@@ -1,5 +1,5 @@
 import { Option } from '@ephox/katamari';
-import { Body, Element, Traverse} from '@ephox/sugar';
+import { Body, Element, Traverse } from '@ephox/sugar';
 import { HTMLFrameElement, HTMLDocument, console } from '@ephox/dom-globals';
 
 // tslint:disable:no-console
@@ -20,17 +20,19 @@ const iframeDoc = (element: Element<HTMLFrameElement>): Option<Element<HTMLDocum
 // NOTE: This looks like it is only used in the demo. Move out.
 const readDoc = (element: Element) => {
   const optDoc = iframeDoc(element);
-  return optDoc.getOrThunk(() => {
+  return optDoc.getOrThunk(() =>
     // INVESTIGATE: This is new, but there is nothing else than can be done here atm. Rethink.
-    return Traverse.owner(element);
-  });
+    Traverse.owner(element)
+  );
 };
 
 const write = (element: Element, content: string): void => {
-  if (!Body.inBody(element)) { throw new Error('Internal error: attempted to write to an iframe that is not n the DOM'); }
+  if (!Body.inBody(element)) {
+    throw new Error('Internal error: attempted to write to an iframe that is not n the DOM');
+  }
 
   const doc = readDoc(element);
-  const dom = doc.dom() as HTMLDocument;
+  const dom = doc.dom();
   dom.open();
   dom.writeln(content);
   dom.close();

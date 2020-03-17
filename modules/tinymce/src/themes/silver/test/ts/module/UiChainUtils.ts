@@ -15,7 +15,7 @@ const cExtractOnlyOne = (selector) => Chain.fromChains([
     selector + '. Found: ' + ts.length))
 ]);
 
-const cResizeToPos = (sx: number, sy: number, dx: number, dy: number, delta: number = 10) => {
+const cResizeToPos = (sx: number, sy: number, dx: number, dy: number, delta = 10) => {
   // Simulate moving the mouse, by making a number of movements
   const numMoves = sy === dy ? Math.abs(dx - sx) / delta : Math.abs(dy - sy) / delta;
   // Determine the deltas based on the number of moves to make
@@ -24,30 +24,28 @@ const cResizeToPos = (sx: number, sy: number, dx: number, dy: number, delta: num
   // Move and release the mouse
   return Chain.control(
     Chain.fromChains([
-        UiFinder.cFindIn('.tox-blocker'),
-        Mouse.cMouseMoveTo(sx, sy)
-      ].concat(
+      UiFinder.cFindIn('.tox-blocker'),
+      Mouse.cMouseMoveTo(sx, sy)
+    ].concat(
       Arr.range(numMoves, (count) => {
         const nx = sx + count * deltaX;
         const ny = sy + count * deltaY;
         return Mouse.cMouseMoveTo(nx, ny);
       })
-      ).concat([
-        Mouse.cMouseMoveTo(dx, dy),
-        Mouse.cMouseUp
-      ])
+    ).concat([
+      Mouse.cMouseMoveTo(dx, dy),
+      Mouse.cMouseUp
+    ])
     ),
     Guard.addLogging(`Resizing from (${sx}, ${sy}) to (${dx}, ${dy})`)
   );
 };
 
-const cScrollRelativeEditor = (editor: Editor, relative: 'top' | 'bottom' = 'top', deltaY: number) => {
-  return Chain.op(() => {
-    const target = Element.fromDom(editor.inline ? editor.getBody() : editor.getContainer());
-    target.dom().scrollIntoView(relative === 'top');
-    Scroll.to(0, window.pageYOffset + deltaY);
-  });
-};
+const cScrollRelativeEditor = (editor: Editor, relative: 'top' | 'bottom' = 'top', deltaY: number) => Chain.op(() => {
+  const target = Element.fromDom(editor.inline ? editor.getBody() : editor.getContainer());
+  target.dom().scrollIntoView(relative === 'top');
+  Scroll.to(0, window.pageYOffset + deltaY);
+});
 
 export {
   cCountNumber,

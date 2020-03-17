@@ -24,13 +24,9 @@ const extractSelected = function (cells) {
   });
 };
 
-const serializeElements = (editor: Editor, elements: Element[]): string => {
-  return Arr.map(elements, (elm) => editor.selection.serializer.serialize(elm.dom(), {})).join('');
-};
+const serializeElements = (editor: Editor, elements: Element[]): string => Arr.map(elements, (elm) => editor.selection.serializer.serialize(elm.dom(), {})).join('');
 
-const getTextContent = (elements: Element[]): string => {
-  return Arr.map(elements, (element) => element.dom().innerText).join('');
-};
+const getTextContent = (elements: Element[]): string => Arr.map(elements, (element) => element.dom().innerText).join('');
 
 const registerEvents = function (editor: Editor, selections: Selections, actions: TableActions, cellSelection) {
   editor.on('BeforeGetContent', function (e) {

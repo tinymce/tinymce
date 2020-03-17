@@ -34,10 +34,10 @@ const adt: {
   text: TypedItemAdtConstructor;
   nonEditable: TypedItemAdtConstructor;
 } = Adt.generate([
-  { boundary: ['item', 'universe'] },
-  { empty: ['item', 'universe'] },
-  { text: ['item', 'universe'] },
-  { nonEditable: ['item', 'universe'] }
+  { boundary: [ 'item', 'universe' ] },
+  { empty: [ 'item', 'universe' ] },
+  { text: [ 'item', 'universe' ] },
+  { nonEditable: [ 'item', 'universe' ] }
 ]);
 
 const no = Fun.never;
@@ -61,7 +61,7 @@ const boundary = Fun.compose(ext as any, adt.boundary as any) as TypedItemConstr
 const empty = Fun.compose(ext as any, adt.empty as any) as TypedItemConstructor;
 const nonEditable = Fun.compose(ext as any, adt.empty as any) as TypedItemConstructor;
 
-const cata = function <E, D, U>(subject: TypedItem<E, D>, onBoundary: Handler<E, D, U>, onEmpty: Handler<E, D, U>, onText: Handler<E, D, U>, onNonEditable: Handler<E, D, U>) {
+const cata = function <E, D, U> (subject: TypedItem<E, D>, onBoundary: Handler<E, D, U>, onEmpty: Handler<E, D, U>, onText: Handler<E, D, U>, onNonEditable: Handler<E, D, U>) {
   return subject.fold(onBoundary, onEmpty, onText, onNonEditable);
 };
 

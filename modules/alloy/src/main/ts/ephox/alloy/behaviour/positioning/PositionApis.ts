@@ -83,13 +83,13 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
       Css.getRaw(placee.element(), 'right').isNone() &&
       Css.getRaw(placee.element(), 'bottom').isNone() &&
       Css.getRaw(placee.element(), 'position').is('fixed')
-    ) { Css.remove(placee.element(), 'position'); }
+    ) {
+      Css.remove(placee.element(), 'position');
+    }
   }, placee.element());
 };
 
-const getMode = (component: AlloyComponent, pConfig: PositioningConfig, pState: Stateless): string => {
-  return pConfig.useFixed() ? 'fixed' : 'absolute';
-};
+const getMode = (component: AlloyComponent, pConfig: PositioningConfig, pState: Stateless): string => pConfig.useFixed() ? 'fixed' : 'absolute';
 
 export {
   position,

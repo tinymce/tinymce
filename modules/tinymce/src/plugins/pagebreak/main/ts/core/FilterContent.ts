@@ -29,7 +29,7 @@ const setup = function (editor) {
 
   editor.on('PreInit', function () {
     editor.serializer.addNodeFilter('img', function (nodes) {
-      let i = nodes.length, node, className;
+      let i = nodes.length; let node; let className;
 
       while (i--) {
         node = nodes[i];

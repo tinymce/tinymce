@@ -83,12 +83,12 @@ const fromChains = <T = any, U = any>(chains: Chain<any, any>[]): Chain<T, U> =>
 
 const fromChainsWith = <T, U = any, V = any>(initial: T, chains: Chain<any, any>[]): Chain<U, V> =>
   fromChains<U, V>(
-    [inject(initial)].concat(chains)
+    [ inject(initial) ].concat(chains)
   );
 
 const fromParent = <T, U, V>(parent: Chain<T, U>, chains: Chain<U, V>[]): Chain<T, U> =>
   on((cvalue: T, cnext: NextFn<U>, cdie: DieFn, clogs: TestLogs) => {
-    Pipeline.async(cvalue, [extract(parent)], (value: U, parentLogs: TestLogs) => {
+    Pipeline.async(cvalue, [ extract(parent) ], (value: U, parentLogs: TestLogs) => {
       const cs = Arr.map(chains, (c) =>
         Step.raw((_, next, die, logs) => {
           // Replace _ with value

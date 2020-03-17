@@ -242,7 +242,7 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (su
   });
 
   suite.test('scope setting', function () {
-    let lastScope, lastEvent, dispatcher;
+    let lastScope; let lastEvent; let dispatcher;
 
     dispatcher = new EventDispatcher();
     dispatcher.on('click', function () {
@@ -263,10 +263,10 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (su
   });
 
   suite.test('beforeFire setting', function () {
-    let lastArgs, dispatcher, args;
+    let lastArgs; let dispatcher; let args;
 
     dispatcher = new EventDispatcher({
-      beforeFire (args) {
+      beforeFire(args) {
         lastArgs = args;
       }
     });
@@ -276,10 +276,10 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (su
   });
 
   suite.test('beforeFire setting (stopImmediatePropagation)', function () {
-    let lastArgs, dispatcher, args, data = '';
+    let lastArgs; let dispatcher; let args; let data = '';
 
     dispatcher = new EventDispatcher({
-      beforeFire (args) {
+      beforeFire(args) {
         lastArgs = args;
         args.stopImmediatePropagation();
       }
@@ -296,10 +296,10 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (su
   });
 
   suite.test('toggleEvent setting', function () {
-    let lastName, lastState, dispatcher;
+    let lastName; let lastState; let dispatcher;
 
     dispatcher = new EventDispatcher({
-      toggleEvent (name, state) {
+      toggleEvent(name, state) {
         lastName = name;
         lastState = state;
       }

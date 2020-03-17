@@ -13,7 +13,7 @@ import { MediaData } from './Types';
 
 const cache = {};
 const embedPromise = function (data: MediaData, dataToHtml: DataToHtml.DataToHtmlCallback, handler) {
-  return new Promise<{url: string, html: string}>(function (res, rej) {
+  return new Promise<{url: string; html: string}>(function (res, rej) {
     const wrappedResolve = function (response) {
       if (response.html) {
         cache[data.source] = response;
@@ -32,7 +32,7 @@ const embedPromise = function (data: MediaData, dataToHtml: DataToHtml.DataToHtm
 };
 
 const defaultPromise = function (data: MediaData, dataToHtml: DataToHtml.DataToHtmlCallback) {
-  return new Promise<{url: string, html: string}>(function (res) {
+  return new Promise<{url: string; html: string}>(function (res) {
     res({ html: dataToHtml(data), url: data.source });
   });
 };

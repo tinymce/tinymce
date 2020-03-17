@@ -23,11 +23,11 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
       }
     });
 
-    const sAssertDialogLabelledBy = Chain.asStep(Body.body(), [NamedChain.asChain([
+    const sAssertDialogLabelledBy = Chain.asStep(Body.body(), [ NamedChain.asChain([
       NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('[role="dialog"]'), 'dialog'),
       NamedChain.direct('dialog', cGetDialogLabelId, 'labelId'),
       NamedChain.bundle((obj) => UiFinder.findIn(obj.dialog, `#${obj.labelId}`)),
-    ])]);
+    ]) ]);
 
     const dialogSpec: Types.Dialog.DialogApi<{}> = {
       title: 'Silver Test Inline (Toolbar) Dialog',

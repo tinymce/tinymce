@@ -37,50 +37,42 @@ export interface SwatchPanelButtonSpec {
   layouts?: Layouts;
 }
 
-export const renderPanelButton = (spec: SwatchPanelButtonSpec, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
-  return AlloyDropdown.sketch({
-    dom: spec.dom,
-    components: spec.components,
+export const renderPanelButton = (spec: SwatchPanelButtonSpec, sharedBackstage: UiFactoryBackstageShared): SketchSpec => AlloyDropdown.sketch({
+  dom: spec.dom,
+  components: spec.components,
 
-    toggleClass: 'mce-active',
+  toggleClass: 'mce-active',
 
-    dropdownBehaviours: Behaviour.derive([
-      Unselecting.config({}),
-      Tabstopping.config({})
-    ]),
-    layouts: spec.layouts,
-    sandboxClasses: ['tox-dialog__popups'],
+  dropdownBehaviours: Behaviour.derive([
+    Unselecting.config({}),
+    Tabstopping.config({})
+  ]),
+  layouts: spec.layouts,
+  sandboxClasses: [ 'tox-dialog__popups' ],
 
-    lazySink: sharedBackstage.getSink,
-    fetch: (comp) => {
-      return Future.nu((callback) => {
-        return spec.fetch(callback);
-      }).map((items) => {
-        return Option.from(createTieredDataFrom(
-          Merger.deepMerge(
-            createPartialChoiceMenu(
-              Id.generate('menu-value'),
-              items,
-              (value) => {
-                spec.onItemAction(comp, value);
-              },
-              spec.columns,
-              spec.presets,
-              ItemResponse.CLOSE_ON_EXECUTE,
-              // No colour is ever selected on opening
-              () => false,
-              sharedBackstage.providers
-            ),
-            {
-              movement: deriveMenuMovement(spec.columns, spec.presets)
-            }
-          )
-        ));
-      });
-    },
+  lazySink: sharedBackstage.getSink,
+  fetch: (comp) => Future.nu((callback) => spec.fetch(callback)).map((items) => Option.from(createTieredDataFrom(
+    Merger.deepMerge(
+      createPartialChoiceMenu(
+        Id.generate('menu-value'),
+        items,
+        (value) => {
+          spec.onItemAction(comp, value);
+        },
+        spec.columns,
+        spec.presets,
+        ItemResponse.CLOSE_ON_EXECUTE,
+        // No colour is ever selected on opening
+        () => false,
+        sharedBackstage.providers
+      ),
+      {
+        movement: deriveMenuMovement(spec.columns, spec.presets)
+      }
+    )
+  ))),
 
-    parts: {
-      menu: MenuParts.part(false, 1, spec.presets)
-    }
-  });
-};
+  parts: {
+    menu: MenuParts.part(false, 1, spec.presets)
+  }
+});

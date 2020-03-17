@@ -35,7 +35,7 @@ export interface ComponentDetail {
   dom: RawDomSchema;
   components: AlloyComponent[];
   events: {
-    events: AlloyEventRecord
+    events: AlloyEventRecord;
   };
   apis?: {};
   behaviours?: AlloyBehaviourRecord;

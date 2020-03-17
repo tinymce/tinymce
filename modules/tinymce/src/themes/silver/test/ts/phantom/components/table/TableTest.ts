@@ -7,22 +7,19 @@ import TestProviders from '../../../module/TestProviders';
 UnitTest.asynctest('Table component Test', (success, failure) => {
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
-      return GuiFactory.build(
-        renderTable({
-          header: [ 'one', 'two', 'three'],
-          cells: [
-            [ 'a', 'b', 'c'],
-            [ 'd', 'e', 'f']
-          ]
-        }, TestProviders)
-      );
-    }, (doc, body, gui, component, store) => {
-      return [
-        Assertions.sAssertStructure(
-          'Assert table structure',
-          ApproxStructure.fromHtml((
-            '<table class="tox-dialog__table">' +
+    (store, doc, body) => GuiFactory.build(
+      renderTable({
+        header: [ 'one', 'two', 'three' ],
+        cells: [
+          [ 'a', 'b', 'c' ],
+          [ 'd', 'e', 'f' ]
+        ]
+      }, TestProviders)
+    ), (doc, body, gui, component, store) => [
+      Assertions.sAssertStructure(
+        'Assert table structure',
+        ApproxStructure.fromHtml((
+          '<table class="tox-dialog__table">' +
               '<thead>' +
                 '<tr>' +
                   '<th>one</th>' +
@@ -43,11 +40,10 @@ UnitTest.asynctest('Table component Test', (success, failure) => {
                 '</tr>' +
               '</tbody>' +
             '</table>'
-          )),
-          component.element()
-        )
-      ];
-    },
+        )),
+        component.element()
+      )
+    ],
     success,
     failure
   );

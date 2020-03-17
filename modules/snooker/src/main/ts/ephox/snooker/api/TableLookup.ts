@@ -55,7 +55,7 @@ const table = function (element: Element, isRoot?: (e: Element) => boolean) {
 };
 
 const row = function (element: Element, isRoot?: (e: Element) => boolean) {
-   return lookup([ 'tr' ], element, isRoot);
+  return lookup([ 'tr' ], element, isRoot);
 };
 
 const rows = function (ancestor: Element) {

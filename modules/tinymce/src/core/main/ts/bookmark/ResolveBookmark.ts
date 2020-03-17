@@ -29,7 +29,7 @@ const addBogus = (dom: DOMUtils, node: DomNode): DomNode => {
 };
 
 const resolveCaretPositionBookmark = (dom: DOMUtils, bookmark) => {
-  let rng, pos;
+  let rng; let pos;
 
   rng = dom.createRng();
   pos = CaretBookmark.resolve(dom.getRoot(), bookmark.start);
@@ -73,7 +73,7 @@ const padEmptyCaretContainer = (root: HTMLElement, node: DomNode, rng: Range): b
 
 const setEndPoint = (dom: DOMUtils, start: boolean, bookmark: PathBookmark, rng: Range) => {
   const point = bookmark[start ? 'start' : 'end'];
-  let i, node, offset, children;
+  let i; let node; let offset; let children;
   const root = dom.getRoot();
 
   if (point) {
@@ -122,9 +122,9 @@ const setEndPoint = (dom: DOMUtils, start: boolean, bookmark: PathBookmark, rng:
 const isValidTextNode = (node: DomNode): node is Text => NodeType.isText(node) && node.data.length > 0;
 
 const restoreEndPoint = (dom: DOMUtils, suffix: string, bookmark: IdBookmark): Option<CaretPosition> => {
-  let marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev;
+  let marker = dom.get(bookmark.id + '_' + suffix); let node; let idx; let next; let prev;
   const keep = bookmark.keep;
-  let container, offset;
+  let container; let offset;
 
   if (marker) {
     node = marker.parentNode;
@@ -238,13 +238,11 @@ const resolveId = (dom: DOMUtils, bookmark: IdBookmark): Option<Range> => {
   );
 };
 
-const resolveIndex = (dom: DOMUtils, bookmark: IndexBookmark): Option<Range> => {
-  return Option.from(dom.select(bookmark.name)[bookmark.index]).map((elm) => {
-    const rng = dom.createRng();
-    rng.selectNode(elm);
-    return rng;
-  });
-};
+const resolveIndex = (dom: DOMUtils, bookmark: IndexBookmark): Option<Range> => Option.from(dom.select(bookmark.name)[bookmark.index]).map((elm) => {
+  const rng = dom.createRng();
+  rng.selectNode(elm);
+  return rng;
+});
 
 const resolve = (selection: Selection, bookmark: Bookmark): Option<Range> => {
   const dom = selection.dom;

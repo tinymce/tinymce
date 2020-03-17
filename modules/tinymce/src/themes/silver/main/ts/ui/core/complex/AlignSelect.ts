@@ -16,22 +16,18 @@ import { buildBasicStaticDataset } from './SelectDatasets';
 import { IsSelectedForType } from './utils/FormatRegister';
 
 const alignMenuItems = [
-  { title: 'Left', icon: 'align-left', format: 'alignleft'},
+  { title: 'Left', icon: 'align-left', format: 'alignleft' },
   { title: 'Center', icon: 'align-center', format: 'aligncenter' },
   { title: 'Right', icon: 'align-right', format: 'alignright' },
   { title: 'Justify', icon: 'align-justify', format: 'alignjustify' }
 ];
 
 const getSpec = (editor: Editor): SelectSpec => {
-  const getMatchingValue = (): Option<Partial<FormatItem>> => {
-    return  Arr.find(alignMenuItems, (item) => editor.formatter.match(item.format));
-  };
+  const getMatchingValue = (): Option<Partial<FormatItem>> => Arr.find(alignMenuItems, (item) => editor.formatter.match(item.format));
 
   const isSelectedFor: IsSelectedForType = (format: string) => () => editor.formatter.match(format);
 
-  const getPreviewFor = (_format: string) => () => {
-    return Option.none<PreviewSpec>();
-  };
+  const getPreviewFor = (_format: string) => () => Option.none<PreviewSpec>();
 
   const updateSelectMenuIcon = (comp: AlloyComponent) => {
     const match = getMatchingValue();
@@ -62,9 +58,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
-const createAlignSelect = (editor, backstage: UiFactoryBackstage) => {
-  return createSelectButton(editor, backstage, getSpec(editor));
-};
+const createAlignSelect = (editor, backstage: UiFactoryBackstage) => createSelectButton(editor, backstage, getSpec(editor));
 
 const alignSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));

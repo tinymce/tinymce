@@ -9,9 +9,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretPositiionPredicateTest', (success,
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 
-  const getRoot = () => {
-    return viewBlock.get();
-  };
+  const getRoot = () => viewBlock.get();
 
   const setupHtml = (html) => {
     viewBlock.update(html);

@@ -56,9 +56,7 @@ const registerCommands = (editor: Editor) => {
   });
 };
 
-const calcCols = (colors) => {
-  return Math.max(5, Math.ceil(Math.sqrt(colors)));
-};
+const calcCols = (colors) => Math.max(5, Math.ceil(Math.sqrt(colors)));
 
 const getColorCols = function (editor: Editor) {
   const colors = Settings.getColors(editor);
@@ -83,7 +81,7 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemApi[] => {
   return hasCustom ? [
     remove,
     custom
-  ] : [remove];
+  ] : [ remove ];
 };
 
 const applyColor = function (editor: Editor, format, value, onChoice: (v: string) => void) {
@@ -105,9 +103,7 @@ const applyColor = function (editor: Editor, format, value, onChoice: (v: string
   }
 };
 
-const getColors = (colors: Menu.ChoiceMenuItemApi[], hasCustom: boolean): Menu.ChoiceMenuItemApi[] => {
-  return colors.concat(Settings.getCurrentColors().concat(getAdditionalColors(hasCustom)));
-};
+const getColors = (colors: Menu.ChoiceMenuItemApi[], hasCustom: boolean): Menu.ChoiceMenuItemApi[] => colors.concat(Settings.getCurrentColors().concat(getAdditionalColors(hasCustom)));
 
 const getFetch = (colors: Menu.ChoiceMenuItemApi[], hasCustom: boolean) => (callback) => {
   callback(getColors(colors, hasCustom));
@@ -130,13 +126,11 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
     icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
     select: (value) => {
       const optCurrentRgb = Option.from(getCurrentColor(editor, format));
-      return optCurrentRgb.bind((currentRgb) => {
-        return RgbaColour.fromString(currentRgb).map((rgba) => {
-          const currentHex = HexColour.fromRgba(rgba).value;
-          // note: value = '#FFFFFF', currentHex = 'ffffff'
-          return Strings.contains(value.toLowerCase(), currentHex);
-        });
-      }).getOr(false);
+      return optCurrentRgb.bind((currentRgb) => RgbaColour.fromString(currentRgb).map((rgba) => {
+        const currentHex = HexColour.fromRgba(rgba).value;
+        // note: value = '#FFFFFF', currentHex = 'ffffff'
+        return Strings.contains(value.toLowerCase(), currentHex);
+      })).getOr(false);
     },
     columns: getColorCols(editor),
     fetch: getFetch(Settings.getColors(editor), Settings.hasCustomColors(editor)),
@@ -191,12 +185,10 @@ const registerTextColorMenuItem = (editor: Editor, name: string, format: string,
 };
 
 const colorPickerDialog = (editor: Editor) => (callback, value: string) => {
-  const getOnSubmit = (callback) => {
-    return (api) => {
-      const data = api.getData();
-      callback(Option.from(data.colorpicker));
-      api.close();
-    };
+  const getOnSubmit = (callback) => (api) => {
+    const data = api.getData();
+    callback(Option.from(data.colorpicker));
+    api.close();
   };
 
   const onAction = (api: Types.Dialog.DialogInstanceApi<ColorSwatchDialogData>, details) => {

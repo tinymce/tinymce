@@ -54,7 +54,7 @@ export const BlobCache = function (): BlobCache {
 
   const create = function (o: BlobInfoData | string, blob?: Blob, base64?: string, filename?: string): BlobInfo {
     if (Type.isString(o)) {
-      const id = o as string;
+      const id = o;
 
       return toBlobInfo({
         id,
@@ -70,7 +70,7 @@ export const BlobCache = function (): BlobCache {
   };
 
   const toBlobInfo = function (o: BlobInfoData): BlobInfo {
-    let id, name;
+    let id; let name;
 
     if (!o.blob || !o.base64) {
       throw new Error('blob and base64 representations of the image are required for BlobInfo to be created');

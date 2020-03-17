@@ -11,19 +11,15 @@ import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from './UiSketcher';
 
 const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, spec): SketchSpec => {
-  const options = Arr.map(detail.options, (option) => {
-    return {
-      dom: {
-        tag: 'option',
-        value: option.value,
-        innerHtml: option.text
-      }
-    };
-  });
+  const options = Arr.map(detail.options, (option) => ({
+    dom: {
+      tag: 'option',
+      value: option.value,
+      innerHtml: option.text
+    }
+  }));
 
-  const initialValues = detail.data.map((v) => {
-    return Objects.wrap('initialValue', v);
-  }).getOr({ });
+  const initialValues = detail.data.map((v) => Objects.wrap('initialValue', v)).getOr({ });
 
   return {
     uid: detail.uid,
@@ -40,15 +36,15 @@ const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, 
         Representing.config({
           store: {
             mode: 'manual',
-            getValue (select) {
+            getValue(select) {
               return Value.get(select.element());
             },
-            setValue (select, newValue) {
+            setValue(select, newValue) {
               // This is probably generically useful ... may become a part of Representing.
-              const found = Arr.find(detail.options, (opt) => {
-                return opt.value === newValue;
-              });
-              if (found.isSome()) { Value.set(select.element(), newValue); }
+              const found = Arr.find(detail.options, (opt) => opt.value === newValue);
+              if (found.isSome()) {
+                Value.set(select.element(), newValue);
+              }
             },
             ...initialValues
           }

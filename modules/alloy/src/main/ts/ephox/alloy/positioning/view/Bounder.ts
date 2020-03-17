@@ -67,7 +67,7 @@ const calcReposition = (newX: number, newY: number, width: number, height: numbe
   };
 };
 
-const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Boxes.Bounds): BounderAttemptAdt  => {
+const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Boxes.Bounds): BounderAttemptAdt => {
   const candidateX = candidate.x();
   const candidateY = candidate.y();
   const bubbleOffsets = candidate.bubble().offset();
@@ -165,8 +165,8 @@ const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: 
       const improved = newDeltaH > deltaH || newDeltaW > deltaW;
       // console.log('improved? ', improved);
       // re-wrap in the ADT either way
-      return improved ? adt.nofit(newReposition, newDeltaW, newDeltaH)
-                      : adt.nofit(reposition, deltaW, deltaH);
+      return improved ? adt.nofit(newReposition, newDeltaW, newDeltaH) :
+        adt.nofit(reposition, deltaW, deltaH);
     });
   };
 
@@ -197,7 +197,7 @@ const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: 
 
   // unwrapping 'reposition' from the adt, for both fit & nofit the first arg is the one we need,
   // so we can cheat and use Fun.identity
-  return abc.fold(Fun.identity, Fun.identity) as RepositionDecision;
+  return abc.fold(Fun.identity, Fun.identity);
 };
 
 export { attempts, calcReposition };

@@ -7,7 +7,7 @@
 
 import { SchemaMap } from './Schema';
 
-export type Attributes = Array<{ name: string; value: string; }> & { map: Record<string, string> };
+export type Attributes = Array<{ name: string; value: string }> & { map: Record<string, string> };
 
 const whiteSpaceRegExp = /^[ \t\r\n]*$/;
 const typeLookup = {
@@ -305,7 +305,7 @@ class Node {
    * @return {tinymce.html.Node} Current node that got removed.
    */
   public remove(): Node {
-    const self = this, parent = self.parent, next = self.next, prev = self.prev;
+    const self = this; const parent = self.parent; const next = self.next; const prev = self.prev;
 
     if (parent) {
       if (parent.firstChild === self) {

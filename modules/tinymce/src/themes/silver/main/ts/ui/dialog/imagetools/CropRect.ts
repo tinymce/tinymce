@@ -40,7 +40,7 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
     { name: 'se', xMul: 1, yMul: 1, deltaX: 0, deltaY: 0, deltaW: 1, deltaH: 1, label: 'Bottom Right Crop Handle' }
   ];
 
-  blockers = ['top', 'right', 'bottom', 'left'];
+  blockers = [ 'top', 'right', 'bottom', 'left' ];
 
   const getAbsoluteRect = (outerRect, relativeRect) => ({
     x: relativeRect.x + outerRect.x,
@@ -59,7 +59,7 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
   const getInnerRect = () => getRelativeRect(clampRect, currentRect);
 
   function moveRect(handle, startRect, deltaX, deltaY) {
-    let x, y, w, h, rect;
+    let x; let y; let w; let h; let rect;
 
     x = startRect.x;
     y = startRect.y;
@@ -93,11 +93,11 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
         document: containerElm.ownerDocument,
         handle: id + '-' + handle.name,
 
-        start () {
+        start() {
           startRect = currentRect;
         },
 
-        drag (e) {
+        drag(e) {
           moveRect(handle, startRect, e.deltaX, e.deltaY);
         }
       });
@@ -149,27 +149,27 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
       }
 
       switch (e.keyCode) {
-        case VK.LEFT:
-          moveAndBlock(e, activeHandle, currentRect, -10, 0);
-          break;
+      case VK.LEFT:
+        moveAndBlock(e, activeHandle, currentRect, -10, 0);
+        break;
 
-        case VK.RIGHT:
-          moveAndBlock(e, activeHandle, currentRect, 10, 0);
-          break;
+      case VK.RIGHT:
+        moveAndBlock(e, activeHandle, currentRect, 10, 0);
+        break;
 
-        case VK.UP:
-          moveAndBlock(e, activeHandle, currentRect, 0, -10);
-          break;
+      case VK.UP:
+        moveAndBlock(e, activeHandle, currentRect, 0, -10);
+        break;
 
-        case VK.DOWN:
-          moveAndBlock(e, activeHandle, currentRect, 0, 10);
-          break;
+      case VK.DOWN:
+        moveAndBlock(e, activeHandle, currentRect, 0, 10);
+        break;
 
-        case VK.ENTER:
-        case VK.SPACEBAR:
-          e.preventDefault();
-          action();
-          break;
+      case VK.ENTER:
+      case VK.SPACEBAR:
+        e.preventDefault();
+        action();
+        break;
       }
     });
   }

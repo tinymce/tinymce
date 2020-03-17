@@ -86,7 +86,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', (s
         cAssertEditorAndLastEvent('After fullscreen toggled', false),
         cAssertFullscreenClass('After fullscreen toggled', false),
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'fullscreen link',
     theme: 'silver',

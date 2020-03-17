@@ -9,23 +9,15 @@ const _initSize: FieldProcessorAdt = FieldSchema.strictObjOf('initSize', [
   FieldSchema.strict('numRows')
 ]);
 
-const itemMarkers: () => FieldProcessorAdt = () => {
-  return FieldSchema.strictOf('markers', MenuMarkers.itemSchema());
-};
+const itemMarkers: () => FieldProcessorAdt = () => FieldSchema.strictOf('markers', MenuMarkers.itemSchema());
 
-const menuMarkers: () => FieldProcessorAdt = () => {
-  return FieldSchema.strictOf('markers', MenuMarkers.schema());
-};
+const menuMarkers: () => FieldProcessorAdt = () => FieldSchema.strictOf('markers', MenuMarkers.schema());
 
-const tieredMenuMarkers: () => FieldProcessorAdt = () => {
-  return FieldSchema.strictObjOf('markers', [
-    FieldSchema.strict('backgroundMenu')
-  ].concat(MenuMarkers.menuFields()).concat(MenuMarkers.itemFields()));
-};
+const tieredMenuMarkers: () => FieldProcessorAdt = () => FieldSchema.strictObjOf('markers', [
+  FieldSchema.strict('backgroundMenu')
+].concat(MenuMarkers.menuFields()).concat(MenuMarkers.itemFields()));
 
-const markers = (required: string[]): FieldProcessorAdt => {
-  return FieldSchema.strictObjOf('markers', Arr.map(required, FieldSchema.strict));
-};
+const markers = (required: string[]): FieldProcessorAdt => FieldSchema.strictObjOf('markers', Arr.map(required, FieldSchema.strict));
 
 const onPresenceHandler = (label: string, fieldName: string, presence: any): FieldProcessorAdt => {
   // We care about where the handler was declared (in terms of which schema)
@@ -35,41 +27,27 @@ const onPresenceHandler = (label: string, fieldName: string, presence: any): Fie
     fieldName,
     presence,
     // Apply some wrapping to their supplied function
-    ValueSchema.valueOf((f) => {
-      return Result.value((...args: any[]) => {
-        /*
+    ValueSchema.valueOf((f) => Result.value((...args: any[]) => {
+      /*
          * This line is just for debugging information
          */
-        Debugging.logHandler(label, fieldName, trace);
-        return f.apply(undefined, args);
-      });
-    })
+      Debugging.logHandler(label, fieldName, trace);
+      return f.apply(undefined, args);
+    }))
   );
 };
 
-const onHandler = (fieldName: string): FieldProcessorAdt => {
-  return onPresenceHandler('onHandler', fieldName, FieldPresence.defaulted(Fun.noop));
-};
+const onHandler = (fieldName: string): FieldProcessorAdt => onPresenceHandler('onHandler', fieldName, FieldPresence.defaulted(Fun.noop));
 
-const onKeyboardHandler = (fieldName: string): FieldProcessorAdt => {
-  return onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.defaulted(Option.none));
-};
+const onKeyboardHandler = (fieldName: string): FieldProcessorAdt => onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.defaulted(Option.none));
 
-const onStrictHandler = (fieldName: string): FieldProcessorAdt =>  {
-  return onPresenceHandler('onHandler', fieldName, FieldPresence.strict());
-};
+const onStrictHandler = (fieldName: string): FieldProcessorAdt => onPresenceHandler('onHandler', fieldName, FieldPresence.strict());
 
-const onStrictKeyboardHandler = (fieldName: string): FieldProcessorAdt =>  {
-  return onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.strict());
-};
+const onStrictKeyboardHandler = (fieldName: string): FieldProcessorAdt => onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.strict());
 
-const output = (name: string, value: any): FieldProcessorAdt => {
-  return FieldSchema.state(name, Fun.constant(value));
-};
+const output = (name: string, value: any): FieldProcessorAdt => FieldSchema.state(name, Fun.constant(value));
 
-const snapshot = (name: string): FieldProcessorAdt => {
-  return FieldSchema.state(name, Fun.identity);
-};
+const snapshot = (name: string): FieldProcessorAdt => FieldSchema.state(name, Fun.identity);
 
 const initSize: () => FieldProcessorAdt = Fun.constant(_initSize);
 

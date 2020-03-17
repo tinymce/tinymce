@@ -50,7 +50,7 @@ const readHeaders = function (editor) {
 };
 
 const getMinLevel = function (headers) {
-  let i, minLevel = 9;
+  let i; let minLevel = 9;
 
   for (i = 0; i < headers.length; i++) {
     if (headers[i].level < minLevel) {
@@ -80,7 +80,7 @@ const generateTocContentHtml = function (editor) {
   let html = '';
   const headers = readHeaders(editor);
   let prevLevel = getMinLevel(headers) - 1;
-  let i, ii, h, nextLevel;
+  let i; let ii; let h; let nextLevel;
 
   if (!headers.length) {
     return '';

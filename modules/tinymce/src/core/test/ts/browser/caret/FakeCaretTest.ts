@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function (success
   };
 
   suite.test('show/hide (before, block)', function () {
-    let rng, $fakeCaretElm;
+    let rng; let $fakeCaretElm;
 
     $(getRoot()).html('<div>a</div>');
 
@@ -58,7 +58,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function (success
   });
 
   suite.test('show/hide (before, block)', function () {
-    let rng, $fakeCaretElm;
+    let rng; let $fakeCaretElm;
 
     $(getRoot()).html('<div>a</div>');
 
@@ -74,7 +74,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function (success
   });
 
   suite.test('show/hide (before, inline)', function () {
-    let rng, $fakeCaretText;
+    let rng; let $fakeCaretText;
 
     $(getRoot()).html('<span>a</span>');
 
@@ -90,7 +90,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', function (success
   });
 
   suite.test('show/hide (after, inline)', function () {
-    let rng, $fakeCaretText;
+    let rng; let $fakeCaretText;
 
     $(getRoot()).html('<span>a</span>');
 

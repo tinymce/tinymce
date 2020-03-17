@@ -8,14 +8,12 @@ export const registerInsertDateTimeItems = () => {
   getDemoRegistry().addSplitButton('insertdatetime', {
     type: 'splitbutton',
     fetch: (callback) => {
-      const items = Arr.map(['%H:%M:%S', '%Y-%m-%d', '%I:%M:%S %p', '%D'], (fmt) => {
-        return {
-          type: 'choiceitem',
-          value: fmt,
-          // Convert current time
-          text: fmt
-        } as ToolbarSplitButtonItemTypes;
-      });
+      const items = Arr.map([ '%H:%M:%S', '%Y-%m-%d', '%I:%M:%S %p', '%D' ], (fmt) => ({
+        type: 'choiceitem',
+        value: fmt,
+        // Convert current time
+        text: fmt
+      } as ToolbarSplitButtonItemTypes));
       callback(items);
     },
     onItemAction: (buttonApi, itemValue) => {

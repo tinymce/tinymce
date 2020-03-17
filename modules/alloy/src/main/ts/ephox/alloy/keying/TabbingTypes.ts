@@ -28,9 +28,7 @@ const create = (cyclicField: FieldProcessorAdt) => {
 
   // TODO: Test this
   const isVisible = (tabbingConfig: TabbingConfig, element: Element<HTMLElement>): boolean => {
-    const target = tabbingConfig.visibilitySelector.bind((sel) => {
-      return SelectorFind.closest<HTMLElement>(element, sel);
-    }).getOr(element);
+    const target = tabbingConfig.visibilitySelector.bind((sel) => SelectorFind.closest<HTMLElement>(element, sel)).getOr(element);
 
     // NOTE: We can't use Visibility.isVisible, because the toolbar has width when it has closed, just not height.
     return Height.get(target) > 0;
@@ -38,22 +36,14 @@ const create = (cyclicField: FieldProcessorAdt) => {
 
   const findInitial = (component: AlloyComponent, tabbingConfig: TabbingConfig): Option<Element> => {
     const tabstops: Element[] = SelectorFilter.descendants(component.element(), tabbingConfig.selector);
-    const visibles: Element[] = Arr.filter(tabstops, (elem) => {
-      return isVisible(tabbingConfig, elem);
-    });
+    const visibles: Element[] = Arr.filter(tabstops, (elem) => isVisible(tabbingConfig, elem));
 
     return Option.from(visibles[tabbingConfig.firstTabstop]);
   };
 
-  const findCurrent = (component: AlloyComponent, tabbingConfig: TabbingConfig): Option<Element> => {
-    return tabbingConfig.focusManager.get(component).bind((elem) => {
-      return SelectorFind.closest(elem, tabbingConfig.selector);
-    });
-  };
+  const findCurrent = (component: AlloyComponent, tabbingConfig: TabbingConfig): Option<Element> => tabbingConfig.focusManager.get(component).bind((elem) => SelectorFind.closest(elem, tabbingConfig.selector));
 
-  const isTabstop = (tabbingConfig: TabbingConfig, element: Element): boolean => {
-    return isVisible(tabbingConfig, element) && tabbingConfig.useTabstopAt(element);
-  };
+  const isTabstop = (tabbingConfig: TabbingConfig, element: Element): boolean => isVisible(tabbingConfig, element) && tabbingConfig.useTabstopAt(element);
 
   // Fire an alloy focus on the first visible element that matches the selector
   const focusIn = (component: AlloyComponent, tabbingConfig: TabbingConfig, tabbingState: Stateless): void => {
@@ -62,18 +52,14 @@ const create = (cyclicField: FieldProcessorAdt) => {
     });
   };
 
-  const goFromTabstop = (component: AlloyComponent, tabstops: Element[], stopIndex: number, tabbingConfig: TabbingConfig, cycle: ArrNavigation.ArrCycle<Element>): Option<boolean> => {
-    return cycle(tabstops, stopIndex, (elem: Element) => {
-      return isTabstop(tabbingConfig, elem);
-    }).fold(() => {
-      // Even if there is only one, still capture the event if cycling
-      return tabbingConfig.cyclic ? Option.some<boolean>(true) : Option.none();
-    }, (target) => {
-      tabbingConfig.focusManager.set(component, target);
-      // Kill the event
-      return Option.some<boolean>(true);
-    });
-  };
+  const goFromTabstop = (component: AlloyComponent, tabstops: Element[], stopIndex: number, tabbingConfig: TabbingConfig, cycle: ArrNavigation.ArrCycle<Element>): Option<boolean> => cycle(tabstops, stopIndex, (elem: Element) => isTabstop(tabbingConfig, elem)).fold(() =>
+  // Even if there is only one, still capture the event if cycling
+    tabbingConfig.cyclic ? Option.some<boolean>(true) : Option.none()
+  , (target) => {
+    tabbingConfig.focusManager.set(component, target);
+    // Kill the event
+    return Option.some<boolean>(true);
+  });
 
   const go = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, tabbingConfig: TabbingConfig, cycle: ArrNavigation.ArrCycle<Element>): Option<boolean> => {
     // 1. Find our current tabstop
@@ -85,9 +71,7 @@ const create = (cyclicField: FieldProcessorAdt) => {
       // focused component
       const optStopIndex = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));
 
-      return optStopIndex.bind((stopIndex) => {
-        return goFromTabstop(component, tabstops, stopIndex, tabbingConfig, cycle);
-      });
+      return optStopIndex.bind((stopIndex) => goFromTabstop(component, tabstops, stopIndex, tabbingConfig, cycle));
     });
   };
 
@@ -101,17 +85,9 @@ const create = (cyclicField: FieldProcessorAdt) => {
     return go(component, simulatedEvent, tabbingConfig, navigate);
   };
 
-  const execute: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig) => {
-    return tabbingConfig.onEnter.bind((f) => {
-      return f(component, simulatedEvent);
-    });
-  };
+  const execute: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig) => tabbingConfig.onEnter.bind((f) => f(component, simulatedEvent));
 
-  const exit: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig) => {
-    return tabbingConfig.onEscape.bind((f) => {
-      return f(component, simulatedEvent);
-    });
-  };
+  const exit: KeyRuleHandler<TabbingConfig, Stateless> = (component, simulatedEvent, tabbingConfig) => tabbingConfig.onEscape.bind((f) => f(component, simulatedEvent));
 
   const getKeydownRules = Fun.constant([
     KeyRules.rule(KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), goBackwards),

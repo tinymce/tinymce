@@ -8,8 +8,8 @@ export const enum ListAction {
 
 export const listToggleActionFromListName = (listName: 'UL' | 'OL' | 'DL'): ListAction => {
   switch (listName) {
-    case 'UL': return ListAction.ToggleUlList;
-    case 'OL': return ListAction.ToggleOlList;
-    case 'DL': return ListAction.ToggleDLList;
+  case 'UL': return ListAction.ToggleUlList;
+  case 'OL': return ListAction.ToggleOlList;
+  case 'DL': return ListAction.ToggleDLList;
   }
 };

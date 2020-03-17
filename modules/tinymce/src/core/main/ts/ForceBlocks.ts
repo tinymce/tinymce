@@ -57,13 +57,13 @@ const shouldRemoveTextNode = (blockElements, node) => {
 };
 
 const addRootBlocks = function (editor: Editor) {
-  const dom = editor.dom, selection = editor.selection;
-  const schema = editor.schema, blockElements = schema.getBlockElements();
+  const dom = editor.dom; const selection = editor.selection;
+  const schema = editor.schema; const blockElements = schema.getBlockElements();
   let node: Node = selection.getStart();
   const rootNode = editor.getBody();
   let rng;
-  let startContainer, startOffset, endContainer, endOffset, rootBlockNode;
-  let tempNode, wrapped, restoreSelection;
+  let startContainer; let startOffset; let endContainer; let endOffset; let rootBlockNode;
+  let tempNode; let wrapped; let restoreSelection;
   let rootNodeName;
 
   const forcedRootBlock = Settings.getForcedRootBlock(editor);

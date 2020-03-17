@@ -35,7 +35,7 @@ export const uniqueId = function (prefix?: string): string {
 };
 
 const imageToBlobInfo = function (blobCache: BlobCache, img: HTMLImageElement, resolve, reject) {
-  let base64, blobInfo;
+  let base64; let blobInfo;
 
   if (img.src.indexOf('blob:') === 0) {
     blobInfo = blobCache.getByUri(img.src);

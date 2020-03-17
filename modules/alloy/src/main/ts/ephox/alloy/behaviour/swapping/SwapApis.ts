@@ -22,13 +22,9 @@ const clear = (component: AlloyComponent, swapConfig: SwappingConfig, swapState:
   Class.remove(component.element(), swapConfig.omega);
 };
 
-const isAlpha = (component: AlloyComponent, swapConfig: SwappingConfig, swapState: Stateless) => {
-  return Class.has(component.element(), swapConfig.alpha);
-};
+const isAlpha = (component: AlloyComponent, swapConfig: SwappingConfig, swapState: Stateless) => Class.has(component.element(), swapConfig.alpha);
 
-const isOmega = (component: AlloyComponent, swapConfig: SwappingConfig, swapState: Stateless) => {
-  return Class.has(component.element(), swapConfig.omega);
-};
+const isOmega = (component: AlloyComponent, swapConfig: SwappingConfig, swapState: Stateless) => Class.has(component.element(), swapConfig.omega);
 
 export {
   toAlpha,

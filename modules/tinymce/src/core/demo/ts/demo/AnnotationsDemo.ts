@@ -32,7 +32,7 @@ export default function () {
           });
           editor.focus();
         },
-        onSetup (btnApi) {
+        onSetup(btnApi) {
           editor.annotator.annotationChanged('alpha', (state, name, obj) => {
             btnApi.setDisabled(state);
           });
@@ -43,14 +43,12 @@ export default function () {
       editor.on('init', () => {
         editor.annotator.register('alpha', {
           persistent: true,
-          decorate: (uid, data) => {
-            return {
-              attributes: {
-                'data-mce-comment': data.comment ? data.comment : '',
-                'data-mce-author': data.author ? data.author : 'anonymous'
-              }
-            };
-          }
+          decorate: (uid, data) => ({
+            attributes: {
+              'data-mce-comment': data.comment ? data.comment : '',
+              'data-mce-author': data.author ? data.author : 'anonymous'
+            }
+          })
         });
       });
     },

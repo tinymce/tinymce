@@ -85,11 +85,9 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
         'input'
       ),
       Assertions.sAssertStructure('"tox-dialog__scroll-disable" should not have been added to the body',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('body', {
-            classes: [ arr.not('tox-dialog__disable-scroll') ]
-          });
-        }),
+        ApproxStructure.build((s, str, arr) => s.element('body', {
+          classes: [ arr.not('tox-dialog__disable-scroll') ]
+        })),
         Body.body()
       ),
       Mouse.sTrueClickOn(Body.body(), 'root:body'),

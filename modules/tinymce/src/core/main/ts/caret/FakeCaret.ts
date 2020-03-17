@@ -38,7 +38,7 @@ const isTableCell = (node: Node) => NodeType.isElement(node) && /^(TD|TH)$/i.tes
 
 const getAbsoluteClientRect = (root: HTMLElement, element: HTMLElement, before: boolean): GeomClientRect.ClientRect => {
   const clientRect = GeomClientRect.collapse(element.getBoundingClientRect(), before);
-  let docElm, scrollX, scrollY, margin, rootRect;
+  let docElm; let scrollX; let scrollY; let margin; let rootRect;
 
   if (root.tagName === 'BODY') {
     docElm = root.ownerDocument.documentElement;
@@ -71,7 +71,7 @@ const getAbsoluteClientRect = (root: HTMLElement, element: HTMLElement, before: 
 };
 
 const trimInlineCaretContainers = (root: Node): void => {
-  let contentEditableFalseNodes, node, sibling, i, data;
+  let contentEditableFalseNodes; let node; let sibling; let i; let data;
 
   contentEditableFalseNodes = DomQuery('*[contentEditable=false]', root);
   for (i = 0; i < contentEditableFalseNodes.length; i++) {
@@ -103,12 +103,12 @@ const trimInlineCaretContainers = (root: Node): void => {
 
 export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Node) => boolean, hasFocus: () => boolean): FakeCaret => {
   const lastVisualCaret = Cell<Option<CaretState>>(Option.none());
-  let cursorInterval, caretContainerNode;
+  let cursorInterval; let caretContainerNode;
   const rootBlock = Settings.getForcedRootBlock(editor);
   const caretBlock = rootBlock.length > 0 ? rootBlock : 'p';
 
   const show = (before: boolean, element: HTMLElement): Range => {
-    let clientRect, rng;
+    let clientRect; let rng;
 
     hide();
 
@@ -188,9 +188,8 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
 
   const destroy = () => Delay.clearInterval(cursorInterval);
 
-  const getCss = () => {
-    return (
-      '.mce-visual-caret {' +
+  const getCss = () => (
+    '.mce-visual-caret {' +
       'position: absolute;' +
       'background-color: black;' +
       'background-color: currentcolor;' +
@@ -207,8 +206,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
       'margin: 0;' +
       'padding: 0;' +
       '}'
-    );
-  };
+  );
 
   return {
     show,

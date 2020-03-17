@@ -10,37 +10,32 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('SpecialKeyingTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build(
-      Container.sketch({
-        dom: {
-          classes: [ 'special-keying' ]
-        },
-        containerBehaviours: Behaviour.derive([
-          Focusing.config({ }),
-          Keying.config({
-            mode: 'special',
-            onSpace: store.adderH('space'),
-            onEnter: store.adderH('enter'),
-            onShiftEnter: store.adderH('shift+enter'),
-            onLeft: store.adderH('left'),
-            onUp: store.adderH('up'),
-            onDown: store.adderH('down'),
-            onRight: store.adderH('right'),
-            onEscape: store.adderH('escape')
-          })
-        ])
-      })
-    );
-
-  }, (doc, body, gui, component, store) => {
-    const press = (expected: string, key: number, modifiers: { }) => {
-      return GeneralSteps.sequence([
-        store.sClear,
-        Keyboard.sKeydown(doc, key, modifiers),
-        store.sAssertEq('Pressing ' + expected, [ expected ])
-      ]);
-    };
+  GuiSetup.setup((store, doc, body) => GuiFactory.build(
+    Container.sketch({
+      dom: {
+        classes: [ 'special-keying' ]
+      },
+      containerBehaviours: Behaviour.derive([
+        Focusing.config({ }),
+        Keying.config({
+          mode: 'special',
+          onSpace: store.adderH('space'),
+          onEnter: store.adderH('enter'),
+          onShiftEnter: store.adderH('shift+enter'),
+          onLeft: store.adderH('left'),
+          onUp: store.adderH('up'),
+          onDown: store.adderH('down'),
+          onRight: store.adderH('right'),
+          onEscape: store.adderH('escape')
+        })
+      ])
+    })
+  ), (doc, body, gui, component, store) => {
+    const press = (expected: string, key: number, modifiers: { }) => GeneralSteps.sequence([
+      store.sClear,
+      Keyboard.sKeydown(doc, key, modifiers),
+      store.sAssertEq('Pressing ' + expected, [ expected ])
+    ]);
 
     return [
       GuiSetup.mSetupKeyLogger(body),
@@ -55,5 +50,7 @@ UnitTest.asynctest('SpecialKeyingTest', (success, failure) => {
       press('escape', Keys.escape(), { }),
       GuiSetup.mTeardownKeyLogger(body, [ ])
     ];
-  }, () => { success(); }, failure);
+  }, () => {
+    success();
+  }, failure);
 });

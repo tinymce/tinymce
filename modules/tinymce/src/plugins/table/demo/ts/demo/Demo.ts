@@ -6,19 +6,19 @@ tinymce.init({
   toolbar: 'table tableprops tablecellprops tablerowprops | tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol | tablecutrow tablecopyrow tablepasterowbefore tablepasterowafter',
   media_dimensions: false,
   table_class_list: [
-    {title: 'None', value: ''},
-    {title: 'Dog', value: 'dog'},
-    {title: 'Cat', value: 'cat'}
+    { title: 'None', value: '' },
+    { title: 'Dog', value: 'dog' },
+    { title: 'Cat', value: 'cat' }
   ],
   table_row_class_list: [
-    {title: 'None', value: ''},
-    {title: 'Fish', value: 'fish'},
-    {title: 'Mouse', value: 'mouse'}
+    { title: 'None', value: '' },
+    { title: 'Fish', value: 'fish' },
+    { title: 'Mouse', value: 'mouse' }
   ],
   table_cell_class_list: [
-    {title: 'None', value: ''},
-    {title: 'Bird', value: 'bird'},
-    {title: 'Snake', value: 'snake'}
+    { title: 'None', value: '' },
+    { title: 'Bird', value: 'bird' },
+    { title: 'Snake', value: 'snake' }
   ],
   table_style_by_css: true,
   // table grid TBD

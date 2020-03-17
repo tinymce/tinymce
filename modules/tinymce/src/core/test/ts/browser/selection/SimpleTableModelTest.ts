@@ -90,43 +90,43 @@ UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', function (
     ])),
     Logger.t('subsection', GeneralSteps.sequence([
       Logger.t('Table 1x1 subsection (1,1)-(1,1)', Chain.asStep({}, [
-        cFromDomSubSection('<table><tbody><tr><td>A</td></tr></tbody></table>', [0, 0, 0], [0, 0, 0]),
+        cFromDomSubSection('<table><tbody><tr><td>A</td></tr></tbody></table>', [ 0, 0, 0 ], [ 0, 0, 0 ]),
         cAssertWidth(1),
         cAssertHeight(1),
         cAssertModelAsHtml('<table><tbody><tr><td>A</td></tr></tbody></table>')
       ])),
       Logger.t('Table 2x2 subsection (1,1)-(2,1)', Chain.asStep({}, [
-        cFromDomSubSection('<table><tbody><tr><td>A</td><td>B</td></tr><tr><td>C</td><td>D</td></tr></tbody></table>', [0, 0, 0], [0, 0, 1]),
+        cFromDomSubSection('<table><tbody><tr><td>A</td><td>B</td></tr><tr><td>C</td><td>D</td></tr></tbody></table>', [ 0, 0, 0 ], [ 0, 0, 1 ]),
         cAssertWidth(2),
         cAssertHeight(1),
         cAssertModelAsHtml('<table><tbody><tr><td>A</td><td>B</td></tr></tbody></table>')
       ])),
       Logger.t('Table 2x2 subsection (2,1)-(1,1)', Chain.asStep({}, [
-        cFromDomSubSection('<table><tbody><tr><td>A</td><td>B</td></tr><tr><td>C</td><td>D</td></tr></tbody></table>', [0, 0, 1], [0, 0, 0]),
+        cFromDomSubSection('<table><tbody><tr><td>A</td><td>B</td></tr><tr><td>C</td><td>D</td></tr></tbody></table>', [ 0, 0, 1 ], [ 0, 0, 0 ]),
         cAssertWidth(2),
         cAssertHeight(1),
         cAssertModelAsHtml('<table><tbody><tr><td>A</td><td>B</td></tr></tbody></table>')
       ])),
       Logger.t('Table 2x2 subsection (1,1)-(1,2)', Chain.asStep({}, [
-        cFromDomSubSection('<table><tbody><tr><td>A</td><td>B</td></tr><tr><td>C</td><td>D</td></tr></tbody></table>', [0, 0, 0], [0, 1, 0]),
+        cFromDomSubSection('<table><tbody><tr><td>A</td><td>B</td></tr><tr><td>C</td><td>D</td></tr></tbody></table>', [ 0, 0, 0 ], [ 0, 1, 0 ]),
         cAssertWidth(1),
         cAssertHeight(2),
         cAssertModelAsHtml('<table><tbody><tr><td>A</td></tr><tr><td>C</td></tr></tbody></table>')
       ])),
       Logger.t('Table 2x2 subsection (1,2)-(1,1)', Chain.asStep({}, [
-        cFromDomSubSection('<table><tbody><tr><td>A</td><td>B</td></tr><tr><td>C</td><td>D</td></tr></tbody></table>', [0, 1, 0], [0, 0, 0]),
+        cFromDomSubSection('<table><tbody><tr><td>A</td><td>B</td></tr><tr><td>C</td><td>D</td></tr></tbody></table>', [ 0, 1, 0 ], [ 0, 0, 0 ]),
         cAssertWidth(1),
         cAssertHeight(2),
         cAssertModelAsHtml('<table><tbody><tr><td>A</td></tr><tr><td>C</td></tr></tbody></table>')
       ])),
       Logger.t('Table 3x3 subsection (2,2)-(3,3)', Chain.asStep({}, [
-        cFromDomSubSection('<table><tbody><tr><td>A</td><td>B</td><td>C</td></tr><tr><td>D</td><td>E</td><td>F</td></tr><tr><td>G</td><td>H</td><td>I</td></tr></tbody></table>', [0, 1, 1], [0, 2, 2]),
+        cFromDomSubSection('<table><tbody><tr><td>A</td><td>B</td><td>C</td></tr><tr><td>D</td><td>E</td><td>F</td></tr><tr><td>G</td><td>H</td><td>I</td></tr></tbody></table>', [ 0, 1, 1 ], [ 0, 2, 2 ]),
         cAssertWidth(2),
         cAssertHeight(2),
         cAssertModelAsHtml('<table><tbody><tr><td>E</td><td>F</td></tr><tr><td>H</td><td>I</td></tr></tbody></table>')
       ])),
       Logger.t('Table 3x3 subsection (3,3)-(2,2)', Chain.asStep({}, [
-        cFromDomSubSection('<table><tbody><tr><td>A</td><td>B</td><td>C</td></tr><tr><td>D</td><td>E</td><td>F</td></tr><tr><td>G</td><td>H</td><td>I</td></tr></tbody></table>', [0, 2, 2], [0, 1, 1]),
+        cFromDomSubSection('<table><tbody><tr><td>A</td><td>B</td><td>C</td></tr><tr><td>D</td><td>E</td><td>F</td></tr><tr><td>G</td><td>H</td><td>I</td></tr></tbody></table>', [ 0, 2, 2 ], [ 0, 1, 1 ]),
         cAssertWidth(2),
         cAssertHeight(2),
         cAssertModelAsHtml('<table><tbody><tr><td>E</td><td>F</td></tr><tr><td>H</td><td>I</td></tr></tbody></table>')

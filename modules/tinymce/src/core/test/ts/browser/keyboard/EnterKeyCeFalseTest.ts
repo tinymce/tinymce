@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', function
   Theme();
 
   const pressEnter = function (editor: Editor, evt?: any) {
-    const dom = editor.dom, target = editor.selection.getNode();
+    const dom = editor.dom; const target = editor.selection.getNode();
 
     evt = Tools.extend({ keyCode: 13 }, evt);
 

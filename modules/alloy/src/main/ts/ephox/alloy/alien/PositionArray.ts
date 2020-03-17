@@ -12,12 +12,10 @@ const generate = <T, U extends PositionableUnit>(xs: T[], f: (thing: T, n: numbe
 
   const r = Arr.foldl(xs, (b, a) => {
     const value = f(a, b.len);
-    return value.fold(Fun.constant(b), (v) => {
-      return {
-        len: v.finish(),
-        list: b.list.concat([v])
-      };
-    });
+    return value.fold(Fun.constant(b), (v) => ({
+      len: v.finish(),
+      list: b.list.concat([ v ])
+    }));
   }, init);
 
   return r.list;

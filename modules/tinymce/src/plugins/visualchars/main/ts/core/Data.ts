@@ -11,7 +11,7 @@ export const charMap = {
 };
 
 export const charMapToRegExp = function (charMap, global?) {
-  let key, regExp = '';
+  let key; let regExp = '';
 
   for (key in charMap) {
     regExp += key;
@@ -21,7 +21,7 @@ export const charMapToRegExp = function (charMap, global?) {
 };
 
 export const charMapToSelector = function (charMap) {
-  let key, selector = '';
+  let key; let selector = '';
 
   for (key in charMap) {
     if (selector) {

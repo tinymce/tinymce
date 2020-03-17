@@ -63,13 +63,13 @@ const findPatternStartFromSpot = (dom: DOMUtils, pattern: InlinePattern, block: 
         rng.setStart(nextSpot.container, nextSpot.offset);
         rng.setEnd(spot.container, spot.offset);
         return rng;
-      }).filter((rng) => {
+      }).filter((rng) =>
         // Ensure the range content matches the start
-        return rng.toString() === startPattern;
-      }).orThunk(() => {
+        rng.toString() === startPattern
+      ).orThunk(() =>
         // No match found, so continue searching
-        return findPatternStartFromSpot(dom, pattern, block, Spot.point(spot.container, 0));
-      });
+        findPatternStartFromSpot(dom, pattern, block, Spot.point(spot.container, 0))
+      );
     }
   });
 };
@@ -222,7 +222,7 @@ const applyPatternWithContent = (editor: Editor, pattern: InlinePattern, startMa
   applyPattern(editor, pattern, patternRange);
 };
 
-const addMarkers = (dom: DOMUtils, matches: InlinePatternMatch[]): (InlinePatternMatch & { endMarker: Marker, startMarker: Marker })[] => {
+const addMarkers = (dom: DOMUtils, matches: InlinePatternMatch[]): (InlinePatternMatch & { endMarker: Marker; startMarker: Marker })[] => {
   const markerPrefix = Id.generate('mce_textpattern');
 
   // Add end markers

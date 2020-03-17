@@ -93,11 +93,9 @@ const toDetailList = (grid: Structs.RowCells[], generators: Generators): RowData
   return deriveRows(rendered, generators);
 };
 
-const findInWarehouse = (warehouse: Warehouse, element: Element): Option<DetailExt> => {
-  return Arr.findMap(warehouse.all, (r) =>
-    Arr.find(r.cells(), (e) => Compare.eq(element, e.element()))
-  );
-};
+const findInWarehouse = (warehouse: Warehouse, element: Element): Option<DetailExt> => Arr.findMap(warehouse.all, (r) =>
+  Arr.find(r.cells(), (e) => Compare.eq(element, e.element()))
+);
 
 type EqEle = (e1: Element, e2: Element) => boolean;
 type Operation<INFO, GW extends GeneratorsWrapper> = (model: Structs.RowCells[], info: INFO, eq: EqEle, w: GW) => TableOperationResult;
@@ -132,25 +130,19 @@ const run = <RAW, INFO, GW extends GeneratorsWrapper>(operation: Operation<INFO,
   });
 };
 
-const onCell = (warehouse: Warehouse, target: TargetElement): Option<DetailExt> => {
-  return TableLookup.cell(target.element()).bind((cell) => findInWarehouse(warehouse, cell));
-};
+const onCell = (warehouse: Warehouse, target: TargetElement): Option<DetailExt> => TableLookup.cell(target.element()).bind((cell) => findInWarehouse(warehouse, cell));
 
-const onPaste = (warehouse: Warehouse, target: TargetPaste): Option<ExtractPaste> => {
-  return TableLookup.cell(target.element()).bind((cell) => findInWarehouse(warehouse, cell).map((details) => {
-    const value: ExtractPaste = {
-      ...details,
-      generators: target.generators,
-      clipboard: target.clipboard
-    };
-    return value;
-  }));
-};
+const onPaste = (warehouse: Warehouse, target: TargetPaste): Option<ExtractPaste> => TableLookup.cell(target.element()).bind((cell) => findInWarehouse(warehouse, cell).map((details) => {
+  const value: ExtractPaste = {
+    ...details,
+    generators: target.generators,
+    clipboard: target.clipboard
+  };
+  return value;
+}));
 
 const onPasteRows = (warehouse: Warehouse, target: TargetPasteRows): Option<ExtractPasteRows> => {
-  const details = Arr.map(target.selection(), (cell) => TableLookup.cell(cell).bind((lc) => {
-    return findInWarehouse(warehouse, lc);
-  }));
+  const details = Arr.map(target.selection(), (cell) => TableLookup.cell(cell).bind((lc) => findInWarehouse(warehouse, lc)));
   const cells = Options.cat(details);
   return cells.length > 0 ? Option.some(
     {
@@ -168,9 +160,7 @@ const onUnmergable = (_warehouse: Warehouse, target: TargetUnmergable): Option<E
   target.unmergable();
 
 const onCells = (warehouse: Warehouse, target: TargetSelection): Option<DetailExt[]> => {
-  const details = Arr.map(target.selection(), (cell) => {
-    return TableLookup.cell(cell).bind((lc) => findInWarehouse(warehouse, lc));
-  });
+  const details = Arr.map(target.selection(), (cell) => TableLookup.cell(cell).bind((lc) => findInWarehouse(warehouse, lc)));
   const cells = Options.cat(details);
   return cells.length > 0 ? Option.some(cells) : Option.none();
 };

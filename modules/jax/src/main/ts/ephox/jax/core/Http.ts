@@ -8,33 +8,31 @@ import { DataType } from './DataType';
 import { RequestBody, ResponseBodyDataTypes, ResponseTypeMap, textData } from './HttpData';
 import { buildUrl } from './UrlBuilder';
 
-const getContentType = (requestBody: RequestBody): Option<string> => {
-  return Option.from(requestBody).bind((b) => {
-    switch (b.type) {
-      case DataType.JSON: return Option.some('application/json');
-      case DataType.FormData: return Option.some('application/x-www-form-urlencoded; charset=UTF-8');
-      case DataType.MultipartFormData: return Option.none();
-      case DataType.Text: return Option.some('text/plain');
-      default: return Option.some('text/plain');
-    }
-  });
-};
+const getContentType = (requestBody: RequestBody): Option<string> => Option.from(requestBody).bind((b) => {
+  switch (b.type) {
+  case DataType.JSON: return Option.some('application/json');
+  case DataType.FormData: return Option.some('application/x-www-form-urlencoded; charset=UTF-8');
+  case DataType.MultipartFormData: return Option.none();
+  case DataType.Text: return Option.some('text/plain');
+  default: return Option.some('text/plain');
+  }
+});
 
 const getAccept = (responseType: ResponseBodyDataTypes) => {
   switch (responseType) {
-    case DataType.Blob: return 'application/octet-stream';
-    case DataType.JSON: return 'application/json, text/javascript';
-    case DataType.Text: return 'text/plain';
-    default: return '';
+  case DataType.Blob: return 'application/octet-stream';
+  case DataType.JSON: return 'application/json, text/javascript';
+  case DataType.Text: return 'text/plain';
+  default: return '';
   }
 };
 
 const getResponseType = (responseType: ResponseBodyDataTypes): Option<'blob' | 'text'> => {
   switch (responseType) {
-    case DataType.JSON: return Option.none();
-    case DataType.Blob: return Option.some<'blob' | 'text'>('blob');
-    case DataType.Text: return Option.some<'blob' | 'text'>('text');
-    default: return Option.none();
+  case DataType.JSON: return Option.none();
+  case DataType.Blob: return Option.some<'blob' | 'text'>('blob');
+  case DataType.Text: return Option.some<'blob' | 'text'>('text');
+  default: return Option.none();
   }
 };
 
@@ -85,59 +83,49 @@ const getData = (body: RequestBody) => Option.from(body).map((b) => {
   }
 });
 
-const send = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>) => {
-  return FutureResult.nu<ResponseTypeMap[T], HttpError>((callback) => {
-    const request = new XMLHttpRequest();
-    request.open(init.method, buildUrl(init.url, Option.from(init.query)), true); // enforced async! enforced type as String!
+const send = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>) => FutureResult.nu<ResponseTypeMap[T], HttpError>((callback) => {
+  const request = new XMLHttpRequest();
+  request.open(init.method, buildUrl(init.url, Option.from(init.query)), true); // enforced async! enforced type as String!
 
-    const options = createOptions(init);
-    applyOptions(request, options);
+  const options = createOptions(init);
+  applyOptions(request, options);
 
-    const onError = () => {
-      ResponseError.handle(init.url, init.responseType, request).get((err) => callback(Result.error(err)));
-    };
+  const onError = () => {
+    ResponseError.handle(init.url, init.responseType, request).get((err) => callback(Result.error(err)));
+  };
 
-    const onLoad = () => {
-      // Local files and Cors errors return status 0.
-      // The only way we can decifer a local request is request url starts with 'file:' and allow local files to succeed.
-      if (request.status === 0 && ! Strings.startsWith(init.url, 'file:')) {
-        onError();
-      } else if (request.status < 100 || request.status >= 400) {
-        onError();
-      } else {
-        ResponseSuccess.validate(init.responseType, request).get(callback);
-      }
-    };
+  const onLoad = () => {
+    // Local files and Cors errors return status 0.
+    // The only way we can decifer a local request is request url starts with 'file:' and allow local files to succeed.
+    if (request.status === 0 && ! Strings.startsWith(init.url, 'file:')) {
+      onError();
+    } else if (request.status < 100 || request.status >= 400) {
+      onError();
+    } else {
+      ResponseSuccess.validate(init.responseType, request).get(callback);
+    }
+  };
 
-    request.onerror = onError;
-    request.onload = onLoad;
+  request.onerror = onError;
+  request.onload = onLoad;
 
-    getData(init.body).fold(
-      () => request.send(),
-      (data) => {
-        request.send(data);
-      }
-    );
-  });
-};
+  getData(init.body).fold(
+    () => request.send(),
+    (data) => {
+      request.send(data);
+    }
+  );
+});
 
 const empty = () => textData('');
 
-const post = <T extends keyof ResponseTypeMap>(init: HttpTypes.PostPutInit<T>) => {
-  return send({ ...init, method: HttpTypes.HttpMethod.Post });
-};
+const post = <T extends keyof ResponseTypeMap>(init: HttpTypes.PostPutInit<T>) => send({ ...init, method: HttpTypes.HttpMethod.Post });
 
-const put = <T extends keyof ResponseTypeMap>(init: HttpTypes.PostPutInit<T>) => {
-  return send({ ...init, method: HttpTypes.HttpMethod.Put });
-};
+const put = <T extends keyof ResponseTypeMap>(init: HttpTypes.PostPutInit<T>) => send({ ...init, method: HttpTypes.HttpMethod.Put });
 
-const get = <T extends keyof ResponseTypeMap>(init: HttpTypes.GetDelInit<T>) => {
-  return send({ ...init, method: HttpTypes.HttpMethod.Get, body: empty() });
-};
+const get = <T extends keyof ResponseTypeMap>(init: HttpTypes.GetDelInit<T>) => send({ ...init, method: HttpTypes.HttpMethod.Get, body: empty() });
 
-const del = <T extends keyof ResponseTypeMap>(init: HttpTypes.GetDelInit<T>) => {
-  return send({ ...init, method: HttpTypes.HttpMethod.Delete, body: empty() });
-};
+const del = <T extends keyof ResponseTypeMap>(init: HttpTypes.GetDelInit<T>) => send({ ...init, method: HttpTypes.HttpMethod.Delete, body: empty() });
 
 interface FetchReaderResult {
   done: boolean;
@@ -150,66 +138,60 @@ const sendProgress = (init: HttpTypes.DownloadHttpRequest, loaded: number) => {
   }
 };
 
-const getMimeType = (headers: Headers) => {
-  return Option.from(headers.get('content-type')).map((value) => {
-    return value.split(';')[0];
-  });
-};
+const getMimeType = (headers: Headers) => Option.from(headers.get('content-type')).map((value) => value.split(';')[0]);
 
-const fetchDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, HttpError> => {
-  return FutureResult.nu((resolve) => {
-    const fail = (message: string, status: number) => {
-      resolve(Result.error({
-        message,
-        status,
-        responseText: ''
-      }));
-    };
+const fetchDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, HttpError> => FutureResult.nu((resolve) => {
+  const fail = (message: string, status: number) => {
+    resolve(Result.error({
+      message,
+      status,
+      responseText: ''
+    }));
+  };
 
-    const failOnError = (e: Error) => {
-      fail(`Could not load url ${init.url}`, HttpErrorCode.InternalServerError);
-    };
+  const failOnError = (e: Error) => {
+    fail(`Could not load url ${init.url}`, HttpErrorCode.InternalServerError);
+  };
 
-    const downloadStream = (response: Response) => {
-      const body = response.body;
-      const chunks: Array<Uint8Array> = [];
-      let loaded = 0;
-      const mime = getMimeType(response.headers);
+  const downloadStream = (response: Response) => {
+    const body = response.body;
+    const chunks: Array<Uint8Array> = [];
+    let loaded = 0;
+    const mime = getMimeType(response.headers);
 
-      sendProgress(init, 0);
+    sendProgress(init, 0);
 
-      if (body) {
-        const reader = body.getReader();
-        const process = (result: FetchReaderResult) => {
-          if (result.done) {
-            resolve(Result.value(new Blob(chunks, { type: mime.getOr('') })));
-          } else {
-            chunks.push(result.value);
-            loaded += result.value.length;
-            sendProgress(init, loaded);
-            reader.read().then(process).catch(failOnError);
-          }
-        };
+    if (body) {
+      const reader = body.getReader();
+      const process = (result: FetchReaderResult) => {
+        if (result.done) {
+          resolve(Result.value(new Blob(chunks, { type: mime.getOr('') })));
+        } else {
+          chunks.push(result.value);
+          loaded += result.value.length;
+          sendProgress(init, loaded);
+          reader.read().then(process).catch(failOnError);
+        }
+      };
 
-        reader.read().then(process).catch(failOnError);
-      } else {
-        fail('Failed to get response body', HttpErrorCode.InternalServerError);
-      }
-    };
+      reader.read().then(process).catch(failOnError);
+    } else {
+      fail('Failed to get response body', HttpErrorCode.InternalServerError);
+    }
+  };
 
-    fetch(init.url, {
-      method: 'get',
-      headers: init.headers,
-      credentials: init.credentials ? 'include' : 'omit'
-    }).then((response) => {
-      if (response.status < 100 || response.status >= 400) {
-        fail(`Could not load url ${init.url}`, response.status);
-      } else {
-        downloadStream(response);
-      }
-    }).catch(failOnError);
-  });
-};
+  fetch(init.url, {
+    method: 'get',
+    headers: init.headers,
+    credentials: init.credentials ? 'include' : 'omit'
+  }).then((response) => {
+    if (response.status < 100 || response.status >= 400) {
+      fail(`Could not load url ${init.url}`, response.status);
+    } else {
+      downloadStream(response);
+    }
+  }).catch(failOnError);
+});
 
 const fallbackDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, HttpError> => {
   sendProgress(init, 0);
@@ -224,9 +206,7 @@ const fallbackDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blo
   });
 };
 
-const download = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, HttpError> => {
-  return Obj.get(Global, 'fetch').exists(Type.isFunction) ? fetchDownload(init) : fallbackDownload(init);
-};
+const download = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, HttpError> => Obj.get(Global, 'fetch').exists(Type.isFunction) ? fetchDownload(init) : fallbackDownload(init);
 
 export {
   send,

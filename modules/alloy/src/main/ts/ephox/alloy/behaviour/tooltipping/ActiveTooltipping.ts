@@ -33,16 +33,16 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
         dom: tooltipConfig.tooltipDom,
         components: tooltipConfig.tooltipComponents,
         events: AlloyEvents.derive(
-          tooltipConfig.mode === 'normal'
-            ? [
+          tooltipConfig.mode === 'normal' ?
+            [
               AlloyEvents.run(NativeEvents.mouseover(), (_) => {
                 AlloyTriggers.emit(comp, ShowTooltipEvent);
               }),
               AlloyEvents.run(NativeEvents.mouseout(), (_) => {
                 AlloyTriggers.emit(comp, HideTooltipEvent);
               })
-            ]
-            : []
+            ] :
+            []
         ),
 
         behaviours: Behaviour.derive([
@@ -73,15 +73,17 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
         // TODO: Think about the types for this, or find a better way for this
         // to rely on receiving.
         const receivingData = message as unknown as ReceivingInternalEvent;
-        if (Arr.contains(receivingData.channels(), ExclusivityChannel)) { hide(comp); }
+        if (Arr.contains(receivingData.channels(), ExclusivityChannel)) {
+          hide(comp);
+        }
       }),
       AlloyEvents.runOnDetached((comp) => {
         hide(comp);
       })
     ],
     (
-      tooltipConfig.mode === 'normal'
-        ? [
+      tooltipConfig.mode === 'normal' ?
+        [
           AlloyEvents.run(NativeEvents.focusin(), (comp) => {
             AlloyTriggers.emit(comp, ShowTooltipEvent);
           }),
@@ -93,15 +95,15 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
           }),
           AlloyEvents.run(NativeEvents.mouseout(), (comp) => {
             AlloyTriggers.emit(comp, HideTooltipEvent);
-          }),
-        ]
-        : [
+          })
+        ] :
+        [
           AlloyEvents.run(SystemEvents.highlight(), (comp, se) => {
             AlloyTriggers.emit(comp, ShowTooltipEvent);
           }),
           AlloyEvents.run(SystemEvents.dehighlight(), (comp) => {
             AlloyTriggers.emit(comp, HideTooltipEvent);
-          }),
+          })
         ]
     )
   ]));

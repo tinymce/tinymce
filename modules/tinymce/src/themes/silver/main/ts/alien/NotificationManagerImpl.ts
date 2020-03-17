@@ -22,15 +22,15 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
 
   const getLayoutDirection = (rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc') => {
     switch (rel) {
-      case 'bc-bc':
-        return LayoutInside.south;
-      case 'tc-tc':
-        return LayoutInside.north;
-      case 'tc-bc':
-        return Layout.north;
-      case 'bc-tc':
-      default:
-        return Layout.south;
+    case 'bc-bc':
+      return LayoutInside.south;
+    case 'tc-tc':
+      return LayoutInside.north;
+    case 'tc-bc':
+      return Layout.north;
+    case 'bc-tc':
+    default:
+      return Layout.south;
     }
   };
 
@@ -67,7 +67,7 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
     const notification = GuiFactory.build(
       Notification.sketch({
         text: settings.text,
-        level: Arr.contains(['success', 'error', 'warning', 'warn', 'info'], settings.type) ? settings.type : undefined,
+        level: Arr.contains([ 'success', 'error', 'warning', 'warn', 'info' ], settings.type) ? settings.type : undefined,
         progress: settings.progressBar === true,
         icon: Option.from(settings.icon),
         closeButton: !hideCloseButton,
@@ -85,7 +85,7 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
         },
         lazySink: extras.backstage.shared.getSink,
         fireDismissalEventInstead: { },
-        ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { } },
+        ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { }},
       })
     );
 

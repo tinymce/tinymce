@@ -91,7 +91,7 @@ const NONE: Option<any> = (() => {
     isNone: Fun.always,
     getOr: id,
     getOrThunk: call,
-    getOrDie (msg) {
+    getOrDie(msg) {
       throw new Error(msg || 'error: getOrDie called on none.');
     },
     getOrNull: Fun.constant(null),
@@ -106,7 +106,7 @@ const NONE: Option<any> = (() => {
     filter: none,
     equals: eq,
     equals_: eq,
-    toArray () { return []; },
+    toArray() { return []; },
     toString: Fun.constant('none()')
   };
   return me;
@@ -115,10 +115,10 @@ const NONE: Option<any> = (() => {
 const some = <T>(a: T): Option<T> => {
   const constant_a = Fun.constant(a);
 
-  const self = () => {
+  const self = () =>
     // can't Fun.constant this one
-    return me;
-  };
+    me
+  ;
 
   const bind = function <T2> (f: (value: T) => T2) {
     return f(a);
@@ -145,12 +145,12 @@ const some = <T>(a: T): Option<T> => {
     forall: bind,
     filter: <Q extends T>(f: (value: T) => value is Q): Option<Q> =>
       f(a) ? me as Option<Q> : NONE,
-    toArray: () => [a],
+    toArray: () => [ a ],
     toString: () => 'some(' + a + ')',
-    equals (o: Option<T>) {
+    equals(o: Option<T>) {
       return o.is(a);
     },
-    equals_<T2> (o: Option<T2>, elementEq: (a: T, b: T2) => boolean) {
+    equals_<T2>(o: Option<T2>, elementEq: (a: T, b: T2) => boolean) {
       return o.fold(
         Fun.never,
         function (b) { return elementEq(a, b); }

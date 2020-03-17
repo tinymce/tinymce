@@ -65,7 +65,7 @@ const matchName = function (dom: DOMUtils, node: Node, format) {
 };
 
 const matchItems = function (dom: DOMUtils, node: Node, format, itemName: string, similar: boolean, vars: FormatVars) {
-  let key, value;
+  let key; let value;
   const items = format[itemName];
   let i;
 
@@ -110,7 +110,7 @@ const matchItems = function (dom: DOMUtils, node: Node, format, itemName: string
 
 const matchNode = function (ed: Editor, node: Node, name: string, vars?: FormatVars, similar?: boolean) {
   const formatList = ed.formatter.get(name);
-  let format, i, x, classes;
+  let format; let i; let x; let classes;
   const dom = ed.dom;
 
   if (formatList && node) {
@@ -168,7 +168,7 @@ const matchAll = function (editor: Editor, names: string[], vars: FormatVars) {
   // Check start of selection for formats
   startElement = editor.selection.getStart();
   editor.dom.getParent(startElement, function (node) {
-    let i, name;
+    let i; let name;
 
     for (i = 0; i < names.length; i++) {
       name = names[i];
@@ -185,7 +185,7 @@ const matchAll = function (editor: Editor, names: string[], vars: FormatVars) {
 
 const canApply = function (editor: Editor, name: string) {
   const formatList = editor.formatter.get(name) as Format[];
-  let startNode, parents, i, x, selector;
+  let startNode; let parents; let i; let x; let selector;
   const dom = editor.dom;
 
   if (formatList) {

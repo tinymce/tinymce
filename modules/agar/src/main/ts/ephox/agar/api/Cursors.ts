@@ -17,14 +17,14 @@ export interface CursorPath {
   foffset: () => number;
 }
 
-const range = (obj: { start: Element<any>; soffset: number; finish: Element<any>; foffset: number; }): CursorRange => ({
+const range = (obj: { start: Element<any>; soffset: number; finish: Element<any>; foffset: number }): CursorRange => ({
   start: Fun.constant(obj.start),
   soffset: Fun.constant(obj.soffset),
   finish: Fun.constant(obj.finish),
   foffset: Fun.constant(obj.foffset)
 });
 
-const path = (obj: { startPath: number[]; soffset: number; finishPath: number[]; foffset: number; }): CursorPath => ({
+const path = (obj: { startPath: number[]; soffset: number; finishPath: number[]; foffset: number }): CursorPath => ({
   startPath: Fun.constant(obj.startPath),
   soffset: Fun.constant(obj.soffset),
   finishPath: Fun.constant(obj.finishPath),
@@ -67,8 +67,8 @@ const pathFrom = (spec: CursorSpec | RangeSpec): CursorPath =>
 
 const follow = (container: Element<any>, calcPath: number[]): Result<Element<any>, string> =>
   Hierarchy.follow(container, calcPath).fold(() =>
-      Result.error('Could not follow path: ' + calcPath.join(',')),
-    Result.value
+    Result.error('Could not follow path: ' + calcPath.join(',')),
+  Result.value
   );
 
 const followPath = (container: Element<any>, calcPath: CursorPath): Result<CursorRange, string> =>

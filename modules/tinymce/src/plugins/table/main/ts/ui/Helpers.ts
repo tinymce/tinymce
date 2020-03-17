@@ -124,7 +124,7 @@ const getAdvancedTab = (dialogName: 'table' | 'row' | 'cell') => {
     label: 'Border width'
   };
 
-  const items = dialogName === 'cell' ? ([borderWidth] as Types.Dialog.BodyComponentApi[]).concat(advTabItems) : advTabItems;
+  const items = dialogName === 'cell' ? ([ borderWidth ] as Types.Dialog.BodyComponentApi[]).concat(advTabItems) : advTabItems;
 
   return {
     title: 'Advanced',

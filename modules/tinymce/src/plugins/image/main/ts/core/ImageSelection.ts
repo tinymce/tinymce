@@ -36,9 +36,7 @@ const getSelectedImage = (editor: Editor): HTMLElement => {
 const splitTextBlock = (editor: Editor, figure: HTMLElement) => {
   const dom = editor.dom;
 
-  const textBlock = dom.getParent(figure.parentNode, (node: Node) => {
-    return !!editor.schema.getTextBlockElements()[node.nodeName];
-  }, editor.getBody());
+  const textBlock = dom.getParent(figure.parentNode, (node: Node) => !!editor.schema.getTextBlockElements()[node.nodeName], editor.getBody());
 
   if (textBlock) {
     return dom.split(textBlock, figure);

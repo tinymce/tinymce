@@ -17,32 +17,30 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
   const sink = Element.fromDom(document.querySelector('.mce-silver-sink'));
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
-      return GuiFactory.build(
-        Container.sketch({
-          dom: {
-            classes: [ 'colorinput-container' ]
-          },
-          components: [
-            renderColorInput({
-              name: 'alpha',
-              label: Option.some('test-color-input'),
-            }, helpers.shared, {
-              colorPicker: (callback, value) => {},
-              hasCustomColors: () => true,
-              getColors: () => [
-                { type: choiceItem, text: 'Turquoise', value: '#18BC9B' },
-                { type: choiceItem, text: 'Green', value: '#2FCC71' },
-                { type: choiceItem, text: 'Blue', value: '#3598DB' },
-                { type: choiceItem, text: 'Purple', value: '#9B59B6' },
-                { type: choiceItem, text: 'Navy Blue', value: '#34495E' }
-              ],
-              getColorCols: () => 3
-            })
-          ]
-        })
-      );
-    },
+    (store, doc, body) => GuiFactory.build(
+      Container.sketch({
+        dom: {
+          classes: [ 'colorinput-container' ]
+        },
+        components: [
+          renderColorInput({
+            name: 'alpha',
+            label: Option.some('test-color-input'),
+          }, helpers.shared, {
+            colorPicker: (callback, value) => {},
+            hasCustomColors: () => true,
+            getColors: () => [
+              { type: choiceItem, text: 'Turquoise', value: '#18BC9B' },
+              { type: choiceItem, text: 'Green', value: '#2FCC71' },
+              { type: choiceItem, text: 'Blue', value: '#3598DB' },
+              { type: choiceItem, text: 'Purple', value: '#9B59B6' },
+              { type: choiceItem, text: 'Navy Blue', value: '#34495E' }
+            ],
+            getColorCols: () => 3
+          })
+        ]
+      })
+    ),
     (doc, body, gui, component, store) => {
       const input = component.getSystem().getByDom(
         SelectorFind.descendant(component.element(), 'input').getOrDie('Could not find input in colorinput')
@@ -74,31 +72,25 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
 
       const sAssertLegendBackground = (label: string, f) => Assertions.sAssertStructure(
         label + ': Checking background of legend button',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('span', {
-            styles: {
-              'background-color': f(s, str, arr)
-            }
-          });
-        }),
+        ApproxStructure.build((s, str, arr) => s.element('span', {
+          styles: {
+            'background-color': f(s, str, arr)
+          }
+        })),
         legend.element()
       );
 
-      const sAssertContainerClasses = (label: string, f) => {
-        return Waiter.sTryUntil(
-          label + ': Checking classes on container',
-          Assertions.sAssertStructure(
-            'Checking classes only',
-            ApproxStructure.build((s, str, arr) => {
-              return s.element('div', {
-                classes: f(s, str, arr)
-                // ignore children
-              });
-            }),
-            Traverse.parent(input.element()).getOrDie('Could not find parent of input')
-          )
-        );
-      };
+      const sAssertContainerClasses = (label: string, f) => Waiter.sTryUntil(
+        label + ': Checking classes on container',
+        Assertions.sAssertStructure(
+          'Checking classes only',
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: f(s, str, arr)
+            // ignore children
+          })),
+          Traverse.parent(input.element()).getOrDie('Could not find parent of input')
+        )
+      );
 
       return [
         TestHelpers.GuiSetup.mAddStyles(doc, [
@@ -108,24 +100,22 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
         ]),
         Assertions.sAssertStructure(
           'Checking initial structure',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              children: [
-                s.element('div', {
-                  children: [
-                    // Ignore other information because it is subject to change. No oxide example yet.
-                    s.element('label', { }),
-                    s.element('div', {
-                      children: [
-                        s.element('input', { }),
-                        s.element('span', { })
-                      ]
-                    })
-                  ]
-                })
-              ]
-            });
-          }),
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            children: [
+              s.element('div', {
+                children: [
+                  // Ignore other information because it is subject to change. No oxide example yet.
+                  s.element('label', { }),
+                  s.element('div', {
+                    children: [
+                      s.element('input', { }),
+                      s.element('span', { })
+                    ]
+                  })
+                ]
+              })
+            ]
+          })),
           component.element()
         ),
 

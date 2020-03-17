@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', function (success,
         EditorManager.get(0).getBody().focus();
         EditorManager.get(1).getBody().focus();
       }),
-      Waiter.sTryUntil('Wait for selection to move', sAssertSelection(1, [0], 0, [0], 0), 10, 3000),
+      Waiter.sTryUntil('Wait for selection to move', sAssertSelection(1, [ 0 ], 0, [ 0 ], 0), 10, 3000),
       Step.sync(function () {
         const caretElm0 = EditorManager.get(0).getBody().querySelector('[data-mce-caret]');
         const caretElm1 = EditorManager.get(1).getBody().querySelector('[data-mce-caret]');

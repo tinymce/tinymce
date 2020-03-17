@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function (success, fai
   });
 
   suite.asyncTest('setInterval', function (_, done) {
-    let count = 0, id;
+    let count = 0; let id;
 
     id = Delay.setInterval(function () {
       if (++count === 2) {
@@ -59,7 +59,7 @@ UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function (success, fai
   });
 
   suite.asyncTest('setEditorInterval', function (_, done) {
-    let count = 0, id;
+    let count = 0; let id;
     const fakeEditor = {} as Editor;
 
     id = Delay.setEditorInterval(fakeEditor, function () {
@@ -95,7 +95,7 @@ UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function (success, fai
     fn(2);
 
     Delay.setTimeout(function () {
-      LegacyUnit.deepEqual(args, [2]);
+      LegacyUnit.deepEqual(args, [ 2 ]);
       done();
     }, 10);
   });

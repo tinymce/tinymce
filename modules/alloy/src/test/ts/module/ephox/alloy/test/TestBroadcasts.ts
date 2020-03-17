@@ -17,40 +17,34 @@ const reposition = (gui: GuiSystem) => {
   ], { });
 };
 
-const sDismiss = (label: string, gui: GuiSystem, element: Element) => {
-  return Logger.t(
-    'Broadcast dismiss: ' + label,
-    GeneralSteps.sequence([
-      Step.sync(() => {
-        dismiss(gui, element);
-      })
-    ])
-  );
-};
+const sDismiss = (label: string, gui: GuiSystem, element: Element) => Logger.t(
+  'Broadcast dismiss: ' + label,
+  GeneralSteps.sequence([
+    Step.sync(() => {
+      dismiss(gui, element);
+    })
+  ])
+);
 
-const sDismissOn = (label: string, gui: GuiSystem, selector: string) => {
-  return Logger.t(
-    'Broadcast dismiss: ' + label,
-    GeneralSteps.sequence([
-      Step.sync(() => {
-        const item = UiFinder.findIn(gui.element(), selector).getOrDie();
+const sDismissOn = (label: string, gui: GuiSystem, selector: string) => Logger.t(
+  'Broadcast dismiss: ' + label,
+  GeneralSteps.sequence([
+    Step.sync(() => {
+      const item = UiFinder.findIn(gui.element(), selector).getOrDie();
 
-        dismiss(gui, item);
-      })
-    ])
-  );
-};
+      dismiss(gui, item);
+    })
+  ])
+);
 
-const sReposition = (label: string, gui: GuiSystem) => {
-  return Logger.t(
-    'Broadcast reposition: ' + label,
-    GeneralSteps.sequence([
-      Step.sync(() => {
-        reposition(gui);
-      })
-    ])
-  );
-};
+const sReposition = (label: string, gui: GuiSystem) => Logger.t(
+  'Broadcast reposition: ' + label,
+  GeneralSteps.sequence([
+    Step.sync(() => {
+      reposition(gui);
+    })
+  ])
+);
 
 export {
   sDismissOn,

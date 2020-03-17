@@ -36,7 +36,7 @@ const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.Detai
  *  2. a data structure which can efficiently identify which cell is in which row,column position
  *  3. a list of all cells in order left-to-right, top-to-bottom
  */
-const generate = function <T extends Structs.Detail>(list: Structs.RowData<T>[]): Warehouse {
+const generate = function <T extends Structs.Detail> (list: Structs.RowData<T>[]): Warehouse {
   // list is an array of objects, made by cells and elements
   // elements: is the TR
   // cells: is an array of objects representing the cells in the row.

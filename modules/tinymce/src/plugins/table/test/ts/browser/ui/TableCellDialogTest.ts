@@ -56,36 +56,32 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
       border: ''
     };
 
-    const baseGetTest = () => {
-      return Log.stepsAsStep('TBA', 'Table: Table cell properties dialog (get data from basic cell)', [
-        tinyApis.sSetSetting('table_cell_advtab', false),
-        tinyApis.sSetContent(baseHtml),
-        tinyApis.sSelect('td', [0]),
-        TableTestUtils.sOpenTableDialog(tinyUi),
-        TableTestUtils.sAssertDialogValues(baseData, false, generalSelectors),
-        TableTestUtils.sClickDialogButton('close dialog', false)
-      ]);
-    };
+    const baseGetTest = () => Log.stepsAsStep('TBA', 'Table: Table cell properties dialog (get data from basic cell)', [
+      tinyApis.sSetSetting('table_cell_advtab', false),
+      tinyApis.sSetContent(baseHtml),
+      tinyApis.sSelect('td', [ 0 ]),
+      TableTestUtils.sOpenTableDialog(tinyUi),
+      TableTestUtils.sAssertDialogValues(baseData, false, generalSelectors),
+      TableTestUtils.sClickDialogButton('close dialog', false)
+    ]);
 
-    const baseGetSetTest = () => {
-      return Log.stepsAsStep('TBA', 'Table: Table cell properties dialog (get/set data from/to basic cell)', [
-        tinyApis.sSetSetting('table_cell_advtab', false),
-        tinyApis.sSetContent(baseHtml),
-        tinyApis.sSelect('td', [0]),
-        TableTestUtils.sOpenTableDialog(tinyUi),
-        TableTestUtils.sAssertDialogValues(baseData, false, generalSelectors),
-        TableTestUtils.sSetDialogValues({
-          width: '100',
-          height: '101',
-          celltype: 'td',
-          scope: '',
-          halign: '',
-          valign: '',
-        }, false, generalSelectors),
-        TableTestUtils.sClickDialogButton('close dialog', true),
-        tinyApis.sAssertContent('<table><tbody><tr><td style="width: 100px; height: 101px;">a</td><td>b</td></tr></tbody></table>'),
-      ]);
-    };
+    const baseGetSetTest = () => Log.stepsAsStep('TBA', 'Table: Table cell properties dialog (get/set data from/to basic cell)', [
+      tinyApis.sSetSetting('table_cell_advtab', false),
+      tinyApis.sSetContent(baseHtml),
+      tinyApis.sSelect('td', [ 0 ]),
+      TableTestUtils.sOpenTableDialog(tinyUi),
+      TableTestUtils.sAssertDialogValues(baseData, false, generalSelectors),
+      TableTestUtils.sSetDialogValues({
+        width: '100',
+        height: '101',
+        celltype: 'td',
+        scope: '',
+        halign: '',
+        valign: '',
+      }, false, generalSelectors),
+      TableTestUtils.sClickDialogButton('close dialog', true),
+      tinyApis.sAssertContent('<table><tbody><tr><td style="width: 100px; height: 101px;">a</td><td>b</td></tr></tbody></table>'),
+    ]);
 
     const advGetTest = () => {
       const complexHtml = '<table><tr><th style="text-align: right; vertical-align: top; width: 10px; height: 11px; ' +
@@ -107,7 +103,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
       return Log.stepsAsStep('TBA', 'Table: Table cell properties dialog (get data from advanced cell)', [
         tinyApis.sSetSetting('table_cell_advtab', true),
         tinyApis.sSetContent(complexHtml),
-        tinyApis.sSelect('th', [0]),
+        tinyApis.sSelect('th', [ 0 ]),
         TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(complexData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('close dialog', false)
@@ -134,7 +130,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
       return Log.stepsAsStep('TBA', 'Table: Table cell properties dialog (update all, including advanced)', [
         tinyApis.sSetSetting('table_cell_advtab', true),
         tinyApis.sSetContent('<table><tr><td>X</td></tr></table>'),
-        tinyApis.sSelect('td', [0]),
+        tinyApis.sSelect('td', [ 0 ]),
         TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sSetDialogValues(advData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('submit dialog', true),
@@ -176,7 +172,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
 
       return Log.stepsAsStep('TBA', 'Table: Table cell properties dialog update multiple cells', [
         tinyApis.sSetContent(initialHtml),
-        tinyApis.sSelect('td:nth-child(2)', [0]),
+        tinyApis.sSelect('td:nth-child(2)', [ 0 ]),
         TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(baseAdvData, true, generalSelectors),
         TableTestUtils.sSetDialogValues(newData, true, generalSelectors),
@@ -219,7 +215,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
 
       return Log.stepsAsStep('TBA', 'Table: Remove all styles', [
         tinyApis.sSetContent(advHtml),
-        tinyApis.sSelect('th', [0]),
+        tinyApis.sSelect('th', [ 0 ]),
         TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
         TableTestUtils.sSetDialogValues(emptyData, true, generalSelectors),
@@ -247,7 +243,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
 
       return Log.stepsAsStep('TBA', 'Table: Open dialog via execCommand', [
         tinyApis.sSetContent(advHtml),
-        tinyApis.sSelect('th', [0]),
+        tinyApis.sSelect('th', [ 0 ]),
         tinyApis.sExecCommand('mceTableCellProps'),
         TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('submit dialog', false),
@@ -274,7 +270,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
       return Log.stepsAsStep('TBA', 'Table: Test cancel changes nothing and save does', [
         tinyApis.sSetSetting('table_cell_advtab', true),
         tinyApis.sSetContent(baseHtml),
-        tinyApis.sSelect('td', [0]),
+        tinyApis.sSelect('td', [ 0 ]),
         TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(baseAdvData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('click cancel', false),

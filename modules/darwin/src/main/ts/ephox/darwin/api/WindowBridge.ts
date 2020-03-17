@@ -56,7 +56,7 @@ export const WindowBridge = function (win: Window): WindowBridge {
     WindowSelection.clear(win);
   };
 
-  const collapseSelection = function (toStart: boolean = false) {
+  const collapseSelection = function (toStart = false) {
     WindowSelection.get(win).each((sel) => sel.fold(
       (rng) => rng.collapse(toStart),
       (startSitu, finishSitu) => {

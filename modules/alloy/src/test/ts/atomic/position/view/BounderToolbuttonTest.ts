@@ -21,76 +21,62 @@ UnitTest.test('BounderToolbuttonTest', () => {
     Assert.eq('label', expected.label, actual.label);
     Assert.eq('X', expected.x, actual.x);
     Assert.eq('Y', expected.y, actual.y);
-    if (expected.candidateYforTest !== undefined) { Assert.eq('Candidate Y', expected.candidateYforTest, actual.candidateYforTest); }
+    if (expected.candidateYforTest !== undefined) {
+      Assert.eq('Candidate Y', expected.candidateYforTest, actual.candidateYforTest);
+    }
   };
 
   // Layout is for boxes with a bubble pointing to a cursor position (vertically aligned to nearest side)
   // We use it for toolbar buttons, like naughty hobbitses, so this test will change (TBIO-2326) because right now it's insane.
   const chameleonBubble = (width: number): Bubble => {
     // no it's not a joke, this is a copy of ephox.chameleon.popup.Bubble
-    const northeast = (): BubbleInstance => {
-      return {
-        offset: () => Position(-1, 1),
-        classesOn: () => [ ],
-        classesOff: () => [ ]
-      };
-    };
+    const northeast = (): BubbleInstance => ({
+      offset: () => Position(-1, 1),
+      classesOn: () => [ ],
+      classesOff: () => [ ]
+    });
 
-    const northwest = (): BubbleInstance => {
-      return {
-        offset: () => Position(width - 1, 1),
-        classesOn: () => [ ],
-        classesOff: () => [ ]
-      };
-    };
+    const northwest = (): BubbleInstance => ({
+      offset: () => Position(width - 1, 1),
+      classesOn: () => [ ],
+      classesOff: () => [ ]
+    });
 
-    const southeast = (): BubbleInstance => {
-      return {
-        offset: () => Position(-1, -2),
-        classesOn: () => [ ],
-        classesOff: () => [ ]
-      };
-    };
+    const southeast = (): BubbleInstance => ({
+      offset: () => Position(-1, -2),
+      classesOn: () => [ ],
+      classesOff: () => [ ]
+    });
 
-    const southwest = (): BubbleInstance => {
-      return {
-        offset: () => Position(width - 1, -2),
-        classesOn: () => [ ],
-        classesOff: () => [ ]
-      };
-    };
+    const southwest = (): BubbleInstance => ({
+      offset: () => Position(width - 1, -2),
+      classesOn: () => [ ],
+      classesOff: () => [ ]
+    });
 
-    const south = (): BubbleInstance => {
-      return {
-        offset: () => Position(-1, 1),
-        classesOn: () => [ ],
-        classesOff: () => [ ]
-      };
-    };
+    const south = (): BubbleInstance => ({
+      offset: () => Position(-1, 1),
+      classesOn: () => [ ],
+      classesOff: () => [ ]
+    });
 
-    const north = (): BubbleInstance => {
-      return {
-        offset: () => Position(-1, 1),
-        classesOn: () => [ ],
-        classesOff: () => [ ]
-      };
-    };
+    const north = (): BubbleInstance => ({
+      offset: () => Position(-1, 1),
+      classesOn: () => [ ],
+      classesOff: () => [ ]
+    });
 
-    const east = (): BubbleInstance => {
-      return {
-        offset: () => Position(-1, 1),
-        classesOn: () => [ ],
-        classesOff: () => [ ]
-      };
-    };
+    const east = (): BubbleInstance => ({
+      offset: () => Position(-1, 1),
+      classesOn: () => [ ],
+      classesOff: () => [ ]
+    });
 
-    const west = (): BubbleInstance => {
-      return {
-        offset: () => Position(-1, 1),
-        classesOn: () => [ ],
-        classesOff: () => [ ]
-      };
-    };
+    const west = (): BubbleInstance => ({
+      offset: () => Position(-1, 1),
+      classesOn: () => [ ],
+      classesOff: () => [ ]
+    });
 
     return {
       northwest,

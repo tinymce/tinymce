@@ -25,7 +25,7 @@ const parseHeader = function (head: string) {
 const htmlToData = function (editor: Editor, head: string) {
   const headerFragment = parseHeader(head);
   const data: any = {};
-  let elm, matches;
+  let elm; let matches;
 
   function getAttr(elm, name) {
     const value = elm.attr(name);
@@ -105,7 +105,7 @@ const htmlToData = function (editor: Editor, head: string) {
 };
 
 const dataToHtml = function (editor, data, head) {
-  let headerFragment, headElement, html, elm, value;
+  let headerFragment; let headElement; let html; let elm; let value;
   const dom = editor.dom;
 
   function setAttr(elm, name, value) {
@@ -209,7 +209,7 @@ const dataToHtml = function (editor, data, head) {
   // Add/update/remove meta
   Tools.each('keywords,description,author,copyright,robots'.split(','), function (name) {
     const nodes = headerFragment.getAll('meta');
-    let i, meta;
+    let i; let meta;
     const value = data[name];
 
     for (i = 0; i < nodes.length; i++) {

@@ -18,15 +18,15 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     name: 'label'
   }),
 
-  PartType.optional<FormFieldDetail, { text: string; }>({
+  PartType.optional<FormFieldDetail, { text: string }>({
     factory: {
-      sketch (spec) {
+      sketch(spec) {
         return {
           uid: spec.uid,
           dom: {
             tag: 'span',
             styles: {
-              display: 'none',
+              display: 'none'
             },
             attributes: {
               'aria-hidden': 'true'
@@ -42,7 +42,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 
   PartType.required<FormFieldDetail, { factory: { sketch: (spec: Record<string, any>) => Record<string, any> } }>({
     factory: {
-      sketch (spec) {
+      sketch(spec) {
         const excludeFactory = Objects.exclude(spec, [ 'factory' ]);
         return spec.factory.sketch(excludeFactory);
       }

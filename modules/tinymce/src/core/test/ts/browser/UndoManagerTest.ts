@@ -120,7 +120,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
   });
 
   suite.test('Events', function (editor) {
-    let add, undo, redo;
+    let add; let undo; let redo;
 
     editor.undoManager.clear();
     editor.setContent('test');
@@ -180,11 +180,11 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     editor.dom.fire(editor.getBody(), 'keyup', evt);
 
     LegacyUnit.strictEqual(added, false);
-    LegacyUnit.deepEqual(commands, ['Undo']);
+    LegacyUnit.deepEqual(commands, [ 'Undo' ]);
   });
 
   suite.test('Transact', function (editor) {
-    let count = 0, level;
+    let count = 0; let level;
 
     editor.undoManager.clear();
 
@@ -283,18 +283,18 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     data = editor.undoManager.data;
     LegacyUnit.equal(data.length, 3);
     LegacyUnit.equal(data[0].content, '<p>abc</p>');
-    LegacyUnit.deepEqual(data[0].bookmark, { start: [0, 0, 0] });
-    LegacyUnit.deepEqual(data[0].beforeBookmark, { start: [0, 0, 0] });
+    LegacyUnit.deepEqual(data[0].bookmark, { start: [ 0, 0, 0 ] });
+    LegacyUnit.deepEqual(data[0].beforeBookmark, { start: [ 0, 0, 0 ] });
     LegacyUnit.equal(data[1].content, '<p>a1c</p>');
-    LegacyUnit.deepEqual(data[1].bookmark, { start: [2, 0, 0] });
-    LegacyUnit.deepEqual(data[1].beforeBookmark, { start: [2, 0, 0] });
+    LegacyUnit.deepEqual(data[1].bookmark, { start: [ 2, 0, 0 ] });
+    LegacyUnit.deepEqual(data[1].beforeBookmark, { start: [ 2, 0, 0 ] });
     LegacyUnit.equal(data[2].content, '<p>a2c</p>');
-    LegacyUnit.deepEqual(data[2].bookmark, { start: [2, 0, 0] });
+    LegacyUnit.deepEqual(data[2].bookmark, { start: [ 2, 0, 0 ] });
     LegacyUnit.deepEqual(data[1].beforeBookmark, data[2].bookmark);
   });
 
   suite.test('Exclude internal elements', function (editor) {
-    let count = 0, lastLevel;
+    let count = 0; let lastLevel;
 
     editor.undoManager.clear();
     LegacyUnit.equal(count, 0);
@@ -369,7 +369,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
   });
 
   suite.test('BeforeAddUndo event', function (editor) {
-    let lastEvt, addUndoEvt;
+    let lastEvt; let addUndoEvt;
 
     const blockEvent = function (e) {
       e.preventDefault();

@@ -13,38 +13,38 @@ import { UndoLevel } from '../undo/UndoManagerTypes';
 import Editor from './Editor';
 import { NativeEventMap } from './util/EventDispatcher';
 
-export type ExecCommandEvent = { command: string, ui?: boolean, value?: any };
+export interface ExecCommandEvent { command: string; ui?: boolean; value?: any }
 
 // TODO Figure out if these properties should be on the ContentArgs types
-export type GetContentEvent = GetContentArgs & { source_view: boolean, selection: boolean, save: boolean };
-export type SetContentEvent = SetContentArgs & { paste: boolean, selection: boolean };
+export type GetContentEvent = GetContentArgs & { source_view: boolean; selection: boolean; save: boolean };
+export type SetContentEvent = SetContentArgs & { paste: boolean; selection: boolean };
 
-export type NewBlockEvent = { newBlock: Element };
+export interface NewBlockEvent { newBlock: Element }
 
-export type NodeChangedEvent = { element: Element, parents: Node[], selectionChange?: boolean, initial?: boolean };
+export interface NodeChangedEvent { element: Element; parents: Node[]; selectionChange?: boolean; initial?: boolean }
 
-export type ObjectResizedEvent = { target: HTMLElement, width: number, height: number };
+export interface ObjectResizedEvent { target: HTMLElement; width: number; height: number }
 
-export type ObjectSelectedEvent = { target: Node, targetClone?: Node };
+export interface ObjectSelectedEvent { target: Node; targetClone?: Node }
 
-export type ScrollIntoViewEvent = { elm: HTMLElement, alignToTop: boolean };
+export interface ScrollIntoViewEvent { elm: HTMLElement; alignToTop: boolean }
 
-export type SetSelectionRangeEvent = { range: Range, forward: boolean };
+export interface SetSelectionRangeEvent { range: Range; forward: boolean }
 
-export type ShowCaretEvent = { target: Node, direction: number, before: boolean };
+export interface ShowCaretEvent { target: Node; direction: number; before: boolean }
 
-export type SwitchModeEvent = { mode: string };
+export interface SwitchModeEvent { mode: string }
 
-export type AddUndoEvent = { level: UndoLevel, lastLevel: UndoLevel, originalEvent: Event };
-export type UndoRedoEvent = { level: UndoLevel };
+export interface AddUndoEvent { level: UndoLevel; lastLevel: UndoLevel; originalEvent: Event }
+export interface UndoRedoEvent { level: UndoLevel }
 
-export type WindowEvent<T extends Types.Dialog.DialogData> = { dialog: Types.Dialog.DialogInstanceApi<T> };
+export interface WindowEvent<T extends Types.Dialog.DialogData> { dialog: Types.Dialog.DialogInstanceApi<T> }
 
-export type ProgressStateEvent = { state: boolean, time?: number };
+export interface ProgressStateEvent { state: boolean; time?: number }
 
-export type PlaceholderToggleEvent = { state: boolean };
+export interface PlaceholderToggleEvent { state: boolean }
 
-export type LoadErrorEvent = { message: string };
+export interface LoadErrorEvent { message: string }
 
 export interface EditorEventMap extends NativeEventMap {
   'activate': { relatedTarget: Editor };

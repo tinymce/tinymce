@@ -20,13 +20,11 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.ApiTest', (success, failur
   TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
-    const createAssertionStep = (getCount: CountGetter) => (label: string, content: string, assertedLength: number, sel?: Sel) => {
-      return GeneralSteps.sequence([
-        tinyApis.sSetContent(content),
-        ...(sel ? [tinyApis.sSetSelection(sel.startPath, sel.soffset, sel.finishPath, sel.foffset)] : []),
-        Step.sync(() => Assertions.assertEq(label, getCount(), assertedLength))
-      ]);
-    };
+    const createAssertionStep = (getCount: CountGetter) => (label: string, content: string, assertedLength: number, sel?: Sel) => GeneralSteps.sequence([
+      tinyApis.sSetContent(content),
+      ...(sel ? [ tinyApis.sSetSelection(sel.startPath, sel.soffset, sel.finishPath, sel.foffset) ] : []),
+      Step.sync(() => Assertions.assertEq(label, getCount(), assertedLength))
+    ]);
 
     const api: WordCountApi = editor.plugins.wordcount as WordCountApi;
 
@@ -63,27 +61,27 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.ApiTest', (success, failur
 
       Logger.t('Selection word count', GeneralSteps.sequence([
         selectionWordCount('Simple word count', '<p>My sentence is this.</p>', 2, {
-          startPath: [0, 0],
+          startPath: [ 0, 0 ],
           soffset: 2,
-          finishPath: [0, 0],
+          finishPath: [ 0, 0 ],
           foffset: 15
         }),
       ])),
 
       Logger.t('Selection character count', GeneralSteps.sequence([
         selectionCharacterCount('Simple word count', '<p>My sentence is this.</p>', 13, {
-          startPath: [0, 0],
+          startPath: [ 0, 0 ],
           soffset: 2,
-          finishPath: [0, 0],
+          finishPath: [ 0, 0 ],
           foffset: 15
         }),
       ])),
 
       Logger.t('Selection character count without spaces', GeneralSteps.sequence([
         selectionCharacterCountWithoutSpaces('Simple word count', '<p>My sentence is this.</p>', 10, {
-          startPath: [0, 0],
+          startPath: [ 0, 0 ],
           soffset: 2,
-          finishPath: [0, 0],
+          finishPath: [ 0, 0 ],
           foffset: 15
         }),
       ]))

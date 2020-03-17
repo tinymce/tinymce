@@ -92,7 +92,7 @@ const timeout = <T, U>(label: string, limit: number): GuardFn<T, U, U> =>
 
 const addLogging = <T, U>(label: string): GuardFn<T, U, U> =>
   (f: RunFn<T, U>, value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) =>
-    Logger.t(label, {runStep: f}).runStep(value, next, die, logs);
+    Logger.t(label, { runStep: f }).runStep(value, next, die, logs);
 
 export {
   timeout,

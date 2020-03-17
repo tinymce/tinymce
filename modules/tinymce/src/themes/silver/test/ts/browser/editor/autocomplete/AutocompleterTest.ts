@@ -52,17 +52,15 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         ]);
       };
 
-      const sTestAutocompleter = (scenario: Scenario) => {
-        return GeneralSteps.sequence([
-          store.sClear,
-          sSetContentAndTrigger(scenario),
-          sWaitForAutocompleteToOpen,
-          sAssertAutocompleterStructure(scenario.structure),
-          scenario.choice,
-          sWaitForAutocompleteToClose,
-          scenario.assertion
-        ]);
-      };
+      const sTestAutocompleter = (scenario: Scenario) => GeneralSteps.sequence([
+        store.sClear,
+        sSetContentAndTrigger(scenario),
+        sWaitForAutocompleteToOpen,
+        sAssertAutocompleterStructure(scenario.structure),
+        scenario.choice,
+        sWaitForAutocompleteToClose,
+        scenario.assertion
+      ]);
 
       const sTestFirstAutocomplete = sTestAutocompleter({
         triggerChar: '+',
@@ -211,7 +209,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         triggerChar: '*',
         initialContent: '*<span data-mce-spelling="invalid">ha</span>p',
         cursorPos: {
-          elementPath: [0, 2],
+          elementPath: [ 0, 2 ],
           offset: 1,
         },
         structure: {
@@ -267,7 +265,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             triggerChar: '*',
             additionalContent: 'bc',
             cursorPos: {
-              elementPath: [0, 2],
+              elementPath: [ 0, 2 ],
               offset: 1
             }
           }),
@@ -292,7 +290,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             triggerChar: '*',
             additionalContent: 'bc',
             cursorPos: {
-              elementPath: [0, 2],
+              elementPath: [ 0, 2 ],
               offset: 1
             }
           }),
@@ -377,21 +375,21 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
       ]);
 
       Pipeline.async({ }, Logger.ts(
-          'Trigger autocompleter',
-          [
-            tinyApis.sFocus(),
-            Logger.t('Checking first autocomplete (columns = 1) trigger: "+"', sTestFirstAutocomplete),
-            Logger.t('Checking first autocomplete (columns = 1) trigger: "+"', sTestFirstAutocomplete2),
-            Logger.t('Checking second autocomplete (columns = 2), two sources, trigger ":"', sTestSecondAutocomplete),
-            Logger.t('Checking third autocomplete (columns = auto) trigger: "~"', sTestThirdAutocomplete),
-            Logger.t('Checking forth autocomplete, (columns = 1), trigger: "!", no icons', sTestFourthAutocomplete),
-            Logger.t('Checking fifth autocomplete, trigger: "=", custom activation check', sTestFifthAutocomplete),
-            Logger.t('Checking sixth autocomplete, (columns = 1), trigger: "#", content has spaces', sTestSixthAutocomplete),
-            Logger.t('Checking autocomplete activation based on content', sTestAutocompleteActivation),
-            Logger.t('Checking autocomplete start of word detection', sTestAutocompleteStartOfWord),
-            Logger.t('Checking autocomplete over fragmented text', sTestAutocompleteFragmentedText)
-          ]
-        ), onSuccess, onFailure);
+        'Trigger autocompleter',
+        [
+          tinyApis.sFocus(),
+          Logger.t('Checking first autocomplete (columns = 1) trigger: "+"', sTestFirstAutocomplete),
+          Logger.t('Checking first autocomplete (columns = 1) trigger: "+"', sTestFirstAutocomplete2),
+          Logger.t('Checking second autocomplete (columns = 2), two sources, trigger ":"', sTestSecondAutocomplete),
+          Logger.t('Checking third autocomplete (columns = auto) trigger: "~"', sTestThirdAutocomplete),
+          Logger.t('Checking forth autocomplete, (columns = 1), trigger: "!", no icons', sTestFourthAutocomplete),
+          Logger.t('Checking fifth autocomplete, trigger: "=", custom activation check', sTestFifthAutocomplete),
+          Logger.t('Checking sixth autocomplete, (columns = 1), trigger: "#", content has spaces', sTestSixthAutocomplete),
+          Logger.t('Checking autocomplete activation based on content', sTestAutocompleteActivation),
+          Logger.t('Checking autocomplete start of word detection', sTestAutocompleteStartOfWord),
+          Logger.t('Checking autocomplete over fragmented text', sTestAutocompleteFragmentedText)
+        ]
+      ), onSuccess, onFailure);
     },
     {
       theme: 'silver',
@@ -401,17 +399,15 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           ch: '+',
           minChars: 0,
           columns: 1,
-          fetch: (pattern, maxResults) => {
-            return new Promise((resolve) => {
-              resolve(
-                Arr.map([ 'aA', 'bB', 'cC', 'dD' ], (letter) => ({
-                  value: `plus-${letter}`,
-                  text: `p-${letter}`,
-                  icon: '+'
-                }))
-              );
-            });
-          },
+          fetch: (pattern, maxResults) => new Promise((resolve) => {
+            resolve(
+              Arr.map([ 'aA', 'bB', 'cC', 'dD' ], (letter) => ({
+                value: `plus-${letter}`,
+                text: `p-${letter}`,
+                icon: '+'
+              }))
+            );
+          }),
           onAction: (autocompleteApi, rng, value) => {
             ed.selection.setRng(rng);
             ed.insertContent(value);
@@ -423,17 +419,15 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           ch: ':',
           minChars: 0,
           columns: 2,
-          fetch: (pattern, maxResults) => {
-            return new Promise((resolve) => {
-              resolve(
-                Arr.map([ 'a' ], (letter) => ({
-                  value: `colon1-${letter}`,
-                  text: `c1-${letter}`,
-                  icon: ':'
-                }))
-              );
-            });
-          },
+          fetch: (pattern, maxResults) => new Promise((resolve) => {
+            resolve(
+              Arr.map([ 'a' ], (letter) => ({
+                value: `colon1-${letter}`,
+                text: `c1-${letter}`,
+                icon: ':'
+              }))
+            );
+          }),
           onAction: (autocompleteApi, rng, value) => {
             store.adder('colon1:' + value)();
             autocompleteApi.hide();
@@ -444,17 +438,15 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           ch: ':',
           minChars: 0,
           columns: 2,
-          fetch: (pattern, maxResults) => {
-            return new Promise((resolve) => {
-              resolve(
-                Arr.map([ 'a', 'b' ], (letter) => ({
-                  value: `colon2-${letter}`,
-                  text: `c2-${letter}`,
-                  icon: ':'
-                }))
-              );
-            });
-          },
+          fetch: (pattern, maxResults) => new Promise((resolve) => {
+            resolve(
+              Arr.map([ 'a', 'b' ], (letter) => ({
+                value: `colon2-${letter}`,
+                text: `c2-${letter}`,
+                icon: ':'
+              }))
+            );
+          }),
           onAction: (autocompleteApi, rng, value) => {
             store.adder('colon2:' + value)();
             autocompleteApi.hide();
@@ -465,17 +457,15 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           ch: '~',
           minChars: 0,
           columns: 'auto',
-          fetch: (pattern, maxResults) => {
-            return new Promise((resolve) => {
-              resolve(
-                Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
-                  value: `tilde-${letter}`,
-                  text: `t-${letter}`,
-                  icon: '~'
-                }))
-              );
-            });
-          },
+          fetch: (pattern, maxResults) => new Promise((resolve) => {
+            resolve(
+              Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
+                value: `tilde-${letter}`,
+                text: `t-${letter}`,
+                icon: '~'
+              }))
+            );
+          }),
           onAction: (autocompleteApi, rng, value) => {
             store.adder('tilde:' + value)();
             autocompleteApi.hide();
@@ -486,16 +476,14 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           ch: '!',
           minChars: 0,
           columns: 1,
-          fetch: (pattern, maxResults) => {
-            return new Promise((resolve) => {
-              resolve(
-                Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
-                  value: `exclamation-${letter}`,
-                  text: `exclamation-${letter}`
-                }))
-              );
-            });
-          },
+          fetch: (pattern, maxResults) => new Promise((resolve) => {
+            resolve(
+              Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
+                value: `exclamation-${letter}`,
+                text: `exclamation-${letter}`
+              }))
+            );
+          }),
           onAction: (autocompleteApi, rng, value) => {
             store.adder('exclamation:' + value)();
             autocompleteApi.hide();
@@ -506,22 +494,20 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           ch: '=',
           minChars: 1,
           columns: 'auto',
-          matches: (rng, text, pattern) => {
+          matches: (rng, text, pattern) =>
             // Check the '=' is in the middle of a word
-            return rng.startOffset !== 0 && !/\s/.test(text.charAt(rng.startOffset - 1));
-          },
-          fetch: (pattern, maxResults) => {
-            return new Promise((resolve) => {
-              const filteredItems = Arr.filter([ 'two', 'three' ], (number) => number.indexOf(pattern) !== -1);
-              resolve(
-                Arr.map(filteredItems, (number) => ({
-                  value: `${number}`,
-                  text: `${number}`,
-                  icon: '='
-                }))
-              );
-            });
-          },
+            rng.startOffset !== 0 && !/\s/.test(text.charAt(rng.startOffset - 1))
+          ,
+          fetch: (pattern, maxResults) => new Promise((resolve) => {
+            const filteredItems = Arr.filter([ 'two', 'three' ], (number) => number.indexOf(pattern) !== -1);
+            resolve(
+              Arr.map(filteredItems, (number) => ({
+                value: `${number}`,
+                text: `${number}`,
+                icon: '='
+              }))
+            );
+          }),
           onAction: (autocompleteApi, rng, value) => {
             ed.selection.setRng(rng);
             ed.insertContent('=' + value);
@@ -533,17 +519,15 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           ch: '*',
           minChars: 2,
           columns: 'auto',
-          fetch: (pattern, maxResults) => {
-            return new Promise((resolve) => {
-              resolve(
-                Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
-                  value: `asterisk-${letter}`,
-                  text: `asterisk-${letter}`,
-                  icon: '*'
-                }))
-              );
-            });
-          },
+          fetch: (pattern, maxResults) => new Promise((resolve) => {
+            resolve(
+              Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
+                value: `asterisk-${letter}`,
+                text: `asterisk-${letter}`,
+                icon: '*'
+              }))
+            );
+          }),
           onAction: (autocompleteApi, rng, value) => {
             store.adder('asterisk:' + value)();
             ed.selection.setRng(rng);
@@ -560,7 +544,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             const filteredItems = Arr.filter([
               { text: 'dollar sign', value: '$' },
               { text: 'equals sign', value: '=' },
-              { text: 'some name', value: '`'}
+              { text: 'some name', value: '`' }
             ], (item) => item.text.indexOf(pattern) !== -1);
             return new Promise((resolve) => {
               resolve(

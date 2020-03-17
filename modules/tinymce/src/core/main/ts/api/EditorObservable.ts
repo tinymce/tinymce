@@ -75,7 +75,7 @@ const fireEvent = (editor: Editor, eventName: string, e: Event) => {
  * @param {String} eventName Name of the event for example "click".
  */
 const bindEventDelegate = function (editor: Editor, eventName: string) {
-  let eventRootElm, delegate;
+  let eventRootElm; let delegate;
 
   if (!editor.delegates) {
     editor.delegates = {};
@@ -149,7 +149,7 @@ const EditorObservable: EditorObservable = {
    *
    * @private
    */
-  bindPendingEventDelegates () {
+  bindPendingEventDelegates() {
     const self = this;
 
     Tools.each(self._pendingNativeEvents, function (name) {
@@ -163,7 +163,7 @@ const EditorObservable: EditorObservable = {
    *
    * @private
    */
-  toggleNativeEvent (name, state) {
+  toggleNativeEvent(name, state) {
     const self = this;
 
     // Never bind focus/blur since the FocusManager fakes those
@@ -176,7 +176,7 @@ const EditorObservable: EditorObservable = {
         bindEventDelegate(self, name);
       } else {
         if (!self._pendingNativeEvents) {
-          self._pendingNativeEvents = [name];
+          self._pendingNativeEvents = [ name ];
         } else {
           self._pendingNativeEvents.push(name);
         }
@@ -192,7 +192,7 @@ const EditorObservable: EditorObservable = {
    *
    * @private
    */
-  unbindAllNativeEvents () {
+  unbindAllNativeEvents() {
     const self = this;
     const body = self.getBody();
     const dom: DOMUtils = self.dom;

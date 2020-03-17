@@ -34,7 +34,7 @@ const isCaretContainer = (node: Node): boolean => isCaretContainerBlock(node) ||
 const hasContent = (node: Node): boolean => node.firstChild !== node.lastChild || !NodeType.isBr(node.firstChild);
 
 const insertInline = (node: Node, before: boolean): Node => {
-  let doc, sibling, textNode, parentNode;
+  let doc; let sibling; let textNode; let parentNode;
 
   doc = node.ownerDocument;
   textNode = doc.createTextNode(Zwsp.ZWSP);
@@ -127,7 +127,7 @@ const createBogusBr = (): Element => {
 };
 
 const insertBlock = (blockName: string, node: Node, before: boolean): Node => {
-  let doc, blockNode, parentNode;
+  let doc; let blockNode; let parentNode;
 
   doc = node.ownerDocument;
   blockNode = doc.createElement(blockName);

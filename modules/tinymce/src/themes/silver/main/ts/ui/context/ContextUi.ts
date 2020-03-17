@@ -27,7 +27,7 @@ export interface ChangeSlideEvent extends CustomEvent {
 
 const resizingClass = 'tox-pop--resizing';
 
-const renderContextToolbar = (spec: { onEscape: () => Option<boolean>, sink: AlloyComponent }) => {
+const renderContextToolbar = (spec: { onEscape: () => Option<boolean>; sink: AlloyComponent }) => {
   const stack = Cell([ ]);
 
   return InlineView.sketch({
@@ -112,19 +112,16 @@ const renderContextToolbar = (spec: { onEscape: () => Option<boolean>, sink: All
       ]),
       Keying.config({
         mode: 'special',
-        onEscape: (comp) => {
-
-          return Arr.last(stack.get()).fold(
-            () => {
-              // Escape just focuses the content. It no longer closes the toolbar.
-              return spec.onEscape();
-            },
-            (_) => {
-              AlloyTriggers.emit(comp, backSlideEvent);
-              return Option.some(true);
-            }
-          );
-        }
+        onEscape: (comp) => Arr.last(stack.get()).fold(
+          () =>
+          // Escape just focuses the content. It no longer closes the toolbar.
+            spec.onEscape()
+          ,
+          (_) => {
+            AlloyTriggers.emit(comp, backSlideEvent);
+            return Option.some(true);
+          }
+        )
       })
     ]),
     lazySink: () => Result.value(spec.sink)

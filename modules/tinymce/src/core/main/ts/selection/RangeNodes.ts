@@ -8,8 +8,8 @@
 import { Range, Node } from '@ephox/dom-globals';
 
 const getSelectedNode = function (range: Range): Node {
-  const startContainer = range.startContainer,
-    startOffset = range.startOffset;
+  const startContainer = range.startContainer;
+  const startOffset = range.startOffset;
 
   if (startContainer.hasChildNodes() && range.endOffset === startOffset + 1) {
     return startContainer.childNodes[startOffset];

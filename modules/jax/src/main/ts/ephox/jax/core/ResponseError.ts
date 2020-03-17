@@ -15,20 +15,18 @@ const fallback = (request: XMLHttpRequest) => Future.pure(request.response);
 const getResponseText = (responseType: ResponseBodyDataTypes, request: XMLHttpRequest) => {
   // for errors, the responseText is json if it can be, fallback if it can't
   switch (responseType) {
-    case DataType.JSON: return JsonResponse.create(request.response).fold(() => fallback(request), Future.pure);
-    case DataType.Blob: return getBlobError(request);
-    case DataType.Text: return fallback(request);
-    default: return fallback(request);
+  case DataType.JSON: return JsonResponse.create(request.response).fold(() => fallback(request), Future.pure);
+  case DataType.Blob: return getBlobError(request);
+  case DataType.Text: return fallback(request);
+  default: return fallback(request);
   }
 };
 
-export const handle = (url: string, responseType: ResponseBodyDataTypes, request: XMLHttpRequest): Future<HttpError> => {
-  return getResponseText(responseType, request).map((responseText) => {
-    const message = request.status === 0 ? 'Unknown HTTP error (possible cross-domain request)' :  `Could not load url ${url}: ${request.statusText}`;
-    return {
-      message,
-      status: request.status,
-      responseText
-    };
-  });
-};
+export const handle = (url: string, responseType: ResponseBodyDataTypes, request: XMLHttpRequest): Future<HttpError> => getResponseText(responseType, request).map((responseText) => {
+  const message = request.status === 0 ? 'Unknown HTTP error (possible cross-domain request)' :  `Could not load url ${url}: ${request.statusText}`;
+  return {
+    message,
+    status: request.status,
+    responseText
+  };
+});

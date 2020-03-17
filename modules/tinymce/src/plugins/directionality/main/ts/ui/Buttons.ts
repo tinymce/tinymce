@@ -8,16 +8,14 @@
 import Editor from 'tinymce/core/api/Editor';
 import { Element, Direction } from '@ephox/sugar';
 
-const getNodeChangeHandler = (editor: Editor, dir: 'ltr' | 'rtl') => {
-  return (api) => {
-    const nodeChangeHandler = (e) => {
-      const element = Element.fromDom(e.element);
-      api.setActive(Direction.getDirection(element) === dir);
-    };
-    editor.on('NodeChange', nodeChangeHandler);
-
-    return () => editor.off('NodeChange', nodeChangeHandler);
+const getNodeChangeHandler = (editor: Editor, dir: 'ltr' | 'rtl') => (api) => {
+  const nodeChangeHandler = (e) => {
+    const element = Element.fromDom(e.element);
+    api.setActive(Direction.getDirection(element) === dir);
   };
+  editor.on('NodeChange', nodeChangeHandler);
+
+  return () => editor.off('NodeChange', nodeChangeHandler);
 };
 
 const register = function (editor: Editor) {

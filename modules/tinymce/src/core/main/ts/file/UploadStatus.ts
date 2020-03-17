@@ -13,7 +13,7 @@
  */
 
 export default function () {
-  const PENDING = 1, UPLOADED = 2;
+  const PENDING = 1; const UPLOADED = 2;
   let blobUriStatuses = {};
 
   const createStatus = function (status, resultUri) {

@@ -18,9 +18,9 @@ export interface AlertBannerWrapper extends AlertBannerSpec {
   iconTooltip: string;
 }
 
-export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: UiFactoryBackstageProviders): SketchSpec =>
   // For using the alert banner inside a dialog
-  return Container.sketch({
+  Container.sketch({
     dom: {
       tag: 'div',
       attributes: {
@@ -54,11 +54,11 @@ export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: 
       {
         dom: {
           tag: 'div',
-          classes: [ 'tox-notification__body'],
+          classes: [ 'tox-notification__body' ],
           // TODO: AP-247: Escape this text so that it can't contain script tags
           innerHtml: providersBackstage.translate(spec.text)
         }
       }
     ]
-  });
-};
+  })
+;

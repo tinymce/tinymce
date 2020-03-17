@@ -21,11 +21,7 @@ import * as TieredMenu from './TieredMenu';
 import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, components: AlloySpec[], _spec: DropdownSpec, externals): SketchSpec => {
-  const lookupAttr = (attr: string) => {
-    return Obj.get(detail.dom, 'attributes').bind((attrs) => {
-      return Obj.get(attrs, attr);
-    });
-  };
+  const lookupAttr = (attr: string) => Obj.get(detail.dom, 'attributes').bind((attrs) => Obj.get(attrs, attr));
 
   const switchToMenu = (sandbox: AlloyComponent) => {
     Sandboxing.getState(sandbox).each((tmenu) => {
@@ -40,12 +36,12 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
 
   const apis: DropdownApis = {
     expand: (comp) => {
-      if (! Toggling.isOn(comp)) {
+      if (!Toggling.isOn(comp)) {
         DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightNone).get(Fun.noop);
       }
     },
     open: (comp) => {
-      if (! Toggling.isOn(comp)) {
+      if (!Toggling.isOn(comp)) {
         DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
       }
     },
@@ -83,10 +79,14 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
         }),
         Coupling.config({
           others: {
-            sandbox (hotspot) {
+            sandbox(hotspot) {
               return DropdownUtils.makeSandbox(detail, hotspot, {
-                onOpen () { Toggling.on(hotspot); },
-                onClose () { Toggling.off(hotspot); }
+                onOpen() {
+                  Toggling.on(hotspot);
+                },
+                onClose() {
+                  Toggling.off(hotspot);
+                }
               });
             }
           }

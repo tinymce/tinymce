@@ -13,7 +13,7 @@ import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
 import { FormatAttrOrStyleValue, FormatVars } from '../api/fmt/Format';
 
-const isNode = (node: any): node is Node => !!(node as any).nodeType;
+const isNode = (node: any): node is Node => !!(node).nodeType;
 
 const isInlineBlock = function (node: Node): boolean {
   return node && /^(IMG)$/.test(node.nodeName);
@@ -21,7 +21,7 @@ const isInlineBlock = function (node: Node): boolean {
 
 const moveStart = function (dom: DOMUtils, selection: Selection, rng: Range) {
   const offset = rng.startOffset;
-  let container = rng.startContainer, walker, node, nodes;
+  let container = rng.startContainer; let walker; let node; let nodes;
 
   if (rng.startContainer === rng.endContainer) {
     if (isInlineBlock(rng.startContainer.childNodes[rng.startOffset])) {

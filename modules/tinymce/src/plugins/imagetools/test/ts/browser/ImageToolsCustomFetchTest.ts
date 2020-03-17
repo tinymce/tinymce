@@ -40,9 +40,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsCustomFetchTest
       ]),
 
       Log.stepsAsStep('TBA', 'ImageTools: flip image with custom fetch image that returns an error', [
-        tinyApis.sSetSetting('imagetools_fetch_image', () => {
-          return Promise.reject('Custom fail');
-        }),
+        tinyApis.sSetSetting('imagetools_fetch_image', () => Promise.reject('Custom fail')),
         ImageUtils.sLoadImage(editor, srcUrl),
         tinyApis.sSelect('img', []),
         ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
@@ -54,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsCustomFetchTest
     plugins: 'imagetools',
     automatic_uploads: false,
     images_upload_handler: uploadHandlerState.handler(srcUrl),
-    imagetools_cors_hosts: ['localhost'],
+    imagetools_cors_hosts: [ 'localhost' ],
     base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

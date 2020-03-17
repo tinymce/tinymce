@@ -29,9 +29,7 @@ export interface WindowManagerSetup {
 
 type InlineDialogAnchor = HotspotAnchorSpec | MakeshiftAnchorSpec | NodeAnchorSpec | SelectionAnchorSpec;
 
-const validateData = <T extends Types.Dialog.DialogData>(data: T, validator: Processor) => {
-  return ValueSchema.getOrDie(ValueSchema.asRaw('data', validator, data));
-};
+const validateData = <T extends Types.Dialog.DialogData>(data: T, validator: Processor) => ValueSchema.getOrDie(ValueSchema.asRaw('data', validator, data));
 
 const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, isToolbarLocationTop: boolean): Behaviour.NamedConfiguredBehaviour<any, any>[] => {
   // When using sticky toolbars it already handles the docking behaviours so applying docking would
@@ -73,9 +71,7 @@ const setup = (extras: WindowManagerSetup) => {
     }
   };
 
-  const openUrl = (config: Types.UrlDialog.UrlDialogApi, closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void) => {
-    return openModalUrlDialog(config, closeWindow);
-  };
+  const openUrl = (config: Types.UrlDialog.UrlDialogApi, closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void) => openModalUrlDialog(config, closeWindow);
 
   const openModalUrlDialog = (config: Types.UrlDialog.UrlDialogApi, closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void) => {
     const factory = (contents: Types.UrlDialog.UrlDialog): Types.UrlDialog.UrlDialogInstanceApi => {
@@ -129,7 +125,7 @@ const setup = (extras: WindowManagerSetup) => {
     return DialogManager.DialogManager.open<T>(factory, config);
   };
 
-  const openInlineDialog = <T extends Types.Dialog.DialogData>(config/*: Types.Dialog.DialogApi<T>*/, anchor: InlineDialogAnchor, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void, ariaAttrs): Types.Dialog.DialogInstanceApi<T> => {
+  const openInlineDialog = <T extends Types.Dialog.DialogData>(config/* : Types.Dialog.DialogApi<T>*/, anchor: InlineDialogAnchor, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void, ariaAttrs): Types.Dialog.DialogInstanceApi<T> => {
     const factory = (contents: Types.Dialog.Dialog<T>, internalInitialData: T, dataValidator: Processor): Types.Dialog.DialogInstanceApi<T> => {
       const initialData = validateData<T>(internalInitialData, dataValidator);
       const inlineDialog = Singleton.value<AlloyComponent>();
@@ -167,7 +163,7 @@ const setup = (extras: WindowManagerSetup) => {
         },
         // Fires the default dismiss event.
         fireDismissalEventInstead: { },
-        ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { } },
+        ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { }},
         inlineBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('window-manager-inline-events', [
             // Can't just fireDismissalEvent formCloseEvent, because it is on the parent component of the dialog

@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretCandidateTest', function (success,
   });
 
   suite.test('isAtomic', function () {
-    $.each(['img', 'input', 'textarea', 'hr'], function (index, name) {
+    $.each([ 'img', 'input', 'textarea', 'hr' ], function (index, name) {
       LegacyUnit.equal(CaretCandidate.isAtomic(document.createElement(name)), true);
     });
 

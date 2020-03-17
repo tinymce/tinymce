@@ -35,17 +35,13 @@ const prepend = (component: AlloyComponent, replaceConfig: ReplacingConfig, repl
 // NOTE: Removee is going to be a component, not a spec.
 const remove = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, removee: AlloyComponent): void => {
   const children = contents(component, replaceConfig);
-  const foundChild = Arr.find(children, (child) => {
-    return Compare.eq(removee.element(), child.element());
-  });
+  const foundChild = Arr.find(children, (child) => Compare.eq(removee.element(), child.element()));
 
   foundChild.each(Attachment.detach);
 };
 
 // TODO: Rename
-const contents = (component: AlloyComponent, replaceConfig: ReplacingConfig/*, replaceState */): AlloyComponent[] => {
-  return component.components();
-};
+const contents = (component: AlloyComponent, replaceConfig: ReplacingConfig/* , replaceState */): AlloyComponent[] => component.components();
 
 const replaceAt = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, replaceeIndex: number, replacer: Option<AlloySpec>): Option<AlloyComponent> => {
   const children = contents(component, replaceConfig);

@@ -21,15 +21,11 @@ export default [
     'property', {
       width: [
         Fields.output('property', 'width'),
-        Fields.output('getDimension', (elem: Element) => {
-          return Width.get(elem) + 'px';
-        })
+        Fields.output('getDimension', (elem: Element) => Width.get(elem) + 'px')
       ],
       height: [
         Fields.output('property', 'height'),
-        Fields.output('getDimension', (elem: Element) => {
-          return Height.get(elem) + 'px';
-        })
+        Fields.output('getDimension', (elem: Element) => Height.get(elem) + 'px')
       ]
     }
   ))

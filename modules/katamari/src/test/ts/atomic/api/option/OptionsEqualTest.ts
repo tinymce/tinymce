@@ -25,9 +25,7 @@ UnitTest.test('Option.some(x) !== Option.none()', () => {
 });
 
 UnitTest.test('Option.some(x) === Option.some(x)', () => {
-  fc.assert(fc.property(fc.integer(), (i) => {
-    return Assert.eq('eq', true, Option.some(i).equals(Option.some(i)));
-  }));
+  fc.assert(fc.property(fc.integer(), (i) => Assert.eq('eq', true, Option.some(i).equals(Option.some(i)))));
 });
 
 UnitTest.test('Option.some(x) === Option.some(x) (same ref)', () => {

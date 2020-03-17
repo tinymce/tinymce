@@ -35,13 +35,9 @@ const apportion = <T>(units: T[], total: number, len: GetLengthFunc<T>): Widths 
     });
   });
 
-  const within = Arr.filter(parray, (unit) => {
-    return unit.finish() <= total;
-  });
+  const within = Arr.filter(parray, (unit) => unit.finish() <= total);
 
-  const withinWidth = Arr.foldr(within, (acc, el) => {
-    return acc + el.width();
-  }, 0);
+  const withinWidth = Arr.foldr(within, (acc, el) => acc + el.width(), 0);
 
   const extra = parray.slice(within.length);
   return {
@@ -51,11 +47,7 @@ const apportion = <T>(units: T[], total: number, len: GetLengthFunc<T>): Widths 
   };
 };
 
-const toUnit = (parray: Pos[]) => {
-  return Arr.map(parray, (unit) => {
-    return unit.element();
-  });
-};
+const toUnit = (parray: Pos[]) => Arr.map(parray, (unit) => unit.element());
 
 const fitLast = (within: Pos[], extra: Pos[], withinWidth: number) => {
   const fits = toUnit(within.concat(extra));
@@ -67,9 +59,7 @@ const overflow = <T>(within: Pos[], extra: Pos[], overflower: T, withinWidth: nu
   return output(fits, toUnit(extra), withinWidth);
 };
 
-const fitAll = (within: Pos[], extra: Pos[], withinWidth: number) => {
-  return output(toUnit(within), [], withinWidth);
-};
+const fitAll = (within: Pos[], extra: Pos[], withinWidth: number) => output(toUnit(within), [], withinWidth);
 
 const tryFit = <T>(total: number, units: T[], len: GetLengthFunc<T>): Option<Widths> => {
   const divide = apportion(units, total, len);
@@ -78,15 +68,21 @@ const tryFit = <T>(total: number, units: T[], len: GetLengthFunc<T>): Option<Wid
 
 const partition = <T>(total: number, units: T[], len: GetLengthFunc<T>, overflower: T) => {
   // Firstly, we try without the overflower.
-  const divide = tryFit(total, units, len).getOrThunk(() => {
+  const divide = tryFit(total, units, len).getOrThunk(() =>
     // If that doesn't work, overflow
-    return apportion(units, total - len(overflower), len);
-  });
+    apportion(units, total - len(overflower), len)
+  );
 
   const within = divide.within();
   const extra = divide.extra();
   const withinWidth = divide.withinWidth();
-  if (extra.length === 1 && extra[0].width() <= len(overflower)) { return fitLast(within, extra, withinWidth); } else if (extra.length >= 1) { return overflow(within, extra, overflower, withinWidth); } else { return fitAll(within, extra, withinWidth); }
+  if (extra.length === 1 && extra[0].width() <= len(overflower)) {
+    return fitLast(within, extra, withinWidth);
+  } else if (extra.length >= 1) {
+    return overflow(within, extra, overflower, withinWidth);
+  } else {
+    return fitAll(within, extra, withinWidth);
+  }
 };
 
 export {

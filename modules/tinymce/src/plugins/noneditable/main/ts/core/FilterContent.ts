@@ -16,7 +16,7 @@ const hasClass = function (checkClassName) {
 
 const replaceMatchWithSpan = function (editor, content, cls) {
   return function (match) {
-    const args = arguments, index = args[args.length - 2];
+    const args = arguments; const index = args[args.length - 2];
     const prevChar = index > 0 ? content.charAt(index - 1) : '';
 
     // Is value inside an attribute then don't replace
@@ -43,7 +43,7 @@ const replaceMatchWithSpan = function (editor, content, cls) {
 };
 
 const convertRegExpsToNonEditable = function (editor, nonEditableRegExps, e) {
-  let i = nonEditableRegExps.length, content = e.content;
+  let i = nonEditableRegExps.length; let content = e.content;
 
   // Don't replace the variables when raw is used for example on undo/redo
   if (e.format === 'raw') {
@@ -58,7 +58,7 @@ const convertRegExpsToNonEditable = function (editor, nonEditableRegExps, e) {
 };
 
 const setup = function (editor) {
-  let editClass, nonEditClass;
+  let editClass; let nonEditClass;
   const contentEditableAttrName = 'contenteditable';
 
   editClass = ' ' + Tools.trim(Settings.getEditableClass(editor)) + ' ';
@@ -76,7 +76,7 @@ const setup = function (editor) {
     }
 
     editor.parser.addAttributeFilter('class', function (nodes) {
-      let i = nodes.length, node;
+      let i = nodes.length; let node;
 
       while (i--) {
         node = nodes[i];
@@ -90,7 +90,7 @@ const setup = function (editor) {
     });
 
     editor.serializer.addAttributeFilter(contentEditableAttrName, function (nodes) {
-      let i = nodes.length, node;
+      let i = nodes.length; let node;
 
       while (i--) {
         node = nodes[i];

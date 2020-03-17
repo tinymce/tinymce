@@ -12,7 +12,9 @@ const attach = (parent: AlloyComponent, child: AlloyComponent): void => {
 const attachWith = (parent: AlloyComponent, child: AlloyComponent, insertion: (parent: Element, child: Element) => void): void => {
   parent.getSystem().addToWorld(child);
   insertion(parent.element(), child.element());
-  if (Body.inBody(parent.element())) { InternalAttachment.fireAttaching(child); }
+  if (Body.inBody(parent.element())) {
+    InternalAttachment.fireAttaching(child);
+  }
   parent.syncComponents();
 };
 
@@ -23,9 +25,7 @@ const doDetach = (component: AlloyComponent) => {
 };
 
 const detach = (component: AlloyComponent): void => {
-  const parent = Traverse.parent(component.element()).bind((p) => {
-    return component.getSystem().getByDom(p).toOption();
-  });
+  const parent = Traverse.parent(component.element()).bind((p) => component.getSystem().getByDom(p).toOption());
 
   doDetach(component);
   parent.each((p) => {

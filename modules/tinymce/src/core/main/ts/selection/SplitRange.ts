@@ -14,10 +14,10 @@ const splitText = function (node: Text, offset: number) {
 };
 
 const split = function (rng: RangeLikeObject): RangeLikeObject {
-  let startContainer = rng.startContainer,
-    startOffset = rng.startOffset,
-    endContainer = rng.endContainer,
-    endOffset = rng.endOffset;
+  let startContainer = rng.startContainer;
+  let startOffset = rng.startOffset;
+  let endContainer = rng.endContainer;
+  let endOffset = rng.endOffset;
 
   // Handle single text node
   if (startContainer === endContainer && NodeType.isText(startContainer)) {

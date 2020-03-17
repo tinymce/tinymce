@@ -40,7 +40,7 @@ const pathJoin = (path1: string | undefined, path2: string) => {
 
 export default (settings: UploaderSettings) => {
   const defaultHandler = (blobInfo: BlobInfo, success: SuccessCallback, failure: FailureCallback, progress: ProgressCallback) => {
-    let xhr, formData;
+    let xhr; let formData;
 
     xhr = new XMLHttpRequest();
     xhr.open('POST', settings.url);
@@ -78,23 +78,17 @@ export default (settings: UploaderSettings) => {
     xhr.send(formData);
   };
 
-  const uploadBlob = (blobInfo: BlobInfo, handler: UploadHandler) => {
-    return new Promise<string>((resolve, reject) => {
-      try {
-        handler(blobInfo, resolve, reject, Fun.noop);
-      } catch (ex) {
-        reject(ex.message);
-      }
-    });
-  };
+  const uploadBlob = (blobInfo: BlobInfo, handler: UploadHandler) => new Promise<string>((resolve, reject) => {
+    try {
+      handler(blobInfo, resolve, reject, Fun.noop);
+    } catch (ex) {
+      reject(ex.message);
+    }
+  });
 
-  const isDefaultHandler = (handler: Function) => {
-    return handler === defaultHandler;
-  };
+  const isDefaultHandler = (handler: Function) => handler === defaultHandler;
 
-  const upload = (blobInfo: BlobInfo): Promise<string> => {
-    return (!settings.url && isDefaultHandler(settings.handler)) ? Promise.reject('Upload url missing from the settings.') : uploadBlob(blobInfo, settings.handler);
-  };
+  const upload = (blobInfo: BlobInfo): Promise<string> => (!settings.url && isDefaultHandler(settings.handler)) ? Promise.reject('Upload url missing from the settings.') : uploadBlob(blobInfo, settings.handler);
 
   settings = Tools.extend({
     credentials: false,

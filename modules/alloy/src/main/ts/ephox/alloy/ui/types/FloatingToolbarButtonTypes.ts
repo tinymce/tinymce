@@ -12,7 +12,7 @@ export interface FloatingToolbarButtonDetail extends CompositeSketchDetail, HasL
   fetch: () => Future<AlloySpec[]>;
   getBounds: Option<() => Bounds>;
   fireDismissalEventInstead: Option<{
-    event: string
+    event: string;
   }>;
 
   markers: {
@@ -32,7 +32,7 @@ export interface FloatingToolbarButtonSpec extends CompositeSketchSpec, HasLayou
   fetch: () => Future<AlloySpec[]>;
   getBounds?: () => Bounds;
   fireDismissalEventInstead?: {
-    event?: string
+    event?: string;
   };
 
   markers: {
@@ -40,8 +40,8 @@ export interface FloatingToolbarButtonSpec extends CompositeSketchSpec, HasLayou
   };
 
   parts: {
-    'button': Partial<SimpleOrSketchSpec>
-    'toolbar': Partial<ToolbarSpec>
+    'button': Partial<SimpleOrSketchSpec>;
+    'toolbar': Partial<ToolbarSpec>;
   };
 }
 

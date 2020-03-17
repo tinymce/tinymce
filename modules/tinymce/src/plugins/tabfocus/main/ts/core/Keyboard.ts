@@ -24,7 +24,7 @@ const tabCancel = function (e) {
 
 const setup = function (editor) {
   function tabHandler(e) {
-    let x, el, v, i;
+    let x; let el; let v; let i;
 
     if (e.keyCode !== VK.TAB || e.ctrlKey || e.altKey || e.metaKey || e.isDefaultPrevented()) {
       return;

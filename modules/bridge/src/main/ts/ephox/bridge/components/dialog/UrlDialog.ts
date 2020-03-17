@@ -69,7 +69,7 @@ export interface UrlDialog {
 }
 
 export const urlDialogButtonSchema = ValueSchema.objOf([
-  FieldSchema.strictStringEnum('type', ['cancel', 'custom']),
+  FieldSchema.strictStringEnum('type', [ 'cancel', 'custom' ]),
   ...dialogButtonFields
 ]);
 
@@ -85,6 +85,4 @@ export const urlDialogSchema = ValueSchema.objOf([
   FieldSchema.defaultedFunction('onMessage', Fun.noop)
 ]);
 
-export const createUrlDialog = (spec: UrlDialogApi): Result<UrlDialog, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw('dialog', urlDialogSchema, spec);
-};
+export const createUrlDialog = (spec: UrlDialogApi): Result<UrlDialog, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('dialog', urlDialogSchema, spec);

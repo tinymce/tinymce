@@ -19,7 +19,7 @@ const trimHtml = function (tempAttrs, html) {
 const trimInternal = function (serializer, html) {
   let content = html;
   const bogusAllRegExp = /<(\w+) [^>]*data-mce-bogus="all"[^>]*>/g;
-  let endTagIndex, index, matchLength, matches, shortEndedElements;
+  let endTagIndex; let index; let matchLength; let matches; let shortEndedElements;
   const schema = serializer.schema;
 
   content = trimHtml(serializer.getTempAttrs(), content);

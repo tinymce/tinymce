@@ -28,7 +28,7 @@ const displayError = (editor: Editor, message: string) => {
 };
 
 const uploadError = (editor: Editor, message: string) => {
-  displayError(editor, I18n.translate(['Failed to upload image: {0}', message]));
+  displayError(editor, I18n.translate([ 'Failed to upload image: {0}', message ]));
 };
 
 const logError = (editor: Editor, errorType: string, msg: string) => {
@@ -37,11 +37,9 @@ const logError = (editor: Editor, errorType: string, msg: string) => {
   console.error(msg);
 };
 
-const createLoadError = (type: string, url: string, name?: string) => {
-  return name ?
-    `Failed to load ${type}: ${name} from url ${url}` :
-    `Failed to load ${type} url: ${url}`;
-};
+const createLoadError = (type: string, url: string, name?: string) => name ?
+  `Failed to load ${type}: ${name} from url ${url}` :
+  `Failed to load ${type} url: ${url}`;
 
 const pluginLoadError = (editor: Editor, url: string, name?: string) => {
   logError(editor, 'PluginLoadError', createLoadError('plugin', url, name));
@@ -56,7 +54,7 @@ const languageLoadError = (editor: Editor, url: string, name: string) => {
 };
 
 const pluginInitError = (editor: Editor, name: string, err) => {
-  const message = I18n.translate(['Failed to initialize plugin: {0}', name]);
+  const message = I18n.translate([ 'Failed to initialize plugin: {0}', name ]);
   initError(message, err);
   displayError(editor, message);
 };

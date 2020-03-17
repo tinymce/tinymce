@@ -96,11 +96,9 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
       Keyboard.sKeydown(doc, Keys.down(), { }),
       UiFinder.sWaitForVisible('Waiting for dropdown', TinyDom.fromDom(document.body), '.tox-menu'),
       sChooseItem,
-      sAssertUrlStructure((s, str, _arr) => {
-        return s.element('input', {
-          value: str.startsWith('#h_')
-        });
-      }),
+      sAssertUrlStructure((s, str, _arr) => s.element('input', {
+        value: str.startsWith('#h_')
+      })),
       sAssertInputValue('Header One', 'Text to display'),
       TestLinkUi.sAssertContentPresence(tinyApis, {
         'h1[id]': 0,
@@ -116,9 +114,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
         NamedChain.asChain([
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('h1'), 'h1'),
           NamedChain.direct('h1', Chain.mapper((h1) => Attr.get(h1, 'id')), 'h1-id'),
-          NamedChain.bundle((obj) => {
-            return UiFinder.findIn(obj[NamedChain.inputName()], `a[href="#${obj['h1-id']}"]:contains("Header One")`);
-          })
+          NamedChain.bundle((obj) => UiFinder.findIn(obj[NamedChain.inputName()], `a[href="#${obj['h1-id']}"]:contains("Header One")`))
         ])
       ])
     ]);
@@ -135,22 +131,22 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
     );
 
     const testChangingUrlValueManually = Log.stepsAsStep('TBA', 'Link: Change urlinput value manually', [
-        tinyApis.sSetContent('<h1>Something</h2>'),
-        tinyApis.sSetSelection([ 0, 0 ], ''.length, [ 0, 0 ], 'Something'.length),
-        TestLinkUi.sOpenLinkDialog(tinyUi),
+      tinyApis.sSetContent('<h1>Something</h2>'),
+      tinyApis.sSetSelection([ 0, 0 ], ''.length, [ 0, 0 ], 'Something'.length),
+      TestLinkUi.sOpenLinkDialog(tinyUi),
 
-        FocusTools.sSetActiveValue(doc, 'http://www.tiny.cloud'),
-        TestLinkUi.sAssertDialogContents({
-          href: 'http://www.tiny.cloud',
-          text: 'Something',
-          title: '',
-          target: ''
-        }),
-        TestLinkUi.sClickSave,
-        TestLinkUi.sAssertContentPresence(tinyApis, {
-          a: 1
-        })
-      ]
+      FocusTools.sSetActiveValue(doc, 'http://www.tiny.cloud'),
+      TestLinkUi.sAssertDialogContents({
+        href: 'http://www.tiny.cloud',
+        text: 'Something',
+        title: '',
+        target: ''
+      }),
+      TestLinkUi.sClickSave,
+      TestLinkUi.sAssertContentPresence(tinyApis, {
+        a: 1
+      })
+    ]
     );
 
     Pipeline.async({}, [

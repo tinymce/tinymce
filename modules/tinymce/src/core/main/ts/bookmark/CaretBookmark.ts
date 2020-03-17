@@ -76,7 +76,7 @@ const normalizedTextOffset = (node: Node, offset: number): number => {
 const equal = (a) => (b) => a === b;
 
 const normalizedNodeIndex = (node: Node): number => {
-  let nodes, index, numTextFragments;
+  let nodes; let index; let numTextFragments;
 
   nodes = getChildNodes(normalizedParent(node));
   index = ArrUtils.findIndex(nodes, equal(node), node);
@@ -89,7 +89,7 @@ const normalizedNodeIndex = (node: Node): number => {
     return result;
   }, 0);
 
-  nodes = ArrUtils.filter(nodes, NodeType.matchNodeNames([node.nodeName]));
+  nodes = ArrUtils.filter(nodes, NodeType.matchNodeNames([ node.nodeName ]));
   index = ArrUtils.findIndex(nodes, equal(node), node);
 
   return index - numTextFragments;
@@ -122,8 +122,8 @@ const parentsUntil = function (root: Node, node: Node, predicate?): Node[] {
 };
 
 const create = (root: Node, caretPosition: CaretPosition): string => {
-  let container, offset, path = [],
-    outputOffset, childNodes, parents;
+  let container; let offset; let path = [];
+  let outputOffset; let childNodes; let parents;
 
   container = caretPosition.container();
   offset = caretPosition.offset();
@@ -159,12 +159,12 @@ const resolvePathItem = (node: Node, name: string, index: number): Node => {
     return !isText(node) || !isText(nodes[index - 1]);
   });
 
-  nodes = ArrUtils.filter(nodes, NodeType.matchNodeNames([name]));
+  nodes = ArrUtils.filter(nodes, NodeType.matchNodeNames([ name ]));
   return nodes[index];
 };
 
 const findTextPosition = (container: Node, offset: number): CaretPosition => {
-  let node = container, targetOffset = 0, dataLen;
+  let node = container; let targetOffset = 0; let dataLen;
 
   while (isText(node)) {
     dataLen = node.data.length;
@@ -193,7 +193,7 @@ const findTextPosition = (container: Node, offset: number): CaretPosition => {
 };
 
 const resolve = (root: Node, path: string): CaretPosition => {
-  let parts, container, offset;
+  let parts; let container; let offset;
 
   if (!path) {
     return null;

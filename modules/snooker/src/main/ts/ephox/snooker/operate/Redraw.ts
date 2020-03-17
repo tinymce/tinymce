@@ -16,7 +16,7 @@ interface NewRowsAndCells {
   readonly newCells: Element[];
 }
 
-const render = function <T extends DetailNew>(table: Element, grid: RowDataNew<T>[]): NewRowsAndCells {
+const render = function <T extends DetailNew> (table: Element, grid: RowDataNew<T>[]): NewRowsAndCells {
   const newRows: Element[] = [];
   const newCells: Element[] = [];
 
@@ -67,15 +67,15 @@ const render = function <T extends DetailNew>(table: Element, grid: RowDataNew<T
 
   Arr.each(grid, function (row) {
     switch (row.section()) {
-      case 'thead':
-        headSection.push(row);
-        break;
-      case 'tbody':
-        bodySection.push(row);
-        break;
-      case 'tfoot':
-        footSection.push(row);
-        break;
+    case 'thead':
+      headSection.push(row);
+      break;
+    case 'tbody':
+      bodySection.push(row);
+      break;
+    case 'tfoot':
+      footSection.push(row);
+      break;
     }
   });
 

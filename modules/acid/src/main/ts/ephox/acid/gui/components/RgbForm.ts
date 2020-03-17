@@ -42,47 +42,45 @@ const rgbFormFactory = (
   onValidHexx: (component: AlloyComponent) => void,
   onInvalidHexx: (component: AlloyComponent) => void
 ): RgbFormSketcher => {
-  const invalidation = (label: string, isValid: (value: string) => boolean) => {
-    return Invalidating.config({
-      invalidClass: getClass('invalid'),
+  const invalidation = (label: string, isValid: (value: string) => boolean) => Invalidating.config({
+    invalidClass: getClass('invalid'),
 
-      notify: {
-        onValidate: (comp: AlloyComponent) => {
-          AlloyTriggers.emitWith(comp, validatingInput, {
-            type: label
-          });
-        },
-        onValid: (comp: AlloyComponent) => {
-          AlloyTriggers.emitWith(comp, validInput, {
-            type: label,
-            value: Representing.getValue(comp)
-          });
-        },
-
-        onInvalid: (comp: AlloyComponent) => {
-          AlloyTriggers.emitWith(comp, invalidInput, {
-            type: label,
-            value: Representing.getValue(comp)
-          });
-        }
+    notify: {
+      onValidate: (comp: AlloyComponent) => {
+        AlloyTriggers.emitWith(comp, validatingInput, {
+          type: label
+        });
+      },
+      onValid: (comp: AlloyComponent) => {
+        AlloyTriggers.emitWith(comp, validInput, {
+          type: label,
+          value: Representing.getValue(comp)
+        });
       },
 
-      validator: {
-        validate: (comp: AlloyComponent) => {
-          const value = Representing.getValue(comp);
-          const res = isValid(value) ? Result.value(true) : Result.error(translate('aria.input.invalid'));
-          return Future.pure(res);
-        },
-        validateOnLoad: false
+      onInvalid: (comp: AlloyComponent) => {
+        AlloyTriggers.emitWith(comp, invalidInput, {
+          type: label,
+          value: Representing.getValue(comp)
+        });
       }
-    });
-  };
+    },
+
+    validator: {
+      validate: (comp: AlloyComponent) => {
+        const value = Representing.getValue(comp);
+        const res = isValid(value) ? Result.value(true) : Result.error(translate('aria.input.invalid'));
+        return Future.pure(res);
+      },
+      validateOnLoad: false
+    }
+  });
 
   const renderTextField = (isValid: (value: string) => boolean, name: string, label: string, description: string, data: string | number) => {
     const helptext = translate(translatePrefix + 'range');
 
     const pLabel = FormField.parts().label({
-      dom: { tag: 'label', innerHtml: label, attributes: { 'aria-label': description } }
+      dom: { tag: 'label', innerHtml: label, attributes: { 'aria-label': description }}
     });
 
     const pField = FormField.parts().field({
@@ -92,7 +90,7 @@ const rgbFormFactory = (
         type: 'text',
         ...name === 'hex' ? { 'aria-live': 'polite' } : {}
       },
-      inputClasses: [getClass('textfield')],
+      inputClasses: [ getClass('textfield') ],
 
       // Have basic invalidating and tabstopping behaviour.
       inputBehaviours: Behaviour.derive([
@@ -109,10 +107,10 @@ const rgbFormFactory = (
       }
     });
 
-    const comps = [pLabel, pField];
-    const concats = name !== 'hex' ? [FormField.parts()['aria-descriptor']({
+    const comps = [ pLabel, pField ];
+    const concats = name !== 'hex' ? [ FormField.parts()['aria-descriptor']({
       text: helptext
-    })] : [];
+    }) ] : [];
     const components = comps.concat(concats);
 
     return {
@@ -150,7 +148,7 @@ const rgbFormFactory = (
     {
       dom: {
         tag: 'div',
-        classes: [getClass('rgba-preview')],
+        classes: [ getClass('rgba-preview') ],
         styles: {
           'background-color': 'white'
         },
@@ -181,25 +179,19 @@ const rgbFormFactory = (
       setValueRgb(rgb);
     };
 
-    const get = (prop: keyof typeof state): Option<any> => {
-      return state[prop].get();
-    };
+    const get = (prop: keyof typeof state): Option<any> => state[prop].get();
 
     const set = (prop: keyof typeof state, value: Option<any>): void => {
       state[prop].set(value);
     };
 
-    const getValueRgb = () => {
-      return get('red').bind(
-        (red) => get('green').bind(
-          (green) => get('blue').map(
-            (blue) => {
-              return RgbaColour.rgbaColour(red, green, blue, 1);
-            }
-          )
+    const getValueRgb = () => get('red').bind(
+      (red) => get('green').bind(
+        (green) => get('blue').map(
+          (blue) => RgbaColour.rgbaColour(red, green, blue, 1)
         )
-      );
-    };
+      )
+    );
 
     // TODO: Find way to use this for palette and slider updates
     const setValueRgb = (rgb: Rgba): void => {
@@ -243,9 +235,7 @@ const rgbFormFactory = (
       });
     };
 
-    const isHexInputEvent = (data: InputEvent): data is HexInputEvent => {
-      return data.type() === 'hex';
-    };
+    const isHexInputEvent = (data: InputEvent): data is HexInputEvent => data.type() === 'hex';
 
     const onValidInput = (form: AlloyComponent, simulatedEvent: SimulatedEvent<InputEvent>) => {
       const data = simulatedEvent.event();
@@ -256,12 +246,10 @@ const rgbFormFactory = (
       }
     };
 
-    const formPartStrings = (key: string) => {
-      return {
-        label: translate(translatePrefix + key + '.label'),
-        description: translate(translatePrefix + key + '.description')
-      };
-    };
+    const formPartStrings = (key: string) => ({
+      label: translate(translatePrefix + key + '.label'),
+      description: translate(translatePrefix + key + '.description')
+    });
 
     const redStrings = formPartStrings('red');
     const greenStrings = formPartStrings('green');
@@ -270,34 +258,32 @@ const rgbFormFactory = (
 
     // TODO: Provide a nice way of adding APIs to existing sketchers
     return Merger.deepMerge(
-      Form.sketch((parts: FormTypes.FormParts) => {
-        return {
-          dom: {
-            tag: 'form',
-            classes: [getClass('rgb-form')],
-            attributes: { 'aria-label': translate('aria.color.picker') }
-          },
-          components: [
-            parts.field('red', FormField.sketch(renderTextField(RgbaColour.isRgbaComponent, 'red', redStrings.label, redStrings.description, 255))),
-            parts.field('green', FormField.sketch(renderTextField(RgbaColour.isRgbaComponent, 'green', greenStrings.label, greenStrings.description, 255))),
-            parts.field('blue', FormField.sketch(renderTextField(RgbaColour.isRgbaComponent, 'blue', blueStrings.label, blueStrings.description, 255))),
-            parts.field('hex', FormField.sketch(renderTextField(HexColour.isHexString, 'hex', hexStrings.label, hexStrings.description, 'ffffff'))),
-            memPreview.asSpec()
-          ],
+      Form.sketch((parts: FormTypes.FormParts) => ({
+        dom: {
+          tag: 'form',
+          classes: [ getClass('rgb-form') ],
+          attributes: { 'aria-label': translate('aria.color.picker') }
+        },
+        components: [
+          parts.field('red', FormField.sketch(renderTextField(RgbaColour.isRgbaComponent, 'red', redStrings.label, redStrings.description, 255))),
+          parts.field('green', FormField.sketch(renderTextField(RgbaColour.isRgbaComponent, 'green', greenStrings.label, greenStrings.description, 255))),
+          parts.field('blue', FormField.sketch(renderTextField(RgbaColour.isRgbaComponent, 'blue', blueStrings.label, blueStrings.description, 255))),
+          parts.field('hex', FormField.sketch(renderTextField(HexColour.isHexString, 'hex', hexStrings.label, hexStrings.description, 'ffffff'))),
+          memPreview.asSpec()
+        ],
 
-          formBehaviours: Behaviour.derive([
-            Invalidating.config({
-              invalidClass: getClass('form-invalid')
-            }),
+        formBehaviours: Behaviour.derive([
+          Invalidating.config({
+            invalidClass: getClass('form-invalid')
+          }),
 
-            AddEventsBehaviour.config('rgb-form-events', [
-              AlloyEvents.run(validInput, onValidInput),
-              AlloyEvents.run(invalidInput, onInvalidInput),
-              AlloyEvents.run(validatingInput, onInvalidInput)
-            ])
+          AddEventsBehaviour.config('rgb-form-events', [
+            AlloyEvents.run(validInput, onValidInput),
+            AlloyEvents.run(invalidInput, onInvalidInput),
+            AlloyEvents.run(validatingInput, onInvalidInput)
           ])
-        };
-      }),
+        ])
+      })),
       {
         apis: {
           updateHex(form: AlloyComponent, hex: Hex) {

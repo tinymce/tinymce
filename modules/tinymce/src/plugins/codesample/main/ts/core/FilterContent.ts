@@ -17,7 +17,7 @@ const setup = function (editor: Editor) {
     $('pre[contenteditable=false]', e.node).
       filter(Utils.trimArg(Utils.isCodeSample)).
       each(function (idx, elm) {
-        const $elm = $(elm), code = elm.textContent;
+        const $elm = $(elm); const code = elm.textContent;
 
         $elm.attr('class', $.trim($elm.attr('class')));
         $elm.removeAttr('contentEditable');

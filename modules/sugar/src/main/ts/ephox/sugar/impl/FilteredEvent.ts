@@ -3,9 +3,9 @@ import { Fun } from '@ephox/katamari';
 import { EventArgs, EventFilter, EventHandler, EventUnbinder } from '../api/events/Types';
 import Element from '../api/node/Element';
 
-const mkEvent = (target: Element, x: number, y: number, stop: () => void, prevent: () => void, kill: () => void, raw: Event): EventArgs => {
+const mkEvent = (target: Element, x: number, y: number, stop: () => void, prevent: () => void, kill: () => void, raw: Event): EventArgs =>
   // switched from a struct to manual Fun.constant() because we are passing functions now, not just values
-  return {
+  ({
     target:  Fun.constant(target),
     x:       Fun.constant(x),
     y:       Fun.constant(y),
@@ -13,8 +13,8 @@ const mkEvent = (target: Element, x: number, y: number, stop: () => void, preven
     prevent,
     kill,
     raw:     Fun.constant(raw)
-  };
-};
+  })
+;
 
 const fromRawEvent = (rawEvent: Event) => {
   const target = Element.fromDom(rawEvent.target as Node);

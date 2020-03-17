@@ -6,8 +6,8 @@
  */
 
 import {
-    AddEventsBehaviour, AlloyEvents, Behaviour, Button, GuiFactory, Memento, Menu, Representing,
-    TieredMenu, Toggling, Transitioning
+  AddEventsBehaviour, AlloyEvents, Behaviour, Button, GuiFactory, Memento, Menu, Representing,
+  TieredMenu, Toggling, Transitioning
 } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Arr, Merger, Obj, Option } from '@ephox/katamari';
@@ -108,7 +108,7 @@ const makeMenu = function (value, items, memMenuThunk, collapsable) {
           },
           GuiFactory.text(value)
         ] : [ GuiFactory.text(value) ],
-        action (item) {
+        action(item) {
           if (collapsable) {
             const comp = memMenuThunk().get(item);
             TieredMenu.collapseMenu(comp);
@@ -174,20 +174,20 @@ const sketch = function (settings) {
     // For animations, need things to stay around in the DOM (at least until animation is done)
     stayInDom: true,
 
-    onExecute (tmenu, item) {
+    onExecute(tmenu, item) {
       const v = Representing.getValue(item);
       settings.handle(item, v.value);
       return Option.none();
     },
-    onEscape () {
+    onEscape() {
       return Option.none();
     },
-    onOpenMenu (container, menu) {
+    onOpenMenu(container, menu) {
       const w = Width.get(container.element());
       Width.set(menu.element(), w);
       Transitioning.jumpTo(menu, 'current');
     },
-    onOpenSubmenu (container, item, submenu) {
+    onOpenSubmenu(container, item, submenu) {
       const w = Width.get(container.element());
       const menu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
       const menuComp = container.getSystem().getByDom(menu).getOrDie();
@@ -199,7 +199,7 @@ const sketch = function (settings) {
       Transitioning.progressTo(submenu, 'current');
     },
 
-    onCollapseMenu (container, item, menu) {
+    onCollapseMenu(container, item, menu) {
       const submenu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
       const submenuComp = container.getSystem().getByDom(submenu).getOrDie();
       Transitioning.progressTo(submenuComp, 'after');

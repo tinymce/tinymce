@@ -101,11 +101,9 @@ export const TinyApis = function (editor: Editor): TinyApis {
     ]);
   };
 
-  const cGetContent = <T> () => Chain.injectThunked<T, string>(() => {
-    return editor.getContent();
-  });
+  const cGetContent = <T> () => Chain.injectThunked<T, string>(() => editor.getContent());
 
-  const sExecCommand = function <T>(command: string, value?: any) {
+  const sExecCommand = function <T> (command: string, value?: any) {
     return Step.sync<T>(function () {
       editor.execCommand(command, false, value);
     });
@@ -135,7 +133,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
   };
 
   // const sAssertSelectionFrom = function (expected) {
-    // TODO
+  // TODO
   // };
 
   const assertPath = function (label: string, root: Element, expPath: number[], expOffset: number, actElement: DomNode, actOffset: number) {
@@ -149,7 +147,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
     Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
   };
 
-  const sAssertSelection = function <T>(startPath: number[], soffset: number, finishPath: number[], foffset: number) {
+  const sAssertSelection = function <T> (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
     return Step.sync<T>(function () {
       const actual = editor.selection.getRng();
       assertPath('start', lazyBody(), startPath, soffset, actual.startContainer, actual.startOffset);

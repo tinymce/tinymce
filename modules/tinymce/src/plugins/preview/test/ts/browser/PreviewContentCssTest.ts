@@ -12,14 +12,12 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentCssTest', (suc
   PreviewPlugin();
   SilverTheme();
 
-  const sAssertIframeHtmlContains = (editor: Editor, text: string) => {
-    return Logger.t('Assert Iframe Html contains ' + text, Step.sync(() => {
-      const actual = IframeContent.getPreviewHtml(editor);
-      const regexp = new RegExp(text);
+  const sAssertIframeHtmlContains = (editor: Editor, text: string) => Logger.t('Assert Iframe Html contains ' + text, Step.sync(() => {
+    const actual = IframeContent.getPreviewHtml(editor);
+    const regexp = new RegExp(text);
 
-      Assert.eq('Should be same html', true, regexp.test(actual));
-    }));
-  };
+    Assert.eq('Should be same html', true, regexp.test(actual));
+  }));
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
@@ -32,8 +30,8 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentCssTest', (suc
         sAssertIframeHtmlContains(editor, `<link type="text/css" rel="stylesheet" href="${contentCssUrl}" crossorigin="anonymous">`),
         tinyApis.sSetSetting('content_css_cors', false),
         sAssertIframeHtmlContains(editor, `<link type="text/css" rel="stylesheet" href="${contentCssUrl}">`)
-    ])
-    , onSuccess, onFailure);
+      ])
+      , onSuccess, onFailure);
   }, {
     theme: 'silver',
     plugins: 'preview',

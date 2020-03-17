@@ -118,7 +118,7 @@ const trimLeadingLineBreaks = function (node) {
 
 const getEditableRoot = function (dom, node) {
   const root = dom.getRoot();
-  let parent, editableRoot;
+  let parent; let editableRoot;
 
   // Get all parents until we hit a non editable parent or the root
   parent = node;
@@ -148,12 +148,12 @@ const applyAttributes = (editor: Editor, node: DomElement, forcedRootBlockAttrs:
   const currentClassesOpt = Option.from(node.className).map((currentClasses) => Arr.filter(currentClasses.split(/\s+/), (clazz) => clazz !== ''));
   Options.lift2(attrClassesOpt, currentClassesOpt, (attrClasses, currentClasses) => {
     const filteredClasses = Arr.filter(currentClasses, (clazz) => !Arr.contains(attrClasses, clazz));
-    const newClasses = [...attrClasses, ...filteredClasses];
+    const newClasses = [ ...attrClasses, ...filteredClasses ];
     editor.dom.setAttrib(node, 'class', newClasses.join(' '));
   });
 
   // Apply any remaining forced root block attributes
-  const appliedAttrs = ['style', 'class'];
+  const appliedAttrs = [ 'style', 'class' ];
   const remainingAttrs = Obj.filter(forcedRootBlockAttrs, (_, attrs) => !Arr.contains(appliedAttrs, attrs));
   editor.dom.setAttribs(node, remainingAttrs);
 };
@@ -169,9 +169,9 @@ const setForcedBlockAttrs = function (editor: Editor, node) {
 
 // Wraps any text nodes or inline elements in the specified forced root block name
 const wrapSelfAndSiblingsInDefaultBlock = function (editor: Editor, newBlockName, rng, container, offset) {
-  let newBlock, parentBlock, startNode, node, next, rootBlockName;
+  let newBlock; let parentBlock; let startNode; let node; let next; let rootBlockName;
   const blockName = newBlockName || 'P';
-  const dom = editor.dom, editableRoot = getEditableRoot(dom, container);
+  const dom = editor.dom; const editableRoot = getEditableRoot(dom, container);
 
   // Not in a block element or in a table cell or caption
   parentBlock = dom.getParent(container, dom.isBlock);
@@ -243,16 +243,16 @@ const addBrToBlockIfNeeded = function (dom, block) {
 };
 
 const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
-  let tmpRng, editableRoot, container, offset, parentBlock, shiftKey;
-  let newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName, isAfterLastNodeInContainer;
+  let tmpRng; let editableRoot; let container; let offset; let parentBlock; let shiftKey;
+  let newBlock; let fragment; let containerBlock; let parentBlockName; let containerBlockName; let newBlockName; let isAfterLastNodeInContainer;
   const dom = editor.dom;
-  const schema = editor.schema, nonEmptyElementsMap = schema.getNonEmptyElements();
+  const schema = editor.schema; const nonEmptyElementsMap = schema.getNonEmptyElements();
   const rng = editor.selection.getRng();
 
   // Creates a new block element by cloning the current one or creating a new one if the name is specified
   // This function will also copy any text formatting from the parent block and add it to the new one
   const createNewBlock = function (name?) {
-    let node = container, block, clonedNode, caretNode;
+    let node = container; let block; let clonedNode; let caretNode;
     const textInlineElements = schema.getTextInlineElements();
 
     if (name || parentBlockName === 'TABLE' || parentBlockName === 'HR') {
@@ -298,7 +298,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
 
   // Returns true/false if the caret is at the start/end of the parent block element
   const isCaretAtStartOrEndOfBlock = function (start?) {
-    let node, name;
+    let node; let name;
 
     const normalizedOffset = normalizeZwspOffset(start, container, offset);
 

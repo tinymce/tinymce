@@ -14,26 +14,29 @@ export default () => {
 
   const readOrTag = (component: AlloyComponent): string => {
     const elem = component.element();
-    return Tagger.read(elem).fold(() => {
+    return Tagger.read(elem).fold(() =>
       // No existing tag, so add one.
-      return Tagger.write('uid-', component.element());
-    }, (uid) => {
-      return uid;
-    });
+      Tagger.write('uid-', component.element())
+    , (uid) => uid);
   };
 
   const failOnDuplicate = (component: AlloyComponent, tagId: string): void => {
     const conflict = components[tagId];
-    if (conflict === component) { unregister(component); } else { throw new Error(
-      'The tagId "' + tagId + '" is already used by: ' + AlloyLogger.element(conflict.element()) + '\nCannot use it for: ' + AlloyLogger.element(component.element()) + '\n' +
+    if (conflict === component) {
+      unregister(component);
+    } else {
+      throw new Error(
+        'The tagId "' + tagId + '" is already used by: ' + AlloyLogger.element(conflict.element()) + '\nCannot use it for: ' + AlloyLogger.element(component.element()) + '\n' +
         'The conflicting element is' + (Body.inBody(conflict.element()) ? ' ' : ' not ') + 'already in the DOM'
-    );
+      );
     }
   };
 
   const register = (component: AlloyComponent): void => {
     const tagId = readOrTag(component);
-    if (Obj.hasNonNullableKey(components, tagId)) { failOnDuplicate(component, tagId); }
+    if (Obj.hasNonNullableKey(components, tagId)) {
+      failOnDuplicate(component, tagId);
+    }
     // Component is passed through an an extra argument to all events
     const extraArgs = [ component ];
     events.registerId(extraArgs, tagId, component.events());
@@ -47,17 +50,11 @@ export default () => {
     });
   };
 
-  const filter = (type: string): UidAndHandler[] => {
-    return events.filterByType(type);
-  };
+  const filter = (type: string): UidAndHandler[] => events.filterByType(type);
 
-  const find = (isAboveRoot: (elem: Element) => boolean, type: string, target: Element): Option<ElementAndHandler> => {
-    return events.find(isAboveRoot, type, target);
-  };
+  const find = (isAboveRoot: (elem: Element) => boolean, type: string, target: Element): Option<ElementAndHandler> => events.find(isAboveRoot, type, target);
 
-  const getById = (id: string): Option<AlloyComponent> => {
-    return Obj.get(components, id);
-  };
+  const getById = (id: string): Option<AlloyComponent> => Obj.get(components, id);
 
   return {
     find,

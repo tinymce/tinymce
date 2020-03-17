@@ -16,11 +16,11 @@ export interface AfterTableResizeEvent {
   readonly table: () => Element;
 }
 
-type TableResizeEventRegistry = {
-  readonly beforeResize: Bindable<BeforeTableResizeEvent>,
-  readonly afterResize: Bindable<AfterTableResizeEvent>,
-  readonly startDrag: Bindable<{}>
-};
+interface TableResizeEventRegistry {
+  readonly beforeResize: Bindable<BeforeTableResizeEvent>;
+  readonly afterResize: Bindable<AfterTableResizeEvent>;
+  readonly startDrag: Bindable<{}>;
+}
 
 interface TableResizeEvents {
   readonly registry: TableResizeEventRegistry;
@@ -45,8 +45,8 @@ const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>): TableResiz
   const manager = BarManager(wire, vdirection, hdirection);
 
   const events = Events.create({
-    beforeResize: Event(['table']),
-    afterResize: Event(['table']),
+    beforeResize: Event([ 'table' ]),
+    afterResize: Event([ 'table' ]),
     startDrag: Event([])
   }) as TableResizeEvents;
 

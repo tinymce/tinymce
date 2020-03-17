@@ -50,26 +50,26 @@ const getContentEditableRoot = function (root: Node, node: Node) {
 };
 
 const ControlSelection = (selection: Selection, editor: Editor): ControlSelection => {
-  const dom = editor.dom, each = Tools.each;
-  let selectedElm, selectedElmGhost, resizeHelper, resizeHandles, selectedHandle;
-  let startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;
-  let width,
-    height;
-  const editableDoc = editor.getDoc(),
-    rootDocument = document;
-  const abs = Math.abs,
-    round = Math.round,
-    rootElement = editor.getBody();
-  let startScrollWidth,
-    startScrollHeight;
+  const dom = editor.dom; const each = Tools.each;
+  let selectedElm; let selectedElmGhost; let resizeHelper; let resizeHandles; let selectedHandle;
+  let startX; let startY; let selectedElmX; let selectedElmY; let startW; let startH; let ratio; let resizeStarted;
+  let width;
+  let height;
+  const editableDoc = editor.getDoc();
+  const rootDocument = document;
+  const abs = Math.abs;
+  const round = Math.round;
+  const rootElement = editor.getBody();
+  let startScrollWidth;
+  let startScrollHeight;
 
   // Details about each resize handle how to scale etc
   resizeHandles = {
     // Name: x multiplier, y multiplier, delta size x, delta size y
-    nw: [0, 0, -1, -1],
-    ne: [1, 0, 1, -1],
-    se: [1, 1, 1, 1],
-    sw: [0, 1, -1, 1]
+    nw: [ 0, 0, -1, -1 ],
+    ne: [ 1, 0, 1, -1 ],
+    se: [ 1, 1, 1, 1 ],
+    sw: [ 0, 1, -1, 1 ]
   };
 
   const isImage = function (elm) {
@@ -120,8 +120,8 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   };
 
   const resizeGhostElement = function (e) {
-    let deltaX, deltaY, proportional;
-    let resizeHelperX, resizeHelperY;
+    let deltaX; let deltaY; let proportional;
+    let resizeHelperX; let resizeHelperY;
 
     // Calc new width/height
     deltaX = e.screenX - startX;
@@ -238,7 +238,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   };
 
   const showResizeRect = function (targetElm) {
-    let position, targetWidth, targetHeight, e, rect;
+    let position; let targetWidth; let targetHeight; let e; let rect;
 
     hideResizeRect();
     unbindResizeHandleEvents();
@@ -351,7 +351,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   };
 
   const hideResizeRect = function () {
-    let name, handleElm;
+    let name; let handleElm;
 
     unbindResizeHandleEvents();
 
@@ -369,7 +369,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   };
 
   const updateResizeRect = function (e) {
-    let startElm, controlElm;
+    let startElm; let controlElm;
 
     const isChildOrEqual = function (node, parent) {
       if (node) {
@@ -439,7 +439,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
       // Needs to be mousedown for drag/drop to work on IE 11
       // Needs to be click on Edge to properly select images
       editor.on('mousedown click', function (e) {
-        const target = e.target, nodeName = target.nodeName;
+        const target = e.target; const nodeName = target.nodeName;
 
         if (!resizeStarted && /^(TABLE|IMG|HR)$/.test(nodeName) && !isWithinContentEditableFalse(target)) {
           if (e.button !== 2) {

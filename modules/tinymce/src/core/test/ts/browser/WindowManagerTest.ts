@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.WindowManagerTest', function (success, 
   Theme();
 
   suite.test('OpenWindow/CloseWindow events', function (editor) {
-    let openWindowArgs, closeWindowArgs;
+    let openWindowArgs; let closeWindowArgs;
 
     editor.on('CloseWindow', function (e) {
       closeWindowArgs = e;

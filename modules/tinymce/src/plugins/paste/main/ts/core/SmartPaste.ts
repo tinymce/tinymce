@@ -74,7 +74,7 @@ const smartInsertContent = function (editor: Editor, html: string) {
 };
 
 const insertContent = function (editor: Editor, html: string, pasteAsText: boolean) {
- if (pasteAsText || Settings.isSmartPasteEnabled(editor) === false) {
+  if (pasteAsText || Settings.isSmartPasteEnabled(editor) === false) {
     pasteHtml(editor, html);
   } else {
     smartInsertContent(editor, html);

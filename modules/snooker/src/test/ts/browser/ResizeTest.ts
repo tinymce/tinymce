@@ -55,12 +55,12 @@ UnitTest.test('ResizeTest', function () {
     const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
     // [50%, 50%] existing widths.
-    assert.eq([50, 50], widths);
+    assert.eq([ 50, 50 ], widths);
 
     const deltas = Deltas.determine(widths, 0, step, tableSize);
 
     // [25%, -25%] deltas.
-    assert.eq([25, -25], deltas);
+    assert.eq([ 25, -25 ], deltas);
 
     // Set new width
     tableSize.setTableWidth(table, [], step);
@@ -103,11 +103,9 @@ UnitTest.test('ResizeTest', function () {
     const warehouse = getWarehouse(table);
     const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
-    const expectedWidths = [50, 50];
+    const expectedWidths = [ 50, 50 ];
 
-    const widthDiffs = Arr.map(expectedWidths, (x, i) => {
-      return widths[i] - x;
-    });
+    const widthDiffs = Arr.map(expectedWidths, (x, i) => widths[i] - x);
 
     // percentage width of this table is 100% but phantom treats this as around 804 pixels when we're doing conversions
     // we have pixel width cells of 400px, so the actual widths of the cells in percentages
@@ -120,7 +118,7 @@ UnitTest.test('ResizeTest', function () {
     const deltas = Deltas.determine(widths, 0, step, tableSize);
 
     // [25%, -25%] deltas.
-    assert.eq([25, -25], deltas);
+    assert.eq([ 25, -25 ], deltas);
 
     // Set new width
     tableSize.setTableWidth(table, [], step);
@@ -164,12 +162,12 @@ UnitTest.test('ResizeTest', function () {
     const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
     // [50%, 50%] existing widths.
-    assert.eq([400, 400], widths);
+    assert.eq([ 400, 400 ], widths);
 
     const deltas = Deltas.determine(widths, 0, step, tableSize);
 
     // [25%, -25%] deltas.
-    assert.eq([200, -200], deltas);
+    assert.eq([ 200, -200 ], deltas);
 
     Remove.remove(table);
   };
@@ -209,12 +207,12 @@ UnitTest.test('ResizeTest', function () {
     const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
     // [50%, 50%] existing widths.
-    assert.eq([400, 400], widths);
+    assert.eq([ 400, 400 ], widths);
 
     const deltas = Deltas.determine(widths, 0, step, tableSize);
 
     // [25%, -25%] deltas.
-    assert.eq([200, -200], deltas);
+    assert.eq([ 200, -200 ], deltas);
 
     Remove.remove(table);
   };

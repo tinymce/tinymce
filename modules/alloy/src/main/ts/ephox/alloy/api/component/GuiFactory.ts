@@ -44,9 +44,9 @@ const text = (textContent: string): PremadeSpec => {
 };
 
 // Rename.
-export interface ExternalElement { uid ?: string; element: Element; }
+export interface ExternalElement { uid?: string; element: Element }
 const external = (spec: ExternalElement): PremadeSpec => {
-  const extSpec: { uid: Option<string>, element: Element } = ValueSchema.asRawOrDie('external.component', ValueSchema.objOfOnly([
+  const extSpec: { uid: Option<string>; element: Element } = ValueSchema.asRawOrDie('external.component', ValueSchema.objOfOnly([
     FieldSchema.strict('element'),
     FieldSchema.option('uid')
   ]), spec);
@@ -58,9 +58,7 @@ const external = (spec: ExternalElement): PremadeSpec => {
   };
 
   const disconnect = () => {
-    systemApi.set(NoContextApi(() => {
-      return me;
-    }));
+    systemApi.set(NoContextApi(() => me));
   };
 
   extSpec.uid.each((uid) => {
@@ -93,18 +91,14 @@ const external = (spec: ExternalElement): PremadeSpec => {
 const uids = Tagger.generate;
 
 // INVESTIGATE: A better way to provide 'meta-specs'
-const build = (spec: AlloySpec): AlloyComponent => {
-  return GuiTypes.getPremade(spec).fold(() => {
-    // EFFICIENCY: Consider not merging here, and passing uid through separately
-    const userSpecWithUid = spec.hasOwnProperty('uid') ? spec as SimpleOrSketchSpec : {
-      uid: uids(''),
-      ...spec,
-    } as SimpleOrSketchSpec;
-    return buildFromSpec(userSpecWithUid).getOrDie();
-  }, (prebuilt) => {
-    return prebuilt;
-  });
-};
+const build = (spec: AlloySpec): AlloyComponent => GuiTypes.getPremade(spec).fold(() => {
+  // EFFICIENCY: Consider not merging here, and passing uid through separately
+  const userSpecWithUid = spec.hasOwnProperty('uid') ? spec as SimpleOrSketchSpec : {
+    uid: uids(''),
+    ...spec
+  } as SimpleOrSketchSpec;
+  return buildFromSpec(userSpecWithUid).getOrDie();
+}, (prebuilt) => prebuilt);
 
 const premade = GuiTypes.premade;
 

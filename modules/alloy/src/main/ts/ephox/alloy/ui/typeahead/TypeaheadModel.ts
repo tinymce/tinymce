@@ -45,8 +45,8 @@ const attemptSelectOver = (model: TypeaheadModelDetail, input: AlloyComponent, i
       Option.some(() => {
         setValueFromItem(model, input, item);
         setSelectionToEnd(input, inputDisplay.length);
-      })
-      : Option.none();
+      }) :
+      Option.none();
   }
 };
 

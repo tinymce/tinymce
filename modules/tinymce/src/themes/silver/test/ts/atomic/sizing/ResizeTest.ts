@@ -21,23 +21,19 @@ const mockEditor = (containerHeight, contentAreaHeight) => {
 };
 
 UnitTest.asynctest('Editor resizing tests', function (success, failure) {
-  const makeCappedSizeTest = (label, originalSize, delta, minSize, maxSize, expected) => {
-    return Logger.t(label, Step.sync(() => {
-      const actual = Utils.calcCappedSize(originalSize + delta, Option.some(minSize), Option.some(maxSize));
-      Assertions.assertEq('Editor size should match expected', expected, actual);
-    }));
-  };
+  const makeCappedSizeTest = (label, originalSize, delta, minSize, maxSize, expected) => Logger.t(label, Step.sync(() => {
+    const actual = Utils.calcCappedSize(originalSize + delta, Option.some(minSize), Option.some(maxSize));
+    Assertions.assertEq('Editor size should match expected', expected, actual);
+  }));
 
-  const makeDimensionsTest = (label: string, topDelta: number, leftDelta: number, resizeType: ResizeTypes, width, expected) => {
-    return Logger.t(label, Step.sync(() => {
-      const containerHeight = 500; // mid way between min and max in mockEditor
-      const chromeHeight = 100; // just need something smaller
-      const editor = mockEditor(containerHeight, containerHeight - chromeHeight);
-      const deltas = { top: () => topDelta, left: () => leftDelta };
-      const actual = getDimensions(editor, deltas, resizeType, containerHeight, width);
-      Assertions.assertEq('Dimensions should match expected', expected, actual);
-    }));
-  };
+  const makeDimensionsTest = (label: string, topDelta: number, leftDelta: number, resizeType: ResizeTypes, width, expected) => Logger.t(label, Step.sync(() => {
+    const containerHeight = 500; // mid way between min and max in mockEditor
+    const chromeHeight = 100; // just need something smaller
+    const editor = mockEditor(containerHeight, containerHeight - chromeHeight);
+    const deltas = { top: () => topDelta, left: () => leftDelta };
+    const actual = getDimensions(editor, deltas, resizeType, containerHeight, width);
+    Assertions.assertEq('Dimensions should match expected', expected, actual);
+  }));
 
   const cappedSizeTests = Log.stepsAsStep('TBA', 'Check editor size stays within min and max bounds', [
     makeCappedSizeTest('Within bounds', 500, 50, 250, 600, 550),

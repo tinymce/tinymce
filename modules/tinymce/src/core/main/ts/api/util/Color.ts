@@ -16,7 +16,7 @@
  * console.log(white.toHex(), red.toHsv());
  */
 
-const min = Math.min, max = Math.max, round = Math.round;
+const min = Math.min; const max = Math.max; const round = Math.round;
 
 interface RGB {
   r: number;
@@ -46,10 +46,10 @@ interface Color {
  */
 const Color = function (value?): Color {
   const self: any = {};
-  let r = 0, g = 0, b = 0;
+  let r = 0; let g = 0; let b = 0;
 
   const rgb2hsv = function (r, g, b) {
-    let h, s, v, d, minRGB, maxRGB;
+    let h; let s; let v; let d; let minRGB; let maxRGB;
 
     h = 0;
     s = 0;
@@ -71,7 +71,7 @@ const Color = function (value?): Color {
       };
     }
 
-    /*eslint no-nested-ternary:0 */
+    /* eslint no-nested-ternary:0 */
     d = (r === minRGB) ? g - b : ((b === minRGB) ? r - g : b - r);
     h = (r === minRGB) ? 3 : ((b === minRGB) ? 1 : 5);
     h = 60 * (h - d / (maxRGB - minRGB));
@@ -86,7 +86,7 @@ const Color = function (value?): Color {
   };
 
   const hsvToRgb = function (hue, saturation, brightness) {
-    let side, chroma, x, match;
+    let side; let chroma; let x; let match;
 
     hue = (parseInt(hue, 10) || 0) % 360;
     saturation = parseInt(saturation, 10) / 100;
@@ -105,44 +105,44 @@ const Color = function (value?): Color {
     match = brightness - chroma;
 
     switch (Math.floor(side)) {
-      case 0:
-        r = chroma;
-        g = x;
-        b = 0;
-        break;
+    case 0:
+      r = chroma;
+      g = x;
+      b = 0;
+      break;
 
-      case 1:
-        r = x;
-        g = chroma;
-        b = 0;
-        break;
+    case 1:
+      r = x;
+      g = chroma;
+      b = 0;
+      break;
 
-      case 2:
-        r = 0;
-        g = chroma;
-        b = x;
-        break;
+    case 2:
+      r = 0;
+      g = chroma;
+      b = x;
+      break;
 
-      case 3:
-        r = 0;
-        g = x;
-        b = chroma;
-        break;
+    case 3:
+      r = 0;
+      g = x;
+      b = chroma;
+      break;
 
-      case 4:
-        r = x;
-        g = 0;
-        b = chroma;
-        break;
+    case 4:
+      r = x;
+      g = 0;
+      b = chroma;
+      break;
 
-      case 5:
-        r = chroma;
-        g = 0;
-        b = x;
-        break;
+    case 5:
+      r = chroma;
+      g = 0;
+      b = x;
+      break;
 
-      default:
-        r = g = b = 0;
+    default:
+      r = g = b = 0;
     }
 
     r = round(255 * (r + match));

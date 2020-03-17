@@ -15,7 +15,7 @@ const createTextBlock = (editor: Editor, contentNode: Node): DocumentFragment =>
   const blockElements = editor.schema.getBlockElements();
   const fragment = dom.createFragment();
   const blockName = Settings.getForcedRootBlock(editor);
-  let node, textBlock, hasContentNode;
+  let node; let textBlock; let hasContentNode;
 
   if (blockName) {
     textBlock = dom.create(blockName);

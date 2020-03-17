@@ -22,12 +22,10 @@ UnitTest.asynctest('TouchTest', (success, failure) => {
 
   let repository = [];
 
-  const handlers = Arr.bind(['touchstart', 'touchend', 'touchmove', 'focus'], (evt) => {
-    return [
-      DomEvent.bind(container, evt, () => repository.push('container.' + evt)),
-      DomEvent.bind(input, evt, () => repository.push('input.' + evt))
-    ];
-  });
+  const handlers = Arr.bind([ 'touchstart', 'touchend', 'touchmove', 'focus' ], (evt) => [
+    DomEvent.bind(container, evt, () => repository.push('container.' + evt)),
+    DomEvent.bind(input, evt, () => repository.push('input.' + evt))
+  ]);
 
   const clearRepository = Step.sync(() => repository = []);
   const assertRepository = (label, expected) => Step.sync(() => Assertions.assertEq(label, expected, repository));
@@ -38,10 +36,10 @@ UnitTest.asynctest('TouchTest', (success, failure) => {
     assertRepository(label, expected)
   ]);
 
-  const isUnfocusedFirefox = () => {
+  const isUnfocusedFirefox = () =>
     // Focus events are not fired until the window has focus: https://bugzilla.mozilla.org/show_bug.cgi?id=566671
-    return platform.browser.isFirefox() && !document.hasFocus();
-  };
+    platform.browser.isFirefox() && !document.hasFocus()
+  ;
 
   Insert.append(container, input);
 
@@ -83,7 +81,7 @@ UnitTest.asynctest('TouchTest', (success, failure) => {
 
     runStep(
       'cTouchStart input',
-      ['input.touchstart', 'container.touchstart'],
+      [ 'input.touchstart', 'container.touchstart' ],
       Chain.asStep(container, [
         UiFinder.cFindIn('input'),
         Touch.cTouchStart
@@ -92,7 +90,7 @@ UnitTest.asynctest('TouchTest', (success, failure) => {
 
     runStep(
       'cTouchEnd input',
-      ['input.touchend', 'container.touchend'],
+      [ 'input.touchend', 'container.touchend' ],
       Chain.asStep(container, [
         UiFinder.cFindIn('input'),
         Touch.cTouchEnd
@@ -101,7 +99,7 @@ UnitTest.asynctest('TouchTest', (success, failure) => {
 
     runStep(
       'cTouchMove input',
-      ['input.touchmove', 'container.touchmove'],
+      [ 'input.touchmove', 'container.touchmove' ],
       Chain.asStep(container, [
         UiFinder.cFindIn('input'),
         Touch.cTouchMove

@@ -7,7 +7,7 @@ import { Arr, Fun, Option } from '@ephox/katamari';
  * f:      thing -> Optional unit
  * start: sets the start position to search at
  */
-const make = function <T, R extends { finish: () => number }> (xs: T[], f: (x: T, offset: number) => Option<R>, start: number = 0) {
+const make = function <T, R extends { finish: () => number }> (xs: T[], f: (x: T, offset: number) => Option<R>, start = 0) {
 
   const init = {
     len: start,
@@ -19,7 +19,7 @@ const make = function <T, R extends { finish: () => number }> (xs: T[], f: (x: T
     return value.fold(Fun.constant(acc), function (v) {
       return {
         len: v.finish(),
-        list: acc.list.concat([v])
+        list: acc.list.concat([ v ])
       };
     });
   }, init);

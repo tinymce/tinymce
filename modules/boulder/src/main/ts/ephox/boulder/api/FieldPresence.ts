@@ -16,7 +16,7 @@ export interface FieldPresenceAdt {
   match: <T>(branches: {
     strict: StrictField<T>;
     defaultedThunk: DefaultedThunkField<T>;
-    asOption: AsOptionField<T>,
+    asOption: AsOptionField<T>;
     asDefaultedOptionThunk: AsDefaultedOptionThunkField<T>;
     mergeWithThunk: MergeWithThunkField<T>;
   }) => T;
@@ -43,7 +43,7 @@ const defaulted = function (fallback: any): FieldPresenceAdt {
   );
 };
 
-const asDefaultedOption = function <T>(fallback: T): FieldPresenceAdt {
+const asDefaultedOption = function <T> (fallback: T): FieldPresenceAdt {
   return adt.asDefaultedOptionThunk(
     Fun.constant(fallback)
   );

@@ -15,7 +15,7 @@ import { MediaData } from './Types';
 
 const DOM = DOMUtils.DOM;
 
-type AttrList = Array<{ name: string, value: string }> & { map: Record<string, string> };
+type AttrList = Array<{ name: string; value: string }> & { map: Record<string, string> };
 
 const setAttributes = function (attrs: AttrList, updatedAttrs: Record<string, any>) {
   let name;
@@ -59,7 +59,7 @@ const normalizeHtml = function (html: string): string {
   return writer.getContent();
 };
 
-const sources = ['source', 'altsource'];
+const sources = [ 'source', 'altsource' ];
 
 const updateHtmlSax = function (html: string, data: Partial<MediaData>, updateAll?: boolean): string {
   const writer = Writer();
@@ -70,83 +70,83 @@ const updateHtmlSax = function (html: string, data: Partial<MediaData>, updateAl
     validate: false,
     allow_conditional_comments: true,
 
-    comment (text) {
+    comment(text) {
       writer.comment(text);
     },
 
-    cdata (text) {
+    cdata(text) {
       writer.cdata(text);
     },
 
-    text (text, raw) {
+    text(text, raw) {
       writer.text(text, raw);
     },
 
-    start (name, attrs, empty) {
+    start(name, attrs, empty) {
       switch (name) {
-        case 'video':
-        case 'object':
-        case 'embed':
-        case 'img':
-        case 'iframe':
-          if (data.height !== undefined && data.width !== undefined) {
-            setAttributes(attrs, {
-              width: data.width,
-              height: data.height
-            });
-          }
-          break;
+      case 'video':
+      case 'object':
+      case 'embed':
+      case 'img':
+      case 'iframe':
+        if (data.height !== undefined && data.width !== undefined) {
+          setAttributes(attrs, {
+            width: data.width,
+            height: data.height
+          });
+        }
+        break;
       }
 
       if (updateAll) {
         switch (name) {
-          case 'video':
+        case 'video':
+          setAttributes(attrs, {
+            poster: data.poster,
+            src: ''
+          });
+
+          if (data.altsource) {
             setAttributes(attrs, {
-              poster: data.poster,
               src: ''
             });
+          }
+          break;
 
-            if (data.altsource) {
-              setAttributes(attrs, {
-                src: ''
-              });
-            }
-            break;
+        case 'iframe':
+          setAttributes(attrs, {
+            src: data.source
+          });
+          break;
 
-          case 'iframe':
+        case 'source':
+          if (sourceCount < 2) {
             setAttributes(attrs, {
-              src: data.source
+              src: data[sources[sourceCount]],
+              type: data[sources[sourceCount] + 'mime']
             });
-            break;
 
-          case 'source':
-            if (sourceCount < 2) {
-              setAttributes(attrs, {
-                src: data[sources[sourceCount]],
-                type: data[sources[sourceCount] + 'mime']
-              });
-
-              if (!data[sources[sourceCount]]) {
-                return;
-              }
-            }
-            sourceCount++;
-            break;
-
-          case 'img':
-            if (!data.poster) {
+            if (!data[sources[sourceCount]]) {
               return;
             }
+          }
+          sourceCount++;
+          break;
 
-            hasImage = true;
-            break;
+        case 'img':
+          if (!data.poster) {
+            return;
+          }
+
+          hasImage = true;
+          break;
         }
       }
 
       writer.start(name, attrs, empty);
     },
 
-    end (name) {
+    end(name) {
       if (name === 'video' && updateAll) {
         for (let index = 0; index < 2; index++) {
           if (data[sources[index]]) {

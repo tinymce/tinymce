@@ -40,7 +40,7 @@ import * as ResumeEditing from '../focus/ResumeEditing';
  * the stubborn keyboard in webapp mode, we will need to find some way to let repartee know the MaxHeight
  * needs to exclude the keyboard. This isn't a problem with timid, because the keyboard is dismissed.
  */
-const stubborn = function (outerBody, cWin, page, frame/*, toolstrip, toolbar*/) {
+const stubborn = function (outerBody, cWin, page, frame/* , toolstrip, toolbar*/) {
   const toEditing = function () {
     ResumeEditing.resume(cWin, frame);
   };
@@ -94,7 +94,7 @@ const stubborn = function (outerBody, cWin, page, frame/*, toolstrip, toolbar*/)
  * However, the timid keyboard mode will seamlessly integrate with dropdowns max-height, because
  * dropdowns dismiss the keyboard, so they have all the height they require.
  */
-const timid = function (outerBody, cWin, page, frame/*, toolstrip, toolbar*/) {
+const timid = function (outerBody, cWin, page, frame/* , toolstrip, toolbar*/) {
   const dismissKeyboard = function () {
     Focus.blur(frame);
   };

@@ -34,30 +34,28 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
           plugins: 'table',
           skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
           content_css: '/project/tinymce/js/tinymce/skins/content/default',
-          setup (editor) {
+          setup(editor) {
             editor.on('SkinLoaded', function () {
-                Delay.setTimeout(function () {
-                    next(editor);
-                }, 0);
+              Delay.setTimeout(function () {
+                next(editor);
+              }, 0);
             });
-        }
+          }
         });
       }),
       Guard.addLogging('Add editor settings')
     );
   };
 
-  const cNotExists = (container: Element, selector: string) => {
-    return Chain.control(
-      Chain.op(() => {
-        UiFinder.findIn(container, selector).fold(
-          () => Assert.eq('should not find anything', true, true),
-          () => Assert.eq('Expected ' + selector + ' not to exist.', true, false)
-        );
-      }),
-      Guard.addLogging('Assert ' + selector + ' does not exist')
-    );
-  };
+  const cNotExists = (container: Element, selector: string) => Chain.control(
+    Chain.op(() => {
+      UiFinder.findIn(container, selector).fold(
+        () => Assert.eq('should not find anything', true, true),
+        () => Assert.eq('Expected ' + selector + ' not to exist.', true, false)
+      );
+    }),
+    Guard.addLogging('Assert ' + selector + ' does not exist')
+  );
 
   const step = Step.raw((_, next, die, initLogs) => {
     NamedChain.pipeline([
@@ -82,4 +80,4 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
   Pipeline.async({}, [
     Log.step('TBA', 'Table: Table outside of inline editor should not become resizable', step)
   ], () => success(), failure, TestLogs.init());
-  });
+});

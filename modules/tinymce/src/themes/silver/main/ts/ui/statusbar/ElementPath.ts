@@ -31,26 +31,24 @@ const renderElementPath = (editor: Editor, settings) => {
   const getDataPath = (data) => {
     const parts = data || [];
 
-    const newPathElements = Arr.map(parts, (part, index) => {
-      return Button.sketch({
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-statusbar__path-item' ],
-          attributes: {
-            'role': 'button',
-            'data-index': index,
-            'tab-index': -1,
-            'aria-level': index + 1
-          },
-          innerHtml: part.name
+    const newPathElements = Arr.map(parts, (part, index) => Button.sketch({
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-statusbar__path-item' ],
+        attributes: {
+          'role': 'button',
+          'data-index': index,
+          'tab-index': -1,
+          'aria-level': index + 1
         },
-        action: (btn) => {
-          editor.focus();
-          editor.selection.select(part.element);
-          editor.nodeChanged();
-        }
-      });
-    });
+        innerHtml: part.name
+      },
+      action: (btn) => {
+        editor.focus();
+        editor.selection.select(part.element);
+        editor.nodeChanged();
+      }
+    }));
 
     const divider = {
       dom: {
@@ -68,7 +66,7 @@ const renderElementPath = (editor: Editor, settings) => {
       newAcc.push(divider);
       newAcc.push(element);
       return newAcc;
-    }, [newPathElements[0]]);
+    }, [ newPathElements[0] ]);
   };
 
   const updatePath = (parents) => {

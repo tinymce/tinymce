@@ -38,9 +38,7 @@ import Serializer from './Serializer';
  * alert(tinymce.activeEditor.selection.getNode().nodeName);
  */
 
-const isNativeIeSelection = (rng: any): boolean => {
-  return !!(<any> rng).select;
-};
+const isNativeIeSelection = (rng: any): boolean => !!(rng).select;
 
 const isAttachedToDom = function (node: Node): boolean {
   return !!(node && node.ownerDocument) && Compare.contains(SugarElement.fromDom(node.ownerDocument), SugarElement.fromDom(node));
@@ -82,9 +80,9 @@ interface Selection {
   getSelectedBlocks: (startElm?: Element, endElm?: Element) => Element[];
   normalize: () => Range;
   selectorChanged: (selector: string, callback: (active: boolean, args: {
-      node: Node;
-      selector: String;
-      parents: Element[];
+    node: Node;
+    selector: String;
+    parents: Element[];
   }) => void) => any;
   selectorChangedWithUnbind: (selector: string, callback: (active: boolean, args: {
     node: Node;
@@ -247,7 +245,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
    * Collapsed means if it's a caret or a larger selection.
    */
   const isCollapsed = (): boolean => {
-    const rng: any = getRng(), sel = getSel();
+    const rng: any = getRng(); const sel = getSel();
 
     if (!rng || rng.item) {
       return false;
@@ -290,7 +288,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
    * @see http://www.dotvoid.com/2001/03/using-the-range-object-in-mozilla/
    */
   const getRng = (): Range | null => {
-    let selection, rng, elm, doc;
+    let selection; let rng; let elm; let doc;
 
     const tryCompareBoundaryPoints = function (how, sourceRange, destinationRange) {
       try {
@@ -319,7 +317,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
       const bookmark = SelectionBookmark.getRng(editor);
 
       if (bookmark.isSome()) {
-        return bookmark.map((r) => EventProcessRanges.processRanges(editor, [r])[0]).getOr(doc.createRange());
+        return bookmark.map((r) => EventProcessRanges.processRanges(editor, [ r ])[0]).getOr(doc.createRange());
       }
     }
 
@@ -335,7 +333,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
       // IE throws unspecified error here if TinyMCE is placed in a frame/iframe
     }
 
-    rng = EventProcessRanges.processRanges(editor, [rng])[0];
+    rng = EventProcessRanges.processRanges(editor, [ rng ])[0];
 
     // No range found then create an empty one
     // This can occur when the editor is placed in a hidden container element on Gecko
@@ -374,7 +372,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
    * @param {Boolean} forward Optional boolean if the selection is forwards or backwards.
    */
   const setRng = (rng: Range, forward?: boolean) => {
-    let sel, node, evt;
+    let sel; let node; let evt;
 
     if (!isValidRange(rng)) {
       return;
@@ -477,8 +475,8 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
 
   const isForward = (): boolean => {
     const sel = getSel();
-    let anchorRange,
-      focusRange;
+    let anchorRange;
+    let focusRange;
 
     // No support for selection direction then always return true
     if (!sel || !sel.anchorNode || !sel.focusNode) {
@@ -513,7 +511,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
     return rng;
   };
 
-    /**
+  /**
    * Executes callback when the current selection starts/stops matching the specified selector. The current
    * state will be passed to the callback as it's first argument.
    *
@@ -521,7 +519,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
    * @param {String} selector CSS selector to check for.
    * @param {function} callback Callback with state and args when the selector is matches or not.
    */
-  const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node, selector: String, parents: Element[] }) => void) => {
+  const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node; selector: String; parents: Element[] }) => void) => {
     selectorChangedWithUnbind(selector, callback);
     return exports;
   };

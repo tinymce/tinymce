@@ -163,7 +163,7 @@ const hasOwnProperty = function (obj, prop) {
  */
 const create = function (s, p, root?) {
   const self = this;
-  let sp, ns, cn, scn, c, de = 0;
+  let sp; let ns; let cn; let scn; let c; let de = 0;
 
   // Parse : <prefix> <class>:<super class>
   s = /^((static) )?([\w.]+)(:([\w.]+))?/.exec(s);
@@ -241,15 +241,15 @@ const create = function (s, p, root?) {
   }
 
   // Add static methods
-  /*jshint sub:true*/
-  /*eslint dot-notation:0*/
+  /* jshint sub:true*/
+  /* eslint dot-notation:0*/
   self.each(p.static, function (f, n) {
     ns[cn][n] = f;
   });
 };
 
 const extend = function (obj, ext, ...x: any[]) {
-  let i, l, name;
+  let i; let l; let name;
   const args = arguments;
   let value;
 
@@ -315,7 +315,7 @@ const walk = function (o, f, n?, s?) {
  * };
  */
 const createNS = function (n, o?) {
-  let i, v;
+  let i; let v;
 
   o = o || window;
 
@@ -345,7 +345,7 @@ const createNS = function (n, o?) {
  * var obj = tinymce.resolve('a.b.c.d');
  */
 const resolve = function (n, o?) {
-  let i, l;
+  let i; let l;
 
   o = o || window;
 

@@ -27,11 +27,9 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', (success, fai
     }));
   };
 
-  const sAssertContent = (tinyApis: TinyApis, expected: string) => {
-    return GeneralSteps.sequence(Log.steps('TBA', 'asserting contents after undo', [
-      tinyApis.sAssertContent(expected)
-    ]));
-  };
+  const sAssertContent = (tinyApis: TinyApis, expected: string) => GeneralSteps.sequence(Log.steps('TBA', 'asserting contents after undo', [
+    tinyApis.sAssertContent(expected)
+  ]));
 
   const sWaitForWordcount = function (num: number) {
     return Waiter.sTryUntil('wordcount did not change', sAssertWordcount(num));

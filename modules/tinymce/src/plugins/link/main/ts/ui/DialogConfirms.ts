@@ -54,19 +54,17 @@ const tryProtocolTransform = (assumeExternalTargets: AssumeExternalTargets, defa
   }) : Option.none();
 };
 
-const preprocess = (editor: Editor, data: LinkDialogOutput): Promise<LinkDialogOutput> => {
-  return Arr.findMap(
-    [ tryEmailTransform, tryProtocolTransform(Settings.assumeExternalTargets(editor),  Settings.getDefaultLinkProtocol(editor)) ],
-    (f) => f(data)
-  ).fold(
-    () => Promise.resolve(data),
-    (transform) => new Promise((callback) => {
-      delayedConfirm(editor, transform.message, (state) => {
-        callback(state ? transform.preprocess(data) : data);
-      });
-    })
-  );
-};
+const preprocess = (editor: Editor, data: LinkDialogOutput): Promise<LinkDialogOutput> => Arr.findMap(
+  [ tryEmailTransform, tryProtocolTransform(Settings.assumeExternalTargets(editor),  Settings.getDefaultLinkProtocol(editor)) ],
+  (f) => f(data)
+).fold(
+  () => Promise.resolve(data),
+  (transform) => new Promise((callback) => {
+    delayedConfirm(editor, transform.message, (state) => {
+      callback(state ? transform.preprocess(data) : data);
+    });
+  })
+);
 
 export const DialogConfirms = {
   preprocess

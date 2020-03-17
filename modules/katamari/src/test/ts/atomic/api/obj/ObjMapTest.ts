@@ -37,8 +37,8 @@ UnitTest.test('Obj.map: unit test', () => {
   };
 
   checkMapToArray([], {}, stringify);
-  checkMapToArray(['a :: a'], { a: 'a' }, stringify);
-  checkMapToArray(['a :: a', 'b :: b', 'c :: c'], { a: 'a', b: 'b', c: 'c' }, stringify);
+  checkMapToArray([ 'a :: a' ], { a: 'a' }, stringify);
+  checkMapToArray([ 'a :: a', 'b :: b', 'c :: c' ], { a: 'a', b: 'b', c: 'c' }, stringify);
 });
 
 UnitTest.test('Obj.map: map id obj = obj', () => {

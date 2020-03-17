@@ -48,7 +48,7 @@ const setEditorHtml = (editor: Editor, html: string) => {
 };
 
 const setContentString = (editor: Editor, body: HTMLElement, content: string, args: SetContentArgs): string => {
-  let forcedRootBlockName, padd;
+  let forcedRootBlockName; let padd;
 
   // Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
   // It will also be impossible to place the caret in the editor unless there is a BR element present
@@ -94,7 +94,7 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
     }
   }
 
-  return args.content as string;
+  return args.content;
 };
 
 const setContentTree = (editor: Editor, body: HTMLElement, content: Node, args: SetContentArgs): Node => {

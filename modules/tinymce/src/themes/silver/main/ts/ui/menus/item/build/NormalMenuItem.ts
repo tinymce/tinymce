@@ -14,13 +14,11 @@ import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 // Note, this does not create a valid SketchSpec.
-const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true): ItemTypes.ItemSpec => {
-  const getApi = (component: AlloyComponent): Menu.MenuItemInstanceApi => {
-    return {
-      isDisabled: () => Disabling.isDisabled(component),
-      setDisabled: (state: boolean) => Disabling.set(component, state)
-    };
-  };
+const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons = true): ItemTypes.ItemSpec => {
+  const getApi = (component: AlloyComponent): Menu.MenuItemInstanceApi => ({
+    isDisabled: () => Disabling.isDisabled(component),
+    setDisabled: (state: boolean) => Disabling.set(component, state)
+  });
 
   const structure = renderItemStructure({
     presets: 'normal',

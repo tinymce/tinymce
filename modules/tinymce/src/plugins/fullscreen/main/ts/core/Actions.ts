@@ -82,7 +82,7 @@ const toggleFullscreen = function (editor, fullscreenState) {
   const body = document.body;
   const documentElement = document.documentElement;
   let editorContainerStyle;
-  let editorContainer, iframe, iframeStyle;
+  let editorContainer; let iframe; let iframeStyle;
   editorContainer = editor.getContainer();
   const editorContainerS = Element.fromDom(editorContainer);
 

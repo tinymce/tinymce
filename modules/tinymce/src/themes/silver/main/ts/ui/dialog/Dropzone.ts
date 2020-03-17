@@ -35,12 +35,10 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
   };
 
   // TODO: Consider moving to alloy
-  const sequence = (actions: Array<AlloyEvents.EventRunHandler<EventArgs>>): AlloyEvents.EventRunHandler<EventArgs> => {
-    return (comp, se) => {
-      Arr.each(actions, (a) => {
-        a(comp, se);
-      });
-    };
+  const sequence = (actions: Array<AlloyEvents.EventRunHandler<EventArgs>>): AlloyEvents.EventRunHandler<EventArgs> => (comp, se) => {
+    Arr.each(actions, (a) => {
+      a(comp, se);
+    });
   };
 
   const onDrop: AlloyEvents.EventRunHandler<EventArgs> = (comp, se) => {
@@ -81,73 +79,71 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
     }
   );
 
-  const renderField = (s) => {
-    return {
-      uid: s.uid,
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-dropzone-container' ]
-      },
-      behaviours: Behaviour.derive([
-        RepresentingConfigs.memory([ ]),
-        ComposingConfigs.self(),
-        Disabling.config({}),
-        Toggling.config({
-          toggleClass: 'dragenter',
-          toggleOnExecute: false
-        }),
-        AddEventsBehaviour.config('dropzone-events', [
-          AlloyEvents.run('dragenter', sequence([ stopper, Toggling.toggle ])),
-          AlloyEvents.run('dragleave', sequence([ stopper, Toggling.toggle ])),
-          AlloyEvents.run('dragover', stopper),
-          AlloyEvents.run('drop', sequence([ stopper, onDrop ])),
-          AlloyEvents.run(NativeEvents.change(), onSelect)
-        ]),
+  const renderField = (s) => ({
+    uid: s.uid,
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-dropzone-container' ]
+    },
+    behaviours: Behaviour.derive([
+      RepresentingConfigs.memory([ ]),
+      ComposingConfigs.self(),
+      Disabling.config({}),
+      Toggling.config({
+        toggleClass: 'dragenter',
+        toggleOnExecute: false
+      }),
+      AddEventsBehaviour.config('dropzone-events', [
+        AlloyEvents.run('dragenter', sequence([ stopper, Toggling.toggle ])),
+        AlloyEvents.run('dragleave', sequence([ stopper, Toggling.toggle ])),
+        AlloyEvents.run('dragover', stopper),
+        AlloyEvents.run('drop', sequence([ stopper, onDrop ])),
+        AlloyEvents.run(NativeEvents.change(), onSelect)
       ]),
-      components: [
-        {
-          dom: {
-            tag: 'div',
-            classes: [ 'tox-dropzone' ],
-            styles: {}
+    ]),
+    components: [
+      {
+        dom: {
+          tag: 'div',
+          classes: [ 'tox-dropzone' ],
+          styles: {}
+        },
+        components: [
+          {
+            dom: {
+              tag: 'p',
+              innerHtml: providersBackstage.translate('Drop an image here')
+            }
           },
-          components: [
-            {
-              dom: {
-                tag: 'p',
-                innerHtml: providersBackstage.translate('Drop an image here')
-              }
+          Button.sketch({
+            dom: {
+              tag: 'button',
+              innerHtml: providersBackstage.translate('Browse for an image'),
+              styles: {
+                position: 'relative'
+              },
+              classes: [ 'tox-button', 'tox-button--secondary' ]
             },
-            Button.sketch({
-              dom: {
-                tag: 'button',
-                innerHtml: providersBackstage.translate('Browse for an image'),
-                styles: {
-                  position: 'relative'
-                },
-                classes: [ 'tox-button', 'tox-button--secondary']
-              },
-              components: [
-                memInput.asSpec()
-              ],
-              action: (comp) => {
-                const inputComp = memInput.get(comp);
-                inputComp.element().dom().click();
-              },
-              buttonBehaviours: Behaviour.derive([
-                Tabstopping.config({ })
-              ])
-            })
-          ]
-        }
-      ]
-    };
-  };
+            components: [
+              memInput.asSpec()
+            ],
+            action: (comp) => {
+              const inputComp = memInput.get(comp);
+              inputComp.element().dom().click();
+            },
+            buttonBehaviours: Behaviour.derive([
+              Tabstopping.config({ })
+            ])
+          })
+        ]
+      }
+    ]
+  });
 
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
   const pField = AlloyFormField.parts().field({
     factory: { sketch: renderField }
   });
 
-  return renderFormFieldWith(pLabel, pField, ['tox-form__group--stretched'], [ ]);
+  return renderFormFieldWith(pLabel, pField, [ 'tox-form__group--stretched' ], [ ]);
 };

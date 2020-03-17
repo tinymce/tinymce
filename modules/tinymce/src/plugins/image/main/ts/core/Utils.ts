@@ -19,43 +19,39 @@ export interface ImageDimensions {
 }
 
 // TODO: Figure out if these would ever be something other than numbers. This was added in: #TINY-1350
-const parseIntAndGetMax = (val1: any, val2: any) => {
-  return Math.max(parseInt(val1, 10), parseInt(val2, 10));
-};
+const parseIntAndGetMax = (val1: any, val2: any) => Math.max(parseInt(val1, 10), parseInt(val2, 10));
 
-const getImageSize = (url: string): Promise<ImageDimensions> => {
-  return new Promise((callback) => {
-    const img = document.createElement('img');
+const getImageSize = (url: string): Promise<ImageDimensions> => new Promise((callback) => {
+  const img = document.createElement('img');
 
-    const done = (dimensions: Promise<ImageDimensions>) => {
-      if (img.parentNode) {
-        img.parentNode.removeChild(img);
-      }
+  const done = (dimensions: Promise<ImageDimensions>) => {
+    if (img.parentNode) {
+      img.parentNode.removeChild(img);
+    }
 
-      callback(dimensions);
-    };
+    callback(dimensions);
+  };
 
-    img.onload = () => {
-      const width = parseIntAndGetMax(img.width, img.clientWidth);
-      const height = parseIntAndGetMax(img.height, img.clientHeight);
-      const dimensions = { width, height };
-      done(Promise.resolve(dimensions));
-    };
+  img.onload = () => {
+    const width = parseIntAndGetMax(img.width, img.clientWidth);
+    const height = parseIntAndGetMax(img.height, img.clientHeight);
+    const dimensions = { width, height };
+    done(Promise.resolve(dimensions));
+  };
 
-    img.onerror = () => {
-      done(Promise.reject(`Failed to get image dimensions for: ${url}`));
-    };
+  img.onerror = () => {
+    done(Promise.reject(`Failed to get image dimensions for: ${url}`));
+  };
 
-    const style = img.style;
-    style.visibility = 'hidden';
-    style.position = 'fixed';
-    style.bottom = style.left = '0px';
-    style.width = style.height = 'auto';
+  const style = img.style;
+  style.visibility = 'hidden';
+  style.position = 'fixed';
+  style.bottom = style.left = '0px';
+  style.width = style.height = 'auto';
 
-    document.body.appendChild(img);
-    img.src = url;
-  });
-};
+  document.body.appendChild(img);
+  img.src = url;
+});
 
 const removePixelSuffix = (value: string): string => {
   if (value) {
@@ -76,29 +72,29 @@ const mergeMargins = (css: StyleMap) => {
     const splitMargin = String(css.margin).split(' ');
 
     switch (splitMargin.length) {
-      case 1: // margin: toprightbottomleft;
-        css['margin-top'] = css['margin-top'] || splitMargin[0];
-        css['margin-right'] = css['margin-right'] || splitMargin[0];
-        css['margin-bottom'] = css['margin-bottom'] || splitMargin[0];
-        css['margin-left'] = css['margin-left'] || splitMargin[0];
-        break;
-      case 2: // margin: topbottom rightleft;
-        css['margin-top'] = css['margin-top'] || splitMargin[0];
-        css['margin-right'] = css['margin-right'] || splitMargin[1];
-        css['margin-bottom'] = css['margin-bottom'] || splitMargin[0];
-        css['margin-left'] = css['margin-left'] || splitMargin[1];
-        break;
-      case 3: // margin: top rightleft bottom;
-        css['margin-top'] = css['margin-top'] || splitMargin[0];
-        css['margin-right'] = css['margin-right'] || splitMargin[1];
-        css['margin-bottom'] = css['margin-bottom'] || splitMargin[2];
-        css['margin-left'] = css['margin-left'] || splitMargin[1];
-        break;
-      case 4: // margin: top right bottom left;
-        css['margin-top'] = css['margin-top'] || splitMargin[0];
-        css['margin-right'] = css['margin-right'] || splitMargin[1];
-        css['margin-bottom'] = css['margin-bottom'] || splitMargin[2];
-        css['margin-left'] = css['margin-left'] || splitMargin[3];
+    case 1: // margin: toprightbottomleft;
+      css['margin-top'] = css['margin-top'] || splitMargin[0];
+      css['margin-right'] = css['margin-right'] || splitMargin[0];
+      css['margin-bottom'] = css['margin-bottom'] || splitMargin[0];
+      css['margin-left'] = css['margin-left'] || splitMargin[0];
+      break;
+    case 2: // margin: topbottom rightleft;
+      css['margin-top'] = css['margin-top'] || splitMargin[0];
+      css['margin-right'] = css['margin-right'] || splitMargin[1];
+      css['margin-bottom'] = css['margin-bottom'] || splitMargin[0];
+      css['margin-left'] = css['margin-left'] || splitMargin[1];
+      break;
+    case 3: // margin: top rightleft bottom;
+      css['margin-top'] = css['margin-top'] || splitMargin[0];
+      css['margin-right'] = css['margin-right'] || splitMargin[1];
+      css['margin-bottom'] = css['margin-bottom'] || splitMargin[2];
+      css['margin-left'] = css['margin-left'] || splitMargin[1];
+      break;
+    case 4: // margin: top right bottom left;
+      css['margin-top'] = css['margin-top'] || splitMargin[0];
+      css['margin-right'] = css['margin-right'] || splitMargin[1];
+      css['margin-bottom'] = css['margin-bottom'] || splitMargin[2];
+      css['margin-left'] = css['margin-left'] || splitMargin[3];
     }
 
     delete css.margin;
@@ -114,7 +110,7 @@ const createImageList = (editor: Editor, callback: (imageList: any) => void) => 
   if (typeof imageList === 'string') {
     XHR.send({
       url: imageList,
-      success (text) {
+      success(text) {
         callback(JSON.parse(text));
       }
     });
@@ -149,22 +145,18 @@ const waitLoadImage = (editor: Editor, data: ImageData, imgElm: HTMLElement) => 
   imgElm.onerror = selectImage;
 };
 
-const blobToDataUri = (blob: Blob) => {
-  return new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      resolve(reader.result);
-    };
-    reader.onerror = () => {
-      reject(reader.error.message);
-    };
-    reader.readAsDataURL(blob);
-  });
-};
+const blobToDataUri = (blob: Blob) => new Promise<string>((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onload = () => {
+    resolve(reader.result);
+  };
+  reader.onerror = () => {
+    reject(reader.error.message);
+  };
+  reader.readAsDataURL(blob);
+});
 
-const isPlaceholderImage = (imgElm: Element): boolean => {
-  return imgElm.nodeName === 'IMG' && (imgElm.hasAttribute('data-mce-object') || imgElm.hasAttribute('data-mce-placeholder'));
-};
+const isPlaceholderImage = (imgElm: Element): boolean => imgElm.nodeName === 'IMG' && (imgElm.hasAttribute('data-mce-object') || imgElm.hasAttribute('data-mce-placeholder'));
 
 export {
   getImageSize,

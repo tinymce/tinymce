@@ -21,19 +21,17 @@ import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 
 UnitTest.asynctest('FieldsTest', (success, failure) => {
 
-  const renderChoice = (choiceSpec: { value: string; text: string; }): AlloySpec & { value: string } => {
-    return {
-      value: choiceSpec.value,
-      dom: {
-        tag: 'span',
-        innerHtml: choiceSpec.text,
-        attributes: {
-          'data-value': choiceSpec.value
-        }
-      },
-      components: [ ]
-    };
-  };
+  const renderChoice = (choiceSpec: { value: string; text: string }): AlloySpec & { value: string } => ({
+    value: choiceSpec.value,
+    dom: {
+      tag: 'span',
+      innerHtml: choiceSpec.text,
+      attributes: {
+        'data-value': choiceSpec.value
+      }
+    },
+    components: [ ]
+  });
 
   const labelSpec: AlloySpec = {
     dom: {
@@ -127,7 +125,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         })
       ],
 
-      onLockedChange (current, other) {
+      onLockedChange(current, other) {
         Representing.setValueFrom(other, current);
       },
       markers: {
@@ -196,25 +194,21 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         });
       }), inputA.element()),
 
-      Assertions.sAssertStructure('Check the select-b dom', ApproxStructure.build((s, str, arr) => {
-        return s.element('div', {
-          children: [
-            s.element('label', { }),
-            s.element('select', { })
-          ]
-        });
-      }), selectB.element()),
+      Assertions.sAssertStructure('Check the select-b dom', ApproxStructure.build((s, str, arr) => s.element('div', {
+        children: [
+          s.element('label', { }),
+          s.element('select', { })
+        ]
+      })), selectB.element()),
 
-      Assertions.sAssertStructure('Check the chooser-c dom', ApproxStructure.build((s, str, arr) => {
-        return s.element('div', {
-          children: [
-            s.element('legend', { }),
-            s.element('span', { attrs: { role: str.is('radio') } }),
-            s.element('span', { attrs: { role: str.is('radio') } }),
-            s.element('span', { attrs: { role: str.is('radio') } })
-          ]
-        });
-      }), chooserC.element()),
+      Assertions.sAssertStructure('Check the chooser-c dom', ApproxStructure.build((s, str, arr) => s.element('div', {
+        children: [
+          s.element('legend', { }),
+          s.element('span', { attrs: { role: str.is('radio') } }),
+          s.element('span', { attrs: { role: str.is('radio') } }),
+          s.element('span', { attrs: { role: str.is('radio') } })
+        ]
+      })), chooserC.element()),
 
       RepresentPipes.sAssertValue('Checking select-b value', 'select-b-init', selectB),
 
@@ -227,9 +221,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         Assertions.assertEq('Checking chooser-c value after set', 'choice3', val2);
       }),
 
-      Assertions.sAssertStructure('Checking the data field (E)', ApproxStructure.build((s, str, arr) => {
-        return s.element('span', { children: [ ] });
-      }), dataE.element()),
+      Assertions.sAssertStructure('Checking the data field (E)', ApproxStructure.build((s, str, arr) => s.element('span', { children: [ ] })), dataE.element()),
 
       Step.sync(() => {
         const val = Representing.getValue(dataE);
@@ -249,14 +241,14 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
       Step.sync(() => {
         FormField.getField(inputA).fold(() => {
           throw new Error('The input Field could not be found');
-        },  (comp) => {
+        }, (comp) => {
           const alloyId = Tagger.readOrDie(comp.element());
           Assertions.assertEq('FormField should have an api that returns the input field', 'input-a-field', alloyId);
         });
 
         FormField.getLabel(inputA).fold(() => {
           throw new Error('The input Label could not be found');
-        },  (comp) => {
+        }, (comp) => {
           const alloyId = Tagger.readOrDie(comp.element());
           Assertions.assertEq('FormField should have an api that returns the input Label', 'input-a-label', alloyId);
         });
@@ -264,5 +256,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
 
       GuiSetup.mRemoveStyles
     ];
-  }, () => { success(); }, failure);
+  }, () => {
+    success();
+  }, failure);
 });

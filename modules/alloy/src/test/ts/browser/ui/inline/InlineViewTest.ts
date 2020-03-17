@@ -16,10 +16,7 @@ import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 
 UnitTest.asynctest('InlineViewTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
-    return Sinks.relativeSink();
-
-  }, (doc, body, gui, component, store) => {
+  GuiSetup.setup((store, doc, body) => Sinks.relativeSink(), (doc, body, gui, component, store) => {
     const inline = GuiFactory.build(
       InlineView.sketch({
         dom: {
@@ -27,12 +24,12 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
           classes: [ 'test-inline' ]
         },
 
-        lazySink (comp) {
+        lazySink(comp) {
           Assertions.assertEq('Checking InlineView passed through to lazySink', true, Compare.eq(inline.element(), comp.element()));
           return Result.value(component);
         },
 
-        getRelated () {
+        getRelated() {
           return Option.some(related);
         }
         // onEscape: store.adderH('inline.escape')
@@ -53,35 +50,31 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
 
     gui.add(related);
 
-    const sCheckOpen = (label: string) => {
-      return Logger.t(
-        label,
-        GeneralSteps.sequence([
-          Waiter.sTryUntil(
-            'Test inline should not be DOM',
-            UiFinder.sExists(gui.element(), '.test-inline')
-          ),
-          Step.sync(() => {
-            Assertions.assertEq('Checking isOpen API', true, InlineView.isOpen(inline));
-          })
-        ])
-      );
-    };
+    const sCheckOpen = (label: string) => Logger.t(
+      label,
+      GeneralSteps.sequence([
+        Waiter.sTryUntil(
+          'Test inline should not be DOM',
+          UiFinder.sExists(gui.element(), '.test-inline')
+        ),
+        Step.sync(() => {
+          Assertions.assertEq('Checking isOpen API', true, InlineView.isOpen(inline));
+        })
+      ])
+    );
 
-    const sCheckClosed = (label: string) => {
-      return Logger.t(
-        label,
-        GeneralSteps.sequence([
-          Waiter.sTryUntil(
-            'Test inline should not be in DOM',
-            UiFinder.sNotExists(gui.element(), '.test-inline')
-          ),
-          Step.sync(() => {
-            Assertions.assertEq('Checking isOpen API', false, InlineView.isOpen(inline));
-          })
-        ])
-      );
-    };
+    const sCheckClosed = (label: string) => Logger.t(
+      label,
+      GeneralSteps.sequence([
+        Waiter.sTryUntil(
+          'Test inline should not be in DOM',
+          UiFinder.sNotExists(gui.element(), '.test-inline')
+        ),
+        Step.sync(() => {
+          Assertions.assertEq('Checking isOpen API', false, InlineView.isOpen(inline));
+        })
+      ])
+    );
 
     return [
       UiFinder.sNotExists(gui.element(), '.test-inline'),
@@ -139,16 +132,14 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
           UiFinder.cFindIn('.test-inline'),
           Assertions.cAssertStructure(
             'Checking structure of changed content',
-            ApproxStructure.build((s, str, arr) => {
-              return s.element('div', {
-                classes: [ arr.has('test-inline') ],
-                children: [
-                  s.element('div', {
-                    html: str.is('changed-html')
-                  })
-                ]
-              });
-            })
+            ApproxStructure.build((s, str, arr) => s.element('div', {
+              classes: [ arr.has('test-inline') ],
+              children: [
+                s.element('div', {
+                  html: str.is('changed-html')
+                })
+              ]
+            }))
           )
         ])
       ),
@@ -199,38 +190,36 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
       Logger.t(
         'Show inline view again, this time with buttons',
         Step.sync(() => {
-          const buildDropdown = (buttonText: string, optionPrefix: string) => {
-            return Dropdown.sketch({
-              dom: {
-                tag: 'button',
-                innerHtml: buttonText
-              },
-              components: [],
+          const buildDropdown = (buttonText: string, optionPrefix: string) => Dropdown.sketch({
+            dom: {
+              tag: 'button',
+              innerHtml: buttonText
+            },
+            components: [],
 
-              toggleClass: 'alloy-selected',
+            toggleClass: 'alloy-selected',
 
-              lazySink() {
-                return Result.value(component);
-              },
-              parts: {
-                menu: TestDropdownMenu.part(store)
-              },
-              fetch() {
-                const future = Future.pure([
-                  { type: 'item', data: { value: optionPrefix.toLowerCase() + '-1', meta: { text: optionPrefix + '-1' } } },
-                  { type: 'item', data: { value: optionPrefix.toLowerCase() + '-2' + buttonText, meta: { text: optionPrefix + '-2' } } }
-                ]);
+            lazySink() {
+              return Result.value(component);
+            },
+            parts: {
+              menu: TestDropdownMenu.part(store)
+            },
+            fetch() {
+              const future = Future.pure([
+                { type: 'item', data: { value: optionPrefix.toLowerCase() + '-1', meta: { text: optionPrefix + '-1' } } },
+                { type: 'item', data: { value: optionPrefix.toLowerCase() + '-2' + buttonText, meta: { text: optionPrefix + '-2' } } }
+              ]);
 
-                return future.map((f) => {
-                  const menu = TestDropdownMenu.renderMenu({
-                    value: 'inline-view-test',
-                    items: Arr.map(f, TestDropdownMenu.renderItem)
-                  });
-                  return Option.some(TieredMenu.singleData('test', menu));
+              return future.map((f) => {
+                const menu = TestDropdownMenu.renderMenu({
+                  value: 'inline-view-test',
+                  items: Arr.map(f, TestDropdownMenu.renderItem)
                 });
-              }
-            });
-          };
+                return Option.some(TieredMenu.singleData('test', menu));
+              });
+            }
+          });
 
           InlineView.showAt(inline, {
             anchor: 'selection',
@@ -241,7 +230,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
               Button.sketch({ uid: 'italic-button', dom: { tag: 'button', innerHtml: 'I', classes: [ 'italic-button' ] }, action: store.adder('italic') }),
               Button.sketch({ uid: 'underline-button', dom: { tag: 'button', innerHtml: 'U', classes: [ 'underline-button' ] }, action: store.adder('underline') }),
               buildDropdown('+', 'Option'),
-              buildDropdown('-', 'Item'),
+              buildDropdown('-', 'Item')
             ]
           }));
         })
@@ -322,5 +311,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
       sCheckClosed('Broadcasting dismiss on a external element should close inline toolbar')
 
     ];
-  }, () => { success(); }, failure);
+  }, () => {
+    success();
+  }, failure);
 });

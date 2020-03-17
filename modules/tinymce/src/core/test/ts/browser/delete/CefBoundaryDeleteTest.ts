@@ -15,9 +15,9 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefBoundaryDeleteTest',  (succes
 
       Logger.t('Should delete single space between cef elements', GeneralSteps.sequence([
         tinyApis.sSetContent('<p><span contenteditable="false">a</span>&nbsp;<span contenteditable="false">b</span>&nbsp;</p>'),
-        tinyApis.sSetSelection([0, 2], 1, [0, 2], 1),
+        tinyApis.sSetSelection([ 0, 2 ], 1, [ 0, 2 ], 1),
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
-        tinyApis.sAssertSelection([0, 1], 1, [0, 1], 1),
+        tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 1 ], 1),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build(function (s, str, arr) {
             return s.element('body', {
@@ -52,9 +52,9 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefBoundaryDeleteTest',  (succes
 
       Logger.t('Should add fake caret if we delete content beside cef elements', GeneralSteps.sequence([
         tinyApis.sSetContent('<p><span contenteditable="false">a</span>&nbsp;</p>'),
-        tinyApis.sSetSelection([0, 2], 1, [0, 2], 1),
+        tinyApis.sSetSelection([ 0, 2 ], 1, [ 0, 2 ], 1),
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
-        tinyApis.sAssertSelection([0, 1], 1, [0, 1], 1),
+        tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 1 ], 1),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build(function (s, str, arr) {
             return s.element('body', {
@@ -80,9 +80,9 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefBoundaryDeleteTest',  (succes
 
       Logger.t('Should add fake caret if we delete range beside cef', GeneralSteps.sequence([
         tinyApis.sSetContent('<p><span contenteditable="false">a</span>&nbsp;abc</p>'),
-        tinyApis.sSetSelection([0, 2], 0, [0, 2], 4),
+        tinyApis.sSetSelection([ 0, 2 ], 0, [ 0, 2 ], 4),
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
-        tinyApis.sAssertSelection([0, 1], 1, [0, 1], 1),
+        tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 1 ], 1),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build(function (s, str, arr) {
             return s.element('body', {

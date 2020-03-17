@@ -28,12 +28,12 @@ const basic = { sketch: Fun.identity };
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.optional<ModalDialogDetail>({
     name: 'draghandle',
-    overrides (detail: ModalDialogDetail, spec) {
+    overrides(detail: ModalDialogDetail, spec) {
       return {
         behaviours: Behaviour.derive([
           Dragging.config({
             mode: 'mouse',
-            getTarget (handle) {
+            getTarget(handle) {
               return SelectorFind.ancestor(handle, '[role="dialog"]').getOr(handle);
             },
             blockerClass: detail.dragBlockClass.getOrDie(
@@ -75,14 +75,14 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 
   PartType.external<ModalDialogDetail>({
     factory: {
-      sketch: (spec, detail) => {
+      sketch: (spec, detail) =>
         // Merging should take care of the uid
-        return {
+        ({
           ...spec,
           dom: detail.dom,
           components: detail.components
-        };
-      }
+        })
+
     },
     schema: [
       FieldSchema.defaulted('dom', {

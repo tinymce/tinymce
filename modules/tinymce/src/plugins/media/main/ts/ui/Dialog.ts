@@ -16,9 +16,7 @@ import * as Service from '../core/Service';
 import { DialogSubData, MediaData, MediaDialogData } from '../core/Types';
 import * as UpdateHtml from '../core/UpdateHtml';
 
-const extractMeta = (sourceInput: keyof MediaDialogData, data: MediaDialogData): Option<Record<string, string>> => {
-  return Obj.get(data, sourceInput).bind((mainData: DialogSubData) => Obj.get(mainData, 'meta'));
-};
+const extractMeta = (sourceInput: keyof MediaDialogData, data: MediaDialogData): Option<Record<string, string>> => Obj.get(data, sourceInput).bind((mainData: DialogSubData) => Obj.get(mainData, 'meta'));
 
 const getValue = (data: MediaDialogData, metaData: Record<string, string>, sourceInput?: keyof MediaDialogData) => (prop: keyof MediaDialogData): Record<string, string> => {
   // Cases:
@@ -31,17 +29,13 @@ const getValue = (data: MediaDialogData, metaData: Record<string, string>, sourc
   const getFromMetaData = (): Option<string> => Obj.get(metaData, prop);
   const getNonEmptyValue = (c: Record<string, string>): Option<string> => Obj.get(c, 'value').bind((v: string) => v.length > 0 ? Option.some(v) : Option.none());
 
-  const getFromValueFirst = () => getFromData().bind((child) => {
-    return Type.isObject(child)
-      ? getNonEmptyValue(child as Record<string, string>).orThunk(getFromMetaData)
-      : getFromMetaData().orThunk(() => Option.from(child as string));
-  });
+  const getFromValueFirst = () => getFromData().bind((child) => Type.isObject(child)
+    ? getNonEmptyValue(child as Record<string, string>).orThunk(getFromMetaData)
+    : getFromMetaData().orThunk(() => Option.from(child as string)));
 
-  const getFromMetaFirst = () => getFromMetaData().orThunk(() => getFromData().bind((child) => {
-    return Type.isObject(child)
-      ? getNonEmptyValue(child as Record<string, string>)
-      : Option.from(child as string);
-  }));
+  const getFromMetaFirst = () => getFromMetaData().orThunk(() => getFromData().bind((child) => Type.isObject(child)
+    ? getNonEmptyValue(child as Record<string, string>)
+    : Option.from(child as string)));
 
   return { [prop]: (prop === sourceInput ? getFromValueFirst() : getFromMetaFirst()).getOr('') };
 };
@@ -97,9 +91,7 @@ const handleError = function (editor: Editor): (error?: { msg: string }) => void
   };
 };
 
-const snippetToData = (editor: Editor, embedSnippet: string): MediaData => {
-  return HtmlToData.htmlToData(Settings.getScripts(editor), embedSnippet);
-};
+const snippetToData = (editor: Editor, embedSnippet: string): MediaData => HtmlToData.htmlToData(Settings.getScripts(editor), embedSnippet);
 
 const isMediaElement = (element: Element) => element.getAttribute('data-mce-object') || element.getAttribute('data-ephox-embed-iri');
 
@@ -234,11 +226,11 @@ const showDialog = function (editor: Editor) {
 
   if (Settings.hasAltSource(editor)) {
     advancedFormItems.push({
-        name: 'altsource',
-        type: 'urlinput',
-        filetype: 'media',
-        label: 'Alternative source URL'
-      }
+      name: 'altsource',
+      type: 'urlinput',
+      filetype: 'media',
+      label: 'Alternative source URL'
+    }
     );
   }
 
@@ -288,29 +280,29 @@ const showDialog = function (editor: Editor) {
         primary: true
       }
     ],
-    onSubmit (api) {
+    onSubmit(api) {
       const serviceData = unwrap(api.getData());
       submitForm(currentData.get(), serviceData, editor);
       api.close();
     },
-    onChange (api, detail) {
+    onChange(api, detail) {
       switch (detail.name) {
-        case 'source':
-          handleSource(currentData.get(), api);
-          break;
+      case 'source':
+        handleSource(currentData.get(), api);
+        break;
 
-        case 'embed':
-          handleEmbed(api);
-          break;
+      case 'embed':
+        handleEmbed(api);
+        break;
 
-        case 'dimensions':
-        case 'altsource':
-        case 'poster':
-          handleUpdate(api, detail.name);
-          break;
+      case 'dimensions':
+      case 'altsource':
+      case 'poster':
+        handleUpdate(api, detail.name);
+        break;
 
-        default:
-          break;
+      default:
+        break;
       }
       currentData.set(unwrap(api.getData()));
     },

@@ -40,16 +40,16 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', (success,
             '<figcaption>TinyMCE</figcaption>' +
           '</figure>'
         ),
-        api.sSetSelection([0], 0, [0], 0),
+        api.sSetSelection([ 0 ], 0, [ 0 ], 0),
         sLinkTheSelection(),
         sAssertPresence({ 'figure.image > a[href="http://google.com"] > img': 1 }),
 
-        api.sSetSelection([0], 0, [0], 0),
+        api.sSetSelection([ 0 ], 0, [ 0 ], 0),
         sUnlinkSelection(),
         sAssertPresence({ 'figure.image > img': 1 }),
         TestLinkUi.sClearHistory
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'link',
     toolbar: 'link',

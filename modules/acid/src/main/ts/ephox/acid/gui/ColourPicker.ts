@@ -66,7 +66,7 @@ const makeFactory = (
     };
 
     const paletteUpdates = () => {
-      const updates = [updateFields];
+      const updates = [ updateFields ];
       return (form: AlloyComponent, simulatedEvent: SimulatedEvent<ColourEvents.PaletteUpdateEvent>) => {
         const value = simulatedEvent.event().value;
         const oldRgb = state.paletteRgba.get();
@@ -79,7 +79,7 @@ const makeFactory = (
     };
 
     const sliderUpdates = () => {
-      const updates = [updatePalette, updateFields];
+      const updates = [ updatePalette, updateFields ];
       return (form: AlloyComponent, simulatedEvent: SimulatedEvent<ColourEvents.SliderUpdateEvent>) => {
         const value = simulatedEvent.event().value;
         const hex = calcHex(value.y());
@@ -103,9 +103,7 @@ const makeFactory = (
           AlloyEvents.run(ColourEvents.sliderUpdate, sliderUpdates())
         ]),
         Composing.config({
-          find: (comp) => {
-            return memRgb.getOpt(comp);
-          }
+          find: (comp) => memRgb.getOpt(comp)
         }),
         Keying.config({
           mode: 'acyclic'

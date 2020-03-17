@@ -56,7 +56,7 @@ const indexOf = function (elements: Element<DomNode>[], element: Element<DomNode
   return Arr.findIndex(elements, Fun.curry(Compare.eq, element));
 };
 
-const selectorsInParent = function <E extends DomNode, S extends DomElement = DomElement>(element: Element<E>, selector: string) {
+const selectorsInParent = function <E extends DomNode, S extends DomElement = DomElement> (element: Element<E>, selector: string) {
   return Traverse.parent(element).bind(function (parent) {
     const children = SelectorFilter.children<S>(parent, selector);
     return indexOf(children, element).map(function (index) {
@@ -65,7 +65,7 @@ const selectorsInParent = function <E extends DomNode, S extends DomElement = Do
   });
 };
 
-const descendantsInAncestor = function <E extends DomNode, A extends DomElement = DomElement, D extends DomElement = DomElement>(element: Element<E>, ancestorSelector: string, descendantSelector: string) {
+const descendantsInAncestor = function <E extends DomNode, A extends DomElement = DomElement, D extends DomElement = DomElement> (element: Element<E>, ancestorSelector: string, descendantSelector: string) {
   return SelectorFind.closest<A>(element, ancestorSelector).bind(function (ancestor) {
     const descendants = SelectorFilter.descendants<D>(ancestor, descendantSelector);
     return indexOf(descendants, element).map(function (index) {

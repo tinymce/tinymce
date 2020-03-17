@@ -15,13 +15,11 @@ const adt: ImageAssetConstructor = Adt.generate([
       'objurl'          // an object URL - THIS MUST BE RELEASED WHEN DONE
     ]
   },
-  { url:  ['id', 'url', 'raw'] } // Remote image. JS image object/element loaded via url
+  { url:  [ 'id', 'url', 'raw' ] } // Remote image. JS image object/element loaded via url
 
 ]);
 
-const cata = <T> (subject: ImageAssetAdt, onFile: BlobCallback<T>, onImage: UrlCallback<T>): T => {
-  return subject.fold(onFile, onImage);
-};
+const cata = <T> (subject: ImageAssetAdt, onFile: BlobCallback<T>, onImage: UrlCallback<T>): T => subject.fold(onFile, onImage);
 
 export default {
   cata,

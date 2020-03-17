@@ -28,7 +28,7 @@ const relaxDomain = function (editor: Editor, ifr) {
       InitContentBody.initContentBody(editor);
     };
 
-    /*eslint no-script-url:0 */
+    /* eslint no-script-url:0 */
     const domainRelaxUrl = 'javascript:(function(){' +
       'document.open();document.domain="' + document.domain + '";' +
       'var ed = window.parent.tinymce.get("' + editor.id + '");document.write(ed.iframeHTML);' +
@@ -59,7 +59,7 @@ const createIframeElement = function (id: string, title: TranslatedString, heigh
 };
 
 const getIframeHtml = function (editor: Editor) {
-  let bodyId, bodyClass, iframeHTML;
+  let bodyId; let bodyClass; let iframeHTML;
 
   iframeHTML = Settings.getDocType(editor) + '<html><head>';
 

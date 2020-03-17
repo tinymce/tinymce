@@ -44,7 +44,7 @@ const toLegacy = (fontSize: string): string => Obj.get(legacyFontSizes, fontSize
 
 const getSpec = (editor: Editor): SelectSpec => {
   const getMatchingValue = () => {
-    let matchOpt = Option.none<{ title: string; format: string; }>();
+    let matchOpt = Option.none<{ title: string; format: string }>();
     const items = dataset.data;
 
     const fontSize = editor.queryCommandValue('FontSize');
@@ -60,11 +60,7 @@ const getSpec = (editor: Editor): SelectSpec => {
     return { matchOpt, size: fontSize };
   };
 
-  const isSelectedFor = (item: string) => {
-    return (valueOpt: Option<{ format: string; title: string }>) => {
-      return valueOpt.exists((value) => value.format === item);
-    };
-  };
+  const isSelectedFor = (item: string) => (valueOpt: Option<{ format: string; title: string }>) => valueOpt.exists((value) => value.format === item);
 
   const getCurrentValue = () => {
     const { matchOpt } = getMatchingValue();
@@ -110,9 +106,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
-const createFontsizeSelect = (editor: Editor, backstage: UiFactoryBackstage) => {
-  return createSelectButton(editor, backstage, getSpec(editor));
-};
+const createFontsizeSelect = (editor: Editor, backstage: UiFactoryBackstage) => createSelectButton(editor, backstage, getSpec(editor));
 
 // TODO: Test this!
 const fontsizeSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {

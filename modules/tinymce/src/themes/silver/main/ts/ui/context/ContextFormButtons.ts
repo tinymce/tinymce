@@ -25,12 +25,10 @@ import { renderToolbarButtonWith, renderToolbarToggleButtonWith } from '../toolb
 
 // Can probably generalise.
 
-const getFormApi = (input): Toolbar.ContextFormInstanceApi => {
-  return {
-    hide: () => AlloyTriggers.emit(input, SystemEvents.sandboxClose()),
-    getValue: () => Representing.getValue(input)
-  };
-};
+const getFormApi = (input): Toolbar.ContextFormInstanceApi => ({
+  hide: () => AlloyTriggers.emit(input, SystemEvents.sandboxClose()),
+  getValue: () => Representing.getValue(input)
+});
 
 const runOnExecute = <T>(memInput: MementoRecord, original: { onAction: (formApi, buttonApi: T) => void }) => AlloyEvents.run<InternalToolbarButtonExecuteEvent<T>>(internalToolbarButtonExecute, (comp, se) => {
   const input = memInput.get(comp);
@@ -86,23 +84,19 @@ const generateOne = (memInput: MementoRecord, button: Toolbar.ContextToggleButto
 
 const generate = (memInput: MementoRecord, buttons: Array<Toolbar.ContextToggleButton | Toolbar.ContextButton>, providersBackstage: UiFactoryBackstageProviders) => {
 
-  const mementos = Arr.map(buttons, (button) => {
-    return Memento.record(
-      generateOne(memInput, button, providersBackstage)
-    );
-  });
+  const mementos = Arr.map(buttons, (button) => Memento.record(
+    generateOne(memInput, button, providersBackstage)
+  ));
 
   const asSpecs = () => Arr.map(mementos, (mem) => mem.asSpec());
 
-  const findPrimary = (compInSystem: AlloyComponent): Option<AlloyComponent> => {
-    return Arr.findMap(buttons, (button, i) => {
-      if (button.primary) {
-        return Option.from(mementos[i]).bind((mem) => mem.getOpt(compInSystem)).filter(Fun.not(Disabling.isDisabled));
-      } else {
-        return Option.none();
-      }
-    });
-  };
+  const findPrimary = (compInSystem: AlloyComponent): Option<AlloyComponent> => Arr.findMap(buttons, (button, i) => {
+    if (button.primary) {
+      return Option.from(mementos[i]).bind((mem) => mem.getOpt(compInSystem)).filter(Fun.not(Disabling.isDisabled));
+    } else {
+      return Option.none();
+    }
+  });
 
   return {
     asSpecs,

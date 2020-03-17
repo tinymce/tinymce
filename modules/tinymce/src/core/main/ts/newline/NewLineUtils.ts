@@ -24,7 +24,7 @@ const firstNonWhiteSpaceNodeSibling = function (node) {
 };
 
 const moveToCaretPosition = function (editor: Editor, root) {
-  let node, rng, lastNode = root;
+  let node; let rng; let lastNode = root;
   const dom = editor.dom;
   const moveCaretBeforeOnEnterElementsMap = editor.schema.getMoveCaretBeforeOnEnterElements();
 
@@ -88,7 +88,7 @@ const moveToCaretPosition = function (editor: Editor, root) {
 
 const getEditableRoot = function (dom, node) {
   const root = dom.getRoot();
-  let parent, editableRoot;
+  let parent; let editableRoot;
 
   // Get all parents until we hit a non editable parent or the root
   parent = node;

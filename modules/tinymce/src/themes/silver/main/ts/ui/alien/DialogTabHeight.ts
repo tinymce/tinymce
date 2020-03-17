@@ -13,30 +13,26 @@ import { Css, Element, Focus, Height, SelectorFind, Traverse, Width } from '@eph
 import Delay from 'tinymce/core/api/util/Delay';
 import { formResizeEvent } from '../general/FormEvents';
 
-const measureHeights = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>, tabview, tabviewComp): number[] => {
-  return Arr.map(allTabs, (tab, i) => {
-    Replacing.set(tabviewComp, allTabs[i].view());
-    const rect = tabview.dom().getBoundingClientRect();
-    Replacing.set(tabviewComp, [ ]);
-    return rect.height;
-  });
-};
+const measureHeights = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>, tabview, tabviewComp): number[] => Arr.map(allTabs, (tab, i) => {
+  Replacing.set(tabviewComp, allTabs[i].view());
+  const rect = tabview.dom().getBoundingClientRect();
+  Replacing.set(tabviewComp, [ ]);
+  return rect.height;
+});
 
-const getMaxHeight = (heights: number[]) => {
-  return Arr.head(Arr.sort(heights, (a, b) => {
-    if (a > b) {
-      return -1;
-    } else if (a < b) {
-      return +1;
-    } else {
-      return 0;
-    }
-  }));
-};
+const getMaxHeight = (heights: number[]) => Arr.head(Arr.sort(heights, (a, b) => {
+  if (a > b) {
+    return -1;
+  } else if (a < b) {
+    return +1;
+  } else {
+    return 0;
+  }
+}));
 
 const getMaxTabviewHeight = (dialog: Element, tabview: Element, tablist: Element) => {
   const documentElement = Traverse.documentElement(dialog).dom();
-  const rootElm = SelectorFind.ancestor(dialog, '.tox-dialog-wrap').getOr(dialog) as Element<DomElement>;
+  const rootElm = SelectorFind.ancestor(dialog, '.tox-dialog-wrap').getOr(dialog);
   const isFixed = Css.get(rootElm, 'position') === 'fixed';
 
   // Get the document or window/viewport height

@@ -8,14 +8,12 @@ import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 // Note, this does not create a valid SketchSpec.
-const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true, downwardsCaret: boolean = false): ItemTypes.ItemSpec => {
+const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons = true, downwardsCaret = false): ItemTypes.ItemSpec => {
   const caret = downwardsCaret ? renderDownwardsCaret(providersBackstage.icons) : renderSubmenuCaret(providersBackstage.icons);
-  const getApi = (component: AlloyComponent): Menu.NestedMenuItemInstanceApi => {
-    return {
-      isDisabled: () => Disabling.isDisabled(component),
-      setDisabled: (state: boolean) => Disabling.set(component, state)
-    };
-  };
+  const getApi = (component: AlloyComponent): Menu.NestedMenuItemInstanceApi => ({
+    isDisabled: () => Disabling.isDisabled(component),
+    setDisabled: (state: boolean) => Disabling.set(component, state)
+  });
 
   const structure = renderItemStructure({
     presets: 'normal',

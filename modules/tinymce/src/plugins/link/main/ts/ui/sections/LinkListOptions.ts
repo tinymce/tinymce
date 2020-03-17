@@ -36,17 +36,15 @@ const getLinks = (editor): Promise<Option<ListItem[]>> => {
     } else if (Type.isFunction(linkList)) {
       linkList((output) => callback(Option.some(output)));
     } else {
-      callback(Option.from(linkList as ListItem[]));
+      callback(Option.from(linkList));
     }
-  }).then((optItems) => {
-    return optItems.bind(ListOptions.sanitizeWith(extractor)).map((items) => {
-      if (items.length > 0) {
-        return [{ text: 'None', value: '' }].concat(items);
-      } else {
-        return items;
-      }
-    });
-  });
+  }).then((optItems) => optItems.bind(ListOptions.sanitizeWith(extractor)).map((items) => {
+    if (items.length > 0) {
+      return [{ text: 'None', value: '' }].concat(items);
+    } else {
+      return items;
+    }
+  }));
 };
 
 export const LinkListOptions = {

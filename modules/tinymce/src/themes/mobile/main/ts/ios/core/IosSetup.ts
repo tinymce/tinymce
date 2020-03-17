@@ -36,7 +36,7 @@ const register = function (toolstrip, socket, container, outerWindow, structure,
       return outside ? Option.some({
         top: Fun.constant(viewTop),
         bottom: Fun.constant(viewTop + rect.height())
-      }) : Option.none<{top: () => number, bottom: () => number}>();
+      }) : Option.none<{top: () => number; bottom: () => number}>();
     });
   };
 

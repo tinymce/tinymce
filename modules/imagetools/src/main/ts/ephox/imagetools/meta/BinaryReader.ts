@@ -1,6 +1,6 @@
 export class BinaryReader {
 
-  public littleEndian: boolean = false;
+  public littleEndian = false;
 
   protected _dv: DataView;
 
@@ -56,7 +56,7 @@ export class BinaryReader {
     const ar = this._dv.buffer;
 
     if (idx !== undefined && size !== undefined) {
-      return ar.slice(idx!, idx! + size!);
+      return ar.slice(idx, idx + size);
     } else if (idx !== undefined) {
       return ar.slice(idx);
     } else {

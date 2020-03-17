@@ -29,6 +29,4 @@ export const toggleMenuItemSchema = ValueSchema.objOf([
   FieldSchema.strictFunction('onAction')
 ].concat(commonMenuItemFields));
 
-export const createToggleMenuItem = (spec: ToggleMenuItemApi): Result<ToggleMenuItem, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw('togglemenuitem', toggleMenuItemSchema, spec);
-};
+export const createToggleMenuItem = (spec: ToggleMenuItemApi): Result<ToggleMenuItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('togglemenuitem', toggleMenuItemSchema, spec);

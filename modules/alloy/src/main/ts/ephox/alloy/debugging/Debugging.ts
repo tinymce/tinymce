@@ -67,35 +67,41 @@ const eventConfig = Cell<Record<string, EventConfiguration>>({ });
 export type EventProcessor = (logger: DebuggerLogger) => boolean;
 
 const makeEventLogger = (eventName: string, initialTarget: Element): DebuggerLogger => {
-  const sequence: Array<{ outcome: string, target: Element, purpose?: string }> = [ ];
+  const sequence: Array<{ outcome: string; target: Element; purpose?: string }> = [ ];
   const startTime = new Date().getTime();
 
   return {
-    logEventCut (name: string, target: Element, purpose: string) {
+    logEventCut(name: string, target: Element, purpose: string) {
       sequence.push({ outcome: 'cut', target, purpose });
     },
-    logEventStopped (name: string, target: Element, purpose: string) {
+    logEventStopped(name: string, target: Element, purpose: string) {
       sequence.push({ outcome: 'stopped', target, purpose });
     },
-    logNoParent (name: string, target: Element, purpose: string) {
+    logNoParent(name: string, target: Element, purpose: string) {
       sequence.push({ outcome: 'no-parent', target, purpose });
     },
-    logEventNoHandlers (name: string, target: Element) {
+    logEventNoHandlers(name: string, target: Element) {
       sequence.push({ outcome: 'no-handlers-left', target });
     },
-    logEventResponse (name: string, target: Element, purpose: string) {
+    logEventResponse(name: string, target: Element, purpose: string) {
       sequence.push({ outcome: 'response', purpose, target });
     },
-    write () {
+    write() {
       const finishTime = new Date().getTime();
-      if (Arr.contains([ 'mousemove', 'mouseover', 'mouseout', SystemEvents.systemInit() ], eventName)) { return; }
+      if (Arr.contains([ 'mousemove', 'mouseover', 'mouseout', SystemEvents.systemInit() ], eventName)) {
+        return;
+      }
       // tslint:disable-next-line:no-console
       console.log(eventName, {
         event: eventName,
         time: finishTime - startTime,
         target: initialTarget.dom(),
         sequence: Arr.map(sequence, (s) => {
-          if (! Arr.contains([ 'cut', 'stopped', 'response' ], s.outcome)) { return s.outcome; } else { return '{' + s.purpose + '} ' + s.outcome + ' at (' + AlloyLogger.element(s.target) + ')'; }
+          if (!Arr.contains([ 'cut', 'stopped', 'response' ], s.outcome)) {
+            return s.outcome;
+          } else {
+            return '{' + s.purpose + '} ' + s.outcome + ' at (' + AlloyLogger.element(s.target) + ')';
+          }
         })
       });
     }
@@ -105,9 +111,7 @@ const makeEventLogger = (eventName: string, initialTarget: Element): DebuggerLog
 const processEvent = (eventName: string, initialTarget: Element, f: EventProcessor) => {
   const status = Obj.get(eventConfig.get(), eventName).orThunk(() => {
     const patterns = Obj.keys(eventConfig.get());
-    return Arr.findMap(patterns, (p) => {
-      return eventName.indexOf(p) > -1 ? Option.some(eventConfig.get()[p]) : Option.none();
-    });
+    return Arr.findMap(patterns, (p) => eventName.indexOf(p) > -1 ? Option.some(eventConfig.get()[p]) : Option.none());
   }).getOr(
     EventConfiguration.NORMAL
   );
@@ -122,7 +126,7 @@ const processEvent = (eventName: string, initialTarget: Element, f: EventProcess
       return output;
     }
     case EventConfiguration.STOP:
-      // Does not even run the function to trigger event and listen to handlers
+    // Does not even run the function to trigger event and listen to handlers
       return true;
   }
 };
@@ -134,13 +138,13 @@ const path = [
 ];
 
 const getTrace = () => {
-  if (debugging === false) { return unknown; }
+  if (debugging === false) {
+    return unknown;
+  }
   const err = new Error();
   if (err.stack !== undefined) {
     const lines = err.stack.split('\n');
-    return Arr.find(lines, (line) => {
-      return line.indexOf('alloy') > 0 && !Arr.exists(path, (p) => line.indexOf(p) > -1);
-    }).getOr(unknown);
+    return Arr.find(lines, (line) => line.indexOf('alloy') > 0 && !Arr.exists(path, (p) => line.indexOf(p) > -1)).getOr(unknown);
   } else {
     return unknown;
   }
@@ -159,9 +163,7 @@ const ignoreEvent = {
   write: Fun.noop
 };
 
-const monitorEvent = (eventName: string, initialTarget: Element, f: EventProcessor): boolean => {
-  return processEvent(eventName, initialTarget, f);
-};
+const monitorEvent = (eventName: string, initialTarget: Element, f: EventProcessor): boolean => processEvent(eventName, initialTarget, f);
 
 const inspectorInfo = (comp: AlloyComponent) => {
   const go = (c: AlloyComponent): InspectorInfo => {
@@ -173,15 +175,11 @@ const inspectorInfo = (comp: AlloyComponent) => {
       '(element)': AlloyLogger.element(c.element()),
       '(initComponents)': Arr.map(cSpec.components !== undefined ? cSpec.components : [ ], go),
       '(components)': Arr.map(c.components(), go),
-      '(bound.events)': Obj.mapToArray(c.events(), (v, k) => {
-        return [ k ];
-      }).join(', '),
-      '(behaviours)': cSpec.behaviours !== undefined ? Obj.map(cSpec.behaviours, (v, k) => {
-        return v === undefined ? '--revoked--' : {
-          'config': v.configAsRaw(),
-          'original-config': v.initialConfig,
-          'state': c.readState(k)
-        };
+      '(bound.events)': Obj.mapToArray(c.events(), (v, k) => [ k ]).join(', '),
+      '(behaviours)': cSpec.behaviours !== undefined ? Obj.map(cSpec.behaviours, (v, k) => v === undefined ? '--revoked--' : {
+        'config': v.configAsRaw(),
+        'original-config': v.initialConfig,
+        'state': c.readState(k)
       }) : 'none'
     };
   };
@@ -205,19 +203,15 @@ const getOrInitConnection = () => {
 
     win[CHROME_INSPECTOR_GLOBAL] = {
       systems: { },
-      lookup (uid: string) {
+      lookup(uid: string) {
         const systems = win[CHROME_INSPECTOR_GLOBAL].systems;
         const connections: string[] = Obj.keys(systems);
         return Arr.findMap(connections, (conn) => {
           const connGui = systems[conn];
-          return connGui.getByUid(uid).toOption().map((comp): LookupInfo => {
-            return Objects.wrap(AlloyLogger.element(comp.element()), inspectorInfo(comp));
-          });
-        }).orThunk(() => {
-          return Option.some<LookupInfo>({
-            error: 'Systems (' + connections.join(', ') + ') did not contain uid: ' + uid
-          });
-        });
+          return connGui.getByUid(uid).toOption().map((comp): LookupInfo => Objects.wrap(AlloyLogger.element(comp.element()), inspectorInfo(comp)));
+        }).orThunk(() => Option.some<LookupInfo>({
+          error: 'Systems (' + connections.join(', ') + ') did not contain uid: ' + uid
+        }));
       },
 
       events: {

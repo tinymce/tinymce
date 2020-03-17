@@ -29,31 +29,31 @@ const makeContextItem = (item: string | Menu.ContextMenuItem | Menu.SeparatorMen
     return item;
   } else {
     switch (item.type) {
-      case 'separator':
-        return separator;
-      case 'submenu':
-        return {
-          type: 'nestedmenuitem',
-          text: item.text,
-          icon: item.icon,
-          getSubmenuItems: () => {
-            const items = item.getSubmenuItems();
-            if (Type.isString(items)) {
-              return items;
-            } else {
-              return Arr.map(items, makeContextItem);
-            }
+    case 'separator':
+      return separator;
+    case 'submenu':
+      return {
+        type: 'nestedmenuitem',
+        text: item.text,
+        icon: item.icon,
+        getSubmenuItems: () => {
+          const items = item.getSubmenuItems();
+          if (Type.isString(items)) {
+            return items;
+          } else {
+            return Arr.map(items, makeContextItem);
           }
-        };
-      default:
-        // case 'item', or anything else really
-        return {
-          type: 'menuitem',
-          text: item.text,
-          icon: item.icon,
-          // disconnect the function from the menu item API bridge defines
-          onAction: Fun.noarg(item.onAction)
-        };
+        }
+      };
+    default:
+      // case 'item', or anything else really
+      return {
+        type: 'menuitem',
+        text: item.text,
+        icon: item.icon,
+        // disconnect the function from the menu item API bridge defines
+        onAction: Fun.noarg(item.onAction)
+      };
     }
   }
 };
@@ -88,7 +88,7 @@ const generateContextMenu = (contextMenus: Record<string, Menu.ContextMenuApi>, 
         return acc;
       }
     } else {
-      return acc.concat([name]);
+      return acc.concat([ name ]);
     }
   }, []);
 
@@ -100,19 +100,17 @@ const generateContextMenu = (contextMenus: Record<string, Menu.ContextMenuApi>, 
   return sections;
 };
 
-const isNativeOverrideKeyEvent = (editor: Editor, e: PointerEvent) => {
-  return e.ctrlKey && !Settings.shouldNeverUseNative(editor);
-};
+const isNativeOverrideKeyEvent = (editor: Editor, e: PointerEvent) => e.ctrlKey && !Settings.shouldNeverUseNative(editor);
 
-export const isTriggeredByKeyboard = (editor: Editor, e: PointerEvent) => {
+export const isTriggeredByKeyboard = (editor: Editor, e: PointerEvent) =>
   // Different browsers trigger the context menu from keyboards differently, so need to check various different things here.
   // If a longpress touch event, always treat it as a pointer event
   // Chrome: button = 0, pointerType = undefined & target = the selection range node
   // Firefox: button = 0, pointerType = undefined & target = body
   // IE/Edge: button = 2, pointerType = "" & target = body
   // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
-  return e.type !== 'longpress' && (e.button !== 2 || e.target === editor.getBody() && e.pointerType === '');
-};
+  e.type !== 'longpress' && (e.button !== 2 || e.target === editor.getBody() && e.pointerType === '')
+;
 
 export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>, backstage: UiFactoryBackstage) => {
   const detection = PlatformDetection.detect();

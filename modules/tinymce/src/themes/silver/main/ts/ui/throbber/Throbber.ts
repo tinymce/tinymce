@@ -12,31 +12,29 @@ import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../backstage/Backstage';
 
-const renderSpinner = (providerBackstage: UiFactoryBackstageProviders): AlloySpec => {
-  return {
-    dom: {
-      tag: 'div',
-      attributes: {
-        'aria-label': providerBackstage.translate('Loading...')
-      },
-      classes: [ 'tox-throbber__busy-spinner' ]
+const renderSpinner = (providerBackstage: UiFactoryBackstageProviders): AlloySpec => ({
+  dom: {
+    tag: 'div',
+    attributes: {
+      'aria-label': providerBackstage.translate('Loading...')
     },
-    components: [
-      {
-        dom: DomFactory.fromHtml(`<div class="tox-spinner"><div></div><div></div><div></div></div>`)
-      }
-    ],
-    behaviours: Behaviour.derive([
-      // Trap the "Tab" key and don't let it escape.
-      Keying.config({
-        mode: 'special',
-        onTab: () => Option.some(true),
-        onShiftTab: () => Option.some(true)
-      }),
-      Focusing.config({ })
-    ])
-  };
-};
+    classes: [ 'tox-throbber__busy-spinner' ]
+  },
+  components: [
+    {
+      dom: DomFactory.fromHtml('<div class="tox-spinner"><div></div><div></div><div></div></div>')
+    }
+  ],
+  behaviours: Behaviour.derive([
+    // Trap the "Tab" key and don't let it escape.
+    Keying.config({
+      mode: 'special',
+      onTab: () => Option.some(true),
+      onShiftTab: () => Option.some(true)
+    }),
+    Focusing.config({ })
+  ])
+});
 
 const toggleThrobber = (comp: AlloyComponent, state: boolean, providerBackstage: UiFactoryBackstageProviders) => {
   const element = comp.element();
@@ -51,25 +49,23 @@ const toggleThrobber = (comp: AlloyComponent, state: boolean, providerBackstage:
   }
 };
 
-const renderThrobber = (spec): AlloySpec => {
-  return {
-    uid: spec.uid,
-    dom: {
-      tag: 'div',
-      attributes: {
-        'aria-hidden': 'true'
-      },
-      classes: [ 'tox-throbber' ],
-      styles: {
-        display: 'none'
-      }
+const renderThrobber = (spec): AlloySpec => ({
+  uid: spec.uid,
+  dom: {
+    tag: 'div',
+    attributes: {
+      'aria-hidden': 'true'
     },
-    behaviours: Behaviour.derive([
-      Replacing.config({})
-    ]),
-    components: [ ]
-  };
-};
+    classes: [ 'tox-throbber' ],
+    styles: {
+      display: 'none'
+    }
+  },
+  behaviours: Behaviour.derive([
+    Replacing.config({})
+  ]),
+  components: [ ]
+});
 
 const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBackstage: UiFactoryBackstageShared) => {
   const throbberState = Cell<boolean>(false);

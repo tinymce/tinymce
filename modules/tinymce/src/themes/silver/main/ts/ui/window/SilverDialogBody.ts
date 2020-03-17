@@ -16,34 +16,32 @@ import * as NavigableObject from '../general/NavigableObject';
 import { bodyChannel } from './DialogChannels';
 
 // TypeScript allows some pretty weird stuff.
-type WindowBodySpec = {
-  body: Types.Dialog.Dialog<unknown>['body']
-};
+interface WindowBodySpec {
+  body: Types.Dialog.Dialog<unknown>['body'];
+}
 
 // ariaAttrs is being passed through to silver inline dialog
 // from the WindowManager as a property of 'params'
 const renderBody = (spec: WindowBodySpec, id: Option<string>, backstage: UiFactoryBackstage, ariaAttrs: boolean): AlloySpec => {
   const renderComponents = (incoming: WindowBodySpec) => {
     switch (incoming.body.type) {
-      case 'tabpanel': {
-        return [
-          renderTabPanel(incoming.body, backstage)
-        ];
-      }
+    case 'tabpanel': {
+      return [
+        renderTabPanel(incoming.body, backstage)
+      ];
+    }
 
-      default: {
-        return [
-          renderBodyPanel(incoming.body, backstage)
-        ];
-      }
+    default: {
+      return [
+        renderBodyPanel(incoming.body, backstage)
+      ];
+    }
     }
   };
 
-  const updateState = (_comp, incoming: WindowBodySpec) => {
-    return Option.some({
-      isTabPanel: () => incoming.body.type === 'tabpanel'
-    });
-  };
+  const updateState = (_comp, incoming: WindowBodySpec) => Option.some({
+    isTabPanel: () => incoming.body.type === 'tabpanel'
+  });
 
   const ariaAttributes = {
     'aria-live': 'polite'
@@ -54,7 +52,7 @@ const renderBody = (spec: WindowBodySpec, id: Option<string>, backstage: UiFacto
       tag: 'div',
       classes: [ 'tox-dialog__content-js' ],
       attributes: {
-        ...id.map((x): {id?: string} => ({id: x})).getOr({}),
+        ...id.map((x): {id?: string} => ({ id: x })).getOr({}),
         ...ariaAttrs ? ariaAttributes : {}
       }
     },
@@ -71,9 +69,7 @@ const renderBody = (spec: WindowBodySpec, id: Option<string>, backstage: UiFacto
   };
 };
 
-const renderInlineBody = (spec: WindowBodySpec, contentId: string, backstage: UiFactoryBackstage, ariaAttrs: boolean) => {
-  return renderBody(spec, Option.some(contentId), backstage, ariaAttrs);
-};
+const renderInlineBody = (spec: WindowBodySpec, contentId: string, backstage: UiFactoryBackstage, ariaAttrs: boolean) => renderBody(spec, Option.some(contentId), backstage, ariaAttrs);
 
 const renderModalBody = (spec: WindowBodySpec, backstage: UiFactoryBackstage) => {
   const bodySpec = renderBody(spec, Option.none(), backstage, false);

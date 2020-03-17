@@ -21,8 +21,8 @@ export interface AnchorDetail<D> {
   placement: (comp: AlloyComponent, anchor: D, origin: OriginAdt) => Option<Anchoring>;
 }
 
-export type MaxHeightFunction =  (elem: Element, available: number) => void;
-export type MaxWidthFunction =  (elem: Element, available: number) => void;
+export type MaxHeightFunction = (elem: Element, available: number) => void;
+export type MaxWidthFunction = (elem: Element, available: number) => void;
 export interface AnchorOverrides {
   maxHeightFunction?: MaxHeightFunction;
   maxWidthFunction?: MaxWidthFunction;

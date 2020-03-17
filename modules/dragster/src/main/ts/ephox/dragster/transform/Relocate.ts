@@ -26,7 +26,7 @@ const both = function (element: Element) {
   };
 
   const events = Events.create({
-    relocate: Event(['x', 'y'])
+    relocate: Event([ 'x', 'y' ])
   }) as RelocateEvents;
 
   return {

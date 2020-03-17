@@ -93,16 +93,10 @@ interface DispatcherMission {
 
 // Find the dispatcher information for the target if available. Note, the
 // dispatcher may also change the target.
-const findDispatcher = (dispatchers: Dispatcher[], target: Element): Option<DispatcherMission> => {
-  return Arr.findMap(dispatchers, (dispatcher: Dispatcher) => {
-    return dispatcher.getTarget(target).map((newTarget) => {
-      return {
-        target: newTarget,
-        dispatcher
-      };
-    });
-  });
-};
+const findDispatcher = (dispatchers: Dispatcher[], target: Element): Option<DispatcherMission> => Arr.findMap(dispatchers, (dispatcher: Dispatcher) => dispatcher.getTarget(target).map((newTarget) => ({
+  target: newTarget,
+  dispatcher
+})));
 
 const getProxy = <T extends SimulatedEvent.EventFormat>(event: T, target: Element) => {
   // Setup the component wrapping for the target element
@@ -128,11 +122,9 @@ const engage = (spec: ForeignGuiSpec) => {
 
   const cache = ForeignCache();
 
-  const domEvents = Arr.map(supportedEvents, (type) => {
-    return DomEvent.bind(detail.root, type, (event) => {
-      dispatchTo(type, event);
-    });
-  });
+  const domEvents = Arr.map(supportedEvents, (type) => DomEvent.bind(detail.root, type, (event) => {
+    dispatchTo(type, event);
+  }));
 
   const proxyFor = <T extends SimulatedEvent.EventFormat>(event: T, target: Element, descHandler: UncurriedHandler) => {
     // create a simple alloy wrapping around the element, and add it to the world
@@ -161,7 +153,9 @@ const engage = (spec: ForeignGuiSpec) => {
      * c) execute the event handler
      * d) remove it from the internal system and clear any DOM markers (alloy-ids etc)
      */
-    if (gui.element().dom().contains(event.target().dom())) { return; }
+    if (gui.element().dom().contains(event.target().dom())) {
+      return;
+    }
 
     // Find if the target has an assigned dispatcher
     findDispatcher(detail.dispatchers, event.target()).each((mission) => {
@@ -171,7 +165,9 @@ const engage = (spec: ForeignGuiSpec) => {
       const events = data.evts;
 
       // if this dispatcher defines this event, proxy it and fire the handler
-      if (Obj.hasNonNullableKey(events, type)) { proxyFor(event, mission.target, events[type]); }
+      if (Obj.hasNonNullableKey(events, type)) {
+        proxyFor(event, mission.target, events[type]);
+      }
     });
   };
 

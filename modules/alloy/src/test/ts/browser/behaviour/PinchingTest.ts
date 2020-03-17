@@ -10,35 +10,31 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('Browser Test: behaviour.PinchingTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build({
-      dom: {
-        tag: 'div',
-        styles: {
-          width: '100px',
-          height: '100px'
+  GuiSetup.setup((store, doc, body) => GuiFactory.build({
+    dom: {
+      tag: 'div',
+      styles: {
+        width: '100px',
+        height: '100px'
+      }
+    },
+    behaviours: Behaviour.derive([
+      Pinching.config({
+        onPinch(elem, dx, dy) {
+          store.adder({ method: 'pinch', dx, dy })();
+        },
+        onPunch(elem, dx, dy) {
+          store.adder({ method: 'punch', dx, dy })();
         }
-      },
-      behaviours: Behaviour.derive([
-        Pinching.config({
-          onPinch (elem, dx, dy) {
-            store.adder({ method: 'pinch', dx, dy })();
-          },
-          onPunch (elem, dx, dy) {
-            store.adder({ method: 'punch', dx, dy })();
-          }
-        })
-      ])
-    });
-  }, (doc, body, gui, component, store) => {
+      })
+    ])
+  }), (doc, body, gui, component, store) => {
 
-    const sSendTouchmove = (touches: Array<{ clientX: number; clientY: number}>) => {
-      return Step.sync(() => {
-        AlloyTriggers.emitWith(component, NativeEvents.touchmove(), {
-          raw: { touches }
-        });
+    const sSendTouchmove = (touches: Array<{ clientX: number; clientY: number}>) => Step.sync(() => {
+      AlloyTriggers.emitWith(component, NativeEvents.touchmove(), {
+        raw: { touches }
       });
-    };
+    });
 
     return [
       store.sAssertEq('Initially empty', [ ]),
@@ -93,5 +89,7 @@ UnitTest.asynctest('Browser Test: behaviour.PinchingTest', (success, failure) =>
         { method: 'pinch', dx: (16 - 8) - (20 - 5), dy: (160 - 80) - (200 - 50) }
       ])
     ];
-  }, () => { success(); }, failure);
+  }, () => {
+    success();
+  }, failure);
 });

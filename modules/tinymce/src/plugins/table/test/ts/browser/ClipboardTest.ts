@@ -13,9 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
   SilverTheme();
   Plugin();
 
-  const cleanTableHtml = (html: string) => {
-    return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
-  };
+  const cleanTableHtml = (html: string) => html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
 
   const selectOne = (editor: Editor, start) => {
     start = editor.$(start)[0];
@@ -403,8 +401,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
     LegacyUnit.equal(clipboardRows[0].tagName, 'TR');
 
     editor.plugins.table.setClipboardRows(clipboardRows.concat([
-      createRow(['a', 'b']),
-      createRow(['c', 'd'])
+      createRow([ 'a', 'b' ]),
+      createRow([ 'c', 'd' ])
     ]));
 
     LegacyUnit.setSelection(editor, 'tr:nth-child(2) td', 0);

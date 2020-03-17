@@ -47,50 +47,41 @@ UnitTest.asynctest('Basic Form', (success, failure) => {
     ]
   };
 
-  GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build(
-      Form.sketch((parts: FormParts) => {
-        return {
-          dom: {
-            tag: 'div'
-          },
-          components: [
-            parts.field('form.ant', FormField.sketch(formAntSpec)),
-            parts.field('form.bull', FormField.sketch(formBullSpec))
-          ]
-        };
-      })
-    );
-
-  }, (doc, body, gui, component, store) => {
+  GuiSetup.setup((store, doc, body) => GuiFactory.build(
+    Form.sketch((parts: FormParts) => ({
+      dom: {
+        tag: 'div'
+      },
+      components: [
+        parts.field('form.ant', FormField.sketch(formAntSpec)),
+        parts.field('form.bull', FormField.sketch(formBullSpec))
+      ]
+    }))
+  ), (doc, body, gui, component, store) => {
     const helper = TestForm.helper(component);
 
-    const sAssertDisplay = (inputText: string, selectValue: string) => {
-      return Step.sync(() => {
-        Assertions.assertStructure(
-          'Checking that HTML select and text input have right contents',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
+    const sAssertDisplay = (inputText: string, selectValue: string) => Step.sync(() => {
+      Assertions.assertStructure(
+        'Checking that HTML select and text input have right contents',
+        ApproxStructure.build((s, str, arr) => s.element('div', {
+          children: [
+            s.element('div', {
               children: [
-                s.element('div', {
-                  children: [
-                    s.element('input', { value: str.is(inputText) }),
-                    s.element('label', {})
-                  ]
-                }),
-                s.element('div', {
-                  children: [
-                    s.element('select', { value: str.is(selectValue) }),
-                    s.element('label', { })
-                  ]
-                })
+                s.element('input', { value: str.is(inputText) }),
+                s.element('label', {})
               ]
-            });
-          }),
-          component.element()
-        );
-      });
-    };
+            }),
+            s.element('div', {
+              children: [
+                s.element('select', { value: str.is(selectValue) }),
+                s.element('label', { })
+              ]
+            })
+          ]
+        })),
+        component.element()
+      );
+    });
 
     return [
       Logger.t(
@@ -164,5 +155,7 @@ UnitTest.asynctest('Basic Form', (success, failure) => {
         ])
       )
     ];
-  }, () => { success(); }, failure);
+  }, () => {
+    success();
+  }, failure);
 });

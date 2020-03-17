@@ -14,125 +14,105 @@ import * as TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialTo
 UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
   const sinkComp = Sinks.relativeSink();
 
-  const makeButton = (itemSpec: { text: string }): SketchSpec => {
-    return Button.sketch({
-      dom: {
-        tag: 'button',
-        innerHtml: itemSpec.text
-      },
-      buttonBehaviours: Behaviour.derive([
-        Tabstopping.config({ })
-      ])
-    });
-  };
+  const makeButton = (itemSpec: { text: string }): SketchSpec => Button.sketch({
+    dom: {
+      tag: 'button',
+      innerHtml: itemSpec.text
+    },
+    buttonBehaviours: Behaviour.derive([
+      Tabstopping.config({ })
+    ])
+  });
 
-  GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build(
-      FloatingToolbarButton.sketch({
-        layouts: {
-          onRtl: () => [ ],
-          onLtr: () => [ Layout.southeast, Layout.northeast ]
-        },
-        lazySink: Fun.constant(Result.value(sinkComp)),
-        fetch: () => {
-          return Future.nu((resolve) => {
-            const groups = TestPartialToolbarGroup.createGroups([
-              { items: Arr.map([ { text: 'A' }, { text: 'B' } ], makeButton) },
-              { items: Arr.map([ { text: 'C' }, { text: 'D' } ], makeButton) }
-            ]);
-            resolve(groups);
-          });
-        },
-        markers: {
-          toggledClass: 'test-button-toggle'
-        },
-        parts: {
-          button: {
-            dom: {
-              tag: 'button',
-              classes: [ 'more-button' ],
-              innerHtml: '+'
-            }
-          },
-          toolbar: {
-            dom: {
-              tag: 'div',
-              classes: [ 'test-toolbar' ]
-            }
+  GuiSetup.setup((store, doc, body) => GuiFactory.build(
+    FloatingToolbarButton.sketch({
+      layouts: {
+        onRtl: () => [ ],
+        onLtr: () => [ Layout.southeast, Layout.northeast ]
+      },
+      lazySink: Fun.constant(Result.value(sinkComp)),
+      fetch: () => Future.nu((resolve) => {
+        const groups = TestPartialToolbarGroup.createGroups([
+          { items: Arr.map([{ text: 'A' }, { text: 'B' }], makeButton) },
+          { items: Arr.map([{ text: 'C' }, { text: 'D' }], makeButton) }
+        ]);
+        resolve(groups);
+      }),
+      markers: {
+        toggledClass: 'test-button-toggle'
+      },
+      parts: {
+        button: {
+          dom: {
+            tag: 'button',
+            classes: [ 'more-button' ],
+            innerHtml: '+'
           }
         },
-      })
-    );
-  }, (doc, body, gui, component, store) => {
+        toolbar: {
+          dom: {
+            tag: 'div',
+            classes: [ 'test-toolbar' ]
+          }
+        }
+      }
+    })
+  ), (doc, body, gui, component, store) => {
     gui.add(sinkComp);
 
-    const sAssertButtonStructure = (active: boolean) => {
-      return GeneralSteps.sequence([
-        Assertions.sAssertStructure(
-          `Floating toolbar button should ${active ? 'have' : 'not have'} toggle class`,
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('button', {
-              classes: active ? [ arr.has('test-button-toggle') ] : [],
-              children: [
-                s.text(str.is('+'))
-              ]
-            });
-          }),
-          component.element()
-        )
-      ]);
-    };
+    const sAssertButtonStructure = (active: boolean) => GeneralSteps.sequence([
+      Assertions.sAssertStructure(
+        `Floating toolbar button should ${active ? 'have' : 'not have'} toggle class`,
+        ApproxStructure.build((s, str, arr) => s.element('button', {
+          classes: active ? [ arr.has('test-button-toggle') ] : [],
+          children: [
+            s.text(str.is('+'))
+          ]
+        })),
+        component.element()
+      )
+    ]);
 
-    const sAssertFloatingToolbarOpened = () => {
-      return GeneralSteps.sequence([
-        Assertions.sAssertStructure(
-          'Assert floating toolbar structure',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
+    const sAssertFloatingToolbarOpened = () => GeneralSteps.sequence([
+      Assertions.sAssertStructure(
+        'Assert floating toolbar structure',
+        ApproxStructure.build((s, str, arr) => s.element('div', {
+          children: [
+            s.element('div', {
+              attrs: {
+                id: str.contains('aria-owns')
+              },
               children: [
                 s.element('div', {
-                  attrs: {
-                    id: str.contains('aria-owns')
-                  },
+                  classes: [ arr.has('test-toolbar') ],
                   children: [
-                    s.element('div', {
-                      classes: [ arr.has('test-toolbar') ],
+                    ApproxStructure.build((s, str, arr) => s.element('div', {
+                      classes: [ arr.has('test-toolbar-group') ],
                       children: [
-                        ApproxStructure.build((s, str, arr) => {
-                          return s.element('div', {
-                            classes: [ arr.has('test-toolbar-group') ],
-                            children: [
-                              s.element('button', { html: str.is('A') }),
-                              s.element('button', { html: str.is('B') })
-                            ]
-                          });
-                        }),
-                        ApproxStructure.build((s, str, arr) => {
-                          return s.element('div', {
-                            classes: [ arr.has('test-toolbar-group') ],
-                            children: [
-                              s.element('button', { html: str.is('C') }),
-                              s.element('button', { html: str.is('D') })
-                            ]
-                          });
-                        })
+                        s.element('button', { html: str.is('A') }),
+                        s.element('button', { html: str.is('B') })
                       ]
-                    })
+                    })),
+                    ApproxStructure.build((s, str, arr) => s.element('div', {
+                      classes: [ arr.has('test-toolbar-group') ],
+                      children: [
+                        s.element('button', { html: str.is('C') }),
+                        s.element('button', { html: str.is('D') })
+                      ]
+                    }))
                   ]
                 })
               ]
-            });
-          }),
-          sinkComp.element()
-        )
-      ]);
-    };
+            })
+          ]
+        })),
+        sinkComp.element()
+      )
+    ]);
 
-    const sAssertFloatingToolbarClosed = () => {
-      return Step.sync(() => {
-        Assertions.assertEq('Floating toolbar should not exist', false, SelectorExists.descendant(sinkComp.element(), 'test-toolbar'));
-      });
-    };
+    const sAssertFloatingToolbarClosed = () => Step.sync(() => {
+      Assertions.assertEq('Floating toolbar should not exist', false, SelectorExists.descendant(sinkComp.element(), 'test-toolbar'));
+    });
 
     return [
       GuiSetup.mAddStyles(doc, [
@@ -141,18 +121,18 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
 
       Log.stepsAsStep('', 'Assert initial structure', [
         sAssertButtonStructure(false),
-        sAssertFloatingToolbarClosed(),
+        sAssertFloatingToolbarClosed()
       ]),
 
       Log.stepsAsStep('', 'Clicking on button should open floating toolbar', [
         Mouse.sClickOn(gui.element(), 'button'),
         sAssertButtonStructure(true),
-        sAssertFloatingToolbarOpened(),
+        sAssertFloatingToolbarOpened()
       ]),
 
       Log.stepsAsStep('', 'Escape should close floating toolbar', [
         Keyboard.sKeydown(doc, Keys.escape(), { }),
-        sAssertFloatingToolbarClosed(),
+        sAssertFloatingToolbarClosed()
       ]),
 
       GuiSetup.mRemoveStyles

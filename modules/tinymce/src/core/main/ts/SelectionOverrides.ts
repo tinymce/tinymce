@@ -80,7 +80,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
     return editor.selection.getRng();
   };
 
-  const showCaret = (direction: number, node: Element, before: boolean, scrollIntoView: boolean = true): Range => {
+  const showCaret = (direction: number, node: Element, before: boolean, scrollIntoView = true): Range => {
     let e;
 
     e = editor.fire('ShowCaret', {
@@ -147,11 +147,11 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
 
     const handleTouchSelect = function (editor: Editor) {
       editor.on('tap', (e) => {
-          const contentEditableRoot = getContentEditableRoot(editor, e.target);
-          if (isContentEditableFalse(contentEditableRoot)) {
-            e.preventDefault();
-            setContentEditableSelection(CefUtils.selectNode(editor, contentEditableRoot));
-          }
+        const contentEditableRoot = getContentEditableRoot(editor, e.target);
+        if (isContentEditableFalse(contentEditableRoot)) {
+          e.preventDefault();
+          setContentEditableSelection(CefUtils.selectNode(editor, contentEditableRoot));
+        }
       }, true);
     };
 
@@ -241,11 +241,11 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
       }
 
       switch (e.keyCode) {
-        default:
-          if (isContentEditableFalse(editor.selection.getNode())) {
-            e.preventDefault();
-          }
-          break;
+      default:
+        if (isContentEditableFalse(editor.selection.getNode())) {
+          e.preventDefault();
+        }
+        break;
       }
     });
 
@@ -275,9 +275,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
       }
     });
 
-    const isPasteBin = (node: Element): boolean => {
-      return node.id === 'mcepastebin';
-    };
+    const isPasteBin = (node: Element): boolean => node.id === 'mcepastebin';
 
     editor.on('AfterSetSelectionRange', function (e) {
       const rng = e.range;
@@ -358,8 +356,8 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
     let node;
     const $ = editor.$;
     const dom = editor.dom;
-    let $realSelectionContainer, sel,
-      startContainer, startOffset, endOffset, e, caretPosition, targetClone, origTargetClone;
+    let $realSelectionContainer; let sel;
+    let startContainer; let startOffset; let endOffset; let e; let caretPosition; let targetClone; let origTargetClone;
 
     if (!range) {
       return null;
@@ -427,7 +425,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
         return $([]);
       },
       function (elm) {
-        return $([elm.dom()]);
+        return $([ elm.dom() ]);
       }
     );
 

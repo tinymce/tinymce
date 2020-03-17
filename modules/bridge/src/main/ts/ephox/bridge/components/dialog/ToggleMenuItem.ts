@@ -20,6 +20,4 @@ export const dialogToggleMenuItemSchema = ValueSchema.objOf([
 
 export const dialogToggleMenuItemDataProcessor = ValueSchema.boolean;
 
-export const createToggleMenuItem = (spec: DialogToggleMenuItemApi): Result<DialogToggleMenuItem, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw('togglemenuitem', dialogToggleMenuItemSchema, spec);
-};
+export const createToggleMenuItem = (spec: DialogToggleMenuItemApi): Result<DialogToggleMenuItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('togglemenuitem', dialogToggleMenuItemSchema, spec);

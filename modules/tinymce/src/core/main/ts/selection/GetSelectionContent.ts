@@ -13,21 +13,19 @@ import * as MultiRange from './MultiRange';
 import * as Zwsp from '../text/Zwsp';
 import Editor from '../api/Editor';
 
-const getTextContent = (editor: Editor): string => {
-  return Option.from(editor.selection.getRng()).map((rng) => {
-    const bin = editor.dom.add(editor.getBody(), 'div', {
-      'data-mce-bogus': 'all',
-      'style': 'overflow: hidden; opacity: 0;'
-    }, rng.cloneContents());
+const getTextContent = (editor: Editor): string => Option.from(editor.selection.getRng()).map((rng) => {
+  const bin = editor.dom.add(editor.getBody(), 'div', {
+    'data-mce-bogus': 'all',
+    'style': 'overflow: hidden; opacity: 0;'
+  }, rng.cloneContents());
 
-    const text = Zwsp.trim(bin.innerText);
-    editor.dom.remove(bin);
-    return text;
-  }).getOr('');
-};
+  const text = Zwsp.trim(bin.innerText);
+  editor.dom.remove(bin);
+  return text;
+}).getOr('');
 
 const getHtmlContent = (editor: Editor, args: any): string => {
-  const rng = editor.selection.getRng(), tmpElm = editor.dom.create('body');
+  const rng = editor.selection.getRng(); const tmpElm = editor.dom.create('body');
   const sel = editor.selection.getSel();
   let fragment;
   const ranges = EventProcessRanges.processRanges(editor, MultiRange.getRanges(sel));

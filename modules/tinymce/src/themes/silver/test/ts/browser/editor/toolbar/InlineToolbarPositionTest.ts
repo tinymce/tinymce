@@ -13,7 +13,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
   Theme();
 
   const sAssertStaticPos = (container: Element) => Waiter.sTryUntil('Wait for toolbar to be absolute', Step.sync(() => {
-    Assertions.assertEq(`Container should be statically positioned`, 'static', Css.get(container, 'position'));
+    Assertions.assertEq('Container should be statically positioned', 'static', Css.get(container, 'position'));
   }));
 
   const sAssertAbsolutePos = (container: Element, contentArea: Element, position: 'above' | 'below') => Waiter.sTryUntil('Wait for toolbar to be absolute', Step.sync(() => {
@@ -25,7 +25,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
       containerAreaBounds.y - container.dom().clientHeight :
       containerAreaBounds.bottom;
 
-    Assertions.assertEq(`Container should be absolutely positioned`, 'absolute', Css.get(container, 'position'));
+    Assertions.assertEq('Container should be absolutely positioned', 'absolute', Css.get(container, 'position'));
     Assertions.assertEq(`Container left position (${left}) should be 0px`, '0px', left);
     Assertions.assertEq(`Container should be positioned ${position} contentarea, ${top}px should be ~${assertTop}px`, true, Math.abs(top - assertTop) < 3);
   }));
@@ -36,7 +36,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
 
     const assertTop = 0;
 
-    Assertions.assertEq(`Header container should be docked (fixed position)`, 'fixed', Css.get(header, 'position'));
+    Assertions.assertEq('Header container should be docked (fixed position)', 'fixed', Css.get(header, 'position'));
     Assertions.assertEq(`Header container left position (${left}) should be 0px`, '0px', left);
     Assertions.assertEq(`Header container should be docked to ${position}, ${top}px should be ~${assertTop}px`, true, Math.abs(top - assertTop) < 3);
   }));
@@ -63,9 +63,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
   ]));
 
   const setupPageScroll = (contentAreaContainer: Element) => {
-    const createScrollDiv = () => {
-      return Element.fromHtml<HTMLElement>('<div tabindex="0" class="scroll-div" style="height: 500px;"></div>');
-    };
+    const createScrollDiv = () => Element.fromHtml<HTMLElement>('<div tabindex="0" class="scroll-div" style="height: 500px;"></div>');
 
     const divBefore = createScrollDiv();
     const divAfter = createScrollDiv();
@@ -87,33 +85,31 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     contentAreaContainer: Element;
   }
 
-  const cTest = (getSteps: (data: Data) => Step<any, any>[]) => {
-    return Chain.runStepsOnValue((editor: Editor) => {
-      const tinyApis = TinyApis(editor);
-      const container = Element.fromDom(editor.getContainer());
-      const contentAreaContainer = Element.fromDom(editor.getContentAreaContainer());
-      const header = SelectorFind.descendant(Element.fromDom(editor.getContainer()), '.tox-editor-header').getOr(container);
-      editor.setContent('<p>START CONTENT</p>' + Arr.range(98, (i) => i === 49 ? '<p>STOP AND CLICK HERE</p>' : '<p>Some content...</p>').join('\n') + '<p>END CONTENT</p>');
+  const cTest = (getSteps: (data: Data) => Step<any, any>[]) => Chain.runStepsOnValue((editor: Editor) => {
+    const tinyApis = TinyApis(editor);
+    const container = Element.fromDom(editor.getContainer());
+    const contentAreaContainer = Element.fromDom(editor.getContentAreaContainer());
+    const header = SelectorFind.descendant(Element.fromDom(editor.getContainer()), '.tox-editor-header').getOr(container);
+    editor.setContent('<p>START CONTENT</p>' + Arr.range(98, (i) => i === 49 ? '<p>STOP AND CLICK HERE</p>' : '<p>Some content...</p>').join('\n') + '<p>END CONTENT</p>');
 
-      let teardownScroll: () => void;
+    let teardownScroll: () => void;
 
-      return [
-        Step.sync(() => {
-          teardownScroll = setupPageScroll(contentAreaContainer);
-        }),
-        ...getSteps({
-          editor,
-          tinyApis,
-          header,
-          container,
-          contentAreaContainer,
-        }),
-        Step.sync(() => {
-          teardownScroll();
-        }),
-      ];
-    });
-  };
+    return [
+      Step.sync(() => {
+        teardownScroll = setupPageScroll(contentAreaContainer);
+      }),
+      ...getSteps({
+        editor,
+        tinyApis,
+        header,
+        container,
+        contentAreaContainer,
+      }),
+      Step.sync(() => {
+        teardownScroll();
+      }),
+    ];
+  });
 
   const settings = {
     theme: 'silver',

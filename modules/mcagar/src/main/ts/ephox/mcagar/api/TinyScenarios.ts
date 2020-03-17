@@ -4,9 +4,9 @@ import Jsc from '@ephox/wrap-jsverify';
 import { Editor } from '../alien/EditorTypes';
 
 type ContentGenerator = any;
-type SelectionExclusions = { containers: (container: Element) => boolean; };
-type ArbScenarioOptions = { exclusions: SelectionExclusions };
-type AsyncPropertyOptions = { scenario: ArbScenarioOptions, property: Record<string, any> };
+interface SelectionExclusions { containers: (container: Element) => boolean }
+interface ArbScenarioOptions { exclusions: SelectionExclusions }
+interface AsyncPropertyOptions { scenario: ArbScenarioOptions; property: Record<string, any> }
 
 interface Scenario {
   input: string;
@@ -45,7 +45,7 @@ export const TinyScenarios = function (editor: Editor): TinyScenarios {
   const arbScenario = function (genContent: ContentGenerator, options: ArbScenarioOptions) {
     return Jsc.bless({
       generator: genScenario(genContent, options.exclusions),
-      show (scenario: Scenario) {
+      show(scenario: Scenario) {
         const root = Element.fromDom(editor.getBody());
         return JSON.stringify({
           input: scenario.input,
@@ -55,7 +55,7 @@ export const TinyScenarios = function (editor: Editor): TinyScenarios {
     });
   };
 
-  const sAsyncProperty = function <T, X, Y>(label: string, generator: ContentGenerator, step: Step<X, Y>, options: AsyncPropertyOptions) {
+  const sAsyncProperty = function <T, X, Y> (label: string, generator: ContentGenerator, step: Step<X, Y>, options: AsyncPropertyOptions) {
     return PropertySteps.sAsyncProperty<T, X, Y>(
       label,
       [
@@ -63,7 +63,7 @@ export const TinyScenarios = function (editor: Editor): TinyScenarios {
       ],
       step,
       options.property
-     );
+    );
   };
 
   return {

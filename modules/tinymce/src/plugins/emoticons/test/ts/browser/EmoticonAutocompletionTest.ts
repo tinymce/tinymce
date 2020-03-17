@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.AutocompletionTest', (succ
         Keyboard.sKeydown(eDoc, Keys.enter(), { }),
         tinyApis.sAssertContent('<p>😂</p>')
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'emoticons',
     toolbar: 'emoticons',

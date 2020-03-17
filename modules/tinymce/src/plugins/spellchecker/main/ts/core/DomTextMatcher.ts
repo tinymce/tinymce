@@ -31,9 +31,9 @@ export interface DomTextMatcher {
 }
 
 export const DomTextMatcher = function (node, editor): DomTextMatcher {
-  let m, matches = [], text;
+  let m; let matches = []; let text;
   const dom = editor.dom;
-  let blockElementsMap, hiddenTextElementsMap, shortEndedElementsMap;
+  let blockElementsMap; let hiddenTextElementsMap; let shortEndedElementsMap;
 
   blockElementsMap = editor.schema.getBlockElements(); // H1-H6, P, TD etc
   hiddenTextElementsMap = editor.schema.getWhiteSpaceElements(); // TEXTAREA, PRE, STYLE, SCRIPT
@@ -83,9 +83,9 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
   }
 
   function stepThroughMatches(node, matches, replaceFn) {
-    let startNode, endNode, startNodeIndex,
-      endNodeIndex, innerNodes = [], atIndex = 0, curNode = node,
-      matchLocation, matchIndex = 0;
+    let startNode; let endNode; let startNodeIndex;
+    let endNodeIndex; let innerNodes = []; let atIndex = 0; let curNode = node;
+    let matchLocation; let matchIndex = 0;
 
     matches = matches.slice(0);
     matches.sort(function (a, b) {
@@ -265,12 +265,12 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
   }
 
   function getWrappersByIndex(index) {
-    const elements = node.getElementsByTagName('*'), wrappers = [];
+    const elements = node.getElementsByTagName('*'); const wrappers = [];
 
     index = typeof index === 'number' ? '' + index : null;
 
     for (let i = 0; i < elements.length; i++) {
-      const element = elements[i], dataIndex = element.getAttribute('data-mce-index');
+      const element = elements[i]; const dataIndex = element.getAttribute('data-mce-index');
 
       if (dataIndex !== null && dataIndex.length && hasClass(element)) {
         if (dataIndex === index || index === null) {
@@ -316,7 +316,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
 
     matches = filteredMatches;
 
-    /*jshint validthis:true*/
+    /* jshint validthis:true*/
     return this;
   }
 
@@ -333,7 +333,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
       }
     }
 
-    /*jshint validthis:true*/
+    /* jshint validthis:true*/
     return this;
   }
 
@@ -349,7 +349,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
       stepThroughMatches(node, matches, genReplacer(callback));
     }
 
-    /*jshint validthis:true*/
+    /* jshint validthis:true*/
     return this;
   }
 

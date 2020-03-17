@@ -14,7 +14,7 @@ import { Arr } from '@ephox/katamari';
  * @class tinymce.util.URI
  */
 
-const each = Tools.each, trim = Tools.trim;
+const each = Tools.each; const trim = Tools.trim;
 const queryParts = 'source protocol authority userInfo user password host port relative path directory file query anchor'.split(' ');
 const DEFAULT_PORTS = {
   ftp: 21,
@@ -38,7 +38,7 @@ export interface URIConstructor {
 
 class URI {
 
-  public static parseDataUri (uri: string): { type: string; data: string} {
+  public static parseDataUri(uri: string): { type: string; data: string} {
     let type;
 
     const uriComponents = decodeURIComponent(uri).split(',');
@@ -54,7 +54,7 @@ class URI {
     };
   }
 
-  public static getDocumentBaseUrl (loc: { protocol: string; host?: string; href?: string; pathname?: string }): string {
+  public static getDocumentBaseUrl(loc: { protocol: string; host?: string; href?: string; pathname?: string }): string {
     let baseUrl;
 
     // Pass applewebdata:// and other non web protocols though
@@ -178,7 +178,7 @@ class URI {
    * @method setPath
    * @param {string} path Path string to set.
    */
-  public setPath (path: string) {
+  public setPath(path: string) {
     const pathMatch = /^(.*?)\/?(\w+)?$/.exec(path);
 
     // Update path parts
@@ -201,7 +201,7 @@ class URI {
    * // Converts an absolute URL to an relative URL url will be somedir/somefile.htm
    * var url = new tinymce.util.URI('http://www.site.com/dir/').toRelative('http://www.site.com/dir/somedir/somefile.htm');
    */
-  public toRelative (uri: string): string {
+  public toRelative(uri: string): string {
     let output;
 
     if (uri === './') {
@@ -216,7 +216,7 @@ class URI {
       return relativeUri.getURI();
     }
 
-    const tu = this.getURI(), uu = relativeUri.getURI();
+    const tu = this.getURI(); const uu = relativeUri.getURI();
 
     // Allow usage of the base_uri when relative_urls = true
     if (tu === uu || (tu.charAt(tu.length - 1) === '/' && tu.substr(0, tu.length - 1) === uu)) {
@@ -249,7 +249,7 @@ class URI {
    * // Converts an relative URL to an absolute URL url will be http://www.site.com/dir/somedir/somefile.htm
    * var url = new tinymce.util.URI('http://www.site.com/dir/').toAbsolute('somedir/somefile.htm');
    */
-  public toAbsolute (uri: string, noHost?: boolean): string {
+  public toAbsolute(uri: string, noHost?: boolean): string {
     const absoluteUri = new URI(uri, { base_uri: this });
 
     return absoluteUri.getURI(noHost && this.isSameOrigin(absoluteUri));
@@ -264,7 +264,7 @@ class URI {
    * @param {tinymce.util.URI} uri Uri instance to compare.
    * @returns {Boolean} True if the origins are the same.
    */
-  public isSameOrigin (uri: URI): boolean {
+  public isSameOrigin(uri: URI): boolean {
     // tslint:disable-next-line:triple-equals
     if (this.host == uri.host && this.protocol == uri.protocol) {
       // tslint:disable-next-line:triple-equals
@@ -289,8 +289,8 @@ class URI {
    * @param {String} base Base point to convert the path from.
    * @param {String} path Absolute path to convert into a relative path.
    */
-  public toRelPath (base: string, path: string): string {
-    let items, breakPoint = 0, out = '', i, l;
+  public toRelPath(base: string, path: string): string {
+    let items; let breakPoint = 0; let out = ''; let i; let l;
 
     // Split the paths
     const normalizedBase = base.substring(0, base.lastIndexOf('/')).split('/');
@@ -340,8 +340,8 @@ class URI {
    * @param {String} base Base point to convert the path from.
    * @param {String} path Relative path to convert into an absolute path.
    */
-  public toAbsPath (base: string, path: string): string {
-    let i, nb = 0, o = [], tr, outPath;
+  public toAbsPath(base: string, path: string): string {
+    let i; let nb = 0; let o = []; let tr; let outPath;
 
     // Split paths
     tr = /\/$/.test(path) ? '/' : '';
@@ -407,7 +407,7 @@ class URI {
    * @method getURI
    * @param {Boolean} noProtoHost Optional no host and protocol part. Defaults to false.
    */
-  public getURI (noProtoHost: boolean = false): string {
+  public getURI(noProtoHost = false): string {
     let s;
 
     // Rebuild source

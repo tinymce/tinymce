@@ -30,17 +30,15 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
 
   const testLog = Cell([ ]);
 
-  const sAssertFocusedCheckbox = (label: string, expected: boolean) => {
-    return Logger.t(
-      label,
-      Chain.asStep(doc, [
-        FocusTools.cGetFocused,
-        Chain.op((checkbox) => {
-          Assertions.assertEq('Checking checked status', expected, checkbox.dom().checked);
-        })
-      ])
-    );
-  };
+  const sAssertFocusedCheckbox = (label: string, expected: boolean) => Logger.t(
+    label,
+    Chain.asStep(doc, [
+      FocusTools.cGetFocused,
+      Chain.op((checkbox) => {
+        Assertions.assertEq('Checking checked status', expected, checkbox.dom().checked);
+      })
+    ])
+  );
 
   const selectors = {
     field1: 'input', // nothing more useful, because it does not have a label
@@ -269,16 +267,14 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
           { label: 'f3', selector: selectors.field3 },
           { label: 'f2', selector: selectors.field2 },
           { label: 'first input', selector: selectors.field1 }
-        ], (dest) => {
-          return [
-            Keyboard.sKeydown(doc, Keys.tab(), { shiftKey: true }),
-            FocusTools.sTryOnSelector(
-              'Focus should move to ' + dest.label,
-              doc,
-              dest.selector
-            )
-          ];
-        })
+        ], (dest) => [
+          Keyboard.sKeydown(doc, Keys.tab(), { shiftKey: true }),
+          FocusTools.sTryOnSelector(
+            'Focus should move to ' + dest.label,
+            doc,
+            dest.selector
+          )
+        ])
       )
     ),
 

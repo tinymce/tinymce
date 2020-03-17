@@ -93,13 +93,11 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
             { title: 'Other', custom: '.DDD' }
           ],
 
-          importcss_selector_converter: (selector, group) => {
-            return {
-              title: selector + group.custom,
-              classes: [ 'converted' ],
-              inline: 'span'
-            };
-          }
+          importcss_selector_converter: (selector, group) => ({
+            title: selector + group.custom,
+            classes: [ 'converted' ],
+            inline: 'span'
+          })
         }
       )
     ),
@@ -142,13 +140,11 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
             },
             {
               title: 'Other',
-              selector_converter: (selector, group) => {
-                return {
-                  title: selector + '.OtherGroup',
-                  selector: 'p',
-                  classes: selector.split('.')[1]
-                };
-              }
+              selector_converter: (selector, group) => ({
+                title: selector + '.OtherGroup',
+                selector: 'p',
+                classes: selector.split('.')[1]
+              })
             }
           ]
         }

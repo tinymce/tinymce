@@ -21,9 +21,7 @@ import * as Settings from '../api/Settings';
  * @private
  */
 
-const isFullscreen = (editor: Editor) => {
-  return editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
-};
+const isFullscreen = (editor: Editor) => editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
 
 /**
  * Calls the resize x times in 100ms intervals. We can't wait for load events since
@@ -61,7 +59,7 @@ const parseCssValueToInt = (dom: DOMUtils, elm: Element, name: string, computed:
  * This method gets executed each time the editor needs to resize.
  */
 const resize = (editor: Editor, oldSize: Cell<number>) => {
-  let deltaSize, resizeHeight, contentHeight;
+  let deltaSize; let resizeHeight; let contentHeight;
   const dom = editor.dom;
 
   const doc = editor.getDoc();

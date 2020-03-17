@@ -18,25 +18,23 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
     const api = TinyApis(editor);
     const ui = TinyUi(editor);
 
-    const sAssertImageTab = (title: string, isPresent: boolean) => {
-      return Logger.t('Assert image tab is present', GeneralSteps.sequence([
-        ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
-        Chain.asStep({}, [
-          ui.cWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
-          Chain.op((container) => {
-            const expected = {};
-            expected['.tox-tab:contains("' + title + '")'] = isPresent ? 1 : 0;
-            Assertions.assertPresence('Asserting presence', expected, container);
-          })
-        ]),
-        ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
-      ]));
-    };
+    const sAssertImageTab = (title: string, isPresent: boolean) => Logger.t('Assert image tab is present', GeneralSteps.sequence([
+      ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
+      Chain.asStep({}, [
+        ui.cWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
+        Chain.op((container) => {
+          const expected = {};
+          expected['.tox-tab:contains("' + title + '")'] = isPresent ? 1 : 0;
+          Assertions.assertPresence('Asserting presence', expected, container);
+        })
+      ]),
+      ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
+    ]));
 
     const sTriggerUpload = Logger.t('Trigger upload', Step.async((next, die) => {
       Conversions.uriToBlob(b64).then((blob) => {
         Pipeline.async({}, [
-          FileInput.sRunOnPatchedFileInput([Files.createFile('logo.png', 0, blob)], Chain.asStep({}, [
+          FileInput.sRunOnPatchedFileInput([ Files.createFile('logo.png', 0, blob) ], Chain.asStep({}, [
             // cPopupToDialog('div[role="dialog"]'),
             ui.cWaitForPopup('Locate popup', 'div[role="dialog"]'),
             UiFinder.cFindIn('input[type="file"]'),
@@ -69,9 +67,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       api.sSetContent('<p><img src="' + src + '" /></p>'),
       api.sSelect('img', []),
       api.sSetSetting('image_uploadtab', false),
-      api.sSetSetting('images_upload_handler', (blobInfo, success) => {
-        return success('file.jpg');
-      }),
+      api.sSetSetting('images_upload_handler', (blobInfo, success) => success('file.jpg')),
       sAssertImageTab('Upload', false),
       api.sSetSetting('image_advtab', true),
       api.sDeleteSetting('image_uploadtab'),
@@ -82,9 +78,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       api.sSetContent('<p><img src="' + src + '" /></p>'),
       api.sSelect('img', []),
       api.sSetSetting('image_advtab', false), // make sure that Advanced tab appears separately
-      api.sSetSetting('images_upload_handler', (blobInfo, success) => {
-        return success('file.jpg');
-      }),
+      api.sSetSetting('images_upload_handler', (blobInfo, success) => success('file.jpg')),
       sAssertImageTab('Upload', true),
       sAssertImageTab('Advanced', false),
       api.sSetSetting('image_advtab', true),
@@ -93,23 +87,19 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       sAssertImageTab('Advanced', true)
     ]);
 
-    const sAssertSrcTextValue = (expectedValue: string) => {
-      return Waiter.sTryUntil('Waited for input to change to expected value', Chain.asStep(Body.body(), [
-        UiFinder.cFindIn('label.tox-label:contains("Source") + div > div > input.tox-textfield'),
-        Chain.op((input) => {
-          Assertions.assertEq('Assert field source value ', expectedValue, input.dom().value);
-        })
-      ]), 10, 10000);
-    };
+    const sAssertSrcTextValue = (expectedValue: string) => Waiter.sTryUntil('Waited for input to change to expected value', Chain.asStep(Body.body(), [
+      UiFinder.cFindIn('label.tox-label:contains("Source") + div > div > input.tox-textfield'),
+      Chain.op((input) => {
+        Assertions.assertEq('Assert field source value ', expectedValue, input.dom().value);
+      })
+    ]), 10, 10000);
 
-    const sAssertSrcTextValueStartsWith = (expectedValue: string) => {
-      return Waiter.sTryUntil('Waited for input to change to start with expected value', Chain.asStep(Body.body(), [
-        UiFinder.cFindIn('label.tox-label:contains("Source") + div > div > input.tox-textfield'),
-        Chain.op((input) => {
-          Assertions.assertEq('Assert field source value ', true, Strings.startsWith(input.dom().value, expectedValue));
-        })
-      ]), 10, 10000);
-    };
+    const sAssertSrcTextValueStartsWith = (expectedValue: string) => Waiter.sTryUntil('Waited for input to change to start with expected value', Chain.asStep(Body.body(), [
+      UiFinder.cFindIn('label.tox-label:contains("Source") + div > div > input.tox-textfield'),
+      Chain.op((input) => {
+        Assertions.assertEq('Assert field source value ', true, Strings.startsWith(input.dom().value, expectedValue));
+      })
+    ]), 10, 10000);
 
     // The following tests have been removed from the testing pipeline as they depend
     // on the triggerUpload functionality which is currently not feasible in the state of the code
@@ -128,9 +118,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
 
     const uploadWithCustomHandler = Log.stepsAsStep('TBA', 'Image: Image uploader test with images_upload_handler', [
       api.sSetContent(''),
-      api.sSetSetting('images_upload_handler', (blobInfo, success) => {
-        return success('file.jpg');
-      }),
+      api.sSetSetting('images_upload_handler', (blobInfo, success) => success('file.jpg')),
       ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
       ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
       ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
@@ -142,9 +130,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
 
     const uploadCustomHandlerBase64String = Log.stepsAsStep('TBA', 'Image: Test that we get full base64 string in images_upload_handler', [
       api.sSetContent(''),
-      api.sSetSetting('images_upload_handler', (blobInfo, success) => {
-        return success(blobInfo.base64());
-      }),
+      api.sSetSetting('images_upload_handler', (blobInfo, success) => success(blobInfo.base64())),
       ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
       ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
       ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),

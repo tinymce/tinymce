@@ -34,9 +34,7 @@ export default (): void => {
 
   const sink = DemoSink.make();
 
-  const lazySink: LazySink = (_) => {
-    return Result.value(sink);
-  };
+  const lazySink: LazySink = (_) => Result.value(sink);
 
   // Note, this should not in the GUI. It will be connected
   // when it opens.
@@ -50,74 +48,72 @@ export default (): void => {
     })
   );
 
-  const makeItem = (v: string, t: string, c: string): DemoRenders.DemoItem => {
-    return {
-      type: 'item',
-      data: {
-        value: v,
-        meta: {
-          'text': t,
-          'item-class': c
-        }
-      },
+  const makeItem = (v: string, t: string, c: string): DemoRenders.DemoItem => ({
+    type: 'item',
+    data: {
+      value: v,
+      meta: {
+        'text': t,
+        'item-class': c
+      }
+    },
 
-      itemBehaviours: Behaviour.derive([
-        Tooltipping.config({
-          lazySink,
-          tooltipDom: {
-            tag: 'div',
-            styles: {
-              background: '#cadbee',
-              padding: '3em'
-            }
-          },
-          tooltipComponents: [
-            GuiFactory.text(t)
-          ],
-          anchor: (comp) => ({
-            anchor: 'submenu',
-            item: comp
-          }),
-          onShow: (component, tooltip) => {
-            setTimeout(() => {
-              Tooltipping.setComponents(component, [
-                {
-                  dom: {
-                    tag: 'div',
-                    innerHtml: 'This lazy loaded'
-                  }
-                }
-              ]);
-            }, 2000);
-          },
-          onHide: (component, tooltip) => {
-
+    itemBehaviours: Behaviour.derive([
+      Tooltipping.config({
+        lazySink,
+        tooltipDom: {
+          tag: 'div',
+          styles: {
+            background: '#cadbee',
+            padding: '3em'
           }
-        })
-      ])
-    };
-  };
+        },
+        tooltipComponents: [
+          GuiFactory.text(t)
+        ],
+        anchor: (comp) => ({
+          anchor: 'submenu',
+          item: comp
+        }),
+        onShow: (component, tooltip) => {
+          setTimeout(() => {
+            Tooltipping.setComponents(component, [
+              {
+                dom: {
+                  tag: 'div',
+                  innerHtml: 'This lazy loaded'
+                }
+              }
+            ]);
+          }, 2000);
+        },
+        onHide: (component, tooltip) => {
+
+        }
+      })
+    ])
+  });
 
   const inlineMenu = TieredMenu.sketch({
     dom: {
       tag: 'div'
     },
 
-    onEscape () {
+    onEscape() {
       console.log('inline.menu.escape');
       return Option.some<boolean>(true);
     },
 
-    onExecute () {
+    onExecute() {
       console.log('inline.menu.execute');
       return Option.some<boolean>(true);
     },
 
-    onOpenMenu (sandbox, menu) {
+    onOpenMenu(sandbox, menu) {
       // handled by inline view itself
     },
 
-    onOpenSubmenu (sandbox, item, submenu) {
+    onOpenSubmenu(sandbox, item, submenu) {
       const sink = lazySink(sandbox).getOrDie();
       Positioning.position(sink, {
         anchor: 'submenu',
@@ -227,21 +223,27 @@ export default (): void => {
                         tag: 'button',
                         innerHtml: 'B'
                       },
-                      action () { console.log('inline bold'); }
+                      action() {
+                        console.log('inline bold');
+                      }
                     }),
                     Button.sketch({
                       dom: {
                         tag: 'button',
                         innerHtml: 'I'
                       },
-                      action () { console.log('inline italic'); }
+                      action() {
+                        console.log('inline italic');
+                      }
                     }),
                     Button.sketch({
                       dom: {
                         tag: 'button',
                         innerHtml: 'U'
                       },
-                      action () { console.log('inline underline'); }
+                      action() {
+                        console.log('inline underline');
+                      }
                     })
                   ]
 

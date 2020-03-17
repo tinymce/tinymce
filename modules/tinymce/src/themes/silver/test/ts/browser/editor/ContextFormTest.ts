@@ -27,16 +27,12 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
         });
       });
 
-      const sCheckLastButtonGroup = (label: string, children: (s, str, arr) => any) => {
-        return Chain.asStep(Body.body(), [
-          UiFinder.cFindIn('.tox-pop .tox-toolbar__group:last'),
-          Assertions.cAssertStructure(label, ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              children: children(s, str, arr)
-            });
-          }))
-        ]);
-      };
+      const sCheckLastButtonGroup = (label: string, children: (s, str, arr) => any) => Chain.asStep(Body.body(), [
+        UiFinder.cFindIn('.tox-pop .tox-toolbar__group:last'),
+        Assertions.cAssertStructure(label, ApproxStructure.build((s, str, arr) => s.element('div', {
+          children: children(s, str, arr)
+        })))
+      ]);
 
       const sFire = (event: string, object) => Step.sync(() => {
         editor.fire(event, object);
@@ -46,16 +42,14 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
         UiFinder.cFindIn('.tox-pop'),
         Assertions.cAssertStructure(
           `${label}: Checking pop has a dialog`,
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-pop') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-pop__dialog') ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('tox-pop') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-pop__dialog') ]
+              })
+            ]
+          }))
         )
       ]);
 
@@ -115,14 +109,14 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
           sFire('test.updateButtonABC', { disable: true }),
           sCheckLastButtonGroup('Checking button is disabled after event', (s, str, arr) => [
             s.element('button', {
-              classes: [ arr.has('tox-tbtn--disabled')],
+              classes: [ arr.has('tox-tbtn--disabled') ],
               attrs: { 'aria-disabled': str.is('true') }
             })
           ]),
           sFire('test.updateButtonABC', { disable: false }),
           sCheckLastButtonGroup('Checking button is re-enabled after event', (s, str, arr) => [
             s.element('button', {
-              classes: [ arr.not('tox-tbtn--disabled')]
+              classes: [ arr.not('tox-tbtn--disabled') ]
             })
           ]),
 
@@ -150,9 +144,9 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
           sFire('test.updateButtonA', { disable: true }),
           sFire('test.updateButtonC', { active: true }),
           sCheckLastButtonGroup('Checking buttons have right state', (s, str, arr) => [
-            s.element('button', { classes: [ arr.has('tox-tbtn--disabled')], attrs: { 'aria-disabled': str.is('true') } }),
-            s.element('button', { classes: [ arr.not('tox-tbtn--disabled')] }),
-            s.element('button', { attrs: { 'aria-pressed': str.is('true') } })
+            s.element('button', { classes: [ arr.has('tox-tbtn--disabled') ], attrs: { 'aria-disabled': str.is('true') }}),
+            s.element('button', { classes: [ arr.not('tox-tbtn--disabled') ] }),
+            s.element('button', { attrs: { 'aria-pressed': str.is('true') }})
           ])
         ])
       ], onSuccess, onFailure);

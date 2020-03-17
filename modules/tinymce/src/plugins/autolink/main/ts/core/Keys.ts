@@ -58,7 +58,7 @@ const setEnd = function (rng, container, offset) {
 };
 
 const parseCurrentLine = function (editor, endOffset, delimiter) {
-  let rng, end, start, endContainer, bookmark, text, matches, prev, len, rngText;
+  let rng; let end; let start; let endContainer; let bookmark; let text; let matches; let prev; let len; let rngText;
   const autoLinkPattern = Settings.getAutoLinkPattern(editor);
   const defaultLinkTarget = Settings.getDefaultLinkTarget(editor);
 

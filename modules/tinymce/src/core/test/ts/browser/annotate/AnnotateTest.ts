@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
         tinyApis.sSetSelection([ 0, 0 ], 'This is the first p'.length, [ 0, 0 ], 'This is the first p'.length),
         sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'one-paragraph' }),
         sAssertHtmlContent(tinyApis, [
-          `<p>This is the first <span data-test-anything="one-paragraph" data-mce-annotation="test-annotation" data-mce-annotation-uid="test-uid" class="mce-annotation">paragraph</span> here</p>`,
+          '<p>This is the first <span data-test-anything="one-paragraph" data-mce-annotation="test-annotation" data-mce-annotation-uid="test-uid" class="mce-annotation">paragraph</span> here</p>',
           '<p>This is the second.</p>'
         ]),
 
@@ -52,22 +52,20 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
         sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'nbsp-paragraph' }),
         Assertions.sAssertStructure(
           'Checking body element',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  children: [
-                    s.text( str.is('Annotation here ') ),
-                    s.element('span', {
-                      classes: [ arr.has('mce-annotation') ],
-                      html: str.is('&nbsp;')
-                    }),
-                    s.text( str.is('\u00A0\u00A0, please'))
-                  ]
-                })
-              ]
-            });
-          }),
+          ApproxStructure.build((s, str, arr) => s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text( str.is('Annotation here ') ),
+                  s.element('span', {
+                    classes: [ arr.has('mce-annotation') ],
+                    html: str.is('&nbsp;')
+                  }),
+                  s.text( str.is('\u00A0\u00A0, please'))
+                ]
+              })
+            ]
+          })),
           Element.fromDom(editor.getBody())
         )
       ])
@@ -81,22 +79,20 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
         sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'nbsp-paragraph' }),
         Assertions.sAssertStructure(
           'Checking body element',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  children: [
-                    s.text( str.is('Annotation here \u00A0') ),
-                    s.element('span', {
-                      classes: [ arr.has('mce-annotation') ],
-                      html: str.is('&nbsp;')
-                    }),
-                    s.text( str.is('\u00A0, please'))
-                  ]
-                })
-              ]
-            });
-          }),
+          ApproxStructure.build((s, str, arr) => s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text( str.is('Annotation here \u00A0') ),
+                  s.element('span', {
+                    classes: [ arr.has('mce-annotation') ],
+                    html: str.is('&nbsp;')
+                  }),
+                  s.text( str.is('\u00A0, please'))
+                ]
+              })
+            ]
+          })),
           Element.fromDom(editor.getBody())
         )
       ])
@@ -110,22 +106,20 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
         sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'nbsp-paragraph' }),
         Assertions.sAssertStructure(
           'Checking body element',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  children: [
-                    s.text( str.is('Annotation here \u00A0\u00A0') ),
-                    s.element('span', {
-                      classes: [ arr.has('mce-annotation') ],
-                      html: str.is(',')
-                    }),
-                    s.text( str.is(' please'))
-                  ]
-                })
-              ]
-            });
-          }),
+          ApproxStructure.build((s, str, arr) => s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text( str.is('Annotation here \u00A0\u00A0') ),
+                  s.element('span', {
+                    classes: [ arr.has('mce-annotation') ],
+                    html: str.is(',')
+                  }),
+                  s.text( str.is(' please'))
+                ]
+              })
+            ]
+          })),
           Element.fromDom(editor.getBody())
         )
       ])
@@ -139,7 +133,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
         tinyApis.sSetSelection([ 0, 0 ], 'This is the first p'.length, [ 0, 0 ], 'This is the first par'.length),
         sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'one-paragraph' }),
         sAssertHtmlContent(tinyApis, [
-          `<p>This is the first p<span data-test-anything="one-paragraph" data-mce-annotation="test-annotation" data-mce-annotation-uid="test-uid" class="mce-annotation">ar</span>agraph</p>`,
+          '<p>This is the first p<span data-test-anything="one-paragraph" data-mce-annotation="test-annotation" data-mce-annotation-uid="test-uid" class="mce-annotation">ar</span>agraph</p>',
           '<p>This is the second.</p>'
         ]),
 
@@ -155,7 +149,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
         tinyApis.sSetSelection([ 0, 0 ], 'This '.length, [ 0, 0 ], 'This is'.length),
         sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'one-paragraph' }),
         sAssertHtmlContent(tinyApis, [
-          `<p>This <span data-test-anything="one-paragraph" data-mce-annotation="test-annotation" data-mce-annotation-uid="test-uid" class="mce-annotation">is</span> the first paragraph</p>`,
+          '<p>This <span data-test-anything="one-paragraph" data-mce-annotation="test-annotation" data-mce-annotation-uid="test-uid" class="mce-annotation">is</span> the first paragraph</p>',
           '<p>This is the second.</p>'
         ]),
 
@@ -171,8 +165,8 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
         tinyApis.sSetSelection([ 0, 0 ], 'This '.length, [ 1, 0 ], 'This is'.length),
         sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'two-paragraphs' }),
         sAssertHtmlContent(tinyApis, [
-          `<p>This <span data-mce-annotation="test-annotation" data-test-anything="two-paragraphs" data-mce-annotation-uid="test-uid" class="mce-annotation">is the first paragraph</span></p>`,
-          `<p><span data-mce-annotation="test-annotation" data-test-anything="two-paragraphs" data-mce-annotation-uid="test-uid" class="mce-annotation">This is</span> the second.</p>`
+          '<p>This <span data-mce-annotation="test-annotation" data-test-anything="two-paragraphs" data-mce-annotation-uid="test-uid" class="mce-annotation">is the first paragraph</span></p>',
+          '<p><span data-mce-annotation="test-annotation" data-test-anything="two-paragraphs" data-mce-annotation-uid="test-uid" class="mce-annotation">This is</span> the second.</p>'
         ]),
         tinyApis.sAssertSelection([ 0 ], 1, [ 1 ], 1)
       ])
@@ -186,9 +180,9 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
         tinyApis.sSetSelection([ 0, 0 ], 'This '.length, [ 2, 0 ], 'This is'.length),
         sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'three-paragraphs' }),
         sAssertHtmlContent(tinyApis, [
-          `<p>This <span data-mce-annotation="test-annotation" data-test-anything="three-paragraphs" data-mce-annotation-uid="test-uid" class="mce-annotation">is the first paragraph</span></p>`,
-          `<p><span data-mce-annotation="test-annotation" data-test-anything="three-paragraphs" data-mce-annotation-uid="test-uid" class="mce-annotation">This is the second.</span></p>`,
-          `<p><span data-mce-annotation="test-annotation" data-test-anything="three-paragraphs" data-mce-annotation-uid="test-uid" class="mce-annotation">This is</span> the third.</p>`
+          '<p>This <span data-mce-annotation="test-annotation" data-test-anything="three-paragraphs" data-mce-annotation-uid="test-uid" class="mce-annotation">is the first paragraph</span></p>',
+          '<p><span data-mce-annotation="test-annotation" data-test-anything="three-paragraphs" data-mce-annotation-uid="test-uid" class="mce-annotation">This is the second.</span></p>',
+          '<p><span data-mce-annotation="test-annotation" data-test-anything="three-paragraphs" data-mce-annotation-uid="test-uid" class="mce-annotation">This is</span> the third.</p>'
         ]),
         tinyApis.sAssertSelection([ 0 ], 1, [ 2 ], 1)
       ])
@@ -211,14 +205,12 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
     setup: (ed: Editor) => {
       ed.on('init', () => {
         ed.annotator.register('test-annotation', {
-          decorate: (uid, data) => {
-            return {
-              attributes: {
-                'data-test-anything': data.anything
-              },
-              classes: [ ]
-            };
-          }
+          decorate: (uid, data) => ({
+            attributes: {
+              'data-test-anything': data.anything
+            },
+            classes: [ ]
+          })
         });
       });
     }

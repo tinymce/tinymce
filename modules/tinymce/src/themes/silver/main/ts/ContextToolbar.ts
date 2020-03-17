@@ -29,12 +29,12 @@ const bubbleSize = 12;
 const bubbleAlignments = {
   valignCentre: [],
   alignCentre: [],
-  alignLeft: ['tox-pop--align-left'],
-  alignRight: ['tox-pop--align-right'],
-  right: ['tox-pop--right'],
-  left: ['tox-pop--left'],
-  bottom: ['tox-pop--bottom'],
-  top: ['tox-pop--top']
+  alignLeft: [ 'tox-pop--align-left' ],
+  alignRight: [ 'tox-pop--align-right' ],
+  right: [ 'tox-pop--right' ],
+  left: [ 'tox-pop--left' ],
+  bottom: [ 'tox-pop--bottom' ],
+  top: [ 'tox-pop--top' ]
 };
 
 const anchorOverrides = {
@@ -44,17 +44,17 @@ const anchorOverrides = {
 
 // On desktop we prioritise north-then-south because it's cleaner, but on mobile we prioritise south to try to avoid overlapping with native context toolbars
 const desktopAnchorSpecLayouts = {
-  onLtr: () => [Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest],
-  onRtl: () => [Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast]
+  onLtr: () => [ Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest,
+    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest ],
+  onRtl: () => [ Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast,
+    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast ]
 };
 
 const mobileAnchorSpecLayouts = {
-  onLtr: () => [Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest],
-  onRtl: () => [Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast]
+  onLtr: () => [ Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north,
+    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest ],
+  onRtl: () => [ Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north,
+    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast ]
 };
 
 const getAnchorLayout = (position: Toolbar.ContextToolbarPosition, isTouch: boolean): Partial<AnchorSpec> => {
@@ -91,14 +91,10 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
 
   const getBounds = () => getContextToolbarBounds(editor);
 
-  const isRangeOverlapping = (aTop: number, aBottom: number, bTop: number, bBottom: number) => {
-    return Math.max(aTop, bTop) <= Math.min(aBottom, bBottom);
-  };
+  const isRangeOverlapping = (aTop: number, aBottom: number, bTop: number, bBottom: number) => Math.max(aTop, bTop) <= Math.min(aBottom, bBottom);
 
   const getLastElementVerticalBound = () => {
-    const nodeBounds = lastElement.get().map((ele) => ele.getBoundingClientRect()).getOrThunk(() => {
-      return editor.selection.getRng().getBoundingClientRect();
-    });
+    const nodeBounds = lastElement.get().map((ele) => ele.getBoundingClientRect()).getOrThunk(() => editor.selection.getRng().getBoundingClientRect());
 
     // Translate to the top level document, as nodeBounds is relative to the iframe viewport
     const diffTop = editor.inline ? Scroll.get().top() : Boxes.absolute(Element.fromDom(editor.getBody())).y;
@@ -148,38 +144,34 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   const lastElement = Cell<Option<DomElement>>(Option.none<DomElement>());
   const timer = Cell(null);
 
-  const wrapInPopDialog = (toolbarSpec: AlloySpec) => {
-    return {
-      dom: {
-        tag: 'div',
-        classes: ['tox-pop__dialog'],
-      },
-      components: [toolbarSpec],
-      behaviours: Behaviour.derive([
-        Keying.config({
-          mode: 'acyclic'
+  const wrapInPopDialog = (toolbarSpec: AlloySpec) => ({
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-pop__dialog' ],
+    },
+    components: [ toolbarSpec ],
+    behaviours: Behaviour.derive([
+      Keying.config({
+        mode: 'acyclic'
+      }),
+
+      AddEventsBehaviour.config('pop-dialog-wrap-events', [
+        AlloyEvents.runOnAttached((comp) => {
+          editor.shortcuts.add('ctrl+F9', 'focus statusbar', () => Keying.focusIn(comp));
         }),
-
-        AddEventsBehaviour.config('pop-dialog-wrap-events', [
-          AlloyEvents.runOnAttached((comp) => {
-            editor.shortcuts.add('ctrl+F9', 'focus statusbar', () => Keying.focusIn(comp));
-          }),
-          AlloyEvents.runOnDetached((comp) => {
-            editor.shortcuts.remove('ctrl+F9');
-          })
-        ])
+        AlloyEvents.runOnDetached((comp) => {
+          editor.shortcuts.remove('ctrl+F9');
+        })
       ])
-    };
-  };
-
-  const getScopes: () => ScopedToolbars = Thunk.cached(() => {
-    return ToolbarScopes.categorise(registryContextToolbars, (toolbarApi) => {
-      const alloySpec = buildToolbar(toolbarApi);
-      AlloyTriggers.emitWith(contextbar, forwardSlideEvent, {
-        forwardContents: wrapInPopDialog(alloySpec)
-      });
-    });
+    ])
   });
+
+  const getScopes: () => ScopedToolbars = Thunk.cached(() => ToolbarScopes.categorise(registryContextToolbars, (toolbarApi) => {
+    const alloySpec = buildToolbar(toolbarApi);
+    AlloyTriggers.emitWith(contextbar, forwardSlideEvent, {
+      forwardContents: wrapInPopDialog(alloySpec)
+    });
+  }));
 
   const buildToolbar = (ctx): AlloySpec => {
     const { buttons } = editor.ui.registry.getAll();
@@ -199,9 +191,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
         onEscape: Option.none,
         cyclicKeying: true
       });
-    })() : (() => {
-      return ContextForm.renderContextForm(toolbarType, ctx, extras.backstage);
-    })();
+    })() : (() => ContextForm.renderContextForm(toolbarType, ctx, extras.backstage))();
   };
 
   editor.on(showContextToolbarEvent, (e) => {

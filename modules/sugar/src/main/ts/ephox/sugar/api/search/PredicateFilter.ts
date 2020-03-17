@@ -9,35 +9,35 @@ import { Node as DomNode } from '@ephox/dom-globals';
 const all: {
   <T extends DomNode = DomNode>(predicate: (e: Element<DomNode>) => e is Element<T>): Element<T>[];
   (predicate: (e: Element<DomNode>) => boolean): Element<DomNode>[];
-} = function <T extends DomNode = DomNode>(predicate: (e: Element<DomNode>) => e is Element<T>) {
+} = function <T extends DomNode = DomNode> (predicate: (e: Element<DomNode>) => e is Element<T>) {
   return descendants(Body.body(), predicate);
 };
 
 const ancestors: {
   <T extends DomNode = DomNode>(scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>, isRoot?: (e: Element<DomNode>) => boolean): Element<T>[];
   (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean, isRoot?: (e: Element<DomNode>) => boolean): Element<DomNode>[];
-} = function <T extends DomNode = DomNode>(scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>, isRoot?: (e: Element<DomNode>) => boolean) {
+} = function <T extends DomNode = DomNode> (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>, isRoot?: (e: Element<DomNode>) => boolean) {
   return Arr.filter(Traverse.parents(scope, isRoot), predicate);
 };
 
 const siblings: {
   <T extends DomNode = DomNode>(scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>): Element<T>[];
   (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean): Element<DomNode>[];
-} = function <T extends DomNode = DomNode>(scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>) {
+} = function <T extends DomNode = DomNode> (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>) {
   return Arr.filter(Traverse.siblings(scope), predicate);
 };
 
 const children: {
   <T extends DomNode = DomNode>(scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>): Element<T>[];
   (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean): Element<DomNode>[];
-} = function <T extends DomNode = DomNode>(scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>) {
+} = function <T extends DomNode = DomNode> (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>) {
   return Arr.filter(Traverse.children(scope), predicate);
 };
 
 const descendants: {
   <T extends DomNode = DomNode>(scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>): Element<T>[];
   (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean): Element<DomNode>[];
-} = function <T extends DomNode = DomNode>(scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>) {
+} = function <T extends DomNode = DomNode> (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>) {
   let result: Element<T>[] = [];
 
   // Recurse.toArray() might help here

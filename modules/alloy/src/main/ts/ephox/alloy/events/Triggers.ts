@@ -68,18 +68,16 @@ const doTriggerHandler = (lookup: LookupEvent, eventType: string, rawEvent: Even
   });
 };
 
-const doTriggerOnUntilStopped = (lookup: LookupEvent, eventType: string, rawEvent: EventFormat, rawTarget: Element, source: Cell<Element>, logger: DebuggerLogger): boolean => {
-  return doTriggerHandler(lookup, eventType, rawEvent, rawTarget, source, logger).fold(() => {
-    // stopped.
-    return true;
-  }, (parent) => {
-    // Go again.
-    return doTriggerOnUntilStopped(lookup, eventType, rawEvent, parent, source, logger);
-  }, () => {
-    // completed
-    return false;
-  });
-};
+const doTriggerOnUntilStopped = (lookup: LookupEvent, eventType: string, rawEvent: EventFormat, rawTarget: Element, source: Cell<Element>, logger: DebuggerLogger): boolean => doTriggerHandler(lookup, eventType, rawEvent, rawTarget, source, logger).fold(() =>
+// stopped.
+  true
+, (parent) =>
+// Go again.
+  doTriggerOnUntilStopped(lookup, eventType, rawEvent, parent, source, logger)
+, () =>
+// completed
+  false
+);
 
 const triggerHandler = <T extends EventFormat>(lookup: LookupEvent, eventType: string, rawEvent: T, target: Element, logger: DebuggerLogger): TriggerAdt => {
   const source = EventSource.derive(rawEvent, target);

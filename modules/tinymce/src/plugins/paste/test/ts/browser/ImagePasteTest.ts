@@ -40,7 +40,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
 
   const appendTeardown = function (editor: Editor, steps: Step<any, any>[]) {
     return Arr.bind(steps, function (step) {
-      return [step, sTeardown(editor)];
+      return [ step, sTeardown(editor) ];
     });
   };
 
@@ -52,14 +52,14 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
       bytes[i] = buff.charCodeAt(i);
     }
 
-    return new Blob([bytes], { type });
+    return new Blob([ bytes ], { type });
   };
 
   const noop = function () {
   };
 
   const mockEvent = function (type: string, files) {
-    let event, transferName;
+    let event; let transferName;
 
     event = {
       type,
@@ -105,7 +105,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
   };
 
   suite.asyncTest('TestCase-TBA: Paste: pasteImages should set unique id in blobcache', function (editor, done, die) {
-    let rng, event;
+    let rng; let event;
     const clipboard = Clipboard(editor, Cell('html'));
 
     const hasCachedItem = (name) => !!editor.editorUpload.blobCache.get(name);
@@ -132,7 +132,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
   });
 
   suite.asyncTest('TestCase-TBA: Paste: dropImages', function (editor, done, die) {
-    let rng, event;
+    let rng; let event;
     const clipboard = Clipboard(editor, Cell('html'));
 
     editor.settings.paste_data_images = true;
@@ -152,7 +152,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
   });
 
   suite.asyncTest('TestCase-TBA: Paste: pasteImages', function (editor, done, die) {
-    let rng, event;
+    let rng; let event;
     const clipboard = Clipboard(editor, Cell('html'));
 
     editor.settings.paste_data_images = true;
@@ -172,7 +172,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
   });
 
   suite.asyncTest('TestCase-TBA: Paste: dropImages - images_dataimg_filter', function (editor, done, die) {
-    let rng, event;
+    let rng; let event;
     const clipboard = Clipboard(editor, Cell('html'));
 
     editor.settings.paste_data_images = true;
@@ -196,7 +196,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
   });
 
   suite.asyncTest('TestCase-TBA: Paste: pasteImages - images_dataimg_filter', function (editor, done, die) {
-    let rng, event;
+    let rng; let event;
     const clipboard = Clipboard(editor, Cell('html'));
 
     editor.settings.paste_data_images = true;

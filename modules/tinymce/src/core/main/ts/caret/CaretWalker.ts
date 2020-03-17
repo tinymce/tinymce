@@ -112,8 +112,8 @@ const moveForwardFromBr = (root: Element, nextNode: Node) => {
 };
 
 const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root: Node): CaretPosition => {
-  let node, nextNode, innerNode;
-  let rootContentEditableFalseElm, caretPosition;
+  let node; let nextNode; let innerNode;
+  let rootContentEditableFalseElm; let caretPosition;
 
   if (!isElement(root) || !startPos) {
     return null;
@@ -220,9 +220,8 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
   return null;
 };
 
-export const CaretWalker = (root: Node): CaretWalker => {
-  return {
-    /**
+export const CaretWalker = (root: Node): CaretWalker => ({
+  /**
      * Returns the next logical caret position from the specified input
      * caretPosition or null if there isn't any more positions left for example
      * at the end specified root element.
@@ -231,11 +230,11 @@ export const CaretWalker = (root: Node): CaretWalker => {
      * @param {tinymce.caret.CaretPosition} caretPosition Caret position to start from.
      * @return {tinymce.caret.CaretPosition} CaretPosition or null if no position was found.
      */
-    next (caretPosition: CaretPosition): CaretPosition {
-      return findCaretPosition(HDirection.Forwards, caretPosition, root);
-    },
+  next(caretPosition: CaretPosition): CaretPosition {
+    return findCaretPosition(HDirection.Forwards, caretPosition, root);
+  },
 
-    /**
+  /**
      * Returns the previous logical caret position from the specified input
      * caretPosition or null if there isn't any more positions left for example
      * at the end specified root element.
@@ -244,8 +243,7 @@ export const CaretWalker = (root: Node): CaretWalker => {
      * @param {tinymce.caret.CaretPosition} caretPosition Caret position to start from.
      * @return {tinymce.caret.CaretPosition} CaretPosition or null if no position was found.
      */
-    prev (caretPosition: CaretPosition): CaretPosition {
-      return findCaretPosition(HDirection.Backwards, caretPosition, root);
-    }
-  };
-};
+  prev(caretPosition: CaretPosition): CaretPosition {
+    return findCaretPosition(HDirection.Backwards, caretPosition, root);
+  }
+});

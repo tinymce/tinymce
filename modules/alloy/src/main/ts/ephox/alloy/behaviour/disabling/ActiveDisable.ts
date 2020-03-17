@@ -9,22 +9,16 @@ import { Stateless } from '../common/BehaviourState';
 import * as DisableApis from './DisableApis';
 import { DisableConfig } from './DisableTypes';
 
-const exhibit = (base: DomDefinitionDetail, disableConfig: DisableConfig) => {
-  return DomModification.nu({
-    // Do not add the attribute yet, because it will depend on the node name
-    // if we use "aria-disabled" or just "disabled"
-    classes: disableConfig.disabled ? disableConfig.disableClass.map(Arr.pure).getOr([ ]) : [ ]
-  });
-};
+const exhibit = (base: DomDefinitionDetail, disableConfig: DisableConfig) => DomModification.nu({
+  // Do not add the attribute yet, because it will depend on the node name
+  // if we use "aria-disabled" or just "disabled"
+  classes: disableConfig.disabled ? disableConfig.disableClass.map(Arr.pure).getOr([ ]) : [ ]
+});
 
-const events = (disableConfig: DisableConfig, disableState: Stateless) => {
-  return AlloyEvents.derive([
-    AlloyEvents.abort(SystemEvents.execute(), (component, simulatedEvent) => {
-      return DisableApis.isDisabled(component, disableConfig);
-    }),
-    Behaviour.loadEvent(disableConfig, disableState, DisableApis.onLoad)
-  ]);
-};
+const events = (disableConfig: DisableConfig, disableState: Stateless) => AlloyEvents.derive([
+  AlloyEvents.abort(SystemEvents.execute(), (component, simulatedEvent) => DisableApis.isDisabled(component, disableConfig)),
+  Behaviour.loadEvent(disableConfig, disableState, DisableApis.onLoad)
+]);
 
 export {
   exhibit,

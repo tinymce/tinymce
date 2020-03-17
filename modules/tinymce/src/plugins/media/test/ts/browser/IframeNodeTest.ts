@@ -22,19 +22,17 @@ UnitTest.asynctest('browser.core.IframeNodeTest', function (success, failure) {
         Chain.asStep(Element.fromDom(editor.getBody()), [
           UiFinder.cFindIn('iframe'),
           Chain.op((input) =>
-            Assertions.assertStructure('should have all attributes', ApproxStructure.build((s, str, arr) => {
-              return s.element('iframe', {
-                classes: [ arr.has('test-class') ],
-                attrs: {
-                  width: str.none('should not have width'),
-                  height: str.none('should not have height')
-                },
-                styles: {
-                  width: str.is('500px'),
-                  height: str.is('250px')
-                },
-              });
-            }), input)
+            Assertions.assertStructure('should have all attributes', ApproxStructure.build((s, str, arr) => s.element('iframe', {
+              classes: [ arr.has('test-class') ],
+              attrs: {
+                width: str.none('should not have width'),
+                height: str.none('should not have height')
+              },
+              styles: {
+                width: str.is('500px'),
+                height: str.is('250px')
+              },
+            })), input)
           )
         ])
       ]),
@@ -46,19 +44,17 @@ UnitTest.asynctest('browser.core.IframeNodeTest', function (success, failure) {
         Chain.asStep(Element.fromDom(editor.getBody()), [
           UiFinder.cFindIn('iframe'),
           Chain.op((input) =>
-            Assertions.assertStructure('should have all attributes', ApproxStructure.build((s, str, arr) => {
-              return s.element('iframe', {
-                classes: [ arr.has('test-class') ],
-                attrs: {
-                  width: str.is('300'),
-                  height: str.is('150')
-                },
-                styles: {
-                  width: str.is('500px'),
-                  height: str.is('250px')
-                },
-              });
-            }), input)
+            Assertions.assertStructure('should have all attributes', ApproxStructure.build((s, str, arr) => s.element('iframe', {
+              classes: [ arr.has('test-class') ],
+              attrs: {
+                width: str.is('300'),
+                height: str.is('150')
+              },
+              styles: {
+                width: str.is('500px'),
+                height: str.is('250px')
+              },
+            })), input)
           )
         ])
       ]),
@@ -70,27 +66,25 @@ UnitTest.asynctest('browser.core.IframeNodeTest', function (success, failure) {
         Chain.asStep(Element.fromDom(editor.getBody()), [
           UiFinder.cFindIn('iframe'),
           Chain.op((input) =>
-            Assertions.assertStructure('should have all attributes', ApproxStructure.build((s, str, arr) => {
-              return s.element('iframe', {
-                attrs: {
-                  width: str.is('300'),
-                  height: str.is('150')
-                },
-                styles: {
-                  width: str.none('should not have width style'),
-                  height: str.none('should not have height style')
-                },
-              });
-            }), input)
+            Assertions.assertStructure('should have all attributes', ApproxStructure.build((s, str, arr) => s.element('iframe', {
+              attrs: {
+                width: str.is('300'),
+                height: str.is('150')
+              },
+              styles: {
+                width: str.none('should not have width style'),
+                height: str.none('should not have height style')
+              },
+            })), input)
           )
         ])
       ]),
     ], onSuccess, onFailure);
   }, {
-    plugins: ['media'],
+    plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
-    media_url_resolver (data, resolve) {
+    media_url_resolver(data, resolve) {
       Delay.setTimeout(function () {
         resolve({
           html: '<span id="fake">' + data.url + '</span>'

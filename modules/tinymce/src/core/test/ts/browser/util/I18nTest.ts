@@ -22,15 +22,15 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, fail
 
     LegacyUnit.equal(translate('text'), 'text translation');
     LegacyUnit.equal(translate('untranslated text'), 'untranslated text');
-    LegacyUnit.equal(translate(['untranslated value:{0}{1}', 'a', 'b']), 'untranslated value:ab');
-    LegacyUnit.equal(translate(['value:{0}{1}', 'a', 'b']), 'value translation:ab');
+    LegacyUnit.equal(translate([ 'untranslated value:{0}{1}', 'a', 'b' ]), 'untranslated value:ab');
+    LegacyUnit.equal(translate([ 'value:{0}{1}', 'a', 'b' ]), 'value translation:ab');
     LegacyUnit.equal(translate('untranslated text{context:context}'), 'untranslated text');
-    LegacyUnit.equal(translate(['untranslated value:{0}{1}{context:something}', 'a', 'b']), 'untranslated value:ab');
-    LegacyUnit.equal(translate(['value:{0}{1}{context:something}', 'a', 'b']), 'value translation:ab with context');
+    LegacyUnit.equal(translate([ 'untranslated value:{0}{1}{context:something}', 'a', 'b' ]), 'untranslated value:ab');
+    LegacyUnit.equal(translate([ 'value:{0}{1}{context:something}', 'a', 'b' ]), 'value translation:ab with context');
 
     // check if translate survives some awkward cases
     LegacyUnit.deepEqual(translate('empty string'), '');
-    LegacyUnit.equal(translate(['untranslated value:{0}{1}', 'a']), 'untranslated value:a{1}',
+    LegacyUnit.equal(translate([ 'untranslated value:{0}{1}', 'a' ]), 'untranslated value:a{1}',
       'Do not strip tokens that weren\'t replaced.');
 
     LegacyUnit.equal(translate([{ }]), '[object Object]');

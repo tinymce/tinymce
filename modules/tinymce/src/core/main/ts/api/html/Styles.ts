@@ -27,7 +27,7 @@
 import { Unicode } from '@ephox/katamari';
 import Schema from './Schema';
 
-export interface StyleMap { [s: string]: string | number; }
+export interface StyleMap { [s: string]: string | number }
 interface Styles {
   toHex(color: string): string;
   parse(css: string): Record<string, string>;
@@ -45,8 +45,8 @@ const toHex = (match: string, r: string, g: string, b: string) => {
 };
 
 const Styles = function (settings?, schema?: Schema): Styles {
-  /*jshint maxlen:255 */
-  /*eslint max-len:0 */
+  /* jshint maxlen:255 */
+  /* eslint max-len:0 */
   const rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi;
   const urlOrStrRegExp = /(?:url(?:(?:\(\s*\"([^\"]+)\"\s*\))|(?:\(\s*\'([^\']+)\'\s*\))|(?:\(\s*([^)\s]+)\s*\))))|(?:\'([^\']+)\')|(?:\"([^\"]+)\")/gi;
   const styleRegExp = /\s*([^:]+):\s*([^;]+);?/g;
@@ -79,7 +79,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
      * @param {String} color RGB string value like rgb(1,2,3)
      * @return {String} Hex version of that RGB value like #FF00FF.
      */
-    toHex (color: string): string {
+    toHex(color: string): string {
       return color.replace(rgbRegExp, toHex);
     },
 
@@ -92,14 +92,14 @@ const Styles = function (settings?, schema?: Schema): Styles {
      * @param {String} css Style value to parse for example: border:1px solid red;.
      * @return {Object} Object representation of that style like {border: '1px solid red'}
      */
-    parse (css: string): Record<string, string> {
+    parse(css: string): Record<string, string> {
       const styles: any = {};
-      let matches, name, value, isEncoded;
+      let matches; let name; let value; let isEncoded;
       const urlConverter = settings.url_converter;
       const urlConverterScope = settings.url_converter_scope || this;
 
       const compress = function (prefix, suffix, noJoin?) {
-        let top, right, bottom, left;
+        let top; let right; let bottom; let left;
 
         top = styles[prefix + '-top' + suffix];
         if (!top) {
@@ -121,7 +121,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
           return;
         }
 
-        const box = [top, right, bottom, left];
+        const box = [ top, right, bottom, left ];
         i = box.length - 1;
         while (i--) {
           if (box[i] !== box[i + 1]) {
@@ -144,7 +144,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
        * Checks if the specific style can be compressed in other words if all border-width are equal.
        */
       const canCompress = function (key) {
-        let value = styles[key], i;
+        let value = styles[key]; let i;
 
         if (!value) {
           return;
@@ -328,11 +328,11 @@ const Styles = function (settings?, schema?: Schema): Styles {
      * @param {String} elementName Optional element name, if specified only the styles that matches the schema will be serialized.
      * @return {String} String representation of the style object for example: border: 1px solid red.
      */
-    serialize (styles: StyleMap, elementName?: string): string {
-      let css = '', name, value;
+    serialize(styles: StyleMap, elementName?: string): string {
+      let css = ''; let name; let value;
 
       const serializeStyles = (name: string) => {
-        let styleList, i, l, value;
+        let styleList; let i; let l; let value;
 
         styleList = validStyles[name];
         if (styleList) {

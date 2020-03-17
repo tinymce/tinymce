@@ -128,38 +128,34 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableResizeTest', 
           '</table>'
   };
 
-  const cInsertTable = (label: string, table: string) => {
-    return Chain.control(
-      Chain.mapper((editor: any) => {
-        editor.setContent(table);
-        const bodyElem = TinyDom.fromDom(editor.getBody());
-        const tableElem = UiFinder.findIn(bodyElem, 'table').getOr(bodyElem);
-        SelectorFind.descendant(tableElem, 'td,th').each((cell) => {
-          editor.selection.select(cell.dom(), true);
-          editor.selection.collapse(true);
-        });
-        return tableElem;
-      }),
-      Guard.addLogging(`Insert ${label}`)
-    );
-  };
+  const cInsertTable = (label: string, table: string) => Chain.control(
+    Chain.mapper((editor: any) => {
+      editor.setContent(table);
+      const bodyElem = TinyDom.fromDom(editor.getBody());
+      const tableElem = UiFinder.findIn(bodyElem, 'table').getOr(bodyElem);
+      SelectorFind.descendant(tableElem, 'td,th').each((cell) => {
+        editor.selection.select(cell.dom(), true);
+        editor.selection.collapse(true);
+      });
+      return tableElem;
+    }),
+    Guard.addLogging(`Insert ${label}`)
+  );
 
-  const cInsertColumnMeasureWidth = (label: string, data: TestData) => {
-    return Log.chain('TBA', 'Insert column before, insert column after, erase column and measure table widths', NamedChain.asChain(
-      [
-        NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-        Chain.label('Insert table', NamedChain.direct('editor', cInsertTable(label, data.html), 'element')),
-        Chain.label('Drag SE (-100, 0)', NamedChain.read('editor', TableTestUtils.cDragHandle('se', -100, 0))),
-        Chain.label('Store width before split', NamedChain.write('widthBefore', TableTestUtils.cGetWidth)),
-        Chain.label('Insert column before', NamedChain.read('editor', TableTestUtils.cInsertColumnBefore)),
-        Chain.label('Insert column after', NamedChain.read('editor', TableTestUtils.cInsertColumnAfter)),
-        Chain.label('Delete column', NamedChain.read('editor', TableTestUtils.cDeleteColumn)),
-        Chain.label('Store width after split', NamedChain.write('widthAfter', TableTestUtils.cGetWidth)),
-        NamedChain.merge(['widthBefore', 'widthAfter'], 'widths'),
-        NamedChain.output('widths')
-      ]
-    ));
-  };
+  const cInsertColumnMeasureWidth = (label: string, data: TestData) => Log.chain('TBA', 'Insert column before, insert column after, erase column and measure table widths', NamedChain.asChain(
+    [
+      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
+      Chain.label('Insert table', NamedChain.direct('editor', cInsertTable(label, data.html), 'element')),
+      Chain.label('Drag SE (-100, 0)', NamedChain.read('editor', TableTestUtils.cDragHandle('se', -100, 0))),
+      Chain.label('Store width before split', NamedChain.write('widthBefore', TableTestUtils.cGetWidth)),
+      Chain.label('Insert column before', NamedChain.read('editor', TableTestUtils.cInsertColumnBefore)),
+      Chain.label('Insert column after', NamedChain.read('editor', TableTestUtils.cInsertColumnAfter)),
+      Chain.label('Delete column', NamedChain.read('editor', TableTestUtils.cDeleteColumn)),
+      Chain.label('Store width after split', NamedChain.write('widthAfter', TableTestUtils.cGetWidth)),
+      NamedChain.merge([ 'widthBefore', 'widthAfter' ], 'widths'),
+      NamedChain.output('widths')
+    ]
+  ));
 
   const cAssertWidths = Chain.label(
     'Assert widths before and after insert column are equal',
@@ -174,16 +170,14 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableResizeTest', 
     })
   );
 
-  const cAssertWidth = (label: string, data: TestData) => {
-    return Chain.label(
-      `Assert width of table ${label} after inserting column`,
-      NamedChain.asChain([
-        NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-        NamedChain.direct('editor', cInsertColumnMeasureWidth(label, data), 'widths'),
-        NamedChain.read('widths', cAssertWidths)
-      ])
-    );
-  };
+  const cAssertWidth = (label: string, data: TestData) => Chain.label(
+    `Assert width of table ${label} after inserting column`,
+    NamedChain.asChain([
+      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
+      NamedChain.direct('editor', cInsertColumnMeasureWidth(label, data), 'widths'),
+      NamedChain.read('widths', cAssertWidths)
+    ])
+  );
 
   NamedChain.pipeline(Log.chains('TBA', 'Table: Insert columns, erase column and assert the table width does not change', [
     NamedChain.write('editor', Editor.cFromSettings({
@@ -202,7 +196,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableResizeTest', 
 
     NamedChain.read('editor', Editor.cRemove)
   ]),
-   function () {
+  function () {
     success();
   }, failure, TestLogs.init());
 });

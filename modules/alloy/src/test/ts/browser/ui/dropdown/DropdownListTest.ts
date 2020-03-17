@@ -55,7 +55,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
           ])
         ]),
 
-        lazySink (c) {
+        lazySink(c) {
           TestDropdownMenu.assertLazySinkArgs('button', 'test-dropdown', c);
           return Result.value(memSink.get(c));
         },
@@ -78,7 +78,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
           menu: TestDropdownMenu.part(store)
         },
 
-        fetch () {
+        fetch() {
           const future = Future.pure([
             { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' } } },
             { type: 'item', data: { value: 'beta', meta: { text: 'Beta' } } },
@@ -126,15 +126,13 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
       // Add more information to this.
       Assertions.sAssertStructure(
         'Initial structure of dropdown button',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('button', {
-            attrs: {
-              'aria-expanded': str.is('false'),
-              'aria-haspopup': str.is('true'),
-              'type': str.is('button')
-            }
-          });
-        }),
+        ApproxStructure.build((s, str, arr) => s.element('button', {
+          attrs: {
+            'aria-expanded': str.is('false'),
+            'aria-haspopup': str.is('true'),
+            'type': str.is('button')
+          }
+        })),
         component.element()
       ),
 
@@ -270,7 +268,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
           Step.sync(() => AlloyTriggers.emit(component, 'test-listener')),
           store.sAssertEq(
             'test-listener should respect eventOrder',
-            ['test.listener.1', 'test.listener.3', 'test.listener.2' ]
+            [ 'test.listener.1', 'test.listener.3', 'test.listener.2' ]
           )
         ])
       ),
@@ -329,5 +327,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
 
       GuiSetup.mRemoveStyles
     ];
-  }, () => { success(); }, failure);
+  }, () => {
+    success();
+  }, failure);
 });

@@ -195,35 +195,35 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     onAction: (api, details) => {
       const data = api.getData();
       switch (details.name) {
-        case 'find':
-          doFind(api);
-          break;
-        case 'replace':
-          if (!Actions.replace(editor, currentSearchState, data.replacetext)) {
-            reset(api);
-          } else {
-            updateButtonStates(api);
-          }
-          break;
-        case 'replaceall':
-          Actions.replace(editor, currentSearchState, data.replacetext, true, true);
+      case 'find':
+        doFind(api);
+        break;
+      case 'replace':
+        if (!Actions.replace(editor, currentSearchState, data.replacetext)) {
           reset(api);
-          break;
-        case 'prev':
-          Actions.prev(editor, currentSearchState);
+        } else {
           updateButtonStates(api);
-          break;
-        case 'next':
-          Actions.next(editor, currentSearchState);
-          updateButtonStates(api);
-          break;
-        case 'matchcase':
-        case 'wholewords':
-          updateSearchState(api);
-          reset(api);
-          break;
-        default:
-          break;
+        }
+        break;
+      case 'replaceall':
+        Actions.replace(editor, currentSearchState, data.replacetext, true, true);
+        reset(api);
+        break;
+      case 'prev':
+        Actions.prev(editor, currentSearchState);
+        updateButtonStates(api);
+        break;
+      case 'next':
+        Actions.next(editor, currentSearchState);
+        updateButtonStates(api);
+        break;
+      case 'matchcase':
+      case 'wholewords':
+        updateSearchState(api);
+        reset(api);
+        break;
+      default:
+        break;
       }
 
       focusButtonIfRequired(api, details.name);
@@ -239,7 +239,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     }
   };
 
-  dialogApi.set(editor.windowManager.open(spec, {inline: 'toolbar'}));
+  dialogApi.set(editor.windowManager.open(spec, { inline: 'toolbar' }));
 };
 
 export {

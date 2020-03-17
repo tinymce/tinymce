@@ -1,4 +1,4 @@
-import { Pipeline, Log} from '@ephox/agar';
+import { Pipeline, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 
@@ -30,12 +30,12 @@ UnitTest.asynctest('browser.plugin.IgnoreForcedPluginsTest', (success, failure) 
           selectors.pluginsTab
         )
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'help',
     toolbar: 'help',
     theme: 'silver',
-    forced_plugins: ['link'],
+    forced_plugins: [ 'link' ],
     base_url: '/project/tinymce/js/tinymce',
   }, success, failure);
 });

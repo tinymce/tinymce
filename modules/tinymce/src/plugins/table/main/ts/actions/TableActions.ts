@@ -7,7 +7,7 @@
 
 import { Arr, Fun, Option } from '@ephox/katamari';
 import {
-    CellMutations, TableDirection, TableFill, TableGridSize, TableOperations
+  CellMutations, TableDirection, TableFill, TableGridSize, TableOperations
 } from '@ephox/snooker';
 import { Element, Node } from '@ephox/sugar';
 

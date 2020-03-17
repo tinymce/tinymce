@@ -56,25 +56,25 @@ const sTryOnSelector = <T>(label: string, doc: Element<any>, selector: string): 
     )
   );
 
-const cSetFocus = (label: string, selector: string): Chain<Element, Element> => {
+const cSetFocus = (label: string, selector: string): Chain<Element, Element> =>
   // Input: container
-  return Chain.fromChains([
+  Chain.fromChains([
     Chain.control<Element, Element, Element>(
       UiFinder.cFindIn(selector),
       Guard.addLogging(label)
     ),
     cSetFocused
-  ]);
-};
+  ])
+;
 
-const cSetActiveValue = (newValue: string): Chain<Element, Element> => {
+const cSetActiveValue = (newValue: string): Chain<Element, Element> =>
   // Input: container
-  return Chain.fromChains([
+  Chain.fromChains([
     cGetOwnerDoc,
     cGetFocused,
     UiControls.cSetValue(newValue)
-  ]);
-};
+  ])
+;
 
 // Input: container
 const cGetActiveValue: Chain<Element, string> =
@@ -85,7 +85,7 @@ const cGetActiveValue: Chain<Element, string> =
   ]);
 
 const sSetFocus = <T>(label: string, container: Element<any>, selector: string): Step<T, T> =>
-  Chain.asStep<T, Element>(container, [cSetFocus(label, selector)]);
+  Chain.asStep<T, Element>(container, [ cSetFocus(label, selector) ]);
 
 const sSetActiveValue = <T>(doc: Element<any>, newValue: string): Step<T, T> =>
   Chain.asStep<T, Element>(doc, [

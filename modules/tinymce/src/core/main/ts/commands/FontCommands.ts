@@ -13,23 +13,17 @@ import * as FontInfo from '../fmt/FontInfo';
 import * as CaretFinder from '../caret/CaretFinder';
 import * as NodeType from '../dom/NodeType';
 
-const findFirstCaretElement = (editor: Editor) => {
-  return CaretFinder.firstPositionIn(editor.getBody()).map((caret) => {
-    const container = caret.container();
-    return NodeType.isText(container) ? container.parentNode : container;
-  });
-};
+const findFirstCaretElement = (editor: Editor) => CaretFinder.firstPositionIn(editor.getBody()).map((caret) => {
+  const container = caret.container();
+  return NodeType.isText(container) ? container.parentNode : container;
+});
 
-const isRangeAtStartOfNode = (rng: Range, root: Node) => {
-  return rng.startContainer === root && rng.startOffset === 0;
-};
+const isRangeAtStartOfNode = (rng: Range, root: Node) => rng.startContainer === root && rng.startOffset === 0;
 
-const getCaretElement = (editor: Editor): Option<Node> => {
-  return Option.from(editor.selection.getRng()).bind((rng) => {
-    const root = editor.getBody();
-    return isRangeAtStartOfNode(rng, root) ? Option.none() : Option.from(editor.selection.getStart(true));
-  });
-};
+const getCaretElement = (editor: Editor): Option<Node> => Option.from(editor.selection.getRng()).bind((rng) => {
+  const root = editor.getBody();
+  return isRangeAtStartOfNode(rng, root) ? Option.none() : Option.from(editor.selection.getStart(true));
+});
 
 const fromFontSizeNumber = (editor: Editor, value: string): string => {
   if (/^[0-9\.]+$/.test(value)) {
@@ -71,21 +65,17 @@ export const fontNameAction = (editor: Editor, value: string) => {
   editor.nodeChanged();
 };
 
-export const fontNameQuery = (editor: Editor) => {
-  return getCaretElement(editor).fold(
-    () => findFirstCaretElement(editor).map((caretElement) => FontInfo.getFontFamily(editor.getBody(), caretElement)).getOr(''),
-    (caretElement) => FontInfo.getFontFamily(editor.getBody(), caretElement)
-  );
-};
+export const fontNameQuery = (editor: Editor) => getCaretElement(editor).fold(
+  () => findFirstCaretElement(editor).map((caretElement) => FontInfo.getFontFamily(editor.getBody(), caretElement)).getOr(''),
+  (caretElement) => FontInfo.getFontFamily(editor.getBody(), caretElement)
+);
 
 export const fontSizeAction = (editor: Editor, value: string) => {
   editor.formatter.toggle('fontsize', { value: fromFontSizeNumber(editor, value) });
   editor.nodeChanged();
 };
 
-export const fontSizeQuery = (editor: Editor) => {
-  return getCaretElement(editor).fold(
-    () => findFirstCaretElement(editor).map((caretElement) => FontInfo.getFontSize(editor.getBody(), caretElement)).getOr(''),
-    (caretElement) => FontInfo.getFontSize(editor.getBody(), caretElement)
-  );
-};
+export const fontSizeQuery = (editor: Editor) => getCaretElement(editor).fold(
+  () => findFirstCaretElement(editor).map((caretElement) => FontInfo.getFontSize(editor.getBody(), caretElement)).getOr(''),
+  (caretElement) => FontInfo.getFontSize(editor.getBody(), caretElement)
+);

@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellPropsStyleTest', (suc
         tinyApis.sSetContent(
           '<table style="border-collapse: collapse;" border="1"><tbody><tr><td style="background-color: blue;" data-mce-selected="1">a</td><td style="background-color: blue;" data-mce-selected="1">b</td></tr></tbody></table>'
         ),
-        tinyApis.sSetSelection([0, 0, 0, 1, 0], 1, [0, 0, 0, 1, 0], 1),
+        tinyApis.sSetSelection([ 0, 0, 0, 1, 0 ], 1, [ 0, 0, 0, 1, 0 ], 1),
         tinyApis.sExecCommand('mceTableCellProps'),
         TableTestUtils.sGotoAdvancedTab,
         TableTestUtils.sSetInputValue('Background color', 'label.tox-label:contains(Background color) + div>input.tox-textfield', 'red'),
@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellPropsStyleTest', (suc
           '<table style="border-collapse: collapse;" border="1"><tbody><tr><td style="background-color: red;">a</td><td style="background-color: red;">b</td></tr></tbody></table>'
         )
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'table',
     indent : false,

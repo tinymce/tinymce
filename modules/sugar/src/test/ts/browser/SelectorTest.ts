@@ -54,16 +54,16 @@ UnitTest.test('SelectorTest', function () {
   Checkers.checkOpt(Option.some(TestPage.p1), SelectorFind.closest(TestPage.s1, 'p'));
   Checkers.checkOpt(Option.some(TestPage.p1), SelectorFind.closest(TestPage.t1, 'p'));
 
-  Checkers.checkList([TestPage.p1, TestPage.p3, TestPage.p2], SelectorFilter.all('p'));
-  Checkers.checkList([TestPage.p1, TestPage.p3, TestPage.p2], Selectors.all('p'));
-  Checkers.checkList([TestPage.s3, TestPage.s2], SelectorFilter.ancestors(TestPage.t4, 'span'));
-  Checkers.checkList([TestPage.d1, TestPage.container], SelectorFilter.ancestors(TestPage.p3, 'div'));
+  Checkers.checkList([ TestPage.p1, TestPage.p3, TestPage.p2 ], SelectorFilter.all('p'));
+  Checkers.checkList([ TestPage.p1, TestPage.p3, TestPage.p2 ], Selectors.all('p'));
+  Checkers.checkList([ TestPage.s3, TestPage.s2 ], SelectorFilter.ancestors(TestPage.t4, 'span'));
+  Checkers.checkList([ TestPage.d1, TestPage.container ], SelectorFilter.ancestors(TestPage.p3, 'div'));
   Checkers.checkList([], SelectorFilter.ancestors(TestPage.t4, 'table'));
-  Checkers.checkList([TestPage.s1], SelectorFilter.siblings(TestPage.t1, '*'));
+  Checkers.checkList([ TestPage.s1 ], SelectorFilter.siblings(TestPage.t1, '*'));
   Checkers.checkList([], SelectorFilter.siblings(TestPage.t5, '*'));
-  Checkers.checkList([TestPage.s1], SelectorFilter.children(TestPage.p1, 'span'));
+  Checkers.checkList([ TestPage.s1 ], SelectorFilter.children(TestPage.p1, 'span'));
   Checkers.checkList([], SelectorFilter.children(TestPage.p1, 'li'));
-  Checkers.checkList([TestPage.s1, TestPage.s2, TestPage.s3, TestPage.s4], SelectorFilter.descendants(TestPage.container, 'span'));
+  Checkers.checkList([ TestPage.s1, TestPage.s2, TestPage.s3, TestPage.s4 ], SelectorFilter.descendants(TestPage.container, 'span'));
   Checkers.checkList([], SelectorFilter.descendants(TestPage.container, 'blockquote'));
 
   assert.eq(true, SelectorExists.any('p'));

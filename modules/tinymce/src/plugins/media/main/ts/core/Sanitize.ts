@@ -23,19 +23,19 @@ const sanitize = function (editor: Editor, html: string) {
     validate: false,
     allow_conditional_comments: false,
 
-    comment (text) {
+    comment(text) {
       writer.comment(text);
     },
 
-    cdata (text) {
+    cdata(text) {
       writer.cdata(text);
     },
 
-    text (text, raw) {
+    text(text, raw) {
       writer.text(text, raw);
     },
 
-    start (name, attrs, empty) {
+    start(name, attrs, empty) {
       blocked = true;
 
       if (name === 'script' || name === 'noscript') {
@@ -56,7 +56,7 @@ const sanitize = function (editor: Editor, html: string) {
       blocked = false;
     },
 
-    end (name) {
+    end(name) {
       if (blocked) {
         return;
       }

@@ -14,14 +14,10 @@ const getEventSource = (simulatedEvent: NativeSimulatedEvent): Option<Position> 
   if (isTouchEvent(evt)) {
     const touchEvent = evt;
     return touchEvent.touches !== undefined && touchEvent.touches.length === 1 ?
-      Option.some(touchEvent.touches[0]).map((t: Touch) => {
-        return Position(t.clientX, t.clientY);
-      }) : Option.none();
+      Option.some(touchEvent.touches[0]).map((t: Touch) => Position(t.clientX, t.clientY)) : Option.none();
   } else {
     const mouseEvent = evt;
-    return mouseEvent.clientX !== undefined ? Option.some(mouseEvent).map((me) => {
-      return Position(me.clientX, me.clientY);
-    }) : Option.none();
+    return mouseEvent.clientX !== undefined ? Option.some(mouseEvent).map((me) => Position(me.clientX, me.clientY)) : Option.none();
   }
 };
 

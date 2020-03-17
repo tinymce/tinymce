@@ -18,7 +18,7 @@ export type ProcessCallback = (element: Text, offset: number, text: string) => n
 
 // This largely is derived from robins isBoundary check, however it also treats contenteditable=false elements as a boundary
 // See robins `Structure.isEmptyTag` for the list of quasi block elements
-const isBoundary = (dom: DOMUtils, node: Node) => dom.isBlock(node) || Arr.contains(['BR', 'IMG', 'HR', 'INPUT'], node.nodeName) || dom.getContentEditable(node) === 'false';
+const isBoundary = (dom: DOMUtils, node: Node) => dom.isBlock(node) || Arr.contains([ 'BR', 'IMG', 'HR', 'INPUT' ], node.nodeName) || dom.getContentEditable(node) === 'false';
 
 const repeatLeft = (dom: DOMUtils, node: Node, offset: number, process: ProcessCallback, rootNode: Node): Option<Spot.SpotPoint<Text>> => {
   const search = TextSeeker(dom, (node) => isBoundary(dom, node));

@@ -19,71 +19,64 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
   };
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
-      return GuiFactory.build(
-        renderSelectBox({
-          name: 'selector',
-          size: 1,
-          label: Option.some('selector'),
-          disabled: false,
-          items: [
-            { value: 'one', text: 'One' },
-            { value: 'two', text: 'Two' },
-            { value: 'three', text: 'Three' },
-          ]
-        }, providers)
-      );
-    },
-    (doc, body, gui, component, store) => {
-
-      return [
-        Assertions.sAssertStructure(
-          'Checking initial structure',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-form__group') ],
+    (store, doc, body) => GuiFactory.build(
+      renderSelectBox({
+        name: 'selector',
+        size: 1,
+        label: Option.some('selector'),
+        disabled: false,
+        items: [
+          { value: 'one', text: 'One' },
+          { value: 'two', text: 'Two' },
+          { value: 'three', text: 'Three' },
+        ]
+      }, providers)
+    ),
+    (doc, body, gui, component, store) => [
+      Assertions.sAssertStructure(
+        'Checking initial structure',
+        ApproxStructure.build((s, str, arr) => s.element('div', {
+          classes: [ arr.has('tox-form__group') ],
+          children: [
+            s.element('label', {
+              classes: [ arr.has('tox-label') ]
+            }),
+            s.element('div', {
+              classes: [ arr.has('tox-selectfield') ],
               children: [
-                s.element('label', {
-                  classes: [ arr.has('tox-label') ]
+                s.element('select', {
+                  value: str.is('one'),
+                  attrs: {
+                    size: str.is('1')
+                  },
+                  children: [
+                    s.element('option', { value: str.is('one'), html: str.is('One') }),
+                    s.element('option', { value: str.is('two'), html: str.is('Two') }),
+                    s.element('option', { value: str.is('three'), html: str.is('Three') })
+                  ]
                 }),
                 s.element('div', {
-                  classes: [arr.has('tox-selectfield')],
+                  classes: [ arr.has('tox-selectfield__icon-js') ],
                   children: [
-                    s.element('select', {
-                      value: str.is('one'),
-                      attrs: {
-                        size: str.is('1')
-                      },
-                      children: [
-                        s.element('option', { value: str.is('one'), html: str.is('One') }),
-                        s.element('option', { value: str.is('two'), html: str.is('Two') }),
-                        s.element('option', { value: str.is('three'), html: str.is('Three') })
-                      ]
-                    }),
-                    s.element('div', {
-                      classes: [arr.has('tox-selectfield__icon-js')],
-                      children: [
-                        s.element('svg', {})
-                      ]
-                    })
+                    s.element('svg', {})
                   ]
                 })
               ]
-            });
-          }),
-          component.element()
-        ),
+            })
+          ]
+        })),
+        component.element()
+      ),
 
-        RepresentingSteps.sSetValue('Choosing three', component, 'three'),
-        DomSteps.sAssertValue('After setting "three"', 'three', component, 'select'),
-        RepresentingSteps.sAssertComposedValue('Checking is three', 'three', component),
+      RepresentingSteps.sSetValue('Choosing three', component, 'three'),
+      DomSteps.sAssertValue('After setting "three"', 'three', component, 'select'),
+      RepresentingSteps.sAssertComposedValue('Checking is three', 'three', component),
 
-        // Disabling state
-        DisablingSteps.sAssertDisabled('Initial disabled state', false, component),
-        DisablingSteps.sSetDisabled('set disabled', component, true),
-        DisablingSteps.sAssertDisabled('enabled > disabled', true, component)
-      ];
-    },
+      // Disabling state
+      DisablingSteps.sAssertDisabled('Initial disabled state', false, component),
+      DisablingSteps.sSetDisabled('set disabled', component, true),
+      DisablingSteps.sAssertDisabled('enabled > disabled', true, component)
+    ],
     success,
     failure
   );

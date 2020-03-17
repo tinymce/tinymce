@@ -36,14 +36,14 @@ const findUntil = (direction: VDirection, root: Node, predicateFn: (node: Node) 
 };
 
 const walkUntil = (direction: VDirection, isAboveFn: PosPredicate, isBeflowFn: PosPredicate, root: Node, predicateFn: RectPredicate, caretPosition: CaretPosition): ClientRectLine[] => {
-  let line = 0, node;
+  let line = 0; let node;
   const result = [];
   let targetClientRect;
 
   const add = function (node: Node) {
-    let i, clientRect, clientRects;
+    let i; let clientRect; let clientRects;
 
-    clientRects = Dimensions.getClientRects([node]);
+    clientRects = Dimensions.getClientRects([ node ]);
     if (direction === -1) {
       clientRects = clientRects.reverse();
     }
@@ -87,10 +87,10 @@ const downUntil = Fun.curry(walkUntil, VDirection.Down, ClientRect.isBelow, Clie
 
 const positionsUntil = (direction: VDirection, root: Node, predicateFn: RectPredicate, node: Node): ClientRectLine[] => {
   const caretWalker = CaretWalker(root);
-  let walkFn, isBelowFn, isAboveFn,
-    caretPosition;
+  let walkFn; let isBelowFn; let isAboveFn;
+  let caretPosition;
   const result = [];
-  let line = 0, clientRect, targetClientRect;
+  let line = 0; let clientRect; let targetClientRect;
 
   const getClientRect = function (caretPosition) {
     if (direction === 1) {

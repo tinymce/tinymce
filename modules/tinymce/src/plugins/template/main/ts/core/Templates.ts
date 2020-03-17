@@ -22,7 +22,7 @@ const createTemplateList = function (editorSettings, callback) {
     if (typeof templateList === 'string') {
       XHR.send({
         url: templateList,
-        success (text) {
+        success(text) {
           callback(JSON.parse(text));
         }
       });
@@ -45,7 +45,7 @@ const replaceTemplateValues = function (html, templateValues) {
 };
 
 const replaceVals = function (editor, e) {
-  const dom = editor.dom, vl = Settings.getTemplateReplaceValues(editor);
+  const dom = editor.dom; const vl = Settings.getTemplateReplaceValues(editor);
 
   Tools.each(dom.select('*', e), function (e) {
     Tools.each(vl, function (v, k) {

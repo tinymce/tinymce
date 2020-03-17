@@ -66,7 +66,7 @@ const ElementUtils = function (dom: DOMUtils) {
      * @return {boolean} True/false if the objects matches or not.
      */
     const compareObjects = function (obj1, obj2) {
-      let value, name;
+      let value; let name;
 
       for (name in obj1) {
         // Obj1 has item obj2 doesn't have

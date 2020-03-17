@@ -10,7 +10,7 @@ import { Id } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 const createTableHtml = function (cols: number, rows: number) {
-  let x, y, html;
+  let x; let y; let html;
 
   html = '<table data-mce-id="mce" style="width: 100%">';
   html += '<tbody>';
@@ -38,7 +38,7 @@ const getInsertedElement = function (editor: Editor) {
 
 const insertTableHtml = (editor: Editor, cols: number, rows: number) => {
   editor.undoManager.transact(function () {
-    let tableElm, cellElm;
+    let tableElm; let cellElm;
 
     editor.insertContent(createTableHtml(cols, rows));
 
@@ -54,7 +54,7 @@ const insertTable = function (editor: Editor, cols: number, rows: number) {
 };
 
 const insertBlob = function (editor: Editor, base64: string, blob: Blob) {
-  let blobCache, blobInfo;
+  let blobCache; let blobInfo;
 
   blobCache = editor.editorUpload.blobCache;
   blobInfo = blobCache.create(Id.generate('mceu'), blob, base64);

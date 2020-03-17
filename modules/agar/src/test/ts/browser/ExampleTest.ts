@@ -37,7 +37,7 @@ UnitTest.asynctest('Example for Tutorial', (success, failure) => {
     Html.set(cancelButton, 'Cancel');
     Class.add(cancelButton, 'cancel');
 
-    InsertAll.append(dialog, [dialogContent, cancelButton]);
+    InsertAll.append(dialog, [ dialogContent, cancelButton ]);
 
     Insert.append(editor, showButton);
 
@@ -81,8 +81,8 @@ UnitTest.asynctest('Example for Tutorial', (success, failure) => {
         Guard.tryUntilNot('Keep going until .dialog is not in the DOM', 10, 2000)
       )
     ]))
-  , () => {
-    Remove.remove(source);
-    success();
-  }, failure);
+    , () => {
+      Remove.remove(source);
+      success();
+    }, failure);
 });

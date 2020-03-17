@@ -21,9 +21,9 @@ UnitTest.asynctest('browser.tinymce.core.DragDropOverridesTest', (success, failu
       Logger.t('drop draggable element outside of editor', GeneralSteps.sequence([
         tinyApis.sSetContent('<p contenteditable="false">a</p>'),
         Step.sync(() => {
-          const target = Hierarchy.follow(Element.fromDom(editor.getBody()), [0]).filter(Node.isElement).getOrDie().dom();
+          const target = Hierarchy.follow(Element.fromDom(editor.getBody()), [ 0 ]).filter(Node.isElement).getOrDie().dom();
           const rect = target.getBoundingClientRect();
-          const button = 0, screenX = (rect.left + rect.width / 2), screenY = (rect.top + rect.height / 2);
+          const button = 0; const screenX = (rect.left + rect.width / 2); const screenY = (rect.top + rect.height / 2);
 
           editor.fire('mousedown', { button, screenX, screenY, target });
           editor.fire('mousemove', { button, screenX: screenX + 20, screenY: screenY + 20, target });

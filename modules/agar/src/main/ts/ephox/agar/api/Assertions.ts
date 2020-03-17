@@ -43,7 +43,7 @@ const assertHtml = (label: TestLabel, expected: string, actual: string): void =>
 const assertStructure = (label: TestLabel, expected: StructAssert, container: Element<any>): void => {
   Logger.sync(label, () => {
     if (expected.type === 'advanced') {
-      expected.doAssert(elementQueue([container], Option.none()));
+      expected.doAssert(elementQueue([ container ], Option.none()));
     } else {
       expected.doAssert(container);
     }

@@ -54,15 +54,13 @@ UnitTest.asynctest('Editor Autocompleter Reload test', (success, failure) => {
     const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);
 
-    const sSetContentAndTrigger = (content: string, triggerCharCode: number) => {
-      return GeneralSteps.sequence([
-        tinyApis.sSetContent(`<p>${content}</p>`),
-        tinyApis.sSetCursor([ 0, 0 ], content.length),
-        tinyApis.sNodeChanged(),
-        tinyActions.sContentKeypress(triggerCharCode, { }),
-        sWaitForAutocompleteToOpen
-      ]);
-    };
+    const sSetContentAndTrigger = (content: string, triggerCharCode: number) => GeneralSteps.sequence([
+      tinyApis.sSetContent(`<p>${content}</p>`),
+      tinyApis.sSetCursor([ 0, 0 ], content.length),
+      tinyApis.sNodeChanged(),
+      tinyActions.sContentKeypress(triggerCharCode, { }),
+      sWaitForAutocompleteToOpen
+    ]);
 
     const sTestAutocompleter = (scenario: Scenario) => GeneralSteps.sequence([
       sSetContentAndTrigger(':aa', ':'.charCodeAt(0)),

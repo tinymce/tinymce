@@ -24,7 +24,7 @@ type RowData = Helpers.RowData;
 const switchRowType = (dom: DOMUtils, rowElm: HTMLElement, toType: string) => {
   const tableElm = dom.getParent(rowElm, 'table');
   const oldParentElm = rowElm.parentNode;
-  let parentElm = dom.select(toType, tableElm as Element)[0];
+  let parentElm = dom.select(toType, tableElm)[0];
 
   if (!parentElm) {
     parentElm = dom.create(toType);
@@ -96,7 +96,7 @@ const onSubmitRowForm = (editor: Editor, rows: HTMLElement[], oldData: RowData, 
 
 const open = (editor: Editor) => {
   const dom = editor.dom;
-  let tableElm, cellElm, rowElm;
+  let tableElm; let cellElm; let rowElm;
   const rows = [];
 
   tableElm = dom.getParent(editor.selection.getStart(), 'table');

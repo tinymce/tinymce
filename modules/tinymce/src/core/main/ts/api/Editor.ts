@@ -80,7 +80,7 @@ export interface EditorConstructor {
 
 // Shorten these names
 const DOM = DOMUtils.DOM;
-const extend = Tools.extend, each = Tools.each;
+const extend = Tools.extend; const each = Tools.each;
 const resolve = Tools.resolve;
 const ie = Env.ie;
 
@@ -208,7 +208,7 @@ class Editor implements EditorObservable {
   public editorManager: EditorManager;
   public inline: boolean;
 
-  public isNotDirty: boolean = false;
+  public isNotDirty = false;
 
   // TODO type these properties
   public callbackLookup: any;
@@ -280,7 +280,7 @@ class Editor implements EditorObservable {
    * @param {Object} settings Settings for the editor.
    * @param {tinymce.EditorManager} editorManager EditorManager instance.
    */
-  constructor (id: string, settings: RawEditorSettings, editorManager: EditorManager) {
+  constructor(id: string, settings: RawEditorSettings, editorManager: EditorManager) {
     this.editorManager = editorManager;
     this.documentBaseUrl = editorManager.documentBaseURL;
 
@@ -337,12 +337,10 @@ class Editor implements EditorObservable {
     editorManager.fire('SetupEditor', { editor: this });
     this.execCallback('setup', this);
 
-    this.$ = DomQuery.overrideDefaults(() => {
-      return {
-        context: this.inline ? this.getBody() : this.getDoc(),
-        element: this.getBody()
-      };
-    });
+    this.$ = DomQuery.overrideDefaults(() => ({
+      context: this.inline ? this.getBody() : this.getDoc(),
+      element: this.getBody()
+    }));
   }
 
   /**
@@ -350,7 +348,7 @@ class Editor implements EditorObservable {
    *
    * @method render
    */
-  public render () {
+  public render() {
     Render.render(this);
   }
 
@@ -361,7 +359,7 @@ class Editor implements EditorObservable {
    * @method focus
    * @param {Boolean} skipFocus Skip DOM focus. Just set is as the active editor.
    */
-  public focus (skipFocus?: boolean) {
+  public focus(skipFocus?: boolean) {
     EditorFocus.focus(this, skipFocus);
   }
 
@@ -371,7 +369,7 @@ class Editor implements EditorObservable {
    * @method hasFocus
    * @return {Boolean} Current focus state of the editor.
    */
-  public hasFocus (): boolean {
+  public hasFocus(): boolean {
     return EditorFocus.hasFocus(this);
   }
 
@@ -383,9 +381,9 @@ class Editor implements EditorObservable {
    * @param {String} name Name of the callback to execute.
    * @return {Object} Return value passed from callback function.
    */
-  public execCallback (name: string, ...x: any[]): any {
+  public execCallback(name: string, ...x: any[]): any {
     const self = this;
-    let callback = self.settings[name], scope;
+    let callback = self.settings[name]; let scope;
 
     if (!callback) {
       return;
@@ -416,7 +414,7 @@ class Editor implements EditorObservable {
    * @param {String} text String to translate by the language pack data.
    * @return {String} Translated string.
    */
-  public translate (text: Untranslated): TranslatedString {
+  public translate(text: Untranslated): TranslatedString {
     return I18n.translate(text);
   }
 
@@ -438,7 +436,7 @@ class Editor implements EditorObservable {
   public getParam <K extends keyof ParamTypeMap>(name: string, defaultVal: ParamTypeMap[K], type: K): ParamTypeMap[K];
   public getParam <K extends keyof EditorSettings>(name: K, defaultVal?: EditorSettings[K], type?: string): EditorSettings[K];
   public getParam <T>(name: string, defaultVal: T, type: string): T;
-  public getParam (name: string, defaultVal?: any, type?: string): any  {
+  public getParam(name: string, defaultVal?: any, type?: string): any  {
     return getParam(this, name, defaultVal, type);
   }
 
@@ -449,7 +447,7 @@ class Editor implements EditorObservable {
    * @method nodeChanged
    * @param {Object} args Optional args to pass to NodeChange event handlers.
    */
-  public nodeChanged (args?: any) {
+  public nodeChanged(args?: any) {
     this._nodeChangeDispatcher.nodeChanged(args);
   }
 
@@ -474,7 +472,7 @@ class Editor implements EditorObservable {
    *    }
    * });
    */
-  public addCommand (name: string, callback: EditorCommandCallback, scope?: object) {
+  public addCommand(name: string, callback: EditorCommandCallback, scope?: object) {
     /**
      * Callback function that gets called when a command is executed.
      *
@@ -495,7 +493,7 @@ class Editor implements EditorObservable {
    * @param {addQueryStateHandlerCallback} callback Function to execute when the command state retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  public addQueryStateHandler (name: string, callback: () => void, scope?: {}) {
+  public addQueryStateHandler(name: string, callback: () => void, scope?: {}) {
     /**
      * Callback function that gets called when a queryCommandState is executed.
      *
@@ -514,7 +512,7 @@ class Editor implements EditorObservable {
    * @param {addQueryValueHandlerCallback} callback Function to execute when the command value retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
-  public addQueryValueHandler (name: string, callback: () => void, scope?: {}) {
+  public addQueryValueHandler(name: string, callback: () => void, scope?: {}) {
     /**
      * Callback function that gets called when a queryCommandValue is executed.
      *
@@ -534,7 +532,7 @@ class Editor implements EditorObservable {
    * @param {Object} scope Optional scope to execute the function in.
    * @return {Boolean} true/false state if the shortcut was added or not.
    */
-  public addShortcut (pattern: string, desc: string, cmdFunc: string | any[] | Function, scope?: {}) {
+  public addShortcut(pattern: string, desc: string, cmdFunc: string | any[] | Function, scope?: {}) {
     this.shortcuts.add(pattern, desc, cmdFunc, scope);
   }
 
@@ -550,7 +548,7 @@ class Editor implements EditorObservable {
    * @param {mixed} value Optional command value, this can be anything.
    * @param {Object} args Optional arguments object.
    */
-  public execCommand (cmd: string, ui?: boolean, value?: any, args?: any): boolean {
+  public execCommand(cmd: string, ui?: boolean, value?: any, args?: any): boolean {
     return this.editorCommands.execCommand(cmd, ui, value, args);
   }
 
@@ -561,7 +559,7 @@ class Editor implements EditorObservable {
    * @param {string} cmd Command to query state from.
    * @return {Boolean} Command specific state, for example if bold is enabled or not.
    */
-  public queryCommandState (cmd: string): boolean {
+  public queryCommandState(cmd: string): boolean {
     return this.editorCommands.queryCommandState(cmd);
   }
 
@@ -572,7 +570,7 @@ class Editor implements EditorObservable {
    * @param {string} cmd Command to query value from.
    * @return {Object} Command specific value, for example the current font size.
    */
-  public queryCommandValue (cmd: string): string {
+  public queryCommandValue(cmd: string): string {
     return this.editorCommands.queryCommandValue(cmd);
   }
 
@@ -583,7 +581,7 @@ class Editor implements EditorObservable {
    * @param {String} cmd Command that we check support for.
    * @return {Boolean} true/false if the command is supported or not.
    */
-  public queryCommandSupported (cmd: string): boolean {
+  public queryCommandSupported(cmd: string): boolean {
     return this.editorCommands.queryCommandSupported(cmd);
   }
 
@@ -592,7 +590,7 @@ class Editor implements EditorObservable {
    *
    * @method show
    */
-  public show () {
+  public show() {
     const self = this;
 
     if (self.hidden) {
@@ -615,8 +613,8 @@ class Editor implements EditorObservable {
    *
    * @method hide
    */
-  public hide () {
-    const self = this, doc = self.getDoc();
+  public hide() {
+    const self = this; const doc = self.getDoc();
 
     if (!self.hidden) {
       // Fixed bug where IE has a blinking cursor left from the editor
@@ -650,7 +648,7 @@ class Editor implements EditorObservable {
    * @method isHidden
    * @return {Boolean} True/false if the editor is hidden or not.
    */
-  public isHidden () {
+  public isHidden() {
     return !!this.hidden;
   }
 
@@ -672,7 +670,7 @@ class Editor implements EditorObservable {
    * // Show progress after 3 seconds
    * tinymce.activeEditor.setProgressState(true, 3000);
    */
-  public setProgressState (state: boolean, time?: number) {
+  public setProgressState(state: boolean, time?: number) {
     this.fire('ProgressState', { state, time });
   }
 
@@ -685,9 +683,9 @@ class Editor implements EditorObservable {
    * @param {Object} args Optional content object, this gets passed around through the whole load process.
    * @return {String} HTML string that got set into the editor.
    */
-  public load (args?: any): string {
+  public load(args?: any): string {
     const self = this;
-    let elm = self.getElement(), html;
+    let elm = self.getElement(); let html;
 
     if (self.removed) {
       return '';
@@ -721,9 +719,9 @@ class Editor implements EditorObservable {
    * @param {Object} args Optional content object, this gets passed around through the whole save process.
    * @return {String} HTML string that got set into the textarea/div.
    */
-  public save (args?: any): string {
+  public save(args?: any): string {
     const self = this;
-    let elm = self.getElement(), html, form;
+    let elm = self.getElement(); let html; let form;
 
     if (!elm || !self.initialized || self.removed) {
       return;
@@ -793,7 +791,7 @@ class Editor implements EditorObservable {
    */
   public setContent (content: string, args?: EditorContent.SetContentArgs): string;
   public setContent (content: Node, args?: EditorContent.SetContentArgs): Node;
-  public setContent (content: EditorContent.Content, args?: EditorContent.SetContentArgs): EditorContent.Content {
+  public setContent(content: EditorContent.Content, args?: EditorContent.SetContentArgs): EditorContent.Content {
     return EditorContent.setContent(this, content, args);
   }
 
@@ -816,7 +814,7 @@ class Editor implements EditorObservable {
    */
   public getContent (args: { format: 'tree' } & EditorContent.GetContentArgs): Node;
   public getContent (args?: EditorContent.GetContentArgs): string;
-  public getContent (args?: EditorContent.GetContentArgs): EditorContent.Content {
+  public getContent(args?: EditorContent.GetContentArgs): EditorContent.Content {
     return EditorContent.getContent(this, args);
   }
 
@@ -827,7 +825,7 @@ class Editor implements EditorObservable {
    * @param {String} content Content to insert.
    * @param {Object} args Optional args to pass to insert call.
    */
-  public insertContent (content: string, args?: any) {
+  public insertContent(content: string, args?: any) {
     if (args) {
       content = extend({ content }, args);
     }
@@ -842,7 +840,7 @@ class Editor implements EditorObservable {
    * @method resetContent
    * @param {String} initialContent An optional string to use as the initial content of the editor.
    */
-  public resetContent (initialContent?: string) {
+  public resetContent(initialContent?: string) {
     // Set the editor content
     if (initialContent === undefined) {
       // editor.startContent is generated by using the `raw` format, so we should set it the same way
@@ -872,7 +870,7 @@ class Editor implements EditorObservable {
    * if (tinymce.activeEditor.isDirty())
    *     alert("You must save your contents.");
    */
-  public isDirty () {
+  public isDirty() {
     return !this.isNotDirty;
   }
 
@@ -892,7 +890,7 @@ class Editor implements EditorObservable {
    *     editor.setDirty(false); // Force not dirty state
    * }
    */
-  public setDirty (state: boolean) {
+  public setDirty(state: boolean) {
     const oldState = !this.isNotDirty;
 
     this.isNotDirty = !state;
@@ -909,7 +907,7 @@ class Editor implements EditorObservable {
    * @method getContainer
    * @return {Element} HTML DOM element for the editor container.
    */
-  public getContainer (): HTMLElement {
+  public getContainer(): HTMLElement {
     const self = this;
 
     if (!self.container) {
@@ -926,7 +924,7 @@ class Editor implements EditorObservable {
    * @method getContentAreaContainer
    * @return {Element} HTML DOM element for the editor area container.
    */
-  public getContentAreaContainer (): HTMLElement {
+  public getContentAreaContainer(): HTMLElement {
     return this.contentAreaContainer;
   }
 
@@ -936,7 +934,7 @@ class Editor implements EditorObservable {
    * @method getElement
    * @return {Element} HTML DOM element for the replaced element.
    */
-  public getElement (): HTMLElement {
+  public getElement(): HTMLElement {
     if (!this.targetElm) {
       this.targetElm = DOM.get(this.id);
     }
@@ -950,7 +948,7 @@ class Editor implements EditorObservable {
    * @method getWin
    * @return {Window} Iframe DOM window object.
    */
-  public getWin (): Window {
+  public getWin(): Window {
     const self = this;
     let elm;
 
@@ -971,7 +969,7 @@ class Editor implements EditorObservable {
    * @method getDoc
    * @return {Document} Iframe DOM document object.
    */
-  public getDoc (): Document {
+  public getDoc(): Document {
     const self = this;
     let win;
 
@@ -993,7 +991,7 @@ class Editor implements EditorObservable {
    * @method getBody
    * @return {Element} The root element of the editable area.
    */
-  public getBody (): HTMLElement {
+  public getBody(): HTMLElement {
     const doc = this.getDoc();
     return this.bodyElement || (doc ? doc.body : null);
   }
@@ -1009,8 +1007,8 @@ class Editor implements EditorObservable {
    * @param {string/HTMLElement} elm Tag name or HTML DOM element depending on HTML or DOM insert.
    * @return {string} Converted URL string.
    */
-  public convertURL (url: string, name: string, elm?): string {
-    const self = this, settings = self.settings;
+  public convertURL(url: string, name: string, elm?): string {
+    const self = this; const settings = self.settings;
 
     // Use callback instead
     if (settings.urlconverter_callback) {
@@ -1039,7 +1037,7 @@ class Editor implements EditorObservable {
    * @method addVisual
    * @param {Element} elm Optional root element to loop though to find tables etc that needs the visual aid.
    */
-  public addVisual (elm?: HTMLElement) {
+  public addVisual(elm?: HTMLElement) {
     const self = this;
     const settings = self.settings;
     const dom: DOMUtils = self.dom;
@@ -1055,31 +1053,31 @@ class Editor implements EditorObservable {
       let value;
 
       switch (elm.nodeName) {
-        case 'TABLE':
-          cls = settings.visual_table_class || 'mce-item-table';
-          value = dom.getAttrib(elm, 'border');
+      case 'TABLE':
+        cls = settings.visual_table_class || 'mce-item-table';
+        value = dom.getAttrib(elm, 'border');
 
-          if ((!value || value === '0') && self.hasVisual) {
+        if ((!value || value === '0') && self.hasVisual) {
+          dom.addClass(elm, cls);
+        } else {
+          dom.removeClass(elm, cls);
+        }
+
+        return;
+
+      case 'A':
+        if (!dom.getAttrib(elm, 'href')) {
+          value = dom.getAttrib(elm, 'name') || elm.id;
+          cls = settings.visual_anchor_class || 'mce-item-anchor';
+
+          if (value && self.hasVisual) {
             dom.addClass(elm, cls);
           } else {
             dom.removeClass(elm, cls);
           }
+        }
 
-          return;
-
-        case 'A':
-          if (!dom.getAttrib(elm, 'href')) {
-            value = dom.getAttrib(elm, 'name') || elm.id;
-            cls = settings.visual_anchor_class || 'mce-item-anchor';
-
-            if (value && self.hasVisual) {
-              dom.addClass(elm, cls);
-            } else {
-              dom.removeClass(elm, cls);
-            }
-          }
-
-          return;
+        return;
       }
     });
 
@@ -1091,7 +1089,7 @@ class Editor implements EditorObservable {
    *
    * @method remove
    */
-  public remove () {
+  public remove() {
     EditorRemove.remove(this);
   }
 
@@ -1103,7 +1101,7 @@ class Editor implements EditorObservable {
    * @method destroy
    * @param {Boolean} automatic Optional state if the destroy is an automatic destroy or user called one.
    */
-  public destroy (automatic?: boolean) {
+  public destroy(automatic?: boolean) {
     EditorRemove.destroy(this, automatic);
   }
 
@@ -1114,41 +1112,41 @@ class Editor implements EditorObservable {
    * @param {function} callback Optional callback with images and status for each image.
    * @return {Promise} Promise instance.
    */
-  public uploadImages (callback?: UploadCallback): Promise<UploadResult[]> {
+  public uploadImages(callback?: UploadCallback): Promise<UploadResult[]> {
     return this.editorUpload.uploadImages(callback);
   }
 
   // Internal functions
 
-  public _scanForImages (): Promise<BlobInfoImagePair[]> {
+  public _scanForImages(): Promise<BlobInfoImagePair[]> {
     return this.editorUpload.scanForImages();
   }
 
   /**
    * No longer supported, use editor.ui.registry.addButton instead
    */
-  public addButton () {
+  public addButton() {
     throw new Error('editor.addButton has been removed in tinymce 5x, use editor.ui.registry.addButton or editor.ui.registry.addToggleButton or editor.ui.registry.addSplitButton instead');
   }
 
   /**
    * No longer supported, use editor.ui.registry.addSidebar instead
    */
-  public addSidebar () {
+  public addSidebar() {
     throw new Error('editor.addSidebar has been removed in tinymce 5x, use editor.ui.registry.addSidebar instead');
   }
 
   /**
    * No longer supported, use editor.ui.registry.addMenuItem instead
    */
-  public addMenuItem () {
+  public addMenuItem() {
     throw new Error('editor.addMenuItem has been removed in tinymce 5x, use editor.ui.registry.addMenuItem instead');
   }
 
   /**
    * No longer supported, use editor.ui.registry.addContextMenu instead
    */
-  public addContextToolbar () {
+  public addContextToolbar() {
     throw new Error('editor.addContextToolbar has been removed in tinymce 5x, use editor.ui.registry.addContextToolbar instead');
   }
 }

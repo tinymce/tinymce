@@ -35,7 +35,7 @@ UnitTest.asynctest('KeyboardTest', (success, failure) => {
 
   const listenOn = (type, f, code, modifiers) =>
     Step.control(
-      Step.raw((value: { container: any; }, next, die, logs) => {
+      Step.raw((value: { container: any }, next, die, logs) => {
         const listener = DomEvent.bind(value.container, type, (event) => {
           const raw = event.raw();
           listener.unbind();
@@ -49,7 +49,7 @@ UnitTest.asynctest('KeyboardTest', (success, failure) => {
     );
 
   const listenOnKeystroke = (code, modifiers) => Step.control(
-    Step.raw((value: { container: any; }, next, die, initLogs) => {
+    Step.raw((value: { container: any }, next, die, initLogs) => {
       const keydownListener = DomEvent.bind(value.container, 'keydown', (dEvent) => {
         keydownListener.unbind();
 

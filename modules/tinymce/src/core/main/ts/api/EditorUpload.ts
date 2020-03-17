@@ -40,11 +40,11 @@ interface EditorUpload {
 
 const EditorUpload = function (editor: Editor): EditorUpload {
   const blobCache = BlobCache();
-  let uploader: Uploader, imageScanner: ImageScanner;
+  let uploader: Uploader; let imageScanner: ImageScanner;
   const uploadStatus = UploadStatus();
   const urlFilters: Array<(img: HTMLImageElement) => boolean> = [];
 
-  const aliveGuard = function <T, R>(callback?: (result: T) => R) {
+  const aliveGuard = function <T, R> (callback?: (result: T) => R) {
     return function (result: T) {
       if (editor.selection) {
         return callback(result);
@@ -54,9 +54,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     };
   };
 
-  const cacheInvalidator = (url: string): string => {
-    return url + (url.indexOf('?') === -1 ? '?' : '&') + (new Date()).getTime();
-  };
+  const cacheInvalidator = (url: string): string => url + (url.indexOf('?') === -1 ? '?' : '&') + (new Date()).getTime();
 
   // Replaces strings without regexps to avoid FF regexp to big issue
   const replaceString = function (content: string, search: string, replace: string): string {
@@ -123,9 +121,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     }
 
     return scanForImages().then(aliveGuard((imageInfos) => {
-      const blobInfos = Arr.map(imageInfos, (imageInfo) => {
-        return imageInfo.blobInfo;
-      });
+      const blobInfos = Arr.map(imageInfos, (imageInfo) => imageInfo.blobInfo);
 
       return uploader.upload(blobInfos, openNotification).then(aliveGuard((result) => {
         const filteredResult = Arr.map(result, (uploadInfo, index) => {

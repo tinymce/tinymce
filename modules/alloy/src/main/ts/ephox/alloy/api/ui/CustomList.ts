@@ -31,9 +31,7 @@ const factory: CompositeSketchFactory<CustomListDetail, CustomListSpec> = (detai
 
       const numListsToAdd = numListsRequired - itemComps.length;
       const itemsToAdd = numListsToAdd > 0 ?
-        Arr.range(numListsToAdd, () => {
-          return detail.makeItem();
-        }) : [ ];
+        Arr.range(numListsToAdd, () => detail.makeItem()) : [ ];
 
       const itemsToRemove = itemComps.slice(numListsRequired);
 
@@ -50,13 +48,11 @@ const factory: CompositeSketchFactory<CustomListDetail, CustomListSpec> = (detai
 
   // In shell mode, the group overrides need to be added to the main container, and there can be no children
   const extra: {
-    behaviours: Array<NamedConfiguredBehaviour<any, any>>,
+    behaviours: Array<NamedConfiguredBehaviour<any, any>>;
     components: AlloySpec[];
   } = detail.shell ? { behaviours: [ Replacing.config({ }) ], components: [ ] } : { behaviours: [ ], components };
 
-  const getListContainer = (component: AlloyComponent) => {
-    return detail.shell ? Option.some(component) : AlloyParts.getPart(component, detail, 'items');
-  };
+  const getListContainer = (component: AlloyComponent) => detail.shell ? Option.some(component) : AlloyParts.getPart(component, detail, 'items');
 
   return {
     uid: detail.uid,

@@ -56,7 +56,7 @@ export function Uploader(uploadStatus, settings): Uploader {
   };
 
   const defaultHandler: UploadHandler = function (blobInfo, success, failure, progress) {
-    let xhr, formData;
+    let xhr; let formData;
 
     xhr = new XMLHttpRequest();
     xhr.open('POST', settings.url);
@@ -129,7 +129,7 @@ export function Uploader(uploadStatus, settings): Uploader {
     uploadStatus.markPending(blobInfo.blobUri());
 
     return new Promise(function (resolve) {
-      let notification, progress;
+      let notification; let progress;
 
       const noop = function () {
       };

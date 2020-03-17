@@ -23,8 +23,8 @@ const JSONP = {
   callbacks: {},
   count: 0,
 
-  send (settings: JSONPSettings) {
-    const self = this, dom = DOMUtils.DOM, count = settings.count !== undefined ? settings.count : self.count;
+  send(settings: JSONPSettings) {
+    const self = this; const dom = DOMUtils.DOM; const count = settings.count !== undefined ? settings.count : self.count;
     const id = 'tinymce_jsonp_' + count;
 
     self.callbacks[count] = function (json) {

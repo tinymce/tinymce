@@ -21,7 +21,7 @@ import Editor from './Editor';
  * editor.shortcuts.add('access+a', "description of the shortcut", function() {}); // "access" maps to ctrl+alt on Mac and shift+alt on PC
  */
 
-const each = Tools.each, explode = Tools.explode;
+const each = Tools.each; const explode = Tools.explode;
 
 const keyCodeLookup = {
   f1: 112,
@@ -103,7 +103,7 @@ class Shortcuts {
    * @param {Object} scope Optional scope to execute the function in.
    * @return {Boolean} true/false state if the shortcut was added or not.
    */
-  public add (pattern: string, desc: string, cmdFunc: string | any[] | Function, scope?: {}): boolean {
+  public add(pattern: string, desc: string, cmdFunc: string | any[] | Function, scope?: {}): boolean {
     const self = this;
     let cmd;
 
@@ -134,7 +134,7 @@ class Shortcuts {
    * @param {String} pattern Shortcut pattern. Like for example: ctrl+alt+o.
    * @return {Boolean} true/false state if the shortcut was removed or not.
    */
-  public remove (pattern: string): boolean {
+  public remove(pattern: string): boolean {
     const shortcut = this.createShortcut(pattern);
 
     if (this.shortcuts[shortcut.id]) {
@@ -145,8 +145,8 @@ class Shortcuts {
     return false;
   }
 
-  private parseShortcut (pattern: string): Shortcut {
-    let id, key;
+  private parseShortcut(pattern: string): Shortcut {
+    let id; let key;
     const shortcut: any = {};
 
     // Parse modifiers and keys ctrl+alt+b for example
@@ -165,7 +165,7 @@ class Shortcuts {
     });
 
     // Generate unique id for modifier combination and set default state for unused modifiers
-    id = [shortcut.keyCode];
+    id = [ shortcut.keyCode ];
     for (key in modifierNames) {
       if (shortcut[key]) {
         id.push(key);
@@ -199,7 +199,7 @@ class Shortcuts {
     return shortcut;
   }
 
-  private createShortcut (pattern: string, desc?: string, cmdFunc?, scope?) {
+  private createShortcut(pattern: string, desc?: string, cmdFunc?, scope?) {
     let shortcuts;
 
     shortcuts = Tools.map(explode(pattern, '>'), this.parseShortcut);
@@ -214,15 +214,15 @@ class Shortcuts {
     });
   }
 
-  private hasModifier (e: KeyboardEvent): boolean {
+  private hasModifier(e: KeyboardEvent): boolean {
     return e.altKey || e.ctrlKey || e.metaKey;
   }
 
-  private isFunctionKey (e: KeyboardEvent): boolean {
+  private isFunctionKey(e: KeyboardEvent): boolean {
     return e.type === 'keydown' && e.keyCode >= 112 && e.keyCode <= 123;
   }
 
-  private matchShortcut (e: KeyboardEvent, shortcut: Shortcut) {
+  private matchShortcut(e: KeyboardEvent, shortcut: Shortcut) {
     if (!shortcut) {
       return false;
     }
@@ -243,7 +243,7 @@ class Shortcuts {
     return false;
   }
 
-  private executeShortcutAction (shortcut) {
+  private executeShortcutAction(shortcut) {
     return shortcut.func ? shortcut.func.call(shortcut.scope) : null;
   }
 }

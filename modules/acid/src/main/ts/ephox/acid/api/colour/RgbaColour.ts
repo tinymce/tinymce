@@ -40,44 +40,44 @@ const fromHsv = (hsv: Hsv): Rgba => {
   const match = brightness - chroma;
 
   switch (Math.floor(side)) {
-    case 0:
-      r = chroma;
-      g = x;
-      b = 0;
-      break;
+  case 0:
+    r = chroma;
+    g = x;
+    b = 0;
+    break;
 
-    case 1:
-      r = x;
-      g = chroma;
-      b = 0;
-      break;
+  case 1:
+    r = x;
+    g = chroma;
+    b = 0;
+    break;
 
-    case 2:
-      r = 0;
-      g = chroma;
-      b = x;
-      break;
+  case 2:
+    r = 0;
+    g = chroma;
+    b = x;
+    break;
 
-    case 3:
-      r = 0;
-      g = x;
-      b = chroma;
-      break;
+  case 3:
+    r = 0;
+    g = x;
+    b = chroma;
+    break;
 
-    case 4:
-      r = x;
-      g = 0;
-      b = chroma;
-      break;
+  case 4:
+    r = x;
+    g = 0;
+    b = chroma;
+    break;
 
-    case 5:
-      r = chroma;
-      g = 0;
-      b = x;
-      break;
+  case 5:
+    r = chroma;
+    g = 0;
+    b = x;
+    break;
 
-    default:
-      r = g = b = 0;
+  default:
+    r = g = b = 0;
   }
 
   r = round(255 * (r + match));
@@ -121,7 +121,7 @@ const fromString = (rgbaString: string): Option<Rgba> => {
 
 const toString = (rgba: Rgba): string => `rgba(${rgba.red},${rgba.green},${rgba.blue},${rgba.alpha})`;
 
-const red = rgbaColour(255, 0, 0, 1);
+const redColour = rgbaColour(255, 0, 0, 1);
 
 export {
   rgbaColour,
@@ -130,5 +130,5 @@ export {
   fromHex,
   fromString,
   toString,
-  red
+  redColour as red
 };

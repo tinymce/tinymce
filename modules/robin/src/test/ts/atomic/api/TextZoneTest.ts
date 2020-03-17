@@ -84,8 +84,8 @@ UnitTest.test('TextZoneTest', function () {
     'Basic zone for one text field',
     Option.some({
       lang: 'en',
-      words: ['one'],
-      elements: ['en-a']
+      words: [ 'one' ],
+      elements: [ 'en-a' ]
     }),
     'en-a',
     'en'
@@ -102,8 +102,8 @@ UnitTest.test('TextZoneTest', function () {
     'Basic zone for semi isolated span should have the partial words outside it',
     Option.some({
       lang: 'en',
-      words: ['on'],
-      elements: ['en-j', 'en-k']
+      words: [ 'on' ],
+      elements: [ 'en-j', 'en-k' ]
     }),
     'span-semi-isolated',
     'en'
@@ -113,8 +113,8 @@ UnitTest.test('TextZoneTest', function () {
     'Basic ranged zone for two adjacent english text nodes should create zone with them',
     Option.some({
       lang: 'en',
-      words: ['two'],
-      elements: ['en-b', 'en-c']
+      words: [ 'two' ],
+      elements: [ 'en-b', 'en-c' ]
     }),
     'en-b', 'en-c',
     'en'
@@ -124,8 +124,8 @@ UnitTest.test('TextZoneTest', function () {
     'Basic ranged zone for an english text node next to another one (but not part of the range) should create zone with them',
     Option.some({
       lang: 'en',
-      words: ['two'],
-      elements: ['en-b', 'en-c']
+      words: [ 'two' ],
+      elements: [ 'en-b', 'en-c' ]
     }),
     'en-b', 'en-b',
     'en'
@@ -142,7 +142,7 @@ UnitTest.test('TextZoneTest', function () {
     const item = doc1.find(doc1.get(), info.startId).getOrDie();
     const actual = TextZone.single(doc1, item, 'en', 'en');
     return actual.forall(function (zone) {
-      assertProps('Testing zone for single(' + info.startId + ')', doc1, [zone]);
+      assertProps('Testing zone for single(' + info.startId + ')', doc1, [ zone ]);
       return true;
     });
   };
@@ -152,7 +152,7 @@ UnitTest.test('TextZoneTest', function () {
     const item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
     const actual = TextZone.range(doc1, item1, 0, item2, 0, 'en', 'en');
     return actual.forall(function (zone) {
-      assertProps('Testing zone for range(' + info.startId + '->' + info.finishId + ')', doc1, [zone]);
+      assertProps('Testing zone for range(' + info.startId + '->' + info.finishId + ')', doc1, [ zone ]);
       return true;
     });
   };

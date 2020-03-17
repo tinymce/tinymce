@@ -9,11 +9,9 @@ import Theme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
   Theme();
 
-  const sAssertBodyClass = (editor: Editor, cls: string, state: boolean) => {
-    return Step.label('sAssertBodyClass: checking editor ' + (state ? 'has' : 'doesn\'t have') + ' class ' + cls, Step.sync(() => {
-      Assertions.assertEq('Should be the expected class state', state, Class.has(Element.fromDom(editor.getBody()), cls));
-    }));
-  };
+  const sAssertBodyClass = (editor: Editor, cls: string, state: boolean) => Step.label('sAssertBodyClass: checking editor ' + (state ? 'has' : 'doesn\'t have') + ' class ' + cls, Step.sync(() => {
+    Assertions.assertEq('Should be the expected class state', state, Class.has(Element.fromDom(editor.getBody()), cls));
+  }));
 
   TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {
     const sOverrideDefaultMode = Step.label('validate default modes cannot be overwritten', Step.async((next, die) => {
@@ -67,17 +65,13 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
       });
     });
 
-    const sAssertMode = (expectedMode: string) => {
-      return Step.label('sAssertMode: checking editor is in mode ' + expectedMode, Step.sync(() => {
-        Assertions.assertEq('Should be the expected mode', expectedMode, editor.mode.get());
-      }));
-    };
+    const sAssertMode = (expectedMode: string) => Step.label('sAssertMode: checking editor is in mode ' + expectedMode, Step.sync(() => {
+      Assertions.assertEq('Should be the expected mode', expectedMode, editor.mode.get());
+    }));
 
-    const sSetMode = (mode: string) => {
-      return Step.label('sSetMode: setting the editor mode to ' + mode, Step.sync(() => {
-        editor.mode.set(mode);
-      }));
-    };
+    const sSetMode = (mode: string) => Step.label('sSetMode: setting the editor mode to ' + mode, Step.sync(() => {
+      editor.mode.set(mode);
+    }));
 
     Pipeline.async({}, Arr.flatten([
       [
@@ -116,7 +110,7 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
       ])
     ]), onSuccess, onFailure);
   }, {
-      base_url: '/project/tinymce/js/tinymce',
-      readonly: true
-    }, success, failure);
+    base_url: '/project/tinymce/js/tinymce',
+    readonly: true
+  }, success, failure);
 });

@@ -16,32 +16,30 @@ import * as ElementPath from './ElementPath';
 import { renderWordCount } from './WordCount';
 
 const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
-  const renderResizeHandlerIcon = (resizeType: ResizeTypes): SimpleSpec => {
-    return {
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-statusbar__resize-handle' ],
-        attributes: {
-          'title': providersBackstage.translate('Resize'), // TODO: tooltips AP-213
-          'aria-hidden': 'true'
-        },
-        innerHtml: getIcon('resize-handle', providersBackstage.icons),
+  const renderResizeHandlerIcon = (resizeType: ResizeTypes): SimpleSpec => ({
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-statusbar__resize-handle' ],
+      attributes: {
+        'title': providersBackstage.translate('Resize'), // TODO: tooltips AP-213
+        'aria-hidden': 'true'
       },
-      behaviours: Behaviour.derive([
-        Dragging.config({
-          mode: 'mouse',
-          repositionTarget: false,
-          onDrag: (comp, target, delta) => {
-            resize(editor, delta, resizeType);
-          },
-          blockerClass: 'tox-blocker'
-        })
-      ])
-    };
-  };
+      innerHtml: getIcon('resize-handle', providersBackstage.icons),
+    },
+    behaviours: Behaviour.derive([
+      Dragging.config({
+        mode: 'mouse',
+        repositionTarget: false,
+        onDrag: (comp, target, delta) => {
+          resize(editor, delta, resizeType);
+        },
+        blockerClass: 'tox-blocker'
+      })
+    ])
+  });
 
   const renderBranding = (): SimpleSpec => {
-    const label = I18n.translate(['Powered by {0}', 'Tiny']);
+    const label = I18n.translate([ 'Powered by {0}', 'Tiny' ]);
     const linkHtml = `<a href="https://www.tiny.cloud/?utm_campaign=editor_referral&amp;utm_medium=poweredby&amp;utm_source=tinymce&amp;utm_content=v5" rel="noopener" target="_blank" tabindex="-1" aria-label="${label}">${label}</a>`;
     return {
       dom: {
@@ -84,7 +82,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
       return [{
         dom: {
           tag: 'div',
-          classes: [ 'tox-statusbar__text-container']
+          classes: [ 'tox-statusbar__text-container' ]
         },
         components,
       }];

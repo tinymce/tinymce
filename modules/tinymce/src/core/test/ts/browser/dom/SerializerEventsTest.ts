@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerEventsTest', function (su
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, [
       Logger.t('Pre/post process events', Step.sync(function () {
-        let preProcessArgs, postProcessArgs;
+        let preProcessArgs; let postProcessArgs;
 
         editor.on('PreProcess', function (o) {
           preProcessArgs = o;

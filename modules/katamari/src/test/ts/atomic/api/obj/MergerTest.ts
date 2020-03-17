@@ -6,24 +6,24 @@ import { UnitTest, Assert } from '@ephox/bedrock-client';
 
 UnitTest.test('Merger', function () {
   Assert.eq('eq', {}, Merger.merge({}, {}));
-  Assert.eq('eq', {a: 'A'}, Merger.merge({a: 'A'}, {}));
-  Assert.eq('eq', {a: 'A'}, Merger.merge({a: 'A'}, {}, {}));
-  Assert.eq('eq', {a: 'A'}, Merger.merge({a: 'A'}, {}, {}));
-  Assert.eq('eq', {a: 'A'}, Merger.merge({}, {a: 'A'},  {}));
-  Assert.eq('eq', {a: 'A'}, Merger.merge({},  {}, {a: 'A'}));
+  Assert.eq('eq', { a: 'A' }, Merger.merge({ a: 'A' }, {}));
+  Assert.eq('eq', { a: 'A' }, Merger.merge({ a: 'A' }, {}, {}));
+  Assert.eq('eq', { a: 'A' }, Merger.merge({ a: 'A' }, {}, {}));
+  Assert.eq('eq', { a: 'A' }, Merger.merge({}, { a: 'A' },  {}));
+  Assert.eq('eq', { a: 'A' }, Merger.merge({},  {}, { a: 'A' }));
 
-  Assert.eq('eq', {a: 'A', b: { bb: 'BB' }}, Merger.merge({ b: { bb: 'BB' }}, { a: 'A' }));
-  Assert.eq('eq', {a: 'A', b: { bb: 'BB' }}, Merger.merge({}, { a: 'A', b: { bb: 'BB' } }));
-  Assert.eq('eq', {a: 'A', b: { bb: 'BB' }}, Merger.merge({ b: { bb: 'B' }}, { a: 'A', b: { bb: 'BB' }}));
-  Assert.eq('eq', {a: 'A', b: { bb: 'BB' }}, Merger.merge({ b: { bb: 'BB' }}, { a: 'A' }));
-  Assert.eq('eq', {a: 'A', b: { bb: 'BB' }}, Merger.merge({ b: { bb: 'BB' }}, { a: 'A' }));
-  Assert.eq('eq', {a: 'A', b: { bb: 'BB' }}, Merger.merge({ b: { bb: 'BB' }}, { a: 'A' }));
+  Assert.eq('eq', { a: 'A', b: { bb: 'BB' }}, Merger.merge({ b: { bb: 'BB' }}, { a: 'A' }));
+  Assert.eq('eq', { a: 'A', b: { bb: 'BB' }}, Merger.merge({}, { a: 'A', b: { bb: 'BB' }}));
+  Assert.eq('eq', { a: 'A', b: { bb: 'BB' }}, Merger.merge({ b: { bb: 'B' }}, { a: 'A', b: { bb: 'BB' }}));
+  Assert.eq('eq', { a: 'A', b: { bb: 'BB' }}, Merger.merge({ b: { bb: 'BB' }}, { a: 'A' }));
+  Assert.eq('eq', { a: 'A', b: { bb: 'BB' }}, Merger.merge({ b: { bb: 'BB' }}, { a: 'A' }));
+  Assert.eq('eq', { a: 'A', b: { bb: 'BB' }}, Merger.merge({ b: { bb: 'BB' }}, { a: 'A' }));
 
   Assert.eq('eq', {
     a: 'A',
     b: {
       bb: 'BB',
-      bc: [1, 'bc'],
+      bc: [ 1, 'bc' ],
       bd: {
         bdd: 'BDBD'
       }
@@ -37,7 +37,7 @@ UnitTest.test('Merger', function () {
   }, {
     b: {
       bb: 'BB',
-      bc: [1, 'bc'],
+      bc: [ 1, 'bc' ],
       bd: {
         bdd: 'BDBD'
       }
@@ -49,7 +49,7 @@ UnitTest.test('Merger', function () {
     b: {
       ba: 'BA',
       bb: 'BB',
-      bc: [1, 'bc'],
+      bc: [ 1, 'bc' ],
       bd: {
         bdd: 'BDBD'
       }
@@ -63,7 +63,7 @@ UnitTest.test('Merger', function () {
   }, {
     b: {
       bb: 'BB',
-      bc: [1, 'bc'],
+      bc: [ 1, 'bc' ],
       bd: {
         bdd: 'BDBD'
       }

@@ -20,9 +20,7 @@ const schema = [
   FieldSchema.defaulted('useDown', false)
 ];
 
-const execute: KeyRuleHandler<ExecutingConfig, Stateless> = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, executeConfig: ExecutingConfig) => {
-  return executeConfig.execute(component, simulatedEvent, component.element());
-};
+const execute: KeyRuleHandler<ExecutingConfig, Stateless> = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, executeConfig: ExecutingConfig) => executeConfig.execute(component, simulatedEvent, component.element());
 
 const getKeydownRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, executeConfig: ExecutingConfig, executeState: Stateless): Array<KeyRules.KeyRule<ExecutingConfig, Stateless>> => {
   const spaceExec = executeConfig.useSpace && !EditableFields.inside(component.element()) ? Keys.SPACE() : [ ];
@@ -37,10 +35,8 @@ const getKeydownRules = (component: AlloyComponent, simulatedEvent: NativeSimula
   ] : [ ]);
 };
 
-const getKeyupRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, executeConfig: ExecutingConfig, executeState: Stateless): Array<KeyRules.KeyRule<ExecutingConfig, Stateless>> => {
-  return executeConfig.useSpace && !EditableFields.inside(component.element()) ? [
-    KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
-  ] : [ ];
-};
+const getKeyupRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, executeConfig: ExecutingConfig, executeState: Stateless): Array<KeyRules.KeyRule<ExecutingConfig, Stateless>> => executeConfig.useSpace && !EditableFields.inside(component.element()) ? [
+  KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
+] : [ ];
 
 export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Option.none());

@@ -29,7 +29,7 @@ const isBookmarkNode = function (node) {
 // this function will then trim off empty edges and produce:
 //   <p>text 1</p><b>CHOP</b><p>text 2</p>
 const trimNode = function (dom, node) {
-  let i, children = node.childNodes;
+  let i; let children = node.childNodes;
 
   if (NodeType.isElement(node) && isBookmarkNode(node)) {
     return;

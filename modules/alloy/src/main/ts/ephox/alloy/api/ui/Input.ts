@@ -4,16 +4,14 @@ import { InputDetail, InputSketcher, InputSpec } from '../../ui/types/InputTypes
 import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from './UiSketcher';
 
-const factory: SingleSketchFactory<InputDetail, InputSpec> = (detail, spec): SketchSpec => {
-  return {
-    uid: detail.uid,
-    dom: InputBase.dom(detail),
-    // No children.
-    components: [ ],
-    behaviours: InputBase.behaviours(detail),
-    eventOrder: detail.eventOrder
-  };
-};
+const factory: SingleSketchFactory<InputDetail, InputSpec> = (detail, spec): SketchSpec => ({
+  uid: detail.uid,
+  dom: InputBase.dom(detail),
+  // No children.
+  components: [ ],
+  behaviours: InputBase.behaviours(detail),
+  eventOrder: detail.eventOrder
+});
 
 const Input: InputSketcher = Sketcher.single({
   name: 'Input',

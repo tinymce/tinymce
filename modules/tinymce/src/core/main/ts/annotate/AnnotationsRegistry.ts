@@ -28,9 +28,7 @@ const create = (): AnnotationsRegistry => {
     };
   };
 
-  const lookup = (name: string): Option<AnnotatorSettings> => {
-    return annotations.hasOwnProperty(name) ? Option.from(annotations[name]).map((a) => a.settings) : Option.none();
-  };
+  const lookup = (name: string): Option<AnnotatorSettings> => annotations.hasOwnProperty(name) ? Option.from(annotations[name]).map((a) => a.settings) : Option.none();
 
   return {
     register,

@@ -11,15 +11,13 @@ UnitTest.asynctest('Editor resize test', (success, failure) => {
   Theme();
 
   TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
-    const cAssertEditorSize = (expectedWidth: number, expectedHeight: number) => {
-      return Chain.control(
-        Chain.op((container: Element) => {
-          Assertions.assertEq(`Editor should be ${expectedHeight}px high`, expectedHeight, container.dom().offsetHeight);
-          Assertions.assertEq(`Editor should be ${expectedWidth}px wide`, expectedWidth, container.dom().offsetWidth);
-        }),
-        Guard.addLogging('Ensure that the editor has resized')
-      );
-    };
+    const cAssertEditorSize = (expectedWidth: number, expectedHeight: number) => Chain.control(
+      Chain.op((container: Element) => {
+        Assertions.assertEq(`Editor should be ${expectedHeight}px high`, expectedHeight, container.dom().offsetHeight);
+        Assertions.assertEq(`Editor should be ${expectedWidth}px wide`, expectedWidth, container.dom().offsetWidth);
+      }),
+      Guard.addLogging('Ensure that the editor has resized')
+    );
 
     Pipeline.async({ }, [
       Chain.asStep(Body.body(), [
@@ -29,7 +27,7 @@ UnitTest.asynctest('Editor resize test', (success, failure) => {
             border: '2px solid #ccc'
           });
         }),
-        Chain.label(`Test resize with max/min sizing`, NamedChain.asChain([
+        Chain.label('Test resize with max/min sizing', NamedChain.asChain([
           NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
           NamedChain.writeValue('container', Element.fromDom(editor.getContainer())),
           NamedChain.direct('body', UiFinder.cFindIn('.tox-statusbar__resize-handle'), 'resizeHandle'),

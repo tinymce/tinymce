@@ -9,14 +9,14 @@ const createDataTransferItem = function (mime, content) {
     kind: 'string',
     type: mime,
     getAsFile: notImplemented,
-    getAsString () {
+    getAsString() {
       return content;
     }
   };
 };
 
 const create = function (inputData) {
-  let data = {}, result;
+  let data = {}; let result;
 
   const clearData = function () {
     data = {};

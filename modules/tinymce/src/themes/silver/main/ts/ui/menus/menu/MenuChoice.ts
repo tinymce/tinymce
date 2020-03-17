@@ -14,17 +14,15 @@ export const createPartialChoiceMenu = (value: string, items: SingleMenuItemApi[
   return createPartialMenuWithAlloyItems(value, hasIcons, alloyItems, columns, presets);
 };
 
-export const createChoiceItems = (items: SingleMenuItemApi[], onItemValueHandler: (itemValue: string) => void, columns: 'auto' | number, itemPresets: Types.PresetItemTypes, itemResponse: ItemResponse, select: (value: string) => boolean, providersBackstage: UiFactoryBackstageProviders) => {
-  return Options.cat(
-    Arr.map(items, (item) => {
-      if (item.type === 'choiceitem') {
-        return BridgeMenu.createChoiceMenuItem(item).fold(
-          handleError,
-          (d: BridgeMenu.ChoiceMenuItem) => Option.some(renderChoiceItem(d, columns === 1, itemPresets, onItemValueHandler, select(item.value), itemResponse, providersBackstage))
-        );
-      } else {
-        return Option.none();
-      }
-    })
-  );
-};
+export const createChoiceItems = (items: SingleMenuItemApi[], onItemValueHandler: (itemValue: string) => void, columns: 'auto' | number, itemPresets: Types.PresetItemTypes, itemResponse: ItemResponse, select: (value: string) => boolean, providersBackstage: UiFactoryBackstageProviders) => Options.cat(
+  Arr.map(items, (item) => {
+    if (item.type === 'choiceitem') {
+      return BridgeMenu.createChoiceMenuItem(item).fold(
+        handleError,
+        (d: BridgeMenu.ChoiceMenuItem) => Option.some(renderChoiceItem(d, columns === 1, itemPresets, onItemValueHandler, select(item.value), itemResponse, providersBackstage))
+      );
+    } else {
+      return Option.none();
+    }
+  })
+);

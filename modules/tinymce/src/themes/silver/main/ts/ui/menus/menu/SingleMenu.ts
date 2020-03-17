@@ -36,38 +36,38 @@ const createMenuItemFromBridge = (item: SingleMenuItemApi, itemResponse: ItemRes
     icon: menuitem.text.isSome() ? Option.none() : menuitem.icon,
   });
   switch (item.type) {
-    case 'menuitem':
-      return BridgeMenu.createMenuItem(item).fold(
-        handleError,
-        (d) => Option.some(MenuItems.normal(parseForHorizontalMenu(d), itemResponse, providersBackstage, menuHasIcons))
-      );
+  case 'menuitem':
+    return BridgeMenu.createMenuItem(item).fold(
+      handleError,
+      (d) => Option.some(MenuItems.normal(parseForHorizontalMenu(d), itemResponse, providersBackstage, menuHasIcons))
+    );
 
-    case 'nestedmenuitem':
-      return BridgeMenu.createNestedMenuItem(item).fold(
-        handleError,
-        (d) => Option.some(MenuItems.nested(parseForHorizontalMenu(d), itemResponse, providersBackstage, menuHasIcons, isHorizontalMenu))
-      );
+  case 'nestedmenuitem':
+    return BridgeMenu.createNestedMenuItem(item).fold(
+      handleError,
+      (d) => Option.some(MenuItems.nested(parseForHorizontalMenu(d), itemResponse, providersBackstage, menuHasIcons, isHorizontalMenu))
+    );
 
-    case 'togglemenuitem':
-      return BridgeMenu.createToggleMenuItem(item).fold(
-        handleError,
-        (d) => Option.some(MenuItems.toggle(parseForHorizontalMenu(d), itemResponse, providersBackstage))
-      );
-    case 'separator':
-      return BridgeMenu.createSeparatorMenuItem(item).fold(
-        handleError,
-        (d) => Option.some(MenuItems.separator(d))
-      );
-    case 'fancymenuitem':
-      return BridgeMenu.createFancyMenuItem(item).fold(
-        handleError,
-        (d) => MenuItems.fancy(parseForHorizontalMenu(d), backstage)
-      );
-    default: {
-      // tslint:disable-next-line:no-console
-      console.error('Unknown item in general menu', item);
-      return Option.none();
-    }
+  case 'togglemenuitem':
+    return BridgeMenu.createToggleMenuItem(item).fold(
+      handleError,
+      (d) => Option.some(MenuItems.toggle(parseForHorizontalMenu(d), itemResponse, providersBackstage))
+    );
+  case 'separator':
+    return BridgeMenu.createSeparatorMenuItem(item).fold(
+      handleError,
+      (d) => Option.some(MenuItems.separator(d))
+    );
+  case 'fancymenuitem':
+    return BridgeMenu.createFancyMenuItem(item).fold(
+      handleError,
+      (d) => MenuItems.fancy(parseForHorizontalMenu(d), backstage)
+    );
+  default: {
+    // tslint:disable-next-line:no-console
+    console.error('Unknown item in general menu', item);
+    return Option.none();
+  }
   }
 };
 
@@ -115,9 +115,7 @@ export const createPartialMenu = (value: string, items: SingleMenuItemApi[], ite
   return createPartial(value, hasIcons, alloyItems, 1, 'normal');
 };
 
-export const createTieredDataFrom = (partialMenu: TieredMenuTypes.PartialMenuSpec) => {
-  return TieredMenu.singleData(partialMenu.value, partialMenu);
-};
+export const createTieredDataFrom = (partialMenu: TieredMenuTypes.PartialMenuSpec) => TieredMenu.singleData(partialMenu.value, partialMenu);
 
 export const createMenuFrom = (partialMenu: PartialMenuSpec, columns: number | 'auto', focusMode: FocusMode, presets: Types.PresetTypes): MenuTypes.MenuSpec  => {
   const focusManager = focusMode === FocusMode.ContentFocus ? FocusManagers.highlights() : FocusManagers.dom();

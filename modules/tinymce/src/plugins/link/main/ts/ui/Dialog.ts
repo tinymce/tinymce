@@ -30,9 +30,7 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Types.Dialo
 
   // Check if a key is defined, meaning it was a field in the dialog. If it is,
   // then check if it's changed and return none if nothing has changed.
-  const getChangedValue = (key: string) => {
-    return Option.from(data[key]).filter((value) => !info.anchor[key].is(value));
-  };
+  const getChangedValue = (key: string) => Option.from(data[key]).filter((value) => !info.anchor[key].is(value));
 
   const changedData = {
     href: data.url.value,
@@ -149,7 +147,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.D
       }
     ],
     initialData,
-    onChange: (api: Types.Dialog.DialogInstanceApi<LinkDialogData>, {name}) => {
+    onChange: (api: Types.Dialog.DialogInstanceApi<LinkDialogData>, { name }) => {
       dialogDelta.onChange(api.getData, { name }).each((newData) => {
         api.setData(newData);
       });

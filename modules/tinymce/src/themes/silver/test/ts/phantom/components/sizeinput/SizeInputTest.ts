@@ -11,16 +11,14 @@ import TestProviders from '../../../module/TestProviders';
 UnitTest.asynctest('SizeInput component Test', (success, failure) => {
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
-      return GuiFactory.build(
-        renderSizeInput({
-          name: 'dimensions',
-          label: Option.some('size'),
-          constrain: true,
-          disabled: false
-        }, TestProviders)
-      );
-    },
+    (store, doc, body) => GuiFactory.build(
+      renderSizeInput({
+        name: 'dimensions',
+        label: Option.some('size'),
+        constrain: true,
+        disabled: false
+      }, TestProviders)
+    ),
     (doc, body, gui, component, store) => {
 
       const sTriggerInput = DomSteps.sTriggerEventOnFocused('input("input")', component, NativeEvents.input());
@@ -35,14 +33,12 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
           Chain.op((lock) => {
             Assertions.assertStructure(
               'Checking lock has toggled',
-              ApproxStructure.build((s, str, arr) => {
-                return s.element('button', {
-                  classes: [
-                    arr.has('tox-lock'),
-                    arr.has('tox-button'),
-                    (locked ? arr.has : arr.not)('tox-locked')]
-                });
-              }),
+              ApproxStructure.build((s, str, arr) => s.element('button', {
+                classes: [
+                  arr.has('tox-lock'),
+                  arr.has('tox-button'),
+                  (locked ? arr.has : arr.not)('tox-locked') ]
+              })),
               lock
             );
           })
@@ -51,60 +47,58 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
       return [
         Assertions.sAssertStructure(
           'Checking initial structure',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [arr.has('tox-form__group')],
-              children: [
-                s.element('div', {
-                  classes: [arr.has('tox-form__controls-h-stack')],
-                  children: [
-                    s.element('div', {
-                      classes: [arr.has('tox-form__group')],
-                      children: [
-                        s.element('label', {
-                          classes: [arr.has('tox-label')],
-                          html: str.is('Width')
-                        }),
-                        s.element('input', {
-                          classes: [arr.has('tox-textfield')],
-                          attrs: {
-                            'data-alloy-tabstop': str.is('true')
-                          }
-                        })
-                      ]
-                    }),
-                    s.element('div', {
-                      classes: [arr.has('tox-form__group')],
-                      children: [
-                        s.element('label', {
-                          classes: [arr.has('tox-label')],
-                          html: str.is('Height')
-                        }),
-                        s.element('input', {
-                          classes: [arr.has('tox-textfield')],
-                          attrs: {
-                            'data-alloy-tabstop': str.is('true')
-                          }
-                        })
-                      ]
-                    }),
-                    s.element('div', {
-                      classes: [arr.has('tox-form__group')],
-                      children: [
-                        s.element('label', {
-                          classes: [arr.has('tox-label')],
-                          html: str.is('&nbsp;')
-                        }),
-                        s.element('button', {
-                          classes: [arr.has('tox-lock'), arr.has('tox-button'), arr.has('tox-locked')]
-                        })
-                      ]
-                    })
-                  ]
-                })
-              ]
-            });
-          }),
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('tox-form__group') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-form__controls-h-stack') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-form__group') ],
+                    children: [
+                      s.element('label', {
+                        classes: [ arr.has('tox-label') ],
+                        html: str.is('Width')
+                      }),
+                      s.element('input', {
+                        classes: [ arr.has('tox-textfield') ],
+                        attrs: {
+                          'data-alloy-tabstop': str.is('true')
+                        }
+                      })
+                    ]
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-form__group') ],
+                    children: [
+                      s.element('label', {
+                        classes: [ arr.has('tox-label') ],
+                        html: str.is('Height')
+                      }),
+                      s.element('input', {
+                        classes: [ arr.has('tox-textfield') ],
+                        attrs: {
+                          'data-alloy-tabstop': str.is('true')
+                        }
+                      })
+                    ]
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-form__group') ],
+                    children: [
+                      s.element('label', {
+                        classes: [ arr.has('tox-label') ],
+                        html: str.is('&nbsp;')
+                      }),
+                      s.element('button', {
+                        classes: [ arr.has('tox-lock'), arr.has('tox-button'), arr.has('tox-locked') ]
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          })),
           component.element()
         ),
         sAssertLocked(true),

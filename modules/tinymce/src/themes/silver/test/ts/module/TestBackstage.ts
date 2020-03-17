@@ -7,12 +7,10 @@ import TestProviders from './TestProviders';
 
 export default function (sink?: AlloyComponent): UiFactoryBackstage {
   // NOTE: Non-sensical anchor
-  const hotspotAnchorFn = (): HotspotAnchorSpec => {
-    return {
-      anchor: 'hotspot',
-      hotspot: sink
-    };
-  };
+  const hotspotAnchorFn = (): HotspotAnchorSpec => ({
+    anchor: 'hotspot',
+    hotspot: sink
+  });
 
   return {
     shared: {
@@ -21,19 +19,15 @@ export default function (sink?: AlloyComponent): UiFactoryBackstage {
       anchors: {
         inlineDialog: hotspotAnchorFn,
         banner: hotspotAnchorFn,
-        cursor: () => {
-          return {
-            anchor: 'selection',
-            root: Body.body()
-          };
-        },
-        node: (elem) => {
-          return {
-            anchor: 'node',
-            root: Body.body(),
-            node: elem
-          };
-        }
+        cursor: () => ({
+          anchor: 'selection',
+          root: Body.body()
+        }),
+        node: (elem) => ({
+          anchor: 'node',
+          root: Body.body(),
+          node: elem
+        })
       },
       getSink: () => Result.value(sink)
     },
@@ -42,9 +36,7 @@ export default function (sink?: AlloyComponent): UiFactoryBackstage {
       addToHistory: () => {},
       getLinkInformation: () => Option.none(),
       getValidationHandler: () => Option.none(),
-      getUrlPicker: (filetype) => Option.some((entry: ApiUrlData) => {
-        return Future.pure(entry);
-      })
+      getUrlPicker: (filetype) => Option.some((entry: ApiUrlData) => Future.pure(entry))
     },
     dialog: {
       isDraggableModal: () => false

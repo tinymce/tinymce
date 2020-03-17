@@ -35,10 +35,10 @@ export interface UiFactoryBackstageShared {
   providers?: UiFactoryBackstageProviders;
   interpreter?: (spec: BridgedType) => AlloySpec;
   anchors?: {
-    inlineDialog: () => HotspotAnchorSpec | NodeAnchorSpec,
-    banner: () => HotspotAnchorSpec | NodeAnchorSpec,
-    cursor: () => SelectionAnchorSpec,
-    node: (elem: Option<Element>) => NodeAnchorSpec
+    inlineDialog: () => HotspotAnchorSpec | NodeAnchorSpec;
+    banner: () => HotspotAnchorSpec | NodeAnchorSpec;
+    cursor: () => SelectionAnchorSpec;
+    node: (elem: Option<Element>) => NodeAnchorSpec;
   };
   formInterpreter?: (parts: FormTypes.FormParts, spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
   getSink?: () => Result<AlloyComponent, any>;
@@ -63,9 +63,7 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
         menuItems: () => editor.ui.registry.getAll().menuItems,
         translate: I18n.translate
       },
-      interpreter: (s) => {
-        return UiFactory.interpretWithoutForm(s, backstage);
-      },
+      interpreter: (s) => UiFactory.interpretWithoutForm(s, backstage),
       anchors: Anchors.getAnchors(editor, lazyAnchorbar),
       getSink: () => Result.value(sink)
     },

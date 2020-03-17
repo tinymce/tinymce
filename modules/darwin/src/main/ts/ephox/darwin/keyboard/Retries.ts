@@ -18,8 +18,8 @@ export interface Retries {
     retry: RetryHandler<T>
   ) => T;
   match: <T>(branches: {
-    none: NoneHandler<T>,
-    retry: RetryHandler<T>
+    none: NoneHandler<T>;
+    retry: RetryHandler<T>;
   }) => T;
   log: (label: string) => void;
 }
@@ -39,7 +39,7 @@ const adt: {
   retry: (caret: Carets) => Retries;
 } = Adt.generate([
   { none: [] },
-  { retry: ['caret'] }
+  { retry: [ 'caret' ] }
 ]);
 
 const isOutside = function (caret: Carets, box: Carets): boolean {

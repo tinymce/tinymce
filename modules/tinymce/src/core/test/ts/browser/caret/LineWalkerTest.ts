@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function (success, fai
   };
 
   suite.test('positionsUntil', function () {
-    let result, predicateCallCount = 0;
+    let result; let predicateCallCount = 0;
 
     const predicate = function () {
       predicateCallCount++;
@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function (success, fai
   });
 
   suite.test('upUntil', function () {
-    let caretPosition, result, predicateCallCount = 0;
+    let caretPosition; let result; let predicateCallCount = 0;
 
     const predicate = function () {
       predicateCallCount++;
@@ -66,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function (success, fai
   });
 
   suite.test('downUntil', function () {
-    let caretPosition, result, predicateCallCount = 0;
+    let caretPosition; let result; let predicateCallCount = 0;
 
     const predicate = function () {
       predicateCallCount++;

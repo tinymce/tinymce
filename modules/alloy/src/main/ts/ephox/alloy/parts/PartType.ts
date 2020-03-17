@@ -78,9 +78,7 @@ const fName = FieldSchema.strict('name');
 const fPname = FieldSchema.field(
   'pname',
   'pname',
-  FieldPresence.defaultedThunk((typeSpec: PartSpec<any, any>) => {
-    return '<alloy.' + Id.generate(typeSpec.name) + '>';
-  }),
+  FieldPresence.defaultedThunk((typeSpec: PartSpec<any, any>) => '<alloy.' + Id.generate(typeSpec.name) + '>'),
   ValueSchema.anyValue()
 );
 
@@ -110,18 +108,16 @@ const groupSpec = ValueSchema.objOf([
   fPname, fDefaults, fOverrides
 ]);
 
-const asNamedPart = function <T>(part: PartTypeAdt<T>): Option<T> {
+const asNamedPart = function <T> (part: PartTypeAdt<T>): Option<T> {
   return part.fold(Option.some, Option.none as () => Option<T>, Option.some, Option.some);
 };
 
 const name = <T extends { name: string }>(part: PartTypeAdt<T>): string => {
-  const get = (data: T) => {
-    return data.name;
-  };
+  const get = (data: T) => data.name;
   return part.fold(get, get, get, get);
 };
 
-const asCommon = function <T>(part: PartTypeAdt<T>): T {
+const asCommon = function <T> (part: PartTypeAdt<T>): T {
   return part.fold(Fun.identity, Fun.identity, Fun.identity, Fun.identity);
 };
 

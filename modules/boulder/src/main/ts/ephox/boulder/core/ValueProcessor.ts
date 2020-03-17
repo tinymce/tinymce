@@ -25,8 +25,8 @@ export interface ValueProcessorAdt {
     state: StateValueProcessor<T>
   ) => T;
   match: <T>(branches: {
-    field: FieldValueProcessor<T>,
-    state: StateValueProcessor<T>
+    field: FieldValueProcessor<T>;
+    state: StateValueProcessor<T>;
   }) => T;
   log: (label: string) => void;
 }
@@ -81,9 +81,7 @@ const cExtractOne = function (path, obj, field, strength) {
     function (key, okey, presence, prop) {
       const bundle = function (av) {
         const result = prop.extract(path.concat([ key ]), strength, av);
-        return SimpleResult.map(result, (res) => {
-          return ObjWriter.wrap(okey, strength(res));
-        });
+        return SimpleResult.map(result, (res) => ObjWriter.wrap(okey, strength(res)));
       };
 
       const bundleAsOption = function (optValue) {
@@ -124,9 +122,7 @@ const cExtractOne = function (path, obj, field, strength) {
           const base = baseThunk(obj);
           const result = SimpleResult.map(
             fallbackAccess(obj, key, Fun.constant({})),
-            (v) => {
-              return Merger.deepMerge(base, v);
-            }
+            (v) => Merger.deepMerge(base, v)
           );
           return SimpleResult.bind(result, bundle);
         });
@@ -241,7 +237,7 @@ const objOf = function (fields: ValueProcessorAdt[]): Processor {
 const arrOf = function (prop: Processor): Processor {
   const extract = function (path, strength, array) {
     const results = Arr.map(array, function (a, i) {
-      return prop.extract(path.concat(['[' + i + ']' ]), strength, a);
+      return prop.extract(path.concat([ '[' + i + ']' ]), strength, a);
     });
     return ResultCombine.consolidateArr(results);
   };
@@ -323,7 +319,7 @@ const func = function (args: string[], schema: Processor, retriever): Processor 
 
   return {
     extract: delegate.extract,
-    toString () {
+    toString() {
       return 'function';
     }
   };

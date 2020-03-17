@@ -135,7 +135,7 @@ const deleteNormalized = (elm: Element, afterDeletePosOpt: Option<CaretPosition>
   // Merge and normalize any prev/next text nodes, so that they are merged and don't lose meaningful whitespace
   // eg. <p>a <span></span> b</p> -> <p>a &nsbp;b</p> or <p><span></span> a</p> -> <p>&nbsp;a</a>
   return Options.lift3(prevTextOpt, nextTextOpt, afterDeletePosOpt, (prev, next, pos) => {
-    const prevNode = prev.dom(), nextNode = next.dom();
+    const prevNode = prev.dom(); const nextNode = next.dom();
     const offset = prevNode.data.length;
     MergeText.mergeTextNodes(prevNode, nextNode, normalizeWhitespace);
     // Update the cursor position if required
@@ -152,7 +152,7 @@ const deleteNormalized = (elm: Element, afterDeletePosOpt: Option<CaretPosition>
 const isInlineElement = (editor: Editor, element: Element): boolean =>
   Obj.has(editor.schema.getTextInlineElements(), SugarNode.name(element));
 
-const deleteElement = (editor: Editor, forward: boolean, elm: Element, moveCaret: boolean = true) => {
+const deleteElement = (editor: Editor, forward: boolean, elm: Element, moveCaret = true) => {
   const afterDeletePos = findCaretPosOutsideElmAfterDelete(forward, editor.getBody(), elm.dom());
   const parentBlock = PredicateFind.ancestor(elm, Fun.curry(isBlock, editor), eqRawNode(editor.getBody()));
   const normalizedAfterDeletePos = deleteNormalized(elm, afterDeletePos, isInlineElement(editor, elm));

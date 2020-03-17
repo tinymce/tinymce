@@ -132,7 +132,7 @@ export default () => {
   const gridSpec = renderGrid({
     columns: 5,
     items: [
-      AlloyInput.sketch({ inputAttributes: { placeholder: 'Text goes here...' } }) as any,
+      AlloyInput.sketch({ inputAttributes: { placeholder: 'Text goes here...' }}) as any,
       renderButton({
         name: 'gridspecbutton',
         text: 'Click Me!',
@@ -279,19 +279,17 @@ export default () => {
     url: ''
   }, sharedBackstage.providers);
 
-  const display = (label: string, spec: SimpleSpec) => {
-    return {
-      dom: {
-        tag: 'div',
-        styles: { border: '1px solid #aaa', margin: '1em', padding: '1em' }
-      },
-      components: [
-        { dom: DomFactory.fromHtml('<h3>' + label + '</h3>') },
-        { dom: { tag: 'hr' } },
-        spec
-      ]
-    };
-  };
+  const display = (label: string, spec: SimpleSpec) => ({
+    dom: {
+      tag: 'div',
+      styles: { border: '1px solid #aaa', margin: '1em', padding: '1em' }
+    },
+    components: [
+      { dom: DomFactory.fromHtml('<h3>' + label + '</h3>') },
+      { dom: { tag: 'hr' }},
+      spec
+    ]
+  });
 
   const memCollection = Memento.record(
     renderCollection({

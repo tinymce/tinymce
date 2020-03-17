@@ -27,7 +27,7 @@ function modify(image: HTMLImageElement, op: string, args: any[]) {
   });
 }
 
-const forms = document.querySelectorAll('.options') as NodeListOf<HTMLFormElement>;
+const forms = document.querySelectorAll('.options');
 // tslint:disable-next-line:prefer-for-of
 for (let i = 0; i < forms.length; i++) {
   (function (form: HTMLFormElement) {

@@ -48,7 +48,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
               }
             },
 
-            fetch (input) {
+            fetch(input) {
               const text = Value.get(input.element()).toLowerCase();
               const future = Future.pure([
                 { type: 'item', data: { value: text + '1', meta: { text: Strings.capitalize(text) + '1' } } },
@@ -58,7 +58,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
               return future.map((f) => {
                 // TODO: Test this.
                 const items = text === 'no-data' ? [
-                  { type: 'separator', text: 'No data', data: { value: '', meta: { text: 'No data'} } }
+                  { type: 'separator', text: 'No data', data: { value: '', meta: { text: 'No data' } } }
                 ] : f;
 
                 const menu = TestDropdownMenu.renderMenu({
@@ -69,7 +69,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
               });
             },
 
-            lazySink (c) {
+            lazySink(c) {
               TestDropdownMenu.assertLazySinkArgs('input', 'test-typeahead', c);
               return Result.value(sink);
             },
@@ -88,12 +88,10 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
 
   }, (doc, body, gui, component, store) => {
 
-    const item = (key: string) => {
-      return {
-        selector: '.selected-item[data-value="' + key + '"]',
-        label: key
-      };
-    };
+    const item = (key: string) => ({
+      selector: '.selected-item[data-value="' + key + '"]',
+      label: key
+    });
 
     const typeahead = gui.getByUid('test-type').getOrDie();
 
@@ -248,5 +246,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
       GuiSetup.mRemoveStyles
 
     ];
-  }, () => { success(); }, failure);
+  }, () => {
+    success();
+  }, failure);
 });

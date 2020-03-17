@@ -13,12 +13,10 @@ import Editor from 'tinymce/core/api/Editor';
 
 import { ScopedToolbars } from './ContextToolbarScopes';
 
-export type LookupResult = { toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm, elem: Element };
+export interface LookupResult { toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm; elem: Element }
 
-const matchTargetWith = (elem: Element, toolbars: Array<Toolbar.ContextToolbar | Toolbar.ContextForm>): Option<LookupResult> => {
-  return Arr.findMap(toolbars, (toolbarApi) =>
-    toolbarApi.predicate(elem.dom()) ? Option.some({ toolbarApi, elem }) : Option.none());
-};
+const matchTargetWith = (elem: Element, toolbars: Array<Toolbar.ContextToolbar | Toolbar.ContextForm>): Option<LookupResult> => Arr.findMap(toolbars, (toolbarApi) =>
+  toolbarApi.predicate(elem.dom()) ? Option.some({ toolbarApi, elem }) : Option.none());
 
 const lookup = (scopes: ScopedToolbars, editor: Editor): Option<LookupResult> => {
   const rootElem = Element.fromDom(editor.getBody());
@@ -32,16 +30,14 @@ const lookup = (scopes: ScopedToolbars, editor: Editor): Option<LookupResult> =>
     return Option.none();
   }
 
-  return matchTargetWith(startNode, scopes.inNodeScope).orThunk(() => {
-    return matchTargetWith(startNode, scopes.inEditorScope).orThunk(() => {
-      // Don't continue to traverse if the start node is the root node
-      if (isRoot(startNode)) {
-        return Option.none();
-      } else {
-        return TransformFind.ancestor(startNode, (elem) => matchTargetWith(elem, scopes.inNodeScope), isRoot);
-      }
-    });
-  });
+  return matchTargetWith(startNode, scopes.inNodeScope).orThunk(() => matchTargetWith(startNode, scopes.inEditorScope).orThunk(() => {
+    // Don't continue to traverse if the start node is the root node
+    if (isRoot(startNode)) {
+      return Option.none();
+    } else {
+      return TransformFind.ancestor(startNode, (elem) => matchTargetWith(elem, scopes.inNodeScope), isRoot);
+    }
+  }));
 };
 
 export {

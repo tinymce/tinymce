@@ -48,9 +48,9 @@ const processChildElements = function (node: Node, filter, process) {
 const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject) {
   const formatList = ed.formatter.get(name);
   const format = formatList[0];
-  let bookmark, rng;
+  let bookmark; let rng;
   const isCollapsed = !node && ed.selection.isCollapsed();
-  const dom = ed.dom, selection: Selection = ed.selection;
+  const dom = ed.dom; const selection: Selection = ed.selection;
 
   const setElementFormat = function (elm: Node, fmt?) {
     fmt = fmt || format;
@@ -114,7 +114,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
 
   const applyRngStyle = function (dom: DOMUtils, rng: RangeLikeObject, bookmark: IdBookmark | IndexBookmark, nodeSpecific?: boolean) {
     const newWrappers: Node[] = [];
-    let wrapName: string, wrapElm: Node, contentEditable = true;
+    let wrapName: string; let wrapElm: Node; let contentEditable = true;
 
     // Setup wrapper element
     wrapName = format.inline || format.block;
@@ -259,7 +259,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
       };
 
       const mergeStyles = function (node: Node) {
-        let child, clone;
+        let child; let clone;
 
         child = getChildElementNode(node);
 

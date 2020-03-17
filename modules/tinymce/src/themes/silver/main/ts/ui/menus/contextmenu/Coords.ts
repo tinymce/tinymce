@@ -12,10 +12,10 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import { HTMLElement, MouseEvent, TouchEvent } from '@ephox/dom-globals';
 
-type Position = {
+interface Position {
   x: number;
   y: number;
-};
+}
 
 const nu = function (x: number, y: number): MakeshiftAnchorSpec {
   return {
@@ -74,10 +74,8 @@ export const getSelectionAnchor = function (editor: Editor): SelectionAnchorSpec
   };
 };
 
-export const getNodeAnchor = (editor: Editor): NodeAnchorSpec => {
-  return {
-    anchor: 'node',
-    node: Option.some(Element.fromDom(editor.selection.getNode())),
-    root: Element.fromDom(editor.getBody())
-  };
-};
+export const getNodeAnchor = (editor: Editor): NodeAnchorSpec => ({
+  anchor: 'node',
+  node: Option.some(Element.fromDom(editor.selection.getNode())),
+  root: Element.fromDom(editor.getBody())
+});

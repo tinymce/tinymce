@@ -19,8 +19,8 @@ function isContentEditableFalse(node: HTMLElement) {
 function findAndReplaceDOMText(regex: RegExp, node: Node, replacementNode: Node, captureGroup: number | false, schema: Schema) {
   let m;
   const matches = [];
-  let text, count = 0, doc;
-  let blockElementsMap, hiddenTextElementsMap, shortEndedElementsMap;
+  let text; let count = 0; let doc;
+  let blockElementsMap; let hiddenTextElementsMap; let shortEndedElementsMap;
 
   doc = node.ownerDocument;
   blockElementsMap = schema.getBlockElements(); // H1-H6, P, TD etc
@@ -47,7 +47,7 @@ function findAndReplaceDOMText(regex: RegExp, node: Node, replacementNode: Node,
       m[0] = cg;
     }
 
-    return [index, index + m[0].length, [m[0]]];
+    return [ index, index + m[0].length, [ m[0] ]];
   }
 
   function getText(node) {
@@ -81,9 +81,9 @@ function findAndReplaceDOMText(regex: RegExp, node: Node, replacementNode: Node,
   }
 
   function stepThroughMatches(node, matches, replaceFn) {
-    let startNode, endNode, startNodeIndex,
-      endNodeIndex, innerNodes = [], atIndex = 0, curNode = node,
-      matchLocation = matches.shift(), matchIndex = 0;
+    let startNode; let endNode; let startNodeIndex;
+    let endNodeIndex; let innerNodes = []; let atIndex = 0; let curNode = node;
+    let matchLocation = matches.shift(); let matchIndex = 0;
 
     out: while (true) {
       if (blockElementsMap[curNode.nodeName] || shortEndedElementsMap[curNode.nodeName] || isContentEditableFalse(curNode)) {

@@ -98,8 +98,8 @@ const extractRows = function (table, sx, sy, ex, ey) {
 };
 
 const subTable = function (table, startPos, endPos) {
-  const sx = startPos.x(), sy = startPos.y();
-  const ex = endPos.x(), ey = endPos.y();
+  const sx = startPos.x(); const sy = startPos.y();
+  const ex = endPos.x(); const ey = endPos.y();
   const newRows = sy < ey ? extractRows(table, sx, sy, ex, ey) : extractRows(table, sx, ey, ex, sy);
 
   return tableModel(table.element(), getWidth(newRows), newRows);

@@ -10,17 +10,17 @@ UnitTest.test('SubsetTest', function () {
       Gene('one', 'li', [
         TextGene('1-text', 'One')
       ]),
-      Gene('two', 'li', [TextGene('2-text', 'Two')]),
+      Gene('two', 'li', [ TextGene('2-text', 'Two') ]),
       Gene('three-five', 'ol', [
-        Gene('three', 'li', [TextGene('3-text', 'three')]),
-        Gene('four', 'li', [TextGene('4-text', 'four')]),
-        Gene('five', 'li', [TextGene('5-text', 'five')])
+        Gene('three', 'li', [ TextGene('3-text', 'three') ]),
+        Gene('four', 'li', [ TextGene('4-text', 'four') ]),
+        Gene('five', 'li', [ TextGene('5-text', 'five') ])
       ]),
-      Gene('six', 'li', [TextGene('6-text', 'six')]),
+      Gene('six', 'li', [ TextGene('6-text', 'six') ]),
       Gene('seven-nine', 'ol', [
         Gene('seven-eight', 'ol', [
-          Gene('seven', 'li', [TextGene('7-text', 'seven')]),
-          Gene('eight', 'li', [TextGene('8-text', 'eight')])
+          Gene('seven', 'li', [ TextGene('7-text', 'seven') ]),
+          Gene('eight', 'li', [ TextGene('8-text', 'eight') ])
         ])
       ])
     ])
@@ -34,9 +34,9 @@ UnitTest.test('SubsetTest', function () {
     KAssert.eqOption('eq', expected, actual);
   };
 
-  check(Option.some(['three-five']), 'three-five', 'five');
-  check(Option.some(['three-five']), 'five', 'three-five');
-  check(Option.some(['two', 'three-five']), 'two', 'five');
-  check(Option.some(['two', 'three-five']), 'two', 'four');
-  check(Option.some(['two', 'three-five', 'six', 'seven-nine']), 'two', 'eight');
+  check(Option.some([ 'three-five' ]), 'three-five', 'five');
+  check(Option.some([ 'three-five' ]), 'five', 'three-five');
+  check(Option.some([ 'two', 'three-five' ]), 'two', 'five');
+  check(Option.some([ 'two', 'three-five' ]), 'two', 'four');
+  check(Option.some([ 'two', 'three-five', 'six', 'seven-nine' ]), 'two', 'eight');
 });

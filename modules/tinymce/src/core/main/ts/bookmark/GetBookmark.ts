@@ -24,7 +24,7 @@ type TrimFn = (s: string) => string;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 
 const getNormalizedTextOffset = function (trim: TrimFn, container: Text, offset: number): number {
-  let node, trimmedOffset;
+  let node; let trimmedOffset;
 
   trimmedOffset = trim(container.data.slice(0, offset)).length;
   for (node = container.previousSibling; node && NodeType.isText(node); node = node.previousSibling) {
@@ -38,7 +38,7 @@ const getPoint = function (dom: DOMUtils, trim: TrimFn, normalized: boolean, rng
   let container = rng[start ? 'startContainer' : 'endContainer'];
   let offset = rng[start ? 'startOffset' : 'endOffset'];
   const point = [];
-  let  childNodes, after = 0;
+  let  childNodes; let after = 0;
   const root = dom.getRoot();
 
   if (NodeType.isText(container)) {
@@ -62,7 +62,7 @@ const getPoint = function (dom: DOMUtils, trim: TrimFn, normalized: boolean, rng
 };
 
 const getLocation = function (trim: TrimFn, selection: Selection, normalized: boolean, rng: Range): PathBookmark {
-  const dom = selection.dom, bookmark: any = {};
+  const dom = selection.dom; const bookmark: any = {};
 
   bookmark.start = getPoint(dom, trim, normalized, rng, true);
 
@@ -92,7 +92,7 @@ const findIndex = function (dom: DOMUtils, name: string, element: Element) {
 };
 
 const moveEndPoint = function (rng: Range, start: boolean) {
-  let container, offset, childNodes;
+  let container; let offset; let childNodes;
   const prefix = start ? 'start' : 'end';
 
   container = rng[prefix + 'Container'];
@@ -178,7 +178,7 @@ const getRangeBookmark = function (selection: Selection): RangeBookmark {
 };
 
 const createBookmarkSpan = (dom: DOMUtils, id: string, filled: boolean) => {
-  const args = { 'data-mce-type': 'bookmark', 'id': id, 'style': 'overflow:hidden;line-height:0px' };
+  const args = { 'data-mce-type': 'bookmark', id, 'style': 'overflow:hidden;line-height:0px' };
   return filled ? dom.create('span', args, '&#xFEFF;') : dom.create('span', args);
 };
 

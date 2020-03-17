@@ -19,10 +19,7 @@ import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 
 UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
-    return Sinks.relativeSink();
-
-  }, (doc, body, gui, component, store) => {
+  GuiSetup.setup((store, doc, body) => Sinks.relativeSink(), (doc, body, gui, component, store) => {
     const anchor = GuiFactory.build({
       dom: {
         tag: 'div',
@@ -44,7 +41,7 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
           classes: [ 'test-inline' ]
         },
 
-        lazySink () {
+        lazySink() {
           return Result.value(component);
         },
 
@@ -67,7 +64,7 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
           classes: [ 'test-inline2' ]
         },
 
-        lazySink () {
+        lazySink() {
           return Result.value(component);
         }
       })
@@ -75,32 +72,28 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
 
     gui.add(anchor);
 
-    const sCheckOpen = (label: string, component: AlloyComponent, selector: string) => {
-      return Logger.t(
-        label,
-        GeneralSteps.sequence([
-          Waiter.sTryUntil(
-            'Test inline should not be DOM',
-            UiFinder.sExists(gui.element(), selector)
-          ),
-          Step.sync(() => {
-            Assertions.assertEq('Checking isOpen API', true, InlineView.isOpen(component));
-          })
-        ])
-      );
-    };
-
-    const sCheckPosition = (label: string, element: Element, x: number, y: number) => {
-      return Logger.t(
-        label,
+    const sCheckOpen = (label: string, component: AlloyComponent, selector: string) => Logger.t(
+      label,
+      GeneralSteps.sequence([
+        Waiter.sTryUntil(
+          'Test inline should not be DOM',
+          UiFinder.sExists(gui.element(), selector)
+        ),
         Step.sync(() => {
-          const top = parseInt(Css.get(element, 'top').replace('px', ''), 10);
-          const left = parseInt(Css.get(element, 'left').replace('px', ''), 10);
-          Assertions.assertEq('Checking top position', y, top);
-          Assertions.assertEq('Checking left position', x, left);
+          Assertions.assertEq('Checking isOpen API', true, InlineView.isOpen(component));
         })
-      );
-    };
+      ])
+    );
+
+    const sCheckPosition = (label: string, element: Element, x: number, y: number) => Logger.t(
+      label,
+      Step.sync(() => {
+        const top = parseInt(Css.get(element, 'top').replace('px', ''), 10);
+        const left = parseInt(Css.get(element, 'left').replace('px', ''), 10);
+        Assertions.assertEq('Checking top position', y, top);
+        Assertions.assertEq('Checking left position', x, left);
+      })
+    );
 
     const anchorSpec: NodeAnchorSpec = {
       anchor: 'node',
@@ -137,7 +130,7 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
 
           sCheckOpen('Dialog should still be open', inline, '.test-inline'),
           sCheckPosition('Check inline view has not moved', inline.element(), 200, 210),
-          store.sAssertEq('Broadcasting SHOULD fire reposition event', [ 'test-reposition-fired' ]),
+          store.sAssertEq('Broadcasting SHOULD fire reposition event', [ 'test-reposition-fired' ])
         ])
       ),
 

@@ -40,13 +40,13 @@ const build = (refresh, scrollIntoView): DropUp => {
           dimension: {
             property: 'height'
           },
-          onShrunk (component) {
+          onShrunk(component) {
             refresh();
             scrollIntoView();
 
             Replacing.set(component, [ ]);
           },
-          onGrown (component) {
+          onGrown(component) {
             refresh();
             scrollIntoView();
           }
@@ -56,7 +56,7 @@ const build = (refresh, scrollIntoView): DropUp => {
         })
       ])
     })
-  ) as AlloyComponent;
+  );
 
   const appear = (menu, update, component) => {
     if (Sliding.hasShrunk(dropup) === true && Sliding.isTransitioning(dropup) === false) {

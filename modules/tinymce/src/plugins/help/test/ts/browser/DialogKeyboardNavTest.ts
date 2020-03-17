@@ -22,13 +22,11 @@ UnitTest.asynctest('browser.tinymce.plugins.help.DialogKeyboardNavTest', (succes
     const sPressDownArrowKey = Keyboard.sKeydown(doc, Keys.down(), { });
 
     // Assert focus is on the expected form element
-    const sAssertFocusOnItem = (label, selector) => {
-      return FocusTools.sTryOnSelector(
-        `Focus should be on: ${label}`,
-        doc,
-        selector
-      );
-    };
+    const sAssertFocusOnItem = (label, selector) => FocusTools.sTryOnSelector(
+      `Focus should be on: ${label}`,
+      doc,
+      selector
+    );
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Help: Open dialog', [
@@ -80,9 +78,9 @@ UnitTest.asynctest('browser.tinymce.plugins.help.DialogKeyboardNavTest', (succes
       ])
     ], onSuccess, onFailure);
   }, {
-      plugins: 'help',
-      toolbar: 'help',
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce'
-    }, success, failure);
+    plugins: 'help',
+    toolbar: 'help',
+    theme: 'silver',
+    base_url: '/project/tinymce/js/tinymce'
+  }, success, failure);
 });

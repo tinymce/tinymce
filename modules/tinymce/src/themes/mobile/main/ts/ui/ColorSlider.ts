@@ -80,11 +80,9 @@ const makeSlider = (spec): SketchSpec => {
       mode: 'x',
       minX: 0,
       maxX: 360,
-      getInitialValue: () => {
-        return {
-          x: () => spec.getInitialValue()
-        };
-      }
+      getInitialValue: () => ({
+        x: () => spec.getInitialValue()
+      })
     },
 
     sliderBehaviours: Behaviour.derive([
@@ -93,11 +91,9 @@ const makeSlider = (spec): SketchSpec => {
   });
 };
 
-const makeItems = (spec): SketchSpec[] => {
-  return [
-    makeSlider(spec)
-  ];
-};
+const makeItems = (spec): SketchSpec[] => [
+  makeSlider(spec)
+];
 
 const sketch = (realm: MobileRealm, editor: Editor) => {
   const spec = {

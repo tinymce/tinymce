@@ -9,28 +9,23 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('TabstoppingTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build(
-      Container.sketch({
-        containerBehaviours: Behaviour.derive([
-          Tabstopping.config({ })
-        ])
-      })
-    );
-
-  }, (doc, body, gui, component, store) => {
-    return [
-      Assertions.sAssertStructure(
-        'Check initial tabstopping values',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            attrs: {
-              'data-alloy-tabstop': str.is('true')
-            }
-          });
-        }),
-        component.element()
-      )
-    ];
-  }, () => { success(); }, failure);
+  GuiSetup.setup((store, doc, body) => GuiFactory.build(
+    Container.sketch({
+      containerBehaviours: Behaviour.derive([
+        Tabstopping.config({ })
+      ])
+    })
+  ), (doc, body, gui, component, store) => [
+    Assertions.sAssertStructure(
+      'Check initial tabstopping values',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        attrs: {
+          'data-alloy-tabstop': str.is('true')
+        }
+      })),
+      component.element()
+    )
+  ], () => {
+    success();
+  }, failure);
 });

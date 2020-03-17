@@ -13,21 +13,19 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 UnitTest.asynctest('Cyclic Keying Test', (success, failure) => {
 
   GuiSetup.setup((store, doc, body) => {
-    const makeButton = (v: string, t: string) => {
-      return Button.sketch({
-        dom: { tag: 'button', innerHtml: t },
-        action: store.adder(v + '.clicked'),
-        buttonBehaviours: Behaviour.derive([
-          Tabstopping.config({ })
-        ])
-      });
-    };
+    const makeButton = (v: string, t: string) => Button.sketch({
+      dom: { tag: 'button', innerHtml: t },
+      action: store.adder(v + '.clicked'),
+      buttonBehaviours: Behaviour.derive([
+        Tabstopping.config({ })
+      ])
+    });
 
     return GuiFactory.build(
       Container.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'cyclic-keying-test'],
+          classes: [ 'cyclic-keying-test' ],
           styles: {
             background: 'blue',
             width: '200px',
@@ -64,60 +62,58 @@ UnitTest.asynctest('Cyclic Keying Test', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
-    return [
-      GuiSetup.mSetupKeyLogger(body),
-      Step.sync(() => {
-        Keying.focusIn(component);
-      }),
-      FocusTools.sTryOnSelector(
-        'Focus should be on button 1 after focusIn',
-        doc,
-        'button:contains("Button1")'
-      ),
-      Keyboard.sKeydown(doc, Keys.tab(), {}),
-      FocusTools.sTryOnSelector(
-        'Focus should move from button 1 to button 2',
-        doc,
-        'button:contains("Button2")'
-      ),
-      Keyboard.sKeydown(doc, Keys.tab(), {}),
-      FocusTools.sTryOnSelector(
-        'Focus should move from button 2 to span',
-        doc,
-        'span.focusable-span'
-      ),
+  }, (doc, body, gui, component, store) => [
+    GuiSetup.mSetupKeyLogger(body),
+    Step.sync(() => {
+      Keying.focusIn(component);
+    }),
+    FocusTools.sTryOnSelector(
+      'Focus should be on button 1 after focusIn',
+      doc,
+      'button:contains("Button1")'
+    ),
+    Keyboard.sKeydown(doc, Keys.tab(), {}),
+    FocusTools.sTryOnSelector(
+      'Focus should move from button 1 to button 2',
+      doc,
+      'button:contains("Button2")'
+    ),
+    Keyboard.sKeydown(doc, Keys.tab(), {}),
+    FocusTools.sTryOnSelector(
+      'Focus should move from button 2 to span',
+      doc,
+      'span.focusable-span'
+    ),
 
-      Keyboard.sKeydown(doc, Keys.tab(), {}),
-      FocusTools.sTryOnSelector(
-        'Focus should move from span to button 1',
-        doc,
-        'button:contains("Button1")'
-      ),
+    Keyboard.sKeydown(doc, Keys.tab(), {}),
+    FocusTools.sTryOnSelector(
+      'Focus should move from span to button 1',
+      doc,
+      'button:contains("Button1")'
+    ),
 
-      Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
-      FocusTools.sTryOnSelector(
-        'Focus should move from button1 to span',
-        doc,
-        'span.focusable-span'
-      ),
+    Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
+    FocusTools.sTryOnSelector(
+      'Focus should move from button1 to span',
+      doc,
+      'span.focusable-span'
+    ),
 
-      Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
-      FocusTools.sTryOnSelector(
-        'Focus should move from span to button 2',
-        doc,
-        'button:contains("Button2")'
-      ),
+    Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
+    FocusTools.sTryOnSelector(
+      'Focus should move from span to button 2',
+      doc,
+      'button:contains("Button2")'
+    ),
 
-      Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
-      FocusTools.sTryOnSelector(
-        'Focus should move from button2 to button 1',
-        doc,
-        'button:contains("Button1")'
-      ),
-      GuiSetup.mTeardownKeyLogger(body, [ ])
-    ];
-  }, () => {
+    Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
+    FocusTools.sTryOnSelector(
+      'Focus should move from button2 to button 1',
+      doc,
+      'button:contains("Button1")'
+    ),
+    GuiSetup.mTeardownKeyLogger(body, [ ])
+  ], () => {
     success();
   }, failure);
 });

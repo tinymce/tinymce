@@ -41,7 +41,7 @@ const findElementSibling = function (node: Node, siblingName: 'nextSibling' | 'p
 };
 
 const mergeSiblingsNodes = function (dom: DOMUtils, prev: Node, next: Node) {
-  let sibling, tmpSibling;
+  let sibling; let tmpSibling;
   const elementUtils = new ElementUtils(dom);
 
   // Check if next/prev exists and that they are elements

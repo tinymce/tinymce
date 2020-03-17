@@ -25,7 +25,7 @@ const create = function (rootNode, targetNode, normalized?) {
 };
 
 const resolve = function (rootNode, path) {
-  let i, node, children;
+  let i; let node; let children;
 
   for (node = rootNode, i = path.length - 1; i >= 0; i--) {
     children = node.childNodes;

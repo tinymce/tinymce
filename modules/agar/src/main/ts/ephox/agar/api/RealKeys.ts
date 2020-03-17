@@ -19,9 +19,9 @@ const adt: {
   text: (s: string) => KeyPressAdt;
   backspace: () => KeyPressAdt;
 } = Adt.generate([
-  {combo: ['modifiers', 'letter']},
-  {text: ['s']},
-  {backspace: []}
+  { combo: [ 'modifiers', 'letter' ] },
+  { text: [ 's' ] },
+  { backspace: [] }
 ]);
 
 interface Modifiers {
@@ -47,7 +47,7 @@ const toSimpleFormat = (keys: KeyPressAdt[]) =>
       altKey: modifiers.altKey().getOr(false),
       key: letter
     }
-  }), (s: string) => ({text: s}), () => ({text: '\u0008'})));
+  }), (s: string) => ({ text: s }), () => ({ text: '\u0008' })));
 
 const sSendKeysOn = <T>(selector: string, keys: KeyPressAdt[]): Step<T, T> =>
   SeleniumAction.sPerform<T>('/keys', {

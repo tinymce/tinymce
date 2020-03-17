@@ -64,14 +64,14 @@ function removeExplorerBrElementsAfterBlocks(editor: Editor, html: string) {
 
   // Remove BR:s from: <BLOCK>X</BLOCK><BR>
   html = Utils.filter(html, [
-    [explorerBlocksRegExp, '$1']
+    [ explorerBlocksRegExp, '$1' ]
   ]);
 
   // IE9 also adds an extra BR element for each soft-linefeed and it also adds a BR for each word wrap break
   html = Utils.filter(html, [
-    [/<br><br>/g, '<BR><BR>'], // Replace multiple BR elements with uppercase BR to keep them intact
-    [/<br>/g, ' '],            // Replace single br elements with space since they are word wrap BR:s
-    [/<BR><BR>/g, '<br>']      // Replace back the double brs but into a single BR
+    [ /<br><br>/g, '<BR><BR>' ], // Replace multiple BR elements with uppercase BR to keep them intact
+    [ /<br>/g, ' ' ],            // Replace single br elements with space since they are word wrap BR:s
+    [ /<BR><BR>/g, '<br>' ]      // Replace back the double brs but into a single BR
   ]);
 
   return html;
@@ -106,7 +106,7 @@ function removeWebKitStyles(editor: Editor, content: string, internal: boolean, 
 
   // Keep specific styles that doesn't match the current node computed style
   if (webKitStyles) {
-    const dom = editor.dom, node = editor.selection.getNode();
+    const dom = editor.dom; const node = editor.selection.getNode();
 
     content = content.replace(/(<[^>]+) style="([^"]*)"([^>]*>)/gi, function (all, before, value, after) {
       const inputStyles = dom.parseStyle(dom.decode(value));
@@ -117,10 +117,10 @@ function removeWebKitStyles(editor: Editor, content: string, internal: boolean, 
       }
 
       for (let i = 0; i < webKitStyles.length; i++) {
-        let inputValue = inputStyles[webKitStyles[i]], currentValue = dom.getStyle(node, webKitStyles[i], true);
+        let inputValue = inputStyles[webKitStyles[i]]; let currentValue = dom.getStyle(node, webKitStyles[i], true);
 
         if (/color/.test(webKitStyles[i])) {
-          inputValue = dom.toHex(inputValue as string);
+          inputValue = dom.toHex(inputValue);
           currentValue = dom.toHex(currentValue);
         }
 

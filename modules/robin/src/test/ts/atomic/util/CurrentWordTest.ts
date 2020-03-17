@@ -3,7 +3,7 @@ import { Option } from '@ephox/katamari';
 import * as CurrentWord from 'ephox/robin/util/CurrentWord';
 
 UnitTest.test('CurrentWordTest', function () {
-  const check = function (expected: { before: Option<number>, after: Option<number> }, text: string, position: number) {
+  const check = function (expected: { before: Option<number>; after: Option<number> }, text: string, position: number) {
     const actual = CurrentWord.around(text, position);
     Assert.eq(
       'Checking before :: Option',

@@ -19,8 +19,8 @@ interface Group {
   selectors: {};
   filter: (value: string) => boolean;
   item: {
-    text: string,
-    menu: []
+    text: string;
+    menu: [];
   };
 }
 
@@ -35,7 +35,7 @@ const removeCacheSuffix = function (url: string) {
 };
 
 const isSkinContentCss = function (editor: Editor, href: string) {
-  const settings = editor.settings, skin = settings.skin !== false ? settings.skin || 'oxide' : false;
+  const settings = editor.settings; const skin = settings.skin !== false ? settings.skin || 'oxide' : false;
 
   if (skin) {
     const skinUrl = settings.skin_url ? editor.documentBaseURI.toAbsolute(settings.skin_url) : EditorManager.baseURL + '/skins/ui/' + skin;
@@ -61,10 +61,10 @@ const compileFilter = function (filter: string | RegExp | Function) {
 };
 
 const getSelectors = function (editor: Editor, doc, fileFilter) {
-  const selectors = [], contentCSSUrls = {};
+  const selectors = []; const contentCSSUrls = {};
 
   function append(styleSheet, imported?) {
-    let href = styleSheet.href, rules;
+    let href = styleSheet.href; let rules;
 
     href = removeCacheSuffix(href);
 

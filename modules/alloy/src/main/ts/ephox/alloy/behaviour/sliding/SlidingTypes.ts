@@ -47,7 +47,7 @@ export interface SlidingState extends BehaviourState {
 
 export interface SlidingConfigSpec extends Behaviour.BehaviourConfigSpec {
   dimension: {
-    property: string
+    property: string;
   };
   closedClass: string;
   openClass: string;

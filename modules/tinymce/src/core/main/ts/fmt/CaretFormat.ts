@@ -23,7 +23,7 @@ import { isCaretNode, getParentCaretContainer } from './FormatContainer';
 import * as DeleteElement from '../delete/DeleteElement';
 import { FormatVars } from '../api/fmt/Format';
 
-const ZWSP = Zwsp.ZWSP, CARET_ID = '_mce_caret';
+const ZWSP = Zwsp.ZWSP; const CARET_ID = '_mce_caret';
 
 const importNode = function (ownerDocument: Document, node: Node) {
   return ownerDocument.importNode(node, true);
@@ -92,8 +92,8 @@ const trimZwspFromCaretContainer = function (caretContainerNode: Node) {
   return textNode;
 };
 
-const removeCaretContainerNode = (editor: Editor, node: Node, moveCaret: boolean = true) => {
-  const dom = editor.dom, selection = editor.selection;
+const removeCaretContainerNode = (editor: Editor, node: Node, moveCaret = true) => {
+  const dom = editor.dom; const selection = editor.selection;
 
   if (isCaretContainerEmpty(node)) {
     DeleteElement.deleteElement(editor, false, Element.fromDom(node), moveCaret);
@@ -121,8 +121,8 @@ const removeCaretContainerNode = (editor: Editor, node: Node, moveCaret: boolean
 };
 
 // Removes the caret container for the specified node or all on the current document
-const removeCaretContainer = function (editor: Editor, node: Node, moveCaret: boolean = true) {
-  const dom = editor.dom, selection = editor.selection;
+const removeCaretContainer = function (editor: Editor, node: Node, moveCaret = true) {
+  const dom = editor.dom; const selection = editor.selection;
   if (!node) {
     node = getParentCaretContainer(editor.getBody(), selection.getStart());
 
@@ -137,7 +137,7 @@ const removeCaretContainer = function (editor: Editor, node: Node, moveCaret: bo
 };
 
 const insertCaretContainerNode = function (editor: Editor, caretContainer: Node, formatNode: Node) {
-  const dom = editor.dom, block = dom.getParent(formatNode, Fun.curry(FormatUtils.isTextBlock, editor));
+  const dom = editor.dom; const block = dom.getParent(formatNode, Fun.curry(FormatUtils.isTextBlock, editor));
 
   if (block && dom.isEmpty(block)) {
     // Replace formatNode with caretContainer when removing format from empty block like <p><b>|</b></p>
@@ -166,7 +166,7 @@ const insertFormatNodesIntoCaretContainer = function (formatNodes: Node[], caret
 };
 
 const applyCaretFormat = function (editor: Editor, name: string, vars: FormatVars) {
-  let rng, caretContainer, textNode, offset, bookmark, container, text;
+  let rng; let caretContainer; let textNode; let offset; let bookmark; let container; let text;
   const selection = editor.selection;
 
   rng = selection.getRng();
@@ -218,10 +218,10 @@ const applyCaretFormat = function (editor: Editor, name: string, vars: FormatVar
 };
 
 const removeCaretFormat = function (editor: Editor, name: string, vars: FormatVars, similar: boolean) {
-  const dom = editor.dom, selection: Selection = editor.selection;
-  let container, offset, bookmark;
-  let hasContentAfter, node, formatNode;
-  const parents = [], rng = selection.getRng();
+  const dom = editor.dom; const selection: Selection = editor.selection;
+  let container; let offset; let bookmark;
+  let hasContentAfter; let node; let formatNode;
+  const parents = []; const rng = selection.getRng();
   let caretContainer;
 
   container = rng.startContainer;
@@ -291,7 +291,7 @@ const removeCaretFormat = function (editor: Editor, name: string, vars: FormatVa
 };
 
 const disableCaretContainer = function (editor: Editor, keyCode: number) {
-  const selection = editor.selection, body = editor.getBody();
+  const selection = editor.selection; const body = editor.getBody();
 
   removeCaretContainer(editor, null, false);
 

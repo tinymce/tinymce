@@ -12,22 +12,22 @@ export interface Selection {
     exact: (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => U
   ) => U;
   match: <U> (branches: {
-    domRange: (rng: Range) => U,
-    relative: (startSitu: Situ, finishSitu: Situ) => U,
-    exact: (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => U
+    domRange: (rng: Range) => U;
+    relative: (startSitu: Situ, finishSitu: Situ) => U;
+    exact: (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => U;
   }) => U;
   log: (label: string) => void;
 }
 
 // Consider adding a type for "element"
 const adt: {
-  domRange: (rng: Range) => Selection,
-  relative: (startSitu: Situ, finishSitu: Situ) => Selection,
-  exact: (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => Selection
+  domRange: (rng: Range) => Selection;
+  relative: (startSitu: Situ, finishSitu: Situ) => Selection;
+  exact: (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => Selection;
 } = Adt.generate([
-  { domRange: ['rng'] },
-  { relative: ['startSitu', 'finishSitu'] },
-  { exact: ['start', 'soffset', 'finish', 'foffset'] }
+  { domRange: [ 'rng' ] },
+  { relative: [ 'startSitu', 'finishSitu' ] },
+  { exact: [ 'start', 'soffset', 'finish', 'foffset' ] }
 ]);
 
 const exactFromRange = function (simRange: SimRange) {

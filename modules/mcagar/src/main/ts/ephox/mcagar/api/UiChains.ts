@@ -34,27 +34,23 @@ const cGetToolbarRoot: Chain<Editor, Element> = NamedChain.asChain([
   NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
   NamedChain.direct('editor', cToolstripRoot, 'container'),
   NamedChain.merge([ 'editor', 'container' ], 'data'),
-  NamedChain.direct('data', Chain.binder((data: { editor: Editor, container: Element<HTMLElement> }) => {
-    return UiFinder.findIn(data.container, getThemeSelectors().toolBarSelector(data.editor));
-  }), 'toolbar'),
+  NamedChain.direct('data', Chain.binder((data: { editor: Editor; container: Element<HTMLElement> }) => UiFinder.findIn(data.container, getThemeSelectors().toolBarSelector(data.editor))), 'toolbar'),
   NamedChain.output('toolbar')
 ]);
 
 const cGetMenuRoot = Chain.fromChains<Editor, Element>([
   cToolstripRoot,
-  Chain.binder((container: Element) => {
-    return UiFinder.findIn(container, getThemeSelectors().menuBarSelector);
-  })
+  Chain.binder((container: Element) => UiFinder.findIn(container, getThemeSelectors().menuBarSelector))
 ]);
 
-const cClickOnWithin = function <T>(label: string, selector: string, cContext: Chain<T, Element>): Chain<T, T> {
-    return NamedChain.asChain([
-      NamedChain.direct(NamedChain.inputName(), cContext, 'context'),
-      NamedChain.direct('context', UiFinder.cFindIn(selector), 'ui'),
-      NamedChain.direct('ui', Mouse.cClick, '_'),
-      NamedChain.outputInput
-    ]);
-  };
+const cClickOnWithin = function <T> (label: string, selector: string, cContext: Chain<T, Element>): Chain<T, T> {
+  return NamedChain.asChain([
+    NamedChain.direct(NamedChain.inputName(), cContext, 'context'),
+    NamedChain.direct('context', UiFinder.cFindIn(selector), 'ui'),
+    NamedChain.direct('ui', Mouse.cClick, '_'),
+    NamedChain.outputInput
+  ]);
+};
 
 const cClickOnUi = function <T> (label: string, selector: string) {
   return cClickOnWithin<T>(label, selector, cDialogRoot);
@@ -68,7 +64,7 @@ const cClickOnMenu = function <T extends Editor> (label: string, selector: strin
   return cClickOnWithin<T>(label, selector, cGetMenuRoot);
 };
 
-const cWaitForState = function <T>(hasState: (element: Element) => boolean) {
+const cWaitForState = function <T> (hasState: (element: Element) => boolean) {
   return function (label: string, selector: string): Chain<T, T> {
     return NamedChain.asChain([
       NamedChain.write('element', Chain.fromChains([
@@ -117,13 +113,9 @@ const cClickPopupButton = function (btnType: 'dialogCloseSelector' | 'dialogSubm
   ]);
 };
 
-const cCloseDialog = (selector: string) => {
-  return cClickPopupButton('dialogCloseSelector', selector);
-};
+const cCloseDialog = (selector: string) => cClickPopupButton('dialogCloseSelector', selector);
 
-const cSubmitDialog = (selector?: string) => {
-  return cClickPopupButton('dialogSubmitSelector', selector);
-};
+const cSubmitDialog = (selector?: string) => cClickPopupButton('dialogSubmitSelector', selector);
 
 export const UiChains: UiChains = {
   cClickOnToolbar,

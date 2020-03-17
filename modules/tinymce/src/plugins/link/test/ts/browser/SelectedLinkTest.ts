@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.SelectedLinkTest', (success, fa
       Log.steps('TBA', 'Link: should not get anchor info if not selected node', [
         TestLinkUi.sClearHistory,
         tinyApis.sSetContent('<p><a href="http://tinymce.com">tiny</a></p>'),
-        tinyApis.sSetSelection([0], 1, [0], 1),
+        tinyApis.sSetSelection([ 0 ], 1, [ 0 ], 1),
         tinyApis.sExecCommand('mcelink'),
         TestLinkUi.sAssertDialogContents({
           href: '',
@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.SelectedLinkTest', (success, fa
         }),
         TestLinkUi.sClearHistory
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'link',
     toolbar: '',

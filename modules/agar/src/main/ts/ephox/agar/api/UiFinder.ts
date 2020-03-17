@@ -17,7 +17,7 @@ const cWaitFor = (message: string, selector: string): Chain<Element<any>, Elemen
   cWaitForState(message, selector, Fun.constant(true));
 
 const sWaitFor = <T>(message: string, container: Element<any>, selector: string): Step<T, T> =>
-  Chain.asStep<T, Element>(container, [cWaitFor(message, selector)]);
+  Chain.asStep<T, Element>(container, [ cWaitFor(message, selector) ]);
 
 const cWaitForVisible = (message: string, selector: string): Chain<Element<any>, Element<any>> =>
   cWaitForState(message, selector, Visibility.isVisible);
@@ -27,10 +27,10 @@ const cWaitForHidden = (message: string, selector: string): Chain<Element<any>, 
   cWaitForState(message, selector, Fun.not(Visibility.isVisible));
 
 const sWaitForVisible = <T>(message: string, container: Element<any>, selector: string): Step<T, T> =>
-  Chain.asStep<T, Element>(container, [cWaitForVisible(message, selector)]);
+  Chain.asStep<T, Element>(container, [ cWaitForVisible(message, selector) ]);
 
 const sWaitForHidden = <T>(message: string, container: Element<any>, selector: string): Step<T, T> =>
-  Chain.asStep<T, Element>(container, [cWaitForHidden(message, selector)]);
+  Chain.asStep<T, Element>(container, [ cWaitForHidden(message, selector) ]);
 
 const cHasState = <T> (predicate: (element: Element<T>) => boolean): Chain<Element<T>, Element<T>> =>
   Chain.binder((element) => predicate(element) ? Result.value(element) :

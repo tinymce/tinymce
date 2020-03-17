@@ -91,7 +91,7 @@ const getTargetFromShadowDom = function (event, defaultTarget) {
 /**
  * Normalizes a native event object or just adds the event specific methods on a custom event.
  */
-const fix = function <T extends any>(originalEvent: T, data?): EventUtilsEvent<T> {
+const fix = function <T extends any> (originalEvent: T, data?): EventUtilsEvent<T> {
   let name;
   const event = data || {};
 
@@ -180,7 +180,7 @@ const fix = function <T extends any>(originalEvent: T, data?): EventUtilsEvent<T
  * It will also set/check the domLoaded state of the event_utils instance so ready isn't called multiple times.
  */
 const bindOnReady = function (win, callback, eventUtils) {
-  const doc = win.document, event = { type: 'ready' };
+  const doc = win.document; const event = { type: 'ready' };
 
   if (eventUtils.domLoaded) {
     callback(event);
@@ -249,16 +249,16 @@ class EventUtils {
   public static Event: EventUtils = new EventUtils();
 
   // State if the DOMContentLoaded was executed or not
-  public domLoaded: boolean = false;
+  public domLoaded = false;
   public events: Record<string, any> = {};
 
   private readonly expando;
   private hasFocusIn: boolean;
   private hasMouseEnterLeave: boolean;
-  private mouseEnterLeave: { mouseenter: 'mouseover', mouseleave: 'mouseout' };
-  private count: number = 1;
+  private mouseEnterLeave: { mouseenter: 'mouseover'; mouseleave: 'mouseout' };
+  private count = 1;
 
-  constructor () {
+  constructor() {
     this.expando = eventExpandoPrefix + (+new Date()).toString(32);
     this.hasMouseEnterLeave = 'onmouseenter' in document.documentElement;
     this.hasFocusIn = 'onfocusin' in document.documentElement;
@@ -277,9 +277,9 @@ class EventUtils {
    */
   public bind <K extends keyof HTMLElementEventMap>(target: any, name: K, callback: EventUtilsCallback<HTMLElementEventMap[K]>, scope?: {}): EventUtilsCallback<HTMLElementEventMap[K]>;
   public bind <T = any>(target: any, names: string, callback: EventUtilsCallback<T>, scope?: {}): EventUtilsCallback<T>;
-  public bind (target: any, names: string, callback: EventUtilsCallback<any>, scope?: {}): EventUtilsCallback<any> {
+  public bind(target: any, names: string, callback: EventUtilsCallback<any>, scope?: {}): EventUtilsCallback<any> {
     const self = this;
-    let id, callbackList, i, name, fakeName, nativeHandler, capture;
+    let id; let callbackList; let i; let name; let fakeName; let nativeHandler; let capture;
     const win = window;
 
     // Native event handler function patches the event and executes the callbacks for the expando
@@ -329,7 +329,7 @@ class EventUtils {
 
         if (fakeName) {
           nativeHandler = function (evt) {
-            let current, related;
+            let current; let related;
 
             current = evt.currentTarget;
             related = evt.relatedTarget;
@@ -412,8 +412,8 @@ class EventUtils {
   public unbind <K extends keyof HTMLElementEventMap>(target: any, name: K, callback?: EventUtilsCallback<HTMLElementEventMap[K]>): this;
   public unbind <T = any>(target: any, names: string, callback?: EventUtilsCallback<T>): this;
   public unbind (target: any): this;
-  public unbind (target: any, names?: string, callback?: EventUtilsCallback<any>): this {
-    let id, callbackList, i, ci, name, eventMap;
+  public unbind(target: any, names?: string, callback?: EventUtilsCallback<any>): this {
+    let id; let callbackList; let i; let ci; let name; let eventMap;
 
     // Don't bind to text nodes or comments
     if (!target || target.nodeType === 3 || target.nodeType === 8) {
@@ -441,7 +441,7 @@ class EventUtils {
               while (ci--) {
                 if (callbackList[ci].func === callback) {
                   const nativeHandler = callbackList.nativeHandler;
-                  const fakeName = callbackList.fakeName, capture = callbackList.capture;
+                  const fakeName = callbackList.fakeName; const capture = callbackList.capture;
 
                   // Clone callbackList since unbind inside a callback would otherwise break the handlers loop
                   callbackList = callbackList.slice(0, ci).concat(callbackList.slice(ci + 1));
@@ -501,7 +501,7 @@ class EventUtils {
    * @param {Object} args Optional arguments to send to the observers.
    * @return {EventUtils} Event utils instance.
    */
-  public fire (target: any, name: string, args?: {}): this {
+  public fire(target: any, name: string, args?: {}): this {
     let id;
 
     // Don't bind to text nodes or comments
@@ -536,8 +536,8 @@ class EventUtils {
    * @param {Object} target Target node/window object.
    * @return {EventUtils} Event utils instance.
    */
-  public clean (target: any): this {
-    let i, children;
+  public clean(target: any): this {
+    let i; let children;
 
     // Don't bind to text nodes or comments
     if (!target || target.nodeType === 3 || target.nodeType === 8) {
@@ -575,7 +575,7 @@ class EventUtils {
   /**
    * Destroys the event object. Call this on IE to remove memory leaks.
    */
-  public destroy () {
+  public destroy() {
     this.events = {};
   }
 
@@ -596,8 +596,8 @@ class EventUtils {
    * @param {Event} evt Event object.
    * @param {String} id Expando id value to look for.
    */
-  private executeHandlers (evt, id) {
-    let callbackList, i, l, callback;
+  private executeHandlers(evt, id) {
+    let callbackList; let i; let l; let callback;
     const container = this.events[id];
 
     callbackList = container && container[evt.type];

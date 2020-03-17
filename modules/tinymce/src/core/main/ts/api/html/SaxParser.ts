@@ -52,7 +52,7 @@ import { extractBase64DataUris, restoreDataUris, Base64Extract } from '../../htm
  * @version 3.4
  */
 
-type AttrList = Array<{ name: string, value: string }> & { map: Record<string, string> };
+type AttrList = Array<{ name: string; value: string }> & { map: Record<string, string> };
 
 export interface SaxParserSettings {
   allow_conditional_comments?: boolean;
@@ -97,9 +97,7 @@ const enum MatchType {
   Attribute = 9
 }
 
-const isValidPrefixAttrName = (name: string): boolean => {
-  return name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
-};
+const isValidPrefixAttrName = (name: string): boolean => name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
 
 const isInvalidUri = (settings: SaxParserSettings, uri: string) => {
   if (settings.allow_html_data_urls) {
@@ -123,7 +121,7 @@ const isInvalidUri = (settings: SaxParserSettings, uri: string) => {
  * @return {Number} Index of the end tag.
  */
 const findEndTagIndex = (schema: Schema, html: string, startIndex: number): number => {
-  let count = 1, index, matches, tokenRegExp, shortEndedElements;
+  let count = 1; let index; let matches; let tokenRegExp; let shortEndedElements;
 
   shortEndedElements = schema.getShortEndedElements();
   tokenRegExp = /<([!?\/])?([A-Za-z0-9\-_\:\.]+)((?:\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\/|\s+)>/g;
@@ -152,7 +150,7 @@ const findEndTagIndex = (schema: Schema, html: string, startIndex: number): numb
 
 const isConditionalComment = (html: string, startIndex: number) => /^\s*\[if [\w\W]+\]>.*<!\[endif\](--!?)?>/.test(html.substr(startIndex));
 
-const findCommentEndIndex = (html: string, isBogus: boolean, startIndex: number = 0) => {
+const findCommentEndIndex = (html: string, isBogus: boolean, startIndex = 0) => {
   const lcHtml = html.toLowerCase();
   if (lcHtml.indexOf('[if ', startIndex) !== -1 && isConditionalComment(lcHtml, startIndex)) {
     const endIfIndex = lcHtml.indexOf('[endif]', startIndex);
@@ -210,13 +208,13 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
 
   const parseInternal = (base64Extract: Base64Extract, format: ParserFormat = 'html') => {
     const html = base64Extract.html;
-    let matches, index = 0, value, endRegExp;
+    let matches; let index = 0; let value; let endRegExp;
     const stack = [];
-    let attrList, i, textData, name;
-    let isInternalElement, removeInternalElements, shortEndedElements, fillAttrsMap, isShortEnded;
-    let validate, elementRule, isValidElement, attr, attribsValue, validAttributesMap, validAttributePatterns;
-    let attributesRequired, attributesDefault, attributesForced, processHtml;
-    let anyAttributesRequired, selfClosing, tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0;
+    let attrList; let i; let textData; let name;
+    let isInternalElement; let removeInternalElements; let shortEndedElements; let fillAttrsMap; let isShortEnded;
+    let validate; let elementRule; let isValidElement; let attr; let attribsValue; let validAttributesMap; let validAttributePatterns;
+    let attributesRequired; let attributesDefault; let attributesForced; let processHtml;
+    let anyAttributesRequired; let selfClosing; let tokenRegExp; let attrRegExp; let specialElements; let attrValue; let idCount = 0;
     const decode = Entities.decode;
     let fixSelfClosing;
     const filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster,xlink:href');
@@ -224,7 +222,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
     const parsingMode = format === 'html' ? ParsingMode.Html : ParsingMode.Xml;
 
     const processEndTag = (name: { name: string; valid: boolean }) => {
-      let pos, i;
+      let pos; let i;
 
       // Find position of parent of the same type
       pos = stack.length;
@@ -286,7 +284,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
     };
 
     const parseAttribute = (match: string, name: string, value?: string, val2?: string, val3?: string) => {
-      let attrRule, i;
+      let attrRule; let i;
       const trimRegExp = /[\s\u0000-\u001F]+/g;
 
       name = name.toLowerCase();

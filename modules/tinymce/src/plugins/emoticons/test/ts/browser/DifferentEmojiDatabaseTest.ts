@@ -24,25 +24,21 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.DifferentEmojiDatabaseTest
       const tinyUi = TinyUi(editor);
 
       Pipeline.async({}, [
-          tinyApis.sFocus(),
-          tinyUi.sClickOnToolbar('click emoticons', 'button'),
-          Chain.asStep({}, [
-            tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),
-          ]),
-          Waiter.sTryUntil(
-            'Wait for emojis to load',
-            UiFinder.sNotExists(Body.body(), '.tox-spinner')
-          ),
-          Chain.asStep(Body.body(), [
-            UiFinder.cFindAllIn('[role="tab"]'),
-            Chain.mapper((elements: Element[]) => {
-              return Arr.map(elements, (elm: Element) => {
-                return elm.dom().textContent;
-              });
-            }),
-            Assertions.cAssertEq('Categories match', categories)
-          ])
-        ], onSuccess, onFailure);
+        tinyApis.sFocus(),
+        tinyUi.sClickOnToolbar('click emoticons', 'button'),
+        Chain.asStep({}, [
+          tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),
+        ]),
+        Waiter.sTryUntil(
+          'Wait for emojis to load',
+          UiFinder.sNotExists(Body.body(), '.tox-spinner')
+        ),
+        Chain.asStep(Body.body(), [
+          UiFinder.cFindAllIn('[role="tab"]'),
+          Chain.mapper((elements: Element[]) => Arr.map(elements, (elm: Element) => elm.dom().textContent)),
+          Assertions.cAssertEq('Categories match', categories)
+        ])
+      ], onSuccess, onFailure);
     }, {
       plugins: 'emoticons',
       toolbar: 'emoticons',

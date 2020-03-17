@@ -16,16 +16,14 @@ import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: (itemValue: string) => void, isSelected: boolean, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders) => {
-  const getApi = (component): Menu.ToggleMenuItemInstanceApi => {
-    return {
-      setActive: (state) => {
-        Toggling.set(component, state);
-      },
-      isActive: () => Toggling.isOn(component),
-      isDisabled: () => Disabling.isDisabled(component),
-      setDisabled: (state: boolean) => Disabling.set(component, state)
-    };
-  };
+  const getApi = (component): Menu.ToggleMenuItemInstanceApi => ({
+    setActive: (state) => {
+      Toggling.set(component, state);
+    },
+    isActive: () => Toggling.isOn(component),
+    isDisabled: () => Disabling.isDisabled(component),
+    setDisabled: (state: boolean) => Disabling.set(component, state)
+  });
 
   const structure = renderItemStructure({
     presets,

@@ -1,4 +1,4 @@
-import {Css, Element, Height, SelectorFind, Width} from '@ephox/sugar';
+import { Css, Element, Height, SelectorFind, Width } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Pinching } from 'ephox/alloy/api/behaviour/Pinching';
@@ -11,17 +11,9 @@ export default (): void => {
 
   // Naive resize handler
   const resize = (element: Element, changeX: number, changeY: number) => {
-    const width = Css.getRaw(element, 'width').map((w) => {
-      return parseInt(w, 10);
-    }).getOrThunk(() => {
-      return Width.get(element);
-    });
+    const width = Css.getRaw(element, 'width').map((w) => parseInt(w, 10)).getOrThunk(() => Width.get(element));
 
-    const height = Css.getRaw(element, 'height').map((h) => {
-      return parseInt(h, 10);
-    }).getOrThunk(() => {
-      return Height.get(element);
-    });
+    const height = Css.getRaw(element, 'height').map((h) => parseInt(h, 10)).getOrThunk(() => Height.get(element));
 
     Css.set(element, 'width', (width + changeX) + 'px');
     Css.set(element, 'height', (height + changeY) + 'px');
@@ -39,10 +31,10 @@ export default (): void => {
     },
     behaviours: Behaviour.derive([
       Pinching.config({
-        onPinch (span, changeX, changeY) {
+        onPinch(span, changeX, changeY) {
           resize(span, changeX, changeY);
         },
-        onPunch (span, changeX, changeY) {
+        onPunch(span, changeX, changeY) {
           resize(span, changeX, changeY);
         }
       })

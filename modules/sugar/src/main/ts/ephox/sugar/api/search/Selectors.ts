@@ -34,12 +34,12 @@ const bypassSelector = function (dom: DomNode) {
           (dom as DomElement | Document).childElementCount === 0;
 };
 
-const all = function <T extends DomElement = DomElement>(selector: string, scope?: Element<DomNode>): Element<T>[] {
+const all = function <T extends DomElement = DomElement> (selector: string, scope?: Element<DomNode>): Element<T>[] {
   const base = scope === undefined ? document : scope.dom();
   return bypassSelector(base) ? [] : Arr.map((base as DomElement | Document).querySelectorAll<T>(selector), Element.fromDom);
 };
 
-const one = function <T extends DomElement = DomElement>(selector: string, scope?: Element<DomNode>) {
+const one = function <T extends DomElement = DomElement> (selector: string, scope?: Element<DomNode>) {
   const base = scope === undefined ? document : scope.dom();
   return bypassSelector(base) ? Option.none<Element<T>>() : Option.from((base as DomElement | Document).querySelector<T>(selector)).map(Element.fromDom);
 };

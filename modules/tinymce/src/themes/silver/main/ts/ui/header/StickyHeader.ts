@@ -57,11 +57,9 @@ const scrollFromBehindHeader = (e: ScrollIntoViewEvent, containerHeader: Element
 };
 
 const updateIframeContentFlow = (header: AlloyComponent, isToolbarTop: boolean): void => {
-  const getOccupiedHeight = (elm: Element<HTMLElement>) => {
-    return Height.getOuter(elm) +
+  const getOccupiedHeight = (elm: Element<HTMLElement>) => Height.getOuter(elm) +
       (parseInt(Css.get(elm, 'margin-top'), 10) || 0) +
       (parseInt(Css.get(elm, 'margin-bottom'), 10) || 0) ;
-  };
 
   const elm = header.element();
   Traverse.parent(elm).each((parentElem: Element<HTMLElement>) => {
@@ -103,22 +101,20 @@ const restoreFocus = (headerElem: Element, focusedElem: Element) => {
   // When the header is hidden, then the element that was focused will be lost
   // so we need to restore it if nothing else has already been focused (eg anything other than the body)
   const ownerDoc = Traverse.owner(focusedElem);
-  Focus.active(ownerDoc).filter((activeElm) => {
+  Focus.active(ownerDoc).filter((activeElm) =>
     // Don't try to refocus the same element
-    return !Compare.eq(focusedElem, activeElm);
-  }).filter((activeElm) => {
+    !Compare.eq(focusedElem, activeElm)
+  ).filter((activeElm) =>
     // Only attempt to refocus if the current focus is the body or is in the header element
-    return Compare.eq(activeElm, Element.fromDom(ownerDoc.dom().body)) || Compare.contains(headerElem, activeElm);
-  }).each(() => Focus.focus(focusedElem));
+    Compare.eq(activeElm, Element.fromDom(ownerDoc.dom().body)) || Compare.contains(headerElem, activeElm)
+  ).each(() => Focus.focus(focusedElem));
 };
 
-const findFocusedElem = (rootElm: Element, lazySink: () => Result<AlloyComponent, Error>): Option<Element> => {
+const findFocusedElem = (rootElm: Element, lazySink: () => Result<AlloyComponent, Error>): Option<Element> =>
   // Check to see if an element is focused inside the header or inside the sink
   // and if so store the element so we can restore it later
-  return Focus.search(rootElm).orThunk(() => {
-    return lazySink().toOption().bind((sink) => Focus.search(sink.element()));
-  });
-};
+  Focus.search(rootElm).orThunk(() => lazySink().toOption().bind((sink) => Focus.search(sink.element())))
+;
 
 const setup = (editor: Editor, lazyHeader: () => Option<AlloyComponent>): void => {
   if (!editor.inline) {
@@ -173,23 +169,19 @@ const setup = (editor: Editor, lazyHeader: () => Option<AlloyComponent>): void =
   });
 };
 
-const isDocked = (lazyHeader: () => Option<AlloyComponent>): boolean => {
-  return lazyHeader().map(Docking.isDocked).getOr(false);
-};
+const isDocked = (lazyHeader: () => Option<AlloyComponent>): boolean => lazyHeader().map(Docking.isDocked).getOr(false);
 
-const getIframeBehaviours = (isToolbarTop: boolean) => {
-  return [
-    Receiving.config({
-      channels: {
-        [ EditorChannels.toolbarHeightChange() ]: {
-          onReceive: (comp) => {
-            updateIframeContentFlow(comp, isToolbarTop);
-          }
+const getIframeBehaviours = (isToolbarTop: boolean) => [
+  Receiving.config({
+    channels: {
+      [ EditorChannels.toolbarHeightChange() ]: {
+        onReceive: (comp) => {
+          updateIframeContentFlow(comp, isToolbarTop);
         }
       }
-    })
-  ];
-};
+    }
+  })
+];
 
 const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>) => {
   const focusedElm = Cell<Option<Element>>(Option.none());
@@ -214,7 +206,7 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
     Focusing.config({ }),
     Docking.config({
       contextual: {
-        lazyContext (comp) {
+        lazyContext(comp) {
           const headerHeight = Height.getOuter(comp.element());
           const container = editor.inline ? editor.getContentAreaContainer() : editor.getContainer();
           const box = Boxes.box(Element.fromDom(container));

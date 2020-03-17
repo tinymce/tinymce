@@ -75,9 +75,7 @@ const findInsertionPoint = (toBlock: Element, block: Element) => {
   return Option.from(parentsAndSelf[parentsAndSelf.length - 1]);
 };
 
-const getInsertionPoint = (fromBlock: Element, toBlock: Element): Option<Element> => {
-  return Compare.contains(toBlock, fromBlock) ? findInsertionPoint(toBlock, fromBlock) : Option.none();
-};
+const getInsertionPoint = (fromBlock: Element, toBlock: Element): Option<Element> => Compare.contains(toBlock, fromBlock) ? findInsertionPoint(toBlock, fromBlock) : Option.none();
 
 const trimBr = (first: boolean, block: Element) => {
   CaretFinder.positionIn(first, block.dom())
@@ -97,9 +95,7 @@ const mergeBlockInto = (rootNode: Element, fromBlock: Element, toBlock: Element)
   );
 };
 
-const mergeBlocks = (rootNode: Element, forward: boolean, block1: Element, block2: Element) => {
-  return forward ? mergeBlockInto(rootNode, block2, block1) : mergeBlockInto(rootNode, block1, block2);
-};
+const mergeBlocks = (rootNode: Element, forward: boolean, block1: Element, block2: Element) => forward ? mergeBlockInto(rootNode, block2, block1) : mergeBlockInto(rootNode, block1, block2);
 
 export {
   mergeBlocks

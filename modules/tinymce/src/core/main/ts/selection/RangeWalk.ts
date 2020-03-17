@@ -37,7 +37,7 @@ const walk = function (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: No
   const nodes = dom.select('td[data-mce-selected],th[data-mce-selected]');
   if (nodes.length > 0) {
     each(nodes, function (node) {
-      callback([node]);
+      callback([ node ]);
     });
 
     return;
@@ -117,7 +117,7 @@ const walk = function (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: No
 
   // Same container
   if (startContainer === endContainer) {
-    return callback(exclude([startContainer]));
+    return callback(exclude([ startContainer ]));
   }
 
   // Find common ancestor and end points

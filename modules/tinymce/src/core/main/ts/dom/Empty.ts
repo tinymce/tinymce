@@ -35,7 +35,7 @@ const isBogus = NodeType.hasAttribute('data-mce-bogus');
 const isBogusAll = NodeType.hasAttributeValue('data-mce-bogus', 'all');
 
 const isEmptyNode = function (targetNode: Node, skipBogus: boolean) {
-  let node, brCount = 0;
+  let node; let brCount = 0;
 
   if (isContent(targetNode, targetNode)) {
     return false;
@@ -76,7 +76,7 @@ const isEmptyNode = function (targetNode: Node, skipBogus: boolean) {
   }
 };
 
-const isEmpty = (elm: Element<Node>, skipBogus: boolean = true) => isEmptyNode(elm.dom(), skipBogus);
+const isEmpty = (elm: Element<Node>, skipBogus = true) => isEmptyNode(elm.dom(), skipBogus);
 
 export {
   isEmpty

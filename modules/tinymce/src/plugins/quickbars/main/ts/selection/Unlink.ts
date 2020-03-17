@@ -38,7 +38,7 @@ const getSelectedElements = function (rootElm: HTMLElement, startNode: Node, end
 };
 
 const unwrapElements = function (editor: Editor, elms: HTMLElement[]) {
-  let bookmark, dom, selection;
+  let bookmark; let dom; let selection;
 
   dom = editor.dom;
   selection = editor.selection;
@@ -61,7 +61,7 @@ const getParentAnchorOrSelf = function (dom, elm: Node) {
 };
 
 const getSelectedAnchors = function (editor: Editor) {
-  let startElm, endElm, rootElm, anchorElms, selection, dom, rng;
+  let startElm; let endElm; let rootElm; let anchorElms; let selection; let dom; let rng;
 
   selection = editor.selection;
   dom = editor.dom;

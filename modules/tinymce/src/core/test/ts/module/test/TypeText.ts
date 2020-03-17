@@ -4,7 +4,7 @@ import { document } from '@ephox/dom-globals';
 
 const insertCharAtRange = function (rng, chr) {
   const outRng = rng.cloneRange();
-  const sc = rng.startContainer, so = rng.startOffset;
+  const sc = rng.startContainer; const so = rng.startOffset;
 
   if (sc.nodeType === 3) {
     sc.insertData(so, chr);

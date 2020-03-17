@@ -38,7 +38,7 @@ UnitTest.asynctest('TouchDraggingTest', (success, failure) => {
           mode: 'touch',
           blockerClass: 'test-blocker',
           snaps: {
-            getSnapPoints () {
+            getSnapPoints() {
               return [
                 Dragging.snap({
                   sensor: DragCoord.fixed(300, 10),
@@ -59,36 +59,30 @@ UnitTest.asynctest('TouchDraggingTest', (success, failure) => {
     })
   );
 
-  GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build(
-      Container.sketch({
-        dom: {
-          tag: 'div',
-          styles: {
-            'margin-bottom': '2000px'
-          }
-        },
-        components: [
-          subject.asSpec()
-        ]
-      })
-    );
-  }, (doc, body, gui, component, store) => {
+  GuiSetup.setup((store, doc, body) => GuiFactory.build(
+    Container.sketch({
+      dom: {
+        tag: 'div',
+        styles: {
+          'margin-bottom': '2000px'
+        }
+      },
+      components: [
+        subject.asSpec()
+      ]
+    })
+  ), (doc, body, gui, component, store) => {
 
-    const cSubject = Chain.mapper(() => {
-      return subject.get(component).element();
-    });
+    const cSubject = Chain.mapper(() => subject.get(component).element());
 
     const cEnsurePositionChanged = Chain.control(
-      Chain.binder((all: any) => {
-        return all.box_position1.left !== all.box_position2.left &&
+      Chain.binder((all: any) => all.box_position1.left !== all.box_position2.left &&
           all.box_position2.left !== all.box_position3.left ? Result.value({}) :
-          Result.error('Positions did not change.\nPosition data: ' + JSON.stringify({
-            1: all.box_position1,
-            2: all.box_position2,
-            3: all.box_position3
-          }, null, 2));
-      }),
+        Result.error('Positions did not change.\nPosition data: ' + JSON.stringify({
+          1: all.box_position1,
+          2: all.box_position2,
+          3: all.box_position3
+        }, null, 2))),
       Guard.addLogging('Ensuring that the position information read from the different stages was different')
     );
     const cEnsureBound = Chain.control(
@@ -140,18 +134,10 @@ UnitTest.asynctest('TouchDraggingTest', (success, failure) => {
 
     const cRecordPosition = Chain.fromChains([
       Chain.control(
-        Chain.binder((box) => {
-          return Css.getRaw(box, 'left').bind((left) => {
-            return Css.getRaw(box, 'top').map((top) => {
-              return Result.value({
-                left,
-                top
-              });
-            });
-          }).getOrThunk(() => {
-            return Result.error('No left,top information yet');
-          });
-        }),
+        Chain.binder((box) => Css.getRaw(box, 'left').bind((left) => Css.getRaw(box, 'top').map((top) => Result.value({
+          left,
+          top
+        }))).getOrThunk(() => Result.error('No left,top information yet'))),
         Guard.tryUntil('Waiting for position data to record')
       )
     ]);
@@ -177,7 +163,7 @@ UnitTest.asynctest('TouchDraggingTest', (success, failure) => {
       }), '_'),
 
       NamedChain.direct('box', Touch.cTouchStart, '_'),
-      NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
+      NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker')
     ]);
 
     return [
@@ -254,9 +240,7 @@ UnitTest.asynctest('TouchDraggingTest', (success, failure) => {
           NamedChain.write('_', cEnsurePinned),
 
           Chain.wait(10),
-          NamedChain.bundle((output) => {
-            return Result.value(output);
-          })
+          NamedChain.bundle((output) => Result.value(output))
         ])
       ])
     ];

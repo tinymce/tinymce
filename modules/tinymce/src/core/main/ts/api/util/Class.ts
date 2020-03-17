@@ -19,9 +19,9 @@ import Tools from './Tools';
  * * Defaults settings
  */
 
-const each = Tools.each, extend = Tools.extend;
+const each = Tools.each; const extend = Tools.extend;
 
-let extendClass, initializing;
+let extendClass; let initializing;
 
 interface Prop {
   Mixins?: any;
@@ -53,11 +53,11 @@ const Class: Class = function () {
 Class.extend = extendClass = function (prop: Prop): ExtendedClass {
   const self = this;
   const _super = self.prototype;
-  let prototype, name, member;
+  let prototype; let name; let member;
 
   // The dummy class constructor
   const Class = function () {
-    let i, mixins, mixin;
+    let i; let mixins; let mixin;
     const self = this;
 
     // All construction is actually done in the init method
@@ -106,7 +106,7 @@ Class.extend = extendClass = function (prop: Prop): ExtendedClass {
   // don't run the init constructor)
   initializing = true;
 
-  /*eslint new-cap:0 */
+  /* eslint new-cap:0 */
   prototype = new self();
   initializing = false;
 

@@ -49,7 +49,7 @@ const normalizePosition = function (forward: boolean, pos: CaretPosition) {
     return pos;
   }
 
-  const container = pos.container(), offset = pos.offset();
+  const container = pos.container(); const offset = pos.offset();
 
   if (forward) {
     if (CaretContainer.isCaretContainerInline(container)) {

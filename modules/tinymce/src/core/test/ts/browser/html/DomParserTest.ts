@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
 
   const schema = Schema({ valid_elements: '*[class|title]' });
   const serializer = Serializer({}, schema);
-  let parser, root;
+  let parser; let root;
 
   const countNodes = function (node, counter?) {
     let sibling;
@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   schema.addValidChildren('+body[style]');
 
   suite.test('Parse element', function () {
-    let parser, root;
+    let parser; let root;
 
     parser = DomParser({}, schema);
     root = parser.parse('<B title="title" class="class">test</B>');
@@ -47,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     LegacyUnit.equal(root.firstChild.name, 'b', 'Element name');
     LegacyUnit.deepEqual(
       root.firstChild.attributes, [{ name: 'title', value: 'title' },
-      { name: 'class', value: 'class' }],
+        { name: 'class', value: 'class' }],
       'Element attributes'
     );
     LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'b': 1, '#text': 1 }, 'Element attributes (count)');
@@ -160,7 +160,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Parse invalid contents', function () {
-    let parser, root;
+    let parser; let root;
 
     parser = DomParser({}, schema);
     root = parser.parse('<p class="a"><p class="b">123</p></p>');
@@ -273,7 +273,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('addNodeFilter', function () {
-    let parser, result;
+    let parser; let result;
 
     parser = DomParser({}, schema);
     parser.addNodeFilter('#comment', function (nodes, name, args) {
@@ -317,7 +317,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('addNodeFilter with parser args', function () {
-    let parser, result;
+    let parser; let result;
 
     parser = DomParser({}, schema);
     parser.addNodeFilter('#comment', function (nodes, name, args) {
@@ -329,7 +329,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('addAttributeFilter', function () {
-    let parser, result;
+    let parser; let result;
 
     parser = DomParser({});
     parser.addAttributeFilter('src', function (nodes, name, args) {
@@ -410,7 +410,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Self closing list elements', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema();
 
     parser = DomParser({}, schema);
@@ -423,7 +423,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Remove redundant br elements', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema();
 
     parser = DomParser({ remove_trailing_brs: true }, schema);
@@ -441,7 +441,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Replace br with nbsp when wrapped in two inline elements and one block', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema();
 
     parser = DomParser({ remove_trailing_brs: true }, schema);
@@ -450,7 +450,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Replace br with nbsp when wrapped in an inline element and placed in the root', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema();
 
     parser = DomParser({ remove_trailing_brs: true }, schema);
@@ -459,7 +459,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Don\'t replace br inside root element when there is multiple brs', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema();
 
     parser = DomParser({ remove_trailing_brs: true }, schema);
@@ -468,7 +468,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Don\'t replace br inside root element when there is siblings', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema();
 
     parser = DomParser({ remove_trailing_brs: true }, schema);
@@ -477,7 +477,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Remove br in invalid parent bug', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema({ valid_elements: 'br' });
 
     parser = DomParser({ remove_trailing_brs: true }, schema);
@@ -486,7 +486,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Forced root blocks', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema();
 
     parser = DomParser({ forced_root_block: 'p' }, schema);
@@ -508,10 +508,10 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Forced root blocks attrs', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema();
 
-    parser = DomParser({ forced_root_block: 'p', forced_root_block_attrs: { class: 'class1' } }, schema);
+    parser = DomParser({ forced_root_block: 'p', forced_root_block_attrs: { class: 'class1' }}, schema);
     root = parser.parse(
       '<!-- a -->' +
       'b' +
@@ -527,11 +527,11 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
       '<p>d</p>' +
       '<p>e</p>' +
       '<p class="class1">f<strong>g</strong>h</p>',
-      'Mixed text nodes, inline elements and blocks.');
+    'Mixed text nodes, inline elements and blocks.');
   });
 
   suite.test('Parse html4 lists into html5 lists', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema();
 
     parser = DomParser({ fix_list_elements: true }, schema);
@@ -543,7 +543,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Parse contents with html4 anchors and allow_html_in_named_anchor: false', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema();
 
     parser = DomParser({ allow_html_in_named_anchor: false }, schema);
@@ -552,7 +552,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Parse contents with html5 anchors and allow_html_in_named_anchor: false', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema({ schema: 'html5' });
 
     parser = DomParser({ allow_html_in_named_anchor: false }, schema);
@@ -561,7 +561,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Parse contents with html4 anchors and allow_html_in_named_anchor: true', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema();
 
     parser = DomParser({ allow_html_in_named_anchor: true }, schema);
@@ -570,7 +570,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Parse contents with html5 anchors and allow_html_in_named_anchor: true', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema({ schema: 'html5' });
 
     parser = DomParser({ allow_html_in_named_anchor: true }, schema);
@@ -579,7 +579,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Parse contents with html5 self closing datalist options', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema({ schema: 'html5' });
 
     parser = DomParser({}, schema);
@@ -594,7 +594,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Parse inline contents before block bug #5424', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema({ schema: 'html5' });
 
     parser = DomParser({}, schema);
@@ -603,7 +603,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Invalid text blocks within a li', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema({ schema: 'html5', valid_children: '-li[p]' });
 
     parser = DomParser({}, schema);
@@ -612,7 +612,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Invalid inline element with space before', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema();
 
     parser = DomParser({}, schema);
@@ -621,7 +621,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Valid classes', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema({ valid_classes: 'classA classB' });
 
     parser = DomParser({}, schema);
@@ -630,8 +630,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Valid classes multiple elements', function () {
-    let parser, root;
-    const schema = Schema({ valid_classes: { '*': 'classA classB', 'strong': 'classC' } });
+    let parser; let root;
+    const schema = Schema({ valid_classes: { '*': 'classA classB', 'strong': 'classC' }});
 
     parser = DomParser({}, schema);
     root = parser.parse('<p class="classA classB classC"><strong class="classA classB classC classD">a</strong></p>');
@@ -639,7 +639,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Pad empty list blocks', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema();
 
     parser = DomParser({}, schema);
@@ -656,7 +656,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Pad empty and preffer br on insert', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema();
 
     parser = DomParser({}, schema);
@@ -665,7 +665,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
   });
 
   suite.test('Preserve space in inline span', function () {
-    let parser, root;
+    let parser; let root;
     const schema = Schema();
 
     parser = DomParser({}, schema);
@@ -717,8 +717,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     const attrFilters = parser.getAttributeFilters();
     const nodeFilters = parser.getNodeFilters();
 
-    Assertions.assertEq('Should be expected filter', {name: 'attr', callbacks: [cb1] }, attrFilters[attrFilters.length - 1]);
-    Assertions.assertEq('Should be extected filter', {name: 'node', callbacks: [cb2] }, nodeFilters[nodeFilters.length - 1]);
+    Assertions.assertEq('Should be expected filter', { name: 'attr', callbacks: [ cb1 ] }, attrFilters[attrFilters.length - 1]);
+    Assertions.assertEq('Should be extected filter', { name: 'node', callbacks: [ cb2 ] }, nodeFilters[nodeFilters.length - 1]);
   });
 
   suite.test('extract base64 uris to blobcache if blob cache is provided', () => {

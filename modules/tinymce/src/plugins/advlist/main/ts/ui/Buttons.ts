@@ -69,9 +69,7 @@ const addSplitButton = function (editor: Editor, id, tooltip, cmd, nodeName, sty
     },
     select: (value) => {
       const listStyleType = ListUtils.getSelectedStyleType(editor);
-      return listStyleType.map((listStyle) => {
-        return value === listStyle;
-      }).getOr(false);
+      return listStyleType.map((listStyle) => value === listStyle).getOr(false);
     },
     onSetup: (api) => {
       const nodeChangeHandler = (e) => {

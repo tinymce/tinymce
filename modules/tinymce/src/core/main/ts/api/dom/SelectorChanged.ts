@@ -23,7 +23,7 @@ const deleteFromCallbackMap = (callbackMap, selector, callback) => {
   }
 };
 
-type SelectorChangedCallback = (active: boolean, args: { node: Node; selector: String; parents: Element[]; }) => void;
+type SelectorChangedCallback = (active: boolean, args: { node: Node; selector: String; parents: Element[] }) => void;
 
 export default (dom: DOMUtils, editor: Editor) => {
   let selectorChangedData: Record<string, SelectorChangedCallback[]>;
@@ -36,7 +36,7 @@ export default (dom: DOMUtils, editor: Editor) => {
         currentSelectors = {};
 
         editor.on('NodeChange', function (e) {
-          const node = e.element, parents = dom.getParents(node, null, dom.getRoot()), matchedSelectors = {};
+          const node = e.element; const parents = dom.getParents(node, null, dom.getRoot()); const matchedSelectors = {};
 
           // Check for new matching selectors
           Tools.each(selectorChangedData, function (callbacks, selector) {

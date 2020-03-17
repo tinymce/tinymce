@@ -27,7 +27,7 @@ export default function () {
         { title: 'Gamma', isSelected: Fun.constant(true), getPreview: Fun.constant('') }
       ]
     },
-    handle (format) {
+    handle(format) {
       // tslint:disable-next-line:no-console
       console.log('firing', format);
     }

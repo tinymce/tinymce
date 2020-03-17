@@ -68,8 +68,8 @@ UnitTest.test('ClusteringTest', function () {
       'Left: stopped by p1, middle: itself, right: stopped by img',
       universe,
       [],
-      ['z1a'],
-      ['z1b'],
+      [ 'z1a' ],
+      [ 'z1b' ],
       Option.none(),
       'p1.text1.id'
     );
@@ -77,8 +77,8 @@ UnitTest.test('ClusteringTest', function () {
     check(
       'Left: stopped by p1, middle: itself, right: stopped by img',
       universe,
-      ['z1a'],
-      ['z1b'],
+      [ 'z1a' ],
+      [ 'z1b' ],
       [],
       Option.none(),
       'p1.text2.id'
@@ -88,7 +88,7 @@ UnitTest.test('ClusteringTest', function () {
       'Left: stopped by img, middle: itself, right: stopped by p2',
       universe,
       [],
-      ['z2a'],
+      [ 'z2a' ],
       [],
       Option.none(),
       'p1.text3.id'
@@ -98,8 +98,8 @@ UnitTest.test('ClusteringTest', function () {
       'Left: stopped by p2, middle: itself, right: stopped by p1.span2 lang',
       universe,
       [],
-      ['z3a'],
-      ['z3b', 'z3c'],
+      [ 'z3a' ],
+      [ 'z3b', 'z3c' ],
       Option.some('DE'),
       'p2.text1.id'
     );
@@ -107,9 +107,9 @@ UnitTest.test('ClusteringTest', function () {
     check(
       'Left: stopped by p2, middle: itself, right: stopped by p1.span2 lang',
       universe,
-      ['z3a'],
-      ['z3b'],
-      ['z3c'],
+      [ 'z3a' ],
+      [ 'z3b' ],
+      [ 'z3c' ],
       Option.some('DE'),
       'p2.text2.id'
     );
@@ -117,8 +117,8 @@ UnitTest.test('ClusteringTest', function () {
     check(
       'Left: stopped by p2, middle: itself, right: stopped by p1.span2 lang',
       universe,
-      ['z3b', 'z3a'], // intentionally ordered that way for "left" call, but not "all"
-      ['z3c'],
+      [ 'z3b', 'z3a' ], // intentionally ordered that way for "left" call, but not "all"
+      [ 'z3c' ],
       [],
       Option.some('DE'),
       'p2.span1.text1.id'
@@ -128,7 +128,7 @@ UnitTest.test('ClusteringTest', function () {
       'Left: stopped by p2.span2 lang, middle: itself, right: stopped by p2.span2 lang',
       universe,
       [],
-      ['z4a'],
+      [ 'z4a' ],
       [],
       Option.some('FR'),
       'p2.span2.text1.id'
@@ -138,8 +138,8 @@ UnitTest.test('ClusteringTest', function () {
       'Left: stopped by p3, middle: itself, right: stopped by space in "g and"',
       universe,
       [],
-      [' '],
-      ['do', 'g'],
+      [ ' ' ],
+      [ 'do', 'g' ],
       Option.none(),
       'p3.text1.id'
     );
@@ -148,8 +148,8 @@ UnitTest.test('ClusteringTest', function () {
       'Left: stopped by " ", middle: itself, right: stopped by space in "g and"',
       universe,
       [],
-      ['do'],
-      ['g'],
+      [ 'do' ],
+      [ 'g' ],
       Option.none(),
       'p3.text2.id'
     );
@@ -157,8 +157,8 @@ UnitTest.test('ClusteringTest', function () {
     check(
       'Left: stopped by " ", middle: itself, right: stopped by space in " bone"',
       universe,
-      ['do'],
-      ['g and'],
+      [ 'do' ],
+      [ 'g and' ],
       [],
       Option.none(),
       'p3.text3.id'
@@ -167,8 +167,8 @@ UnitTest.test('ClusteringTest', function () {
     check(
       'Left: stopped by space in "g and", middle: itself, right: stopped by p3',
       universe,
-      ['and'],
-      [' bone'],
+      [ 'and' ],
+      [ ' bone' ],
       [],
       Option.none(),
       'p3.text4.id'

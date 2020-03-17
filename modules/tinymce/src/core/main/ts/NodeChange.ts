@@ -22,7 +22,7 @@ class NodeChange {
   private readonly editor: Editor;
   private lastPath = [];
 
-  constructor (editor: Editor) {
+  constructor(editor: Editor) {
     this.editor = editor;
     let lastRng;
     const self = this;
@@ -30,7 +30,7 @@ class NodeChange {
     // Gecko doesn't support the "selectionchange" event
     if (!('onselectionchange' in editor.getDoc())) {
       editor.on('NodeChange click mouseup keyup focus', function (e) {
-        let nativeRng, fakeRng;
+        let nativeRng; let fakeRng;
 
         // Since DOM Ranges mutate on modification
         // of the DOM we need to clone it's contents
@@ -97,9 +97,9 @@ class NodeChange {
    * @method nodeChanged
    * @param {Object} args Optional args to pass to NodeChange event handlers.
    */
-  public nodeChanged (args?) {
+  public nodeChanged(args?) {
     const selection = this.editor.selection;
-    let node, parents, root;
+    let node; let parents; let root;
 
     // Fix for bug #1896577 it seems that this can not be fired while the editor is loading
     if (this.editor.initialized && selection && !this.editor.settings.disable_nodechange && !this.editor.mode.isReadOnly()) {
@@ -136,8 +136,8 @@ class NodeChange {
    * @private
    * @return {Boolean} True if the element path is the same false if it's not.
    */
-  private isSameElementPath (startElm) {
-    let i, currentPath;
+  private isSameElementPath(startElm) {
+    let i; let currentPath;
 
     currentPath = this.editor.$(startElm).parentsUntil(this.editor.getBody()).add(startElm);
     if (currentPath.length === this.lastPath.length) {

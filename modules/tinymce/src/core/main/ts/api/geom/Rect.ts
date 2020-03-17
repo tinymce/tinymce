@@ -30,7 +30,7 @@ interface Rect {
   fromClientRect (clientRect: ClientRect): GeomRect;
 }
 
-const min = Math.min, max = Math.max, round = Math.round;
+const min = Math.min; const max = Math.max; const round = Math.round;
 
 /**
  * Returns the rect positioned based on the relative position name
@@ -42,7 +42,7 @@ const min = Math.min, max = Math.max, round = Math.round;
  * @param {String} rel Relative position. For example: tr-bl.
  */
 const relativePosition = function (rect, targetRect, rel) {
-  let x, y, w, h, targetW, targetH;
+  let x; let y; let w; let h; let targetW; let targetH;
 
   x = targetRect.x;
   y = targetRect.y;
@@ -98,7 +98,7 @@ const relativePosition = function (rect, targetRect, rel) {
  * @param {Array} rels Array of relative positions to test against.
  */
 const findBestRelativePosition = function (rect, targetRect, constrainRect, rels) {
-  let pos, i;
+  let pos; let i;
 
   for (i = 0; i < rels.length; i++) {
     pos = relativePosition(rect, targetRect, rels[i]);
@@ -134,7 +134,7 @@ const inflate = function (rect, w, h) {
  * @return {Rect} The intersection of the two rectangles or null if they don't intersect.
  */
 const intersect = function (rect, cropRect) {
-  let x1, y1, x2, y2;
+  let x1; let y1; let x2; let y2;
 
   x1 = max(rect.x, cropRect.x);
   y1 = max(rect.y, cropRect.y);
@@ -159,8 +159,8 @@ const intersect = function (rect, cropRect) {
  * @return {Rect} Clamped rect.
  */
 const clamp = function (rect, clampRect, fixedSize?) {
-  let underflowX1, underflowY1, overflowX2, overflowY2,
-    x1, y1, x2, y2, cx2, cy2;
+  let underflowX1; let underflowY1; let overflowX2; let overflowY2;
+  let x1; let y1; let x2; let y2; let cx2; let cy2;
 
   x1 = rect.x;
   y1 = rect.y;

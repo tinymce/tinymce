@@ -9,7 +9,7 @@ import { getAttrs, getClasses } from './DomFactory';
 // for now though lets just cast the types
 const readText = (elem: Element<DomText>) => {
   const text = Text.get(elem);
-  return text.trim().length > 0 ? [ { text } ] as unknown as SimpleOrSketchSpec[] : [ ];
+  return text.trim().length > 0 ? [{ text }] as unknown as SimpleOrSketchSpec[] : [ ];
 };
 
 const readChildren = (elem: Element<DomNode>): SimpleOrSketchSpec[] => {
@@ -22,15 +22,13 @@ const readChildren = (elem: Element<DomNode>): SimpleOrSketchSpec[] => {
     const classes = getClasses(elem);
     const children = Traverse.children(elem);
 
-    const components = Arr.bind(children, (child) => {
-      return Node.isText(child) ? readText(child) : readChildren(child);
-    });
+    const components = Arr.bind(children, (child) => Node.isText(child) ? readText(child) : readChildren(child));
 
     return [{
       dom: {
         tag: Node.name(elem),
-        ...(!Obj.isEmpty(attributes) ? {attributes} : {}),
-        ...(classes.length > 0 ? {classes} : {})
+        ...(!Obj.isEmpty(attributes) ? { attributes } : {}),
+        ...(classes.length > 0 ? { classes } : {})
       },
       components
     }];
@@ -43,15 +41,13 @@ const read = (elem: Element<DomNode>): SimpleOrSketchSpec => {
 
   const children = Traverse.children(elem);
 
-  const components = Arr.bind(children, (child) => {
-    return readChildren(child);
-  });
+  const components = Arr.bind(children, (child) => readChildren(child));
 
   return {
     dom: {
       tag: Node.name(elem),
-      ...(!Obj.isEmpty(attributes) ? {attributes} : {}),
-      ...(classes.length > 0 ? {classes} : {})
+      ...(!Obj.isEmpty(attributes) ? { attributes } : {}),
+      ...(classes.length > 0 ? { classes } : {})
     },
     components
   };

@@ -15,9 +15,9 @@ export const validate = <T extends keyof ResponseTypeMap>(responseType: Response
   });
 
   switch (responseType) {
-    case DataType.JSON: return JsonResponse.create(request.response).fold(error, FutureResult.pure);
-    case DataType.Blob: return normal();
-    case DataType.Text: return normal();
-    default: return error('unknown data type');
+  case DataType.JSON: return JsonResponse.create(request.response).fold(error, FutureResult.pure);
+  case DataType.Blob: return normal();
+  case DataType.Text: return normal();
+  default: return error('unknown data type');
   }
 };

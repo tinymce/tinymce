@@ -12,20 +12,18 @@ import { CropRect } from './CropRect';
 import Rect from 'tinymce/core/api/geom/Rect';
 import Promise from 'tinymce/core/api/util/Promise';
 
-const loadImage = (image): Promise<Element> => {
-  return new Promise(function (resolve) {
-    const loaded = function () {
-      image.removeEventListener('load', loaded);
-      resolve(image);
-    };
+const loadImage = (image): Promise<Element> => new Promise(function (resolve) {
+  const loaded = function () {
+    image.removeEventListener('load', loaded);
+    resolve(image);
+  };
 
-    if (image.complete) {
-      resolve(image);
-    } else {
-      image.addEventListener('load', loaded);
-    }
-  });
-};
+  if (image.complete) {
+    resolve(image);
+  } else {
+    image.addEventListener('load', loaded);
+  }
+});
 
 const renderImagePanel = (initialUrl: string) => {
   const memBg = Memento.record(
@@ -122,33 +120,31 @@ const renderImagePanel = (initialUrl: string) => {
   const updateSrc = (anyInSystem: AlloyComponent, url: string): Promise<Option<Element>> => {
     const img = Element.fromTag('img');
     Attr.set(img, 'src', url);
-    return loadImage(img.dom()).then(() => {
-      return memContainer.getOpt(anyInSystem).map((panel) => {
-        const aImg = GuiFactory.external({
-          element: img
-        });
-
-        Replacing.replaceAt(panel, 1, Option.some(aImg));
-
-        const lastViewRect = viewRectState.get();
-        const viewRect = {
-          x: 0,
-          y: 0,
-          w: img.dom().naturalWidth,
-          h: img.dom().naturalHeight
-        };
-        viewRectState.set(viewRect);
-        const rect = Rect.inflate(viewRect, -20, -20);
-        rectState.set(rect);
-
-        if (lastViewRect.w !== viewRect.w || lastViewRect.h !== viewRect.h) {
-          zoomFit(panel, img);
-        }
-
-        repaintImg(panel, img);
-        return img;
+    return loadImage(img.dom()).then(() => memContainer.getOpt(anyInSystem).map((panel) => {
+      const aImg = GuiFactory.external({
+        element: img
       });
-    });
+
+      Replacing.replaceAt(panel, 1, Option.some(aImg));
+
+      const lastViewRect = viewRectState.get();
+      const viewRect = {
+        x: 0,
+        y: 0,
+        w: img.dom().naturalWidth,
+        h: img.dom().naturalHeight
+      };
+      viewRectState.set(viewRect);
+      const rect = Rect.inflate(viewRect, -20, -20);
+      rectState.set(rect);
+
+      if (lastViewRect.w !== viewRect.w || lastViewRect.h !== viewRect.h) {
+        zoomFit(panel, img);
+      }
+
+      repaintImg(panel, img);
+      return img;
+    }));
   };
 
   const zoom = (anyInSystem: AlloyComponent, direction: number): void => {
@@ -174,14 +170,12 @@ const renderImagePanel = (initialUrl: string) => {
     });
   };
 
-  const getRect = (): any => {
-    return rectState.get();
-  };
+  const getRect = (): any => rectState.get();
 
   const container = Container.sketch({
     dom: {
       tag: 'div',
-      classes: [ 'tox-image-tools__image']
+      classes: [ 'tox-image-tools__image' ]
     },
     components: [
       memBg.asSpec(),

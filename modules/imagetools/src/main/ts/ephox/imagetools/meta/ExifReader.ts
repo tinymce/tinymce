@@ -278,48 +278,48 @@ export class ExifReader {
   // The following methods are "inherited" from BinaryReader
 
   public BYTE(idx: number): number | null {
-      return this._reader.BYTE(idx);
+    return this._reader.BYTE(idx);
   }
 
   public SHORT(idx: number): number | null {
-      return this._reader.SHORT(idx);
+    return this._reader.SHORT(idx);
   }
 
   public LONG(idx: number): number | null {
-      return this._reader.LONG(idx);
+    return this._reader.LONG(idx);
   }
 
   public SLONG(idx: number): number | null {
-      return this._reader.SLONG(idx);
+    return this._reader.SLONG(idx);
   }
 
   public CHAR(idx: number): string {
-      return this._reader.CHAR(idx);
+    return this._reader.CHAR(idx);
   }
 
   public STRING(idx: number, count: number): string {
-      return this._reader.STRING(idx, count);
+    return this._reader.STRING(idx, count);
   }
 
   public SEGMENT(idx: number, size: number): ArrayBuffer {
-      return this._reader.SEGMENT(idx, size);
+    return this._reader.SEGMENT(idx, size);
   }
 
   public asArray(type: 'STRING' | 'CHAR', idx: number, count: number): string[];
   public asArray(type: 'SEGMENT', idx: number, count: number): ArrayBuffer[];
   public asArray(type: string, idx: number, count: number): number[];
   public asArray(type: string, idx: number, count: number): (number | string | ArrayBuffer)[] {
-      // I have to override asArray because of the 'this[type]'
-      const values = [];
+    // I have to override asArray because of the 'this[type]'
+    const values = [];
 
-      for (let i = 0; i < count; i++) {
-          values[i] = (this as any)[type](idx + i);
-      }
-      return values;
+    for (let i = 0; i < count; i++) {
+      values[i] = (this as any)[type](idx + i);
+    }
+    return values;
   }
 
   public length(): number {
-      return this._reader.length();
+    return this._reader.length();
   }
 
   // End of "inherited" methods

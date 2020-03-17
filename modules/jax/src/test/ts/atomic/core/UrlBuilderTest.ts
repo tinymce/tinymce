@@ -6,7 +6,7 @@ UnitTest.test('UrlBuilderTest', () => {
   const createRecord = (record: any) => Option.some<Record<string, string>>(record);
 
   // copied from agar, perhaps we shoud move it to bedrock
-  const assertEq = function <T>(label: string, expected: string, actual: string) {
+  const assertEq = function <T> (label: string, expected: string, actual: string) {
     assert.eq(expected, actual, `${label}.\n  Expected: ${expected} \n  Actual: ${actual}`);
   };
 

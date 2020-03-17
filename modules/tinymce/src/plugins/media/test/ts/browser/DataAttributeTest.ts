@@ -60,12 +60,12 @@ UnitTest.asynctest('browser.plugins.media.DataAttributeTest', function (success,
         Utils.sAssertSizeRecalcUnconstrained(ui),
         Utils.sAssertSizeRecalcConstrainedReopen(ui)
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
-    plugins: ['media'],
+    plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
-    media_url_resolver (data, resolve) {
+    media_url_resolver(data, resolve) {
       resolve({ html: '<div data-ephox-embed-iri="' + data.url + '" style="max-width: 300px; max-height: 150px"></div>' });
     },
     base_url: '/project/tinymce/js/tinymce',

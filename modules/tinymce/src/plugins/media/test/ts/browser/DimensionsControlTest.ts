@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsControlTest', functi
     ])
     , onSuccess, onFailure);
   }, {
-    plugins: ['media'],
+    plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
     media_dimensions: false,

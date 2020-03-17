@@ -12,13 +12,9 @@ import * as Utils from './Utils';
 import * as Dialog from '../ui/Dialog';
 import Editor from 'tinymce/core/api/Editor';
 
-const getLink = (editor: Editor, elm) => {
-  return editor.dom.getParent(elm, 'a[href]');
-};
+const getLink = (editor: Editor, elm) => editor.dom.getParent(elm, 'a[href]');
 
-const getSelectedLink = (editor: Editor) => {
-  return getLink(editor, editor.selection.getStart());
-};
+const getSelectedLink = (editor: Editor) => getLink(editor, editor.selection.getStart());
 
 const hasOnlyAltModifier = function (e) {
   return e.altKey === true && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false;
@@ -38,34 +34,28 @@ const gotoLink = (editor: Editor, a) => {
   }
 };
 
-const openDialog = (editor: Editor) => {
-  return function () {
-    Dialog.open(editor);
-  };
+const openDialog = (editor: Editor) => function () {
+  Dialog.open(editor);
 };
 
-const gotoSelectedLink = (editor: Editor) => {
-  return function () {
-    gotoLink(editor, getSelectedLink(editor));
-  };
+const gotoSelectedLink = (editor: Editor) => function () {
+  gotoLink(editor, getSelectedLink(editor));
 };
 
-const leftClickedOnAHref = (editor: Editor) => {
-  return function (elm) {
-    let sel, rng, node;
-    // TODO: this used to query the context menu plugin directly. Is that a good idea?
-    //  && !isContextMenuVisible(editor)
-    if (Settings.hasContextToolbar(editor) && Utils.isLink(elm)) {
-      sel = editor.selection;
-      rng = sel.getRng();
-      node = rng.startContainer;
-      // ignore cursor positions at the beginning/end (to make context toolbar less noisy)
-      if (node.nodeType === 3 && sel.isCollapsed() && rng.startOffset > 0 && rng.startOffset < node.data.length) {
-        return true;
-      }
+const leftClickedOnAHref = (editor: Editor) => function (elm) {
+  let sel; let rng; let node;
+  // TODO: this used to query the context menu plugin directly. Is that a good idea?
+  //  && !isContextMenuVisible(editor)
+  if (Settings.hasContextToolbar(editor) && Utils.isLink(elm)) {
+    sel = editor.selection;
+    rng = sel.getRng();
+    node = rng.startContainer;
+    // ignore cursor positions at the beginning/end (to make context toolbar less noisy)
+    if (node.nodeType === 3 && sel.isCollapsed() && rng.startOffset > 0 && rng.startOffset < node.data.length) {
+      return true;
     }
-    return false;
-  };
+  }
+  return false;
 };
 
 const setupGotoLinks = (editor: Editor) => {
@@ -86,22 +76,18 @@ const setupGotoLinks = (editor: Editor) => {
   });
 };
 
-const toggleActiveState = (editor: Editor) => {
-  return function (api) {
-    const nodeChangeHandler = (e) => api.setActive(!editor.mode.isReadOnly() && !!Utils.getAnchorElement(editor, e.element));
-    editor.on('NodeChange', nodeChangeHandler);
-    return () => editor.off('NodeChange', nodeChangeHandler);
-  };
+const toggleActiveState = (editor: Editor) => function (api) {
+  const nodeChangeHandler = (e) => api.setActive(!editor.mode.isReadOnly() && !!Utils.getAnchorElement(editor, e.element));
+  editor.on('NodeChange', nodeChangeHandler);
+  return () => editor.off('NodeChange', nodeChangeHandler);
 };
 
-const toggleEnabledState = (editor: Editor) => {
-  return function (api) {
-    const parents = editor.dom.getParents(editor.selection.getStart());
-    api.setDisabled(!Utils.hasLinks(parents));
-    const nodeChangeHandler = (e) => api.setDisabled(!Utils.hasLinks(e.parents));
-    editor.on('NodeChange', nodeChangeHandler);
-    return () => editor.off('NodeChange', nodeChangeHandler);
-  };
+const toggleEnabledState = (editor: Editor) => function (api) {
+  const parents = editor.dom.getParents(editor.selection.getStart());
+  api.setDisabled(!Utils.hasLinks(parents));
+  const nodeChangeHandler = (e) => api.setDisabled(!Utils.hasLinks(e.parents));
+  editor.on('NodeChange', nodeChangeHandler);
+  return () => editor.off('NodeChange', nodeChangeHandler);
 };
 
 export {

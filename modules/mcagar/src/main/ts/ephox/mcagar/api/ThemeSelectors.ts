@@ -32,9 +32,7 @@ const SilverThemeSelectors: ThemeSelectors = {
   dialogSubmitSelector: '.tox-button:contains("Save")'
 };
 
-const getThemeSelectors = (): ThemeSelectors => {
-  return isModern() ? ModernThemeSelectors : SilverThemeSelectors;
-};
+const getThemeSelectors = (): ThemeSelectors => isModern() ? ModernThemeSelectors : SilverThemeSelectors;
 
 export {
   getThemeSelectors,

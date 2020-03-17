@@ -4,9 +4,7 @@ import * as Overflows from 'ephox/alloy/toolbar/Overflows';
 
 UnitTest.test('OverflowTest', () => {
   /* global assert */
-  const len = (unit: string) => {
-    return unit.length;
-  };
+  const len = (unit: string) => unit.length;
 
   const check = (expectedWithin: string[], expectedExtra: string[], total: number, input: string[], overflower: string) => {
     const actual = Overflows.partition(total, input, len, overflower);

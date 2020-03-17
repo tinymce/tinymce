@@ -54,26 +54,24 @@ promiseTest('Future: anonBind', () =>
     });
   }))));
 
-promiseTest('Future: parallel', () => {
-  return new Promise(function (resolve, reject) {
-    const f = Future.nu(function (callback) {
-      setTimeout(Fun.curry(callback, 'apple'), 10);
-    });
-    const g = Future.nu(function (callback) {
-      setTimeout(Fun.curry(callback, 'banana'), 5);
-    });
-    const h = Future.nu(function (callback) {
-      callback('carrot');
-    });
-
-    Futures.par([ f, g, h ]).get(function (r) {
-      eqAsync('r[0]', r[0], 'apple', reject);
-      eqAsync('r[1]', r[1], 'banana', reject);
-      eqAsync('r[2]', r[2], 'carrot', reject);
-      resolve(true);
-    });
+promiseTest('Future: parallel', () => new Promise(function (resolve, reject) {
+  const f = Future.nu(function (callback) {
+    setTimeout(Fun.curry(callback, 'apple'), 10);
   });
-});
+  const g = Future.nu(function (callback) {
+    setTimeout(Fun.curry(callback, 'banana'), 5);
+  });
+  const h = Future.nu(function (callback) {
+    callback('carrot');
+  });
+
+  Futures.par([ f, g, h ]).get(function (r) {
+    eqAsync('r[0]', r[0], 'apple', reject);
+    eqAsync('r[1]', r[1], 'banana', reject);
+    eqAsync('r[2]', r[2], 'carrot', reject);
+    resolve(true);
+  });
+}));
 
 promiseTest('Future: parallel spec', () =>
   fc.assert(fc.asyncProperty(fc.array(fc.tuple(fc.integer(1, 10), fc.integer())), (tuples) => new Promise((resolve, reject) => {
@@ -82,7 +80,7 @@ promiseTest('Future: parallel spec', () =>
         cb(value);
       }, timeout);
     }))).get((ii) => {
-      eqAsync('pars', tuples.map(([_, i]) => i), ii, reject, tArray(tNumber));
+      eqAsync('pars', tuples.map(([ _, i ]) => i), ii, reject, tArray(tNumber));
       resolve();
     });
   })))
@@ -110,7 +108,7 @@ promiseTest('Future: mapM spec', () =>
         cb(value);
       }, timeout);
     })).get((ii) => {
-      eqAsync('pars', tuples.map(([_, i]) => i), ii, reject, tArray(tNumber));
+      eqAsync('pars', tuples.map(([ _, i ]) => i), ii, reject, tArray(tNumber));
       resolve();
     });
   })))

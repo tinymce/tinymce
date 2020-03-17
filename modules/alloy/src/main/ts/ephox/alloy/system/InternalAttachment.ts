@@ -47,7 +47,9 @@ const replaceChildren = (component: AlloyComponent, newChildren: AlloyComponent[
     if (!childComp.getSystem().isConnected()) {
       component.getSystem().addToWorld(childComp);
       attach(component, childComp);
-      if (Body.inBody(component.element())) { fireAttaching(childComp); }
+      if (Body.inBody(component.element())) {
+        fireAttaching(childComp);
+      }
     } else {
       attach(component, childComp);
     }

@@ -23,37 +23,33 @@ import { DialogSpec, getEventExtras, getHeader, renderModalDialog, WindowExtra }
 import {  bodySendMessageChannel } from './DialogChannels';
 
 // A list of supported message actions
-const SUPPORTED_MESSAGE_ACTIONS = ['insertContent', 'setContent', 'execCommand', 'close', 'block', 'unblock'];
+const SUPPORTED_MESSAGE_ACTIONS = [ 'insertContent', 'setContent', 'execCommand', 'close', 'block', 'unblock' ];
 
-const isSupportedMessage = (data: any): boolean => {
-  return Type.isObject(data) && SUPPORTED_MESSAGE_ACTIONS.indexOf(data.mceAction) !== -1;
-};
+const isSupportedMessage = (data: any): boolean => Type.isObject(data) && SUPPORTED_MESSAGE_ACTIONS.indexOf(data.mceAction) !== -1;
 
-const isCustomMessage = (data: any): boolean => {
-  return !isSupportedMessage(data) && Type.isObject(data) && Obj.has(data, 'mceAction');
-};
+const isCustomMessage = (data: any): boolean => !isSupportedMessage(data) && Type.isObject(data) && Obj.has(data, 'mceAction');
 
 const handleMessage = (editor: Editor, api: Types.UrlDialog.UrlDialogInstanceApi, data: any) => {
   switch (data.mceAction) {
-    case 'insertContent':
-      editor.insertContent(data.content);
-      break;
-    case 'setContent':
-      editor.setContent(data.content);
-      break;
-    case 'execCommand':
-      const ui = Type.isBoolean(data.ui) ? data.ui : false;
-      editor.execCommand(data.cmd, ui, data.value);
-      break;
-    case 'close':
-      api.close();
-      break;
-    case 'block':
-      api.block(data.message);
-      break;
-    case 'unblock':
-      api.unblock();
-      break;
+  case 'insertContent':
+    editor.insertContent(data.content);
+    break;
+  case 'setContent':
+    editor.setContent(data.content);
+    break;
+  case 'execCommand':
+    const ui = Type.isBoolean(data.ui) ? data.ui : false;
+    editor.execCommand(data.cmd, ui, data.value);
+    break;
+  case 'close':
+    api.close();
+    break;
+  case 'block':
+    api.block(data.message);
+    break;
+  case 'unblock':
+    api.unblock();
+    break;
   }
 };
 

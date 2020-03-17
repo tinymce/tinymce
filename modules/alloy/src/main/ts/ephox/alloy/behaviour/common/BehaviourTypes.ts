@@ -11,7 +11,7 @@ import { BehaviourState, BehaviourStateInitialiser } from './BehaviourState';
 export type BehaviourApiFunc<D extends BehaviourConfigDetail, S extends BehaviourState> = (component: AlloyComponent, bConfig: D, bState: S, ...rest: any[]) => any;
 
 export type BehaviourRecord = Record<string, ConfiguredBehaviour<any, any, any>>;
-export type BehaviourApisRecord<D extends BehaviourConfigDetail, S extends BehaviourState> = { [key: string]: BehaviourApiFunc<D, S> };
+export interface BehaviourApisRecord<D extends BehaviourConfigDetail, S extends BehaviourState> { [key: string]: BehaviourApiFunc<D, S> }
 export type BehaviourExtraRecord<E> = { [K in keyof E]: Function };
 
 export type BehaviourInfo<D extends BehaviourConfigDetail, S extends BehaviourState> = Record<string, () => Option<BehaviourConfigAndState<D, S>>>;
@@ -60,7 +60,7 @@ export interface BehaviourConfig<D extends BehaviourConfigDetail, S extends Beha
   fields: FieldProcessorAdt[];
 }
 
-export interface BehaviourModeSpec<D extends BehaviourConfigDetail, S extends BehaviourState, A extends BehaviourApisRecord<D, S>, E extends BehaviourExtraRecord<E> = {}> extends BaseBehaviourConfig<D, S, A, E>  {
+export interface BehaviourModeSpec<D extends BehaviourConfigDetail, S extends BehaviourState, A extends BehaviourApisRecord<D, S>, E extends BehaviourExtraRecord<E> = {}> extends BaseBehaviourConfig<D, S, A, E> {
   branchKey: string;
   branches: Record<string, FieldProcessorAdt[]>;
 }

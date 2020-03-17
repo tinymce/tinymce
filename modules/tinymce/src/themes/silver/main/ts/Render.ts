@@ -88,10 +88,10 @@ const setup = (editor: Editor): RenderInfo => {
 
   const platform = PlatformDetection.detect();
   const isIE = platform.browser.isIE();
-  const platformClasses = isIE ? ['tox-platform-ie'] : [];
+  const platformClasses = isIE ? [ 'tox-platform-ie' ] : [];
   const isTouch = platform.deviceType.isTouch();
   const touchPlatformClass = 'tox-platform-touch';
-  const deviceClasses = isTouch ? [touchPlatformClass] : [];
+  const deviceClasses = isTouch ? [ touchPlatformClass ] : [];
   const isToolbarTop = isToolbarLocationTop(editor);
 
   const dirAttributes = I18n.isRtl() ? {
@@ -115,7 +115,7 @@ const setup = (editor: Editor): RenderInfo => {
   const sink = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: ['tox', 'tox-silver-sink', 'tox-tinymce-aux'].concat(platformClasses).concat(deviceClasses),
+      classes: [ 'tox', 'tox-silver-sink', 'tox-tinymce-aux' ].concat(platformClasses).concat(deviceClasses),
       ...dirAttributes
     },
     behaviours: Behaviour.derive([
@@ -130,21 +130,15 @@ const setup = (editor: Editor): RenderInfo => {
   const memAnchorBar = Memento.record({
     dom: {
       tag: 'div',
-      classes: [ 'tox-anchorbar']
+      classes: [ 'tox-anchorbar' ]
     }
   });
 
-  const lazyAnchorBar = () => lazyOuterContainer.bind((container) => {
-    return memAnchorBar.getOpt(container);
-  }).getOrDie('Could not find a anchor bar element');
+  const lazyAnchorBar = () => lazyOuterContainer.bind((container) => memAnchorBar.getOpt(container)).getOrDie('Could not find a anchor bar element');
 
-  const lazyToolbar = () => lazyOuterContainer.bind((container) => {
-    return OuterContainer.getToolbar(container);
-  }).getOrDie('Could not find more toolbar element');
+  const lazyToolbar = () => lazyOuterContainer.bind((container) => OuterContainer.getToolbar(container)).getOrDie('Could not find more toolbar element');
 
-  const lazyThrobber = () => lazyOuterContainer.bind((container) => {
-    return OuterContainer.getThrobber(container);
-  }).getOrDie('Could not find throbber element');
+  const lazyThrobber = () => lazyOuterContainer.bind((container) => OuterContainer.getThrobber(container)).getOrDie('Could not find throbber element');
 
   const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar);
 
@@ -154,7 +148,7 @@ const setup = (editor: Editor): RenderInfo => {
       classes: [ 'tox-menubar' ]
     },
     backstage,
-    onEscape () {
+    onEscape() {
       editor.focus();
     }
   });
@@ -196,14 +190,14 @@ const setup = (editor: Editor): RenderInfo => {
   const partSidebar: AlloySpec = OuterContainer.parts().sidebar({
     dom: {
       tag: 'div',
-      classes: ['tox-sidebar']
+      classes: [ 'tox-sidebar' ]
     }
   });
 
   const partThrobber: AlloySpec = OuterContainer.parts().throbber({
     dom: {
       tag: 'div',
-      classes: ['tox-throbber']
+      classes: [ 'tox-throbber' ]
     },
     backstage
   });
@@ -216,7 +210,7 @@ const setup = (editor: Editor): RenderInfo => {
   const socketSidebarContainer: SimpleSpec = {
     dom: {
       tag: 'div',
-      classes: ['tox-sidebar-wrap']
+      classes: [ 'tox-sidebar-wrap' ]
     },
     components: [
       partSocket,
@@ -242,7 +236,7 @@ const setup = (editor: Editor): RenderInfo => {
   const partHeader = OuterContainer.parts().header({
     dom: {
       tag: 'div',
-      classes: ['tox-editor-header'],
+      classes: [ 'tox-editor-header' ],
       ...verticalDirAttributes,
     },
     components: Arr.flatten<AlloySpec>([
@@ -267,13 +261,13 @@ const setup = (editor: Editor): RenderInfo => {
   const editorContainer = {
     dom: {
       tag: 'div',
-      classes: ['tox-editor-container']
+      classes: [ 'tox-editor-container' ]
     },
     components: editorComponents,
   };
 
   const containerComponents = Arr.flatten<AlloySpec>([
-    [editorContainer],
+    [ editorContainer ],
     // Inline mode does not have a status bar
     isInline ? [ ] : statusbar.toArray(),
     [ partThrobber ]
@@ -292,9 +286,9 @@ const setup = (editor: Editor): RenderInfo => {
     OuterContainer.sketch({
       dom: {
         tag: 'div',
-        classes: ['tox', 'tox-tinymce']
-          .concat(isInline ? ['tox-tinymce-inline'] : [])
-          .concat(isToolbarTop ? [] : ['tox-tinymce--toolbar-bottom'])
+        classes: [ 'tox', 'tox-tinymce' ]
+          .concat(isInline ? [ 'tox-tinymce-inline' ] : [])
+          .concat(isToolbarTop ? [] : [ 'tox-tinymce--toolbar-bottom' ])
           .concat(deviceClasses)
           .concat(platformClasses),
         styles: {
@@ -403,7 +397,7 @@ const setup = (editor: Editor): RenderInfo => {
     return mode.render(editor, uiComponents, rawUiConfig, backstage, args);
   };
 
-  return {mothership, uiMothership, backstage, renderUI, getUi};
+  return { mothership, uiMothership, backstage, renderUI, getUi };
 };
 
 export {

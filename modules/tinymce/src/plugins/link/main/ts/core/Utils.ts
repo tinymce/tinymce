@@ -25,28 +25,20 @@ const applyRelTargetRules = (rel: string, isUnsafe: boolean): string => {
   const rules = [ 'noopener' ];
   const rels = rel ? rel.split(/\s+/) : [];
 
-  const toString = (rels: string[]): string => {
-    return Tools.trim(rels.sort().join(' '));
-  };
+  const toString = (rels: string[]): string => Tools.trim(rels.sort().join(' '));
 
   const addTargetRules = (rels: string[]): string[] => {
     rels = removeTargetRules(rels);
     return rels.length > 0 ? rels.concat(rules) : rules;
   };
 
-  const removeTargetRules = (rels: string[]): string[] => {
-    return rels.filter((val) => {
-      return Tools.inArray(rules, val) === -1;
-    });
-  };
+  const removeTargetRules = (rels: string[]): string[] => rels.filter((val) => Tools.inArray(rules, val) === -1);
 
   const newRels = isUnsafe ? addTargetRules(rels) : removeTargetRules(rels);
   return newRels.length > 0 ? toString(newRels) : '';
 };
 
-const trimCaretContainers = (text: string): string => {
-  return text.replace(/\uFEFF/g, '');
-};
+const trimCaretContainers = (text: string): string => text.replace(/\uFEFF/g, '');
 
 const getAnchorElement = (editor: Editor, selectedElm?: Element): HTMLAnchorElement => {
   selectedElm = selectedElm || editor.selection.getNode();
@@ -63,13 +55,9 @@ const getAnchorText = (selection, anchorElm: HTMLAnchorElement) => {
   return trimCaretContainers(text);
 };
 
-const isLink = (elm: Element): elm is HTMLAnchorElement => {
-  return elm && elm.nodeName === 'A' && !!getHref(elm);
-};
+const isLink = (elm: Element): elm is HTMLAnchorElement => elm && elm.nodeName === 'A' && !!getHref(elm);
 
-const hasLinks = (elements: Element[]) => {
-  return Tools.grep(elements, isLink).length > 0;
-};
+const hasLinks = (elements: Element[]) => Tools.grep(elements, isLink).length > 0;
 
 const isOnlyTextSelected = (html: string) => {
   // Partial html and not a fully selected anchor element
@@ -80,21 +68,17 @@ const isOnlyTextSelected = (html: string) => {
   return true;
 };
 
-const isImageFigure = (elm: Element) => {
-  return elm && elm.nodeName === 'FIGURE' && /\bimage\b/i.test(elm.className);
-};
+const isImageFigure = (elm: Element) => elm && elm.nodeName === 'FIGURE' && /\bimage\b/i.test(elm.className);
 
-const getLinkAttrs = (data: LinkDialogOutput): Record<string, string> => {
-  return Arr.foldl([ 'title', 'rel', 'class', 'target' ], (acc, key) => {
-    data[key].each((value) => {
-      // If dealing with an empty string, then treat that as being null so the attribute is removed
-      acc[key] = value.length > 0 ? value : null;
-    });
-    return acc;
-  }, {
-    href: data.href
+const getLinkAttrs = (data: LinkDialogOutput): Record<string, string> => Arr.foldl([ 'title', 'rel', 'class', 'target' ], (acc, key) => {
+  data[key].each((value) => {
+    // If dealing with an empty string, then treat that as being null so the attribute is removed
+    acc[key] = value.length > 0 ? value : null;
   });
-};
+  return acc;
+}, {
+  href: data.href
+});
 
 const handleExternalTargets = (href: string, assumeExternalTargets: AssumeExternalTargets): string => {
   if ((assumeExternalTargets === AssumeExternalTargets.ALWAYS_HTTP

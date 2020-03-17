@@ -12,211 +12,201 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
   ListsPlugin();
   Theme();
 
-  const clickOnSplitBtnFor = (label) => {
-    return Log.stepsAsStep('TBA', `ADVlist: Test split menu for ${label} has the correct Dom structure`, [
-      Mouse.sClickOn(Body.body(), '[aria-label="' + label + '"] > .tox-tbtn + .tox-split-button__chevron'),
-      Waiter.sTryUntil(
-        `Waiting for ${label} menu to appear`,
-        UiFinder.sExists(Body.body(), '.tox-menu.tox-selected-menu')
-      )
-    ]);
-  };
+  const clickOnSplitBtnFor = (label) => Log.stepsAsStep('TBA', `ADVlist: Test split menu for ${label} has the correct Dom structure`, [
+    Mouse.sClickOn(Body.body(), '[aria-label="' + label + '"] > .tox-tbtn + .tox-split-button__chevron'),
+    Waiter.sTryUntil(
+      `Waiting for ${label} menu to appear`,
+      UiFinder.sExists(Body.body(), '.tox-menu.tox-selected-menu')
+    )
+  ]);
 
-  const assertNumListStructure = () => {
-    return Step.sync(() => {
-      Assertions.assertStructure('A basic alert dialog should have these components',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            classes: [ arr.has('tox-tiered-menu') ],
+  const assertNumListStructure = () => Step.sync(() => {
+    Assertions.assertStructure('A basic alert dialog should have these components',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-tiered-menu') ],
+        children: [
+          s.element('div', {
+            classes: [
+              arr.has('tox-menu'),
+              arr.has('tox-collection'),
+              arr.has('tox-collection--toolbar'),
+              arr.has('tox-collection--toolbar-lg'),
+              arr.has('tox-selected-menu')
+            ],
             children: [
               s.element('div', {
-                classes: [
-                  arr.has('tox-menu'),
-                  arr.has('tox-collection'),
-                  arr.has('tox-collection--toolbar'),
-                  arr.has('tox-collection--toolbar-lg'),
-                  arr.has('tox-selected-menu')
-                ],
+                classes: [ arr.has('tox-collection__group') ],
                 children: [
                   s.element('div', {
-                    classes: [ arr.has('tox-collection__group') ],
+                    classes: [
+                      arr.has('tox-menu-nav__js'),
+                      arr.has('tox-collection__item'),
+                      arr.has('tox-collection__item--active')
+                    ],
+                    attrs: {
+                      title: str.is('Default'),
+                    },
                     children: [
                       s.element('div', {
-                        classes: [
-                          arr.has('tox-menu-nav__js'),
-                          arr.has('tox-collection__item'),
-                          arr.has('tox-collection__item--active')
-                        ],
-                        attrs: {
-                          title: str.is('Default'),
-                        },
-                        children: [
-                          s.element('div', {
-                            classes: [ arr.has('tox-collection__item-icon') ]
-                          })
-                        ]
-                      }),
-                      s.element('div', {
-                        classes: [
-                          arr.has('tox-menu-nav__js'),
-                          arr.has('tox-collection__item')
-                        ],
-                        attrs: {
-                          title: str.is('Circle'),
-                        },
-                        children: [
-                          s.element('div', {
-                            classes: [ arr.has('tox-collection__item-icon') ]
-                          })
-                        ]
-                      }),
-                      s.element('div', {
-                        classes: [
-                          arr.has('tox-menu-nav__js'),
-                          arr.has('tox-collection__item')
-                        ],
-                        attrs: {
-                          title: str.is('Square'),
-                        },
-                        children: [
-                          s.element('div', {
-                            classes: [ arr.has('tox-collection__item-icon') ]
-                          })
-                        ]
-                      })
-                    ]
-                  })
-                ]
-              })
-            ]
-          });
-        }),
-        Element.fromDom(document.querySelector('.tox-tiered-menu'))
-      );
-    });
-  };
-
-  const assertBullListStructure = () => {
-    return Step.sync(() => {
-      Assertions.assertStructure('A basic alert dialog should have these components',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            classes: [ arr.has('tox-tiered-menu') ],
-            children: [
-              s.element('div', {
-                classes: [
-                  arr.has('tox-menu'),
-                  arr.has('tox-collection'),
-                  arr.has('tox-collection--toolbar'),
-                  arr.has('tox-collection--toolbar-lg'),
-                  arr.has('tox-selected-menu')
-                ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-collection__group') ],
-                    children: [
-                      s.element('div', {
-                        classes: [
-                          arr.has('tox-menu-nav__js'),
-                          arr.has('tox-collection__item'),
-                          arr.has('tox-collection__item--active')
-                        ],
-                        attrs: {
-                          title: str.is('Default'),
-                        },
-                        children: [
-                          s.element('div', {
-                            classes: [ arr.has('tox-collection__item-icon') ]
-                          })
-                        ]
-                      }),
-                      s.element('div', {
-                        classes: [
-                          arr.has('tox-menu-nav__js'),
-                          arr.has('tox-collection__item')
-                        ],
-                        attrs: {
-                          title: str.is('Lower Alpha'),
-                        },
-                        children: [
-                          s.element('div', {
-                            classes: [ arr.has('tox-collection__item-icon') ]
-                          })
-                        ]
-                      }),
-                      s.element('div', {
-                        classes: [
-                          arr.has('tox-menu-nav__js'),
-                          arr.has('tox-collection__item')
-                        ],
-                        attrs: {
-                          title: str.is('Lower Greek'),
-                        },
-                        children: [
-                          s.element('div', {
-                            classes: [ arr.has('tox-collection__item-icon') ]
-                          })
-                        ]
+                        classes: [ arr.has('tox-collection__item-icon') ]
                       })
                     ]
                   }),
-                  // second row of icons
                   s.element('div', {
-                    classes: [ arr.has('tox-collection__group') ],
+                    classes: [
+                      arr.has('tox-menu-nav__js'),
+                      arr.has('tox-collection__item')
+                    ],
+                    attrs: {
+                      title: str.is('Circle'),
+                    },
                     children: [
                       s.element('div', {
-                        classes: [
-                          arr.has('tox-menu-nav__js'),
-                          arr.has('tox-collection__item')
-                        ],
-                        attrs: {
-                          title: str.is('Lower Roman'),
-                        },
-                        children: [
-                          s.element('div', {
-                            classes: [ arr.has('tox-collection__item-icon') ]
-                          })
-                        ]
-                      }),
+                        classes: [ arr.has('tox-collection__item-icon') ]
+                      })
+                    ]
+                  }),
+                  s.element('div', {
+                    classes: [
+                      arr.has('tox-menu-nav__js'),
+                      arr.has('tox-collection__item')
+                    ],
+                    attrs: {
+                      title: str.is('Square'),
+                    },
+                    children: [
                       s.element('div', {
-                        classes: [
-                          arr.has('tox-menu-nav__js'),
-                          arr.has('tox-collection__item')
-                        ],
-                        attrs: {
-                          title: str.is('Upper Alpha'),
-                        },
-                        children: [
-                          s.element('div', {
-                            classes: [ arr.has('tox-collection__item-icon') ]
-                          })
-                        ]
-                      }),
-                      s.element('div', {
-                        classes: [
-                          arr.has('tox-menu-nav__js'),
-                          arr.has('tox-collection__item')
-                        ],
-                        attrs: {
-                          title: str.is('Upper Roman'),
-                        },
-                        children: [
-                          s.element('div', {
-                            classes: [ arr.has('tox-collection__item-icon') ]
-                          })
-                        ]
+                        classes: [ arr.has('tox-collection__item-icon') ]
                       })
                     ]
                   })
                 ]
               })
             ]
-          });
-        }),
-        Element.fromDom(document.querySelector('.tox-tiered-menu'))
-      );
-    });
-  };
+          })
+        ]
+      })),
+      Element.fromDom(document.querySelector('.tox-tiered-menu'))
+    );
+  });
+
+  const assertBullListStructure = () => Step.sync(() => {
+    Assertions.assertStructure('A basic alert dialog should have these components',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-tiered-menu') ],
+        children: [
+          s.element('div', {
+            classes: [
+              arr.has('tox-menu'),
+              arr.has('tox-collection'),
+              arr.has('tox-collection--toolbar'),
+              arr.has('tox-collection--toolbar-lg'),
+              arr.has('tox-selected-menu')
+            ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-collection__group') ],
+                children: [
+                  s.element('div', {
+                    classes: [
+                      arr.has('tox-menu-nav__js'),
+                      arr.has('tox-collection__item'),
+                      arr.has('tox-collection__item--active')
+                    ],
+                    attrs: {
+                      title: str.is('Default'),
+                    },
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item-icon') ]
+                      })
+                    ]
+                  }),
+                  s.element('div', {
+                    classes: [
+                      arr.has('tox-menu-nav__js'),
+                      arr.has('tox-collection__item')
+                    ],
+                    attrs: {
+                      title: str.is('Lower Alpha'),
+                    },
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item-icon') ]
+                      })
+                    ]
+                  }),
+                  s.element('div', {
+                    classes: [
+                      arr.has('tox-menu-nav__js'),
+                      arr.has('tox-collection__item')
+                    ],
+                    attrs: {
+                      title: str.is('Lower Greek'),
+                    },
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item-icon') ]
+                      })
+                    ]
+                  })
+                ]
+              }),
+              // second row of icons
+              s.element('div', {
+                classes: [ arr.has('tox-collection__group') ],
+                children: [
+                  s.element('div', {
+                    classes: [
+                      arr.has('tox-menu-nav__js'),
+                      arr.has('tox-collection__item')
+                    ],
+                    attrs: {
+                      title: str.is('Lower Roman'),
+                    },
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item-icon') ]
+                      })
+                    ]
+                  }),
+                  s.element('div', {
+                    classes: [
+                      arr.has('tox-menu-nav__js'),
+                      arr.has('tox-collection__item')
+                    ],
+                    attrs: {
+                      title: str.is('Upper Alpha'),
+                    },
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item-icon') ]
+                      })
+                    ]
+                  }),
+                  s.element('div', {
+                    classes: [
+                      arr.has('tox-menu-nav__js'),
+                      arr.has('tox-collection__item')
+                    ],
+                    attrs: {
+                      title: str.is('Upper Roman'),
+                    },
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item-icon') ]
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      })),
+      Element.fromDom(document.querySelector('.tox-tiered-menu'))
+    );
+  });
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, [

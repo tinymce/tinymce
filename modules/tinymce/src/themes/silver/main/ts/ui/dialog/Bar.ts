@@ -13,12 +13,10 @@ import { Omit } from '../Omit';
 
 type BarSpec = Omit<Types.Bar.Bar, 'type'>;
 
-export const renderBar = (spec: BarSpec, backstage: UiFactoryBackstageShared): SimpleSpec => {
-  return {
-    dom: {
-      tag: 'div',
-      classes: ['tox-bar', 'tox-form__controls-h-stack']
-    },
-    components: Arr.map(spec.items, backstage.interpreter)
-  };
-};
+export const renderBar = (spec: BarSpec, backstage: UiFactoryBackstageShared): SimpleSpec => ({
+  dom: {
+    tag: 'div',
+    classes: [ 'tox-bar', 'tox-form__controls-h-stack' ]
+  },
+  components: Arr.map(spec.items, backstage.interpreter)
+});

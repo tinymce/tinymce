@@ -14,7 +14,7 @@ const setupButtons = function (editor: Editor) {
   editor.ui.registry.addButton('quickimage', {
     icon: 'image',
     tooltip: 'Insert image',
-    onAction () {
+    onAction() {
       Picker.pickFile(editor).then(function (files) {
         if (files.length > 0) {
           const blob = files[0];
@@ -30,7 +30,7 @@ const setupButtons = function (editor: Editor) {
   editor.ui.registry.addButton('quicktable', {
     icon: 'table',
     tooltip: 'Insert table',
-    onAction () {
+    onAction() {
       // panel.hide();
       Actions.insertTable(editor, 2, 2);
     }

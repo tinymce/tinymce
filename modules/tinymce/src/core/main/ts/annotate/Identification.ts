@@ -13,7 +13,7 @@ import * as Markings from './Markings';
 
 // Given the current editor selection, identify the uid of any current
 // annotation
-const identify = (editor: Editor, annotationName: Option<string>): Option<{uid: string, name: string, elements: any[]}> => {
+const identify = (editor: Editor, annotationName: Option<string>): Option<{uid: string; name: string; elements: any[]}> => {
   const rng = editor.selection.getRng();
 
   const start = Element.fromDom(rng.startContainer);
@@ -25,9 +25,7 @@ const identify = (editor: Editor, annotationName: Option<string>): Option<{uid: 
   );
 
   const newStart = Traverse.child(start, rng.startOffset).getOr(start);
-  const closest = SelectorFind.closest(newStart, selector, (n) => {
-    return Compare.eq(n, root);
-  });
+  const closest = SelectorFind.closest(newStart, selector, (n) => Compare.eq(n, root));
 
   const getAttr = (c, property: string): Option<any> => {
     if (Attr.has(c, property)) {
@@ -37,23 +35,19 @@ const identify = (editor: Editor, annotationName: Option<string>): Option<{uid: 
     }
   };
 
-  return closest.bind((c) => {
-    return getAttr(c, `${Markings.dataAnnotationId()}`).bind((uid) =>
-      getAttr(c, `${Markings.dataAnnotation()}`).map((name) => {
-        const elements = findMarkers(editor, uid);
-        return {
-          uid,
-          name,
-          elements
-        };
-      })
-    );
-  });
+  return closest.bind((c) => getAttr(c, `${Markings.dataAnnotationId()}`).bind((uid) =>
+    getAttr(c, `${Markings.dataAnnotation()}`).map((name) => {
+      const elements = findMarkers(editor, uid);
+      return {
+        uid,
+        name,
+        elements
+      };
+    })
+  ));
 };
 
-const isAnnotation = (elem: any): boolean => {
-  return Node.isElement(elem) && Class.has(elem, Markings.annotation());
-};
+const isAnnotation = (elem: any): boolean => Node.isElement(elem) && Class.has(elem, Markings.annotation());
 
 const findMarkers = (editor: Editor, uid: string): any[] => {
   const body = Element.fromDom(editor.getBody());

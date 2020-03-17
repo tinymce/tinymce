@@ -20,7 +20,7 @@ import { MobileWebApp } from 'tinymce/themes/mobile/api/IosWebapp';
 export default (scrollIntoView: () => void): MobileRealm => {
   const alloy = OuterContainer({
     classes: [ Styles.resolve('android-container') ]
-  }) as Gui.GuiSystem;
+  });
 
   const toolbar = ScrollingToolbar();
 
@@ -28,7 +28,7 @@ export default (scrollIntoView: () => void): MobileRealm => {
 
   const switchToEdit = CommonRealm.makeEditSwitch(webapp);
 
-  const socket = CommonRealm.makeSocket() as AlloyComponent;
+  const socket = CommonRealm.makeSocket();
 
   const dropup = Dropup.build(Fun.noop, scrollIntoView);
 

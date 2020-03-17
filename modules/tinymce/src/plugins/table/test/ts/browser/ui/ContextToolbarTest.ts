@@ -2,7 +2,7 @@ import { Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Mouse
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { TinyApis, TinyLoader, TinyUi, UiChains} from '@ephox/mcagar';
+import { TinyApis, TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
 import { Body, Element, Replication, SelectorFilter, Html, Remove } from '@ephox/sugar';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
@@ -37,31 +37,25 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success,
     const sPressTabKey = Keyboard.sKeydown(doc, Keys.tab(), { });
 
     // Assert focus is on the expected toolbar button
-    const sAssertFocusOnItem = (label: string, selector: string) => {
-      return FocusTools.sTryOnSelector(`Focus should be on: ${label}`, doc, selector);
-    };
+    const sAssertFocusOnItem = (label: string, selector: string) => FocusTools.sTryOnSelector(`Focus should be on: ${label}`, doc, selector);
 
-    const sAssertButtonDisabled = (label: string, selector: string) => {
-      return tinyUi.sWaitForUi(label, `.tox-pop__dialog ${selector}.tox-tbtn--disabled`);
-    };
+    const sAssertButtonDisabled = (label: string, selector: string) => tinyUi.sWaitForUi(label, `.tox-pop__dialog ${selector}.tox-tbtn--disabled`);
 
-    const sClickOnToolbarButton = (selector: string) => {
-      return Chain.asStep({}, [
-        Chain.fromParent(tinyUi.cWaitForPopup('wait for context toolbar', '.tox-pop__dialog div'), [
-          Chain.fromChains([
-            UiFinder.cFindIn(selector),
-            Mouse.cClick
-          ])
+    const sClickOnToolbarButton = (selector: string) => Chain.asStep({}, [
+      Chain.fromParent(tinyUi.cWaitForPopup('wait for context toolbar', '.tox-pop__dialog div'), [
+        Chain.fromChains([
+          UiFinder.cFindIn(selector),
+          Mouse.cClick
         ])
-      ]);
-    };
+      ])
+    ]);
 
-    const sAssertHtmlStructure = (label, expectedHtml) => Chain.asStep({editor}, [ NamedChain.read('editor', Chain.op((editor) => {
+    const sAssertHtmlStructure = (label, expectedHtml) => Chain.asStep({ editor }, [ NamedChain.read('editor', Chain.op((editor) => {
       const elm = Replication.deep(Element.fromDom(editor.getBody()));
       Arr.each(SelectorFilter.descendants(elm, '*[data-mce-bogus="all"]'), Remove.remove);
       const actualHtml = Html.get(elm);
       Assertions.assertHtmlStructure(label, `<body>${expectedHtml}</body>`, `<body>${actualHtml}</body>`);
-    }))]);
+    })) ]);
 
     const sOpenAndCloseDialog = GeneralSteps.sequence([
       Chain.asStep(editor, [
@@ -125,7 +119,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success,
       ]),
       Log.stepsAsStep('TBA', 'Table: context toolbar functionality test with focus in caption', [
         sAddTableAndOpenContextToolbar('<table style = "width: 5%;"><caption>abc</caption><tbody><tr><td>x</td></tr></tbody></table>'),
-        tinyApis.sSetCursor([0, 0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0, 0 ], 1),
 
         sClickOnToolbarButton('button[aria-label="Table properties"]'),
         sOpenAndCloseDialog,

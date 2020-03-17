@@ -1,0 +1,10 @@
+{
+  "extends": "plugin:@tinymce/standard",
+  "parserOptions": {
+    "sourceType": "module",
+    "project": [
+      "./tsconfig.json",
+      "modules/*/tsconfig.json"
+    ]
+  }
+}

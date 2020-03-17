@@ -33,7 +33,7 @@ UnitTest.test('DirectionTest', function () {
   assertOnDirection(el, 'isLeft', 'isRight', 'isLeft');
 
   const arabicElement = EphoxElement('div');
-  Attr.setAll(arabicElement, {lang: 'ar', dir: 'rtl'});
+  Attr.setAll(arabicElement, { lang: 'ar', dir: 'rtl' });
   assertDirection(arabicElement, 'rtl');
   assertOnDirection(arabicElement, 'isLeft', 'isRight', 'isRight');
 });

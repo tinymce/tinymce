@@ -33,9 +33,7 @@ export default (): void => {
 
   gui.add(sink);
 
-  const lazySink = () => {
-    return Result.value(sink);
-  };
+  const lazySink = () => Result.value(sink);
 
   const alphaSpec = { label: 'Alpha', inline: false };
   const betaSpec = { label: 'Beta', inline: false };
@@ -76,74 +74,70 @@ export default (): void => {
   const form = HtmlDisplay.section(
     gui,
     'This form has many fields',
-    Form.sketch((parts: FormParts) => {
-      return {
-        dom: {
-          tag: 'div',
-          classes: [ 'outside-form' ]
-        },
+    Form.sketch((parts: FormParts) => ({
+      dom: {
+        tag: 'div',
+        classes: [ 'outside-form' ]
+      },
 
-        components: [
-          parts.field('aria', FormField.sketch({
-            dom: {
-              tag: 'span'
-            },
-            components: [
-              FormField.parts().label({
-                dom: {
-                  tag: 'label',
-                  innerHtml: 'aria test'
-                }
-              }),
-              FormField.parts().field({ factory: Input }),
-              FormField.parts()['aria-descriptor']({
-                text: 'aria descriptor'
-              })
-            ]
-          })),
-          parts.field('alpha', DemoFields.textMunger(alphaSpec)),
-          parts.field('beta', DemoFields.textMunger(betaSpec)),
-          Container.sketch({
-            dom: {
-              styles: {
-                border: '1px solid green'
+      components: [
+        parts.field('aria', FormField.sketch({
+          dom: {
+            tag: 'span'
+          },
+          components: [
+            FormField.parts().label({
+              dom: {
+                tag: 'label',
+                innerHtml: 'aria test'
               }
-            },
-            components: [
-              parts.field('gamma', DemoFields.textMunger(gammaSpec))
-            ]
-          }),
-
-          parts.field('delta', DemoFields.textMunger(deltaSpec)),
-          parts.field('epsilon', DemoFields.textMunger(epsilonSpec)),
-          parts.field('theta', DemoFields.selectMunger(thetaSpec)),
-          parts.field('rho', DemoFields.chooserMunger(rhoSpec)),
-          parts.field('omega', DemoFields.coupledTextMunger(omegaSpec)),
-          parts.field('maxis', DemoFields.typeaheadMunger(maxiSpec)),
-
-          Button.sketch({
-            dom: {
-              tag: 'button',
-              innerHtml: 'OK'
-            },
-            action (button) {
-              console.log('Form values', Obj.map(
-                Representing.getValue(form),
-                (v) => {
-                  return v.getOr('Not found');
-                }
-              ));
+            }),
+            FormField.parts().field({ factory: Input }),
+            FormField.parts()['aria-descriptor']({
+              text: 'aria descriptor'
+            })
+          ]
+        })),
+        parts.field('alpha', DemoFields.textMunger(alphaSpec)),
+        parts.field('beta', DemoFields.textMunger(betaSpec)),
+        Container.sketch({
+          dom: {
+            styles: {
+              border: '1px solid green'
             }
-          })
-        ],
+          },
+          components: [
+            parts.field('gamma', DemoFields.textMunger(gammaSpec))
+          ]
+        }),
 
-        formBehaviours: Behaviour.derive([
-          Keying.config({
-            mode: 'cyclic'
-          })
-        ])
-      };
-    })
+        parts.field('delta', DemoFields.textMunger(deltaSpec)),
+        parts.field('epsilon', DemoFields.textMunger(epsilonSpec)),
+        parts.field('theta', DemoFields.selectMunger(thetaSpec)),
+        parts.field('rho', DemoFields.chooserMunger(rhoSpec)),
+        parts.field('omega', DemoFields.coupledTextMunger(omegaSpec)),
+        parts.field('maxis', DemoFields.typeaheadMunger(maxiSpec)),
+
+        Button.sketch({
+          dom: {
+            tag: 'button',
+            innerHtml: 'OK'
+          },
+          action(button) {
+            console.log('Form values', Obj.map(
+              Representing.getValue(form),
+              (v) => v.getOr('Not found')
+            ));
+          }
+        })
+      ],
+
+      formBehaviours: Behaviour.derive([
+        Keying.config({
+          mode: 'cyclic'
+        })
+      ])
+    }))
   );
 
   Representing.setValue(form, {
@@ -172,47 +166,43 @@ export default (): void => {
 
       components: [
         ExpandableForm.parts().minimal(
-          Form.sketch((parts: FormParts) => {
-            return {
-              dom: {
-                tag: 'div',
-                classes: [ 'demo-form-section', 'demo-form-minimal' ]
-              },
+          Form.sketch((parts: FormParts) => ({
+            dom: {
+              tag: 'div',
+              classes: [ 'demo-form-section', 'demo-form-minimal' ]
+            },
 
-              components: [
-                parts.field('omega', DemoFields.coupledTextMunger(omegaSpec)),
-                parts.field('alpha', DemoFields.textMunger(alphaSpec)),
-                parts.field('beta', DemoFields.textMunger(betaSpec)),
-              ]
-            };
-          })
+            components: [
+              parts.field('omega', DemoFields.coupledTextMunger(omegaSpec)),
+              parts.field('alpha', DemoFields.textMunger(alphaSpec)),
+              parts.field('beta', DemoFields.textMunger(betaSpec))
+            ]
+          }))
         ),
 
         ExpandableForm.parts().extra(
-          Form.sketch((parts: FormParts) => {
-            return {
-              dom: {
-                tag: 'div',
-                classes: [ 'demo-form-section', 'demo-form-extra' ]
-              },
-              components: [
-                parts.field('beta', DemoFields.textMunger(betaSpec)),
-                Container.sketch({
-                  dom: {
-                    styles: {
-                      border: '1px solid green'
-                    }
-                  },
-                  components: [
-                    parts.field('gamma', DemoFields.textMunger(gammaSpec))
-                  ]
-                }),
-                parts.field('delta', DemoFields.textMunger(deltaSpec)),
-                parts.field('epsilon', DemoFields.textMunger(epsilonSpec)),
-                parts.field('rho', DemoFields.chooserMunger(rhoSpec))
-              ]
-            };
-          })
+          Form.sketch((parts: FormParts) => ({
+            dom: {
+              tag: 'div',
+              classes: [ 'demo-form-section', 'demo-form-extra' ]
+            },
+            components: [
+              parts.field('beta', DemoFields.textMunger(betaSpec)),
+              Container.sketch({
+                dom: {
+                  styles: {
+                    border: '1px solid green'
+                  }
+                },
+                components: [
+                  parts.field('gamma', DemoFields.textMunger(gammaSpec))
+                ]
+              }),
+              parts.field('delta', DemoFields.textMunger(deltaSpec)),
+              parts.field('epsilon', DemoFields.textMunger(epsilonSpec)),
+              parts.field('rho', DemoFields.chooserMunger(rhoSpec))
+            ]
+          }))
         ),
         ExpandableForm.parts().expander({
           dom: {
@@ -238,12 +228,10 @@ export default (): void => {
             Button.sketch(
               {
                 dom: { tag: 'button', innerHtml: 'OK' },
-                action (button) {
+                action(button) {
                   console.log('Exp Form values', Obj.map(
                     Representing.getValue(expform),
-                    (v) => {
-                      return v.getOr('Not found');
-                    }
+                    (v) => v.getOr('Not found')
                   ));
                 }
               }

@@ -7,24 +7,18 @@ import { SliderValue, TwoDSliderDetail } from '../types/SliderTypes';
 import * as ModelCommon from './ModelCommon';
 import { halfX, halfY, max1X, max1Y, min1X, min1Y } from './SliderValues';
 
-const xValue = (x: number) => {
-  return {
-    x: Fun.constant(x)
-  };
-};
+const xValue = (x: number) => ({
+  x: Fun.constant(x)
+});
 
-const yValue = (y: number) => {
-  return {
-    y: Fun.constant(y)
-  };
-};
+const yValue = (y: number) => ({
+  y: Fun.constant(y)
+});
 
-const xyValue = (x: number, y: number) => {
-  return {
-    x: Fun.constant(x),
-    y: Fun.constant(y)
-  };
-};
+const xyValue = (x: number, y: number) => ({
+  x: Fun.constant(x),
+  y: Fun.constant(y)
+});
 
 const fireSliderChange = (component: AlloyComponent, value: SliderValue): void => {
   AlloyTriggers.emitWith(component, ModelCommon.sliderChangeEvent(), { value });
@@ -102,5 +96,5 @@ export {
   setToBEdgeXY,
   setToBLEdgeXY,
   setToLEdge,
-  setToLEdgeXY,
+  setToLEdgeXY
 };

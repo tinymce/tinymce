@@ -44,38 +44,38 @@ const Serializer = function (settings?: SerializerSettings, schema = Schema()) {
    * @return {String} String with HTML based on DOM tree.
    */
   const serialize = (node: Node): string => {
-    let handlers, validate;
+    let handlers; let validate;
 
     validate = settings.validate;
 
     handlers = {
       // #text
-      3 (node) {
+      3(node) {
         writer.text(node.value, node.raw);
       },
 
       // #comment
-      8 (node) {
+      8(node) {
         writer.comment(node.value);
       },
 
       // Processing instruction
-      7 (node) {
+      7(node) {
         writer.pi(node.name, node.value);
       },
 
       // Doctype
-      10 (node) {
+      10(node) {
         writer.doctype(node.value);
       },
 
       // CDATA
-      4 (node) {
+      4(node) {
         writer.cdata(node.value);
       },
 
       // Document fragment
-      11 (node) {
+      11(node) {
         if ((node = node.firstChild)) {
           do {
             walk(node);
@@ -88,7 +88,7 @@ const Serializer = function (settings?: SerializerSettings, schema = Schema()) {
 
     const walk = function (node: Node) {
       const handler = handlers[node.type];
-      let  name, isEmpty, attrs, attrName, attrValue, sortedAttrs, i, l, elementRule;
+      let  name; let isEmpty; let attrs; let attrName; let attrValue; let sortedAttrs; let i; let l; let elementRule;
 
       if (!handler) {
         name = node.name;

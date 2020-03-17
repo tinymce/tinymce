@@ -63,23 +63,21 @@ const cGetInput = (selector: string) => Chain.control(
   Guard.addLogging('Get input')
 );
 
-const sAssertInputValue = (label, selector, expected) => {
-  return Logger.t(label,
-    Chain.asStep({}, [
-      cGetInput(selector),
-      Chain.op((element) => {
-        if (element.dom().type === 'checkbox') {
-          Assertions.assertEq(`The input value for ${label} should be: `, expected, element.dom().checked);
-          return;
-        }
-        Assertions.assertEq(`The input value for ${label} should be: `, expected, Value.get(element));
-      })
-    ]),
-  );
-};
+const sAssertInputValue = (label, selector, expected) => Logger.t(label,
+  Chain.asStep({}, [
+    cGetInput(selector),
+    Chain.op((element) => {
+      if (element.dom().type === 'checkbox') {
+        Assertions.assertEq(`The input value for ${label} should be: `, expected, element.dom().checked);
+        return;
+      }
+      Assertions.assertEq(`The input value for ${label} should be: `, expected, Value.get(element));
+    })
+  ]),
+);
 
 const sAssertDialogContents = (expected: Record<string, any>) => {
-  const steps = [sWaitForUi('Wait for dialog to appear', 'div[role="dialog"]')];
+  const steps = [ sWaitForUi('Wait for dialog to appear', 'div[role="dialog"]') ];
   Obj.mapToArray(selectors, (value, key) => {
     if (Obj.has(expected, key)) {
       steps.push(sAssertInputValue(key, value, expected[key]));
@@ -88,14 +86,12 @@ const sAssertDialogContents = (expected: Record<string, any>) => {
   return GeneralSteps.sequence(steps);
 };
 
-const sWaitForUi = (label: string, selector: string) => {
-  return Logger.t('Wait for UI', Waiter.sTryUntil(
-    label,
-    UiFinder.sWaitForVisible('Waiting', TinyDom.fromDom(document.body), selector),
-    100,
-    1000
-  ));
-};
+const sWaitForUi = (label: string, selector: string) => Logger.t('Wait for UI', Waiter.sTryUntil(
+  label,
+  UiFinder.sWaitForVisible('Waiting', TinyDom.fromDom(document.body), selector),
+  100,
+  1000
+));
 
 const sInsertLink = function (ui: TinyUi, url: string) {
   return Logger.t('Insert link', GeneralSteps.sequence([
@@ -105,14 +101,12 @@ const sInsertLink = function (ui: TinyUi, url: string) {
   ]));
 };
 
-const sAssertContentPresence = (api: TinyApis, presence: Record<string, number>) => {
-  return Logger.t('Assert content presence', Waiter.sTryUntil(
-    'Waiting for content to have expected presence',
-    api.sAssertContentPresence(presence),
-    100,
-    1000
-  ));
-};
+const sAssertContentPresence = (api: TinyApis, presence: Record<string, number>) => Logger.t('Assert content presence', Waiter.sTryUntil(
+  'Waiting for content to have expected presence',
+  api.sAssertContentPresence(presence),
+  100,
+  1000
+));
 
 const sWaitForDialogClose = Logger.t('Wait for dialog to close', Waiter.sTryUntil(
   'Waiting for dialog to go away',

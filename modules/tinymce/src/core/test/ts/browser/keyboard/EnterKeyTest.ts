@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function (success, 
   Theme();
 
   const pressEnter = function (editor, evt?) {
-    const dom = editor.dom, target = editor.selection.getNode();
+    const dom = editor.dom; const target = editor.selection.getNode();
 
     evt = Tools.extend({ keyCode: 13, shiftKey: false }, evt);
 

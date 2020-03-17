@@ -13,17 +13,13 @@ UnitTest.test('TestLogsTest', () => {
 
   const logs = TestLogs.init();
 
-  const addToLog = (s: string) => (logs) => {
-    return addLogEntry(logs, s);
-  };
+  const addToLog = (s: string) => (logs) => addLogEntry(logs, s);
   const assertLog = (expected) => (logs) => {
     Assert.eq('Checking logs', expected, logs.history);
     return logs;
   };
 
-  const addTraceToLog = (trace: { stack: any }) => (logs) => {
-    return addStackTrace(logs, trace);
-  };
+  const addTraceToLog = (trace: { stack: any }) => (logs) => addStackTrace(logs, trace);
 
   Arr.foldl([
     addToLog('alpha'),

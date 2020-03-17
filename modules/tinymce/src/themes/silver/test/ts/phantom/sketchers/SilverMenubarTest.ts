@@ -29,25 +29,23 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
   const sink = Element.fromDom(document.querySelector('.mce-silver-sink'));
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
-      return GuiFactory.build({
-        dom: {
-          tag: 'div',
-          classes: [ 'silvermenubar-test-container' ]
-        },
-        components: [
-          SilverMenubar.sketch({
-            dom: {
-              tag: 'div',
-              classes: [ 'test-menubar' ]
-            },
-            onEscape: store.adder('Menubar.escape'),
-            onSetup: store.adder('Menubar.setup'),
-            backstage: helpers.backstage
-          })
-        ]
-      });
-    },
+    (store, doc, body) => GuiFactory.build({
+      dom: {
+        tag: 'div',
+        classes: [ 'silvermenubar-test-container' ]
+      },
+      components: [
+        SilverMenubar.sketch({
+          dom: {
+            tag: 'div',
+            classes: [ 'test-menubar' ]
+          },
+          onEscape: store.adder('Menubar.escape'),
+          onSetup: store.adder('Menubar.setup'),
+          backstage: helpers.backstage
+        })
+      ]
+    }),
     (doc, body, gui, testContainer, store) => {
       const menubarEl = SelectorFind.descendant(testContainer.element(), '.test-menubar').getOrDie('Could not find menubar to test');
 
@@ -102,31 +100,27 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
           UiFinder.cFindIn('.tox-selected-menu'),
           Assertions.cAssertStructure(
             'Checking contents of menu',
-            ApproxStructure.build((s, str, arr) => {
-              return s.element('div', {
-                children: Arr.map(groups, (items) => {
+            ApproxStructure.build((s, str, arr) => s.element('div', {
+              children: Arr.map(groups, (items) => s.element('div', {
+                classes: [ arr.has('tox-collection__group') ],
+                children: Arr.map(items, (itemText) => {
+                  // itemText can have a trailing >, which means it has a caret
+                  const hasCaret = Strings.endsWith(itemText, '>');
                   return s.element('div', {
-                    classes: [ arr.has('tox-collection__group') ],
-                    children: Arr.map(items, (itemText) => {
-                      // itemText can have a trailing >, which means it has a caret
-                      const hasCaret = Strings.endsWith(itemText, '>');
-                      return s.element('div', {
-                        classes: [ arr.has('tox-collection__item') ],
-                        children: [
-                          s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }),
-                          s.element('div', {
-                            classes: [ arr.has('tox-collection__item-label') ],
-                            html: str.is(hasCaret ? itemText.substring(0, itemText.length - 1) : itemText)
-                          })
-                        ].concat(hasCaret ? [
-                          s.element('div', { classes: [ arr.has('tox-collection__item-caret') ] })
-                        ] : [ ])
-                      });
-                    })
+                    classes: [ arr.has('tox-collection__item') ],
+                    children: [
+                      s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }),
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item-label') ],
+                        html: str.is(hasCaret ? itemText.substring(0, itemText.length - 1) : itemText)
+                      })
+                    ].concat(hasCaret ? [
+                      s.element('div', { classes: [ arr.has('tox-collection__item-caret') ] })
+                    ] : [ ])
                   });
                 })
-              });
-            })
+              }))
+            }))
           )
         ])
       );
@@ -136,15 +130,13 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
         store.sClear,
         Assertions.sAssertStructure(
           'Checking initial structure for menubar',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [arr.has('test-menubar')],
-              attrs: {
-                role: str.is('menubar')
-              },
-              children: [ ]
-            });
-          }),
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('test-menubar') ],
+            attrs: {
+              role: str.is('menubar')
+            },
+            children: [ ]
+          })),
           menubar.element()
         ),
 

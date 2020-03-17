@@ -17,40 +17,34 @@ const getToolbarSelector = (type: ToolbarMode, opening: boolean) => {
   return type === ToolbarMode.sliding ? slidingClass : floatingClass;
 };
 
-const sOpenMenuWithSelector = (label: string, selector: string) => {
-  return Logger.t(
-    `Trying to open menu: ${label}`,
-    GeneralSteps.sequence([
-      Mouse.sClickOn(Body.body(), selector),
-      Chain.asStep(Body.body(), [
-        UiFinder.cWaitForVisible('Waiting for menu', '[role="menu"]')
-      ]),
-    ])
-  );
-};
+const sOpenMenuWithSelector = (label: string, selector: string) => Logger.t(
+  `Trying to open menu: ${label}`,
+  GeneralSteps.sequence([
+    Mouse.sClickOn(Body.body(), selector),
+    Chain.asStep(Body.body(), [
+      UiFinder.cWaitForVisible('Waiting for menu', '[role="menu"]')
+    ]),
+  ])
+);
 
-const sOpenMore = (type: ToolbarMode) => {
-  return Logger.t(
-    `Trying to open more drawer`,
-    GeneralSteps.sequence([
-      Mouse.sClickOn(Body.body(), 'button[title="More..."]'),
-      UiFinder.sWaitForVisible('Waiting for more drawer to open', Body.body(), getToolbarSelector(type, true))
-    ])
-  );
-};
+const sOpenMore = (type: ToolbarMode) => Logger.t(
+  'Trying to open more drawer',
+  GeneralSteps.sequence([
+    Mouse.sClickOn(Body.body(), 'button[title="More..."]'),
+    UiFinder.sWaitForVisible('Waiting for more drawer to open', Body.body(), getToolbarSelector(type, true))
+  ])
+);
 
-const sCloseMore = (type: ToolbarMode) => {
-  return Logger.t(
-    `Trying to close more drawer`,
-    GeneralSteps.sequence([
-      Mouse.sClickOn(Body.body(), 'button[title="More..."]'),
-      Waiter.sTryUntil('Waiting for more drawer to close', UiFinder.sNotExists(Body.body(), getToolbarSelector(type, false)))
-    ])
-  );
-};
+const sCloseMore = (type: ToolbarMode) => Logger.t(
+  'Trying to close more drawer',
+  GeneralSteps.sequence([
+    Mouse.sClickOn(Body.body(), 'button[title="More..."]'),
+    Waiter.sTryUntil('Waiting for more drawer to close', UiFinder.sNotExists(Body.body(), getToolbarSelector(type, false)))
+  ])
+);
 
 const sOpenAlignMenu = (label: string) => {
-  const selector = `button[aria-label="Align"]`;
+  const selector = 'button[aria-label="Align"]';
   return sOpenMenuWithSelector(label, selector);
 };
 
@@ -63,24 +57,20 @@ const sOpenMenu = (label: string, menuText: string) => {
 };
 
 const sOpenNestedMenus = (menus: OpenNestedMenus[]) => {
-  const openMenusSequence = menus.map((menu) => {
-    return sOpenMenuWithSelector(menu.label, menu.selector);
-  });
+  const openMenusSequence = menus.map((menu) => sOpenMenuWithSelector(menu.label, menu.selector));
   return GeneralSteps.sequence(openMenusSequence);
 };
 
-const sAssertMoreDrawerInViewport = (type: ToolbarMode) => {
-  return Chain.asStep(Body.body(), [
-    UiFinder.cFindIn(getToolbarSelector(type, true)),
-    Chain.op((drawer) => {
-      const winBox = Boxes.win();
-      const drawerBox = Boxes.box(drawer);
-      // -1 from the bottom to account for the negative margin
-      const inViewport = drawerBox.x >= winBox.x && drawerBox.bottom - 1 <= winBox.bottom;
-      Assertions.assertEq('Check more drawer is shown within the viewport', inViewport, true);
-    })
-  ]);
-};
+const sAssertMoreDrawerInViewport = (type: ToolbarMode) => Chain.asStep(Body.body(), [
+  UiFinder.cFindIn(getToolbarSelector(type, true)),
+  Chain.op((drawer) => {
+    const winBox = Boxes.win();
+    const drawerBox = Boxes.box(drawer);
+    // -1 from the bottom to account for the negative margin
+    const inViewport = drawerBox.x >= winBox.x && drawerBox.bottom - 1 <= winBox.bottom;
+    Assertions.assertEq('Check more drawer is shown within the viewport', inViewport, true);
+  })
+]);
 
 export {
   // generic methods

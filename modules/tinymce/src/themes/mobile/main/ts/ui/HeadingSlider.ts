@@ -16,14 +16,12 @@ import { MobileRealm } from '../ui/IosRealm';
 
 const headings = [ 'p', 'h3', 'h2', 'h1' ];
 
-const makeSlider = (spec): SketchSpec => {
-  return SizeSlider.sketch({
-    category: 'heading',
-    sizes: headings,
-    onChange: spec.onChange,
-    getInitialValue: spec.getInitialValue
-  });
-};
+const makeSlider = (spec): SketchSpec => SizeSlider.sketch({
+  category: 'heading',
+  sizes: headings,
+  onChange: spec.onChange,
+  getInitialValue: spec.getInitialValue
+});
 
 const sketch = (realm: MobileRealm, editor): SketchSpec => {
   const spec = {

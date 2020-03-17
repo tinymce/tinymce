@@ -9,17 +9,17 @@ interface EntryPoint<E> {
     rightEdge: (element: E) => T
   ) => T;
   match: <T> (branches: {
-    leftEdge: (element: E) => T,
-    between: (before: E, after: E) => T,
-    rightEdge: (element: E) => T
+    leftEdge: (element: E) => T;
+    between: (before: E, after: E) => T;
+    rightEdge: (element: E) => T;
   }) => T;
   log: (label: string) => void;
 }
 
 const adt: {
-  leftEdge: <E> (element: E) => EntryPoint<E>,
-  between: <E> (before: E, after: E) => EntryPoint<E>,
-  rightEdge: <E> (element: E) => EntryPoint<E>
+  leftEdge: <E> (element: E) => EntryPoint<E>;
+  between: <E> (before: E, after: E) => EntryPoint<E>;
+  rightEdge: <E> (element: E) => EntryPoint<E>;
 } = Adt.generate([
   { leftEdge: [ 'element' ] },
   { between: [ 'before', 'after' ] },

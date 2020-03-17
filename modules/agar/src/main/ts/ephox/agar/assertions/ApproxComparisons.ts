@@ -62,7 +62,7 @@ const contains = (target: string): CombinedAssert => {
   };
 };
 
-const none = (message: string = '[[missing value]]'): CombinedAssert => {
+const none = (message = '[[missing value]]'): CombinedAssert => {
   const compare = (actual: string) => actual === missingValuePlaceholder;
 
   const strAssert = (label: TestLabel, actual) => {

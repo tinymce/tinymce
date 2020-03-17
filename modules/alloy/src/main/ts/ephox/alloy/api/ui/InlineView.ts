@@ -58,9 +58,7 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
     onEscape() {
       // Note for the future: this should possibly also call detail.onHide
       Sandboxing.close(menuSandbox);
-      detail.onEscape.map((handler) => {
-        return handler(menuSandbox);
-      });
+      detail.onEscape.map((handler) => handler(menuSandbox));
       return Option.some<boolean>(true);
     },
 
@@ -81,23 +79,21 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
       }, submenu);
     },
 
-    onRepositionMenu (tmenu, primaryMenu, submenuTriggers) {
+    onRepositionMenu(tmenu, primaryMenu, submenuTriggers) {
       const sink = lazySink().getOrDie();
       Positioning.positionWithinBounds(sink, anchor, primaryMenu, getBounds());
       Arr.each(submenuTriggers, (st) => {
         const submenuLayouts = getSubmenuLayouts(st.triggeringPath);
         Positioning.position(sink, { anchor: 'submenu', item: st.triggeringItem, ...submenuLayouts }, st.triggeredMenu);
       });
-    },
+    }
   });
 };
 
 const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: InlineViewDetail, spec): SketchSpec => {
   const isPartOfRelated = (sandbox: AlloyComponent, queryElem: Element) => {
     const related = detail.getRelated(sandbox);
-    return related.exists((rel) => {
-      return ComponentStructure.isPartOf(rel, queryElem);
-    });
+    return related.exists((rel) => ComponentStructure.isPartOf(rel, queryElem));
   };
 
   const setContent = (sandbox: AlloyComponent, thing: AlloySpec) => {
@@ -137,9 +133,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
       Sandboxing.close(sandbox);
     }
   };
-  const getContent = (sandbox: AlloyComponent): Option<AlloyComponent> => {
-    return Sandboxing.getState(sandbox);
-  };
+  const getContent = (sandbox: AlloyComponent): Option<AlloyComponent> => Sandboxing.getState(sandbox);
   const reposition = (sandbox: AlloyComponent) => {
     if (Sandboxing.isOpen(sandbox)) {
       Representing.getValue(sandbox).each((state: InlineViewState) => {
@@ -178,16 +172,16 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
       detail.inlineBehaviours,
       [
         Sandboxing.config({
-          isPartOf (sandbox, data, queryElem) {
+          isPartOf(sandbox, data, queryElem) {
             return ComponentStructure.isPartOf(data, queryElem) || isPartOfRelated(sandbox, queryElem);
           },
-          getAttachPoint (sandbox) {
+          getAttachPoint(sandbox) {
             return detail.lazySink(sandbox).getOrDie();
           },
-          onOpen (sandbox) {
+          onOpen(sandbox) {
             detail.onShow(sandbox);
           },
-          onClose (sandbox) {
+          onClose(sandbox) {
             detail.onHide(sandbox);
           }
         }),
@@ -201,11 +195,11 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
           channels: {
             ...Dismissal.receivingChannel({
               isExtraPart: Fun.constant(false),
-              ...detail.fireDismissalEventInstead.map((fe) => ({ fireEventInstead: { event: fe.event }} as any)).getOr({ })
+              ...detail.fireDismissalEventInstead.map((fe) => ({ fireEventInstead: { event: fe.event } } as any)).getOr({ })
             }),
             ...Reposition.receivingChannel({
               isExtraPart: Fun.constant(false),
-              ...detail.fireRepositionEventInstead.map((fe) => ({ fireEventInstead: { event: fe.event }} as any)).getOr({ }),
+              ...detail.fireRepositionEventInstead.map((fe) => ({ fireEventInstead: { event: fe.event } } as any)).getOr({ }),
               doReposition: reposition
             })
           }
@@ -255,12 +249,8 @@ const InlineView: InlineViewSketcher = Sketcher.single<InlineViewSpec, InlineVie
     hide: (apis, component) => {
       apis.hide(component);
     },
-    isOpen: (apis, component) => {
-      return apis.isOpen(component);
-    },
-    getContent: (apis, component) => {
-      return apis.getContent(component);
-    },
+    isOpen: (apis, component) => apis.isOpen(component),
+    getContent: (apis, component) => apis.getContent(component),
     setContent: (apis, component, thing) => {
       apis.setContent(component, thing);
     },

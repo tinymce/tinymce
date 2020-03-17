@@ -43,7 +43,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
               }
             },
 
-            fetch (input) {
+            fetch(input) {
               const future = Future.pure([
                 { type: 'item', data: { value: 'choice1', meta: { text: 'choice1' } } },
                 { type: 'item', data: { value: 'choice2', meta: { text: 'choice2' } } }
@@ -58,7 +58,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
               });
             },
 
-            lazySink (c) {
+            lazySink(c) {
               TestDropdownMenu.assertLazySinkArgs('input', 'test-typeahead', c);
               return Result.value(sink);
             },
@@ -124,7 +124,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
             FocusTools.cGetActiveValue,
             Assertions.cAssertEq('Active value should be the first option', 'choice1')
           ]),
-          steps.sWaitForNoMenu('Selecting an item should close the menu'),
+          steps.sWaitForNoMenu('Selecting an item should close the menu')
         ])
       ),
       GuiSetup.mRemoveStyles

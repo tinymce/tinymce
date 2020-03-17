@@ -26,17 +26,9 @@ const schema = [
 
 // TODO: Remove dupe.
 // TODO: Probably use this for not just execution.
-const findCurrent = (component: AlloyComponent, flowConfig: FlowConfig): Option<Element> => {
-  return flowConfig.focusManager.get(component).bind((elem) => {
-    return SelectorFind.closest(elem, flowConfig.selector);
-  });
-};
+const findCurrent = (component: AlloyComponent, flowConfig: FlowConfig): Option<Element> => flowConfig.focusManager.get(component).bind((elem) => SelectorFind.closest(elem, flowConfig.selector));
 
-const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, flowConfig: FlowConfig): Option<boolean> => {
-  return findCurrent(component, flowConfig).bind((focused) => {
-    return flowConfig.execute(component, simulatedEvent, focused);
-  });
-};
+const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, flowConfig: FlowConfig): Option<boolean> => findCurrent(component, flowConfig).bind((focused) => flowConfig.execute(component, simulatedEvent, focused));
 
 const focusIn = (component: AlloyComponent, flowConfig: FlowConfig, state: Stateless): void => {
   flowConfig.getInitial(component).orThunk(
@@ -46,25 +38,13 @@ const focusIn = (component: AlloyComponent, flowConfig: FlowConfig, state: State
   });
 };
 
-const moveLeft = (element: Element, focused: Element, info: FlowConfig): Option<Element> => {
-  return DomNavigation.horizontal(element, info.selector, focused, -1);
-};
+const moveLeft = (element: Element, focused: Element, info: FlowConfig): Option<Element> => DomNavigation.horizontal(element, info.selector, focused, -1);
 
-const moveRight = (element: Element, focused: Element, info: FlowConfig): Option<Element> => {
-  return DomNavigation.horizontal(element, info.selector, focused, +1);
-};
+const moveRight = (element: Element, focused: Element, info: FlowConfig): Option<Element> => DomNavigation.horizontal(element, info.selector, focused, +1);
 
-const doMove = (movement: KeyRuleHandler<FlowConfig, Stateless>): KeyRuleHandler<FlowConfig, Stateless> => {
-  return (component, simulatedEvent, flowConfig, flowState) => {
-    return movement(component, simulatedEvent, flowConfig, flowState).bind(() => {
-      return flowConfig.executeOnMove ? execute(component, simulatedEvent, flowConfig) : Option.some<boolean>(true);
-    });
-  };
-};
+const doMove = (movement: KeyRuleHandler<FlowConfig, Stateless>): KeyRuleHandler<FlowConfig, Stateless> => (component, simulatedEvent, flowConfig, flowState) => movement(component, simulatedEvent, flowConfig, flowState).bind(() => flowConfig.executeOnMove ? execute(component, simulatedEvent, flowConfig) : Option.some<boolean>(true));
 
-const doEscape: KeyRuleHandler<FlowConfig, Stateless>  = (component, simulatedEvent, flowConfig) => {
-  return flowConfig.onEscape(component, simulatedEvent);
-};
+const doEscape: KeyRuleHandler<FlowConfig, Stateless> = (component, simulatedEvent, flowConfig) => flowConfig.onEscape(component, simulatedEvent);
 
 const getKeydownRules = (_component: AlloyComponent, _se: NativeSimulatedEvent, flowConfig: FlowConfig, _flowState: Stateless): Array<KeyRules.KeyRule<FlowConfig, Stateless>> => {
   const westMovers = Keys.LEFT().concat(flowConfig.allowVertical ? Keys.UP() : [ ]);

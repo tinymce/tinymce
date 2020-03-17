@@ -23,58 +23,52 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('selectOnFocus', true)
 ]);
 
-const focusBehaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => {
-  return Behaviour.derive([
-    Focusing.config({
-      onFocus: !detail.selectOnFocus ? Fun.noop : (component) => {
-        const input = component.element();
-        const value = Value.get(input);
-        input.dom().setSelectionRange(0, value.length);
-      }
-    })
-  ]);
-};
+const focusBehaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => Behaviour.derive([
+  Focusing.config({
+    onFocus: !detail.selectOnFocus ? Fun.noop : (component) => {
+      const input = component.element();
+      const value = Value.get(input);
+      input.dom().setSelectionRange(0, value.length);
+    }
+  })
+]);
 
-const behaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => {
-  return {
-    ...focusBehaviours(detail),
-    ...SketchBehaviours.augment(
-      detail.inputBehaviours,
-      [
-        Representing.config({
-          store: {
-            mode: 'manual',
-            // Propagating its Option
-            ...detail.data.map((data) => ({ initialValue: data } as { initialValue?: string })).getOr({ }),
-            getValue (input) {
-              return Value.get(input.element());
-            },
-            setValue (input, data) {
-              const current = Value.get(input.element());
-              // Only set it if it has changed ... otherwise the cursor goes to the end.
-              if (current !== data) {
-                Value.set(input.element(), data);
-              }
-            }
+const behaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => ({
+  ...focusBehaviours(detail),
+  ...SketchBehaviours.augment(
+    detail.inputBehaviours,
+    [
+      Representing.config({
+        store: {
+          mode: 'manual',
+          // Propagating its Option
+          ...detail.data.map((data) => ({ initialValue: data } as { initialValue?: string })).getOr({ }),
+          getValue(input) {
+            return Value.get(input.element());
           },
-          onSetValue: detail.onSetValue
-        })
-      ]
-    )
-  };
-};
+          setValue(input, data) {
+            const current = Value.get(input.element());
+            // Only set it if it has changed ... otherwise the cursor goes to the end.
+            if (current !== data) {
+              Value.set(input.element(), data);
+            }
+          }
+        },
+        onSetValue: detail.onSetValue
+      })
+    ]
+  )
+});
 
-const dom = (detail: InputDetail): RawDomSchema => {
-  return {
-    tag: detail.tag,
-    attributes: {
-      type: 'text',
-      ...detail.inputAttributes
-    },
-    styles: detail.inputStyles,
-    classes: detail.inputClasses
-  };
-};
+const dom = (detail: InputDetail): RawDomSchema => ({
+  tag: detail.tag,
+  attributes: {
+    type: 'text',
+    ...detail.inputAttributes
+  },
+  styles: detail.inputStyles,
+  classes: detail.inputClasses
+});
 
 export {
   schema,

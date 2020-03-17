@@ -22,10 +22,10 @@ export const registerSpellcheckerItems = () => {
       callback(languages);
       // Set the active state of a particular language (if it matches selected language).. handled by `select`
     },
-    select: (itemValue) => {
+    select: (itemValue) =>
       // return true if current language = item value
-      return itemValue === 'en';
-    },
+      itemValue === 'en'
+    ,
     onAction: (buttonApi) => {
       // trigger search replace dialog
     },

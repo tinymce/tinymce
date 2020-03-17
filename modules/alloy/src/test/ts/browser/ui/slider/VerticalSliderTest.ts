@@ -14,61 +14,57 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
 
   // Tests requiring 'flex' do not currently work on phantom. Use the remote  to see how it is
   // viewed as an invalid value.
-  if (PhantomSkipper.skip()) { return success(); }
-  GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build(
-      Slider.sketch({
-        dom: {
-          tag: 'div',
-          classes: [ 'vertical-slider-test' ],
-          styles: {
-            'border': '1px solid black',
-            'width': '20px',
-            'display': 'flex',
-            'flex-direction': 'column'
-          }
-        },
-        model: {
-          mode: 'y',
-          minY: 50,
-          getInitialValue: Fun.constant({y: Fun.constant(200)}),
-          maxY: 200
-        },
-        stepSize: 10,
-        snapToGrid: true,
+  if (PhantomSkipper.skip()) {
+    return success();
+  }
+  GuiSetup.setup((store, doc, body) => GuiFactory.build(
+    Slider.sketch({
+      dom: {
+        tag: 'div',
+        classes: [ 'vertical-slider-test' ],
+        styles: {
+          'border': '1px solid black',
+          'width': '20px',
+          'display': 'flex',
+          'flex-direction': 'column'
+        }
+      },
+      model: {
+        mode: 'y',
+        minY: 50,
+        getInitialValue: Fun.constant({ y: Fun.constant(200) }),
+        maxY: 200
+      },
+      stepSize: 10,
+      snapToGrid: true,
 
-        components: [
-          Slider.parts()['top-edge']({ dom: { tag: 'div', classes: [ 'vertical-slider-test-top-edge' ], styles: {
-            height: '40px',
-            width: '20px',
-            background: 'black'
-          } } }),
-          Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'vertical-slider-test-spectrum' ], styles: {
-            height: '150px',
-            background: 'green'
-          } } }),
-          Slider.parts()['bottom-edge']({ dom: { tag: 'div', classes: [ 'vertical-slider-test-bottom-edge' ], styles: {
-            height: '40px',
-            width: '20px',
-            background: 'white'
-          } } }),
-          Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'vertical-slider-test-thumb' ], styles: {
-            height: '20px',
-            width: '20px',
-            background: 'gray'
-          } } })
-        ]
-      })
-    );
-  }, (doc, body, gui, component, store) => {
+      components: [
+        Slider.parts()['top-edge']({ dom: { tag: 'div', classes: [ 'vertical-slider-test-top-edge' ], styles: {
+          height: '40px',
+          width: '20px',
+          background: 'black'
+        } } }),
+        Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'vertical-slider-test-spectrum' ], styles: {
+          height: '150px',
+          background: 'green'
+        } } }),
+        Slider.parts()['bottom-edge']({ dom: { tag: 'div', classes: [ 'vertical-slider-test-bottom-edge' ], styles: {
+          height: '40px',
+          width: '20px',
+          background: 'white'
+        } } }),
+        Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'vertical-slider-test-thumb' ], styles: {
+          height: '20px',
+          width: '20px',
+          background: 'gray'
+        } } })
+      ]
+    })
+  ), (doc, body, gui, component, store) => {
 
-    const cGetBounds = Chain.mapper((elem: Element) => {
-      return elem.dom().getBoundingClientRect();
-    });
+    const cGetBounds = Chain.mapper((elem: Element) => elem.dom().getBoundingClientRect());
 
-    const cGetComponent = Chain.binder((elem: Element) => {
-      return component.getSystem().getByDom(elem);
-    });
+    const cGetComponent = Chain.binder((elem: Element) => component.getSystem().getByDom(elem));
 
     const cGetParts = NamedChain.asChain([
       NamedChain.writeValue('slider', component.element()),
@@ -121,18 +117,14 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
       );
     });
 
-    const cCheckValue = (expected: number) => {
-      return Chain.op((parts: any) => {
-        const v = Representing.getValue(parts.sliderComp);
-        Assert.eq('Checking slider value', expected, v.y());
-      });
-    };
+    const cCheckValue = (expected: number) => Chain.op((parts: any) => {
+      const v = Representing.getValue(parts.sliderComp);
+      Assert.eq('Checking slider value', expected, v.y());
+    });
 
-    const sAssertValue = (label: string, expected: number) => {
-      return Logger.t(label, Step.sync(() => {
-        Assert.eq(label, expected, Representing.getValue(component).y());
-      }));
-    };
+    const sAssertValue = (label: string, expected: number) => Logger.t(label, Step.sync(() => {
+      Assert.eq(label, expected, Representing.getValue(component).y());
+    }));
 
     return [
       Logger.t(
@@ -260,5 +252,7 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
       Keyboard.sKeydown(doc, Keys.down(), {}),
       sAssertValue('Checking that the thumb is now one step further bottom', 70)
     ];
-  }, () => { success(); }, failure);
+  }, () => {
+    success();
+  }, failure);
 });

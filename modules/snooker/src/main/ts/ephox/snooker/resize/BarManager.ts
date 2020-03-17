@@ -29,9 +29,9 @@ export interface DragAdjustEvents {
     startAdjust: Bindable<{}>;
   };
   trigger: {
-      adjustHeight: (table: Element, delta: number, row: number) => void;
-      adjustWidth: (table: Element, delta: number, column: number) => void;
-      startAdjust: () => void;
+    adjustHeight: (table: Element, delta: number, row: number) => void;
+    adjustWidth: (table: Element, delta: number, column: number) => void;
+    startAdjust: () => void;
   };
 }
 
@@ -112,11 +112,7 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
     return Compare.eq(e, wire.view());
   };
 
-  const findClosestEditableTable = (target: Element): Option<Element> => {
-    return SelectorFind.closest(target, 'table', isRoot).filter((table) => {
-      return findClosestContentEditable(table, isRoot).exists(isContentEditableTrue);
-    });
-  };
+  const findClosestEditableTable = (target: Element): Option<Element> => SelectorFind.closest(target, 'table', isRoot).filter((table) => findClosestContentEditable(table, isRoot).exists(isContentEditableTrue));
 
   /* mouseover on table: When the mouse moves within the CONTENT AREA (NOT THE TABLE), refresh the bars. */
   const mouseover = DomEvent.bind(wire.view(), 'mouseover', function (event) {
@@ -150,8 +146,8 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
   };
 
   const events = Events.create({
-    adjustHeight: Event(['table', 'delta', 'row']),
-    adjustWidth: Event(['table', 'delta', 'column']),
+    adjustHeight: Event([ 'table', 'delta', 'row' ]),
+    adjustWidth: Event([ 'table', 'delta', 'column' ]),
     startAdjust: Event([])
   }) as DragAdjustEvents;
 

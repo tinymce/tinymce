@@ -39,16 +39,14 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
     });
   };
 
-  const sScrollRangeIntoView = (editor: Editor, path: number[], offset: number) => {
-    return Step.sync(function () {
-      const x = Cursors.calculateOne(Element.fromDom(editor.getBody()), path);
-      const rng = editor.dom.createRng();
-      rng.setStart(x.dom(), offset);
-      rng.setEnd(x.dom(), offset);
+  const sScrollRangeIntoView = (editor: Editor, path: number[], offset: number) => Step.sync(function () {
+    const x = Cursors.calculateOne(Element.fromDom(editor.getBody()), path);
+    const rng = editor.dom.createRng();
+    rng.setStart(x.dom(), offset);
+    rng.setEnd(x.dom(), offset);
 
-      ScrollIntoView.scrollRangeIntoView(editor, rng);
-    });
-  };
+    ScrollIntoView.scrollRangeIntoView(editor, rng);
+  });
 
   const sAssertScrollPosition = function (editor: Editor, x: number, y: number) {
     return Step.sync(function () {
@@ -150,11 +148,11 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
         Logger.t('Scroll up/down', GeneralSteps.sequence([
           sScrollReset(editor),
           sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>'),
-          sScrollRangeIntoView(editor, [1, 0], 0),
+          sScrollRangeIntoView(editor, [ 1, 0 ], 0),
           sAssertApproxScrollPosition(editor, 0, 618), // Height of the text content/cursor
-          sScrollRangeIntoView(editor, [0, 0], 0),
+          sScrollRangeIntoView(editor, [ 0, 0 ], 0),
           sAssertApproxScrollPosition(editor, 0, 0),
-          sScrollRangeIntoView(editor, [2, 0], 0),
+          sScrollRangeIntoView(editor, [ 2, 0 ], 0),
           sAssertApproxScrollPosition(editor, 0, 668)
         ]))
       ])),

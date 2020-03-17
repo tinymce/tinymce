@@ -112,7 +112,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (suc
       Logger.t('GetSelectionRange event', GeneralSteps.sequence([
         mBindEventMutator(editor, 'GetSelectionRange', selectAll),
         tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetCursor([0, 0], 0),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
         sGetRng(editor),
         Step.stateful(function (value, next, die) {
           assertSelectAllRange(editor, editor.selection.getRng());

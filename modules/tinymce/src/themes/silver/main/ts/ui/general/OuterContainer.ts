@@ -108,17 +108,13 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
     },
     refreshToolbar(comp) {
       const toolbar = Composite.parts.getPart(comp, detail, 'toolbar');
-      toolbar.each((toolbar) => {
-        return toolbar.getApis<ToolbarApis>().refresh(toolbar);
-      });
+      toolbar.each((toolbar) => toolbar.getApis<ToolbarApis>().refresh(toolbar));
     },
     getThrobber(comp) {
       return Composite.parts.getPart(comp, detail, 'throbber');
     },
     focusToolbar(comp) {
-      const optToolbar = Composite.parts.getPart(comp, detail, 'toolbar').orThunk(() => {
-        return Composite.parts.getPart(comp, detail, 'multiple-toolbar');
-      });
+      const optToolbar = Composite.parts.getPart(comp, detail, 'toolbar').orThunk(() => Composite.parts.getPart(comp, detail, 'multiple-toolbar'));
 
       optToolbar.each(function (toolbar) {
         Keying.focusIn(toolbar);
@@ -165,33 +161,29 @@ const toolbarFactory = (spec: ToolbarSketchSpec) => {
 
 const partMultipleToolbar = Composite.partType.optional<OuterContainerSketchDetail, MultipleToolbarSketchSpec>({
   factory: {
-    sketch: (spec) => {
-      return CustomList.sketch({
-        uid: spec.uid,
-        dom: spec.dom,
+    sketch: (spec) => CustomList.sketch({
+      uid: spec.uid,
+      dom: spec.dom,
 
-        listBehaviours: Behaviour.derive([
-          Keying.config({
-            mode: 'acyclic',
-            selector: '.tox-toolbar'
-          })
-        ]),
+      listBehaviours: Behaviour.derive([
+        Keying.config({
+          mode: 'acyclic',
+          selector: '.tox-toolbar'
+        })
+      ]),
 
-        makeItem: () => {
-          return renderToolbar({
-            type: spec.type,
-            uid: Id.generate('multiple-toolbar-item'),
-            cyclicKeying: false,
-            initGroups: [ ],
-            onEscape: () => Option.none()
-          });
-        },
-        setupItem: (mToolbar, tc, data, index) => {
-          Toolbar.setGroups(tc, data);
-        },
-        shell: true
-      });
-    }
+      makeItem: () => renderToolbar({
+        type: spec.type,
+        uid: Id.generate('multiple-toolbar-item'),
+        cyclicKeying: false,
+        initGroups: [ ],
+        onEscape: () => Option.none()
+      }),
+      setupItem: (mToolbar, tc, data, index) => {
+        Toolbar.setGroups(tc, data);
+      },
+      shell: true
+    })
   },
   name: 'multiple-toolbar',
   schema: [
@@ -315,9 +307,7 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
       apis.setToolbar(comp, groups);
     },
     setToolbars(apis, comp, ts) {
-      const renderedToolbars = Arr.map(ts, (g) => {
-        return Arr.map(g, renderToolbarGroup);
-      });
+      const renderedToolbars = Arr.map(ts, (g) => Arr.map(g, renderToolbarGroup));
 
       apis.setToolbars(comp, renderedToolbars);
     },

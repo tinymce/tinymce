@@ -34,9 +34,7 @@ const isElement = isType<DomElement>(NodeTypes.ELEMENT);
 const isText = isType<Text>(NodeTypes.TEXT);
 const isDocument = isType<Document>(NodeTypes.DOCUMENT);
 
-const isTag = <K extends keyof HTMLElementTagNameMap>(tag: K) => (e: Element<any>): e is Element<HTMLElementTagNameMap[K]> => {
-  return isElement(e) && name(e) === tag;
-};
+const isTag = <K extends keyof HTMLElementTagNameMap>(tag: K) => (e: Element<any>): e is Element<HTMLElementTagNameMap[K]> => isElement(e) && name(e) === tag;
 
 export {
   name,

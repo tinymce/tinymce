@@ -10,7 +10,7 @@ import * as Api from './api/Api';
 import * as Wordcounter from './core/WordCounter';
 import * as Buttons from './ui/Buttons';
 
-export default function (delay: number = 300) {
+export default function (delay = 300) {
   PluginManager.add('wordcount', (editor) => {
     const api = Api.get(editor);
 

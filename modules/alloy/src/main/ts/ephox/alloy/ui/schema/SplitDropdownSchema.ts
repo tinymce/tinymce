@@ -43,7 +43,7 @@ const arrowPart = PartType.required<SplitDropdownDetail, ButtonSpec>({
   factory: Button,
   schema: [ FieldSchema.strict('dom') ],
   name: 'arrow',
-  defaults () {
+  defaults() {
     return {
       buttonBehaviours: Behaviour.derive([
         // TODO: Remove all traces of revoking
@@ -51,7 +51,7 @@ const arrowPart = PartType.required<SplitDropdownDetail, ButtonSpec>({
       ])
     };
   },
-  overrides (detail) {
+  overrides(detail) {
     return {
       dom: {
         tag: 'span',
@@ -59,7 +59,7 @@ const arrowPart = PartType.required<SplitDropdownDetail, ButtonSpec>({
           role: 'presentation'
         }
       },
-      action (arrow: AlloyComponent) {
+      action(arrow: AlloyComponent) {
         arrow.getSystem().getByUid(detail.uid).each(AlloyTriggers.emitExecute);
       },
       buttonBehaviours: Behaviour.derive([
@@ -76,7 +76,7 @@ const buttonPart = PartType.required<SplitDropdownDetail, ButtonSpec>({
   factory: Button,
   schema: [ FieldSchema.strict('dom') ],
   name: 'button',
-  defaults () {
+  defaults() {
     return {
       buttonBehaviours: Behaviour.derive([
         // TODO: Remove all traces of revoking
@@ -84,7 +84,7 @@ const buttonPart = PartType.required<SplitDropdownDetail, ButtonSpec>({
       ])
     };
   },
-  overrides (detail) {
+  overrides(detail) {
     return {
       dom: {
         tag: 'span',
@@ -92,7 +92,7 @@ const buttonPart = PartType.required<SplitDropdownDetail, ButtonSpec>({
           role: 'presentation'
         }
       },
-      action (btn: AlloyComponent) {
+      action(btn: AlloyComponent) {
         btn.getSystem().getByUid(detail.uid).each((splitDropdown) => {
           detail.onExecute(splitDropdown, btn);
         });
@@ -107,13 +107,13 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 
   PartType.optional({
     factory: {
-      sketch (spec) {
+      sketch(spec) {
         return {
           uid: spec.uid,
           dom: {
             tag: 'span',
             styles: {
-              display: 'none',
+              display: 'none'
             },
             attributes: {
               'aria-hidden': 'true'
@@ -132,9 +132,9 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
       Fields.tieredMenuMarkers()
     ],
     name: 'menu',
-    defaults (detail) {
+    defaults(detail) {
       return {
-        onExecute (tmenu: AlloyComponent, item: AlloyComponent) {
+        onExecute(tmenu: AlloyComponent, item: AlloyComponent) {
           tmenu.getSystem().getByUid(detail.uid).each((splitDropdown) => {
             detail.onItemExecute(splitDropdown, tmenu, item);
           });

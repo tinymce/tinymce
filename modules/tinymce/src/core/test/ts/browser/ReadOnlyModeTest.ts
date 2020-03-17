@@ -13,62 +13,56 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
   TinyLoader.setup(function (editor: Editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
-    const sSetMode = (mode: string) => {
-      return Step.label('sSetMode: setting the editor mode to ' + mode, Step.sync(() => {
-        editor.mode.set(mode);
-      }));
-    };
+    const sSetMode = (mode: string) => Step.label('sSetMode: setting the editor mode to ' + mode, Step.sync(() => {
+      editor.mode.set(mode);
+    }));
 
-    const sAssertNestedContentEditableTrueDisabled = (state: boolean, offscreen: boolean) => {
-      return tinyApis.sAssertContentStructure(
-        ApproxStructure.build(function (s, str, arr) {
-          const attrs = state ? {
-            'contenteditable': str.is('false'),
-            'data-mce-contenteditable': str.is('true')
-          } : {
-            'contenteditable': str.is('true'),
-            'data-mce-contenteditable': str.none()
-          };
+    const sAssertNestedContentEditableTrueDisabled = (state: boolean, offscreen: boolean) => tinyApis.sAssertContentStructure(
+      ApproxStructure.build(function (s, str, arr) {
+        const attrs = state ? {
+          'contenteditable': str.is('false'),
+          'data-mce-contenteditable': str.is('true')
+        } : {
+          'contenteditable': str.is('true'),
+          'data-mce-contenteditable': str.none()
+        };
 
-          return s.element('body', {
-            children: [
-              s.element('div', {
-                attrs: {
-                  contenteditable: str.is('false')
-                },
-                children: [
-                  s.text(str.is('a')),
-                  s.element('span', {
-                    attrs,
-                  }),
-                  s.text(str.is('c'))
-                ]
-              }),
-              ...offscreen ? [ s.element('div', {}) ] : [] // Offscreen cef clone
-            ]
-          });
-        })
-      );
-    };
+        return s.element('body', {
+          children: [
+            s.element('div', {
+              attrs: {
+                contenteditable: str.is('false')
+              },
+              children: [
+                s.text(str.is('a')),
+                s.element('span', {
+                  attrs,
+                }),
+                s.text(str.is('c'))
+              ]
+            }),
+            ...offscreen ? [ s.element('div', {}) ] : [] // Offscreen cef clone
+          ]
+        });
+      })
+    );
 
     const sAssertFakeSelection = (expectedState: boolean) => Step.sync(() => {
       Assert.eq('Selected element should have expected state', expectedState, editor.selection.getNode().hasAttribute('data-mce-selected'));
     });
 
-    const sAssertResizeBars = (expectedState: boolean) => {
-      return Step.sync(() => {
-        SelectorFind.descendant(Element.fromDom(editor.getDoc().documentElement), '.ephox-snooker-resizer-bar').fold(
-          () => {
-            Assert.eq('Was expecting to find resize bars', expectedState, false);
-          },
-          (bar) => {
-            const actualDisplay = Css.get(bar, 'display');
-            const expectedDisplay = expectedState ? 'block' : 'none';
-            Assert.eq('Should be expected display state on resize bar', expectedDisplay, actualDisplay);
-          }
-        );
-      });
-    };
+    const sAssertResizeBars = (expectedState: boolean) => Step.sync(() => {
+      SelectorFind.descendant(Element.fromDom(editor.getDoc().documentElement), '.ephox-snooker-resizer-bar').fold(
+        () => {
+          Assert.eq('Was expecting to find resize bars', expectedState, false);
+        },
+        (bar) => {
+          const actualDisplay = Css.get(bar, 'display');
+          const expectedDisplay = expectedState ? 'block' : 'none';
+          Assert.eq('Should be expected display state on resize bar', expectedDisplay, actualDisplay);
+        }
+      );
+    });
 
     const sMouseOverTable = Chain.asStep(Element.fromDom(editor.getBody()), [
       UiFinder.cFindIn('table'),
@@ -152,7 +146,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
                   attrs: {
                     'data-mce-bogus': str.is('all'),
                   },
-                  classes: [arr.has('mce-visual-caret'), arr.has('mce-visual-caret-before')]
+                  classes: [ arr.has('mce-visual-caret'), arr.has('mce-visual-caret-before') ]
                 })
               ]
             });
@@ -188,7 +182,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
       Log.stepsAsStep('TBA', 'Resize bars for tables should be hidden while in readonly mode', [
         sSetMode('design'),
         tinyApis.sSetContent('<table><tbody><tr><td>a</td></tr></tbody></table>'),
-        tinyApis.sSetCursor([0, 0, 0, 0, 0], 0),
+        tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 0),
         sMouseOverTable,
         sAssertResizeBars(true),
         sSetMode('readonly'),
@@ -203,13 +197,13 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
         tinyApis.sFocus(),
         sSetMode('design'),
         tinyApis.sSetContent('<table><tbody><tr><td>a</td></tr></tbody></table>'),
-        tinyApis.sSetCursor([0, 0, 0, 0, 0], 0),
+        tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 0),
         UiFinder.sWaitFor('Waited for context toolbar', Body.body(), '.tox-pop'),
         sSetMode('readonly'),
         UiFinder.sNotExists(Body.body(), '.tox-pop'),
         sSetMode('design'),
         tinyApis.sSetContent('<table><tbody><tr><td>a</td></tr></tbody></table>'),
-        tinyApis.sSetCursor([0, 0, 0, 0, 0], 0),
+        tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 0),
         UiFinder.sWaitFor('Waited for context toolbar', Body.body(), '.tox-pop')
       ]),
       Log.stepsAsStep('TBA', 'Main toolbar should disable when switching to readonly mode', [
@@ -232,9 +226,9 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
       ])
     ], onSuccess, onFailure);
   }, {
-      base_url: '/project/tinymce/js/tinymce',
-      toolbar: 'bold',
-      plugins: 'table',
-      statusbar: false
-    }, success, failure);
+    base_url: '/project/tinymce/js/tinymce',
+    toolbar: 'bold',
+    plugins: 'table',
+    statusbar: false
+  }, success, failure);
 });

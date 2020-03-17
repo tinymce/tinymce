@@ -27,7 +27,7 @@ import { BlobCache } from '../file/BlobCache';
  * @version 3.4
  */
 
-const makeMap = Tools.makeMap, each = Tools.each, explode = Tools.explode, extend = Tools.extend;
+const makeMap = Tools.makeMap; const each = Tools.each; const explode = Tools.explode; const extend = Tools.extend;
 
 export interface ParserArgs {
   getInner?: boolean | number;
@@ -87,8 +87,8 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
   settings.root_name = settings.root_name || 'body';
 
   const fixInvalidChildren = function (nodes) {
-    let ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i;
-    let nonEmptyElements, whitespaceElements, nonSplitableElements, textBlockElements, specialElements, sibling, nextNode;
+    let ni; let node; let parent; let parents; let newParent; let currentNode; let tempNode; let childNode; let i;
+    let nonEmptyElements; let whitespaceElements; let nonSplitableElements; let textBlockElements; let specialElements; let sibling; let nextNode;
 
     nonSplitableElements = makeMap('tr,td,th,tbody,thead,tfoot,table');
     nonEmptyElements = schema.getNonEmptyElements();
@@ -127,7 +127,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
       }
 
       // Get list of all parent nodes until we find a valid parent to stick the child into
-      parents = [node];
+      parents = [ node ];
       for (parent = node.parent; parent && !schema.isValidChild(parent.name, node.name) &&
         !nonSplitableElements[parent.name]; parent = parent.parent) {
         parents.push(parent);
@@ -213,7 +213,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
    * @return {tinymce.html.Node} The passed in node.
    */
   const filterNode = (node: Node): Node => {
-    let i, name, list;
+    let i; let name; let list;
 
     name = node.name;
     // Run element filters
@@ -223,7 +223,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
       if (list) {
         list.push(node);
       } else {
-        matchedNodes[name] = [node];
+        matchedNodes[name] = [ node ];
       }
     }
 
@@ -238,7 +238,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         if (list) {
           list.push(node);
         } else {
-          matchedAttributes[name] = [node];
+          matchedAttributes[name] = [ node ];
         }
       }
     }
@@ -309,7 +309,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         }
       }
 
-      attributeFilters.push({ name, callbacks: [callback] });
+      attributeFilters.push({ name, callbacks: [ callback ] });
     });
   };
 
@@ -326,7 +326,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
    * @return {tinymce.html.Node} Root node containing the tree.
    */
   const parse = (html: string, args?: ParserArgs): Node => {
-    let parser, nodes, i, l, fi, fl, list, name;
+    let parser; let nodes; let i; let l; let fi; let fl; let list; let name;
     let blockElements;
     const invalidChildren = [];
     let isInWhiteSpacePreservedElement;
@@ -360,7 +360,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
     isInWhiteSpacePreservedElement = whiteSpaceElements.hasOwnProperty(args.context) || whiteSpaceElements.hasOwnProperty(settings.root_name);
 
     const addRootBlocks = function () {
-      let node = rootNode.firstChild, next, rootBlockNode;
+      let node = rootNode.firstChild; let next; let rootBlockNode;
 
       // Removes whitespace at beginning and end of block so:
       // <p> x </p> -> <p>x</p>
@@ -418,7 +418,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         if (list) {
           list.push(node);
         } else {
-          matchedNodes[name] = [node];
+          matchedNodes[name] = [ node ];
         }
       }
 
@@ -426,7 +426,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
     };
 
     const removeWhitespaceBefore = function (node) {
-      let textNode, textNodeNext, textVal, sibling;
+      let textNode; let textNodeNext; let textVal; let sibling;
       const blockElements = schema.getBlockElements();
 
       for (textNode = node.prev; textNode && textNode.type === 3;) {
@@ -482,11 +482,11 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
       // Exclude P and LI from DOM parsing since it's treated better by the DOM parser
       self_closing_elements: cloneAndExcludeBlocks(schema.getSelfClosingElements()),
 
-      cdata (text) {
+      cdata(text) {
         node.append(createNode('#cdata', 4)).value = text;
       },
 
-      text (text, raw) {
+      text(text, raw) {
         let textNode;
 
         // Trim all redundant whitespace on non white space elements
@@ -506,16 +506,16 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         }
       },
 
-      comment (text) {
+      comment(text) {
         node.append(createNode('#comment', 8)).value = text;
       },
 
-      pi (name, text) {
+      pi(name, text) {
         node.append(createNode(name, 7)).value = text;
         removeWhitespaceBefore(node);
       },
 
-      doctype (text) {
+      doctype(text) {
         let newNode;
 
         newNode = node.append(createNode('#doctype', 10));
@@ -523,8 +523,8 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         removeWhitespaceBefore(node);
       },
 
-      start (name, attrs, empty) {
-        let newNode, attrFiltersLen, elementRule, attrName, parent;
+      start(name, attrs, empty) {
+        let newNode; let attrFiltersLen; let elementRule; let attrName; let parent;
 
         elementRule = validate ? schema.getElementRule(name) : {};
         if (elementRule) {
@@ -551,7 +551,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
               if (list) {
                 list.push(newNode);
               } else {
-                matchedAttributes[attrName] = [newNode];
+                matchedAttributes[attrName] = [ newNode ];
               }
             }
           }
@@ -573,8 +573,8 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         }
       },
 
-      end (name) {
-        let textNode, elementRule, text, sibling, tempNode;
+      end(name) {
+        let textNode; let elementRule; let text; let sibling; let tempNode;
 
         elementRule = validate ? schema.getElementRule(name) : {};
         if (elementRule) {
@@ -641,7 +641,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
 
             // Trim start white space
             // Removed due to: #5424
-            /*textNode = node.prev;
+            /* textNode = node.prev;
             if (textNode && textNode.type === 3) {
               text = textNode.value.replace(startWhiteSpaceRegExp, '');
 

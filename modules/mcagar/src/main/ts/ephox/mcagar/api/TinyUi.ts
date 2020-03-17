@@ -34,15 +34,11 @@ export const TinyUi = function (editor: Editor): TinyUi {
   const cDialogRoot = Chain.inject(dialogRoot);
 
   const cGetToolbarRoot = Chain.fromChainsWith<Element, Element, Element>(toolstripRoot, [
-    Chain.binder((container: Element) => {
-      return UiFinder.findIn(container, getThemeSelectors().toolBarSelector(editor));
-    })
+    Chain.binder((container: Element) => UiFinder.findIn(container, getThemeSelectors().toolBarSelector(editor)))
   ]);
 
   const cGetMenuRoot = Chain.fromChainsWith<Element, Element, Element>(toolstripRoot, [
-    Chain.binder((container: Element) => {
-      return UiFinder.findIn(container, getThemeSelectors().menuBarSelector);
-    })
+    Chain.binder((container: Element) => UiFinder.findIn(container, getThemeSelectors().menuBarSelector))
   ]);
 
   const cEditorRoot = Chain.inject(editorRoot);
@@ -61,7 +57,7 @@ export const TinyUi = function (editor: Editor): TinyUi {
     ]);
   };
 
-  const sClickOnMenu = function <T>(label: string, selector: string) {
+  const sClickOnMenu = function <T> (label: string, selector: string) {
     return Chain.asStep<T, any>({}, [
       cFindIn(cGetMenuRoot, selector),
       Mouse.cClick
@@ -146,9 +142,7 @@ export const TinyUi = function (editor: Editor): TinyUi {
 
   const cSubmitDialog = function () {
     return Chain.fromChains<Element, Element>([
-      Chain.binder((container: Element) => {
-        return UiFinder.findIn(container, getThemeSelectors().dialogSubmitSelector);
-      }),
+      Chain.binder((container: Element) => UiFinder.findIn(container, getThemeSelectors().dialogSubmitSelector)),
       Mouse.cClick
     ]);
   };

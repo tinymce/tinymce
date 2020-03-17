@@ -60,5 +60,7 @@ UnitTest.asynctest('Browser Test: api.ComponentConfiguredTest', (success, failur
         Assertions.assertEq('hasConfigured', false, toggler.hasConfigured(Toggling));
       })
     )
-  ], () => { success(); }, failure);
+  ], () => {
+    success();
+  }, failure);
 });

@@ -11,7 +11,7 @@ import * as Events from '../api/Events';
 import Tools from '../api/util/Tools';
 
 const preProcess = function (editor: Editor, node: Element, args) {
-  let impl, doc, oldDoc;
+  let impl; let doc; let oldDoc;
   const dom = editor.dom;
 
   node = node.cloneNode(true) as Element;
@@ -24,7 +24,7 @@ const preProcess = function (editor: Editor, node: Element, args) {
     doc = impl.createHTMLDocument('');
 
     // Add the element or it's children if it's a body element to the new document
-    Tools.each(node.nodeName === 'BODY' ? node.childNodes : [node], function (node) {
+    Tools.each(node.nodeName === 'BODY' ? node.childNodes : [ node ], function (node) {
       doc.body.appendChild(doc.importNode(node, true));
     });
 

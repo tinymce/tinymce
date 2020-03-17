@@ -14,7 +14,7 @@ export interface AnnotationChanges {
   addListener: (name: string, f: AnnotationListener) => void;
 }
 
-export type AnnotationListener = (state: boolean, name: string, data?: { uid: string, nodes: any[] }) => void;
+export type AnnotationListener = (state: boolean, name: string, data?: { uid: string; nodes: any[] }) => void;
 
 export interface AnnotationListenerData {
   listeners: AnnotationListener[];
@@ -102,12 +102,10 @@ const setup = (editor: Editor, registry: AnnotationsRegistry): AnnotationChanges
   });
 
   const addListener = (name: string, f: AnnotationListener): void => {
-    updateCallbacks(name, (data) => {
-      return {
-        previous: data.previous,
-        listeners: data.listeners.concat([ f ])
-      };
-    });
+    updateCallbacks(name, (data) => ({
+      previous: data.previous,
+      listeners: data.listeners.concat([ f ])
+    }));
   };
 
   return {

@@ -56,4 +56,4 @@ export default ValueSchema.objOf([
   FieldSchema.defaulted('translate', Fun.identity),
   FieldSchema.defaulted('setReadOnly', Fun.noop),
   FieldSchema.defaulted('readOnlyOnInit', Fun.constant(true))
-]) as Processor;
+]);

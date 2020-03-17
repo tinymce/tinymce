@@ -57,16 +57,12 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
       // Title attribute is added here to provide tooltips which might be helpful to sighted users.
       // Using aria-label here overrides the Apple description of emojis and special characters in Mac/ MS description in Windows.
       // But if only the title attribute is used instead, the names are read out twice. i.e., the description followed by the item.text.
-      const ariaLabel = itemText.replace(/\_| \- |\-/g, (match) => {
-        return mapItemName[match];
-      });
+      const ariaLabel = itemText.replace(/\_| \- |\-/g, (match) => mapItemName[match]);
       return `<div class="tox-collection__item" tabindex="-1" data-collection-item-value="${escapeAttribute(item.value)}" title="${ariaLabel}" aria-label="${ariaLabel}">${iconContent}${textContent}</div>`;
     });
 
     const chunks = spec.columns > 1 && spec.columns !== 'auto' ? Arr.chunk(htmlLines, spec.columns) : [ htmlLines ];
-    const html = Arr.map(chunks, (ch) => {
-      return `<div class="tox-collection__group">${ch.join('')}</div>`;
-    });
+    const html = Arr.map(chunks, (ch) => `<div class="tox-collection__group">${ch.join('')}</div>`);
 
     Html.set(comp.element(), html.join(''));
   };
@@ -138,7 +134,7 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
     ])
   });
 
-  const extraClasses = ['tox-form__group--collection'];
+  const extraClasses = [ 'tox-form__group--collection' ];
 
   return renderFormFieldWith(pLabel, pField, extraClasses, [ ]);
 };

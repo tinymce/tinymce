@@ -116,7 +116,7 @@ const onSubmitCellForm = (editor: Editor, cells: HTMLTableCellElement[], api) =>
 
 const open = (editor: Editor) => {
   // these any types are cheating, but seem difficult to unwind
-  let cellElm, cells = [];
+  let cellElm; let cells = [];
 
   // Get selected cells or the current cell
   cells = editor.dom.select('td[data-mce-selected],th[data-mce-selected]');

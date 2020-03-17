@@ -30,9 +30,9 @@ interface Quirks {
 
 const Quirks = function (editor: Editor): Quirks {
   const each = Tools.each;
-  const BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection: Selection = editor.selection,
-    settings = editor.settings, parser = editor.parser;
-  const isGecko = Env.gecko, isIE = Env.ie, isWebKit = Env.webkit;
+  const BACKSPACE = VK.BACKSPACE; const DELETE = VK.DELETE; const dom = editor.dom; const selection: Selection = editor.selection;
+  const settings = editor.settings; const parser = editor.parser;
+  const isGecko = Env.gecko; const isIE = Env.ie; const isWebKit = Env.webkit;
   const mceInternalUrlPrefix = 'data:text/mce-internal,';
   const mceInternalDataType = isIE ? 'Text' : 'URL';
 
@@ -67,7 +67,7 @@ const Quirks = function (editor: Editor): Quirks {
    * @param {DragEvent} e Event object
    */
   const setMceInternalContent = function (e) {
-    let selectionHtml, internalContent;
+    let selectionHtml; let internalContent;
 
     if (e.dataTransfer) {
       if (editor.selection.isCollapsed() && e.target.tagName === 'IMG') {
@@ -160,7 +160,7 @@ const Quirks = function (editor: Editor): Quirks {
 
     editor.on('keydown', function (e) {
       const keyCode = e.keyCode;
-      let isCollapsed, body;
+      let isCollapsed; let body;
 
       // Empty the editor if it's needed for example backspace at <p><b>|</b></p>
       if (!isDefaultPrevented(e) && (keyCode === DELETE || keyCode === BACKSPACE)) {
@@ -217,7 +217,7 @@ const Quirks = function (editor: Editor): Quirks {
       // Case 1 IME doesn't initialize if you focus the document
       // Disabled since it was interferring with the cE=false logic
       // Also coultn't reproduce the issue on Safari 9
-      /*dom.bind(editor.getDoc(), 'focusin', function() {
+      /* dom.bind(editor.getDoc(), 'focusin', function() {
         selection.setRng(selection.getRng());
       });*/
 
@@ -418,7 +418,7 @@ const Quirks = function (editor: Editor): Quirks {
   const removeBlockQuoteOnBackSpace = function () {
     // Add block quote deletion handler
     editor.on('keydown', function (e) {
-      let rng, container, offset, root, parent;
+      let rng; let container; let offset; let root; let parent;
 
       if (isDefaultPrevented(e) || e.keyCode !== VK.BACKSPACE) {
         return;

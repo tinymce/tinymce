@@ -31,7 +31,7 @@ const getElmIndex = function (elm: Element) {
 };
 
 const markAllMatches = function (editor: Editor, currentSearchState: Cell<SearchState>, regex: RegExp) {
-  let node, marker;
+  let node; let marker;
 
   marker = editor.dom.create('span', {
     'data-mce-bogus': 1
@@ -163,7 +163,7 @@ const isMatchSpan = function (node: Element) {
 const replace = function (editor: Editor, currentSearchState: Cell<SearchState>, text: string, forward?: boolean, all?: boolean) {
   const searchState = currentSearchState.get();
   const currentIndex = searchState.index;
-  let i, nodes, node, matchIndex, currentMatchIndex, nextIndex = currentIndex;
+  let i; let nodes; let node; let matchIndex; let currentMatchIndex; let nextIndex = currentIndex;
 
   forward = forward !== false;
 
@@ -216,7 +216,7 @@ const replace = function (editor: Editor, currentSearchState: Cell<SearchState>,
 };
 
 const done = function (editor: Editor, currentSearchState: Cell<SearchState>, keepEditorSelection?: boolean) {
-  let i, nodes, startContainer, endContainer;
+  let i; let nodes; let startContainer; let endContainer;
   const searchState = currentSearchState.get();
 
   nodes = Tools.toArray(editor.getBody().getElementsByTagName('span'));

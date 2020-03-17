@@ -36,8 +36,8 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentStyleTest', (s
         sAssertIframeHtmlContains(editor, '<style type="text/css">p {color: blue;}</style>'),
         tinyApis.sDeleteSetting('content_style'),
         sAssertIframeHtmlNotContains(editor, '<style type="text/css">p {color: blue;}</style>')
-    ])
-    , onSuccess, onFailure);
+      ])
+      , onSuccess, onFailure);
   }, {
     theme: 'silver',
     plugins: 'preview',

@@ -27,20 +27,18 @@ interface TextMungerSpec {
   label: string;
 }
 
-const invalidation = (validate: (v: string) => Result<Record<string, string>, string>, invalidUid: string) => {
-  return Invalidating.config({
-    invalidClass: 'invalid-input',
-    notify: {
-      getContainer (input) {
-        return ComponentUtil.getByUid(input, invalidUid).map(ComponentUtil.toElem);
-      }
-    },
-    validator: {
-      validate: Invalidating.validation<Record<string, string>>(validate),
-      onEvent: NativeEvents.input()
+const invalidation = (validate: (v: string) => Result<Record<string, string>, string>, invalidUid: string) => Invalidating.config({
+  invalidClass: 'invalid-input',
+  notify: {
+    getContainer(input) {
+      return ComponentUtil.getByUid(input, invalidUid).map(ComponentUtil.toElem);
     }
-  });
-};
+  },
+  validator: {
+    validate: Invalidating.validation<Record<string, string>>(validate),
+    onEvent: NativeEvents.input()
+  }
+});
 
 const rawTextMunger = (spec: TextMungerSpec) => {
   const invalidUid = Tagger.generate('demo-invalid-uid');
@@ -52,9 +50,7 @@ const rawTextMunger = (spec: TextMungerSpec) => {
   const pField = FormField.parts().field({
     factory: Input,
     inputBehaviours: Behaviour.derive([
-      invalidation((v) => {
-        return v.indexOf('a') === 0 ? Result.error('Do not start with a!') : Result.value({ });
-      }, invalidUid),
+      invalidation((v) => v.indexOf('a') === 0 ? Result.error('Do not start with a!') : Result.value({ }), invalidUid),
       Tabstopping.config({ })
     ])
   });
@@ -76,7 +72,7 @@ const textMunger = (spec: TextMungerSpec): SketchSpec => {
   return FormField.sketch(m);
 };
 
-const selectMunger = (spec: { label: string; options: Array<{ value: string, text: string }> }): SketchSpec => {
+const selectMunger = (spec: { label: string; options: Array<{ value: string; text: string }> }): SketchSpec => {
   const pLabel = FormField.parts().label({
     dom: { tag: 'label', innerHtml: spec.label }
   });
@@ -157,7 +153,7 @@ const coupledTextMunger = (spec: { field1: TextMungerSpec; field2: TextMungerSpe
     markers: {
       lockClass: 'demo-selected'
     },
-    onLockedChange (current, other) {
+    onLockedChange(current, other) {
       const cValue = Representing.getValue(current);
       Representing.setValue(other, cValue);
     },
@@ -184,7 +180,7 @@ const typeaheadMunger = (spec: { label: string; lazySink: LazySink; dataset: any
 
     lazySink: spec.lazySink,
 
-    fetch (input: AlloyComponent) {
+    fetch(input: AlloyComponent) {
 
       const text = Value.get(input.element());
       const matching: DemoRenders.DemoItems[] = Arr.bind(spec.dataset, (d) => {
@@ -192,7 +188,7 @@ const typeaheadMunger = (spec: { label: string; lazySink: LazySink; dataset: any
         if (index > -1) {
           const html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' +
             d.substring(index + text.length);
-          return [ { 'type': 'item', 'data': { value: d, text: d, html }, 'item-class': 'class-' + d } ];
+          return [{ 'type': 'item', 'data': { value: d, text: d, html }, 'item-class': 'class-' + d }];
         } else {
           return [ ];
         }

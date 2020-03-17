@@ -20,7 +20,7 @@ const cUiDoc = Chain.injectThunked(function () {
   return Element.fromDom(document);
 });
 
-const cTriggerKeyEvent = function <T>(cTarget: Chain<T, Element>, evtType: 'keydown' | 'keyup' | 'keypress' | 'keystroke', code: number, modifiers = {}) {
+const cTriggerKeyEvent = function <T> (cTarget: Chain<T, Element>, evtType: 'keydown' | 'keyup' | 'keypress' | 'keystroke', code: number, modifiers = {}) {
   return NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), cTarget, 'doc'),
     NamedChain.direct('doc', FocusTools.cGetFocused, 'activeElement'),

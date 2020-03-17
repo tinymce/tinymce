@@ -19,58 +19,52 @@ UnitTest.asynctest('GroupToolbarButtonTest', (success, failure) => {
     }
   };
 
-  const defaultToolbarGroupStruct = ApproxStructure.build((s, str, arr) => {
-    return s.element('div', {
-      classes: [ arr.has('tox-toolbar__overflow') ],
-      children: [
-        s.element('div', {
-          classes: [ arr.has('tox-toolbar__group') ],
-          children: [
-            s.element('button', {
-              attrs: { title: str.is('Bold')}
-            })
-          ]
-        }),
-        s.element('div', {
-          classes: [ arr.has('tox-toolbar__group') ],
-          children: [
-            s.element('button', {
-              attrs: { title: str.is('Italic')}
-            })
-          ]
-        }),
-      ]
-    });
-  });
+  const defaultToolbarGroupStruct = ApproxStructure.build((s, str, arr) => s.element('div', {
+    classes: [ arr.has('tox-toolbar__overflow') ],
+    children: [
+      s.element('div', {
+        classes: [ arr.has('tox-toolbar__group') ],
+        children: [
+          s.element('button', {
+            attrs: { title: str.is('Bold') }
+          })
+        ]
+      }),
+      s.element('div', {
+        classes: [ arr.has('tox-toolbar__group') ],
+        children: [
+          s.element('button', {
+            attrs: { title: str.is('Italic') }
+          })
+        ]
+      }),
+    ]
+  }));
 
-  const cTestWithEditor = (settings: Record<string, any>, chains: NamedChain[]): Chain<any, any> => {
-    return NamedChain.asChain([
-      NamedChain.writeValue('body', Body.body()),
-      NamedChain.write('editor', McEditor.cFromSettings({
-        theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce',
-        toolbar_mode: 'floating',
-        ...settings
-      })),
-      NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-      ...chains,
-      NamedChain.read('editor', McEditor.cRemove),
-      NamedChain.outputInput
-    ]);
-  };
+  const cTestWithEditor = (settings: Record<string, any>, chains: NamedChain[]): Chain<any, any> => NamedChain.asChain([
+    NamedChain.writeValue('body', Body.body()),
+    NamedChain.write('editor', McEditor.cFromSettings({
+      theme: 'silver',
+      base_url: '/project/tinymce/js/tinymce',
+      toolbar_mode: 'floating',
+      ...settings
+    })),
+    NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+    ...chains,
+    NamedChain.read('editor', McEditor.cRemove),
+    NamedChain.outputInput
+  ]);
 
-  const sTestToolbarGroup = (settings: Record<string, any>, buttonSelector: string, toolbarSelector: string, expectedStruct: StructAssert) => {
-    return Chain.asStep({}, [
-      cTestWithEditor(settings, [
-        NamedChain.read('body', Mouse.cClickOn(buttonSelector)),
-        NamedChain.direct('body', cExtractOnlyOne(toolbarSelector), 'toolbarGroup'),
-        NamedChain.read('toolbarGroup', Assertions.cAssertStructure(
-          'Checking structure of the toolbar group',
-          expectedStruct
-        ))
-      ])
-    ]);
-  };
+  const sTestToolbarGroup = (settings: Record<string, any>, buttonSelector: string, toolbarSelector: string, expectedStruct: StructAssert) => Chain.asStep({}, [
+    cTestWithEditor(settings, [
+      NamedChain.read('body', Mouse.cClickOn(buttonSelector)),
+      NamedChain.direct('body', cExtractOnlyOne(toolbarSelector), 'toolbarGroup'),
+      NamedChain.read('toolbarGroup', Assertions.cAssertStructure(
+        'Checking structure of the toolbar group',
+        expectedStruct
+      ))
+    ])
+  ]);
 
   Pipeline.async({}, [
     Log.step('TINY-4229', 'Register floating group toolbar button via editor settings', sTestToolbarGroup(
@@ -87,34 +81,32 @@ UnitTest.asynctest('GroupToolbarButtonTest', (success, failure) => {
             icon: 'align-left',
             tooltip: 'Alignment',
             items: [
-              { name: 'Alignment', items: [ 'alignleft', 'aligncenter', 'alignright' ]}
+              { name: 'Alignment', items: [ 'alignleft', 'aligncenter', 'alignright' ] }
             ]
           });
         }
       },
       'button[title="Alignment"]',
       '.tox-toolbar__overflow',
-      ApproxStructure.build((s, str, arr) => {
-        return s.element('div', {
-          classes: [ arr.has('tox-toolbar__overflow') ],
-          children: [
-            s.element('div', {
-              classes: [ arr.has('tox-toolbar__group') ],
-              children: [
-                s.element('button', {
-                  attrs: { title: str.is('Align left')}
-                }),
-                s.element('button', {
-                  attrs: { title: str.is('Align center')}
-                }),
-                s.element('button', {
-                  attrs: { title: str.is('Align right')}
-                })
-              ]
-            })
-          ]
-        });
-      }),
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-toolbar__overflow') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-toolbar__group') ],
+            children: [
+              s.element('button', {
+                attrs: { title: str.is('Align left') }
+              }),
+              s.element('button', {
+                attrs: { title: str.is('Align center') }
+              }),
+              s.element('button', {
+                attrs: { title: str.is('Align right') }
+              })
+            ]
+          })
+        ]
+      })),
     )),
     Log.step('TINY-4616', 'Group toolbars are ignored when using wrap toolbar mode', Chain.asStep({}, [
       cTestWithEditor({

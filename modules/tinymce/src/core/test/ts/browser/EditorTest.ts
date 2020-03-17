@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
   Theme();
 
   suite.test('Event: change', function (editor) {
-    let level, lastLevel;
+    let level; let lastLevel;
 
     editor.on('change', function (e) {
       level = e.level;
@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
   });
 
   suite.test('Event: beforeExecCommand', function (editor) {
-    let cmd, ui, value;
+    let cmd; let ui; let value;
 
     editor.on('BeforeExecCommand', function (e) {
       cmd = e.command;
@@ -217,7 +217,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
   });
 
   suite.test('hide save content and hidden state while saving', function (editor) {
-    let lastEvent, hiddenStateWhileSaving;
+    let lastEvent; let hiddenStateWhileSaving;
 
     editor.on('SaveContent', function (e) {
       lastEvent = e;
@@ -251,7 +251,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
 
   suite.test('addCommand', function (editor) {
     const scope = {};
-    let lastScope, lastArgs;
+    let lastScope; let lastArgs;
 
     const callback = function () {
       // eslint-disable-next-line
@@ -275,7 +275,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
 
   suite.test('addQueryStateHandler', function (editor) {
     const scope = {};
-    let lastScope, currentState;
+    let lastScope; let currentState;
 
     const callback = function () {
       // eslint-disable-next-line
@@ -315,7 +315,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
 
   suite.test('addQueryValueHandler', function (editor) {
     const scope = {};
-    let lastScope, currentValue;
+    let lastScope; let currentValue;
 
     const callback = function () {
       // eslint-disable-next-line
@@ -393,7 +393,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
     });
 
     LegacyUnit.equal(editor.translate('input i18n'), 'output i18n');
-    LegacyUnit.equal(editor.translate(['value:{0}{1}', 'a', 'b']), 'value translation:ab');
+    LegacyUnit.equal(editor.translate([ 'value:{0}{1}', 'a', 'b' ]), 'value translation:ab');
   });
 
   suite.test('Treat some paragraphs as empty contents', function (editor) {

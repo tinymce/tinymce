@@ -24,7 +24,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import { trimOrPadLeftRight, trimNbspAfterDeleteAndPadValue, isAfterNbsp } from './NbspTrim';
 import ParserNode from '../api/html/Node';
 
-const isTableCell = NodeType.matchNodeNames(['td', 'th']);
+const isTableCell = NodeType.matchNodeNames([ 'td', 'th' ]);
 
 const selectionSetContent = (editor: Editor, content: string) => {
   const rng = editor.selection.getRng();
@@ -51,7 +51,7 @@ const validInsertion = function (editor: Editor, value: string, parentNode: DomE
     // Check if parent is empty or only has one BR element then set the innerHTML of that parent
     const node = parentNode.firstChild;
     const node2 = parentNode.lastChild;
-    if (!node || (node === node2 && node.nodeName === 'BR')) {///
+    if (!node || (node === node2 && node.nodeName === 'BR')) {// /
       editor.dom.setHTML(parentNode, value);
     } else {
       selectionSetContent(editor, value);
@@ -68,7 +68,7 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
   const dom = editor.dom;
 
   if (merge) {
-    const root = editor.getBody(), elementUtils = new ElementUtils(dom);
+    const root = editor.getBody(); const elementUtils = new ElementUtils(dom);
 
     Tools.each(dom.select('*[data-mce-fragment]'), function (node) {
       for (let testNode = node.parentNode; testNode && testNode !== root; testNode = testNode.parentNode) {
@@ -105,9 +105,9 @@ const canHaveChildren = function (editor: Editor, node) {
 };
 
 const moveSelectionToMarker = function (editor: Editor, marker) {
-  let parentEditableFalseElm, parentBlock, nextRng;
-  const dom = editor.dom, selection = editor.selection;
-  let node, node2;
+  let parentEditableFalseElm; let parentBlock; let nextRng;
+  const dom = editor.dom; const selection = editor.selection;
+  let node; let node2;
 
   const getContentEditableFalseParent = function (node: Node) {
     const root = editor.getBody();
@@ -189,9 +189,9 @@ const moveSelectionToMarker = function (editor: Editor, marker) {
 };
 
 const insertHtmlAtCaret = function (editor: Editor, value: string, details) {
-  let parser, serializer, parentNode, rootNode, fragment, args;
-  let marker, rng, node, bookmarkHtml, merge;
-  const selection: Selection = editor.selection, dom = editor.dom;
+  let parser; let serializer; let parentNode; let rootNode; let fragment; let args;
+  let marker; let rng; let node; let bookmarkHtml; let merge;
+  const selection: Selection = editor.selection; const dom = editor.dom;
 
   // Check for whitespace before/after value
   if (/^ | $/.test(value)) {

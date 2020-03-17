@@ -2,10 +2,10 @@ import { Option } from '@ephox/katamari';
 
 import { HorizontalSliderDetail, SliderDetail, VerticalSliderDetail } from '../types/SliderTypes';
 
-const t = 'top',
-      r = 'right',
-      b = 'bottom',
-      l = 'left';
+const t = 'top';
+const r = 'right';
+const b = 'bottom';
+const l = 'left';
 
 // Values
 const minX = (detail: HorizontalSliderDetail): number => detail.model.minX;

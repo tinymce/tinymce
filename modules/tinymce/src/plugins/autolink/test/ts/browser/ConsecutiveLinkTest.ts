@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.ConsecutiveLinkTest', (succ
       tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'AutoLink: Chrome adds a nbsp between link and text', [
         tinyApis.sSetContent('<p><a href="http://www.domain.com">www.domain.com</a>&nbsp;www.domain.com</p>'),
-        tinyApis.sSetCursor([0, 1], 15),
+        tinyApis.sSetCursor([ 0, 1 ], 15),
         Step.sync(function () {
           KeyUtils.type(editor, ' ');
         }),
@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.ConsecutiveLinkTest', (succ
       ]),
       Log.stepsAsStep('TBA', 'AutoLink: FireFox does not seem to add a nbsp between link and text', [
         tinyApis.sSetContent('<p><a href="http://www.domain.com">www.domain.com</a> www.domain.com</p>'),
-        tinyApis.sSetCursor([0, 1], 15),
+        tinyApis.sSetCursor([ 0, 1 ], 15),
         Step.sync(function () {
           KeyUtils.type(editor, ' ');
         }),

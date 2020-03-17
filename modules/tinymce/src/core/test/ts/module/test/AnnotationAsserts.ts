@@ -14,30 +14,24 @@ const sAnnotate = <T> (editor: Editor, name: string, uid: string, data: { }): St
   });
 
 // This will result in an attribute order-insensitive HTML assertion
-const sAssertHtmlContent = <T> (tinyApis: TinyApis, children: string[]): Step<T, T> => {
-  return tinyApis.sAssertContentStructure(
-    ApproxStructure.build((s, str, arr) => {
-      return s.element('body', {
-        children: Arr.map(children, ApproxStructure.fromHtml)
-      });
-    })
-  );
-};
+const sAssertHtmlContent = <T> (tinyApis: TinyApis, children: string[]): Step<T, T> => tinyApis.sAssertContentStructure(
+  ApproxStructure.build((s, str, arr) => s.element('body', {
+    children: Arr.map(children, ApproxStructure.fromHtml)
+  }))
+);
 
-const assertMarker = (editor: Editor, expected: { uid: string, name: string}, nodes: Element[]) => {
+const assertMarker = (editor: Editor, expected: { uid: string; name: string}, nodes: Element[]) => {
   const { uid, name } = expected;
   Arr.each(nodes, (node) => {
     Assertions.assertEq('Wrapper must be in content', true, editor.getBody().contains(node));
     Assertions.assertStructure(
       'Checking wrapper has correct decoration',
-      ApproxStructure.build((s, str, arr) => {
-        return s.element('span', {
-          attrs: {
-            'data-mce-annotation': str.is(name),
-            'data-mce-annotation-uid': str.is(uid)
-          }
-        });
-      }),
+      ApproxStructure.build((s, str, arr) => s.element('span', {
+        attrs: {
+          'data-mce-annotation': str.is(name),
+          'data-mce-annotation-uid': str.is(uid)
+        }
+      })),
       SugarElement.fromDom(node)
     );
   });

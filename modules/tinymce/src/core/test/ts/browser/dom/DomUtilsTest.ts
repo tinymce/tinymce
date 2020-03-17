@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
 
     DOM.add(document.body, 'div', { id : 'test' });
 
-    dom = DOMUtils(document, { hex_colors : true, keep_values : true, url_converter (u) {
+    dom = DOMUtils(document, { hex_colors : true, keep_values : true, url_converter(u) {
       return 'X' + u + 'Y';
     } });
 
@@ -163,7 +163,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     DOM.remove(e);
 
     DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
-    DOM.add(['test2', 'test3', 'test4'], 'span', { class : 'abc 123' });
+    DOM.add([ 'test2', 'test3', 'test4' ], 'span', { class : 'abc 123' });
     LegacyUnit.equal(DOM.select('span', 'test').length, 6);
 
     DOM.remove('test');
@@ -267,7 +267,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     LegacyUnit.equal(DOM.getAttrib('test', 'class'), '123');
     LegacyUnit.equal(DOM.getAttrib('test', 'title'), 'abc');
 
-    dom = DOMUtils(document, { keep_values : true, url_converter (u, n) {
+    dom = DOMUtils(document, { keep_values : true, url_converter(u, n) {
       return '&<>"' + u + '&<>"' + n;
     } });
 
@@ -607,7 +607,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
   });
 
   suite.test('split', function () {
-    let point, parent;
+    let point; let parent;
     DOM.add(document.body, 'div', { id : 'test' });
 
     DOM.setHTML('test', '<p><b>text1<span>inner</span>text2</b></p>');
@@ -768,13 +768,13 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     LegacyUnit.equal(count, 1);
 
     count = 0;
-    DOM.bind([document, window], 'click', function (e) {
+    DOM.bind([ document, window ], 'click', function (e) {
       e.stopPropagation();
       count++;
     });
     DOM.fire(document, 'click');
     DOM.fire(window, 'click');
-    DOM.unbind([document, window], 'click');
+    DOM.unbind([ document, window ], 'click');
     LegacyUnit.equal(count, 2);
 
     count = 0;

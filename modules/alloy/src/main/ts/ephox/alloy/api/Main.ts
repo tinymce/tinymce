@@ -10,7 +10,7 @@ import {
   EventFormat,
   NativeSimulatedEvent,
   ReceivingEvent,
-  SimulatedEvent,
+  SimulatedEvent
 } from '../events/SimulatedEvent';
 import * as TapEvent from '../events/TapEvent';
 import * as AlloyLogger from '../log/AlloyLogger';
@@ -60,7 +60,7 @@ import {
   RawDomSchema,
   SimpleOrSketchSpec,
   SimpleSpec,
-  SketchSpec,
+  SketchSpec
 } from './component/SpecTypes';
 import * as Composite from './composite/Parts';
 import * as DragCoord from './data/DragCoord';

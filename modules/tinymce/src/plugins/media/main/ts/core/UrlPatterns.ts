@@ -82,9 +82,7 @@ const getUrl = (pattern: UrlPattern, url: string) => {
   const match = pattern.regex.exec(url);
   let newUrl = protocol + pattern.url;
   for (let i = 0; i < match.length; i++) {
-    newUrl = newUrl.replace('$' + i, () => {
-      return match[i] ? match[i] : '';
-    });
+    newUrl = newUrl.replace('$' + i, () => match[i] ? match[i] : '');
   }
 
   return newUrl.replace(/\?$/, '');

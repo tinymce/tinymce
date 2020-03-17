@@ -27,8 +27,8 @@ import { document, window } from '@ephox/dom-globals';
  */
 
 function getDocumentSize(doc) {
-  let documentElement, body, scrollWidth, clientWidth;
-  let offsetWidth, scrollHeight, clientHeight, offsetHeight;
+  let documentElement; let body; let scrollWidth; let clientWidth;
+  let offsetWidth; let scrollHeight; let clientHeight; let offsetHeight;
   const max = Math.max;
 
   documentElement = doc.documentElement;
@@ -49,7 +49,7 @@ function getDocumentSize(doc) {
 }
 
 function updateWithTouchData(e) {
-  let keys, i;
+  let keys; let i;
 
   if (e.changedTouches) {
     keys = 'screenX screenY pageX pageY clientX clientY'.split(' ');
@@ -63,7 +63,7 @@ export default function (id, settings) {
   let $eventOverlay;
   const doc = settings.document || document;
   let downButton;
-  let start, stop, drag, startX, startY;
+  let start; let stop; let drag; let startX; let startY;
 
   settings = settings || {};
 
@@ -71,7 +71,7 @@ export default function (id, settings) {
 
   start = function (e) {
     const docSize = getDocumentSize(doc);
-    let handleElm, cursor;
+    let handleElm; let cursor;
 
     updateWithTouchData(e);
 

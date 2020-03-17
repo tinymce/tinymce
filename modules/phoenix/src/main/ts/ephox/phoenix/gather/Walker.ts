@@ -40,7 +40,7 @@ const successors: Successor[] = [
   { current: advance, next: advance, fallback: Option.some(sidestep) }
 ];
 
-const go = function <E, D>(universe: Universe<E, D>, item: E, mode: Transition, direction: Direction, rules: Successor[] = successors): Option<Traverse<E>> {
+const go = function <E, D> (universe: Universe<E, D>, item: E, mode: Transition, direction: Direction, rules: Successor[] = successors): Option<Traverse<E>> {
   // INVESTIGATE: Find a way which doesn't require an array search first to identify the current mode.
   const ruleOpt = Arr.find(rules, function (succ) {
     return succ.current === mode;

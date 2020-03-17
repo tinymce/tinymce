@@ -55,7 +55,7 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
    * @param {Function} errorCallback Callback to be executed when failed loading.
    */
   const load = function (url: string, loadedCallback: Function, errorCallback?: Function) {
-    let link, style, startTime, state;
+    let link; let style; let startTime; let state;
 
     const resolve = (status: number) => {
       state.status = status;
@@ -114,7 +114,7 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
     const waitForWebKitLinkLoaded = function () {
       wait(function () {
         const styleSheets = document.styleSheets;
-        let styleSheet, i = styleSheets.length, owner;
+        let styleSheet; let i = styleSheets.length; let owner;
 
         while (i--) {
           styleSheet = styleSheets[i];

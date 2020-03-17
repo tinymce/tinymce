@@ -78,7 +78,7 @@ export interface DraggingConfig<E> {
   getBounds: () => Bounds;
   blockerClass: string;
   dragger: {
-    handlers: (dragConfig: DraggingConfig<E>, dragState: DraggingState) => AlloyEvents.AlloyEventRecord
+    handlers: (dragConfig: DraggingConfig<E>, dragState: DraggingState) => AlloyEvents.AlloyEventRecord;
   };
 }
 

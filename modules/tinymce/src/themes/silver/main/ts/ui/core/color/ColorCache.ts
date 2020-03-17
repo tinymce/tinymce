@@ -10,7 +10,7 @@ import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 
 const storageName = 'tinymce-custom-colors';
 
-export default (max: number = 10) => {
+export default (max = 10) => {
   const storageString = LocalStorage.getItem(storageName);
   const localstorage = Type.isString(storageString) ? JSON.parse(storageString) : [];
 
@@ -41,9 +41,7 @@ export default (max: number = 10) => {
     cache.splice(idx, 1);
   };
 
-  const state = (): string[] => {
-    return cache.slice(0);
-  };
+  const state = (): string[] => cache.slice(0);
 
   return {
     add,

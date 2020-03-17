@@ -45,7 +45,7 @@ const removeStyles = (dom, element: HTMLElement, styles: string[]) => {
 };
 
 const getEndPointNode = function (editor, rng, start, root) {
-  let container, offset;
+  let container; let offset;
 
   container = rng[start ? 'startContainer' : 'endContainer'];
   offset = rng[start ? 'startOffset' : 'endOffset'];
@@ -75,7 +75,7 @@ const getEndPointNode = function (editor, rng, start, root) {
 };
 
 const getSelectedTextBlocks = function (editor, rng, root) {
-  const textBlocks = [], dom = editor.dom;
+  const textBlocks = []; const dom = editor.dom;
 
   const startNode = getEndPointNode(editor, rng, true, root);
   const endNode = getEndPointNode(editor, rng, false, root);
@@ -155,7 +155,7 @@ const applyList = function (editor, listName: string, detail = {}) {
   bookmark = Bookmark.createBookmark(rng);
 
   Tools.each(getSelectedTextBlocks(editor, rng, root), function (block) {
-    let listBlock, sibling;
+    let listBlock; let sibling;
 
     sibling = block.previousSibling;
     if (sibling && NodeType.isListNode(sibling) && sibling.nodeName === listName && hasCompatibleStyle(dom, sibling, detail)) {
@@ -200,7 +200,7 @@ const shouldMerge = function (dom, list1, list2) {
 };
 
 const mergeWithAdjacentLists = function (dom, listBlock) {
-  let sibling, node;
+  let sibling; let node;
 
   sibling = listBlock.nextSibling;
   if (shouldMerge(dom, listBlock, sibling)) {
@@ -238,7 +238,7 @@ const toggleMultipleLists = function (editor, parentList, lists, listName, detai
   } else {
     const bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
 
-    Tools.each([parentList].concat(lists), function (elm) {
+    Tools.each([ parentList ].concat(lists), function (elm) {
       updateList(editor, elm, listName, detail);
     });
 

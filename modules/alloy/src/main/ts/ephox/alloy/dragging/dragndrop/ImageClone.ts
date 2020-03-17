@@ -46,9 +46,7 @@ const setDragImageFromClone = (transfer: DataTransfer, parent: Element, image: D
 // IE and Edge doesn't support setDragImage so this fallback will hide the target from being used as a ghost
 const blockDefaultGhost = (target: Element) => {
   const targetClone = Replication.deep(target);
-  const oldStyles = Arr.map(['position', 'visibility'], (name) => {
-    return { name, value: Css.getRaw(target, name) };
-  });
+  const oldStyles = Arr.map([ 'position', 'visibility' ], (name) => ({ name, value: Css.getRaw(target, name) }));
 
   Insert.before(target, targetClone);
   Css.setAll(target, {

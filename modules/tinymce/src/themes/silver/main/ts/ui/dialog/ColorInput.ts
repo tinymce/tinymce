@@ -58,7 +58,7 @@ type ColorInputSpec = Omit<Types.ColorInput.ColorInput, 'type'>;
 export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactoryBackstageShared, colorInputBackstage: UiFactoryBackstageForColorInput): SimpleSpec => {
   const pField = FormField.parts().field({
     factory: Input,
-    inputClasses: ['tox-textfield'],
+    inputClasses: [ 'tox-textfield' ],
 
     onSetValue: (c) => Invalidating.run(c).get(() => { }),
 
@@ -66,9 +66,7 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
       Tabstopping.config({ }),
       Invalidating.config({
         invalidClass: 'tox-textbox-field-invalid',
-        getRoot: (comp) => {
-          return Traverse.parent(comp.element());
-        },
+        getRoot: (comp) => Traverse.parent(comp.element()),
         notify: {
           onValid: (comp) => {
             // onValid should pass through the value here
@@ -156,13 +154,13 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
   return FormField.sketch({
     dom: {
       tag: 'div',
-      classes: ['tox-form__group']
+      classes: [ 'tox-form__group' ]
     },
     components: pLabel.toArray().concat([
       {
         dom: {
           tag: 'div',
-          classes: ['tox-color-input']
+          classes: [ 'tox-color-input' ]
         },
         components: [
           pField,

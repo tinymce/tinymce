@@ -13,7 +13,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 const DOM = DOMUtils.DOM;
 
 const splitList = function (editor, ul, li) {
-  let tmpRng, fragment, bookmarks, node, newBlock;
+  let tmpRng; let fragment; let bookmarks; let node; let newBlock;
 
   const removeAndKeepBookmarks = function (targetNode) {
     Tools.each(bookmarks, function (node) {

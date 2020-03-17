@@ -22,19 +22,15 @@ export type BodyPanelSpec = Omit<Types.Dialog.Panel, 'type'>;
 
 const renderBodyPanel = (spec: BodyPanelSpec, backstage: UiFactoryBackstage): SimpleSpec => {
   const memForm = Memento.record(
-    AlloyForm.sketch((parts) => {
-      return {
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-form' ].concat(spec.classes)
-        },
-        // All of the items passed through the form need to be put through the interpreter
-        // with their form part preserved.
-        components: Arr.map(spec.items, (item) => {
-          return interpretInForm(parts, item, backstage);
-        })
-      };
-    })
+    AlloyForm.sketch((parts) => ({
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-form' ].concat(spec.classes)
+      },
+      // All of the items passed through the form need to be put through the interpreter
+      // with their form part preserved.
+      components: Arr.map(spec.items, (item) => interpretInForm(parts, item, backstage))
+    }))
   );
 
   return {
@@ -46,7 +42,7 @@ const renderBodyPanel = (spec: BodyPanelSpec, backstage: UiFactoryBackstage): Si
       {
         dom: {
           tag: 'div',
-          classes: ['tox-dialog__body-content']
+          classes: [ 'tox-dialog__body-content' ]
         },
         components: [
           memForm.asSpec()

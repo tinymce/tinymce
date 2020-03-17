@@ -11,7 +11,7 @@ interface GrowEvents {
     grow: Bindable<GrowEvent>;
   };
   trigger: {
-      grow: (x: number, y: number) => void;
+    grow: (x: number, y: number) => void;
   };
 }
 
@@ -25,7 +25,7 @@ type GrowthFn = (x: number, y: number) => Growth;
 const grower = function (f: GrowthFn) {
   return function (element: Element) {
     const events = Events.create({
-      grow: Event(['x', 'y'])
+      grow: Event([ 'x', 'y' ])
     }) as GrowEvents;
 
     const mutate =  function (x: number, y: number) {

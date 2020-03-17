@@ -48,7 +48,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
             inputClasses: [ 'with-selectover' ],
             minChars: 2,
             model: {
-              selectsOver: true,
+              selectsOver: true
             },
             markers: typeaheadMarkers,
             initialData: {
@@ -58,7 +58,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
               }
             },
             fetch,
-            lazySink (c) {
+            lazySink(c) {
               TestDropdownMenu.assertLazySinkArgs('input', 'with-selectover', c);
               return Result.value(sink);
             },
@@ -72,7 +72,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
             inputClasses: [ 'without-selectover' ],
             minChars: 2,
             model: {
-              selectsOver: false,
+              selectsOver: false
             },
             markers: typeaheadMarkers,
             initialData: {
@@ -82,7 +82,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
               }
             },
             fetch,
-            lazySink (c) {
+            lazySink(c) {
               TestDropdownMenu.assertLazySinkArgs('input', 'without-selectover', c);
               return Result.value(sink);
             },
@@ -120,7 +120,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
         steps.sAssertValue('Should change to "Alpha" with it selected over', 'Alpha'),
         steps.sAssertTextSelection('Selects Over Al|pha|', 'Al'.length, 'Alpha'.length),
         Keyboard.sKeydown(doc, Keys.escape(), { }),
-        steps.sWaitForNoMenu('Pressing escape should dismiss menu for end of this part of test'),
+        steps.sWaitForNoMenu('Pressing escape should dismiss menu for end of this part of test')
       ];
     };
 
@@ -150,7 +150,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
     return [
       GuiSetup.mAddStyles(doc, [
         '.selected-item { background-color: #cadbee; }'
-      ]),
+      ])
     ].concat(
       testWithSelector(),
       testWithoutSelector()

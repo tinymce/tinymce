@@ -16,12 +16,12 @@ UnitTest.asynctest('browser.tinymce.core.content.PlaceholderVisuallyEmptyTest', 
       Assertions.assertEq(label, expected, isVisuallyEmpty(editor.dom, body, forcedRootBlockFalse ? '' : 'p'));
     });
 
-    const sTestEmpty = (content: string, forcedRootBlockFalse: boolean = false) => GeneralSteps.sequence([
+    const sTestEmpty = (content: string, forcedRootBlockFalse = false) => GeneralSteps.sequence([
       tinyApi.sSetRawContent(content),
       sAssertEmpty(`Check "${content}" is empty`, true, forcedRootBlockFalse)
     ]);
 
-    const sTestNotEmpty = (content: string, forcedRootBlockFalse: boolean = false) => GeneralSteps.sequence([
+    const sTestNotEmpty = (content: string, forcedRootBlockFalse = false) => GeneralSteps.sequence([
       tinyApi.sSetRawContent(content),
       sAssertEmpty(`Check "${content}" is not empty`, false, forcedRootBlockFalse)
     ]);

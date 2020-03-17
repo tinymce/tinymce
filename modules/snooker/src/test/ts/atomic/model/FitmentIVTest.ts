@@ -8,7 +8,7 @@ import * as Fitment from 'ephox/snooker/test/Fitment';
 import * as TableMerge from 'ephox/snooker/test/TableMerge';
 
 UnitTest.test('FitmentIVTest', function () {
-  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as any as Element, isNew);
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as Element, isNew);
 
   // Spend 5 seconds running as many iterations as we can (there are three cycles, so 15s total)
   const CYCLE_TIME = 5000;
@@ -40,7 +40,7 @@ UnitTest.test('FitmentIVTest', function () {
     } as any;
   };
 
-  const grid = function (isNew: boolean, rows: number, cols: number, prefix: string = '') {
+  const grid = function (isNew: boolean, rows: number, cols: number, prefix = '') {
     return Arr.map(new Array(rows), function (_row, r) {
       return Arr.map(new Array(cols), function (_cs, c) {
         return en(prefix + '-' + r + '-' + c, isNew);
@@ -177,7 +177,7 @@ UnitTest.test('FitmentIVTest', function () {
       }
     };
 
-    const queryliser2000 = function (result: Result<Structs.RowCells[], string>, s: Structs.Address, specA: { rows: () => number, cols: () => number, grid: () => Structs.ElementNew[][] }, specB: { rows: () => number, cols: () => number, grid: () => Structs.ElementNew[][] }) {
+    const queryliser2000 = function (result: Result<Structs.RowCells[], string>, s: Structs.Address, specA: { rows: () => number; cols: () => number; grid: () => Structs.ElementNew[][] }, specB: { rows: () => number; cols: () => number; grid: () => Structs.ElementNew[][] }) {
       // expect to see some cell from specB at some address on specA
       const offsetRow = s.row();
       const offsetCol = s.column();

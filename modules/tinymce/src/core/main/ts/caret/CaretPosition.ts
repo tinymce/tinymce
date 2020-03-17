@@ -93,7 +93,7 @@ const getBoundingClientRectWebKitText = (rng: Range): ClientRect => {
 const isZeroRect = (r) => r.left === 0 && r.right === 0 && r.top === 0 && r.bottom === 0;
 
 const getBoundingClientRect = (item: Element | Range): ClientRect => {
-  let clientRect, clientRects;
+  let clientRect; let clientRects;
 
   clientRects = item.getClientRects();
   if (clientRects.length > 0) {
@@ -123,7 +123,7 @@ const collapseAndInflateWidth = (clientRect: ClientRect, toStart: boolean): Geom
 
 const getCaretPositionClientRects = (caretPosition: CaretPosition): ClientRect[] => {
   const clientRects = [];
-  let beforeNode, node;
+  let beforeNode; let node;
 
   const addUniqueAndValidRect = function (clientRect) {
     if (clientRect.height === 0) {
@@ -276,13 +276,9 @@ export function CaretPosition(container: Node, offset: number, clientRects?): Ca
     return clientRects;
   };
 
-  const isVisible = () => {
-    return getClientRects().length > 0;
-  };
+  const isVisible = () => getClientRects().length > 0;
 
-  const isEqual = (caretPosition: CaretPosition) => {
-    return caretPosition && container === caretPosition.container() && offset === caretPosition.offset();
-  };
+  const isEqual = (caretPosition: CaretPosition) => caretPosition && container === caretPosition.container() && offset === caretPosition.offset();
 
   const getNode = (before?: boolean): Node => resolveIndex(container, before ? offset - 1 : offset);
 
@@ -402,13 +398,9 @@ export namespace CaretPosition {
    */
   export const before = (node: Node) => CaretPosition(node.parentNode, nodeIndex(node));
 
-  export const isAbove = (pos1: CaretPosition, pos2: CaretPosition): boolean => {
-    return Options.lift2(Arr.head(pos2.getClientRects()), Arr.last(pos1.getClientRects()), GeomClientRect.isAbove).getOr(false);
-  };
+  export const isAbove = (pos1: CaretPosition, pos2: CaretPosition): boolean => Options.lift2(Arr.head(pos2.getClientRects()), Arr.last(pos1.getClientRects()), GeomClientRect.isAbove).getOr(false);
 
-  export const isBelow = (pos1: CaretPosition, pos2: CaretPosition): boolean => {
-    return Options.lift2(Arr.last(pos2.getClientRects()), Arr.head(pos1.getClientRects()), GeomClientRect.isBelow).getOr(false);
-  };
+  export const isBelow = (pos1: CaretPosition, pos2: CaretPosition): boolean => Options.lift2(Arr.last(pos2.getClientRects()), Arr.head(pos1.getClientRects()), GeomClientRect.isBelow).getOr(false);
 
   export const isAtStart = (pos: CaretPosition) => pos ? pos.isAtStart() : false;
   export const isAtEnd = (pos: CaretPosition) => pos ? pos.isAtEnd() : false;

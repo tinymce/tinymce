@@ -10,11 +10,11 @@ const sharedOne: SharedOneFn = oneAll;
 type SubsetFn = <E, D>(universe: Universe<E, D>, start: E, end: E) => Option<E[]>;
 const subset: SubsetFn = SubsetFn.subset;
 
-type AncestorsFnResult<E> = {
+interface AncestorsFnResult<E> {
   firstpath: () => E[];
   secondpath: () => E[];
   shared: () => Option<E>;
-};
+}
 type AncestorsFn = <E, D>(universe: Universe<E, D>, start: E, finish: E, isRoot?: ((x: E) => boolean) | undefined) => AncestorsFnResult<E>;
 const ancestors: AncestorsFn = SubsetFn.ancestors;
 

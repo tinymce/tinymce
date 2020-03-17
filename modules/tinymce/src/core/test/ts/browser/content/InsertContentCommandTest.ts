@@ -315,8 +315,8 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
   });
 
   suite.test('mceInsertContent - invalid insertion with spans on page', function (editor) {
-    const startingContent = '<p>123 testing <em>span later in document</em></p>',
-      insertedContent = '<ul><li>u</li><li>l</li></ul>';
+    const startingContent = '<p>123 testing <em>span later in document</em></p>';
+    const insertedContent = '<ul><li>u</li><li>l</li></ul>';
     editor.setContent(startingContent);
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 0);

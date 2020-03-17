@@ -2,7 +2,7 @@ import { Blob } from '@ephox/dom-globals';
 import * as Conversions from '../util/Conversions';
 import { Promise } from '../util/Promise';
 import { BinaryReader } from './BinaryReader';
-import { ExifReader, ExifTags, GPSTags , TiffTags} from './ExifReader';
+import { ExifReader, ExifTags, GPSTags , TiffTags } from './ExifReader';
 
 export interface JPEGMeta {
   tiff: TiffTags;

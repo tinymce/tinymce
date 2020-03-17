@@ -18,7 +18,7 @@ const morphToCoord = (component: AlloyComponent, config: DockingConfig, position
   method(component);
 };
 
-const updateVisibility = (component: AlloyComponent, config: DockingConfig, state: DockingState, viewport: Boxes.Bounds, morphToDocked: boolean = false) => {
+const updateVisibility = (component: AlloyComponent, config: DockingConfig, state: DockingState, viewport: Boxes.Bounds, morphToDocked = false) => {
   config.contextual.each((contextInfo) => {
     // Make the dockable component disappear if the context is outside the viewport
     contextInfo.lazyContext(component).each((box) => {
@@ -104,8 +104,6 @@ const reset = (component: AlloyComponent, config: DockingConfig, state: DockingS
   }
 };
 
-const isDocked = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {
-  return state.isDocked();
-};
+const isDocked = (component: AlloyComponent, config: DockingConfig, state: DockingState) => state.isDocked();
 
 export { refresh, reset, isDocked };

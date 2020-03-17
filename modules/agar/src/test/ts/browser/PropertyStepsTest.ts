@@ -10,7 +10,7 @@ UnitTest.asynctest('PropertyStepsTest', (success, failure) => {
   Pipeline.async({}, [
     PropertySteps.sAsyncProperty(
       'Check number dividing by 1 is itself',
-      [Jsc.integer],
+      [ Jsc.integer ],
       Step.stateful((num: number, next, die) => {
         Assert.eq('x / 1 === x', num, num / 1);
         next(num);

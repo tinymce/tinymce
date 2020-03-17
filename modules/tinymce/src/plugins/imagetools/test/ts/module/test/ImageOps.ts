@@ -30,30 +30,30 @@ export default function (editor) {
       Mouse.cMouseUpTo(5, 0)
     ]),
     Guard.addLogging('Drag and drop')
-);
+  );
 
   const cExecCommandFromDialog = function (label) {
     let cInteractWithUi;
 
     switch (label) {
-      case 'Rotate counterclockwise':
-      case 'Rotate clockwise':
-      case 'Flip vertically':
-      case 'Flip horizontally':
-        // Orientation operations, like Flip or Rotate are grouped in a sub-panel
-        cInteractWithUi = cClickToolbarButton(label);
-        label = 'Orientation';
-        break;
+    case 'Rotate counterclockwise':
+    case 'Rotate clockwise':
+    case 'Flip vertically':
+    case 'Flip horizontally':
+      // Orientation operations, like Flip or Rotate are grouped in a sub-panel
+      cInteractWithUi = cClickToolbarButton(label);
+      label = 'Orientation';
+      break;
 
-      case 'Brightness':
-      case 'Contrast':
-      case 'Color levels':
-      case 'Gamma':
-        cInteractWithUi = cDragDrop;
-        break;
+    case 'Brightness':
+    case 'Contrast':
+    case 'Color levels':
+    case 'Gamma':
+      cInteractWithUi = cDragDrop;
+      break;
 
-      default:
-        cInteractWithUi = Chain.wait(1);
+    default:
+      cInteractWithUi = Chain.wait(1);
     }
 
     return Chain.control(
@@ -81,12 +81,10 @@ export default function (editor) {
     );
   };
 
-  const cWaitForDialogClose = () => {
-    return Chain.control(
-      UiFinder.cNotExists('[role="dialog"]'),
-      Guard.tryUntil('Waiting for dialog to go away', 10, 3000)
-    );
-  };
+  const cWaitForDialogClose = () => Chain.control(
+    UiFinder.cNotExists('[role="dialog"]'),
+    Guard.tryUntil('Waiting for dialog to go away', 10, 3000)
+  );
 
   const cClickButton = function (text) {
     return Chain.control(

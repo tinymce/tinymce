@@ -23,8 +23,8 @@ export type Decorator = (
   uid: string,
   data: DecoratorData
 ) => {
-  attributes?: { },
-  classes?: string[]
+  attributes?: { };
+  classes?: string[];
 };
 
 const applyWordGrab = (editor: Editor, rng: Range): void => {
@@ -79,26 +79,26 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
     const ctx = context(editor, elem, 'span', Node.name(elem));
 
     switch (ctx) {
-      case ChildContext.InvalidChild: {
-        finishWrapper();
-        const children = Traverse.children(elem);
-        processElements(children);
-        finishWrapper();
-        break;
-      }
+    case ChildContext.InvalidChild: {
+      finishWrapper();
+      const children = Traverse.children(elem);
+      processElements(children);
+      finishWrapper();
+      break;
+    }
 
-      case ChildContext.Valid: {
-        const w = getOrOpenWrapper();
-        Insert.wrap(elem, w);
-        break;
-      }
+    case ChildContext.Valid: {
+      const w = getOrOpenWrapper();
+      Insert.wrap(elem, w);
+      break;
+    }
 
-      // INVESTIGATE: Are these sensible things to do?
-      case ChildContext.Skipping:
-      case ChildContext.Existing:
-      case ChildContext.Caret: {
-        // Do nothing.
-      }
+    // INVESTIGATE: Are these sensible things to do?
+    case ChildContext.Skipping:
+    case ChildContext.Existing:
+    case ChildContext.Caret: {
+      // Do nothing.
+    }
     }
   };
 

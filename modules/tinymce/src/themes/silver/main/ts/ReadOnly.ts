@@ -75,17 +75,15 @@ export const setupReadonlyModeSwitch = (editor: Editor, uiComponents: RenderUiCo
   }
 };
 
-export const createReadonlyReceivingForOverflow = (getOverflow: (comp: AlloyComponent) => Option<AlloyComponent>) => {
-  return Receiving.config({
-    channels: {
-      [ReadOnlyChannel]: {
-        schema: ReadOnlyDataSchema,
-        onReceive: (comp, data: ReadOnlyData) => {
-          getOverflow(comp).each((toolbar) => {
-            setDisabledAll(toolbar, data.readonly);
-          });
-        }
+export const createReadonlyReceivingForOverflow = (getOverflow: (comp: AlloyComponent) => Option<AlloyComponent>) => Receiving.config({
+  channels: {
+    [ReadOnlyChannel]: {
+      schema: ReadOnlyDataSchema,
+      onReceive: (comp, data: ReadOnlyData) => {
+        getOverflow(comp).each((toolbar) => {
+          setDisabledAll(toolbar, data.readonly);
+        });
       }
     }
-  });
-};
+  }
+});

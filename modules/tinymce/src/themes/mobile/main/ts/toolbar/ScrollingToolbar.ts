@@ -83,7 +83,7 @@ export default function () {
         shell: true
       }
     )
-  ) as AlloyComponent;
+  );
 
   const wrapper = GuiFactory.build(
     Container.sketch({
@@ -100,7 +100,7 @@ export default function () {
         })
       ])
     })
-  ) as AlloyComponent;
+  );
 
   const resetGroups = function () {
     Toolbar.setGroups(toolbar, initGroups.get());

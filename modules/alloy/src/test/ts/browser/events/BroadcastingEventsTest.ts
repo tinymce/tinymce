@@ -17,29 +17,26 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, fail
     'body { margin-top: 2000px; }'
   ];
 
-  GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build(
-      Container.sketch({
-        dom: {
-          styles: {
-            'overflow-x': 'hidden',
-            'background': 'blue',
-            'max-width': '300px',
-            'height': '20px'
-          }
-        },
-        events: AlloyEvents.derive([
-          AlloyEvents.run<EventArgs>(SystemEvents.windowScroll(), (component, simulatedEvent) => {
-            store.adder(simulatedEvent.event().raw().type)();
-          }),
-          AlloyEvents.run<EventArgs>(SystemEvents.windowResize(), (component, simulatedEvent) => {
-            store.adder(simulatedEvent.event().raw().type)();
-          })
-        ])
-      })
-    );
-
-  }, (doc, body, gui, component, store) => {
+  GuiSetup.setup((store, doc, body) => GuiFactory.build(
+    Container.sketch({
+      dom: {
+        styles: {
+          'overflow-x': 'hidden',
+          'background': 'blue',
+          'max-width': '300px',
+          'height': '20px'
+        }
+      },
+      events: AlloyEvents.derive([
+        AlloyEvents.run<EventArgs>(SystemEvents.windowScroll(), (component, simulatedEvent) => {
+          store.adder(simulatedEvent.event().raw().type)();
+        }),
+        AlloyEvents.run<EventArgs>(SystemEvents.windowResize(), (component, simulatedEvent) => {
+          store.adder(simulatedEvent.event().raw().type)();
+        })
+      ])
+    })
+  ), (doc, body, gui, component, store) => {
     cleanup.add(
       DomEvent.bind(Element.fromDom(window), 'scroll', (evt) => {
         gui.broadcastEvent(SystemEvents.windowScroll(), evt);
@@ -71,7 +68,7 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, fail
       store.sClear,
       Step.sync(() => {
         // Fake a window resize, by manually triggering a resize event
-        if (typeof(Event) === 'function') {
+        if (typeof (Event) === 'function') {
           // modern browsers
           window.dispatchEvent(new Event('resize'));
         } else {

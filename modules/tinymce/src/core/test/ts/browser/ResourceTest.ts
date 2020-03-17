@@ -16,9 +16,7 @@ const install = () => {
   return uninstall;
 };
 
-const testScript = (id: string, data: string) => {
-  return `data:text/javascript,tinymce.Resource.add('${id}', '${data}')`;
-};
+const testScript = (id: string, data: string) => `data:text/javascript,tinymce.Resource.add('${id}', '${data}')`;
 
 const cScriptAdd = (id: string, data: string) => Chain.op<any>((value) => {
   tinymce.Resource.add(id, data);

@@ -14,7 +14,7 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
     const hotspot = GuiFactory.build(
       Button.sketch({
-        action () { },
+        action() { },
         dom: {
           styles: {
             position: 'absolute',
@@ -40,12 +40,10 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
     );
 
   }, (doc, body, gui, component, store) => {
-    const cSetupAnchor = Chain.mapper((hotspot) => {
-      return {
-        anchor: 'hotspot',
-        hotspot
-      };
-    });
+    const cSetupAnchor = Chain.mapper((hotspot) => ({
+      anchor: 'hotspot',
+      hotspot
+    }));
 
     return [
       Chain.asStep({}, [
@@ -68,5 +66,7 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
         ])
       ])
     ];
-  }, () => { success(); }, failure);
+  }, () => {
+    success();
+  }, failure);
 });

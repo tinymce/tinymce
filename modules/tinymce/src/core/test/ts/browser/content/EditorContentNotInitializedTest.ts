@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentNotInitializedTest
     Assert.eq('should return what you tried to set', content, actual);
   });
   const cGetAndAssertContent = (expected, tree?) => Chain.op((editor: any) => {
-    const actual = tree ? editor.getContent({format: 'tree'}) : editor.getContent();
+    const actual = tree ? editor.getContent({ format: 'tree' }) : editor.getContent();
 
     Assert.eq('content should be equal', expected, actual);
   });

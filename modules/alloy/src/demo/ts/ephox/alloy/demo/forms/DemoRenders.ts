@@ -17,7 +17,7 @@ export interface DemoItem {
       text: string;
 
       [key: string]: string;
-    }
+    };
   };
 
   [key: string]: any;
@@ -31,7 +31,7 @@ export interface DemoSeparatorItem {
     meta?: {
       text: string;
       [key: string]: string;
-    }
+    };
   };
 }
 
@@ -89,7 +89,7 @@ const demoGridMenu = ValueSchema.objOf([
 
 const demoChoice = ValueSchema.objOf([ ]);
 
-const choice = (choiceSpec: { value: string; text: string; }) => {
+const choice = (choiceSpec: { value: string; text: string }) => {
   const spec = ValueSchema.asRawOrDie('DemoRenders.choice', demoChoice, choiceSpec);
   return {
     dom: DomFactory.fromHtml(
@@ -236,7 +236,9 @@ const menu = (menuSpec: DemoMenu) => {
 
 const orb = (spec: DemoItem): ItemSpec => {
   const html = (() => {
-    if (spec.data && spec.data.meta && spec.data.meta.text) { return spec.data.meta.text; }
+    if (spec.data && spec.data.meta && spec.data.meta.text) {
+      return spec.data.meta.text;
+    }
     return 'No.Text.For.Orb';
   })();
 
@@ -259,15 +261,13 @@ const orb = (spec: DemoItem): ItemSpec => {
   };
 };
 
-const toolbarItem = (spec: { text: string; action: () => void; }) => {
-  return {
-    dom: {
-      tag: 'span',
-      classes: [ 'demo-alloy-toolbar-item' ],
-      innerHtml: spec.text
-    }
-  };
-};
+const toolbarItem = (spec: { text: string; action: () => void }) => ({
+  dom: {
+    tag: 'span',
+    classes: [ 'demo-alloy-toolbar-item' ],
+    innerHtml: spec.text
+  }
+});
 
 const toolbarGroup = (group: { label?: string; items: AlloySpec[] }) => {
   const spec = group;

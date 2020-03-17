@@ -18,8 +18,8 @@ UnitTest.test('Arr.map: unit tests', () => {
   };
 
   checkA([], [], dbl);
-  checkA([2], [1], dbl);
-  checkA([4, 6, 10], [2, 3, 5], dbl);
+  checkA([ 2 ], [ 1 ], dbl);
+  checkA([ 4, 6, 10 ], [ 2, 3, 5 ], dbl);
 });
 
 UnitTest.test('Arr.map: functor laws', () => {

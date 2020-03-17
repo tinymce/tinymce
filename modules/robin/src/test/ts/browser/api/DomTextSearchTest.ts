@@ -126,7 +126,7 @@ UnitTest.test('DomTextSearchTest', function () {
   const w2 = Element.fromText('  words  ');
   const w3 = Element.fromText('  wordd  ');
   Insert.append(span2, w2);
-  InsertAll.append(element, [w1, span2, w3]);
+  InsertAll.append(element, [ w1, span2, w3 ]);
 
   Assert.eq('eq', 3, element.dom().childNodes.length); // Range offsets [0, 3)
   Assert.eq('eq', 1, span2.dom().childNodes.length);              // Range offsets [0, 1)
@@ -195,14 +195,14 @@ UnitTest.test('DomTextSearchTest', function () {
     const deltaText = Element.fromText(Unicode.zeroWidth);
     const epsilonText = Element.fromText('epsilon');
 
-    InsertAll.append(container, [alphaText, betaSpan, gammaText, deltaText, epsilonText]);
-    InsertAll.append(betaSpan, [betaText1, betaText2]);
+    InsertAll.append(container, [ alphaText, betaSpan, gammaText, deltaText, epsilonText ]);
+    InsertAll.append(betaSpan, [ betaText1, betaText2 ]);
 
     const checkNoneScan = function (label: string, start: Element, offset: number) {
       KAssert.eqNone('There should be no scanning (' + label + ')', DomTextSearch.scanRight(start, offset));
     };
 
-    const checkScan = function (label: string, expected: { element: Element, offset: number }, start: Element, offset: number) {
+    const checkScan = function (label: string, expected: { element: Element; offset: number }, start: Element, offset: number) {
       const actual = DomTextSearch.scanRight(start, offset).getOrDie('Could not find scan result for: ' + label);
       Assert.eq('eq', expected.offset, actual.offset());
       Assert.eq('Element did not match scan: (' + label + ')', true, Compare.eq(expected.element, actual.element()));

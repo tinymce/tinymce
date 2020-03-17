@@ -14,23 +14,21 @@ import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
 UnitTest.asynctest('HighlightingTest', (success, failure) => {
 
   GuiSetup.setup((store, doc, body) => {
-    const makeItem = (name: string) => {
-      return Container.sketch({
-        dom: {
-          tag: 'span',
-          styles: {
-            'display': 'inline-block',
-            'width': '100px',
-            'height': '30px',
-            'border': '1px solid red',
-            'text-align': 'center',
-            'vertical-align': 'middle'
-          },
-          innerHtml: name,
-          classes: [ name, 'test-item' ]
-        }
-      });
-    };
+    const makeItem = (name: string) => Container.sketch({
+      dom: {
+        tag: 'span',
+        styles: {
+          'display': 'inline-block',
+          'width': '100px',
+          'height': '30px',
+          'border': '1px solid red',
+          'text-align': 'center',
+          'vertical-align': 'middle'
+        },
+        innerHtml: name,
+        classes: [ name, 'test-item' ]
+      }
+    });
     return GuiFactory.build(
       Container.sketch({
         containerBehaviours: Behaviour.derive([
@@ -48,12 +46,10 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
     );
 
   }, (doc, body, gui, component, store) => {
-    const cCheckNum = (label: string, expected: number) => {
-      return Chain.fromChains([
-        Chain.mapper((array) => array.length),
-        Assertions.cAssertEq(label, expected)
-      ]);
-    };
+    const cCheckNum = (label: string, expected: number) => Chain.fromChains([
+      Chain.mapper((array) => array.length),
+      Assertions.cAssertEq(label, expected)
+    ]);
 
     const cCheckNumOf = (label: string, selector: string, expected: number) => {
       const field = 'check-' + selector;
@@ -63,18 +59,14 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
       ]);
     };
 
-    const cCheckSelected = (label: string, expected: string) => {
-      return Chain.fromChains([
-        // always check there is only 1
-        cCheckNumOf(label + '\nChecking number of selected: ', '.test-selected', 1),
-        NamedChain.direct('container', UiFinder.cFindIn('.test-selected'), 'selected'),
-        NamedChain.direct('selected', Chain.binder((sel) => {
-          return Class.has(sel, expected) ? Result.value(sel) :
-            Result.error(label + '\nIncorrect element selected. Expected: ' + expected + ', but was: ' +
-              Attr.get(sel, 'class'));
-        }), '_')
-      ]);
-    };
+    const cCheckSelected = (label: string, expected: string) => Chain.fromChains([
+      // always check there is only 1
+      cCheckNumOf(label + '\nChecking number of selected: ', '.test-selected', 1),
+      NamedChain.direct('container', UiFinder.cFindIn('.test-selected'), 'selected'),
+      NamedChain.direct('selected', Chain.binder((sel) => Class.has(sel, expected) ? Result.value(sel) :
+        Result.error(label + '\nIncorrect element selected. Expected: ' + expected + ', but was: ' +
+              Attr.get(sel, 'class'))), '_')
+    ]);
 
     const cHighlight: Chain<any, any> = Chain.op((item: AlloyComponent) => {
       Highlighting.highlight(component, item);
@@ -96,66 +88,38 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
       Highlighting.highlightLast(component);
     });
 
-    const cHighlightAt = (index: number): Chain<any, any> => {
-      return Chain.op(() => {
+    const cHighlightAt = (index: number): Chain<any, any> => Chain.op(() => {
+      Highlighting.highlightAt(component, index);
+    });
+
+    const cHighlightAtError = (index: number): Chain<any, any> => Chain.binder((v) => {
+      try {
         Highlighting.highlightAt(component, index);
-      });
-    };
-
-    const cHighlightAtError = (index: number): Chain<any, any> => {
-      return Chain.binder((v) => {
-        try {
-          Highlighting.highlightAt(component, index);
-          return Result.error('Expected to get an error because there should be no item with index ' + index);
-        } catch (e) { /* */ }
-        return Result.value(v);
-      });
-    };
-
-    const cIsHighlighted = Chain.mapper((item) => {
-      return Highlighting.isHighlighted(component, item);
+        return Result.error('Expected to get an error because there should be no item with index ' + index);
+      } catch (e) { /* */ }
+      return Result.value(v);
     });
 
-    const cGetHighlightedOrDie = Chain.binder(() => {
-      return Highlighting.getHighlighted(component).fold(() => {
-        return Result.error(new Error('getHighlighted did not find a selection'));
-      }, Result.value);
+    const cIsHighlighted = Chain.mapper((item) => Highlighting.isHighlighted(component, item));
+
+    const cGetHighlightedOrDie = Chain.binder(() => Highlighting.getHighlighted(component).fold(() => Result.error(new Error('getHighlighted did not find a selection')), Result.value));
+
+    const cGetHighlightedIsNone = Chain.binder((v) => Highlighting.getHighlighted(component).fold(() => Result.value(v), (comp) => Result.error('Highlighted value should be nothing. Was: ' + Truncate.getHtml(comp.element()))));
+
+    const cGetFirst = Chain.binder(() => Highlighting.getFirst(component).fold(() => Result.error(new Error('getFirst found nothing')), Result.value));
+
+    const cGetLast = Chain.binder(() => Highlighting.getLast(component).fold(() => Result.error(new Error('getLast found nothing')), Result.value));
+
+    const cHasClass = (clazz: string) => Chain.binder((comp: AlloyComponent) => {
+      const elem = comp.element();
+      return Class.has(elem, clazz) ? Result.value(elem) :
+        Result.error('element ' + Truncate.getHtml(elem) + ' did not have class: ' + clazz);
     });
 
-    const cGetHighlightedIsNone = Chain.binder((v) => {
-      return Highlighting.getHighlighted(component).fold(() => {
-        return Result.value(v);
-      }, (comp) => {
-        return Result.error('Highlighted value should be nothing. Was: ' + Truncate.getHtml(comp.element()));
-      });
-    });
-
-    const cGetFirst = Chain.binder(() => {
-      return Highlighting.getFirst(component).fold(() => {
-        return Result.error(new Error('getFirst found nothing'));
-      }, Result.value);
-    });
-
-    const cGetLast = Chain.binder(() => {
-      return Highlighting.getLast(component).fold(() => {
-        return Result.error(new Error('getLast found nothing'));
-      }, Result.value);
-    });
-
-    const cHasClass = (clazz: string) => {
-      return Chain.binder((comp: AlloyComponent) => {
-        const elem = comp.element();
-        return Class.has(elem, clazz) ? Result.value(elem) :
-          Result.error('element ' + Truncate.getHtml(elem) + ' did not have class: ' + clazz);
-      });
-    };
-
-    const cFindComponent = (selector: string) => {
-      return Chain.fromChains([
-        UiFinder.cFindIn(selector),
-        ChainUtils.eToComponent(component)
-      ]);
-    };
+    const cFindComponent = (selector: string) => Chain.fromChains([
+      UiFinder.cFindIn(selector),
+      ChainUtils.eToComponent(component)
+    ]);
 
     return [
       Chain.asStep({}, [
@@ -210,9 +174,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
           NamedChain.direct('container', cGetHighlightedIsNone, '_'),
 
           Chain.op((input) => {
-            Highlighting.highlightBy(component, (comp) => {
-              return Class.has(comp.element(), 'beta');
-            });
+            Highlighting.highlightBy(component, (comp) => Class.has(comp.element(), 'beta'));
           }),
 
           NamedChain.direct('container', cGetHighlightedOrDie, 'blah'),
@@ -236,5 +198,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
         ])
       ])
     ];
-  }, () => { success(); }, failure);
+  }, () => {
+    success();
+  }, failure);
 });

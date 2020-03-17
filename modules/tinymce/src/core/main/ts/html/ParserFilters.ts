@@ -53,9 +53,9 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
       let node;
       const blockElements = Tools.extend({}, schema.getBlockElements());
       const nonEmptyElements = schema.getNonEmptyElements();
-      let parent, lastParent, prev, prevName;
+      let parent; let lastParent; let prev; let prevName;
       const whiteSpaceElements = schema.getNonEmptyElements();
-      let elementRule, textNode;
+      let elementRule; let textNode;
 
       // Remove brs from body element as well
       blockElements.body = 1;
@@ -134,10 +134,8 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
     let i = nodes.length;
 
     const appendRel = (rel: string) => {
-      const parts = rel.split(' ').filter((p) => {
-        return p.length > 0;
-      });
-      return parts.concat(['noopener']).sort().join(' ');
+      const parts = rel.split(' ').filter((p) => p.length > 0);
+      return parts.concat([ 'noopener' ]).sort().join(' ');
     };
 
     const addNoOpener = (rel: string) => {
@@ -162,7 +160,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
   // Force anchor names closed, unless the setting "allow_html_in_named_anchor" is explicitly included.
   if (!settings.allow_html_in_named_anchor) {
     parser.addAttributeFilter('id,name', (nodes) => {
-      let i = nodes.length, sibling, prevSibling, parent, node;
+      let i = nodes.length; let sibling; let prevSibling; let parent; let node;
 
       while (i--) {
         node = nodes[i];
@@ -183,7 +181,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
 
   if (settings.fix_list_elements) {
     parser.addNodeFilter('ul,ol', (nodes) => {
-      let i = nodes.length, node, parentNode;
+      let i = nodes.length; let node; let parentNode;
 
       while (i--) {
         node = nodes[i];
@@ -204,9 +202,9 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
 
   if (settings.validate && schema.getValidClasses()) {
     parser.addAttributeFilter('class', (nodes) => {
-      let i = nodes.length, node, classList, ci, className, classValue;
+      let i = nodes.length; let node; let classList; let ci; let className; let classValue;
       const validClasses = schema.getValidClasses();
-      let validClassesMap, valid;
+      let validClassesMap; let valid;
 
       while (i--) {
         node = nodes[i];

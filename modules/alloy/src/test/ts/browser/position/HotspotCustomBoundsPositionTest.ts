@@ -18,7 +18,7 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
     const hotspot = GuiFactory.build(
       Button.sketch({
-        action () { },
+        action() { },
         dom: {
           styles: {
             position: 'absolute',
@@ -44,16 +44,14 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
     );
 
   }, (doc, body, gui, component, store) => {
-    const cSetupAnchor = Chain.mapper((hotspot) => {
-      return {
-        anchor: 'hotspot',
-        hotspot,
-        layouts: {
-          onLtr: () => [ Layout.northeast, Layout.southeast ],
-          onRtl: () => [ Layout.northwest, Layout.southwest ]
-        }
-      };
-    });
+    const cSetupAnchor = Chain.mapper((hotspot) => ({
+      anchor: 'hotspot',
+      hotspot,
+      layouts: {
+        onLtr: () => [ Layout.northeast, Layout.southeast ],
+        onRtl: () => [ Layout.northwest, Layout.southwest ]
+      }
+    }));
 
     const cAssertLayoutDirection = (direction: 'top' | 'bottom'): Chain<any, any> => Chain.op((data: { popup: AlloyComponent }) => {
       const popup = data.popup.element();
@@ -85,9 +83,11 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
           PositionTestUtils.cTestSinkWithinBounds('Relative, bounds 50px from top', 'relative', bounds100PixelsFromTop),
           cAssertLayoutDirection('bottom'),
           PositionTestUtils.cTestSinkWithinBounds('Fixed, bounds 50px from top', 'fixed', bounds100PixelsFromTop),
-          cAssertLayoutDirection('bottom'),
+          cAssertLayoutDirection('bottom')
         ])
       ])
     ];
-  }, () => { success(); }, failure);
+  }, () => {
+    success();
+  }, failure);
 });

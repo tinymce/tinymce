@@ -16,7 +16,7 @@ UnitTest.asynctest('MakeshiftPositionTest', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
     const button = GuiFactory.build(
       Button.sketch({
-        action () { },
+        action() { },
         dom: {
           styles: {
             position: 'absolute',
@@ -42,13 +42,11 @@ UnitTest.asynctest('MakeshiftPositionTest', (success, failure) => {
     );
 
   }, (doc, body, gui, component, store) => {
-    const cSetupAnchor = (x: number, y: number) => Chain.injectThunked(() => {
-      return {
-        anchor: 'makeshift',
-        x,
-        y
-      };
-    });
+    const cSetupAnchor = (x: number, y: number) => Chain.injectThunked(() => ({
+      anchor: 'makeshift',
+      x,
+      y
+    }));
 
     const cAssertPopupNotInNoFitPosition = Chain.op((popup: AlloyComponent) => {
       const box = popup.element().dom().getBoundingClientRect();
@@ -77,5 +75,7 @@ UnitTest.asynctest('MakeshiftPositionTest', (success, failure) => {
         ])
       ])
     ];
-  }, () => { success(); }, failure);
+  }, () => {
+    success();
+  }, failure);
 });

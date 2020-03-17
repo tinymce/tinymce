@@ -12,47 +12,46 @@ import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
 
   // Seems to have stopped working on phantomjs
-  if (PhantomSkipper.skip()) { return success(); }
+  if (PhantomSkipper.skip()) {
+    return success();
+  }
 
   const slidingStyles = [
     '.test-sliding-width-growing { transition: width 5.0s ease; }',
     '.test-sliding-width-shrinking { transition: width 5.0s ease; background: green !important; }'
   ];
 
-  GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build(
-      Container.sketch({
-        dom: {
-          styles: {
-            'overflow-x': 'hidden',
-            'background': 'blue',
-            'max-width': '300px',
-            'height': '20px'
-          }
-        },
-        components: [ ],
-        containerBehaviours: Behaviour.derive([
-          Sliding.config({
-            closedClass: 'test-sliding-closed',
-            openClass: 'test-sliding-open',
-            shrinkingClass: 'test-sliding-width-shrinking',
-            growingClass: 'test-sliding-width-growing',
+  GuiSetup.setup((store, doc, body) => GuiFactory.build(
+    Container.sketch({
+      dom: {
+        styles: {
+          'overflow-x': 'hidden',
+          'background': 'blue',
+          'max-width': '300px',
+          'height': '20px'
+        }
+      },
+      components: [ ],
+      containerBehaviours: Behaviour.derive([
+        Sliding.config({
+          closedClass: 'test-sliding-closed',
+          openClass: 'test-sliding-open',
+          shrinkingClass: 'test-sliding-width-shrinking',
+          growingClass: 'test-sliding-width-growing',
 
-            dimension: {
-              property: 'width'
-            },
+          dimension: {
+            property: 'width'
+          },
 
-            onShrunk: store.adder('onShrunk'),
-            onStartShrink: store.adder('onStartShrink'),
-            onGrown: store.adder('onGrown'),
-            onStartGrow: store.adder('onStartGrow')
-          })
+          onShrunk: store.adder('onShrunk'),
+          onStartShrink: store.adder('onStartShrink'),
+          onGrown: store.adder('onGrown'),
+          onStartGrow: store.adder('onStartGrow')
+        })
 
-        ])
-      })
-    );
-
-  }, (doc, body, gui, component, store) => {
+      ])
+    })
+  ), (doc, body, gui, component, store) => {
 
     const sIsGrowing = Step.sync(() => {
       Assertions.assertEq('Ensuring still growing', true, Class.has(component.element(), 'test-sliding-width-growing'));
@@ -113,8 +112,10 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
           })
         ),
         sIsGrowing,
-        sIsNotShrinking,
+        sIsNotShrinking
       ])
     ];
-  }, () => { success(); }, failure);
+  }, () => {
+    success();
+  }, failure);
 });

@@ -29,7 +29,7 @@ class TreeWalker {
   private readonly rootNode: Node;
   private node: Node;
 
-  constructor (startNode: Node, rootNode: Node) {
+  constructor(startNode: Node, rootNode: Node) {
     this.node = startNode;
     this.rootNode = rootNode;
 
@@ -47,7 +47,7 @@ class TreeWalker {
    * @method current
    * @return {Node} Current node where the walker is.
    */
-  public current (): Node {
+  public current(): Node {
     return this.node;
   }
 
@@ -57,7 +57,7 @@ class TreeWalker {
    * @method next
    * @return {Node} Current node where the walker is after moving to the next node.
    */
-  public next (shallow?: boolean): Node {
+  public next(shallow?: boolean): Node {
     this.node = this.findSibling(this.node, 'firstChild', 'nextSibling', shallow);
     return this.node;
   }
@@ -68,18 +68,18 @@ class TreeWalker {
    * @method prev
    * @return {Node} Current node where the walker is after moving to the previous node.
    */
-  public prev (shallow?: boolean): Node {
+  public prev(shallow?: boolean): Node {
     this.node = this.findSibling(this.node, 'lastChild', 'previousSibling', shallow);
     return this.node;
   }
 
-  public prev2 (shallow?: boolean): Node {
+  public prev2(shallow?: boolean): Node {
     this.node = this.findPreviousNode(this.node, 'lastChild', 'previousSibling', shallow);
     return this.node;
   }
 
-  private findSibling (node: Node, startName: 'firstChild' | 'lastChild', siblingName: 'nextSibling' | 'previousSibling', shallow?: boolean) {
-    let sibling: Node, parent: Node;
+  private findSibling(node: Node, startName: 'firstChild' | 'lastChild', siblingName: 'nextSibling' | 'previousSibling', shallow?: boolean) {
+    let sibling: Node; let parent: Node;
 
     if (node) {
       // Walk into nodes if it has a start
@@ -105,8 +105,8 @@ class TreeWalker {
     }
   }
 
-  private findPreviousNode (node: Node, startName: 'lastChild', siblingName: 'previousSibling', shallow?: boolean) {
-    let sibling: Node, parent: Node, child: Node;
+  private findPreviousNode(node: Node, startName: 'lastChild', siblingName: 'previousSibling', shallow?: boolean) {
+    let sibling: Node; let parent: Node; let child: Node;
 
     if (node) {
       sibling = node[siblingName];

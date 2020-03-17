@@ -24,7 +24,7 @@ const each = Tools.each;
 const dom = DOMUtils.DOM;
 
 const parsedSelectorToHtml = function (ancestry, editor: Editor) {
-  let elm, item, fragment;
+  let elm; let item; let fragment;
   const schema = editor && editor.schema || Schema({});
 
   const decorate = function (elm, item) {
@@ -61,7 +61,7 @@ const parsedSelectorToHtml = function (ancestry, editor: Editor) {
   };
 
   const wrapInHtml = function (elm, ancestry, siblings) {
-    let parent, parentCandidate, parentRequired;
+    let parent; let parentCandidate; let parentRequired;
     const ancestor = ancestry.length > 0 && ancestry[0];
     const ancestorName = ancestor && ancestor.name;
 
@@ -130,19 +130,19 @@ const parseSelectorItem = function (item) {
     // matching IDs, CLASSes, ATTRIBUTES and PSEUDOs
     tagName = item.replace(/(?:([#\.]|::?)([\w\-]+)|(\[)([^\]]+)\]?)/g, function ($0, $1, $2, $3, $4) {
       switch ($1) {
-        case '#':
-          obj.attrs.id = $2;
-          break;
+      case '#':
+        obj.attrs.id = $2;
+        break;
 
-        case '.':
-          obj.classes.push($2);
-          break;
+      case '.':
+        obj.classes.push($2);
+        break;
 
-        case ':':
-          if (Tools.inArray('checked disabled enabled read-only required'.split(' '), $2) !== -1) {
-            obj.attrs[$2] = $2;
-          }
-          break;
+      case ':':
+        if (Tools.inArray('checked disabled enabled read-only required'.split(' '), $2) !== -1) {
+          obj.attrs[$2] = $2;
+        }
+        break;
       }
 
       // atribute matched
@@ -186,8 +186,8 @@ const parseSelector = function (selector: string) {
 };
 
 const getCssText = function (editor: Editor, format) {
-  let name, previewFrag, previewElm, items;
-  let previewCss = '', parentFontSize, previewStyles;
+  let name; let previewFrag; let previewElm; let items;
+  let previewCss = ''; let parentFontSize; let previewStyles;
 
   previewStyles = editor.settings.preview_styles;
 
@@ -236,7 +236,7 @@ const getCssText = function (editor: Editor, format) {
     name = format.selector;
     previewFrag = parsedSelectorToHtml(items, editor);
   } else {
-    previewFrag = parsedSelectorToHtml([name], editor);
+    previewFrag = parsedSelectorToHtml([ name ], editor);
   }
 
   previewElm = dom.select(name, previewFrag)[0] || previewFrag.firstChild;

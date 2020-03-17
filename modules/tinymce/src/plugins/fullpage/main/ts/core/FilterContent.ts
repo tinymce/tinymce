@@ -21,7 +21,7 @@ const low = function (s) {
 };
 
 const handleSetContent = function (editor: Editor, headState, footState, evt) {
-  let startPos, endPos, content, headerFragment, styles = '';
+  let startPos; let endPos; let content; let headerFragment; let styles = '';
   const dom = editor.dom;
 
   if (evt.selection) {
@@ -110,7 +110,7 @@ const handleSetContent = function (editor: Editor, headState, footState, evt) {
       dom.add(headElm, 'link', {
         'rel': 'stylesheet',
         'text': 'text/css',
-        'href': href,
+        href,
         'data-mce-fullpage': '1'
       });
     }
@@ -125,7 +125,7 @@ const handleSetContent = function (editor: Editor, headState, footState, evt) {
 };
 
 const getDefaultHeader = function (editor) {
-  let header = '', value, styles = '';
+  let header = ''; let value; let styles = '';
 
   if (Settings.getDefaultXmlPi(editor)) {
     const piEncoding = Settings.getDefaultEncoding(editor);

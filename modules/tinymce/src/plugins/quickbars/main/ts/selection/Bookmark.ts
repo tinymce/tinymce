@@ -20,7 +20,7 @@ const create = function (dom, rng) {
   const bookmark = {};
 
   function setupEndPoint(start?) {
-    let offsetNode, container, offset;
+    let offsetNode; let container; let offset;
 
     container = rng[start ? 'startContainer' : 'endContainer'];
     offset = rng[start ? 'startOffset' : 'endOffset'];
@@ -64,10 +64,10 @@ const create = function (dom, rng) {
  */
 const resolve = function (dom, bookmark) {
   function restoreEndPoint(start?) {
-    let container, offset, node;
+    let container; let offset; let node;
 
     function nodeIndex(container) {
-      let node = container.parentNode.firstChild, idx = 0;
+      let node = container.parentNode.firstChild; let idx = 0;
 
       while (node) {
         if (node === container) {

@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
   Theme();
 
   const setup = function () {
-    let i, htmlReset = '', odd;
+    let i; let htmlReset = ''; let odd;
     for (i = 1; i < 9; i++) {
       odd = i % 2 !== 0;
       htmlReset += '<textarea id="elm-' + i + '" class="' + (odd ? 'elm-odd' : 'elm-even') + '"></textarea>';
@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
       target: elm1,
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback (ed) {
+      init_instance_callback(ed) {
         LegacyUnit.equalDom(ed.targetElm, elm1);
         teardown(done);
       }
@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
       target: elm,
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback (ed) {
+      init_instance_callback(ed) {
         LegacyUnit.equal(ed.id.length > 0, true, 'editors id set to: ' + ed.id);
         LegacyUnit.equalDom(ed.targetElm, elm);
         teardown(done);
@@ -73,7 +73,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
       target: elm1,
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback (ed) {
+      init_instance_callback(ed) {
         LegacyUnit.equalDom(ed.targetElm, elm2);
         teardown(done);
       }
@@ -120,7 +120,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
       target: elm1,
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback (ed) {
+      init_instance_callback(ed) {
         LegacyUnit.equal(ed.targetElm !== elm1, true, 'target option ignored');
         LegacyUnit.equal(Tools.inArray(targets, ed.targetElm), -1);
 
@@ -143,7 +143,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
       selector: '#elm-1',
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback (ed) {
+      init_instance_callback(ed) {
 
         Assertions.assertEq('Should have set suffix on EditorManager', '.min', EditorManager.suffix);
         Assertions.assertEq('Should have set suffix on editor', '.min', ed.suffix);
@@ -186,47 +186,45 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     Assertions.assertHtml('Editor contents should be the second div content', '<p>b</p>', editors[1].getContent());
     // tslint:disable-next-line:no-console
     console.log('Editor container 0:', editors[0].editorContainer);
-    const containerApproxStructure = ApproxStructure.build((s, str, arr) => {
-      return s.element('div', {
-        classes: [ arr.has('tox'), arr.has('tox-tinymce'), arr.has('tox-tinymce-inline') ],
-        children: [
-          s.element('div', {
-            classes: [ arr.has('tox-editor-container') ],
-            children: [
-              s.element('div', {
-                classes: [ arr.has('tox-editor-header') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-menubar') ],
-                    attrs: {
-                      role: str.is('menubar'),
-                    },
-                  }),
-                  s.element('div', {
-                    classes: [ arr.has('tox-toolbar') ],
-                    attrs: {
-                      role: str.is('group'),
-                    },
-                  }),
-                  s.element('div', {
-                    classes: [ arr.has('tox-anchorbar') ]
-                  })
-                ]
-              })
-            ]
-          }),
-          s.element('div', {
-            classes: [ arr.has('tox-throbber') ]
-          })
-        ]
-      });
-    });
+    const containerApproxStructure = ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('tox'), arr.has('tox-tinymce'), arr.has('tox-tinymce-inline') ],
+      children: [
+        s.element('div', {
+          classes: [ arr.has('tox-editor-container') ],
+          children: [
+            s.element('div', {
+              classes: [ arr.has('tox-editor-header') ],
+              children: [
+                s.element('div', {
+                  classes: [ arr.has('tox-menubar') ],
+                  attrs: {
+                    role: str.is('menubar'),
+                  },
+                }),
+                s.element('div', {
+                  classes: [ arr.has('tox-toolbar') ],
+                  attrs: {
+                    role: str.is('group'),
+                  },
+                }),
+                s.element('div', {
+                  classes: [ arr.has('tox-anchorbar') ]
+                })
+              ]
+            })
+          ]
+        }),
+        s.element('div', {
+          classes: [ arr.has('tox-throbber') ]
+        })
+      ]
+    }));
     Assertions.assertStructure('Editor container should match expected structure', containerApproxStructure, Element.fromDom(editors[0].editorContainer));
     Assertions.assertStructure('Editor container should match expected structure', containerApproxStructure, Element.fromDom(editors[1].editorContainer));
 
     Assertions.assertEq(
       'Should only be two skin files the skin and the content for inline mode',
-      ['skin.min.css', 'content.inline.min.css'],
+      [ 'skin.min.css', 'content.inline.min.css' ],
       getSkinCssFilenames()
     );
 
@@ -253,21 +251,19 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     next({});
   }));
 
-  const sInitAndAssertContent = (html: string, selector: string, expectedEditorContent: string) => {
-    return Step.async((done) => {
-      viewBlock.update(html);
+  const sInitAndAssertContent = (html: string, selector: string, expectedEditorContent: string) => Step.async((done) => {
+    viewBlock.update(html);
 
-      EditorManager.init({
-        selector,
-        skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-        content_css: '/project/tinymce/js/tinymce/skins/content/default',
-        init_instance_callback (ed) {
-          Assertions.assertEq('Expect editor to have content', expectedEditorContent, ed.getContent({ format: 'text' }));
-          teardown(done);
-        }
-      });
+    EditorManager.init({
+      selector,
+      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
+      content_css: '/project/tinymce/js/tinymce/skins/content/default',
+      init_instance_callback(ed) {
+        Assertions.assertEq('Expect editor to have content', expectedEditorContent, ed.getContent({ format: 'text' }));
+        teardown(done);
+      }
     });
-  };
+  });
 
   setup();
   Pipeline.async({}, [

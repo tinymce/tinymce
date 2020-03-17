@@ -49,7 +49,7 @@ const setup = function (editor: Editor, clipboard: Clipboard, draggingInternally
   }
 
   editor.on('drop', function (e) {
-    let dropContent, rng;
+    let dropContent; let rng;
 
     rng = getCaretRangeFromEvent(editor, e);
 

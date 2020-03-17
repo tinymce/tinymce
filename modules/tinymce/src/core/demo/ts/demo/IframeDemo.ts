@@ -32,7 +32,7 @@ export default function () {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
     selector: 'textarea',
-    setup (ed) {
+    setup(ed) {
       makeSidebar(ed, 'sidebar1', 'green', 200);
     },
     plugins: [

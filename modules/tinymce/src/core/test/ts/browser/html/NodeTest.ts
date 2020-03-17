@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('append inside empty node', function () {
-    let root, node;
+    let root; let node;
 
     root = new Node('#frag', 11);
     node = root.append(new Node('b', 1));
@@ -61,7 +61,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('append node after node', function () {
-    let root, node, node2;
+    let root; let node; let node2;
 
     root = new Node('#frag', 11);
     node2 = root.append(new Node('a', 1));
@@ -86,7 +86,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('append existing node before other existing node', function () {
-    let root, node, node2;
+    let root; let node; let node2;
 
     root = new Node('#frag', 11);
     node = root.append(new Node('a', 1));
@@ -107,7 +107,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('remove single child', function () {
-    let root, node;
+    let root; let node;
 
     root = new Node('#frag', 11);
     node = root.append(new Node('p', 1));
@@ -121,7 +121,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('remove middle node', function () {
-    let root, node, node2, node3;
+    let root; let node; let node2; let node3;
 
     root = new Node('#frag', 11);
     node = root.append(new Node('a', 1));
@@ -140,7 +140,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('insert after last', function () {
-    let fragment, root, node, node2;
+    let fragment; let root; let node; let node2;
 
     fragment = new Node('#frag', 11);
     root = fragment.append(new Node('body', 1));
@@ -154,7 +154,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('insert before first', function () {
-    let fragment, root, node, node2;
+    let fragment; let root; let node; let node2;
 
     fragment = new Node('#frag', 11);
     root = fragment.append(new Node('body', 1));
@@ -171,7 +171,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('insert before second', function () {
-    let fragment, root, node, node2, node3;
+    let fragment; let root; let node; let node2; let node3;
 
     fragment = new Node('#frag', 11);
     root = fragment.append(new Node('body', 1));
@@ -186,7 +186,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('insert after and between two nodes', function () {
-    let root, node, node2, node3, fragment;
+    let root; let node; let node2; let node3; let fragment;
 
     fragment = new Node('#frag', 11);
     root = fragment.append(new Node('body', 1));
@@ -203,7 +203,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('replace single child', function () {
-    let root, node1, node2;
+    let root; let node1; let node2;
 
     root = new Node('#frag', 11);
     node1 = root.append(new Node('b', 1));
@@ -217,7 +217,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('replace first child', function () {
-    let root, node1, node2, node3;
+    let root; let node1; let node2; let node3;
 
     root = new Node('#frag', 11);
     node1 = root.append(new Node('b', 1));
@@ -232,7 +232,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('replace last child', function () {
-    let root, node1, node2, node3;
+    let root; let node1; let node2; let node3;
 
     root = new Node('#frag', 11);
     node1 = root.append(new Node('b', 1));
@@ -247,7 +247,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('replace middle child', function () {
-    let root, node1, node2, node3, node4;
+    let root; let node1; let node2; let node3; let node4;
 
     root = new Node('#frag', 11);
     node1 = root.append(new Node('b', 1));
@@ -310,7 +310,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('clone', function () {
-    let root, node, clone;
+    let root; let node; let clone;
 
     node = new Node('#text', 3);
     node.value = 'value';
@@ -345,7 +345,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('unwrap', function () {
-    let root, node1, node2, node3;
+    let root; let node1; let node2; let node3;
 
     root = new Node('#frag', 11);
     node1 = root.append(new Node('b', 1));
@@ -367,7 +367,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('empty', function () {
-    let root, node1;
+    let root; let node1;
 
     root = new Node('#frag', 11);
     node1 = root.append(new Node('b', 1));
@@ -379,7 +379,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
   });
 
   suite.test('isEmpty', function () {
-    let root, node1, node2;
+    let root; let node1; let node2;
 
     root = new Node('#frag', 11);
     node1 = root.append(new Node('p', 1));

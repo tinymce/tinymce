@@ -72,11 +72,11 @@ UnitTest.test('Custom Editor Schema Test', () => {
       g: new Boolean(false),
       h: new Date(),
       i: /^(?:fizz|buzz)/,
-      j: new Blob(['<a id="a"><b id="b">hey!</b></a>'], {type : 'text/html'}),
-      k: ['text', Infinity, true, false],
+      j: new Blob([ '<a id="a"><b id="b">hey!</b></a>' ], { type : 'text/html' }),
+      k: [ 'text', Infinity, true, false ],
       l: { prop: 'value' },
-      m: new Map([['key1', 'value1'], ['key2', 'value2']]),
-      n: new Set([1, 2, 3, 4, 5])
+      m: new Map([[ 'key1', 'value1' ], [ 'key2', 'value2' ]]),
+      n: new Set([ 1, 2, 3, 4, 5 ])
     }
   }).isValue());
 

@@ -53,9 +53,7 @@ const appendStyle = function (editor: Editor, text: string) {
 
 const getRootName = (editor: Editor): string => editor.inline ? editor.getElement().nodeName.toLowerCase() : undefined;
 
-const removeUndefined = <T>(obj: T): T => {
-  return Obj.filter(obj as Record<string, unknown>, (v) => Type.isUndefined(v) === false) as T;
-};
+const removeUndefined = <T>(obj: T): T => Obj.filter(obj as Record<string, unknown>, (v) => Type.isUndefined(v) === false) as T;
 
 const mkParserSettings = (editor: Editor): DomParserSettings => {
   const settings = editor.settings;
@@ -129,7 +127,7 @@ const createParser = function (editor: Editor): DomParser {
 
   // Convert src and href into data-mce-src, data-mce-href and data-mce-style
   parser.addAttributeFilter('src,href,style,tabindex', function (nodes, name) {
-    let i = nodes.length, node: Node, value: string;
+    let i = nodes.length; let node: Node; let value: string;
     const dom = editor.dom;
     const internalName = 'data-mce-' + name;
 
@@ -165,7 +163,7 @@ const createParser = function (editor: Editor): DomParser {
 
   // Keep scripts from executing
   parser.addNodeFilter('script', function (nodes: Node[]) {
-    let i = nodes.length, node, type;
+    let i = nodes.length; let node; let type;
 
     while (i--) {
       node = nodes[i];
@@ -178,7 +176,7 @@ const createParser = function (editor: Editor): DomParser {
 
   if (editor.settings.preserve_cdata) {
     parser.addNodeFilter('#cdata', function (nodes: Node[]) {
-      let i = nodes.length, node;
+      let i = nodes.length; let node;
 
       while (i--) {
         node = nodes[i];
@@ -190,7 +188,7 @@ const createParser = function (editor: Editor): DomParser {
   }
 
   parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function (nodes: Node[]) {
-    let i = nodes.length, node;
+    let i = nodes.length; let node;
     const nonEmptyElements = editor.schema.getNonEmptyElements();
 
     while (i--) {
@@ -262,7 +260,7 @@ const getStyleSheetLoader = function (editor: Editor) {
 const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   const settings = editor.settings;
   const targetElm = editor.getElement();
-  let doc = editor.getDoc(), body, contentCssText;
+  let doc = editor.getDoc(); let body; let contentCssText;
 
   // Restore visibility on target element
   if (!settings.inline) {
@@ -320,7 +318,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
     schema: editor.schema,
     contentCssCors: Settings.shouldUseContentCssCors(editor),
     referrerPolicy: Settings.getReferrerPolicy(editor),
-    onSetAttrib (e) {
+    onSetAttrib(e) {
       editor.fire('SetAttrib', e);
     }
   });
@@ -372,7 +370,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   });
 
   editor.load({ initial: true, format: 'html' });
-  editor.startContent = editor.getContent({ format: 'raw' }) as string;
+  editor.startContent = editor.getContent({ format: 'raw' });
 
   editor.on('compositionstart compositionend', function (e) {
     editor.composing = e.type === 'compositionstart';

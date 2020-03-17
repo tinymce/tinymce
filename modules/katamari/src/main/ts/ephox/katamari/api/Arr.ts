@@ -19,9 +19,7 @@ export const indexOf = <T = any>(xs: ArrayLike<T>, x: T): Option<number> => {
   return r === -1 ? Option.none() : Option.some(r);
 };
 
-export const contains = <T>(xs: ArrayLike<T>, x: T): boolean => {
-  return rawIndexOf(xs, x) > -1;
-};
+export const contains = <T>(xs: ArrayLike<T>, x: T): boolean => rawIndexOf(xs, x) > -1;
 
 export const exists = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): boolean => {
   for (let i = 0, len = xs.length; i < len; i++) {
@@ -87,7 +85,7 @@ export const eachr = <T>(xs: ArrayLike<T>, f: ArrayMorphism<T, void>): void => {
   }
 };
 
-export const partition = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): { pass: T[], fail: T[] } => {
+export const partition = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): { pass: T[]; fail: T[] } => {
   const pass: T[] = [];
   const fail: T[] = [];
   for (let i = 0, len = xs.length; i < len; i++) {
@@ -100,7 +98,7 @@ export const partition = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): {
 
 export const filter: {
   <T, Q extends T>(xs: ArrayLike<T>, pred: (x: T, i: number) => x is Q): Q[];
-  <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[]
+  <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[];
 } = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[] => {
   const r: T[] = [];
   for (let i = 0, len = xs.length; i < len; i++) {
@@ -221,9 +219,7 @@ export const reverse = <T>(xs: ArrayLike<T>): T[] => {
   return r;
 };
 
-export const difference = <T>(a1: ArrayLike<T>, a2: ArrayLike<T>): T[] => {
-  return filter(a1, (x) => !contains(a2, x));
-};
+export const difference = <T>(a1: ArrayLike<T>, a2: ArrayLike<T>): T[] => filter(a1, (x) => !contains(a2, x));
 
 export const mapToObject = <T extends keyof any, U>(xs: ArrayLike<T>, f: (x: T, i: number) => U): Record<T, U> => {
   const r = {} as Record<T, U>;
@@ -234,7 +230,7 @@ export const mapToObject = <T extends keyof any, U>(xs: ArrayLike<T>, f: (x: T, 
   return r;
 };
 
-export const pure = <T>(x: T): T[] => [x];
+export const pure = <T>(x: T): T[] => [ x ];
 
 export const sort = <T>(xs: ArrayLike<T>, comparator?: Comparator<T>): T[] => {
   const copy: T[] = nativeSlice.call(xs, 0);

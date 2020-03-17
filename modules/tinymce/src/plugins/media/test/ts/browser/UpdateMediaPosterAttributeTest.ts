@@ -18,12 +18,10 @@ UnitTest.asynctest('browser.plugins.media.UpdateMediaPosterAttributeTest', (succ
     const poster1 = 'https://www.google.com/logos/google.jpg';
     const poster2 = 'https://upload.wikimedia.org/wikipedia/commons/8/82/Facebook_icon.jpg';
 
-    const sOpenAdvTab = () => {
-      return GeneralSteps.sequence([
-        ui.sWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-        ui.sClickOnUi('Switch to Advanced Tab', 'div.tox-tab:contains(Advanced)')
-      ]);
-    };
+    const sOpenAdvTab = () => GeneralSteps.sequence([
+      ui.sWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
+      ui.sClickOnUi('Switch to Advanced Tab', 'div.tox-tab:contains(Advanced)')
+    ]);
 
     const sCloseDialog = ui.sClickOnUi('Click Save', 'button:contains("Save")');
 
@@ -53,9 +51,9 @@ UnitTest.asynctest('browser.plugins.media.UpdateMediaPosterAttributeTest', (succ
         sCloseDialog,
         api.sSetContent('')
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
-    plugins: ['media'],
+    plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',

@@ -9,7 +9,7 @@ const formatErrors = function (errors) {
   const es = errors.length > 10 ? errors.slice(0, 10).concat([
     {
       path: [ ],
-      getErrorInfo () {
+      getErrorInfo() {
         return '... (only showing first ten failures)';
       }
     }

@@ -41,9 +41,7 @@ const DialogManager: DialogManager = {
     return factory(internalDialog);
   },
 
-  redial: <T extends DialogData>(structure: DialogApi<T>): DialogInit<T> => {
-    return extract(structure);
-  }
+  redial: <T extends DialogData>(structure: DialogApi<T>): DialogInit<T> => extract(structure)
 };
 
 export {

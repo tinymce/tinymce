@@ -16,76 +16,68 @@ import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 
 UnitTest.asynctest('GridMenuTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build(
-      Menu.sketch({
-        value: 'test-menu-1',
-        items: Arr.map([
-          { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' } }, hasSubmenu: false },
-          { type: 'item', data: { value: 'beta', meta: { text: 'Beta' } }, hasSubmenu: false },
-          { type: 'item', data: { value: 'gamma', meta: { text: 'Gamma' } }, hasSubmenu: false },
-          { type: 'item', data: { value: 'delta', meta: { text: 'Delta' } }, hasSubmenu: false },
-          { type: 'item', data: { value: 'epsilon', meta: { text: 'Epsilon' } }, hasSubmenu: false },
-          { type: 'item', data: { value: 'rho', meta: { text: 'Rho' } }, hasSubmenu: false }
-        ], TestDropdownMenu.renderItem),
-        dom: {
-          tag: 'ol',
-          classes: [ 'test-menu' ]
-        },
+  GuiSetup.setup((store, doc, body) => GuiFactory.build(
+    Menu.sketch({
+      value: 'test-menu-1',
+      items: Arr.map([
+        { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' } }, hasSubmenu: false },
+        { type: 'item', data: { value: 'beta', meta: { text: 'Beta' } }, hasSubmenu: false },
+        { type: 'item', data: { value: 'gamma', meta: { text: 'Gamma' } }, hasSubmenu: false },
+        { type: 'item', data: { value: 'delta', meta: { text: 'Delta' } }, hasSubmenu: false },
+        { type: 'item', data: { value: 'epsilon', meta: { text: 'Epsilon' } }, hasSubmenu: false },
+        { type: 'item', data: { value: 'rho', meta: { text: 'Rho' } }, hasSubmenu: false }
+      ], TestDropdownMenu.renderItem),
+      dom: {
+        tag: 'ol',
+        classes: [ 'test-menu' ]
+      },
 
-        movement: {
-          mode: 'grid',
-          initSize: {
-            numRows: 2,
-            numColumns: 3
-          }
-        },
+      movement: {
+        mode: 'grid',
+        initSize: {
+          numRows: 2,
+          numColumns: 3
+        }
+      },
 
-        components: [
-          Menu.parts().items({ })
-        ],
+      components: [
+        Menu.parts().items({ })
+      ],
 
-        markers: {
-          item: TestDropdownMenu.markers().item,
-          selectedItem: TestDropdownMenu.markers().selectedItem
-        },
+      markers: {
+        item: TestDropdownMenu.markers().item,
+        selectedItem: TestDropdownMenu.markers().selectedItem
+      },
 
-        menuBehaviours: Behaviour.derive([
-          AddEventsBehaviour.config('menu-test-behaviour', [
-            AlloyEvents.run(MenuEvents.focus(), store.adder('menu.events.focus'))
-          ])
+      menuBehaviours: Behaviour.derive([
+        AddEventsBehaviour.config('menu-test-behaviour', [
+          AlloyEvents.run(MenuEvents.focus(), store.adder('menu.events.focus'))
         ])
-      })
-    );
-  }, (doc, body, gui, component, store) => {
+      ])
+    })
+  ), (doc, body, gui, component, store) => {
     // TODO: Flesh out test.
-    const cAssertStructure = (label: string, expected: StructAssert) => {
-      return Chain.op((element: Element) => {
-        Assertions.assertStructure(label, expected, element);
-      });
-    };
+    const cAssertStructure = (label: string, expected: StructAssert) => Chain.op((element: Element) => {
+      Assertions.assertStructure(label, expected, element);
+    });
 
     const cTriggerFocusItem = Chain.op((target: Element) => {
       AlloyTriggers.dispatch(component, target, SystemEvents.focusItem());
     });
 
-    const cAssertSelectedStates = (label: string, expected: boolean[]) => {
-      return NamedChain.direct('menu', cAssertStructure(label, ApproxStructure.build((s, str, arr) => {
-        return s.element('ol', {
-          classes: [
-            arr.has('test-menu')
-          ],
-          children: [
-            s.element('li', { classes: [ (expected[0] ? arr.has : arr.not)('selected-item') ] }),
-            s.element('li', { classes: [ (expected[1] ? arr.has : arr.not)('selected-item') ] }),
-            s.element('li', { classes: [ (expected[2] ? arr.has : arr.not)('selected-item') ] }),
-            s.element('li', { classes: [ (expected[3] ? arr.has : arr.not)('selected-item') ] }),
-            s.element('li', { classes: [ (expected[4] ? arr.has : arr.not)('selected-item') ] }),
-            s.element('li', { classes: [ (expected[5] ? arr.has : arr.not)('selected-item') ] })
-          ]
-        });
-      })), '_');
-    };
+    const cAssertSelectedStates = (label: string, expected: boolean[]) => NamedChain.direct('menu', cAssertStructure(label, ApproxStructure.build((s, str, arr) => s.element('ol', {
+      classes: [
+        arr.has('test-menu')
+      ],
+      children: [
+        s.element('li', { classes: [ (expected[0] ? arr.has : arr.not)('selected-item') ] }),
+        s.element('li', { classes: [ (expected[1] ? arr.has : arr.not)('selected-item') ] }),
+        s.element('li', { classes: [ (expected[2] ? arr.has : arr.not)('selected-item') ] }),
+        s.element('li', { classes: [ (expected[3] ? arr.has : arr.not)('selected-item') ] }),
+        s.element('li', { classes: [ (expected[4] ? arr.has : arr.not)('selected-item') ] }),
+        s.element('li', { classes: [ (expected[5] ? arr.has : arr.not)('selected-item') ] })
+      ]
+    }))), '_');
 
     return [
       Chain.asStep({}, [
@@ -129,5 +121,7 @@ UnitTest.asynctest('GridMenuTest', (success, failure) => {
         ])
       ])
     ];
-  }, () => { success(); }, failure);
+  }, () => {
+    success();
+  }, failure);
 });

@@ -40,16 +40,18 @@ const adt: {
 const isSubstituted = (spec: any): spec is ConfiguredPart => Obj.has(spec, 'uiType');
 
 const subPlaceholder = <D extends CompositeSketchDetail>(owner: Option<string>, detail: D, compSpec: ConfiguredPart, placeholders: Record<string, Replacement>): UiSubstitutesAdt => {
-  if (owner.exists((o) => o !== compSpec.owner)) { return adt.single(true, Fun.constant(compSpec)); }
+  if (owner.exists((o) => o !== compSpec.owner)) {
+    return adt.single(true, Fun.constant(compSpec));
+  }
   // Ignore having to find something for the time being.
   return Obj.get(placeholders as any, compSpec.name).fold(() => {
     throw new Error('Unknown placeholder component: ' + compSpec.name + '\nKnown: [' +
       Obj.keys(placeholders) + ']\nNamespace: ' + owner.getOr('none') + '\nSpec: ' + JSON.stringify(compSpec, null, 2)
     );
-  }, (newSpec) => {
+  }, (newSpec) =>
     // Must return a single/multiple type
-    return newSpec.replace();
-  });
+    newSpec.replace()
+  );
 };
 
 const scan = <D extends CompositeSketchDetail>(owner: Option<string>, detail: D, compSpec: AlloySpec, placeholders: Record<string, Replacement>): UiSubstitutesAdt => {
@@ -67,9 +69,7 @@ const substitute = <D extends CompositeSketchDetail>(owner: Option<string>, deta
     (req, valueThunk) => {
       const value = isSubstituted(compSpec) ? valueThunk(detail, compSpec.config, compSpec.validated) : valueThunk(detail);
       const childSpecs = Obj.get(value as any, 'components').getOr([]);
-      const substituted = Arr.bind(childSpecs, (c) => {
-        return substitute(owner, detail, c, placeholders);
-      });
+      const substituted = Arr.bind(childSpecs, (c) => substitute(owner, detail, c, placeholders));
       return [
         {
           ...value,
@@ -90,18 +90,12 @@ const substitute = <D extends CompositeSketchDetail>(owner: Option<string>, deta
   );
 };
 
-const substituteAll = <D extends CompositeSketchDetail>(owner: Option<string>, detail: D, components: AlloySpec[], placeholders: Record<string, Replacement>): AlloySpec[] => {
-  return Arr.bind(components, (c) => {
-    return substitute(owner, detail, c, placeholders);
-  });
-};
+const substituteAll = <D extends CompositeSketchDetail>(owner: Option<string>, detail: D, components: AlloySpec[], placeholders: Record<string, Replacement>): AlloySpec[] => Arr.bind(components, (c) => substitute(owner, detail, c, placeholders));
 
 const oneReplace = (label: string, replacements: UiSubstitutesAdt): Replacement => {
   let called = false;
 
-  const used = () => {
-    return called;
-  };
+  const used = () => called;
 
   const replace = () => {
     if (called) {
@@ -111,13 +105,7 @@ const oneReplace = (label: string, replacements: UiSubstitutesAdt): Replacement 
     return replacements;
   };
 
-  const required = () => {
-    return replacements.fold((req, _) => {
-      return req;
-    }, (req, _) => {
-      return req;
-    });
-  };
+  const required = () => replacements.fold((req, _) => req, (req, _) => req);
 
   return {
     name: Fun.constant(label),
@@ -128,9 +116,7 @@ const oneReplace = (label: string, replacements: UiSubstitutesAdt): Replacement 
 };
 
 const substitutePlaces = <D extends CompositeSketchDetail>(owner: Option<string>, detail: D, components: AlloySpec[], placeholders: Record<string, UiSubstitutesAdt>) => {
-  const ps = Obj.map(placeholders, (ph, name) => {
-    return oneReplace(name, ph);
-  });
+  const ps = Obj.map(placeholders, (ph, name) => oneReplace(name, ph));
 
   const outcome = substituteAll(owner, detail, components, ps);
 
@@ -146,13 +132,7 @@ const substitutePlaces = <D extends CompositeSketchDetail>(owner: Option<string>
   return outcome;
 };
 
-const singleReplace = <D extends CompositeSketchDetail>(detail: D, p: UiSubstitutesAdt) => {
-  return p.fold((req, valueThunk) => {
-    return [ valueThunk(detail) ];
-  }, (req, valuesThunk) => {
-    return valuesThunk(detail);
-  });
-};
+const singleReplace = <D extends CompositeSketchDetail>(detail: D, p: UiSubstitutesAdt) => p.fold((req, valueThunk) => [ valueThunk(detail) ], (req, valuesThunk) => valuesThunk(detail));
 
 const single = adt.single;
 const multiple = adt.multiple;

@@ -25,16 +25,12 @@ export const TestStore = (): TestStore => {
     console.log('store.add', value, array);
   };
 
-  const adder = (value: any) => {
-    return () => add(value);
-  };
+  const adder = (value: any) => () => add(value);
 
   // Used for keyboard handlers which need to return Option to know whether or not to kill the event
-  const adderH = (value: any) => {
-    return () => {
-      add(value);
-      return Option.some(true);
-    };
+  const adderH = (value: any) => () => {
+    add(value);
+    return Option.some(true);
   };
 
   const sClear = Step.sync(() => {
@@ -49,29 +45,21 @@ export const TestStore = (): TestStore => {
     clear();
   });
 
-  const sAssertEq = <T> (label: string, expected: any[]): Step<T, T> => {
-    return Step.sync(() => {
-      // Can't use a normal step here, because we don't need to get array lazily
-      return Assert.eq(label, expected, array.slice(0));
-    });
-  };
+  const sAssertEq = <T> (label: string, expected: any[]): Step<T, T> => Step.sync(() =>
+  // Can't use a normal step here, because we don't need to get array lazily
+    Assert.eq(label, expected, array.slice(0))
+  );
 
-  const cAssertEq = <T> (label: string, expected: any[]): Chain<T, T> => {
-    return Chain.op(() => {
-      assertEq(label, expected);
-    });
-  };
+  const cAssertEq = <T> (label: string, expected: any[]): Chain<T, T> => Chain.op(() => {
+    assertEq(label, expected);
+  });
 
-  const assertEq = (label: string, expected: any[]) => {
-    return Assert.eq(label, expected, array.slice(0));
-  };
+  const assertEq = (label: string, expected: any[]) => Assert.eq(label, expected, array.slice(0));
 
-  const sAssertSortedEq = (label: string, expected: any[]) => {
-    return Step.sync(() => {
-      // Can't use a normal step here, because we don't need to get array lazily
-      return Assert.eq(label, expected.slice(0).sort(), array.slice(0).sort());
-    });
-  };
+  const sAssertSortedEq = (label: string, expected: any[]) => Step.sync(() =>
+  // Can't use a normal step here, because we don't need to get array lazily
+    Assert.eq(label, expected.slice(0).sort(), array.slice(0).sort())
+  );
 
   return {
     add,

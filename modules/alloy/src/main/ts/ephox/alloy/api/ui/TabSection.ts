@@ -19,9 +19,7 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detai
   const changeTab = (button: AlloyComponent) => {
     const tabValue = Representing.getValue(button);
     AlloyParts.getPart(button, detail, 'tabview').each((tabview) => {
-      const tabWithValue = Arr.find(detail.tabs, (t) => {
-        return t.value === tabValue;
-      });
+      const tabWithValue = Arr.find(detail.tabs, (t) => t.value === tabValue);
 
       tabWithValue.each((tabData) => {
         const panel = tabData.view();
@@ -71,21 +69,17 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detai
     ),
 
     apis: {
-      getViewItems (section: AlloyComponent) {
-        return AlloyParts.getPart(section, detail, 'tabview').map((tabview) => {
-          return Replacing.contents(tabview);
-        }).getOr([ ]);
+      getViewItems(section: AlloyComponent) {
+        return AlloyParts.getPart(section, detail, 'tabview').map((tabview) => Replacing.contents(tabview)).getOr([ ]);
       },
 
       // How should "clickToDismiss" interact with this? At the moment, it will never dismiss
-      showTab (section: AlloyComponent, tabKey: string) {
+      showTab(section: AlloyComponent, tabKey: string) {
         // We only change the tab if it isn't currently active because that takes
         // the whole "dismiss" issue out of the equation.
         const getTabIfNotActive = (tabbar: AlloyComponent) => {
           const candidates = Highlighting.getCandidates(tabbar);
-          const optTab = Arr.find(candidates, (c) => {
-            return Representing.getValue(c) === tabKey;
-          });
+          const optTab = Arr.find(candidates, (c) => Representing.getValue(c) === tabKey);
 
           return optTab.filter((tab) => !Highlighting.isHighlighted(tabbar, tab));
         };
@@ -103,9 +97,7 @@ const TabSection: TabSectionSketcher = Sketcher.composite<TabSectionSpec, TabSec
   partFields: TabSectionSchema.parts(),
   factory,
   apis: {
-    getViewItems: (apis, component) => {
-      return apis.getViewItems(component);
-    },
+    getViewItems: (apis, component) => apis.getViewItems(component),
     showTab: (apis, component, tabKey) => {
       apis.showTab(component, tabKey);
     }

@@ -25,68 +25,56 @@ const sOpenDialog = function (ui: TinyUi) {
   ]));
 };
 
-const cFindInDialog = (selector: string) => (ui: TinyUi) => {
-  return Chain.control(
-    Chain.fromChains([
-      ui.cWaitForPopup('Wait for popup', 'div[role="dialog"]'),
-      UiFinder.cFindIn(selector)
-    ]),
-    Guard.addLogging(`Find ${selector} in dialog`)
-  );
-};
+const cFindInDialog = (selector: string) => (ui: TinyUi) => Chain.control(
+  Chain.fromChains([
+    ui.cWaitForPopup('Wait for popup', 'div[role="dialog"]'),
+    UiFinder.cFindIn(selector)
+  ]),
+  Guard.addLogging(`Find ${selector} in dialog`)
+);
 
-const cGetValueOn = (selector: string) => (ui: TinyUi) => {
-  return Chain.control(
-    Chain.fromChains([
-      cFindInDialog(selector)(ui),
-      UiControls.cGetValue
-    ]),
-    Guard.addLogging('Get value')
-  );
-};
+const cGetValueOn = (selector: string) => (ui: TinyUi) => Chain.control(
+  Chain.fromChains([
+    cFindInDialog(selector)(ui),
+    UiControls.cGetValue
+  ]),
+  Guard.addLogging('Get value')
+);
 
-const cSetValueOn = (selector: string, newValue: string) => (ui: TinyUi) => {
-  return Chain.control(
-    Chain.fromChains([
-      cFindInDialog(selector)(ui),
-      UiControls.cSetValue(newValue)
-    ]),
-    Guard.addLogging('Set value')
-  );
-};
+const cSetValueOn = (selector: string, newValue: string) => (ui: TinyUi) => Chain.control(
+  Chain.fromChains([
+    cFindInDialog(selector)(ui),
+    UiControls.cSetValue(newValue)
+  ]),
+  Guard.addLogging('Set value')
+);
 
-const sAssertFieldValue = (selector: string) => (ui: TinyUi, value: string) => {
-  return Waiter.sTryUntil(`Wait for new ${selector} value`,
-    Chain.asStep({}, [
-      cGetValueOn(selector)(ui),
-      Assertions.cAssertEq(`Assert ${value} value`, value)
-    ]), 20, 3000
-  );
-};
+const sAssertFieldValue = (selector: string) => (ui: TinyUi, value: string) => Waiter.sTryUntil(`Wait for new ${selector} value`,
+  Chain.asStep({}, [
+    cGetValueOn(selector)(ui),
+    Assertions.cAssertEq(`Assert ${value} value`, value)
+  ]), 20, 3000
+);
 
 const sAssertWidthValue = sAssertFieldValue(selectors.width);
 const sAssertHeightValue = sAssertFieldValue(selectors.height);
 const sAssertSourceValue = sAssertFieldValue(selectors.source);
 
-const sSetValueAndTrigger = (selector: string, value: string, events: string[]) => (ui: TinyUi) => {
-  return Logger.t(`Set ${value} and trigger ${events.join(',')}`, Chain.asStep({}, [
-    Chain.fromChains([
-      cFindInDialog(selector)(ui),      // get the element
-      Chain.op(Focus.focus),            // fire focusin, required by sizeinput to recalc ratios
-      cSetValueOn(selector, value)(ui), // change the value
-      ...Arr.map(events, (event) => cFakeEvent(event)),                 // fire [change, input etc],
-      Chain.wait(0) // Wait needed as paste event is triggered async
-    ])
-  ]));
-};
+const sSetValueAndTrigger = (selector: string, value: string, events: string[]) => (ui: TinyUi) => Logger.t(`Set ${value} and trigger ${events.join(',')}`, Chain.asStep({}, [
+  Chain.fromChains([
+    cFindInDialog(selector)(ui),      // get the element
+    Chain.op(Focus.focus),            // fire focusin, required by sizeinput to recalc ratios
+    cSetValueOn(selector, value)(ui), // change the value
+    ...Arr.map(events, (event) => cFakeEvent(event)),                 // fire [change, input etc],
+    Chain.wait(0) // Wait needed as paste event is triggered async
+  ])
+]));
 
 const sPasteSourceValue = function (ui: TinyUi, value: string) {
   return sSetValueAndTrigger(selectors.source, value, [ 'paste' ])(ui);
 };
 
-const sPastePosterValue = (ui: TinyUi, value: string) => {
-  return sSetValueAndTrigger(selectors.poster, value, [ 'paste' ])(ui);
-};
+const sPastePosterValue = (ui: TinyUi, value: string) => sSetValueAndTrigger(selectors.poster, value, [ 'paste' ])(ui);
 
 const sChangeWidthValue = function (ui: TinyUi, value: string) {
   return sSetValueAndTrigger(selectors.width, value, [ 'input', 'change' ])(ui);
@@ -195,11 +183,11 @@ const sAssertEmbedData = function (ui: TinyUi, content: string) {
   return GeneralSteps.sequence([
     ui.sClickOnUi('Switch to Embed tab', '.tox-tab:contains("Embed")'),
     Waiter.sTryUntil('Textarea should have a proper value',
-    Chain.asStep(Body.body(), [
-      cFindInDialog(selectors.embed)(ui),
-      UiControls.cGetValue,
-      Assertions.cAssertEq('embed content', content)
-    ]), 1, 3000),
+      Chain.asStep(Body.body(), [
+        cFindInDialog(selectors.embed)(ui),
+        UiControls.cGetValue,
+        Assertions.cAssertEq('embed content', content)
+      ]), 1, 3000),
     ui.sClickOnUi('Switch to General tab', '.tox-tab:contains("General")')
   ]);
 };
@@ -246,43 +234,35 @@ const sSetSetting = function (editorSetting: Record<string, any>, key: string, v
   }));
 };
 
-const cNotExists = (selector: string) => {
-  return Chain.control(
-    Chain.op((container: Element) => {
-      UiFinder.findIn(container, selector).fold(
-        () => Assert.eq('should not find anything', true, true),
-        () => Assert.eq('Expected ' + selector + ' not to exist.', true, false)
-      );
-    }),
-    Guard.addLogging(`Assert ${selector} does not exist`)
-  );
-};
+const cNotExists = (selector: string) => Chain.control(
+  Chain.op((container: Element) => {
+    UiFinder.findIn(container, selector).fold(
+      () => Assert.eq('should not find anything', true, true),
+      () => Assert.eq('Expected ' + selector + ' not to exist.', true, false)
+    );
+  }),
+  Guard.addLogging(`Assert ${selector} does not exist`)
+);
 
-const cExists = (selector: string) => {
-  return Chain.control(
-    Chain.op((container: Element) => {
-      UiFinder.findIn(container, selector).fold(
-        () => Assert.eq('Expected ' + selector + ' to exist.', true, false),
-        () => Assert.eq('found element', true, true)
-      );
-    }),
-    Guard.addLogging(`Assert ${selector} exists`)
-  );
-};
+const cExists = (selector: string) => Chain.control(
+  Chain.op((container: Element) => {
+    UiFinder.findIn(container, selector).fold(
+      () => Assert.eq('Expected ' + selector + ' to exist.', true, false),
+      () => Assert.eq('found element', true, true)
+    );
+  }),
+  Guard.addLogging(`Assert ${selector} exists`)
+);
 
-const sSetHeightAndWidth = (ui: TinyUi, height: string, width: string) => {
-  return Logger.t(`Set height and width to ${height}x${width}`, GeneralSteps.sequence([
-    sChangeWidthValue(ui, width),
-    sChangeHeightValue(ui, height)
-  ]));
-};
+const sSetHeightAndWidth = (ui: TinyUi, height: string, width: string) => Logger.t(`Set height and width to ${height}x${width}`, GeneralSteps.sequence([
+  sChangeWidthValue(ui, width),
+  sChangeHeightValue(ui, height)
+]));
 
-const sAssertHeightAndWidth = (ui: TinyUi, height: string, width: string) => {
-  return Logger.t('Check height and width updated', GeneralSteps.sequence([
-    sAssertWidthValue(ui, width),
-    sAssertHeightValue(ui, height)
-  ]));
-};
+const sAssertHeightAndWidth = (ui: TinyUi, height: string, width: string) => Logger.t('Check height and width updated', GeneralSteps.sequence([
+  sAssertWidthValue(ui, width),
+  sAssertHeightValue(ui, height)
+]));
 
 export {
   cSetSourceInput,

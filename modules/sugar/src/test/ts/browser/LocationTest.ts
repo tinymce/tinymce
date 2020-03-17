@@ -17,11 +17,11 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
   const platform = PlatformDetection.detect();
   const scrollBarWidth = Scroll.scrollBarWidth();
 
-  const leftScrollBarWidth = (doc) => {
+  const leftScrollBarWidth = (doc) =>
     // Tries to detect the width of the left scrollbar by checking the offsetLeft of the documentElement
     // Chrome adds the scrollbar to the left in rtl mode as of Chrome 70+
-    return Location.relative(Traverse.documentElement(doc.body)).left();
-  };
+    Location.relative(Traverse.documentElement(doc.body)).left()
+  ;
 
   const asserteq = function (expected, actual, message) {
     // I wish assert.eq printed expected and actual on failure
@@ -49,7 +49,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
           body,
           rtl: iframeDoc.body.dir === 'rtl',
           dir: Attr.get(body, 'dir') || 'ltr',
-          byId (str) {
+          byId(str) {
             return Option.from(iframeDoc.getElementById(str))
               .map(Element.fromDom)
               .getOrDie('cannot find element with id ' + str);
@@ -75,14 +75,14 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     html: Option.none(),
     body: Option.some({ contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
   },
-    function () {
-      testOne(ifr, { // rtl iframe
-        iframe: { id: 'ifrRtl', style: 'height:200px; width:500px; border: 1px dashed turquoise;' },
-        html: Option.none(),
-        body: Option.some({ dir: 'rtl', contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
-      },
-        success);
-    });
+  function () {
+    testOne(ifr, { // rtl iframe
+      iframe: { id: 'ifrRtl', style: 'height:200px; width:500px; border: 1px dashed turquoise;' },
+      html: Option.none(),
+      body: Option.some({ dir: 'rtl', contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
+    },
+    success);
+  });
 
   const checks = function (doc) {
 
@@ -138,33 +138,33 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     const tests = [
       {
         id: 'absolute-1',
-        absolute: { top: 1, left: { ltr: 1, rtl: 1 + leftScrollW } },
-        relative: { top: 1, left: { ltr: 1, rtl: 1 + leftScrollW } }, // JQuery returns 0/0
-        viewport: { top: 1, left: { ltr: 1, rtl: 1 + leftScrollW } }
+        absolute: { top: 1, left: { ltr: 1, rtl: 1 + leftScrollW }},
+        relative: { top: 1, left: { ltr: 1, rtl: 1 + leftScrollW }}, // JQuery returns 0/0
+        viewport: { top: 1, left: { ltr: 1, rtl: 1 + leftScrollW }}
       },
       {
         id: 'absolute-1-1',
-        absolute: { top: 5, left: { ltr: 5, rtl: 5 + leftScrollW } },
-        relative: { top: 2, left: { ltr: 2, rtl: 2 } }, // JQuery returns 1/1
-        viewport: { top: 5, left: { ltr: 5, rtl: 5 + leftScrollW } }
+        absolute: { top: 5, left: { ltr: 5, rtl: 5 + leftScrollW }},
+        relative: { top: 2, left: { ltr: 2, rtl: 2 }}, // JQuery returns 1/1
+        viewport: { top: 5, left: { ltr: 5, rtl: 5 + leftScrollW }}
       },
       {
         id: 'absolute-1-1-1',
-        absolute: { top: 9, left: { ltr: 9, rtl: 9 + leftScrollW } },
-        relative: { top: 2, left: { ltr: 2, rtl: 2 } }, // JQuery returns 1/1
-        viewport: { top: 9, left: { ltr: 9, rtl: 9 + leftScrollW } }
+        absolute: { top: 9, left: { ltr: 9, rtl: 9 + leftScrollW }},
+        relative: { top: 2, left: { ltr: 2, rtl: 2 }}, // JQuery returns 1/1
+        viewport: { top: 9, left: { ltr: 9, rtl: 9 + leftScrollW }}
       },
       {
         id: 'absolute-2',
-        absolute: { top: 20, left: { ltr: 20, rtl: 20 + leftScrollW } },
-        relative: { top: 20, left: { ltr: 20, rtl: 20 + leftScrollW } }, // JQuery returns 19/19
-        viewport: { top: 20, left: { ltr: 20, rtl: 20 + leftScrollW } }
+        absolute: { top: 20, left: { ltr: 20, rtl: 20 + leftScrollW }},
+        relative: { top: 20, left: { ltr: 20, rtl: 20 + leftScrollW }}, // JQuery returns 19/19
+        viewport: { top: 20, left: { ltr: 20, rtl: 20 + leftScrollW }}
       },
       {
         id: 'positionTest',
-        absolute: { top: 10, left: { ltr: 10, rtl: 10 + leftScrollW } },
-        relative: { top: 10, left: { ltr: 10, rtl: 10 + leftScrollW } },
-        viewport: { top: 10, left: { ltr: 10, rtl: 10 + leftScrollW } }
+        absolute: { top: 10, left: { ltr: 10, rtl: 10 + leftScrollW }},
+        relative: { top: 10, left: { ltr: 10, rtl: 10 + leftScrollW }},
+        viewport: { top: 10, left: { ltr: 10, rtl: 10 + leftScrollW }}
       }
     ];
 
@@ -179,41 +179,41 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     const tests = [
       {
         id: 'relative-1',
-        absolute: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW } },
-        relative: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth } }, // JQuery returns 6/6
-        viewport: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW } }
+        absolute: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW }},
+        relative: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth }}, // JQuery returns 6/6
+        viewport: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW }}
       },
       {
         id: 'relative-1-1',
-        absolute: { top: 14, left: { ltr: 14, rtl: 372 - scrollBarWidth + leftScrollW } },
-        relative: { top: 6, left: { ltr: 6, rtl: -10 } }, // JQuery returns 5/5
-        viewport: { top: 14, left: { ltr: 14, rtl: 372 - scrollBarWidth + leftScrollW } }
+        absolute: { top: 14, left: { ltr: 14, rtl: 372 - scrollBarWidth + leftScrollW }},
+        relative: { top: 6, left: { ltr: 6, rtl: -10 }}, // JQuery returns 5/5
+        viewport: { top: 14, left: { ltr: 14, rtl: 372 - scrollBarWidth + leftScrollW }}
       },
       {
         id: 'relative-1-1-1',
-        absolute: { top: 22, left: { ltr: 22, rtl: 364 - scrollBarWidth + leftScrollW } },
-        relative: { top: 6, left: { ltr: 6, rtl: -10 } }, // JQuery returns 5/5
-        viewport: { top: 22, left: { ltr: 22, rtl: 364 - scrollBarWidth + leftScrollW } }
+        absolute: { top: 22, left: { ltr: 22, rtl: 364 - scrollBarWidth + leftScrollW }},
+        relative: { top: 6, left: { ltr: 6, rtl: -10 }}, // JQuery returns 5/5
+        viewport: { top: 22, left: { ltr: 22, rtl: 364 - scrollBarWidth + leftScrollW }}
       },
       {
         id: 'relative-2',
-        absolute: { top: 141, left: { ltr: 26, rtl: 400 - scrollBarWidth + leftScrollW } },
-        relative: { top: 141, left: { ltr: 26, rtl: 400 - scrollBarWidth } }, // JQuery returns 141/26
-        viewport: { top: 141, left: { ltr: 26, rtl: 400 - scrollBarWidth + leftScrollW } }
+        absolute: { top: 141, left: { ltr: 26, rtl: 400 - scrollBarWidth + leftScrollW }},
+        relative: { top: 141, left: { ltr: 26, rtl: 400 - scrollBarWidth }}, // JQuery returns 141/26
+        viewport: { top: 141, left: { ltr: 26, rtl: 400 - scrollBarWidth + leftScrollW }}
       },
 
       // This simulates a docked ego state for the toolbars
       {
         id: 'relative-toolbar-container',
-        absolute: { top: 684, left: { ltr: 5, rtl: 395 - scrollBarWidth + leftScrollW } },
-        relative: { top: 684, left: { ltr: 5, rtl: 395 - scrollBarWidth } },
-        viewport: { top: 684, left: { ltr: 5, rtl: 395 - scrollBarWidth + leftScrollW } }
+        absolute: { top: 684, left: { ltr: 5, rtl: 395 - scrollBarWidth + leftScrollW }},
+        relative: { top: 684, left: { ltr: 5, rtl: 395 - scrollBarWidth }},
+        viewport: { top: 684, left: { ltr: 5, rtl: 395 - scrollBarWidth + leftScrollW }}
       },
       {
         id: 'relative-toolbar',
-        absolute: { top: 684 - 40, left: { ltr: 5, rtl: 395 - scrollBarWidth + leftScrollW } },
-        relative: { top: -40, left: { ltr: 0, rtl: 0 } },
-        viewport: { top: 684 - 40, left: { ltr: 5, rtl: 395 - scrollBarWidth + leftScrollW } }
+        absolute: { top: 684 - 40, left: { ltr: 5, rtl: 395 - scrollBarWidth + leftScrollW }},
+        relative: { top: -40, left: { ltr: 0, rtl: 0 }},
+        viewport: { top: 684 - 40, left: { ltr: 5, rtl: 395 - scrollBarWidth + leftScrollW }}
       }
     ];
 
@@ -228,27 +228,27 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     const tests = [
       {
         id: 'static-1',
-        absolute: { top: extraHeight + 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW } },
-        relative: { top: extraHeight + 6, left: { ltr: 6, rtl: 380 - scrollBarWidth } }, // JQuery returns +6/6
-        viewport: { top: extraHeight + 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW } }
+        absolute: { top: extraHeight + 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW }},
+        relative: { top: extraHeight + 6, left: { ltr: 6, rtl: 380 - scrollBarWidth }}, // JQuery returns +6/6
+        viewport: { top: extraHeight + 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW }}
       },
       {
         id: 'static-1-1',
-        absolute: { top: extraHeight + 14, left: { ltr: 14, rtl: 372 - scrollBarWidth + leftScrollW } },
-        relative: { top: extraHeight + 14, left: { ltr: 14, rtl: 372 - scrollBarWidth } }, // JQuery returns +14/14
-        viewport: { top: extraHeight + 14, left: { ltr: 14, rtl: 372 - scrollBarWidth + leftScrollW } }
+        absolute: { top: extraHeight + 14, left: { ltr: 14, rtl: 372 - scrollBarWidth + leftScrollW }},
+        relative: { top: extraHeight + 14, left: { ltr: 14, rtl: 372 - scrollBarWidth }}, // JQuery returns +14/14
+        viewport: { top: extraHeight + 14, left: { ltr: 14, rtl: 372 - scrollBarWidth + leftScrollW }}
       },
       {
         id: 'static-1-1-1',
-        absolute: { top: extraHeight + 22, left: { ltr: 22, rtl: 364 - scrollBarWidth + leftScrollW } },
-        relative: { top: extraHeight + 22, left: { ltr: 22, rtl: 364 - scrollBarWidth } }, // JQuery returns +22/22
-        viewport: { top: extraHeight + 22, left: { ltr: 22, rtl: 364 - scrollBarWidth + leftScrollW } }
+        absolute: { top: extraHeight + 22, left: { ltr: 22, rtl: 364 - scrollBarWidth + leftScrollW }},
+        relative: { top: extraHeight + 22, left: { ltr: 22, rtl: 364 - scrollBarWidth }}, // JQuery returns +22/22
+        viewport: { top: extraHeight + 22, left: { ltr: 22, rtl: 364 - scrollBarWidth + leftScrollW }}
       },
       {
         id: 'static-2',
-        absolute: { top: extraHeight + 121, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW } },
-        relative: { top: extraHeight + 121, left: { ltr: 6, rtl: 380 - scrollBarWidth } }, // JQuery returns +121/6
-        viewport: { top: extraHeight + 121, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW } }
+        absolute: { top: extraHeight + 121, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW }},
+        relative: { top: extraHeight + 121, left: { ltr: 6, rtl: 380 - scrollBarWidth }}, // JQuery returns +121/6
+        viewport: { top: extraHeight + 121, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW }}
       }
     ];
 
@@ -267,33 +267,33 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     const tests = [
       {
         id: 'table-1',
-        absolute: { top: extraHeight + 6, left: { ltr: 5, rtl: 171 - scrollBarWidth + leftScrollW } },
-        relative: { top: extraHeight + 6, left: { ltr: 5, rtl: 171 - scrollBarWidth } },
-        viewport: { top: extraHeight + 6, left: { ltr: 5, rtl: 171 - scrollBarWidth + leftScrollW } }
+        absolute: { top: extraHeight + 6, left: { ltr: 5, rtl: 171 - scrollBarWidth + leftScrollW }},
+        relative: { top: extraHeight + 6, left: { ltr: 5, rtl: 171 - scrollBarWidth }},
+        viewport: { top: extraHeight + 6, left: { ltr: 5, rtl: 171 - scrollBarWidth + leftScrollW }}
       },
       {
         id: 'th-1',
-        absolute: { top: extraHeight + 10, left: { ltr: 9, rtl: 387 - scrollBarWidth + leftScrollW } },
-        relative: { top: 4, left: { ltr: 4, rtl: 216 } },  // JQuery returns extraHeight + 11/10, but that's nonsense
-        viewport: { top: extraHeight + 10, left: { ltr: 9, rtl: 387 - scrollBarWidth + leftScrollW } }
+        absolute: { top: extraHeight + 10, left: { ltr: 9, rtl: 387 - scrollBarWidth + leftScrollW }},
+        relative: { top: 4, left: { ltr: 4, rtl: 216 }},  // JQuery returns extraHeight + 11/10, but that's nonsense
+        viewport: { top: extraHeight + 10, left: { ltr: 9, rtl: 387 - scrollBarWidth + leftScrollW }}
       },
       {
         id: 'th-3',
-        absolute: { top: extraHeight + 10, left: { ltr: 221, rtl: 175 - scrollBarWidth + leftScrollW } },
-        relative: { top: 4, left: { ltr: 216, rtl: 4 } },  // JQuery returns extraHeight + 11/222, but that's nonsense
-        viewport: { top: extraHeight + 10, left: { ltr: 221, rtl: 175 - scrollBarWidth + leftScrollW } }
+        absolute: { top: extraHeight + 10, left: { ltr: 221, rtl: 175 - scrollBarWidth + leftScrollW }},
+        relative: { top: 4, left: { ltr: 216, rtl: 4 }},  // JQuery returns extraHeight + 11/222, but that's nonsense
+        viewport: { top: extraHeight + 10, left: { ltr: 221, rtl: 175 - scrollBarWidth + leftScrollW }}
       },
       {
         id: 'td-1',
-        absolute: { top: extraHeight + 116, left: { ltr: 9, rtl: 387 - scrollBarWidth + leftScrollW } },
-        relative: { top: 110, left: { ltr: 4, rtl: 216 } },  // JQuery returns extraHeight + 117/10, but that's nonsense
-        viewport: { top: extraHeight + 116, left: { ltr: 9, rtl: 387 - scrollBarWidth + leftScrollW } }
+        absolute: { top: extraHeight + 116, left: { ltr: 9, rtl: 387 - scrollBarWidth + leftScrollW }},
+        relative: { top: 110, left: { ltr: 4, rtl: 216 }},  // JQuery returns extraHeight + 117/10, but that's nonsense
+        viewport: { top: extraHeight + 116, left: { ltr: 9, rtl: 387 - scrollBarWidth + leftScrollW }}
       },
       {
         id: 'td-3',
-        absolute: { top: extraHeight + 116, left: { ltr: 221, rtl: 175 - scrollBarWidth + leftScrollW } },
-        relative: { top: 110, left: { ltr: 216, rtl: 4 } },  // JQuery returns extraHeight + 117/222, but that's nonsense
-        viewport: { top: extraHeight + 116, left: { ltr: 221, rtl: 175 - scrollBarWidth + leftScrollW } }
+        absolute: { top: extraHeight + 116, left: { ltr: 221, rtl: 175 - scrollBarWidth + leftScrollW }},
+        relative: { top: 110, left: { ltr: 216, rtl: 4 }},  // JQuery returns extraHeight + 117/222, but that's nonsense
+        viewport: { top: extraHeight + 116, left: { ltr: 221, rtl: 175 - scrollBarWidth + leftScrollW }}
       }
     ];
 
@@ -324,21 +324,21 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     const noScroll = [
       {
         id: 'fixed-1',
-        absolute: { top: 1, left: { ltr: 1, rtl: 1 + leftScrollW } },
-        relative: { top: 1, left: { ltr: 1, rtl: 1 + leftScrollW } }, // JQuery returns 0/0
-        viewport: { top: 1, left: { ltr: 1, rtl: 1 + leftScrollW } }
+        absolute: { top: 1, left: { ltr: 1, rtl: 1 + leftScrollW }},
+        relative: { top: 1, left: { ltr: 1, rtl: 1 + leftScrollW }}, // JQuery returns 0/0
+        viewport: { top: 1, left: { ltr: 1, rtl: 1 + leftScrollW }}
       },
       {
         id: 'fixed-2',
-        absolute: { top: 21, left: { ltr: 21, rtl: 21 + leftScrollW } },
-        relative: { top: 21, left: { ltr: 21, rtl: 21 + leftScrollW } }, // JQuery returns 20/20
-        viewport: { top: 21, left: { ltr: 21, rtl: 21 + leftScrollW } }
+        absolute: { top: 21, left: { ltr: 21, rtl: 21 + leftScrollW }},
+        relative: { top: 21, left: { ltr: 21, rtl: 21 + leftScrollW }}, // JQuery returns 20/20
+        viewport: { top: 21, left: { ltr: 21, rtl: 21 + leftScrollW }}
       },
       {
         id: 'fixed-no-top-left',
-        absolute: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW } },
-        relative: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW } }, // JQuery returns 6/6
-        viewport: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW } }
+        absolute: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW }},
+        relative: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW }}, // JQuery returns 6/6
+        viewport: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW }}
       }
     ];
 
@@ -349,30 +349,30 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     const withScroll = [
       {
         id: 'fixed-1',
-        absolute: { top: topScroll + 1, left: { ltr: leftScroll + 1, rtl: 1 + leftScrollW } },
-        relative: { top: 1, left: { ltr: 1, rtl: 1 + leftScrollW } }, // JQuery returns 0/0
-        viewport: { top: 1, left: { ltr: 1, rtl: 1 + leftScrollW } }
+        absolute: { top: topScroll + 1, left: { ltr: leftScroll + 1, rtl: 1 + leftScrollW }},
+        relative: { top: 1, left: { ltr: 1, rtl: 1 + leftScrollW }}, // JQuery returns 0/0
+        viewport: { top: 1, left: { ltr: 1, rtl: 1 + leftScrollW }}
       },
       {
         id: 'fixed-2',
-        absolute: { top: topScroll + 21, left: { ltr: leftScroll + 21, rtl: 21 + leftScrollW } },
-        relative: { top: 21, left: { ltr: 21, rtl: 21 + leftScrollW } }, // JQuery returns 20/20
-        viewport: { top: 21, left: { ltr: 21, rtl: 21 + leftScrollW } }
+        absolute: { top: topScroll + 21, left: { ltr: leftScroll + 21, rtl: 21 + leftScrollW }},
+        relative: { top: 21, left: { ltr: 21, rtl: 21 + leftScrollW }}, // JQuery returns 20/20
+        viewport: { top: 21, left: { ltr: 21, rtl: 21 + leftScrollW }}
       },
       {
         id: 'fixed-no-top-left',
-        absolute: { top: topScroll + 6, left: { ltr: leftScroll + 6, rtl: 380 - scrollBarWidth + leftScrollW } },
-        relative: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW } }, // JQuery returns 6/6
-        viewport: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW } }
+        absolute: { top: topScroll + 6, left: { ltr: leftScroll + 6, rtl: 380 - scrollBarWidth + leftScrollW }},
+        relative: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW }}, // JQuery returns 6/6
+        viewport: { top: 6, left: { ltr: 6, rtl: 380 - scrollBarWidth + leftScrollW }}
       }
     ];
 
     const afterSetPosition = [
       {
         id: 'fixed-no-top-left',
-        absolute: { top: topScroll + 11, left: { ltr: leftScroll + 21, rtl: 21 + leftScrollW } },
-        relative: { top: 11, left: { ltr: 21, rtl: 21 + leftScrollW } }, // JQuery returns 10/20
-        viewport: { top: 11, left: { ltr: 21, rtl: 21 + leftScrollW } }
+        absolute: { top: topScroll + 11, left: { ltr: leftScroll + 21, rtl: 21 + leftScrollW }},
+        relative: { top: 11, left: { ltr: 21, rtl: 21 + leftScrollW }}, // JQuery returns 10/20
+        viewport: { top: 11, left: { ltr: 21, rtl: 21 + leftScrollW }}
       }
     ];
 

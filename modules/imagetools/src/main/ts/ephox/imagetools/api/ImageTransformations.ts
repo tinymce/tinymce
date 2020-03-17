@@ -79,14 +79,14 @@ const exifRotate = (ir: ImageResult): Promise<ImageResult> => {
   const checkRotation = (data: JPEGMeta.JPEGMeta) => {
     const orientation = data.tiff.Orientation;
     switch (orientation) {
-      case ROTATE_90:
-        return rotate(ir, 90);
-      case ROTATE_180:
-        return rotate(ir, 180);
-      case ROTATE_270:
-        return rotate(ir, 270);
-      default:
-        return ir;
+    case ROTATE_90:
+      return rotate(ir, 90);
+    case ROTATE_180:
+      return rotate(ir, 180);
+    case ROTATE_270:
+      return rotate(ir, 270);
+    default:
+      return ir;
     }
   };
 

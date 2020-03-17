@@ -20,7 +20,9 @@ UnitTest.test('BounderCursorTest', () => {
     Assert.eq('label', expected.label, actual.label);
     Assert.eq('X', expected.x, actual.x);
     Assert.eq('Y', expected.y, actual.y);
-    if (expected.candidateYforTest !== undefined) { Assert.eq('Candidate Y', expected.candidateYforTest, actual.candidateYforTest); }
+    if (expected.candidateYforTest !== undefined) {
+      Assert.eq('Candidate Y', expected.candidateYforTest, actual.candidateYforTest);
+    }
   };
 
   // Layout is for boxes with a bubble pointing to a cursor position (vertically aligned to nearest side)
@@ -170,7 +172,7 @@ UnitTest.test('BounderCursorTest', () => {
   // East
   check({
     label: 'layout-e',
-    x: 55 + 10 ,
+    x: 55 + 10,
     y: 150 - (75 / 2) + (10 / 2)
   }, two, bounds(55, 150, 10, 10), panelBox, bubb, view);
 

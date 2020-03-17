@@ -70,7 +70,7 @@ const unwrapSingleBlockChild = function (dom: DOMUtils, elm: Element) {
 };
 
 const moveChildren = function (dom: DOMUtils, fromElm: Element, toElm: Element) {
-  let node, targetElm;
+  let node; let targetElm;
 
   targetElm = hasOnlyOneBlockChild(dom, toElm) ? toElm.firstChild : toElm;
   unwrapSingleBlockChild(dom, fromElm);
@@ -83,7 +83,7 @@ const moveChildren = function (dom: DOMUtils, fromElm: Element, toElm: Element) 
 };
 
 const mergeLiElements = function (dom: DOMUtils, fromElm: Element, toElm: Element) {
-  let node, listNode;
+  let node; let listNode;
   const ul = fromElm.parentNode;
 
   if (!NodeType.isChildOfBody(dom, fromElm) || !NodeType.isChildOfBody(dom, toElm)) {
@@ -154,7 +154,7 @@ const mergeBackward = function (editor: Editor, rng: DomRange, fromLi: HTMLLIEle
 };
 
 const backspaceDeleteFromListToListCaret = function (editor: Editor, isForward: boolean) {
-  const dom = editor.dom, selection = editor.selection;
+  const dom = editor.dom; const selection = editor.selection;
   const selectionStartElm = selection.getStart();
   const root = Selection.getClosestListRootElm(editor, selectionStartElm);
   const li = dom.getParent(selection.getStart(), 'LI', root) as HTMLLIElement;

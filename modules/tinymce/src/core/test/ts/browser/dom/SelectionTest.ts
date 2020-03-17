@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   Theme();
 
   suite.test('getContent', function (editor) {
-    let rng, eventObj;
+    let rng; let eventObj;
 
     editor.focus();
 
@@ -72,7 +72,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('setContent', function (editor) {
-    let rng, eventObj;
+    let rng; let eventObj;
 
     // Set contents at selection
     editor.setContent('<p>text</p>');
@@ -192,7 +192,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('getBookmark/setBookmark (persistent)', function (editor) {
-    let rng, bookmark;
+    let rng; let bookmark;
 
     // Get persistent bookmark simple text selection
     editor.setContent('text');
@@ -218,7 +218,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('getBookmark/setBookmark (simple)', function (editor) {
-    let rng, bookmark;
+    let rng; let bookmark;
 
     // Get persistent bookmark simple text selection
     editor.setContent('text');
@@ -244,7 +244,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('getBookmark/setBookmark (nonintrusive) - simple text selection', function (editor) {
-    let rng, bookmark;
+    let rng; let bookmark;
 
     editor.setContent('text');
     rng = editor.dom.createRng();
@@ -258,7 +258,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark simple element selection', function (editor) {
-    let rng, bookmark;
+    let rng; let bookmark;
 
     // Get non intrusive bookmark simple element selection
     editor.setContent('<p>text<em>a<strong>b</strong>c</em></p>');
@@ -272,7 +272,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark multiple elements text selection', function (editor) {
-    let rng, bookmark;
+    let rng; let bookmark;
 
     // Get non intrusive bookmark multiple elements text selection
     editor.setContent('<p>text</p>\n<p>text</p>');
@@ -287,7 +287,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('getBookmark/setBookmark (nonintrusive)', function (editor) {
-    let rng, bookmark;
+    let rng; let bookmark;
 
     // Get non intrusive bookmark multiple elements text selection fragmented
     editor.setContent('<p>text</p><p>text</p>');
@@ -306,7 +306,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('getBookmark/setBookmark (nonintrusive) - fragmentext text (normalized)', function (editor) {
-    let rng, bookmark;
+    let rng; let bookmark;
 
     // Get non intrusive bookmark multiple elements text selection fragmented
     editor.setContent('<p>text</p><p>text</p>');
@@ -326,7 +326,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('getBookmark/setBookmark (nonintrusive) - fragmentext text with zwsp (normalized)', function (editor) {
-    let rng, bookmark;
+    let rng; let bookmark;
 
     // Get non intrusive bookmark multiple elements text selection fragmented
     editor.setContent('<p>text</p><p>text</p>');
@@ -346,7 +346,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before image', function (editor) {
-    let rng, bookmark;
+    let rng; let bookmark;
 
     editor.setContent('<p><img src="about:blank" /></p>');
     rng = editor.dom.createRng();
@@ -364,7 +364,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before/after image', function (editor) {
-    let rng, bookmark;
+    let rng; let bookmark;
 
     editor.setContent('<p><img src="about:blank" /></p>');
     rng = editor.dom.createRng();
@@ -382,7 +382,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark after image', function (editor) {
-    let rng, bookmark;
+    let rng; let bookmark;
 
     editor.setContent('<p><img src="about:blank" /></p>');
     rng = editor.dom.createRng();
@@ -400,7 +400,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before element', function (editor) {
-    let rng, bookmark;
+    let rng; let bookmark;
 
     editor.setContent('abc<b>123</b>');
     rng = editor.dom.createRng();
@@ -418,7 +418,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark after element', function (editor) {
-    let rng, bookmark;
+    let rng; let bookmark;
 
     // Get bookmark after element
     editor.setContent('<b>123</b>abc');
@@ -437,7 +437,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside element', function (editor) {
-    let rng, bookmark;
+    let rng; let bookmark;
 
     editor.setContent('abc<b>123</b>abc');
     rng = editor.dom.createRng();
@@ -455,7 +455,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside root text', function (editor) {
-    let rng, bookmark;
+    let rng; let bookmark;
 
     editor.setContent('abc');
     rng = editor.dom.createRng();
@@ -473,7 +473,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside complex html', function (editor) {
-    let rng, bookmark;
+    let rng; let bookmark;
 
     editor.setContent('<p>abc</p>123<p>123</p><p>123<b>123</b><table><tr><td>abc</td></tr></table></p>');
     editor.execCommand('SelectAll');
@@ -500,7 +500,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('getBookmark/setBookmark before cE=false', function (editor) {
-    let rng, bookmark;
+    let rng; let bookmark;
 
     editor.setContent('<p><input><span contentEditable="false">1</span></p>');
     CaretContainer.insertInline(editor.$('span')[0], true);
@@ -515,7 +515,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('getBookmark/setBookmark before cE=false block', function (editor) {
-    let rng, bookmark;
+    let rng; let bookmark;
 
     editor.setContent('<p contentEditable="false">1</p>');
     CaretContainer.insertBlock('p', editor.$('p')[0], true);
@@ -1076,7 +1076,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('selectorChanged', function (editor) {
-    let newState, newArgs;
+    let newState; let newArgs;
 
     editor.selection.selectorChanged('a[href]', function (state, args) {
       newState = state;
@@ -1101,7 +1101,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
   });
 
   suite.test('selectorChangedWithUnbind', function (editor) {
-    let newState, newArgs, calls = 0;
+    let newState; let newArgs; let calls = 0;
 
     const { unbind } = editor.selection.selectorChangedWithUnbind('a[href]', function (state, args) {
       newState = state;
@@ -1185,7 +1185,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(curRng.endContainer.nodeName, 'BODY');
     LegacyUnit.equal(curRng.endOffset, 0);
   });
-/*
+  /*
   // TODO: Re-implement this test as a separate test if needed by destroying an editor etc
   suite.test('getRng should return null if win.document is not defined or null', function (editor) {
     const win = editor.selection.win;

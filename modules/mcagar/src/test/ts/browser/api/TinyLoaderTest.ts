@@ -7,11 +7,9 @@ import { TinyUi } from 'ephox/mcagar/api/TinyUi';
 UnitTest.asynctest('TinyLoaderTest', (success, failure) => {
   let clickedOn = false;
 
-  const sAssertState = (expected: boolean, label: string) => {
-    return Step.sync(() => {
-      Assertions.assertEq(label, expected, clickedOn);
-    });
-  };
+  const sAssertState = (expected: boolean, label: string) => Step.sync(() => {
+    Assertions.assertEq(label, expected, clickedOn);
+  });
 
   const silverSetup = (ed: Editor) => {
     ed.ui.registry.addButton('test-button', {
@@ -34,8 +32,8 @@ UnitTest.asynctest('TinyLoaderTest', (success, failure) => {
     ], loadSuccess, loadFailure);
 
   }, {
-      setup: silverSetup,
-      toolbar: 'test-button',
-      base_url: '/project/tinymce/js/tinymce',
-    }, success, failure);
+    setup: silverSetup,
+    toolbar: 'test-button',
+    base_url: '/project/tinymce/js/tinymce',
+  }, success, failure);
 });

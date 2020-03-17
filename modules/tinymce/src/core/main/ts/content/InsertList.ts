@@ -179,7 +179,7 @@ const insertAtCaret = function (serializer, dom, rng, fragment): Range {
   const domFragment = toDomFragment(dom, serializer, fragment);
   const liTarget = getParentLi(dom, rng.startContainer);
   const liElms = trimListItems(listItems(domFragment.firstChild));
-  const BEGINNING = 1, END = 2;
+  const BEGINNING = 1; const END = 2;
   const rootNode = dom.getRoot();
 
   const isAt = function (location) {

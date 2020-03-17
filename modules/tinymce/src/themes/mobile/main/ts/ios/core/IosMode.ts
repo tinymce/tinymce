@@ -88,7 +88,7 @@ const create = function (platform, mask) {
           outerBody: platform.body,
           outerWindow: platform.win,
           keyboardType: IosKeyboard.stubborn,
-          isScrolling () {
+          isScrolling() {
             // TODO: There is no get in singleton investigate this
             const scrollValue = scrollEvents as any;
             return scrollValue.get().exists(function (s) {
@@ -135,8 +135,8 @@ const create = function (platform, mask) {
     Thor.restoreStyles();
     Scrollable.deregister(platform.toolbar);
 
-    Css.remove(platform.socket, 'overflow'/*, 'scroll'*/);
-    Css.remove(platform.socket, '-webkit-overflow-scrolling'/*, 'touch'*/);
+    Css.remove(platform.socket, 'overflow'/* , 'scroll'*/);
+    Css.remove(platform.socket, '-webkit-overflow-scrolling'/* , 'touch'*/);
 
     // Hide the keyboard and remove the selection so there isn't a blue cursor in the content
     // still even once exited.

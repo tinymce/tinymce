@@ -17,7 +17,7 @@ import { isContent, isNbsp, isWhiteSpace } from '../text/CharType';
 import * as FormatUtils from './FormatUtils';
 
 const isBookmarkNode = Bookmarks.isBookmarkNode;
-const getParents = FormatUtils.getParents, isWhiteSpaceNode = FormatUtils.isWhiteSpaceNode, isTextBlock = FormatUtils.isTextBlock;
+const getParents = FormatUtils.getParents; const isWhiteSpaceNode = FormatUtils.isWhiteSpaceNode; const isTextBlock = FormatUtils.isTextBlock;
 
 const isBogusBr = function (node: Element) {
   return node.nodeName === 'BR' && node.getAttribute('data-mce-bogus') && !node.nextSibling;
@@ -69,11 +69,7 @@ const findWordEndPoint = (dom: DOMUtils, body: HTMLElement, container: Node, off
   };
 
   const spaceResult = walk(container, offset, findSpace);
-  return spaceResult.bind((result) => {
-    return includeTrailingSpaces ? walk(result.container, result.offset + (start ? -1 : 0), findContent) : Option.some(result);
-  }).orThunk(() => {
-    return lastTextNode ? Option.some({ container: lastTextNode, offset: start ? 0 : lastTextNode.length }) : Option.none();
-  });
+  return spaceResult.bind((result) => includeTrailingSpaces ? walk(result.container, result.offset + (start ? -1 : 0), findContent) : Option.some(result)).orThunk(() => lastTextNode ? Option.some({ container: lastTextNode, offset: start ? 0 : lastTextNode.length }) : Option.none());
 };
 
 const findSelectorEndPoint = function (dom: DOMUtils, format, rng: Range, container: Node, siblingName: 'previousSibling' | 'nextSibling') {
@@ -144,7 +140,7 @@ const findBlockEndPoint = function (editor: Editor, format, container: Node, sib
 
 // This function walks up the tree if there is no siblings before/after the node
 const findParentContainer = function (dom: DOMUtils, format, startContainer: Node, startOffset: number, endContainer: Node, endOffset: number, start: boolean) {
-  let container, parent, sibling, siblingName, root;
+  let container; let parent; let sibling; let siblingName; let root;
 
   container = parent = start ? startContainer : endContainer;
   siblingName = start ? 'previousSibling' : 'nextSibling';
@@ -157,7 +153,7 @@ const findParentContainer = function (dom: DOMUtils, format, startContainer: Nod
     }
   }
 
-  /*eslint no-constant-condition:0 */
+  /* eslint no-constant-condition:0 */
   while (true) {
     // Stop expanding on block elements
     if (!format[0].block_expand && dom.isBlock(parent)) {
@@ -183,11 +179,11 @@ const findParentContainer = function (dom: DOMUtils, format, startContainer: Nod
   return container;
 };
 
-const expandRng = function (editor: Editor, rng: Range, format, includeTrailingSpace: boolean = false) {
-  let startContainer = rng.startContainer,
-    startOffset = rng.startOffset,
-    endContainer = rng.endContainer,
-    endOffset = rng.endOffset;
+const expandRng = function (editor: Editor, rng: Range, format, includeTrailingSpace = false) {
+  let startContainer = rng.startContainer;
+  let startOffset = rng.startOffset;
+  let endContainer = rng.endContainer;
+  let endOffset = rng.endOffset;
   const dom = editor.dom;
 
   // If index based start position then resolve it

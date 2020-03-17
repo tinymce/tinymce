@@ -34,12 +34,10 @@ const isTableCell = function (node) {
   return /^(TH|TD)$/.test(node.nodeName);
 };
 
-const isChildOfInlineParent = (dom: DOMUtils, node: Node, parent: Node): boolean => {
-  return dom.isChildOf(node, parent) && node !== parent && !dom.isBlock(parent);
-};
+const isChildOfInlineParent = (dom: DOMUtils, node: Node, parent: Node): boolean => dom.isChildOf(node, parent) && node !== parent && !dom.isBlock(parent);
 
 const getContainer = function (ed: Editor, rng: RangeLikeObject, start?: boolean) {
-  let container: Node, offset: number;
+  let container: Node; let offset: number;
 
   container = rng[start ? 'startContainer' : 'endContainer'];
   offset = rng[start ? 'startOffset' : 'endOffset'];
@@ -148,7 +146,7 @@ const find = function (dom: DOMUtils, node: Node, next: boolean, inc?: boolean) 
 const removeNode = function (ed: Editor, node: Node, format) {
   const parentNode = node.parentNode;
   let rootBlockElm;
-  const dom = ed.dom, forcedRootBlock = Settings.getForcedRootBlock(ed);
+  const dom = ed.dom; const forcedRootBlock = Settings.getForcedRootBlock(ed);
 
   if (format.block) {
     if (!forcedRootBlock) {
@@ -333,7 +331,7 @@ const findFormatRoot = function (editor: Editor, container: Node, name: string, 
 };
 
 const wrapAndSplit = function (editor: Editor, formatList, formatRoot: Node, container: Node, target: Node, split: boolean, format, vars: FormatVars) {
-  let parent, clone, lastClone, firstClone, i, formatRootParent;
+  let parent; let clone; let lastClone; let firstClone; let i; let formatRootParent;
   const dom = editor.dom;
 
   // Format root found then clone formats and split it
@@ -380,8 +378,8 @@ const wrapAndSplit = function (editor: Editor, formatList, formatRoot: Node, con
 };
 
 const remove = function (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range, similar?) {
-  const formatList = ed.formatter.get(name), format = formatList[0];
-  let bookmark, rng, contentEditable = true;
+  const formatList = ed.formatter.get(name); const format = formatList[0];
+  let bookmark; let rng; let contentEditable = true;
   const dom = ed.dom;
   const selection: Selection = ed.selection;
 
@@ -398,7 +396,7 @@ const remove = function (ed: Editor, name: string, vars?: FormatVars, node?: Nod
 
   // Merges the styles for each node
   const process = function (node: Node) {
-    let children: Node[], i, l, lastContentEditable, hasContentEditableState;
+    let children: Node[]; let i; let l; let lastContentEditable; let hasContentEditableState;
 
     // Node has a contentEditable value
     if (NodeType.isElement(node) && dom.getContentEditable(node)) {
@@ -455,7 +453,7 @@ const remove = function (ed: Editor, name: string, vars?: FormatVars, node?: Nod
   };
 
   const removeRngStyle = function (rng: Range) {
-    let startContainer, endContainer;
+    let startContainer; let endContainer;
     const commonAncestorContainer = rng.commonAncestorContainer;
 
     let expandedRng = ExpandRange.expandRng(ed, rng, formatList, true);

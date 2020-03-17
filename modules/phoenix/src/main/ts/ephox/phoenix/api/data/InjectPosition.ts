@@ -12,11 +12,11 @@ export interface InjectPosition<E> {
     onInvalid: InvalidHandler<E, U>
   ) => U;
   match: <U> (branches: {
-    before: InjectPositionHandler<E, U>,
-    after: InjectPositionHandler<E, U>,
-    rest: InjectPositionHandler<E, U>,
-    last: InjectPositionHandler<E, U>,
-    invalid: InvalidHandler<E, U>,
+    before: InjectPositionHandler<E, U>;
+    after: InjectPositionHandler<E, U>;
+    rest: InjectPositionHandler<E, U>;
+    last: InjectPositionHandler<E, U>;
+    invalid: InvalidHandler<E, U>;
   }) => U;
   log: (label: string) => void;
 }
@@ -28,11 +28,11 @@ const adt: {
   last: <E> (element: E) => InjectPosition<E>;
   invalid: <E> (element: E, offset: number) => InjectPosition<E>;
 } = Adt.generate([
-  { before: ['element'] },
-  { after: ['element'] },
-  { rest: ['element'] },
-  { last: ['element'] },
-  { invalid: ['element', 'offset'] }
+  { before: [ 'element' ] },
+  { after: [ 'element' ] },
+  { rest: [ 'element' ] },
+  { last: [ 'element' ] },
+  { invalid: [ 'element', 'offset' ] }
 ]);
 
 export const InjectPosition = {

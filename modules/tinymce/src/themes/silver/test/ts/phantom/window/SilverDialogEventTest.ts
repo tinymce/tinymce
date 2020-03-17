@@ -12,9 +12,9 @@ import { WindowExtra } from 'tinymce/themes/silver/ui/window/SilverDialogCommon'
 
 UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
 
-  const dialogSpec = (store): DialogManager.DialogInit<{}> => {
+  const dialogSpec = (store): DialogManager.DialogInit<{}> =>
     // the `any` here can't be removed, because internalDialog uses types that aren't exposed from Bridge
-    return {
+    ({
       internalDialog: {
         title: 'test dialog',
         size: 'normal',
@@ -56,23 +56,23 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
       },
       initialData: {},
       dataValidator: ValueSchema.anyValue()
-    } ;
-  };
+    } )
+  ;
 
   const sGui = (selector: string, sequence) => Step.async((next, die) => {
     TestHelpers.GuiSetup.setup(
-      (store, dov, body) => {
+      (store, dov, body) =>
         // Build the sink for the component
-        return GuiFactory.build({
+        GuiFactory.build({
           dom: {
             tag: 'div'
           },
           behaviours: Behaviour.derive([
             Positioning.config({ })
           ])
-        });
+        })
 
-      },
+      ,
       (doc, body, gui, sink, store) => {
         const dialogStuff = renderDialog(
           // Build the component

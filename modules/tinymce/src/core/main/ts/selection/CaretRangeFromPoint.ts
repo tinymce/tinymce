@@ -29,7 +29,7 @@ const findParent = function (node, rootNode, predicate) {
  * Finds the closest selection rect tries to get the range from that.
  */
 const findClosestIeRange = function (clientX, clientY, doc) {
-  let element, rng, rects;
+  let element; let rng; let rects;
 
   element = doc.elementFromPoint(clientX, clientY);
   rng = doc.body.createTextRange();
@@ -70,7 +70,7 @@ const moveOutOfContentEditableFalse = function (rng, rootNode) {
 };
 
 const fromPoint = function (clientX: number, clientY: number, doc: Document): Range {
-  let rng, point;
+  let rng; let point;
   const pointDoc = doc as any;
 
   if (pointDoc.caretPositionFromPoint) {

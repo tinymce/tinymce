@@ -24,31 +24,25 @@ const typical = <C extends GeneralKeyingConfig, S extends BehaviourState>(
   getKeydownRules: (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state: S) => Array<KeyRules.KeyRule<C, S>>,
   getKeyupRules: (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state: S) => Array<KeyRules.KeyRule<C, S>>,
   optFocusIn: (config: C) => Option<(comp: AlloyComponent, config: C, state: S) => void>) => {
-  const schema = () => {
-    return infoSchema.concat([
-      FieldSchema.defaulted('focusManager', FocusManagers.dom()),
-      FieldSchema.defaultedOf('focusInside', 'onFocus', ValueSchema.valueOf((val) => {
-        return Arr.contains([ 'onFocus', 'onEnterOrSpace', 'onApi' ], val) ? Result.value(val) : Result.error('Invalid value for focusInside');
-      })),
-      Fields.output('handler', me),
-      Fields.output('state', stateInit),
-      Fields.output('sendFocusIn', optFocusIn)
-    ]);
-  };
+  const schema = () => infoSchema.concat([
+    FieldSchema.defaulted('focusManager', FocusManagers.dom()),
+    FieldSchema.defaultedOf('focusInside', 'onFocus', ValueSchema.valueOf((val) => Arr.contains([ 'onFocus', 'onEnterOrSpace', 'onApi' ], val) ? Result.value(val) : Result.error('Invalid value for focusInside'))),
+    Fields.output('handler', me),
+    Fields.output('state', stateInit),
+    Fields.output('sendFocusIn', optFocusIn)
+  ]);
 
   const processKey = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, getRules: GetRulesFunc<C, S>, keyingConfig: C, keyingState: S): Option<boolean> => {
     const rules = getRules(component, simulatedEvent, keyingConfig, keyingState);
 
-    return KeyRules.choose(rules, simulatedEvent.event()).bind((rule) => {
-      return rule(component, simulatedEvent, keyingConfig, keyingState);
-    });
+    return KeyRules.choose(rules, simulatedEvent.event()).bind((rule) => rule(component, simulatedEvent, keyingConfig, keyingState));
   };
 
   const toEvents = (keyingConfig: C, keyingState: S): AlloyEvents.AlloyEventRecord => {
 
-    const onFocusHandler = keyingConfig.focusInside !== FocusInsideModes.OnFocusMode
-      ? Option.none<AlloyEvents.AlloyEventKeyAndHandler<EventFormat>>()
-      : optFocusIn(keyingConfig).map((focusIn) =>
+    const onFocusHandler = keyingConfig.focusInside !== FocusInsideModes.OnFocusMode ?
+      Option.none<AlloyEvents.AlloyEventKeyAndHandler<EventFormat>>() :
+      optFocusIn(keyingConfig).map((focusIn) =>
         AlloyEvents.run<EventArgs>(SystemEvents.focus(), (component, simulatedEvent) => {
           focusIn(component, keyingConfig, keyingState);
           simulatedEvent.stop();

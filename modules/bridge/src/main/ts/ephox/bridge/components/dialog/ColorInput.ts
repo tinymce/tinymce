@@ -16,6 +16,4 @@ export const colorInputSchema = ValueSchema.objOf(colorInputFields);
 
 export const colorInputDataProcessor = ValueSchema.string;
 
-export const createInputBox = (spec: ColorInputApi): Result<ColorInput, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<ColorInput>('colorinput', colorInputSchema, spec);
-};
+export const createInputBox = (spec: ColorInputApi): Result<ColorInput, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<ColorInput>('colorinput', colorInputSchema, spec);

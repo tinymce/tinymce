@@ -15,11 +15,9 @@ export interface SimpleValue<A> {
   svalue: A;
 }
 
-const fold = <B, E, A>(res: SimpleResult<E, A>, onError: (err: E) => B, onValue: (val: A) => B): B => {
-  return res.stype === SimpleResultType.Error ? onError(res.serror) : onValue(res.svalue);
-};
+const fold = <B, E, A>(res: SimpleResult<E, A>, onError: (err: E) => B, onValue: (val: A) => B): B => res.stype === SimpleResultType.Error ? onError(res.serror) : onValue(res.svalue);
 
-const partition = <E, A>(results: Array<SimpleResult<E[], any>>): { values: any[], errors: E[][] } => {
+const partition = <E, A>(results: Array<SimpleResult<E[], any>>): { values: any[]; errors: E[][] } => {
   const values = [ ];
   const errors = [ ];
   Arr.each(results, (obj) => {
@@ -64,21 +62,13 @@ const bindError = <F, E, A>(res: SimpleResult<E, A>, f: (e: E) => SimpleResult<F
   }
 };
 
-const svalue = <E, A>(v: A): SimpleResult<E, A> => {
-  return { stype: SimpleResultType.Value, svalue: v };
-};
+const svalue = <E, A>(v: A): SimpleResult<E, A> => ({ stype: SimpleResultType.Value, svalue: v });
 
-const serror = <E, A>(e: E): SimpleResult<E, A> => {
-  return { stype: SimpleResultType.Error, serror: e };
-};
+const serror = <E, A>(e: E): SimpleResult<E, A> => ({ stype: SimpleResultType.Error, serror: e });
 
-const toResult = <E, A>(res: SimpleResult<E, A>): Result<A, E> => {
-  return fold(res, Result.error, Result.value);
-};
+const toResult = <E, A>(res: SimpleResult<E, A>): Result<A, E> => fold(res, Result.error, Result.value);
 
-const fromResult = <E, A>(res: Result<A, E>): SimpleResult<E, A> => {
-  return res.fold<SimpleResult<E, A>>(serror, svalue);
-};
+const fromResult = <E, A>(res: Result<A, E>): SimpleResult<E, A> => res.fold<SimpleResult<E, A>>(serror, svalue);
 
 export const SimpleResult = {
   fromResult,

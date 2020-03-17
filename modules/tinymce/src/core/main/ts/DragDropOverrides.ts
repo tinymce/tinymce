@@ -21,8 +21,8 @@ import Editor from './api/Editor';
  * @class tinymce.DragDropOverrides
  */
 
-const isContentEditableFalse = NodeType.isContentEditableFalse,
-  isContentEditableTrue = NodeType.isContentEditableTrue;
+const isContentEditableFalse = NodeType.isContentEditableFalse;
+const isContentEditableTrue = NodeType.isContentEditableTrue;
 
 const isDraggable = function (rootElm, elm) {
   return isContentEditableFalse(elm) && elm !== rootElm;
@@ -83,7 +83,7 @@ const appendGhostToBody = function (ghostElm, bodyElm) {
 };
 
 const moveGhost = function (ghostElm, position, width, height, maxX, maxY) {
-  let overflowX = 0, overflowY = 0;
+  let overflowX = 0; let overflowY = 0;
 
   ghostElm.style.left = position.pageX + 'px';
   ghostElm.style.top = position.pageY + 'px';
@@ -229,7 +229,7 @@ const removeDragState = function (state) {
 
 const bindFakeDragEvents = function (editor: Editor) {
   const state = {};
-  let pageDom, dragStartHandler, dragHandler, dropHandler, dragEndHandler, rootDocument;
+  let pageDom; let dragStartHandler; let dragHandler; let dropHandler; let dragEndHandler; let rootDocument;
 
   pageDom = DOMUtils.DOM;
   rootDocument = document;

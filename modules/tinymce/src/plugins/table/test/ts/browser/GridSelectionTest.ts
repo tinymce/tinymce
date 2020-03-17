@@ -22,13 +22,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', (success, 
         editor.fire('mouseup', { target: endTd, button: 0 });
       };
 
-      const getCells = (table): HTMLTableCellElement[] => {
-        return editor.$(table).find('td').toArray();
-      };
+      const getCells = (table): HTMLTableCellElement[] => editor.$(table).find('td').toArray();
 
-      const getSelectedCells = (table) => {
-        return editor.$(table).find('td[data-mce-selected]').toArray();
-      };
+      const getSelectedCells = (table) => editor.$(table).find('td[data-mce-selected]').toArray();
 
       return Logger.t('Assert Table Selection', Step.sync(() => {
         editor.setContent(tableHtml);
@@ -56,10 +52,10 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', (success, 
     };
 
     const assertions = [
-      sAssertTableSelection('<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>', ['1', '2'], ['1', '2']),
-      sAssertTableSelection('<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>', ['1', '3'], ['1', '3']),
-      sAssertTableSelection('<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>', ['1', '4'], ['1', '2', '3', '4']),
-      sAssertTableSelection('<table><tr><td colspan="2" rowspan="2">1</td><td>3</td></tr><tr><td>6</td></tr></table>', ['1', '6'], ['1', '3', '6']),
+      sAssertTableSelection('<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>', [ '1', '2' ], [ '1', '2' ]),
+      sAssertTableSelection('<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>', [ '1', '3' ], [ '1', '3' ]),
+      sAssertTableSelection('<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>', [ '1', '4' ], [ '1', '2', '3', '4' ]),
+      sAssertTableSelection('<table><tr><td colspan="2" rowspan="2">1</td><td>3</td></tr><tr><td>6</td></tr></table>', [ '1', '6' ], [ '1', '3', '6' ]),
       sAssertTableSelection('<table>' +
         '<tr>' +
         '<td>1</td>' +
@@ -74,8 +70,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', (success, 
         '<td>6</td>' +
         '</tr>' +
         '</table>',
-        ['2', '6'],
-        ['2', '3', '4', '5', '6']
+      [ '2', '6' ],
+      [ '2', '3', '4', '5', '6' ]
       ),
     ];
 
@@ -89,7 +85,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', (success, 
       tinyApis.sSetRawContent('<table><tr><td data-mce-selected="1">a</td><td>b</td></tr><tr><td data-mce-selected="1">c</td><td>d</td></tr></table>'),
       sAssertSelectionContent(editor, '<table><tbody><tr><td>a</td></tr><tr><td>c</td></tr></tbody></table>')
     ])
-  ), onSuccess, onFailure);
+    ), onSuccess, onFailure);
   }, {
     plugins: 'table',
     indent: false,

@@ -15,7 +15,7 @@
 const isArray = Array.isArray;
 
 const toArray = function (obj) {
-  let array = obj, i, l;
+  let array = obj; let i; let l;
 
   if (!isArray(obj)) {
     array = [];
@@ -28,7 +28,7 @@ const toArray = function (obj) {
 };
 
 const each = function (o, cb, s?) {
-  let n, l;
+  let n; let l;
 
   if (!o) {
     return 0;
@@ -80,7 +80,7 @@ const filter = function (a, f?) {
 };
 
 const indexOf = function (a, v) {
-  let i, l;
+  let i; let l;
 
   if (a) {
     for (i = 0, l = a.length; i < l; i++) {
@@ -108,7 +108,7 @@ const reduce = function (collection, iteratee, accumulator?, thisArg?) {
 };
 
 const findIndex = function (array, predicate, thisArg?) {
-  let i, l;
+  let i; let l;
 
   for (i = 0, l = array.length; i < l; i++) {
     if (predicate.call(thisArg, array[i], i, array)) {

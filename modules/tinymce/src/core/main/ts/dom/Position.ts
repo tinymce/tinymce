@@ -37,7 +37,7 @@ const getTableCaptionDeltaY = function (elm) {
 const hasChild = (elm, child) => elm.children && Arr.contains(elm.children, child);
 
 const getPos = function (body, elm, rootElm) {
-  let x = 0, y = 0, offsetParent;
+  let x = 0; let y = 0; let offsetParent;
   const doc = body.ownerDocument;
   let pos;
 

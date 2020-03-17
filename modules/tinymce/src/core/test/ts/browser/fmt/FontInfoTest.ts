@@ -53,47 +53,47 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
   });
 
   suite.test('getFontSize', function () {
-    assertComputedFontProp('fontSize', '<mark></mark>', [0], '10px');
-    assertComputedFontProp('fontSize', '<span><mark></mark></span>', [0, 0], '10px');
-    assertSpecificFontProp('fontSize', '<mark style="font-size: 10px"></mark>', [0], '10px');
-    assertSpecificFontProp('fontSize', '<mark style="font-size: 14px"></mark>', [0], '14px');
-    assertSpecificFontProp('fontSize', '<mark style="font-size: 14pt"></mark>', [0], '14pt');
-    assertSpecificFontProp('fontSize', '<mark style="font-size: 14em"></mark>', [0], '14em');
-    assertSpecificFontProp('fontSize', '<span style="font-size: 10px"><mark></mark></span>', [0, 0], '10px');
-    assertSpecificFontProp('fontSize', '<span style="font-size: 14px"><mark></mark></span>', [0, 0], '14px');
-    assertSpecificFontProp('fontSize', '<span style="font-size: 10px"><span><mark></mark></span></span>', [0, 0, 0], '10px');
-    assertSpecificFontProp('fontSize', '<span style="font-size: 14px"><span><mark></mark></span></span>', [0, 0, 0], '14px');
-    assertSpecificFontProp('fontSize', '<font size="2"></font>', [0], '2');
-    assertSpecificFontProp('fontSize', '<font size="4"><mark></mark></font>', [0, 0], '4');
+    assertComputedFontProp('fontSize', '<mark></mark>', [ 0 ], '10px');
+    assertComputedFontProp('fontSize', '<span><mark></mark></span>', [ 0, 0 ], '10px');
+    assertSpecificFontProp('fontSize', '<mark style="font-size: 10px"></mark>', [ 0 ], '10px');
+    assertSpecificFontProp('fontSize', '<mark style="font-size: 14px"></mark>', [ 0 ], '14px');
+    assertSpecificFontProp('fontSize', '<mark style="font-size: 14pt"></mark>', [ 0 ], '14pt');
+    assertSpecificFontProp('fontSize', '<mark style="font-size: 14em"></mark>', [ 0 ], '14em');
+    assertSpecificFontProp('fontSize', '<span style="font-size: 10px"><mark></mark></span>', [ 0, 0 ], '10px');
+    assertSpecificFontProp('fontSize', '<span style="font-size: 14px"><mark></mark></span>', [ 0, 0 ], '14px');
+    assertSpecificFontProp('fontSize', '<span style="font-size: 10px"><span><mark></mark></span></span>', [ 0, 0, 0 ], '10px');
+    assertSpecificFontProp('fontSize', '<span style="font-size: 14px"><span><mark></mark></span></span>', [ 0, 0, 0 ], '14px');
+    assertSpecificFontProp('fontSize', '<font size="2"></font>', [ 0 ], '2');
+    assertSpecificFontProp('fontSize', '<font size="4"><mark></mark></font>', [ 0, 0 ], '4');
   });
 
   suite.test('getFontFamily', function () {
-    assertComputedFontProp('fontFamily', '<mark></mark>', [0], 'Arial,Verdana');
-    assertComputedFontProp('fontFamily', '<span><mark></mark></span>', [0, 0], 'Arial,Helvetica,Verdana');
-    assertSpecificFontProp('fontFamily', '<mark style="font-family: Arial, Verdana"></mark>', [0], 'Arial,Verdana');
-    assertSpecificFontProp('fontFamily', '<mark style="font-family: Comic Sans MS"></mark>', [0], 'Comic Sans MS');
-    assertSpecificFontProp('fontFamily', '<mark style="font-family: Arial, Helvetica, Verdana"></mark>', [0], 'Arial,Helvetica,Verdana');
-    assertSpecificFontProp('fontFamily', '<span style="font-family: Arial, Verdana"><mark></mark></span>', [0, 0], 'Arial,Verdana');
+    assertComputedFontProp('fontFamily', '<mark></mark>', [ 0 ], 'Arial,Verdana');
+    assertComputedFontProp('fontFamily', '<span><mark></mark></span>', [ 0, 0 ], 'Arial,Helvetica,Verdana');
+    assertSpecificFontProp('fontFamily', '<mark style="font-family: Arial, Verdana"></mark>', [ 0 ], 'Arial,Verdana');
+    assertSpecificFontProp('fontFamily', '<mark style="font-family: Comic Sans MS"></mark>', [ 0 ], 'Comic Sans MS');
+    assertSpecificFontProp('fontFamily', '<mark style="font-family: Arial, Helvetica, Verdana"></mark>', [ 0 ], 'Arial,Helvetica,Verdana');
+    assertSpecificFontProp('fontFamily', '<span style="font-family: Arial, Verdana"><mark></mark></span>', [ 0, 0 ], 'Arial,Verdana');
     assertSpecificFontProp(
       'fontFamily',
       '<span style="font-family: Arial, Helvetica, Verdana"><mark></mark></span>',
-      [0, 0],
+      [ 0, 0 ],
       'Arial,Helvetica,Verdana'
     );
     assertSpecificFontProp(
       'fontFamily',
       '<span style="font-family: Arial, Verdana"><span><mark></mark></span>',
-      [0, 0, 0],
+      [ 0, 0, 0 ],
       'Arial,Verdana'
     );
     assertSpecificFontProp(
       'fontFamily',
       '<span style="font-family: Arial, Helvetica, Verdana"><span><mark></mark></span></span>',
-      [0, 0, 0],
+      [ 0, 0, 0 ],
       'Arial,Helvetica,Verdana'
     );
-    assertSpecificFontProp('fontFamily', '<font face="Comic Sans MS"></font>', [0], 'Comic Sans MS');
-    assertSpecificFontProp('fontFamily', '<font face="Arial, Verdana"><mark></mark></font>', [0, 0], 'Arial,Verdana');
+    assertSpecificFontProp('fontFamily', '<font face="Comic Sans MS"></font>', [ 0 ], 'Comic Sans MS');
+    assertSpecificFontProp('fontFamily', '<font face="Arial, Verdana"><mark></mark></font>', [ 0, 0 ], 'Arial,Verdana');
   });
 
   suite.asyncTest('getFontFamily should always return string even if display: none (firefox specific bug)', function (_, done) {
@@ -140,10 +140,10 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
   });
 
   suite.test('comments should always return empty string', function () {
-    assertComputedFontProp('fontFamily', '<!-- comment -->', [0], '');
-    assertComputedFontProp('fontSize', '<!-- comment -->', [0], '');
-    assertSpecificFontProp('fontFamily', '<!-- comment -->', [0], '');
-    assertSpecificFontProp('fontSize', '<!-- comment -->', [0], '');
+    assertComputedFontProp('fontFamily', '<!-- comment -->', [ 0 ], '');
+    assertComputedFontProp('fontSize', '<!-- comment -->', [ 0 ], '');
+    assertSpecificFontProp('fontFamily', '<!-- comment -->', [ 0 ], '');
+    assertSpecificFontProp('fontSize', '<!-- comment -->', [ 0 ], '');
   });
 
   suite.test('should not throw error when passed in element without parent', () => {

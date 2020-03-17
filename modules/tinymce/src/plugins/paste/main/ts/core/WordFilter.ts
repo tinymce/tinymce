@@ -37,7 +37,7 @@ function isWordContent(content) {
  * Checks if the specified text starts with "1. " or "a. " etc.
  */
 function isNumericList(text) {
-  let found, patterns;
+  let found; let patterns;
 
   patterns = [
     /^[IVXLMCD]{1,2}\.[ \u00a0]/,  // Roman upper case
@@ -71,7 +71,7 @@ function isBulletList(text) {
  * @param {tinymce.html.Node} node Root node to convert children of.
  */
 function convertFakeListsToProperLists(node) {
-  let currentListNode, prevListNode, lastLevel = 1;
+  let currentListNode; let prevListNode; let lastLevel = 1;
 
   function getText(node) {
     let txt = '';
@@ -227,61 +227,61 @@ function convertFakeListsToProperLists(node) {
 }
 
 function filterStyles(editor, validStyles, node, styleValue) {
-  let outputStyles = {}, matches;
+  let outputStyles = {}; let matches;
   const styles = editor.dom.parseStyle(styleValue);
 
   Tools.each(styles, function (value, name) {
     // Convert various MS styles to W3C styles
     switch (name) {
-      case 'mso-list':
-        // Parse out list indent level for lists
-        matches = /\w+ \w+([0-9]+)/i.exec(styleValue);
-        if (matches) {
-          node._listLevel = parseInt(matches[1], 10);
-        }
+    case 'mso-list':
+      // Parse out list indent level for lists
+      matches = /\w+ \w+([0-9]+)/i.exec(styleValue);
+      if (matches) {
+        node._listLevel = parseInt(matches[1], 10);
+      }
 
-        // Remove these nodes <span style="mso-list:Ignore">o</span>
-        // Since the span gets removed we mark the text node and the span
-        if (/Ignore/i.test(value) && node.firstChild) {
-          node._listIgnore = true;
-          node.firstChild._listIgnore = true;
-        }
+      // Remove these nodes <span style="mso-list:Ignore">o</span>
+      // Since the span gets removed we mark the text node and the span
+      if (/Ignore/i.test(value) && node.firstChild) {
+        node._listIgnore = true;
+        node.firstChild._listIgnore = true;
+      }
 
-        break;
+      break;
 
-      case 'horiz-align':
-        name = 'text-align';
-        break;
+    case 'horiz-align':
+      name = 'text-align';
+      break;
 
-      case 'vert-align':
-        name = 'vertical-align';
-        break;
+    case 'vert-align':
+      name = 'vertical-align';
+      break;
 
-      case 'font-color':
-      case 'mso-foreground':
-        name = 'color';
-        break;
+    case 'font-color':
+    case 'mso-foreground':
+      name = 'color';
+      break;
 
-      case 'mso-background':
-      case 'mso-highlight':
-        name = 'background';
-        break;
+    case 'mso-background':
+    case 'mso-highlight':
+      name = 'background';
+      break;
 
-      case 'font-weight':
-      case 'font-style':
-        if (value !== 'normal') {
-          outputStyles[name] = value;
-        }
+    case 'font-weight':
+    case 'font-style':
+      if (value !== 'normal') {
+        outputStyles[name] = value;
+      }
+      return;
+
+    case 'mso-element':
+      // Remove track changes code
+      if (/^(comment|comment-list)$/i.test(value)) {
+        node.remove();
         return;
+      }
 
-      case 'mso-element':
-        // Remove track changes code
-        if (/^(comment|comment-list)$/i.test(value)) {
-          node.remove();
-          return;
-        }
-
-        break;
+      break;
     }
 
     if (name.indexOf('mso-comment') === 0) {
@@ -322,7 +322,7 @@ function filterStyles(editor, validStyles, node, styleValue) {
 }
 
 const filterWordContent = function (editor: Editor, content: string) {
-  let retainStyleProperties, validStyles;
+  let retainStyleProperties; let validStyles;
 
   retainStyleProperties = Settings.getRetainStyleProps(editor);
   if (retainStyleProperties) {
@@ -345,14 +345,14 @@ const filterWordContent = function (editor: Editor, content: string) {
     /<(!|script[^>]*>.*?<\/script(?=[>\s])|\/?(\?xml(:\w+)?|img|meta|link|style|\w:\w+)(?=[\s\/>]))[^>]*>/gi,
 
     // Convert <s> into <strike> for line-though
-    [/<(\/?)s>/gi, '<$1strike>'],
+    [ /<(\/?)s>/gi, '<$1strike>' ],
 
     // Replace nsbp entites to char since it's easier to handle
-    [/&nbsp;/gi, Unicode.nbsp],
+    [ /&nbsp;/gi, Unicode.nbsp ],
 
     // Convert <span style="mso-spacerun:yes">___</span> to string of alternating
     // breaking/non-breaking spaces of same length
-    [/<span\s+style\s*=\s*"\s*mso-spacerun\s*:\s*yes\s*;?\s*"\s*>([\s\u00a0]*)<\/span>/gi,
+    [ /<span\s+style\s*=\s*"\s*mso-spacerun\s*:\s*yes\s*;?\s*"\s*>([\s\u00a0]*)<\/span>/gi,
       function (str, spaces) {
         return (spaces.length > 0) ?
           spaces.replace(/./, ' ').slice(Math.floor(spaces.length / 2)).split('').join(Unicode.nbsp) : '';
@@ -371,7 +371,7 @@ const filterWordContent = function (editor: Editor, content: string) {
   // Add style/class attribute to all element rules since the user might have removed them from
   // paste_word_valid_elements config option and we need to check them for properties
   Tools.each(schema.elements, function (rule) {
-    /*eslint dot-notation:0*/
+    /* eslint dot-notation:0*/
     if (!rule.attributes.class) {
       rule.attributes.class = {};
       rule.attributesOrder.push('class');
@@ -388,7 +388,7 @@ const filterWordContent = function (editor: Editor, content: string) {
 
   // Filter styles to remove "mso" specific styles and convert some of them
   domParser.addAttributeFilter('style', function (nodes) {
-    let i = nodes.length, node;
+    let i = nodes.length; let node;
 
     while (i--) {
       node = nodes[i];
@@ -403,7 +403,7 @@ const filterWordContent = function (editor: Editor, content: string) {
 
   // Check the class attribute for comments or del items and remove those
   domParser.addAttributeFilter('class', function (nodes) {
-    let i = nodes.length, node, className;
+    let i = nodes.length; let node; let className;
 
     while (i--) {
       node = nodes[i];
@@ -428,7 +428,7 @@ const filterWordContent = function (editor: Editor, content: string) {
 
   // Keep some of the links and anchors
   domParser.addNodeFilter('a', function (nodes) {
-    let i = nodes.length, node, href, name;
+    let i = nodes.length; let node; let href; let name;
 
     while (i--) {
       node = nodes[i];

@@ -32,7 +32,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteTest', (success, failure)
 
   const appendTeardown = function (editor: Editor, steps: Step<any, any>[]) {
     return Arr.bind(steps, function (step) {
-      return [step, sTeardown(editor)];
+      return [ step, sTeardown(editor) ];
     });
   };
 
@@ -518,8 +518,8 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteTest', (success, failure)
   });
 
   suite.test('TestCase-TBA: Paste: paste invalid content with spans on page', function (editor) {
-    const startingContent = '<p>123 testing <span id="x">span later in document</span></p>',
-      insertedContent = '<ul><li>u</li><li>l</li></ul>';
+    const startingContent = '<p>123 testing <span id="x">span later in document</span></p>';
+    const insertedContent = '<ul><li>u</li><li>l</li></ul>';
     editor.setContent(startingContent);
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 0);

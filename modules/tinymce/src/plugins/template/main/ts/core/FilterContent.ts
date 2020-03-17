@@ -12,7 +12,7 @@ import * as Templates from './Templates';
 
 const setup = function (editor) {
   editor.on('PreProcess', function (o) {
-    const dom = editor.dom, dateFormat = Settings.getMdateFormat(editor);
+    const dom = editor.dom; const dateFormat = Settings.getMdateFormat(editor);
 
     Tools.each(dom.select('div', o.node), function (e) {
       if (dom.hasClass(e, 'mceTmpl')) {

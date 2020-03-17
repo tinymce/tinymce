@@ -29,10 +29,10 @@ type IframeSpec = Omit<Types.Iframe.Iframe, 'type'>;
 const getDynamicSource = (isSandbox): IFrameSourcing => {
   const cachedValue = Cell('');
   return {
-    getValue: (frameComponent: AlloyComponent): string => {
+    getValue: (frameComponent: AlloyComponent): string =>
       // Ideally we should fetch data from the iframe...innerHtml, this triggers Corrs errors
-      return cachedValue.get();
-    },
+      cachedValue.get()
+    ,
     setValue: (frameComponent: AlloyComponent, html: string) => {
 
       if (!isSandbox) {
@@ -61,7 +61,7 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
   const isSandbox = platformNeedsSandboxing && spec.sandboxed;
 
   const attributes = {
-    ...spec.label.map<{ title?: string }>((title) => ({title})).getOr({}),
+    ...spec.label.map<{ title?: string }>((title) => ({ title })).getOr({}),
     ...isSandbox ? { sandbox : 'allow-scripts allow-same-origin' } : { }
   };
 
@@ -69,30 +69,28 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
 
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
-  const factory = (newSpec: { uid: string }) => {
-    return NavigableObject.craft(
-      {
-        // We need to use the part uid or the label and field won't be linked with ARIA
-        uid: newSpec.uid,
-        dom: {
-          tag: 'iframe',
-          attributes
-        },
-        behaviours: Behaviour.derive([
-          Tabstopping.config({ }),
-          Focusing.config({ }),
-          RepresentingConfigs.withComp(Option.none(), sourcing.getValue, sourcing.setValue)
-        ])
-      }
-    );
-  };
+  const factory = (newSpec: { uid: string }) => NavigableObject.craft(
+    {
+      // We need to use the part uid or the label and field won't be linked with ARIA
+      uid: newSpec.uid,
+      dom: {
+        tag: 'iframe',
+        attributes
+      },
+      behaviours: Behaviour.derive([
+        Tabstopping.config({ }),
+        Focusing.config({ }),
+        RepresentingConfigs.withComp(Option.none(), sourcing.getValue, sourcing.setValue)
+      ])
+    }
+  );
 
   // Note, it's not going to handle escape at this point.
   const pField = FormField.parts().field({
     factory: { sketch: factory }
   });
 
-  return renderFormFieldWith(pLabel, pField, ['tox-form__group--stretched'], [ ]);
+  return renderFormFieldWith(pLabel, pField, [ 'tox-form__group--stretched' ], [ ]);
 };
 
 export {

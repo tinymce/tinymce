@@ -10,7 +10,7 @@ const charCodeToKeyCode = function (charCode) {
 };
 
 const type = function (editor, chr) {
-  let keyCode, charCode, evt, startElm, rng, offset;
+  let keyCode; let charCode; let evt; let startElm; let rng; let offset;
 
   const fakeEvent = function (target, type, evt) {
     editor.dom.fire(target, type, evt);
@@ -66,7 +66,7 @@ const type = function (editor, chr) {
 
         if (rng.collapsed) {
           if (rng.startContainer.nodeType === 1) {
-            const nodes = rng.startContainer.childNodes, lastNode = nodes[nodes.length - 1];
+            const nodes = rng.startContainer.childNodes; const lastNode = nodes[nodes.length - 1];
 
             // If caret is at <p>abc|</p> and after the abc text node then move it to the end of the text node
             // Expand the range to include the last char <p>ab[c]</p> since IE 11 doesn't delete otherwise

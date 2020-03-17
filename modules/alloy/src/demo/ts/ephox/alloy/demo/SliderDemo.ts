@@ -33,7 +33,7 @@ export default (): void => {
         mode: 'x',
         minX: 20,
         maxX: 100,
-        getInitialValue: Fun.constant({x: Fun.constant(80)})
+        getInitialValue: Fun.constant({ x: Fun.constant(80) })
       },
       stepSize: 10,
       snapToGrid: true,
@@ -48,7 +48,7 @@ export default (): void => {
               outline: '4px solid green'
             }
           }
-        }) as ConfiguredPart,
+        }),
         Slider.parts().thumb({
           dom: {
             tag: 'div',
@@ -72,14 +72,18 @@ export default (): void => {
       dom: { tag: 'div', styles: { 'margin-bottom': '40px' } },
       model: {
         mode: 'y',
-        getInitialValue: Fun.constant({y: Fun.constant(35)})
+        getInitialValue: Fun.constant({ y: Fun.constant(35) })
       },
 
       stepSize: 40,
       snapStart: 35,
       snapToGrid: true,
-      onDragStart(_, thumb) { Toggling.on(thumb); },
-      onDragEnd(_, thumb) { Toggling.off(thumb); },
+      onDragStart(_, thumb) {
+        Toggling.on(thumb);
+      },
+      onDragEnd(_, thumb) {
+        Toggling.off(thumb);
+      },
 
       onChange(_slider, thumb, value: SliderValue) {
         if (isValueY(value)) {
@@ -154,7 +158,7 @@ export default (): void => {
         maxX: 360,
         minY: 0,
         maxY: 360,
-        getInitialValue: Fun.constant({x: Fun.constant(120), y: Fun.constant(120)})
+        getInitialValue: Fun.constant({ x: Fun.constant(120), y: Fun.constant(120) })
       },
       stepSize: 10,
 
@@ -216,7 +220,7 @@ export default (): void => {
         Slider.parts().thumb({
           dom: {
             tag: 'div',
-            classes: ['demo-sliding-thumb'],
+            classes: [ 'demo-sliding-thumb' ],
             styles: {
               'height': '30px',
               'width': '10px',
@@ -236,6 +240,8 @@ export default (): void => {
   const isTouch = platform.deviceType.isTouch();
 
   DomEvent.bind(body, 'click', () => {
-    if (!isTouch) { Keying.focusIn(slider1); }
+    if (!isTouch) {
+      Keying.focusIn(slider1);
+    }
   });
 };

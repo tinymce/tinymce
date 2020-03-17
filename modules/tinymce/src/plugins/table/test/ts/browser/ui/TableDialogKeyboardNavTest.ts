@@ -19,18 +19,16 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', (
     const htmlEmptyTable = '<table><tr><td>X</td></tr></table>';
 
     const sSetTable = tinyApis.sSetContent(htmlEmptyTable);
-    const sSetCursor = tinyApis.sSetCursor([0, 0, 0], 0);
+    const sSetCursor = tinyApis.sSetCursor([ 0, 0, 0 ], 0);
     // Tab key press
     const sPressTabKey = Keyboard.sKeydown(doc, Keys.tab(), { });
 
     // Assert focus is on the expected form element
-    const sAssertFocusOnItem = (label, selector) => {
-      return FocusTools.sTryOnSelector(
-        `Focus should be on: ${label}`,
-        doc,
-        selector
-      );
-    };
+    const sAssertFocusOnItem = (label, selector) => FocusTools.sTryOnSelector(
+      `Focus should be on: ${label}`,
+      doc,
+      selector
+    );
 
     Pipeline.async({}, Log.steps('TBA', 'Table: Open dialog, test the tab key navigation cycles through all focusable fields in General and Advanced tabs', [
       // Create table and set focus
@@ -86,10 +84,10 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', (
       sAssertFocusOnItem('Advanced Tab', '.tox-dialog__body-nav-item:contains("Advanced")'),
     ]), onSuccess, onFailure);
   }, {
-      plugins: 'table',
-      toolbar: 'tableprops',
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce',
-      table_advtab: true
-    }, success, failure);
+    plugins: 'table',
+    toolbar: 'tableprops',
+    theme: 'silver',
+    base_url: '/project/tinymce/js/tinymce',
+    table_advtab: true
+  }, success, failure);
 });

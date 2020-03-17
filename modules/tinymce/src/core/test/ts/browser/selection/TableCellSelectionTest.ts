@@ -44,12 +44,12 @@ UnitTest.asynctest('browser.tinymce.core.selection.TableCellSelectionTest', func
     Logger.t('Get table cells from fake selection', Chain.asStep(viewBlock, [
       cSetHtml('<table><tbody><tr><td data-mce-selected="1">A</td><td>B</td></tr><tr><td data-mce-selected="1">C</td><td>D</td></tr></tbody></table>'),
       cGetCellsFromElement,
-      cAssertCellContents(['A', 'C'])
+      cAssertCellContents([ 'A', 'C' ])
     ])),
     Logger.t('Get table cells from ranges', Chain.asStep(viewBlock, [
       cSetHtml('<table><tbody><tr><td>A</td><td>B</td></tr><tr><td>C</td><td>D</td></tr></tbody></table>'),
-      cGetCellsFromRanges([[0, 0, 0, 1], [0, 0, 1, 1]]),
-      cAssertCellContents(['B', 'D'])
+      cGetCellsFromRanges([[ 0, 0, 0, 1 ], [ 0, 0, 1, 1 ]]),
+      cAssertCellContents([ 'B', 'D' ])
     ]))
   ], function () {
     viewBlock.detach();

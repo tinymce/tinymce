@@ -5,7 +5,7 @@ import Element from './Element';
 
 type ElementTuple<T> = { [K in keyof T]: Element<T[K]> };
 
-const fromHtml = function <T extends Node[]>(html: string, scope?: Document): ElementTuple<T> {
+const fromHtml = function <T extends Node[]> (html: string, scope?: Document): ElementTuple<T> {
   const doc: Document = scope || document;
   const div = doc.createElement('div');
   div.innerHTML = html;

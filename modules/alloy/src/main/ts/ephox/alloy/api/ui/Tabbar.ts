@@ -8,52 +8,48 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, components, spec, externals) => {
-  return {
-    'uid': detail.uid,
-    'dom': detail.dom,
-    'components': components,
-    'debug.sketcher': 'Tabbar',
+const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, components, spec, externals) => ({
+  'uid': detail.uid,
+  'dom': detail.dom,
+  components,
+  'debug.sketcher': 'Tabbar',
 
-    'domModification': {
-      attributes: {
-        role: 'tablist'
-      }
-    },
+  'domModification': {
+    attributes: {
+      role: 'tablist'
+    }
+  },
 
-    'behaviours': SketchBehaviours.augment(
-      detail.tabbarBehaviours,
-      [
-        Highlighting.config({
-          highlightClass: detail.markers.selectedClass,
-          itemClass: detail.markers.tabClass,
+  'behaviours': SketchBehaviours.augment(
+    detail.tabbarBehaviours,
+    [
+      Highlighting.config({
+        highlightClass: detail.markers.selectedClass,
+        itemClass: detail.markers.tabClass,
 
-          // https://www.w3.org/TR/2010/WD-wai-aria-practices-20100916/#tabpanel
-          // Consider a more seam-less way of combining highlighting and toggling
-          onHighlight (tabbar, tab) {
-            // TODO: Integrate highlighting and toggling in a nice way
-            Attr.set(tab.element(), 'aria-selected', 'true');
-          },
-          onDehighlight (tabbar, tab) {
-            Attr.set(tab.element(), 'aria-selected', 'false');
-          }
-        }),
+        // https://www.w3.org/TR/2010/WD-wai-aria-practices-20100916/#tabpanel
+        // Consider a more seam-less way of combining highlighting and toggling
+        onHighlight(tabbar, tab) {
+          // TODO: Integrate highlighting and toggling in a nice way
+          Attr.set(tab.element(), 'aria-selected', 'true');
+        },
+        onDehighlight(tabbar, tab) {
+          Attr.set(tab.element(), 'aria-selected', 'false');
+        }
+      }),
 
-        Keying.config({
-          mode: 'flow',
-          getInitial (tabbar) {
-            // Restore focus to the previously highlighted tab.
-            return Highlighting.getHighlighted(tabbar).map((tab) => {
-              return tab.element();
-            });
-          },
-          selector: '.' + detail.markers.tabClass,
-          executeOnMove: true
-        })
-      ]
-    )
-  };
-};
+      Keying.config({
+        mode: 'flow',
+        getInitial(tabbar) {
+          // Restore focus to the previously highlighted tab.
+          return Highlighting.getHighlighted(tabbar).map((tab) => tab.element());
+        },
+        selector: '.' + detail.markers.tabClass,
+        executeOnMove: true
+      })
+    ]
+  )
+});
 
 const Tabbar: TabbarSketcher = Sketcher.composite({
   name: 'Tabbar',

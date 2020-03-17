@@ -231,7 +231,7 @@ UnitTest.test('EraseOperationsTest', function () {
   Assertions.checkDelete(Option.some({ section: 0, row: 1, column: 2 }),
     Option.some(deleteExpected10),
 
-   '<table border="1">' +
+    '<table border="1">' +
      '<tbody><tr><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr>' +
        '<tr><td>10</td><td rowspan="2">11 21</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td></tr>' +
        '<tr><td>20</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td></tr>' +
@@ -244,7 +244,7 @@ UnitTest.test('EraseOperationsTest', function () {
        '<tr><td>90</td><td>91</td><td>92</td><td>93</td><td>94</td><td>95</td><td>96</td><td>97</td><td>98</td><td>99</td></tr></tbody>' +
    '</table>',
 
-   TableOperations.eraseRows, [
+    TableOperations.eraseRows, [
       { section: 0, row: 1, column: 2 },
       { section: 0, row: 3, column: 2 },
       { section: 0, row: 4, column: 2 }
@@ -263,7 +263,7 @@ UnitTest.test('EraseOperationsTest', function () {
   Assertions.checkDelete(Option.some({ section: 0, row: 1, column: 1 }),
     Option.some(deleteExpected11),
 
-     '<table border="1">' +
+    '<table border="1">' +
        '<tbody><tr><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr>' +
          '<tr><td>10</td><td rowspan="2">11 21</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td></tr>' +
          '<tr><td>20</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td></tr>' +
@@ -276,11 +276,11 @@ UnitTest.test('EraseOperationsTest', function () {
          '<tr><td>90</td><td>91</td><td>92</td><td>93</td><td>94</td><td>95</td><td>96</td><td>97</td><td>98</td><td>99</td></tr></tbody>' +
      '</table>',
 
-      TableOperations.eraseColumns, [
-        { section: 0, row: 1, column: 1 },
-        { section: 0, row: 3, column: 1 },
-        { section: 0, row: 4, column: 1 }
-      ],
+    TableOperations.eraseColumns, [
+      { section: 0, row: 1, column: 1 },
+      { section: 0, row: 3, column: 1 },
+      { section: 0, row: 4, column: 1 }
+    ],
     platform
   );
 
@@ -307,9 +307,9 @@ UnitTest.test('EraseOperationsTest', function () {
       '<tr><td>90</td><td>91</td><td>92</td><td>93</td><td>94</td><td>95</td><td>96</td><td>97</td><td>98</td><td>99</td></tr></tbody>' +
     '</table>',
 
-     TableOperations.eraseColumns, [
-        { section: 0, row: 3, column: 3 }
-      ],
+    TableOperations.eraseColumns, [
+      { section: 0, row: 3, column: 3 }
+    ],
     platform
   );
 
@@ -434,13 +434,13 @@ UnitTest.test('EraseOperationsTest', function () {
     '<table border="1"><tbody><tr><td rowspan="2">row 0 cell 0 row 1 cell 0 </td><td>row 0 cell 1</td><td rowspan="3">row 0 cell 2 row 1 cell 2 row 2 cell 2 </td></tr><tr><td>row 1 cell 1</td></tr><tr><td>row 2 cell 0</td><td>row 2 cell 1</td></tr><tr><td>row 3 cell 0</td><td>row 3 cell 1</td><td>row 3 cell 2</td></tr><tr><td>row 4 cell 0</td><td>row 4 cell 1</td><td>row 4 cell 2</td></tr></tbody></table>',
 
     TableOperations.eraseColumns, [
-        { section: 0, row: 0, column: 2 },
-        { section: 0, row: 2, column: 1 },
-        { section: 0, row: 3, column: 1 },
-        { section: 0, row: 3, column: 2 },
-        { section: 0, row: 4, column: 1 },
-        { section: 0, row: 4, column: 2 }
-      ],
+      { section: 0, row: 0, column: 2 },
+      { section: 0, row: 2, column: 1 },
+      { section: 0, row: 3, column: 1 },
+      { section: 0, row: 3, column: 2 },
+      { section: 0, row: 4, column: 1 },
+      { section: 0, row: 4, column: 2 }
+    ],
     platform
   );
 
@@ -450,14 +450,14 @@ UnitTest.test('EraseOperationsTest', function () {
     '<table border="1"><tbody><tr><td rowspan="2">row 0 cell 0 row 1 cell 0 </td><td>row 0 cell 1</td><td rowspan="3">row 0 cell 2 row 1 cell 2 row 2 cell 2 </td></tr><tr><td>row 1 cell 1</td></tr><tr><td>row 2 cell 0</td><td>row 2 cell 1</td></tr><tr><td>row 3 cell 0</td><td>row 3 cell 1</td><td>row 3 cell 2</td></tr><tr><td>row 4 cell 0</td><td>row 4 cell 1</td><td>row 4 cell 2</td></tr></tbody></table>',
 
     TableOperations.eraseRows, [
-        { section: 0, row: 0, column: 2 },
-        { section: 0, row: 2, column: 1 },
-        { section: 0, row: 3, column: 1 },
-        { section: 0, row: 3, column: 2 },
-        { section: 0, row: 4, column: 1 },
-        { section: 0, row: 4, column: 2 }
-      ],
-      platform
+      { section: 0, row: 0, column: 2 },
+      { section: 0, row: 2, column: 1 },
+      { section: 0, row: 3, column: 1 },
+      { section: 0, row: 3, column: 2 },
+      { section: 0, row: 4, column: 1 },
+      { section: 0, row: 4, column: 2 }
+    ],
+    platform
   );
 
   Assertions.checkDelete(Option.none(),
@@ -466,10 +466,10 @@ UnitTest.test('EraseOperationsTest', function () {
     '<table border="1"><tbody><tr><td rowspan="2">row 0 cell 0 row 1 cell 0 </td><td>row 0 cell 1</td><td rowspan="3">row 0 cell 2 row 1 cell 2 row 2 cell 2 </td></tr><tr><td>row 1 cell 1</td></tr><tr><td>row 2 cell 0</td><td>row 2 cell 1</td></tr><tr><td>row 3 cell 0</td><td>row 3 cell 1</td><td>row 3 cell 2</td></tr><tr><td>row 4 cell 0</td><td>row 4 cell 1</td><td>row 4 cell 2</td></tr></tbody></table>',
 
     TableOperations.eraseColumns, [
-        { section: 0, row: 4, column: 0 },
-        { section: 0, row: 4, column: 1 },
-        { section: 0, row: 4, column: 2 }
-      ],
+      { section: 0, row: 4, column: 0 },
+      { section: 0, row: 4, column: 1 },
+      { section: 0, row: 4, column: 2 }
+    ],
     platform
   );
 

@@ -7,7 +7,7 @@ import { OptionalDomSchema, RawDomSchema, SimpleOrSketchSpec, SketchSpec } from 
 import { CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { ConfiguredPart } from '../../parts/AlloyParts';
 
-export interface SlotContainerDetail extends CompositeSketchDetail  {
+export interface SlotContainerDetail extends CompositeSketchDetail {
   uid: string;
   dom: RawDomSchema;
   slotBehaviours: SketchBehaviours;

@@ -76,9 +76,9 @@ const moveToCeFalseHorizontally = (direction: HDirection, editor: Editor, getNex
 type WalkerFunction = (root: Element, pred: (clientRect: LineWalker.ClientRectLine) => boolean, pos: CaretPosition) => LineWalker.ClientRectLine[];
 
 const moveToCeFalseVertically = (direction: LineWalker.VDirection, editor: Editor, walkerFn: WalkerFunction, range: Range) => {
-  let caretPosition, linePositions, nextLinePositions;
-  let closestNextLineRect, caretClientRect, clientX;
-  let dist1, dist2, contentEditableFalseNode;
+  let caretPosition; let linePositions; let nextLinePositions;
+  let closestNextLineRect; let caretClientRect; let clientX;
+  let dist1; let dist2; let contentEditableFalseNode;
 
   contentEditableFalseNode = getSelectedNode(range);
   caretPosition = CaretUtils.getNormalizedRangeEndPoint(direction, editor.getBody(), range);
@@ -136,7 +136,7 @@ const createTextBlock = (editor: Editor): Element => {
 };
 
 const exitPreBlock = (editor: Editor, direction: HDirection, range: Range): void => {
-  let pre, caretPos, newBlock;
+  let pre; let caretPos; let newBlock;
   const caretWalker = CaretWalker(editor.getBody());
   const getNextVisualCaretPosition = Fun.curry(CaretUtils.getVisualCaretPosition, caretWalker.next);
   const getPrevVisualCaretPosition = Fun.curry(CaretUtils.getVisualCaretPosition, caretWalker.prev);
@@ -209,47 +209,41 @@ const getVerticalRange = (editor: Editor, down: boolean): Range => {
   return null;
 };
 
-const moveH = (editor: Editor, forward: boolean) => {
-  return () => {
-    const newRng = getHorizontalRange(editor, forward);
+const moveH = (editor: Editor, forward: boolean) => () => {
+  const newRng = getHorizontalRange(editor, forward);
 
-    if (newRng) {
-      editor.selection.setRng(newRng);
-      return true;
-    } else {
-      return false;
-    }
-  };
+  if (newRng) {
+    editor.selection.setRng(newRng);
+    return true;
+  } else {
+    return false;
+  }
 };
 
-const moveV = (editor: Editor, down: boolean) => {
-  return () => {
-    const newRng = getVerticalRange(editor, down);
+const moveV = (editor: Editor, down: boolean) => () => {
+  const newRng = getVerticalRange(editor, down);
 
-    if (newRng) {
-      editor.selection.setRng(newRng);
-      return true;
-    } else {
-      return false;
-    }
-  };
+  if (newRng) {
+    editor.selection.setRng(newRng);
+    return true;
+  } else {
+    return false;
+  }
 };
 
 const isCefPosition = (forward: boolean) => (pos: CaretPosition) => forward ? isAfterContentEditableFalse(pos) : isBeforeContentEditableFalse(pos);
 
-const moveToLineEndPoint = (editor: Editor, forward: boolean) => {
-  return () => {
-    const from = forward ? CaretPosition.fromRangeEnd(editor.selection.getRng()) : CaretPosition.fromRangeStart(editor.selection.getRng());
-    const result = forward ? getPositionsUntilNextLine(editor.getBody(), from) : getPositionsUntilPreviousLine(editor.getBody(), from);
-    const to = forward ? Arr.last(result.positions) : Arr.head(result.positions);
-    return to.filter(isCefPosition(forward)).fold(
-      Fun.constant(false),
-      (pos) => {
-        editor.selection.setRng(pos.toRange());
-        return true;
-      }
-    );
-  };
+const moveToLineEndPoint = (editor: Editor, forward: boolean) => () => {
+  const from = forward ? CaretPosition.fromRangeEnd(editor.selection.getRng()) : CaretPosition.fromRangeStart(editor.selection.getRng());
+  const result = forward ? getPositionsUntilNextLine(editor.getBody(), from) : getPositionsUntilPreviousLine(editor.getBody(), from);
+  const to = forward ? Arr.last(result.positions) : Arr.head(result.positions);
+  return to.filter(isCefPosition(forward)).fold(
+    Fun.constant(false),
+    (pos) => {
+      editor.selection.setRng(pos.toRange());
+      return true;
+    }
+  );
 };
 
 export {

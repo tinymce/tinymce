@@ -205,18 +205,16 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
     store.sClear
   ]);
 
-  const sTestMouseOperation = (eventName: string, op: Chain<any, any>) => {
-    return GeneralSteps.sequence([
-      Chain.asStep(page, [ op ]),
-      store.sAssertEq(
-        'Checking event log after ' + eventName + ' on root',
-        [
-          { eventName, target: 'gui-events-test-container' }
-        ]
-      ),
-      store.sClear
-    ]);
-  };
+  const sTestMouseOperation = (eventName: string, op: Chain<any, any>) => GeneralSteps.sequence([
+    Chain.asStep(page, [ op ]),
+    store.sAssertEq(
+      'Checking event log after ' + eventName + ' on root',
+      [
+        { eventName, target: 'gui-events-test-container' }
+      ]
+    ),
+    store.sClear
+  ]);
 
   const sTestUnbind = GeneralSteps.sequence([
     Step.sync(() => {
@@ -252,7 +250,7 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
   const sTestTransitionEnd = Step.pass;
 
   const gui = GuiEvents.setup(page, {
-    triggerEvent,
+    triggerEvent
   });
 
   Pipeline.async({}, [

@@ -14,7 +14,7 @@ import Tools from '../api/util/Tools';
 import Editor from '../api/Editor';
 
 const getStartNode = function (rng) {
-  const sc = rng.startContainer, so = rng.startOffset;
+  const sc = rng.startContainer; const so = rng.startOffset;
   if (NodeType.isText(sc)) {
     return so === 0 ? Option.some(Element.fromDom(sc)) : Option.none();
   } else {
@@ -23,7 +23,7 @@ const getStartNode = function (rng) {
 };
 
 const getEndNode = function (rng) {
-  const ec = rng.endContainer, eo = rng.endOffset;
+  const ec = rng.endContainer; const eo = rng.endOffset;
   if (NodeType.isText(ec)) {
     return eo === ec.data.length ? Option.some(Element.fromDom(ec)) : Option.none();
   } else {
@@ -33,23 +33,23 @@ const getEndNode = function (rng) {
 
 const getFirstChildren = function (node) {
   return Traverse.firstChild(node).fold(
-    Fun.constant([node]),
+    Fun.constant([ node ]),
     function (child) {
-      return [node].concat(getFirstChildren(child));
+      return [ node ].concat(getFirstChildren(child));
     }
   );
 };
 
 const getLastChildren = function (node) {
   return Traverse.lastChild(node).fold(
-    Fun.constant([node]),
+    Fun.constant([ node ]),
     function (child) {
       if (Node.name(child) === 'br') {
         return Traverse.prevSibling(child).map(function (sibling) {
-          return [node].concat(getLastChildren(sibling));
+          return [ node ].concat(getLastChildren(sibling));
         }).getOr([]);
       } else {
-        return [node].concat(getLastChildren(child));
+        return [ node ].concat(getLastChildren(child));
       }
     }
   );
@@ -64,7 +64,7 @@ const hasAllContentsSelected = function (elm, rng) {
 };
 
 const moveEndPoint = (dom, rng: Range, node, start: boolean): void => {
-  const root = node, walker = new TreeWalker(node, root);
+  const root = node; const walker = new TreeWalker(node, root);
   const nonEmptyElementsMap = dom.schema.getNonEmptyElements();
 
   do {

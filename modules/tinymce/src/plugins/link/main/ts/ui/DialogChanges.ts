@@ -14,28 +14,24 @@ export interface DialogDelta {
   text: string;
 }
 
-const findTextByValue = (value: string, catalog: ListItem[]): Option<ListValue> => {
-  return Arr.findMap(catalog, (item) => {
-    // TODO TINY-2236 re-enable this (support will need to be added to bridge)
-    // return 'items' in item ? findTextByValue(value, item.items) :
-     return Option.some(item).filter((i) => i.value === value);
-  });
-};
+const findTextByValue = (value: string, catalog: ListItem[]): Option<ListValue> => Arr.findMap(catalog, (item) =>
+// TODO TINY-2236 re-enable this (support will need to be added to bridge)
+// return 'items' in item ? findTextByValue(value, item.items) :
+  Option.some(item).filter((i) => i.value === value)
+);
 const getDelta = (persistentText: string, fieldName: string, catalog: ListItem[], data: Partial<LinkDialogData>): Option<DialogDelta> => {
   const value = data[fieldName];
   const hasPersistentText = persistentText.length > 0;
-  return value !== undefined ? findTextByValue(value, catalog).map((i) => {
-    return {
-      url: {
-        value: i.value,
-        meta: {
-          text: hasPersistentText ? persistentText : i.text,
-          attach: Fun.noop
-        }
-      },
-      text: hasPersistentText ? persistentText : i.text
-    };
-  }) : Option.none();
+  return value !== undefined ? findTextByValue(value, catalog).map((i) => ({
+    url: {
+      value: i.value,
+      meta: {
+        text: hasPersistentText ? persistentText : i.text,
+        attach: Fun.noop
+      }
+    },
+    text: hasPersistentText ? persistentText : i.text
+  })) : Option.none();
 };
 
 const findCatalog = (settings: LinkDialogInfo, fieldName: string): Option<ListItem[]> => {

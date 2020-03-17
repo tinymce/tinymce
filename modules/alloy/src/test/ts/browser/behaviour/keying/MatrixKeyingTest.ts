@@ -24,34 +24,32 @@ UnitTest.asynctest('Matrix Keying Test', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
     const rows = Arr.chunk(cells, 6);
 
-    const item = (classes: string[]) => {
-      return Container.sketch({
-        dom: {
-          tag: 'span',
-          styles: {
-            display: 'inline-block',
-            width: '20px',
-            height: '20px',
-            margin: '1px',
-            border: '1px solid black'
-          },
-          classes: [ 'cell' ].concat(classes)
+    const item = (classes: string[]) => Container.sketch({
+      dom: {
+        tag: 'span',
+        styles: {
+          display: 'inline-block',
+          width: '20px',
+          height: '20px',
+          margin: '1px',
+          border: '1px solid black'
         },
-        events: AlloyEvents.derive([
-          AlloyEvents.runOnExecute(
-            store.adder('item.execute: ' + classes.join(','))
-          )
-        ]),
-        containerBehaviours: Behaviour.derive([
-          Focusing.config({ })
-        ])
-      });
-    };
+        classes: [ 'cell' ].concat(classes)
+      },
+      events: AlloyEvents.derive([
+        AlloyEvents.runOnExecute(
+          store.adder('item.execute: ' + classes.join(','))
+        )
+      ]),
+      containerBehaviours: Behaviour.derive([
+        Focusing.config({ })
+      ])
+    });
 
     return GuiFactory.build(
       Container.sketch({
         dom: {
-          classes: [ 'matrix-keying-test'],
+          classes: [ 'matrix-keying-test' ],
           styles: {
             background: 'white',
             width: '150px',
@@ -69,32 +67,26 @@ UnitTest.asynctest('Matrix Keying Test', (success, failure) => {
           })
         ]),
         // 4 x 6 grid size
-        components: Arr.map(rows, (row) => {
-          return Container.sketch({
-            dom: {
-              tag: 'span',
-              classes: [ 'row' ]
-            },
-            components: Arr.map(row, (c) => {
-              return item([ c ]);
-            })
-          });
-        })
+        components: Arr.map(rows, (row) => Container.sketch({
+          dom: {
+            tag: 'span',
+            classes: [ 'row' ]
+          },
+          components: Arr.map(row, (c) => item([ c ]))
+        }))
       })
     );
 
   }, (doc, body, gui, component, store) => {
 
     const targets: any = Objects.wrapAll(
-      Arr.map(cells, (sq) => {
-        return {
-          key: sq,
-          value: {
-            label: sq,
-            selector: '.' + sq
-          }
-        };
-      })
+      Arr.map(cells, (sq) => ({
+        key: sq,
+        value: {
+          label: sq,
+          selector: '.' + sq
+        }
+      }))
     );
 
     return [

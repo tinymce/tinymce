@@ -15,7 +15,7 @@ import Editor from '../api/Editor';
  */
 
 const getAbsolutePosition = function (elm) {
-  let doc, docElem, win, clientRect;
+  let doc; let docElem; let win; let clientRect;
 
   clientRect = elm.getBoundingClientRect();
   doc = elm.ownerDocument;
@@ -38,7 +38,7 @@ const getScrollPosition = function (editor: Editor) {
 };
 
 const getBodyScroll = function (editor: Editor) {
-  const body = editor.getBody(), docElm = editor.getDoc().documentElement;
+  const body = editor.getBody(); const docElm = editor.getDoc().documentElement;
   const inlineScroll = { left: body.scrollLeft, top: body.scrollTop };
   const iframeScroll = { left: body.scrollLeft || docElm.scrollLeft, top: body.scrollTop || docElm.scrollTop };
 

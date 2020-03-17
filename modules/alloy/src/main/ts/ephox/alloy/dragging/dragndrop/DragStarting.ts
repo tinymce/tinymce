@@ -16,7 +16,7 @@ const dragStart = (component: AlloyComponent, target: Element, config: DragStart
 
   config.getData.each((getData) => {
     const data = getData(component);
-    const types = [config.type].concat(config.phoneyTypes);
+    const types = [ config.type ].concat(config.phoneyTypes);
 
     DataTransfers.setData(transfer, types, data);
   });
@@ -35,7 +35,7 @@ const dragStart = (component: AlloyComponent, target: Element, config: DragStart
 const schema: FieldProcessorAdt[] = [
   FieldSchema.defaultedString('type', 'text/plain'),
   FieldSchema.defaulted('phoneyTypes', []),
-  FieldSchema.defaultedStringEnum('effectAllowed', 'all', ['copy', 'move', 'link', 'all', 'copyLink', 'linkMove', 'copyMove']),
+  FieldSchema.defaultedStringEnum('effectAllowed', 'all', [ 'copy', 'move', 'link', 'all', 'copyLink', 'linkMove', 'copyMove' ]),
   FieldSchema.optionFunction('getData'),
   FieldSchema.optionFunction('getImageParent'),
   FieldSchema.optionFunction('getImage'),
@@ -45,13 +45,11 @@ const schema: FieldProcessorAdt[] = [
   FieldSchema.defaultedFunction('onDragover', Fun.identity),
   FieldSchema.defaultedFunction('onDragend', Fun.identity),
   FieldSchema.state('instance', () => {
-    const exhibit = () => {
-      return DomModification.nu({
-        attributes: {
-          draggable: 'true'
-        }
-      });
-    };
+    const exhibit = () => DomModification.nu({
+      attributes: {
+        draggable: 'true'
+      }
+    });
 
     const handlers = (config: DragStartingConfig): AlloyEvents.AlloyEventRecord => AlloyEvents.derive([
       AlloyEvents.run(NativeEvents.dragover(), config.onDragover),

@@ -39,10 +39,10 @@ interface InternalTemplate {
   };
 }
 
-type DialogData = {
+interface DialogData {
   template: string;
   preview: string;
-};
+}
 
 type UpdateDialogCallback = (dialogApi: Types.Dialog.DialogInstanceApi<DialogData>, template: InternalTemplate, previewHtml: string) => void;
 
@@ -105,38 +105,28 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
     }));
   };
 
-  const createSelectBoxItems = (templates: InternalTemplate[]) => {
-    return Arr.map(templates, (t) => {
-      return {
-        text: t.text,
-        value: t.text
-      };
-    });
-  };
+  const createSelectBoxItems = (templates: InternalTemplate[]) => Arr.map(templates, (t) => ({
+    text: t.text,
+    value: t.text
+  }));
 
-  const findTemplate = (templates: InternalTemplate[], templateTitle: string) => {
-    return Arr.find(templates, (t) => {
-      return t.text === templateTitle;
-    });
-  };
+  const findTemplate = (templates: InternalTemplate[], templateTitle: string) => Arr.find(templates, (t) => t.text === templateTitle);
 
   const loadFailedAlert = (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
     editor.windowManager.alert('Could not load the specified template.', () => api.focus('template'));
   };
 
-  const getTemplateContent = (t: InternalTemplate) => {
-    return new Promise<string>((resolve, reject) => {
-      t.value.url.fold(() => resolve(t.value.content.getOr('')), (url) => XHR.send({
-        url,
-        success (html: string) {
-          resolve(html);
-        },
-        error: (e) => {
-          reject(e);
-        }
-      }));
-    });
-  };
+  const getTemplateContent = (t: InternalTemplate) => new Promise<string>((resolve, reject) => {
+    t.value.url.fold(() => resolve(t.value.content.getOr('')), (url) => XHR.send({
+      url,
+      success(html: string) {
+        resolve(html);
+      },
+      error: (e) => {
+        reject(e);
+      }
+    }));
+  });
 
   const onChange = (templates: InternalTemplate[], updateDialog: UpdateDialogCallback) => (api: Types.Dialog.DialogInstanceApi<DialogData>, change: { name: string }) => {
     if (change.name === 'template') {

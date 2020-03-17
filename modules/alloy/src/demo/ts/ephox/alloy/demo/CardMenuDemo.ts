@@ -21,82 +21,74 @@ export default (): void => {
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  const makeBack = (text: string): ItemSpec => {
-    return {
-      data: TieredMenu.collapseItem(text),
-      type: 'item',
-      dom: {
-        tag: 'div',
-        innerHtml: text
-      },
-      components: [ ]
-    };
-  };
+  const makeBack = (text: string): ItemSpec => ({
+    data: TieredMenu.collapseItem(text),
+    type: 'item',
+    dom: {
+      tag: 'div',
+      innerHtml: text
+    },
+    components: [ ]
+  });
 
-  const makeItem = (value: string, text: string): ItemSpec => {
-    return {
-      data: {
-        value
-      },
-      type: 'item',
-      dom: {
-        tag: 'div',
-        innerHtml: text
-      },
-      components: [ ]
-    };
-  };
+  const makeItem = (value: string, text: string): ItemSpec => ({
+    data: {
+      value
+    },
+    type: 'item',
+    dom: {
+      tag: 'div',
+      innerHtml: text
+    },
+    components: [ ]
+  });
 
-  const makeSeparator = (text: string) => {
-    return {
-      type: 'separator',
-      dom: {
-        tag: 'div',
-        classes: [ 'separator' ]
-      },
-      components: [
-        {
-          dom: {
-            tag: 'strong',
-            innerHtml: text
+  const makeSeparator = (text: string) => ({
+    type: 'separator',
+    dom: {
+      tag: 'div',
+      classes: [ 'separator' ]
+    },
+    components: [
+      {
+        dom: {
+          tag: 'strong',
+          innerHtml: text
+        }
+      }
+    ]
+  });
+
+  const makeMenu = (value: string, items: ItemSpec[]) => ({
+    value,
+    dom: {
+      tag: 'div'
+    },
+    components: [
+      Objects.exclude(makeSeparator(value), [ 'type' ]),
+      {
+        dom: {
+          tag: 'div',
+          classes: [ 'menu-items-container' ]
+        },
+        components: [
+          Menu.parts().items({ })
+        ]
+      }
+    ],
+    items,
+    menuBehaviours: Behaviour.derive([
+      Transitioning.config({
+        initialState: 'after',
+        routes: Transitioning.createTristate('before', 'current', 'after', {
+          transition: {
+            property: 'transform',
+            transitionClass: 'transitioning'
           }
-        }
-      ]
-    };
-  };
-
-  const makeMenu = (value: string, items: ItemSpec[]) => {
-    return {
-      value,
-      dom: {
-        tag: 'div'
-      },
-      components: [
-        Objects.exclude(makeSeparator(value), [ 'type' ]),
-        {
-          dom: {
-            tag: 'div',
-            classes: [ 'menu-items-container' ]
-          },
-          components: [
-            Menu.parts().items({ })
-          ]
-        }
-      ],
-      items,
-      menuBehaviours: Behaviour.derive([
-        Transitioning.config({
-          initialState: 'after',
-          routes: Transitioning.createTristate('before', 'current', 'after', {
-            transition: {
-              property: 'transform',
-              transitionClass: 'transitioning'
-            }
-          })
         })
-      ])
-    };
-  };
+      })
+    ])
+  });
 
   // https://jsfiddle.net/xuto3by2/1/
   const tieredMenu = TieredMenu.sketch({
@@ -113,22 +105,22 @@ export default (): void => {
     // For animations, need things to stay around in the DOM (at least until animation is done)
     stayInDom: true,
 
-    onExecute () {
+    onExecute() {
       console.log('Executing');
       return Option.some<boolean>(true);
     },
-    onEscape () {
+    onEscape() {
       console.log('Escaping');
       return Option.some<boolean>(true);
     },
-    onOpenMenu (container: AlloyComponent, menu: AlloyComponent) {
+    onOpenMenu(container: AlloyComponent, menu: AlloyComponent) {
       const w = Width.get(container.element());
       Width.set(menu.element(), w);
       if (Transitioning.jumpTo) {
         Transitioning.jumpTo(menu, 'current');
       }
     },
-    onOpenSubmenu (container, item, submenu) {
+    onOpenSubmenu(container, item, submenu) {
       const w = Width.get(container.element());
       const menu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
       const menuComp = container.getSystem().getByDom(menu).getOrDie();
@@ -141,7 +133,7 @@ export default (): void => {
       }
     },
 
-    onCollapseMenu (container, item, menu) {
+    onCollapseMenu(container, item, menu) {
       const submenu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
       const submenuComp = container.getSystem().getByDom(submenu).getOrDie();
       if (Transitioning.progressTo) {

@@ -19,13 +19,11 @@ UnitTest.asynctest('HttpDownloadTest', (success, failure) => {
         total += loaded;
       }
     }
-  ).bindFuture((blob) => {
-    return FutureResult.fromFuture<string, HttpError>(readBlobAsText(blob));
-  }).get((result) => {
+  ).bindFuture((blob) => FutureResult.fromFuture<string, HttpError>(readBlobAsText(blob))).get((result) => {
     result.fold(
       (err) => failure(err.message),
       (actualText) => {
-        const expectedText = JSON.stringify({ results: { data: '123' } }, null, '  ');
+        const expectedText = JSON.stringify({ results: { data: '123' }}, null, '  ');
 
         assert.eq(expectedText, actualText, 'Should be the expected text');
         assert.eq(true, progressCalls > 1, 'Should be more than 1 progress calls');

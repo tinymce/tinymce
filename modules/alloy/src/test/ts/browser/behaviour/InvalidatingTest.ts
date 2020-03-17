@@ -14,29 +14,27 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
   const root = Cell(Option.none<Element<any>>());
 
-  GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build({
-        dom: {
-          tag: 'input'
-        },
-        behaviours: Behaviour.derive([
-          Invalidating.config({
-            invalidClass: 'test-invalid',
-            getRoot: root.get,
-            notify: {},
-            validator: {
-              validate (input) {
-                const value = Value.get(input.element());
-                const res = value === 'good-value' ? Result.value('good-value') : Result.error('bad value: ' + value);
-                return Future.pure(res);
-              },
-              onEvent: 'custom.test.validate'
-            }
-          })
-        ])
-      }
-    );
-  }, (doc, body, gui, component, store) => {
+  GuiSetup.setup((store, doc, body) => GuiFactory.build({
+    dom: {
+      tag: 'input'
+    },
+    behaviours: Behaviour.derive([
+      Invalidating.config({
+        invalidClass: 'test-invalid',
+        getRoot: root.get,
+        notify: {},
+        validator: {
+          validate(input) {
+            const value = Value.get(input.element());
+            const res = value === 'good-value' ? Result.value('good-value') : Result.error('bad value: ' + value);
+            return Future.pure(res);
+          },
+          onEvent: 'custom.test.validate'
+        }
+      })
+    ])
+  }
+  ), (doc, body, gui, component, store) => {
 
     // This will be used for the other root.
     const other = GuiFactory.build({
@@ -46,126 +44,96 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
     });
     gui.add(other);
 
-    const sCheckValidOf = (label: string, comp: AlloyComponent) => {
-      return Logger.t(
-        label,
-        Step.control(
+    const sCheckValidOf = (label: string, comp: AlloyComponent) => Logger.t(
+      label,
+      Step.control(
 
-          Assertions.sAssertStructure(
-            'Checking structure after marking valid',
-            ApproxStructure.build((s, str, arr) => {
-              return s.element('input', {
-                classes: [
-                  arr.not('test-invalid')
-                ]
-              });
-            }),
-            comp.element()
-          ),
-          Guard.tryUntil('valid')
-        )
-      );
-    };
+        Assertions.sAssertStructure(
+          'Checking structure after marking valid',
+          ApproxStructure.build((s, str, arr) => s.element('input', {
+            classes: [
+              arr.not('test-invalid')
+            ]
+          })),
+          comp.element()
+        ),
+        Guard.tryUntil('valid')
+      )
+    );
 
-    const sCheckInvalidOf = (label: string, comp: AlloyComponent) => {
-      return Logger.t(
-        label,
-        Step.control(
-          Assertions.sAssertStructure(
-            'Checking structure after marking invalid',
-            ApproxStructure.build((s, str, arr) => {
-              return s.element('input', {
-                classes: [
-                  arr.has('test-invalid')
-                ]
-              });
-            }),
-            comp.element()
-          ),
-          Guard.tryUntil('invalid')
-        )
-      );
-    };
+    const sCheckInvalidOf = (label: string, comp: AlloyComponent) => Logger.t(
+      label,
+      Step.control(
+        Assertions.sAssertStructure(
+          'Checking structure after marking invalid',
+          ApproxStructure.build((s, str, arr) => s.element('input', {
+            classes: [
+              arr.has('test-invalid')
+            ]
+          })),
+          comp.element()
+        ),
+        Guard.tryUntil('invalid')
+      )
+    );
 
-    const sCheckValid = (label: string) => {
-      return sCheckValidOf(label, component);
-    };
+    const sCheckValid = (label: string) => sCheckValidOf(label, component);
 
-    const sCheckInvalid = (label: string) => {
-      return sCheckInvalidOf(label, component);
-    };
+    const sCheckInvalid = (label: string) => sCheckInvalidOf(label, component);
 
-    const sCheckIsInvalidOf = (label: string, comp: AlloyComponent, expected: boolean) => {
-      return Logger.t(
-        label,
-        Step.control(
-          Step.sync(() => {
-            Assertions.assertEq(
-              'Checking invalid status is: ' + expected,
-              expected,
-              Invalidating.isInvalid(comp)
-            );
-          }),
-          Guard.tryUntil('invalid status was not: ' + expected)
-        )
-      );
-    };
+    const sCheckIsInvalidOf = (label: string, comp: AlloyComponent, expected: boolean) => Logger.t(
+      label,
+      Step.control(
+        Step.sync(() => {
+          Assertions.assertEq(
+            'Checking invalid status is: ' + expected,
+            expected,
+            Invalidating.isInvalid(comp)
+          );
+        }),
+        Guard.tryUntil('invalid status was not: ' + expected)
+      )
+    );
 
-    const sCheckIsValid = (label: string) => {
-      return sCheckIsInvalidOf(label, component, false);
-    };
+    const sCheckIsValid = (label: string) => sCheckIsInvalidOf(label, component, false);
 
-    const sCheckIsInvalid = (label: string) => {
-      return sCheckIsInvalidOf(label, component, true);
-    };
+    const sCheckIsInvalid = (label: string) => sCheckIsInvalidOf(label, component, true);
 
-    const sCheckHasAriaInvalidOf = (label: string, comp: AlloyComponent) => {
-      return Logger.t(
-        label,
-        Step.control(
-          Assertions.sAssertStructure(
-            'Checking structure after marking invalid',
-            ApproxStructure.build((s, str, arr) => {
-              return s.element('input', {
-                attrs: {
-                  'aria-invalid': str.is('true')
-                }
-              });
-            }),
-            comp.element()
-          ),
-          Guard.tryUntil('valid')
-        )
-      );
-    };
+    const sCheckHasAriaInvalidOf = (label: string, comp: AlloyComponent) => Logger.t(
+      label,
+      Step.control(
+        Assertions.sAssertStructure(
+          'Checking structure after marking invalid',
+          ApproxStructure.build((s, str, arr) => s.element('input', {
+            attrs: {
+              'aria-invalid': str.is('true')
+            }
+          })),
+          comp.element()
+        ),
+        Guard.tryUntil('valid')
+      )
+    );
 
-    const sCheckHasNoAriaInvalidOf = (label: string, comp: AlloyComponent) => {
-      return Logger.t(
-        label,
-        Step.control(
-          Assertions.sAssertStructure(
-            'Checking structure after marking valid',
-            ApproxStructure.build((s, str, arr) => {
-              return s.element('input', {
-                attrs: {
-                  'aria-invalid': str.is('false')
-                }
-              });
-            }),
-            comp.element()
-          ),
-          Guard.tryUntil('invalid')
-        )
-      );
-    };
+    const sCheckHasNoAriaInvalidOf = (label: string, comp: AlloyComponent) => Logger.t(
+      label,
+      Step.control(
+        Assertions.sAssertStructure(
+          'Checking structure after marking valid',
+          ApproxStructure.build((s, str, arr) => s.element('input', {
+            attrs: {
+              'aria-invalid': str.is('false')
+            }
+          })),
+          comp.element()
+        ),
+        Guard.tryUntil('invalid')
+      )
+    );
 
-    const sCheckHasAriaInvalid = (label: string) => {
-      return sCheckHasAriaInvalidOf(label, component);
-    };
+    const sCheckHasAriaInvalid = (label: string) => sCheckHasAriaInvalidOf(label, component);
 
-    const sCheckHasNoAriaInvalid = (label: string) => {
-      return sCheckHasNoAriaInvalidOf(label, component);
-    };
+    const sCheckHasNoAriaInvalid = (label: string) => sCheckHasNoAriaInvalidOf(label, component);
 
     const sValidate = GeneralSteps.sequence([
       Step.sync(() => {
@@ -189,25 +157,21 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       });
     });
 
-    const cCheckValidationFails = (label: string, expected: string) => {
-      return Chain.op((res: Result<any, any>) => {
-        res.fold((err) => {
-          Assertions.assertEq(label, expected, err);
-        }, (val) => {
-          throw new Error(label + ': Unexpected value: ' + val);
-        });
+    const cCheckValidationFails = (label: string, expected: string) => Chain.op((res: Result<any, any>) => {
+      res.fold((err) => {
+        Assertions.assertEq(label, expected, err);
+      }, (val) => {
+        throw new Error(label + ': Unexpected value: ' + val);
       });
-    };
+    });
 
-    const cCheckValidationPasses = (label: string, expected: string) => {
-      return Chain.op((res: Result<any, any>) => {
-        res.fold((err) => {
-          throw new Error(label + ': Unexpected error: ' + err);
-        }, (val) => {
-          Assertions.assertEq(label, expected, val);
-        });
+    const cCheckValidationPasses = (label: string, expected: string) => Chain.op((res: Result<any, any>) => {
+      res.fold((err) => {
+        throw new Error(label + ': Unexpected error: ' + err);
+      }, (val) => {
+        Assertions.assertEq(label, expected, val);
       });
-    };
+    });
 
     return [
       GuiSetup.mAddStyles(doc, [
@@ -312,5 +276,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
       GuiSetup.mRemoveStyles
     ];
-  }, () => { success(); }, failure);
+  }, () => {
+    success();
+  }, failure);
 });

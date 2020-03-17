@@ -14,13 +14,13 @@ function applyColorFilter(canvas: HTMLCanvasElement, type: string, matrix: Color
 
   function applyMatrix(pixelsData: ImageData, m: ColorMatrix.Matrix) {
     // tslint:disable-next-line:one-variable-per-declaration
-    let r, g, b, a;
+    let r; let g; let b; let a;
     // tslint:disable-next-line:one-variable-per-declaration
-    const data = pixelsData.data,
-      m0 = m[0], m1 = m[1], m2 = m[2], m3 = m[3], m4 = m[4],
-      m5 = m[5], m6 = m[6], m7 = m[7], m8 = m[8], m9 = m[9],
-      m10 = m[10], m11 = m[11], m12 = m[12], m13 = m[13], m14 = m[14],
-      m15 = m[15], m16 = m[16], m17 = m[17], m18 = m[18], m19 = m[19];
+    const data = pixelsData.data;
+    const m0 = m[0]; const m1 = m[1]; const m2 = m[2]; const m3 = m[3]; const m4 = m[4];
+    const m5 = m[5]; const m6 = m[6]; const m7 = m[7]; const m8 = m[8]; const m9 = m[9];
+    const m10 = m[10]; const m11 = m[11]; const m12 = m[12]; const m13 = m[13]; const m14 = m[14];
+    const m15 = m[15]; const m16 = m[16]; const m17 = m[17]; const m18 = m[18]; const m19 = m[19];
 
     for (let i = 0; i < data.length; i += 4) {
       r = data[i];
