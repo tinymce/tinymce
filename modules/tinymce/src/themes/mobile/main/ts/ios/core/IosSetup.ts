@@ -17,8 +17,8 @@ import BackgroundActivity from '../smooth/BackgroundActivity';
 import * as Greenzone from '../view/Greenzone';
 import * as IosUpdates from '../view/IosUpdates';
 import * as IosViewport from '../view/IosViewport';
+import { IosKeyboardConstructor } from '../view/IosKeyboard';
 import { HTMLElement, HTMLIFrameElement, Node as DomNode, Window } from '@ephox/dom-globals';
-import { IosKeyboardConstructor } from 'tinymce/themes/mobile/ios/view/IosKeyboard';
 
 const VIEW_MARGIN = 5;
 
