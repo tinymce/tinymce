@@ -408,18 +408,14 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
 
     // Make a HTML5 safe shallow copy
-    if (!deep) {
-      const clone = doc.createElement(node.nodeName);
+    const clone = doc.createElement(node.nodeName);
 
-      // Copy attribs
-      each(getAttribs(node), function (attr: Attr) {
-        setAttrib(clone, attr.nodeName, getAttrib(node, attr.nodeName));
-      });
+    // Copy attribs
+    each(getAttribs(node), function (attr: Attr) {
+      setAttrib(clone, attr.nodeName, getAttrib(node, attr.nodeName));
+    });
 
-      return clone;
-    }
-
-    return null;
+    return clone;
   };
 
   const getRoot = (): HTMLElement => {
