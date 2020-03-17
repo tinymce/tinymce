@@ -12,12 +12,10 @@ import { RangeLikeObject } from './RangeTypes';
 
 const each = Tools.each;
 
-const getEndChild = function (container: Node, index: number) {
+const clampToExistingChildren = (container: Node, index: number) => {
   const childNodes = container.childNodes;
 
-  index--;
-
-  if (index > childNodes.length - 1) {
+  if (index >= childNodes.length) {
     index = childNodes.length - 1;
   } else if (index < 0) {
     index = 0;
@@ -25,6 +23,8 @@ const getEndChild = function (container: Node, index: number) {
 
   return childNodes[index] || container;
 };
+
+const getEndChild = (container: Node, index: number) => clampToExistingChildren(container, index - 1);
 
 const walk = function (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => void) {
   let startContainer = rng.startContainer;
@@ -107,7 +107,7 @@ const walk = function (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: No
 
   // If index based start position then resolve it
   if (startContainer.nodeType === 1 && startContainer.hasChildNodes()) {
-    startContainer = startContainer.childNodes[startOffset];
+    startContainer = clampToExistingChildren(startContainer, startOffset);
   }
 
   // If index based end position then resolve it
