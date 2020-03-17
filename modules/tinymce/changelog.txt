@@ -11,6 +11,7 @@ Version 5.2.1 (TBD)
     Fixed the context toolbar overlapping with the menu bar and toolbar #TINY-4586
     Fixed notification and inline dialog positioning issues when using the bottom toolbar #TINY-4586
     Fixed the `colorinput` popup appearing offscreen on mobile devices #TINY-4711
+    Fixed special characters not being found when searching by whole words only #TINY-4522
     Fixed an issue where dragging images could cause them to be duplicated #TINY-4195
     Fixed context toolbars activating without the editor having focus #TINY-4754
     Fixed an issue where removing the background color of text did not always work. #TINY-4770
