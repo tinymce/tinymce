@@ -50,7 +50,7 @@ const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemRespo
       onSetup: spec.onSetup,
       triggersSubmenu: false,
       itemBehaviours: [ ]
-    }, structure, itemResponse),
+    }, structure, itemResponse, providersBackstage),
     {
       toggling: {
         toggleClass: ItemClasses.tickedClass,

@@ -29,7 +29,7 @@ import { createTieredDataFrom } from '../../menus/menu/SingleMenu';
 import { ToolbarButtonClasses } from '../button/ButtonClasses';
 import { onToolbarButtonExecute, toolbarButtonEventOrder } from '../button/ButtonEvents';
 import { renderToolbarGroup, ToolbarGroup } from '../CommonToolbar';
-import ReadOnly from 'tinymce/themes/silver/ReadOnly';
+import * as ReadOnly from '../../../ReadOnly';
 
 interface Specialisation<T> {
   toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
@@ -110,6 +110,7 @@ const renderCommonStructure = (icon: Option<string>, text: Option<string>, toolt
     ]),
 
     eventOrder: {
+      [SystemEvents.receive()]: [ 'receiving', 'reflecting' ],
       [NativeEvents.mousedown()]: [
         'focusing',
         'alloy.base.behaviour',
@@ -119,6 +120,8 @@ const renderCommonStructure = (icon: Option<string>, text: Option<string>, toolt
 
     buttonBehaviours: Behaviour.derive(
       [
+        DisablingConfigs.toolbarButton(providersBackstage.isReadonly()),
+        ReadOnly.receivingConfig(),
         AddEventsBehaviour.config('common-button-display-events', [
           AlloyEvents.run(NativeEvents.mousedown(), (button, se) => {
             se.event().prevent();
@@ -330,7 +333,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     onItemExecute: (a, b, c) => { },
 
     splitDropdownBehaviours: Behaviour.derive([
-      DisablingConfigs.splitButton(false || sharedBackstage.providers.isReadonly()),
+      DisablingConfigs.splitButton(sharedBackstage.providers.isReadonly()),
       ReadOnly.receivingConfig(),
       AddEventsBehaviour.config('split-dropdown-events', [
         AlloyEvents.run(focusButtonEvent, Focusing.focus),

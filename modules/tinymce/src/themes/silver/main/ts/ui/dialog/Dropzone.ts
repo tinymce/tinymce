@@ -17,6 +17,8 @@ import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { formChangeEvent } from '../general/FormEvents';
 import { Omit } from '../Omit';
+import { DisablingConfigs } from '../alien/DisablingConfigs';
+import * as ReadOnly from '../../ReadOnly';
 
 const extensionsAccepted = '.jpg,.jpeg,.png,.gif';
 
@@ -135,7 +137,9 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
                 inputComp.element().dom().click();
               },
               buttonBehaviours: Behaviour.derive([
-                Tabstopping.config({ })
+                Tabstopping.config({ }),
+                DisablingConfigs.button(providersBackstage.isReadonly()),
+                ReadOnly.receivingConfig()
               ])
             })
           ]

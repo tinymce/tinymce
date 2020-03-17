@@ -182,6 +182,7 @@ const setup = (editor: Editor): RenderInfo => {
       tag: 'div',
       classes: [ 'tox-toolbar-overlord' ]
     },
+    backstage,
     onEscape: () => { },
     type: toolbarMode
   });

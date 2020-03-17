@@ -13,6 +13,8 @@ import { UiFactoryBackstage } from '../../backstage/Backstage';
 import * as Channels from '../../Channels';
 import { renderIconButtonSpec } from '../general/Button';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
+import { DisablingConfigs } from '../alien/DisablingConfigs';
+import * as ReadOnly from '../../ReadOnly';
 
 export interface MoreDrawerData {
   lazyMoreButton: () => AlloyComponent;
@@ -26,10 +28,10 @@ export interface ToolbarSpec {
   onEscape: (comp: AlloyComponent) => Option<boolean>;
   initGroups: ToolbarGroup[];
   attributes?: Record<string, string>;
+  backstage: UiFactoryBackstage;
 }
 export interface MoreDrawerToolbarSpec extends ToolbarSpec {
   getSink: () => Result<AlloyComponent, string>;
-  backstage: UiFactoryBackstage;
   moreDrawerData?: MoreDrawerData;
 }
 
@@ -79,13 +81,15 @@ const getToolbarbehaviours = (toolbarSpec: ToolbarSpec, modeName) => {
   });
 
   return Behaviour.derive([
+    DisablingConfigs.toolbarButton(toolbarSpec.backstage.shared.providers.isReadonly()),
+    ReadOnly.receivingConfig(),
     Keying.config({
       // Tabs between groups
       mode: modeName,
       onEscape: toolbarSpec.onEscape,
       selector: '.tox-toolbar__group'
     }),
-    AddEventsBehaviour.config('toolbar-events', [ onAttached ]),
+    AddEventsBehaviour.config('toolbar-events', [ onAttached ])
   ]);
 };
 

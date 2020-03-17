@@ -88,7 +88,7 @@ const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, matchText
     onSetup: () => () => { },
     triggersSubmenu: false,
     itemBehaviours: tooltipBehaviour(spec.meta, sharedBackstage),
-  }, structure, itemResponse);
+  }, structure, itemResponse, sharedBackstage.providers);
 };
 
 export { renderAutocompleteItem };

@@ -68,7 +68,8 @@ const renderContextForm = (toolbarType: ToolbarMode, ctx: Toolbar.ContextForm, b
       }
     ],
     onEscape: Option.none,
-    cyclicKeying: true
+    cyclicKeying: true,
+    backstage
   });
 };
 

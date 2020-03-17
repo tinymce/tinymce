@@ -77,7 +77,7 @@ const receivingConfig = (): Behaviour.NamedConfiguredBehaviour<any, any> => {
   });
 };
 
-export default {
+export {
   ReadOnlyDataSchema,
   toggleToReadOnly,
   setupReadonlyModeSwitch,

@@ -13,7 +13,7 @@ import Delay from 'tinymce/core/api/util/Delay';
 import * as Events from '../api/Events';
 import { getUiContainer, isToolbarLocationTop } from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
-import ReadOnly from '../ReadOnly';
+import * as ReadOnly from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { InlineHeader } from '../ui/header/InlineHeader';

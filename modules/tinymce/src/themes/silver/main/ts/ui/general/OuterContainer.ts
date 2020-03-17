@@ -36,6 +36,7 @@ interface MultipleToolbarSketchSpec {
   dom: RawDomSchema;
   onEscape: () => { };
   type: ToolbarMode;
+  backstage: UiFactoryBackstage;
 }
 
 interface ToolbarSketchSpec extends MoreDrawerData {
@@ -183,6 +184,7 @@ const partMultipleToolbar = Composite.partType.optional<OuterContainerSketchDeta
             uid: Id.generate('multiple-toolbar-item'),
             cyclicKeying: false,
             initGroups: [ ],
+            backstage: spec.backstage,
             onEscape: () => Option.none()
           });
         },

@@ -197,7 +197,8 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
         uid: Id.generate('context-toolbar'),
         initGroups,
         onEscape: Option.none,
-        cyclicKeying: true
+        cyclicKeying: true,
+        backstage: extras.backstage
       });
     })() : (() => {
       return ContextForm.renderContextForm(toolbarType, ctx, extras.backstage);

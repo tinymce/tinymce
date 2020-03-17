@@ -36,7 +36,7 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
     onSetup: spec.onSetup,
     triggersSubmenu: true,
     itemBehaviours: [ ]
-  }, structure, itemResponse);
+  }, structure, itemResponse, providersBackstage);
 };
 
 export { renderNestedItem };
