@@ -405,17 +405,17 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     // TODO: Add feature detection here in the future
     if (!isIE || node.nodeType !== 1 || deep) {
       return node.cloneNode(deep);
+    } else {
+      // Make a HTML5 safe shallow copy
+      const clone = doc.createElement(node.nodeName);
+
+      // Copy attribs
+      each(getAttribs(node), function (attr: Attr) {
+        setAttrib(clone, attr.nodeName, getAttrib(node, attr.nodeName));
+      });
+
+      return clone;
     }
-
-    // Make a HTML5 safe shallow copy
-    const clone = doc.createElement(node.nodeName);
-
-    // Copy attribs
-    each(getAttribs(node), function (attr: Attr) {
-      setAttrib(clone, attr.nodeName, getAttrib(node, attr.nodeName));
-    });
-
-    return clone;
   };
 
   const getRoot = (): HTMLElement => {
