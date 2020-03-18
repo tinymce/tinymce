@@ -1,4 +1,4 @@
-import { document, Document, Node, Window, HTMLElementTagNameMap, HTMLElement, HTMLSpanElement, HTMLDivElement, HTMLTableElement } from '@ephox/dom-globals';
+import { document, Document, Node, Window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import * as Traverse from '../search/Traverse';
 import Element from './Element';

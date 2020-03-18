@@ -28,39 +28,6 @@ UnitTest.asynctest('ChainTest', (success, failure) => {
   const acc = (ch) => Chain.async((input, next, die) => {
     next(input + ch);
   });
-  const testInputValueFails = StepAssertions.testStepsFail(
-    'Output value is not a chain: dog',
-    [
-      Chain.asStep({}, [
-        Chain.on((cInput, cNext, cDie, cLogs) => {
-          cNext(<any> 'dog', cLogs);
-        })
-      ])
-    ]
-  );
-
-  const testInputValuePasses = StepAssertions.testStepsPass(
-    {},
-    [
-      Chain.asStep({}, [
-        Chain.on(function (cInput, cNext, cDie, cLogs) {
-          cNext('doge', cLogs);
-        })
-      ])
-    ]
-  );
-
-  const testInputValueOfUndefinedPasses = StepAssertions.testStepsPass(
-    {},
-    [
-      Chain.asStep({}, [
-        Chain.on(function (cInput, cNext, cDie, cLogs) {
-          cNext(undefined, cLogs);
-        })
-      ])
-    ]
-  );
-
   const testChainingFails = StepAssertions.testStepsFail(
     'Cat is not a dog',
     [

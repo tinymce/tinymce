@@ -78,8 +78,6 @@ UnitTest.asynctest('Browser Test: Selection.getAtPoint', function (success, fail
     check(500, 20, Selection.range(outside, 6, outside, 6));
     check(600, 20, Selection.range(outside, 6, outside, 6));
 
-    const div = get('div');
-
     const one = Traverse.children(get('.one'))[0];
     check(100, 100, Selection.range(one, 1, one, 1));
     check(150, 100, Selection.range(one, 1, one, 1));

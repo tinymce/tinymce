@@ -1,4 +1,4 @@
-import { document, HTMLElement, Window, HTMLDivElement, Document, Element as DomElement } from '@ephox/dom-globals';
+import { document, Window, HTMLDivElement, Document, Element as DomElement } from '@ephox/dom-globals';
 import { Option, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import * as Insert from '../dom/Insert';

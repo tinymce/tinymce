@@ -9,7 +9,6 @@ import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
 import * as DomContainers from 'ephox/agar/test/DomContainers';
 import { TestLogs } from 'ephox/agar/api/TestLogs';
-import { MixedKeyModifiers } from 'ephox/agar/keyboard/FakeKeys';
 
 UnitTest.asynctest('KeyboardTest', (success, failure) => {
 

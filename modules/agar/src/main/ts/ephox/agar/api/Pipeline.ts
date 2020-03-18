@@ -1,4 +1,4 @@
-import { console, setTimeout } from '@ephox/dom-globals';
+import { console } from '@ephox/dom-globals';
 import { Arr, Type } from '@ephox/katamari';
 
 import { DieFn, NextFn } from '../pipe/Pipe';

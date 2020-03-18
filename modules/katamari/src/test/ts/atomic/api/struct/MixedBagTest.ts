@@ -57,7 +57,7 @@ UnitTest.test('MixedBag: unit tests', () => {
   (() => {
     const expected = 'All required keys (alpha, beta, gamma) were not specified. Specified keys were: alpha, gamma, oDelta, oEpsilon.';
     try {
-      const t1 = bagger({
+      bagger({
         alpha: 'a',
         gamma: 'g',
         oDelta: 'd',
@@ -105,7 +105,7 @@ UnitTest.test('MixedBag: unit tests', () => {
   (() => {
     const expected = 'Unsupported keys for object: ghost';
     try {
-      const t1 = bagger({
+      bagger({
         alpha: 'a',
         beta: 'b',
         gamma: undefined,
@@ -123,7 +123,7 @@ UnitTest.test('MixedBag: unit tests', () => {
   (() => {
     const expected = 'You must specify at least one required or optional field.';
     try {
-      const bg = MixedBag([], []);
+      MixedBag([], []);
 
       Assert.fail('Expected failure: ' + expected);
     } catch (err) {
@@ -134,7 +134,7 @@ UnitTest.test('MixedBag: unit tests', () => {
   (() => {
     const expected = 'The value 10 in the required fields was not a string.';
     try {
-      const bg = MixedBag(<any> [ 10 ], []);
+      MixedBag(<any> [ 10 ], []);
 
       Assert.fail('Expected failure: ' + expected);
     } catch (err) {
@@ -145,7 +145,7 @@ UnitTest.test('MixedBag: unit tests', () => {
   (() => {
     const expected = 'The value 5 in the optional fields was not a string.';
     try {
-      const bg = MixedBag([], <any> [ 5 ]);
+      MixedBag([], <any> [ 5 ]);
 
       Assert.fail('Expected failure: ' + expected);
     } catch (err) {
@@ -156,7 +156,7 @@ UnitTest.test('MixedBag: unit tests', () => {
   (() => {
     const expected = 'The required fields must be an array. Was: apple.';
     try {
-      const bg = MixedBag(<any> 'apple', <any> [ 5 ]);
+      MixedBag(<any> 'apple', <any> [ 5 ]);
 
       Assert.fail('Expected failure: ' + expected);
     } catch (err) {
@@ -167,7 +167,7 @@ UnitTest.test('MixedBag: unit tests', () => {
   (() => {
     const expected = 'The optional fields must be an array. Was: beetroot.';
     try {
-      const bg = MixedBag([], <any> 'beetroot');
+      MixedBag([], <any> 'beetroot');
 
       Assert.fail('Expected failure: ' + expected);
     } catch (err) {
@@ -178,7 +178,7 @@ UnitTest.test('MixedBag: unit tests', () => {
   (() => {
     const expected = 'The field: cat occurs more than once in the combined fields: [apple, cat, cat].';
     try {
-      const bg = MixedBag([ 'cat' ], [ 'apple', 'cat' ]);
+      MixedBag([ 'cat' ], [ 'apple', 'cat' ]);
 
       Assert.fail('Expected failure: ' + expected);
     } catch (err) {

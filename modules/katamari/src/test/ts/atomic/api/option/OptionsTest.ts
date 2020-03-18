@@ -2,7 +2,6 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Option } from 'ephox/katamari/api/Option';
 import * as Options from 'ephox/katamari/api/Options';
-import { tOption } from 'ephox/katamari/api/OptionInstances';
 import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import fc from 'fast-check';
 import { UnitTest, Assert } from '@ephox/bedrock-client';

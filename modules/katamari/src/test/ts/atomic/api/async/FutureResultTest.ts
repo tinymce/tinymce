@@ -104,7 +104,6 @@ promiseTest('FutureResult: value mapResult', () => {
 });
 
 promiseTest('FutureResult: error mapResult', () => {
-  const f = (x) => x + 3;
   return fc.assert(fc.asyncProperty(fc.integer(), (i) => {
     return new Promise((resolve, reject) => {
       FutureResult.error(i).mapResult(Fun.die('⊥')).get((ii) => {
@@ -153,7 +152,7 @@ promiseTest('FutureResult: value bindFuture value', () => {
 promiseTest('FutureResult: bindFuture: value bindFuture error', () => {
   return fc.assert(fc.asyncProperty(fc.integer(), fc.string(), (i, s) => {
     return new Promise((resolve, reject) => {
-      FutureResult.value(i).bindFuture((i) => FutureResult.error(s)).get((actual) => {
+      FutureResult.value(i).bindFuture(() => FutureResult.error(s)).get((actual) => {
         eqAsync('bind result', Result.error(s), actual, reject, tResult(tNumber));
         resolve();
       });

@@ -1,4 +1,4 @@
-import { clearInterval, setInterval, Node as DomNode, MutationObserver, MutationCallback, HTMLElement } from '@ephox/dom-globals';
+import { clearInterval, setInterval, MutationObserver, HTMLElement } from '@ephox/dom-globals';
 import { Fun, Throttler } from '@ephox/katamari';
 import Element from '../node/Element';
 import * as Traverse from '../search/Traverse';

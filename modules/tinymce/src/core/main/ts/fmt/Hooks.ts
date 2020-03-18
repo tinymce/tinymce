@@ -20,10 +20,10 @@ import Editor from '../api/Editor';
 const postProcessHooks = {}, filter = ArrUtils.filter, each = ArrUtils.each;
 
 const addPostProcessHook = function (name, hook) {
-  let hooks = postProcessHooks[name];
+  const hooks = postProcessHooks[name];
 
   if (!hooks) {
-    postProcessHooks[name] = hooks = [];
+    postProcessHooks[name] = [];
   }
 
   postProcessHooks[name].push(hook);

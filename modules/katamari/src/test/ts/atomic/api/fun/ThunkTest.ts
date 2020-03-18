@@ -3,19 +3,17 @@ import fc from 'fast-check';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 
 UnitTest.test('ThunkTest', function () {
-  const testSanity = function () {
-    let args: any[] | null = null;
-    const f = Thunk.cached(function () {
-      args = Array.prototype.slice.call(arguments);
-      return args;
-    });
-    const r1 = f('a');
-    Assert.eq('eq', [ 'a' ], args);
-    Assert.eq('eq', [ 'a' ], r1);
-    const r2 = f('b');
-    Assert.eq('eq', [ 'a' ], args);
-    Assert.eq('eq', [ 'a' ], r2);
-  };
+  let args: any[] | null = null;
+  const f = Thunk.cached(function () {
+    args = Array.prototype.slice.call(arguments);
+    return args;
+  });
+  const r1 = f('a');
+  Assert.eq('eq', [ 'a' ], args);
+  Assert.eq('eq', [ 'a' ], r1);
+  const r2 = f('b');
+  Assert.eq('eq', [ 'a' ], args);
+  Assert.eq('eq', [ 'a' ], r2);
 });
 
 UnitTest.test('Thunk.cached counter', () => {
