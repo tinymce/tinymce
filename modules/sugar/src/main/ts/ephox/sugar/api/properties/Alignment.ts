@@ -2,7 +2,7 @@ import * as Css from './Css';
 import * as Direction from './Direction';
 import * as Node from '../node/Node';
 import Element from '../node/Element';
-import { Node as DomNode, Element as DomElement } from '@ephox/dom-globals';
+import { Element as DomElement } from '@ephox/dom-globals';
 
 type Alignment = 'left' | 'right' | 'justify' | 'center' | 'match-parent';
 

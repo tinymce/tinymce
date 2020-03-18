@@ -3,9 +3,6 @@ import { Option } from 'ephox/katamari/api/Option';
 import { tOption } from 'ephox/katamari/api/OptionInstances';
 import fc from 'fast-check';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Testable } from '@ephox/dispute';
-
-const { tNumber } = Testable;
 
 UnitTest.test('Option.none: unit tests', () => {
   const s = Option.none<number>();

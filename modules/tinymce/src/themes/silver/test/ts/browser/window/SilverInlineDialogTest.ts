@@ -1,9 +1,9 @@
-import { ApproxStructure, Assertions, Chain, Mouse, Pipeline, UiFinder, Waiter, Step, FocusTools, Logger } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
 import { document } from '@ephox/dom-globals';
-import { Cell } from '@ephox/katamari';
+import { Cell, Strings } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { Body, Element } from '@ephox/sugar';
 
@@ -37,9 +37,30 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
           align: 'start',
           primary: true
         },
+        {
+          type: 'custom',
+          name: 'alert',
+          text: 'Alert'
+        },
+        {
+          type: 'custom',
+          name: 'confirm',
+          text: 'Confirm'
+        }
       ],
       initialData: {
         fred: 'said hello pebbles'
+      },
+      onAction: (api, action) => {
+        store.adder('onAction')();
+        switch (action.name) {
+          case 'alert':
+            editor.windowManager.alert('Alert!');
+            break;
+          case 'confirm':
+            editor.windowManager.confirm('Alert!');
+            break;
+        }
       }
     };
 
@@ -53,6 +74,19 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
         currentApi.set(dialogApi);
       })
     ]);
+
+    const sTestAlertOrConfirm = (type: 'alert' | 'confirm') => {
+      const buttonSelector = Strings.capitalize(type);
+      const dialogSelector = `.tox-${type}-dialog`;
+      return GeneralSteps.sequence([
+        store.sClear,
+        Mouse.sTrueClickOn(Body.body(), '[role=dialog] button:contains(' + buttonSelector + ')'),
+        DialogUtils.sWaitForOpen(dialogSelector),
+        store.sAssertEq('Checking onAction called', [ 'onAction' ]),
+        Mouse.sTrueClickOn(Body.body(), dialogSelector + ' .tox-dialog__footer button'),
+        Waiter.sTryUntil('Wait for dialog to close', UiFinder.sNotExists(Body.body(), dialogSelector)),
+      ]);
+    };
 
     Pipeline.async({}, [
       TestHelpers.GuiSetup.mAddStyles(Element.fromDom(document), [
@@ -92,6 +126,13 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
         }),
         Body.body()
       ),
+
+      // Ensure the dialog isn't dismissed when clicking on alert or confirm dialogs
+      sTestAlertOrConfirm('alert'),
+      sTestAlertOrConfirm('confirm'),
+      store.sClear,
+
+      // Clicking elsewhere should close the dialog
       Mouse.sTrueClickOn(Body.body(), 'root:body'),
       Waiter.sTryUntil(
         'Waiting for all dialog events when closing via dismiss',

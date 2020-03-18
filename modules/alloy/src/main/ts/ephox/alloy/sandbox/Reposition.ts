@@ -1,6 +1,5 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Option } from '@ephox/katamari';
 
 import { NamedConfiguredBehaviour } from '../api/behaviour/Behaviour';
 import { Receiving } from '../api/behaviour/Receiving';
@@ -12,7 +11,6 @@ import * as Channels from '../api/messages/Channels';
 import { ReceivingConfig, ReceivingConfigSpec } from '../behaviour/receiving/ReceivingTypes';
 
 export interface RepositionReceivingDetail {
-  isExtraPart: (sandbox: AlloyComponent, target: () => Element) => boolean;
   doReposition: (sandbox: AlloyComponent) => void;
   fireEventInstead: Option<{
     event: string;
@@ -20,7 +18,6 @@ export interface RepositionReceivingDetail {
 }
 
 export interface RepositionReceivingSpec {
-  isExtraPart?: (sandbox: AlloyComponent, target: () => Element) => boolean;
   doReposition: (sandbox: AlloyComponent) => void;
   fireEventInstead?: {
     event?: string;
@@ -28,7 +25,6 @@ export interface RepositionReceivingSpec {
 }
 
 const schema = ValueSchema.objOfOnly([
-  FieldSchema.defaulted('isExtraPart', Fun.constant(false)),
   FieldSchema.optionObjOf('fireEventInstead', [
     FieldSchema.defaulted('event', SystemEvents.repositionRequested())
   ]),

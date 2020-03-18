@@ -32,6 +32,9 @@ const wordbreak: WordbreakApi = Chars.wordbreak;
 type WordcharApi = () => string;
 const wordchar: WordcharApi = Chars.wordchar;
 
+type PunctuationApi = () => string;
+const punctuation: PunctuationApi = Chars.punctuation;
+
 export {
   safeword,
   safetoken,
@@ -41,5 +44,6 @@ export {
   sanitise,
   chars,
   wordbreak,
-  wordchar
+  wordchar,
+  punctuation
 };

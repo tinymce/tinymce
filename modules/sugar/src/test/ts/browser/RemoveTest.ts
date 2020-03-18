@@ -14,8 +14,6 @@ UnitTest.test('RemoveTest', function () {
   const runChecks = function (connected) {
     const container = Div();
     const span = EphoxElement('span');
-    const ol = EphoxElement('ol');
-    const li1 = EphoxElement('li');
     const li2 = EphoxElement('li');
     const li3 = EphoxElement('li');
     const li4 = EphoxElement('li');

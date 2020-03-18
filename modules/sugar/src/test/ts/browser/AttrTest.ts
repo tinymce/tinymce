@@ -3,9 +3,7 @@ import Element from 'ephox/sugar/api/node/Element';
 import Div from 'ephox/sugar/test/Div';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import { Node, Comment, HTMLDivElement, HTMLSpanElement } from '@ephox/dom-globals';
-import { OptionInstances, Option } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
-import { Testable } from '@ephox/dispute';
 
 UnitTest.test('AttrTest', function () {
   const c = Div();

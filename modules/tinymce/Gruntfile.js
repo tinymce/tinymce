@@ -4,7 +4,6 @@ let zipUtils = require('./tools/modules/zip-helper');
 let gruntUtils = require('./tools/modules/grunt-utils');
 let gruntWebPack = require('./tools/modules/grunt-webpack');
 let swag = require('@ephox/swag');
-let path = require('path');
 
 let plugins = [
   'advlist', 'anchor', 'autolink', 'autoresize', 'autosave', 'bbcode', 'charmap', 'code', 'codesample',
@@ -24,6 +23,11 @@ let themes = [
 let oxideUiSkinMap = {
   'dark': 'oxide-dark',
   'default': 'oxide'
+};
+
+const stripSourceMaps = function (data) {
+  const sourcemap = data.lastIndexOf('/*# sourceMappingURL=');
+  return sourcemap > -1 ? data.slice(0, sourcemap) : data;
 };
 
 module.exports = function (grunt) {
@@ -337,10 +341,7 @@ module.exports = function (grunt) {
           to: 'dist/tinymce_<%= pkg.version %>.zip',
           dataFilter: (args) => {
             if (args.filePath.endsWith('.min.css')) {
-              var sourcemap = args.data.lastIndexOf('/*# sourceMappingURL=');
-              if (sourcemap > -1) {
-                args.data = args.data.slice(0, sourcemap);
-              }
+              args.data = stripSourceMaps(args.data);
             }
           }
         },
@@ -420,6 +421,11 @@ module.exports = function (grunt) {
           },
           pathFilter: function (zipFilePath) {
             return zipFilePath.replace('js/tinymce/', 'dist/');
+          },
+          dataFilter: (args) => {
+            if (args.filePath.endsWith('.min.css')) {
+              args.data = stripSourceMaps(args.data);
+            }
           },
           onBeforeConcat: function (destPath, chunks) {
             // Strip the license from each file and prepend the license, so it only appears once
@@ -583,7 +589,12 @@ module.exports = function (grunt) {
               zipUtils.generateIndex('icons', 'icons')
             );
           },
-          to: 'dist/tinymce_<%= pkg.version %>_component.zip'
+          to: 'dist/tinymce_<%= pkg.version %>_component.zip',
+          dataFilter: (args) => {
+            if (args.filePath.endsWith('.min.css')) {
+              args.data = stripSourceMaps(args.data);
+            }
+          }
         },
         src: [
           'js/tinymce/skins',

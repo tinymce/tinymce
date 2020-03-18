@@ -28,7 +28,6 @@ UnitTest.test('DirectionTest', function () {
     Remove.remove(element);
   };
 
-  const direction = Direction.getDirection(el);
   assertDirection(el, 'ltr');
   assertOnDirection(el, 'isLeft', 'isRight', 'isLeft');
 
