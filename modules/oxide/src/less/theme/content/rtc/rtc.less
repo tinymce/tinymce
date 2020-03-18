@@ -6,12 +6,14 @@
 @rtc-caret-6-color: #ECCAFA;
 @rtc-caret-7-color: #E67E23;
 @rtc-caret-8-color: #fff0b7;
+@rtc-remote-image-background-color: #eaeaea;
+@rtc-remote-image-border-color: #bbb;
 
-.rtc-user-selection {
+.tox-rtc-user-selection {
   position: relative;
 }
 
-.rtc-user-cursor {
+.tox-rtc-user-cursor {
   bottom: 0;
   cursor: default;
   position: absolute;
@@ -50,42 +52,41 @@
   }
 }
 
-.rtc-user-selection--1 .rtc-user-cursor {
+.tox-rtc-user-selection--1 .tox-rtc-user-cursor {
   background-color: @rtc-caret-1-color;
 }
 
-.rtc-user-selection--2 .rtc-user-cursor {
+.tox-rtc-user-selection--2 .tox-rtc-user-cursor {
   background-color: @rtc-caret-2-color;
 }
 
-.rtc-user-selection--3 .rtc-user-cursor {
+.tox-rtc-user-selection--3 .tox-rtc-user-cursor {
   background-color: @rtc-caret-3-color;
 }
 
-.rtc-user-selection--4 .rtc-user-cursor {
+.tox-rtc-user-selection--4 .tox-rtc-user-cursor {
   background-color: @rtc-caret-4-color;
 }
 
-.rtc-user-selection--5 .rtc-user-cursor {
+.tox-rtc-user-selection--5 .tox-rtc-user-cursor {
   background-color: @rtc-caret-5-color;
 }
 
-.rtc-user-selection--6 .rtc-user-cursor {
+.tox-rtc-user-selection--6 .tox-rtc-user-cursor {
   background-color: @rtc-caret-6-color;
 }
 
-.rtc-user-selection--7 .rtc-user-cursor {
+.tox-rtc-user-selection--7 .tox-rtc-user-cursor {
   background-color: @rtc-caret-7-color;
 }
 
-.rtc-user-selection--8 .rtc-user-cursor {
+.tox-rtc-user-selection--8 .tox-rtc-user-cursor {
   background-color: @rtc-caret-8-color;
 }
 
-.rtc-remote-image {
-  background: #eaeaea;
-  border: 1px solid #bbb;
-  display: inline-block;
+.tox-rtc-remote-image {
+  background: @rtc-remote-image-background-color;
+  border: 1px solid @rtc-remote-image-border-color;
   min-height: 240px;
   min-width: 320px;
 }
