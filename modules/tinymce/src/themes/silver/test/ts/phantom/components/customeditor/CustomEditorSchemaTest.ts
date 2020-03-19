@@ -68,7 +68,7 @@ UnitTest.test('Custom Editor Schema Test', () => {
       d: false,
       e: null,
       f: undefined,
-      // tslint:disable-next-line:no-construct
+      // eslint-disable-next-line no-new-wrappers
       g: new Boolean(false),
       h: new Date(),
       i: /^(?:fizz|buzz)/,

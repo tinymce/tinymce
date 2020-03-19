@@ -122,7 +122,7 @@ class URI {
     // Relative path http:// or protocol relative //path
     if (!/^[\w\-]*:?\/\//.test(url)) {
       const baseUrl = this.settings.base_uri ? this.settings.base_uri.path : new URI(document.location.href).directory;
-      // tslint:disable-next-line:triple-equals
+      // eslint-disable-next-line eqeqeq
       if (this.settings.base_uri && this.settings.base_uri.protocol == '') {
         url = '//mce_host' + self.toAbsPath(baseUrl, url);
       } else {
@@ -265,15 +265,15 @@ class URI {
    * @returns {Boolean} True if the origins are the same.
    */
   public isSameOrigin (uri: URI): boolean {
-    // tslint:disable-next-line:triple-equals
+    // eslint-disable-next-line eqeqeq
     if (this.host == uri.host && this.protocol == uri.protocol) {
-      // tslint:disable-next-line:triple-equals
+      // eslint-disable-next-line eqeqeq
       if (this.port == uri.port) {
         return true;
       }
 
       const defaultPort = DEFAULT_PORTS[this.protocol];
-      // tslint:disable-next-line:triple-equals
+      // eslint-disable-next-line eqeqeq
       if (defaultPort && ((this.port || defaultPort) == (uri.port || defaultPort))) {
         return true;
       }

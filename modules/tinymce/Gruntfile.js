@@ -43,11 +43,11 @@ module.exports = function (grunt) {
       tsc: { command: 'tsc -b' }
     },
 
-    tslint: {
+    eslint: {
       options: {
-        configuration: '../../tslint.json'
+        configFile: '../../.eslintrc.json',
       },
-      files: { src: [ 'src/**/*.ts' ] }
+      target: [ 'src/**/*.ts' ]
     },
 
     globals: {
@@ -389,7 +389,7 @@ module.exports = function (grunt) {
               'modules/*/README.md',
               'modules/*/package.json',
               'modules/*/tsconfig*.json',
-              'modules/*/tslint*.json',
+              'modules/*/.eslint*.json',
               'modules/*/webpack.config.js',
               'modules/*/.stylelintignore',
               'modules/*/.stylelintrc',
@@ -400,7 +400,7 @@ module.exports = function (grunt) {
               'lerna.json',
               'package.json',
               'tsconfig*.json',
-              'tslint*.json',
+              '.eslint*.json',
               'yarn.lock'
             ]
           },
@@ -841,7 +841,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('prodBuild', [
     'shell:tsc',
-    'tslint',
+    'eslint',
     'globals',
     'rollup',
     'unicode',

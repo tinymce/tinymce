@@ -17,7 +17,7 @@ const isLeftButtonPressed = function (raw: MouseEvent) {
   }
 
   // use bitwise & for optimal comparison
-  // tslint:disable-next-line:no-bitwise
+  // eslint-disable-next-line no-bitwise
   return (raw.buttons & 1) !== 0;
 };
 

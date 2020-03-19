@@ -76,7 +76,7 @@ const extractHeaders = function (br: BinaryReader): Header[] {
     if (marker >= 0xFFE1 && marker <= 0xFFEF) {
       headers.push({
         hex: marker,
-        name: 'APP' + (marker & 0x000F),
+        name: 'APP' + (marker & 0x000F), // eslint-disable-line no-bitwise
         start: idx,
         length,
         segment: br.SEGMENT(idx, length)

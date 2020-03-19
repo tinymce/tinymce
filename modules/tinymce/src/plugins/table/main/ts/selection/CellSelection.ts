@@ -150,6 +150,7 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
       }
 
       // use bitwise & for optimal comparison
+      // eslint-disable-next-line no-bitwise
       return (raw.buttons & 1) !== 0;
     };
 

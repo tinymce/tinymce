@@ -18,7 +18,7 @@
   "main": "tinymce.js",
   "scripts": {
     "test": "grunt test",
-    "lint": "tslint --config ../../tslint.json src/**/*.ts",
+    "lint": "grunt eslint",
     "silver-test": "grunt bedrock-auto:silver",
     "silver-test-manual": "grunt bedrock-manual:silver"
   },

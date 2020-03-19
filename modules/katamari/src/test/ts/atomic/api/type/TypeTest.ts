@@ -15,7 +15,7 @@ UnitTest.test('Type.is*: Unit tests', () => {
     );
   };
 
-  // tslint:disable-next-line:no-construct
+  // eslint-disable-next-line no-new-wrappers
   const objectString = new String('ball');
   const noop = () => {};
 

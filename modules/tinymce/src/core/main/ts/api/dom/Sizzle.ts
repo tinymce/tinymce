@@ -24,6 +24,8 @@ import { window } from '@ephox/dom-globals';
 
 /*eslint-enable */
 
+/* eslint-disable no-bitwise */
+
 /* tslint:disable */
 
 let i,
@@ -1491,7 +1493,9 @@ tokenize = Sizzle.tokenize = function (selector, parseOnly) {
 
     // Filters
     for (type in Expr.filter) {
-      if (!Expr.filter.hasOwnProperty(type)) continue;
+      if (!Expr.filter.hasOwnProperty(type)) {
+        continue;
+      }
       if ((match = matchExpr[type].exec(soFar)) && (!preFilters[type] ||
         (match = preFilters[type](match)))) {
         matched = match.shift();

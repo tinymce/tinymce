@@ -14,14 +14,14 @@ const register = (editor: Editor) => {
   editor.ui.registry.addToggleButton('image', {
     icon: 'image',
     tooltip: 'Insert/edit image',
-    onAction: Dialog(editor).open,
+    onAction: Dialog(editor).openLater,
     onSetup: (buttonApi) => editor.selection.selectorChangedWithUnbind('img:not([data-mce-object],[data-mce-placeholder]),figure.image', buttonApi.setActive).unbind
   });
 
   editor.ui.registry.addMenuItem('image', {
     icon: 'image',
     text: 'Image...',
-    onAction: Dialog(editor).open
+    onAction: Dialog(editor).openLater
   });
 
   editor.ui.registry.addContextMenu('image', {

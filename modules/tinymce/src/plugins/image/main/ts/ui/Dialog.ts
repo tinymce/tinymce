@@ -450,10 +450,13 @@ export const Dialog = (editor: Editor) => {
     serializeStyle: serializeStyle(editor),
   };
   const open = () => collect(editor).then(makeDialog(helpers)).then((spec) => {
-    editor.windowManager.open(spec);
+    return editor.windowManager.open(spec);
   });
-
+  const openLater = () => {
+    open();
+  };
   return {
-    open
+    open,
+    openLater
   };
 };

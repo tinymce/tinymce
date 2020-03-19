@@ -29,7 +29,7 @@ interface VisualViewport {
 
 const get = (_win?: Window): Option<VisualViewport> => {
   const win = _win === undefined ? window : _win;
-  /* tslint:disable-next-line:no-string-literal */
+  // eslint-disable-next-line dot-notation
   return Option.from(win['visualViewport']);
 };
 
