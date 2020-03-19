@@ -6,6 +6,7 @@ Version 5.3.0 (TBD)
     Fixed resize handlers displaying in the wrong location sometimes for remote images #TINY-4732
     Fixed table picker breaking in Firefox on low zoom levels #TINY-4728
     Fixed issue with loading or pasting contents with large base64 encoded images on Safari #TINY-4715
+    Fixed supplementary special characters being truncated when inserted into the editor. Patch contributed by mlitwin. #TINY-4791
 Version 5.2.1 (TBD)
     Fixed "is decorative" checkbox in the image dialog not staying checked on certain actions #FOAM-11
     Fixed possible uncaught exception when a style attribute is removed using a parser filter #TINY-4742

@@ -1,5 +1,7 @@
 import * as StrAppend from '../str/StrAppend';
 
+const nativeFromCodePoint = String.fromCodePoint;
+
 const checkRange = (str: string, substr: string, start: number): boolean =>
   substr === '' || str.length >= substr.length && str.substr(start, start + substr.length) === substr;
 
@@ -75,3 +77,41 @@ export const lTrim: (s: string) => string =
 
 export const rTrim: (s: string) => string =
   blank(/\s+$/g);
+
+// Extract codepoint a la ES2015 String.fromCodePoint
+// From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/fromCodePoint
+export const fromCodePoint = (...codePoints: number[]): string => {
+  if (nativeFromCodePoint) {
+    return nativeFromCodePoint(...codePoints);
+  } else {
+    const codeUnits: number[] = [];
+    let codeLen = 0;
+    let result = '';
+    for (let index = 0, len = codePoints.length; index !== len; ++index) {
+      let codePoint = +codePoints[index];
+      // correctly handles all cases including `NaN`, `-Infinity`, `+Infinity`
+      // The surrounding `!(...)` is required to correctly handle `NaN` cases
+      // The (codePoint>>>0) === codePoint clause handles decimals and negatives
+      // eslint-disable-next-line no-bitwise
+      if (!(codePoint < 0x10FFFF && (codePoint >>> 0) === codePoint)) {
+        throw RangeError('Invalid code point: ' + codePoint);
+      }
+      if (codePoint <= 0xFFFF) { // BMP code point
+        codeLen = codeUnits.push(codePoint);
+      } else { // Astral code point; split in surrogate halves
+        // https://mathiasbynens.be/notes/javascript-encoding#surrogate-formulae
+        codePoint -= 0x10000;
+        codeLen = codeUnits.push(
+          // eslint-disable-next-line no-bitwise
+          (codePoint >> 10) + 0xD800,  // highSurrogate
+          (codePoint % 0x400) + 0xDC00 // lowSurrogate
+        );
+      }
+      if (codeLen >= 0x3fff) {
+        result += String.fromCharCode.apply(null, codeUnits);
+        codeUnits.length = 0;
+      }
+    }
+    return result + String.fromCharCode.apply(null, codeUnits);
+  }
+};
