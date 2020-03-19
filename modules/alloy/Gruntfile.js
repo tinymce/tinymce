@@ -75,13 +75,6 @@ module.exports = function (grunt) {
       command: 'tsc'
     },
 
-    tslint: {
-      options: {
-        configuration: '../../tslint.json'
-      },
-      plugin: ['src/**/*.ts']
-    },
-
     'webpack-dev-server': {
       options: {
         webpack: [
