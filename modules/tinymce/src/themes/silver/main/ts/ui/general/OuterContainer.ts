@@ -9,7 +9,7 @@ import { AlloyComponent, AlloySpec, Behaviour, Composite, CustomList, Keying, Ra
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Id, Option, Result } from '@ephox/katamari';
 import { ToolbarMode } from '../../api/Settings';
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 
 import { HeaderSpec, renderHeader } from '../header/CommonHeader';
 import SilverMenubar, { SilverMenubarSpec } from '../menus/menubar/SilverMenubar';
@@ -36,7 +36,7 @@ interface MultipleToolbarSketchSpec {
   dom: RawDomSchema;
   onEscape: () => { };
   type: ToolbarMode;
-  backstage: UiFactoryBackstage;
+  providers: UiFactoryBackstageProviders;
 }
 
 interface ToolbarSketchSpec extends MoreDrawerData {
@@ -46,7 +46,7 @@ interface ToolbarSketchSpec extends MoreDrawerData {
   onEscape: () => { };
   type: ToolbarMode;
   getSink: () => Result<AlloyComponent, string>;
-  backstage: UiFactoryBackstage;
+  providers: UiFactoryBackstageProviders;
 }
 
 interface OuterContainerApis {
@@ -184,7 +184,7 @@ const partMultipleToolbar = Composite.partType.optional<OuterContainerSketchDeta
             uid: Id.generate('multiple-toolbar-item'),
             cyclicKeying: false,
             initGroups: [ ],
-            backstage: spec.backstage,
+            providers: spec.providers,
             onEscape: () => Option.none()
           });
         },
@@ -216,7 +216,7 @@ const partToolbar = Composite.partType.optional<OuterContainerSketchDetail, Tool
         cyclicKeying: false,
         initGroups: [],
         getSink: spec.getSink,
-        backstage: spec.backstage,
+        providers: spec.providers,
         moreDrawerData: {
           lazyToolbar: spec.lazyToolbar,
           lazyMoreButton: spec.lazyMoreButton,

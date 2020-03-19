@@ -198,10 +198,10 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
         initGroups,
         onEscape: Option.none,
         cyclicKeying: true,
-        backstage: extras.backstage
+        providers: extras.backstage.shared.providers
       });
     })() : (() => {
-      return ContextForm.renderContextForm(toolbarType, ctx, extras.backstage);
+      return ContextForm.renderContextForm(toolbarType, ctx, extras.backstage.shared.providers);
     })();
   };
 

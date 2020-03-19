@@ -9,7 +9,7 @@ import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, 
 import { Arr, Option, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 import { ToolbarMode } from '../../api/Settings';
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Channels from '../../Channels';
 import { renderIconButtonSpec } from '../general/Button';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
@@ -28,7 +28,7 @@ export interface ToolbarSpec {
   onEscape: (comp: AlloyComponent) => Option<boolean>;
   initGroups: ToolbarGroup[];
   attributes?: Record<string, string>;
-  backstage: UiFactoryBackstage;
+  providers: UiFactoryBackstageProviders;
 }
 export interface MoreDrawerToolbarSpec extends ToolbarSpec {
   getSink: () => Result<AlloyComponent, string>;
@@ -81,7 +81,7 @@ const getToolbarbehaviours = (toolbarSpec: ToolbarSpec, modeName) => {
   });
 
   return Behaviour.derive([
-    DisablingConfigs.toolbarButton(toolbarSpec.backstage.shared.providers.isReadonly()),
+    DisablingConfigs.toolbarButton(toolbarSpec.providers.isReadonly()),
     ReadOnly.receivingConfig(),
     Keying.config({
       // Tabs between groups
@@ -115,7 +115,7 @@ const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec) => {
         tooltip: Option.some('More...'),
         primary: false,
         borderless: false
-      }, Option.none(), toolbarSpec.backstage.shared.providers)
+      }, Option.none(), toolbarSpec.providers)
     },
     splitToolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName)
   };

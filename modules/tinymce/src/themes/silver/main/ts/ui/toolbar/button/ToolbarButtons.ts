@@ -110,7 +110,6 @@ const renderCommonStructure = (icon: Option<string>, text: Option<string>, toolt
     ]),
 
     eventOrder: {
-      [SystemEvents.receive()]: [ 'receiving', 'reflecting' ],
       [NativeEvents.mousedown()]: [
         'focusing',
         'alloy.base.behaviour',

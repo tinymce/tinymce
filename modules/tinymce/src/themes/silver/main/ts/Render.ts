@@ -167,7 +167,7 @@ const setup = (editor: Editor): RenderInfo => {
       classes: [ 'tox-toolbar' ]
     },
     getSink: lazySink,
-    backstage,
+    providers: backstage.shared.providers,
     onEscape() {
       editor.focus();
     },
@@ -182,7 +182,7 @@ const setup = (editor: Editor): RenderInfo => {
       tag: 'div',
       classes: [ 'tox-toolbar-overlord' ]
     },
-    backstage,
+    providers: backstage.shared.providers,
     onEscape: () => { },
     type: toolbarMode
   });
