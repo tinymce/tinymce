@@ -10,6 +10,7 @@
   "rules": {
     "@tinymce/no-enums-in-export-specifier": "off",
     "@tinymce/no-unimported-promise": "off",
+    "@typescript-eslint/ban-ts-ignore": "off", // this will be added to the plugin
     "@typescript-eslint/camelcase": "off",
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/explicit-member-accessibility": "off",
