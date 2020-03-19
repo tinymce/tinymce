@@ -14,7 +14,7 @@
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts",
     "prepublishOnly": "tsc -b",
-    "lint": "tslint --config ../../tslint.json --project ."
+    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
   },
   "repository": {
     "type": "git",
