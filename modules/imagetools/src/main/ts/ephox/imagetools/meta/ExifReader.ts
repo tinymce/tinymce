@@ -238,7 +238,7 @@ export class ExifReader {
 
   private _tiffTags: TiffTags;
 
-  constructor(ar: ArrayBuffer) {
+  public constructor(ar: ArrayBuffer) {
     this._reader = new BinaryReader(ar);
     this._idx = this._offsets.tiffHeader;
 

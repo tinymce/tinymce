@@ -81,7 +81,7 @@ class JSONRequest {
   public settings: JSONRequestSettings;
   public count: number;
 
-  constructor (settings?: JSONRequestSettings) {
+  public constructor (settings?: JSONRequestSettings) {
     this.settings = extend({}, settings);
     this.count = 0;
   }

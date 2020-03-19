@@ -116,7 +116,7 @@ class Node {
    * @param {String} name Name of the node type.
    * @param {Number} type Numeric type representing the node.
    */
-  constructor(name: string, type: number) {
+  public constructor(name: string, type: number) {
     this.name = name;
     this.type = type;
 

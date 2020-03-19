@@ -62,7 +62,7 @@ class Shortcuts {
   private readonly shortcuts: Record<string, Shortcut> = {};
   private pendingPatterns = [];
 
-  constructor(editor: Editor) {
+  public constructor(editor: Editor) {
     this.editor = editor;
     const self = this;
 

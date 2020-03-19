@@ -4,7 +4,7 @@ export class BinaryReader {
 
   protected _dv: DataView;
 
-  constructor(ar: ArrayBuffer) {
+  public constructor(ar: ArrayBuffer) {
     this._dv = new DataView(ar);
   }
 

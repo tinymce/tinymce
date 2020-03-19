@@ -22,7 +22,7 @@ class NodeChange {
   private readonly editor: Editor;
   private lastPath = [];
 
-  constructor (editor: Editor) {
+  public constructor (editor: Editor) {
     this.editor = editor;
     let lastRng;
     const self = this;

@@ -44,7 +44,7 @@ class EditorCommands {
   private selectionBookmark: Bookmark;
   private commands = { state: {}, exec: {}, value: {} };
 
-  constructor (editor: Editor) {
+  public constructor (editor: Editor) {
     this.editor = editor;
 
     this.setupCommands(editor);

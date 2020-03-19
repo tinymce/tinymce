@@ -78,7 +78,7 @@ class ScriptLoader {
   private queueLoadedCallbacks: Array<{success: () => void, failure: (urls: string[]) => void, scope: any}> = [];
   private loading = 0;
 
-  constructor (settings: Partial<ScriptLoaderSettings> = {}) {
+  public constructor (settings: Partial<ScriptLoaderSettings> = {}) {
     this.settings = settings;
   }
 

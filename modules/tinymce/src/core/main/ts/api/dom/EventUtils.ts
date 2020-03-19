@@ -258,7 +258,7 @@ class EventUtils {
   private mouseEnterLeave: { mouseenter: 'mouseover', mouseleave: 'mouseout' };
   private count: number = 1;
 
-  constructor () {
+  public constructor () {
     this.expando = eventExpandoPrefix + (+new Date()).toString(32);
     this.hasMouseEnterLeave = 'onmouseenter' in document.documentElement;
     this.hasFocusIn = 'onfocusin' in document.documentElement;
