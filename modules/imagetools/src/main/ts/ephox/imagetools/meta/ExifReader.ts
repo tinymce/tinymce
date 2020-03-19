@@ -1,4 +1,5 @@
 import { BinaryReader } from './BinaryReader';
+import { Option, Options } from "@ephox/katamari";
 
 // See https://www.exif.org/Exif2-2.PDF for types
 export interface TiffTags {
@@ -255,21 +256,21 @@ export class ExifReader {
       throw new Error('Invalid Exif data.');
     }
 
-    this._offsets.IFD0 = this._offsets.tiffHeader + this.LONG(this._idx += 2)!;
+    this._offsets.IFD0 = this._offsets.tiffHeader + Option.from(this.LONG(this._idx += 2)).getOrDie("Unable to calcuate IFDO offset");
     this._tiffTags = this.extractTags(this._offsets.IFD0, tags.tiff);
 
-    if ('ExifIFDPointer' in this._tiffTags) {
-      this._offsets.exifIFD = this._offsets.tiffHeader + this._tiffTags.ExifIFDPointer!;
+    if (this._tiffTags.ExifIFDPointer !== undefined) {
+      this._offsets.exifIFD = this._offsets.tiffHeader + this._tiffTags.ExifIFDPointer;
       delete this._tiffTags.ExifIFDPointer;
     }
 
-    if ('GPSInfoIFDPointer' in this._tiffTags) {
-      this._offsets.gpsIFD = this._offsets.tiffHeader + this._tiffTags.GPSInfoIFDPointer!;
+    if (this._tiffTags.GPSInfoIFDPointer !== undefined) {
+      this._offsets.gpsIFD = this._offsets.tiffHeader + this._tiffTags.GPSInfoIFDPointer;
       delete this._tiffTags.GPSInfoIFDPointer;
     }
 
     // check if we have a thumb as well
-    const IFD1Offset = this.LONG(this._offsets.IFD0 + this.SHORT(this._offsets.IFD0)! * 12 + 2);
+    const IFD1Offset = this.LONG(this._offsets.IFD0 + Option.from(this.SHORT(this._offsets.IFD0)).getOrDie("Unable to calculate IFD1 offset") * 12 + 2);
     if (IFD1Offset) {
       this._offsets.IFD1 = this._offsets.tiffHeader + IFD1Offset;
     }
@@ -328,12 +329,20 @@ export class ExifReader {
     return this.BYTE(idx);
   }
 
-  public RATIONAL(idx: number): number {
-    return this.LONG(idx)! / this.LONG(idx + 4)!;
+  public RATIONAL(idx: number): number | null {
+    return Options.lift2(
+      Option.from(this.LONG(idx)),
+      Option.from(this.LONG(idx + 4)),
+      (num, denom) => num / denom
+    ).getOrNull();
   }
 
-  public SRATIONAL(idx: number): number {
-    return this.SLONG(idx)! / this.SLONG(idx + 4)!;
+  public SRATIONAL(idx: number): number | null {
+    return Options.lift2(
+      Option.from(this.SLONG(idx)),
+      Option.from(this.SLONG(idx + 4)),
+      (num, denom) => num / denom
+    ).getOrNull();
   }
 
   public ASCII(idx: number): string {
@@ -429,12 +438,11 @@ export class ExifReader {
       SRATIONAL : 8
     };
 
-    // Ensure we don't try to read something that doesn't exist
-    if (IFD_offset + 2 > self.length()) {
+    const length = self.SHORT(IFD_offset);
+
+    if (length == null) {
       return hash;
     }
-
-    const length = self.SHORT(IFD_offset)!;
 
     // The size of APP1 including all these elements shall not exceed the 64 Kbytes specified in the JPEG standard.
 
@@ -444,14 +452,23 @@ export class ExifReader {
       // Set binary reader pointer to beginning of the next tag
       let offset = IFD_offset + 2 + i * 12;
 
-      const tag = tags2extract[self.SHORT(offset)!];
+      const tagId = self.SHORT(offset);
+      if (tagId === null) {
+        throw new Error('Invalid Exif data.');
+      }
+
+      const tag = tags2extract[tagId];
 
       if (tag === undefined) {
         continue; // Not the tag we requested
       }
 
-      const type = types[self.SHORT(offset += 2)!];
-      const count = self.LONG(offset += 2)!;
+      const typeId = self.SHORT(offset += 2);
+      const count = self.LONG(offset += 2);
+      if (typeId === null || count === null) {
+        throw new Error('Invalid Exif data.');
+      }
+      const type = types[typeId];
       const size = sizes[type];
 
       if (!size) {
@@ -463,7 +480,11 @@ export class ExifReader {
       // tag can only fit 4 bytes of data, if data is larger we should look outside
       if (size * count > 4) {
         // instead of data tag contains an offset of the data
-        offset = self.LONG(offset)! + self._offsets.tiffHeader;
+        const longAtOffset = self.LONG(offset);
+        if (longAtOffset === null) {
+          throw new Error('Invalid Exif data.');
+        }
+        offset = longAtOffset + self._offsets.tiffHeader;
       }
 
       // in case we left the boundaries of data throw an early exception

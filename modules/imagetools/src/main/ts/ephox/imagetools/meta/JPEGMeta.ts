@@ -51,13 +51,15 @@ const extractFrom = function (blob: Blob): Promise<JPEGMeta> {
 };
 
 const extractHeaders = function (br: BinaryReader): Header[] {
-  const headers = [];
-  let marker;
+  const headers: Header[] = [];
 
   let idx = 2;
 
   while (idx + 2 <= br.length()) {
-    marker = br.SHORT(idx)!;
+    let marker = br.SHORT(idx);
+    if (marker === null) {
+      throw new Error('Invalid Exif data.');
+    }
 
     // omit RST (restart) markers
     if (marker >= 0xFFD0 && marker <= 0xFFD7) {
@@ -70,7 +72,12 @@ const extractHeaders = function (br: BinaryReader): Header[] {
       break;
     }
 
-    const length = br.SHORT(idx + 2)! + 2;
+    const lengthTemp = br.SHORT(idx + 2);
+    if (lengthTemp === null) {
+      throw new Error('Invalid Exif data.');
+    }
+
+    const length = lengthTemp + 2;
 
     // APPn marker detected
     if (marker >= 0xFFE1 && marker <= 0xFFEF) {

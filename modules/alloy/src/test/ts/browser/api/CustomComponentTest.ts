@@ -129,7 +129,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       ]),
 
       Step.sync(() => {
-        bA.get()!.behaveA(component);
+        bA.get()?.behaveA(component);
       }),
 
       store.sAssertEq('Should now have an Api log', [
