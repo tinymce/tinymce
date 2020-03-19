@@ -7,9 +7,11 @@
 
 import Editor from '../api/Editor';
 import * as Rtc from '../Rtc';
+import { Content } from '../content/GetContent';
+import { ContentFormat } from '../content/GetContentImpl';
 
-const getContent = (editor: Editor, args: any = {}): string => {
-  const format = args.format ? args.format : 'html';
+const getContent = (editor: Editor, args: any = {}): Content => {
+  const format: ContentFormat = args.format ? args.format : 'html';
 
   return Rtc.getSelectedContent(editor, format, args);
 };

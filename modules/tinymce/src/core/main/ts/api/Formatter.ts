@@ -122,7 +122,7 @@ const Formatter = function (editor: Editor): Formatter {
      * @param {Node} node Optional node to apply the format to or remove from. Defaults to current selection.
      */
     toggle: (name, vars?, node?) => {
-      Rtc.toggleFormat(editor, formats, name, vars, node);
+      Rtc.toggleFormat(editor, name, vars, node);
     },
 
     /**

@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
+
 import { Event, Node as DomNode, Range } from '@ephox/dom-globals';
 import { Fun, Obj, Option, Type } from '@ephox/katamari';
 import Editor from './api/Editor';
@@ -10,16 +17,18 @@ import * as ApplyFormat from './fmt/ApplyFormat';
 import * as RemoveFormat from './fmt/RemoveFormat';
 import * as ToggleFormat from './fmt/ToggleFormat';
 import { RangeLikeObject } from './selection/RangeTypes';
-import { FormatRegistry } from './fmt/FormatRegistry';
 import { Content } from './content/EditorContent';
 import { GetContentArgs, ContentFormat, getContentInternal } from './content/GetContentImpl';
 import { SetContentArgs, setContentInternal } from './content/SetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
 import { getSelectedContentInternal } from './selection/GetSelectionContentImpl';
+import Formatter from './api/Formatter';
 
 const isTreeNode = (content: any): content is Node => content instanceof Node;
 
-const isSupportedContentFormat = (format: string) => format !== 'text';
+const runSerializerFiltersOnFragment = (editor: Editor, fragment: Node) => {
+  FilterNode.filter(editor.serializer.getNodeFilters(), editor.serializer.getAttributeFilters(), fragment);
+};
 
 /** API implemented by the RTC plugin */
 interface RtcRuntimeApi {
@@ -55,15 +64,17 @@ interface RtcAdaptor {
     extra: (undoManager: UndoManager, index: Index, callback1: () => void, callback2: () => void) => void;
   };
   formatter: {
-    applyFormat: (format: string, vars?: Record<string, string>, node?: DomNode | RangeLikeObject) => void;
-    removeFormat: (name: string, vars?: Record<string, string>, node?: DomNode | Range) => void;
-    toggleFormat: (formats: FormatRegistry, name: string, vars: Record<string, string>, node: DomNode) => void;
+    apply: Formatter['apply'];
+    remove: Formatter['remove'];
+    toggle: Formatter['toggle'];
   };
   editor: {
     getContent: (args: GetContentArgs, format: ContentFormat) => Content;
     setContent: (content: Content, args: SetContentArgs) => Content;
     insertContent: (value: string, details) => void;
-    getSelectedContent: (format: ContentFormat, args) => string;
+  };
+  selection: {
+    getContent: (format: ContentFormat, args) => Content;
   };
   raw: {
     getModel: () => Option<any>;
@@ -104,15 +115,17 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
     extra: (undoManager, index, callback1, callback2) => Operations.extra(editor, undoManager, index, callback1, callback2)
   },
   formatter: {
-    applyFormat: (name, vars?, node?) => ApplyFormat.applyFormat(editor, name, vars, node),
-    removeFormat: (name, vars, node) => RemoveFormat.remove(editor, name, vars, node),
-    toggleFormat: (formats, name, vars, node) => ToggleFormat.toggle(editor, formats, name, vars, node),
+    apply: (name, vars?, node?) => ApplyFormat.applyFormat(editor, name, vars, node),
+    remove: (name, vars, node) => RemoveFormat.remove(editor, name, vars, node),
+    toggle: (name, vars, node) => ToggleFormat.toggle(editor, name, vars, node),
   },
   editor: {
     getContent: (args, format) =>  getContentInternal(editor, args, format),
     setContent: (content, args) => setContentInternal(editor, content, args),
-    insertContent: (value, details) => insertHtmlAtCaret(editor, value, details),
-    getSelectedContent: (format, args) => getSelectedContentInternal(editor, format, args)
+    insertContent: (value, details) => insertHtmlAtCaret(editor, value, details)
+  },
+  selection: {
+    getContent: (format, args) => getSelectedContentInternal(editor, format, args)
   },
   raw: {
     getModel: () => Option.none()
@@ -147,30 +160,21 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
       extra: unsupported
     },
     formatter: {
-      applyFormat: (name, vars, _node) => rtcEditor.applyFormat(name, defaultVars(vars)),
-      removeFormat: (name, vars, _node) => rtcEditor.removeFormat(name, defaultVars(vars)),
-      toggleFormat: (_formats, name, vars, _node) => rtcEditor.toggleFormat(name, defaultVars(vars)),
+      apply: (name, vars, _node) => rtcEditor.applyFormat(name, defaultVars(vars)),
+      remove: (name, vars, _node) => rtcEditor.removeFormat(name, defaultVars(vars)),
+      toggle: (name, vars, _node) => rtcEditor.toggleFormat(name, defaultVars(vars)),
     },
     editor: {
       getContent: (args, format) => {
-        if (isSupportedContentFormat(format)) {
+        if (format === 'html' || format === 'tree') {
           const fragment = rtcEditor.getContent();
           const serializer = Serializer({ inner: true });
 
-          FilterNode.filter(tinymceEditor.serializer.getNodeFilters(), tinymceEditor.serializer.getAttributeFilters(), fragment);
+          runSerializerFiltersOnFragment(tinymceEditor, fragment);
 
-          return serializer.serialize(fragment);
+          return format === 'tree' ? fragment : serializer.serialize(fragment);
         } else {
           return makePlainAdaptor(tinymceEditor).editor.getContent(args, format);
-        }
-      },
-      getSelectedContent: (format, args) => {
-        if (isSupportedContentFormat(format)) {
-          const fragment = rtcEditor.getSelectedContent();
-          const serializer = Serializer({});
-          return serializer.serialize(fragment);
-        } else {
-          return makePlainAdaptor(tinymceEditor).editor.getSelectedContent(format, args);
         }
       },
       setContent: (content, _args) => {
@@ -183,13 +187,27 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
         rtcEditor.insertContent(fragment);
       }
     },
+    selection: {
+      getContent: (format, args) => {
+        if (format === 'html' || format === 'tree') {
+          const fragment = rtcEditor.getSelectedContent();
+          const serializer = Serializer({});
+
+          runSerializerFiltersOnFragment(tinymceEditor, fragment);
+
+          return format === 'tree' ? fragment : serializer.serialize(fragment);
+        } else {
+          return makePlainAdaptor(tinymceEditor).selection.getContent(format, args);
+        }
+      }
+    },
     raw: {
       getModel: () => Option.some(rtcEditor.getRawModel())
     }
   };
 };
 
-export const isRtc = (editor) => Obj.has(editor.plugins, 'rtc');
+export const isRtc = (editor: Editor) => Obj.has(editor.plugins, 'rtc');
 
 export const setup = (editor: Editor): Option<Promise<boolean>> => {
   const editorCast = editor as RtcEditor;
@@ -268,15 +286,15 @@ export const extra = (editor: Editor, undoManager: UndoManager, index: Index, ca
 };
 
 export const applyFormat = (editor: Editor, name: string, vars?: Record<string, string>, node?: DomNode | RangeLikeObject): void => {
-  getRtcInstanceWithError(editor).formatter.applyFormat(name, vars, node);
+  getRtcInstanceWithError(editor).formatter.apply(name, vars, node);
 };
 
 export const removeFormat = (editor: Editor, name: string, vars?: Record<string, string>, node?: DomNode | Range) => {
-  getRtcInstanceWithError(editor).formatter.removeFormat(name, vars, node);
+  getRtcInstanceWithError(editor).formatter.remove(name, vars, node);
 };
 
-export const toggleFormat = (editor: Editor, formats: FormatRegistry, name: string, vars: Record<string, string>, node: DomNode): void => {
-  getRtcInstanceWithError(editor).formatter.toggleFormat(formats, name, vars, node);
+export const toggleFormat = (editor: Editor, name: string, vars: Record<string, string>, node: DomNode): void => {
+  getRtcInstanceWithError(editor).formatter.toggle(name, vars, node);
 };
 
 export const getContent = (editor: Editor, args: GetContentArgs, format: ContentFormat): Content => {
@@ -291,6 +309,6 @@ export const insertContent = (editor: Editor, value: string, details): void => {
   return getRtcInstanceWithFallback(editor).editor.insertContent(value, details);
 };
 
-export const getSelectedContent = (editor: Editor, format: ContentFormat, args): string => {
-  return getRtcInstanceWithError(editor).editor.getSelectedContent(format, args);
+export const getSelectedContent = (editor: Editor, format: ContentFormat, args): Content => {
+  return getRtcInstanceWithError(editor).selection.getContent(format, args);
 };
