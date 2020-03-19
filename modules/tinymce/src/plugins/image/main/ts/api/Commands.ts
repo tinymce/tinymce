@@ -9,8 +9,7 @@ import { Dialog } from '../ui/Dialog';
 import Editor from 'tinymce/core/api/Editor';
 
 const register = (editor: Editor) => {
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  editor.addCommand('mceImage', Dialog(editor).open);
+  editor.addCommand('mceImage', Dialog(editor).openLater);
 };
 
 export {
