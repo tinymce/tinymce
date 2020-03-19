@@ -231,7 +231,6 @@ const getRtcInstanceWithFallback = (editor: Editor): RtcAdaptor => {
 };
 
 const getRtcInstanceWithError = (editor: Editor): RtcAdaptor => {
-  // Calls to editor.getContent/editor.setContent should still work even if the rtcInstance is not yet available
   const rtcInstance = (editor as RtcEditor).rtcInstance;
   if (!rtcInstance) {
     throw new Error('Failed to get RTC instance not yet initialized.');
