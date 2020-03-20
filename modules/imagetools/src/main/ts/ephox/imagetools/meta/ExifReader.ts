@@ -1,5 +1,6 @@
 import { BinaryReader } from './BinaryReader';
-import { Option, Options } from "@ephox/katamari";
+import { Arr, Option, Result, Type } from "@ephox/katamari";
+import { readLong, readSignedLong, readShort, readByte, readString, readList } from './BinaryReaderUtils';
 
 // See https://www.exif.org/Exif2-2.PDF for types
 export interface TiffTags {
@@ -8,8 +9,8 @@ export interface TiffTags {
   Make?: string;
   Model?: string;
   Software?: string;
-  ExifIFDPointer?: number;
-  GPSInfoIFDPointer?: number;
+  ExifIFDPointer: Option<number>;
+  GPSInfoIFDPointer: Option<number>;
 }
 
 export interface GPSTags {
@@ -44,7 +45,12 @@ export interface ExifTags {
   Sharpness?: number;
 }
 
-const tags: Record<string, any> = {
+interface ThumbTags {
+  JPEGInterchangeFormat: number;
+  JPEGInterchangeFormatLength: number;
+}
+
+const tags: Record<string, Record<number, string>> = {
   tiff: {
     /*
     The image orientation viewed in terms of rows and columns.
@@ -64,7 +70,7 @@ const tags: Record<string, any> = {
     0x0110: 'Model',
     0x0131: 'Software',
     0x8769: 'ExifIFDPointer',
-    0x8825:	'GPSInfoIFDPointer'
+    0x8825: 'GPSInfoIFDPointer'
   },
   exif: {
     0x9000: 'ExifVersion',
@@ -76,7 +82,7 @@ const tags: Record<string, any> = {
     0x829D: 'FNumber',
     0x8827: 'ISOSpeedRatings',
     0x9201: 'ShutterSpeedValue',
-    0x9202: 'ApertureValue'	,
+    0x9202: 'ApertureValue',
     0x9207: 'MeteringMode',
     0x9208: 'LightSource',
     0x9209: 'Flash',
@@ -103,7 +109,7 @@ const tags: Record<string, any> = {
   }
 };
 
-const tagDescs: Record<string, any> = {
+const tagDescs: Record<string, Record<number, string>> = {
   ColorSpace: {
     1: 'sRGB',
     0: 'Uncalibrated'
@@ -206,309 +212,290 @@ const tagDescs: Record<string, any> = {
 
   // GPS related
   GPSLatitudeRef: {
-    N: 'North latitude',
-    S: 'South latitude'
+    0x4E: 'North latitude', // 'N' codepoint
+    0x53: 'South latitude' // 'S' codepoint
   },
 
   GPSLongitudeRef: {
-    E: 'East longitude',
-    W: 'West longitude'
+    0x45: 'East longitude', // 'E' codepoint
+    0x57: 'West longitude' // 'W' codepoint
   }
 };
 
-interface Offsets {
-  tiffHeader: 10;
-  IFD0: null | number;
-  IFD1: null | number;
-  exifIFD: null | number;
-  gpsIFD: null | number;
-}
+const readRational = (reader: BinaryReader, idx: number) => {
+  return readLong(reader, idx).bind((numerator) => {
+    return readLong(reader, idx + 4).map((denominator) => {
+      return numerator / denominator;
+    });
+  });
+};
 
-export class ExifReader {
+const readSignedRational = (reader: BinaryReader, idx: number) => {
+  return readSignedLong(reader, idx).bind((numerator) => {
+    return readSignedLong(reader, idx + 4).map((denominator) => {
+      return numerator / denominator;
+    });
+  });
+};
 
-  private _reader: BinaryReader;
-  private _idx: number;
+const extractTags = (reader: BinaryReader, ifdOffset: number, tiffHeaderOffset: number, tags2extract: Record<number, string>): Result<Record<string, unknown>, string> => {
 
-  private _offsets: Offsets = {
-    tiffHeader: 10,
-    IFD0: null,
-    IFD1: null,
-    exifIFD: null,
-    gpsIFD: null
+  const types: Record<number, { name: string; size: number; read: (reader: BinaryReader, idx: number) => Result<number, string> }> = {
+    1: { name: 'BYTE', size: 1, read: readByte },
+    7: { name: 'UNDEFINED', size: 1, read: readByte },
+    2: { name: 'ASCII', size: 1, read: readByte }, // readByte is only used for single characters
+    3: { name: 'SHORT', size: 2, read: readShort },
+    4: { name: 'LONG', size: 4, read: readLong },
+    5: { name: 'RATIONAL', size: 8, read: readRational },
+    9: { name: 'SLONG', size: 4, read: readSignedLong },
+    10: { name: 'SRATIONAL', size: 8, read: readSignedRational }
   };
 
-  private _tiffTags: TiffTags;
+  const withTag = (tag: string) => (value: unknown) => Option.some<[string, unknown]>([tag, value]);
 
-  public constructor(ar: ArrayBuffer) {
-    this._reader = new BinaryReader(ar);
-    this._idx = this._offsets.tiffHeader;
+  // TODO: maybe escape and sanitize
+  const cleanupString = (str: string) => str.replace(/\0$/, '').trim();
 
-    // Check if that's APP1 and that it has EXIF
-    if (this.SHORT(0) !== 0xFFE1 || this.STRING(4, 5).toUpperCase() !== 'EXIF\0') {
-      throw new Error('Exif data cannot be read or not available.');
+  const ID_OFFSET = 0;
+  const TYPE_OFFSET = 2;
+  const COUNT_OFFSET = 4;
+  const DATA_OFFSET = 8;
+  // read the length of this tag section
+  return readShort(reader, ifdOffset).fold(
+    () => Result.value({}), // it doesn't exist, we'll return an empty set
+    (length) => {
+      const tagSet: Record<string, unknown> = {};
+      // The size of APP1 including all these elements shall not exceed the 64 Kbytes specified in the JPEG standard.
+
+      for (let i = 0; i < length; i++) {
+
+        // Set binary reader pointer to beginning of the next tag
+        const offset = ifdOffset + 2 + (i * 12);
+
+        // read the tagId, typeId and count from the tag
+        const tagItem = readShort(reader, offset + ID_OFFSET).bind(
+          (tagId) => readShort(reader, offset + TYPE_OFFSET).bind(
+            (typeId) => readLong(reader, offset + COUNT_OFFSET).bind(
+              (count): Result<Option<[string, unknown]>, string> => {
+                // now see if we're interested in the tag
+                const tag = tags2extract[tagId];
+                if (tag === undefined) {
+                  // skip tag, we're not interested in it
+                  return Result.value(Option.none());
+                }
+                const type = types[typeId];
+                if (type === undefined) {
+                  // unknown type? this data is bad
+                  return Result.error('Tag with type number ' + typeId + ' was unrecognised.');
+                }
+                // find where the data is
+                let dataOffset = offset + DATA_OFFSET;
+                // tag can only fit 4 bytes of data, if data is larger we should look outside
+                if (type.size * count > 4) {
+                  // instead of data, the tag contains an offset of the data
+                  const indirectDataOffset = readLong(reader, offset + DATA_OFFSET);
+                  if (indirectDataOffset.isError()) {
+                    return indirectDataOffset.map((_value) => Option.none<[string, unknown]>());
+                  }
+                  dataOffset = indirectDataOffset.getOrDie() + tiffHeaderOffset;
+                }
+                // in case we left the boundaries of the buffer return an error
+                if (dataOffset + (type.size * count) >= reader.length()) {
+                  return Result.error('Invalid Exif data.');
+                }
+                // read the data associated with the tag
+                if (count === 1 && tagDescs[tag] !== undefined) {
+                  return type.read(reader, dataOffset).map((num) => tagDescs[tag][num]).map(withTag(tag));
+                } else if (type.name === 'ASCII') { // special care for the string
+                  return readString(reader, dataOffset, count).map(cleanupString).map(withTag(tag));
+                } else if (count === 1) {
+                  return type.read(reader, dataOffset).map(withTag(tag));
+                } else {
+                  return readList(reader, dataOffset, type.size, count, type.read).map(withTag(tag));
+                }
+              }
+            )
+          )
+        );
+        // check if we successfully read the tag
+        if (tagItem.isError()) {
+          return tagItem.map((_value) => tagSet);
+        }
+        // add to set of tags
+        tagItem.each((opt) => opt.each(([tag, value]) => {
+          tagSet[tag] = value;
+        }));
+      }
+
+      return Result.value(tagSet);
     }
+  );
 
+};
+
+const parseTiffTags = (data: Record<string, unknown>): TiffTags => ({
+  Orientation: Option.from(data.Orientation).filter(Type.isNumber).getOrUndefined(),
+  ImageDescription: Option.from(data.ImageDescription).filter(Type.isString).getOrUndefined(),
+  Make: Option.from(data.Make).filter(Type.isString).getOrUndefined(),
+  Model: Option.from(data.Model).filter(Type.isString).getOrUndefined(),
+  Software: Option.from(data.Software).filter(Type.isString).getOrUndefined(),
+  ExifIFDPointer: Option.from(data.ExifIFDPointer).filter(Type.isNumber),
+  GPSInfoIFDPointer: Option.from(data.GPSInfoIFDPointer).filter(Type.isNumber)
+});
+
+const parseExifTags = (data: Record<string, unknown>): ExifTags => {
+  const ExifVersion = (() => {
+    const version = data.ExifVersion;
+    if (Type.isString(version)) {
+      return version;
+    } else if (Type.isArray(version)) {
+      return Arr.map(version, (item) => {
+        if (Type.isNumber(item)) {
+          return String.fromCharCode(item);
+        } else {
+          return '';
+        }
+      }).join('');
+    } else {
+      return undefined;
+    }
+  })();
+
+  return {
+    ExifVersion,
+    ColorSpace: Option.from(data.ColorSpace).filter(Type.isNumber).getOrUndefined(),
+    PixelXDimension: Option.from(data.PixelXDimension).filter(Type.isNumber).getOrUndefined(),
+    PixelYDimension: Option.from(data.PixelYDimension).filter(Type.isNumber).getOrUndefined(),
+    DateTimeOriginal: Option.from(data.DateTimeOriginal).filter(Type.isString).getOrUndefined(),
+    ExposureTime: Option.from(data.ExposureTime).filter(Type.isNumber).getOrUndefined(),
+    FNumber: Option.from(data.FNumber).filter(Type.isNumber).getOrUndefined(),
+    ISOSpeedRatings: Option.from(data.ISOSpeedRatings).filter(Type.isNumber).getOrUndefined(),
+    ShutterSpeedValue: Option.from(data.ShutterSpeedValue).filter(Type.isNumber).getOrUndefined(),
+    ApertureValue: Option.from(data.ApertureValue).filter(Type.isNumber).getOrUndefined(),
+    MeteringMode: Option.from(data.MeteringMode).filter(Type.isNumber).getOrUndefined(),
+    LightSource: Option.from(data.LightSource).filter(Type.isNumber).getOrUndefined(),
+    Flash: Option.from(data.Flash).filter(Type.isNumber).getOrUndefined(),
+    FocalLength: Option.from(data.FocalLength).filter(Type.isNumber).getOrUndefined(),
+    ExposureMode: Option.from(data.ExposureMode).filter(Type.isNumber).getOrUndefined(),
+    WhiteBalance: Option.from(data.WhiteBalance).filter(Type.isNumber).getOrUndefined(),
+    SceneCaptureType: Option.from(data.SceneCaptureType).filter(Type.isString).getOrUndefined(),
+    DigitalZoomRatio: Option.from(data.DigitalZoomRatio).filter(Type.isNumber).getOrUndefined(),
+    Contrast: Option.from(data.Contrast).filter(Type.isNumber).getOrUndefined(),
+    Saturation: Option.from(data.Saturation).filter(Type.isNumber).getOrUndefined(),
+    Sharpness: Option.from(data.Sharpness).filter(Type.isNumber).getOrUndefined(),
+  };
+};
+
+const parseGpsTags = (data: Record<string, unknown>): GPSTags => {
+  const GPSVersionID = (() => {
+    const version = data.GPSVersionID;
+    if (Type.isString(version)) {
+      return version;
+    } else if (Type.isArray(version)) {
+      return Arr.map(version, (item) => {
+        if (Type.isNumber(item)) {
+          return '' + item;
+        } else if (Type.isString(item)) {
+          return item;
+        } else {
+          return '';
+        }
+      }).join('.');
+    }
+    return undefined;
+  })();
+
+  return {
+    GPSVersionID,
+    GPSLatitudeRef: Option.from(data.GPSLatitudeRef).filter((x): x is 'N' | 'S' => x === 'N' || x === 'S').getOrUndefined(),
+    GPSLatitude: Option.from(data.GPSLatitude).filter(Type.isNumber).getOrUndefined(),
+    GPSLongitudeRef: Option.from(data.GPSLongitudeRef).filter((x): x is 'E' | 'W' => x === 'E' || x === 'W').getOrUndefined(),
+    GPSLongitude: Option.from(data.GPSLongitude).filter(Type.isNumber).getOrUndefined(),
+  };
+};
+
+const parseThumbTags = (data: Record<string, unknown>): Result<ThumbTags, string> => {
+  const JPEGInterchangeFormat = data.JPEGInterchangeFormat;
+  if (JPEGInterchangeFormat === undefined) {
+    return Result.error('');
+  }
+  if (!Type.isNumber(JPEGInterchangeFormat)) {
+    return Result.error('');
+  }
+  const JPEGInterchangeFormatLength = data.JPEGInterchangeFormatLength;
+  if (JPEGInterchangeFormatLength === undefined) {
+    return Result.error('');
+  }
+  if (!Type.isNumber(JPEGInterchangeFormatLength)) {
+    return Result.error('');
+  }
+  return Result.value({
+    JPEGInterchangeFormat,
+    JPEGInterchangeFormatLength,
+  });
+};
+
+export interface MetaData {
+  tiff: Result<TiffTags, string>;
+  exif: Result<Option<ExifTags>, string>;
+  gps: Result<Option<GPSTags>, string>;
+  thumb: Result<Option<ArrayBuffer>, string>;
+}
+
+export const readMetaData = (ar: ArrayBuffer): MetaData => {
+  const reader = new BinaryReader(ar);
+  const TIFF_HEADER = 10;
+  const ifd0 = ((): Result<number, string> => {
+    // Check if that's APP1 and that it has EXIF
+    if (!readShort(reader, 0).is(0xFFE1) || !readString(reader, 4, 5).map((s) => s.toUpperCase()).is('EXIF\0')) {
+      return Result.error('APP1 marker and EXIF marker cannot be read or not available.');
+    }
     // Set read order of multi-byte data
-    this._reader.littleEndian = (this.SHORT(this._idx) === 0x4949);
+    reader.littleEndian = readShort(reader, TIFF_HEADER).is(0x4949);
 
     // Check if always present bytes are indeed present
-    if (this.SHORT(this._idx += 2) !== 0x002A) {
-      throw new Error('Invalid Exif data.');
+    if (!readShort(reader, TIFF_HEADER + 2).is(0x002A)) {
+      return Result.error('Invalid Exif data.');
     }
 
-    this._offsets.IFD0 = this._offsets.tiffHeader + Option.from(this.LONG(this._idx += 2)).getOrDie("Unable to calcuate IFDO offset");
-    this._tiffTags = this.extractTags(this._offsets.IFD0, tags.tiff);
+    return readLong(reader, TIFF_HEADER + 4).map((ifb0Offset) => TIFF_HEADER + ifb0Offset);
+  })();
 
-    if (this._tiffTags.ExifIFDPointer !== undefined) {
-      this._offsets.exifIFD = this._offsets.tiffHeader + this._tiffTags.ExifIFDPointer;
-      delete this._tiffTags.ExifIFDPointer;
-    }
+  const tiff = ifd0.bind((ifb0Start) => {
+    return extractTags(reader, ifb0Start, TIFF_HEADER, tags.tiff).map(parseTiffTags);
+  });
 
-    if (this._tiffTags.GPSInfoIFDPointer !== undefined) {
-      this._offsets.gpsIFD = this._offsets.tiffHeader + this._tiffTags.GPSInfoIFDPointer;
-      delete this._tiffTags.GPSInfoIFDPointer;
-    }
+  const exif = tiff.bind((tiffTags) => {
+    return tiffTags.ExifIFDPointer.fold(
+      () => Result.value(Option.none<ExifTags>()),
+      (exifOffset) => extractTags(reader, TIFF_HEADER + exifOffset, TIFF_HEADER, tags.exif)
+        .map(parseExifTags).map(Option.some)
+    );
+  });
 
-    // check if we have a thumb as well
-    const IFD1Offset = this.LONG(this._offsets.IFD0 + Option.from(this.SHORT(this._offsets.IFD0)).getOrDie("Unable to calculate IFD1 offset") * 12 + 2);
-    if (IFD1Offset) {
-      this._offsets.IFD1 = this._offsets.tiffHeader + IFD1Offset;
-    }
-  }
+  const gps = tiff.bind((tiffTags) => {
+    return tiffTags.GPSInfoIFDPointer.fold(
+      () => Result.value(Option.none<GPSTags>()),
+      (gpsOffset) => extractTags(reader, TIFF_HEADER + gpsOffset, TIFF_HEADER, tags.gps)
+        .map(parseGpsTags).map(Option.some)
+    );
+  });
 
-  // The following methods are "inherited" from BinaryReader
+  const exififd = ifd0.bind((ifb0Start) => readShort(reader, ifb0Start).map((ifb0Length) => ifb0Start + 2 + (ifb0Length * 12)));
 
-  public BYTE(idx: number): number | null {
-      return this._reader.BYTE(idx);
-  }
+  const ifd1 = exififd.bind((exififdStart) => readLong(reader, exififdStart).map((ifb1Offset) => ifb1Offset + TIFF_HEADER));
 
-  public SHORT(idx: number): number | null {
-      return this._reader.SHORT(idx);
-  }
+  const thumb = ifd1.bind((ifd1Start) => {
+    return extractTags(reader, ifd1Start, TIFF_HEADER, tags.thumb)
+      .bind(parseThumbTags)
+      .map((tags) => reader.segment(TIFF_HEADER + tags.JPEGInterchangeFormat, tags.JPEGInterchangeFormatLength))
+      .map(Option.some);
+  });
 
-  public LONG(idx: number): number | null {
-      return this._reader.LONG(idx);
-  }
-
-  public SLONG(idx: number): number | null {
-      return this._reader.SLONG(idx);
-  }
-
-  public CHAR(idx: number): string {
-      return this._reader.CHAR(idx);
-  }
-
-  public STRING(idx: number, count: number): string {
-      return this._reader.STRING(idx, count);
-  }
-
-  public SEGMENT(idx: number, size: number): ArrayBuffer {
-      return this._reader.SEGMENT(idx, size);
-  }
-
-  public asArray(type: 'STRING' | 'CHAR', idx: number, count: number): string[];
-  public asArray(type: 'SEGMENT', idx: number, count: number): ArrayBuffer[];
-  public asArray(type: string, idx: number, count: number): number[];
-  public asArray(type: string, idx: number, count: number): (number | string | ArrayBuffer)[] {
-      // I have to override asArray because of the 'this[type]'
-      const values = [];
-
-      for (let i = 0; i < count; i++) {
-          values[i] = (this as any)[type](idx + i);
-      }
-      return values;
-  }
-
-  public length(): number {
-      return this._reader.length();
-  }
-
-  // End of "inherited" methods
-
-  public UNDEFINED(idx: number): number | null {
-    return this.BYTE(idx);
-  }
-
-  public RATIONAL(idx: number): number | null {
-    return Options.lift2(
-      Option.from(this.LONG(idx)),
-      Option.from(this.LONG(idx + 4)),
-      (num, denom) => num / denom
-    ).getOrNull();
-  }
-
-  public SRATIONAL(idx: number): number | null {
-    return Options.lift2(
-      Option.from(this.SLONG(idx)),
-      Option.from(this.SLONG(idx + 4)),
-      (num, denom) => num / denom
-    ).getOrNull();
-  }
-
-  public ASCII(idx: number): string {
-    return this.CHAR(idx);
-  }
-
-  public TIFF(): TiffTags {
-    return this._tiffTags;
-  }
-
-  public EXIF(): ExifTags | null {
-    const self = this;
-
-    if (self._offsets.exifIFD) {
-      try {
-        const Exif: ExifTags = self.extractTags(self._offsets.exifIFD, tags.exif);
-        // Fix formatting of some tags
-        if (Exif.ExifVersion && Array.isArray(Exif.ExifVersion)) {
-          let exifVersion = '';
-          for (const ch of Exif.ExifVersion) {
-            exifVersion += String.fromCharCode(ch);
-          }
-          Exif.ExifVersion = exifVersion;
-        }
-        return Exif;
-      } catch (ex) {
-        return null;
-      }
-    } else {
-      return null;
-    }
-  }
-
-  public GPS(): GPSTags | null {
-    const self = this;
-
-    if (self._offsets.gpsIFD) {
-      try {
-        const GPS: GPSTags = self.extractTags(self._offsets.gpsIFD, tags.gps);
-        // iOS devices (and probably some others) do not put in GPSVersionID tag (why?..)
-        if (GPS.GPSVersionID && Array.isArray(GPS.GPSVersionID)) {
-          GPS.GPSVersionID = GPS.GPSVersionID.join('.');
-        }
-        return GPS;
-      } catch (ex) {
-        return null;
-      }
-    } else {
-      return null;
-    }
-  }
-
-  public thumb(): ArrayBuffer | null {
-    const self = this;
-
-    if (self._offsets.IFD1) {
-      try {
-        const IFD1Tags: any = self.extractTags(self._offsets.IFD1, tags.thumb);
-
-        if ('JPEGInterchangeFormat' in IFD1Tags) {
-          return self.SEGMENT(self._offsets.tiffHeader + IFD1Tags.JPEGInterchangeFormat, IFD1Tags.JPEGInterchangeFormatLength);
-        }
-      } catch (ex) {
-        return null;
-      }
-    }
-    return null;
-  }
-
-  private extractTags(IFD_offset: number, tags2extract: any): any {
-    const self = this;
-    const hash: any = {};
-
-    const types: Record<number, string> = {
-      1 : 'BYTE',
-      7 : 'UNDEFINED',
-      2 : 'ASCII',
-      3 : 'SHORT',
-      4 : 'LONG',
-      5 : 'RATIONAL',
-      9 : 'SLONG',
-      10: 'SRATIONAL'
-    };
-
-    const sizes: Record<string, number> = {
-      BYTE      : 1,
-      UNDEFINED : 1,
-      ASCII     : 1,
-      SHORT     : 2,
-      LONG      : 4,
-      RATIONAL  : 8,
-      SLONG     : 4,
-      SRATIONAL : 8
-    };
-
-    const length = self.SHORT(IFD_offset);
-
-    if (length == null) {
-      return hash;
-    }
-
-    // The size of APP1 including all these elements shall not exceed the 64 Kbytes specified in the JPEG standard.
-
-    for (let i = 0; i < length; i++) {
-      let values = [];
-
-      // Set binary reader pointer to beginning of the next tag
-      let offset = IFD_offset + 2 + i * 12;
-
-      const tagId = self.SHORT(offset);
-      if (tagId === null) {
-        throw new Error('Invalid Exif data.');
-      }
-
-      const tag = tags2extract[tagId];
-
-      if (tag === undefined) {
-        continue; // Not the tag we requested
-      }
-
-      const typeId = self.SHORT(offset += 2);
-      const count = self.LONG(offset += 2);
-      if (typeId === null || count === null) {
-        throw new Error('Invalid Exif data.');
-      }
-      const type = types[typeId];
-      const size = sizes[type];
-
-      if (!size) {
-        throw new Error('Invalid Exif data.');
-      }
-
-      offset += 4;
-
-      // tag can only fit 4 bytes of data, if data is larger we should look outside
-      if (size * count > 4) {
-        // instead of data tag contains an offset of the data
-        const longAtOffset = self.LONG(offset);
-        if (longAtOffset === null) {
-          throw new Error('Invalid Exif data.');
-        }
-        offset = longAtOffset + self._offsets.tiffHeader;
-      }
-
-      // in case we left the boundaries of data throw an early exception
-      if (offset + size * count >= self.length()) {
-        throw new Error('Invalid Exif data.');
-      }
-
-      // special care for the string
-      if (type === 'ASCII') {
-        // TODO: maybe escape and sanitize
-        hash[tag] = self.STRING(offset, count).replace(/\0$/, '').trim(); // strip trailing NULL
-        continue;
-      } else {
-        values = self.asArray(type, offset, count);
-        const value = (count === 1 ? values[0] : values);
-
-        if (tagDescs.hasOwnProperty(tag) && typeof value !== 'object') {
-          hash[tag] = tagDescs[tag][value];
-        } else {
-          hash[tag] = value;
-        }
-      }
-    }
-
-    return hash;
-  }
-}
+  return {
+    tiff,
+    exif,
+    gps,
+    thumb
+  };
+};
