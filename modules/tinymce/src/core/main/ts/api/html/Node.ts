@@ -491,6 +491,12 @@ class Node {
             return false;
           }
 
+          // Keep anchor in empty block
+          const isAnchor = !node.attr('href') && (node.attr('id') || node.attr('name'));
+          if (isAnchor) {
+            return false;
+          }
+
           // Keep bookmark nodes and name attribute like <a name="1"></a>
           let i = node.attributes.length;
           while (i--) {

@@ -6,31 +6,33 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+import { Element } from '@ephox/dom-globals';
 
-const isValidId = function (id: string) {
+const isAnchor = (editor: Editor, node: Element) => node.tagName === 'A' && editor.dom.getAttrib(node, 'href') === '';
+
+const isValidId = (id: string) => {
   // Follows HTML4 rules: https://www.w3.org/TR/html401/types.html#type-id
   return /^[A-Za-z][A-Za-z0-9\-:._]*$/.test(id);
 };
 
-const getId = function (editor: Editor) {
+const getId = (editor: Editor) => {
   const selectedNode = editor.selection.getNode();
-  const isAnchor = selectedNode.tagName === 'A' && editor.dom.getAttrib(selectedNode, 'href') === '';
-  return isAnchor ? (selectedNode.getAttribute('id') || selectedNode.getAttribute('name')) : '';
+  return isAnchor(editor, selectedNode) ? (selectedNode.getAttribute('id') || selectedNode.getAttribute('name')) : '';
 };
 
-const insert = function (editor: Editor, id: string) {
+const insert = (editor: Editor, id: string) => {
   const selectedNode = editor.selection.getNode();
-  const isAnchor = selectedNode.tagName === 'A' && editor.dom.getAttrib(selectedNode, 'href') === '';
 
-  if (isAnchor) {
+  if (isAnchor(editor, selectedNode)) {
     selectedNode.removeAttribute('name');
     selectedNode.id = id;
     editor.undoManager.add();
   } else {
     editor.focus();
     editor.selection.collapse(true);
-    editor.execCommand('mceInsertContent', false, editor.dom.createHTML('a', {
-      id
+    editor.insertContent(editor.dom.createHTML('a', {
+      id,
+      contenteditable: 'false'
     }));
   }
 };

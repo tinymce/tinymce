@@ -11,7 +11,7 @@ import FilterContent from './core/FilterContent';
 import Buttons from './ui/Buttons';
 
 export default function () {
-  PluginManager.add('anchor', function (editor) {
+  PluginManager.add('anchor', (editor) => {
     FilterContent.setup(editor);
     Commands.register(editor);
     Buttons.register(editor);

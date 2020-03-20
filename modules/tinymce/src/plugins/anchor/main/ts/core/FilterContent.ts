@@ -5,22 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const isAnchorNode = function (node) {
-  return !node.attr('href') && (node.attr('id') || node.attr('name')) && !node.firstChild;
+import { Arr } from '@ephox/katamari';
+import Node from 'tinymce/core/api/html/Node';
+import Editor from 'tinymce/core/api/Editor';
+
+const isAnchorNode = (node: Node) => {
+  return !node.attr('href') && (node.attr('id') || node.attr('name'));
 };
 
-const setContentEditable = function (state) {
-  return function (nodes) {
-    for (let i = 0; i < nodes.length; i++) {
-      if (isAnchorNode(nodes[i])) {
-        nodes[i].attr('contenteditable', state);
-      }
+const setContentEditable = (state: string | null) => (nodes: Node[]) =>
+  Arr.each((nodes), (node) => {
+    if (isAnchorNode(node)) {
+      node.attr('contenteditable', state);
     }
-  };
-};
+  });
 
-const setup = function (editor) {
-  editor.on('PreInit', function () {
+const setup = (editor: Editor) => {
+  editor.on('PreInit', () => {
     editor.parser.addNodeFilter('a', setContentEditable('false'));
     editor.serializer.addNodeFilter('a', setContentEditable(null));
   });
