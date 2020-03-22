@@ -8,9 +8,10 @@
 import { Compare, Element, Focus } from '@ephox/sugar';
 
 import * as CursorRefresh from '../../touch/focus/CursorRefresh';
+import { HTMLElement, Window } from '@ephox/dom-globals';
 
-const resume = function (cWin, frame) {
-  Focus.active().each(function (active) {
+const resume = (cWin: Window, frame: Element<HTMLElement>): void => {
+  Focus.active().each((active) => {
     // INVESTIGATE: This predicate may not be required. The purpose of it is to ensure
     // that the content window's frame element is not unnecessarily blurred before giving
     // it focus.
