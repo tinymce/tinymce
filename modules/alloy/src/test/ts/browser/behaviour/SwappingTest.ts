@@ -36,7 +36,7 @@ UnitTest.asynctest('SwappingTest', (success, failure) => {
       })
     );
   }, (doc, body, gui, component, store) => {
-    // / string -> [string] -> [string] -> ()
+    // string -> [string] -> [string] -> ()
     const assertClasses = (label: string, has: string[], not: string[]) => {
       Assertions.assertStructure(
         'Asserting structure after: ' + label,

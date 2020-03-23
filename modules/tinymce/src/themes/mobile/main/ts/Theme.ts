@@ -28,9 +28,9 @@ import * as FormatChangers from './util/FormatChangers';
 import * as SkinLoaded from './util/SkinLoaded';
 import { NotificationSpec } from 'tinymce/core/api/NotificationManager';
 
-// / not to be confused with editor mode
-const READING = 'toReading'; // / 'hide the keyboard'
-const EDITING = 'toEditing'; // / 'show the keyboard'
+// not to be confused with editor mode
+const READING = 'toReading'; // 'hide the keyboard'
+const EDITING = 'toEditing'; // 'show the keyboard'
 
 const renderMobileTheme = (editor: Editor) => {
   const renderUI = () => {
@@ -161,7 +161,7 @@ const renderMobileTheme = (editor: Editor) => {
             } else if (Node.name(target) === 'a') {
               const component = realm.system().getByDom(Element.fromDom(editor.editorContainer));
               component.each((container) => {
-                // / view mode
+                // view mode
                 if (Swapping.isAlpha(container)) {
                   TinyCodeDupe.openLink(target.dom());
                 }
