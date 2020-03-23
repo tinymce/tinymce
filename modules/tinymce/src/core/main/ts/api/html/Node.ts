@@ -491,17 +491,12 @@ class Node {
             return false;
           }
 
-          // Keep anchor in empty block
-          const isAnchor = !node.attr('href') && (node.attr('id') || node.attr('name'));
-          if (isAnchor) {
-            return false;
-          }
-
-          // Keep bookmark nodes and name attribute like <a name="1"></a>
+          // Keep nodes with data-bookmark attributes, name attributes or are named anchors
           let i = node.attributes.length;
           while (i--) {
+            const isNamedAnchor = node.name === 'a' && !node.attr('href') && node.attr('id');
             const name = node.attributes[i].name;
-            if (name === 'name' || name.indexOf('data-mce-bookmark') === 0) {
+            if (name === 'name' || name.indexOf('data-mce-bookmark') === 0 || isNamedAnchor) {
               return false;
             }
           }

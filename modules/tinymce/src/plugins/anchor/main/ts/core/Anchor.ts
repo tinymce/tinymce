@@ -8,7 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import { Element } from '@ephox/dom-globals';
 
-const isAnchor = (editor: Editor, node: Element) => node.tagName === 'A' && editor.dom.getAttrib(node, 'href') === '';
+const isNamedAnchor = (editor: Editor, node: Element) => node.tagName === 'A' && editor.dom.getAttrib(node, 'href') === '';
 
 const isValidId = (id: string) => {
   // Follows HTML4 rules: https://www.w3.org/TR/html401/types.html#type-id
@@ -17,13 +17,13 @@ const isValidId = (id: string) => {
 
 const getId = (editor: Editor) => {
   const selectedNode = editor.selection.getNode();
-  return isAnchor(editor, selectedNode) ? (selectedNode.getAttribute('id') || selectedNode.getAttribute('name')) : '';
+  return isNamedAnchor(editor, selectedNode) ? (selectedNode.getAttribute('id') || selectedNode.getAttribute('name')) : '';
 };
 
 const insert = (editor: Editor, id: string) => {
   const selectedNode = editor.selection.getNode();
 
-  if (isAnchor(editor, selectedNode)) {
+  if (isNamedAnchor(editor, selectedNode)) {
     selectedNode.removeAttribute('name');
     selectedNode.id = id;
     editor.undoManager.add();
@@ -31,8 +31,7 @@ const insert = (editor: Editor, id: string) => {
     editor.focus();
     editor.selection.collapse(true);
     editor.insertContent(editor.dom.createHTML('a', {
-      id,
-      contenteditable: 'false'
+      id
     }));
   }
 };

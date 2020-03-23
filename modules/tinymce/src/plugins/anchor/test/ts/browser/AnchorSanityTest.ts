@@ -1,12 +1,12 @@
 import { Pipeline, Step, Waiter, Log } from '@ephox/agar';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import AchorPlugin from 'tinymce/plugins/anchor/Plugin';
+import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorSanityTest.js', (success, failure) => {
-  AchorPlugin();
+UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorSanityTest', (success, failure) => {
+  AnchorPlugin();
   SilverTheme();
 
   const sType = (text: string) =>
@@ -39,20 +39,20 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorSanityTest.js', (succes
         sAddAnchor(tinyApis, tinyUi, 'abc'),
         tinyApis.sAssertContent('<p><a id="abc"></a>abc</p>')
       ]),
-      Log.stepsAsStep('TBA', 'Anchor: Add anchor to empty editor, then check if that anchor is present in the editor', [
+      Log.stepsAsStep('TINY-2788', 'Anchor: Add anchor to empty editor, then check if that anchor is present in the editor', [
         tinyApis.sSetContent(''),
         tinyApis.sFocus(),
         sAddAnchor(tinyApis, tinyUi, 'abc'),
         tinyApis.sAssertContent('<p><a id="abc"></a></p>')
       ]),
-      Log.stepsAsStep('TBA', 'Anchor: Add anchor to empty line, then check if that anchor is present in the editor', [
+      Log.stepsAsStep('TINY-2788', 'Anchor: Add anchor to empty line, then check if that anchor is present in the editor', [
         tinyApis.sSetContent('<p>abc</p><p></p><p>def</p>'),
         tinyApis.sFocus(),
         tinyApis.sSetCursor([1], 0),
         sAddAnchor(tinyApis, tinyUi, 'abc'),
         tinyApis.sAssertContent('<p>abc</p>\n<p><a id="abc"></a></p>\n<p>def</p>')
       ]),
-      Log.stepsAsStep('TBA', 'Anchor: Add two anchors side by side, then check if they are present in the editor', [
+      Log.stepsAsStep('TINY-2788', 'Anchor: Add two anchors side by side, then check if they are present in the editor', [
         tinyApis.sSetContent(''),
         tinyApis.sFocus(),
         sAddAnchor(tinyApis, tinyUi, 'abc'),
@@ -60,8 +60,7 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorSanityTest.js', (succes
         sAddAnchor(tinyApis, tinyUi, 'def', 2),
         tinyApis.sAssertContent('<p><a id="abc"></a><a id="def"></a></p>'),
       ])
-    ]
-      , onSuccess, onFailure);
+    ], onSuccess, onFailure);
   }, {
     theme: 'silver',
     plugins: 'anchor',

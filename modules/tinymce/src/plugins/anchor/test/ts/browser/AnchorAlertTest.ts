@@ -1,13 +1,13 @@
 import { Pipeline, Step, Log, Waiter, UiFinder } from '@ephox/agar';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import AchorPlugin from 'tinymce/plugins/anchor/Plugin';
+import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Element } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorAlertTest', (success, failure) => {
-  AchorPlugin();
+  AnchorPlugin();
   Theme();
 
   const sType = (text: string) =>
@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorAlertTest', (success, f
     const alertDialogSelector = 'div[role="dialog"].tox-dialog.tox-alert-dialog';
 
     Pipeline.async({},
-      Log.steps('TBA', 'Anchor: Add anchor with invalid id, check alert appears', [
+      Log.steps('TINY-2788', 'Anchor: Add anchor with invalid id, check alert appears', [
         tinyApis.sSetContent(''),
         sAddAnchor(tinyUi, ''),
         tinyUi.sWaitForPopup('Wait for alert window', alertDialogSelector),
@@ -43,8 +43,7 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorAlertTest', (success, f
         tinyUi.sClickOnUi('Click on Cancel button', 'button.tox-button:contains(Cancel)'),
         Waiter.sTryUntil('Anchor Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
         tinyApis.sAssertContent(''),
-      ])
-      , onSuccess, onFailure);
+      ]), onSuccess, onFailure);
   }, {
     theme: 'silver',
     plugins: 'anchor',

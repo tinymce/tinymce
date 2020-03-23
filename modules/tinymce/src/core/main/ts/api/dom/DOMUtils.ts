@@ -1050,18 +1050,13 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
             return false;
           }
 
-          // Keep anchor in empty block
-          const isAnchor = name && !getAttrib(node, 'href') && (getAttrib(node, 'id') || getAttrib(node, 'name'));
-          if (isAnchor) {
-            return false;
-          }
-
-          // Keep elements with data-bookmark attributes or name attribute like <a name="1"></a>
+          // Keep elements with data-bookmark attributes, name attributes or are named anchors
           attributes = getAttribs(node);
           i = attributes.length;
           while (i--) {
+            const isNamedAnchor = node.nodeName === 'A' && !getAttrib(node, 'href') && getAttrib(node, 'id');
             name = attributes[i].nodeName;
-            if (name === 'name' || name === 'data-mce-bookmark') {
+            if (name === 'name' || name === 'data-mce-bookmark' || isNamedAnchor) {
               return false;
             }
           }
