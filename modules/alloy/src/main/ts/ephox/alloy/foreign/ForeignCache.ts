@@ -17,8 +17,8 @@ export default () => {
       // If we haven't already setup this particular element, then generate any state and config
       // required by its behaviours and put it in the cache.
       const info = {
-        events: Obj.hasNonNullableKey(spec, 'events') ? spec.events! : { }, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        eventOrder: Obj.hasNonNullableKey(spec, 'eventOrder') ? spec.eventOrder! : { } // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        events: Obj.hasNonNullableKey(spec, 'events') ? spec.events : { },
+        eventOrder: Obj.hasNonNullableKey(spec, 'eventOrder') ? spec.eventOrder : { }
       };
 
       // NOTE: Note all behaviours are supported at the moment
