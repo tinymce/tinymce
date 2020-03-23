@@ -26,6 +26,7 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorContentEditableTest', (
                       attrs: { contenteditable: str.is('false'), id: str.is('abc') },
                       classes: [arr.has('mce-item-anchor')]
                     }),
+                    s.theRest()
                   ]
                 })
               ]
@@ -48,6 +49,7 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorContentEditableTest', (
                       attrs: { contenteditable: str.none(), id: str.is('abc') },
                       classes: [arr.has('mce-item-anchor')]
                     }),
+                    s.theRest()
                   ]
                 })
               ]

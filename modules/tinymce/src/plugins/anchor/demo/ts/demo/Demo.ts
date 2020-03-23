@@ -5,6 +5,7 @@ tinymce.init({
   plugins: 'anchor code',
   toolbar: 'anchor code',
   height: 600,
+  forced_root_block: false
 });
 
 export {};
