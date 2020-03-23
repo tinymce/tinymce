@@ -78,20 +78,20 @@ const match = function (predicates, action) {
 
 const getAction = function (editor: Editor, evt?) {
   return LazyEvaluator.evaluateUntil([
-    match([shouldBlockNewLine], newLineAction.none()),
-    match([inSummaryBlock()], newLineAction.br()),
-    match([inPreBlock(true), shouldPutBrInPre(false), hasShiftKey], newLineAction.br()),
-    match([inPreBlock(true), shouldPutBrInPre(false)], newLineAction.block()),
-    match([inPreBlock(true), shouldPutBrInPre(true), hasShiftKey], newLineAction.block()),
-    match([inPreBlock(true), shouldPutBrInPre(true)], newLineAction.br()),
-    match([inListBlock(true), hasShiftKey], newLineAction.br()),
-    match([inListBlock(true)], newLineAction.block()),
-    match([isBrMode(true), hasShiftKey, canInsertIntoEditableRoot], newLineAction.block()),
-    match([isBrMode(true)], newLineAction.br()),
-    match([inBrContext], newLineAction.br()),
-    match([isBrMode(false), hasShiftKey], newLineAction.br()),
-    match([canInsertIntoEditableRoot], newLineAction.block())
-  ], [editor, !!(evt && evt.shiftKey)]).getOr(newLineAction.none());
+    match([ shouldBlockNewLine ], newLineAction.none()),
+    match([ inSummaryBlock() ], newLineAction.br()),
+    match([ inPreBlock(true), shouldPutBrInPre(false), hasShiftKey ], newLineAction.br()),
+    match([ inPreBlock(true), shouldPutBrInPre(false) ], newLineAction.block()),
+    match([ inPreBlock(true), shouldPutBrInPre(true), hasShiftKey ], newLineAction.block()),
+    match([ inPreBlock(true), shouldPutBrInPre(true) ], newLineAction.br()),
+    match([ inListBlock(true), hasShiftKey ], newLineAction.br()),
+    match([ inListBlock(true) ], newLineAction.block()),
+    match([ isBrMode(true), hasShiftKey, canInsertIntoEditableRoot ], newLineAction.block()),
+    match([ isBrMode(true) ], newLineAction.br()),
+    match([ inBrContext ], newLineAction.br()),
+    match([ isBrMode(false), hasShiftKey ], newLineAction.br()),
+    match([ canInsertIntoEditableRoot ], newLineAction.block())
+  ], [ editor, !!(evt && evt.shiftKey) ]).getOr(newLineAction.none());
 };
 
 export {

@@ -39,7 +39,7 @@ const sketch = (editor): SketchSpec => {
   const pickerDom = {
     tag: 'input',
     attributes: { accept: 'image/*', type: 'file', title: '' },
-     // Visibility hidden so that it cannot be seen, and position absolute so that it doesn't
+    // Visibility hidden so that it cannot be seen, and position absolute so that it doesn't
     // disrupt the layout
     styles: { visibility: 'hidden', position: 'absolute' }
   };
@@ -63,7 +63,7 @@ const sketch = (editor): SketchSpec => {
     components: [
       memPicker.asSpec()
     ],
-    action (button) {
+    action(button) {
       const picker = memPicker.get(button);
       // Trigger a dom click for the file input
       picker.element().dom().click();

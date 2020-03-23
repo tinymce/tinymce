@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.print.PrintSanityTest', (success, fa
 
     Pipeline.async({}, [ Log.step('TBA', 'Print: Assert print button exists',
       tinyUi.sWaitForUi('check print button exists', 'button[aria-label="Print"]')
-    )], onSuccess, onFailure);
+    ) ], onSuccess, onFailure);
   }, {
     plugins: 'print',
     toolbar: 'print',

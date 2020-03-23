@@ -132,7 +132,7 @@ export default () => {
   const gridSpec = renderGrid({
     columns: 5,
     items: [
-      AlloyInput.sketch({ inputAttributes: { placeholder: 'Text goes here...' } }) as any,
+      AlloyInput.sketch({ inputAttributes: { placeholder: 'Text goes here...' }}) as any,
       renderButton({
         name: 'gridspecbutton',
         text: 'Click Me!',
@@ -287,7 +287,7 @@ export default () => {
       },
       components: [
         { dom: DomFactory.fromHtml('<h3>' + label + '</h3>') },
-        { dom: { tag: 'hr' } },
+        { dom: { tag: 'hr' }},
         spec
       ]
     };

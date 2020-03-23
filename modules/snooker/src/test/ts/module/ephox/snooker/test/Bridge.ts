@@ -20,10 +20,10 @@ const targetStub = function (selection: { section: number, row: number, column: 
 };
 
 const generators: Generators = {
-  row () {
+  row() {
     return Element.fromTag('tr');
   },
-  cell (prev) {
+  cell(prev) {
     const tag = Element.fromTag(Node.name(prev.element()));
     Insert.append(tag, Element.fromText('?'));
     // We aren't halving widths here, so table widths will not be preserved.p
@@ -32,7 +32,7 @@ const generators: Generators = {
     });
     return tag;
   },
-  replace (cell, tag, attrs) {
+  replace(cell, tag, attrs) {
     const replica = Replication.copy(cell, tag);
     // TODO: Snooker passes null to indicate 'remove attribute'
     Obj.each(attrs, function (v, k) {
@@ -44,7 +44,7 @@ const generators: Generators = {
     });
     return replica;
   },
-  gap () {
+  gap() {
     const tag = Element.fromTag('td');
     Insert.append(tag, Element.fromText('?'));
     return tag;

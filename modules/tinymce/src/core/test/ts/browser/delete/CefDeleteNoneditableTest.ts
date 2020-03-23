@@ -20,9 +20,9 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
     const generalTests = [
       Log.stepsAsStep('TINY-3868', 'Should not backspace cef inside cef with ranged selection', [
         tinyApis.sSetContent('<div class="mceNonEditable"><span class="mceNonEditable">a</span> b</div><p>c</p>'),
-        tinyApis.sSelect('div.mceNonEditable', [0]),
+        tinyApis.sSelect('div.mceNonEditable', [ 0 ]),
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
-        tinyApis.sAssertSelection([0], 0, [0], 1),
+        tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 1),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build((s, str, arr) => {
             return s.element('body', {
@@ -53,9 +53,9 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
 
       Log.stepsAsStep('TINY-3868', 'Should not delete cef inside cef with ranged selection', [
         tinyApis.sSetContent('<div class="mceNonEditable"><span class="mceNonEditable">a</span> b</div><p>c</p>'),
-        tinyApis.sSelect('div.mceNonEditable', [0]),
+        tinyApis.sSelect('div.mceNonEditable', [ 0 ]),
         tinyActions.sContentKeystroke(46, {}), // 46 = delete keycode
-        tinyApis.sAssertSelection([0], 0, [0], 1),
+        tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 1),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build((s, str, arr) => {
             return s.element('body', {
@@ -86,10 +86,10 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
 
       Log.stepsAsStep('TINY-3868', 'Should backspace cef inside cet with collapsed selection after inner cef', [
         tinyApis.sSetContent('<div class="mceNonEditable"><span class="mceEditable"><span class="mceNonEditable">az</span> b</span> c</div><p>d</p>'),
-        tinyApis.sSelect('div>span', [0]),
+        tinyApis.sSelect('div>span', [ 0 ]),
         Keyboard.sKeydown(Element.fromDom(editor.getDoc()), Keys.right(), { }),
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
-        tinyApis.sAssertSelection([0, 0, 0], 0, [0, 0, 0], 0),
+        tinyApis.sAssertSelection([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build((s, str, arr) => {
             return s.element('body', {
@@ -120,10 +120,10 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
     const nonIeTests = [
       Log.stepsAsStep('TINY-3868', 'Should not backspace cef inside cef with collapsed selection after inner cef', [
         tinyApis.sSetContent('<div class="mceNonEditable"><span class="mceNonEditable">a</span> b</div><p>c</p>'),
-        tinyApis.sSelect('div.mceNonEditable', [0]),
+        tinyApis.sSelect('div.mceNonEditable', [ 0 ]),
         Keyboard.sKeydown(Element.fromDom(editor.getDoc()), Keys.right(), { }),
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
-        tinyApis.sAssertSelection([0, 1], 1, [0, 1], 1),
+        tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 1 ], 1),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build((s, str, arr) => {
             return s.element('body', {
@@ -152,10 +152,10 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
 
       Log.stepsAsStep('TINY-3868', 'Should not delete cef inside cef with collapsed selection before inner cef', [
         tinyApis.sSetContent('<div class="mceNonEditable"><span class="mceNonEditable">a</span> b</div><p>c</p>'),
-        tinyApis.sSelect('div.mceNonEditable', [0]),
+        tinyApis.sSelect('div.mceNonEditable', [ 0 ]),
         Keyboard.sKeydown(Element.fromDom(editor.getDoc()), Keys.left(), { }),
         tinyActions.sContentKeystroke(46, {}), // 46 = delete keycode
-        tinyApis.sAssertSelection([0, 0], 0, [0, 0], 0),
+        tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build((s, str, arr) => {
             return s.element('body', {

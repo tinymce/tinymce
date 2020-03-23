@@ -9,7 +9,7 @@ tinymce.init({
   skin_url: '../../../../../js/tinymce/skins/ui/oxide',
   plugins: 'paste code',
   toolbar: 'undo redo | pastetext code',
-  init_instance_callback (editor) {
+  init_instance_callback(editor) {
     editor.on('PastePreProcess', function (evt) {
       console.log(evt);
     });

@@ -114,87 +114,87 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', funct
   Pipeline.async({}, [
     Logger.t('attached element returns some', Chain.asStep(viewBlock, [
       cSetHtml('hello'),
-      cSetSelection([0], 0, [0], 1),
+      cSetSelection([ 0 ], 0, [ 0 ], 1),
       cGetBookmark([]),
       cAssertSome,
       cSetSelectionFromBookmark,
-      cAssertSelection([0], 0, [0], 1)
+      cAssertSelection([ 0 ], 0, [ 0 ], 1)
     ])),
     Logger.t('foffset too big', Chain.asStep(viewBlock, [
       cSetHtml('hello'),
-      cSetSelection([0], 0, [0], 3),
+      cSetSelection([ 0 ], 0, [ 0 ], 3),
       cGetBookmark([]),
       cManipulateBookmarkOffsets(0, 10),
       cSetSelectionFromBookmark,
-      cAssertSelection([0], 0, [0], 5)
+      cAssertSelection([ 0 ], 0, [ 0 ], 5)
     ])),
     Logger.t('soffset too small', Chain.asStep(viewBlock, [
       cSetHtml('hello'),
-      cSetSelection([0], 0, [0], 3),
+      cSetSelection([ 0 ], 0, [ 0 ], 3),
       cGetBookmark([]),
       cManipulateBookmarkOffsets(-2, 5),
       cSetSelectionFromBookmark,
-      cAssertSelection([0], 0, [0], 5)
+      cAssertSelection([ 0 ], 0, [ 0 ], 5)
     ])),
     Logger.t('both offsets too small', Chain.asStep(viewBlock, [
       cSetHtml('hello'),
-      cSetSelection([0], 0, [0], 3),
+      cSetSelection([ 0 ], 0, [ 0 ], 3),
       cGetBookmark([]),
       cManipulateBookmarkOffsets(-2, -5),
       cSetSelectionFromBookmark,
-      cAssertSelection([0], 0, [0], 0)
+      cAssertSelection([ 0 ], 0, [ 0 ], 0)
     ])),
     Logger.t('both offsets too small', Chain.asStep(viewBlock, [
       cSetHtml('hello'),
-      cSetSelection([0], 0, [0], 3),
+      cSetSelection([ 0 ], 0, [ 0 ], 3),
       cGetBookmark([]),
       cManipulateBookmarkOffsets(6, 6),
       cSetSelectionFromBookmark,
-      cAssertSelection([0], 5, [0], 5)
+      cAssertSelection([ 0 ], 5, [ 0 ], 5)
     ])),
     Logger.t('two p tags offsets too big', Chain.asStep(viewBlock, [
       cSetHtml('<p>abc</p><p>123</p>'),
-      cSetSelection([0, 0], 0, [1, 0], 1),
+      cSetSelection([ 0, 0 ], 0, [ 1, 0 ], 1),
       cGetBookmark([]),
       cAssertSome,
       cManipulateBookmarkOffsets(4, 4),
       cSetSelectionFromBookmark,
-      cAssertSelection([0, 0], 3, [1, 0], 3)
+      cAssertSelection([ 0, 0 ], 3, [ 1, 0 ], 3)
     ])),
     Logger.t('two p tags, delete one and should be none', Chain.asStep(viewBlock, [
       cSetHtml('<p>abc</p><p>123</p>'),
-      cSetSelection([0, 0], 0, [1, 0], 1),
+      cSetSelection([ 0, 0 ], 0, [ 1, 0 ], 1),
       cGetBookmark([]),
       cAssertSome,
-      cDeleteElement([0]),
+      cDeleteElement([ 0 ]),
       cValidateBookmark([]),
       cAssertNone()
     ])),
     Logger.t('three p tags, delete middle and should be none', Chain.asStep(viewBlock, [
       cSetHtml('<p>abc</p><p>xyz</p><p>123</p>'),
-      cSetSelection([0, 0], 0, [2, 0], 1),
+      cSetSelection([ 0, 0 ], 0, [ 2, 0 ], 1),
       cGetBookmark([]),
       cAssertSome,
-      cDeleteElement([1]),
+      cDeleteElement([ 1 ]),
       cValidateBookmark([]),
       cSetSelectionFromBookmark,
-      cAssertSelection([0, 0], 0, [1, 0], 1)
+      cAssertSelection([ 0, 0 ], 0, [ 1, 0 ], 1)
     ])),
     Logger.t('backwards selection should set a non-backwards bookmark, one p tag', Chain.asStep(viewBlock, [
       cSetHtml('<p>hello</p>'),
-      cSetSelection([0, 0], 5, [0, 0], 0),
+      cSetSelection([ 0, 0 ], 5, [ 0, 0 ], 0),
       cGetBookmark([]),
       cAssertSome,
       cValidateBookmark([]),
-      cAssertBookmark([0, 0], 0, [0, 0], 5)
+      cAssertBookmark([ 0, 0 ], 0, [ 0, 0 ], 5)
     ])),
     Logger.t('backwards selection should set a non-backwards bookmark, two p tags', Chain.asStep(viewBlock, [
       cSetHtml('<p>hello</p><p>world</p>'),
-      cSetSelection([1, 0], 3, [0, 0], 2),
+      cSetSelection([ 1, 0 ], 3, [ 0, 0 ], 2),
       cGetBookmark([]),
       cAssertSome,
       cValidateBookmark([]),
-      cAssertBookmark([0, 0], 2, [1, 0], 3)
+      cAssertBookmark([ 0, 0 ], 2, [ 1, 0 ], 3)
     ])),
     Logger.t('readRange with with win without getSelection should return Option.none', Chain.asStep({}, [
       Chain.injectThunked(function () {

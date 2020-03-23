@@ -73,7 +73,7 @@ UnitTest.asynctest('Widget Keying Test', (success, failure) => {
       Container.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'widget-keying-test'],
+          classes: [ 'widget-keying-test' ],
           styles: {
             background: 'blue',
             padding: '1em'

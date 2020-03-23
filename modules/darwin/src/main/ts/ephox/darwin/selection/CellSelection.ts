@@ -82,7 +82,7 @@ const getLast = function (boxes: Element[], lastSelectedSelector: string) {
 const getEdges = function (container: Element, firstSelectedSelector: string, lastSelectedSelector: string) {
   return SelectorFind.descendant(container, firstSelectedSelector).bind(function (first) {
     return SelectorFind.descendant(container, lastSelectedSelector).bind(function (last) {
-      return DomParent.sharedOne(lookupTable, [first, last]).map(function (tbl) {
+      return DomParent.sharedOne(lookupTable, [ first, last ]).map(function (tbl) {
         return {
           first: Fun.constant(first),
           last: Fun.constant(last),

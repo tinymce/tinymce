@@ -29,7 +29,7 @@ const CreateIconManager = (): IconManager => {
       return lookup[id];
     }
 
-    return { icons: {} };
+    return { icons: {}};
   };
 
   const has = (id: string) => {

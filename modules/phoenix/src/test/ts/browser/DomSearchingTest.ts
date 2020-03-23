@@ -8,7 +8,7 @@ UnitTest.test('DomSearchingTest', function () {
   const root = Element.fromTag('div');
   root.dom().innerHTML = 'This is some<ol><li>text</li></ol>';
 
-  const result = DomSearch.run([root], [{
+  const result = DomSearch.run([ root ], [{
     word: Fun.constant('sometext'),
     pattern: Fun.constant(Pattern.unsafetoken('sometext'))
   }], Fun.constant(false));

@@ -38,7 +38,7 @@ export function FormatRegistry(editor: Editor): FormatRegistry {
       } else {
         // Force format into array and add it to internal collection
         if (!Type.isArray(format)) {
-          format = [format];
+          format = [ format ];
         }
 
         Tools.each(format, function (format: any) {

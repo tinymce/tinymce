@@ -37,20 +37,20 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
     Pipeline.async({}, [
       Logger.t('Should insert a before b', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>b</p>'),
-        tinyApis.sSetSelection([0, 0], 0, [0, 0], 0),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
         sSetContent(editor, 'a', {}),
         tinyApis.sAssertContent('<p>ab</p>')
       ])),
       Logger.t('Should fill the body with x h1 instead of a before b in a paragraph', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>b</p>'),
-        tinyApis.sSetSelection([0, 0], 0, [0, 0], 0),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
         sSetContentOverride(editor, 'a', '<h1>x</h1>', {}),
         tinyApis.sAssertContent('<h1>x</h1>')
       ])),
 
       Logger.t('Insert content in middle of word, expanded selection', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>abc</p>'),
-        tinyApis.sSetSelection([0, 0], 1, [0, 0], 2),
+        tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 2),
         sSetContent(editor, 'X', {}),
         Assertions.sAssertStructure('Checking initial structure',
           ApproxStructure.build((s, str, arr) => {
@@ -66,12 +66,12 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
           }),
           root
         ),
-        tinyApis.sAssertSelection([0, 0], 2, [0, 0], 2),
+        tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
       ])),
 
       Logger.t('Insert content in middle of word, collapsed selection', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>ab</p>'),
-        tinyApis.sSetSelection([0, 0], 1, [0, 0], 1),
+        tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
         sSetContent(editor, 'X', {}),
         Assertions.sAssertStructure('Checking initial structure',
           ApproxStructure.build((s, str, arr) => {
@@ -87,12 +87,12 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
           }),
           root
         ),
-        tinyApis.sAssertSelection([0, 0], 2, [0, 0], 2),
+        tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
       ])),
 
       Logger.t('Insert content at start of word, collapsed selection', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetSelection([0, 0], 0, [0, 0], 0),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
         sSetContent(editor, 'X', {}),
         Assertions.sAssertStructure('Checking initial structure',
           ApproxStructure.build((s, str, arr) => {
@@ -108,12 +108,12 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
           }),
           root
         ),
-        tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1),
+        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
       ])),
 
       Logger.t('Insert content at end of word, collapsed selection', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetSelection([0, 0], 1, [0, 0], 1),
+        tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
         sSetContent(editor, 'X', {}),
         Assertions.sAssertStructure('Checking initial structure',
           ApproxStructure.build((s, str, arr) => {
@@ -133,7 +133,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
 
       Logger.t('Insert content at end of word with partial text', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetSelection([0, 0], 1, [0, 0], 1),
+        tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
         sSetContent(editor, 'b<em>c</em>', {}),
         Assertions.sAssertStructure('Checking initial structure',
           ApproxStructure.build((s, str, arr) => {
@@ -158,7 +158,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
 
       Logger.t('Insert content at end of word with partial text', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetSelection([0, 0], 1, [0, 0], 1),
+        tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
         sSetContent(editor, '<em>b</em>c', {}),
         Assertions.sAssertStructure('Checking initial structure',
           ApproxStructure.build((s, str, arr) => {

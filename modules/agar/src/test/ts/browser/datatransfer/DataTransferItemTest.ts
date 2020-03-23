@@ -14,7 +14,7 @@ import { KAssert } from '@ephox/katamari-assertions';
 UnitTest.asynctest('DataTransferItemTest', (success, failure) => {
   Pipeline.async({}, [
     Logger.t('Create transfer item from file', Step.sync(() => {
-      const fileItem = createDataTransferItemFromFile(createDataTransfer(), createFile('a.txt', 1234, new Blob(['123'], { type: 'text/plain' })));
+      const fileItem = createDataTransferItemFromFile(createDataTransfer(), createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/plain' })));
 
       Assert.eq('Should be the expected kind', 'file', fileItem.kind);
       Assert.eq('Should be a noop', Fun.noop, fileItem.getAsString);

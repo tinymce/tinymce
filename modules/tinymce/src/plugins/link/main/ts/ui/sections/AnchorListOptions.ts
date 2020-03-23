@@ -15,10 +15,10 @@ const getAnchors = (editor): Option<ListValue[]> => {
   const anchorNodes = editor.dom.select('a:not([href])');
   const anchors = Arr.bind(anchorNodes, function (anchor: HTMLAnchorElement) {
     const id = anchor.name || anchor.id;
-    return id ? [ { text: id, value: '#' + id } ] : [ ];
+    return id ? [{ text: id, value: '#' + id }] : [ ];
   });
 
-  return anchors.length > 0 ? Option.some([ { text: 'None', value: '' } ].concat(anchors)) : Option.none();
+  return anchors.length > 0 ? Option.some([{ text: 'None', value: '' }].concat(anchors)) : Option.none();
 };
 
 export const AnchorListOptions = {

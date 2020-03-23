@@ -40,7 +40,7 @@ const wrap = function (innerElm, elms) {
     Insert.append(elm, acc);
     return elm;
   }, innerElm);
-  return elms.length > 0 ? Fragment.fromElements([wrapped]) : wrapped;
+  return elms.length > 0 ? Fragment.fromElements([ wrapped ]) : wrapped;
 };
 
 const directListWrappers = function (commonAnchorContainer) {
@@ -86,7 +86,7 @@ const getTableFragment = function (rootNode, selectedTableCells) {
     const fullTableModel = SimpleTableModel.fromDom(tableElm);
 
     return SimpleTableModel.subsection(fullTableModel, firstCell, lastCell).map(function (sectionedTableModel) {
-      return Fragment.fromElements([SimpleTableModel.toDom(sectionedTableModel)]);
+      return Fragment.fromElements([ SimpleTableModel.toDom(sectionedTableModel) ]);
     });
   }).getOrThunk(emptyFragment);
 };

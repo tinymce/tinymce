@@ -228,9 +228,9 @@ UnitTest.asynctest('Chain.predicate true', (success, failure) => {
   Pipeline.async('stepstate', [
     StepAssertions.testStepsPass(
       'stepstate',
-      [Chain.asStep('chicken', [Chain.predicate((x) => {
+      [ Chain.asStep('chicken', [ Chain.predicate((x) => {
         return x === 'chicken';
-      })])]
+      }) ]) ]
     )
   ], () => success(), failure);
 });
@@ -239,7 +239,7 @@ UnitTest.asynctest('Chain.predicate false', (success, failure) => {
   Pipeline.async('stepstate', [
     StepAssertions.testStepsFail(
       'predicate did not succeed',
-      [Chain.asStep('chicken', [Chain.predicate((x) => x === 'frog')])]
+      [ Chain.asStep('chicken', [ Chain.predicate((x) => x === 'frog') ]) ]
     )
   ], () => success(), failure);
 });

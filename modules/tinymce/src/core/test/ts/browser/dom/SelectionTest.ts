@@ -1185,7 +1185,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(curRng.endContainer.nodeName, 'BODY');
     LegacyUnit.equal(curRng.endOffset, 0);
   });
-/*
+  /*
   // TODO: Re-implement this test as a separate test if needed by destroying an editor etc
   suite.test('getRng should return null if win.document is not defined or null', function (editor) {
     const win = editor.selection.win;

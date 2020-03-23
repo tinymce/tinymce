@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.MergeCellCommandTest', (succes
 
   const testCommand = function (editor, command, tests) {
     // TODO: Figure out why these doesn't work
-    /*Tools.each(tests, function (test) {
+    /* Tools.each(tests, function (test) {
       editor.getBody().innerHTML = test.before;
       editor.selection.select(editor.dom.select('td[data-mce-selected]')[0], true);
       editor.selection.collapse(true);

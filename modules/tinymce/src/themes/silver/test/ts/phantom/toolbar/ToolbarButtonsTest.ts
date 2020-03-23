@@ -182,7 +182,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
       return Arr.flatten([
         (() => {
           return [
-            store.sAssertEq('Store should have setups only', ['onSetup.1', 'onSetup.2', 'onSetup.3', 'onSetup.4']),
+            store.sAssertEq('Store should have setups only', [ 'onSetup.1', 'onSetup.2', 'onSetup.3', 'onSetup.4' ]),
             store.sClear
           ];
         })(),

@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.AutocompletionTest', (succes
         // is empty. Not sure if it's an encoding issue for entities.
         navigator.userAgent.indexOf('PhantomJS') > -1 ? Step.pass : tinyApis.sAssertContent('<p>₡</p>')
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'charmap',
     toolbar: 'charmap',

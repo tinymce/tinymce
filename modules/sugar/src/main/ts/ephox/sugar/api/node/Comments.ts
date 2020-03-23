@@ -3,7 +3,7 @@ import { Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import Element from './Element';
 
-const regularGetNodes = function <T extends DomNode>(texas: TreeWalker) {
+const regularGetNodes = function <T extends DomNode> (texas: TreeWalker) {
   const ret: Element<T>[] = [];
   while (texas.nextNode() !== null) {
     ret.push(Element.fromDom(texas.currentNode as T));
@@ -11,7 +11,7 @@ const regularGetNodes = function <T extends DomNode>(texas: TreeWalker) {
   return ret;
 };
 
-const ieGetNodes = function <T extends DomNode>(texas: TreeWalker) {
+const ieGetNodes = function <T extends DomNode> (texas: TreeWalker) {
   // IE throws an error on nextNode() when there are zero nodes available, and any attempts I made to detect this
   // just resulted in throwing away valid cases
   try {

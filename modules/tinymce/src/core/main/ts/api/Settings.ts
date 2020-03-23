@@ -169,7 +169,7 @@ const getContentCss = (editor: Editor): string[] => {
   } else if (contentCss === false || editor.inline) {
     return [];
   } else {
-    return ['default'];
+    return [ 'default' ];
   }
 };
 

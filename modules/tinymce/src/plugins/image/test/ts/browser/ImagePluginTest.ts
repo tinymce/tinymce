@@ -39,12 +39,12 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
     };
 
     const createTestOnEmptyEditor = (name: string, data: Partial<ImageDialogData>, expectedContent: string) => {
-      return createTestWithContent(name, '', { elementPath: [0], offset: 0 }, data, expectedContent);
+      return createTestWithContent(name, '', { elementPath: [ 0 ], offset: 0 }, data, expectedContent);
     };
 
     const createTestUpdatedStyle = (name: string, style: string, assertion: Step<any, any>) => {
       return Log.stepsAsStep('TBA', 'Image: ' + name, [
-        sInitAndOpenDialog('', { elementPath: [0], offset: 0 }),
+        sInitAndOpenDialog('', { elementPath: [ 0 ], offset: 0 }),
         ui.sClickOnUi('Switch to Advanced tab', '.tox-tab:contains("Advanced")'),
         Chain.asStep(Body.body(), [
           cSetInputValue(advancedTabSelectors.style, style)
@@ -118,7 +118,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
         'Advanced image dialog border option on editor with content',
         '<p>a</p>',
         {
-          elementPath: [0],
+          elementPath: [ 0 ],
           offset: 1
         },
         {
@@ -196,9 +196,9 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
     ];
     Pipeline.async({}, suiteArr, onSuccess, onFailure);
   }, {
-      theme: 'silver',
-      plugins: 'image',
-      indent: false,
-      base_url: '/project/tinymce/js/tinymce'
-    }, success, failure);
+    theme: 'silver',
+    plugins: 'image',
+    indent: false,
+    base_url: '/project/tinymce/js/tinymce'
+  }, success, failure);
 });

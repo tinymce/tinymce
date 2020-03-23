@@ -33,10 +33,10 @@ UnitTest.test('ADT Test', () => {
   checkInvalidGenerate({}, 'object instead of array');
   checkInvalidGenerate([], 'empty cases array');
   checkInvalidGenerate([ 'f' ], 'array contains strings');
-  checkInvalidGenerate([ {} ], 'empty case');
-  checkInvalidGenerate([ { t: {} } ], 'object case arguments');
-  checkInvalidGenerate([ { cata: [] } ], 'case named cata');
-  checkInvalidGenerate([ { a: [] }, { a: [] } ], 'duplicate names');
+  checkInvalidGenerate([{}], 'empty case');
+  checkInvalidGenerate([{ t: {}}], 'object case arguments');
+  checkInvalidGenerate([{ cata: [] }], 'case named cata');
+  checkInvalidGenerate([{ a: [] }, { a: [] }], 'duplicate names');
   checkInvalidGenerate([
     {
       one: [],

@@ -1,4 +1,4 @@
-import { Chain, Cursors} from '@ephox/agar';
+import { Chain, Cursors } from '@ephox/agar';
 import { Element, SimRange, Traverse } from '@ephox/sugar';
 
 const toDomRange = function (range: SimRange) {

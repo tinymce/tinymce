@@ -66,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', (s
         sAssertUri(srcUrl)
       ]),
       Log.stepsAsStep('TBA', 'ImageTools: test rotate image', [
-        ImageUtils.sLoadImage(editor, srcUrl, {width: 200, height: 100}),
+        ImageUtils.sLoadImage(editor, srcUrl, { width: 200, height: 100 }),
         tinyApis.sSelect('img', []),
         ImageUtils.sExecCommand(editor, 'mceImageRotateRight'),
         ImageUtils.sWaitForBlobImage(editor),

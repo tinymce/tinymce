@@ -48,7 +48,7 @@ addPostProcessHook('pre', function (editor: Editor) {
     DomQuery(pre1).append('<br><br>').append(pre2.childNodes);
   };
 
-  isPre = NodeType.matchNodeNames(['pre']);
+  isPre = NodeType.matchNodeNames([ 'pre' ]);
 
   if (!rng.collapsed) {
     blocks = editor.selection.getSelectedBlocks();

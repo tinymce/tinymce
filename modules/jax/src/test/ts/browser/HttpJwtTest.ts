@@ -63,14 +63,14 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
         responseType: DataType.JSON,
       },
       fakeFactory(invalidCalls)
-    ), [ 'cached', 'fresh'], invalidCalls),
+    ), [ 'cached', 'fresh' ], invalidCalls),
     expectValue('GET on valid url', {}, HttpJwt.get(
       {
         url: '/custom/jax/sample/token/valid',
         responseType: DataType.JSON,
       },
       fakeFactory(validCalls)
-    ), [ 'cached'], validCalls)
+    ), [ 'cached' ], validCalls)
   ];
 
   Arr.foldr(responses, function (res, rest) {

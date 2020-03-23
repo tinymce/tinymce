@@ -26,7 +26,7 @@ const capRect = (left: number, top: number, width: number, height: number): Opti
 
 const calcNewAnchor = (optBox: Option<Boxes.BoxByPoint>, rootPoint: CssPosition.CssPositionAdt, anchorInfo: SelectionAnchor | NodeAnchor, origin: Origins.OriginAdt, elem: Element) => {
   return optBox.map((box) => {
-    const points = [rootPoint, box.point];
+    const points = [ rootPoint, box.point ];
     const topLeft = Origins.cata(origin,
       () => {
         return CssPosition.sumAsAbsolute(points);

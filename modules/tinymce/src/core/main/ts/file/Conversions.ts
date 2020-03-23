@@ -81,7 +81,7 @@ const buildBlob = (type: string, data: string): Option<Blob> => {
     arr[i] = str.charCodeAt(i);
   }
 
-  return Option.some(new Blob([arr], { type }));
+  return Option.some(new Blob([ arr ], { type }));
 };
 
 const dataUriToBlob = function (uri: string): Promise<Blob> {

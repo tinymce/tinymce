@@ -23,9 +23,9 @@ const targets: {
   children: (element: Element<any>, selector: string) => TargetAdt;
   descendants: (element: Element<any>, selector: string) => TargetAdt;
 } = Adt.generate([
-  {self: ['element', 'selector']},
-  {children: ['element', 'selector']},
-  {descendants: ['element', 'selector']}
+  { self: [ 'element', 'selector' ] },
+  { children: [ 'element', 'selector' ] },
+  { descendants: [ 'element', 'selector' ] }
 ]);
 
 const derive = (element: Element<any>, selector: string) => {

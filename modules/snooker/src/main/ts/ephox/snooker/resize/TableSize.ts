@@ -13,7 +13,7 @@ const percentageSize = function (width: string, element: Element): TableSize {
   };
   const singleColumnWidth = function (w: number, _delta: number) {
     // If we have one column in a percent based table, that column should be 100% of the width of the table.
-    return [100 - w];
+    return [ 100 - w ];
   };
   // Get the width of a 10 pixel wide cell over the width of the table as a percentage
   const minCellWidth = function () {

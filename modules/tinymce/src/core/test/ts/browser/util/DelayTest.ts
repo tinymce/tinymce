@@ -95,7 +95,7 @@ UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function (success, fai
     fn(2);
 
     Delay.setTimeout(function () {
-      LegacyUnit.deepEqual(args, [2]);
+      LegacyUnit.deepEqual(args, [ 2 ]);
       done();
     }, 10);
   });

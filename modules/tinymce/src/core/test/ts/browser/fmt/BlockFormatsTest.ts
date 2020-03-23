@@ -26,19 +26,19 @@ UnitTest.asynctest('browser.tinymce.core.fmt.BlockFormatsTest', (success, failur
       }, (tinyApis: TinyApis, editor: Editor) => [
         Logger.t('apply heading format at the end of paragraph should not expand selection', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p>'),
-          tinyApis.sSetCursor([0, 0], 1),
+          tinyApis.sSetCursor([ 0, 0 ], 1),
           Step.sync(() => editor.formatter.apply('h1')),
           Step.sync(() => Assert.eq('should still have a collapsed rng', true, editor.selection.isCollapsed()))
         ])),
         Logger.t('apply alignright format at the end of paragraph should not expand selection', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p>'),
-          tinyApis.sSetCursor([0, 0], 1),
+          tinyApis.sSetCursor([ 0, 0 ], 1),
           Step.sync(() => editor.formatter.apply('alignright')),
           Step.sync(() => Assert.eq('should still have a collapsed rng', true, editor.selection.isCollapsed()))
         ])),
         Logger.t('Using default style formats config, the Block formatting dropdown should show the correct format selection', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p>'),
-          tinyApis.sSetCursor([0, 0], 1),
+          tinyApis.sSetCursor([ 0, 0 ], 1),
           UiFinder.sWaitFor('default setting - Check that formatter displays Paragraph', Body.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Paragraph")'),
           Step.sync(() => editor.formatter.apply('h1')),
           UiFinder.sWaitFor('default setting - Check that formatter displays Heading 1', Body.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Heading 1")'),
@@ -54,20 +54,20 @@ UnitTest.asynctest('browser.tinymce.core.fmt.BlockFormatsTest', (success, failur
         statusbar: false,
         menubar: false,
         style_formats: [
-          { title: 'Paragraph', block: 'p'},
-          { title: 'Heading 1', block: 'h1'},
-          { title: 'Heading 2', block: 'h2'},
-          { title: 'Heading 3', block: 'h3'},
-          { title: 'Heading 4', block: 'h4'},
-          { title: 'Heading 5', block: 'h5'},
-          { title: 'Heading 6', block: 'h6'},
-          { title: 'Div', block: 'div'},
-          { title: 'Pre', block: 'pre'}
+          { title: 'Paragraph', block: 'p' },
+          { title: 'Heading 1', block: 'h1' },
+          { title: 'Heading 2', block: 'h2' },
+          { title: 'Heading 3', block: 'h3' },
+          { title: 'Heading 4', block: 'h4' },
+          { title: 'Heading 5', block: 'h5' },
+          { title: 'Heading 6', block: 'h6' },
+          { title: 'Div', block: 'div' },
+          { title: 'Pre', block: 'pre' }
         ]
       }, (tinyApis: any, editor: Editor) => [
         Logger.t('Using default style formats config, the Block formatting dropdown should show the correct format selection ', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p>'),
-          tinyApis.sSetCursor([0, 0], 1),
+          tinyApis.sSetCursor([ 0, 0 ], 1),
           UiFinder.sWaitFor('Check that formatter displays Paragraph', Body.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Paragraph")'),
           Step.sync(() => editor.formatter.apply('h1')),
           UiFinder.sWaitFor('Check that formatter displays Heading 1', Body.body(), 'button.tox-tbtn--select span.tox-tbtn__select-label:contains("Heading 1")'),

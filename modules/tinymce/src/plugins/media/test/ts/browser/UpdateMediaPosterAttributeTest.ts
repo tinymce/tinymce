@@ -53,9 +53,9 @@ UnitTest.asynctest('browser.plugins.media.UpdateMediaPosterAttributeTest', (succ
         sCloseDialog,
         api.sSetContent('')
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
-    plugins: ['media'],
+    plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',

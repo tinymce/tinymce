@@ -10,7 +10,7 @@ import { Arr, Future, Futures, Merger, Obj, Option, Result, Results } from '@eph
 
 export interface FormValidator { 'value': string | number; 'text': string; }
 
-const toValidValues = function <T>(values: { [key: string]: Option<T[keyof T]> }) {
+const toValidValues = function <T> (values: { [key: string]: Option<T[keyof T]> }) {
   const errors: string[] = [];
   const result: { [key: string]: T[keyof T] } = {};
 

@@ -23,7 +23,7 @@ const UndoManager = function (editor: Editor): UndoManager {
   const locks: Locks = Cell(0);
   const index: Index = Cell(0);
 
-  /*eslint consistent-this:0 */
+  /* eslint consistent-this:0 */
   const undoManager = {
     data: [], // Gets mutated both internally and externally by plugins like remark, not documented
 
@@ -41,7 +41,7 @@ const UndoManager = function (editor: Editor): UndoManager {
      *
      * @method beforeChange
      */
-    beforeChange () {
+    beforeChange() {
       beforeChange(editor, locks, beforeBookmark);
     },
 
@@ -53,7 +53,7 @@ const UndoManager = function (editor: Editor): UndoManager {
      * @param {DOMEvent} event Optional event responsible for the creation of the undo level.
      * @return {Object} Undo level that got added or null it a level wasn't needed.
      */
-    add (level?: UndoLevel, event?: Event): UndoLevel {
+    add(level?: UndoLevel, event?: Event): UndoLevel {
       return addUndoLevel(editor, undoManager, index, locks, beforeBookmark, level, event);
     },
 
@@ -63,7 +63,7 @@ const UndoManager = function (editor: Editor): UndoManager {
      * @method undo
      * @return {Object} Undo level or null if no undo was performed.
      */
-    undo (): UndoLevel {
+    undo(): UndoLevel {
       return undo(editor, undoManager, locks, index);
     },
 
@@ -73,7 +73,7 @@ const UndoManager = function (editor: Editor): UndoManager {
      * @method redo
      * @return {Object} Redo level or null if no redo was performed.
      */
-    redo (): UndoLevel {
+    redo(): UndoLevel {
       return redo(editor, index, undoManager.data);
     },
 
@@ -82,7 +82,7 @@ const UndoManager = function (editor: Editor): UndoManager {
      *
      * @method clear
      */
-    clear () {
+    clear() {
       clear(editor, undoManager, index);
     },
 
@@ -91,7 +91,7 @@ const UndoManager = function (editor: Editor): UndoManager {
      *
      * @method reset
      */
-    reset () {
+    reset() {
       reset(undoManager);
     },
 
@@ -101,7 +101,7 @@ const UndoManager = function (editor: Editor): UndoManager {
      * @method hasUndo
      * @return {Boolean} true/false if the undo manager has any undo levels.
      */
-    hasUndo () {
+    hasUndo() {
       return hasUndo(editor, undoManager, index);
     },
 
@@ -111,7 +111,7 @@ const UndoManager = function (editor: Editor): UndoManager {
      * @method hasRedo
      * @return {Boolean} true/false if the undo manager has any redo levels.
      */
-    hasRedo () {
+    hasRedo() {
       return hasRedo(undoManager, index);
     },
 
@@ -125,7 +125,7 @@ const UndoManager = function (editor: Editor): UndoManager {
      * @param {function} callback Function that gets executed and has dom manipulation logic in it.
      * @return {Object} Undo level that got added or null it a level wasn't needed.
      */
-    transact (callback: () => void): UndoLevel {
+    transact(callback: () => void): UndoLevel {
       return transact(undoManager, locks, callback);
     },
 
@@ -137,7 +137,7 @@ const UndoManager = function (editor: Editor): UndoManager {
      * @method ignore
      * @param {function} callback Function that gets executed and has dom manipulation logic in it.
      */
-    ignore (callback: () => void) {
+    ignore(callback: () => void) {
       ignore(locks, callback);
     },
 
@@ -150,7 +150,7 @@ const UndoManager = function (editor: Editor): UndoManager {
      * @param {function} callback1 Function that does mutation but gets stored as a "hidden" extra undo level.
      * @param {function} callback2 Function that does mutation but gets displayed to the user.
      */
-    extra (callback1: () => void, callback2: () => void) {
+    extra(callback1: () => void, callback2: () => void) {
       extra(editor, undoManager, index, callback1, callback2);
     }
   };

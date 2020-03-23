@@ -34,22 +34,22 @@ const sAssertEditorContentStructure = (editorBody, language, content) => {
     Assertions.sAssertStructure(
       'Asserting editor structure',
       ApproxStructure.build((s, str, arr) => {
-      return s.element('body', {
-        children: [
-          s.element('pre', {
-            classes: [
-              arr.has('language-' + language)
-            ],
-            attrs: {
-              contenteditable: str.is('false')
-            }
-          }),
-          s.anything()
-        ]
-      });
-    }),
-    Element.fromDom(editorBody)
-  ), 100, 3000));
+        return s.element('body', {
+          children: [
+            s.element('pre', {
+              classes: [
+                arr.has('language-' + language)
+              ],
+              attrs: {
+                contenteditable: str.is('false')
+              }
+            }),
+            s.anything()
+          ]
+        });
+      }),
+      Element.fromDom(editorBody)
+    ), 100, 3000));
 };
 
 const sAssertPreText = (container: Element, selector, expected) => {

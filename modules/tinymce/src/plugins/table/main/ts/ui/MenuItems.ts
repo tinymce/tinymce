@@ -15,7 +15,7 @@ import { SelectionTargets } from '../selection/SelectionTargets';
 const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
   const cmd = (command) => () => editor.execCommand(command);
 
-  const insertTableAction = ({numRows, numColumns}) => {
+  const insertTableAction = ({ numRows, numColumns }) => {
     editor.undoManager.transact(function () {
       InsertTable.insert(editor, numColumns, numRows);
     });
@@ -88,7 +88,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
     editor.ui.registry.addNestedMenuItem('inserttable', {
       text: 'Table',
       icon: 'table',
-      getSubmenuItems: () => [{type: 'fancymenuitem', fancytype: 'inserttable', onAction: insertTableAction}]
+      getSubmenuItems: () => [{ type: 'fancymenuitem', fancytype: 'inserttable', onAction: insertTableAction }]
     });
   }
 

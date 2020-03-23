@@ -107,8 +107,8 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
     let i = nodes.length, node, value, type;
 
     const trim = function (value) {
-      /*jshint maxlen:255 */
-      /*eslint max-len:0 */
+      /* jshint maxlen:255 */
+      /* eslint max-len:0 */
       return value.replace(/(<!--\[CDATA\[|\]\]-->)/g, '\n')
         .replace(/^[\r\n]*|[\r\n]*$/g, '')
         .replace(/^\s*((<!--)?(\s*\/\/)?\s*<!\[CDATA\[|(<!--\s*)?\/\*\s*<!\[CDATA\[\s*\*\/|(\/\/)?\s*<!--|\/\*\s*<!--\s*\*\/)\s*[\r\n]*/gi, '')

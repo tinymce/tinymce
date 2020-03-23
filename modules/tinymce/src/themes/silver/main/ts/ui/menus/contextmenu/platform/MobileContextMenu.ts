@@ -18,22 +18,22 @@ import { getNodeAnchor, getPointAnchor } from '../Coords';
 type MenuItems = string | Array<string | SingleMenuItemApi>;
 
 const layouts = {
-  onLtr: () => [Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest],
-  onRtl: () => [Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast]
+  onLtr: () => [ Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north,
+    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest ],
+  onRtl: () => [ Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north,
+    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast ]
 };
 
 const bubbleSize = 12;
 const bubbleAlignments = {
   valignCentre: [],
   alignCentre: [],
-  alignLeft: ['tox-pop--align-left'],
-  alignRight: ['tox-pop--align-right'],
-  right: ['tox-pop--right'],
-  left: ['tox-pop--left'],
-  bottom: ['tox-pop--bottom'],
-  top: ['tox-pop--top']
+  alignLeft: [ 'tox-pop--align-left' ],
+  alignRight: [ 'tox-pop--align-right' ],
+  right: [ 'tox-pop--right' ],
+  left: [ 'tox-pop--left' ],
+  bottom: [ 'tox-pop--bottom' ],
+  top: [ 'tox-pop--top' ]
 };
 
 const isTouchWithinSelection = (editor: Editor, e: EditorEvent<TouchEvent>) => {

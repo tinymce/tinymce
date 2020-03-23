@@ -106,7 +106,7 @@ Class.extend = extendClass = function (prop: Prop): ExtendedClass {
   // don't run the init constructor)
   initializing = true;
 
-  /*eslint new-cap:0 */
+  /* eslint new-cap:0 */
   prototype = new self();
   initializing = false;
 

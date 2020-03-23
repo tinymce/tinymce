@@ -68,7 +68,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
 
   const cAssertStructure = (structure) => {
     return Chain.control(
-        Chain.op(function (data: any) {
+      Chain.op(function (data: any) {
         Assertions.assertStructure('', structure, data.parent);
       }),
       Guard.addLogging('Assert structure')

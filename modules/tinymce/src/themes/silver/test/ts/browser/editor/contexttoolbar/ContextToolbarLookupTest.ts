@@ -42,39 +42,39 @@ UnitTest.asynctest('Inline editor Context Toolbar Lookup test', (success, failur
 
         Log.stepsAsStep('TINY-4571', 'Context toolbar initial load lookups', [
           Step.wait(50), // Need to wait a little for the context toolbar lookup to run
-          sAssertNames(['p', 'div'], ['p', 'div'], ['p'])
+          sAssertNames([ 'p', 'div' ], [ 'p', 'div' ], [ 'p' ])
         ]),
 
         Log.stepsAsStep('TINY-4571', 'Context toolbar node scope lookup', [
           tinyApis.sSetContent('<p><a href="http://tiny.cloud">link</a></p>'),
           sResetNames(),
-          tinyApis.sSetCursor([0, 0, 0], 1),
+          tinyApis.sSetCursor([ 0, 0, 0 ], 1),
           UiFinder.sWaitForVisible('Waiting for node toolbar to appear', Body.body(), '.tox-tbtn:contains(Node)'),
-          sAssertNames(['a'], [], [])
+          sAssertNames([ 'a' ], [], [])
         ]),
 
         Log.stepsAsStep('TINY-4571', 'Context toolbar parent node scope lookup', [
           tinyApis.sSetContent('<p><strong><em>bold italic</em></strong></p>'),
           sResetNames(),
-          tinyApis.sSetCursor([0, 0, 0, 0], 1),
+          tinyApis.sSetCursor([ 0, 0, 0, 0 ], 1),
           UiFinder.sWaitForVisible('Waiting for parent node toolbar to appear', Body.body(), '.tox-tbtn:contains(Parent)'),
-          sAssertNames(['em', 'strong', 'p'], ['em', 'strong', 'p'], ['em'])
+          sAssertNames([ 'em', 'strong', 'p' ], [ 'em', 'strong', 'p' ], [ 'em' ])
         ]),
 
         Log.stepsAsStep('TINY-4571', 'Context toolbar editor scope lookup', [
           tinyApis.sSetContent('<p><span style="color: red">content</span></p>'),
           sResetNames(),
-          tinyApis.sSetCursor([0, 0, 0], 1),
+          tinyApis.sSetCursor([ 0, 0, 0 ], 1),
           UiFinder.sWaitForVisible('Waiting for editor toolbar to appear', Body.body(), '.tox-tbtn:contains(Editor)'),
-          sAssertNames(['span'], ['span'], ['span'])
+          sAssertNames([ 'span' ], [ 'span' ], [ 'span' ])
         ]),
 
         Log.stepsAsStep('TINY-4571', 'Context toolbar no match lookup', [
           tinyApis.sSetContent('<p><code>Code</code></p>'),
           sResetNames(),
-          tinyApis.sSetCursor([0, 0, 0], 1),
+          tinyApis.sSetCursor([ 0, 0, 0 ], 1),
           Step.wait(50), // Need to wait a little for the context toolbar lookup to run
-          sAssertNames(['code', 'p', 'div'], ['code', 'p', 'div'], ['code'])
+          sAssertNames([ 'code', 'p', 'div' ], [ 'code', 'p', 'div' ], [ 'code' ])
         ]),
 
         Log.stepsAsStep('TINY-4571', 'Context toolbar root node lookup', [
@@ -83,15 +83,15 @@ UnitTest.asynctest('Inline editor Context Toolbar Lookup test', (success, failur
           tinyApis.sSetCursor([], 0),
           Step.wait(50), // Need to wait a little for the context toolbar lookup to run
           // IE will fire the lookup twice
-          Env.browser.isIE() ? sAssertNames(['div', 'div'], ['div', 'div'], ['div', 'div']) : sAssertNames(['div'], ['div'], ['div'])
+          Env.browser.isIE() ? sAssertNames([ 'div', 'div' ], [ 'div', 'div' ], [ 'div', 'div' ]) : sAssertNames([ 'div' ], [ 'div' ], [ 'div' ])
         ]),
 
         Log.stepsAsStep('TINY-4571', 'Context toolbar click outside to inside', [
           tinyApis.sSetContent('<p><strong><em>bold italic</em></strong></p>'),
           sResetNames(),
-          tinyApis.sSetCursor([0, 0, 0, 0], 1),
+          tinyApis.sSetCursor([ 0, 0, 0, 0 ], 1),
           UiFinder.sWaitForVisible('Waiting for parent node toolbar to appear', Body.body(), '.tox-tbtn:contains(Parent)'),
-          sAssertNames(['em', 'strong', 'p'], ['em', 'strong', 'p'], ['em']),
+          sAssertNames([ 'em', 'strong', 'p' ], [ 'em', 'strong', 'p' ], [ 'em' ]),
           sResetNames(),
           Step.sync(() => {
             SelectorFind.descendant(Body.body(), '#content-click-area').each(Focus.focus);
@@ -100,7 +100,7 @@ UnitTest.asynctest('Inline editor Context Toolbar Lookup test', (success, failur
           sAssertNames([], [], []),
           tinyApis.sFocus(),
           UiFinder.sWaitForVisible('Waiting for parent node toolbar to appear', Body.body(), '.tox-tbtn:contains(Parent)'),
-          sAssertNames(['em', 'strong', 'p'], ['em', 'strong', 'p'], ['em'])
+          sAssertNames([ 'em', 'strong', 'p' ], [ 'em', 'strong', 'p' ], [ 'em' ])
         ]),
       ], onSuccess, onFailure);
     },

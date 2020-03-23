@@ -36,7 +36,7 @@ UnitTest.asynctest('SwappingTest', (success, failure) => {
       })
     );
   }, (doc, body, gui, component, store) => {
-    /// string -> [string] -> [string] -> ()
+    // / string -> [string] -> [string] -> ()
     const assertClasses = (label: string, has: string[], not: string[]) => {
       Assertions.assertStructure(
         'Asserting structure after: ' + label,
@@ -60,13 +60,13 @@ UnitTest.asynctest('SwappingTest', (success, failure) => {
 
     const testHasAlpha = (label: string) => {
       return Step.sync(() => {
-        assertClasses(label, [ALPHA_CLS()], [OMEGA_CLS()]);
+        assertClasses(label, [ ALPHA_CLS() ], [ OMEGA_CLS() ]);
       });
     };
 
     const testHasOmega = (label: string) => {
       return Step.sync(() => {
-        assertClasses(label, [OMEGA_CLS()], [ALPHA_CLS()]);
+        assertClasses(label, [ OMEGA_CLS() ], [ ALPHA_CLS() ]);
       });
     };
 

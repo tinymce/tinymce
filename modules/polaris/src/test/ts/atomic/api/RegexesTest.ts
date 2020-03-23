@@ -148,7 +148,7 @@ UnitTest.test('RegexesTest', function () {
     assert.eq(false, match !== null && cs === match[0], 'expected false but was true: ' + cs);
   });
 
-  const autolinks = {// Ignore trailing: \-_.~*+=!&;:\'%@?#^${}(),
+  const autolinks = { // Ignore trailing: \-_.~*+=!&;:\'%@?#^${}(),
     'http://google.com\\': 'http://google.com',
     // 'http://google.com-': 'http://google.com', // TODO: change Regexes so domain cant end in '-'
     'http://google.com_': 'http://google.com',

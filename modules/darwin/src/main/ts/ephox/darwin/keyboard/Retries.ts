@@ -39,7 +39,7 @@ const adt: {
   retry: (caret: Carets) => Retries;
 } = Adt.generate([
   { none: [] },
-  { retry: ['caret'] }
+  { retry: [ 'caret' ] }
 ]);
 
 const isOutside = function (caret: Carets, box: Carets): boolean {

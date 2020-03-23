@@ -86,10 +86,10 @@ export default (): void => {
         openClass: 'demo-typeahead-open'
       },
 
-      initialData: { value: 'bison', meta: { text: 'Bison' } },
+      initialData: { value: 'bison', meta: { text: 'Bison' }},
       model,
 
-      fetch (input) {
+      fetch(input) {
         const inputValue = Value.get(input.element());
         console.log('text', inputValue);
         const matching: DemoRenders.DemoItems[] = Arr.bind(dataset, (d) => {
@@ -131,7 +131,7 @@ export default (): void => {
           return Option.some(TieredMenu.singleData('blah', menu));
         });
       },
-      onExecute (sandbox, item, itemValue) {
+      onExecute(sandbox, item, itemValue) {
         const value = Representing.getValue(item);
         console.log('*** typeahead menu demo execute on: ', value, ' ***');
         return Option.some(true);
@@ -143,11 +143,11 @@ export default (): void => {
     'An example of a typeahead component',
     Container.sketch({
       components: [
-         sketchTypeahead({
-           selectsOver: true,
-           getDisplayText: (itemData) => itemData.meta && itemData.meta.text ? itemData.meta.text : 'No.text',
-           populateFromBrowse: true,
-         }),
+        sketchTypeahead({
+          selectsOver: true,
+          getDisplayText: (itemData) => itemData.meta && itemData.meta.text ? itemData.meta.text : 'No.text',
+          populateFromBrowse: true,
+        }),
 
         sketchTypeahead({
           selectsOver: false,

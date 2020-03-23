@@ -22,7 +22,7 @@ class NodeChange {
   private readonly editor: Editor;
   private lastPath = [];
 
-  public constructor (editor: Editor) {
+  public constructor(editor: Editor) {
     this.editor = editor;
     let lastRng;
     const self = this;
@@ -97,7 +97,7 @@ class NodeChange {
    * @method nodeChanged
    * @param {Object} args Optional args to pass to NodeChange event handlers.
    */
-  public nodeChanged (args?) {
+  public nodeChanged(args?) {
     const selection = this.editor.selection;
     let node, parents, root;
 
@@ -136,7 +136,7 @@ class NodeChange {
    * @private
    * @return {Boolean} True if the element path is the same false if it's not.
    */
-  private isSameElementPath (startElm) {
+  private isSameElementPath(startElm) {
     let i, currentPath;
 
     currentPath = this.editor.$(startElm).parentsUntil(this.editor.getBody()).add(startElm);

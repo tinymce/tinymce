@@ -13,7 +13,7 @@ const chooseChannels = (channels: string[], message: ReceivingInternalEvent) => 
   });
 };
 
-const events = (receiveConfig: ReceivingConfig/*, receiveState */) => {
+const events = (receiveConfig: ReceivingConfig/* , receiveState */) => {
   return AlloyEvents.derive([
     AlloyEvents.run<ReceivingEvent>(SystemEvents.receive(), (component, message) => {
       const channelMap = receiveConfig.channels;

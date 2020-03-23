@@ -8,7 +8,7 @@ import { PinchingConfig, PinchingState, PinchDragData } from '../../behaviour/pi
 import { DragModeDeltas } from '../../dragging/common/DraggingTypes';
 
 const mode: DragModeDeltas<PinchDragData> = {
-  getData (e: EventArgs<TouchEvent>)  {
+  getData(e: EventArgs<TouchEvent>)  {
     const raw = e.raw();
     const touches = raw.touches;
     if (touches.length < 2) { return Option.none(); }
@@ -25,7 +25,7 @@ const mode: DragModeDeltas<PinchDragData> = {
     });
   },
 
-  getDelta (old, nu) {
+  getDelta(old, nu) {
     const changeX = nu.deltaX - old.deltaX;
     const changeY = nu.deltaY - old.deltaY;
     const changeDistance = nu.deltaDistance - old.deltaDistance;

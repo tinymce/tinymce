@@ -1,6 +1,6 @@
 import {
-    ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse,
-    Pipeline, Step, UiFinder
+  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse,
+  Pipeline, Step, UiFinder
 } from '@ephox/agar';
 import { Attachment, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
@@ -340,7 +340,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
       node: Element.fromHtml('<a href="http://prepared-url">Prepared</a>'),
       fields: { },
       expected: [ ],
-      mutations (node) {
+      mutations(node) {
         return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
           return s.element('a', {
             attrs: {
@@ -359,7 +359,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
         url: 'http://new-url'
       },
       expected: [ ],
-      mutations (node) {
+      mutations(node) {
         return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
           return s.element('a', {
             attrs: {
@@ -378,7 +378,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
         url: 'http://new-url'
       },
       expected: [ ],
-      mutations (node) {
+      mutations(node) {
         return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
           return s.element('a', {
             attrs: {
@@ -398,7 +398,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
         text: 'new-text'
       },
       expected: [ ],
-      mutations (node) {
+      mutations(node) {
         return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
           return s.element('a', {
             attrs: {

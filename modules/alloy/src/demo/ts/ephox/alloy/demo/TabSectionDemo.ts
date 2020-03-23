@@ -63,7 +63,7 @@ export default (): void => {
         {
           value: 'alpha',
           text: 'Alpha',
-          view () {
+          view() {
             return [
               GuiFactory.text('Alpha panel text')
             ];
@@ -72,7 +72,7 @@ export default (): void => {
         {
           value: 'beta',
           text: 'Beta',
-          view () {
+          view() {
             return [
               GuiFactory.text('Beta panel text')
             ];

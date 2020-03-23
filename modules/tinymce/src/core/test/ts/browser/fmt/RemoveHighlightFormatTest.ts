@@ -15,31 +15,31 @@ UnitTest.asynctest('browser.tinymce.core.fmt.RemoveHighlightFormatTest', (succes
       Logger.t('We remove a block', GeneralSteps.sequence([
         Logger.t('Which starts in the color, but ends outside of it', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>Part 1 <span style="background-color: #e03e2d;">Part 2 Part 3</span> Part 4'),
-          tinyApis.sSetSelection([0, 1, 0], 6, [0, 2], 4),
+          tinyApis.sSetSelection([ 0, 1, 0 ], 6, [ 0, 2 ], 4),
           tinyApis.sExecCommand('RemoveFormat'),
           tinyApis.sAssertContent('<p>Part 1 <span style="background-color: #e03e2d;">Part 2</span> Part 3 Part 4</p>'),
-          tinyApis.sAssertSelection([0, 1], 1, [0, 3], 4)
+          tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 3 ], 4)
         ])),
         Logger.t('Which starts in the color, but ends outside of it', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>Part 1 <span style="background-color: #e03e2d;">Part 2 Part 3</span> Part 4'),
-          tinyApis.sSetSelection([0, 0], 3, [0, 1, 0], 4),
+          tinyApis.sSetSelection([ 0, 0 ], 3, [ 0, 1, 0 ], 4),
           tinyApis.sExecCommand('RemoveFormat'),
           tinyApis.sAssertContent('<p>Part 1 Part<span style="background-color: #e03e2d;"> 2 Part 3</span> Part 4</p>'),
-          tinyApis.sAssertSelection([0, 0], 3, [0, 2], 0)
+          tinyApis.sAssertSelection([ 0, 0 ], 3, [ 0, 2 ], 0)
         ])),
         Logger.t('Which starts and ends in the color', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>Part 1 <span style="background-color: #e03e2d;">Part 2 Part 3</span> Part 4'),
-          tinyApis.sSetSelection([0, 1, 0], 6, [0, 1, 0], 7),
+          tinyApis.sSetSelection([ 0, 1, 0 ], 6, [ 0, 1, 0 ], 7),
           tinyApis.sExecCommand('RemoveFormat'),
           tinyApis.sAssertContent('<p>Part 1 <span style="background-color: #e03e2d;">Part 2</span> <span style="background-color: #e03e2d;">Part 3</span> Part 4</p>'),
-          tinyApis.sAssertSelection([0, 1], 1, [0, 3], 0)
+          tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 3 ], 0)
         ])),
         Logger.t('Which starts and ends outside the color', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>Part 1 <span style="background-color: #e03e2d;">Part 2 Part 3</span> Part 4'),
-          tinyApis.sSetSelection([0, 0], 2, [0, 2], 4),
+          tinyApis.sSetSelection([ 0, 0 ], 2, [ 0, 2 ], 4),
           tinyApis.sExecCommand('RemoveFormat'),
           tinyApis.sAssertContent('<p>Part 1 Part 2 Part 3 Part 4</p>'),
-          tinyApis.sAssertSelection([0, 0], 2, [0, 2], 4)
+          tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 2 ], 4)
         ])),
       ])),
     ], onSuccess, onFailure);

@@ -41,20 +41,20 @@ const willDeleteLastPositionInElement = function (forward: boolean, fromPos: Car
     CaretFinder.firstPositionIn(elm),
     CaretFinder.lastPositionIn(elm),
     function (firstPos, lastPos) {
-    const normalizedFirstPos = InlineUtils.normalizePosition(true, firstPos);
-    const normalizedLastPos = InlineUtils.normalizePosition(false, lastPos);
-    const normalizedFromPos = InlineUtils.normalizePosition(false, fromPos);
+      const normalizedFirstPos = InlineUtils.normalizePosition(true, firstPos);
+      const normalizedLastPos = InlineUtils.normalizePosition(false, lastPos);
+      const normalizedFromPos = InlineUtils.normalizePosition(false, fromPos);
 
-    if (forward) {
-      return CaretFinder.nextPosition(elm, normalizedFromPos).map(function (nextPos) {
-        return nextPos.isEqual(normalizedLastPos) && fromPos.isEqual(normalizedFirstPos);
-      }).getOr(false);
-    } else {
-      return CaretFinder.prevPosition(elm, normalizedFromPos).map(function (prevPos) {
-        return prevPos.isEqual(normalizedFirstPos) && fromPos.isEqual(normalizedLastPos);
-      }).getOr(false);
-    }
-  }).getOr(true);
+      if (forward) {
+        return CaretFinder.nextPosition(elm, normalizedFromPos).map(function (nextPos) {
+          return nextPos.isEqual(normalizedLastPos) && fromPos.isEqual(normalizedFirstPos);
+        }).getOr(false);
+      } else {
+        return CaretFinder.prevPosition(elm, normalizedFromPos).map(function (prevPos) {
+          return prevPos.isEqual(normalizedFirstPos) && fromPos.isEqual(normalizedLastPos);
+        }).getOr(false);
+      }
+    }).getOr(true);
 };
 
 export {

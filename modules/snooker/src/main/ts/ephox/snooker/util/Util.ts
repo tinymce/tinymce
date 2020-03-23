@@ -1,7 +1,7 @@
 import { Arr, Option } from '@ephox/katamari';
 
 // Rename this module, and repeat should be in Arr.
-const repeat = function <T>(repititions: number, f: (idx: number) => T) {
+const repeat = function <T> (repititions: number, f: (idx: number) => T) {
   const r: T[] = [];
   for (let i = 0; i < repititions; i++) {
     r.push(f(i));
@@ -17,7 +17,7 @@ const range = function (start: number, end: number) {
   return r;
 };
 
-const unique = function <T>(xs: T[], eq: (a: T, b: T) => boolean) {
+const unique = function <T> (xs: T[], eq: (a: T, b: T) => boolean) {
   const result: T[] = [];
   Arr.each(xs, function (x, i) {
     if (i < xs.length - 1 && !eq(x, xs[i + 1])) {

@@ -135,22 +135,22 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
     );
 
     const testChangingUrlValueManually = Log.stepsAsStep('TBA', 'Link: Change urlinput value manually', [
-        tinyApis.sSetContent('<h1>Something</h2>'),
-        tinyApis.sSetSelection([ 0, 0 ], ''.length, [ 0, 0 ], 'Something'.length),
-        TestLinkUi.sOpenLinkDialog(tinyUi),
+      tinyApis.sSetContent('<h1>Something</h2>'),
+      tinyApis.sSetSelection([ 0, 0 ], ''.length, [ 0, 0 ], 'Something'.length),
+      TestLinkUi.sOpenLinkDialog(tinyUi),
 
-        FocusTools.sSetActiveValue(doc, 'http://www.tiny.cloud'),
-        TestLinkUi.sAssertDialogContents({
-          href: 'http://www.tiny.cloud',
-          text: 'Something',
-          title: '',
-          target: ''
-        }),
-        TestLinkUi.sClickSave,
-        TestLinkUi.sAssertContentPresence(tinyApis, {
-          a: 1
-        })
-      ]
+      FocusTools.sSetActiveValue(doc, 'http://www.tiny.cloud'),
+      TestLinkUi.sAssertDialogContents({
+        href: 'http://www.tiny.cloud',
+        text: 'Something',
+        title: '',
+        target: ''
+      }),
+      TestLinkUi.sClickSave,
+      TestLinkUi.sAssertContentPresence(tinyApis, {
+        a: 1
+      })
+    ]
     );
 
     Pipeline.async({}, [

@@ -9,7 +9,7 @@ const createDataTransferItem = function (mime, content) {
     kind: 'string',
     type: mime,
     getAsFile: notImplemented,
-    getAsString () {
+    getAsString() {
       return content;
     }
   };

@@ -88,7 +88,7 @@ const generateContextMenu = (contextMenus: Record<string, Menu.ContextMenuApi>, 
         return acc;
       }
     } else {
-      return acc.concat([name]);
+      return acc.concat([ name ]);
     }
   }, []);
 

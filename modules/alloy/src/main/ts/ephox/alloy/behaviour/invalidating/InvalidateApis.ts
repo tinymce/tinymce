@@ -15,7 +15,7 @@ const isAriaElement = (elem: Element) => {
   return Arr.contains(ariaElements, name);
 };
 
-const markValid = (component: AlloyComponent, invalidConfig: InvalidatingConfig/*, invalidState */): void => {
+const markValid = (component: AlloyComponent, invalidConfig: InvalidatingConfig/* , invalidState */): void => {
   const elem = invalidConfig.getRoot(component).getOr(component.element());
   Class.remove(elem, invalidConfig.invalidClass);
   invalidConfig.notify.each((notifyInfo) => {

@@ -57,7 +57,7 @@ const open = function (editor: Editor, database: EmojiDatabase) {
       tabs: Arr.map(database.listCategories(), (cat) => ({
         title: cat,
         name: cat,
-        items: [searchField, resultsField]
+        items: [ searchField, resultsField ]
       }))
     };
     return {

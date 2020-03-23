@@ -141,7 +141,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
       tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'Test context menus on empty editor', [
         sOpenContextMenu('p'),
-        sAssertMenuItems([selectors.link]),
+        sAssertMenuItems([ selectors.link ]),
         sPressEscKey
       ]),
       Log.stepsAsStep('TBA', 'Test context menus on a link', [

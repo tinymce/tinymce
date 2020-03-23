@@ -82,9 +82,9 @@ interface Selection {
   getSelectedBlocks: (startElm?: Element, endElm?: Element) => Element[];
   normalize: () => Range;
   selectorChanged: (selector: string, callback: (active: boolean, args: {
-      node: Node;
-      selector: String;
-      parents: Element[];
+    node: Node;
+    selector: String;
+    parents: Element[];
   }) => void) => any;
   selectorChangedWithUnbind: (selector: string, callback: (active: boolean, args: {
     node: Node;
@@ -319,7 +319,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
       const bookmark = SelectionBookmark.getRng(editor);
 
       if (bookmark.isSome()) {
-        return bookmark.map((r) => EventProcessRanges.processRanges(editor, [r])[0]).getOr(doc.createRange());
+        return bookmark.map((r) => EventProcessRanges.processRanges(editor, [ r ])[0]).getOr(doc.createRange());
       }
     }
 
@@ -335,7 +335,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
       // IE throws unspecified error here if TinyMCE is placed in a frame/iframe
     }
 
-    rng = EventProcessRanges.processRanges(editor, [rng])[0];
+    rng = EventProcessRanges.processRanges(editor, [ rng ])[0];
 
     // No range found then create an empty one
     // This can occur when the editor is placed in a hidden container element on Gecko
@@ -513,7 +513,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
     return rng;
   };
 
-    /**
+  /**
    * Executes callback when the current selection starts/stops matching the specified selector. The current
    * state will be passed to the callback as it's first argument.
    *

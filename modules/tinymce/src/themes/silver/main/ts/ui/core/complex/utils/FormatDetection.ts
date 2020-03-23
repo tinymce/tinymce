@@ -17,7 +17,7 @@ const findNearest = (editor: Editor, getStyles, parents: Element[]) => {
       return editor.formatter.matchNode(parent, fmt.format);
     });
   }).orThunk(() => {
-    if (editor.formatter.match('p')) { return Option.some({title: 'Paragraph', format: 'p' }); }
+    if (editor.formatter.match('p')) { return Option.some({ title: 'Paragraph', format: 'p' }); }
     return Option.none();
   });
 };

@@ -37,7 +37,7 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
   const coupledSpec = (className: string) => ({
     dom: {
       tag: 'div',
-      classes: [className]
+      classes: [ className ]
     },
     components: [
       FormField.parts().label(labelSpec),
@@ -48,7 +48,7 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
   const lockSpec = {
     dom: {
       tag: 'button',
-      classes: ['lock'],
+      classes: [ 'lock' ],
       innerHtml: '+'
     }
   };
@@ -57,7 +57,7 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
     return FormCoupledInputs.sketch({
       dom: {
         tag: 'div',
-        classes: [config.className]
+        classes: [ config.className ]
       },
       components: [
         FormCoupledInputs.parts().field1(coupledSpec('field1')),
@@ -107,7 +107,7 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
           const inputStruct = s.element('div', {
             children: [
               s.element('label', { html: str.is('Label') }),
-              s.element('input', { attrs: { type: str.is('text') } })
+              s.element('input', { attrs: { type: str.is('text') }})
             ]
           });
           return s.element('div', {
@@ -222,7 +222,7 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
       sTestCopying('.default', '.field2 input', { field1: '', field2: 'lkjh' }, { field1: 'lkjh', field2: 'lkjh' }),
       store.sAssertEq('click', []),
       Mouse.sClickOn(component.element(), '.behaviour-tester'),
-      store.sAssertEq('click', ['click']),
+      store.sAssertEq('click', [ 'click' ]),
       sTestApi()
     ];
   }, success, failure);

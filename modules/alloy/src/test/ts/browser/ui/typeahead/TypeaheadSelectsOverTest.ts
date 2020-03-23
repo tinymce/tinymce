@@ -24,9 +24,9 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
 
     const fetch = (input: AlloyComponent): Future<Option<TieredData>> => {
       const future = Future.pure([
-        { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' } } },
-        { type: 'item', data: { value: 'beta', meta: { text: 'Beta' } } },
-        { type: 'item', data: { value: 'gamma', meta: { text: 'Gamma' } } }
+        { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' }}},
+        { type: 'item', data: { value: 'beta', meta: { text: 'Beta' }}},
+        { type: 'item', data: { value: 'gamma', meta: { text: 'Gamma' }}}
       ]);
 
       return future.map((items) => {
@@ -58,7 +58,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
               }
             },
             fetch,
-            lazySink (c) {
+            lazySink(c) {
               TestDropdownMenu.assertLazySinkArgs('input', 'with-selectover', c);
               return Result.value(sink);
             },
@@ -82,7 +82,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
               }
             },
             fetch,
-            lazySink (c) {
+            lazySink(c) {
               TestDropdownMenu.assertLazySinkArgs('input', 'without-selectover', c);
               return Result.value(sink);
             },

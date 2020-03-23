@@ -28,7 +28,7 @@ const relaxDomain = function (editor: Editor, ifr) {
       InitContentBody.initContentBody(editor);
     };
 
-    /*eslint no-script-url:0 */
+    /* eslint no-script-url:0 */
     const domainRelaxUrl = 'javascript:(function(){' +
       'document.open();document.domain="' + document.domain + '";' +
       'var ed = window.parent.tinymce.get("' + editor.id + '");document.write(ed.iframeHTML);' +

@@ -4,7 +4,7 @@ import { TextSplit } from '../api/data/TextSplit';
 /*
  * Categorise a split of a text node as: none, start, middle, or end
  */
-const determine = function <E>(target: TextSplit<E>) {
+const determine = function <E> (target: TextSplit<E>) {
   return target.before().fold(function () {
     return target.after().fold(function () {
       return SplitPosition.none<E>();

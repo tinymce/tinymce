@@ -27,7 +27,7 @@ export default function (): Universe<Element, Document> {
     if (!Node.isElement(element)) {
       return false;
     }
-    return Arr.contains(['br', 'img', 'hr', 'input'], Node.name(element));
+    return Arr.contains([ 'br', 'img', 'hr', 'input' ], Node.name(element));
   };
 
   const isNonEditable = (element: Element) => {

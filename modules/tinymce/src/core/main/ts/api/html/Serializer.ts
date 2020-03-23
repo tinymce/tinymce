@@ -50,32 +50,32 @@ const Serializer = function (settings?: SerializerSettings, schema = Schema()) {
 
     handlers = {
       // #text
-      3 (node) {
+      3(node) {
         writer.text(node.value, node.raw);
       },
 
       // #comment
-      8 (node) {
+      8(node) {
         writer.comment(node.value);
       },
 
       // Processing instruction
-      7 (node) {
+      7(node) {
         writer.pi(node.name, node.value);
       },
 
       // Doctype
-      10 (node) {
+      10(node) {
         writer.doctype(node.value);
       },
 
       // CDATA
-      4 (node) {
+      4(node) {
         writer.cdata(node.value);
       },
 
       // Document fragment
-      11 (node) {
+      11(node) {
         if ((node = node.firstChild)) {
           do {
             walk(node);

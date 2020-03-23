@@ -138,7 +138,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
           'Checking initial structure for menubar',
           ApproxStructure.build((s, str, arr) => {
             return s.element('div', {
-              classes: [arr.has('test-menubar')],
+              classes: [ arr.has('test-menubar') ],
               attrs: {
                 role: str.is('menubar')
               },

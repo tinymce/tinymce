@@ -125,9 +125,9 @@ UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
       Step.sync(() => {
 
         const groups = Arr.map([
-          { items: Arr.map([ { text: 'A' }, { text: 'B' } ], makeToolbarItem) },
-          { items: Arr.map([ { text: 'C' }, { text: 'D' } ], makeToolbarItem) },
-          { items: Arr.map([ { text: 'E' }, { text: 'F' }, { text: 'G' } ], makeToolbarItem) }
+          { items: Arr.map([{ text: 'A' }, { text: 'B' }], makeToolbarItem) },
+          { items: Arr.map([{ text: 'C' }, { text: 'D' }], makeToolbarItem) },
+          { items: Arr.map([{ text: 'E' }, { text: 'F' }, { text: 'G' }], makeToolbarItem) }
         ], makeToolbarGroup);
 
         CustomList.setItems(toolbarList, [

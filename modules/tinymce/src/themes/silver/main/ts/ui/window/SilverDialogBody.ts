@@ -54,7 +54,7 @@ const renderBody = (spec: WindowBodySpec, id: Option<string>, backstage: UiFacto
       tag: 'div',
       classes: [ 'tox-dialog__content-js' ],
       attributes: {
-        ...id.map((x): {id?: string} => ({id: x})).getOr({}),
+        ...id.map((x): {id?: string} => ({ id: x })).getOr({}),
         ...ariaAttrs ? ariaAttributes : {}
       }
     },

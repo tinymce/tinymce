@@ -7,7 +7,7 @@ import { Body, Element, Insert, Remove } from '@ephox/sugar';
 import { Cell, Option } from '@ephox/katamari';
 
 UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
-  const files = [ createFile('a.txt', 0, new Blob(['x'])) ];
+  const files = [ createFile('a.txt', 0, new Blob([ 'x' ])) ];
   const filesState = Cell(Option.none<FileList>());
 
   const pickFiles = (body: Element<any>, next: (files: FileList) => void) => {

@@ -78,7 +78,7 @@ class ScriptLoader {
   private queueLoadedCallbacks: Array<{success: () => void, failure: (urls: string[]) => void, scope: any}> = [];
   private loading = 0;
 
-  public constructor (settings: Partial<ScriptLoaderSettings> = {}) {
+  public constructor(settings: Partial<ScriptLoaderSettings> = {}) {
     this.settings = settings;
   }
 
@@ -94,7 +94,7 @@ class ScriptLoader {
    * @param {function} success Optional success callback function when the script loaded successfully.
    * @param {function} failure Optional failure callback function when the script failed to load.
    */
-  public loadScript (url: string, success?: () => void, failure?: () => void) {
+  public loadScript(url: string, success?: () => void, failure?: () => void) {
     const dom = DOM;
     let elm, id;
 
@@ -157,7 +157,7 @@ class ScriptLoader {
    * @param {String} url URL to check for.
    * @return {Boolean} true/false if the URL is loaded.
    */
-  public isDone (url: string): boolean {
+  public isDone(url: string): boolean {
     return this.states[url] === LOADED;
   }
 
@@ -168,7 +168,7 @@ class ScriptLoader {
    * @method markDone
    * @param {string} url Absolute URL to the script to mark as loaded.
    */
-  public markDone (url: string) {
+  public markDone(url: string) {
     this.states[url] = LOADED;
   }
 
@@ -181,7 +181,7 @@ class ScriptLoader {
    * @param {Object} scope Optional scope to execute callback in.
    * @param {function} failure Optional failure callback function to execute when the script failed to load.
    */
-  public add (url: string, success?: () => void, scope?: {}, failure?: () => void) {
+  public add(url: string, success?: () => void, scope?: {}, failure?: () => void) {
     const state = this.states[url];
 
     // Add url to load queue
@@ -204,11 +204,11 @@ class ScriptLoader {
     }
   }
 
-  public load (url: string, success?: () => void, scope?: {}, failure?: () => void) {
+  public load(url: string, success?: () => void, scope?: {}, failure?: () => void) {
     return this.add(url, success, scope, failure);
   }
 
-  public remove (url: string) {
+  public remove(url: string) {
     delete this.states[url];
     delete this.scriptLoadedCallbacks[url];
   }
@@ -221,7 +221,7 @@ class ScriptLoader {
    * @param {function} failure Optional callback to execute when queued items failed to load.
    * @param {Object} scope Optional scope to execute the callback in.
    */
-  public loadQueue (success?: () => void, scope?: {}, failure?: (urls: string[]) => void) {
+  public loadQueue(success?: () => void, scope?: {}, failure?: (urls: string[]) => void) {
     this.loadScripts(this.queue, success, scope, failure);
   }
 
@@ -235,7 +235,7 @@ class ScriptLoader {
    * @param {Object} scope Optional scope to execute callback in.
    * @param {function} failure Optional callback to execute if scripts failed to load.
    */
-  public loadScripts (scripts: string[], success?: () => void, scope?: {}, failure?: (urls: string[]) => void) {
+  public loadScripts(scripts: string[], success?: () => void, scope?: {}, failure?: (urls: string[]) => void) {
     const self = this;
     let loadScripts;
     const failures = [];

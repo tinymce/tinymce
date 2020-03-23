@@ -54,9 +54,9 @@ const bundle = function (grid: Structs.RowCells[], row: number, column: number) 
 const uniqueRows = function (details: Structs.DetailExt[]) {
   return Arr.foldl(details, function (rest, detail) {
     return Arr.exists(rest, function (currentDetail) {
-        return currentDetail.row() === detail.row();
-      }) ? rest : rest.concat([detail]);
-    }, [] as Structs.DetailExt[]).sort(function (detailA, detailB) {
+      return currentDetail.row() === detail.row();
+    }) ? rest : rest.concat([ detail ]);
+  }, [] as Structs.DetailExt[]).sort(function (detailA, detailB) {
     return detailA.row() - detailB.row();
   });
 };
@@ -64,9 +64,9 @@ const uniqueRows = function (details: Structs.DetailExt[]) {
 const uniqueColumns = function (details: Structs.DetailExt[]) {
   return Arr.foldl(details, function (rest, detail) {
     return Arr.exists(rest, function (currentDetail) {
-        return currentDetail.column() === detail.column();
-      }) ? rest : rest.concat([detail]);
-    }, [] as Structs.DetailExt[]).sort(function (detailA, detailB) {
+      return currentDetail.column() === detail.column();
+    }) ? rest : rest.concat([ detail ]);
+  }, [] as Structs.DetailExt[]).sort(function (detailA, detailB) {
     return detailA.column() - detailB.column();
   });
 };

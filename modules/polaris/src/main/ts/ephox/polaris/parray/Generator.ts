@@ -19,7 +19,7 @@ const make = function <T, R extends { finish: () => number }> (xs: T[], f: (x: T
     return value.fold(Fun.constant(acc), function (v) {
       return {
         len: v.finish(),
-        list: acc.list.concat([v])
+        list: acc.list.concat([ v ])
       };
     });
   }, init);

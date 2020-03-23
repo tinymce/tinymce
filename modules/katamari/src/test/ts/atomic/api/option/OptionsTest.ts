@@ -7,8 +7,8 @@ import fc from 'fast-check';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 
 UnitTest.test('OptionsTest', () => {
-  const arr1 = [Option.some(1), Option.none(), Option.some(2), Option.some(3), Option.none(), Option.none(), Option.none(), Option.none(), Option.some(4)];
-  Assert.eq('eq', [1, 2, 3, 4], Options.cat(arr1));
+  const arr1 = [ Option.some(1), Option.none(), Option.some(2), Option.some(3), Option.none(), Option.none(), Option.none(), Option.none(), Option.some(4) ];
+  Assert.eq('eq', [ 1, 2, 3, 4 ], Options.cat(arr1));
 
   Assert.eq('each returns undefined 1', undefined, Option.some(1).each(Fun.identity));
   Assert.eq('each returns undefined 2', undefined, Option.none().each(Fun.identity));

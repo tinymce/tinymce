@@ -29,7 +29,7 @@ const dispatchWith = (component: AlloyComponent, target: Element, event: string,
   component.getSystem().triggerEvent(event, target, Obj.map(data, Fun.constant));
 };
 
-const dispatchEvent = function <T extends EventFormat>(component: AlloyComponent, target: Element, event: string, simulatedEvent: SimulatedEvent<T>): void {
+const dispatchEvent = function <T extends EventFormat> (component: AlloyComponent, target: Element, event: string, simulatedEvent: SimulatedEvent<T>): void {
   component.getSystem().triggerEvent(event, target, simulatedEvent.event());
 };
 

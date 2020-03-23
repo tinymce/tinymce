@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
       target: elm1,
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback (ed) {
+      init_instance_callback(ed) {
         LegacyUnit.equalDom(ed.targetElm, elm1);
         teardown(done);
       }
@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
       target: elm,
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback (ed) {
+      init_instance_callback(ed) {
         LegacyUnit.equal(ed.id.length > 0, true, 'editors id set to: ' + ed.id);
         LegacyUnit.equalDom(ed.targetElm, elm);
         teardown(done);
@@ -73,7 +73,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
       target: elm1,
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback (ed) {
+      init_instance_callback(ed) {
         LegacyUnit.equalDom(ed.targetElm, elm2);
         teardown(done);
       }
@@ -120,7 +120,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
       target: elm1,
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback (ed) {
+      init_instance_callback(ed) {
         LegacyUnit.equal(ed.targetElm !== elm1, true, 'target option ignored');
         LegacyUnit.equal(Tools.inArray(targets, ed.targetElm), -1);
 
@@ -143,7 +143,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
       selector: '#elm-1',
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback (ed) {
+      init_instance_callback(ed) {
 
         Assertions.assertEq('Should have set suffix on EditorManager', '.min', EditorManager.suffix);
         Assertions.assertEq('Should have set suffix on editor', '.min', ed.suffix);
@@ -226,7 +226,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
 
     Assertions.assertEq(
       'Should only be two skin files the skin and the content for inline mode',
-      ['skin.min.css', 'content.inline.min.css'],
+      [ 'skin.min.css', 'content.inline.min.css' ],
       getSkinCssFilenames()
     );
 
@@ -261,7 +261,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
         selector,
         skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
         content_css: '/project/tinymce/js/tinymce/skins/content/default',
-        init_instance_callback (ed) {
+        init_instance_callback(ed) {
           Assertions.assertEq('Expect editor to have content', expectedEditorContent, ed.getContent({ format: 'text' }));
           teardown(done);
         }

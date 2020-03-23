@@ -38,8 +38,8 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
         AlloyEvents.runOnAttached((component) => {
           memReplaced.getOpt(component).each((ta) => {
             (isOldCustomEditor(spec)
-            ? spec.init(ta.element().dom())
-            : Resource.load(spec.scriptId, spec.scriptUrl).then(
+              ? spec.init(ta.element().dom())
+              : Resource.load(spec.scriptId, spec.scriptUrl).then(
                 (init: CustomEditorInitFn) => init(ta.element().dom(), spec.settings)
               )
             ).then((ea) => {
@@ -73,6 +73,6 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
 
       ComposingConfigs.self()
     ]),
-    components: [memReplaced.asSpec()]
+    components: [ memReplaced.asSpec() ]
   };
 };

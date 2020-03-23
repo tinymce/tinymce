@@ -15,7 +15,7 @@ import ItemResponse from '../ItemResponse';
 import { ItemStructure } from '../structure/ItemStructure';
 
 export const componentRenderPipeline = (xs: Array<Option<AlloySpec>>) =>
-Arr.bind(xs, (o) => o.toArray());
+  Arr.bind(xs, (o) => o.toArray());
 
 export interface CommonMenuItemSpec<T> {
   onAction: (itemApi: T) => void;

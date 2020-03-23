@@ -67,8 +67,8 @@ const pathFrom = (spec: CursorSpec | RangeSpec): CursorPath =>
 
 const follow = (container: Element<any>, calcPath: number[]): Result<Element<any>, string> =>
   Hierarchy.follow(container, calcPath).fold(() =>
-      Result.error('Could not follow path: ' + calcPath.join(',')),
-    Result.value
+    Result.error('Could not follow path: ' + calcPath.join(',')),
+  Result.value
   );
 
 const followPath = (container: Element<any>, calcPath: CursorPath): Result<CursorRange, string> =>

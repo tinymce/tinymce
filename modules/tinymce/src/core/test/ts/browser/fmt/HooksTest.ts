@@ -13,50 +13,50 @@ UnitTest.asynctest('browser.tinymce.core.fmt.HooksTest', function (success, fail
   suite.test('pre - postProcessHook', function (editor) {
     const assertPreHook = function (setupHtml, setupSelection, expected) {
       editor.getBody().innerHTML = setupHtml;
-      LegacyUnit.setSelection.apply(LegacyUnit, [editor].concat(setupSelection));
+      LegacyUnit.setSelection.apply(LegacyUnit, [ editor ].concat(setupSelection));
       Hooks.postProcess('pre', editor);
       LegacyUnit.equal(editor.getContent(), expected);
     };
 
     assertPreHook(
       '<pre>a</pre><pre>b</pre>',
-      ['pre:nth-child(1)', 0, 'pre:nth-child(2)', 1],
+      [ 'pre:nth-child(1)', 0, 'pre:nth-child(2)', 1 ],
       '<pre>a<br /><br />b</pre>'
     );
 
     assertPreHook(
       '<pre>a</pre><pre>b</pre>',
-      ['pre:nth-child(2)', 0, 'pre:nth-child(2)', 1],
+      [ 'pre:nth-child(2)', 0, 'pre:nth-child(2)', 1 ],
       '<pre>a</pre><pre>b</pre>'
     );
 
     assertPreHook(
       '<pre>a</pre><pre>b</pre>',
-      ['pre:nth-child(2)', 1, 'pre:nth-child(2)', 1],
+      [ 'pre:nth-child(2)', 1, 'pre:nth-child(2)', 1 ],
       '<pre>a</pre><pre>b</pre>'
     );
 
     assertPreHook(
       '<pre>a</pre><pre>b</pre><pre>c</pre>',
-      ['pre:nth-child(1)', 0, 'pre:nth-child(3)', 1],
+      [ 'pre:nth-child(1)', 0, 'pre:nth-child(3)', 1 ],
       '<pre>a<br /><br />b<br /><br />c</pre>'
     );
 
     assertPreHook(
       '<pre>a</pre><pre>b</pre>',
-      ['pre:nth-child(1)', 0, 'pre:nth-child(1)', 1],
+      [ 'pre:nth-child(1)', 0, 'pre:nth-child(1)', 1 ],
       '<pre>a</pre><pre>b</pre>'
     );
 
     assertPreHook(
       '<pre>a</pre><p>b</p><pre>c</pre>',
-      ['pre:nth-child(1)', 0, 'pre:nth-child(3)', 1],
+      [ 'pre:nth-child(1)', 0, 'pre:nth-child(3)', 1 ],
       '<pre>a</pre><p>b</p><pre>c</pre>'
     );
 
     assertPreHook(
       '<pre>a</pre><pre>b</pre><p>c</p><pre>d</pre><pre>e</pre>',
-      ['pre:nth-child(1)', 0, 'pre:nth-child(5)', 1],
+      [ 'pre:nth-child(1)', 0, 'pre:nth-child(5)', 1 ],
       '<pre>a<br /><br />b</pre><p>c</p><pre>d<br /><br />e</pre>'
     );
   });

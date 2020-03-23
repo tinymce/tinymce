@@ -69,7 +69,7 @@ export interface UrlDialog {
 }
 
 export const urlDialogButtonSchema = ValueSchema.objOf([
-  FieldSchema.strictStringEnum('type', ['cancel', 'custom']),
+  FieldSchema.strictStringEnum('type', [ 'cancel', 'custom' ]),
   ...dialogButtonFields
 ]);
 

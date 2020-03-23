@@ -51,7 +51,7 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
       return {
         anchor: 'selection',
         root: data.inline.element(),
-        getSelection () {
+        getSelection() {
           return Option.some(
             Cursors.calculate(data.inline.element(), data.path)
           );

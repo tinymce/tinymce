@@ -69,7 +69,7 @@ const addToHistory = function (url: string, fileType: string) {
   const history = getAllHistory();
   const items = Object.prototype.hasOwnProperty.call(history, fileType) ? history[fileType] : [];
   const itemsWithoutUrl = Arr.filter(items, (item) => item !== url);
-  history[fileType] = [url].concat(itemsWithoutUrl).slice(0, HISTORY_LENGTH);
+  history[fileType] = [ url ].concat(itemsWithoutUrl).slice(0, HISTORY_LENGTH);
   setAllHistory(history);
 };
 

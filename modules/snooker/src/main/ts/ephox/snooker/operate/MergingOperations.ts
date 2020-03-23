@@ -43,9 +43,9 @@ const unmerge = function (grid: Structs.RowCells[], target: Element, comparator:
 
 const uniqueCells = function (row: Structs.ElementNew[], comparator: CompElm) {
   return Arr.foldl(row, function (rest, cell) {
-      return Arr.exists(rest, function (currentCell) {
-        return comparator(currentCell.element(), cell.element());
-      }) ? rest : rest.concat([cell]);
+    return Arr.exists(rest, function (currentCell) {
+      return comparator(currentCell.element(), cell.element());
+    }) ? rest : rest.concat([ cell ]);
   }, [] as Structs.ElementNew[]);
 };
 

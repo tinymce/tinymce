@@ -40,7 +40,7 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
                   classes: [
                     arr.has('tox-lock'),
                     arr.has('tox-button'),
-                    (locked ? arr.has : arr.not)('tox-locked')]
+                    (locked ? arr.has : arr.not)('tox-locked') ]
                 });
               }),
               lock
@@ -53,20 +53,20 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
           'Checking initial structure',
           ApproxStructure.build((s, str, arr) => {
             return s.element('div', {
-              classes: [arr.has('tox-form__group')],
+              classes: [ arr.has('tox-form__group') ],
               children: [
                 s.element('div', {
-                  classes: [arr.has('tox-form__controls-h-stack')],
+                  classes: [ arr.has('tox-form__controls-h-stack') ],
                   children: [
                     s.element('div', {
-                      classes: [arr.has('tox-form__group')],
+                      classes: [ arr.has('tox-form__group') ],
                       children: [
                         s.element('label', {
-                          classes: [arr.has('tox-label')],
+                          classes: [ arr.has('tox-label') ],
                           html: str.is('Width')
                         }),
                         s.element('input', {
-                          classes: [arr.has('tox-textfield')],
+                          classes: [ arr.has('tox-textfield') ],
                           attrs: {
                             'data-alloy-tabstop': str.is('true')
                           }
@@ -74,14 +74,14 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
                       ]
                     }),
                     s.element('div', {
-                      classes: [arr.has('tox-form__group')],
+                      classes: [ arr.has('tox-form__group') ],
                       children: [
                         s.element('label', {
-                          classes: [arr.has('tox-label')],
+                          classes: [ arr.has('tox-label') ],
                           html: str.is('Height')
                         }),
                         s.element('input', {
-                          classes: [arr.has('tox-textfield')],
+                          classes: [ arr.has('tox-textfield') ],
                           attrs: {
                             'data-alloy-tabstop': str.is('true')
                           }
@@ -89,14 +89,14 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
                       ]
                     }),
                     s.element('div', {
-                      classes: [arr.has('tox-form__group')],
+                      classes: [ arr.has('tox-form__group') ],
                       children: [
                         s.element('label', {
-                          classes: [arr.has('tox-label')],
+                          classes: [ arr.has('tox-label') ],
                           html: str.is('&nbsp;')
                         }),
                         s.element('button', {
-                          classes: [arr.has('tox-lock'), arr.has('tox-button'), arr.has('tox-locked')]
+                          classes: [ arr.has('tox-lock'), arr.has('tox-button'), arr.has('tox-locked') ]
                         })
                       ]
                     })

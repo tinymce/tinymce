@@ -2,7 +2,7 @@ import { Node as DomNode } from '@ephox/dom-globals';
 import { Fun, Option, Type } from '@ephox/katamari';
 import Element from '../node/Element';
 
-const ancestor = function <A>(scope: Element<DomNode>, transform: (e: Element<DomNode>) => Option<A>, isRoot?: (e: Element<DomNode>) => boolean): Option<A> {
+const ancestor = function <A> (scope: Element<DomNode>, transform: (e: Element<DomNode>) => Option<A>, isRoot?: (e: Element<DomNode>) => boolean): Option<A> {
   let element = scope.dom();
   const stop = Type.isFunction(isRoot) ? isRoot : Fun.constant(false);
 
@@ -20,7 +20,7 @@ const ancestor = function <A>(scope: Element<DomNode>, transform: (e: Element<Do
   return Option.none<A>();
 };
 
-const closest = function <A>(scope: Element<DomNode>, transform: (e: Element<DomNode>) => Option<A>, isRoot?: (e: Element<DomNode>) => boolean): Option<A> {
+const closest = function <A> (scope: Element<DomNode>, transform: (e: Element<DomNode>) => Option<A>, isRoot?: (e: Element<DomNode>) => boolean): Option<A> {
   const current = transform(scope);
   return current.orThunk(function () {
     return isRoot(scope) ? Option.none<A>() : ancestor(scope, transform, isRoot);

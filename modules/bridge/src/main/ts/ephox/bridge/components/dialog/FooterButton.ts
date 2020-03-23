@@ -62,7 +62,7 @@ const baseButtonFields = [
     ValueSchema.string
   ),
   FieldSchema.optionString('icon'),
-  FieldSchema.defaultedStringEnum('align', 'end', ['start', 'end']),
+  FieldSchema.defaultedStringEnum('align', 'end', [ 'start', 'end' ]),
   FieldSchema.defaultedBoolean('primary', false),
   FieldSchema.defaultedBoolean('disabled', false)
 ];
@@ -73,12 +73,12 @@ export const dialogButtonFields = [
 ];
 
 const normalButtonFields = [
-  FieldSchema.strictStringEnum('type', ['submit', 'cancel', 'custom']),
+  FieldSchema.strictStringEnum('type', [ 'submit', 'cancel', 'custom' ]),
   ...dialogButtonFields
 ];
 
 const menuButtonFields = [
-  FieldSchema.strictStringEnum('type', ['menu']),
+  FieldSchema.strictStringEnum('type', [ 'menu' ]),
   FieldSchema.optionString('text'),
   FieldSchema.optionString('tooltip'),
   FieldSchema.optionString('icon'),

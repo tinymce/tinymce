@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.UnmergeCellTableResizeTest', (
             '</table>',
 
     select: (editor) => {
-    Keyboard.keydown(Keys.down(), { shift: true }, TinyDom.fromDom(editor.getBody()));
+      Keyboard.keydown(Keys.down(), { shift: true }, TinyDom.fromDom(editor.getBody()));
     }
   };
 
@@ -242,7 +242,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.UnmergeCellTableResizeTest', (
 
   const cUnmergeCellsMeasureTableWidth = (label, data) => {
     return Log.chain('TBA', 'Merge and unmerge cells, measure table widths', NamedChain.asChain(
-       [
+      [
         NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
         Chain.label('Insert table', NamedChain.direct('editor', cInsertTable(label, data.html), 'element')),
         Chain.label('Drag SE (-100, 0)', NamedChain.read('editor', TableTestUtils.cDragHandle('se', -100, 0))),
@@ -250,7 +250,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.UnmergeCellTableResizeTest', (
         Chain.label('Merge table cells', NamedChain.read('editor', TableTestUtils.cMergeCells(data.select))),
         Chain.label('Split table cells', NamedChain.read('editor', TableTestUtils.cSplitCells)),
         Chain.label('Store width after merge/unmerge', NamedChain.write('widthAfter', TableTestUtils.cGetWidth)),
-        NamedChain.merge(['widthBefore', 'widthAfter'], 'widths'),
+        NamedChain.merge([ 'widthBefore', 'widthAfter' ], 'widths'),
         NamedChain.output('widths')
       ]
     ));
@@ -267,7 +267,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.UnmergeCellTableResizeTest', (
         Chain.label('Store width before split', NamedChain.write('widthBefore', TableTestUtils.cGetWidth)),
         Chain.label('Split table cells', NamedChain.read('editor', TableTestUtils.cSplitCells)),
         Chain.label('Store width after split', NamedChain.write('widthAfter', TableTestUtils.cGetWidth)),
-        NamedChain.merge(['widthBefore', 'widthAfter'], 'widths'),
+        NamedChain.merge([ 'widthBefore', 'widthAfter' ], 'widths'),
         NamedChain.output('widths')
       ]
     ));

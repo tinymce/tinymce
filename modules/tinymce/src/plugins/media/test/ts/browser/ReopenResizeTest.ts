@@ -49,9 +49,9 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (s
           10, 3000
         )
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
-    plugins: ['media'],
+    plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
     indent: false,

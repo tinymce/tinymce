@@ -16,7 +16,7 @@ interface NewRowsAndCells {
   readonly newCells: Element[];
 }
 
-const render = function <T extends DetailNew>(table: Element, grid: RowDataNew<T>[]): NewRowsAndCells {
+const render = function <T extends DetailNew> (table: Element, grid: RowDataNew<T>[]): NewRowsAndCells {
   const newRows: Element[] = [];
   const newCells: Element[] = [];
 

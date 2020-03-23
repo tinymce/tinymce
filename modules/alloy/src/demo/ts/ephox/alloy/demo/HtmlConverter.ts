@@ -14,7 +14,7 @@ import { Input } from 'ephox/alloy/api/ui/Input';
 export default (): void => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
-// TODO: Change this to match the simplified UI templating model we have now including text
+  // TODO: Change this to match the simplified UI templating model we have now including text
 
   const page = Container.sketch({
     components: [
@@ -39,7 +39,7 @@ export default (): void => {
           tag: 'button',
           innerHtml: 'Convert'
         },
-        action (button) {
+        action(button) {
           const textarea = button.getSystem().getByUid('textarea-input').getOrDie();
           const value = Representing.getValue(textarea);
           const output = GuiTemplate.readHtml(value).getOrDie();

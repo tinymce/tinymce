@@ -27,11 +27,11 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
                   text: 'Hund'
                 }
               },
-              getDataKey (component) {
+              getDataKey(component) {
                 return Value.get(component.element());
               },
-              getFallbackEntry (key) {
-                return { value: 'fallback.' + key.toLowerCase(), meta: { text: key } };
+              getFallbackEntry(key) {
+                return { value: 'fallback.' + key.toLowerCase(), meta: { text: key }};
               },
               setValue: (comp, data) => {
                 Value.set(comp.element(), data.meta.text);
@@ -67,7 +67,7 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
         component.element()
       ),
 
-      sAssertRepValue('Checking represented value on load', { value: 'dog', meta: { text: 'Hund' } }),
+      sAssertRepValue('Checking represented value on load', { value: 'dog', meta: { text: 'Hund' }}),
 
       FocusTools.sSetFocus('Setting of focus on input field', gui.element(), 'input'),
       FocusTools.sSetActiveValue(doc, 'Katze'),
@@ -89,7 +89,7 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
       }),
 
       sUpdateDataset([
-        { value: 'big.e', meta: { text: 'Elephant' } }
+        { value: 'big.e', meta: { text: 'Elephant' }}
       ]),
 
       sAssertRepValue('Checking represented value after set input but after update', {

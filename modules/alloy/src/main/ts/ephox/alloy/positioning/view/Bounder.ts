@@ -166,7 +166,7 @@ const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: 
       // console.log('improved? ', improved);
       // re-wrap in the ADT either way
       return improved ? adt.nofit(newReposition, newDeltaW, newDeltaH)
-                      : adt.nofit(reposition, deltaW, deltaH);
+        : adt.nofit(reposition, deltaW, deltaH);
     });
   };
 

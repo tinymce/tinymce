@@ -18,7 +18,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
           Replacing.config({ })
         ]),
         components: [
-          Container.sketch({ dom: { tag: 'span' } })
+          Container.sketch({ dom: { tag: 'span' }})
         ]
       })
     );
@@ -39,7 +39,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
         `${label}: Check replaceAt(${replaceeIndex}, "${replaceClass}") for data: [${inputClasses.join(', ')}]`,
         Step.sync(() => {
           Replacing.set(component,
-              Arr.map(inputClasses, (ic) => makeTag('div', [ ic ]))
+            Arr.map(inputClasses, (ic) => makeTag('div', [ ic ]))
           );
           Replacing.replaceAt(component, replaceeIndex, Option.some(makeTag('div', [ replaceClass ])));
           Assertions.assertStructure(
@@ -138,7 +138,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
       Logger.t(
         'Replacing.append to put a new thing at the end.',
         Step.sync(() => {
-          Replacing.append(component, Container.sketch({ dom: { tag: 'span' } }));
+          Replacing.append(component, Container.sketch({ dom: { tag: 'span' }}));
         })
       ),
       Assertions.sAssertStructure(

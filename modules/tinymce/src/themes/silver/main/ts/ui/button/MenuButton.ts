@@ -41,29 +41,29 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
 
 const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Option<string>): SketchSpec => {
   return renderCommonDropdown({
-      text: spec.text,
-      icon: spec.icon,
-      tooltip: spec.tooltip,
-      // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
-      role,
-      fetch: (callback) => {
-        spec.fetch((items) => {
-          callback(
-            NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false)
-          );
-        });
-      },
-      onSetup: spec.onSetup,
-      getApi: getMenuButtonApi,
-      columns: 1,
-      presets: 'normal',
-      classes: [],
-      dropdownBehaviours: [
-        Tabstopping.config({ })
-      ]
+    text: spec.text,
+    icon: spec.icon,
+    tooltip: spec.tooltip,
+    // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
+    role,
+    fetch: (callback) => {
+      spec.fetch((items) => {
+        callback(
+          NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false)
+        );
+      });
     },
-    prefix,
-    backstage.shared);
+    onSetup: spec.onSetup,
+    getApi: getMenuButtonApi,
+    columns: 1,
+    presets: 'normal',
+    classes: [],
+    dropdownBehaviours: [
+      Tabstopping.config({ })
+    ]
+  },
+  prefix,
+  backstage.shared);
 };
 
 interface StoragedMenuItem extends Types.Dialog.DialogToggleMenuItem {

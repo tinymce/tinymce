@@ -64,7 +64,7 @@ const part = (store: TestStore) => {
       tag: 'div'
     },
     markers: itemMarkers,
-    onExecute (dropdown: AlloyComponent, item: AlloyComponent) {
+    onExecute(dropdown: AlloyComponent, item: AlloyComponent) {
       const v = Representing.getValue(item);
       return store.adderH('dropdown.menu.execute: ' + v.value)();
     }

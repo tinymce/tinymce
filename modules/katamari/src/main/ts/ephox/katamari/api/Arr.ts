@@ -234,7 +234,7 @@ export const mapToObject = <T extends keyof any, U>(xs: ArrayLike<T>, f: (x: T, 
   return r;
 };
 
-export const pure = <T>(x: T): T[] => [x];
+export const pure = <T>(x: T): T[] => [ x ];
 
 export const sort = <T>(xs: ArrayLike<T>, comparator?: Comparator<T>): T[] => {
   const copy: T[] = nativeSlice.call(xs, 0);

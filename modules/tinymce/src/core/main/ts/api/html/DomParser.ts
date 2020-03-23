@@ -127,7 +127,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
       }
 
       // Get list of all parent nodes until we find a valid parent to stick the child into
-      parents = [node];
+      parents = [ node ];
       for (parent = node.parent; parent && !schema.isValidChild(parent.name, node.name) &&
         !nonSplitableElements[parent.name]; parent = parent.parent) {
         parents.push(parent);
@@ -223,7 +223,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
       if (list) {
         list.push(node);
       } else {
-        matchedNodes[name] = [node];
+        matchedNodes[name] = [ node ];
       }
     }
 
@@ -238,7 +238,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         if (list) {
           list.push(node);
         } else {
-          matchedAttributes[name] = [node];
+          matchedAttributes[name] = [ node ];
         }
       }
     }
@@ -309,7 +309,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         }
       }
 
-      attributeFilters.push({ name, callbacks: [callback] });
+      attributeFilters.push({ name, callbacks: [ callback ] });
     });
   };
 
@@ -418,7 +418,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         if (list) {
           list.push(node);
         } else {
-          matchedNodes[name] = [node];
+          matchedNodes[name] = [ node ];
         }
       }
 
@@ -482,11 +482,11 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
       // Exclude P and LI from DOM parsing since it's treated better by the DOM parser
       self_closing_elements: cloneAndExcludeBlocks(schema.getSelfClosingElements()),
 
-      cdata (text) {
+      cdata(text) {
         node.append(createNode('#cdata', 4)).value = text;
       },
 
-      text (text, raw) {
+      text(text, raw) {
         let textNode;
 
         // Trim all redundant whitespace on non white space elements
@@ -506,16 +506,16 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         }
       },
 
-      comment (text) {
+      comment(text) {
         node.append(createNode('#comment', 8)).value = text;
       },
 
-      pi (name, text) {
+      pi(name, text) {
         node.append(createNode(name, 7)).value = text;
         removeWhitespaceBefore(node);
       },
 
-      doctype (text) {
+      doctype(text) {
         let newNode;
 
         newNode = node.append(createNode('#doctype', 10));
@@ -523,7 +523,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         removeWhitespaceBefore(node);
       },
 
-      start (name, attrs, empty) {
+      start(name, attrs, empty) {
         let newNode, attrFiltersLen, elementRule, attrName, parent;
 
         elementRule = validate ? schema.getElementRule(name) : {};
@@ -551,7 +551,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
               if (list) {
                 list.push(newNode);
               } else {
-                matchedAttributes[attrName] = [newNode];
+                matchedAttributes[attrName] = [ newNode ];
               }
             }
           }
@@ -573,7 +573,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         }
       },
 
-      end (name) {
+      end(name) {
         let textNode, elementRule, text, sibling, tempNode;
 
         elementRule = validate ? schema.getElementRule(name) : {};
@@ -641,7 +641,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
 
             // Trim start white space
             // Removed due to: #5424
-            /*textNode = node.prev;
+            /* textNode = node.prev;
             if (textNode && textNode.type === 3) {
               text = textNode.value.replace(startWhiteSpaceRegExp, '');
 

@@ -7,7 +7,7 @@ import { readBlobAsText } from 'ephox/agar/test/BlobReader';
 UnitTest.asynctest('FilesTest', (success, failure) => {
   Pipeline.async({}, [
     Logger.t('Create file', Step.sync(() => {
-      const file = createFile('test.txt', 1234, new Blob(['123'], { type: 'text/plain' }));
+      const file = createFile('test.txt', 1234, new Blob([ '123' ], { type: 'text/plain' }));
 
       Assert.eq('Should have expected file name', 'test.txt', file.name);
       Assert.eq('Should have expected size', 3, file.size);
@@ -16,7 +16,7 @@ UnitTest.asynctest('FilesTest', (success, failure) => {
     })),
 
     Logger.t('Create file and read blob data', Step.async((next, die) => {
-      const file = createFile('test.txt', 1234, new Blob(['123'], { type: 'text/plain' }));
+      const file = createFile('test.txt', 1234, new Blob([ '123' ], { type: 'text/plain' }));
 
       readBlobAsText(file).get((result) => {
         result.fold(

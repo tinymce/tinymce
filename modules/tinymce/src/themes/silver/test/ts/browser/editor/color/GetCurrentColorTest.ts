@@ -26,13 +26,13 @@ UnitTest.asynctest('GetCurrentColorTest', (success, failure) => {
       Log.stepsAsStep('TBA', 'TextColor: getCurrentColor should return the first found forecolor, not the parent color', [
         tinyApis.sFocus(),
         tinyApis.sSetContent('<p style="color: blue;">hello <span style="color: red;">world</span></p>'),
-        tinyApis.sSetSelection([0, 1, 0], 2, [0, 1, 0], 2),
+        tinyApis.sSetSelection([ 0, 1, 0 ], 2, [ 0, 1, 0 ], 2),
         sAssertCurrentColor(editor, 'forecolor', 'should return red', 'red')
       ]),
       Log.stepsAsStep('TBA', 'TextColor: getCurrentColor should return the first found backcolor, not the parent color', [
         tinyApis.sFocus(),
         tinyApis.sSetContent('<p style="background-color: red;">hello <span style="background-color: blue;">world</span></p>'),
-        tinyApis.sSetSelection([0, 1, 0], 2, [0, 1, 0], 2),
+        tinyApis.sSetSelection([ 0, 1, 0 ], 2, [ 0, 1, 0 ], 2),
         sAssertCurrentColor(editor, 'backcolor', 'should return blue', 'blue')
       ])
     ], onSuccess, onFailure);

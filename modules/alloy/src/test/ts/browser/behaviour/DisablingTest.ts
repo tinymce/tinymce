@@ -37,7 +37,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
           AlloyEvents.runOnExecute(store.adder('execute.reached'))
         ])
       }
-    ));
+      ));
   }, (doc, body, gui, component, store) => {
 
     const sClickButton = Chain.asStep({ }, [

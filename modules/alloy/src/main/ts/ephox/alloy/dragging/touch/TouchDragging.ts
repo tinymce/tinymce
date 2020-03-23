@@ -33,9 +33,9 @@ const events = <E>(dragConfig: TouchDraggingConfig<E>, dragState: DraggingState,
       const dragApi: BlockerDragApi = {
         drop: stop,
         // delayDrop is not used by touch
-        delayDrop () { },
+        delayDrop() { },
         forceDrop: stop,
-        move (event) {
+        move(event) {
           DragUtils.move(component, dragConfig, dragState, TouchData, event);
         }
       };

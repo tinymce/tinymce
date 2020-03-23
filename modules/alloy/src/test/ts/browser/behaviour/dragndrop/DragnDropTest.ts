@@ -85,7 +85,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
   };
 
   const sAssertDraggedData = (label: string, store: TestStore, expectedDropData: Record<string, any>) => {
-    return store.sAssertEq(label, ['canDrag', 'onDragstart', 'onDragenter', 'onDragover', {
+    return store.sAssertEq(label, [ 'canDrag', 'onDragstart', 'onDragenter', 'onDragover', {
       type: 'drop',
       files: [],
       ...expectedDropData
@@ -93,7 +93,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
   };
 
   const sAssertDraggedFiles = (label: string, store: TestStore, expectedDropFiles: Array<Record<string, any>>) => {
-    return store.sAssertEq(label, ['canDrag', 'onDragstart', 'onDragenter', 'onDragover', {
+    return store.sAssertEq(label, [ 'canDrag', 'onDragstart', 'onDragenter', 'onDragover', {
       type: 'drop',
       data: '',
       files: expectedDropFiles
@@ -157,8 +157,8 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
             onDragstart: (comp, simulatedEvent) => {
               const rawEvent: any = simulatedEvent.event().raw();
               const transfer: DataTransfer = rawEvent.dataTransfer;
-              transfer.items.add(Files.createFile('a.html', 1234, new Blob(['abc'], { type: 'text/html' })));
-              transfer.items.add(Files.createFile('b.txt', 123, new Blob(['abcd'], { type: 'text/plain' })));
+              transfer.items.add(Files.createFile('a.html', 1234, new Blob([ 'abc' ], { type: 'text/html' })));
+              transfer.items.add(Files.createFile('b.txt', 123, new Blob([ 'abcd' ], { type: 'text/plain' })));
               store.add('onDragstart');
             }
           })
@@ -207,7 +207,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
       Logger.t('Drag and drop move to copy', GeneralSteps.sequence([
         store.sClear,
         Dnd.sDragnDrop('.draggableMove', '.dropzoneCopy'),
-        store.sAssertEq('Should not include drop since it is a invalid drop', ['canDrag', 'onDragstart', 'onDragenter', 'onDragover', 'onDragend'])
+        store.sAssertEq('Should not include drop since it is a invalid drop', [ 'canDrag', 'onDragstart', 'onDragenter', 'onDragover', 'onDragend' ])
       ]))
     ];
   }, () => success(), failure);

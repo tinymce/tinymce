@@ -13,7 +13,7 @@ const beforeSpecial = function (element: Element<DomNode>, offset: number) {
   const name = Node.name(element);
   if ('input' === name) {
     return Situ.after(element);
-  } else if (!Arr.contains(['br', 'img'], name)) {
+  } else if (!Arr.contains([ 'br', 'img' ], name)) {
     return Situ.on(element, offset);
   } else {
     return offset === 0 ? Situ.before(element) : Situ.after(element);

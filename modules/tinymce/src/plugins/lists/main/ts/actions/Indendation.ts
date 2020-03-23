@@ -6,7 +6,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import { Element} from '@ephox/sugar';
+import { Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Indentation } from '../listModel/Indentation';
 import { listIndentation } from '../listModel/ListsIndendation';

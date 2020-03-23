@@ -52,7 +52,7 @@ const setup = function (info, onSuccess, onFailure) {
 
   ThemeManager.add(strName, function (editor) {
     return {
-      renderUI () {
+      renderUI() {
         editor.fire('SkinLoaded');
         return {
           iframeContainer: socket.element().dom(),
@@ -63,7 +63,7 @@ const setup = function (info, onSuccess, onFailure) {
   });
 
   return {
-    use (f: (realm: MobileRealm, apis: TinyApis, toolbar: AlloyComponent, socket: AlloyComponent, buttons, onSuccess: () => void, onFailure: (err?: any) => void) => void) {
+    use(f: (realm: MobileRealm, apis: TinyApis, toolbar: AlloyComponent, socket: AlloyComponent, buttons, onSuccess: () => void, onFailure: (err?: any) => void) => void) {
       TinyLoader.setup(function (editor, onS, onF) {
         const features = Features.setup(realm, editor);
 

@@ -45,8 +45,8 @@ const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>): TableResiz
   const manager = BarManager(wire, vdirection, hdirection);
 
   const events = Events.create({
-    beforeResize: Event(['table']),
-    afterResize: Event(['table']),
+    beforeResize: Event([ 'table' ]),
+    afterResize: Event([ 'table' ]),
     startDrag: Event([])
   }) as TableResizeEvents;
 

@@ -52,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.SequenceTest', (success, 
   }, {
     theme: 'silver',
     plugins: 'imagetools',
-    imagetools_cors_hosts: ['moxiecode.cachefly.net'],
+    imagetools_cors_hosts: [ 'moxiecode.cachefly.net' ],
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'editimage',
   }, success, failure);

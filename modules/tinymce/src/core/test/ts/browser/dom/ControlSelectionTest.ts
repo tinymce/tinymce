@@ -27,8 +27,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
       Logger.t('Select image by context menu clicking on it', GeneralSteps.sequence([
         Step.label('Focus editor', tinyApis.sFocus()),
         Step.label('Set editor content to a paragraph with a image within', tinyApis.sSetContent('<p><img src="http://www.google.com/google.jpg" width="100" height="100"></p>')),
-        Step.label('Context menu click on the image', sContextMenuClickInMiddleOf(editor, [0, 0])),
-        Step.label('Check that the image is selected', tinyApis.sAssertSelection([0], 0, [0], 1))
+        Step.label('Context menu click on the image', sContextMenuClickInMiddleOf(editor, [ 0, 0 ])),
+        Step.label('Check that the image is selected', tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 1))
       ]))
     ], onSuccess, onFailure);
   }, {

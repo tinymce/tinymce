@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
       Logger.t('getContent tree using public api', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>html</p>'),
         Step.sync(() => {
-          const tree = editor.getContent({ format: 'tree'}) as Node;
+          const tree = editor.getContent({ format: 'tree' }) as Node;
           Assertions.assertHtml('Should be expected filtered html', '<p>html</p>', toHtml(tree));
         })
       ])),

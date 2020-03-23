@@ -49,7 +49,7 @@ export const renderPanelButton = (spec: SwatchPanelButtonSpec, sharedBackstage: 
       Tabstopping.config({})
     ]),
     layouts: spec.layouts,
-    sandboxClasses: ['tox-dialog__popups'],
+    sandboxClasses: [ 'tox-dialog__popups' ],
 
     lazySink: sharedBackstage.getSink,
     fetch: (comp) => {

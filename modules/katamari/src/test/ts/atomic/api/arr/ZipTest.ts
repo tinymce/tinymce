@@ -23,7 +23,7 @@ UnitTest.test('Zip: unit tests', () => {
         : a.v > b.v ? gt
           : lt
         : a.k > b.k ? gt
-        : lt
+          : lt
     ));
 
     expectedZipToObject.fold(() => {
@@ -40,7 +40,7 @@ UnitTest.test('Zip: unit tests', () => {
 
   check1(
     Option.some({ q: 'a', r: 'x' }),
-    Option.some([ { k: 'q', v: 'a' }, { k: 'r', v: 'x' } ]),
+    Option.some([{ k: 'q', v: 'a' }, { k: 'r', v: 'x' }]),
     [ 'q', 'r' ],
     [ 'a', 'x' ]
   );

@@ -31,7 +31,7 @@ const invalidation = (validate: (v: string) => Result<Record<string, string>, st
   return Invalidating.config({
     invalidClass: 'invalid-input',
     notify: {
-      getContainer (input) {
+      getContainer(input) {
         return ComponentUtil.getByUid(input, invalidUid).map(ComponentUtil.toElem);
       }
     },
@@ -157,7 +157,7 @@ const coupledTextMunger = (spec: { field1: TextMungerSpec; field2: TextMungerSpe
     markers: {
       lockClass: 'demo-selected'
     },
-    onLockedChange (current, other) {
+    onLockedChange(current, other) {
       const cValue = Representing.getValue(current);
       Representing.setValue(other, cValue);
     },
@@ -184,7 +184,7 @@ const typeaheadMunger = (spec: { label: string; lazySink: LazySink; dataset: any
 
     lazySink: spec.lazySink,
 
-    fetch (input: AlloyComponent) {
+    fetch(input: AlloyComponent) {
 
       const text = Value.get(input.element());
       const matching: DemoRenders.DemoItems[] = Arr.bind(spec.dataset, (d) => {
@@ -192,7 +192,7 @@ const typeaheadMunger = (spec: { label: string; lazySink: LazySink; dataset: any
         if (index > -1) {
           const html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' +
             d.substring(index + text.length);
-          return [ { 'type': 'item', 'data': { value: d, text: d, html }, 'item-class': 'class-' + d } ];
+          return [{ 'type': 'item', 'data': { value: d, text: d, html }, 'item-class': 'class-' + d }];
         } else {
           return [ ];
         }

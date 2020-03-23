@@ -69,7 +69,7 @@ const findLineNodeRects = (root: Node, targetNodeRect: NodeClientRect): ClientRe
   const collect = (checkPosFn, node) => {
     let lineRects;
 
-    lineRects = Arr.filter(getClientRects([node]), function (clientRect) {
+    lineRects = Arr.filter(getClientRects([ node ]), function (clientRect) {
       return !checkPosFn(clientRect, targetNodeRect);
     });
 

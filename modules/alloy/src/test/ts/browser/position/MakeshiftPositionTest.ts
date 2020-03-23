@@ -16,7 +16,7 @@ UnitTest.asynctest('MakeshiftPositionTest', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
     const button = GuiFactory.build(
       Button.sketch({
-        action () { },
+        action() { },
         dom: {
           styles: {
             position: 'absolute',

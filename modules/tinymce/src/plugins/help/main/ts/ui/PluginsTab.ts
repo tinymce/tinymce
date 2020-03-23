@@ -81,7 +81,7 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
     const count = pluginLis.length;
     const pluginsString = pluginLis.join('');
 
-    const html = '<p><b>' + I18n.translate(['Plugins installed ({0}):', count]) + '</b></p>' +
+    const html = '<p><b>' + I18n.translate([ 'Plugins installed ({0}):', count ]) + '</b></p>' +
       '<ul>' + pluginsString + '</ul>';
 
     return html;

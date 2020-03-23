@@ -61,7 +61,7 @@ const getPositionsUntil = (predicate: CheckerPredicate, direction: HDirection, s
 
     if (NodeType.isBr(nextPos.getNode(false))) {
       if (direction === HDirection.Forwards) {
-        return { positions: flip(direction, positions).concat([nextPos]), breakType: BreakType.Br, breakAt: Option.some(nextPos) };
+        return { positions: flip(direction, positions).concat([ nextPos ]), breakType: BreakType.Br, breakAt: Option.some(nextPos) };
       } else {
         return { positions: flip(direction, positions), breakType: BreakType.Br, breakAt: Option.some(nextPos) };
       }
@@ -87,7 +87,7 @@ const getPositionsUntil = (predicate: CheckerPredicate, direction: HDirection, s
 const getAdjacentLinePositions = (direction: HDirection, getPositionsUntilBreak: LineInfoFinder, scope: HTMLElement, start: CaretPosition): CaretPosition[] => {
   return getPositionsUntilBreak(scope, start).breakAt.map((pos) => {
     const positions = getPositionsUntilBreak(scope, pos).positions;
-    return direction === HDirection.Backwards ? positions.concat(pos) : [pos].concat(positions);
+    return direction === HDirection.Backwards ? positions.concat(pos) : [ pos ].concat(positions);
   }).getOr([]);
 };
 
@@ -120,7 +120,7 @@ const getPositionsAbove = Fun.curry(getAdjacentLinePositions, -1, getPositionsUn
 const getPositionsBelow = Fun.curry(getAdjacentLinePositions, 1, getPositionsUntilNextLine) as CaretPositionsFinder;
 
 const getFirstLinePositions = (scope: HTMLElement) => CaretFinder.firstPositionIn(scope).map((pos) => {
-  return [pos].concat(getPositionsUntilNextLine(scope, pos).positions);
+  return [ pos ].concat(getPositionsUntilNextLine(scope, pos).positions);
 }).getOr([]);
 
 const getLastLinePositions = (scope: HTMLElement) => CaretFinder.lastPositionIn(scope).map((pos) => {

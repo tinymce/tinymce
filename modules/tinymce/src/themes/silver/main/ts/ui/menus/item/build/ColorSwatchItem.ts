@@ -42,7 +42,7 @@ export function renderColorSwatchItem(spec: Menu.FancyMenuItem, backstage: UiFac
 
   return {
     type: 'widget',
-    data: { value: Id.generate('widget-id')},
+    data: { value: Id.generate('widget-id') },
     dom: {
       tag: 'div',
       classes: [ 'tox-fancymenuitem' ],

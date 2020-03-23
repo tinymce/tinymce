@@ -16,7 +16,7 @@ const open = (editor: Editor, api: WordCountApi) => {
       items: [
         {
           type: 'table',
-          header: ['Count', 'Document', 'Selection'],
+          header: [ 'Count', 'Document', 'Selection' ],
           cells: [
             [
               'Words',

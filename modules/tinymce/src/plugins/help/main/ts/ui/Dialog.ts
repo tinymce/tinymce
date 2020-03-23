@@ -36,7 +36,7 @@ const parseHelpTabsSetting = (tabsFromSettings: Settings.HelpTabsSetting, tabs: 
       return t.name;
     }
   });
-  return {tabs: newTabs, names};
+  return { tabs: newTabs, names };
 };
 
 const getNamesFromTabs = (tabs: TabSpecs): TabData => {
@@ -49,7 +49,7 @@ const getNamesFromTabs = (tabs: TabSpecs): TabData => {
     names.push('versions');
   }
 
-  return {tabs, names};
+  return { tabs, names };
 };
 
 const parseCustomTabs = (editor: Editor, customTabs: CustomTabSpecs) => {
@@ -74,7 +74,7 @@ const parseCustomTabs = (editor: Editor, customTabs: CustomTabSpecs) => {
 const init = (editor: Editor, customTabs: CustomTabSpecs): () => void => {
   return () => {
     // const tabSpecs: Record<string, Types.Dialog.TabApi> = customTabs.get();
-    const {tabs, names} = parseCustomTabs(editor, customTabs);
+    const { tabs, names } = parseCustomTabs(editor, customTabs);
     const foundTabs: Option<Types.Dialog.TabApi>[] = Arr.map(names, (name) => {
       return Obj.get(tabs, name);
     });

@@ -31,42 +31,42 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionUtilsTest', function
   Pipeline.async({}, [
     Logger.t('All text is selected in paragraph', Chain.asStep(viewBlock, [
       cSetHtml('<p>a</p>'),
-      cHasAllContentsSelected([0, 0], 0, [0, 0], 1),
+      cHasAllContentsSelected([ 0, 0 ], 0, [ 0, 0 ], 1),
       Assertions.cAssertEq('Should be true since all contents is selected', true)
     ])),
     Logger.t('All text is selected in paragraph', Chain.asStep(viewBlock, [
       cSetHtml('<p>ab</p>'),
-      cHasAllContentsSelected([0, 0], 0, [0, 0], 2),
+      cHasAllContentsSelected([ 0, 0 ], 0, [ 0, 0 ], 2),
       Assertions.cAssertEq('Should be true since all contents is selected', true)
     ])),
     Logger.t('All text is selected in paragraph and sub element', Chain.asStep(viewBlock, [
       cSetHtml('<p>a<b>b</b></p>'),
-      cHasAllContentsSelected([0, 0], 0, [0, 1, 0], 1),
+      cHasAllContentsSelected([ 0, 0 ], 0, [ 0, 1, 0 ], 1),
       Assertions.cAssertEq('Should be true since all contents is selected', true)
     ])),
     Logger.t('All text is selected in paragraph and with traling br', Chain.asStep(viewBlock, [
       cSetHtml('<p>a<br></p>'),
-      cHasAllContentsSelected([0, 0], 0, [0, 0], 1),
+      cHasAllContentsSelected([ 0, 0 ], 0, [ 0, 0 ], 1),
       Assertions.cAssertEq('Should be true since all contents is selected', true)
     ])),
     Logger.t('Collapsed range in paragraph', Chain.asStep(viewBlock, [
       cSetHtml('<p>a</p>'),
-      cHasAllContentsSelected([0, 0], 0, [0, 0], 0),
+      cHasAllContentsSelected([ 0, 0 ], 0, [ 0, 0 ], 0),
       Assertions.cAssertEq('Should be false since only some contents is selected', false)
     ])),
     Logger.t('Partial text selection in paragraph', Chain.asStep(viewBlock, [
       cSetHtml('<p>ab</p>'),
-      cHasAllContentsSelected([0, 0], 0, [0, 0], 1),
+      cHasAllContentsSelected([ 0, 0 ], 0, [ 0, 0 ], 1),
       Assertions.cAssertEq('Should be false since only some contents is selected', false)
     ])),
     Logger.t('Partial text selection in paragraph', Chain.asStep(viewBlock, [
       cSetHtml('<p>ab</p>'),
-      cHasAllContentsSelected([0, 0], 1, [0, 0], 2),
+      cHasAllContentsSelected([ 0, 0 ], 1, [ 0, 0 ], 2),
       Assertions.cAssertEq('Should be false since only some contents is selected', false)
     ])),
     Logger.t('Partial mixed selection in paragraph', Chain.asStep(viewBlock, [
       cSetHtml('<p>a<b>bc</b></p>'),
-      cHasAllContentsSelected([0, 0], 1, [0, 1, 0], 1),
+      cHasAllContentsSelected([ 0, 0 ], 1, [ 0, 1, 0 ], 1),
       Assertions.cAssertEq('Should be false since only some contents is selected', false)
     ]))
   ], function () {

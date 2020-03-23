@@ -234,11 +234,11 @@ const showDialog = function (editor: Editor) {
 
   if (Settings.hasAltSource(editor)) {
     advancedFormItems.push({
-        name: 'altsource',
-        type: 'urlinput',
-        filetype: 'media',
-        label: 'Alternative source URL'
-      }
+      name: 'altsource',
+      type: 'urlinput',
+      filetype: 'media',
+      label: 'Alternative source URL'
+    }
     );
   }
 
@@ -288,12 +288,12 @@ const showDialog = function (editor: Editor) {
         primary: true
       }
     ],
-    onSubmit (api) {
+    onSubmit(api) {
       const serviceData = unwrap(api.getData());
       submitForm(currentData.get(), serviceData, editor);
       api.close();
     },
-    onChange (api, detail) {
+    onChange(api, detail) {
       switch (detail.name) {
         case 'source':
           handleSource(currentData.get(), api);

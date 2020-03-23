@@ -35,7 +35,7 @@ const setupEvents = (editor: Editor, targetElm: Element, ui: InlineHeader) => {
 
   const resizeContent = (e) => {
     const { pos, bounds } = getTargetPosAndBounds(targetElm, isToolbarTop);
-    const { pos: prevPos, bounds: prevBounds} = prevPosAndBounds.get();
+    const { pos: prevPos, bounds: prevBounds } = prevPosAndBounds.get();
 
     const hasResized = bounds.height !== prevBounds.height || bounds.width !== prevBounds.width;
     prevPosAndBounds.set({ pos, bounds });

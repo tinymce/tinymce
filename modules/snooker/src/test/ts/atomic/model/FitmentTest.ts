@@ -31,8 +31,8 @@ UnitTest.test('FitmentTest', function () {
 
   const gridB = function () {
     return [
-      [en(1, true), en(2, true)],
-      [en(3, true), en(4, true)]
+      [ en(1, true), en(2, true) ],
+      [ en(3, true), en(4, true) ]
     ];
   };
 
@@ -58,19 +58,19 @@ UnitTest.test('FitmentTest', function () {
   check(measureTest, {
     rowDelta: 1,
     colDelta: -1
-   }, start(0, 2), gridA, gridB, Fun.noop, Fun.noop);
+  }, start(0, 2), gridA, gridB, Fun.noop, Fun.noop);
 
   // the starting position is invalid, it should break expect an error
   check(measureTest, {
     error: 'invalid start address out of table bounds, row: 10, column: 66'
-   }, start(10, 66), gridA, gridB, Fun.noop, Fun.noop);
+  }, start(10, 66), gridA, gridB, Fun.noop, Fun.noop);
 
   check(
     tailorTest,
     [
-      [en('a', false), en('b', false), en('c', false)],
-      [en('d', false), en('e', false), en('f', false)],
-      [en('g', false), en('h', false), en('i', false)]
+      [ en('a', false), en('b', false), en('c', false) ],
+      [ en('d', false), en('e', false), en('f', false) ],
+      [ en('g', false), en('h', false), en('i', false) ]
     ], start(0, 0), gridA, {
       rowDelta: 1,
       colDelta: 1
@@ -79,9 +79,9 @@ UnitTest.test('FitmentTest', function () {
   check(
     tailorTest,
     [
-      [en('a', false), en('b', false), en('c', false)],
-      [en('d', false), en('e', false), en('f', false)],
-      [en('g', false), en('h', false), en('i', false)]
+      [ en('a', false), en('b', false), en('c', false) ],
+      [ en('d', false), en('e', false), en('f', false) ],
+      [ en('g', false), en('h', false), en('i', false) ]
     ], start(1, 1), gridA, {
       rowDelta: 0,
       colDelta: 0
@@ -90,10 +90,10 @@ UnitTest.test('FitmentTest', function () {
   check(
     tailorTest,
     [
-      [en('a', false),   en('b', false),   en('c', false),   en('?_0', true)],
-      [en('d', false),   en('e', false),   en('f', false),   en('?_1', true)],
-      [en('g', false),   en('h', false),   en('i', false),   en('?_2', true)],
-      [en('?_3', true), en('?_4', true), en('?_5', true), en('?_6', true)]
+      [ en('a', false),   en('b', false),   en('c', false),   en('?_0', true) ],
+      [ en('d', false),   en('e', false),   en('f', false),   en('?_1', true) ],
+      [ en('g', false),   en('h', false),   en('i', false),   en('?_2', true) ],
+      [ en('?_3', true), en('?_4', true), en('?_5', true), en('?_6', true) ]
     ], start(2, 2), gridA, {
       rowDelta: -1,
       colDelta: -1
@@ -102,9 +102,9 @@ UnitTest.test('FitmentTest', function () {
   check(
     tailorTest,
     [
-      [en('a', false), en('b', false), en('c', false), en('?_0', true)],
-      [en('d', false), en('e', false), en('f', false), en('?_1', true)],
-      [en('g', false), en('h', false), en('i', false), en('?_2', true)]
+      [ en('a', false), en('b', false), en('c', false), en('?_0', true) ],
+      [ en('d', false), en('e', false), en('f', false), en('?_1', true) ],
+      [ en('g', false), en('h', false), en('i', false), en('?_2', true) ]
     ], start(0, 2), gridA, {
       rowDelta: 1,
       colDelta: -1
@@ -113,34 +113,34 @@ UnitTest.test('FitmentTest', function () {
   check(
     mergeGridsTest,
     [
-      [en('h(1)_0', true), en('h(2)_1', true), en('c', false)],
-      [en('h(3)_2', true), en('h(4)_3', true), en('f', false)],
-      [en('g', false), en('h', false), en('i', false)]
+      [ en('h(1)_0', true), en('h(2)_1', true), en('c', false) ],
+      [ en('h(3)_2', true), en('h(4)_3', true), en('f', false) ],
+      [ en('g', false), en('h', false), en('i', false) ]
     ], start(0, 0), gridA, gridB, generator, Fun.tripleEquals);
 
   check(
     mergeGridsTest,
     [
-      [en('a', false), en('b', false), en('c', false)],
-      [en('d', false), en('h(1)_0', true), en('h(2)_1', true)],
-      [en('g', false), en('h(3)_2', true), en('h(4)_3', true)]
+      [ en('a', false), en('b', false), en('c', false) ],
+      [ en('d', false), en('h(1)_0', true), en('h(2)_1', true) ],
+      [ en('g', false), en('h(3)_2', true), en('h(4)_3', true) ]
     ], start(1, 1), gridA, gridB, generator, Fun.tripleEquals);
 
   check(
     mergeGridsTest,
     [
-      [en('a', false),   en('b', false),   en('c', false),        en('?_0', true)],
-      [en('d', false),   en('e', false),   en('f', false),        en('?_1', true)],
-      [en('g', false),   en('h', false),   en('h(1)_0', true),   en('h(2)_1', true)],
-      [en('?_3', true), en('?_4', true), en('h(3)_2', true),   en('h(4)_3', true)]
+      [ en('a', false),   en('b', false),   en('c', false),        en('?_0', true) ],
+      [ en('d', false),   en('e', false),   en('f', false),        en('?_1', true) ],
+      [ en('g', false),   en('h', false),   en('h(1)_0', true),   en('h(2)_1', true) ],
+      [ en('?_3', true), en('?_4', true), en('h(3)_2', true),   en('h(4)_3', true) ]
     ], start(2, 2), gridA, gridB, generator, Fun.tripleEquals);
 
   check(
     mergeGridsTest,
     [
-      [en('a', false), en('b', false), en('h(1)_0', true), en('h(2)_1', true)],
-      [en('d', false), en('e', false), en('h(3)_2', true), en('h(4)_3', true)],
-      [en('g', false), en('h', false), en('i', false), en('?_2', true)]
+      [ en('a', false), en('b', false), en('h(1)_0', true), en('h(2)_1', true) ],
+      [ en('d', false), en('e', false), en('h(3)_2', true), en('h(4)_3', true) ],
+      [ en('g', false), en('h', false), en('i', false), en('?_2', true) ]
     ], start(0, 2), gridA, gridB, generator, Fun.tripleEquals);
 
   check(

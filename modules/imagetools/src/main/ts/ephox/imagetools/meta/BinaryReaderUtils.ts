@@ -10,7 +10,7 @@ export const readList = <T> (reader: BinaryReader, idx: number, unitSize: number
     const offset = idx + unitSize * i;
     const item = read(reader, offset);
     if (item.isError()) {
-      return item.map((value) => [value]);
+      return item.map((value) => [ value ]);
     }
     list.push(item.getOrDie());
   }

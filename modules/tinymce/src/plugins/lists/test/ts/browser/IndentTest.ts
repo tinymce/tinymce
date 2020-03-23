@@ -130,7 +130,7 @@ UnitTest.asynctest('tinymce.lists.browser.IndentTest', (success, failure) => {
     LegacyUnit.execCommand(editor, 'Indent');
 
     LegacyUnit.equal(editor.getContent(),
-    '<ol>' +
+      '<ol>' +
     '<li>' +
     '<table>' +
     '<tr>' +

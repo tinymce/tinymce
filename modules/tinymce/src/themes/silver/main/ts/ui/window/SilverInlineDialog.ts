@@ -93,8 +93,8 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
     },
     eventOrder: {
       [SystemEvents.receive()]: [ Reflecting.name(), Receiving.name() ],
-      [SystemEvents.execute()]: ['execute-on-form'],
-      [SystemEvents.attachedToDom()]: ['reflecting', 'execute-on-form']
+      [SystemEvents.execute()]: [ 'execute-on-form' ],
+      [SystemEvents.attachedToDom()]: [ 'reflecting', 'execute-on-form' ]
     },
 
     // Dupe with SilverDialog.

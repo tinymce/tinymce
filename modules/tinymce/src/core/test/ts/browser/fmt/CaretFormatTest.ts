@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
       tinyApis.sFocus(),
       Logger.t('Apply bold to caret and type bold text after the unformatted text', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetCursor([0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         sApplyCaretFormat(editor, 'bold', {}),
         TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'x'),
         tinyApis.sAssertContent('<p>a<strong>x</strong></p>'),
@@ -73,11 +73,11 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
             ]
           });
         })),
-        tinyApis.sAssertSelection([0, 1, 0, 0], 2, [0, 1, 0, 0], 2)
+        tinyApis.sAssertSelection([ 0, 1, 0, 0 ], 2, [ 0, 1, 0, 0 ], 2)
       ])),
       Logger.t('Apply bold to caret in middle of a word', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>ab</p>'),
-        tinyApis.sSetCursor([0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         sApplyCaretFormat(editor, 'bold', {}),
         tinyApis.sAssertContent('<p><strong>ab</strong></p>'),
         tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
@@ -89,11 +89,11 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
             ]
           });
         })),
-        tinyApis.sAssertSelection([0, 0, 0], 1, [0, 0, 0], 1)
+        tinyApis.sAssertSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1)
       ])),
       Logger.t('Remove bold from caret and type after the bold text', GeneralSteps.sequence([
         tinyApis.sSetContent('<p><strong>a</strong></p>'),
-        tinyApis.sSetCursor([0, 0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0, 0 ], 1),
         sRemoveCaretFormat(editor, 'bold', {}),
         TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'x'),
         tinyApis.sAssertContent('<p><strong>a</strong>x</p>'),
@@ -121,11 +121,11 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
             ]
           });
         })),
-        tinyApis.sAssertSelection([0, 1, 0], 2, [0, 1, 0], 2)
+        tinyApis.sAssertSelection([ 0, 1, 0 ], 2, [ 0, 1, 0 ], 2)
       ])),
       Logger.t('Remove bold from caret in the middle of a bold word', GeneralSteps.sequence([
         tinyApis.sSetContent('<p><strong>ab</strong></p>'),
-        tinyApis.sSetCursor([0, 0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0, 0 ], 1),
         sRemoveCaretFormat(editor, 'bold', {}),
         tinyApis.sAssertContent('<p>ab</p>'),
         tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
@@ -137,11 +137,11 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
             ]
           });
         })),
-        tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
       ])),
       Logger.t('Toggle bold format on and off and type after unformatted text', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetCursor([0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         sApplyCaretFormat(editor, 'bold', {}),
         sRemoveCaretFormat(editor, 'bold', {}),
         TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'x'),
@@ -162,11 +162,11 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
             ]
           });
         })),
-        tinyApis.sAssertSelection([0, 1, 0], 2, [0, 1, 0], 2)
+        tinyApis.sAssertSelection([ 0, 1, 0 ], 2, [ 0, 1, 0 ], 2)
       ])),
       Logger.t('Toggle bold format off and on and type after bold text', GeneralSteps.sequence([
         tinyApis.sSetContent('<p><strong>a</strong></p>'),
-        tinyApis.sSetCursor([0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         sRemoveCaretFormat(editor, 'bold', {}),
         sApplyCaretFormat(editor, 'bold', {}),
         TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'x'),
@@ -195,11 +195,11 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
             ]
           });
         })),
-        tinyApis.sAssertSelection([0, 1, 0, 0], 2, [0, 1, 0, 0], 2)
+        tinyApis.sAssertSelection([ 0, 1, 0, 0 ], 2, [ 0, 1, 0, 0 ], 2)
       ])),
       Logger.t('Apply bold format to the end of text and with trailing br', GeneralSteps.sequence([
         tinyApis.sSetRawContent('<p>a<br></p>'),
-        tinyApis.sSetCursor([0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         sApplyCaretFormat(editor, 'bold', {}),
         TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'x'),
         tinyApis.sAssertContent('<p>a<strong>x</strong></p>'),
@@ -228,11 +228,11 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
             ]
           });
         })),
-        tinyApis.sAssertSelection([0, 1, 0, 0], 2, [0, 1, 0, 0], 2)
+        tinyApis.sAssertSelection([ 0, 1, 0, 0 ], 2, [ 0, 1, 0, 0 ], 2)
       ])),
       Logger.t('Remove bold format from word with trailing br', GeneralSteps.sequence([
         tinyApis.sSetRawContent('<p><strong>a<br></strong></p>'),
-        tinyApis.sSetCursor([0, 0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0, 0 ], 1),
         sRemoveCaretFormat(editor, 'bold', {}),
         TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'x'),
         tinyApis.sAssertContent('<p><strong>a</strong>x</p>'),
@@ -254,18 +254,18 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
             ]
           });
         })),
-        tinyApis.sAssertSelection([0, 1, 0], 2, [0, 1, 0], 2)
+        tinyApis.sAssertSelection([ 0, 1, 0 ], 2, [ 0, 1, 0 ], 2)
       ])),
       Logger.t('Remove bold format from empty paragraph and move selection', GeneralSteps.sequence([
         tinyApis.sSetRawContent('<p>a</p><p><strong><br></strong></p>'),
-        tinyApis.sSetCursor([1, 0, 0], 0),
+        tinyApis.sSetCursor([ 1, 0, 0 ], 0),
         sRemoveCaretFormat(editor, 'bold', {}),
         tinyApis.sAssertContent('<p>a</p>\n<p>&nbsp;</p>'),
         tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
           return s.element('body', {
             children: [
               s.element('p', {
-                children: [s.text(str.is('a')) ]
+                children: [ s.text(str.is('a')) ]
               }),
               s.element('p', {
                 children: [
@@ -283,14 +283,14 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
             ]
           });
         })),
-        tinyApis.sSetCursor([0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'x'),
         tinyApis.sAssertContent('<p>ax</p>\n<p>&nbsp;</p>'),
         tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
           return s.element('body', {
             children: [
               s.element('p', {
-                children: [s.text(str.is('ax')) ]
+                children: [ s.text(str.is('ax')) ]
               }),
               s.element('p', {
                 children: [
@@ -307,7 +307,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
       })),
       Logger.t('Apply some format to the empty editor and make sure that the content didn\'t mutate after serialization (TINY-1288)', GeneralSteps.sequence([
         tinyApis.sSetContent(''),
-        tinyApis.sSetCursor([0], 0),
+        tinyApis.sSetCursor([ 0 ], 0),
         tinyApis.sExecCommand('fontname', 'Arial'),
         tinyApis.sAssertContent(''),
         sAssertNormalizedContentStructure(editor, ApproxStructure.build(function (s, str) {

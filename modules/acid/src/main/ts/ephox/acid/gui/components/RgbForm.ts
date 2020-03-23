@@ -82,7 +82,7 @@ const rgbFormFactory = (
     const helptext = translate(translatePrefix + 'range');
 
     const pLabel = FormField.parts().label({
-      dom: { tag: 'label', innerHtml: label, attributes: { 'aria-label': description } }
+      dom: { tag: 'label', innerHtml: label, attributes: { 'aria-label': description }}
     });
 
     const pField = FormField.parts().field({
@@ -92,7 +92,7 @@ const rgbFormFactory = (
         type: 'text',
         ...name === 'hex' ? { 'aria-live': 'polite' } : {}
       },
-      inputClasses: [getClass('textfield')],
+      inputClasses: [ getClass('textfield') ],
 
       // Have basic invalidating and tabstopping behaviour.
       inputBehaviours: Behaviour.derive([
@@ -109,10 +109,10 @@ const rgbFormFactory = (
       }
     });
 
-    const comps = [pLabel, pField];
-    const concats = name !== 'hex' ? [FormField.parts()['aria-descriptor']({
+    const comps = [ pLabel, pField ];
+    const concats = name !== 'hex' ? [ FormField.parts()['aria-descriptor']({
       text: helptext
-    })] : [];
+    }) ] : [];
     const components = comps.concat(concats);
 
     return {
@@ -150,7 +150,7 @@ const rgbFormFactory = (
     {
       dom: {
         tag: 'div',
-        classes: [getClass('rgba-preview')],
+        classes: [ getClass('rgba-preview') ],
         styles: {
           'background-color': 'white'
         },
@@ -274,7 +274,7 @@ const rgbFormFactory = (
         return {
           dom: {
             tag: 'form',
-            classes: [getClass('rgb-form')],
+            classes: [ getClass('rgb-form') ],
             attributes: { 'aria-label': translate('aria.color.picker') }
           },
           components: [

@@ -45,7 +45,7 @@ export const TinyScenarios = function (editor: Editor): TinyScenarios {
   const arbScenario = function (genContent: ContentGenerator, options: ArbScenarioOptions) {
     return Jsc.bless({
       generator: genScenario(genContent, options.exclusions),
-      show (scenario: Scenario) {
+      show(scenario: Scenario) {
         const root = Element.fromDom(editor.getBody());
         return JSON.stringify({
           input: scenario.input,
@@ -55,7 +55,7 @@ export const TinyScenarios = function (editor: Editor): TinyScenarios {
     });
   };
 
-  const sAsyncProperty = function <T, X, Y>(label: string, generator: ContentGenerator, step: Step<X, Y>, options: AsyncPropertyOptions) {
+  const sAsyncProperty = function <T, X, Y> (label: string, generator: ContentGenerator, step: Step<X, Y>, options: AsyncPropertyOptions) {
     return PropertySteps.sAsyncProperty<T, X, Y>(
       label,
       [
@@ -63,7 +63,7 @@ export const TinyScenarios = function (editor: Editor): TinyScenarios {
       ],
       step,
       options.property
-     );
+    );
   };
 
   return {

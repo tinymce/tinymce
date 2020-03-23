@@ -9,14 +9,14 @@ UnitTest.test('TableLookupTest', function () {
     Insert.append(Body.body(), element);
 
     SelectorFind.descendant(Body.body(), triggerSelector).fold(function () {
-        assert.fail('Could not find anything with ' + triggerSelector);
-      }, function (triggerElement) {
-        const result = TableLookup.cell(triggerElement);
-        assert.eq(true, result.isSome(), label + ': Expected the result to find something');
-        const expectedElement = SelectorFilter.descendants(Body.body(), resultSelector);
-        assert.eq(true, expectedElement.length === 1, label + ': Expected to find only one element in the DOM with the selector ' + resultSelector + ' found: ' + expectedElement.length);
-        assert.eq(true, Compare.eq(expectedElement[0], result.getOrDie()), label + ': The result and the expectation should be the same element');
-        Remove.remove(element);
+      assert.fail('Could not find anything with ' + triggerSelector);
+    }, function (triggerElement) {
+      const result = TableLookup.cell(triggerElement);
+      assert.eq(true, result.isSome(), label + ': Expected the result to find something');
+      const expectedElement = SelectorFilter.descendants(Body.body(), resultSelector);
+      assert.eq(true, expectedElement.length === 1, label + ': Expected to find only one element in the DOM with the selector ' + resultSelector + ' found: ' + expectedElement.length);
+      assert.eq(true, Compare.eq(expectedElement[0], result.getOrDie()), label + ': The result and the expectation should be the same element');
+      Remove.remove(element);
     });
   };
 
@@ -25,11 +25,11 @@ UnitTest.test('TableLookupTest', function () {
     Insert.append(Body.body(), element);
 
     SelectorFind.descendant(Body.body(), selector).fold(function () {
-        assert.fail('Could not find anything with ' + selector);
-      }, function (triggerElement) {
-        const result = TableLookup.cell(triggerElement);
-        assert.eq(false, result.isSome(), label + ': Expected the result to find nothing');
-        Remove.remove(element);
+      assert.fail('Could not find anything with ' + selector);
+    }, function (triggerElement) {
+      const result = TableLookup.cell(triggerElement);
+      assert.eq(false, result.isSome(), label + ': Expected the result to find nothing');
+      Remove.remove(element);
     });
   };
 
@@ -79,13 +79,13 @@ UnitTest.test('TableLookupTest', function () {
 
     const cells = SelectorFilter.descendants(Body.body(), 'td');
     if (cells.length === 0) { assert.fail('Could not find any table cell element'); } else {
-        Arr.each(cells, function (cell) {
-          const result = TableLookup.cell(cell);
-          assert.eq(true, result.isSome(), label + ': Expected the result to find something');
-          assert.eq(true, Compare.eq(cell, result.getOrDie()), label + ': The result and the expectation should be the same element');
-        });
+      Arr.each(cells, function (cell) {
+        const result = TableLookup.cell(cell);
+        assert.eq(true, result.isSome(), label + ': Expected the result to find something');
+        assert.eq(true, Compare.eq(cell, result.getOrDie()), label + ': The result and the expectation should be the same element');
+      });
 
-        Remove.remove(element);
+      Remove.remove(element);
     }
   };
 

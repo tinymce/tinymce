@@ -33,7 +33,7 @@ const sketch = (fSpec: FormSpecBuilder): SketchSpec => {
 
     return {
       field,
-      record () { return record; }
+      record() { return record; }
     };
   })();
 
@@ -64,7 +64,7 @@ const make = (detail: FormDetail, components: AlloySpec[]) => {
         Representing.config({
           store: {
             mode: 'manual',
-            getValue (form) {
+            getValue(form) {
               const resPs = AlloyParts.getAllParts(form, detail);
               return Obj.map(resPs, (resPThunk, pName) => {
                 return resPThunk().bind((v) => {
@@ -75,7 +75,7 @@ const make = (detail: FormDetail, components: AlloySpec[]) => {
                 }).map(Representing.getValue);
               });
             },
-            setValue (form, values) {
+            setValue(form, values) {
               Obj.each(values, (newValue, key) => {
                 AlloyParts.getPart(form, detail, key).each((wrapper) => {
                   Composing.getCurrent(wrapper).each((field) => {
@@ -90,7 +90,7 @@ const make = (detail: FormDetail, components: AlloySpec[]) => {
     ),
 
     apis: {
-      getField (form: AlloyComponent, key: string) {
+      getField(form: AlloyComponent, key: string) {
         // Returns an Option (not a result);
         return AlloyParts.getPart(form, detail, key).bind(Composing.getCurrent);
       }

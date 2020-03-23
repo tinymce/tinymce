@@ -13,16 +13,16 @@ export type NamedChain = Chain<NamedData, NamedData>;
 
 const asChain = <T>(chains: NamedChain[]): Chain<T, any> =>
   Chain.fromChains(Arr.flatten([
-    [Chain.mapper((input: T) => ({
+    [ Chain.mapper((input: T) => ({
       [inputNameId]: input,
       [outputNameId]: outputUnset
-    }))],
+    })) ],
     chains,
-    [Chain.mapper((data: NamedData) => {
+    [ Chain.mapper((data: NamedData) => {
       const output = data[outputNameId];
       delete data[outputNameId];
       return output === outputUnset ? data : output;
-    })]
+    }) ]
   ]));
 
 // Write merges in its output into input because it knows that it was
@@ -106,7 +106,7 @@ const output = (name: string) =>
 const outputInput = output(inputNameId);
 
 const pipeline = (namedChains: NamedChain[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs: TestLogs) => {
-  Chain.pipeline([asChain(namedChains)], onSuccess, onFailure, initLogs);
+  Chain.pipeline([ asChain(namedChains) ], onSuccess, onFailure, initLogs);
 };
 
 const inputName = () => inputNameId;

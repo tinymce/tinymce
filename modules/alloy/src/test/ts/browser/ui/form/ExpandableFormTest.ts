@@ -62,7 +62,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
             classes: [ 'extra-form', 'form-section' ]
           },
           components: [
-            Container.sketch({ dom: { styles: { height: '100px', width: '100px', background: 'green' } } }),
+            Container.sketch({ dom: { styles: { height: '100px', width: '100px', background: 'green' }}}),
             parts.field('form.bull', FormField.sketch({
               uid: 'select-bull',
               dom: {
@@ -115,7 +115,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
               tag: 'button',
               innerHtml: 'Shrink!'
             },
-            action (button) {
+            action(button) {
               ExpandableForm.collapseFormImmediately(me);
             },
             buttonBehaviours: Behaviour.derive([

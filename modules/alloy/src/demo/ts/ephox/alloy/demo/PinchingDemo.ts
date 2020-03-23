@@ -1,4 +1,4 @@
-import {Css, Element, Height, SelectorFind, Width} from '@ephox/sugar';
+import { Css, Element, Height, SelectorFind, Width } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Pinching } from 'ephox/alloy/api/behaviour/Pinching';
@@ -39,10 +39,10 @@ export default (): void => {
     },
     behaviours: Behaviour.derive([
       Pinching.config({
-        onPinch (span, changeX, changeY) {
+        onPinch(span, changeX, changeY) {
           resize(span, changeX, changeY);
         },
-        onPunch (span, changeX, changeY) {
+        onPunch(span, changeX, changeY) {
           resize(span, changeX, changeY);
         }
       })

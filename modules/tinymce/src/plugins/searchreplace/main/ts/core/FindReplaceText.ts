@@ -47,7 +47,7 @@ function findAndReplaceDOMText(regex: RegExp, node: Node, replacementNode: Node,
       m[0] = cg;
     }
 
-    return [index, index + m[0].length, [m[0]]];
+    return [ index, index + m[0].length, [ m[0] ]];
   }
 
   function getText(node) {

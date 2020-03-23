@@ -87,10 +87,10 @@ UnitTest.asynctest('browser.core.IframeNodeTest', function (success, failure) {
       ]),
     ], onSuccess, onFailure);
   }, {
-    plugins: ['media'],
+    plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
-    media_url_resolver (data, resolve) {
+    media_url_resolver(data, resolve) {
       Delay.setTimeout(function () {
         resolve({
           html: '<span id="fake">' + data.url + '</span>'

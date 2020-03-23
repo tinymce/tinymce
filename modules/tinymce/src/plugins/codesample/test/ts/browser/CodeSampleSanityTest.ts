@@ -25,9 +25,9 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.CodeSampleSanityTest', (s
       ]),
 
       Log.stepsAsStep('TBA', 'CodeSample: Set the codesample content, submit and check the editor content changes correctly', [
-       TestUtils.sSetTextareaContent(markupContent),
-       TestUtils.sSubmitDialog(docBody),
-       TestUtils.sAssertEditorContents(editorBody, 'markup', markupContent, 'pre.language-markup'),
+        TestUtils.sSetTextareaContent(markupContent),
+        TestUtils.sSubmitDialog(docBody),
+        TestUtils.sAssertEditorContents(editorBody, 'markup', markupContent, 'pre.language-markup'),
       ]),
 
       Log.stepsAsStep('TBA', 'CodeSample: Re-open the dialog and check the dialog language and content is correct - focus problems and make this fail', [
@@ -35,9 +35,9 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.CodeSampleSanityTest', (s
       ]),
 
       Log.stepsAsStep('TBA', 'CodeSample: Set the codesample content but CANCEL and check the editor content did not change', [
-         TestUtils.sSetTextareaContent(newContent),
-         TestUtils.sCancelDialog(docBody),
-         TestUtils.sAssertEditorContents(editorBody, 'markup', markupContent, 'pre.language-markup'),
+        TestUtils.sSetTextareaContent(newContent),
+        TestUtils.sCancelDialog(docBody),
+        TestUtils.sAssertEditorContents(editorBody, 'markup', markupContent, 'pre.language-markup'),
       ]),
     ], onSuccess, onFailure);
   }, {

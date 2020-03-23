@@ -56,17 +56,17 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
     // Can't check content inside the iframe due to permission issues.
     // So instead, check that there is a source tag now.
     return Assertions.sAssertStructure(
-        'Checking to see that the src tag is now set on the iframe',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('iframe', {
-            classes: [ ],
-            attrs: {
-              srcdoc: str.contains(content)
-            }
-          });
-        }),
-        frame.element()
-      );
+      'Checking to see that the src tag is now set on the iframe',
+      ApproxStructure.build((s, str, arr) => {
+        return s.element('iframe', {
+          classes: [ ],
+          attrs: {
+            srcdoc: str.contains(content)
+          }
+        });
+      }),
+      frame.element()
+    );
   };
 
   const sAssertStandardIframeContent = (frame: AlloyComponent) => {

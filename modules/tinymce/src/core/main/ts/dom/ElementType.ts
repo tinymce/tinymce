@@ -23,8 +23,8 @@ const voids = [
   'isindex', 'link', 'meta', 'param', 'embed', 'source', 'wbr', 'track'
 ];
 
-const tableCells = ['td', 'th'];
-const tableSections = ['thead', 'tbody', 'tfoot'];
+const tableCells = [ 'td', 'th' ];
+const tableSections = [ 'thead', 'tbody', 'tfoot' ];
 
 const textBlocks = [
   'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'address', 'pre', 'form',
@@ -32,10 +32,10 @@ const textBlocks = [
   'section', 'hgroup', 'aside', 'nav', 'figure'
 ];
 
-const headings = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
-const listItems = ['li', 'dd', 'dt'];
-const lists = ['ul', 'ol', 'dl'];
-const wsElements = ['pre', 'script', 'textarea', 'style'];
+const headings = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ];
+const listItems = [ 'li', 'dd', 'dt' ];
+const lists = [ 'ul', 'ol', 'dl' ];
+const wsElements = [ 'pre', 'script', 'textarea', 'style' ];
 
 const lazyLookup = function <T = HTMLElement> (items) {
   let lookup;

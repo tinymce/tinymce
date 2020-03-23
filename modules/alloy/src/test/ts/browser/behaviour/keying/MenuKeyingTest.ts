@@ -27,7 +27,7 @@ UnitTest.asynctest('MenuKeyingTest', (success, failure) => {
       Container.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'menu-keying-test'],
+          classes: [ 'menu-keying-test' ],
           styles: {
 
           }

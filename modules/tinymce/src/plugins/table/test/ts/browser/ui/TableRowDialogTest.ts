@@ -47,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         tinyApis.sSetSetting('table_row_advtab', false),
         UiFinder.sWaitForVisible('waiting for editor', Element.fromDom(document.body), 'div.tox-tinymce'),
         tinyApis.sSetContent(baseHtml),
-        tinyApis.sSelect('td', [0]),
+        tinyApis.sSelect('td', [ 0 ]),
         TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(baseData, false, generalSelectors),
         TableTestUtils.sClickDialogButton('cancel dialog', false)
@@ -58,7 +58,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       return Log.stepsAsStep('TBA', 'Table: Table row properties dialog (update all)', [
         UiFinder.sWaitForVisible('waiting for editor', Element.fromDom(document.body), 'div.tox-tinymce'),
         tinyApis.sSetContent(baseHtml),
-        tinyApis.sSelect('td', [0]),
+        tinyApis.sSelect('td', [ 0 ]),
         TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sSetDialogValues({
           height: '10',
@@ -73,7 +73,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
     const captionTest = () => {
       return Log.stepsAsStep('TBA', 'Table: Caption should always stay the firstChild of the table (see TINY-1167)', [
         tinyApis.sSetContent('<table><caption>CAPTION</caption><tbody><tr><td>X</td></tr><tr><td>Y</td></tr></tbody></table>'),
-        tinyApis.sSelect('td', [0]),
+        tinyApis.sSelect('td', [ 0 ]),
         TableTestUtils.sOpenTableDialog(tinyUi),
 
         TableTestUtils.sSetDialogValues({
@@ -90,7 +90,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       return Log.stepsAsStep('TBA', 'Table: Table row properties dialog (get data from complex row)', [
         tinyApis.sSetSetting('table_row_advtab', true),
         tinyApis.sSetContent(advHtml),
-        tinyApis.sSelect('td', [0]),
+        tinyApis.sSelect('td', [ 0 ]),
         TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('clicking cancel', false)
@@ -109,7 +109,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
           '</tbody>' +
           '</table>'
         ),
-        tinyApis.sSelect('td', [0]),
+        tinyApis.sSelect('td', [ 0 ]),
         TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sSetDialogValues({
           align: '',
@@ -136,7 +136,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       return Log.stepsAsStep('TBA', 'Table: Remove all advanced styles through the style field', [
         tinyApis.sSetContent(advHtml),
 
-        tinyApis.sSelect('tr:nth-child(1) td:nth-child(1)', [0]),
+        tinyApis.sSelect('tr:nth-child(1) td:nth-child(1)', [ 0 ]),
         TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
         TableTestUtils.sSetDialogValues({
@@ -208,7 +208,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
 
       return Log.stepsAsStep('TBA', 'Table: Table row properties dialog update multiple rows', [
         tinyApis.sSetContent(initialHtml),
-        tinyApis.sSelect('tr:nth-child(2) td:nth-child(2)', [0]),
+        tinyApis.sSelect('tr:nth-child(2) td:nth-child(2)', [ 0 ]),
         TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(initialData, true, generalSelectors),
         TableTestUtils.sSetDialogValues(newData, true, generalSelectors),
@@ -233,7 +233,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       return Log.stepsAsStep('TBA', 'Table: Change table row type from header to body', [
         tinyApis.sSetContent(initialHtml),
 
-        tinyApis.sSelect('tr:nth-child(1) td:nth-child(1)', [0]),
+        tinyApis.sSelect('tr:nth-child(1) td:nth-child(1)', [ 0 ]),
         TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(initialData, true, generalSelectors),
         TableTestUtils.sSetDialogValues({

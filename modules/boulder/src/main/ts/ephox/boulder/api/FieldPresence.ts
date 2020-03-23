@@ -43,7 +43,7 @@ const defaulted = function (fallback: any): FieldPresenceAdt {
   );
 };
 
-const asDefaultedOption = function <T>(fallback: T): FieldPresenceAdt {
+const asDefaultedOption = function <T> (fallback: T): FieldPresenceAdt {
   return adt.asDefaultedOptionThunk(
     Fun.constant(fallback)
   );

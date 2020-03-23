@@ -25,7 +25,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.onStrictHandler('onLockedChange'),
   Fields.markers([ 'lockClass' ]),
   FieldSchema.defaulted('locked', false),
-  SketchBehaviours.field('coupledFieldBehaviours', [Composing, Representing])
+  SketchBehaviours.field('coupledFieldBehaviours', [ Composing, Representing ])
 ]);
 
 const getField = (comp: AlloyComponent, detail: FormCoupledInputsDetail, partName: string) => {
@@ -36,7 +36,7 @@ const coupledPart = (selfName: string, otherName: string) => {
   return PartType.required<FormCoupledInputsDetail, FormFieldSpec>({
     factory: FormField,
     name: selfName,
-    overrides (detail) {
+    overrides(detail) {
       return {
         fieldBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('coupled-input-behaviour', [
@@ -65,7 +65,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
       FieldSchema.strict('dom')
     ],
     name: 'lock',
-    overrides (detail) {
+    overrides(detail) {
       return {
         buttonBehaviours: Behaviour.derive([
           Toggling.config({

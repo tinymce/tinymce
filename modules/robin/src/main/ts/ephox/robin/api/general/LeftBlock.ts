@@ -15,14 +15,14 @@ const goLeft = function <E, D> (universe: Universe<E, D>, item: E, mode: Transit
       return [];
     }
     // Only include the current item if the strategy permits it. Top won't add parents.
-    const inclusions = strategy.inclusion(universe, n, item) ? [n.item()] : [];
+    const inclusions = strategy.inclusion(universe, n, item) ? [ n.item() ] : [];
     return inclusions.concat(goLeft(universe, n.item(), n.mode(), strategy));
   }).getOr([]);
 };
 
 const run = function <E, D> (strategy: Walks, universe: Universe<E, D>, item: E) {
   const lefts = goLeft(universe, item, Gather.sidestep, strategy);
-  return Arr.reverse(lefts).concat([item]);
+  return Arr.reverse(lefts).concat([ item ]);
 };
 
 const top = <E, D> (universe: Universe<E, D> , item: E) => run(Walks.top, universe, item);

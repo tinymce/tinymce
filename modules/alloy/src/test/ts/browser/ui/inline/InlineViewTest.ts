@@ -27,12 +27,12 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
           classes: [ 'test-inline' ]
         },
 
-        lazySink (comp) {
+        lazySink(comp) {
           Assertions.assertEq('Checking InlineView passed through to lazySink', true, Compare.eq(inline.element(), comp.element()));
           return Result.value(component);
         },
 
-        getRelated () {
+        getRelated() {
           return Option.some(related);
         }
         // onEscape: store.adderH('inline.escape')
@@ -217,8 +217,8 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
               },
               fetch() {
                 const future = Future.pure([
-                  { type: 'item', data: { value: optionPrefix.toLowerCase() + '-1', meta: { text: optionPrefix + '-1' } } },
-                  { type: 'item', data: { value: optionPrefix.toLowerCase() + '-2' + buttonText, meta: { text: optionPrefix + '-2' } } }
+                  { type: 'item', data: { value: optionPrefix.toLowerCase() + '-1', meta: { text: optionPrefix + '-1' }}},
+                  { type: 'item', data: { value: optionPrefix.toLowerCase() + '-2' + buttonText, meta: { text: optionPrefix + '-2' }}}
                 ]);
 
                 return future.map((f) => {

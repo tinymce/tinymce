@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
-import {AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Button, Container, DomFactory, Focusing, Keying, ModalDialog, NativeEvents, SystemEvents, Tabstopping } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Button, Container, DomFactory, Focusing, Keying, ModalDialog, NativeEvents, SystemEvents, Tabstopping } from '@ephox/alloy';
 import { Option, Result } from '@ephox/katamari';
 import { Body, Class } from '@ephox/sugar';
 import Env from 'tinymce/core/api/Env';
@@ -79,7 +79,7 @@ const pBodyMessage = (message: string, providersBackstage: UiFactoryBackstagePro
     {
       dom: {
         tag: 'div',
-        classes: ['tox-dialog__body-content']
+        classes: [ 'tox-dialog__body-content' ]
       },
       components: [
         {

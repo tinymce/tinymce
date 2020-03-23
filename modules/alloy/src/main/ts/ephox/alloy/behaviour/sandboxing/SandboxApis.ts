@@ -94,7 +94,7 @@ const cloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sandb
   store(sandbox, 'visibility', sConfig.cloakVisibilityAttr, 'hidden');
 };
 
-const hasPosition = (element: Element) => Arr.exists(['top', 'left', 'right', 'bottom'], (pos) => Css.getRaw(element, pos).isSome());
+const hasPosition = (element: Element) => Arr.exists([ 'top', 'left', 'right', 'bottom' ], (pos) => Css.getRaw(element, pos).isSome());
 
 const decloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) => {
   if (!hasPosition(sandbox.element())) {

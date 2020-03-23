@@ -10,7 +10,7 @@ const mergeValues = (values: Array<Record<string, any>>, base: Record<string, an
   ) : SimpleResult.svalue(base);
 };
 
-const mergeErrors = function <E>(errors: E[][]): SimpleResult<E[], any> {
+const mergeErrors = function <E> (errors: E[][]): SimpleResult<E[], any> {
   return Fun.compose<any, any, any>(SimpleResult.serror, Arr.flatten)(errors);
 };
 

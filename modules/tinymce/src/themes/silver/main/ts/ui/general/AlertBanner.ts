@@ -54,7 +54,7 @@ export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: 
       {
         dom: {
           tag: 'div',
-          classes: [ 'tox-notification__body'],
+          classes: [ 'tox-notification__body' ],
           // TODO: AP-247: Escape this text so that it can't contain script tags
           innerHtml: providersBackstage.translate(spec.text)
         }

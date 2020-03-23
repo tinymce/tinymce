@@ -68,7 +68,7 @@ const renderElementPath = (editor: Editor, settings) => {
       newAcc.push(divider);
       newAcc.push(element);
       return newAcc;
-    }, [newPathElements[0]]);
+    }, [ newPathElements[0] ]);
   };
 
   const updatePath = (parents) => {

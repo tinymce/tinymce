@@ -67,7 +67,7 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
     const notification = GuiFactory.build(
       Notification.sketch({
         text: settings.text,
-        level: Arr.contains(['success', 'error', 'warning', 'warn', 'info'], settings.type) ? settings.type : undefined,
+        level: Arr.contains([ 'success', 'error', 'warning', 'warn', 'info' ], settings.type) ? settings.type : undefined,
         progress: settings.progressBar === true,
         icon: Option.from(settings.icon),
         closeButton: !hideCloseButton,
@@ -85,7 +85,7 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
         },
         lazySink: extras.backstage.shared.getSink,
         fireDismissalEventInstead: { },
-        ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { } },
+        ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { }},
       })
     );
 

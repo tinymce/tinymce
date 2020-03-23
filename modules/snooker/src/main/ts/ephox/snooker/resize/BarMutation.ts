@@ -12,7 +12,7 @@ interface DragDistanceEvents {
     drag: Bindable<DragEvent>
   };
   trigger: {
-      drag: (xDelta: number, yDelta: number, target: Element) => void;
+    drag: (xDelta: number, yDelta: number, target: Element) => void;
   };
 }
 
@@ -21,13 +21,13 @@ export interface BarMutation {
   get: () => Option<Element>;
   mutate: (x: number, y: number) => void;
   events: {
-      drag: Bindable<DragEvent>;
+    drag: Bindable<DragEvent>;
   };
 }
 
 export const BarMutation = function (): BarMutation {
   const events = Events.create({
-    drag: Event(['xDelta', 'yDelta', 'target'])
+    drag: Event([ 'xDelta', 'yDelta', 'target' ])
   }) as DragDistanceEvents;
 
   let target = Option.none<Element>();

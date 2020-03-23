@@ -82,7 +82,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewInlineTest', function (succes
       ]))
     ], onSuccess, onFailure);
   }, {
-      inline: true,
-      base_url: '/project/tinymce/js/tinymce'
-    }, success, failure);
+    inline: true,
+    base_url: '/project/tinymce/js/tinymce'
+  }, success, failure);
 });

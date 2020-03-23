@@ -12,7 +12,7 @@ export default function () {
 
   tinymce.init({
     selector: 'textarea',
-    theme (editor, target) {
+    theme(editor, target) {
       const dom = tinymce.DOM;
       let editorContainer;
 

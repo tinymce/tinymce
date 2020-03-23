@@ -68,7 +68,7 @@ export const renderColorPicker = (spec: ColorPickerSpec): SimpleSpec => {
     colourPickerFactory.sketch({
       dom: {
         tag: 'div',
-        classes: [getClass('color-picker-container')],
+        classes: [ getClass('color-picker-container') ],
         attributes: {
           role: 'presentation'
         }

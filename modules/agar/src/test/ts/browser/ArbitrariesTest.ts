@@ -23,7 +23,7 @@ UnitTest.test('Arbitraries Test', () => {
   const assertProperty = (label, element, assertion) => {
     Insert.append(Body.body(), element);
 
-    const self = Node.isElement(element) ? [element] : [];
+    const self = Node.isElement(element) ? [ element ] : [];
     const descendants = SelectorFilter.descendants(element, '*').concat(self);
     const failing = Arr.filter(descendants, assertion);
     Remove.remove(element);
@@ -36,7 +36,7 @@ UnitTest.test('Arbitraries Test', () => {
 
   const checkProperty = (label, arb, f) => {
     // Increase when doing proper testing.
-    Jsc.syncProperty(label, [arb], f, {tests: 3});
+    Jsc.syncProperty(label, [ arb ], f, { tests: 3 });
   };
 
   checkProperty('Text nodes should have node type 3', Arbitraries.content('netext'), (textnode) => {
@@ -56,7 +56,7 @@ UnitTest.test('Arbitraries Test', () => {
 
   checkProperty('Zerowidths text nodes should have node type 3 and be uFEFF or u200B', Arbitraries.content('zerowidths'), (textnode) => {
     Assertions.assertEq('Node type of "zerowidths"', 3, Node.type(textnode));
-    Assertions.assertEq('Zerowidths cursor value: ' + Text.get(textnode), true, Arr.contains(['\uFEFF', '\u200B'], Text.get(textnode)));
+    Assertions.assertEq('Zerowidths cursor value: ' + Text.get(textnode), true, Arr.contains([ '\uFEFF', '\u200B' ], Text.get(textnode)));
     return true;
   });
 
@@ -65,10 +65,10 @@ UnitTest.test('Arbitraries Test', () => {
       recursionDepth: 1,
       type: 'composite',
       tags: {
-        span: {weight: 1.0, attributes: {'data-a': 'b'}, styles: {color: 'red'}}
+        span: { weight: 1.0, attributes: { 'data-a': 'b' }, styles: { color: 'red' }}
       },
       components: {
-        'test-data': {weight: 1.0, useDepth: true}
+        'test-data': { weight: 1.0, useDepth: true }
       }
     }
   }), (data) =>
@@ -81,12 +81,12 @@ UnitTest.test('Arbitraries Test', () => {
       type: 'leaf',
       tag: 'span',
       attributes: Generators.chooseOne([
-        {weight: 1.0, property: 'data-custom', value: Jsc.constant('hi').generator},
-        {weight: 2.0, property: 'contenteditable', value: Jsc.constant('true').generator}
+        { weight: 1.0, property: 'data-custom', value: Jsc.constant('hi').generator },
+        { weight: 2.0, property: 'contenteditable', value: Jsc.constant('true').generator }
       ]),
       styles: Generators.chooseOne([
-        {weight: 1.0, property: 'color', value: Generators.hexColor},
-        {weight: 0.5, property: 'visibility', value: Jsc.elements(['hidden', 'visible']).generator}
+        { weight: 1.0, property: 'color', value: Generators.hexColor },
+        { weight: 0.5, property: 'visibility', value: Jsc.elements([ 'hidden', 'visible' ]).generator }
       ]),
       components: {}
     }
@@ -146,7 +146,7 @@ UnitTest.test('Arbitraries Test', () => {
   checkProperty('Inline elements should have display: inline', Arbitraries.content('inline'), (element) => {
     // console.log('inline.element', Html.getOuter(element));
     return assertProperty('(display === inline)', element, (elem) =>
-      Css.get(elem, 'display') !== 'inline' || Arr.contains(['span-underline', 'span-strikethrough'], Node.name(elem))
+      Css.get(elem, 'display') !== 'inline' || Arr.contains([ 'span-underline', 'span-strikethrough' ], Node.name(elem))
     );
   });
 
@@ -162,7 +162,7 @@ UnitTest.test('Arbitraries Test', () => {
   checkProperty('Formatting elements should only contain (display === inline)', Arbitraries.content('formatting'), (section) => assertProperty('nothing should have display block inside a formatting element', section, (elem) => !Compare.eq(section, elem) && Node.isElement(elem) && Css.get(elem, 'display') !== 'inline'));
 
   checkProperty('Table cell elements', Arbitraries.content('tablecell'), (element) => {
-    Assertions.assertEq('Cells should be th|td', true, ['td', 'th'].indexOf(Node.name(element)) > -1);
+    Assertions.assertEq('Cells should be th|td', true, [ 'td', 'th' ].indexOf(Node.name(element)) > -1);
     return true;
   });
 
@@ -189,10 +189,10 @@ UnitTest.test('Arbitraries Test', () => {
   checkProperty('Table elements', Arbitraries.content('table', {
     table: {
       components: {
-        thead: {chance: 1.0},
-        tfoot: {chance: 1.0},
-        tbody: {chance: 1.0},
-        caption: {chance: 1.0}
+        thead: { chance: 1.0 },
+        tfoot: { chance: 1.0 },
+        tbody: { chance: 1.0 },
+        caption: { chance: 1.0 }
       }
     }
   }), (element) => {
@@ -217,7 +217,7 @@ UnitTest.test('Arbitraries Test', () => {
   });
 
   checkProperty('ol and ul elements', Arbitraries.content('list'), (element) => {
-    Assertions.assertEq('Lists should be ol|ul', true, ['ol', 'ul'].indexOf(Node.name(element)) > -1);
+    Assertions.assertEq('Lists should be ol|ul', true, [ 'ol', 'ul' ].indexOf(Node.name(element)) > -1);
     return true;
   });
 

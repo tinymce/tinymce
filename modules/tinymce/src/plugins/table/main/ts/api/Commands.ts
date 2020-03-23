@@ -117,56 +117,56 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
 
   // Register action commands
   each({
-    mceTableSplitCells () {
+    mceTableSplitCells() {
       actOnSelection(actions.unmergeCells);
     },
 
-    mceTableMergeCells () {
+    mceTableMergeCells() {
       actOnSelection(actions.mergeCells);
     },
 
-    mceTableInsertRowBefore () {
+    mceTableInsertRowBefore() {
       actOnSelection(actions.insertRowsBefore);
     },
 
-    mceTableInsertRowAfter () {
+    mceTableInsertRowAfter() {
       actOnSelection(actions.insertRowsAfter);
     },
 
-    mceTableInsertColBefore () {
+    mceTableInsertColBefore() {
       actOnSelection(actions.insertColumnsBefore);
     },
 
-    mceTableInsertColAfter () {
+    mceTableInsertColAfter() {
       actOnSelection(actions.insertColumnsAfter);
     },
 
-    mceTableDeleteCol () {
+    mceTableDeleteCol() {
       actOnSelection(actions.deleteColumn);
     },
 
-    mceTableDeleteRow () {
+    mceTableDeleteRow() {
       actOnSelection(actions.deleteRow);
     },
 
-    mceTableCutRow (grid) {
+    mceTableCutRow(grid) {
       copyRowSelection().each((selection) => {
         clipboardRows.set(selection);
         actOnSelection(actions.deleteRow);
       });
     },
 
-    mceTableCopyRow (grid) {
+    mceTableCopyRow(grid) {
       copyRowSelection().each((selection) => {
         clipboardRows.set(selection);
       });
     },
 
-    mceTablePasteRowBefore (grid) {
+    mceTablePasteRowBefore(grid) {
       pasteOnSelection(actions.pasteRowsBefore);
     },
 
-    mceTablePasteRowAfter (grid) {
+    mceTablePasteRowAfter(grid) {
       pasteOnSelection(actions.pasteRowsAfter);
     },
 

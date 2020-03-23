@@ -46,7 +46,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
             outline: '2px solid blue'
           }
         },
-        lazySink (comp) {
+        lazySink(comp) {
           return Result.value(sinkComp);
         },
         components: [
@@ -189,9 +189,9 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
 
       Step.sync(() => {
         const groups = TestPartialToolbarGroup.createGroups([
-          { items: Arr.map([ { text: 'A' }, { text: 'B' } ], makeButton) },
-          { items: Arr.map([ { text: 'C' }, { text: 'D' } ], makeButton) },
-          { items: Arr.map([ { text: 'E' }, { text: 'F' }, { text: 'G' } ], makeButton) }
+          { items: Arr.map([{ text: 'A' }, { text: 'B' }], makeButton) },
+          { items: Arr.map([{ text: 'C' }, { text: 'D' }], makeButton) },
+          { items: Arr.map([{ text: 'E' }, { text: 'F' }, { text: 'G' }], makeButton) }
         ]);
         SplitFloatingToolbar.setGroups(component, groups);
         SplitFloatingToolbar.toggle(component);

@@ -11,7 +11,7 @@ export interface TextSearchSeeker {
   attempt: <E> (phase: TextSeekerPhaseConstructor, item: E, text: string, index: number) => TextSeekerPhase<E>;
 }
 
-const seekerSig = Contracts.exactly(['regex', 'attempt']);
+const seekerSig = Contracts.exactly([ 'regex', 'attempt' ]);
 
 type PreviousCharFn = (text: string, offset: Option<number>) => Option<CharPos>;
 const previousChar: PreviousCharFn = TextSearchBase.previous;

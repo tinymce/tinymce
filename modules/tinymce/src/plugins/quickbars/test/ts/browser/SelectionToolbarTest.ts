@@ -86,13 +86,13 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.SelectionToolbarTest', (su
       tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'Text selection toolbar', [
         tinyApis.sSetContent('<p>Some <strong>bold</strong> and <em>italic</em> content.</p><blockquote><p>Some quoted content</p></blockquote>'),
-        tinyApis.sSetSelection([0, 0], 0, [0, 0], 4),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 4),
         sWaitForTextToolbarAndAssertState(tinyUi, false, false, false, false, false, false),
-        tinyApis.sSetSelection([0, 1, 0], 0, [0, 1, 0], 3),
+        tinyApis.sSetSelection([ 0, 1, 0 ], 0, [ 0, 1, 0 ], 3),
         sWaitForTextToolbarAndAssertState(tinyUi, true, false, false, false, false, false),
-        tinyApis.sSetSelection([0, 3, 0], 1, [0, 3, 0], 4),
+        tinyApis.sSetSelection([ 0, 3, 0 ], 1, [ 0, 3, 0 ], 4),
         sWaitForTextToolbarAndAssertState(tinyUi, false, true, false, false, false, false),
-        tinyApis.sSetSelection([1, 0], 0, [1, 0], 1),
+        tinyApis.sSetSelection([ 1, 0 ], 0, [ 1, 0 ], 1),
         sWaitForTextToolbarAndAssertState(tinyUi, false, false, false, false, false, true)
       ]),
       Log.stepsAsStep('TBA', 'Image selection toolbar', [

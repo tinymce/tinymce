@@ -57,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function (success, f
   });
 
   suite.test('matchNodeNames', function () {
-    const matchNodeNames = NodeType.matchNodeNames(['a', 'div', '#text']);
+    const matchNodeNames = NodeType.matchNodeNames([ 'a', 'div', '#text' ]);
 
     LegacyUnit.strictEqual(matchNodeNames(null), false);
     LegacyUnit.strictEqual(matchNodeNames(document.createTextNode('x')), true);

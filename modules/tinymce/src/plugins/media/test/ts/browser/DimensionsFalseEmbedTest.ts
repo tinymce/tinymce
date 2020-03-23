@@ -55,9 +55,9 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsFalseEmbedTest', fun
           tinyApis.sAssertContentStructure(struct)
         )
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
-    plugins: ['media'],
+    plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
     media_dimensions: false,

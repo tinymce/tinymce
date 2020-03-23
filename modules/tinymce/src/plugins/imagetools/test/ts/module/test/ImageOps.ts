@@ -30,7 +30,7 @@ export default function (editor) {
       Mouse.cMouseUpTo(5, 0)
     ]),
     Guard.addLogging('Drag and drop')
-);
+  );
 
   const cExecCommandFromDialog = function (label) {
     let cInteractWithUi;

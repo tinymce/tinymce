@@ -38,7 +38,7 @@ UnitTest.asynctest('TouchDraggingTest', (success, failure) => {
           mode: 'touch',
           blockerClass: 'test-blocker',
           snaps: {
-            getSnapPoints () {
+            getSnapPoints() {
               return [
                 Dragging.snap({
                   sensor: DragCoord.fixed(300, 10),

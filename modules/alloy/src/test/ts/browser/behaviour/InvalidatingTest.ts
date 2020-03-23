@@ -16,25 +16,25 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
   GuiSetup.setup((store, doc, body) => {
     return GuiFactory.build({
-        dom: {
-          tag: 'input'
-        },
-        behaviours: Behaviour.derive([
-          Invalidating.config({
-            invalidClass: 'test-invalid',
-            getRoot: root.get,
-            notify: {},
-            validator: {
-              validate (input) {
-                const value = Value.get(input.element());
-                const res = value === 'good-value' ? Result.value('good-value') : Result.error('bad value: ' + value);
-                return Future.pure(res);
-              },
-              onEvent: 'custom.test.validate'
-            }
-          })
-        ])
-      }
+      dom: {
+        tag: 'input'
+      },
+      behaviours: Behaviour.derive([
+        Invalidating.config({
+          invalidClass: 'test-invalid',
+          getRoot: root.get,
+          notify: {},
+          validator: {
+            validate(input) {
+              const value = Value.get(input.element());
+              const res = value === 'good-value' ? Result.value('good-value') : Result.error('bad value: ' + value);
+              return Future.pure(res);
+            },
+            onEvent: 'custom.test.validate'
+          }
+        })
+      ])
+    }
     );
   }, (doc, body, gui, component, store) => {
 

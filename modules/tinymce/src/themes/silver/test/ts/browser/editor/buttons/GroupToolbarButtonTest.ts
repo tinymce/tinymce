@@ -27,7 +27,7 @@ UnitTest.asynctest('GroupToolbarButtonTest', (success, failure) => {
           classes: [ arr.has('tox-toolbar__group') ],
           children: [
             s.element('button', {
-              attrs: { title: str.is('Bold')}
+              attrs: { title: str.is('Bold') }
             })
           ]
         }),
@@ -35,7 +35,7 @@ UnitTest.asynctest('GroupToolbarButtonTest', (success, failure) => {
           classes: [ arr.has('tox-toolbar__group') ],
           children: [
             s.element('button', {
-              attrs: { title: str.is('Italic')}
+              attrs: { title: str.is('Italic') }
             })
           ]
         }),
@@ -87,7 +87,7 @@ UnitTest.asynctest('GroupToolbarButtonTest', (success, failure) => {
             icon: 'align-left',
             tooltip: 'Alignment',
             items: [
-              { name: 'Alignment', items: [ 'alignleft', 'aligncenter', 'alignright' ]}
+              { name: 'Alignment', items: [ 'alignleft', 'aligncenter', 'alignright' ] }
             ]
           });
         }
@@ -102,13 +102,13 @@ UnitTest.asynctest('GroupToolbarButtonTest', (success, failure) => {
               classes: [ arr.has('tox-toolbar__group') ],
               children: [
                 s.element('button', {
-                  attrs: { title: str.is('Align left')}
+                  attrs: { title: str.is('Align left') }
                 }),
                 s.element('button', {
-                  attrs: { title: str.is('Align center')}
+                  attrs: { title: str.is('Align center') }
                 }),
                 s.element('button', {
-                  attrs: { title: str.is('Align right')}
+                  attrs: { title: str.is('Align right') }
                 })
               ]
             })

@@ -13,7 +13,7 @@ UnitTest.test('Arr.head: empty', () => {
 
 UnitTest.test('Arr.head: nonEmpty', () => {
   fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), (t, h) => {
-    const arr = [h].concat(t);
+    const arr = [ h ].concat(t);
     Assert.eq('nonEmpty', Option.some(h), Arr.head(arr), tOption(tNumber));
   }));
 });

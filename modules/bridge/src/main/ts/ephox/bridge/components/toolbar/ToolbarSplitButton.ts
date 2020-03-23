@@ -58,7 +58,7 @@ export const splitButtonSchema = ValueSchema.objOf([
   FieldSchema.strictFunction('fetch'),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
   // TODO: Validate the allowed presets
-  FieldSchema.defaultedStringEnum('presets', 'normal', ['normal', 'color', 'listpreview']),
+  FieldSchema.defaultedStringEnum('presets', 'normal', [ 'normal', 'color', 'listpreview' ]),
   FieldSchema.defaulted('columns', 1),
   FieldSchema.strictFunction('onAction'),
   FieldSchema.strictFunction('onItemAction')

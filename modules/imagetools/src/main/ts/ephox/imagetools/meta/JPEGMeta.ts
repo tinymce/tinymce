@@ -3,7 +3,7 @@ import { Options } from '@ephox/katamari';
 import * as Conversions from '../util/Conversions';
 import { Promise } from '../util/Promise';
 import { BinaryReader } from './BinaryReader';
-import { readMetaData, ExifTags, GPSTags , TiffTags} from './ExifReader';
+import { readMetaData, ExifTags, GPSTags , TiffTags } from './ExifReader';
 import { readShort } from './BinaryReaderUtils';
 
 export interface JPEGMeta {

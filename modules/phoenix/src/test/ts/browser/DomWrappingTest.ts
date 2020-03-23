@@ -45,8 +45,8 @@ UnitTest.test('DomWrappingTest', function () {
 
   checker(
     '<span><span class="me">this is</span><span><span class="me"> ath</span>ens!</span></span>',
-    [0, 0], 0,
-    [0, 1, 0], 4,
+    [ 0, 0 ], 0,
+    [ 0, 1, 0 ], 4,
     [
       s('span', [
         t('this is'),
@@ -60,22 +60,22 @@ UnitTest.test('DomWrappingTest', function () {
 
   checker(
     '<span><span class="me">this is</span><br><span><span class="me"> ath</span>ens!</span></span>',
-    [0, 0], 0,
-    [0, 2, 0], 4,
-    [s('span', [
+    [ 0, 0 ], 0,
+    [ 0, 2, 0 ], 4,
+    [ s('span', [
       t('this is'),
       Element.fromTag('br'),
       s('span', [
         t(' athens!')
       ])
-    ])],
+    ]) ],
     '<span>this is<br><span> athens!</span></span>'
   );
 
   checker(
     '<p><span>th<span class="me">is is</span><br><span><span class="me"> athens!</span></span></span></p><p><span class=\"me\">Mo</span>re</p>',
-    [0, 0, 0], 2,
-    [1, 0], 2,
+    [ 0, 0, 0 ], 2,
+    [ 1, 0 ], 2,
     [
       s('p', [
         s('span', [

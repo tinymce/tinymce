@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DefaultTableToolbarTest', (suc
       Logger.t('test default count of toolbar buttons', GeneralSteps.sequence([
         tinyApis.sFocus(),
         tinyApis.sSetContent(tableHtml),
-        TableTestUtils.sOpenToolbarOn(editor, 'table td', [0]),
+        TableTestUtils.sOpenToolbarOn(editor, 'table td', [ 0 ]),
         Chain.asStep({}, [
           tinyUi.cWaitForUi('no context found', 'div.tox-pop div.tox-toolbar'),
           Chain.mapper(function (x) {
