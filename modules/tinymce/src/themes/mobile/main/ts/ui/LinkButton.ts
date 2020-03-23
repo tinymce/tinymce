@@ -36,7 +36,7 @@ const getGroups = Thunk.cached(function (realm, editor) {
             );
           },
 
-          onExecute(dialog/* , simulatedEvent */) {
+          onExecute(dialog, _simulatedEvent) {
             const info = Representing.getValue(dialog);
             LinkBridge.applyInfo(editor, info);
             realm.restoreToolbar();

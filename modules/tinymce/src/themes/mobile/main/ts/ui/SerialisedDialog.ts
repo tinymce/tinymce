@@ -120,14 +120,14 @@ const sketch = function (rawSpec) {
           }),
           Keying.config({
             mode: 'special',
-            focusIn(dialog/* , specialInfo */) {
+            focusIn(dialog, _specialInfo) {
               focusInput(dialog);
             },
-            onTab(dialog/* , specialInfo */) {
+            onTab(dialog, _specialInfo) {
               navigate(dialog, +1);
               return Option.some(true);
             },
-            onShiftTab(dialog/* , specialInfo */) {
+            onShiftTab(dialog, _specialInfo) {
               navigate(dialog, -1);
               return Option.some(true);
             }
@@ -211,7 +211,7 @@ const sketch = function (rawSpec) {
             );
           });
         }),
-        AlloyEvents.run(NativeEvents.touchend(), function (wrapper/* , simulatedEvent */) {
+        AlloyEvents.run(NativeEvents.touchend(), function (wrapper, _simulatedEvent) {
           spec.state.dialogSwipeState.on(function (state) {
             const dialog = memForm.get(wrapper);
             // Confusing
