@@ -33,6 +33,5 @@ export const readSignedLong = (reader: BinaryReader, idx: number) =>
 export const readChar = (reader: BinaryReader, idx: number) =>
   readByte(reader, idx).bind(byteToChar);
 
-
 export const readString = (reader: BinaryReader, idx: number, length: number = 1) =>
   readList(reader, idx, 1, length, readChar).map((chars) => chars.join(''));
