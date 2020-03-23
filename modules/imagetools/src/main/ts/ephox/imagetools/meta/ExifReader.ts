@@ -15,15 +15,15 @@ export interface TiffTags {
 
 export interface GPSTags {
   GPSVersionID?: string;
-  GPSLatitudeRef?: 'N' | 'S';
+  GPSLatitudeRef?: string;
   GPSLatitude?: number;
-  GPSLongitudeRef?: 'E' | 'W';
+  GPSLongitudeRef?: string;
   GPSLongitude?: number;
 }
 
 export interface ExifTags {
   ExifVersion?: string;
-  ColorSpace?: number;
+  ColorSpace?: string;
   PixelXDimension?: number;
   PixelYDimension?: number;
   DateTimeOriginal?: string;
@@ -32,17 +32,17 @@ export interface ExifTags {
   ISOSpeedRatings?: number;
   ShutterSpeedValue?: number;
   ApertureValue?: number;
-  MeteringMode?: number;
-  LightSource?: number;
-  Flash?: number;
+  MeteringMode?: string;
+  LightSource?: string;
+  Flash?: string;
   FocalLength?: number;
-  ExposureMode?: number;
-  WhiteBalance?: number;
+  ExposureMode?: string;
+  WhiteBalance?: string;
   SceneCaptureType?: string;
   DigitalZoomRatio?: number;
-  Contrast?: number;
-  Saturation?: number;
-  Sharpness?: number;
+  Contrast?: string;
+  Saturation?: string;
+  Sharpness?: string;
 }
 
 interface ThumbTags {
@@ -363,7 +363,7 @@ const parseExifTags = (data: Record<string, unknown>): ExifTags => {
 
   return {
     ExifVersion,
-    ColorSpace: Option.from(data.ColorSpace).filter(Type.isNumber).getOrUndefined(),
+    ColorSpace: Option.from(data.ColorSpace).filter(Type.isString).getOrUndefined(),
     PixelXDimension: Option.from(data.PixelXDimension).filter(Type.isNumber).getOrUndefined(),
     PixelYDimension: Option.from(data.PixelYDimension).filter(Type.isNumber).getOrUndefined(),
     DateTimeOriginal: Option.from(data.DateTimeOriginal).filter(Type.isString).getOrUndefined(),
@@ -372,17 +372,17 @@ const parseExifTags = (data: Record<string, unknown>): ExifTags => {
     ISOSpeedRatings: Option.from(data.ISOSpeedRatings).filter(Type.isNumber).getOrUndefined(),
     ShutterSpeedValue: Option.from(data.ShutterSpeedValue).filter(Type.isNumber).getOrUndefined(),
     ApertureValue: Option.from(data.ApertureValue).filter(Type.isNumber).getOrUndefined(),
-    MeteringMode: Option.from(data.MeteringMode).filter(Type.isNumber).getOrUndefined(),
-    LightSource: Option.from(data.LightSource).filter(Type.isNumber).getOrUndefined(),
-    Flash: Option.from(data.Flash).filter(Type.isNumber).getOrUndefined(),
+    MeteringMode: Option.from(data.MeteringMode).filter(Type.isString).getOrUndefined(),
+    LightSource: Option.from(data.LightSource).filter(Type.isString).getOrUndefined(),
+    Flash: Option.from(data.Flash).filter(Type.isString).getOrUndefined(),
     FocalLength: Option.from(data.FocalLength).filter(Type.isNumber).getOrUndefined(),
-    ExposureMode: Option.from(data.ExposureMode).filter(Type.isNumber).getOrUndefined(),
-    WhiteBalance: Option.from(data.WhiteBalance).filter(Type.isNumber).getOrUndefined(),
+    ExposureMode: Option.from(data.ExposureMode).filter(Type.isString).getOrUndefined(),
+    WhiteBalance: Option.from(data.WhiteBalance).filter(Type.isString).getOrUndefined(),
     SceneCaptureType: Option.from(data.SceneCaptureType).filter(Type.isString).getOrUndefined(),
     DigitalZoomRatio: Option.from(data.DigitalZoomRatio).filter(Type.isNumber).getOrUndefined(),
-    Contrast: Option.from(data.Contrast).filter(Type.isNumber).getOrUndefined(),
-    Saturation: Option.from(data.Saturation).filter(Type.isNumber).getOrUndefined(),
-    Sharpness: Option.from(data.Sharpness).filter(Type.isNumber).getOrUndefined(),
+    Contrast: Option.from(data.Contrast).filter(Type.isString).getOrUndefined(),
+    Saturation: Option.from(data.Saturation).filter(Type.isString).getOrUndefined(),
+    Sharpness: Option.from(data.Sharpness).filter(Type.isString).getOrUndefined(),
   };
 };
 
@@ -407,9 +407,9 @@ const parseGpsTags = (data: Record<string, unknown>): GPSTags => {
 
   return {
     GPSVersionID,
-    GPSLatitudeRef: Option.from(data.GPSLatitudeRef).filter((x): x is 'N' | 'S' => x === 'N' || x === 'S').getOrUndefined(),
+    GPSLatitudeRef: Option.from(data.GPSLatitudeRef).filter(Type.isString).getOrUndefined(),
     GPSLatitude: Option.from(data.GPSLatitude).filter(Type.isNumber).getOrUndefined(),
-    GPSLongitudeRef: Option.from(data.GPSLongitudeRef).filter((x): x is 'E' | 'W' => x === 'E' || x === 'W').getOrUndefined(),
+    GPSLongitudeRef: Option.from(data.GPSLongitudeRef).filter(Type.isString).getOrUndefined(),
     GPSLongitude: Option.from(data.GPSLongitude).filter(Type.isNumber).getOrUndefined(),
   };
 };
