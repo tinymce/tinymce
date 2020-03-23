@@ -39,8 +39,8 @@ const normalize = (format: string) => {
 };
 
 const createDataTransfer = (): DataTransfer => {
-  let dropEffect: string = 'move';
-  let effectAllowed: string = 'all';
+  let dropEffect = 'move';
+  let effectAllowed = 'all';
   let items: DataTransferItemList;
 
   const dataTransfer: DataTransfer = {

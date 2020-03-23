@@ -99,7 +99,7 @@ class URI {
    * @param {String} url URI string to parse.
    * @param {Object} settings Optional settings object.
    */
-  constructor(url: string, settings?: URISettings) {
+  public constructor(url: string, settings?: URISettings) {
     url = trim(url);
     this.settings = settings || {};
     const baseUri: URI = this.settings.base_uri;

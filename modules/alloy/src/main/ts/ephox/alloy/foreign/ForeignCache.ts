@@ -17,8 +17,8 @@ export default () => {
       // If we haven't already setup this particular element, then generate any state and config
       // required by its behaviours and put it in the cache.
       const info = {
-        events: Obj.hasNonNullableKey(spec, 'events') ? spec.events! : { },
-        eventOrder: Obj.hasNonNullableKey(spec, 'eventOrder') ? spec.eventOrder! : { }
+        events: Obj.hasNonNullableKey(spec, 'events') ? spec.events : { },
+        eventOrder: Obj.hasNonNullableKey(spec, 'eventOrder') ? spec.eventOrder : { }
       };
 
       // NOTE: Note all behaviours are supported at the moment

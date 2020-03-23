@@ -124,7 +124,7 @@ class EventDispatcher<T extends NativeEventMap> {
   private readonly toggleEvent: (name: string, toggle: boolean) => void;
   private bindings = {};
 
-  constructor (settings?: Record<string, any>) {
+  public constructor (settings?: Record<string, any>) {
     this.settings = settings || {};
     this.scope = this.settings.scope || this;
     this.toggleEvent = this.settings.toggleEvent || Fun.never;

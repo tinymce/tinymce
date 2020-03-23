@@ -11,16 +11,13 @@
     "@tinymce/no-enums-in-export-specifier": "off",
     "@tinymce/no-unimported-promise": "off",
     "@typescript-eslint/ban-ts-ignore": "off", // this will be added to the plugin
-    "@typescript-eslint/camelcase": "off",
-    "@typescript-eslint/consistent-type-definitions": "off",
-    "@typescript-eslint/explicit-member-accessibility": "off",
+    "@typescript-eslint/camelcase": "off", // leave off
+    "@typescript-eslint/consistent-type-definitions": "off", // leave off
     "@typescript-eslint/indent": "off",
     "@typescript-eslint/member-delimiter-style": "off",
     "@typescript-eslint/member-ordering": "off",
     "@typescript-eslint/no-empty-function": "off",
-    "@typescript-eslint/no-for-in-array": "off",
-    "@typescript-eslint/no-inferrable-types": "off",
-    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-inferrable-types": [ "error", { "ignoreParameters": true, "ignoreProperties": true }], // this will be added to the plugin
     "@typescript-eslint/no-this-alias": "off",
     "@typescript-eslint/no-unnecessary-type-assertion": "off",
     "@typescript-eslint/no-unused-vars": "off",

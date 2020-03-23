@@ -29,7 +29,7 @@ class TreeWalker {
   private readonly rootNode: Node;
   private node: Node;
 
-  constructor (startNode: Node, rootNode: Node) {
+  public constructor (startNode: Node, rootNode: Node) {
     this.node = startNode;
     this.rootNode = rootNode;
 

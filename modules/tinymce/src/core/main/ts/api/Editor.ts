@@ -280,7 +280,7 @@ class Editor implements EditorObservable {
    * @param {Object} settings Settings for the editor.
    * @param {tinymce.EditorManager} editorManager EditorManager instance.
    */
-  constructor (id: string, settings: RawEditorSettings, editorManager: EditorManager) {
+  public constructor (id: string, settings: RawEditorSettings, editorManager: EditorManager) {
     this.editorManager = editorManager;
     this.documentBaseUrl = editorManager.documentBaseURL;
 

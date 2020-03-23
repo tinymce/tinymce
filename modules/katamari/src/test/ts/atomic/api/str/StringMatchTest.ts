@@ -53,8 +53,8 @@ UnitTest.test('StringMatch: unit tests', () => {
     { expected: true, input: '', match: StringMatch.all() }
   ];
 
-  for (const tc in testcases) {
-    check(testcases[tc]);
+  for (let i = 0; i < testcases.length; i++) {
+    check(testcases[i]);
   }
 });
 
