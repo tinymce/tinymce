@@ -1,4 +1,4 @@
-Version 4.9.9 (TBD)
+Version 4.9.9 (2020-03-25)
     Fixed the table selection not functioning correctly in Microsoft Edge 44 or higher #TINY-3862
     Fixed the table resize handles not functioning correctly in Microsoft Edge 44 or higher #TINY-4160
     Fixed the `forced_root_block_attrs` setting not applying attributes to new blocks consistently #TINY-4564
