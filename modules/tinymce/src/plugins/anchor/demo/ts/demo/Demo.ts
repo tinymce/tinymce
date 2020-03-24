@@ -4,8 +4,7 @@ tinymce.init({
   selector: 'textarea.tinymce',
   plugins: 'anchor code',
   toolbar: 'anchor code',
-  height: 600,
-  forced_root_block: false
+  height: 600
 });
 
 export {};
