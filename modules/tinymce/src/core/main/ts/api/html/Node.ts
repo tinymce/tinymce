@@ -63,6 +63,19 @@ const isEmptyTextNode = (node: Node) => {
   return true;
 };
 
+// Check if node contains data-bookmark attribute, name attribute, id attribute or is a named anchor
+const isExemptElement = (node: Node) => {
+  const isNamedAnchor = node.name === 'a' && !node.attr('href') && node.attr('id');
+  let i = node.attributes ? node.attributes.length : 0;
+  while (i--) {
+    const name = node.attributes[i].name;
+    if (name === 'name' || (name === 'id' && !node.firstChild) || name.indexOf('data-mce-bookmark') === 0 || isNamedAnchor) {
+      return true;
+    }
+  }
+  return false;
+};
+
 /**
  * This class is a minimalistic implementation of a DOM like node used by the DomParser class.
  *
@@ -478,6 +491,10 @@ class Node {
     const self = this;
     let node = self.firstChild;
 
+    if (isExemptElement(self)) {
+      return false;
+    }
+
     if (node) {
       do {
         if (node.type === 1) {
@@ -491,14 +508,8 @@ class Node {
             return false;
           }
 
-          // Keep nodes with data-bookmark attributes, name attributes or are named anchors
-          let i = node.attributes.length;
-          while (i--) {
-            const isNamedAnchor = node.name === 'a' && !node.attr('href') && node.attr('id');
-            const name = node.attributes[i].name;
-            if (name === 'name' || name.indexOf('data-mce-bookmark') === 0 || isNamedAnchor) {
-              return false;
-            }
+          if (isExemptElement(node)) {
+            return false;
           }
         }
 
