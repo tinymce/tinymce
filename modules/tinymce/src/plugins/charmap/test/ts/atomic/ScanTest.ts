@@ -11,13 +11,15 @@ UnitTest.test('atomic.tinymce.plugins.charmap.ScanTest', () => {
       [ 8364, 'euro sign' ],
       [ 402, 'function / florin' ],
       [ 192, 'A - grave' ],
-      [ 224, 'a - grave' ]
+      [ 224, 'a - grave' ],
+      [ 0x1d160, 'Musical Symbol Eighth Note' ]
     ]
   };
 
   const testCharCode = () => {
     Assertions.assertEq('$ should match the dollar sign', [{ value: '$', icon: '$', text: 'dollar sign' }], Scan.scan(charMap, '$'));
     Assertions.assertEq('À should match the "A - grave" and "a - grave"', [{ value: 'À', icon: 'À', text: 'A - grave' }, { value: 'à', icon: 'à', text: 'a - grave' }], Scan.scan(charMap, 'À'));
+    Assertions.assertEq('𝅘𝅥𝅮 should match "Musical Symbol Eighth Note"', [{ value: '𝅘𝅥𝅮', icon: '𝅘𝅥𝅮', text: 'Musical Symbol Eighth Note' }], Scan.scan(charMap, '𝅘𝅥𝅮'));
   };
 
   const testNames = () => {
