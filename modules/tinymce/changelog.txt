@@ -25,6 +25,7 @@ Version 5.2.1 (TBD)
     Fixed an issue where dragging images could cause them to be duplicated #TINY-4195
     Fixed context toolbars activating without the editor having focus #TINY-4754
     Fixed an issue where removing the background color of text did not always work. #TINY-4770
+    Fixed an issue where creating new rows and columns in a table would not retain the style of the previous row or column. #TINY-4788
 Version 5.2.0 (2020-02-13)
     Added the ability to apply formats to spaces #TINY-4200
     Added new `toolbar_location` setting to allow for positioning the menu and toolbar at the bottom of the editor #TINY-4210
