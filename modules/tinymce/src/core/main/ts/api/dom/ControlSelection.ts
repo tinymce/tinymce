@@ -17,6 +17,7 @@ import Delay from '../util/Delay';
 import Tools from '../util/Tools';
 import VK from '../util/VK';
 import Selection from './Selection';
+import { Obj } from '@ephox/katamari';
 
 interface ControlSelection {
   isResizable (elm: Element): boolean;
@@ -351,21 +352,19 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   };
 
   const hideResizeRect = function () {
-    let name, handleElm;
-
     unbindResizeHandleEvents();
 
     if (selectedElm) {
       selectedElm.removeAttribute('data-mce-selected');
     }
 
-    for (name in resizeHandles) {
-      handleElm = dom.get('mceResizeHandle' + name);
+    Obj.each(resizeHandles, (value, name) => {
+      const handleElm = dom.get('mceResizeHandle' + name);
       if (handleElm) {
         dom.unbind(handleElm);
         dom.remove(handleElm);
       }
-    }
+    });
   };
 
   const updateResizeRect = function (e) {
@@ -412,14 +411,12 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   };
 
   const unbindResizeHandleEvents = function () {
-    for (const name in resizeHandles) {
-      const handle = resizeHandles[name];
-
+    Obj.each(resizeHandles, (handle) => {
       if (handle.elm) {
         dom.unbind(handle.elm);
         delete handle.elm;
       }
-    }
+    });
   };
 
   const disableGeckoResize = function () {

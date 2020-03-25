@@ -1442,9 +1442,11 @@ Expr = Sizzle.selectors = {
 Expr.pseudos.nth = Expr.pseudos.eq;
 
 // Add button/input type pseudos
+// eslint-disable-next-line guard-for-in
 for (i in { radio: true, checkbox: true, file: true, password: true, image: true }) {
   Expr.pseudos[i] = createInputPseudo(i);
 }
+// eslint-disable-next-line guard-for-in
 for (i in { submit: true, reset: true }) {
   Expr.pseudos[i] = createButtonPseudo(i);
 }

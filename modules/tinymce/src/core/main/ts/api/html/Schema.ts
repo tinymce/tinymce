@@ -6,6 +6,7 @@
  */
 
 import Tools from '../util/Tools';
+import { Obj } from '@ephox/katamari';
 
 export type SchemaType = 'html4' | 'html5' | 'html5-strict';
 
@@ -538,9 +539,9 @@ function Schema(settings?: SchemaSettings): Schema {
 
           // Copy attributes from global rule into current rule
           if (globalAttributes) {
-            for (key in globalAttributes) {
-              attributes[key] = globalAttributes[key];
-            }
+            Obj.each(globalAttributes, (value, key) => {
+              attributes[key] = value;
+            });
 
             attributesOrder.push.apply(attributesOrder, globalAttributesOrder);
           }

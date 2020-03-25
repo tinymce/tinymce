@@ -5,6 +5,7 @@ import AddOnManager from 'tinymce/core/api/AddOnManager';
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import I18n from 'tinymce/core/api/util/I18n';
+import { Obj } from '@ephox/katamari';
 
 UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
@@ -42,9 +43,9 @@ UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', (success, failure) =
       proto[name] = originalFuncs[name];
       delete originalFuncs[name];
     } else {
-      for (const key in originalFuncs) {
-        proto[key] = originalFuncs[key];
-      }
+      Obj.each(originalFuncs, (value, key) => {
+        proto[key] = value;
+      });
 
       delete proto.__originalFuncs;
     }

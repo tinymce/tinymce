@@ -6,6 +6,7 @@
  */
 
 import { SchemaMap } from './Schema';
+import { Obj } from '@ephox/katamari';
 
 export type Attributes = Array<{ name: string; value: string }> & { map: Record<string, string> };
 
@@ -89,9 +90,9 @@ class Node {
 
     // Add attributes if needed
     if (attrs) {
-      for (const attrName in attrs) {
-        node.attr(attrName, attrs[attrName]);
-      }
+      Obj.each(attrs, (value, attrName) => {
+        node.attr(attrName, value);
+      });
     }
 
     return node;
@@ -170,9 +171,9 @@ class Node {
     let attrs: Attributes;
 
     if (typeof name !== 'string') {
-      for (const key in name) {
-        self.attr(key, name[key]);
-      }
+      Obj.each(name, (value, key) => {
+        self.attr(key, value);
+      });
 
       return self;
     }

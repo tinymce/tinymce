@@ -6,7 +6,7 @@
  */
 
 import { document, Element, HTMLFormElement, Window, BeforeUnloadEvent } from '@ephox/dom-globals';
-import { Arr, Type } from '@ephox/katamari';
+import { Arr, Type, Obj } from '@ephox/katamari';
 import AddOnManager from './AddOnManager';
 import Editor from './Editor';
 import { RawEditorSettings } from './SettingsTypes';
@@ -337,9 +337,9 @@ const EditorManager: EditorManager = {
     this.defaultSettings = defaultSettings;
 
     const pluginBaseUrls = defaultSettings.plugin_base_urls;
-    for (const name in pluginBaseUrls) {
-      AddOnManager.PluginManager.urls[name] = pluginBaseUrls[name];
-    }
+    Obj.each(pluginBaseUrls, (pluginBaseUrl, pluginName) => {
+      AddOnManager.PluginManager.urls[pluginName] = pluginBaseUrl;
+    });
   },
 
   /**

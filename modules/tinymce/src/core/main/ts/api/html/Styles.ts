@@ -24,7 +24,7 @@
  * @version 3.4
  */
 
-import { Unicode } from '@ephox/katamari';
+import { Unicode, Obj } from '@ephox/katamari';
 import Schema from './Schema';
 
 export interface StyleMap { [s: string]: string | number }
@@ -329,7 +329,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
      * @return {String} String representation of the style object for example: border: 1px solid red.
      */
     serialize(styles: StyleMap, elementName?: string): string {
-      let css = '', name, value;
+      let css = '';
 
       const serializeStyles = (name: string) => {
         let styleList, i, l, value;
@@ -364,13 +364,11 @@ const Styles = function (settings?, schema?: Schema): Styles {
         serializeStyles(elementName);
       } else {
         // Output the styles in the order they are inside the object
-        for (name in styles) {
-          value = styles[name];
-
+        Obj.each(styles, (value, name) => {
           if (value && (!invalidStyles || isValid(name, elementName))) {
             css += (css.length > 0 ? ' ' : '') + name + ': ' + value + ';';
           }
-        }
+        });
       }
 
       return css;
