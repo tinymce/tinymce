@@ -488,7 +488,7 @@ function Schema(settings?: SchemaSettings): Schema {
   // This function is a bit hard to read since it's heavily optimized for speed
   const addValidElements = (validElements: string) => {
     let ei, el, ai, al, matches, element, attr, attrData, elementName, attrName, attrType, attributes, attributesOrder,
-      prefix, outputName, globalAttributes, globalAttributesOrder, key, value;
+      prefix, outputName, globalAttributes, globalAttributesOrder, value;
     const elementRuleRegExp = /^([#+\-])?([^\[!\/]+)(?:\/([^\[!]+))?(?:(!?)\[([^\]]+)\])?$/,
       attrRuleRegExp = /^([!\-])?(\w+[\\:]:\w+|[^=:<]+)?(?:([=:<])(.*))?$/,
       hasPatternsRegExp = /[*?+]/;
