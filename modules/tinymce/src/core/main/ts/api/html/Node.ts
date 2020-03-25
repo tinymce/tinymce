@@ -64,7 +64,7 @@ const isEmptyTextNode = (node: Node) => {
 };
 
 // Check if node contains data-bookmark attribute, name attribute, id attribute or is a named anchor
-const isExemptElement = (node: Node) => {
+const isNonEmptyElement = (node: Node) => {
   const isNamedAnchor = node.name === 'a' && !node.attr('href') && node.attr('id');
   let i = node.attributes ? node.attributes.length : 0;
   while (i--) {
@@ -491,7 +491,7 @@ class Node {
     const self = this;
     let node = self.firstChild;
 
-    if (isExemptElement(self)) {
+    if (isNonEmptyElement(self)) {
       return false;
     }
 
@@ -508,7 +508,7 @@ class Node {
             return false;
           }
 
-          if (isExemptElement(node)) {
+          if (isNonEmptyElement(node)) {
             return false;
           }
         }

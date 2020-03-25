@@ -1017,8 +1017,30 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return styles.toHex(Tools.trim(rgbVal));
   };
 
+  // Check if element has a data-bookmark attribute, name attribute or is a named anchor
+  const isNonEmptyElement = (node: Node) => {
+    if (NodeType.isElement(node)) {
+      const attributes = getAttribs(node);
+      let i = attributes.length;
+      while (i--) {
+        const isNamedAnchor = node.nodeName === 'A' && !getAttrib(node, 'href') && getAttrib(node, 'id');
+        const name = attributes[i].nodeName;
+        if (name === 'name' || name === 'data-mce-bookmark' || isNamedAnchor) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  };
+
   const isEmpty = (node: Node, elements?: Record<string, any>) => {
-    let i, attributes, type, name, brCount = 0;
+    let type: number, name: string, brCount = 0;
+
+    // Keep elements with data-bookmark attributes, name attributes or are named anchors
+    if (isNonEmptyElement(node)) {
+      return false;
+    }
 
     node = node.firstChild;
     if (node) {
@@ -1051,14 +1073,8 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
           }
 
           // Keep elements with data-bookmark attributes, name attributes or are named anchors
-          attributes = getAttribs(node);
-          i = attributes.length;
-          while (i--) {
-            const isNamedAnchor = node.nodeName === 'A' && !getAttrib(node, 'href') && getAttrib(node, 'id');
-            name = attributes[i].nodeName;
-            if (name === 'name' || name === 'data-mce-bookmark' || isNamedAnchor) {
-              return false;
-            }
+          if (isNonEmptyElement(node)) {
+            return false;
           }
         }
 
