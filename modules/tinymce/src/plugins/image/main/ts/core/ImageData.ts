@@ -8,14 +8,14 @@
 import { document, HTMLElement, Node } from '@ephox/dom-globals';
 import { Attr, Element } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import { ImageDialogInfo } from '../ui/DialogTypes';
 import * as Utils from './Utils';
+import { Type } from '@ephox/katamari';
 
 const DOM = DOMUtils.DOM;
 
 interface ImageData {
   src: string;
-  alt: string;
+  alt: string | null;
   title: string;
   width: string;
   height: string;
@@ -209,11 +209,11 @@ const getStyleValue = (normalizeCss: CssNormalizer, data: ImageData): string => 
   return normalizeCss(image.getAttribute('style'));
 };
 
-const create = (normalizeCss: CssNormalizer, data: ImageData, info: ImageDialogInfo): HTMLElement => {
+const create = (normalizeCss: CssNormalizer, data: ImageData): HTMLElement => {
   const image = document.createElement('img');
-  write(normalizeCss, { ...data, caption: false }, image, info);
+  write(normalizeCss, { ...data, caption: false }, image);
   // Always set alt even if data.alt is an empty string
-  setAlt(image, data.alt, data.isDecorative, info);
+  setAlt(image, data.alt, data.isDecorative);
 
   if (data.caption) {
     const figure = DOM.create('figure', { class: 'image' });
@@ -252,16 +252,16 @@ const updateProp = (image: HTMLElement, oldData: ImageData, newData: ImageData, 
   }
 };
 
-const setAlt = (image: HTMLElement, alt: string, isDecorative: boolean, info: ImageDialogInfo) => {
+const setAlt = (image: HTMLElement, alt: string, isDecorative: boolean) => {
   if (isDecorative) {
     DOM.setAttrib(image, 'role', 'presentation');
     // unfortunately can't set "" attr value with domutils
     const sugarImage = Element.fromDom(image);
     Attr.set(sugarImage, 'alt', '');
   } else {
-    if (info.hasAccessibilityOptions) {
-      // because domutils, if alt.length === 0 this will remove alt. TODO TINY-4628
-      DOM.setAttrib(image, 'alt', alt);
+    if (Type.isNull(alt)) {
+      const sugarImage = Element.fromDom(image);
+      Attr.remove(sugarImage, 'alt');
     } else {
       // unfortunately can't set "" attr value with domutils
       const sugarImage = Element.fromDom(image);
@@ -273,9 +273,9 @@ const setAlt = (image: HTMLElement, alt: string, isDecorative: boolean, info: Im
   }
 };
 
-const updateAlt = (image: HTMLElement, oldData: ImageData, newData: ImageData, info: ImageDialogInfo) => {
+const updateAlt = (image: HTMLElement, oldData: ImageData, newData: ImageData) => {
   if (newData.alt !== oldData.alt || newData.isDecorative !== oldData.isDecorative) {
-    setAlt(image, newData.alt, newData.isDecorative, info);
+    setAlt(image, newData.alt, newData.isDecorative);
   }
 };
 
@@ -286,7 +286,7 @@ const normalized = (set: (image: HTMLElement, value: string) => void, normalizeC
   };
 };
 
-const write = (normalizeCss: CssNormalizer, newData: ImageData, image: HTMLElement, info: ImageDialogInfo) => {
+const write = (normalizeCss: CssNormalizer, newData: ImageData, image: HTMLElement) => {
   const oldData = read(normalizeCss, image);
 
   updateProp(image, oldData, newData, 'caption', (image, _name, _value) => toggleCaption(image));
@@ -300,7 +300,7 @@ const write = (normalizeCss: CssNormalizer, newData: ImageData, image: HTMLEleme
   updateProp(image, oldData, newData, 'vspace', normalized(setVspace, normalizeCss));
   updateProp(image, oldData, newData, 'border', normalized(setBorder, normalizeCss));
   updateProp(image, oldData, newData, 'borderStyle', normalized(setBorderStyle, normalizeCss));
-  updateAlt(image, oldData, newData, info);
+  updateAlt(image, oldData, newData);
 };
 
 export {

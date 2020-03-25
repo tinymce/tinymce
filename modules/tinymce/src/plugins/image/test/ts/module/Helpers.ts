@@ -193,6 +193,14 @@ const cAssertInputValue = (selector: string, value: string) => {
   ]);
 };
 
+const cAssertInputCheckbox = (selector: string, expectedState: boolean) => {
+  return Chain.fromChainsWith(Body.body(), [
+    UiFinder.cFindIn(selector),
+    Chain.mapper((elm: Element<HTMLInputElement>) => elm.dom().checked),
+    Assertions.cAssertEq(`input value should be ${expectedState}`, expectedState)
+  ]);
+};
+
 const cOpFromChains = (chains: Chain<any, any>[]) => Chain.control(
   // TODO: Another API case.
   Chain.on((value, next, die, logs) => {
@@ -219,5 +227,6 @@ export {
   cSubmitDialog,
   cAssertCleanHtml,
   cAssertInputValue,
+  cAssertInputCheckbox,
   cOpFromChains
 };
