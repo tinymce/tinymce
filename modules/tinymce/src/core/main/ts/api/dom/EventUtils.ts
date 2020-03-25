@@ -473,7 +473,7 @@ class EventUtils {
 
       // Check if object is empty, if it isn't then we won't remove the expando map
       for (name in eventMap) {
-        if (Object.prototype.hasOwnProperty.call(eventMap, name)) {
+        if (Obj.has(eventMap, name)) {
           return this;
         }
       }
