@@ -44,7 +44,7 @@ const text = (textContent: string): PremadeSpec => {
 };
 
 // Rename.
-export interface ExternalElement { uid ?: string; element: Element }
+export interface ExternalElement { uid?: string; element: Element }
 const external = (spec: ExternalElement): PremadeSpec => {
   const extSpec: { uid: Option<string>; element: Element } = ValueSchema.asRawOrDie('external.component', ValueSchema.objOfOnly([
     FieldSchema.strict('element'),
