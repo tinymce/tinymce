@@ -27,7 +27,7 @@ export interface ChangeSlideEvent extends CustomEvent {
 
 const resizingClass = 'tox-pop--resizing';
 
-const renderContextToolbar = (spec: { onEscape: () => Option<boolean>, sink: AlloyComponent }) => {
+const renderContextToolbar = (spec: { onEscape: () => Option<boolean>; sink: AlloyComponent }) => {
   const stack = Cell([ ]);
 
   return InlineView.sketch({

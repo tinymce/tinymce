@@ -52,7 +52,7 @@ import { extractBase64DataUris, restoreDataUris, Base64Extract } from '../../htm
  * @version 3.4
  */
 
-type AttrList = Array<{ name: string, value: string }> & { map: Record<string, string> };
+type AttrList = Array<{ name: string; value: string }> & { map: Record<string, string> };
 
 export interface SaxParserSettings {
   allow_conditional_comments?: boolean;

@@ -10,7 +10,7 @@ export interface RepositionDecision {
   readonly direction: DirectionAdt;
   readonly classes: {
     off: string[];
-    on: string[]
+    on: string[];
   };
   readonly label: string;
   readonly candidateYforTest: number;

@@ -24,10 +24,10 @@ export interface InlineViewDetail extends SingleSketchDetail {
   lazySink: LazySink;
   eventOrder: Record<string, string[]>;
   fireDismissalEventInstead: Option<{
-    event: string
+    event: string;
   }>;
   fireRepositionEventInstead: Option<{
-    event: string
+    event: string;
   }>;
 }
 
@@ -44,10 +44,10 @@ export interface InlineViewSpec extends SingleSketchSpec {
   isExtraPart?: (component: AlloyComponent, target: Element) => boolean;
   eventOrder?: Record<string, string[]>;
   fireDismissalEventInstead?: {
-    event?: string
+    event?: string;
   };
   fireRepositionEventInstead?: {
-    event?: string
+    event?: string;
   };
 }
 

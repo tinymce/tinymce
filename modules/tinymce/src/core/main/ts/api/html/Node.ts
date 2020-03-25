@@ -7,7 +7,7 @@
 
 import { SchemaMap } from './Schema';
 
-export type Attributes = Array<{ name: string; value: string; }> & { map: Record<string, string> };
+export type Attributes = Array<{ name: string; value: string }> & { map: Record<string, string> };
 
 const whiteSpaceRegExp = /^[ \t\r\n]*$/;
 const typeLookup = {

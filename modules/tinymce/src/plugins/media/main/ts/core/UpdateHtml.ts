@@ -15,7 +15,7 @@ import { MediaData } from './Types';
 
 const DOM = DOMUtils.DOM;
 
-type AttrList = Array<{ name: string, value: string }> & { map: Record<string, string> };
+type AttrList = Array<{ name: string; value: string }> & { map: Record<string, string> };
 
 const setAttributes = function (attrs: AttrList, updatedAttrs: Record<string, any>) {
   let name;

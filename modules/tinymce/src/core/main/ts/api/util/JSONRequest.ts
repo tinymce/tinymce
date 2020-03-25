@@ -41,7 +41,7 @@ const extend = Tools.extend;
 
 export interface JSONRequestSettings {
   crossDomain?: boolean;
-  requestheaders?: Record<string, { key: string, value: string}>;
+  requestheaders?: Record<string, { key: string; value: string}>;
   type?: string;
   url?: string;
   error_scope?: {};

@@ -18,19 +18,19 @@ interface ClumpsScan<E> {
     finished: (element: E, mode: Transition) => T
   ) => T;
   match: <T> (branches: {
-    none: (last: E, mode: Transition) => T,
-    running: (next: E, mode: Transition) => T,
-    split: (boundary: E, last: E, mode: Transition) => T,
-    finished: (element: E, mode: Transition) => T
+    none: (last: E, mode: Transition) => T;
+    running: (next: E, mode: Transition) => T;
+    split: (boundary: E, last: E, mode: Transition) => T;
+    finished: (element: E, mode: Transition) => T;
   }) => T;
   log: (label: string) => void;
 }
 
 const adt: {
-  none: <E> (last: E, mode: Transition) => ClumpsScan<E>,
-  running: <E> (next: E, mode: Transition) => ClumpsScan<E>,
-  split: <E> (boundary: E, last: E, mode: Transition) => ClumpsScan<E>,
-  finished: <E> (element: E, mode: Transition) => ClumpsScan<E>
+  none: <E> (last: E, mode: Transition) => ClumpsScan<E>;
+  running: <E> (next: E, mode: Transition) => ClumpsScan<E>;
+  split: <E> (boundary: E, last: E, mode: Transition) => ClumpsScan<E>;
+  finished: <E> (element: E, mode: Transition) => ClumpsScan<E>;
 } = Adt.generate([
   { none: [ 'last', 'mode' ] },
   { running: [ 'next', 'mode' ] },

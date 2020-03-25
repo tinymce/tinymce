@@ -43,7 +43,7 @@ UnitTest.asynctest('InputTest', (success, failure) => {
       );
     });
 
-    const sCheckInputSelection = (label: string, expected: { start: number; end: number; }) => {
+    const sCheckInputSelection = (label: string, expected: { start: number; end: number }) => {
       return Step.sync(() => {
         Assertions.assertEq(
           label + '\nChecking selectionStart',

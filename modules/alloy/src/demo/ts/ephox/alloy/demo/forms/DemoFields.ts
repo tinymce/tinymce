@@ -76,7 +76,7 @@ const textMunger = (spec: TextMungerSpec): SketchSpec => {
   return FormField.sketch(m);
 };
 
-const selectMunger = (spec: { label: string; options: Array<{ value: string, text: string }> }): SketchSpec => {
+const selectMunger = (spec: { label: string; options: Array<{ value: string; text: string }> }): SketchSpec => {
   const pLabel = FormField.parts().label({
     dom: { tag: 'label', innerHtml: spec.label }
   });

@@ -14,7 +14,7 @@ interface FilterMatch {
   nodes: Node[];
 }
 
-interface FilterMatchMap { [key: string]: FilterMatch; }
+interface FilterMatchMap { [key: string]: FilterMatch }
 
 const traverse = (node: Node, fn: (node: Node) => void): void => {
   fn(node);

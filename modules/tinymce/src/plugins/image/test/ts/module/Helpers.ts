@@ -7,21 +7,21 @@ import { TinyUi } from '@ephox/mcagar';
 
 export type ImageDialogData = {
   src: {
-    value: string
-  },
-  alt: string,
-  decorative: boolean
+    value: string;
+  };
+  alt: string;
+  decorative: boolean;
   dimensions: {
-    width: string,
-    height: string
-  },
-  caption: boolean,
-  classIndex: number, // because the DOM api is setSelectedIndex
-  border: string,
-  hspace: string,
-  style: string,
-  vspace: string,
-  borderstyle: string,
+    width: string;
+    height: string;
+  };
+  caption: boolean;
+  classIndex: number; // because the DOM api is setSelectedIndex
+  border: string;
+  hspace: string;
+  style: string;
+  vspace: string;
+  borderstyle: string;
 };
 
 export const generalTabSelectors = {

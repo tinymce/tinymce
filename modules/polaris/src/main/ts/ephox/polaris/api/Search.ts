@@ -5,7 +5,7 @@ import * as Sleuth from '../search/Sleuth';
 type FindallApi = (input: string, pattern: PRegExp) => PRange[];
 const findall: FindallApi = Find.all;
 
-type FindmanyApi = <T extends { pattern: () => PRegExp; }>(text: string, targets: T[]) => (T & PRange)[];
+type FindmanyApi = <T extends { pattern: () => PRegExp }>(text: string, targets: T[]) => (T & PRange)[];
 const findmany: FindmanyApi = Sleuth.search;
 
 export {

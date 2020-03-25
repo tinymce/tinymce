@@ -14,7 +14,7 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as AutocompleteTag from './AutocompleteTag';
 
 export interface AutocompleterUiApi {
-  onKeypress: { cancel: () => void, throttle: (evt: Event) => void };
+  onKeypress: { cancel: () => void; throttle: (evt: Event) => void };
   getView: () => Option<AlloyComponent>;
   isMenuOpen: () => boolean;
   isActive: () => boolean;

@@ -202,7 +202,7 @@ UnitTest.test('DomTextSearchTest', function () {
       KAssert.eqNone('There should be no scanning (' + label + ')', DomTextSearch.scanRight(start, offset));
     };
 
-    const checkScan = function (label: string, expected: { element: Element, offset: number }, start: Element, offset: number) {
+    const checkScan = function (label: string, expected: { element: Element; offset: number }, start: Element, offset: number) {
       const actual = DomTextSearch.scanRight(start, offset).getOrDie('Could not find scan result for: ' + label);
       Assert.eq('eq', expected.offset, actual.offset());
       Assert.eq('Element did not match scan: (' + label + ')', true, Compare.eq(expected.element, actual.element()));

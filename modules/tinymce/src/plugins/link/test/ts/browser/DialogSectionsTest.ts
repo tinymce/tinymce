@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, 
   };
 
   interface TestSection {
-    setting: { key: string, value: Option<any> };
+    setting: { key: string; value: Option<any> };
     selector: string;
     exists: boolean;
   }
@@ -77,7 +77,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, 
       ])
     );
 
-    const sCheckRelSection = (exists: boolean, value: Option<Array<{ value: string, title: string }>>) => Log.step('TBA', 'Link: sCheckRelSection',
+    const sCheckRelSection = (exists: boolean, value: Option<Array<{ value: string; title: string }>>) => Log.step('TBA', 'Link: sCheckRelSection',
       sCheckSections([
         {
           setting: { key: 'rel_list', value },
@@ -87,7 +87,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, 
       ])
     );
 
-    const sCheckClassSection = (exists: boolean, value: Option<Array<{ value: string, title: string }>>) => Log.step('TBA', 'Link: sCheckClassSection',
+    const sCheckClassSection = (exists: boolean, value: Option<Array<{ value: string; title: string }>>) => Log.step('TBA', 'Link: sCheckClassSection',
       sCheckSections([
         {
           setting: { key: 'link_class_list', value },
@@ -97,7 +97,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, 
       ])
     );
 
-    const sCheckLinkListSection = (exists: boolean, value: Option<Array<{ value: string, title: string }>>) => Log.step('TBA', 'Link: sCheckLinkListSection',
+    const sCheckLinkListSection = (exists: boolean, value: Option<Array<{ value: string; title: string }>>) => Log.step('TBA', 'Link: sCheckLinkListSection',
       sCheckSections([
         {
           setting: { key: 'link_list', value },

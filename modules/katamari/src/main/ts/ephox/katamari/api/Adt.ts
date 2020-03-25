@@ -5,7 +5,7 @@ import { console } from '@ephox/dom-globals';
 
 export interface Adt {
   fold: <T> (...caseHandlers: ((...data: any[]) => T)[]) => T;
-  match: <T> (branches: { [branch: string]: (...data: any[]) => T; }) => T;
+  match: <T> (branches: { [branch: string]: (...data: any[]) => T }) => T;
   log: (label: string) => void;
 }
 

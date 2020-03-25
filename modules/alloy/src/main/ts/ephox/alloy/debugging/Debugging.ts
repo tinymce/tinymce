@@ -67,7 +67,7 @@ const eventConfig = Cell<Record<string, EventConfiguration>>({ });
 export type EventProcessor = (logger: DebuggerLogger) => boolean;
 
 const makeEventLogger = (eventName: string, initialTarget: Element): DebuggerLogger => {
-  const sequence: Array<{ outcome: string, target: Element, purpose?: string }> = [ ];
+  const sequence: Array<{ outcome: string; target: Element; purpose?: string }> = [ ];
   const startTime = new Date().getTime();
 
   return {

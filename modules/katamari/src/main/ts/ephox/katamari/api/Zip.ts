@@ -18,7 +18,7 @@ export const zipToTuples = function <K, V> (keys: K[], values: V[]) {
   if (keys.length !== values.length) {
     throw new Error(`Assertion failed: keys.length !== values.length (${keys.length} !== ${values.length})`);
   }
-  const r: { k: K, v: V }[] = [];
+  const r: { k: K; v: V }[] = [];
   for (let i = 0; i < keys.length; i++) {
     r.push({ k: keys[i], v: values[i] });
   }

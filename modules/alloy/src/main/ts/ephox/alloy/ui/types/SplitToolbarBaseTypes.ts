@@ -28,8 +28,8 @@ export interface SplitToolbarBaseSpec extends CompositeSketchSpec {
   splitToolbarBehaviours?: AlloyBehaviourRecord;
 
   parts: {
-    'overflow-group': Partial<ToolbarGroupSpec>,
-    'overflow-button': Partial<SimpleOrSketchSpec>
+    'overflow-group': Partial<ToolbarGroupSpec>;
+    'overflow-button': Partial<SimpleOrSketchSpec>;
   };
 }
 

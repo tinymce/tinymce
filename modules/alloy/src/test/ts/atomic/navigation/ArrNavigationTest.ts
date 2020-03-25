@@ -52,7 +52,7 @@ UnitTest.test('ArrNavigationTest', () => {
   Jsc.property(
     'Cycling should always be possible in a >= 2 length array',
     arbTestCase,
-    (testCase: { values: number[]; index: number; }) => {
+    (testCase: { values: number[]; index: number }) => {
       ArrNavigation.cycleNext(testCase.values, testCase.index, Fun.constant(true)).getOrDie(
         'Should always be able to cycle next on a >= 2 length array'
       );
@@ -63,7 +63,7 @@ UnitTest.test('ArrNavigationTest', () => {
   Jsc.property(
     'Cycling should never be possible in a >= 2 length array if predicate is never',
     arbTestCase,
-    (testCase: { values: number[]; index: number; }) => {
+    (testCase: { values: number[]; index: number }) => {
       ArrNavigation.cycleNext(testCase.values, testCase.index, Fun.constant(false)).each((_) => {
         throw new Error('Should not have navigatied to: ' + _);
       });
@@ -74,7 +74,7 @@ UnitTest.test('ArrNavigationTest', () => {
   Jsc.property(
     'Cycling across a list of unique numbers of size 2 or greater should be symmetric: after(before(x)) === x',
     arbUniqueNumTestCase,
-    (testCase: { values: number[]; index: number; }) => {
+    (testCase: { values: number[]; index: number }) => {
       const initial = testCase.index;
       const before = ArrNavigation.cyclePrev<number>(testCase.values, initial, Fun.constant(true)).getOrDie(
         'Should always be able to cycle prev on a >= 2 length array'
@@ -91,7 +91,7 @@ UnitTest.test('ArrNavigationTest', () => {
   Jsc.property(
     'Cycling across a list of unique numbers of size 2 or greater should be symmetric: before(after(x)) === x',
     arbUniqueNumTestCase,
-    (testCase: { values: number[]; index: number; }) => {
+    (testCase: { values: number[]; index: number }) => {
       const initial = testCase.index;
       const after = ArrNavigation.cycleNext<number>(testCase.values, initial, Fun.constant(true)).getOrDie(
         'Should always be able to cycle next on a >= 2 length array'
@@ -108,7 +108,7 @@ UnitTest.test('ArrNavigationTest', () => {
   Jsc.property(
     'Cycling next makes an index of 0, or one higher',
     arbUniqueNumTestCase,
-    (testCase: { values: number[]; index: number; }) => {
+    (testCase: { values: number[]; index: number }) => {
       const after = ArrNavigation.cycleNext(testCase.values, testCase.index, Fun.constant(true)).getOrDie(
         'Should always be able to cycle next on a >= 2 length array'
       );
@@ -120,7 +120,7 @@ UnitTest.test('ArrNavigationTest', () => {
   Jsc.property(
     'Cycling prev makes an index of values.length - 1, or one lower',
     arbUniqueNumTestCase,
-    (testCase: { values: number[]; index: number; }) => {
+    (testCase: { values: number[]; index: number }) => {
       const before = ArrNavigation.cyclePrev(testCase.values, testCase.index, Fun.constant(true)).getOrDie(
         'Should always be able to cycle prev on a >= 2 length array'
       );
@@ -132,7 +132,7 @@ UnitTest.test('ArrNavigationTest', () => {
   Jsc.property(
     'Unique: Try next should be some(+1) or none',
     arbUniqueNumTestCase,
-    (testCase: { values: number[]; index: number; }) => {
+    (testCase: { values: number[]; index: number }) => {
       return ArrNavigation.tryNext(testCase.values, testCase.index, Fun.constant(true)).fold(() => {
         // Nothing, so we must be at the last index position
         return Jsc.eq(testCase.index, testCase.values.length - 1);
@@ -145,7 +145,7 @@ UnitTest.test('ArrNavigationTest', () => {
   Jsc.property(
     'Unique: Try prev should be some(-1) or none',
     arbUniqueNumTestCase,
-    (testCase: { values: number[]; index: number; }) => {
+    (testCase: { values: number[]; index: number }) => {
       return ArrNavigation.tryPrev(testCase.values, testCase.index, Fun.constant(true)).fold(() => {
         // Nothing, so we must be at the first index position
         return Jsc.eq(testCase.index, 0);

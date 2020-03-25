@@ -21,7 +21,7 @@ const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowC
   });
 };
 
-const measureTest = function (expected: { error: string } | {rowDelta: number, colDelta: number }, startAddress: Structs.Address, gridA: () => Structs.ElementNew[][], gridB: () => Structs.ElementNew[][]) {
+const measureTest = function (expected: { error: string } | {rowDelta: number; colDelta: number }, startAddress: Structs.Address, gridA: () => Structs.ElementNew[][], gridB: () => Structs.ElementNew[][]) {
   // Try put gridB into gridA at the startAddress
   // returns a delta,
   // colDelta = -3 means gridA is 3 columns too short
@@ -51,7 +51,7 @@ const tailorTest = function (expected: Structs.ElementNew[][], startAddress: Str
   assertGrids(mapToStructGrid(expected), tailoredGrid);
 };
 
-const tailorIVTest = function (expected: { rows: number, cols: number }, startAddress: Structs.Address, gridA: () => Structs.ElementNew[][], delta: Fitment.Delta, generator: () => SimpleGenerators) {
+const tailorIVTest = function (expected: { rows: number; cols: number }, startAddress: Structs.Address, gridA: () => Structs.ElementNew[][], delta: Fitment.Delta, generator: () => SimpleGenerators) {
   const tailoredGrid = Fitment.tailor(mapToStructGrid(gridA()), delta, generator());
   const rows = tailoredGrid.length;
   const cols = tailoredGrid[0].cells().length;

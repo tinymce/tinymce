@@ -46,9 +46,9 @@ export interface Traverse<E> {
 }
 
 export type Successor = {
-  readonly current: Transition,
-  readonly next: Transition,
-  readonly fallback: Option<Transition>
+  readonly current: Transition;
+  readonly next: Transition;
+  readonly fallback: Option<Transition>;
 };
 
 export interface Wrapter<E> {

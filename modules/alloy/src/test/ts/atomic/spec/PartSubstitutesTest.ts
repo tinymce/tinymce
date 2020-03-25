@@ -99,7 +99,7 @@ UnitTest.test('PartSubstitutesTest', () => {
       const internals = substitutes.internals();
       const externals = substitutes.externals();
 
-      const checkSinglePart = (label: string, expected: { required: boolean, spec: any, factory: any }, part: UiSubstitutes.UiSubstitutesAdt) => {
+      const checkSinglePart = (label: string, expected: { required: boolean; spec: any; factory: any }, part: UiSubstitutes.UiSubstitutesAdt) => {
         Logger.sync('Checking: ' + label, () => {
           part.match({
             single: (required, valueThunk) => {

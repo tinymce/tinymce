@@ -18,7 +18,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     name: 'label'
   }),
 
-  PartType.optional<FormFieldDetail, { text: string; }>({
+  PartType.optional<FormFieldDetail, { text: string }>({
     factory: {
       sketch(spec) {
         return {

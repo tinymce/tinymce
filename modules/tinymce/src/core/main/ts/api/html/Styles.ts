@@ -27,7 +27,7 @@
 import { Unicode } from '@ephox/katamari';
 import Schema from './Schema';
 
-export interface StyleMap { [s: string]: string | number; }
+export interface StyleMap { [s: string]: string | number }
 interface Styles {
   toHex(color: string): string;
   parse(css: string): Record<string, string>;

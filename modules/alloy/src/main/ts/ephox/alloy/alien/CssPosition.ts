@@ -7,8 +7,8 @@ export interface CssPositionAdt {
     absolute: (point: Position, sx: number, sy: number) => T
   ) => T;
   match: <T> (branches: {
-    screen: (point: Position) => T,
-    absolute: (point: Position, sx: number, sy: number) => T
+    screen: (point: Position) => T;
+    absolute: (point: Position, sx: number, sy: number) => T;
   }) => T;
   log: (label: string) => void;
 }

@@ -12,7 +12,7 @@ UnitTest.test('DomTextdataTest', function () {
   const e = Element.fromText('epsilon');
   const f = Element.fromText('foo');
 
-  const check = function (expected: { text: string, cursor: Option<number> }, elements: Element[], current: Element, offset: number) {
+  const check = function (expected: { text: string; cursor: Option<number> }, elements: Element[], current: Element, offset: number) {
     const actual = DomTextdata.from(elements, current, offset);
     Assert.eq('eq', expected.text, actual.text);
 

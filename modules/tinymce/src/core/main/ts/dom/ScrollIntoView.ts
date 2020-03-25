@@ -34,7 +34,7 @@ const fireAfterScrollIntoViewEvent = (editor: Editor, data: ScrollIntoViewEvent)
   editor.fire('AfterScrollIntoView', data);
 };
 
-const descend = (element: SugarElement, offset: number): { element: SugarElement, offset: number } => {
+const descend = (element: SugarElement, offset: number): { element: SugarElement; offset: number } => {
   const children = Traverse.children(element);
   if (children.length === 0 || excludeFromDescend(element)) {
     return { element, offset };

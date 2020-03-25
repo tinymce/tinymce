@@ -3,8 +3,8 @@ import fc from 'fast-check';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 
 UnitTest.test('ObjEachTest', function () {
-  const check = function <T> (expected: Array<{index: string, value: T}>, input: Record<string, T>) {
-    const values: Array<{index: string, value: T}> = [];
+  const check = function <T> (expected: Array<{index: string; value: T}>, input: Record<string, T>) {
+    const values: Array<{index: string; value: T}> = [];
     Obj.each(input, function (x, i) {
       values.push({ index: i, value: x });
     });

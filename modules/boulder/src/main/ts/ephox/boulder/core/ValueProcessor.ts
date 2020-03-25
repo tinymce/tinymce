@@ -25,8 +25,8 @@ export interface ValueProcessorAdt {
     state: StateValueProcessor<T>
   ) => T;
   match: <T>(branches: {
-    field: FieldValueProcessor<T>,
-    state: StateValueProcessor<T>
+    field: FieldValueProcessor<T>;
+    state: StateValueProcessor<T>;
   }) => T;
   log: (label: string) => void;
 }

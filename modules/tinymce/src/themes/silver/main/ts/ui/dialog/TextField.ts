@@ -125,7 +125,7 @@ export interface TextField {
   disabled: boolean;
   validation: Option<{
     validator: Validator;
-    validateOnLoad?: boolean
+    validateOnLoad?: boolean;
   }>;
   maximized: boolean;
 }

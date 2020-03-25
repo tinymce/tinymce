@@ -18,8 +18,8 @@ export interface Retries {
     retry: RetryHandler<T>
   ) => T;
   match: <T>(branches: {
-    none: NoneHandler<T>,
-    retry: RetryHandler<T>
+    none: NoneHandler<T>;
+    retry: RetryHandler<T>;
   }) => T;
   log: (label: string) => void;
 }

@@ -12,7 +12,7 @@ export interface StringMap {
   [key: string]: string;
 }
 
-type ClassList = Array<{title: string, value: string}>;
+type ClassList = Array<{title: string; value: string}>;
 type ColorPickerCallback = (editor: Editor, pickValue: (value: string) => void, value: string) => void;
 
 const defaultTableToolbar = 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol';

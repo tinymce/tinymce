@@ -19,7 +19,7 @@ UnitTest.test('RecalculationsTest', function () {
     }>;
   }
 
-  const expectedParts: (widths: {element: string, width: number}[], heights: {element: string, height: number}[]) => Parts = Struct.immutable('widths', 'heights');
+  const expectedParts: (widths: {element: string; width: number}[], heights: {element: string; height: number}[]) => Parts = Struct.immutable('widths', 'heights');
 
   const check = function (expected: Parts[], input: Structs.RowData<Structs.Detail>[], sizes: Structs.Dimensions) {
     const warehouse = Warehouse.generate(input);

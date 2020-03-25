@@ -63,7 +63,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
       return frame.element().dom().contentWindow;
     });
 
-    const cSetPath = (rawPath: { startPath: number[]; soffset: number; finishPath: number[]; foffset: number; }) => {
+    const cSetPath = (rawPath: { startPath: number[]; soffset: number; finishPath: number[]; foffset: number }) => {
       const path = Cursors.path(rawPath);
 
       return Chain.binder((win: Window) => {

@@ -17,7 +17,7 @@ import { bodyChannel } from './DialogChannels';
 
 // TypeScript allows some pretty weird stuff.
 type WindowBodySpec = {
-  body: Types.Dialog.Dialog<unknown>['body']
+  body: Types.Dialog.Dialog<unknown>['body'];
 };
 
 // ariaAttrs is being passed through to silver inline dialog

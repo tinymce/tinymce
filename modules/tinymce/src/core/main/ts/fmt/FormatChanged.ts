@@ -12,9 +12,9 @@ import Tools from '../api/util/Tools';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
 
-export type FormatChangeCallback = (state: boolean, data: { node: Node, format: string, parents: any }) => void;
+export type FormatChangeCallback = (state: boolean, data: { node: Node; format: string; parents: any }) => void;
 type FormatCallbacks = Record<string, FormatChangeCallback[]>;
-type FormatData = { similar?: boolean, callbacks: FormatChangeCallback[] };
+type FormatData = { similar?: boolean; callbacks: FormatChangeCallback[] };
 type RegisteredFormats = Record<string, FormatData>;
 
 const setup = (registeredFormatListeners: Cell<RegisteredFormats>, editor: Editor) => {

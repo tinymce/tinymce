@@ -10,7 +10,7 @@ const comparison = Adt.generate([
 ]);
 
 /** partition :: [Result a] -> { errors: [String], values: [a] } */
-export const partition = function <T, E> (results: Result<T, E>[]): { values: T[], errors: E[] } {
+export const partition = function <T, E> (results: Result<T, E>[]): { values: T[]; errors: E[] } {
   const errors: E[] = [];
   const values: T[] = [];
 

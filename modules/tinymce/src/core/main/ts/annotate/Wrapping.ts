@@ -23,8 +23,8 @@ export type Decorator = (
   uid: string,
   data: DecoratorData
 ) => {
-  attributes?: { },
-  classes?: string[]
+  attributes?: { };
+  classes?: string[];
 };
 
 const applyWordGrab = (editor: Editor, rng: Range): void => {

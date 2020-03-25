@@ -9,7 +9,7 @@ export interface InDragEvent {
 
 interface InDragEvents {
   registry: {
-    move: Bindable<InDragEvent>
+    move: Bindable<InDragEvent>;
   };
   trigger: {
     move: (info: Position) => void;

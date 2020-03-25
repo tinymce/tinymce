@@ -54,8 +54,8 @@ export interface SchemaElement extends ElementRule {
   pattern?: RegExp;
 }
 
-export type SchemaMap = { [name: string]: {}; };
-export type SchemaRegExpMap = { [name: string]: RegExp; };
+export type SchemaMap = { [name: string]: {} };
+export type SchemaRegExpMap = { [name: string]: RegExp };
 
 interface Schema {
   children: Record<string, {}>;

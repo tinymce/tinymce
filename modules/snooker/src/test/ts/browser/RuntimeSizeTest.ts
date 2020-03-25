@@ -38,7 +38,7 @@ UnitTest.test('Runtime Size Test', function () {
     Css.set(table, 'height', value);
   };
 
-  const resizeTableBy = function (table: Element, setSize: (e: Element, v: string) => void, tableInfo: { total: number, cells: number[] }, delta: number) {
+  const resizeTableBy = function (table: Element, setSize: (e: Element, v: string) => void, tableInfo: { total: number; cells: number[] }, delta: number) {
     setSize(table, '');
     Arr.map(SelectorFilter.descendants(table, 'td'), function (cell, i) {
       setSize(cell, (tableInfo.cells[i] + delta) + 'px');
@@ -50,7 +50,7 @@ UnitTest.test('Runtime Size Test', function () {
     assert.eq(true, Math.abs(a - b) <= 1, msg);
   };
 
-  const assertSize = function (s1: { total: number, cells: number[] }, table: Element, getOuterSize: (e: Element) => number, message: string) {
+  const assertSize = function (s1: { total: number; cells: number[] }, table: Element, getOuterSize: (e: Element) => number, message: string) {
     const s2 = measureTable(table, getOuterSize);
     const cellAssertEq = platform.browser.isIE() || platform.browser.isEdge() ? fuzzyAssertEq : assert.eq;
 
@@ -182,7 +182,7 @@ UnitTest.test('Runtime Size Test', function () {
     return table;
   };
 
-  const resizeModel = function (size: { total: number, cells: number[] }, delta: number) {
+  const resizeModel = function (size: { total: number; cells: number[] }, delta: number) {
     const deltaTotal = delta * size.cells.length;
     const cells = Arr.map(size.cells, function (cz) {
       return cz + delta;

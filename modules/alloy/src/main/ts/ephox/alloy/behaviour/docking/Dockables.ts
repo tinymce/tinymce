@@ -19,9 +19,9 @@ export interface MorphAdt {
     fixed: FixedMorph<T>
   ) => T;
   match: <T> (branches: {
-    static: StaticMorph<T>,
-    absolute: AbsoluteMorph<T>,
-    fixed: FixedMorph<T>,
+    static: StaticMorph<T>;
+    absolute: AbsoluteMorph<T>;
+    fixed: FixedMorph<T>;
   }) => T;
   log: (label: string) => void;
 }

@@ -6,7 +6,7 @@ import { TargetMergable } from '../../../../../../main/ts/ephox/snooker/model/Ru
 
 // Mock/Stub out helper functions
 
-const targetStub = function (selection: { section: number, row: number, column: number}[], bounds: { startRow: number, startCol: number, finishRow: number, finishCol: number}, table: Element): TargetMergable {
+const targetStub = function (selection: { section: number; row: number; column: number}[], bounds: { startRow: number; startCol: number; finishRow: number; finishCol: number}, table: Element): TargetMergable {
   const cells = Options.cat(Arr.map(selection, function (path) {
     return Hierarchy.follow(table, [ path.section, path.row, path.column ]);
   }));

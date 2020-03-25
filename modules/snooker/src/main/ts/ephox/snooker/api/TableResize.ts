@@ -17,9 +17,9 @@ export interface AfterTableResizeEvent {
 }
 
 type TableResizeEventRegistry = {
-  readonly beforeResize: Bindable<BeforeTableResizeEvent>,
-  readonly afterResize: Bindable<AfterTableResizeEvent>,
-  readonly startDrag: Bindable<{}>
+  readonly beforeResize: Bindable<BeforeTableResizeEvent>;
+  readonly afterResize: Bindable<AfterTableResizeEvent>;
+  readonly startDrag: Bindable<{}>;
 };
 
 interface TableResizeEvents {

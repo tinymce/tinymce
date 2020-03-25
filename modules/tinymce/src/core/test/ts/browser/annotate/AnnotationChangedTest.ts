@@ -11,15 +11,15 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
 
   Theme();
 
-  const changes: Cell<Array<{state: boolean, name: string, uid: string}>> = Cell([ ]);
+  const changes: Cell<Array<{state: boolean; name: string; uid: string}>> = Cell([ ]);
 
-  const sAssertChanges = <T> (message: string, expected: Array<{uid: string, state: boolean, name: string}>): Step<T, T> =>
+  const sAssertChanges = <T> (message: string, expected: Array<{uid: string; state: boolean; name: string}>): Step<T, T> =>
     Logger.t(
       message,
       // Use a chain so that changes.get() can be evaluated at run-time.
       Chain.asStep({ }, [
         Chain.injectThunked(changes.get),
-        Chain.op((cs: Array<{uid: string, name: string}>) => {
+        Chain.op((cs: Array<{uid: string; name: string}>) => {
           Assertions.assertEq('Checking changes', expected, cs);
         })
       ])
@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
   TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
-    const sTestAnnotationEvents = <T> (label: string, start: number[], soffset: number, expected: Array<{ uid: string, name: string, state: boolean}>): Step<T, T> => {
+    const sTestAnnotationEvents = <T> (label: string, start: number[], soffset: number, expected: Array<{ uid: string; name: string; state: boolean}>): Step<T, T> => {
       return StepSequence.sequenceSame<T>([
         tinyApis.sSetSelection(start, soffset, start, soffset),
         Waiter.sTryUntil(

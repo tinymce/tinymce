@@ -20,10 +20,10 @@ export interface CellLocation {
     last: LastHandler<T>
   ) => T;
   match: <T> (branches: {
-    none: NoneHandler<T>,
-    first: FirstHandler<T>,
-    middle: MiddleHandler<T>,
-    last: LastHandler<T>
+    none: NoneHandler<T>;
+    first: FirstHandler<T>;
+    middle: MiddleHandler<T>;
+    last: LastHandler<T>;
   }) => T;
   log: (label: string) => void;
 }

@@ -16,10 +16,10 @@ export interface BeforeAfter {
     failedDown: FailedDownHandler<T>,
   ) => T;
   match: <T>(branches: {
-    none: NoneHandler<T>,
-    success: SuccessHandler<T>,
-    failedUp: FailedUpHandler<T>,
-    failedDown: FailedDownHandler<T>,
+    none: NoneHandler<T>;
+    success: SuccessHandler<T>;
+    failedUp: FailedUpHandler<T>;
+    failedDown: FailedDownHandler<T>;
   }) => T;
   log: (label: string) => void;
 }

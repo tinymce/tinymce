@@ -111,7 +111,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     }
   });
 
-  interface CellSize { cell: HTMLTableCellElement; width: string; }
+  interface CellSize { cell: HTMLTableCellElement; width: string }
 
   editor.on('ObjectResized', function (e) {
     const targetElm = e.target;

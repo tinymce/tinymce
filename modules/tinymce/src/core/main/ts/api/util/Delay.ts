@@ -9,7 +9,7 @@ import { clearInterval, clearTimeout, document, HTMLElement, setInterval, setTim
 import Editor from '../Editor';
 import Promise from './Promise';
 
-type DebounceFunc = (...args: any[]) => { stop: () => void; };
+type DebounceFunc = (...args: any[]) => { stop: () => void };
 
 interface Delay {
   requestAnimationFrame (callback: () => void, element?: HTMLElement): void;

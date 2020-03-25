@@ -14,7 +14,7 @@ export interface FancyMenuItem {
 }
 
 export interface FancyActionArgsMap {
-  'inserttable': { numRows: Number, numColumns: Number };
+  'inserttable': { numRows: Number; numColumns: Number };
   'colorswatch': { value: string };
 }
 

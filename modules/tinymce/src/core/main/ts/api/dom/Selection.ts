@@ -521,7 +521,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
    * @param {String} selector CSS selector to check for.
    * @param {function} callback Callback with state and args when the selector is matches or not.
    */
-  const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node, selector: String, parents: Element[] }) => void) => {
+  const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node; selector: String; parents: Element[] }) => void) => {
     selectorChangedWithUnbind(selector, callback);
     return exports;
   };
