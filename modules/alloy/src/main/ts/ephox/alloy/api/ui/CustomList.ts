@@ -50,7 +50,7 @@ const factory: CompositeSketchFactory<CustomListDetail, CustomListSpec> = (detai
 
   // In shell mode, the group overrides need to be added to the main container, and there can be no children
   const extra: {
-    behaviours: Array<NamedConfiguredBehaviour<any, any>>,
+    behaviours: Array<NamedConfiguredBehaviour<any, any>>;
     components: AlloySpec[];
   } = detail.shell ? { behaviours: [ Replacing.config({ }) ], components: [ ] } : { behaviours: [ ], components };
 

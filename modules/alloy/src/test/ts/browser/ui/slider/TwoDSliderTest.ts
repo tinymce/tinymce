@@ -188,7 +188,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       );
     });
 
-    const cCheckValue = (expected: { x: number; y: number; }) => {
+    const cCheckValue = (expected: { x: number; y: number }) => {
       return Chain.op((parts: any) => {
         const v = Representing.getValue(parts.sliderComp);
         Assert.eq('Checking slider value', expected.x, v.x());
@@ -196,7 +196,7 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       });
     };
 
-    const sAssertValue = (label: string, expected: { x: number; y: number; }) => {
+    const sAssertValue = (label: string, expected: { x: number; y: number }) => {
       return Logger.t(label, Step.sync(() => {
         const v = Representing.getValue(component);
         Assert.eq(label, expected.x, v.x());

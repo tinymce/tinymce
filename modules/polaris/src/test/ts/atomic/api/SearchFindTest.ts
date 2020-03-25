@@ -14,7 +14,7 @@ UnitTest.test('api.Search.findall (using api.Pattern)', function () {
       assert.eq(exp[1], actual[i].finish());
     });
   };
-  const testData: (pattern: PRegExp, name: string) => { pattern: () => PRegExp, name: () => string } = Struct.immutable('pattern', 'name');
+  const testData: (pattern: PRegExp, name: string) => { pattern: () => PRegExp; name: () => string } = Struct.immutable('pattern', 'name');
 
   const checkMany = function (expected: [number, number, string][], text: string, targets: ReturnType<typeof testData>[]) {
     const actual = Search.findmany(text, targets);

@@ -52,9 +52,9 @@ export interface DomQueryConstructor {
     attrHandle: {};
     find: {};
     relative: Record<string, { dir: string; first?: boolean }>;
-    preFilter: Record<string, any>
-    filter: Record<string, any>
-    pseudos: Record<string, any>
+    preFilter: Record<string, any>;
+    filter: Record<string, any>;
+    pseudos: Record<string, any>;
   };
 
   // Tools

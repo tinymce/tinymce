@@ -16,7 +16,7 @@ export interface XHRSettings {
   content_type?: string;
   crossDomain?: boolean;
   data?: string;
-  requestheaders?: Record<string, { key: string, value: string}>;
+  requestheaders?: Record<string, { key: string; value: string}>;
   scope?: {};
   type?: string;
   url: string;

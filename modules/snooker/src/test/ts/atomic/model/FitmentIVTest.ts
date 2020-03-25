@@ -177,7 +177,7 @@ UnitTest.test('FitmentIVTest', function () {
       }
     };
 
-    const queryliser2000 = function (result: Result<Structs.RowCells[], string>, s: Structs.Address, specA: { rows: () => number, cols: () => number, grid: () => Structs.ElementNew[][] }, specB: { rows: () => number, cols: () => number, grid: () => Structs.ElementNew[][] }) {
+    const queryliser2000 = function (result: Result<Structs.RowCells[], string>, s: Structs.Address, specA: { rows: () => number; cols: () => number; grid: () => Structs.ElementNew[][] }, specB: { rows: () => number; cols: () => number; grid: () => Structs.ElementNew[][] }) {
       // expect to see some cell from specB at some address on specA
       const offsetRow = s.row();
       const offsetCol = s.column();

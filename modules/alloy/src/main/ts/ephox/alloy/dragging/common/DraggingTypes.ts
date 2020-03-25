@@ -78,7 +78,7 @@ export interface DraggingConfig<E> {
   readonly getBounds: () => Bounds;
   readonly blockerClass: string;
   readonly dragger: {
-    readonly handlers: (dragConfig: DraggingConfig<E>, dragState: DraggingState) => AlloyEvents.AlloyEventRecord
+    readonly handlers: (dragConfig: DraggingConfig<E>, dragState: DraggingState) => AlloyEvents.AlloyEventRecord;
   };
 }
 

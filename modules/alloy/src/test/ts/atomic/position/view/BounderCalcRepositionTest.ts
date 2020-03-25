@@ -42,7 +42,7 @@ UnitTest.test('BounderCalcRepositionTest', () => {
   Jsc.property(
     'Check that all values have something visible within bounds',
     arbTestCase,
-    (input: { newX: number, newY: number, width: number, height: number, boundsX: number, boundsY: number, boundsW: number, boundsH: number}) => {
+    (input: { newX: number; newY: number; width: number; height: number; boundsX: number; boundsY: number; boundsW: number; boundsH: number}) => {
       const bounds = makeBounds(input.boundsX, input.boundsY, input.boundsW, input.boundsH);
       const output = Bounder.calcReposition(input.newX, input.newY, input.width, input.height, bounds);
 

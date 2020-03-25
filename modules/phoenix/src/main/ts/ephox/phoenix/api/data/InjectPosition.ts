@@ -12,11 +12,11 @@ export interface InjectPosition<E> {
     onInvalid: InvalidHandler<E, U>
   ) => U;
   match: <U> (branches: {
-    before: InjectPositionHandler<E, U>,
-    after: InjectPositionHandler<E, U>,
-    rest: InjectPositionHandler<E, U>,
-    last: InjectPositionHandler<E, U>,
-    invalid: InvalidHandler<E, U>,
+    before: InjectPositionHandler<E, U>;
+    after: InjectPositionHandler<E, U>;
+    rest: InjectPositionHandler<E, U>;
+    last: InjectPositionHandler<E, U>;
+    invalid: InvalidHandler<E, U>;
   }) => U;
   log: (label: string) => void;
 }

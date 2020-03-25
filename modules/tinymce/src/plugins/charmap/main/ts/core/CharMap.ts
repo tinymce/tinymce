@@ -15,8 +15,8 @@ const isArray = Tools.isArray;
 export const UserDefined = 'User Defined';
 
 export type CharMap = {
-  name: string,
-  characters: [number, string][]
+  name: string;
+  characters: [number, string][];
 };
 
 const getDefaultCharMap = function (): CharMap[] {

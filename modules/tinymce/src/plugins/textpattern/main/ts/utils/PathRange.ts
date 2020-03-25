@@ -40,7 +40,7 @@ const generatePathRange = (root: Node, startNode: Node, startOffset: number, end
   return { start, end };
 };
 
-const resolvePath = (root: Node, path: number[]): Option<{node: Node, offset: number}> => {
+const resolvePath = (root: Node, path: number[]): Option<{node: Node; offset: number}> => {
   const nodePath = path.slice();
   const offset = nodePath.pop();
   return Arr.foldl(nodePath, (optNode: Option<Node>, index: number) => {

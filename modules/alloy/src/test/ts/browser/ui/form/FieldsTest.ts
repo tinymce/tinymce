@@ -21,7 +21,7 @@ import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 
 UnitTest.asynctest('FieldsTest', (success, failure) => {
 
-  const renderChoice = (choiceSpec: { value: string; text: string; }): AlloySpec & { value: string } => {
+  const renderChoice = (choiceSpec: { value: string; text: string }): AlloySpec & { value: string } => {
     return {
       value: choiceSpec.value,
       dom: {

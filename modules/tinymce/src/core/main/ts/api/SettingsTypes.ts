@@ -23,7 +23,7 @@ export type SetupCallback = (editor: Editor) => void;
 
 export type FilePickerCallback = (callback: Function, value: any, meta: Record<string, any>) => void;
 export type FilePickerValidationStatus = 'valid' | 'unknown' | 'invalid' | 'none';
-export type FilePickerValidationCallback = (info: { type: string, url: string }, callback: (validation: { status: FilePickerValidationStatus, message: string}) => void) => void;
+export type FilePickerValidationCallback = (info: { type: string; url: string }, callback: (validation: { status: FilePickerValidationStatus; message: string}) => void) => void;
 
 // dom-globals is outdated and missing a number of valid values
 export type ReferrerPolicy = DomReferrerPolicy | 'origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin';
@@ -127,7 +127,7 @@ export interface RawEditorSettings {
   language_url?: string;
   max_height?: number;
   max_width?: number;
-  menu?: Record<string, { title: string, items: string }>;
+  menu?: Record<string, { title: string; items: string }>;
   menubar?: boolean | string;
   min_height?: number;
   min_width?: number;

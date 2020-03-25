@@ -4,9 +4,9 @@ import Jsc from '@ephox/wrap-jsverify';
 import { Editor } from '../alien/EditorTypes';
 
 type ContentGenerator = any;
-type SelectionExclusions = { containers: (container: Element) => boolean; };
+type SelectionExclusions = { containers: (container: Element) => boolean };
 type ArbScenarioOptions = { exclusions: SelectionExclusions };
-type AsyncPropertyOptions = { scenario: ArbScenarioOptions, property: Record<string, any> };
+type AsyncPropertyOptions = { scenario: ArbScenarioOptions; property: Record<string, any> };
 
 interface Scenario {
   input: string;

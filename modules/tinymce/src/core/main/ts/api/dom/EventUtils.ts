@@ -255,7 +255,7 @@ class EventUtils {
   private readonly expando;
   private hasFocusIn: boolean;
   private hasMouseEnterLeave: boolean;
-  private mouseEnterLeave: { mouseenter: 'mouseover', mouseleave: 'mouseout' };
+  private mouseEnterLeave: { mouseenter: 'mouseover'; mouseleave: 'mouseout' };
   private count: number = 1;
 
   public constructor() {

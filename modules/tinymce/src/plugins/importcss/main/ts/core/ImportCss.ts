@@ -19,8 +19,8 @@ interface Group {
   selectors: {};
   filter: (value: string) => boolean;
   item: {
-    text: string,
-    menu: []
+    text: string;
+    menu: [];
   };
 }
 

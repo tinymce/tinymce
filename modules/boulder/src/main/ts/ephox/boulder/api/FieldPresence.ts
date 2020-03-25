@@ -16,7 +16,7 @@ export interface FieldPresenceAdt {
   match: <T>(branches: {
     strict: StrictField<T>;
     defaultedThunk: DefaultedThunkField<T>;
-    asOption: AsOptionField<T>,
+    asOption: AsOptionField<T>;
     asDefaultedOptionThunk: AsDefaultedOptionThunkField<T>;
     mergeWithThunk: MergeWithThunkField<T>;
   }) => T;

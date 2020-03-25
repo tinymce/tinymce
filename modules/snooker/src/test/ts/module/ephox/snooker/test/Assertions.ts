@@ -14,7 +14,7 @@ import { HTMLTableElement, HTMLTableDataCellElement, HTMLTableHeaderCellElement 
 
 type Op<T> = (wire: ResizeWire, table: Element, target: T, generators: Generators, direction: BarPositions<ColInfo>) => Option<RunOperationOutput>;
 
-const checkOld = function <T> (expCell: { section: number, row: number, column: number }, expectedHtml: string, input: string, operation: Op<TargetElement>, section: number, row: number, column: number, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
+const checkOld = function <T> (expCell: { section: number; row: number; column: number }, expectedHtml: string, input: string, operation: Op<TargetElement>, section: number, row: number, column: number, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
   const table = Element.fromHtml<HTMLTableElement>(input);
   Insert.append(Body.body(), table);
   const wire = ResizeWire.only(Body.body());
@@ -59,7 +59,7 @@ const checkPaste = function (expectedHtml: string, input: string, pasteHtml: str
   Bars.destroy(wire);
 };
 
-const checkStructure = function (expCell: { section: number, row: number, column: number}, expected: string[][], input: string, operation: Op<TargetElement>, section: number, row: number, column: number, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
+const checkStructure = function (expCell: { section: number; row: number; column: number}, expected: string[][], input: string, operation: Op<TargetElement>, section: number, row: number, column: number, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
   const table = Element.fromHtml<HTMLTableElement>(input);
   Insert.append(Body.body(), table);
   const wire = ResizeWire.only(Body.body());
@@ -79,7 +79,7 @@ const checkStructure = function (expCell: { section: number, row: number, column
   Bars.destroy(wire);
 };
 
-const checkDelete = function (optExpCell: Option<{ section: number, row: number, column: number }>, optExpectedHtml: Option<{ ie: string, normal: string }>, input: string, operation: Op<TargetSelection>, cells: { section: number, row: number, column: number }[], platform: ReturnType<typeof PlatformDetection.detect>, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
+const checkDelete = function (optExpCell: Option<{ section: number; row: number; column: number }>, optExpectedHtml: Option<{ ie: string; normal: string }>, input: string, operation: Op<TargetSelection>, cells: { section: number; row: number; column: number }[], platform: ReturnType<typeof PlatformDetection.detect>, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
   const table = Element.fromHtml<HTMLTableElement>(input);
   Insert.append(Body.body(), table);
   const wire = ResizeWire.only(Body.body());
@@ -120,7 +120,7 @@ const checkDelete = function (optExpCell: Option<{ section: number, row: number,
   Bars.destroy(wire);
 };
 
-const checkMerge = function (label: string, expected: string, input: string, selection: {section: number, row: number, column: number}[], bounds: {startRow: number, startCol: number, finishRow: number, finishCol: number}, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
+const checkMerge = function (label: string, expected: string, input: string, selection: {section: number; row: number; column: number}[], bounds: {startRow: number; startCol: number; finishRow: number; finishCol: number}, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
   const table = Element.fromHtml<HTMLTableElement>(input);
   const expectedDom = Element.fromHtml(expected);
 
@@ -147,7 +147,7 @@ const checkMerge = function (label: string, expected: string, input: string, sel
   Bars.destroy(wire);
 };
 
-const checkUnmerge = function (expected: string, input: string, unmergablePaths: { section: number, row: number, column: number }[], direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
+const checkUnmerge = function (expected: string, input: string, unmergablePaths: { section: number; row: number; column: number }[], direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
   const table = Element.fromHtml<HTMLTableElement>(input);
   Insert.append(Body.body(), table);
   const wire = ResizeWire.only(Body.body());

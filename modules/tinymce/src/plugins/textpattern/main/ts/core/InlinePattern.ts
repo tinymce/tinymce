@@ -222,7 +222,7 @@ const applyPatternWithContent = (editor: Editor, pattern: InlinePattern, startMa
   applyPattern(editor, pattern, patternRange);
 };
 
-const addMarkers = (dom: DOMUtils, matches: InlinePatternMatch[]): (InlinePatternMatch & { endMarker: Marker, startMarker: Marker })[] => {
+const addMarkers = (dom: DOMUtils, matches: InlinePatternMatch[]): (InlinePatternMatch & { endMarker: Marker; startMarker: Marker })[] => {
   const markerPrefix = Id.generate('mce_textpattern');
 
   // Add end markers

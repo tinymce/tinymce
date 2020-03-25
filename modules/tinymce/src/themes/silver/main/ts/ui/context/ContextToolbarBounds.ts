@@ -11,7 +11,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { window } from '@ephox/dom-globals';
 import * as Settings from '../../api/Settings';
 
-const getHorizontalBounds = (contentAreaBox: Bounds, viewportBounds: Bounds): { x: number, width: number } => {
+const getHorizontalBounds = (contentAreaBox: Bounds, viewportBounds: Bounds): { x: number; width: number } => {
   const x = Math.max(viewportBounds.x, contentAreaBox.x);
   const contentBoxWidth = contentAreaBox.right - x;
   const maxViewportWidth = viewportBounds.width - (x - viewportBounds.x);
@@ -19,7 +19,7 @@ const getHorizontalBounds = (contentAreaBox: Bounds, viewportBounds: Bounds): { 
   return { x, width };
 };
 
-const getVerticalBounds = (editor: Editor, contentAreaBox: Bounds, viewportBounds: Bounds): { y: number, bottom: number } => {
+const getVerticalBounds = (editor: Editor, contentAreaBox: Bounds, viewportBounds: Bounds): { y: number; bottom: number } => {
   const container = Element.fromDom(editor.getContainer());
   const header = SelectorFind.descendant(container, '.tox-editor-header').getOr(container);
   const headerBox = Boxes.box(header);

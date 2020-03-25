@@ -473,7 +473,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return $elm[0] && $elm[0].style ? $elm[0].style[name] : undefined;
   };
 
-  const getSize = (elm: HTMLElement | string): {w: number, h: number} => {
+  const getSize = (elm: HTMLElement | string): {w: number; h: number} => {
     let w, h;
 
     elm = get(elm);

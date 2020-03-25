@@ -6,7 +6,7 @@ import Jsc from '@ephox/wrap-jsverify';
 import * as AlloyParts from 'ephox/alloy/parts/AlloyParts';
 import * as PartType from 'ephox/alloy/parts/PartType';
 
-type TestSpec = { defaultValue: number; overriddenValue: number; };
+type TestSpec = { defaultValue: number; overriddenValue: number };
 
 UnitTest.test('Atomic Test: parts.SchemasTest', () => {
   const internal = PartType.required<any, TestSpec>({

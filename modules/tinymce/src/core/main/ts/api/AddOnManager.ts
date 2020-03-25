@@ -77,7 +77,7 @@ import I18n from './util/I18n';
  * });
  */
 
-export interface UrlObject { prefix: string; resource: string; suffix: string; }
+export interface UrlObject { prefix: string; resource: string; suffix: string }
 
 type WaitState = 'added' | 'loaded';
 
@@ -90,7 +90,7 @@ interface AddOnManager<T> {
   items: AddOnConstructor<T>[];
   urls: Record<string, string>;
   lookup: Record<string, { instance: AddOnConstructor<T>; dependencies?: string[] }>;
-  _listeners: { name: string, state: WaitState, callback: () => void }[];
+  _listeners: { name: string; state: WaitState; callback: () => void }[];
   get (name: string): AddOnConstructor<T>;
   dependencies (name: string): string[];
   requireLangPack (name: string, languages: string): void;

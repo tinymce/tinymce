@@ -9,7 +9,7 @@ import { Arr, Obj } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { SelectData } from './BespokeSelect';
 
-const process = (rawFormats): Array<{ title: string, format: string}> => {
+const process = (rawFormats): Array<{ title: string; format: string}> => {
   return Arr.map(rawFormats, (item) => {
     let title = item, format = item;
     // Allow text=value block formats

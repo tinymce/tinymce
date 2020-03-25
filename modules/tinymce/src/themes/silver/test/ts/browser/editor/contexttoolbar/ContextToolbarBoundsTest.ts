@@ -58,8 +58,8 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
     label: string;
     settings: Record<string, any>;
     scroll?: {
-      relativeTop: boolean,
-      delta: number
+      relativeTop: boolean;
+      delta: number;
     };
     assertBounds: (currentBounds: TestBounds) => {
       x: number;

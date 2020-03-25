@@ -29,8 +29,8 @@ export interface SplitSlidingToolbarSpec extends SplitToolbarBaseSpec {
   onClosed?: (comp: AlloyComponent) => void;
 
   parts: {
-    'overflow-group': Partial<ToolbarGroupSpec>,
-    'overflow-button': Partial<SimpleOrSketchSpec>
+    'overflow-group': Partial<ToolbarGroupSpec>;
+    'overflow-button': Partial<SimpleOrSketchSpec>;
   };
 }
 

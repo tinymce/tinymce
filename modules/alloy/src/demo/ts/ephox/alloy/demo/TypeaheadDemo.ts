@@ -65,9 +65,9 @@ export default (): void => {
   };
 
   const sketchTypeahead = (model: {
-    selectsOver: boolean,
-    getDisplayText: (data: TypeaheadData) => string,
-    populateFromBrowse: boolean
+    selectsOver: boolean;
+    getDisplayText: (data: TypeaheadData) => string;
+    populateFromBrowse: boolean;
   }) => {
     return Typeahead.sketch({
       minChars: 1,

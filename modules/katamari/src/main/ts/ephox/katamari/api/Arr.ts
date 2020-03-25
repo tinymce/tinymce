@@ -87,7 +87,7 @@ export const eachr = <T>(xs: ArrayLike<T>, f: ArrayMorphism<T, void>): void => {
   }
 };
 
-export const partition = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): { pass: T[], fail: T[] } => {
+export const partition = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): { pass: T[]; fail: T[] } => {
   const pass: T[] = [];
   const fail: T[] = [];
   for (let i = 0, len = xs.length; i < len; i++) {
@@ -100,7 +100,7 @@ export const partition = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): {
 
 export const filter: {
   <T, Q extends T>(xs: ArrayLike<T>, pred: (x: T, i: number) => x is Q): Q[];
-  <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[]
+  <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[];
 } = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[] => {
   const r: T[] = [];
   for (let i = 0, len = xs.length; i < len; i++) {

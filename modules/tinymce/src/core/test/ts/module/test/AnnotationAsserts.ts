@@ -24,7 +24,7 @@ const sAssertHtmlContent = <T> (tinyApis: TinyApis, children: string[]): Step<T,
   );
 };
 
-const assertMarker = (editor: Editor, expected: { uid: string, name: string}, nodes: Element[]) => {
+const assertMarker = (editor: Editor, expected: { uid: string; name: string}, nodes: Element[]) => {
   const { uid, name } = expected;
   Arr.each(nodes, (node) => {
     Assertions.assertEq('Wrapper must be in content', true, editor.getBody().contains(node));

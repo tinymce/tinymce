@@ -15,11 +15,11 @@ export interface ColumnContext {
     right: RightHandler<T>,
   ) => T;
   match: <T> (branches: {
-    none: NoneHandler<T>,
-    only: OnlyHandler<T>,
-    left: LeftHandler<T>,
-    middle: MiddleHandler<T>,
-    right: RightHandler<T>,
+    none: NoneHandler<T>;
+    only: OnlyHandler<T>;
+    left: LeftHandler<T>;
+    middle: MiddleHandler<T>;
+    right: RightHandler<T>;
   }) => T;
   log: (label: string) => void;
 }

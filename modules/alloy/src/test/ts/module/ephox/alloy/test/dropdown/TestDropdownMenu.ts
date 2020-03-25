@@ -27,7 +27,7 @@ const renderMenu = (spec: { value: string; text?: string; items: ItemSpec[] }): 
   };
 };
 
-const renderItem = (spec: { type: any, widget?: any, data: { value: string, meta: any }, hasSubmenu?: boolean}): ItemSpec => {
+const renderItem = (spec: { type: any; widget?: any; data: { value: string; meta: any }; hasSubmenu?: boolean}): ItemSpec => {
   return spec.type === 'widget' ? {
     type: 'widget',
     data: spec.data,

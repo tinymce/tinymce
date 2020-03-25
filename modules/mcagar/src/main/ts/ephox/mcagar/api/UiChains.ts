@@ -34,7 +34,7 @@ const cGetToolbarRoot: Chain<Editor, Element> = NamedChain.asChain([
   NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
   NamedChain.direct('editor', cToolstripRoot, 'container'),
   NamedChain.merge([ 'editor', 'container' ], 'data'),
-  NamedChain.direct('data', Chain.binder((data: { editor: Editor, container: Element<HTMLElement> }) => {
+  NamedChain.direct('data', Chain.binder((data: { editor: Editor; container: Element<HTMLElement> }) => {
     return UiFinder.findIn(data.container, getThemeSelectors().toolBarSelector(data.editor));
   }), 'toolbar'),
   NamedChain.output('toolbar')

@@ -17,14 +17,14 @@ export interface CursorPath {
   foffset: () => number;
 }
 
-const range = (obj: { start: Element<any>; soffset: number; finish: Element<any>; foffset: number; }): CursorRange => ({
+const range = (obj: { start: Element<any>; soffset: number; finish: Element<any>; foffset: number }): CursorRange => ({
   start: Fun.constant(obj.start),
   soffset: Fun.constant(obj.soffset),
   finish: Fun.constant(obj.finish),
   foffset: Fun.constant(obj.foffset)
 });
 
-const path = (obj: { startPath: number[]; soffset: number; finishPath: number[]; foffset: number; }): CursorPath => ({
+const path = (obj: { startPath: number[]; soffset: number; finishPath: number[]; foffset: number }): CursorPath => ({
   startPath: Fun.constant(obj.startPath),
   soffset: Fun.constant(obj.soffset),
   finishPath: Fun.constant(obj.finishPath),

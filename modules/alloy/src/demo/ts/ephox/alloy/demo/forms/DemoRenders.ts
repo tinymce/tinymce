@@ -17,7 +17,7 @@ export interface DemoItem {
       text: string;
 
       [key: string]: string;
-    }
+    };
   };
 
   [key: string]: any;
@@ -31,7 +31,7 @@ export interface DemoSeparatorItem {
     meta?: {
       text: string;
       [key: string]: string;
-    }
+    };
   };
 }
 
@@ -89,7 +89,7 @@ const demoGridMenu = ValueSchema.objOf([
 
 const demoChoice = ValueSchema.objOf([ ]);
 
-const choice = (choiceSpec: { value: string; text: string; }) => {
+const choice = (choiceSpec: { value: string; text: string }) => {
   const spec = ValueSchema.asRawOrDie('DemoRenders.choice', demoChoice, choiceSpec);
   return {
     dom: DomFactory.fromHtml(
@@ -259,7 +259,7 @@ const orb = (spec: DemoItem): ItemSpec => {
   };
 };
 
-const toolbarItem = (spec: { text: string; action: () => void; }) => {
+const toolbarItem = (spec: { text: string; action: () => void }) => {
   return {
     dom: {
       tag: 'span',

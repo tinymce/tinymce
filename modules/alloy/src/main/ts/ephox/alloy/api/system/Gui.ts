@@ -160,7 +160,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
     Remove.remove(root.element());
   };
 
-  const broadcastData = (data: { universal: () => boolean, data: () => any, channels?: () => string[] }) => {
+  const broadcastData = (data: { universal: () => boolean; data: () => any; channels?: () => string[] }) => {
     const receivers = registry.filter(SystemEvents.receive());
     Arr.each(receivers, (receiver) => {
       const descHandler = receiver.descHandler();

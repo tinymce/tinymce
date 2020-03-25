@@ -62,7 +62,7 @@ export interface ImageDialogData {
       hspace?: string;
       borderstyle?: string;
       isDecorative?: boolean;
-    }
+    };
   };
   images: string;
   alt: string;

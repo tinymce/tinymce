@@ -12,8 +12,8 @@ export interface SelectionDirection {
     rtl: SelectionDirectionHandler<U>
   ) => U;
   match: <U> (branches: {
-    ltr: SelectionDirectionHandler<U>,
-    rtl: SelectionDirectionHandler<U>
+    ltr: SelectionDirectionHandler<U>;
+    rtl: SelectionDirectionHandler<U>;
   }) => U;
   log: (label: string) => void;
 }
@@ -21,8 +21,8 @@ export interface SelectionDirection {
 type SelectionDirectionConstructor = (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => SelectionDirection;
 
 const adt: {
-  ltr: SelectionDirectionConstructor,
-  rtl: SelectionDirectionConstructor
+  ltr: SelectionDirectionConstructor;
+  rtl: SelectionDirectionConstructor;
 } = Adt.generate([
   { ltr: [ 'start', 'soffset', 'finish', 'foffset' ] },
   { rtl: [ 'start', 'soffset', 'finish', 'foffset' ] }

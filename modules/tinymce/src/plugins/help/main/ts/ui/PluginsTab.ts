@@ -52,7 +52,7 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
       '</div>';
   };
 
-  const makeLink = (p: {name: string, url: string}): string =>
+  const makeLink = (p: {name: string; url: string}): string =>
     `<a href="${p.url}" target="_blank" rel="noopener">${p.name}</a>`;
 
   const maybeUrlize = (editor, key: string) => {

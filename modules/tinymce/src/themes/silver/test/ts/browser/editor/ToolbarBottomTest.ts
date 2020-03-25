@@ -13,7 +13,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
   interface Scenario {
     message: string;
     settings: EditorSettings;
-    initial: Array<{ clickOn: string, waitFor: string }>;
+    initial: Array<{ clickOn: string; waitFor: string }>;
     assertAbove: string;
     assertBelow: string;
   }

@@ -9,7 +9,7 @@ export interface DragEvent extends DragDistanceEvent {
 
 interface DragDistanceEvents {
   registry: {
-    drag: Bindable<DragEvent>
+    drag: Bindable<DragEvent>;
   };
   trigger: {
     drag: (xDelta: number, yDelta: number, target: Element) => void;

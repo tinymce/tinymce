@@ -16,11 +16,11 @@ interface ZoneWalkerState<E> {
     concluded: (item: E, mode: Transition) => T
   ) => T;
   match: <T> (branches: {
-    inline: (item: E, mode: Transition, lang: Option<string>) => T,
-    text: (item: E, mode: Transition) => T,
-    empty: (item: E, mode: Transition) => T,
-    boundary: (item: E, mode: Transition, lang: Option<string>) => T,
-    concluded: (item: E, mode: Transition) => T
+    inline: (item: E, mode: Transition, lang: Option<string>) => T;
+    text: (item: E, mode: Transition) => T;
+    empty: (item: E, mode: Transition) => T;
+    boundary: (item: E, mode: Transition, lang: Option<string>) => T;
+    concluded: (item: E, mode: Transition) => T;
   }) => T;
   log: (label: string) => void;
 }

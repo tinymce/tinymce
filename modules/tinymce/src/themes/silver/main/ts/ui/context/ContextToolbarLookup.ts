@@ -13,7 +13,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import { ScopedToolbars } from './ContextToolbarScopes';
 
-export type LookupResult = { toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm, elem: Element };
+export type LookupResult = { toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm; elem: Element };
 
 const matchTargetWith = (elem: Element, toolbars: Array<Toolbar.ContextToolbar | Toolbar.ContextForm>): Option<LookupResult> => {
   return Arr.findMap(toolbars, (toolbarApi) =>

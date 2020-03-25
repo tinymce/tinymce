@@ -1,6 +1,6 @@
 import { Fun, Num, Option } from '@ephox/katamari';
 
-export type WrapArrNavigationOutcome = { row: () => number, column: () => number};
+export type WrapArrNavigationOutcome = { row: () => number; column: () => number};
 export type ArrNavigationFunc<A> = (values: A[], index: number, numRows: number, numCols: number) => Option<A>;
 
 const withGrid = <A>(values: A[], index: number, numCols: number, f: (oldRow: number, oldColumn: number) => Option<WrapArrNavigationOutcome>): Option<A> => {

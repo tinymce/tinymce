@@ -22,7 +22,7 @@ import Tools from './util/Tools';
 import URI from './util/URI';
 import { EditorManagerEventMap } from './EventTypes';
 
-declare const window: Window & { tinymce: any; tinyMCEPreInit: any; };
+declare const window: Window & { tinymce: any; tinyMCEPreInit: any };
 
 /**
  * This class used as a factory for manager for tinymce.Editor instances.

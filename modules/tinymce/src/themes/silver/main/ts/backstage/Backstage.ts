@@ -35,10 +35,10 @@ export interface UiFactoryBackstageShared {
   providers?: UiFactoryBackstageProviders;
   interpreter?: (spec: BridgedType) => AlloySpec;
   anchors?: {
-    inlineDialog: () => HotspotAnchorSpec | NodeAnchorSpec,
-    banner: () => HotspotAnchorSpec | NodeAnchorSpec,
-    cursor: () => SelectionAnchorSpec,
-    node: (elem: Option<Element>) => NodeAnchorSpec
+    inlineDialog: () => HotspotAnchorSpec | NodeAnchorSpec;
+    banner: () => HotspotAnchorSpec | NodeAnchorSpec;
+    cursor: () => SelectionAnchorSpec;
+    node: (elem: Option<Element>) => NodeAnchorSpec;
   };
   formInterpreter?: (parts: FormTypes.FormParts, spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
   getSink?: () => Result<AlloyComponent, any>;

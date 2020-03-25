@@ -74,8 +74,8 @@ class ScriptLoader {
   private settings: Partial<ScriptLoaderSettings>;
   private states: Record<string, number> = {};
   private queue: string[] = [];
-  private scriptLoadedCallbacks: Record<string, Array<{success: () => void, failure: () => void, scope: any}>> = {};
-  private queueLoadedCallbacks: Array<{success: () => void, failure: (urls: string[]) => void, scope: any}> = [];
+  private scriptLoadedCallbacks: Record<string, Array<{success: () => void; failure: () => void; scope: any}>> = {};
+  private queueLoadedCallbacks: Array<{success: () => void; failure: (urls: string[]) => void; scope: any}> = [];
   private loading = 0;
 
   public constructor(settings: Partial<ScriptLoaderSettings> = {}) {

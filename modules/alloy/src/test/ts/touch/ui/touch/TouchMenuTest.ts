@@ -18,7 +18,7 @@ interface TestItemSpec {
     value: string;
     meta: {
       text: string;
-    }
+    };
   };
 }
 

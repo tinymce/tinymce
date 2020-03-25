@@ -8,7 +8,7 @@
 import Tools from 'tinymce/core/api/util/Tools';
 import Entities from 'tinymce/core/api/html/Entities';
 
-export interface RootAttrs {[key: string]: string; }
+export interface RootAttrs {[key: string]: string }
 
 /**
  * Newlines class contains utilities to convert newlines (\n or \r\n) tp BRs or to a combination of the specified block element and BRs

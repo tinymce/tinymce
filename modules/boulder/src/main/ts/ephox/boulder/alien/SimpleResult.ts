@@ -19,7 +19,7 @@ const fold = <B, E, A>(res: SimpleResult<E, A>, onError: (err: E) => B, onValue:
   return res.stype === SimpleResultType.Error ? onError(res.serror) : onValue(res.svalue);
 };
 
-const partition = <E, A>(results: Array<SimpleResult<E[], any>>): { values: any[], errors: E[][] } => {
+const partition = <E, A>(results: Array<SimpleResult<E[], any>>): { values: any[]; errors: E[][] } => {
   const values = [ ];
   const errors = [ ];
   Arr.each(results, (obj) => {
