@@ -13,6 +13,7 @@ import Selection from '../api/dom/Selection';
 import DomSerializer from '../api/dom/Serializer';
 import Editor from '../api/Editor';
 import EditorUpload from '../api/EditorUpload';
+import Env from '../api/Env';
 import * as Events from '../api/Events';
 import Formatter from '../api/Formatter';
 import DomParser from '../api/html/DomParser';
@@ -32,6 +33,7 @@ import KeyboardOverrides from '../keyboard/KeyboardOverrides';
 import { NodeChange } from '../NodeChange';
 import * as DetailsElement from '../selection/DetailsElement';
 import * as MultiClickSelection from '../selection/MultiClickSelection';
+import SelectionBookmark from '../selection/SelectionBookmark';
 import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
 import Quirks from '../util/Quirks';
@@ -53,17 +55,16 @@ const createParser = function (editor: Editor): DomParser {
 
   // Convert src and href into data-mce-src, data-mce-href and data-mce-style
   parser.addAttributeFilter('src,href,style,tabindex', function (nodes, name) {
-    let i = nodes.length, node;
+    let i = nodes.length, node: Node, value: string;
     const dom = editor.dom;
-    let value, internalName;
+    const internalName = 'data-mce-' + name;
 
     while (i--) {
       node = nodes[i];
       value = node.attr(name);
-      internalName = 'data-mce-' + name;
 
       // Add internal attribute if we need to we don't on a refresh of the document
-      if (!node.attr(internalName)) {
+      if (value && !node.attr(internalName)) {
         // Don't duplicate these since they won't get modified by any browser
         if (value.indexOf('data:') === 0 || value.indexOf('blob:') === 0) {
           continue;
@@ -158,7 +159,13 @@ const moveSelectionToFirstCaretPosition = (editor: Editor) => {
       const node = pos.getNode();
       // If a table is the first caret pos, then walk down one more level
       const caretPos = NodeType.isTable(node) ? CaretFinder.firstPositionIn(node).getOr(pos) : pos;
-      editor.selection.setRng(caretPos.toRange());
+      // Don't set the selection on IE, as since it's a single selection model setting the selection will cause
+      // it to grab focus, so instead store the selection in the bookmark
+      if (Env.browser.isIE()) {
+        SelectionBookmark.storeNative(editor, caretPos.toRange());
+      } else {
+        editor.selection.setRng(caretPos.toRange());
+      }
     });
   }
 };
@@ -217,7 +224,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   // It will not steal focus while setting contentEditable
   body = editor.getBody();
   body.disabled = true;
-  editor.readonly = settings.readonly;
+  editor.readonly = !!settings.readonly;
 
   if (!editor.readonly) {
     if (editor.inline && DOM.getStyle(body, 'position', true) === 'static') {

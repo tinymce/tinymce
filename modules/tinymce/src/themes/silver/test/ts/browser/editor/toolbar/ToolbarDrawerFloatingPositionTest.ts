@@ -1,10 +1,11 @@
-import { Assertions, Chain, GeneralSteps, Mouse, Pipeline, Step, UiFinder, Waiter, Logger } from '@ephox/agar';
+import { Chain, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { TinyUi, Editor as McEditor } from '@ephox/mcagar';
-import { Body, Css, Element, Location, Scroll, Width } from '@ephox/sugar';
+import { Editor as McEditor, TinyUi } from '@ephox/mcagar';
+import { Css, Element, Location, Scroll } from '@ephox/sugar';
 
-import Theme from 'tinymce/themes/silver/Theme';
 import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
+import { sOpenFloatingToolbarAndAssertPosition } from '../../../module/ToolbarUtils';
 
 UnitTest.asynctest('Editor Floating Toolbar Drawer Position test', (success, failure) => {
   Theme();
@@ -25,34 +26,17 @@ UnitTest.asynctest('Editor Floating Toolbar Drawer Position test', (success, fai
         const uiContainer = Element.fromDom(editor.getContainer());
         const initialContainerPos = Location.absolute(uiContainer);
 
-        const sOpenAndAssertPosition = (top: number) => GeneralSteps.sequence([
-          Mouse.sClickOn(Body.body(), '.tox-tbtn[title="More..."]'),
-          Chain.asStep(Body.body, [
-            tinyUi.cWaitForUi('Wait for drawer to be visible', '.tox-toolbar__overflow'),
-            Chain.op((toolbar) => {
-              const diff = 10;
-              const pos = Location.absolute(toolbar);
-              const right = pos.left() + Width.get(toolbar);
-              Assertions.assertEq(`Drawer top position ${pos.top()}px should be ~${top}px`, true, Math.abs(pos.top() - top) < diff);
-              Assertions.assertEq(`Drawer left position ${pos.left()}px should be ~105px`, true, Math.abs(pos.left() - 105) < diff);
-              Assertions.assertEq(`Drawer right position ${right}px should be ~465px`, true, Math.abs(right - 465) < diff);
-            })
-          ]),
-          Mouse.sClickOn(Body.body(), '.tox-tbtn[title="More..."]'),
-          Waiter.sTryUntil('Wait for drawer to close', UiFinder.sNotExists(Body.body(), '.tox-toolbar__overflow'))
-        ]);
-
         Pipeline.async({ }, [
           Step.sync(() => {
             Css.set(uiContainer, 'margin-left', '100px');
           }),
-          sOpenAndAssertPosition(initialContainerPos.top() + 39), // top of ui container + toolbar height
+          sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top() + 39), // top of ui container + toolbar height
           Step.sync(() => {
             Css.set(uiContainer, 'margin-top', '2000px');
             Css.set(uiContainer, 'margin-bottom', '2000px');
           }),
           sScrollTo(0, 2000),
-          sOpenAndAssertPosition(initialContainerPos.top() + 39 + 2000), // top of ui container + toolbar height + scroll pos
+          sOpenFloatingToolbarAndAssertPosition(tinyUi, () => initialContainerPos.top() + 39 + 2000), // top of ui container + toolbar height + scroll pos
         ], () => onSuccess(editor), onFailure);
       }),
       McEditor.cRemove

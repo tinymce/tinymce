@@ -7,6 +7,7 @@
 
 import { Node, HTMLElement, Text } from '@ephox/dom-globals';
 import { Arr, Cell, Fun } from '@ephox/katamari';
+import Env from '../api/Env';
 import CaretContainerRemove from '../caret/CaretContainerRemove';
 import CaretPosition from '../caret/CaretPosition';
 import BoundaryCaret from './BoundaryCaret';
@@ -100,7 +101,11 @@ const setupSelectedState = function (editor: Editor): Cell<Text> {
   const isInlineTarget: NodePredicate  = Fun.curry(InlineUtils.isInlineTarget, editor);
 
   editor.on('NodeChange', function (e) {
-    if (isFeatureEnabled(editor)) {
+    // IE will steal the focus when changing the selection since it uses a single selection model
+    // as such we should ignore the first node change, as we don't want the editor to steal focus
+    // during the initial load. If the content is changed afterwords then we are okay with it
+    // stealing focus since it likely means the editor is being interacted with.
+    if (isFeatureEnabled(editor) && !(Env.browser.isIE() && e.initial)) {
       toggleInlines(isInlineTarget, editor.dom, e.parents);
       safeRemoveCaretContainer(editor, caret);
       renderInsideInlineCaret(isInlineTarget, editor, caret, e.parents);

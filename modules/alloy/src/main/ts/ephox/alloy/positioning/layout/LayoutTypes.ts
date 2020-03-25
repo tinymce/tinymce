@@ -1,5 +1,5 @@
-import { Bubble } from './Bubble';
 import { SpotInfo } from '../view/SpotInfo';
+import { Bubble } from './Bubble';
 
 export interface AnchorBox {
   x: () => number;

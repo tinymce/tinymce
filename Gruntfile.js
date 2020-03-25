@@ -97,7 +97,7 @@ const fetchLernaProjects = (log, runAllTests) => {
   // if JSON parse fails, well, grunt will just fail /shrug
   const parseLernaList = (cmd) => {
     try {
-      return JSON.parse(exec(`yarn -s lerna ${cmd} -a --no-ignore-changes --json --loglevel warn 2>&1`));
+      return JSON.parse(exec(`yarn -s lerna ${cmd} -a --json --loglevel warn 2>&1`));
     } catch (e) {
       // If no changes are found, then lerna returns an exit code of 1, so deal with that gracefully
       if (e.status === 1) {
@@ -108,7 +108,7 @@ const fetchLernaProjects = (log, runAllTests) => {
     }
   };
 
-  const changes = runAllTests ? [] : parseLernaList('changed');
+  const changes = runAllTests ? [] : parseLernaList('changed --no-ignore-changes');
 
   if (changes.length === 0) {
     log.writeln('No changes found, testing all projects');

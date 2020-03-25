@@ -1,3 +1,22 @@
+Version 5.2.1 (2020-03-25)
+    Fixed the "is decorative" checkbox in the image dialog clearing after certain dialog events #FOAM-11
+    Fixed possible uncaught exception when a `style` attribute is removed using a content filter on `setContent` #TINY-4742
+    Fixed the table selection not functioning correctly in Microsoft Edge 44 or higher #TINY-3862
+    Fixed the table resize handles not functioning correctly in Microsoft Edge 44 or higher #TINY-4160
+    Fixed the floating toolbar drawer disconnecting from the toolbar when adding content in inline mode #TINY-4725 #TINY-4765
+    Fixed `readonly` mode not returning the appropriate boolean value #TINY-3948
+    Fixed the `forced_root_block_attrs` setting not applying attributes to new blocks consistently #TINY-4564
+    Fixed the editor incorrectly stealing focus during initialization in Microsoft Internet Explorer #TINY-4697
+    Fixed dialogs stealing focus when opening an alert or confirm dialog using an `onAction` callback #TINY-4014
+    Fixed inline dialogs incorrectly closing when clicking on an opened alert or confirm dialog #TINY-4012
+    Fixed the context toolbar overlapping the menu bar and toolbar #TINY-4586
+    Fixed notification and inline dialog positioning issues when using `toolbar_location: 'bottom'` #TINY-4586
+    Fixed the `colorinput` popup appearing offscreen on mobile devices #TINY-4711
+    Fixed special characters not being found when searching by "whole words only" #TINY-4522
+    Fixed an issue where dragging images could cause them to be duplicated #TINY-4195
+    Fixed context toolbars activating without the editor having focus #TINY-4754
+    Fixed an issue where removing the background color of text did not always work #TINY-4770
+    Fixed an issue where new rows and columns in a table did not retain the style of the previous row or column #TINY-4788
 Version 5.2.0 (2020-02-13)
     Added the ability to apply formats to spaces #TINY-4200
     Added new `toolbar_location` setting to allow for positioning the menu and toolbar at the bottom of the editor #TINY-4210

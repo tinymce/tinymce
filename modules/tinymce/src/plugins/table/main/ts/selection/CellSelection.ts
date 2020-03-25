@@ -6,23 +6,24 @@
  */
 
 import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
-import { Fun, Option, Struct, Cell } from '@ephox/katamari';
-import { TableLookup, OtherCells, TableFill, TableResize } from '@ephox/snooker';
-import { Element, Selection, SelectionDirection, Class, Node, Compare } from '@ephox/sugar';
+import { Event, HTMLElement, KeyboardEvent, MouseEvent, Node as HtmlNode, TouchEvent } from '@ephox/dom-globals';
+import { Cell, Fun, Option, Struct } from '@ephox/katamari';
+import { DomParent } from '@ephox/robin';
+import { OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker';
+import { Class, Compare, DomEvent, Element, Node, Selection, SelectionDirection } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
+import * as Util from '../alien/Util';
+import * as Events from '../api/Events';
 
 import { getCloneElements } from '../api/Settings';
-import * as Util from '../alien/Util';
 import Direction from '../queries/Direction';
 import Ephemera from './Ephemera';
-import * as Events from '../api/Events';
-import { DomParent } from '@ephox/robin';
+import { SelectionTargets } from './SelectionTargets';
 
 const hasInternalTarget = (e: Event) => {
   return Class.has(Element.fromDom(e.target as HTMLElement), 'ephox-snooker-resizer-bar') === false;
 };
-import { KeyboardEvent, MouseEvent, Event, HTMLElement, TouchEvent, Node as HtmlNode } from '@ephox/dom-globals';
-import Editor from 'tinymce/core/api/Editor';
-import { SelectionTargets } from './SelectionTargets';
 
 export default function (editor: Editor, lazyResize: () => Option<TableResize>, selectionTargets: SelectionTargets) {
   const handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);
@@ -91,7 +92,7 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
     };
 
     const keyup = function (event) {
-      const wrappedEvent = wrapEvent(event);
+      const wrappedEvent = DomEvent.fromRawEvent(event);
       // Note, this is an optimisation.
       if (wrappedEvent.raw().shiftKey && SelectionKeys.isNavigation(wrappedEvent.raw().which)) {
         const rng = editor.selection.getRng();
@@ -104,7 +105,7 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
     };
 
     const keydown = function (event: KeyboardEvent) {
-      const wrappedEvent = wrapEvent(event);
+      const wrappedEvent = DomEvent.fromRawEvent(event);
       lazyResize().each(function (resize) {
         resize.hideBars();
       });
@@ -122,34 +123,6 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
       });
     };
 
-    const isMouseEvent = (event: any): event is MouseEvent => event.hasOwnProperty('x') && event.hasOwnProperty('y');
-
-    const wrapEvent = function (event: MouseEvent | KeyboardEvent) {
-      // IE9 minimum
-      const target = Element.fromDom(event.target as HTMLElement);
-
-      const stop = function () {
-        event.stopPropagation();
-      };
-
-      const prevent = function () {
-        event.preventDefault();
-      };
-
-      const kill = Fun.compose(prevent, stop); // more of a sequence than a compose, but same effect
-
-      // FIX: Don't just expose the raw event. Need to identify what needs standardisation.
-      return {
-        target:  Fun.constant(target),
-        x:       Fun.constant(isMouseEvent(event) ? event.x : null),
-        y:       Fun.constant(isMouseEvent(event) ? event.y : null),
-        stop,
-        prevent,
-        kill,
-        raw:     Fun.constant(event)
-      };
-    };
-
     const isLeftMouse = function (raw: MouseEvent) {
       return raw.button === 0;
     };
@@ -162,23 +135,30 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
         return true;
       }
 
+      // Edge 44+ broke the "buttons" property so that it now returns 0 always on mouseover
+      // so we can't detect if the left mouse button is down. The deprecated "which" property
+      // also can't be used as it returns 1 at all times, as such just return true.
+      if (Env.browser.isEdge() && raw.buttons === 0) {
+        return true;
+      }
+
       // use bitwise & for optimal comparison
       return (raw.buttons & 1) !== 0;
     };
 
     const mouseDown = function (e: MouseEvent) {
       if (isLeftMouse(e) && hasInternalTarget(e)) {
-        mouseHandlers.mousedown(wrapEvent(e));
+        mouseHandlers.mousedown(DomEvent.fromRawEvent(e));
       }
     };
     const mouseOver = function (e: MouseEvent) {
       if (isLeftButtonPressed(e) && hasInternalTarget(e)) {
-        mouseHandlers.mouseover(wrapEvent(e));
+        mouseHandlers.mouseover(DomEvent.fromRawEvent(e));
       }
     };
     const mouseUp = function (e: MouseEvent) {
       if (isLeftMouse(e) && hasInternalTarget(e)) {
-        mouseHandlers.mouseup(wrapEvent(e));
+        mouseHandlers.mouseup(DomEvent.fromRawEvent(e));
       }
     };
 

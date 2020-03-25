@@ -11,7 +11,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from '@ephox/bridge';
 
 const toggleState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi) => {
-  const toggleDisabledState = () => api.setDisabled(editor.readonly || !Toc.hasHeaders(editor));
+  const toggleDisabledState = () => api.setDisabled(editor.mode.isReadOnly() || !Toc.hasHeaders(editor));
 
   toggleDisabledState();
   editor.on('LoadContent SetContent change', toggleDisabledState);

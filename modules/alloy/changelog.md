@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [6.1.0] - 2020-03-16
+
+### Added
+
+- Added new `isExtraPart` property to `InlineView`. This allows the component to declare an external component as part of itself for dismissal events.
+
+# [6.0.1] - 2020-03-02
+
+### Fixed
+
+- Fixed `Bounder` incorrectly calculating the bottom/right limits, due to not taking into account the element size.
+- Fixed `LayoutInside` incorrectly placing items in the opposite direction.
+
 # [6.0.0] - 2020-02-13
 
 ### Removed

@@ -69,7 +69,7 @@ node("primary") {
 
     def cleanAndInstall = {
       echo "Installing tools"
-      exec("git clean -fdx modules")
+      exec("git clean -fdx modules scratch js dist")
       yarnInstall()
     }
 
@@ -127,33 +127,21 @@ node("primary") {
       }
     }
 
-    // No actual code runs between SCM checkout and here, just function definition
-    notifyBitbucket()
-    try {
-      // our linux nodes have multiple executors, sometimes yarn creates conflicts
-      lock("Don't run yarn simultaneously") {
-        stage ("Install tools") {
-          cleanAndInstall()
-        }
+    // our linux nodes have multiple executors, sometimes yarn creates conflicts
+    lock("Don't run yarn simultaneously") {
+      stage ("Install tools") {
+        cleanAndInstall()
       }
-
-      stage ("Type check") {
-        exec("yarn ci-all")
-      }
-
-      stage ("Run Tests") {
-        grunt("list-changed-phantom list-changed-browser")
-        // Run all the tests in parallel
-        parallel processes
-      }
-
-      // bitbucket plugin requires the result to explicitly be success
-      if (currentBuild.resultIsBetterOrEqualTo("SUCCESS")) {
-        currentBuild.result = "SUCCESS"
-      }
-    } catch (err) {
-      currentBuild.result = "FAILED"
     }
-    notifyBitbucket()
+
+    stage ("Type check") {
+      exec("yarn ci-all")
+    }
+
+    stage ("Run Tests") {
+      grunt("list-changed-phantom list-changed-browser")
+      // Run all the tests in parallel
+      parallel processes
+    }
   }
 }
