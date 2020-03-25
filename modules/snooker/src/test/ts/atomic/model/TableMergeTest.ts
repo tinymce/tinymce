@@ -55,7 +55,7 @@ UnitTest.test('TableMergeTest', function () {
 
   const gridcicada = function () {
     return [
-      [ en('cic1', true), en('cic2', true), en('cic3', true), en('cic3', true), en('cic3', true), en('cic4', true), en('cic4', true), en('cic4', true)]
+      [ en('cic1', true), en('cic2', true), en('cic3', true), en('cic3', true), en('cic3', true), en('cic4', true), en('cic4', true), en('cic4', true) ]
     ];
   };
 
@@ -67,24 +67,24 @@ UnitTest.test('TableMergeTest', function () {
       colDelta: 2
     },
     [
-      [en('a', false), en('b', false), en('c', false)],
-      [en('d', false), en('e', false), en('f', false)],
-      [en('g', false), en('h', false), en('i', false)],
-      [en('j', false), en('k', false), en('l', false)],
-      [en('?_0', true), en('?_1', true), en('?_2', true)],
-      [en('?_3', true), en('?_4', true), en('?_5', true)],
-      [en('?_6', true), en('?_7', true), en('?_8', true)],
-      [en('?_9', true), en('?_10', true), en('?_11', true)]
+      [ en('a', false), en('b', false), en('c', false) ],
+      [ en('d', false), en('e', false), en('f', false) ],
+      [ en('g', false), en('h', false), en('i', false) ],
+      [ en('j', false), en('k', false), en('l', false) ],
+      [ en('?_0', true), en('?_1', true), en('?_2', true) ],
+      [ en('?_3', true), en('?_4', true), en('?_5', true) ],
+      [ en('?_6', true), en('?_7', true), en('?_8', true) ],
+      [ en('?_9', true), en('?_10', true), en('?_11', true) ]
     ],
     [
-      [en('a', false),          en('b', false),   en('c', false)],
-      [en('d', false),          en('e', false),   en('f', false)],
-      [en('g', false),          en('h', false),   en('i', false)],
-      [en('h(bee1)_0', true), en('k', false),   en('l', false)],
-      [en('h(bee2)_1', true), en('?_1', true), en('?_2', true)],
-      [en('h(bee3)_2', true), en('?_4', true), en('?_5', true)],
-      [en('h(bee3)_3', true), en('?_7', true), en('?_8', true)],
-      [en('h(bee3)_4', true), en('?_10', true), en('?_11', true)]
+      [ en('a', false),          en('b', false),   en('c', false) ],
+      [ en('d', false),          en('e', false),   en('f', false) ],
+      [ en('g', false),          en('h', false),   en('i', false) ],
+      [ en('h(bee1)_0', true), en('k', false),   en('l', false) ],
+      [ en('h(bee2)_1', true), en('?_1', true), en('?_2', true) ],
+      [ en('h(bee3)_2', true), en('?_4', true), en('?_5', true) ],
+      [ en('h(bee3)_3', true), en('?_7', true), en('?_8', true) ],
+      [ en('h(bee3)_4', true), en('?_10', true), en('?_11', true) ]
     ]
   );
 
@@ -96,16 +96,16 @@ UnitTest.test('TableMergeTest', function () {
       colDelta: -5
     },
     [
-      [en('a', false), en('b', false), en('c', false), en('?_0', true),  en('?_1', true),  en('?_2', true),  en('?_3', true),  en('?_4', true)],
-      [en('d', false), en('e', false), en('f', false), en('?_5', true),  en('?_6', true),  en('?_7', true),  en('?_8', true),  en('?_9', true)],
-      [en('g', false), en('h', false), en('i', false), en('?_10', true), en('?_11', true), en('?_12', true), en('?_13', true), en('?_14', true)],
-      [en('j', false), en('k', false), en('l', false), en('?_15', true), en('?_16', true), en('?_17', true), en('?_18', true), en('?_19', true)]
+      [ en('a', false), en('b', false), en('c', false), en('?_0', true),  en('?_1', true),  en('?_2', true),  en('?_3', true),  en('?_4', true) ],
+      [ en('d', false), en('e', false), en('f', false), en('?_5', true),  en('?_6', true),  en('?_7', true),  en('?_8', true),  en('?_9', true) ],
+      [ en('g', false), en('h', false), en('i', false), en('?_10', true), en('?_11', true), en('?_12', true), en('?_13', true), en('?_14', true) ],
+      [ en('j', false), en('k', false), en('l', false), en('?_15', true), en('?_16', true), en('?_17', true), en('?_18', true), en('?_19', true) ]
     ],
     [
-      [en('a', false), en('b', false), en('c', false), en('?_0', true),  en('?_1', true),  en('?_2', true),  en('?_3', true),  en('?_4', true)],
-      [en('h(cic1)_0', true), en('h(cic2)_1', true), en('h(cic3)_2', true), en('h(cic3)_3', true), en('h(cic3)_4', true), en('h(cic4)_5', true),  en('h(cic4)_6', true), en('h(cic4)_7', true)],
-      [en('g', false), en('h', false), en('i', false), en('?_10', true), en('?_11', true), en('?_12', true), en('?_13', true), en('?_14', true)],
-      [en('j', false), en('k', false), en('l', false), en('?_15', true), en('?_16', true), en('?_17', true), en('?_18', true), en('?_19', true)]
+      [ en('a', false), en('b', false), en('c', false), en('?_0', true),  en('?_1', true),  en('?_2', true),  en('?_3', true),  en('?_4', true) ],
+      [ en('h(cic1)_0', true), en('h(cic2)_1', true), en('h(cic3)_2', true), en('h(cic3)_3', true), en('h(cic3)_4', true), en('h(cic4)_5', true),  en('h(cic4)_6', true), en('h(cic4)_7', true) ],
+      [ en('g', false), en('h', false), en('i', false), en('?_10', true), en('?_11', true), en('?_12', true), en('?_13', true), en('?_14', true) ],
+      [ en('j', false), en('k', false), en('l', false), en('?_15', true), en('?_16', true), en('?_17', true), en('?_18', true), en('?_19', true) ]
     ]
   );
 

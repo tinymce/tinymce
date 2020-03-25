@@ -67,7 +67,7 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
       const sel = editor.selection;
       const start = Element.fromDom(sel.getStart());
       const end = Element.fromDom(sel.getEnd());
-      const shared = DomParent.sharedOne(TableLookup.table, [start, end]);
+      const shared = DomParent.sharedOne(TableLookup.table, [ start, end ]);
       shared.fold(function () {
         annotations.clear(body);
       }, Fun.noop);

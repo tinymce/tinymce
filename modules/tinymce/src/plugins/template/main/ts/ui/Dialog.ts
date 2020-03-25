@@ -128,7 +128,7 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
     return new Promise<string>((resolve, reject) => {
       t.value.url.fold(() => resolve(t.value.content.getOr('')), (url) => XHR.send({
         url,
-        success (html: string) {
+        success(html: string) {
           resolve(html);
         },
         error: (e) => {

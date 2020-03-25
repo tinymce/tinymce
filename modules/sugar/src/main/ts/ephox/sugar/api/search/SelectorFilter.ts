@@ -3,7 +3,7 @@ import * as Selectors from './Selectors';
 import Element from '../node/Element';
 import { Node as DomNode, Element as DomElement } from '@ephox/dom-globals';
 
-const all = function <T extends DomElement = DomElement>(selector: string) {
+const all = function <T extends DomElement = DomElement> (selector: string) {
   return Selectors.all<T>(selector);
 };
 
@@ -13,7 +13,7 @@ const all = function <T extends DomElement = DomElement>(selector: string) {
 // Traverse should also do this (but probably not by default).
 //
 
-const ancestors = function <T extends DomElement = DomElement>(scope: Element<DomNode>, selector: string, isRoot?: (e: Element<DomNode>) => boolean) {
+const ancestors = function <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string, isRoot?: (e: Element<DomNode>) => boolean) {
   // It may surprise you to learn this is exactly what JQuery does
   // TODO: Avoid all this wrapping and unwrapping
   return PredicateFilter.ancestors(scope, function (e): e is Element<T> {
@@ -21,7 +21,7 @@ const ancestors = function <T extends DomElement = DomElement>(scope: Element<Do
   }, isRoot);
 };
 
-const siblings = function <T extends DomElement = DomElement>(scope: Element<DomNode>, selector: string) {
+const siblings = function <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string) {
   // It may surprise you to learn this is exactly what JQuery does
   // TODO: Avoid all the wrapping and unwrapping
   return PredicateFilter.siblings(scope, function (e): e is Element<T> {
@@ -29,7 +29,7 @@ const siblings = function <T extends DomElement = DomElement>(scope: Element<Dom
   });
 };
 
-const children = function <T extends DomElement = DomElement>(scope: Element<DomNode>, selector: string) {
+const children = function <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string) {
   // It may surprise you to learn this is exactly what JQuery does
   // TODO: Avoid all the wrapping and unwrapping
   return PredicateFilter.children(scope, function (e): e is Element<T> {
@@ -37,7 +37,7 @@ const children = function <T extends DomElement = DomElement>(scope: Element<Dom
   });
 };
 
-const descendants = function <T extends DomElement = DomElement>(scope: Element<DomNode>, selector: string) {
+const descendants = function <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string) {
   return Selectors.all<T>(selector, scope);
 };
 

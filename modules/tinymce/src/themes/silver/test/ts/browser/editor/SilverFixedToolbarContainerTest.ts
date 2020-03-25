@@ -26,18 +26,18 @@ UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => 
                     classes: [ arr.has('tox-editor-header') ],
                     children: [
                       s.element('div', {
-                        classes: [arr.has('tox-menubar')],
+                        classes: [ arr.has('tox-menubar') ],
                         attrs: { role: str.is('menubar') },
                         children: [
                           s.element('button', {
-                            classes: [arr.has('tox-mbtn'), arr.has('tox-mbtn--select')],
+                            classes: [ arr.has('tox-mbtn'), arr.has('tox-mbtn--select') ],
                             children: [
                               s.element('span', {
-                                classes: [arr.has('tox-mbtn__select-label')],
+                                classes: [ arr.has('tox-mbtn__select-label') ],
                                 html: str.is('File')
                               }),
                               s.element('div', {
-                                classes: [arr.has('tox-mbtn__select-chevron')],
+                                classes: [ arr.has('tox-mbtn__select-chevron') ],
                                 children: [
                                   s.element('svg', {})
                                 ]
@@ -86,7 +86,7 @@ UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => 
             ]
           }),
           s.element('div', {
-            classes: [ arr.has('tox'), arr.has('tox-silver-sink'), arr.has('tox-tinymce-aux')]
+            classes: [ arr.has('tox'), arr.has('tox-silver-sink'), arr.has('tox-tinymce-aux') ]
           })
         ]
       });
@@ -95,24 +95,24 @@ UnitTest.asynctest('Silver fixed_toolbar_container test', (success, failure) => 
   );
 
   TinyLoader.setup((editor, onSuccess, onFailure) => {
-      const tinyApis = TinyApis(editor);
+    const tinyApis = TinyApis(editor);
 
-      Pipeline.async({ }, [
-        tinyApis.sSetContent('fixed_toolbar_container test'),
-        tinyApis.sFocus(),
-        sToolbarTest(),
-      ], onSuccess, onFailure);
-    }, {
-      theme: 'silver',
-      inline: true,
-      fixed_toolbar_container: '#toolbar',
-      menubar: 'file',
-      toolbar: 'undo bold',
-      base_url: '/project/tinymce/js/tinymce',
-    }, () => {
-      Remove.remove(toolbarContainer);
-      success();
-    },
-    failure
+    Pipeline.async({ }, [
+      tinyApis.sSetContent('fixed_toolbar_container test'),
+      tinyApis.sFocus(),
+      sToolbarTest(),
+    ], onSuccess, onFailure);
+  }, {
+    theme: 'silver',
+    inline: true,
+    fixed_toolbar_container: '#toolbar',
+    menubar: 'file',
+    toolbar: 'undo bold',
+    base_url: '/project/tinymce/js/tinymce',
+  }, () => {
+    Remove.remove(toolbarContainer);
+    success();
+  },
+  failure
   );
 });

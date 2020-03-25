@@ -21,12 +21,12 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
 
   const connection = ForeignGui.engage({
     root,
-    insertion (parent, system) {
+    insertion(parent, system) {
       Insert.append(parent, system.element());
     },
     dispatchers: [
       {
-        getTarget (elem) { return Node.name(elem) === 'span' ? Option.some(elem) : Option.none(); },
+        getTarget(elem) { return Node.name(elem) === 'span' ? Option.some(elem) : Option.none(); },
         alloyConfig: {
           behaviours: Behaviour.derive([
             Toggling.config({

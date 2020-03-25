@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.SearchTest', (success, fai
           tinyApis.sAssertContent('<p>🌈</p>')
         )
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'emoticons',
     toolbar: 'emoticons',

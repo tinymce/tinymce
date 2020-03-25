@@ -22,7 +22,7 @@ UnitTest.asynctest('TouchTest', (success, failure) => {
 
   let repository = [];
 
-  const handlers = Arr.bind(['touchstart', 'touchend', 'touchmove', 'focus'], (evt) => {
+  const handlers = Arr.bind([ 'touchstart', 'touchend', 'touchmove', 'focus' ], (evt) => {
     return [
       DomEvent.bind(container, evt, () => repository.push('container.' + evt)),
       DomEvent.bind(input, evt, () => repository.push('input.' + evt))
@@ -83,7 +83,7 @@ UnitTest.asynctest('TouchTest', (success, failure) => {
 
     runStep(
       'cTouchStart input',
-      ['input.touchstart', 'container.touchstart'],
+      [ 'input.touchstart', 'container.touchstart' ],
       Chain.asStep(container, [
         UiFinder.cFindIn('input'),
         Touch.cTouchStart
@@ -92,7 +92,7 @@ UnitTest.asynctest('TouchTest', (success, failure) => {
 
     runStep(
       'cTouchEnd input',
-      ['input.touchend', 'container.touchend'],
+      [ 'input.touchend', 'container.touchend' ],
       Chain.asStep(container, [
         UiFinder.cFindIn('input'),
         Touch.cTouchEnd
@@ -101,7 +101,7 @@ UnitTest.asynctest('TouchTest', (success, failure) => {
 
     runStep(
       'cTouchMove input',
-      ['input.touchmove', 'container.touchmove'],
+      [ 'input.touchmove', 'container.touchmove' ],
       Chain.asStep(container, [
         UiFinder.cFindIn('input'),
         Touch.cTouchMove

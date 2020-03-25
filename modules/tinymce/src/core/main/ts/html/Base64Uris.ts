@@ -30,7 +30,7 @@ export const extractBase64DataUris = (html: string): Base64Extract => {
   let count = 0;
 
   while ((matches = dataImageUri.exec(html))) {
-    const [uri] = matches;
+    const [ uri ] = matches;
     const imageId = prefix + '_' + count++;
 
     uris[imageId] = uri;

@@ -45,37 +45,37 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (s
       Logger.t('Backspace/delete in unformatted plain text', GeneralSteps.sequence([
         Logger.t('Backspace after plain text should do nothing', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p>'),
-          tinyApis.sSetCursor([0, 0], 1),
+          tinyApis.sSetCursor([ 0, 0 ], 1),
           sBackspaceNoop(editor),
           tinyApis.sAssertContent('<p>a</p>'),
-          tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+          tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
         ])),
         Logger.t('Delete before plain text should do nothing', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>a</p>'),
-          tinyApis.sSetCursor([0, 0], 0),
+          tinyApis.sSetCursor([ 0, 0 ], 0),
           sDeleteNoop(editor),
           tinyApis.sAssertContent('<p>a</p>'),
-          tinyApis.sAssertSelection([0, 0], 0, [0, 0], 0)
+          tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0)
         ])),
         Logger.t('Backspace in middle of plain text should do nothing', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>ab</p>'),
-          tinyApis.sSetCursor([0, 0], 1),
+          tinyApis.sSetCursor([ 0, 0 ], 1),
           sBackspaceNoop(editor),
           tinyApis.sAssertContent('<p>ab</p>'),
-          tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+          tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
         ])),
         Logger.t('Delete in middle of plain text should do nothing', GeneralSteps.sequence([
           tinyApis.sSetContent('<p>ab</p>'),
-          tinyApis.sSetCursor([0, 0], 1),
+          tinyApis.sSetCursor([ 0, 0 ], 1),
           sDeleteNoop(editor),
           tinyApis.sAssertContent('<p>ab</p>'),
-          tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+          tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
         ])),
         Logger.t('Delete in middle of caret format span should do nothing', GeneralSteps.sequence([
           tinyApis.sSetRawContent('<p>a<span id="_mce_caret" data-mce-bogus="1" data-mce-type="format-caret"><strong>&#65279;</strong></span>b</p>'),
-          tinyApis.sSetCursor([0, 1], 0),
+          tinyApis.sSetCursor([ 0, 1 ], 0),
           sDeleteNoop(editor),
-          tinyApis.sAssertSelection([0, 1], 0, [0, 1], 0),
+          tinyApis.sAssertSelection([ 0, 1 ], 0, [ 0, 1 ], 0),
           tinyApis.sAssertContentStructure(
             ApproxStructure.build(function (s, str, arr) {
               return s.element('body', {
@@ -108,7 +108,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (s
       Logger.t('Backspace/delete in at last character', GeneralSteps.sequence([
         Logger.t('Backspace after last character in formatted element', GeneralSteps.sequence([
           tinyApis.sSetContent('<p><strong><em>a</em></strong></p>'),
-          tinyApis.sSetCursor([0, 0, 0, 0], 1),
+          tinyApis.sSetCursor([ 0, 0, 0, 0 ], 1),
           sBackspace(editor),
           tinyApis.sAssertContentStructure(
             ApproxStructure.build(function (s, str, arr) {
@@ -139,11 +139,11 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (s
               });
             })
           ),
-          tinyApis.sAssertSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0)
+          tinyApis.sAssertSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0)
         ])),
         Logger.t('Delete before last character in formatted element', GeneralSteps.sequence([
           tinyApis.sSetContent('<p><strong><em>a</em></strong></p>'),
-          tinyApis.sSetCursor([0, 0, 0, 0], 0),
+          tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
           sDelete(editor),
           tinyApis.sAssertContentStructure(
             ApproxStructure.build(function (s, str, arr) {
@@ -174,23 +174,23 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (s
               });
             })
           ),
-          tinyApis.sAssertSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0)
+          tinyApis.sAssertSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0)
         ])),
         Logger.t('Backspace before last character in formatted element', GeneralSteps.sequence([
           tinyApis.sSetContent('<p><em>a</em><strong>b</strong></p>'),
-          tinyApis.sSetCursor([0, 1, 0], 0),
+          tinyApis.sSetCursor([ 0, 1, 0 ], 0),
           sBackspaceNoop(editor),
-          tinyApis.sAssertSelection([0, 1, 0], 0, [0, 1, 0], 0)
+          tinyApis.sAssertSelection([ 0, 1, 0 ], 0, [ 0, 1, 0 ], 0)
         ])),
         Logger.t('Delete after last character in formatted element', GeneralSteps.sequence([
           tinyApis.sSetContent('<p><em>a</em><strong>b</strong></p>'),
-          tinyApis.sSetCursor([0, 0, 0], 1),
+          tinyApis.sSetCursor([ 0, 0, 0 ], 1),
           sDeleteNoop(editor),
-          tinyApis.sAssertSelection([0, 0, 0], 1, [0, 0, 0], 1)
+          tinyApis.sAssertSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1)
         ])),
         Logger.t('Backspace after last character in formatted element with sibling in format parent', GeneralSteps.sequence([
           tinyApis.sSetContent('<p><ins><strong><em>a</em></strong>b</ins></p>'),
-          tinyApis.sSetCursor([0, 0, 0, 0, 0], 1),
+          tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 1),
           sBackspace(editor),
           tinyApis.sAssertContentStructure(
             ApproxStructure.build(function (s, str, arr) {
@@ -226,11 +226,11 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (s
               });
             })
           ),
-          tinyApis.sAssertSelection([0, 0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0, 0], 0)
+          tinyApis.sAssertSelection([ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 0)
         ])),
         Logger.t('Delete after last character in formatted element with sibling in format parent', GeneralSteps.sequence([
           tinyApis.sSetContent('<p><ins>a<strong><em>b</em></strong></ins></p>'),
-          tinyApis.sSetCursor([0, 0, 1, 0, 0], 0),
+          tinyApis.sSetCursor([ 0, 0, 1, 0, 0 ], 0),
           sDelete(editor),
           tinyApis.sAssertContentStructure(
             ApproxStructure.build(function (s, str, arr) {
@@ -266,7 +266,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (s
               });
             })
           ),
-          tinyApis.sAssertSelection([0, 0, 1, 0, 0, 0], 0, [0, 0, 1, 0, 0, 0], 0)
+          tinyApis.sAssertSelection([ 0, 0, 1, 0, 0, 0 ], 0, [ 0, 0, 1, 0, 0, 0 ], 0)
         ]))
       ]))
     ], onSuccess, onFailure);

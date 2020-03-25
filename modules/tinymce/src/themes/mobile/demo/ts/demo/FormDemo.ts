@@ -10,8 +10,8 @@ export default function () {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
   const form = SerialisedDialog.sketch({
-    onExecute () { },
-    getInitialValue () {
+    onExecute() { },
+    getInitialValue() {
       return Option.some({
         alpha: 'Alpha',
         beta: '',

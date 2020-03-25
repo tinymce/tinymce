@@ -85,7 +85,7 @@ const cGetActiveValue: Chain<Element, string> =
   ]);
 
 const sSetFocus = <T>(label: string, container: Element<any>, selector: string): Step<T, T> =>
-  Chain.asStep<T, Element>(container, [cSetFocus(label, selector)]);
+  Chain.asStep<T, Element>(container, [ cSetFocus(label, selector) ]);
 
 const sSetActiveValue = <T>(doc: Element<any>, newValue: string): Step<T, T> =>
   Chain.asStep<T, Element>(doc, [

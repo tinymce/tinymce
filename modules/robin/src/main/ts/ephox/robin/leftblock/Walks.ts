@@ -4,9 +4,9 @@ import { Gather, Transition, Traverse } from '@ephox/phoenix';
 
 export interface Walks {
   rules?: {
-      current: Transition;
-      next: Transition;
-      fallback: Option<Transition>;
+    current: Transition;
+    next: Transition;
+    fallback: Option<Transition>;
   }[];
   inclusion: <E, D> (universe: Universe<E, D>, next: Traverse<E>, item: E) => boolean;
 }

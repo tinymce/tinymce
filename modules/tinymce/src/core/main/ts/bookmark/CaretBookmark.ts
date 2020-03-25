@@ -89,7 +89,7 @@ const normalizedNodeIndex = (node: Node): number => {
     return result;
   }, 0);
 
-  nodes = ArrUtils.filter(nodes, NodeType.matchNodeNames([node.nodeName]));
+  nodes = ArrUtils.filter(nodes, NodeType.matchNodeNames([ node.nodeName ]));
   index = ArrUtils.findIndex(nodes, equal(node), node);
 
   return index - numTextFragments;
@@ -159,7 +159,7 @@ const resolvePathItem = (node: Node, name: string, index: number): Node => {
     return !isText(node) || !isText(nodes[index - 1]);
   });
 
-  nodes = ArrUtils.filter(nodes, NodeType.matchNodeNames([name]));
+  nodes = ArrUtils.filter(nodes, NodeType.matchNodeNames([ name ]));
   return nodes[index];
 };
 

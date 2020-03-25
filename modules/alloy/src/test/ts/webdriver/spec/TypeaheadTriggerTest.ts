@@ -37,17 +37,17 @@ UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
               openClass: 'test-typeahead-open'
             },
 
-            fetch (input: AlloyComponent) {
+            fetch(input: AlloyComponent) {
               const text = Value.get(input.element());
               const future = Future.pure([
-                { type: 'item', data: { value: text + '1', meta: { text: text + '1' } } },
-                { type: 'item', data: { value: text + '2', meta: { text: text + '2' } } }
+                { type: 'item', data: { value: text + '1', meta: { text: text + '1' }}},
+                { type: 'item', data: { value: text + '2', meta: { text: text + '2' }}}
               ]);
 
               return future.map((f) => {
                 // TODO: Test this.
                 const items = text === 'no-data' ? [
-                  { type: 'separator', data: { value: '', meta: { text: 'No data'} } }
+                  { type: 'separator', data: { value: '', meta: { text: 'No data' }}}
                 ] : f;
                 const menu = TestDropdownMenu.renderMenu({
                   value: 'blah',
@@ -57,7 +57,7 @@ UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
               });
             },
 
-            lazySink (c) {
+            lazySink(c) {
               TestDropdownMenu.assertLazySinkArgs('input', 'test-typeahead', c);
               return Result.value(sink);
             },

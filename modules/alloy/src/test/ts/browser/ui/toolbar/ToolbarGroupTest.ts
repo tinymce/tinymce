@@ -59,7 +59,7 @@ UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
               Tabstopping.config({ })
             ]),
 
-            items: Arr.map([ { data: { value: 'a', text: 'A' } }, { data: { value: 'b', text: 'B' }} ], mungeItem),
+            items: Arr.map([{ data: { value: 'a', text: 'A' }}, { data: { value: 'b', text: 'B' }}], mungeItem),
             markers: {
               itemSelector: '.toolbar-item'
             }

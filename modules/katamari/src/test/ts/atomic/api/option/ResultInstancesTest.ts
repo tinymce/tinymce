@@ -75,14 +75,14 @@ UnitTest.test('ResultInstances.eq: (a = b) = (error(a) = error(b))', () => {
 UnitTest.test('ResultInstances.pprint', () => {
   fc.assert(fc.property(fc.integer(), (i) => {
     Assert.eq('pprint value',
-`Result.value(
+      `Result.value(
   ${i}
 )`,
       Pprint.render(Result.value(i), tResult(tNumber, tString))
     );
 
     Assert.eq('pprint error',
-`Result.error(
+      `Result.error(
   ${i}
 )`,
       Pprint.render(Result.error(i), tResult(tString, tNumber))

@@ -16,7 +16,7 @@ const getPremade = (spec: AlloySpec): Option<AlloyComponent> => {
 };
 
 const makeApi = <A, R>(f: (api: A, comp: AlloyComponent, ...rest: any[]) => R) => {
-  return FunctionAnnotator.markAsSketchApi((component: AlloyComponent, ...rest: any[]/*, ... */) => {
+  return FunctionAnnotator.markAsSketchApi((component: AlloyComponent, ...rest: any[]/* , ... */) => {
     return f.apply(undefined, ([ component.getApis<any>() ] as any).concat([ component ].concat(rest)));
   }, f);
 };

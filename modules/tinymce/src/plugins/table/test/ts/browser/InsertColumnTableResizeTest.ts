@@ -155,7 +155,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableResizeTest', 
         Chain.label('Insert column after', NamedChain.read('editor', TableTestUtils.cInsertColumnAfter)),
         Chain.label('Delete column', NamedChain.read('editor', TableTestUtils.cDeleteColumn)),
         Chain.label('Store width after split', NamedChain.write('widthAfter', TableTestUtils.cGetWidth)),
-        NamedChain.merge(['widthBefore', 'widthAfter'], 'widths'),
+        NamedChain.merge([ 'widthBefore', 'widthAfter' ], 'widths'),
         NamedChain.output('widths')
       ]
     ));
@@ -202,7 +202,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableResizeTest', 
 
     NamedChain.read('editor', Editor.cRemove)
   ]),
-   function () {
+  function () {
     success();
   }, failure, TestLogs.init());
 });

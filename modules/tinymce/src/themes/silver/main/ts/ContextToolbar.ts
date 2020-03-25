@@ -29,12 +29,12 @@ const bubbleSize = 12;
 const bubbleAlignments = {
   valignCentre: [],
   alignCentre: [],
-  alignLeft: ['tox-pop--align-left'],
-  alignRight: ['tox-pop--align-right'],
-  right: ['tox-pop--right'],
-  left: ['tox-pop--left'],
-  bottom: ['tox-pop--bottom'],
-  top: ['tox-pop--top']
+  alignLeft: [ 'tox-pop--align-left' ],
+  alignRight: [ 'tox-pop--align-right' ],
+  right: [ 'tox-pop--right' ],
+  left: [ 'tox-pop--left' ],
+  bottom: [ 'tox-pop--bottom' ],
+  top: [ 'tox-pop--top' ]
 };
 
 const anchorOverrides = {
@@ -44,17 +44,17 @@ const anchorOverrides = {
 
 // On desktop we prioritise north-then-south because it's cleaner, but on mobile we prioritise south to try to avoid overlapping with native context toolbars
 const desktopAnchorSpecLayouts = {
-  onLtr: () => [Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest],
-  onRtl: () => [Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast]
+  onLtr: () => [ Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest,
+    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest ],
+  onRtl: () => [ Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast,
+    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast ]
 };
 
 const mobileAnchorSpecLayouts = {
-  onLtr: () => [Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest],
-  onRtl: () => [Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast]
+  onLtr: () => [ Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north,
+    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest ],
+  onRtl: () => [ Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north,
+    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast ]
 };
 
 const getAnchorLayout = (position: Toolbar.ContextToolbarPosition, isTouch: boolean): Partial<AnchorSpec> => {
@@ -152,9 +152,9 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     return {
       dom: {
         tag: 'div',
-        classes: ['tox-pop__dialog'],
+        classes: [ 'tox-pop__dialog' ],
       },
-      components: [toolbarSpec],
+      components: [ toolbarSpec ],
       behaviours: Behaviour.derive([
         Keying.config({
           mode: 'acyclic'

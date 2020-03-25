@@ -40,9 +40,9 @@ UnitTest.asynctest('AllowBubblingTest', (success, failure) => {
       })
     );
   }, (doc, body, gui, component, store) =>
-      Logger.t('Should fire simulated scroll event', StepSequence.sequenceSame([
-        sDispatchScrollEvent(component),
-        store.sAssertEq('Should have fired simulated scroll event', [ 'bubbled.scroll' ])
-      ])),
-    () => { success(); }, failure);
+    Logger.t('Should fire simulated scroll event', StepSequence.sequenceSame([
+      sDispatchScrollEvent(component),
+      store.sAssertEq('Should have fired simulated scroll event', [ 'bubbled.scroll' ])
+    ])),
+  () => { success(); }, failure);
 });

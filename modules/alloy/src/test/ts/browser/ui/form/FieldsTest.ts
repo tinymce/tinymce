@@ -127,7 +127,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         })
       ],
 
-      onLockedChange (current, other) {
+      onLockedChange(current, other) {
         Representing.setValueFrom(other, current);
       },
       markers: {
@@ -209,9 +209,9 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         return s.element('div', {
           children: [
             s.element('legend', { }),
-            s.element('span', { attrs: { role: str.is('radio') } }),
-            s.element('span', { attrs: { role: str.is('radio') } }),
-            s.element('span', { attrs: { role: str.is('radio') } })
+            s.element('span', { attrs: { role: str.is('radio') }}),
+            s.element('span', { attrs: { role: str.is('radio') }}),
+            s.element('span', { attrs: { role: str.is('radio') }})
           ]
         });
       }), chooserC.element()),

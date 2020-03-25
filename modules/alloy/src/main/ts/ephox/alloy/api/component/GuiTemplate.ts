@@ -9,7 +9,7 @@ import { getAttrs, getClasses } from './DomFactory';
 // for now though lets just cast the types
 const readText = (elem: Element<DomText>) => {
   const text = Text.get(elem);
-  return text.trim().length > 0 ? [ { text } ] as unknown as SimpleOrSketchSpec[] : [ ];
+  return text.trim().length > 0 ? [{ text }] as unknown as SimpleOrSketchSpec[] : [ ];
 };
 
 const readChildren = (elem: Element<DomNode>): SimpleOrSketchSpec[] => {
@@ -29,8 +29,8 @@ const readChildren = (elem: Element<DomNode>): SimpleOrSketchSpec[] => {
     return [{
       dom: {
         tag: Node.name(elem),
-        ...(!Obj.isEmpty(attributes) ? {attributes} : {}),
-        ...(classes.length > 0 ? {classes} : {})
+        ...(!Obj.isEmpty(attributes) ? { attributes } : {}),
+        ...(classes.length > 0 ? { classes } : {})
       },
       components
     }];
@@ -50,8 +50,8 @@ const read = (elem: Element<DomNode>): SimpleOrSketchSpec => {
   return {
     dom: {
       tag: Node.name(elem),
-      ...(!Obj.isEmpty(attributes) ? {attributes} : {}),
-      ...(classes.length > 0 ? {classes} : {})
+      ...(!Obj.isEmpty(attributes) ? { attributes } : {}),
+      ...(classes.length > 0 ? { classes } : {})
     },
     components
   };

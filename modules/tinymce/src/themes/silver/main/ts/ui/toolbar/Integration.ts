@@ -44,7 +44,7 @@ const defaultToolbar = [
     name: 'styles', items: [ 'styleselect' ]
   },
   {
-    name: 'formatting', items: [ 'bold', 'italic']
+    name: 'formatting', items: [ 'bold', 'italic' ]
   },
   {
     name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ]

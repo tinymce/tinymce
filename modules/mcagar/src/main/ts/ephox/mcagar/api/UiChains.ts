@@ -47,14 +47,14 @@ const cGetMenuRoot = Chain.fromChains<Editor, Element>([
   })
 ]);
 
-const cClickOnWithin = function <T>(label: string, selector: string, cContext: Chain<T, Element>): Chain<T, T> {
-    return NamedChain.asChain([
-      NamedChain.direct(NamedChain.inputName(), cContext, 'context'),
-      NamedChain.direct('context', UiFinder.cFindIn(selector), 'ui'),
-      NamedChain.direct('ui', Mouse.cClick, '_'),
-      NamedChain.outputInput
-    ]);
-  };
+const cClickOnWithin = function <T> (label: string, selector: string, cContext: Chain<T, Element>): Chain<T, T> {
+  return NamedChain.asChain([
+    NamedChain.direct(NamedChain.inputName(), cContext, 'context'),
+    NamedChain.direct('context', UiFinder.cFindIn(selector), 'ui'),
+    NamedChain.direct('ui', Mouse.cClick, '_'),
+    NamedChain.outputInput
+  ]);
+};
 
 const cClickOnUi = function <T> (label: string, selector: string) {
   return cClickOnWithin<T>(label, selector, cDialogRoot);
@@ -68,7 +68,7 @@ const cClickOnMenu = function <T extends Editor> (label: string, selector: strin
   return cClickOnWithin<T>(label, selector, cGetMenuRoot);
 };
 
-const cWaitForState = function <T>(hasState: (element: Element) => boolean) {
+const cWaitForState = function <T> (hasState: (element: Element) => boolean) {
   return function (label: string, selector: string): Chain<T, T> {
     return NamedChain.asChain([
       NamedChain.write('element', Chain.fromChains([

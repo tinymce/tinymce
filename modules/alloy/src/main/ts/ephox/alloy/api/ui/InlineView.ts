@@ -41,7 +41,7 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
   const layouts = menuSpec.type === 'horizontal' ? { layouts: {
     onLtr: () => Layout.belowOrAbove(),
     onRtl: () => Layout.belowOrAboveRtl()
-  } } : { };
+  }} : { };
 
   const isFirstTierSubmenu = (triggeringPaths: string[]) => triggeringPaths.length === 2; // primary and first tier menu === 2 items
   const getSubmenuLayouts = (triggeringPaths: string[]) => isFirstTierSubmenu(triggeringPaths) ? layouts : { };
@@ -81,7 +81,7 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
       }, submenu);
     },
 
-    onRepositionMenu (tmenu, primaryMenu, submenuTriggers) {
+    onRepositionMenu(tmenu, primaryMenu, submenuTriggers) {
       const sink = lazySink().getOrDie();
       Positioning.positionWithinBounds(sink, anchor, primaryMenu, getBounds());
       Arr.each(submenuTriggers, (st) => {
@@ -178,16 +178,16 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
       detail.inlineBehaviours,
       [
         Sandboxing.config({
-          isPartOf (sandbox, data, queryElem) {
+          isPartOf(sandbox, data, queryElem) {
             return ComponentStructure.isPartOf(data, queryElem) || isPartOfRelated(sandbox, queryElem);
           },
-          getAttachPoint (sandbox) {
+          getAttachPoint(sandbox) {
             return detail.lazySink(sandbox).getOrDie();
           },
-          onOpen (sandbox) {
+          onOpen(sandbox) {
             detail.onShow(sandbox);
           },
-          onClose (sandbox) {
+          onClose(sandbox) {
             detail.onHide(sandbox);
           }
         }),

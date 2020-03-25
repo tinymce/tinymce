@@ -35,7 +35,7 @@ export default (): void => {
             tag: 'button',
             innerHtml: 'Button'
           },
-          action () {
+          action() {
             console.log('clicked on a button');
           }
         }),

@@ -34,11 +34,11 @@ const sFakeKey = (types: string[]) => {
   };
 };
 
-const keydownTypes = ['keydown'];
-const keyupTypes = ['keyup'];
-const keypressTypes = ['keypress'];
+const keydownTypes = [ 'keydown' ];
+const keyupTypes = [ 'keyup' ];
+const keypressTypes = [ 'keypress' ];
 // Should throw an error
-const keystrokeTypes = ['keydown', 'keyup'];
+const keystrokeTypes = [ 'keydown', 'keyup' ];
 
 const keydown = fakeKeys(keydownTypes);
 const keyup = fakeKeys(keyupTypes);

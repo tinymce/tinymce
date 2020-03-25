@@ -14,7 +14,7 @@ import { HTMLTableElement, HTMLTableDataCellElement, HTMLTableHeaderCellElement 
 
 type Op<T> = (wire: ResizeWire, table: Element, target: T, generators: Generators, direction: BarPositions<ColInfo>) => Option<RunOperationOutput>;
 
-const checkOld = function <T>(expCell: { section: number, row: number, column: number }, expectedHtml: string, input: string, operation: Op<TargetElement>, section: number, row: number, column: number, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
+const checkOld = function <T> (expCell: { section: number, row: number, column: number }, expectedHtml: string, input: string, operation: Op<TargetElement>, section: number, row: number, column: number, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
   const table = Element.fromHtml<HTMLTableElement>(input);
   Insert.append(Body.body(), table);
   const wire = ResizeWire.only(Body.body());
@@ -45,8 +45,8 @@ const checkPaste = function (expectedHtml: string, input: string, pasteHtml: str
     wire,
     table,
     {
-      selection: Fun.constant([Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()]),
-      clipboard: Fun.constant([SelectorFind.descendant(pasteTable, 'tr').getOrDie()]),
+      selection: Fun.constant([ Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie() ]),
+      clipboard: Fun.constant([ SelectorFind.descendant(pasteTable, 'tr').getOrDie() ]),
       generators: Fun.constant(Bridge.generators as SimpleGenerators) // Impossible type! This might work in some restricted circumstances.
     },
     Bridge.generators,
@@ -88,7 +88,7 @@ const checkDelete = function (optExpCell: Option<{ section: number, row: number,
   });
 
   const result = operation(wire, table, {
-      selection: Fun.constant(cellz)
+    selection: Fun.constant(cellz)
   }, Bridge.generators, direction);
 
   // The operation might delete the whole table

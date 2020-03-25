@@ -83,7 +83,7 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemApi[] => {
   return hasCustom ? [
     remove,
     custom
-  ] : [remove];
+  ] : [ remove ];
 };
 
 const applyColor = function (editor: Editor, format, value, onChoice: (v: string) => void) {

@@ -31,14 +31,14 @@ UnitTest.test('ClassTest', function () {
   Class.add(c, 'spot');
   check(true, true, false, false);
 
-  Classes.add(c, ['mogel', 't']);
+  Classes.add(c, [ 'mogel', 't' ]);
   check(true, true, true, true);
 
-  assert.eq(['blob', 'spot', 'mogel', 't'], Classes.get(c));
+  assert.eq([ 'blob', 'spot', 'mogel', 't' ], Classes.get(c));
 
-  Classes.remove(c, ['mogel', 't']);
+  Classes.remove(c, [ 'mogel', 't' ]);
   check(true, true, false, false);
-  assert.eq(['blob', 'spot'], Classes.get(c));
+  assert.eq([ 'blob', 'spot' ], Classes.get(c));
 
   Class.remove(c, 'blob');
   check(false, true, false, false);
@@ -58,14 +58,14 @@ UnitTest.test('ClassTest', function () {
 
   assert.eq([], Classes.get(m));
 
-  Classes.add(m, ['a', 'b']);
-  assert.eq(['a', 'b'], Classes.get(m));
-  Classes.remove(m, ['a', 'b']);
+  Classes.add(m, [ 'a', 'b' ]);
+  assert.eq([ 'a', 'b' ], Classes.get(m));
+  Classes.remove(m, [ 'a', 'b' ]);
   assert.eq([], Classes.get(m));
   assert.eq(false, Class.has(m, 'a'));
 
   Class.toggle(m, 'a');
-  assert.eq(['a'], Classes.get(m));
+  assert.eq([ 'a' ], Classes.get(m));
   Class.toggle(m, 'a');
   assert.eq([], Classes.get(m));
 
@@ -73,7 +73,7 @@ UnitTest.test('ClassTest', function () {
   assert.eq(false, tgl.isOn());
   tgl.on();
   assert.eq(true, tgl.isOn());
-  assert.eq(['tglClass'], Classes.get(m));
+  assert.eq([ 'tglClass' ], Classes.get(m));
   tgl.off();
   assert.eq(false, tgl.isOn());
   assert.eq([], Classes.get(m));

@@ -221,7 +221,7 @@ const EditorManager: EditorManager = {
 
   settings: {},
 
-  setup () {
+  setup() {
     const self: EditorManager = this;
     let baseURL, documentBaseURL, suffix = '';
 
@@ -321,7 +321,7 @@ const EditorManager: EditorManager = {
    * @method overrideDefaults
    * @param {Object} defaultSettings Defaults settings object.
    */
-  overrideDefaults (defaultSettings) {
+  overrideDefaults(defaultSettings) {
     let baseUrl, suffix;
 
     baseUrl = defaultSettings.base_url;
@@ -363,7 +363,7 @@ const EditorManager: EditorManager = {
    *    ...
    * });
    */
-  init (settings) {
+  init(settings) {
     const self: EditorManager = this;
     let result, invalidInlineTargets;
 
@@ -437,7 +437,7 @@ const EditorManager: EditorManager = {
       } else if (settings.selector) {
         return DOM.select(settings.selector);
       } else if (settings.target) {
-        return [settings.target];
+        return [ settings.target ];
       }
 
       // Fallback to old setting
@@ -585,7 +585,7 @@ const EditorManager: EditorManager = {
    *    ed.windowManager.alert('Hello world!');
    * });
    */
-  get (id?: number | string) {
+  get(id?: number | string) {
     if (arguments.length === 0) {
       return editors.slice(0);
     } else if (Type.isString(id)) {
@@ -606,7 +606,7 @@ const EditorManager: EditorManager = {
    * @param {tinymce.Editor} editor Editor instance to add to the collection.
    * @return {tinymce.Editor} The same instance that got passed in.
    */
-  add (editor) {
+  add(editor) {
     const self: EditorManager = this;
     let existingEditor;
 
@@ -662,7 +662,7 @@ const EditorManager: EditorManager = {
    * @param {Object} settings Editor instance settings.
    * @return {tinymce.Editor} Editor instance that got created.
    */
-  createEditor (id, settings) {
+  createEditor(id, settings) {
     return this.add(new Editor(id, settings, this));
   },
 
@@ -686,7 +686,7 @@ const EditorManager: EditorManager = {
    * @param {tinymce.Editor/String/Object} [selector] CSS selector or editor instance to remove.
    * @return {tinymce.Editor} The editor that got passed in will be return if it was found otherwise null.
    */
-  remove (selector?: string | Editor) {
+  remove(selector?: string | Editor) {
     const self = this;
     let i, editor;
 
@@ -744,7 +744,7 @@ const EditorManager: EditorManager = {
    * @param {String} value Optional value parameter like for example an URL to a link.
    * @return {Boolean} true/false if the command was executed or not.
    */
-  execCommand (cmd, ui, value) {
+  execCommand(cmd, ui, value) {
     const self = this, editor = self.get(value);
 
     // Manager commands
@@ -794,7 +794,7 @@ const EditorManager: EditorManager = {
    * // Saves all contents
    * tinyMCE.triggerSave();
    */
-  triggerSave () {
+  triggerSave() {
     each(editors, function (editor) {
       editor.save();
     });
@@ -807,7 +807,7 @@ const EditorManager: EditorManager = {
    * @param {String} code Optional language code.
    * @param {Object} items Name/value object with translations.
    */
-  addI18n (code, items) {
+  addI18n(code, items) {
     I18n.add(code, items);
   },
 
@@ -818,7 +818,7 @@ const EditorManager: EditorManager = {
    * @param {String/Array/Object} text String to translate
    * @return {String} Translated string.
    */
-  translate (text) {
+  translate(text) {
     return I18n.translate(text);
   },
 
@@ -828,7 +828,7 @@ const EditorManager: EditorManager = {
    * @method setActive
    * @param {tinymce.Editor} editor Editor instance to set as the active instance.
    */
-  setActive (editor) {
+  setActive(editor) {
     const activeEditor = this.activeEditor;
 
     if (this.activeEditor !== editor) {
@@ -842,7 +842,7 @@ const EditorManager: EditorManager = {
     this.activeEditor = editor;
   },
 
-  _setBaseUrl (baseUrl: string) {
+  _setBaseUrl(baseUrl: string) {
     this.baseURL = new URI(this.documentBaseURL).toAbsolute(baseUrl.replace(/\/+$/, ''));
     this.baseURI = new URI(this.baseURL);
   }

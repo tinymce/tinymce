@@ -133,7 +133,7 @@ const setup = (extras: WindowManagerSetup) => {
     return DialogManager.DialogManager.open<T>(factory, config);
   };
 
-  const openInlineDialog = <T extends Types.Dialog.DialogData>(config/*: Types.Dialog.DialogApi<T>*/, anchor: InlineDialogAnchor, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void, ariaAttrs): Types.Dialog.DialogInstanceApi<T> => {
+  const openInlineDialog = <T extends Types.Dialog.DialogData>(config/* : Types.Dialog.DialogApi<T>*/, anchor: InlineDialogAnchor, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void, ariaAttrs): Types.Dialog.DialogInstanceApi<T> => {
     const factory = (contents: Types.Dialog.Dialog<T>, internalInitialData: T, dataValidator: Processor): Types.Dialog.DialogInstanceApi<T> => {
       const initialData = validateData<T>(internalInitialData, dataValidator);
       const inlineDialog = Singleton.value<AlloyComponent>();
@@ -171,7 +171,7 @@ const setup = (extras: WindowManagerSetup) => {
         },
         // Fires the default dismiss event.
         fireDismissalEventInstead: { },
-        ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { } },
+        ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { }},
         inlineBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('window-manager-inline-events', [
             AlloyEvents.run(SystemEvents.dismissRequested(), (comp, se) => {

@@ -56,7 +56,7 @@ const getServiceErrorMsg = function (type) {
 
 const getServiceError = function (text) {
   const serviceError = Utils.parseJson(text);
-  const errorType = Utils.traverse(serviceError, ['error', 'type']);
+  const errorType = Utils.traverse(serviceError, [ 'error', 'type' ]);
   const errorMsg = errorType ? getServiceErrorMsg(errorType) : 'Invalid JSON in service error message';
 
   return 'ImageProxy Service error: ' + errorMsg;

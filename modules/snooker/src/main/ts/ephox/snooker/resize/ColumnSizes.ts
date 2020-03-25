@@ -24,7 +24,7 @@ const getRawH = function (cell: Element) {
   return getRaw(cell, 'height', Sizes.getHeight);
 };
 
-const getWidthFrom = function <T>(warehouse: Warehouse, direction: BarPositions<ColInfo>, getWidth: (cell: Element, tableSize: TableSize) => T, fallback: (deduced: Option<number>) => T, tableSize: TableSize) {
+const getWidthFrom = function <T> (warehouse: Warehouse, direction: BarPositions<ColInfo>, getWidth: (cell: Element, tableSize: TableSize) => T, fallback: (deduced: Option<number>) => T, tableSize: TableSize) {
   const columns = Blocks.columns(warehouse);
 
   const backups = Arr.map(columns, function (cellOption) {

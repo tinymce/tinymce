@@ -5,7 +5,7 @@ import { getDemoRegistry } from '../buttons/DemoRegistry';
 
 export const registerDemoContextMenus = () => {
   getDemoRegistry().addContextMenu('regular', {
-    update: () => ['bold', 'italic', '|', 'table']
+    update: () => [ 'bold', 'italic', '|', 'table' ]
   });
 
   getDemoRegistry().addContextMenu('custom', {
@@ -19,7 +19,7 @@ export const registerDemoContextMenus = () => {
   });
 
   getDemoRegistry().addContextMenu('mixed', {
-    update: () => ['bold', 'italic', {
+    update: () => [ 'bold', 'italic', {
       icon: 'code',
       text: 'Code',
       onAction: (api) => {

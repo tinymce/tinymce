@@ -15,7 +15,7 @@ UnitTest.asynctest('TogglingAriaTest', (success, failure) => {
       Container.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'custom-component-test'],
+          classes: [ 'custom-component-test' ],
           styles: {
             background: 'blue',
             width: '200px',

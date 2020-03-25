@@ -55,12 +55,12 @@ UnitTest.test('ResizeTest', function () {
     const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
     // [50%, 50%] existing widths.
-    assert.eq([50, 50], widths);
+    assert.eq([ 50, 50 ], widths);
 
     const deltas = Deltas.determine(widths, 0, step, tableSize);
 
     // [25%, -25%] deltas.
-    assert.eq([25, -25], deltas);
+    assert.eq([ 25, -25 ], deltas);
 
     // Set new width
     tableSize.setTableWidth(table, [], step);
@@ -103,7 +103,7 @@ UnitTest.test('ResizeTest', function () {
     const warehouse = getWarehouse(table);
     const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
-    const expectedWidths = [50, 50];
+    const expectedWidths = [ 50, 50 ];
 
     const widthDiffs = Arr.map(expectedWidths, (x, i) => {
       return widths[i] - x;
@@ -120,7 +120,7 @@ UnitTest.test('ResizeTest', function () {
     const deltas = Deltas.determine(widths, 0, step, tableSize);
 
     // [25%, -25%] deltas.
-    assert.eq([25, -25], deltas);
+    assert.eq([ 25, -25 ], deltas);
 
     // Set new width
     tableSize.setTableWidth(table, [], step);
@@ -164,12 +164,12 @@ UnitTest.test('ResizeTest', function () {
     const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
     // [50%, 50%] existing widths.
-    assert.eq([400, 400], widths);
+    assert.eq([ 400, 400 ], widths);
 
     const deltas = Deltas.determine(widths, 0, step, tableSize);
 
     // [25%, -25%] deltas.
-    assert.eq([200, -200], deltas);
+    assert.eq([ 200, -200 ], deltas);
 
     Remove.remove(table);
   };
@@ -209,12 +209,12 @@ UnitTest.test('ResizeTest', function () {
     const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
     // [50%, 50%] existing widths.
-    assert.eq([400, 400], widths);
+    assert.eq([ 400, 400 ], widths);
 
     const deltas = Deltas.determine(widths, 0, step, tableSize);
 
     // [25%, -25%] deltas.
-    assert.eq([200, -200], deltas);
+    assert.eq([ 200, -200 ], deltas);
 
     Remove.remove(table);
   };

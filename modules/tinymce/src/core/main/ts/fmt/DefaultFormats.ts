@@ -12,15 +12,15 @@ import { Formats } from '../api/fmt/Format';
 const get = function (dom: DOMUtils) {
   const formats: Formats = {
     valigntop: [
-      { selector: 'td,th', styles: { verticalAlign: 'top' } }
+      { selector: 'td,th', styles: { verticalAlign: 'top' }}
     ],
 
     valignmiddle: [
-      { selector: 'td,th', styles: { verticalAlign: 'middle' } }
+      { selector: 'td,th', styles: { verticalAlign: 'middle' }}
     ],
 
     valignbottom: [
-      { selector: 'td,th', styles: { verticalAlign: 'bottom' } }
+      { selector: 'td,th', styles: { verticalAlign: 'bottom' }}
     ],
 
     alignleft: [
@@ -129,13 +129,13 @@ const get = function (dom: DOMUtils) {
 
     bold: [
       { inline: 'strong', remove: 'all' },
-      { inline: 'span', styles: { fontWeight: 'bold' } },
+      { inline: 'span', styles: { fontWeight: 'bold' }},
       { inline: 'b', remove: 'all' }
     ],
 
     italic: [
       { inline: 'em', remove: 'all' },
-      { inline: 'span', styles: { fontStyle: 'italic' } },
+      { inline: 'span', styles: { fontStyle: 'italic' }},
       { inline: 'i', remove: 'all' }
     ],
 
@@ -153,7 +153,7 @@ const get = function (dom: DOMUtils) {
     hilitecolor: { inline: 'span', styles: { backgroundColor: '%value' }, links: true, remove_similar: true, clear_child_styles: true },
     fontname: { inline: 'span', toggle: false, styles: { fontFamily: '%value' }, clear_child_styles: true },
     fontsize: { inline: 'span', toggle: false, styles: { fontSize: '%value' }, clear_child_styles: true },
-    fontsize_class: { inline: 'span', attributes: { class: '%value' } },
+    fontsize_class: { inline: 'span', attributes: { class: '%value' }},
     blockquote: { block: 'blockquote', wrapper: true, remove: 'all' },
     subscript: { inline: 'sub' },
     superscript: { inline: 'sup' },
@@ -161,11 +161,11 @@ const get = function (dom: DOMUtils) {
 
     link: {
       inline: 'a', selector: 'a', remove: 'all', split: true, deep: true,
-      onmatch () {
+      onmatch() {
         return true;
       },
 
-      onformat (elm, fmt, vars) {
+      onformat(elm, fmt, vars) {
         Tools.each(vars, function (value, key) {
           dom.setAttrib(elm, key, value);
         });
@@ -181,8 +181,8 @@ const get = function (dom: DOMUtils) {
         block_expand: true,
         deep: true
       },
-      { selector: 'span', attributes: ['style', 'class'], remove: 'empty', split: true, expand: false, deep: true },
-      { selector: '*', attributes: ['style', 'class'], split: false, expand: false, deep: true }
+      { selector: 'span', attributes: [ 'style', 'class' ], remove: 'empty', split: true, expand: false, deep: true },
+      { selector: '*', attributes: [ 'style', 'class' ], split: false, expand: false, deep: true }
     ]
   };
 

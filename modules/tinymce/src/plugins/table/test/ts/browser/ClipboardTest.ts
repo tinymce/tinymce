@@ -403,8 +403,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
     LegacyUnit.equal(clipboardRows[0].tagName, 'TR');
 
     editor.plugins.table.setClipboardRows(clipboardRows.concat([
-      createRow(['a', 'b']),
-      createRow(['c', 'd'])
+      createRow([ 'a', 'b' ]),
+      createRow([ 'c', 'd' ])
     ]));
 
     LegacyUnit.setSelection(editor, 'tr:nth-child(2) td', 0);

@@ -11,7 +11,7 @@ import * as Splitter from './Splitter';
  */
 const separate = function <E, D, M extends PRange & {word: () => string}>(universe: Universe<E, D>, list: SpotRange<E>[], matches: M[]) {
   const allPositions = Arr.bind(matches, function (match) {
-    return [match.start(), match.finish()];
+    return [ match.start(), match.finish() ];
   });
 
   const subdivide = function (unit: SpotRange<E>, positions: number[]) {

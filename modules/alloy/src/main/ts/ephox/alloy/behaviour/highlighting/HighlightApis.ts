@@ -33,7 +33,7 @@ const dehighlight = (component: AlloyComponent, hConfig: HighlightingConfig, hSt
 };
 
 const highlight = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, target: AlloyComponent): void => {
-  dehighlightAllExcept(component, hConfig, hState, [target]);
+  dehighlightAllExcept(component, hConfig, hState, [ target ]);
 
   if (! isHighlighted(component, hConfig, hState, target)) {
     Class.add(target.element(), hConfig.highlightClass);

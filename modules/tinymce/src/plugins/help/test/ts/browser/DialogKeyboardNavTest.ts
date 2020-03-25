@@ -80,9 +80,9 @@ UnitTest.asynctest('browser.tinymce.plugins.help.DialogKeyboardNavTest', (succes
       ])
     ], onSuccess, onFailure);
   }, {
-      plugins: 'help',
-      toolbar: 'help',
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce'
-    }, success, failure);
+    plugins: 'help',
+    toolbar: 'help',
+    theme: 'silver',
+    base_url: '/project/tinymce/js/tinymce'
+  }, success, failure);
 });

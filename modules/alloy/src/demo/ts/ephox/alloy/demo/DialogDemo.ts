@@ -39,7 +39,7 @@ export default (): void => {
   const pClose = ModalDialog.parts().close({
     dom: DomFactory.fromHtml('<button type="button" aria-hidden="true" class="mce-close"></button>'),
     components: [
-      Container.sketch({ dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] } })
+      Container.sketch({ dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] }})
     ]
   });
 
@@ -134,7 +134,7 @@ export default (): void => {
       ],
 
       lazySink,
-      onEscape () {
+      onEscape() {
         console.log('escaping');
         return Option.some<boolean>(true);
       },

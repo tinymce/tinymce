@@ -316,7 +316,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
 
     matches = filteredMatches;
 
-    /*jshint validthis:true*/
+    /* jshint validthis:true*/
     return this;
   }
 
@@ -333,7 +333,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
       }
     }
 
-    /*jshint validthis:true*/
+    /* jshint validthis:true*/
     return this;
   }
 
@@ -349,7 +349,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
       stepThroughMatches(node, matches, genReplacer(callback));
     }
 
-    /*jshint validthis:true*/
+    /* jshint validthis:true*/
     return this;
   }
 

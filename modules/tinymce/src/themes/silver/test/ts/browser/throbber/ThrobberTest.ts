@@ -14,7 +14,7 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.throbber.ThrobberTest', (
         attrs: {
           'aria-hidden': str.is('true')
         },
-        classes: [arr.has('tox-throbber')],
+        classes: [ arr.has('tox-throbber') ],
         styles: {
           display: str.is('none')
         }

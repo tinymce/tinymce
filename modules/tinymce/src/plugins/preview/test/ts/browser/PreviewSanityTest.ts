@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewSanityTest', (success
         Keyboard.sKeydown(doc, Keys.escape(), { }),
         Waiter.sTryUntil('Dialog should close on esc', UiFinder.sNotExists(docBody, dialogSelector))
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     theme: 'silver',
     plugins: 'preview',

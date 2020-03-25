@@ -41,7 +41,7 @@ const renderFormFieldDom = (): RawDomSchema => {
 const renderFormFieldDomWith = (extraClasses): RawDomSchema => {
   return {
     tag: 'div',
-    classes: ['tox-form__group'].concat(extraClasses)
+    classes: [ 'tox-form__group' ].concat(extraClasses)
   };
 };
 
@@ -49,7 +49,7 @@ const renderLabel = (label: string, providersBackstage: UiFactoryBackstageProvid
   return AlloyFormField.parts().label({
     dom: {
       tag: 'label',
-      classes: ['tox-label'],
+      classes: [ 'tox-label' ],
       innerHtml: providersBackstage.translate(label)
     }
   });

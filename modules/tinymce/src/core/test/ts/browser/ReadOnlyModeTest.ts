@@ -152,7 +152,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
                   attrs: {
                     'data-mce-bogus': str.is('all'),
                   },
-                  classes: [arr.has('mce-visual-caret'), arr.has('mce-visual-caret-before')]
+                  classes: [ arr.has('mce-visual-caret'), arr.has('mce-visual-caret-before') ]
                 })
               ]
             });
@@ -188,7 +188,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
       Log.stepsAsStep('TBA', 'Resize bars for tables should be hidden while in readonly mode', [
         sSetMode('design'),
         tinyApis.sSetContent('<table><tbody><tr><td>a</td></tr></tbody></table>'),
-        tinyApis.sSetCursor([0, 0, 0, 0, 0], 0),
+        tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 0),
         sMouseOverTable,
         sAssertResizeBars(true),
         sSetMode('readonly'),
@@ -203,13 +203,13 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
         tinyApis.sFocus(),
         sSetMode('design'),
         tinyApis.sSetContent('<table><tbody><tr><td>a</td></tr></tbody></table>'),
-        tinyApis.sSetCursor([0, 0, 0, 0, 0], 0),
+        tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 0),
         UiFinder.sWaitFor('Waited for context toolbar', Body.body(), '.tox-pop'),
         sSetMode('readonly'),
         UiFinder.sNotExists(Body.body(), '.tox-pop'),
         sSetMode('design'),
         tinyApis.sSetContent('<table><tbody><tr><td>a</td></tr></tbody></table>'),
-        tinyApis.sSetCursor([0, 0, 0, 0, 0], 0),
+        tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 0),
         UiFinder.sWaitFor('Waited for context toolbar', Body.body(), '.tox-pop')
       ]),
       Log.stepsAsStep('TBA', 'Main toolbar should disable when switching to readonly mode', [
@@ -232,9 +232,9 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
       ])
     ], onSuccess, onFailure);
   }, {
-      base_url: '/project/tinymce/js/tinymce',
-      toolbar: 'bold',
-      plugins: 'table',
-      statusbar: false
-    }, success, failure);
+    base_url: '/project/tinymce/js/tinymce',
+    toolbar: 'bold',
+    plugins: 'table',
+    statusbar: false
+  }, success, failure);
 });

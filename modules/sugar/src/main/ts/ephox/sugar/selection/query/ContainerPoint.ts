@@ -24,8 +24,8 @@ const searchInChildren = function (doc: Element<Document>, node: Element<DomNode
     // slight mutation because we assume creating ranges is expensive
     r.selectNode(n.dom());
     return Geometry.inRect(r.getBoundingClientRect(), x, y) ?
-            locateNode(doc, n, x, y) :
-            Option.none<Range>();
+      locateNode(doc, n, x, y) :
+      Option.none<Range>();
   });
 };
 

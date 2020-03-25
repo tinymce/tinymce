@@ -173,10 +173,10 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
       ),
 
       Step.sync(() => {
-        gui.broadcastOn([ 'channel-1' ], {blah: true});
+        gui.broadcastOn([ 'channel-1' ], { blah: true });
       }),
 
-      sAssertReflectState('reflector 1', {blah: true}, '.reflector-1'),
+      sAssertReflectState('reflector 1', { blah: true }, '.reflector-1'),
       store.sAssertEq('No attached/detached should have occurred', [ ]),
 
       Step.sync(() => {

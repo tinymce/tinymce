@@ -103,21 +103,21 @@ export default (): void => {
       tag: 'div'
     },
 
-    onEscape () {
+    onEscape() {
       console.log('inline.menu.escape');
       return Option.some<boolean>(true);
     },
 
-    onExecute () {
+    onExecute() {
       console.log('inline.menu.execute');
       return Option.some<boolean>(true);
     },
 
-    onOpenMenu (sandbox, menu) {
+    onOpenMenu(sandbox, menu) {
       // handled by inline view itself
     },
 
-    onOpenSubmenu (sandbox, item, submenu) {
+    onOpenSubmenu(sandbox, item, submenu) {
       const sink = lazySink(sandbox).getOrDie();
       Positioning.position(sink, {
         anchor: 'submenu',
@@ -227,21 +227,21 @@ export default (): void => {
                         tag: 'button',
                         innerHtml: 'B'
                       },
-                      action () { console.log('inline bold'); }
+                      action() { console.log('inline bold'); }
                     }),
                     Button.sketch({
                       dom: {
                         tag: 'button',
                         innerHtml: 'I'
                       },
-                      action () { console.log('inline italic'); }
+                      action() { console.log('inline italic'); }
                     }),
                     Button.sketch({
                       dom: {
                         tag: 'button',
                         innerHtml: 'U'
                       },
-                      action () { console.log('inline underline'); }
+                      action() { console.log('inline underline'); }
                     })
                   ]
 

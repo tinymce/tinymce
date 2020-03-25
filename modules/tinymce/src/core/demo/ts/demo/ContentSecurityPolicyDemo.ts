@@ -51,7 +51,7 @@ const settings = {
   importcss_append: true,
   height: 400,
   image_advtab: true,
-  file_picker_callback (callback, value, meta) {
+  file_picker_callback(callback, value, meta) {
     if (meta.fieldname === 'poster') {
       callback('test.mp4', { altsource: 'blah.ogg', width: '400px', poster: 'testing.jpg', embed: '<p>test</p>' });
       return;
@@ -72,14 +72,14 @@ const settings = {
       callback('movie.mp4', { embed: '<p>test</p>' });
     }
   },
-  spellchecker_callback (method, text, success, failure) {
+  spellchecker_callback(method, text, success, failure) {
     const words = text.match(this.getWordCharPattern());
 
     if (method === 'spellcheck') {
       const suggestions = {};
 
       for (let i = 0; i < words.length; i++) {
-        suggestions[words[i]] = ['First', 'Second'];
+        suggestions[words[i]] = [ 'First', 'Second' ];
       }
 
       success(suggestions);
@@ -97,7 +97,7 @@ const settings = {
   template_mdate_format: '[MDATE: %m/%d/%Y : %H:%M:%S]',
   image_caption: true,
   theme: 'silver',
-  setup (ed) {
+  setup(ed) {
     makeSidebar(ed, 'sidebar1', 'green', 200);
   },
   plugins: [

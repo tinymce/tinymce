@@ -214,7 +214,7 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
     Focusing.config({ }),
     Docking.config({
       contextual: {
-        lazyContext (comp) {
+        lazyContext(comp) {
           const headerHeight = Height.getOuter(comp.element());
           const container = editor.inline ? editor.getContentAreaContainer() : editor.getContainer();
           const box = Boxes.box(Element.fromDom(container));

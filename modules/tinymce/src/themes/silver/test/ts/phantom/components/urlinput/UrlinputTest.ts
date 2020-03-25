@@ -99,13 +99,13 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                     classes: [ arr.has('tox-collection__group') ],
                     children: [
                       s.element('div', {
-                        classes: [ arr.has('tox-collection__item')],
+                        classes: [ arr.has('tox-collection__item') ],
                         children: [
                           s.element('div', { html: str.is('Header1') })
                         ]
                       }),
                       s.element('div', {
-                        classes: [ arr.has('tox-collection__item')],
+                        classes: [ arr.has('tox-collection__item') ],
                         children: [
                           s.element('div', { html: str.is('Header2') })
                         ]
@@ -155,13 +155,13 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                     classes: [ arr.has('tox-collection__group') ],
                     children: [
                       s.element('div', {
-                        classes: [ arr.has('tox-collection__item')],
+                        classes: [ arr.has('tox-collection__item') ],
                         children: [
                           s.element('div', { html: str.is('Header1') })
                         ]
                       }),
                       s.element('div', {
-                        classes: [ arr.has('tox-collection__item')],
+                        classes: [ arr.has('tox-collection__item') ],
                         children: [
                           s.element('div', { html: str.is('Header2') })
                         ]
@@ -218,7 +218,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
           const repValue = Representing.getValue(input);
           Assertions.assertEq('Checking Rep.getValue', {
             value: 'http://tiny.cloud',
-            meta: { before: '#header'},
+            meta: { before: '#header' },
             fieldname: 'test'
           }, repValue);
         }),

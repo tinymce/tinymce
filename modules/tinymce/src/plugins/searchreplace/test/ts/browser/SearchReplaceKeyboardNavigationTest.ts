@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardN
         altKey: false,
         shiftKey: false,
         metaKey: false
-      }, {altKey: true, keyCode: 120});
+      }, { altKey: true, keyCode: 120 });
       editor.fire('keydown', args);
     });
 

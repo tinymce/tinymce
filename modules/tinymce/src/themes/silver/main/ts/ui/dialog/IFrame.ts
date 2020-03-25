@@ -61,7 +61,7 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
   const isSandbox = platformNeedsSandboxing && spec.sandboxed;
 
   const attributes = {
-    ...spec.label.map<{ title?: string }>((title) => ({title})).getOr({}),
+    ...spec.label.map<{ title?: string }>((title) => ({ title })).getOr({}),
     ...isSandbox ? { sandbox : 'allow-scripts allow-same-origin' } : { }
   };
 
@@ -92,7 +92,7 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
     factory: { sketch: factory }
   });
 
-  return renderFormFieldWith(pLabel, pField, ['tox-form__group--stretched'], [ ]);
+  return renderFormFieldWith(pLabel, pField, [ 'tox-form__group--stretched' ], [ ]);
 };
 
 export {

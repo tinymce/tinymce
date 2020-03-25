@@ -7,11 +7,11 @@ import * as ArbNodes from './ArbNodes';
 import { WeightedChoice } from './WeightedChoice';
 
 const toTags = (detail) =>
-  Obj.mapToArray(detail.tags, (v, k) => Merger.deepMerge(v, {tag: k}));
+  Obj.mapToArray(detail.tags, (v, k) => Merger.deepMerge(v, { tag: k }));
 
 const flattenTag = (tag) => {
   const r = {};
-  r[tag] = {weight: 1.0};
+  r[tag] = { weight: 1.0 };
   return r;
 };
 

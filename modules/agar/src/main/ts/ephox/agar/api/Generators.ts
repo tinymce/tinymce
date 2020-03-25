@@ -33,7 +33,7 @@ const hexColor = Jsc.tuple([
   hexDigit,
   hexDigit,
   hexDigit
-]).generator.map((digits) => ['#'].concat(digits).join(''));
+]).generator.map((digits) => [ '#' ].concat(digits).join(''));
 
 export {
   selection,

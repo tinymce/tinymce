@@ -21,17 +21,17 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DisableTableToolbarTest', (suc
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({},
-     Log.steps('TBA', 'Table: test that table toolbar can be disabled', [
+      Log.steps('TBA', 'Table: test that table toolbar can be disabled', [
         tinyApis.sFocus(),
         tinyApis.sSetSetting('table_toolbar', 'tableprops tabledelete'),
         tinyApis.sSetContent(tableHtml),
-        tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 1),
+        tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1),
         Step.wait(100), // How should I do this better?
-                        // I want to check that the inline toolbar does not appear,
-                        // but I have to wait unless it won't exist any way because it's too fast
+        // I want to check that the inline toolbar does not appear,
+        // but I have to wait unless it won't exist any way because it's too fast
         UiFinder.sNotExists(TinyDom.fromDom(document.body), 'div.tox-pop div.tox-toolbar')
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'table',
     table_toolbar: '',

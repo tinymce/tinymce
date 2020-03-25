@@ -39,13 +39,13 @@ interface LtrRtlRanges {
 
 const getRanges = function (win: Window, selection: Selection): LtrRtlRanges {
   return selection.match<LtrRtlRanges>({
-    domRange (rng) {
+    domRange(rng) {
       return {
         ltr: Fun.constant(rng),
         rtl: Option.none
       };
     },
-    relative (startSitu, finishSitu) {
+    relative(startSitu, finishSitu) {
       return {
         ltr: Thunk.cached(function () {
           return NativeRange.relativeToNative(win, startSitu, finishSitu);
@@ -57,7 +57,7 @@ const getRanges = function (win: Window, selection: Selection): LtrRtlRanges {
         })
       };
     },
-    exact (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
+    exact(start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
       return {
         ltr: Thunk.cached(function () {
           return NativeRange.exactToNative(win, start, soffset, finish, foffset);

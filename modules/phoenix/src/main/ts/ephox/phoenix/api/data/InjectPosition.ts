@@ -28,11 +28,11 @@ const adt: {
   last: <E> (element: E) => InjectPosition<E>;
   invalid: <E> (element: E, offset: number) => InjectPosition<E>;
 } = Adt.generate([
-  { before: ['element'] },
-  { after: ['element'] },
-  { rest: ['element'] },
-  { last: ['element'] },
-  { invalid: ['element', 'offset'] }
+  { before: [ 'element' ] },
+  { after: [ 'element' ] },
+  { rest: [ 'element' ] },
+  { last: [ 'element' ] },
+  { invalid: [ 'element', 'offset' ] }
 ]);
 
 export const InjectPosition = {

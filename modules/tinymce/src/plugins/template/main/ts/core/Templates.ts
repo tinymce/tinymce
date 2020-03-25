@@ -22,7 +22,7 @@ const createTemplateList = function (editorSettings, callback) {
     if (typeof templateList === 'string') {
       XHR.send({
         url: templateList,
-        success (text) {
+        success(text) {
           callback(JSON.parse(text));
         }
       });

@@ -7,8 +7,8 @@ import { setReadWriteMode, isInProtectedMode, isInReadWriteMode } from './Mode';
 
 const imageId = Id.generate('image');
 
-const validDropEffects = ['none', 'copy', 'link', 'move'];
-const validEffectAlloweds = ['none', 'copy', 'copyLink', 'copyMove', 'link', 'linkMove', 'move', 'all', 'uninitialized'];
+const validDropEffects = [ 'none', 'copy', 'link', 'move' ];
+const validEffectAlloweds = [ 'none', 'copy', 'copyLink', 'copyMove', 'link', 'linkMove', 'move', 'all', 'uninitialized' ];
 
 export interface DragImageData {
   image: DomElement;
@@ -83,7 +83,7 @@ const createDataTransfer = (): DataTransfer => {
     get types() {
       const types = Arr.map(Arr.from(items), (item) => item.type);
       const hasFiles = Arr.exists(Arr.from(items), (item) => item.kind === 'file');
-      return types.concat(hasFiles ? ['Files'] : []);
+      return types.concat(hasFiles ? [ 'Files' ] : []);
     },
 
     setDragImage: (image: DomElement, x: number, y: number) => {

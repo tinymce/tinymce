@@ -9,10 +9,10 @@ UnitTest.test('Arr.reverse: unit tests', () => {
   };
 
   check([], []);
-  check([1], [1]);
-  check([1, 2], [2, 1]);
-  check([2, 1], [1, 2]);
-  check([1, 4, 5, 3, 2], [2, 3, 5, 4, 1]);
+  check([ 1 ], [ 1 ]);
+  check([ 1, 2 ], [ 2, 1 ]);
+  check([ 2, 1 ], [ 1, 2 ]);
+  check([ 1, 4, 5, 3, 2 ], [ 2, 3, 5, 4, 1 ]);
 });
 
 UnitTest.test('Arr.reverse: Reversing twice is identity', () => {

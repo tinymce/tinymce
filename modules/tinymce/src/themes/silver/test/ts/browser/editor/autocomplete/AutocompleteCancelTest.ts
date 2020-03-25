@@ -152,13 +152,13 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
         s.element('p', {}),
       ]),
       sInsertContentAndTrigger('aa'),
-      sSetCursor([0, 0, 0], 2),
+      sSetCursor([ 0, 0, 0 ], 2),
       sWaitForAutocompleteToClose,
       sAssertContent('Check autocompleter was not cancelled', (s, str) => [
         expectedAutocompletePara(':aaa')(s, str),
         s.element('p', { }),
       ]),
-      sSetCursor([1, 0], 0),
+      sSetCursor([ 1, 0 ], 0),
       sAssertContent('Check autocompleter was cancelled', (s, str) => [
         expectedSimplePara(':aaa')(s, str),
         s.element('p', { })

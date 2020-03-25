@@ -61,7 +61,7 @@ export const TinyUi = function (editor: Editor): TinyUi {
     ]);
   };
 
-  const sClickOnMenu = function <T>(label: string, selector: string) {
+  const sClickOnMenu = function <T> (label: string, selector: string) {
     return Chain.asStep<T, any>({}, [
       cFindIn(cGetMenuRoot, selector),
       Mouse.cClick

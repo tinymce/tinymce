@@ -44,7 +44,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
   const uploadStatus = UploadStatus();
   const urlFilters: Array<(img: HTMLImageElement) => boolean> = [];
 
-  const aliveGuard = function <T, R>(callback?: (result: T) => R) {
+  const aliveGuard = function <T, R> (callback?: (result: T) => R) {
     return function (result: T) {
       if (editor.selection) {
         return callback(result);

@@ -35,11 +35,11 @@ const reduceBy = (value: number, min: number, max: number, step: number): number
   if (value < min) {
     return value;
   } else if (value > max) {
-      return max;
+    return max;
   } else if (value === min) {
-      return min - 1;
+    return min - 1;
   } else {
-      return Math.max(min, value - step);
+    return Math.max(min, value - step);
   }
 };
 
@@ -47,11 +47,11 @@ const increaseBy = (value: number, min: number, max: number, step: number): numb
   if (value > max) {
     return value;
   } else if (value < min) {
-      return min;
+    return min;
   } else if (value === max) {
-      return max + 1;
+    return max + 1;
   } else {
-      return Math.min(max, value + step);
+    return Math.min(max, value + step);
   }
 };
 

@@ -87,7 +87,7 @@ UnitTest.test('Runtime Size Test', function () {
     Attr.set(table, 'cellspacing', random(0, 10).toString());
 
     Css.setAll(table, {
-      'border-collapse': randomValue(['collapse', 'separate']),
+      'border-collapse': randomValue([ 'collapse', 'separate' ]),
       'border-left': randomBorder(0, 5, 'red'),
       'border-right': randomBorder(0, 5, 'red'),
       'width': randomSize(100, 1000)
@@ -138,7 +138,7 @@ UnitTest.test('Runtime Size Test', function () {
     Attr.set(table, 'cellspacing', random(0, 10).toString());
 
     Css.setAll(table, {
-      'border-collapse': randomValue(['collapse', 'separate']),
+      'border-collapse': randomValue([ 'collapse', 'separate' ]),
       'border-top': randomBorder(0, 5, 'red'),
       'border-bottom': randomBorder(0, 5, 'red'),
       'height': randomSize(100, 1000)
@@ -151,7 +151,7 @@ UnitTest.test('Runtime Size Test', function () {
       Css.setAll(cell, {
         'width': '10px',
         'height': randomSize(1, 100),
-        'box-sizing': randomValue(['content-box', 'border-box']),
+        'box-sizing': randomValue([ 'content-box', 'border-box' ]),
         'padding-top': randomSize(0, 5),
         'padding-bottom': randomSize(0, 5),
         'border-top': randomBorder(0, 5, 'green'),

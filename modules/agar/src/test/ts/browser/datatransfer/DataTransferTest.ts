@@ -142,10 +142,10 @@ UnitTest.test('DataTransfer: add files', () => {
   transfer.items.add(createFile('test.gif', 123, new Blob([ '' ], { type: 'image/gif' })));
 
   Assert.eq('Should be able to access files length', 1, transfer.files.length);
-  Assert.eq('Types', ['image/gif'], Arr.map(transfer.files, (x) => x.type));
+  Assert.eq('Types', [ 'image/gif' ], Arr.map(transfer.files, (x) => x.type));
 
   transfer.items.add(createFile('test.jpg', 123, new Blob([ '' ], { type: 'image/jpg' })));
 
-  Assert.eq('Expected file types', ['image/gif', 'image/jpg'], Arr.map(transfer.files, (x) => x.type));
-  Assert.eq('Expected file kinds', ['file', 'file'], Arr.map(transfer.items, (x) => x.kind));
+  Assert.eq('Expected file types', [ 'image/gif', 'image/jpg' ], Arr.map(transfer.files, (x) => x.type));
+  Assert.eq('Expected file kinds', [ 'file', 'file' ], Arr.map(transfer.items, (x) => x.kind));
 });

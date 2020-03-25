@@ -71,22 +71,22 @@ const makeEventLogger = (eventName: string, initialTarget: Element): DebuggerLog
   const startTime = new Date().getTime();
 
   return {
-    logEventCut (name: string, target: Element, purpose: string) {
+    logEventCut(name: string, target: Element, purpose: string) {
       sequence.push({ outcome: 'cut', target, purpose });
     },
-    logEventStopped (name: string, target: Element, purpose: string) {
+    logEventStopped(name: string, target: Element, purpose: string) {
       sequence.push({ outcome: 'stopped', target, purpose });
     },
-    logNoParent (name: string, target: Element, purpose: string) {
+    logNoParent(name: string, target: Element, purpose: string) {
       sequence.push({ outcome: 'no-parent', target, purpose });
     },
-    logEventNoHandlers (name: string, target: Element) {
+    logEventNoHandlers(name: string, target: Element) {
       sequence.push({ outcome: 'no-handlers-left', target });
     },
-    logEventResponse (name: string, target: Element, purpose: string) {
+    logEventResponse(name: string, target: Element, purpose: string) {
       sequence.push({ outcome: 'response', purpose, target });
     },
-    write () {
+    write() {
       const finishTime = new Date().getTime();
       if (Arr.contains([ 'mousemove', 'mouseover', 'mouseout', SystemEvents.systemInit() ], eventName)) { return; }
       // tslint:disable-next-line:no-console
@@ -205,7 +205,7 @@ const getOrInitConnection = () => {
 
     win[CHROME_INSPECTOR_GLOBAL] = {
       systems: { },
-      lookup (uid: string) {
+      lookup(uid: string) {
         const systems = win[CHROME_INSPECTOR_GLOBAL].systems;
         const connections: string[] = Obj.keys(systems);
         return Arr.findMap(connections, (conn) => {

@@ -166,7 +166,7 @@ const testChainsFail = (expected, initial, chains: Array<Chain<any, any>>) => {
   return Step.raw((initValue, next, die, initLogs) => {
     Chain.pipeline(
       Arr.flatten([
-        [Chain.inject(initial)],
+        [ Chain.inject(initial) ],
         chains
       ]),
       (v, newLogs) => {

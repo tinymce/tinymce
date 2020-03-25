@@ -11,7 +11,7 @@ import { RowData, Detail } from '../api/Structs';
 import { Element } from '@ephox/sugar';
 import { BarPositions, ColInfo, RowInfo } from './BarPositions';
 
-const getWarehouse = function <T extends Detail>(list: RowData<T>[]) {
+const getWarehouse = function <T extends Detail> (list: RowData<T>[]) {
   return Warehouse.generate(list);
 };
 
@@ -74,7 +74,7 @@ const adjustHeight = function (table: Element, delta: number, index: number, dir
 };
 
 // Ensure that the width of table cells match the passed in table information.
-const adjustWidthTo = function <T extends Detail>(table: Element, list: RowData<T>[], direction: BarPositions<ColInfo>) {
+const adjustWidthTo = function <T extends Detail> (table: Element, list: RowData<T>[], direction: BarPositions<ColInfo>) {
   const tableSize = TableSize.getTableSize(table);
   const warehouse = getWarehouse(list);
   const widths = tableSize.getWidths(warehouse, direction, tableSize);

@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
     const sTriggerUpload = Logger.t('Trigger upload', Step.async((next, die) => {
       Conversions.uriToBlob(b64).then((blob) => {
         Pipeline.async({}, [
-          FileInput.sRunOnPatchedFileInput([Files.createFile('logo.png', 0, blob)], Chain.asStep({}, [
+          FileInput.sRunOnPatchedFileInput([ Files.createFile('logo.png', 0, blob) ], Chain.asStep({}, [
             // cPopupToDialog('div[role="dialog"]'),
             ui.cWaitForPopup('Locate popup', 'div[role="dialog"]'),
             UiFinder.cFindIn('input[type="file"]'),

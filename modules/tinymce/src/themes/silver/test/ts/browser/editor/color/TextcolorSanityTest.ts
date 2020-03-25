@@ -53,7 +53,7 @@ UnitTest.asynctest('TextcolorSanityTest', (success, failure) => {
       Log.stepsAsStep('TBA', 'TextColor: forecolor', [
         tinyApis.sFocus(),
         tinyApis.sSetContent('hello test'),
-        tinyApis.sSetSelection([0, 0], 0, [0, 0], 5),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 5),
         tinyUi.sClickOnToolbar('click forecolor', '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron'),
         tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
         tinyUi.sClickOnUi('click green color', 'div[data-mce-color="#2DC26B"]'),
@@ -65,7 +65,7 @@ UnitTest.asynctest('TextcolorSanityTest', (success, failure) => {
       Log.stepsAsStep('TBA', 'TextColor: backcolor', [
         tinyApis.sFocus(),
         tinyApis.sSetContent('hello test'),
-        tinyApis.sSetSelection([0, 0], 0, [0, 0], 5),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 5),
         tinyUi.sClickOnToolbar('click backcolor', '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron'),
         tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
         tinyUi.sClickOnUi('click green color', 'div[data-mce-color="#2DC26B"]'),

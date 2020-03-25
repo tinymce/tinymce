@@ -21,12 +21,12 @@ UnitTest.asynctest('GridMenuTest', (success, failure) => {
       Menu.sketch({
         value: 'test-menu-1',
         items: Arr.map([
-          { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' } }, hasSubmenu: false },
-          { type: 'item', data: { value: 'beta', meta: { text: 'Beta' } }, hasSubmenu: false },
-          { type: 'item', data: { value: 'gamma', meta: { text: 'Gamma' } }, hasSubmenu: false },
-          { type: 'item', data: { value: 'delta', meta: { text: 'Delta' } }, hasSubmenu: false },
-          { type: 'item', data: { value: 'epsilon', meta: { text: 'Epsilon' } }, hasSubmenu: false },
-          { type: 'item', data: { value: 'rho', meta: { text: 'Rho' } }, hasSubmenu: false }
+          { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' }}, hasSubmenu: false },
+          { type: 'item', data: { value: 'beta', meta: { text: 'Beta' }}, hasSubmenu: false },
+          { type: 'item', data: { value: 'gamma', meta: { text: 'Gamma' }}, hasSubmenu: false },
+          { type: 'item', data: { value: 'delta', meta: { text: 'Delta' }}, hasSubmenu: false },
+          { type: 'item', data: { value: 'epsilon', meta: { text: 'Epsilon' }}, hasSubmenu: false },
+          { type: 'item', data: { value: 'rho', meta: { text: 'Rho' }}, hasSubmenu: false }
         ], TestDropdownMenu.renderItem),
         dom: {
           tag: 'ol',

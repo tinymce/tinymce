@@ -196,7 +196,7 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
       sAssertInputHidden('input: After SlotContainer.hideAllSlots(_)'),
       sAssertInputSlotHidden('After SlotContainer.hideAllSlots(_)'),
       sAssertButtonSlotHidden('After SlotContainer.hideAllSlots(_)'),
-      sAssertGetSlotNames('checking the list slots', ['inputA', 'buttonB']),
+      sAssertGetSlotNames('checking the list slots', [ 'inputA', 'buttonB' ]),
     ];
   }, () => { success(); }, failure);
 });

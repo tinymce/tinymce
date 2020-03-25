@@ -1,5 +1,5 @@
 import { Option } from '@ephox/katamari';
-import { Body, Element, Traverse} from '@ephox/sugar';
+import { Body, Element, Traverse } from '@ephox/sugar';
 import { HTMLFrameElement, HTMLDocument, console } from '@ephox/dom-globals';
 
 // tslint:disable:no-console

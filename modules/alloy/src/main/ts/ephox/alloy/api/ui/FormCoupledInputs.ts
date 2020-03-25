@@ -27,14 +27,14 @@ const factory: CompositeSketchFactory<FormCoupledInputsDetail, FormCoupledInputs
             mode: 'manual',
             getValue(comp) {
 
-              const parts = AlloyParts.getPartsOrDie(comp, detail, ['field1', 'field2']);
+              const parts = AlloyParts.getPartsOrDie(comp, detail, [ 'field1', 'field2' ]);
               return {
                 [detail.field1Name]: Representing.getValue(parts.field1()),
                 [detail.field2Name]: Representing.getValue(parts.field2())
               };
             },
             setValue(comp, value) {
-              const parts = AlloyParts.getPartsOrDie(comp, detail, ['field1', 'field2']);
+              const parts = AlloyParts.getPartsOrDie(comp, detail, [ 'field1', 'field2' ]);
               if (Obj.hasNonNullableKey(value, detail.field1Name)) { Representing.setValue(parts.field1(), value[detail.field1Name]); }
               if (Obj.hasNonNullableKey(value, detail.field2Name)) { Representing.setValue(parts.field2(), value[detail.field2Name]); }
             }

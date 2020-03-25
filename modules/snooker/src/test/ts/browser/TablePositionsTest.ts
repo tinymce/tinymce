@@ -10,13 +10,13 @@ UnitTest.test('RectangularTest', function () {
   Insert.append(body, div);
 
   const table = Element.fromHtml(
-     '<table id="tableA" border=1>' +
+    '<table id="tableA" border=1>' +
        '<tbody>' +
          '<tr>' +
            '<td id="A1" rowspan=3 style="min-width: 100px;">A1</td>' +
            '<td id="B1" style="min-width: 100px; background: #bcabee;">B1 START SELECTION<br /></td>' +
            '<td id="C1" style="min-width: 100px;" colspan=2>C1<br /><br /><br /></td>' +
-           // '<td style="min-width: 100px;">D1</td>' +
+    // '<td style="min-width: 100px;">D1</td>' +
          '</tr>' +
          '<tr>' +
            // '<td style="min-width: 100px;">A2</td>' +
@@ -38,7 +38,7 @@ UnitTest.test('RectangularTest', function () {
          '</tr>' +
        '</tbody>' +
      '</table>'
-   );
+  );
 
   const table2 = Element.fromHtml('<table id="tableB" border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border:none;">' +
    '<tbody><tr>' +
@@ -67,8 +67,8 @@ UnitTest.test('RectangularTest', function () {
       '<td id="TBD2" style="min-width: 100px; height: 40px">D2 </td>' +
       '<td id="TBD3" style="min-width: 100px; height: 40px">D3 </td>' +
       '<td id="TBD4" style="min-width: 100px; height: 40px">D4 </td>' +
-      // '<td id="TBD5" style="min-width: 100px; height: 40px">D5 </td>'+
-      // '<td id="TBD6" style="min-width: 100px; height: 40px">D6 </td>'+
+  // '<td id="TBD5" style="min-width: 100px; height: 40px">D5 </td>'+
+  // '<td id="TBD6" style="min-width: 100px; height: 40px">D6 </td>'+
     '</tr> </tbody></table>');
 
   InsertAll.append(div, [ table, table2 ] );

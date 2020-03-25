@@ -746,12 +746,12 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     editor.formatter.register('format', {
       inline: 'b',
       styles: {
-        color (vars) {
+        color(vars) {
           return vars.color + '00ff';
         }
       },
       attributes: {
-        title (vars) {
+        title(vars) {
           return vars.title + '2';
         }
       }
@@ -1322,7 +1322,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     editor.formatter.apply('format');
     LegacyUnit.equal(getContent(editor), '<p style="font-size: 22pt;"><span style="text-decoration: underline;"><span style="color: yellow;' +
       ' text-decoration: underline;">yellow<span style="color: #ff0000; text-decoration: underline;">red</span>yellow</span></span></p>',
-      'Coloring an colored underdlined text should result in newly colored underline'
+    'Coloring an colored underdlined text should result in newly colored underline'
     );
   });
 
@@ -2037,7 +2037,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
 
     editor.selection.select(editor.dom.select('p')[0]);
 
-    editor.formatter.register('format', { inline: 'span', styles: { fontSize: '14px' } });
+    editor.formatter.register('format', { inline: 'span', styles: { fontSize: '14px' }});
     editor.formatter.apply('format');
 
     LegacyUnit.equal(
@@ -2059,7 +2059,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
 
   suite.test('Apply ceFalseOverride format', function (editor) {
     editor.setContent('<p contenteditable="false">a</p><div contenteditable="false">b</div>');
-    editor.formatter.register('format', { selector: 'div', classes: ['a'], ceFalseOverride: true });
+    editor.formatter.register('format', { selector: 'div', classes: [ 'a' ], ceFalseOverride: true });
 
     editor.selection.select(editor.dom.select('p')[0]);
     editor.formatter.apply('format');
@@ -2078,7 +2078,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
 
   suite.test('Apply defaultBlock format', function (editor) {
     editor.getBody().innerHTML = 'a<br>b';
-    editor.formatter.register('format', { selector: 'div', defaultBlock: 'div', classes: ['a'] });
+    editor.formatter.register('format', { selector: 'div', defaultBlock: 'div', classes: [ 'a' ] });
     editor.selection.setCursorLocation(editor.getBody().firstChild, 0);
     editor.formatter.apply('format');
     LegacyUnit.equal(getContent(editor), '<div class="a">a</div>b');
@@ -2112,7 +2112,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     editor.setContent('<p>a</p>');
     editor.formatter.register('format', {
       inline: 'span',
-      onformat (elm) {
+      onformat(elm) {
         elm.className = 'x';
       }
     });

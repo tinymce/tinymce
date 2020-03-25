@@ -45,7 +45,7 @@ const tooltipBehaviour = (meta: Record<string, any>, sharedBackstage: UiFactoryB
         onShow: (component, _tooltip) => {
           tooltipWorker((elm) => {
             Tooltipping.setComponents(component, [
-              GuiFactory.external({element: Element.fromDom(elm) })
+              GuiFactory.external({ element: Element.fromDom(elm) })
             ]);
           });
         }

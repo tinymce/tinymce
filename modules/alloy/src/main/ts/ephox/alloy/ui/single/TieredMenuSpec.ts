@@ -200,7 +200,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
       updateAriaExpansions(container, path);
       // When expanding, always select the first.
       return Option.from(path[0]).bind((menuName) => {
-          return layeredState.lookupMenu(menuName).bind((activeMenuPrep) => {
+        return layeredState.lookupMenu(menuName).bind((activeMenuPrep) => {
           const activeMenu = buildIfRequired(container, menuName, activeMenuPrep);
 
           // DUPE with above. Fix later.
@@ -372,15 +372,15 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     });
 
     maybeActivePrimary.fold(() => {
-        // When a menu is open but there is no activeItem, we get the menu from the container.
-        extractMenuFromContainer(container).each((primaryMenu) => {
-          detail.onRepositionMenu(container, primaryMenu, []);
-        });
-      },
-      ({ primary, triggeringPath }) => {
-        // Refresh all the menus up to the active item
-        detail.onRepositionMenu(container, primary, triggeringPath);
+      // When a menu is open but there is no activeItem, we get the menu from the container.
+      extractMenuFromContainer(container).each((primaryMenu) => {
+        detail.onRepositionMenu(container, primaryMenu, []);
       });
+    },
+    ({ primary, triggeringPath }) => {
+      // Refresh all the menus up to the active item
+      detail.onRepositionMenu(container, primary, triggeringPath);
+    });
   };
 
   const apis: TieredMenuApis = {
@@ -401,7 +401,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
           onRight: keyOnItem(onRight),
           onLeft: keyOnItem(onLeft),
           onEscape: keyOnItem(onEscape),
-          focusIn (container, keyInfo) {
+          focusIn(container, keyInfo) {
             layeredState.getPrimary().each((primary) => {
               AlloyTriggers.dispatch(container, primary.element(), SystemEvents.focusItem());
             });
@@ -413,7 +413,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
           itemClass: detail.markers.menu
         }),
         Composing.config({
-          find (container) {
+          find(container) {
             return Highlighting.getHighlighted(container);
           }
         }),

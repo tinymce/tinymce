@@ -241,8 +241,8 @@ const create = function (s, p, root?) {
   }
 
   // Add static methods
-  /*jshint sub:true*/
-  /*eslint dot-notation:0*/
+  /* jshint sub:true*/
+  /* eslint dot-notation:0*/
   self.each(p.static, function (f, n) {
     ns[cn][n] = f;
   });

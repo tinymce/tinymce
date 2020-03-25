@@ -110,7 +110,7 @@ const groupSpec = ValueSchema.objOf([
   fPname, fDefaults, fOverrides
 ]);
 
-const asNamedPart = function <T>(part: PartTypeAdt<T>): Option<T> {
+const asNamedPart = function <T> (part: PartTypeAdt<T>): Option<T> {
   return part.fold(Option.some, Option.none as () => Option<T>, Option.some, Option.some);
 };
 
@@ -121,7 +121,7 @@ const name = <T extends { name: string }>(part: PartTypeAdt<T>): string => {
   return part.fold(get, get, get, get);
 };
 
-const asCommon = function <T>(part: PartTypeAdt<T>): T {
+const asCommon = function <T> (part: PartTypeAdt<T>): T {
   return part.fold(Fun.identity, Fun.identity, Fun.identity, Fun.identity);
 };
 

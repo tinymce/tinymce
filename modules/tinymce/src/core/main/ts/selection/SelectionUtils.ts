@@ -33,23 +33,23 @@ const getEndNode = function (rng) {
 
 const getFirstChildren = function (node) {
   return Traverse.firstChild(node).fold(
-    Fun.constant([node]),
+    Fun.constant([ node ]),
     function (child) {
-      return [node].concat(getFirstChildren(child));
+      return [ node ].concat(getFirstChildren(child));
     }
   );
 };
 
 const getLastChildren = function (node) {
   return Traverse.lastChild(node).fold(
-    Fun.constant([node]),
+    Fun.constant([ node ]),
     function (child) {
       if (Node.name(child) === 'br') {
         return Traverse.prevSibling(child).map(function (sibling) {
-          return [node].concat(getLastChildren(sibling));
+          return [ node ].concat(getLastChildren(sibling));
         }).getOr([]);
       } else {
-        return [node].concat(getLastChildren(child));
+        return [ node ].concat(getLastChildren(child));
       }
     }
   );

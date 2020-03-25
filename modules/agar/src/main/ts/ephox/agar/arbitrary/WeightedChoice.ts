@@ -25,9 +25,9 @@ const choose = <T extends WeightedItem>(candidates: T[]) => {
     };
     return {
       total: newTotal,
-      list: rest.list.concat([merged])
+      list: rest.list.concat([ merged ])
     };
-  }, {list: <(T & AccWeightItem)[]> [], total: 0});
+  }, { list: <(T & AccWeightItem)[]> [], total: 0 });
 
   return weighted(result.list, result.total);
 };
@@ -38,7 +38,7 @@ const gChoose = <T extends WeightedItem>(weighted: WeightedList<T>) => Jsc.numbe
   );
 
   const keys = raw.map(Obj.keys).getOr([]) as string[];
-  return keys.length === ['weight', 'accWeight'].length ? Option.none() : raw;
+  return keys.length === [ 'weight', 'accWeight' ].length ? Option.none() : raw;
 });
 
 const generator = <T extends WeightedItem>(candidates: T[]) => {

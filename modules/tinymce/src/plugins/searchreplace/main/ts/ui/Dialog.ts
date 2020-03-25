@@ -239,7 +239,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     }
   };
 
-  dialogApi.set(editor.windowManager.open(spec, {inline: 'toolbar'}));
+  dialogApi.set(editor.windowManager.open(spec, { inline: 'toolbar' }));
 };
 
 export {

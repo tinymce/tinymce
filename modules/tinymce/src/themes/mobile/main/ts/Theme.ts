@@ -28,9 +28,9 @@ import * as FormatChangers from './util/FormatChangers';
 import * as SkinLoaded from './util/SkinLoaded';
 import { NotificationSpec } from 'tinymce/core/api/NotificationManager';
 
-/// not to be confused with editor mode
-const READING = 'toReading'; /// 'hide the keyboard'
-const EDITING = 'toEditing'; /// 'show the keyboard'
+// not to be confused with editor mode
+const READING = 'toReading'; // 'hide the keyboard'
+const EDITING = 'toEditing'; // 'show the keyboard'
 
 const renderMobileTheme = (editor: Editor) => {
   const renderUI = () => {
@@ -59,7 +59,7 @@ const renderMobileTheme = (editor: Editor) => {
 
     const outerWindow = targetNode.ownerDocument.defaultView;
     const orientation = Orientation.onChange(outerWindow, {
-      onChange () {
+      onChange() {
         const alloy = realm.system();
         alloy.broadcastOn([ TinyChannels.orientationChanged ], { width: Orientation.getActualWidth(outerWindow) });
       },
@@ -96,7 +96,7 @@ const renderMobileTheme = (editor: Editor) => {
     const bindHandler = (label: string, handler) => {
       editor.on(label, handler);
       return {
-        unbind () {
+        unbind() {
           editor.off(label);
         }
       };
@@ -105,25 +105,25 @@ const renderMobileTheme = (editor: Editor) => {
     editor.on('init', () => {
       realm.init({
         editor: {
-          getFrame () {
+          getFrame() {
             return Element.fromDom(editor.contentAreaContainer.querySelector('iframe'));
           },
 
-          onDomChanged () {
+          onDomChanged() {
             return {
               unbind: Fun.noop
             };
           },
 
-          onToReading (handler) {
+          onToReading(handler) {
             return bindHandler(READING, handler);
           },
 
-          onToEditing (handler) {
+          onToEditing(handler) {
             return bindHandler(EDITING, handler);
           },
 
-          onScrollToCursor (handler) {
+          onScrollToCursor(handler) {
             editor.on('ScrollIntoView', (tinyEvent) => {
               handler(tinyEvent);
             });
@@ -138,11 +138,11 @@ const renderMobileTheme = (editor: Editor) => {
             };
           },
 
-          onTouchToolstrip () {
+          onTouchToolstrip() {
             hideDropup();
           },
 
-          onTouchContent () {
+          onTouchContent() {
             const toolbar = Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar')));
             // If something in the toolbar had focus, fire an execute on it (execute on tap away)
             // Perhaps it will be clearer later what is a better way of doing this.
@@ -151,7 +151,7 @@ const renderMobileTheme = (editor: Editor) => {
             hideDropup();
           },
 
-          onTapContent (evt) {
+          onTapContent(evt) {
             const target = evt.target();
             // If the user has tapped (touchstart, touchend without movement) on an image, select it.
             if (Node.name(target) === 'img') {
@@ -161,7 +161,7 @@ const renderMobileTheme = (editor: Editor) => {
             } else if (Node.name(target) === 'a') {
               const component = realm.system().getByDom(Element.fromDom(editor.editorContainer));
               component.each((container) => {
-                /// view mode
+                // view mode
                 if (Swapping.isAlpha(container)) {
                   TinyCodeDupe.openLink(target.dom());
                 }
@@ -177,11 +177,11 @@ const renderMobileTheme = (editor: Editor) => {
         alloy: realm.system(),
         translate: Fun.noop,
 
-        setReadOnly (ro) {
+        setReadOnly(ro) {
           setReadOnly(dynamicGroup, readOnlyGroups, mainGroups, ro);
         },
 
-        readOnlyOnInit () {
+        readOnlyOnInit() {
           return Settings.readOnlyOnInit(editor);
         }
       });
@@ -262,7 +262,7 @@ const renderMobileTheme = (editor: Editor) => {
   };
 
   return {
-    getNotificationManagerImpl () {
+    getNotificationManagerImpl() {
       return {
         open: Fun.constant({
           progressBar: { value: Fun.noop },

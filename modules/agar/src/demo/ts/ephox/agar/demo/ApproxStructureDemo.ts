@@ -15,8 +15,8 @@ export const demo = (): void => {
 
       const span = Element.fromTag('span');
 
-      InsertAll.append(div, [p]);
-      InsertAll.append(p, [span]);
+      InsertAll.append(div, [ p ]);
+      InsertAll.append(p, [ span ]);
 
       Class.add(span, 'dog');
 
@@ -29,7 +29,7 @@ export const demo = (): void => {
                 s.element('p', {
                   children: [
                     s.element('span', {
-                      classes: [arr.has('dog'), arr.not('cat')]
+                      classes: [ arr.has('dog'), arr.not('cat') ]
                     })
                   ]
                 })
@@ -39,7 +39,7 @@ export const demo = (): void => {
         )
       ], success, failure);
 
-      return [div];
+      return [ div ];
     }
   );
 };

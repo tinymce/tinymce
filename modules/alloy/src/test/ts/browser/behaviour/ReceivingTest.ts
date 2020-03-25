@@ -15,7 +15,7 @@ UnitTest.asynctest('ReceivingTest', (success, failure) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
-          classes: [ 'receiving-test']
+          classes: [ 'receiving-test' ]
         },
         uid: 'custom-uid',
         containerBehaviours: Behaviour.derive([
@@ -28,7 +28,7 @@ UnitTest.asynctest('ReceivingTest', (success, failure) => {
                 schema: ValueSchema.objOfOnly([
                   FieldSchema.strict('dummy')
                 ]),
-                onReceive (component, data) {
+                onReceive(component, data) {
                   store.adder('received: ' + data.dummy)();
                 }
               }

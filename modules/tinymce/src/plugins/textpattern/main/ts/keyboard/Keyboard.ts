@@ -15,8 +15,8 @@ import { PatternSet } from '../core/PatternTypes';
 import * as KeyHandler from './KeyHandler';
 
 const setup = function (editor: Editor, patternsState: Cell<PatternSet>) {
-  const charCodes = [',', '.', ';', ':', '!', '?'];
-  const keyCodes = [32];
+  const charCodes = [ ',', '.', ';', ':', '!', '?' ];
+  const keyCodes = [ 32 ];
 
   editor.on('keydown', function (e: EditorEvent<KeyboardEvent>) {
     if (e.keyCode === 13 && !VK.modifierPressed(e)) {

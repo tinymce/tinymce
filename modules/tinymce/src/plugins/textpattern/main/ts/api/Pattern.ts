@@ -36,7 +36,7 @@ const normalizePattern = (pattern: RawPattern): Result<Pattern, PatternError> =>
         }
         formats = pattern.format as string[];
       } else if (Type.isString(pattern.format)) {
-        formats = [pattern.format];
+        formats = [ pattern.format ];
       } else {
         return err(name + ' pattern has non-string `format` parameter');
       }
@@ -72,8 +72,8 @@ const normalizePattern = (pattern: RawPattern): Result<Pattern, PatternError> =>
       start = '';
     }
     return formatOrCmd<InlinePattern>('Inline',
-    (format) => ({ type: 'inline-format', start, end, format }),
-    (cmd, value) => ({ type: 'inline-command', start, end, cmd, value }));
+      (format) => ({ type: 'inline-format', start, end, format }),
+      (cmd, value) => ({ type: 'inline-command', start, end, cmd, value }));
   } else if (pattern.replacement !== undefined) {
     // replacement pattern
     if (!Type.isString(pattern.replacement)) {

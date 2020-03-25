@@ -19,7 +19,7 @@ UnitTest.asynctest('Browser Test: .AnchorInlineTest', (success, failure) => {
       Log.steps('TBA', 'Anchor: Add anchor by selecting text content, then check that anchor is inserted correctly', [
         tinyApis.sFocus(),
         tinyApis.sSetContent('<p>abc 123</p>'),
-        tinyApis.sSetSelection([0, 0], 4, [0, 0], 7),
+        tinyApis.sSetSelection([ 0, 0 ], 4, [ 0, 0 ], 7),
         tinyActions.sContentKeystroke(Keys.space(), {}),
         tinyApis.sExecCommand('mceanchor'),
         Chain.asStep(Element.fromDom(document.body), [
@@ -37,8 +37,8 @@ UnitTest.asynctest('Browser Test: .AnchorInlineTest', (success, failure) => {
           )
         ]),
         tinyApis.sAssertContent('<p>abc <a id="abc"></a>123</p>')
-    ])
-    , onSuccess, onFailure);
+      ])
+      , onSuccess, onFailure);
   }, {
     theme: 'silver',
     plugins: 'anchor',

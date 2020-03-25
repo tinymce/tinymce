@@ -13,7 +13,7 @@ UnitTest.test('AlignmentTest', function () {
   const createDirectionalP = function (direction) {
     const divEl = EphoxElement('div');
     const par = EphoxElement('p');
-    Attr.setAll(divEl, {dir: direction});
+    Attr.setAll(divEl, { dir: direction });
     Insert.append(body, divEl);
     Insert.append(divEl, par);
     return par;

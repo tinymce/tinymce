@@ -34,8 +34,8 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorSanityTest.js', (succes
             { 'a.mce-item-anchor': 1 }
           )
         )
-    ])
-    , onSuccess, onFailure);
+      ])
+      , onSuccess, onFailure);
   }, {
     theme: 'silver',
     plugins: 'anchor',

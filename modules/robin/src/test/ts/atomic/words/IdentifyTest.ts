@@ -24,9 +24,9 @@ UnitTest.test('words :: Identify', function () {
 
   check([], '');
   check([], ' ');
-  check([WordScope('one', none, none)], 'one');
-  check([WordScope('this', some('('), some(')'))], '(this)');
-  check([WordScope('don\'t', some(' '), some(' '))], ' don\'t ');
+  check([ WordScope('one', none, none) ], 'one');
+  check([ WordScope('this', some('('), some(')')) ], '(this)');
+  check([ WordScope('don\'t', some(' '), some(' ')) ], ' don\'t ');
   check([
     WordScope('it', some('"'), some(' ')),
     WordScope('is', some(' '), some(' ')),
@@ -51,5 +51,5 @@ UnitTest.test('words :: Identify', function () {
   ], ' \'this the night before');
 
   // Note, the smart quotes.
-  checkWords(['Tale', 'is', 'about', 'an', 'adorable', 'mouse', 'with', 'a', 'lute', 'fighting', 'giant', 'crabs', 'Really', 'I’d', 'hope', 'that', 'was', 'enough', 'for', 'you', 'but', 'I\u2019ll', 'throw'], 'Tale is about an adorable mouse with a lute fighting giant crabs. Really I’d hope that was enough for you, but I\u2019ll throw');
+  checkWords([ 'Tale', 'is', 'about', 'an', 'adorable', 'mouse', 'with', 'a', 'lute', 'fighting', 'giant', 'crabs', 'Really', 'I’d', 'hope', 'that', 'was', 'enough', 'for', 'you', 'but', 'I\u2019ll', 'throw' ], 'Tale is about an adorable mouse with a lute fighting giant crabs. Really I’d hope that was enough for you, but I\u2019ll throw');
 });

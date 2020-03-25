@@ -13,7 +13,7 @@ const noMenu = function (cell) {
     element: Fun.constant(cell),
     mergable: Option.none,
     unmergable: Option.none,
-    selection: Fun.constant([cell])
+    selection: Fun.constant([ cell ])
   };
 };
 

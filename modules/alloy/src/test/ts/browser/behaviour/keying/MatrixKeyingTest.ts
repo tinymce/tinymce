@@ -51,7 +51,7 @@ UnitTest.asynctest('Matrix Keying Test', (success, failure) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
-          classes: [ 'matrix-keying-test'],
+          classes: [ 'matrix-keying-test' ],
           styles: {
             background: 'white',
             width: '150px',

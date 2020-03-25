@@ -21,9 +21,9 @@ const adt: {
   on: (element: Element<DomNode>, offset: number) => Situ,
   after: (element: Element<DomNode>) => Situ
 } = Adt.generate([
-  { before: ['element'] },
-  { on: ['element', 'offset'] },
-  { after: ['element'] }
+  { before: [ 'element' ] },
+  { on: [ 'element', 'offset' ] },
+  { after: [ 'element' ] }
 ]);
 
 // Probably don't need this given that we now have "match"

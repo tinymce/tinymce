@@ -17,7 +17,7 @@ const last = function (element: Element<DomNode>) {
 const descendantRtl: {
   <T extends DomNode = DomNode>(scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>): Option<Element<T>>;
   (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean): Option<Element<DomNode>>;
-} = function <T extends DomNode = DomNode>(scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>): Option<Element<T>> {
+} = function <T extends DomNode = DomNode> (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>): Option<Element<T>> {
   const descend = function (element: Element<DomNode>): Option<Element<T>> {
     const children = Traverse.children(element);
     for (let i = children.length - 1; i >= 0; i--) {

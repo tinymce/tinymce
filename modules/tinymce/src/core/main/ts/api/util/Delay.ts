@@ -33,7 +33,7 @@ let requestAnimationFramePromise;
 
 const requestAnimationFrame = function (callback, element?) {
   let i, requestAnimationFrameFunc: any = window.requestAnimationFrame;
-  const vendors = ['ms', 'moz', 'webkit'];
+  const vendors = [ 'ms', 'moz', 'webkit' ];
 
   const featurefill = function (callback) {
     window.setTimeout(callback, 0);
@@ -100,7 +100,7 @@ const Delay: Delay = {
    * @param {function} callback Callback to execute when a new frame is available.
    * @param {DOMElement} element Optional element to scope it to.
    */
-  requestAnimationFrame (callback, element?) {
+  requestAnimationFrame(callback, element?) {
     if (requestAnimationFramePromise) {
       requestAnimationFramePromise.then(callback);
       return;
@@ -145,7 +145,7 @@ const Delay: Delay = {
    * @param {Number} time Optional time to wait before the callback is executed, defaults to 0.
    * @return {Number} Timeout id number.
    */
-  setEditorTimeout (editor, callback, time?) {
+  setEditorTimeout(editor, callback, time?) {
     return wrappedSetTimeout(function () {
       if (!editor.removed) {
         callback();
@@ -162,7 +162,7 @@ const Delay: Delay = {
    * @param {Number} time Optional time to wait before the callback is executed, defaults to 0.
    * @return {Number} Timeout id number.
    */
-  setEditorInterval (editor, callback, time?) {
+  setEditorInterval(editor, callback, time?) {
     let timer;
 
     timer = wrappedSetInterval(function () {

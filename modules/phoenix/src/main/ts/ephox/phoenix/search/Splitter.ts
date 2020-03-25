@@ -8,14 +8,14 @@ import * as Spot from '../api/data/Spot';
  *
  * Returns a PositionArray of the result.
  */
-const subdivide = function <E, D>(universe: Universe<E, D>, item: E, positions: number[]) {
+const subdivide = function <E, D> (universe: Universe<E, D>, item: E, positions: number[]) {
   const text = universe.property().getText(item);
   const pieces = Arr.filter(Strings.splits(text, positions), function (section) {
     return section.length > 0;
   });
 
   if (pieces.length <= 1) {
-    return [Spot.range(item, 0, text.length)];
+    return [ Spot.range(item, 0, text.length) ];
   }
   universe.property().setText(item, pieces[0]);
 
@@ -28,7 +28,7 @@ const subdivide = function <E, D>(universe: Universe<E, D>, item: E, positions: 
   const otherElements = Arr.map(others, function (a) { return a.element(); });
   universe.insert().afterAll(item, otherElements);
 
-  return [Spot.range(item, 0, pieces[0].length)].concat(others);
+  return [ Spot.range(item, 0, pieces[0].length) ].concat(others);
 };
 
 export {

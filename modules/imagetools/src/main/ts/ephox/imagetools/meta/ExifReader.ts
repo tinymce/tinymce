@@ -251,7 +251,7 @@ const extractTags = (reader: BinaryReader, ifdOffset: number, tiffHeaderOffset: 
     10: { name: 'SRATIONAL', size: 8, read: readSignedRational }
   };
 
-  const withTag = (tag: string) => (value: unknown) => Option.some<[string, unknown]>([tag, value]);
+  const withTag = (tag: string) => (value: unknown) => Option.some<[string, unknown]>([ tag, value ]);
 
   // TODO: maybe escape and sanitize
   const cleanupString = (str: string) => str.replace(/\0$/, '').trim();
@@ -322,7 +322,7 @@ const extractTags = (reader: BinaryReader, ifdOffset: number, tiffHeaderOffset: 
           return tagItem.map((_value) => tagSet);
         }
         // add to set of tags
-        tagItem.each((opt) => opt.each(([tag, value]) => {
+        tagItem.each((opt) => opt.each(([ tag, value ]) => {
           tagSet[tag] = value;
         }));
       }

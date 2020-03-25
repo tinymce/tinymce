@@ -64,8 +64,8 @@ UnitTest.test('WarehouseTest', function () {
     '0,1': 'a',
     '0,2': 'a'
   },
-    [
-      f('r0', [ s('a', 1, 3) ], 'tbody')
-    ]
+  [
+    f('r0', [ s('a', 1, 3) ], 'tbody')
+  ]
   );
 });

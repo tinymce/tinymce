@@ -15,7 +15,7 @@ const generate = <T, U extends PositionableUnit>(xs: T[], f: (thing: T, n: numbe
     return value.fold(Fun.constant(b), (v) => {
       return {
         len: v.finish(),
-        list: b.list.concat([v])
+        list: b.list.concat([ v ])
       };
     });
   }, init);

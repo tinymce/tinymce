@@ -32,7 +32,7 @@ export default function () {
           });
           editor.focus();
         },
-        onSetup (btnApi) {
+        onSetup(btnApi) {
           editor.annotator.annotationChanged('alpha', (state, name, obj) => {
             btnApi.setDisabled(state);
           });

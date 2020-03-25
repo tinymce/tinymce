@@ -37,7 +37,7 @@ export default (): void => {
           mode: 'drop',
           type: 'text/plain',
           dropEffect,
-          onDrop (component, dropEvent) {
+          onDrop(component, dropEvent) {
             // tslint:disable-next-line:no-console
             console.log(`onDrop`, {
               data: dropEvent.data,
@@ -78,14 +78,14 @@ export default (): void => {
         DragnDrop.config({
           mode: 'drag',
           type: 'text/plain',
-          phoneyTypes: ['-x-alloy/something'],
+          phoneyTypes: [ '-x-alloy/something' ],
           effectAllowed,
-          getData (component) {
+          getData(component) {
             return data;
           },
-          getImage (component) {
+          getImage(component) {
             return {
-              element () {
+              element() {
                 const clone = Replication.deep(component.element());
                 Css.set(clone, 'background-color', 'blue');
                 return clone;

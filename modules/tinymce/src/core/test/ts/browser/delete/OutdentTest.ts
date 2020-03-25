@@ -36,10 +36,10 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeindentTest', function (success
     Pipeline.async({}, [
       tinyApis.sFocus(),
       Logger.t('Backspace key on text', GeneralSteps.sequence([
-        sTestBackspace('<p>a</p>', [0, 0], 0, '<p>a</p>', [0, 0], 0), // outdent
-        sTestBackspace('<p>aa</p>', [0, 0], 1, '<p style="padding-left: 40px;">aa</p>', [0, 0], 1), // no outdent
-        sTestBackspace('<p>a</p><p>b</p>', [1, 0], 0, '<p>a</p>\n<p>b</p>', [1, 0], 0), // outdent
-        sTestBackspace('<p>a</p><p>bb</p>', [1, 0], 1, '<p>a</p>\n<p style="padding-left: 40px;">bb</p>', [1, 0], 1), // no outdent
+        sTestBackspace('<p>a</p>', [ 0, 0 ], 0, '<p>a</p>', [ 0, 0 ], 0), // outdent
+        sTestBackspace('<p>aa</p>', [ 0, 0 ], 1, '<p style="padding-left: 40px;">aa</p>', [ 0, 0 ], 1), // no outdent
+        sTestBackspace('<p>a</p><p>b</p>', [ 1, 0 ], 0, '<p>a</p>\n<p>b</p>', [ 1, 0 ], 0), // outdent
+        sTestBackspace('<p>a</p><p>bb</p>', [ 1, 0 ], 1, '<p>a</p>\n<p style="padding-left: 40px;">bb</p>', [ 1, 0 ], 1), // no outdent
       ]))
     ], onSuccess, onFailure);
   }, {

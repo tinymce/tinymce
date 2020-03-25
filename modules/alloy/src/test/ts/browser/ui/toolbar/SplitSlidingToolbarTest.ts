@@ -168,9 +168,9 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
 
       Step.sync(() => {
         const groups = TestPartialToolbarGroup.createGroups([
-          { items: Arr.map([ { text: 'A' }, { text: 'B' } ], makeButton) },
-          { items: Arr.map([ { text: 'C' }, { text: 'D' } ], makeButton) },
-          { items: Arr.map([ { text: 'E' }, { text: 'F' }, { text: 'G' } ], makeButton) }
+          { items: Arr.map([{ text: 'A' }, { text: 'B' }], makeButton) },
+          { items: Arr.map([{ text: 'C' }, { text: 'D' }], makeButton) },
+          { items: Arr.map([{ text: 'E' }, { text: 'F' }, { text: 'G' }], makeButton) }
         ]);
         SplitSlidingToolbar.setGroups(component, groups);
         SplitSlidingToolbar.toggle(component);

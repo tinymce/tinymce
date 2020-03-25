@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', (succe
           })),
         sRemoveInputs
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'tabfocus',
     tabfocus_elements: 'tempinput1',

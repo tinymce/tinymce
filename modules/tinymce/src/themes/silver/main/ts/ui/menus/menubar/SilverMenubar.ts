@@ -61,7 +61,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
       return renderMenuButton(internal,
         MenuButtonClasses.Button,
         spec.backstage,
-         // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
+        // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
         Option.some('menuitem')
       );
     });
@@ -145,10 +145,10 @@ export default Sketcher.single<SilverMenubarSpec, SilverMenubarDetail, SilverMen
     FieldSchema.defaulted('onSetup', Fun.noop)
   ],
   apis: {
-    focus (apis, comp) {
+    focus(apis, comp) {
       apis.focus(comp);
     },
-    setMenus (apis, comp, menus) {
+    setMenus(apis, comp, menus) {
       apis.setMenus(comp, menus);
     }
   }

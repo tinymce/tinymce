@@ -10,7 +10,7 @@ type TestSpec = { defaultValue: number; overriddenValue: number; };
 
 UnitTest.test('Atomic Test: parts.SchemasTest', () => {
   const internal = PartType.required<any, TestSpec>({
-    factory: { sketch (x) { return 'sketch.' + x; } },
+    factory: { sketch(x) { return 'sketch.' + x; } },
     schema: [ ],
     name: 'internal',
     pname: '<part.internal>',
@@ -19,7 +19,7 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
   });
 
   const external = PartType.external<any, TestSpec>({
-    factory: { sketch (x) { return x + '.external'; } },
+    factory: { sketch(x) { return x + '.external'; } },
     schema: [ ],
     name: 'external',
     defaults: Fun.constant({ defaultValue: 10 }),
@@ -27,7 +27,7 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
   });
 
   const optional = PartType.optional<any, TestSpec>({
-    factory: { sketch (x) { return x + '.optional'; } },
+    factory: { sketch(x) { return x + '.optional'; } },
     schema: [ ],
     name: 'optional',
     pname: '<part.optional>',
@@ -36,7 +36,7 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
   });
 
   const group = PartType.group<any, TestSpec>({
-    factory: { sketch (x) { return x + '.group'; } },
+    factory: { sketch(x) { return x + '.group'; } },
     schema: [ ],
     name: 'group',
     unit: 'member',
@@ -70,7 +70,7 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
 
   checkSuccess(
     'sanity: just external',
-    { external: { entirety: 'external.schema' } },
+    { external: { entirety: 'external.schema' }},
     [ external ],
     { external: 'external.schema' }
   );

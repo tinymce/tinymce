@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.plugin.PluginTest', (success, failure) => {
           selectors.pluginsTab
         )
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'help',
     toolbar: 'help',

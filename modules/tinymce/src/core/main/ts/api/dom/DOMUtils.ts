@@ -61,7 +61,7 @@ interface AttrHooks {
 const setupAttrHooks = function (styles: Styles, settings: Partial<DOMUtilsSettings>, getContext): AttrHooks {
   const keepValues: boolean = settings.keep_values;
   const keepUrlHook = {
-    set ($elm, value: string, name: string) {
+    set($elm, value: string, name: string) {
       if (settings.url_converter) {
         value = settings.url_converter.call(settings.url_converter_scope || getContext(), value, name, $elm[0]);
       }
@@ -69,14 +69,14 @@ const setupAttrHooks = function (styles: Styles, settings: Partial<DOMUtilsSetti
       $elm.attr('data-mce-' + name, value).attr(name, value);
     },
 
-    get ($elm, name: string) {
+    get($elm, name: string) {
       return $elm.attr('data-mce-' + name) || $elm.attr(name);
     }
   };
 
   const attrHooks: AttrHooks = {
     style: {
-      set ($elm, value: string | {}) {
+      set($elm, value: string | {}) {
         if (value !== null && typeof value === 'object') {
           $elm.css(value);
           return;
@@ -96,7 +96,7 @@ const setupAttrHooks = function (styles: Styles, settings: Partial<DOMUtilsSetti
         }
       },
 
-      get ($elm) {
+      get($elm) {
         let value = $elm.attr('data-mce-style') || $elm.attr('style');
 
         value = styles.serialize(styles.parse(value), $elm[0].nodeName);
@@ -187,8 +187,8 @@ interface DOMUtils {
   getViewPort (argWin?: Window): GeomRect;
   getRect (elm: string | HTMLElement): GeomRect;
   getSize (elm: string | HTMLElement): {
-      w: number;
-      h: number;
+    w: number;
+    h: number;
   };
   getParent (node: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node): Element;
   getParents (elm: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node, collect?: boolean): Element[];
@@ -212,8 +212,8 @@ interface DOMUtils {
   setAttribs (elm: string | Node, attrs: Record<string, string>): void;
   getAttrib (elm: string | Node, name: string, defaultVal?: string): string;
   getPos (elm: string | Node, rootElm?: Node): {
-      x: number;
-      y: number;
+    x: number;
+    y: number;
   };
   parseStyle (cssText: string): Record<string, string>;
   serializeStyle (stylesArg: StyleMap, name?: string): string;
@@ -543,9 +543,9 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       }
     }
 
-    const elms = !Array.isArray(elm) ? [elm] : elm;
+    const elms = !Array.isArray(elm) ? [ elm ] : elm;
 
-    /*eslint new-cap:0 */
+    /* eslint new-cap:0 */
     return Sizzle(selector, elms[0].ownerDocument || elms[0], null, elms).length > 0;
   };
 
@@ -583,7 +583,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
         if (collect) {
           result.push(node);
         } else {
-          return [node];
+          return [ node ];
         }
       }
 
@@ -1132,7 +1132,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
     // Collect all window/document events bound by editor instance
     if (settings.collect && (target === doc || target === win)) {
-      boundEvents.push([target, name, func, scope]);
+      boundEvents.push([ target, name, func, scope ]);
     }
 
     return events.bind(target, name, func, scope || self);

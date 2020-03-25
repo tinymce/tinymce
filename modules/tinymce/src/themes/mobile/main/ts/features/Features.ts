@@ -126,7 +126,7 @@ const setup = function (realm: MobileRealm, editor: Editor) {
 
   const feature = function (prereq, sketch) {
     return {
-      isSupported () {
+      isSupported() {
         // NOTE: forall is true for none
         const buttons = editor.ui.registry.getAll().buttons;
         return prereq.forall(function (p) {

@@ -66,7 +66,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
   };
 
   const domEvents = GuiEvents.setup(root.element(), {
-    triggerEvent (eventName: string, event: EventArgs) {
+    triggerEvent(eventName: string, event: EventArgs) {
       return Debugging.monitorEvent(eventName, event.target(), (logger: Debugging.DebuggerLogger) => {
         return Triggers.triggerUntilStopped(lookup, eventName, event, logger);
       });
@@ -76,13 +76,13 @@ const takeover = (root: AlloyComponent): GuiSystem => {
   const systemApi: AlloySystemApi = {
     // This is a real system
     debugInfo: Fun.constant('real'),
-    triggerEvent (eventName: string, target: Element, data: any) {
+    triggerEvent(eventName: string, target: Element, data: any) {
       Debugging.monitorEvent(eventName, target, (logger: Debugging.DebuggerLogger) => {
         // The return value is not used because this is a fake event.
         return Triggers.triggerOnUntilStopped(lookup, eventName, data, target, logger);
       });
     },
-    triggerFocus (target: Element, originator: Element) {
+    triggerFocus(target: Element, originator: Element) {
       Tagger.read(target).fold(() => {
         // When the target is not within the alloy system, dispatch a normal focus event.
         Focus.focus(target);
@@ -102,28 +102,28 @@ const takeover = (root: AlloyComponent): GuiSystem => {
       });
     },
 
-    triggerEscape (comp, simulatedEvent) {
+    triggerEscape(comp, simulatedEvent) {
       systemApi.triggerEvent('keydown', comp.element(), simulatedEvent.event());
     },
 
-    getByUid (uid) {
+    getByUid(uid) {
       return getByUid(uid);
     },
-    getByDom (elem) {
+    getByDom(elem) {
       return getByDom(elem);
     },
     build: GuiFactory.build,
-    addToGui (c) { add(c); },
-    removeFromGui (c) { remove(c); },
-    addToWorld (c) { addToWorld(c); },
-    removeFromWorld (c) { removeFromWorld(c); },
-    broadcast (message) {
+    addToGui(c) { add(c); },
+    removeFromGui(c) { remove(c); },
+    addToWorld(c) { addToWorld(c); },
+    removeFromWorld(c) { removeFromWorld(c); },
+    broadcast(message) {
       broadcast(message);
     },
-    broadcastOn (channels, message) {
+    broadcastOn(channels, message) {
       broadcastOn(channels, message);
     },
-    broadcastEvent (eventName: string, event: EventArgs) {
+    broadcastEvent(eventName: string, event: EventArgs) {
       broadcastEvent(eventName, event);
     },
     isConnected: Fun.constant(true)

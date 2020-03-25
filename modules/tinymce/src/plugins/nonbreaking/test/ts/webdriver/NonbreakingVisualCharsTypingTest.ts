@@ -59,7 +59,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
 
       Log.stepsAsStep('TINY-3647', '2. NonBreaking: Add text to editor, click on the nbsp button, and assert content is correct', [
         tinyApis.sSetContent('test'),
-        tinyApis.sSetCursor([0, 0], 4),
+        tinyApis.sSetCursor([ 0, 0 ], 4),
         tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
         tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
           return s.element('body', {
@@ -85,7 +85,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
 
       Log.stepsAsStep('TINY-3647', '3. NonBreaking: Add content to editor, click on the nbsp button then type some text, and assert content is correct', [
         tinyApis.sSetContent('test'),
-        tinyApis.sSetCursor([0, 0], 4),
+        tinyApis.sSetCursor([ 0, 0 ], 4),
         tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
         RealKeys.sSendKeysOn(
           'iframe => body => p',
@@ -135,7 +135,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
                     ]
                   }),
                   s.text(str.is(detection.browser.isFirefox() ? Unicode.zeroWidth + ' ' : (isIE ? ' ' : Unicode.zeroWidth + Unicode.nbsp)))
-                ].concat(detection.browser.isFirefox() ? [ s.element('br', {})] : [])
+                ].concat(detection.browser.isFirefox() ? [ s.element('br', {}) ] : [])
               })
             ]
           });
@@ -146,7 +146,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
 
       Log.stepsAsStep('TINY-3647', '5. NonBreaking: Add text to editor, click on the nbsp button and add content plus a space, and assert content is correct', [
         tinyApis.sSetContent('test'),
-        tinyApis.sSetCursor([0, 0], 4),
+        tinyApis.sSetCursor([ 0, 0 ], 4),
         tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
         tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
           return s.element('body', {
@@ -185,7 +185,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
                     ]
                   }),
                   s.text(str.is(detection.browser.isFirefox() ? Unicode.zeroWidth + 'test ' : (isIE ? 'test ' : Unicode.zeroWidth + 'test\u00a0')))
-                ].concat(detection.browser.isFirefox() ? [ s.element('br', {})] : [])
+                ].concat(detection.browser.isFirefox() ? [ s.element('br', {}) ] : [])
               })
             ]
           });
@@ -196,7 +196,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
 
       Log.stepsAsStep('TINY-3647', '6. NonBreaking: Add text to editor, click on the nbsp button and add content plus a space, repeat, and assert content is correct', [
         tinyApis.sSetContent('test'),
-        tinyApis.sSetCursor([0, 0], 4),
+        tinyApis.sSetCursor([ 0, 0 ], 4),
         tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
         tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
           return s.element('body', {
@@ -235,7 +235,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
                     ]
                   }),
                   s.text(str.is(detection.browser.isFirefox() ? Unicode.zeroWidth + 'test ' : (isIE ? 'test ' : Unicode.zeroWidth + 'test\u00a0')))
-                ].concat(detection.browser.isFirefox() ? [ s.element('br', {})] : [])
+                ].concat(detection.browser.isFirefox() ? [ s.element('br', {}) ] : [])
               })
             ]
           });
@@ -259,7 +259,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
                     ]
                   }),
                   s.text(str.is(detection.browser.isFirefox() ? Unicode.zeroWidth + 'test test ' : (isIE ? 'test test ' : Unicode.zeroWidth + 'test test\u00a0')))
-                ].concat(detection.browser.isFirefox() ? [ s.element('br', {})] : [])
+                ].concat(detection.browser.isFirefox() ? [ s.element('br', {}) ] : [])
               })
             ]
           });

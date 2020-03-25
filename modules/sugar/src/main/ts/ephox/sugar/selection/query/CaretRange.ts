@@ -46,14 +46,14 @@ const searchFromPoint = function (doc: Element<Document>, x: number, y: number):
     };
 
     return Traverse.children(elem).length === 0 ? fallback() :
-            // if we have children, search for the right text node and then get the offset out of it
-            searchTextNodes(doc, elem, x, y).orThunk(fallback);
+    // if we have children, search for the right text node and then get the offset out of it
+      searchTextNodes(doc, elem, x, y).orThunk(fallback);
   });
 };
 
 const availableSearch = document.caretPositionFromPoint ? caretPositionFromPoint :  // defined standard
-                      document.caretRangeFromPoint ? caretRangeFromPoint :        // webkit implementation
-                      searchFromPoint;                                            // fallback
+  document.caretRangeFromPoint ? caretRangeFromPoint :        // webkit implementation
+    searchFromPoint;                                            // fallback
 
 const fromPoint = function (win: Window, x: number, y: number) {
   const doc = Element.fromDom(win.document);

@@ -27,12 +27,12 @@ UnitTest.asynctest('browser.tinymce.core.InlineEditorRemoveTest', (success, fail
 
   Pipeline.async({}, [
     Logger.t('Removing inline editor should remove all data-mce-bogus tags', Chain.asStep({}, [
-        McEditor.cFromHtml('<div></div>', settings),
-        ApiChains.cSetRawContent('<p data-mce-bogus="all">b</p><p data-mce-bogus="1">b</p>'),
-        cRemoveEditor,
-        cAssertBogusNotExist,
-        McEditor.cRemove,
-      ]),
+      McEditor.cFromHtml('<div></div>', settings),
+      ApiChains.cSetRawContent('<p data-mce-bogus="all">b</p><p data-mce-bogus="1">b</p>'),
+      cRemoveEditor,
+      cAssertBogusNotExist,
+      McEditor.cRemove,
+    ]),
     )
   ], function () {
     success();

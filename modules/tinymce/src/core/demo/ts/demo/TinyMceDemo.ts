@@ -18,11 +18,11 @@ export default function () {
     // images_upload_base_path: 'base/path',
     // images_upload_credentials: true,
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
-    setup (ed) {
+    setup(ed) {
       ed.addButton('demoButton', {
         type: 'button',
         text: 'Demo',
-        onclick () {
+        onclick() {
           ed.insertContent('Hello world!');
         }
       });

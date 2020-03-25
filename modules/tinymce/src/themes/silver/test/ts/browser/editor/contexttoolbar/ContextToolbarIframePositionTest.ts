@@ -133,7 +133,7 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
           tinyApis.sSelect('img', []),
           UiFinder.sWaitForVisible('Waiting for toolbar to appear to top inside content', Body.body(), '.tox-pop.tox-pop--top'),
           sAssertPosition('top', -309),
-          tinyApis.sSetCursor([0], 1),
+          tinyApis.sSetCursor([ 0 ], 1),
           tinyActions.sContentKeystroke(Keys.enter()),
           tinyActions.sContentKeystroke(Keys.enter()),
           tinyApis.sNodeChanged(),
@@ -149,7 +149,7 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
             '<p style="height: 400px"></p>'
           ),
           sScrollTo(0, 225),
-          tinyApis.sSetCursor( [1, 0], 0),
+          tinyApis.sSetCursor( [ 1, 0 ], 0),
 
           // Middle
           UiFinder.sWaitForVisible('Waiting for toolbar to appear', Body.body(), '.tox-pop.tox-pop--left'),
@@ -193,7 +193,7 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
             });
           }),
           tinyApis.sSetContent('<p><a href="http://tiny.cloud">link</a></p>'),
-          tinyApis.sSetCursor([0, 0, 0], 1),
+          tinyApis.sSetCursor([ 0, 0, 0 ], 1),
           UiFinder.sWaitForVisible('Waiting for toolbar to appear below content', Body.body(), '.tox-pop.tox-pop--top'),
           Step.wait(250), // TODO: Find out why Safari fails without this wait
           Step.sync(() => {

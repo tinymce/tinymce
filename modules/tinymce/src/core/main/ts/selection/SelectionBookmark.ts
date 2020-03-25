@@ -68,8 +68,8 @@ const getBookmark = function (root) {
 
 const validate = function (root, bookmark) {
   return Option.from(bookmark)
-      .filter(isRngInRoot(root))
-      .map(normalizeRng);
+    .filter(isRngInRoot(root))
+    .map(normalizeRng);
 };
 
 const bookmarkToNativeRng = function (bookmark): Option<Range> {

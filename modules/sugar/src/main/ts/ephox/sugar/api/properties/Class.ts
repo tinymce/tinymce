@@ -42,7 +42,7 @@ const remove = function (element: Element<DomElement>, clazz: string) {
 
 const toggle = function (element: Element<DomElement>, clazz: string) {
   return ClassList.supports(element) ? element.dom().classList.toggle(clazz) :
-                                       ClassList.toggle(element, clazz);
+    ClassList.toggle(element, clazz);
 };
 
 const toggler = function (element: Element<DomElement>, clazz: string) {

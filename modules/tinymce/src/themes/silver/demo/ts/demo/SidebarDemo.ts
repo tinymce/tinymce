@@ -41,7 +41,7 @@ export default function () {
     // statusbar: false,
     resize: 'both',
 
-    setup (ed: Editor) {
+    setup(ed: Editor) {
       makeSidebar(ed, 'sidebar1', 'green', 200);
       makeSidebar(ed, 'sidebar2', 'red', 300);
       makeSidebar(ed, 'sidebar3', 'blue', 150);

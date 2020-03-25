@@ -10,7 +10,7 @@ const createCell = function () {
   return td;
 };
 
-const replace = function <K extends keyof HTMLElementTagNameMap>(cell: Element, tag: K, attrs: Record<string, string | number | boolean | null>) {
+const replace = function <K extends keyof HTMLElementTagNameMap> (cell: Element, tag: K, attrs: Record<string, string | number | boolean | null>) {
   const replica = Replication.copy(cell, tag);
   // TODO: Snooker passes null to indicate 'remove attribute'
   Obj.each(attrs, function (v, k) {
@@ -57,7 +57,7 @@ const cellOperations = function (mutate: (e1: Element, e2: Element) => void, doc
     const docu = Traverse.owner(prev.element());
     const td = Element.fromTag(Node.name(prev.element()), docu.dom());
 
-    const formats = formatsToClone.getOr(['strong', 'em', 'b', 'i', 'span', 'font', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div']);
+    const formats = formatsToClone.getOr([ 'strong', 'em', 'b', 'i', 'span', 'font', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div' ]);
 
     // If we aren't cloning the child formatting, we can just give back the new td immediately.
     const lastNode = formats.length > 0 ? cloneFormats(prev.element(), td, formats) : td;

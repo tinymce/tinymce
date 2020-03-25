@@ -47,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     LegacyUnit.equal(root.firstChild.name, 'b', 'Element name');
     LegacyUnit.deepEqual(
       root.firstChild.attributes, [{ name: 'title', value: 'title' },
-      { name: 'class', value: 'class' }],
+        { name: 'class', value: 'class' }],
       'Element attributes'
     );
     LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'b': 1, '#text': 1 }, 'Element attributes (count)');
@@ -511,7 +511,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     let parser, root;
     const schema = Schema();
 
-    parser = DomParser({ forced_root_block: 'p', forced_root_block_attrs: { class: 'class1' } }, schema);
+    parser = DomParser({ forced_root_block: 'p', forced_root_block_attrs: { class: 'class1' }}, schema);
     root = parser.parse(
       '<!-- a -->' +
       'b' +
@@ -527,7 +527,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
       '<p>d</p>' +
       '<p>e</p>' +
       '<p class="class1">f<strong>g</strong>h</p>',
-      'Mixed text nodes, inline elements and blocks.');
+    'Mixed text nodes, inline elements and blocks.');
   });
 
   suite.test('Parse html4 lists into html5 lists', function () {
@@ -631,7 +631,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
 
   suite.test('Valid classes multiple elements', function () {
     let parser, root;
-    const schema = Schema({ valid_classes: { '*': 'classA classB', 'strong': 'classC' } });
+    const schema = Schema({ valid_classes: { '*': 'classA classB', 'strong': 'classC' }});
 
     parser = DomParser({}, schema);
     root = parser.parse('<p class="classA classB classC"><strong class="classA classB classC classD">a</strong></p>');
@@ -717,8 +717,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     const attrFilters = parser.getAttributeFilters();
     const nodeFilters = parser.getNodeFilters();
 
-    Assertions.assertEq('Should be expected filter', {name: 'attr', callbacks: [cb1] }, attrFilters[attrFilters.length - 1]);
-    Assertions.assertEq('Should be extected filter', {name: 'node', callbacks: [cb2] }, nodeFilters[nodeFilters.length - 1]);
+    Assertions.assertEq('Should be expected filter', { name: 'attr', callbacks: [ cb1 ] }, attrFilters[attrFilters.length - 1]);
+    Assertions.assertEq('Should be extected filter', { name: 'node', callbacks: [ cb2 ] }, nodeFilters[nodeFilters.length - 1]);
   });
 
   suite.test('extract base64 uris to blobcache if blob cache is provided', () => {

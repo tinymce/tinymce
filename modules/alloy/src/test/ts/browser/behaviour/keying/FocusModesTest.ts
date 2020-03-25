@@ -49,7 +49,7 @@ UnitTest.asynctest('Focus Modes Test', (success, failure) => {
       {
         dom: {
           tag: 'div',
-          classes: [ 'cyclic-keying-test'],
+          classes: [ 'cyclic-keying-test' ],
           styles: {
             background: 'blue',
             width: '200px',

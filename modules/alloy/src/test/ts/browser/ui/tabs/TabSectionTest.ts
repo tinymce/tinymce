@@ -50,7 +50,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
             uid: 'alpha-tab',
             value: 'alpha',
             dom: { tag: 'button', innerHtml: 'A' },
-            view () {
+            view() {
               counterA++;
               return [
                 Container.sketch({
@@ -66,7 +66,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
             uid: 'beta-tab',
             value: 'beta',
             dom: { tag: 'button', innerHtml: 'B' },
-            view () {
+            view() {
               counterB++;
               return [
                 Container.sketch({

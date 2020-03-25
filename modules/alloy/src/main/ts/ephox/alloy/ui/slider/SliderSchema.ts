@@ -59,7 +59,7 @@ const SliderSchema: FieldProcessorAdt[] = [
     }
   )),
 
-  SketchBehaviours.field('sliderBehaviours', [Keying, Representing]),
+  SketchBehaviours.field('sliderBehaviours', [ Keying, Representing ]),
   FieldSchema.state('mouseIsDown', () => Cell(false))
 ];
 

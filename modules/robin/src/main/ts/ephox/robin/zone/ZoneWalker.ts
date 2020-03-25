@@ -33,14 +33,14 @@ const adt: {
   concluded: <E> (item: E, mode: Transition) => ZoneWalkerState<E>;
 } = Adt.generate([
   // an inline element, so use the lang to identify if a new zone is needed
-  { inline: ['item', 'mode', 'lang'] },
-  { text: ['item', 'mode'] },
+  { inline: [ 'item', 'mode', 'lang' ] },
+  { text: [ 'item', 'mode' ] },
   // things like <img>, <br>
-  { empty: ['item', 'mode'] },
+  { empty: [ 'item', 'mode' ] },
   // things like boundary tags
-  { boundary: ['item', 'mode', 'lang'] },
+  { boundary: [ 'item', 'mode', 'lang' ] },
   // hit the starting tag
-  { concluded: ['item', 'mode'] }
+  { concluded: [ 'item', 'mode' ] }
 ]);
 
 const analyse = function <E, D> (universe: Universe<E, D>, item: E, mode: Transition, stopOn: (item: E, mode: Transition) => boolean) {

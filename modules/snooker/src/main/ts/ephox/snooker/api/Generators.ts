@@ -98,7 +98,7 @@ const modification = function (generators: Generators, toData = elementToData): 
   } ;
 };
 
-const transform = function <K extends keyof HTMLElementTagNameMap>(scope: string | null, tag: K) {
+const transform = function <K extends keyof HTMLElementTagNameMap> (scope: string | null, tag: K) {
   return function (generators: Generators): GeneratorsTransform {
     const position = Cell(Option.none<Element>());
     verifyGenerators(generators);

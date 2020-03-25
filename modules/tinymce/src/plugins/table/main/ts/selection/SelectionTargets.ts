@@ -51,7 +51,7 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
     handler();
 
     // Register the handler so we can update the state when resetting targets
-    changeHandlers.set(changeHandlers.get().concat([handler]));
+    changeHandlers.set(changeHandlers.get().concat([ handler ]));
 
     return () => {
       changeHandlers.set(Arr.filter(changeHandlers.get(), (h) => h !== handler));

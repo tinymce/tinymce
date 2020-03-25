@@ -34,13 +34,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
           plugins: 'table',
           skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
           content_css: '/project/tinymce/js/tinymce/skins/content/default',
-          setup (editor) {
+          setup(editor) {
             editor.on('SkinLoaded', function () {
-                Delay.setTimeout(function () {
-                    next(editor);
-                }, 0);
+              Delay.setTimeout(function () {
+                next(editor);
+              }, 0);
             });
-        }
+          }
         });
       }),
       Guard.addLogging('Add editor settings')
@@ -82,4 +82,4 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
   Pipeline.async({}, [
     Log.step('TBA', 'Table: Table outside of inline editor should not become resizable', step)
   ], () => success(), failure, TestLogs.init());
-  });
+});

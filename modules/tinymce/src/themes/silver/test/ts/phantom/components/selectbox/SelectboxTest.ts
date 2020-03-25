@@ -47,7 +47,7 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
                   classes: [ arr.has('tox-label') ]
                 }),
                 s.element('div', {
-                  classes: [arr.has('tox-selectfield')],
+                  classes: [ arr.has('tox-selectfield') ],
                   children: [
                     s.element('select', {
                       value: str.is('one'),
@@ -61,7 +61,7 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
                       ]
                     }),
                     s.element('div', {
-                      classes: [arr.has('tox-selectfield__icon-js')],
+                      classes: [ arr.has('tox-selectfield__icon-js') ],
                       children: [
                         s.element('svg', {})
                       ]

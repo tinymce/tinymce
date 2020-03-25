@@ -33,7 +33,7 @@ const brokenPath = <E> (first: E, second: Option<E>, splits: BrokenPathSplits<E>
   splits
 });
 
-const bisect = function <E, D>(universe: Universe<E, D>, parent: E, child: E): Option<Bisect<E>> {
+const bisect = function <E, D> (universe: Universe<E, D>, parent: E, child: E): Option<Bisect<E>> {
   const children = universe.property().children(parent);
   const index = Arr.findIndex(children, Fun.curry(universe.eq, child));
   return index.map(function (ind) {
@@ -48,7 +48,7 @@ const bisect = function <E, D>(universe: Universe<E, D>, parent: E, child: E): O
  * Clone parent to the RIGHT and move everything after child in the parent element into
  * a clone of the parent (placed after parent).
  */
-const breakToRight = function <E, D>(universe: Universe<E, D>, parent: E, child: E) {
+const breakToRight = function <E, D> (universe: Universe<E, D>, parent: E, child: E) {
   return bisect(universe, parent, child).map(function (parts) {
     const second = universe.create().clone(parent);
     universe.insert().appendAll(second, parts.after);
@@ -61,10 +61,10 @@ const breakToRight = function <E, D>(universe: Universe<E, D>, parent: E, child:
  * Clone parent to the LEFT and move everything before and including child into
  * the a clone of the parent (placed before parent)
  */
-const breakToLeft = function <E, D>(universe: Universe<E, D>, parent: E, child: E) {
+const breakToLeft = function <E, D> (universe: Universe<E, D>, parent: E, child: E) {
   return bisect(universe, parent, child).map(function (parts) {
     const prior = universe.create().clone(parent);
-    universe.insert().appendAll(prior, parts.before.concat([child]));
+    universe.insert().appendAll(prior, parts.before.concat([ child ]));
     universe.insert().appendAll(parent, parts.after);
     universe.insert().before(parent, prior);
     return leftRight(prior, parent);
@@ -78,7 +78,7 @@ const breakToLeft = function <E, D>(universe: Universe<E, D>, parent: E, child: 
  *   second: the optional element representing second part of the top-level split if the breaking completed successfully to the top
  *   splits: a list of (Element, Element) pairs that represent the splits that have occurred on the way to the top.
  */
-const breakPath = function <E, D>(universe: Universe<E, D>, item: E, isTop: (e: E) => boolean, breaker: (universe: Universe<E, D>, parent: E, child: E) => Option<LeftRight<E>>) {
+const breakPath = function <E, D> (universe: Universe<E, D>, item: E, isTop: (e: E) => boolean, breaker: (universe: Universe<E, D>, parent: E, child: E) => Option<LeftRight<E>>) {
 
   const next = function (child: E, group: Option<E>, splits: BrokenPathSplits<E>[]): BrokenPath<E> {
     const fallback = brokenPath(child, Option.none(), splits);

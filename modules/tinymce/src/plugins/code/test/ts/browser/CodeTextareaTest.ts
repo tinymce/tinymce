@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeTextareaTest', (success, fa
       ]);
     };
 
-    const sAssertStyleExits = Chain.asStep({editor}, [
+    const sAssertStyleExits = Chain.asStep({ editor }, [
       cAssertWhiteSpace(),
       UiChains.cCloseDialog('div[role="dialog"]')
     ]);

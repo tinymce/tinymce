@@ -17,9 +17,9 @@ UnitTest.test('CompareTest', function () {
   check(false, TestPage.s1, TestPage.s2);
 
   assert.eq(false, Compare.member(TestPage.p1, []));
-  assert.eq(true, Compare.member(TestPage.p1, [TestPage.p1]));
-  assert.eq(true, Compare.member(TestPage.p1, [TestPage.t2, TestPage.p1]));
-  assert.eq(false, Compare.member(TestPage.p1, [TestPage.t2]));
+  assert.eq(true, Compare.member(TestPage.p1, [ TestPage.p1 ]));
+  assert.eq(true, Compare.member(TestPage.p1, [ TestPage.t2, TestPage.p1 ]));
+  assert.eq(false, Compare.member(TestPage.p1, [ TestPage.t2 ]));
 
   const checkIsEqualNode = function (expected, e1, e2) {
     assert.eq(expected, Compare.isEqualNode(e1, e2));

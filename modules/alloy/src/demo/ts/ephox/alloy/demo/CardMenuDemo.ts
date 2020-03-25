@@ -113,22 +113,22 @@ export default (): void => {
     // For animations, need things to stay around in the DOM (at least until animation is done)
     stayInDom: true,
 
-    onExecute () {
+    onExecute() {
       console.log('Executing');
       return Option.some<boolean>(true);
     },
-    onEscape () {
+    onEscape() {
       console.log('Escaping');
       return Option.some<boolean>(true);
     },
-    onOpenMenu (container: AlloyComponent, menu: AlloyComponent) {
+    onOpenMenu(container: AlloyComponent, menu: AlloyComponent) {
       const w = Width.get(container.element());
       Width.set(menu.element(), w);
       if (Transitioning.jumpTo) {
         Transitioning.jumpTo(menu, 'current');
       }
     },
-    onOpenSubmenu (container, item, submenu) {
+    onOpenSubmenu(container, item, submenu) {
       const w = Width.get(container.element());
       const menu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
       const menuComp = container.getSystem().getByDom(menu).getOrDie();
@@ -141,7 +141,7 @@ export default (): void => {
       }
     },
 
-    onCollapseMenu (container, item, menu) {
+    onCollapseMenu(container, item, menu) {
       const submenu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
       const submenuComp = container.getSystem().getByDom(submenu).getOrDie();
       if (Transitioning.progressTo) {

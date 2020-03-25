@@ -72,11 +72,11 @@ const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyCo
   const all = GuiFactory.build(
     Container.sketch({
       components: [
-        Container.sketch({ dom: { tag: 'hr' } }),
+        Container.sketch({ dom: { tag: 'hr' }}),
         information,
         GuiFactory.premade(display),
         dump,
-        Container.sketch({ dom: { tag: 'hr' } })
+        Container.sketch({ dom: { tag: 'hr' }})
       ]
     })
   );

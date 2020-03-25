@@ -46,7 +46,7 @@ const receivingChannel = (rawSpec: DismissalReceivingSpec) => {
       schema: ValueSchema.objOfOnly([
         FieldSchema.strict('target')
       ]),
-      onReceive (sandbox: AlloyComponent, data: { target: () => Element }) {
+      onReceive(sandbox: AlloyComponent, data: { target: () => Element }) {
         if (Sandboxing.isOpen(sandbox)) {
           const isPart = Sandboxing.isPartOf(sandbox, data.target) || detail.isExtraPart(sandbox, data.target);
           if (!isPart) {

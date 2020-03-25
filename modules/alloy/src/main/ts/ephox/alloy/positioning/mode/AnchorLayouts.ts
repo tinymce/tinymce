@@ -31,14 +31,14 @@ const get = (
 
   const ltr = isBottomToTop ?
     info.layouts.bind((ls) => ls.onBottomLtr.map((f) => f(elem)))
-    .or(customLtr)
-    .getOr(defaultBottomLtr) :
+      .or(customLtr)
+      .getOr(defaultBottomLtr) :
     customLtr.getOr(defaultLtr);
 
   const rtl = isBottomToTop ?
     info.layouts.bind((ls) => ls.onBottomRtl.map((f) => f(elem)))
-    .or(customRtl)
-    .getOr(defaultBottomRtl) :
+      .or(customRtl)
+      .getOr(defaultBottomRtl) :
     customRtl.getOr(defaultRtl);
 
   const f = Direction.onDirection(ltr, rtl);

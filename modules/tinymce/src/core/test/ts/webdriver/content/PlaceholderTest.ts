@@ -42,7 +42,7 @@ UnitTest.asynctest('webdriver.tinymce.core.content.PlaceholderTest', (success, f
     const browserSpecificTests = PlatformDetection.detect().browser.isIE() ? [ ] : [
       Log.stepsAsStep('TINY-3917', 'Check placeholder restores when deleting content via command', [
         sSetContent('<p>a</p>'),
-        tinyApi.sSetCursor([0, 0], 1),
+        tinyApi.sSetCursor([ 0, 0 ], 1),
         sAssertPlaceholderNotExists,
         tinyApi.sExecCommand('Delete'),
         sAssertPlaceholderExists,

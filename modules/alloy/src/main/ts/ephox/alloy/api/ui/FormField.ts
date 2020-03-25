@@ -18,7 +18,7 @@ const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail,
     detail.fieldBehaviours,
     [
       Composing.config({
-        find (container) {
+        find(container) {
           return AlloyParts.getPart(container, detail, 'field');
         }
       }),
@@ -26,10 +26,10 @@ const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail,
       Representing.config({
         store: {
           mode: 'manual',
-          getValue (field) {
+          getValue(field) {
             return Composing.getCurrent(field).bind(Representing.getValue);
           },
-          setValue (field, value) {
+          setValue(field, value) {
             Composing.getCurrent(field).each((current) => {
               Representing.setValue(current, value);
             });

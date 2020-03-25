@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     return {
       counts,
 
-      comment (text) {
+      comment(text) {
         if ('comment' in counts) {
           counts.comment++;
         } else {
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
         writer.comment(text);
       },
 
-      cdata (text) {
+      cdata(text) {
         if ('cdata' in counts) {
           counts.cdata++;
         } else {
@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
         writer.cdata(text);
       },
 
-      text (text, raw) {
+      text(text, raw) {
         if ('text' in counts) {
           counts.text++;
         } else {
@@ -47,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
         writer.text(text, raw);
       },
 
-      start (name, attrs, empty) {
+      start(name, attrs, empty) {
         if ('start' in counts) {
           counts.start++;
         } else {
@@ -57,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
         writer.start(name, attrs, empty);
       },
 
-      end (name) {
+      end(name) {
         if ('end' in counts) {
           counts.end++;
         } else {
@@ -67,7 +67,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
         writer.end(name);
       },
 
-      pi (name, text) {
+      pi(name, text) {
         if ('pi' in counts) {
           counts.pi++;
         } else {
@@ -77,7 +77,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
         writer.pi(name, text);
       },
 
-      doctype (text) {
+      doctype(text) {
         if ('doctype:' in counts) {
           counts.doctype++;
         } else {

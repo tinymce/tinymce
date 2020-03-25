@@ -12,11 +12,11 @@ UnitTest.asynctest('ChainPipelineTest', (success, failure) => {
     cAcc(2),
     cAcc(3)
   ], (result) => {
-      try {
-        Assert.eq('Expected result to be the sum', 6, result);
-        success();
-      } catch (err) {
-          failure(err);
-      }
+    try {
+      Assert.eq('Expected result to be the sum', 6, result);
+      success();
+    } catch (err) {
+      failure(err);
+    }
   }, failure);
 });

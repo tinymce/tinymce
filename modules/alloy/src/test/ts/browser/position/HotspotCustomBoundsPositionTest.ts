@@ -18,7 +18,7 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
     const hotspot = GuiFactory.build(
       Button.sketch({
-        action () { },
+        action() { },
         dom: {
           styles: {
             position: 'absolute',

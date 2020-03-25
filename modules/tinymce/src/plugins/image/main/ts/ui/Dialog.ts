@@ -110,7 +110,7 @@ const addPrependUrl2 = (info: ImageDialogInfo, srcURL: string): Option<string> =
 const addPrependUrl = (info: ImageDialogInfo, api: API) => {
   const data = api.getData();
   addPrependUrl2(info, data.src.value).each((srcURL) => {
-    api.setData({ src: { value: srcURL, meta: data.src.meta } });
+    api.setData({ src: { value: srcURL, meta: data.src.meta }});
   });
 };
 
@@ -290,7 +290,7 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
       };
 
       const updateSrcAndSwitchTab = (url: string) => {
-        api.setData({ src: { value: url, meta: {} } });
+        api.setData({ src: { value: url, meta: {}}});
         api.showTab('general');
         changeSrc(helpers, info, state, api);
       };

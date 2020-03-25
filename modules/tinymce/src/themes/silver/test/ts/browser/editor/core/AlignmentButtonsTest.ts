@@ -31,19 +31,19 @@ UnitTest.asynctest('Editor alignment toolbar buttons test', (success, failure) =
                   classes: [ arr.has('tox-toolbar__group') ],
                   children: [
                     s.element('button', {
-                      attrs: { title: str.is('Align left')}
+                      attrs: { title: str.is('Align left') }
                     }),
                     s.element('button', {
-                      attrs: { title: str.is('Align center')}
+                      attrs: { title: str.is('Align center') }
                     }),
                     s.element('button', {
-                      attrs: { title: str.is('Align right')}
+                      attrs: { title: str.is('Align right') }
                     }),
                     s.element('button', {
-                      attrs: { title: str.is('Justify')}
+                      attrs: { title: str.is('Justify') }
                     }),
                     s.element('button', {
-                      attrs: { title: str.is('No alignment')}
+                      attrs: { title: str.is('No alignment') }
                     }),
                   ]
                 })

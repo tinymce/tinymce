@@ -24,7 +24,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
     const items = (suffix: string) => [
       {
         type: 'widget',
-        data: { value: 'alpha', meta: { text: 'Alpha' } },
+        data: { value: 'alpha', meta: { text: 'Alpha' }},
         dom: {
           tag: 'span',
           classes: [ `alpha-widget-${suffix}` ]
@@ -47,7 +47,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
 
       {
         type: 'item',
-        data: { value: 'beta', meta: { text: 'Beta' } },
+        data: { value: 'beta', meta: { text: 'Beta' }},
         dom: {
           tag: 'span',
           classes: [ `beta-item-${suffix}` ],

@@ -14,7 +14,7 @@ const format = function (command, update) {
     channels: Objects.wrap(
       TinyChannels.formatChanged,
       {
-        onReceive (button, data) {
+        onReceive(button, data) {
           if (data.command === command) {
             update(button, data.state);
           }

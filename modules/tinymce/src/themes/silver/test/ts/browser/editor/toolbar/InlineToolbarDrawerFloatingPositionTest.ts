@@ -46,7 +46,7 @@ UnitTest.asynctest('Inline Editor Floating Toolbar Drawer Position test', (succe
           }),
           tinyApis.sSetContent('<p>Line 1</p><p>Line 2</p><p>Line 3</p>'),
           tinyApis.sFocus(),
-          tinyApis.sSetCursor([2, 0], 'Line 3'.length),
+          tinyApis.sSetCursor([ 2, 0 ], 'Line 3'.length),
           UiFinder.sWaitForVisible('Wait for editor to be visible', Body.body(), '.tox-editor-header button[title="More..."]'),
           ...getSteps(editor, tinyApis)
         ], () => onSuccess(editor), onFailure);

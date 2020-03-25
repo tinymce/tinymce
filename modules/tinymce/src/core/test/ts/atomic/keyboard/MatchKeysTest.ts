@@ -65,12 +65,12 @@ UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (succe
   Pipeline.async({}, [
     sTestMatchNone([], {}),
     sTestMatchNone([], event({ keyCode: 65 })),
-    sTestMatchNone([ { keyCode: 65, action: actionA } ], event({ keyCode: 13 })),
-    sTestMatch([ { keyCode: 65, action: actionA } ], event({ keyCode: 65 }), [ 'a' ]),
-    sTestMatch([ { keyCode: 65, shiftKey: true, action: actionA } ], event({ keyCode: 65, shiftKey: true }), [ 'a' ]),
-    sTestMatch([ { keyCode: 65, altKey: true, action: actionA } ], event({ keyCode: 65, altKey: true }), [ 'a' ]),
-    sTestMatch([ { keyCode: 65, ctrlKey: true, action: actionA } ], event({ keyCode: 65, ctrlKey: true }), [ 'a' ]),
-    sTestMatch([ { keyCode: 65, metaKey: true, action: actionA } ], event({ keyCode: 65, metaKey: true }), [ 'a' ]),
+    sTestMatchNone([{ keyCode: 65, action: actionA }], event({ keyCode: 13 })),
+    sTestMatch([{ keyCode: 65, action: actionA }], event({ keyCode: 65 }), [ 'a' ]),
+    sTestMatch([{ keyCode: 65, shiftKey: true, action: actionA }], event({ keyCode: 65, shiftKey: true }), [ 'a' ]),
+    sTestMatch([{ keyCode: 65, altKey: true, action: actionA }], event({ keyCode: 65, altKey: true }), [ 'a' ]),
+    sTestMatch([{ keyCode: 65, ctrlKey: true, action: actionA }], event({ keyCode: 65, ctrlKey: true }), [ 'a' ]),
+    sTestMatch([{ keyCode: 65, metaKey: true, action: actionA }], event({ keyCode: 65, metaKey: true }), [ 'a' ]),
     sTestMatch(
       [
         { keyCode: 65, ctrlKey: true, metaKey: true, altKey: true, action: actionA },

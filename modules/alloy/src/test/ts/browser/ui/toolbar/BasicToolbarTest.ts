@@ -96,7 +96,7 @@ UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
       Step.sync(() => {
         TestPartialToolbarGroup.setGroups(t1, [
           {
-            items: Arr.map([ { text: 'a1' }, { text: 'a2' } ], makeButton)
+            items: Arr.map([{ text: 'a1' }, { text: 'a2' }], makeButton)
           }
         ]);
       }),
@@ -141,7 +141,7 @@ UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
       Step.sync(() => {
         TestPartialToolbarGroup.setGroups(t2, [
           {
-            items: Arr.map([ { text: 'b1' }, { text: 'b2' } ], makeButton)
+            items: Arr.map([{ text: 'b1' }, { text: 'b2' }], makeButton)
           }
         ]);
       }),

@@ -80,7 +80,7 @@ const createSelector = (snaps: DraggingTypes.SnapsConfigSpec<SnapExtra>) => Meme
   Button.sketch({
     dom: {
       tag: 'div',
-      classes: ['tox-selector']
+      classes: [ 'tox-selector' ]
     },
 
     buttonBehaviours: Behaviour.derive([

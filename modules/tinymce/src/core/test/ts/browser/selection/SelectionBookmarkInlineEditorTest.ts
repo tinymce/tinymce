@@ -83,25 +83,25 @@ UnitTest.asynctest(
         Logger.t('restore even without second nodechange, restores on focusout', Step.sync(function () {
           editor.setContent('<p>a</p><p>b</p>');
 
-          setSelection(editor, [0, 0], 0, [0, 0], 0);
+          setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
           editor.nodeChanged();
 
-          setSelection(editor, [1, 0], 1, [1, 0], 1);
+          setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
           focusDiv();
 
-          assertSelection(editor, [0, 0], 0, [0, 0], 0);
+          assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
         })),
         Logger.t('restore with second nodechange, restores on focusout', Step.sync(function () {
           editor.setContent('<p>a</p><p>b</p>');
 
-          setSelection(editor, [0, 0], 0, [0, 0], 0);
+          setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
           editor.nodeChanged();
 
-          setSelection(editor, [1, 0], 1, [1, 0], 1);
+          setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
           editor.nodeChanged();
           focusDiv();
 
-          assertSelection(editor, [1, 0], 1, [1, 0], 1);
+          assertSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
         })),
         sRemoveTestDiv
       ] : [ // On the other browsers we test for bookmark saved on nodechange, keyup, mouseup and touchend events
@@ -112,63 +112,63 @@ UnitTest.asynctest(
           // so by adding an undo level first we keep it from adding a bookmark because the undo manager
           // does not add a new undolevel if it is the same as the previous level.
 
-          setSelection(editor, [0, 0], 0, [0, 0], 0);
+          setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
           editor.nodeChanged();
 
-          setSelection(editor, [1, 0], 1, [1, 0], 1);
-          assertBookmark(editor, [0, 0], 0, [0, 0], 0);
+          setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
+          assertBookmark(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
         })),
         Logger.t('assert selection after nodechanged, should restore', Step.sync(function () {
           editor.setContent('<p>a</p><p>b</p>');
 
-          setSelection(editor, [0, 0], 0, [0, 0], 0);
+          setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
           editor.nodeChanged();
 
-          setSelection(editor, [1, 0], 1, [1, 0], 1);
+          setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
           editor.nodeChanged();
-          assertBookmark(editor, [1, 0], 1, [1, 0], 1);
+          assertBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
         })),
         Logger.t('assert selection after keyup, should restore', Step.sync(function () {
           editor.setContent('<p>a</p><p>b</p>');
 
-          setSelection(editor, [0, 0], 0, [0, 0], 0);
+          setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
           editor.nodeChanged();
 
-          setSelection(editor, [1, 0], 1, [1, 0], 1);
+          setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
           editor.fire('keyup', { });
-          assertBookmark(editor, [1, 0], 1, [1, 0], 1);
+          assertBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
         })),
         Logger.t('assert selection after touchend, should restore', GeneralSteps.sequence([
           Step.sync(function () {
             editor.setContent('<p>a</p><p>b</p>');
 
-            setSelection(editor, [0, 0], 0, [0, 0], 0);
+            setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
             editor.nodeChanged();
 
-            setSelection(editor, [1, 0], 1, [1, 0], 1);
+            setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
             editor.fire('mouseup', { });
           }),
-          sWaitForBookmark(editor, [1, 0], 1, [1, 0], 1)
+          sWaitForBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1)
         ])),
         Logger.t('assert selection after touchend, should restore', GeneralSteps.sequence([
           Step.sync(function () {
             editor.setContent('<p>a</p><p>b</p>');
 
-            setSelection(editor, [0, 0], 0, [0, 0], 0);
+            setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
             editor.nodeChanged();
 
-            setSelection(editor, [1, 0], 1, [1, 0], 1);
+            setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
             editor.fire('touchend', { });
           }),
-          sWaitForBookmark(editor, [1, 0], 1, [1, 0], 1)
+          sWaitForBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1)
         ])),
         Logger.t('selection with mouseup outside editor body', GeneralSteps.sequence([
           Step.sync(function () {
             editor.setContent('<p>ab</p>');
-            setSelection(editor, [0, 0], 0, [0, 0], 1);
+            setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
             DOMUtils.DOM.fire(document, 'mouseup');
           }),
-          sWaitForBookmark(editor, [0, 0], 0, [0, 0], 1)
+          sWaitForBookmark(editor, [ 0, 0 ], 0, [ 0, 0 ], 1)
         ])),
         Logger.t('getSelectionRange event should fire on bookmarked ranges', GeneralSteps.sequence([
           sAddTestDiv,
@@ -180,7 +180,7 @@ UnitTest.asynctest(
             };
 
             editor.setContent('<p>a</p><p>b</p>');
-            setSelection(editor, [0, 0], 0, [0, 0], 1);
+            setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
             editor.nodeChanged();
             focusDiv();
 

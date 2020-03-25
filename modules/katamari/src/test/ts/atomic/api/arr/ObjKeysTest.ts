@@ -14,8 +14,8 @@ UnitTest.test('Obj.keys: unit tests', () => {
   };
 
   check([], {});
-  check(['a'], { a: 'A' });
-  check(['a', 'b', 'c'], { a: 'A', c: 'C', b: 'B' });
+  check([ 'a' ], { a: 'A' });
+  check([ 'a', 'b', 'c' ], { a: 'A', c: 'C', b: 'B' });
 });
 
 UnitTest.test('Obj.keys are all in input', () => {

@@ -22,10 +22,10 @@ UnitTest.test('DomTextdataTest', function () {
   check({
     text: '',
     cursor: Option.some(0)
-  }, [c], c, 0);
+  }, [ c ], c, 0);
 
   check({
     text: 'alpha beta epsilonfoo',
     cursor: Option.some(13)
-  }, [a, b, c, d, e, f], e, 2);
+  }, [ a, b, c, d, e, f ], e, 2);
 });

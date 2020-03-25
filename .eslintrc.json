@@ -13,7 +13,11 @@
     "@typescript-eslint/ban-ts-ignore": "off", // this will be added to the plugin
     "@typescript-eslint/camelcase": "off", // leave off
     "@typescript-eslint/consistent-type-definitions": "off", // leave off
-    "@typescript-eslint/indent": "off",
+    "@typescript-eslint/indent": [ "error", 2, { // this will be added to the plugin
+      "FunctionDeclaration": { "parameters": "first" },
+      "FunctionExpression": { "parameters": "first" },
+      "SwitchCase": 1
+    }],
     "@typescript-eslint/member-delimiter-style": "off",
     "@typescript-eslint/member-ordering": "off",
     "@typescript-eslint/no-empty-function": "off",
@@ -26,20 +30,16 @@
     "@typescript-eslint/quotes": "off",
     "@typescript-eslint/type-annotation-spacing": "off",
     "@typescript-eslint/unbound-method": "off",
-    "array-bracket-spacing": "off",
     "arrow-body-style": "off",
     "guard-for-in": "off",
     "no-empty": "off",
     "no-shadow": "off",
     "no-underscore-dangle": "off",
     "no-unused-expressions": "off",
-    "object-curly-spacing": "off",
     "one-var": "off",
     "prefer-const": "off",
     "prefer-rest-params": "off",
     "prefer-spread": "off",
-    "quote-props": "off",
-    "space-before-function-paren": "off",
-    "spaced-comment": "off"
+    "quote-props": "off"
   }
 }

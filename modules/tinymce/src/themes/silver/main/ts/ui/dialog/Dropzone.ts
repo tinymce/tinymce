@@ -125,7 +125,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
                 styles: {
                   position: 'relative'
                 },
-                classes: [ 'tox-button', 'tox-button--secondary']
+                classes: [ 'tox-button', 'tox-button--secondary' ]
               },
               components: [
                 memInput.asSpec()
@@ -149,5 +149,5 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
     factory: { sketch: renderField }
   });
 
-  return renderFormFieldWith(pLabel, pField, ['tox-form__group--stretched'], [ ]);
+  return renderFormFieldWith(pLabel, pField, [ 'tox-form__group--stretched' ], [ ]);
 };

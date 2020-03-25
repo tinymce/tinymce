@@ -31,7 +31,7 @@ const unwrapReferences = (items: Array<string | SingleMenuItemApi>, menuItems: M
         return acc;
       } else if (item === '|') {
         // Ignore the separator if it's at the start or a duplicate
-        return acc.length > 0 && !isSeparator(acc[acc.length - 1]) ? acc.concat([separator]) : acc;
+        return acc.length > 0 && !isSeparator(acc[acc.length - 1]) ? acc.concat([ separator ]) : acc;
       } else if (Obj.has(menuItems, item.toLowerCase())) {
         return acc.concat([ menuItems[item.toLowerCase()] ]);
       } else {

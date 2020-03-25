@@ -24,7 +24,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import { trimOrPadLeftRight, trimNbspAfterDeleteAndPadValue, isAfterNbsp } from './NbspTrim';
 import ParserNode from '../api/html/Node';
 
-const isTableCell = NodeType.matchNodeNames(['td', 'th']);
+const isTableCell = NodeType.matchNodeNames([ 'td', 'th' ]);
 
 const selectionSetContent = (editor: Editor, content: string) => {
   const rng = editor.selection.getRng();
@@ -51,7 +51,7 @@ const validInsertion = function (editor: Editor, value: string, parentNode: DomE
     // Check if parent is empty or only has one BR element then set the innerHTML of that parent
     const node = parentNode.firstChild;
     const node2 = parentNode.lastChild;
-    if (!node || (node === node2 && node.nodeName === 'BR')) {///
+    if (!node || (node === node2 && node.nodeName === 'BR')) {
       editor.dom.setHTML(parentNode, value);
     } else {
       selectionSetContent(editor, value);

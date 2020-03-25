@@ -19,7 +19,7 @@ const getClassList = (editor: Editor) => {
     (item) => {
       if (item.value) {
         item.textStyle = () => {
-          return editor.formatter.getCssText({ block: 'tr', classes: [item.value] });
+          return editor.formatter.getCssText({ block: 'tr', classes: [ item.value ] });
         };
       }
     }

@@ -21,10 +21,10 @@ UnitTest.asynctest('Browser Test: behaviour.PinchingTest', (success, failure) =>
       },
       behaviours: Behaviour.derive([
         Pinching.config({
-          onPinch (elem, dx, dy) {
+          onPinch(elem, dx, dy) {
             store.adder({ method: 'pinch', dx, dy })();
           },
-          onPunch (elem, dx, dy) {
+          onPunch(elem, dx, dy) {
             store.adder({ method: 'punch', dx, dy })();
           }
         })

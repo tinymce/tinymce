@@ -31,7 +31,7 @@ UnitTest.asynctest('Register formats before setContent test', (success, failure)
     style_formats: [
       { title: 'my-block-format', block: 'h1' },
       { title: 'my-inline-format', inline: 'b' },
-      { title: 'my-selector-format', selector: 'h1', classes: ['class'] }
+      { title: 'my-selector-format', selector: 'h1', classes: [ 'class' ] }
     ],
     setup: (editor) => {
       editor.on('beforesetcontent', (_) => storeFormats(editor));

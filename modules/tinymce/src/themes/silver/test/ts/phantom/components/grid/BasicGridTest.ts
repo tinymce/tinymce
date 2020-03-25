@@ -22,17 +22,17 @@ UnitTest.asynctest('Grid component Test', (success, failure) => {
             {
               dom: {
                 tag: 'div',
-                classes: ['foo']
+                classes: [ 'foo' ]
               }
             } as any,
             {
               dom: {
                 tag: 'div',
-                classes: ['bar']
+                classes: [ 'bar' ]
               }
             } as any
           ]
-         }, sharedBackstage)
+        }, sharedBackstage)
       );
     },
     (doc, body, gui, component, store) => {
@@ -41,13 +41,13 @@ UnitTest.asynctest('Grid component Test', (success, failure) => {
           'Checking initial structure',
           ApproxStructure.build((s, str, arr) => {
             return s.element('div', {
-              classes: [arr.has('tox-form__grid'), arr.has('tox-form__grid--10col')],
+              classes: [ arr.has('tox-form__grid'), arr.has('tox-form__grid--10col') ],
               children: [
                 s.element('div', {
-                  classes: [arr.has('foo')]
+                  classes: [ arr.has('foo') ]
                 }),
                 s.element('div', {
-                  classes: [arr.has('bar')]
+                  classes: [ arr.has('bar') ]
                 })
               ]
             });

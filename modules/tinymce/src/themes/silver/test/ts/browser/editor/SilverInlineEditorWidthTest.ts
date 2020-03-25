@@ -62,29 +62,29 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
   const sTestRender = (label: string, settings: Record<string, any>, expectedWidth: number, additionalSteps: (editor: Editor, apis) => Step<any, any>[] = Fun.constant([])) => {
     return Step.label(label, Step.raw((_, done, die, logs) => {
       TinyLoader.setup((editor, onSuccess, onFailure) => {
-          const uiContainer = Element.fromDom(editor.getContainer());
-          const tinyApis = TinyApis(editor);
+        const uiContainer = Element.fromDom(editor.getContainer());
+        const tinyApis = TinyApis(editor);
 
-          Pipeline.async({}, [
-            Step.sync(() => Scroll.to(0, 0)),
-            tinyApis.sFocus(),
-            sStructureTest(editor, uiContainer, expectedWidth),
-            sAssetWidth(uiContainer, expectedWidth, expectedWidth - 100),
-            tinyApis.sSetContent(Arr.range(100, () => '<p></p>').join('')),
-            Step.sync(() => Scroll.to(0, 500)),
-            UiFinder.sWaitForVisible('Wait to be docked', Body.body(), '.tox-tinymce--toolbar-sticky-on .tox-editor-header'),
-            sAssetWidth(uiContainer, expectedWidth, expectedWidth - 100),
-            ...additionalSteps(editor, tinyApis)
-          ], onSuccess, onFailure, logs);
-        },
-        {
-          theme: 'silver',
-          menubar: false,
-          inline: true,
-          base_url: '/project/tinymce/js/tinymce',
-          toolbar_mode: 'floating',
-          ...settings
-        }, done, die
+        Pipeline.async({}, [
+          Step.sync(() => Scroll.to(0, 0)),
+          tinyApis.sFocus(),
+          sStructureTest(editor, uiContainer, expectedWidth),
+          sAssetWidth(uiContainer, expectedWidth, expectedWidth - 100),
+          tinyApis.sSetContent(Arr.range(100, () => '<p></p>').join('')),
+          Step.sync(() => Scroll.to(0, 500)),
+          UiFinder.sWaitForVisible('Wait to be docked', Body.body(), '.tox-tinymce--toolbar-sticky-on .tox-editor-header'),
+          sAssetWidth(uiContainer, expectedWidth, expectedWidth - 100),
+          ...additionalSteps(editor, tinyApis)
+        ], onSuccess, onFailure, logs);
+      },
+      {
+        theme: 'silver',
+        menubar: false,
+        inline: true,
+        base_url: '/project/tinymce/js/tinymce',
+        toolbar_mode: 'floating',
+        ...settings
+      }, done, die
       );
     }));
   };

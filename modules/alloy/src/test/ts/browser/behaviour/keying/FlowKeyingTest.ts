@@ -40,7 +40,7 @@ UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
-          classes: [ 'flow-keying-test'],
+          classes: [ 'flow-keying-test' ],
           styles: {
             background: 'white',
             width: '200px',

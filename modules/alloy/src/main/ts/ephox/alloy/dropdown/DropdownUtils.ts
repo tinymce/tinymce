@@ -64,13 +64,13 @@ const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Optio
 
         highlightImmediately: highlightOnOpen === HighlightOnOpen.HighlightFirst,
 
-        onOpenMenu (tmenu, menu) {
+        onOpenMenu(tmenu, menu) {
           const sink = getLazySink().getOrDie();
           Positioning.position(sink, anchor, menu);
           Sandboxing.decloak(sandbox);
         },
 
-        onOpenSubmenu (tmenu, item, submenu) {
+        onOpenSubmenu(tmenu, item, submenu) {
           const sink = getLazySink().getOrDie();
           Positioning.position(sink, {
             anchor: 'submenu',
@@ -79,7 +79,7 @@ const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Optio
           Sandboxing.decloak(sandbox);
         },
 
-        onRepositionMenu (tmenu, primaryMenu, submenuTriggers) {
+        onRepositionMenu(tmenu, primaryMenu, submenuTriggers) {
           const sink = getLazySink().getOrDie();
           Positioning.position(sink, anchor, primaryMenu);
           Arr.each(submenuTriggers, (st) => {
@@ -87,7 +87,7 @@ const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Optio
           });
         },
 
-        onEscape () {
+        onEscape() {
           // Focus the triggering component after escaping the menu
           Focusing.focus(component);
           Sandboxing.close(sandbox);
@@ -211,15 +211,15 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
         Sandboxing.config({
           onOpen,
           onClose,
-          isPartOf (container: AlloyComponent, data: AlloyComponent, queryElem: Element): boolean {
+          isPartOf(container: AlloyComponent, data: AlloyComponent, queryElem: Element): boolean {
             return ComponentStructure.isPartOf(data, queryElem) || ComponentStructure.isPartOf(hotspot, queryElem);
           },
-          getAttachPoint () {
+          getAttachPoint() {
             return lazySink().getOrDie();
           }
         }),
         Composing.config({
-          find (sandbox: AlloyComponent): Option<AlloyComponent> {
+          find(sandbox: AlloyComponent): Option<AlloyComponent> {
             return Sandboxing.getState(sandbox).bind((menu) => {
               return Composing.getCurrent(menu);
             });

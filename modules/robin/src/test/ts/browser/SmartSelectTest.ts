@@ -38,11 +38,11 @@ UnitTest.test('SmartSelectTest', function () {
     const space = Element.fromText(' ');
     const yes = Element.fromText('"yes"');
 
-    InsertAll.append(p1, [are, s1, oi, b1]);
-    InsertAll.append(p2, [toSay, space, yes]);
-    InsertAll.append(s1, [g]);
-    InsertAll.append(b1, [ng]);
-    InsertAll.append(editor, [we, p1, p2]);
+    InsertAll.append(p1, [ are, s1, oi, b1 ]);
+    InsertAll.append(p2, [ toSay, space, yes ]);
+    InsertAll.append(s1, [ g ]);
+    InsertAll.append(b1, [ ng ]);
+    InsertAll.append(editor, [ we, p1, p2 ]);
     Insert.append(Body.body(), editor);
   };
 
@@ -83,46 +83,46 @@ UnitTest.test('SmartSelectTest', function () {
 
   const words = {
     we: {
-      start: { element: [0], offset: 0 },
-      finish: { element: [0], offset: 'We'.length },
+      start: { element: [ 0 ], offset: 0 },
+      finish: { element: [ 0 ], offset: 'We'.length },
       word: 'We'
     },
     are: {
-      start: { element: [1, 0], offset: 0 },
-      finish: { element: [1, 0], offset: 'are'.length },
+      start: { element: [ 1, 0 ], offset: 0 },
+      finish: { element: [ 1, 0 ], offset: 'are'.length },
       word: 'are'
     },
     going: {
-      start: { element: [1, 1, 0], offset: ''.length },
-      finish: { element: [1, 3, 0], offset: 'ng'.length },
+      start: { element: [ 1, 1, 0 ], offset: ''.length },
+      finish: { element: [ 1, 3, 0 ], offset: 'ng'.length },
       word: 'going'
     },
     to: {
-      start: { element: [2, 0], offset: ''.length },
-      finish: { element: [2, 0], offset: 'to'.length },
+      start: { element: [ 2, 0 ], offset: ''.length },
+      finish: { element: [ 2, 0 ], offset: 'to'.length },
       word: 'to'
     },
     say: {
-      start: { element: [2, 0], offset: 'to '.length },
-      finish: { element: [2, 0], offset: 'to say'.length },
+      start: { element: [ 2, 0 ], offset: 'to '.length },
+      finish: { element: [ 2, 0 ], offset: 'to say'.length },
       word: 'say'
     },
     yes: {
-      start: { element: [2, 2], offset: '"'.length },
-      finish: { element: [2, 2], offset: '"yes'.length },
+      start: { element: [ 2, 2 ], offset: '"'.length },
+      finish: { element: [ 2, 2 ], offset: '"yes'.length },
       word: 'yes'
     }
   };
 
   populate();
 
-  check(words.we, [0], 1);
-  check(words.are, [1, 0], 1);
-  check(words.are, [1, 0], 2);
-  check(words.going, [1, 1, 0], 1);
-  check(words.to, [2, 0], 1);
-  check(words.say, [2, 0], 'to s'.length);
-  check(words.yes, [2, 2], '"y'.length);
+  check(words.we, [ 0 ], 1);
+  check(words.are, [ 1, 0 ], 1);
+  check(words.are, [ 1, 0 ], 2);
+  check(words.going, [ 1, 1, 0 ], 1);
+  check(words.to, [ 2, 0 ], 1);
+  check(words.say, [ 2, 0 ], 'to s'.length);
+  check(words.yes, [ 2, 2 ], '"y'.length);
 
   cleanup();
 });

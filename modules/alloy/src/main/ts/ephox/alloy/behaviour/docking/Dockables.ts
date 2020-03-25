@@ -34,7 +34,7 @@ interface MorphConstructor {
 
 const morphAdt: MorphConstructor = Adt.generate([
   { static: [ ] },
-  { absolute: [ 'positionCss'] },
+  { absolute: [ 'positionCss' ] },
   { fixed: [ 'positionCss' ] }
 ]);
 

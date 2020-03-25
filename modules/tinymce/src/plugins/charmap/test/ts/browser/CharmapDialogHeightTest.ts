@@ -61,7 +61,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.DialogHeightTest', (success,
           ])
         ])
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'charmap',
     toolbar: 'charmap',

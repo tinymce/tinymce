@@ -25,17 +25,17 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.ToolbarFalseTest', (succes
       tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'Text selection toolbar is not shown', [
         tinyApis.sSetContent('<p>Some <strong>bold</strong> and <em>italic</em> content.</p><blockquote><p>Some quoted content</p></blockquote>'),
-        tinyApis.sSetSelection([0, 0], 0, [0, 0], 4),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 4),
         sAssertToolbarNotVisible
       ]),
       Log.stepsAsStep('TBA', 'Insert toolbar is not shown', [
         tinyApis.sSetContent('<p>Some <strong>bold</strong> and <em>italic</em> content.</p><p></p>'),
-        tinyApis.sSetSelection([1], 0, [1], 0),
+        tinyApis.sSetSelection([ 1 ], 0, [ 1 ], 0),
         sAssertToolbarNotVisible
       ]),
       Log.stepsAsStep('TBA', 'Image toolbar is not shown', [
         tinyApis.sSetContent('<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></p>'),
-        tinyApis.sSetSelection([0], 0, [0], 0),
+        tinyApis.sSetSelection([ 0 ], 0, [ 0 ], 0),
         sAssertToolbarNotVisible
       ])
     ], onSuccess, onFailure);

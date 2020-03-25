@@ -43,7 +43,7 @@ const remove = (component: AlloyComponent, replaceConfig: ReplacingConfig, repla
 };
 
 // TODO: Rename
-const contents = (component: AlloyComponent, replaceConfig: ReplacingConfig/*, replaceState */): AlloyComponent[] => {
+const contents = (component: AlloyComponent, replaceConfig: ReplacingConfig): AlloyComponent[] => {
   return component.components();
 };
 

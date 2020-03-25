@@ -13,7 +13,7 @@ import { formCancelEvent, FormCancelEvent, formSubmitEvent, FormSubmitEvent } fr
 import * as Dialogs from './Dialogs';
 
 export interface ConfirmDialogSetup {
-    backstage: UiFactoryBackstage;
+  backstage: UiFactoryBackstage;
 }
 export const setup = (extras: ConfirmDialogSetup) => {
   const sharedBackstage = extras.backstage.shared;

@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginInlineEdi
         Assert.eq('should have isFullsceen api function', false, editor.plugins.fullscreen.isFullscreen());
         Assert.eq('should not have the fullscreen button', 'undefined', typeof editor.ui.registry.getAll().buttons.fullscreen);
       })
-    )], onSuccess, onFailure);
+    ) ], onSuccess, onFailure);
   }, {
     inline: true,
     plugins: 'fullscreen link',
