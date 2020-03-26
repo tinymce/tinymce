@@ -6,6 +6,7 @@
  */
 
 import { window } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
 
 /* jshint bitwise:false, expr:true, noempty:false, sub:true, eqnull:true, latedef:false, maxlen:255 */
 
@@ -1442,14 +1443,12 @@ Expr = Sizzle.selectors = {
 Expr.pseudos.nth = Expr.pseudos.eq;
 
 // Add button/input type pseudos
-// eslint-disable-next-line guard-for-in
-for (i in { radio: true, checkbox: true, file: true, password: true, image: true }) {
+Arr.each([ 'radio', 'checkbox', 'file', 'password', 'image' ], (i) => {
   Expr.pseudos[i] = createInputPseudo(i);
-}
-// eslint-disable-next-line guard-for-in
-for (i in { submit: true, reset: true }) {
+});
+Arr.each([ 'submit', 'reset' ], (i) => {
   Expr.pseudos[i] = createButtonPseudo(i);
-}
+});
 
 // Easy API for creating new setFilters
 function setFilters() { }
