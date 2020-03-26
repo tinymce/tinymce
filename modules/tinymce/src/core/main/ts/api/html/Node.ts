@@ -171,9 +171,11 @@ class Node {
     let attrs: Attributes;
 
     if (typeof name !== 'string') {
-      Obj.each(name, (value, key) => {
-        self.attr(key, value);
-      });
+      if (name !== undefined && name !== null) {
+        Obj.each(name, (value, key) => {
+          self.attr(key, value);
+        });
+      }
 
       return self;
     }

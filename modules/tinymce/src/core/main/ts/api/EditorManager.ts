@@ -337,9 +337,11 @@ const EditorManager: EditorManager = {
     this.defaultSettings = defaultSettings;
 
     const pluginBaseUrls = defaultSettings.plugin_base_urls;
-    Obj.each(pluginBaseUrls, (pluginBaseUrl, pluginName) => {
-      AddOnManager.PluginManager.urls[pluginName] = pluginBaseUrl;
-    });
+    if (pluginBaseUrls !== undefined) {
+      Obj.each(pluginBaseUrls, (pluginBaseUrl, pluginName) => {
+        AddOnManager.PluginManager.urls[pluginName] = pluginBaseUrl;
+      });
+    }
   },
 
   /**
