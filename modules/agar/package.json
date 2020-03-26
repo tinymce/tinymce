@@ -9,7 +9,8 @@
   "scripts": {
     "prepublishOnly": "tsc -b",
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
-    "test-manual": "bedrock --testdirs src/test/ts/browser src/test/ts/atomic"
+    "test-manual": "bedrock --testdirs src/test/ts/browser src/test/ts/atomic",
+    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
   },
   "keywords": [
     "testing",

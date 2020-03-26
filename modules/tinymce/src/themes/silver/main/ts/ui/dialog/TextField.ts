@@ -85,7 +85,7 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
   const pField = AlloyFormField.parts().field({
     tag: spec.multiline === true ? 'textarea' : 'input',
     inputAttributes,
-    inputClasses: [spec.classname],
+    inputClasses: [ spec.classname ],
     inputBehaviours: Behaviour.derive(
       Arr.flatten<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>([
         baseInputBehaviours,
@@ -96,8 +96,8 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
     factory: AlloyInput
   });
 
-  const extraClasses = spec.flex ? ['tox-form__group--stretched'] : [];
-  const extraClasses2 = extraClasses.concat(spec.maximized ? ['tox-form-group--maximize'] : []);
+  const extraClasses = spec.flex ? [ 'tox-form__group--stretched' ] : [];
+  const extraClasses2 = extraClasses.concat(spec.maximized ? [ 'tox-form-group--maximize' ] : []);
 
   const extraBehaviours = [
     Disabling.config({
@@ -128,7 +128,7 @@ export interface TextField {
   disabled: boolean;
   validation: Option<{
     validator: Validator;
-    validateOnLoad?: boolean
+    validateOnLoad?: boolean;
   }>;
   maximized: boolean;
 }

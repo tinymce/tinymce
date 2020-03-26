@@ -9,7 +9,7 @@ import { KeyboardEvent } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { CellNavigation, TableLookup } from '@ephox/snooker';
 import {
-    Compare, CursorPosition, Element, Node, Selection, SelectorFilter, SelectorFind, WindowSelection
+  Compare, CursorPosition, Element, Node, Selection, SelectorFilter, SelectorFind, WindowSelection
 } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -57,7 +57,7 @@ const go: any = function (editor: Editor, isRoot, cell, actions, lazyWire) { // 
   });
 };
 
-const rootElements = ['table', 'li', 'dl'];
+const rootElements = [ 'table', 'li', 'dl' ];
 
 const handle = function (event: KeyboardEvent, editor: Editor, actions: TableActions, lazyWire) {
   if (event.keyCode === VK.TAB) {

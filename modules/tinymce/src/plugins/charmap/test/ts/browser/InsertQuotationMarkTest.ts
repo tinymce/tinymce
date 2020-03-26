@@ -28,10 +28,10 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.InsertQuotationMarkTest', (s
         ]),
         tinyApis.sAssertContent('<p>"</p>')
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'charmap',
-    charmap_append: [[34, 'quotation mark']],
+    charmap_append: [[ 34, 'quotation mark' ]],
     toolbar: 'charmap',
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',

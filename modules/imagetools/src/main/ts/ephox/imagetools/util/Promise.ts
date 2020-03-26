@@ -166,18 +166,18 @@ const promise = <T>(): PromisePolyfillConstructor => {
     }
   }
 
-  Promise.prototype.catch = function <TResult = never>(onRejected?: Callback<any, TResult> | null): PromisePolyfill<T | TResult> {
+  Promise.prototype.catch = function <TResult = never> (onRejected?: Callback<any, TResult> | null): PromisePolyfill<T | TResult> {
     return this.then(null, onRejected);
   };
 
-  Promise.prototype.then = function <TResult1 = T, TResult2 = never>(onFulfilled?: Callback<T, TResult1> | null, onRejected?: Callback<any, TResult2> | null): PromisePolyfill<TResult1 | TResult2> {
+  Promise.prototype.then = function <TResult1 = T, TResult2 = never> (onFulfilled?: Callback<T, TResult1> | null, onRejected?: Callback<any, TResult2> | null): PromisePolyfill<TResult1 | TResult2> {
     const me = this;
     return new Promise(function (resolve, reject) {
       handle.call(me, new (Handler as any)(onFulfilled, onRejected, resolve, reject));
     });
   };
 
-  Promise.all = function <U>(...values: any[]): PromisePolyfill<any> {
+  Promise.all = function <U> (...values: any[]): PromisePolyfill<any> {
     const args = Array.prototype.slice.call(values.length === 1 && isArray(values[0]) ? values[0] : values);
 
     return new Promise(function (resolve, reject) {
@@ -208,7 +208,7 @@ const promise = <T>(): PromisePolyfillConstructor => {
     });
   };
 
-  Promise.resolve = function <U>(value?: U | PromiseLike<U>): PromisePolyfill<U | void> {
+  Promise.resolve = function <U> (value?: U | PromiseLike<U>): PromisePolyfill<U | void> {
     if (value && typeof value === 'object' && (value as {}).constructor === Promise) {
       return value as PromisePolyfill<U | void>;
     }
@@ -218,13 +218,13 @@ const promise = <T>(): PromisePolyfillConstructor => {
     });
   };
 
-  Promise.reject = function <U = never>(reason?: any): PromisePolyfill<U> {
+  Promise.reject = function <U = never> (reason?: any): PromisePolyfill<U> {
     return new Promise(function (resolve, reject) {
       reject(reason);
     });
   };
 
-  Promise.race = function <U>(values: PromiseLike<U>[]): PromisePolyfill<U> {
+  Promise.race = function <U> (values: PromiseLike<U>[]): PromisePolyfill<U> {
     return new Promise(function (resolve, reject) {
       for (const value of values) {
         value.then(resolve, reject);

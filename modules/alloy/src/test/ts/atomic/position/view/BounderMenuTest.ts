@@ -17,10 +17,10 @@ UnitTest.test('BounderMenuTest', () => {
   /* global assert */
   const check = (expected: TestDecisionSpec, preference: AnchorLayout[], anchor: AnchorBox, panel: AnchorElement, bubbles: Bubble.Bubble, bounds: Bounds) => {
     const actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
-    assert.eq(expected.label, actual.label());
-    assert.eq(expected.x, actual.x());
-    assert.eq(expected.y, actual.y());
-    if (expected.candidateYforTest !== undefined) { assert.eq(expected.candidateYforTest, actual.candidateYforTest()); }
+    assert.eq(expected.label, actual.label);
+    assert.eq(expected.x, actual.x);
+    assert.eq(expected.y, actual.y);
+    if (expected.candidateYforTest !== undefined) { assert.eq(expected.candidateYforTest, actual.candidateYforTest); }
   };
 
   // LinkedLayout is for submenus (vertically aligned to opposite side of menu)

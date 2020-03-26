@@ -31,8 +31,8 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DefaultLinkTargetTest', (succes
       Log.stepsAsStep('TBA', 'Link: adds target if default is set and target_list is enabled', [
         tinyApis.sSetSetting('default_link_target', '_blank'),
         tinyApis.sSetSetting('target_list', [
-          {title: 'None', value: ''},
-          {title: 'New', value: '_blank'}
+          { title: 'None', value: '' },
+          { title: 'New', value: '_blank' }
         ]),
         TestLinkUi.sInsertLink(tinyUi, 'http://www.google.com'),
         TestLinkUi.sAssertContentPresence(tinyApis, { 'a[target="_blank"]': 1, 'a': 1 }),

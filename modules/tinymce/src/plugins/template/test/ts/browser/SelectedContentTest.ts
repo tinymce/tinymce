@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.SelectedContentTest', (succ
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Template: Test selectedcontent replacement with default class', [
         tinyApis.sSetContent('Text'),
-        tinyApis.sSetSelection([0, 0], 0, [0, 0], 4),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 4),
         tinyApis.sSetSetting('templates', [{ title: 'a', description: 'b', content: '<h1 class="selcontent">This will be replaced</h1>' }]),
         Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.plugins.template.SelectedContentTest', (succ
 
       Log.stepsAsStep('TBA', 'Template: Test selectedcontent replacement with custom class', [
         tinyApis.sSetContent('Text'),
-        tinyApis.sSetSelection([0, 0], 0, [0, 0], 4),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 4),
         tinyApis.sSetSetting('template_selected_content_classes', 'customSelected'),
         tinyApis.sSetSetting('templates', [{ title: 'a', description: 'b', content: '<h1 class="customSelected">This will be replaced/h1>' }]),
         Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),

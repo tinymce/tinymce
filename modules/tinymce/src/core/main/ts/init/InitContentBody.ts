@@ -320,7 +320,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
     schema: editor.schema,
     contentCssCors: Settings.shouldUseContentCssCors(editor),
     referrerPolicy: Settings.getReferrerPolicy(editor),
-    onSetAttrib (e) {
+    onSetAttrib(e) {
       editor.fire('SetAttrib', e);
     }
   });

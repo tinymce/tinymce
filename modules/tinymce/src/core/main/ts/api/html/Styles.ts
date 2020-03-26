@@ -27,7 +27,7 @@
 import { Unicode } from '@ephox/katamari';
 import Schema from './Schema';
 
-export interface StyleMap { [s: string]: string | number; }
+export interface StyleMap { [s: string]: string | number }
 interface Styles {
   toHex(color: string): string;
   parse(css: string): Record<string, string>;
@@ -45,8 +45,8 @@ const toHex = (match: string, r: string, g: string, b: string) => {
 };
 
 const Styles = function (settings?, schema?: Schema): Styles {
-  /*jshint maxlen:255 */
-  /*eslint max-len:0 */
+  /* jshint maxlen:255 */
+  /* eslint max-len:0 */
   const rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi;
   const urlOrStrRegExp = /(?:url(?:(?:\(\s*\"([^\"]+)\"\s*\))|(?:\(\s*\'([^\']+)\'\s*\))|(?:\(\s*([^)\s]+)\s*\))))|(?:\'([^\']+)\')|(?:\"([^\"]+)\")/gi;
   const styleRegExp = /\s*([^:]+):\s*([^;]+);?/g;
@@ -79,7 +79,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
      * @param {String} color RGB string value like rgb(1,2,3)
      * @return {String} Hex version of that RGB value like #FF00FF.
      */
-    toHex (color: string): string {
+    toHex(color: string): string {
       return color.replace(rgbRegExp, toHex);
     },
 
@@ -92,7 +92,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
      * @param {String} css Style value to parse for example: border:1px solid red;.
      * @return {Object} Object representation of that style like {border: '1px solid red'}
      */
-    parse (css: string): Record<string, string> {
+    parse(css: string): Record<string, string> {
       const styles: any = {};
       let matches, name, value, isEncoded;
       const urlConverter = settings.url_converter;
@@ -121,7 +121,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
           return;
         }
 
-        const box = [top, right, bottom, left];
+        const box = [ top, right, bottom, left ];
         i = box.length - 1;
         while (i--) {
           if (box[i] !== box[i + 1]) {
@@ -328,7 +328,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
      * @param {String} elementName Optional element name, if specified only the styles that matches the schema will be serialized.
      * @return {String} String representation of the style object for example: border: 1px solid red.
      */
-    serialize (styles: StyleMap, elementName?: string): string {
+    serialize(styles: StyleMap, elementName?: string): string {
       let css = '', name, value;
 
       const serializeStyles = (name: string) => {

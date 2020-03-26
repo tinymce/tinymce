@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
       return { w: elmStyle.width, h: elmStyle.height };
     }),
     Guard.addLogging('Get element size')
-);
+  );
 
   const cDragHandleRight = function (px) {
     return Chain.control(

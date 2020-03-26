@@ -148,12 +148,12 @@ const applyAttributes = (editor: Editor, node: DomElement, forcedRootBlockAttrs:
   const currentClassesOpt = Option.from(node.className).map((currentClasses) => Arr.filter(currentClasses.split(/\s+/), (clazz) => clazz !== ''));
   Options.lift2(attrClassesOpt, currentClassesOpt, (attrClasses, currentClasses) => {
     const filteredClasses = Arr.filter(currentClasses, (clazz) => !Arr.contains(attrClasses, clazz));
-    const newClasses = [...attrClasses, ...filteredClasses];
+    const newClasses = [ ...attrClasses, ...filteredClasses ];
     editor.dom.setAttrib(node, 'class', newClasses.join(' '));
   });
 
   // Apply any remaining forced root block attributes
-  const appliedAttrs = ['style', 'class'];
+  const appliedAttrs = [ 'style', 'class' ];
   const remainingAttrs = Obj.filter(forcedRootBlockAttrs, (_, attrs) => !Arr.contains(appliedAttrs, attrs));
   editor.dom.setAttribs(node, remainingAttrs);
 };

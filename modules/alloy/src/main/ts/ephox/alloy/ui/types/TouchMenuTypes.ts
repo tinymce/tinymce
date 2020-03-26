@@ -54,7 +54,7 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
   onExecute?: (sandbox: AlloyComponent, menu: AlloyComponent, item: AlloyComponent, value: ItemDataTuple) => void;
   onTap?: (comp: AlloyComponent) => void;
 
-  menuTransition?: { property: string, transitionClass: string };
+  menuTransition?: { property: string; transitionClass: string };
 
   onOpen?: (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
   onClosed?: (sandbox: AlloyComponent, inline: AlloyComponent) => void;
@@ -68,9 +68,9 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
   useMinWidth?: boolean;
 
   parts: {
-    menu: PartialMenuSpec,
-    view: Partial<TabviewSpec>,
-    sink?: SimpleOrSketchSpec
+    menu: PartialMenuSpec;
+    view: Partial<TabviewSpec>;
+    sink?: SimpleOrSketchSpec;
   };
 
   getAnchor?: (comp: AlloyComponent) => AnchorSpec;

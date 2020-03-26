@@ -50,7 +50,7 @@ UnitTest.asynctest('Flat Grid Keying Test', (success, failure) => {
       Container.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'flat-grid-keying-test'],
+          classes: [ 'flat-grid-keying-test' ],
           styles: {
             background: 'white',
             width: '150px',

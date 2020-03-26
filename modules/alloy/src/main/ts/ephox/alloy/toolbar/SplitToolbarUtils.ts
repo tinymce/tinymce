@@ -30,7 +30,7 @@ const refresh = (toolbar: AlloyComponent, detail: SplitToolbarBaseDetail, setOve
   // Set the primary toolbar to have visibility hidden;
   Css.set(primary.element(), 'visibility', 'hidden');
 
-  const groups = detail.builtGroups.get().concat([overflowGroup]);
+  const groups = detail.builtGroups.get().concat([ overflowGroup ]);
 
   // Store the current focus state
   const focusedComp = findFocusedComp(groups);

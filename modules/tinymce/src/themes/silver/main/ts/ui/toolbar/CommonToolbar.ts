@@ -44,13 +44,13 @@ const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
   const attributes = toolbarGroup.title.fold(() => {
     return {};
   },
-    (title) => {
-      return { attributes: { title } };
-    });
+  (title) => {
+    return { attributes: { title }};
+  });
   return {
     dom: {
       tag: 'div',
-      classes: ['tox-toolbar__group'],
+      classes: [ 'tox-toolbar__group' ],
       ...attributes
     },
 
@@ -100,7 +100,7 @@ const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec) => {
     uid: toolbarSpec.uid,
     dom: {
       tag: 'div',
-      classes: ['tox-toolbar-overlord']
+      classes: [ 'tox-toolbar-overlord' ]
     },
     parts: {
       // This already knows it is a toolbar group
@@ -128,7 +128,7 @@ const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
   const primary = AlloySplitFloatingToolbar.parts().primary({
     dom: {
       tag: 'div',
-      classes: ['tox-toolbar__primary']
+      classes: [ 'tox-toolbar__primary' ]
     }
   });
 
@@ -141,11 +141,12 @@ const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
       const headerBounds = Boxes.absolute(headerElem);
       const docElem = Traverse.documentElement(headerElem);
       const docBounds = Boxes.absolute(docElem);
+      const minTop = Math.min(docBounds.y, headerBounds.x);
       return Boxes.bounds(
-        headerBounds.x() + overflowXOffset,
-        docBounds.y(),
-        headerBounds.width() - overflowXOffset * 2,
-        docBounds.height()
+        headerBounds.x + overflowXOffset,
+        minTop,
+        headerBounds.width - overflowXOffset * 2,
+        Math.max(docBounds.height, headerBounds.bottom - minTop)
       );
     },
     parts: {
@@ -153,7 +154,7 @@ const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
       overflow: {
         dom: {
           tag: 'div',
-          classes: ['tox-toolbar__overflow'],
+          classes: [ 'tox-toolbar__overflow' ],
           attributes: toolbarSpec.attributes
         }
       }
@@ -169,14 +170,14 @@ const renderSlidingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
   const primary = AlloySplitSlidingToolbar.parts().primary({
     dom: {
       tag: 'div',
-      classes: ['tox-toolbar__primary']
+      classes: [ 'tox-toolbar__primary' ]
     }
   });
 
   const overflow = AlloySplitSlidingToolbar.parts().overflow({
     dom: {
       tag: 'div',
-      classes: ['tox-toolbar__overflow']
+      classes: [ 'tox-toolbar__overflow' ]
     }
   });
 
@@ -208,7 +209,7 @@ const renderToolbar = (toolbarSpec: ToolbarSpec) => {
     uid: toolbarSpec.uid,
     dom: {
       tag: 'div',
-      classes: ['tox-toolbar'].concat(toolbarSpec.type === ToolbarMode.scrolling ? [ 'tox-toolbar--scrolling' ] : [])
+      classes: [ 'tox-toolbar' ].concat(toolbarSpec.type === ToolbarMode.scrolling ? [ 'tox-toolbar--scrolling' ] : [])
     },
     components: [
       AlloyToolbar.parts().groups({})

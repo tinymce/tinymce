@@ -11,7 +11,7 @@ const read = function (element: Element<DomElement>, attr: string): string[] {
 
 const add = function (element: Element<DomElement>, attr: string, id: string): boolean {
   const old = read(element, attr);
-  const nu = old.concat([id]);
+  const nu = old.concat([ id ]);
   Attr.set(element, attr, nu.join(' '));
   return true;
 };

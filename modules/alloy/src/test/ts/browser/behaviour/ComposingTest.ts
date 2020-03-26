@@ -24,7 +24,7 @@ UnitTest.asynctest('Browser Test: behaviour.ComposingTest', (success, failure) =
         ],
         behaviours: Behaviour.derive([
           Composing.config({
-            find (comp) {
+            find(comp) {
               return inner.getOpt(comp);
             }
           })

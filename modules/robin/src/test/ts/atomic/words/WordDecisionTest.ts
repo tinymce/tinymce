@@ -33,10 +33,10 @@ UnitTest.test('WordDecisionTest', function () {
   check([], true, 'p1', WordWalking.left.slicer, Option.none());
   check([], true, 'p1', WordWalking.right.slicer, Option.none());
   check([], true, 'going_', WordWalking.left.slicer, Option.none());
-  check(['going_'], true, 'going_', WordWalking.right.slicer, Option.none());
-  check(['to'], false, 'to', WordWalking.left.slicer, Option.none());
-  check(['to'], false, 'to', WordWalking.right.slicer, Option.none());
-  check(['_b'], true, '_b', WordWalking.left.slicer, Option.none());
+  check([ 'going_' ], true, 'going_', WordWalking.right.slicer, Option.none());
+  check([ 'to' ], false, 'to', WordWalking.left.slicer, Option.none());
+  check([ 'to' ], false, 'to', WordWalking.right.slicer, Option.none());
+  check([ '_b' ], true, '_b', WordWalking.left.slicer, Option.none());
   check([], true, '_b', WordWalking.right.slicer, Option.none());
   check([], true, 'br1', WordWalking.left.slicer, Option.none());
   check([], true, 'br1', WordWalking.right.slicer, Option.none());

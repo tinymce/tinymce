@@ -30,13 +30,13 @@ const getGroups = Thunk.cached(function (realm, editor) {
 
           // Do not include link
           maxFieldIndex: [ 'url', 'text', 'title', 'target' ].length - 1,
-          getInitialValue (/* dialog */) {
+          getInitialValue(/* dialog */) {
             return Option.some(
               LinkBridge.getInfo(editor)
             );
           },
 
-          onExecute (dialog/*, simulatedEvent */) {
+          onExecute(dialog, _simulatedEvent) {
             const info = Representing.getValue(dialog);
             LinkBridge.applyInfo(editor, info);
             realm.restoreToolbar();

@@ -98,36 +98,36 @@ const backspaceDeleteCollapsed = function (editor: Editor, caret, forward: boole
       );
     }
   })
-  .map(setCaretLocation(editor, caret))
-  .getOrThunk(function () {
-    const toPosition = CaretFinder.navigate(forward, rootNode, from);
-    const toLocation = toPosition.bind(function (pos) {
-      return BoundaryLocation.readLocation(isInlineTarget, rootNode, pos);
-    });
+    .map(setCaretLocation(editor, caret))
+    .getOrThunk(function () {
+      const toPosition = CaretFinder.navigate(forward, rootNode, from);
+      const toLocation = toPosition.bind(function (pos) {
+        return BoundaryLocation.readLocation(isInlineTarget, rootNode, pos);
+      });
 
-    if (fromLocation.isSome() && toLocation.isSome()) {
-      return InlineUtils.findRootInline(isInlineTarget, rootNode, from).map(function (elm) {
-        if (hasOnlyTwoOrLessPositionsLeft(elm)) {
-          DeleteElement.deleteElement(editor, forward, Element.fromDom(elm));
-          return true;
-        } else {
-          return false;
-        }
-      }).getOr(false);
-    } else {
-      return toLocation.bind(function (_) {
-        return toPosition.map(function (to) {
-          if (forward) {
-            deleteFromTo(editor, caret, from, to);
+      if (fromLocation.isSome() && toLocation.isSome()) {
+        return InlineUtils.findRootInline(isInlineTarget, rootNode, from).map(function (elm) {
+          if (hasOnlyTwoOrLessPositionsLeft(elm)) {
+            DeleteElement.deleteElement(editor, forward, Element.fromDom(elm));
+            return true;
           } else {
-            deleteFromTo(editor, caret, to, from);
+            return false;
           }
+        }).getOr(false);
+      } else {
+        return toLocation.bind(function (_) {
+          return toPosition.map(function (to) {
+            if (forward) {
+              deleteFromTo(editor, caret, from, to);
+            } else {
+              deleteFromTo(editor, caret, to, from);
+            }
 
-          return true;
-        });
-      }).getOr(false);
-    }
-  });
+            return true;
+          });
+        }).getOr(false);
+      }
+    });
 };
 
 const backspaceDelete = function (editor: Editor, caret, forward?: boolean) {

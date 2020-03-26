@@ -19,7 +19,7 @@ UnitTest.asynctest('ExecutingKeyingTest', (success, failure) => {
         return GuiFactory.build(
           Container.sketch({
             dom: {
-              classes: [ 'executing-keying-test'],
+              classes: [ 'executing-keying-test' ],
               styles: {
 
               }
@@ -58,7 +58,7 @@ UnitTest.asynctest('ExecutingKeyingTest', (success, failure) => {
         return GuiFactory.build(
           Container.sketch({
             dom: {
-              classes: [ 'executing-keying-test'],
+              classes: [ 'executing-keying-test' ],
               styles: {
 
               }

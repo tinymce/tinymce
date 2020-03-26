@@ -39,10 +39,10 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
               selectsOver: false
             },
 
-            fetch () {
+            fetch() {
               const items = [
-                { type: 'item', data: { value: '1', meta: { text: '1' } } },
-                { type: 'item', data: { value: '2', meta: { text: '2' } } }
+                { type: 'item', data: { value: '1', meta: { text: '1' }}},
+                { type: 'item', data: { value: '2', meta: { text: '2' }}}
               ];
 
               return Future.pure(Option.some(TieredMenu.singleData('blah.overall', TestDropdownMenu.renderMenu({
@@ -51,7 +51,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
               }))));
             },
 
-            lazySink (c) {
+            lazySink(c) {
               TestDropdownMenu.assertLazySinkArgs('input', 'test-typeahead', c);
               return Result.value(sink);
             },
@@ -96,7 +96,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
       Keyboard.sKeydown(doc, Keys.enter(), {}),
       steps.sWaitForNoMenu('Enter to close menu'),
       Keyboard.sKeydown(doc,  Keys.enter(), {}),
-      store.sAssertEq('Should have item1 and onExecute', ['1(input-div-li)', '***onExecute***']),
+      store.sAssertEq('Should have item1 and onExecute', [ '1(input-div-li)', '***onExecute***' ]),
 
       FocusTools.sSetFocus('Focusing typeahead to open preview mode', gui.element(), 'input'),
       FocusTools.sSetActiveValue(doc, 'al'),
@@ -109,7 +109,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
       store.sAssertEq('Pressing <enter> in preview mode should execute', [ '***onExecute***' ]),
 
       GuiSetup.mRemoveStyles,
-      GuiSetup.mTeardownKeyLogger(body, ['keydown.to.body: 27']),
+      GuiSetup.mTeardownKeyLogger(body, [ 'keydown.to.body: 27' ]),
     ];
   }, success, failure);
 });

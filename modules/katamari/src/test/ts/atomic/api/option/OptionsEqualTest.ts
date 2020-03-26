@@ -1,4 +1,3 @@
-import * as Options from 'ephox/katamari/api/Options';
 import { Option } from 'ephox/katamari/api/Option';
 import { arbOptionSome as arbOptionSome } from 'ephox/katamari/test/arb/ArbDataTypes';
 

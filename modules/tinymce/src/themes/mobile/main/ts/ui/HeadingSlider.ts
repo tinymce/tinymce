@@ -12,10 +12,11 @@ import * as Buttons from '../ui/Buttons';
 import * as SizeSlider from './SizeSlider';
 import * as ToolbarWidgets from './ToolbarWidgets';
 import { SketchSpec } from '@ephox/alloy';
+import { MobileRealm } from '../ui/IosRealm';
 
 const headings = [ 'p', 'h3', 'h2', 'h1' ];
 
-const makeSlider = function (spec) {
+const makeSlider = (spec): SketchSpec => {
   return SizeSlider.sketch({
     category: 'heading',
     sizes: headings,
@@ -24,32 +25,28 @@ const makeSlider = function (spec) {
   });
 };
 
-const sketch = function (realm, editor): SketchSpec {
+const sketch = (realm: MobileRealm, editor): SketchSpec => {
   const spec = {
-    onChange (value) {
+    onChange(value) {
       editor.execCommand('FormatBlock', null, headings[value].toLowerCase());
     },
-    getInitialValue () {
+    getInitialValue() {
       const node = editor.selection.getStart();
       const elem = Element.fromDom(node);
       const heading = PredicateFind.closest(elem, (e) => {
         const nodeName = Node.name(e);
         return Arr.contains(headings, nodeName);
-      }, function (e) {
-        return Compare.eq(e, Element.fromDom(editor.getBody()));
-      });
+      }, (e) => Compare.eq(e, Element.fromDom(editor.getBody())));
 
       return heading.bind((elm) => Arr.indexOf(headings, Node.name(elm))).getOr(0);
     }
   };
 
-  return ToolbarWidgets.button(realm, 'heading', function () {
-    return [
-      Buttons.getToolbarIconButton('small-heading', editor),
-      makeSlider(spec),
-      Buttons.getToolbarIconButton('large-heading', editor)
-    ];
-  }, editor);
+  return ToolbarWidgets.button(realm, 'heading', () => [
+    Buttons.getToolbarIconButton('small-heading', editor),
+    makeSlider(spec),
+    Buttons.getToolbarIconButton('large-heading', editor)
+  ], editor);
 };
 
 export {

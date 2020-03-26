@@ -112,7 +112,7 @@ tinymce.init({
             type: 'htmlpanel',
             html: '<p>This is yet another extra tab</p>',
           }
-        ]}
+        ] }
       );
       editor.plugins.help.addTab({
         name: 'extra5',

@@ -88,7 +88,7 @@ const readLocation = function (isInlineTarget, rootNode, pos) {
     start,
     end,
     after
-  ], [isInlineTarget, rootNode, pos]);
+  ], [ isInlineTarget, rootNode, pos ]);
 
   return location.filter(isValidLocation);
 };

@@ -13,7 +13,7 @@ UnitTest.test('Arr.findMap of non-empty is first if f is Option.some', () => {
     fc.integer(),
     fc.array(fc.integer()),
     (head, tail) => {
-      const arr = [head, ...tail];
+      const arr = [ head, ...tail ];
       Assert.eq('eq', Option.some(head), Arr.findMap(arr, Option.some), tOption());
     }
   ));
@@ -35,7 +35,7 @@ UnitTest.test('Arr.findMap finds an element', () => {
     fc.integer(),
     fc.array(fc.integer()),
     (prefix, element, ret, suffix) => {
-      const arr = [...prefix, element, ...suffix];
+      const arr = [ ...prefix, element, ...suffix ];
       Assert.eq('eq', Option.some(ret), Arr.findMap(arr, (x) => Options.someIf(x === element, ret)), tOption());
     }
   ));

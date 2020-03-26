@@ -31,19 +31,19 @@ UnitTest.test('SplitterTest', function () {
     assert.eq(toplevel, Arr.map(universe.get().children, TestRenders.text));
   };
 
-  checkSubdivide(['_', 'abcdefghijklm', 'n', 'opq', 'rstuvwxyz'], [
+  checkSubdivide([ '_', 'abcdefghijklm', 'n', 'opq', 'rstuvwxyz' ], [
     { id: 'a', start: 0, finish: 1, text: '_' },
     { id: '?_abcdefghijklm', start: 1, finish: 14, text: 'abcdefghijklm' },
     { id: '?_n', start: 14, finish: 15, text: 'n' },
     { id: '?_opq', start: 15, finish: 18, text: 'opq' },
     { id: '?_rstuvwxyz', start: 18, finish: 27, text: 'rstuvwxyz' }
-  ], 'a', [1, 14, 15, 18], Gene('root', 'root', [
+  ], 'a', [ 1, 14, 15, 18 ], Gene('root', 'root', [
     TextGene('a', '_abcdefghijklmnopqrstuvwxyz')
   ]));
 
-  checkSubdivide(['_abcdefghijklmnopqrstuvwxyz'], [
+  checkSubdivide([ '_abcdefghijklmnopqrstuvwxyz' ], [
     { id: 'a', start: 0, finish: 27, text: '_abcdefghijklmnopqrstuvwxyz' }
-  ], 'a', [100], Gene('root', 'root', [
+  ], 'a', [ 100 ], Gene('root', 'root', [
     TextGene('a', '_abcdefghijklmnopqrstuvwxyz')
   ]));
 });

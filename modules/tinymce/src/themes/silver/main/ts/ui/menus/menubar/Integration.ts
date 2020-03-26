@@ -29,7 +29,7 @@ const defaultMenus = {
   help: { title: 'Help', items: 'help' }
 };
 
-const make = (menu: {title: string, items: string[]}, registry: MenuRegistry, editor): MenubarItemSpec => {
+const make = (menu: {title: string; items: string[]}, registry: MenuRegistry, editor): MenubarItemSpec => {
   const removedMenuItems = getRemovedMenuItems(editor).split(/[ ,]/);
   return {
     text: menu.title,

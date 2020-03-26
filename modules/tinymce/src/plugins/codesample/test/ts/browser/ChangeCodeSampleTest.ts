@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.ChangeLanguageCodeSampleT
         TestUtils.sAssertEditorContents(editorBody, 'javascript', jsContent, 'pre.language-javascript'),
         TestUtils.sOpenDialogAndAssertInitial(editor, docBody, 'javascript', jsContent),
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'codesample',
     theme: 'silver',

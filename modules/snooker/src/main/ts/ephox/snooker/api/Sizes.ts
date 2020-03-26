@@ -2,12 +2,15 @@ import { Arr, Fun, Option } from '@ephox/katamari';
 import { Css, Height, Width, Element } from '@ephox/sugar';
 import * as DetailsList from '../model/DetailsList';
 import { Warehouse } from '../model/Warehouse';
-import { BarPositions, ColInfo } from '../resize/BarPositions';
+import * as BarPositions from '../resize/BarPositions';
 import * as ColumnSizes from '../resize/ColumnSizes';
 import * as Redistribution from '../resize/Redistribution';
 import * as CellUtils from '../util/CellUtils';
 import * as TableSize from '../resize/TableSize';
 import { DetailExt, RowData } from './Structs';
+
+type ColInfo = BarPositions.ColInfo;
+type BarPositions<A> = BarPositions.BarPositions<A>;
 
 const redistributeToW = function (newWidths: string[], cells: DetailExt[], unit: string) {
   Arr.each(cells, function (cell) {
@@ -38,7 +41,7 @@ const getUnit = function (newSize: string) {
 const redistribute = function (table: Element, optWidth: Option<string>, optHeight: Option<string>, direction: BarPositions<ColInfo>) {
   const list = DetailsList.fromTable(table);
   const warehouse = Warehouse.generate(list);
-  const rows = warehouse.all();
+  const rows = warehouse.all;
   const cells = Warehouse.justCells(warehouse);
   const tableSize = TableSize.getTableSize(table);
 

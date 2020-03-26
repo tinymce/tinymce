@@ -38,7 +38,7 @@ const sketch = function (onView, translate): SketchSpec {
             components: [
               memIcon.asSpec()
             ],
-            action (button) {
+            action(button) {
               onViewThrottle.throttle();
             },
 

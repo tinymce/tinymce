@@ -67,7 +67,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
     NamedChain.read('editor', TableTestUtils.cDragHandle('se', -100, -20)),
     NamedChain.write('widthAfter', TableTestUtils.cGetWidth),
     NamedChain.write('events', cUnbindResizeEvents),
-    NamedChain.merge(['widthBefore', 'widthAfter'], 'widths'),
+    NamedChain.merge([ 'widthBefore', 'widthAfter' ], 'widths'),
     NamedChain.output('widths')
   ]);
 

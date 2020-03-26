@@ -7,7 +7,7 @@
 
 import { SchemaMap } from './Schema';
 
-export type Attributes = Array<{ name: string; value: string; }> & { map: Record<string, string> };
+export type Attributes = Array<{ name: string; value: string }> & { map: Record<string, string> };
 
 const whiteSpaceRegExp = /^[ \t\r\n]*$/;
 const typeLookup = {
@@ -116,7 +116,7 @@ class Node {
    * @param {String} name Name of the node type.
    * @param {Number} type Numeric type representing the node.
    */
-  constructor(name: string, type: number) {
+  public constructor(name: string, type: number) {
     this.name = name;
     this.type = type;
 

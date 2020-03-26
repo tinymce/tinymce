@@ -40,14 +40,14 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryCaretTest', function (
 
   Pipeline.async({}, [
     Logger.t('sTestRenderCaret', GeneralSteps.sequence([
-      sTestRenderCaret('<p><a href="#">a</a></p>', [0], 0, '<p>' + ZWSP + '<a href="#">a</a></p>', [0, 0], 1),
-      sTestRenderCaret('<p><a href="#">a</a></p>', [0, 0, 0], 0, '<p><a href="#">' + ZWSP + 'a</a></p>', [0, 0, 0], 1),
-      sTestRenderCaret('<p><a href="#">a</a></p>', [0, 0, 0], 1, '<p><a href="#">a' + ZWSP + '</a></p>', [0, 0, 0], 1),
-      sTestRenderCaret('<p><a href="#">a</a></p>', [0], 1, '<p><a href="#">a</a>' + ZWSP + '</p>', [0, 1], 1),
-      sTestRenderCaret('<p><img src="#"><a href="#">a</a></p>', [0], 1, '<p><img src="#">' + ZWSP + '<a href="#">a</a></p>', [0, 1], 0),
-      sTestRenderCaret('<p><a href="#"><img src="#">a</a></p>', [0, 0], 0, '<p><a href="#">' + ZWSP + '<img src="#">a</a></p>', [0, 0, 0], 1),
-      sTestRenderCaret('<p><a href="#">a<img src="#"></a></p>', [0, 0], 2, '<p><a href="#">a<img src="#">' + ZWSP + '</a></p>', [0, 0, 2], 1),
-      sTestRenderCaret('<p><a href="#">a</a><img src="#"></p>', [0], 1, '<p><a href="#">a</a>' + ZWSP + '<img src="#"></p>', [0, 1], 1)
+      sTestRenderCaret('<p><a href="#">a</a></p>', [ 0 ], 0, '<p>' + ZWSP + '<a href="#">a</a></p>', [ 0, 0 ], 1),
+      sTestRenderCaret('<p><a href="#">a</a></p>', [ 0, 0, 0 ], 0, '<p><a href="#">' + ZWSP + 'a</a></p>', [ 0, 0, 0 ], 1),
+      sTestRenderCaret('<p><a href="#">a</a></p>', [ 0, 0, 0 ], 1, '<p><a href="#">a' + ZWSP + '</a></p>', [ 0, 0, 0 ], 1),
+      sTestRenderCaret('<p><a href="#">a</a></p>', [ 0 ], 1, '<p><a href="#">a</a>' + ZWSP + '</p>', [ 0, 1 ], 1),
+      sTestRenderCaret('<p><img src="#"><a href="#">a</a></p>', [ 0 ], 1, '<p><img src="#">' + ZWSP + '<a href="#">a</a></p>', [ 0, 1 ], 0),
+      sTestRenderCaret('<p><a href="#"><img src="#">a</a></p>', [ 0, 0 ], 0, '<p><a href="#">' + ZWSP + '<img src="#">a</a></p>', [ 0, 0, 0 ], 1),
+      sTestRenderCaret('<p><a href="#">a<img src="#"></a></p>', [ 0, 0 ], 2, '<p><a href="#">a<img src="#">' + ZWSP + '</a></p>', [ 0, 0, 2 ], 1),
+      sTestRenderCaret('<p><a href="#">a</a><img src="#"></p>', [ 0 ], 1, '<p><a href="#">a</a>' + ZWSP + '<img src="#"></p>', [ 0, 1 ], 1)
     ]))
   ], function () {
     success();

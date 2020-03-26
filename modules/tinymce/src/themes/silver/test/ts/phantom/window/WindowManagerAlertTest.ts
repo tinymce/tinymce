@@ -76,10 +76,10 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
                           ]
                         }),
                         s.element('div', {
-                          classes: [ arr.has('tox-dialog__body')],
+                          classes: [ arr.has('tox-dialog__body') ],
                           children: [
                             s.element('div', {
-                              classes: [ arr.has('tox-dialog__body-content')],
+                              classes: [ arr.has('tox-dialog__body-content') ],
                               children: [
                                 s.element('p', {})
                               ]
@@ -150,10 +150,10 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
         Assertions.assertStructure('A basic alert dialog should have these components',
           ApproxStructure.build((s, str, arr) => {
             return s.element('div', {
-              classes: [ arr.has('tox-dialog__body')],
+              classes: [ arr.has('tox-dialog__body') ],
               children: [
                 s.element('div', {
-                  classes: [ arr.has('tox-dialog__body-content')],
+                  classes: [ arr.has('tox-dialog__body-content') ],
                   children: [
                     s.element('p', {
                       html: str.is(label)

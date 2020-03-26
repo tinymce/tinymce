@@ -92,7 +92,7 @@ const compositeSchema = ValueSchema.objOfOnly([
   FieldSchema.defaulted('extraApis', { })
 ]);
 
-const single = function <S extends SingleSketchSpec, D extends SingleSketchDetail, A extends FunctionRecord<A>, E extends FunctionRecord<E> = {}>(rawConfig: SingleSketcherSpec<S, D, A, E>): SingleSketch<S> & A & E {
+const single = function <S extends SingleSketchSpec, D extends SingleSketchDetail, A extends FunctionRecord<A>, E extends FunctionRecord<E> = {}> (rawConfig: SingleSketcherSpec<S, D, A, E>): SingleSketch<S> & A & E {
   const config: SingleSketcherRawDetail<S, D, A> = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, singleSchema, rawConfig);
 
   const sketch = (spec: S) => {
@@ -110,10 +110,10 @@ const single = function <S extends SingleSketchSpec, D extends SingleSketchDetai
     sketch,
     ...apis,
     ...extraApis
-   };
+  };
 };
 
-const composite = function <S extends CompositeSketchSpec, D extends CompositeSketchDetail, A extends FunctionRecord<A>, E extends FunctionRecord<E> = {}>(rawConfig: CompositeSketcherSpec<S, D, A, E>): CompositeSketch<S> & A & E {
+const composite = function <S extends CompositeSketchSpec, D extends CompositeSketchDetail, A extends FunctionRecord<A>, E extends FunctionRecord<E> = {}> (rawConfig: CompositeSketcherSpec<S, D, A, E>): CompositeSketch<S> & A & E {
   const config: CompositeSketcherRawDetail<S, D, A> = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, compositeSchema, rawConfig);
 
   const sketch = (spec: S) => {
@@ -136,7 +136,7 @@ const composite = function <S extends CompositeSketchSpec, D extends CompositeSk
     parts: Fun.constant(parts),
     ...apis,
     ...extraApis
-   };
+  };
 };
 
 export {

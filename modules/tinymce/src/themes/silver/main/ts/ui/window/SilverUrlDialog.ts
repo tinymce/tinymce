@@ -23,7 +23,7 @@ import { DialogSpec, getEventExtras, getHeader, renderModalDialog, WindowExtra }
 import {  bodySendMessageChannel } from './DialogChannels';
 
 // A list of supported message actions
-const SUPPORTED_MESSAGE_ACTIONS = ['insertContent', 'setContent', 'execCommand', 'close', 'block', 'unblock'];
+const SUPPORTED_MESSAGE_ACTIONS = [ 'insertContent', 'setContent', 'execCommand', 'close', 'block', 'unblock' ];
 
 const isSupportedMessage = (data: any): boolean => {
   return Type.isObject(data) && SUPPORTED_MESSAGE_ACTIONS.indexOf(data.mceAction) !== -1;

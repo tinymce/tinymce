@@ -393,7 +393,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
     });
 
     LegacyUnit.equal(editor.translate('input i18n'), 'output i18n');
-    LegacyUnit.equal(editor.translate(['value:{0}{1}', 'a', 'b']), 'value translation:ab');
+    LegacyUnit.equal(editor.translate([ 'value:{0}{1}', 'a', 'b' ]), 'value translation:ab');
   });
 
   suite.test('Treat some paragraphs as empty contents', function (editor) {

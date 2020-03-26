@@ -10,7 +10,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 const get = function (editor: Editor) {
   return {
-    backspaceDelete (isForward: boolean) {
+    backspaceDelete(isForward: boolean) {
       Delete.backspaceDelete(editor, isForward);
     }
   };

@@ -92,7 +92,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
             'documentBaseUrl',
             {
               defaultSetting: 'a',
-              plugins: ['a']
+              plugins: [ 'a' ]
             },
             {
               validate: false,
@@ -111,11 +111,11 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
 
         Logger.t('Override defaults with forced_plugins using arrays', Step.sync(function () {
           const defaultSettings = {
-            forced_plugins: ['a', 'b']
+            forced_plugins: [ 'a', 'b' ]
           };
 
           const userSettings = {
-            plugins: ['c', 'd']
+            plugins: [ 'c', 'd' ]
           };
 
           const settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
@@ -143,7 +143,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           };
 
           const userSettings = {
-            plugins: [' c ', '  d   e ']
+            plugins: [ ' c ', '  d   e ' ]
           };
 
           const settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
@@ -153,7 +153,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
 
         Logger.t('Override defaults with just default forced_plugins', Step.sync(function () {
           const defaultSettings = {
-            forced_plugins: ['a', 'b']
+            forced_plugins: [ 'a', 'b' ]
           };
 
           const userSettings = {
@@ -169,7 +169,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           };
 
           const userSettings = {
-            plugins: ['a', 'b']
+            plugins: [ 'a', 'b' ]
           };
 
           const settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
@@ -179,12 +179,12 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
 
         Logger.t('Override defaults with forced_plugins should not be possible to override', Step.sync(function () {
           const defaultSettings = {
-            forced_plugins: ['a', 'b']
+            forced_plugins: [ 'a', 'b' ]
           };
 
           const userSettings = {
-            forced_plugins: ['a'],
-            plugins: ['c', 'd']
+            forced_plugins: [ 'a' ],
+            plugins: [ 'c', 'd' ]
           };
 
           const settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
@@ -198,7 +198,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
             'id',
             'documentBaseUrl',
             {
-              plugins: ['a']
+              plugins: [ 'a' ]
             },
             {
               string: 'a',
@@ -265,7 +265,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         Logger.t('Merged settings forced_plugins in default override settings (desktop)', Step.sync(function () {
           Assertions.assertEq(
             'Should have plugins merged with forced plugins',
-            { validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a b' },
+            { validate: true, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a b' },
             EditorSettings.combineSettings(false, false, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ] })
           );
         })),
@@ -273,7 +273,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         Logger.t('Merged settings forced_plugins in default override settings (mobile)', Step.sync(function () {
           Assertions.assertEq(
             'Should be have plugins merged with forced plugins',
-            { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a b' },
+            { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a b' },
             EditorSettings.combineSettings(true, true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ] })
           );
         })),
@@ -281,31 +281,31 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         Logger.t('Merged settings forced_plugins in default override settings with user mobile settings (desktop)', Step.sync(function () {
           Assertions.assertEq(
             'Should not have plugins merged with mobile plugins',
-            { validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a b' },
-            EditorSettings.combineSettings(false, false, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ], mobile: { plugins: [ 'c' ], toolbar_sticky: true } })
+            { validate: true, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a b' },
+            EditorSettings.combineSettings(false, false, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ], mobile: { plugins: [ 'c' ], toolbar_sticky: true }})
           );
         })),
 
         Logger.t('Merged settings forced_plugins in default override settings with user mobile settings (mobile)', Step.sync(function () {
           Assertions.assertEq(
             'Should have forced_plugins merged with mobile plugins but only whitelisted user plugins',
-            { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a lists', theme: 'mobile', toolbar_sticky: true },
-            EditorSettings.combineSettings(true, true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ], mobile: { plugins: [ 'lists custom' ], theme: 'mobile', toolbar_sticky: true } })
+            { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a lists', theme: 'mobile', toolbar_sticky: true },
+            EditorSettings.combineSettings(true, true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ], mobile: { plugins: [ 'lists custom' ], theme: 'mobile', toolbar_sticky: true }})
           );
         })),
 
         Logger.t('Merged settings forced_plugins in default override settings with user mobile settings (mobile)', Step.sync(function () {
           Assertions.assertEq(
             'Should not merge forced_plugins with mobile plugins when theme is not mobile',
-            { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, forced_plugins: ['a'], plugins: 'a lists custom' },
-            EditorSettings.combineSettings(true, true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ], mobile: { plugins: [ 'lists custom' ] } })
+            { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a lists custom' },
+            EditorSettings.combineSettings(true, true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ], mobile: { plugins: [ 'lists custom' ] }})
           );
         })),
 
         Logger.t('Merged settings forced_plugins in default override forced_plugins in user settings', Step.sync(function () {
           Assertions.assertEq(
             'Should not have user forced plugins',
-            { validate: true, external_plugins: {}, forced_plugins: ['b'], plugins: 'a' },
+            { validate: true, external_plugins: {}, forced_plugins: [ 'b' ], plugins: 'a' },
             EditorSettings.combineSettings(false, false, {}, { forced_plugins: [ 'a' ] }, { forced_plugins: [ 'b' ] })
           );
         })),
@@ -322,7 +322,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq(
             'Should use settings.plugins when mobile theme is not set',
             { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, plugins: 'lists b autolink', theme: 'silver' },
-            EditorSettings.combineSettings(true, true, {}, {}, { theme: 'silver', plugins: [ 'lists', 'b', 'autolink' ], mobile: {} })
+            EditorSettings.combineSettings(true, true, {}, {}, { theme: 'silver', plugins: [ 'lists', 'b', 'autolink' ], mobile: {}})
           );
         })),
 
@@ -330,7 +330,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq(
             'Should fallback to filtered white listed. settings.plugins',
             { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile' },
-            EditorSettings.combineSettings(true, true, {}, {}, { theme: 'silver', plugins: [ 'lists', 'b', 'autolink' ], mobile: { theme: 'mobile' } })
+            EditorSettings.combineSettings(true, true, {}, {}, { theme: 'silver', plugins: [ 'lists', 'b', 'autolink' ], mobile: { theme: 'mobile' }})
           );
         })),
 
@@ -338,7 +338,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq(
             'Should not have any plugins when mobile.plugins is explicitly empty',
             { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, plugins: '' },
-            EditorSettings.combineSettings(true, true, {}, {}, { mobile: { plugins: '' } })
+            EditorSettings.combineSettings(true, true, {}, {}, { mobile: { plugins: '' }})
           );
         })),
 
@@ -346,7 +346,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq(
             'Should allow all plugins',
             { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, plugins: 'lists autolink foo bar' },
-            EditorSettings.combineSettings(true, true, {}, {}, { mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ] } })
+            EditorSettings.combineSettings(true, true, {}, {}, { mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ] }})
           );
         })),
 
@@ -354,7 +354,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq(
             'Should fallback to filtered white listed',
             { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile' },
-            EditorSettings.combineSettings(true, true, {}, {}, { mobile: { theme: 'mobile', plugins: [ 'lists', 'autolink', 'foo', 'bar' ] } })
+            EditorSettings.combineSettings(true, true, {}, {}, { mobile: { theme: 'mobile', plugins: [ 'lists', 'autolink', 'foo', 'bar' ] }})
           );
         })),
 
@@ -362,7 +362,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq(
             'Should allow all mobile plugin',
             { ...expectedPhoneDefaultSettings, validate: true, theme: 'silver', external_plugins: {}, plugins: 'lists autolink foo bar' },
-            EditorSettings.combineSettings(true, true, {}, {}, { theme: 'test', mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ], theme: 'silver' } })
+            EditorSettings.combineSettings(true, true, {}, {}, { theme: 'test', mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ], theme: 'silver' }})
           );
         })),
 
@@ -403,8 +403,8 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           obj: { a: 1 },
           arr: [ 'a' ],
           fun: () => {},
-          strArr: ['a', 'b'],
-          mixedArr: ['a', 3]
+          strArr: [ 'a', 'b' ],
+          mixedArr: [ 'a', 3 ]
         }, EditorManager);
 
         Assertions.assertEq('Should be expected bool', true, EditorSettings.getParam(editor, 'bool', false, 'boolean'));
@@ -419,9 +419,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         Assertions.assertEq('Should be expected default object', {}, EditorSettings.getParam(editor, 'obj_undefined', {}, 'object'));
         Assertions.assertEq('Should be expected default array', [], EditorSettings.getParam(editor, 'arr_undefined', [], 'array'));
         Assertions.assertEq('Should be expected default function', null, EditorSettings.getParam(editor, 'fun_undefined', null, 'function'));
-        Assertions.assertEq('Should be expected string array', ['a', 'b'], EditorSettings.getParam(editor, 'strArr', ['x'], 'string[]'));
-        Assertions.assertEq('Should be expected default array on mixed types', ['x'], EditorSettings.getParam(editor, 'mixedArr', ['x'], 'string[]'));
-        Assertions.assertEq('Should be expected default array on boolean', ['x'], EditorSettings.getParam(editor, 'bool', ['x'], 'string[]'));
+        Assertions.assertEq('Should be expected string array', [ 'a', 'b' ], EditorSettings.getParam(editor, 'strArr', [ 'x' ], 'string[]'));
+        Assertions.assertEq('Should be expected default array on mixed types', [ 'x' ], EditorSettings.getParam(editor, 'mixedArr', [ 'x' ], 'string[]'));
+        Assertions.assertEq('Should be expected default array on boolean', [ 'x' ], EditorSettings.getParam(editor, 'bool', [ 'x' ], 'string[]'));
       }))
     ], onSuccess, onFailure);
   }, {

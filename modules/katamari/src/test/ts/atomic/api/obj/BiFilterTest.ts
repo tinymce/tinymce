@@ -13,10 +13,10 @@ UnitTest.test('BiFilterTest', () => {
     Assert.eq('eq', falseObj, filtered.f);
   };
 
-  check({}, {a: '1'}, {a: '1'}, even);
-  check({b: '2'}, {}, {b: '2'}, even);
-  check({b: '2'}, {a: '1'}, {a: '1', b: '2'}, even);
-  check({b: '2', d: '4'}, {a: '1', c: '3'}, {a: '1', b: '2', c: '3', d: '4'}, even);
+  check({}, { a: '1' }, { a: '1' }, even);
+  check({ b: '2' }, {}, { b: '2' }, even);
+  check({ b: '2' }, { a: '1' }, { a: '1', b: '2' }, even);
+  check({ b: '2', d: '4' }, { a: '1', c: '3' }, { a: '1', b: '2', c: '3', d: '4' }, even);
 });
 
 UnitTest.test('Check that if the filter always returns false, then everything is in "f"', () => {

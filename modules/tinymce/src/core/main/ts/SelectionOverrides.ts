@@ -147,11 +147,11 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
 
     const handleTouchSelect = function (editor: Editor) {
       editor.on('tap', (e) => {
-          const contentEditableRoot = getContentEditableRoot(editor, e.target);
-          if (isContentEditableFalse(contentEditableRoot)) {
-            e.preventDefault();
-            setContentEditableSelection(CefUtils.selectNode(editor, contentEditableRoot));
-          }
+        const contentEditableRoot = getContentEditableRoot(editor, e.target);
+        if (isContentEditableFalse(contentEditableRoot)) {
+          e.preventDefault();
+          setContentEditableSelection(CefUtils.selectNode(editor, contentEditableRoot));
+        }
       }, true);
     };
 
@@ -427,7 +427,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
         return $([]);
       },
       function (elm) {
-        return $([elm.dom()]);
+        return $([ elm.dom() ]);
       }
     );
 

@@ -52,7 +52,7 @@ const create = function (name: string): Outlaw {
   };
 
   const events = Events.create({
-    shoot: Event(['target']),
+    shoot: Event([ 'target' ]),
     die:   Event([])
   }) as OutlawEvents;
 

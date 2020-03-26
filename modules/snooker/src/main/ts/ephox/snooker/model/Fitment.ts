@@ -5,8 +5,8 @@ import * as GridRow from './GridRow';
 import { SimpleGenerators } from '../api/Generators';
 
 export interface Delta {
-  colDelta: () => number;
-  rowDelta: () => number;
+  readonly colDelta: number;
+  readonly rowDelta: number;
 }
 
 /*
@@ -34,8 +34,8 @@ const measure = function (startAddress: Structs.Address, gridA: Structs.RowCells
   const colRequired = GridRow.cellLength(gridB[0]);
   const rowRequired = gridB.length;
   return Result.value({
-    rowDelta: Fun.constant(rowRemainder.length - rowRequired),
-    colDelta: Fun.constant(colRemainder.length - colRequired)
+    rowDelta: rowRemainder.length - rowRequired,
+    colDelta: colRemainder.length - colRequired
   });
 };
 
@@ -44,8 +44,8 @@ const measureWidth = function (gridA: Structs.RowCells[], gridB: Structs.RowCell
   const colLengthB = GridRow.cellLength(gridB[0]);
 
   return {
-    rowDelta: Fun.constant(0),
-    colDelta: Fun.constant(colLengthA - colLengthB)
+    rowDelta: 0,
+    colDelta: colLengthA - colLengthB
   };
 };
 
@@ -68,12 +68,11 @@ const colFill = function (grid: Structs.RowCells[], amount: number, generator: S
 };
 
 const tailor = function (gridA: Structs.RowCells[], delta: Delta, generator: SimpleGenerators): Structs.RowCells[] {
-  const fillCols = delta.colDelta() < 0 ? colFill : Fun.identity;
-  const fillRows = delta.rowDelta() < 0 ? rowFill : Fun.identity;
+  const fillCols = delta.colDelta < 0 ? colFill : Fun.identity;
+  const fillRows = delta.rowDelta < 0 ? rowFill : Fun.identity;
 
-  const modifiedCols = fillCols(gridA, Math.abs(delta.colDelta()), generator);
-  const tailoredGrid = fillRows(modifiedCols, Math.abs(delta.rowDelta()), generator);
-  return tailoredGrid;
+  const modifiedCols = fillCols(gridA, Math.abs(delta.colDelta), generator);
+  return fillRows(modifiedCols, Math.abs(delta.rowDelta), generator);
 };
 
 export {

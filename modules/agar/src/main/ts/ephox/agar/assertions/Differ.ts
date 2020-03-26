@@ -15,7 +15,7 @@
 const htmlDiff: (v1: string, v2: string) => string = (() => {
   const hasOwn = Object.prototype.hasOwnProperty;
 
-  /*jshint eqeqeq:false, eqnull:true */
+  /* jshint eqeqeq:false, eqnull:true */
   const diff = (o, n) => {
     let i;
     const ns = {};
@@ -103,13 +103,13 @@ const htmlDiff: (v1: string, v2: string) => string = (() => {
     const out = diff(o === '' ? [] : o.split(/\s+/), n === '' ? [] : n.split(/\s+/));
 
     if (oSpace == null) {
-      oSpace = [' '];
+      oSpace = [ ' ' ];
     } else {
       oSpace.push(' ');
     }
 
     if (nSpace == null) {
-      nSpace = [' '];
+      nSpace = [ ' ' ];
     } else {
       nSpace.push(' ');
     }

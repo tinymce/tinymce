@@ -59,7 +59,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
                     ]
                   }),
                   s.element('div', {
-                    classes: [ arr.has('tox-dialog__content-js')],
+                    classes: [ arr.has('tox-dialog__content-js') ],
                     children: [
                       s.element('div', {
                         classes: [ arr.has('tox-dialog__body') ],
@@ -233,7 +233,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
         sCheckInputValue('Robots', selectors.robotsInput, 'the nu robots'),
         sCheckInputValue('Author', selectors.authorInput, 'the nu author'),
         sCheckInputValue('Encoding', selectors.encodingInput, 'the nu encoding'),
-    ]), onSuccess, onFailure);
+      ]), onSuccess, onFailure);
 
   }, {
     plugins: 'fullpage',

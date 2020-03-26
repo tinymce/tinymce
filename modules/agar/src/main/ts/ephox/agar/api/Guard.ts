@@ -4,7 +4,6 @@ import * as ErrorTypes from '../alien/ErrorTypes';
 import { DieFn, NextFn, RunFn } from '../pipe/Pipe';
 import * as Logger from './Logger';
 import { TestLogs, addLogEntry } from './TestLogs';
-import { Step } from './Step';
 
 export type GuardFn<T, U, V> = (run: RunFn<T, U>, value: T, next: NextFn<V>, die: DieFn, logs: TestLogs) => void;
 
@@ -92,7 +91,7 @@ const timeout = <T, U>(label: string, limit: number): GuardFn<T, U, U> =>
 
 const addLogging = <T, U>(label: string): GuardFn<T, U, U> =>
   (f: RunFn<T, U>, value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) =>
-    Logger.t(label, {runStep: f}).runStep(value, next, die, logs);
+    Logger.t(label, { runStep: f }).runStep(value, next, die, logs);
 
 export {
   timeout,

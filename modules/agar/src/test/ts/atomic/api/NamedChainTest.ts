@@ -46,7 +46,7 @@ UnitTest.asynctest('NamedChainTest', (success, failure) => {
           NamedChain.overwrite('x', doubleNum),
           NamedChain.direct('y', mult10, '10y'),
 
-          NamedChain.merge(['x', 'y', 'z'], 'xyz'),
+          NamedChain.merge([ 'x', 'y', 'z' ], 'xyz'),
 
           NamedChain.read('x', cIsEqual(10)),
 

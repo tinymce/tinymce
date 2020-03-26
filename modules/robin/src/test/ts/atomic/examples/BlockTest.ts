@@ -39,10 +39,10 @@ UnitTest.test('BlockTest', function () {
     Assert.eq('Checking parent :: Option', expected.getOr('none'), actual.getOr(Gene('none', 'none')).id);
   };
 
-  check(Option.some('ol1'), ['li2'], Look.selector(doc, 'ol'));
-  check(Option.some('ol1'), ['li2', 'li3', 'li4_text'], Look.selector(doc, 'ol'));
-  check(Option.none(), ['li2', 'li5'], Look.selector(doc, 'ol'));
+  check(Option.some('ol1'), [ 'li2' ], Look.selector(doc, 'ol'));
+  check(Option.some('ol1'), [ 'li2', 'li3', 'li4_text' ], Look.selector(doc, 'ol'));
+  check(Option.none(), [ 'li2', 'li5' ], Look.selector(doc, 'ol'));
 
-  check(Option.some('ol1'), ['li2', 'li4'], Look.predicate(doc, (item: Gene) => Structure.isBlock(doc, item)));
-  check(Option.some('d1'), ['li1_text', 'li5_text'], Look.exact(doc, Gene('d1', 'div')));
+  check(Option.some('ol1'), [ 'li2', 'li4' ], Look.predicate(doc, (item: Gene) => Structure.isBlock(doc, item)));
+  check(Option.some('d1'), [ 'li1_text', 'li5_text' ], Look.exact(doc, Gene('d1', 'div')));
 });

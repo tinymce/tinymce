@@ -27,10 +27,10 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.DblClickCodesampleTest', 
           TestUtils.sSetTextareaContent(markupContent),
           TestUtils.sSubmitDialog(docBody),
           TestUtils.sAssertEditorContents(editorBody, 'markup', markupContent, 'pre.language-markup'),
-            Step.sync(function () {
-              const pre = editor.getBody().querySelector('pre');
-              editor.fire('dblclick', { target: pre });
-            }),
+          Step.sync(function () {
+            const pre = editor.getBody().querySelector('pre');
+            editor.fire('dblclick', { target: pre });
+          }),
           UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
           TestUtils.sAssertCodeSampleDialog('markup', markupContent),
         ]),
@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.DblClickCodesampleTest', 
           UiFinder.sExists(docBody, 'button[aria-pressed="true"]'),
         ]),
       ]
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'codesample',
     theme: 'silver',

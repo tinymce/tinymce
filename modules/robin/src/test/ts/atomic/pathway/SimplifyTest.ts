@@ -45,8 +45,8 @@ UnitTest.test('SimplifyTest', function () {
   };
 
   check([], []);
-  check(['a'], ['a']);
-  check(['a'], ['a', 'aa', 'ab']);
-  check(['a'], ['a', 'aa', 'ab', 'acbba']);
-  check(['a', 'b'], ['a', 'aa', 'ab', 'b']);
+  check([ 'a' ], [ 'a' ]);
+  check([ 'a' ], [ 'a', 'aa', 'ab' ]);
+  check([ 'a' ], [ 'a', 'aa', 'ab', 'acbba' ]);
+  check([ 'a', 'b' ], [ 'a', 'aa', 'ab', 'b' ]);
 });

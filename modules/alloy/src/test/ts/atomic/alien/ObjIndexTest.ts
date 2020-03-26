@@ -38,7 +38,7 @@ UnitTest.test('ObjIndexTest', () => {
         }
       }, tuple);
       assertSortedEq('Checking grouping', {
-        population: [ { country: 'aus', value: 100 }]
+        population: [{ country: 'aus', value: 100 }]
       }, actual);
     }
   );

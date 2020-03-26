@@ -35,7 +35,7 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
   const updateSelectMenuText = (parents: Element[], comp: AlloyComponent) => {
     const getFormatItems = (fmt) => {
       const subs = fmt.items;
-      return subs !== undefined && subs.length > 0 ? Arr.bind(subs, getFormatItems) : [ { title: fmt.title, format: fmt.format } ];
+      return subs !== undefined && subs.length > 0 ? Arr.bind(subs, getFormatItems) : [{ title: fmt.title, format: fmt.format }];
     };
     const flattenedItems = Arr.bind(getStyleFormats(editor), getFormatItems);
     const detectedFormat = findNearest(editor, () => flattenedItems, parents);

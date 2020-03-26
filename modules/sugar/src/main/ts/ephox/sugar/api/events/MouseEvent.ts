@@ -17,7 +17,7 @@ const isLeftButtonPressed = function (raw: MouseEvent) {
   }
 
   // use bitwise & for optimal comparison
-  // tslint:disable-next-line:no-bitwise
+  // eslint-disable-next-line no-bitwise
   return (raw.buttons & 1) !== 0;
 };
 
@@ -30,12 +30,12 @@ const isRealClick = function (raw: any) {
     // https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted
     : raw.isTrusted !== undefined && raw.isTrusted !== true ? false
     // fallback to yes because there's no other way to really know
-    : true;
+      : true;
 };
 
 const filtered = function (event: string, filter: EventFilter) {
   return {
-    bind (element: Element, f: EventHandler) {
+    bind(element: Element, f: EventHandler) {
       return FilteredEvent.bind(element, event, filter, f);
     }
   };

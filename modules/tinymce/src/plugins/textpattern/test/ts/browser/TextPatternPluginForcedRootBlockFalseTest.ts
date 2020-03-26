@@ -17,11 +17,11 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginForcedR
 
     const steps = Utils.withTeardown([
       Step.label('inline format with forced_root_block: false', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '**a**', 5, [0], false),
+        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '**a**', 5, [ 0 ], false),
         Step.label('Check bold format was applied', tinyApis.sAssertContentStructure(Utils.forcedRootBlockInlineStructHelper('strong', 'a')))
       ])),
       Step.label('block format with forced_root_block: false', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '# heading 1', 11, [0], false),
+        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '# heading 1', 11, [ 0 ], false),
         Step.label('Check heading format was applied', tinyApis.sAssertContentStructure(Utils.forcedRootBlockStructHelper('h1', ' heading 1'))),
       ]))
     ], tinyApis.sSetContent(''));

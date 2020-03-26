@@ -18,7 +18,7 @@ interface TestItemSpec {
     value: string;
     meta: {
       text: string;
-    }
+    };
   };
 }
 
@@ -94,11 +94,11 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
           }
         },
 
-        fetch () {
+        fetch() {
           return Future.pure(
             Option.from(Arr.map([
-              { type: 'item', data: { value: 'dog', meta: { text: 'Dog' } } },
-              { type: 'item', data: { value: 'elephant', meta: { text: 'Elephant' } } }
+              { type: 'item', data: { value: 'dog', meta: { text: 'Dog' }}},
+              { type: 'item', data: { value: 'elephant', meta: { text: 'Elephant' }}}
             ], munge))
           );
         },

@@ -66,8 +66,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.DialogTest', (success, failure
 
       Log.stepsAsStep('TBA', 'Insert Image Dialog with all options', [
         api.sSetSetting('file_picker_callback', () => {}),
-        api.sSetSetting('image_class_list', [{title: 'sample', value: 'sample'}]),
-        api.sSetSetting('image_list', [{title: 'sample', value: 'sample'}]),
+        api.sSetSetting('image_class_list', [{ title: 'sample', value: 'sample' }]),
+        api.sSetSetting('image_list', [{ title: 'sample', value: 'sample' }]),
         api.sSetSetting('image_caption', true),
         api.sExecCommand('mceImage'),
         sAssertFocused('Tab', '.tox-dialog__body-nav-item:contains("General")'),

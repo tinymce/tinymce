@@ -42,10 +42,10 @@ const sketch = function (rawSpec): SketchSpec {
         Styles.resolve('slider-size-container') ]
     },
     onChange,
-    onDragStart (slider, thumb) {
+    onDragStart(slider, thumb) {
       Toggling.on(thumb);
     },
-    onDragEnd (slider, thumb) {
+    onDragEnd(slider, thumb) {
       Toggling.off(thumb);
     },
     model: {

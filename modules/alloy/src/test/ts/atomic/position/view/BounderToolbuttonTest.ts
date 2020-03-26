@@ -18,10 +18,10 @@ UnitTest.test('BounderToolbuttonTest', () => {
   /* global assert */
   const check = (expected: TestDecisionSpec, preference: AnchorLayout[], anchor: AnchorBox, panel: AnchorElement, bubbles: Bubble, bounds: Bounds) => {
     const actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
-    Assert.eq('label', expected.label, actual.label());
-    Assert.eq('X', expected.x, actual.x());
-    Assert.eq('Y', expected.y, actual.y());
-    if (expected.candidateYforTest !== undefined) { Assert.eq('Candidate Y', expected.candidateYforTest, actual.candidateYforTest()); }
+    Assert.eq('label', expected.label, actual.label);
+    Assert.eq('X', expected.x, actual.x);
+    Assert.eq('Y', expected.y, actual.y);
+    if (expected.candidateYforTest !== undefined) { Assert.eq('Candidate Y', expected.candidateYforTest, actual.candidateYforTest); }
   };
 
   // Layout is for boxes with a bubble pointing to a cursor position (vertically aligned to nearest side)

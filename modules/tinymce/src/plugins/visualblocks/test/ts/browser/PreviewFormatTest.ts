@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', (s
           Assertions.assertEq('Visual blocks class should still not exist', false, Class.has(Element.fromDom(editor.getBody()), 'mce-visualblocks'));
         })
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'visualblocks',
     toolbar: 'visualblocks',

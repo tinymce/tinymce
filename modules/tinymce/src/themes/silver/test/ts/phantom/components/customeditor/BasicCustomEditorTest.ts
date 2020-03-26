@@ -54,7 +54,7 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
           scriptId: 'BasicCustomEditorTest',
           scriptUrl: '/custom/404', // using the cache
           settings: undefined
-         })
+        })
       );
     },
     (doc, body, gui, component, store) => {
@@ -66,7 +66,7 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
             return s.element('div', {
               children: [
                 s.element('textarea', {
-                  classes: [arr.not('my-custom-editor')]
+                  classes: [ arr.not('my-custom-editor') ]
                 })
               ]
             });
@@ -95,7 +95,7 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
               return s.element('div', {
                 children: [
                   s.element('textarea', {
-                    classes: [arr.has('my-custom-editor')]
+                    classes: [ arr.has('my-custom-editor') ]
                   })
                 ]
               });

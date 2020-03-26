@@ -26,7 +26,7 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
         uid: 'no-duplicates',
         containerBehaviours: Behaviour.derive([
           Sandboxing.config({
-            getAttachPoint (c) {
+            getAttachPoint(c) {
               Assertions.assertEq('Checking getAttachPoint gets given sandbox', sandbox.element(), c.element());
               return sink;
             },

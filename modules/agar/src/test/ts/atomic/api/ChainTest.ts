@@ -28,39 +28,6 @@ UnitTest.asynctest('ChainTest', (success, failure) => {
   const acc = (ch) => Chain.async((input, next, die) => {
     next(input + ch);
   });
-  const testInputValueFails = StepAssertions.testStepsFail(
-    'Output value is not a chain: dog',
-    [
-      Chain.asStep({}, [
-        Chain.on((cInput, cNext, cDie, cLogs) => {
-          cNext(<any> 'dog', cLogs);
-        })
-      ])
-    ]
-  );
-
-  const testInputValuePasses = StepAssertions.testStepsPass(
-    {},
-    [
-      Chain.asStep({}, [
-        Chain.on(function (cInput, cNext, cDie, cLogs) {
-          cNext('doge', cLogs);
-        })
-      ])
-    ]
-  );
-
-  const testInputValueOfUndefinedPasses = StepAssertions.testStepsPass(
-    {},
-    [
-      Chain.asStep({}, [
-        Chain.on(function (cInput, cNext, cDie, cLogs) {
-          cNext(undefined, cLogs);
-        })
-      ])
-    ]
-  );
-
   const testChainingFails = StepAssertions.testStepsFail(
     'Cat is not a dog',
     [
@@ -261,9 +228,9 @@ UnitTest.asynctest('Chain.predicate true', (success, failure) => {
   Pipeline.async('stepstate', [
     StepAssertions.testStepsPass(
       'stepstate',
-      [Chain.asStep('chicken', [Chain.predicate((x) => {
+      [ Chain.asStep('chicken', [ Chain.predicate((x) => {
         return x === 'chicken';
-      })])]
+      }) ]) ]
     )
   ], () => success(), failure);
 });
@@ -272,7 +239,7 @@ UnitTest.asynctest('Chain.predicate false', (success, failure) => {
   Pipeline.async('stepstate', [
     StepAssertions.testStepsFail(
       'predicate did not succeed',
-      [Chain.asStep('chicken', [Chain.predicate((x) => x === 'frog')])]
+      [ Chain.asStep('chicken', [ Chain.predicate((x) => x === 'frog') ]) ]
     )
   ], () => success(), failure);
 });

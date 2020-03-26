@@ -104,8 +104,8 @@ export interface ContextForm extends ContextBar {
 
 const contextBarFields = [
   FieldSchema.defaultedFunction('predicate', () => false),
-  FieldSchema.defaultedStringEnum('scope', 'node', ['node', 'editor']),
-  FieldSchema.defaultedStringEnum('position', 'selection', ['node', 'selection', 'line']),
+  FieldSchema.defaultedStringEnum('scope', 'node', [ 'node', 'editor' ]),
+  FieldSchema.defaultedStringEnum('position', 'selection', [ 'node', 'selection', 'line' ]),
 ];
 
 const contextButtonFields = baseToolbarButtonFields.concat([

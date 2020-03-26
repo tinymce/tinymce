@@ -26,6 +26,7 @@
   "scripts": {
     "test": "bedrock-auto -b phantomjs -d src/test",
     "test-manual": "bedrock -d src/test",
+    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
     "prepublishOnly": "tsc -b"
   },
   "author": "Ephox Corporation",

@@ -11,22 +11,22 @@ import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';
 
 // display element to the right, left edge against the right of the menu
 const eastX = (anchor: AnchorBox): number => {
-  return anchor.x() + anchor.width();
+  return anchor.x + anchor.width;
 };
 
 // display element to the left, right edge against the left of the menu
 const westX = (anchor: AnchorBox, element: AnchorElement): number => {
-  return anchor.x() - element.width();
+  return anchor.x - element.width;
 };
 
 // display element pointing up, bottom edge against the bottom of the menu (usually to one side)
 const northY = (anchor: AnchorBox, element: AnchorElement): number => {
-  return anchor.y() - element.height() + anchor.height();
+  return anchor.y - element.height + anchor.height;
 };
 
 // display element pointing down, top edge against the top of the menu (usually to one side)
 const southY = (anchor: AnchorBox): number => {
-  return anchor.y();
+  return anchor.y;
 };
 
 const southeast: AnchorLayout = (anchor, element, bubbles) => {

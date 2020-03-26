@@ -4,12 +4,14 @@ import { PlatformDetection } from '@ephox/sand';
 import { Awareness, Compare, Element } from '@ephox/sugar';
 import { BeforeAfter } from '../navigation/BeforeAfter';
 import * as BrTags from '../navigation/BrTags';
-import { Carets } from './Carets';
+import * as Carets from './Carets';
 import * as Rectangles from './Rectangles';
 import { Retries } from './Retries';
 import { WindowBridge } from '../api/WindowBridge';
 import { KeyDirection } from '../navigation/KeyDirection';
 import { Situs } from '../selection/Situs';
+
+type Carets = Carets.Carets;
 
 const MAX_RETRIES = 20;
 

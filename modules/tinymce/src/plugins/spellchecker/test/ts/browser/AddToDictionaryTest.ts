@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.AddToDictionaryTest', (
         UiFinder.cFindIn('.tox-collection__item-label:contains("Add to dictionary")'),
         Mouse.cClick
       ]),
-      Step.sync(() => Assert.eq('dict should now have hello', ['hello'], dict))
+      Step.sync(() => Assert.eq('dict should now have hello', [ 'hello' ], dict))
     ]), onSuccess, onFailure);
   }, {
     theme: 'silver',
@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.AddToDictionaryTest', (
     base_url: '/project/tinymce/js/tinymce',
     spellchecker_callback(method, text, success, failure) {
       if (method === 'spellcheck') {
-        success({dictionary: dict, words: {hello: ['word1'], world: ['word2']}});
+        success({ dictionary: dict, words: { hello: [ 'word1' ], world: [ 'word2' ] }});
       } else if (method === 'addToDictionary') {
         dict.push(text);
         success();

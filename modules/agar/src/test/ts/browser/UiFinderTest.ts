@@ -51,7 +51,7 @@ UnitTest.asynctest('UiFinderTest', (success, failure) => {
       const result = UiFinder.findIn(container, 'strong').getOrDie();
       Assertions.assertDomEq(
         'Checking findIn',
-        Hierarchy.follow(container, [0, 1]).getOrDie('Invalid test data'),
+        Hierarchy.follow(container, [ 0, 1 ]).getOrDie('Invalid test data'),
         result
       );
     }),

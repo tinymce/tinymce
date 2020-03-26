@@ -116,12 +116,12 @@ const cAssertSinkVisibility = (label: string, visibility: 'hidden' | 'visible') 
   NamedChain.writeValue('body', Body.body()),
   NamedChain.direct('body', UiFinder.cFindIn( '.tox-tinymce-aux'), 'sink'),
   NamedChain.direct('sink', Chain.control(
-      Chain.fromChains([
-        Chain.mapper((sink) =>  Css.get(sink, 'visibility')),
-        Assertions.cAssertEq(label, visibility)
-      ]),
-      Guard.tryUntil(`Wait for sink visibility to be ${visibility}`)
-    ), '_'),
+    Chain.fromChains([
+      Chain.mapper((sink) =>  Css.get(sink, 'visibility')),
+      Assertions.cAssertEq(label, visibility)
+    ]),
+    Guard.tryUntil(`Wait for sink visibility to be ${visibility}`)
+  ), '_'),
   NamedChain.outputInput
 ]);
 

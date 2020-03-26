@@ -23,7 +23,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       fields: [ ],
       name: 'behaviourA',
       active: {
-        exhibit (base, info) {
+        exhibit(base, info) {
           return DomModification.nu({
             classes: [ 'behaviour-a-exhibit' ]
           });
@@ -35,7 +35,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
         )
       },
       apis: {
-        behaveA (comp) {
+        behaveA(comp) {
           store.adder('behaveA')();
         }
       }
@@ -49,7 +49,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       ],
       name: 'behaviourB',
       active: {
-        exhibit (base, info: { attr: string}) {
+        exhibit(base, info: { attr: string}) {
           const extra = {
             attributes: {
               'behaviour-b-exhibit': info.attr
@@ -72,7 +72,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       Container.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'custom-component-test']
+          classes: [ 'custom-component-test' ]
         },
         uid: 'custom-uid',
         containerBehaviours: Behaviour.derive([
@@ -129,7 +129,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       ]),
 
       Step.sync(() => {
-        bA.get()!.behaveA(component);
+        bA.get()?.behaveA(component);
       }),
 
       store.sAssertEq('Should now have an Api log', [

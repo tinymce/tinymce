@@ -25,8 +25,8 @@ export interface ValueProcessorAdt {
     state: StateValueProcessor<T>
   ) => T;
   match: <T>(branches: {
-    field: FieldValueProcessor<T>,
-    state: StateValueProcessor<T>
+    field: FieldValueProcessor<T>;
+    state: StateValueProcessor<T>;
   }) => T;
   log: (label: string) => void;
 }
@@ -241,7 +241,7 @@ const objOf = function (fields: ValueProcessorAdt[]): Processor {
 const arrOf = function (prop: Processor): Processor {
   const extract = function (path, strength, array) {
     const results = Arr.map(array, function (a, i) {
-      return prop.extract(path.concat(['[' + i + ']' ]), strength, a);
+      return prop.extract(path.concat([ '[' + i + ']' ]), strength, a);
     });
     return ResultCombine.consolidateArr(results);
   };
@@ -323,7 +323,7 @@ const func = function (args: string[], schema: Processor, retriever): Processor 
 
   return {
     extract: delegate.extract,
-    toString () {
+    toString() {
       return 'function';
     }
   };

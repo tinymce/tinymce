@@ -39,82 +39,82 @@ UnitTest.test('ModificationOperationsTest', function () {
     };
 
     checkBody([], [], 0, 0);
-    checkBody([[en('?_0', true), en('a', false)]], [[en('a', false)]], 0, 0);
-    checkBody([[en('a', false), en('?_0', true)]], [[en('a', false)]], 0, 1);
+    checkBody([[ en('?_0', true), en('a', false) ]], [[ en('a', false) ]], 0, 0);
+    checkBody([[ en('a', false), en('?_0', true) ]], [[ en('a', false) ]], 0, 1);
     checkBody(
       [
-        [en('a', false), en('?_0', true)],
-        [en('b', false), en('?_1', true)]
+        [ en('a', false), en('?_0', true) ],
+        [ en('b', false), en('?_1', true) ]
       ],
       [
-        [en('a', false)],
-        [en('b', false)]
+        [ en('a', false) ],
+        [ en('b', false) ]
       ], 0, 1
     );
     checkBody(
       [
-        [en('?_0', true), en('a', false)],
-        [en('?_1', true), en('b', false)]
+        [ en('?_0', true), en('a', false) ],
+        [ en('?_1', true), en('b', false) ]
       ],
       [
-        [en('a', false)],
-        [en('b', false)]
+        [ en('a', false) ],
+        [ en('b', false) ]
       ], 0, 0
     );
     // Spanning check.
     checkBody(
       [
-        [en('a', false), en('a', false), en('a', false)],
-        [en('b', false), en('?_0', true), en('c', false)]
+        [ en('a', false), en('a', false), en('a', false) ],
+        [ en('b', false), en('?_0', true), en('c', false) ]
       ],
       [
-        [en('a', false), en('a', false)],
-        [en('b', false), en('c', false)]
+        [ en('a', false), en('a', false) ],
+        [ en('b', false), en('c', false) ]
       ], 0, 1
     );
     checkBody(
       [
-        [en('a', false), en('b', false), en('?_0', true)],
-        [en('c', false), en('b', false), en('?_0', true)],
-        [en('c', false), en('d', false), en('?_1', true)]
+        [ en('a', false), en('b', false), en('?_0', true) ],
+        [ en('c', false), en('b', false), en('?_0', true) ],
+        [ en('c', false), en('d', false), en('?_1', true) ]
       ],
       [
-        [en('a', false), en('b', false)],
-        [en('c', false), en('b', false)],
-        [en('c', false), en('d', false)]
+        [ en('a', false), en('b', false) ],
+        [ en('c', false), en('b', false) ],
+        [ en('c', false), en('d', false) ]
       ], 1, 2
     );
 
     check(
       [
-        r([en('a', false), en('?_0', true)], 'thead'),
-        r([en('b', false), en('?_1', true)], 'tbody')
+        r([ en('a', false), en('?_0', true) ], 'thead'),
+        r([ en('b', false), en('?_1', true) ], 'tbody')
       ],
       [
-        r([en('a', false)], 'thead'),
-        r([en('b', false)], 'tbody')
+        r([ en('a', false) ], 'thead'),
+        r([ en('b', false) ], 'tbody')
       ], 0, 1
     );
 
     check(
       [
-        r([en('?_0', true), en('a', false)], 'thead'),
-        r([en('?_1', true), en('b', false)], 'tbody')
+        r([ en('?_0', true), en('a', false) ], 'thead'),
+        r([ en('?_1', true), en('b', false) ], 'tbody')
       ],
       [
-        r([en('a', false)], 'thead'),
-        r([en('b', false)], 'tbody')
+        r([ en('a', false) ], 'thead'),
+        r([ en('b', false) ], 'tbody')
       ], 0, 0
     );
 
     check(
       [
-        r([en('a', false), en('a', false), en('a', false)], 'thead'),
-        r([en('b', false), en('?_0', true), en('c', false)], 'tbody')
+        r([ en('a', false), en('a', false), en('a', false) ], 'thead'),
+        r([ en('b', false), en('?_0', true), en('c', false) ], 'tbody')
       ],
       [
-        r([en('a', false), en('a', false)], 'thead'),
-        r([en('b', false), en('c', false)], 'tbody')
+        r([ en('a', false), en('a', false) ], 'thead'),
+        r([ en('b', false), en('c', false) ], 'tbody')
       ], 0, 1
     );
   })();
@@ -132,42 +132,42 @@ UnitTest.test('ModificationOperationsTest', function () {
       check(structExpected, structGrid, example, index);
     };
 
-    checkBody([[en('?_0', true)], [en('a', false)]], [[en('a', false)]], 0, 0);
-    checkBody([[en('a', false)], [en('?_0', true)]], [[en('a', false)]], 0, 1);
-    checkBody([[en('a', false), en('b', false)], [en('?_0', true), en('?_1', true)]], [[en('a', false), en('b', false)]], 0, 1);
-    checkBody([[en('a', false), en('a', false)], [en('?_0', true), en('?_0', true)]], [[en('a', false), en('a', false)]], 0, 1);
+    checkBody([[ en('?_0', true) ], [ en('a', false) ]], [[ en('a', false) ]], 0, 0);
+    checkBody([[ en('a', false) ], [ en('?_0', true) ]], [[ en('a', false) ]], 0, 1);
+    checkBody([[ en('a', false), en('b', false) ], [ en('?_0', true), en('?_1', true) ]], [[ en('a', false), en('b', false) ]], 0, 1);
+    checkBody([[ en('a', false), en('a', false) ], [ en('?_0', true), en('?_0', true) ]], [[ en('a', false), en('a', false) ]], 0, 1);
 
     checkBody(
       [
-        [en('a', false), en('a', false), en('b', false)],
-        [en('?_0', true), en('?_0', true), en('b', false)],
-        [en('c', false), en('d', false), en('b', false)]
+        [ en('a', false), en('a', false), en('b', false) ],
+        [ en('?_0', true), en('?_0', true), en('b', false) ],
+        [ en('c', false), en('d', false), en('b', false) ]
       ],
       [
-        [en('a', false), en('a', false), en('b', false)],
-        [en('c', false), en('d', false), en('b', false)]
+        [ en('a', false), en('a', false), en('b', false) ],
+        [ en('c', false), en('d', false), en('b', false) ]
       ], 0, 1);
 
     check(
       [
-        r([en('a', false), en('b', false), en('c', false)], 'thead'),
-        r([en('?_0', true), en('?_1', true), en('?_2', true)], 'thead'),
-        r([en('d', false), en('e', false), en('f', false)], 'tbody')
+        r([ en('a', false), en('b', false), en('c', false) ], 'thead'),
+        r([ en('?_0', true), en('?_1', true), en('?_2', true) ], 'thead'),
+        r([ en('d', false), en('e', false), en('f', false) ], 'tbody')
       ],
       [
-        r([en('a', false), en('b', false), en('c', false)], 'thead'),
-        r([en('d', false), en('e', false), en('f', false)], 'tbody')
+        r([ en('a', false), en('b', false), en('c', false) ], 'thead'),
+        r([ en('d', false), en('e', false), en('f', false) ], 'tbody')
       ], 0, 1);
 
     check(
       [
-        r([en('a', false), en('b', false), en('c', false)], 'thead'),
-        r([en('?_0', true), en('?_1', true), en('?_2', true)], 'tbody'),
-        r([en('d', false), en('e', false), en('f', false)], 'tbody')
+        r([ en('a', false), en('b', false), en('c', false) ], 'thead'),
+        r([ en('?_0', true), en('?_1', true), en('?_2', true) ], 'tbody'),
+        r([ en('d', false), en('e', false), en('f', false) ], 'tbody')
       ],
       [
-        r([en('a', false), en('b', false), en('c', false)], 'thead'),
-        r([en('d', false), en('e', false), en('f', false)], 'tbody')
+        r([ en('a', false), en('b', false), en('c', false) ], 'thead'),
+        r([ en('d', false), en('e', false), en('f', false) ], 'tbody')
       ], 1, 1);
   })();
 
@@ -184,25 +184,25 @@ UnitTest.test('ModificationOperationsTest', function () {
       check(structExpected, structGrid, index);
     };
 
-    checkBody([], [[en('a', false)]], 0);
-    checkBody([[en('b', false)]], [[en('a', false), en('b', false)]], 0);
+    checkBody([], [[ en('a', false) ]], 0);
+    checkBody([[ en('b', false) ]], [[ en('a', false), en('b', false) ]], 0);
     checkBody(
       [
-        [en('a', false), en('b', false)],
-        [en('c', false), en('c', false)]
+        [ en('a', false), en('b', false) ],
+        [ en('c', false), en('c', false) ]
       ],
       [
-        [en('a', false), en('b', false), en('b', false)],
-        [en('c', false), en('c', false), en('c', false)]
+        [ en('a', false), en('b', false), en('b', false) ],
+        [ en('c', false), en('c', false), en('c', false) ]
       ], 1);
     check(
       [
-        r([en('a', false), en('b', false)], 'thead'),
-        r([en('c', false), en('c', false)], 'tbody')
+        r([ en('a', false), en('b', false) ], 'thead'),
+        r([ en('c', false), en('c', false) ], 'tbody')
       ],
       [
-        r([en('a', false), en('b', false), en('b', false)], 'thead'),
-        r([en('c', false), en('c', false), en('c', false)], 'tbody')
+        r([ en('a', false), en('b', false), en('b', false) ], 'thead'),
+        r([ en('c', false), en('c', false), en('c', false) ], 'tbody')
       ], 1);
   })();
 
@@ -219,28 +219,28 @@ UnitTest.test('ModificationOperationsTest', function () {
       check(structExpected, structGrid, index);
     };
 
-    checkBody([], [[en('a', false)]], 0);
-    checkBody([[en('b', false)]], [[en('a', false)], [en('b', false)]], 0);
+    checkBody([], [[ en('a', false) ]], 0);
+    checkBody([[ en('b', false) ]], [[ en('a', false) ], [ en('b', false) ]], 0);
     checkBody(
       [
-        [en('a', false), en('b', false), en('b', false)],
-        [en('c', false), en('c', false), en('c', false)]
+        [ en('a', false), en('b', false), en('b', false) ],
+        [ en('c', false), en('c', false), en('c', false) ]
       ],
       [
-        [en('a', false), en('b', false), en('b', false)],
-        [en('a', false), en('b', false), en('b', false)],
-        [en('c', false), en('c', false), en('c', false)]
+        [ en('a', false), en('b', false), en('b', false) ],
+        [ en('a', false), en('b', false), en('b', false) ],
+        [ en('c', false), en('c', false), en('c', false) ]
       ], 1);
 
     check(
       [
-        r([en('a', false), en('b', false), en('b', false)], 'thead'),
-        r([en('c', false), en('c', false), en('c', false)], 'tbody')
+        r([ en('a', false), en('b', false), en('b', false) ], 'thead'),
+        r([ en('c', false), en('c', false), en('c', false) ], 'tbody')
       ],
       [
-        r([en('a', false), en('b', false), en('b', false)], 'thead'),
-        r([en('a', false), en('b', false), en('b', false)], 'tbody'),
-        r([en('c', false), en('c', false), en('c', false)], 'tbody')
+        r([ en('a', false), en('b', false), en('b', false) ], 'thead'),
+        r([ en('a', false), en('b', false), en('b', false) ], 'tbody'),
+        r([ en('c', false), en('c', false), en('c', false) ], 'tbody')
       ], 1);
   })();
 
@@ -257,186 +257,186 @@ UnitTest.test('ModificationOperationsTest', function () {
     };
 
     // splitting simple tables without existing colspans
-    checkBody([[en('a', false), en('?_0', true)]], [[en('a', false)]], 0, 0);
-    checkBody([[en('a', false), en('?_0', true), en('b', false)]], [[en('a', false), en('b', false)]], 0, 0);
-    checkBody([[en('a', false), en('b', false), en('?_0', true)]], [[en('a', false), en('b', false)]], 0, 1);
+    checkBody([[ en('a', false), en('?_0', true) ]], [[ en('a', false) ]], 0, 0);
+    checkBody([[ en('a', false), en('?_0', true), en('b', false) ]], [[ en('a', false), en('b', false) ]], 0, 0);
+    checkBody([[ en('a', false), en('b', false), en('?_0', true) ]], [[ en('a', false), en('b', false) ]], 0, 1);
     checkBody(
       [
-        [en('a', false), en('b', false), en('?_0', true)],
-        [en('c', false), en('d', false), en('d', false)]
+        [ en('a', false), en('b', false), en('?_0', true) ],
+        [ en('c', false), en('d', false), en('d', false) ]
       ],
       [
-        [en('a', false), en('b', false)],
-        [en('c', false), en('d', false)]
+        [ en('a', false), en('b', false) ],
+        [ en('c', false), en('d', false) ]
       ], 0, 1
     );
     checkBody(
       [
-        [en('a', false), en('?_0', true), en('b', false), en('c', false)],
-        [en('d', false), en('d', false), en('e', false), en('f', false)],
-        [en('g', false), en('g', false), en('h', false), en('i', false)]
+        [ en('a', false), en('?_0', true), en('b', false), en('c', false) ],
+        [ en('d', false), en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('g', false), en('h', false), en('i', false) ]
       ],
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('d', false), en('e', false), en('f', false)],
-        [en('g', false), en('h', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false) ]
       ], 0, 0
     );
     checkBody(
       [
-        [en('a', false), en('b', false), en('b', false), en('c', false)],
-        [en('d', false), en('e', false), en('?_0', true), en('f', false)],
-        [en('g', false), en('h', false), en('h', false), en('i', false)]
+        [ en('a', false), en('b', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('?_0', true), en('f', false) ],
+        [ en('g', false), en('h', false), en('h', false), en('i', false) ]
       ],
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('d', false), en('e', false), en('f', false)],
-        [en('g', false), en('h', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false) ]
       ], 1, 1
     );
     checkBody(
       [
-        [en('a', false), en('b', false), en('c', false), en('c', false)],
-        [en('d', false), en('e', false), en('f', false), en('f', false)],
-        [en('g', false), en('h', false), en('i', false), en('?_0', true)]
+        [ en('a', false), en('b', false), en('c', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('f', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false), en('?_0', true) ]
       ],
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('d', false), en('e', false), en('f', false)],
-        [en('g', false), en('h', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false) ]
       ], 2, 2
     );
     checkBody(
       [
-        [en('a', false), en('b', false), en('c', false), en('?_0', true)],
-        [en('d', false), en('e', false), en('f', false), en('f', false)],
-        [en('g', false), en('h', false), en('i', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false), en('?_0', true) ],
+        [ en('d', false), en('e', false), en('f', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false), en('i', false) ]
       ],
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('d', false), en('e', false), en('f', false)],
-        [en('g', false), en('h', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false) ]
       ], 0, 2
     );
     checkBody(
       [
-        [en('a', false), en('a', false), en('b', false), en('c', false)],
-        [en('d', false), en('d', false), en('e', false), en('f', false)],
-        [en('g', false), en('?_0', true), en('h', false), en('i', false)]
+        [ en('a', false), en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('?_0', true), en('h', false), en('i', false) ]
       ],
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('d', false), en('e', false), en('f', false)],
-        [en('g', false), en('h', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false) ]
       ], 2, 0
     );
     // Splitting a cell where other cells have colspans
     checkBody(
       [
-        [en('a', false), en('b', false), en('?_0', true)],
-        [en('c', false), en('c', false), en('c', false)]
+        [ en('a', false), en('b', false), en('?_0', true) ],
+        [ en('c', false), en('c', false), en('c', false) ]
       ],
       [
-        [en('a', false), en('b', false)],
-        [en('c', false), en('c', false)]
+        [ en('a', false), en('b', false) ],
+        [ en('c', false), en('c', false) ]
       ], 0, 1
     );
     checkBody(
       [
-        [en('a', false), en('?_0', true), en('b', false), en('c', false)],
-        [en('d', false), en('d', false), en('d', false), en('f', false)],
-        [en('g', false), en('g', false), en('h', false), en('h', false)]
+        [ en('a', false), en('?_0', true), en('b', false), en('c', false) ],
+        [ en('d', false), en('d', false), en('d', false), en('f', false) ],
+        [ en('g', false), en('g', false), en('h', false), en('h', false) ]
       ],
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('d', false), en('d', false), en('f', false)],
-        [en('g', false), en('h', false), en('h', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('d', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('h', false) ]
       ], 0, 0
     );
     checkBody(
       [
-        [en('a', false), en('a', false), en('a', false), en('a', false)],
-        [en('d', false), en('e', false), en('?_0', true), en('f', false)],
-        [en('g', false), en('h', false), en('h', false), en('h', false)]
+        [ en('a', false), en('a', false), en('a', false), en('a', false) ],
+        [ en('d', false), en('e', false), en('?_0', true), en('f', false) ],
+        [ en('g', false), en('h', false), en('h', false), en('h', false) ]
       ],
       [
-        [en('a', false), en('a', false), en('a', false)],
-        [en('d', false), en('e', false), en('f', false)],
-        [en('g', false), en('h', false), en('h', false)]
+        [ en('a', false), en('a', false), en('a', false) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('h', false) ]
       ], 1, 1
     );
     checkBody(
       [
-        [en('a', false), en('a', false), en('c', false), en('c', false)],
-        [en('d', false), en('d', false), en('d', false), en('d', false)],
-        [en('g', false), en('h', false), en('i', false), en('?_0', true)]
+        [ en('a', false), en('a', false), en('c', false), en('c', false) ],
+        [ en('d', false), en('d', false), en('d', false), en('d', false) ],
+        [ en('g', false), en('h', false), en('i', false), en('?_0', true) ]
       ],
       [
-        [en('a', false), en('a', false), en('c', false)],
-        [en('d', false), en('d', false), en('d', false)],
-        [en('g', false), en('h', false), en('i', false)]
+        [ en('a', false), en('a', false), en('c', false) ],
+        [ en('d', false), en('d', false), en('d', false) ],
+        [ en('g', false), en('h', false), en('i', false) ]
       ], 2, 2
     );
     checkBody(
       [
-        [en('a', false), en('b', false), en('c', false), en('?_0', true)],
-        [en('d', false), en('e', false), en('e', false), en('e', false)],
-        [en('g', false), en('g', false), en('i', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false), en('?_0', true) ],
+        [ en('d', false), en('e', false), en('e', false), en('e', false) ],
+        [ en('g', false), en('g', false), en('i', false), en('i', false) ]
       ],
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('d', false), en('e', false), en('e', false)],
-        [en('g', false), en('g', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('e', false) ],
+        [ en('g', false), en('g', false), en('i', false) ]
       ], 0, 2
     );
     checkBody(
       [
-        [en('a', false), en('a', false), en('a', false), en('c', false)],
-        [en('a', false), en('a', false), en('a', false), en('a', false)],
-        [en('g', false), en('?_0', true), en('h', false), en('i', false)]
+        [ en('a', false), en('a', false), en('a', false), en('c', false) ],
+        [ en('a', false), en('a', false), en('a', false), en('a', false) ],
+        [ en('g', false), en('?_0', true), en('h', false), en('i', false) ]
       ],
       [
-        [en('a', false), en('a', false), en('c', false)],
-        [en('a', false), en('a', false), en('a', false)],
-        [en('g', false), en('h', false), en('i', false)]
+        [ en('a', false), en('a', false), en('c', false) ],
+        [ en('a', false), en('a', false), en('a', false) ],
+        [ en('g', false), en('h', false), en('i', false) ]
       ], 2, 0
     );
     // splitting a cell which is already merged
     checkBody(
       [
-        [en('a', false), en('a', false), en('a', false), en('a', false)],
-        [en('a', false), en('a', false), en('?_0', true), en('a', false)],
-        [en('a', false), en('a', false), en('a', false), en('a', false)]
+        [ en('a', false), en('a', false), en('a', false), en('a', false) ],
+        [ en('a', false), en('a', false), en('?_0', true), en('a', false) ],
+        [ en('a', false), en('a', false), en('a', false), en('a', false) ]
       ],
       [
-        [en('a', false), en('a', false), en('a', false)],
-        [en('a', false), en('a', false), en('a', false)],
-        [en('a', false), en('a', false), en('a', false)]
+        [ en('a', false), en('a', false), en('a', false) ],
+        [ en('a', false), en('a', false), en('a', false) ],
+        [ en('a', false), en('a', false), en('a', false) ]
       ], 1, 1
     );
     check(
       [
-        r([en('a', false), en('b', false), en('c', false), en('?_0', true)], 'thead'),
-        r([en('d', false), en('e', false), en('e', false), en('e', false)], 'tbody'),
-        r([en('g', false), en('g', false), en('i', false), en('i', false)], 'tbody')
+        r([ en('a', false), en('b', false), en('c', false), en('?_0', true) ], 'thead'),
+        r([ en('d', false), en('e', false), en('e', false), en('e', false) ], 'tbody'),
+        r([ en('g', false), en('g', false), en('i', false), en('i', false) ], 'tbody')
       ],
       [
-        r([en('a', false), en('b', false), en('c', false)], 'thead'),
-        r([en('d', false), en('e', false), en('e', false)], 'tbody'),
-        r([en('g', false), en('g', false), en('i', false)], 'tbody')
+        r([ en('a', false), en('b', false), en('c', false) ], 'thead'),
+        r([ en('d', false), en('e', false), en('e', false) ], 'tbody'),
+        r([ en('g', false), en('g', false), en('i', false) ], 'tbody')
       ], 0, 2
     );
 
     check(
       [
-        r([en('a', false), en('a', false), en('a', false), en('c', false)], 'thead'),
-        r([en('a', false), en('a', false), en('a', false), en('a', false)], 'tbody'),
-        r([en('g', false), en('?_0', true), en('h', false), en('i', false)], 'tbody')
+        r([ en('a', false), en('a', false), en('a', false), en('c', false) ], 'thead'),
+        r([ en('a', false), en('a', false), en('a', false), en('a', false) ], 'tbody'),
+        r([ en('g', false), en('?_0', true), en('h', false), en('i', false) ], 'tbody')
       ],
       [
-        r([en('a', false), en('a', false), en('c', false)], 'thead'),
-        r([en('a', false), en('a', false), en('a', false)], 'tbody'),
-        r([en('g', false), en('h', false), en('i', false)], 'tbody')
+        r([ en('a', false), en('a', false), en('c', false) ], 'thead'),
+        r([ en('a', false), en('a', false), en('a', false) ], 'tbody'),
+        r([ en('g', false), en('h', false), en('i', false) ], 'tbody')
       ], 2, 0
     );
   })();
@@ -457,186 +457,186 @@ UnitTest.test('ModificationOperationsTest', function () {
     // checkBody([], [], 0, 0); // ?? table without rows will fail - a problem?
     // checkBody([[]], [], 0, 0); // This case shouldn't come up?
     checkBody([[], []], [[]], 0, 0);
-    checkBody([[en('a', false)], [en('?_0', true)]], [[en('a', false)]], 0, 0);
-    checkBody([[en('a', false), en('b', false)], [en('?_0', true), en('b', false)]], [[en('a', false), en('b', false)]], 0, 0);
-    checkBody([[en('a', false), en('b', false)], [en('a', false), en('?_0', true)]], [[en('a', false), en('b', false)]], 0, 1);
+    checkBody([[ en('a', false) ], [ en('?_0', true) ]], [[ en('a', false) ]], 0, 0);
+    checkBody([[ en('a', false), en('b', false) ], [ en('?_0', true), en('b', false) ]], [[ en('a', false), en('b', false) ]], 0, 0);
+    checkBody([[ en('a', false), en('b', false) ], [ en('a', false), en('?_0', true) ]], [[ en('a', false), en('b', false) ]], 0, 1);
     checkBody(
       [
-        [en('a', false), en('b', false)],
-        [en('a', false), en('?_0', true)],
-        [en('c', false), en('d', false)]
+        [ en('a', false), en('b', false) ],
+        [ en('a', false), en('?_0', true) ],
+        [ en('c', false), en('d', false) ]
       ],
       [
-        [en('a', false), en('b', false)],
-        [en('c', false), en('d', false)]
+        [ en('a', false), en('b', false) ],
+        [ en('c', false), en('d', false) ]
       ], 0, 1
     );
     checkBody(
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('?_0', true), en('b', false), en('c', false)],
-        [en('d', false), en('e', false), en('f', false)],
-        [en('g', false), en('h', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('?_0', true), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false) ]
       ],
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('d', false), en('e', false), en('f', false)],
-        [en('g', false), en('h', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false) ]
       ], 0, 0
     );
     checkBody(
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('d', false), en('e', false), en('f', false)],
-        [en('d', false), en('?_0', true), en('f', false)],
-        [en('g', false), en('h', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('d', false), en('?_0', true), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false) ]
       ],
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('d', false), en('e', false), en('f', false)],
-        [en('g', false), en('h', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false) ]
       ], 1, 1
     );
     checkBody(
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('d', false), en('e', false), en('f', false)],
-        [en('g', false), en('h', false), en('i', false)],
-        [en('g', false), en('h', false), en('?_0', true)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false) ],
+        [ en('g', false), en('h', false), en('?_0', true) ]
       ],
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('d', false), en('e', false), en('f', false)],
-        [en('g', false), en('h', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false) ]
       ], 2, 2
     );
     checkBody(
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('a', false), en('b', false), en('?_0', true)],
-        [en('d', false), en('e', false), en('f', false)],
-        [en('g', false), en('h', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('a', false), en('b', false), en('?_0', true) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false) ]
       ],
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('d', false), en('e', false), en('f', false)],
-        [en('g', false), en('h', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false) ]
       ], 0, 2
     );
     checkBody(
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('d', false), en('e', false), en('f', false)],
-        [en('g', false), en('h', false), en('i', false)],
-        [en('?_0', true), en('h', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false) ],
+        [ en('?_0', true), en('h', false), en('i', false) ]
       ],
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('d', false), en('e', false), en('f', false)],
-        [en('g', false), en('h', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('e', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('i', false) ]
       ], 2, 0
     );
     // Splitting a cell where other cells have rowspans
     checkBody(
       [
-        [en('a', false), en('b', false)],
-        [en('a', false), en('?_0', true)],
-        [en('a', false), en('c', false)]
+        [ en('a', false), en('b', false) ],
+        [ en('a', false), en('?_0', true) ],
+        [ en('a', false), en('c', false) ]
       ],
       [
-        [en('a', false), en('b', false)],
-        [en('a', false), en('c', false)]
+        [ en('a', false), en('b', false) ],
+        [ en('a', false), en('c', false) ]
       ], 0, 1
     );
     checkBody(
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('?_0', true), en('b', false), en('c', false)],
-        [en('d', false), en('b', false), en('f', false)],
-        [en('g', false), en('h', false), en('f', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('?_0', true), en('b', false), en('c', false) ],
+        [ en('d', false), en('b', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('f', false) ]
       ],
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('d', false), en('b', false), en('f', false)],
-        [en('g', false), en('h', false), en('f', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('d', false), en('b', false), en('f', false) ],
+        [ en('g', false), en('h', false), en('f', false) ]
       ], 0, 0
     );
     checkBody(
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('a', false), en('e', false), en('c', false)],
-        [en('a', false), en('?_0', true), en('c', false)],
-        [en('a', false), en('e', false), en('f', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('a', false), en('e', false), en('c', false) ],
+        [ en('a', false), en('?_0', true), en('c', false) ],
+        [ en('a', false), en('e', false), en('f', false) ]
       ],
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('a', false), en('e', false), en('c', false)],
-        [en('a', false), en('e', false), en('f', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('a', false), en('e', false), en('c', false) ],
+        [ en('a', false), en('e', false), en('f', false) ]
       ], 1, 1
     );
     checkBody(
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('a', false), en('b', false), en('i', false)],
-        [en('a', false), en('h', false), en('i', false)],
-        [en('a', false), en('h', false), en('?_0', true)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('a', false), en('b', false), en('i', false) ],
+        [ en('a', false), en('h', false), en('i', false) ],
+        [ en('a', false), en('h', false), en('?_0', true) ]
       ],
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('a', false), en('b', false), en('i', false)],
-        [en('a', false), en('h', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('a', false), en('b', false), en('i', false) ],
+        [ en('a', false), en('h', false), en('i', false) ]
       ], 2, 2
     );
     checkBody(
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('a', false), en('b', false), en('?_0', true)],
-        [en('a', false), en('e', false), en('e', false)],
-        [en('d', false), en('e', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('a', false), en('b', false), en('?_0', true) ],
+        [ en('a', false), en('e', false), en('e', false) ],
+        [ en('d', false), en('e', false), en('i', false) ]
       ],
       [
-        [en('a', false), en('b', false), en('c', false)],
-        [en('a', false), en('e', false), en('e', false)],
-        [en('d', false), en('e', false), en('i', false)]
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('a', false), en('e', false), en('e', false) ],
+        [ en('d', false), en('e', false), en('i', false) ]
       ], 0, 2
     );
     checkBody(
       [
-        [en('a', false), en('a', false), en('b', false)],
-        [en('a', false), en('a', false), en('a', false)],
-        [en('c', false), en('a', false), en('i', false)],
-        [en('?_0', true), en('a', false), en('i', false)]
+        [ en('a', false), en('a', false), en('b', false) ],
+        [ en('a', false), en('a', false), en('a', false) ],
+        [ en('c', false), en('a', false), en('i', false) ],
+        [ en('?_0', true), en('a', false), en('i', false) ]
       ],
       [
-        [en('a', false), en('a', false), en('b', false)],
-        [en('a', false), en('a', false), en('a', false)],
-        [en('c', false), en('a', false), en('i', false)]
+        [ en('a', false), en('a', false), en('b', false) ],
+        [ en('a', false), en('a', false), en('a', false) ],
+        [ en('c', false), en('a', false), en('i', false) ]
       ], 2, 0
     );
     // splitting a cell which is already merged
     checkBody(
       [
-        [en('a', false), en('a', false), en('a', false)],
-        [en('a', false), en('a', false), en('a', false)],
-        [en('a', false), en('?_0', true), en('a', false)],
-        [en('a', false), en('a', false), en('a', false)]
+        [ en('a', false), en('a', false), en('a', false) ],
+        [ en('a', false), en('a', false), en('a', false) ],
+        [ en('a', false), en('?_0', true), en('a', false) ],
+        [ en('a', false), en('a', false), en('a', false) ]
       ],
       [
-        [en('a', false), en('a', false), en('a', false)],
-        [en('a', false), en('a', false), en('a', false)],
-        [en('a', false), en('a', false), en('a', false)]
+        [ en('a', false), en('a', false), en('a', false) ],
+        [ en('a', false), en('a', false), en('a', false) ],
+        [ en('a', false), en('a', false), en('a', false) ]
       ], 1, 1
     );
 
     check(
       [
-        r([en('a', false), en('b', false)], 'thead'),
-        r([en('a', false), en('?_0', true)], 'thead'),
-        r([en('c', false), en('d', false)], 'tbody')
+        r([ en('a', false), en('b', false) ], 'thead'),
+        r([ en('a', false), en('?_0', true) ], 'thead'),
+        r([ en('c', false), en('d', false) ], 'tbody')
       ],
       [
-        r([en('a', false), en('b', false)], 'thead'),
-        r([en('c', false), en('d', false)], 'tbody')
+        r([ en('a', false), en('b', false) ], 'thead'),
+        r([ en('c', false), en('d', false) ], 'tbody')
       ], 0, 1
     );
   })();

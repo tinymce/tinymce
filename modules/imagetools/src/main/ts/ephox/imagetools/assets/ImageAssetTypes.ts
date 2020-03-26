@@ -22,8 +22,8 @@ export interface ImageAssetAdt {
     url: UrlCallback<T>
   ) => T;
   match: <T> (branches: {
-    blob: BlobCallback<T>,
-    url: UrlCallback<T>
+    blob: BlobCallback<T>;
+    url: UrlCallback<T>;
   }) => T;
   log: (label: string) => void;
 }

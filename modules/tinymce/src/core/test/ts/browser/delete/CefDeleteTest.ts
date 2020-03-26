@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
       tinyApis.sFocus(),
       Logger.t('Should padd empty ce=true inside ce=false when everything is deleted', GeneralSteps.sequence([
         tinyApis.sSetContent('<div contenteditable="false">a<p contenteditable="true">a</p>b</div>'),
-        tinyApis.sSetSelection([1, 1, 0], 0, [1, 1, 0], 1),
+        tinyApis.sSetSelection([ 1, 1, 0 ], 0, [ 1, 1, 0 ], 1),
         sFakeBackspaceKeyOnRange(editor),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build(function (s, str, arr) {
@@ -57,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
 
       Logger.t('Should not padd an non empty ce=true inside ce=false', GeneralSteps.sequence([
         tinyApis.sSetContent('<div contenteditable="false">a<p contenteditable="true">ab</p>b</div>'),
-        tinyApis.sSetSelection([1, 1, 0], 0, [1, 1, 0], 1),
+        tinyApis.sSetSelection([ 1, 1, 0 ], 0, [ 1, 1, 0 ], 1),
         sFakeBackspaceKeyOnRange(editor),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build(function (s, str, arr) {
@@ -84,7 +84,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
         tinyApis.sSetContent('<div contenteditable="false">a</div>'),
         tinyApis.sSetSelection([], 1, [], 2),
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
-        tinyApis.sAssertSelection([0], 0, [0], 0),
+        tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 0),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build(function (s, str, arr) {
             return s.element('body', {
@@ -108,7 +108,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
         tinyApis.sSetContent('<div contenteditable="false">a</div>'),
         tinyApis.sSetSelection([], 2, [], 2),
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
-        tinyApis.sAssertSelection([0], 0, [0], 0),
+        tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 0),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build(function (s, str, arr) {
             return s.element('body', {
@@ -132,7 +132,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
         tinyApis.sSetContent('<div contenteditable="false">a</div><p>b</p>'),
         tinyApis.sSetSelection([], 2, [], 2),
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
-        tinyApis.sAssertSelection([0, 0], 0, [0, 0], 0),
+        tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build(function (s, str, arr) {
             return s.element('body', {

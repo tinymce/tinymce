@@ -8,7 +8,7 @@
   },
   "scripts": {
     "prepublishOnly": "yarn run lint && yarn run build",
-    "lint": "tslint --config ../../tslint.json src/**/*.ts",
+    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
     "build": "tsc -b",
     "test": "bedrock-auto -b phantomjs --customRoutes src/test/json/routes.json -d src/test/ts/",
     "test-manual": "bedrock --customRoutes src/test/json/routes.json -d src/test/ts/",

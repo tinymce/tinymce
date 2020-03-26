@@ -33,7 +33,7 @@ const renderClose = (providersBackstage: UiFactoryBackstageProviders) => {
   return Button.sketch({
     dom: {
       tag: 'button',
-      classes: ['tox-button', 'tox-button--icon', 'tox-button--naked'],
+      classes: [ 'tox-button', 'tox-button--icon', 'tox-button--naked' ],
       attributes: {
         'type': 'button',
         'aria-label': providersBackstage.translate('Close'),
@@ -44,7 +44,7 @@ const renderClose = (providersBackstage: UiFactoryBackstageProviders) => {
       {
         dom: {
           tag: 'div',
-          classes: ['tox-icon'],
+          classes: [ 'tox-icon' ],
           innerHtml: '<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M17.953 7.453L13.422 12l4.531 4.547-1.406 1.406L12 13.422l-4.547 4.531-1.406-1.406L10.578 12 6.047 7.453l1.406-1.406L12 10.578l4.547-4.531z" fill-rule="evenodd"></path></svg>'
         }
       }
@@ -63,7 +63,7 @@ const renderTitle = (spec: WindowHeaderSpec, id: Option<string>, providersBackst
       tag: 'div',
       classes: [ 'tox-dialog__title' ],
       attributes: {
-        ...id.map((x) => ({id: x}) as {id?: string}).getOr({})
+        ...id.map((x) => ({ id: x }) as {id?: string}).getOr({})
       }
     },
     components: renderComponents(spec),
@@ -94,7 +94,7 @@ const renderInlineHeader = (spec: WindowHeaderSpec, titleId: string, providersBa
       Dragging.config({
         mode: 'mouse',
         blockerClass: 'blocker',
-        getTarget (handle) {
+        getTarget(handle) {
           return SelectorFind.closest(handle, '[role="dialog"]').getOrDie();
         },
         snaps: {

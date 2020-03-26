@@ -1,4 +1,4 @@
-import { assert, UnitTest} from '@ephox/bedrock-client';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Menu } from '@ephox/bridge';
 import * as MenuConversion from 'tinymce/themes/silver/ui/menus/menu/MenuConversion';
 
@@ -51,7 +51,7 @@ UnitTest.test('themes.silver.ui.menus.MenuConversion', () => {
   });
 
   // Menu reference array
-  expandAndAssertEq([ 'menu-1', '|', 'menu-2'], {
+  expandAndAssertEq([ 'menu-1', '|', 'menu-2' ], {
     items: [ menu1, separator, menu2 ],
     menus: { },
     expansions: { }

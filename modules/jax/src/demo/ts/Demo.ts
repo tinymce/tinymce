@@ -18,7 +18,7 @@ Http.get({
 
 Http.post({
   url: 'https://httpbin.org/post',
-  body: HttpData.jsonData({cool: 'data'}),
+  body: HttpData.jsonData({ cool: 'data' }),
   responseType: DataType.JSON
 }).get((result) => {
   result.fold(
@@ -99,7 +99,7 @@ Http.post({
   body: HttpData.multipartFormData({
     param1: 'abc',
     param2: 'abc',
-    blob1: new Blob(['text'])
+    blob1: new Blob([ 'text' ])
   }),
   responseType: DataType.JSON
 }).get((result) => {

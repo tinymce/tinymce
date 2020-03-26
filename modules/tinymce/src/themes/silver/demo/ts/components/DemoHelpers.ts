@@ -14,7 +14,7 @@ const setupDemo = () => {
     throw Error('old sinks found, a previous demo did not call helpers.destroy() leaving artifacts, found: ' + oldSink.length);
   }
 
-// begin of demo helpers
+  // begin of demo helpers
   const sink = GuiFactory.build({
     dom: DomFactory.fromHtml('<div class="mce-silver-sink"></div>'),
     behaviours: Behaviour.derive([
@@ -29,22 +29,22 @@ const setupDemo = () => {
 
   const fakeHistory = (fileType: string): string[] => {
     if (fileType === 'image') {
-      return ['https://i.stack.imgur.com/8JoS3.png'];
+      return [ 'https://i.stack.imgur.com/8JoS3.png' ];
     } else if (fileType === 'media') {
       return [];
     } else if (fileType === 'file') {
-      return ['https://www.tiny.cloud/'];
+      return [ 'https://www.tiny.cloud/' ];
     }
     return [];
-};
+  };
 
   const fakeLinkInfo: LinkInformation = {
     targets: [
-      { type: 'anchor', title: 'Google', url: 'http://www.google.com.au', level: 0, attach: Fun.noop},
+      { type: 'anchor', title: 'Google', url: 'http://www.google.com.au', level: 0, attach: Fun.noop },
       { type: 'header', title: 'Header', url: '#header', level: 1, attach: () => {
-          // tslint:disable-next-line:no-console
+        // tslint:disable-next-line:no-console
         console.log('This is where the ID would be attached to the header so it can be linked');
-      }}
+      } }
     ],
     anchorTop: '#top',
     anchorBottom: '#bottom'
@@ -149,7 +149,7 @@ const setupDemo = () => {
       getValidationHandler: () => Option.some(fakeValidator),
       getUrlPicker: (filetype) => Option.some((entry: ApiUrlData) => {
         const newUrl = Option.from(window.prompt('File browser would show instead of this...', entry.value));
-        return Future.pure({...entry, value: newUrl.getOr(entry.value)});
+        return Future.pure({ ...entry, value: newUrl.getOr(entry.value) });
       })
     },
     // styleselect: StyleFormatsBackstage.init({

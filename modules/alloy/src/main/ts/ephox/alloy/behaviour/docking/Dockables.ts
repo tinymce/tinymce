@@ -19,9 +19,9 @@ export interface MorphAdt {
     fixed: FixedMorph<T>
   ) => T;
   match: <T> (branches: {
-    static: StaticMorph<T>,
-    absolute: AbsoluteMorph<T>,
-    fixed: FixedMorph<T>,
+    static: StaticMorph<T>;
+    absolute: AbsoluteMorph<T>;
+    fixed: FixedMorph<T>;
   }) => T;
   log: (label: string) => void;
 }
@@ -34,7 +34,7 @@ interface MorphConstructor {
 
 const morphAdt: MorphConstructor = Adt.generate([
   { static: [ ] },
-  { absolute: [ 'positionCss'] },
+  { absolute: [ 'positionCss' ] },
   { fixed: [ 'positionCss' ] }
 ]);
 
@@ -55,15 +55,15 @@ const disappear = (component: AlloyComponent, contextualInfo: DockingContext): v
 };
 
 const isPartiallyVisible = (box: Boxes.Bounds, viewport: Boxes.Bounds): boolean => {
-  return box.y() < viewport.bottom() && box.bottom() > viewport.y();
+  return box.y < viewport.bottom && box.bottom > viewport.y;
 };
 
 const isTopCompletelyVisible = (box: Boxes.Bounds, viewport: Boxes.Bounds): boolean => {
-  return box.y() >= viewport.y();
+  return box.y >= viewport.y;
 };
 
 const isBottomCompletelyVisible = (box: Boxes.Bounds, viewport: Boxes.Bounds): boolean => {
-  return box.bottom() <= viewport.bottom();
+  return box.bottom <= viewport.bottom;
 };
 
 const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: Boxes.Bounds): boolean => {
@@ -81,8 +81,8 @@ const getPrior = (elem: Element<HTMLElement>, state: DockingState): Option<Boxes
   return state.getInitialPosition().map((pos) => {
     // Only supports position absolute.
     return Boxes.bounds(
-      pos.bounds.x(),
-      pos.bounds.y(),
+      pos.bounds.x,
+      pos.bounds.y,
       Width.get(elem),
       Height.get(elem)
     );
@@ -109,10 +109,10 @@ const revertToOriginal = (elem: Element<HTMLElement>, box: Boxes.Bounds, state: 
         const offsetBox = OffsetOrigin.getOffsetParent(elem).map(Boxes.box).getOrThunk(() => Boxes.box(Body.body()));
         return Option.some(morphAdt.absolute(NuPositionCss(
           'absolute',
-          Obj.get(position.style, 'left').map((_) => box.x() - offsetBox.x()),
-          Obj.get(position.style, 'top').map((_) => box.y() - offsetBox.y()),
-          Obj.get(position.style, 'right').map((_) => offsetBox.right() - box.right()),
-          Obj.get(position.style, 'bottom').map((_) => offsetBox.bottom() - box.bottom()),
+          Obj.get(position.style, 'left').map((_) => box.x - offsetBox.x),
+          Obj.get(position.style, 'top').map((_) => box.y - offsetBox.y),
+          Obj.get(position.style, 'right').map((_) => offsetBox.right - box.right),
+          Obj.get(position.style, 'bottom').map((_) => offsetBox.bottom - box.bottom),
         )));
 
       default:
@@ -134,12 +134,12 @@ const morphToFixed = (elem: Element<HTMLElement>, dockInfo: DockingConfig, viewp
 
     // Calculate the fixed position
     const winBox = Boxes.win();
-    const left = box.x() - winBox.x();
-    const top = viewport.y() - winBox.y();
-    const bottom = winBox.bottom() - viewport.bottom();
+    const left = box.x - winBox.x;
+    const top = viewport.y - winBox.y;
+    const bottom = winBox.bottom - viewport.bottom;
 
     // Check whether we are docking the bottom of the viewport, or the top
-    const isTop = box.y() <= viewport.y();
+    const isTop = box.y <= viewport.y;
     return Option.some(morphAdt.fixed(NuPositionCss(
       'fixed',
       Option.some(left),

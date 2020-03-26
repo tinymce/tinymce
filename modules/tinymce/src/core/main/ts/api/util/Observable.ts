@@ -29,7 +29,7 @@ const getEventDispatcher = function (obj): EventDispatcher<any> {
   if (!obj._eventDispatcher) {
     obj._eventDispatcher = new EventDispatcher({
       scope: obj,
-      toggleEvent (name, state) {
+      toggleEvent(name, state) {
         if (EventDispatcher.isNative(name) && obj.toggleNativeEvent) {
           obj.toggleNativeEvent(name, state);
         }
@@ -53,7 +53,7 @@ const Observable: Observable<any> = {
    * @example
    * instance.fire('event', {...});
    */
-  fire (name, args?, bubble?) {
+  fire(name, args?, bubble?) {
     const self = this;
 
     // Prevent all events except the remove/detach event after the instance has been removed
@@ -90,7 +90,7 @@ const Observable: Observable<any> = {
    *     // Callback logic
    * });
    */
-  on (name, callback, prepend?) {
+  on(name, callback, prepend?) {
     return getEventDispatcher(this).on(name, callback, prepend);
   },
 
@@ -112,7 +112,7 @@ const Observable: Observable<any> = {
    * // Unbind all events
    * instance.off();
    */
-  off (name?, callback?) {
+  off(name?, callback?) {
     return getEventDispatcher(this).off(name, callback);
   },
 
@@ -125,7 +125,7 @@ const Observable: Observable<any> = {
    * @param {callback} callback Callback to bind only once.
    * @return {Object} Current class instance.
    */
-  once (name, callback) {
+  once(name, callback) {
     return getEventDispatcher(this).once(name, callback);
   },
 
@@ -136,7 +136,7 @@ const Observable: Observable<any> = {
    * @param {String} name Name of the event to check for.
    * @return {Boolean} true/false if the event exists or not.
    */
-  hasEventListeners (name) {
+  hasEventListeners(name) {
     return getEventDispatcher(this).has(name);
   }
 };

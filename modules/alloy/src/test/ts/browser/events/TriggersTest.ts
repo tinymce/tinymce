@@ -68,11 +68,11 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
 
     return Obj.get(domEvents as any, eventType).bind((x) => Obj.get(x, targetId)).map((h: Function) => {
       return {
-        descHandler: Fun.constant({
+        descHandler: {
           cHandler: h,
           purpose: Fun.constant('purpose')
-        }),
-        element: Fun.constant(target)
+        },
+        element: target
       };
     });
   };

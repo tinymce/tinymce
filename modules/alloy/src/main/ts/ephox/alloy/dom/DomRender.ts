@@ -21,7 +21,7 @@ const renderToDom = (definition: DomDefinition.GeneralDefinitionDetail<Element>)
   });
 
   if (!definition.uid) {
-    // tslint:disable-next-line:no-debugger
+    // eslint-disable-next-line no-debugger
     debugger;
   }
   Tagger.writeOnly(subject, definition.uid);

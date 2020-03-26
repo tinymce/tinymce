@@ -7,9 +7,9 @@ export interface Size {
     percent: (value: number) => T
   ) => T;
   match: <T> (branches: {
-    invalid: (raw: string) => T,
-    pixels: (value: number) => T,
-    percent: (value: number) => T
+    invalid: (raw: string) => T;
+    pixels: (value: number) => T;
+    percent: (value: number) => T;
   }) => T;
   log: (label: string) => void;
 }

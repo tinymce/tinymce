@@ -17,7 +17,7 @@ import { bodyChannel } from './DialogChannels';
 
 // TypeScript allows some pretty weird stuff.
 type WindowBodySpec = {
-  body: Types.Dialog.Dialog<unknown>['body']
+  body: Types.Dialog.Dialog<unknown>['body'];
 };
 
 // ariaAttrs is being passed through to silver inline dialog
@@ -54,7 +54,7 @@ const renderBody = (spec: WindowBodySpec, id: Option<string>, backstage: UiFacto
       tag: 'div',
       classes: [ 'tox-dialog__content-js' ],
       attributes: {
-        ...id.map((x): {id?: string} => ({id: x})).getOr({}),
+        ...id.map((x): {id?: string} => ({ id: x })).getOr({}),
         ...ariaAttrs ? ariaAttributes : {}
       }
     },

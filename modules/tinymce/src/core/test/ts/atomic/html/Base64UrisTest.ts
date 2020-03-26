@@ -7,7 +7,7 @@ import { KAssert } from '@ephox/katamari-assertions';
 UnitTest.test('Base64Uris Test', () => {
   const replacePrefix = (value: string, prefix: string) => value.replace(/\$prefix/g, prefix);
   const replaceUrisPrefix = (uris: UriMap, prefix: string): UriMap => {
-    return Obj.tupleMap(uris, (value, key) => ({k: replacePrefix(key, prefix), v: value}));
+    return Obj.tupleMap(uris, (value, key) => ({ k: replacePrefix(key, prefix), v: value }));
   };
 
   const testExtract = (label: string, html: string, expectedExtract: Partial<Base64Extract>) => {

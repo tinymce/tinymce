@@ -78,7 +78,7 @@ gulp.task('less', function() {
       relativeUrls: true,
       plugins: [autoprefix]
     }))
-    .pipe(gulp.dest('./build/skins/'))
+    .pipe(gulp.dest('./build/skins/'));
 });
 
 //
@@ -102,7 +102,7 @@ gulp.task('copyFonts', function() {
   let base = './build/skins/ui';
 
   return fs.readdirSync(base).reduce((stream, skin) => {
-    return stream.pipe(gulp.dest(base + '/' + skin + '/fonts/'))
+    return stream.pipe(gulp.dest(base + '/' + skin + '/fonts/'));
   }, gulp.src('./src/fonts/**'));
 });
 
@@ -114,7 +114,9 @@ gulp.task('monitor', function (done) {
     root: './build',
     port: 3000,
     livereload: true
-  }, function () { this.server.on('close', done) });
+  }, function () {
+    this.server.on('close', done);
+  });
 
   gulp.watch('./src/**/*').on('change', gulp.series('css', 'buildDemos', 'copyTinymce'));
 });
@@ -125,7 +127,7 @@ gulp.task('monitor', function (done) {
 gulp.task('clean', function () {
   return gulp.src('./build', {
     read: false,
-    allowEmpty: true,
+    allowEmpty: true
   })
   .pipe(clean());
 });
@@ -133,9 +135,9 @@ gulp.task('clean', function () {
 //
 // Build project and watch LESS file changes
 //
-gulp.task('css', gulp.series('lint', 'less', 'minifyCss'))
+gulp.task('css', gulp.series('lint', 'less', 'minifyCss'));
 gulp.task('build', gulp.series('clean', 'css', 'copyFonts'));
 gulp.task('default', gulp.series('build'));
 
-gulp.task('demo-build', gulp.series('css', 'less', 'minifyCss', 'buildDemos', 'buildSkinSwitcher'))
+gulp.task('demo-build', gulp.series('css', 'less', 'minifyCss', 'buildDemos', 'buildSkinSwitcher'));
 gulp.task('watch', gulp.series('build', 'buildDemos', 'copyTinymce', 'buildSkinSwitcher', 'monitor'));

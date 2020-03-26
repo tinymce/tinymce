@@ -47,19 +47,19 @@ UnitTest.test('BoundedZoneTest', function () {
 
   check(doc1, [
 
-    { lang: 'fr', elements: ['a'], words: ['one'] },
-    { lang: 'fr', elements: ['b', 'c'], words: ['two'] },
+    { lang: 'fr', elements: [ 'a' ], words: [ 'one' ] },
+    { lang: 'fr', elements: [ 'b', 'c' ], words: [ 'two' ] },
 
-    { lang: 'en', elements: ['en-a'], words: ['one'] },
-    { lang: 'en', elements: ['en-b', 'en-c'], words: ['two'] },
+    { lang: 'en', elements: [ 'en-a' ], words: [ 'one' ] },
+    { lang: 'en', elements: [ 'en-b', 'en-c' ], words: [ 'two' ] },
 
-    { lang: 'de', elements: ['de-a', 'de-b'], words: ['die'] },
+    { lang: 'de', elements: [ 'de-a', 'de-b' ], words: [ 'die' ] },
 
-    { lang: 'en', elements: ['en-d', 'en-e'], words: ['butter'] },
+    { lang: 'en', elements: [ 'en-d', 'en-e' ], words: [ 'butter' ] },
 
-    { lang: 'de', elements: ['de-c'], words: ['der', 'Hund'] },
+    { lang: 'de', elements: [ 'de-c' ], words: [ 'der', 'Hund' ] },
 
-    { lang: 'en', elements: ['en-f', 'en-g'], words: ['another'] }
+    { lang: 'en', elements: [ 'en-f', 'en-g' ], words: [ 'another' ] }
 
   ], 'div1');
 
@@ -102,14 +102,14 @@ UnitTest.test('BoundedZoneTest', function () {
 
   check(doc2, [
 
-    { lang: 'en', elements: ['en-a'], words: ['one'] },
-    { lang: 'en', elements: ['en-b', 'en-c'], words: ['two'] },
-    { lang: 'de', elements: ['de-a', 'de-b'], words: ['die'] },
-    { lang: 'fr', elements: ['fr-a'], words: ['e'] },
-    { lang: 'de', elements: ['de-c', 'de-c-1'], words: ['undinside'] },
-    { lang: 'en', elements: ['en-d', 'en-e'], words: ['butter'] },
-    { lang: 'de', elements: ['de-d'], words: [] },
-    { lang: 'en', elements: ['en-f', 'en-g'], words: ['another'] }
+    { lang: 'en', elements: [ 'en-a' ], words: [ 'one' ] },
+    { lang: 'en', elements: [ 'en-b', 'en-c' ], words: [ 'two' ] },
+    { lang: 'de', elements: [ 'de-a', 'de-b' ], words: [ 'die' ] },
+    { lang: 'fr', elements: [ 'fr-a' ], words: [ 'e' ] },
+    { lang: 'de', elements: [ 'de-c', 'de-c-1' ], words: [ 'undinside' ] },
+    { lang: 'en', elements: [ 'en-d', 'en-e' ], words: [ 'butter' ] },
+    { lang: 'de', elements: [ 'de-d' ], words: [] },
+    { lang: 'en', elements: [ 'en-f', 'en-g' ], words: [ 'another' ] }
 
   ], 'div1');
 

@@ -33,7 +33,7 @@ export const create = () => (function () {
   };
 
   Object.defineProperty(storage, 'length', {
-    get () { return keys.length; },
+    get() { return keys.length; },
     configurable: false,
     enumerable: false
   });

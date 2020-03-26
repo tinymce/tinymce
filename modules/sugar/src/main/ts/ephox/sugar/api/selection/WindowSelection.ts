@@ -13,29 +13,28 @@ import { Selection } from './Selection';
 import { SimRange } from './SimRange';
 import { Situ } from './Situ';
 
-const doSetNativeRange = function (win: Window, rng: Range) {
-  Option.from(win.getSelection()).each(function (selection) {
+const doSetNativeRange = (win: Window, rng: Range): void => {
+  Option.from(win.getSelection()).each((selection) => {
     selection.removeAllRanges();
     selection.addRange(rng);
   });
 };
 
-const doSetRange = function (win: Window, start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
+const doSetRange = (win: Window, start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number): void => {
   const rng = NativeRange.exactToNative(win, start, soffset, finish, foffset);
   doSetNativeRange(win, rng);
 };
 
-const findWithin = function (win: Window, selection: Selection, selector: string): Element<DomElement>[] {
-  return Within.find(win, selection, selector);
-};
+const findWithin = (win: Window, selection: Selection, selector: string): Element<DomElement>[] =>
+  Within.find(win, selection, selector);
 
-const setLegacyRtlRange = function (win: Window, selection: DomSelection, start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
+const setLegacyRtlRange = (win: Window, selection: DomSelection, start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number): void => {
   selection.collapse(start.dom(), soffset);
   selection.extend(finish.dom(), foffset);
 };
 
-const setRangeFromRelative = function (win: Window, relative: Selection) {
-  return SelectionDirection.diagnose(win, relative).match({
+const setRangeFromRelative = (win: Window, relative: Selection): void =>
+  SelectionDirection.diagnose(win, relative).match({
     ltr(start, soffset, finish, foffset) {
       doSetRange(win, start, soffset, finish, foffset);
     },
@@ -57,25 +56,22 @@ const setRangeFromRelative = function (win: Window, relative: Selection) {
       }
     }
   });
-};
 
-const setExact = function (win: Window, start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
+const setExact = (win: Window, start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number): void => {
   const relative = Prefilter.preprocessExact(start, soffset, finish, foffset);
 
   setRangeFromRelative(win, relative);
 };
 
-const setRelative = function (win: Window, startSitu: Situ, finishSitu: Situ) {
+const setRelative = (win: Window, startSitu: Situ, finishSitu: Situ): void => {
   const relative = Prefilter.preprocessRelative(startSitu, finishSitu);
 
   setRangeFromRelative(win, relative);
 };
 
-const toNative = function (selection: Selection) {
+const toNative = (selection: Selection): Range => {
   const win: Window = Selection.getWin(selection).dom();
-  const getDomRange = function (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
-    return NativeRange.exactToNative(win, start, soffset, finish, foffset);
-  };
+  const getDomRange = (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => NativeRange.exactToNative(win, start, soffset, finish, foffset);
   const filtered = Prefilter.preprocess(selection);
   return SelectionDirection.diagnose(win, filtered).match({
     ltr: getDomRange,
@@ -86,7 +82,7 @@ const toNative = function (selection: Selection) {
 // NOTE: We are still reading the range because it gives subtly different behaviour
 // than using the anchorNode and focusNode. I'm not sure if this behaviour is any
 // better or worse; it's just different.
-const readRange = function (selection: DomSelection) {
+const readRange = (selection: DomSelection) => {
   if (selection.rangeCount > 0) {
     const firstRng = selection.getRangeAt(0);
     const lastRng = selection.getRangeAt(selection.rangeCount - 1);
@@ -102,7 +98,7 @@ const readRange = function (selection: DomSelection) {
   }
 };
 
-const doGetExact = function (selection: DomSelection) {
+const doGetExact = (selection: DomSelection) => {
   const anchor = Element.fromDom(selection.anchorNode);
   const focus = Element.fromDom(selection.focusNode);
 
@@ -117,12 +113,12 @@ const doGetExact = function (selection: DomSelection) {
   ) : readRange(selection);
 };
 
-const setToElement = function (win: Window, element: Element<DomNode>) {
+const setToElement = (win: Window, element: Element<DomNode>) => {
   const rng = NativeRange.selectNodeContents(win, element);
   doSetNativeRange(win, rng);
 };
 
-const forElement = function (win: Window, element: Element<DomNode>) {
+const forElement = (win: Window, element: Element<DomNode>) => {
   const rng = NativeRange.selectNodeContents(win, element);
   return SimRange.create(
     Element.fromDom(rng.startContainer), rng.startOffset,
@@ -130,7 +126,7 @@ const forElement = function (win: Window, element: Element<DomNode>) {
   );
 };
 
-const getExact = function (win: Window) {
+const getExact = (win: Window) => {
   // We want to retrieve the selection as it is.
   return Option.from(win.getSelection())
     .filter((sel) => sel.rangeCount > 0)
@@ -138,54 +134,65 @@ const getExact = function (win: Window) {
 };
 
 // TODO: Test this.
-const get = function (win: Window) {
-  return getExact(win).map(function (range) {
-    return Selection.exact(range.start(), range.soffset(), range.finish(), range.foffset());
-  });
-};
+const get = (win: Window) =>
+  getExact(win).map((range) => Selection.exact(range.start(), range.soffset(), range.finish(), range.foffset()));
 
-const getFirstRect = function (win: Window, selection: Selection) {
+const getFirstRect = (win: Window, selection: Selection) => {
   const rng = SelectionDirection.asLtrRange(win, selection);
   return NativeRange.getFirstRect(rng);
 };
 
-const getBounds = function (win: Window, selection: Selection) {
+const getBounds = (win: Window, selection: Selection) => {
   const rng = SelectionDirection.asLtrRange(win, selection);
   return NativeRange.getBounds(rng);
 };
 
-const getAtPoint = function (win: Window, x: number, y: number) {
-  return CaretRange.fromPoint(win, x, y);
-};
+const getAtPoint = (win: Window, x: number, y: number) => CaretRange.fromPoint(win, x, y);
 
-const getAsString = function (win: Window, selection: Selection) {
+const getAsString = (win: Window, selection: Selection) => {
   const rng = SelectionDirection.asLtrRange(win, selection);
   return NativeRange.toString(rng);
 };
 
-const clear = function (win: Window) {
+const clear = (win: Window) => {
   const selection = win.getSelection();
   selection.removeAllRanges();
 };
 
-const clone = function (win: Window, selection: Selection) {
+const clone = (win: Window, selection: Selection) => {
   const rng = SelectionDirection.asLtrRange(win, selection);
   return NativeRange.cloneFragment(rng);
 };
 
-const replace = function (win: Window, selection: Selection, elements: Element<DomNode>[]) {
+const replace = (win: Window, selection: Selection, elements: Element<DomNode>[]) => {
   const rng = SelectionDirection.asLtrRange(win, selection);
   const fragment = Fragment.fromElements(elements, win.document);
   NativeRange.replaceWith(rng, fragment);
 };
 
-const deleteAt = function (win: Window, selection: Selection) {
+const deleteAt = (win: Window, selection: Selection) => {
   const rng = SelectionDirection.asLtrRange(win, selection);
   NativeRange.deleteContents(rng);
 };
 
-const isCollapsed = function (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
-  return Compare.eq(start, finish) && soffset === foffset;
-};
+const isCollapsed = (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => Compare.eq(start, finish) && soffset === foffset;
 
-export { setExact, getExact, get, setRelative, toNative, setToElement, clear, clone, replace, deleteAt, forElement, getFirstRect, getBounds, getAtPoint, findWithin, getAsString, isCollapsed, };
+export {
+  setExact,
+  getExact,
+  get,
+  setRelative,
+  toNative,
+  setToElement,
+  clear,
+  clone,
+  replace,
+  deleteAt,
+  forElement,
+  getFirstRect,
+  getBounds,
+  getAtPoint,
+  findWithin,
+  getAsString,
+  isCollapsed,
+};

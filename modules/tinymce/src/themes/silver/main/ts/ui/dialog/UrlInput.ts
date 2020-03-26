@@ -88,8 +88,8 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
   const pField = AlloyFormField.parts().field({
     factory: AlloyTypeahead,
     dismissOnBlur: true,
-    inputClasses: ['tox-textfield'],
-    sandboxClasses: ['tox-dialog__popups'],
+    inputClasses: [ 'tox-textfield' ],
+    sandboxClasses: [ 'tox-dialog__popups' ],
     inputAttributes: {
       'aria-errormessage': errorId,
       'type': 'url'
@@ -201,7 +201,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     return ({
       dom: {
         tag: 'div',
-        classes: ['tox-icon', 'tox-control-wrap__status-icon-' + name],
+        classes: [ 'tox-icon', 'tox-control-wrap__status-icon-' + name ],
         innerHtml: Icons.get(icon, providersBackstage.icons),
         attributes: {
           'title': providersBackstage.translate(label),
@@ -219,7 +219,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
   const memStatus = Memento.record({
     dom: {
       tag: 'div',
-      classes: ['tox-control-wrap__status-icon-wrap']
+      classes: [ 'tox-control-wrap__status-icon-wrap' ]
     },
     components: [
       // Include the 'valid' and 'unknown' icons here only if they are to be displayed
@@ -235,9 +235,9 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     {
       dom: {
         tag: 'div',
-        classes: ['tox-control-wrap']
+        classes: [ 'tox-control-wrap' ]
       },
-      components: [pField, memStatus.asSpec()],
+      components: [ pField, memStatus.asSpec() ],
       behaviours: Behaviour.derive([
         Disabling.config({ disabled: spec.disabled })
       ])
@@ -251,16 +251,16 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     disabled: spec.disabled,
     primary: false,
     borderless: true
-  },  (component) => AlloyTriggers.emit(component, browseUrlEvent), providersBackstage, [], ['tox-browse-url']));
+  },  (component) => AlloyTriggers.emit(component, browseUrlEvent), providersBackstage, [], [ 'tox-browse-url' ]));
 
   const controlHWrapper = (): AlloySpec => {
     return {
       dom: {
         tag: 'div',
-        classes: ['tox-form__controls-h-stack']
+        classes: [ 'tox-form__controls-h-stack' ]
       },
       components: Arr.flatten([
-        [memUrlBox.asSpec()],
+        [ memUrlBox.asSpec() ],
         optUrlPicker.map(() => memUrlPickerButton.asSpec()).toArray()
       ])
     };

@@ -36,15 +36,15 @@ UnitTest.asynctest('TieredMenuWithoutImmediateHighlightTest', (success, failure)
             'menu-a': {
               value: 'menu-a',
               items: Arr.map([
-                { type: 'item', data: { value: 'a-alpha', meta: { text: 'a-Alpha' } }, hasSubmenu: false },
-                { type: 'item', data: { value: 'a-beta', meta: { text: 'a-Beta' } }, hasSubmenu: true },
-                { type: 'item', data: { value: 'a-gamma', meta: { text: 'a-Gamma' } }, hasSubmenu: false }
+                { type: 'item', data: { value: 'a-alpha', meta: { text: 'a-Alpha' }}, hasSubmenu: false },
+                { type: 'item', data: { value: 'a-beta', meta: { text: 'a-Beta' }}, hasSubmenu: true },
+                { type: 'item', data: { value: 'a-gamma', meta: { text: 'a-Gamma' }}, hasSubmenu: false }
               ], TestDropdownMenu.renderItem)
             },
             'a-beta': { // menu name should be triggering parent item so TieredMenuSpec path works
               value: 'menu-b',
               items: Arr.map([
-                { type: 'item', data: { value: 'b-alpha', meta: { text: 'b-Alpha' } }, hasSubmenu: false }
+                { type: 'item', data: { value: 'b-alpha', meta: { text: 'b-Alpha' }}, hasSubmenu: false }
               ], TestDropdownMenu.renderItem)
             }
           }, TestDropdownMenu.renderMenu),

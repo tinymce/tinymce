@@ -13,7 +13,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
   interface Scenario {
     message: string;
     settings: EditorSettings;
-    initial: Array<{ clickOn: string, waitFor: string }>;
+    initial: Array<{ clickOn: string; waitFor: string }>;
     assertAbove: string;
     assertBelow: string;
   }
@@ -42,7 +42,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
           Assertions.assertEq(
             `"${scenario.assertAbove}" should be placed above "${scenario.assertBelow}"`,
             true,
-            input.upperBoxBounds.bottom() - input.lowerBoxBounds.y() < 5
+            input.upperBoxBounds.bottom - input.lowerBoxBounds.y < 5
           );
         }),
         NamedChain.read('editor', McEditor.cRemove)

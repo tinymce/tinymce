@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
       Logger.t(label, GeneralSteps.sequence([
         Logger.t('Insert block before', GeneralSteps.sequence([
           tinyApis.sSetContent(initalHTML),
-          tinyApis.sSetCursor([0, 0], 0),
+          tinyApis.sSetCursor([ 0, 0 ], 0),
           tinyApis.sExecCommand('mceInsertNewLine'),
           tinyApis.sAssertContentStructure(
             ApproxStructure.build((s, str, arr) => {
@@ -32,11 +32,11 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
               });
             })
           ),
-          tinyApis.sAssertSelection([1, 0], 0, [1, 0], 0)
+          tinyApis.sAssertSelection([ 1, 0 ], 0, [ 1, 0 ], 0)
         ])),
         Logger.t('Split block in the middle', GeneralSteps.sequence([
           tinyApis.sSetContent(initalHTML),
-          tinyApis.sSetCursor([0, 0], 1),
+          tinyApis.sSetCursor([ 0, 0 ], 1),
           tinyApis.sExecCommand('mceInsertNewLine'),
           tinyApis.sAssertContentStructure(
             ApproxStructure.build((s, str, arr) => {
@@ -48,11 +48,11 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
               });
             })
           ),
-          tinyApis.sAssertSelection([1, 0], 0, [1, 0], 0)
+          tinyApis.sAssertSelection([ 1, 0 ], 0, [ 1, 0 ], 0)
         ])),
         Logger.t('Insert block after', GeneralSteps.sequence([
           tinyApis.sSetContent(initalHTML),
-          tinyApis.sSetCursor([0, 0], 2),
+          tinyApis.sSetCursor([ 0, 0 ], 2),
           tinyApis.sExecCommand('mceInsertNewLine'),
           tinyApis.sAssertContentStructure(
             ApproxStructure.build((s, str, arr) => {
@@ -64,11 +64,11 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
               });
             })
           ),
-          tinyApis.sAssertSelection([1], 0, [1], 0)
+          tinyApis.sAssertSelection([ 1 ], 0, [ 1 ], 0)
         ])),
         Logger.t('Insert block after bookmark', GeneralSteps.sequence([
           tinyApis.sSetRawContent(`<${rootBlock}>${bookmarkSpan}<br data-mce-bogus="1"></${rootBlock}>`),
-          tinyApis.sSetCursor([0], 1),
+          tinyApis.sSetCursor([ 0 ], 1),
           tinyApis.sExecCommand('mceInsertNewLine'),
           tinyApis.sAssertContentStructure(
             ApproxStructure.build((s, str) => {
@@ -97,7 +97,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
                 ]
               });
             })),
-          tinyApis.sAssertSelection([1], 0, [1], 0)
+          tinyApis.sAssertSelection([ 1 ], 0, [ 1 ], 0)
         ]))
       ]));
 

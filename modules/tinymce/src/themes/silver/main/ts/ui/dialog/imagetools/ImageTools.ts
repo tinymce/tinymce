@@ -74,14 +74,14 @@ export const renderImageTools = (detail: ImageToolsSpec, providersBackstage: UiF
   };
 
   const block = (anyInSystem: AlloyComponent): void => {
-    AlloyTriggers.emitWith(anyInSystem, ImageToolsEvents.external.formActionEvent, { name: ImageToolsEvents.external.disable(), value: { } });
+    AlloyTriggers.emitWith(anyInSystem, ImageToolsEvents.external.formActionEvent, { name: ImageToolsEvents.external.disable(), value: { }});
   };
 
   const unblock = (anyInSystem: AlloyComponent): void => {
     editPanel.getApplyButton(anyInSystem).each((applyButton) => {
       Disabling.enable(applyButton);
     });
-    AlloyTriggers.emitWith(anyInSystem, ImageToolsEvents.external.formActionEvent, { name: ImageToolsEvents.external.enable(), value: { } });
+    AlloyTriggers.emitWith(anyInSystem, ImageToolsEvents.external.formActionEvent, { name: ImageToolsEvents.external.enable(), value: { }});
   };
 
   const updateSrc = (anyInSystem: AlloyComponent, src: string): Promise<Option<Element>> => {

@@ -18,8 +18,8 @@ interface CellEvent extends CustomEvent {
 }
 
 const makeCell = (row, col, labelId) => {
-  const emitCellOver = (c: AlloyComponent) => AlloyTriggers.emitWith(c, cellOverEvent, {row, col} );
-  const emitExecute = (c: AlloyComponent) => AlloyTriggers.emitWith(c, cellExecuteEvent, {row, col} );
+  const emitCellOver = (c: AlloyComponent) => AlloyTriggers.emitWith(c, cellOverEvent, { row, col } );
+  const emitExecute = (c: AlloyComponent) => AlloyTriggers.emitWith(c, cellExecuteEvent, { row, col } );
 
   const onClick = (c: AlloyComponent, se: NativeSimulatedEvent) => {
     se.stop();
@@ -45,7 +45,7 @@ const makeCell = (row, col, labelId) => {
         toggleClass: 'tox-insert-table-picker__selected',
         toggleOnExecute: false
       }),
-      Focusing.config({onFocus: emitCellOver})
+      Focusing.config({ onFocus: emitCellOver })
     ])
   });
 };
@@ -84,12 +84,12 @@ export function renderInsertTableMenuItem(spec: Menu.FancyMenuItem): ItemTypes.W
   const memLabel = Memento.record({
     dom: {
       tag: 'span',
-      classes: ['tox-insert-table-picker__label'],
+      classes: [ 'tox-insert-table-picker__label' ],
       attributes: {
         id: sizeLabelId
       }
     },
-    components: [GuiFactory.text('0x0')],
+    components: [ GuiFactory.text('0x0') ],
     behaviours: Behaviour.derive([
       Replacing.config({})
     ])
@@ -97,16 +97,16 @@ export function renderInsertTableMenuItem(spec: Menu.FancyMenuItem): ItemTypes.W
 
   return {
     type: 'widget',
-    data: { value: Id.generate('widget-id')},
+    data: { value: Id.generate('widget-id') },
     dom: {
       tag: 'div',
-      classes: ['tox-fancymenuitem'],
+      classes: [ 'tox-fancymenuitem' ],
     },
     autofocus: true,
-    components: [ItemWidget.parts().widget({
+    components: [ ItemWidget.parts().widget({
       dom: {
         tag: 'div',
-        classes: ['tox-insert-table-picker']
+        classes: [ 'tox-insert-table-picker' ]
       },
       components: makeComponents(cells).concat(memLabel.asSpec()),
       behaviours: Behaviour.derive([
@@ -115,10 +115,10 @@ export function renderInsertTableMenuItem(spec: Menu.FancyMenuItem): ItemTypes.W
             const row = e.event().row();
             const col = e.event().col();
             selectCells(cells, row, col, numRows, numColumns);
-            Replacing.set(memLabel.get(c), [makeLabelText(row, col)]);
+            Replacing.set(memLabel.get(c), [ makeLabelText(row, col) ]);
           }),
           AlloyEvents.runWithTarget<CellEvent>(cellExecuteEvent, (c, _, e) => {
-            spec.onAction({numRows: e.event().row() + 1, numColumns: e.event().col() + 1});
+            spec.onAction({ numRows: e.event().row() + 1, numColumns: e.event().col() + 1 });
             AlloyTriggers.emit(c, SystemEvents.sandboxClose());
           })
         ]),
@@ -131,6 +131,6 @@ export function renderInsertTableMenuItem(spec: Menu.FancyMenuItem): ItemTypes.W
           selector: '[role="button"]'
         })
       ])
-    })]
+    }) ]
   };
 }

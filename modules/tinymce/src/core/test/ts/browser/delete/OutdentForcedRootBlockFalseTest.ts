@@ -36,10 +36,10 @@ UnitTest.asynctest('browser.tinymce.core.delete.OutdentForcedRootBlockFalseTest'
     Pipeline.async({}, [
       tinyApis.sFocus(),
       Logger.t('Backspace key on text with forced_root_block: false', GeneralSteps.sequence([
-        sTestBackspace('a', [0], 0, '<div>a</div>', [0, 0], 0), // outdent
-        sTestBackspace('aa', [0], 1, '<div style="padding-left: 40px;">aa</div>', [0, 0], 1), // no outdent
-        sTestBackspace('a <br>b', [2], 0, 'a\n<div>b</div>', [1, 0], 0), // outdent
-        sTestBackspace('aa<br>bb', [2], 1, 'aa\n<div style="padding-left: 40px;">bb</div>', [1, 0], 1), // no outdent
+        sTestBackspace('a', [ 0 ], 0, '<div>a</div>', [ 0, 0 ], 0), // outdent
+        sTestBackspace('aa', [ 0 ], 1, '<div style="padding-left: 40px;">aa</div>', [ 0, 0 ], 1), // no outdent
+        sTestBackspace('a <br>b', [ 2 ], 0, 'a\n<div>b</div>', [ 1, 0 ], 0), // outdent
+        sTestBackspace('aa<br>bb', [ 2 ], 1, 'aa\n<div style="padding-left: 40px;">bb</div>', [ 1, 0 ], 1), // no outdent
       ]))
     ], onSuccess, onFailure);
   }, {

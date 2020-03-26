@@ -80,7 +80,7 @@ const createSelector = (snaps: DraggingTypes.SnapsConfigSpec<SnapExtra>) => Meme
   Button.sketch({
     dom: {
       tag: 'div',
-      classes: ['tox-selector']
+      classes: [ 'tox-selector' ]
     },
 
     buttonBehaviours: Behaviour.derive([
@@ -108,7 +108,7 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
 
   const getTopLeftSnap = (td: Element<HTMLTableDataCellElement>) => {
     const box = Boxes.absolute(td);
-    return calcSnap(memTopLeft.getOpt(sink), td, box.x(), box.y(), box.width(), box.height());
+    return calcSnap(memTopLeft.getOpt(sink), td, box.x, box.y, box.width, box.height);
   };
 
   const getTopLeftSnaps = () => {
@@ -124,7 +124,7 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
 
   const getBottomRightSnap = (td: Element<HTMLTableDataCellElement>) => {
     const box = Boxes.absolute(td);
-    return calcSnap(memBottomRight.getOpt(sink), td, box.right(), box.bottom(), box.width(), box.height());
+    return calcSnap(memBottomRight.getOpt(sink), td, box.right, box.bottom, box.width, box.height);
   };
 
   const getBottomRightSnaps = () => {

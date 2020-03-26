@@ -19,9 +19,9 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodePathTest', function (success, f
   suite.test('create', function () {
     setupHtml('<p>a<b>12<input></b></p>');
 
-    LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild), [0]);
-    LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild.firstChild), [0, 0]);
-    LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild.lastChild.lastChild), [1, 1, 0]);
+    LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild), [ 0 ]);
+    LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild.firstChild), [ 0, 0 ]);
+    LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild.lastChild.lastChild), [ 1, 1, 0 ]);
   });
 
   suite.test('resolve', function () {

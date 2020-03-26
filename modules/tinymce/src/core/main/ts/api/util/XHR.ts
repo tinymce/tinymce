@@ -16,7 +16,7 @@ export interface XHRSettings {
   content_type?: string;
   crossDomain?: boolean;
   data?: string;
-  requestheaders?: Record<string, { key: string, value: string}>;
+  requestheaders?: Record<string, { key: string; value: string}>;
   scope?: {};
   type?: string;
   url: string;
@@ -64,7 +64,7 @@ const XHR: XHR = {
    * @method send
    * @param {Object} settings Object will target URL, callbacks and other info needed to make the request.
    */
-  send (settings: XHRSettings) {
+  send(settings: XHRSettings) {
     let xhr, count = 0;
 
     const ready = function () {

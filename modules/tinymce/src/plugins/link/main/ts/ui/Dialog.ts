@@ -149,7 +149,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.D
       }
     ],
     initialData,
-    onChange: (api: Types.Dialog.DialogInstanceApi<LinkDialogData>, {name}) => {
+    onChange: (api: Types.Dialog.DialogInstanceApi<LinkDialogData>, { name }) => {
       dialogDelta.onChange(api.getData, { name }).each((newData) => {
         api.setData(newData);
       });

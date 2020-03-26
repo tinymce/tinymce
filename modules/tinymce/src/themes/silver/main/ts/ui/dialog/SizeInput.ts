@@ -45,7 +45,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
   const pLock = AlloyFormCoupledInputs.parts().lock({
     dom: {
       tag: 'button',
-      classes: ['tox-lock', 'tox-button', 'tox-button--naked', 'tox-button--icon'],
+      classes: [ 'tox-lock', 'tox-button', 'tox-button--naked', 'tox-button--icon' ],
       attributes: {
         title: providersBackstage.translate(spec.label.getOr('Constrain proportions'))  // TODO: tooltips AP-213
       }
@@ -54,14 +54,14 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
       {
         dom: {
           tag: 'span',
-          classes: ['tox-icon', 'tox-lock-icon__lock'],
+          classes: [ 'tox-icon', 'tox-lock-icon__lock' ],
           innerHtml: Icons.get('lock', providersBackstage.icons)
         }
       },
       {
         dom: {
           tag: 'span',
-          classes: ['tox-icon', 'tox-lock-icon__unlock'],
+          classes: [ 'tox-icon', 'tox-lock-icon__unlock' ],
           innerHtml: Icons.get('unlock', providersBackstage.icons)
         }
       }
@@ -85,7 +85,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
 
   const getFieldPart = (isField1) => AlloyFormField.parts().field({
     factory: AlloyInput,
-    inputClasses: ['tox-textfield'],
+    inputClasses: [ 'tox-textfield' ],
     inputBehaviours: Behaviour.derive([
       Disabling.config({ disabled: spec.disabled || providersBackstage.isReadonly() }),
       ReadOnly.receivingConfig(),
@@ -106,7 +106,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     return {
       dom: {
         tag: 'label',
-        classes: ['tox-label'],
+        classes: [ 'tox-label' ],
         innerHtml: providersBackstage.translate(label)
       }
     };
@@ -123,13 +123,13 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
   return AlloyFormCoupledInputs.sketch({
     dom: {
       tag: 'div',
-      classes: ['tox-form__group']
+      classes: [ 'tox-form__group' ]
     },
     components: [
       {
         dom: {
           tag: 'div',
-          classes: ['tox-form__controls-h-stack']
+          classes: [ 'tox-form__controls-h-stack' ]
         },
         components: [
           // NOTE: Form coupled inputs to the FormField.sketch themselves.

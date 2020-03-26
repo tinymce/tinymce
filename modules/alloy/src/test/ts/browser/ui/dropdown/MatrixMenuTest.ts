@@ -22,10 +22,10 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
       Menu.sketch({
         value: 'test-menu-1',
         items: Arr.map([
-          { type: 'item', data: { value: 'alpha', meta: { } }, hasSubmenu: false },
-          { type: 'item', data: { value: 'beta', meta: { } }, hasSubmenu: false },
-          { type: 'item', data: { value: 'gamma', meta: { } }, hasSubmenu: false },
-          { type: 'item', data: { value: 'delta', meta: { } }, hasSubmenu: false }
+          { type: 'item', data: { value: 'alpha', meta: { }}, hasSubmenu: false },
+          { type: 'item', data: { value: 'beta', meta: { }}, hasSubmenu: false },
+          { type: 'item', data: { value: 'gamma', meta: { }}, hasSubmenu: false },
+          { type: 'item', data: { value: 'delta', meta: { }}, hasSubmenu: false }
         ], TestDropdownMenu.renderItem),
         dom: {
           tag: 'ol',

@@ -8,7 +8,7 @@ const skipChild = '_';
 const toComponents = (detail) =>
   Obj.mapToArray(detail.components, (v, k) => {
     // If there is no component, then the choice will be None.
-    return k !== skipChild ? Merger.deepMerge(v, {component: k}) : v;
+    return k !== skipChild ? Merger.deepMerge(v, { component: k }) : v;
   });
 
 const none = Jsc.constant([]).generator;
@@ -39,7 +39,7 @@ const structure = (rawDepth, detail, construct) => {
   return Jsc.number(0, 1).generator.flatMap((random) => {
     const children = Arr.foldl(components, (b, component) => {
       // TODO: Allow the order to be mixed up?
-      return random <= component.chance ? b.concat([construct(component.component, rawDepth)]) : b;
+      return random <= component.chance ? b.concat([ construct(component.component, rawDepth) ]) : b;
     }, []);
 
     return Jsc.tuple(children).generator;

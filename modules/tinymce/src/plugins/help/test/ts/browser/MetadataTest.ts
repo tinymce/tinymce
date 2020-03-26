@@ -36,7 +36,7 @@ UnitTest.asynctest('Browser Test: .MetadataTest', (success, failure) => {
           selectors.pluginsTab
         )
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'help fake nometafake',
     toolbar: 'help',

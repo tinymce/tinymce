@@ -24,8 +24,8 @@ const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scro
   const bounds = startData.bounds;
   const absoluteCoord = DragCoord.asAbsolute(coords, scroll, origin);
 
-  const newX = Num.clamp(absoluteCoord.left(), bounds.x(), bounds.x() + bounds.width() - startData.width);
-  const newY = Num.clamp(absoluteCoord.top(), bounds.y(), bounds.y() + bounds.height() - startData.height);
+  const newX = Num.clamp(absoluteCoord.left(), bounds.x, bounds.x + bounds.width - startData.width);
+  const newY = Num.clamp(absoluteCoord.top(), bounds.y, bounds.y + bounds.height - startData.height);
   const newCoords = DragCoord.absolute(newX, newY);
 
   // Translate the absolute coord back into the previous type

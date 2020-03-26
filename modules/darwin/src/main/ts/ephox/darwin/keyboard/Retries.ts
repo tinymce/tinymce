@@ -2,9 +2,12 @@ import { Adt, Fun, Option } from '@ephox/katamari';
 import { DomGather } from '@ephox/phoenix';
 import { DomStructure } from '@ephox/robin';
 import { Node, PredicateFind, Element } from '@ephox/sugar';
-import { Carets } from './Carets';
+import * as Carets from './Carets';
 import * as Rectangles from './Rectangles';
 import { WindowBridge } from '../api/WindowBridge';
+import { Situs } from '../selection/Situs';
+
+type Carets = Carets.Carets;
 
 type NoneHandler<T> = () => T;
 type RetryHandler<T> = (caret: Carets) => T;
@@ -15,8 +18,8 @@ export interface Retries {
     retry: RetryHandler<T>
   ) => T;
   match: <T>(branches: {
-    none: NoneHandler<T>,
-    retry: RetryHandler<T>
+    none: NoneHandler<T>;
+    retry: RetryHandler<T>;
   }) => T;
   log: (label: string) => void;
 }
@@ -36,11 +39,11 @@ const adt: {
   retry: (caret: Carets) => Retries;
 } = Adt.generate([
   { none: [] },
-  { retry: ['caret'] }
+  { retry: [ 'caret' ] }
 ]);
 
-const isOutside = function (caret: Carets, box: Carets) {
-  return caret.left() < box.left() || Math.abs(box.right() - caret.left()) < 1 || caret.left() > box.right();
+const isOutside = function (caret: Carets, box: Carets): boolean {
+  return caret.left < box.left || Math.abs(box.right - caret.left) < 1 || caret.left > box.right;
 };
 
 // Find the block and determine whether or not that block is outside. If it is outside, move up/down and right.
@@ -72,26 +75,26 @@ const inOutsideBlock = function (bridge: WindowBridge, element: Element, caret: 
  *    because the guess is GOOD.
  */
 
-const adjustDown = function (bridge: WindowBridge, element: Element, guessBox: Carets, original: Carets, caret: Carets) {
+const adjustDown = function (bridge: WindowBridge, element: Element, guessBox: Carets, original: Carets, caret: Carets): Retries {
   const lowerCaret = Carets.moveDown(caret, JUMP_SIZE);
-  if (Math.abs(guessBox.bottom() - original.bottom()) < 1) {
+  if (Math.abs(guessBox.bottom - original.bottom) < 1) {
     return adt.retry(lowerCaret);
-  } else if (guessBox.top() > caret.bottom()) {
+  } else if (guessBox.top > caret.bottom) {
     return adt.retry(lowerCaret);
-  } else if (guessBox.top() === caret.bottom()) {
+  } else if (guessBox.top === caret.bottom) {
     return adt.retry(Carets.moveDown(caret, 1));
   } else {
     return inOutsideBlock(bridge, element, caret) ? adt.retry(Carets.translate(lowerCaret, JUMP_SIZE, 0)) : adt.none();
   }
 };
 
-const adjustUp = function (bridge: WindowBridge, element: Element, guessBox: Carets, original: Carets, caret: Carets) {
+const adjustUp = function (bridge: WindowBridge, element: Element, guessBox: Carets, original: Carets, caret: Carets): Retries {
   const higherCaret = Carets.moveUp(caret, JUMP_SIZE);
-  if (Math.abs(guessBox.top() - original.top()) < 1) {
+  if (Math.abs(guessBox.top - original.top) < 1) {
     return adt.retry(higherCaret);
-  } else if (guessBox.bottom() < caret.top()) {
+  } else if (guessBox.bottom < caret.top) {
     return adt.retry(higherCaret);
-  } else if (guessBox.bottom() === caret.top()) {
+  } else if (guessBox.bottom === caret.top) {
     return adt.retry(Carets.moveUp(caret, 1));
   } else {
     return inOutsideBlock(bridge, element, caret) ? adt.retry(Carets.translate(higherCaret, JUMP_SIZE, 0)) : adt.none();
@@ -112,7 +115,7 @@ const downMovement: CaretMovement = {
   gather: DomGather.after
 };
 
-const isAtTable = function (bridge: WindowBridge, x: number, y: number) {
+const isAtTable = function (bridge: WindowBridge, x: number, y: number): boolean {
   return bridge.elementFromPoint(x, y).filter(function (elm) {
     return Node.name(elm) === 'table';
   }).isSome();
@@ -126,11 +129,11 @@ const adjustTil = function (bridge: WindowBridge, movement: CaretMovement, origi
   if (numRetries === 0) {
     return Option.some(caret);
   }
-  if (isAtTable(bridge, caret.left(), movement.point(caret))) {
+  if (isAtTable(bridge, caret.left, movement.point(caret))) {
     return adjustForTable(bridge, movement, original, caret, numRetries - 1);
   }
 
-  return bridge.situsFromPoint(caret.left(), movement.point(caret)).bind(function (guess) {
+  return bridge.situsFromPoint(caret.left, movement.point(caret)).bind(function (guess) {
     return guess.start().fold<Option<Carets>>(Option.none, function (element) {
       return Rectangles.getEntireBox(bridge, element).bind(function (guessBox) {
         return movement.adjuster(bridge, element, guessBox, original, caret).fold<Option<Carets>>(
@@ -146,15 +149,15 @@ const adjustTil = function (bridge: WindowBridge, movement: CaretMovement, origi
   });
 };
 
-const ieTryDown = function (bridge: WindowBridge, caret: Carets) {
-  return bridge.situsFromPoint(caret.left(), caret.bottom() + JUMP_SIZE);
+const ieTryDown = function (bridge: WindowBridge, caret: Carets): Option<Situs> {
+  return bridge.situsFromPoint(caret.left, caret.bottom + JUMP_SIZE);
 };
 
-const ieTryUp = function (bridge: WindowBridge, caret: Carets) {
-  return bridge.situsFromPoint(caret.left(), caret.top() - JUMP_SIZE);
+const ieTryUp = function (bridge: WindowBridge, caret: Carets): Option<Situs> {
+  return bridge.situsFromPoint(caret.left, caret.top - JUMP_SIZE);
 };
 
-const checkScroll = function (movement: CaretMovement, adjusted: Carets, bridge: WindowBridge) {
+const checkScroll = function (movement: CaretMovement, adjusted: Carets, bridge: WindowBridge): Option<number> {
   // I'm not convinced that this is right. Let's re-examine it later.
   if (movement.point(adjusted) > bridge.getInnerHeight()) {
     return Option.some(movement.point(adjusted) - bridge.getInnerHeight());
@@ -165,14 +168,14 @@ const checkScroll = function (movement: CaretMovement, adjusted: Carets, bridge:
   }
 };
 
-const retry = function (movement: CaretMovement, bridge: WindowBridge, caret: Carets) {
+const retry = function (movement: CaretMovement, bridge: WindowBridge, caret: Carets): Option<Situs> {
   const moved = movement.move(caret, JUMP_SIZE);
   const adjusted = adjustTil(bridge, movement, caret, moved, NUM_RETRIES).getOr(moved);
   return checkScroll(movement, adjusted, bridge).fold(function () {
-    return bridge.situsFromPoint(adjusted.left(), movement.point(adjusted));
+    return bridge.situsFromPoint(adjusted.left, movement.point(adjusted));
   }, function (delta) {
     bridge.scrollBy(0, delta);
-    return bridge.situsFromPoint(adjusted.left(), movement.point(adjusted) - delta);
+    return bridge.situsFromPoint(adjusted.left, movement.point(adjusted) - delta);
   });
 };
 

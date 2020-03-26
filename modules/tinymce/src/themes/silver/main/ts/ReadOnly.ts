@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Channels, Disabling, Receiving, Behaviour } from '@ephox/alloy';
+import { Channels, Disabling, Receiving, Behaviour } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Selectors } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from './api/Settings';
 import { RenderUiComponents } from './Render';
@@ -35,19 +34,7 @@ const broadcastReadonly = (uiComponents: RenderUiComponents, readonly: boolean) 
   uiComponents.uiMothership.broadcastOn([ ReadOnlyChannel ], { readonly });
 };
 
-const toggleToReadOnly = (uiComponents: RenderUiComponents, readonly: boolean) => {
-  const outerContainer = uiComponents.outerContainer;
-
-  broadcastReadonly(uiComponents, readonly);
-
-  Selectors.all('*', outerContainer.element()).forEach((elm) => {
-    outerContainer.getSystem().getByDom(elm).each((comp: AlloyComponent) => {
-      if (comp.hasConfigured(Disabling)) {
-        Disabling.set(comp, readonly);
-      }
-    });
-  });
-};
+const toggleToReadOnly = (uiComponents: RenderUiComponents, readonly: boolean) => broadcastReadonly(uiComponents, readonly);
 
 const setupReadonlyModeSwitch = (editor: Editor, uiComponents: RenderUiComponents) => {
   editor.on('init', () => {

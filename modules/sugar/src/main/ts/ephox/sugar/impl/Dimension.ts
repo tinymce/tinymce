@@ -20,7 +20,7 @@ export default function (name: string, getOffset: (e: Element<HTMLElement>) => n
    *
    * TBIO doesn't do this, so the code is removed to save space, but left here just in case.
    */
-/*
+  /*
   var getDocumentWidth = function (element) {
     var dom = element.dom();
     if (Node.isDocument(element)) {

@@ -38,7 +38,7 @@ const Serializer = function (settings: SerializerSettings, editor?: Editor): Ser
 
     /**
      * Adds a node filter function to the parser used by the serializer, the parser will collect the specified nodes by name
-     * and then execute the callback ones it has finished parsing the document.
+     * and then execute the callback once it has finished parsing the document.
      *
      * @example
      * parser.addNodeFilter('p,h1', function(nodes, name) {
@@ -55,7 +55,7 @@ const Serializer = function (settings: SerializerSettings, editor?: Editor): Ser
     /**
      * Adds a attribute filter function to the parser used by the serializer, the parser will
      * collect nodes that has the specified attributes
-     * and then execute the callback ones it has finished parsing the document.
+     * and then execute the callback once it has finished parsing the document.
      *
      * @example
      * parser.addAttributeFilter('src,href', function(nodes, name) {

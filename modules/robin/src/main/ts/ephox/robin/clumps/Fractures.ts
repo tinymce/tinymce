@@ -37,10 +37,10 @@ const breakLeft = function <E, D> (universe: Universe<E, D>, element: E, common:
   } else {
     const breakage = breakPath(universe, element, common, breakToLeft);
     // Move the first element into the second section of the split because we want to include element in the section.
-    if (breakage.splits().length > 0) {
-      universe.insert().prepend(breakage.splits()[0].second(), element);
+    if (breakage.splits.length > 0) {
+      universe.insert().prepend(breakage.splits[0].second, element);
     }
-    return Option.some(breakage.second().getOr(element));
+    return Option.some(breakage.second.getOr(element));
   }
 };
 
@@ -50,7 +50,7 @@ const breakRight = function <E, D> (universe: Universe<E, D>, element: E, common
     return Option.none<E>();
   } else {
     const breakage = breakPath(universe, element, common, breakToRight);
-    return Option.some(breakage.first());
+    return Option.some(breakage.first);
   }
 };
 

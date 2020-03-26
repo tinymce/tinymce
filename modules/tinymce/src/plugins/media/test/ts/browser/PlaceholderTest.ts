@@ -126,15 +126,15 @@ UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
           'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
           iframeStructure)
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
-    plugins: ['media'],
+    plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
     extended_valid_elements: 'script[src|type]',
     media_scripts: [
-        { filter: 'http://media1.tinymce.com' },
-        { filter: 'http://media2.tinymce.com', width: 100, height: 200 }
+      { filter: 'http://media1.tinymce.com' },
+      { filter: 'http://media2.tinymce.com', width: 100, height: 200 }
     ],
     base_url: '/project/tinymce/js/tinymce'
   }, success, failure);

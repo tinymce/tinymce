@@ -63,27 +63,27 @@ export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFacto
 
   const chevron: Option<AlloySpec> = spec.size > 1 ? Option.none() :
     Option.some({
-        dom: {
-          tag: 'div',
-          classes: ['tox-selectfield__icon-js'],
-          innerHtml: Icons.get('chevron-down', providersBackstage.icons)
-        }
-      });
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-selectfield__icon-js' ],
+        innerHtml: Icons.get('chevron-down', providersBackstage.icons)
+      }
+    });
 
   const selectWrap: SimpleSpec = {
     dom: {
       tag: 'div',
-      classes: ['tox-selectfield']
+      classes: [ 'tox-selectfield' ]
     },
-    components: Arr.flatten([[pField], chevron.toArray()])
+    components: Arr.flatten([[ pField ], chevron.toArray() ])
   };
 
   return AlloyFormField.sketch({
     dom: {
       tag: 'div',
-      classes: ['tox-form__group']
+      classes: [ 'tox-form__group' ]
     },
-    components: Arr.flatten<AlloySpec>([pLabel.toArray(), [selectWrap]]),
+    components: Arr.flatten<AlloySpec>([ pLabel.toArray(), [ selectWrap ]]),
     fieldBehaviours: Behaviour.derive([
       Disabling.config({
         disabled: spec.disabled || providersBackstage.isReadonly(),

@@ -16,7 +16,7 @@ export interface HtmlPanel {
 const htmlPanelFields = [
   FieldSchema.strictString('type'),
   FieldSchema.strictString('html'),
-  FieldSchema.defaultedStringEnum('presets', 'presentation', ['presentation', 'document'])
+  FieldSchema.defaultedStringEnum('presets', 'presentation', [ 'presentation', 'document' ])
 ];
 
 export const htmlPanelSchema = ValueSchema.objOf(htmlPanelFields);

@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo \"No tests here\"",
     "prepublishOnly": "tsc -b",
-    "lint": "tslint --config ../../tslint.json src/**/*.ts"
+    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
   },
   "dependencies": {
     "@ephox/boulder": "^4.0.3",

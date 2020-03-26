@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Singleton, Struct } from '@ephox/katamari';
+import { Singleton } from '@ephox/katamari';
 import { Class, Css, Element, Focus } from '@ephox/sugar';
 
 import * as Styles from '../../style/Styles';
@@ -60,42 +60,18 @@ const create = function (platform, mask) {
 
       Focus.focus(editorApi.body());
 
-      const setupBag = Struct.immutableBag([
-        'cWin',
-        'ceBody',
-        'socket',
-        'toolstrip',
-        'toolbar',
-        'dropup',
-        'contentElement',
-        'cursor',
-        'keyboardType',
-        'isScrolling',
-        'outerWindow',
-        'outerBody'
-      ], []);
-
       iosApi.set(
-        IosSetup.setup(setupBag({
+        IosSetup.setup({
           cWin: editorApi.win(),
           ceBody: editorApi.body(),
           socket: platform.socket,
           toolstrip: platform.toolstrip,
-          toolbar: platform.toolbar,
           dropup: platform.dropup.element(),
           contentElement: editorApi.frame(),
-          cursor: Fun.noop,
           outerBody: platform.body,
           outerWindow: platform.win,
-          keyboardType: IosKeyboard.stubborn,
-          isScrolling () {
-            // TODO: There is no get in singleton investigate this
-            const scrollValue = scrollEvents as any;
-            return scrollValue.get().exists(function (s) {
-              return s.socket.isScrolling();
-            });
-          }
-        }))
+          keyboardType: IosKeyboard.stubborn
+        })
       );
 
       iosApi.run(function (api) {
@@ -135,8 +111,8 @@ const create = function (platform, mask) {
     Thor.restoreStyles();
     Scrollable.deregister(platform.toolbar);
 
-    Css.remove(platform.socket, 'overflow'/*, 'scroll'*/);
-    Css.remove(platform.socket, '-webkit-overflow-scrolling'/*, 'touch'*/);
+    Css.remove(platform.socket, 'overflow'/* , 'scroll'*/);
+    Css.remove(platform.socket, '-webkit-overflow-scrolling'/* , 'touch'*/);
 
     // Hide the keyboard and remove the selection so there isn't a blue cursor in the content
     // still even once exited.

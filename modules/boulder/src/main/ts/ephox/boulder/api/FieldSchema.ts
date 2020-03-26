@@ -80,7 +80,7 @@ const option = function (key: string): FieldProcessorAdt {
 };
 
 const optionOf = function (key: string, schema: Processor): FieldProcessorAdt {
-   return field(key, key, FieldPresence.asOption(), schema);
+  return field(key, key, FieldPresence.asOption(), schema);
 };
 
 const optionNumber = function (key: string): FieldProcessorAdt {

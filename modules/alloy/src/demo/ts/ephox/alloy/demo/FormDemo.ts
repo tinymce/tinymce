@@ -126,7 +126,7 @@ export default (): void => {
               tag: 'button',
               innerHtml: 'OK'
             },
-            action (button) {
+            action(button) {
               console.log('Form values', Obj.map(
                 Representing.getValue(form),
                 (v) => {
@@ -238,7 +238,7 @@ export default (): void => {
             Button.sketch(
               {
                 dom: { tag: 'button', innerHtml: 'OK' },
-                action (button) {
+                action(button) {
                   console.log('Exp Form values', Obj.map(
                     Representing.getValue(expform),
                     (v) => {

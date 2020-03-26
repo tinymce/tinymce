@@ -4,7 +4,7 @@ import Jsc from '@ephox/wrap-jsverify';
 
 const getIds = function (item: Gene, predicate: (g: Gene) => boolean): string[] {
   const rest = Arr.bind(item.children || [], function (id) { return getIds(id, predicate); });
-  const self = predicate(item) && item.id !== 'root' ? [item.id] : [];
+  const self = predicate(item) && item.id !== 'root' ? [ item.id ] : [];
   return self.concat(rest);
 };
 

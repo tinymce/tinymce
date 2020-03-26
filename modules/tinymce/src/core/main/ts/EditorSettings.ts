@@ -170,9 +170,9 @@ const processPlugins = function (isMobileDevice: boolean, sectionResult: Section
     // is a mobile device with mobile theme
     isMobileDevice && isSectionTheme(sectionResult, 'mobile', 'mobile') ? filterLegacyMobilePlugins(mobilePlugins) :
     // is a mobile device with any mobile settings
-    isMobileDevice && hasSection(sectionResult, 'mobile') ? mobilePlugins :
-    // is desktop
-    desktopPlugins;
+      isMobileDevice && hasSection(sectionResult, 'mobile') ? mobilePlugins :
+      // is desktop
+        desktopPlugins;
 
   const combinedPlugins = combinePlugins(forcedPlugins, platformPlugins);
 
@@ -188,7 +188,7 @@ const isOnMobile = function (isMobileDevice: boolean, sectionResult: SectionResu
 const combineSettings = (isMobileDevice: boolean, isPhone: boolean,  defaultSettings: RawEditorSettings, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings => {
   // Use mobile mode by default on phones, so patch in the default mobile settings
   const defaultDeviceSettings = isMobileDevice ? { mobile: getDefaultMobileSettings(settings, isPhone) } : { };
-  const sectionResult = extractSections(['mobile'], Merger.deepMerge(defaultDeviceSettings, settings));
+  const sectionResult = extractSections([ 'mobile' ], Merger.deepMerge(defaultDeviceSettings, settings));
 
   const extendedSettings = Tools.extend(
     // Default settings

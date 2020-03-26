@@ -22,14 +22,14 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       getContent: editorState.content.get,
       select: Fun.noop
     },
-    insertContent (data) {
+    insertContent(data) {
       store.adder({ method: 'insertContent', data })();
     },
-    execCommand (name) {
+    execCommand(name) {
       store.adder({ method: 'execCommand', data: name })();
     },
     dom: {
-      createHTML (tag, attributes, innerText) {
+      createHTML(tag, attributes, innerText) {
         return { tag, attributes, innerText };
       },
       encode: Fun.identity
@@ -175,7 +175,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
     info: {
       url: 'hi'
     },
-    mutations (elem) {
+    mutations(elem) {
 
     },
     expected: [
@@ -198,7 +198,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       url: 'hi',
       text: 'hello'
     },
-    mutations (elem) {
+    mutations(elem) {
 
     },
     expected: [
@@ -222,7 +222,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       text: 'hello',
       title: 'Title'
     },
-    mutations (elem) {
+    mutations(elem) {
 
     },
     expected: [
@@ -248,7 +248,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       title: 'Title',
       target: 'new'
     },
-    mutations (elem) {
+    mutations(elem) {
 
     },
     expected: [
@@ -278,7 +278,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
         Element.fromHtml('<a href="http://foo">http://foo</a>')
       )
     },
-    mutations (elem) {
+    mutations(elem) {
       Assertions.assertStructure('Checking structure', ApproxStructure.build(function (s, str, arr) {
         return s.element('a', {
           attrs: {
@@ -301,7 +301,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
         Element.fromHtml('<a href="http://foo">Foo</a>')
       )
     },
-    mutations (elem) {
+    mutations(elem) {
       Assertions.assertStructure('Checking structure', ApproxStructure.build(function (s, str, arr) {
         return s.element('a', {
           attrs: {
@@ -324,7 +324,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
         Element.fromHtml('<a href="http://foo">Foo</a>')
       )
     },
-    mutations (elem) {
+    mutations(elem) {
       Assertions.assertStructure('Checking structure', ApproxStructure.build(function (s, str, arr) {
         return s.element('a', {
           attrs: {

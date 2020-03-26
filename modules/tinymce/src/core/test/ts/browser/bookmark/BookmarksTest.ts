@@ -71,7 +71,7 @@ UnitTest.asynctest('browser.tinymce.core.bookmark.BookmarksTest', (success, fail
         namedChains,
         [ cRemoveEditor ]
       ])
-    )]);
+      ) ]);
   };
 
   const cAssertRangeBookmark = (spath, soffset, fpath, foffset) => cBundleOp((input) => {
@@ -110,79 +110,79 @@ UnitTest.asynctest('browser.tinymce.core.bookmark.BookmarksTest', (success, fail
 
   Pipeline.async({}, [
     Logger.t('Range bookmark', sBookmarkTest([
-      cSetupEditor('<p>a</p>', [0, 0], 0, [0, 0], 1),
+      cSetupEditor('<p>a</p>', [ 0, 0 ], 0, [ 0, 0 ], 1),
       cGetBookmark(1, false),
-      cAssertRangeBookmark([0, 0], 0, [0, 0], 1),
-      cSetCursor([0, 0], 0),
+      cAssertRangeBookmark([ 0, 0 ], 0, [ 0, 0 ], 1),
+      cSetCursor([ 0, 0 ], 0),
       cResolveBookmark,
-      cAssertSelection([0, 0], 0, [0, 0], 1)
+      cAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 1)
     ])),
     Logger.t('Get path bookmark', sBookmarkTest([
-      cSetupEditor('<p>a</p>', [0, 0], 0, [0, 0], 1),
+      cSetupEditor('<p>a</p>', [ 0, 0 ], 0, [ 0, 0 ], 1),
       cGetBookmark(2, false),
-      cAssertPathBookmark([0, 0, 0], [1, 0, 0]),
-      cSetCursor([0, 0], 0),
+      cAssertPathBookmark([ 0, 0, 0 ], [ 1, 0, 0 ]),
+      cSetCursor([ 0, 0 ], 0),
       cResolveBookmark,
-      cAssertSelection([0, 0], 0, [0, 0], 1)
+      cAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 1)
     ])),
     Logger.t('Get id bookmark', sBookmarkTest([
-      cSetupEditor('<p><img src="about:blank"></p>', [0], 0, [0], 1),
+      cSetupEditor('<p><img src="about:blank"></p>', [ 0 ], 0, [ 0 ], 1),
       cGetBookmark(2, false),
       cAssertIndexBookmark('IMG', 0),
-      cSetCursor([0, 0], 0),
+      cSetCursor([ 0, 0 ], 0),
       cResolveBookmark,
-      cAssertSelection([0], 0, [0], 1)
+      cAssertSelection([ 0 ], 0, [ 0 ], 1)
     ])),
     Logger.t('Get string path bookmark', sBookmarkTest([
-      cSetupEditor('<p>a</p>', [0, 0], 0, [0, 0], 1),
+      cSetupEditor('<p>a</p>', [ 0, 0 ], 0, [ 0, 0 ], 1),
       cGetBookmark(3, false),
       cAssertStringPathBookmark('p[0]/text()[0],0', 'p[0]/text()[0],1'),
-      cSetCursor([0, 0], 0),
+      cSetCursor([ 0, 0 ], 0),
       cResolveBookmark,
-      cAssertSelection([0, 0], 0, [0, 0], 1)
+      cAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 1)
     ])),
     Logger.t('Get persistent bookmark on element indexes', sBookmarkTest([
-      cSetupEditor('<p><img src="about:blank"></p>', [0], 0, [0], 1),
+      cSetupEditor('<p><img src="about:blank"></p>', [ 0 ], 0, [ 0 ], 1),
       cGetBookmark(0, false),
       cAssertApproxRawContent('<p><img src="about:blank"></p>'),
       cAssertIndexBookmark('IMG', 0),
-      cSetCursor([0, 0], 0),
+      cSetCursor([ 0, 0 ], 0),
       cResolveBookmark,
       cAssertApproxRawContent('<p><img src="about:blank"></p>'),
-      cAssertSelection([0], 0, [0], 1)
+      cAssertSelection([ 0 ], 0, [ 0 ], 1)
     ])),
     Logger.t('Get persistent bookmark marker spans on text offsets', sBookmarkTest([
-      cSetupEditor('<p>abc</p>', [0, 0], 1, [0, 0], 2),
+      cSetupEditor('<p>abc</p>', [ 0, 0 ], 1, [ 0, 0 ], 2),
       cGetBookmark(0, false),
       cAssertApproxRawContent('<p>a<span data-mce-type="bookmark" id="mce_1_start"></span>b<span id="mce_1_end"></span>c</p>'),
-      cAssertSelection([0, 2], 0, [0, 2], 1),
+      cAssertSelection([ 0, 2 ], 0, [ 0, 2 ], 1),
       cAssertIdBookmark,
-      cSetCursor([0, 1], 0),
+      cSetCursor([ 0, 1 ], 0),
       cResolveBookmark,
       cAssertApproxRawContent('<p>abc</p>'),
-      cAssertSelection([0, 0], 1, [0, 0], 2)
+      cAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 2)
     ])),
     Logger.t('Get persistent bookmark marker spans on element indexes', sBookmarkTest([
-      cSetupEditor('<p><input><input></p>', [0], 0, [0], 2),
+      cSetupEditor('<p><input><input></p>', [ 0 ], 0, [ 0 ], 2),
       cGetBookmark(0, false),
       cAssertApproxRawContent('<p><span data-mce-type="bookmark" id="mce_1_start"></span><input><input><span id="mce_1_end"></span></p>'),
-      cAssertSelection([0], 1, [0], 3),
+      cAssertSelection([ 0 ], 1, [ 0 ], 3),
       cAssertIdBookmark,
-      cSetCursor([0], 2),
+      cSetCursor([ 0 ], 2),
       cResolveBookmark,
       cAssertApproxRawContent('<p><input><input></p>'),
-      cAssertSelection([0], 0, [0], 2)
+      cAssertSelection([ 0 ], 0, [ 0 ], 2)
     ])),
     Logger.t('Get persistent bookmark filled with marker spans on text offsets', sBookmarkTest([
-      cSetupEditor('<p>abc</p>', [0, 0], 1, [0, 0], 2),
+      cSetupEditor('<p>abc</p>', [ 0, 0 ], 1, [ 0, 0 ], 2),
       cGetFilledPersistentBookmark(0, true),
       cAssertApproxRawContent('<p>a<span data-mce-type="bookmark" id="mce_1_start">\ufeff</span>b<span id="mce_1_end">\ufeff</span>c</p>'),
-      cAssertSelection([0, 1, 0], 1, [0, 3, 0], 1),
+      cAssertSelection([ 0, 1, 0 ], 1, [ 0, 3, 0 ], 1),
       cAssertIdBookmark,
-      cSetCursor([0, 1], 0),
+      cSetCursor([ 0, 1 ], 0),
       cResolveBookmark,
       cAssertApproxRawContent('<p>abc</p>'),
-      cAssertSelection([0, 0], 1, [0, 0], 2)
+      cAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 2)
     ])),
   ], success, failure);
 });

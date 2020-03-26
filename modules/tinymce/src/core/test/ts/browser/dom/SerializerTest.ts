@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function (success,
 
   const addTeardown = function (steps) {
     return Arr.bind(steps, function (step) {
-      return [step, Step.sync(teardown)];
+      return [ step, Step.sync(teardown) ];
     });
   };
 

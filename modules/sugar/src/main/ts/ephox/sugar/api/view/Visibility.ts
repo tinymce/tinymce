@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import Toggler from '../properties/Toggler';
 import * as Css from '../properties/Css';
-import { HTMLElement, Node as DomNode, Element as DomElement } from '@ephox/dom-globals';
+import { HTMLElement, Element as DomElement } from '@ephox/dom-globals';
 import Element from '../node/Element';
 
 // This function is dangerous. Toggle behaviour is different depending on whether the element is in the DOM or not when it's created.

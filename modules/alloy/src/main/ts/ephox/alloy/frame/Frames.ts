@@ -9,7 +9,7 @@ const walkUp = (navigation: Navigation, doc: Element<HTMLDocument>): Element[] =
   return frame.fold(Fun.constant([]), (f) => {
     const parent = navigation.owner(f);
     const rest = walkUp(navigation, parent);
-    return [f].concat(rest);
+    return [ f ].concat(rest);
   });
 };
 

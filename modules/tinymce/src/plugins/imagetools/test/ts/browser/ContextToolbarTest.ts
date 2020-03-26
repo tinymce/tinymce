@@ -1,7 +1,7 @@
 import { Log, Pipeline, Chain, UiFinder, FocusTools, Keyboard, Keys, GeneralSteps, Waiter, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
-import { TinyApis, TinyDom, TinyLoader, TinyUi, UiChains} from '@ephox/mcagar';
+import { TinyApis, TinyDom, TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
 
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
 
     const sOpenContextToolbar = (source) => {
       return GeneralSteps.sequence([
-        ImageUtils.sLoadImage(editor, source, {width: 460, height: 598}),
+        ImageUtils.sLoadImage(editor, source, { width: 460, height: 598 }),
         tinyApis.sSelect('img', []),
         tinyUi.sWaitForUi('Wait for table context toolbar', '.tox-toolbar button[aria-label="Rotate counterclockwise"]'),
       ]);
@@ -68,18 +68,18 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
     };
 
     const sAssertImageFlip = (label) => {
-      return Chain.asStep({editor}, [
+      return Chain.asStep({ editor }, [
         Chain.label(`Assert ${label}`,
-        NamedChain.asChain([
-          NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-          Chain.label('Store img src before flip', NamedChain.write('srcBeforeFlip', cGetImageSrc)),
-          Chain.label('Flip image', NamedChain.read('editor', cClickContextToolbarButton(label))),
-          Waiter.cTryUntilPredicate('Wait for image to flip', (state: Record<string, any>) => {
-            const oldSrc = Option.from(state.srcBeforeFlip).getOrDie();
-            const newSrc = getImageSrc();
-            return newSrc !== oldSrc;
-          })
-        ]))
+          NamedChain.asChain([
+            NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
+            Chain.label('Store img src before flip', NamedChain.write('srcBeforeFlip', cGetImageSrc)),
+            Chain.label('Flip image', NamedChain.read('editor', cClickContextToolbarButton(label))),
+            Waiter.cTryUntilPredicate('Wait for image to flip', (state: Record<string, any>) => {
+              const oldSrc = Option.from(state.srcBeforeFlip).getOrDie();
+              const newSrc = getImageSrc();
+              return newSrc !== oldSrc;
+            })
+          ]))
       ]);
     };
 
@@ -110,13 +110,13 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
         Waiter.sTryUntil('Wait for image to be rotated', tinyApis.sAssertContentPresence({ 'img[width="460"][height="598"]': 1 })),
         sAssertImageFlip('Flip horizontally'),
         sAssertImageFlip('Flip vertically'),
-        Chain.asStep({}, [cClickContextToolbarButton('Edit image')]),
+        Chain.asStep({}, [ cClickContextToolbarButton('Edit image') ]),
         /* Previously there was a fixed wait here, waiting for the dialog to display.
         Without this wait, you can't see the dialog if you're watching the test.
         However, the below DOM assertions insist that the dialog is, indeed, there.
         */
         sWaitForDialogOpenThenCloseDialog('div.tox-image-tools__image>img'),
-        Chain.asStep({}, [cClickContextToolbarButton('Image options')]),
+        Chain.asStep({}, [ cClickContextToolbarButton('Image options') ]),
         sWaitForDialogOpenThenCloseDialog('div.tox-form'),
       ])
     ], onSuccess, onFailure);

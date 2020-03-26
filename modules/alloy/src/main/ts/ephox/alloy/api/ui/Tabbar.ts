@@ -12,7 +12,7 @@ const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, compo
   return {
     'uid': detail.uid,
     'dom': detail.dom,
-    'components': components,
+    components,
     'debug.sketcher': 'Tabbar',
 
     'domModification': {
@@ -30,18 +30,18 @@ const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, compo
 
           // https://www.w3.org/TR/2010/WD-wai-aria-practices-20100916/#tabpanel
           // Consider a more seam-less way of combining highlighting and toggling
-          onHighlight (tabbar, tab) {
+          onHighlight(tabbar, tab) {
             // TODO: Integrate highlighting and toggling in a nice way
             Attr.set(tab.element(), 'aria-selected', 'true');
           },
-          onDehighlight (tabbar, tab) {
+          onDehighlight(tabbar, tab) {
             Attr.set(tab.element(), 'aria-selected', 'false');
           }
         }),
 
         Keying.config({
           mode: 'flow',
-          getInitial (tabbar) {
+          getInitial(tabbar) {
             // Restore focus to the previously highlighted tab.
             return Highlighting.getHighlighted(tabbar).map((tab) => {
               return tab.element();

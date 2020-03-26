@@ -12,7 +12,7 @@ UnitTest.test('DomTextdataTest', function () {
   const e = Element.fromText('epsilon');
   const f = Element.fromText('foo');
 
-  const check = function (expected: { text: string, cursor: Option<number> }, elements: Element[], current: Element, offset: number) {
+  const check = function (expected: { text: string; cursor: Option<number> }, elements: Element[], current: Element, offset: number) {
     const actual = DomTextdata.from(elements, current, offset);
     Assert.eq('eq', expected.text, actual.text);
 
@@ -22,10 +22,10 @@ UnitTest.test('DomTextdataTest', function () {
   check({
     text: '',
     cursor: Option.some(0)
-  }, [c], c, 0);
+  }, [ c ], c, 0);
 
   check({
     text: 'alpha beta epsilonfoo',
     cursor: Option.some(13)
-  }, [a, b, c, d, e, f], e, 2);
+  }, [ a, b, c, d, e, f ], e, 2);
 });

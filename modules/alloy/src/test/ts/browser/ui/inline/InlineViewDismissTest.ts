@@ -26,11 +26,11 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
           classes: [ 'test-inline' ]
         },
 
-        lazySink () {
+        lazySink() {
           return Result.value(component);
         },
 
-        getRelated () {
+        getRelated() {
           return Option.some(related);
         },
 

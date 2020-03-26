@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.util.LocalStorageTest', (success, failu
 
   const appendTeardown = function (steps) {
     return Arr.bind(steps, function (step) {
-      return [step, teardown];
+      return [ step, teardown ];
     });
   };
 

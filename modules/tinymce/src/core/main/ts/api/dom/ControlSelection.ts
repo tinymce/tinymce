@@ -66,10 +66,10 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   // Details about each resize handle how to scale etc
   resizeHandles = {
     // Name: x multiplier, y multiplier, delta size x, delta size y
-    nw: [0, 0, -1, -1],
-    ne: [1, 0, 1, -1],
-    se: [1, 1, 1, 1],
-    sw: [0, 1, -1, 1]
+    nw: [ 0, 0, -1, -1 ],
+    ne: [ 1, 0, 1, -1 ],
+    se: [ 1, 1, 1, 1 ],
+    sw: [ 0, 1, -1, 1 ]
   };
 
   const isImage = function (elm) {

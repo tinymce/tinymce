@@ -1,15 +1,17 @@
 import { Universe } from '@ephox/boss';
 import { Contracts, Fun, Option } from '@ephox/katamari';
 import { Gather, Spot, SpotPoint } from '@ephox/phoenix';
-import { CharPos, TextSearch as TextSearchBase } from '../../textdata/TextSearch';
+import * as TextSearchBase from '../../textdata/TextSearch';
 import { TextSeeker, TextSeekerOutcome, TextSeekerPhase, TextSeekerPhaseConstructor, TextSeekerPhaseProcessor } from '../../textdata/TextSeeker';
+
+type CharPos = TextSearchBase.CharPos;
 
 export interface TextSearchSeeker {
   regex: () => RegExp;
   attempt: <E> (phase: TextSeekerPhaseConstructor, item: E, text: string, index: number) => TextSeekerPhase<E>;
 }
 
-const seekerSig = Contracts.exactly(['regex', 'attempt']);
+const seekerSig = Contracts.exactly([ 'regex', 'attempt' ]);
 
 type PreviousCharFn = (text: string, offset: Option<number>) => Option<CharPos>;
 const previousChar: PreviousCharFn = TextSearchBase.previous;

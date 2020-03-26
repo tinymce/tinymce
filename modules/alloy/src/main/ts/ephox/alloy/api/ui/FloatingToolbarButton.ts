@@ -75,7 +75,7 @@ const makeSandbox = (button: AlloyComponent, spec: FloatingToolbarButtonSpec, de
     dom: {
       tag: 'div',
       attributes: {
-        id: ariaOwner.id()
+        id: ariaOwner.id
       }
     },
     behaviours: Behaviour.derive(
@@ -90,21 +90,20 @@ const makeSandbox = (button: AlloyComponent, spec: FloatingToolbarButtonSpec, de
         Sandboxing.config({
           onOpen,
           onClose,
-          isPartOf (container: AlloyComponent, data: AlloyComponent, queryElem: Element): boolean {
+          isPartOf(container: AlloyComponent, data: AlloyComponent, queryElem: Element): boolean {
             return ComponentStructure.isPartOf(data, queryElem) || ComponentStructure.isPartOf(button, queryElem);
           },
-          getAttachPoint () {
+          getAttachPoint() {
             return detail.lazySink(button).getOrDie();
           }
         }),
         Receiving.config({
           channels: {
             ...Dismissal.receivingChannel({
-              isExtraPart: Fun.constant(false),
+              isExtraPart: Fun.never,
               ...detail.fireDismissalEventInstead.map((fe) => ({ fireEventInstead: { event: fe.event }} as any)).getOr({ })
             }),
             ...Reposition.receivingChannel({
-              isExtraPart: Fun.constant(false),
               doReposition: () => {
                 Sandboxing.getState(Coupling.getCoupled(button, 'toolbarSandbox')).each((toolbar) => {
                   position(button, toolbar, detail, spec.layouts);
@@ -122,7 +121,7 @@ const factory: CompositeSketchFactory<FloatingToolbarButtonDetail, FloatingToolb
   return {
     ...Button.sketch({
       ...externals.button(),
-      action (button) {
+      action(button) {
         toggle(button, externals);
       },
       buttonBehaviours: SketchBehaviours.augment(
@@ -130,7 +129,7 @@ const factory: CompositeSketchFactory<FloatingToolbarButtonDetail, FloatingToolb
         [
           Coupling.config({
             others: {
-              toolbarSandbox (button) {
+              toolbarSandbox(button) {
                 return makeSandbox(button, spec, detail);
               }
             }

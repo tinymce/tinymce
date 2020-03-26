@@ -32,7 +32,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteTest', (success, failure)
 
   const appendTeardown = function (editor: Editor, steps: Step<any, any>[]) {
     return Arr.bind(steps, function (step) {
-      return [step, sTeardown(editor)];
+      return [ step, sTeardown(editor) ];
     });
   };
 

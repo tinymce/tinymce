@@ -74,7 +74,7 @@ const cDragnDrop = <T> (fromSelector: string, toSelector: string): Chain<Element
 };
 
 const sDragnDrop = <T>(fromSelector: string, toSelector: string): Step<T, T> =>
-  Chain.asStep(Body.body(), [cDragnDrop(fromSelector, toSelector)]);
+  Chain.asStep(Body.body(), [ cDragnDrop(fromSelector, toSelector) ]);
 
 const sDropFiles = <T>(files: File[], toSelector: string): Step<T, T> => {
   return Chain.asStep(Body.body(), [

@@ -60,7 +60,7 @@ type ColorInputSpec = Omit<Types.ColorInput.ColorInput, 'type'>;
 export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactoryBackstageShared, colorInputBackstage: UiFactoryBackstageForColorInput): SimpleSpec => {
   const pField = FormField.parts().field({
     factory: Input,
-    inputClasses: ['tox-textfield'],
+    inputClasses: [ 'tox-textfield' ],
 
     onSetValue: (c) => Invalidating.run(c).get(() => { }),
 
@@ -160,13 +160,13 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
   return FormField.sketch({
     dom: {
       tag: 'div',
-      classes: ['tox-form__group']
+      classes: [ 'tox-form__group' ]
     },
     components: pLabel.toArray().concat([
       {
         dom: {
           tag: 'div',
-          classes: ['tox-color-input']
+          classes: [ 'tox-color-input' ]
         },
         components: [
           pField,

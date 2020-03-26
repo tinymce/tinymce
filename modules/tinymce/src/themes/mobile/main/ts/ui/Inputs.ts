@@ -35,7 +35,7 @@ const clearInputBehaviour = 'input-clearing';
 const field = function (name, placeholder) {
   const inputSpec = Memento.record(Input.sketch({
     inputAttributes: { placeholder: I18n.translate(placeholder) },
-    onSetValue (input, data) {
+    onSetValue(input, data) {
       // If the value changes, inform the container so that it can update whether the "x" is visible
       AlloyTriggers.emit(input, NativeEvents.input());
     },
@@ -54,7 +54,7 @@ const field = function (name, placeholder) {
   const buttonSpec = Memento.record(
     Button.sketch({
       dom: UiDomFactory.dom('<button class="${prefix}-input-container-x ${prefix}-icon-cancel-circle ${prefix}-icon"></button>'),
-      action (button) {
+      action(button) {
         const input = inputSpec.get(button);
         Representing.setValue(input, '');
       }
@@ -74,7 +74,7 @@ const field = function (name, placeholder) {
           toggleClass: Styles.resolve('input-container-empty')
         }),
         Composing.config({
-          find (comp) {
+          find(comp) {
             return Option.some(inputSpec.get(comp));
           }
         }),
@@ -93,22 +93,20 @@ const field = function (name, placeholder) {
   };
 };
 
-const hidden = function (name) {
-  return {
-    name,
-    spec: DataField.sketch({
-      dom: {
-        tag: 'span',
-        styles: {
-          display: 'none'
-        }
-      },
-      getInitialValue () {
-        return Option.none();
+const hidden = (name) => ({
+  name,
+  spec: DataField.sketch({
+    dom: {
+      tag: 'span',
+      styles: {
+        display: 'none'
       }
-    }) as SketchSpec
-  };
-};
+    },
+    getInitialValue() {
+      return Option.none();
+    }
+  }) as SketchSpec
+});
 
 export {
   field,

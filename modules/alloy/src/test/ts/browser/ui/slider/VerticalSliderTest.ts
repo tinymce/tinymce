@@ -31,7 +31,7 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
         model: {
           mode: 'y',
           minY: 50,
-          getInitialValue: Fun.constant({y: Fun.constant(200)}),
+          getInitialValue: Fun.constant({ y: Fun.constant(200) }),
           maxY: 200
         },
         stepSize: 10,
@@ -42,21 +42,21 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
             height: '40px',
             width: '20px',
             background: 'black'
-          } } }),
+          }}}),
           Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'vertical-slider-test-spectrum' ], styles: {
             height: '150px',
             background: 'green'
-          } } }),
+          }}}),
           Slider.parts()['bottom-edge']({ dom: { tag: 'div', classes: [ 'vertical-slider-test-bottom-edge' ], styles: {
             height: '40px',
             width: '20px',
             background: 'white'
-          } } }),
+          }}}),
           Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'vertical-slider-test-thumb' ], styles: {
             height: '20px',
             width: '20px',
             background: 'gray'
-          } } })
+          }}})
         ]
       })
     );

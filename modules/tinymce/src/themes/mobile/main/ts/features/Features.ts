@@ -20,6 +20,7 @@ import * as FontSizeSlider from '../ui/FontSizeSlider';
 import * as ImagePicker from '../ui/ImagePicker';
 import * as LinkButton from '../ui/LinkButton';
 import * as StyleFormats from '../util/StyleFormats';
+import { MobileRealm } from '../ui/IosRealm';
 
 const defaults = [ 'undo', 'bold', 'italic', 'link', 'image', 'bullist', 'styleselect' ];
 
@@ -41,7 +42,7 @@ const identify = function (settings) {
   return Type.isArray(toolbar) ? identifyFromArray(toolbar) : extract(toolbar);
 };
 
-const setup = function (realm, editor: Editor) {
+const setup = function (realm: MobileRealm, editor: Editor) {
   const commandSketch = function (name) {
     return function () {
       return Buttons.forToolbarCommand(editor, name);
@@ -125,7 +126,7 @@ const setup = function (realm, editor: Editor) {
 
   const feature = function (prereq, sketch) {
     return {
-      isSupported () {
+      isSupported() {
         // NOTE: forall is true for none
         const buttons = editor.ui.registry.getAll().buttons;
         return prereq.forall(function (p) {

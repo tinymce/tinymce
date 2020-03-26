@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function (success, fa
 
   suite.test('Urls convert urls and force format', function () {
     const styles = Styles({
-      url_converter (url) {
+      url_converter(url) {
         return '|' + url + '|';
       }
     });
@@ -153,7 +153,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function (success, fa
   });
 
   suite.test('Valid styles', function () {
-    const styles = Styles({}, Schema({ valid_styles: { '*': 'color,font-size', 'a': 'margin-left' } }));
+    const styles = Styles({}, Schema({ valid_styles: { '*': 'color,font-size', 'a': 'margin-left' }}));
 
     LegacyUnit.equal(
       styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px; invalid: 1;'), 'b'),
@@ -166,7 +166,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function (success, fa
   });
 
   suite.test('Invalid styles', function () {
-    const styles = Styles({}, Schema({ invalid_styles: { '*': 'color,font-size', 'a': 'margin-left' } }));
+    const styles = Styles({}, Schema({ invalid_styles: { '*': 'color,font-size', 'a': 'margin-left' }}));
 
     LegacyUnit.equal(styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px'), 'b'), 'margin-left: 10px;');
     LegacyUnit.equal(

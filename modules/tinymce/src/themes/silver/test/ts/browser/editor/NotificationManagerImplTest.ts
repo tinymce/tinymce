@@ -73,7 +73,7 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
                   classes: [ arr.has('tox-progress-bar'), arr.has('tox-progress-indicator') ],
                   children: [
                     s.element('div', {
-                      classes: [ arr.has('tox-bar-container')],
+                      classes: [ arr.has('tox-bar-container') ],
                       children: [
                         s.element('div', {
                           classes: [ arr.has('tox-bar') ],
@@ -85,7 +85,7 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
                     }),
                     s.element('div', {
                       classes: [ arr.has('tox-text') ],
-                      children: [ s.text(str.is(`${progress}%`))]
+                      children: [ s.text(str.is(`${progress}%`)) ]
                     })
                   ]
                 })

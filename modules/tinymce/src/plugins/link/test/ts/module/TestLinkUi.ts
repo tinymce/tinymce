@@ -79,7 +79,7 @@ const sAssertInputValue = (label, selector, expected) => {
 };
 
 const sAssertDialogContents = (expected: Record<string, any>) => {
-  const steps = [sWaitForUi('Wait for dialog to appear', 'div[role="dialog"]')];
+  const steps = [ sWaitForUi('Wait for dialog to appear', 'div[role="dialog"]') ];
   Obj.mapToArray(selectors, (value, key) => {
     if (Obj.has(expected, key)) {
       steps.push(sAssertInputValue(key, value, expected[key]));

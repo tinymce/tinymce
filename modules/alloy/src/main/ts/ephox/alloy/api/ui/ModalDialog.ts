@@ -122,7 +122,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
   const modalEventsId = Id.generate('modal-events');
   const eventOrder = {
     ...detail.eventOrder,
-    'alloy.system.attached': [modalEventsId].concat(detail.eventOrder['alloy.system.attached'] || [])
+    'alloy.system.attached': [ modalEventsId ].concat(detail.eventOrder['alloy.system.attached'] || [])
   };
 
   return {

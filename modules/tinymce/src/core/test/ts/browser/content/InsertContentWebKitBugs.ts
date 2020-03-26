@@ -12,10 +12,10 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentTest', (success, f
     Pipeline.async({}, [
       Logger.t('Insert contents on a triple click selection should not produce odd spans', GeneralSteps.sequence([
         tinyApis.sSetContent('<blockquote><p>a</p></blockquote><p>b</p>'),
-        tinyApis.sSetSelection([0, 0, 0], 0, [1], 0),
+        tinyApis.sSetSelection([ 0, 0, 0 ], 0, [ 1 ], 0),
         tinyApis.sExecCommand('mceInsertContent', '<p>c</p>'),
         tinyApis.sAssertContent('<blockquote><p>c</p></blockquote><p>b</p>'),
-        tinyApis.sAssertSelection([0, 0, 0], 1, [0, 0, 0], 1)
+        tinyApis.sAssertSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1)
       ]))
     ], onSuccess, onFailure);
   }, {

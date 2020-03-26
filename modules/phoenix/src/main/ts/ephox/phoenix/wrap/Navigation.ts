@@ -6,7 +6,7 @@ import { SpotPoint } from '../api/data/Types';
 /**
  * Return the last available cursor position in the node.
  */
-const toLast = function <E, D>(universe: Universe<E, D>, node: E): SpotPoint<E> {
+const toLast = function <E, D> (universe: Universe<E, D>, node: E): SpotPoint<E> {
   if (universe.property().isText(node)) {
     return Spot.point(node, universe.property().getText(node).length);
   } else {
@@ -16,7 +16,7 @@ const toLast = function <E, D>(universe: Universe<E, D>, node: E): SpotPoint<E> 
   }
 };
 
-const toLower = function <E, D>(universe: Universe<E, D>, node: E) {
+const toLower = function <E, D> (universe: Universe<E, D>, node: E) {
   const lastOffset = universe.property().isText(node) ?
     universe.property().getText(node).length :
     universe.property().children(node).length;
@@ -26,7 +26,7 @@ const toLower = function <E, D>(universe: Universe<E, D>, node: E) {
 /**
  * Descend down to a leaf node at the given offset.
  */
-const toLeaf = function <E, D>(universe: Universe<E, D>, element: E, offset: number): SpotPoint<E> {
+const toLeaf = function <E, D> (universe: Universe<E, D>, element: E, offset: number): SpotPoint<E> {
   const children = universe.property().children(element);
   if (children.length > 0 && offset < children.length) {
     return toLeaf(universe, children[offset], 0);
@@ -37,7 +37,7 @@ const toLeaf = function <E, D>(universe: Universe<E, D>, element: E, offset: num
   }
 };
 
-const scan = function <E, D>(universe: Universe<E, D>, element: E, direction: (e: E) => Option<E>): Option<E> {
+const scan = function <E, D> (universe: Universe<E, D>, element: E, direction: (e: E) => Option<E>): Option<E> {
   // if a comment or zero-length text, scan the siblings
   if ((universe.property().isText(element) && universe.property().getText(element).trim().length === 0)
     || universe.property().isComment(element)) {
@@ -51,20 +51,20 @@ const scan = function <E, D>(universe: Universe<E, D>, element: E, direction: (e
   }
 };
 
-const freefallLtr = function <E, D>(universe: Universe<E, D>, element: E): SpotPoint<E> {
+const freefallLtr = function <E, D> (universe: Universe<E, D>, element: E): SpotPoint<E> {
   const candidate = scan(universe, element, universe.query().nextSibling).getOr(element);
   if (universe.property().isText(candidate)) { return Spot.point(candidate, 0); }
   const children = universe.property().children(candidate);
   return children.length > 0 ? freefallLtr(universe, children[0]) : Spot.point(candidate, 0);
 };
 
-const toEnd = function <E, D>(universe: Universe<E, D>, element: E) {
+const toEnd = function <E, D> (universe: Universe<E, D>, element: E) {
   if (universe.property().isText(element)) { return universe.property().getText(element).length; }
   const children = universe.property().children(element);
   return children.length;
 };
 
-const freefallRtl = function <E, D>(universe: Universe<E, D>, element: E): SpotPoint<E> {
+const freefallRtl = function <E, D> (universe: Universe<E, D>, element: E): SpotPoint<E> {
   const candidate = scan(universe, element, universe.query().prevSibling).getOr(element);
   if (universe.property().isText(candidate)) { return Spot.point(candidate, toEnd(universe, candidate)); }
   const children = universe.property().children(candidate);

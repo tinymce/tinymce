@@ -25,7 +25,7 @@ UnitTest.asynctest('HttpDownloadTest', (success, failure) => {
     result.fold(
       (err) => failure(err.message),
       (actualText) => {
-        const expectedText = JSON.stringify({ results: { data: '123' } }, null, '  ');
+        const expectedText = JSON.stringify({ results: { data: '123' }}, null, '  ');
 
         assert.eq(expectedText, actualText, 'Should be the expected text');
         assert.eq(true, progressCalls > 1, 'Should be more than 1 progress calls');

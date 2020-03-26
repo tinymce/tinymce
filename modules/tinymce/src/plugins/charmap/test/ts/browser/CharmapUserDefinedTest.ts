@@ -41,11 +41,11 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharmapUserDefinedTest', (su
         ]),
         tinyUi.sWaitForUi('wait for character A', '.tox-collection .tox-collection__item-icon:contains(A)')
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'charmap',
     toolbar: 'charmap',
-    charmap: [['A'.charCodeAt(0), 'A']],
+    charmap: [[ 'A'.charCodeAt(0), 'A' ]],
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',
   }, success, failure);

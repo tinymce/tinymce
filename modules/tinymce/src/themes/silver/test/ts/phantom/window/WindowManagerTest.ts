@@ -95,7 +95,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
     title: 'test-missing-panel',
     body: {
       type: 'panel'
-      /*items: []*/ // I need items: [] to work, thats what this test should complain about
+      /* items: []*/ // I need items: [] to work, thats what this test should complain about
     },
     buttons: []
   }, (err) => {

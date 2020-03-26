@@ -51,8 +51,8 @@ const setup = (createComponent: (store: TestStore, doc: Element, body: Element) 
  * @param failure
  */
 const guiSetup = <A, B> (createComponent: (store: TestStore, doc: Element, body: Element) => AlloyComponent,
-                         f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Step<A, B>, success: () => void, failure: (err: any, logs?: TestLogs) => void) => {
- setup(createComponent, (doc, body, gui, component, store) => [f(doc, body, gui, component, store)], success, failure);
+  f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Step<A, B>, success: () => void, failure: (err: any, logs?: TestLogs) => void) => {
+  setup(createComponent, (doc, body, gui, component, store) => [ f(doc, body, gui, component, store) ], success, failure);
 };
 
 const mSetupKeyLogger = (body: Element) => {

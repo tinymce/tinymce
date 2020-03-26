@@ -1,4 +1,4 @@
-import { Arr, Fun, Option } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { Position } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -66,8 +66,8 @@ const moveOrSnap = <E>(component: AlloyComponent, snapInfo: SnapsConfig<E>, coor
     // return { position: 'fixed', left: newfixed.left() + 'px', top: newfixed.top() + 'px' };
   }, (spanned) => {
     return {
-      coord: spanned.output(),
-      extra: spanned.extra()
+      coord: spanned.output,
+      extra: spanned.extra
     };
   });
 };
@@ -78,12 +78,11 @@ const stopDrag = <E>(component: AlloyComponent, snapInfo: SnapsConfig<E>): void 
 
 const findMatchingSnap = <E>(snaps: Array<SnapConfig<E>>, newCoord: DragCoord.CoordAdt, scroll: Position, origin: Position): Option<SnapOutput<E>> => {
   return Arr.findMap(snaps, (snap) => {
-    // NOTE: These are structs because of the immutableBag in Dragging.ts
-    const sensor = snap.sensor();
-    const inRange = DragCoord.withinRange(newCoord, sensor, snap.range().left(), snap.range().top(), scroll, origin);
+    const sensor = snap.sensor;
+    const inRange = DragCoord.withinRange(newCoord, sensor, snap.range.left(), snap.range.top(), scroll, origin);
     return inRange ? Option.some(
       {
-        output: Fun.constant(DragCoord.absorb(snap.output(), newCoord, scroll, origin)),
+        output: DragCoord.absorb(snap.output, newCoord, scroll, origin),
         extra: snap.extra
       }
     ) : Option.none();
@@ -102,9 +101,8 @@ const findClosestSnap = <E>(component: AlloyComponent, snapInfo: SnapsConfig<E>,
   const matchSnap = findMatchingSnap(snaps, newCoord, scroll, origin);
   return matchSnap.orThunk((): Option<SnapOutput<E>> => {
     const bestSnap = Arr.foldl(snaps, (acc: SnapCandidate<E>, snap: SnapConfig<E>): SnapCandidate<E> => {
-      // NOTE: These are structs because of the immutableBag in Dragging.ts
-      const sensor = snap.sensor();
-      const deltas = DragCoord.getDeltas(newCoord, sensor, snap.range().left(), snap.range().top(), scroll, origin);
+      const sensor = snap.sensor;
+      const deltas = DragCoord.getDeltas(newCoord, sensor, snap.range.left(), snap.range.top(), scroll, origin);
       return acc.deltas.fold(() => {
         return {
           deltas: Option.some(deltas),
@@ -128,7 +126,7 @@ const findClosestSnap = <E>(component: AlloyComponent, snapInfo: SnapsConfig<E>,
     });
     return bestSnap.snap.map((snap): SnapOutput<E> => {
       return {
-        output: Fun.constant(DragCoord.absorb(snap.output(), newCoord, scroll, origin)),
+        output: DragCoord.absorb(snap.output, newCoord, scroll, origin),
         extra: snap.extra
       };
     });
@@ -151,8 +149,8 @@ const snapTo = <E>(snap: SnapConfig<E>, scroll: Position, origin: Position): Sna
   return {
     // TODO: This looks to be incorrect and needs fixing as DragCoord definitely needs a number
     // based drag coord for the second argument here, so this is probably a bug.
-    coord: DragCoord.absorb(snap.output(), snap.output() as any, scroll, origin),
-    extra: snap.extra()
+    coord: DragCoord.absorb(snap.output, snap.output as any, scroll, origin),
+    extra: snap.extra
   };
 };
 

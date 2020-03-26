@@ -37,7 +37,7 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
       return [
         FocusTools.sSetFocus('Focus checkbox', body, '.tox-checkbox__input'),
         Keyboard.sKeydown(doc, Keys.enter(), {}),
-        store.sAssertEq('Form change should have fired', ['test-check-box'])
+        store.sAssertEq('Form change should have fired', [ 'test-check-box' ])
       ];
     },
     success,

@@ -70,11 +70,11 @@ UnitTest.test('SearcherTest', function () {
   // paragraphs. This one ends with a partial fo|r and more.
 
   checkWords([
-    { items: ['test'], word: 'test', exact: 'test' },
-    { items: ['word'], word: 'word', exact: 'word' },
-    { items: ['for'], word: 'for', exact: 'for' },
-    { items: ['w', 'or', 'd'], word: 'word', exact: 'word' },
-    { items: ['for'], word: 'for', exact: 'for' },
-    { items: ['tes', 't'], word: 'test', exact: 'test' }
-  ], ['p1', 'p2', 'p3'], ['for', 'test', 'word'], data());
+    { items: [ 'test' ], word: 'test', exact: 'test' },
+    { items: [ 'word' ], word: 'word', exact: 'word' },
+    { items: [ 'for' ], word: 'for', exact: 'for' },
+    { items: [ 'w', 'or', 'd' ], word: 'word', exact: 'word' },
+    { items: [ 'for' ], word: 'for', exact: 'for' },
+    { items: [ 'tes', 't' ], word: 'test', exact: 'test' }
+  ], [ 'p1', 'p2', 'p3' ], [ 'for', 'test', 'word' ], data());
 });

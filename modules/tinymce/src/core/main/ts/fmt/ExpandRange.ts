@@ -157,7 +157,7 @@ const findParentContainer = function (dom: DOMUtils, format, startContainer: Nod
     }
   }
 
-  /*eslint no-constant-condition:0 */
+  /* eslint no-constant-condition:0 */
   while (true) {
     // Stop expanding on block elements
     if (!format[0].block_expand && dom.isBlock(parent)) {

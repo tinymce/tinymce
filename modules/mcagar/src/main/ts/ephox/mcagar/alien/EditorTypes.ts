@@ -21,7 +21,7 @@ export interface Editor {
   selection: Selection;
   windowManager: any;
   ui: {
-    registry: any
+    registry: any;
   };
 
   getBody: () => HTMLElement;

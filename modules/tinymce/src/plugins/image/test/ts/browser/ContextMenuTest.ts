@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ContextMenuTest', (success, fa
       ]),
       Log.stepsAsStep('TBA', 'Opening context menus on an unselected figure', [
         tinyApis.sSetRawContent('<figure class="image" contenteditable="false"><img src="image.png"><figcaption contenteditable="true">Caption</figcaption></figure><p>Second paragraph</p>'),
-        tinyApis.sSetSelection([1, 0], 1, [1, 0], 1),
+        tinyApis.sSetSelection([ 1, 0 ], 1, [ 1, 0 ], 1),
         sOpenContextMenu('figure.image'),
         Keyboard.sKeydown(rootDoc, Keys.enter(), {}),
         sWaitForAndSubmitDialog,
@@ -50,19 +50,19 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ContextMenuTest', (success, fa
       ]),
       Log.stepsAsStep('TBA', 'Opening context menus on a selected image', [
         tinyApis.sSetRawContent('<p><img src="image.png" /></p><p>Second paragraph</p>'),
-        tinyApis.sSetSelection([0], 0, [0], 1),
+        tinyApis.sSetSelection([ 0 ], 0, [ 0 ], 1),
         sOpenContextMenu('img'),
         Keyboard.sKeydown(rootDoc, Keys.enter(), {}),
         sWaitForAndSubmitDialog,
-        tinyApis.sAssertSelection([0], 0, [0], 1)
+        tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 1)
       ]),
       Log.stepsAsStep('TBA', 'Opening context menus on an unselected image', [
         tinyApis.sSetRawContent('<p><img src="image.png" /></p><p>Second paragraph</p>'),
-        tinyApis.sSetSelection([1, 0], 1, [1, 0], 1),
+        tinyApis.sSetSelection([ 1, 0 ], 1, [ 1, 0 ], 1),
         sOpenContextMenu('img'),
         Keyboard.sKeydown(rootDoc, Keys.enter(), {}),
         sWaitForAndSubmitDialog,
-        tinyApis.sAssertSelection([0], 0, [0], 1)
+        tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 1)
       ])
     ], onSuccess, onFailure);
   }, {

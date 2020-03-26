@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.RemoveLinkTest', (success, fail
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Removing a link with a collapsed selection', [
         tinyApis.sSetContent('<p><a href="http://tiny.cloud">tiny</a></p>'),
-        tinyApis.sSetSelection([0, 0, 0], 2, [0, 0, 0], 2),
+        tinyApis.sSetSelection([ 0, 0, 0 ], 2, [ 0, 0, 0 ], 2),
         Chain.asStep(doc, [
           tinyUi.cTriggerContextMenu('open context menu', 'a[href="http://tiny.cloud"]', '.tox-silver-sink [role="menuitem"]')
         ]),
@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.RemoveLinkTest', (success, fail
       ]),
       Log.stepsAsStep('TBA', 'Removing a link with some text selected', [
         tinyApis.sSetContent('<p><a href="http://tiny.cloud">tiny</a></p>'),
-        tinyApis.sSetSelection([0, 0, 0], 0, [0, 0, 0], 2),
+        tinyApis.sSetSelection([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 2),
         Chain.asStep(doc, [
           tinyUi.cTriggerContextMenu('open context menu', 'a[href="http://tiny.cloud"]', '.tox-silver-sink [role="menuitem"]')
         ]),
@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.RemoveLinkTest', (success, fail
       ]),
       Log.stepsAsStep('TBA', 'Removing a link from an image', [
         tinyApis.sSetContent('<p><a href="http://tiny.cloud"><img src="http://moxiecode.cachefly.net/tinymce/v9/images/logo.png" /></a></p>'),
-        tinyApis.sSetSelection([0, 0], 0, [0, 0], 1),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 1),
         Chain.asStep(doc, [
           tinyUi.cTriggerContextMenu('open context menu', 'a[href="http://tiny.cloud"]', '.tox-silver-sink [role="menuitem"]')
         ]),

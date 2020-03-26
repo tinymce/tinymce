@@ -21,14 +21,14 @@ export const renderLabel = (spec: LabelSpec, backstageShared: UiFactoryBackstage
     dom: {
       tag: 'label',
       innerHtml: backstageShared.providers.translate(spec.label),
-      classes: ['tox-label']
+      classes: [ 'tox-label' ]
     }
   } as AlloySpec;
   const comps = Arr.map(spec.items, backstageShared.interpreter);
   return {
     dom: {
       tag: 'div',
-      classes: ['tox-form__group']
+      classes: [ 'tox-form__group' ]
     },
     components: [
       label

@@ -55,7 +55,7 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteInlineTest', (success, 
       skin: false,
       plugins: 'lists',
       disable_nodechange: true,
-      init_instance_callback (editor) {
+      init_instance_callback(editor) {
         Pipeline.async({}, Log.steps('TBA', 'Lists: Backspace delete inline tests', suite.toSteps(editor)), function () {
           teardown(editor, div);
           success();

@@ -39,7 +39,7 @@ const addFontToSpansFilter = (domParser: DomParser, styles: Styles, fontSizes: s
 
       node.name = 'span';
       node.attr('style', styles.serialize(props));
-      removeAttrs(node, ['color', 'face', 'size']);
+      removeAttrs(node, [ 'color', 'face', 'size' ]);
     });
   });
 };

@@ -76,7 +76,7 @@ const sAssertMoreDrawerInViewport = (type: ToolbarMode) => {
       const winBox = Boxes.win();
       const drawerBox = Boxes.box(drawer);
       // -1 from the bottom to account for the negative margin
-      const inViewport = drawerBox.x() >= winBox.x() && drawerBox.bottom() - 1 <= winBox.bottom();
+      const inViewport = drawerBox.x >= winBox.x && drawerBox.bottom - 1 <= winBox.bottom;
       Assertions.assertEq('Check more drawer is shown within the viewport', inViewport, true);
     })
   ]);

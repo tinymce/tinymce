@@ -25,14 +25,14 @@ export default function () {
       select: Fun.noop
     },
 
-    insertContent (data) {
+    insertContent(data) {
       store.adder({ method: 'insertContent', data })();
     },
-    execCommand (name, ui, args) {
+    execCommand(name, ui, args) {
       store.adder({ method: 'execCommand', data: Objects.wrap(name, args) })();
     },
     dom: {
-      createHTML (tag, attributes, innerText) {
+      createHTML(tag, attributes, innerText) {
         return { tag, attributes, innerText };
       },
       encode: Fun.identity

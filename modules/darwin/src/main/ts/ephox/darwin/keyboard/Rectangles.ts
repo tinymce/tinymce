@@ -1,7 +1,9 @@
 import { Option } from '@ephox/katamari';
 import { Awareness, Node, Element, RawRect } from '@ephox/sugar';
-import { Carets } from './Carets';
+import * as Carets from './Carets';
 import { WindowBridge } from '../api/WindowBridge';
+
+type Carets = Carets.Carets;
 
 const getPartialBox = function (bridge: WindowBridge, element: Element, offset: number) {
   if (offset >= 0 && offset < Awareness.getEnd(element)) {
@@ -12,20 +14,18 @@ const getPartialBox = function (bridge: WindowBridge, element: Element, offset: 
   return Option.none<RawRect>();
 };
 
-const toCaret = function (rect: RawRect) {
-  return Carets.nu({
-    left: rect.left,
-    top: rect.top,
-    right: rect.right,
-    bottom: rect.bottom
-  });
-};
+const toCaret = (rect: RawRect): Carets => ({
+  left: rect.left,
+  top: rect.top,
+  right: rect.right,
+  bottom: rect.bottom
+});
 
 const getElemBox = function (bridge: WindowBridge, element: Element) {
   return Option.some(bridge.getRect(element));
 };
 
-const getBoxAt = function (bridge: WindowBridge, element: Element, offset: number) {
+const getBoxAt = function (bridge: WindowBridge, element: Element, offset: number): Option<Carets> {
   // Note, we might need to consider this offset and descend.
   if (Node.isElement(element)) {
     return getElemBox(bridge, element).map(toCaret);
@@ -36,7 +36,7 @@ const getBoxAt = function (bridge: WindowBridge, element: Element, offset: numbe
   }
 };
 
-const getEntireBox = function (bridge: WindowBridge, element: Element) {
+const getEntireBox = function (bridge: WindowBridge, element: Element): Option<Carets> {
   if (Node.isElement(element)) {
     return getElemBox(bridge, element).map(toCaret);
   } else if (Node.isText(element)) {

@@ -68,8 +68,8 @@ runs `tsc -b -w` for those times when you don't need to iterate in the browser.
 `yarn tsc`
 an alias to `tsc -b` just in case you forget
 
-`yarn tslint`
-runs `tslint` in _all_ projects, with a rule set that is far more strict than most projects were previously subject to. This is a good source of things to improve when bored.
+`yarn eslint`
+runs `eslint` in _all_ projects, with a rule set that is far more strict than most projects were previously subject to. This is a good source of things to improve when bored.
 
 `yarn tinymce-grunt`
 easy access to the TinyMCE grunt commands from the root folder.

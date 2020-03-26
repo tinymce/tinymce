@@ -26,7 +26,7 @@ UnitTest.asynctest(
         }))
       ], onSuccess, onFailure);
     }, {
-      theme (editor, target) {
+      theme(editor, target) {
         const elm = Element.fromHtml('<div><button>B</button><div></div></div>');
 
         Insert.after(Element.fromDom(target), elm);
@@ -37,7 +37,7 @@ UnitTest.asynctest(
         };
       },
       base_url: '/project/tinymce/js/tinymce',
-      init_instance_callback (editor) {
+      init_instance_callback(editor) {
         editor.fire('SkinLoaded');
       }
     }, success, failure);

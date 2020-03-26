@@ -19,7 +19,7 @@ interface TestEvents {
 UnitTest.test('Events', function () {
   (function () {
     const events = Events.create({
-      myEvent: Event(['name'])
+      myEvent: Event([ 'name' ])
     }) as TestEvents;
 
     let called = false;
@@ -63,11 +63,11 @@ UnitTest.test('Events', function () {
 
   (function () {
     const ea = Events.create({
-      chook: Event(['a', 'b', 'c'])
+      chook: Event([ 'a', 'b', 'c' ])
     });
 
     const eb = Events.create({
-      quack: SourceEvent(['a', 'b', 'c'], ea.registry.chook)
+      quack: SourceEvent([ 'a', 'b', 'c' ], ea.registry.chook)
     });
 
     assert.throws(
@@ -92,11 +92,11 @@ UnitTest.test('Events', function () {
 
   (function () {
     const ea = Events.create({
-      chook: Event(['a', 'b', 'c', 'd', 'e']) // superset of arguments
+      chook: Event([ 'a', 'b', 'c', 'd', 'e' ]) // superset of arguments
     });
 
     const eb = Events.create({
-      quack: SourceEvent(['a', 'b', 'c'], ea.registry.chook)
+      quack: SourceEvent([ 'a', 'b', 'c' ], ea.registry.chook)
     });
 
     eb.registry.quack.bind(function (evt) {

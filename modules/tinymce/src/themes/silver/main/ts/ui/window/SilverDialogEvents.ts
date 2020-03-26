@@ -5,37 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent,
-  AlloyEvents,
-  AlloyTriggers,
-  CustomEvent,
-  NativeEvents,
-  Reflecting,
-  Representing,
-  Keying,
-} from '@ephox/alloy';
+import { AlloyComponent, AlloyEvents, AlloyTriggers, CustomEvent, Keying, NativeEvents, Reflecting, Representing, } from '@ephox/alloy';
 import { DialogManager, Types } from '@ephox/bridge';
-import { Focus, Compare, Attr } from '@ephox/sugar';
+import { HTMLElement } from '@ephox/dom-globals';
+import { Result } from '@ephox/katamari';
+import { Attr, Compare, Element, Focus } from '@ephox/sugar';
 
-import {
-  formActionEvent,
-  FormActionEvent,
-  formBlockEvent,
-  formCancelEvent,
-  FormCancelEvent,
-  FormChangeEvent,
-  formChangeEvent,
-  FormCloseEvent,
-  formCloseEvent,
-  FormBlockEvent,
-  FormSubmitEvent,
-  formSubmitEvent,
-  formUnblockEvent,
-  FormUnblockEvent,
-  formTabChangeEvent,
-  FormTabChangeEvent
-} from '../general/FormEvents';
+import { formActionEvent, FormActionEvent, formBlockEvent, FormBlockEvent, formCancelEvent, FormCancelEvent, FormChangeEvent, formChangeEvent, FormCloseEvent, formCloseEvent, FormSubmitEvent, formSubmitEvent, formTabChangeEvent, FormTabChangeEvent, formUnblockEvent, FormUnblockEvent } from '../general/FormEvents';
 import * as NavigableObject from '../general/NavigableObject';
 
 export interface ExtraListeners {
@@ -90,7 +66,7 @@ const initUrlDialog = <T>(getInstanceApi: () => Types.UrlDialog.UrlDialogInstanc
   ];
 };
 
-const initDialog = <T>(getInstanceApi: () => Types.Dialog.DialogInstanceApi<T>, extras: ExtraListeners) => {
+const initDialog = <T>(getInstanceApi: () => Types.Dialog.DialogInstanceApi<T>, extras: ExtraListeners, getSink: () => Result<AlloyComponent, any>) => {
   const fireApiEvent = <E extends CustomEvent>(eventName: string, f: (api: Types.Dialog.DialogInstanceApi<T>, spec: Types.Dialog.Dialog<T>, e: E, c: AlloyComponent) => void) => {
     return AlloyEvents.run<E>(eventName, (c, se) => {
       withSpec(c, (spec, _c) => {
@@ -116,19 +92,23 @@ const initDialog = <T>(getInstanceApi: () => Types.Dialog.DialogInstanceApi<T>, 
 
     fireApiEvent<FormActionEvent>(formActionEvent, (api, spec, event, component) => {
       const focusIn = () => Keying.focusIn(component);
+      const isDisabled = (focused: Element<HTMLElement>) => Attr.has(focused, 'disabled') || Attr.getOpt(focused, 'aria-disabled').exists((val) => val === 'true');
       const current = Focus.active();
 
       spec.onAction(api, { name: event.name(), value: event.value() });
 
-      Focus.active().fold(() => {
-        focusIn();
-      }, (focused) => {
+      Focus.active().fold(focusIn, (focused) => {
         // We need to check if the focused element is disabled because apparently firefox likes to leave focus on disabled elements.
-        if (!Compare.contains(component.element(), focused) || Attr.has(focused, 'disabled')) {
+        if (isDisabled(focused)) {
           focusIn();
-          // And we need the below check for IE, which likes to leave focus on the parent of disabled elements
-        } else if (Compare.contains(focused, current.getOrNull()) && Attr.has(current.getOrDie(), 'disabled')) {
+        // And we need the below check for IE, which likes to leave focus on the parent of disabled elements
+        } else if (current.exists((cur) => Compare.contains(focused, cur) && isDisabled(cur))) {
           focusIn();
+        // Lastly if something outside the sink has focus then return the focus back to the dialog
+        } else {
+          getSink().toOption()
+            .filter((sink) => !Compare.contains(sink.element(), focused))
+            .each(focusIn);
         }
       });
     }),

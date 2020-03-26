@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.TableInListTest', (success, fa
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Lists: unlist table in list then add list inside table', [
         tinyApis.sSetContent('<ul><li><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></li></ul>'),
-        tinyApis.sSetCursor([0, 0, 0, 0, 0, 0, 0], 0),
+        tinyApis.sSetCursor([ 0, 0, 0, 0, 0, 0, 0 ], 0),
         tinyUi.sClickOnToolbar('click list button', 'button[aria-label="Bullet list"]'),
         tinyApis.sAssertContent('<ul><li><table><tbody><tr><td><ul><li>a</li></ul></td><td>b</td></tr></tbody></table></li></ul>'),
         tinyUi.sClickOnToolbar('click list button', 'button[aria-label="Bullet list"]'),
@@ -25,22 +25,22 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.TableInListTest', (success, fa
       ]),
       Log.stepsAsStep('TBA', 'Lists: delete list in table test', [
         tinyApis.sSetContent('<ul><li><table><tbody><tr><td><ul><li><p>a</p></li></ul></td><td><p>b</p></td></tr></tbody></table></li></ul>'),
-        tinyApis.sSetSelection([0, 0, 0, 0, 0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0, 0, 0, 0, 0], 1),
+        tinyApis.sSetSelection([ 0, 0, 0, 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ], 1),
         Step.sync(function () {
           editor.plugins.lists.backspaceDelete();
           editor.plugins.lists.backspaceDelete();
         }),
-        tinyApis.sAssertSelection([0, 0, 0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0, 0, 0], 0),
+        tinyApis.sAssertSelection([ 0, 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0, 0 ], 0),
         tinyApis.sAssertContent('<ul><li><table><tbody><tr><td><p>&nbsp;</p></td><td><p>b</p></td></tr></tbody></table></li></ul>')
       ]),
       Log.stepsAsStep('TBA', 'Lists: focus on table cell in list does not activate button', [
         tinyApis.sSetContent('<ul><li><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></li></ul>'),
-        tinyApis.sSetCursor([0, 0, 0, 0, 0, 0, 0], 0),
+        tinyApis.sSetCursor([ 0, 0, 0, 0, 0, 0, 0 ], 0),
         UiFinder.sNotExists(TinyDom.fromDom(editor.getContainer()), 'div[aria-label="Bullet list"][aria-pressed="true"]')
       ]),
       Log.stepsAsStep('TBA', 'Lists: indent and outdent li in ul in list in table in list', [
         tinyApis.sSetContent('<ul><li><table><tbody><tr><td><ul><li><p>a</p></li><li><p>b</p></li></ul></td><td><p>b</p></td></tr></tbody></table></li></ul>'),
-        tinyApis.sSetSelection([0, 0, 0, 0, 0, 0, 0, 1, 0, 0], 0, [0, 0, 0, 0, 0, 0, 0, 1, 0, 0], 1),
+        tinyApis.sSetSelection([ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ], 1),
         tinyUi.sClickOnToolbar('click increase indent', 'button[aria-label="Increase indent"]'),
         tinyApis.sAssertContent('<ul><li><table><tbody><tr><td><ul><li><p>a</p><ul><li><p>b</p></li></ul></li></ul></td><td><p>b</p></td></tr></tbody></table></li></ul>'),
         tinyUi.sClickOnToolbar('click decrease indent', 'button[aria-label="Decrease indent"]'),
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.TableInListTest', (success, fa
       ]),
       Log.stepsAsStep('TBA', 'Lists: toggle from UL to OL in list in table in list only changes inner list', [
         tinyApis.sSetContent('<ul><li><table><tbody><tr><td><ul><li><p>a</p></li><li><p>b</p></li></ul></td><td><p>b</p></td></tr></tbody></table></li></ul>'),
-        tinyApis.sSetSelection([0, 0, 0, 0, 0, 0, 0, 1, 0, 0], 0, [0, 0, 0, 0, 0, 0, 0, 1, 0, 0], 1),
+        tinyApis.sSetSelection([ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ], 1),
         tinyUi.sClickOnToolbar('click numlist button', 'button[aria-label="Numbered list"]'),
         tinyApis.sAssertContent('<ul><li><table><tbody><tr><td><ol><li><p>a</p></li><li><p>b</p></li></ol></td><td><p>b</p></td></tr></tbody></table></li></ul>')
       ])

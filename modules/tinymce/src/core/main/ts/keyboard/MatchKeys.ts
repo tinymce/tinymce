@@ -43,7 +43,7 @@ const matchesEvent = function (pattern: KeyPattern, evt: KeyboardEvent) {
 
 const match = function (patterns: KeyPattern[], evt: KeyboardEvent) {
   return Arr.bind(defaultPatterns(patterns), (pattern) => {
-    return matchesEvent(pattern, evt) ? [pattern] : [ ];
+    return matchesEvent(pattern, evt) ? [ pattern ] : [ ];
   });
 };
 

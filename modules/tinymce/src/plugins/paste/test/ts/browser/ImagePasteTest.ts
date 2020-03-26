@@ -40,7 +40,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
 
   const appendTeardown = function (editor: Editor, steps: Step<any, any>[]) {
     return Arr.bind(steps, function (step) {
-      return [step, sTeardown(editor)];
+      return [ step, sTeardown(editor) ];
     });
   };
 
@@ -52,7 +52,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
       bytes[i] = buff.charCodeAt(i);
     }
 
-    return new Blob([bytes], { type });
+    return new Blob([ bytes ], { type });
   };
 
   const noop = function () {

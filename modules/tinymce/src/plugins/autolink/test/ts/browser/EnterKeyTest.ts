@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.EnterKeyTest', (success, fa
       Log.steps('TINY-1202', 'AutoLink: Focus on editor, set content, set cursor at end of content, assert enter/return keystroke and keydown event', [
         tinyApis.sFocus(),
         tinyApis.sSetContent('<p>abcdefghijk</p>'),
-        tinyApis.sSetCursor([0, 0], 'abcdefghijk'.length),
+        tinyApis.sSetCursor([ 0, 0 ], 'abcdefghijk'.length),
         tinyActions.sContentKeystroke(Keys.enter(), {}),
         Step.sync(function () {
           try {
@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.EnterKeyTest', (success, fa
             Assertions.assertEq('should not throw error', true, false);
           }
         }),
-    ]), onSuccess, onFailure);
+      ]), onSuccess, onFailure);
   }, {
     plugins: 'autolink',
     base_url: '/project/tinymce/js/tinymce'

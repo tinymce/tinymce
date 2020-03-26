@@ -21,7 +21,7 @@ UnitTest.asynctest('Ui Label component Test', (success, failure) => {
             {
               dom: {
                 tag: 'label',
-                classes: ['tox-checkbox']
+                classes: [ 'tox-checkbox' ]
               }
             } as any
           ]

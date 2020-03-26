@@ -38,7 +38,7 @@ export interface Result<T, E> {
  * getOrDie :: this Result a -> a (or throws error)
 */
 
-const value = function <T, E = any>(o: T): Result<T, E> {
+const value = function <T, E = any> (o: T): Result<T, E> {
   const is = function (v: T) {
     return o === v;
   };
@@ -51,11 +51,11 @@ const value = function <T, E = any>(o: T): Result<T, E> {
     return value(o);
   };
 
-  const map = function <U>(f: (value: T) => U) {
+  const map = function <U> (f: (value: T) => U) {
     return value(f(o));
   };
 
-  const mapError = function <U>(f: (error: E) => U) {
+  const mapError = function <U> (f: (error: E) => U) {
     return value(o);
   };
 
@@ -63,11 +63,11 @@ const value = function <T, E = any>(o: T): Result<T, E> {
     f(o);
   };
 
-  const bind = function <U>(f: (value: T) => Result<U, E>) {
+  const bind = function <U> (f: (value: T) => Result<U, E>) {
     return f(o);
   };
 
-  const fold = function <U>(_: (err: E) => U, onValue: (value: T) => U) {
+  const fold = function <U> (_: (err: E) => U, onValue: (value: T) => U) {
     return onValue(o);
   };
 
@@ -103,7 +103,7 @@ const value = function <T, E = any>(o: T): Result<T, E> {
   };
 };
 
-const error = function <T = any, E = any>(message: E): Result<T, E> {
+const error = function <T = any, E = any> (message: E): Result<T, E> {
   const getOrThunk = function (f: () => T) {
     return f();
   };
@@ -120,19 +120,19 @@ const error = function <T = any, E = any>(message: E): Result<T, E> {
     return f();
   };
 
-  const map = function <U>(f: (value: T) => U) {
+  const map = function <U> (f: (value: T) => U) {
     return error<U, E>(message);
   };
 
-  const mapError = function <U>(f: (error: E) => U) {
+  const mapError = function <U> (f: (error: E) => U) {
     return error(f(message));
   };
 
-  const bind = function <U>(f: (value: T) => Result<U, E>) {
+  const bind = function <U> (f: (value: T) => Result<U, E>) {
     return error<U, E>(message);
   };
 
-  const fold = function <U>(onError: (err: E) => U, _: (value: T) => U) {
+  const fold = function <U> (onError: (err: E) => U, _: (value: T) => U) {
     return onError(message);
   };
 

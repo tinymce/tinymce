@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
       selector: 'textarea.tinymce',
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback (editor1) {
+      init_instance_callback(editor1) {
         LegacyUnit.equal(EditorManager.get().length, 1);
         LegacyUnit.equal(EditorManager.get(0) === EditorManager.activeEditor, true);
         LegacyUnit.equal(EditorManager.get(1), null);
@@ -88,7 +88,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
       language: langCode,
       language_url: langUrl,
-      init_instance_callback (ed) {
+      init_instance_callback(ed) {
         const scripts = Tools.grep(document.getElementsByTagName('script'), function (script) {
           return script.src === langUrl;
         });
@@ -107,7 +107,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
       selector: 'textarea',
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback (editor1) {
+      init_instance_callback(editor1) {
         Delay.setTimeout(function () {
           // Destroy the editor by setting innerHTML common ajax pattern
           viewBlock.update('<textarea id="' + editor1.id + '"></textarea>');
@@ -117,7 +117,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
             selector: 'textarea',
             skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
             content_css: '/project/tinymce/js/tinymce/skins/content/default',
-            init_instance_callback (editor2) {
+            init_instance_callback(editor2) {
               LegacyUnit.equal(EditorManager.get().length, 1);
               LegacyUnit.equal(editor1.id, editor2.id);
               LegacyUnit.equal(editor1.destroyed, true, 'First editor instance should be destroyed');

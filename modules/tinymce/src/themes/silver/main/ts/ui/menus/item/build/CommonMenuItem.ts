@@ -17,7 +17,7 @@ import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Bac
 import * as ReadOnly from 'tinymce/themes/silver/ReadOnly';
 
 export const componentRenderPipeline = (xs: Array<Option<AlloySpec>>) =>
-Arr.bind(xs, (o) => o.toArray());
+  Arr.bind(xs, (o) => o.toArray());
 
 export interface CommonMenuItemSpec<T> {
   onAction: (itemApi: T) => void;

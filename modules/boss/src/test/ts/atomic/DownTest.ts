@@ -40,16 +40,16 @@ UnitTest.test('DownTest', function () {
     check(expected, actual);
   };
 
-  checkSelector(['1.1.1', '1.1.2', '1.1.2.2.1'], 'goose');
-  checkSelector(['1.1', '1.1.2.1', '1.1.2.2', '1.1.3', '1.1.4', '1.1.4.1'], 'duck');
-  checkSelector(['1.1', '1.1.1', '1.1.2', '1.1.2.1', '1.1.2.2', '1.1.2.2.1', '1.1.3', '1.1.4', '1.1.4.1'], 'duck,goose');
-  checkSelector(['1.1', '1.1.1', '1.1.2', '1.1.2.1', '1.1.2.2', '1.1.2.2.1', '1.1.3', '1.1.4', '1.1.4.1'], 'root,duck,goose');
+  checkSelector([ '1.1.1', '1.1.2', '1.1.2.2.1' ], 'goose');
+  checkSelector([ '1.1', '1.1.2.1', '1.1.2.2', '1.1.3', '1.1.4', '1.1.4.1' ], 'duck');
+  checkSelector([ '1.1', '1.1.1', '1.1.2', '1.1.2.1', '1.1.2.2', '1.1.2.2.1', '1.1.3', '1.1.4', '1.1.4.1' ], 'duck,goose');
+  checkSelector([ '1.1', '1.1.1', '1.1.2', '1.1.2.1', '1.1.2.2', '1.1.2.2.1', '1.1.3', '1.1.4', '1.1.4.1' ], 'root,duck,goose');
 
   checkPredicate([], '1.1.4', function (item) {
     return item.name.indexOf('g') > -1;
   });
 
-  checkPredicate(['1.1.1', '1.1.2', '1.1.2.2.1'], '1.1', function (item) {
+  checkPredicate([ '1.1.1', '1.1.2', '1.1.2.2.1' ], '1.1', function (item) {
     return item.name.indexOf('g') > -1;
   });
 });

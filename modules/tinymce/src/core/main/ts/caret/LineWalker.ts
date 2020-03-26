@@ -43,7 +43,7 @@ const walkUntil = (direction: VDirection, isAboveFn: PosPredicate, isBeflowFn: P
   const add = function (node: Node) {
     let i, clientRect, clientRects;
 
-    clientRects = Dimensions.getClientRects([node]);
+    clientRects = Dimensions.getClientRects([ node ]);
     if (direction === -1) {
       clientRects = clientRects.reverse();
     }

@@ -16,7 +16,7 @@ import { buildBasicStaticDataset } from './SelectDatasets';
 import { IsSelectedForType } from './utils/FormatRegister';
 
 const alignMenuItems = [
-  { title: 'Left', icon: 'align-left', format: 'alignleft'},
+  { title: 'Left', icon: 'align-left', format: 'alignleft' },
   { title: 'Center', icon: 'align-center', format: 'aligncenter' },
   { title: 'Right', icon: 'align-right', format: 'alignright' },
   { title: 'Justify', icon: 'align-justify', format: 'alignjustify' }

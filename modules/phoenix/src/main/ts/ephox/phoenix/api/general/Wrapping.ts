@@ -20,7 +20,7 @@ const leaves: LeavesApi = Wrapper.leaves;
 type ReuseApi = <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, predicate: (e: E) => boolean, nu: () => Wrapter<E>) => E[];
 const reuse: ReuseApi = Wrapper.reuse;
 
-const spans = function <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, exclusions?: (e: E) => boolean) {
+const spans = function <E, D> (universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, exclusions?: (e: E) => boolean) {
   return SpanWrap.spans(universe, base, baseOffset, end, endOffset, exclusions);
 };
 

@@ -27,7 +27,7 @@ UnitTest.asynctest('Cyclic Keying Test', (success, failure) => {
       Container.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'cyclic-keying-test'],
+          classes: [ 'cyclic-keying-test' ],
           styles: {
             background: 'blue',
             width: '200px',

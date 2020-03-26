@@ -18,7 +18,7 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
   GuiSetup.setup((store, doc, body) => {
     const hotspot = GuiFactory.build(
       Button.sketch({
-        action () { },
+        action() { },
         dom: {
           styles: {
             position: 'absolute',
@@ -63,7 +63,7 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
     });
 
     const win = Boxes.win();
-    const bounds100PixelsFromTop = Boxes.bounds(win.x(), win.y() + 100, win.width(), win.height() - 100);
+    const bounds100PixelsFromTop = Boxes.bounds(win.x, win.y + 100, win.width, win.height - 100);
 
     return [
       Chain.asStep({}, [

@@ -42,7 +42,7 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
       toolbar: 'help',
       theme: 'silver',
       base_url: '/project/tinymce/js/tinymce'
-    }, ['Handy Shortcuts', 'Keyboard Navigation', 'Plugins', 'Version'])),
+    }, [ 'Handy Shortcuts', 'Keyboard Navigation', 'Plugins', 'Version' ])),
 
     Logger.t('Test help_tabs with pre-registered and new tabs', makeStep({
       plugins: 'help',
@@ -69,7 +69,7 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
           }]
         },
       ]
-    }, ['Handy Shortcuts', 'Plugins', 'Version', 'Extra1'])),
+    }, [ 'Handy Shortcuts', 'Plugins', 'Version', 'Extra1' ])),
 
     Logger.t('Test addTab() with a new tab', makeStep({
       plugins: 'help',
@@ -88,7 +88,7 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
           });
         });
       }
-    }, ['Handy Shortcuts', 'Keyboard Navigation', 'Plugins', 'Extra1', 'Version'])),
+    }, [ 'Handy Shortcuts', 'Keyboard Navigation', 'Plugins', 'Extra1', 'Version' ])),
 
     Logger.t('Test help_tabs and addTab()', makeStep({
       plugins: 'help',
@@ -136,7 +136,7 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
           });
         });
       }
-    }, ['Handy Shortcuts', 'Extra2', 'Plugins', 'Version', 'Extra1'])),
+    }, [ 'Handy Shortcuts', 'Extra2', 'Plugins', 'Version', 'Extra1' ])),
 
     Logger.t('Test things do not break if a tab name does not have a spec', makeStep({
       plugins: 'help',
@@ -149,6 +149,6 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
         'versions',
         'unknown'
       ]
-    }, ['Handy Shortcuts', 'Plugins', 'Version'])),
+    }, [ 'Handy Shortcuts', 'Plugins', 'Version' ])),
   ], success, failure);
 });

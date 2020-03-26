@@ -24,7 +24,7 @@ const getTransition = (comp: AlloyComponent, transConfig: TransitioningConfig, t
   });
 };
 
-const getTransitionOf = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Option<{ transition: { property: string; transitionClass: string }, route: TransitionProperties }> => {
+const getTransitionOf = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Option<{ transition: { property: string; transitionClass: string }; route: TransitionProperties }> => {
   return findRoute(comp, transConfig, transState, route).bind((r: TransitionProperties) => {
     return r.transition.map((t) => {
       return {

@@ -23,7 +23,7 @@ const register = function (editor: Editor) {
       return value === defaultFormat.get();
     },
     fetch: (done) => {
-      done(Tools.map(formats, (format): Menu.ChoiceMenuItemApi => ({type: 'choiceitem', text: Actions.getDateTime(editor, format), value: format})));
+      done(Tools.map(formats, (format): Menu.ChoiceMenuItemApi => ({ type: 'choiceitem', text: Actions.getDateTime(editor, format), value: format })));
     },
     onAction: (...args) => {
       Actions.insertDateTime(editor, defaultFormat.get());
@@ -42,7 +42,7 @@ const register = function (editor: Editor) {
   editor.ui.registry.addNestedMenuItem('insertdatetime', {
     icon: 'insert-time',
     text: 'Date/time',
-    getSubmenuItems: () => Tools.map(formats, (format): Menu.MenuItemApi => ({type: 'menuitem', text: Actions.getDateTime(editor, format), onAction: makeMenuItemHandler(format)}))
+    getSubmenuItems: () => Tools.map(formats, (format): Menu.MenuItemApi => ({ type: 'menuitem', text: Actions.getDateTime(editor, format), onAction: makeMenuItemHandler(format) }))
   });
 };
 

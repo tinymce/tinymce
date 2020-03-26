@@ -82,7 +82,7 @@ promiseTest('Future: parallel spec', () =>
         cb(value);
       }, timeout);
     }))).get((ii) => {
-      eqAsync('pars', tuples.map(([_, i]) => i), ii, reject, tArray(tNumber));
+      eqAsync('pars', tuples.map(([ _, i ]) => i), ii, reject, tArray(tNumber));
       resolve();
     });
   })))
@@ -110,7 +110,7 @@ promiseTest('Future: mapM spec', () =>
         cb(value);
       }, timeout);
     })).get((ii) => {
-      eqAsync('pars', tuples.map(([_, i]) => i), ii, reject, tArray(tNumber));
+      eqAsync('pars', tuples.map(([ _, i ]) => i), ii, reject, tArray(tNumber));
       resolve();
     });
   })))

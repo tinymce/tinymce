@@ -44,105 +44,105 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
       tinyApis.sFocus(),
       Logger.t('Backspace in same block should remain unchanged', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetCursor([0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         sBackspaceNoop(editor),
         tinyApis.sAssertContent('<p>a</p>'),
-        tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
       ])),
       Logger.t('Delete in same block should remain unchanged', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetCursor([0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         sDeleteNoop(editor),
         tinyApis.sAssertContent('<p>a</p>'),
-        tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
       ])),
       Logger.t('Backspace between blocks with different parents should not merge', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p><div><p>b</p></div>'),
-        tinyApis.sSetCursor([1, 0, 0], 0),
+        tinyApis.sSetCursor([ 1, 0, 0 ], 0),
         sBackspaceNoop(editor),
         tinyApis.sAssertContent('<p>a</p><div><p>b</p></div>'),
-        tinyApis.sAssertSelection([1, 0, 0], 0, [1, 0, 0], 0)
+        tinyApis.sAssertSelection([ 1, 0, 0 ], 0, [ 1, 0, 0 ], 0)
       ])),
       Logger.t('Delete between blocks with different parents should not merge', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p><div><p>b</p></div>'),
-        tinyApis.sSetCursor([0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         sDeleteNoop(editor),
         tinyApis.sAssertContent('<p>a</p><div><p>b</p></div>'),
-        tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
       ])),
       Logger.t('Backspace between textblock and non text block should not merge', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p><ul><li>b</li></ul>'),
-        tinyApis.sSetCursor([1, 0, 0], 0),
+        tinyApis.sSetCursor([ 1, 0, 0 ], 0),
         sBackspaceNoop(editor),
         tinyApis.sAssertContent('<p>a</p><ul><li>b</li></ul>'),
-        tinyApis.sAssertSelection([1, 0, 0], 0, [1, 0, 0], 0)
+        tinyApis.sAssertSelection([ 1, 0, 0 ], 0, [ 1, 0, 0 ], 0)
       ])),
       Logger.t('Delete between textblock and non text block should not merge', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p><ul><li>b</li></ul>'),
-        tinyApis.sSetCursor([0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         sDeleteNoop(editor),
         tinyApis.sAssertContent('<p>a</p><ul><li>b</li></ul>'),
-        tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
       ])),
       Logger.t('Backspace on range between blocks should not merge (handled elsewhere)', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p><p>b</p>'),
-        tinyApis.sSetSelection([0, 0], 1, [1, 0], 0),
+        tinyApis.sSetSelection([ 0, 0 ], 1, [ 1, 0 ], 0),
         sBackspaceNoop(editor),
         tinyApis.sAssertContent('<p>a</p><p>b</p>'),
-        tinyApis.sAssertSelection([0, 0], 1, [1, 0], 0)
+        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 1, 0 ], 0)
       ])),
       Logger.t('Delete on range between blocks should not merge (handled elsewhere)', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p><p>b</p>'),
-        tinyApis.sSetSelection([0, 0], 1, [1, 0], 0),
+        tinyApis.sSetSelection([ 0, 0 ], 1, [ 1, 0 ], 0),
         sDeleteNoop(editor),
         tinyApis.sAssertContent('<p>a</p><p>b</p>'),
-        tinyApis.sAssertSelection([0, 0], 1, [1, 0], 0)
+        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 1, 0 ], 0)
       ])),
       Logger.t('Backspace between simple blocks should merge', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p><p>b</p>'),
-        tinyApis.sSetCursor([1, 0], 0),
+        tinyApis.sSetCursor([ 1, 0 ], 0),
         sBackspace(editor),
         tinyApis.sAssertContent('<p>ab</p>'),
-        tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
       ])),
       Logger.t('Delete between simple blocks should merge', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p><p>b</p>'),
-        tinyApis.sSetCursor([0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         sDelete(editor),
         tinyApis.sAssertContent('<p>ab</p>'),
-        tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
       ])),
       Logger.t('Backspace between complex blocks should merge', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a<em>b</em></p><p><em>c</em>d</p>'),
-        tinyApis.sSetCursor([1, 0, 0], 0),
+        tinyApis.sSetCursor([ 1, 0, 0 ], 0),
         sBackspace(editor),
         tinyApis.sAssertContent('<p>a<em>b</em><em>c</em>d</p>'),
-        tinyApis.sAssertSelection([0, 1, 0], 1, [0, 1, 0], 1)
+        tinyApis.sAssertSelection([ 0, 1, 0 ], 1, [ 0, 1, 0 ], 1)
       ])),
       Logger.t('Delete between complex blocks should merge', GeneralSteps.sequence([
         tinyApis.sSetContent('<p><em>a</em>b</p><p>c<em>d</em></p>'),
-        tinyApis.sSetCursor([0, 1], 1),
+        tinyApis.sSetCursor([ 0, 1 ], 1),
         sDelete(editor),
         tinyApis.sAssertContent('<p><em>a</em>bc<em>d</em></p>'),
-        tinyApis.sAssertSelection([0, 1], 1, [0, 1], 1)
+        tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 1 ], 1)
       ])),
       Logger.t('Backspace from red span to h1 should merge', GeneralSteps.sequence([
         tinyApis.sSetContent('<h1>a</h1><p><span style="color: red;">b</span></p>'),
-        tinyApis.sSetCursor([1, 0, 0], 0),
+        tinyApis.sSetCursor([ 1, 0, 0 ], 0),
         sBackspace(editor),
         tinyApis.sAssertContent('<h1>a<span style="color: red;">b</span></h1>'),
-        tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
       ])),
       Logger.t('Delete from red span to h1 should merge', GeneralSteps.sequence([
         tinyApis.sSetContent('<p><span style="color: red;">a</span></p><h1>b</h1>'),
-        tinyApis.sSetCursor([0, 0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0, 0 ], 1),
         sDelete(editor),
         tinyApis.sAssertContent('<p><span style="color: red;">a</span>b</p>'),
-        tinyApis.sAssertSelection([0, 0, 0], 1, [0, 0, 0], 1)
+        tinyApis.sAssertSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1)
       ])),
       Logger.t('Backspace from block into block with trailing br should merge', GeneralSteps.sequence([
         tinyApis.sSetRawContent('<p>a<br></p><p>b</p>'),
-        tinyApis.sSetCursor([1, 0], 0),
+        tinyApis.sSetCursor([ 1, 0 ], 0),
         sBackspace(editor),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build(function (s, str, arr) {
@@ -158,11 +158,11 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
             });
           })
         ),
-        tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
       ])),
       Logger.t('Delete from block into block with trailing br should merge', GeneralSteps.sequence([
         tinyApis.sSetRawContent('<p>a<br></p><p>b</p>'),
-        tinyApis.sSetCursor([0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         sDelete(editor),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build(function (s, str, arr) {
@@ -178,11 +178,11 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
             });
           })
         ),
-        tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
       ])),
       Logger.t('Backspace from empty block into content block should merge', GeneralSteps.sequence([
         tinyApis.sSetRawContent('<p>a</p><p><br></p>'),
-        tinyApis.sSetCursor([1], 0),
+        tinyApis.sSetCursor([ 1 ], 0),
         sBackspace(editor),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build(function (s, str, arr) {
@@ -197,11 +197,11 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
             });
           })
         ),
-        tinyApis.sAssertSelection([0, 0], 1, [0, 0], 1)
+        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
       ])),
       Logger.t('Delete from empty block into content block should merge', GeneralSteps.sequence([
         tinyApis.sSetRawContent('<p><br></p><p>a</p>'),
-        tinyApis.sSetCursor([0], 0),
+        tinyApis.sSetCursor([ 0 ], 0),
         sDelete(editor),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build(function (s, str, arr) {
@@ -216,11 +216,11 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
             });
           })
         ),
-        tinyApis.sAssertSelection([0, 0], 0, [0, 0], 0)
+        tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0)
       ])),
       Logger.t('Backspace between empty blocks should merge', GeneralSteps.sequence([
         tinyApis.sSetRawContent('<p><br></p><p><br></p>'),
-        tinyApis.sSetCursor([1], 0),
+        tinyApis.sSetCursor([ 1 ], 0),
         sBackspace(editor),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build(function (s, str, arr) {
@@ -235,11 +235,11 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
             });
           })
         ),
-        tinyApis.sAssertSelection([0], 0, [0], 0)
+        tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 0)
       ])),
       Logger.t('Delete between empty blocks should merge', GeneralSteps.sequence([
         tinyApis.sSetRawContent('<p><br></p><p><br></p>'),
-        tinyApis.sSetCursor([0], 0),
+        tinyApis.sSetCursor([ 0 ], 0),
         sDelete(editor),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build(function (s, str, arr) {
@@ -254,11 +254,11 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
             });
           })
         ),
-        tinyApis.sAssertSelection([0], 0, [0], 0)
+        tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 0)
       ])),
       Logger.t('Backspace from block into block with trailing noneditable should merge', GeneralSteps.sequence([
         tinyApis.sSetRawContent('<p>a<span contentEditable="false">b</span></p><p>c</p>'),
-        tinyApis.sSetCursor([1, 0], 0),
+        tinyApis.sSetCursor([ 1, 0 ], 0),
         sBackspace(editor),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build((s, str, arr) => {
@@ -283,11 +283,11 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
             });
           })
         ),
-        tinyApis.sAssertSelection([0, 2], 1, [0, 2], 1)
+        tinyApis.sAssertSelection([ 0, 2 ], 1, [ 0, 2 ], 1)
       ])),
       Logger.t('Delete from block into block with trailing contenteditable should merge', GeneralSteps.sequence([
         tinyApis.sSetRawContent('<p>a<span contentEditable="false">b</span></p><p>c</p>'),
-        tinyApis.sSetCursor([0], 2),
+        tinyApis.sSetCursor([ 0 ], 2),
         sDelete(editor),
         tinyApis.sAssertContentStructure(
           ApproxStructure.build((s, str, arr) => {
@@ -312,7 +312,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
             });
           })
         ),
-        tinyApis.sAssertSelection([0, 2], 1, [0, 2], 1)
+        tinyApis.sAssertSelection([ 0, 2 ], 1, [ 0, 2 ], 1)
       ])),
     ], onSuccess, onFailure);
   }, {

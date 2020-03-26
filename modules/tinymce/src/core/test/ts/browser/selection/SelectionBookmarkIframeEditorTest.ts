@@ -67,49 +67,49 @@ UnitTest.asynctest(
         Logger.t('assert selection after no nodechanged, should not restore', Step.sync(function () {
           editor.setContent('<p>a</p><p>b</p>');
 
-          setSelection(editor, [0, 0], 0, [0, 0], 0);
+          setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
           editor.nodeChanged();
 
-          setSelection(editor, [1, 0], 1, [1, 0], 1);
+          setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
           focusDiv();
 
-          assertSelection(editor, [0, 0], 0, [0, 0], 0);
+          assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
         })),
         Logger.t('assert selection after nodechanged, should restore', Step.sync(function () {
           editor.setContent('<p>a</p><p>b</p>');
 
-          setSelection(editor, [0], 0, [0], 0);
+          setSelection(editor, [ 0 ], 0, [ 0 ], 0);
           editor.nodeChanged();
 
-          setSelection(editor, [1, 0], 1, [1, 0], 1);
+          setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
           editor.nodeChanged();
           focusDiv();
 
-          assertSelection(editor, [1, 0], 1, [1, 0], 1);
+          assertSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
         })),
         Logger.t('assert selection after keyup, should restore', Step.sync(function () {
           editor.setContent('<p>a</p><p>b</p>');
 
-          setSelection(editor, [0], 0, [0], 0);
+          setSelection(editor, [ 0 ], 0, [ 0 ], 0);
           editor.nodeChanged();
 
-          setSelection(editor, [1, 0], 1, [1, 0], 1);
+          setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
           editor.fire('keyup', { });
           focusDiv();
 
-          assertSelection(editor, [1, 0], 1, [1, 0], 1);
+          assertSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
         })),
         Logger.t('assert selection after mouseup, should restore', Step.sync(function () {
           editor.setContent('<p>a</p><p>b</p>');
 
-          setSelection(editor, [0], 0, [0], 0);
+          setSelection(editor, [ 0 ], 0, [ 0 ], 0);
           editor.nodeChanged();
 
-          setSelection(editor, [1, 0], 1, [1, 0], 1);
+          setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
           editor.fire('mouseup', { });
           focusDiv();
 
-          assertSelection(editor, [1, 0], 1, [1, 0], 1);
+          assertSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
         })),
         sRemoveTestDiv
       ] : [], onSuccess, onFailure);

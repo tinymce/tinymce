@@ -122,7 +122,7 @@ UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function (success, 
     ), '&#8218;&#402;&#8222;&#8230;&#8224;&#8225;&#710;&#8240;&#352;&#8249;&#338;&#141;&#381;' +
     '&#143;&#144;&#8216;&#8217;&#8220;&#8221;&#8226;&#8211;&#8212;&#732;&#8482;&#353;' +
       '&#8250;&#339;&#157;&#382;&#376;',
-      'Entity decode ascii');
+    'Entity decode ascii');
 
     LegacyUnit.equal(Entities.encodeNumeric(Entities.decode('&#194564;')), '&#194564;', 'High byte non western character.');
   });

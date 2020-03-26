@@ -24,11 +24,11 @@ export default function () {
       File: [ 'x1', 'x2', 'x3', '|', 't1', '|', 'd1' ]
     },
 
-    setup (ed: Editor) {
+    setup(ed: Editor) {
       ed.ui.registry.addMenuItem('x1', {
         icon: 'drop',
         text: 'Text with icon',
-        onAction () {
+        onAction() {
           console.log('Just Text click');
         }
       });
@@ -36,7 +36,7 @@ export default function () {
       ed.ui.registry.addMenuItem('x2', {
         // icon: Icons.getOr('bold', () => 'oh no'),
         text: 'Just Text',
-        onAction () {
+        onAction() {
           console.log('Just Text click');
         }
       });
@@ -45,7 +45,7 @@ export default function () {
         // icon: Icons.getOr('bold', () => 'oh no'),
         text: 'Just Text with shortcut',
         shortcut: 'Ctrl+Alt+Delete',
-        onAction () {
+        onAction() {
           console.log('Just Text click');
         }
       });
@@ -62,7 +62,7 @@ export default function () {
           comp.setActive(state);
           return () => { };
         },
-        onAction (comp) {
+        onAction(comp) {
           DemoState.toggle();
           comp.setActive(DemoState.get());
           console.log('button with Toggle click - current state is: ' + DemoState.get());
@@ -76,7 +76,7 @@ export default function () {
           {
             type: 'menuitem',
             text: 'Nested 1',
-            onAction () {
+            onAction() {
               console.log('clicked nested 1');
             }
           },
@@ -84,7 +84,7 @@ export default function () {
             type: 'menuitem',
             text: 'Nested 2',
             icon: 'drop',
-            onAction () {
+            onAction() {
               console.log('clicked nested 1');
             }
           },
@@ -92,7 +92,7 @@ export default function () {
             type: 'menuitem',
             text: 'Nested 3',
             shortcut: 'X',
-            onAction () {
+            onAction() {
               console.log('clicked nested 1');
             }
           },
@@ -108,7 +108,7 @@ export default function () {
               comp.setActive(state);
               return () => { };
             },
-            onAction (comp) {
+            onAction(comp) {
               DemoState2.toggle();
               comp.setActive(DemoState2.get());
               console.log('button with Toggle click - current state is: ' + DemoState2.get());

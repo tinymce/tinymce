@@ -2,77 +2,77 @@ import { Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
 export interface Dimension {
-  width: () => number;
-  height: () => number;
+  readonly width: () => number;
+  readonly height: () => number;
 }
 
 export interface Dimensions {
-  width: () => number[];
-  height: () => number[];
+  readonly width: () => number[];
+  readonly height: () => number[];
 }
 
 export interface Grid {
-  rows: () => number;
-  columns: () => number;
+  readonly rows: () => number;
+  readonly columns: () => number;
 }
 
 export interface Address {
-  row: () => number;
-  column: () => number;
+  readonly row: () => number;
+  readonly column: () => number;
 }
 
 export interface Coords {
-  x: () => number;
-  y: () => number;
+  readonly x: () => number;
+  readonly y: () => number;
 }
 
 export interface Detail {
-  element: () => Element;
-  rowspan: () => number;
-  colspan: () => number;
+  readonly element: () => Element;
+  readonly rowspan: () => number;
+  readonly colspan: () => number;
 }
 
 export interface DetailNew extends Detail {
-  isNew: () => boolean;
+  readonly isNew: () => boolean;
 }
 
 export interface DetailExt extends Detail {
-  row: () => number;
-  column: () => number;
+  readonly row: () => number;
+  readonly column: () => number;
 }
 
 type Section = 'tfoot' | 'thead' | 'tbody';
 
 export interface RowCells {
-  cells: () => ElementNew[];
-  section: () => Section;
+  readonly cells: () => ElementNew[];
+  readonly section: () => Section;
 }
 
 export interface RowData<T> {
-  element: () => Element;
-  cells: () => T[];
-  section: () => Section;
+  readonly element: () => Element;
+  readonly cells: () => T[];
+  readonly section: () => Section;
 }
 
 export interface RowDataNew<T> extends RowData<T> {
-  isNew: () => boolean;
+  readonly isNew: () => boolean;
 }
 
 export interface ElementNew {
-  element: () => Element;
-  isNew: () => boolean;
+  readonly element: () => Element;
+  readonly isNew: () => boolean;
 }
 
 export interface RowDetails {
-  details: () => DetailNew[];
-  section: () => Section;
+  readonly details: () => DetailNew[];
+  readonly section: () => Section;
 }
 
 export interface Bounds {
-  startRow: () => number;
-  startCol: () => number;
-  finishRow: () => number;
-  finishCol: () => number;
+  readonly startRow: () => number;
+  readonly startCol: () => number;
+  readonly finishRow: () => number;
+  readonly finishCol: () => number;
 }
 
 const dimension = (

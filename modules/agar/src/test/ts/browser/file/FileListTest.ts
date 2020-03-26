@@ -6,8 +6,8 @@ import { Type } from '@ephox/katamari';
 
 UnitTest.test('FileListTest', () => {
   const files = createFileList([
-    createFile('a.txt', 1234, new Blob(['123'], { type: 'text/plain' })),
-    createFile('b.html', 1234, new Blob(['123'], { type: 'text/html' }))
+    createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/plain' })),
+    createFile('b.html', 1234, new Blob([ '123' ], { type: 'text/html' }))
   ]);
 
   Assert.eq('Should be the expected file list length', 2, files.length);

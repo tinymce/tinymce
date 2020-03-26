@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
                     return s.element('div', {
                       classes: [ arr.has('tox-collection__item') ],
                       children: [
-                        ...hasIcons ? [ s.element('div', { classes: [ arr.has('tox-collection__item-icon') ]}) ] : [ ],
+                        ...hasIcons ? [ s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }) ] : [ ],
                         s.element('div', exp.submenu ? {
                           classes: [ arr.has('tox-collection__item-label') ],
                           html: str.is(exp.html)
@@ -57,22 +57,22 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
         sOpenStyleMenu,
         sAssertMenu('Checking stuff', assertions.menuContents, assertions.menuHasIcons)
       ].concat(assertions.choice.map((c) => [
-          Assertions.sAssertPresence(
-            `${c} should NOT be present before clicking`,
-            {
-              [c]: 0
-            },
-            Element.fromDom(editor.getBody())
-          ),
-          Mouse.sClickOn(Body.body(), `.tox-collection__item .tox-collection__item-label:contains(${c})`),
-          Assertions.sAssertPresence(
-            `${c} should be present`,
-            {
-              [c]: 1
-            },
-            Element.fromDom(editor.getBody())
-          )
-        ]).getOr([ ])), onSuccess, onFailure);
+        Assertions.sAssertPresence(
+          `${c} should NOT be present before clicking`,
+          {
+            [c]: 0
+          },
+          Element.fromDom(editor.getBody())
+        ),
+        Mouse.sClickOn(Body.body(), `.tox-collection__item .tox-collection__item-label:contains(${c})`),
+        Assertions.sAssertPresence(
+          `${c} should be present`,
+          {
+            [c]: 1
+          },
+          Element.fromDom(editor.getBody())
+        )
+      ]).getOr([ ])), onSuccess, onFailure);
     }, {
       plugins: 'importcss',
       toolbar: 'styleselect',

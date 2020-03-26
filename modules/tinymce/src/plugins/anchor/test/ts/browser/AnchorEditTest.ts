@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorEditTest', (success, fa
         tinyApis.sSetCursor([], 0),
         tinyApis.sAssertContentPresence({ 'a.mce-item-anchor#abc': 1 })
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     theme: 'silver',
     plugins: 'anchor',

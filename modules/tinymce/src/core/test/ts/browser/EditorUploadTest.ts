@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
 
   const appendTeardown = function (editor: Editor, steps: Step<any, any>[]) {
     return Arr.bind(steps, function (step) {
-      return [step, teardown(editor)];
+      return [ step, teardown(editor) ];
     });
   };
 
@@ -91,27 +91,27 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
   });
 
   suite.asyncTest(
-  'don\'t replace uploaded blob uri with result uri (copy/paste of' +
+    'don\'t replace uploaded blob uri with result uri (copy/paste of' +
   ' an uploaded blob uri) since blob uris are retained',
-  function (editor, done) {
-    editor.settings.images_replace_blob_uris = false;
-    editor.setContent(imageHtml(testBlobDataUri));
+    function (editor, done) {
+      editor.settings.images_replace_blob_uris = false;
+      editor.setContent(imageHtml(testBlobDataUri));
 
-    editor.settings.images_upload_handler = function (data, success) {
-      success('file.png');
-    };
+      editor.settings.images_upload_handler = function (data, success) {
+        success('file.png');
+      };
 
-    editor._scanForImages().then(function (result) {
-      const blobUri = result[0].blobInfo.blobUri();
+      editor._scanForImages().then(function (result) {
+        const blobUri = result[0].blobInfo.blobUri();
 
-      editor.uploadImages(function () {
-        editor.setContent(imageHtml(blobUri));
-        LegacyUnit.strictEqual(hasBlobAsSource(editor.$('img')[0]), true);
-        LegacyUnit.strictEqual(editor.getContent(), '<p><img src="file.png" /></p>');
-        done();
+        editor.uploadImages(function () {
+          editor.setContent(imageHtml(blobUri));
+          LegacyUnit.strictEqual(hasBlobAsSource(editor.$('img')[0]), true);
+          LegacyUnit.strictEqual(editor.getContent(), '<p><img src="file.png" /></p>');
+          done();
+        });
       });
     });
-  });
 
   suite.asyncTest('uploadImages (callback)', function (editor, done) {
     let uploadedBlobInfo;
@@ -207,7 +207,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     editor.uploadImages((result) => {
       assertResult(editor, uploadedBlobInfo, result);
 
-      return editor.uploadImages((result) => {
+      editor.uploadImages((result) => {
         const img = editor.$('img')[0];
         LegacyUnit.strictEqual(hasBlobAsSource(img), false);
         LegacyUnit.strictEqual(img.src.indexOf('custom.png?size=small&') !== -1, true, 'Check the cache invalidation string was added');

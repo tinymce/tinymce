@@ -59,7 +59,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
     factory: { sketch: Fun.identity },
     dom: {
       tag: 'input',
-      classes: ['tox-checkbox__input'],
+      classes: [ 'tox-checkbox__input' ],
       attributes: {
         type: 'checkbox'
       }
@@ -88,7 +88,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
   const pLabel = AlloyFormField.parts().label({
     dom: {
       tag: 'span',
-      classes: ['tox-checkbox__label'],
+      classes: [ 'tox-checkbox__label' ],
       innerHtml: providerBackstage.translate(spec.label)
     },
     behaviours: Behaviour.derive([
@@ -101,7 +101,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
     return {
       dom: {
         tag: 'span',
-        classes: ['tox-icon', 'tox-checkbox-icon__' + className],
+        classes: [ 'tox-icon', 'tox-checkbox-icon__' + className ],
         innerHtml: Icons.get(iconName, providerBackstage.icons)
       }
     };
@@ -111,7 +111,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
     {
       dom: {
         tag: 'div',
-        classes: ['tox-checkbox__icons']
+        classes: [ 'tox-checkbox__icons' ]
       },
       components: [
         makeIcon('checked'),
@@ -123,7 +123,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
   return AlloyFormField.sketch({
     dom: {
       tag: 'label',
-      classes: ['tox-checkbox'],
+      classes: [ 'tox-checkbox' ],
     },
     components: [
       pField,

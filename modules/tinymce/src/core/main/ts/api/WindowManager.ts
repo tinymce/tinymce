@@ -65,24 +65,24 @@ const WindowManager = function (editor: Editor): WindowManager {
     };
   };
 
-  const fireOpenEvent = function <T>(dialog: InstanceApi<T>) {
+  const fireOpenEvent = function <T> (dialog: InstanceApi<T>) {
     editor.fire('OpenWindow', {
       dialog
     });
   };
 
-  const fireCloseEvent = function <T>(dialog: InstanceApi<T>) {
+  const fireCloseEvent = function <T> (dialog: InstanceApi<T>) {
     editor.fire('CloseWindow', {
       dialog
     });
   };
 
-  const addDialog = function <T>(dialog: InstanceApi<T>) {
+  const addDialog = function <T> (dialog: InstanceApi<T>) {
     dialogs.push(dialog);
     fireOpenEvent(dialog);
   };
 
-  const closeDialog = function <T>(dialog: InstanceApi<T>) {
+  const closeDialog = function <T> (dialog: InstanceApi<T>) {
     fireCloseEvent(dialog);
     dialogs = Arr.filter(dialogs, function (otherDialog) {
       return otherDialog !== dialog;
@@ -106,7 +106,7 @@ const WindowManager = function (editor: Editor): WindowManager {
     return dialog;
   };
 
-  const open = function <T>(args, params?): Types.Dialog.DialogInstanceApi<T> {
+  const open = function <T> (args, params?): Types.Dialog.DialogInstanceApi<T> {
     return storeSelectionAndOpenDialog(() => getImplementation().open<T>(args, params, closeDialog));
   };
 

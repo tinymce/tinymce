@@ -9,7 +9,6 @@ import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
 import * as DomContainers from 'ephox/agar/test/DomContainers';
 import { TestLogs } from 'ephox/agar/api/TestLogs';
-import { MixedKeyModifiers } from 'ephox/agar/keyboard/FakeKeys';
 
 UnitTest.asynctest('KeyboardTest', (success, failure) => {
 
@@ -35,7 +34,7 @@ UnitTest.asynctest('KeyboardTest', (success, failure) => {
 
   const listenOn = (type, f, code, modifiers) =>
     Step.control(
-      Step.raw((value: { container: any; }, next, die, logs) => {
+      Step.raw((value: { container: any }, next, die, logs) => {
         const listener = DomEvent.bind(value.container, type, (event) => {
           const raw = event.raw();
           listener.unbind();
@@ -49,7 +48,7 @@ UnitTest.asynctest('KeyboardTest', (success, failure) => {
     );
 
   const listenOnKeystroke = (code, modifiers) => Step.control(
-    Step.raw((value: { container: any; }, next, die, initLogs) => {
+    Step.raw((value: { container: any }, next, die, initLogs) => {
       const keydownListener = DomEvent.bind(value.container, 'keydown', (dEvent) => {
         keydownListener.unbind();
 

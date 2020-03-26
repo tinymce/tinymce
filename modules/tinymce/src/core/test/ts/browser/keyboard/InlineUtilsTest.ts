@@ -65,68 +65,68 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function (su
     Logger.t('normalizePosition on text forwards', GeneralSteps.sequence([
       Logger.t('normalizePosition start of zwsp before text', Chain.asStep({}, [
         cCreateElement('<p>' + ZWSP + 'a</p>'),
-        cNormalizePosition(true, [0], 0),
-        cAssertPosition([0], 1)
+        cNormalizePosition(true, [ 0 ], 0),
+        cAssertPosition([ 0 ], 1)
       ])),
       Logger.t('normalizePosition end of zwsp before text', Chain.asStep({}, [
         cCreateElement('<p>' + ZWSP + 'a</p>'),
-        cNormalizePosition(true, [0], 1),
-        cAssertPosition([0], 1)
+        cNormalizePosition(true, [ 0 ], 1),
+        cAssertPosition([ 0 ], 1)
       ])),
       Logger.t('normalizePosition start of zwsp after text', Chain.asStep({}, [
         cCreateElement('<p>a' + ZWSP + '</p>'),
-        cNormalizePosition(true, [0], 1),
-        cAssertPosition([0], 2)
+        cNormalizePosition(true, [ 0 ], 1),
+        cAssertPosition([ 0 ], 2)
       ])),
       Logger.t('normalizePosition end of zwsp after text', Chain.asStep({}, [
         cCreateElement('<p>a' + ZWSP + '</p>'),
-        cNormalizePosition(true, [0], 2),
-        cAssertPosition([0], 2)
+        cNormalizePosition(true, [ 0 ], 2),
+        cAssertPosition([ 0 ], 2)
       ]))
     ])),
 
     Logger.t('normalizePosition on text backwards', GeneralSteps.sequence([
       Logger.t('normalizePosition end of zwsp after text', Chain.asStep({}, [
         cCreateElement('<p>a' + ZWSP + '</p>'),
-        cNormalizePosition(false, [0], 2),
-        cAssertPosition([0], 1)
+        cNormalizePosition(false, [ 0 ], 2),
+        cAssertPosition([ 0 ], 1)
       ])),
       Logger.t('normalizePosition start of zwsp after text', Chain.asStep({}, [
         cCreateElement('<p>a' + ZWSP + '</p>'),
-        cNormalizePosition(false, [0], 1),
-        cAssertPosition([0], 1)
+        cNormalizePosition(false, [ 0 ], 1),
+        cAssertPosition([ 0 ], 1)
       ])),
       Logger.t('normalizePosition end of zwsp before text', Chain.asStep({}, [
         cCreateElement('<p>' + ZWSP + 'a</p>'),
-        cNormalizePosition(false, [0], 1),
-        cAssertPosition([0], 0)
+        cNormalizePosition(false, [ 0 ], 1),
+        cAssertPosition([ 0 ], 0)
       ])),
       Logger.t('normalizePosition start of zwsp before text', Chain.asStep({}, [
         cCreateElement('<p>' + ZWSP + 'a</p>'),
-        cNormalizePosition(false, [0], 0),
-        cAssertPosition([0], 0)
+        cNormalizePosition(false, [ 0 ], 0),
+        cAssertPosition([ 0 ], 0)
       ]))
     ])),
 
     Logger.t('normalizePosition on element forwards', GeneralSteps.sequence([
       Logger.t('normalizePosition start of zwsp before element', Chain.asStep({}, [
         cCreateElement('<p>' + ZWSP + '<input></p>'),
-        cNormalizePosition(true, [0], 0),
+        cNormalizePosition(true, [ 0 ], 0),
         cAssertPosition([], 1)
       ])),
       Logger.t('normalizePosition end of zwsp before element', Chain.asStep({}, [
         cCreateElement('<p>' + ZWSP + '<input></p>'),
-        cNormalizePosition(true, [0], 1),
+        cNormalizePosition(true, [ 0 ], 1),
         cAssertPosition([], 1)
       ])),
       Logger.t('normalizePosition start of zwsp after element', Chain.asStep({}, [
         cCreateElement('<p><input>' + ZWSP + '</p>'),
-        cNormalizePosition(true, [1], 0),
+        cNormalizePosition(true, [ 1 ], 0),
         cAssertPosition([], 2)
       ])),
       Logger.t('normalizePosition end of zwsp after element', Chain.asStep({}, [
         cCreateElement('<p><input>' + ZWSP + '</p>'),
-        cNormalizePosition(true, [1], 1),
+        cNormalizePosition(true, [ 1 ], 1),
         cAssertPosition([], 2)
       ]))
     ])),
@@ -134,22 +134,22 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function (su
     Logger.t('normalizePosition on element backwards', GeneralSteps.sequence([
       Logger.t('normalizePosition end of zwsp after element', Chain.asStep({}, [
         cCreateElement('<p><input>' + ZWSP + '</p>'),
-        cNormalizePosition(false, [1], 1),
+        cNormalizePosition(false, [ 1 ], 1),
         cAssertPosition([], 1)
       ])),
       Logger.t('normalizePosition start of zwsp after element', Chain.asStep({}, [
         cCreateElement('<p><input>' + ZWSP + '</p>'),
-        cNormalizePosition(false, [1], 0),
+        cNormalizePosition(false, [ 1 ], 0),
         cAssertPosition([], 1)
       ])),
       Logger.t('normalizePosition end of zwsp before element', Chain.asStep({}, [
         cCreateElement('<p>' + ZWSP + '<input></p>'),
-        cNormalizePosition(false, [0], 1),
+        cNormalizePosition(false, [ 0 ], 1),
         cAssertPosition([], 0)
       ])),
       Logger.t('normalizePosition start of zwsp before element', Chain.asStep({}, [
         cCreateElement('<p>' + ZWSP + '<input></p>'),
-        cNormalizePosition(false, [0], 0),
+        cNormalizePosition(false, [ 0 ], 0),
         cAssertPosition([], 0)
       ]))
     ])),
@@ -157,26 +157,26 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function (su
     Logger.t('normalizePosition on text forwards', GeneralSteps.sequence([
       Logger.t('normalizePosition start of zwsp before text', Chain.asStep({}, [
         cCreateElement('<p>' + ZWSP + 'a</p>'),
-        cSplitAt([0], 1),
-        cNormalizePosition(true, [0], 0),
-        cAssertPosition([1], 0)
+        cSplitAt([ 0 ], 1),
+        cNormalizePosition(true, [ 0 ], 0),
+        cAssertPosition([ 1 ], 0)
       ])),
       Logger.t('normalizePosition end of zwsp before text', Chain.asStep({}, [
         cCreateElement('<p>' + ZWSP + 'a</p>'),
-        cSplitAt([0], 1),
-        cNormalizePosition(true, [0], 1),
-        cAssertPosition([1], 0)
+        cSplitAt([ 0 ], 1),
+        cNormalizePosition(true, [ 0 ], 1),
+        cAssertPosition([ 1 ], 0)
       ])),
       Logger.t('normalizePosition start of zwsp after text', Chain.asStep({}, [
         cCreateElement('<p>a' + ZWSP + '</p>'),
-        cSplitAt([0], 1),
-        cNormalizePosition(true, [1], 0),
+        cSplitAt([ 0 ], 1),
+        cNormalizePosition(true, [ 1 ], 0),
         cAssertPosition([], 2)
       ])),
       Logger.t('normalizePosition end of zwsp after text', Chain.asStep({}, [
         cCreateElement('<p>a' + ZWSP + '</p>'),
-        cSplitAt([0], 1),
-        cNormalizePosition(true, [1], 1),
+        cSplitAt([ 0 ], 1),
+        cNormalizePosition(true, [ 1 ], 1),
         cAssertPosition([], 2)
       ]))
     ]))

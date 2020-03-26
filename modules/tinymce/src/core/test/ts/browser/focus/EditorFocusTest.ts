@@ -82,21 +82,21 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function (succe
       Logger.t('Focus editor initialized on a div with p', Chain.asStep({}, [
         cCreateInlineEditor('<div class="tinymce-editor"><p>a</p></div>'),
         cFocusEditor,
-        cAssertSelection([0, 0], 0, [0, 0], 0),
+        cAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
         McEditor.cRemove
       ])),
       Logger.t('Focus editor initialized on a list', Chain.asStep({}, [
         cCreateInlineEditor('<ul class="tinymce-editor"><li>a</li></ul>'),
         cFocusEditor,
-        cAssertSelection([0, 0], 0, [0, 0], 0),
+        cAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
         McEditor.cRemove
       ])),
       Logger.t('Selection restored on focus with table cE=true', Chain.asStep({}, [
         cCreateEditor('<div class="tinymce-editor"><p>a</p><div>b<table contenteditable="true"><tbody><tr><td>c</td><td></td></tr></tbody></table></div></div>'),
-        cSetSelection([1, 1, 0, 0, 0, 0], 0, [1, 1, 0, 0, 0, 0], 0),
+        cSetSelection([ 1, 1, 0, 0, 0, 0 ], 0, [ 1, 1, 0, 0, 0, 0 ], 0),
         cSelectBody,
         cFocusEditor,
-        cAssertSelection([1, 1, 0, 0, 0, 0], 0, [1, 1, 0, 0, 0, 0], 0),
+        cAssertSelection([ 1, 1, 0, 0, 0, 0 ], 0, [ 1, 1, 0, 0, 0, 0 ], 0),
         McEditor.cRemove
       ]))
     ])),
@@ -109,9 +109,9 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function (succe
       ])),
       Logger.t('Focus on cE=true inside a cE=false', Chain.asStep({}, [
         cCreateInlineEditor('<div class="tinymce-editor"><div contenteditable="false">a<div contenteditable="true">b</div></div></div>'),
-        cSetSelection([0, 1, 0], 0, [0, 1, 0], 0),
-        cFocusElement([0, 1]),
-        cAssertHasFocus([0, 1]),
+        cSetSelection([ 0, 1, 0 ], 0, [ 0, 1, 0 ], 0),
+        cFocusElement([ 0, 1 ]),
+        cAssertHasFocus([ 0, 1 ]),
         McEditor.cRemove
       ]))
     ]))

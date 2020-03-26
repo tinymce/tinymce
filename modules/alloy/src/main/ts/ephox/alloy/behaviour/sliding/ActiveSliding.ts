@@ -9,7 +9,7 @@ import * as DomModification from '../../dom/DomModification';
 import * as SlidingApis from './SlidingApis';
 import { SlidingConfig, SlidingState } from './SlidingTypes';
 
-const exhibit = (base: DomDefinitionDetail, slideConfig: SlidingConfig/*, slideState */) => {
+const exhibit = (base: DomDefinitionDetail, slideConfig: SlidingConfig, _slideState: SlidingState) => {
   const expanded = slideConfig.expanded;
 
   return expanded ? DomModification.nu({

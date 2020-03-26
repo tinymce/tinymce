@@ -63,8 +63,8 @@ const renderCommonSpec = (spec, actionOpt: Option<(comp: AlloyComponent) => void
       ])
     ].concat(extraBehaviours)),
     eventOrder: {
-      click: ['button press', 'alloy.base.behaviour'],
-      mousedown: ['button press', 'alloy.base.behaviour']
+      click: [ 'button press', 'alloy.base.behaviour' ],
+      mousedown: [ 'button press', 'alloy.base.behaviour' ]
     },
     ...action
   };
@@ -107,9 +107,9 @@ export const renderButtonSpec = (spec: ButtonSpec, action: Option<(comp: AlloyCo
   };
 
   const classes = [
-    ...!spec.primary && !spec.borderless ? ['tox-button', 'tox-button--secondary'] : ['tox-button'],
-    ...icon.isSome() ? ['tox-button--icon'] : [],
-    ...spec.borderless ? ['tox-button--naked'] : [],
+    ...!spec.primary && !spec.borderless ? [ 'tox-button', 'tox-button--secondary' ] : [ 'tox-button' ],
+    ...icon.isSome() ? [ 'tox-button--icon' ] : [],
+    ...spec.borderless ? [ 'tox-button--naked' ] : [],
     ...extraClasses
   ];
 

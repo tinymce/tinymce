@@ -22,12 +22,12 @@ UnitTest.test('DomDescentTest', function () {
 
   const refs = Obj.map({
     div: [],
-    p: [1],
-    span: [1].concat([1]),
-    first: [1, 1].concat([0]),
-    table: [2],
-    td: [2, 1, 1, 1],
-    tdtext: [2, 1, 1, 1, 0]
+    p: [ 1 ],
+    span: [ 1 ].concat([ 1 ]),
+    first: [ 1, 1 ].concat([ 0 ]),
+    table: [ 2 ],
+    td: [ 2, 1, 1, 1 ],
+    tdtext: [ 2, 1, 1, 1, 0 ]
   }, toRef);
 
   interface CheckItem {
@@ -42,12 +42,12 @@ UnitTest.test('DomDescentTest', function () {
   };
 
   // Descending into div should take you to first whitspace node.
-  check({ path: [0], offset: 0 }, DomDescent.toLeaf(refs.div.element, 0));
+  check({ path: [ 0 ], offset: 0 }, DomDescent.toLeaf(refs.div.element, 0));
   // Descending into last offset of div should take you to last whitespace node.
-  check({ path: [3], offset: 0 }, DomDescent.toLeaf(refs.div.element, 3));
+  check({ path: [ 3 ], offset: 0 }, DomDescent.toLeaf(refs.div.element, 3));
 
   // But freefalling into div should take you to first paragraph text.
-  check({ path: [1, 0], offset: 0 }, DomDescent.freefallLtr(refs.div.element));
+  check({ path: [ 1, 0 ], offset: 0 }, DomDescent.freefallLtr(refs.div.element));
   // But freefalling (RTL) into div should take you to the end of last cell
   check({ path: refs.tdtext.path, offset: 'Hi'.length }, DomDescent.freefallRtl(refs.div.element));
   // Frefalling into the table should take you to the start of the first cell

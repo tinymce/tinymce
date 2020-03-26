@@ -30,7 +30,7 @@ const htmlToDataSax = function (prefixes: VideoScript[], html: string): MediaDat
   SaxParser({
     validate: false,
     allow_conditional_comments: true,
-    start (name, attrs) {
+    start(name, attrs) {
       if (!data.source && name === 'param') {
         data.source = attrs.map.movie;
       }

@@ -15,7 +15,7 @@ UnitTest.test('Type.is*: Unit tests', () => {
     );
   };
 
-  // tslint:disable-next-line:no-construct
+  // eslint-disable-next-line no-new-wrappers
   const objectString = new String('ball');
   const noop = () => {};
 
@@ -37,7 +37,7 @@ UnitTest.test('Type.is*: Unit tests', () => {
   checkIsNull(false, objectString);
   checkIsNull(false, []);
   checkIsNull(false, noop);
-  checkIsNull(false, [1, 3, 4, 5]);
+  checkIsNull(false, [ 1, 3, 4, 5 ]);
   checkIsNull(false, 1);
 
   checkIsUndefined(false, null);
@@ -49,7 +49,7 @@ UnitTest.test('Type.is*: Unit tests', () => {
   checkIsUndefined(false, objectString);
   checkIsUndefined(false, []);
   checkIsUndefined(false, noop);
-  checkIsUndefined(false, [1, 3, 4, 5]);
+  checkIsUndefined(false, [ 1, 3, 4, 5 ]);
   checkIsUndefined(false, 1);
 
   checkIsBoolean(false, null);
@@ -61,7 +61,7 @@ UnitTest.test('Type.is*: Unit tests', () => {
   checkIsBoolean(false, objectString);
   checkIsBoolean(false, []);
   checkIsBoolean(false, noop);
-  checkIsBoolean(false, [1, 3, 4, 5]);
+  checkIsBoolean(false, [ 1, 3, 4, 5 ]);
   checkIsBoolean(false, 1);
 
   checkIsString(false, null);
@@ -73,7 +73,7 @@ UnitTest.test('Type.is*: Unit tests', () => {
   checkIsString(true,  objectString);
   checkIsString(false, []);
   checkIsString(false, noop);
-  checkIsString(false, [1, 3, 4, 5]);
+  checkIsString(false, [ 1, 3, 4, 5 ]);
   checkIsString(false, 1);
 
   checkIsObject(false, null);
@@ -85,7 +85,7 @@ UnitTest.test('Type.is*: Unit tests', () => {
   checkIsObject(false, objectString);
   checkIsObject(false, []);
   checkIsObject(false, noop);
-  checkIsObject(false, [1, 3, 4, 5]);
+  checkIsObject(false, [ 1, 3, 4, 5 ]);
   checkIsObject(false, 1);
 
   checkIsArray(false, null);
@@ -97,7 +97,7 @@ UnitTest.test('Type.is*: Unit tests', () => {
   checkIsArray(false, objectString);
   checkIsArray(true,  []);
   checkIsArray(false, noop);
-  checkIsArray(true,  [1, 3, 4, 5]);
+  checkIsArray(true,  [ 1, 3, 4, 5 ]);
   checkIsArray(false, 1);
 
   checkIsFunction(false, null);
@@ -109,7 +109,7 @@ UnitTest.test('Type.is*: Unit tests', () => {
   checkIsFunction(false, objectString);
   checkIsFunction(false, []);
   checkIsFunction(true,  noop);
-  checkIsFunction(false, [1, 3, 4, 5]);
+  checkIsFunction(false, [ 1, 3, 4, 5 ]);
   checkIsFunction(false, 1);
 
   checkIsNumber(false, null);
@@ -121,7 +121,7 @@ UnitTest.test('Type.is*: Unit tests', () => {
   checkIsNumber(false, objectString);
   checkIsNumber(false, []);
   checkIsNumber(false, noop);
-  checkIsNumber(false, [1, 3, 4, 5]);
+  checkIsNumber(false, [ 1, 3, 4, 5 ]);
   checkIsNumber(true,  1);
 
 });

@@ -29,19 +29,19 @@ const revocable = function <T> (doRevoke: (data: T) => void) {
   };
 };
 
-export const destroyable = function <T extends { destroy: () => void; }> () {
+export const destroyable = function <T extends { destroy: () => void }> () {
   return revocable<T>(function (s) {
     s.destroy();
   });
 };
 
-export const unbindable = function <T extends { unbind: () => void; }> () {
+export const unbindable = function <T extends { unbind: () => void }> () {
   return revocable<T>(function (s) {
     s.unbind();
   });
 };
 
-export const api = function <T extends { destroy: () => void; }> () {
+export const api = function <T extends { destroy: () => void }> () {
   const subject = Cell(Option.none<T>());
 
   const revoke = function () {

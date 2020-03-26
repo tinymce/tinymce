@@ -52,14 +52,14 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest', (su
           { title: 'Table of contents', value: 'toc' }
         ]),
         tinyApis.sSetContent('<a href="http://www.google.com" target="_blank" rel="nofollow alternate">Google</a>'),
-        tinyApis.sSelect('p', [0]),
+        tinyApis.sSelect('p', [ 0 ]),
         TestLinkUi.sOpenLinkDialog(tinyUi),
         TestLinkUi.sAssertDialogContents({
-            text: 'Google',
-            title: '',
-            href: 'http://www.google.com',
-            target: '_blank',
-            rel: 'alternate nofollow noopener'
+          text: 'Google',
+          title: '',
+          href: 'http://www.google.com',
+          target: '_blank',
+          rel: 'alternate nofollow noopener'
         }),
         // Clicking "cancel" here instead of "ok" so that it doesn't fire a pending insert.
         TestLinkUi.sClickCancel

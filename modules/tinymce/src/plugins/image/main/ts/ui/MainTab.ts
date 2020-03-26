@@ -72,18 +72,18 @@ const makeItems = (info: ImageDialogInfo) => {
   };
 
   return Arr.flatten<any>([
-    [imageUrl],
+    [ imageUrl ],
     imageList.toArray(),
-    info.hasAccessibilityOptions && info.hasDescription ? [isDecorative] : [],
-    info.hasDescription ? [imageDescription] : [],
-    info.hasImageTitle ? [imageTitle] : [],
-    info.hasDimensions ? [imageDimensions] : [],
+    info.hasAccessibilityOptions && info.hasDescription ? [ isDecorative ] : [],
+    info.hasDescription ? [ imageDescription ] : [],
+    info.hasImageTitle ? [ imageTitle ] : [],
+    info.hasDimensions ? [ imageDimensions ] : [],
     [{
       type: 'grid',
       columns: 2,
       items: Arr.flatten([
         classList.toArray(),
-        info.hasImageCaption ? [caption] : []
+        info.hasImageCaption ? [ caption ] : []
       ])
     }]
   ]);

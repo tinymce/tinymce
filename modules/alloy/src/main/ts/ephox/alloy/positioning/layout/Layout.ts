@@ -12,40 +12,40 @@ import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';
 
 // display element to the right, left edge against the anchor
 const eastX = (anchor: AnchorBox): number => {
-  return anchor.x();
+  return anchor.x;
 };
 
 // element centre aligned horizontally with the anchor
 const middleX = (anchor: AnchorBox, element: AnchorElement): number => {
-  return anchor.x() + (anchor.width() / 2) - (element.width() / 2);
+  return anchor.x + (anchor.width / 2) - (element.width / 2);
 };
 
 // display element to the left, right edge against the right of the anchor
 const westX = (anchor: AnchorBox, element: AnchorElement): number => {
-  return anchor.x() + anchor.width() - element.width();
+  return anchor.x + anchor.width - element.width;
 };
 
 // display element above, bottom edge against the top of the anchor
 const northY = (anchor: AnchorBox, element: AnchorElement): number => {
-  return anchor.y() - element.height();
+  return anchor.y - element.height;
 };
 
 // display element below, top edge against the bottom of the anchor
 const southY = (anchor: AnchorBox): number => {
-  return anchor.y() + anchor.height();
+  return anchor.y + anchor.height;
 };
 
 // display element below, top edge against the bottom of the anchor
 const centreY = (anchor: AnchorBox, element: AnchorElement): number => {
-  return anchor.y() + (anchor.height() / 2) - (element.height() / 2);
+  return anchor.y + (anchor.height / 2) - (element.height / 2);
 };
 
 const eastEdgeX = (anchor: AnchorBox): number => {
-  return anchor.x() + anchor.width();
+  return anchor.x + anchor.width;
 };
 
 const westEdgeX = (anchor: AnchorBox, element: AnchorElement): number => {
-  return anchor.x() - element.width();
+  return anchor.x - element.width;
 };
 
 const southeast: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => {
