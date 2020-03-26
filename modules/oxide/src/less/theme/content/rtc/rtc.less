@@ -1,0 +1,93 @@
+@rtc-caret-1-color: rgb(45, 194, 107);
+@rtc-caret-3-color: rgb(241, 196, 15);
+@rtc-caret-2-color: rgb(224, 62, 45);
+@rtc-caret-4-color: rgb(53, 152, 219);
+@rtc-caret-5-color: rgb(185, 106, 217);
+@rtc-caret-6-color: rgb(230, 126, 35);
+@rtc-caret-7-color: rgb(170, 166, 157);
+@rtc-caret-8-color: rgb(243, 104, 224);
+
+@rtc-remote-image-background-color: #eaeaea;
+@rtc-remote-image-border-color: #ccc;
+
+.tox-rtc-user-selection {
+  position: relative;
+}
+
+.tox-rtc-user-cursor {
+  bottom: 0;
+  cursor: default;
+  position: absolute;
+  top: 0;
+  width: 2px;
+
+  &::before {
+    background-color: inherit;
+    border-radius: 50%;
+    content: '';
+    display: block;
+    height: 8px;
+    position: absolute;
+    right: -3px;
+    top: -3px;
+    width: 8px;
+  }
+
+  &:hover::after {
+    background-color: inherit;
+    border-radius: 100px;
+    box-sizing: border-box;
+    color: #fff;
+    content: attr(data-user);
+    display: block;
+    font-size: 12px;
+    font-weight: @font-weight-bold;
+    left: -5px;
+    min-height: 8px;
+    min-width: 8px;
+    padding: 0 12px;
+    position: absolute;
+    top: -11px;
+    white-space: nowrap;
+    z-index: 1000;
+  }
+}
+
+.tox-rtc-user-selection--1 .tox-rtc-user-cursor {
+  background-color: @rtc-caret-1-color;
+}
+
+.tox-rtc-user-selection--2 .tox-rtc-user-cursor {
+  background-color: @rtc-caret-2-color;
+}
+
+.tox-rtc-user-selection--3 .tox-rtc-user-cursor {
+  background-color: @rtc-caret-3-color;
+}
+
+.tox-rtc-user-selection--4 .tox-rtc-user-cursor {
+  background-color: @rtc-caret-4-color;
+}
+
+.tox-rtc-user-selection--5 .tox-rtc-user-cursor {
+  background-color: @rtc-caret-5-color;
+}
+
+.tox-rtc-user-selection--6 .tox-rtc-user-cursor {
+  background-color: @rtc-caret-6-color;
+}
+
+.tox-rtc-user-selection--7 .tox-rtc-user-cursor {
+  background-color: @rtc-caret-7-color;
+}
+
+.tox-rtc-user-selection--8 .tox-rtc-user-cursor {
+  background-color: @rtc-caret-8-color;
+}
+
+.tox-rtc-remote-image {
+  background: @rtc-remote-image-background-color data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/rtc-remote-image-loader.svg') no-repeat center center;
+  border: 1px solid @rtc-remote-image-border-color;
+  min-height: 240px;
+  min-width: 320px;
+}
