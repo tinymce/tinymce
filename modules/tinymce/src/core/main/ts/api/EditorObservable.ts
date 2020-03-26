@@ -12,6 +12,7 @@ import Tools from './util/Tools';
 import Editor from './Editor';
 import { EditorEventMap } from './EventTypes';
 import { isReadOnly, preventReadOnlyEvents } from '../mode/Readonly';
+import { Obj } from '@ephox/katamari';
 
 /**
  * This mixin contains the event logic for the tinymce.Editor class.
@@ -91,13 +92,11 @@ const bindEventDelegate = function (editor: Editor, eventName: string) {
     if (!customEventRootDelegates) {
       customEventRootDelegates = {};
       editor.editorManager.on('removeEditor', function () {
-        let name;
-
         if (!editor.editorManager.activeEditor) {
           if (customEventRootDelegates) {
-            for (name in customEventRootDelegates) {
+            Obj.each(customEventRootDelegates, (_value, name) => {
               editor.dom.unbind(getEventTarget(editor, name));
-            }
+            });
 
             customEventRootDelegates = null;
           }
@@ -196,12 +195,11 @@ const EditorObservable: EditorObservable = {
     const self = this;
     const body = self.getBody();
     const dom: DOMUtils = self.dom;
-    let name;
 
     if (self.delegates) {
-      for (name in self.delegates) {
-        self.dom.unbind(getEventTarget(self, name), name, self.delegates[name]);
-      }
+      Obj.each(self.delegates, (value, name) => {
+        self.dom.unbind(getEventTarget(self, name), name, value);
+      });
 
       delete self.delegates;
     }

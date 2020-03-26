@@ -8,6 +8,7 @@
 import { document, HTMLElementEventMap, window } from '@ephox/dom-globals';
 import Env from '../Env';
 import Delay from '../util/Delay';
+import { Obj } from '@ephox/katamari';
 
 export type EventUtilsCallback<T> = (event: EventUtilsEvent<T>) => void;
 
@@ -463,17 +464,18 @@ class EventUtils {
         }
       } else {
         // All events for a specific element
-        for (name in eventMap) {
-          callbackList = eventMap[name];
+        Obj.each(eventMap, (callbackList, name) => {
           removeEvent(target, callbackList.fakeName || name, callbackList.nativeHandler, callbackList.capture);
-        }
+        });
 
         eventMap = {};
       }
 
       // Check if object is empty, if it isn't then we won't remove the expando map
       for (name in eventMap) {
-        return this;
+        if (Obj.has(eventMap, name)) {
+          return this;
+        }
       }
 
       // Delete event object
