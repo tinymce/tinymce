@@ -29,8 +29,7 @@ import { Arr } from '@ephox/katamari';
 
 /* tslint:disable */
 
-let i,
-  support,
+let support,
   Expr,
   getText,
   isXML,
