@@ -66,14 +66,7 @@ const isEmptyTextNode = (node: Node) => {
 // Check if node contains data-bookmark attribute, name attribute, id attribute or is a named anchor
 const isNonEmptyElement = (node: Node) => {
   const isNamedAnchor = node.name === 'a' && !node.attr('href') && node.attr('id');
-  let i = node.attributes ? node.attributes.length : 0;
-  while (i--) {
-    const name = node.attributes[i].name;
-    if (name === 'name' || (name === 'id' && !node.firstChild) || name.indexOf('data-mce-bookmark') === 0 || isNamedAnchor) {
-      return true;
-    }
-  }
-  return false;
+  return (node.attr('name') || (node.attr('id') && !node.firstChild) || node.attr('data-mce-bookmark') || isNamedAnchor);
 };
 
 /**

@@ -1020,17 +1020,11 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   // Check if element has a data-bookmark attribute, name attribute or is a named anchor
   const isNonEmptyElement = (node: Node) => {
     if (NodeType.isElement(node)) {
-      const attributes = getAttribs(node);
-      let i = attributes.length;
-      while (i--) {
-        const isNamedAnchor = node.nodeName === 'A' && !getAttrib(node, 'href') && getAttrib(node, 'id');
-        const name = attributes[i].nodeName;
-        if (name === 'name' || name === 'data-mce-bookmark' || isNamedAnchor) {
-          return true;
-        }
+      const isNamedAnchor = node.nodeName === 'A' && !getAttrib(node, 'href') && getAttrib(node, 'id');
+      if (getAttrib(node, 'name') || getAttrib(node, 'data-mce-bookmark') || isNamedAnchor) {
+        return true;
       }
     }
-
     return false;
   };
 
