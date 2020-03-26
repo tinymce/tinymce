@@ -3,14 +3,15 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { console } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Hierarchy, Element } from '@ephox/sugar';
+import { Element, Hierarchy } from '@ephox/sugar';
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
-import { getPositionsUntilPreviousLine, LineInfo, getPositionsUntilNextLine, getPositionsAbove, getPositionsBelow, isAtFirstLine, isAtLastLine, findClosestHorizontalPosition, BreakType } from 'tinymce/core/caret/LineReader';
+import { BreakType, findClosestHorizontalPosition, getPositionsAbove, getPositionsBelow, getPositionsUntilNextLine, getPositionsUntilPreviousLine, isAtFirstLine, isAtLastLine, LineInfo } from 'tinymce/core/caret/LineReader';
 import ViewBlock from '../../module/test/ViewBlock';
 
 UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) => {
   const viewBlock = ViewBlock();
   const browser = PlatformDetection.detect().browser;
+  const isSafari13OrLower = browser.isSafari() && (browser.version.major < 13 || browser.version.major === 13 && browser.version.minor < 1);
 
   interface Path {
     path: number[];
@@ -202,7 +203,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
           cSetHtml('<div style="width: 10px">abc def ghi</div>'),
           cGetPositionsUntilPreviousLine([ 0, 0 ], 6)
         ],
-        browser.isSafari() ? [
+        isSafari13OrLower ? [
           cAssertLineInfoCaretPositions([
             { path: [ 0, 0 ], offset: 4 },
             { path: [ 0, 0 ], offset: 5 }
@@ -222,7 +223,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
           cSetHtml('<div style="width: 10px">abc def ghi</div>'),
           cGetPositionsUntilPreviousLine([ 0, 0 ], 5)
         ],
-        browser.isSafari() ? [
+        isSafari13OrLower ? [
           cAssertLineInfoCaretPositions([
             { path: [ 0, 0 ], offset: 4 }
           ]),
