@@ -90,7 +90,7 @@ const markFragmentElements = (fragment: ParserNode) => {
   }
 };
 
-const umarkFragmentElements = (elm: DomElement) => {
+const unmarkFragmentElements = (elm: DomElement) => {
   Tools.each(elm.getElementsByTagName('*'), (elm: DomElement) => {
     elm.removeAttribute('data-mce-fragment');
   });
@@ -327,7 +327,7 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
 
   reduceInlineTextElements(editor, merge);
   moveSelectionToMarker(editor, dom.get('mce_marker'));
-  umarkFragmentElements(editor.getBody());
+  unmarkFragmentElements(editor.getBody());
   trimBrsFromTableCell(editor.dom, editor.selection.getStart());
 
   editor.fire('SetContent', args);
