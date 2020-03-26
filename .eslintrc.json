@@ -22,7 +22,6 @@
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-inferrable-types": [ "error", { "ignoreParameters": true, "ignoreProperties": true }], // this will be added to the plugin
     "@typescript-eslint/no-this-alias": "off",
-    "@typescript-eslint/no-unnecessary-type-assertion": "off",
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/prefer-for-of": "off",
     "@typescript-eslint/prefer-regexp-exec": "off",

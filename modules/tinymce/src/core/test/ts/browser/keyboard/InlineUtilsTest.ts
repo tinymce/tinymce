@@ -4,7 +4,6 @@ import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as InlineUtils from 'tinymce/core/keyboard/InlineUtils';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Text } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function (success, failure) {
   const ZWSP = Zwsp.ZWSP;
@@ -34,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function (su
 
   const cSplitAt = function (path, offset) {
     return Chain.mapper(function (elm: any) {
-      const textNode = Hierarchy.follow(elm, path).filter(Node.isText).getOrDie() as Element<Text>;
+      const textNode = Hierarchy.follow(elm, path).filter(Node.isText).getOrDie();
       textNode.dom().splitText(offset);
       return elm;
     });

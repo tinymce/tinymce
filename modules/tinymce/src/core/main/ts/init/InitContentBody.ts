@@ -372,7 +372,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   });
 
   editor.load({ initial: true, format: 'html' });
-  editor.startContent = editor.getContent({ format: 'raw' }) as string;
+  editor.startContent = editor.getContent({ format: 'raw' });
 
   editor.on('compositionstart compositionend', function (e) {
     editor.composing = e.type === 'compositionstart';

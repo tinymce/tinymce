@@ -7,7 +7,7 @@ import { Element } from '@ephox/sugar';
 UnitTest.test('MergeOperationsTest', function () {
   const b = Structs.bounds;
   const r = Structs.rowcells;
-  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as any as Element, isNew);
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as Element, isNew);
 
   // Test basic merge.
   (function () {

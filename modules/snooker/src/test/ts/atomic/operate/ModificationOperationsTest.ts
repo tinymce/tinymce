@@ -8,7 +8,7 @@ import { Element } from '@ephox/sugar';
 
 UnitTest.test('ModificationOperationsTest', function () {
   const r = Structs.rowcells;
-  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as any as Element, isNew);
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as Element, isNew);
   const mapToStructGrid = function (grid: Structs.ElementNew[][]) {
     return Arr.map(grid, function (row) {
       return Structs.rowcells(row, 'tbody');

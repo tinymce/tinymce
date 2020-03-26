@@ -37,7 +37,7 @@ const gChoose = <T extends WeightedItem>(weighted: WeightedList<T>) => Jsc.numbe
     w <= d.accWeight
   );
 
-  const keys = raw.map(Obj.keys).getOr([]) as string[];
+  const keys = raw.map(Obj.keys).getOr([]);
   return keys.length === [ 'weight', 'accWeight' ].length ? Option.none() : raw;
 });
 

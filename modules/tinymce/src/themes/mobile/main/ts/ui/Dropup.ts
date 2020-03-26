@@ -56,7 +56,7 @@ const build = (refresh, scrollIntoView): DropUp => {
         })
       ])
     })
-  ) as AlloyComponent;
+  );
 
   const appear = (menu, update, component) => {
     if (Sliding.hasShrunk(dropup) === true && Sliding.isTransitioning(dropup) === false) {

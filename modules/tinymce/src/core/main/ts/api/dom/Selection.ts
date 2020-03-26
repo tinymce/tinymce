@@ -39,7 +39,7 @@ import Serializer from './Serializer';
  */
 
 const isNativeIeSelection = (rng: any): boolean => {
-  return !!(<any> rng).select;
+  return !!(rng).select;
 };
 
 const isAttachedToDom = function (node: Node): boolean {

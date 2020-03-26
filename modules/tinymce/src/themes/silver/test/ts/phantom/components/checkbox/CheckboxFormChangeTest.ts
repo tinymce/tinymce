@@ -26,7 +26,7 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
           behaviours: Behaviour.derive([
             AddEventsBehaviour.config('test-checkbox', [
               AlloyEvents.run(formChangeEvent, (component, event) => {
-                store.adder((event.event() as any).name())();
+                store.adder((event.event()).name())();
               })
             ])
           ])

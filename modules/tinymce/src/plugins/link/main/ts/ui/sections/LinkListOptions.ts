@@ -36,7 +36,7 @@ const getLinks = (editor): Promise<Option<ListItem[]>> => {
     } else if (Type.isFunction(linkList)) {
       linkList((output) => callback(Option.some(output)));
     } else {
-      callback(Option.from(linkList as ListItem[]));
+      callback(Option.from(linkList));
     }
   }).then((optItems) => {
     return optItems.bind(ListOptions.sanitizeWith(extractor)).map((items) => {

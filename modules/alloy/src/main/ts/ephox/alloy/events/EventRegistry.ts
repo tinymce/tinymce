@@ -71,7 +71,7 @@ export default () => {
 
   // Given event type, and element, find the handler.
   const find = (isAboveRoot: (elem: Element) => boolean, type: string, target: Element): Option<ElementAndHandler> => {
-    const handlers = Obj.get(registry, type) as Option<Record<string, CurriedHandler>>;
+    const handlers = Obj.get(registry, type);
     return TransformFind.closest(target, (elem: Element) => {
       return findHandler(handlers, elem);
     }, isAboveRoot);
