@@ -31,7 +31,7 @@ const sOpenMenuWithSelector = (label: string, selector: string) => {
 
 const sOpenMore = (type: ToolbarMode) => {
   return Logger.t(
-    `Trying to open more drawer`,
+    'Trying to open more drawer',
     GeneralSteps.sequence([
       Mouse.sClickOn(Body.body(), 'button[title="More..."]'),
       UiFinder.sWaitForVisible('Waiting for more drawer to open', Body.body(), getToolbarSelector(type, true))
@@ -41,7 +41,7 @@ const sOpenMore = (type: ToolbarMode) => {
 
 const sCloseMore = (type: ToolbarMode) => {
   return Logger.t(
-    `Trying to close more drawer`,
+    'Trying to close more drawer',
     GeneralSteps.sequence([
       Mouse.sClickOn(Body.body(), 'button[title="More..."]'),
       Waiter.sTryUntil('Waiting for more drawer to close', UiFinder.sNotExists(Body.body(), getToolbarSelector(type, false)))
@@ -50,7 +50,7 @@ const sCloseMore = (type: ToolbarMode) => {
 };
 
 const sOpenAlignMenu = (label: string) => {
-  const selector = `button[aria-label="Align"]`;
+  const selector = 'button[aria-label="Align"]';
   return sOpenMenuWithSelector(label, selector);
 };
 

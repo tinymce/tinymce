@@ -23,7 +23,7 @@ const isVisualCharsEnabled = (editor: Editor) => {
 };
 
 const insertNbsp = (editor: Editor, times: number) => {
-  const classes = () => isVisualCharsEnabled(editor) ? `mce-nbsp-wrap mce-nbsp` : `mce-nbsp-wrap`;
+  const classes = () => isVisualCharsEnabled(editor) ? 'mce-nbsp-wrap mce-nbsp' : 'mce-nbsp-wrap';
   const nbspSpan = () => `<span class="${classes()}" contenteditable="false">${stringRepeat('&nbsp;', times)}</span>`;
 
   const shouldWrap = Settings.wrapNbsps(editor);

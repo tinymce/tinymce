@@ -45,7 +45,7 @@ UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
   };
 
   const errorMessage = (inputEntries: Entry[], outputEntries: Entry[]): string => {
-    return `\nPretty print counterexample:\n` +
+    return '\nPretty print counterexample:\n' +
     `input: [${stringifyEntries(inputEntries)}\n]\n` +
     `output: [${stringifyEntries(outputEntries)}\n]`;
   };

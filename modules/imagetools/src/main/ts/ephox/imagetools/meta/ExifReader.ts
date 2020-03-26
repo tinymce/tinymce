@@ -1,5 +1,5 @@
 import { BinaryReader } from './BinaryReader';
-import { Arr, Option, Result, Type } from "@ephox/katamari";
+import { Arr, Option, Result, Type } from '@ephox/katamari';
 import { readLong, readSignedLong, readShort, readByte, readString, readList } from './BinaryReaderUtils';
 
 // See https://www.exif.org/Exif2-2.PDF for types

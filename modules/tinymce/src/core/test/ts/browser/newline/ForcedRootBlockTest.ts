@@ -103,7 +103,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
 
     Pipeline.async({}, [
       tinyApis.sFocus(),
-      sAssertNewLine('paragraph, plain', 'p', forcedRootBlockAttrs, `<p>ab</p>`, baseExpectedHTML),
+      sAssertNewLine('paragraph, plain', 'p', forcedRootBlockAttrs, '<p>ab</p>', baseExpectedHTML),
       sAssertNewLine('paragraph, same attributes as forced_root_block_attrs', 'p', forcedRootBlockAttrs, `<p class=${forcedRootBlockAttrs.class} style=${forcedRootBlockAttrs.style}>ab</p>`, baseExpectedHTML),
       sAssertNewLine('paragraph, only style attribute', 'p', forcedRootBlockAttrs, `<p style=${forcedRootBlockAttrs.style}>ab</p>`, baseExpectedHTML),
       sAssertNewLine('paragraph, only class attribute', 'p', forcedRootBlockAttrs, `<p class=${forcedRootBlockAttrs.class}>ab</p>`, baseExpectedHTML),
@@ -111,21 +111,21 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
         'paragraph, additional attribute',
         'p',
         forcedRootBlockAttrs,
-        `<p data-test="1">ab</p>`,
+        '<p data-test="1">ab</p>',
         (innerHTML: string) => `<p class="${forcedRootBlockAttrs.class}" style="${forcedRootBlockAttrs.style}" data-test="1">${innerHTML}</p>`
       ),
       sAssertNewLine(
         'paragraph, custom class attribute',
         'p',
         forcedRootBlockAttrs,
-        `<p class="c1">ab</p>`,
+        '<p class="c1">ab</p>',
         (innerHTML: string) => `<p class="${forcedRootBlockAttrs.class + ' c1'}" style="${forcedRootBlockAttrs.style}">${innerHTML}</p>`
       ),
       sAssertNewLine(
         'paragraph, custom style attribute',
         'p',
         forcedRootBlockAttrs,
-        `<p style="padding-left: 40px;">ab</p>`,
+        '<p style="padding-left: 40px;">ab</p>',
         (innerHTML: string) => `<p class="${forcedRootBlockAttrs.class}" style="${forcedRootBlockAttrs.style + ' padding-left: 40px;'}">${innerHTML}</p>`
       ),
       tinyApis.sSetSetting('forced_root_block_attrs', { ...forcedRootBlockAttrs, 'data-test': '1' }),
@@ -133,14 +133,14 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
         'paragraph, additional attribute in forced_root_block_attrs',
         'p',
         { ...forcedRootBlockAttrs, 'data-test': '1' },
-        `<p>ab</p>`,
+        '<p>ab</p>',
         (innerHTML: string) => `<p class="${forcedRootBlockAttrs.class}" style="${forcedRootBlockAttrs.style}" data-test="1">${innerHTML}</p>`
       ),
       sAssertNewLine(
         'paragraph, common attribute',
         'p',
         { ...forcedRootBlockAttrs, 'data-test': '1' },
-        `<p data-test="0">ab</p>`,
+        '<p data-test="0">ab</p>',
         (innerHTML: string) => `<p class="${forcedRootBlockAttrs.class}" style="${forcedRootBlockAttrs.style}" data-test="1">${innerHTML}</p>`
       ),
       tinyApis.sSetSetting('forced_root_block_atrrs', forcedRootBlockAttrs),
@@ -149,7 +149,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
         'div, plain',
         'div',
         forcedRootBlockAttrs,
-        `<div>ab</div>`,
+        '<div>ab</div>',
         (innerHTML: string) => `<div class="${forcedRootBlockAttrs.class}" style="${forcedRootBlockAttrs.style}">${innerHTML}</div>`
       )
     ], onSuccess, onFailure);

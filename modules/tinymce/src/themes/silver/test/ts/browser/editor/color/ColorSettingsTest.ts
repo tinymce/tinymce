@@ -11,7 +11,7 @@ UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
   SilverTheme();
 
   const sResetLocalStorage = function () {
-    return Logger.t(`Reset local storage`, Step.sync(function () {
+    return Logger.t('Reset local storage', Step.sync(function () {
       LocalStorage.removeItem('tinymce-custom-colors');
     }));
   };

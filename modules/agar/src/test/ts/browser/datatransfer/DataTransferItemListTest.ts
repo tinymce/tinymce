@@ -24,7 +24,7 @@ UnitTest.test('DataTransferItemListTest', () => {
 
     assert.throwsError(() => {
       items.add('123', 'text/plain');
-    }, `Failed to execute 'add' on 'DataTransferItemList': An item already exists for type 'text/plain'.`);
+    }, 'Failed to execute \'add\' on \'DataTransferItemList\': An item already exists for type \'text/plain\'.');
   };
 
   const testRemoving = () => {

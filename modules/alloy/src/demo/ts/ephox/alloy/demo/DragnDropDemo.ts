@@ -39,7 +39,7 @@ export default (): void => {
           dropEffect,
           onDrop(component, dropEvent) {
             // tslint:disable-next-line:no-console
-            console.log(`onDrop`, {
+            console.log('onDrop', {
               data: dropEvent.data,
               files: dropEvent.files
             });

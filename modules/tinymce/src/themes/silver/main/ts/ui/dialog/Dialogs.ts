@@ -103,14 +103,14 @@ const pFooterGroup = (startButtons: AlloySpec[], endButtons: AlloySpec[]) => {
     Container.sketch({
       dom: {
         tag: 'div',
-        classes: [ `tox-dialog__footer-start` ]
+        classes: [ 'tox-dialog__footer-start' ]
       },
       components: startButtons
     }),
     Container.sketch({
       dom: {
         tag: 'div',
-        classes: [ `tox-dialog__footer-end` ]
+        classes: [ 'tox-dialog__footer-end' ]
       },
       components: endButtons
     })

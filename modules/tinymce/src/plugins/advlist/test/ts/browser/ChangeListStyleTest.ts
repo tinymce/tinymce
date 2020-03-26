@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.ChangeListStyleTest', functi
     const tinyUi = TinyUi(editor);
     const sWaitForMenu = () => {
       return Waiter.sTryUntil(
-        `Waiting for menu to appear`,
+        'Waiting for menu to appear',
         UiFinder.sExists(Body.body(), '.tox-menu.tox-selected-menu')
       );
     };
