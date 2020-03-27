@@ -63,6 +63,12 @@ const isEmptyTextNode = (node: Node) => {
   return true;
 };
 
+// Check if node contains data-bookmark attribute, name attribute, id attribute or is a named anchor
+const isNonEmptyElement = (node: Node) => {
+  const isNamedAnchor = node.name === 'a' && !node.attr('href') && node.attr('id');
+  return (node.attr('name') || (node.attr('id') && !node.firstChild) || node.attr('data-mce-bookmark') || isNamedAnchor);
+};
+
 /**
  * This class is a minimalistic implementation of a DOM like node used by the DomParser class.
  *
@@ -478,6 +484,10 @@ class Node {
     const self = this;
     let node = self.firstChild;
 
+    if (isNonEmptyElement(self)) {
+      return false;
+    }
+
     if (node) {
       do {
         if (node.type === 1) {
@@ -491,13 +501,8 @@ class Node {
             return false;
           }
 
-          // Keep bookmark nodes and name attribute like <a name="1"></a>
-          let i = node.attributes.length;
-          while (i--) {
-            const name = node.attributes[i].name;
-            if (name === 'name' || name.indexOf('data-mce-bookmark') === 0) {
-              return false;
-            }
+          if (isNonEmptyElement(node)) {
+            return false;
           }
         }
 

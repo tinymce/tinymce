@@ -655,19 +655,16 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
           }
 
           if (elementRule.removeEmpty && isEmpty(schema, nonEmptyElements, whiteSpaceElements, node)) {
-            // Leave nodes that have a name like <a name="name">
-            if (!node.attr('name') && !node.attr('id')) {
-              tempNode = node.parent;
+            tempNode = node.parent;
 
-              if (blockElements[node.name]) {
-                node.empty().remove();
-              } else {
-                node.unwrap();
-              }
-
-              node = tempNode;
-              return;
+            if (blockElements[node.name]) {
+              node.empty().remove();
+            } else {
+              node.unwrap();
             }
+
+            node = tempNode;
+            return;
           }
 
           if (elementRule.paddEmpty && (isPaddedWithNbsp(node) || isEmpty(schema, nonEmptyElements, whiteSpaceElements, node))) {
