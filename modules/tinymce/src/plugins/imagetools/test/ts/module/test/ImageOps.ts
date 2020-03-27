@@ -9,7 +9,7 @@ export default function (editor) {
   const cHasState = function (predicate) {
     return Chain.control(
       Chain.binder(function (element) {
-        return predicate(element) ? Result.value(element) : Result.error('Predicate didn\'t match.');
+        return predicate(element) ? Result.value(element) : Result.error(`Predicate didn't match.`);
       }),
       Guard.addLogging('Assert element has state')
     );

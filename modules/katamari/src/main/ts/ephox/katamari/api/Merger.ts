@@ -45,7 +45,7 @@ const baseMerge = function (merger: MergeStrategy): (...objs: Array<Record<strin
     }
 
     if (objects.length === 0) {
-      throw new Error('Can\'t merge zero objects');
+      throw new Error(`Can't merge zero objects`);
     }
 
     const ret: Record<string, any> = {};

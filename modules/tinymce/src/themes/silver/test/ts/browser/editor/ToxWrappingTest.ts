@@ -19,7 +19,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
           UiFinder.cFindIn(`#${Attr.get(replacedElem, 'id')}`),
           Chain.binder((elem) => Traverse.nextSibling(elem).fold(() => Result.error('Replaced element has no next sibling'), Result.value)),
           Chain.mapper((elem) => Class.has(elem, 'tox-tinymce')),
-          Assertions.cAssertEq('Replaced element\'s next sibling has "tox-tinymce" class', true)
+          Assertions.cAssertEq(`Replaced element's next sibling has "tox-tinymce" class`, true)
         ])
       ], onSuccess, onFailure);
     },

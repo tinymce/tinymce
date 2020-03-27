@@ -52,11 +52,11 @@ const setupDemo = () => {
 
   const fakeValidator: UrlValidationHandler = (info, callback) => {
     if (info.url === 'test-valid' || /^https?:\/\/www\.google\.com\/google\.jpg$/.test(info.url)) {
-      callback({ message: 'Yep, that\'s valid...', status: 'valid' });
+      callback({ message: `Yep, that's valid...`, status: 'valid' });
     } else if (info.url === 'test-unknown' || /\.(?:jpg|png|gif)$/.test(info.url)) {
-      callback({ message: 'Hmm, I don\'t know...', status: 'unknown' });
+      callback({ message: `Hmm, I don't know...`, status: 'unknown' });
     } else if (info.url === 'test-invalid') {
-      callback({ message: 'No, no, definitly not, just don\'t, STOP...', status: 'invalid' });
+      callback({ message: `No, no, definitly not, just don't, STOP...`, status: 'invalid' });
     } else {
       callback({ message: '', status: 'none' });
     }

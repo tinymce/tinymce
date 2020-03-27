@@ -91,7 +91,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
   });
 
   suite.asyncTest(
-    'don\'t replace uploaded blob uri with result uri (copy/paste of' +
+    `don't replace uploaded blob uri with result uri (copy/paste of` +
   ' an uploaded blob uri) since blob uris are retained',
     function (editor, done) {
       editor.settings.images_replace_blob_uris = false;
@@ -278,7 +278,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     editor.uploadImages(uploadDone);
   });
 
-  suite.asyncTest('Don\'t upload transparent image', function (editor, done) {
+  suite.asyncTest(`Don't upload transparent image`, function (editor, done) {
     let uploadCount = 0;
 
     const uploadDone = function () {
@@ -296,7 +296,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     editor.uploadImages(uploadDone);
   });
 
-  suite.asyncTest('Don\'t upload bogus image', function (editor, done) {
+  suite.asyncTest(`Don't upload bogus image`, function (editor, done) {
     let uploadCount = 0;
 
     const uploadDone = function () {
@@ -314,7 +314,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     editor.uploadImages(uploadDone);
   });
 
-  suite.asyncTest('Don\'t upload filtered image', function (editor, done) {
+  suite.asyncTest(`Don't upload filtered image`, function (editor, done) {
     let uploadCount = 0;
 
     const uploadDone = function () {
@@ -338,7 +338,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     editor.uploadImages(uploadDone);
   });
 
-  suite.asyncTest('Don\'t upload api filtered image', function (editor, done) {
+  suite.asyncTest(`Don't upload api filtered image`, function (editor, done) {
     let uploadCount = 0, filterCount = 0;
 
     const uploadDone = function () {

@@ -13,17 +13,17 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function (success, fa
     LegacyUnit.equal(styles.serialize(styles.parse('FONT-SIZE:10px')), 'font-size: 10px;');
     LegacyUnit.equal(styles.serialize(styles.parse('FONT-SIZE:10px;COLOR:red')), 'font-size: 10px; color: red;');
     LegacyUnit.equal(styles.serialize(styles.parse('   FONT-SIZE  :  10px  ;   COLOR  :  red   ')), 'font-size: 10px; color: red;');
-    LegacyUnit.equal(styles.serialize(styles.parse('key:"value"')), 'key: \'value\';');
-    LegacyUnit.equal(styles.serialize(styles.parse('key:"value1" \'value2\'')), 'key: \'value1\' \'value2\';');
-    LegacyUnit.equal(styles.serialize(styles.parse('key:"val\\"ue1" \'val\\\'ue2\'')), 'key: \'val"ue1\' \'val\\\'ue2\';');
+    LegacyUnit.equal(styles.serialize(styles.parse('key:"value"')), `key: 'value';`);
+    LegacyUnit.equal(styles.serialize(styles.parse(`key:"value1" 'value2'`)), `key: 'value1' 'value2';`);
+    LegacyUnit.equal(styles.serialize(styles.parse(`key:"val\\"ue1" 'val\\'ue2'`)), `key: 'val"ue1' 'val\\'ue2';`);
     LegacyUnit.equal(styles.serialize(styles.parse('width:100%')), 'width: 100%;');
-    LegacyUnit.equal(styles.serialize(styles.parse('value:_; value2:"_"')), 'value: _; value2: \'_\';');
-    LegacyUnit.equal(styles.serialize(styles.parse('value: "&amp;"')), 'value: \'&amp;\';');
-    LegacyUnit.equal(styles.serialize(styles.parse('value: "&"')), 'value: \'&\';');
+    LegacyUnit.equal(styles.serialize(styles.parse('value:_; value2:"_"')), `value: _; value2: '_';`);
+    LegacyUnit.equal(styles.serialize(styles.parse('value: "&amp;"')), `value: '&amp;';`);
+    LegacyUnit.equal(styles.serialize(styles.parse('value: "&"')), `value: '&';`);
     LegacyUnit.equal(styles.serialize(styles.parse('value: ')), '');
     LegacyUnit.equal(
-      styles.serialize(styles.parse('background: url(\'http://www.site.com/(foo)\');')),
-      'background: url(\'http://www.site.com/(foo)\');'
+      styles.serialize(styles.parse(`background: url('http://www.site.com/(foo)');`)),
+      `background: url('http://www.site.com/(foo)');`
     );
   });
 
@@ -48,23 +48,23 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function (success, fa
       }
     });
 
-    LegacyUnit.equal(styles.serialize(styles.parse('background: url(a)')), 'background: url(\'|a|\');');
-    LegacyUnit.equal(styles.serialize(styles.parse('background: url("a")')), 'background: url(\'|a|\');');
-    LegacyUnit.equal(styles.serialize(styles.parse('background: url(\'a\')')), 'background: url(\'|a|\');');
-    LegacyUnit.equal(styles.serialize(styles.parse('background: url(   a   )')), 'background: url(\'|a|\');');
-    LegacyUnit.equal(styles.serialize(styles.parse('background: url(   "a"   )')), 'background: url(\'|a|\');');
-    LegacyUnit.equal(styles.serialize(styles.parse('background: url(    \'a\'    )')), 'background: url(\'|a|\');');
+    LegacyUnit.equal(styles.serialize(styles.parse('background: url(a)')), `background: url('|a|');`);
+    LegacyUnit.equal(styles.serialize(styles.parse('background: url("a")')), `background: url('|a|');`);
+    LegacyUnit.equal(styles.serialize(styles.parse(`background: url('a')`)), `background: url('|a|');`);
+    LegacyUnit.equal(styles.serialize(styles.parse('background: url(   a   )')), `background: url('|a|');`);
+    LegacyUnit.equal(styles.serialize(styles.parse('background: url(   "a"   )')), `background: url('|a|');`);
+    LegacyUnit.equal(styles.serialize(styles.parse(`background: url(    'a'    )`)), `background: url('|a|');`);
     LegacyUnit.equal(
-      styles.serialize(styles.parse('background1: url(a); background2: url("a"); background3: url(\'a\')')),
-      'background1: url(\'|a|\'); background2: url(\'|a|\'); background3: url(\'|a|\');'
+      styles.serialize(styles.parse(`background1: url(a); background2: url("a"); background3: url('a')`)),
+      `background1: url('|a|'); background2: url('|a|'); background3: url('|a|');`
     );
     LegacyUnit.equal(
-      styles.serialize(styles.parse('background: url(\'http://www.site.com/a?a=b&c=d\')')),
-      'background: url(\'|http://www.site.com/a?a=b&c=d|\');'
+      styles.serialize(styles.parse(`background: url('http://www.site.com/a?a=b&c=d')`)),
+      `background: url('|http://www.site.com/a?a=b&c=d|');`
     );
     LegacyUnit.equal(
-      styles.serialize(styles.parse('background: url(\'http://www.site.com/a_190x144.jpg\');')),
-      'background: url(\'|http://www.site.com/a_190x144.jpg|\');'
+      styles.serialize(styles.parse(`background: url('http://www.site.com/a_190x144.jpg');`)),
+      `background: url('|http://www.site.com/a_190x144.jpg|');`
     );
   });
 
@@ -178,9 +178,9 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function (success, fa
   suite.test('Suspicious (XSS) property names', function () {
     const styles = Styles();
 
-    LegacyUnit.equal(styles.serialize(styles.parse('font-fa"on-load\\3dxss\\28\\29\\20mily:\'arial\'')), '');
-    LegacyUnit.equal(styles.serialize(styles.parse('font-fa\\"on-load\\3dxss\\28\\29\\20mily:\'arial\'')), '');
-    LegacyUnit.equal(styles.serialize(styles.parse('font-fa\\22on-load\\3dxss\\28\\29\\20mily:\'arial\'')), '');
+    LegacyUnit.equal(styles.serialize(styles.parse(`font-fa"on-load\\3dxss\\28\\29\\20mily:'arial'`)), '');
+    LegacyUnit.equal(styles.serialize(styles.parse(`font-fa\\"on-load\\3dxss\\28\\29\\20mily:'arial'`)), '');
+    LegacyUnit.equal(styles.serialize(styles.parse(`font-fa\\22on-load\\3dxss\\28\\29\\20mily:'arial'`)), '');
   });
 
   suite.test('Script urls denied', function () {
@@ -214,10 +214,10 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function (success, fa
   suite.test('Script urls allowed', function () {
     const styles = Styles({ allow_script_urls: true });
 
-    LegacyUnit.equal(styles.serialize(styles.parse('behavior:url(test.htc)')), 'behavior: url(\'test.htc\');');
+    LegacyUnit.equal(styles.serialize(styles.parse('behavior:url(test.htc)')), `behavior: url('test.htc');`);
     LegacyUnit.equal(styles.serialize(styles.parse('color:expression(alert(1))')), 'color: expression(alert(1));');
-    LegacyUnit.equal(styles.serialize(styles.parse('background:url(javascript:alert(1)')), 'background: url(\'javascript:alert(1\');');
-    LegacyUnit.equal(styles.serialize(styles.parse('background:url(vbscript:alert(1)')), 'background: url(\'vbscript:alert(1\');');
+    LegacyUnit.equal(styles.serialize(styles.parse('background:url(javascript:alert(1)')), `background: url('javascript:alert(1');`);
+    LegacyUnit.equal(styles.serialize(styles.parse('background:url(vbscript:alert(1)')), `background: url('vbscript:alert(1');`);
   });
 
   Pipeline.async({}, suite.toSteps({}), function () {

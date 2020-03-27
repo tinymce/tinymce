@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
     editor.setContent('test 123');
     editor.execCommand('SelectAll');
     editor.execCommand('FontName', false, 'Bauhaus 93');
-    LegacyUnit.equal(editor.getContent(), '<p><span style="font-family: \'Bauhaus 93\';">test 123</span></p>');
+    LegacyUnit.equal(editor.getContent(), `<p><span style="font-family: 'Bauhaus 93';">test 123</span></p>`);
 
     editor.setContent('test 123');
     editor.execCommand('SelectAll');

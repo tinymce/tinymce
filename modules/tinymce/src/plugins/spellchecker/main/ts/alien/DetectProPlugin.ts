@@ -14,8 +14,8 @@ const hasProPlugin = function (editor) {
 
     if (typeof window.console !== 'undefined' && window.console.log) {
       window.console.log(
-        'Spell Checker Pro is incompatible with Spell Checker plugin! ' +
-        'Remove \'spellchecker\' from the \'plugins\' option.'
+        `Spell Checker Pro is incompatible with Spell Checker plugin! ` +
+        `Remove 'spellchecker' from the 'plugins' option.`
       );
     }
     return true;

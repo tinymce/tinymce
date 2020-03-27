@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
   Theme();
 
   const systemFontStackVariants = [
-    '-apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Oxygen, Ubuntu, Cantarell, \'Open Sans\', \'Helvetica Neue\', sans-serif;', // Oxide
+    `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;`, // Oxide
     '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";', // Bootstrap
     '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;' // Wordpress
   ];
@@ -83,7 +83,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
 
       Logger.t('System font stack variants on a paragraph show "System Font" as the font name', GeneralSteps.sequence([
         tinyApis.sSetContent(Arr.foldl(systemFontStackVariants, (acc, font) => {
-          return acc + '<p style="font-family: ' + font.replace(/"/g, '\'') + '"></p>';
+          return acc + '<p style="font-family: ' + font.replace(/"/g, `'`) + '"></p>';
         }, '')),
         tinyApis.sFocus(),
         ...Arr.bind(systemFontStackVariants, (_, idx) => {

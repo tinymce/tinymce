@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, fail
     // check if translate survives some awkward cases
     LegacyUnit.deepEqual(translate('empty string'), '');
     LegacyUnit.equal(translate([ 'untranslated value:{0}{1}', 'a' ]), 'untranslated value:a{1}',
-      'Do not strip tokens that weren\'t replaced.');
+      `Do not strip tokens that weren't replaced.`);
 
     LegacyUnit.equal(translate([{ }]), '[object Object]');
     LegacyUnit.equal(translate(function () { }), '[object Function]');

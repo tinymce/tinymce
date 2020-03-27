@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.init.InitContentBodySelectionTest', (su
         Pipeline.async({}, [
           api.sAssertSelection(path, offset, path, offset),
           Step.sync(() => {
-            Assertions.assertEq('Check editor doesn\'t have focus', false, editor.hasFocus());
+            Assertions.assertEq(`Check editor doesn't have focus`, false, editor.hasFocus());
           })
         ], onSuccess, onFailure);
       }, {

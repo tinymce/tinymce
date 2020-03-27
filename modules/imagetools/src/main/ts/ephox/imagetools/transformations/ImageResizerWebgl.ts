@@ -116,7 +116,7 @@ const shaders: Shaders = {
 function _drawImage(canvas: HTMLCanvasElement, image: HTMLImageElement, wRatio: number, hRatio: number): void {
   const gl = Canvas.get3dContext(canvas);
   if (!gl) {
-    throw new Error('Your environment doesn\'t support WebGL.');
+    throw new Error(`Your environment doesn't support WebGL.`);
   }
 
   const maxTexSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);

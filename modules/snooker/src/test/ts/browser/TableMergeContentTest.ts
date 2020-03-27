@@ -94,7 +94,7 @@ UnitTest.test('TableMergeContentTest', function () {
       expected: ''
     },
     {
-      label: 'lists should not have BR\'s after',
+      label: `lists should not have BR's after`,
       html: '<ul style="list-style-type: disc;"><li>Abotts&nbsp;list</li><li>empty</li></ul>',
       expected: ''
     },

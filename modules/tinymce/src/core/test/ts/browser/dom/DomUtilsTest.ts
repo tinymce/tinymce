@@ -54,26 +54,26 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
 
     LegacyUnit.equal(
       dom.serializeStyle(dom.parseStyle('background: transparent url(test.gif);')),
-      'background: transparent url(\'Xtest.gifY\');'
+      `background: transparent url('Xtest.gifY');`
     );
 
     LegacyUnit.equal(
       dom.serializeStyle(dom.parseStyle('background: transparent url(http://www.site.com/test.gif?a=1&b=2);')),
-      'background: transparent url(\'Xhttp://www.site.com/test.gif?a=1&b=2Y\');'
+      `background: transparent url('Xhttp://www.site.com/test.gif?a=1&b=2Y');`
     );
 
     dom.setHTML('test', '<span id="test2" style="   margin-left: 1px;    margin-top: 1px;   margin-right: 1px;   margin-bottom: 1px   "></span>');
     LegacyUnit.equal(dom.getAttrib('test2', 'style'), 'margin: 1px;');
 
     dom.setHTML('test', '<span id="test2" style="background-image: url(test.gif);"></span>');
-    LegacyUnit.equal(dom.getAttrib('test2', 'style'), 'background-image: url(\'Xtest.gifY\');');
+    LegacyUnit.equal(dom.getAttrib('test2', 'style'), `background-image: url('Xtest.gifY');`);
 
     // dom.get('test').innerHTML = '<span id="test2" style="border: 1px solid #00ff00"></span>';
     // LegacyUnit.equal(dom.getAttrib('test2', 'style'), Env.ue && !window.getSelection ?
     // 'border: #00ff00 1px solid;' : 'border: 1px solid #00ff00;'); // IE has a separate output
 
     dom.get('test').innerHTML = '<span id="test2" style="background-image: url(http://www.site.com/test.gif);"></span>';
-    LegacyUnit.equal(dom.getAttrib('test2', 'style'), 'background-image: url(\'Xhttp://www.site.com/test.gifY\');');
+    LegacyUnit.equal(dom.getAttrib('test2', 'style'), `background-image: url('Xhttp://www.site.com/test.gifY');`);
 
     DOM.remove('test');
   });
@@ -243,7 +243,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
   });
 
   suite.test('encode', function () {
-    LegacyUnit.equal(DOM.encode('abc<>"&\'\u00e5\u00e4\u00f6'), 'abc&lt;&gt;&quot;&amp;&#39;\u00e5\u00e4\u00f6');
+    LegacyUnit.equal(DOM.encode(`abc<>"&'\u00e5\u00e4\u00f6`), 'abc&lt;&gt;&quot;&amp;&#39;\u00e5\u00e4\u00f6');
   });
 
   suite.test('setGetAttrib', function () {
@@ -500,7 +500,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     }
 
     // Create an iframe to load in, so that we are using a different document. Otherwise DOMUtils will fallback to using the default.
-    const iframe = DOM.create('iframe', { src: 'javascript=\'\'' }) as HTMLIFrameElement;
+    const iframe = DOM.create('iframe', { src: `javascript=''` }) as HTMLIFrameElement;
     DOM.add(document.body, iframe);
 
     const iframeDoc = iframe.contentWindow.document;

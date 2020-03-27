@@ -138,7 +138,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
             UiFinder.cFindAllIn('.tox-collection__item'),
             Chain.op((menuItems) => {
               if (menuItems.length > 2) {
-                throw Error('Menu hasn\'t been updated yet');
+                throw Error(`Menu hasn't been updated yet`);
               }
             })
           ])

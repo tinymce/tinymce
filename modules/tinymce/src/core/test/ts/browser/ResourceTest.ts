@@ -71,7 +71,7 @@ UnitTest.asynctest('Scripts test', (success, failure) => {
     ])),
     Step.label('invalid id fails', Chain.asStep({}, [
       cScriptLoad('script.4', testScript('invalid-id', 'value.4')), // this takes 1 second to timeout
-      cAssertLoadFailure('Script at URL "data:text/javascript,tinymce.Resource.add(\'invalid-id\', \'value.4\')" did not call `tinymce.Resource.add(\'script.4\', data)` within 1 second'),
+      cAssertLoadFailure(`Script at URL "data:text/javascript,tinymce.Resource.add('invalid-id', 'value.4')" did not call \`tinymce.Resource.add('script.4', data)\` within 1 second`),
     ])),
   ], cleanup.wrap(success), cleanup.wrap(failure));
 });

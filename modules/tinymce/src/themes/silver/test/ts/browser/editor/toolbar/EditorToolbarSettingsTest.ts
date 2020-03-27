@@ -513,7 +513,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
       ])
     ]),
 
-    Log.chainsAsStep('TBA', 'Testing toolbar with toolbar group names: toolbar: [ { name: \'history\', items: [ \'undo\', \'redo\' ] }, { name: \'formatting\', items: [ \'bold\', \'italic\' ] } ] should create a "undo redo | bold italic" toolbar', [
+    Log.chainsAsStep('TBA', 'Testing toolbar with toolbar group names: toolbar: [ { name: "history", items: [ "undo", "redo" ] }, { name: "formatting", items: [ "bold", "italic" ] } ] should create a "undo redo | bold italic" toolbar', [
       NamedChain.asChain([
         NamedChain.writeValue('body', Body.body()),
         NamedChain.write('editor', cCreateEditorWithToolbar([{ name: 'history', items: [ 'undo', 'redo' ] }, { name: 'formatting', items: [ 'bold', 'italic' ] }])),
