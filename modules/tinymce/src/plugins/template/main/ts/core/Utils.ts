@@ -12,7 +12,7 @@ const entitiesAttr = {
   '<': '&lt;',
   '>': '&gt;',
   '&': '&amp;',
-  "'": '&#039;'
+  '\'': '&#039;'
 };
 
 const htmlEscape = (html: string): string => {
