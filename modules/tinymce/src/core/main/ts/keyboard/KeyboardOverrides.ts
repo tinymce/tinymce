@@ -14,8 +14,9 @@ import * as CaretContainerInput from '../caret/CaretContainerInput';
 import Editor from '../api/Editor';
 import * as InputKeys from './InputKeys';
 import * as HomeEndKeys from './HomeEndKeys';
+import * as Rtc from '../Rtc';
 
-const setup = (editor: Editor): void => {
+const registerKeyboardOverrides = (editor: Editor) => {
   const caret = BoundarySelection.setupSelectedState(editor);
 
   CaretContainerInput.setup(editor);
@@ -25,6 +26,12 @@ const setup = (editor: Editor): void => {
   SpaceKey.setup(editor);
   InputKeys.setup(editor);
   HomeEndKeys.setup(editor);
+};
+
+const setup = (editor: Editor): void => {
+  if (!Rtc.isRtc(editor)) {
+    registerKeyboardOverrides(editor);
+  }
 };
 
 export {
