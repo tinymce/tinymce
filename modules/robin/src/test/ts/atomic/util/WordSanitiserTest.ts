@@ -18,12 +18,12 @@ UnitTest.test('Word Sanitiser', function () {
   };
 
   check(ss('one', '<', '>'), ss('one', '<', '>'));
-  check(ss('one', '<', '\''), ss('one\'', '<', '>'));
-  check(ss('one', '\'', '>'), ss('\'one', '<', '>'));
-  check(ss('\'twas', '<', '>'), ss('\'twas', '<', '>'));
-  check(ss('\'twas', '\'', '\''), ss('\'\'twas\'', '<', '>'));
-  check(ss('\'\'one\'\'', '<', '>'), ss('\'\'one\'\'', '<', '>'));
-  check(ss('\'twas', '\'', '>'), ss('\'\'twas', '<', '>'));
+  check(ss('one', '<', `'`), ss(`one'`, '<', '>'));
+  check(ss('one', `'`, '>'), ss(`'one`, '<', '>'));
+  check(ss(`'twas`, '<', '>'), ss(`'twas`, '<', '>'));
+  check(ss(`'twas`, `'`, `'`), ss(`''twas'`, '<', '>'));
+  check(ss(`''one''`, '<', '>'), ss(`''one''`, '<', '>'));
+  check(ss(`'twas`, `'`, '>'), ss(`''twas`, '<', '>'));
 
   check(ss('one', '<', '>'), ss('one', '<', '>'));
   check(ss('one', '<', '\u2018'), ss('one\u2018', '<', '>'));

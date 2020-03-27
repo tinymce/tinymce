@@ -6,7 +6,7 @@ import * as ArrPinpoint from './ArrPinpoint';
 
 const locateVisible = (container: Element<HTMLElement>, current: Element<HTMLElement>, selector: string): Option<ArrPinpoint.IndexInfo<Element<HTMLElement>>> => {
   const predicate = (x: Element) => Compare.eq(x, current);
-  const candidates = SelectorFilter.descendants(container, selector) as Array<Element<HTMLElement>>;
+  const candidates = SelectorFilter.descendants<HTMLElement>(container, selector);
   const visible = Arr.filter(candidates, Visibility.isVisible);
   return ArrPinpoint.locate(visible, predicate);
 };

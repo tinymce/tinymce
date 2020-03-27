@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
       const selector = 'div[role="dialog"]';
       return GeneralSteps.sequence([
         Chain.asStep(editor, [
-          tinyUi.cWaitForPopup('wait for dialog', `div.tox-dialog__title`),
+          tinyUi.cWaitForPopup('wait for dialog', 'div.tox-dialog__title'),
           tinyUi.cWaitForPopup('wait for dialog child element', childSelector),
           UiChains.cCloseDialog(selector)
         ]),

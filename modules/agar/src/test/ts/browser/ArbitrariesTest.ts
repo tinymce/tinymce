@@ -224,7 +224,7 @@ UnitTest.test('Arbitraries Test', () => {
   /*
   This is not a test ... just example code
   Pipeline.async({}, [
-    PropertySteps.sAsyncProperty('Let\'s see a visible selection', [
+    PropertySteps.sAsyncProperty(`Let's see a visible selection`, [
       Arbitraries.scenario('table', {}, {})
     ], Step.stateful(function (scenario, next, die) {
         Insert.append(Body.body(), scenario.root());

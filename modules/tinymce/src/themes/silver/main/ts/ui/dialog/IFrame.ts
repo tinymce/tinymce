@@ -36,7 +36,7 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
     setValue: (frameComponent: AlloyComponent, html: string) => {
 
       if (!isSandbox) {
-        Attr.set(frameComponent.element(), 'src', 'javascript:\'\'');
+        Attr.set(frameComponent.element(), 'src', `javascript:''`);
         // IE 6-11 doesn't support data uris on iframeComponents
         // and Edge only supports upto ~4000 chars in data uris
         // so I guess they will have to be less secure since we can't sandbox on those

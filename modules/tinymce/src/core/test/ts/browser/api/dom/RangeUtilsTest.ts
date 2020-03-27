@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.core.api.dom.RangeUtilsTest', function (succ
     Assertions.assertEq('endOffset should be equal', true, expected.endOffset === actual.endOffset);
   };
 
-  const sTestDontNormalizeAtAnchors = Logger.t('Don\'t normalize at anchors', Step.sync(function () {
+  const sTestDontNormalizeAtAnchors = Logger.t(`Don't normalize at anchors`, Step.sync(function () {
     viewBlock.update('a<a href="#">b</a>c');
 
     const rng1 = createRange(viewBlock.get().firstChild, 1, viewBlock.get().firstChild, 1);

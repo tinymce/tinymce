@@ -142,10 +142,10 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
           sAssertPosition('top', -56),
         ]),
 
-        Log.stepsAsStep('TINY-4586', 'Line context toolbar remains inside iframe container and doesn\'t overlap the header', [
+        Log.stepsAsStep('TINY-4586', `Line context toolbar remains inside iframe container and doesn't overlap the header`, [
           tinyApis.sSetContent(
             '<p style="height: 400px"></p>' +
-            `<div style="height: 25px;"></div>` +
+            '<div style="height: 25px;"></div>' +
             '<p style="height: 400px"></p>'
           ),
           sScrollTo(0, 225),

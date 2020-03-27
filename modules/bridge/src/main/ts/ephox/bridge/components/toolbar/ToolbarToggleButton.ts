@@ -1,4 +1,4 @@
-import { ValueSchema, FieldSchema, Processor } from '@ephox/boulder';
+import { ValueSchema, FieldSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 import { BaseToolbarButtonApi, BaseToolbarButtonInstanceApi, BaseToolbarButton, baseToolbarButtonFields } from './ToolbarButton';
 
@@ -39,7 +39,7 @@ export const toggleButtonSchema = ValueSchema.objOf(
     FieldSchema.strictString('type'),
     FieldSchema.strictFunction('onAction')
   ])
-) as Processor;
+);
 
 export const isToggleButton = (spec: any): spec is ToolbarToggleButton => spec.type === 'togglebutton';
 

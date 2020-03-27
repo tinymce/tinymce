@@ -78,7 +78,7 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
         return s.element('iframe', {
           classes: [],
           attrs: {
-            src: str.is('javascript:\'\'')
+            src: str.is(`javascript:''`)
           }
         });
       }),

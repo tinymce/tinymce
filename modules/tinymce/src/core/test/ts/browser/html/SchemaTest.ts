@@ -173,7 +173,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     );
   });
 
-  suite.test('addValidElements when there\'s a colon in an attribute name', function () {
+  suite.test(`addValidElements when there's a colon in an attribute name`, function () {
     let schema;
 
     schema = Schema({ valid_elements: '@[xml\\:space]' });

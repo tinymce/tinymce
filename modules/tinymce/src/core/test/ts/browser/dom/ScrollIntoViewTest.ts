@@ -116,7 +116,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
           sScrollIntoView(editor, 'div:nth-child(2)', true),
           sAssertScrollPosition(editor, 0, 1000)
         ])),
-        Logger.t('Scroll to element already in view shouldn\'t do anything', GeneralSteps.sequence([
+        Logger.t(`Scroll to element already in view shouldn't do anything`, GeneralSteps.sequence([
           sScrollReset(editor),
           sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 600px">a</div>'),
           Step.sync(() => {

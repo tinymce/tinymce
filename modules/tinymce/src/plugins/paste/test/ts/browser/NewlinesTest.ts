@@ -18,7 +18,7 @@ UnitTest.test('tinymce.plugins.paste.browser.NewlinesTest', function () {
       isText: true
     },
     {
-      label: 'TestCase-TBA: Paste: Case shouldn\'t matter',
+      label: `TestCase-TBA: Paste: Case shouldn't matter`,
       content: '<DIV>a</DIV><DIV><BR></DIV>',
       isText: true
     },

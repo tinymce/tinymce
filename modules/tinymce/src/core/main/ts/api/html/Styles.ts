@@ -65,7 +65,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
     invalidStyles = schema.getInvalidStyles();
   }
 
-  encodingItems = ('\\" \\\' \\; \\: ; : ' + invisibleChar).split(' ');
+  encodingItems = (`\\" \\' \\; \\: ; : ` + invisibleChar).split(' ');
   for (i = 0; i < encodingItems.length; i++) {
     encodingLookup[encodingItems[i]] = invisibleChar + i;
     encodingLookup[invisibleChar + i] = encodingItems[i];
@@ -194,7 +194,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
       };
 
       // Decodes the specified string by replacing all _<num> with it's original value \" \' etc
-      // It will also decode the \" \' if keepSlashes is set to fale or omitted
+      // It will also decode the \" \' if keepSlashes is set to false or omitted
       const decode = function (str: string, keepSlashes?: boolean) {
         if (isEncoded) {
           str = str.replace(/\uFEFF[0-9]/g, function (str) {
@@ -224,7 +224,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
           str = decode(str);
 
           // Force strings into single quote format
-          return '\'' + str.replace(/\'/g, '\\\'') + '\'';
+          return `'` + str.replace(/\'/g, `\\'`) + `'`;
         }
 
         url = decode(url || url2 || url3);
@@ -247,7 +247,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
         }
 
         // Output new URL format
-        return 'url(\'' + url.replace(/\'/g, '\\\'') + '\')';
+        return `url('` + url.replace(/\'/g, `\\'`) + `')`;
       };
 
       if (css) {

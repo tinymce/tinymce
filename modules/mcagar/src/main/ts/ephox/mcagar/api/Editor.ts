@@ -23,7 +23,7 @@ const cFromElement = function <T extends EditorType = EditorType> (element: Elem
     if (nuSettings.base_url) {
       setTinymceBaseUrl(tinymce, nuSettings.base_url);
     } else if (!Type.isString(tinymce.baseURL) || !Strings.contains(tinymce.baseURL, '/project/')) {
-      setTinymceBaseUrl(Global.tinymce, `/project/node_modules/tinymce`);
+      setTinymceBaseUrl(Global.tinymce, '/project/node_modules/tinymce');
     }
 
     tinymce.init({

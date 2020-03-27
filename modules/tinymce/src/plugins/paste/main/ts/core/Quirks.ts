@@ -120,7 +120,7 @@ function removeWebKitStyles(editor: Editor, content: string, internal: boolean, 
         let inputValue = inputStyles[webKitStyles[i]], currentValue = dom.getStyle(node, webKitStyles[i], true);
 
         if (/color/.test(webKitStyles[i])) {
-          inputValue = dom.toHex(inputValue as string);
+          inputValue = dom.toHex(inputValue);
           currentValue = dom.toHex(currentValue);
         }
 

@@ -96,8 +96,8 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse(
-      '<span id=id1 title="title value" class=\'class1 class2\' data-value="value1" ' +
-      'MYATTR="val1" myns:myattr="val2" disabled empty=""></span>'
+      `<span id=id1 title="title value" class='class1 class2' data-value="value1" ` +
+      `MYATTR="val1" myns:myattr="val2" disabled empty=""></span>`
     );
     LegacyUnit.equal(
       writer.getContent(),
@@ -110,7 +110,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
-    parser.parse('<b href=\'"&amp;<>\'></b>');
+    parser.parse(`<b href='"&amp;<>'></b>`);
     LegacyUnit.equal(writer.getContent(), '<b href="&quot;&amp;&lt;&gt;"></b>', 'Parse attributes with <> in them.');
     LegacyUnit.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse attributes with <> in them (count).');
 
@@ -240,10 +240,10 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
-    parser.parse('text\n<SC' + 'RIPT type=mce-text/javascript>// <![CDATA[\nalert(\'HELLO WORLD!\');\n// ]]></SC' + 'RIPT>');
+    parser.parse('text\n<SC' + `RIPT type=mce-text/javascript>// <![CDATA[\nalert('HELLO WORLD!');\n// ]]></SC` + 'RIPT>');
     LegacyUnit.equal(
       writer.getContent(),
-      'text\n<sc' + 'ript type="mce-text/javascript">// <![CDATA[\nalert(\'HELLO WORLD!\');\n// ]]></sc' + 'ript>',
+      'text\n<sc' + `ript type="mce-text/javascript">// <![CDATA[\nalert('HELLO WORLD!');\n// ]]></sc` + 'ript>',
       'Parse cdata script.'
     );
     LegacyUnit.deepEqual(counter.counts, { text: 2, start: 1, end: 1 }, 'Parse cdata script counts.');

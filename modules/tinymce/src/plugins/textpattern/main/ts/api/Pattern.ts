@@ -144,8 +144,8 @@ const denormalizePattern = (pattern: Pattern): RawPattern => {
 
 const createPatternSet = (patterns: Pattern[]): PatternSet => {
   return {
-    inlinePatterns: Arr.filter(patterns, isInlinePattern) as InlinePattern[],
-    blockPatterns: sortPatterns(Arr.filter(patterns, isBlockPattern) as BlockPattern[]),
+    inlinePatterns: Arr.filter(patterns, isInlinePattern),
+    blockPatterns: sortPatterns(Arr.filter(patterns, isBlockPattern)),
   };
 };
 

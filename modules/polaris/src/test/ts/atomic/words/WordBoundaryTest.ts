@@ -14,7 +14,7 @@ UnitTest.test('Words.WordBoundaryTest', function () {
     assert.eq(false, iwb('üßœ', 1));
 
     // should not break some punctuation
-    assert.eq(false, iwb('can\'t', 2));
+    assert.eq(false, iwb(`can't`, 2));
     assert.eq(false, iwb('can’t', 2));
     assert.eq(false, iwb('foo.bar', 2));
     assert.eq(false, iwb('foo:bar', 2));

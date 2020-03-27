@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
     LegacyUnit.equal(
       actual,
       expected,
-      'Doesn\'t match the expected computed runtime style'
+      `Doesn't match the expected computed runtime style`
     );
     div.parentNode.removeChild(div);
   };
@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
     LegacyUnit.equal(
       actual,
       expected,
-      'Doesn\'t match the expected specific element style'
+      `Doesn't match the expected specific element style`
     );
     div.parentNode.removeChild(div);
   };

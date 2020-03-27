@@ -70,7 +70,7 @@ UnitTest.asynctest('RealMouseTest', (success, failure) => {
       RealMouse.cClick(),
       Chain.op((button) => {
         Assertions.assertEq('mouseup event has fired', 1, count.get());
-        Assertions.assertEq(`button doesn\'t have ${RealMouse.BedrockIdAttribute} attribute`, false, Attr.has(button, RealMouse.BedrockIdAttribute));
+        Assertions.assertEq(`button doesn't have ${RealMouse.BedrockIdAttribute} attribute`, false, Attr.has(button, RealMouse.BedrockIdAttribute));
       })
     ])
   ], () => {

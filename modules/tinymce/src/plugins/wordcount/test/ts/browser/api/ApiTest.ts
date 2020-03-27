@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.ApiTest', (success, failur
         bodyWordCount('Does not count dashes', '<p>Something -- ok</p>', 2),
         bodyWordCount('Does not count asterisks, non-word characters', '<p>* something\n\u00b7 something else</p>', 3),
         bodyWordCount('Does count numbers', '<p>Something 123 ok</p>', 3),
-        bodyWordCount('Does not count htmlentities', '<p>It&rsquo;s my life &ndash; &#8211; &#x2013; don\'t you forget.</p>', 6),
+        bodyWordCount('Does not count htmlentities', `<p>It&rsquo;s my life &ndash; &#8211; &#x2013; don't you forget.</p>`, 6),
         bodyWordCount('Counts hyphenated words as one word', '<p>Hello some-word here.</p>', 3),
         bodyWordCount('Counts words between blocks as two words', '<p>Hello</p><p>world</p>', 2)
       ])),

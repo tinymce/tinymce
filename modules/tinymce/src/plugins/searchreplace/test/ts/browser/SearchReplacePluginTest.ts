@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplacePluginTes
   });
 
   suite.test('TestCase-TINY-4522: SearchReplace: Find word with punctuation, whole words: true', function (editor) {
-    editor.setContent('\'test\' "test" \u2018test\u2019 test: test; test! test. test? test,');
+    editor.setContent(`'test' "test" \u2018test\u2019 test: test; test! test. test? test,`);
     LegacyUnit.equal(9, editor.plugins.searchreplace.find('test', false, true));
     LegacyUnit.equal(1, editor.plugins.searchreplace.find('test!', false, true));
   });

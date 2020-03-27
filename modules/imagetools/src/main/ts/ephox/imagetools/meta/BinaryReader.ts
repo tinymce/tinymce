@@ -1,4 +1,4 @@
-import { Result } from "@ephox/katamari";
+import { Result } from '@ephox/katamari';
 
 export class BinaryReader {
 

@@ -58,7 +58,7 @@ reverseEntities = {
   '&gt;': '>',
   '&amp;': '&',
   '&quot;': '"',
-  '&apos;': '\''
+  '&apos;': `'`
 };
 
 // Decodes text by using the browser

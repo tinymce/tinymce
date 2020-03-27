@@ -326,7 +326,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (success
     LegacyUnit.equal(editor.getContent(), '<p><em><b>abc</b></em><b>d</b>e</p>');
   });
 
-  suite.test('Toggle styles at the end of the content don\' removes the format where it is not needed.', function (editor) {
+  suite.test(`Toggle styles at the end of the content don' removes the format where it is not needed.`, function (editor) {
     editor.setContent('<p><em><b>abce</b></em></p>');
     editor.formatter.register('b', { inline: 'b' });
     editor.formatter.register('em', { inline: 'em' });

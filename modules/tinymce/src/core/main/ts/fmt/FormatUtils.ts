@@ -13,7 +13,7 @@ import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
 import { FormatAttrOrStyleValue, FormatVars } from '../api/fmt/Format';
 
-const isNode = (node: any): node is Node => !!(node as any).nodeType;
+const isNode = (node: any): node is Node => !!(node).nodeType;
 
 const isInlineBlock = function (node: Node): boolean {
   return node && /^(IMG)$/.test(node.nodeName);

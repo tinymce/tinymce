@@ -103,13 +103,13 @@ let support,
     // Operator (capture 2)
     '*([*^$|!~]?=)' + whitespace +
     // "Attribute values must be CSS identifiers [capture 5] or strings [capture 3 or capture 4]"
-    '*(?:\'((?:\\\\.|[^\\\\\'])*)\'|"((?:\\\\.|[^\\\\"])*)"|(' + identifier + '))|)' + whitespace +
+    `*(?:'((?:\\\\.|[^\\\\'])*)'|"((?:\\\\.|[^\\\\"])*)"|(` + identifier + '))|)' + whitespace +
     '*\\]',
 
   pseudos = ':(' + identifier + ')(?:\\((' +
     // To reduce the number of selectors needing tokenize in the preFilter, prefer arguments:
     // 1. quoted (capture 3; capture 4 or capture 5)
-    '(\'((?:\\\\.|[^\\\\\'])*)\'|"((?:\\\\.|[^\\\\"])*)")|' +
+    `('((?:\\\\.|[^\\\\'])*)'|"((?:\\\\.|[^\\\\"])*)")|` +
     // 2. simple (capture 6)
     '((?:\\\\.|[^\\\\()[\\]]|' + attributes + ')*)|' +
     // 3. anything else (capture 2)
@@ -122,7 +122,7 @@ let support,
   rcomma = new RegExp('^' + whitespace + '*,' + whitespace + '*'),
   rcombinators = new RegExp('^' + whitespace + '*([>+~]|' + whitespace + ')' + whitespace + '*'),
 
-  rattributeQuotes = new RegExp('=' + whitespace + '*([^\\]\'"]*?)' + whitespace + '*\\]', 'g'),
+  rattributeQuotes = new RegExp('=' + whitespace + `*([^\\]'"]*?)` + whitespace + '*\\]', 'g'),
 
   rpseudo = new RegExp(pseudos),
   ridentifier = new RegExp('^' + identifier + '$'),
@@ -280,7 +280,7 @@ const Sizzle: any = function (selector, context, results, seed) {
         } else {
           context.setAttribute('id', nid);
         }
-        nid = '[id=\'' + nid + '\'] ';
+        nid = `[id='${nid}'] `;
 
         i = groups.length;
         while (i--) {
@@ -848,7 +848,7 @@ Sizzle.matchesSelector = function (elem, expr) {
   }
 
   // Make sure that attribute selectors are quoted
-  expr = expr.replace(rattributeQuotes, '=\'$1\']');
+  expr = expr.replace(rattributeQuotes, `='$1']`);
 
   if (support.matchesSelector && documentIsHTML &&
     (!rbuggyMatches || !rbuggyMatches.test(expr)) &&

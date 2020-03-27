@@ -94,7 +94,7 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
     }
   }
 
-  return args.content as string;
+  return args.content;
 };
 
 const setContentTree = (editor: Editor, body: HTMLElement, content: Node, args: SetContentArgs): Node => {

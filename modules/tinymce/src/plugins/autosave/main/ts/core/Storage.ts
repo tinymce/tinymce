@@ -48,7 +48,7 @@ const storeDraft = (editor: Editor) => {
   const prefix = Settings.getAutoSavePrefix(editor);
 
   if (!isEmpty(editor) && editor.isDirty()) {
-    LocalStorage.setItem(prefix + 'draft', editor.getContent({ format: 'raw', no_events: true }) as string);
+    LocalStorage.setItem(prefix + 'draft', editor.getContent({ format: 'raw', no_events: true }));
     LocalStorage.setItem(prefix + 'time', new Date().getTime().toString());
     Events.fireStoreDraft(editor);
   }

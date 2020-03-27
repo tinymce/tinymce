@@ -17,7 +17,7 @@ const sSetContentAndFireKeystroke = function (key: number) {
 };
 
 const sSetContentAndPressSpace = (tinyApis: TinyApis, tinyActions: TinyActions, content: string, offset = content.length, elementPath = [ 0, 0 ]) => {
-  return Step.label(`Set content and press space`, GeneralSteps.sequence([
+  return Step.label('Set content and press space', GeneralSteps.sequence([
     tinyApis.sSetContent('<p>' + content + '</p>'),
     tinyApis.sFocus(),
     tinyApis.sSetCursor(

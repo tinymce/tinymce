@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function (success, fa
       'Test preview of a custom element.');
 
     ok(/color\:rgb\(255, 0, 0\)/.test(getCssText({ inline: 'invalid', styles: { color: '#ff0000' }})),
-      'Test preview of an invalid element shouldn\'t crash the editor .');
+      `Test preview of an invalid element shouldn't crash the editor .`);
 
     ok(/color\:rgb\(0, 255, 0\)/.test(getCssText({ selector: 'tr', classes: [ 'preview' ] })),
       'Style is properly inherited in preview for partial element (like TR).');

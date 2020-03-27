@@ -52,7 +52,7 @@ const defaultSpellcheckCallback = function (editor: Editor, pluginUrl: string, c
         const parseResult = JSON.parse(result);
 
         if (!parseResult) {
-          const message = editor.translate('Server response wasn\'t proper JSON.');
+          const message = editor.translate(`Server response wasn't proper JSON.`);
           errorCallback(message);
         } else if (parseResult.error) {
           errorCallback(parseResult.error);

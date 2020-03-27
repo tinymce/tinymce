@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DefaultLinkTargetTest', (succes
         tinyApis.sSetContent(''),
         tinyApis.sDeleteSetting('target_list')
       ]),
-      Log.stepsAsStep('TBA', 'Link: changing to current window doesn\'t apply the default', [
+      Log.stepsAsStep('TBA', `Link: changing to current window doesn't apply the default`, [
         tinyApis.sSetSetting('default_link_target', '_blank'),
         TestLinkUi.sInsertLink(tinyUi, 'http://www.google.com'),
         TestLinkUi.sAssertContentPresence(tinyApis, { 'a[target="_blank"]': 1, 'a': 1 }),
@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DefaultLinkTargetTest', (succes
         TestLinkUi.sAssertContentPresence(tinyApis, { 'a:not([target="_blank"])': 1, 'a': 1 }),
         tinyApis.sSetContent('')
       ]),
-      Log.stepsAsStep('TBA', 'Link: default isn\'t applied to an existing link', [
+      Log.stepsAsStep('TBA', `Link: default isn't applied to an existing link`, [
         tinyApis.sSetSetting('default_link_target', '_blank'),
         tinyApis.sSetContent('<a href="http://www.google.com">https://www.google.com/</a>'),
         TestLinkUi.sAssertContentPresence(tinyApis, { 'a:not([target="_blank"])': 1, 'a': 1 }),

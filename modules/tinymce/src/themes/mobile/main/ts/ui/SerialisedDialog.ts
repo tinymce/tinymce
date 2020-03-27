@@ -147,14 +147,14 @@ const sketch = function (rawSpec) {
             AlloyEvents.runOnExecute(spec.onExecute),
 
             AlloyEvents.run(NativeEvents.transitionend(), function (dialog, simulatedEvent) {
-              const event = simulatedEvent.event() as any;
+              const event = simulatedEvent.event();
               if (event.raw().propertyName === 'left') {
                 focusInput(dialog);
               }
             }),
 
             AlloyEvents.run(navigateEvent, function (dialog, simulatedEvent) {
-              const event = simulatedEvent.event() as any;
+              const event = simulatedEvent.event();
               const direction = event.direction();
               navigate(dialog, direction);
             })
@@ -197,13 +197,13 @@ const sketch = function (rawSpec) {
 
       AddEventsBehaviour.config(wrapperAdhocEvents, [
         AlloyEvents.run(NativeEvents.touchstart(), function (wrapper, simulatedEvent) {
-          const event = simulatedEvent.event() as any;
+          const event = simulatedEvent.event();
           spec.state.dialogSwipeState.set(
             SwipingModel.init(event.raw().touches[0].clientX)
           );
         }),
         AlloyEvents.run(NativeEvents.touchmove(), function (wrapper, simulatedEvent) {
-          const event = simulatedEvent.event() as any;
+          const event = simulatedEvent.event();
           spec.state.dialogSwipeState.on(function (state) {
             simulatedEvent.event().prevent();
             spec.state.dialogSwipeState.set(

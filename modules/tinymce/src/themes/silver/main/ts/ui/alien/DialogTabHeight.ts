@@ -36,7 +36,7 @@ const getMaxHeight = (heights: number[]) => {
 
 const getMaxTabviewHeight = (dialog: Element, tabview: Element, tablist: Element) => {
   const documentElement = Traverse.documentElement(dialog).dom();
-  const rootElm = SelectorFind.ancestor(dialog, '.tox-dialog-wrap').getOr(dialog) as Element<DomElement>;
+  const rootElm = SelectorFind.ancestor(dialog, '.tox-dialog-wrap').getOr(dialog);
   const isFixed = Css.get(rootElm, 'position') === 'fixed';
 
   // Get the document or window/viewport height

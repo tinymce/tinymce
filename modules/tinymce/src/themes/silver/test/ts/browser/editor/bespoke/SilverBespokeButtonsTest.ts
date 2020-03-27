@@ -47,9 +47,9 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
       const sAssertFocusOnAlignToolbarButton = () => {
         return FocusTools.sTryOnSelector(
-          `Focus should be on Align`,
+          'Focus should be on Align',
           doc,
-          `.tox-toolbar__group button[aria-label="Align"]`
+          '.tox-toolbar__group button[aria-label="Align"]'
         );
       };
 

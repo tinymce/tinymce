@@ -74,7 +74,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         Obj.each(expectedTabletDefaultSettings, (value, key) => {
           Assertions.assertEq(`Should have default ${key} setting`, value, Obj.get(defaultSettings, key).getOrUndefined());
         });
-        Assertions.assertEq(`Should not have menubar setting`, undefined, Obj.get(defaultSettings, 'menubar').getOrUndefined());
+        Assertions.assertEq('Should not have menubar setting', undefined, Obj.get(defaultSettings, 'menubar').getOrUndefined());
       })),
 
       Logger.t('default phone settings', Step.sync(() => {

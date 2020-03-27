@@ -394,16 +394,16 @@ UnitTest.test('ValueSchemaRawTest', function () {
 
   Logger.sync('Checking basic types', function () {
     checkIs('Checking valid number', 42, 42, ValueSchema.number);
-    checkErr('Checking invalid number', `Expected type: number but got: string`, 'a', ValueSchema.number);
+    checkErr('Checking invalid number', 'Expected type: number but got: string', 'a', ValueSchema.number);
 
     checkIs('Checking valid string', 'a', 'a', ValueSchema.string);
-    checkErr('Checking invalid string', `Expected type: string but got: number`, 42, ValueSchema.string);
+    checkErr('Checking invalid string', 'Expected type: string but got: number', 42, ValueSchema.string);
 
     checkIs('Checking valid boolean', true, true, ValueSchema.boolean);
-    checkErr('Checking invalid boolean', `Expected type: boolean but got: string`, 'a', ValueSchema.boolean);
+    checkErr('Checking invalid boolean', 'Expected type: boolean but got: string', 'a', ValueSchema.boolean);
 
     checkIs('Checking valid function', Fun.noop, Fun.noop, ValueSchema.func);
-    checkErr('Checking invalid function', `Expected type: function but got: string`, 'a', ValueSchema.func);
+    checkErr('Checking invalid function', 'Expected type: function but got: string', 'a', ValueSchema.func);
   });
 
   Logger.sync('asRaw with type', function () {

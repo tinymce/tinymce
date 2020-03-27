@@ -101,8 +101,8 @@ const getSelectedBlocks = (dom: DOMUtils, rng: Range, startElm?: Element, endElm
   const selectedBlocks = [];
 
   root = dom.getRoot();
-  startElm = dom.getParent(startElm || getStart(root, rng, rng.collapsed), dom.isBlock) as Element;
-  endElm = dom.getParent(endElm || getEnd(root, rng, rng.collapsed), dom.isBlock) as Element;
+  startElm = dom.getParent(startElm || getStart(root, rng, rng.collapsed), dom.isBlock);
+  endElm = dom.getParent(endElm || getEnd(root, rng, rng.collapsed), dom.isBlock);
 
   if (startElm && startElm !== root) {
     selectedBlocks.push(startElm);

@@ -32,8 +32,8 @@ UnitTest.test('api.Search.findall (using api.Pattern)', function () {
   checkAll([[ 1, 7 ]], ' cattle', Pattern.unsafeword('cattle'));
   checkAll([], Unicode.zeroWidth + 'dog ', Pattern.safeword('dog'));
 
-  checkAll([[ 3, 7 ], [ 10, 14 ]], 'no it\'s i it\'s done.', Pattern.unsafetoken('it\'s'));
-  checkAll([[ 0, 12 ]], 'catastrophe\'', Pattern.unsafetoken('catastrophe\''));
+  checkAll([[ 3, 7 ], [ 10, 14 ]], `no it's i it's done.`, Pattern.unsafetoken(`it's`));
+  checkAll([[ 0, 12 ]], `catastrophe'`, Pattern.unsafetoken(`catastrophe'`));
 
   checkAll([[ 0, 3 ]], 'sre', Pattern.unsafeword('sre'));
   checkAll([[ 0, 3 ]], 'sre ', Pattern.unsafeword('sre'));

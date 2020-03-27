@@ -26,7 +26,7 @@ UnitTest.test('words :: Identify', function () {
   check([], ' ');
   check([ WordScope('one', none, none) ], 'one');
   check([ WordScope('this', some('('), some(')')) ], '(this)');
-  check([ WordScope('don\'t', some(' '), some(' ')) ], ' don\'t ');
+  check([ WordScope(`don't`, some(' '), some(' ')) ], ` don't `);
   check([
     WordScope('it', some('"'), some(' ')),
     WordScope('is', some(' '), some(' ')),
@@ -37,18 +37,18 @@ UnitTest.test('words :: Identify', function () {
     WordScope('live', some(' '), some('"'))
   ], '"it is a good day to live"');
   check([
-    WordScope('\'twas', some(' '), some(' ')),
+    WordScope(`'twas`, some(' '), some(' ')),
     WordScope('the', some(' '), some(' ')),
     WordScope('night', some(' '), some(' ')),
     WordScope('before', some(' '), none)
-  ], ' \'twas the night before');
+  ], ` 'twas the night before`);
 
   check([
-    WordScope('this', some('\''), some(' ')),
+    WordScope('this', some(`'`), some(' ')),
     WordScope('the', some(' '), some(' ')),
     WordScope('night', some(' '), some(' ')),
     WordScope('before', some(' '), none)
-  ], ' \'this the night before');
+  ], ` 'this the night before`);
 
   // Note, the smart quotes.
   checkWords([ 'Tale', 'is', 'about', 'an', 'adorable', 'mouse', 'with', 'a', 'lute', 'fighting', 'giant', 'crabs', 'Really', 'I’d', 'hope', 'that', 'was', 'enough', 'for', 'you', 'but', 'I\u2019ll', 'throw' ], 'Tale is about an adorable mouse with a lute fighting giant crabs. Really I’d hope that was enough for you, but I\u2019ll throw');

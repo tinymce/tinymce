@@ -10,7 +10,7 @@ UnitTest.test('TableMergeTest', function () {
   const start = Structs.address;
   const suite = TableMerge.suite;
 
-  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as any as Element, isNew);
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as Element, isNew);
 
   // Advanced Spans
   const gridAdvancedOne = function () {
