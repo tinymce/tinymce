@@ -36,7 +36,6 @@
     "one-var": "off",
     "prefer-const": "off",
     "prefer-rest-params": "off",
-    "prefer-spread": "off",
-    "quote-props": "off"
+    "prefer-spread": "off"
   }
 }
