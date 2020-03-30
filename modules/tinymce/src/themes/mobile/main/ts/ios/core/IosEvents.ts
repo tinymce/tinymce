@@ -10,7 +10,7 @@ import { Compare, DomEvent, Height } from '@ephox/sugar';
 
 import * as TappingEvent from '../../util/TappingEvent';
 
-const initEvents = (editorApi, iosApi, toolstrip, socket, dropup): { destroy: () => void } => {
+const initEvents = (editorApi, iosApi, toolstrip, socket, _dropup): { destroy: () => void } => {
   const saveSelectionFirst = () => {
     iosApi.run((api) => {
       api.highlightSelection();
@@ -34,7 +34,7 @@ const initEvents = (editorApi, iosApi, toolstrip, socket, dropup): { destroy: ()
     });
   };
 
-  const scrollToElement = (target): void => {
+  const scrollToElement = (_target): void => {
     scrollToY(iosApi, socket);
   };
 

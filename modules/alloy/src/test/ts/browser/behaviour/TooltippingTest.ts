@@ -28,7 +28,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
     ])
   });
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     const lazySink = (): Result<AlloyComponent, any> => {
       return memSink.getOpt(me).fold(
         () => Result.error('Could not find test sink'),
@@ -80,7 +80,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
     });
 
     return me;
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, component, _store) => {
 
     const alphaButton = component.getSystem().getByDom(
       SelectorFind.descendant(component.element(), '.alpha').getOrDie('Could not find alpha button')
@@ -101,12 +101,12 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
 
     const sAssertEmptySink = Logger.t(
       'Waiting for sink to be empty',
-      sAssertSinkContents((s, str, arr) => [ ])
+      sAssertSinkContents((_s, _str, _arr) => [ ])
     );
 
     const sAssertSinkHtml = (html: string) => Logger.t(
       'Waiting for ' + html + ' to be in sink',
-      sAssertSinkContents((s, str, arr) => [
+      sAssertSinkContents((s, str, _arr) => [
         s.element('span', {
           html: str.is(html)
         })
@@ -119,7 +119,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
         [
           Assertions.sAssertStructure(
             'Check initial tooltipping values',
-            ApproxStructure.build((s, str, arr) => {
+            ApproxStructure.build((s, _str, arr) => {
               return s.element('div', {
                 classes: [ arr.has('tooltipping-container') ]
               });

@@ -85,7 +85,7 @@ const NONE: Option<any> = (() => {
   const call = (thunk) => thunk();
   const id = (n) => n;
   const me: Option<any> = {
-    fold: (n, s) => n(),
+    fold: (n, _s) => n(),
     is: Fun.never,
     isSome: Fun.never,
     isNone: Fun.always,

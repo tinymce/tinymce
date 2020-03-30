@@ -17,7 +17,7 @@ import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const sink = Sinks.relativeSink();
 
     return GuiFactory.build(
@@ -80,7 +80,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, component, _store) => {
 
     const typeahead = gui.getByUid('test-type').getOrDie();
 

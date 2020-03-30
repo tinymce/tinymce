@@ -8,7 +8,7 @@ import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 
 UnitTest.asynctest('ColorPicker component Test', (success, failure) => {
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       return GuiFactory.build(
         renderColorPicker({
           label: Option.some('ColorPicker label'),
@@ -16,7 +16,7 @@ UnitTest.asynctest('ColorPicker component Test', (success, failure) => {
         })
       );
     },
-    (doc, body, gui, component, store) => {
+    (_doc, _body, _gui, component, _store) => {
 
       const sAssertColour = (label: string, expected: string, labelText: string) =>
         Logger.t(

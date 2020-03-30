@@ -4,7 +4,7 @@ export const registerPrintItems = () => {
   getDemoRegistry().addButton('print', {
     type: 'button',
     disabled: false,
-    onAction: (buttonApi) => {
+    onAction: (_buttonApi) => {
       // trigger print
     }
   });

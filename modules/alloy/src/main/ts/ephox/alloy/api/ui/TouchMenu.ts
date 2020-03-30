@@ -136,16 +136,16 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
 
       AlloyEvents.abort(NativeEvents.contextmenu(), Fun.constant(true)),
 
-      AlloyEvents.run(NativeEvents.touchstart(), (comp, se) => {
+      AlloyEvents.run(NativeEvents.touchstart(), (comp, _se) => {
         Toggling.on(comp);
       }),
 
-      AlloyEvents.run(SystemEvents.tap(), (comp, se) => {
+      AlloyEvents.run(SystemEvents.tap(), (comp, _se) => {
         detail.onTap(comp);
       }),
 
       // On longpress, create the menu items to show, and put them in the sandbox.
-      AlloyEvents.run(SystemEvents.longpress(), (component, simulatedEvent) => {
+      AlloyEvents.run(SystemEvents.longpress(), (component, _simulatedEvent) => {
         detail.fetch(component).get((items) => {
           forceHoverOn(component);
           const iMenu = Menu.sketch({
@@ -194,7 +194,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
       // 1. Trigger execute on any selected item
       // 2. Close the menu
       // 3. Depress the button
-      AlloyEvents.run(NativeEvents.touchend(), (component, simulatedEvent) => {
+      AlloyEvents.run(NativeEvents.touchend(), (component, _simulatedEvent) => {
 
         getMenu(component).each((iMenu) => {
           Highlighting.getHighlighted(iMenu).each(AlloyTriggers.emitExecute);
@@ -205,7 +205,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
         Toggling.off(component);
       }),
 
-      AlloyEvents.runOnDetached((component, simulatedEvent) => {
+      AlloyEvents.runOnDetached((component, _simulatedEvent) => {
         const sandbox = Coupling.getCoupled(component, 'sandbox');
         InlineView.hide(sandbox);
       })

@@ -74,7 +74,7 @@ const isHighlighted = (component: AlloyComponent, hConfig: HighlightingConfig, h
   return Class.has(queryTarget.element(), hConfig.highlightClass);
 };
 
-const getHighlighted = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): Option<AlloyComponent> => {
+const getHighlighted = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): Option<AlloyComponent> => {
   return SelectorFind.descendant(component.element(), '.' + hConfig.highlightClass).bind((e) => component.getSystem().getByDom(e).toOption());
 };
 
@@ -86,11 +86,11 @@ const getByIndex = (component: AlloyComponent, hConfig: HighlightingConfig, hSta
   }, component.getSystem().getByDom);
 };
 
-const getFirst = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): Option<AlloyComponent> => {
+const getFirst = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): Option<AlloyComponent> => {
   return SelectorFind.descendant(component.element(), '.' + hConfig.itemClass).bind((e) => component.getSystem().getByDom(e).toOption());
 };
 
-const getLast = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): Option<AlloyComponent> => {
+const getLast = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): Option<AlloyComponent> => {
   const items: Element[] = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass);
   const last = items.length > 0 ? Option.some(items[items.length - 1]) : Option.none<Element<any>>();
   return last.bind((c) => component.getSystem().getByDom(c).toOption());
@@ -116,7 +116,7 @@ const getNext = (component: AlloyComponent, hConfig: HighlightingConfig, hState:
   return getDelta(component, hConfig, hState, +1);
 };
 
-const getCandidates = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless): AlloyComponent[] => {
+const getCandidates = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): AlloyComponent[] => {
   const items = SelectorFilter.descendants(component.element(), '.' + hConfig.itemClass);
   return Options.cat(
     Arr.map(items, (i) => {

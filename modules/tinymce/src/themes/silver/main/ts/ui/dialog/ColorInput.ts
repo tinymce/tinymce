@@ -186,8 +186,8 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
             Composing.getCurrent(comp).each(Focusing.focus);
           });
         }),
-        AlloyEvents.run<ColorPickerCancelEvent>(colorPickerCancelEvent, (comp, se) => {
-          FormField.getField(comp).each((field) => {
+        AlloyEvents.run<ColorPickerCancelEvent>(colorPickerCancelEvent, (comp, _se) => {
+          FormField.getField(comp).each((_field) => {
             Composing.getCurrent(comp).each(Focusing.focus);
           });
         })

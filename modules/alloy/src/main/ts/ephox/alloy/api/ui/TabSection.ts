@@ -15,7 +15,7 @@ import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detail, components, spec, externals) => {
+const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detail, components, _spec, _externals) => {
   const changeTab = (button: AlloyComponent) => {
     const tabValue = Representing.getValue(button);
     AlloyParts.getPart(button, detail, 'tabview').each((tabview) => {
@@ -52,7 +52,7 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detai
       Arr.flatten([
 
         detail.selectFirst ? [
-          AlloyEvents.runOnAttached((section, simulatedEvent) => {
+          AlloyEvents.runOnAttached((section, _simulatedEvent) => {
             changeTabBy(section, Highlighting.getFirst);
           })
         ] : [ ],

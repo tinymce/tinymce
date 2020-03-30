@@ -17,7 +17,7 @@
 // import SilverTheme from '../../../../../themes/silver/main/ts/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.ColorPickerTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.table.ColorPickerTest', (success, _failure) => {
 /*      TablePlugin();
       ColorPickerPlugin();
       SilverTheme();

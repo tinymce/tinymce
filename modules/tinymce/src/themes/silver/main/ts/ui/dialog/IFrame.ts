@@ -29,7 +29,7 @@ type IframeSpec = Omit<Types.Iframe.Iframe, 'type'>;
 const getDynamicSource = (isSandbox): IFrameSourcing => {
   const cachedValue = Cell('');
   return {
-    getValue: (frameComponent: AlloyComponent): string => {
+    getValue: (_frameComponent: AlloyComponent): string => {
       // Ideally we should fetch data from the iframe...innerHtml, this triggers Corrs errors
       return cachedValue.get();
     },

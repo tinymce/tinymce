@@ -61,7 +61,7 @@ const tryBr = function (isRoot: (e: Element) => boolean, element: Element, offse
 
 const process = function (analysis: BeforeAfter): Option<SpotPoint<Element>> {
   return BeforeAfter.cata(analysis,
-    function (message) {
+    function (_message) {
       return Option.none();
     },
     function () {

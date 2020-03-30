@@ -10,7 +10,7 @@ import { Document } from '@ephox/dom-globals';
  */
 const bind = function (doc: Element<Document>, handler: (pos: Position) => void) {
   let lastScroll = Scroll.get(doc);
-  const scrollBinder = DomEvent.bind(doc, 'scroll', function (event) {
+  const scrollBinder = DomEvent.bind(doc, 'scroll', function (_event) {
     const scroll = Scroll.get(doc);
     if ( (scroll.top() !== lastScroll.top()) || (scroll.left() !== lastScroll.left()) ) {
       handler(scroll);

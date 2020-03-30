@@ -6,7 +6,7 @@ import { renderHtmlPanel } from 'tinymce/themes/silver/ui/general/HtmlPanel';
 
 UnitTest.asynctest('HtmlPanel component Test', (success, failure) => {
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       return GuiFactory.build(
         renderHtmlPanel({
           html: '<br /><br /><hr />',
@@ -14,12 +14,12 @@ UnitTest.asynctest('HtmlPanel component Test', (success, failure) => {
         })
       );
     },
-    (doc, body, gui, component, store) => {
+    (_doc, _body, _gui, component, _store) => {
 
       return [
         Assertions.sAssertStructure(
           'Checking initial structure',
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('div', {
               attrs: {
                 role: str.is('presentation')
@@ -40,7 +40,7 @@ UnitTest.asynctest('HtmlPanel component Test', (success, failure) => {
   );
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       return GuiFactory.build(
         renderHtmlPanel({
           html: '<br /><hr />',
@@ -48,12 +48,12 @@ UnitTest.asynctest('HtmlPanel component Test', (success, failure) => {
         })
       );
     },
-    (doc, body, gui, component, store) => {
+    (_doc, _body, _gui, component, _store) => {
 
       return [
         Assertions.sAssertStructure(
           'Checking initial structure',
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('div', {
               attrs: {
                 role: str.is('document')

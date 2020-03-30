@@ -9,7 +9,7 @@ import TestProviders from '../../module/TestProviders';
 UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       return GuiFactory.build(
         renderSizeInput({
           name: 'dimensions',
@@ -19,7 +19,7 @@ UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
         }, TestProviders)
       );
     },
-    (doc, body, gui, component, store) => {
+    (_doc, _body, _gui, component, _store) => {
       const sAssertLockedStatus = (label: string, expected: boolean) => Logger.t(
         label,
         Chain.asStep(component.element(), [

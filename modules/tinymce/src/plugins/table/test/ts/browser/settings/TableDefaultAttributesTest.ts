@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultAttributesTest', (
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
-    const tableBody2By2 = (s, str, arr) => s.element('tbody', {
+    const tableBody2By2 = (s, str, _arr) => s.element('tbody', {
       children: [
         s.element('tr', {
           children: [

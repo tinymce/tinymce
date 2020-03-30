@@ -56,7 +56,7 @@ UnitTest.asynctest('ActionTest', (success, failure) =>  {
         meta: true
       }
     }),
-    Waiter.cTryUntilPredicate('Wait for 2 assertions', (x) => count === 2),
+    Waiter.cTryUntilPredicate('Wait for 2 assertions', (_x) => count === 2),
     Editor.cRemove
   ]);
 

@@ -4,7 +4,7 @@ export const registerNonbreakingItems = () => {
   getDemoRegistry().addButton('nonbreaking', {
     type: 'button',
     disabled: false,
-    onAction: (buttonApi) => {
+    onAction: (_buttonApi) => {
       // inserts nbsp
     }
   });

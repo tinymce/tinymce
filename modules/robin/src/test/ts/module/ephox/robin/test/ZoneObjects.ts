@@ -47,7 +47,7 @@ const assertProps = function (label: string, universe: TestUniverse, zones: Zone
       '\nProperty test for zone: ' + JSON.stringify(rawOne(universe, zone), null, 2),
       function () {
         // Check languages all match the zone language
-        Arr.each(elements, function (x, i) {
+        Arr.each(elements, function (x) {
           Assert.eq(
             'Checking everything in ' + label + ' has same language. Item: ' + x.id,
             LanguageZones.calculate(universe, x).getOr('none'), zone.lang
@@ -61,7 +61,7 @@ const assertProps = function (label: string, universe: TestUniverse, zones: Zone
 
         // Check block tags match across zones
         const blockParent = universe.up().predicate(first, universe.property().isBoundary).getOrDie('No block parent tag found');
-        Arr.each(elements, function (x, i) {
+        Arr.each(elements, function (x) {
           Assert.eq(
             'All block ancestor tags should be the same as the original',
             blockParent,

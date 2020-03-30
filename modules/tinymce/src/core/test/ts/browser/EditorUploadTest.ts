@@ -83,7 +83,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
   suite.asyncTest('replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)', function (editor, done) {
     editor.setContent(imageHtml(testBlobDataUri));
 
-    editor.settings.images_upload_handler = function (data, success) {
+    editor.settings.images_upload_handler = function (_data, success) {
       success('file.png');
     };
 
@@ -106,7 +106,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
       editor.settings.images_replace_blob_uris = false;
       editor.setContent(imageHtml(testBlobDataUri));
 
-      editor.settings.images_upload_handler = function (data, success) {
+      editor.settings.images_upload_handler = function (_data, success) {
         success('file.png');
       };
 
@@ -196,7 +196,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     }).then(done, die);
   });
 
-  suite.asyncTest('uploadImages reuse filename', (editor, done, die) => {
+  suite.asyncTest('uploadImages reuse filename', (editor, done, _die) => {
     let uploadedBlobInfo;
 
     editor.settings.images_reuse_filename = true;
@@ -207,7 +207,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
       success('custom.png?size=small');
     };
 
-    const assertResult = function (editor: Editor, uploadedBlobInfo: BlobInfo, result: UploadResult[]) {
+    const assertResult = function (editor: Editor, _uploadedBlobInfo: BlobInfo, result: UploadResult[]) {
       LegacyUnit.strictEqual(result.length, 1);
       LegacyUnit.strictEqual(result[0].status, true);
       LegacyUnit.equal('<p><img src="custom.png?size=small" /></p>', editor.getContent());
@@ -218,7 +218,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     editor.uploadImages((result) => {
       assertResult(editor, uploadedBlobInfo, result);
 
-      editor.uploadImages((result) => {
+      editor.uploadImages((_result) => {
         const img = editor.$('img')[0];
         LegacyUnit.strictEqual(hasBlobAsSource(img), false);
         LegacyUnit.strictEqual(img.src.indexOf('custom.png?size=small&') !== -1, true, 'Check the cache invalidation string was added');
@@ -247,7 +247,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
 
     editor.setContent(imageHtml(testBlobDataUri));
 
-    editor.settings.images_upload_handler = function (data, success) {
+    editor.settings.images_upload_handler = function (_data, success) {
       uploadCount++;
 
       Delay.setTimeout(function () {
@@ -278,7 +278,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
 
     editor.setContent(imageHtml(testBlobDataUri));
 
-    editor.settings.images_upload_handler = function (data, success, failure) {
+    editor.settings.images_upload_handler = function (_data, _success, failure) {
       uploadCount++;
 
       Delay.setTimeout(function () {
@@ -300,7 +300,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
 
     editor.setContent(imageHtml(Env.transparentSrc));
 
-    editor.settings.images_upload_handler = function (data, success) {
+    editor.settings.images_upload_handler = function (_data, success) {
       uploadCount++;
       success('url');
     };
@@ -318,7 +318,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
 
     editor.getBody().innerHTML = '<img src="' + testBlobDataUri + '" data-mce-bogus="1">';
 
-    editor.settings.images_upload_handler = function (data, success) {
+    editor.settings.images_upload_handler = function (_data, success) {
       uploadCount++;
       success('url');
     };
@@ -342,7 +342,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
       return !img.hasAttribute('data-skip');
     };
 
-    editor.settings.images_upload_handler = function (data, success) {
+    editor.settings.images_upload_handler = function (_data, success) {
       uploadCount++;
       success('url');
     };
@@ -369,7 +369,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
       return !img.hasAttribute('data-skip');
     });
 
-    editor.settings.images_upload_handler = function (data, success) {
+    editor.settings.images_upload_handler = function (_data, success) {
       uploadCount++;
       success('url');
     };

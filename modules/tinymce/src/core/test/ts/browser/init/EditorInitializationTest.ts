@@ -169,7 +169,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     });
   };
 
-  const mCreateInlineModeMultipleInstances = Step.label('mCreateInlineModeMultipleInstances', Step.stateful(function (value, next, die) {
+  const mCreateInlineModeMultipleInstances = Step.label('mCreateInlineModeMultipleInstances', Step.stateful(function (_value, next, die) {
     viewBlock.update('<div class="tinymce-editor"><p>a</p></div><div class="tinymce-editor"><p>b</p></div>');
 
     EditorManager.init({
@@ -181,7 +181,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     }).then(next, die);
   }));
 
-  const mAssertEditors = Step.label('mAssertEditors', Step.stateful(function (editors: any[], next, die) {
+  const mAssertEditors = Step.label('mAssertEditors', Step.stateful(function (editors: any[], next, _die) {
     Assertions.assertHtml('Editor contents should be the first div content', '<p>a</p>', editors[0].getContent());
     Assertions.assertHtml('Editor contents should be the second div content', '<p>b</p>', editors[1].getContent());
     // tslint:disable-next-line:no-console
@@ -243,7 +243,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     EditorManager.remove();
   }));
 
-  const mAssertTargets = Step.label('mAssertTargets', Step.stateful(function (targets: any[], next, die) {
+  const mAssertTargets = Step.label('mAssertTargets', Step.stateful(function (targets: any[], next, _die) {
     Assertions.assertEq('Targets should be two since there are two editors', 2, targets.length);
 
     Arr.each(targets, function (target) {

@@ -28,7 +28,7 @@ UnitTest.test('Browser Test: SelectionTest', function () {
   };
 
   const assertNoSelection = function (label) {
-    WindowSelection.getExact(window).each(function (sel) {
+    WindowSelection.getExact(window).each(function (_sel) {
       assert.fail('There should not be a selection yet: ' + label);
     });
   };

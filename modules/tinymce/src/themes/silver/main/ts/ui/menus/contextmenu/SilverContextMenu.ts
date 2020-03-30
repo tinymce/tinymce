@@ -130,7 +130,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       fireDismissalEventInstead: { },
       inlineBehaviours: Behaviour.derive([
         AddEventsBehaviour.config('dismissContextMenu', [
-          AlloyEvents.run(SystemEvents.dismissRequested(), (comp, se) => {
+          AlloyEvents.run(SystemEvents.dismissRequested(), (comp, _se) => {
             Sandboxing.close(comp);
             editor.focus();
           })

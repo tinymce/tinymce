@@ -28,17 +28,17 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
       containerBehaviours: Behaviour.derive([
         DragnDrop.config({
           mode: 'drag',
-          canDrag: (component, target) => {
+          canDrag: (_component, _target) => {
             store.add('canDrag');
             return true;
           },
-          onDragstart: (component, simulatedEvent) => {
+          onDragstart: (_component, _simulatedEvent) => {
             store.add('onDragstart');
           },
-          onDragover: (component, simulatedEvent) => {
+          onDragover: (_component, _simulatedEvent) => {
             store.add('onDragover');
           },
-          onDragend: (component, simulatedEvent) => {
+          onDragend: (_component, _simulatedEvent) => {
             store.add('onDragend');
           },
           ...overrides
@@ -60,22 +60,22 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
       containerBehaviours: Behaviour.derive([
         DragnDrop.config({
           mode: 'drop',
-          onDrop: (comp, dropEvent) => {
+          onDrop: (_comp, dropEvent) => {
             const files = Arr.map(dropEvent.files, ({ name, size, type, lastModified }) => {
               return { name, size, type, lastModified };
             });
             store.add({ type: 'drop', files, data: dropEvent.data });
           },
-          onDrag: (component, simulatedEvent) => {
+          onDrag: (_component, _simulatedEvent) => {
             store.add('onDrag');
           },
-          onDragover: (component, simulatedEvent) => {
+          onDragover: (_component, _simulatedEvent) => {
             store.add('onDragover');
           },
-          onDragenter: (component, simulatedEvent) => {
+          onDragenter: (_component, _simulatedEvent) => {
             store.add('onDragenter');
           },
-          onDragleave: (component, simulatedEvent) => {
+          onDragleave: (_component, _simulatedEvent) => {
             store.add('onDragleave');
           },
           ...overrides
@@ -100,7 +100,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
     }, 'onDragend' ]);
   };
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         components: [
@@ -118,20 +118,20 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
           }),
 
           createDraggable(store, 'draggableDataA', {
-            getData: (comp) => {
+            getData: (_comp) => {
               return 'a';
             }
           }),
 
           createDraggable(store, 'draggableDataB', {
             type: 'text/html',
-            getData: (comp) => {
+            getData: (_comp) => {
               return 'b';
             }
           }),
 
           createDraggable(store, 'draggableDataC', {
-            onDragstart: (comp, simulatedEvent) => {
+            onDragstart: (_comp, simulatedEvent) => {
               const rawEvent: any = simulatedEvent.event().raw();
               const transfer: DataTransfer = rawEvent.dataTransfer;
               transfer.items.add('c', 'text/plain');
@@ -141,20 +141,20 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
 
           createDraggable(store, 'draggableCopy', {
             effectAllowed: 'copy',
-            getData: (comp) => {
+            getData: (_comp) => {
               return 'copy';
             }
           }),
 
           createDraggable(store, 'draggableMove', {
             effectAllowed: 'move',
-            getData: (comp) => {
+            getData: (_comp) => {
               return 'move';
             }
           }),
 
           createDraggable(store, 'draggableFilesA', {
-            onDragstart: (comp, simulatedEvent) => {
+            onDragstart: (_comp, simulatedEvent) => {
               const rawEvent: any = simulatedEvent.event().raw();
               const transfer: DataTransfer = rawEvent.dataTransfer;
               transfer.items.add(Files.createFile('a.html', 1234, new Blob([ 'abc' ], { type: 'text/html' })));
@@ -165,7 +165,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
         ]
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, _component, store) => {
     return [
       Logger.t('Drag and drop with getData', GeneralSteps.sequence([
         store.sClear,

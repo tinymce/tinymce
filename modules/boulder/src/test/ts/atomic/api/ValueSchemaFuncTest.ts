@@ -41,7 +41,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
     });
   };
 
-  const getter1 = function (a, b, c) {
+  const getter1 = function (_a, _b, _c) {
     const args = Array.prototype.slice.call(arguments, 0);
     return args.join('.');
   };
@@ -69,7 +69,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
     function (f) {
       return f('x');
     },
-    function (v) {
+    function (_v) {
       return 'y';
     },
     ValueSchema.funcOrDie([ 'value' ], ValueSchema.valueOf(function (v) {

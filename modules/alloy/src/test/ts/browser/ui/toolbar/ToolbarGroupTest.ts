@@ -34,7 +34,7 @@ UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
     };
   };
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build(
       {
         dom: {
@@ -68,7 +68,7 @@ UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
       }
     );
 
-  }, (doc, body, gui, component: AlloyComponent, store) => {
+  }, (doc, _body, _gui, component: AlloyComponent, _store) => {
 
     const group1 = component.getSystem().getByDom(
       SelectorFind.descendant(component.element(), '.test-group1').getOrDie('Could not find test-group1')

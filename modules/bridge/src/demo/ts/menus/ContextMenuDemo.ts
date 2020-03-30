@@ -12,7 +12,7 @@ export const registerDemoContextMenus = () => {
     update: () => [{
       icon: 'code',
       text: 'Code',
-      onAction: (api) => {
+      onAction: (_api) => {
         console.log('open source code dialog');
       }
     }]
@@ -22,7 +22,7 @@ export const registerDemoContextMenus = () => {
     update: () => [ 'bold', 'italic', {
       icon: 'code',
       text: 'Code',
-      onAction: (api) => {
+      onAction: (_api) => {
         console.log('open source code dialog');
       }
     }]

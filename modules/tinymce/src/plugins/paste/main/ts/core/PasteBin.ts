@@ -21,7 +21,7 @@ const isExternalPasteBin = (editor: Editor) => getPasteBinParent(editor) !== edi
 
 const delegatePasteEvents = (editor: Editor, pasteBinElm: Element, pasteBinDefaultContent: string) => {
   if (isExternalPasteBin(editor)) {
-    editor.dom.bind(pasteBinElm, 'paste keyup', function (e) {
+    editor.dom.bind(pasteBinElm, 'paste keyup', function (_e) {
       if (!isDefault(editor, pasteBinDefaultContent)) {
         editor.fire('paste');
       }

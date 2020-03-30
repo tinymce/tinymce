@@ -75,7 +75,7 @@ const safeRemoveCaretContainer = function (editor: Editor, caret: Cell<Text>) {
 const renderInsideInlineCaret = function (isInlineTarget: NodePredicate, editor: Editor, caret: Cell<Text>, elms: Node[]) {
   if (editor.selection.isCollapsed()) {
     const inlines = Arr.filter(elms, isInlineTarget);
-    Arr.each(inlines, function (inline) {
+    Arr.each(inlines, function (_inline) {
       const pos = CaretPosition.fromRangeStart(editor.selection.getRng());
       BoundaryLocation.readLocation(isInlineTarget, editor.getBody(), pos).bind(function (location) {
         return renderCaretLocation(editor, caret, location);
@@ -90,7 +90,7 @@ const move = function (editor: Editor, caret: Cell<Text>, forward: boolean) {
   };
 };
 
-const moveWord = function (forward: boolean, editor: Editor, caret: Cell<Text>) {
+const moveWord = function (forward: boolean, editor: Editor, _caret: Cell<Text>) {
   return function () {
     return isFeatureEnabled(editor) ? WordSelection.moveByWord(forward, editor) : false;
   };

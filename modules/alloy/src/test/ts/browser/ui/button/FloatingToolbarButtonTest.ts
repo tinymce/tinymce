@@ -26,7 +26,7 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
     });
   };
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build(
       FloatingToolbarButton.sketch({
         layouts: {
@@ -63,7 +63,7 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
         },
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, component, _store) => {
     gui.add(sinkComp);
 
     const sAssertButtonStructure = (active: boolean) => {

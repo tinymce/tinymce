@@ -28,7 +28,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
     })
   );
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const c = GuiFactory.build(
       SplitDropdown.sketch({
         dom: {
@@ -120,7 +120,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
 
     return c;
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, component, store) => {
     gui.add(
       GuiFactory.build(sink.asSpec())
     );
@@ -128,7 +128,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
     return [
       Assertions.sAssertStructure(
         'Check basic initial structure',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('span', {
             attrs: {
               'role': str.is('button'),

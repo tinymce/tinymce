@@ -11,10 +11,10 @@ import { readBlobAsText } from 'ephox/jax/core/BlobReader';
 const expectError = (label: string, response: FutureResult<any, HttpError>) => {
   return FutureResult.nu((callback) => {
     response.get((res) => {
-      res.fold((err) => {
+      res.fold((_err) => {
         console.log(label, 'successfully failed');
         callback(Result.value({ }));
-      }, (val) => {
+      }, (_val) => {
         callback(Result.error('Unexpected value in test: ' + label));
       });
     });

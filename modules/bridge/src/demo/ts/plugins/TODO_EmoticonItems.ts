@@ -5,10 +5,10 @@ export const registerEmoticonItems = () => {
   getDemoRegistry().addButton('emoticon', {
     type: 'button',
     disabled: false,
-    onSetup: (buttonApi) => {
+    onSetup: (_buttonApi) => {
       return () => { };
     },
-    onAction: (buttonApi) => {
+    onAction: (_buttonApi) => {
 
     }
   });

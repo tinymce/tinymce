@@ -71,7 +71,7 @@ const make = (detail: SlotContainerDetail, components: AlloySpec[]) => {
     Arr.each(keys, (key) => f(container, key));
   };
 
-  const doShowing = (comp: AlloyComponent, key: string): boolean => {
+  const doShowing = (comp: AlloyComponent, _key: string): boolean => {
     return Attr.get(comp.element(), 'aria-hidden') !== 'true';
   };
 

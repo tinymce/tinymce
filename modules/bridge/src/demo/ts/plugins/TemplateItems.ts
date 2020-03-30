@@ -4,7 +4,7 @@ export const registerTemplateItems = () => {
   getDemoRegistry().addButton('template', {
     type: 'button',
     disabled: false,
-    onAction: (buttonApi) => {
+    onAction: (_buttonApi) => {
       // show dialog
     }
   });

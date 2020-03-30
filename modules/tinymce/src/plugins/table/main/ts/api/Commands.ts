@@ -83,7 +83,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
     });
   };
 
-  const copyRowSelection = (execute?) => {
+  const copyRowSelection = (_execute?) => {
     return TableSelection.getSelectionStartCell(editor).map((cell) => {
       return getTableFromCell(cell).bind((table) => {
         const doc = Element.fromDom(editor.getDoc());
@@ -149,24 +149,24 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
       actOnSelection(actions.deleteRow);
     },
 
-    mceTableCutRow(grid) {
+    mceTableCutRow(_grid) {
       copyRowSelection().each((selection) => {
         clipboardRows.set(selection);
         actOnSelection(actions.deleteRow);
       });
     },
 
-    mceTableCopyRow(grid) {
+    mceTableCopyRow(_grid) {
       copyRowSelection().each((selection) => {
         clipboardRows.set(selection);
       });
     },
 
-    mceTablePasteRowBefore(grid) {
+    mceTablePasteRowBefore(_grid) {
       pasteOnSelection(actions.pasteRowsBefore);
     },
 
-    mceTablePasteRowAfter(grid) {
+    mceTablePasteRowAfter(_grid) {
       pasteOnSelection(actions.pasteRowsAfter);
     },
 

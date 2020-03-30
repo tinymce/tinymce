@@ -9,7 +9,7 @@ import TestProviders from '../../../module/TestProviders';
 UnitTest.asynctest('DialogButton component Test', (success, failure) => {
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (store, _doc, _body) => {
       return GuiFactory.build(
         renderButton({
           name: 'test-button',

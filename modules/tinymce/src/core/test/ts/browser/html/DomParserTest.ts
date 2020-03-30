@@ -708,8 +708,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
 
   suite.test('getAttributeFilters/getNodeFilters', function () {
     const parser = DomParser();
-    const cb1 = (nodes, name, args) => {};
-    const cb2 = (nodes, name, args) => {};
+    const cb1 = (_nodes, _name, _args) => {};
+    const cb2 = (_nodes, _name, _args) => {};
 
     parser.addAttributeFilter('attr', cb1);
     parser.addNodeFilter('node', cb2);

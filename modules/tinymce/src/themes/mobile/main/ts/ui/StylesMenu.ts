@@ -126,7 +126,7 @@ const makeMenu = function (value, items, memMenuThunk, collapsable) {
 
         behaviours: Behaviour.derive([
           AddEventsBehaviour.config('adhoc-scrollable-menu', [
-            AlloyEvents.runOnAttached(function (component, simulatedEvent) {
+            AlloyEvents.runOnAttached(function (component, _simulatedEvent) {
               Css.set(component.element(), 'overflow-y', 'auto');
               Css.set(component.element(), '-webkit-overflow-scrolling', 'touch');
               Scrollable.register(component.element());
@@ -174,7 +174,7 @@ const sketch = function (settings) {
     // For animations, need things to stay around in the DOM (at least until animation is done)
     stayInDom: true,
 
-    onExecute(tmenu, item) {
+    onExecute(_tmenu, item) {
       const v = Representing.getValue(item);
       settings.handle(item, v.value);
       return Option.none();

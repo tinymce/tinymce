@@ -16,7 +16,7 @@ import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
 
 UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const sink = Sinks.relativeSink();
 
     return GuiFactory.build(
@@ -72,7 +72,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, body, gui, _component, store) => {
 
     const typeahead = gui.getByUid('test-type').getOrDie();
 

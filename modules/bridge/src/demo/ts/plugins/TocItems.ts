@@ -1,7 +1,7 @@
 import { getDemoRegistry } from './../buttons/DemoRegistry';
 
 const editor = {
-  on: (s, f) => { },
+  on: (_s, _f) => { },
   isDirty: () => true
 };
 
@@ -15,7 +15,7 @@ export const registerTocItems = () => {
       });
       return () => { };
     },
-    onAction: (buttonApi) => {
+    onAction: (_buttonApi) => {
       // insert Table of contents
     }
   });

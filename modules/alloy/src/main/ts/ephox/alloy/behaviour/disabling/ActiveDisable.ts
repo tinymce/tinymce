@@ -19,7 +19,7 @@ const exhibit = (base: DomDefinitionDetail, disableConfig: DisableConfig) => {
 
 const events = (disableConfig: DisableConfig, disableState: Stateless) => {
   return AlloyEvents.derive([
-    AlloyEvents.abort(SystemEvents.execute(), (component, simulatedEvent) => {
+    AlloyEvents.abort(SystemEvents.execute(), (component, _simulatedEvent) => {
       return DisableApis.isDisabled(component, disableConfig);
     }),
     Behaviour.loadEvent(disableConfig, disableState, DisableApis.onLoad)

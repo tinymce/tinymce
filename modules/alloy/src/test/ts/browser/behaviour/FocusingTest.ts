@@ -9,7 +9,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('FocusingTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -27,11 +27,11 @@ UnitTest.asynctest('FocusingTest', (success, failure) => {
         ])
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, component, _store) => {
     return [
       Assertions.sAssertStructure(
         'Checking tabindex is -1',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('div', {
             attrs: {
               tabindex: str.is('-1')

@@ -19,10 +19,10 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
     openClass: 'test-typeahead-open'
   };
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const sink = Sinks.relativeSink();
 
-    const fetch = (input: AlloyComponent): Future<Option<TieredData>> => {
+    const fetch = (_input: AlloyComponent): Future<Option<TieredData>> => {
       const future = Future.pure([
         { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' }}},
         { type: 'item', data: { value: 'beta', meta: { text: 'Beta' }}},
@@ -98,7 +98,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, _component, _store) => {
     const testWithSelector = () => {
       const typeahead = gui.getByUid('test-type-with-selectover').getOrDie();
 

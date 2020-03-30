@@ -16,7 +16,7 @@ UnitTest.asynctest('AlertBanner component Test', (success, failure) => {
   };
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       return GuiFactory.build(
         renderAlertBanner({
           level: 'warn',
@@ -27,7 +27,7 @@ UnitTest.asynctest('AlertBanner component Test', (success, failure) => {
         }, providers)
       );
     },
-    (doc, body, gui, component, store) => {
+    (_doc, _body, _gui, component, _store) => {
       return [
         Assertions.sAssertStructure(
           'Checking initial structure',

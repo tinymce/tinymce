@@ -23,7 +23,7 @@ const registerFormatButtons = (editor: Editor) => {
     { name: 'strikethrough', text: 'Strikethrough', icon: 'strike-through' },
     { name: 'subscript', text: 'Subscript', icon: 'subscript' },
     { name: 'superscript', text: 'Superscript', icon: 'superscript' }
-  ], (btn, idx) => {
+  ], (btn, _idx) => {
     editor.ui.registry.addToggleButton(btn.name, {
       tooltip: btn.text,
       icon: btn.icon,

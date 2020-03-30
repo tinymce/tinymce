@@ -232,7 +232,7 @@ const flip = function (editor: Editor, imageUploadTimerState, axis) {
 };
 
 const handleDialogBlob = function (editor: Editor, imageUploadTimerState, img, originalSize, blob: Blob) {
-  return new Promise(function (resolve) {
+  return new Promise(function (_resolve) {
     BlobConversions.blobToImage(blob).
       then(function (newImage) {
         const newSize = ImageSize.getNaturalImageSize(newImage);

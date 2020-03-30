@@ -54,7 +54,7 @@ export default (): void => {
           tag: 'button',
           innerHtml: 'Wait for 5 seconds'
         },
-        action: (comp) => {
+        action: (_comp) => {
           ModalDialog.setBusy(dialog, (dlg, busyBehaviours) => ({
             dom: {
               tag: 'div',

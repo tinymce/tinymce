@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Keyboard, Keys
 import { document, window } from '@ephox/dom-globals';
 import { Body, Css, Element, Focus, Scroll, SelectorFind } from '@ephox/sugar';
 
-const staticPartsOuter = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] => {
+const staticPartsOuter = (s: ApproxStructure.StructApi, _str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] => {
   // should not change
   return [
     s.element('div', {
@@ -11,7 +11,7 @@ const staticPartsOuter = (s: ApproxStructure.StructApi, str: ApproxStructure.Str
   ];
 };
 
-const staticPartsInner = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] => {
+const staticPartsInner = (s: ApproxStructure.StructApi, _str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] => {
   // should not change
   return [
     s.element('div', {
@@ -40,7 +40,7 @@ const sAssertHeaderDocked = (assertDockedTop: boolean) => Chain.asStep(Body.body
   Chain.control(
     Assertions.cAssertStructure(
       `Header should be docked to ${assertDockedTop ? 'top' : 'bottom'}`,
-      ApproxStructure.build((s, str, arr) => {
+      ApproxStructure.build((s, str, _arr) => {
         return s.element('div', {
           styles: {
             position: str.is('fixed'),
@@ -196,7 +196,7 @@ const sScrollAndAssertStructure = (isToolbarTop: boolean, scrollY: number, expec
 
 const sAssertEditorClasses = (docked: boolean) => Chain.asStep(Body.body(), [
   UiFinder.cFindIn('.tox-tinymce'),
-  Assertions.cAssertStructure('Check root container classes', ApproxStructure.build((s, str, arr) => {
+  Assertions.cAssertStructure('Check root container classes', ApproxStructure.build((s, _str, arr) => {
     return s.element('div', {
       classes: [
         arr.has('tox-tinymce--toolbar-sticky-' + (docked ? 'on' : 'off')),

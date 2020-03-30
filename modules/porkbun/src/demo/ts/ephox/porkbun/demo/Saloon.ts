@@ -55,7 +55,7 @@ const create = function (): Saloon {
       events.trigger.shooting(patron, event.target());
     });
 
-    binder.bind(patron.events.die, function (event) {
+    binder.bind(patron.events.die, function (_event) {
       stopListening(patron);
     });
   };

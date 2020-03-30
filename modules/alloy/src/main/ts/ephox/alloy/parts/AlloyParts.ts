@@ -122,7 +122,7 @@ const getParts = <D extends CompositeSketchDetail>(component: AlloyComponent, de
 
 const getAllParts = <D extends CompositeSketchDetail>(component: AlloyComponent, detail: D): Record<string, () => Result<AlloyComponent, Error>> => {
   const system = component.getSystem();
-  return Obj.map(detail.partUids, (pUid, k) => {
+  return Obj.map(detail.partUids, (pUid, _k) => {
     return Fun.constant(system.getByUid(pUid));
   });
 };

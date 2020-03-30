@@ -81,7 +81,7 @@ export const convertUnit = (size: Size, unit: SizeUnit): Option<number> => {
 
 export type SizeConversion = (input: Size) => Option<Size>;
 
-export const noSizeConversion: SizeConversion = (input: Size) => Option.none();
+export const noSizeConversion: SizeConversion = (_input: Size) => Option.none();
 
 export const ratioSizeConversion = (scale: number, unit: SizeUnit): SizeConversion =>
   (size: Size) => convertUnit(size, unit).map((value) => ({ value: value * scale, unit }));

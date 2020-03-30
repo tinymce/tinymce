@@ -4,7 +4,7 @@ export const registerFullpageItems = () => {
   getDemoRegistry().addButton('fullpage', {
     type: 'button',
     disabled: false,
-    onAction: (buttonApi) => {
+    onAction: (_buttonApi) => {
       // show dialog
     }
   });

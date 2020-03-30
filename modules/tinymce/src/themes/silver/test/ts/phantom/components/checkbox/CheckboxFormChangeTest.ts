@@ -10,7 +10,7 @@ import TestProviders from '../../../module/TestProviders';
 UnitTest.asynctest('Checkbox component Test', (success, failure) => {
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (store, _doc, _body) => {
       return GuiFactory.build(
         {
           dom: {
@@ -25,7 +25,7 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
           ],
           behaviours: Behaviour.derive([
             AddEventsBehaviour.config('test-checkbox', [
-              AlloyEvents.run(formChangeEvent, (component, event) => {
+              AlloyEvents.run(formChangeEvent, (_component, event) => {
                 store.adder((event.event()).name())();
               })
             ])
@@ -33,7 +33,7 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
         }
       );
     },
-    (doc, body, gui, component, store) => {
+    (doc, body, _gui, _component, store) => {
       return [
         FocusTools.sSetFocus('Focus checkbox', body, '.tox-checkbox__input'),
         Keyboard.sKeydown(doc, Keys.enter(), {}),

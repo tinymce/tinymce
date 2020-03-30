@@ -12,7 +12,7 @@ UnitTest.test('Options.traverse - unit tests', () => {
     Option.some([]),
     Options.traverse<number, string>(
       [],
-      (x: number): Option<string> => {
+      (_x: number): Option<string> => {
         throw Error('no');
       }
     ),
@@ -34,7 +34,7 @@ UnitTest.test('Options.traverse - unit tests', () => {
     Option.none(),
     Options.traverse<number, string>(
       [ 3 ],
-      (x: number): Option<string> => Option.none()
+      (_x: number): Option<string> => Option.none()
     ),
     tOption(tArray(tString)));
 

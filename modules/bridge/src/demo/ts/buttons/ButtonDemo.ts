@@ -6,7 +6,7 @@ export const registerDemoButtons = () => {
   getDemoRegistry().addButton('code', {
     icon: 'code',
     tooltip: 'Source code',
-    onAction: (api) => {
+    onAction: (_api) => {
       console.log('source code editor');
     }
   });
@@ -27,7 +27,7 @@ export const registerDemoButtons = () => {
   getDemoRegistry().addSplitButton('mysplitbutton', {
     text: 'My split button',
     tooltip: 'My split button',
-    onAction: (api) => {
+    onAction: (_api) => {
       console.log('mysplitbutton clicked');
     },
     onItemAction: (api, value) => {
@@ -50,7 +50,7 @@ export const registerDemoButtons = () => {
       api.setActive(false);
       return () => { };
     },
-    onAction: (api) => {
+    onAction: (_api) => {
       console.log('bold clicked');
     }
   });

@@ -3,7 +3,6 @@ import { HTMLDocument } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Element, Traverse } from '@ephox/sugar';
 
-/* global assert */
 
 const range = <T, R>(num: number, f: (v: T, i: number) => R[]) => {
   const array = new Array(num);

@@ -66,7 +66,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
     }
   });
 
-  const dragEndUnbinder = DomEvent.bind(draggable, 'dragend', (evt) => {
+  const dragEndUnbinder = DomEvent.bind(draggable, 'dragend', (_evt) => {
     store.push('dragend');
   });
 

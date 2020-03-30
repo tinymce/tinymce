@@ -15,7 +15,6 @@ interface TestDecisionSpec {
 }
 
 UnitTest.test('BounderToolbuttonTest', () => {
-  /* global assert */
   const check = (expected: TestDecisionSpec, preference: AnchorLayout[], anchor: AnchorBox, panel: AnchorElement, bubbles: Bubble, bounds: Bounds) => {
     const actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
     Assert.eq('label', expected.label, actual.label);

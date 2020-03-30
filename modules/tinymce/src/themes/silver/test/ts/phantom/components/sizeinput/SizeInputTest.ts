@@ -11,7 +11,7 @@ import TestProviders from '../../../module/TestProviders';
 UnitTest.asynctest('SizeInput component Test', (success, failure) => {
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       return GuiFactory.build(
         renderSizeInput({
           name: 'dimensions',
@@ -21,7 +21,7 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
         }, TestProviders)
       );
     },
-    (doc, body, gui, component, store) => {
+    (doc, _body, _gui, component, _store) => {
 
       const sTriggerInput = DomSteps.sTriggerEventOnFocused('input("input")', component, NativeEvents.input());
 
@@ -35,7 +35,7 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
           Chain.op((lock) => {
             Assertions.assertStructure(
               'Checking lock has toggled',
-              ApproxStructure.build((s, str, arr) => {
+              ApproxStructure.build((s, _str, arr) => {
                 return s.element('button', {
                   classes: [
                     arr.has('tox-lock'),

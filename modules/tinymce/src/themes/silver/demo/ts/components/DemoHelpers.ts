@@ -143,10 +143,10 @@ const setupDemo = () => {
     colorinput: fakecolorinputBackstage,
     urlinput: {
       getHistory: fakeHistory,
-      addToHistory: (url: string, fileType: string) => {},
+      addToHistory: (_url: string, _fileType: string) => {},
       getLinkInformation: () => Option.some(fakeLinkInfo),
       getValidationHandler: () => Option.some(fakeValidator),
-      getUrlPicker: (filetype) => Option.some((entry: ApiUrlData) => {
+      getUrlPicker: (_filetype) => Option.some((entry: ApiUrlData) => {
         const newUrl = Option.from(window.prompt('File browser would show instead of this...', entry.value));
         return Future.pure({ ...entry, value: newUrl.getOr(entry.value) });
       })
@@ -228,9 +228,9 @@ const setupDemo = () => {
   };
 
   const mockEditor = {
-    setContent: (content) => {},
-    insertContent: (content: string, args?: any) => {},
-    execCommand: (cmd: string, ui?: boolean, value?: any) => {}
+    setContent: (_content) => {},
+    insertContent: (_content: string, _args?: any) => {},
+    execCommand: (_cmd: string, _ui?: boolean, _value?: any) => {}
   } as Editor;
 
   const extras = {

@@ -55,7 +55,7 @@ export const renderImageTools = (detail: ImageToolsSpec, providersBackstage: UiF
 
   const undo = (anyInSystem: AlloyComponent, _simulatedEvent: SimulatedEvent<CustomEvent>): void => {
     const url = state.undo();
-    updateSrc(anyInSystem, url).then((oImg) => {
+    updateSrc(anyInSystem, url).then((_oImg) => {
       unblock(anyInSystem);
       updateButtonUndoStates(anyInSystem);
     });
@@ -63,7 +63,7 @@ export const renderImageTools = (detail: ImageToolsSpec, providersBackstage: UiF
 
   const redo = (anyInSystem: AlloyComponent, _simulatedEvent: SimulatedEvent<CustomEvent>): void => {
     const url = state.redo();
-    updateSrc(anyInSystem, url).then((oImg) => {
+    updateSrc(anyInSystem, url).then((_oImg) => {
       unblock(anyInSystem);
       updateButtonUndoStates(anyInSystem);
     });
@@ -150,7 +150,7 @@ export const renderImageTools = (detail: ImageToolsSpec, providersBackstage: UiF
 
   const cancel = (anyInSystem: AlloyComponent): void => {
     const currentUrl = destroyTempState(anyInSystem);
-    updateSrc(anyInSystem, currentUrl).then((oImg) => {
+    updateSrc(anyInSystem, currentUrl).then((_oImg) => {
       unblock(anyInSystem);
     });
   };

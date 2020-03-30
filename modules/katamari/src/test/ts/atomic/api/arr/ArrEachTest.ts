@@ -48,7 +48,7 @@ UnitTest.test('Arr.each: property test', () => {
     fc.array(fc.integer()),
     (arr) => {
       const values: number[] = [];
-      const output = Arr.each(arr, (x, i) => {
+      const output = Arr.each(arr, (x, _i) => {
         values.push(x);
       });
       Assert.eq('Return undefined', undefined, output);
@@ -62,7 +62,7 @@ UnitTest.test('Arr.eachr: property test', () => {
     fc.array(fc.integer()),
     (arr) => {
       const values: number[] = [];
-      const output = Arr.eachr(arr, (x, i) => {
+      const output = Arr.eachr(arr, (x, _i) => {
         values.push(x);
       });
       Assert.eq('Return undefined', undefined, output);

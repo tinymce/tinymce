@@ -5,7 +5,7 @@ import { SandboxingConfig, SandboxingState } from './SandboxingTypes';
 
 const events = (sandboxConfig: SandboxingConfig, sandboxState: SandboxingState): AlloyEvents.AlloyEventRecord => {
   return AlloyEvents.derive([
-    AlloyEvents.run(SystemEvents.sandboxClose(), (sandbox, simulatedEvent) => {
+    AlloyEvents.run(SystemEvents.sandboxClose(), (sandbox, _simulatedEvent) => {
       SandboxApis.close(sandbox, sandboxConfig, sandboxState);
     })
   ]);

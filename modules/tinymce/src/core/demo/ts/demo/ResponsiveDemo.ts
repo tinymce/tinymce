@@ -15,8 +15,8 @@ export default () => {
           api.element().removeChild(box.dom());
         };
       },
-      onShow: (api) => { },
-      onHide: (api) => { },
+      onShow: (_api) => { },
+      onHide: (_api) => { },
     });
   };
 
@@ -40,7 +40,7 @@ export default () => {
     ],
     importcss_append: true,
     height: 400,
-    file_picker_callback(callback, value, meta) {
+    file_picker_callback(callback, _value, meta) {
       // Provide file and text for the link dialog
       if (meta.filetype === 'file') {
         callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
@@ -56,7 +56,7 @@ export default () => {
         callback('movie.mp4', { source2: 'alt.ogg', poster: 'https://www.google.com/logos/google.jpg' });
       }
     },
-    spellchecker_callback(method, text, success, failure) {
+    spellchecker_callback(method, text, success, _failure) {
       const words = text.match(this.getWordCharPattern());
 
       if (method === 'spellcheck') {

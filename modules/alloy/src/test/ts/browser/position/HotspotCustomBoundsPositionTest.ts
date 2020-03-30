@@ -15,7 +15,7 @@ import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     const hotspot = GuiFactory.build(
       Button.sketch({
         action() { },
@@ -43,7 +43,7 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, gui, _component, _store) => {
     const cSetupAnchor = Chain.mapper((hotspot) => {
       return {
         anchor: 'hotspot',

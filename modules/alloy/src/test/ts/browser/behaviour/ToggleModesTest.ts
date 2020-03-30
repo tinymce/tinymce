@@ -22,7 +22,7 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', () => {
 
     Assertions.assertStructure(
       'Button should have aria-pressed role',
-      ApproxStructure.build((s, str, arr) => {
+      ApproxStructure.build((s, str, _arr) => {
         return s.element('button', {
           attrs: {
             'aria-checked': str.none(),
@@ -44,7 +44,7 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', () => {
     ToggleModes.updateAuto(listbox, notUsed, true);
     Assertions.assertStructure(
       'Listbox should have aria-pressed and aria-expanded role',
-      ApproxStructure.build((s, str, arr) => {
+      ApproxStructure.build((s, str, _arr) => {
         return s.element('button', {
           attrs: {
             'aria-checked': str.none(),
@@ -66,7 +66,7 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', () => {
     ToggleModes.updateAuto(menuitem, notUsed, true);
     Assertions.assertStructure(
       'Menu Item Checkbox should have aria-checked role',
-      ApproxStructure.build((s, str, arr) => {
+      ApproxStructure.build((s, str, _arr) => {
         return s.element('li', {
           attrs: {
             'aria-checked': str.is('true'),

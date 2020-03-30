@@ -15,7 +15,7 @@ UnitTest.asynctest('Browser Test: behaviour.KeyingAndFocusingTest', (success, fa
   // keying and focusing, that the keying behaviour's focusIn fires
   // after the focusing
   GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       const memChild = Memento.record({
         uid: 'child',
         dom: {
@@ -58,7 +58,7 @@ UnitTest.asynctest('Browser Test: behaviour.KeyingAndFocusingTest', (success, fa
         ])
       });
     },
-    (doc, body, gui, component, store) => {
+    (doc, _body, _gui, component, _store) => {
       return [
         GuiSetup.mAddStyles(doc, [
           ':focus { outline: 10px solid green; }'

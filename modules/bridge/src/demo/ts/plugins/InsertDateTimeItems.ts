@@ -18,10 +18,10 @@ export const registerInsertDateTimeItems = () => {
       });
       callback(items);
     },
-    onItemAction: (buttonApi, itemValue) => {
+    onItemAction: (_buttonApi, _itemValue) => {
       // insert date time using itemValue fmt
     },
-    onAction: (buttonApi) => {
+    onAction: (_buttonApi) => {
       // fmt <- retrieve previously selected format (or default if none)
       // insert data time using fmt
     }

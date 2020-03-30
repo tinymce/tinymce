@@ -7,7 +7,7 @@ import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('RepresentingTest (mode: memory)', (success, failure) => {
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build({
       dom: {
         tag: 'span'
@@ -22,7 +22,7 @@ UnitTest.asynctest('RepresentingTest (mode: memory)', (success, failure) => {
       ])
     });
 
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, component, _store) => {
     return [
       RepresentPipes.sAssertValue('Checking initial value', '1', component),
       RepresentPipes.sSetValue(component, '2'),

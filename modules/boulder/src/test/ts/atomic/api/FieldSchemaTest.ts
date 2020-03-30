@@ -23,8 +23,8 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', function () {
     ]);
 
     ValueSchema.asRaw('spec', schema, input).fold(
-      (err) => {},
-      (value) => Assert.fail('Should fail on value')
+      (_err) => {},
+      (_value) => Assert.fail('Should fail on value')
     );
   };
 
@@ -34,7 +34,7 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', function () {
     ]);
 
     ValueSchema.asRaw('spec', schema, input).fold(
-      (err) => Assert.fail('Should not fail'),
+      (_err) => Assert.fail('Should not fail'),
       (actual: any) => {
         Obj.each(expected, (expectedValueOpt, expectedKey) => {
           KAssert.eqOption('eq', expectedValueOpt, actual[expectedKey]);

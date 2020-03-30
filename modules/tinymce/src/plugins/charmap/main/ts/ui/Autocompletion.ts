@@ -17,8 +17,8 @@ const init = (editor: Editor, all: CharMap) => {
     ch: ':',
     columns: 'auto',
     minChars: 2,
-    fetch: (pattern, maxResults) => {
-      return new Promise((resolve, reject) => {
+    fetch: (pattern, _maxResults) => {
+      return new Promise((resolve, _reject) => {
         resolve(Scan.scan(all, pattern));
       });
     },

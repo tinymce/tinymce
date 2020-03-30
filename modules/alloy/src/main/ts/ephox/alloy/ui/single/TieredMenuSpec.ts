@@ -35,7 +35,7 @@ export interface MenuNotBuilt {
   nbMenu: () => AlloySpec;
 }
 
-const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, rawUiSpec) => {
+const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _rawUiSpec) => {
   const submenuParentItems: Cell<Option<Record<string, AlloyComponent>>> = Cell(Option.none());
 
   const buildMenus = (container: AlloyComponent, primaryName: string, menus: Record<string, PartialMenuSpec>): Record<string, MenuPreparation> => {
@@ -82,7 +82,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
   };
 
   // Find the first item with value `itemValue` in any of the menus inside this tiered menu structure
-  const getItemByValue = (container: AlloyComponent, menus: AlloyComponent[], itemValue: string): Option<AlloyComponent> => {
+  const getItemByValue = (_container: AlloyComponent, menus: AlloyComponent[], itemValue: string): Option<AlloyComponent> => {
     // Can *greatly* improve the performance of this by calculating things up front.
     return Arr.findMap(menus, (menu) => {
       if (! menu.getSystem().isConnected()) { return Option.none(); }
@@ -91,8 +91,8 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     });
   };
 
-  const toDirectory = (container: AlloyComponent): Record<string, string[]> => {
-    return Obj.map(detail.data.menus, (data, menuName) => {
+  const toDirectory = (_container: AlloyComponent): Record<string, string[]> => {
+    return Obj.map(detail.data.menus, (data, _menuName) => {
       return Arr.bind(data.items, (item) => {
         return item.type === 'separator' ? [ ] : [ item.data.value ];
       });
@@ -311,7 +311,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
     }),
 
     // Open the menu as soon as it is added to the DOM
-    AlloyEvents.runOnAttached((container, simulatedEvent) => {
+    AlloyEvents.runOnAttached((container, _simulatedEvent) => {
       setup(container).each((primary) => {
         Replacing.append(container, GuiFactory.premade(primary));
         detail.onOpenMenu(container, primary);
@@ -401,7 +401,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, raw
           onRight: keyOnItem(onRight),
           onLeft: keyOnItem(onLeft),
           onEscape: keyOnItem(onEscape),
-          focusIn(container, keyInfo) {
+          focusIn(container, _keyInfo) {
             layeredState.getPrimary().each((primary) => {
               AlloyTriggers.dispatch(container, primary.element(), SystemEvents.focusItem());
             });

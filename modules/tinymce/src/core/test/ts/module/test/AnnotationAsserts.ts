@@ -16,7 +16,7 @@ const sAnnotate = <T> (editor: Editor, name: string, uid: string, data: { }): St
 // This will result in an attribute order-insensitive HTML assertion
 const sAssertHtmlContent = <T> (tinyApis: TinyApis, children: string[]): Step<T, T> => {
   return tinyApis.sAssertContentStructure(
-    ApproxStructure.build((s, str, arr) => {
+    ApproxStructure.build((s, _str, _arr) => {
       return s.element('body', {
         children: Arr.map(children, ApproxStructure.fromHtml)
       });
@@ -30,7 +30,7 @@ const assertMarker = (editor: Editor, expected: { uid: string; name: string}, no
     Assertions.assertEq('Wrapper must be in content', true, editor.getBody().contains(node));
     Assertions.assertStructure(
       'Checking wrapper has correct decoration',
-      ApproxStructure.build((s, str, arr) => {
+      ApproxStructure.build((s, str, _arr) => {
         return s.element('span', {
           attrs: {
             'data-mce-annotation': str.is(name),

@@ -59,7 +59,7 @@ const hasPropValue = function (propName: string, propValue: any) {
   };
 };
 
-const hasAttribute = function (attrName: string, attrValue?: string) {
+const hasAttribute = function (attrName: string, _attrValue?: string) {
   return function (node: Node) {
     return isElement(node) && node.hasAttribute(attrName);
   };

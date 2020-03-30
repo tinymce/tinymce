@@ -91,7 +91,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
         tinyApis.sAssertSelection([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('div', {
@@ -125,7 +125,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
         tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 1 ], 1),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('div', {
@@ -157,7 +157,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
         tinyActions.sContentKeystroke(46, {}), // 46 = delete keycode
         tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('div', {

@@ -25,10 +25,10 @@ const register = function (editor: Editor) {
     fetch: (done) => {
       done(Tools.map(formats, (format): Menu.ChoiceMenuItemApi => ({ type: 'choiceitem', text: Actions.getDateTime(editor, format), value: format })));
     },
-    onAction: (...args) => {
+    onAction: (_api) => {
       Actions.insertDateTime(editor, defaultFormat.get());
     },
-    onItemAction: (_ , value) => {
+    onItemAction: (_api , value) => {
       defaultFormat.set(value);
       Actions.insertDateTime(editor, value);
     }

@@ -20,11 +20,11 @@ const testScript = (id: string, data: string) => {
   return `data:text/javascript,tinymce.Resource.add('${id}', '${data}')`;
 };
 
-const cScriptAdd = (id: string, data: string) => Chain.op<any>((value) => {
+const cScriptAdd = (id: string, data: string) => Chain.op<any>((_value) => {
   tinymce.Resource.add(id, data);
 });
 
-const cScriptLoad = (id: string, url: string) => Chain.async<any, Result<string, string>>((input, next, die) => {
+const cScriptLoad = (id: string, url: string) => Chain.async<any, Result<string, string>>((_input, next, _die) => {
   tinymce.Resource.load(id, url).then((value) => {
     next(Result.value(value));
   }, (err) => {

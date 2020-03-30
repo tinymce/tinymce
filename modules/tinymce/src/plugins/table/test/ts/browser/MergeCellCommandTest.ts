@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.MergeCellCommandTest', (succes
   Plugin();
   SilverTheme();
 
-  const testCommand = function (editor, command, tests) {
+  const testCommand = function (_editor, _command, _tests) {
     // TODO: Figure out why these doesn't work
     /* Tools.each(tests, function (test) {
       editor.getBody().innerHTML = test.before;

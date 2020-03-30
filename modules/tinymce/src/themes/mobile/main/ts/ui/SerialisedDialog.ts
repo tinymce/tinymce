@@ -134,7 +134,7 @@ const sketch = function (rawSpec) {
           }),
 
           AddEventsBehaviour.config(formAdhocEvents, [
-            AlloyEvents.runOnAttached(function (dialog, simulatedEvent) {
+            AlloyEvents.runOnAttached(function (dialog, _simulatedEvent) {
               // Reset state to first screen.
               resetState();
               const dotitems = memDots.get(dialog);
@@ -196,13 +196,13 @@ const sketch = function (rawSpec) {
       }),
 
       AddEventsBehaviour.config(wrapperAdhocEvents, [
-        AlloyEvents.run(NativeEvents.touchstart(), function (wrapper, simulatedEvent) {
+        AlloyEvents.run(NativeEvents.touchstart(), function (_wrapper, simulatedEvent) {
           const event = simulatedEvent.event();
           spec.state.dialogSwipeState.set(
             SwipingModel.init(event.raw().touches[0].clientX)
           );
         }),
-        AlloyEvents.run(NativeEvents.touchmove(), function (wrapper, simulatedEvent) {
+        AlloyEvents.run(NativeEvents.touchmove(), function (_wrapper, simulatedEvent) {
           const event = simulatedEvent.event();
           spec.state.dialogSwipeState.on(function (state) {
             simulatedEvent.event().prevent();

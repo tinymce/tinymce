@@ -36,7 +36,7 @@ const withTeardown = function (steps: Step<any, any>[], teardownStep: Step<any, 
 };
 
 const bodyStruct = function (children: StructAssert[]) {
-  return ApproxStructure.build(function (s, str) {
+  return ApproxStructure.build(function (s, _str) {
     return s.element('body', {
       children
     });

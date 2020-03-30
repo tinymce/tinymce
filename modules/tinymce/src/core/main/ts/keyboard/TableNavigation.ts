@@ -53,7 +53,7 @@ const isCaretAtStartOrEndOfTable = (forward: boolean, rng: Range, table: Element
   return CaretFinder.positionIn(!forward, table).map((pos) => pos.isEqual(caretPos)).getOr(false);
 };
 
-const navigateHorizontally = (editor, forward: boolean, table: HTMLElement, td: HTMLElement): boolean => {
+const navigateHorizontally = (editor, forward: boolean, table: HTMLElement, _td: HTMLElement): boolean => {
   const rng = editor.selection.getRng();
   const direction = forward ? 1 : -1;
 

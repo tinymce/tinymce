@@ -44,7 +44,7 @@ const renderElementPath = (editor: Editor, settings) => {
           },
           innerHtml: part.name
         },
-        action: (btn) => {
+        action: (_btn) => {
           editor.focus();
           editor.selection.select(part.element);
           editor.nodeChanged();
@@ -112,7 +112,7 @@ const renderElementPath = (editor: Editor, settings) => {
       Tabstopping.config({ }),
       Replacing.config({ }),
       AddEventsBehaviour.config('elementPathEvents', [
-        AlloyEvents.runOnAttached((comp, e) => {
+        AlloyEvents.runOnAttached((comp, _e) => {
           // NOTE: If statusbar ever gets re-rendered, we will need to free this.
           editor.shortcuts.add('alt+F11', 'focus statusbar elementpath', () => Keying.focusIn(comp));
 

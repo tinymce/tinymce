@@ -67,7 +67,7 @@ const init = (): LayeredState => {
   };
 
   const getTriggeringItem = (menuValue: string): Option<string> => {
-    return Obj.find(expansions.get(), (v, k) => {
+    return Obj.find(expansions.get(), (v, _k) => {
       return v === menuValue;
     });
   };

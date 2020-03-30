@@ -139,7 +139,7 @@ export const createMenuFrom = (partialMenu: PartialMenuSpec, columns: number | '
     focusManager,
 
     menuBehaviours: SimpleBehaviours.unnamedEvents(columns !== 'auto' ? [ ] : [
-      AlloyEvents.runOnAttached((comp, se) => {
+      AlloyEvents.runOnAttached((comp, _se) => {
         detectSize(comp, 4, menuMarkers.item).each(({ numColumns, numRows }) => {
           Keying.setGridSize(comp, numRows, numColumns);
         });

@@ -131,7 +131,7 @@ export default (): void => {
           return Option.some(TieredMenu.singleData('blah', menu));
         });
       },
-      onExecute(sandbox, item, itemValue) {
+      onExecute(sandbox, item, _itemValue) {
         const value = Representing.getValue(item);
         console.log('*** typeahead menu demo execute on: ', value, ' ***');
         return Option.some(true);

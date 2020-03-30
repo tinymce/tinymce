@@ -50,7 +50,7 @@ promiseTest('LazyValue: isReady', () => new Promise((resolve, reject) => {
   });
 
   eqAsync('LazyValue.isReady. Lazy value should not be ready yet.', false, lazy.isReady(), reject);
-  lazy.get((v) => {
+  lazy.get((_v) => {
     eqAsync('LazyValue.isReady. Lazy value should now be ready', true, lazy.isReady(), reject);
     resolve();
   });

@@ -202,7 +202,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
         ch: ':',
         minChars: 1,
         columns: 'auto',
-        fetch: (pattern, maxResults) => {
+        fetch: (pattern, _maxResults) => {
           const filteredItems = Arr.filter([ 'a', 'b', 'c', 'd' ], (item) => item.indexOf(pattern) !== -1);
           return new Promise((resolve) => {
             resolve(
@@ -214,7 +214,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
             );
           });
         },
-        onAction: (autocompleteApi, rng, value) => {
+        onAction: (autocompleteApi, _rng, _value) => {
           autocompleteApi.hide();
         }
       });

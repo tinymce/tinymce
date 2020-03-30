@@ -9,7 +9,7 @@ import { Unicode } from '@ephox/katamari';
 UnitTest.asynctest('browser.tinymce.core.delete.CefBoundaryDeleteTest',  (success, failure) => {
   Theme();
 
-  const sTestDelete = function (editor: Editor, tinyApis: TinyApis, tinyActions: TinyActions) {
+  const sTestDelete = function (_editor: Editor, tinyApis: TinyApis, tinyActions: TinyActions) {
     return GeneralSteps.sequence([
       tinyApis.sFocus(),
 
@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefBoundaryDeleteTest',  (succes
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
         tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 1 ], 1),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefBoundaryDeleteTest',  (succes
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
         tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 1 ], 1),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -84,7 +84,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefBoundaryDeleteTest',  (succes
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
         tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 1 ], 1),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('p', {

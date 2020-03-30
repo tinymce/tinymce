@@ -405,7 +405,7 @@ class Editor implements EditorObservable {
       self.callbackLookup[name] = { func: callback, scope };
     }
 
-    return callback.apply(scope || self, Array.prototype.slice.call(arguments, 1));
+    return callback.apply(scope || self, x);
   }
 
   /**

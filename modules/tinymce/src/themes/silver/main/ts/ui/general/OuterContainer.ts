@@ -70,7 +70,7 @@ interface ToolbarApis {
   refresh: (toolbar: AlloyComponent) => void;
 }
 
-const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, OuterContainerSketchSpec> = function (detail, components, spec) {
+const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, OuterContainerSketchSpec> = function (detail, components, _spec) {
   const apis: OuterContainerApis = {
     getSocket(comp) {
       return Composite.parts.getPart(comp, detail, 'socket');
@@ -186,7 +186,7 @@ const partMultipleToolbar = Composite.partType.optional<OuterContainerSketchDeta
             onEscape: () => Option.none()
           });
         },
-        setupItem: (mToolbar, tc, data, index) => {
+        setupItem: (_mToolbar, tc, data, _index) => {
           Toolbar.setGroups(tc, data);
         },
         shell: true

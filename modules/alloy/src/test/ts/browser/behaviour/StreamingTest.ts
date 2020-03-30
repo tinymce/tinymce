@@ -10,7 +10,7 @@ import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 
 UnitTest.asynctest('StreamingTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -30,7 +30,7 @@ UnitTest.asynctest('StreamingTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, gui, component, store) => {
     return [
       GeneralSteps.sequenceRepeat(
         5,

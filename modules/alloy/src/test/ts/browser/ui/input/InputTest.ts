@@ -12,7 +12,7 @@ UnitTest.asynctest('InputTest', (success, failure) => {
 
   const platform = PlatformDetection.detect();
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build(
       Input.sketch({
         inputAttributes: { placeholder: 'placeholder-text' },
@@ -22,7 +22,7 @@ UnitTest.asynctest('InputTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, component, _store) => {
     const testStructure = Step.sync(() => {
       Assertions.assertStructure(
         'Checking initial structure of input',
@@ -82,7 +82,7 @@ UnitTest.asynctest('InputTest', (success, failure) => {
         Assertions.assertEq('Checking getValue after setValue', 'v', newData);
         Assertions.assertStructure(
           'Checking new structure of input',
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('input', {
               attrs: {
                 'type': str.is('text'),

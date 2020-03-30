@@ -3,7 +3,6 @@ import { UnitTest, assert } from '@ephox/bedrock-client';
 import * as Overflows from 'ephox/alloy/toolbar/Overflows';
 
 UnitTest.test('OverflowTest', () => {
-  /* global assert */
   const len = (unit: string) => {
     return unit.length;
   };

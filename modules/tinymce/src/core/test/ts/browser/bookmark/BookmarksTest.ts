@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.bookmark.BookmarksTest', (success, fail
     return NamedChain.direct('editor', Chain.mapper((editor) => GetBookmark.getBookmark(editor.selection, type, normalized)), 'bookmark');
   };
 
-  const cGetFilledPersistentBookmark = (type: number, normalized: boolean) => {
+  const cGetFilledPersistentBookmark = (_type: number, _normalized: boolean) => {
     return NamedChain.direct('editor', Chain.mapper((editor) => GetBookmark.getPersistentBookmark(editor.selection, true)), 'bookmark');
   };
 

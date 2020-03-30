@@ -89,10 +89,10 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
       Disabling.config({ disabled: spec.disabled }),
       Tabstopping.config({}),
       AddEventsBehaviour.config('size-input-events', [
-        AlloyEvents.run(NativeEvents.focusin(), function (component, simulatedEvent) {
+        AlloyEvents.run(NativeEvents.focusin(), function (component, _simulatedEvent) {
           AlloyTriggers.emitWith(component, ratioEvent, { isField1 });
         }),
-        AlloyEvents.run(NativeEvents.change(), function (component, simulatedEvent) {
+        AlloyEvents.run(NativeEvents.change(), function (component, _simulatedEvent) {
           AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
         })
       ])
@@ -147,7 +147,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     markers: {
       lockClass: 'tox-locked'
     },
-    onLockedChange(current: AlloyComponent, other: AlloyComponent, lock: AlloyComponent) {
+    onLockedChange(current: AlloyComponent, other: AlloyComponent, _lock: AlloyComponent) {
       parseSize(Representing.getValue(current)).each((size) => {
         converter(size).each((newSize) => {
           Representing.setValue(other, formatSize(newSize));

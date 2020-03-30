@@ -15,7 +15,7 @@ import { Attr } from '@ephox/sugar';
 
 UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success, failure) => {
   GuiSetup.setup(
-    (store, doc, body) => {
+    (store, _doc, _body) => {
       return GuiFactory.build({
         dom: {
           tag: 'div',
@@ -44,7 +44,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
           }),
 
           AddEventsBehaviour.config('focus-manager-events', [
-            AlloyEvents.run<SystemEvents.AlloyFocusShiftedEvent>(SystemEvents.focusShifted(), (comp, se) => {
+            AlloyEvents.run<SystemEvents.AlloyFocusShiftedEvent>(SystemEvents.focusShifted(), (_comp, se) => {
               const prevFocus = se.event().prevFocus();
               const newFocus = se.event().newFocus();
               const prevIndex = prevFocus.map((p) => Attr.get(p, 'data-index')).getOr('{none}');
@@ -56,7 +56,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
       });
     },
 
-    (doc, body, gui, component, store) => {
+    (doc, _body, _gui, component, store) => {
       const highlightManager = FocusManagers.highlights();
       const domManager = FocusManagers.dom();
 

@@ -15,7 +15,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('TieredMenuWithoutImmediateHighlightTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       TieredMenu.sketch({
         uid: 'uid-test-menu-1',
@@ -73,7 +73,7 @@ UnitTest.asynctest('TieredMenuWithoutImmediateHighlightTest', (success, failure)
         onRepositionMenu: store.adderH('onRepositionMenu')
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, component, store) => {
     return [
       Assertions.sAssertStructure(
         'Original structure test',

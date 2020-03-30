@@ -341,7 +341,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
       fields: { },
       expected: [ ],
       mutations(node) {
-        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
+        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, _arr) {
           return s.element('a', {
             attrs: {
               href: str.is('http://prepared-url')
@@ -360,7 +360,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
       },
       expected: [ ],
       mutations(node) {
-        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
+        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, _arr) {
           return s.element('a', {
             attrs: {
               href: str.is('http://new-url')
@@ -379,7 +379,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
       },
       expected: [ ],
       mutations(node) {
-        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
+        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, _arr) {
           return s.element('a', {
             attrs: {
               href: str.is('http://new-url')
@@ -399,7 +399,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
       },
       expected: [ ],
       mutations(node) {
-        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
+        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, _arr) {
           return s.element('a', {
             attrs: {
               href: str.is('http://new-url')

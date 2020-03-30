@@ -47,7 +47,7 @@ const forbid = function (key: string, message: string): FieldProcessorAdt {
     key,
     key,
     FieldPresence.asOption(),
-    value(function (v) {
+    value(function (_v) {
       return SimpleResult.serror('The field: ' + key + ' is forbidden. ' + message);
     })
   );

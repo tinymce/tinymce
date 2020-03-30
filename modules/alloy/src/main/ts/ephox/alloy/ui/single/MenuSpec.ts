@@ -12,7 +12,7 @@ import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
 import { MenuDetail, MenuItemHoverEvent, MenuSpec } from '../types/MenuTypes';
 
-const make: CompositeSketchFactory<MenuDetail, MenuSpec> = (detail, components, spec, externals) => {
+const make: CompositeSketchFactory<MenuDetail, MenuSpec> = (detail, components, _spec, _externals) => {
   return {
     uid: detail.uid,
     dom: detail.dom,

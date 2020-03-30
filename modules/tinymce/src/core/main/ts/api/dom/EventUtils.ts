@@ -7,7 +7,6 @@
 
 import { document, HTMLElementEventMap, window } from '@ephox/dom-globals';
 import Env from '../Env';
-import Delay from '../util/Delay';
 import { Obj } from '@ephox/katamari';
 
 export type EventUtilsCallback<T> = (event: EventUtilsEvent<T>) => void;
@@ -203,26 +202,6 @@ const bindOnReady = function (win, callback, eventUtils) {
       eventUtils.domLoaded = true;
       callback(event);
     }
-  };
-
-  const waitForDomLoaded = function () {
-    if (isDocReady()) {
-      removeEvent(doc, 'readystatechange', waitForDomLoaded);
-      readyHandler();
-    }
-  };
-
-  const tryScroll = function () {
-    try {
-      // If IE is used, use the trick by Diego Perini licensed under MIT by request to the author.
-      // http://javascript.nwbox.com/IEContentLoaded/
-      doc.documentElement.doScroll('left');
-    } catch (ex) {
-      Delay.setTimeout(tryScroll);
-      return;
-    }
-
-    readyHandler();
   };
 
   if (isDocReady()) {

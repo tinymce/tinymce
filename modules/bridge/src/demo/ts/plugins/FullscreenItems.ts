@@ -1,8 +1,8 @@
 import { getDemoRegistry } from './../buttons/DemoRegistry';
 
 const editor = {
-  on: (s, f) => { },
-  off: (s, f) => { }
+  on: (_s, _f) => { },
+  off: (_s, _f) => { }
 };
 
 export const registerFullscreenItems = () => {
@@ -16,7 +16,7 @@ export const registerFullscreenItems = () => {
       editor.on('FullscreenStateChanged', f);
       return () => editor.off('FullscreenStateChanged', f);
     },
-    onAction: (buttonApi) => {
+    onAction: (_buttonApi) => {
       // show fullscreen
     }
   });

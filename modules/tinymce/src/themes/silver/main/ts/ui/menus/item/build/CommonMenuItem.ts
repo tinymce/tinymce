@@ -61,7 +61,7 @@ export interface CommonCollectionItemSpec {
 // from other renders because it is used for rendering a component
 // inside a dialog, not inside a menu. That's basically the reason
 // for the differences here.
-const renderCommonChoice = <T>(spec: CommonCollectionItemSpec, structure: ItemStructure, itemResponse: ItemResponse): AlloySpec => {
+const renderCommonChoice = <T>(spec: CommonCollectionItemSpec, structure: ItemStructure, _itemResponse: ItemResponse): AlloySpec => {
 
   return Button.sketch({
     dom: structure.dom,

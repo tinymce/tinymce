@@ -26,7 +26,7 @@ const initCommonEvents = (fireApiEvent: <E extends CustomEvent>(name: string, f:
     AlloyEvents.runWithTarget(NativeEvents.focusin(), NavigableObject.onFocus),
 
     // TODO: Test if disabled first.
-    fireApiEvent<FormCloseEvent>(formCloseEvent, (api, spec) => {
+    fireApiEvent<FormCloseEvent>(formCloseEvent, (_api, spec) => {
       extras.onClose();
       spec.onClose();
     }),
@@ -37,9 +37,9 @@ const initCommonEvents = (fireApiEvent: <E extends CustomEvent>(name: string, f:
       AlloyTriggers.emit(self, formCloseEvent);
     }),
 
-    AlloyEvents.run<FormUnblockEvent>(formUnblockEvent, (c, se) => extras.onUnblock()),
+    AlloyEvents.run<FormUnblockEvent>(formUnblockEvent, (_c, _se) => extras.onUnblock()),
 
-    AlloyEvents.run<FormBlockEvent>(formBlockEvent, (c, se) => extras.onBlock(se.event()))
+    AlloyEvents.run<FormBlockEvent>(formBlockEvent, (_c, se) => extras.onBlock(se.event()))
   ];
 };
 

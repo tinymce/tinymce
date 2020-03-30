@@ -77,7 +77,7 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
     });
   };
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       {
         dom: {
@@ -98,7 +98,7 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
       }
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, component, store) => {
 
     const sTestStructure = (selector: string, locked: boolean) => Chain.asStep(component.element(), [
       UiFinder.cFindIn(selector),

@@ -17,7 +17,7 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, fail
     'body { margin-top: 2000px; }'
   ];
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -29,17 +29,17 @@ UnitTest.asynctest('Browser Test: events.BroadcastingEventsTest', (success, fail
           }
         },
         events: AlloyEvents.derive([
-          AlloyEvents.run<EventArgs>(SystemEvents.windowScroll(), (component, simulatedEvent) => {
+          AlloyEvents.run<EventArgs>(SystemEvents.windowScroll(), (_component, simulatedEvent) => {
             store.adder(simulatedEvent.event().raw().type)();
           }),
-          AlloyEvents.run<EventArgs>(SystemEvents.windowResize(), (component, simulatedEvent) => {
+          AlloyEvents.run<EventArgs>(SystemEvents.windowResize(), (_component, simulatedEvent) => {
             store.adder(simulatedEvent.event().raw().type)();
           })
         ])
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, _component, store) => {
     cleanup.add(
       DomEvent.bind(Element.fromDom(window), 'scroll', (evt) => {
         gui.broadcastEvent(SystemEvents.windowScroll(), evt);

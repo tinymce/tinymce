@@ -69,7 +69,7 @@ export default {
           initialData: {
             preview: 'some html url'
           },
-          onSubmit: (api) => { console.log('Preview Demo Submit'); },
+          onSubmit: (_api) => { console.log('Preview Demo Submit'); },
           onClose: () => { console.log('Preview Demo Close'); }
         });
       }

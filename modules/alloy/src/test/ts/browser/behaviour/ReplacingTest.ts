@@ -11,7 +11,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('ReplacingTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         containerBehaviours: Behaviour.derive([
@@ -22,7 +22,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
         ]
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, component, _store) => {
 
     const makeTag = (tag: string, classes: string[]): AlloySpec => {
       return {
@@ -44,7 +44,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
           Replacing.replaceAt(component, replaceeIndex, Option.some(makeTag('div', [ replaceClass ])));
           Assertions.assertStructure(
             'Asserting structure',
-            ApproxStructure.build((s, str, arr) => {
+            ApproxStructure.build((s, _str, arr) => {
               return s.element('div', {
                 children: Arr.map(expectedClasses, (ec) => s.element('div', { classes: [ arr.has(ec) ] }))
               });
@@ -58,7 +58,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
     return [
       Assertions.sAssertStructure(
         'Initially, has a single span',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, _str, _arr) => {
           return s.element('div', {
             children: [
               s.element('span', { })
@@ -76,7 +76,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'After set([]), is empty',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, _str, _arr) => {
           return s.element('div', {
             children: [ ]
           });
@@ -96,7 +96,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'After first time of replace([ first, second ])',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, _str, _arr) => {
           return s.element('div', {
             children: [
               s.element('div', { }),
@@ -121,7 +121,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
       ),
       Assertions.sAssertStructure(
         'After second time of set([ first, second ])',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, _str, _arr) => {
           return s.element('div', {
             children: [
               s.element('div', { }),
@@ -143,7 +143,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
       ),
       Assertions.sAssertStructure(
         'After append(span)',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, _str, _arr) => {
           return s.element('div', {
             children: [
               s.element('div', { }),
@@ -171,7 +171,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'After prepend(label)',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, _str, _arr) => {
           return s.element('div', {
             children: [
               s.element('label', {}),
@@ -197,7 +197,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'After remove(second)',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, _str, _arr) => {
           return s.element('div', {
             children: [
               s.element('label', {}),
@@ -221,7 +221,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'After append(second) after remove(second)',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, _str, _arr) => {
           return s.element('div', {
             children: [
               s.element('label', {}),

@@ -8,7 +8,7 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, components, spec, externals) => {
+const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, components, _spec, _externals) => {
   return {
     'uid': detail.uid,
     'dom': detail.dom,

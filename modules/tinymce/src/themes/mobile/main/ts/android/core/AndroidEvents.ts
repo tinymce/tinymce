@@ -56,7 +56,7 @@ const initEvents = function (editorApi, toolstrip, alloy) {
     tapping.onTouchmove(),
     tapping.onTouchend(),
 
-    DomEvent.bind(toolstrip, 'touchstart', function (evt) {
+    DomEvent.bind(toolstrip, 'touchstart', function (_evt) {
       editorApi.onTouchToolstrip();
     }),
 

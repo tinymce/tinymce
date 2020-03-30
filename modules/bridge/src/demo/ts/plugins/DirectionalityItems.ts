@@ -1,8 +1,8 @@
 import { getDemoRegistry } from './../buttons/DemoRegistry';
 
 const editor = {
-  on: (s, f) => { },
-  off: (s, f) => { }
+  on: (_s, _f) => { },
+  off: (_s, _f) => { }
 };
 
 export const registerDirectionalityItems = () => {
@@ -16,7 +16,7 @@ export const registerDirectionalityItems = () => {
       editor.on('nodeChange', f);
       return () => editor.off('nodeChange', f);
     },
-    onAction: (buttonApi) => {
+    onAction: (_buttonApi) => {
       // execute command direction LTR or RTL
     }
   });

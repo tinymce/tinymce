@@ -56,7 +56,7 @@ const create = (cyclicField: FieldProcessorAdt) => {
   };
 
   // Fire an alloy focus on the first visible element that matches the selector
-  const focusIn = (component: AlloyComponent, tabbingConfig: TabbingConfig, tabbingState: Stateless): void => {
+  const focusIn = (component: AlloyComponent, tabbingConfig: TabbingConfig, _tabbingState: Stateless): void => {
     findInitial(component, tabbingConfig).each((target) => {
       tabbingConfig.focusManager.set(component, target);
     });
@@ -75,7 +75,7 @@ const create = (cyclicField: FieldProcessorAdt) => {
     });
   };
 
-  const go = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, tabbingConfig: TabbingConfig, cycle: ArrNavigation.ArrCycle<Element>): Option<boolean> => {
+  const go = (component: AlloyComponent, _simulatedEvent: NativeSimulatedEvent, tabbingConfig: TabbingConfig, cycle: ArrNavigation.ArrCycle<Element>): Option<boolean> => {
     // 1. Find our current tabstop
     // 2. Find the index of that tabstop
     // 3. Cycle the tabstop

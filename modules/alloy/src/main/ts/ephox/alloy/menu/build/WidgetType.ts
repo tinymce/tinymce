@@ -46,14 +46,14 @@ const builder = (detail: WidgetItemDetail) => {
     domModification: detail.domModification,
     events: AlloyEvents.derive([
       AlloyEvents.runOnExecute((component, simulatedEvent) => {
-        focusWidget(component).each((widget) => {
+        focusWidget(component).each((_widget) => {
           simulatedEvent.stop();
         });
       }),
 
       AlloyEvents.run(NativeEvents.mouseover(), ItemEvents.onHover),
 
-      AlloyEvents.run(SystemEvents.focusItem(), (component, simulatedEvent) => {
+      AlloyEvents.run(SystemEvents.focusItem(), (component, _simulatedEvent) => {
         if (detail.autofocus) { focusWidget(component); } else { Focusing.focus(component); }
       })
     ]),

@@ -57,7 +57,7 @@ const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>): TableResiz
     events.trigger.afterResize(event.table());
   });
 
-  manager.events.startAdjust.bind(function (event) {
+  manager.events.startAdjust.bind(function (_event) {
     events.trigger.startDrag();
   });
 

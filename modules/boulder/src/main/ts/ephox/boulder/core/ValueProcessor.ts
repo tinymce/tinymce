@@ -225,7 +225,7 @@ const objOf = function (fields: ValueProcessorAdt[]): Processor {
     const fieldStrings = Arr.map(fields, function (field) {
       return field.fold(function (key, okey, presence, prop) {
         return key + ' -> ' + prop.toString();
-      }, function (okey, instantiator) {
+      }, function (okey, _instantiator) {
         return 'state(' + okey + ')';
       });
     });

@@ -401,7 +401,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           ch: '+',
           minChars: 0,
           columns: 1,
-          fetch: (pattern, maxResults) => {
+          fetch: (_pattern, _maxResults) => {
             return new Promise((resolve) => {
               resolve(
                 Arr.map([ 'aA', 'bB', 'cC', 'dD' ], (letter) => ({
@@ -423,7 +423,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           ch: ':',
           minChars: 0,
           columns: 2,
-          fetch: (pattern, maxResults) => {
+          fetch: (_pattern, _maxResults) => {
             return new Promise((resolve) => {
               resolve(
                 Arr.map([ 'a' ], (letter) => ({
@@ -434,7 +434,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
               );
             });
           },
-          onAction: (autocompleteApi, rng, value) => {
+          onAction: (autocompleteApi, _rng, value) => {
             store.adder('colon1:' + value)();
             autocompleteApi.hide();
           }
@@ -444,7 +444,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           ch: ':',
           minChars: 0,
           columns: 2,
-          fetch: (pattern, maxResults) => {
+          fetch: (_pattern, _maxResults) => {
             return new Promise((resolve) => {
               resolve(
                 Arr.map([ 'a', 'b' ], (letter) => ({
@@ -455,7 +455,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
               );
             });
           },
-          onAction: (autocompleteApi, rng, value) => {
+          onAction: (autocompleteApi, _rng, value) => {
             store.adder('colon2:' + value)();
             autocompleteApi.hide();
           }
@@ -465,7 +465,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           ch: '~',
           minChars: 0,
           columns: 'auto',
-          fetch: (pattern, maxResults) => {
+          fetch: (_pattern, _maxResults) => {
             return new Promise((resolve) => {
               resolve(
                 Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
@@ -476,7 +476,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
               );
             });
           },
-          onAction: (autocompleteApi, rng, value) => {
+          onAction: (autocompleteApi, _rng, value) => {
             store.adder('tilde:' + value)();
             autocompleteApi.hide();
           }
@@ -486,7 +486,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           ch: '!',
           minChars: 0,
           columns: 1,
-          fetch: (pattern, maxResults) => {
+          fetch: (_pattern, _maxResults) => {
             return new Promise((resolve) => {
               resolve(
                 Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
@@ -496,7 +496,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
               );
             });
           },
-          onAction: (autocompleteApi, rng, value) => {
+          onAction: (autocompleteApi, _rng, value) => {
             store.adder('exclamation:' + value)();
             autocompleteApi.hide();
           }
@@ -506,11 +506,11 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           ch: '=',
           minChars: 1,
           columns: 'auto',
-          matches: (rng, text, pattern) => {
+          matches: (rng, text, _pattern) => {
             // Check the '=' is in the middle of a word
             return rng.startOffset !== 0 && !/\s/.test(text.charAt(rng.startOffset - 1));
           },
-          fetch: (pattern, maxResults) => {
+          fetch: (pattern, _maxResults) => {
             return new Promise((resolve) => {
               const filteredItems = Arr.filter([ 'two', 'three' ], (number) => number.indexOf(pattern) !== -1);
               resolve(
@@ -533,7 +533,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           ch: '*',
           minChars: 2,
           columns: 'auto',
-          fetch: (pattern, maxResults) => {
+          fetch: (_pattern, _maxResults) => {
             return new Promise((resolve) => {
               resolve(
                 Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
@@ -556,7 +556,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           ch: '#',
           minChars: 1,
           columns: 1,
-          fetch: (pattern, maxResults) => {
+          fetch: (pattern, _maxResults) => {
             const filteredItems = Arr.filter([
               { text: 'dollar sign', value: '$' },
               { text: 'equals sign', value: '=' },

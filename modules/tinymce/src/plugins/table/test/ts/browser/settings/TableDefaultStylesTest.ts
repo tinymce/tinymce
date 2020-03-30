@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultStylesTest', (succ
         tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
         Waiter.sTryUntil('click table menu', tinyUi.sClickOnUi('click table menu', 'div.tox-menu div.tox-collection__item .tox-collection__item-label:contains("Table")')),
         Waiter.sTryUntil('click table grid', tinyUi.sClickOnUi('click table grid', 'div.tox-insert-table-picker div[role="button"]:nth(0)')), // button for 1x1 table
-        TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, arr) => {
+        TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, _arr) => {
           return s.element('table', {
             styles: {
               'width': str.is('100%'),
@@ -58,7 +58,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultStylesTest', (succ
         tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
         Waiter.sTryUntil('click table menu', tinyUi.sClickOnUi('click table menu', 'div.tox-menu div.tox-collection__item .tox-collection__item-label:contains("Table")')),
         Waiter.sTryUntil('click table grid', tinyUi.sClickOnUi('click table grid', 'div.tox-insert-table-picker div[role="button"]:nth(0)')), // button for 1x1 table
-        TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, arr) => {
+        TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, _arr) => {
           return s.element('table', {
             styles: {
               'width': str.none('Should not have default width'),

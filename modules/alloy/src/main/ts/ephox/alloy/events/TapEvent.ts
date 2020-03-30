@@ -79,7 +79,7 @@ const monitor = (settings: GuiEventSettings) => {
       return Compare.eq(data.target, event.target());
     };
 
-    return startData.get().filter(isSame).map((data) => {
+    return startData.get().filter(isSame).map((_data) => {
       if (longpressFired.get()) {
         event.prevent();
         return false;

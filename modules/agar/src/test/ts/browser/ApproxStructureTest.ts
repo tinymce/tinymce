@@ -3,7 +3,7 @@ import { Element, InsertAll } from '@ephox/sugar';
 import * as ApproxStructure from 'ephox/agar/api/ApproxStructure';
 import * as Assertions from 'ephox/agar/api/Assertions';
 
-UnitTest.asynctest('ApproxStructureTest', (success, failure) => {
+UnitTest.asynctest('ApproxStructureTest', (success, _failure) => {
 
   const html = '<div data-key="test-1" selected="double" class="test1 root" style="display: block;">' +
     '<div selected="true">' +
@@ -60,7 +60,7 @@ UnitTest.asynctest('ApproxStructureTest', (success, failure) => {
 
   check(ApproxStructure.fromHtml(html), html);
 
-  check(ApproxStructure.build((s, str, arr) =>
+  check(ApproxStructure.build((s, str, _arr) =>
     s.element('div', {
       children: [
         s.element('div', {
@@ -119,14 +119,14 @@ UnitTest.asynctest('ApproxStructureTest', (success, failure) => {
     Element.fromText('world')
   ]);
 
-  Assertions.assertStructure('Test', ApproxStructure.build((s, str, arr) =>
+  Assertions.assertStructure('Test', ApproxStructure.build((s, str, _arr) =>
     s.element('div', {
       children: [
         s.text(str.is('hello world'), true)
       ]
     })), container);
 
-  Assertions.assertStructure('Test', ApproxStructure.build((s, str, arr) =>
+  Assertions.assertStructure('Test', ApproxStructure.build((s, str, _arr) =>
     s.element('div', {
       children: [
         s.text(str.is('hello'), false),

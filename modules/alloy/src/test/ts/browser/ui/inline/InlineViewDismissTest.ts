@@ -15,10 +15,10 @@ import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 
 UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return Sinks.relativeSink();
 
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, gui, component, store) => {
     const inline = GuiFactory.build(
       InlineView.sketch({
         dom: {

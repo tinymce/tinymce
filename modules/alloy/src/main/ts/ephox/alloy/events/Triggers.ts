@@ -86,7 +86,7 @@ const triggerHandler = <T extends EventFormat>(lookup: LookupEvent, eventType: s
   return doTriggerHandler(lookup, eventType, rawEvent, target, source, logger);
 };
 
-const broadcast = (listeners: UidAndHandler[], rawEvent: EventFormat, logger?: DebuggerLogger): boolean => {
+const broadcast = (listeners: UidAndHandler[], rawEvent: EventFormat, _logger?: DebuggerLogger): boolean => {
   const simulatedEvent = fromExternal(rawEvent);
 
   Arr.each(listeners, (listener) => {

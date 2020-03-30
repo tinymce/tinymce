@@ -46,12 +46,12 @@ const build = (refresh, scrollIntoView): DropUp => {
 
             Replacing.set(component, [ ]);
           },
-          onGrown(component) {
+          onGrown(_component) {
             refresh();
             scrollIntoView();
           }
         }),
-        Receivers.orientation((component, data) => {
+        Receivers.orientation((_component, _data) => {
           disappear(Fun.noop);
         })
       ])

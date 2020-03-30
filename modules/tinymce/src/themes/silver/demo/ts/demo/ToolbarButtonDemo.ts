@@ -15,7 +15,7 @@ export default function () {
       editor.ui.registry.addButton(`${name}-${i}`, {
         type: buttonType,
         icon: `*-${i}-*`,
-        onAction(comp) {
+        onAction(_comp) {
           console.log(`${name} ${i} button clicked`);
         }
       });
@@ -55,7 +55,7 @@ export default function () {
         icon: 'bold',
         // ariaLabel: 'aria says icon button',
         disabled: true,
-        onAction(comp) {
+        onAction(_comp) {
           console.log('basic-button-2 click, basic-icon');
         }
       });
@@ -64,7 +64,7 @@ export default function () {
         type: 'button',
         icon: 'checkmark',
         // ariaLabel: 'aria says icon button',
-        onAction(comp) {
+        onAction(_comp) {
           console.log('basic-button-2 click, basic-icon');
         }
       });

@@ -18,25 +18,25 @@ const newLineAction = Adt.generate([
   { none: [ ] }
 ]);
 
-const shouldBlockNewLine = function (editor: Editor, shiftKey) {
+const shouldBlockNewLine = function (editor: Editor, _shiftKey) {
   return ContextSelectors.shouldBlockNewLine(editor);
 };
 
 const isBrMode = function (requiredState) {
-  return function (editor: Editor, shiftKey) {
+  return function (editor: Editor, _shiftKey) {
     const brMode = Settings.getForcedRootBlock(editor) === '';
     return brMode === requiredState;
   };
 };
 
 const inListBlock = function (requiredState) {
-  return function (editor: Editor, shiftKey) {
+  return function (editor: Editor, _shiftKey) {
     return NewLineUtils.isListItemParentBlock(editor) === requiredState;
   };
 };
 
 const inBlock = (blockName: string, requiredState: boolean) => {
-  return function (editor: Editor, shiftKey) {
+  return function (editor: Editor, _shiftKey) {
     const state = NewLineUtils.getParentBlockName(editor) === blockName.toUpperCase();
     return state === requiredState;
   };
@@ -46,16 +46,16 @@ const inPreBlock = (requiredState: boolean) => inBlock('pre', requiredState);
 const inSummaryBlock = () => inBlock('summary', true);
 
 const shouldPutBrInPre = function (requiredState) {
-  return function (editor: Editor, shiftKey) {
+  return function (editor: Editor, _shiftKey) {
     return Settings.shouldPutBrInPre(editor) === requiredState;
   };
 };
 
-const inBrContext = function (editor: Editor, shiftKey) {
+const inBrContext = function (editor: Editor, _shiftKey) {
   return ContextSelectors.shouldInsertBr(editor);
 };
 
-const hasShiftKey = function (editor: Editor, shiftKey) {
+const hasShiftKey = function (_editor: Editor, shiftKey) {
   return shiftKey;
 };
 

@@ -52,7 +52,7 @@ UnitTest.asynctest('Browser Test: behaviour.ReplacingAndTogglingTest', (success,
     ])
   });
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build({
       dom: {
         tag: 'div',
@@ -72,7 +72,7 @@ UnitTest.asynctest('Browser Test: behaviour.ReplacingAndTogglingTest', (success,
       ])
     });
   },
-  (doc, body, gui, component, store) => {
+  (_doc, _body, _gui, component, _store) => {
     const childComp1 = memChild1.get(component);
     const childComp2 = memChild2.get(component);
     return [

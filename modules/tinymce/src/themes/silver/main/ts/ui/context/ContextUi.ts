@@ -50,8 +50,8 @@ const renderContextToolbar = (spec: { onEscape: () => Option<boolean>; sink: All
 
     inlineBehaviours: Behaviour.derive([
       AddEventsBehaviour.config('context-toolbar-events', [
-        AlloyEvents.runOnSource<EventArgs>(NativeEvents.transitionend(), (comp, se) => {
-          InlineView.getContent(comp).each((c) => {
+        AlloyEvents.runOnSource<EventArgs>(NativeEvents.transitionend(), (comp, _se) => {
+          InlineView.getContent(comp).each((_c) => {
             // Css.remove(c.element(), 'opacity');
           });
           Class.remove(comp.element(), resizingClass);
@@ -97,7 +97,7 @@ const renderContextToolbar = (spec: { onEscape: () => Option<boolean>; sink: All
           });
         }),
 
-        AlloyEvents.run<BackwardSlideEvent>(backSlideEvent, (comp, se) => {
+        AlloyEvents.run<BackwardSlideEvent>(backSlideEvent, (comp, _se) => {
           Arr.last(stack.get()).each((last) => {
             stack.set(stack.get().slice(0, stack.get().length - 1));
             AlloyTriggers.emitWith(comp, changeSlideEvent, {

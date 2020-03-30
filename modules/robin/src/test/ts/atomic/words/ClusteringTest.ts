@@ -187,7 +187,7 @@ UnitTest.test('ClusteringTest', function () {
   const checkProps = function (universe: TestUniverse, textIds: string[], start: Gene, actual: ClusteringLangs) {
     const checkGroup = function (label: string, group: WordDecisionItem<Gene>[]) {
       const items = Arr.map(group, function (g) { return g.item; });
-      Arr.each(items, function (x, i) {
+      Arr.each(items, function (x) {
         Assert.eq('Checking everything in ' + label + ' has same language', LanguageZones.calculate(universe, x).getOr('none'), actual.lang.getOr('none'));
         Assert.eq(
           'Check that everything in the ' + label + ' is a text node',
@@ -215,7 +215,7 @@ UnitTest.test('ClusteringTest', function () {
     });
 
     const blockParent = universe.up().predicate(start, universe.property().isBoundary).getOrDie('No block parent tag found');
-    Arr.each(actual.all, function (x, i) {
+    Arr.each(actual.all, function (x) {
       Assert.eq(
         'All block ancestor tags should be the same as the original',
         blockParent,

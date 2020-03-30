@@ -175,7 +175,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
     info: {
       url: 'hi'
     },
-    mutations(elem) {
+    mutations(_elem) {
 
     },
     expected: [
@@ -198,7 +198,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       url: 'hi',
       text: 'hello'
     },
-    mutations(elem) {
+    mutations(_elem) {
 
     },
     expected: [
@@ -222,7 +222,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       text: 'hello',
       title: 'Title'
     },
-    mutations(elem) {
+    mutations(_elem) {
 
     },
     expected: [
@@ -248,7 +248,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       title: 'Title',
       target: 'new'
     },
-    mutations(elem) {
+    mutations(_elem) {
 
     },
     expected: [
@@ -279,7 +279,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       )
     },
     mutations(elem) {
-      Assertions.assertStructure('Checking structure', ApproxStructure.build(function (s, str, arr) {
+      Assertions.assertStructure('Checking structure', ApproxStructure.build(function (s, str, _arr) {
         return s.element('a', {
           attrs: {
             href: str.is('hi')
@@ -302,7 +302,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       )
     },
     mutations(elem) {
-      Assertions.assertStructure('Checking structure', ApproxStructure.build(function (s, str, arr) {
+      Assertions.assertStructure('Checking structure', ApproxStructure.build(function (s, str, _arr) {
         return s.element('a', {
           attrs: {
             href: str.is('hi')
@@ -325,7 +325,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       )
     },
     mutations(elem) {
-      Assertions.assertStructure('Checking structure', ApproxStructure.build(function (s, str, arr) {
+      Assertions.assertStructure('Checking structure', ApproxStructure.build(function (s, str, _arr) {
         return s.element('a', {
           attrs: {
             href: str.is('hi'),

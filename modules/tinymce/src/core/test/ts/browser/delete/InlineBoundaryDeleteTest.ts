@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', funct
   };
 
   const paragraphWithText = function (text) {
-    return ApproxStructure.build(function (s, str, arr) {
+    return ApproxStructure.build(function (s, str, _arr) {
       return s.element('body', {
         children: [ s.element('p', { children: [ s.text(str.is(text)) ] }) ]
       });

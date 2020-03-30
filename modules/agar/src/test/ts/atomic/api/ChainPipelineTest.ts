@@ -3,7 +3,7 @@ import { Chain } from 'ephox/agar/api/Chain';
 
 UnitTest.asynctest('ChainPipelineTest', (success, failure) => {
 
-  const cAcc = (ch) => Chain.async((input, next, die) => {
+  const cAcc = (ch) => Chain.async((input, next, _die) => {
     next(input + ch);
   });
 

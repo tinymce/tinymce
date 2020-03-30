@@ -17,7 +17,7 @@ import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
 
 UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const sink = Sinks.relativeSink();
 
     return GuiFactory.build(
@@ -43,7 +43,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
               }
             },
 
-            fetch(input) {
+            fetch(_input) {
               const future = Future.pure([
                 { type: 'item', data: { value: 'choice1', meta: { text: 'choice1' }}},
                 { type: 'item', data: { value: 'choice2', meta: { text: 'choice2' }}}
@@ -75,7 +75,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, component, _store) => {
 
     const typeahead = gui.getByUid('test-type').getOrDie();
 

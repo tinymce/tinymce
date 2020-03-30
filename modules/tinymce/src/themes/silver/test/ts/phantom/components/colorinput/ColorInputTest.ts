@@ -17,7 +17,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
   const sink = Element.fromDom(document.querySelector('.mce-silver-sink'));
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       return GuiFactory.build(
         Container.sketch({
           dom: {
@@ -28,7 +28,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
               name: 'alpha',
               label: Option.some('test-color-input'),
             }, helpers.shared, {
-              colorPicker: (callback, value) => {},
+              colorPicker: (_callback, _value) => {},
               hasCustomColors: () => true,
               getColors: () => [
                 { type: choiceItem, text: 'Turquoise', value: '#18BC9B' },
@@ -43,7 +43,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
         })
       );
     },
-    (doc, body, gui, component, store) => {
+    (doc, _body, _gui, component, _store) => {
       const input = component.getSystem().getByDom(
         SelectorFind.descendant(component.element(), 'input').getOrDie('Could not find input in colorinput')
       ).getOrDie();
@@ -108,7 +108,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
         ]),
         Assertions.sAssertStructure(
           'Checking initial structure',
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, _str, _arr) => {
             return s.element('div', {
               children: [
                 s.element('div', {
@@ -145,8 +145,8 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
               AlloyTriggers.emit(input, NativeEvents.input());
             }),
 
-            sAssertContainerClasses('Post: typing invalid colour (notblue)', (s, str, arr) => [ arr.has('tox-textbox-field-invalid') ]),
-            sAssertLegendBackground('After typing invalid colour (notblue)', (s, str, arr) => str.none())
+            sAssertContainerClasses('Post: typing invalid colour (notblue)', (_s, _str, arr) => [ arr.has('tox-textbox-field-invalid') ]),
+            sAssertLegendBackground('After typing invalid colour (notblue)', (_s, str, _arr) => str.none())
           ])
         ),
 
@@ -157,8 +157,8 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
             Step.sync(() => {
               AlloyTriggers.emit(input, NativeEvents.input());
             }),
-            sAssertContainerClasses('Post: typing colour (green)', (s, str, arr) => [ arr.not('tox-textbox-field-invalid') ]),
-            sAssertLegendBackground('After typing colour (green)', (s, str, arr) => str.is('green'))
+            sAssertContainerClasses('Post: typing colour (green)', (_s, _str, arr) => [ arr.not('tox-textbox-field-invalid') ]),
+            sAssertLegendBackground('After typing colour (green)', (_s, str, _arr) => str.is('green'))
           ])
         ),
 

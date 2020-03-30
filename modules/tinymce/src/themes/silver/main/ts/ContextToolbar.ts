@@ -164,7 +164,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
           AlloyEvents.runOnAttached((comp) => {
             editor.shortcuts.add('ctrl+F9', 'focus statusbar', () => Keying.focusIn(comp));
           }),
-          AlloyEvents.runOnDetached((comp) => {
+          AlloyEvents.runOnDetached((_comp) => {
             editor.shortcuts.remove('ctrl+F9');
           })
         ])
@@ -289,7 +289,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
       );
     });
 
-    editor.on('focusout', (e) => {
+    editor.on('focusout', (_e) => {
       Delay.setEditorTimeout(editor, () => {
         if (Focus.search(sink.element()).isNone() && Focus.search(contextbar.element()).isNone()) {
           lastAnchor.set(Option.none());
@@ -305,7 +305,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
       }
     });
 
-    editor.on('NodeChange', (e) => {
+    editor.on('NodeChange', (_e) => {
       Focus.search(contextbar.element()).fold(
         () => {
           resetTimer(

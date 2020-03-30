@@ -102,7 +102,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     },
 
     getHotspot: (comp) => memUrlBox.getOpt(comp),
-    onSetValue: (comp, newValue) => {
+    onSetValue: (comp, _newValue) => {
       if (comp.hasConfigured(Invalidating)) {
         Invalidating.run(comp).get(Fun.noop);
       }
