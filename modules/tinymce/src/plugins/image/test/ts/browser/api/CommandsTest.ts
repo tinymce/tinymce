@@ -1,4 +1,4 @@
-import { Log, Pipeline } from '@ephox/agar';
+import { Log, Pipeline, ApproxStructure } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { ImageData } from 'tinymce/plugins/image/core/ImageData';
@@ -33,10 +33,39 @@ UnitTest.asynctest('browser.tinymce.plugins.image.api.CommandsTest', (success, f
           borderStyle: 'solid',
           isDecorative: false
         }),
-        api.sAssertContent('<p>a<img class="cls1" style="color: red; border-width: 3px; border-style: solid; margin: 2px 1px 2px 1px;" title="title" src="#2" alt="alt" width="100" height="200" /></p>')
+        api.sSetCursor([ 0, 0 ], 1),
+        api.sAssertContentStructure(
+          ApproxStructure.build((s, str, _arr) => {
+            return s.element('body', {
+              children: [
+                s.element('p', {
+                  children: [
+                    s.text(str.is('a')),
+                    s.element('img', {
+                      attrs: {
+                        class: str.is('cls1'),
+                        title: str.is('title'),
+                        src: str.is('#2'),
+                        alt: str.is('alt'),
+                        width: str.is('100'),
+                        height: str.is('200')
+                      },
+                      styles: {
+                        color: str.is('red'),
+                        'border-width': str.is('3px'),
+                        'border-style': str.is('solid'),
+                        margin: str.is('2px 1px')
+                      }
+                    }),
+                  ]
+                })
+              ]
+            });
+          })
+        )
       ]),
       Log.stepsAsStep('TBA', 'Update image with all data specified except caption and isDecorative', [
-        api.sSetContent('<p><img src="#1" /></a>'),
+        api.sSetContent('<p><img src="#1" /></p>'),
         api.sSetSelection([ 0 ], 0, [ 0 ], 1),
         sUpdateImage({
           src: '#2',
@@ -53,7 +82,35 @@ UnitTest.asynctest('browser.tinymce.plugins.image.api.CommandsTest', (success, f
           borderStyle: 'solid',
           isDecorative: false
         }),
-        api.sAssertContent('<p><img class="cls1" style="color: red; border-width: 3px; border-style: solid; margin: 2px 1px 2px 1px;" title="title" src="#2" alt="alt" width="100" height="200" /></p>')
+        api.sSetCursor([ 0 ], 1),
+        api.sAssertContentStructure(
+          ApproxStructure.build((s, str, _arr) => {
+            return s.element('body', {
+              children: [
+                s.element('p', {
+                  children: [
+                    s.element('img', {
+                      attrs: {
+                        class: str.is('cls1'),
+                        title: str.is('title'),
+                        src: str.is('#2'),
+                        alt: str.is('alt'),
+                        width: str.is('100'),
+                        height: str.is('200')
+                      },
+                      styles: {
+                        color: str.is('red'),
+                        'border-width': str.is('3px'),
+                        'border-style': str.is('solid'),
+                        margin: str.is('2px 1px')
+                      }
+                    }),
+                  ]
+                })
+              ]
+            });
+          })
+        )
       ]),
       Log.stepsAsStep('TBA', 'Update image with null alt value', [
         api.sSetContent('<p><img src="#1" alt="alt1" /></p>'),
