@@ -105,7 +105,7 @@ const retainAttributesAndInnerHtml = function (editor: Editor, sourceNode: Node,
 };
 
 const isPageEmbedWrapper = (node: Node) => {
-  const nodeClass = node.attr('class') as string;
+  const nodeClass = node.attr('class');
   return nodeClass && /\btiny-pageembed\b/.test(nodeClass);
 };
 

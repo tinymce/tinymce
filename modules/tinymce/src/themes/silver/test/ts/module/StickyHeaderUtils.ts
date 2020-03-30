@@ -161,7 +161,7 @@ const sAssertEditorContainer = (isToolbarTop: boolean, expectedPart: (s, str, ar
   UiFinder.cFindIn('.tox-editor-container'),
   Chain.control(
     Assertions.cAssertStructure(
-      `for the .tox-editor-container`,
+      'for the .tox-editor-container',
       ApproxStructure.build((s, str, arr) => {
         return s.element('div', {
           classes: [ arr.has('tox-editor-container') ],
@@ -180,7 +180,7 @@ const sScrollAndAssertStructure = (isToolbarTop: boolean, scrollY: number, expec
   UiFinder.cFindIn('.tox-editor-container'),
   Chain.control(
     Assertions.cAssertStructure(
-      `for the .tox-editor-container`,
+      'for the .tox-editor-container',
       ApproxStructure.build((s, str, arr) => {
         return s.element('div', {
           classes: [ arr.has('tox-editor-container') ],

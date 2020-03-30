@@ -59,7 +59,7 @@ const Observable: Observable<any> = {
     // Prevent all events except the remove/detach event after the instance has been removed
     if (self.removed && name !== 'remove' && name !== 'detach') {
       // TODO should we be patching the EventArgs here like EventDispatcher?
-      return args as any;
+      return args;
     }
 
     const dispatcherArgs = getEventDispatcher(self).fire(name, args);

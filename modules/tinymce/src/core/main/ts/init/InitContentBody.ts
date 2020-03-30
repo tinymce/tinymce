@@ -38,6 +38,7 @@ import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
 import Quirks from '../util/Quirks';
 import { Obj, Type } from '@ephox/katamari';
+import * as Rtc from '../Rtc';
 
 declare const escape: any;
 
@@ -259,10 +260,79 @@ const getStyleSheetLoader = function (editor: Editor) {
   return editor.inline ? DOM.styleSheetLoader : editor.dom.styleSheetLoader;
 };
 
+const preInit = (editor: Editor, rtcMode: boolean) => {
+  const settings = editor.settings, doc = editor.getDoc(), body = editor.getBody();
+
+  if (!settings.browser_spellcheck && !settings.gecko_spellcheck) {
+    doc.body.spellcheck = false; // Gecko
+    DOM.setAttrib(body, 'spellcheck', 'false');
+  }
+
+  editor.quirks = Quirks(editor);
+
+  Events.firePostRender(editor);
+
+  const directionality = Settings.getDirectionality(editor);
+  if (directionality !== undefined) {
+    body.dir = directionality;
+  }
+
+  if (settings.protect) {
+    editor.on('BeforeSetContent', function (e) {
+      Tools.each(settings.protect, function (pattern) {
+        e.content = e.content.replace(pattern, function (str) {
+          return '<!--mce:protected ' + escape(str) + '-->';
+        });
+      });
+    });
+  }
+
+  editor.on('SetContent', function () {
+    editor.addVisual(editor.getBody());
+  });
+
+  // When connected to a server the value on the server should get priority
+  if (rtcMode === false) {
+    editor.load({ initial: true, format: 'html' });
+  }
+
+  editor.startContent = editor.getContent({ format: 'raw' });
+
+  editor.on('compositionstart compositionend', function (e) {
+    editor.composing = e.type === 'compositionstart';
+  });
+
+  // Add editor specific CSS styles
+  if (editor.contentStyles.length > 0) {
+    let contentCssText = '';
+
+    Tools.each(editor.contentStyles, function (style) {
+      contentCssText += style + '\r\n';
+    });
+
+    editor.dom.addStyle(contentCssText);
+  }
+
+  getStyleSheetLoader(editor).loadAll(
+    editor.contentCSS,
+    function (_) {
+      initEditor(editor);
+    },
+    function (urls) {
+      initEditor(editor);
+    }
+  );
+
+  // Append specified content CSS last
+  if (settings.content_style) {
+    appendStyle(editor, settings.content_style);
+  }
+};
+
 const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   const settings = editor.settings;
   const targetElm = editor.getElement();
-  let doc = editor.getDoc(), body, contentCssText;
+  let doc = editor.getDoc(), body;
 
   // Restore visibility on target element
   if (!settings.inline) {
@@ -336,73 +406,26 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
 
   TouchEvents.setup(editor);
   DetailsElement.setup(editor);
-  MultiClickSelection.setup(editor);
+
+  if (!Rtc.isRtc(editor)) {
+    MultiClickSelection.setup(editor);
+  }
+
   KeyboardOverrides.setup(editor);
   ForceBlocks.setup(editor);
   Placeholder.setup(editor);
 
   Events.firePreInit(editor);
 
-  if (!settings.browser_spellcheck && !settings.gecko_spellcheck) {
-    doc.body.spellcheck = false; // Gecko
-    DOM.setAttrib(body, 'spellcheck', 'false');
-  }
-
-  editor.quirks = Quirks(editor);
-
-  Events.firePostRender(editor);
-
-  const directionality = Settings.getDirectionality(editor);
-  if (directionality !== undefined) {
-    body.dir = directionality;
-  }
-
-  if (settings.protect) {
-    editor.on('BeforeSetContent', function (e) {
-      Tools.each(settings.protect, function (pattern) {
-        e.content = e.content.replace(pattern, function (str) {
-          return '<!--mce:protected ' + escape(str) + '-->';
-        });
-      });
+  Rtc.setup(editor).fold(() => {
+    preInit(editor, false);
+  }, (loadingRtc) => {
+    editor.setProgressState(true);
+    loadingRtc.then((rtcMode) => {
+      editor.setProgressState(false);
+      preInit(editor, rtcMode);
     });
-  }
-
-  editor.on('SetContent', function () {
-    editor.addVisual(editor.getBody());
   });
-
-  editor.load({ initial: true, format: 'html' });
-  editor.startContent = editor.getContent({ format: 'raw' }) as string;
-
-  editor.on('compositionstart compositionend', function (e) {
-    editor.composing = e.type === 'compositionstart';
-  });
-
-  // Add editor specific CSS styles
-  if (editor.contentStyles.length > 0) {
-    contentCssText = '';
-
-    Tools.each(editor.contentStyles, function (style) {
-      contentCssText += style + '\r\n';
-    });
-
-    editor.dom.addStyle(contentCssText);
-  }
-
-  getStyleSheetLoader(editor).loadAll(
-    editor.contentCSS,
-    function (_) {
-      initEditor(editor);
-    },
-    function (urls) {
-      initEditor(editor);
-    }
-  );
-
-  // Append specified content CSS last
-  if (settings.content_style) {
-    appendStyle(editor, settings.content_style);
-  }
 };
 
 export {

@@ -13,7 +13,7 @@ const validDefaultOrDie = (value: any, predicate: (value: any) => boolean): bool
     return true;
   }
 
-  throw new Error('Default value doesn\'t match requested type.');
+  throw new Error(`Default value doesn't match requested type.`);
 };
 
 const items = (value: boolean | string, defaultValue: string): string => {

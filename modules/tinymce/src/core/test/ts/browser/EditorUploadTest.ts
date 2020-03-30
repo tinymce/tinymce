@@ -42,10 +42,19 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     return DOMUtils.DOM.createHTML('img', { src: uri });
   };
 
-  const assertResult = function (editor: Editor, uploadedBlobInfo: BlobInfo, result: UploadResult[]) {
+  const assertResult = function (editor: Editor, uploadUri: string, uploadedBlobInfo: BlobInfo, result: UploadResult[]) {
+    const firstResult = result[0];
     LegacyUnit.strictEqual(result.length, 1);
-    LegacyUnit.strictEqual(result[0].status, true);
-    LegacyUnit.strictEqual(result[0].element.src.indexOf(uploadedBlobInfo.id() + '.png') !== -1, true);
+    LegacyUnit.strictEqual(firstResult.status, true);
+    LegacyUnit.strictEqual(firstResult.element.src.indexOf(uploadedBlobInfo.id() + '.png') !== -1, true);
+    LegacyUnit.strictEqual(firstResult.uploadUri, uploadUri);
+    LegacyUnit.strictEqual(firstResult.blobInfo.id(), uploadedBlobInfo.id());
+    LegacyUnit.strictEqual(firstResult.blobInfo.name(), uploadedBlobInfo.name());
+    LegacyUnit.strictEqual(firstResult.blobInfo.filename(), uploadedBlobInfo.filename());
+    LegacyUnit.strictEqual(firstResult.blobInfo.blob(), uploadedBlobInfo.blob());
+    LegacyUnit.strictEqual(firstResult.blobInfo.base64(), uploadedBlobInfo.base64());
+    LegacyUnit.strictEqual(firstResult.blobInfo.blobUri(), uploadedBlobInfo.blobUri());
+    LegacyUnit.strictEqual(firstResult.blobInfo.uri(), uploadedBlobInfo.uri());
     LegacyUnit.equal('<p><img src="' + uploadedBlobInfo.filename() + '" /></p>', editor.getContent());
 
     return result;
@@ -91,7 +100,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
   });
 
   suite.asyncTest(
-    'don\'t replace uploaded blob uri with result uri (copy/paste of' +
+    `don't replace uploaded blob uri with result uri (copy/paste of` +
   ' an uploaded blob uri) since blob uris are retained',
     function (editor, done) {
       editor.settings.images_replace_blob_uris = false;
@@ -114,17 +123,18 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     });
 
   suite.asyncTest('uploadImages (callback)', function (editor, done) {
-    let uploadedBlobInfo;
+    let uploadedBlobInfo, uploadUri;
 
     editor.setContent(imageHtml(testBlobDataUri));
 
     editor.settings.images_upload_handler = function (data, success) {
       uploadedBlobInfo = data;
-      success(data.id() + '.png');
+      uploadUri = data.id() + '.png';
+      success(uploadUri);
     };
 
     editor.uploadImages(function (result) {
-      assertResult(editor, uploadedBlobInfo, result);
+      assertResult(editor, uploadUri, uploadedBlobInfo, result);
 
       editor.uploadImages(function (result) {
         LegacyUnit.strictEqual(result.length, 0);
@@ -133,18 +143,19 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     });
   });
 
-  suite.asyncTest('uploadImages (promise)', function (editor, done) {
-    let uploadedBlobInfo;
+  suite.asyncTest('uploadImages (promise)', function (editor, done, die) {
+    let uploadedBlobInfo, uploadUri;
 
     editor.setContent(imageHtml(testBlobDataUri));
 
     editor.settings.images_upload_handler = function (data, success) {
       uploadedBlobInfo = data;
-      success(data.id() + '.png');
+      uploadUri = data.id() + '.png';
+      success(uploadUri);
     };
 
     editor.uploadImages().then(function (result) {
-      assertResult(editor, uploadedBlobInfo, result);
+      assertResult(editor, uploadUri, uploadedBlobInfo, result);
     }).then(function () {
       uploadedBlobInfo = null;
 
@@ -153,10 +164,10 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
         LegacyUnit.strictEqual(uploadedBlobInfo, null);
         done();
       });
-    });
+    }, die);
   });
 
-  suite.asyncTest('uploadImages retain blob urls after upload', function (editor, done) {
+  suite.asyncTest('uploadImages retain blob urls after upload', function (editor, done, die) {
     let uploadedBlobInfo;
 
     const assertResult = function (result) {
@@ -182,7 +193,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
         LegacyUnit.strictEqual(result.length, 0);
         LegacyUnit.strictEqual(uploadedBlobInfo, null);
       });
-    }).then(done);
+    }).then(done, die);
   });
 
   suite.asyncTest('uploadImages reuse filename', (editor, done, die) => {
@@ -251,7 +262,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
   suite.asyncTest('uploadConcurrentImages (fail)', function (editor, done) {
     let uploadCount = 0, callCount = 0;
 
-    const uploadDone = function (result) {
+    const uploadDone = function (result: UploadResult[]) {
       callCount++;
 
       if (callCount === 2) {
@@ -262,6 +273,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
 
       LegacyUnit.equalDom(result[0].element, editor.$('img')[0]);
       LegacyUnit.equal(result[0].status, false);
+      LegacyUnit.equal(result[0].uploadUri, '');
     };
 
     editor.setContent(imageHtml(testBlobDataUri));
@@ -278,7 +290,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     editor.uploadImages(uploadDone);
   });
 
-  suite.asyncTest('Don\'t upload transparent image', function (editor, done) {
+  suite.asyncTest(`Don't upload transparent image`, function (editor, done) {
     let uploadCount = 0;
 
     const uploadDone = function () {
@@ -296,7 +308,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     editor.uploadImages(uploadDone);
   });
 
-  suite.asyncTest('Don\'t upload bogus image', function (editor, done) {
+  suite.asyncTest(`Don't upload bogus image`, function (editor, done) {
     let uploadCount = 0;
 
     const uploadDone = function () {
@@ -314,7 +326,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     editor.uploadImages(uploadDone);
   });
 
-  suite.asyncTest('Don\'t upload filtered image', function (editor, done) {
+  suite.asyncTest(`Don't upload filtered image`, function (editor, done) {
     let uploadCount = 0;
 
     const uploadDone = function () {
@@ -338,7 +350,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     editor.uploadImages(uploadDone);
   });
 
-  suite.asyncTest('Don\'t upload api filtered image', function (editor, done) {
+  suite.asyncTest(`Don't upload api filtered image`, function (editor, done) {
     let uploadCount = 0, filterCount = 0;
 
     const uploadDone = function () {

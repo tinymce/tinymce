@@ -21,7 +21,6 @@ import {
   Representing,
   Tabstopping,
   Toggling,
-  SketchSpec,
 } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 
@@ -105,7 +104,7 @@ const hidden = (name) => ({
     getInitialValue() {
       return Option.none();
     }
-  }) as SketchSpec
+  })
 });
 
 export {

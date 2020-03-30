@@ -139,22 +139,22 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function (success, fa
     let writer;
 
     writer = Writer();
-    writer.start('p', [{ name: 'title', value: '<>"\'&\u00e5\u00e4\u00f6' }]);
-    writer.text('<>"\'&\u00e5\u00e4\u00f6');
+    writer.start('p', [{ name: 'title', value: `<>"'&\u00e5\u00e4\u00f6` }]);
+    writer.text(`<>"'&\u00e5\u00e4\u00f6`);
     writer.end('p');
-    LegacyUnit.equal(writer.getContent(), '<p title="&lt;&gt;&quot;\'&amp;\u00e5\u00e4\u00f6">&lt;&gt;"\'&amp;\u00e5\u00e4\u00f6</p>');
+    LegacyUnit.equal(writer.getContent(), `<p title="&lt;&gt;&quot;'&amp;\u00e5\u00e4\u00f6">&lt;&gt;"'&amp;\u00e5\u00e4\u00f6</p>`);
 
     writer = Writer({ entity_encoding: 'numeric' });
-    writer.start('p', [{ name: 'title', value: '<>"\'&\u00e5\u00e4\u00f6' }]);
-    writer.text('<>"\'&\u00e5\u00e4\u00f6');
+    writer.start('p', [{ name: 'title', value: `<>"'&\u00e5\u00e4\u00f6` }]);
+    writer.text(`<>"'&\u00e5\u00e4\u00f6`);
     writer.end('p');
-    LegacyUnit.equal(writer.getContent(), '<p title="&lt;&gt;&quot;\'&amp;&#229;&#228;&#246;">&lt;&gt;"\'&amp;&#229;&#228;&#246;</p>');
+    LegacyUnit.equal(writer.getContent(), `<p title="&lt;&gt;&quot;'&amp;&#229;&#228;&#246;">&lt;&gt;"'&amp;&#229;&#228;&#246;</p>`);
 
     writer = Writer({ entity_encoding: 'named' });
-    writer.start('p', [{ name: 'title', value: '<>"\'&\u00e5\u00e4\u00f6' }]);
-    writer.text('<>"\'&\u00e5\u00e4\u00f6');
+    writer.start('p', [{ name: 'title', value: `<>"'&\u00e5\u00e4\u00f6` }]);
+    writer.text(`<>"'&\u00e5\u00e4\u00f6`);
     writer.end('p');
-    LegacyUnit.equal(writer.getContent(), '<p title="&lt;&gt;&quot;\'&amp;&aring;&auml;&ouml;">&lt;&gt;"\'&amp;&aring;&auml;&ouml;</p>');
+    LegacyUnit.equal(writer.getContent(), `<p title="&lt;&gt;&quot;'&amp;&aring;&auml;&ouml;">&lt;&gt;"'&amp;&aring;&auml;&ouml;</p>`);
   });
 
   Pipeline.async({}, suite.toSteps({}), function () {

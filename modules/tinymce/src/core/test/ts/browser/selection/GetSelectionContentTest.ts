@@ -83,7 +83,7 @@ UnitTest.asynctest('browser.tinymce.selection.GetSelectionContentTest', (success
         tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 1),
         sAssertGetContentOverrideBeforeGetContent('Should be overridden content', editor, 'X')
       ])),
-      Logger.t('Should be text contents when editor isn\'t focused and format is text', GeneralSteps.sequence([
+      Logger.t(`Should be text contents when editor isn't focused and format is text`, GeneralSteps.sequence([
         sAddTestDiv,
         tinyApis.sSetContent('<p>ab</p>'),
         tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 2),

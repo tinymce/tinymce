@@ -25,7 +25,7 @@ UnitTest.test('ADT Test', () => {
   };
 
   const checkInvalidGenerate = (cases, message) => {
-    checkInvalid('generate() did not throw an error. Input: "' + message + '\'', () => {
+    checkInvalid('generate() did not throw an error. Input: "' + message + '"', () => {
       Adt.generate(cases);
     });
   };

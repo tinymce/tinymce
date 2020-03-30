@@ -77,7 +77,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ProcessFiltersTest', (success,
       ])),
 
       Chain.asStep(editor, Log.chains('TBA', 'Paste: Paste pre/post process passthough unsafe content', [
-        cProcessPrePost('<img src="non-existent.png" onerror="alert(\'!\')">', true, Fun.noop, Fun.noop),
+        cProcessPrePost(`<img src="non-existent.png" onerror="alert('!')">`, true, Fun.noop, Fun.noop),
         Assertions.cAssertEq('Should be changed if dangerous content', { content: '<img src="non-existent.png">', cancelled: false })
       ])),
 

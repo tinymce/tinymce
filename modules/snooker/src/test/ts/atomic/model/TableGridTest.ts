@@ -6,7 +6,7 @@ import { Element } from '@ephox/sugar';
 
 UnitTest.test('TableGrid.subgrid test', function () {
   const r = Structs.rowcells;
-  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as any as Element, isNew);
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as Element, isNew);
 
   const check = function (expected: { colspan: number; rowspan: number }, row: number, column: number, grid: Structs.RowCells[]) {
     const actual = TableGrid.subgrid(grid, row, column, Fun.tripleEquals);

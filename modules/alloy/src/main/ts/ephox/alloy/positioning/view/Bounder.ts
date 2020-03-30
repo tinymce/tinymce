@@ -197,7 +197,7 @@ const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: 
 
   // unwrapping 'reposition' from the adt, for both fit & nofit the first arg is the one we need,
   // so we can cheat and use Fun.identity
-  return abc.fold(Fun.identity, Fun.identity) as RepositionDecision;
+  return abc.fold(Fun.identity, Fun.identity);
 };
 
 export { attempts, calcReposition };

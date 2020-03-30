@@ -57,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.SelectionToolbarTest', (su
     if (alignment === undefined) {
       attrs = useFigure ? 'class="image"' : '';
     } else if (alignment === Alignment.Center) {
-      attrs = useFigure ? `class="image align-${alignment}"` : `style="margin-left: auto; margin-right: auto; display: block;"`;
+      attrs = useFigure ? `class="image align-${alignment}"` : 'style="margin-left: auto; margin-right: auto; display: block;"';
     } else {
       attrs = useFigure ? `class="image align-${alignment}"` : `style="float: ${alignment};"`;
     }

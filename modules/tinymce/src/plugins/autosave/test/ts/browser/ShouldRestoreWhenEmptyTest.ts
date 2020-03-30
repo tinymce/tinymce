@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autosave.ShouldRestoreWhenEmptyTest'
       cRemoveDraft,
       McEditor.cRemove
     ])),
-    Logger.t('shouldn\'t restore draft when empty without setting', Chain.asStep({}, [
+    Logger.t(`shouldn't restore draft when empty without setting`, Chain.asStep({}, [
       McEditor.cFromSettings({ base_url: '/project/tinymce/js/tinymce', plugins: 'autosave', autosave_prefix: testingPrefix }),
       cAssertHasDraft(false),
       ApiChains.cSetContent('<p>X</p>'),

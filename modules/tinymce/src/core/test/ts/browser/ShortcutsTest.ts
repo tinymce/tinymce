@@ -29,9 +29,9 @@ UnitTest.asynctest('browser.tinymce.core.ShortcutsTest', function (success, fail
       editor.fire('keydown', args);
 
       if (assertState) {
-        LegacyUnit.equal(called, true, 'Shortcut wasn\'t called: ' + shortcut);
+        LegacyUnit.equal(called, true, `Shortcut wasn't called: ` + shortcut);
       } else {
-        LegacyUnit.equal(called, false, 'Shortcut was called when it shouldn\'t have been: ' + shortcut);
+        LegacyUnit.equal(called, false, `Shortcut was called when it shouldn't have been: ` + shortcut);
       }
     };
 
@@ -85,12 +85,12 @@ UnitTest.asynctest('browser.tinymce.core.ShortcutsTest', function (success, fail
       });
 
       editor.fire('keydown', eventArgs());
-      LegacyUnit.equal(called, true, 'Shortcut wasn\'t called when it should have been.');
+      LegacyUnit.equal(called, true, `Shortcut wasn't called when it should have been.`);
 
       called = false;
       editor.shortcuts.remove(pattern);
       editor.fire('keydown', eventArgs());
-      LegacyUnit.equal(called, false, 'Shortcut was called when it shouldn\'t.');
+      LegacyUnit.equal(called, false, `Shortcut was called when it shouldn't.`);
     };
 
     testPattern('ctrl+d', 68, true);

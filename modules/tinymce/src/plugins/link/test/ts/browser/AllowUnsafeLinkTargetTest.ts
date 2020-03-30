@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest', (su
 
     Pipeline.async({}, [
       TestLinkUi.sClearHistory,
-      Log.stepsAsStep('TBA', 'Link: doesn\'t add rel noopener stuff with allow_unsafe_link_target: true', [
+      Log.stepsAsStep('TBA', `Link: doesn't add rel noopener stuff with allow_unsafe_link_target: true`, [
         tinyApis.sSetSetting('allow_unsafe_link_target', true),
         TestLinkUi.sInsertLink(tinyUi, 'http://www.google.com'),
         TestLinkUi.sAssertContentPresence(tinyApis, { 'a[rel="noopener"]': 0, 'a': 1 }),
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest', (su
         tinyApis.sSetContent('')
       ]),
 
-      Log.stepsAsStep('TBA', 'Link: ...and if it\'s undefined', [
+      Log.stepsAsStep('TBA', `Link: ...and if it's undefined`, [
         tinyApis.sSetSetting('allow_unsafe_link_target', undefined),
         TestLinkUi.sInsertLink(tinyUi, 'http://www.google.com'),
         TestLinkUi.sAssertContentPresence(tinyApis, { 'a[rel="noopener"]': 1 })

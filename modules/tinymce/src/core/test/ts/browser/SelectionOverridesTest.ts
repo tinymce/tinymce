@@ -166,8 +166,8 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (succ
       editor.selection.select(editor.dom.select('table')[0]);
       const offscreenSelection = editor.dom.select('.mce-offscreen-selection')[0];
 
-      ok(offscreenSelection.offsetLeft !== undefined, 'The offscreen selection\'s left border is undefined');
-      ok(offscreenSelection.offsetLeft < 0, 'The offscreen selection\'s left border is onscreen');
+      ok(offscreenSelection.offsetLeft !== undefined, `The offscreen selection's left border is undefined`);
+      ok(offscreenSelection.offsetLeft < 0, `The offscreen selection's left border is onscreen`);
       ok(offscreenSelection.offsetWidth + offscreenSelection.offsetLeft < 0,
         'The cE=false offscreen selection is visible on-screen. Right edge: ' +
         offscreenSelection.offsetLeft + '+' + offscreenSelection.offsetWidth + '=' +

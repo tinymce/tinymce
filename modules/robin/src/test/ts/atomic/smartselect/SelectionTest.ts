@@ -13,7 +13,7 @@ UnitTest.test('SelectionTest', function () {
       TextGene('d', 'not be de'),
       TextGene('e', 'termined '),
       TextGene('f', 'and'),
-      TextGene('g', ' it\'s driving me in'),
+      TextGene('g', ` it's driving me in`),
       Gene('s1', 'span', [
         TextGene('h', 'sane')
       ]),
@@ -99,10 +99,10 @@ UnitTest.test('SelectionTest', function () {
 
   check({
     startContainer: 'g',
-    startOffset: ' it\'s driving me '.length,
+    startOffset: ` it's driving me `.length,
     endContainer: 'h',
     endOffset: 'sane'.length
-  }, doc1, 'g', ' it\'s driving me i'.length);
+  }, doc1, 'g', ` it's driving me i`.length);
 
   check({
     startContainer: 'c',

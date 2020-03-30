@@ -1,5 +1,5 @@
-import { BinaryReader } from "./BinaryReader";
-import { Result } from "@ephox/katamari";
+import { BinaryReader } from './BinaryReader';
+import { Result } from '@ephox/katamari';
 
 export const readList = <T> (reader: BinaryReader, idx: number, unitSize: number, count: number, read: (reader: BinaryReader, idx: number) => Result<T, string>) => {
   if (idx + (unitSize * count) > reader.length()) {

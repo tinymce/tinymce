@@ -458,7 +458,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     LegacyUnit.equal(serializer.serialize(root), '<strong>\u00a0</strong>');
   });
 
-  suite.test('Don\'t replace br inside root element when there is multiple brs', function () {
+  suite.test(`Don't replace br inside root element when there is multiple brs`, function () {
     let parser, root;
     const schema = Schema();
 
@@ -467,7 +467,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     LegacyUnit.equal(serializer.serialize(root), '<strong><br /><br /></strong>');
   });
 
-  suite.test('Don\'t replace br inside root element when there is siblings', function () {
+  suite.test(`Don't replace br inside root element when there is siblings`, function () {
     let parser, root;
     const schema = Schema();
 

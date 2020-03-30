@@ -54,7 +54,7 @@ export const BlobCache = function (): BlobCache {
 
   const create = function (o: BlobInfoData | string, blob?: Blob, base64?: string, filename?: string): BlobInfo {
     if (Type.isString(o)) {
-      const id = o as string;
+      const id = o;
 
       return toBlobInfo({
         id,

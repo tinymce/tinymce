@@ -22,15 +22,13 @@
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-inferrable-types": [ "error", { "ignoreParameters": true, "ignoreProperties": true }], // this will be added to the plugin
     "@typescript-eslint/no-this-alias": "off",
-    "@typescript-eslint/no-unnecessary-type-assertion": "off",
+    "@typescript-eslint/no-unnecessary-type-assertion": "off", // to be investigated later, produces different results on a uncompiled environment
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/prefer-for-of": "off",
     "@typescript-eslint/prefer-regexp-exec": "off",
-    "@typescript-eslint/quotes": "off",
-    "@typescript-eslint/type-annotation-spacing": "off",
+    "@typescript-eslint/quotes": [ "error", "single", { "allowTemplateLiterals": true }], // this will be added to the plugin
     "@typescript-eslint/unbound-method": "off",
     "arrow-body-style": "off",
-    "guard-for-in": "off",
     "no-empty": "off",
     "no-shadow": "off",
     "no-underscore-dangle": "off",

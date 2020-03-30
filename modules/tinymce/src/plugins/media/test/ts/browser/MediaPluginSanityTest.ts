@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.MediaPluginSanityTest', functi
         Utils.sAssertSizeRecalcUnconstrained(ui),
         Utils.sAssertSizeRecalcConstrainedReopen(ui)
       ]),
-      Log.stepsAsStep('TBA', 'Media: Test changing source, width and height doesn\'t delete other values', [
+      Log.stepsAsStep('TBA', `Media: Test changing source, width and height doesn't delete other values`, [
         apis.sSetContent(''),
         Utils.sOpenDialog(ui),
         Utils.sSetHeightAndWidth(ui, '300', '300'),

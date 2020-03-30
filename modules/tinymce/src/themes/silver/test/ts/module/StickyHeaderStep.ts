@@ -46,7 +46,7 @@ const sTestStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoc
         ])),
         Step.label('Scroll down so the editor is hidden from view, it should have hidden css markings', StickyUtils.sScrollAndAssertStructure(isToolbarTop, 500, StickyUtils.expectedEditorHidden)),
         StickyUtils.sAssertHeaderDocked(isToolbarTop),
-        ...toolbarMode === ToolbarMode.default ? [ ] : [ Step.label('Open the more drawer and ensure it\'s visible', GeneralSteps.sequence([
+        ...toolbarMode === ToolbarMode.default ? [ ] : [ Step.label(`Open the more drawer and ensure it's visible`, GeneralSteps.sequence([
           MenuUtils.sOpenMore(toolbarMode),
           MenuUtils.sAssertMoreDrawerInViewport(toolbarMode)
         ])) ],

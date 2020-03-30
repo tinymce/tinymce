@@ -39,7 +39,7 @@ import Serializer from './Serializer';
  */
 
 const isNativeIeSelection = (rng: any): boolean => {
-  return !!(<any> rng).select;
+  return !!(rng).select;
 };
 
 const isAttachedToDom = function (node: Node): boolean {
@@ -57,12 +57,12 @@ const isValidRange = function (rng: Range) {
 };
 
 interface Selection {
-  bookmarkManager: any;
+  bookmarkManager: BookmarkManager;
   controlSelection: ControlSelection;
-  dom: any;
+  dom: DOMUtils;
   win: Window;
-  serializer: any;
-  editor: any;
+  serializer: Serializer;
+  editor: Editor;
   collapse: (toStart?: boolean) => void;
   setCursorLocation: (node?: Node, offset?: number) => void;
   getContent: (args?: any) => any;
@@ -85,7 +85,7 @@ interface Selection {
     node: Node;
     selector: String;
     parents: Element[];
-  }) => void) => any;
+  }) => void) => Selection;
   selectorChangedWithUnbind: (selector: string, callback: (active: boolean, args: {
     node: Node;
     selector: String;

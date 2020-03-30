@@ -35,7 +35,7 @@ export interface MobileRealm {
 export default (scrollIntoView: () => void): MobileRealm => {
   const alloy = OuterContainer({
     classes: [ Styles.resolve('ios-container') ]
-  }) as Gui.GuiSystem;
+  });
 
   const toolbar = ScrollingToolbar();
 
@@ -43,7 +43,7 @@ export default (scrollIntoView: () => void): MobileRealm => {
 
   const switchToEdit = CommonRealm.makeEditSwitch(webapp);
 
-  const socket = CommonRealm.makeSocket() as AlloyComponent;
+  const socket = CommonRealm.makeSocket();
 
   const dropup = Dropup.build(function () {
     webapp.run(function (w) {

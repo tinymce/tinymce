@@ -6,7 +6,6 @@
  */
 
 import { DomSerializer, DomSerializerSettings } from '../../dom/DomSerializer';
-import Schema from '../html/Schema';
 import Editor from '../Editor';
 
 // tslint:disable-next-line:no-empty-interface
@@ -34,7 +33,7 @@ const Serializer = function (settings: SerializerSettings, editor?: Editor): Ser
      *
      * @field {tinymce.html.Schema} schema
      */
-    schema: domSerializer.schema as Schema,
+    schema: domSerializer.schema,
 
     /**
      * Adds a node filter function to the parser used by the serializer, the parser will collect the specified nodes by name

@@ -6,12 +6,13 @@
  */
 
 import { Element, HTMLAnchorElement } from '@ephox/dom-globals';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Option, Obj, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 import { AssumeExternalTargets } from '../api/Types';
 import { AttachState, LinkDialogOutput } from '../ui/DialogTypes';
+import { hasRtcPlugin } from './DetectRtc';
 
 const hasProtocol = (url: string): boolean => /^\w+:/i.test(url);
 
@@ -150,7 +151,7 @@ const createLink = (editor: Editor, selectedElm: Element, text: Option<string>, 
   }
 };
 
-const link = (editor: Editor, attachState: AttachState, data: LinkDialogOutput) => {
+const linkDomMutation = (editor: Editor, attachState: AttachState, data: LinkDialogOutput) => {
   const selectedElm = editor.selection.getNode();
   const anchorElm = getAnchorElement(editor, selectedElm);
   const linkAttrs = applyLinkOverrides(editor, getLinkAttrs(data));
@@ -169,7 +170,7 @@ const link = (editor: Editor, attachState: AttachState, data: LinkDialogOutput) 
   });
 };
 
-const unlink = (editor: Editor) => {
+const unlinkDomMutation = (editor: Editor) => {
   editor.undoManager.transact(() => {
     const node = editor.selection.getNode();
     if (isImageFigure(node)) {
@@ -182,6 +183,27 @@ const unlink = (editor: Editor) => {
     }
     editor.focus();
   });
+};
+
+const unwrapOptions = (data: LinkDialogOutput) => {
+  const { class: cls, href, rel, target, text, title } = data;
+
+  return Obj.filter({
+    class: cls.getOrNull(),
+    href,
+    rel: rel.getOrNull(),
+    target: target.getOrNull(),
+    text: text.getOrNull(),
+    title: title.getOrNull()
+  }, (v, k) => Type.isNull(v) === false);
+};
+
+const link = (editor: Editor, attachState: AttachState, data: LinkDialogOutput) => {
+  hasRtcPlugin(editor) ? editor.execCommand('createlink', false, unwrapOptions(data)) : linkDomMutation(editor, attachState, data);
+};
+
+const unlink = (editor: Editor) => {
+  hasRtcPlugin(editor) ? editor.execCommand('unlink') : unlinkDomMutation(editor);
 };
 
 const unlinkImageFigure = (editor: Editor, fig: Element) => {

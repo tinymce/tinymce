@@ -430,7 +430,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
     try {
       document.readyState = 'loading';
     } catch (e) {
-      LegacyUnit.equal(true, true, 'IE doesn\'t allow us to set document.readyState');
+      LegacyUnit.equal(true, true, `IE doesn't allow us to set document.readyState`);
       return;
     }
 

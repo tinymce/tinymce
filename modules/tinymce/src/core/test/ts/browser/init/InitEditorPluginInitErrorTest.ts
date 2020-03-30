@@ -23,8 +23,8 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorPluginInitErrorTest', (s
         tinyApis.sSetContent('<p>a</p>'),
         tinyApis.sAssertContent('<p>a</p>'),
       ]),
-      Log.step('TBA', 'Failed plugin shouldn\'t be registered', Step.sync(() => {
-        Assertions.assertEq('Plugin shouldn\'t be registered', undefined, editor.plugins.errorplugin);
+      Log.step('TBA', `Failed plugin shouldn't be registered`, Step.sync(() => {
+        Assertions.assertEq(`Plugin shouldn't be registered`, undefined, editor.plugins.errorplugin);
       })),
       Log.step('TBA', 'Notification opened detailing plugin failed to init', Step.sync(() => {
         const notifications = editor.notificationManager.getNotifications();

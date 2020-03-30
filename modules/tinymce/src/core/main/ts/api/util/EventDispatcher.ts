@@ -7,7 +7,7 @@
 
 import { ClipboardEvent, DataTransfer, DragEvent, Event, FocusEvent, KeyboardEvent, MouseEvent, PointerEvent, TouchEvent, WheelEvent } from '@ephox/dom-globals';
 import Tools from './Tools';
-import { Fun } from '@ephox/katamari';
+import { Fun, Obj } from '@ephox/katamari';
 
 // InputEvent is experimental so we don't have an actual type
 // See https://developer.mozilla.org/en-US/docs/Web/API/InputEvent
@@ -282,7 +282,7 @@ class EventDispatcher<T extends NativeEventMap> {
   public off <U = any>(name: string, callback: (event: EditorEvent<U>) => void): this;
   public off (name?: string): this;
   public off(name?: string, callback?: (event: EditorEvent<any>) => void): this {
-    let i, handlers, bindingName, names, hi;
+    let i, handlers, names, hi;
 
     if (name) {
       names = name.toLowerCase().split(' ');
@@ -293,10 +293,10 @@ class EventDispatcher<T extends NativeEventMap> {
 
         // Unbind all handlers
         if (!name) {
-          for (bindingName in this.bindings) {
+          Obj.each(this.bindings, (_value, bindingName) => {
             this.toggleEvent(bindingName, false);
             delete this.bindings[bindingName];
-          }
+          });
 
           return this;
         }
@@ -323,9 +323,9 @@ class EventDispatcher<T extends NativeEventMap> {
         }
       }
     } else {
-      for (name in this.bindings) {
+      Obj.each(this.bindings, (_value, name) => {
         this.toggleEvent(name, false);
-      }
+      });
 
       this.bindings = {};
     }

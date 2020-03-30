@@ -6,7 +6,7 @@
  */
 
 import { AlloyTriggers, Attachment, Swapping } from '@ephox/alloy';
-import { HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
+import { HTMLIFrameElement } from '@ephox/dom-globals';
 import { Cell, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Element, Focus, Node } from '@ephox/sugar';
@@ -257,7 +257,7 @@ const renderMobileTheme = (editor: Editor) => {
 
     return {
       iframeContainer: realm.socket().element().dom() as HTMLIFrameElement,
-      editorContainer: realm.element().dom() as HTMLElement
+      editorContainer: realm.element().dom()
     };
   };
 

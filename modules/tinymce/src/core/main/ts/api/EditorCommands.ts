@@ -302,7 +302,7 @@ class EditorCommands {
         // Present alert message about clipboard access not being available
         if (failed || !doc.queryCommandSupported(command)) {
           let msg = editor.translate(
-            'Your browser doesn\'t support direct access to the clipboard. ' +
+            `Your browser doesn't support direct access to the clipboard. ` +
             'Please use the Ctrl+X/C/V keyboard shortcuts instead.'
           );
 
