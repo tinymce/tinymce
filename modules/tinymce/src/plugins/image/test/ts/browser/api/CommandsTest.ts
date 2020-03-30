@@ -71,6 +71,16 @@ UnitTest.asynctest('browser.tinymce.plugins.image.api.CommandsTest', (success, f
         }),
         api.sAssertContent('<p><img src="#1" alt="" /></p>')
       ]),
+      Log.stepsAsStep('TBA', 'Update image with empty title, width, height should not produce empty attributes', [
+        api.sSetContent('<p><img src="#1" title="title" width="100" height="200" /></p>'),
+        api.sSetSelection([ 0 ], 0, [ 0 ], 1),
+        sUpdateImage({
+          title: '',
+          width: '',
+          height: ''
+        }),
+        api.sAssertContent('<p><img src="#1" /></p>')
+      ]),
     ], onSuccess, onFailure);
   }, {
     theme: 'silver',

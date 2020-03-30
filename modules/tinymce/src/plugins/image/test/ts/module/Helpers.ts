@@ -10,6 +10,7 @@ export type ImageDialogData = {
     value: string;
   };
   alt: string;
+  title: string;
   decorative: boolean;
   dimensions: {
     width: string;
@@ -26,6 +27,7 @@ export type ImageDialogData = {
 
 export const generalTabSelectors = {
   src: 'label.tox-label:contains("Source") + div.tox-form__controls-h-stack div.tox-control-wrap input.tox-textfield',
+  title: 'label.tox-label:contains("Image title") + input.tox-textfield',
   alt: 'label.tox-label:contains("Alternative description") + input.tox-textfield',
   width: 'div.tox-form__controls-h-stack div label:contains("Width") + input.tox-textfield',
   height: 'div.tox-form__controls-h-stack div label:contains("Height") + input.tox-textfield',
