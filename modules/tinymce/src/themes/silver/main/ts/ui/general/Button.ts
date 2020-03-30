@@ -34,6 +34,7 @@ import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 import { Types } from '@ephox/bridge';
 import { Omit } from '../Omit';
 import { renderFormField } from '../alien/FieldLabeller';
+import * as ReadOnly from '../../ReadOnly';
 
 type ButtonSpec = Omit<Types.Button.Button, 'type'>;
 type FooterButtonSpec = Omit<Types.Dialog.DialogNormalButton, 'type'> | Omit<Types.Dialog.DialogMenuButton, 'type'>;
@@ -42,7 +43,7 @@ export interface IconButtonWrapper extends Omit<ButtonSpec, 'text'> {
   tooltip: Option<string>;
 }
 
-const renderCommonSpec = (spec, actionOpt: Option<(comp: AlloyComponent) => void>, extraBehaviours = [], dom, components) => {
+const renderCommonSpec = (spec, actionOpt: Option<(comp: AlloyComponent) => void>, extraBehaviours = [], dom, components, providersBackstage: UiFactoryBackstageProviders) => {
   const action = actionOpt.fold(() => {
     return {};
   }, (action) => {
@@ -53,7 +54,8 @@ const renderCommonSpec = (spec, actionOpt: Option<(comp: AlloyComponent) => void
 
   const common = {
     buttonBehaviours: Behaviour.derive([
-      DisablingConfigs.button(spec.disabled),
+      DisablingConfigs.button(spec.disabled || providersBackstage.isReadonly()),
+      ReadOnly.receivingConfig(),
       Tabstopping.config({}),
       AddEventsBehaviour.config('button press', [
         AlloyEvents.preventDefault('click'),
@@ -84,7 +86,7 @@ export const renderIconButtonSpec = (spec: IconButtonWrapper, action: Option<(co
   const components = componentRenderPipeline([
     icon
   ]);
-  return renderCommonSpec(spec, action, extraBehaviours, dom, components);
+  return renderCommonSpec(spec, action, extraBehaviours, dom, components, providersBackstage);
 };
 
 export const renderIconButton = (spec: IconButtonWrapper, action: (comp: AlloyComponent) => void, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = []): SketchSpec => {
@@ -119,7 +121,7 @@ export const renderButtonSpec = (spec: ButtonSpec, action: Option<(comp: AlloyCo
       title: translatedText // TODO: tooltips AP-213
     }
   };
-  return renderCommonSpec(spec, action, extraBehaviours, dom, components);
+  return renderCommonSpec(spec, action, extraBehaviours, dom, components, providersBackstage);
 };
 
 export const renderButton = (spec: ButtonSpec, action: (comp: AlloyComponent) => void, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = [], extraClasses = []): SketchSpec => {

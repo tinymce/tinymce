@@ -41,7 +41,7 @@ const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, provi
     onSetup: spec.onSetup,
     triggersSubmenu: false,
     itemBehaviours: [ ]
-  }, structure, itemResponse);
+  }, structure, itemResponse, providersBackstage);
 };
 
 export { renderNormalItem };

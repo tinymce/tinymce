@@ -29,6 +29,7 @@ import { createTieredDataFrom } from '../../menus/menu/SingleMenu';
 import { ToolbarButtonClasses } from '../button/ButtonClasses';
 import { onToolbarButtonExecute, toolbarButtonEventOrder } from '../button/ButtonEvents';
 import { renderToolbarGroup, ToolbarGroup } from '../CommonToolbar';
+import * as ReadOnly from '../../../ReadOnly';
 
 interface Specialisation<T> {
   toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
@@ -118,6 +119,8 @@ const renderCommonStructure = (icon: Option<string>, text: Option<string>, toolt
 
     buttonBehaviours: Behaviour.derive(
       [
+        DisablingConfigs.toolbarButton(providersBackstage.isReadonly()),
+        ReadOnly.receivingConfig(),
         AddEventsBehaviour.config('common-button-display-events', [
           AlloyEvents.run(NativeEvents.mousedown(), (button, se) => {
             se.event().prevent();
@@ -186,7 +189,8 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
           onControlAttached(specialisation, editorOffCell),
           onControlDetached(specialisation, editorOffCell),
         ]),
-        DisablingConfigs.toolbarButton(spec.disabled)
+        DisablingConfigs.toolbarButton(spec.disabled || providersBackstage.isReadonly()),
+        ReadOnly.receivingConfig()
       ].concat(specialisation.toolbarButtonBehaviours)
     )
   });
@@ -328,7 +332,8 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     onItemExecute: (a, b, c) => { },
 
     splitDropdownBehaviours: Behaviour.derive([
-      DisablingConfigs.splitButton(false),
+      DisablingConfigs.splitButton(sharedBackstage.providers.isReadonly()),
+      ReadOnly.receivingConfig(),
       AddEventsBehaviour.config('split-dropdown-events', [
         AlloyEvents.run(focusButtonEvent, Focusing.focus),
         onControlAttached(specialisation, editorOffCell),
@@ -361,7 +366,11 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
           tag: 'button',
           classes: [ ToolbarButtonClasses.Button, 'tox-split-button__chevron' ],
           innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons)
-        }
+        },
+        buttonBehaviours: Behaviour.derive([
+          DisablingConfigs.splitButton(sharedBackstage.providers.isReadonly()),
+          ReadOnly.receivingConfig()
+        ]),
       }),
       AlloySplitDropdown.parts()['aria-descriptor']({
         text: sharedBackstage.providers.translate('To open the popup, press Shift+Enter')

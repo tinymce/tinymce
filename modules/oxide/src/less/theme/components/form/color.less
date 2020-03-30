@@ -29,14 +29,15 @@
       border-width: 1px;
       box-shadow: none;
       box-sizing: border-box;
-      cursor: pointer;
       height: @textfield-height - 12px;
       position: absolute;
       top: 6px;
       width: $height;
 
-      &:focus {
+      &:hover:not([aria-disabled=true]),
+      &:focus:not([aria-disabled=true]) {
         border-color: @input-button-focus-border-color;
+        cursor: pointer;
       }
 
       &::before {
@@ -59,6 +60,10 @@
         z-index: -1;
       }
     }
+
+    span[aria-disabled=true] {
+      cursor: not-allowed;
+    }
   }
 }
 
@@ -68,6 +73,7 @@
       padding-left: @textfield-height;
     }
 
+    /* stylelint-disable-next-line no-descending-specificity */
     span {
       left: 6px;
     }
@@ -81,6 +87,7 @@
       padding-right: @textfield-height;
     }
 
+    /* stylelint-disable-next-line no-descending-specificity */
     span {
       right: 6px;
     }

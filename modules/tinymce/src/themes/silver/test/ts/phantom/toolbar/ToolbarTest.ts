@@ -5,8 +5,10 @@ import { Arr, Option } from '@ephox/katamari';
 
 import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
 import { renderToolbar, renderToolbarGroup } from 'tinymce/themes/silver/ui/toolbar/CommonToolbar';
+import TestProviders from '../../module/TestProviders';
 
 UnitTest.asynctest('Toolbar Test', (success, failure) => {
+  const providers = TestProviders;
 
   const makeButton = (t: string) => {
     return {
@@ -30,6 +32,7 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
           uid: 'test-toolbar-uid',
           onEscape: store.adderH('onEscape'),
           cyclicKeying: true,
+          providers,
           initGroups: [
             {
               title: Option.none(), items: Arr.map([ 'one', 'two', 'three' ], makeButton)

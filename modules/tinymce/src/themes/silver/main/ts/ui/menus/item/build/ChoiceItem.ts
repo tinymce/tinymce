@@ -55,7 +55,7 @@ const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: 
       },
       triggersSubmenu: false,
       itemBehaviours: [ ]
-    }, structure, itemResponse),
+    }, structure, itemResponse, providersBackstage),
     {
       toggling: {
         toggleClass: ItemClasses.tickedClass,
