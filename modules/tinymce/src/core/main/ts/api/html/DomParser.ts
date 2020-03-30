@@ -11,7 +11,7 @@ import { hasOnlyChild, isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode
 import Tools from '../util/Tools';
 import Node from './Node';
 import SaxParser from './SaxParser';
-import Schema from './Schema';
+import Schema, { SchemaElement } from './Schema';
 import { BlobCache } from '../file/BlobCache';
 
 /**
@@ -573,10 +573,13 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         }
       },
 
-      end(name) {
-        let textNode, elementRule, text, sibling, tempNode;
+      end(name: string) {
+        let textNode: Node;
+        let text: string;
+        let sibling: Node;
+        let tempNode: Node;
 
-        elementRule = validate ? schema.getElementRule(name) : {};
+        const elementRule: SchemaElement = validate ? schema.getElementRule(name) : {} as SchemaElement;
         if (elementRule) {
           if (blockElements[name]) {
             if (!isInWhiteSpacePreservedElement) {
@@ -670,7 +673,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
             return;
           }
 
-          if (elementRule.paddEmpty && (isPaddedWithNbsp(node) || isEmpty(schema, nonEmptyElements, whiteSpaceElements, node))) {
+          if (elementRule.paddEmpty && elementRule.removeEmpty && (isPaddedWithNbsp(node) || isEmpty(schema, nonEmptyElements, whiteSpaceElements, node))) {
             paddEmptyNode(settings, args, blockElements, node);
           }
 

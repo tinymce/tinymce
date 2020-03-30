@@ -7,7 +7,7 @@
 
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import { Element as DomElement, Node } from '@ephox/dom-globals';
+import { Element as DomElement, Node, Range } from '@ephox/dom-globals';
 import Env from '../api/Env';
 import * as InsertList from './InsertList';
 import CaretPosition from '../caret/CaretPosition';
@@ -104,10 +104,10 @@ const canHaveChildren = function (editor: Editor, node) {
   return node && !editor.schema.getShortEndedElements()[node.nodeName];
 };
 
-const moveSelectionToMarker = function (editor: Editor, marker) {
-  let parentEditableFalseElm, parentBlock, nextRng;
-  const dom = editor.dom, selection = editor.selection;
-  let node, node2;
+const moveSelectionToMarker = function (editor: Editor, marker: DomElement) {
+  let nextRng: Range;
+  const dom: DOMUtils = editor.dom;
+  const selection: Selection = editor.selection;
 
   const getContentEditableFalseParent = function (node: Node) {
     const root = editor.getBody();
@@ -128,7 +128,7 @@ const moveSelectionToMarker = function (editor: Editor, marker) {
   editor.selection.scrollIntoView(marker);
 
   // If marker is in cE=false then move selection to that element instead
-  parentEditableFalseElm = getContentEditableFalseParent(marker);
+  const parentEditableFalseElm: Node = getContentEditableFalseParent(marker);
   if (parentEditableFalseElm) {
     dom.remove(marker);
     selection.select(parentEditableFalseElm);
@@ -136,16 +136,16 @@ const moveSelectionToMarker = function (editor: Editor, marker) {
   }
 
   // Move selection before marker and remove it
-  let rng = dom.createRng();
+  let rng: Range = dom.createRng();
 
   // If previous sibling is a text node set the selection to the end of that node
-  node = marker.previousSibling;
+  const node: any = marker.previousSibling;
   if (node && node.nodeType === 3) {
     rng.setStart(node, node.nodeValue.length);
 
     // TODO: Why can't we normalize on IE
     if (!Env.ie) {
-      node2 = marker.nextSibling;
+      const node2: any = marker.nextSibling;
       if (node2 && node2.nodeType === 3) {
         node.appendData(node2.data);
         node2.parentNode.removeChild(node2);
@@ -168,10 +168,10 @@ const moveSelectionToMarker = function (editor: Editor, marker) {
   };
 
   // Remove the marker node and set the new range
-  parentBlock = dom.getParent(marker, dom.isBlock);
+  const parentBlock: DomElement = dom.getParent(marker, dom.isBlock);
   dom.remove(marker);
 
-  if (parentBlock && dom.isEmpty(parentBlock)) {
+  if (parentBlock && dom.isEmpty(parentBlock) && editor.schema.getElementRule(parentBlock.nodeName.toLowerCase()).removeEmpty) {
     editor.$(parentBlock).empty();
 
     rng.setStart(parentBlock, 0);
