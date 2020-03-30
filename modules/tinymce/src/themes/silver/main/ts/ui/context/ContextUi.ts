@@ -51,9 +51,6 @@ const renderContextToolbar = (spec: { onEscape: () => Option<boolean>; sink: All
     inlineBehaviours: Behaviour.derive([
       AddEventsBehaviour.config('context-toolbar-events', [
         AlloyEvents.runOnSource<EventArgs>(NativeEvents.transitionend(), (comp, _se) => {
-          InlineView.getContent(comp).each((_c) => {
-            // Css.remove(c.element(), 'opacity');
-          });
           Class.remove(comp.element(), resizingClass);
           Css.remove(comp.element(), 'width');
         }),
