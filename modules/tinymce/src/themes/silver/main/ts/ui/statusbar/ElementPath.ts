@@ -5,9 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Button, Keying, Replacing, Tabstopping } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, Button, Keying, Replacing, Tabstopping, Disabling } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import * as ReadOnly from '../../ReadOnly';
+import { DisablingConfigs } from '../alien/DisablingConfigs';
 
 const isHidden = (elm) => {
   if (elm.nodeType === 1) {
@@ -23,7 +26,7 @@ const isHidden = (elm) => {
   return false;
 };
 
-const renderElementPath = (editor: Editor, settings) => {
+const renderElementPath = (editor: Editor, settings, providersBackstage: UiFactoryBackstageProviders) => {
   if (!settings.delimiter) {
     settings.delimiter = '\u00BB';
   }
@@ -48,7 +51,11 @@ const renderElementPath = (editor: Editor, settings) => {
           editor.focus();
           editor.selection.select(part.element);
           editor.nodeChanged();
-        }
+        },
+        buttonBehaviours: Behaviour.derive([
+          DisablingConfigs.button(providersBackstage.isReadonly()),
+          ReadOnly.receivingConfig()
+        ])
       });
     });
 
@@ -109,6 +116,8 @@ const renderElementPath = (editor: Editor, settings) => {
         mode: 'flow',
         selector: 'div[role=button]'
       }),
+      Disabling.config({ disabled: providersBackstage.isReadonly() }),
+      ReadOnly.receivingConfig(),
       Tabstopping.config({ }),
       Replacing.config({ }),
       AddEventsBehaviour.config('elementPathEvents', [

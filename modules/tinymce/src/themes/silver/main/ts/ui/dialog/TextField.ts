@@ -29,12 +29,14 @@ import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formChangeEvent, formSubmitEvent } from '../general/FormEvents';
 import { Omit } from '../Omit';
+import * as ReadOnly from '../../ReadOnly';
 
 const renderTextField = function (spec: TextField, providersBackstage: UiFactoryBackstageProviders) {
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   const baseInputBehaviours = [
-    Disabling.config({ disabled: spec.disabled }),
+    Disabling.config({ disabled: spec.disabled || providersBackstage.isReadonly() }),
+    ReadOnly.receivingConfig(),
     Keying.config({
       mode: 'execution',
       useEnter: spec.multiline !== true,
@@ -99,14 +101,15 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
 
   const extraBehaviours = [
     Disabling.config({
-      disabled: spec.disabled,
+      disabled: spec.disabled || providersBackstage.isReadonly(),
       onDisabled: (comp) => {
         AlloyFormField.getField(comp).each(Disabling.disable);
       },
       onEnabled: (comp) => {
         AlloyFormField.getField(comp).each(Disabling.enable);
       }
-    })
+    }),
+    ReadOnly.receivingConfig()
   ];
 
   return renderFormFieldWith(pLabel, pField, extraClasses2, extraBehaviours);

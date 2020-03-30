@@ -48,6 +48,7 @@ import {
 import ItemResponse from '../menus/item/ItemResponse';
 import { Omit } from '../Omit';
 import { renderButton } from '../general/Button';
+import * as ReadOnly from '../../ReadOnly';
 
 type UrlInputSpec = Omit<Types.UrlInput.UrlInput, 'type'>;
 
@@ -288,7 +289,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     ]),
     fieldBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: spec.disabled,
+        disabled: spec.disabled || providersBackstage.isReadonly(),
         onDisabled: (comp) => {
           AlloyFormField.getField(comp).each(Disabling.disable);
           memUrlPickerButton.getOpt(comp).each(Disabling.disable);
@@ -298,6 +299,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
           memUrlPickerButton.getOpt(comp).each(Disabling.enable);
         }
       }),
+      ReadOnly.receivingConfig(),
       AddEventsBehaviour.config('url-input-events', [
         AlloyEvents.run<CustomEvent>(browseUrlEvent, openUrlPicker)
       ])

@@ -8,6 +8,9 @@ Version 5.3.0 (TBD)
     Fixed table picker breaking in Firefox on low zoom levels #TINY-4728
     Fixed issue with loading or pasting contents with large base64 encoded images on Safari #TINY-4715
     Fixed supplementary special characters being truncated when inserted into the editor. Patch contributed by mlitwin. #TINY-4791
+    Fixed toolbar buttons not set to disabled when the editor is in readonly mode #TINY-4592
+Version 5.2.2 (TBD)
+    Fixed an issue where anchors could not be inserted on empty lines #TINY-2788
 Version 5.2.1 (2020-03-25)
     Fixed the "is decorative" checkbox in the image dialog clearing after certain dialog events #FOAM-11
     Fixed possible uncaught exception when a `style` attribute is removed using a content filter on `setContent` #TINY-4742

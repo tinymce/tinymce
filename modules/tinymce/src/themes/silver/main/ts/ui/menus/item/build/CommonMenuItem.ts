@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, ItemTypes, NativeEvents, Replacing, } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, ItemTypes, NativeEvents, Replacing } from '@ephox/alloy';
 import { Arr, Cell, Fun, Option } from '@ephox/katamari';
 
 import { DisablingConfigs } from 'tinymce/themes/silver/ui/alien/DisablingConfigs';
@@ -13,6 +13,8 @@ import { onControlAttached, onControlDetached, OnDestroy } from 'tinymce/themes/
 import { menuItemEventOrder, onMenuItemExecute } from '../ItemEvents';
 import ItemResponse from '../ItemResponse';
 import { ItemStructure } from '../structure/ItemStructure';
+import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
+import * as ReadOnly from 'tinymce/themes/silver/ReadOnly';
 
 export const componentRenderPipeline = (xs: Array<Option<AlloySpec>>) =>
   Arr.bind(xs, (o) => o.toArray());
@@ -27,7 +29,7 @@ export interface CommonMenuItemSpec<T> {
   data: ItemDataOutput;
 }
 
-const renderCommonItem = <T>(spec: CommonMenuItemSpec<T>, structure: ItemStructure, itemResponse: ItemResponse): ItemTypes.ItemSpec => {
+const renderCommonItem = <T>(spec: CommonMenuItemSpec<T>, structure: ItemStructure, itemResponse: ItemResponse, providersbackstage: UiFactoryBackstageProviders): ItemTypes.ItemSpec => {
   const editorOffCell = Cell(Fun.noop);
 
   return {
@@ -44,7 +46,8 @@ const renderCommonItem = <T>(spec: CommonMenuItemSpec<T>, structure: ItemStructu
           onControlAttached(spec, editorOffCell),
           onControlDetached(spec, editorOffCell)
         ]),
-        DisablingConfigs.item(spec.disabled),
+        DisablingConfigs.item(spec.disabled || providersbackstage.isReadonly()),
+        ReadOnly.receivingConfig(),
         Replacing.config({ })
       ].concat(spec.itemBehaviours)
     )
@@ -61,7 +64,7 @@ export interface CommonCollectionItemSpec {
 // from other renders because it is used for rendering a component
 // inside a dialog, not inside a menu. That's basically the reason
 // for the differences here.
-const renderCommonChoice = <T>(spec: CommonCollectionItemSpec, structure: ItemStructure, _itemResponse: ItemResponse): AlloySpec => {
+const renderCommonChoice = <T>(spec: CommonCollectionItemSpec, structure: ItemStructure, itemResponse: ItemResponse, providersbackstage: UiFactoryBackstageProviders): AlloySpec => {
 
   return Button.sketch({
     dom: structure.dom,
@@ -72,7 +75,8 @@ const renderCommonChoice = <T>(spec: CommonCollectionItemSpec, structure: ItemSt
         AddEventsBehaviour.config('item-events', [
           AlloyEvents.run(NativeEvents.mouseover(), Focusing.focus)
         ]),
-        DisablingConfigs.item(spec.disabled)
+        DisablingConfigs.item(spec.disabled || providersbackstage.isReadonly()),
+        ReadOnly.receivingConfig()
       ]
     ),
     action: spec.onAction

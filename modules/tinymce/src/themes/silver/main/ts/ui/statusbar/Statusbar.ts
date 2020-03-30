@@ -69,7 +69,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
     const components: SimpleSpec[] = [];
 
     if (editor.getParam('elementpath', true, 'boolean')) {
-      components.push(ElementPath.renderElementPath(editor, { }));
+      components.push(ElementPath.renderElementPath(editor, { }, providersBackstage));
     }
 
     if (Strings.contains(editor.settings.plugins, 'wordcount')) {

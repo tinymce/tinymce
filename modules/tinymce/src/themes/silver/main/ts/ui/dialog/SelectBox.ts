@@ -27,6 +27,7 @@ import * as Icons from 'tinymce/themes/silver/ui/icons/Icons';
 
 import { formChangeEvent } from '../general/FormEvents';
 import { Omit } from '../Omit';
+import * as ReadOnly from '../../ReadOnly';
 
 type SelectBoxSpec = Omit<Types.SelectBox.SelectBox, 'type'>;
 
@@ -85,14 +86,15 @@ export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFacto
     components: Arr.flatten<AlloySpec>([ pLabel.toArray(), [ selectWrap ]]),
     fieldBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: spec.disabled,
+        disabled: spec.disabled || providersBackstage.isReadonly(),
         onDisabled: (comp) => {
           AlloyFormField.getField(comp).each(Disabling.disable);
         },
         onEnabled: (comp) => {
           AlloyFormField.getField(comp).each(Disabling.enable);
         }
-      })
+      }),
+      ReadOnly.receivingConfig()
     ])
   });
 };

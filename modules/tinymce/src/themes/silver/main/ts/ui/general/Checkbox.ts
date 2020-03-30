@@ -31,6 +31,7 @@ import * as Icons from '../icons/Icons';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formChangeEvent } from './FormEvents';
 import { Omit } from '../Omit';
+import * as ReadOnly from '../../ReadOnly';
 
 type CheckboxSpec = Omit<Types.Checkbox.Checkbox, 'type'>;
 
@@ -131,7 +132,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
     ],
     fieldBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: spec.disabled,
+        disabled: spec.disabled || providerBackstage.isReadonly(),
         disableClass: 'tox-checkbox--disabled',
         onDisabled: (comp) => {
           AlloyFormField.getField(comp).each(Disabling.disable);
@@ -139,7 +140,8 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
         onEnabled: (comp) => {
           AlloyFormField.getField(comp).each(Disabling.enable);
         }
-      })
+      }),
+      ReadOnly.receivingConfig()
     ])
   });
 };

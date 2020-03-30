@@ -13,7 +13,7 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
-import { setupReadonlyModeSwitch } from '../ReadOnly';
+import * as ReadOnly from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
@@ -109,7 +109,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     DomEvent.bind(socket.element(), 'scroll', limit.throttle);
   }
 
-  setupReadonlyModeSwitch(editor, uiComponents);
+  ReadOnly.setupReadonlyModeSwitch(editor, uiComponents);
 
   editor.addCommand('ToggleSidebar', (ui: boolean, value: string) => {
     OuterContainer.toggleSidebar(uiComponents.outerContainer, value);
