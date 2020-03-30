@@ -61,7 +61,7 @@ UnitTest.test('Checking value.getOrDie() does not throw', () => {
 });
 
 UnitTest.test('Checking value.or(oValue) === value', () => {
-  fc.assert(fc.property(fc.integer(), fc.integer(), (a, _b) => {
+  fc.assert(fc.property(fc.integer(), (a) => {
     Assert.eq('eq', Result.value(a), Result.value(a).or(Result.value(a)), tResult());
   }));
 });
@@ -73,7 +73,7 @@ UnitTest.test('Checking value.orThunk(die) does not throw', () => {
 });
 
 UnitTest.test('Checking value.fold(die, id) === value.getOrDie()', () => {
-  fc.assert(fc.property(arbResultValue(fc.integer()), fc.json(), (res, _json) => {
+  fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
     const actual = res.getOrDie();
     Assert.eq('eq', actual, res.fold(Fun.die('should not get here'), Fun.identity));
   }));
