@@ -50,7 +50,7 @@ const extract = <T>(form) => {
   const values = toValidValues(rawValues);
 
   // TODO: Consider how to work "required" into this
-  return values.fold(function (errs) {
+  return values.fold(function (_errs) {
     // TODO: Something went very wrong (could not find fields)
     return Future.pure(Result.error([]));
   }, function (vs) {

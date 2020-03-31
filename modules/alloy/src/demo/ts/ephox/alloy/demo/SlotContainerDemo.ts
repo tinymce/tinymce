@@ -34,7 +34,7 @@ export default (): void => {
                 },
                 innerHtml: 'Inconsistent Button'
               },
-              action: (btn) => {
+              action: (_btn) => {
                 // tslint:disable-next-line:no-console
                 console.log('clicking on action');
               }

@@ -2,7 +2,7 @@ import { document } from '@ephox/dom-globals';
 import { Attr, Element, Insert, Remove } from '@ephox/sugar';
 import { Step } from 'ephox/agar/api/Step';
 
-const mSetup = Step.stateful((state, next, die) => {
+const mSetup = Step.stateful((state, next, _die) => {
   const container = Element.fromTag('div');
   Attr.set(container, 'tabindex', '-1');
   Attr.set(container, 'test-id', 'true');
@@ -21,7 +21,7 @@ interface TeardownState {
   container: Element<any>;
 }
 
-const mTeardown = Step.stateful<TeardownState, TeardownState>((state, next, die) => {
+const mTeardown = Step.stateful<TeardownState, TeardownState>((state, next, _die) => {
   Remove.remove(state.container);
   next(state);
 });

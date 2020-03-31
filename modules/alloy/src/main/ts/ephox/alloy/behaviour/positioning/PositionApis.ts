@@ -87,7 +87,7 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
   }, placee.element());
 };
 
-const getMode = (component: AlloyComponent, pConfig: PositioningConfig, pState: Stateless): string => {
+const getMode = (component: AlloyComponent, pConfig: PositioningConfig, _pState: Stateless): string => {
   return pConfig.useFixed() ? 'fixed' : 'absolute';
 };
 

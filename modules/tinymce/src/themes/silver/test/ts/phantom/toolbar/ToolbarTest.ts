@@ -25,7 +25,7 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
   };
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (store, _doc, _body) => {
       return GuiFactory.build(
         renderToolbar({
           type: ToolbarMode.default,
@@ -47,7 +47,7 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
         })
       );
     },
-    (doc, body, gui, toolbar: AlloyComponent, store) => {
+    (doc, _body, _gui, toolbar: AlloyComponent, _store) => {
       return [
         TestHelpers.GuiSetup.mAddStyles(doc, [
           '.tox-toolbar { padding: 0.3em; background: blue; display: flex; flex-direction: row;}',

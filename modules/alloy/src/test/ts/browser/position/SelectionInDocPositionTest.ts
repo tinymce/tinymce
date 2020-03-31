@@ -12,7 +12,7 @@ import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     let content = '';
     for (let i = 0; i < 20; i++) {
       content += '<p>paragraph ' + i + '</p>';
@@ -46,7 +46,7 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, gui, _component, _store) => {
     const cSetupAnchor = Chain.mapper((data: any) => {
       return {
         anchor: 'selection',

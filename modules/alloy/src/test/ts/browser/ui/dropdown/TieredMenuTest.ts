@@ -16,7 +16,7 @@ import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 
 UnitTest.asynctest('TieredMenuTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       TieredMenu.sketch({
         uid: 'uid-test-menu-1',
@@ -73,7 +73,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
         onRepositionMenu: store.adderH('onRepositionMenu')
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, _gui, component, store) => {
     // TODO: Flesh out test.
     // const cAssertStructure = (label, expected) => {
     //   return Chain.op((element: Element) => {

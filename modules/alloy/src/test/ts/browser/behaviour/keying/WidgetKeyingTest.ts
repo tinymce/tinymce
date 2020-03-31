@@ -24,7 +24,7 @@ UnitTest.asynctest('Widget Keying Test', (success, failure) => {
    * you will tab into the inner parts from outside.
    */
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const makeButton = (v: string, t: string) => {
       return Button.sketch({
         dom: { tag: 'button', innerHtml: t },
@@ -92,7 +92,7 @@ UnitTest.asynctest('Widget Keying Test', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, body, _gui, component, _store) => {
     return [
       GuiSetup.mAddStyles(doc, [
         ':focus { outline: 3px solid red; }'

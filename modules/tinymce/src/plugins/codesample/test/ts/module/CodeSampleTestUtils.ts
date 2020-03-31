@@ -28,7 +28,7 @@ const sAssertCodeSampleDialog = (expectedLanguage, expectedContent) => {
   }));
 };
 
-const sAssertEditorContentStructure = (editorBody, language, content) => {
+const sAssertEditorContentStructure = (editorBody, language, _content) => {
   return Logger.t('Assert editor contents structure', Waiter.sTryUntil(
     'Assert content',
     Assertions.sAssertStructure(

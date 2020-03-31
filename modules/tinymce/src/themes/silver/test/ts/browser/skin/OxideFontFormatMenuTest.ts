@@ -224,7 +224,7 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
         { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
       ],
       base_url: '/project/tinymce/js/tinymce',
-      setup: (ed) => {
+      setup: (_ed) => {
 
       }
     },

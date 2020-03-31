@@ -231,7 +231,7 @@ const renderSidebar = (spec) => {
         AlloyEvents.run<FixSizeEvent>(fixSize, (comp, se) => {
           Css.set(comp.element(), 'width', se.event().width());
         }),
-        AlloyEvents.run(autoSize, (comp, se) => {
+        AlloyEvents.run(autoSize, (comp, _se) => {
           Css.remove(comp.element(), 'width');
         })
       ])

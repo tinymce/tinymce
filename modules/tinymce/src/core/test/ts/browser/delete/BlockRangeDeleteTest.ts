@@ -22,14 +22,14 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockRangeDeleteTest', function 
     });
   };
 
-  const sBackspace = function (editor, forward?) {
+  const sBackspace = function (editor, _forward?) {
     return Step.sync(function () {
       const returnVal = BlockRangeDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
-  const sBackspaceNoop = function (editor, forward?) {
+  const sBackspaceNoop = function (editor, _forward?) {
     return Step.sync(function () {
       const returnVal = BlockRangeDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);

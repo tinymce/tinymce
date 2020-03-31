@@ -47,7 +47,7 @@ UnitTest.asynctest('Basic Form', (success, failure) => {
     ]
   };
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build(
       Form.sketch((parts: FormParts) => {
         return {
@@ -62,14 +62,14 @@ UnitTest.asynctest('Basic Form', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, component, _store) => {
     const helper = TestForm.helper(component);
 
     const sAssertDisplay = (inputText: string, selectValue: string) => {
       return Step.sync(() => {
         Assertions.assertStructure(
           'Checking that HTML select and text input have right contents',
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('div', {
               children: [
                 s.element('div', {

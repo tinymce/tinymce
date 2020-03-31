@@ -16,7 +16,7 @@ UnitTest.asynctest('AllowBubblingTest', (success, failure) => {
     });
   };
 
-  GuiSetup.guiSetup((store, doc, body) => {
+  GuiSetup.guiSetup((store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -32,14 +32,14 @@ UnitTest.asynctest('AllowBubblingTest', (success, failure) => {
             ]
           }),
           AddEventsBehaviour.config('events', [
-            AlloyEvents.run('bubbled.scroll', (comp, e) => {
+            AlloyEvents.run('bubbled.scroll', (_comp, _e) => {
               store.add('bubbled.scroll');
             })
           ])
         ])
       })
     );
-  }, (doc, body, gui, component, store) =>
+  }, (_doc, _body, _gui, component, store) =>
     Logger.t('Should fire simulated scroll event', StepSequence.sequenceSame([
       sDispatchScrollEvent(component),
       store.sAssertEq('Should have fired simulated scroll event', [ 'bubbled.scroll' ])

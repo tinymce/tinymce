@@ -21,10 +21,10 @@ const makeSidebar = (ed, name: string, background: string, width: number) => {
         api.element().removeChild(box.dom());
       };
     },
-    onShow: (api) => {
+    onShow: (_api) => {
       console.log('onShow ' + name);
     },
-    onHide: (api) => {
+    onHide: (_api) => {
       console.log('onHide ' + name);
     },
   });
@@ -51,7 +51,7 @@ const settings = {
   importcss_append: true,
   height: 400,
   image_advtab: true,
-  file_picker_callback(callback, value, meta) {
+  file_picker_callback(callback, _value, meta) {
     if (meta.fieldname === 'poster') {
       callback('test.mp4', { altsource: 'blah.ogg', width: '400px', poster: 'testing.jpg', embed: '<p>test</p>' });
       return;
@@ -72,7 +72,7 @@ const settings = {
       callback('movie.mp4', { embed: '<p>test</p>' });
     }
   },
-  spellchecker_callback(method, text, success, failure) {
+  spellchecker_callback(method, text, success, _failure) {
     const words = text.match(this.getWordCharPattern());
 
     if (method === 'spellcheck') {

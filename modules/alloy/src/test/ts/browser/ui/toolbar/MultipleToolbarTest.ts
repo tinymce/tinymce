@@ -11,7 +11,7 @@ import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 
 UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build(
       CustomList.sketch({
         uid: 'multiple-toolbar',
@@ -31,12 +31,12 @@ UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
             }
           );
         },
-        setupItem: (mToolbar: AlloyComponent, tc: AlloyComponent, data: any, index: number) => {
+        setupItem: (_mToolbar: AlloyComponent, tc: AlloyComponent, data: any, _index: number) => {
           Toolbar.setGroups(tc, data);
         }
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, _gui, component, _store) => {
 
     const makeToolbarItem = (itemSpec: { text: string }): AlloySpec => {
       return {
@@ -100,7 +100,7 @@ UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
     const sAssertMultipleToolbars = (label: string) => {
       return Assertions.sAssertStructure(
         label,
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, _str, arr) => {
           return s.element('div', {
             classes: [ arr.has('test-multiple-toolbar') ],
             children: [

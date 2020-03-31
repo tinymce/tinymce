@@ -223,7 +223,7 @@ const convertSelectorToFormat = function (editor, plugin, selector, group) {
 };
 
 const setup = function (editor: Editor) {
-  editor.on('init', function (e) {
+  editor.on('init', function (_e) {
     const model = generate();
 
     const globallyUniqueSelectors = {};

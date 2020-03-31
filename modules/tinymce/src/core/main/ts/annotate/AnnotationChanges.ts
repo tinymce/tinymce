@@ -23,7 +23,7 @@ export interface AnnotationListenerData {
 
 export type AnnotationListenerMap = Record<string, AnnotationListenerData>;
 
-const setup = (editor: Editor, registry: AnnotationsRegistry): AnnotationChanges => {
+const setup = (editor: Editor, _registry: AnnotationsRegistry): AnnotationChanges => {
   const changeCallbacks = Cell<AnnotationListenerMap>({ });
 
   const initData = (): AnnotationListenerData => ({

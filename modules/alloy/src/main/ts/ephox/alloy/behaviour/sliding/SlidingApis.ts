@@ -133,12 +133,12 @@ const hasShrunk = (component: AlloyComponent, slideConfig: SlidingConfig, slideS
   return slideState.isCollapsed();
 };
 
-const isGrowing = (component: AlloyComponent, slideConfig: SlidingConfig, slideState: SlidingState) => {
+const isGrowing = (component: AlloyComponent, slideConfig: SlidingConfig, _slideState: SlidingState) => {
   const root = getAnimationRoot(component, slideConfig);
   return Class.has(root, slideConfig.growingClass) === true;
 };
 
-const isShrinking = (component: AlloyComponent, slideConfig: SlidingConfig, slideState: SlidingState) => {
+const isShrinking = (component: AlloyComponent, slideConfig: SlidingConfig, _slideState: SlidingState) => {
   const root = getAnimationRoot(component, slideConfig);
   return Class.has(root, slideConfig.shrinkingClass) === true;
 };

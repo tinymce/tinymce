@@ -41,7 +41,7 @@ const getNewRowCursorPosition = function (editor: Editor, table) {
   });
 };
 
-const go: any = function (editor: Editor, isRoot, cell, actions, lazyWire) { // TODO: forwars/backward is calling without actions
+const go: any = function (editor: Editor, isRoot, cell, actions, _lazyWire) { // TODO: forwars/backward is calling without actions
   return cell.fold(Option.none, Option.none, function (current, next) {
     return CursorPosition.first(next).map(function (cell) {
       return getCellFirstCursorPosition(editor, cell);

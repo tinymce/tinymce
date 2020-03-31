@@ -32,7 +32,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
     })
   );
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const makeFlow = (v: string) => {
       return Container.sketch({
         dom: {
@@ -143,7 +143,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
 
     return c;
 
-  }, (doc, body, gui, dropdown, store) => {
+  }, (doc, _body, gui, dropdown, store) => {
     gui.add(
       GuiFactory.build(sink.asSpec())
     );

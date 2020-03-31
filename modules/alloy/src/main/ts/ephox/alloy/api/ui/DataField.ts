@@ -29,7 +29,7 @@ const factory: SingleSketchFactory<DataFieldDetail, DataFieldSpec> = (detail): S
       ]
     ),
     events: AlloyEvents.derive([
-      AlloyEvents.runOnAttached((component, simulatedEvent) => {
+      AlloyEvents.runOnAttached((component, _simulatedEvent) => {
         Representing.setValue(component, detail.getInitialValue());
       })
     ])

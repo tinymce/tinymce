@@ -12,7 +12,7 @@ import { Tabbar } from 'ephox/alloy/api/ui/Tabbar';
 import { TabSection } from 'ephox/alloy/api/ui/TabSection';
 
 UnitTest.asynctest('TabSection Test', (success, failure) => {
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     let counterA = 0;
     let counterB = 0;
 
@@ -82,7 +82,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, _gui, component, _store) => {
     const alpha = component.getSystem().getByUid('alpha-tab').getOrDie();
     const beta = component.getSystem().getByUid('beta-tab').getOrDie();
     const tview = component.getSystem().getByDom(
@@ -157,7 +157,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
           }),
           sAssertTabSelection('Check Alpha', true, alpha.element()),
           sAssertTabSelection('Check Beta', false, beta.element()),
-          sAssertTabView('Check TabView', (s, str, arr) => [
+          sAssertTabView('Check TabView', (s, str, _arr) => [
             s.element('div', {
               html: str.is('This is the view for "A1"')
             })
@@ -173,7 +173,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
           }),
           sAssertTabSelection('Check Alpha', false, alpha.element()),
           sAssertTabSelection('Check Beta', true, beta.element()),
-          sAssertTabView('Check TabView', (s, str, arr) => [
+          sAssertTabView('Check TabView', (s, str, _arr) => [
             s.element('div', {
               html: str.is('This is the view for "B1"')
             })
@@ -189,7 +189,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
           }),
           sAssertTabSelection('Check Alpha', true, alpha.element()),
           sAssertTabSelection('Check Beta', false, beta.element()),
-          sAssertTabView('Check TabView', (s, str, arr) => [
+          sAssertTabView('Check TabView', (s, str, _arr) => [
             s.element('div', {
               html: str.is('This is the view for "A2"')
             })
@@ -205,7 +205,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
           }),
           sAssertTabSelection('Check Alpha', true, alpha.element()),
           sAssertTabSelection('Check Beta', false, beta.element()),
-          sAssertTabView('Check TabView', (s, str, arr) => [
+          sAssertTabView('Check TabView', (s, str, _arr) => [
             s.element('div', {
               html: str.is('This is the view for "A2"')
             })
@@ -221,7 +221,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
           }),
           sAssertTabSelection('Check Alpha', true, alpha.element()),
           sAssertTabSelection('Check Beta', false, beta.element()),
-          sAssertTabView('Check TabView', (s, str, arr) => [
+          sAssertTabView('Check TabView', (s, str, _arr) => [
             s.element('div', {
               html: str.is('This is the view for "A2"')
             })
@@ -237,7 +237,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
           }),
           sAssertTabSelection('Check Alpha', true, alpha.element()),
           sAssertTabSelection('Check Beta', false, beta.element()),
-          sAssertTabView('Check TabView', (s, str, arr) => [
+          sAssertTabView('Check TabView', (s, str, _arr) => [
             s.element('div', {
               html: str.is('This is the view for "A2"')
             })
@@ -253,7 +253,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
           }),
           sAssertTabSelection('Check Alpha', false, alpha.element()),
           sAssertTabSelection('Check Beta', true, beta.element()),
-          sAssertTabView('Check TabView', (s, str, arr) => [
+          sAssertTabView('Check TabView', (s, str, _arr) => [
             s.element('div', {
               html: str.is('This is the view for "B2"')
             })

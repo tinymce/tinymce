@@ -1,7 +1,7 @@
 import { ApproxStructure, StructAssert } from '@ephox/agar';
 import { Unicode } from '@ephox/katamari';
 
-const sAssertStruct = (paraStruct: StructAssert[]) => ApproxStructure.build((s, str) => {
+const sAssertStruct = (paraStruct: StructAssert[]) => ApproxStructure.build((s, _str) => {
   return s.element('body', {
     children: [
       s.element('p', {

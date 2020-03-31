@@ -14,7 +14,7 @@ import * as Settings from './Settings';
 type LastSuggestion = Actions.LastSuggestion;
 type Data = Actions.Data;
 
-const get = function (editor: Editor, startedState: Cell<boolean>, lastSuggestionsState: Cell<LastSuggestion>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, url: string) {
+const get = function (editor: Editor, startedState: Cell<boolean>, lastSuggestionsState: Cell<LastSuggestion>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, _url: string) {
   const getLanguage = function () {
     return currentLanguageState.get();
   };

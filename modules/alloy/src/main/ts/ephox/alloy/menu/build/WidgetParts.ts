@@ -16,7 +16,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
           Representing.config({
             store: {
               mode: 'manual',
-              getValue(component) {
+              getValue(_component) {
                 return detail.data;
               },
               setValue() { }

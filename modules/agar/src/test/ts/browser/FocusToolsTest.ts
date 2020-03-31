@@ -100,7 +100,7 @@ UnitTest.asynctest('FocusToolsTest', (success, failure) => {
 
     DomContainers.mTeardown
 
-  ], (_, logs) => {
+  ], (_, _logs) => {
     success();
   }, failure);
 });

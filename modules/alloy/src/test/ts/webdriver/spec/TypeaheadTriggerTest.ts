@@ -14,7 +14,7 @@ import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const sink = Sinks.relativeSink();
 
     return GuiFactory.build(
@@ -70,7 +70,7 @@ UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, _component, _store) => {
 
     const typeahead = gui.getByUid('test-type').getOrDie();
     const steps = TestTypeaheadSteps(doc, gui, typeahead);

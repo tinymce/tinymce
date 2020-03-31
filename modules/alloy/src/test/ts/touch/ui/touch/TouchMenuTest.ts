@@ -36,7 +36,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
     };
   };
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const menuPart = {
       value: 'touchmenu1',
       dom: {
@@ -109,7 +109,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
         toggleClass: 'touch-menu-open'
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, component, store) => {
 
     const fireTouchstart = (target: Element, x: number, y: number) => {
       AlloyTriggers.dispatchWith(component, target, NativeEvents.touchstart(), {
@@ -191,7 +191,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
       store.sAssertEq('Hover on should be fired immediately after longpress menu appears', [ 'onHoverOn' ]),
 
       sFireTouchmoveOn(component.element(), '[role="menu"] [data-value="dog"]'),
-      sAssertMenuStructure('Checking menu structure with hover over first item', ApproxStructure.build((s, str, arr) => {
+      sAssertMenuStructure('Checking menu structure with hover over first item', ApproxStructure.build((s, _str, arr) => {
         return s.element('div', {
           children: [
             s.element('div', {
@@ -205,7 +205,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
       })),
       store.sAssertEq('Hover off should be fire when an item gets focus', [ 'onHoverOn', 'onHoverOff' ]),
       sFireTouchmoveOn(component.element(), '[role="menu"] [data-value="elephant"]'),
-      sAssertMenuStructure('Checking menu structure with hover over first item', ApproxStructure.build((s, str, arr) => {
+      sAssertMenuStructure('Checking menu structure with hover over first item', ApproxStructure.build((s, _str, arr) => {
         return s.element('div', {
           children: [
             s.element('div', {
@@ -221,7 +221,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
       store.sAssertEq('Hover off should not fire again until hover on has fired', [ 'onHoverOn', 'onHoverOff' ]),
       sFireTouchmoveOn(component.element(), '.touch-menu-button'),
       sAssertMenuStructure('Checking menu structure with hover over the touch button (so nothing selected)',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, _str, arr) => {
           return s.element('div', {
             children: [
               s.element('div', {
@@ -249,7 +249,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
         [ 'onHoverOn', 'onHoverOff', 'onHoverOn', 'onHoverOff' ]
       ),
       sAssertMenuStructure('Checking menu structure with hover over nothing (so nothing selected)',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, _str, arr) => {
           return s.element('div', {
             children: [
               s.element('div', {

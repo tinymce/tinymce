@@ -35,7 +35,7 @@ UnitTest.asynctest('WindowManager:tabbed-dialog Test', (success, failure) => {
     });
   };
 
-  NamedChain.direct('tabview', Chain.op((tabview) => {
+  NamedChain.direct('tabview', Chain.op((_tabview) => {
 
   }), '_'),
 
@@ -112,21 +112,21 @@ UnitTest.asynctest('WindowManager:tabbed-dialog Test', (success, failure) => {
         NamedChain.direct('dialog', UiFinder.cFindIn('[role="tab"]:contains("Advanced")'), 'advancedTab'),
         NamedChain.direct('dialog', UiFinder.cFindIn('[role="tabpanel"]'), 'tabview'),
         NamedChain.direct('dialog', Mouse.cClickOn('button:contains("-> Basic")'), '_'),
-        NamedChain.direct('tabview', cAssertFormContents('Clicking Basic button', (s, str, arr) => {
+        NamedChain.direct('tabview', cAssertFormContents('Clicking Basic button', (s, str, _arr) => {
           return s.element('input', {
             value: str.is('First tab value')
           });
         }), '_'),
 
         NamedChain.direct('dialog', Mouse.cClickOn('button:contains("-> Advanced")'), '_'),
-        NamedChain.direct('tabview', cAssertFormContents('Clicking Advanced button (not tab)', (s, str, arr) => {
+        NamedChain.direct('tabview', cAssertFormContents('Clicking Advanced button (not tab)', (s, str, _arr) => {
           return s.element('textarea', {
             value: str.is('Textarea value')
           });
         }), '_'),
 
         NamedChain.direct('dialog', Mouse.cClickOn('button:contains("-> Basic")'), '_'),
-        NamedChain.direct('tabview', cAssertFormContents('Clicking Basic button again (not tab)', (s, str, arr) => {
+        NamedChain.direct('tabview', cAssertFormContents('Clicking Basic button again (not tab)', (s, str, _arr) => {
           return s.element('input', {
             value: str.is('First tab value')
           });

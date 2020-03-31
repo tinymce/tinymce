@@ -248,24 +248,18 @@ const create = function (s, p, root?) {
   });
 };
 
-const extend = function (obj, ext, ...x: any[]) {
-  let i, l, name;
-  const args = arguments;
-  let value;
-
-  for (i = 1, l = args.length; i < l; i++) {
-    ext = args[i];
-    for (name in ext) {
+const extend = function (obj, ...exts: any[]) {
+  for (let i = 0; i < exts.length; i++) {
+    const ext = exts[i];
+    for (let name in ext) {
       if (ext.hasOwnProperty(name)) {
-        value = ext[name];
-
+        const value = ext[name];
         if (value !== undefined) {
           obj[name] = value;
         }
       }
     }
   }
-
   return obj;
 };
 

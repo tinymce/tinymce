@@ -64,7 +64,7 @@ const deleteRange = function (editor: Editor) {
   return isEverythingSelected(rootNode, rng) ? emptyEditor(editor) : deleteRangeMergeBlocks(rootNode, editor.selection);
 };
 
-const backspaceDelete = function (editor: Editor, forward: boolean) {
+const backspaceDelete = function (editor: Editor, _forward: boolean) {
   return editor.selection.isCollapsed() ? false : deleteRange(editor);
 };
 

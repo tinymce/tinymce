@@ -15,7 +15,7 @@ UnitTest.test('FamilyGroupTest', function () {
       return '/';
     }, function (text) {
       return '"' + Text.get(text) + '"';
-    }, function (text) {
+    }, function (_text) {
       return '\\';
     });
   };

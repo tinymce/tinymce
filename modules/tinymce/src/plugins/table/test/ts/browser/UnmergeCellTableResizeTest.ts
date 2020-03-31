@@ -163,7 +163,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.UnmergeCellTableResizeTest', (
             '</tbody>' +
           '</table>',
 
-    select: (editor) => { return; }
+    select: (_editor) => { return; }
   };
 
   const selectedRow = {

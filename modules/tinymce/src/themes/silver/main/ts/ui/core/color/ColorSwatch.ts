@@ -140,13 +140,13 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
     },
     columns: getColorCols(editor),
     fetch: getFetch(Settings.getColors(editor), Settings.hasCustomColors(editor)),
-    onAction: (splitButtonApi) => {
+    onAction: (_splitButtonApi) => {
       // do something with last color
       if (lastColor.get() !== null) {
         applyColor(editor, format, lastColor.get(), () => { });
       }
     },
-    onItemAction: (splitButtonApi, value) => {
+    onItemAction: (_splitButtonApi, value) => {
       applyColor(editor, format, value, (newColor) => {
         lastColor.set(newColor);
 

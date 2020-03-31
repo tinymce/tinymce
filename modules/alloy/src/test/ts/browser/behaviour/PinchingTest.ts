@@ -10,7 +10,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('Browser Test: behaviour.PinchingTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build({
       dom: {
         tag: 'div',
@@ -21,16 +21,16 @@ UnitTest.asynctest('Browser Test: behaviour.PinchingTest', (success, failure) =>
       },
       behaviours: Behaviour.derive([
         Pinching.config({
-          onPinch(elem, dx, dy) {
+          onPinch(_elem, dx, dy) {
             store.adder({ method: 'pinch', dx, dy })();
           },
-          onPunch(elem, dx, dy) {
+          onPunch(_elem, dx, dy) {
             store.adder({ method: 'punch', dx, dy })();
           }
         })
       ])
     });
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, component, store) => {
 
     const sSendTouchmove = (touches: Array<{ clientX: number; clientY: number}>) => {
       return Step.sync(() => {

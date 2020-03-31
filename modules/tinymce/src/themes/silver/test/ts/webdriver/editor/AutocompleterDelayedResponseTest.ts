@@ -108,7 +108,7 @@ UnitTest.asynctest('Editor Autocompleter delay response test', (success, failure
           ch: '$',
           minChars: 0,
           columns: 'auto',
-          fetch: (pattern, maxResults) => {
+          fetch: (_pattern, _maxResults) => {
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve(

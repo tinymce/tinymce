@@ -9,7 +9,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('MouseDragEventTest', (success, failure) => {
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -31,7 +31,7 @@ UnitTest.asynctest('MouseDragEventTest', (success, failure) => {
         ])
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, gui, component, store) => {
     const cAssertNoPositionInfo = Chain.op((box: Element) => {
       Assertions.assertEq('Should be no "left"', true, Css.getRaw(box, 'left').isNone());
       Assertions.assertEq('Should be no "top"', true, Css.getRaw(box, 'top').isNone());

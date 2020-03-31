@@ -21,7 +21,7 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
     '.test-sliding-width-shrinking { transition: opacity 0.9s ease, width 0.6s linear 0.3s, visibility 0s linear 0.9s }'
   ];
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -65,7 +65,7 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, _gui, component, store) => {
 
     const sIsNotGrowing = Step.sync(() => {
       Assertions.assertEq('Ensuring stopped growing', false, Class.has(component.element(), 'test-sliding-width-growing'));
@@ -160,7 +160,7 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'Checking initial structure',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, _str, arr) => {
           return s.element('div', {
             classes: [
               arr.has('test-sliding-closed')

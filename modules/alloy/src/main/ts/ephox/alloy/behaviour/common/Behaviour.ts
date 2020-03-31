@@ -21,7 +21,7 @@ const executeEvent = <C extends BehaviourConfigSpec, S extends BehaviourState>(b
 };
 
 const loadEvent = <C extends BehaviourConfigSpec, S extends BehaviourState>(bConfig: C, bState: S, f: Executor<C, S>): AlloyEvents.AlloyEventKeyAndHandler<CustomEvent> => {
-  return AlloyEvents.runOnInit((component, simulatedEvent) => {
+  return AlloyEvents.runOnInit((component, _simulatedEvent) => {
     f(component, bConfig, bState);
   });
 };

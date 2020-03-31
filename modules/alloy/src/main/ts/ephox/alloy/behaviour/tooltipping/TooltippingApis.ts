@@ -4,7 +4,7 @@ import { AlloySpec } from '../../api/component/SpecTypes';
 import { ExclusivityChannel } from './TooltippingCommunication';
 import { TooltippingConfig, TooltippingState } from './TooltippingTypes';
 
-const hideAllExclusive = (component: AlloyComponent, tConfig: TooltippingConfig, tState: TooltippingState): void => {
+const hideAllExclusive = (component: AlloyComponent, _tConfig: TooltippingConfig, _tState: TooltippingState): void => {
   component.getSystem().broadcastOn([ ExclusivityChannel ], { });
 };
 

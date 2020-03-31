@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
           tinyApis.sSetCursor([ 0, 0 ], 0),
           tinyApis.sExecCommand('mceInsertNewLine'),
           tinyApis.sAssertContentStructure(
-            ApproxStructure.build((s, str, arr) => {
+            ApproxStructure.build((s, _str, _arr) => {
               return s.element('body', {
                 children: [
                   ApproxStructure.fromHtml(expectedHTML('<br data-mce-bogus="1">')),
@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
           tinyApis.sSetCursor([ 0, 0 ], 1),
           tinyApis.sExecCommand('mceInsertNewLine'),
           tinyApis.sAssertContentStructure(
-            ApproxStructure.build((s, str, arr) => {
+            ApproxStructure.build((s, _str, _arr) => {
               return s.element('body', {
                 children: [
                   s.element(rootBlock, {}),
@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
           tinyApis.sSetCursor([ 0, 0 ], 2),
           tinyApis.sExecCommand('mceInsertNewLine'),
           tinyApis.sAssertContentStructure(
-            ApproxStructure.build((s, str, arr) => {
+            ApproxStructure.build((s, _str, _arr) => {
               return s.element('body', {
                 children: [
                   s.element(rootBlock, {}),

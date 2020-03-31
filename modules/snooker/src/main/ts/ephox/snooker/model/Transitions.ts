@@ -6,8 +6,8 @@ import { Generators } from '../api/Generators';
 import { Element } from '@ephox/sugar';
 
 const toDetails = function (grid: Structs.RowCells[], comparator: (a: Element, b: Element) => boolean) {
-  const seen = Arr.map(grid, function (row, ri) {
-    return Arr.map(row.cells(), function (col, ci) {
+  const seen = Arr.map(grid, function (row) {
+    return Arr.map(row.cells(), function () {
       return false;
     });
   });

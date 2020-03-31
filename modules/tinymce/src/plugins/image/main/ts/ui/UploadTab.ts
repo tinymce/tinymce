@@ -8,7 +8,7 @@
 import { ImageDialogInfo } from './DialogTypes';
 import { Types } from '@ephox/bridge';
 
-const makeTab = (info: ImageDialogInfo) => {
+const makeTab = (_info: ImageDialogInfo) => {
   const items: Types.Dialog.BodyComponentApi[] = [
     {
       type: 'dropzone',

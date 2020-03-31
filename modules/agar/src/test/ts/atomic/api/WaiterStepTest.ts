@@ -44,7 +44,7 @@ UnitTest.asynctest('WaiterTest', (success, failure) => {
   const makeDelayStep = (label, timeout, delay) =>
     Waiter.sTimeout(
       label + ': Waiter timeout',
-      Step.async((next, die) => {
+      Step.async((next, _die) => {
         setTimeout(() => {
           next();
         }, delay);

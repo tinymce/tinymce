@@ -37,23 +37,23 @@ export default (): void => {
           mode: 'drop',
           type: 'text/plain',
           dropEffect,
-          onDrop(component, dropEvent) {
+          onDrop(_component, dropEvent) {
             // tslint:disable-next-line:no-console
             console.log('onDrop', {
               data: dropEvent.data,
               files: dropEvent.files
             });
           },
-          onDrag: (component, simulatedEvent) => {
+          onDrag: (_component, _simulatedEvent) => {
             // console.log('onDrag', simulatedEvent.event().raw().target);
           },
-          onDragover: (component, simulatedEvent) => {
+          onDragover: (_component, _simulatedEvent) => {
             // console.log('onDragover', simulatedEvent.event().raw().target);
           },
-          onDragenter: (component, simulatedEvent) => {
+          onDragenter: (_component, _simulatedEvent) => {
             // console.log('onDragenter', simulatedEvent.event().raw().target);
           },
-          onDragleave: (component, simulatedEvent) => {
+          onDragleave: (_component, _simulatedEvent) => {
             // console.log('onDragleave', simulatedEvent.event().raw().target);
           }
         })
@@ -80,7 +80,7 @@ export default (): void => {
           type: 'text/plain',
           phoneyTypes: [ '-x-alloy/something' ],
           effectAllowed,
-          getData(component) {
+          getData(_component) {
             return data;
           },
           getImage(component) {
@@ -94,17 +94,17 @@ export default (): void => {
               y: Fun.constant(0)
             };
           },
-          canDrag: (component, target) => {
+          canDrag: (_component, _target) => {
             // console.log('canDrag');
             return true;
           },
-          onDragstart: (component, simulatedEvent) => {
+          onDragstart: (_component, _simulatedEvent) => {
             // console.log('onDragstart', component.element().dom());
           },
-          onDragover: (component, simulatedEvent) => {
+          onDragover: (_component, _simulatedEvent) => {
             // console.log('onDragover', component.element().dom());
           },
-          onDragend: (component, simulatedEvent) => {
+          onDragend: (_component, _simulatedEvent) => {
             // console.log('onDragend', component.element().dom());
           }
         })

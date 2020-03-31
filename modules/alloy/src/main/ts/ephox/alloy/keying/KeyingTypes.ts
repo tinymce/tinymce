@@ -10,7 +10,7 @@ import { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as KeyMatch from '../navigation/KeyMatch';
 import { GeneralKeyingConfig, KeyRuleHandler } from './KeyingModeTypes';
 
-const doDefaultExecute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, focused: Element): Option<boolean> => {
+const doDefaultExecute = (component: AlloyComponent, _simulatedEvent: NativeSimulatedEvent, focused: Element): Option<boolean> => {
   // Note, we use to pass through simulatedEvent here and make target: component. This simplification
   // may be a problem
   AlloyTriggers.dispatch(component, focused, SystemEvents.execute());
@@ -25,7 +25,7 @@ const defaultExecute = (component: AlloyComponent, simulatedEvent: NativeSimulat
 // stops the keyup, which should stop the click. We might want to make this only work for buttons and Firefox etc,
 // but at this stage it's cleaner to just always do it. It makes sense that Keying that handles space should handle
 // keyup also. This does make the name confusing, though.
-const stopEventForFirefox: KeyRuleHandler<GeneralKeyingConfig, any> = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
+const stopEventForFirefox: KeyRuleHandler<GeneralKeyingConfig, any> = (_component: AlloyComponent, _simulatedEvent: NativeSimulatedEvent) => {
   return Option.some<boolean>(true);
 };
 

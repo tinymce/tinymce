@@ -9,7 +9,7 @@ import { Cell } from '@ephox/katamari';
 UnitTest.asynctest('ControlOnSetup Test', (success, failure) => {
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       return GuiFactory.build({
         dom: {
           tag: 'div',
@@ -20,7 +20,7 @@ UnitTest.asynctest('ControlOnSetup Test', (success, failure) => {
         ])
       });
     },
-    (doc, body, gui, component, store) => {
+    (_doc, _body, _gui, component, store) => {
       const cellWithDestroy = Cell(store.adder('fallbackWithDestroy'));
 
       const onDestroy1 = store.adder('onDestroy.1');

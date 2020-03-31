@@ -45,7 +45,7 @@ UnitTest.test('Atomic Test: parts.GenerateTest', () => {
       const generated = AlloyParts.generate('owner', parts);
 
       // Check that config and validated match what was passed through
-      Obj.each(generated, (g, k) => {
+      Obj.each(generated, (g) => {
         const output = g(data);
         Assert.eq('Checking config', data, output.config);
         Assert.eq('Checking validated', {
@@ -71,7 +71,7 @@ UnitTest.test('Atomic Test: parts.GenerateTest', () => {
       const generated = AlloyParts.generate('owner', parts);
 
       // Check that config, and ensure that preprocessor is all that is in validated
-      Obj.each(generated, (g, k) => {
+      Obj.each(generated, (g) => {
         const output = g(data);
         Assert.eq('Checking config', data, output.config);
         Assert.eq('Checking validated', 'PREPROCESSOR', output.validated.preprocess.getOr('none'));

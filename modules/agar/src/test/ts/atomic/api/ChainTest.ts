@@ -25,7 +25,7 @@ UnitTest.asynctest('ChainTest', (success, failure) => {
       }
     });
 
-  const acc = (ch) => Chain.async((input, next, die) => {
+  const acc = (ch) => Chain.async((input, next, _die) => {
     next(input + ch);
   });
   const testChainingFails = StepAssertions.testStepsFail(
@@ -128,10 +128,10 @@ UnitTest.asynctest('ChainTest', (success, failure) => {
       Chain.inject('runSteps'),
       Chain.runStepsOnValue(
         (s: string) => [
-          Step.stateful((initial, next, die) => {
+          Step.stateful((initial, next, _die) => {
             next(initial + '*' + s + 'OnValue');
           }),
-          Step.stateful((v, next, die) => {
+          Step.stateful((v, next, _die) => {
             next(v + '=succ!');
           })
         ]

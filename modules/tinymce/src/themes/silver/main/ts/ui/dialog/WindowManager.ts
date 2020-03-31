@@ -174,14 +174,14 @@ const setup = (extras: WindowManagerSetup) => {
         ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { }},
         inlineBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('window-manager-inline-events', [
-            AlloyEvents.run(SystemEvents.dismissRequested(), (comp, se) => {
+            AlloyEvents.run(SystemEvents.dismissRequested(), (_comp, _se) => {
               AlloyTriggers.emit(dialogUi.dialog, formCancelEvent);
             })
           ]),
           ...inlineAdditionalBehaviours(editor, isStickyToolbar, isToolbarLocationTop)
         ]),
         // Treat alert or confirm dialogs as part of the inline dialog
-        isExtraPart: (comp, target) => isAlertOrConfirmDialog(target)
+        isExtraPart: (_comp, target) => isAlertOrConfirmDialog(target)
       }));
       inlineDialog.set(inlineDialogComp);
 

@@ -46,7 +46,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
         UiFinder.cFindIn('.tox-pop'),
         Assertions.cAssertStructure(
           `${label}: Checking pop has a dialog`,
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, _str, arr) => {
             return s.element('div', {
               classes: [ arr.has('tox-pop') ],
               children: [
@@ -120,14 +120,14 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
             })
           ]),
           sFire('test.updateButtonABC', { disable: false }),
-          sCheckLastButtonGroup('Checking button is re-enabled after event', (s, str, arr) => [
+          sCheckLastButtonGroup('Checking button is re-enabled after event', (s, _str, arr) => [
             s.element('button', {
               classes: [ arr.not('tox-tbtn--disabled') ]
             })
           ]),
 
           sFire('test.updateButtonABC', { active: true }),
-          sCheckLastButtonGroup('Checking button is pressed after event', (s, str, arr) => [
+          sCheckLastButtonGroup('Checking button is pressed after event', (s, str, _arr) => [
             s.element('button', {
               attrs: {
                 'aria-pressed': str.is('true')
@@ -136,7 +136,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
           ]),
 
           sFire('test.updateButtonABC', { active: false }),
-          sCheckLastButtonGroup('Checking button is *not* pressed after event', (s, str, arr) => [
+          sCheckLastButtonGroup('Checking button is *not* pressed after event', (s, str, _arr) => [
             s.element('button', {
               attrs: {
                 'aria-pressed': str.is('false')
@@ -202,14 +202,14 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
                   ed.off('test.updateButtonA', f);
                 };
               },
-              onAction: (formApi, buttonApi) => store.adder('A.' + formApi.getValue())()
+              onAction: (formApi, _buttonApi) => store.adder('A.' + formApi.getValue())()
             },
             {
               type: 'contextformbutton',
               icon: 'fake-icon-name',
               tooltip: 'B',
               primary: true,
-              onAction: (formApi, buttonApi) => store.adder('B.' + formApi.getValue())()
+              onAction: (formApi, _buttonApi) => store.adder('B.' + formApi.getValue())()
             },
             {
               type: 'contextformtogglebutton',
@@ -230,7 +230,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
                   ed.off('test.updateButtonC', f);
                 };
               },
-              onAction: (formApi, buttonApi) => store.adder('C.' + formApi.getValue())()
+              onAction: (formApi, _buttonApi) => store.adder('C.' + formApi.getValue())()
             }
           ]
         });

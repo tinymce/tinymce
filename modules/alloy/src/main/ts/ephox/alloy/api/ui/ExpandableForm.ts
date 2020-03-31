@@ -16,7 +16,7 @@ const runOnExtra = (detail: ExpandableFormDetail, operation: (comp: AlloyCompone
   };
 };
 
-const factory: CompositeSketchFactory<ExpandableFormDetail, ExpandableFormSpec> = (detail, components, spec, _externals): SketchSpec => {
+const factory: CompositeSketchFactory<ExpandableFormDetail, ExpandableFormSpec> = (detail, components, _spec, _externals): SketchSpec => {
   const getParts = (form: AlloyComponent) => {
     return AlloyParts.getPartsOrDie(form, detail, [ 'minimal', 'extra' ]);
   };

@@ -195,7 +195,7 @@ const unwrapOptions = (data: LinkDialogOutput) => {
     target: target.getOrNull(),
     text: text.getOrNull(),
     title: title.getOrNull()
-  }, (v, k) => Type.isNull(v) === false);
+  }, (v, _k) => Type.isNull(v) === false);
 };
 
 const link = (editor: Editor, attachState: AttachState, data: LinkDialogOutput) => {

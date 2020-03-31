@@ -23,7 +23,6 @@
     "@typescript-eslint/no-inferrable-types": [ "error", { "ignoreParameters": true, "ignoreProperties": true }], // this will be added to the plugin
     "@typescript-eslint/no-this-alias": "off",
     "@typescript-eslint/no-unnecessary-type-assertion": "off", // to be investigated later, produces different results on a uncompiled environment
-    "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/prefer-for-of": "off",
     "@typescript-eslint/prefer-regexp-exec": "off",
     "@typescript-eslint/quotes": [ "error", "single", { "allowTemplateLiterals": true }], // this will be added to the plugin
@@ -36,7 +35,6 @@
     "one-var": "off",
     "prefer-const": "off",
     "prefer-rest-params": "off",
-    "prefer-spread": "off",
-    "quote-props": "off"
+    "prefer-spread": "off"
   }
 }

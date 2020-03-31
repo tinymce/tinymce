@@ -23,7 +23,7 @@ UnitTest.test('DraggerTest', function () {
       assert.eq(argumentToMutate, mutation);
       mutations.push(data as any as number);
     },
-    sink: (dragApi, settings) => {
+    sink: (dragApi, _settings) => {
       optApi = Option.some(dragApi);
       return DragSink({
         element: () => 'element' as unknown as Element, // fake element

@@ -97,7 +97,7 @@ const open = function (editor: Editor, database: EmojiDatabase) {
       updateFilter.throttle(dialogApi);
       dialogApi.focus(patternName);
       dialogApi.unblock();
-    }).catch((err) => {
+    }).catch((_err) => {
       dialogApi.redial({
         title: 'Emoticons',
         body: {

@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
         tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 2),
         sSetContent(editor, 'X', {}),
         Assertions.sAssertStructure('Checking initial structure',
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -74,7 +74,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
         tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
         sSetContent(editor, 'X', {}),
         Assertions.sAssertStructure('Checking initial structure',
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -95,7 +95,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
         tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
         sSetContent(editor, 'X', {}),
         Assertions.sAssertStructure('Checking initial structure',
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -116,7 +116,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
         tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
         sSetContent(editor, 'X', {}),
         Assertions.sAssertStructure('Checking initial structure',
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -136,7 +136,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
         tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
         sSetContent(editor, 'b<em>c</em>', {}),
         Assertions.sAssertStructure('Checking initial structure',
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -161,7 +161,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
         tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
         sSetContent(editor, '<em>b</em>c', {}),
         Assertions.sAssertStructure('Checking initial structure',
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('p', {

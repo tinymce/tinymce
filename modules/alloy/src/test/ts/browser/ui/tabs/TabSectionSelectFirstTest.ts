@@ -10,7 +10,7 @@ import { TabSection } from 'ephox/alloy/api/ui/TabSection';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('TabSectionSelectFirst Test', (success, failure) => {
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     let counterA = 0;
     let counterB = 0;
 
@@ -81,7 +81,7 @@ UnitTest.asynctest('TabSectionSelectFirst Test', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, _gui, component, _store) => {
     return [
       GuiSetup.mAddStyles(doc, [
         '.selected-test-tab-button { background: #cadbee; }'

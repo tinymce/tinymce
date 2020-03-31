@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryCaretTest', function (
     return location;
   };
 
-  const sTestRenderCaret = function (html, elementPath, offset, expectedHtml, expectedPath, expectedOffset) {
+  const sTestRenderCaret = function (html, elementPath, offset, expectedHtml, expectedPath, _expectedOffset) {
     return Step.sync(function () {
       const elm = Element.fromHtml<HTMLDivElement>('<div>' + html + '</div>');
       const location = createLocation(elm, elementPath, offset);

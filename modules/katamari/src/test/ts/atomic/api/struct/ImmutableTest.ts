@@ -29,7 +29,7 @@ UnitTest.test('Checking struct with right number of arguments', () => {
       const struct = Struct.immutable.apply(undefined, values);
       const output = struct.apply(undefined, values);
 
-      const evaluated = Obj.mapToArray(output, (v, k) => v());
+      const evaluated = Obj.mapToArray(output, (v, _k) => v());
 
       Assert.eq('eq', evaluated, values);
     }

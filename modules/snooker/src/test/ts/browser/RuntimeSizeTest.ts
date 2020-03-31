@@ -195,7 +195,7 @@ UnitTest.test('Runtime Size Test', function () {
   };
 
   const testTableSize = function (createTable: () => Element, getOuterSize: (e: Element) => number, getSize: (e: Element) => number, setSize: (e: Element, v: string) => void) {
-    return function (n: any) {
+    return function (_n: any) {
       const table = createTable();
       const beforeSize = measureTable(table, getOuterSize);
 

@@ -56,7 +56,7 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
 
   const annotations = SelectionAnnotation.byAttr(Ephemera, onSelection, onClear);
 
-  editor.on('init', function (e) {
+  editor.on('init', function (_e) {
     const win = editor.getWin();
     const body = Util.getBody(editor);
     const isRoot = Util.getIsRoot(editor);
@@ -212,7 +212,7 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
   });
 
   const destroy = function () {
-    handlers.each(function (handlers) {
+    handlers.each(function (_handlers) {
       // editor.off('mousedown', handlers.mousedown());
       // editor.off('mouseover', handlers.mouseover());
       // editor.off('mouseup', handlers.mouseup());

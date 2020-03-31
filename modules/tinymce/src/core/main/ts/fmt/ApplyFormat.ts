@@ -32,19 +32,6 @@ const isElementNode = function (node: Node) {
   return node && node.nodeType === 1 && !Bookmarks.isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
 };
 
-const processChildElements = function (node: Node, filter, process) {
-  each(node.childNodes, function (node) {
-    if (isElementNode(node)) {
-      if (filter(node)) {
-        process(node);
-      }
-      if (node.hasChildNodes()) {
-        processChildElements(node, filter, process);
-      }
-    }
-  });
-};
-
 const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject) {
   const formatList = ed.formatter.get(name);
   const format = formatList[0];

@@ -11,8 +11,6 @@ UnitTest.test('StringMatch: unit tests', () => {
     ));
   };
 
-  const toString = (subject) => StringMatch.cata(subject, (s) => 'starts with: ' + s, (p) => 'pattern: ' + p, (s) => 'contains: ' + s, (s) => 'exact: ' + s, () => 'all', (n) => 'not: ' + toString(n));
-
   const testcases = [
     { expected: false, input: 'bee', match: StringMatch.starts('a', StringMatch.caseInsensitive) },
     { expected: false, input: 'bee', match: StringMatch.starts('bed', StringMatch.caseInsensitive) },

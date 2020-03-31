@@ -265,7 +265,7 @@ const fetchChoices = (getApi, spec: ChoiceFetcher, providersBackstage: UiFactory
           {
             movement: deriveMenuMovement(spec.columns, spec.presets),
             menuBehaviours: SimpleBehaviours.unnamedEvents(spec.columns !== 'auto' ? [ ] : [
-              AlloyEvents.runOnAttached((comp, se) => {
+              AlloyEvents.runOnAttached((comp, _se) => {
                 detectSize(comp, 4, classForPreset(spec.presets)).each(({ numRows, numColumns }) => {
                   Keying.setGridSize(comp, numRows, numColumns);
                 });
@@ -329,7 +329,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       spec.onAction(getApi(button));
     },
 
-    onItemExecute: (a, b, c) => { },
+    onItemExecute: (_a, _b, _c) => { },
 
     splitDropdownBehaviours: Behaviour.derive([
       DisablingConfigs.splitButton(sharedBackstage.providers.isReadonly()),

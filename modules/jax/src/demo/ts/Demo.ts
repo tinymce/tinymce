@@ -125,7 +125,7 @@ Http.download({
   );
 });
 
-const jwtFactory = (flesh: boolean) => FutureResult.pure('123');
+const jwtFactory = (_foo: boolean) => FutureResult.pure('123');
 
 HttpJwt.put({
   url: 'https://httpbin.org/put',

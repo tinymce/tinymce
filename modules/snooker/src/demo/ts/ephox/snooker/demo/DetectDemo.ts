@@ -207,7 +207,7 @@ Ready.execute(function () {
   };
 
   const runOperation = function (operation: (wire: ResizeWire, table: Element, target: TargetElement & TargetSelection, generators: Generators, direction: BarPositions<ColInfo>) => Option<RunOperationOutput>) {
-    return function (event: EventArgs) {
+    return function (_event: EventArgs) {
       detection().each(function (start) {
         const dir = Direction.getDirection(start);
         const direction = dir === 'rtl' ? ResizeDirection.rtl : ResizeDirection.ltr;

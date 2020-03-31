@@ -18,7 +18,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
 
   const frame = Element.fromTag('iframe');
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     let content = '';
     for (let i = 0; i < 20; i++) {
       content += '<p id=p' + i + '>paragraph ' + i + '</p>';
@@ -49,7 +49,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, gui, _component, _store) => {
     const cSetupAnchor = Chain.mapper((data: any) => {
       const node = data.classic.element().dom().contentWindow.document.querySelector('#p3');
       return {
@@ -102,7 +102,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
                   const root = Element.fromDom(data.classic.element().dom().contentWindow.document.body);
                   return SelectorFind.descendant(root, 'p').fold(() => {
                     return Result.error('Could not find paragraph yet');
-                  }, (p) => {
+                  }, (_p) => {
                     return Result.value(data);
                   });
                 }),

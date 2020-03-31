@@ -56,7 +56,7 @@ const guiSetup = <A, B> (createComponent: (store: TestStore, doc: Element, body:
 };
 
 const mSetupKeyLogger = (body: Element) => {
-  return Step.stateful((oldState: Record<string, any>, next, die) => {
+  return Step.stateful((oldState: Record<string, any>, next, _die) => {
     const onKeydown: EventUnbinder = DomEvent.bind(body, 'keydown', (event) => {
       newState.log.push('keydown.to.body: ' + event.raw().which);
     });
@@ -72,7 +72,7 @@ const mSetupKeyLogger = (body: Element) => {
 };
 
 const mTeardownKeyLogger = (body: Element, expected: string[]) => {
-  return Step.stateful((state: KeyLoggerState, next, die) => {
+  return Step.stateful((state: KeyLoggerState, next, _die) => {
     Assertions.assertEq('Checking key log outside context (on teardown)', expected, state.log);
     state.onKeydown.unbind();
     const { onKeydown, log, ...rest } = state;
@@ -81,7 +81,7 @@ const mTeardownKeyLogger = (body: Element, expected: string[]) => {
 };
 
 const mAddStyles = (doc: Element<HTMLDocument>, styles: string[]) => {
-  return Step.stateful((value: any, next, die) => {
+  return Step.stateful((value: any, next, _die) => {
     const style = Element.fromTag('style');
     const head = Element.fromDom(doc.dom().head);
     Insert.append(head, style);
@@ -93,7 +93,7 @@ const mAddStyles = (doc: Element<HTMLDocument>, styles: string[]) => {
   });
 };
 
-const mRemoveStyles = Step.stateful((value: any, next, die) => {
+const mRemoveStyles = Step.stateful((value: any, next, _die) => {
   Remove.remove(value.style);
   next(value);
 });

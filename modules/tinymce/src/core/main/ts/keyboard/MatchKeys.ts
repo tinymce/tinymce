@@ -48,9 +48,8 @@ const match = function (patterns: KeyPattern[], evt: KeyboardEvent) {
 };
 
 const action = function (f, ...x: any[]) {
-  const args = Array.prototype.slice.call(arguments, 1);
   return function () {
-    return f.apply(null, args);
+    return f.apply(null, x);
   };
 };
 

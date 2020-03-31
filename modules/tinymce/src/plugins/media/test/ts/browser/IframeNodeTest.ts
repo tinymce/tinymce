@@ -70,7 +70,7 @@ UnitTest.asynctest('browser.core.IframeNodeTest', function (success, failure) {
         Chain.asStep(Element.fromDom(editor.getBody()), [
           UiFinder.cFindIn('iframe'),
           Chain.op((input) =>
-            Assertions.assertStructure('should have all attributes', ApproxStructure.build((s, str, arr) => {
+            Assertions.assertStructure('should have all attributes', ApproxStructure.build((s, str, _arr) => {
               return s.element('iframe', {
                 attrs: {
                   width: str.is('300'),

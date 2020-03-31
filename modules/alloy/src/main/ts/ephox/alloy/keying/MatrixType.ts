@@ -26,7 +26,7 @@ const schema: FieldProcessorAdt[] = [
   FieldSchema.defaulted('execute', KeyingTypes.defaultExecute)
 ];
 
-const focusIn = (component: AlloyComponent, matrixConfig: MatrixConfig, state: Stateless): void => {
+const focusIn = (component: AlloyComponent, matrixConfig: MatrixConfig, _state: Stateless): void => {
   const focused = matrixConfig.previousSelector(component).orThunk(() => {
     const selectors = matrixConfig.selectors;
     return SelectorFind.descendant(component.element(), selectors.cell);

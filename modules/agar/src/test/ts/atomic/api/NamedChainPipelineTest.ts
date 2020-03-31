@@ -6,7 +6,7 @@ import { TestLogs } from 'ephox/agar/api/TestLogs';
 UnitTest.asynctest('NamedChainPipelineTest', (success, failure) => {
 
   const cAcc = (ch: number) =>
-    Chain.async((input: number, next, die) => {
+    Chain.async((input: number, next, _die) => {
       next(input + ch);
     });
 

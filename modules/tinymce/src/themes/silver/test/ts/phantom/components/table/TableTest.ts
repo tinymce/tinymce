@@ -7,7 +7,7 @@ import TestProviders from '../../../module/TestProviders';
 UnitTest.asynctest('Table component Test', (success, failure) => {
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       return GuiFactory.build(
         renderTable({
           header: [ 'one', 'two', 'three' ],
@@ -17,7 +17,7 @@ UnitTest.asynctest('Table component Test', (success, failure) => {
           ]
         }, TestProviders)
       );
-    }, (doc, body, gui, component, store) => {
+    }, (_doc, _body, _gui, component, _store) => {
       return [
         Assertions.sAssertStructure(
           'Assert table structure',

@@ -12,7 +12,7 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<CustomListDetail, CustomListSpec> = (detail, components, spec, external) => {
+const factory: CompositeSketchFactory<CustomListDetail, CustomListSpec> = (detail, components, _spec, _external) => {
 
   const setItems = (list: AlloyComponent, items: AlloySpec[]) => {
     getListContainer(list).fold(() => {

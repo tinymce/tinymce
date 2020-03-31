@@ -122,7 +122,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
         dialogEvents.concat([
           // Note: `runOnSource` here will only listen to the event at the outer component level.
           // Using just `run` instead will cause an infinite loop as `focusIn` would fire a `focusin` which would then get responded to and so forth.
-          AlloyEvents.runOnSource(NativeEvents.focusin(), (comp, se) => {
+          AlloyEvents.runOnSource(NativeEvents.focusin(), (comp, _se) => {
             Keying.focusIn(comp);
           })
         ])

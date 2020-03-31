@@ -13,7 +13,7 @@ import * as AlloyEvents from '../events/AlloyEvents';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail, components, spec, externals): SketchSpec => {
+const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail, components, _spec, _externals): SketchSpec => {
   const behaviours = SketchBehaviours.augment(
     detail.fieldBehaviours,
     [
@@ -41,7 +41,7 @@ const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail,
 
   const events = AlloyEvents.derive([
     // Used to be systemInit
-    AlloyEvents.runOnAttached((component, simulatedEvent) => {
+    AlloyEvents.runOnAttached((component, _simulatedEvent) => {
       const ps = AlloyParts.getParts(component, detail, [ 'label', 'field', 'aria-descriptor' ]);
       ps.field().each((field) => {
         const id = Id.generate(detail.prefix);

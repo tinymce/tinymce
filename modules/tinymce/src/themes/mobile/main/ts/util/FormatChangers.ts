@@ -29,7 +29,7 @@ const init = (realm: MobileRealm, editor: Editor): void => {
   });
 
   Arr.each([ 'ul', 'ol' ], (command) => {
-    editor.selection.selectorChanged(command, (state, data) => {
+    editor.selection.selectorChanged(command, (state, _data) => {
       fireChange(realm, command, state);
     });
   });

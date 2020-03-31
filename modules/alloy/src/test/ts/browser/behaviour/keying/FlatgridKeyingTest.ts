@@ -21,7 +21,7 @@ UnitTest.asynctest('Flat Grid Keying Test', (success, failure) => {
     's19', 's20', 's21'
   ];
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const item = (classes: string[]) => {
       return Container.sketch({
         dom: {

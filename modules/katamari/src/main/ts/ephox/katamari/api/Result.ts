@@ -43,11 +43,11 @@ const value = function <T, E = any> (o: T): Result<T, E> {
     return o === v;
   };
 
-  const or = function (opt: Result<T, E>) {
+  const or = function (_opt: Result<T, E>) {
     return value(o);
   };
 
-  const orThunk = function (f: () => Result<T, E>) {
+  const orThunk = function (_f: () => Result<T, E>) {
     return value(o);
   };
 
@@ -55,7 +55,7 @@ const value = function <T, E = any> (o: T): Result<T, E> {
     return value(f(o));
   };
 
-  const mapError = function <U> (f: (error: E) => U) {
+  const mapError = function <U> (_f: (error: E) => U) {
     return value(o);
   };
 
@@ -120,7 +120,7 @@ const error = function <T = any, E = any> (message: E): Result<T, E> {
     return f();
   };
 
-  const map = function <U> (f: (value: T) => U) {
+  const map = function <U> (_f: (value: T) => U) {
     return error<U, E>(message);
   };
 
@@ -128,7 +128,7 @@ const error = function <T = any, E = any> (message: E): Result<T, E> {
     return error(f(message));
   };
 
-  const bind = function <U> (f: (value: T) => Result<U, E>) {
+  const bind = function <U> (_f: (value: T) => Result<U, E>) {
     return error<U, E>(message);
   };
 

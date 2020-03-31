@@ -24,7 +24,7 @@ const getFullySelectedListWrappers = function (parents, rng) {
     return Node.name(elm) === 'li' && SelectionUtils.hasAllContentsSelected(elm, rng);
   }).fold(
     Fun.constant([]),
-    function (li) {
+    function (_li) {
       return findParentListContainer(parents).map(function (listCont) {
         return [
           Element.fromTag('li'),

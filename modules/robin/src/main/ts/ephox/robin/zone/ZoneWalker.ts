@@ -91,7 +91,7 @@ const process = function <E, D> (universe: Universe<E, D>, outcome: ZoneWalkerSt
         // Use boundary positions to assess whether we have moved out of the viewport.
         const position = viewport.assess(aItem);
         return ZonePosition.cata(position,
-          function (aboveBlock) {
+          function (_aboveBlock) {
             // We are before the viewport, so skip
             // Only sidestep if we hadn't already tried it. Otherwise, we'll loop forever.
             if (aMode !== Gather.backtrack) {
@@ -99,17 +99,17 @@ const process = function <E, D> (universe: Universe<E, D>, outcome: ZoneWalkerSt
             } else {
               return Trampoline.stop();
             }
-          }, function (inBlock) {
+          }, function (_inBlock) {
             // We are in the viewport, so process normally
             const opening = aMode === Gather.advance;
             (opening ? stack.openBoundary : stack.closeBoundary)(aLang, aItem);
             return doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
-          }, function (belowBlock) {
+          }, function (_belowBlock) {
             // We've gone past the end of the viewport, so stop completely
             return Trampoline.stop();
           }
         );
-      }, function (aItem, aMode) {
+      }, function (_aItem, _aMode) {
         // concluded(aItem, aMode) DO NOTHING
         return Trampoline.stop();
       }

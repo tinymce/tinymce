@@ -15,7 +15,7 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
   // Tests requiring 'flex' do not currently work on phantom. Use the remote  to see how it is
   // viewed as an invalid value.
   if (PhantomSkipper.skip()) { return success(); }
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build(
       Slider.sketch({
         dom: {
@@ -59,7 +59,7 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
         ]
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, _gui, component, _store) => {
 
     const cGetBounds = Chain.mapper((elem: Element) => {
       return elem.dom().getBoundingClientRect();

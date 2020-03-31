@@ -4,7 +4,7 @@ export const registerCharmapItems = () => {
   getDemoRegistry().addButton('charmap', {
     type: 'button',
     disabled: false,
-    onAction: (buttonApi) => {
+    onAction: (_buttonApi) => {
       // show charmap
     }
   });

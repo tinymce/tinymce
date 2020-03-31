@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
         tinyApis.sSetSelection([ 1, 1, 0 ], 0, [ 1, 1, 0 ], 1),
         sFakeBackspaceKeyOnRange(editor),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('div', {
@@ -60,7 +60,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
         tinyApis.sSetSelection([ 1, 1, 0 ], 0, [ 1, 1, 0 ], 1),
         sFakeBackspaceKeyOnRange(editor),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('div', {
@@ -86,7 +86,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
         tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 0),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -110,7 +110,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
         tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 0),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -134,7 +134,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
         tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('p', {

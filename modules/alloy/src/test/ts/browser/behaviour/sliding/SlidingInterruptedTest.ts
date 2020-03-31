@@ -19,7 +19,7 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
     '.test-sliding-width-shrinking { transition: width 5.0s ease; background: green !important; }'
   ];
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -52,7 +52,7 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, _gui, component, _store) => {
 
     const sIsGrowing = Step.sync(() => {
       Assertions.assertEq('Ensuring still growing', true, Class.has(component.element(), 'test-sliding-width-growing'));
@@ -93,7 +93,7 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
       Step.wait(100),
 
       Log.stepsAsStep('TBA', 'Grow while shrinking should have growing and not shrinking', [
-        Step.stateful((value, next, die) => {
+        Step.stateful((value, next, _die) => {
           next({
             ...value,
             width: Width.get(component.element())
@@ -102,7 +102,7 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
         sGrow,
         Logger.t(
           'Check when the shrinking bar starts growing again, its width does not jump to either 0 or max',
-          Step.stateful((value, next, die) => {
+          Step.stateful((value, next, _die) => {
             const actualWidth = Width.get(component.element());
             Assertions.assertEq(
               `Width should stay about the same. Should have been about: ${value.width}px, was: ${actualWidth}px`,

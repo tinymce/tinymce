@@ -13,7 +13,7 @@ UnitTest.asynctest('Ui Label component Test', (success, failure) => {
   };
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       return GuiFactory.build(
         renderLabel({
           label: 'Group of Options',
@@ -28,7 +28,7 @@ UnitTest.asynctest('Ui Label component Test', (success, failure) => {
         }, sharedBackstage)
       );
     },
-    (doc, body, gui, component, store) => {
+    (_doc, _body, _gui, component, _store) => {
 
       return [
         Assertions.sAssertStructure(

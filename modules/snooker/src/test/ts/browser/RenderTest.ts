@@ -7,7 +7,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
     Logger.t('Render table default options', Step.sync(() => {
       const table = Render.render(1, 2, 0, 0);
 
-      Assertions.assertStructure('Should be a table with default styles/attributes', ApproxStructure.build((s, str, arr) => {
+      Assertions.assertStructure('Should be a table with default styles/attributes', ApproxStructure.build((s, str, _arr) => {
         return s.element('table', {
           styles: {
             'width': str.is('100%'),
@@ -45,7 +45,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
     Logger.t('Render table with percentages', Step.sync(() => {
       const table = Render.render(1, 2, 0, 0, { styles: {}, attributes: {}, percentages: true });
 
-      Assertions.assertStructure('Should be a table with percentages', ApproxStructure.build((s, str, arr) => {
+      Assertions.assertStructure('Should be a table with percentages', ApproxStructure.build((s, str, _arr) => {
         return s.element('table', {
           styles: {
             'width': str.none('Should not have width'),
@@ -83,7 +83,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
     Logger.t('Render table with everything disabled', Step.sync(() => {
       const table = Render.render(1, 2, 0, 0, { styles: { width: '50%', height: '100px' }, attributes: {}, percentages: false });
 
-      Assertions.assertStructure('Should be a table with styles', ApproxStructure.build((s, str, arr) => {
+      Assertions.assertStructure('Should be a table with styles', ApproxStructure.build((s, str, _arr) => {
         return s.element('table', {
           styles: {
             width: str.is('50%'),
@@ -121,7 +121,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
     Logger.t('Render table with attributes', Step.sync(() => {
       const table = Render.render(1, 2, 0, 0, { styles: {}, attributes: { border: '1', class: 'myclass' }, percentages: false });
 
-      Assertions.assertStructure('Should be a table with styles', ApproxStructure.build((s, str, arr) => {
+      Assertions.assertStructure('Should be a table with styles', ApproxStructure.build((s, str, _arr) => {
         return s.element('table', {
           styles: {
             'width': str.none('Should not have width'),
@@ -163,7 +163,7 @@ UnitTest.asynctest('RenderTest', (success, failure) => {
     Logger.t('Render table with everything disabled', Step.sync(() => {
       const table = Render.render(1, 2, 0, 0, { styles: {}, attributes: {}, percentages: false });
 
-      Assertions.assertStructure('Should be a table with default styles/attributes', ApproxStructure.build((s, str, arr) => {
+      Assertions.assertStructure('Should be a table with default styles/attributes', ApproxStructure.build((s, str, _arr) => {
         return s.element('table', {
           styles: {
             'width': str.none('Should not have width'),

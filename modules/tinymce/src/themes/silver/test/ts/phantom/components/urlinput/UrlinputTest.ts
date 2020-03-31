@@ -15,7 +15,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
   const sink = Element.fromDom(document.querySelector('.mce-silver-sink'));
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (store, _doc, _body) => {
       return GuiFactory.build(
         renderUrlInput({
           label: Option.some('UrlInput label'),
@@ -23,8 +23,8 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
           filetype: 'file',
           disabled: false
         }, helpers.backstage, {
-          getHistory: (fileType) => [],
-          addToHistory: (url, filetype) => store.adder('addToHistory')(),
+          getHistory: (_fileType) => [],
+          addToHistory: (_url, _filetype) => store.adder('addToHistory')(),
           getLinkInformation: () => Option.some({
             targets: [
               {
@@ -46,14 +46,14 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
             anchorBottom: undefined
           }),
           getValidationHandler: () => Option.none(),
-          getUrlPicker: (filetype) => Option.some((entry: ApiUrlData) => {
+          getUrlPicker: (_filetype) => Option.some((entry: ApiUrlData) => {
             store.adder('urlpicker')();
             return Future.pure({ value: 'http://tiny.cloud', meta: { before: entry.value }, fieldname: 'test' });
           })
         })
       );
     },
-    (doc, body, gui, component, store) => {
+    (doc, _body, _gui, component, store) => {
 
       const input = component.getSystem().getByDom(
         SelectorFind.descendant(component.element(), 'input').getOrDie(

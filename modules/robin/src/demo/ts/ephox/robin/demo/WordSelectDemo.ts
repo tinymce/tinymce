@@ -39,7 +39,7 @@ const getSelection = function () {
   }
 };
 
-DomEvent.bind(editor, 'click', function (event) {
+DomEvent.bind(editor, 'click', function (_event) {
   const current = getSelection();
   if (current !== null && current.collapsed()) {
     const wordRange = DomSmartSelect.word(current.startContainer(), current.startOffset(), Fun.constant(false));

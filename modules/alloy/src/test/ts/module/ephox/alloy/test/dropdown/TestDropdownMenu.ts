@@ -64,7 +64,7 @@ const part = (store: TestStore) => {
       tag: 'div'
     },
     markers: itemMarkers,
-    onExecute(dropdown: AlloyComponent, item: AlloyComponent) {
+    onExecute(_dropdown: AlloyComponent, item: AlloyComponent) {
       const v = Representing.getValue(item);
       return store.adderH('dropdown.menu.execute: ' + v.value)();
     }
@@ -72,7 +72,7 @@ const part = (store: TestStore) => {
 };
 
 const mStoreMenuUid = (component: AlloyComponent) => {
-  return Step.stateful((value: any, next, die) => {
+  return Step.stateful((value: any, next, _die) => {
     const menu = SelectorFind.descendant(component.element(), '.menu').getOrDie('Could not find menu');
     const uid = Tagger.readOrDie(menu);
     next(
@@ -101,7 +101,7 @@ const mWaitForNewMenu = (component: AlloyComponent) => {
 const assertLazySinkArgs = (expectedTag: string, expectedClass: string, comp: AlloyComponent) => {
   Assertions.assertStructure(
     'Lazy sink should get passed the split button',
-    ApproxStructure.build((s, str, arr) => {
+    ApproxStructure.build((s, _str, arr) => {
       return s.element(expectedTag, {
         classes: [ arr.has(expectedClass) ]
       });

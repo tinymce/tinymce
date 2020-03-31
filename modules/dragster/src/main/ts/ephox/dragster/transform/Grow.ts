@@ -51,7 +51,7 @@ const both = grower(function (x, y): Growth {
   };
 });
 
-const horizontal = grower(function (x, y): Growth  {
+const horizontal = grower(function (x, _y): Growth  {
   return {
     x,
     y: 0

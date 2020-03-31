@@ -15,7 +15,7 @@ UnitTest.asynctest('ExecutingKeyingTest', (success, failure) => {
     'Default execution',
     Step.async((next, die) => {
 
-      GuiSetup.setup((store, doc, body) => {
+      GuiSetup.setup((store, _doc, _body) => {
         return GuiFactory.build(
           Container.sketch({
             dom: {
@@ -36,7 +36,7 @@ UnitTest.asynctest('ExecutingKeyingTest', (success, failure) => {
           })
         );
 
-      }, (doc, body, gui, component, store) => {
+      }, (doc, body, _gui, component, store) => {
         return [
           GuiSetup.mSetupKeyLogger(body),
           Step.sync(() => {
@@ -54,7 +54,7 @@ UnitTest.asynctest('ExecutingKeyingTest', (success, failure) => {
   const sTestConfiguration = Logger.t(
     'Testing ctrl+enter and space execute',
     Step.async((next, die) => {
-      GuiSetup.setup((store, doc, body) => {
+      GuiSetup.setup((store, _doc, _body) => {
         return GuiFactory.build(
           Container.sketch({
             dom: {
@@ -78,7 +78,7 @@ UnitTest.asynctest('ExecutingKeyingTest', (success, failure) => {
           })
         );
 
-      }, (doc, body, gui, component, store) => {
+      }, (doc, body, _gui, component, store) => {
         return [
           GuiSetup.mSetupKeyLogger(body),
           Step.sync(() => {

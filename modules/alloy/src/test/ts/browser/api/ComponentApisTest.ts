@@ -10,7 +10,7 @@ UnitTest.asynctest('ComponentApisTest', (success, failure) => {
     doSecondThing: () => void;
     doThirdThing: () => string;
   }
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build({
       dom: {
         tag: 'div',
@@ -22,7 +22,7 @@ UnitTest.asynctest('ComponentApisTest', (success, failure) => {
         doThirdThing: () => 'thirdThing'
       }
     });
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, component, store) => {
     return [
       Logger.t('Testing "doFirstThing"', GeneralSteps.sequence([
         store.sAssertEq('No APIs have been called yet', [ ]),

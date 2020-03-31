@@ -33,7 +33,7 @@ export default function () {
           editor.focus();
         },
         onSetup(btnApi) {
-          editor.annotator.annotationChanged('alpha', (state, name, obj) => {
+          editor.annotator.annotationChanged('alpha', (state, _name, _obj) => {
             btnApi.setDisabled(state);
           });
           return () => {};
@@ -43,7 +43,7 @@ export default function () {
       editor.on('init', () => {
         editor.annotator.register('alpha', {
           persistent: true,
-          decorate: (uid, data) => {
+          decorate: (_uid, data) => {
             return {
               attributes: {
                 'data-mce-comment': data.comment ? data.comment : '',

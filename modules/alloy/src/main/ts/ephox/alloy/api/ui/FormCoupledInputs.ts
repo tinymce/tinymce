@@ -11,7 +11,7 @@ import { SketchBehaviours } from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<FormCoupledInputsDetail, FormCoupledInputsSpec> = (detail, components, spec, externals): SketchSpec => {
+const factory: CompositeSketchFactory<FormCoupledInputsDetail, FormCoupledInputsSpec> = (detail, components, _spec, _externals): SketchSpec => {
   return {
     uid: detail.uid,
     dom: detail.dom,

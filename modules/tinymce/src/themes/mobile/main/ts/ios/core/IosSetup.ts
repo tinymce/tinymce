@@ -147,7 +147,7 @@ const setup = function (bag: IosSetupOptions) {
     keyboardModel.toReading();
   };
 
-  const onToolbarTouch = function (event) {
+  const onToolbarTouch = function (_event) {
     keyboardModel.onToolbarTouch();
   };
 

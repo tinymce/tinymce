@@ -31,11 +31,11 @@ const sTestStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoc
         ])),
         Step.label('Checking scroll event listeners are bound, scroll by 1px then assert', StickyUtils.sScrollAndAssertStructure(isToolbarTop, 1, StickyUtils.expectedScrollEventBound)),
         Step.label('Scroll to half the editor should have sticky css markings', GeneralSteps.sequence([
-          Step.stateful((value, next, die) => next(editor.getContentAreaContainer().clientHeight)),
+          Step.stateful((_value, next, _die) => next(editor.getContentAreaContainer().clientHeight)),
           StickyUtils.sScrollAndAssertStructure(isToolbarTop, 200, StickyUtils.expectedHalfView),
           StickyUtils.sAssertHeaderDocked(isToolbarTop),
           StickyUtils.sAssertEditorClasses(true),
-          Step.stateful((contentAreaContainerHeight, next, die) => {
+          Step.stateful((contentAreaContainerHeight, next, _die) => {
             Assertions.assertEq(
               'ContentAreaContainer height should be the same before as after docking',
               contentAreaContainerHeight,

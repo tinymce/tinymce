@@ -66,7 +66,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     if (hasObjectResizing(editor) && hasTableResizeBars(editor)) {
       const sz = TableResize.create(rawWire, direction);
       sz.on();
-      sz.events.startDrag.bind(function (event) {
+      sz.events.startDrag.bind(function (_event) {
         selectionRng = Option.some(editor.selection.getRng());
       });
 

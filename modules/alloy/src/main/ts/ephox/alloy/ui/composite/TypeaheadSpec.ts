@@ -114,7 +114,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         delay: detail.responseTime,
         stopEvent: false
       },
-      onStream(component, simulatedEvent) {
+      onStream(component, _simulatedEvent) {
 
         const sandbox = Coupling.getCoupled(component, 'sandbox');
         const focusInInput = Focusing.isFocused(component);

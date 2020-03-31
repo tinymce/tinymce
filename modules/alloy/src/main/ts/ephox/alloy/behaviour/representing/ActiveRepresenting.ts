@@ -5,10 +5,10 @@ import { RepresentingConfig, RepresentingState } from './RepresentingTypes';
 
 const events = (repConfig: RepresentingConfig, repState: RepresentingState): AlloyEvents.AlloyEventRecord => {
   const es = repConfig.resetOnDom ? [
-    AlloyEvents.runOnAttached((comp, se) => {
+    AlloyEvents.runOnAttached((comp, _se) => {
       RepresentApis.onLoad(comp, repConfig, repState);
     }),
-    AlloyEvents.runOnDetached((comp, se) => {
+    AlloyEvents.runOnDetached((comp, _se) => {
       RepresentApis.onUnload(comp, repConfig, repState);
     })
   ] : [

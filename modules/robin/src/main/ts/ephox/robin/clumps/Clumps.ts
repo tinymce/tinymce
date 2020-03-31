@@ -195,7 +195,7 @@ const doCollect = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => b
 
   // If the dropped start should be skipped, find the thing to the right of it.
   const raw = scan(universe, isRoot, Gather.sidestep, droppedStart, droppedStart, droppedFinish);
-  return Arr.map(raw, function (r, i) {
+  return Arr.map(raw, function (r) {
     // Incorporate any offsets that were required.
     const soff = universe.eq(r.start, start) ? soffset : 0;
     const foff = universe.eq(r.finish, finish) ? foffset : getEnd(universe, r.finish);

@@ -52,7 +52,7 @@ UnitTest.asynctest('Browser Test: .ui.button.ButtonTypeTest', (success, failure)
    * The purpose of this test is to check that the type attribute is only defaulted
    * when the type is button (and that any specified type does not clobber it)
    */
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
 
     return GuiFactory.build({
       dom: {
@@ -65,7 +65,7 @@ UnitTest.asynctest('Browser Test: .ui.button.ButtonTypeTest', (success, failure)
         memTypedSpan.asSpec()
       ]
     });
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, component, _store) => {
     const sCheck = (label: string, expected: string | undefined, memento: Memento.MementoRecord) => {
       return Logger.t(
         label,

@@ -20,8 +20,8 @@ UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
     elm.dom().click();
   };
 
-  const cPickFiles = Chain.async<Element, FileList>((input, next, die) => pickFiles(input, next));
-  const sPickFiles = Step.async((next, die) => pickFiles(Body.body(), (files) => {
+  const cPickFiles = Chain.async<Element, FileList>((input, next, _die) => pickFiles(input, next));
+  const sPickFiles = Step.async((next, _die) => pickFiles(Body.body(), (files) => {
     filesState.set(Option.some(files));
     next();
   }));

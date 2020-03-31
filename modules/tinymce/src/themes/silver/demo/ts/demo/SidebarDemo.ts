@@ -20,10 +20,10 @@ export default function () {
           api.element().removeChild(box.dom());
         };
       },
-      onShow: (api) => {
+      onShow: (_api) => {
         console.log('onShow ' + name);
       },
-      onHide: (api) => {
+      onHide: (_api) => {
         console.log('onHide ' + name);
       },
     });

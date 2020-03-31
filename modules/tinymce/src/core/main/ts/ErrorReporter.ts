@@ -64,10 +64,10 @@ const pluginInitError = (editor: Editor, name: string, err) => {
 const initError = function (message: string, ...x: any[]) {
   const console = window.console;
   if (console) { // Skip test env
-    if (console.error) { // tslint:disable-line:no-console
-      console.error.apply(console, arguments); // tslint:disable-line:no-console
+    if (console.error) {
+      console.error(message, ...x);
     } else {
-      console.log.apply(console, arguments); // tslint:disable-line:no-console
+      console.log(message, ...x);
     }
   }
 };

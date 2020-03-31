@@ -35,9 +35,9 @@ UnitTest.test('Custom Editor Schema Test', () => {
 
   Assert.eq('Expect init be valid', true, ValueSchema.asRaw('.', schema, {
     ...base,
-    init(el) {
+    init(_el) {
       return {
-        setValue: (value: string) => {},
+        setValue: (_value: string) => {},
         getValue: () => '',
         destroy: () =>  {}
       };
@@ -48,9 +48,9 @@ UnitTest.test('Custom Editor Schema Test', () => {
     ...base,
     scriptId: 'scriptId',
     scriptUrl: 'scriptUrl',
-    init(el) {
+    init(_el) {
       return {
-        setValue: (value: string) => {},
+        setValue: (_value: string) => {},
         getValue: () => '',
         destroy: () =>  {}
       };

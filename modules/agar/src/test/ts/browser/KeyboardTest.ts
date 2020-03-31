@@ -71,7 +71,7 @@ UnitTest.asynctest('KeyboardTest', (success, failure) => {
 
   Pipeline.async({}, [
     DomContainers.mSetup,
-    Step.stateful((state, next, die) => {
+    Step.stateful((state, next, _die) => {
       Focus.focus(state.container);
       next(state);
     }),

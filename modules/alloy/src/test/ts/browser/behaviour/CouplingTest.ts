@@ -13,7 +13,7 @@ import * as StepUtils from 'ephox/alloy/test/StepUtils';
 
 UnitTest.asynctest('CouplingTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         uid: 'primary',
@@ -33,7 +33,7 @@ UnitTest.asynctest('CouplingTest', (success, failure) => {
         ])
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, gui, component, store) => {
     return [
       StepUtils.sAssertFailContains(
         'Testing getCoupled with invalid name: fake',

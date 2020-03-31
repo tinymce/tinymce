@@ -20,7 +20,7 @@ const destroy = function (wire: ResizeWire) {
 
 const drawBar = function <T> (wire: ResizeWire, positions: Option<T>[], create: (origin: Position, info: T) => Element) {
   const origin = wire.origin();
-  Arr.each(positions, function (cpOption, i) {
+  Arr.each(positions, function (cpOption) {
     cpOption.each(function (cp) {
       const bar = create(origin, cp);
       Class.add(bar, resizeBar);

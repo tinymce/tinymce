@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.selection.DetailsElementTest', (success, fai
     Pipeline.async({}, [
       Logger.t('Should should retain open attribute if it is not opened', GeneralSteps.sequence([
         tinyApis.sSetContent('<details><summary>a</summary>b</details>'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, _arr) => {
           return s.element('body', {
             children: [
               s.element('details', {
@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.selection.DetailsElementTest', (success, fai
       ])),
       Logger.t('Should should retain open attribute if it opened', GeneralSteps.sequence([
         tinyApis.sSetContent('<details open="open"><summary>a</summary>b</details>'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, _arr) => {
           return s.element('body', {
             children: [
               s.element('details', {

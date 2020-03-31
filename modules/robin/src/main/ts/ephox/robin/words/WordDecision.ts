@@ -30,11 +30,11 @@ const fromItem = function <E, D> (universe: Universe<E, D>, item: E) {
   return universe.property().isText(item) ? detail(universe, item) : make(item, 0, 0, '');
 };
 
-const onEdge = function <E, D> (universe: Universe<E, D>, item: E, slicer: (text: string) => Option<[number, number]>) {
+const onEdge = function <E, D> (_universe: Universe<E, D>, _item: E, _slicer: (text: string) => Option<[number, number]>) {
   return decision<E>([], true);
 };
 
-const onOther = function <E, D> (universe: Universe<E, D>, item: E, slicer: (text: string) => Option<[number, number]>) {
+const onOther = function <E, D> (_universe: Universe<E, D>, _item: E, _slicer: (text: string) => Option<[number, number]>) {
   return decision<E>([], false);
 };
 

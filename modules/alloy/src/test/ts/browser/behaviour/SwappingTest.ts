@@ -13,7 +13,7 @@ UnitTest.asynctest('SwappingTest', (success, failure) => {
   const ALPHA_CLS = Fun.constant('i-am-the-alpha');
   const OMEGA_CLS = Fun.constant('and-the-omega');
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -35,7 +35,7 @@ UnitTest.asynctest('SwappingTest', (success, failure) => {
         ])
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, component, _store) => {
     // string -> [string] -> [string] -> ()
     const assertClasses = (label: string, has: string[], not: string[]) => {
       Assertions.assertStructure(

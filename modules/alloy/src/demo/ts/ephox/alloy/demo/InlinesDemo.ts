@@ -78,7 +78,7 @@ export default (): void => {
             anchor: 'submenu',
             item: comp
           }),
-          onShow: (component, tooltip) => {
+          onShow: (component, _tooltip) => {
             setTimeout(() => {
               Tooltipping.setComponents(component, [
                 {
@@ -90,7 +90,7 @@ export default (): void => {
               ]);
             }, 2000);
           },
-          onHide: (component, tooltip) => {
+          onHide: (_component, _tooltip) => {
 
           }
         })
@@ -113,7 +113,7 @@ export default (): void => {
       return Option.some<boolean>(true);
     },
 
-    onOpenMenu(sandbox, menu) {
+    onOpenMenu(_sandbox, _menu) {
       // handled by inline view itself
     },
 

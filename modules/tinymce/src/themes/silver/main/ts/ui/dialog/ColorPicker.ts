@@ -51,7 +51,7 @@ const translate = function (key) {
 
 type ColorPickerSpec = Omit<Types.ColorPicker.ColorPicker, 'type'>;
 
-export const renderColorPicker = (spec: ColorPickerSpec): SimpleSpec => {
+export const renderColorPicker = (_spec: ColorPickerSpec): SimpleSpec => {
   const getClass = (key: string) => 'tox-' + key;
 
   const colourPickerFactory = ColourPicker.makeFactory(translate, getClass);

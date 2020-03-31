@@ -10,7 +10,7 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from './UiSketcher';
 
-const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, spec): SketchSpec => {
+const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, _spec): SketchSpec => {
   const options = Arr.map(detail.options, (option) => {
     return {
       dom: {

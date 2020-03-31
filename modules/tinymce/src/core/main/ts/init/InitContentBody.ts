@@ -318,7 +318,7 @@ const preInit = (editor: Editor, rtcMode: boolean) => {
     function (_) {
       initEditor(editor);
     },
-    function (urls) {
+    function (_urls) {
       initEditor(editor);
     }
   );

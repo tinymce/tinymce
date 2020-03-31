@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function (su
   const createFakeEditor = function (settings) {
     return {
       settings,
-      getParam: (name: string, defaultVal?: any, type?: string) => settings[name] || defaultVal
+      getParam: (name: string, defaultVal?: any, _type?: string) => settings[name] || defaultVal
     } as any;
   };
 

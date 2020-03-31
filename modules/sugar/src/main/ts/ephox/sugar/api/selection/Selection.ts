@@ -39,10 +39,10 @@ const getStart = function (selection: Selection) {
     domRange(rng) {
       return Element.fromDom(rng.startContainer);
     },
-    relative(startSitu, finishSitu) {
+    relative(startSitu, _finishSitu) {
       return Situ.getStart(startSitu);
     },
-    exact(start, soffset, finish, foffset) {
+    exact(start, _soffset, _finish, _foffset) {
       return start;
     }
   });

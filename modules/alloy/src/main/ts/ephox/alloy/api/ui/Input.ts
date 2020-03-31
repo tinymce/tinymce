@@ -4,7 +4,7 @@ import { InputDetail, InputSketcher, InputSpec } from '../../ui/types/InputTypes
 import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from './UiSketcher';
 
-const factory: SingleSketchFactory<InputDetail, InputSpec> = (detail, spec): SketchSpec => {
+const factory: SingleSketchFactory<InputDetail, InputSpec> = (detail, _spec): SketchSpec => {
   return {
     uid: detail.uid,
     dom: InputBase.dom(detail),

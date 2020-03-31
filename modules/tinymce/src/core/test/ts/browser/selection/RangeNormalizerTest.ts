@@ -14,12 +14,12 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', functio
     });
   };
 
-  const mNormalizeRange = Step.stateful(function (value: any, next, die) {
+  const mNormalizeRange = Step.stateful(function (value: any, next, _die) {
     next(RangeNormalizer.normalize(value));
   });
 
   const mCreateRange = function (startPath, startOffset, endPath, endOffset) {
-    return Step.stateful(function (value, next, die) {
+    return Step.stateful(function (_value, next, _die) {
       const startContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
       const endContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), endPath).getOrDie();
       const rng = document.createRange();
@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', functio
   };
 
   const mAssertRange = function (startPath, startOffset, endPath, endOffset) {
-    return Step.stateful(function (value: any, next, die) {
+    return Step.stateful(function (value: any, next, _die) {
       const startContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), startPath).getOrDie();
       const endContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), endPath).getOrDie();
 

@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysTableTest', (success,
   const caretAfter = Fun.curry(caret, 'after');
   const visualCaretBefore = Fun.curry(visualCaret, true);
   const visualCaretAfter = Fun.curry(visualCaret, false);
-  const buildBody = (children) => ApproxStructure.build((s, str, arr) => s.element('body', { children }));
+  const buildBody = (children) => ApproxStructure.build((s, _str, _arr) => s.element('body', { children }));
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, [

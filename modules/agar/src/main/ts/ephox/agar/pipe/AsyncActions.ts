@@ -3,7 +3,7 @@ import { setTimeout } from '@ephox/dom-globals';
 import { DieFn } from './Pipe';
 
 const delay = (amount: number) =>
-  (next: () => void, die: DieFn): void => {
+  (next: () => void, _die: DieFn): void => {
     setTimeout(() => {
       next();
     }, amount);

@@ -32,7 +32,7 @@ const allWords = (function () {
   return Obj.keys(set);
 })();
 
-DomEvent.bind(button, 'click', function (event) {
+DomEvent.bind(button, 'click', function (_event) {
   highlight(allWords, underline);
 });
 

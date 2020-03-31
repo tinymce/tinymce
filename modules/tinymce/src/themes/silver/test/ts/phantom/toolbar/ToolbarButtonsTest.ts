@@ -17,7 +17,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
   const shouldActivate = Cell(false);
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (store, _doc, _body) => {
       return GuiFactory.build(
         {
           dom: {
@@ -36,7 +36,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                   tooltip: Option.some('tooltip'),
                   icon: Option.none(),
                   text: Option.some('button1'),
-                  onSetup: (api: Toolbar.ToolbarButtonInstanceApi) => {
+                  onSetup: (_api: Toolbar.ToolbarButtonInstanceApi) => {
                     store.adder('onSetup.1')();
                     return () => { };
                   },
@@ -61,7 +61,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                   tooltip: Option.some('tooltip'),
                   icon: Option.none(),
                   text: Option.some('button2'),
-                  onSetup: (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
+                  onSetup: (_api: Toolbar.ToolbarToggleButtonInstanceApi) => {
                     store.adder('onSetup.2')();
                     return () => { };
                   },
@@ -96,7 +96,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                       }
                     ]);
                   },
-                  onSetup: (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
+                  onSetup: (_api: Toolbar.ToolbarToggleButtonInstanceApi) => {
                     store.adder('onSetup.3')();
                     return () => { };
                   },
@@ -105,7 +105,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                     api.setDisabled(shouldDisable.get());
                     api.setActive(shouldActivate.get());
                   },
-                  onItemAction: (api: Toolbar.ToolbarToggleButtonInstanceApi, value: string) => {
+                  onItemAction: (api: Toolbar.ToolbarToggleButtonInstanceApi, _value: string) => {
                     store.adder('onItemAction.3')();
                     api.setActive(true);
                   }
@@ -128,13 +128,13 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                       {
                         type: 'menuitem',
                         text: 'Item 1',
-                        onAction: (api: Menu.MenuItemInstanceApi) => {
+                        onAction: (_api: Menu.MenuItemInstanceApi) => {
                           store.adder('onAction.4')();
                         },
                       }
                     ]);
                   },
-                  onSetup: (api: Toolbar.ToolbarMenuButtonInstanceApi) => {
+                  onSetup: (_api: Toolbar.ToolbarMenuButtonInstanceApi) => {
                     store.adder('onSetup.4')();
                     return () => { };
                   },
@@ -145,7 +145,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
         }
       );
     },
-    (doc, body, gui, component: AlloyComponent, store) => {
+    (_doc, body, _gui, component: AlloyComponent, store) => {
       const getButton = (selector: string) => {
         return component.getSystem().getByDom(
           SelectorFind.descendant(component.element(), selector).getOrDie(

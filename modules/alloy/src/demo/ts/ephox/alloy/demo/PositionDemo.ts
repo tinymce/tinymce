@@ -178,7 +178,7 @@ export default (): void => {
             tag: 'button',
             innerHtml: 'Show popup at cursor'
           },
-          action(button) {
+          action(_button) {
             Attachment.attach(sink, popup);
             Positioning.position(sink, {
               anchor: 'selection',

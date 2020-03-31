@@ -44,7 +44,7 @@ const wrapper = function () {
   return DomWrapping.nu(c);
 };
 
-DomEvent.bind(button, 'click', function (event) {
+DomEvent.bind(button, 'click', function (_event) {
   const token = Value.get(input);
   if (token.length > 0) {
     const matches = DomSearch.safeToken([ content ], token);
@@ -52,7 +52,7 @@ DomEvent.bind(button, 'click', function (event) {
   }
 });
 
-DomEvent.bind(buttonWord, 'click', function (event) {
+DomEvent.bind(buttonWord, 'click', function (_event) {
   const word = Value.get(input);
   if (word.length > 0) {
     const matches = DomSearch.safeWords([ content ], [ word ]);

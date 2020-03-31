@@ -8,7 +8,7 @@ const readBlobAsText = (blob: Blob): FutureResult<string, string> => {
     reader.onloadend = () => {
       resolve(Result.value(reader.result));
     };
-    reader.onerror = (evt) => {
+    reader.onerror = (_evt) => {
       resolve(Result.error('Error loading blob'));
     };
   });

@@ -54,7 +54,7 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
     })
   );
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -68,7 +68,7 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
         ]
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, component, _store) => {
 
     const cSubject = Chain.injectThunked(() => {
       return subject.get(component).element();

@@ -23,14 +23,14 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
     });
   };
 
-  const sBackspace = function (editor, forward?) {
+  const sBackspace = function (editor, _forward?) {
     return Step.sync(function () {
       const returnVal = BlockBoundaryDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
-  const sBackspaceNoop = function (editor, forward?) {
+  const sBackspaceNoop = function (editor, _forward?) {
     return Step.sync(function () {
       const returnVal = BlockBoundaryDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
@@ -145,7 +145,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
         tinyApis.sSetCursor([ 1, 0 ], 0),
         sBackspace(editor),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -165,7 +165,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
         tinyApis.sSetCursor([ 0, 0 ], 1),
         sDelete(editor),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -185,7 +185,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
         tinyApis.sSetCursor([ 1 ], 0),
         sBackspace(editor),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -204,7 +204,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
         tinyApis.sSetCursor([ 0 ], 0),
         sDelete(editor),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -223,7 +223,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
         tinyApis.sSetCursor([ 1 ], 0),
         sBackspace(editor),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, _str, _arr) {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -242,7 +242,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
         tinyApis.sSetCursor([ 0 ], 0),
         sDelete(editor),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, _str, _arr) {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -261,7 +261,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
         tinyApis.sSetCursor([ 1, 0 ], 0),
         sBackspace(editor),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -290,7 +290,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
         tinyApis.sSetCursor([ 0 ], 2),
         sDelete(editor),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('p', {

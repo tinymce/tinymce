@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.AlignedCellRowStyleChangeTest'
       TableTestUtils.sGotoAdvancedTab,
       TableTestUtils.sSetInputValue('Background color', 'label.tox-label:contains(Background color) + div>input.tox-textfield', 'red'),
       TableTestUtils.sClickDialogButton('close dialog', true),
-      TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, arr) => {
+      TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, _arr) => {
         return s.element('table', {
           children: [
             s.element('tbody', {

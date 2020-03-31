@@ -23,7 +23,7 @@ const events = (transConfig: TransitioningConfig, transState: Stateless): AlloyE
       });
     }),
 
-    AlloyEvents.runOnAttached((comp, se) => {
+    AlloyEvents.runOnAttached((comp, _se) => {
       TransitionApis.jumpTo(comp, transConfig, transState, transConfig.initialState);
     })
   ]);

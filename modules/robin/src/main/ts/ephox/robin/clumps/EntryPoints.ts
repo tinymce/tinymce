@@ -80,7 +80,7 @@ const toRight = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boo
   return analyse(universe, element, offset, adt.rightEdge).fold(function (e) {
     // We are at the left edge of the finishing element, so gather the previous element.
     return Gather.before(universe, e, isRoot).getOr(e);
-  }, function (b, a) {
+  }, function (b, _a) {
     // We are splitting an element, so take the left side.
     return b;
   }, function (e) {

@@ -22,7 +22,6 @@ interface DefinitionType {
 }
 
 UnitTest.test('DomDefinitionTest', () => {
-  /* global assert */
   // TODO: Add property based tests.
 
   // Since making DomDefinition just the value after defaulting, this

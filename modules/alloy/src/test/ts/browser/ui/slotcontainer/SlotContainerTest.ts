@@ -10,7 +10,7 @@ import { SlotContainer } from 'ephox/alloy/api/ui/SlotContainer';
 
 UnitTest.asynctest('SlotContainerTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       SlotContainer.sketch((parts) => ({
         dom: {
@@ -45,7 +45,7 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
         ]
       }))
     );
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, component, _store) => {
 
     const cGetSlot = (slot: string) => Chain.binder(() => {
       return SlotContainer.getSlot(component, slot).fold(
@@ -65,7 +65,7 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
       })
     ]);
 
-    const sAssertButtonShowing = (label: string) => sAssertSlotStructure(label, 'buttonB', (s, str, arr) => {
+    const sAssertButtonShowing = (label: string) => sAssertSlotStructure(label, 'buttonB', (s, str, _arr) => {
       return s.element('button', {
         attrs: {
           'aria-hidden': str.none()
@@ -76,7 +76,7 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
       });
     });
 
-    const sAssertButtonHidden = (label: string) => sAssertSlotStructure(label, 'buttonB', (s, str, arr) => {
+    const sAssertButtonHidden = (label: string) => sAssertSlotStructure(label, 'buttonB', (s, str, _arr) => {
       return s.element('button', {
         attrs: {
           'aria-hidden': str.is('true')
@@ -87,7 +87,7 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
       });
     });
 
-    const sAssertInputShowing = (label: string) => sAssertSlotStructure(label, 'inputA', (s, str, arr) => {
+    const sAssertInputShowing = (label: string) => sAssertSlotStructure(label, 'inputA', (s, str, _arr) => {
       return s.element('input', {
         attrs: {
           'aria-hidden': str.none()
@@ -98,7 +98,7 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
       });
     });
 
-    const sAssertInputHidden = (label: string) => sAssertSlotStructure(label, 'inputA', (s, str, arr) => {
+    const sAssertInputHidden = (label: string) => sAssertSlotStructure(label, 'inputA', (s, str, _arr) => {
       return s.element('input', {
         attrs: {
           'aria-hidden': str.is('true')
@@ -147,7 +147,7 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
     return [
       Assertions.sAssertStructure(
         'Checking initial structure',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, _str, arr) => {
           return s.element('div', {
             classes: [ arr.has('test-slot-container') ],
             children: [
