@@ -64,8 +64,8 @@ const identifyMenus = (editor: Editor, registry: MenuRegistry): MenubarItemSpec[
   const userDefinedMenus = Obj.keys(registry.menus).length > 0;
 
   const menubar: string[] = registry.menubar === undefined || registry.menubar === true ? parseItemsString(defaultMenubar) : parseItemsString(registry.menubar === false ? '' : registry.menubar);
-  const validMenus = Arr.filter(menubar, (menuName) => userDefinedMenus ? ((registry.menus.hasOwnProperty(menuName) && registry.menus[menuName].hasOwnProperty('items')
-      || defaultMenus.hasOwnProperty(menuName)))
+  const validMenus = Arr.filter(menubar, (menuName) => userDefinedMenus ? (registry.menus.hasOwnProperty(menuName) && registry.menus[menuName].hasOwnProperty('items')
+      || defaultMenus.hasOwnProperty(menuName))
     : defaultMenus.hasOwnProperty(menuName));
 
   const menus: MenubarItemSpec[] = Arr.map(validMenus, (menuName) => {
