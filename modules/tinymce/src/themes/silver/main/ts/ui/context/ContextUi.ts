@@ -112,8 +112,7 @@ const renderContextToolbar = (spec: { onEscape: () => Option<boolean>; sink: All
         onEscape: (comp) => Arr.last(stack.get()).fold(
           () =>
           // Escape just focuses the content. It no longer closes the toolbar.
-            spec.onEscape()
-          ,
+            spec.onEscape(),
           (_) => {
             AlloyTriggers.emit(comp, backSlideEvent);
             return Option.some(true);

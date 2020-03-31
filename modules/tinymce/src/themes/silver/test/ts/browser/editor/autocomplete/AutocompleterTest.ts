@@ -496,8 +496,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           columns: 'auto',
           matches: (rng, text, _pattern) =>
             // Check the '=' is in the middle of a word
-            rng.startOffset !== 0 && !/\s/.test(text.charAt(rng.startOffset - 1))
-          ,
+            rng.startOffset !== 0 && !/\s/.test(text.charAt(rng.startOffset - 1)),
           fetch: (pattern, _maxResults) => new Promise((resolve) => {
             const filteredItems = Arr.filter([ 'two', 'three' ], (number) => number.indexOf(pattern) !== -1);
             resolve(

@@ -24,8 +24,7 @@ export const registerSpellcheckerItems = () => {
     },
     select: (itemValue) =>
       // return true if current language = item value
-      itemValue === 'en'
-    ,
+      itemValue === 'en',
     onAction: (_buttonApi) => {
       // trigger search replace dialog
     },

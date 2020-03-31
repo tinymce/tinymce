@@ -31,8 +31,7 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
   return {
     getValue: (_frameComponent: AlloyComponent): string =>
       // Ideally we should fetch data from the iframe...innerHtml, this triggers Corrs errors
-      cachedValue.get()
-    ,
+      cachedValue.get(),
     setValue: (frameComponent: AlloyComponent, html: string) => {
 
       if (!isSandbox) {

@@ -50,38 +50,14 @@ const positionWithDirection = (posName: string, decision: RepositionDecision, x:
   const none = Option.none<number>();
 
   return Direction.cata(decision.direction,
-    () =>
-      // southeast
-      NuPositionCss(posName, left, top, none, none)
-    ,
-    () =>
-      // southwest
-      NuPositionCss(posName, none, top, right, none)
-    ,
-    () =>
-      // northeast
-      NuPositionCss(posName, left, none, none, bottom)
-    ,
-    () =>
-      // northwest
-      NuPositionCss(posName, none, none, right, bottom)
-    ,
-    () =>
-      // south
-      NuPositionCss(posName, left, top, none, none)
-    ,
-    () =>
-      // north
-      NuPositionCss(posName, left, none, none, bottom)
-    ,
-    () =>
-      // east
-      NuPositionCss(posName, left, top, none, none)
-    ,
-    () =>
-      // west
-      NuPositionCss(posName, none, top, right, none)
-
+    () => NuPositionCss(posName, left, top, none, none), // southeast
+    () => NuPositionCss(posName, none, top, right, none), // southwest
+    () => NuPositionCss(posName, left, none, none, bottom), // northeast
+    () => NuPositionCss(posName, none, none, right, bottom), // northwest
+    () => NuPositionCss(posName, left, top, none, none), // south
+    () => NuPositionCss(posName, left, none, none, bottom), // north
+    () => NuPositionCss(posName, left, top, none, none), // east
+    () => NuPositionCss(posName, none, top, right, none) // west
   );
 };
 

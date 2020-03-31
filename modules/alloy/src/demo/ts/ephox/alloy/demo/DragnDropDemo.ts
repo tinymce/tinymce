@@ -93,8 +93,7 @@ export default (): void => {
         },
         canDrag: (_component, _target) =>
         // console.log('canDrag');
-          true
-        ,
+          true,
         onDragstart: (_component, _simulatedEvent) => {
           // console.log('onDragstart', component.element().dom());
         },

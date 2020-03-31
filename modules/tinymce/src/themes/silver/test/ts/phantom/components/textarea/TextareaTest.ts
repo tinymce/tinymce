@@ -50,8 +50,7 @@ UnitTest.asynctest('Textarea component Test', (success, failure) => {
         DisablingSteps.sAssertDisabled('Initial disabled state', false, component),
         DisablingSteps.sSetDisabled('set disabled', component, true),
         DisablingSteps.sAssertDisabled('enabled > disabled', true, component)
-      ]
-    ,
+      ],
     success,
     failure
   );

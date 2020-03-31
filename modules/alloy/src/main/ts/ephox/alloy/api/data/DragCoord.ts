@@ -108,17 +108,11 @@ const getDeltas = (coord1: CoordAdt<number>, coord2: CoordAdt<number>, xRange: n
 const toStyles = (coord: CoordAdt<number>, scroll: Position, origin: Position): StylesCoord => {
   const stylesOpt = coord.fold(
     (x, y) =>
-      // offset
-      ({ position: Option.some('absolute'), left: Option.some(x + 'px'), top: Option.some(y + 'px') })
-    ,
+      ({ position: Option.some('absolute'), left: Option.some(x + 'px'), top: Option.some(y + 'px') }), // offset
     (x, y) =>
-      ({ position: Option.some('absolute'), left: Option.some((x - origin.left()) + 'px'), top: Option.some((y - origin.top()) + 'px') })
-      // absolute
-    ,
+      ({ position: Option.some('absolute'), left: Option.some((x - origin.left()) + 'px'), top: Option.some((y - origin.top()) + 'px') }), // absolute
     (x, y) =>
-      // fixed
-      ({ position: Option.some('fixed'), left: Option.some(x + 'px'), top: Option.some(y + 'px') })
-
+      ({ position: Option.some('fixed'), left: Option.some(x + 'px'), top: Option.some(y + 'px') }) // fixed
   );
 
   return { right: Option.none(),  bottom: Option.none(), ...stylesOpt };

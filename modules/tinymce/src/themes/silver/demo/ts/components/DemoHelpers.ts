@@ -115,22 +115,19 @@ const setupDemo = () => {
           ({
             anchor: 'hotspot',
             hotspot: sink
-          })
-        ,
+          }),
         banner: () =>
           // NOTE: Non-sensical
           ({
             anchor: 'hotspot',
             hotspot: sink
-          })
-        ,
+          }),
         cursor: () =>
           // NOTE: Non-sensical
           ({
             anchor: 'selection',
             root: Body.body()
-          })
-        ,
+          }),
         node: (elem) =>
           // NOTE: Non-sensical
           ({
@@ -138,7 +135,6 @@ const setupDemo = () => {
             root: Body.body(),
             node: elem
           })
-
       }
     },
     colorinput: fakecolorinputBackstage,

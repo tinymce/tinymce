@@ -69,9 +69,7 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
           behaviours: Behaviour.derive([
             Positioning.config({ })
           ])
-        })
-
-      ,
+        }),
       (_doc, _body, _gui, sink, store) => {
         const dialogStuff = renderDialog(
           // Build the component
