@@ -110,7 +110,7 @@ const unwrapEmptySpan = function (dom: DOMUtils, node: Node) {
   }
 };
 
-const processUnderlineAndColor = function (dom: DOMUtils, node: Node) {
+const processTextDecorationsAndColor = function (dom: DOMUtils, node: Node) {
   let textDecoration;
   if (node.nodeType === 1 && node.parentNode && node.parentNode.nodeType === 1) {
     textDecoration = FormatUtils.getTextDecoration(dom, node.parentNode);
@@ -122,11 +122,11 @@ const processUnderlineAndColor = function (dom: DOMUtils, node: Node) {
   }
 };
 
-const mergeUnderlineAndColor = function (dom: DOMUtils, format, vars: FormatVars, node: Node) {
+const mergeTextDecorationsAndColor = function (dom: DOMUtils, format, vars: FormatVars, node: Node) {
   // Colored nodes should be underlined so that the color of the underline matches the text color.
   if (format.styles.color || format.styles.textDecoration) {
-    Tools.walk(node, Fun.curry(processUnderlineAndColor, dom), 'childNodes');
-    processUnderlineAndColor(dom, node);
+    Tools.walk(node, Fun.curry(processTextDecorationsAndColor, dom), 'childNodes');
+    processTextDecorationsAndColor(dom, node);
   }
 };
 
@@ -212,7 +212,7 @@ const mergeWithParents = function (editor: Editor, format, name: string, vars: F
 
 export {
   mergeWithChildren,
-  mergeUnderlineAndColor,
+  mergeTextDecorationsAndColor,
   mergeBackgroundColorAndFontSize,
   mergeSubSup,
   mergeSiblings,
