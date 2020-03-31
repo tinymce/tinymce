@@ -49,12 +49,25 @@ export interface ElementFields {
 const elementQueue = (items: Element<any>[], container: Option<Element<any>>): ElementQueue => {
   let i = -1;
 
-  const context = () => container.fold(() => '\nItem[' + i + ']:' +
-      (i >= 0 && i < items.length ? '\n' + Truncate.getHtml(items[i]) : ' *missing*') +
-      '\nComplete Structure:\n' + Arr.map(items, Html.getOuter).join(''), (element) => '\nContainer:\n' + Truncate.getHtml(element) +
-      '\nItem[' + i + ']:' +
-      (i >= 0 && i < items.length ? '\n' + Truncate.getHtml(items[i]) : ' *missing*') +
-      '\nComplete Structure:\n' + Html.getOuter(element));
+  const context = () => {
+    const hasItem = i >= 0 && i < items.length;
+    const itemHtml = hasItem ? '\n' + Truncate.getHtml(items[i]) : ' *missing*';
+    const itemInfo = '\nItem[' + i + ']:' + itemHtml;
+    return container.fold(
+      () => {
+        const structHtml = Arr.map(items, Html.getOuter).join('');
+        const structInfo = '\nComplete Structure:\n' + structHtml;
+        return itemInfo + structInfo;
+      },
+      (element) => {
+        const containerHtml = Truncate.getHtml(element);
+        const containerInfo = '\nContainer:\n' + containerHtml;
+        const structHtml = Html.getOuter(element);
+        const structInfo = '\nComplete Structure:\n' + structHtml;
+        return containerInfo + itemInfo + structInfo;
+      }
+    );
+  };
 
   const current = () => i >= 0 && i < items.length ? Option.some(items[i]) : Option.none<Element<any>>();
 
