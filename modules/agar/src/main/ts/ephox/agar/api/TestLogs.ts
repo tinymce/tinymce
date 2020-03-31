@@ -22,9 +22,8 @@ const modifyStartedEntryTo = (entries: TestLogEntry[], f): TestLogEntry[] => Arr
     // If the last entry has started, and has entries,
     if (lastEntry.state === TestLogEntryState.Started) {
       return Arr.last(lastEntry.entries).fold(
-        () =>
         // We have no entries, so just modify us
-          entries.slice(0, entries.length - 1).concat([ f(lastEntry) ]),
+        () => entries.slice(0, entries.length - 1).concat([ f(lastEntry) ]),
         // Great name!
         (lastEntryLastEntry) => {
           if (lastEntryLastEntry.state === TestLogEntryState.Started) {
