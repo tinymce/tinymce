@@ -51,10 +51,10 @@ UnitTest.asynctest('browser.tinymce.plugins.image.api.CommandsTest', (success, f
                         height: str.is('200')
                       },
                       styles: {
-                        color: str.is('red'),
+                        'color': str.is('red'),
                         'border-width': str.is('3px'),
                         'border-style': str.is('solid'),
-                        margin: str.is('2px 1px')
+                        'margin': str.is('2px 1px')
                       }
                     }),
                   ]
@@ -99,10 +99,10 @@ UnitTest.asynctest('browser.tinymce.plugins.image.api.CommandsTest', (success, f
                         height: str.is('200')
                       },
                       styles: {
-                        color: str.is('red'),
+                        'color': str.is('red'),
                         'border-width': str.is('3px'),
                         'border-style': str.is('solid'),
-                        margin: str.is('2px 1px')
+                        'margin': str.is('2px 1px')
                       }
                     }),
                   ]
