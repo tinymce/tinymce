@@ -673,7 +673,8 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
             return;
           }
 
-          if (elementRule.paddEmpty && elementRule.removeEmpty && (isPaddedWithNbsp(node) || isEmpty(schema, nonEmptyElements, whiteSpaceElements, node))) {
+          const childShouldBeKept = node.firstChild && schema.getElementRule(node.firstChild.name) && !schema.getElementRule(node.firstChild.name).removeEmpty;
+          if (elementRule.paddEmpty && !childShouldBeKept && (isPaddedWithNbsp(node) || isEmpty(schema, nonEmptyElements, whiteSpaceElements, node))) {
             paddEmptyNode(settings, args, blockElements, node);
           }
 
