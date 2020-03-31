@@ -117,8 +117,7 @@ const some = <T>(a: T): Option<T> => {
 
   const self = () =>
     // can't Fun.constant this one
-    me
-  ;
+    me;
 
   const bind = function <T2> (f: (value: T) => T2) {
     return f(a);

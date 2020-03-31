@@ -75,8 +75,7 @@ const modifyLastEntryTo = (entries: TestLogEntry[], f): TestLogEntry[] =>
         return entries.slice(0, entries.length - 1).concat([ f(lastEntry) ]);
       }
     }
-  )
-;
+  );
 
 const modifyLastEntry = (logs: TestLogs, f): TestLogs => ({
   history: modifyLastEntryTo(logs.history, f)

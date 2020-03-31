@@ -225,8 +225,7 @@ export const setup = (editor: Editor): Option<Promise<boolean>> => {
 
 const getRtcInstanceWithFallback = (editor: Editor): RtcAdaptor =>
   // Calls to editor.getContent/editor.setContent should still work even if the rtcInstance is not yet available
-  (editor as RtcEditor).rtcInstance ? (editor as RtcEditor).rtcInstance : makePlainAdaptor(editor)
-;
+  (editor as RtcEditor).rtcInstance ? (editor as RtcEditor).rtcInstance : makePlainAdaptor(editor);
 
 const getRtcInstanceWithError = (editor: Editor): RtcAdaptor => {
   const rtcInstance = (editor as RtcEditor).rtcInstance;

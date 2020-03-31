@@ -6,8 +6,7 @@ import { Step } from './Step';
 
 const generateLogMsg = (testId: string, description: string): string =>
   // AP-147 Format: 'TestCase-<plugin name>-<test case ID / TBA:> <description of the test>'
-  `TestCase-${testId}: ${description}`
-;
+  `TestCase-${testId}: ${description}`;
 
 const step = <T, U>(testId: string, description: string, f: Step<T, U>): Step<T, U> => Step.label(generateLogMsg(testId, description), f);
 

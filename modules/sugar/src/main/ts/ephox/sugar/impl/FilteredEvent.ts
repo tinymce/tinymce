@@ -13,8 +13,7 @@ const mkEvent = (target: Element, x: number, y: number, stop: () => void, preven
     prevent,
     kill,
     raw:     Fun.constant(raw)
-  })
-;
+  });
 
 const fromRawEvent = (rawEvent: Event) => {
   const target = Element.fromDom(rawEvent.target as Node);

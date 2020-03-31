@@ -64,8 +64,7 @@ const cSetFocus = (label: string, selector: string): Chain<Element, Element> =>
       Guard.addLogging(label)
     ),
     cSetFocused
-  ])
-;
+  ]);
 
 const cSetActiveValue = (newValue: string): Chain<Element, Element> =>
   // Input: container
@@ -73,8 +72,7 @@ const cSetActiveValue = (newValue: string): Chain<Element, Element> =>
     cGetOwnerDoc,
     cGetFocused,
     UiControls.cSetValue(newValue)
-  ])
-;
+  ]);
 
 // Input: container
 const cGetActiveValue: Chain<Element, string> =

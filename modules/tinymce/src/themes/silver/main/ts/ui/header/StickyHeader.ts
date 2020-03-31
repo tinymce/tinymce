@@ -113,8 +113,7 @@ const restoreFocus = (headerElem: Element, focusedElem: Element) => {
 const findFocusedElem = (rootElm: Element, lazySink: () => Result<AlloyComponent, Error>): Option<Element> =>
   // Check to see if an element is focused inside the header or inside the sink
   // and if so store the element so we can restore it later
-  Focus.search(rootElm).orThunk(() => lazySink().toOption().bind((sink) => Focus.search(sink.element())))
-;
+  Focus.search(rootElm).orThunk(() => lazySink().toOption().bind((sink) => Focus.search(sink.element())));
 
 const setup = (editor: Editor, lazyHeader: () => Option<AlloyComponent>): void => {
   if (!editor.inline) {

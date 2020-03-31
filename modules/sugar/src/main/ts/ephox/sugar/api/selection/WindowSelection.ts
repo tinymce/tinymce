@@ -130,8 +130,7 @@ const getExact = (win: Window) =>
   // We want to retrieve the selection as it is.
   Option.from(win.getSelection())
     .filter((sel) => sel.rangeCount > 0)
-    .bind(doGetExact)
-;
+    .bind(doGetExact);
 
 // TODO: Test this.
 const get = (win: Window) =>

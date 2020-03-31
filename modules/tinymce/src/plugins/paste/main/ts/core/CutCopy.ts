@@ -20,8 +20,7 @@ interface SelectionContentData {
 const hasWorkingClipboardApi = (clipboardData: DataTransfer) =>
   // iOS supports the clipboardData API but it doesn't do anything for cut operations
   // Edge 15 has a broken HTML Clipboard API see https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11780845/
-  Env.iOS === false && clipboardData !== undefined && typeof clipboardData.setData === 'function' && Utils.isMsEdge() !== true
-;
+  Env.iOS === false && clipboardData !== undefined && typeof clipboardData.setData === 'function' && Utils.isMsEdge() !== true;
 
 const setHtml5Clipboard = (clipboardData: DataTransfer, html: string, text: string) => {
   if (hasWorkingClipboardApi(clipboardData)) {

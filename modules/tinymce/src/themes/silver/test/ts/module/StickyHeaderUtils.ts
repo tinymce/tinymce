@@ -8,8 +8,7 @@ const staticPartsOuter = (s: ApproxStructure.StructApi, _str: ApproxStructure.St
     s.element('div', {
       classes: [ arr.has('tox-sidebar-wrap') ]
     })
-  ]
-;
+  ];
 
 const staticPartsInner = (s: ApproxStructure.StructApi, _str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] =>
   // should not change
@@ -21,8 +20,7 @@ const staticPartsInner = (s: ApproxStructure.StructApi, _str: ApproxStructure.St
     s.element('div', {
       classes: [ arr.has('tox-anchorbar') ]
     }),
-  ]
-;
+  ];
 
 const expectedScrollEventBound = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] => [
   s.element('div', {

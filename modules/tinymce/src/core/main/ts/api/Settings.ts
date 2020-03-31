@@ -127,8 +127,7 @@ const getResizeImgProportional = (editor: Editor): boolean => editor.getParam('r
 
 const getPlaceholder = (editor: Editor): string =>
   // Fallback to the original elements placeholder if not set in the settings
-  editor.getParam('placeholder', DOM.getAttrib(editor.getElement(), 'placeholder'), 'string')
-;
+  editor.getParam('placeholder', DOM.getAttrib(editor.getElement(), 'placeholder'), 'string');
 
 export {
   getIframeAttrs,

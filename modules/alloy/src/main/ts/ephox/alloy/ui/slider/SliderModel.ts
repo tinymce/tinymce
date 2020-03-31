@@ -80,8 +80,7 @@ const snapValueOf = (value: number, min: number, max: number, step: number, snap
     const numSteps = Math.min(maxSteps, rawSteps + adjustment);
     const r = start + (numSteps * step);
     return Math.max(start, r);
-  })
-;
+  });
 
 const findOffsetOf = (value: number, min: number, max: number): number => Math.min(max, Math.max(value, min)) - min;
 

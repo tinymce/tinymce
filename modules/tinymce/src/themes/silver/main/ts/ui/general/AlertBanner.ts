@@ -60,5 +60,4 @@ export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: 
         }
       }
     ]
-  })
-;
+  });

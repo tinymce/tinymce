@@ -120,8 +120,7 @@ const translate = (text: Untranslated): TranslatedString => {
 
   const translated = (text: Untranslated): TranslatedString =>
     // TODO: When we figure out how to return a type Translated that fails if you give a String, we implement here
-    text
-  ;
+    text;
 
   // empty strings
   if (isEmpty(text)) {

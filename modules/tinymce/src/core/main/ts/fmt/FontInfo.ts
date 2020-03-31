@@ -43,8 +43,7 @@ const toPt = (fontSize: string, precision?: number) => {
 
 const normalizeFontFamily = (fontFamily: string) =>
   // 'Font name', Font -> Font name,Font
-  fontFamily.replace(/[\'\"\\]/g, '').replace(/,\s+/g, ',')
-;
+  fontFamily.replace(/[\'\"\\]/g, '').replace(/,\s+/g, ',');
 
 const getComputedFontProp = (propName: string, elm: HTMLElement): Option<string> => Option.from(DOMUtils.DOM.getStyle(elm, propName, true));
 

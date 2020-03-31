@@ -105,8 +105,7 @@ const init = (): LayeredState => {
 
   const collapse = (itemValue: string): Option<string[]> =>
     // Look up which key has the itemValue
-    Obj.get(paths.get(), itemValue).bind((path) => path.length > 1 ? Option.some(path.slice(1)) : Option.none())
-  ;
+    Obj.get(paths.get(), itemValue).bind((path) => path.length > 1 ? Option.some(path.slice(1)) : Option.none());
 
   const refresh = (itemValue: string): Option<string[]> => Obj.get(paths.get(), itemValue);
 

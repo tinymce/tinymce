@@ -109,8 +109,7 @@ export const isTriggeredByKeyboard = (editor: Editor, e: PointerEvent) =>
   // Firefox: button = 0, pointerType = undefined & target = body
   // IE/Edge: button = 2, pointerType = "" & target = body
   // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
-  e.type !== 'longpress' && (e.button !== 2 || e.target === editor.getBody() && e.pointerType === '')
-;
+  e.type !== 'longpress' && (e.button !== 2 || e.target === editor.getBody() && e.pointerType === '');
 
 export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>, backstage: UiFactoryBackstage) => {
   const detection = PlatformDetection.detect();

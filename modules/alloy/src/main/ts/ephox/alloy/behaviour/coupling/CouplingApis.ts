@@ -3,8 +3,7 @@ import { CouplingState, CouplingConfig } from './CouplingTypes';
 
 const getCoupled = (component: AlloyComponent, coupleConfig: CouplingConfig, coupleState: CouplingState, name: string): AlloyComponent =>
   // console.log('state', coupleState.readState());
-  coupleState.getOrCreate(component, coupleConfig, name)
-;
+  coupleState.getOrCreate(component, coupleConfig, name);
 
 export {
   getCoupled

@@ -56,8 +56,7 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
       },
       initialData: {},
       dataValidator: ValueSchema.anyValue()
-    } )
-  ;
+    });
 
   const sGui = (selector: string, sequence) => Step.async((next, die) => {
     TestHelpers.GuiSetup.setup(

@@ -47,8 +47,7 @@ const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number
   const findTriggerChIndex = (element: Text, offset: number, text: string) =>
     // Stop searching by just returning the current offset if whitespace was found (eg Option.none())
     // and we'll handle the final checks below instead
-    findChar(text, offset, ch).getOr(offset)
-  ;
+    findChar(text, offset, ch).getOr(offset);
 
   const root = dom.getParent(initRange.startContainer, dom.isBlock) || dom.getRoot();
   return repeatLeft(dom, initRange.startContainer, initRange.startOffset, findTriggerChIndex, root).bind((spot) => {

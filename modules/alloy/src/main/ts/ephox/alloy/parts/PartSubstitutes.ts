@@ -13,8 +13,7 @@ const combine = <D extends CompositeSketchDetail, S extends CompositeSketchSpec>
     partSpec,
     { uid: detail.partUids[data.name] },
     data.overrides(detail, partSpec, partValidated)
-  )
-;
+  );
 
 const subs = <D extends CompositeSketchDetail>(owner: string, detail: D, parts: PartType.PartTypeAdt[]): Substitutions => {
   const internals: Record<string, UiSubstitutes.UiSubstitutesAdt> = { };

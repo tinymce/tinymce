@@ -30,8 +30,7 @@ const create = (editor: Editor, range: Range): Element =>
     });
 
     return wrapper;
-  })
-;
+  });
 
 const detect = (elm: Element): Option<Element> => SelectorFind.closest(elm, autocompleteSelector);
 

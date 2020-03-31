@@ -82,8 +82,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
       if (! menu.getSystem().isConnected()) { return Option.none(); }
       const candidates = Highlighting.getCandidates(menu);
       return Arr.find(candidates, (c) => getItemValue(c) === itemValue);
-    })
-  ;
+    });
 
   const toDirectory = (_container: AlloyComponent): Record<string, string[]> => Obj.map(detail.data.menus, (data, _menuName) => Arr.bind(data.items, (item) => item.type === 'separator' ? [ ] : [ item.data.value ]));
 
@@ -221,8 +220,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
 
   const onLeft = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> =>
     // Exclude inputs, textareas etc.
-    EditableFields.inside(item.element()) ? Option.none() : collapseLeft(container, item)
-  ;
+    EditableFields.inside(item.element()) ? Option.none() : collapseLeft(container, item);
 
   const onEscape = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => collapseLeft(container, item).orThunk(() =>
   // This should only fire when the user presses ESC ... not any other close.

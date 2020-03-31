@@ -62,8 +62,7 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
         }
       })),
       frame.element()
-    )
-  ;
+    );
 
   const sAssertStandardIframeContent = (frame: AlloyComponent) =>
     // TODO: See if we can match the contents inside the iframe body. That may not be possible though,
@@ -77,8 +76,7 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
         }
       })),
       frame.element()
-    )
-  ;
+    );
 
   TestHelpers.GuiSetup.setup(
     (_store, _doc, _body) => GuiFactory.build(

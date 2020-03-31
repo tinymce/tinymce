@@ -76,8 +76,7 @@ const schemas = (parts: PartType.PartTypeAdt[]): FieldProcessorAdt[] =>
     Option.none
   ).map((data) => FieldSchema.strictObjOf(data.name, data.schema.concat([
     Fields.snapshot(PartType.original())
-  ]))).toArray())
-;
+  ]))).toArray());
 
 const names = (parts: PartType.PartTypeAdt[]): string[] => Arr.map(parts, PartType.name);
 

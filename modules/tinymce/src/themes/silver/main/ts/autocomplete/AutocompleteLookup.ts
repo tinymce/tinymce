@@ -36,8 +36,7 @@ const isPreviousCharContent = (dom: DOMUtils, leaf: Spot.SpotPoint<Node>) =>
   repeatLeft(dom, leaf.container, leaf.offset, (element, offset) => offset === 0 ? -1 : offset, dom.getRoot()).filter((spot) => {
     const char = spot.container.data.charAt(spot.offset - 1);
     return !isWhitespace(char);
-  }).isSome()
-;
+  }).isSome();
 
 const isStartOfWord = (dom: DOMUtils) => (rng: Range) => {
   const leaf = toLeaf(rng.startContainer, rng.startOffset);

@@ -11,8 +11,7 @@ const isSkinDisabled = (editor: Editor): boolean => editor.settings.skin === fal
 
 const readOnlyOnInit = (_editor: Editor) =>
   // Intentional short circuit, TODO: implement editor.settings.mobile
-  false
-;
+  false;
 
 export {
   isSkinDisabled,

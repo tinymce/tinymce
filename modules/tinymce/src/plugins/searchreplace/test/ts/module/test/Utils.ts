@@ -24,8 +24,7 @@ const sOpenDialog = (ui: TinyUi) => GeneralSteps.sequence([
 
 const sCloseDialog = (ui: TinyUi) =>
   // Note: Can't use UiChains.cCloseDialog here, as the dialog doesn't have a cancel button in the footer
-  ui.sClickOnUi('Click cancel button', 'div[role="dialog"] button[aria-label=Close]')
-;
+  ui.sClickOnUi('Click cancel button', 'div[role="dialog"] button[aria-label=Close]');
 
 const sClickFind = (ui) => ui.sClickOnUi('Click find', '[role=dialog] button:contains("Find")');
 const sClickNext = (ui) => ui.sClickOnUi('Click next', '[role=dialog] button[title="Next"]');

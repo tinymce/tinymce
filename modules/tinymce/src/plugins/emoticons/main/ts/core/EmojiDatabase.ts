@@ -102,9 +102,7 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
 
   const listCategories = (): string[] =>
     // TODO: Category key order should be adjusted to match the standard
-    [ ALL_CATEGORY ].concat(Obj.keys(categories.get().getOr({})))
-
-  ;
+    [ ALL_CATEGORY ].concat(Obj.keys(categories.get().getOr({})));
 
   const waitForLoad = (): Promise<boolean> => {
     if (hasLoaded()) {

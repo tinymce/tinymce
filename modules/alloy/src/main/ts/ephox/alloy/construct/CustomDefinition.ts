@@ -65,8 +65,7 @@ const toDefinition = (detail: CustomDetail<any>): DomDefinitionDetail =>
     ...detail.dom,
     uid: detail.uid,
     domChildren: Arr.map(detail.components, (comp) => comp.element())
-  })
-;
+  });
 
 const toModification = (detail: CustomDetail<any>): DomModification => detail.domModification.fold(() => NuModification({ }), NuModification);
 

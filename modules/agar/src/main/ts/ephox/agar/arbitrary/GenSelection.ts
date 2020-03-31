@@ -13,8 +13,7 @@ const defaultExclusions: SelectionExclusions = {
 
 const getEnd = (target: Element<any>): number =>
   // Probably do this more efficiently
-  Node.isText(target) ? Text.get(target).length : Traverse.children(target).length
-;
+  Node.isText(target) ? Text.get(target).length : Traverse.children(target).length;
 
 const gChooseIn = (target: Element<any>): any => {
   const offsets = getEnd(target);

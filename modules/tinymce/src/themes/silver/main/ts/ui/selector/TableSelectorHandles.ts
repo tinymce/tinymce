@@ -113,8 +113,7 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
     // Arr.each(debugs, (debugArea) => {
     //   Remove.remove(debugArea);
     // });
-    Arr.map(tlTds.get(), (td) => getTopLeftSnap(td))
-  ;
+    Arr.map(tlTds.get(), (td) => getTopLeftSnap(td));
 
   const getBottomRightSnap = (td: Element<HTMLTableDataCellElement>) => {
     const box = Boxes.absolute(td);
@@ -127,8 +126,7 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
     // Arr.each(debugs, (debugArea) => {
     //   Remove.remove(debugArea);
     // });
-    Arr.map(brTds.get(), (td) => getBottomRightSnap(td))
-  ;
+    Arr.map(brTds.get(), (td) => getBottomRightSnap(td));
 
   const topLeftSnaps = getSnapsConfig(getTopLeftSnaps, startCell, (start) => {
     finishCell.get().each((finish) => {

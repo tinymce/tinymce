@@ -24,8 +24,7 @@ export const enum ChildContext {
 
 const isZeroWidth = (elem): boolean =>
   // TODO: I believe this is the same cursor used in tinymce (Unicode.zeroWidth)?
-  Node.isText(elem) && Text.get(elem) === Unicode.zeroWidth
-;
+  Node.isText(elem) && Text.get(elem) === Unicode.zeroWidth;
 
 const context = (editor: Editor, elem: any, wrapName: string, nodeName: string): ChildContext => Traverse.parent(elem).fold(
   () => ChildContext.Skipping,

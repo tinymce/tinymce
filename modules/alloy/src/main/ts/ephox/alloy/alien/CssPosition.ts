@@ -26,8 +26,7 @@ const toFixed = (pos: CssPositionAdt): Position =>
   pos.fold(
     Fun.identity,
     (point, scrollLeft, scrollTop) => point.translate(-scrollLeft, -scrollTop)
-  )
-;
+  );
 
 const toAbsolute = (pos: CssPositionAdt): Position => pos.fold(Fun.identity, Fun.identity);
 

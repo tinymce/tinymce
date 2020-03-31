@@ -31,7 +31,6 @@ const singleWithUrl = (img: Blob, objurl: string) => Future.nu((callback: (data:
 
 const multiple = (imgs: Blob[]): Future<ImageAssetAdt[]> =>
   // edge case: where a drop of a non-file takes place
-  Futures.traverse(imgs, single)
-;
+  Futures.traverse(imgs, single);
 
 export { multiple, single, singleWithUrl };

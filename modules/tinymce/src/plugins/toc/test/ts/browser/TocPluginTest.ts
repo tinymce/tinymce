@@ -40,8 +40,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
       '<h1 id="h3">H1</h1>' +
       '<p>This is some text.</p>' +
       '<h3 id="h4">H3</h3>' +
-      '<p>This is some text.</p>'
-    ;
+      '<p>This is some text.</p>';
 
     LegacyUnit.setSelection(editor, 'h1', 0);
     editor.execCommand('mceInsertToc');
@@ -83,8 +82,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
       '<h1 id="h3">H1</h1>' +
       '<p>This is some text.</p>' +
       '<h2 id="h4">H2</h2>' +
-      '<p>This is some text.</p>'
-    ;
+      '<p>This is some text.</p>';
 
     LegacyUnit.setSelection(editor, 'h1', 0);
     editor.execCommand('mceInsertToc');
@@ -122,8 +120,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
       '<h1 id="h3">H1</h1>' +
       '<p>This is some text.</p>' +
       '<h3 id="h4">H3</h3>' +
-      '<p>This is some text.</p>'
-    ;
+      '<p>This is some text.</p>';
 
     LegacyUnit.setSelection(editor, 'h1', 0);
     editor.execCommand('mceInsertToc');
@@ -147,8 +144,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
       '<h2 id="h2">H2</h2>' +
       '<p>This is some text.</p>' +
       '<h3 id="h4">H3</h3>' +
-      '<p>This is some text.</p>'
-    ;
+      '<p>This is some text.</p>';
 
     LegacyUnit.setSelection(editor, 'h2', 0);
     editor.execCommand('mceInsertToc');

@@ -12,8 +12,7 @@ const isNamedAnchor = (editor: Editor, node: Element) => node.tagName === 'A' &&
 
 const isValidId = (id: string) =>
   // Follows HTML4 rules: https://www.w3.org/TR/html401/types.html#type-id
-  /^[A-Za-z][A-Za-z0-9\-:._]*$/.test(id)
-;
+  /^[A-Za-z][A-Za-z0-9\-:._]*$/.test(id);
 
 const getId = (editor: Editor) => {
   const selectedNode = editor.selection.getNode();

@@ -30,8 +30,7 @@ const stepToPromise = <T, U>(step: Step<T, U>) =>
         resolve(true);
         // Not sure what to do about logging for this.
       }, reject, TestLogs.init());
-    }) : fakePromise()
-  ;
+    }) : fakePromise();
 
 // Maybe wrap in the same way Jsc does for console output with ticks and crosses.
 const sAsyncProperty = <T, X, Y>(name: string, arbitraries, statefulStep: Step<X, Y>, _options?) => {

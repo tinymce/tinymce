@@ -144,8 +144,7 @@ export const reset = (undoManager: UndoManager) => {
 
 export const hasUndo = (editor: Editor, undoManager: UndoManager, index: Index) =>
   // Has undo levels or typing and content isn't the same as the initial level
-  index.get() > 0 || (undoManager.typing && undoManager.data[0] && !Levels.isEq(Levels.createFromEditor(editor), undoManager.data[0]))
-;
+  index.get() > 0 || (undoManager.typing && undoManager.data[0] && !Levels.isEq(Levels.createFromEditor(editor), undoManager.data[0]));
 
 export const hasRedo = (undoManager: UndoManager, index: Index) => index.get() < undoManager.data.length - 1 && !undoManager.typing;
 

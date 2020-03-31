@@ -76,8 +76,7 @@ const sAssertEditorContents = (editorBody, language, content, selector) =>
   GeneralSteps.sequence(Logger.ts('Assert overall structure of editor content', [
     sAssertEditorContentStructure(editorBody, language, content),
     sAssertPreText(Element.fromDom(editorBody), selector, content),
-  ]))
-;
+  ]));
 
 export {
   sSetLanguage,

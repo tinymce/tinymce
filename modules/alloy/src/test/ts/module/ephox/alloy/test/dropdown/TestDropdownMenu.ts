@@ -87,8 +87,7 @@ const mWaitForNewMenu = (component: AlloyComponent) =>
       100,
       3000
     ).runStep(value, next, die, logs);
-  })
-;
+  });
 
 const assertLazySinkArgs = (expectedTag: string, expectedClass: string, comp: AlloyComponent) => {
   Assertions.assertStructure(
