@@ -37,11 +37,15 @@ const composite = (rawDepth, detail, construct) => {
 const structure = (rawDepth, detail, construct) => {
   const components = toComponents(detail);
   return Jsc.number(0, 1).generator.flatMap((random) => {
-    const children = Arr.foldl(components, (b, component) =>
-      // TODO: Allow the order to be mixed up?
-      random <= component.chance ? b.concat([ construct(component.component, rawDepth) ]) : b
-    , []);
-
+    // TODO: Allow the order to be mixed up?
+    const children = Arr.foldl(
+      components,
+      (b, component) =>
+        random <= component.chance ?
+          b.concat([ construct(component.component, rawDepth) ]) :
+          b,
+      []
+    );
     return Jsc.tuple(children).generator;
   });
 };
