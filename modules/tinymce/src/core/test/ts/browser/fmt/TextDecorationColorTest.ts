@@ -34,75 +34,78 @@ UnitTest.asynctest('browser.tinymce.core.fmt.TextDecorationColorTest', function 
 
     type Selection = {startPath: number[], sOffset: number, finishPath: number[], fOffset: number};
 
-    const sMergeForecolorAndTextDecoration = (toolbarLabel: string, textDecoration: string, selectedText: string, restText: string, selection: Selection) =>
-      Log.stepsAsStep('', `Merge forecolor and ${toolbarLabel} with text: ${selectedText + restText}`, [
+    const sMergeForecolorAndTextDecoration = (toolbarLabel: string, textDecoration: string, text: {bText: string, mText: string, aText: string}, selection: Selection) =>
+      Log.stepsAsStep('', `Merge forecolor and ${toolbarLabel} with text: ${text.bText + text.mText + text.aText}`, [
         Log.stepsAsStep('TBA', 'Apply forecolor then text-decoration then unapply them', [
-          tinyApis.sSetContent(`<p>${selectedText + restText}</p>`),
+          tinyApis.sSetContent(`<p>${text.bText + text.mText + text.aText}</p>`),
           tinyApis.sFocus(),
           tinyApis.sSetSelection(selection.startPath, selection.sOffset, selection.finishPath, selection.fOffset),
           applyForecolor(),
-          tinyApis.sAssertContent(`<p><span style="color: #bfedd2;">${selectedText}</span>${restText}</p>`),
+          tinyApis.sAssertContent(`<p>${text.bText}<span style="color: #bfedd2;">${text.mText}</span>${text.aText}</p>`),
           toggleInlineStyle(toolbarLabel),
-          tinyApis.sAssertContent(`<p><span style="text-decoration: ${textDecoration};"><span style="color: #bfedd2; text-decoration: ${textDecoration};">${selectedText}</span></span>${restText}</p>`),
+          tinyApis.sAssertContent(`<p>${text.bText}<span style="text-decoration: ${textDecoration};"><span style="color: #bfedd2; text-decoration: ${textDecoration};">${text.mText}</span></span>${text.aText}</p>`),
           toggleInlineStyle(toolbarLabel),
-          tinyApis.sAssertContent(`<p><span style="color: #bfedd2;">${selectedText}</span>${restText}</p>`),
+          tinyApis.sAssertContent(`<p>${text.bText}<span style="color: #bfedd2;">${text.mText}</span>${text.aText}</p>`),
           removeForecolor(),
-          tinyApis.sAssertContent(`<p>${selectedText + restText}</p>`),
+          tinyApis.sAssertContent(`<p>${text.bText + text.mText + text.aText}</p>`),
         ]),
         Log.stepsAsStep('TBA', 'Apply text-decoration then forecolor then unapply them', [
-          tinyApis.sSetContent(`<p>${selectedText + restText}</p>`),
+          tinyApis.sSetContent(`<p>${text.bText + text.mText + text.aText}</p>`),
           tinyApis.sFocus(),
           tinyApis.sSetSelection(selection.startPath, selection.sOffset, selection.finishPath, selection.fOffset),
           toggleInlineStyle(toolbarLabel),
-          tinyApis.sAssertContent(`<p><span style="text-decoration: ${textDecoration};">${selectedText}</span>${restText}</p>`),
+          tinyApis.sAssertContent(`<p>${text.bText}<span style="text-decoration: ${textDecoration};">${text.mText}</span>${text.aText}</p>`),
           applyForecolor(),
           // This is different to above - need to investigate this
           // Probably should use Structure builder
-          tinyApis.sAssertContent(`<p><span style="text-decoration: ${textDecoration}; color: #bfedd2;">${selectedText}</span>${restText}</p>`),
+          tinyApis.sAssertContent(`<p>${text.bText}<span style="text-decoration: ${textDecoration}; color: #bfedd2;">${text.mText}</span>${text.aText}</p>`),
           removeForecolor(),
-          tinyApis.sAssertContent(`<p><span style="text-decoration: ${textDecoration};">${selectedText}</span>${restText}</p>`),
+          tinyApis.sAssertContent(`<p>${text.bText}<span style="text-decoration: ${textDecoration};">${text.mText}</span>${text.aText}</p>`),
           toggleInlineStyle(toolbarLabel),
-          tinyApis.sSetContent(`<p>${selectedText + restText}</p>`),
+          tinyApis.sAssertContent(`<p>${text.bText + text.mText + text.aText}</p>`),
         ]),
         Log.stepsAsStep('TBA', 'Apply forecolor and custom format then unapply them', [
-          tinyApis.sSetContent(`<p>${selectedText + restText}</p>`),
+          tinyApis.sSetContent(`<p>${text.bText + text.mText + text.aText}</p>`),
           tinyApis.sFocus(),
           tinyApis.sSetSelection(selection.startPath, selection.sOffset, selection.finishPath, selection.fOffset),
           applyForecolor(),
-          tinyApis.sAssertContent(`<p><span style="color: #bfedd2;">${selectedText}</span>${restText}</p>`),
+          tinyApis.sAssertContent(`<p>${text.bText}<span style="color: #bfedd2;">${text.mText}</span>${text.aText}</p>`),
           applyCustomFormat('custom_format'),
-          tinyApis.sAssertContent(`<p><span class="abc" style="color: #bfedd2; text-decoration: underline;">${selectedText}</span>${restText}</p>`),
+          tinyApis.sAssertContent(`<p>${text.bText}<span class="abc" style="color: #bfedd2; text-decoration: underline;">${text.mText}</span>${text.aText}</p>`),
           removeCustomFormat('custom_format'),
-          tinyApis.sAssertContent(`<p><span style="color: #bfedd2;">${selectedText}</span>${restText}</p>`),
+          tinyApis.sAssertContent(`<p>${text.bText}<span style="color: #bfedd2;">${text.mText}</span>${text.aText}</p>`),
           removeForecolor(),
-          tinyApis.sSetContent(`<p>${selectedText + restText}</p>`),
+          tinyApis.sAssertContent(`<p>${text.bText + text.mText + text.aText}</p>`),
         ]),
         // Apply custom format then forecolor
         Log.stepsAsStep('TBA', 'Apply custom format and forecolor then unapply them', [
-          tinyApis.sSetContent(`<p>${selectedText + restText}</p>`),
+          tinyApis.sSetContent(`<p>${text.bText + text.mText + text.aText}</p>`),
           tinyApis.sFocus(),
           tinyApis.sSetSelection(selection.startPath, selection.sOffset, selection.finishPath, selection.fOffset),
           applyCustomFormat('custom_format'),
-          tinyApis.sAssertContent(`<p><span class="abc" style="text-decoration: underline;">${selectedText}</span>${restText}</p>`),
+          tinyApis.sAssertContent(`<p>${text.bText}<span class="abc" style="text-decoration: underline;">${text.mText}</span>${text.aText}</p>`),
           applyForecolor(),
-          tinyApis.sAssertContent(`<p><span class="abc" style="text-decoration: underline; color: #bfedd2;">${selectedText}</span>${restText}</p>`),
+          tinyApis.sAssertContent(`<p>${text.bText}<span class="abc" style="text-decoration: underline; color: #bfedd2;">${text.mText}</span>${text.aText}</p>`),
           removeForecolor(),
-          tinyApis.sAssertContent(`<p><span class="abc" style="text-decoration: underline;">${selectedText}</span>${restText}</p>`),
+          tinyApis.sAssertContent(`<p>${text.bText}<span class="abc" style="text-decoration: underline;">${text.mText}</span>${text.aText}</p>`),
           removeCustomFormat('custom_format'),
-          tinyApis.sSetContent(`<p>${selectedText + restText}</p>`),
+          tinyApis.sAssertContent(`<p>${text.bText + text.mText + text.aText}</p>`),
         ]),
       ]);
 
     Pipeline.async({}, [
       // Collapsed selections
-      sMergeForecolorAndTextDecoration('Underline', 'underline', 'abc', '', {startPath: [0, 0], sOffset: 1, finishPath: [0, 0], fOffset: 1}),
-      sMergeForecolorAndTextDecoration('Strikethrough', 'line-through', 'abc', '', {startPath: [0, 0], sOffset: 1, finishPath: [0, 0], fOffset: 1}),
+      sMergeForecolorAndTextDecoration('Underline', 'underline', {bText: '', mText: 'abc', aText: ''}, {startPath: [0, 0], sOffset: 1, finishPath: [0, 0], fOffset: 1}),
+      sMergeForecolorAndTextDecoration('Strikethrough', 'line-through', {bText: '', mText: 'abc', aText: ''}, {startPath: [0, 0], sOffset: 1, finishPath: [0, 0], fOffset: 1}),
       // Ranged selections (single word)
-      sMergeForecolorAndTextDecoration('Underline', 'underline', 'abc', ' def', {startPath: [0, 0], sOffset: 0, finishPath: [0, 0], fOffset: 'abc'.length}),
-      sMergeForecolorAndTextDecoration('Strikethrough', 'line-through', 'abc', ' def', {startPath: [0, 0], sOffset: 0, finishPath: [0, 0], fOffset: 'abc'.length}),
+      sMergeForecolorAndTextDecoration('Underline', 'underline', {bText: '', mText: 'abc', aText: ' def'}, {startPath: [0, 0], sOffset: 0, finishPath: [0, 0], fOffset: 'abc'.length}),
+      sMergeForecolorAndTextDecoration('Strikethrough', 'line-through', {bText: '', mText: 'abc', aText: ' def'}, {startPath: [0, 0], sOffset: 0, finishPath: [0, 0], fOffset: 'abc'.length}),
+      // Ranged selections (part of word)
+      sMergeForecolorAndTextDecoration('Underline', 'underline', {bText: 'a', mText: 'b', aText: 'c def'}, {startPath: [0, 0], sOffset: 1, finishPath: [0, 0], fOffset: 2}),
+      sMergeForecolorAndTextDecoration('Strikethrough', 'line-through', {bText: 'a', mText: 'b', aText: 'c def'}, {startPath: [0, 0], sOffset: 1, finishPath: [0, 0], fOffset: 2}),
       // Ranged selections (multiple words)
-      sMergeForecolorAndTextDecoration('Underline', 'underline', 'abc def', '', {startPath: [0, 0], sOffset: 0, finishPath: [0, 0], fOffset: 'abc def'.length}),
-      sMergeForecolorAndTextDecoration('Strikethrough', 'line-through', 'abc def', '', {startPath: [0, 0], sOffset: 0, finishPath: [0, 0], fOffset: 'abc def'.length}),
+      sMergeForecolorAndTextDecoration('Underline', 'underline', {bText: '', mText: 'abc def', aText: ''}, {startPath: [0, 0], sOffset: 0, finishPath: [0, 0], fOffset: 'abc def'.length}),
+      sMergeForecolorAndTextDecoration('Strikethrough', 'line-through', {bText: '', mText: 'abc def', aText: ''}, {startPath: [0, 0], sOffset: 0, finishPath: [0, 0], fOffset: 'abc def'.length}),
     ], onSuccess, onFailure);
   }, {
     plugins: '',
