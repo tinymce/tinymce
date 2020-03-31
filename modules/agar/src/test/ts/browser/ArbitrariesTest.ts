@@ -143,12 +143,12 @@ UnitTest.test('Arbitraries Test', () => {
     }
   });
 
-  checkProperty('Inline elements should have display: inline', Arbitraries.content('inline'), (element) => {
+  checkProperty('Inline elements should have display: inline', Arbitraries.content('inline'), (element) =>
     // console.log('inline.element', Html.getOuter(element));
-    return assertProperty('(display === inline)', element, (elem) =>
+    assertProperty('(display === inline)', element, (elem) =>
       Css.get(elem, 'display') !== 'inline' || Arr.contains([ 'span-underline', 'span-strikethrough' ], Node.name(elem))
-    );
-  });
+    )
+  );
 
   checkProperty('Container elements', Arbitraries.content('container'), (element) => assertProperty('if display === inline, no descendants have display block', element, (elem) => {
     if (Css.get(elem, 'display') === 'inline') {

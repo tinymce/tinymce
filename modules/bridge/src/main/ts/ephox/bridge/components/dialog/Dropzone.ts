@@ -16,6 +16,4 @@ export const dropZoneSchema = ValueSchema.objOf(dropZoneFields);
 
 export const dropZoneDataProcessor = ValueSchema.arrOfVal();
 
-export const createDropZone = (spec: DropZoneApi): Result<DropZone, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<DropZone>('dropzone', dropZoneSchema, spec);
-};
+export const createDropZone = (spec: DropZoneApi): Result<DropZone, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<DropZone>('dropzone', dropZoneSchema, spec);

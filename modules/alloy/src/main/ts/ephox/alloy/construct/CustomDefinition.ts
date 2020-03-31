@@ -21,68 +21,58 @@ export interface CustomDetail<A> {
   'debug.sketcher': string;
 }
 
-const toInfo = <A>(spec: ComponentDetail): Result<CustomDetail<A>, any> => {
-  return ValueSchema.asRaw('custom.definition', ValueSchema.objOf([
-    FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOf([
-      // Note, no children.
-      FieldSchema.strict('tag'),
-      FieldSchema.defaulted('styles', {}),
-      FieldSchema.defaulted('classes', []),
-      FieldSchema.defaulted('attributes', {}),
-      FieldSchema.option('value'),
-      FieldSchema.option('innerHtml')
-    ])),
-    FieldSchema.strict('components'),
-    FieldSchema.strict('uid'),
+const toInfo = <A>(spec: ComponentDetail): Result<CustomDetail<A>, any> => ValueSchema.asRaw('custom.definition', ValueSchema.objOf([
+  FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOf([
+    // Note, no children.
+    FieldSchema.strict('tag'),
+    FieldSchema.defaulted('styles', {}),
+    FieldSchema.defaulted('classes', []),
+    FieldSchema.defaulted('attributes', {}),
+    FieldSchema.option('value'),
+    FieldSchema.option('innerHtml')
+  ])),
+  FieldSchema.strict('components'),
+  FieldSchema.strict('uid'),
 
-    FieldSchema.defaulted('events', {}),
-    FieldSchema.defaulted('apis', { }),
+  FieldSchema.defaulted('events', {}),
+  FieldSchema.defaulted('apis', { }),
 
-    // Use mergeWith in the future when pre-built behaviours conflict
-    FieldSchema.field(
-      'eventOrder',
-      'eventOrder',
-      FieldPresence.mergeWith({
-        // Note, not using constant behaviour names to avoid code size of unused behaviours
-        'alloy.execute': [ 'disabling', 'alloy.base.behaviour', 'toggling', 'typeaheadevents' ],
-        'alloy.focus': [ 'alloy.base.behaviour', 'focusing', 'keying' ],
-        'alloy.system.init': [ 'alloy.base.behaviour', 'disabling', 'toggling', 'representing' ],
-        'input': [ 'alloy.base.behaviour', 'representing', 'streaming', 'invalidating' ],
-        'alloy.system.detached': [ 'alloy.base.behaviour', 'representing', 'item-events', 'tooltipping' ],
-        'mousedown': [ 'focusing', 'alloy.base.behaviour', 'item-type-events' ],
-        'touchstart': [ 'focusing', 'alloy.base.behaviour', 'item-type-events' ],
-        'mouseover': [ 'item-type-events', 'tooltipping' ],
-        'alloy.receive': [ 'receiving', 'reflecting' ]
-      }),
-      ValueSchema.anyValue()
-    ),
+  // Use mergeWith in the future when pre-built behaviours conflict
+  FieldSchema.field(
+    'eventOrder',
+    'eventOrder',
+    FieldPresence.mergeWith({
+      // Note, not using constant behaviour names to avoid code size of unused behaviours
+      'alloy.execute': [ 'disabling', 'alloy.base.behaviour', 'toggling', 'typeaheadevents' ],
+      'alloy.focus': [ 'alloy.base.behaviour', 'focusing', 'keying' ],
+      'alloy.system.init': [ 'alloy.base.behaviour', 'disabling', 'toggling', 'representing' ],
+      'input': [ 'alloy.base.behaviour', 'representing', 'streaming', 'invalidating' ],
+      'alloy.system.detached': [ 'alloy.base.behaviour', 'representing', 'item-events', 'tooltipping' ],
+      'mousedown': [ 'focusing', 'alloy.base.behaviour', 'item-type-events' ],
+      'touchstart': [ 'focusing', 'alloy.base.behaviour', 'item-type-events' ],
+      'mouseover': [ 'item-type-events', 'tooltipping' ],
+      'alloy.receive': [ 'receiving', 'reflecting' ]
+    }),
+    ValueSchema.anyValue()
+  ),
 
-    FieldSchema.option('domModification')
-  ]), spec);
-};
+  FieldSchema.option('domModification')
+]), spec);
 
-const toDefinition = (detail: CustomDetail<any>): DomDefinitionDetail => {
+const toDefinition = (detail: CustomDetail<any>): DomDefinitionDetail =>
   // EFFICIENCY: Consider not merging here.
-  return {
+  ({
     ...detail.dom,
     uid: detail.uid,
     domChildren: Arr.map(detail.components, (comp) => comp.element())
-  };
-};
+  })
+;
 
-const toModification = (detail: CustomDetail<any>): DomModification => {
-  return detail.domModification.fold(() => {
-    return NuModification({ });
-  }, NuModification);
-};
+const toModification = (detail: CustomDetail<any>): DomModification => detail.domModification.fold(() => NuModification({ }), NuModification);
 
-const toApis = <A>(info: CustomDetail<A>): A => {
-  return info.apis;
-};
+const toApis = <A>(info: CustomDetail<A>): A => info.apis;
 
-const toEvents = (info: CustomDetail<any>): AlloyEventRecord => {
-  return info.events;
-};
+const toEvents = (info: CustomDetail<any>): AlloyEventRecord => info.events;
 
 export {
   toInfo,

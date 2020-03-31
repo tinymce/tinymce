@@ -63,6 +63,4 @@ export const customEditorSchema = ValueSchema.valueOf(
 
 export const customEditorDataProcessor = ValueSchema.string;
 
-export const createCustomEditor = (spec: CustomEditorApi): Result<CustomEditor, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<CustomEditor>('CustomEditor', customEditorSchema, spec);
-};
+export const createCustomEditor = (spec: CustomEditorApi): Result<CustomEditor, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<CustomEditor>('CustomEditor', customEditorSchema, spec);

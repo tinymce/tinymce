@@ -68,10 +68,8 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, format: Conten
   return args.content;
 };
 
-export const getContentInternal = (editor: Editor, args: GetContentArgs, format): Content => {
-  return Option.from(editor.getBody())
-    .fold(
-      Fun.constant(args.format === 'tree' ? new Node('body', 11) : ''),
-      (body) => getContentFromBody(editor, args, format, body)
-    );
-};
+export const getContentInternal = (editor: Editor, args: GetContentArgs, format): Content => Option.from(editor.getBody())
+  .fold(
+    Fun.constant(args.format === 'tree' ? new Node('body', 11) : ''),
+    (body) => getContentFromBody(editor, args, format, body)
+  );

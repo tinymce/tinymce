@@ -15,9 +15,7 @@ import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('SandboxingTest', (success, failure) => {
 
-  GuiSetup.setup((_store, _doc, _body) => {
-    return Sinks.fixedSink();
-  }, (_doc, _body, gui, sink, store) => {
+  GuiSetup.setup((_store, _doc, _body) => Sinks.fixedSink(), (_doc, _body, gui, sink, store) => {
     const sandbox = sink.getSystem().build(
       Container.sketch({
         dom: {
@@ -40,68 +38,58 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
       })
     );
 
-    const sOpenWith = (data: AlloySpec) => {
-      return Step.sync(() => {
-        Sandboxing.open(sandbox, data);
-      });
-    };
+    const sOpenWith = (data: AlloySpec) => Step.sync(() => {
+      Sandboxing.open(sandbox, data);
+    });
 
     const sClose = Step.sync(() => {
       Sandboxing.close(sandbox);
     });
 
-    const sCheckShowing = (label: string, expected: boolean) => {
-      return Step.sync(() => {
-        Assertions.assertEq(
-          label + '\nSandbox should ' + (expected === false ? '*not* ' : '') + 'be open',
-          expected,
-          Sandboxing.isOpen(sandbox)
-        );
-      });
-    };
-
-    const sCheckOpenState = (label: string, expected: { data: string; store: string[] }) => {
-      return Logger.t(
-        label,
-        GeneralSteps.sequence([
-          sCheckShowing(label, true),
-          UiFinder.sExists(gui.element(), 'input[data-test-input="' + expected.data + '"]'),
-          UiFinder.sExists(gui.element(), '.test-sandbox'),
-          store.sAssertEq('Checking store', expected.store),
-          store.sClear,
-          Step.sync(() => {
-            const state = Sandboxing.getState(sandbox);
-            Assertions.assertEq(label + '\nChecking state node name', 'input', Node.name(state.getOrDie().element()));
-          })
-        ])
+    const sCheckShowing = (label: string, expected: boolean) => Step.sync(() => {
+      Assertions.assertEq(
+        label + '\nSandbox should ' + (expected === false ? '*not* ' : '') + 'be open',
+        expected,
+        Sandboxing.isOpen(sandbox)
       );
-    };
+    });
 
-    const sCheckClosedState = (label: string, expected: { store: string[] }) => {
-      return Logger.t(
-        label,
-        GeneralSteps.sequence([
-          sCheckShowing(label, false),
-          UiFinder.sNotExists(gui.element(), 'input[data-test-input]'),
-          UiFinder.sNotExists(gui.element(), '.test-sandbox'),
-          store.sAssertEq(label, expected.store),
-          store.sClear,
-          Step.sync(() => {
-            const state = Sandboxing.getState(sandbox);
-            Assertions.assertEq(label + '\nChecking state is not set', true, state.isNone());
-          })
-        ])
-      );
-    };
+    const sCheckOpenState = (label: string, expected: { data: string; store: string[] }) => Logger.t(
+      label,
+      GeneralSteps.sequence([
+        sCheckShowing(label, true),
+        UiFinder.sExists(gui.element(), 'input[data-test-input="' + expected.data + '"]'),
+        UiFinder.sExists(gui.element(), '.test-sandbox'),
+        store.sAssertEq('Checking store', expected.store),
+        store.sClear,
+        Step.sync(() => {
+          const state = Sandboxing.getState(sandbox);
+          Assertions.assertEq(label + '\nChecking state node name', 'input', Node.name(state.getOrDie().element()));
+        })
+      ])
+    );
 
-    const makeData = (rawData: string) => {
-      return Input.sketch({
-        uid: rawData,
-        inputAttributes: {
-          'data-test-input': rawData
-        }
-      });
-    };
+    const sCheckClosedState = (label: string, expected: { store: string[] }) => Logger.t(
+      label,
+      GeneralSteps.sequence([
+        sCheckShowing(label, false),
+        UiFinder.sNotExists(gui.element(), 'input[data-test-input]'),
+        UiFinder.sNotExists(gui.element(), '.test-sandbox'),
+        store.sAssertEq(label, expected.store),
+        store.sClear,
+        Step.sync(() => {
+          const state = Sandboxing.getState(sandbox);
+          Assertions.assertEq(label + '\nChecking state is not set', true, state.isNone());
+        })
+      ])
+    );
+
+    const makeData = (rawData: string) => Input.sketch({
+      uid: rawData,
+      inputAttributes: {
+        'data-test-input': rawData
+      }
+    });
 
     const firstOpening = makeData('first-opening');
     const secondOpening = makeData('second-opening');

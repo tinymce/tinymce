@@ -40,19 +40,17 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
       align: ''
     };
 
-    const standardOkTest = () => {
-      return Log.stepsAsStep('TBA', 'Table: Table properties dialog standard ok', [
-        sSetTable,
-        sSetCursor,
-        TableTestUtils.sOpenTableDialog(tinyUi),
-        TableTestUtils.sAssertDialogValues(emptyStandardData, false, generalSelectors),
-        TableTestUtils.sClickDialogButton('empty dialog with empty details', true),
-        TableTestUtils.sAssertElementStructure(editor, 'table', htmlEmptyTable),
-        TableTestUtils.sOpenTableDialog(tinyUi),
-        TableTestUtils.sAssertDialogValues(emptyStandardData, false, generalSelectors),
-        TableTestUtils.sClickDialogButton('cancelling dialog', false)
-      ]);
-    };
+    const standardOkTest = () => Log.stepsAsStep('TBA', 'Table: Table properties dialog standard ok', [
+      sSetTable,
+      sSetCursor,
+      TableTestUtils.sOpenTableDialog(tinyUi),
+      TableTestUtils.sAssertDialogValues(emptyStandardData, false, generalSelectors),
+      TableTestUtils.sClickDialogButton('empty dialog with empty details', true),
+      TableTestUtils.sAssertElementStructure(editor, 'table', htmlEmptyTable),
+      TableTestUtils.sOpenTableDialog(tinyUi),
+      TableTestUtils.sAssertDialogValues(emptyStandardData, false, generalSelectors),
+      TableTestUtils.sClickDialogButton('cancelling dialog', false)
+    ]);
 
     const standardFillOkTest = () => {
       const htmlFilledEmptyTable = ApproxStructure.build(function (s, str/* , arr*/) {

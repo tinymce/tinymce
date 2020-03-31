@@ -50,42 +50,40 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
 
       const sWaitForToolbarHidden = UiFinder.sWaitForHidden('Waiting for toolbar to be hidden', Body.body(), '.tox-pop');
 
-      const sTestPositionWhileScrolling = (scenario: Scenario) => {
-        return Log.stepsAsStep('TBA', scenario.label, [
-          tinyApis.sSetContent(
-            '<p style="height: 100px"></p>' +
+      const sTestPositionWhileScrolling = (scenario: Scenario) => Log.stepsAsStep('TBA', scenario.label, [
+        tinyApis.sSetContent(
+          '<p style="height: 100px"></p>' +
             '<p style="height: 100px"></p>' +
             '<p style="height: 100px"></p>' +
             `<p style="height: 25px;${scenario.contentStyles || ''}">${scenario.content}</p>` +
             '<p style="height: 100px"></p>' +
             '<p style="height: 100px"></p>' +
             '<p style="height: 100px"></p>'
-          ),
-          tinyApis.sFocus(),
-          sScrollTo(0, 200),
-          tinyApis.sSetCursor(scenario.cursor.elementPath, scenario.cursor.offset),
-          UiFinder.sWaitForVisible('Waiting for toolbar to appear above content', Body.body(), '.tox-pop.tox-pop--bottom' + scenario.classes),
-          sAssertPosition('bottom', 232),
+        ),
+        tinyApis.sFocus(),
+        sScrollTo(0, 200),
+        tinyApis.sSetCursor(scenario.cursor.elementPath, scenario.cursor.offset),
+        UiFinder.sWaitForVisible('Waiting for toolbar to appear above content', Body.body(), '.tox-pop.tox-pop--bottom' + scenario.classes),
+        sAssertPosition('bottom', 232),
 
-          // Position the link at the top of the viewport, just below the toolbar
-          sScrollTo(0, 300),
-          UiFinder.sWaitForVisible('Waiting for toolbar to appear below content', Body.body(), '.tox-pop.tox-pop--top' + scenario.classes),
-          sAssertPosition('top', -289),
+        // Position the link at the top of the viewport, just below the toolbar
+        sScrollTo(0, 300),
+        UiFinder.sWaitForVisible('Waiting for toolbar to appear below content', Body.body(), '.tox-pop.tox-pop--top' + scenario.classes),
+        sAssertPosition('top', -289),
 
-          // Position the behind the menu/toolbar and check the context toolbar is hidden
-          sScrollTo(0, 400),
-          sWaitForToolbarHidden,
+        // Position the behind the menu/toolbar and check the context toolbar is hidden
+        sScrollTo(0, 400),
+        sWaitForToolbarHidden,
 
-          // Position the element back into view
-          sScrollTo(0, 200),
-          UiFinder.sWaitForVisible('Waiting for toolbar to appear above content', Body.body(), '.tox-pop.tox-pop--bottom' + scenario.classes),
-          sAssertPosition('bottom', 232),
+        // Position the element back into view
+        sScrollTo(0, 200),
+        UiFinder.sWaitForVisible('Waiting for toolbar to appear above content', Body.body(), '.tox-pop.tox-pop--bottom' + scenario.classes),
+        sAssertPosition('bottom', 232),
 
-          // Position the element off the top of the screen and check the context toolbar is hidden
-          sScrollTo(0, 600),
-          sWaitForToolbarHidden
-        ]);
-      };
+        // Position the element off the top of the screen and check the context toolbar is hidden
+        sScrollTo(0, 600),
+        sWaitForToolbarHidden
+      ]);
 
       const fullscreenSelector = '.tox.tox-fullscreen';
       const fullscreenButtonSelector = 'button[aria-label="Fullscreen"]';

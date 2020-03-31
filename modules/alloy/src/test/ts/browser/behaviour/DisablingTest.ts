@@ -27,23 +27,19 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
     })
   );
 
-  GuiSetup.setup((store, _doc, _body) => {
-    return GuiFactory.build(
-      Container.sketch({
-        components: [
-          subject.asSpec()
-        ],
-        events: AlloyEvents.derive([
-          AlloyEvents.runOnExecute(store.adder('execute.reached'))
-        ])
-      }
-      ));
-  }, (_doc, _body, _gui, component, store) => {
+  GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
+    Container.sketch({
+      components: [
+        subject.asSpec()
+      ],
+      events: AlloyEvents.derive([
+        AlloyEvents.runOnExecute(store.adder('execute.reached'))
+      ])
+    }
+    )), (_doc, _body, _gui, component, store) => {
 
     const sClickButton = Chain.asStep({ }, [
-      Chain.mapper(() => {
-        return subject.get(component).element();
-      }),
+      Chain.mapper(() => subject.get(component).element()),
       Mouse.cClick
     ]);
 
@@ -51,13 +47,11 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
     return [
       Assertions.sAssertStructure(
         'Disabled should have a disabled attribute',
-        ApproxStructure.build((s, str, _arr) => {
-          return s.element('button', {
-            attrs: {
-              disabled: str.is('disabled')
-            }
-          });
-        }),
+        ApproxStructure.build((s, str, _arr) => s.element('button', {
+          attrs: {
+            disabled: str.is('disabled')
+          }
+        })),
         button.element()
       ),
 
@@ -82,13 +76,11 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'After re-enabling, the disabled attribute should be removed',
-        ApproxStructure.build((s, str, _arr) => {
-          return s.element('button', {
-            attrs: {
-              disabled: str.none()
-            }
-          });
-        }),
+        ApproxStructure.build((s, str, _arr) => s.element('button', {
+          attrs: {
+            disabled: str.none()
+          }
+        })),
         button.element()
       ),
 
@@ -113,13 +105,11 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'Disabled should have a disabled attribute',
-        ApproxStructure.build((s, str, _arr) => {
-          return s.element('button', {
-            attrs: {
-              disabled: str.is('disabled')
-            }
-          });
-        }),
+        ApproxStructure.build((s, str, _arr) => s.element('button', {
+          attrs: {
+            disabled: str.is('disabled')
+          }
+        })),
         button.element()
       ),
 
@@ -132,13 +122,11 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'After re-enabling, the disabled attribute should be removed',
-        ApproxStructure.build((s, str, _arr) => {
-          return s.element('button', {
-            attrs: {
-              disabled: str.none()
-            }
-          });
-        }),
+        ApproxStructure.build((s, str, _arr) => s.element('button', {
+          attrs: {
+            disabled: str.none()
+          }
+        })),
         button.element()
       )
     ];

@@ -229,17 +229,11 @@ const calcHSpace = (css: StyleMap): string => {
   return matchingLeftRight ? Utils.removePixelSuffix(String(css['margin-right'])) : '';
 };
 
-const calcBorderWidth = (css: StyleMap): string => {
-  return css['border-width'] ? Utils.removePixelSuffix(String(css['border-width'])) : '';
-};
+const calcBorderWidth = (css: StyleMap): string => css['border-width'] ? Utils.removePixelSuffix(String(css['border-width'])) : '';
 
-const calcBorderStyle = (css: StyleMap): string => {
-  return css['border-style'] ? String(css['border-style']) : '';
-};
+const calcBorderStyle = (css: StyleMap): string => css['border-style'] ? String(css['border-style']) : '';
 
-const calcStyle = (parseStyle: Helpers['parseStyle'], serializeStyle: Helpers['serializeStyle'], css: StyleMap): string => {
-  return serializeStyle(parseStyle(serializeStyle(css)));
-};
+const calcStyle = (parseStyle: Helpers['parseStyle'], serializeStyle: Helpers['serializeStyle'], css: StyleMap): string => serializeStyle(parseStyle(serializeStyle(css)));
 
 const changeStyle2 = (parseStyle: Helpers['parseStyle'], serializeStyle: Helpers['serializeStyle'], data: ImageDialogData): ImageDialogData => {
   const css = Utils.mergeMargins(parseStyle(data.style));
@@ -399,23 +393,17 @@ const submitHandler = (editor: Editor) => (info: ImageDialogInfo) => (api: API) 
   api.close();
 };
 
-const imageSize = (editor: Editor) => (url: string): Promise<Size> => {
-  return Utils.getImageSize(editor.documentBaseURI.toAbsolute(url)).then((dimensions) => {
-    return {
-      width: String(dimensions.width),
-      height: String(dimensions.height)
-    };
-  });
-};
+const imageSize = (editor: Editor) => (url: string): Promise<Size> => Utils.getImageSize(editor.documentBaseURI.toAbsolute(url)).then((dimensions) => ({
+  width: String(dimensions.width),
+  height: String(dimensions.height)
+}));
 
-const createBlobCache = (editor: Editor) => (file: File, blobUri: string, dataUrl: string): BlobInfo => {
-  return editor.editorUpload.blobCache.create({
-    blob: file,
-    blobUri,
-    name: file.name ? file.name.replace(/\.[^\.]+$/, '') : null,
-    base64: dataUrl.split(',')[ 1 ]
-  });
-};
+const createBlobCache = (editor: Editor) => (file: File, blobUri: string, dataUrl: string): BlobInfo => editor.editorUpload.blobCache.create({
+  blob: file,
+  blobUri,
+  name: file.name ? file.name.replace(/\.[^\.]+$/, '') : null,
+  base64: dataUrl.split(',')[ 1 ]
+});
 
 const addToBlobCache = (editor: Editor) => (blobInfo: BlobInfo) => {
   editor.editorUpload.blobCache.add(blobInfo);
@@ -426,17 +414,11 @@ const alertErr = (editor: Editor) => (api: API, message: string) => {
   editor.windowManager.alert(message, api.close);
 };
 
-const normalizeCss = (editor: Editor) => (cssText: string) => {
-  return doNormalizeCss(editor, cssText);
-};
+const normalizeCss = (editor: Editor) => (cssText: string) => doNormalizeCss(editor, cssText);
 
-const parseStyle = (editor: Editor) => (cssText: string): StyleMap => {
-  return editor.dom.parseStyle(cssText);
-};
+const parseStyle = (editor: Editor) => (cssText: string): StyleMap => editor.dom.parseStyle(cssText);
 
-const serializeStyle = (editor: Editor) => (stylesArg: StyleMap, name?: string): string => {
-  return editor.dom.serializeStyle(stylesArg, name);
-};
+const serializeStyle = (editor: Editor) => (stylesArg: StyleMap, name?: string): string => editor.dom.serializeStyle(stylesArg, name);
 
 export const Dialog = (editor: Editor) => {
   const helpers: Helpers = {
@@ -449,9 +431,7 @@ export const Dialog = (editor: Editor) => {
     parseStyle: parseStyle(editor),
     serializeStyle: serializeStyle(editor),
   };
-  const open = () => collect(editor).then(makeDialog(helpers)).then((spec) => {
-    return editor.windowManager.open(spec);
-  });
+  const open = () => collect(editor).then(makeDialog(helpers)).then((spec) => editor.windowManager.open(spec));
   const openLater = () => {
     open();
   };

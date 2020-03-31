@@ -47,17 +47,15 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
     );
   };
 
-  const cNotExists = (container: Element, selector: string) => {
-    return Chain.control(
-      Chain.op(() => {
-        UiFinder.findIn(container, selector).fold(
-          () => Assert.eq('should not find anything', true, true),
-          () => Assert.eq('Expected ' + selector + ' not to exist.', true, false)
-        );
-      }),
-      Guard.addLogging('Assert ' + selector + ' does not exist')
-    );
-  };
+  const cNotExists = (container: Element, selector: string) => Chain.control(
+    Chain.op(() => {
+      UiFinder.findIn(container, selector).fold(
+        () => Assert.eq('should not find anything', true, true),
+        () => Assert.eq('Expected ' + selector + ' not to exist.', true, false)
+      );
+    }),
+    Guard.addLogging('Assert ' + selector + ' does not exist')
+  );
 
   const step = Step.raw((_, next, die, initLogs) => {
     NamedChain.pipeline([

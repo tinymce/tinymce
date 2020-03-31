@@ -57,22 +57,20 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
     Tabstopping.config({})
   ];
 
-  const validatingBehaviours = spec.validation.map((vl) => {
-    return Invalidating.config({
-      getRoot(input) {
-        return Traverse.parent(input.element());
+  const validatingBehaviours = spec.validation.map((vl) => Invalidating.config({
+    getRoot(input) {
+      return Traverse.parent(input.element());
+    },
+    invalidClass: 'tox-invalid',
+    validator: {
+      validate(input) {
+        const v = Representing.getValue(input);
+        const result = vl.validator(v);
+        return Future.pure(result === true ? Result.value(v) : Result.error(result));
       },
-      invalidClass: 'tox-invalid',
-      validator: {
-        validate(input) {
-          const v = Representing.getValue(input);
-          const result = vl.validator(v);
-          return Future.pure(result === true ? Result.value(v) : Result.error(result));
-        },
-        validateOnLoad: vl.validateOnLoad
-      }
-    });
-  }).toArray();
+      validateOnLoad: vl.validateOnLoad
+    }
+  })).toArray();
 
   const placeholder = spec.placeholder.fold( Fun.constant({}), (p) => ({ placeholder: providersBackstage.translate(p) }));
   const inputMode = spec.inputMode.fold(Fun.constant({}), (mode) => ({ inputmode: mode }));
@@ -137,35 +135,31 @@ type InputSpec = Omit<Types.Input.Input, 'type'>;
 
 type TextAreaSpec = Omit<Types.TextArea.TextArea, 'type'>;
 
-const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
-  return renderTextField({
-    name: spec.name,
-    multiline: false,
-    label: spec.label,
-    inputMode: spec.inputMode,
-    placeholder: spec.placeholder,
-    flex: false,
-    disabled: spec.disabled,
-    classname: 'tox-textfield',
-    validation: Option.none(),
-    maximized: spec.maximized
-  }, providersBackstage);
-};
+const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => renderTextField({
+  name: spec.name,
+  multiline: false,
+  label: spec.label,
+  inputMode: spec.inputMode,
+  placeholder: spec.placeholder,
+  flex: false,
+  disabled: spec.disabled,
+  classname: 'tox-textfield',
+  validation: Option.none(),
+  maximized: spec.maximized
+}, providersBackstage);
 
-const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
-  return renderTextField({
-    name: spec.name,
-    multiline: true,
-    label: spec.label,
-    inputMode: Option.none(), // type attribute is not valid for textareas
-    placeholder: spec.placeholder,
-    flex: true,
-    disabled: spec.disabled,
-    classname: 'tox-textarea',
-    validation: Option.none(),
-    maximized: spec.maximized
-  }, providersBackstage);
-};
+const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => renderTextField({
+  name: spec.name,
+  multiline: true,
+  label: spec.label,
+  inputMode: Option.none(), // type attribute is not valid for textareas
+  placeholder: spec.placeholder,
+  flex: true,
+  disabled: spec.disabled,
+  classname: 'tox-textarea',
+  validation: Option.none(),
+  maximized: spec.maximized
+}, providersBackstage);
 
 export {
   renderInput,

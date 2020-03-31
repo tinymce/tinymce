@@ -14,12 +14,10 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.ChangeListStyleTest', functi
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
-    const sWaitForMenu = () => {
-      return Waiter.sTryUntil(
-        'Waiting for menu to appear',
-        UiFinder.sExists(Body.body(), '.tox-menu.tox-selected-menu')
-      );
-    };
+    const sWaitForMenu = () => Waiter.sTryUntil(
+      'Waiting for menu to appear',
+      UiFinder.sExists(Body.body(), '.tox-menu.tox-selected-menu')
+    );
 
     Pipeline.async({}, [
       Logger.t('ul to alpha, cursor only in parent', GeneralSteps.sequence([

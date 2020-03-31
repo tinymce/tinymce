@@ -29,6 +29,4 @@ export const nestedMenuItemSchema = ValueSchema.objOf([
   FieldSchema.optionString('icon'),
 ].concat(commonMenuItemFields));
 
-export const createNestedMenuItem = (spec: NestedMenuItemApi): Result<NestedMenuItem, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw('nestedmenuitem', nestedMenuItemSchema, spec);
-};
+export const createNestedMenuItem = (spec: NestedMenuItemApi): Result<NestedMenuItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('nestedmenuitem', nestedMenuItemSchema, spec);

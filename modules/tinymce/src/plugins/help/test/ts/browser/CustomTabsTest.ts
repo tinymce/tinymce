@@ -15,26 +15,22 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
 
   const doc = Element.fromDom(document);
 
-  const compareTabNames = (expectedNames: string[]) => {
-    return Chain.op((editor: Editor) => {
-      editor.execCommand('mceHelp');
-      const actualTabs = UiFinder.findAllIn(doc, 'div.tox-dialog__body-nav-item.tox-tab');
-      const actualNames: string[] = Arr.map(actualTabs, (tab) => Html.get(tab));
-      Arr.map(expectedNames, (x, i) => assert.eq(x, actualNames[i], `Tab names did not match. Expected: ${expectedNames}. Actual: ${actualNames}`));
-    });
-  };
+  const compareTabNames = (expectedNames: string[]) => Chain.op((editor: Editor) => {
+    editor.execCommand('mceHelp');
+    const actualTabs = UiFinder.findAllIn(doc, 'div.tox-dialog__body-nav-item.tox-tab');
+    const actualNames: string[] = Arr.map(actualTabs, (tab) => Html.get(tab));
+    Arr.map(expectedNames, (x, i) => assert.eq(x, actualNames[i], `Tab names did not match. Expected: ${expectedNames}. Actual: ${actualNames}`));
+  });
 
-  const makeStep = (config: Object, expectedTabNames: string[]) => {
-    return Chain.asStep({}, [
-      McEditor.cFromSettings(config),
-      NamedChain.asChain([
-        NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-        NamedChain.read('editor', compareTabNames(expectedTabNames)),
-        NamedChain.output('editor'),
-      ]),
-      McEditor.cRemove
-    ]);
-  };
+  const makeStep = (config: Object, expectedTabNames: string[]) => Chain.asStep({}, [
+    McEditor.cFromSettings(config),
+    NamedChain.asChain([
+      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
+      NamedChain.read('editor', compareTabNames(expectedTabNames)),
+      NamedChain.output('editor'),
+    ]),
+    McEditor.cRemove
+  ]);
 
   Pipeline.async({}, [
     Logger.t('Default help dialog', makeStep({

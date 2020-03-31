@@ -39,6 +39,4 @@ export const selectBoxSchema = ValueSchema.objOf(selectBoxFields);
 
 export const selectBoxDataProcessor = ValueSchema.string;
 
-export const createSelectBox = (spec: SelectBoxApi): Result<SelectBox, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<SelectBox>('selectbox', selectBoxSchema, spec);
-};
+export const createSelectBox = (spec: SelectBoxApi): Result<SelectBox, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<SelectBox>('selectbox', selectBoxSchema, spec);

@@ -27,6 +27,4 @@ const alertBannerFields = [
 
 export const alertBannerSchema = ValueSchema.objOf(alertBannerFields);
 
-export const createAlertBanner = (spec: AlertBannerApi): Result<AlertBanner, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<AlertBanner>('alertbanner', alertBannerSchema, spec);
-};
+export const createAlertBanner = (spec: AlertBannerApi): Result<AlertBanner, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<AlertBanner>('alertbanner', alertBannerSchema, spec);

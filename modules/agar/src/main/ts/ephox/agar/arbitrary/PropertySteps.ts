@@ -23,15 +23,15 @@ const fakePromise = (): PromiseLike<true> => {
 };
 
 const stepToPromise = <T, U>(step: Step<T, U>) =>
-  (input: T): PromiseLike<true> => {
+  (input: T): PromiseLike<true> =>
     // tslint:disable-next-line:no-unimported-promise
-    return typeof Promise !== 'undefined' ? new Promise<true>((resolve, reject) => {
+    typeof Promise !== 'undefined' ? new Promise<true>((resolve, reject) => {
       step.runStep(input, () => {
         resolve(true);
         // Not sure what to do about logging for this.
       }, reject, TestLogs.init());
-    }) : fakePromise();
-  };
+    }) : fakePromise()
+  ;
 
 // Maybe wrap in the same way Jsc does for console output with ticks and crosses.
 const sAsyncProperty = <T, X, Y>(name: string, arbitraries, statefulStep: Step<X, Y>, _options?) => {

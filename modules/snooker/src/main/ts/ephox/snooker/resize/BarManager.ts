@@ -112,11 +112,7 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
     return Compare.eq(e, wire.view());
   };
 
-  const findClosestEditableTable = (target: Element): Option<Element> => {
-    return SelectorFind.closest(target, 'table', isRoot).filter((table) => {
-      return findClosestContentEditable(table, isRoot).exists(isContentEditableTrue);
-    });
-  };
+  const findClosestEditableTable = (target: Element): Option<Element> => SelectorFind.closest(target, 'table', isRoot).filter((table) => findClosestContentEditable(table, isRoot).exists(isContentEditableTrue));
 
   /* mouseover on table: When the mouse moves within the CONTENT AREA (NOT THE TABLE), refresh the bars. */
   const mouseover = DomEvent.bind(wire.view(), 'mouseover', function (event) {

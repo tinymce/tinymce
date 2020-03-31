@@ -261,27 +261,25 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
         tinyApis.sSetCursor([ 1, 0 ], 0),
         sBackspace(editor),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, _arr) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  children: [
-                    s.text(str.is('a')),
-                    s.element('span', {
-                      attrs: {
-                        contenteditable: str.is('false')
-                      },
-                      children: [
-                        s.text(str.is('b'))
-                      ]
-                    }),
-                    s.text(str.is(Zwsp.ZWSP)),
-                    s.text(str.is('c'))
-                  ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, _arr) => s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text(str.is('a')),
+                  s.element('span', {
+                    attrs: {
+                      contenteditable: str.is('false')
+                    },
+                    children: [
+                      s.text(str.is('b'))
+                    ]
+                  }),
+                  s.text(str.is(Zwsp.ZWSP)),
+                  s.text(str.is('c'))
+                ]
+              })
+            ]
+          }))
         ),
         tinyApis.sAssertSelection([ 0, 2 ], 1, [ 0, 2 ], 1)
       ])),
@@ -290,27 +288,25 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockBoundaryDeleteTest', functi
         tinyApis.sSetCursor([ 0 ], 2),
         sDelete(editor),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, _arr) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  children: [
-                    s.text(str.is('a')),
-                    s.element('span', {
-                      attrs: {
-                        contenteditable: str.is('false')
-                      },
-                      children: [
-                        s.text(str.is('b'))
-                      ]
-                    }),
-                    s.text(str.is(Zwsp.ZWSP)),
-                    s.text(str.is('c'))
-                  ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, _arr) => s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text(str.is('a')),
+                  s.element('span', {
+                    attrs: {
+                      contenteditable: str.is('false')
+                    },
+                    children: [
+                      s.text(str.is('b'))
+                    ]
+                  }),
+                  s.text(str.is(Zwsp.ZWSP)),
+                  s.text(str.is('c'))
+                ]
+              })
+            ]
+          }))
         ),
         tinyApis.sAssertSelection([ 0, 2 ], 1, [ 0, 2 ], 1)
       ])),

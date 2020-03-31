@@ -57,22 +57,20 @@ const cGotoAdvancedTab = Chain.fromChains([
   Mouse.cClick
 ]);
 
-const cSetFieldValue = (selector, value) => {
-  return Chain.fromChains([
-    Chain.inject(Body.body()),
-    UiFinder.cFindIn(selector),
-    Chain.op(Focus.focus),
-    Chain.op((element) => {
-      if (element.dom().type === 'checkbox') {
-        Checked.set(element, value);
-      } else if (Node.name(element) === 'select' && typeof value === 'number') {
-        SelectTag.setSelected(element, value);
-      } else {
-        Value.set(element, value);
-      }
-    })
-  ]);
-};
+const cSetFieldValue = (selector, value) => Chain.fromChains([
+  Chain.inject(Body.body()),
+  UiFinder.cFindIn(selector),
+  Chain.op(Focus.focus),
+  Chain.op((element) => {
+    if (element.dom().type === 'checkbox') {
+      Checked.set(element, value);
+    } else if (Node.name(element) === 'select' && typeof value === 'number') {
+      SelectTag.setSelected(element, value);
+    } else {
+      Value.set(element, value);
+    }
+  })
+]);
 
 const cSetTabFieldValues = (data, tabSelectors) => {
   const chains = Arr.flatten(Obj.mapToArray(tabSelectors, (value, key): Chain<any, any>[] => {
@@ -113,16 +111,14 @@ const cFillActiveDialog = (data: Partial<ImageDialogData>, hasAdvanced = false) 
   );
 };
 
-const cFakeEvent = (name: string) => {
-  return Chain.control(
-    Chain.op(function (elm: Element) {
-      const evt = document.createEvent('HTMLEvents');
-      evt.initEvent(name, true, true);
-      elm.dom().dispatchEvent(evt);
-    }),
-    Guard.addLogging('Fake event')
-  );
-};
+const cFakeEvent = (name: string) => Chain.control(
+  Chain.op(function (elm: Element) {
+    const evt = document.createEvent('HTMLEvents');
+    evt.initEvent(name, true, true);
+    elm.dom().dispatchEvent(evt);
+  }),
+  Guard.addLogging('Fake event')
+);
 
 const cSetInputValue = (selector: string, value: string) => Chain.fromChains([
   cSetFieldValue(selector, value),
@@ -134,14 +130,12 @@ const cSetSelectValue = (selector: string, value: string) => Chain.fromChains([
   cFakeEvent('change')
 ]);
 
-const cExecCommand = (command: string, value?: any, args?: any) => {
-  return Chain.control(
-    Chain.op((editor: Editor) => {
-      editor.execCommand(command, value, args);
-    }),
-    Guard.addLogging('Execute command')
-  );
-};
+const cExecCommand = (command: string, value?: any, args?: any) => Chain.control(
+  Chain.op((editor: Editor) => {
+    editor.execCommand(command, value, args);
+  }),
+  Guard.addLogging('Execute command')
+);
 
 const cTinyUI = Chain.control(
   Chain.binder(
@@ -185,13 +179,11 @@ const cAssertCleanHtml = (label: string, expected: string) => Chain.control(
   Guard.addLogging('Assert clean html')
 );
 
-const cAssertInputValue = (selector: string, value: string) => {
-  return Chain.fromChainsWith(Body.body(), [
-    UiFinder.cFindIn(selector),
-    UiControls.cGetValue,
-    Assertions.cAssertEq(`input value should be ${value}`, value)
-  ]);
-};
+const cAssertInputValue = (selector: string, value: string) => Chain.fromChainsWith(Body.body(), [
+  UiFinder.cFindIn(selector),
+  UiControls.cGetValue,
+  Assertions.cAssertEq(`input value should be ${value}`, value)
+]);
 
 const cOpFromChains = (chains: Chain<any, any>[]) => Chain.control(
   // TODO: Another API case.

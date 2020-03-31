@@ -64,24 +64,20 @@ const dropFiles = (files: File[], to: Element<any>): void => {
   checkDefaultPrevented(dispatchDndEvent(createDropEvent(toWin, toRect.left, toRect.top, transfer), to));
 };
 
-const cDragnDrop = <T> (fromSelector: string, toSelector: string): Chain<Element<T>, Element<T>> => {
-  return NamedChain.asChain([
-    NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn(fromSelector), 'from'),
-    NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn(toSelector), 'to'),
-    Chain.op((obj) => dragnDrop(obj.from, obj.to)),
-    NamedChain.output(NamedChain.inputName())
-  ]);
-};
+const cDragnDrop = <T> (fromSelector: string, toSelector: string): Chain<Element<T>, Element<T>> => NamedChain.asChain([
+  NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn(fromSelector), 'from'),
+  NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn(toSelector), 'to'),
+  Chain.op((obj) => dragnDrop(obj.from, obj.to)),
+  NamedChain.output(NamedChain.inputName())
+]);
 
 const sDragnDrop = <T>(fromSelector: string, toSelector: string): Step<T, T> =>
   Chain.asStep(Body.body(), [ cDragnDrop(fromSelector, toSelector) ]);
 
-const sDropFiles = <T>(files: File[], toSelector: string): Step<T, T> => {
-  return Chain.asStep(Body.body(), [
-    UiFinder.cFindIn(toSelector),
-    cDropFiles(files)
-  ]);
-};
+const sDropFiles = <T>(files: File[], toSelector: string): Step<T, T> => Chain.asStep(Body.body(), [
+  UiFinder.cFindIn(toSelector),
+  cDropFiles(files)
+]);
 
 const cDropFiles = <T> (files: File[]): Chain<Element<T>, Element<T>> =>
   Chain.op((elm) => {

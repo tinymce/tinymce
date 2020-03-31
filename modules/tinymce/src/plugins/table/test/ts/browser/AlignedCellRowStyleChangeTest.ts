@@ -25,35 +25,33 @@ UnitTest.asynctest('browser.tinymce.plugins.table.AlignedCellRowStyleChangeTest'
       TableTestUtils.sGotoAdvancedTab,
       TableTestUtils.sSetInputValue('Background color', 'label.tox-label:contains(Background color) + div>input.tox-textfield', 'red'),
       TableTestUtils.sClickDialogButton('close dialog', true),
-      TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, _arr) => {
-        return s.element('table', {
-          children: [
-            s.element('tbody', {
-              children: [
-                s.element('tr', {
-                  styles: { 'background-color': str.is('red') },
-                  children: [
-                    s.element('td', {
-                      styles: { 'text-align': str.is('center') },
-                      children: [ s.text(str.is('a')) ]
-                    }),
-                    s.element('td', {
-                      styles: { 'text-align': str.is('center') },
-                      children: [ s.text(str.is('b')) ]
-                    })
-                  ]
-                }),
-                s.element('tr', {
-                  children: [
-                    s.element('td', { children: [ s.text(str.is('c')) ] }),
-                    s.element('td', { children: [ s.text(str.is('d')) ] })
-                  ]
-                })
-              ]
-            })
-          ]
-        });
-      }))
+      TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, _arr) => s.element('table', {
+        children: [
+          s.element('tbody', {
+            children: [
+              s.element('tr', {
+                styles: { 'background-color': str.is('red') },
+                children: [
+                  s.element('td', {
+                    styles: { 'text-align': str.is('center') },
+                    children: [ s.text(str.is('a')) ]
+                  }),
+                  s.element('td', {
+                    styles: { 'text-align': str.is('center') },
+                    children: [ s.text(str.is('b')) ]
+                  })
+                ]
+              }),
+              s.element('tr', {
+                children: [
+                  s.element('td', { children: [ s.text(str.is('c')) ] }),
+                  s.element('td', { children: [ s.text(str.is('d')) ] })
+                ]
+              })
+            ]
+          })
+        ]
+      })))
     ]), onSuccess, onFailure);
   }, {
     plugins: 'table',

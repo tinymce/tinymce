@@ -6,9 +6,7 @@ import * as DomPinpoint from './DomPinpoint';
 
 const horizontal = (container: Element<HTMLElement>, selector: string, current: Element<HTMLElement>, delta: number): Option<Element> => {
 
-  const isDisabledButton = (candidate: Element<HTMLElement>) => {
-    return Node.name(candidate) === 'button' && Attr.get(candidate, 'disabled') === 'disabled';
-  };
+  const isDisabledButton = (candidate: Element<HTMLElement>) => Node.name(candidate) === 'button' && Attr.get(candidate, 'disabled') === 'disabled';
 
   const tryCycle = (initial: number, index: number, candidates: Array<Element<HTMLElement>>): Option<Element<HTMLElement>> => {
     const newIndex = Num.cycleBy(index, delta, 0, candidates.length - 1);

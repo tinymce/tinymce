@@ -29,12 +29,10 @@ export interface UidAndHandler {
   readonly descHandler: () => CurriedHandler;
 }
 
-const broadcastHandler = (id: string, handler: CurriedHandler): UidAndHandler => {
-  return {
-    id: Fun.constant(id),
-    descHandler: Fun.constant(handler)
-  };
-};
+const broadcastHandler = (id: string, handler: CurriedHandler): UidAndHandler => ({
+  id: Fun.constant(id),
+  descHandler: Fun.constant(handler)
+});
 
 export type EventName = string;
 export type Uid = string;
@@ -50,31 +48,15 @@ export default () => {
     });
   };
 
-  const findHandler = (handlers: Option<Record<Uid, CurriedHandler>>, elem: Element): Option<ElementAndHandler> => {
-    return Tagger.read(elem).fold(() => {
-      return Option.none();
-    }, (id) => {
-      return handlers.bind((h) => Obj.get(h, id)).map((descHandler: CurriedHandler) => {
-        return eventHandler(elem, descHandler);
-      });
-    });
-  };
+  const findHandler = (handlers: Option<Record<Uid, CurriedHandler>>, elem: Element): Option<ElementAndHandler> => Tagger.read(elem).fold(() => Option.none(), (id) => handlers.bind((h) => Obj.get(h, id)).map((descHandler: CurriedHandler) => eventHandler(elem, descHandler)));
 
   // Given just the event type, find all handlers regardless of element
-  const filterByType = (type: string): UidAndHandler[] => {
-    return Obj.get(registry, type).map((handlers) => {
-      return Obj.mapToArray(handlers, (f, id) => {
-        return broadcastHandler(id, f);
-      });
-    }).getOr([ ]);
-  };
+  const filterByType = (type: string): UidAndHandler[] => Obj.get(registry, type).map((handlers) => Obj.mapToArray(handlers, (f, id) => broadcastHandler(id, f))).getOr([ ]);
 
   // Given event type, and element, find the handler.
   const find = (isAboveRoot: (elem: Element) => boolean, type: string, target: Element): Option<ElementAndHandler> => {
     const handlers = Obj.get(registry, type);
-    return TransformFind.closest(target, (elem: Element) => {
-      return findHandler(handlers, elem);
-    }, isAboveRoot);
+    return TransformFind.closest(target, (elem: Element) => findHandler(handlers, elem), isAboveRoot);
   };
 
   const unregisterId = (id: string): void => {

@@ -19,20 +19,14 @@ const fakeKeys = (types: string[]) => (value: number, modifiers: MixedKeyModifie
   });
 };
 
-const cFakeKey = (types: string[], keyvalue: number, modifiers: MixedKeyModifiers) => {
-  return Chain.op((dispatcher: Element<any>) => {
-    fakeKeys(types)(keyvalue, modifiers, dispatcher);
-  });
-};
+const cFakeKey = (types: string[], keyvalue: number, modifiers: MixedKeyModifiers) => Chain.op((dispatcher: Element<any>) => {
+  fakeKeys(types)(keyvalue, modifiers, dispatcher);
+});
 
-const sFakeKey = (types: string[]) => {
-  return <T>(doc: Element<any>, keyvalue: number, modifiers: MixedKeyModifiers): Step<T, T> => {
-    return Chain.asStep<T, Element>(doc, [
-      FocusTools.cGetFocused,
-      cFakeKey(types, keyvalue, modifiers)
-    ]);
-  };
-};
+const sFakeKey = (types: string[]) => <T>(doc: Element<any>, keyvalue: number, modifiers: MixedKeyModifiers): Step<T, T> => Chain.asStep<T, Element>(doc, [
+  FocusTools.cGetFocused,
+  cFakeKey(types, keyvalue, modifiers)
+]);
 
 const keydownTypes = [ 'keydown' ];
 const keyupTypes = [ 'keyup' ];

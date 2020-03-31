@@ -69,9 +69,7 @@ export const renderImageTools = (detail: ImageToolsSpec, providersBackstage: UiF
     });
   };
 
-  const imageResultToBlob = (ir: ImageResult): Promise<Blob> => {
-    return ir.toBlob();
-  };
+  const imageResultToBlob = (ir: ImageResult): Promise<Blob> => ir.toBlob();
 
   const block = (anyInSystem: AlloyComponent): void => {
     AlloyTriggers.emitWith(anyInSystem, ImageToolsEvents.external.formActionEvent, { name: ImageToolsEvents.external.disable(), value: { }});
@@ -95,14 +93,12 @@ export const renderImageTools = (detail: ImageToolsSpec, providersBackstage: UiF
       then(filter).
       then(imageResultToBlob).
       then(action).
-      then((url) => {
-        return updateSrc(anyInSystem, url).then((oImg) => {
-          updateButtonUndoStates(anyInSystem);
-          swap();
-          unblock(anyInSystem);
-          return oImg;
-        });
-      }).catch((err) => {
+      then((url) => updateSrc(anyInSystem, url).then((oImg) => {
+        updateButtonUndoStates(anyInSystem);
+        swap();
+        unblock(anyInSystem);
+        return oImg;
+      })).catch((err) => {
       // tslint:disable-next-line:no-console
         console.log(err); // TODO: Notify the user?
         unblock(anyInSystem);
@@ -197,9 +193,7 @@ export const renderImageTools = (detail: ImageToolsSpec, providersBackstage: UiF
       Representing.config({
         store: {
           mode: 'manual',
-          getValue: () => {
-            return state.getBlobState();
-          }
+          getValue: () => state.getBlobState()
         }
       }),
       AddEventsBehaviour.config('image-tools-events', [

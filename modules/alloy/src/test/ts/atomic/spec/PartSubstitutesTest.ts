@@ -49,36 +49,30 @@ UnitTest.test('PartSubstitutesTest', () => {
           name: 'required.A',
           pname: 'part:a',
           factory: {
-            sketch: (spec) => {
-              return {
-                factory: 'factory.A',
-                spec
-              };
-            }
+            sketch: (spec) => ({
+              factory: 'factory.A',
+              spec
+            })
           }
         }),
         PartType.optional({
           name: 'optional.B',
           pname: 'part:b',
           factory: {
-            sketch: (spec) => {
-              return {
-                factory: 'factory.B',
-                spec
-              };
-            }
+            sketch: (spec) => ({
+              factory: 'factory.B',
+              spec
+            })
           }
         }),
         PartType.external({
           name: 'external.C',
           pname: 'part:c',
           factory: {
-            sketch: (spec) => {
-              return {
-                factory: 'factory.C',
-                spec
-              };
-            }
+            sketch: (spec) => ({
+              factory: 'factory.C',
+              spec
+            })
           }
         }),
         PartType.group({
@@ -86,12 +80,10 @@ UnitTest.test('PartSubstitutesTest', () => {
           pname: 'part:d',
           unit: 'unit.d',
           factory: {
-            sketch: (spec) => {
-              return {
-                factory: 'factory.D',
-                spec
-              };
-            }
+            sketch: (spec) => ({
+              factory: 'factory.D',
+              spec
+            })
           }
         })
       ]);

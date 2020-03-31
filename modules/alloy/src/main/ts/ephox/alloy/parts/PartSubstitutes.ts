@@ -6,15 +6,15 @@ import * as UiSubstitutes from '../spec/UiSubstitutes';
 import { Substitutions } from './AlloyParts';
 import * as PartType from './PartType';
 
-const combine = <D extends CompositeSketchDetail, S extends CompositeSketchSpec>(detail: D, data: PartType.BasePartDetail<D, S>, partSpec: S, partValidated?: Record<string, any>): S & { uid: string } => {
+const combine = <D extends CompositeSketchDetail, S extends CompositeSketchSpec>(detail: D, data: PartType.BasePartDetail<D, S>, partSpec: S, partValidated?: Record<string, any>): S & { uid: string } =>
   // Extremely confusing names and types :(
-  return Merger.deepMerge(
+  Merger.deepMerge(
     data.defaults(detail, partSpec, partValidated),
     partSpec,
     { uid: detail.partUids[data.name] },
     data.overrides(detail, partSpec, partValidated)
-  );
-};
+  )
+;
 
 const subs = <D extends CompositeSketchDetail>(owner: string, detail: D, parts: PartType.PartTypeAdt[]): Substitutions => {
   const internals: Record<string, UiSubstitutes.UiSubstitutesAdt> = { };
@@ -24,11 +24,9 @@ const subs = <D extends CompositeSketchDetail>(owner: string, detail: D, parts: 
     part.fold(
       // Internal
       (data) => {
-        internals[data.pname] = UiSubstitutes.single(true, (detail, partSpec, partValidated) => {
-          return data.factory.sketch(
-            combine(detail, data, partSpec, partValidated)
-          );
-        });
+        internals[data.pname] = UiSubstitutes.single(true, (detail, partSpec, partValidated) => data.factory.sketch(
+          combine(detail, data, partSpec, partValidated)
+        ));
       },
 
       // External
@@ -45,27 +43,25 @@ const subs = <D extends CompositeSketchDetail>(owner: string, detail: D, parts: 
 
       // Optional
       (data) => {
-        internals[data.pname] = UiSubstitutes.single(false, (detail, partSpec, partValidated) => {
-          return data.factory.sketch(
-            combine(detail, data, partSpec, partValidated)
-          );
-        });
+        internals[data.pname] = UiSubstitutes.single(false, (detail, partSpec, partValidated) => data.factory.sketch(
+          combine(detail, data, partSpec, partValidated)
+        ));
       },
 
       // Group
       (data) => {
         internals[data.pname] = UiSubstitutes.multiple(true, (detail, _partSpec, _partValidated) => {
           const units: Array<Record<string, any>> = (detail as any)[data.name];
-          return Arr.map(units, (u) => {
+          return Arr.map(units, (u) =>
             // Group multiples do not take the uid because there is more than one.
-            return data.factory.sketch(
+            data.factory.sketch(
               Merger.deepMerge(
                 data.defaults(detail, u,  _partValidated),
                 u,
                 data.overrides(detail, u)
               )
-            );
-          });
+            )
+          );
         });
       }
     );

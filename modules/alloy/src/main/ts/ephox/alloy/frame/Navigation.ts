@@ -16,9 +16,7 @@ const view = (doc: Element<HTMLDocument>): Option<Element<DomElement>> => {
   return element.map(Element.fromDom);
 };
 
-const owner = (element: Element<DomNode>): Element<HTMLDocument> => {
-  return Traverse.owner(element);
-};
+const owner = (element: Element<DomNode>): Element<HTMLDocument> => Traverse.owner(element);
 
 export {
   view,

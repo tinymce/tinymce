@@ -115,10 +115,10 @@ const NONE: Option<any> = (() => {
 const some = <T>(a: T): Option<T> => {
   const constant_a = Fun.constant(a);
 
-  const self = () => {
+  const self = () =>
     // can't Fun.constant this one
-    return me;
-  };
+    me
+  ;
 
   const bind = function <T2> (f: (value: T) => T2) {
     return f(a);

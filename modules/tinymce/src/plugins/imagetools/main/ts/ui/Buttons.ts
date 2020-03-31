@@ -63,16 +63,14 @@ const register = function (editor: Editor) {
   });
 
   editor.ui.registry.addContextMenu('imagetools', {
-    update: (element) => {
+    update: (element) =>
       // since there's no menu item available, this has to be it's own thing
-      return Actions.getEditableImage(editor, element).fold(() => [], (_) => {
-        return [{
-          text: 'Edit image',
-          icon: 'edit-image',
-          onAction: cmd('mceEditImage')
-        }];
-      });
-    }
+      Actions.getEditableImage(editor, element).fold(() => [], (_) => [{
+        text: 'Edit image',
+        icon: 'edit-image',
+        onAction: cmd('mceEditImage')
+      }])
+
   });
 };
 

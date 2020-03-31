@@ -156,9 +156,7 @@ const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, spec: Se
 const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
   const { items, getStyleItems } = createMenuItems(editor, backstage, spec);
 
-  const getApi = (comp: AlloyComponent): BespokeSelectApi => {
-    return { getComponent: () => comp };
-  };
+  const getApi = (comp: AlloyComponent): BespokeSelectApi => ({ getComponent: () => comp });
 
   const onSetup = (api: BespokeSelectApi): () => void => {
     spec.setInitialValue.each((f) => f(api.getComponent()));

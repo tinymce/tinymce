@@ -56,9 +56,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     };
   };
 
-  const cacheInvalidator = (url: string): string => {
-    return url + (url.indexOf('?') === -1 ? '?' : '&') + (new Date()).getTime();
-  };
+  const cacheInvalidator = (url: string): string => url + (url.indexOf('?') === -1 ? '?' : '&') + (new Date()).getTime();
 
   // Replaces strings without regexps to avoid FF regexp to big issue
   const replaceString = function (content: string, search: string, replace: string): string {
@@ -126,9 +124,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     }
 
     return scanForImages().then(aliveGuard((imageInfos) => {
-      const blobInfos = Arr.map(imageInfos, (imageInfo) => {
-        return imageInfo.blobInfo;
-      });
+      const blobInfos = Arr.map(imageInfos, (imageInfo) => imageInfo.blobInfo);
 
       return uploader.upload(blobInfos, openNotification).then(aliveGuard((result) => {
         const filteredResult: UploadResult[] = Arr.map(result, (uploadInfo, index) => {

@@ -60,9 +60,7 @@ const allAlignments: Array<keyof BubbleAlignments> = [
 ];
 
 const nu = (width: number, yoffset: number, classes: BubbleAlignments): Bubble => {
-  const getClasses = (prop: keyof BubbleAlignments): string[] => {
-    return Obj.get(classes, prop).getOr([ ]);
-  };
+  const getClasses = (prop: keyof BubbleAlignments): string[] => Obj.get(classes, prop).getOr([ ]);
 
   const make = (xDelta: number, yDelta: number, alignmentsOn: Array<(keyof BubbleAlignments)>) => {
     const alignmentsOff = Arr.difference(allAlignments, alignmentsOn);

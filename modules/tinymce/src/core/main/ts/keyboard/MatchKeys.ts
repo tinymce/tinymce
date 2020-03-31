@@ -17,19 +17,15 @@ export interface KeyPattern {
   action: () => boolean;
 }
 
-const defaultPatterns = (patterns: KeyPattern[]): KeyPattern[] => {
-  return Arr.map(patterns, (pattern) => {
-    return {
-      shiftKey: false,
-      altKey: false,
-      ctrlKey: false,
-      metaKey: false,
-      keyCode: 0,
-      action: Fun.noop,
-      ...pattern
-    };
-  });
-};
+const defaultPatterns = (patterns: KeyPattern[]): KeyPattern[] => Arr.map(patterns, (pattern) => ({
+  shiftKey: false,
+  altKey: false,
+  ctrlKey: false,
+  metaKey: false,
+  keyCode: 0,
+  action: Fun.noop,
+  ...pattern
+}));
 
 const matchesEvent = function (pattern: KeyPattern, evt: KeyboardEvent) {
   return (
@@ -42,9 +38,7 @@ const matchesEvent = function (pattern: KeyPattern, evt: KeyboardEvent) {
 };
 
 const match = function (patterns: KeyPattern[], evt: KeyboardEvent) {
-  return Arr.bind(defaultPatterns(patterns), (pattern) => {
-    return matchesEvent(pattern, evt) ? [ pattern ] : [ ];
-  });
+  return Arr.bind(defaultPatterns(patterns), (pattern) => matchesEvent(pattern, evt) ? [ pattern ] : [ ]);
 };
 
 const action = function (f, ...x: any[]) {

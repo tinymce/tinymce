@@ -6,9 +6,7 @@ import * as Behaviour from '../common/Behaviour';
 import * as ToggleApis from './ToggleApis';
 import { TogglingConfig, TogglingState } from './TogglingTypes';
 
-const exhibit = () => {
-  return DomModification.nu({ });
-};
+const exhibit = () => DomModification.nu({ });
 
 const events = (toggleConfig: TogglingConfig, toggleState: TogglingState): AlloyEvents.AlloyEventRecord => {
   const execute = Behaviour.executeEvent(toggleConfig, toggleState, ToggleApis.toggle);

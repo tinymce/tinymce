@@ -105,9 +105,7 @@ UnitTest.test('ResizeTest', function () {
 
     const expectedWidths = [ 50, 50 ];
 
-    const widthDiffs = Arr.map(expectedWidths, (x, i) => {
-      return widths[i] - x;
-    });
+    const widthDiffs = Arr.map(expectedWidths, (x, i) => widths[i] - x);
 
     // percentage width of this table is 100% but phantom treats this as around 804 pixels when we're doing conversions
     // we have pixel width cells of 400px, so the actual widths of the cells in percentages

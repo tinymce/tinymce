@@ -5,9 +5,7 @@ const createFileList = (inputFiles: File[]): FileList => {
   const files = {
     length: inputFiles.length,
 
-    item: (idx: number) => {
-      return inputFiles[idx];
-    }
+    item: (idx: number) => inputFiles[idx]
   };
 
   Arr.each(inputFiles, (file, idx) => {

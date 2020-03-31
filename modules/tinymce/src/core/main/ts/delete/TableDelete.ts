@@ -31,23 +31,17 @@ const deleteTableElement = (editor: Editor, table) => {
   return true;
 };
 
-const deleteCellRange = (editor: Editor, rootElm, rng: Range) => {
-  return TableDeleteAction.getActionFromRange(rootElm, rng).map((action) => {
-    return action.fold(
-      Fun.curry(deleteTableElement, editor),
-      Fun.curry(emptyCells, editor)
-    );
-  });
-};
+const deleteCellRange = (editor: Editor, rootElm, rng: Range) => TableDeleteAction.getActionFromRange(rootElm, rng).map((action) => action.fold(
+  Fun.curry(deleteTableElement, editor),
+  Fun.curry(emptyCells, editor)
+));
 
 const deleteCaptionRange = (editor: Editor, caption) => emptyElement(editor, caption);
 
-const deleteTableRange = (editor: Editor, rootElm, rng: Range, startElm) => {
-  return getParentCaption(rootElm, startElm).fold(
-    () => deleteCellRange(editor, rootElm, rng),
-    (caption) => deleteCaptionRange(editor, caption)
-  ).getOr(false);
-};
+const deleteTableRange = (editor: Editor, rootElm, rng: Range, startElm) => getParentCaption(rootElm, startElm).fold(
+  () => deleteCellRange(editor, rootElm, rng),
+  (caption) => deleteCaptionRange(editor, caption)
+).getOr(false);
 
 const deleteRange = (editor: Editor, startElm) => {
   const rootNode = Element.fromDom(editor.getBody());
@@ -59,19 +53,9 @@ const deleteRange = (editor: Editor, startElm) => {
 
 const getParentCell = (rootElm, elm) => Arr.find(Parents.parentsAndSelf(elm, rootElm), ElementType.isTableCell);
 
-const getParentCaption = (rootElm, elm) => {
-  return Arr.find(Parents.parentsAndSelf(elm, rootElm), (elm) => {
-    return Node.name(elm) === 'caption';
-  });
-};
+const getParentCaption = (rootElm, elm) => Arr.find(Parents.parentsAndSelf(elm, rootElm), (elm) => Node.name(elm) === 'caption');
 
-const deleteBetweenCells = (editor: Editor, rootElm, forward: boolean, fromCell, from: CaretPosition) => {
-  return CaretFinder.navigate(forward, editor.getBody(), from).bind((to) => {
-    return getParentCell(rootElm, Element.fromDom(to.getNode())).map((toCell) => {
-      return Compare.eq(toCell, fromCell) === false;
-    });
-  });
-};
+const deleteBetweenCells = (editor: Editor, rootElm, forward: boolean, fromCell, from: CaretPosition) => CaretFinder.navigate(forward, editor.getBody(), from).bind((to) => getParentCell(rootElm, Element.fromDom(to.getNode())).map((toCell) => Compare.eq(toCell, fromCell) === false));
 
 const emptyElement = (editor: Editor, elm) => {
   PaddingBr.fillWithPaddingBr(elm);
@@ -79,33 +63,17 @@ const emptyElement = (editor: Editor, elm) => {
   return Option.some(true);
 };
 
-const isDeleteOfLastCharPos = (fromCaption, forward: boolean, from: CaretPosition, to: CaretPosition) => {
-  return CaretFinder.firstPositionIn(fromCaption.dom()).bind((first) => {
-    return CaretFinder.lastPositionIn(fromCaption.dom()).map((last) => {
-      return forward ? from.isEqual(first) && to.isEqual(last) : from.isEqual(last) && to.isEqual(first);
-    });
-  }).getOr(true);
-};
+const isDeleteOfLastCharPos = (fromCaption, forward: boolean, from: CaretPosition, to: CaretPosition) => CaretFinder.firstPositionIn(fromCaption.dom()).bind((first) => CaretFinder.lastPositionIn(fromCaption.dom()).map((last) => forward ? from.isEqual(first) && to.isEqual(last) : from.isEqual(last) && to.isEqual(first))).getOr(true);
 
 const emptyCaretCaption = (editor: Editor, elm) => emptyElement(editor, elm);
 
-const validateCaretCaption = (rootElm, fromCaption, to: CaretPosition) => {
-  return getParentCaption(rootElm, Element.fromDom(to.getNode())).map((toCaption) => {
-    return Compare.eq(toCaption, fromCaption) === false;
-  });
-};
+const validateCaretCaption = (rootElm, fromCaption, to: CaretPosition) => getParentCaption(rootElm, Element.fromDom(to.getNode())).map((toCaption) => Compare.eq(toCaption, fromCaption) === false);
 
-const deleteCaretInsideCaption = (editor: Editor, rootElm, forward: boolean, fromCaption, from: CaretPosition) => {
-  return CaretFinder.navigate(forward, editor.getBody(), from).bind((to) => {
-    return isDeleteOfLastCharPos(fromCaption, forward, from, to) ? emptyCaretCaption(editor, fromCaption) : validateCaretCaption(rootElm, fromCaption, to);
-  }).or(Option.some(true));
-};
+const deleteCaretInsideCaption = (editor: Editor, rootElm, forward: boolean, fromCaption, from: CaretPosition) => CaretFinder.navigate(forward, editor.getBody(), from).bind((to) => isDeleteOfLastCharPos(fromCaption, forward, from, to) ? emptyCaretCaption(editor, fromCaption) : validateCaretCaption(rootElm, fromCaption, to)).or(Option.some(true));
 
 const deleteCaretCells = (editor: Editor, forward: boolean, rootElm, startElm) => {
   const from = CaretPosition.fromRangeStart(editor.selection.getRng());
-  return getParentCell(rootElm, startElm).bind((fromCell) => {
-    return Empty.isEmpty(fromCell) ? emptyElement(editor, fromCell) : deleteBetweenCells(editor, rootElm, forward, fromCell, from);
-  }).getOr(false);
+  return getParentCell(rootElm, startElm).bind((fromCell) => Empty.isEmpty(fromCell) ? emptyElement(editor, fromCell) : deleteBetweenCells(editor, rootElm, forward, fromCell, from)).getOr(false);
 };
 
 const deleteCaretCaption = (editor: Editor, forward: boolean, rootElm, fromCaption) => {

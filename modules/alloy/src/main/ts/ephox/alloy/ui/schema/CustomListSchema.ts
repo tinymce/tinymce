@@ -14,13 +14,11 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   SketchBehaviours.field('listBehaviours', [ Replacing ])
 ]);
 
-const customListDetail = () => {
-  return {
-    behaviours: Behaviour.derive([
-      Replacing.config({ })
-    ])
-  };
-};
+const customListDetail = () => ({
+  behaviours: Behaviour.derive([
+    Replacing.config({ })
+  ])
+});
 
 const itemsPart = PartType.optional<CustomListDetail>({
   name: 'items',

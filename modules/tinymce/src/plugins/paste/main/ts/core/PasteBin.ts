@@ -13,9 +13,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 // We can't attach the pastebin to a H1 inline element on IE since it won't allow H1 or other
 // non valid parents to be pasted into the pastebin so we need to attach it to the body
-const getPasteBinParent = (editor: Editor): Element => {
-  return Env.ie && editor.inline ? document.body : editor.getBody();
-};
+const getPasteBinParent = (editor: Editor): Element => Env.ie && editor.inline ? document.body : editor.getBody();
 
 const isExternalPasteBin = (editor: Editor) => getPasteBinParent(editor) !== editor.getBody();
 
@@ -89,9 +87,7 @@ const remove = (editor, lastRngCell) => {
   lastRngCell.set(null);
 };
 
-const getEl = (editor: Editor) => {
-  return editor.dom.get('mcepastebin');
-};
+const getEl = (editor: Editor) => editor.dom.get('mcepastebin');
 
 /**
  * Returns the contents of the paste bin as a HTML string.
@@ -135,17 +131,11 @@ const getHtml = (editor: Editor): string => {
   return pasteBinElm ? pasteBinElm.innerHTML : '';
 };
 
-const getLastRng = (lastRng) => {
-  return lastRng.get();
-};
+const getLastRng = (lastRng) => lastRng.get();
 
-const isDefaultContent = (pasteBinDefaultContent: string, content: string) => {
-  return content === pasteBinDefaultContent;
-};
+const isDefaultContent = (pasteBinDefaultContent: string, content: string) => content === pasteBinDefaultContent;
 
-const isPasteBin = (elm: Element): boolean => {
-  return elm && elm.id === 'mcepastebin';
-};
+const isPasteBin = (elm: Element): boolean => elm && elm.id === 'mcepastebin';
 
 const isDefault = (editor, pasteBinDefaultContent) => {
   const pasteBinElm = getEl(editor);

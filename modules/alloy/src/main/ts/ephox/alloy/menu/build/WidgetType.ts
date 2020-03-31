@@ -22,23 +22,19 @@ const builder = (detail: WidgetItemDetail) => {
   const subs = AlloyParts.substitutes(WidgetParts.owner(), detail, WidgetParts.parts());
   const components = AlloyParts.components(WidgetParts.owner(), detail, subs.internals());
 
-  const focusWidget = (component: AlloyComponent) => {
-    return AlloyParts.getPart(component, detail, 'widget').map((widget) => {
-      Keying.focusIn(widget);
-      return widget;
-    });
-  };
+  const focusWidget = (component: AlloyComponent) => AlloyParts.getPart(component, detail, 'widget').map((widget) => {
+    Keying.focusIn(widget);
+    return widget;
+  });
 
-  const onHorizontalArrow = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent): Option<boolean> => {
-    return EditableFields.inside(simulatedEvent.event().target()) ? Option.none<boolean>() : (() => {
-      if (detail.autofocus) {
-        simulatedEvent.setSource(component.element());
-        return Option.none<boolean>();
-      } else {
-        return Option.none<boolean>();
-      }
-    })();
-  };
+  const onHorizontalArrow = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent): Option<boolean> => EditableFields.inside(simulatedEvent.event().target()) ? Option.none<boolean>() : (() => {
+    if (detail.autofocus) {
+      simulatedEvent.setSource(component.element());
+      return Option.none<boolean>();
+    } else {
+      return Option.none<boolean>();
+    }
+  })();
 
   return {
     dom: detail.dom,

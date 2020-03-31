@@ -16,6 +16,4 @@ export const colorPickerSchema = ValueSchema.objOf(colorPickerFields);
 
 export const colorPickerDataProcessor = ValueSchema.string;
 
-export const createColorPicker = (spec: ColorPickerApi): Result<ColorPicker, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<ColorPicker>('colorpicker', colorPickerSchema, spec);
-};
+export const createColorPicker = (spec: ColorPickerApi): Result<ColorPicker, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<ColorPicker>('colorpicker', colorPickerSchema, spec);

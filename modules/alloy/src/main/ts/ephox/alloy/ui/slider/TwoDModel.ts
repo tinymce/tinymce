@@ -17,12 +17,10 @@ const fireSliderChange = (spectrum: AlloyComponent, value: SliderValueXY): void 
   AlloyTriggers.emitWith(spectrum, ModelCommon.sliderChangeEvent(), { value });
 };
 
-const sliderValue = (x: number, y: number): SliderValueXY => {
-  return {
-    x: Fun.constant(x),
-    y: Fun.constant(y)
-  };
-};
+const sliderValue = (x: number, y: number): SliderValueXY => ({
+  x: Fun.constant(x),
+  y: Fun.constant(y)
+});
 
 // find both values of x and y offsets of where the mouse was clicked from the model.
 // then fire a slider change event with those values, returning the values
@@ -46,9 +44,7 @@ const moveBy = (direction: number, isVerticalMovement: boolean, spectrum: AlloyC
   return Option.some(xValue);
 };
 
-const handleMovement = (direction: number, isVerticalMovement: boolean) => (spectrum: AlloyComponent, detail: TwoDSliderDetail): Option<boolean> => {
-  return moveBy(direction, isVerticalMovement, spectrum, detail).map((): boolean => true);
-};
+const handleMovement = (direction: number, isVerticalMovement: boolean) => (spectrum: AlloyComponent, detail: TwoDSliderDetail): Option<boolean> => moveBy(direction, isVerticalMovement, spectrum, detail).map((): boolean => true);
 
 // fire a slider change event with the minimum value
 const setToMin = (spectrum: AlloyComponent, detail: TwoDSliderDetail): void => {
@@ -65,9 +61,7 @@ const setToMax = (spectrum: AlloyComponent, detail: TwoDSliderDetail): void => {
 };
 
 // get event data as a SugarPosition
-const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent): Option<Position> => {
-  return ModelCommon.getEventSource(simulatedEvent);
-};
+const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent): Option<Position> => ModelCommon.getEventSource(simulatedEvent);
 
 // update the position of the thumb from the slider's current value
 const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, detail: TwoDSliderDetail, edges: SliderModelDetailParts): void => {

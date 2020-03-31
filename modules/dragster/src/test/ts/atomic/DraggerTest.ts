@@ -13,12 +13,8 @@ UnitTest.test('DraggerTest', function () {
   const mutations: number[] = [ ];
 
   const mode = DragMode({
-    compare: (old: any, nu: any) => {
-      return (nu - old) as unknown as Position;
-    },
-    extract: (raw: any) => {
-      return Option.from(parseInt(raw, 10) as unknown as Position);
-    },
+    compare: (old: any, nu: any) => (nu - old) as unknown as Position,
+    extract: (raw: any) => Option.from(parseInt(raw, 10) as unknown as Position),
     mutate: (mutation, data) => {
       assert.eq(argumentToMutate, mutation);
       mutations.push(data as any as number);

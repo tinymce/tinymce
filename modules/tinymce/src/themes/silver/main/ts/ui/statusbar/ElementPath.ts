@@ -34,30 +34,28 @@ const renderElementPath = (editor: Editor, settings, providersBackstage: UiFacto
   const getDataPath = (data) => {
     const parts = data || [];
 
-    const newPathElements = Arr.map(parts, (part, index) => {
-      return Button.sketch({
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-statusbar__path-item' ],
-          attributes: {
-            'role': 'button',
-            'data-index': index,
-            'tab-index': -1,
-            'aria-level': index + 1
-          },
-          innerHtml: part.name
+    const newPathElements = Arr.map(parts, (part, index) => Button.sketch({
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-statusbar__path-item' ],
+        attributes: {
+          'role': 'button',
+          'data-index': index,
+          'tab-index': -1,
+          'aria-level': index + 1
         },
-        action: (_btn) => {
-          editor.focus();
-          editor.selection.select(part.element);
-          editor.nodeChanged();
-        },
-        buttonBehaviours: Behaviour.derive([
-          DisablingConfigs.button(providersBackstage.isReadonly()),
-          ReadOnly.receivingConfig()
-        ])
-      });
-    });
+        innerHtml: part.name
+      },
+      action: (_btn) => {
+        editor.focus();
+        editor.selection.select(part.element);
+        editor.nodeChanged();
+      },
+      buttonBehaviours: Behaviour.derive([
+        DisablingConfigs.button(providersBackstage.isReadonly()),
+        ReadOnly.receivingConfig()
+      ])
+    }));
 
     const divider = {
       dom: {

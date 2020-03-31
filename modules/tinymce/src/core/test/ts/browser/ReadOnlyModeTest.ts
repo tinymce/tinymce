@@ -13,62 +13,56 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
   TinyLoader.setup(function (editor: Editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
-    const sSetMode = (mode: string) => {
-      return Step.label('sSetMode: setting the editor mode to ' + mode, Step.sync(() => {
-        editor.mode.set(mode);
-      }));
-    };
+    const sSetMode = (mode: string) => Step.label('sSetMode: setting the editor mode to ' + mode, Step.sync(() => {
+      editor.mode.set(mode);
+    }));
 
-    const sAssertNestedContentEditableTrueDisabled = (state: boolean, offscreen: boolean) => {
-      return tinyApis.sAssertContentStructure(
-        ApproxStructure.build(function (s, str, _arr) {
-          const attrs = state ? {
-            'contenteditable': str.is('false'),
-            'data-mce-contenteditable': str.is('true')
-          } : {
-            'contenteditable': str.is('true'),
-            'data-mce-contenteditable': str.none()
-          };
+    const sAssertNestedContentEditableTrueDisabled = (state: boolean, offscreen: boolean) => tinyApis.sAssertContentStructure(
+      ApproxStructure.build(function (s, str, _arr) {
+        const attrs = state ? {
+          'contenteditable': str.is('false'),
+          'data-mce-contenteditable': str.is('true')
+        } : {
+          'contenteditable': str.is('true'),
+          'data-mce-contenteditable': str.none()
+        };
 
-          return s.element('body', {
-            children: [
-              s.element('div', {
-                attrs: {
-                  contenteditable: str.is('false')
-                },
-                children: [
-                  s.text(str.is('a')),
-                  s.element('span', {
-                    attrs,
-                  }),
-                  s.text(str.is('c'))
-                ]
-              }),
-              ...offscreen ? [ s.element('div', {}) ] : [] // Offscreen cef clone
-            ]
-          });
-        })
-      );
-    };
+        return s.element('body', {
+          children: [
+            s.element('div', {
+              attrs: {
+                contenteditable: str.is('false')
+              },
+              children: [
+                s.text(str.is('a')),
+                s.element('span', {
+                  attrs,
+                }),
+                s.text(str.is('c'))
+              ]
+            }),
+            ...offscreen ? [ s.element('div', {}) ] : [] // Offscreen cef clone
+          ]
+        });
+      })
+    );
 
     const sAssertFakeSelection = (expectedState: boolean) => Step.sync(() => {
       Assert.eq('Selected element should have expected state', expectedState, editor.selection.getNode().hasAttribute('data-mce-selected'));
     });
 
-    const sAssertResizeBars = (expectedState: boolean) => {
-      return Step.sync(() => {
-        SelectorFind.descendant(Element.fromDom(editor.getDoc().documentElement), '.ephox-snooker-resizer-bar').fold(
-          () => {
-            Assert.eq('Was expecting to find resize bars', expectedState, false);
-          },
-          (bar) => {
-            const actualDisplay = Css.get(bar, 'display');
-            const expectedDisplay = expectedState ? 'block' : 'none';
-            Assert.eq('Should be expected display state on resize bar', expectedDisplay, actualDisplay);
-          }
-        );
-      });
-    };
+    const sAssertResizeBars = (expectedState: boolean) => Step.sync(() => {
+      SelectorFind.descendant(Element.fromDom(editor.getDoc().documentElement), '.ephox-snooker-resizer-bar').fold(
+        () => {
+          Assert.eq('Was expecting to find resize bars', expectedState, false);
+        },
+        (bar) => {
+          const actualDisplay = Css.get(bar, 'display');
+          const expectedDisplay = expectedState ? 'block' : 'none';
+          Assert.eq('Should be expected display state on resize bar', expectedDisplay, actualDisplay);
+        }
+      );
+    });
 
     const sMouseOverTable = Chain.asStep(Element.fromDom(editor.getBody()), [
       UiFinder.cFindIn('table'),

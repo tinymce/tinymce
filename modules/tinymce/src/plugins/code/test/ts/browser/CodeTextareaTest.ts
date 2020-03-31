@@ -14,9 +14,7 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeTextareaTest', (success, fa
     const tinyUi = TinyUi(editor);
 
     const cOpenDialog = Chain.fromChains([
-      Chain.op(() => {
-        return editor.execCommand('mceCodeEditor');
-      }),
+      Chain.op(() => editor.execCommand('mceCodeEditor')),
       tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'),
     ]);
 
@@ -25,16 +23,14 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeTextareaTest', (success, fa
       return editor.dom.getStyle(element, 'white-space', true);
     });
 
-    const cAssertWhiteSpace = () => {
-      return NamedChain.asChain([
-        NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-        NamedChain.direct('editor', cOpenDialog, 'element'),
-        NamedChain.direct('element', cGetWhiteSpace, 'whitespace'),
-        NamedChain.read('whitespace', Chain.op((whitespace) => {
-          Assertions.assertEq('Textarea should have "white-space: pre-wrap"', 'pre-wrap', whitespace);
-        }))
-      ]);
-    };
+    const cAssertWhiteSpace = () => NamedChain.asChain([
+      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
+      NamedChain.direct('editor', cOpenDialog, 'element'),
+      NamedChain.direct('element', cGetWhiteSpace, 'whitespace'),
+      NamedChain.read('whitespace', Chain.op((whitespace) => {
+        Assertions.assertEq('Textarea should have "white-space: pre-wrap"', 'pre-wrap', whitespace);
+      }))
+    ]);
 
     const sAssertStyleExits = Chain.asStep({ editor }, [
       cAssertWhiteSpace(),

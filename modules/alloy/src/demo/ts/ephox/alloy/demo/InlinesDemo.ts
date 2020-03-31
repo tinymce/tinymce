@@ -34,9 +34,7 @@ export default (): void => {
 
   const sink = DemoSink.make();
 
-  const lazySink: LazySink = (_) => {
-    return Result.value(sink);
-  };
+  const lazySink: LazySink = (_) => Result.value(sink);
 
   // Note, this should not in the GUI. It will be connected
   // when it opens.
@@ -50,53 +48,51 @@ export default (): void => {
     })
   );
 
-  const makeItem = (v: string, t: string, c: string): DemoRenders.DemoItem => {
-    return {
-      type: 'item',
-      data: {
-        value: v,
-        meta: {
-          'text': t,
-          'item-class': c
-        }
-      },
+  const makeItem = (v: string, t: string, c: string): DemoRenders.DemoItem => ({
+    type: 'item',
+    data: {
+      value: v,
+      meta: {
+        'text': t,
+        'item-class': c
+      }
+    },
 
-      itemBehaviours: Behaviour.derive([
-        Tooltipping.config({
-          lazySink,
-          tooltipDom: {
-            tag: 'div',
-            styles: {
-              background: '#cadbee',
-              padding: '3em'
-            }
-          },
-          tooltipComponents: [
-            GuiFactory.text(t)
-          ],
-          anchor: (comp) => ({
-            anchor: 'submenu',
-            item: comp
-          }),
-          onShow: (component, _tooltip) => {
-            setTimeout(() => {
-              Tooltipping.setComponents(component, [
-                {
-                  dom: {
-                    tag: 'div',
-                    innerHtml: 'This lazy loaded'
-                  }
-                }
-              ]);
-            }, 2000);
-          },
-          onHide: (_component, _tooltip) => {
-
+    itemBehaviours: Behaviour.derive([
+      Tooltipping.config({
+        lazySink,
+        tooltipDom: {
+          tag: 'div',
+          styles: {
+            background: '#cadbee',
+            padding: '3em'
           }
-        })
-      ])
-    };
-  };
+        },
+        tooltipComponents: [
+          GuiFactory.text(t)
+        ],
+        anchor: (comp) => ({
+          anchor: 'submenu',
+          item: comp
+        }),
+        onShow: (component, _tooltip) => {
+          setTimeout(() => {
+            Tooltipping.setComponents(component, [
+              {
+                dom: {
+                  tag: 'div',
+                  innerHtml: 'This lazy loaded'
+                }
+              }
+            ]);
+          }, 2000);
+        },
+        onHide: (_component, _tooltip) => {
+
+        }
+      })
+    ])
+  });
 
   const inlineMenu = TieredMenu.sketch({
     dom: {

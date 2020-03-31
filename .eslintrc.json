@@ -27,7 +27,6 @@
     "@typescript-eslint/prefer-regexp-exec": "off",
     "@typescript-eslint/quotes": [ "error", "single", { "allowTemplateLiterals": true }], // this will be added to the plugin
     "@typescript-eslint/unbound-method": "off",
-    "arrow-body-style": "off",
     "no-empty": "off",
     "no-shadow": "off",
     "no-underscore-dangle": "off",

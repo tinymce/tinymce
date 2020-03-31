@@ -11,32 +11,16 @@ UnitTest.test('BounderCalcRepositionTest', () => {
   const zeroableArb = Jsc.integer(minBounds, maxBounds);
 
   const arbTestCase = Jsc.bless({
-    generator: zeroableArb.generator.flatMap((boundsX: number) => {
-      return zeroableArb.generator.flatMap((boundsY: number) => {
-        return Jsc.integer(boundsX, maxBounds).generator.flatMap((newX: number) => {
-          return Jsc.integer(boundsY, maxBounds).generator.flatMap((newY: number) => {
-            return zeroableArb.generator.flatMap((width: number) => {
-              return zeroableArb.generator.flatMap((height: number) => {
-                return Jsc.integer(newX + width, maxBounds).generator.flatMap((boundsW: number) => {
-                  return Jsc.integer(newY + height, maxBounds).generator.map((boundsH: number) => {
-                    return {
-                      newX,
-                      newY,
-                      width,
-                      height,
-                      boundsX,
-                      boundsY,
-                      boundsW,
-                      boundsH
-                    };
-                  });
-                });
-              });
-            });
-          });
-        });
-      });
-    })
+    generator: zeroableArb.generator.flatMap((boundsX: number) => zeroableArb.generator.flatMap((boundsY: number) => Jsc.integer(boundsX, maxBounds).generator.flatMap((newX: number) => Jsc.integer(boundsY, maxBounds).generator.flatMap((newY: number) => zeroableArb.generator.flatMap((width: number) => zeroableArb.generator.flatMap((height: number) => Jsc.integer(newX + width, maxBounds).generator.flatMap((boundsW: number) => Jsc.integer(newY + height, maxBounds).generator.map((boundsH: number) => ({
+      newX,
+      newY,
+      width,
+      height,
+      boundsX,
+      boundsY,
+      boundsW,
+      boundsH
+    })))))))))
   });
 
   Jsc.property(

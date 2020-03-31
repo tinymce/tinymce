@@ -10,11 +10,9 @@ import * as Triggers from 'ephox/alloy/events/Triggers';
 UnitTest.asynctest('TriggersTest', (success, failure) => {
   let log: string[] = [ ];
 
-  const make = (stop: boolean, message: string) => {
-    return (labEvent: EventArgs) => {
-      log.push(message);
-      if (stop) { labEvent.stop(); }
-    };
+  const make = (stop: boolean, message: string) => (labEvent: EventArgs) => {
+    log.push(message);
+    if (stop) { labEvent.stop(); }
   };
 
   // OK for this test, we need to start with a list of events which may or may not stop
@@ -66,29 +64,25 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
   const lookup = (eventType: string, target: Element) => {
     const targetId = Attr.get(target, 'data-event-id');
 
-    return Obj.get(domEvents as any, eventType).bind((x) => Obj.get(x, targetId)).map((h: Function) => {
-      return {
-        descHandler: {
-          cHandler: h,
-          purpose: Fun.constant('purpose')
-        },
-        element: target
-      };
-    });
+    return Obj.get(domEvents as any, eventType).bind((x) => Obj.get(x, targetId)).map((h: Function) => ({
+      descHandler: {
+        cHandler: h,
+        purpose: Fun.constant('purpose')
+      },
+      element: target
+    }));
   };
 
   const container = Element.fromTag('div');
   const body = Element.fromDom(document.body);
 
-  const sCheck = (label: string, expected: string[], target: string, eventType: string) => {
-    return Logger.t(label, Step.sync(() => {
-      Html.set(container, '<div data-event-id="alpha"><div data-event-id="beta"><div data-event-id="gamma"></div></div></div>');
-      const targetEl = SelectorFind.descendant(container, '[data-event-id="' + target + '"]').getOrDie();
-      Triggers.triggerOnUntilStopped(lookup, eventType, { } as any, targetEl, logger);
-      Assertions.assertEq(label, expected, log.slice(0));
-      log = [ ];
-    }));
-  };
+  const sCheck = (label: string, expected: string[], target: string, eventType: string) => Logger.t(label, Step.sync(() => {
+    Html.set(container, '<div data-event-id="alpha"><div data-event-id="beta"><div data-event-id="gamma"></div></div></div>');
+    const targetEl = SelectorFind.descendant(container, '[data-event-id="' + target + '"]').getOrDie();
+    Triggers.triggerOnUntilStopped(lookup, eventType, { } as any, targetEl, logger);
+    Assertions.assertEq(label, expected, log.slice(0));
+    log = [ ];
+  }));
 
   Insert.append(body, container);
 
@@ -126,14 +120,12 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
     { expected: [ 'alpha' ], target: 'alpha', type: 'all.stop' }
   ];
 
-  const steps = Arr.map(cases, (c) => {
-    return sCheck(
-      'fire(' + c.target + ') using event: ' + c.type,
-      c.expected,
-      c.target,
-      c.type
-    );
-  });
+  const steps = Arr.map(cases, (c) => sCheck(
+    'fire(' + c.target + ') using event: ' + c.type,
+    c.expected,
+    c.target,
+    c.type
+  ));
 
   Pipeline.async({}, steps, () => { success(); }, failure);
 });

@@ -69,42 +69,40 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
     };
   }
 
-  const sTestScenario = (scenario: Scenario) => {
-    return Logger.t(scenario.label, Chain.asStep({ }, [
-      NamedChain.asChain([
-        NamedChain.write('editor', McEditor.cFromSettings({
-          theme: 'silver',
-          base_url: '/project/tinymce/js/tinymce',
-          ...scenario.settings
-        })),
-        NamedChain.write('tearDownScroll', Chain.mapper(() => setupPageScroll())),
-        NamedChain.read('editor', Chain.op((editor: Editor) => editor.focus())),
-        NamedChain.read('editor', cScrollRelativeEditorContainer(scenario.scroll.relativeTop, scenario.scroll.delta)),
-        NamedChain.read('editor', Chain.op((editor) => {
-          const assertBounds = (bound: 'x' | 'y' | 'right' | 'bottom') => {
-            const expectedBound = asserted[bound];
-            const actualBound = actual[bound];
+  const sTestScenario = (scenario: Scenario) => Logger.t(scenario.label, Chain.asStep({ }, [
+    NamedChain.asChain([
+      NamedChain.write('editor', McEditor.cFromSettings({
+        theme: 'silver',
+        base_url: '/project/tinymce/js/tinymce',
+        ...scenario.settings
+      })),
+      NamedChain.write('tearDownScroll', Chain.mapper(() => setupPageScroll())),
+      NamedChain.read('editor', Chain.op((editor: Editor) => editor.focus())),
+      NamedChain.read('editor', cScrollRelativeEditorContainer(scenario.scroll.relativeTop, scenario.scroll.delta)),
+      NamedChain.read('editor', Chain.op((editor) => {
+        const assertBounds = (bound: 'x' | 'y' | 'right' | 'bottom') => {
+          const expectedBound = asserted[bound];
+          const actualBound = actual[bound];
 
-            Assertions.assertEq(
-              `Expect context toolbar bounds.${bound} === ${expectedBound} (Actual: ${actualBound})`,
-              actualBound,
-              expectedBound
-            );
-          };
+          Assertions.assertEq(
+            `Expect context toolbar bounds.${bound} === ${expectedBound} (Actual: ${actualBound})`,
+            actualBound,
+            expectedBound
+          );
+        };
 
-          const asserted = scenario.assertBounds(getBounds(editor));
-          const actual = getContextToolbarBounds(editor);
+        const asserted = scenario.assertBounds(getBounds(editor));
+        const actual = getContextToolbarBounds(editor);
 
-          assertBounds('x');
-          assertBounds('y');
-          assertBounds('right');
-          assertBounds('bottom');
-        })),
-        NamedChain.read('tearDownScroll', Chain.op(Fun.call)),
-        NamedChain.read('editor', McEditor.cRemove),
-      ])
-    ]));
-  };
+        assertBounds('x');
+        assertBounds('y');
+        assertBounds('right');
+        assertBounds('bottom');
+      })),
+      NamedChain.read('tearDownScroll', Chain.op(Fun.call)),
+      NamedChain.read('editor', McEditor.cRemove),
+    ])
+  ]));
 
   Pipeline.async({}, [
     Logger.t('Test Context toolbar bounds with toolbar top', GeneralSteps.sequence([

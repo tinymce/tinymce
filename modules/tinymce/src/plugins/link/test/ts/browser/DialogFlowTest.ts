@@ -96,11 +96,9 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
       Keyboard.sKeydown(doc, Keys.down(), { }),
       UiFinder.sWaitForVisible('Waiting for dropdown', TinyDom.fromDom(document.body), '.tox-menu'),
       sChooseItem,
-      sAssertUrlStructure((s, str, _arr) => {
-        return s.element('input', {
-          value: str.startsWith('#h_')
-        });
-      }),
+      sAssertUrlStructure((s, str, _arr) => s.element('input', {
+        value: str.startsWith('#h_')
+      })),
       sAssertInputValue('Header One', 'Text to display'),
       TestLinkUi.sAssertContentPresence(tinyApis, {
         'h1[id]': 0,
@@ -116,9 +114,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
         NamedChain.asChain([
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('h1'), 'h1'),
           NamedChain.direct('h1', Chain.mapper((h1) => Attr.get(h1, 'id')), 'h1-id'),
-          NamedChain.bundle((obj) => {
-            return UiFinder.findIn(obj[NamedChain.inputName()], `a[href="#${obj['h1-id']}"]:contains("Header One")`);
-          })
+          NamedChain.bundle((obj) => UiFinder.findIn(obj[NamedChain.inputName()], `a[href="#${obj['h1-id']}"]:contains("Header One")`))
         ])
       ])
     ]);

@@ -59,9 +59,7 @@ const getSelectedListItems = function (editor) {
   });
 };
 
-const getSelectedDlItems = (editor: Editor): Node[] => {
-  return Arr.filter(getSelectedListItems(editor), NodeType.isDlItemNode);
-};
+const getSelectedDlItems = (editor: Editor): Node[] => Arr.filter(getSelectedListItems(editor), NodeType.isDlItemNode);
 
 const getClosestListRootElm = function (editor, elm) {
   const parentTableCell = editor.dom.getParents(elm, 'TD,TH');

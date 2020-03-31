@@ -134,17 +134,11 @@ const setup = (editor: Editor): RenderInfo => {
     }
   });
 
-  const lazyAnchorBar = () => lazyOuterContainer.bind((container) => {
-    return memAnchorBar.getOpt(container);
-  }).getOrDie('Could not find a anchor bar element');
+  const lazyAnchorBar = () => lazyOuterContainer.bind((container) => memAnchorBar.getOpt(container)).getOrDie('Could not find a anchor bar element');
 
-  const lazyToolbar = () => lazyOuterContainer.bind((container) => {
-    return OuterContainer.getToolbar(container);
-  }).getOrDie('Could not find more toolbar element');
+  const lazyToolbar = () => lazyOuterContainer.bind((container) => OuterContainer.getToolbar(container)).getOrDie('Could not find more toolbar element');
 
-  const lazyThrobber = () => lazyOuterContainer.bind((container) => {
-    return OuterContainer.getThrobber(container);
-  }).getOrDie('Could not find throbber element');
+  const lazyThrobber = () => lazyOuterContainer.bind((container) => OuterContainer.getThrobber(container)).getOrDie('Could not find throbber element');
 
   const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar);
 

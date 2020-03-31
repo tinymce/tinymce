@@ -97,9 +97,7 @@ const enum MatchType {
   Attribute = 9
 }
 
-const isValidPrefixAttrName = (name: string): boolean => {
-  return name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
-};
+const isValidPrefixAttrName = (name: string): boolean => name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
 
 const isInvalidUri = (settings: SaxParserSettings, uri: string) => {
   if (settings.allow_html_data_urls) {

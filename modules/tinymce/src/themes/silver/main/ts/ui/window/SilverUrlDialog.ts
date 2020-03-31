@@ -25,13 +25,9 @@ import {  bodySendMessageChannel } from './DialogChannels';
 // A list of supported message actions
 const SUPPORTED_MESSAGE_ACTIONS = [ 'insertContent', 'setContent', 'execCommand', 'close', 'block', 'unblock' ];
 
-const isSupportedMessage = (data: any): boolean => {
-  return Type.isObject(data) && SUPPORTED_MESSAGE_ACTIONS.indexOf(data.mceAction) !== -1;
-};
+const isSupportedMessage = (data: any): boolean => Type.isObject(data) && SUPPORTED_MESSAGE_ACTIONS.indexOf(data.mceAction) !== -1;
 
-const isCustomMessage = (data: any): boolean => {
-  return !isSupportedMessage(data) && Type.isObject(data) && Obj.has(data, 'mceAction');
-};
+const isCustomMessage = (data: any): boolean => !isSupportedMessage(data) && Type.isObject(data) && Obj.has(data, 'mceAction');
 
 const handleMessage = (editor: Editor, api: Types.UrlDialog.UrlDialogInstanceApi, data: any) => {
   switch (data.mceAction) {

@@ -49,31 +49,29 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertNewLine', (success, failu
           tinyApis.sSetRawContent(`<p>${bookmarkSpan}<br data-mce-bogus="1"></p>`),
           tinyApis.sSetCursor([ 0 ], 1),
           sInsertNewline(editor, { }),
-          Assertions.sAssertStructure('Content should only have one bookmark span', ApproxStructure.build((s, str) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  children: [
-                    ApproxStructure.fromHtml(bookmarkSpan),
-                    s.element('br', {
-                      attrs: {
-                        'data-mce-bogus': str.is('1')
-                      }
-                    })
-                  ]
-                }),
-                s.element('p', {
-                  children: [
-                    s.element('br', {
-                      attrs: {
-                        'data-mce-bogus': str.is('1')
-                      }
-                    })
-                  ]
-                })
-              ]
-            });
-          }), body),
+          Assertions.sAssertStructure('Content should only have one bookmark span', ApproxStructure.build((s, str) => s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  ApproxStructure.fromHtml(bookmarkSpan),
+                  s.element('br', {
+                    attrs: {
+                      'data-mce-bogus': str.is('1')
+                    }
+                  })
+                ]
+              }),
+              s.element('p', {
+                children: [
+                  s.element('br', {
+                    attrs: {
+                      'data-mce-bogus': str.is('1')
+                    }
+                  })
+                ]
+              })
+            ]
+          })), body),
           tinyApis.sAssertSelection([ 1 ], 0, [ 1 ], 0)
         ]))
       ])),

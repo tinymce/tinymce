@@ -19,6 +19,4 @@ export const separatorMenuItemSchema = ValueSchema.objOf([
   FieldSchema.optionString('text')
 ]);
 
-export const createSeparatorMenuItem = (spec: SeparatorMenuItemApi): Result<SeparatorMenuItem, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw('separatormenuitem', separatorMenuItemSchema, spec);
-};
+export const createSeparatorMenuItem = (spec: SeparatorMenuItemApi): Result<SeparatorMenuItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('separatormenuitem', separatorMenuItemSchema, spec);

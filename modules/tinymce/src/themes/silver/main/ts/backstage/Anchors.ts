@@ -70,26 +70,22 @@ const getBannerAnchor = (contentAreaElement: () => Element, lazyAnchorbar: () =>
   return useEditableAreaAnchor ? editableAreaAnchor : standardAnchor;
 };
 
-const getCursorAnchor = (editor: Editor, bodyElement: () => Element) => (): SelectionAnchorSpec => {
-  return {
-    anchor: 'selection',
-    root: bodyElement(),
-    getSelection: () => {
-      const rng = editor.selection.getRng();
-      return Option.some(
-        Selection.range(Element.fromDom(rng.startContainer), rng.startOffset, Element.fromDom(rng.endContainer), rng.endOffset)
-      );
-    }
-  };
-};
+const getCursorAnchor = (editor: Editor, bodyElement: () => Element) => (): SelectionAnchorSpec => ({
+  anchor: 'selection',
+  root: bodyElement(),
+  getSelection: () => {
+    const rng = editor.selection.getRng();
+    return Option.some(
+      Selection.range(Element.fromDom(rng.startContainer), rng.startOffset, Element.fromDom(rng.endContainer), rng.endOffset)
+    );
+  }
+});
 
-const getNodeAnchor = (bodyElement) => (element: Option<Element>): NodeAnchorSpec => {
-  return {
-    anchor: 'node',
-    root: bodyElement(),
-    node: element
-  };
-};
+const getNodeAnchor = (bodyElement) => (element: Option<Element>): NodeAnchorSpec => ({
+  anchor: 'node',
+  root: bodyElement(),
+  node: element
+});
 
 const getAnchors = (editor: Editor, lazyAnchorbar: () => AlloyComponent) => {
   const useFixedToolbarContainer: boolean = useFixedContainer(editor);

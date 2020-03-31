@@ -13,31 +13,25 @@ UnitTest.asynctest('browser.core.SubmitTest', (success, failure) => {
 
   const customEmbed = '<div style="left: 0px; width: 100%; height: 0px; position: relative; padding-bottom: 56.338%; max-width: 650px;"><iframe src="https://www.youtube.com/embed/IcgmSRJHu_8" width="560" height="314" allowfullscreen="allowfullscreen" data-mce-fragment="1"></iframe></div>';
 
-  const sTestResolvedEmbedContentSubmit = (ui: TinyUi, editor: Editor, apis: TinyApis, url: string, expected: string) => {
-    return Logger.t(`Assert content ${expected}`, GeneralSteps.sequence([
-      Utils.sOpenDialog(ui),
-      Utils.sSetFormItemNoEvent(ui, url),
-      ui.sClickOnUi('click save button', Utils.selectors.saveButton),
-      Utils.sAssertEditorContent(apis, editor, expected)
-    ]));
-  };
+  const sTestResolvedEmbedContentSubmit = (ui: TinyUi, editor: Editor, apis: TinyApis, url: string, expected: string) => Logger.t(`Assert content ${expected}`, GeneralSteps.sequence([
+    Utils.sOpenDialog(ui),
+    Utils.sSetFormItemNoEvent(ui, url),
+    ui.sClickOnUi('click save button', Utils.selectors.saveButton),
+    Utils.sAssertEditorContent(apis, editor, expected)
+  ]));
 
-  const sTestManualEmbedContentSubmit = (ui: TinyUi, editor: Editor, apis: TinyApis, embed: string, expected: string) => {
-    return Logger.t(`Assert content ${expected}`, GeneralSteps.sequence([
-      Utils.sOpenDialog(ui),
-      Utils.sPasteTextareaValue(ui, embed),
-      ui.sClickOnUi('click save button', Utils.selectors.saveButton),
-      Utils.sAssertEditorContent(apis, editor, expected)
-    ]));
-  };
+  const sTestManualEmbedContentSubmit = (ui: TinyUi, editor: Editor, apis: TinyApis, embed: string, expected: string) => Logger.t(`Assert content ${expected}`, GeneralSteps.sequence([
+    Utils.sOpenDialog(ui),
+    Utils.sPasteTextareaValue(ui, embed),
+    ui.sClickOnUi('click save button', Utils.selectors.saveButton),
+    Utils.sAssertEditorContent(apis, editor, expected)
+  ]));
 
-  const sTestEmbedUnchangedAfterOpenCloseDialog = (ui: TinyUi, editor: Editor, apis: TinyApis, expected: string) => {
-    return GeneralSteps.sequence([
-      Utils.sOpenDialog(ui),
-      ui.sClickOnUi('click save button', Utils.selectors.saveButton),
-      Utils.sAssertEditorContent(apis, editor, expected),
-    ]);
-  };
+  const sTestEmbedUnchangedAfterOpenCloseDialog = (ui: TinyUi, editor: Editor, apis: TinyApis, expected: string) => GeneralSteps.sequence([
+    Utils.sOpenDialog(ui),
+    ui.sClickOnUi('click save button', Utils.selectors.saveButton),
+    Utils.sAssertEditorContent(apis, editor, expected),
+  ]);
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const ui = TinyUi(editor);

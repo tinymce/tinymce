@@ -26,15 +26,7 @@ UnitTest.test('DragCoordTest', () => {
     { asPoint: DragCoord.asOffset, nu: DragCoord.offset, mode: 'offset' }
   ]);
 
-  const arbPosition = (name: string) => {
-    return Jsc.tuple([ Jsc.integer, Jsc.integer ]).smap((arr: [ number, number ]) => {
-      return Position(arr[0], arr[1]);
-    }, (pos: Position) => {
-      return [ pos.left(), pos.top() ];
-    }, (pos: Position) => {
-      return name + ': { left: ' + pos.left() + ', top: ' + pos.top() + '}';
-    });
-  };
+  const arbPosition = (name: string) => Jsc.tuple([ Jsc.integer, Jsc.integer ]).smap((arr: [ number, number ]) => Position(arr[0], arr[1]), (pos: Position) => [ pos.left(), pos.top() ], (pos: Position) => name + ': { left: ' + pos.left() + ', top: ' + pos.top() + '}');
 
   Jsc.property(
     'round-tripping coordinates',

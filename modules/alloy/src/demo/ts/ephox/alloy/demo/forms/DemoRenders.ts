@@ -259,15 +259,13 @@ const orb = (spec: DemoItem): ItemSpec => {
   };
 };
 
-const toolbarItem = (spec: { text: string; action: () => void }) => {
-  return {
-    dom: {
-      tag: 'span',
-      classes: [ 'demo-alloy-toolbar-item' ],
-      innerHtml: spec.text
-    }
-  };
-};
+const toolbarItem = (spec: { text: string; action: () => void }) => ({
+  dom: {
+    tag: 'span',
+    classes: [ 'demo-alloy-toolbar-item' ],
+    innerHtml: spec.text
+  }
+});
 
 const toolbarGroup = (group: { label?: string; items: AlloySpec[] }) => {
   const spec = group;

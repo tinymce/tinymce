@@ -30,52 +30,44 @@ export interface DialogSpec {
   extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
 }
 
-const getHeader = (title: string, backstage: UiFactoryBackstage) => {
-  return renderModalHeader({
-    title: backstage.shared.providers.translate(title),
-    draggable: backstage.dialog.isDraggableModal()
-  }, backstage.shared.providers);
-};
+const getHeader = (title: string, backstage: UiFactoryBackstage) => renderModalHeader({
+  title: backstage.shared.providers.translate(title),
+  draggable: backstage.dialog.isDraggableModal()
+}, backstage.shared.providers);
 
-const getEventExtras = (lazyDialog, extra: WindowExtra) => {
-  return {
-    onClose: () => extra.closeWindow(),
-    onBlock: (blockEvent: FormBlockEvent) => {
-      ModalDialog.setBusy(lazyDialog(), (d, bs) => {
-        return {
-          dom: {
-            tag: 'div',
-            classes: [ 'tox-dialog__busy-spinner' ],
-            attributes: {
-              'aria-label': blockEvent.message()
-            },
-            styles: {
-              left: '0px',
-              right: '0px',
-              bottom: '0px',
-              top: '0px',
-              position: 'absolute'
-            }
-          },
-          behaviours: bs,
-          components: [
-            {
-              dom: DomFactory.fromHtml('<div class="tox-spinner"><div></div><div></div><div></div></div>')
-            }
-          ]
-        };
-      });
-    },
-    onUnblock: () => {
-      ModalDialog.setIdle(lazyDialog());
-    }
-  };
-};
+const getEventExtras = (lazyDialog, extra: WindowExtra) => ({
+  onClose: () => extra.closeWindow(),
+  onBlock: (blockEvent: FormBlockEvent) => {
+    ModalDialog.setBusy(lazyDialog(), (d, bs) => ({
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-dialog__busy-spinner' ],
+        attributes: {
+          'aria-label': blockEvent.message()
+        },
+        styles: {
+          left: '0px',
+          right: '0px',
+          bottom: '0px',
+          top: '0px',
+          position: 'absolute'
+        }
+      },
+      behaviours: bs,
+      components: [
+        {
+          dom: DomFactory.fromHtml('<div class="tox-spinner"><div></div><div></div><div></div></div>')
+        }
+      ]
+    }));
+  },
+  onUnblock: () => {
+    ModalDialog.setIdle(lazyDialog());
+  }
+});
 
 const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[], backstage: UiFactoryBackstage) => {
-  const updateState = (_comp, incoming) => {
-    return Option.some(incoming);
-  };
+  const updateState = (_comp, incoming) => Option.some(incoming);
 
   return GuiFactory.build(Dialogs.renderDialog({
     ...spec,
@@ -124,18 +116,16 @@ const mapMenuButtons = (buttons: Types.Dialog.DialogButton[]): (Types.Dialog.Dia
   });
 };
 
-const extractCellsToObject = (buttons: (StoragedMenuButton | Types.Dialog.DialogMenuButton | Types.Dialog.DialogNormalButton)[]) => {
-  return Arr.foldl(buttons, (acc, button) => {
-    if (button.type === 'menu') {
-      const menuButton = button as StoragedMenuButton;
-      return Arr.foldl(menuButton.items, (innerAcc, item) => {
-        innerAcc[item.name] = item.storage;
-        return innerAcc;
-      }, acc);
-    }
-    return acc;
-  }, {});
-};
+const extractCellsToObject = (buttons: (StoragedMenuButton | Types.Dialog.DialogMenuButton | Types.Dialog.DialogNormalButton)[]) => Arr.foldl(buttons, (acc, button) => {
+  if (button.type === 'menu') {
+    const menuButton = button as StoragedMenuButton;
+    return Arr.foldl(menuButton.items, (innerAcc, item) => {
+      innerAcc[item.name] = item.storage;
+      return innerAcc;
+    }, acc);
+  }
+  return acc;
+}, {});
 
 export {
   getHeader,

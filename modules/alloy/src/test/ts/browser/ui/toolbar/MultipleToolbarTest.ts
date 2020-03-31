@@ -11,42 +11,36 @@ import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 
 UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
-  GuiSetup.setup((_store, _doc, _body) => {
-    return GuiFactory.build(
-      CustomList.sketch({
-        uid: 'multiple-toolbar',
-        dom: {
-          tag: 'div',
-          classes: [ 'test-multiple-toolbar' ],
-        },
-        shell: true,
-        makeItem: () => {
-          return Toolbar.sketch(
-            {
-              dom: {
-                tag: 'div',
-                classes: [ 'test-single-toolbar' ]
-              },
-              components: [ ]
-            }
-          );
-        },
-        setupItem: (_mToolbar: AlloyComponent, tc: AlloyComponent, data: any, _index: number) => {
-          Toolbar.setGroups(tc, data);
+  GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(
+    CustomList.sketch({
+      uid: 'multiple-toolbar',
+      dom: {
+        tag: 'div',
+        classes: [ 'test-multiple-toolbar' ],
+      },
+      shell: true,
+      makeItem: () => Toolbar.sketch(
+        {
+          dom: {
+            tag: 'div',
+            classes: [ 'test-single-toolbar' ]
+          },
+          components: [ ]
         }
-      })
-    );
-  }, (doc, _body, _gui, component, _store) => {
+      ),
+      setupItem: (_mToolbar: AlloyComponent, tc: AlloyComponent, data: any, _index: number) => {
+        Toolbar.setGroups(tc, data);
+      }
+    })
+  ), (doc, _body, _gui, component, _store) => {
 
-    const makeToolbarItem = (itemSpec: { text: string }): AlloySpec => {
-      return {
-        dom: {
-          tag: 'button',
-          classes: [ 'test-toolbar-item' ],
-          innerHtml: itemSpec.text
-        }
-      };
-    };
+    const makeToolbarItem = (itemSpec: { text: string }): AlloySpec => ({
+      dom: {
+        tag: 'button',
+        classes: [ 'test-toolbar-item' ],
+        innerHtml: itemSpec.text
+      }
+    });
 
     const makeToolbarGroup = (group: { items: AlloySpec[] }) => {
       const spec = group;
@@ -67,52 +61,46 @@ UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
       };
     };
 
-    const toolbar = ApproxStructure.build((s, str, arr) => {
-      return s.element('div', {
-        classes: [ arr.has('test-single-toolbar') ],
-        children: [
-          s.element('div', {
-            classes: [ arr.has('test-toolbar-group') ],
-            children: [
-              s.element('button', { html: str.is('A') }),
-              s.element('button', { html: str.is('B') })
-            ]
-          }),
-          s.element('div', {
-            classes: [ arr.has('test-toolbar-group') ],
-            children: [
-              s.element('button', { html: str.is('C') }),
-              s.element('button', { html: str.is('D') })
-            ]
-          }),
-          s.element('div', {
-            classes: [ arr.has('test-toolbar-group') ],
-            children: [
-              s.element('button', { html: str.is('E') }),
-              s.element('button', { html: str.is('F') }),
-              s.element('button', { html: str.is('G') })
-            ]
-          })
-        ]
-      });
-    });
-
-    const sAssertMultipleToolbars = (label: string) => {
-      return Assertions.sAssertStructure(
-        label,
-        ApproxStructure.build((s, _str, arr) => {
-          return s.element('div', {
-            classes: [ arr.has('test-multiple-toolbar') ],
-            children: [
-              toolbar,
-              toolbar,
-              toolbar
-            ]
-          });
+    const toolbar = ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('test-single-toolbar') ],
+      children: [
+        s.element('div', {
+          classes: [ arr.has('test-toolbar-group') ],
+          children: [
+            s.element('button', { html: str.is('A') }),
+            s.element('button', { html: str.is('B') })
+          ]
         }),
-        component.element()
-      );
-    };
+        s.element('div', {
+          classes: [ arr.has('test-toolbar-group') ],
+          children: [
+            s.element('button', { html: str.is('C') }),
+            s.element('button', { html: str.is('D') })
+          ]
+        }),
+        s.element('div', {
+          classes: [ arr.has('test-toolbar-group') ],
+          children: [
+            s.element('button', { html: str.is('E') }),
+            s.element('button', { html: str.is('F') }),
+            s.element('button', { html: str.is('G') })
+          ]
+        })
+      ]
+    }));
+
+    const sAssertMultipleToolbars = (label: string) => Assertions.sAssertStructure(
+      label,
+      ApproxStructure.build((s, _str, arr) => s.element('div', {
+        classes: [ arr.has('test-multiple-toolbar') ],
+        children: [
+          toolbar,
+          toolbar,
+          toolbar
+        ]
+      })),
+      component.element()
+    );
 
     const toolbarList = component.getSystem().getByUid('multiple-toolbar').getOrDie();
 

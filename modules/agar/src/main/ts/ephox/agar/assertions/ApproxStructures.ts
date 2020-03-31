@@ -49,18 +49,12 @@ export interface ElementFields {
 const elementQueue = (items: Element<any>[], container: Option<Element<any>>): ElementQueue => {
   let i = -1;
 
-  const context = () => {
-    return container.fold(() => {
-      return '\nItem[' + i + ']:' +
+  const context = () => container.fold(() => '\nItem[' + i + ']:' +
       (i >= 0 && i < items.length ? '\n' + Truncate.getHtml(items[i]) : ' *missing*') +
-      '\nComplete Structure:\n' + Arr.map(items, Html.getOuter).join('');
-    }, (element) => {
-      return '\nContainer:\n' + Truncate.getHtml(element) +
+      '\nComplete Structure:\n' + Arr.map(items, Html.getOuter).join(''), (element) => '\nContainer:\n' + Truncate.getHtml(element) +
       '\nItem[' + i + ']:' +
       (i >= 0 && i < items.length ? '\n' + Truncate.getHtml(items[i]) : ' *missing*') +
-      '\nComplete Structure:\n' + Html.getOuter(element);
-    });
-  };
+      '\nComplete Structure:\n' + Html.getOuter(element));
 
   const current = () => i >= 0 && i < items.length ? Option.some(items[i]) : Option.none<Element<any>>();
 

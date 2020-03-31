@@ -9,9 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { Menu } from '@ephox/bridge';
 
 const toggleUndoRedoState = (api: Menu.MenuItemInstanceApi, editor: Editor, type: 'hasUndo' | 'hasRedo') => {
-  const checkState = () => {
-    return editor.undoManager ? editor.undoManager[type]() : false;
-  };
+  const checkState = () => editor.undoManager ? editor.undoManager[type]() : false;
 
   const onUndoStateChange = () => {
     api.setDisabled(editor.mode.isReadOnly() || !checkState());

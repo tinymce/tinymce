@@ -73,20 +73,16 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
   // (easily) the same representing logic as input fields.
   const focusBehaviours = InputBase.focusBehaviours(detail);
 
-  const mapFetch = (comp: AlloyComponent) => (tdata: Option<TieredData>): Option<TieredData> => {
-    return tdata.map((data) => {
-      const menus = Obj.values(data.menus);
-      const items = Arr.bind(menus, (menu) => {
-        return Arr.filter(menu.items, (item): item is NormalItemSpec => item.type === 'item');
-      });
+  const mapFetch = (comp: AlloyComponent) => (tdata: Option<TieredData>): Option<TieredData> => tdata.map((data) => {
+    const menus = Obj.values(data.menus);
+    const items = Arr.bind(menus, (menu) => Arr.filter(menu.items, (item): item is NormalItemSpec => item.type === 'item'));
 
-      const repState = Representing.getState(comp) as DatasetRepresentingState;
-      repState.update(
-        Arr.map(items, (item) => item.data)
-      );
-      return data;
-    });
-  };
+    const repState = Representing.getState(comp) as DatasetRepresentingState;
+    repState.update(
+      Arr.map(items, (item) => item.data)
+    );
+    return data;
+  });
 
   const behaviours = [
     Focusing.config({ }),
@@ -103,9 +99,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         setValue: (comp, data) => {
           Value.set(comp.element(), detail.model.getDisplayText(data));
         },
-        ...detail.initialData.map((d) => {
-          return Objects.wrap('initialValue', d);
-        }).getOr({ })
+        ...detail.initialData.map((d) => Objects.wrap('initialValue', d)).getOr({ })
       }
     }),
     Streaming.config({
@@ -122,9 +116,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         if (focusInInput) {
           if (Value.get(component.element()).length >= detail.minChars) {
 
-            const previousValue = Composing.getCurrent(sandbox).bind((menu) => {
-              return Highlighting.getHighlighted(menu).map(Representing.getValue) as Option<TypeaheadData>;
-            });
+            const previousValue = Composing.getCurrent(sandbox).bind((menu) => Highlighting.getHighlighted(menu).map(Representing.getValue) as Option<TypeaheadData>);
 
             detail.previewing.set(true);
 
@@ -180,9 +172,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         if (sandboxIsOpen && !detail.previewing.get()) {
           // If we have a current selection in the menu, and we aren't
           // previewing, copy the item data into the input
-          return Composing.getCurrent(sandbox).bind((menu) => {
-            return Highlighting.getHighlighted(menu);
-          }).map((item): boolean => {
+          return Composing.getCurrent(sandbox).bind((menu) => Highlighting.getHighlighted(menu)).map((item): boolean => {
             AlloyTriggers.emitWith(comp, TypeaheadEvents.itemExecute(), { item });
             return true;
           });

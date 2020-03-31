@@ -337,12 +337,10 @@ class Editor implements EditorObservable {
     editorManager.fire('SetupEditor', { editor: this });
     this.execCallback('setup', this);
 
-    this.$ = DomQuery.overrideDefaults(() => {
-      return {
-        context: this.inline ? this.getBody() : this.getDoc(),
-        element: this.getBody()
-      };
-    });
+    this.$ = DomQuery.overrideDefaults(() => ({
+      context: this.inline ? this.getBody() : this.getDoc(),
+      element: this.getBody()
+    }));
   }
 
   /**

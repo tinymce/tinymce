@@ -22,13 +22,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', (success, 
         editor.fire('mouseup', { target: endTd, button: 0 });
       };
 
-      const getCells = (table): HTMLTableCellElement[] => {
-        return editor.$(table).find('td').toArray();
-      };
+      const getCells = (table): HTMLTableCellElement[] => editor.$(table).find('td').toArray();
 
-      const getSelectedCells = (table) => {
-        return editor.$(table).find('td[data-mce-selected]').toArray();
-      };
+      const getSelectedCells = (table) => editor.$(table).find('td[data-mce-selected]').toArray();
 
       return Logger.t('Assert Table Selection', Step.sync(() => {
         editor.setContent(tableHtml);

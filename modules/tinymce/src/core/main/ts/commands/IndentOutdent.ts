@@ -13,11 +13,7 @@ import { isListItem, isList, isTable } from '../dom/ElementType';
 import * as Settings from '../api/Settings';
 import * as NodeType from '../dom/NodeType';
 
-const isEditable = (target: Element) => {
-  return PredicateFind.closest(target, (elm) => {
-    return NodeType.isContentEditableTrue(elm.dom()) || NodeType.isContentEditableFalse(elm.dom());
-  }).exists((elm) => NodeType.isContentEditableTrue(elm.dom()));
-};
+const isEditable = (target: Element) => PredicateFind.closest(target, (elm) => NodeType.isContentEditableTrue(elm.dom()) || NodeType.isContentEditableFalse(elm.dom())).exists((elm) => NodeType.isContentEditableTrue(elm.dom()));
 
 const parseIndentValue = (value: string) => {
   const number = parseInt(value, 10);
@@ -42,33 +38,25 @@ const indentElement = (dom, command: string, useMargin: boolean, value: number, 
   }
 };
 
-const validateBlocks = (editor: Editor, blocks: Element[]) => {
-  return Arr.forall(blocks, (block) => {
-    const indentStyleName = getIndentStyleName(Settings.shouldIndentUseMargin(editor), block);
-    const intentValue = Css.getRaw(block, indentStyleName).map(parseIndentValue).getOr(0);
-    const contentEditable = editor.dom.getContentEditable(block.dom());
-    return contentEditable !== 'false' && intentValue > 0;
-  });
-};
+const validateBlocks = (editor: Editor, blocks: Element[]) => Arr.forall(blocks, (block) => {
+  const indentStyleName = getIndentStyleName(Settings.shouldIndentUseMargin(editor), block);
+  const intentValue = Css.getRaw(block, indentStyleName).map(parseIndentValue).getOr(0);
+  const contentEditable = editor.dom.getContentEditable(block.dom());
+  return contentEditable !== 'false' && intentValue > 0;
+});
 
 const canOutdent = (editor: Editor) => {
   const blocks = getBlocksToIndent(editor);
   return !editor.mode.isReadOnly() && (blocks.length > 1 || validateBlocks(editor, blocks));
 };
 
-const isListComponent = (el: Element) => {
-  return isList(el) || isListItem(el);
-};
+const isListComponent = (el: Element) => isList(el) || isListItem(el);
 
-const parentIsListComponent = (el: Element) => {
-  return Traverse.parent(el).map(isListComponent).getOr(false);
-};
+const parentIsListComponent = (el: Element) => Traverse.parent(el).map(isListComponent).getOr(false);
 
-const getBlocksToIndent = (editor: Editor) => {
-  return Arr.filter(Arr.map(editor.selection.getSelectedBlocks(), Element.fromDom), (el) =>
-    !isListComponent(el) && !parentIsListComponent(el) && isEditable(el)
-  ) as Element<HTMLElement>[];
-};
+const getBlocksToIndent = (editor: Editor) => Arr.filter(Arr.map(editor.selection.getSelectedBlocks(), Element.fromDom), (el) =>
+  !isListComponent(el) && !parentIsListComponent(el) && isEditable(el)
+) as Element<HTMLElement>[];
 
 const handle = (editor: Editor, command: string) => {
   const { dom, selection, formatter } = editor;

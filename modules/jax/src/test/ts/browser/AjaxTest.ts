@@ -8,28 +8,42 @@ import { readBlobAsText } from 'ephox/jax/core/BlobReader';
 
 /* tslint:disable:no-console */
 
-const expectError = (label: string, response: FutureResult<any, HttpError>) => {
-  return FutureResult.nu((callback) => {
-    response.get((res) => {
-      res.fold((_err) => {
-        console.log(label, 'successfully failed');
-        callback(Result.value({ }));
-      }, (_val) => {
-        callback(Result.error('Unexpected value in test: ' + label));
-      });
+const expectError = (label: string, response: FutureResult<any, HttpError>) => FutureResult.nu((callback) => {
+  response.get((res) => {
+    res.fold((_err) => {
+      console.log(label, 'successfully failed');
+      callback(Result.value({ }));
+    }, (_val) => {
+      callback(Result.error('Unexpected value in test: ' + label));
     });
   });
-};
+});
 
-const expectValue = (label: string, value: any, response: FutureResult<any, HttpError>) => {
-  return FutureResult.nu((callback) => {
-    response.get((res) => {
-      res.fold((err) => {
-        callback(Result.error(new Error(err.message)));
-      }, (val) => {
+const expectValue = (label: string, value: any, response: FutureResult<any, HttpError>) => FutureResult.nu((callback) => {
+  response.get((res) => {
+    res.fold((err) => {
+      callback(Result.error(new Error(err.message)));
+    }, (val) => {
+      try {
+        assert.eq(value, val);
+        console.log(label, 'passed with ', val);
+        callback(Result.value({}));
+      } catch (err) {
+        callback(Result.error(new Error(err)));
+      }
+    });
+  });
+});
+
+const expectBlobJson = (label: string, value: any, response: FutureResult<Blob, HttpError>) => FutureResult.nu((callback) => {
+  response.get((res) => {
+    res.fold((err) => {
+      callback(Result.error(new Error(err.message)));
+    }, (blob) => {
+      readBlobAsText(blob).get((text) => {
         try {
-          assert.eq(value, val);
-          console.log(label, 'passed with ', val);
+          assert.eq(JSON.stringify(value, null, '  '), text);
+          console.log(label, 'passed with ', text);
           callback(Result.value({}));
         } catch (err) {
           callback(Result.error(new Error(err)));
@@ -37,27 +51,7 @@ const expectValue = (label: string, value: any, response: FutureResult<any, Http
       });
     });
   });
-};
-
-const expectBlobJson = (label: string, value: any, response: FutureResult<Blob, HttpError>) => {
-  return FutureResult.nu((callback) => {
-    response.get((res) => {
-      res.fold((err) => {
-        callback(Result.error(new Error(err.message)));
-      }, (blob) => {
-        readBlobAsText(blob).get((text) => {
-          try {
-            assert.eq(JSON.stringify(value, null, '  '), text);
-            console.log(label, 'passed with ', text);
-            callback(Result.value({}));
-          } catch (err) {
-            callback(Result.error(new Error(err)));
-          }
-        });
-      });
-    });
-  });
-};
+});
 
 UnitTest.asynctest('HttpTest', (success, failure) => {
   const responses = [
@@ -237,11 +231,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
     ))
   ];
 
-  Arr.foldr(responses, (res, rest) => {
-    return rest.bindFuture(() => {
-      return res;
-    });
-  }, FutureResult.pure({})).get((v) => {
+  Arr.foldr(responses, (res, rest) => rest.bindFuture(() => res), FutureResult.pure({})).get((v) => {
     v.fold((err) => {
       failure(err);
     }, (_) => {

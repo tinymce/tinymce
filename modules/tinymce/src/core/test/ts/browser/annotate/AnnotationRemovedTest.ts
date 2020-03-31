@@ -150,25 +150,21 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationRemovedTest', (succe
     setup: (ed: Editor) => {
       ed.on('init', () => {
         ed.annotator.register('alpha', {
-          decorate: (uid, data) => {
-            return {
-              attributes: {
-                'data-test-anything': data.anything
-              },
-              classes: [ ]
-            };
-          }
+          decorate: (uid, data) => ({
+            attributes: {
+              'data-test-anything': data.anything
+            },
+            classes: [ ]
+          })
         });
 
         ed.annotator.register('beta', {
-          decorate: (uid, data) => {
-            return {
-              attributes: {
-                'data-test-something': data.something
-              },
-              classes: [ ]
-            };
-          }
+          decorate: (uid, data) => ({
+            attributes: {
+              'data-test-something': data.something
+            },
+            classes: [ ]
+          })
         });
       });
     }

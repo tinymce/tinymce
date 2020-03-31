@@ -20,9 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.DialogTest', (success, failure
     const sPressEsc = Keyboard.sKeydown(doc, Keys.escape(), {});
     const sPressDown = Keyboard.sKeydown(doc, Keys.down(), {});
 
-    const sAssertFocused = (name, selector) => {
-      return FocusTools.sTryOnSelector(name, doc, selector);
-    };
+    const sAssertFocused = (name, selector) => FocusTools.sTryOnSelector(name, doc, selector);
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Insert Image Dialog basic cycle ', [

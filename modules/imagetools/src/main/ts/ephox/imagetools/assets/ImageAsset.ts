@@ -19,9 +19,7 @@ const adt: ImageAssetConstructor = Adt.generate([
 
 ]);
 
-const cata = <T> (subject: ImageAssetAdt, onFile: BlobCallback<T>, onImage: UrlCallback<T>): T => {
-  return subject.fold(onFile, onImage);
-};
+const cata = <T> (subject: ImageAssetAdt, onFile: BlobCallback<T>, onImage: UrlCallback<T>): T => subject.fold(onFile, onImage);
 
 export default {
   cata,

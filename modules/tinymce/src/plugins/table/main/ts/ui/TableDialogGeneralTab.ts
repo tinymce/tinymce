@@ -86,9 +86,7 @@ const getItems = (editor: Editor, hasClasses: boolean, insertNewTable: boolean) 
         getTableClassList(editor),
         (item) => {
           if (item.value) {
-            item.textStyle = () => {
-              return editor.formatter.getCssText({ block: 'table', classes: [ item.value ] });
-            };
+            item.textStyle = () => editor.formatter.getCssText({ block: 'table', classes: [ item.value ] });
           }
         }
       )

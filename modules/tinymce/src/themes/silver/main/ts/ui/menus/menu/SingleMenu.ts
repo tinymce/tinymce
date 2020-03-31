@@ -115,9 +115,7 @@ export const createPartialMenu = (value: string, items: SingleMenuItemApi[], ite
   return createPartial(value, hasIcons, alloyItems, 1, 'normal');
 };
 
-export const createTieredDataFrom = (partialMenu: TieredMenuTypes.PartialMenuSpec) => {
-  return TieredMenu.singleData(partialMenu.value, partialMenu);
-};
+export const createTieredDataFrom = (partialMenu: TieredMenuTypes.PartialMenuSpec) => TieredMenu.singleData(partialMenu.value, partialMenu);
 
 export const createMenuFrom = (partialMenu: PartialMenuSpec, columns: number | 'auto', focusMode: FocusMode, presets: Types.PresetTypes): MenuTypes.MenuSpec  => {
   const focusManager = focusMode === FocusMode.ContentFocus ? FocusManagers.highlights() : FocusManagers.dom();

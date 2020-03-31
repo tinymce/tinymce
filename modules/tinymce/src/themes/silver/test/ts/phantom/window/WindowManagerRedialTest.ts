@@ -136,9 +136,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
   };
 
   const sTestOpen = Chain.asStep({ }, [
-    Chain.injectThunked(() => {
-      return windowManager.open(dialogA, {}, () => store.adder('closeWindow')() );
-    }),
+    Chain.injectThunked(() => windowManager.open(dialogA, {}, () => store.adder('closeWindow')() )),
     Chain.op((dialogApi) => {
       currentDialogApi.set(dialogApi);
     })

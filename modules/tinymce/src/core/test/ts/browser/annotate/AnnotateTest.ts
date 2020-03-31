@@ -52,22 +52,20 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
         sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'nbsp-paragraph' }),
         Assertions.sAssertStructure(
           'Checking body element',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  children: [
-                    s.text( str.is('Annotation here ') ),
-                    s.element('span', {
-                      classes: [ arr.has('mce-annotation') ],
-                      html: str.is('&nbsp;')
-                    }),
-                    s.text( str.is('\u00A0\u00A0, please'))
-                  ]
-                })
-              ]
-            });
-          }),
+          ApproxStructure.build((s, str, arr) => s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text( str.is('Annotation here ') ),
+                  s.element('span', {
+                    classes: [ arr.has('mce-annotation') ],
+                    html: str.is('&nbsp;')
+                  }),
+                  s.text( str.is('\u00A0\u00A0, please'))
+                ]
+              })
+            ]
+          })),
           Element.fromDom(editor.getBody())
         )
       ])
@@ -81,22 +79,20 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
         sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'nbsp-paragraph' }),
         Assertions.sAssertStructure(
           'Checking body element',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  children: [
-                    s.text( str.is('Annotation here \u00A0') ),
-                    s.element('span', {
-                      classes: [ arr.has('mce-annotation') ],
-                      html: str.is('&nbsp;')
-                    }),
-                    s.text( str.is('\u00A0, please'))
-                  ]
-                })
-              ]
-            });
-          }),
+          ApproxStructure.build((s, str, arr) => s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text( str.is('Annotation here \u00A0') ),
+                  s.element('span', {
+                    classes: [ arr.has('mce-annotation') ],
+                    html: str.is('&nbsp;')
+                  }),
+                  s.text( str.is('\u00A0, please'))
+                ]
+              })
+            ]
+          })),
           Element.fromDom(editor.getBody())
         )
       ])
@@ -110,22 +106,20 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
         sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'nbsp-paragraph' }),
         Assertions.sAssertStructure(
           'Checking body element',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  children: [
-                    s.text( str.is('Annotation here \u00A0\u00A0') ),
-                    s.element('span', {
-                      classes: [ arr.has('mce-annotation') ],
-                      html: str.is(',')
-                    }),
-                    s.text( str.is(' please'))
-                  ]
-                })
-              ]
-            });
-          }),
+          ApproxStructure.build((s, str, arr) => s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text( str.is('Annotation here \u00A0\u00A0') ),
+                  s.element('span', {
+                    classes: [ arr.has('mce-annotation') ],
+                    html: str.is(',')
+                  }),
+                  s.text( str.is(' please'))
+                ]
+              })
+            ]
+          })),
           Element.fromDom(editor.getBody())
         )
       ])
@@ -211,14 +205,12 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
     setup: (ed: Editor) => {
       ed.on('init', () => {
         ed.annotator.register('test-annotation', {
-          decorate: (uid, data) => {
-            return {
-              attributes: {
-                'data-test-anything': data.anything
-              },
-              classes: [ ]
-            };
-          }
+          decorate: (uid, data) => ({
+            attributes: {
+              'data-test-anything': data.anything
+            },
+            classes: [ ]
+          })
         });
       });
     }

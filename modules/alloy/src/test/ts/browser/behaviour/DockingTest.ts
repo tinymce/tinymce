@@ -13,54 +13,51 @@ import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 UnitTest.asynctest('DockingTest', (success, failure) => {
   const cleanup = Cleaner();
 
-  GuiSetup.setup((store, _doc, _body) => {
-    return GuiFactory.build(
-      Container.sketch({
-        dom: {
-          styles: {
-            'margin-top': '2000px',
-            'margin-bottom': '5000px'
-          }
-        },
-        components: [
-          Container.sketch({
-            dom: {
-              styles: {
-                width: '100px',
-                height: '100px',
-                background: 'blue'
-              }
-            },
-            containerBehaviours: Behaviour.derive([
-              Docking.config({
-                onDocked: store.adder('static.onDocked'),
-                onUndocked: store.adder('static.onUndocked')
-              })
-            ])
-          }),
-          Container.sketch({
-            dom: {
-              styles: {
-                width: '100px',
-                height: '100px',
-                background: 'red',
-                position: 'absolute',
-                top: '2300px',
-                right: '200px'
-              }
-            },
-            containerBehaviours: Behaviour.derive([
-              Docking.config({
-                onDocked: store.adder('absolute.onDocked'),
-                onUndocked: store.adder('absolute.onUndocked')
-              })
-            ])
-          })
-        ]
-      })
-    );
-
-  }, (_doc, _body, gui, component, store) => {
+  GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
+    Container.sketch({
+      dom: {
+        styles: {
+          'margin-top': '2000px',
+          'margin-bottom': '5000px'
+        }
+      },
+      components: [
+        Container.sketch({
+          dom: {
+            styles: {
+              width: '100px',
+              height: '100px',
+              background: 'blue'
+            }
+          },
+          containerBehaviours: Behaviour.derive([
+            Docking.config({
+              onDocked: store.adder('static.onDocked'),
+              onUndocked: store.adder('static.onUndocked')
+            })
+          ])
+        }),
+        Container.sketch({
+          dom: {
+            styles: {
+              width: '100px',
+              height: '100px',
+              background: 'red',
+              position: 'absolute',
+              top: '2300px',
+              right: '200px'
+            }
+          },
+          containerBehaviours: Behaviour.derive([
+            Docking.config({
+              onDocked: store.adder('absolute.onDocked'),
+              onUndocked: store.adder('absolute.onUndocked')
+            })
+          ])
+        })
+      ]
+    })
+  ), (_doc, _body, gui, component, store) => {
     const staticBox = component.components()[0];
     const absoluteBox = component.components()[1];
     cleanup.add(
@@ -68,29 +65,21 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
         gui.broadcastEvent(SystemEvents.windowScroll(), evt);
       }).unbind
     );
-    const boxWithNoPosition = () => {
-      return ApproxStructure.build((s, str, _arr) => {
-        return s.element('div', {
-          styles: {
-            position: str.none(),
-            left: str.none(),
-            top: str.none(),
-            right: str.none(),
-            bottom: str.none()
-          }
-        });
-      });
-    };
+    const boxWithNoPosition = () => ApproxStructure.build((s, str, _arr) => s.element('div', {
+      styles: {
+        position: str.none(),
+        left: str.none(),
+        top: str.none(),
+        right: str.none(),
+        bottom: str.none()
+      }
+    }));
 
-    const boxWithPosition = (position: string) => {
-      return ApproxStructure.build((s, str, _arr) => {
-        return s.element('div', {
-          styles: {
-            position: str.is(position)
-          }
-        });
-      });
-    };
+    const boxWithPosition = (position: string) => ApproxStructure.build((s, str, _arr) => s.element('div', {
+      styles: {
+        position: str.is(position)
+      }
+    }));
 
     const sAssertInitialStructure = Logger.t('Assert initial structure', GeneralSteps.sequence([
       Assertions.sAssertStructure(
@@ -100,17 +89,15 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
       ),
       Assertions.sAssertStructure(
         'Assert initial structure of absoluteBox',
-        ApproxStructure.build((s, str, _arr) => {
-          return s.element('div', {
-            styles: {
-              position: str.is('absolute'),
-              left: str.none(),
-              top: str.is('2300px'),
-              right: str.is('200px'),
-              bottom: str.none(),
-            }
-          });
-        }),
+        ApproxStructure.build((s, str, _arr) => s.element('div', {
+          styles: {
+            position: str.is('absolute'),
+            left: str.none(),
+            top: str.is('2300px'),
+            right: str.is('200px'),
+            bottom: str.none(),
+          }
+        })),
         absoluteBox.element()
       )
     ]));
@@ -147,17 +134,15 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
         'When fixed, absoluteBox should be positioned with "top" and "left"',
         Assertions.sAssertStructure(
           'Assert structure of absoluteBox',
-          ApproxStructure.build((s, str, _arr) => {
-            return s.element('div', {
-              styles: {
-                position: str.is('fixed'),
-                left: str.contains('px'), // assert isSome
-                top: str.contains('0px'),
-                right: str.none(),
-                bottom: str.none()
-              }
-            });
-          }),
+          ApproxStructure.build((s, str, _arr) => s.element('div', {
+            styles: {
+              position: str.is('fixed'),
+              left: str.contains('px'), // assert isSome
+              top: str.contains('0px'),
+              right: str.none(),
+              bottom: str.none()
+            }
+          })),
           absoluteBox.element()
         ),
       ),

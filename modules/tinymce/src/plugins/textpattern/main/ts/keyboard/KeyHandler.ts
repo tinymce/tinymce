@@ -71,17 +71,13 @@ const checkKeyEvent = (codes, event, predicate) => {
   }
 };
 
-const checkKeyCode = (codes, event) => {
-  return checkKeyEvent(codes, event, function (code, event) {
-    return code === event.keyCode && VK.modifierPressed(event) === false;
-  });
-};
+const checkKeyCode = (codes, event) => checkKeyEvent(codes, event, function (code, event) {
+  return code === event.keyCode && VK.modifierPressed(event) === false;
+});
 
-const checkCharCode = (chars, event) => {
-  return checkKeyEvent(chars, event, function (chr, event) {
-    return chr.charCodeAt(0) === event.charCode;
-  });
-};
+const checkCharCode = (chars, event) => checkKeyEvent(chars, event, function (chr, event) {
+  return chr.charCodeAt(0) === event.charCode;
+});
 
 export {
   handleEnter,

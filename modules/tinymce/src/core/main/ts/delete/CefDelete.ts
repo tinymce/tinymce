@@ -38,9 +38,7 @@ const moveToPosition = function (editor: Editor) {
   };
 };
 
-const getAncestorCe = (editor, node: Node) => {
-  return Option.from(getContentEditableRoot(editor.getBody(), node));
-};
+const getAncestorCe = (editor, node: Node) => Option.from(getContentEditableRoot(editor.getBody(), node));
 
 const backspaceDeleteCaret = function (editor: Editor, forward: boolean) {
   const selectedNode = editor.selection.getNode(); // is the parent node if cursor before/after cef

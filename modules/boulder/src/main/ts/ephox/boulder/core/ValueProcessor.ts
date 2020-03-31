@@ -81,9 +81,7 @@ const cExtractOne = function (path, obj, field, strength) {
     function (key, okey, presence, prop) {
       const bundle = function (av) {
         const result = prop.extract(path.concat([ key ]), strength, av);
-        return SimpleResult.map(result, (res) => {
-          return ObjWriter.wrap(okey, strength(res));
-        });
+        return SimpleResult.map(result, (res) => ObjWriter.wrap(okey, strength(res)));
       };
 
       const bundleAsOption = function (optValue) {
@@ -124,9 +122,7 @@ const cExtractOne = function (path, obj, field, strength) {
           const base = baseThunk(obj);
           const result = SimpleResult.map(
             fallbackAccess(obj, key, Fun.constant({})),
-            (v) => {
-              return Merger.deepMerge(base, v);
-            }
+            (v) => Merger.deepMerge(base, v)
           );
           return SimpleResult.bind(result, bundle);
         });

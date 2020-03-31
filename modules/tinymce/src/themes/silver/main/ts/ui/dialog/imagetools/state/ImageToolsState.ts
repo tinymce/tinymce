@@ -26,21 +26,13 @@ const makeState = (initialState: BlobState) => {
   const undoStack = UndoStack();
   undoStack.add(initialState);
 
-  const getBlobState = (): BlobState => {
-    return blobState.get();
-  };
+  const getBlobState = (): BlobState => blobState.get();
 
   const setBlobState = (state: BlobState): void => {
     blobState.set(state);
   };
 
-  const getTempState = (): BlobState => {
-    return tempState.get().fold(() => {
-      return blobState.get();
-    }, (temp) => {
-      return temp;
-    });
-  };
+  const getTempState = (): BlobState => tempState.get().fold(() => blobState.get(), (temp) => temp);
 
   const updateTempState = (blob: Blob): string => {
     const newTempState = createState(blob);
@@ -50,12 +42,10 @@ const makeState = (initialState: BlobState) => {
     return newTempState.url;
   };
 
-  const createState = (blob: Blob): BlobState => {
-    return {
-      blob,
-      url: URL.createObjectURL(blob)
-    };
-  };
+  const createState = (blob: Blob): BlobState => ({
+    blob,
+    url: URL.createObjectURL(blob)
+  });
 
   const destroyState = (state: BlobState): void => {
     URL.revokeObjectURL(state.url);
@@ -84,14 +74,12 @@ const makeState = (initialState: BlobState) => {
     return newState.url;
   };
 
-  const applyTempState = (postApply: () => void): void => {
-    return tempState.get().fold(() => {
-      // TODO: Inform the user of failures somehow
-    }, (temp) => {
-      addBlobState(temp.blob);
-      postApply();
-    });
-  };
+  const applyTempState = (postApply: () => void): void => tempState.get().fold(() => {
+    // TODO: Inform the user of failures somehow
+  }, (temp) => {
+    addBlobState(temp.blob);
+    postApply();
+  });
 
   const undo = (): string => {
     const currentState = undoStack.undo();

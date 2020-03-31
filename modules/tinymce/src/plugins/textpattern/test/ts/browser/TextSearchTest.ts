@@ -18,9 +18,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextSearchTest', (succes
   Theme();
   TextpatternPlugin();
 
-  const process = (content: string) => (element: Text, offset: number) => {
-    return element.data === content ? offset : -1;
-  };
+  const process = (content: string) => (element: Text, offset: number) => element.data === content ? offset : -1;
 
   const repeatLeftUntil = (editor: Editor, content: string) => {
     const rng = editor.selection.getRng();

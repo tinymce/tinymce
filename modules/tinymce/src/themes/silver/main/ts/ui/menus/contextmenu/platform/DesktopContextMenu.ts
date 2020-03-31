@@ -9,9 +9,7 @@ import * as MenuParts from '../../menu/MenuParts';
 import { getNodeAnchor, getPointAnchor } from '../Coords';
 import { SingleMenuItemApi } from '../../menu/SingleMenuTypes';
 
-const getAnchorSpec = (editor: Editor, e: EditorEvent<PointerEvent>, isTriggeredByKeyboardEvent: boolean) => {
-  return isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, e);
-};
+const getAnchorSpec = (editor: Editor, e: EditorEvent<PointerEvent>, isTriggeredByKeyboardEvent: boolean) => isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, e);
 
 export const initAndShow = (editor: Editor, e: EditorEvent<PointerEvent>, buildMenu: () => string | Array<string | SingleMenuItemApi>, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, isTriggeredByKeyboardEvent: boolean) => {
   const items = buildMenu();

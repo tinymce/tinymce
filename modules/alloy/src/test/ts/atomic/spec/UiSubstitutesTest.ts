@@ -38,12 +38,10 @@ UnitTest.test('UiSubstitutesTest', () => {
         { uiType: 'normal' },
         { uiType: 'placeholder', name: 'foo', owner: 'owner' }
       ] as ConfiguredPart[], {
-        foo: UiSubstitutes.single(true, (detail) => {
-          return {
-            uiType: 'foo-dependent',
-            detail
-          } as unknown as ConfiguredPart;
-        })
+        foo: UiSubstitutes.single(true, (detail) => ({
+          uiType: 'foo-dependent',
+          detail
+        } as unknown as ConfiguredPart))
       });
       Assert.eq('Dependent should be substituted', [
         { uiType: 'normal', components: [ ] },

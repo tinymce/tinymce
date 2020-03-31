@@ -96,13 +96,9 @@ const getParentBlock = (node: Node, rootNode?: Node) => {
   return null;
 };
 
-const isInSameBlock = (caretPosition1: CaretPosition, caretPosition2: CaretPosition, rootNode?: Node): boolean => {
-  return getParentBlock(caretPosition1.container(), rootNode) === getParentBlock(caretPosition2.container(), rootNode);
-};
+const isInSameBlock = (caretPosition1: CaretPosition, caretPosition2: CaretPosition, rootNode?: Node): boolean => getParentBlock(caretPosition1.container(), rootNode) === getParentBlock(caretPosition2.container(), rootNode);
 
-const isInSameEditingHost = (caretPosition1: CaretPosition, caretPosition2: CaretPosition, rootNode?: Node): boolean => {
-  return getEditingHost(caretPosition1.container(), rootNode) === getEditingHost(caretPosition2.container(), rootNode);
-};
+const isInSameEditingHost = (caretPosition1: CaretPosition, caretPosition2: CaretPosition, rootNode?: Node): boolean => getEditingHost(caretPosition1.container(), rootNode) === getEditingHost(caretPosition2.container(), rootNode);
 
 const getChildNodeAtRelativeOffset = (relativeOffset: number, caretPosition: CaretPosition): Node => {
   let container, offset;
@@ -135,9 +131,7 @@ const beforeAfter = (before: boolean, node: Node): Range => {
   return range;
 };
 
-const isNodesInSameBlock = (root: Node, node1: Node, node2: Node): boolean => {
-  return getParentBlock(node1, root) === getParentBlock(node2, root);
-};
+const isNodesInSameBlock = (root: Node, node1: Node, node2: Node): boolean => getParentBlock(node1, root) === getParentBlock(node2, root);
 
 const lean = (left: boolean, root: Node, node: Node): Node => {
   let sibling, siblingName;
@@ -283,9 +277,7 @@ const normalizeRange = (direction: number, root: Node, range: Range): Range => {
   return range;
 };
 
-const getRelativeCefElm = (forward: boolean, caretPosition: CaretPosition) => {
-  return Option.from(getChildNodeAtRelativeOffset(forward ? 0 : -1, caretPosition)).filter(isContentEditableFalse);
-};
+const getRelativeCefElm = (forward: boolean, caretPosition: CaretPosition) => Option.from(getChildNodeAtRelativeOffset(forward ? 0 : -1, caretPosition)).filter(isContentEditableFalse);
 
 const getNormalizedRangeEndPoint = (direction: number, root: Node, range: Range): CaretPosition => {
   const normalizedRange = normalizeRange(direction, root, range);

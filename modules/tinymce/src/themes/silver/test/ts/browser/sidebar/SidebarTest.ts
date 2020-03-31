@@ -29,38 +29,36 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.sidebar.SidebarTest', fun
     Pipeline.async(editor, Log.steps('TBA', 'Sidebar actions test', [
       Chain.asStep(Body.body(), [
         UiFinder.cFindIn('.tox-sidebar-wrap .tox-sidebar'),
-        Assertions.cAssertStructure('Checking structure', ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            classes: [ arr.has('tox-sidebar') ],
-            children: [
-              s.element('div', {
-                classes: [ arr.has('tox-sidebar__slider') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-sidebar__pane-container') ],
-                    children: [
-                      s.element('div', {
-                        classes: [ arr.has('tox-sidebar__pane') ],
-                        styles: { display: str.is('none') },
-                        attrs: { 'aria-hidden': str.is('true') }
-                      }),
-                      s.element('div', {
-                        classes: [ arr.has('tox-sidebar__pane') ],
-                        styles: { display: str.is('none') },
-                        attrs: { 'aria-hidden': str.is('true') }
-                      }),
-                      s.element('div', {
-                        classes: [ arr.has('tox-sidebar__pane') ],
-                        styles: { display: str.is('none') },
-                        attrs: { 'aria-hidden': str.is('true') }
-                      })
-                    ]
-                  })
-                ]
-              })
-            ]
-          });
-        }))
+        Assertions.cAssertStructure('Checking structure', ApproxStructure.build((s, str, arr) => s.element('div', {
+          classes: [ arr.has('tox-sidebar') ],
+          children: [
+            s.element('div', {
+              classes: [ arr.has('tox-sidebar__slider') ],
+              children: [
+                s.element('div', {
+                  classes: [ arr.has('tox-sidebar__pane-container') ],
+                  children: [
+                    s.element('div', {
+                      classes: [ arr.has('tox-sidebar__pane') ],
+                      styles: { display: str.is('none') },
+                      attrs: { 'aria-hidden': str.is('true') }
+                    }),
+                    s.element('div', {
+                      classes: [ arr.has('tox-sidebar__pane') ],
+                      styles: { display: str.is('none') },
+                      attrs: { 'aria-hidden': str.is('true') }
+                    }),
+                    s.element('div', {
+                      classes: [ arr.has('tox-sidebar__pane') ],
+                      styles: { display: str.is('none') },
+                      attrs: { 'aria-hidden': str.is('true') }
+                    })
+                  ]
+                })
+              ]
+            })
+          ]
+        })))
       ]),
       Waiter.sTryUntil('Checking initial events', store.sAssertEq('Asserting intial render and hide of sidebar', [
         { name: 'mysidebar1:render', index: 0 },

@@ -275,9 +275,7 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
       }
     });
 
-    const isPasteBin = (node: Element): boolean => {
-      return node.id === 'mcepastebin';
-    };
+    const isPasteBin = (node: Element): boolean => node.id === 'mcepastebin';
 
     editor.on('AfterSetSelectionRange', function (e) {
       const rng = e.range;

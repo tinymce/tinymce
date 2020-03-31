@@ -37,18 +37,16 @@ const defToStr = (defn: GeneralDefinitionDetail<any>): string => {
   return JSON.stringify(raw, null, 2);
 };
 
-const defToRaw = (defn: GeneralDefinitionDetail<Element>): GeneralDefinitionSpec<string> => {
-  return {
-    uid: defn.uid,
-    tag: defn.tag,
-    classes: defn.classes,
-    attributes: defn.attributes,
-    styles: defn.styles,
-    value: defn.value.getOr('<none>'),
-    innerHtml: defn.innerHtml.getOr('<none>'),
-    domChildren: defn.domChildren.length === 0 ? '0 children, but still specified' : String(defn.domChildren.length)
-  };
-};
+const defToRaw = (defn: GeneralDefinitionDetail<Element>): GeneralDefinitionSpec<string> => ({
+  uid: defn.uid,
+  tag: defn.tag,
+  classes: defn.classes,
+  attributes: defn.attributes,
+  styles: defn.styles,
+  value: defn.value.getOr('<none>'),
+  innerHtml: defn.innerHtml.getOr('<none>'),
+  domChildren: defn.domChildren.length === 0 ? '0 children, but still specified' : String(defn.domChildren.length)
+});
 
 export {
   defToStr,

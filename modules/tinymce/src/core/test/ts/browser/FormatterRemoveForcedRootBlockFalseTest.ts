@@ -9,9 +9,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveForcedRootBlockFalseTest
 
   Theme();
 
-  const getContent = (editor: Editor) => {
-    return editor.getContent().toLowerCase().replace(/[\r]+/g, '');
-  };
+  const getContent = (editor: Editor) => editor.getContent().toLowerCase().replace(/[\r]+/g, '');
 
   suite.test('Remove block format from first block with forced_root_block: false', (editor) => {
     editor.formatter.register('format', { block: 'h1' });

@@ -31,37 +31,31 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationPersistenceTest', (s
 
   const settingsWithPersistence = {
     persistent: true,
-    decorate: (uid, data) => {
-      return {
-        attributes: {
-          'data-test-anything': data.anything
-        },
-        classes: [ ]
-      };
-    }
+    decorate: (uid, data) => ({
+      attributes: {
+        'data-test-anything': data.anything
+      },
+      classes: [ ]
+    })
   };
 
   const settingsWithDefaultPersistence = {
-    decorate: (uid, data) => {
-      return {
-        attributes: {
-          'data-test-anything': data.anything
-        },
-        classes: [ ]
-      };
-    }
+    decorate: (uid, data) => ({
+      attributes: {
+        'data-test-anything': data.anything
+      },
+      classes: [ ]
+    })
   };
 
   const settingsWithoutPersistence = {
     persistent: false,
-    decorate: (uid, data) => {
-      return {
-        attributes: {
-          'data-test-anything': data.anything
-        },
-        classes: [ ]
-      };
-    }
+    decorate: (uid, data) => ({
+      attributes: {
+        'data-test-anything': data.anything
+      },
+      classes: [ ]
+    })
   };
 
   const sSetupSingleAnnotation = (tinyApis: TinyApis, editor: Editor) => GeneralSteps.sequence([
@@ -90,18 +84,16 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationPersistenceTest', (s
     })
   ]);
 
-  const sContentContains = (tinyApis: TinyApis, ed: Editor, pattern: string, isContained: boolean) => {
-    return Chain.asStep({ }, [
-      Chain.injectThunked(() => ed.getContent()),
-      Chain.op((content) => {
-        Assertions.assertEq(
-          'editor.getContent() should contain: ' + pattern + ' = ' + isContained,
-          true,
-          content.indexOf(pattern) > -1 === isContained
-        );
-      })
-    ]);
-  };
+  const sContentContains = (tinyApis: TinyApis, ed: Editor, pattern: string, isContained: boolean) => Chain.asStep({ }, [
+    Chain.injectThunked(() => ed.getContent()),
+    Chain.op((content) => {
+      Assertions.assertEq(
+        'editor.getContent() should contain: ' + pattern + ' = ' + isContained,
+        true,
+        content.indexOf(pattern) > -1 === isContained
+      );
+    })
+  ]);
 
   Pipeline.async({ }, [
     Logger.t(

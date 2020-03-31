@@ -30,24 +30,22 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.external<FloatingToolbarButtonDetail, ButtonSpec>({
     name: 'button',
-    overrides: (detail) => {
-      return {
-        dom: {
-          attributes: {
-            'aria-haspopup': 'true'
-          }
-        },
-        buttonBehaviours: Behaviour.derive([
-          Toggling.config({
-            toggleClass: detail.markers.toggledClass,
-            aria: {
-              mode: 'expanded'
-            },
-            toggleOnExecute: false
-          })
-        ])
-      };
-    }
+    overrides: (detail) => ({
+      dom: {
+        attributes: {
+          'aria-haspopup': 'true'
+        }
+      },
+      buttonBehaviours: Behaviour.derive([
+        Toggling.config({
+          toggleClass: detail.markers.toggledClass,
+          aria: {
+            mode: 'expanded'
+          },
+          toggleOnExecute: false
+        })
+      ])
+    })
   }),
 
   PartType.external<FloatingToolbarButtonDetail, ToolbarSpec>({

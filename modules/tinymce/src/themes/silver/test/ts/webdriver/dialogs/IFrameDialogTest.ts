@@ -54,9 +54,7 @@ UnitTest.asynctest('IFrame Dialog Test (webdriver)', (success, failure) => {
             frame1: '<!doctype html><html><head>' +
               '</head>' +
               '<body><h1>Heading</h1>' +
-              Arr.map([ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ], (n) => {
-                return '<p>This is paragraph: ' + n + '</p>';
-              }).join('\n') +
+              Arr.map([ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ], (n) => '<p>This is paragraph: ' + n + '</p>').join('\n') +
             '</body>'
           }
         }, { }, Fun.noop);

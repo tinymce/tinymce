@@ -13,46 +13,34 @@ const withGrid = <A>(values: A[], index: number, numCols: number, f: (oldRow: nu
   });
 };
 
-const cycleHorizontal = <A>(values: A[], index: number, numRows: number, numCols: number, delta: number) => {
-  return withGrid(values, index, numCols, (oldRow, oldColumn) => {
-    const onLastRow = oldRow === numRows - 1;
-    const colsInRow = onLastRow ? values.length - (oldRow * numCols) : numCols;
-    const newColumn = Num.cycleBy(oldColumn, delta, 0, colsInRow - 1);
-    return Option.some({
-      row: Fun.constant(oldRow),
-      column: Fun.constant(newColumn)
-    });
+const cycleHorizontal = <A>(values: A[], index: number, numRows: number, numCols: number, delta: number) => withGrid(values, index, numCols, (oldRow, oldColumn) => {
+  const onLastRow = oldRow === numRows - 1;
+  const colsInRow = onLastRow ? values.length - (oldRow * numCols) : numCols;
+  const newColumn = Num.cycleBy(oldColumn, delta, 0, colsInRow - 1);
+  return Option.some({
+    row: Fun.constant(oldRow),
+    column: Fun.constant(newColumn)
   });
-};
+});
 
-const cycleVertical = <A>(values: A[], index: number, numRows: number, numCols: number, delta: number) => {
-  return withGrid(values, index, numCols, (oldRow, oldColumn) => {
-    const newRow = Num.cycleBy(oldRow, delta, 0, numRows - 1);
-    const onLastRow = newRow === numRows - 1;
-    const colsInRow = onLastRow ? values.length - (newRow * numCols) : numCols;
-    const newCol = Num.clamp(oldColumn, 0, colsInRow - 1);
-    return Option.some({
-      row: Fun.constant(newRow),
-      column: Fun.constant(newCol)
-    });
+const cycleVertical = <A>(values: A[], index: number, numRows: number, numCols: number, delta: number) => withGrid(values, index, numCols, (oldRow, oldColumn) => {
+  const newRow = Num.cycleBy(oldRow, delta, 0, numRows - 1);
+  const onLastRow = newRow === numRows - 1;
+  const colsInRow = onLastRow ? values.length - (newRow * numCols) : numCols;
+  const newCol = Num.clamp(oldColumn, 0, colsInRow - 1);
+  return Option.some({
+    row: Fun.constant(newRow),
+    column: Fun.constant(newCol)
   });
-};
+});
 
-const cycleRight = <A>(values: A[], index: number, numRows: number, numCols: number) => {
-  return cycleHorizontal(values, index, numRows, numCols, +1);
-};
+const cycleRight = <A>(values: A[], index: number, numRows: number, numCols: number) => cycleHorizontal(values, index, numRows, numCols, +1);
 
-const cycleLeft = <A>(values: A[], index: number, numRows: number, numCols: number) => {
-  return cycleHorizontal(values, index, numRows, numCols, -1);
-};
+const cycleLeft = <A>(values: A[], index: number, numRows: number, numCols: number) => cycleHorizontal(values, index, numRows, numCols, -1);
 
-const cycleUp = <A>(values: A[], index: number, numRows: number, numCols: number) => {
-  return cycleVertical(values, index, numRows, numCols, -1);
-};
+const cycleUp = <A>(values: A[], index: number, numRows: number, numCols: number) => cycleVertical(values, index, numRows, numCols, -1);
 
-const cycleDown = <A>(values: A[], index: number, numRows: number, numCols: number) => {
-  return cycleVertical(values, index, numRows, numCols, +1);
-};
+const cycleDown = <A>(values: A[], index: number, numRows: number, numCols: number) => cycleVertical(values, index, numRows, numCols, +1);
 
 export {
   cycleDown,

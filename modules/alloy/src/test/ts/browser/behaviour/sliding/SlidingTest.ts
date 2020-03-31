@@ -21,51 +21,48 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
     '.test-sliding-width-shrinking { transition: opacity 0.9s ease, width 0.6s linear 0.3s, visibility 0s linear 0.9s }'
   ];
 
-  GuiSetup.setup((store, _doc, _body) => {
-    return GuiFactory.build(
-      Container.sketch({
-        dom: {
-          styles: {
-            'overflow-x': 'hidden',
-            'background': 'blue',
-            'max-width': '300px',
-            'height': '20px'
-          }
-        },
-        components: [
-          {
-            dom: {
-              tag: 'div',
-              styles: {
-                width: '20px',
-                height: '10px',
-                transition: 'width 0.1s ease'
-              }
+  GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
+    Container.sketch({
+      dom: {
+        styles: {
+          'overflow-x': 'hidden',
+          'background': 'blue',
+          'max-width': '300px',
+          'height': '20px'
+        }
+      },
+      components: [
+        {
+          dom: {
+            tag: 'div',
+            styles: {
+              width: '20px',
+              height: '10px',
+              transition: 'width 0.1s ease'
             }
           }
-        ],
-        containerBehaviours: Behaviour.derive([
-          Sliding.config({
-            closedClass: 'test-sliding-closed',
-            openClass: 'test-sliding-open',
-            shrinkingClass: 'test-sliding-width-shrinking',
-            growingClass: 'test-sliding-width-growing',
+        }
+      ],
+      containerBehaviours: Behaviour.derive([
+        Sliding.config({
+          closedClass: 'test-sliding-closed',
+          openClass: 'test-sliding-open',
+          shrinkingClass: 'test-sliding-width-shrinking',
+          growingClass: 'test-sliding-width-growing',
 
-            dimension: {
-              property: 'width'
-            },
+          dimension: {
+            property: 'width'
+          },
 
-            onShrunk: store.adder('onShrunk'),
-            onStartShrink: store.adder('onStartShrink'),
-            onGrown: store.adder('onGrown'),
-            onStartGrow: store.adder('onStartGrow')
-          })
+          onShrunk: store.adder('onShrunk'),
+          onStartShrink: store.adder('onStartShrink'),
+          onGrown: store.adder('onGrown'),
+          onStartGrow: store.adder('onStartGrow')
+        })
 
-        ])
-      })
-    );
-
-  }, (doc, _body, _gui, component, store) => {
+      ])
+    })
+  ), (doc, _body, _gui, component, store) => {
 
     const sIsNotGrowing = Step.sync(() => {
       Assertions.assertEq('Ensuring stopped growing', false, Class.has(component.element(), 'test-sliding-width-growing'));
@@ -75,98 +72,88 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
       Assertions.assertEq('Ensuring stopped shrinking', false, Class.has(component.element(), 'test-sliding-width-shrinking'));
     });
 
-    const sGrowingSteps = (label: string) => {
-      return Logger.t(
-        label,
-        GeneralSteps.sequence([
-          store.sAssertEq('On start growing', [ 'onStartGrow' ]),
-          Assertions.sAssertStructure(
-            'Checking structure',
-            ApproxStructure.build((s, str, arr) => {
-              return s.element('div', {
-                classes: [
-                  arr.not('test-sliding-width-shrinking'),
-                  arr.has('test-sliding-width-growing'),
-                  arr.not('test-sliding-closed'),
-                  arr.has('test-sliding-open')
-                ],
-                styles: {
-                  width: str.is('300px')
-                }
-              });
-            }),
-            component.element()
-          ),
+    const sGrowingSteps = (label: string) => Logger.t(
+      label,
+      GeneralSteps.sequence([
+        store.sAssertEq('On start growing', [ 'onStartGrow' ]),
+        Assertions.sAssertStructure(
+          'Checking structure',
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [
+              arr.not('test-sliding-width-shrinking'),
+              arr.has('test-sliding-width-growing'),
+              arr.not('test-sliding-closed'),
+              arr.has('test-sliding-open')
+            ],
+            styles: {
+              width: str.is('300px')
+            }
+          })),
+          component.element()
+        ),
 
-          Waiter.sTryUntil(
-            'Waiting for animation to stop (growing)',
-            sIsNotGrowing,
-            10,
-            4000
-          ),
+        Waiter.sTryUntil(
+          'Waiting for animation to stop (growing)',
+          sIsNotGrowing,
+          10,
+          4000
+        ),
 
-          Step.sync(() => {
-            Assertions.assertEq('Checking hasGrown = true', true, Sliding.hasGrown(component));
-          }),
+        Step.sync(() => {
+          Assertions.assertEq('Checking hasGrown = true', true, Sliding.hasGrown(component));
+        }),
 
-          store.sAssertEq('After finished growing', [ 'onStartGrow', 'onGrown' ]),
-          store.sClear
-        ])
-      );
-    };
+        store.sAssertEq('After finished growing', [ 'onStartGrow', 'onGrown' ]),
+        store.sClear
+      ])
+    );
 
-    const sShrinkingSteps = (label: string) => {
-      return Logger.t(
-        label,
-        GeneralSteps.sequence([
-          store.sAssertEq('On start shrinking', [ 'onStartShrink' ]),
-          Assertions.sAssertStructure(
-            'Checking structure',
-            ApproxStructure.build((s, str, arr) => {
-              return s.element('div', {
-                classes: [
-                  arr.has('test-sliding-width-shrinking'),
-                  arr.not('test-sliding-width-growing'),
-                  arr.has('test-sliding-closed'),
-                  arr.not('test-sliding-open')
-                ],
-                styles: {
-                  width: str.is('0px')
-                }
-              });
-            }),
-            component.element()
-          ),
+    const sShrinkingSteps = (label: string) => Logger.t(
+      label,
+      GeneralSteps.sequence([
+        store.sAssertEq('On start shrinking', [ 'onStartShrink' ]),
+        Assertions.sAssertStructure(
+          'Checking structure',
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [
+              arr.has('test-sliding-width-shrinking'),
+              arr.not('test-sliding-width-growing'),
+              arr.has('test-sliding-closed'),
+              arr.not('test-sliding-open')
+            ],
+            styles: {
+              width: str.is('0px')
+            }
+          })),
+          component.element()
+        ),
 
-          Waiter.sTryUntil(
-            label + '\nWaiting for animation to stop (shrinking)',
-            sIsNotShrinking,
-            10,
-            4000
-          ),
+        Waiter.sTryUntil(
+          label + '\nWaiting for animation to stop (shrinking)',
+          sIsNotShrinking,
+          10,
+          4000
+        ),
 
-          Step.sync(() => {
-            Assertions.assertEq('Checking hasGrown = false', false, Sliding.hasGrown(component));
-          }),
+        Step.sync(() => {
+          Assertions.assertEq('Checking hasGrown = false', false, Sliding.hasGrown(component));
+        }),
 
-          store.sAssertEq('After finished shrinking', [ 'onStartShrink', 'onShrunk' ]),
-          store.sClear
-        ])
-      );
-    };
+        store.sAssertEq('After finished shrinking', [ 'onStartShrink', 'onShrunk' ]),
+        store.sClear
+      ])
+    );
 
     return [
       GuiSetup.mAddStyles(doc, slidingStyles),
 
       Assertions.sAssertStructure(
         'Checking initial structure',
-        ApproxStructure.build((s, _str, arr) => {
-          return s.element('div', {
-            classes: [
-              arr.has('test-sliding-closed')
-            ]
-          });
-        }),
+        ApproxStructure.build((s, _str, arr) => s.element('div', {
+          classes: [
+            arr.has('test-sliding-closed')
+          ]
+        })),
         component.element()
       ),
 
@@ -209,20 +196,18 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
       store.sAssertEq('On start shrinking', [ 'onStartShrink', 'onShrunk' ]),
       Assertions.sAssertStructure(
         'Checking structure of immediate shrink',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            classes: [
-              arr.not('test-sliding-width-shrinking'),
-              arr.not('test-sliding-width-growing'),
-              arr.not('test-sliding-open'),
+        ApproxStructure.build((s, str, arr) => s.element('div', {
+          classes: [
+            arr.not('test-sliding-width-shrinking'),
+            arr.not('test-sliding-width-growing'),
+            arr.not('test-sliding-open'),
 
-              arr.has('test-sliding-closed')
-            ],
-            styles: {
-              width: str.is('0px')
-            }
-          });
-        }),
+            arr.has('test-sliding-closed')
+          ],
+          styles: {
+            width: str.is('0px')
+          }
+        })),
         component.element()
       ),
       Step.sync(() => {

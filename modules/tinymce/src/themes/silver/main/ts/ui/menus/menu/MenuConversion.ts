@@ -15,9 +15,7 @@ type MenuItemRegistry = Record<string, Menu.MenuItemApi | Menu.NestedMenuItemApi
 
 const isMenuItemReference = (item: string | SingleMenuItemApi): item is string => Type.isString(item);
 const isSeparator = (item: SingleMenuItemApi): item is Menu.SeparatorMenuItemApi => item.type === 'separator';
-const isExpandingMenuItem = (item: SingleMenuItemApi): item is Menu.NestedMenuItemApi => {
-  return Obj.has(item as Record<string, any>, 'getSubmenuItems');
-};
+const isExpandingMenuItem = (item: SingleMenuItemApi): item is Menu.NestedMenuItemApi => Obj.has(item as Record<string, any>, 'getSubmenuItems');
 
 const separator: Menu.SeparatorMenuItemApi = {
   type: 'separator'
@@ -75,12 +73,10 @@ const getFromExpandingItem = (item: Menu.NestedMenuItemApi, menuItems: MenuItemR
   };
 };
 
-const getFromItem = (item: SingleMenuItemApi, menuItems: MenuItemRegistry) => {
-  return isExpandingMenuItem(item) ? getFromExpandingItem(item, menuItems) : {
-    item,
-    menus: { },
-    expansions: { }
-  };
+const getFromItem = (item: SingleMenuItemApi, menuItems: MenuItemRegistry) => isExpandingMenuItem(item) ? getFromExpandingItem(item, menuItems) : {
+  item,
+  menus: { },
+  expansions: { }
 };
 
 const generateValueIfRequired = (item: SingleMenuItemApi): SingleMenuItemApi => {

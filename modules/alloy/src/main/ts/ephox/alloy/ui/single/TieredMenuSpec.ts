@@ -38,35 +38,31 @@ export interface MenuNotBuilt {
 const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _rawUiSpec) => {
   const submenuParentItems: Cell<Option<Record<string, AlloyComponent>>> = Cell(Option.none());
 
-  const buildMenus = (container: AlloyComponent, primaryName: string, menus: Record<string, PartialMenuSpec>): Record<string, MenuPreparation> => {
-    return Obj.map(menus, (spec, name) => {
+  const buildMenus = (container: AlloyComponent, primaryName: string, menus: Record<string, PartialMenuSpec>): Record<string, MenuPreparation> => Obj.map(menus, (spec, name) => {
 
-      const makeSketch = () => {
-        return Menu.sketch({
-          dom: spec.dom,
-          ...spec,
-          value: name,
-          items: spec.items,
-          markers: detail.markers,
+    const makeSketch = () => Menu.sketch({
+      dom: spec.dom,
+      ...spec,
+      value: name,
+      items: spec.items,
+      markers: detail.markers,
 
-          // Fake focus.
-          fakeFocus: detail.fakeFocus,
-          onHighlight: detail.onHighlight,
+      // Fake focus.
+      fakeFocus: detail.fakeFocus,
+      onHighlight: detail.onHighlight,
 
-          focusManager: detail.fakeFocus ? FocusManagers.highlights() : FocusManagers.dom()
-        });
-      };
-
-      // Only build the primary at first. Build the others as needed.
-      return name === primaryName ? {
-        type: 'prepared',
-        menu: container.getSystem().build(makeSketch())
-      } as MenuPrepared : {
-        type: 'notbuilt',
-        nbMenu: makeSketch
-      } as MenuNotBuilt;
+      focusManager: detail.fakeFocus ? FocusManagers.highlights() : FocusManagers.dom()
     });
-  };
+
+    // Only build the primary at first. Build the others as needed.
+    return name === primaryName ? {
+      type: 'prepared',
+      menu: container.getSystem().build(makeSketch())
+    } as MenuPrepared : {
+      type: 'notbuilt',
+      nbMenu: makeSketch
+    } as MenuNotBuilt;
+  });
 
   const layeredState: LayeredState = LayeredState.init();
 
@@ -77,46 +73,30 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
     return layeredState.getPrimary();
   };
 
-  const getItemValue = (item: AlloyComponent): string => {
-    return Representing.getValue(item).value;
-  };
+  const getItemValue = (item: AlloyComponent): string => Representing.getValue(item).value;
 
   // Find the first item with value `itemValue` in any of the menus inside this tiered menu structure
-  const getItemByValue = (_container: AlloyComponent, menus: AlloyComponent[], itemValue: string): Option<AlloyComponent> => {
+  const getItemByValue = (_container: AlloyComponent, menus: AlloyComponent[], itemValue: string): Option<AlloyComponent> =>
     // Can *greatly* improve the performance of this by calculating things up front.
-    return Arr.findMap(menus, (menu) => {
+    Arr.findMap(menus, (menu) => {
       if (! menu.getSystem().isConnected()) { return Option.none(); }
       const candidates = Highlighting.getCandidates(menu);
       return Arr.find(candidates, (c) => getItemValue(c) === itemValue);
-    });
-  };
+    })
+  ;
 
-  const toDirectory = (_container: AlloyComponent): Record<string, string[]> => {
-    return Obj.map(detail.data.menus, (data, _menuName) => {
-      return Arr.bind(data.items, (item) => {
-        return item.type === 'separator' ? [ ] : [ item.data.value ];
-      });
-    });
-  };
+  const toDirectory = (_container: AlloyComponent): Record<string, string[]> => Obj.map(detail.data.menus, (data, _menuName) => Arr.bind(data.items, (item) => item.type === 'separator' ? [ ] : [ item.data.value ]));
 
   const setActiveMenu = (container: AlloyComponent, menu: AlloyComponent): void => {
     Highlighting.highlight(container, menu);
-    Highlighting.getHighlighted(menu).orThunk(() => {
-      return Highlighting.getFirst(menu);
-    }).each((item) => {
+    Highlighting.getHighlighted(menu).orThunk(() => Highlighting.getFirst(menu)).each((item) => {
       AlloyTriggers.dispatch(container, item.element(), SystemEvents.focusItem());
     });
   };
 
-  const getMenus = (state: LayeredState, menuValues: string[]): AlloyComponent[] => {
-    return Options.cat(
-      Arr.map(menuValues, (mv) => {
-        return state.lookupMenu(mv).bind((prep) => {
-          return prep.type === 'prepared' ? Option.some(prep.menu) : Option.none();
-        });
-      })
-    );
-  };
+  const getMenus = (state: LayeredState, menuValues: string[]): AlloyComponent[] => Options.cat(
+    Arr.map(menuValues, (mv) => state.lookupMenu(mv).bind((prep) => prep.type === 'prepared' ? Option.some(prep.menu) : Option.none()))
+  );
 
   const closeOthers = (container: AlloyComponent, state: LayeredState, path: string[]): void => {
     const others = getMenus(state, state.otherMenus(path));
@@ -128,21 +108,19 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
     });
   };
 
-  const getSubmenuParents = (container: AlloyComponent): Record<string, AlloyComponent> => {
-    return submenuParentItems.get().getOrThunk(() => {
-      const r: Record<string, AlloyComponent> = { };
-      const items = SelectorFilter.descendants(container.element(), `.${detail.markers.item}`);
-      const parentItems = Arr.filter(items, (i) => Attr.get(i, 'aria-haspopup') === 'true');
-      Arr.each(parentItems, (i) => {
-        container.getSystem().getByDom(i).each((itemComp) => {
-          const key = getItemValue(itemComp);
-          r[key] = itemComp;
-        });
+  const getSubmenuParents = (container: AlloyComponent): Record<string, AlloyComponent> => submenuParentItems.get().getOrThunk(() => {
+    const r: Record<string, AlloyComponent> = { };
+    const items = SelectorFilter.descendants(container.element(), `.${detail.markers.item}`);
+    const parentItems = Arr.filter(items, (i) => Attr.get(i, 'aria-haspopup') === 'true');
+    Arr.each(parentItems, (i) => {
+      container.getSystem().getByDom(i).each((itemComp) => {
+        const key = getItemValue(itemComp);
+        r[key] = itemComp;
       });
-      submenuParentItems.set(Option.some(r));
-      return r;
     });
-  };
+    submenuParentItems.set(Option.some(r));
+    return r;
+  });
 
   // Not ideal. Ideally, we would like a map of item keys to components.
   const updateAriaExpansions = (container: AlloyComponent, path: string[]) => {
@@ -154,32 +132,27 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
     });
   };
 
-  const updateMenuPath = (container: AlloyComponent, state: LayeredState, path: string[]): Option<AlloyComponent> => {
-    return Option.from(path[0]).bind((latestMenuName) => {
-      return state.lookupMenu(latestMenuName).bind((menuPrep: MenuPreparation) => {
-        if (menuPrep.type === 'notbuilt') {
-          return Option.none();
-        } else {
-          const activeMenu = menuPrep.menu;
-          const rest = getMenus(state, path.slice(1));
-          Arr.each(rest, (r) => {
-            Class.add(r.element(), detail.markers.backgroundMenu);
-          });
-
-          if (! Body.inBody(activeMenu.element())) {
-            Replacing.append(container, GuiFactory.premade(activeMenu));
-          }
-
-          // Remove the background-menu class from the active menu
-          Classes.remove(activeMenu.element(), [ detail.markers.backgroundMenu ]);
-          setActiveMenu(container, activeMenu);
-          closeOthers(container, state, path);
-          return Option.some(activeMenu);
-        }
+  const updateMenuPath = (container: AlloyComponent, state: LayeredState, path: string[]): Option<AlloyComponent> => Option.from(path[0]).bind((latestMenuName) => state.lookupMenu(latestMenuName).bind((menuPrep: MenuPreparation) => {
+    if (menuPrep.type === 'notbuilt') {
+      return Option.none();
+    } else {
+      const activeMenu = menuPrep.menu;
+      const rest = getMenus(state, path.slice(1));
+      Arr.each(rest, (r) => {
+        Class.add(r.element(), detail.markers.backgroundMenu);
       });
-    });
 
-  };
+      if (! Body.inBody(activeMenu.element())) {
+        Replacing.append(container, GuiFactory.premade(activeMenu));
+      }
+
+      // Remove the background-menu class from the active menu
+      Classes.remove(activeMenu.element(), [ detail.markers.backgroundMenu ]);
+      setActiveMenu(container, activeMenu);
+      closeOthers(container, state, path);
+      return Option.some(activeMenu);
+    }
+  }));
 
   enum ExpandHighlightDecision { HighlightSubmenu, HighlightParent }
 
@@ -199,27 +172,25 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
       // Called when submenus are opened by keyboard AND hovering navigation
       updateAriaExpansions(container, path);
       // When expanding, always select the first.
-      return Option.from(path[0]).bind((menuName) => {
-        return layeredState.lookupMenu(menuName).bind((activeMenuPrep) => {
-          const activeMenu = buildIfRequired(container, menuName, activeMenuPrep);
+      return Option.from(path[0]).bind((menuName) => layeredState.lookupMenu(menuName).bind((activeMenuPrep) => {
+        const activeMenu = buildIfRequired(container, menuName, activeMenuPrep);
 
-          // DUPE with above. Fix later.
-          if (! Body.inBody(activeMenu.element())) {
-            Replacing.append(container, GuiFactory.premade(activeMenu));
-          }
+        // DUPE with above. Fix later.
+        if (! Body.inBody(activeMenu.element())) {
+          Replacing.append(container, GuiFactory.premade(activeMenu));
+        }
 
-          // updateMenuPath is the code which changes the active menu. We don't always
-          // want to change the active menu. Sometimes, we just want to show it (e.g. hover)
-          detail.onOpenSubmenu(container, item, activeMenu, Arr.reverse(path));
-          if (decision === ExpandHighlightDecision.HighlightSubmenu) {
-            Highlighting.highlightFirst(activeMenu);
-            return updateMenuPath(container, layeredState, path);
-          } else {
-            Highlighting.dehighlightAll(activeMenu);
-            return Option.some(item);
-          }
-        });
-      });
+        // updateMenuPath is the code which changes the active menu. We don't always
+        // want to change the active menu. Sometimes, we just want to show it (e.g. hover)
+        detail.onOpenSubmenu(container, item, activeMenu, Arr.reverse(path));
+        if (decision === ExpandHighlightDecision.HighlightSubmenu) {
+          Highlighting.highlightFirst(activeMenu);
+          return updateMenuPath(container, layeredState, path);
+        } else {
+          Highlighting.dehighlightAll(activeMenu);
+          return Option.some(item);
+        }
+      }));
     });
   };
 
@@ -246,32 +217,20 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
     });
   };
 
-  const onRight = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => {
-    return EditableFields.inside(item.element()) ? Option.none() : expandRight(container, item, ExpandHighlightDecision.HighlightSubmenu);
-  };
+  const onRight = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => EditableFields.inside(item.element()) ? Option.none() : expandRight(container, item, ExpandHighlightDecision.HighlightSubmenu);
 
-  const onLeft = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => {
+  const onLeft = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> =>
     // Exclude inputs, textareas etc.
-    return EditableFields.inside(item.element()) ? Option.none() : collapseLeft(container, item);
-  };
+    EditableFields.inside(item.element()) ? Option.none() : collapseLeft(container, item)
+  ;
 
-  const onEscape = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => {
-    return collapseLeft(container, item).orThunk(() => {
-      // This should only fire when the user presses ESC ... not any other close.
-      return detail.onEscape(container, item).map(() => container);
-    });
-  };
+  const onEscape = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => collapseLeft(container, item).orThunk(() =>
+  // This should only fire when the user presses ESC ... not any other close.
+    detail.onEscape(container, item).map(() => container)
+  );
 
   type KeyHandler = (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
-  const keyOnItem = (f: (container: AlloyComponent, item: AlloyComponent) => Option<AlloyComponent>): KeyHandler => {
-    return (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent): Option<boolean> => {
-      return SelectorFind.closest(simulatedEvent.getSource(), '.' + detail.markers.item).bind((target) => {
-        return container.getSystem().getByDom(target).toOption().bind((item: AlloyComponent) => {
-          return f(container, item).map((): boolean => true);
-        });
-      });
-    };
-  };
+  const keyOnItem = (f: (container: AlloyComponent, item: AlloyComponent) => Option<AlloyComponent>): KeyHandler => (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent): Option<boolean> => SelectorFind.closest(simulatedEvent.getSource(), '.' + detail.markers.item).bind((target) => container.getSystem().getByDom(target).toOption().bind((item: AlloyComponent) => f(container, item).map((): boolean => true)));
 
   const events = AlloyEvents.derive([
     // Set "active-menu" for the menu with focus
@@ -283,9 +242,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
         Highlighting.highlight(sandbox, menu);
 
         const value = getItemValue(simulatedEvent.event().item());
-        layeredState.refresh(value).each((path) => {
-          return closeOthers(sandbox, layeredState, path);
-        });
+        layeredState.refresh(value).each((path) => closeOthers(sandbox, layeredState, path));
       });
     }),
 
@@ -331,9 +288,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
     })
   ] : [ ]));
 
-  const getActiveItem = (container: AlloyComponent): Option<AlloyComponent> => {
-    return Highlighting.getHighlighted(container).bind(Highlighting.getHighlighted);
-  };
+  const getActiveItem = (container: AlloyComponent): Option<AlloyComponent> => Highlighting.getHighlighted(container).bind(Highlighting.getHighlighted);
 
   const collapseMenuApi = (container: AlloyComponent) => {
     getActiveItem(container).each((currentItem) => {
@@ -347,29 +302,21 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
     });
   };
 
-  const extractMenuFromContainer = (container: AlloyComponent) => {
-    return Option.from(container.components()[0]).filter((comp) => {
-      return Attr.get(comp.element(), 'role') === 'menu';
-    });
-  };
+  const extractMenuFromContainer = (container: AlloyComponent) => Option.from(container.components()[0]).filter((comp) => Attr.get(comp.element(), 'role') === 'menu');
 
   const repositionMenus = (container: AlloyComponent): void => {
     // Get the primary menu
-    const maybeActivePrimary = layeredState.getPrimary().bind((primary) => {
+    const maybeActivePrimary = layeredState.getPrimary().bind((primary) =>
       // Get the triggering path (item, menu) up to the active item
-      return getActiveItem(container).bind((currentItem) => {
+      getActiveItem(container).bind((currentItem) => {
         const itemValue = getItemValue(currentItem);
         const allMenus: MenuPreparation[] = Obj.values(layeredState.getMenus());
         const preparedMenus: AlloyComponent[] = Options.cat(
           Arr.map(allMenus, LayeredState.extractPreparedMenu)
         );
-        return layeredState.getTriggeringPath(itemValue, (v) => {
-          return getItemByValue(container, preparedMenus, v);
-        });
-      }).map((triggeringPath) => {
-        return { primary, triggeringPath };
-      });
-    });
+        return layeredState.getTriggeringPath(itemValue, (v) => getItemByValue(container, preparedMenus, v));
+      }).map((triggeringPath) => ({ primary, triggeringPath }))
+    );
 
     maybeActivePrimary.fold(() => {
       // When a menu is open but there is no activeItem, we get the menu from the container.

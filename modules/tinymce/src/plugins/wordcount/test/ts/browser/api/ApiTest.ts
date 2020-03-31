@@ -20,13 +20,11 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.ApiTest', (success, failur
   TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
-    const createAssertionStep = (getCount: CountGetter) => (label: string, content: string, assertedLength: number, sel?: Sel) => {
-      return GeneralSteps.sequence([
-        tinyApis.sSetContent(content),
-        ...(sel ? [ tinyApis.sSetSelection(sel.startPath, sel.soffset, sel.finishPath, sel.foffset) ] : []),
-        Step.sync(() => Assertions.assertEq(label, getCount(), assertedLength))
-      ]);
-    };
+    const createAssertionStep = (getCount: CountGetter) => (label: string, content: string, assertedLength: number, sel?: Sel) => GeneralSteps.sequence([
+      tinyApis.sSetContent(content),
+      ...(sel ? [ tinyApis.sSetSelection(sel.startPath, sel.soffset, sel.finishPath, sel.foffset) ] : []),
+      Step.sync(() => Assertions.assertEq(label, getCount(), assertedLength))
+    ]);
 
     const api: WordCountApi = editor.plugins.wordcount as WordCountApi;
 

@@ -36,12 +36,10 @@ type BehaviourTuple<T extends EventFormat> = {
   handler: () => AlloyEventHandler<T>;
 };
 
-const behaviourTuple = <T extends EventFormat>(name: string, handler: AlloyEventHandler<T>): BehaviourTuple<T> => {
-  return {
-    name: Fun.constant(name),
-    handler: Fun.constant(handler)
-  };
-};
+const behaviourTuple = <T extends EventFormat>(name: string, handler: AlloyEventHandler<T>): BehaviourTuple<T> => ({
+  name: Fun.constant(name),
+  handler: Fun.constant(handler)
+});
 
 const nameToHandlers = (behaviours: Array<AlloyBehaviour<any, any>>, info: Info) => {
   const r: Record<string, any> = {};
@@ -82,13 +80,11 @@ const assemble = <T extends EventFormat>(rawHandler: AlloyEventHandler<T>) => {
   };
 };
 
-const missingOrderError = <T> (eventName: string, tuples: Array<BehaviourTuple<any>>): Result<T, string[]> => {
-  return Result.error([
-    'The event (' + eventName + ') has more than one behaviour that listens to it.\nWhen this occurs, you must ' +
+const missingOrderError = <T> (eventName: string, tuples: Array<BehaviourTuple<any>>): Result<T, string[]> => Result.error([
+  'The event (' + eventName + ') has more than one behaviour that listens to it.\nWhen this occurs, you must ' +
     'specify an event ordering for the behaviours in your spec (e.g. [ "listing", "toggling" ]).\nThe behaviours that ' +
     'can trigger it are: ' + JSON.stringify(Arr.map(tuples, (c) => c.name()), null, 2)
-  ]);
-};
+]);
 
 const fuse = <T extends EventFormat>(tuples: Array<BehaviourTuple<T>>, eventOrder: Record<string, string[]>, eventName: string): Result<AlloyEventHandler<T>, any[]> => {
   // ASSUMPTION: tuples.length will never be 0, because it wouldn't have an entry if it was 0
@@ -110,9 +106,7 @@ const combineGroups = <T extends EventFormat>(byEventName: Record<string, Array<
     const combined: Result<AlloyEventHandler<T>, any[]> = tuples.length === 1 ? Result.value(tuples[0].handler()) : fuse<T>(tuples, eventOrder, eventName);
     return combined.map((handler) => {
       const assembled = assemble(handler);
-      const purpose = tuples.length > 1 ? Arr.filter(eventOrder[eventName], (o) => {
-        return Arr.exists(tuples, (t) => t.name() === o);
-      }).join(' > ') : tuples[0].name();
+      const purpose = tuples.length > 1 ? Arr.filter(eventOrder[eventName], (o) => Arr.exists(tuples, (t) => t.name() === o)).join(' > ') : tuples[0].name();
       return Objects.wrap(eventName, DescribedHandler.uncurried(assembled, purpose));
     });
   });

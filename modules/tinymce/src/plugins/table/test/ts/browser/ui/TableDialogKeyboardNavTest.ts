@@ -24,13 +24,11 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', (
     const sPressTabKey = Keyboard.sKeydown(doc, Keys.tab(), { });
 
     // Assert focus is on the expected form element
-    const sAssertFocusOnItem = (label, selector) => {
-      return FocusTools.sTryOnSelector(
-        `Focus should be on: ${label}`,
-        doc,
-        selector
-      );
-    };
+    const sAssertFocusOnItem = (label, selector) => FocusTools.sTryOnSelector(
+      `Focus should be on: ${label}`,
+      doc,
+      selector
+    );
 
     Pipeline.async({}, Log.steps('TBA', 'Table: Open dialog, test the tab key navigation cycles through all focusable fields in General and Advanced tabs', [
       // Create table and set focus

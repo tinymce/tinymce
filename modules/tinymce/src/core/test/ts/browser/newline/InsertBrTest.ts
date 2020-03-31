@@ -92,19 +92,17 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function (succes
         tinyApis.sNodeChanged(),
         sInsertBr(editor),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, _arr) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  children: [
-                    s.text(str.is('a')),
-                    s.element('br', {}),
-                    s.element('br', {})
-                  ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, _arr) => s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text(str.is('a')),
+                  s.element('br', {}),
+                  s.element('br', {})
+                ]
+              })
+            ]
+          }))
         ),
         tinyApis.sAssertSelection([ 0 ], 2, [ 0 ], 2),
       ]))

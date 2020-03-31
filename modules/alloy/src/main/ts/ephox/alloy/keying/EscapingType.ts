@@ -13,9 +13,7 @@ const schema = [
   Fields.onStrictKeyboardHandler('onEscape')
 ];
 
-const doEscape: KeyRuleHandler<EscapingConfig, Stateless> = (component, simulatedEvent, escapeConfig, _escapeState) => {
-  return escapeConfig.onEscape(component, simulatedEvent);
-};
+const doEscape: KeyRuleHandler<EscapingConfig, Stateless> = (component, simulatedEvent, escapeConfig, _escapeState) => escapeConfig.onEscape(component, simulatedEvent);
 
 const getKeydownRules: () => Array<KeyRules.KeyRule<EscapingConfig, Stateless>> = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), doEscape)

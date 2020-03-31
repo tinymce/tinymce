@@ -5,40 +5,28 @@ import Jsc from '@ephox/wrap-jsverify';
 import * as ArrNavigation from 'ephox/alloy/navigation/ArrNavigation';
 
 UnitTest.test('ArrNavigationTest', () => {
-  const genUniqueArray = (min: number, max: number) => {
-    return Jsc.integer(min, max).generator.map((num: number) => {
-      const r = [ ];
-      for (let i = 0; i < num; i++) {
-        r[i] = i;
-      }
-      return r;
-    });
-  };
-
-  const genIndexInArray = (array: number[]) => {
-    return Jsc.integer(0, array.length - 1).generator;
-  };
-
-  const genTestCase = Jsc.nearray(Jsc.integer).generator.flatMap((values1: number[]) => {
-    return Jsc.nearray(Jsc.integer).generator.flatMap((values2: number[]) => {
-      const combined = values1.concat(values2);
-      return genIndexInArray(combined).map((index: number) => {
-        return {
-          values: combined,
-          index
-        };
-      });
-    });
+  const genUniqueArray = (min: number, max: number) => Jsc.integer(min, max).generator.map((num: number) => {
+    const r = [ ];
+    for (let i = 0; i < num; i++) {
+      r[i] = i;
+    }
+    return r;
   });
 
-  const genUniqueNumTestCase = genUniqueArray(2, 10).flatMap((values: number[]) => {
-    return genIndexInArray(values).map((index: number) => {
-      return {
-        values,
-        index
-      };
-    });
-  });
+  const genIndexInArray = (array: number[]) => Jsc.integer(0, array.length - 1).generator;
+
+  const genTestCase = Jsc.nearray(Jsc.integer).generator.flatMap((values1: number[]) => Jsc.nearray(Jsc.integer).generator.flatMap((values2: number[]) => {
+    const combined = values1.concat(values2);
+    return genIndexInArray(combined).map((index: number) => ({
+      values: combined,
+      index
+    }));
+  }));
+
+  const genUniqueNumTestCase = genUniqueArray(2, 10).flatMap((values: number[]) => genIndexInArray(values).map((index: number) => ({
+    values,
+    index
+  })));
 
   const arbTestCase = Jsc.bless({
     generator: genTestCase
@@ -132,26 +120,18 @@ UnitTest.test('ArrNavigationTest', () => {
   Jsc.property(
     'Unique: Try next should be some(+1) or none',
     arbUniqueNumTestCase,
-    (testCase: { values: number[]; index: number }) => {
-      return ArrNavigation.tryNext(testCase.values, testCase.index, Fun.constant(true)).fold(() => {
-        // Nothing, so we must be at the last index position
-        return Jsc.eq(testCase.index, testCase.values.length - 1);
-      }, (after) => {
-        return Jsc.eq(testCase.index + 1, after);
-      });
-    }
+    (testCase: { values: number[]; index: number }) => ArrNavigation.tryNext(testCase.values, testCase.index, Fun.constant(true)).fold(() =>
+    // Nothing, so we must be at the last index position
+      Jsc.eq(testCase.index, testCase.values.length - 1)
+    , (after) => Jsc.eq(testCase.index + 1, after))
   );
 
   Jsc.property(
     'Unique: Try prev should be some(-1) or none',
     arbUniqueNumTestCase,
-    (testCase: { values: number[]; index: number }) => {
-      return ArrNavigation.tryPrev(testCase.values, testCase.index, Fun.constant(true)).fold(() => {
-        // Nothing, so we must be at the first index position
-        return Jsc.eq(testCase.index, 0);
-      }, (before) => {
-        return Jsc.eq(testCase.index - 1, before);
-      });
-    }
+    (testCase: { values: number[]; index: number }) => ArrNavigation.tryPrev(testCase.values, testCase.index, Fun.constant(true)).fold(() =>
+    // Nothing, so we must be at the first index position
+      Jsc.eq(testCase.index, 0)
+    , (before) => Jsc.eq(testCase.index - 1, before))
   );
 });

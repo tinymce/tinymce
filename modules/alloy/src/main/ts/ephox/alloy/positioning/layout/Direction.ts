@@ -56,17 +56,11 @@ const cata = <B>(
   north: DirectionFunc<B>,
   east: DirectionFunc<B>,
   west: DirectionFunc<B>
-): B => {
-  return subject.fold(southeast, southwest, northeast, northwest, south, north, east, west);
-};
+): B => subject.fold(southeast, southwest, northeast, northwest, south, north, east, west);
 
-const cataVertical = <B>(subject: DirectionAdt, south: DirectionFunc<B>, middle: DirectionFunc<B>, north: DirectionFunc<B>): B => {
-  return subject.fold(south, south, north, north, south, north, middle, middle);
-};
+const cataVertical = <B>(subject: DirectionAdt, south: DirectionFunc<B>, middle: DirectionFunc<B>, north: DirectionFunc<B>): B => subject.fold(south, south, north, north, south, north, middle, middle);
 
-const cataHorizontal = <B>(subject: DirectionAdt, east: DirectionFunc<B>, middle: DirectionFunc<B>, west: DirectionFunc<B>): B => {
-  return subject.fold(east, west, east, west, middle, middle, east, west);
-};
+const cataHorizontal = <B>(subject: DirectionAdt, east: DirectionFunc<B>, middle: DirectionFunc<B>, west: DirectionFunc<B>): B => subject.fold(east, west, east, west, middle, middle, east, west);
 
 // TODO: Simplify with the typescript approach.
 const southeast = adt.southeast;

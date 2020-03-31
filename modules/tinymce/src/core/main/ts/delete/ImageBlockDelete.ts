@@ -24,9 +24,7 @@ const deleteCaret = (editor: Editor, forward: boolean): boolean => {
     .getOr(false);
 };
 
-const backspaceDelete = (editor: Editor, forward: boolean): boolean => {
-  return editor.selection.isCollapsed() ? deleteCaret(editor, forward) : false;
-};
+const backspaceDelete = (editor: Editor, forward: boolean): boolean => editor.selection.isCollapsed() ? deleteCaret(editor, forward) : false;
 
 export {
   backspaceDelete

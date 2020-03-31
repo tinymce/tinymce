@@ -7,9 +7,7 @@ const EMPTY_STRING = UnicodeData.EMPTY_STRING;
 const WHITESPACE = UnicodeData.WHITESPACE;
 const PUNCTUATION = UnicodeData.PUNCTUATION;
 
-const isProtocol = (str: string): boolean => {
-  return str === 'http' || str === 'https';
-};
+const isProtocol = (str: string): boolean => str === 'http' || str === 'https';
 
 const findWordEnd = (characters: string[], startIndex: number) => {
   let i: number;
@@ -72,12 +70,10 @@ export interface WordOptions {
   includePunctuation?: boolean;
 }
 
-const getDefaultOptions = (): WordOptions => {
-  return {
-    includeWhitespace: false,
-    includePunctuation: false,
-  };
-};
+const getDefaultOptions = (): WordOptions => ({
+  includeWhitespace: false,
+  includePunctuation: false,
+});
 
 const getWords = <T>(chars: T[], extract: (char: T) => string, options?: WordOptions): T[][] => {
   options = {

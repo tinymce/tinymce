@@ -29,6 +29,4 @@ export const inputSchema = ValueSchema.objOf(inputFields);
 
 export const inputDataProcessor = ValueSchema.string;
 
-export const createInput = (spec: InputApi): Result<Input, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<Input>('input', inputSchema, spec);
-};
+export const createInput = (spec: InputApi): Result<Input, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<Input>('input', inputSchema, spec);

@@ -10,51 +10,39 @@ import Editor from 'tinymce/core/api/Editor';
 UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', (success, failure) => {
   Theme();
 
-  const sAssertRawNormalizedContent = (editor: Editor, expectedContent: string) => {
-    return Step.sync(() => {
-      const element = Replication.deep(Element.fromDom(editor.getBody()));
+  const sAssertRawNormalizedContent = (editor: Editor, expectedContent: string) => Step.sync(() => {
+    const element = Replication.deep(Element.fromDom(editor.getBody()));
 
-      // Remove internal selection dom items
-      Arr.each(SelectorFilter.descendants(element, '*[data-mce-bogus="all"]'), Remove.remove);
-      Arr.each(SelectorFilter.descendants(element, '*'), (elm) => {
-        Attr.remove(elm, 'data-mce-selected');
-      });
-
-      Assertions.assertHtml('Should be expected contents', expectedContent, Html.get(element));
+    // Remove internal selection dom items
+    Arr.each(SelectorFilter.descendants(element, '*[data-mce-bogus="all"]'), Remove.remove);
+    Arr.each(SelectorFilter.descendants(element, '*'), (elm) => {
+      Attr.remove(elm, 'data-mce-selected');
     });
-  };
 
-  const sDelete = (editor: Editor) => {
-    return Step.sync(() => {
-      const returnVal = TableDelete.backspaceDelete(editor, true);
-      Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
-    });
-  };
+    Assertions.assertHtml('Should be expected contents', expectedContent, Html.get(element));
+  });
 
-  const sBackspace = (editor: Editor) => {
-    return Step.sync(() => {
-      const returnVal = TableDelete.backspaceDelete(editor, false);
-      Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
-    });
-  };
+  const sDelete = (editor: Editor) => Step.sync(() => {
+    const returnVal = TableDelete.backspaceDelete(editor, true);
+    Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
+  });
 
-  const sDeleteNoop = (editor: Editor) => {
-    return Step.sync(() => {
-      const returnVal = TableDelete.backspaceDelete(editor, true);
-      Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
-    });
-  };
+  const sBackspace = (editor: Editor) => Step.sync(() => {
+    const returnVal = TableDelete.backspaceDelete(editor, false);
+    Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
+  });
 
-  const sBackspaceNoop = (editor: Editor) => {
-    return Step.sync(() => {
-      const returnVal = TableDelete.backspaceDelete(editor, false);
-      Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
-    });
-  };
+  const sDeleteNoop = (editor: Editor) => Step.sync(() => {
+    const returnVal = TableDelete.backspaceDelete(editor, true);
+    Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
+  });
 
-  const sKeyboardBackspace = (editor: Editor) => {
-    return Keyboard.sKeystroke(Element.fromDom(editor.getDoc()), Keys.backspace(), {});
-  };
+  const sBackspaceNoop = (editor: Editor) => Step.sync(() => {
+    const returnVal = TableDelete.backspaceDelete(editor, false);
+    Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
+  });
+
+  const sKeyboardBackspace = (editor: Editor) => Keyboard.sKeystroke(Element.fromDom(editor.getDoc()), Keys.backspace(), {});
 
   TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);

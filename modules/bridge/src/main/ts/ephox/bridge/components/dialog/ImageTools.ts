@@ -29,6 +29,4 @@ export const imageToolsSchema = ValueSchema.objOf(imageToolsFields);
 
 export const imageToolsDataProcessor = ValueSchema.string;
 
-export const createImageTools = (spec: ImageToolsApi): Result<ImageTools, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<ImageTools>('imagetools', imageToolsSchema, spec);
-};
+export const createImageTools = (spec: ImageToolsApi): Result<ImageTools, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<ImageTools>('imagetools', imageToolsSchema, spec);

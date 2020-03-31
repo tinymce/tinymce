@@ -28,32 +28,28 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   SketchBehaviours.field('coupledFieldBehaviours', [ Composing, Representing ])
 ]);
 
-const getField = (comp: AlloyComponent, detail: FormCoupledInputsDetail, partName: string) => {
-  return AlloyParts.getPart(comp, detail, partName).bind(Composing.getCurrent);
-};
+const getField = (comp: AlloyComponent, detail: FormCoupledInputsDetail, partName: string) => AlloyParts.getPart(comp, detail, partName).bind(Composing.getCurrent);
 
-const coupledPart = (selfName: string, otherName: string) => {
-  return PartType.required<FormCoupledInputsDetail, FormFieldSpec>({
-    factory: FormField,
-    name: selfName,
-    overrides(detail) {
-      return {
-        fieldBehaviours: Behaviour.derive([
-          AddEventsBehaviour.config('coupled-input-behaviour', [
-            AlloyEvents.run(NativeEvents.input(), (me) => {
-              getField(me, detail, otherName).each((other) => {
-                AlloyParts.getPart(me, detail, 'lock').each((lock) => {
-                  // TODO IMPROVEMENT: Allow locker to fire onLockedChange if it is turned on after being off.
-                  if (Toggling.isOn(lock)) { detail.onLockedChange(me, other, lock); }
-                });
+const coupledPart = (selfName: string, otherName: string) => PartType.required<FormCoupledInputsDetail, FormFieldSpec>({
+  factory: FormField,
+  name: selfName,
+  overrides(detail) {
+    return {
+      fieldBehaviours: Behaviour.derive([
+        AddEventsBehaviour.config('coupled-input-behaviour', [
+          AlloyEvents.run(NativeEvents.input(), (me) => {
+            getField(me, detail, otherName).each((other) => {
+              AlloyParts.getPart(me, detail, 'lock').each((lock) => {
+                // TODO IMPROVEMENT: Allow locker to fire onLockedChange if it is turned on after being off.
+                if (Toggling.isOn(lock)) { detail.onLockedChange(me, other, lock); }
               });
-            })
-          ])
+            });
+          })
         ])
-      };
-    }
-  });
-};
+      ])
+    };
+  }
+});
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   coupledPart('field1', 'field2'),

@@ -19,16 +19,14 @@ export interface OnMenuItemExecuteType<T> extends GetApiType<T> {
 }
 
 // Perform `action` when an item is clicked on, close menus, and stop event
-const onMenuItemExecute = <T>(info: OnMenuItemExecuteType<T>, itemResponse: ItemResponse) => {
-  return AlloyEvents.runOnExecute(function (comp, simulatedEvent) {
-    // If there is an action, run the action
-    runWithApi(info, comp)(info.onAction);
-    if (! info.triggersSubmenu && itemResponse === ItemResponse.CLOSE_ON_EXECUTE) {
-      AlloyTriggers.emit(comp, SystemEvents.sandboxClose());
-      simulatedEvent.stop();
-    }
-  });
-};
+const onMenuItemExecute = <T>(info: OnMenuItemExecuteType<T>, itemResponse: ItemResponse) => AlloyEvents.runOnExecute(function (comp, simulatedEvent) {
+  // If there is an action, run the action
+  runWithApi(info, comp)(info.onAction);
+  if (! info.triggersSubmenu && itemResponse === ItemResponse.CLOSE_ON_EXECUTE) {
+    AlloyTriggers.emit(comp, SystemEvents.sandboxClose());
+    simulatedEvent.stop();
+  }
+});
 
 const menuItemEventOrder = {
   // TODO: use the constants provided by behaviours.

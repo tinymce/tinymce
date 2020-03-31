@@ -238,13 +238,11 @@ const resolveId = (dom: DOMUtils, bookmark: IdBookmark): Option<Range> => {
   );
 };
 
-const resolveIndex = (dom: DOMUtils, bookmark: IndexBookmark): Option<Range> => {
-  return Option.from(dom.select(bookmark.name)[bookmark.index]).map((elm) => {
-    const rng = dom.createRng();
-    rng.selectNode(elm);
-    return rng;
-  });
-};
+const resolveIndex = (dom: DOMUtils, bookmark: IndexBookmark): Option<Range> => Option.from(dom.select(bookmark.name)[bookmark.index]).map((elm) => {
+  const rng = dom.createRng();
+  rng.selectNode(elm);
+  return rng;
+});
 
 const resolve = (selection: Selection, bookmark: Bookmark): Option<Range> => {
   const dom = selection.dom;

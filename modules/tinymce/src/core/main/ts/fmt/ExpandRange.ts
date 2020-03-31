@@ -69,11 +69,7 @@ const findWordEndPoint = (dom: DOMUtils, body: HTMLElement, container: Node, off
   };
 
   const spaceResult = walk(container, offset, findSpace);
-  return spaceResult.bind((result) => {
-    return includeTrailingSpaces ? walk(result.container, result.offset + (start ? -1 : 0), findContent) : Option.some(result);
-  }).orThunk(() => {
-    return lastTextNode ? Option.some({ container: lastTextNode, offset: start ? 0 : lastTextNode.length }) : Option.none();
-  });
+  return spaceResult.bind((result) => includeTrailingSpaces ? walk(result.container, result.offset + (start ? -1 : 0), findContent) : Option.some(result)).orThunk(() => lastTextNode ? Option.some({ container: lastTextNode, offset: start ? 0 : lastTextNode.length }) : Option.none());
 };
 
 const findSelectorEndPoint = function (dom: DOMUtils, format, rng: Range, container: Node, siblingName: 'previousSibling' | 'nextSibling') {

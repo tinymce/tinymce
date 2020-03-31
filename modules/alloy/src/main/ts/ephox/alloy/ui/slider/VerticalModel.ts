@@ -16,11 +16,9 @@ const fireSliderChange = (spectrum: AlloyComponent, value: SliderValueY): void =
   AlloyTriggers.emitWith(spectrum, ModelCommon.sliderChangeEvent(), { value });
 };
 
-const sliderValue = (y: number): SliderValueY => {
-  return {
-    y: Fun.constant(y)
-  };
-};
+const sliderValue = (y: number): SliderValueY => ({
+  y: Fun.constant(y)
+});
 
 // find the value of the y offset of where the mouse was clicked from the model.
 const findValueOfOffset = (spectrum: AlloyComponent, detail: VerticalSliderDetail, top: number): number => {
@@ -70,9 +68,7 @@ const moveBy = (direction: number, spectrum: AlloyComponent, detail: VerticalSli
   return Option.some(yValue);
 };
 
-const handleMovement = (direction: number) => (spectrum: AlloyComponent, detail: VerticalSliderDetail): Option<boolean> => {
-  return moveBy(direction, spectrum, detail).map((): boolean => true);
-};
+const handleMovement = (direction: number) => (spectrum: AlloyComponent, detail: VerticalSliderDetail): Option<boolean> => moveBy(direction, spectrum, detail).map((): boolean => true);
 
 // get y offset from event
 const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent): Option<number> => {

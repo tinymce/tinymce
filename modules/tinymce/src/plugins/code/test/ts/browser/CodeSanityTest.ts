@@ -20,27 +20,21 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', (success, fail
 
     const docBody = Element.fromDom(document.body);
 
-    const sSetTextareaContent = (content) => {
-      return Logger.t('Changing textarea content to ' + content, Step.sync(() => {
-        const textarea: any = document.querySelector('div[role="dialog"] textarea');
-        textarea.value = content;
-      }));
-    };
+    const sSetTextareaContent = (content) => Logger.t('Changing textarea content to ' + content, Step.sync(() => {
+      const textarea: any = document.querySelector('div[role="dialog"] textarea');
+      textarea.value = content;
+    }));
 
-    const sAssertTextareaContent = (expected) => {
-      return Logger.t('Asserting textarea content is ' + expected, Step.sync(() => {
-        const textarea: any = document.querySelector('div[role="dialog"] textarea');
-        Assert.eq('Should have correct value', expected, textarea.value);
-      }));
-    };
+    const sAssertTextareaContent = (expected) => Logger.t('Asserting textarea content is ' + expected, Step.sync(() => {
+      const textarea: any = document.querySelector('div[role="dialog"] textarea');
+      Assert.eq('Should have correct value', expected, textarea.value);
+    }));
 
-    const sSubmitDialog = (docBody) => {
-      return GeneralSteps.sequence(Logger.ts('Clicking on the Save button to close dialog', [
-        FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
-        Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
-        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector))
-      ]));
-    };
+    const sSubmitDialog = (docBody) => GeneralSteps.sequence(Logger.ts('Clicking on the Save button to close dialog', [
+      FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
+      Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
+      Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector))
+    ]));
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Code: Set content in empty editor and assert values', [

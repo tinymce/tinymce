@@ -50,25 +50,23 @@ const deleteEmptyBlockOrMoveToCef = (root: Node, forward: boolean, from: CaretPo
   });
 };
 
-const findCefPosition = (root: Node, forward: boolean, from: CaretPosition) => {
-  return CaretFinder.fromPosition(forward, root, from).bind(function (to) {
-    if (isCompoundElement(to.getNode())) {
-      return Option.none();
-    } else if (isDeleteFromCefDifferentBlocks(root, forward, from, to)) {
-      return Option.none();
-    } else if (forward && NodeType.isContentEditableFalse(to.getNode())) {
-      return deleteEmptyBlockOrMoveToCef(root, forward, from, to);
-    } else if (forward === false && NodeType.isContentEditableFalse(to.getNode(true))) {
-      return deleteEmptyBlockOrMoveToCef(root, forward, from, to);
-    } else if (forward && isAfterContentEditableFalse(from)) {
-      return Option.some(DeleteAction.moveToPosition(to));
-    } else if (forward === false && isBeforeContentEditableFalse(from)) {
-      return Option.some(DeleteAction.moveToPosition(to));
-    } else {
-      return Option.none();
-    }
-  });
-};
+const findCefPosition = (root: Node, forward: boolean, from: CaretPosition) => CaretFinder.fromPosition(forward, root, from).bind(function (to) {
+  if (isCompoundElement(to.getNode())) {
+    return Option.none();
+  } else if (isDeleteFromCefDifferentBlocks(root, forward, from, to)) {
+    return Option.none();
+  } else if (forward && NodeType.isContentEditableFalse(to.getNode())) {
+    return deleteEmptyBlockOrMoveToCef(root, forward, from, to);
+  } else if (forward === false && NodeType.isContentEditableFalse(to.getNode(true))) {
+    return deleteEmptyBlockOrMoveToCef(root, forward, from, to);
+  } else if (forward && isAfterContentEditableFalse(from)) {
+    return Option.some(DeleteAction.moveToPosition(to));
+  } else if (forward === false && isBeforeContentEditableFalse(from)) {
+    return Option.some(DeleteAction.moveToPosition(to));
+  } else {
+    return Option.none();
+  }
+});
 
 const getContentEditableBlockAction = (forward: boolean, elm: Node) => {
   if (forward && NodeType.isContentEditableFalse(elm.nextSibling)) {
@@ -80,23 +78,21 @@ const getContentEditableBlockAction = (forward: boolean, elm: Node) => {
   }
 };
 
-const skipMoveToActionFromInlineCefToContent = (root: Node, from: CaretPosition, deleteAction) => {
-  return deleteAction.fold(
-    function (elm) {
-      return Option.some(DeleteAction.remove(elm));
-    },
-    function (elm) {
-      return Option.some(DeleteAction.moveToElement(elm));
-    },
-    function (to) {
-      if (CaretUtils.isInSameBlock(from, to, root)) {
-        return Option.none();
-      } else {
-        return Option.some(DeleteAction.moveToPosition(to));
-      }
+const skipMoveToActionFromInlineCefToContent = (root: Node, from: CaretPosition, deleteAction) => deleteAction.fold(
+  function (elm) {
+    return Option.some(DeleteAction.remove(elm));
+  },
+  function (elm) {
+    return Option.some(DeleteAction.moveToElement(elm));
+  },
+  function (to) {
+    if (CaretUtils.isInSameBlock(from, to, root)) {
+      return Option.none();
+    } else {
+      return Option.some(DeleteAction.moveToPosition(to));
     }
-  );
-};
+  }
+);
 
 const getContentEditableAction = (root: Node, forward: boolean, from: CaretPosition) => {
   if (isAtContentEditableBlockCaret(forward, from)) {

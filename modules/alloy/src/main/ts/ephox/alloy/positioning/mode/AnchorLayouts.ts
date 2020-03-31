@@ -6,14 +6,12 @@ import { HasLayoutAnchor } from './Anchoring';
 import { Option } from '@ephox/katamari';
 import { isBottomToTopDir } from './VerticalDir';
 
-const schema: () => FieldProcessorAdt = () => {
-  return FieldSchema.optionObjOf('layouts', [
-    FieldSchema.strict('onLtr'),
-    FieldSchema.strict('onRtl'),
-    FieldSchema.option('onBottomLtr'),
-    FieldSchema.option('onBottomRtl')
-  ]);
-};
+const schema: () => FieldProcessorAdt = () => FieldSchema.optionObjOf('layouts', [
+  FieldSchema.strict('onLtr'),
+  FieldSchema.strict('onRtl'),
+  FieldSchema.option('onBottomLtr'),
+  FieldSchema.option('onBottomRtl')
+]);
 
 const get = (
   elem: Element,

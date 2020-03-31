@@ -18,11 +18,7 @@ const toggleState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi) 
   return () => editor.on('LoadContent SetContent change', toggleDisabledState);
 };
 
-const isToc = (editor: Editor) => {
-  return (elm) => {
-    return elm && editor.dom.is(elm, '.' + Settings.getTocClass(editor)) && editor.getBody().contains(elm);
-  };
-};
+const isToc = (editor: Editor) => (elm) => elm && editor.dom.is(elm, '.' + Settings.getTocClass(editor)) && editor.getBody().contains(elm);
 
 const register = (editor: Editor) => {
   editor.ui.registry.addButton('toc', {

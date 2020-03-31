@@ -21,23 +21,17 @@ const adt: {
   { absolute: [ 'point', 'scrollLeft', 'scrollTop' ] }
 ]);
 
-const toFixed = (pos: CssPositionAdt): Position => {
+const toFixed = (pos: CssPositionAdt): Position =>
   // TODO: Use new ADT methods
-  return pos.fold(
+  pos.fold(
     Fun.identity,
     (point, scrollLeft, scrollTop) => point.translate(-scrollLeft, -scrollTop)
-  );
-};
+  )
+;
 
-const toAbsolute = (pos: CssPositionAdt): Position => {
-  return pos.fold(Fun.identity, Fun.identity);
-};
+const toAbsolute = (pos: CssPositionAdt): Position => pos.fold(Fun.identity, Fun.identity);
 
-const sum = (points: Position[]): Position => {
-  return Arr.foldl(points, (b, a) => {
-    return b.translate(a.left(), a.top());
-  }, Position(0, 0));
-};
+const sum = (points: Position[]): Position => Arr.foldl(points, (b, a) => b.translate(a.left(), a.top()), Position(0, 0));
 
 const sumAsFixed = (positions: CssPositionAdt[]): Position => {
   const points = Arr.map(positions, toFixed);

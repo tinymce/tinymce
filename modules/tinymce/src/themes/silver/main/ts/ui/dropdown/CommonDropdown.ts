@@ -158,9 +158,7 @@ const renderCommonDropdown = <T>(spec: CommonDropdownSpec<T>, prefix: string, sh
         menu: MenuParts.part(false, spec.columns, spec.presets)
       },
 
-      fetch: () => {
-        return Future.nu(spec.fetch);
-      }
+      fetch: () => Future.nu(spec.fetch)
     })
   );
 

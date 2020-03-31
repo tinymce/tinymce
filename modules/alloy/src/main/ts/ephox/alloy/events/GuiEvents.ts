@@ -83,16 +83,14 @@ const setup = (container: Element, rawSettings: { }): { unbind: () => void } => 
       'drop',
       'keyup'
     ]),
-    (type) => {
-      return DomEvent.bind(container, type, (event) => {
-        tapEvent.fireIfReady(event, type).each((tapStopped) => {
-          if (tapStopped) { event.kill(); }
-        });
-
-        const stopped = settings.triggerEvent(type, event);
-        if (stopped) { event.kill(); }
+    (type) => DomEvent.bind(container, type, (event) => {
+      tapEvent.fireIfReady(event, type).each((tapStopped) => {
+        if (tapStopped) { event.kill(); }
       });
-    }
+
+      const stopped = settings.triggerEvent(type, event);
+      if (stopped) { event.kill(); }
+    })
   );
   const pasteTimeout = Cell(Option.none<number>());
   const onPaste = DomEvent.bind(container, 'paste', (event) => {

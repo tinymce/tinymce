@@ -21,6 +21,4 @@ const htmlPanelFields = [
 
 export const htmlPanelSchema = ValueSchema.objOf(htmlPanelFields);
 
-export const createHtmlPanel = (spec: HtmlPanelApi) => {
-  return ValueSchema.asRaw<HtmlPanel>('htmlpanel', htmlPanelSchema, spec);
-};
+export const createHtmlPanel = (spec: HtmlPanelApi) => ValueSchema.asRaw<HtmlPanel>('htmlpanel', htmlPanelSchema, spec);

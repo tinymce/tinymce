@@ -44,11 +44,11 @@ const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number
     return Option.none();
   }
 
-  const findTriggerChIndex = (element: Text, offset: number, text: string) => {
+  const findTriggerChIndex = (element: Text, offset: number, text: string) =>
     // Stop searching by just returning the current offset if whitespace was found (eg Option.none())
     // and we'll handle the final checks below instead
-    return findChar(text, offset, ch).getOr(offset);
-  };
+    findChar(text, offset, ch).getOr(offset)
+  ;
 
   const root = dom.getParent(initRange.startContainer, dom.isBlock) || dom.getRoot();
   return repeatLeft(dom, initRange.startContainer, initRange.startOffset, findTriggerChIndex, root).bind((spot) => {
@@ -73,17 +73,15 @@ const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number
   });
 };
 
-const getContext = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Option<AutocompleteContext> => {
-  return AutocompleteTag.detect(Element.fromDom(initRange.startContainer)).fold(
-    () => findStart(dom, initRange, ch, minChars),
-    (elm) => {
-      const range = dom.createRng();
-      range.selectNode(elm.dom());
-      const text = getText(range);
-      return Option.some({ range, text: stripTriggerChar(text, ch), triggerChar: ch });
-    }
-  );
-};
+const getContext = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Option<AutocompleteContext> => AutocompleteTag.detect(Element.fromDom(initRange.startContainer)).fold(
+  () => findStart(dom, initRange, ch, minChars),
+  (elm) => {
+    const range = dom.createRng();
+    range.selectNode(elm.dom());
+    const text = getText(range);
+    return Option.some({ range, text: stripTriggerChar(text, ch), triggerChar: ch });
+  }
+);
 
 export {
   findChar, // Exposed for testing.

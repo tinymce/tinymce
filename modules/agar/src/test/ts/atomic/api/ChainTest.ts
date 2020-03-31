@@ -228,9 +228,7 @@ UnitTest.asynctest('Chain.predicate true', (success, failure) => {
   Pipeline.async('stepstate', [
     StepAssertions.testStepsPass(
       'stepstate',
-      [ Chain.asStep('chicken', [ Chain.predicate((x) => {
-        return x === 'chicken';
-      }) ]) ]
+      [ Chain.asStep('chicken', [ Chain.predicate((x) => x === 'chicken') ]) ]
     )
   ], () => success(), failure);
 });

@@ -30,27 +30,23 @@ import { renderSizeInput } from '../SizeInput';
 import * as ImageToolsEvents from './ImageToolsEvents';
 
 const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProviders) => {
-  const createButton = (text: string, action: (button: AlloyComponent) => void, disabled: boolean, primary: boolean): Memento.MementoRecord => {
-    return Memento.record(renderButton({
-      name: text,
-      text,
-      disabled,
-      primary,
-      icon: Option.none(),
-      borderless: false
-    }, action, providersBackstage));
-  };
+  const createButton = (text: string, action: (button: AlloyComponent) => void, disabled: boolean, primary: boolean): Memento.MementoRecord => Memento.record(renderButton({
+    name: text,
+    text,
+    disabled,
+    primary,
+    icon: Option.none(),
+    borderless: false
+  }, action, providersBackstage));
 
-  const createIconButton = (icon: string, tooltip: string, action: (button: AlloyComponent) => void, disabled: boolean): Memento.MementoRecord => {
-    return Memento.record(renderIconButton({
-      name: icon,
-      icon: Option.some(icon),
-      tooltip: Option.some(tooltip),
-      disabled,
-      primary: false,
-      borderless: false
-    }, action, providersBackstage));
-  };
+  const createIconButton = (icon: string, tooltip: string, action: (button: AlloyComponent) => void, disabled: boolean): Memento.MementoRecord => Memento.record(renderIconButton({
+    name: icon,
+    icon: Option.some(icon),
+    tooltip: Option.some(tooltip),
+    disabled,
+    primary: false,
+    borderless: false
+  }, action, providersBackstage));
 
   const disableAllComponents = (comps, eventcomp) => {
     comps.map((mem) => {
@@ -115,27 +111,21 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     emitEnable(comp);
   };
 
-  const createBackButton = (): Memento.MementoRecord => {
-    return createButton('Back', (button) => emit(button, ImageToolsEvents.internal.back(), {
-      swap: getBackSwap(button)
-    }), false, false);
-  };
+  const createBackButton = (): Memento.MementoRecord => createButton('Back', (button) => emit(button, ImageToolsEvents.internal.back(), {
+    swap: getBackSwap(button)
+  }), false, false);
 
-  const createSpacer = (): Memento.MementoRecord => {
-    return Memento.record({
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-spacer' ]
-      },
-      behaviours: Behaviour.derive([ Disabling.config({ }) ])
-    });
-  };
+  const createSpacer = (): Memento.MementoRecord => Memento.record({
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-spacer' ]
+    },
+    behaviours: Behaviour.derive([ Disabling.config({ }) ])
+  });
 
-  const createApplyButton = (): Memento.MementoRecord => {
-    return createButton('Apply', (button) => emit(button, ImageToolsEvents.internal.apply(), {
-      swap: getBackSwap(button)
-    }), true, true);
-  };
+  const createApplyButton = (): Memento.MementoRecord => createButton('Apply', (button) => emit(button, ImageToolsEvents.internal.apply(), {
+    swap: getBackSwap(button)
+  }), true, true);
 
   const makeCropTransform = (): ((ir: ImageResult) => Promise<ImageResult>) => (ir: ImageResult): Promise<ImageResult> => {
     const rect = imagePanel.getRect();
@@ -176,9 +166,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     }, providersBackstage)
   );
 
-  const makeResizeTransform = (width: number, height: number): ((ir: ImageResult) => Promise<ImageResult>) => (ir: ImageResult): Promise<ImageResult> => {
-    return ImageTransformations.resize(ir, width, height);
-  };
+  const makeResizeTransform = (width: number, height: number): ((ir: ImageResult) => Promise<ImageResult>) => (ir: ImageResult): Promise<ImageResult> => ImageTransformations.resize(ir, width, height);
 
   const resizePanelComponents = [
     createBackButton(),
@@ -320,13 +308,11 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     return makeSlider(label, onChoose, min, value, max);
   };
 
-  const variableFilterPanelComponents = (label, transform, min, value, max) => {
-    return [
-      createBackButton(),
-      makeVariableSlider(label, transform, min, value, max),
-      createApplyButton()
-    ];
-  };
+  const variableFilterPanelComponents = (label, transform, min, value, max) => [
+    createBackButton(),
+    makeVariableSlider(label, transform, min, value, max),
+    createApplyButton()
+  ];
 
   const createVariableFilterPanel = (label: string, transform: (ir: ImageResult, adjust: number) => Promise<ImageResult>, min: number, value: number, max: number) => {
     const filterPanelComponents = variableFilterPanelComponents(label, transform, min, value, max);
@@ -468,12 +454,10 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
 
   const memContainer = Memento.record(container);
 
-  const getApplyButton = (anyInSystem: AlloyComponent): Option<AlloyComponent> => {
-    return memContainer.getOpt(anyInSystem).map((container) => {
-      const panel = container.components()[0];
-      return panel.components()[panel.components().length - 1];
-    });
-  };
+  const getApplyButton = (anyInSystem: AlloyComponent): Option<AlloyComponent> => memContainer.getOpt(anyInSystem).map((container) => {
+    const panel = container.components()[0];
+    return panel.components()[panel.components().length - 1];
+  });
 
   return {
     memContainer,

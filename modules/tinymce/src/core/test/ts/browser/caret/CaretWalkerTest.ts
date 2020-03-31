@@ -20,9 +20,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
     return viewBlock.get();
   };
 
-  const getChildNode = (childIndex: number) => {
-    return getRoot().childNodes[childIndex];
-  };
+  const getChildNode = (childIndex: number) => getRoot().childNodes[childIndex];
 
   const setupHtml = function (html) {
     viewBlock.update(html);

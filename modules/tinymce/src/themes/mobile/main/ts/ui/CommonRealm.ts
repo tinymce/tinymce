@@ -9,30 +9,26 @@ import { Behaviour, Button, Container, GuiFactory, Replacing, Swapping, AlloyCom
 
 import * as UiDomFactory from '../util/UiDomFactory';
 
-const makeEditSwitch = (webapp): AlloyComponent => {
-  return GuiFactory.build(
-    Button.sketch({
-      dom: UiDomFactory.dom('<div class="${prefix}-mask-edit-icon ${prefix}-icon"></div>'),
-      action() {
-        webapp.run((w) => {
-          w.setReadOnly(false);
-        });
-      }
-    })
-  );
-};
+const makeEditSwitch = (webapp): AlloyComponent => GuiFactory.build(
+  Button.sketch({
+    dom: UiDomFactory.dom('<div class="${prefix}-mask-edit-icon ${prefix}-icon"></div>'),
+    action() {
+      webapp.run((w) => {
+        w.setReadOnly(false);
+      });
+    }
+  })
+);
 
-const makeSocket = (): AlloyComponent => {
-  return GuiFactory.build(
-    Container.sketch({
-      dom: UiDomFactory.dom('<div class="${prefix}-editor-socket"></div>'),
-      components: [],
-      containerBehaviours: Behaviour.derive([
-        Replacing.config({})
-      ])
-    })
-  );
-};
+const makeSocket = (): AlloyComponent => GuiFactory.build(
+  Container.sketch({
+    dom: UiDomFactory.dom('<div class="${prefix}-editor-socket"></div>'),
+    components: [],
+    containerBehaviours: Behaviour.derive([
+      Replacing.config({})
+    ])
+  })
+);
 
 const showEdit = (socket: AlloyComponent, switchToEdit: AlloyComponent): void => {
   Replacing.append(socket, GuiFactory.premade(switchToEdit));

@@ -39,9 +39,7 @@ const set = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleStat
   action(component, toggleConfig, toggleState);
 };
 
-const isOn = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState) => {
-  return toggleState.get();
-};
+const isOn = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState) => toggleState.get();
 
 const onLoad = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState) => {
   // There used to be a bit of code in here that would only overwrite
