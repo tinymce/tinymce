@@ -7,7 +7,6 @@
 
 import { HTMLElement, Node } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
-import { ImageDialogInfo } from '../ui/DialogTypes';
 import { create, defaultData, ImageData, isFigure, read, write } from './ImageData';
 import * as Utils from './Utils';
 
@@ -50,8 +49,8 @@ const readImageDataFromSelection = (editor: Editor): ImageData => {
   return image ? read((css) => normalizeCss(editor, css), image) : defaultData();
 };
 
-const insertImageAtCaret = (editor: Editor, data: ImageData, info: ImageDialogInfo) => {
-  const elm = create((css) => normalizeCss(editor, css), data, info);
+const insertImageAtCaret = (editor: Editor, data: ImageData) => {
+  const elm = create((css) => normalizeCss(editor, css), data);
 
   editor.dom.setAttrib(elm, 'data-mce-id', '__mcenew');
   editor.focus();
@@ -87,10 +86,10 @@ const deleteImage = (editor: Editor, image: HTMLElement) => {
   }
 };
 
-const writeImageDataToSelection = (editor: Editor, data: ImageData, info: ImageDialogInfo) => {
+const writeImageDataToSelection = (editor: Editor, data: ImageData) => {
   const image = getSelectedImage(editor);
 
-  write((css) => normalizeCss(editor, css), data, image, info);
+  write((css) => normalizeCss(editor, css), data, image);
   syncSrcAttr(editor, image);
 
   if (isFigure(image.parentNode)) {
@@ -103,16 +102,19 @@ const writeImageDataToSelection = (editor: Editor, data: ImageData, info: ImageD
   }
 };
 
-const insertOrUpdateImage = (editor: Editor, data: ImageData, info: ImageDialogInfo) => {
+const insertOrUpdateImage = (editor: Editor, partialData: Partial<ImageData>) => {
   const image = getSelectedImage(editor);
   if (image) {
+    const selectedImageData = read((css) => normalizeCss(editor, css), image);
+    const data = { ...selectedImageData, ...partialData };
+
     if (data.src) {
-      writeImageDataToSelection(editor, data, info);
+      writeImageDataToSelection(editor, data);
     } else {
       deleteImage(editor, image);
     }
-  } else if (data.src) {
-    insertImageAtCaret(editor, data, info);
+  } else if (partialData.src) {
+    insertImageAtCaret(editor, { ...defaultData(), ...partialData });
   }
 };
 

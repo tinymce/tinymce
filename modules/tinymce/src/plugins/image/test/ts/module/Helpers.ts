@@ -10,6 +10,7 @@ export type ImageDialogData = {
     value: string;
   };
   alt: string;
+  title: string;
   decorative: boolean;
   dimensions: {
     width: string;
@@ -26,6 +27,7 @@ export type ImageDialogData = {
 
 export const generalTabSelectors = {
   src: 'label.tox-label:contains("Source") + div.tox-form__controls-h-stack div.tox-control-wrap input.tox-textfield',
+  title: 'label.tox-label:contains("Image title") + input.tox-textfield',
   alt: 'label.tox-label:contains("Alternative description") + input.tox-textfield',
   width: 'div.tox-form__controls-h-stack div label:contains("Width") + input.tox-textfield',
   height: 'div.tox-form__controls-h-stack div label:contains("Height") + input.tox-textfield',
@@ -185,6 +187,12 @@ const cAssertInputValue = (selector: string, value: string) => Chain.fromChainsW
   Assertions.cAssertEq(`input value should be ${value}`, value)
 ]);
 
+const cAssertInputCheckbox = (selector: string, expectedState: boolean) => Chain.fromChainsWith(Body.body(), [
+  UiFinder.cFindIn(selector),
+  Chain.mapper((elm: Element<HTMLInputElement>) => elm.dom().checked),
+  Assertions.cAssertEq(`input value should be ${expectedState}`, expectedState)
+]);
+
 const cOpFromChains = (chains: Chain<any, any>[]) => Chain.control(
   // TODO: Another API case.
   Chain.on((value, next, die, logs) => {
@@ -211,5 +219,6 @@ export {
   cSubmitDialog,
   cAssertCleanHtml,
   cAssertInputValue,
+  cAssertInputCheckbox,
   cOpFromChains
 };

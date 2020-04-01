@@ -4,7 +4,6 @@ import { Arr, Obj } from '@ephox/katamari';
 import { Element, Html, Node, SelectorFind } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { create, defaultData, getStyleValue, ImageData, isFigure, isImage, read, write } from 'tinymce/plugins/image/core/ImageData';
-import { ImageDialogInfo } from 'tinymce/plugins/image/ui/DialogTypes';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success, failure) => {
   const cSetHtml = (html: string) => Chain.control(
@@ -25,8 +24,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
     return DOMUtils.DOM.styles.serialize(newCss);
   };
 
-  const cCreate = (data: ImageData, hasAccessibilityOptions: boolean) => Chain.control(
-    Chain.inject(Element.fromDom(create(normalizeCss, data, { hasAccessibilityOptions } as ImageDialogInfo))),
+  const cCreate = (data: ImageData) => Chain.control(
+    Chain.inject(Element.fromDom(create(normalizeCss, data))),
     Guard.addLogging(`Create ${data}`)
   );
   const cReadFromImage = Chain.control(
@@ -39,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
 
   const cWriteToImage = Chain.control(
     Chain.op(function (data: any) {
-      write(normalizeCss, data.model, data.image.dom(), { hasAccessibilityOptions: false } as ImageDialogInfo);
+      write(normalizeCss, data.model, data.image.dom());
     }),
     Guard.addLogging('Write to image')
   );
@@ -99,7 +98,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         border: '4',
         borderStyle: 'dotted',
         isDecorative: false
-      }, false),
+      }),
       cReadFromImage,
       cAssertModel({
         src: 'some.gif',
@@ -154,7 +153,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         border: '',
         borderStyle: '',
         isDecorative: false
-      }, false),
+      }),
       cReadFromImage,
       cAssertModel({
         src: 'some.gif',
@@ -209,7 +208,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         border: '4',
         borderStyle: 'dotted',
         isDecorative: false
-      }, false),
+      }),
       cReadFromImage,
       cAssertModel({
         src: 'some.gif',
@@ -280,7 +279,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         border: '4',
         borderStyle: 'dotted',
         isDecorative: true
-      }, true),
+      }),
       cReadFromImage,
       cAssertModel({
         src: 'some.gif',
@@ -495,6 +494,38 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
                 'margin-bottom': str.is('4px'),
                 'margin-left': str.is('3px'),
                 'margin-right': str.is('3px')
+              }
+            })
+          ]
+        });
+      }))
+    ])),
+    Chain.asStep(Element.fromTag('div'), Log.chains('TBA', 'Image: write null as alt will remove the attribute', [
+      cSetHtml('<img src="some.gif" alt="alt">'),
+      cReadFromImage,
+      cUpdateModel({
+        src: 'some2.gif',
+        alt: null,
+        title: '',
+        width: '',
+        height: '',
+        class: '',
+        style: '',
+        caption: false,
+        hspace: '',
+        vspace: '',
+        border: '',
+        borderStyle: '',
+        isDecorative: false
+      }),
+      cWriteToImage,
+      cAssertStructure(ApproxStructure.build(function (s, str) {
+        return s.element('div', {
+          children: [
+            s.element('img', {
+              attrs: {
+                src: str.is('some2.gif'),
+                alt: str.none('no alt'),
               }
             })
           ]

@@ -13,7 +13,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
 import { getStyleValue, ImageData } from '../core/ImageData';
-import { insertOrUpdateImage, normalizeCss as doNormalizeCss } from '../core/ImageSelection';
+import { normalizeCss as doNormalizeCss } from '../core/ImageSelection';
 import { ListUtils } from '../core/ListUtils';
 import Uploader from '../core/Uploader';
 import * as Utils from '../core/Utils';
@@ -78,9 +78,9 @@ const fromImageData = (image: ImageData): ImageDialogData => ({
   isDecorative: image.isDecorative
 });
 
-const toImageData = (data: ImageDialogData): ImageData => ({
+const toImageData = (data: ImageDialogData, removeEmptyAlt: boolean): ImageData => ({
   src: data.src.value,
-  alt: data.alt,
+  alt: data.alt.length === 0 && removeEmptyAlt ? null : data.alt,
   title: data.title,
   width: data.dimensions.width,
   height: data.dimensions.height,
@@ -258,7 +258,7 @@ const changeStyle = (helpers: Helpers, api: API) => {
 
 const changeAStyle = (helpers: Helpers, info: ImageDialogInfo, api: API) => {
   const data: ImageDialogData = Merger.deepMerge(fromImageData(info.image), api.getData());
-  const style = getStyleValue(helpers.normalizeCss, toImageData(data));
+  const style = getStyleValue(helpers.normalizeCss, toImageData(data, false));
   api.setData({ style });
 };
 
@@ -384,10 +384,7 @@ const makeDialog = (helpers: Helpers) => (info: ImageDialogInfo): Types.Dialog.D
 const submitHandler = (editor: Editor) => (info: ImageDialogInfo) => (api: API) => {
   const data: ImageDialogData = Merger.deepMerge(fromImageData(info.image), api.getData());
 
-  editor.undoManager.transact(() => {
-    insertOrUpdateImage(editor, toImageData(data), info);
-  });
-
+  editor.execCommand('mceUpdateImage', false, toImageData(data, info.hasAccessibilityOptions));
   editor.editorUpload.uploadImagesAuto();
 
   api.close();

@@ -7,7 +7,6 @@ import { ImageData } from 'tinymce/plugins/image/core/ImageData';
 import { insertOrUpdateImage } from 'tinymce/plugins/image/core/ImageSelection';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { ImageDialogInfo } from 'tinymce/plugins/image/ui/DialogTypes';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (success, failure) => {
   Plugin();
@@ -29,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (su
       borderStyle: '',
       isDecorative: false,
       ...data
-    }, { hasAccessibilityOptions: false } as ImageDialogInfo);
+    });
   });
 
   const sWaitForDragHandles = (editor: any): Step<any, any> => Waiter.sTryUntil('wait for draghandles', UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlenw'), 10, 5000);
