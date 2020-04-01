@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.TextDecorationColorTest', function 
 
     type Selection = {startPath: number[], sOffset: number, finishPath: number[], fOffset: number};
 
-    const sMergeForecolorAndTextDecoration = (toolbarLabel: string, textDecoration: string, text: {bText: string, mText: string, aText: string}, selection: Selection) =>
+    const sMergeForecolorAndTextDecoration = (toolbarLabel: string, textDecoration: string) => (text: {bText: string, mText: string, aText: string}, selection: Selection) =>
       Log.stepsAsStep('', `Merge forecolor and ${toolbarLabel} with text: ${text.bText + text.mText + text.aText}`, [
         Log.stepsAsStep('TBA', 'Apply forecolor then text-decoration then unapply them', [
           tinyApis.sSetContent(`<p>${text.bText + text.mText + text.aText}</p>`),
@@ -93,19 +93,22 @@ UnitTest.asynctest('browser.tinymce.core.fmt.TextDecorationColorTest', function 
         ]),
       ]);
 
+    const sMergeForecolorAndUnderline = sMergeForecolorAndTextDecoration('Underline', 'underline');
+    const sMergeForecolorAndStrikethrough = sMergeForecolorAndTextDecoration('Strikethrough', 'line-through');
+
     Pipeline.async({}, [
       // Collapsed selections
-      sMergeForecolorAndTextDecoration('Underline', 'underline', {bText: '', mText: 'abc', aText: ''}, {startPath: [0, 0], sOffset: 1, finishPath: [0, 0], fOffset: 1}),
-      sMergeForecolorAndTextDecoration('Strikethrough', 'line-through', {bText: '', mText: 'abc', aText: ''}, {startPath: [0, 0], sOffset: 1, finishPath: [0, 0], fOffset: 1}),
+      sMergeForecolorAndUnderline({bText: '', mText: 'abc', aText: ''}, {startPath: [0, 0], sOffset: 1, finishPath: [0, 0], fOffset: 1}),
+      sMergeForecolorAndStrikethrough({bText: '', mText: 'abc', aText: ''}, {startPath: [0, 0], sOffset: 1, finishPath: [0, 0], fOffset: 1}),
       // Ranged selections (single word)
-      sMergeForecolorAndTextDecoration('Underline', 'underline', {bText: '', mText: 'abc', aText: ' def'}, {startPath: [0, 0], sOffset: 0, finishPath: [0, 0], fOffset: 'abc'.length}),
-      sMergeForecolorAndTextDecoration('Strikethrough', 'line-through', {bText: '', mText: 'abc', aText: ' def'}, {startPath: [0, 0], sOffset: 0, finishPath: [0, 0], fOffset: 'abc'.length}),
+      sMergeForecolorAndUnderline({bText: '', mText: 'abc', aText: ' def'}, {startPath: [0, 0], sOffset: 0, finishPath: [0, 0], fOffset: 'abc'.length}),
+      sMergeForecolorAndStrikethrough({bText: '', mText: 'abc', aText: ' def'}, {startPath: [0, 0], sOffset: 0, finishPath: [0, 0], fOffset: 'abc'.length}),
       // Ranged selections (part of word)
-      sMergeForecolorAndTextDecoration('Underline', 'underline', {bText: 'a', mText: 'b', aText: 'c def'}, {startPath: [0, 0], sOffset: 1, finishPath: [0, 0], fOffset: 2}),
-      sMergeForecolorAndTextDecoration('Strikethrough', 'line-through', {bText: 'a', mText: 'b', aText: 'c def'}, {startPath: [0, 0], sOffset: 1, finishPath: [0, 0], fOffset: 2}),
+      sMergeForecolorAndUnderline({bText: 'a', mText: 'b', aText: 'c def'}, {startPath: [0, 0], sOffset: 1, finishPath: [0, 0], fOffset: 2}),
+      sMergeForecolorAndStrikethrough({bText: 'a', mText: 'b', aText: 'c def'}, {startPath: [0, 0], sOffset: 1, finishPath: [0, 0], fOffset: 2}),
       // Ranged selections (multiple words)
-      sMergeForecolorAndTextDecoration('Underline', 'underline', {bText: '', mText: 'abc def', aText: ''}, {startPath: [0, 0], sOffset: 0, finishPath: [0, 0], fOffset: 'abc def'.length}),
-      sMergeForecolorAndTextDecoration('Strikethrough', 'line-through', {bText: '', mText: 'abc def', aText: ''}, {startPath: [0, 0], sOffset: 0, finishPath: [0, 0], fOffset: 'abc def'.length}),
+      sMergeForecolorAndUnderline({bText: '', mText: 'abc def', aText: ''}, {startPath: [0, 0], sOffset: 0, finishPath: [0, 0], fOffset: 'abc def'.length}),
+      sMergeForecolorAndStrikethrough({bText: '', mText: 'abc def', aText: ''}, {startPath: [0, 0], sOffset: 0, finishPath: [0, 0], fOffset: 'abc def'.length}),
     ], onSuccess, onFailure);
   }, {
     plugins: '',
