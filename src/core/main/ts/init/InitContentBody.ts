@@ -229,7 +229,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   editor.selection = Selection(editor.dom, editor.getWin(), editor.serializer, editor);
   editor.annotator = Annotator(editor);
   editor.formatter = Formatter(editor);
-  editor.undoManager = UndoManager(editor);
+  editor.undoManager = settings.UndoManager ? new settings.UndoManager(editor) : UndoManager(editor);
   editor._nodeChangeDispatcher = new NodeChange(editor);
   editor._selectionOverrides = SelectionOverrides(editor);
 
