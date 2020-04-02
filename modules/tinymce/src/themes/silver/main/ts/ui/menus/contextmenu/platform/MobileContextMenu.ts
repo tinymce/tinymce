@@ -1,12 +1,4 @@
-import {
-  AlloyComponent,
-  Bubble,
-  InlineView,
-  Layout,
-  LayoutInside,
-  MaxHeight,
-  MaxWidth
-} from '@ephox/alloy';
+import { AlloyComponent, Bubble, InlineView, Layout, LayoutInside, MaxHeight, MaxWidth } from '@ephox/alloy';
 import { MouseEvent, TouchEvent } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
@@ -75,10 +67,7 @@ const isTouchWithinSelection = (editor: Editor, e: EditorEvent<TouchEvent>) => {
   } else {
     const touch = e.touches[0];
     const rng = selection.getRng();
-    const rngRectOpt = WindowSelection.getFirstRect(
-      editor.getWin(),
-      Selection.domRange(rng)
-    );
+    const rngRectOpt = WindowSelection.getFirstRect(editor.getWin(), Selection.domRange(rng));
     return rngRectOpt.exists(
       (rngRect) =>
         rngRect.left() <= touch.clientX &&
@@ -89,14 +78,8 @@ const isTouchWithinSelection = (editor: Editor, e: EditorEvent<TouchEvent>) => {
   }
 };
 
-const getAnchorSpec = (
-  editor: Editor,
-  isTriggeredByKeyboardEvent: boolean,
-  e: EditorEvent<TouchEvent>
-) => {
-  const anchorSpec = isTriggeredByKeyboardEvent
-    ? getNodeAnchor(editor)
-    : getPointAnchor(editor, e);
+const getAnchorSpec = (editor: Editor, isTriggeredByKeyboardEvent: boolean, e: EditorEvent<TouchEvent>) => {
+  const anchorSpec = isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, e);
   return {
     bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
     layouts,
@@ -154,29 +137,27 @@ const show = (
 ) => {
   const anchorSpec = getAnchorSpec(editor, isTriggeredByKeyboardEvent, e);
 
-  NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, true).map(
-    (menuData) => {
-      e.preventDefault();
+  NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, true).map((menuData) => {
+    e.preventDefault();
 
-      // Show the context menu, with items set to close on click
-      InlineView.showMenuWithinBounds(
-        contextmenu,
-        anchorSpec,
-        {
-          menu: {
-            markers: MenuParts.markers('normal'),
-            highlightImmediately
-          },
-          data: menuData,
-          type: 'horizontal'
+    // Show the context menu, with items set to close on click
+    InlineView.showMenuWithinBounds(
+      contextmenu,
+      anchorSpec,
+      {
+        menu: {
+          markers: MenuParts.markers('normal'),
+          highlightImmediately
         },
-        () => Option.some(getContextToolbarBounds(editor))
-      );
+        data: menuData,
+        type: 'horizontal'
+      },
+      () => Option.some(getContextToolbarBounds(editor))
+    );
 
-      // Ensure the context toolbar is hidden
-      editor.fire(hideContextToolbarEvent);
-    }
-  );
+    // Ensure the context toolbar is hidden
+    editor.fire(hideContextToolbarEvent);
+  });
 };
 
 export const initAndShow = (
@@ -193,20 +174,11 @@ export const initAndShow = (
   const isAndroid = detection.os.isAndroid();
   const isTouch = detection.deviceType.isTouch();
 
-  const shouldHighlightImmediately = () =>
-    !(isAndroid || isiOS || (isOSX && isTouch));
+  const shouldHighlightImmediately = () => !(isAndroid || isiOS || (isOSX && isTouch));
 
   const open = () => {
     const items = buildMenu();
-    show(
-      editor,
-      e,
-      items,
-      backstage,
-      contextmenu,
-      isTriggeredByKeyboardEvent,
-      shouldHighlightImmediately()
-    );
+    show(editor, e, items, backstage, contextmenu, isTriggeredByKeyboardEvent, shouldHighlightImmediately());
   };
 
   // On iOS/iPadOS if we've long pressed on a ranged selection then we've already selected the content

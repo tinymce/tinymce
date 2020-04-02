@@ -49,9 +49,7 @@ const t3 = Element.fromText(' things. Like:');
 const t4 = Element.fromText('More data');
 const t5 = Element.fromText('And more data.');
 const t6 = Element.fromText('Nested inside div');
-const t7 = Element.fromText(
-  'Text in a node ancestor of another node with text (t6)'
-);
+const t7 = Element.fromText('Text in a node ancestor of another node with text (t6)');
 
 const ul = Element.fromTag('ul');
 const li = Element.fromTag('li');
@@ -73,24 +71,4 @@ const connect = function () {
   Insert.append(body, container);
 };
 
-export {
-  container,
-  d1,
-  p1,
-  p2,
-  p3,
-  s1,
-  s2,
-  s3,
-  s4,
-  t1,
-  t2,
-  t3,
-  t4,
-  t5,
-  t6,
-  t7,
-  ul,
-  li,
-  connect
-};
+export { container, d1, p1, p2, p3, s1, s2, s3, s4, t1, t2, t3, t4, t5, t6, t7, ul, li, connect };

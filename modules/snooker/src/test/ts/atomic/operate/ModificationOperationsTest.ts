@@ -8,18 +8,14 @@ import { Element } from '@ephox/sugar';
 
 UnitTest.test('ModificationOperationsTest', function () {
   const r = Structs.rowcells;
-  const en = (fakeElement: any, isNew: boolean) =>
-    Structs.elementnew(fakeElement as Element, isNew);
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as Element, isNew);
   const mapToStructGrid = function (grid: Structs.ElementNew[][]) {
     return Arr.map(grid, function (row) {
       return Structs.rowcells(row, 'tbody');
     });
   };
 
-  const assertGrids = function (
-    expected: Structs.RowCells[],
-    actual: Structs.RowCells[]
-  ) {
+  const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowCells[]) {
     assert.eq(expected.length, actual.length);
     Arr.each(expected, function (row, i) {
       Arr.each(row.cells(), function (cell, j) {
@@ -32,12 +28,7 @@ UnitTest.test('ModificationOperationsTest', function () {
 
   // Test basic insert column
   (function () {
-    const check = function (
-      expected: Structs.RowCells[],
-      grid: Structs.RowCells[],
-      example: number,
-      index: number
-    ) {
+    const check = function (expected: Structs.RowCells[], grid: Structs.RowCells[], example: number, index: number) {
       const actual = ModificationOperations.insertColumnAt(
         grid,
         index,
@@ -47,12 +38,7 @@ UnitTest.test('ModificationOperationsTest', function () {
       );
       assertGrids(expected, actual);
     };
-    const checkBody = function (
-      expected: Structs.ElementNew[][],
-      grid: Structs.ElementNew[][],
-      example: number,
-      index: number
-    ) {
+    const checkBody = function (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], example: number, index: number) {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       check(structExpected, structGrid, example, index);
@@ -108,34 +94,22 @@ UnitTest.test('ModificationOperationsTest', function () {
     );
 
     check(
-      [
-        r([en('a', false), en('?_0', true)], 'thead'),
-        r([en('b', false), en('?_1', true)], 'tbody')
-      ],
+      [r([en('a', false), en('?_0', true)], 'thead'), r([en('b', false), en('?_1', true)], 'tbody')],
       [r([en('a', false)], 'thead'), r([en('b', false)], 'tbody')],
       0,
       1
     );
 
     check(
-      [
-        r([en('?_0', true), en('a', false)], 'thead'),
-        r([en('?_1', true), en('b', false)], 'tbody')
-      ],
+      [r([en('?_0', true), en('a', false)], 'thead'), r([en('?_1', true), en('b', false)], 'tbody')],
       [r([en('a', false)], 'thead'), r([en('b', false)], 'tbody')],
       0,
       0
     );
 
     check(
-      [
-        r([en('a', false), en('a', false), en('a', false)], 'thead'),
-        r([en('b', false), en('?_0', true), en('c', false)], 'tbody')
-      ],
-      [
-        r([en('a', false), en('a', false)], 'thead'),
-        r([en('b', false), en('c', false)], 'tbody')
-      ],
+      [r([en('a', false), en('a', false), en('a', false)], 'thead'), r([en('b', false), en('?_0', true), en('c', false)], 'tbody')],
+      [r([en('a', false), en('a', false)], 'thead'), r([en('b', false), en('c', false)], 'tbody')],
       0,
       1
     );
@@ -143,12 +117,7 @@ UnitTest.test('ModificationOperationsTest', function () {
 
   // Test basic insert row
   (function () {
-    const check = function (
-      expected: Structs.RowCells[],
-      grid: Structs.RowCells[],
-      example: number,
-      index: number
-    ) {
+    const check = function (expected: Structs.RowCells[], grid: Structs.RowCells[], example: number, index: number) {
       const actual = ModificationOperations.insertRowAt(
         grid,
         index,
@@ -159,12 +128,7 @@ UnitTest.test('ModificationOperationsTest', function () {
       assertGrids(expected, actual);
     };
 
-    const checkBody = function (
-      expected: Structs.ElementNew[][],
-      grid: Structs.ElementNew[][],
-      example: number,
-      index: number
-    ) {
+    const checkBody = function (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], example: number, index: number) {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       check(structExpected, structGrid, example, index);
@@ -211,10 +175,7 @@ UnitTest.test('ModificationOperationsTest', function () {
         r([en('?_0', true), en('?_1', true), en('?_2', true)], 'thead'),
         r([en('d', false), en('e', false), en('f', false)], 'tbody')
       ],
-      [
-        r([en('a', false), en('b', false), en('c', false)], 'thead'),
-        r([en('d', false), en('e', false), en('f', false)], 'tbody')
-      ],
+      [r([en('a', false), en('b', false), en('c', false)], 'thead'), r([en('d', false), en('e', false), en('f', false)], 'tbody')],
       0,
       1
     );
@@ -225,10 +186,7 @@ UnitTest.test('ModificationOperationsTest', function () {
         r([en('?_0', true), en('?_1', true), en('?_2', true)], 'tbody'),
         r([en('d', false), en('e', false), en('f', false)], 'tbody')
       ],
-      [
-        r([en('a', false), en('b', false), en('c', false)], 'thead'),
-        r([en('d', false), en('e', false), en('f', false)], 'tbody')
-      ],
+      [r([en('a', false), en('b', false), en('c', false)], 'thead'), r([en('d', false), en('e', false), en('f', false)], 'tbody')],
       1,
       1
     );
@@ -236,20 +194,12 @@ UnitTest.test('ModificationOperationsTest', function () {
 
   // Test basic delete column
   (function () {
-    const check = function (
-      expected: Structs.RowCells[],
-      grid: Structs.RowCells[],
-      index: number
-    ) {
+    const check = function (expected: Structs.RowCells[], grid: Structs.RowCells[], index: number) {
       const actual = ModificationOperations.deleteColumnsAt(grid, index, index);
       assertGrids(expected, actual);
     };
 
-    const checkBody = function (
-      expected: Structs.ElementNew[][],
-      grid: Structs.ElementNew[][],
-      index: number
-    ) {
+    const checkBody = function (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       check(structExpected, structGrid, index);
@@ -269,34 +219,20 @@ UnitTest.test('ModificationOperationsTest', function () {
       1
     );
     check(
-      [
-        r([en('a', false), en('b', false)], 'thead'),
-        r([en('c', false), en('c', false)], 'tbody')
-      ],
-      [
-        r([en('a', false), en('b', false), en('b', false)], 'thead'),
-        r([en('c', false), en('c', false), en('c', false)], 'tbody')
-      ],
+      [r([en('a', false), en('b', false)], 'thead'), r([en('c', false), en('c', false)], 'tbody')],
+      [r([en('a', false), en('b', false), en('b', false)], 'thead'), r([en('c', false), en('c', false), en('c', false)], 'tbody')],
       1
     );
   })();
 
   // Test basic delete row
   (function () {
-    const check = function (
-      expected: Structs.RowCells[],
-      grid: Structs.RowCells[],
-      index: number
-    ) {
+    const check = function (expected: Structs.RowCells[], grid: Structs.RowCells[], index: number) {
       const actual = ModificationOperations.deleteRowsAt(grid, index, index);
       assertGrids(expected, actual);
     };
 
-    const checkBody = function (
-      expected: Structs.ElementNew[][],
-      grid: Structs.ElementNew[][],
-      index: number
-    ) {
+    const checkBody = function (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       check(structExpected, structGrid, index);
@@ -318,10 +254,7 @@ UnitTest.test('ModificationOperationsTest', function () {
     );
 
     check(
-      [
-        r([en('a', false), en('b', false), en('b', false)], 'thead'),
-        r([en('c', false), en('c', false), en('c', false)], 'tbody')
-      ],
+      [r([en('a', false), en('b', false), en('b', false)], 'thead'), r([en('c', false), en('c', false), en('c', false)], 'tbody')],
       [
         r([en('a', false), en('b', false), en('b', false)], 'thead'),
         r([en('a', false), en('b', false), en('b', false)], 'tbody'),
@@ -332,12 +265,7 @@ UnitTest.test('ModificationOperationsTest', function () {
   })();
 
   (function () {
-    const check = function (
-      expected: Structs.RowCells[],
-      grid: Structs.RowCells[],
-      exRow: number,
-      exCol: number
-    ) {
+    const check = function (expected: Structs.RowCells[], grid: Structs.RowCells[], exRow: number, exCol: number) {
       const actual = ModificationOperations.splitCellIntoColumns(
         grid,
         exRow,
@@ -348,12 +276,7 @@ UnitTest.test('ModificationOperationsTest', function () {
       assertGrids(expected, actual);
     };
 
-    const checkBody = function (
-      expected: Structs.ElementNew[][],
-      grid: Structs.ElementNew[][],
-      exRow: number,
-      exCol: number
-    ) {
+    const checkBody = function (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], exRow: number, exCol: number) {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       check(structExpected, structGrid, exRow, exCol);
@@ -361,18 +284,8 @@ UnitTest.test('ModificationOperationsTest', function () {
 
     // splitting simple tables without existing colspans
     checkBody([[en('a', false), en('?_0', true)]], [[en('a', false)]], 0, 0);
-    checkBody(
-      [[en('a', false), en('?_0', true), en('b', false)]],
-      [[en('a', false), en('b', false)]],
-      0,
-      0
-    );
-    checkBody(
-      [[en('a', false), en('b', false), en('?_0', true)]],
-      [[en('a', false), en('b', false)]],
-      0,
-      1
-    );
+    checkBody([[en('a', false), en('?_0', true), en('b', false)]], [[en('a', false), en('b', false)]], 0, 0);
+    checkBody([[en('a', false), en('b', false), en('?_0', true)]], [[en('a', false), en('b', false)]], 0, 1);
     checkBody(
       [
         [en('a', false), en('b', false), en('?_0', true)],
@@ -555,18 +468,9 @@ UnitTest.test('ModificationOperationsTest', function () {
     );
     check(
       [
-        r(
-          [en('a', false), en('b', false), en('c', false), en('?_0', true)],
-          'thead'
-        ),
-        r(
-          [en('d', false), en('e', false), en('e', false), en('e', false)],
-          'tbody'
-        ),
-        r(
-          [en('g', false), en('g', false), en('i', false), en('i', false)],
-          'tbody'
-        )
+        r([en('a', false), en('b', false), en('c', false), en('?_0', true)], 'thead'),
+        r([en('d', false), en('e', false), en('e', false), en('e', false)], 'tbody'),
+        r([en('g', false), en('g', false), en('i', false), en('i', false)], 'tbody')
       ],
       [
         r([en('a', false), en('b', false), en('c', false)], 'thead'),
@@ -579,18 +483,9 @@ UnitTest.test('ModificationOperationsTest', function () {
 
     check(
       [
-        r(
-          [en('a', false), en('a', false), en('a', false), en('c', false)],
-          'thead'
-        ),
-        r(
-          [en('a', false), en('a', false), en('a', false), en('a', false)],
-          'tbody'
-        ),
-        r(
-          [en('g', false), en('?_0', true), en('h', false), en('i', false)],
-          'tbody'
-        )
+        r([en('a', false), en('a', false), en('a', false), en('c', false)], 'thead'),
+        r([en('a', false), en('a', false), en('a', false), en('a', false)], 'tbody'),
+        r([en('g', false), en('?_0', true), en('h', false), en('i', false)], 'tbody')
       ],
       [
         r([en('a', false), en('a', false), en('c', false)], 'thead'),
@@ -603,12 +498,7 @@ UnitTest.test('ModificationOperationsTest', function () {
   })();
 
   (function () {
-    const check = function (
-      expected: Structs.RowCells[],
-      grid: Structs.RowCells[],
-      exRow: number,
-      exCol: number
-    ) {
+    const check = function (expected: Structs.RowCells[], grid: Structs.RowCells[], exRow: number, exCol: number) {
       const actual = ModificationOperations.splitCellIntoRows(
         grid,
         exRow,
@@ -619,12 +509,7 @@ UnitTest.test('ModificationOperationsTest', function () {
       assertGrids(expected, actual);
     };
 
-    const checkBody = function (
-      expected: Structs.ElementNew[][],
-      grid: Structs.ElementNew[][],
-      exRow: number,
-      exCol: number
-    ) {
+    const checkBody = function (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], exRow: number, exCol: number) {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       check(structExpected, structGrid, exRow, exCol);
@@ -853,10 +738,7 @@ UnitTest.test('ModificationOperationsTest', function () {
         r([en('a', false), en('?_0', true)], 'thead'),
         r([en('c', false), en('d', false)], 'tbody')
       ],
-      [
-        r([en('a', false), en('b', false)], 'thead'),
-        r([en('c', false), en('d', false)], 'tbody')
-      ],
+      [r([en('a', false), en('b', false)], 'thead'), r([en('c', false), en('d', false)], 'tbody')],
       0,
       1
     );

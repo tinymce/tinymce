@@ -14,15 +14,11 @@ import { Types } from '@ephox/bridge';
 const getClassList = (editor: Editor) => {
   const rowClassList = getCellClassList(editor);
 
-  const classes: Types.SelectBox.ExternalSelectBoxItem[] = Helpers.buildListItems(
-    rowClassList,
-    (item) => {
-      if (item.value) {
-        item.textStyle = () =>
-          editor.formatter.getCssText({ block: 'tr', classes: [item.value] });
-      }
+  const classes: Types.SelectBox.ExternalSelectBoxItem[] = Helpers.buildListItems(rowClassList, (item) => {
+    if (item.value) {
+      item.textStyle = () => editor.formatter.getCssText({ block: 'tr', classes: [item.value] });
     }
-  );
+  });
 
   if (rowClassList.length > 0) {
     return Option.some<Types.Dialog.BodyComponentApi>({

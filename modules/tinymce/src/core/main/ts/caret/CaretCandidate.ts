@@ -22,21 +22,8 @@ const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const isBr = NodeType.isBr;
 const isText = NodeType.isText;
-const isInvalidTextElement = NodeType.matchNodeNames([
-  'script',
-  'style',
-  'textarea'
-]);
-const isAtomicInline = NodeType.matchNodeNames([
-  'img',
-  'input',
-  'textarea',
-  'hr',
-  'iframe',
-  'video',
-  'audio',
-  'object'
-]);
+const isInvalidTextElement = NodeType.matchNodeNames(['script', 'style', 'textarea']);
+const isAtomicInline = NodeType.matchNodeNames(['img', 'input', 'textarea', 'hr', 'iframe', 'video', 'audio', 'object']);
 const isTable = NodeType.matchNodeNames(['table']);
 const isCaretContainer = CaretContainer.isCaretContainer;
 
@@ -53,20 +40,13 @@ const isCaretCandidate = (node: Node): boolean => {
     return true;
   }
 
-  return (
-    isAtomicInline(node) ||
-    isBr(node) ||
-    isTable(node) ||
-    isNonUiContentEditableFalse(node)
-  );
+  return isAtomicInline(node) || isBr(node) || isTable(node) || isNonUiContentEditableFalse(node);
 };
 
 // UI components on IE is marked with contenteditable=false and unselectable=true so lets not handle those as real content editables
-const isUnselectable = (node: Node) =>
-  NodeType.isElement(node) && node.getAttribute('unselectable') === 'true';
+const isUnselectable = (node: Node) => NodeType.isElement(node) && node.getAttribute('unselectable') === 'true';
 
-const isNonUiContentEditableFalse = (node: Node): node is HTMLElement =>
-  isUnselectable(node) === false && isContentEditableFalse(node);
+const isNonUiContentEditableFalse = (node: Node): node is HTMLElement => isUnselectable(node) === false && isContentEditableFalse(node);
 
 const isInEditable = (node: Node, root: Node): boolean => {
   for (node = node.parentNode; node && node !== root; node = node.parentNode) {
@@ -98,9 +78,7 @@ const isAtomicContentEditableFalse = (node: Node): boolean => {
   );
 };
 
-const isAtomic = (node: Node): boolean =>
-  isAtomicInline(node) || isAtomicContentEditableFalse(node);
-const isEditableCaretCandidate = (node: Node, root?: Node) =>
-  isCaretCandidate(node) && isInEditable(node, root);
+const isAtomic = (node: Node): boolean => isAtomicInline(node) || isAtomicContentEditableFalse(node);
+const isEditableCaretCandidate = (node: Node, root?: Node) => isCaretCandidate(node) && isInEditable(node, root);
 
 export { isCaretCandidate, isInEditable, isAtomic, isEditableCaretCandidate };

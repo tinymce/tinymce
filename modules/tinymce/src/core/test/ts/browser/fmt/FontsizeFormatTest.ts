@@ -4,10 +4,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.FontsizeFormatTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.fmt.FontsizeFormatTest', function (success, failure) {
   Theme();
 
   const sAssertMenuItemCount = function (expected, _editor) {
@@ -24,14 +21,8 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontsizeFormatTest', function (
       Pipeline.async(
         {},
         [
-          tinyUi.sClickOnToolbar(
-            'Could not find fontsize select',
-            'button.tox-tbtn.tox-tbtn--select.tox-tbtn--bespoke'
-          ),
-          tinyUi.sWaitForUi(
-            'Menu did not appear',
-            'div.tox-menu.tox-collection.tox-collection--list.tox-selected-menu'
-          ),
+          tinyUi.sClickOnToolbar('Could not find fontsize select', 'button.tox-tbtn.tox-tbtn--select.tox-tbtn--bespoke'),
+          tinyUi.sWaitForUi('Menu did not appear', 'div.tox-menu.tox-collection.tox-collection--list.tox-selected-menu'),
           sAssertMenuItemCount(1, editor)
         ],
         onSuccess,

@@ -14,10 +14,7 @@ interface WeightedList<T extends WeightedItem> {
   total: () => number;
 }
 
-const weighted: <T extends WeightedItem>(
-  list: (T & AccWeightItem)[],
-  total: number
-) => WeightedList<T> = Struct.immutable('list', 'total');
+const weighted: <T extends WeightedItem>(list: (T & AccWeightItem)[], total: number) => WeightedList<T> = Struct.immutable('list', 'total');
 
 const choose = <T extends WeightedItem>(candidates: T[]) => {
   const result = Arr.foldl(

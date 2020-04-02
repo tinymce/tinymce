@@ -1,16 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  FocusTools,
-  Guard,
-  Keyboard,
-  Keys,
-  Logger,
-  Mouse,
-  Pipeline,
-  UiFinder
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, Guard, Keyboard, Keys, Logger, Mouse, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Menu } from '@ephox/bridge';
 import { document } from '@ephox/dom-globals';
@@ -31,8 +19,7 @@ UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
     (editor, onSuccess, onFailure) => {
       const doc = Element.fromDom(document);
 
-      const structColors = (values: string[]) => (s, str, arr) =>
-        Arr.map(values, (v) => structColor(v)(s, str, arr));
+      const structColors = (values: string[]) => (s, str, arr) => Arr.map(values, (v) => structColor(v)(s, str, arr));
 
       const structColor = (value: string) => (s, str, arr) =>
         s.element('div', {
@@ -47,9 +34,7 @@ UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
           FocusTools.cGetFocused,
           Assertions.cAssertStructure(
             'Checking focus is on ' + expected,
-            ApproxStructure.build((s, str, arr) =>
-              structColor(expected)(s, str, arr)
-            )
+            ApproxStructure.build((s, str, arr) => structColor(expected)(s, str, arr))
           )
         ]);
 
@@ -57,16 +42,11 @@ UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
         {},
         Logger.ts('Check structure of color swatch', [
           // Give a visual indication of focus
-          TestHelpers.GuiSetup.mAddStyles(doc, [
-            ':focus { transform: scale(0.8) }'
-          ]),
+          TestHelpers.GuiSetup.mAddStyles(doc, [':focus { transform: scale(0.8) }']),
 
           Mouse.sClickOn(Body.body(), '.tox-split-button__chevron'),
           Chain.asStep(Body.body(), [
-            Chain.control(
-              UiFinder.cFindIn('[role="menu"]'),
-              Guard.tryUntil('Waiting for menu')
-            ),
+            Chain.control(UiFinder.cFindIn('[role="menu"]'), Guard.tryUntil('Waiting for menu')),
             Assertions.cAssertStructure(
               'Checking menu structure for color swatches',
               ApproxStructure.build((s, str, arr) =>
@@ -86,26 +66,18 @@ UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
                         }),
                         s.element('div', {
                           classes: [arr.has('tox-swatches__row')],
-                          children: structColors(['white'])(s, str, arr).concat(
-                            [
-                              s.element('div', {
-                                classes: [
-                                  arr.has('tox-swatch'),
-                                  arr.has('tox-swatch--remove')
-                                ],
-                                children: [s.element('svg', {})]
-                              })
-                            ]
-                          )
+                          children: structColors(['white'])(s, str, arr).concat([
+                            s.element('div', {
+                              classes: [arr.has('tox-swatch'), arr.has('tox-swatch--remove')],
+                              children: [s.element('svg', {})]
+                            })
+                          ])
                         }),
                         s.element('div', {
                           classes: [arr.has('tox-swatches__row')],
                           children: [
                             s.element('button', {
-                              classes: [
-                                arr.has('tox-swatch'),
-                                arr.has('tox-swatches__picker-btn')
-                              ],
+                              classes: [arr.has('tox-swatch'), arr.has('tox-swatches__picker-btn')],
                               children: [s.element('svg', {})]
                             })
                           ]

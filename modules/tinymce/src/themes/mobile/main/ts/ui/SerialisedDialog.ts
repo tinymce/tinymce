@@ -54,11 +54,7 @@ const sketch = function (rawSpec) {
 
   const navigationButton = function (direction, directionName, enabled) {
     return Button.sketch({
-      dom: UiDomFactory.dom(
-        '<span class="${prefix}-icon-' +
-          directionName +
-          ' ${prefix}-icon"></span>'
-      ),
+      dom: UiDomFactory.dom('<span class="${prefix}-icon-' + directionName + ' ${prefix}-icon"></span>'),
       action(button) {
         AlloyTriggers.emitWith(button, navigateEvent, { direction });
       },
@@ -72,39 +68,21 @@ const sketch = function (rawSpec) {
   };
 
   const reposition = function (dialog, message) {
-    SelectorFind.descendant(
-      dialog.element(),
-      '.' + Styles.resolve('serialised-dialog-chain')
-    ).each(function (parent) {
-      Css.set(
-        parent,
-        'left',
-        -spec.state.currentScreen.get() * message.width + 'px'
-      );
+    SelectorFind.descendant(dialog.element(), '.' + Styles.resolve('serialised-dialog-chain')).each(function (parent) {
+      Css.set(parent, 'left', -spec.state.currentScreen.get() * message.width + 'px');
     });
   };
 
   const navigate = function (dialog, direction) {
-    const screens = SelectorFilter.descendants<HTMLElement>(
-      dialog.element(),
-      '.' + Styles.resolve('serialised-dialog-screen')
-    );
-    SelectorFind.descendant(
-      dialog.element(),
-      '.' + Styles.resolve('serialised-dialog-chain')
-    ).each(function (parent) {
-      if (
-        spec.state.currentScreen.get() + direction >= 0 &&
-        spec.state.currentScreen.get() + direction < screens.length
-      ) {
+    const screens = SelectorFilter.descendants<HTMLElement>(dialog.element(), '.' + Styles.resolve('serialised-dialog-screen'));
+    SelectorFind.descendant(dialog.element(), '.' + Styles.resolve('serialised-dialog-chain')).each(function (parent) {
+      if (spec.state.currentScreen.get() + direction >= 0 && spec.state.currentScreen.get() + direction < screens.length) {
         Css.getRaw(parent, 'left').each(function (left) {
           const currentLeft = parseInt(left, 10);
           const w = Width.get(screens[0]);
           Css.set(parent, 'left', currentLeft - direction * w + 'px');
         });
-        spec.state.currentScreen.set(
-          spec.state.currentScreen.get() + direction
-        );
+        spec.state.currentScreen.set(spec.state.currentScreen.get() + direction);
       }
     });
   };
@@ -133,20 +111,14 @@ const sketch = function (rawSpec) {
   const memForm = Memento.record(
     Form.sketch(function (parts) {
       return {
-        dom: UiDomFactory.dom(
-          '<div class="${prefix}-serialised-dialog"></div>'
-        ),
+        dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog"></div>'),
         components: [
           Container.sketch({
-            dom: UiDomFactory.dom(
-              '<div class="${prefix}-serialised-dialog-chain" style="left: 0px; position: absolute;"></div>'
-            ),
+            dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog-chain" style="left: 0px; position: absolute;"></div>'),
             components: Arr.map(spec.fields, function (field, i) {
               return i <= spec.maxFieldIndex
                 ? Container.sketch({
-                    dom: UiDomFactory.dom(
-                      '<div class="${prefix}-serialised-dialog-screen"></div>'
-                    ),
+                    dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog-screen"></div>'),
                     components: [
                       navigationButton(-1, 'previous', i > 0),
                       parts.field(field.name, field.spec),
@@ -190,10 +162,7 @@ const sketch = function (rawSpec) {
 
             AlloyEvents.runOnExecute(spec.onExecute),
 
-            AlloyEvents.run(NativeEvents.transitionend(), function (
-              dialog,
-              simulatedEvent
-            ) {
+            AlloyEvents.run(NativeEvents.transitionend(), function (dialog, simulatedEvent) {
               const event = simulatedEvent.event();
               if (event.raw().propertyName === 'left') {
                 focusInput(dialog);
@@ -221,11 +190,7 @@ const sketch = function (rawSpec) {
     ]),
     components: Arr.bind(spec.fields, function (_f, i) {
       return i <= spec.maxFieldIndex
-        ? [
-            UiDomFactory.spec(
-              '<div class="${prefix}-dot-item ${prefix}-icon-full-dot ${prefix}-icon"></div>'
-            )
-          ]
+        ? [UiDomFactory.spec('<div class="${prefix}-dot-item ${prefix}-icon-full-dot ${prefix}-icon"></div>')]
         : [];
     })
   });
@@ -244,31 +209,18 @@ const sketch = function (rawSpec) {
       }),
 
       AddEventsBehaviour.config(wrapperAdhocEvents, [
-        AlloyEvents.run(NativeEvents.touchstart(), function (
-          _wrapper,
-          simulatedEvent
-        ) {
+        AlloyEvents.run(NativeEvents.touchstart(), function (_wrapper, simulatedEvent) {
           const event = simulatedEvent.event();
-          spec.state.dialogSwipeState.set(
-            SwipingModel.init(event.raw().touches[0].clientX)
-          );
+          spec.state.dialogSwipeState.set(SwipingModel.init(event.raw().touches[0].clientX));
         }),
-        AlloyEvents.run(NativeEvents.touchmove(), function (
-          _wrapper,
-          simulatedEvent
-        ) {
+        AlloyEvents.run(NativeEvents.touchmove(), function (_wrapper, simulatedEvent) {
           const event = simulatedEvent.event();
           spec.state.dialogSwipeState.on(function (state) {
             simulatedEvent.event().prevent();
-            spec.state.dialogSwipeState.set(
-              SwipingModel.move(state, event.raw().touches[0].clientX)
-            );
+            spec.state.dialogSwipeState.set(SwipingModel.move(state, event.raw().touches[0].clientX));
           });
         }),
-        AlloyEvents.run(NativeEvents.touchend(), function (
-          wrapper,
-          _simulatedEvent
-        ) {
+        AlloyEvents.run(NativeEvents.touchend(), function (wrapper, _simulatedEvent) {
           spec.state.dialogSwipeState.on(function (state) {
             const dialog = memForm.get(wrapper);
             // Confusing

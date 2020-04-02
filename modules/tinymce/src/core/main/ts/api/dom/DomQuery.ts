@@ -5,12 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  document,
-  HTMLElementEventMap,
-  Node,
-  Window
-} from '@ephox/dom-globals';
+import { document, HTMLElementEventMap, Node, Window } from '@ephox/dom-globals';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
 import Sizzle from './Sizzle';
 import Tools from '../util/Tools';
@@ -67,14 +62,8 @@ export interface DomQueryConstructor {
   isArray: Tools['isArray'];
 
   // tslint:disable-next-line:no-misused-new
-  new <T extends Node = Node>(
-    selector?: DomQueryInitSelector<T>,
-    context?: Node
-  ): DomQuery;
-  <T extends Node = Node>(
-    selector?: DomQueryInitSelector<T>,
-    context?: Node
-  ): DomQuery;
+  new <T extends Node = Node>(selector?: DomQueryInitSelector<T>, context?: Node): DomQuery;
+  <T extends Node = Node>(selector?: DomQueryInitSelector<T>, context?: Node): DomQuery;
 
   overrideDefaults(callback: Function): DomQueryConstructor;
 
@@ -127,16 +116,10 @@ interface DomQuery<T = Node> extends Iterable<T> {
   last(): this;
   next(selector?: string): this;
   nextUntil(selector: DomQuerySelector<T>, until?: string): this;
-  off<K extends keyof HTMLElementEventMap>(
-    name: K,
-    callback?: EventUtilsCallback<HTMLElementEventMap[K]>
-  ): this;
+  off<K extends keyof HTMLElementEventMap>(name: K, callback?: EventUtilsCallback<HTMLElementEventMap[K]>): this;
   off<U>(name?: string, callback?: EventUtilsCallback<U>): this;
   offset(offset?: {}): {} | this;
-  on<K extends keyof HTMLElementEventMap>(
-    name: K,
-    callback: EventUtilsCallback<HTMLElementEventMap[K]>
-  ): this;
+  on<K extends keyof HTMLElementEventMap>(name: K, callback: EventUtilsCallback<HTMLElementEventMap[K]>): this;
   on<U>(name: string, callback: EventUtilsCallback<U>): this;
   parent(selector?: string): this;
   parents(selector?: string): this;
@@ -234,11 +217,7 @@ const domManipulate = function (targetNodes, sourceItem, callback, reverse?) {
 };
 
 const hasClass = function (node, className) {
-  return (
-    node &&
-    className &&
-    (' ' + node.className + ' ').indexOf(' ' + className + ' ') !== -1
-  );
+  return node && className && (' ' + node.className + ' ').indexOf(' ' + className + ' ') !== -1;
 };
 
 const wrap = function (elements, wrapper, all?) {
@@ -262,14 +241,8 @@ const wrap = function (elements, wrapper, all?) {
   return elements;
 };
 
-const numericCssMap = Tools.makeMap(
-  'fillOpacity fontWeight lineHeight opacity orphans widows zIndex zoom',
-  ' '
-);
-const booleanMap = Tools.makeMap(
-  'checked compact declare defer disabled ismap multiple nohref noshade nowrap readonly selected',
-  ' '
-);
+const numericCssMap = Tools.makeMap('fillOpacity fontWeight lineHeight opacity orphans widows zIndex zoom', ' ');
+const booleanMap = Tools.makeMap('checked compact declare defer disabled ismap multiple nohref noshade nowrap readonly selected', ' ');
 const propFix = {
   for: 'htmlFor',
   class: 'className',
@@ -282,10 +255,7 @@ const cssFix = {
 const attrHooks = {},
   cssHooks = {};
 
-const DomQueryConstructor: any = function <T extends Node = Node>(
-  selector: DomQueryInitSelector<T>,
-  context?
-): DomQuery {
+const DomQueryConstructor: any = function <T extends Node = Node>(selector: DomQueryInitSelector<T>, context?): DomQuery {
   /* eslint new-cap:0 */
   return new DomQuery.fn.init(selector, context);
 };
@@ -310,9 +280,7 @@ const inArray = function (item, array) {
 const whiteSpaceRegExp = /^\s*|\s*$/g;
 
 const trim = function (str) {
-  return str === null || str === undefined
-    ? ''
-    : ('' + str).replace(whiteSpaceRegExp, '');
+  return str === null || str === undefined ? '' : ('' + str).replace(whiteSpaceRegExp, '');
 };
 
 const each = function (obj, callback) {
@@ -432,11 +400,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
     if (isString(selector)) {
       self.selector = selector;
 
-      if (
-        selector.charAt(0) === '<' &&
-        selector.charAt(selector.length - 1) === '>' &&
-        selector.length >= 3
-      ) {
+      if (selector.charAt(0) === '<' && selector.charAt(selector.length - 1) === '>' && selector.length >= 3) {
         match = [null, selector, null];
       } else {
         match = rquickExpr.exec(selector);
@@ -444,8 +408,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
 
       if (match) {
         if (match[1]) {
-          node = createFragment(selector, getElementDocument(context))
-            .firstChild;
+          node = createFragment(selector, getElementDocument(context)).firstChild;
 
           while (node) {
             push.call(self, node);
@@ -687,9 +650,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
 
         if (elm.ownerDocument.defaultView) {
           try {
-            return elm.ownerDocument.defaultView
-              .getComputedStyle(elm, null)
-              .getPropertyValue(dashed(name));
+            return elm.ownerDocument.defaultView.getComputedStyle(elm, null).getPropertyValue(dashed(name));
           } catch (ex) {
             return undefined;
           }
@@ -1038,12 +999,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
           existingClassName = node.className;
 
           if (classState) {
-            node.className = trim(
-              (' ' + existingClassName + ' ').replace(
-                ' ' + className + ' ',
-                ' '
-              )
-            );
+            node.className = trim((' ' + existingClassName + ' ').replace(' ' + className + ' ', ' '));
           } else {
             node.className += existingClassName ? ' ' + className : className;
           }
@@ -1278,14 +1234,8 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
 
         if (elm.getBoundingClientRect) {
           pos = elm.getBoundingClientRect();
-          x =
-            pos.left +
-            (docElm.scrollLeft || doc.body.scrollLeft) -
-            docElm.clientLeft;
-          y =
-            pos.top +
-            (docElm.scrollTop || doc.body.scrollTop) -
-            docElm.clientTop;
+          x = pos.left + (docElm.scrollLeft || doc.body.scrollLeft) - docElm.clientLeft;
+          y = pos.top + (docElm.scrollTop || doc.body.scrollTop) - docElm.clientTop;
         }
       }
 
@@ -1552,12 +1502,7 @@ each(
      * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
      */
     contents(node) {
-      return Tools.toArray(
-        (node.nodeName === 'iframe'
-          ? node.contentDocument || node.contentWindow.document
-          : node
-        ).childNodes
-      );
+      return Tools.toArray((node.nodeName === 'iframe' ? node.contentDocument || node.contentWindow.document : node).childNodes);
     }
   },
   function (name, fn) {

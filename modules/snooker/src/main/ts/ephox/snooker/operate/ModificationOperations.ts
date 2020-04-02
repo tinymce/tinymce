@@ -9,27 +9,14 @@ type Subst = (element: Element, comparator: CompElm) => Element;
 // substitution :: (item, comparator) -> item
 // example is the location of the cursor (the row index)
 // index is the insert position (at - or after - example) (the row index)
-const insertRowAt = function (
-  grid: Structs.RowCells[],
-  index: number,
-  example: number,
-  comparator: CompElm,
-  substitution: Subst
-) {
+const insertRowAt = function (grid: Structs.RowCells[], index: number, example: number, comparator: CompElm, substitution: Subst) {
   const before = grid.slice(0, index);
   const after = grid.slice(index);
 
   const between = GridRow.mapCells(grid[example], function (ex, c) {
     const withinSpan =
-      index > 0 &&
-      index < grid.length &&
-      comparator(
-        GridRow.getCellElement(grid[index - 1], c),
-        GridRow.getCellElement(grid[index], c)
-      );
-    const ret = withinSpan
-      ? GridRow.getCell(grid[index], c)
-      : Structs.elementnew(substitution(ex.element(), comparator), true);
+      index > 0 && index < grid.length && comparator(GridRow.getCellElement(grid[index - 1], c), GridRow.getCellElement(grid[index], c));
+    const ret = withinSpan ? GridRow.getCell(grid[index], c) : Structs.elementnew(substitution(ex.element(), comparator), true);
     return ret;
   });
 
@@ -39,27 +26,15 @@ const insertRowAt = function (
 // substitution :: (item, comparator) -> item
 // example is the location of the cursor (the column index)
 // index is the insert position (at - or after - example) (the column index)
-const insertColumnAt = function (
-  grid: Structs.RowCells[],
-  index: number,
-  example: number,
-  comparator: CompElm,
-  substitution: Subst
-) {
+const insertColumnAt = function (grid: Structs.RowCells[], index: number, example: number, comparator: CompElm, substitution: Subst) {
   return Arr.map(grid, function (row) {
     const withinSpan =
       index > 0 &&
       index < GridRow.cellLength(row) &&
-      comparator(
-        GridRow.getCellElement(row, index - 1),
-        GridRow.getCellElement(row, index)
-      );
+      comparator(GridRow.getCellElement(row, index - 1), GridRow.getCellElement(row, index));
     const sub = withinSpan
       ? GridRow.getCell(row, index)
-      : Structs.elementnew(
-          substitution(GridRow.getCellElement(row, example), comparator),
-          true
-        );
+      : Structs.elementnew(substitution(GridRow.getCellElement(row, example), comparator), true);
     return GridRow.addCell(row, index, sub);
   });
 };
@@ -80,10 +55,7 @@ const splitCellIntoColumns = function (
   return Arr.map(grid, function (row, i) {
     const isTargetCell = i === exampleRow;
     const sub = isTargetCell
-      ? Structs.elementnew(
-          substitution(GridRow.getCellElement(row, exampleCol), comparator),
-          true
-        )
+      ? Structs.elementnew(substitution(GridRow.getCellElement(row, exampleCol), comparator), true)
       : GridRow.getCell(row, exampleCol);
     return GridRow.addCell(row, index, sub);
   });
@@ -107,19 +79,13 @@ const splitCellIntoRows = function (
 
   const between = GridRow.mapCells(grid[exampleRow], function (ex, i) {
     const isTargetCell = i === exampleCol;
-    return isTargetCell
-      ? Structs.elementnew(substitution(ex.element(), comparator), true)
-      : ex;
+    return isTargetCell ? Structs.elementnew(substitution(ex.element(), comparator), true) : ex;
   });
 
   return before.concat([between]).concat(after);
 };
 
-const deleteColumnsAt = function (
-  grid: Structs.RowCells[],
-  start: number,
-  finish: number
-) {
+const deleteColumnsAt = function (grid: Structs.RowCells[], start: number, finish: number) {
   const rows = Arr.map(grid, function (row) {
     const cells = row
       .cells()
@@ -133,19 +99,8 @@ const deleteColumnsAt = function (
   });
 };
 
-const deleteRowsAt = function (
-  grid: Structs.RowCells[],
-  start: number,
-  finish: number
-) {
+const deleteRowsAt = function (grid: Structs.RowCells[], start: number, finish: number) {
   return grid.slice(0, start).concat(grid.slice(finish + 1));
 };
 
-export {
-  insertRowAt,
-  insertColumnAt,
-  splitCellIntoColumns,
-  splitCellIntoRows,
-  deleteRowsAt,
-  deleteColumnsAt
-};
+export { insertRowAt, insertColumnAt, splitCellIntoColumns, splitCellIntoRows, deleteRowsAt, deleteColumnsAt };

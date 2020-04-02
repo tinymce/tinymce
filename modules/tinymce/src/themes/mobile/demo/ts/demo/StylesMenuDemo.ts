@@ -61,14 +61,10 @@ export default function () {
   Attachment.attachSystem(ephoxUi, gui);
 
   const container = GuiFactory.build({
-    dom: UiDomFactory.dom(
-      '<div class="${prefix}-outer-container ${prefix}-fullscreen-maximized"></div>'
-    ),
+    dom: UiDomFactory.dom('<div class="${prefix}-outer-container ${prefix}-fullscreen-maximized"></div>'),
     components: [
       {
-        dom: UiDomFactory.dom(
-          '<div class="${prefix}-dropup" style="height: 500px;"></div>'
-        ),
+        dom: UiDomFactory.dom('<div class="${prefix}-dropup" style="height: 500px;"></div>'),
         components: [menu]
       }
     ]

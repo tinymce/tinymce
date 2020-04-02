@@ -41,9 +41,7 @@ export default function () {
   tinymce.init({
     selector: 'textarea.tiny-text',
     theme: 'silver',
-    toolbar: ['disabled-button', 'icon-button', 'icon-button-toggle']
-      .concat(generatedNames)
-      .join(' '),
+    toolbar: ['disabled-button', 'icon-button', 'icon-button-toggle'].concat(generatedNames).join(' '),
     plugins: [
       'lists', // Required for list functionality (commands),
       'autolink', // Required for turning pasted text into hyperlinks
@@ -54,8 +52,7 @@ export default function () {
       ed.on('skinLoaded', function () {
         // Notification fields for equality: type, text, progressBar, timeout
         ed.notificationManager.open({
-          text:
-            'You will not see this because the mobile theme has no notifications',
+          text: 'You will not see this because the mobile theme has no notifications',
           type: 'info'
         });
       });
@@ -97,9 +94,7 @@ export default function () {
         onAction(comp) {
           DemoState2.toggle();
           comp.setActive(DemoState2.get());
-          console.log(
-            'button with Toggle click - current state is: ' + DemoState2.get()
-          );
+          console.log('button with Toggle click - current state is: ' + DemoState2.get());
         }
       });
 

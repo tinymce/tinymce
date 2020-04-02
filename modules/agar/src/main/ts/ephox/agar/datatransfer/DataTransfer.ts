@@ -1,9 +1,5 @@
 import { Arr, Type, Id, Option } from '@ephox/katamari';
-import {
-  Element as DomElement,
-  DataTransfer,
-  DataTransferItemList
-} from '@ephox/dom-globals';
+import { Element as DomElement, DataTransfer, DataTransferItemList } from '@ephox/dom-globals';
 import { createDataTransferItemList } from './DataTransferItemList';
 import { createFileList } from '../file/FileList';
 import { getData } from './DataTransferItem';
@@ -12,17 +8,7 @@ import { setReadWriteMode, isInProtectedMode, isInReadWriteMode } from './Mode';
 const imageId = Id.generate('image');
 
 const validDropEffects = ['none', 'copy', 'link', 'move'];
-const validEffectAlloweds = [
-  'none',
-  'copy',
-  'copyLink',
-  'copyMove',
-  'link',
-  'linkMove',
-  'move',
-  'all',
-  'uninitialized'
-];
+const validEffectAlloweds = ['none', 'copy', 'copyLink', 'copyMove', 'link', 'linkMove', 'move', 'all', 'uninitialized'];
 
 export interface DragImageData {
   image: DomElement;
@@ -87,19 +73,14 @@ const createDataTransfer = (): DataTransfer => {
         return createFileList([]);
       }
 
-      const files = Arr.bind(Arr.from(items), (item) =>
-        item.kind === 'file' ? [item.getAsFile()] : []
-      );
+      const files = Arr.bind(Arr.from(items), (item) => (item.kind === 'file' ? [item.getAsFile()] : []));
 
       return createFileList(files);
     },
 
     get types() {
       const types = Arr.map(Arr.from(items), (item) => item.type);
-      const hasFiles = Arr.exists(
-        Arr.from(items),
-        (item) => item.kind === 'file'
-      );
+      const hasFiles = Arr.exists(Arr.from(items), (item) => item.kind === 'file');
       return types.concat(hasFiles ? ['Files'] : []);
     },
 
@@ -114,10 +95,7 @@ const createDataTransfer = (): DataTransfer => {
         return '';
       }
 
-      return Arr.find(
-        Arr.from(items),
-        (item) => item.type === normalize(format)
-      )
+      return Arr.find(Arr.from(items), (item) => item.type === normalize(format))
         .bind((item) => getData(item))
         .getOr('');
     },
@@ -136,10 +114,7 @@ const createDataTransfer = (): DataTransfer => {
         const normalizedFormat = normalize(format);
 
         if (Type.isString(normalizedFormat)) {
-          Arr.findIndex(
-            Arr.from(items),
-            (item) => item.type === normalizedFormat
-          ).each((idx) => {
+          Arr.findIndex(Arr.from(items), (item) => item.type === normalizedFormat).each((idx) => {
             items.remove(idx);
           });
         } else {

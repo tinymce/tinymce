@@ -31,19 +31,14 @@ import * as ReadOnly from '../../ReadOnly';
 
 type SelectBoxSpec = Omit<Types.SelectBox.SelectBox, 'type'>;
 
-export const renderSelectBox = (
-  spec: SelectBoxSpec,
-  providersBackstage: UiFactoryBackstageProviders
-): SketchSpec => {
+export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const translatedOptions = Arr.map(spec.items, (item) => ({
     text: providersBackstage.translate(item.text),
     value: item.value
   }));
 
   // DUPE with TextField.
-  const pLabel = spec.label.map((label) =>
-    renderLabel(label, providersBackstage)
-  );
+  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   const pField = AlloyFormField.parts().field({
     // TODO: Alloy should not allow dom changing of an HTML select!

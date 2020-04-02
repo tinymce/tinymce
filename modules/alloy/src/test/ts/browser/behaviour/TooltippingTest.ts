@@ -41,9 +41,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
   GuiSetup.setup(
     (_store, _doc, _body) => {
       const lazySink = (): Result<AlloyComponent, any> =>
-        memSink
-          .getOpt(me)
-          .fold(() => Result.error('Could not find test sink'), Result.value);
+        memSink.getOpt(me).fold(() => Result.error('Could not find test sink'), Result.value);
 
       const makeButton = (name: string): AlloySpec =>
         Container.sketch({
@@ -70,12 +68,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
           tag: 'div',
           classes: ['tooltipping-container']
         },
-        components: [
-          memSink.asSpec(),
-          makeButton('alpha'),
-          makeButton('beta'),
-          makeButton('gamma')
-        ],
+        components: [memSink.asSpec(), makeButton('alpha'), makeButton('beta'), makeButton('gamma')],
         behaviours: Behaviour.derive([
           Keying.config({
             mode: 'flow',
@@ -90,17 +83,11 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
     (doc, _body, gui, component, _store) => {
       const alphaButton = component
         .getSystem()
-        .getByDom(
-          SelectorFind.descendant(component.element(), '.alpha').getOrDie(
-            'Could not find alpha button'
-          )
-        )
+        .getByDom(SelectorFind.descendant(component.element(), '.alpha').getOrDie('Could not find alpha button'))
         .toOption()
         .getOrDie('Could not find alpha button component');
 
-      const sAssertSinkContents = (
-        children: ApproxStructure.Builder<StructAssert[]>
-      ) =>
+      const sAssertSinkContents = (children: ApproxStructure.Builder<StructAssert[]>) =>
         Waiter.sTryUntil(
           'Waiting for tooltip to appear in sink',
           Assertions.sAssertStructure(
@@ -156,11 +143,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
           sAssertSinkHtml('alpha-tooltip'),
           Mouse.sHoverOn(component.element(), 'button:contains("beta-html")'),
           sAssertSinkHtml('beta-tooltip'),
-          FocusTools.sSetFocus(
-            'Focusing beta button',
-            component.element(),
-            'button:contains("beta-html")'
-          ),
+          FocusTools.sSetFocus('Focusing beta button', component.element(), 'button:contains("beta-html")'),
           sAssertSinkHtml('beta-tooltip'),
           Keyboard.sKeydown(doc, Keys.right(), {}),
           sAssertSinkHtml('gamma-tooltip'),
@@ -168,49 +151,23 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
           sAssertSinkHtml('alpha-tooltip')
         ]),
 
-        Logger.ts(
-          'Checking tooltips do not disappear when the tooltip is hovered, but do disappear ' +
-            'when something else is hovered',
-          [
-            Mouse.sHoverOn(
-              component.element(),
-              'button:contains("alpha-html")'
-            ),
-            Waiter.sTryUntil('alpha-tooltip', sAssertSinkHtml('alpha-tooltip')),
-            Mouse.sHoverOn(
-              component.element(),
-              'span:contains("alpha-tooltip")'
-            ),
-            Logger.t(
-              'Hovering the tooltip itself should not dismiss it',
-              Waiter.sTryUntil('tt', sAssertSinkHtml('alpha-tooltip'))
-            ),
-            Chain.asStep({}, [
-              Chain.inject(gui.element()),
-              UiFinder.cFindIn('span:contains("alpha-tooltip")'),
-              Mouse.cMouseOut
-            ]),
-            Logger.t(
-              'Hovering outside the tooltip should dismiss it after delay',
-              Waiter.sTryUntil('emptysing', sAssertEmptySink)
-            )
-          ]
-        ),
+        Logger.ts('Checking tooltips do not disappear when the tooltip is hovered, but do disappear ' + 'when something else is hovered', [
+          Mouse.sHoverOn(component.element(), 'button:contains("alpha-html")'),
+          Waiter.sTryUntil('alpha-tooltip', sAssertSinkHtml('alpha-tooltip')),
+          Mouse.sHoverOn(component.element(), 'span:contains("alpha-tooltip")'),
+          Logger.t('Hovering the tooltip itself should not dismiss it', Waiter.sTryUntil('tt', sAssertSinkHtml('alpha-tooltip'))),
+          Chain.asStep({}, [Chain.inject(gui.element()), UiFinder.cFindIn('span:contains("alpha-tooltip")'), Mouse.cMouseOut]),
+          Logger.t('Hovering outside the tooltip should dismiss it after delay', Waiter.sTryUntil('emptysing', sAssertEmptySink))
+        ]),
 
-        Logger.ts(
-          'Tooltips should not throw errors when the firing button is removed from the dom',
-          [
-            Mouse.sHoverOn(
-              component.element(),
-              'button:contains("alpha-html")'
-            ),
-            Step.sync(() => {
-              Replacing.remove(component, alphaButton);
-            })
-            // NOTE: This won't actual fail is this throws an error to the console :( It's
-            // disconnected from the event queue.
-          ]
-        )
+        Logger.ts('Tooltips should not throw errors when the firing button is removed from the dom', [
+          Mouse.sHoverOn(component.element(), 'button:contains("alpha-html")'),
+          Step.sync(() => {
+            Replacing.remove(component, alphaButton);
+          })
+          // NOTE: This won't actual fail is this throws an error to the console :( It's
+          // disconnected from the event queue.
+        ])
       ]);
     },
     () => {

@@ -1,11 +1,4 @@
-import {
-  Assertions,
-  Chain,
-  Logger,
-  NamedChain,
-  Pipeline,
-  GeneralSteps
-} from '@ephox/agar';
+import { Assertions, Chain, Logger, NamedChain, Pipeline, GeneralSteps } from '@ephox/agar';
 import { Bounds, Boxes } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { window } from '@ephox/dom-globals';
@@ -28,13 +21,8 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
 
   const getBounds = (editor: Editor): TestBounds => {
     const container = Element.fromDom(editor.getContainer());
-    const contentAreaContainer = Element.fromDom(
-      editor.getContentAreaContainer()
-    );
-    const header = SelectorFind.descendant(
-      Body.body(),
-      '.tox-editor-header'
-    ).getOrDie();
+    const contentAreaContainer = Element.fromDom(editor.getContentAreaContainer());
+    const header = SelectorFind.descendant(Body.body(), '.tox-editor-header').getOrDie();
 
     return {
       viewport: Boxes.win(),
@@ -60,10 +48,7 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
     };
   };
 
-  const cScrollRelativeEditorContainer = (
-    relativeTop: boolean,
-    delta: number
-  ) =>
+  const cScrollRelativeEditorContainer = (relativeTop: boolean, delta: number) =>
     Chain.op((editor: Editor) => {
       const editorContainer = Element.fromDom(editor.getContainer());
       editorContainer.dom().scrollIntoView(relativeTop);
@@ -108,13 +93,7 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
             'editor',
             Chain.op((editor: Editor) => editor.focus())
           ),
-          NamedChain.read(
-            'editor',
-            cScrollRelativeEditorContainer(
-              scenario.scroll.relativeTop,
-              scenario.scroll.delta
-            )
-          ),
+          NamedChain.read('editor', cScrollRelativeEditorContainer(scenario.scroll.relativeTop, scenario.scroll.delta)),
           NamedChain.read(
             'editor',
             Chain.op((editor) => {
@@ -151,8 +130,7 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
         'Test Context toolbar bounds with toolbar top',
         GeneralSteps.sequence([
           sTestScenario({
-            label:
-              'Inline(full view): bottom of the header -> Bottom of the viewport',
+            label: 'Inline(full view): bottom of the header -> Bottom of the viewport',
             settings: { inline: true },
             scroll: { relativeTop: true, delta: -10 },
             assertBounds: (bounds: TestBounds) => ({
@@ -163,8 +141,7 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
             })
           }),
           sTestScenario({
-            label:
-              'Distraction Free(full view): Top of the viewport -> Bottom of the viewport',
+            label: 'Distraction Free(full view): Top of the viewport -> Bottom of the viewport',
             settings: { menubar: false, inline: true, toolbar: false },
             scroll: { relativeTop: true, delta: -10 },
             assertBounds: (bounds: TestBounds) => ({
@@ -175,8 +152,7 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
             })
           }),
           sTestScenario({
-            label:
-              'Iframe(full view): Bottom of the header -> Bottom of the editor container',
+            label: 'Iframe(full view): Bottom of the header -> Bottom of the editor container',
             settings: {},
             scroll: { relativeTop: true, delta: -10 },
             assertBounds: (bounds: TestBounds) => ({
@@ -187,8 +163,7 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
             })
           }),
           sTestScenario({
-            label:
-              'Iframe(editor partly in view): Top of viewport -> Bottom of the editor container',
+            label: 'Iframe(editor partly in view): Top of viewport -> Bottom of the editor container',
             settings: { height: 400 },
             scroll: { relativeTop: true, delta: 200 },
             assertBounds: (bounds: TestBounds) => ({
@@ -199,8 +174,7 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
             })
           }),
           sTestScenario({
-            label:
-              'Iframe(editor partly in view): Bottom of viewport -> Top of content area',
+            label: 'Iframe(editor partly in view): Bottom of viewport -> Top of content area',
             settings: { height: 400 },
             scroll: { relativeTop: false, delta: -200 },
             assertBounds: (bounds: TestBounds) => ({
@@ -217,8 +191,7 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
         'Test Context toolbar bounds with toolbar bottom',
         GeneralSteps.sequence([
           sTestScenario({
-            label:
-              'Iframe(full view): Bottom of the header -> Bottom of the editor container',
+            label: 'Iframe(full view): Bottom of the header -> Bottom of the editor container',
             settings: { toolbar_location: 'bottom' },
             scroll: { relativeTop: true, delta: -10 },
             assertBounds: (bounds: TestBounds) => ({
@@ -229,8 +202,7 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
             })
           }),
           sTestScenario({
-            label:
-              'Inline(full view): Top of the viewport -> Top of the header',
+            label: 'Inline(full view): Top of the viewport -> Top of the header',
             settings: { inline: true, toolbar_location: 'bottom' },
             scroll: { relativeTop: true, delta: -10 },
             assertBounds: (bounds: TestBounds) => ({

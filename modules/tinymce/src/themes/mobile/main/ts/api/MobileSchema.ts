@@ -32,14 +32,8 @@ export default ValueSchema.objOf([
     FieldSchema.defaulted('onTapContent', Fun.noop),
     FieldSchema.defaulted('onTouchToolstrip', Fun.noop),
 
-    FieldSchema.defaulted(
-      'onScrollToCursor',
-      Fun.constant({ unbind: Fun.noop })
-    ),
-    FieldSchema.defaulted(
-      'onScrollToElement',
-      Fun.constant({ unbind: Fun.noop })
-    ),
+    FieldSchema.defaulted('onScrollToCursor', Fun.constant({ unbind: Fun.noop })),
+    FieldSchema.defaulted('onScrollToElement', Fun.constant({ unbind: Fun.noop })),
     FieldSchema.defaulted('onToEditing', Fun.constant({ unbind: Fun.noop })),
     FieldSchema.defaulted('onToReading', Fun.constant({ unbind: Fun.noop })),
     FieldSchema.defaulted('onToolbarScrollStart', Fun.identity)

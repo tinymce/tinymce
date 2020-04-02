@@ -11,9 +11,7 @@ import { Selection } from 'ephox/sugar/api/selection/Selection';
 import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
 
 UnitTest.test('Browser Test: SelectionTest', function () {
-  const p1 = Element.fromHtml(
-    '<p>This is the <strong>first</strong> paragraph</p>'
-  );
+  const p1 = Element.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');
   const p2 = Element.fromHtml('<p>This is the <em>second</em> paragraph</p>');
 
   InsertAll.append(Body.body(), [p1, p2]);
@@ -26,27 +24,8 @@ UnitTest.test('Browser Test: SelectionTest', function () {
       },
       function (sel) {
         Obj.each(expected, function (num, tag) {
-          const actual = WindowSelection.findWithin(
-            window,
-            Selection.exact(
-              sel.start(),
-              sel.soffset(),
-              sel.finish(),
-              sel.foffset()
-            ),
-            tag
-          );
-          assert.eq(
-            num,
-            actual.length,
-            'Incorrect number of ' +
-              tag +
-              ' tags.\n' +
-              'Expected: ' +
-              num +
-              ', but was: ' +
-              actual.length
-          );
+          const actual = WindowSelection.findWithin(window, Selection.exact(sel.start(), sel.soffset(), sel.finish(), sel.foffset()), tag);
+          assert.eq(num, actual.length, 'Incorrect number of ' + tag + ' tags.\n' + 'Expected: ' + num + ', but was: ' + actual.length);
           assert.eq(
             true,
             Arr.forall(actual, function (a) {

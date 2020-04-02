@@ -1,64 +1,38 @@
-import {
-  ApproxStructure,
-  Assertions,
-  GeneralSteps,
-  Logger,
-  Pipeline,
-  Step
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import * as InlineFormatDelete from 'tinymce/core/delete/InlineFormatDelete';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (success, failure) {
   Theme();
 
   const sDelete = function (editor) {
     return Step.sync(function () {
       const returnVal = InlineFormatDelete.backspaceDelete(editor, true);
-      Assertions.assertEq(
-        'Should return true since the operation should have done something',
-        true,
-        returnVal
-      );
+      Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
   const sDeleteNoop = function (editor) {
     return Step.sync(function () {
       const returnVal = InlineFormatDelete.backspaceDelete(editor, true);
-      Assertions.assertEq(
-        'Should return false since the operation is a noop',
-        false,
-        returnVal
-      );
+      Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
     });
   };
 
   const sBackspace = function (editor, _forward?) {
     return Step.sync(function () {
       const returnVal = InlineFormatDelete.backspaceDelete(editor, false);
-      Assertions.assertEq(
-        'Should return true since the operation should have done something',
-        true,
-        returnVal
-      );
+      Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
   const sBackspaceNoop = function (editor, _forward?) {
     return Step.sync(function () {
       const returnVal = InlineFormatDelete.backspaceDelete(editor, false);
-      Assertions.assertEq(
-        'Should return false since the operation is a noop',
-        false,
-        returnVal
-      );
+      Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
     });
   };
 
@@ -187,12 +161,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (
                       });
                     })
                   ),
-                  tinyApis.sAssertSelection(
-                    [0, 0, 0, 0, 0],
-                    0,
-                    [0, 0, 0, 0, 0],
-                    0
-                  )
+                  tinyApis.sAssertSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0)
                 ])
               ),
               Logger.t(
@@ -228,12 +197,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (
                       });
                     })
                   ),
-                  tinyApis.sAssertSelection(
-                    [0, 0, 0, 0, 0],
-                    0,
-                    [0, 0, 0, 0, 0],
-                    0
-                  )
+                  tinyApis.sAssertSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0)
                 ])
               ),
               Logger.t(
@@ -257,9 +221,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (
               Logger.t(
                 'Backspace after last character in formatted element with sibling in format parent',
                 GeneralSteps.sequence([
-                  tinyApis.sSetContent(
-                    '<p><ins><strong><em>a</em></strong>b</ins></p>'
-                  ),
+                  tinyApis.sSetContent('<p><ins><strong><em>a</em></strong>b</ins></p>'),
                   tinyApis.sSetCursor([0, 0, 0, 0, 0], 1),
                   sBackspace(editor),
                   tinyApis.sAssertContentStructure(
@@ -279,9 +241,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (
                                       s.element('strong', {
                                         children: [
                                           s.element('em', {
-                                            children: [
-                                              s.text(str.is(Zwsp.ZWSP))
-                                            ]
+                                            children: [s.text(str.is(Zwsp.ZWSP))]
                                           })
                                         ]
                                       })
@@ -296,20 +256,13 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (
                       });
                     })
                   ),
-                  tinyApis.sAssertSelection(
-                    [0, 0, 0, 0, 0, 0],
-                    0,
-                    [0, 0, 0, 0, 0, 0],
-                    0
-                  )
+                  tinyApis.sAssertSelection([0, 0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0, 0], 0)
                 ])
               ),
               Logger.t(
                 'Delete after last character in formatted element with sibling in format parent',
                 GeneralSteps.sequence([
-                  tinyApis.sSetContent(
-                    '<p><ins>a<strong><em>b</em></strong></ins></p>'
-                  ),
+                  tinyApis.sSetContent('<p><ins>a<strong><em>b</em></strong></ins></p>'),
                   tinyApis.sSetCursor([0, 0, 1, 0, 0], 0),
                   sDelete(editor),
                   tinyApis.sAssertContentStructure(
@@ -330,9 +283,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (
                                       s.element('strong', {
                                         children: [
                                           s.element('em', {
-                                            children: [
-                                              s.text(str.is(Zwsp.ZWSP))
-                                            ]
+                                            children: [s.text(str.is(Zwsp.ZWSP))]
                                           })
                                         ]
                                       })
@@ -346,12 +297,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (
                       });
                     })
                   ),
-                  tinyApis.sAssertSelection(
-                    [0, 0, 1, 0, 0, 0],
-                    0,
-                    [0, 0, 1, 0, 0, 0],
-                    0
-                  )
+                  tinyApis.sAssertSelection([0, 0, 1, 0, 0, 0], 0, [0, 0, 1, 0, 0, 0], 0)
                 ])
               )
             ])

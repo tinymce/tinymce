@@ -37,9 +37,7 @@ UnitTest.asynctest('CssReflowTest', function (success, failure) {
     const reflowTest = Element.fromTag('div', iframeDoc);
     Insert.append(Element.fromDom(iframeDoc.body), reflowTest);
     Html.set(reflowTest, '<span class="style">text</span>');
-    const newspan = Traverse.firstChild(reflowTest).getOrDie(
-      'test broke'
-    ) as Element<HTMLSpanElement>;
+    const newspan = Traverse.firstChild(reflowTest).getOrDie('test broke') as Element<HTMLSpanElement>;
     Css.reflow(newspan);
     // TODO: I can't actually make this fail without a reflow, we need a more stressful test. But you get the idea.
     assert.eq('solid', Css.get(newspan, 'border-left-style'));

@@ -45,10 +45,7 @@ const setup = function (editor: Editor) {
           $(elm)
             .find('br')
             .each(function (idx, elm) {
-              elm.parentNode.replaceChild(
-                editor.getDoc().createTextNode('\n'),
-                elm
-              );
+              elm.parentNode.replaceChild(editor.getDoc().createTextNode('\n'), elm);
             });
 
           elm.contentEditable = 'false';

@@ -6,17 +6,13 @@ const getNode = function (container: Element) {
   return SelectorFind.descendant(container, '.me')
     .fold(
       function () {
-        return SelectorFind.descendant(container, '.child').bind(
-          Traverse.firstChild
-        );
+        return SelectorFind.descendant(container, '.child').bind(Traverse.firstChild);
       },
       function (v: Element<DomNode>) {
         return Option.some(v);
       }
     )
-    .getOrDie(
-      'Could not find the descendant ".me" or the first child of the descendant ".child"'
-    );
+    .getOrDie('Could not find the descendant ".me" or the first child of the descendant ".child"');
 };
 
 const run = function (input: string, f: (e: Element) => void) {

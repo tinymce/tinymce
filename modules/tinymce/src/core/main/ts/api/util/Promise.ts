@@ -82,17 +82,10 @@ const promise = function () {
       if (newValue === this) {
         throw new TypeError('A promise cannot be resolved with itself.');
       }
-      if (
-        newValue &&
-        (typeof newValue === 'object' || typeof newValue === 'function')
-      ) {
+      if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
         const then = newValue.then;
         if (typeof then === 'function') {
-          doResolve(
-            bind(then, newValue),
-            bind(resolve, this),
-            bind(reject, this)
-          );
+          doResolve(bind(then, newValue), bind(resolve, this), bind(reject, this));
           return;
         }
       }
@@ -170,9 +163,7 @@ const promise = function () {
   };
 
   Promise.all = function () {
-    const args = Array.prototype.slice.call(
-      arguments.length === 1 && isArray(arguments[0]) ? arguments[0] : arguments
-    );
+    const args = Array.prototype.slice.call(arguments.length === 1 && isArray(arguments[0]) ? arguments[0] : arguments);
 
     return new Promise(function (resolve, reject) {
       if (args.length === 0) {

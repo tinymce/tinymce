@@ -5,14 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  Behaviour,
-  Container,
-  GuiFactory,
-  Replacing,
-  Sliding,
-  AlloyComponent
-} from '@ephox/alloy';
+import { Behaviour, Container, GuiFactory, Replacing, Sliding, AlloyComponent } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
 
 import * as Receivers from '../channels/Receivers';
@@ -64,10 +57,7 @@ const build = (refresh, scrollIntoView): DropUp => {
   );
 
   const appear = (menu, update, component) => {
-    if (
-      Sliding.hasShrunk(dropup) === true &&
-      Sliding.isTransitioning(dropup) === false
-    ) {
+    if (Sliding.hasShrunk(dropup) === true && Sliding.isTransitioning(dropup) === false) {
       window.requestAnimationFrame(() => {
         update(component);
         Replacing.set(dropup, [menu()]);

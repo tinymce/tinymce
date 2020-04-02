@@ -57,8 +57,7 @@ const render = (
   for (let i = 0; i < rows; i++) {
     const tr = tableRow();
     for (let j = 0; j < columns; j++) {
-      const td =
-        i < rowHeaders || j < columnHeaders ? tableHeaderCell() : tableCell();
+      const td = i < rowHeaders || j < columnHeaders ? tableHeaderCell() : tableCell();
       if (j < columnHeaders) {
         Attr.set(td, 'scope', 'row');
       }

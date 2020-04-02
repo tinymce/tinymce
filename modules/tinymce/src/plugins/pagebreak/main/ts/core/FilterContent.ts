@@ -13,13 +13,7 @@ const getPageBreakClass = function () {
 };
 
 const getPlaceholderHtml = function () {
-  return (
-    '<img src="' +
-    Env.transparentSrc +
-    '" class="' +
-    getPageBreakClass() +
-    '" data-mce-resize="false" data-mce-placeholder />'
-  );
+  return '<img src="' + Env.transparentSrc + '" class="' + getPageBreakClass() + '" data-mce-resize="false" data-mce-placeholder />';
 };
 
 const setup = function (editor) {
@@ -33,10 +27,7 @@ const setup = function (editor) {
   );
 
   editor.on('BeforeSetContent', function (e) {
-    e.content = e.content.replace(
-      pageBreakSeparatorRegExp,
-      getPlaceholderHtml()
-    );
+    e.content = e.content.replace(pageBreakSeparatorRegExp, getPlaceholderHtml());
   });
 
   editor.on('PreInit', function () {
@@ -51,10 +42,7 @@ const setup = function (editor) {
         if (className && className.indexOf('mce-pagebreak') !== -1) {
           // Replace parent block node if pagebreak_split_block is enabled
           const parentNode = node.parent;
-          if (
-            editor.schema.getBlockElements()[parentNode.name] &&
-            Settings.shouldSplitBlock(editor)
-          ) {
+          if (editor.schema.getBlockElements()[parentNode.name] && Settings.shouldSplitBlock(editor)) {
             parentNode.type = 3;
             parentNode.value = separatorHtml;
             parentNode.raw = true;

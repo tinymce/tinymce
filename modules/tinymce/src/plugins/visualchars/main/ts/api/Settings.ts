@@ -7,7 +7,6 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const isEnabledByDefault = (editor: Editor) =>
-  editor.getParam('visualchars_default_state', false);
+const isEnabledByDefault = (editor: Editor) => editor.getParam('visualchars_default_state', false);
 
 export { isEnabledByDefault };

@@ -13,8 +13,7 @@ const getText = (node: Node, schema: Schema): string[] => {
   const blockElements: SchemaMap = schema.getBlockElements();
   const shortEndedElements: SchemaMap = schema.getShortEndedElements();
 
-  const isNewline = (node: Node) =>
-    blockElements[node.nodeName] || shortEndedElements[node.nodeName];
+  const isNewline = (node: Node) => blockElements[node.nodeName] || shortEndedElements[node.nodeName];
 
   const textBlocks: string[] = [];
   let txt = '';

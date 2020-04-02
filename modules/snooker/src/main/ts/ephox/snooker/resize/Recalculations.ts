@@ -5,11 +5,7 @@ import { Element } from '@ephox/sugar';
 // Returns the sum of elements of measures in the half-open range [start, end)
 // Measures is in pixels, treated as an array of integers or integers in string format.
 // NOTE: beware of accumulated rounding errors over multiple columns - could result in noticeable table width changes
-const total = function (
-  start: number,
-  end: number,
-  measures: number[]
-): number {
+const total = function (start: number, end: number, measures: number[]): number {
   let r = 0;
   for (let i = start; i < end; i++) {
     r += measures[i] !== undefined ? measures[i] : 0;
@@ -25,10 +21,7 @@ interface CellWidthSpan {
 
 // Returns an array of all cells in warehouse with updated cell-widths, using
 // the array 'widths' of the representative widths of each column of the table 'warehouse'
-const recalculateWidth = function (
-  warehouse: Warehouse,
-  widths: number[]
-): CellWidthSpan[] {
+const recalculateWidth = function (warehouse: Warehouse, widths: number[]): CellWidthSpan[] {
   const all = Warehouse.justCells(warehouse);
 
   return Arr.map(all, function (cell) {

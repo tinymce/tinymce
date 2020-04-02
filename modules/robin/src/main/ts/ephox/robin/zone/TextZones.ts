@@ -18,21 +18,10 @@ const rangeOn = function <E, D>(
   transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>,
   viewport: ZoneViewports<E>
 ) {
-  const ancestor = universe.eq(first, last)
-    ? Option.some(first)
-    : universe.property().parent(first);
+  const ancestor = universe.eq(first, last) ? Option.some(first) : universe.property().parent(first);
   return ancestor.map(function (parent) {
-    const defaultLang = LanguageZones.calculate(universe, parent).getOr(
-      envLang
-    );
-    return ZoneWalker.walk(
-      universe,
-      first,
-      last,
-      defaultLang,
-      transform,
-      viewport
-    );
+    const defaultLang = LanguageZones.calculate(universe, parent).getOr(envLang);
+    return ZoneWalker.walk(universe, first, last, defaultLang, transform, viewport);
   });
 };
 
@@ -58,51 +47,17 @@ const fromBoundedWith = function <E, D>(
   return Zones.fromWalking(universe, groups);
 };
 
-const fromBounded = function <E, D>(
-  universe: Universe<E, D>,
-  left: E,
-  right: E,
-  envLang: string,
-  viewport: ZoneViewports<E>
-) {
-  return fromBoundedWith(
-    universe,
-    left,
-    right,
-    envLang,
-    WordDecision.detail,
-    viewport
-  );
+const fromBounded = function <E, D>(universe: Universe<E, D>, left: E, right: E, envLang: string, viewport: ZoneViewports<E>) {
+  return fromBoundedWith(universe, left, right, envLang, WordDecision.detail, viewport);
 };
 
-const fromRange = function <E, D>(
-  universe: Universe<E, D>,
-  start: E,
-  finish: E,
-  envLang: string,
-  viewport: ZoneViewports<E>
-) {
-  const edges = Clustering.getEdges(
-    universe,
-    start,
-    finish,
-    Fun.constant(false)
-  );
+const fromRange = function <E, D>(universe: Universe<E, D>, start: E, finish: E, envLang: string, viewport: ZoneViewports<E>) {
+  const edges = Clustering.getEdges(universe, start, finish, Fun.constant(false));
   const transform = transformEdges(edges.left, edges.right);
-  return fromBoundedWith(
-    universe,
-    edges.left.item,
-    edges.right.item,
-    envLang,
-    transform,
-    viewport
-  );
+  return fromBoundedWith(universe, edges.left.item, edges.right.item, envLang, transform, viewport);
 };
 
-const transformEdges = function <E>(
-  leftEdge: WordDecisionItem<E>,
-  rightEdge: WordDecisionItem<E>
-) {
+const transformEdges = function <E>(leftEdge: WordDecisionItem<E>, rightEdge: WordDecisionItem<E>) {
   return function <D>(universe: Universe<E, D>, element: E) {
     return universe.eq(element, leftEdge.item)
       ? leftEdge
@@ -112,27 +67,13 @@ const transformEdges = function <E>(
   };
 };
 
-const fromInline = function <E, D>(
-  universe: Universe<E, D>,
-  element: E,
-  envLang: string,
-  viewport: ZoneViewports<E>
-) {
+const fromInline = function <E, D>(universe: Universe<E, D>, element: E, envLang: string, viewport: ZoneViewports<E>) {
   // Create a cluster that branches to the edge of words, and then apply the zones. We will move
   // past language boundaries, because we might need to be retokenizing words post a language
   // change
   const bounded = Clustering.byBoundary(universe, element);
   const transform = transformEdges(bounded.left, bounded.right);
-  return bounded.isEmpty
-    ? empty<E>()
-    : fromBoundedWith(
-        universe,
-        bounded.left.item,
-        bounded.right.item,
-        envLang,
-        transform,
-        viewport
-      );
+  return bounded.isEmpty ? empty<E>() : fromBoundedWith(universe, bounded.left.item, bounded.right.item, envLang, transform, viewport);
 };
 
 const empty = function <E>(): Zones<E> {
@@ -141,11 +82,4 @@ const empty = function <E>(): Zones<E> {
   };
 };
 
-export {
-  fromRange,
-  transformEdges,
-  fromBounded,
-  fromBoundedWith,
-  fromInline,
-  empty
-};
+export { fromRange, transformEdges, fromBounded, fromBoundedWith, fromInline, empty };

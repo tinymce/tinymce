@@ -19,12 +19,7 @@ import Uploader from '../core/Uploader';
 import * as Utils from '../core/Utils';
 import { AdvTab } from './AdvTab';
 import { collect } from './DialogInfo';
-import {
-  API,
-  ImageDialogData,
-  ImageDialogInfo,
-  ListValue
-} from './DialogTypes';
+import { API, ImageDialogData, ImageDialogInfo, ListValue } from './DialogTypes';
 import { MainTab } from './MainTab';
 import { UploadTab } from './UploadTab';
 
@@ -83,10 +78,7 @@ const fromImageData = (image: ImageData): ImageDialogData => ({
   isDecorative: image.isDecorative
 });
 
-const toImageData = (
-  data: ImageDialogData,
-  removeEmptyAlt: boolean
-): ImageData => ({
+const toImageData = (data: ImageDialogData, removeEmptyAlt: boolean): ImageData => ({
   src: data.src.value,
   alt: data.alt.length === 0 && removeEmptyAlt ? null : data.alt,
   title: data.title,
@@ -102,10 +94,7 @@ const toImageData = (
   isDecorative: data.isDecorative
 });
 
-const addPrependUrl2 = (
-  info: ImageDialogInfo,
-  srcURL: string
-): Option<string> => {
+const addPrependUrl2 = (info: ImageDialogInfo, srcURL: string): Option<string> => {
   // Add the prependURL
   if (!/^(?:[a-zA-Z]+:)?\/\//.test(srcURL)) {
     return info.prependURL.bind((prependUrl) => {
@@ -125,11 +114,7 @@ const addPrependUrl = (info: ImageDialogInfo, api: API) => {
   });
 };
 
-const formFillFromMeta2 = (
-  info: ImageDialogInfo,
-  data: ImageDialogData,
-  meta: ImageDialogData['src']['meta']
-): void => {
+const formFillFromMeta2 = (info: ImageDialogInfo, data: ImageDialogData, meta: ImageDialogData['src']['meta']): void => {
   if (info.hasDescription && Type.isString(meta.alt)) {
     data.alt = meta.alt;
   }
@@ -186,12 +171,7 @@ const formFillFromMeta = (info: ImageDialogInfo, api: API) => {
   }
 };
 
-const calculateImageSize = (
-  helpers: Helpers,
-  info: ImageDialogInfo,
-  state: ImageDialogState,
-  api: API
-) => {
+const calculateImageSize = (helpers: Helpers, info: ImageDialogInfo, state: ImageDialogState, api: API) => {
   const data = api.getData();
   const url = data.src.value;
   const meta = data.src.meta || {};
@@ -204,41 +184,25 @@ const calculateImageSize = (
   }
 };
 
-const updateImagesDropdown = (
-  info: ImageDialogInfo,
-  state: ImageDialogState,
-  api: API
-) => {
+const updateImagesDropdown = (info: ImageDialogInfo, state: ImageDialogState, api: API) => {
   const data = api.getData();
   const image = ListUtils.findEntry(info.imageList, data.src.value);
   state.prevImage = image;
   api.setData({ images: image.map((entry) => entry.value).getOr('') });
 };
 
-const changeSrc = (
-  helpers: Helpers,
-  info: ImageDialogInfo,
-  state: ImageDialogState,
-  api: API
-) => {
+const changeSrc = (helpers: Helpers, info: ImageDialogInfo, state: ImageDialogState, api: API) => {
   addPrependUrl(info, api);
   formFillFromMeta(info, api);
   calculateImageSize(helpers, info, state, api);
   updateImagesDropdown(info, state, api);
 };
 
-const changeImages = (
-  helpers: Helpers,
-  info: ImageDialogInfo,
-  state: ImageDialogState,
-  api: API
-) => {
+const changeImages = (helpers: Helpers, info: ImageDialogInfo, state: ImageDialogState, api: API) => {
   const data = api.getData();
   const image = ListUtils.findEntry(info.imageList, data.images);
   image.each((img) => {
-    const updateAlt =
-      data.alt === '' ||
-      state.prevImage.map((image) => image.text === data.alt).getOr(false);
+    const updateAlt = data.alt === '' || state.prevImage.map((image) => image.text === data.alt).getOr(false);
     if (updateAlt) {
       if (img.value === '') {
         api.setData({ src: img, alt: state.prevAlt });
@@ -254,38 +218,21 @@ const changeImages = (
 };
 
 const calcVSpace = (css: StyleMap): string => {
-  const matchingTopBottom =
-    css['margin-top'] &&
-    css['margin-bottom'] &&
-    css['margin-top'] === css['margin-bottom'];
-  return matchingTopBottom
-    ? Utils.removePixelSuffix(String(css['margin-top']))
-    : '';
+  const matchingTopBottom = css['margin-top'] && css['margin-bottom'] && css['margin-top'] === css['margin-bottom'];
+  return matchingTopBottom ? Utils.removePixelSuffix(String(css['margin-top'])) : '';
 };
 
 const calcHSpace = (css: StyleMap): string => {
-  const matchingLeftRight =
-    css['margin-right'] &&
-    css['margin-left'] &&
-    css['margin-right'] === css['margin-left'];
-  return matchingLeftRight
-    ? Utils.removePixelSuffix(String(css['margin-right']))
-    : '';
+  const matchingLeftRight = css['margin-right'] && css['margin-left'] && css['margin-right'] === css['margin-left'];
+  return matchingLeftRight ? Utils.removePixelSuffix(String(css['margin-right'])) : '';
 };
 
-const calcBorderWidth = (css: StyleMap): string =>
-  css['border-width']
-    ? Utils.removePixelSuffix(String(css['border-width']))
-    : '';
+const calcBorderWidth = (css: StyleMap): string => (css['border-width'] ? Utils.removePixelSuffix(String(css['border-width'])) : '');
 
-const calcBorderStyle = (css: StyleMap): string =>
-  css['border-style'] ? String(css['border-style']) : '';
+const calcBorderStyle = (css: StyleMap): string => (css['border-style'] ? String(css['border-style']) : '');
 
-const calcStyle = (
-  parseStyle: Helpers['parseStyle'],
-  serializeStyle: Helpers['serializeStyle'],
-  css: StyleMap
-): string => serializeStyle(parseStyle(serializeStyle(css)));
+const calcStyle = (parseStyle: Helpers['parseStyle'], serializeStyle: Helpers['serializeStyle'], css: StyleMap): string =>
+  serializeStyle(parseStyle(serializeStyle(css)));
 
 const changeStyle2 = (
   parseStyle: Helpers['parseStyle'],
@@ -308,29 +255,17 @@ const changeStyle2 = (
 
 const changeStyle = (helpers: Helpers, api: API) => {
   const data = api.getData();
-  const newData = changeStyle2(
-    helpers.parseStyle,
-    helpers.serializeStyle,
-    data
-  );
+  const newData = changeStyle2(helpers.parseStyle, helpers.serializeStyle, data);
   api.setData(newData);
 };
 
 const changeAStyle = (helpers: Helpers, info: ImageDialogInfo, api: API) => {
-  const data: ImageDialogData = Merger.deepMerge(
-    fromImageData(info.image),
-    api.getData()
-  );
+  const data: ImageDialogData = Merger.deepMerge(fromImageData(info.image), api.getData());
   const style = getStyleValue(helpers.normalizeCss, toImageData(data, false));
   api.setData({ style });
 };
 
-const changeFileInput = (
-  helpers: Helpers,
-  info: ImageDialogInfo,
-  state: ImageDialogState,
-  api: API
-) => {
+const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDialogState, api: API) => {
   const data = api.getData();
   api.block('Uploading image'); // What msg do we pass to the lock?
   Arr.head(data.fileinput).fold(
@@ -381,11 +316,7 @@ const changeFileInput = (
   );
 };
 
-const changeHandler = (
-  helpers: Helpers,
-  info: ImageDialogInfo,
-  state: ImageDialogState
-) => (api: API, evt: ChangeEvent) => {
+const changeHandler = (helpers: Helpers, info: ImageDialogInfo, state: ImageDialogState) => (api: API, evt: ChangeEvent) => {
   if (evt.name === 'src') {
     changeSrc(helpers, info, state, api);
   } else if (evt.name === 'images') {
@@ -394,12 +325,7 @@ const changeHandler = (
     state.prevAlt = api.getData().alt;
   } else if (evt.name === 'style') {
     changeStyle(helpers, api);
-  } else if (
-    evt.name === 'vspace' ||
-    evt.name === 'hspace' ||
-    evt.name === 'border' ||
-    evt.name === 'borderstyle'
-  ) {
+  } else if (evt.name === 'vspace' || evt.name === 'hspace' || evt.name === 'border' || evt.name === 'borderstyle') {
     changeAStyle(helpers, info, api);
   } else if (evt.name === 'fileinput') {
     changeFileInput(helpers, info, state, api);
@@ -423,9 +349,7 @@ const makeDialogBody = (info: ImageDialogInfo) => {
       tabs: Arr.flatten([
         [MainTab.makeTab(info)],
         info.hasAdvTab ? [AdvTab.makeTab(info)] : [],
-        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler)
-          ? [UploadTab.makeTab(info)]
-          : []
+        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [UploadTab.makeTab(info)] : []
       ])
     };
     return tabPanel;
@@ -438,9 +362,7 @@ const makeDialogBody = (info: ImageDialogInfo) => {
   }
 };
 
-const makeDialog = (helpers: Helpers) => (
-  info: ImageDialogInfo
-): Types.Dialog.DialogApi<ImageDialogData> => {
+const makeDialog = (helpers: Helpers) => (info: ImageDialogInfo): Types.Dialog.DialogApi<ImageDialogData> => {
   const state = createState(info);
   return {
     title: 'Insert/Edit Image',
@@ -466,37 +388,22 @@ const makeDialog = (helpers: Helpers) => (
   };
 };
 
-const submitHandler = (editor: Editor) => (info: ImageDialogInfo) => (
-  api: API
-) => {
-  const data: ImageDialogData = Merger.deepMerge(
-    fromImageData(info.image),
-    api.getData()
-  );
+const submitHandler = (editor: Editor) => (info: ImageDialogInfo) => (api: API) => {
+  const data: ImageDialogData = Merger.deepMerge(fromImageData(info.image), api.getData());
 
-  editor.execCommand(
-    'mceUpdateImage',
-    false,
-    toImageData(data, info.hasAccessibilityOptions)
-  );
+  editor.execCommand('mceUpdateImage', false, toImageData(data, info.hasAccessibilityOptions));
   editor.editorUpload.uploadImagesAuto();
 
   api.close();
 };
 
 const imageSize = (editor: Editor) => (url: string): Promise<Size> =>
-  Utils.getImageSize(editor.documentBaseURI.toAbsolute(url)).then(
-    (dimensions) => ({
-      width: String(dimensions.width),
-      height: String(dimensions.height)
-    })
-  );
+  Utils.getImageSize(editor.documentBaseURI.toAbsolute(url)).then((dimensions) => ({
+    width: String(dimensions.width),
+    height: String(dimensions.height)
+  }));
 
-const createBlobCache = (editor: Editor) => (
-  file: File,
-  blobUri: string,
-  dataUrl: string
-): BlobInfo =>
+const createBlobCache = (editor: Editor) => (file: File, blobUri: string, dataUrl: string): BlobInfo =>
   editor.editorUpload.blobCache.create({
     blob: file,
     blobUri,
@@ -513,16 +420,11 @@ const alertErr = (editor: Editor) => (api: API, message: string) => {
   editor.windowManager.alert(message, api.close);
 };
 
-const normalizeCss = (editor: Editor) => (cssText: string) =>
-  doNormalizeCss(editor, cssText);
+const normalizeCss = (editor: Editor) => (cssText: string) => doNormalizeCss(editor, cssText);
 
-const parseStyle = (editor: Editor) => (cssText: string): StyleMap =>
-  editor.dom.parseStyle(cssText);
+const parseStyle = (editor: Editor) => (cssText: string): StyleMap => editor.dom.parseStyle(cssText);
 
-const serializeStyle = (editor: Editor) => (
-  stylesArg: StyleMap,
-  name?: string
-): string => editor.dom.serializeStyle(stylesArg, name);
+const serializeStyle = (editor: Editor) => (stylesArg: StyleMap, name?: string): string => editor.dom.serializeStyle(stylesArg, name);
 
 export const Dialog = (editor: Editor) => {
   const helpers: Helpers = {

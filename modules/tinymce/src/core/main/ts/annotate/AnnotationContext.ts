@@ -26,12 +26,7 @@ const isZeroWidth = (elem): boolean =>
   // TODO: I believe this is the same cursor used in tinymce (Unicode.zeroWidth)?
   Node.isText(elem) && Text.get(elem) === Unicode.zeroWidth;
 
-const context = (
-  editor: Editor,
-  elem: any,
-  wrapName: string,
-  nodeName: string
-): ChildContext =>
+const context = (editor: Editor, elem: any, wrapName: string, nodeName: string): ChildContext =>
   Traverse.parent(elem).fold(
     () => ChildContext.Skipping,
 
@@ -44,10 +39,7 @@ const context = (
         return ChildContext.Existing;
       } else if (isCaretNode(elem)) {
         return ChildContext.Caret;
-      } else if (
-        !FormatUtils.isValid(editor, wrapName, nodeName) ||
-        !FormatUtils.isValid(editor, Node.name(parent), wrapName)
-      ) {
+      } else if (!FormatUtils.isValid(editor, wrapName, nodeName) || !FormatUtils.isValid(editor, Node.name(parent), wrapName)) {
         return ChildContext.InvalidChild;
       } else {
         return ChildContext.Valid;

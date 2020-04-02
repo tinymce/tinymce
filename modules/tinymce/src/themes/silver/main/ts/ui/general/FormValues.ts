@@ -6,25 +6,14 @@
  */
 
 import { Form, Invalidating, Representing } from '@ephox/alloy';
-import {
-  Arr,
-  Future,
-  Futures,
-  Merger,
-  Obj,
-  Option,
-  Result,
-  Results
-} from '@ephox/katamari';
+import { Arr, Future, Futures, Merger, Obj, Option, Result, Results } from '@ephox/katamari';
 
 export interface FormValidator {
   value: string | number;
   text: string;
 }
 
-const toValidValues = function <T>(values: {
-  [key: string]: Option<T[keyof T]>;
-}) {
+const toValidValues = function <T>(values: { [key: string]: Option<T[keyof T]> }) {
   const errors: string[] = [];
   const result: { [key: string]: T[keyof T] } = {};
 
@@ -59,8 +48,7 @@ interface ValueHolder {
   text: any;
 }
 
-const isValueHolder = (v: any): v is ValueHolder =>
-  Obj.hasNonNullableKey(v, 'value') && Obj.hasNonNullableKey(v, 'text');
+const isValueHolder = (v: any): v is ValueHolder => Obj.hasNonNullableKey(v, 'value') && Obj.hasNonNullableKey(v, 'text');
 
 const extract = <T>(form) => {
   // FIX: May hit race conditions here is the validation is ongoing and I fire
@@ -78,17 +66,11 @@ const extract = <T>(form) => {
     },
     function (vs) {
       const keys: string[] = Obj.keys(vs);
-      const validations: Array<Future<
-        Result<any, { field: any; message: string }>
-      >> = Arr.map(keys, function (key: string) {
+      const validations: Array<Future<Result<any, { field: any; message: string }>>> = Arr.map(keys, function (key: string) {
         // TODO: This should be fine because we just got the value.
-        const field = Form.getField(form, key).getOrDie(
-          'Could not find field: ' + key
-        );
+        const field = Form.getField(form, key).getOrDie('Could not find field: ' + key);
         // TODO: check this refactored line if it breaks.
-        return field.hasConfigured(Invalidating)
-          ? Invalidating.run(field).map(Result.value)
-          : Future.pure(Result.value(true));
+        return field.hasConfigured(Invalidating) ? Invalidating.run(field).map(Result.value) : Future.pure(Result.value(true));
       });
 
       return Futures.par(validations).map(function (answers) {

@@ -1,14 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import {
-  Class,
-  Element,
-  Html,
-  Insert,
-  InsertAll,
-  Remove,
-  SelectorFind,
-  Traverse
-} from '@ephox/sugar';
+import { Class, Element, Html, Insert, InsertAll, Remove, SelectorFind, Traverse } from '@ephox/sugar';
 import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
 
 UnitTest.test('DomWrappingTest', function () {
@@ -76,13 +67,7 @@ UnitTest.test('DomWrappingTest', function () {
     0,
     [0, 2, 0],
     4,
-    [
-      s('span', [
-        t('this is'),
-        Element.fromTag('br'),
-        s('span', [t(' athens!')])
-      ])
-    ],
+    [s('span', [t('this is'), Element.fromTag('br'), s('span', [t(' athens!')])])],
     '<span>this is<br><span> athens!</span></span>'
   );
 
@@ -92,16 +77,7 @@ UnitTest.test('DomWrappingTest', function () {
     2,
     [1, 0],
     2,
-    [
-      s('p', [
-        s('span', [
-          t('this is'),
-          Element.fromTag('br'),
-          s('span', [t(' athens!')])
-        ])
-      ]),
-      s('p', [t('More')])
-    ],
+    [s('p', [s('span', [t('this is'), Element.fromTag('br'), s('span', [t(' athens!')])])]), s('p', [t('More')])],
     '<p><span>this is<br><span> athens!</span></span></p><p>More</p>'
   );
 

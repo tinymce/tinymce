@@ -17,11 +17,7 @@ const MAX_RETRIES = 20;
 
 const platform = PlatformDetection.detect();
 
-const findSpot = function (
-  bridge: WindowBridge,
-  isRoot: (e: Element) => boolean,
-  direction: KeyDirection
-) {
+const findSpot = function (bridge: WindowBridge, isRoot: (e: Element) => boolean, direction: KeyDirection) {
   return bridge.getSelection().bind(function (sel) {
     return BrTags.tryBr(isRoot, sel.finish(), sel.foffset(), direction).fold(
       function () {
@@ -56,20 +52,10 @@ const scan = function (
     return Option.none();
   }
   // Firstly, move the (x, y) and see what element we end up on.
-  return tryCursor(bridge, isRoot, element, offset, direction).bind(function (
-    situs
-  ) {
+  return tryCursor(bridge, isRoot, element, offset, direction).bind(function (situs) {
     const range = bridge.fromSitus(situs);
     // Now, check to see if the element is a new cell.
-    const analysis = BeforeAfter.verify(
-      bridge,
-      element,
-      offset,
-      range.finish(),
-      range.foffset(),
-      direction.failure,
-      isRoot
-    );
+    const analysis = BeforeAfter.verify(bridge, element, offset, range.finish(), range.foffset(), direction.failure, isRoot);
     return BeforeAfter.cata(
       analysis,
       function () {
@@ -93,14 +79,7 @@ const scan = function (
           return tryAgain(bridge, element, offset, Carets.moveDown, direction);
         } else {
           // We need to look again from the end of our current cell
-          return scan(
-            bridge,
-            isRoot,
-            cell,
-            Awareness.getEnd(cell),
-            direction,
-            numRetries - 1
-          );
+          return scan(bridge, isRoot, cell, Awareness.getEnd(cell), direction, numRetries - 1);
         }
       }
     );
@@ -119,18 +98,9 @@ const tryAgain = function (
   });
 };
 
-const tryAt = function (
-  bridge: WindowBridge,
-  direction: KeyDirection,
-  box: Carets
-) {
+const tryAt = function (bridge: WindowBridge, direction: KeyDirection, box: Carets) {
   // NOTE: As we attempt to take over selection everywhere, we'll probably need to separate these again.
-  if (
-    platform.browser.isChrome() ||
-    platform.browser.isSafari() ||
-    platform.browser.isFirefox() ||
-    platform.browser.isEdge()
-  ) {
+  if (platform.browser.isChrome() || platform.browser.isSafari() || platform.browser.isFirefox() || platform.browser.isEdge()) {
     return direction.otherRetry(bridge, box);
   } else if (platform.browser.isIE()) {
     return direction.ieRetry(bridge, box);
@@ -151,21 +121,10 @@ const tryCursor = function (
   });
 };
 
-const handle = function (
-  bridge: WindowBridge,
-  isRoot: (e: Element) => boolean,
-  direction: KeyDirection
-) {
+const handle = function (bridge: WindowBridge, isRoot: (e: Element) => boolean, direction: KeyDirection) {
   return findSpot(bridge, isRoot, direction).bind(function (spot) {
     // There is a point to start doing box-hitting from
-    return scan(
-      bridge,
-      isRoot,
-      spot.element(),
-      spot.offset(),
-      direction,
-      MAX_RETRIES
-    ).map(bridge.fromSitus);
+    return scan(bridge, isRoot, spot.element(), spot.offset(), direction, MAX_RETRIES).map(bridge.fromSitus);
   });
 };
 

@@ -51,16 +51,9 @@ tinymce.init({
   // imagetools_cors_hosts: ['localhost', 'moxiecode.cachefly.net'],
   // imagetools_credentials_hosts: ['localhost'],
   // rtl_ui: true,
-  toolbar:
-    'editimage undo redo | styleselect | alignleft aligncenter alignright alignjustify | link image | media | emoticons',
+  toolbar: 'editimage undo redo | styleselect | alignleft aligncenter alignright alignjustify | link image | media | emoticons',
   images_upload_handler(data, success, failure, progress) {
-    console.log(
-      'blob upload [started]',
-      'id:',
-      data.id(),
-      'filename:',
-      data.filename()
-    );
+    console.log('blob upload [started]', 'id:', data.id(), 'filename:', data.filename());
     progress(0);
 
     Delay.setTimeout(function () {

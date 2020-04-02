@@ -8,9 +8,7 @@ const left = function (): Direction {
   };
 
   const first = function <E>(children: E[]): Option<E> {
-    return children.length > 0
-      ? Option.some(children[children.length - 1])
-      : Option.none();
+    return children.length > 0 ? Option.some(children[children.length - 1]) : Option.none();
   };
 
   return {

@@ -28,24 +28,15 @@ const setup = function (editor: Editor) {
 
     // Set allowFullscreen attribs as boolean
     const boolAttrs = editor.schema.getBoolAttrs();
-    Tools.each(
-      'webkitallowfullscreen mozallowfullscreen allowfullscreen'.split(' '),
-      function (name) {
-        boolAttrs[name] = {};
-      }
-    );
+    Tools.each('webkitallowfullscreen mozallowfullscreen allowfullscreen'.split(' '), function (name) {
+      boolAttrs[name] = {};
+    });
 
     // Converts iframe, video etc into placeholder images
-    editor.parser.addNodeFilter(
-      'iframe,video,audio,object,embed,script',
-      Nodes.placeHolderConverter(editor)
-    );
+    editor.parser.addNodeFilter('iframe,video,audio,object,embed,script', Nodes.placeHolderConverter(editor));
 
     // Replaces placeholder images with real elements for video, object, iframe etc
-    editor.serializer.addAttributeFilter('data-mce-object', function (
-      nodes,
-      name
-    ) {
+    editor.serializer.addAttributeFilter('data-mce-object', function (nodes, name) {
       let i = nodes.length;
       let node;
       let realElm;

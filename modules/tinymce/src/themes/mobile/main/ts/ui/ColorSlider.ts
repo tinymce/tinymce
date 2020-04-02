@@ -42,29 +42,19 @@ const makeSlider = (spec): SketchSpec => {
   };
 
   return Slider.sketch({
-    dom: UiDomFactory.dom(
-      '<div class="${prefix}-slider ${prefix}-hue-slider-container"></div>'
-    ),
+    dom: UiDomFactory.dom('<div class="${prefix}-slider ${prefix}-hue-slider-container"></div>'),
     components: [
-      Slider.parts()['left-edge'](
-        UiDomFactory.spec('<div class="${prefix}-hue-slider-black"></div>')
-      ),
+      Slider.parts()['left-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-black"></div>')),
       Slider.parts().spectrum({
-        dom: UiDomFactory.dom(
-          '<div class="${prefix}-slider-gradient-container"></div>'
-        ),
-        components: [
-          UiDomFactory.spec('<div class="${prefix}-slider-gradient"></div>')
-        ],
+        dom: UiDomFactory.dom('<div class="${prefix}-slider-gradient-container"></div>'),
+        components: [UiDomFactory.spec('<div class="${prefix}-slider-gradient"></div>')],
         behaviours: Behaviour.derive([
           Toggling.config({
             toggleClass: Styles.resolve('thumb-active')
           })
         ])
       }),
-      Slider.parts()['right-edge'](
-        UiDomFactory.spec('<div class="${prefix}-hue-slider-white"></div>')
-      ),
+      Slider.parts()['right-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-white"></div>')),
       Slider.parts().thumb({
         dom: UiDomFactory.dom('<div class="${prefix}-slider-thumb"></div>'),
         behaviours: Behaviour.derive([
@@ -113,12 +103,7 @@ const sketch = (realm: MobileRealm, editor: Editor) => {
     }
   };
 
-  return ToolbarWidgets.button(
-    realm,
-    'color-levels',
-    () => makeItems(spec),
-    editor
-  );
+  return ToolbarWidgets.button(realm, 'color-levels', () => makeItems(spec), editor);
 };
 
 export { makeItems, sketch };

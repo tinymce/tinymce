@@ -1,11 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Pipeline,
-  Waiter,
-  Logger,
-  Log
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Pipeline, Waiter, Logger, Log } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
@@ -23,12 +16,7 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
 
     return Logger.t(
       `Test html data ${expected}`,
-      Waiter.sTryUntil(
-        'Wait for structure check',
-        Assertions.sAssertStructure('Assert equal', expected, actual),
-        10,
-        500
-      )
+      Waiter.sTryUntil('Wait for structure check', Assertions.sAssertStructure('Assert equal', expected, actual), 10, 500)
     );
   };
 
@@ -63,34 +51,30 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
 
       Pipeline.async(
         {},
-        Log.steps(
-          'TBA',
-          'Media: Assert html structure of the video and iframe elements',
-          [
-            sTestDataToHtml(
-              editor,
-              {
-                'type': 'video',
-                'source': 'a',
-                'altsource': '',
-                'poster': '',
-                'data-ephox-embed': 'a'
-              },
-              videoStruct
-            ),
-            sTestDataToHtml(
-              editor,
-              {
-                'type': 'iframe',
-                'source': 'a',
-                'altsource': '',
-                'poster': '',
-                'data-ephox-embed': 'a'
-              },
-              iframeStruct
-            )
-          ]
-        ),
+        Log.steps('TBA', 'Media: Assert html structure of the video and iframe elements', [
+          sTestDataToHtml(
+            editor,
+            {
+              'type': 'video',
+              'source': 'a',
+              'altsource': '',
+              'poster': '',
+              'data-ephox-embed': 'a'
+            },
+            videoStruct
+          ),
+          sTestDataToHtml(
+            editor,
+            {
+              'type': 'iframe',
+              'source': 'a',
+              'altsource': '',
+              'poster': '',
+              'data-ephox-embed': 'a'
+            },
+            iframeStruct
+          )
+        ]),
         onSuccess,
         onFailure
       );

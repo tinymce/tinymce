@@ -33,20 +33,16 @@ const rangeFromPositions = function (from, to) {
 
 // Checks for delete at <code>|a</code> when there is only one item left except the zwsp caret container nodes
 const hasOnlyTwoOrLessPositionsLeft = function (elm) {
-  return Options.lift2(
-    CaretFinder.firstPositionIn(elm),
-    CaretFinder.lastPositionIn(elm),
-    function (firstPos, lastPos) {
-      const normalizedFirstPos = InlineUtils.normalizePosition(true, firstPos);
-      const normalizedLastPos = InlineUtils.normalizePosition(false, lastPos);
+  return Options.lift2(CaretFinder.firstPositionIn(elm), CaretFinder.lastPositionIn(elm), function (firstPos, lastPos) {
+    const normalizedFirstPos = InlineUtils.normalizePosition(true, firstPos);
+    const normalizedLastPos = InlineUtils.normalizePosition(false, lastPos);
 
-      return CaretFinder.nextPosition(elm, normalizedFirstPos)
-        .map(function (pos) {
-          return pos.isEqual(normalizedLastPos);
-        })
-        .getOr(true);
-    }
-  ).getOr(true);
+    return CaretFinder.nextPosition(elm, normalizedFirstPos)
+      .map(function (pos) {
+        return pos.isEqual(normalizedLastPos);
+      })
+      .getOr(true);
+  }).getOr(true);
 };
 
 const setCaretLocation = function (editor: Editor, caret) {
@@ -68,11 +64,7 @@ const deleteFromTo = function (editor: Editor, caret, from, to) {
     editor.selection.setRng(rangeFromPositions(from, to));
     editor.execCommand('Delete');
 
-    BoundaryLocation.readLocation(
-      isInlineTarget,
-      rootNode,
-      CaretPosition.fromRangeStart(editor.selection.getRng())
-    )
+    BoundaryLocation.readLocation(isInlineTarget, rootNode, CaretPosition.fromRangeStart(editor.selection.getRng()))
       .map(BoundaryLocation.inside)
       .map(setCaretLocation(editor, caret));
   });
@@ -85,19 +77,10 @@ const rescope = function (rootNode, node) {
   return parentBlock ? parentBlock : rootNode;
 };
 
-const backspaceDeleteCollapsed = function (
-  editor: Editor,
-  caret,
-  forward: boolean,
-  from
-) {
+const backspaceDeleteCollapsed = function (editor: Editor, caret, forward: boolean, from) {
   const rootNode = rescope(editor.getBody(), from.container());
   const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
-  const fromLocation = BoundaryLocation.readLocation(
-    isInlineTarget,
-    rootNode,
-    from
-  );
+  const fromLocation = BoundaryLocation.readLocation(isInlineTarget, rootNode, from);
 
   return fromLocation
     .bind(function (location) {
@@ -128,11 +111,7 @@ const backspaceDeleteCollapsed = function (
         return InlineUtils.findRootInline(isInlineTarget, rootNode, from)
           .map(function (elm) {
             if (hasOnlyTwoOrLessPositionsLeft(elm)) {
-              DeleteElement.deleteElement(
-                editor,
-                forward,
-                Element.fromDom(elm)
-              );
+              DeleteElement.deleteElement(editor, forward, Element.fromDom(elm));
               return true;
             } else {
               return false;

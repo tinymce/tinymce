@@ -14,11 +14,7 @@ export interface AnnotationChanges {
   addListener: (name: string, f: AnnotationListener) => void;
 }
 
-export type AnnotationListener = (
-  state: boolean,
-  name: string,
-  data?: { uid: string; nodes: any[] }
-) => void;
+export type AnnotationListener = (state: boolean, name: string, data?: { uid: string; nodes: any[] }) => void;
 
 export interface AnnotationListenerData {
   listeners: AnnotationListener[];
@@ -27,10 +23,7 @@ export interface AnnotationListenerData {
 
 export type AnnotationListenerMap = Record<string, AnnotationListenerData>;
 
-const setup = (
-  editor: Editor,
-  _registry: AnnotationsRegistry
-): AnnotationChanges => {
+const setup = (editor: Editor, _registry: AnnotationsRegistry): AnnotationChanges => {
   const changeCallbacks = Cell<AnnotationListenerMap>({});
 
   const initData = (): AnnotationListenerData => ({
@@ -38,24 +31,16 @@ const setup = (
     previous: Cell(Option.none())
   });
 
-  const withCallbacks = (
-    name: string,
-    f: (listeners: AnnotationListenerData) => void
-  ) => {
+  const withCallbacks = (name: string, f: (listeners: AnnotationListenerData) => void) => {
     updateCallbacks(name, (data) => {
       f(data);
       return data;
     });
   };
 
-  const updateCallbacks = (
-    name: string,
-    f: (inputData: AnnotationListenerData) => AnnotationListenerData
-  ) => {
+  const updateCallbacks = (name: string, f: (inputData: AnnotationListenerData) => AnnotationListenerData) => {
     const callbackMap = changeCallbacks.get();
-    const data = callbackMap.hasOwnProperty(name)
-      ? callbackMap[name]
-      : initData();
+    const data = callbackMap.hasOwnProperty(name) ? callbackMap[name] : initData();
     const outputData = f(data);
     callbackMap[name] = outputData;
     changeCallbacks.set(callbackMap);

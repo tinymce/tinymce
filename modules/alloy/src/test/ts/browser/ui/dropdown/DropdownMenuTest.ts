@@ -1,15 +1,4 @@
-import {
-  FocusTools,
-  GeneralSteps,
-  Keyboard,
-  Keys,
-  Logger,
-  Mouse,
-  Step,
-  Touch,
-  UiFinder,
-  Waiter
-} from '@ephox/agar';
+import { FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, Touch, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Future, Obj, Option, Result } from '@ephox/katamari';
 
@@ -196,11 +185,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           },
 
           fetch() {
-            return Future.pure(testData).map((d) =>
-              Option.from(
-                TieredMenu.tieredData(d.primary, d.menus, d.expansions)
-              )
-            );
+            return Future.pure(testData).map((d) => Option.from(TieredMenu.tieredData(d.primary, d.menus, d.expansions)));
           }
         })
       );
@@ -272,25 +257,15 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           ])
         );
 
-        const sCheckActive = GeneralSteps.sequence(
-          Arr.map(active, (o) =>
-            UiFinder.sExists(gui.element(), o.selector + '.selected-menu')
-          )
-        );
+        const sCheckActive = GeneralSteps.sequence(Arr.map(active, (o) => UiFinder.sExists(gui.element(), o.selector + '.selected-menu')));
 
-        const sCheckOthers = GeneralSteps.sequence(
-          Arr.map(others, (o) => UiFinder.sNotExists(gui.element(), o.selector))
-        );
+        const sCheckOthers = GeneralSteps.sequence(Arr.map(others, (o) => UiFinder.sNotExists(gui.element(), o.selector)));
 
         return Logger.t(
           label,
           GeneralSteps.sequence([
             store.sAssertEq('checking store', stored),
-            FocusTools.sTryOnSelector(
-              'Searching for focus on: ' + focused.label,
-              doc,
-              focused.selector
-            ),
+            FocusTools.sTryOnSelector('Searching for focus on: ' + focused.label, doc, focused.selector),
             sCheckActive,
             sCheckBackground,
             sCheckOthers,
@@ -312,20 +287,11 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           focusables.button,
           [],
           [],
-          [
-            focusables.toolsMenu,
-            focusables.packagesMenu,
-            focusables.sortbyMenu,
-            focusables.stringsMenu,
-            focusables.numbersMenu
-          ]
+          [focusables.toolsMenu, focusables.packagesMenu, focusables.sortbyMenu, focusables.stringsMenu, focusables.numbersMenu]
         ),
         Keyboard.sKeydown(doc, Keys.enter(), {}),
 
-        Waiter.sTryUntil(
-          'Wait until dropdown content loads',
-          UiFinder.sExists(gui.element(), '.menu')
-        ),
+        Waiter.sTryUntil('Wait until dropdown content loads', UiFinder.sExists(gui.element(), '.menu')),
 
         sTestMenus(
           'After open',
@@ -333,12 +299,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           focusables.packages,
           [focusables.toolsMenu],
           [],
-          [
-            focusables.packagesMenu,
-            focusables.sortbyMenu,
-            focusables.stringsMenu,
-            focusables.numbersMenu
-          ]
+          [focusables.packagesMenu, focusables.sortbyMenu, focusables.stringsMenu, focusables.numbersMenu]
         ),
 
         // Press enter should expand
@@ -349,11 +310,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           focusables.sortby,
           [focusables.packagesMenu],
           [focusables.toolsMenu],
-          [
-            focusables.sortbyMenu,
-            focusables.stringsMenu,
-            focusables.numbersMenu
-          ]
+          [focusables.sortbyMenu, focusables.stringsMenu, focusables.numbersMenu]
         ),
 
         // Press left should collapse
@@ -364,12 +321,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           focusables.packages,
           [focusables.toolsMenu],
           [],
-          [
-            focusables.packagesMenu,
-            focusables.sortbyMenu,
-            focusables.stringsMenu,
-            focusables.numbersMenu
-          ]
+          [focusables.packagesMenu, focusables.sortbyMenu, focusables.stringsMenu, focusables.numbersMenu]
         ),
 
         // Press right should expand again
@@ -380,11 +332,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           focusables.sortby,
           [focusables.packagesMenu],
           [focusables.toolsMenu],
-          [
-            focusables.sortbyMenu,
-            focusables.stringsMenu,
-            focusables.numbersMenu
-          ]
+          [focusables.sortbyMenu, focusables.stringsMenu, focusables.numbersMenu]
         ),
 
         // Press space should expand again
@@ -417,11 +365,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           focusables.sortby,
           [focusables.packagesMenu],
           [focusables.toolsMenu],
-          [
-            focusables.sortbyMenu,
-            focusables.stringsMenu,
-            focusables.numbersMenu
-          ]
+          [focusables.sortbyMenu, focusables.stringsMenu, focusables.numbersMenu]
         ),
 
         // Pressing right should open up sortby menu
@@ -443,11 +387,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           [],
           focusables.doubled,
           [focusables.numbersMenu],
-          [
-            focusables.sortbyMenu,
-            focusables.toolsMenu,
-            focusables.packagesMenu
-          ],
+          [focusables.sortbyMenu, focusables.toolsMenu, focusables.packagesMenu],
           [focusables.stringsMenu]
         ),
 
@@ -458,11 +398,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           ['dropdown.menu.execute: doubled'],
           focusables.doubled,
           [focusables.numbersMenu],
-          [
-            focusables.sortbyMenu,
-            focusables.toolsMenu,
-            focusables.packagesMenu
-          ],
+          [focusables.sortbyMenu, focusables.toolsMenu, focusables.packagesMenu],
           [focusables.stringsMenu]
         ),
 
@@ -481,16 +417,12 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
         Mouse.sClickOn(gui.element(), focusables.about.selector),
         // Menus are somewhat irrelevant here, because the hover would have changed them,
         // not the click
-        store.sAssertEq('Checking about fired', [
-          'dropdown.menu.execute: about'
-        ]),
+        store.sAssertEq('Checking about fired', ['dropdown.menu.execute: about']),
         store.sClear,
 
         // Tap on "about"
         Touch.sTapOn(gui.element(), focusables.about.selector),
-        store.sAssertEq('Checking about fired', [
-          'dropdown.menu.execute: about'
-        ]),
+        store.sAssertEq('Checking about fired', ['dropdown.menu.execute: about']),
         store.sClear,
 
         // Hover on "about"
@@ -501,12 +433,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           focusables.about,
           [focusables.toolsMenu],
           [],
-          [
-            focusables.packagesMenu,
-            focusables.sortbyMenu,
-            focusables.stringsMenu,
-            focusables.numbersMenu
-          ]
+          [focusables.packagesMenu, focusables.sortbyMenu, focusables.stringsMenu, focusables.numbersMenu]
         ),
 
         // Pressing right on "about" does nothing
@@ -517,12 +444,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           focusables.about,
           [focusables.toolsMenu],
           [],
-          [
-            focusables.packagesMenu,
-            focusables.sortbyMenu,
-            focusables.stringsMenu,
-            focusables.numbersMenu
-          ]
+          [focusables.packagesMenu, focusables.sortbyMenu, focusables.stringsMenu, focusables.numbersMenu]
         ),
 
         // Now, let's play with the inline widget
@@ -533,12 +455,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           focusables.widget,
           [focusables.toolsMenu],
           [],
-          [
-            focusables.packagesMenu,
-            focusables.sortbyMenu,
-            focusables.stringsMenu,
-            focusables.numbersMenu
-          ]
+          [focusables.packagesMenu, focusables.sortbyMenu, focusables.stringsMenu, focusables.numbersMenu]
         ),
 
         // Press enter to go into the inline widget
@@ -549,19 +466,10 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           focusables.widgetOne,
           [focusables.toolsMenu],
           [],
-          [
-            focusables.packagesMenu,
-            focusables.sortbyMenu,
-            focusables.stringsMenu,
-            focusables.numbersMenu
-          ]
+          [focusables.packagesMenu, focusables.sortbyMenu, focusables.stringsMenu, focusables.numbersMenu]
         ),
 
-        NavigationUtils.sequence(doc, Keys.right(), {}, [
-          focusables.widgetTwo,
-          focusables.widgetThree,
-          focusables.widgetOne
-        ]),
+        NavigationUtils.sequence(doc, Keys.right(), {}, [focusables.widgetTwo, focusables.widgetThree, focusables.widgetOne]),
 
         // Press escape to exit the inline widget
         Keyboard.sKeydown(doc, Keys.escape(), {}),
@@ -571,12 +479,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           focusables.widget,
           [focusables.toolsMenu],
           [],
-          [
-            focusables.packagesMenu,
-            focusables.sortbyMenu,
-            focusables.stringsMenu,
-            focusables.numbersMenu
-          ]
+          [focusables.packagesMenu, focusables.sortbyMenu, focusables.stringsMenu, focusables.numbersMenu]
         )
       ];
     },

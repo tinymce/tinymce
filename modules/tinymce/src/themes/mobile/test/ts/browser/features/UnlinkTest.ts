@@ -6,10 +6,7 @@ import * as TestTheme from '../../module/test/theme/TestTheme';
 import * as TestUi from '../../module/test/ui/TestUi';
 import { TestHelpers } from '@ephox/alloy';
 
-UnitTest.asynctest('Browser Test: features.UnlinkTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('Browser Test: features.UnlinkTest', function (success, failure) {
   /* This test is going to create a toolbar with bold, italic, underline in it */
   const body = Body.body();
 
@@ -22,12 +19,7 @@ UnitTest.asynctest('Browser Test: features.UnlinkTest', function (
     failure
   ).use(function (realm, apis, toolbar, socket, buttons, onSuccess, onFailure) {
     const sSetS1 = apis.sSetSelection([0, 0], 'n'.length, [0, 0], 'n'.length);
-    const sSetS2 = apis.sSetSelection(
-      [0, 1, 0],
-      'tin'.length,
-      [0, 1, 0],
-      'tin'.length
-    );
+    const sSetS2 = apis.sSetSelection([0, 1, 0], 'tin'.length, [0, 1, 0], 'tin'.length);
 
     const sCheckComponent = function (label, state) {
       return function (memento) {
@@ -45,10 +37,7 @@ UnitTest.asynctest('Browser Test: features.UnlinkTest', function (
 
     const sCheckLink = function (situation, expected) {
       return GeneralSteps.sequence([
-        sCheckComponent(
-          situation + ' (unlink state)',
-          expected
-        )(buttons.unlink),
+        sCheckComponent(situation + ' (unlink state)', expected)(buttons.unlink),
         sCheckComponent(situation + ' (link state)', expected)(buttons.link)
       ]);
     };
@@ -64,9 +53,7 @@ UnitTest.asynctest('Browser Test: features.UnlinkTest', function (
         ]),
         apis.sFocus(),
 
-        apis.sSetContent(
-          '<p>no link <a href="www.tinymce.com">tinymce</a></p>'
-        ),
+        apis.sSetContent('<p>no link <a href="www.tinymce.com">tinymce</a></p>'),
         sCheckS1('initial selection in text'),
         sCheckS2('normal >>> link'),
         sCheckS1('link >>> normal'),

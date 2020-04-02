@@ -79,9 +79,7 @@ UnitTest.asynctest('TabSectionSelectFirst Test', (success, failure) => {
       );
     },
     (doc, _body, _gui, component, _store) => [
-      GuiSetup.mAddStyles(doc, [
-        '.selected-test-tab-button { background: #cadbee; }'
-      ]),
+      GuiSetup.mAddStyles(doc, ['.selected-test-tab-button { background: #cadbee; }']),
       Assertions.sAssertStructure(
         'Checking initial tab section',
         ApproxStructure.build((s, str, arr) =>

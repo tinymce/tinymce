@@ -15,14 +15,8 @@ const getFromExpandingItem = function (item) {
 
   const rest = expand(item.items);
 
-  const newMenus = Merger.deepMerge(
-    rest.menus,
-    Objects.wrap(item.title, rest.items)
-  );
-  const newExpansions = Merger.deepMerge(
-    rest.expansions,
-    Objects.wrap(item.title, item.title)
-  );
+  const newMenus = Merger.deepMerge(rest.menus, Objects.wrap(item.title, rest.items));
+  const newExpansions = Merger.deepMerge(rest.expansions, Objects.wrap(item.title, item.title));
 
   return {
     item: newItem,

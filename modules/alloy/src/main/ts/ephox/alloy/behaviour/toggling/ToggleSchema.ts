@@ -15,10 +15,7 @@ export default [
       mode: 'none'
     },
     ValueSchema.choose('mode', {
-      pressed: [
-        FieldSchema.defaulted('syncWithExpanded', false),
-        Fields.output('update', ToggleModes.updatePressed)
-      ],
+      pressed: [FieldSchema.defaulted('syncWithExpanded', false), Fields.output('update', ToggleModes.updatePressed)],
       checked: [Fields.output('update', ToggleModes.updateChecked)],
       expanded: [Fields.output('update', ToggleModes.updateExpanded)],
       selected: [Fields.output('update', ToggleModes.updateSelected)],

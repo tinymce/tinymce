@@ -5,10 +5,7 @@ const create = function () {
   const registrations: Bindable<any>[] = [];
   const handlers: EventHandler<any>[] = [];
 
-  const bind = function (
-    registration: Bindable<any>,
-    handler: EventHandler<any>
-  ) {
+  const bind = function (registration: Bindable<any>, handler: EventHandler<any>) {
     if (Arr.contains(registrations, registration)) {
       throw new Error('Invalid key, key already exists.');
     } else {

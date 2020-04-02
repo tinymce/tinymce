@@ -2,8 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Assertions from 'ephox/agar/api/Assertions';
 
 UnitTest.test('AssertionsTest', () => {
-  const replaceTokens = (str, values) =>
-    str.replace(/\{\{(\w+)\}\}/gi, ($0, $1) => (values[$1] ? values[$1] : ''));
+  const replaceTokens = (str, values) => str.replace(/\{\{(\w+)\}\}/gi, ($0, $1) => (values[$1] ? values[$1] : ''));
 
   try {
     Assertions.assertEq('test 2 (assertEq)', 5, 5);
@@ -34,8 +33,7 @@ UnitTest.test('AssertionsTest', () => {
       class: 'class2 class1'
     };
 
-    const html =
-      '<div id="container" style="{{style}}"><p class="{{class}}">some text</p></div>';
+    const html = '<div id="container" style="{{style}}"><p class="{{class}}">some text</p></div>';
 
     Assertions.assertHtmlStructure(
       'html is the same, although styles & classes are in different order',

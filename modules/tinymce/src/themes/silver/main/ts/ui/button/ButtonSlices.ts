@@ -21,24 +21,15 @@ const renderIcon = (iconHtml, behaviours): SimpleOrSketchSpec => ({
   ...behaviours
 });
 
-const renderIconFromPack = (
-  iconName: string,
-  iconsProvider: IconProvider
-): SimpleOrSketchSpec => renderIcon(getIcon(iconName, iconsProvider), {});
+const renderIconFromPack = (iconName: string, iconsProvider: IconProvider): SimpleOrSketchSpec =>
+  renderIcon(getIcon(iconName, iconsProvider), {});
 
-const renderReplacableIconFromPack = (
-  iconName: string,
-  iconsProvider: IconProvider
-): SimpleOrSketchSpec =>
+const renderReplacableIconFromPack = (iconName: string, iconsProvider: IconProvider): SimpleOrSketchSpec =>
   renderIcon(getIcon(iconName, iconsProvider), {
     behaviours: Behaviour.derive([Replacing.config({})])
   });
 
-const renderLabel = (
-  text: TranslateIfNeeded,
-  prefix: string,
-  providersBackstage: UiFactoryBackstageProviders
-) => ({
+const renderLabel = (text: TranslateIfNeeded, prefix: string, providersBackstage: UiFactoryBackstageProviders) => ({
   dom: {
     tag: 'span',
     innerHtml: providersBackstage.translate(text),

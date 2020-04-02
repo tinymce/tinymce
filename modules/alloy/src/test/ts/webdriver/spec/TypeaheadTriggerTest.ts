@@ -66,18 +66,12 @@ UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
                     value: 'blah',
                     items: Arr.map(items, TestDropdownMenu.renderItem)
                   });
-                  return Option.some(
-                    TieredMenu.singleData('blah.overall', menu)
-                  );
+                  return Option.some(TieredMenu.singleData('blah.overall', menu));
                 });
               },
 
               lazySink(c) {
-                TestDropdownMenu.assertLazySinkArgs(
-                  'input',
-                  'test-typeahead',
-                  c
-                );
+                TestDropdownMenu.assertLazySinkArgs('input', 'test-typeahead', c);
                 return Result.value(sink);
               },
 
@@ -96,9 +90,7 @@ UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
       return [
         FocusTools.sSetFocus('Focusing typeahead', gui.element(), 'input'),
 
-        GuiSetup.mAddStyles(doc, [
-          '.test-typeahead-selected-item { background-color: #cadbee; }'
-        ]),
+        GuiSetup.mAddStyles(doc, ['.test-typeahead-selected-item { background-color: #cadbee; }']),
 
         steps.sAssertValue('Initial value of typeahead', 'initial-value'),
         UiControls.sSetValue(typeahead.element(), 'a-'),

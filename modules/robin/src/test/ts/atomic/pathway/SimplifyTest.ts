@@ -9,22 +9,10 @@ UnitTest.test('SimplifyTest', function () {
       Gene('a', '.', [
         Gene('aa', '.', [Gene('aaa', '.'), Gene('aab', '.'), Gene('aac', '.')]),
         Gene('ab', '.'),
-        Gene('ac', '.', [
-          Gene('aca', '.'),
-          Gene('acb', '.', [
-            Gene('acba', '.'),
-            Gene('acbb', '.', [Gene('acbba', '.')])
-          ])
-        ])
+        Gene('ac', '.', [Gene('aca', '.'), Gene('acb', '.', [Gene('acba', '.'), Gene('acbb', '.', [Gene('acbba', '.')])])])
       ]),
       Gene('b', '.'),
-      Gene('c', '.', [
-        Gene('ca', '.'),
-        Gene('cb', '.', [
-          Gene('cba', '.', [Gene('cbaa', '.'), Gene('cbab', '.')]),
-          Gene('cbb', '.')
-        ])
-      ])
+      Gene('c', '.', [Gene('ca', '.'), Gene('cb', '.', [Gene('cba', '.', [Gene('cbaa', '.'), Gene('cbab', '.')]), Gene('cbb', '.')])])
     ])
   );
 

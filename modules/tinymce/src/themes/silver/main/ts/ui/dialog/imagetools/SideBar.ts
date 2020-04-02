@@ -5,14 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent,
-  AlloyTriggers,
-  Container,
-  Disabling,
-  Memento,
-  SketchSpec
-} from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, Container, Disabling, Memento, SketchSpec } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
@@ -48,11 +41,7 @@ const setButtonEnabled = (button: AlloyComponent, enabled: boolean): void => {
 };
 
 const renderSideBar = (providersBackstage: UiFactoryBackstageProviders) => {
-  const updateButtonUndoStates = (
-    anyInSystem: AlloyComponent,
-    undoEnabled: boolean,
-    redoEnabled: boolean
-  ): void => {
+  const updateButtonUndoStates = (anyInSystem: AlloyComponent, undoEnabled: boolean, redoEnabled: boolean): void => {
     memUndo.getOpt(anyInSystem).each((undo) => {
       setButtonEnabled(undo, undoEnabled);
     });

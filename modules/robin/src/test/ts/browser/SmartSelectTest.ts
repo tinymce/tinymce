@@ -1,14 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
-import {
-  Body,
-  Compare,
-  Element,
-  Hierarchy,
-  Insert,
-  InsertAll,
-  Remove
-} from '@ephox/sugar';
+import { Body, Compare, Element, Hierarchy, Insert, InsertAll, Remove } from '@ephox/sugar';
 import * as DomSmartSelect from 'ephox/robin/api/dom/DomSmartSelect';
 
 UnitTest.test('SmartSelectTest', function () {
@@ -70,23 +62,15 @@ UnitTest.test('SmartSelectTest', function () {
   }
 
   const check = function (expected: Expected, path: number[], offset: number) {
-    const start = Hierarchy.follow(editor, path).getOrDie(
-      'Looking for start of smart select'
-    );
+    const start = Hierarchy.follow(editor, path).getOrDie('Looking for start of smart select');
     const actual = DomSmartSelect.word(start, offset);
     actual.fold(
       function () {
         throw new Error('Expected to select word: ' + expected.word);
       },
       function (act) {
-        const expStart = Hierarchy.follow(
-          editor,
-          expected.start.element
-        ).getOrDie('Could not find expected start');
-        const expFinish = Hierarchy.follow(
-          editor,
-          expected.finish.element
-        ).getOrDie('Could not find expected finish');
+        const expStart = Hierarchy.follow(editor, expected.start.element).getOrDie('Could not find expected start');
+        const expFinish = Hierarchy.follow(editor, expected.finish.element).getOrDie('Could not find expected finish');
         assert.eq(true, Compare.eq(expStart, act.startContainer()));
         assert.eq(expected.start.offset, act.startOffset());
         assert.eq(true, Compare.eq(expFinish, act.endContainer()));

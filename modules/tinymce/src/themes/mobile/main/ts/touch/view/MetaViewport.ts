@@ -25,11 +25,7 @@ const tag = function () {
   const backup = Attr.get(element, 'content');
 
   const maximize = function () {
-    Attr.set(
-      element,
-      'content',
-      'width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0'
-    );
+    Attr.set(element, 'content', 'width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0');
   };
 
   const restore = function () {

@@ -6,10 +6,7 @@ import * as Parent from '../general/Parent';
 
 const universe = DomUniverse();
 
-const sharedOne = function (
-  look: (e: Element) => Option<Element>,
-  elements: Element[]
-) {
+const sharedOne = function (look: (e: Element) => Option<Element>, elements: Element[]) {
   return Parent.sharedOne(
     universe,
     function (_universe, element) {
@@ -23,11 +20,7 @@ const subset = function (start: Element, finish: Element) {
   return Parent.subset(universe, start, finish);
 };
 
-const ancestors = function (
-  start: Element,
-  finish: Element,
-  isRoot?: (x: Element) => boolean
-) {
+const ancestors = function (start: Element, finish: Element, isRoot?: (x: Element) => boolean) {
   return Parent.ancestors(universe, start, finish, isRoot);
 };
 

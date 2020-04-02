@@ -27,10 +27,7 @@ const split = function (rng: RangeLikeObject): RangeLikeObject {
 
       if (endOffset > startOffset) {
         endOffset = endOffset - startOffset;
-        startContainer = endContainer = splitText(
-          endContainer as Text,
-          endOffset
-        ).previousSibling;
+        startContainer = endContainer = splitText(endContainer as Text, endOffset).previousSibling;
         endOffset = endContainer.nodeValue.length;
         startOffset = 0;
       } else {
@@ -39,21 +36,13 @@ const split = function (rng: RangeLikeObject): RangeLikeObject {
     }
   } else {
     // Split startContainer text node if needed
-    if (
-      NodeType.isText(startContainer) &&
-      startOffset > 0 &&
-      startOffset < startContainer.nodeValue.length
-    ) {
+    if (NodeType.isText(startContainer) && startOffset > 0 && startOffset < startContainer.nodeValue.length) {
       startContainer = splitText(startContainer, startOffset);
       startOffset = 0;
     }
 
     // Split endContainer text node if needed
-    if (
-      NodeType.isText(endContainer) &&
-      endOffset > 0 &&
-      endOffset < endContainer.nodeValue.length
-    ) {
+    if (NodeType.isText(endContainer) && endOffset > 0 && endOffset < endContainer.nodeValue.length) {
       endContainer = splitText(endContainer, endOffset).previousSibling;
       endOffset = endContainer.nodeValue.length;
     }

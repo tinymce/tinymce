@@ -57,10 +57,7 @@ const popup = () =>
     })
   );
 
-const isInside = (
-  sinkComponent: AlloyComponent,
-  popupComponent: AlloyComponent
-) => {
+const isInside = (sinkComponent: AlloyComponent, popupComponent: AlloyComponent) => {
   const isSink = (el: Element) => Compare.eq(el, sinkComponent.element());
 
   return PredicateExists.closest(popupComponent.element(), isSink);

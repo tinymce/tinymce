@@ -22,10 +22,7 @@ const barPart = PartType.required<TabSectionDetail, TabbarSpec>({
   factory: Tabbar,
   schema: [
     FieldSchema.strict('dom'),
-    FieldSchema.strictObjOf('markers', [
-      FieldSchema.strict('tabClass'),
-      FieldSchema.strict('selectedClass')
-    ])
+    FieldSchema.strictObjOf('markers', [FieldSchema.strict('tabClass'), FieldSchema.strict('selectedClass')])
   ],
   name: 'tabbar',
   defaults(detail: TabSectionDetail) {

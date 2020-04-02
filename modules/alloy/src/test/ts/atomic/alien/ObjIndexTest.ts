@@ -20,11 +20,7 @@ UnitTest.test('ObjIndexTest', () => {
       })
     );
 
-  const assertSortedEq = (
-    label: string,
-    expected: Record<string, any[]>,
-    actual: Record<string, any[]>
-  ) => {
+  const assertSortedEq = (label: string, expected: Record<string, any[]>, actual: Record<string, any[]>) => {
     Assert.eq(label, sortObjValue(expected), sortObjValue(actual));
   };
 

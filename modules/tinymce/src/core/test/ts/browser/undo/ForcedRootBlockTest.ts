@@ -6,10 +6,7 @@ import * as Levels from 'tinymce/core/undo/Levels';
 import { UndoLevelType } from 'tinymce/core/undo/UndoManagerTypes';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.undo.ForcedRootBlockTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.undo.ForcedRootBlockTest', function (success, failure) {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
@@ -27,20 +24,13 @@ UnitTest.asynctest('browser.tinymce.core.undo.ForcedRootBlockTest', function (
   });
 
   suite.test('createFromEditor forced_root_block: false', function (editor) {
-    editor.getBody().innerHTML =
-      '<iframe src="about:blank"></iframe> <strong>a</strong> <span>b</span>';
+    editor.getBody().innerHTML = '<iframe src="about:blank"></iframe> <strong>a</strong> <span>b</span>';
 
     LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
       beforeBookmark: null,
       bookmark: null,
       content: '',
-      fragments: [
-        '<iframe src="about:blank"></iframe>',
-        ' ',
-        '<strong>a</strong>',
-        ' ',
-        '<span>b</span>'
-      ],
+      fragments: ['<iframe src="about:blank"></iframe>', ' ', '<strong>a</strong>', ' ', '<span>b</span>'],
       type: UndoLevelType.Fragmented
     });
   });

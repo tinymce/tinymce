@@ -13,15 +13,7 @@ import {
   Log,
   Chain
 } from '@ephox/agar';
-import {
-  AlloyTriggers,
-  Container,
-  GuiFactory,
-  Invalidating,
-  NativeEvents,
-  Representing,
-  TestHelpers
-} from '@ephox/alloy';
+import { AlloyTriggers, Container, GuiFactory, Invalidating, NativeEvents, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 import { Element, SelectorFind, Traverse } from '@ephox/sugar';
@@ -71,20 +63,14 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
     (doc, _body, _gui, component, _store) => {
       const input = component
         .getSystem()
-        .getByDom(
-          SelectorFind.descendant(component.element(), 'input').getOrDie(
-            'Could not find input in colorinput'
-          )
-        )
+        .getByDom(SelectorFind.descendant(component.element(), 'input').getOrDie('Could not find input in colorinput'))
         .getOrDie();
 
       const legend = component
         .getSystem()
         .getByDom(
           // Intentionally, only finding direct child
-          SelectorFind.descendant(component.element(), 'span').getOrDie(
-            'Could not find legend in colorinput'
-          )
+          SelectorFind.descendant(component.element(), 'span').getOrDie('Could not find legend in colorinput')
         )
         .getOrDie();
 
@@ -99,21 +85,14 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
         'Clicking the legend should bring up the colorswatch',
         GeneralSteps.sequence([
           Mouse.sClickOn(legend.element(), 'root:span'),
-          UiFinder.sWaitFor(
-            'Waiting for colorswatch to show up!',
-            sink,
-            '.tox-swatches'
-          )
+          UiFinder.sWaitFor('Waiting for colorswatch to show up!', sink, '.tox-swatches')
         ])
       );
 
       const sAssertFocusedValue = (label: string, expected: string) =>
         Logger.t(
           label,
-          Chain.asStep(sink, [
-            FocusTools.cGetActiveValue,
-            Assertions.cAssertEq('Checking value of focused element', expected)
-          ])
+          Chain.asStep(sink, [FocusTools.cGetActiveValue, Assertions.cAssertEq('Checking value of focused element', expected)])
         );
 
       const sAssertLegendBackground = (label: string, f) =>
@@ -140,9 +119,7 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
                 // ignore children
               })
             ),
-            Traverse.parent(input.element()).getOrDie(
-              'Could not find parent of input'
-            )
+            Traverse.parent(input.element()).getOrDie('Could not find parent of input')
           )
         );
 
@@ -174,36 +151,20 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
 
         Logger.t(
           'Initially, the colour should not be invalid',
-          GeneralSteps.sequence([
-            Assertions.sAssertEq(
-              'Invalidating.isInvalid',
-              false,
-              Invalidating.isInvalid(input)
-            )
-          ])
+          GeneralSteps.sequence([Assertions.sAssertEq('Invalidating.isInvalid', false, Invalidating.isInvalid(input))])
         ),
 
         Logger.t(
           'Type an invalid colour: "notblue"',
           GeneralSteps.sequence([
-            FocusTools.sSetFocus(
-              'Move focus to input field',
-              component.element(),
-              'input'
-            ),
+            FocusTools.sSetFocus('Move focus to input field', component.element(), 'input'),
             FocusTools.sSetActiveValue(doc, 'notblue'),
             Step.sync(() => {
               AlloyTriggers.emit(input, NativeEvents.input());
             }),
 
-            sAssertContainerClasses(
-              'Post: typing invalid colour (notblue)',
-              (_s, _str, arr) => [arr.has('tox-textbox-field-invalid')]
-            ),
-            sAssertLegendBackground(
-              'After typing invalid colour (notblue)',
-              (_s, str, _arr) => str.none()
-            )
+            sAssertContainerClasses('Post: typing invalid colour (notblue)', (_s, _str, arr) => [arr.has('tox-textbox-field-invalid')]),
+            sAssertLegendBackground('After typing invalid colour (notblue)', (_s, str, _arr) => str.none())
           ])
         ),
 
@@ -214,93 +175,49 @@ UnitTest.asynctest('Color input component Test', (success, failure) => {
             Step.sync(() => {
               AlloyTriggers.emit(input, NativeEvents.input());
             }),
-            sAssertContainerClasses(
-              'Post: typing colour (green)',
-              (_s, _str, arr) => [arr.not('tox-textbox-field-invalid')]
-            ),
-            sAssertLegendBackground(
-              'After typing colour (green)',
-              (_s, str, _arr) => str.is('green')
-            )
+            sAssertContainerClasses('Post: typing colour (green)', (_s, _str, arr) => [arr.not('tox-textbox-field-invalid')]),
+            sAssertLegendBackground('After typing colour (green)', (_s, str, _arr) => str.is('green'))
           ])
         ),
 
-        Log.stepsAsStep(
-          'TBA',
-          'Check that pressing enter inside the picker refocuses the colorinput',
-          [
-            sOpenPicker,
-            FocusTools.sTryOnSelector(
-              'Focus should be on a swatch',
-              doc,
-              'div.tox-swatch'
-            ),
-            Keyboard.sKeydown(doc, Keys.enter(), {}),
-            FocusTools.sTryOnSelector(
-              'Focus should be back on colorinput button (after escape)',
-              doc,
-              '.colorinput-container input'
-            ),
-            sAssertFocusedValue('After pressing <enter> in hex', '#18BC9B'),
-            UiFinder.sNotExists(sink, '.tox-swatches')
-          ]
-        ),
+        Log.stepsAsStep('TBA', 'Check that pressing enter inside the picker refocuses the colorinput', [
+          sOpenPicker,
+          FocusTools.sTryOnSelector('Focus should be on a swatch', doc, 'div.tox-swatch'),
+          Keyboard.sKeydown(doc, Keys.enter(), {}),
+          FocusTools.sTryOnSelector('Focus should be back on colorinput button (after escape)', doc, '.colorinput-container input'),
+          sAssertFocusedValue('After pressing <enter> in hex', '#18BC9B'),
+          UiFinder.sNotExists(sink, '.tox-swatches')
+        ]),
 
-        Log.stepsAsStep(
-          'TBA',
-          'Check that pressing escape inside the picker refocuses the colorinput button',
-          [
-            sOpenPicker,
-            FocusTools.sTryOnSelector(
-              'Focus should be on a swatch',
-              doc,
-              'div.tox-swatch'
-            ),
-            Keyboard.sKeydown(doc, Keys.escape(), {}),
-            FocusTools.sTryOnSelector(
-              'Focus should be back on colorinput button (after escape)',
-              doc,
-              '.colorinput-container > div:not(.mce-silver-sink) span'
-            ),
-            UiFinder.sNotExists(sink, '.tox-swatches')
-          ]
-        ),
+        Log.stepsAsStep('TBA', 'Check that pressing escape inside the picker refocuses the colorinput button', [
+          sOpenPicker,
+          FocusTools.sTryOnSelector('Focus should be on a swatch', doc, 'div.tox-swatch'),
+          Keyboard.sKeydown(doc, Keys.escape(), {}),
+          FocusTools.sTryOnSelector(
+            'Focus should be back on colorinput button (after escape)',
+            doc,
+            '.colorinput-container > div:not(.mce-silver-sink) span'
+          ),
+          UiFinder.sNotExists(sink, '.tox-swatches')
+        ]),
 
-        Log.stepsAsStep(
-          'TBA',
-          'Check that validating an empty string passes (first time)',
-          [
-            sSetColorInputValue(''),
-            Step.wait(50),
-            UiFinder.sNotExists(
-              component.element(),
-              '.tox-textbox-field-invalid'
-            )
-          ]
-        ),
+        Log.stepsAsStep('TBA', 'Check that validating an empty string passes (first time)', [
+          sSetColorInputValue(''),
+          Step.wait(50),
+          UiFinder.sNotExists(component.element(), '.tox-textbox-field-invalid')
+        ]),
 
-        Log.stepsAsStep(
-          'TBA',
-          'Check that validating an incorrect value fails',
-          [
-            sSetColorInputValue('dog'),
-            Step.wait(50),
-            UiFinder.sExists(component.element(), '.tox-textbox-field-invalid')
-          ]
-        ),
+        Log.stepsAsStep('TBA', 'Check that validating an incorrect value fails', [
+          sSetColorInputValue('dog'),
+          Step.wait(50),
+          UiFinder.sExists(component.element(), '.tox-textbox-field-invalid')
+        ]),
 
-        Log.stepsAsStep(
-          'TBA',
-          'Check that validating an empty is string passes',
-          [
-            sSetColorInputValue(''),
-            Step.wait(50),
-            UiFinder.sNotExists(
-              component.element(),
-              '.tox-textbox-field-invalid'
-            )
-          ]
-        ),
+        Log.stepsAsStep('TBA', 'Check that validating an empty is string passes', [
+          sSetColorInputValue(''),
+          Step.wait(50),
+          UiFinder.sNotExists(component.element(), '.tox-textbox-field-invalid')
+        ]),
 
         TestHelpers.GuiSetup.mRemoveStyles
       ];

@@ -1,10 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  GeneralSteps,
-  Logger,
-  Step
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, GeneralSteps, Logger, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Value } from '@ephox/sugar';
 
@@ -62,10 +56,7 @@ UnitTest.asynctest('Basic Form', (success, failure) => {
           dom: {
             tag: 'div'
           },
-          components: [
-            parts.field('form.ant', FormField.sketch(formAntSpec)),
-            parts.field('form.bull', FormField.sketch(formBullSpec))
-          ]
+          components: [parts.field('form.ant', FormField.sketch(formAntSpec)), parts.field('form.bull', FormField.sketch(formBullSpec))]
         }))
       ),
     (_doc, _body, _gui, component, _store) => {
@@ -79,16 +70,10 @@ UnitTest.asynctest('Basic Form', (success, failure) => {
               s.element('div', {
                 children: [
                   s.element('div', {
-                    children: [
-                      s.element('input', { value: str.is(inputText) }),
-                      s.element('label', {})
-                    ]
+                    children: [s.element('input', { value: str.is(inputText) }), s.element('label', {})]
                   }),
                   s.element('div', {
-                    children: [
-                      s.element('select', { value: str.is(selectValue) }),
-                      s.element('label', {})
-                    ]
+                    children: [s.element('select', { value: str.is(selectValue) }), s.element('label', {})]
                   })
                 ]
               })
@@ -163,14 +148,8 @@ UnitTest.asynctest('Basic Form', (success, failure) => {
           'Retrieve the bull field directly and check its value',
           GeneralSteps.sequence([
             Step.sync(() => {
-              const field = Form.getField(component, 'form.bull').getOrDie(
-                'Could not find field'
-              );
-              Assertions.assertEq(
-                'Checking value',
-                'select-b-other',
-                Value.get(field.element())
-              );
+              const field = Form.getField(component, 'form.bull').getOrDie('Could not find field');
+              Assertions.assertEq('Checking value', 'select-b-other', Value.get(field.element()));
             })
           ])
         )

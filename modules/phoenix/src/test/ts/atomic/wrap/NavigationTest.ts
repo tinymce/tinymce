@@ -7,10 +7,7 @@ UnitTest.test('NavigationTest', function () {
   let doc = TestUniverse(
     Gene('root', 'root', [
       Gene('1', 'div', [
-        Gene('1.1', 'p', [
-          Gene('1.1.1', 'img', []),
-          TextGene('1.1.2', 'post-image text')
-        ]),
+        Gene('1.1', 'p', [Gene('1.1.1', 'img', []), TextGene('1.1.2', 'post-image text')]),
         Gene('1.2', 'p', [
           TextGene('1.2.1', 'This is text'),
           Gene('1.2.2', 'span', [TextGene('1.2.2.1', 'inside a span')]),
@@ -46,10 +43,7 @@ UnitTest.test('NavigationTest', function () {
   };
 
   checkLower({ element: '1', offset: 2 }, '1');
-  checkLower(
-    { element: '1.2.5', offset: 'Last piece of text'.length },
-    '1.2.5'
-  );
+  checkLower({ element: '1.2.5', offset: 'Last piece of text'.length }, '1.2.5');
 
   checkLast({ element: '1.2.5', offset: 'Last piece of text'.length }, '1');
   checkLast({ element: '1.2.5', offset: 'Last piece of text'.length }, '1.2.5');
@@ -57,17 +51,9 @@ UnitTest.test('NavigationTest', function () {
   checkLeaf({ element: '1.1.2', offset: 0 }, '1.1', 1);
   checkLeaf({ element: '1.1.2', offset: 'post-image text'.length }, '1.1', 2);
   checkLeaf({ element: '1.2.2.1', offset: 0 }, '1.2', 1);
-  checkLeaf(
-    { element: '1.2.5', offset: 'Last piece of text'.length },
-    '1.2',
-    5
-  );
+  checkLeaf({ element: '1.2.5', offset: 'Last piece of text'.length }, '1.2', 5);
 
-  const checkFreeFallLtr = function (
-    expected: CheckItem,
-    universe: TestUniverse,
-    elementId: string
-  ) {
+  const checkFreeFallLtr = function (expected: CheckItem, universe: TestUniverse, elementId: string) {
     const element = Finder.get(doc, elementId);
     const actual = Navigation.freefallLtr(universe, element);
     assert.eq(element.id, elementId);
@@ -75,11 +61,7 @@ UnitTest.test('NavigationTest', function () {
     assert.eq(expected.offset, actual.offset());
   };
 
-  const checkFreeFallRtl = function (
-    expected: CheckItem,
-    universe: TestUniverse,
-    elementId: string
-  ) {
+  const checkFreeFallRtl = function (expected: CheckItem, universe: TestUniverse, elementId: string) {
     const element = Finder.get(doc, elementId);
     const actual = Navigation.freefallRtl(universe, element);
     assert.eq(element.id, elementId);
@@ -115,11 +97,7 @@ UnitTest.test('NavigationTest', function () {
   checkFreeFallRtl({ element: '1.2.5', offset: 18 }, doc, '1.2.5');
 
   // Freefall with comment nodes: tbio-4938
-  doc = TestUniverse(
-    Gene('2-root', '2-root', [
-      Gene('2-1', 'p', [TextGene('2-1.1', 'some text')])
-    ])
-  );
+  doc = TestUniverse(Gene('2-root', '2-root', [Gene('2-1', 'p', [TextGene('2-1.1', 'some text')])]));
 
   checkFreeFallLtr({ element: '2-1.1', offset: 0 }, doc, '2-root');
   checkFreeFallLtr({ element: '2-1.1', offset: 0 }, doc, '2-1');
@@ -129,14 +107,7 @@ UnitTest.test('NavigationTest', function () {
   checkFreeFallRtl({ element: '2-1.1', offset: 9 }, doc, '2-1');
   checkFreeFallRtl({ element: '2-1.1', offset: 9 }, doc, '2-1.1');
 
-  doc = TestUniverse(
-    Gene('3-root', '3-root', [
-      Gene('3-1', 'p', [
-        CommentGene('3-c0', 'some comment'),
-        TextGene('3-1.1', 'some text')
-      ])
-    ])
-  );
+  doc = TestUniverse(Gene('3-root', '3-root', [Gene('3-1', 'p', [CommentGene('3-c0', 'some comment'), TextGene('3-1.1', 'some text')])]));
 
   checkFreeFallLtr({ element: '3-1.1', offset: 0 }, doc, '3-root');
   checkFreeFallLtr({ element: '3-1.1', offset: 0 }, doc, '3-1');
@@ -151,11 +122,7 @@ UnitTest.test('NavigationTest', function () {
   doc = TestUniverse(
     Gene('4-root', '4-root', [
       CommentGene('4-c0', 'some comment'),
-      Gene('4-1', 'p', [
-        CommentGene('4-c1', 'some comment'),
-        TextGene('4-1.1', 'some text'),
-        CommentGene('4-c2', 'some comment')
-      ])
+      Gene('4-1', 'p', [CommentGene('4-c1', 'some comment'), TextGene('4-1.1', 'some text'), CommentGene('4-c2', 'some comment')])
     ])
   );
 

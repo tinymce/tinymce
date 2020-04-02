@@ -32,10 +32,9 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   SketchBehaviours.field('expandableBehaviours', [Representing])
 ]);
 
-const runOnExtra = (
-  detail: ExpandableFormDetail,
-  operation: (comp: AlloyComponent) => void
-): ((comp: AlloyComponent) => void) => (anyComp) => {
+const runOnExtra = (detail: ExpandableFormDetail, operation: (comp: AlloyComponent) => void): ((comp: AlloyComponent) => void) => (
+  anyComp
+) => {
   AlloyParts.getPart(anyComp, detail, 'extra').each(operation);
 };
 
@@ -93,11 +92,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
               detail.onGrown(extra);
             },
             getAnimationRoot(extra: AlloyComponent) {
-              return extra
-                .getSystem()
-                .getByUid(detail.uid)
-                .getOrDie()
-                .element();
+              return extra.getSystem().getByUid(detail.uid).getOrDie().element();
             }
           })
         ])

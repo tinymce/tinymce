@@ -15,10 +15,7 @@ const setup = (editor: Editor) => {
   editor.on('click keyup touchend', () => {
     const selectedNode = editor.selection.getNode();
 
-    if (
-      selectedNode &&
-      editor.dom.hasClass(selectedNode, 'mce-preview-object')
-    ) {
+    if (selectedNode && editor.dom.hasClass(selectedNode, 'mce-preview-object')) {
       if (editor.dom.getAttrib(selectedNode, 'data-mce-selected')) {
         selectedNode.setAttribute('data-mce-selected', '2');
       }

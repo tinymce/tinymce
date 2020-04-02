@@ -195,9 +195,7 @@ export default (): void => {
                     border: '1px solid green'
                   }
                 },
-                components: [
-                  parts.field('gamma', DemoFields.textMunger(gammaSpec))
-                ]
+                components: [parts.field('gamma', DemoFields.textMunger(gammaSpec))]
               }),
               parts.field('delta', DemoFields.textMunger(deltaSpec)),
               parts.field('epsilon', DemoFields.textMunger(epsilonSpec)),
@@ -229,9 +227,7 @@ export default (): void => {
               action(_button) {
                 console.log(
                   'Exp Form values',
-                  Obj.map(Representing.getValue(expform), (v) =>
-                    v.getOr('Not found')
-                  )
+                  Obj.map(Representing.getValue(expform), (v) => v.getOr('Not found'))
                 );
               }
             })

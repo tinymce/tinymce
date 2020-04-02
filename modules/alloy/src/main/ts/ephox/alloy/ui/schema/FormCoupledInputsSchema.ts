@@ -28,11 +28,8 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   SketchBehaviours.field('coupledFieldBehaviours', [Composing, Representing])
 ]);
 
-const getField = (
-  comp: AlloyComponent,
-  detail: FormCoupledInputsDetail,
-  partName: string
-) => AlloyParts.getPart(comp, detail, partName).bind(Composing.getCurrent);
+const getField = (comp: AlloyComponent, detail: FormCoupledInputsDetail, partName: string) =>
+  AlloyParts.getPart(comp, detail, partName).bind(Composing.getCurrent);
 
 const coupledPart = (selfName: string, otherName: string) =>
   PartType.required<FormCoupledInputsDetail, FormFieldSpec>({

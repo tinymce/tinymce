@@ -14,16 +14,10 @@ import Editor from 'tinymce/core/api/Editor';
 
 const getLink = (editor: Editor, elm) => editor.dom.getParent(elm, 'a[href]');
 
-const getSelectedLink = (editor: Editor) =>
-  getLink(editor, editor.selection.getStart());
+const getSelectedLink = (editor: Editor) => getLink(editor, editor.selection.getStart());
 
 const hasOnlyAltModifier = function (e) {
-  return (
-    e.altKey === true &&
-    e.shiftKey === false &&
-    e.ctrlKey === false &&
-    e.metaKey === false
-  );
+  return e.altKey === true && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false;
 };
 
 const gotoLink = (editor: Editor, a) => {
@@ -60,12 +54,7 @@ const leftClickedOnAHref = (editor: Editor) =>
       rng = sel.getRng();
       node = rng.startContainer;
       // ignore cursor positions at the beginning/end (to make context toolbar less noisy)
-      if (
-        node.nodeType === 3 &&
-        sel.isCollapsed() &&
-        rng.startOffset > 0 &&
-        rng.startOffset < node.data.length
-      ) {
+      if (node.nodeType === 3 && sel.isCollapsed() && rng.startOffset > 0 && rng.startOffset < node.data.length) {
         return true;
       }
     }
@@ -92,10 +81,7 @@ const setupGotoLinks = (editor: Editor) => {
 
 const toggleActiveState = (editor: Editor) =>
   function (api) {
-    const nodeChangeHandler = (e) =>
-      api.setActive(
-        !editor.mode.isReadOnly() && !!Utils.getAnchorElement(editor, e.element)
-      );
+    const nodeChangeHandler = (e) => api.setActive(!editor.mode.isReadOnly() && !!Utils.getAnchorElement(editor, e.element));
     editor.on('NodeChange', nodeChangeHandler);
     return () => editor.off('NodeChange', nodeChangeHandler);
   };
@@ -104,17 +90,9 @@ const toggleEnabledState = (editor: Editor) =>
   function (api) {
     const parents = editor.dom.getParents(editor.selection.getStart());
     api.setDisabled(!Utils.hasLinks(parents));
-    const nodeChangeHandler = (e) =>
-      api.setDisabled(!Utils.hasLinks(e.parents));
+    const nodeChangeHandler = (e) => api.setDisabled(!Utils.hasLinks(e.parents));
     editor.on('NodeChange', nodeChangeHandler);
     return () => editor.off('NodeChange', nodeChangeHandler);
   };
 
-export {
-  openDialog,
-  gotoSelectedLink,
-  leftClickedOnAHref,
-  setupGotoLinks,
-  toggleActiveState,
-  toggleEnabledState
-};
+export { openDialog, gotoSelectedLink, leftClickedOnAHref, setupGotoLinks, toggleActiveState, toggleEnabledState };

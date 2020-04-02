@@ -16,8 +16,6 @@ const entitiesAttr = {
 };
 
 const htmlEscape = (html: string): string =>
-  html.replace(/["'<>&]/g, (match: string) =>
-    Obj.get<Record<string, string>, string>(entitiesAttr, match).getOr(match)
-  );
+  html.replace(/["'<>&]/g, (match: string) => Obj.get<Record<string, string>, string>(entitiesAttr, match).getOr(match));
 
 export { htmlEscape };

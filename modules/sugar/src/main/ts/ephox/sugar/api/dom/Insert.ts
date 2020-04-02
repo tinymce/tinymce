@@ -40,11 +40,7 @@ const append = function (parent: Element<DomNode>, element: Element<DomNode>) {
   parent.dom().appendChild(element.dom());
 };
 
-const appendAt = function (
-  parent: Element<DomNode>,
-  element: Element<DomNode>,
-  index: number
-) {
+const appendAt = function (parent: Element<DomNode>, element: Element<DomNode>, index: number) {
   Traverse.child(parent, index).fold(
     function () {
       append(parent, element);

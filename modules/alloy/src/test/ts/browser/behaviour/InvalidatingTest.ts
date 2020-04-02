@@ -1,14 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  GeneralSteps,
-  Guard,
-  Logger,
-  Step,
-  UiControls,
-  Waiter
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Logger, Step, UiControls, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Cell, Future, Option, Result } from '@ephox/katamari';
 import { Element, Value } from '@ephox/sugar';
@@ -37,10 +27,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
             validator: {
               validate(input) {
                 const value = Value.get(input.element());
-                const res =
-                  value === 'good-value'
-                    ? Result.value('good-value')
-                    : Result.error('bad value: ' + value);
+                const res = value === 'good-value' ? Result.value('good-value') : Result.error('bad value: ' + value);
                 return Future.pure(res);
               },
               onEvent: 'custom.test.validate'
@@ -93,33 +80,22 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
       const sCheckValid = (label: string) => sCheckValidOf(label, component);
 
-      const sCheckInvalid = (label: string) =>
-        sCheckInvalidOf(label, component);
+      const sCheckInvalid = (label: string) => sCheckInvalidOf(label, component);
 
-      const sCheckIsInvalidOf = (
-        label: string,
-        comp: AlloyComponent,
-        expected: boolean
-      ) =>
+      const sCheckIsInvalidOf = (label: string, comp: AlloyComponent, expected: boolean) =>
         Logger.t(
           label,
           Step.control(
             Step.sync(() => {
-              Assertions.assertEq(
-                'Checking invalid status is: ' + expected,
-                expected,
-                Invalidating.isInvalid(comp)
-              );
+              Assertions.assertEq('Checking invalid status is: ' + expected, expected, Invalidating.isInvalid(comp));
             }),
             Guard.tryUntil('invalid status was not: ' + expected)
           )
         );
 
-      const sCheckIsValid = (label: string) =>
-        sCheckIsInvalidOf(label, component, false);
+      const sCheckIsValid = (label: string) => sCheckIsInvalidOf(label, component, false);
 
-      const sCheckIsInvalid = (label: string) =>
-        sCheckIsInvalidOf(label, component, true);
+      const sCheckIsInvalid = (label: string) => sCheckIsInvalidOf(label, component, true);
 
       const sCheckHasAriaInvalidOf = (label: string, comp: AlloyComponent) =>
         Logger.t(
@@ -159,11 +135,9 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
           )
         );
 
-      const sCheckHasAriaInvalid = (label: string) =>
-        sCheckHasAriaInvalidOf(label, component);
+      const sCheckHasAriaInvalid = (label: string) => sCheckHasAriaInvalidOf(label, component);
 
-      const sCheckHasNoAriaInvalid = (label: string) =>
-        sCheckHasNoAriaInvalidOf(label, component);
+      const sCheckHasNoAriaInvalid = (label: string) => sCheckHasNoAriaInvalidOf(label, component);
 
       const sValidate = GeneralSteps.sequence([
         Step.sync(() => {
@@ -240,102 +214,56 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
         UiControls.sSetValueOn(gui.element(), 'input', 'good-value'),
         sValidate,
-        sCheckValid(
-          'validation should have fixed it (eventually... because future based)'
-        ),
+        sCheckValid('validation should have fixed it (eventually... because future based)'),
 
         UiControls.sSetValueOn(gui.element(), 'input', 'bad-value'),
         sValidate,
-        sCheckInvalid(
-          'validation should fail (eventually... because future based)'
-        ),
+        sCheckInvalid('validation should fail (eventually... because future based)'),
         sCheckHasAriaInvalid('the field should have aria-invalid'),
 
-        Chain.asStep({}, [
-          cQueryApi,
-          cCheckValidationFails('Querying "bad-value"', 'bad value: bad-value')
-        ]),
-        sCheckInvalid(
-          'validation should fail (eventually... because future based)'
-        ),
+        Chain.asStep({}, [cQueryApi, cCheckValidationFails('Querying "bad-value"', 'bad value: bad-value')]),
+        sCheckInvalid('validation should fail (eventually... because future based)'),
 
         UiControls.sSetValueOn(gui.element(), 'input', 'good-value'),
-        Chain.asStep({}, [
-          cQueryApi,
-          cCheckValidationPasses('Querying "good-value"', 'good-value')
-        ]),
-        sCheckInvalid(
-          'the query API should not change the classes on the input'
-        ),
+        Chain.asStep({}, [cQueryApi, cCheckValidationPasses('Querying "good-value"', 'good-value')]),
+        sCheckInvalid('the query API should not change the classes on the input'),
 
-        Chain.asStep({}, [
-          cRunApi,
-          cCheckValidationPasses('Running on "good-value"', 'good-value')
-        ]),
+        Chain.asStep({}, [cRunApi, cCheckValidationPasses('Running on "good-value"', 'good-value')]),
         sCheckValid('run API should update classes on the input to success'),
 
         UiControls.sSetValueOn(gui.element(), 'input', 'bad-value'),
-        Chain.asStep({}, [
-          cRunApi,
-          cCheckValidationFails(
-            'Running on "bad-value"',
-            'bad value: bad-value'
-          )
-        ]),
+        Chain.asStep({}, [cRunApi, cCheckValidationFails('Running on "bad-value"', 'bad value: bad-value')]),
         sCheckInvalid('run API should update classes on the input to failure'),
 
         Step.sync(() => {
           Invalidating.markValid(component);
         }),
-        sCheckValid(
-          'Before changing getRoot, everything should be valid again'
-        ),
+        sCheckValid('Before changing getRoot, everything should be valid again'),
 
         sCheckValidOf('Other should initially be valid', other),
         Step.sync(() => {
           root.set(Option.some(other.element()));
         }),
 
-        Chain.asStep({}, [
-          cRunApi,
-          cCheckValidationFails(
-            'Running on "bad-value"',
-            'bad value: bad-value'
-          )
-        ]),
-        sCheckInvalidOf(
-          'After running validation, the "other" should be invalid now',
-          other
-        ),
+        Chain.asStep({}, [cRunApi, cCheckValidationFails('Running on "bad-value"', 'bad value: bad-value')]),
+        sCheckInvalidOf('After running validation, the "other" should be invalid now', other),
         sCheckValid('The first input should stay valid the whole time'),
 
         UiControls.sSetValueOn(gui.element(), 'input', 'good-value'),
-        Chain.asStep({}, [
-          cRunApi,
-          cCheckValidationPasses('Running on "good-value"', 'good-value')
-        ]),
-        sCheckValidOf(
-          'After running validation, the "other" should be valid now',
-          other
-        ),
+        Chain.asStep({}, [cRunApi, cCheckValidationPasses('Running on "good-value"', 'good-value')]),
+        sCheckValidOf('After running validation, the "other" should be valid now', other),
         sCheckValid('The first input should stay valid the whole time'),
 
         Step.sync(() => {
           Invalidating.markInvalid(component, 'programmatic bad value');
         }),
-        sCheckInvalidOf(
-          'After running markInvalid, the "other" should be invalid again',
-          other
-        ),
+        sCheckInvalidOf('After running markInvalid, the "other" should be invalid again', other),
         sCheckValid('The first input should stay valid the whole time'),
 
         Step.sync(() => {
           Invalidating.markValid(component);
         }),
-        sCheckValidOf(
-          'After running markValid, the "other" should be valid again',
-          other
-        ),
+        sCheckValidOf('After running markValid, the "other" should be valid again', other),
         sCheckValid('The first input should stay valid the whole time'),
 
         GuiSetup.mRemoveStyles

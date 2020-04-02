@@ -21,18 +21,11 @@ const findWordEnd = (characters: string[], startIndex: number) => {
 
 const findUrlEnd = (characters: string[], startIndex: number): number => {
   const endIndex = findWordEnd(characters, startIndex + 1);
-  const peakedWord = characters
-    .slice(startIndex + 1, endIndex)
-    .join(EMPTY_STRING);
+  const peakedWord = characters.slice(startIndex + 1, endIndex).join(EMPTY_STRING);
   return peakedWord.substr(0, 3) === '://' ? endIndex : startIndex;
 };
 
-const findWords = <T>(
-  chars: T[],
-  sChars: string[],
-  characterMap: CharacterMap,
-  options: WordOptions
-): T[][] => {
+const findWords = <T>(chars: T[], sChars: string[], characterMap: CharacterMap, options: WordOptions): T[][] => {
   const words: T[][] = [];
   let word: T[] = [];
 
@@ -46,10 +39,7 @@ const findWords = <T>(
     // append the current word to the words array and start building a new word.
     if (isWordBoundary(characterMap, i)) {
       const ch = sChars[i];
-      if (
-        (options.includeWhitespace || !WHITESPACE.test(ch)) &&
-        (options.includePunctuation || !PUNCTUATION.test(ch))
-      ) {
+      if ((options.includeWhitespace || !WHITESPACE.test(ch)) && (options.includePunctuation || !PUNCTUATION.test(ch))) {
         const startOfWord = i - word.length + 1;
         const endOfWord = i + 1;
         const str = sChars.slice(startOfWord, endOfWord).join(EMPTY_STRING);
@@ -81,11 +71,7 @@ const getDefaultOptions = (): WordOptions => ({
   includePunctuation: false
 });
 
-const getWords = <T>(
-  chars: T[],
-  extract: (char: T) => string,
-  options?: WordOptions
-): T[][] => {
+const getWords = <T>(chars: T[], extract: (char: T) => string, options?: WordOptions): T[][] => {
   options = {
     ...getDefaultOptions(),
     ...options

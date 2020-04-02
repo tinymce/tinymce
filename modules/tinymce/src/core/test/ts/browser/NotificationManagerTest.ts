@@ -7,27 +7,20 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
 import { NotificationSpec } from 'tinymce/core/api/NotificationManager';
 
-UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (success, failure) {
   Theme();
 
   const suite = LegacyUnit.createSuite<Editor>();
 
   const teardown = function (editor: Editor) {
-    const notifications = [].concat(
-      editor.notificationManager.getNotifications()
-    );
+    const notifications = [].concat(editor.notificationManager.getNotifications());
 
     Tools.each(notifications, function (notification) {
       notification.close();
     });
   };
 
-  suite.test('TestCase-TBA: Should not add duplicate text message', function (
-    editor
-  ) {
+  suite.test('TestCase-TBA: Should not add duplicate text message', function (editor) {
     const testMsg1: NotificationSpec = {
       type: 'success',
       text: 'test success message'
@@ -48,144 +41,94 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (
 
     editor.notificationManager.open(testMsg1);
 
-    LegacyUnit.equal(
-      notifications.length,
-      1,
-      'Should have one message after one added.'
-    );
+    LegacyUnit.equal(notifications.length, 1, 'Should have one message after one added.');
 
     editor.notificationManager.open(testMsg1);
 
-    LegacyUnit.equal(
-      notifications.length,
-      1,
-      'Should not add message if duplicate.'
-    );
+    LegacyUnit.equal(notifications.length, 1, 'Should not add message if duplicate.');
 
     editor.notificationManager.open(testMsg2);
     editor.notificationManager.open(testMsg3);
     editor.notificationManager.open(testMsg4);
 
-    LegacyUnit.equal(
-      notifications.length,
-      4,
-      'Non duplicate messages should get added.'
-    );
+    LegacyUnit.equal(notifications.length, 4, 'Non duplicate messages should get added.');
 
     editor.notificationManager.open(testMsg2);
     editor.notificationManager.open(testMsg3);
     editor.notificationManager.open(testMsg4);
 
-    LegacyUnit.equal(
-      notifications.length,
-      4,
-      'Should work for all text message types.'
-    );
+    LegacyUnit.equal(notifications.length, 4, 'Should work for all text message types.');
 
     teardown(editor);
   });
 
-  suite.test(
-    'TestCase-TBA: Should add duplicate progressBar messages',
-    function (editor) {
-      const testMsg1: NotificationSpec = {
-        text: 'test progressBar message',
-        progressBar: true
-      };
-      const notifications = editor.notificationManager.getNotifications();
+  suite.test('TestCase-TBA: Should add duplicate progressBar messages', function (editor) {
+    const testMsg1: NotificationSpec = {
+      text: 'test progressBar message',
+      progressBar: true
+    };
+    const notifications = editor.notificationManager.getNotifications();
 
-      editor.notificationManager.open(testMsg1);
+    editor.notificationManager.open(testMsg1);
 
-      LegacyUnit.equal(
-        notifications.length,
-        1,
-        'Should have one message after one added.'
-      );
+    LegacyUnit.equal(notifications.length, 1, 'Should have one message after one added.');
 
-      editor.notificationManager.open(testMsg1);
-      editor.notificationManager.open(testMsg1);
-      editor.notificationManager.open(testMsg1);
+    editor.notificationManager.open(testMsg1);
+    editor.notificationManager.open(testMsg1);
+    editor.notificationManager.open(testMsg1);
 
-      LegacyUnit.equal(
-        notifications.length,
-        4,
-        'Duplicate should be added for progressBar message.'
-      );
+    LegacyUnit.equal(notifications.length, 4, 'Duplicate should be added for progressBar message.');
 
-      teardown(editor);
-    }
-  );
+    teardown(editor);
+  });
 
-  suite.asyncTest(
-    'TestCase-TBA: Should add duplicate timeout messages',
-    function (editor, done) {
-      const checkClosed = function () {
-        if (notifications.length === 0) {
-          done();
-          teardown(editor);
-        }
-      };
-      const testMsg1: NotificationSpec = {
-        text: 'test timeout message',
-        timeout: 1
-      };
-      const notifications = editor.notificationManager.getNotifications();
-
-      editor.notificationManager.open(testMsg1);
-
-      LegacyUnit.equal(
-        notifications.length,
-        1,
-        'Should have one message after one added.'
-      );
-
-      editor.notificationManager.open(testMsg1);
-
-      LegacyUnit.equal(
-        notifications.length,
-        2,
-        'Duplicate should be added for timeout message.'
-      );
-
-      Delay.setTimeout(() => {
-        checkClosed();
-      }, 100);
-    }
-  );
-
-  suite.test(
-    'TestCase-TBA: Should not open notification if editor is removed',
-    function (editor) {
-      const testMsg1: NotificationSpec = {
-        type: 'warning',
-        text: 'test progressBar message'
-      };
-
-      editor.remove();
-
-      try {
-        editor.notificationManager.open(testMsg1);
-        LegacyUnit.equal(true, true, 'Should execute without throwing.');
-      } catch (e) {
-        LegacyUnit.equal(true, false, 'Should never throw exception.');
+  suite.asyncTest('TestCase-TBA: Should add duplicate timeout messages', function (editor, done) {
+    const checkClosed = function () {
+      if (notifications.length === 0) {
+        done();
+        teardown(editor);
       }
+    };
+    const testMsg1: NotificationSpec = {
+      text: 'test timeout message',
+      timeout: 1
+    };
+    const notifications = editor.notificationManager.getNotifications();
 
-      teardown(editor);
+    editor.notificationManager.open(testMsg1);
+
+    LegacyUnit.equal(notifications.length, 1, 'Should have one message after one added.');
+
+    editor.notificationManager.open(testMsg1);
+
+    LegacyUnit.equal(notifications.length, 2, 'Duplicate should be added for timeout message.');
+
+    Delay.setTimeout(() => {
+      checkClosed();
+    }, 100);
+  });
+
+  suite.test('TestCase-TBA: Should not open notification if editor is removed', function (editor) {
+    const testMsg1: NotificationSpec = {
+      type: 'warning',
+      text: 'test progressBar message'
+    };
+
+    editor.remove();
+
+    try {
+      editor.notificationManager.open(testMsg1);
+      LegacyUnit.equal(true, true, 'Should execute without throwing.');
+    } catch (e) {
+      LegacyUnit.equal(true, false, 'Should never throw exception.');
     }
-  );
+
+    teardown(editor);
+  });
 
   TinyLoader.setupLight(
     function (editor, onSuccess, onFailure) {
-      Pipeline.async(
-        {},
-        Log.steps(
-          'TBA',
-          'Testing the notifications api',
-          suite.toSteps(editor)
-        ),
-        onSuccess,
-        onFailure
-      );
+      Pipeline.async({}, Log.steps('TBA', 'Testing the notifications api', suite.toSteps(editor)), onSuccess, onFailure);
     },
     {
       add_unload_trigger: false,

@@ -38,10 +38,4 @@ const getSpellcheckerWordcharPattern = function (editor: Editor) {
   return editor.getParam('spellchecker_wordchar_pattern', defaultPattern);
 };
 
-export {
-  getLanguages,
-  getLanguage,
-  getRpcUrl,
-  getSpellcheckerCallback,
-  getSpellcheckerWordcharPattern
-};
+export { getLanguages, getLanguage, getRpcUrl, getSpellcheckerCallback, getSpellcheckerWordcharPattern };

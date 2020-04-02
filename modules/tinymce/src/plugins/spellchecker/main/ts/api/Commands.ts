@@ -21,14 +21,7 @@ const register = function (
   currentLanguageState: Cell<string>
 ) {
   editor.addCommand('mceSpellCheck', function () {
-    Actions.spellcheck(
-      editor,
-      pluginUrl,
-      startedState,
-      textMatcherState,
-      lastSuggestionsState,
-      currentLanguageState
-    );
+    Actions.spellcheck(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
   });
 };
 

@@ -1,10 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  FocusTools,
-  Guard,
-  Step
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Guard, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -47,11 +41,7 @@ UnitTest.asynctest('FocusingTest', (success, failure) => {
       ),
 
       Step.control(
-        FocusTools.sIsOnSelector(
-          'Should not start with focus',
-          doc,
-          '.focusable'
-        ),
+        FocusTools.sIsOnSelector('Should not start with focus', doc, '.focusable'),
         // NOTE: this required a change to agar because it was throwing an error prototype,
         // rather than die for its assertion, which meant that the tryUntilNot did not work.
         // I had to hack the local agar to ignore the error prototype check in Guard. Will

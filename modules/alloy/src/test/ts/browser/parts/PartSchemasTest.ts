@@ -72,11 +72,7 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
     input: { external?: string }
   ) => {
     const schemas = AlloyParts.schemas(parts);
-    const output = ValueSchema.asRawOrDie(
-      label,
-      ValueSchema.objOfOnly(schemas),
-      input
-    );
+    const output = ValueSchema.asRawOrDie(label, ValueSchema.objOfOnly(schemas), input);
 
     Assert.eq(label, expected, output);
     return true;
@@ -84,22 +80,15 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
 
   checkSuccess('sanity: just internal', {}, [internal], {});
 
-  checkSuccess(
-    'sanity: just external',
-    { external: { entirety: 'external.schema' } },
-    [external],
-    {
-      external: 'external.schema'
-    }
-  );
+  checkSuccess('sanity: just external', { external: { entirety: 'external.schema' } }, [external], {
+    external: 'external.schema'
+  });
 
   checkSuccess('sanity: group', {}, [group], {});
 
   checkSuccess('sanity: just optional', {}, [optional], {});
 
-  Jsc.syncProperty('Just internal', [Jsc.string], () =>
-    checkSuccess('just internal', {}, [internal], {})
-  );
+  Jsc.syncProperty('Just internal', [Jsc.string], () => checkSuccess('just internal', {}, [internal], {}));
 
   Jsc.syncProperty('Just external', [Jsc.string], (s: string) =>
     checkSuccess(
@@ -112,7 +101,5 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
     )
   );
 
-  Jsc.syncProperty('Just group', [Jsc.string], () =>
-    checkSuccess('just group', {}, [group], {})
-  );
+  Jsc.syncProperty('Just group', [Jsc.string], () => checkSuccess('just group', {}, [group], {}));
 });

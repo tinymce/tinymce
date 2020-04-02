@@ -1,9 +1,7 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
 
 const formatObj = function (input) {
-  return Type.isObject(input) && Obj.keys(input).length > 100
-    ? ' removed due to size'
-    : JSON.stringify(input, null, 2);
+  return Type.isObject(input) && Obj.keys(input).length > 100 ? ' removed due to size' : JSON.stringify(input, null, 2);
 };
 
 const formatErrors = function (errors) {

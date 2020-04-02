@@ -45,26 +45,8 @@ UnitTest.asynctest('SmoothAnimationTest', function () {
   };
 
   const assertInfo = function (label, expected, info) {
-    assert.eq(
-      expected.current,
-      info.current,
-      'Test: ' +
-        label +
-        '. Expected current: ' +
-        expected.current +
-        ', but was: ' +
-        info.current
-    );
-    assert.eq(
-      expected.values,
-      info.values,
-      'Test: ' +
-        label +
-        '. Expected values: ' +
-        expected.values +
-        ', but was: ' +
-        info.values
-    );
+    assert.eq(expected.current, info.current, 'Test: ' + label + '. Expected current: ' + expected.current + ', but was: ' + info.current);
+    assert.eq(expected.values, info.values, 'Test: ' + label + '. Expected values: ' + expected.values + ', but was: ' + info.values);
   };
 
   check('Test 1', 2, 10, 3).get(function (data1) {
@@ -72,17 +54,9 @@ UnitTest.asynctest('SmoothAnimationTest', function () {
     check('Test 2', 15, 9, 4).get(function (data2) {
       assertInfo(data2.label, { current: 9, values: [15, 11, 9] }, data2.info);
       check('Test 3: jump to end', 15, 9, -4).get(function (data3) {
-        assertInfo(
-          data3.label,
-          { current: 9, values: [15, 19, /* jump to end*/ 9] },
-          data3.info
-        );
+        assertInfo(data3.label, { current: 9, values: [15, 19, /* jump to end*/ 9] }, data3.info);
         check('Test 4: abort', 10, 1000, 50).get(function (data4) {
-          assertInfo(
-            data4.label,
-            { current: 'abort', values: [10, 60, 'abort'] },
-            data4.info
-          );
+          assertInfo(data4.label, { current: 'abort', values: [10, 60, 'abort'] }, data4.info);
           success();
         });
       });

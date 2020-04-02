@@ -1,15 +1,5 @@
 import { HTMLInputElement, HTMLButtonElement } from '@ephox/dom-globals';
-import {
-  Attr,
-  Css,
-  DomEvent,
-  Element,
-  Html,
-  Insert,
-  InsertAll,
-  Remove,
-  Value
-} from '@ephox/sugar';
+import { Attr, Css, DomEvent, Element, Html, Insert, InsertAll, Remove, Value } from '@ephox/sugar';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as FocusTools from 'ephox/agar/api/FocusTools';
 import * as Mouse from 'ephox/agar/api/Mouse';
@@ -26,9 +16,7 @@ export const demo = (): void => {
 
       const labelName = Element.fromTag('label');
       Html.set(labelName, 'Name');
-      const fieldName = Element.fromHtml<HTMLInputElement>(
-        '<input type="text" />'
-      );
+      const fieldName = Element.fromHtml<HTMLInputElement>('<input type="text" />');
 
       const submit = Element.fromTag('button');
       Attr.set(submit, 'type', 'button');

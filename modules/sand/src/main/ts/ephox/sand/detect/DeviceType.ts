@@ -24,12 +24,10 @@ export const DeviceType = function (
   const isiPhone = os.isiOS() && !isiPad;
   const isMobile = os.isiOS() || os.isAndroid();
   const isTouch = isMobile || mediaMatch('(pointer:coarse)');
-  const isTablet =
-    isiPad || (!isiPhone && isMobile && mediaMatch('(min-device-width:768px)'));
+  const isTablet = isiPad || (!isiPhone && isMobile && mediaMatch('(min-device-width:768px)'));
   const isPhone = isiPhone || (isMobile && !isTablet);
 
-  const iOSwebview =
-    browser.isSafari() && os.isiOS() && /safari/i.test(userAgent) === false;
+  const iOSwebview = browser.isSafari() && os.isiOS() && /safari/i.test(userAgent) === false;
   const isDesktop = !isPhone && !isTablet && !iOSwebview;
 
   return {

@@ -19,9 +19,5 @@ UnitTest.test('DomSearchingTest', function () {
     Fun.constant(false)
   );
 
-  assert.eq(
-    0,
-    result.length,
-    'There should be no matches, because some and text are separated by a list boundary'
-  );
+  assert.eq(0, result.length, 'There should be no matches, because some and text are separated by a list boundary');
 });

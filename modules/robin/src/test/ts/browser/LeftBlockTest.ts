@@ -1,15 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { DomUniverse, Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
-import {
-  Body,
-  Element,
-  Hierarchy,
-  Insert,
-  InsertAll,
-  Remove,
-  Replication
-} from '@ephox/sugar';
+import { Body, Element, Hierarchy, Insert, InsertAll, Remove, Replication } from '@ephox/sugar';
 import * as LeftBlock from 'ephox/robin/api/general/LeftBlock';
 
 UnitTest.test('LeftBlockTest', function () {
@@ -18,8 +10,7 @@ UnitTest.test('LeftBlockTest', function () {
   const editor = Element.fromTag('div');
 
   const reset = function () {
-    editor.dom().innerHTML =
-      '<p>alpha<span>cat</span><b>hello<i>word</i>hi</b>there</p>';
+    editor.dom().innerHTML = '<p>alpha<span>cat</span><b>hello<i>word</i>hi</b>there</p>';
   };
 
   const setup = function () {
@@ -30,11 +21,7 @@ UnitTest.test('LeftBlockTest', function () {
     Remove.remove(editor);
   };
 
-  const check = function (
-    expected: string,
-    path: number[],
-    method: <E, D>(universe: Universe<E, D>, item: E) => E[]
-  ) {
+  const check = function (expected: string, path: number[], method: <E, D>(universe: Universe<E, D>, item: E) => E[]) {
     reset();
     const ele = Hierarchy.follow(editor, path);
     assert.eq(true, ele.isSome(), 'Could not find element at path: ' + path);

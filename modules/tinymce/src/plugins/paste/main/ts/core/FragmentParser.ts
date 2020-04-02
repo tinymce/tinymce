@@ -20,9 +20,7 @@ const findEndTokenIndex = function (regexp: RegExp, html: string) {
 const unwrap = function (startRe: RegExp, endRe: RegExp, html: string) {
   const startIndex = findStartTokenIndex(startRe, html);
   const endIndex = findEndTokenIndex(endRe, html);
-  return startIndex !== -1 && endIndex !== -1
-    ? html.substring(startIndex, endIndex)
-    : html;
+  return startIndex !== -1 && endIndex !== -1 ? html.substring(startIndex, endIndex) : html;
 };
 
 const parseContext = function (html: string) {
@@ -45,18 +43,12 @@ const getFragmentInfo = function (html: string) {
 };
 
 const unwrapHtml = function (html: string) {
-  return unwrap(
-    /<body[^>]*>/gi,
-    /<\/body>/gi,
-    unwrap(/<!--\s*StartFragment\s*-->/g, /<!--\s*EndFragment\s*-->/g, html)
-  );
+  return unwrap(/<body[^>]*>/gi, /<\/body>/gi, unwrap(/<!--\s*StartFragment\s*-->/g, /<!--\s*EndFragment\s*-->/g, html));
 };
 
 const getFragmentHtml = function (html: string) {
   const fragmentInfo = getFragmentInfo(html);
-  return validContext.test(fragmentInfo.context)
-    ? unwrapHtml(fragmentInfo.html)
-    : unwrapHtml(html);
+  return validContext.test(fragmentInfo.context) ? unwrapHtml(fragmentInfo.html) : unwrapHtml(html);
 };
 
 export { getFragmentInfo, getFragmentHtml };

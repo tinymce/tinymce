@@ -40,15 +40,4 @@ const wordchar: WordcharApi = Chars.wordchar;
 type PunctuationApi = () => string;
 const punctuation: PunctuationApi = Chars.punctuation;
 
-export {
-  safeword,
-  safetoken,
-  custom,
-  unsafeword,
-  unsafetoken,
-  sanitise,
-  chars,
-  wordbreak,
-  wordchar,
-  punctuation
-};
+export { safeword, safetoken, custom, unsafeword, unsafetoken, sanitise, chars, wordbreak, wordchar, punctuation };

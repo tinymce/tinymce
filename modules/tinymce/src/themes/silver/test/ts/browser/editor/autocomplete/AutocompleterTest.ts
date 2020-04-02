@@ -1,12 +1,4 @@
-import {
-  Logger,
-  Pipeline,
-  Step,
-  Keys,
-  UiFinder,
-  GeneralSteps,
-  Waiter
-} from '@ephox/agar';
+import { Logger, Pipeline, Step, Keys, UiFinder, GeneralSteps, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
@@ -49,33 +41,21 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
       const tinyApis = TinyApis(editor);
       const tinyActions = TinyActions(editor);
 
-      const sSetContentAndTrigger = (
-        details: TriggerDetails,
-        triggerOverride?: number
-      ) => {
+      const sSetContentAndTrigger = (details: TriggerDetails, triggerOverride?: number) => {
         const initialContent = details.initialContent || details.triggerChar;
         const additionalContent = details.additionalContent;
         return GeneralSteps.sequence([
           tinyApis.sSetContent(`<p>${initialContent}</p>`),
           details.cursorPos
-            ? tinyApis.sSetCursor(
-                details.cursorPos.elementPath,
-                details.cursorPos.offset
-              )
+            ? tinyApis.sSetCursor(details.cursorPos.elementPath, details.cursorPos.offset)
             : tinyApis.sSetCursor([0, 0], initialContent.length),
-          tinyActions.sContentKeypress(
-            triggerOverride || details.triggerChar.charCodeAt(0),
-            {}
-          ),
+          tinyActions.sContentKeypress(triggerOverride || details.triggerChar.charCodeAt(0), {}),
           // Wait 50ms for the keypress to process
           Step.wait(50),
           ...(additionalContent
             ? [
                 tinyApis.sExecCommand('mceInsertContent', additionalContent),
-                tinyActions.sContentKeypress(
-                  additionalContent.charCodeAt(additionalContent.length - 1),
-                  {}
-                )
+                tinyActions.sContentKeypress(additionalContent.charCodeAt(additionalContent.length - 1), {})
               ]
             : [])
         ]);
@@ -106,10 +86,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             ]
           ]
         },
-        choice: GeneralSteps.sequence([
-          tinyActions.sContentKeydown(Keys.down(), {}),
-          tinyActions.sContentKeydown(Keys.enter(), {})
-        ]),
+        choice: GeneralSteps.sequence([tinyActions.sContentKeydown(Keys.down(), {}), tinyActions.sContentKeydown(Keys.enter(), {})]),
         assertion: tinyApis.sAssertContent('<p>plus-bB</p>')
       });
 
@@ -122,8 +99,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             [
               {
                 title: 'p-aA',
-                text:
-                  'p-<span class="tox-autocompleter-highlight">a</span><span class="tox-autocompleter-highlight">A</span>',
+                text: 'p-<span class="tox-autocompleter-highlight">a</span><span class="tox-autocompleter-highlight">A</span>',
                 icon: '+'
               },
               { title: 'p-bB', text: 'p-bB', icon: '+' },
@@ -132,10 +108,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             ]
           ]
         },
-        choice: GeneralSteps.sequence([
-          tinyActions.sContentKeydown(Keys.down(), {}),
-          tinyActions.sContentKeydown(Keys.enter(), {})
-        ]),
+        choice: GeneralSteps.sequence([tinyActions.sContentKeydown(Keys.down(), {}), tinyActions.sContentKeydown(Keys.enter(), {})]),
         assertion: tinyApis.sAssertContent('<p>plus-bB</p>')
       });
 
@@ -151,13 +124,8 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             [{ title: 'c2-b', icon: ':' }]
           ]
         },
-        choice: GeneralSteps.sequence([
-          tinyActions.sContentKeydown(Keys.down(), {}),
-          tinyActions.sContentKeydown(Keys.enter(), {})
-        ]),
-        assertion: store.sAssertEq('Second action should fire', [
-          'colon2:colon2-b'
-        ])
+        choice: GeneralSteps.sequence([tinyActions.sContentKeydown(Keys.down(), {}), tinyActions.sContentKeydown(Keys.enter(), {})]),
+        assertion: store.sAssertEq('Second action should fire', ['colon2:colon2-b'])
       });
 
       const sTestThirdAutocomplete = sTestAutocompleter({
@@ -200,9 +168,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           tinyActions.sContentKeydown(Keys.down(), {}),
           tinyActions.sContentKeydown(Keys.enter(), {})
         ]),
-        assertion: store.sAssertEq('Exclamation-c should fire', [
-          'exclamation:exclamation-c'
-        ])
+        assertion: store.sAssertEq('Exclamation-c should fire', ['exclamation:exclamation-c'])
       });
 
       const sTestFifthAutocomplete = sTestAutocompleter({
@@ -217,9 +183,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             ]
           ]
         },
-        choice: GeneralSteps.sequence([
-          tinyActions.sContentKeydown(Keys.enter(), {})
-        ]),
+        choice: GeneralSteps.sequence([tinyActions.sContentKeydown(Keys.enter(), {})]),
         assertion: tinyApis.sAssertContent('<p>test=two</p>')
       });
 
@@ -234,15 +198,12 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             [
               {
                 title: 'equals sign',
-                text:
-                  '<span class="tox-autocompleter-highlight">equals s</span>ign'
+                text: '<span class="tox-autocompleter-highlight">equals s</span>ign'
               }
             ]
           ]
         },
-        choice: GeneralSteps.sequence([
-          tinyActions.sContentKeydown(Keys.enter(), {})
-        ]),
+        choice: GeneralSteps.sequence([tinyActions.sContentKeydown(Keys.enter(), {})]),
         assertion: store.sAssertEq('Hash-= should fire', ['hash:hash-='])
       });
 
@@ -264,9 +225,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             ]
           ]
         },
-        choice: GeneralSteps.sequence([
-          tinyActions.sContentKeydown(Keys.enter(), {})
-        ]),
+        choice: GeneralSteps.sequence([tinyActions.sContentKeydown(Keys.enter(), {})]),
         assertion: tinyApis.sAssertContent('<p>asterisk-a</p>')
       });
 
@@ -282,18 +241,12 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
             }),
             // Can't wait for anything to change, so just wait for a prefixed amount of time
             Step.wait(500),
-            Step.label(
-              'Check the autocompleter does not appear',
-              UiFinder.sNotExists(Body.body(), '.tox-autocompleter')
-            ),
+            Step.label('Check the autocompleter does not appear', UiFinder.sNotExists(Body.body(), '.tox-autocompleter')),
             sSetContentAndTrigger({
               triggerChar: '*',
               additionalContent: 'bc'
             }),
-            tinyUi.sWaitForPopup(
-              'wait for autocompleter to appear',
-              '.tox-autocompleter div[role="menu"]'
-            ),
+            tinyUi.sWaitForPopup('wait for autocompleter to appear', '.tox-autocompleter div[role="menu"]'),
             sAssertAutocompleterStructure({
               type: 'grid',
               groups: [
@@ -321,10 +274,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                 offset: 1
               }
             }),
-            tinyUi.sWaitForPopup(
-              'wait for autocompleter to appear',
-              '.tox-autocompleter div[role="menu"]'
-            ),
+            tinyUi.sWaitForPopup('wait for autocompleter to appear', '.tox-autocompleter div[role="menu"]'),
             sAssertAutocompleterStructure({
               type: 'grid',
               groups: [
@@ -344,8 +294,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           'Immediately after a ce=false element',
           GeneralSteps.sequence([
             sSetContentAndTrigger({
-              initialContent:
-                'Some content <span contenteditable="false">uneditable content</span>*',
+              initialContent: 'Some content <span contenteditable="false">uneditable content</span>*',
               triggerChar: '*',
               additionalContent: 'bc',
               cursorPos: {
@@ -353,10 +302,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                 offset: 1
               }
             }),
-            tinyUi.sWaitForPopup(
-              'wait for autocompleter to appear',
-              '.tox-autocompleter div[role="menu"]'
-            ),
+            tinyUi.sWaitForPopup('wait for autocompleter to appear', '.tox-autocompleter div[role="menu"]'),
             sAssertAutocompleterStructure({
               type: 'grid',
               groups: [
@@ -382,18 +328,12 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         }),
         // Can't wait for anything to change, so just wait for a prefixed amount of time
         Step.wait(500),
-        Step.label(
-          'Check the autocompleter does not appear',
-          UiFinder.sNotExists(Body.body(), '.tox-autocompleter')
-        ),
+        Step.label('Check the autocompleter does not appear', UiFinder.sNotExists(Body.body(), '.tox-autocompleter')),
         sSetContentAndTrigger({
           triggerChar: '=',
           initialContent: 'test=t'
         }),
-        tinyUi.sWaitForPopup(
-          'wait for autocompleter to appear',
-          '.tox-autocompleter div[role="menu"]'
-        ),
+        tinyUi.sWaitForPopup('wait for autocompleter to appear', '.tox-autocompleter div[role="menu"]'),
         sAssertAutocompleterStructure({
           type: 'grid',
           groups: [
@@ -438,10 +378,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           },
           Keys.backspace()
         ),
-        tinyUi.sWaitForPopup(
-          'wait for autocompleter to appear',
-          '.tox-autocompleter div[role="menu"]'
-        ),
+        tinyUi.sWaitForPopup('wait for autocompleter to appear', '.tox-autocompleter div[role="menu"]'),
         sAssertAutocompleterStructure({
           type: 'grid',
           groups: [[{ title: 'two', icon: '=' }]]
@@ -454,46 +391,16 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         {},
         Logger.ts('Trigger autocompleter', [
           tinyApis.sFocus(),
-          Logger.t(
-            'Checking first autocomplete (columns = 1) trigger: "+"',
-            sTestFirstAutocomplete
-          ),
-          Logger.t(
-            'Checking first autocomplete (columns = 1) trigger: "+"',
-            sTestFirstAutocomplete2
-          ),
-          Logger.t(
-            'Checking second autocomplete (columns = 2), two sources, trigger ":"',
-            sTestSecondAutocomplete
-          ),
-          Logger.t(
-            'Checking third autocomplete (columns = auto) trigger: "~"',
-            sTestThirdAutocomplete
-          ),
-          Logger.t(
-            'Checking forth autocomplete, (columns = 1), trigger: "!", no icons',
-            sTestFourthAutocomplete
-          ),
-          Logger.t(
-            'Checking fifth autocomplete, trigger: "=", custom activation check',
-            sTestFifthAutocomplete
-          ),
-          Logger.t(
-            'Checking sixth autocomplete, (columns = 1), trigger: "#", content has spaces',
-            sTestSixthAutocomplete
-          ),
-          Logger.t(
-            'Checking autocomplete activation based on content',
-            sTestAutocompleteActivation
-          ),
-          Logger.t(
-            'Checking autocomplete start of word detection',
-            sTestAutocompleteStartOfWord
-          ),
-          Logger.t(
-            'Checking autocomplete over fragmented text',
-            sTestAutocompleteFragmentedText
-          )
+          Logger.t('Checking first autocomplete (columns = 1) trigger: "+"', sTestFirstAutocomplete),
+          Logger.t('Checking first autocomplete (columns = 1) trigger: "+"', sTestFirstAutocomplete2),
+          Logger.t('Checking second autocomplete (columns = 2), two sources, trigger ":"', sTestSecondAutocomplete),
+          Logger.t('Checking third autocomplete (columns = auto) trigger: "~"', sTestThirdAutocomplete),
+          Logger.t('Checking forth autocomplete, (columns = 1), trigger: "!", no icons', sTestFourthAutocomplete),
+          Logger.t('Checking fifth autocomplete, trigger: "=", custom activation check', sTestFifthAutocomplete),
+          Logger.t('Checking sixth autocomplete, (columns = 1), trigger: "#", content has spaces', sTestSixthAutocomplete),
+          Logger.t('Checking autocomplete activation based on content', sTestAutocompleteActivation),
+          Logger.t('Checking autocomplete start of word detection', sTestAutocompleteStartOfWord),
+          Logger.t('Checking autocomplete over fragmented text', sTestAutocompleteFragmentedText)
         ]),
         onSuccess,
         onFailure
@@ -609,14 +516,10 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           columns: 'auto',
           matches: (rng, text, _pattern) =>
             // Check the '=' is in the middle of a word
-            rng.startOffset !== 0 &&
-            !/\s/.test(text.charAt(rng.startOffset - 1)),
+            rng.startOffset !== 0 && !/\s/.test(text.charAt(rng.startOffset - 1)),
           fetch: (pattern, _maxResults) =>
             new Promise((resolve) => {
-              const filteredItems = Arr.filter(
-                ['two', 'three'],
-                (number) => number.indexOf(pattern) !== -1
-              );
+              const filteredItems = Arr.filter(['two', 'three'], (number) => number.indexOf(pattern) !== -1);
               resolve(
                 Arr.map(filteredItems, (number) => ({
                   value: `${number}`,

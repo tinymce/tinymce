@@ -15,10 +15,7 @@ UnitTest.asynctest('ActionTest', (success, failure) => {
   };
 
   const cAssertContentKeyboardEvent = (
-    cAction: (
-      code: number,
-      modifiers?: Record<string, any>
-    ) => Chain<EditorType, EditorType>,
+    cAction: (code: number, modifiers?: Record<string, any>) => Chain<EditorType, EditorType>,
     evt: Record<string, any>
   ) =>
     Chain.fromChains([

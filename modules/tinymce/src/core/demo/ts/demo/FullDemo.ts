@@ -12,13 +12,7 @@ export default function () {
       tooltip: 'Tooltip for ' + name,
       onSetup: (api) => {
         console.log('onSetup ' + name);
-        const box = Element.fromHtml(
-          '<div style="width: ' +
-            width +
-            'px; background: ' +
-            background +
-            ';"></div>'
-        );
+        const box = Element.fromHtml('<div style="width: ' + width + 'px; background: ' + background + ';"></div>');
         api.element().appendChild(box.dom());
         return () => {
           api.element().removeChild(box.dom());
@@ -112,8 +106,7 @@ export default function () {
       {
         title: 'Some title 2',
         description: 'Some desc 2',
-        content:
-          '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>'
+        content: '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>'
       }
     ],
     template_cdate_format: '[CDATE: %m/%d/%Y : %H:%M:%S]',
@@ -179,7 +172,5 @@ export default function () {
   };
 
   tinymce.init(settings);
-  tinymce.init(
-    Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' })
-  );
+  tinymce.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
 }

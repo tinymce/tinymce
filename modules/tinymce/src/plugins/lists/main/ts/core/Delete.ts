@@ -5,12 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  Element,
-  HTMLLIElement,
-  Node,
-  Range as DomRange
-} from '@ephox/dom-globals';
+import { Element, HTMLLIElement, Node, Range as DomRange } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Compare, Element as SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -18,10 +13,7 @@ import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
-import {
-  flattenListSelection,
-  outdentListSelection
-} from '../actions/Indendation';
+import { flattenListSelection, outdentListSelection } from '../actions/Indendation';
 import * as ToggleList from '../actions/ToggleList';
 import * as Bookmark from './Bookmark';
 import * as NodeType from './NodeType';
@@ -29,19 +21,11 @@ import * as NormalizeLists from './NormalizeLists';
 import * as Range from './Range';
 import * as Selection from './Selection';
 
-const findNextCaretContainer = function (
-  editor: Editor,
-  rng: DomRange,
-  isForward: Boolean,
-  root: Node
-): Node {
+const findNextCaretContainer = function (editor: Editor, rng: DomRange, isForward: Boolean, root: Node): Node {
   let node = rng.startContainer;
   const offset = rng.startOffset;
 
-  if (
-    NodeType.isTextNode(node) &&
-    (isForward ? offset < node.data.length : offset > 0)
-  ) {
+  if (NodeType.isTextNode(node) && (isForward ? offset < node.data.length : offset > 0)) {
     return node;
   }
 
@@ -76,11 +60,7 @@ const findNextCaretContainer = function (
 
 const hasOnlyOneBlockChild = function (dom: DOMUtils, elm: Element): boolean {
   const childNodes = elm.childNodes;
-  return (
-    childNodes.length === 1 &&
-    !NodeType.isListNode(childNodes[0]) &&
-    dom.isBlock(childNodes[0])
-  );
+  return childNodes.length === 1 && !NodeType.isListNode(childNodes[0]) && dom.isBlock(childNodes[0]);
 };
 
 const unwrapSingleBlockChild = function (dom: DOMUtils, elm: Element) {
@@ -89,11 +69,7 @@ const unwrapSingleBlockChild = function (dom: DOMUtils, elm: Element) {
   }
 };
 
-const moveChildren = function (
-  dom: DOMUtils,
-  fromElm: Element,
-  toElm: Element
-) {
+const moveChildren = function (dom: DOMUtils, fromElm: Element, toElm: Element) {
   let node, targetElm;
 
   targetElm = hasOnlyOneBlockChild(dom, toElm) ? toElm.firstChild : toElm;
@@ -106,18 +82,11 @@ const moveChildren = function (
   }
 };
 
-const mergeLiElements = function (
-  dom: DOMUtils,
-  fromElm: Element,
-  toElm: Element
-) {
+const mergeLiElements = function (dom: DOMUtils, fromElm: Element, toElm: Element) {
   let node, listNode;
   const ul = fromElm.parentNode;
 
-  if (
-    !NodeType.isChildOfBody(dom, fromElm) ||
-    !NodeType.isChildOfBody(dom, toElm)
-  ) {
+  if (!NodeType.isChildOfBody(dom, fromElm) || !NodeType.isChildOfBody(dom, toElm)) {
     return;
   }
 
@@ -146,14 +115,9 @@ const mergeLiElements = function (
     toElm.appendChild(listNode);
   }
 
-  const contains = Compare.contains(
-    SugarElement.fromDom(toElm),
-    SugarElement.fromDom(fromElm)
-  );
+  const contains = Compare.contains(SugarElement.fromDom(toElm), SugarElement.fromDom(fromElm));
 
-  const nestedLists = contains
-    ? dom.getParents(fromElm, NodeType.isListNode, toElm)
-    : [];
+  const nestedLists = contains ? dom.getParents(fromElm, NodeType.isListNode, toElm) : [];
 
   dom.remove(fromElm);
 
@@ -164,22 +128,13 @@ const mergeLiElements = function (
   });
 };
 
-const mergeIntoEmptyLi = function (
-  editor: Editor,
-  fromLi: HTMLLIElement,
-  toLi: HTMLLIElement
-) {
+const mergeIntoEmptyLi = function (editor: Editor, fromLi: HTMLLIElement, toLi: HTMLLIElement) {
   editor.dom.$(toLi).empty();
   mergeLiElements(editor.dom, fromLi, toLi);
   editor.selection.setCursorLocation(toLi);
 };
 
-const mergeForward = function (
-  editor: Editor,
-  rng: DomRange,
-  fromLi: HTMLLIElement,
-  toLi: HTMLLIElement
-) {
+const mergeForward = function (editor: Editor, rng: DomRange, fromLi: HTMLLIElement, toLi: HTMLLIElement) {
   const dom = editor.dom;
 
   if (dom.isEmpty(toLi)) {
@@ -191,22 +146,14 @@ const mergeForward = function (
   }
 };
 
-const mergeBackward = function (
-  editor: Editor,
-  rng: DomRange,
-  fromLi: HTMLLIElement,
-  toLi: HTMLLIElement
-) {
+const mergeBackward = function (editor: Editor, rng: DomRange, fromLi: HTMLLIElement, toLi: HTMLLIElement) {
   const bookmark = Bookmark.createBookmark(rng);
   mergeLiElements(editor.dom, fromLi, toLi);
   const resolvedBookmark = Bookmark.resolveBookmark(bookmark);
   editor.selection.setRng(resolvedBookmark);
 };
 
-const backspaceDeleteFromListToListCaret = function (
-  editor: Editor,
-  isForward: boolean
-) {
+const backspaceDeleteFromListToListCaret = function (editor: Editor, isForward: boolean) {
   const dom = editor.dom,
     selection = editor.selection;
   const selectionStartElm = selection.getStart();
@@ -220,11 +167,7 @@ const backspaceDeleteFromListToListCaret = function (
     }
 
     const rng = Range.normalizeRange(selection.getRng());
-    const otherLi = dom.getParent(
-      findNextCaretContainer(editor, rng, isForward, root),
-      'LI',
-      root
-    ) as HTMLLIElement;
+    const otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward, root), 'LI', root) as HTMLLIElement;
 
     if (otherLi && otherLi !== li) {
       editor.undoManager.transact(() => {
@@ -263,10 +206,7 @@ const removeBlock = function (dom: DOMUtils, block: Element, root: Node) {
   }
 };
 
-const backspaceDeleteIntoListCaret = function (
-  editor: Editor,
-  isForward: boolean
-) {
+const backspaceDeleteIntoListCaret = function (editor: Editor, isForward: boolean) {
   const dom = editor.dom;
   const selectionStartElm = editor.selection.getStart();
   const root = Selection.getClosestListRootElm(editor, selectionStartElm);
@@ -274,11 +214,7 @@ const backspaceDeleteIntoListCaret = function (
 
   if (block && dom.isEmpty(block)) {
     const rng = Range.normalizeRange(editor.selection.getRng());
-    const otherLi = dom.getParent(
-      findNextCaretContainer(editor, rng, isForward, root),
-      'LI',
-      root
-    );
+    const otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward, root), 'LI', root);
 
     if (otherLi) {
       editor.undoManager.transact(function () {
@@ -295,24 +231,14 @@ const backspaceDeleteIntoListCaret = function (
   return false;
 };
 
-const backspaceDeleteCaret = function (
-  editor: Editor,
-  isForward: boolean
-): boolean {
-  return (
-    backspaceDeleteFromListToListCaret(editor, isForward) ||
-    backspaceDeleteIntoListCaret(editor, isForward)
-  );
+const backspaceDeleteCaret = function (editor: Editor, isForward: boolean): boolean {
+  return backspaceDeleteFromListToListCaret(editor, isForward) || backspaceDeleteIntoListCaret(editor, isForward);
 };
 
 const backspaceDeleteRange = function (editor: Editor): boolean {
   const selectionStartElm = editor.selection.getStart();
   const root = Selection.getClosestListRootElm(editor, selectionStartElm);
-  const startListParent = editor.dom.getParent(
-    selectionStartElm,
-    'LI,DT,DD',
-    root
-  );
+  const startListParent = editor.dom.getParent(selectionStartElm, 'LI,DT,DD', root);
 
   if (startListParent || Selection.getSelectedListItems(editor).length > 0) {
     editor.undoManager.transact(function () {
@@ -327,9 +253,7 @@ const backspaceDeleteRange = function (editor: Editor): boolean {
 };
 
 const backspaceDelete = function (editor: Editor, isForward: boolean): boolean {
-  return editor.selection.isCollapsed()
-    ? backspaceDeleteCaret(editor, isForward)
-    : backspaceDeleteRange(editor);
+  return editor.selection.isCollapsed() ? backspaceDeleteCaret(editor, isForward) : backspaceDeleteRange(editor);
 };
 
 const setup = function (editor: Editor) {

@@ -27,9 +27,7 @@ const getEndNode = function (rng) {
   const ec = rng.endContainer,
     eo = rng.endOffset;
   if (NodeType.isText(ec)) {
-    return eo === ec.data.length
-      ? Option.some(Element.fromDom(ec))
-      : Option.none();
+    return eo === ec.data.length ? Option.some(Element.fromDom(ec)) : Option.none();
   } else {
     return Option.from(ec.childNodes[eo - 1]).map(Element.fromDom);
   }
@@ -56,14 +54,8 @@ const getLastChildren = function (node) {
 };
 
 const hasAllContentsSelected = function (elm, rng) {
-  return Options.lift2(getStartNode(rng), getEndNode(rng), function (
-    startNode,
-    endNode
-  ) {
-    const start = Arr.find(
-      getFirstChildren(elm),
-      Fun.curry(Compare.eq, startNode)
-    );
+  return Options.lift2(getStartNode(rng), getEndNode(rng), function (startNode, endNode) {
+    const start = Arr.find(getFirstChildren(elm), Fun.curry(Compare.eq, startNode));
     const end = Arr.find(getLastChildren(elm), Fun.curry(Compare.eq, endNode));
     return start.isSome() && end.isSome();
   }).getOr(false);
@@ -87,10 +79,7 @@ const moveEndPoint = (dom, rng: Range, node, start: boolean): void => {
     }
 
     // BR/IMG/INPUT elements but not table cells
-    if (
-      nonEmptyElementsMap[node.nodeName] &&
-      !/^(TD|TH)$/.test(node.nodeName)
-    ) {
+    if (nonEmptyElementsMap[node.nodeName] && !/^(TD|TH)$/.test(node.nodeName)) {
       if (start) {
         rng.setStartBefore(node);
       } else {

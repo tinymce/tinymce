@@ -25,14 +25,9 @@ const listState = function (editor: Editor, listName) {
   return function (buttonApi) {
     const nodeChangeHandler = (e) => {
       const tableCellIndex = findIndex(e.parents, NodeType.isTableCellNode);
-      const parents =
-        tableCellIndex !== -1 ? e.parents.slice(0, tableCellIndex) : e.parents;
+      const parents = tableCellIndex !== -1 ? e.parents.slice(0, tableCellIndex) : e.parents;
       const lists = Tools.grep(parents, NodeType.isListNode);
-      buttonApi.setActive(
-        lists.length > 0 &&
-          lists[0].nodeName === listName &&
-          !isCustomList(lists[0])
-      );
+      buttonApi.setActive(lists.length > 0 && lists[0].nodeName === listName && !isCustomList(lists[0]));
     };
 
     editor.on('NodeChange', nodeChangeHandler);

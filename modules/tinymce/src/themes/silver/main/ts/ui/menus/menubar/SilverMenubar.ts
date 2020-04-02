@@ -52,19 +52,14 @@ export interface SilverMenubarApis {
   setMenus: (comp: AlloyComponent, groups) => void;
 }
 
-export interface SilverMenubarSketch
-  extends Sketcher.SingleSketch<SilverMenubarSpec>,
-    SilverMenubarApis {}
+export interface SilverMenubarSketch extends Sketcher.SingleSketch<SilverMenubarSpec>, SilverMenubarApis {}
 
 export interface MenubarItemSpec {
   text: TranslatedString;
   getItems: () => SingleMenuItemApi[];
 }
 
-const factory: UiSketcher.SingleSketchFactory<
-  SilverMenubarDetail,
-  SilverMenubarSpec
-> = function (detail, spec) {
+const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubarSpec> = function (detail, spec) {
   const setMenus = (comp: AlloyComponent, menus: MenubarItemSpec[]) => {
     const newMenus = Arr.map(menus, (m) => {
       const buttonSpec = {
@@ -111,14 +106,8 @@ const factory: UiSketcher.SingleSketchFactory<
 
         AlloyEvents.run(NativeEvents.mouseover(), (comp, se) => {
           // TODO: Use constants
-          SelectorFind.descendant(
-            comp.element(),
-            '.' + MenuButtonClasses.Active
-          ).each((activeButton) => {
-            SelectorFind.closest(
-              se.event().target(),
-              '.' + MenuButtonClasses.Button
-            ).each((hoveredButton) => {
+          SelectorFind.descendant(comp.element(), '.' + MenuButtonClasses.Active).each((activeButton) => {
+            SelectorFind.closest(se.event().target(), '.' + MenuButtonClasses.Button).each((hoveredButton) => {
               if (!Compare.eq(activeButton, hoveredButton)) {
                 // Now, find the components, and expand the hovered one, and close the active one
                 comp
@@ -139,25 +128,22 @@ const factory: UiSketcher.SingleSketchFactory<
           });
         }),
 
-        AlloyEvents.run<SystemEvents.AlloyFocusShiftedEvent>(
-          SystemEvents.focusShifted(),
-          (comp, se) => {
-            se.event()
-              .prevFocus()
-              .bind((prev) => comp.getSystem().getByDom(prev).toOption())
-              .each((prev) => {
-                se.event()
-                  .newFocus()
-                  .bind((nu) => comp.getSystem().getByDom(nu).toOption())
-                  .each((nu) => {
-                    if (Dropdown.isOpen(prev)) {
-                      Dropdown.expand(nu);
-                      Dropdown.close(prev);
-                    }
-                  });
-              });
-          }
-        )
+        AlloyEvents.run<SystemEvents.AlloyFocusShiftedEvent>(SystemEvents.focusShifted(), (comp, se) => {
+          se.event()
+            .prevFocus()
+            .bind((prev) => comp.getSystem().getByDom(prev).toOption())
+            .each((prev) => {
+              se.event()
+                .newFocus()
+                .bind((nu) => comp.getSystem().getByDom(nu).toOption())
+                .each((nu) => {
+                  if (Dropdown.isOpen(prev)) {
+                    Dropdown.expand(nu);
+                    Dropdown.close(prev);
+                  }
+                });
+            });
+        })
       ]),
       Keying.config({
         mode: 'flow',
@@ -178,11 +164,7 @@ const factory: UiSketcher.SingleSketchFactory<
   };
 };
 
-export default Sketcher.single<
-  SilverMenubarSpec,
-  SilverMenubarDetail,
-  SilverMenubarApis
->({
+export default Sketcher.single<SilverMenubarSpec, SilverMenubarDetail, SilverMenubarApis>({
   factory,
   name: 'silver.Menubar',
   configFields: [

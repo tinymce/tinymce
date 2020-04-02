@@ -49,10 +49,7 @@ const sanitize = function (editor: Editor, html: string) {
           }
 
           if (attrs[i].name === 'style') {
-            attrs[i].value = editor.dom.serializeStyle(
-              editor.dom.parseStyle(attrs[i].value),
-              name
-            );
+            attrs[i].value = editor.dom.serializeStyle(editor.dom.parseStyle(attrs[i].value), name);
           }
         }
 

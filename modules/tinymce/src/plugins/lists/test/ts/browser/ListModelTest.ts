@@ -20,29 +20,17 @@ UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
     depth: Jsc.integer(1, 10),
     content: Jsc.small(arbitratyContent),
     listType: Jsc.oneof(Jsc.constant(ListType.OL), Jsc.constant(ListType.UL)),
-    listAttributes: Jsc.oneof(
-      Jsc.constant({}),
-      Jsc.constant({ style: 'list-style-type: lower-alpha;' })
-    ),
-    itemAttributes: Jsc.oneof(
-      Jsc.constant({}),
-      Jsc.constant({ style: 'color: red;' })
-    )
+    listAttributes: Jsc.oneof(Jsc.constant({}), Jsc.constant({ style: 'list-style-type: lower-alpha;' })),
+    itemAttributes: Jsc.oneof(Jsc.constant({}), Jsc.constant({ style: 'color: red;' }))
   });
 
   const arbitraryEntries = Jsc.array(arbitraryEntry);
 
-  const composeParseProperty = Jsc.forall(
-    arbitraryEntries,
-    (inputEntries: Entry[]) => {
-      normalizeEntries(inputEntries);
-      const outputEntries = composeParse(inputEntries);
-      return (
-        isEqualEntries(inputEntries, outputEntries) ||
-        errorMessage(inputEntries, outputEntries)
-      );
-    }
-  );
+  const composeParseProperty = Jsc.forall(arbitraryEntries, (inputEntries: Entry[]) => {
+    normalizeEntries(inputEntries);
+    const outputEntries = composeParse(inputEntries);
+    return isEqualEntries(inputEntries, outputEntries) || errorMessage(inputEntries, outputEntries);
+  });
 
   const composeParse = (entries: Entry[]): Entry[] =>
     composeList(document, entries)
@@ -51,33 +39,25 @@ UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
       .map((entrySet) => entrySet.entries)
       .getOr([]);
 
-  const isEqualEntries = (a: Entry[], b: Entry[]): boolean =>
-    stringifyEntries(a) === stringifyEntries(b);
+  const isEqualEntries = (a: Entry[], b: Entry[]): boolean => stringifyEntries(a) === stringifyEntries(b);
 
-  const errorMessage = (
-    inputEntries: Entry[],
-    outputEntries: Entry[]
-  ): string =>
+  const errorMessage = (inputEntries: Entry[], outputEntries: Entry[]): string =>
     '\nPretty print counterexample:\n' +
     `input: [${stringifyEntries(inputEntries)}\n]\n` +
     `output: [${stringifyEntries(outputEntries)}\n]`;
 
-  const stringifyEntries = (entries: Entry[]): string =>
-    Arr.map(entries, stringifyEntry).join(',');
+  const stringifyEntries = (entries: Entry[]): string => Arr.map(entries, stringifyEntry).join(',');
 
   const stringifyEntry = (entry: Entry): string => `\n  {
       depth: ${entry.depth}
-      content: ${
-        entry.content.length > 0 ? serializeElements(entry.content) : '[Empty]'
-      }
+      content: ${entry.content.length > 0 ? serializeElements(entry.content) : '[Empty]'}
       listType: ${entry.listType}
       isSelected: ${entry.isSelected}
       listAttributes: ${JSON.stringify(entry.listAttributes)}
       itemAttributes: ${JSON.stringify(entry.itemAttributes)}
     }`;
 
-  const serializeElements = (elms: Element[]): string =>
-    Arr.map(elms, (el) => el.dom().outerHTML).join('');
+  const serializeElements = (elms: Element[]): string => Arr.map(elms, (el) => el.dom().outerHTML).join('');
 
   Jsc.assert(composeParseProperty, {
     size: 500,

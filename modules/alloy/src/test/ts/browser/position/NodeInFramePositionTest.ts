@@ -2,13 +2,7 @@ import { Chain, Cursors, Guard, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Window } from '@ephox/dom-globals';
 import { Option, Result } from '@ephox/katamari';
-import {
-  Css,
-  DomEvent,
-  Element,
-  SelectorFind,
-  WindowSelection
-} from '@ephox/sugar';
+import { Css, DomEvent, Element, SelectorFind, WindowSelection } from '@ephox/sugar';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -32,10 +26,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
 
       const onload = DomEvent.bind(frame, 'load', () => {
         onload.unbind();
-        Frames.write(
-          frame,
-          '<html><body contenteditable="true">' + content + '</body></html>'
-        );
+        Frames.write(frame, '<html><body contenteditable="true">' + content + '</body></html>');
       });
 
       const classicEditor = GuiFactory.build(
@@ -60,45 +51,24 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
     },
     (_doc, _body, gui, _component, _store) => {
       const cSetupAnchor = Chain.mapper((data: any) => {
-        const node = data.classic
-          .element()
-          .dom()
-          .contentWindow.document.querySelector('#p3');
+        const node = data.classic.element().dom().contentWindow.document.querySelector('#p3');
         return {
           anchor: 'node',
-          root: Element.fromDom(
-            data.classic.element().dom().contentWindow.document.body
-          ),
+          root: Element.fromDom(data.classic.element().dom().contentWindow.document.body),
           node: Option.some(Element.fromDom(node))
         };
       });
 
-      const cGetWin = Chain.mapper(
-        (frame: AlloyComponent) => frame.element().dom().contentWindow
-      );
+      const cGetWin = Chain.mapper((frame: AlloyComponent) => frame.element().dom().contentWindow);
 
-      const cSetPath = (rawPath: {
-        startPath: number[];
-        soffset: number;
-        finishPath: number[];
-        foffset: number;
-      }) => {
+      const cSetPath = (rawPath: { startPath: number[]; soffset: number; finishPath: number[]; foffset: number }) => {
         const path = Cursors.path(rawPath);
 
         return Chain.binder((win: Window) => {
           const body = Element.fromDom(win.document.body);
           const range = Cursors.calculate(body, path);
-          WindowSelection.setExact(
-            win,
-            range.start(),
-            range.soffset(),
-            range.finish(),
-            range.foffset()
-          );
-          return WindowSelection.getExact(win).fold(
-            () => Result.error('Could not retrieve the set selection'),
-            Result.value
-          );
+          WindowSelection.setExact(win, range.start(), range.soffset(), range.finish(), range.foffset());
+          return WindowSelection.getExact(win).fold(() => Result.error('Could not retrieve the set selection'), Result.value);
         });
       };
 
@@ -117,19 +87,13 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
             ChainUtils.cLogging('Waiting for iframe to load content.', [
               Chain.control(
                 Chain.binder((data: any) => {
-                  const root = Element.fromDom(
-                    data.classic.element().dom().contentWindow.document.body
-                  );
+                  const root = Element.fromDom(data.classic.element().dom().contentWindow.document.body);
                   return SelectorFind.descendant(root, 'p').fold(
                     () => Result.error('Could not find paragraph yet'),
                     (_p) => Result.value(data)
                   );
                 }),
-                Guard.tryUntil(
-                  'Waiting for content to load in iframe',
-                  10,
-                  10000
-                )
+                Guard.tryUntil('Waiting for content to load in iframe', 10, 10000)
               )
             ]),
 

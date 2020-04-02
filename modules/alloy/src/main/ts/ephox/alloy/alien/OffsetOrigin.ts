@@ -1,23 +1,13 @@
 import { Element as DomElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import {
-  Css,
-  Element,
-  Insert,
-  Location,
-  Position,
-  Remove,
-  Traverse
-} from '@ephox/sugar';
+import { Css, Element, Insert, Location, Position, Remove, Traverse } from '@ephox/sugar';
 
 const getOffsetParent = (element: Element): Option<Element<DomElement>> => {
   // Firefox sets the offsetParent to the body when fixed instead of null like
   // all other browsers. So we need to check if the element is fixed and if so then
   // disregard the elements offsetParent.
   const isFixed = Css.getRaw(element, 'position').is('fixed');
-  const offsetParent = isFixed
-    ? Option.none<Element<DomElement>>()
-    : Traverse.offsetParent(element);
+  const offsetParent = isFixed ? Option.none<Element<DomElement>>() : Traverse.offsetParent(element);
   return offsetParent.orThunk(
     (): Option<Element<DomElement>> => {
       const marker = Element.fromTag('span');

@@ -30,10 +30,7 @@ import * as NavigableObject from '../general/NavigableObject';
 
 const isTouch = Env.deviceType.isTouch();
 
-const hiddenHeader = (
-  title: AlloyParts.ConfiguredPart,
-  close: AlloyParts.ConfiguredPart
-): AlloySpec => ({
+const hiddenHeader = (title: AlloyParts.ConfiguredPart, close: AlloyParts.ConfiguredPart): AlloySpec => ({
   dom: {
     tag: 'div',
     styles: { display: 'none' },
@@ -42,10 +39,7 @@ const hiddenHeader = (
   components: [title, close]
 });
 
-const defaultHeader = (
-  title: AlloyParts.ConfiguredPart,
-  close: AlloyParts.ConfiguredPart
-): AlloySpec => ({
+const defaultHeader = (title: AlloyParts.ConfiguredPart, close: AlloyParts.ConfiguredPart): AlloySpec => ({
   dom: {
     tag: 'div',
     classes: ['tox-dialog__header']
@@ -53,10 +47,7 @@ const defaultHeader = (
   components: [title, close]
 });
 
-const pClose = (
-  onClose: () => void,
-  providersBackstage: UiFactoryBackstageProviders
-) =>
+const pClose = (onClose: () => void, providersBackstage: UiFactoryBackstageProviders) =>
   ModalDialog.parts().close(
     // Need to find a way to make it clear in the docs whether parts can be sketches
     Button.sketch({
@@ -85,10 +76,7 @@ const pUntitled = () =>
     }
   });
 
-const pBodyMessage = (
-  message: string,
-  providersBackstage: UiFactoryBackstageProviders
-) =>
+const pBodyMessage = (message: string, providersBackstage: UiFactoryBackstageProviders) =>
   ModalDialog.parts().body({
     dom: {
       tag: 'div',
@@ -102,9 +90,7 @@ const pBodyMessage = (
         },
         components: [
           {
-            dom: DomFactory.fromHtml(
-              `<p>${providersBackstage.translate(message)}</p>`
-            )
+            dom: DomFactory.fromHtml(`<p>${providersBackstage.translate(message)}</p>`)
           }
         ]
       }
@@ -180,9 +166,7 @@ const renderDialog = (spec: DialogSpec) => {
           {
             dom: {
               tag: 'div',
-              classes: isTouch
-                ? [blockerBackdropClass, blockerBackdropClass + '--opaque']
-                : [blockerBackdropClass]
+              classes: isTouch ? [blockerBackdropClass, blockerBackdropClass + '--opaque'] : [blockerBackdropClass]
             }
           }
         ]
@@ -215,28 +199,11 @@ const renderDialog = (spec: DialogSpec) => {
 
     eventOrder: {
       [SystemEvents.execute()]: ['dialog-events'],
-      [SystemEvents.attachedToDom()]: [
-        'scroll-lock',
-        'dialog-events',
-        'alloy.base.behaviour'
-      ],
-      [SystemEvents.detachedFromDom()]: [
-        'alloy.base.behaviour',
-        'dialog-events',
-        'scroll-lock'
-      ],
+      [SystemEvents.attachedToDom()]: ['scroll-lock', 'dialog-events', 'alloy.base.behaviour'],
+      [SystemEvents.detachedFromDom()]: ['alloy.base.behaviour', 'dialog-events', 'scroll-lock'],
       ...spec.eventOrder
     }
   });
 };
 
-export {
-  defaultHeader,
-  hiddenHeader,
-  pClose,
-  pUntitled,
-  pBodyMessage,
-  pFooter,
-  pFooterGroup,
-  renderDialog
-};
+export { defaultHeader, hiddenHeader, pClose, pUntitled, pBodyMessage, pFooter, pFooterGroup, renderDialog };

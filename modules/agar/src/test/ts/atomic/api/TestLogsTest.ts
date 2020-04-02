@@ -1,13 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import {
-  addLogEntry,
-  addStackTrace,
-  popLogLevel,
-  pushLogLevel,
-  TestLogEntryState,
-  TestLogs
-} from 'ephox/agar/api/TestLogs';
+import { addLogEntry, addStackTrace, popLogLevel, pushLogLevel, TestLogEntryState, TestLogs } from 'ephox/agar/api/TestLogs';
 
 UnitTest.test('TestLogsTest', () => {
   const logs = TestLogs.init();
@@ -18,8 +11,7 @@ UnitTest.test('TestLogsTest', () => {
     return logs;
   };
 
-  const addTraceToLog = (trace: { stack: any }) => (logs) =>
-    addStackTrace(logs, trace);
+  const addTraceToLog = (trace: { stack: any }) => (logs) => addStackTrace(logs, trace);
 
   Arr.foldl(
     [

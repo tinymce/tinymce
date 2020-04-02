@@ -7,12 +7,7 @@ export interface ResponseTypeMap {
   [DataType.Text]: string;
 }
 
-export type RequestBody =
-  | JsonData
-  | BlobData
-  | TextData
-  | FormData
-  | MultipartFormData;
+export type RequestBody = JsonData | BlobData | TextData | FormData | MultipartFormData;
 export type ResponseBody = Exclude<RequestBody, FormData>;
 export type ResponseBodyDataTypes = Exclude<DataType, DataType.FormData>;
 
@@ -57,9 +52,7 @@ export const formData = (data: Record<string, string>): FormData => ({
   type: DataType.FormData,
   data
 });
-export const multipartFormData = (
-  data: Record<string, string | Blob | File>
-): MultipartFormData => ({
+export const multipartFormData = (data: Record<string, string | Blob | File>): MultipartFormData => ({
   type: DataType.MultipartFormData,
   data
 });

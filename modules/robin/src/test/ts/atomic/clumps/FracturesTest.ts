@@ -7,30 +7,17 @@ UnitTest.test('FracturesTest', function () {
     return TestUniverse(
       Gene('root', 'root', [
         Gene('a', 'span', [
-          Gene('aa', 'span', [
-            TextGene('aaa', 'aaa'),
-            TextGene('aab', 'aab'),
-            TextGene('aac', 'aac')
-          ]),
+          Gene('aa', 'span', [TextGene('aaa', 'aaa'), TextGene('aab', 'aab'), TextGene('aac', 'aac')]),
           TextGene('ab', 'ab'),
           Gene('ac', 'span', [
             TextGene('aca', 'aca'),
-            Gene('acb', 'span', [
-              TextGene('acba', 'acba'),
-              Gene('acbb', 'span', [TextGene('acbba', 'acbba')])
-            ])
+            Gene('acb', 'span', [TextGene('acba', 'acba'), Gene('acbb', 'span', [TextGene('acbba', 'acbba')])])
           ])
         ]),
         TextGene('b', 'b'),
         Gene('c', 'span', [
           TextGene('ca', 'ca'),
-          Gene('cb', 'span', [
-            Gene('c', 'span', [
-              TextGene('cbaa', 'cbaa'),
-              TextGene('cbab', 'cbab')
-            ]),
-            TextGene('cbb', 'cbb')
-          ])
+          Gene('cb', 'span', [Gene('c', 'span', [TextGene('cbaa', 'cbaa'), TextGene('cbab', 'cbab')]), TextGene('cbb', 'cbb')])
         ])
       ])
     );
@@ -40,12 +27,7 @@ UnitTest.test('FracturesTest', function () {
     return item.name === 'root';
   };
 
-  const check = function (
-    expected: string,
-    startId: string,
-    finishId: string,
-    doc: TestUniverse = regen()
-  ) {
+  const check = function (expected: string, startId: string, finishId: string, doc: TestUniverse = regen()) {
     const start = doc.find(doc.get(), startId).getOrDie();
     const finish = doc.find(doc.get(), finishId).getOrDie();
     const actual = Fractures.fracture(doc, isRoot, start, finish);
@@ -93,18 +75,11 @@ UnitTest.test('FracturesTest', function () {
     TestUniverse(
       Gene('root', 'root', [
         Gene('a', 'span', [
-          Gene('aa', 'span', [
-            TextGene('aaa', 'aaa'),
-            TextGene('aab', 'aab'),
-            TextGene('aac', 'aac')
-          ]),
+          Gene('aa', 'span', [TextGene('aaa', 'aaa'), TextGene('aab', 'aab'), TextGene('aac', 'aac')]),
           TextGene('ab', 'ab'),
           Gene('ac', 'span', [
             TextGene('aca', 'aca'),
-            Gene('acb', 'span', [
-              TextGene('acba', 'acba'),
-              Gene('acbb', 'span', [TextGene('acbba', 'acbba')])
-            ])
+            Gene('acb', 'span', [TextGene('acba', 'acba'), Gene('acbb', 'span', [TextGene('acbba', 'acbba')])])
           ])
         ])
       ])

@@ -7,47 +7,24 @@ import { Stateless } from '../../behaviour/common/BehaviourState';
 import * as TransitionApis from './TransitionApis';
 import { TransitioningConfig } from './TransitioningTypes';
 
-const events = (
-  transConfig: TransitioningConfig,
-  transState: Stateless
-): AlloyEvents.AlloyEventRecord =>
+const events = (transConfig: TransitioningConfig, transState: Stateless): AlloyEvents.AlloyEventRecord =>
   AlloyEvents.derive([
-    AlloyEvents.run<EventArgs<TransitionEvent>>(
-      NativeEvents.transitionend(),
-      (component, simulatedEvent) => {
-        const raw = simulatedEvent.event().raw();
-        TransitionApis.getCurrentRoute(component, transConfig, transState).each(
-          (route) => {
-            TransitionApis.findRoute(
-              component,
-              transConfig,
-              transState,
-              route
-            ).each((rInfo) => {
-              rInfo.transition.each((rTransition) => {
-                if (raw.propertyName === rTransition.property) {
-                  TransitionApis.jumpTo(
-                    component,
-                    transConfig,
-                    transState,
-                    route.destination
-                  );
-                  transConfig.onTransition(component, route);
-                }
-              });
-            });
-          }
-        );
-      }
-    ),
+    AlloyEvents.run<EventArgs<TransitionEvent>>(NativeEvents.transitionend(), (component, simulatedEvent) => {
+      const raw = simulatedEvent.event().raw();
+      TransitionApis.getCurrentRoute(component, transConfig, transState).each((route) => {
+        TransitionApis.findRoute(component, transConfig, transState, route).each((rInfo) => {
+          rInfo.transition.each((rTransition) => {
+            if (raw.propertyName === rTransition.property) {
+              TransitionApis.jumpTo(component, transConfig, transState, route.destination);
+              transConfig.onTransition(component, route);
+            }
+          });
+        });
+      });
+    }),
 
     AlloyEvents.runOnAttached((comp, _se) => {
-      TransitionApis.jumpTo(
-        comp,
-        transConfig,
-        transState,
-        transConfig.initialState
-      );
+      TransitionApis.jumpTo(comp, transConfig, transState, transConfig.initialState);
     })
   ]);
 

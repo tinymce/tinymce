@@ -5,16 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AddEventsBehaviour,
-  AlloyEvents,
-  Behaviour,
-  Button,
-  Keying,
-  Replacing,
-  Tabstopping,
-  Disabling
-} from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, Button, Keying, Replacing, Tabstopping, Disabling } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -35,11 +26,7 @@ const isHidden = (elm) => {
   return false;
 };
 
-const renderElementPath = (
-  editor: Editor,
-  settings,
-  providersBackstage: UiFactoryBackstageProviders
-) => {
+const renderElementPath = (editor: Editor, settings, providersBackstage: UiFactoryBackstageProviders) => {
   if (!settings.delimiter) {
     settings.delimiter = '\u00BB';
   }
@@ -65,10 +52,7 @@ const renderElementPath = (
           editor.selection.select(part.element);
           editor.nodeChanged();
         },
-        buttonBehaviours: Behaviour.derive([
-          DisablingConfigs.button(providersBackstage.isReadonly()),
-          ReadOnly.receivingConfig()
-        ])
+        buttonBehaviours: Behaviour.derive([DisablingConfigs.button(providersBackstage.isReadonly()), ReadOnly.receivingConfig()])
       })
     );
 
@@ -140,9 +124,7 @@ const renderElementPath = (
       AddEventsBehaviour.config('elementPathEvents', [
         AlloyEvents.runOnAttached((comp, _e) => {
           // NOTE: If statusbar ever gets re-rendered, we will need to free this.
-          editor.shortcuts.add('alt+F11', 'focus statusbar elementpath', () =>
-            Keying.focusIn(comp)
-          );
+          editor.shortcuts.add('alt+F11', 'focus statusbar elementpath', () => Keying.focusIn(comp));
 
           editor.on('NodeChange', (e) => {
             const newPath = updatePath(e.parents);

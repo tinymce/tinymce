@@ -88,13 +88,4 @@ const renderDownwardsCaret = (icons: IconProvider): AlloySpec => ({
   }
 });
 
-export {
-  renderIcon,
-  renderText,
-  renderHtml,
-  renderStyledText,
-  renderShortcut,
-  renderCheckmark,
-  renderSubmenuCaret,
-  renderDownwardsCaret
-};
+export { renderIcon, renderText, renderHtml, renderStyledText, renderShortcut, renderCheckmark, renderSubmenuCaret, renderDownwardsCaret };

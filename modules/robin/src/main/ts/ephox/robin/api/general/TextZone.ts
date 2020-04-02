@@ -6,12 +6,7 @@ import * as TextZone from '../../zone/TextZone';
  * TextZone returns an Optional zone if that zone is the right language (onlyLang)
  */
 // Cluster out from a single point, enforcing one language
-const single = function <E, D>(
-  universe: Universe<E, D>,
-  element: E,
-  envLang: string,
-  onlyLang: string
-) {
+const single = function <E, D>(universe: Universe<E, D>, element: E, envLang: string, onlyLang: string) {
   if (universe.property().isBoundary(element)) {
     return TextZone.fromBounded(universe, element, element, envLang, onlyLang);
   } else if (universe.property().isEmptyTag(element)) {
@@ -35,13 +30,7 @@ const range = function <E, D>(
   if (universe.eq(startPt.element(), finishPt.element())) {
     return single(universe, startPt.element(), envLang, onlyLang);
   }
-  return TextZone.fromRange(
-    universe,
-    startPt.element(),
-    finishPt.element(),
-    envLang,
-    onlyLang
-  );
+  return TextZone.fromRange(universe, startPt.element(), finishPt.element(), envLang, onlyLang);
 };
 
 export { single, range };

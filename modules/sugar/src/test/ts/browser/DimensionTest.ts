@@ -184,12 +184,7 @@ UnitTest.test('DimensionTest', function () {
   // Dimension.agregate takes an element and a list of propeties that return measurement values.
   // it will accumulatively add all the properties and return a cumulative total.
   const dim = Dimension('internal', () => 1);
-  const ctotal = dim.aggregate(container, [
-    'padding-top',
-    'margin-bottom',
-    'border-top-width',
-    'border-bottom-width'
-  ]);
+  const ctotal = dim.aggregate(container, ['padding-top', 'margin-bottom', 'border-top-width', 'border-bottom-width']);
   assert.eq(paddingTop + marginBottom + borderWidth + borderWidth, ctotal);
 
   // mixit up, add unknowns
@@ -202,10 +197,7 @@ UnitTest.test('DimensionTest', function () {
     'display',
     'elmos-house'
   ]);
-  assert.eq(
-    paddingTop + marginBottom + borderWidth + borderWidth + 0 + 0 + 0,
-    mixup
-  );
+  assert.eq(paddingTop + marginBottom + borderWidth + borderWidth + 0 + 0 + 0, mixup);
 
   // Height.setMax test
   // when we set max-height: 100px we mean it!, natively borders and padding are not included in these calculations
@@ -217,31 +209,15 @@ UnitTest.test('DimensionTest', function () {
 
   // native max-height proof of failure
   const containerHeight = Height.get(container);
-  assert.eq(
-    true,
-    containerHeight > maxHeight,
-    'failing case the parent boundary should be greater than the allowed maximum'
-  );
+  assert.eq(true, containerHeight > maxHeight, 'failing case the parent boundary should be greater than the allowed maximum');
   // we use the innerHeight value here because it has yet to hit the maxHeight
-  assert.eq(
-    borderWidth + paddingTop + innerHeight + borderWidth,
-    containerHeight,
-    ' failing case true calculation does not match'
-  );
+  assert.eq(borderWidth + paddingTop + innerHeight + borderWidth, containerHeight, ' failing case true calculation does not match');
 
   const boundsHeight = Height.get(bounds);
-  assert.eq(
-    true,
-    boundsHeight > maxHeight,
-    'failing case the parent boundary should be greater than the allowed maximum'
-  );
+  assert.eq(true, boundsHeight > maxHeight, 'failing case the parent boundary should be greater than the allowed maximum');
 
   // if the child pushes the parent oversize, the parent may be forced to scroll which may not be desireable
-  assert.eq(
-    true,
-    boundsHeight > containerHeight,
-    ' the parent bounds should be the same height as the child container'
-  );
+  assert.eq(true, boundsHeight > containerHeight, ' the parent bounds should be the same height as the child container');
 
   // Passing test, the container should equal to maxHeight set!
   Height.setMax(container, maxHeight);
@@ -251,10 +227,7 @@ UnitTest.test('DimensionTest', function () {
 
   // the max-height property should be a compensated value.
   const cssMaxHeight = Css.get(container, 'max-height');
-  assert.eq(
-    maxHeight - paddingTop - borderWidth - borderWidth - marginBottom + 'px',
-    cssMaxHeight
-  );
+  assert.eq(maxHeight - paddingTop - borderWidth - borderWidth - marginBottom + 'px', cssMaxHeight);
 
   // native max-width: proof of failure
   Css.set(container, 'max-width', maxWidth + 'px');
@@ -277,11 +250,7 @@ UnitTest.test('DimensionTest', function () {
 
   // Height on detached node
   const detachedElm = Element.fromHtml<HTMLDivElement>('<div>a</div>');
-  assert.eq(
-    0,
-    Height.getOuter(detachedElm),
-    'Should be zero for a detached element'
-  );
+  assert.eq(0, Height.getOuter(detachedElm), 'Should be zero for a detached element');
 
   // This test is broken in ie10, we don't understand exactly how it calculates max-width, every other platform passes.
   // Since we are not using the Width.setMax method in out codebase, commenting it out till then.

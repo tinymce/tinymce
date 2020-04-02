@@ -8,11 +8,7 @@
 import { Fun, Arr, Type } from '@ephox/katamari';
 import { TableRender } from '@ephox/snooker';
 import { Attr, Html, SelectorFind, SelectorFilter, Css } from '@ephox/sugar';
-import {
-  getDefaultAttributes,
-  getDefaultStyles,
-  isPixelsForced
-} from '../api/Settings';
+import { getDefaultAttributes, getDefaultStyles, isPixelsForced } from '../api/Settings';
 import { fireNewRow, fireNewCell } from '../api/Events';
 import * as Util from '../alien/Util';
 import Editor from 'tinymce/core/api/Editor';
@@ -30,31 +26,22 @@ const placeCaretInCell = (editor: Editor, cell) => {
 };
 
 const selectFirstCellInTable = (editor: Editor, tableElm) => {
-  SelectorFind.descendant<
-    HTMLTableDataCellElement | HTMLTableHeaderCellElement
-  >(tableElm, 'td,th').each(Fun.curry(placeCaretInCell, editor));
-};
-
-const fireEvents = (editor: Editor, table) => {
-  Arr.each(
-    SelectorFilter.descendants<HTMLTableRowElement>(table, 'tr'),
-    (row) => {
-      fireNewRow(editor, row.dom());
-
-      Arr.each(
-        SelectorFilter.descendants<
-          HTMLTableDataCellElement | HTMLTableHeaderCellElement
-        >(row, 'th,td'),
-        (cell) => {
-          fireNewCell(editor, cell.dom());
-        }
-      );
-    }
+  SelectorFind.descendant<HTMLTableDataCellElement | HTMLTableHeaderCellElement>(tableElm, 'td,th').each(
+    Fun.curry(placeCaretInCell, editor)
   );
 };
 
-const isPercentage = (width: string) =>
-  Type.isString(width) && width.indexOf('%') !== -1;
+const fireEvents = (editor: Editor, table) => {
+  Arr.each(SelectorFilter.descendants<HTMLTableRowElement>(table, 'tr'), (row) => {
+    fireNewRow(editor, row.dom());
+
+    Arr.each(SelectorFilter.descendants<HTMLTableDataCellElement | HTMLTableHeaderCellElement>(row, 'th,td'), (cell) => {
+      fireNewCell(editor, cell.dom());
+    });
+  });
+};
+
+const isPercentage = (width: string) => Type.isString(width) && width.indexOf('%') !== -1;
 
 const insert = (editor: Editor, columns: number, rows: number): HTMLElement => {
   const defaultStyles = getDefaultStyles(editor);
@@ -70,10 +57,7 @@ const insert = (editor: Editor, columns: number, rows: number): HTMLElement => {
   const html = Html.getOuter(table);
   editor.insertContent(html);
 
-  return SelectorFind.descendant<HTMLTableElement>(
-    Util.getBody(editor),
-    'table[data-mce-id="__mce"]'
-  )
+  return SelectorFind.descendant<HTMLTableElement>(Util.getBody(editor), 'table[data-mce-id="__mce"]')
     .map((table) => {
       if (isPixelsForced(editor)) {
         Css.set(table, 'width', Css.get(table, 'width'));

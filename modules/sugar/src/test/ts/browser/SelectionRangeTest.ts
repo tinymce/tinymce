@@ -22,10 +22,7 @@ UnitTest.test('WindowSelectionTest', function () {
   const body = Body.body();
   Insert.append(body, container);
 
-  Html.set(
-    container,
-    '<p>This <strong>world</strong> is not <strong>w<em>ha</em>t</strong> I<br><br>wanted</p><p><br>And even more</p>'
-  );
+  Html.set(container, '<p>This <strong>world</strong> is not <strong>w<em>ha</em>t</strong> I<br><br>wanted</p><p><br>And even more</p>');
 
   const find = function (path) {
     return Hierarchy.follow(container, path).getOrDie('invalid path');
@@ -52,22 +49,12 @@ UnitTest.test('WindowSelectionTest', function () {
   const checkSelection = function (label, variants, start, finish) {
     const expected = detector(variants);
     WindowSelection.setRelative(window, start, finish);
-    const actual = WindowSelection.getExact(window).getOrDie(
-      'No selection after selection'
-    );
+    const actual = WindowSelection.getExact(window).getOrDie('No selection after selection');
     const expStart = find(expected.start);
     const expFinish = find(expected.finish);
 
-    assert.eq(
-      true,
-      Compare.eq(expStart, actual.start()),
-      'Start element different'
-    );
-    assert.eq(
-      true,
-      Compare.eq(expFinish, actual.finish()),
-      'Finish element different'
-    );
+    assert.eq(true, Compare.eq(expStart, actual.start()), 'Start element different');
+    assert.eq(true, Compare.eq(expFinish, actual.finish()), 'Finish element different');
     assert.eq(expected.soffset, actual.soffset());
     assert.eq(expected.foffset, actual.foffset());
   };
@@ -80,15 +67,8 @@ UnitTest.test('WindowSelectionTest', function () {
 
   const checkStringAt = function (label, expectedStr, start, finish) {
     // dont need to set a selection range, just extract the Situ.on() element/offset pair
-    const actual = WindowSelection.getAsString(
-      window,
-      Selection.relative(start, finish)
-    );
-    assert.eq(
-      expectedStr,
-      actual,
-      'Actual was not expected [' + expectedStr + '|' + actual + ']'
-    );
+    const actual = WindowSelection.getAsString(window, Selection.relative(start, finish));
+    assert.eq(expectedStr, actual, 'Actual was not expected [' + expectedStr + '|' + actual + ']');
   };
 
   checkSelection(
@@ -297,12 +277,7 @@ UnitTest.test('WindowSelectionTest', function () {
     Situ.on(find([0]), 7)
   );
 
-  checkStringAt(
-    'RTL Selection (This world is not what I)',
-    'This world is not what I',
-    Situ.on(find([0]), 7),
-    Situ.on(find([0]), 0)
-  );
+  checkStringAt('RTL Selection (This world is not what I)', 'This world is not what I', Situ.on(find([0]), 7), Situ.on(find([0]), 0));
 
   // Test that proves safari will always normalise a selection to the end leaf
   // when we set the selection to the span, then get selection, all browsers will return the span

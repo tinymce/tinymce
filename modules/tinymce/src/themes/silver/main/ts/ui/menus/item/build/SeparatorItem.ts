@@ -10,9 +10,7 @@ import { Menu } from '@ephox/bridge';
 import * as ItemClasses from '../ItemClasses';
 import { ItemTypes } from '@ephox/alloy';
 
-const renderSeparatorItem = (
-  spec: Menu.SeparatorMenuItem
-): ItemTypes.ItemSpec => {
+const renderSeparatorItem = (spec: Menu.SeparatorMenuItem): ItemTypes.ItemSpec => {
   const innerHtml = spec.text.fold(
     () => ({}),
     (text) => ({ innerHtml: text })

@@ -36,11 +36,7 @@ const updateAdvancedProps = (modifiers, data: CellData) => {
 // When applying to a single cell, values can be falsy. That is
 // because there should be a consistent value across the cell
 // selection, so it should also be possible to toggle things off.
-const applyToSingle = (
-  editor: Editor,
-  cells: HTMLTableCellElement[],
-  data: CellData
-) => {
+const applyToSingle = (editor: Editor, cells: HTMLTableCellElement[], data: CellData) => {
   // NOTE: cells instead of cellElm passed through here just to keep signature
   // same as applyToMultiple. Probably change.
   // let cellElm = cells[0] as HTMLTableCellElement;
@@ -110,11 +106,7 @@ const applyToMultiple = (editor, cells: Node[], data: CellData) => {
   });
 };
 
-const onSubmitCellForm = (
-  editor: Editor,
-  cells: HTMLTableCellElement[],
-  api
-) => {
+const onSubmitCellForm = (editor: Editor, cells: HTMLTableCellElement[], api) => {
   const data = api.getData();
   api.close();
 
@@ -146,11 +138,7 @@ const open = (editor: Editor) => {
 
   // Get current data and find shared values between cells
   const cellsData: CellData[] = Tools.map(cells, (cellElm) =>
-    Helpers.extractDataFromCellElement(
-      editor,
-      cellElm,
-      hasAdvancedCellTab(editor)
-    )
+    Helpers.extractDataFromCellElement(editor, cellElm, hasAdvancedCellTab(editor))
   );
   const data: CellData = Helpers.getSharedValues(cellsData);
 

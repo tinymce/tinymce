@@ -26,15 +26,7 @@ import {
   SystemEvents
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import {
-  Arr,
-  Future,
-  FutureResult,
-  Id,
-  Option,
-  Result,
-  Fun
-} from '@ephox/katamari';
+import { Arr, Future, FutureResult, Id, Option, Result, Fun } from '@ephox/katamari';
 import { Traverse, Attr } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
@@ -60,36 +52,19 @@ import * as ReadOnly from '../../ReadOnly';
 
 type UrlInputSpec = Omit<Types.UrlInput.UrlInput, 'type'>;
 
-const getItems = (
-  fileType: 'image' | 'media' | 'file',
-  input: AlloyComponent,
-  urlBackstage: UiFactoryBackstageForUrlInput
-) => {
+const getItems = (fileType: 'image' | 'media' | 'file', input: AlloyComponent, urlBackstage: UiFactoryBackstageForUrlInput) => {
   const urlInputValue = Representing.getValue(input);
-  const term =
-    urlInputValue.meta.text !== undefined
-      ? urlInputValue.meta.text
-      : urlInputValue.value;
+  const term = urlInputValue.meta.text !== undefined ? urlInputValue.meta.text : urlInputValue.value;
   const info = urlBackstage.getLinkInformation();
   return info.fold(
     () => [],
     (linkInfo) => {
-      const history = filterByQuery(
-        term,
-        historyTargets(urlBackstage.getHistory(fileType))
-      );
+      const history = filterByQuery(term, historyTargets(urlBackstage.getHistory(fileType)));
       return fileType === 'file'
         ? joinMenuLists([
             history,
             filterByQuery(term, headerTargets(linkInfo)),
-            filterByQuery(
-              term,
-              Arr.flatten([
-                anchorTargetTop(linkInfo),
-                anchorTargets(linkInfo),
-                anchorTargetBottom(linkInfo)
-              ])
-            )
+            filterByQuery(term, Arr.flatten([anchorTargetTop(linkInfo), anchorTargets(linkInfo), anchorTargetBottom(linkInfo)]))
           ])
         : history;
     }
@@ -124,12 +99,7 @@ export const renderUrlInput = (
     responseTime: 0,
     fetch: (input: AlloyComponent) => {
       const items = getItems(spec.filetype, input, urlBackstage);
-      const tdata = NestedMenus.build(
-        items,
-        ItemResponse.BUBBLE_TO_SANDBOX,
-        backstage,
-        false
-      );
+      const tdata = NestedMenus.build(items, ItemResponse.BUBBLE_TO_SANDBOX, backstage, false);
       return Future.pure(tdata);
     },
 
@@ -151,11 +121,7 @@ export const renderUrlInput = (
               notify: {
                 onInvalid: (comp: AlloyComponent, err: string) => {
                   memInvalidIcon.getOpt(comp).each((invalidComp) => {
-                    Attr.set(
-                      invalidComp.element(),
-                      'title',
-                      providersBackstage.translate(err)
-                    );
+                    Attr.set(invalidComp.element(), 'title', providersBackstage.translate(err));
                   });
                 }
               },
@@ -163,18 +129,15 @@ export const renderUrlInput = (
                 validate: (input) => {
                   const urlEntry = Representing.getValue(input);
                   return FutureResult.nu((completer) => {
-                    handler(
-                      { type: spec.filetype, url: urlEntry.value },
-                      (validation) => {
-                        if (validation.status === 'invalid') {
-                          const err = Result.error(validation.message);
-                          completer(err);
-                        } else {
-                          const val = Result.value(validation.message);
-                          completer(val);
-                        }
+                    handler({ type: spec.filetype, url: urlEntry.value }, (validation) => {
+                      if (validation.status === 'invalid') {
+                        const err = Result.error(validation.message);
+                        completer(err);
+                      } else {
+                        const val = Result.value(validation.message);
+                        completer(val);
                       }
-                    );
+                    });
                   });
                 },
                 validateOnLoad: false
@@ -246,17 +209,10 @@ export const renderUrlInput = (
     }
   });
 
-  const pLabel = spec.label.map((label) =>
-    renderLabel(label, providersBackstage)
-  );
+  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   // TODO: Consider a way of merging with Checkbox.
-  const makeIcon = (
-    name,
-    errId: Option<string>,
-    icon = name,
-    label = name
-  ) => ({
+  const makeIcon = (name, errId: Option<string>, icon = name, label = name) => ({
     dom: {
       tag: 'div',
       classes: ['tox-icon', 'tox-control-wrap__status-icon-' + name],
@@ -272,9 +228,7 @@ export const renderUrlInput = (
     }
   });
 
-  const memInvalidIcon = Memento.record(
-    makeIcon('invalid', Option.some(errorId), 'warning')
-  );
+  const memInvalidIcon = Memento.record(makeIcon('invalid', Option.some(errorId), 'warning'));
 
   const memStatus = Memento.record({
     dom: {
@@ -297,9 +251,7 @@ export const renderUrlInput = (
       classes: ['tox-control-wrap']
     },
     components: [pField, memStatus.asSpec()],
-    behaviours: Behaviour.derive([
-      Disabling.config({ disabled: spec.disabled })
-    ])
+    behaviours: Behaviour.derive([Disabling.config({ disabled: spec.disabled })])
   });
 
   const memUrlPickerButton = Memento.record(
@@ -324,10 +276,7 @@ export const renderUrlInput = (
       tag: 'div',
       classes: ['tox-form__controls-h-stack']
     },
-    components: Arr.flatten([
-      [memUrlBox.asSpec()],
-      optUrlPicker.map(() => memUrlPickerButton.asSpec()).toArray()
-    ])
+    components: Arr.flatten([[memUrlBox.asSpec()], optUrlPicker.map(() => memUrlPickerButton.asSpec()).toArray()])
   });
 
   const openUrlPicker = (comp: AlloyComponent) => {
@@ -362,9 +311,7 @@ export const renderUrlInput = (
         }
       }),
       ReadOnly.receivingConfig(),
-      AddEventsBehaviour.config('url-input-events', [
-        AlloyEvents.run<CustomEvent>(browseUrlEvent, openUrlPicker)
-      ])
+      AddEventsBehaviour.config('url-input-events', [AlloyEvents.run<CustomEvent>(browseUrlEvent, openUrlPicker)])
     ])
   });
 };

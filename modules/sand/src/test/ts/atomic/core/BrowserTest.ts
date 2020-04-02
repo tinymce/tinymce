@@ -25,36 +25,21 @@ UnitTest.test('BrowserTest', function () {
     assert.eq(
       true,
       PlatformQuery[expectedQuery](platform),
-      'The query ' +
-        expectedQuery +
-        ' should match.\nUser Agent: ' +
-        userAgent +
-        '\nbrowser: ' +
-        expectedBrowser
+      'The query ' + expectedQuery + ' should match.\nUser Agent: ' + userAgent + '\nbrowser: ' + expectedBrowser
     );
   }
 
-  const checkOSVersion = function (
-    expectedMajor: number,
-    expectedMinor: number,
-    userAgent: string
-  ) {
+  const checkOSVersion = function (expectedMajor: number, expectedMinor: number, userAgent: string) {
     const platform = PlatformDetection.detect(userAgent, () => false);
     assert.eq(
       expectedMajor,
       platform.os.version.major,
-      'invalid major OS version ' +
-        platform.os.version.major +
-        ' for agent: ' +
-        userAgent
+      'invalid major OS version ' + platform.os.version.major + ' for agent: ' + userAgent
     );
     assert.eq(
       expectedMinor,
       platform.os.version.minor,
-      'invalid minor OS version ' +
-        platform.os.version.minor +
-        ' for agent: ' +
-        userAgent
+      'invalid minor OS version ' + platform.os.version.minor + ' for agent: ' + userAgent
     );
   };
 
@@ -67,14 +52,7 @@ UnitTest.test('BrowserTest', function () {
     0,
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36 Edge/12.0'
   );
-  check(
-    'isIE11',
-    'Windows',
-    'IE',
-    11,
-    0,
-    'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko'
-  );
+  check('isIE11', 'Windows', 'IE', 11, 0, 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko');
   check(
     'isIE',
     'Windows',
@@ -107,47 +85,12 @@ UnitTest.test('BrowserTest', function () {
     0,
     'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; WOW64; Trident/4.0; SLCC1; .NET CLR 2.0.50727; InfoPath.2; .NET CLR 1.1.4322; .NET CLR 3.5.21022; .NET CLR 3.5.30729; .NET CLR 3.0.30729)'
   );
-  check(
-    'isIE',
-    'Windows',
-    'IE',
-    7,
-    0,
-    'Mozilla/4.0 (compatible; MSIE 7.0; chromeframe/10.0.648.204; Windows NT 5.1)'
-  );
-  check(
-    'isIE',
-    'Windows',
-    'IE',
-    7,
-    0,
-    'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
-  );
-  check(
-    'isIE',
-    'Windows',
-    'IE',
-    6,
-    0,
-    'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)'
-  );
-  check(
-    'isIE',
-    'Windows',
-    'IE',
-    6,
-    0,
-    'Mozilla/4.0 (compatible; MSIE 6.0; chromeframe/10.0.648.204; Windows NT 5.1; SV1)'
-  );
+  check('isIE', 'Windows', 'IE', 7, 0, 'Mozilla/4.0 (compatible; MSIE 7.0; chromeframe/10.0.648.204; Windows NT 5.1)');
+  check('isIE', 'Windows', 'IE', 7, 0, 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)');
+  check('isIE', 'Windows', 'IE', 6, 0, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)');
+  check('isIE', 'Windows', 'IE', 6, 0, 'Mozilla/4.0 (compatible; MSIE 6.0; chromeframe/10.0.648.204; Windows NT 5.1; SV1)');
 
-  check(
-    'isFirefox',
-    'Windows',
-    'Firefox',
-    3,
-    6,
-    'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.2) Gecko/20100115 Firefox/3.6'
-  );
+  check('isFirefox', 'Windows', 'Firefox', 3, 6, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.2) Gecko/20100115 Firefox/3.6');
   check(
     'isFirefox',
     'Windows',
@@ -172,14 +115,7 @@ UnitTest.test('BrowserTest', function () {
     6,
     'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.7) Gecko/20100723 Fedora/3.6.7-1.fc13 Firefox/3.6'
   );
-  check(
-    'isFirefox',
-    'FreeBSD',
-    'Firefox',
-    3,
-    6,
-    'Mozilla/5.0 (X11; U; FreeBSD amd64; en-US; rv:1.9.2.20) Gecko/20110823 Firefox/3.6.20'
-  );
+  check('isFirefox', 'FreeBSD', 'Firefox', 3, 6, 'Mozilla/5.0 (X11; U; FreeBSD amd64; en-US; rv:1.9.2.20) Gecko/20110823 Firefox/3.6.20');
   check(
     'isFirefox',
     'OSX',
@@ -214,22 +150,8 @@ UnitTest.test('BrowserTest', function () {
     'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-au) AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 Safari/533.17.8'
   );
 
-  check(
-    'isOpera',
-    'Windows',
-    'Opera',
-    10,
-    50,
-    'Opera/9.80 (Windows NT 6.1; U; en) Presto/2.5.22 Version/10.50'
-  );
-  check(
-    'isOpera',
-    'Windows',
-    'Opera',
-    9,
-    63,
-    'Opera/9.63 (Windows NT 5.1; U; en) Presto/2.1.1'
-  );
+  check('isOpera', 'Windows', 'Opera', 10, 50, 'Opera/9.80 (Windows NT 6.1; U; en) Presto/2.5.22 Version/10.50');
+  check('isOpera', 'Windows', 'Opera', 9, 63, 'Opera/9.63 (Windows NT 5.1; U; en) Presto/2.1.1');
 
   check(
     'isChrome',
@@ -363,11 +285,7 @@ UnitTest.test('BrowserTest', function () {
     0,
     'Mozilla/5.0 (Linux; U; Android 4.0.3; de-ch; HTC Sensation Build/IML74K) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30'
   );
-  checkOSVersion(
-    2,
-    3,
-    'Mozilla/5.0 (Linux; U; Android 2.3; en-us) AppleWebKit/999+ (KHTML, like Gecko) Safari/999.9'
-  );
+  checkOSVersion(2, 3, 'Mozilla/5.0 (Linux; U; Android 2.3; en-us) AppleWebKit/999+ (KHTML, like Gecko) Safari/999.9');
   checkOSVersion(
     2,
     3,
@@ -460,11 +378,7 @@ UnitTest.test('BrowserTest', function () {
   );
 
   // WKWebView drops the 'Version/X.X' text
-  checkOSVersion(
-    9,
-    2,
-    'Mozilla/5.0 (iPad; CPU OS 9_2 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13C75'
-  );
+  checkOSVersion(9, 2, 'Mozilla/5.0 (iPad; CPU OS 9_2 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13C75');
   // And verify the normal string still works
   checkOSVersion(
     9,
@@ -472,9 +386,5 @@ UnitTest.test('BrowserTest', function () {
     'Mozilla/5.0 (iPad; CPU OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1'
   );
   // iPhone5, 6 & 6 plus
-  checkOSVersion(
-    9,
-    2,
-    'Mozilla/5.0 (iPhone; CPU iPhone OS 9_2 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13C75'
-  );
+  checkOSVersion(9, 2, 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_2 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13C75');
 });

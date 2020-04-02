@@ -27,11 +27,4 @@ const isInReadWriteMode = checkMode(Mode.ReadWrite);
 const isInProtectedMode = checkMode(Mode.Protected);
 const isInReadOnlyMode = checkMode(Mode.ReadOnly);
 
-export {
-  setReadWriteMode,
-  setProtectedMode,
-  setReadOnlyMode,
-  isInReadWriteMode,
-  isInProtectedMode,
-  isInReadOnlyMode
-};
+export { setReadWriteMode, setProtectedMode, setReadOnlyMode, isInReadWriteMode, isInProtectedMode, isInReadOnlyMode };

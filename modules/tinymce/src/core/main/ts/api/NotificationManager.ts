@@ -35,10 +35,7 @@ export interface NotificationApi {
   };
   text: (text: string) => void;
   moveTo: (x: number, y: number) => void;
-  moveRel: (
-    element: Element,
-    rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc' | 'banner'
-  ) => void;
+  moveRel: (element: Element, rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc' | 'banner') => void;
   getEl: () => Element;
   settings: NotificationSpec;
 }
@@ -66,9 +63,7 @@ function NotificationManager(editor: Editor): NotificationManager {
 
   const getImplementation = function (): NotificationManagerImpl {
     const theme = editor.theme;
-    return theme && theme.getNotificationManagerImpl
-      ? theme.getNotificationManagerImpl()
-      : NotificationManagerImpl();
+    return theme && theme.getNotificationManagerImpl ? theme.getNotificationManagerImpl() : NotificationManagerImpl();
   };
 
   const getTopNotification = function (): Option<NotificationApi> {
@@ -76,14 +71,7 @@ function NotificationManager(editor: Editor): NotificationManager {
   };
 
   const isEqual = function (a: NotificationSpec, b: NotificationSpec) {
-    return (
-      a.type === b.type &&
-      a.text === b.text &&
-      !a.progressBar &&
-      !a.timeout &&
-      !b.progressBar &&
-      !b.timeout
-    );
+    return a.type === b.type && a.text === b.text && !a.progressBar && !a.timeout && !b.progressBar && !b.timeout;
   };
 
   const reposition = function () {

@@ -9,11 +9,7 @@ const attach = (parent: AlloyComponent, child: AlloyComponent): void => {
   attachWith(parent, child, Insert.append);
 };
 
-const attachWith = (
-  parent: AlloyComponent,
-  child: AlloyComponent,
-  insertion: (parent: Element, child: Element) => void
-): void => {
+const attachWith = (parent: AlloyComponent, child: AlloyComponent, insertion: (parent: Element, child: Element) => void): void => {
   parent.getSystem().addToWorld(child);
   insertion(parent.element(), child.element());
   if (Body.inBody(parent.element())) {
@@ -29,9 +25,7 @@ const doDetach = (component: AlloyComponent) => {
 };
 
 const detach = (component: AlloyComponent): void => {
-  const parent = Traverse.parent(component.element()).bind((p) =>
-    component.getSystem().getByDom(p).toOption()
-  );
+  const parent = Traverse.parent(component.element()).bind((p) => component.getSystem().getByDom(p).toOption());
 
   doDetach(component);
   parent.each((p) => {
@@ -56,11 +50,7 @@ const attachSystemAfter = (element: Element, guiSystem: GuiSystem): void => {
   attachSystemWith(element, guiSystem, Insert.after);
 };
 
-const attachSystemWith = (
-  element: Element,
-  guiSystem: GuiSystem,
-  inserter: (marker: Element, element: Element) => void
-): void => {
+const attachSystemWith = (element: Element, guiSystem: GuiSystem, inserter: (marker: Element, element: Element) => void): void => {
   inserter(element, guiSystem.element());
   const children = Traverse.children(guiSystem.element());
   Arr.each(children, (child) => {
@@ -76,12 +66,4 @@ const detachSystem = (guiSystem: GuiSystem): void => {
   Remove.remove(guiSystem.element());
 };
 
-export {
-  attach,
-  attachWith,
-  detach,
-  detachChildren,
-  attachSystem,
-  attachSystemAfter,
-  detachSystem
-};
+export { attach, attachWith, detach, detachChildren, attachSystem, attachSystemAfter, detachSystem };

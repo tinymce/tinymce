@@ -9,15 +9,9 @@ import { KAssert } from '@ephox/katamari-assertions';
 UnitTest.test('CheckedTest', function () {
   const container = Element.fromTag('div');
 
-  const alpha = Element.fromHtml<HTMLInputElement>(
-    '<input type="radio" value="alpha"></input>'
-  );
-  const beta = Element.fromHtml<HTMLInputElement>(
-    '<input type="radio" value="beta"></input>'
-  );
-  const gamma = Element.fromHtml<HTMLInputElement>(
-    '<input type="radio" value="gamma"></input>'
-  );
+  const alpha = Element.fromHtml<HTMLInputElement>('<input type="radio" value="alpha"></input>');
+  const beta = Element.fromHtml<HTMLInputElement>('<input type="radio" value="beta"></input>');
+  const gamma = Element.fromHtml<HTMLInputElement>('<input type="radio" value="gamma"></input>');
 
   InsertAll.append(container, [alpha, beta, gamma]);
 

@@ -5,13 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  Behaviour,
-  Focusing,
-  Tabstopping,
-  FormField,
-  AlloyComponent
-} from '@ephox/alloy';
+import { Behaviour, Focusing, Tabstopping, FormField, AlloyComponent } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
@@ -23,10 +17,7 @@ import { renderLabel, renderFormFieldWith } from '../alien/FieldLabeller';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { Omit } from '../Omit';
 
-const platformNeedsSandboxing = !(
-  PlatformDetection.detect().browser.isIE() ||
-  PlatformDetection.detect().browser.isEdge()
-);
+const platformNeedsSandboxing = !(PlatformDetection.detect().browser.isIE() || PlatformDetection.detect().browser.isEdge());
 
 interface IFrameSourcing {
   getValue: (frame: AlloyComponent) => string;
@@ -63,10 +54,7 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
   };
 };
 
-const renderIFrame = (
-  spec: IframeSpec,
-  providersBackstage: UiFactoryBackstageProviders
-) => {
+const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstageProviders) => {
   const isSandbox = platformNeedsSandboxing && spec.sandboxed;
 
   const attributes = {
@@ -78,9 +66,7 @@ const renderIFrame = (
 
   const sourcing = getDynamicSource(isSandbox);
 
-  const pLabel = spec.label.map((label) =>
-    renderLabel(label, providersBackstage)
-  );
+  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   const factory = (newSpec: { uid: string }) =>
     NavigableObject.craft({
@@ -93,11 +79,7 @@ const renderIFrame = (
       behaviours: Behaviour.derive([
         Tabstopping.config({}),
         Focusing.config({}),
-        RepresentingConfigs.withComp(
-          Option.none(),
-          sourcing.getValue,
-          sourcing.setValue
-        )
+        RepresentingConfigs.withComp(Option.none(), sourcing.getValue, sourcing.setValue)
       ])
     });
 
@@ -106,12 +88,7 @@ const renderIFrame = (
     factory: { sketch: factory }
   });
 
-  return renderFormFieldWith(
-    pLabel,
-    pField,
-    ['tox-form__group--stretched'],
-    []
-  );
+  return renderFormFieldWith(pLabel, pField, ['tox-form__group--stretched'], []);
 };
 
 export { renderIFrame };

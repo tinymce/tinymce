@@ -20,10 +20,7 @@ export const validate = <T extends keyof ResponseTypeMap>(
 
   switch (responseType) {
     case DataType.JSON:
-      return JsonResponse.create(request.response).fold(
-        error,
-        FutureResult.pure
-      );
+      return JsonResponse.create(request.response).fold(error, FutureResult.pure);
     case DataType.Blob:
       return normal();
     case DataType.Text:

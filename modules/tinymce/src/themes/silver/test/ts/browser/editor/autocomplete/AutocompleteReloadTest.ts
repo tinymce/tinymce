@@ -8,10 +8,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-import {
-  sAssertAutocompleterStructure,
-  sWaitForAutocompleteToOpen
-} from '../../../module/AutocompleterUtils';
+import { sAssertAutocompleterStructure, sWaitForAutocompleteToOpen } from '../../../module/AutocompleterUtils';
 
 UnitTest.asynctest('Editor Autocompleter Reload test', (success, failure) => {
   SilverTheme();
@@ -56,10 +53,7 @@ UnitTest.asynctest('Editor Autocompleter Reload test', (success, failure) => {
       const tinyUi = TinyUi(editor);
       const tinyApis = TinyApis(editor);
 
-      const sSetContentAndTrigger = (
-        content: string,
-        triggerCharCode: number
-      ) =>
+      const sSetContentAndTrigger = (content: string, triggerCharCode: number) =>
         GeneralSteps.sequence([
           tinyApis.sSetContent(`<p>${content}</p>`),
           tinyApis.sSetCursor([0, 0], content.length),
@@ -73,9 +67,7 @@ UnitTest.asynctest('Editor Autocompleter Reload test', (success, failure) => {
           sSetContentAndTrigger(':aa', ':'.charCodeAt(0)),
           scenario.action,
           scenario.assertion,
-          ...(scenario.postAction
-            ? [scenario.postAction, scenario.postAssertion]
-            : [])
+          ...(scenario.postAction ? [scenario.postAction, scenario.postAssertion] : [])
         ]);
 
       Pipeline.async(
@@ -86,14 +78,8 @@ UnitTest.asynctest('Editor Autocompleter Reload test', (success, failure) => {
             action: Step.pass,
             assertion: sAssertInitialMenu,
             postAction: GeneralSteps.sequence([
-              tinyUi.sClickOnUi(
-                'Click extra item',
-                '.tox-collection__item:contains("Load more...")'
-              ),
-              tinyUi.sWaitForUi(
-                'Wait for menu to reload',
-                '.tox-collection__item:contains("ra")'
-              )
+              tinyUi.sClickOnUi('Click extra item', '.tox-collection__item:contains("Load more...")'),
+              tinyUi.sWaitForUi('Wait for menu to reload', '.tox-collection__item:contains("ra")')
             ]),
             postAssertion: sAssertReloadedMenu
           })
@@ -113,13 +99,10 @@ UnitTest.asynctest('Editor Autocompleter Reload test', (success, failure) => {
           fetch: (pattern, maxResults, meta) => {
             const prefix = Obj.get(meta, 'prefix').getOr('');
             return new Promise((resolve) => {
-              const items: InlineContent.AutocompleterContents[] = Arr.map(
-                ['a', 'b', 'c', 'd'],
-                (item) => ({
-                  value: `item-${item}`,
-                  text: `${prefix}${item}`
-                })
-              );
+              const items: InlineContent.AutocompleterContents[] = Arr.map(['a', 'b', 'c', 'd'], (item) => ({
+                value: `item-${item}`,
+                text: `${prefix}${item}`
+              }));
 
               const extras: InlineContent.AutocompleterContents[] =
                 Obj.keys(meta).length === 0

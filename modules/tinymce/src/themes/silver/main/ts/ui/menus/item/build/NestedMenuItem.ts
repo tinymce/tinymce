@@ -3,10 +3,7 @@ import { Menu } from '@ephox/bridge';
 import { Fun, Option } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import ItemResponse from '../ItemResponse';
-import {
-  renderSubmenuCaret,
-  renderDownwardsCaret
-} from '../structure/ItemSlices';
+import { renderSubmenuCaret, renderDownwardsCaret } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
@@ -18,12 +15,8 @@ const renderNestedItem = (
   renderIcons: boolean = true,
   downwardsCaret: boolean = false
 ): ItemTypes.ItemSpec => {
-  const caret = downwardsCaret
-    ? renderDownwardsCaret(providersBackstage.icons)
-    : renderSubmenuCaret(providersBackstage.icons);
-  const getApi = (
-    component: AlloyComponent
-  ): Menu.NestedMenuItemInstanceApi => ({
+  const caret = downwardsCaret ? renderDownwardsCaret(providersBackstage.icons) : renderSubmenuCaret(providersBackstage.icons);
+  const getApi = (component: AlloyComponent): Menu.NestedMenuItemInstanceApi => ({
     isDisabled: () => Disabling.isDisabled(component),
     setDisabled: (state: boolean) => Disabling.set(component, state)
   });

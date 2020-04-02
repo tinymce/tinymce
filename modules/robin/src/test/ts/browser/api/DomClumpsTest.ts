@@ -1,15 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import {
-  Body,
-  Compare,
-  Element,
-  Hierarchy,
-  Html,
-  Insert,
-  InsertAll,
-  Remove
-} from '@ephox/sugar';
+import { Body, Compare, Element, Hierarchy, Html, Insert, InsertAll, Remove } from '@ephox/sugar';
 import * as DomClumps from 'ephox/robin/api/dom/DomClumps';
 
 UnitTest.test('DomClumpsTest', function () {
@@ -20,9 +11,7 @@ UnitTest.test('DomClumpsTest', function () {
   Insert.append(body, container);
 
   const find = function (path: number[]) {
-    return Hierarchy.follow(container, path).getOrDie(
-      'Could not find the path: ' + path.join(',')
-    );
+    return Hierarchy.follow(container, path).getOrDie('Could not find the path: ' + path.join(','));
   };
 
   const isRoot = function (elem: Element) {
@@ -37,45 +26,18 @@ UnitTest.test('DomClumpsTest', function () {
     }
   };
 
-  const checkFracture = function (
-    expected: string,
-    start: number[],
-    soffset: number,
-    finish: number[],
-    foffset: number
-  ) {
-    DomClumps.fracture(
-      isRoot,
-      find(start),
-      soffset,
-      find(finish),
-      foffset
-    ).each(mark);
+  const checkFracture = function (expected: string, start: number[], soffset: number, finish: number[], foffset: number) {
+    DomClumps.fracture(isRoot, find(start), soffset, find(finish), foffset).each(mark);
     assert.eq(expected, Html.get(container));
   };
 
-  const checkFractures = function (
-    expected: string,
-    start: number[],
-    soffset: number,
-    finish: number[],
-    foffset: number
-  ) {
-    const sections = DomClumps.fractures(
-      isRoot,
-      find(start),
-      soffset,
-      find(finish),
-      foffset
-    );
+  const checkFractures = function (expected: string, start: number[], soffset: number, finish: number[], foffset: number) {
+    const sections = DomClumps.fractures(isRoot, find(start), soffset, find(finish), foffset);
     Arr.each(sections, mark);
     assert.eq(expected, Html.get(container));
   };
 
-  container.dom().innerHTML =
-    '<p>One</p>' +
-    '<table><tbody><tr><th>Heading</th></tr><tr><td>Data</td></tr></tbody></table>' +
-    '<p>Two</p>';
+  container.dom().innerHTML = '<p>One</p>' + '<table><tbody><tr><th>Heading</th></tr><tr><td>Data</td></tr></tbody></table>' + '<p>Two</p>';
   // Highlighting over a table from O|ne -> T|wo
   checkFractures(
     '<p>O<strong>ne</strong></p>' +
@@ -147,8 +109,7 @@ UnitTest.test('DomClumpsTest', function () {
     'This is th'.length
   );
 
-  container.dom().innerHTML =
-    '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+  container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
   // Highlighting from This| -> an|d
   checkFracture(
     '<p>This<strong> is <b>bold text</b> an</strong>d <i>italic text</i> here.</p>',
@@ -158,40 +119,18 @@ UnitTest.test('DomClumpsTest', function () {
     ' an'.length
   );
 
-  container.dom().innerHTML =
-    '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+  container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
   // Highlighting from <b> -> </b>
-  checkFracture(
-    '<p>This is <strong><b>bold text</b></strong> and <i>italic text</i> here.</p>',
-    [0],
-    1,
-    [0],
-    2
-  );
+  checkFracture('<p>This is <strong><b>bold text</b></strong> and <i>italic text</i> here.</p>', [0], 1, [0], 2);
 
-  container.dom().innerHTML =
-    '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+  container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
   // Highlighting from <b> to text|</b>
-  checkFracture(
-    '<p>This is <strong><b>bold text</b></strong> and <i>italic text</i> here.</p>',
-    [0],
-    1,
-    [0, 1],
-    1
-  );
+  checkFracture('<p>This is <strong><b>bold text</b></strong> and <i>italic text</i> here.</p>', [0], 1, [0, 1], 1);
 
-  container.dom().innerHTML =
-    '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
-  checkFracture(
-    '<p>This is <b><strong>bold</strong> text</b> and <i>italic text</i> here.</p>',
-    [0],
-    1,
-    [0, 1, 0],
-    'bold'.length
-  );
+  container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+  checkFracture('<p>This is <b><strong>bold</strong> text</b> and <i>italic text</i> here.</p>', [0], 1, [0, 1, 0], 'bold'.length);
 
-  container.dom().innerHTML =
-    '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+  container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
   checkFracture(
     '<p>T<strong>his is <b>bold</b></strong><b> text</b> and <i>italic text</i> here.</p>',
     [0, 0],
@@ -200,48 +139,19 @@ UnitTest.test('DomClumpsTest', function () {
     'bold'.length
   );
 
-  container.dom().innerHTML =
-    '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
-  checkFracture(
-    '<p>This is <b>bold text</b><strong> and </strong><i>italic text</i> here.</p>',
-    [0],
-    2,
-    [0],
-    3
-  );
+  container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+  checkFracture('<p>This is <b>bold text</b><strong> and </strong><i>italic text</i> here.</p>', [0], 2, [0], 3);
 
-  container.dom().innerHTML =
-    '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
-  checkFracture(
-    '<p>This is <b>bold text</b> and <strong><i>italic text</i></strong> here.</p>',
-    [0],
-    3,
-    [0],
-    4
-  );
+  container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+  checkFracture('<p>This is <b>bold text</b> and <strong><i>italic text</i></strong> here.</p>', [0], 3, [0], 4);
 
-  container.dom().innerHTML =
-    '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
-  checkFracture(
-    '<p>This is <b>bold text</b> and <i>italic text</i><strong> here.</strong></p>',
-    [0],
-    4,
-    [0],
-    5
-  );
+  container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+  checkFracture('<p>This is <b>bold text</b> and <i>italic text</i><strong> here.</strong></p>', [0], 4, [0], 5);
 
-  container.dom().innerHTML =
-    '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
-  checkFracture(
-    '<p>This is <b>bold text</b> and <i>italic text</i><strong> he</strong>re.</p>',
-    [0],
-    4,
-    [0, 4],
-    ' he'.length
-  );
+  container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+  checkFracture('<p>This is <b>bold text</b> and <i>italic text</i><strong> he</strong>re.</p>', [0], 4, [0, 4], ' he'.length);
 
-  container.dom().innerHTML =
-    '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+  container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
   checkFracture(
     '<p>This is <b>b</b><strong><b>old text</b> and <i>italic text</i> he</strong>re.</p>',
     [0, 1, 0],
@@ -250,8 +160,7 @@ UnitTest.test('DomClumpsTest', function () {
     ' he'.length
   );
 
-  container.dom().innerHTML =
-    '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+  container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
   checkFracture(
     '<p>This is <b>b<strong>o</strong>ld text</b> and <i>italic text</i> here.</p>',
     [0, 1, 0],
@@ -260,18 +169,10 @@ UnitTest.test('DomClumpsTest', function () {
     'bo'.length
   );
 
-  container.dom().innerHTML =
-    '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
-  checkFracture(
-    '<p>This is <b>bold text</b><strong> and </strong><i>italic text</i> here.</p>',
-    [0, 1],
-    1,
-    [0, 3],
-    0
-  );
+  container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+  checkFracture('<p>This is <b>bold text</b><strong> and </strong><i>italic text</i> here.</p>', [0, 1], 1, [0, 3], 0);
 
-  container.dom().innerHTML =
-    '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+  container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
   checkFracture(
     // Remove the empty formatting element.
     '<p>This is <b></b><strong><b>bold text</b> a</strong>nd <i>italic text</i> here.</p>',
@@ -281,8 +182,7 @@ UnitTest.test('DomClumpsTest', function () {
     ' a'.length
   );
 
-  container.dom().innerHTML =
-    '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
+  container.dom().innerHTML = '<p>This is <b>bold text</b> and <i>italic text</i> here.</p>';
   checkFracture(
     '<p>This is <b><strong>bold text</strong></b> and <i>italic text</i> here.</p>',
     [0, 1, 0],
@@ -291,8 +191,7 @@ UnitTest.test('DomClumpsTest', function () {
     'bold text'.length
   );
 
-  container.dom().innerHTML =
-    '<p>This <span>new <u>words</u></span> is <b>bold text</b> and <i>italic text</i> here.</p>';
+  container.dom().innerHTML = '<p>This <span>new <u>words</u></span> is <b>bold text</b> and <i>italic text</i> here.</p>';
   checkFracture(
     '<p>This <span>new <u>words</u></span><strong> is <b>bo</b></strong><b>ld text</b> and <i>italic text</i> here.</p>',
     [0, 1],
@@ -329,8 +228,7 @@ UnitTest.test('DomClumpsTest', function () {
     'h'.length
   );
 
-  container.dom().innerHTML =
-    '<table><tbody><tr><td>One</td>\n\n\n \n<td>Two</td></tr>\n</tbody></table>';
+  container.dom().innerHTML = '<table><tbody><tr><td>One</td>\n\n\n \n<td>Two</td></tr>\n</tbody></table>';
   checkFractures(
     '<table><tbody>' +
       '<tr>' +
@@ -346,8 +244,7 @@ UnitTest.test('DomClumpsTest', function () {
     2
   );
 
-  container.dom().innerHTML =
-    '<table><tbody>\n<tr>\n<td>One</td>\n\n\n \n<td>Two</td></tr>\n</tbody></table>';
+  container.dom().innerHTML = '<table><tbody>\n<tr>\n<td>One</td>\n\n\n \n<td>Two</td></tr>\n</tbody></table>';
   checkFractures(
     '<table><tbody>\n' +
       '<tr>\n' +
@@ -363,8 +260,7 @@ UnitTest.test('DomClumpsTest', function () {
     1
   );
 
-  container.dom().innerHTML =
-    '<table><caption>Heading</caption><tbody>\n<tr>\n<td>One</td>\n\n\n \n<td>Two</td></tr>\n</tbody></table>';
+  container.dom().innerHTML = '<table><caption>Heading</caption><tbody>\n<tr>\n<td>One</td>\n\n\n \n<td>Two</td></tr>\n</tbody></table>';
   checkFractures(
     '<table><caption><strong>Heading</strong></caption><tbody>\n' +
       '<tr>\n' +
@@ -381,13 +277,7 @@ UnitTest.test('DomClumpsTest', function () {
   );
 
   container.dom().innerHTML = '<ol><li>One</li><li>Two</li><li>Three</li></ol>';
-  checkFractures(
-    '<ol><li><strong>One</strong></li><li><strong>Two</strong></li><li><strong>Three</strong></li></ol>',
-    [0],
-    0,
-    [0],
-    2
-  );
+  checkFractures('<ol><li><strong>One</strong></li><li><strong>Two</strong></li><li><strong>Three</strong></li></ol>', [0], 0, [0], 2);
 
   container.dom().innerHTML = '<ol><li>One</li><li>Two</li><li>Three</li></ol>';
   checkFractures(

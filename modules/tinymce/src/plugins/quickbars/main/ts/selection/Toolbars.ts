@@ -10,11 +10,8 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../api/Settings';
 
 const addToEditor = (editor: Editor) => {
-  const isEditable = (node: Element) =>
-    editor.dom.getContentEditableParent(node) !== 'false';
-  const isImage = (node: Element) =>
-    node.nodeName === 'IMG' ||
-    (node.nodeName === 'FIGURE' && /image/i.test(node.className));
+  const isEditable = (node: Element) => editor.dom.getContentEditableParent(node) !== 'false';
+  const isImage = (node: Element) => node.nodeName === 'IMG' || (node.nodeName === 'FIGURE' && /image/i.test(node.className));
 
   const imageToolbarItems = Settings.getImageToolbarItems(editor);
   if (imageToolbarItems.trim().length > 0) {
@@ -28,8 +25,7 @@ const addToEditor = (editor: Editor) => {
   const textToolbarItems = Settings.getTextSelectionToolbarItems(editor);
   if (textToolbarItems.trim().length > 0) {
     editor.ui.registry.addContextToolbar('textselection', {
-      predicate: (node) =>
-        !isImage(node) && !editor.selection.isCollapsed() && isEditable(node),
+      predicate: (node) => !isImage(node) && !editor.selection.isCollapsed() && isEditable(node),
       items: textToolbarItems,
       position: 'selection',
       scope: 'editor'

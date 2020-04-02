@@ -1,23 +1,13 @@
 import { Arr, Type } from '@ephox/katamari';
-import {
-  File,
-  DataTransferItemList,
-  DataTransferItem,
-  DataTransfer
-} from '@ephox/dom-globals';
-import {
-  createDataTransferItemFromString,
-  createDataTransferItemFromFile
-} from './DataTransferItem';
+import { File, DataTransferItemList, DataTransferItem, DataTransfer } from '@ephox/dom-globals';
+import { createDataTransferItemFromString, createDataTransferItemFromFile } from './DataTransferItem';
 import { isInReadWriteMode } from './Mode';
 
 const throwInvalidState = (): void => {
   throw new Error('Invalid state dataTransfer is not in read/write mode');
 };
 
-const createDataTransferItemList = (
-  dataTransfer: DataTransfer
-): DataTransferItemList => {
+const createDataTransferItemList = (dataTransfer: DataTransfer): DataTransferItemList => {
   const items: DataTransferItem[] = [];
 
   const createIndexes = (list: any, items: DataTransferItem[]) => {
@@ -43,9 +33,7 @@ const createDataTransferItemList = (
         const hasType = Arr.exists(items, (item) => item.type === type);
 
         if (hasType) {
-          throw new Error(
-            `Failed to execute 'add' on 'DataTransferItemList': An item already exists for type '${type}'.`
-          );
+          throw new Error(`Failed to execute 'add' on 'DataTransferItemList': An item already exists for type '${type}'.`);
         }
 
         items.push(createDataTransferItemFromString(dataTransfer, type, data));

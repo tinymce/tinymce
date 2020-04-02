@@ -15,8 +15,7 @@ const generator = function (item: string, start: number) {
   });
 };
 
-const make = (values: string[]): PArrayTestItem[] =>
-  PositionArray.generate(values, generator);
+const make = (values: string[]): PArrayTestItem[] => PositionArray.generate(values, generator);
 
 const dump = function (parray: PArrayTestItem[]) {
   return Arr.map(parray, function (unit) {

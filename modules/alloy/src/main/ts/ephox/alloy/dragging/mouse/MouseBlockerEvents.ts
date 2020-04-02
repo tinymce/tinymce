@@ -17,12 +17,9 @@ const init = (dragApi: BlockerDragApi): AlloyEvents.AlloyEventRecord =>
 
     // As the user moves the mouse around (while pressed down), we move the
     // component around
-    AlloyEvents.run<EventArgs<MouseEvent>>(
-      NativeEvents.mousemove(),
-      (comp, simulatedEvent) => {
-        dragApi.move(simulatedEvent.event());
-      }
-    ),
+    AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mousemove(), (comp, simulatedEvent) => {
+      dragApi.move(simulatedEvent.event());
+    }),
 
     // When the use moves outside the range, schedule a block to occur but
     // give it a chance to be cancelled.

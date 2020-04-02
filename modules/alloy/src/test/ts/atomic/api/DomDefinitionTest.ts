@@ -30,8 +30,7 @@ UnitTest.test('DomDefinitionTest', () => {
 
   const arbOptionOf = <T>(arb: any) =>
     Jsc.tuple([Jsc.bool, arb]).smap(
-      (arr: [boolean, string]) =>
-        arr[0] ? Option.some(arr[1]) : Option.none(),
+      (arr: [boolean, string]) => (arr[0] ? Option.some(arr[1]) : Option.none()),
       (opt: Option<string>) =>
         opt.fold(
           () => [false, ''],
@@ -53,17 +52,7 @@ UnitTest.test('DomDefinitionTest', () => {
     arbOptionOf(Jsc.string),
     arbOptionOf(Jsc.string)
   ]).smap(
-    (
-      arr: [
-        string,
-        string,
-        string[],
-        Record<string, string>,
-        Record<string, string>,
-        Option<string>,
-        Option<string>
-      ]
-    ) => ({
+    (arr: [string, string, string[], Record<string, string>, Record<string, string>, Option<string>, Option<string>]) => ({
       uid: arr[0],
       tag: arr[1],
       classes: arr[2],
@@ -93,11 +82,7 @@ UnitTest.test('DomDefinitionTest', () => {
       )
   );
 
-  const arbModification = Jsc.tuple([
-    Jsc.array(Jsc.nestring),
-    Jsc.dict(Jsc.nestring),
-    Jsc.dict(Jsc.nestring)
-  ]).smap(
+  const arbModification = Jsc.tuple([Jsc.array(Jsc.nestring), Jsc.dict(Jsc.nestring), Jsc.dict(Jsc.nestring)]).smap(
     (arr: [string[], Record<string, string>, Record<string, string>]) => ({
       classes: arr[0],
       attributes: arr[1],
@@ -120,26 +105,17 @@ UnitTest.test('DomDefinitionTest', () => {
     (defn: DefinitionType, mod: ModifiationType) => {
       const result = DomModification.merge(defn, mod);
       Assert.eq(
-        () =>
-          'All classes in mod should be in final result: ' +
-          JSON.stringify(result, null, 2) +
-          '. Should be none left over.',
+        () => 'All classes in mod should be in final result: ' + JSON.stringify(result, null, 2) + '. Should be none left over.',
         [],
         Arr.difference(mod.classes, result.classes)
       );
       Assert.eq(
-        () =>
-          'All classes in defn should be in final result ' +
-          JSON.stringify(result, null, 2) +
-          '.too. Should be none left over.',
+        () => 'All classes in defn should be in final result ' + JSON.stringify(result, null, 2) + '.too. Should be none left over.',
         [],
         Arr.difference(defn.classes, result.classes)
       );
       Assert.eq(
-        () =>
-          'All styles from modification should be in final result' +
-          JSON.stringify(result, null, 2) +
-          '.',
+        () => 'All styles from modification should be in final result' + JSON.stringify(result, null, 2) + '.',
         true,
         Obj.find(mod.styles, (v, k) => result.styles[k] !== v).isNone()
       );
@@ -155,16 +131,12 @@ UnitTest.test('DomDefinitionTest', () => {
             JSON.stringify(result, null, 2) +
             '., unless modification changed it',
           true,
-          result.styles[k] === v ||
-            (result.styles[k] === mod.styles[k] && mod.styles.hasOwnProperty(k))
+          result.styles[k] === v || (result.styles[k] === mod.styles[k] && mod.styles.hasOwnProperty(k))
         );
       });
 
       Assert.eq(
-        () =>
-          'All attributes from modification should be in final result' +
-          JSON.stringify(result, null, 2) +
-          '.',
+        () => 'All attributes from modification should be in final result' + JSON.stringify(result, null, 2) + '.',
         true,
         Obj.find(mod.attributes, (v, k) => result.attributes[k] !== v).isNone()
       );
@@ -180,9 +152,7 @@ UnitTest.test('DomDefinitionTest', () => {
             JSON.stringify(result, null, 2) +
             '., unless modification changed it',
           true,
-          result.attributes[k] === v ||
-            (result.attributes[k] === mod.attributes[k] &&
-              mod.attributes.hasOwnProperty(k))
+          result.attributes[k] === v || (result.attributes[k] === mod.attributes[k] && mod.attributes.hasOwnProperty(k))
         );
       });
       return true;

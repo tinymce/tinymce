@@ -3,13 +3,9 @@ import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import { BarPositions, ColInfo } from '../resize/BarPositions';
 
-export default function (
-  directionAt: (e: Element) => { isRtl: () => boolean }
-): BarPositions<ColInfo> {
+export default function (directionAt: (e: Element) => { isRtl: () => boolean }): BarPositions<ColInfo> {
   const auto = function (table: Element) {
-    return directionAt(table).isRtl()
-      ? ResizeDirection.rtl
-      : ResizeDirection.ltr;
+    return directionAt(table).isRtl() ? ResizeDirection.rtl : ResizeDirection.ltr;
   };
 
   const delta = function (amount: number, table: Element) {

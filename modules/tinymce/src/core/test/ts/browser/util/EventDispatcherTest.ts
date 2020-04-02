@@ -3,10 +3,7 @@ import { Pipeline } from '@ephox/agar';
 import EventDispatcher from 'tinymce/core/api/util/EventDispatcher';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('fire (no event listeners)', function () {

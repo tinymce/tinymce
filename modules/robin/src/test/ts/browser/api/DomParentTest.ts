@@ -1,13 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import {
-  Attr,
-  Compare,
-  Element,
-  Hierarchy,
-  Html,
-  SelectorFind
-} from '@ephox/sugar';
+import { Attr, Compare, Element, Hierarchy, Html, SelectorFind } from '@ephox/sugar';
 import * as DomParent from 'ephox/robin/api/dom/DomParent';
 import { KAssert } from '@ephox/katamari-assertions';
 
@@ -87,12 +80,7 @@ UnitTest.test('DomParentTest', function () {
     'six'
   );
 
-  const checkPath = function (
-    expected: string,
-    input: string,
-    p: number[],
-    c: number[]
-  ) {
+  const checkPath = function (expected: string, input: string, p: number[], c: number[]) {
     const container = Element.fromTag('div');
     container.dom().innerHTML = input;
 
@@ -104,22 +92,9 @@ UnitTest.test('DomParentTest', function () {
   };
 
   checkPath(
-    '<div>' +
-      '<font>' +
-      '<span>Cat</span>' +
-      '<span>Dog</span>' +
-      '</font>' +
-      '<font>' +
-      '<span></span>' +
-      '</font>' +
-      '</div>',
+    '<div>' + '<font>' + '<span>Cat</span>' + '<span>Dog</span>' + '</font>' + '<font>' + '<span></span>' + '</font>' + '</div>',
 
-    '<div>' +
-      '<font>' +
-      '<span>Cat</span>' +
-      '<span>Dog</span>' +
-      '</font>' +
-      '</div>',
+    '<div>' + '<font>' + '<span>Cat</span>' + '<span>Dog</span>' + '</font>' + '</div>',
     [0, 0],
     [0, 0, 1, 0]
   );
@@ -141,17 +116,7 @@ UnitTest.test('DomParentTest', function () {
       '</font>' +
       '</div>',
 
-    '<div>' +
-      '<font>' +
-      '<span>Cat</span>' +
-      '<span>' +
-      'Hello' +
-      '<br>' +
-      'World' +
-      '</span>' +
-      '<span>Dog</span>' +
-      '</font>' +
-      '</div>',
+    '<div>' + '<font>' + '<span>Cat</span>' + '<span>' + 'Hello' + '<br>' + 'World' + '</span>' + '<span>Dog</span>' + '</font>' + '</div>',
     [0, 0],
     [0, 0, 1, 1]
   );
@@ -172,17 +137,7 @@ UnitTest.test('DomParentTest', function () {
       '</font>' +
       '</div>',
 
-    '<div>' +
-      '<font>' +
-      '<span>Cat</span>' +
-      '<span>' +
-      'Hello' +
-      '<br>' +
-      'World' +
-      '</span>' +
-      '<span>Dog</span>' +
-      '</font>' +
-      '</div>',
+    '<div>' + '<font>' + '<span>Cat</span>' + '<span>' + 'Hello' + '<br>' + 'World' + '</span>' + '<span>Dog</span>' + '</font>' + '</div>',
     [0, 0],
     [0, 0, 1, 2]
   );
@@ -204,17 +159,7 @@ UnitTest.test('DomParentTest', function () {
       '</font>' +
       '</div>',
 
-    '<div>' +
-      '<font>' +
-      '<span>Cat</span>' +
-      '<span>' +
-      'Hello' +
-      '<br>' +
-      'World' +
-      '</span>' +
-      '<span>Dog</span>' +
-      '</font>' +
-      '</div>',
+    '<div>' + '<font>' + '<span>Cat</span>' + '<span>' + 'Hello' + '<br>' + 'World' + '</span>' + '<span>Dog</span>' + '</font>' + '</div>',
     [0, 0],
     [0, 0, 1, 0]
   );
@@ -245,12 +190,8 @@ UnitTest.test('DomParentTest', function () {
       const child = SelectorFind.descendant(container, '.' + f).getOrDie();
       const subset = DomParent.subset(parent, child);
 
-      const actual = subset.map((ss) =>
-        Arr.map(ss, (x) => Attr.get(x, 'class'))
-      );
-      const expected_ = expected.map((ss) =>
-        Arr.map<string | undefined>(ss, (x) => x)
-      );
+      const actual = subset.map((ss) => Arr.map(ss, (x) => Attr.get(x, 'class')));
+      const expected_ = expected.map((ss) => Arr.map<string | undefined>(ss, (x) => x));
 
       KAssert.eqOption('eq', expected_, actual);
     };
@@ -258,10 +199,6 @@ UnitTest.test('DomParentTest', function () {
     check(Option.some(['three-five']), 'three-five', 'five');
     check(Option.some(['three-five']), 'five', 'three-five');
     check(Option.some(['two', 'three-five']), 'two', 'five');
-    check(
-      Option.some(['two', 'three-five', 'six', 'seven-nine']),
-      'two',
-      'eight'
-    );
+    check(Option.some(['two', 'three-five', 'six', 'seven-nine']), 'two', 'eight');
   })();
 });

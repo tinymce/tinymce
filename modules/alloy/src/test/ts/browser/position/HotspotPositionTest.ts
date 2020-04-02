@@ -61,10 +61,7 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
             PositionTestUtils.cTestSink('Fixed, not scrolled', 'fixed'),
 
             PositionTestUtils.cScrollDown('hotspot', '1000px'),
-            PositionTestUtils.cTestSink(
-              'Relative, scrolled 1000px',
-              'relative'
-            ),
+            PositionTestUtils.cTestSink('Relative, scrolled 1000px', 'relative'),
             PositionTestUtils.cTestSink('Fixed, scrolled 1000px', 'fixed')
           ])
         ])

@@ -16,10 +16,7 @@ export default [
       ValueSchema.setOf(
         Result.value,
         ValueSchema.objOfOnly([
-          FieldSchema.optionObjOfOnly('transition', [
-            FieldSchema.strict('property'),
-            FieldSchema.strict('transitionClass')
-          ])
+          FieldSchema.optionObjOfOnly('transition', [FieldSchema.strict('property'), FieldSchema.strict('transitionClass')])
         ])
       )
     )

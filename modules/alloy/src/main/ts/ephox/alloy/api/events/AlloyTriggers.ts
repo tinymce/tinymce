@@ -9,11 +9,7 @@ const emit = (component: AlloyComponent, event: string): void => {
   dispatchWith(component, component.element(), event, {});
 };
 
-const emitWith = (
-  component: AlloyComponent,
-  event: string,
-  properties: Record<string, any>
-): void => {
+const emitWith = (component: AlloyComponent, event: string, properties: Record<string, any>): void => {
   dispatchWith(component, component.element(), event, properties);
 };
 
@@ -21,27 +17,16 @@ const emitExecute = (component: AlloyComponent): void => {
   emit(component, SystemEvents.execute());
 };
 
-const dispatch = (
-  component: AlloyComponent,
-  target: Element,
-  event: string
-): void => {
+const dispatch = (component: AlloyComponent, target: Element, event: string): void => {
   dispatchWith(component, target, event, {});
 };
 
-const dispatchWith = (
-  component: AlloyComponent,
-  target: Element,
-  event: string,
-  properties: Record<string, any>
-): void => {
+const dispatchWith = (component: AlloyComponent, target: Element, event: string, properties: Record<string, any>): void => {
   const data = {
     target,
     ...properties
   };
-  component
-    .getSystem()
-    .triggerEvent(event, target, Obj.map(data, Fun.constant));
+  component.getSystem().triggerEvent(event, target, Obj.map(data, Fun.constant));
 };
 
 const dispatchEvent = function <T extends EventFormat>(
@@ -57,12 +42,4 @@ const dispatchFocus = (component: AlloyComponent, target: Element): void => {
   component.getSystem().triggerFocus(target, component.element());
 };
 
-export {
-  emit,
-  emitWith,
-  emitExecute,
-  dispatch,
-  dispatchWith,
-  dispatchEvent,
-  dispatchFocus
-};
+export { emit, emitWith, emitExecute, dispatch, dispatchWith, dispatchEvent, dispatchFocus };

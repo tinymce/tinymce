@@ -1,10 +1,5 @@
 import { Adt } from '@ephox/katamari';
-import {
-  ImageAssetAdt,
-  ImageAssetConstructor,
-  BlobCallback,
-  UrlCallback
-} from './ImageAssetTypes';
+import { ImageAssetAdt, ImageAssetConstructor, BlobCallback, UrlCallback } from './ImageAssetTypes';
 
 /*
  * An arbitrary common
@@ -25,11 +20,7 @@ const adt: ImageAssetConstructor = Adt.generate([
   { url: ['id', 'url', 'raw'] } // Remote image. JS image object/element loaded via url
 ]);
 
-const cata = <T>(
-  subject: ImageAssetAdt,
-  onFile: BlobCallback<T>,
-  onImage: UrlCallback<T>
-): T => subject.fold(onFile, onImage);
+const cata = <T>(subject: ImageAssetAdt, onFile: BlobCallback<T>, onImage: UrlCallback<T>): T => subject.fold(onFile, onImage);
 
 export default {
   cata,

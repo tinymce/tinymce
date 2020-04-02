@@ -13,18 +13,8 @@ type MiddleHandler<T> = (current: Element, target: any) => T;
 type LastHandler<T> = (current: Element) => T;
 
 export interface CellLocation {
-  fold: <T>(
-    none: NoneHandler<T>,
-    first: FirstHandler<T>,
-    middle: MiddleHandler<T>,
-    last: LastHandler<T>
-  ) => T;
-  match: <T>(branches: {
-    none: NoneHandler<T>;
-    first: FirstHandler<T>;
-    middle: MiddleHandler<T>;
-    last: LastHandler<T>;
-  }) => T;
+  fold: <T>(none: NoneHandler<T>, first: FirstHandler<T>, middle: MiddleHandler<T>, last: LastHandler<T>) => T;
+  match: <T>(branches: { none: NoneHandler<T>; first: FirstHandler<T>; middle: MiddleHandler<T>; last: LastHandler<T> }) => T;
   log: (label: string) => void;
 }
 
@@ -33,12 +23,7 @@ const adt: {
   first: (current: Element) => CellLocation;
   middle: (current: Element, target: Element) => CellLocation;
   last: (current: Element) => CellLocation;
-} = Adt.generate([
-  { none: ['current'] },
-  { first: ['current'] },
-  { middle: ['current', 'target'] },
-  { last: ['current'] }
-]);
+} = Adt.generate([{ none: ['current'] }, { first: ['current'] }, { middle: ['current', 'target'] }, { last: ['current'] }]);
 
 const none = (current: Element | undefined = undefined) => adt.none(current);
 

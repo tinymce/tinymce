@@ -1,24 +1,8 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Logger,
-  Mouse,
-  Pipeline,
-  Step
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Logger, Mouse, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import {
-  Body,
-  Element,
-  EventArgs,
-  Html,
-  Insert,
-  Node,
-  Remove,
-  Traverse
-} from '@ephox/sugar';
+import { Body, Element, EventArgs, Html, Insert, Node, Remove, Traverse } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
@@ -31,10 +15,7 @@ import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
   const root = Element.fromTag('div');
-  Html.set(
-    root,
-    '<span class="clicker">A</span> and <span class="clicker">B</span>'
-  );
+  Html.set(root, '<span class="clicker">A</span> and <span class="clicker">B</span>');
 
   Insert.append(Body.body(), root);
 
@@ -55,17 +36,11 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
             })
           ]),
           events: AlloyEvents.derive([
-            AlloyEvents.run<EventArgs>(
-              NativeEvents.click(),
-              (component, simulatedEvent) => {
-                // We have to remove the proxy first, because we are during a proxied event (click)
-                connection.unproxy(component);
-                connection.dispatchTo(
-                  SystemEvents.execute(),
-                  simulatedEvent.event()
-                );
-              }
-            )
+            AlloyEvents.run<EventArgs>(NativeEvents.click(), (component, simulatedEvent) => {
+              // We have to remove the proxy first, because we are during a proxied event (click)
+              connection.unproxy(component);
+              connection.dispatchTo(SystemEvents.execute(), simulatedEvent.event());
+            })
           ])
         }
       }
@@ -76,15 +51,9 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
     Logger.t(
       label,
       Step.sync(() => {
-        const child = Traverse.child(root, index).getOrDie(
-          'Could not find child at index: ' + index
-        );
+        const child = Traverse.child(root, index).getOrDie('Could not find child at index: ' + index);
         const alloyUid = Tagger.readOrDie(child);
-        Assertions.assertEq(
-          'Uid should have been initialised',
-          true,
-          alloyUid.startsWith('uid_')
-        );
+        Assertions.assertEq('Uid should have been initialised', true, alloyUid.startsWith('uid_'));
       })
     );
 
@@ -92,9 +61,7 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
     Logger.t(
       label,
       Step.sync(() => {
-        const child = Traverse.child(root, index).getOrDie(
-          'Could not find child at index: ' + index
-        );
+        const child = Traverse.child(root, index).getOrDie('Could not find child at index: ' + index);
         const optUid = Tagger.read(child);
         Assertions.assertEq('Uid should NOT be set', true, optUid.isNone());
       })
@@ -103,9 +70,7 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
   Pipeline.async(
     {},
     [
-      GuiSetup.mAddStyles(Element.fromDom(document), [
-        '.selected { color: white; background: black; }'
-      ]),
+      GuiSetup.mAddStyles(Element.fromDom(document), ['.selected { color: white; background: black; }']),
       Assertions.sAssertStructure(
         'Checking initial structure ... nothing is selected',
         ApproxStructure.build((s, str, arr) =>

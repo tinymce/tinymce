@@ -39,11 +39,7 @@ UnitTest.asynctest('AlertBanner component Test', (success, failure) => {
             attrs: {
               role: str.is('alert')
             },
-            classes: [
-              arr.has('tox-notification'),
-              arr.has('tox-notification--in'),
-              arr.has('tox-notification--warn')
-            ],
+            classes: [arr.has('tox-notification'), arr.has('tox-notification--in'), arr.has('tox-notification--warn')],
             children: [
               s.element('div', {
                 classes: [arr.has('tox-notification__icon')],

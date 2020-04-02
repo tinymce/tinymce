@@ -4,9 +4,7 @@ import { Fun, Option, Result } from '@ephox/katamari';
 import { ChoiceMenuItemApi, SeparatorMenuItemApi } from '../../api/Menu';
 
 // Temporarily disable separators until things are clearer
-export type ToolbarSplitButtonItemTypes =
-  | ChoiceMenuItemApi
-  | SeparatorMenuItemApi;
+export type ToolbarSplitButtonItemTypes = ChoiceMenuItemApi | SeparatorMenuItemApi;
 export type SuccessCallback = (menu: ToolbarSplitButtonItemTypes[]) => void;
 export type SelectPredicate = (value: string) => boolean;
 
@@ -23,9 +21,7 @@ export interface ToolbarSplitButtonApi {
   presets?: PresetTypes;
   columns?: ColumnTypes;
   fetch: (success: SuccessCallback) => void;
-  onSetup?: (
-    api: ToolbarSplitButtonInstanceApi
-  ) => (api: ToolbarSplitButtonInstanceApi) => void;
+  onSetup?: (api: ToolbarSplitButtonInstanceApi) => (api: ToolbarSplitButtonInstanceApi) => void;
   onAction: (api: ToolbarSplitButtonInstanceApi) => void;
   onItemAction: (api: ToolbarSplitButtonInstanceApi, value: string) => void;
 }
@@ -39,9 +35,7 @@ export interface ToolbarSplitButton {
   presets: PresetTypes;
   columns: ColumnTypes;
   fetch: (success: SuccessCallback) => void;
-  onSetup: (
-    api: ToolbarSplitButtonInstanceApi
-  ) => (api: ToolbarSplitButtonInstanceApi) => void;
+  onSetup: (api: ToolbarSplitButtonInstanceApi) => (api: ToolbarSplitButtonInstanceApi) => void;
   onAction: (api: ToolbarSplitButtonInstanceApi) => void;
   onItemAction: (api: ToolbarSplitButtonInstanceApi, value: string) => void;
 }
@@ -64,20 +58,13 @@ export const splitButtonSchema = ValueSchema.objOf([
   FieldSchema.strictFunction('fetch'),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
   // TODO: Validate the allowed presets
-  FieldSchema.defaultedStringEnum('presets', 'normal', [
-    'normal',
-    'color',
-    'listpreview'
-  ]),
+  FieldSchema.defaultedStringEnum('presets', 'normal', ['normal', 'color', 'listpreview']),
   FieldSchema.defaulted('columns', 1),
   FieldSchema.strictFunction('onAction'),
   FieldSchema.strictFunction('onItemAction')
 ]);
 
-export const isSplitButtonButton = (spec: any): spec is ToolbarSplitButton =>
-  spec.type === 'splitbutton';
+export const isSplitButtonButton = (spec: any): spec is ToolbarSplitButton => spec.type === 'splitbutton';
 
-export const createSplitButton = (
-  spec: any
-): Result<ToolbarSplitButton, ValueSchema.SchemaError<any>> =>
+export const createSplitButton = (spec: any): Result<ToolbarSplitButton, ValueSchema.SchemaError<any>> =>
   ValueSchema.asRaw<ToolbarSplitButton>('SplitButton', splitButtonSchema, spec);

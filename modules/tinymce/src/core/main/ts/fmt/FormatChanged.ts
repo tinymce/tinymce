@@ -12,29 +12,18 @@ import Tools from '../api/util/Tools';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
 
-export type FormatChangeCallback = (
-  state: boolean,
-  data: { node: Node; format: string; parents: any }
-) => void;
+export type FormatChangeCallback = (state: boolean, data: { node: Node; format: string; parents: any }) => void;
 type FormatCallbacks = Record<string, FormatChangeCallback[]>;
 type FormatData = { similar?: boolean; callbacks: FormatChangeCallback[] };
 type RegisteredFormats = Record<string, FormatData>;
 
-const setup = (
-  registeredFormatListeners: Cell<RegisteredFormats>,
-  editor: Editor
-) => {
+const setup = (registeredFormatListeners: Cell<RegisteredFormats>, editor: Editor) => {
   const currentFormats = Cell<Record<string, FormatChangeCallback[]>>({});
 
   registeredFormatListeners.set({});
 
   editor.on('NodeChange', (e) => {
-    updateAndFireChangeCallbacks(
-      editor,
-      e.element,
-      currentFormats,
-      registeredFormatListeners.get()
-    );
+    updateAndFireChangeCallbacks(editor, e.element, currentFormats, registeredFormatListeners.get());
   });
 };
 
@@ -78,12 +67,7 @@ const updateAndFireChangeCallbacks = (
   });
 
   // Check if current formats still match
-  const remainingFormats = filterRemainingFormats(
-    currentFormats.get(),
-    matchedFormats,
-    elm,
-    parents
-  );
+  const remainingFormats = filterRemainingFormats(currentFormats.get(), matchedFormats, elm, parents);
 
   // Update the current formats
   currentFormats.set({
@@ -92,27 +76,19 @@ const updateAndFireChangeCallbacks = (
   });
 };
 
-const filterRemainingFormats = (
-  currentFormats: FormatCallbacks,
-  matchedFormats: FormatCallbacks,
-  elm: Element,
-  parents: Node[]
-) =>
-  Obj.bifilter(
-    currentFormats,
-    (callbacks: FormatChangeCallback[], format: string) => {
-      if (!Obj.has(matchedFormats, format)) {
-        // Execute callbacks
-        Arr.each(callbacks, (callback: FormatChangeCallback) => {
-          callback(false, { node: elm, format, parents });
-        });
+const filterRemainingFormats = (currentFormats: FormatCallbacks, matchedFormats: FormatCallbacks, elm: Element, parents: Node[]) =>
+  Obj.bifilter(currentFormats, (callbacks: FormatChangeCallback[], format: string) => {
+    if (!Obj.has(matchedFormats, format)) {
+      // Execute callbacks
+      Arr.each(callbacks, (callback: FormatChangeCallback) => {
+        callback(false, { node: elm, format, parents });
+      });
 
-        return false;
-      } else {
-        return true;
-      }
+      return false;
+    } else {
+      return true;
     }
-  ).t;
+  }).t;
 
 const addListeners = (
   registeredFormatListeners: Cell<RegisteredFormats>,
@@ -133,18 +109,11 @@ const addListeners = (
   registeredFormatListeners.set(formatChangeItems);
 };
 
-const removeListeners = (
-  registeredFormatListeners: Cell<RegisteredFormats>,
-  formats: string,
-  callback: FormatChangeCallback
-) => {
+const removeListeners = (registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback) => {
   const formatChangeItems = registeredFormatListeners.get();
 
   Arr.each(formats.split(','), (format) => {
-    formatChangeItems[format].callbacks = Arr.filter(
-      formatChangeItems[format].callbacks,
-      (c) => c !== callback
-    );
+    formatChangeItems[format].callbacks = Arr.filter(formatChangeItems[format].callbacks, (c) => c !== callback);
 
     if (formatChangeItems[format].callbacks.length === 0) {
       delete formatChangeItems[format];

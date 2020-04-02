@@ -63,8 +63,5 @@ UnitTest.test('MenuPathingTest', () => {
     }
   );
 
-  Jsc.property(
-    '*** No property checking anything for MenuPathing yet',
-    () => true
-  );
+  Jsc.property('*** No property checking anything for MenuPathing yet', () => true);
 });

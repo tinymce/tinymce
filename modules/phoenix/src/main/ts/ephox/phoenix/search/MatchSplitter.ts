@@ -9,11 +9,7 @@ import * as Splitter from './Splitter';
  *
  * Each match is then mapped to the word it matched and the elements that make up the word.
  */
-const separate = function <E, D, M extends PRange & { word: () => string }>(
-  universe: Universe<E, D>,
-  list: SpotRange<E>[],
-  matches: M[]
-) {
+const separate = function <E, D, M extends PRange & { word: () => string }>(universe: Universe<E, D>, list: SpotRange<E>[], matches: M[]) {
   const allPositions = Arr.bind(matches, function (match) {
     return [match.start(), match.finish()];
   });

@@ -19,11 +19,7 @@ const sLoadImage = function (editor, url, size?) {
       const img = new Image();
 
       img.onload = function () {
-        editor.setContent(
-          `<p><img src="${url}" ${
-            size ? `width="${size.width}" height="${size.height}"` : ''
-          } /></p>`
-        );
+        editor.setContent(`<p><img src="${url}" ${size ? `width="${size.width}" height="${size.height}"` : ''} /></p>`);
         editor.focus();
         done();
       };
@@ -46,11 +42,7 @@ const sWaitForBlobImage = function (editor) {
   return Waiter.sTryUntil(
     'Did not find a blobimage',
     Step.sync(function () {
-      Assert.eq(
-        'Should be one blob image',
-        true,
-        editor.dom.select('img[src^=blob]').length === 1
-      );
+      Assert.eq('Should be one blob image', true, editor.dom.select('img[src^=blob]').length === 1);
     }),
     10,
     3000
@@ -80,11 +72,7 @@ const createStateContainer = function () {
   const sWaitForState = Waiter.sTryUntil(
     'Did not get a state change',
     Step.sync(function () {
-      Assert.eq(
-        'Should be true when we have the state',
-        true,
-        state.get() !== null
-      );
+      Assert.eq('Should be true when we have the state', true, state.get() !== null);
     }),
     10,
     3000
@@ -98,10 +86,4 @@ const createStateContainer = function () {
   };
 };
 
-export {
-  sExecCommand,
-  sLoadImage,
-  sUploadImages,
-  sWaitForBlobImage,
-  createStateContainer
-};
+export { sExecCommand, sLoadImage, sUploadImages, sWaitForBlobImage, createStateContainer };

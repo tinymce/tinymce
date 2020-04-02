@@ -66,10 +66,7 @@ const isBogusBr = function (dom, node: Node) {
 const isEmpty = function (dom, elm, keepBookmarks?) {
   const empty = dom.isEmpty(elm);
 
-  if (
-    keepBookmarks &&
-    dom.select('span[data-mce-type=bookmark]', elm).length > 0
-  ) {
+  if (keepBookmarks && dom.select('span[data-mce-type=bookmark]', elm).length > 0) {
     return false;
   }
 

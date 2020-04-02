@@ -5,12 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  Range,
-  document,
-  Attr,
-  Selection as DomSelection
-} from '@ephox/dom-globals';
+import { Range, document, Attr, Selection as DomSelection } from '@ephox/dom-globals';
 import Env from '../api/Env';
 import * as CaretContainer from '../caret/CaretContainer';
 import * as CaretRangeFromPoint from '../selection/CaretRangeFromPoint';
@@ -89,11 +84,7 @@ const Quirks = function (editor: Editor): Quirks {
 
       // Safari/IE doesn't support custom dataTransfer items so we can only use URL and Text
       if (selectionHtml.length > 0) {
-        internalContent =
-          mceInternalUrlPrefix +
-          escape(editor.id) +
-          ',' +
-          escape(selectionHtml);
+        internalContent = mceInternalUrlPrefix + escape(editor.id) + ',' + escape(selectionHtml);
         e.dataTransfer.setData(mceInternalDataType, internalContent);
       }
     }
@@ -114,13 +105,8 @@ const Quirks = function (editor: Editor): Quirks {
     if (e.dataTransfer) {
       internalContent = e.dataTransfer.getData(mceInternalDataType);
 
-      if (
-        internalContent &&
-        internalContent.indexOf(mceInternalUrlPrefix) >= 0
-      ) {
-        internalContent = internalContent
-          .substr(mceInternalUrlPrefix.length)
-          .split(',');
+      if (internalContent && internalContent.indexOf(mceInternalUrlPrefix) >= 0) {
+        internalContent = internalContent.substr(mceInternalUrlPrefix.length).split(',');
 
         return {
           id: unescape(internalContent[0]),
@@ -186,10 +172,7 @@ const Quirks = function (editor: Editor): Quirks {
       let isCollapsed, body;
 
       // Empty the editor if it's needed for example backspace at <p><b>|</b></p>
-      if (
-        !isDefaultPrevented(e) &&
-        (keyCode === DELETE || keyCode === BACKSPACE)
-      ) {
+      if (!isDefaultPrevented(e) && (keyCode === DELETE || keyCode === BACKSPACE)) {
         isCollapsed = editor.selection.isCollapsed();
         body = editor.getBody();
 
@@ -298,11 +281,7 @@ const Quirks = function (editor: Editor): Quirks {
             return;
           }
 
-          if (
-            previousSibling &&
-            previousSibling.nodeName &&
-            previousSibling.nodeName.toLowerCase() === 'hr'
-          ) {
+          if (previousSibling && previousSibling.nodeName && previousSibling.nodeName.toLowerCase() === 'hr') {
             dom.remove(previousSibling);
             e.preventDefault();
           }
@@ -347,10 +326,7 @@ const Quirks = function (editor: Editor): Quirks {
       // Workaround for bug, http://bugs.webkit.org/show_bug.cgi?id=12250
       // WebKit can't even do simple things like selecting an image
       // Needs to be the setBaseAndExtend or it will fail to select floated images
-      if (
-        /^(IMG|HR)$/.test(target.nodeName) &&
-        dom.getContentEditableParent(target) !== 'false'
-      ) {
+      if (/^(IMG|HR)$/.test(target.nodeName) && dom.getContentEditableParent(target) !== 'false') {
         e.preventDefault();
         editor.selection.select(target);
         editor.nodeChanged();
@@ -394,20 +370,14 @@ const Quirks = function (editor: Editor): Quirks {
 
     const isSelectionAcrossElements = function () {
       return (
-        !selection.isCollapsed() &&
-        dom.getParent(selection.getStart(), dom.isBlock) !==
-          dom.getParent(selection.getEnd(), dom.isBlock)
+        !selection.isCollapsed() && dom.getParent(selection.getStart(), dom.isBlock) !== dom.getParent(selection.getEnd(), dom.isBlock)
       );
     };
 
     editor.on('keypress', function (e) {
       let applyAttributes;
 
-      if (
-        !isDefaultPrevented(e) &&
-        (e.keyCode === 8 || e.keyCode === 46) &&
-        isSelectionAcrossElements()
-      ) {
+      if (!isDefaultPrevented(e) && (e.keyCode === 8 || e.keyCode === 46) && isSelectionAcrossElements()) {
         applyAttributes = getAttributeApplyFunction();
         editor.getDoc().execCommand('delete', false, null);
         applyAttributes();
@@ -438,11 +408,7 @@ const Quirks = function (editor: Editor): Quirks {
       if (!isDefaultPrevented(e) && e.keyCode === BACKSPACE) {
         if (selection.isCollapsed() && selection.getRng().startOffset === 0) {
           const previousSibling = selection.getNode().previousSibling;
-          if (
-            previousSibling &&
-            previousSibling.nodeName &&
-            previousSibling.nodeName.toLowerCase() === 'table'
-          ) {
+          if (previousSibling && previousSibling.nodeName && previousSibling.nodeName.toLowerCase() === 'table') {
             e.preventDefault();
             return false;
           }
@@ -479,12 +445,7 @@ const Quirks = function (editor: Editor): Quirks {
         return;
       }
 
-      while (
-        parent &&
-        parent.parentNode &&
-        parent.parentNode.firstChild === parent &&
-        parent.parentNode !== root
-      ) {
+      while (parent && parent.parentNode && parent.parentNode.firstChild === parent && parent.parentNode !== root) {
         parent = parent.parentNode;
       }
 
@@ -540,10 +501,7 @@ const Quirks = function (editor: Editor): Quirks {
 
         if (parentNode.lastChild === node) {
           while (parentNode && !dom.isBlock(parentNode)) {
-            if (
-              parentNode.parentNode.lastChild !== parentNode ||
-              parentNode === root
-            ) {
+            if (parentNode.parentNode.lastChild !== parentNode || parentNode === root) {
               return;
             }
 
@@ -569,10 +527,7 @@ const Quirks = function (editor: Editor): Quirks {
   const setDefaultBlockType = function () {
     if (settings.forced_root_block) {
       editor.on('init', function () {
-        setEditorCommandState(
-          'DefaultParagraphSeparator',
-          Settings.getForcedRootBlock(editor)
-        );
+        setEditorCommandState('DefaultParagraphSeparator', Settings.getForcedRootBlock(editor));
       });
     }
   };
@@ -601,13 +556,7 @@ const Quirks = function (editor: Editor): Quirks {
    * Forces Gecko to render a broken image icon if it fails to load an image.
    */
   const showBrokenImageIcon = function () {
-    editor.contentStyles.push(
-      'img:-moz-broken {' +
-        '-moz-force-broken-image-icon:1;' +
-        'min-width:24px;' +
-        'min-height:24px' +
-        '}'
-    );
+    editor.contentStyles.push('img:-moz-broken {' + '-moz-force-broken-image-icon:1;' + 'min-width:24px;' + 'min-height:24px' + '}');
   };
 
   /**
@@ -668,21 +617,13 @@ const Quirks = function (editor: Editor): Quirks {
   const blockCmdArrowNavigation = function () {
     if (Env.mac) {
       editor.on('keydown', function (e) {
-        if (
-          VK.metaKeyPressed(e) &&
-          !e.shiftKey &&
-          (e.keyCode === 37 || e.keyCode === 39)
-        ) {
+        if (VK.metaKeyPressed(e) && !e.shiftKey && (e.keyCode === 37 || e.keyCode === 39)) {
           e.preventDefault();
           // The modify component isn't part of the standard spec, so we need to add the type here
           const selection = editor.selection.getSel() as DomSelection & {
             modify: Function;
           };
-          selection.modify(
-            'move',
-            e.keyCode === 37 ? 'backward' : 'forward',
-            'lineboundary'
-          );
+          selection.modify('move', e.keyCode === 37 ? 'backward' : 'forward', 'lineboundary');
         }
       });
     }
@@ -712,9 +653,7 @@ const Quirks = function (editor: Editor): Quirks {
       } while ((elm = elm.parentNode));
     });
 
-    editor.contentStyles.push(
-      '.mce-content-body {-webkit-touch-callout: none}'
-    );
+    editor.contentStyles.push('.mce-content-body {-webkit-touch-callout: none}');
   };
 
   /**

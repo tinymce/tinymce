@@ -13,12 +13,7 @@ import OuterContainer from '../ui/general/OuterContainer';
 import { identifyButtons } from '../ui/toolbar/Integration';
 
 // Set toolbar(s) depending on if multiple toolbars is configured or not
-const setToolbar = (
-  editor: Editor,
-  uiComponents: RenderUiComponents,
-  rawUiConfig: RenderUiConfig,
-  backstage: UiFactoryBackstage
-) => {
+const setToolbar = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage) => {
   const comp = uiComponents.outerContainer;
   const toolbarConfig = rawUiConfig.toolbar;
   const toolbarButtonsConfig = rawUiConfig.buttons;
@@ -35,10 +30,7 @@ const setToolbar = (
     });
     OuterContainer.setToolbars(comp, toolbars);
   } else {
-    OuterContainer.setToolbar(
-      comp,
-      identifyButtons(editor, rawUiConfig, { backstage }, Option.none())
-    );
+    OuterContainer.setToolbar(comp, identifyButtons(editor, rawUiConfig, { backstage }, Option.none()));
   }
 };
 

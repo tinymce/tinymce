@@ -7,10 +7,7 @@ import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as HtmlUtils from '../module/test/HtmlUtils';
 
-UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function (success, failure) {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
@@ -60,9 +57,7 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function (
 
   if (Env.ceFalse) {
     suite.test('SelectAll', function (editor) {
-      editor.setContent(
-        '<p>a</p><div contenteditable="false"><div contenteditable="true">b</div><p>c</p>'
-      );
+      editor.setContent('<p>a</p><div contenteditable="false"><div contenteditable="true">b</div><p>c</p>');
       LegacyUnit.setSelection(editor, 'div div', 0);
       editor.execCommand('SelectAll');
       LegacyUnit.equal(editor.selection.getStart().nodeName, 'DIV');
@@ -85,10 +80,7 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function (
     editor.setContent('<p>123</p>');
     LegacyUnit.setSelection(editor, 'p', 3);
     editor.execCommand('InsertLineBreak');
-    LegacyUnit.equal(
-      HtmlUtils.cleanHtml(editor.getBody().innerHTML),
-      '<p>123<br><br></p>'
-    );
+    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>123<br><br></p>');
   });
 
   TinyLoader.setupLight(

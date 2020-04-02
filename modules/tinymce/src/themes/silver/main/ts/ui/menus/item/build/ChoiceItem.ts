@@ -45,9 +45,7 @@ const renderChoiceItem = (
       // useText essentially says that we have one column. In one column lists, we should show a tick
       // The tick is controlled by the tickedClass (via css). It is always present
       // but is hidden unless the tickedClass is present.
-      checkMark: useText
-        ? Option.some(renderCheckmark(providersBackstage.icons))
-        : Option.none(),
+      checkMark: useText ? Option.some(renderCheckmark(providersBackstage.icons)) : Option.none(),
       caret: Option.none(),
       value: spec.value
     },

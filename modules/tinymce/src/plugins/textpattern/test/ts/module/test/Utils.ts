@@ -1,11 +1,4 @@
-import {
-  ApproxStructure,
-  GeneralSteps,
-  Keys,
-  Logger,
-  Step,
-  StructAssert
-} from '@ephox/agar';
+import { ApproxStructure, GeneralSteps, Keys, Logger, Step, StructAssert } from '@ephox/agar';
 import { Arr, Unicode } from '@ephox/katamari';
 import { TinyActions, TinyApis } from '@ephox/mcagar';
 
@@ -48,10 +41,7 @@ const sSetContentAndPressSpace = (
     ])
   );
 
-const withTeardown = function (
-  steps: Step<any, any>[],
-  teardownStep: Step<any, any>
-) {
+const withTeardown = function (steps: Step<any, any>[], teardownStep: Step<any, any>) {
   return Arr.bind(steps, function (step) {
     return [step, teardownStep];
   });
@@ -107,10 +97,7 @@ const blockStructHelper = function (tag: string, content: string) {
   });
 };
 
-const forcedRootBlockInlineStructHelper = function (
-  tag: string,
-  content: string
-) {
+const forcedRootBlockInlineStructHelper = function (tag: string, content: string) {
   return ApproxStructure.build(function (s, str) {
     return bodyStruct([
       s.element(tag, {
@@ -127,11 +114,7 @@ const forcedRootBlockStructHelper = function (tag: string, content: string) {
   return ApproxStructure.build(function (s, str) {
     return bodyStruct([
       s.element(tag, {
-        children: [
-          s.text(str.is(content), true),
-          s.element('br', {}),
-          s.element('br', {})
-        ]
+        children: [s.text(str.is(content), true), s.element('br', {}), s.element('br', {})]
       })
     ]);
   });

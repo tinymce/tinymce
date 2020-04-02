@@ -35,15 +35,11 @@ export default function () {
   };
 
   const isPending = function (blobUri) {
-    return hasBlobUri(blobUri)
-      ? blobUriStatuses[blobUri].status === PENDING
-      : false;
+    return hasBlobUri(blobUri) ? blobUriStatuses[blobUri].status === PENDING : false;
   };
 
   const isUploaded = function (blobUri) {
-    return hasBlobUri(blobUri)
-      ? blobUriStatuses[blobUri].status === UPLOADED
-      : false;
+    return hasBlobUri(blobUri) ? blobUriStatuses[blobUri].status === UPLOADED : false;
   };
 
   const markPending = function (blobUri) {

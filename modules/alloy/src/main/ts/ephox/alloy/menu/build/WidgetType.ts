@@ -19,16 +19,8 @@ import { WidgetItemDetail } from '../../ui/types/ItemTypes';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 
 const builder = (detail: WidgetItemDetail) => {
-  const subs = AlloyParts.substitutes(
-    WidgetParts.owner(),
-    detail,
-    WidgetParts.parts()
-  );
-  const components = AlloyParts.components(
-    WidgetParts.owner(),
-    detail,
-    subs.internals()
-  );
+  const subs = AlloyParts.substitutes(WidgetParts.owner(), detail, WidgetParts.parts());
+  const components = AlloyParts.components(WidgetParts.owner(), detail, subs.internals());
 
   const focusWidget = (component: AlloyComponent) =>
     AlloyParts.getPart(component, detail, 'widget').map((widget) => {
@@ -36,10 +28,7 @@ const builder = (detail: WidgetItemDetail) => {
       return widget;
     });
 
-  const onHorizontalArrow = (
-    component: AlloyComponent,
-    simulatedEvent: NativeSimulatedEvent
-  ): Option<boolean> =>
+  const onHorizontalArrow = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent): Option<boolean> =>
     EditableFields.inside(simulatedEvent.event().target())
       ? Option.none<boolean>()
       : (() => {
@@ -64,16 +53,13 @@ const builder = (detail: WidgetItemDetail) => {
 
       AlloyEvents.run(NativeEvents.mouseover(), ItemEvents.onHover),
 
-      AlloyEvents.run(
-        SystemEvents.focusItem(),
-        (component, _simulatedEvent) => {
-          if (detail.autofocus) {
-            focusWidget(component);
-          } else {
-            Focusing.focus(component);
-          }
+      AlloyEvents.run(SystemEvents.focusItem(), (component, _simulatedEvent) => {
+        if (detail.autofocus) {
+          focusWidget(component);
+        } else {
+          Focusing.focus(component);
         }
-      )
+      })
     ]),
     behaviours: SketchBehaviours.augment(detail.widgetBehaviours, [
       Representing.config({

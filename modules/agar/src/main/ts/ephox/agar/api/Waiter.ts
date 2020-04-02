@@ -12,12 +12,7 @@ const sTryUntilPredicate = <T>(
   amount: number = defaultAmount
 ): Step<T, T> => sTryUntil(label, Step.predicate(p), interval, amount);
 
-const sTryUntil = <T, U>(
-  label: string,
-  step: Step<T, U>,
-  interval: number = defaultInterval,
-  amount: number = defaultAmount
-): Step<T, U> =>
+const sTryUntil = <T, U>(label: string, step: Step<T, U>, interval: number = defaultInterval, amount: number = defaultAmount): Step<T, U> =>
   Step.control(step, Guard.tryUntil<T, U>(label, interval, amount));
 
 const sTryUntilNot = <T, U>(
@@ -25,14 +20,10 @@ const sTryUntilNot = <T, U>(
   step: Step<T, U>,
   interval: number = defaultInterval,
   amount: number = defaultAmount
-): Step<T, T> =>
-  Step.control(step, Guard.tryUntilNot<T, U>(label, interval, amount));
+): Step<T, T> => Step.control(step, Guard.tryUntilNot<T, U>(label, interval, amount));
 
-const sTimeout = <T, U>(
-  label: string,
-  step: Step<T, U>,
-  limit: number = defaultAmount
-): Step<T, U> => Step.control(step, Guard.timeout<T, U>(label, limit));
+const sTimeout = <T, U>(label: string, step: Step<T, U>, limit: number = defaultAmount): Step<T, U> =>
+  Step.control(step, Guard.timeout<T, U>(label, limit));
 
 const cTryUntilPredicate = <T>(
   label: string,
@@ -46,30 +37,16 @@ const cTryUntil = <T, U>(
   chain: Chain<T, U>,
   interval: number = defaultInterval,
   amount: number = defaultAmount
-): Chain<T, U> =>
-  Chain.control(chain, Guard.tryUntil<T, U>(label, interval, amount));
+): Chain<T, U> => Chain.control(chain, Guard.tryUntil<T, U>(label, interval, amount));
 
 const cTryUntilNot = <T, U>(
   label: string,
   chain: Chain<T, U>,
   interval: number = defaultInterval,
   amount: number = defaultAmount
-): Chain<T, T> =>
-  Chain.control(chain, Guard.tryUntilNot<T, U>(label, interval, amount));
+): Chain<T, T> => Chain.control(chain, Guard.tryUntilNot<T, U>(label, interval, amount));
 
-const cTimeout = <T, U>(
-  label: string,
-  chain: Chain<T, U>,
-  limit: number = defaultAmount
-): Chain<T, U> => Chain.control(chain, Guard.timeout<T, U>(label, limit));
+const cTimeout = <T, U>(label: string, chain: Chain<T, U>, limit: number = defaultAmount): Chain<T, U> =>
+  Chain.control(chain, Guard.timeout<T, U>(label, limit));
 
-export {
-  sTryUntilPredicate,
-  sTryUntil,
-  sTryUntilNot,
-  sTimeout,
-  cTryUntilPredicate,
-  cTryUntil,
-  cTryUntilNot,
-  cTimeout
-};
+export { sTryUntilPredicate, sTryUntil, sTryUntilNot, sTimeout, cTryUntilPredicate, cTryUntil, cTryUntilNot, cTimeout };

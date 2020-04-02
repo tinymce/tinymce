@@ -36,23 +36,17 @@ const setContentEditable = (elm: Element, state: boolean) => {
 };
 
 const switchOffContentEditableTrue = (elm: Element) => {
-  Arr.each(
-    SelectorFilter.descendants(elm, '*[contenteditable="true"]'),
-    (elm) => {
-      Attr.set(elm, internalContentEditableAttr, 'true');
-      setContentEditable(elm, false);
-    }
-  );
+  Arr.each(SelectorFilter.descendants(elm, '*[contenteditable="true"]'), (elm) => {
+    Attr.set(elm, internalContentEditableAttr, 'true');
+    setContentEditable(elm, false);
+  });
 };
 
 const switchOnContentEditableTrue = (elm: Element) => {
-  Arr.each(
-    SelectorFilter.descendants(elm, `*[${internalContentEditableAttr}="true"]`),
-    (elm) => {
-      Attr.remove(elm, internalContentEditableAttr);
-      setContentEditable(elm, true);
-    }
-  );
+  Arr.each(SelectorFilter.descendants(elm, `*[${internalContentEditableAttr}="true"]`), (elm) => {
+    Attr.remove(elm, internalContentEditableAttr);
+    setContentEditable(elm, true);
+  });
 };
 
 const removeFakeSelection = (editor: Editor) => {
@@ -127,8 +121,7 @@ const registerReadOnlyContentFilters = (editor: Editor) => {
 
 const isClickEvent = (e: Event): e is MouseEvent => e.type === 'click';
 
-const isInAnchor = (editor: Editor, target: HTMLElement) =>
-  editor.dom.getParent(target, 'a') !== null;
+const isInAnchor = (editor: Editor, target: HTMLElement) => editor.dom.getParent(target, 'a') !== null;
 
 const preventReadOnlyEvents = (editor: Editor, e: Event) => {
   const target = e.target as HTMLElement;
@@ -152,10 +145,4 @@ const registerReadOnlySelectionBlockers = (editor: Editor) => {
   });
 };
 
-export {
-  isReadOnly,
-  toggleReadOnly,
-  registerReadOnlyContentFilters,
-  preventReadOnlyEvents,
-  registerReadOnlySelectionBlockers
-};
+export { isReadOnly, toggleReadOnly, registerReadOnlyContentFilters, preventReadOnlyEvents, registerReadOnlySelectionBlockers };

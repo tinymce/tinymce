@@ -37,10 +37,7 @@ const loadLanguage = (scriptLoader, editor: Editor) => {
   const languageUrl = Settings.getLanguageUrl(editor);
 
   if (I18n.hasCode(languageCode) === false && languageCode !== 'en') {
-    const url =
-      languageUrl !== ''
-        ? languageUrl
-        : editor.editorManager.baseURL + '/langs/' + languageCode + '.js';
+    const url = languageUrl !== '' ? languageUrl : editor.editorManager.baseURL + '/langs/' + languageCode + '.js';
 
     scriptLoader.add(url, Fun.noop, undefined, () => {
       ErrorReporter.languageLoadError(editor, url, languageCode);
@@ -48,12 +45,7 @@ const loadLanguage = (scriptLoader, editor: Editor) => {
   }
 };
 
-const loadTheme = function (
-  scriptLoader: ScriptLoader,
-  editor: Editor,
-  suffix,
-  callback
-) {
+const loadTheme = function (scriptLoader: ScriptLoader, editor: Editor, suffix, callback) {
   const settings = editor.settings,
     theme = settings.theme;
 
@@ -89,11 +81,7 @@ const getIconsUrlMetaFromUrl = (editor: Editor): Option<UrlMeta> =>
       name: Option.none()
     }));
 
-const getIconsUrlMetaFromName = (
-  editor: Editor,
-  name: string | undefined,
-  suffix: string
-): Option<UrlMeta> =>
+const getIconsUrlMetaFromName = (editor: Editor, name: string | undefined, suffix: string): Option<UrlMeta> =>
   Option.from(name)
     .filter((name) => name.length > 0 && !IconManager.has(name))
     .map((name) => ({
@@ -101,11 +89,7 @@ const getIconsUrlMetaFromName = (
       name: Option.some(name)
     }));
 
-const loadIcons = (
-  scriptLoader: ScriptLoader,
-  editor: Editor,
-  suffix: string
-) => {
+const loadIcons = (scriptLoader: ScriptLoader, editor: Editor, suffix: string) => {
   const defaultIconsUrl = getIconsUrlMetaFromName(editor, 'default', suffix);
   const customIconsUrl = getIconsUrlMetaFromUrl(editor).orThunk(() =>
     getIconsUrlMetaFromName(editor, Settings.getIconPackName(editor), '')
@@ -113,20 +97,12 @@ const loadIcons = (
 
   Arr.each(Options.cat([defaultIconsUrl, customIconsUrl]), (urlMeta) => {
     scriptLoader.add(urlMeta.url, Fun.noop, undefined, () => {
-      ErrorReporter.iconsLoadError(
-        editor,
-        urlMeta.url,
-        urlMeta.name.getOrUndefined()
-      );
+      ErrorReporter.iconsLoadError(editor, urlMeta.url, urlMeta.name.getOrUndefined());
     });
   });
 };
 
-const loadPlugins = (
-  editor: Editor,
-  settings: RawEditorSettings,
-  suffix: string
-) => {
+const loadPlugins = (editor: Editor, settings: RawEditorSettings, suffix: string) => {
   if (Type.isArray(settings.plugins)) {
     settings.plugins = settings.plugins.join(' ');
   }
@@ -156,11 +132,7 @@ const loadPlugins = (
 
           const dep = PluginManager.createUrl(defaultSettings, depPlugin);
           PluginManager.load(dep.resource, dep, Fun.noop, undefined, () => {
-            ErrorReporter.pluginLoadError(
-              editor,
-              dep.prefix + dep.resource + dep.suffix,
-              dep.resource
-            );
+            ErrorReporter.pluginLoadError(editor, dep.prefix + dep.resource + dep.suffix, dep.resource);
           });
         });
       } else {
@@ -171,11 +143,7 @@ const loadPlugins = (
         };
 
         PluginManager.load(plugin, url, Fun.noop, undefined, () => {
-          ErrorReporter.pluginLoadError(
-            editor,
-            url.prefix + url.resource + url.suffix,
-            plugin
-          );
+          ErrorReporter.pluginLoadError(editor, url.prefix + url.resource + url.suffix, plugin);
         });
       }
     }
@@ -242,16 +210,12 @@ const render = function (editor: Editor) {
     editor.inline = true;
   }
 
-  const form =
-    (editor.getElement() as HTMLFormElement).form || DOM.getParent(id, 'form');
+  const form = (editor.getElement() as HTMLFormElement).form || DOM.getParent(id, 'form');
   if (form) {
     editor.formElement = form;
 
     // Add hidden input for non input elements inside form elements
-    if (
-      settings.hidden_input &&
-      !NodeType.isTextareaOrInput(editor.getElement())
-    ) {
+    if (settings.hidden_input && !NodeType.isTextareaOrInput(editor.getElement())) {
       DOM.insertAfter(DOM.create('input', { type: 'hidden', name: id }), id);
       editor.hasHiddenInput = true;
     }
@@ -269,12 +233,7 @@ const render = function (editor: Editor) {
     });
 
     // Check page uses id="submit" or name="submit" for it's submit button
-    if (
-      settings.submit_patch &&
-      !form.submit.nodeType &&
-      !form.submit.length &&
-      !form._mceOldSubmit
-    ) {
+    if (settings.submit_patch && !form.submit.nodeType && !form.submit.length && !form._mceOldSubmit) {
       form._mceOldSubmit = form.submit;
       form.submit = function () {
         editor.editorManager.triggerSave();

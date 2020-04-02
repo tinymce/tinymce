@@ -22,9 +22,7 @@ const setup = (editor: Editor) => {
 
       // Setup a return message if the editor is dirty
       if (!msg && editor.isDirty() && Settings.shouldAskBeforeUnload(editor)) {
-        msg = editor.translate(
-          'You have unsaved changes are you sure you want to navigate away?'
-        );
+        msg = editor.translate('You have unsaved changes are you sure you want to navigate away?');
       }
     });
 

@@ -239,10 +239,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
             return '';
           }
 
-          if (
-            !settings.allow_svg_data_urls &&
-            /^data:image\/svg/i.test(scriptUrl)
-          ) {
+          if (!settings.allow_svg_data_urls && /^data:image\/svg/i.test(scriptUrl)) {
             return '';
           }
         }
@@ -260,11 +257,9 @@ const Styles = function (settings?, schema?: Schema): Styles {
         css = css.replace(/[\u0000-\u001F]/g, '');
 
         // Encode \" \' % and ; and : inside strings so they don't interfere with the style parsing
-        css = css
-          .replace(/\\[\"\';:\uFEFF]/g, encode)
-          .replace(/\"[^\"]+\"|\'[^\']+\'/g, function (str) {
-            return str.replace(/[;:]/g, encode);
-          });
+        css = css.replace(/\\[\"\';:\uFEFF]/g, encode).replace(/\"[^\"]+\"|\'[^\']+\'/g, function (str) {
+          return str.replace(/[;:]/g, encode);
+        });
 
         // Parse styles
         while ((matches = styleRegExp.exec(css))) {
@@ -280,18 +275,12 @@ const Styles = function (settings?, schema?: Schema): Styles {
             // Skip properties with double quotes and sequences like \" \' in their names
             // See 'mXSS Attacks: Attacking well-secured Web-Applications by using innerHTML Mutations'
             // https://cure53.de/fp170.pdf
-            if (
-              name.indexOf(invisibleChar) !== -1 ||
-              name.indexOf('"') !== -1
-            ) {
+            if (name.indexOf(invisibleChar) !== -1 || name.indexOf('"') !== -1) {
               continue;
             }
 
             // Don't allow behavior name or expression/comments within the values
-            if (
-              !settings.allow_script_urls &&
-              (name === 'behavior' || /expression\s*\(|\/\*|\*\//.test(value))
-            ) {
+            if (!settings.allow_script_urls && (name === 'behavior' || /expression\s*\(|\/\*|\*\//.test(value))) {
               continue;
             }
 

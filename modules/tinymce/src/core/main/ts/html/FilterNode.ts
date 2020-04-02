@@ -30,11 +30,7 @@ const traverse = (node: Node, fn: (node: Node) => void): void => {
   }
 };
 
-const findMatchingNodes = (
-  nodeFilters: ParserFilter[],
-  attributeFilters: ParserFilter[],
-  node: Node
-): FilterMatch[] => {
+const findMatchingNodes = (nodeFilters: ParserFilter[], attributeFilters: ParserFilter[], node: Node): FilterMatch[] => {
   const nodeMatches: FilterMatchMap = {};
   const attrMatches: FilterMatchMap = {};
   const matches: FilterMatch[] = [];
@@ -78,11 +74,7 @@ const findMatchingNodes = (
   return matches;
 };
 
-const filter = (
-  nodeFilters: ParserFilter[],
-  attributeFilters: ParserFilter[],
-  node: Node
-): void => {
+const filter = (nodeFilters: ParserFilter[], attributeFilters: ParserFilter[], node: Node): void => {
   const matches = findMatchingNodes(nodeFilters, attributeFilters, node);
 
   Arr.each(matches, (match: FilterMatch) => {

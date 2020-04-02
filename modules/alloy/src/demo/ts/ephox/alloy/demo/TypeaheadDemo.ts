@@ -63,11 +63,7 @@ export default (): void => {
 
   const lazySink = () => Result.value(sink);
 
-  const sketchTypeahead = (model: {
-    selectsOver: boolean;
-    getDisplayText: (data: TypeaheadData) => string;
-    populateFromBrowse: boolean;
-  }) =>
+  const sketchTypeahead = (model: { selectsOver: boolean; getDisplayText: (data: TypeaheadData) => string; populateFromBrowse: boolean }) =>
     Typeahead.sketch({
       minChars: 1,
       lazySink,
@@ -153,10 +149,7 @@ export default (): void => {
       components: [
         sketchTypeahead({
           selectsOver: true,
-          getDisplayText: (itemData) =>
-            itemData.meta && itemData.meta.text
-              ? itemData.meta.text
-              : 'No.text',
+          getDisplayText: (itemData) => (itemData.meta && itemData.meta.text ? itemData.meta.text : 'No.text'),
           populateFromBrowse: true
         }),
 

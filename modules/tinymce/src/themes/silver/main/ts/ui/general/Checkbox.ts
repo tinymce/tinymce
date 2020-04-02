@@ -35,10 +35,7 @@ import * as ReadOnly from '../../ReadOnly';
 
 type CheckboxSpec = Omit<Types.Checkbox.Checkbox, 'type'>;
 
-export const renderCheckbox = (
-  spec: CheckboxSpec,
-  providerBackstage: UiFactoryBackstageProviders
-): SimpleSpec => {
+export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const repBehaviour = Representing.config({
     store: {
       mode: 'manual',

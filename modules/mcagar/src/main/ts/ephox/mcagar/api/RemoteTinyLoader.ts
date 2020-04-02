@@ -30,16 +30,8 @@ const loadScript = (url: string): FutureResult<string, Error> =>
     Insert.append(Body.body(), script);
   });
 
-const loadScripts = (
-  urls: string[],
-  success: () => void,
-  failure: Loader.FailureCallback
-) => {
-  const result = Arr.foldl(
-    urls,
-    (acc, url) => acc.bindFuture(() => loadScript(url)),
-    FutureResult.pure('')
-  );
+const loadScripts = (urls: string[], success: () => void, failure: Loader.FailureCallback) => {
+  const result = Arr.foldl(urls, (acc, url) => acc.bindFuture(() => loadScript(url)), FutureResult.pure(''));
 
   result.get((res) => {
     res.fold((e) => failure(e, TestLogs.init()), success);

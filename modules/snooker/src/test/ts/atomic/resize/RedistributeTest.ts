@@ -17,16 +17,8 @@ UnitTest.test('RedistributeTest', function () {
     );
   };
 
-  const check = function (
-    expected: string[],
-    input: string[],
-    originalWidth: number,
-    newWidth: string
-  ) {
-    assert.eq(
-      expected,
-      Redistribution.redistribute(input, originalWidth, newWidth)
-    );
+  const check = function (expected: string[], input: string[], originalWidth: number, newWidth: string) {
+    assert.eq(expected, Redistribution.redistribute(input, originalWidth, newWidth));
   };
 
   const checkValidate = function (expected: string, input: string) {
@@ -55,10 +47,7 @@ UnitTest.test('RedistributeTest', function () {
   check(['', '', '20px'], ['', '', '20px'], 60, '60px');
   check(['', '', ''], ['', '', ''], 60, '60px');
 
-  assert.eq(
-    ['10px', '10px', '11px'],
-    Redistribution.toIntegers(['10.3px', '10.3px', '10.3px'])
-  );
+  assert.eq(['10px', '10px', '11px'], Redistribution.toIntegers(['10.3px', '10.3px', '10.3px']));
 
   assert.eq(100, Redistribution.sum(['100px'], 10));
   assert.eq(50, Redistribution.sum(['50%'], 10));

@@ -55,15 +55,10 @@ UnitTest.test('Fun: unit tests', () => {
 
 UnitTest.test('Check compose :: compose(f, g)(x) = f(g(x))', () => {
   fc.assert(
-    fc.property(
-      fc.string(),
-      fc.func(fc.string()),
-      fc.func(fc.string()),
-      (x, f, g) => {
-        const h = Fun.compose(f, g);
-        Assert.eq('eq', f(g(x)), h(x));
-      }
-    )
+    fc.property(fc.string(), fc.func(fc.string()), fc.func(fc.string()), (x, f, g) => {
+      const h = Fun.compose(f, g);
+      Assert.eq('eq', f(g(x)), h(x));
+    })
   );
 });
 

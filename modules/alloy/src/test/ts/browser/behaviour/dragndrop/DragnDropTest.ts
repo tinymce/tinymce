@@ -10,19 +10,12 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { DragnDrop } from 'ephox/alloy/api/behaviour/DragnDrop';
 import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
-import {
-  StartingDragndropConfigSpec,
-  DropDragndropConfigSpec
-} from 'ephox/alloy/dragging/dragndrop/DragnDropTypes';
+import { StartingDragndropConfigSpec, DropDragndropConfigSpec } from 'ephox/alloy/dragging/dragndrop/DragnDropTypes';
 
 UnitTest.asynctest('DragnDropTest', (success, failure) => {
   const platform = PlatformDetection.detect();
 
-  const createDraggable = (
-    store: TestStore,
-    cls: string,
-    overrides: Partial<StartingDragndropConfigSpec>
-  ) =>
+  const createDraggable = (store: TestStore, cls: string, overrides: Partial<StartingDragndropConfigSpec>) =>
     Container.sketch({
       dom: {
         styles: {
@@ -53,11 +46,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
       ])
     });
 
-  const createDropZone = (
-    store: TestStore,
-    cls: string,
-    overrides: Partial<DropDragndropConfigSpec>
-  ) =>
+  const createDropZone = (store: TestStore, cls: string, overrides: Partial<DropDragndropConfigSpec>) =>
     Container.sketch({
       dom: {
         styles: {
@@ -71,15 +60,12 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
         DragnDrop.config({
           mode: 'drop',
           onDrop: (_comp, dropEvent) => {
-            const files = Arr.map(
-              dropEvent.files,
-              ({ name, size, type, lastModified }) => ({
-                name,
-                size,
-                type,
-                lastModified
-              })
-            );
+            const files = Arr.map(dropEvent.files, ({ name, size, type, lastModified }) => ({
+              name,
+              size,
+              type,
+              lastModified
+            }));
             store.add({ type: 'drop', files, data: dropEvent.data });
           },
           onDrag: (_component, _simulatedEvent) => {
@@ -99,11 +85,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
       ])
     });
 
-  const sAssertDraggedData = (
-    label: string,
-    store: TestStore,
-    expectedDropData: Record<string, any>
-  ) =>
+  const sAssertDraggedData = (label: string, store: TestStore, expectedDropData: Record<string, any>) =>
     store.sAssertEq(label, [
       'canDrag',
       'onDragstart',
@@ -117,11 +99,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
       'onDragend'
     ]);
 
-  const sAssertDraggedFiles = (
-    label: string,
-    store: TestStore,
-    expectedDropFiles: Array<Record<string, any>>
-  ) =>
+  const sAssertDraggedFiles = (label: string, store: TestStore, expectedDropFiles: Array<Record<string, any>>) =>
     store.sAssertEq(label, [
       'canDrag',
       'onDragstart',
@@ -185,20 +163,8 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
               onDragstart: (_comp, simulatedEvent) => {
                 const rawEvent: any = simulatedEvent.event().raw();
                 const transfer: DataTransfer = rawEvent.dataTransfer;
-                transfer.items.add(
-                  Files.createFile(
-                    'a.html',
-                    1234,
-                    new Blob(['abc'], { type: 'text/html' })
-                  )
-                );
-                transfer.items.add(
-                  Files.createFile(
-                    'b.txt',
-                    123,
-                    new Blob(['abcd'], { type: 'text/plain' })
-                  )
-                );
+                transfer.items.add(Files.createFile('a.html', 1234, new Blob(['abc'], { type: 'text/html' })));
+                transfer.items.add(Files.createFile('b.txt', 123, new Blob(['abcd'], { type: 'text/plain' })));
                 store.add('onDragstart');
               }
             })
@@ -273,10 +239,13 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
         GeneralSteps.sequence([
           store.sClear,
           Dnd.sDragnDrop('.draggableMove', '.dropzoneCopy'),
-          store.sAssertEq(
-            'Should not include drop since it is a invalid drop',
-            ['canDrag', 'onDragstart', 'onDragenter', 'onDragover', 'onDragend']
-          )
+          store.sAssertEq('Should not include drop since it is a invalid drop', [
+            'canDrag',
+            'onDragstart',
+            'onDragenter',
+            'onDragover',
+            'onDragend'
+          ])
         ])
       )
     ],

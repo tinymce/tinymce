@@ -23,20 +23,11 @@ const formatErr = function (label: string, err: any) {
         '\n' +
         err.counterexamplestr +
         '\n' +
-        JSON.stringify(
-          { rngState: err.rngState, shrinks: err.shrinks, tests: err.tests },
-          null,
-          2
-        )
+        JSON.stringify({ rngState: err.rngState, shrinks: err.shrinks, tests: err.tests }, null, 2)
     : err;
 };
 
-const checkWith = function <T extends any[]>(
-  label: string,
-  arbitraries: T,
-  f: Function,
-  options: Record<string, any> = {}
-) {
+const checkWith = function <T extends any[]>(label: string, arbitraries: T, f: Function, options: Record<string, any> = {}) {
   // TODO narrow types
   // NOTE: Due to a current implementation detail of Jsc's wrapper, these will not have labels in the console
   // However, use this one if you want to supply options (like seed, number of tests etc.)
@@ -54,11 +45,7 @@ const checkWith = function <T extends any[]>(
   });
 };
 
-const check = function <T extends any[]>(
-  label: string,
-  arbitraries: T,
-  f: Function
-) {
+const check = function <T extends any[]>(label: string, arbitraries: T, f: Function) {
   // TODO narrow types
   Jsc.property.apply(Jsc, [label, ...arbitraries, f]);
 };

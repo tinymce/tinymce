@@ -13,9 +13,7 @@ export interface OnMenuItemExecuteType<T> extends GetApiType<T> {
   onAction: (itemApi: T) => void;
 }
 
-export const internalToolbarButtonExecute = Id.generate(
-  'toolbar.button.execute'
-);
+export const internalToolbarButtonExecute = Id.generate('toolbar.button.execute');
 
 export interface InternalToolbarButtonExecuteEvent<T> extends CustomEvent {
   buttonApi: () => T;
@@ -38,12 +36,7 @@ const onToolbarButtonExecute = <T>(info: OnMenuItemExecuteType<T>) =>
 
 const toolbarButtonEventOrder = {
   // TODO: use the constants provided by behaviours.
-  'alloy.execute': [
-    'disabling',
-    'alloy.base.behaviour',
-    'toggling',
-    'toolbar-button-events'
-  ]
+  'alloy.execute': ['disabling', 'alloy.base.behaviour', 'toggling', 'toolbar-button-events']
 };
 
 export { onToolbarButtonExecute, toolbarButtonEventOrder, runWithApi };

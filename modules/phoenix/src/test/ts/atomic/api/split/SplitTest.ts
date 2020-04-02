@@ -6,9 +6,7 @@ import * as Finder from 'ephox/phoenix/test/Finder';
 
 UnitTest.test('api.Split.(split,splitByPair)', function () {
   const generate = function (text: string) {
-    const universe = TestUniverse(
-      Gene('root', 'root', [TextGene('generate_text', text)])
-    );
+    const universe = TestUniverse(Gene('root', 'root', [TextGene('generate_text', text)]));
 
     const item = Finder.get(universe, 'generate_text');
     return { universe, item };
@@ -27,34 +25,21 @@ UnitTest.test('api.Split.(split,splitByPair)', function () {
     );
   };
 
-  const checkSplit = function (
-    before: Option<string>,
-    after: Option<string>,
-    text: string,
-    position: number
-  ) {
+  const checkSplit = function (before: Option<string>, after: Option<string>, text: string, position: number) {
     const input = generate(text);
     const actual = Split.split(input.universe, input.item, position);
     assert.eq(true, isEq(before, actual.before()));
     assert.eq(true, isEq(after, actual.after()));
   };
 
-  const checkPair = function (
-    expected: string,
-    middle: string,
-    text: string,
-    start: number,
-    finish: number
-  ) {
+  const checkPair = function (expected: string, middle: string, text: string, start: number, finish: number) {
     const input = generate(text);
     const actual = Split.splitByPair(input.universe, input.item, start, finish);
     assert.eq(middle, actual.text);
     assert.eq(
       expected,
       input.universe.shortlog(function (item) {
-        return item.name === 'TEXT_GENE'
-          ? 'text("' + item.text + '")'
-          : item.id;
+        return item.name === 'TEXT_GENE' ? 'text("' + item.text + '")' : item.id;
       })
     );
   };

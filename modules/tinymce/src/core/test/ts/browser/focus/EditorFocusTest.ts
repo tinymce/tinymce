@@ -7,10 +7,7 @@ import * as EditorFocus from 'tinymce/core/focus/EditorFocus';
 import Theme from 'tinymce/themes/silver/Theme';
 import { document, HTMLElement } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function (success, failure) {
   Theme();
 
   const cCreateInlineEditor = function (html) {
@@ -32,12 +29,9 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function (
 
   const cFocusElement = function (elementPath) {
     return Chain.op(function (editor: Editor) {
-      const element = Hierarchy.follow(
-        Element.fromDom(editor.getBody()),
-        elementPath
-      )
-        .filter(Node.isElement)
-        .getOrDie() as Element<HTMLElement>;
+      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).filter(Node.isElement).getOrDie() as Element<
+        HTMLElement
+      >;
       Focus.focus(element);
     });
   };
@@ -53,14 +47,8 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function (
 
   const cSetSelection = function (startPath, startOffset, endPath, endOffset) {
     return Chain.op(function (editor: Editor) {
-      const startContainer = Hierarchy.follow(
-        Element.fromDom(editor.getBody()),
-        startPath
-      ).getOrDie();
-      const endContainer = Hierarchy.follow(
-        Element.fromDom(editor.getBody()),
-        endPath
-      ).getOrDie();
+      const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
+      const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
       const rng = editor.dom.createRng();
 
       rng.setStart(startContainer.dom(), startOffset);
@@ -70,62 +58,24 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', function (
     });
   };
 
-  const cAssertSelection = function (
-    startPath,
-    startOffset,
-    endPath,
-    endOffset
-  ) {
+  const cAssertSelection = function (startPath, startOffset, endPath, endOffset) {
     return Chain.op(function (editor: Editor) {
-      const startContainer = Hierarchy.follow(
-        Element.fromDom(editor.getBody()),
-        startPath
-      ).getOrDie();
-      const endContainer = Hierarchy.follow(
-        Element.fromDom(editor.getBody()),
-        endPath
-      ).getOrDie();
+      const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
+      const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
       const rng = editor.selection.getRng();
 
-      Assertions.assertDomEq(
-        'Should be expected from start container',
-        startContainer,
-        Element.fromDom(rng.startContainer)
-      );
-      Assertions.assertEq(
-        'Should be expected from start offset',
-        startOffset,
-        rng.startOffset
-      );
-      Assertions.assertDomEq(
-        'Should be expected end container',
-        endContainer,
-        Element.fromDom(rng.endContainer)
-      );
-      Assertions.assertEq(
-        'Should be expected end offset',
-        endOffset,
-        rng.endOffset
-      );
+      Assertions.assertDomEq('Should be expected from start container', startContainer, Element.fromDom(rng.startContainer));
+      Assertions.assertEq('Should be expected from start offset', startOffset, rng.startOffset);
+      Assertions.assertDomEq('Should be expected end container', endContainer, Element.fromDom(rng.endContainer));
+      Assertions.assertEq('Should be expected end offset', endOffset, rng.endOffset);
     });
   };
 
   const cAssertHasFocus = function (elementPath) {
     return Chain.op(function (editor: Editor) {
-      const element = Hierarchy.follow(
-        Element.fromDom(editor.getBody()),
-        elementPath
-      ).getOrDie();
-      Assertions.assertEq(
-        'Should have focus on the editor',
-        true,
-        EditorFocus.hasFocus(editor)
-      );
-      Assertions.assertDomEq(
-        'Should be the expected activeElement',
-        element,
-        Focus.active(Element.fromDom(editor.getDoc())).getOrDie()
-      );
+      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), elementPath).getOrDie();
+      Assertions.assertEq('Should have focus on the editor', true, EditorFocus.hasFocus(editor));
+      Assertions.assertDomEq('Should be the expected activeElement', element, Focus.active(Element.fromDom(editor.getDoc())).getOrDie());
     });
   };
 

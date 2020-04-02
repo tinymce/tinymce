@@ -16,15 +16,8 @@ import { SilverDialogEvents } from './SilverDialogEvents';
 import { renderModalFooter } from './SilverDialogFooter';
 import { getDialogApi } from './SilverDialogInstanceApi';
 
-const renderDialog = <T>(
-  dialogInit: DialogManager.DialogInit<T>,
-  extra: SilverDialogCommon.WindowExtra,
-  backstage: UiFactoryBackstage
-) => {
-  const header = SilverDialogCommon.getHeader(
-    dialogInit.internalDialog.title,
-    backstage
-  );
+const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra, backstage: UiFactoryBackstage) => {
+  const header = SilverDialogCommon.getHeader(dialogInit.internalDialog.title, backstage);
 
   const body = renderModalBody(
     {
@@ -33,13 +26,9 @@ const renderDialog = <T>(
     backstage
   );
 
-  const storagedMenuButtons = SilverDialogCommon.mapMenuButtons(
-    dialogInit.internalDialog.buttons
-  );
+  const storagedMenuButtons = SilverDialogCommon.mapMenuButtons(dialogInit.internalDialog.buttons);
 
-  const objOfCells = SilverDialogCommon.extractCellsToObject(
-    storagedMenuButtons
-  );
+  const objOfCells = SilverDialogCommon.extractCellsToObject(storagedMenuButtons);
 
   const footer = renderModalFooter(
     {
@@ -70,12 +59,7 @@ const renderDialog = <T>(
     extraStyles: {}
   };
 
-  const dialog = SilverDialogCommon.renderModalDialog(
-    spec,
-    dialogInit,
-    dialogEvents,
-    backstage
-  );
+  const dialog = SilverDialogCommon.renderModalDialog(spec, dialogInit, dialogEvents, backstage);
 
   const modalAccess = (() => {
     const getForm = (): AlloyComponent => {

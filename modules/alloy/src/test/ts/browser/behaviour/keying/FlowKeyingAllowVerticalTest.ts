@@ -26,9 +26,7 @@ UnitTest.asynctest('Flow Keying Allow Vertical Test', (success, failure) => {
             },
             classes
           },
-          events: AlloyEvents.derive([
-            AlloyEvents.runOnExecute(store.adder('item.execute: ' + name))
-          ]),
+          events: AlloyEvents.derive([AlloyEvents.runOnExecute(store.adder('item.execute: ' + name))]),
           containerBehaviours: Behaviour.derive([Focusing.config({})])
         });
 
@@ -72,37 +70,14 @@ UnitTest.asynctest('Flow Keying Allow Vertical Test', (success, failure) => {
       return [
         GuiSetup.mSetupKeyLogger(body),
         FocusTools.sSetFocus('Initial focus', gui.element(), '.one'),
-        NavigationUtils.sequence(doc, Keys.right(), {}, [
-          targets.two,
-          targets.three,
-          targets.four,
-          targets.five,
-          targets.one,
-          targets.two
-        ]),
-        NavigationUtils.sequence(doc, Keys.up(), {}, [
-          targets.two,
-          targets.two,
-          targets.two,
-          targets.two
-        ]),
-        NavigationUtils.sequence(doc, Keys.left(), {}, [
-          targets.one,
-          targets.five,
-          targets.four,
-          targets.three
-        ]),
-        NavigationUtils.sequence(doc, Keys.down(), {}, [
-          targets.three,
-          targets.three,
-          targets.three
-        ]),
+        NavigationUtils.sequence(doc, Keys.right(), {}, [targets.two, targets.three, targets.four, targets.five, targets.one, targets.two]),
+        NavigationUtils.sequence(doc, Keys.up(), {}, [targets.two, targets.two, targets.two, targets.two]),
+        NavigationUtils.sequence(doc, Keys.left(), {}, [targets.one, targets.five, targets.four, targets.three]),
+        NavigationUtils.sequence(doc, Keys.down(), {}, [targets.three, targets.three, targets.three]),
 
         // Test execute
         Keyboard.sKeydown(doc, Keys.enter(), {}),
-        store.sAssertEq('Check that execute has fired on the right target', [
-          'item.execute: three'
-        ]),
+        store.sAssertEq('Check that execute has fired on the right target', ['item.execute: three']),
         GuiSetup.mTeardownKeyLogger(body, [
           // 4x Keyup, ignored by alloy on Keys.up()
           'keydown.to.body: 38',

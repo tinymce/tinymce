@@ -5,10 +5,7 @@ import * as TypeText from '../../module/test/TypeText';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.TypeTextAtCef', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.keyboard.TypeTextAtCef', function (success, failure) {
   Theme();
 
   TinyLoader.setupLight(
@@ -23,56 +20,35 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.TypeTextAtCef', function (
           Logger.t(
             'Type text before cef inline element',
             GeneralSteps.sequence([
-              tinyApis.sSetContent(
-                '<p><span contenteditable="false">a</span></p>'
-              ),
+              tinyApis.sSetContent('<p><span contenteditable="false">a</span></p>'),
               tinyApis.sSelect('p', [1]),
               tinyActions.sContentKeystroke(Keys.left(), {}),
-              TypeText.sTypeContentAtSelection(
-                Element.fromDom(editor.getDoc()),
-                'bc'
-              ),
+              TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'bc'),
               tinyApis.sAssertSelection([0, 0], 2, [0, 0], 2),
-              tinyApis.sAssertContent(
-                '<p>bc<span contenteditable="false">a</span></p>'
-              )
+              tinyApis.sAssertContent('<p>bc<span contenteditable="false">a</span></p>')
             ])
           ),
           Logger.t(
             'Type after cef inline element',
             GeneralSteps.sequence([
-              tinyApis.sSetContent(
-                '<p><span contenteditable="false">a</span></p>'
-              ),
+              tinyApis.sSetContent('<p><span contenteditable="false">a</span></p>'),
               tinyApis.sSelect('p', [1]),
               tinyActions.sContentKeystroke(Keys.right(), {}),
-              TypeText.sTypeContentAtSelection(
-                Element.fromDom(editor.getDoc()),
-                'bc'
-              ),
+              TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'bc'),
               tinyApis.sAssertSelection([0, 1], 3, [0, 1], 3),
-              tinyApis.sAssertContent(
-                '<p><span contenteditable="false">a</span>bc</p>'
-              )
+              tinyApis.sAssertContent('<p><span contenteditable="false">a</span>bc</p>')
             ])
           ),
           Logger.t(
             'Type between cef inline elements',
             GeneralSteps.sequence([
-              tinyApis.sSetContent(
-                '<p><span contenteditable="false">a</span>&nbsp;<span contenteditable="false">b</span></p>'
-              ),
+              tinyApis.sSetContent('<p><span contenteditable="false">a</span>&nbsp;<span contenteditable="false">b</span></p>'),
               tinyApis.sSelect('p', [3]),
               tinyActions.sContentKeystroke(Keys.left(), {}),
               tinyActions.sContentKeystroke(Keys.left(), {}),
-              TypeText.sTypeContentAtSelection(
-                Element.fromDom(editor.getDoc()),
-                'bc'
-              ),
+              TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'bc'),
               tinyApis.sAssertSelection([0, 1], 3, [0, 1], 3),
-              tinyApis.sAssertContent(
-                '<p><span contenteditable="false">a</span>bc&nbsp;<span contenteditable="false">b</span></p>'
-              )
+              tinyApis.sAssertContent('<p><span contenteditable="false">a</span>bc&nbsp;<span contenteditable="false">b</span></p>')
             ])
           )
         ],

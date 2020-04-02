@@ -7,13 +7,7 @@
 
 import * as LegacyFilter from '../../html/LegacyFilter';
 import * as ParserFilters from '../../html/ParserFilters';
-import {
-  hasOnlyChild,
-  isEmpty,
-  isLineBreakNode,
-  isPaddedWithNbsp,
-  paddEmptyNode
-} from '../../html/ParserUtils';
+import { hasOnlyChild, isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../../html/ParserUtils';
 import Tools from '../util/Tools';
 import Node from './Node';
 import SaxParser from './SaxParser';
@@ -49,11 +43,7 @@ export interface ParserArgs {
   [key: string]: any;
 }
 
-export type ParserFilterCallback = (
-  nodes: Node[],
-  name: string,
-  args: ParserArgs
-) => void;
+export type ParserFilterCallback = (nodes: Node[], name: string, args: ParserArgs) => void;
 
 export interface ParserFilter {
   name: string;
@@ -81,24 +71,15 @@ export interface DomParserSettings {
 
 interface DomParser {
   schema: Schema;
-  addAttributeFilter(
-    name: string,
-    callback: (nodes: Node[], name: string, args: ParserArgs) => void
-  ): void;
+  addAttributeFilter(name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void): void;
   getAttributeFilters(): ParserFilter[];
-  addNodeFilter(
-    name: string,
-    callback: (nodes: Node[], name: string, args: ParserArgs) => void
-  ): void;
+  addNodeFilter(name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void): void;
   getNodeFilters(): ParserFilter[];
   filterNode(node: Node): Node;
   parse(html: string, args?: ParserArgs): Node;
 }
 
-const DomParser = function (
-  settings?: DomParserSettings,
-  schema = Schema()
-): DomParser {
+const DomParser = function (settings?: DomParserSettings, schema = Schema()): DomParser {
   const nodeFilters = {};
   const attributeFilters = [];
   let matchedNodes = {};
@@ -109,22 +90,8 @@ const DomParser = function (
   settings.root_name = settings.root_name || 'body';
 
   const fixInvalidChildren = function (nodes) {
-    let ni,
-      node,
-      parent,
-      parents,
-      newParent,
-      currentNode,
-      tempNode,
-      childNode,
-      i;
-    let nonEmptyElements,
-      whitespaceElements,
-      nonSplitableElements,
-      textBlockElements,
-      specialElements,
-      sibling,
-      nextNode;
+    let ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i;
+    let nonEmptyElements, whitespaceElements, nonSplitableElements, textBlockElements, specialElements, sibling, nextNode;
 
     nonSplitableElements = makeMap('tr,td,th,tbody,thead,tfoot,table');
     nonEmptyElements = schema.getNonEmptyElements();
@@ -166,9 +133,7 @@ const DomParser = function (
       parents = [node];
       for (
         parent = node.parent;
-        parent &&
-        !schema.isValidChild(parent.name, node.name) &&
-        !nonSplitableElements[parent.name];
+        parent && !schema.isValidChild(parent.name, node.name) && !nonSplitableElements[parent.name];
         parent = parent.parent
       ) {
         parents.push(parent);
@@ -191,11 +156,7 @@ const DomParser = function (
             tempNode = currentNode;
           }
 
-          for (
-            childNode = parents[i].firstChild;
-            childNode && childNode !== parents[i + 1];
-
-          ) {
+          for (childNode = parents[i].firstChild; childNode && childNode !== parents[i + 1]; ) {
             nextNode = childNode.next;
             tempNode.append(childNode);
             childNode = nextNode;
@@ -213,10 +174,7 @@ const DomParser = function (
 
         // Check if the element is empty by looking through it's contents and special treatment for <p><br /></p>
         parent = parents[0];
-        if (
-          isEmpty(schema, nonEmptyElements, whitespaceElements, parent) ||
-          hasOnlyChild(parent, 'br')
-        ) {
+        if (isEmpty(schema, nonEmptyElements, whitespaceElements, parent) || hasOnlyChild(parent, 'br')) {
           parent.empty().remove();
         }
       } else if (node.parent) {
@@ -239,10 +197,7 @@ const DomParser = function (
         }
 
         // Try wrapping the element in a DIV
-        if (
-          schema.isValidChild(node.parent.name, 'div') &&
-          schema.isValidChild('div', node.name)
-        ) {
+        if (schema.isValidChild(node.parent.name, 'div') && schema.isValidChild('div', node.name)) {
           node.wrap(filterNode(new Node('div', 1)));
         } else {
           // We failed wrapping it, then remove or unwrap it
@@ -311,10 +266,7 @@ const DomParser = function (
    * @method {String} name Comma separated list of nodes to collect.
    * @param {function} callback Callback function to execute once it has collected nodes.
    */
-  const addNodeFilter = (
-    name: string,
-    callback: (nodes: Node[], name: string, args: ParserArgs) => void
-  ) => {
+  const addNodeFilter = (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void) => {
     each(explode(name), function (name) {
       let list = nodeFilters[name];
 
@@ -352,10 +304,7 @@ const DomParser = function (
    * @param {String} name Comma separated list of nodes to collect.
    * @param {function} callback Callback function to execute once it has collected nodes.
    */
-  const addAttributeFilter = (
-    name: string,
-    callback: (nodes: Node[], name: string, args: ParserArgs) => void
-  ) => {
+  const addAttributeFilter = (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void) => {
     each(explode(name), function (name) {
       let i;
 
@@ -402,17 +351,11 @@ const DomParser = function (
     args = args || {};
     matchedNodes = {};
     matchedAttributes = {};
-    blockElements = extend(
-      makeMap('script,style,head,html,body,title,meta,param'),
-      schema.getBlockElements()
-    );
+    blockElements = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
     const nonEmptyElements = schema.getNonEmptyElements();
     const children = schema.children;
     const validate = settings.validate;
-    const forcedRootBlockName =
-      'forced_root_block' in args
-        ? args.forced_root_block
-        : settings.forced_root_block;
+    const forcedRootBlockName = 'forced_root_block' in args ? args.forced_root_block : settings.forced_root_block;
     const rootBlockName = getRootBlockName(forcedRootBlockName);
     const whiteSpaceElements = schema.getWhiteSpaceElements();
     const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
@@ -421,8 +364,7 @@ const DomParser = function (
     const isAllWhiteSpaceRegExp = /^[ \t\r\n]+$/;
 
     isInWhiteSpacePreservedElement =
-      whiteSpaceElements.hasOwnProperty(args.context) ||
-      whiteSpaceElements.hasOwnProperty(settings.root_name);
+      whiteSpaceElements.hasOwnProperty(args.context) || whiteSpaceElements.hasOwnProperty(settings.root_name);
 
     const addRootBlocks = function () {
       let node = rootNode.firstChild,
@@ -453,13 +395,7 @@ const DomParser = function (
       while (node) {
         next = node.next;
 
-        if (
-          node.type === 3 ||
-          (node.type === 1 &&
-            node.name !== 'p' &&
-            !blockElements[node.name] &&
-            !node.attr('data-mce-type'))
-        ) {
+        if (node.type === 3 || (node.type === 1 && node.name !== 'p' && !blockElements[node.name] && !node.attr('data-mce-type'))) {
           if (!rootBlockNode) {
             // Create a new root block element
             rootBlockNode = createNode(rootBlockName, 1);
@@ -520,11 +456,7 @@ const DomParser = function (
             continue;
           }
 
-          if (
-            !blockElements[textNodeNext.name] &&
-            textNodeNext.name !== 'script' &&
-            textNodeNext.name !== 'style'
-          ) {
+          if (!blockElements[textNodeNext.name] && textNodeNext.name !== 'script' && textNodeNext.name !== 'style') {
             textNode = textNode.prev;
             continue;
           }
@@ -557,9 +489,7 @@ const DomParser = function (
         preserve_cdata: settings.preserve_cdata,
 
         // Exclude P and LI from DOM parsing since it's treated better by the DOM parser
-        self_closing_elements: cloneAndExcludeBlocks(
-          schema.getSelfClosingElements()
-        ),
+        self_closing_elements: cloneAndExcludeBlocks(schema.getSelfClosingElements()),
 
         cdata(text) {
           node.append(createNode('#cdata', 4)).value = text;
@@ -678,10 +608,7 @@ const DomParser = function (
                       text = textNode.value;
                       sibling = textNode.next;
 
-                      if (
-                        text.length === 0 ||
-                        isAllWhiteSpaceRegExp.test(text)
-                      ) {
+                      if (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {
                         textNode.remove();
                         textNode = sibling;
                       }
@@ -710,10 +637,7 @@ const DomParser = function (
                       text = textNode.value;
                       sibling = textNode.prev;
 
-                      if (
-                        text.length === 0 ||
-                        isAllWhiteSpaceRegExp.test(text)
-                      ) {
+                      if (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {
                         textNode.remove();
                         textNode = sibling;
                       }
@@ -742,10 +666,7 @@ const DomParser = function (
               isInWhiteSpacePreservedElement = false;
             }
 
-            if (
-              elementRule.removeEmpty &&
-              isEmpty(schema, nonEmptyElements, whiteSpaceElements, node)
-            ) {
+            if (elementRule.removeEmpty && isEmpty(schema, nonEmptyElements, whiteSpaceElements, node)) {
               tempNode = node.parent;
 
               if (blockElements[node.name]) {
@@ -758,11 +679,7 @@ const DomParser = function (
               return;
             }
 
-            if (
-              elementRule.paddEmpty &&
-              (isPaddedWithNbsp(node) ||
-                isEmpty(schema, nonEmptyElements, whiteSpaceElements, node))
-            ) {
+            if (elementRule.paddEmpty && (isPaddedWithNbsp(node) || isEmpty(schema, nonEmptyElements, whiteSpaceElements, node))) {
               paddEmptyNode(settings, args, blockElements, node);
             }
 

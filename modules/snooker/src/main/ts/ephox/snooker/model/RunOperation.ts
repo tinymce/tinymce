@@ -8,11 +8,7 @@ import * as Bars from '../resize/Bars';
 import * as DetailsList from './DetailsList';
 import * as Transitions from './Transitions';
 import { Warehouse } from './Warehouse';
-import {
-  Generators,
-  GeneratorsWrapper,
-  SimpleGenerators
-} from '../api/Generators';
+import { Generators, GeneratorsWrapper, SimpleGenerators } from '../api/Generators';
 import { ResizeWire } from '../api/ResizeWire';
 import { TableOperationResult } from '../api/TableOperations';
 
@@ -72,8 +68,7 @@ export interface ExtractPasteRows {
   readonly clipboard: () => Element[];
 }
 
-const fromWarehouse = (warehouse: Warehouse, generators: Generators) =>
-  Transitions.toGrid(warehouse, generators, false);
+const fromWarehouse = (warehouse: Warehouse, generators: Generators) => Transitions.toGrid(warehouse, generators, false);
 
 const deriveRows = (rendered: Structs.RowDetails[], generators: Generators) => {
   // The row is either going to be a new row, or the row of any of the cells.
@@ -85,51 +80,27 @@ const deriveRows = (rendered: Structs.RowDetails[], generators: Generators) => {
         return Structs.elementnew(row, isNew);
       })
     );
-    return rowOfCells.getOrThunk(() =>
-      Structs.elementnew(generators.row(), true)
-    );
+    return rowOfCells.getOrThunk(() => Structs.elementnew(generators.row(), true));
   };
 
   return Arr.map(rendered, (details) => {
     const row = findRow(details.details());
-    return Structs.rowdatanew(
-      row.element(),
-      details.details(),
-      details.section(),
-      row.isNew()
-    );
+    return Structs.rowdatanew(row.element(), details.details(), details.section(), row.isNew());
   });
 };
 
-const toDetailList = (
-  grid: Structs.RowCells[],
-  generators: Generators
-): RowDataNew<DetailNew>[] => {
+const toDetailList = (grid: Structs.RowCells[], generators: Generators): RowDataNew<DetailNew>[] => {
   const rendered = Transitions.toDetails(grid, Compare.eq);
   return deriveRows(rendered, generators);
 };
 
-const findInWarehouse = (
-  warehouse: Warehouse,
-  element: Element
-): Option<DetailExt> =>
-  Arr.findMap(warehouse.all, (r) =>
-    Arr.find(r.cells(), (e) => Compare.eq(element, e.element()))
-  );
+const findInWarehouse = (warehouse: Warehouse, element: Element): Option<DetailExt> =>
+  Arr.findMap(warehouse.all, (r) => Arr.find(r.cells(), (e) => Compare.eq(element, e.element())));
 
 type EqEle = (e1: Element, e2: Element) => boolean;
-type Operation<INFO, GW extends GeneratorsWrapper> = (
-  model: Structs.RowCells[],
-  info: INFO,
-  eq: EqEle,
-  w: GW
-) => TableOperationResult;
+type Operation<INFO, GW extends GeneratorsWrapper> = (model: Structs.RowCells[], info: INFO, eq: EqEle, w: GW) => TableOperationResult;
 type Extract<RAW, INFO> = (warehouse: Warehouse, target: RAW) => Option<INFO>;
-type Adjustment = <T extends Structs.DetailNew>(
-  table: Element,
-  grid: Structs.RowDataNew<T>[],
-  direction: BarPositions<ColInfo>
-) => void;
+type Adjustment = <T extends Structs.DetailNew>(table: Element, grid: Structs.RowDataNew<T>[], direction: BarPositions<ColInfo>) => void;
 type PostAction = (e: Element) => void;
 type GenWrap<GW extends GeneratorsWrapper> = (g: Generators) => GW;
 
@@ -174,18 +145,10 @@ const run = <RAW, INFO, GW extends GeneratorsWrapper>(
   );
 };
 
-const onCell = (
-  warehouse: Warehouse,
-  target: TargetElement
-): Option<DetailExt> =>
-  TableLookup.cell(target.element()).bind((cell) =>
-    findInWarehouse(warehouse, cell)
-  );
+const onCell = (warehouse: Warehouse, target: TargetElement): Option<DetailExt> =>
+  TableLookup.cell(target.element()).bind((cell) => findInWarehouse(warehouse, cell));
 
-const onPaste = (
-  warehouse: Warehouse,
-  target: TargetPaste
-): Option<ExtractPaste> =>
+const onPaste = (warehouse: Warehouse, target: TargetPaste): Option<ExtractPaste> =>
   TableLookup.cell(target.element()).bind((cell) =>
     findInWarehouse(warehouse, cell).map((details) => {
       const value: ExtractPaste = {
@@ -197,13 +160,8 @@ const onPaste = (
     })
   );
 
-const onPasteRows = (
-  warehouse: Warehouse,
-  target: TargetPasteRows
-): Option<ExtractPasteRows> => {
-  const details = Arr.map(target.selection(), (cell) =>
-    TableLookup.cell(cell).bind((lc) => findInWarehouse(warehouse, lc))
-  );
+const onPasteRows = (warehouse: Warehouse, target: TargetPasteRows): Option<ExtractPasteRows> => {
+  const details = Arr.map(target.selection(), (cell) => TableLookup.cell(cell).bind((lc) => findInWarehouse(warehouse, lc)));
   const cells = Options.cat(details);
   return cells.length > 0
     ? Option.some({
@@ -214,34 +172,14 @@ const onPasteRows = (
     : Option.none();
 };
 
-const onMergable = (
-  _warehouse: Warehouse,
-  target: TargetMergable
-): Option<ExtractMergable> => target.mergable();
+const onMergable = (_warehouse: Warehouse, target: TargetMergable): Option<ExtractMergable> => target.mergable();
 
-const onUnmergable = (
-  _warehouse: Warehouse,
-  target: TargetUnmergable
-): Option<Element[]> => target.unmergable();
+const onUnmergable = (_warehouse: Warehouse, target: TargetUnmergable): Option<Element[]> => target.unmergable();
 
-const onCells = (
-  warehouse: Warehouse,
-  target: TargetSelection
-): Option<DetailExt[]> => {
-  const details = Arr.map(target.selection(), (cell) =>
-    TableLookup.cell(cell).bind((lc) => findInWarehouse(warehouse, lc))
-  );
+const onCells = (warehouse: Warehouse, target: TargetSelection): Option<DetailExt[]> => {
+  const details = Arr.map(target.selection(), (cell) => TableLookup.cell(cell).bind((lc) => findInWarehouse(warehouse, lc)));
   const cells = Options.cat(details);
   return cells.length > 0 ? Option.some(cells) : Option.none();
 };
 
-export {
-  run,
-  toDetailList,
-  onCell,
-  onCells,
-  onPaste,
-  onPasteRows,
-  onMergable,
-  onUnmergable
-};
+export { run, toDetailList, onCell, onCells, onPaste, onPasteRows, onMergable, onUnmergable };

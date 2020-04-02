@@ -6,14 +6,7 @@
  */
 
 import { Fun, Option } from '@ephox/katamari';
-import {
-  Compare,
-  DomEvent,
-  Element,
-  WindowSelection,
-  StructRect,
-  RawRect
-} from '@ephox/sugar';
+import { Compare, DomEvent, Element, WindowSelection, StructRect, RawRect } from '@ephox/sugar';
 
 const getBodyFromFrame = function (frame) {
   return Option.some(Element.fromDom(frame.dom().contentWindow.document.body));
@@ -76,16 +69,12 @@ const getActiveApi = function (editor) {
   // if it is collapsed;
   const tryFallbackBox = function (win) {
     const isCollapsed = function (sel) {
-      return (
-        Compare.eq(sel.start(), sel.finish()) && sel.soffset() === sel.foffset()
-      );
+      return Compare.eq(sel.start(), sel.finish()) && sel.soffset() === sel.foffset();
     };
 
     const toStartRect = function (sel) {
       const rect = sel.start().dom().getBoundingClientRect();
-      return rect.width > 0 || rect.height > 0
-        ? Option.some(rect).map(toRect)
-        : Option.none<StructRect>();
+      return rect.width > 0 || rect.height > 0 ? Option.some(rect).map(toRect) : Option.none<StructRect>();
     };
 
     return WindowSelection.getExact(win).filter(isCollapsed).bind(toStartRect);
@@ -99,11 +88,9 @@ const getActiveApi = function (editor) {
         const getCursorBox = editor.getCursorBox.getOrThunk(function () {
           return function () {
             return WindowSelection.get(win).bind(function (sel) {
-              return WindowSelection.getFirstRect(win, sel).orThunk(
-                function () {
-                  return tryFallbackBox(win);
-                }
-              );
+              return WindowSelection.getFirstRect(win, sel).orThunk(function () {
+                return tryFallbackBox(win);
+              });
             });
           };
         });
@@ -131,12 +118,7 @@ const getActiveApi = function (editor) {
           frame: Fun.constant(frame),
 
           onKeyup: getOrListen(editor, doc, 'onKeyup', 'keyup'),
-          onNodeChanged: getOrListen(
-            editor,
-            doc,
-            'onNodeChanged',
-            'SelectionChange'
-          ),
+          onNodeChanged: getOrListen(editor, doc, 'onNodeChanged', 'SelectionChange'),
           onDomChanged: editor.onDomChanged, // consider defaulting with MutationObserver
 
           onScrollToCursor: editor.onScrollToCursor,

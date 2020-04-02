@@ -17,10 +17,7 @@ interface Entities {
   encodeAllRaw(text: string): string;
   encodeNumeric(text: string, attr?: boolean): string;
   encodeNamed(text: string, attr?: boolean, entities?: EntitiesMap): string;
-  getEncodeFunc(
-    name: string,
-    entities?: EntitiesMap | string
-  ): (text: string, attr?: boolean) => string;
+  getEncodeFunc(name: string, entities?: EntitiesMap | string): (text: string, attr?: boolean) => string;
   decode(text: string): string;
 }
 
@@ -193,13 +190,7 @@ const encodeNumeric = (text: string, attr?: boolean): string =>
   text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
     // Multi byte sequence convert it to a single entity
     if (chr.length > 1) {
-      return (
-        '&#' +
-        ((chr.charCodeAt(0) - 0xd800) * 0x400 +
-          (chr.charCodeAt(1) - 0xdc00) +
-          0x10000) +
-        ';'
-      );
+      return '&#' + ((chr.charCodeAt(0) - 0xd800) * 0x400 + (chr.charCodeAt(1) - 0xdc00) + 0x10000) + ';';
     }
 
     return baseEntities[chr] || '&#' + chr.charCodeAt(0) + ';';
@@ -215,16 +206,10 @@ const encodeNumeric = (text: string, attr?: boolean): string =>
  * @param {Object} entities Optional parameter with entities to use.
  * @return {String} Entity encoded text.
  */
-const encodeNamed = (
-  text: string,
-  attr?: boolean,
-  entities?: EntitiesMap
-): string => {
+const encodeNamed = (text: string, attr?: boolean, entities?: EntitiesMap): string => {
   entities = entities || namedEntities;
 
-  return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (
-    chr
-  ) {
+  return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
     return baseEntities[chr] || entities[chr] || chr;
   });
 };
@@ -252,13 +237,7 @@ const getEncodeFunc = (name: string, entities?: EntitiesMap | string) => {
 
       // Convert multi-byte sequences to a single entity.
       if (chr.length > 1) {
-        return (
-          '&#' +
-          ((chr.charCodeAt(0) - 0xd800) * 0x400 +
-            (chr.charCodeAt(1) - 0xdc00) +
-            0x10000) +
-          ';'
-        );
+        return '&#' + ((chr.charCodeAt(0) - 0xd800) * 0x400 + (chr.charCodeAt(1) - 0xdc00) + 0x10000) + ';';
       }
 
       return '&#' + chr.charCodeAt(0) + ';';

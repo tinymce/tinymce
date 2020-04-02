@@ -4,22 +4,14 @@ import { Element } from '@ephox/sugar';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
-export interface InvalidatingBehaviour
-  extends Behaviour.AlloyBehaviour<InvalidatingConfigSpec, InvalidatingConfig> {
-  config: (
-    config: InvalidatingConfigSpec
-  ) => Behaviour.NamedConfiguredBehaviour<
-    InvalidatingConfigSpec,
-    InvalidatingConfig
-  >;
+export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour<InvalidatingConfigSpec, InvalidatingConfig> {
+  config: (config: InvalidatingConfigSpec) => Behaviour.NamedConfiguredBehaviour<InvalidatingConfigSpec, InvalidatingConfig>;
   markValid: (component: AlloyComponent) => void;
   isInvalid: (component: AlloyComponent) => boolean;
   markInvalid: (component: AlloyComponent, text: string) => void;
   query: (component: AlloyComponent) => Future<Result<any, string>>;
   run: (component: AlloyComponent) => Future<Result<any, string>>;
-  validation: <T>(
-    validate: (v: string) => Result<T, string>
-  ) => (component: AlloyComponent) => Future<Result<T, string>>;
+  validation: <T>(validate: (v: string) => Result<T, string>) => (component: AlloyComponent) => Future<Result<T, string>>;
 }
 
 export interface InvalidatingConfigSpec extends Behaviour.BehaviourConfigSpec {

@@ -1,19 +1,10 @@
-import {
-  GeneralSteps,
-  Logger,
-  Pipeline,
-  Step,
-  ApproxStructure
-} from '@ephox/agar';
+import { GeneralSteps, Logger, Pipeline, Step, ApproxStructure } from '@ephox/agar';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import * as InsertBr from 'tinymce/core/newline/InsertBr';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function (success, failure) {
   Theme();
 
   const sInsertBr = function (editor) {
@@ -65,9 +56,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function (
                   tinyApis.sNodeChanged(),
                   sInsertBr(editor),
                   tinyApis.sAssertSelection([0], 3, [0], 3),
-                  tinyApis.sAssertContent(
-                    '<p>a<a href="#">b</a><br /><br />c</p>'
-                  )
+                  tinyApis.sAssertContent('<p>a<a href="#">b</a><br /><br />c</p>')
                 ])
               ),
               Logger.t(
@@ -79,9 +68,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function (
                   tinyApis.sNodeChanged(),
                   sInsertBr(editor),
                   tinyApis.sAssertSelection([0], 3, [0], 3),
-                  tinyApis.sAssertContent(
-                    '<p>a<a href="#">b</a><br /><br /></p>'
-                  )
+                  tinyApis.sAssertContent('<p>a<a href="#">b</a><br /><br /></p>')
                 ])
               )
             ])
@@ -140,11 +127,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function (
                   s.element('body', {
                     children: [
                       s.element('p', {
-                        children: [
-                          s.text(str.is('a')),
-                          s.element('br', {}),
-                          s.element('br', {})
-                        ]
+                        children: [s.text(str.is('a')), s.element('br', {}), s.element('br', {})]
                       })
                     ]
                   })

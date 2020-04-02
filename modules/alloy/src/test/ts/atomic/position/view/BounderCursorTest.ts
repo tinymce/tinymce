@@ -3,11 +3,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Bounds, bounds } from 'ephox/alloy/alien/Boxes';
 import * as Bubble from 'ephox/alloy/positioning/layout/Bubble';
 import * as Layout from 'ephox/alloy/positioning/layout/Layout';
-import {
-  AnchorBox,
-  AnchorElement,
-  AnchorLayout
-} from 'ephox/alloy/positioning/layout/LayoutTypes';
+import { AnchorBox, AnchorElement, AnchorLayout } from 'ephox/alloy/positioning/layout/LayoutTypes';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 
 interface TestDecisionSpec {
@@ -31,21 +27,12 @@ UnitTest.test('BounderCursorTest', () => {
     Assert.eq('X', expected.x, actual.x);
     Assert.eq('Y', expected.y, actual.y);
     if (expected.candidateYforTest !== undefined) {
-      Assert.eq(
-        'Candidate Y',
-        expected.candidateYforTest,
-        actual.candidateYforTest
-      );
+      Assert.eq('Candidate Y', expected.candidateYforTest, actual.candidateYforTest);
     }
   };
 
   // Layout is for boxes with a bubble pointing to a cursor position (vertically aligned to nearest side)
-  const four = [
-    Layout.southeast,
-    Layout.southwest,
-    Layout.northeast,
-    Layout.northwest
-  ];
+  const four = [Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest];
   const two = [Layout.east, Layout.west];
 
   // empty input array is now invalid, just returns anchor coordinates

@@ -51,9 +51,7 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
         anchor: 'selection',
         root: data.inline.element(),
         getSelection() {
-          return Option.some(
-            Cursors.calculate(data.inline.element(), data.path)
-          );
+          return Option.some(Cursors.calculate(data.inline.element(), data.path));
         }
       }));
 
@@ -81,59 +79,38 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
 
             NamedChain.write('anchor', cSetupAnchor),
 
-            PositionTestUtils.cTestSink(
-              'Relative, Selected: 3rd paragraph, no page scroll, no editor scroll',
-              'relative'
-            ),
-            PositionTestUtils.cTestSink(
-              'Fixed, Selected: 3rd paragraph, no page scroll, no editor scroll',
-              'fixed'
-            ),
+            PositionTestUtils.cTestSink('Relative, Selected: 3rd paragraph, no page scroll, no editor scroll', 'relative'),
+            PositionTestUtils.cTestSink('Fixed, Selected: 3rd paragraph, no page scroll, no editor scroll', 'fixed'),
 
             PositionTestUtils.cScrollDown('inline', '2000px'),
 
-            PositionTestUtils.cTestSink(
-              'Relative, Selected: 3rd paragraph, large scroll, no editor scroll',
-              'relative'
-            ),
-            PositionTestUtils.cTestSink(
-              'Fixed, Selected: 3rd paragraph, large scroll, no editor scroll',
-              'fixed'
-            ),
+            PositionTestUtils.cTestSink('Relative, Selected: 3rd paragraph, large scroll, no editor scroll', 'relative'),
+            PositionTestUtils.cTestSink('Fixed, Selected: 3rd paragraph, large scroll, no editor scroll', 'fixed'),
 
-            ChainUtils.cLogging(
-              'Setting selection to 13th paragraph and scrolling there',
-              [
-                NamedChain.writeValue(
-                  'path',
-                  Cursors.path({
-                    startPath: [12],
-                    soffset: 0,
-                    finishPath: [13],
-                    foffset: 0
-                  })
-                ),
-                NamedChain.bundle((data: any) => {
-                  const root = data.inline.element();
-                  const path = data.path;
-                  const range = Cursors.calculate(root, path);
-                  range.start().dom().scrollIntoView();
-                  return Result.value(data);
-                }),
+            ChainUtils.cLogging('Setting selection to 13th paragraph and scrolling there', [
+              NamedChain.writeValue(
+                'path',
+                Cursors.path({
+                  startPath: [12],
+                  soffset: 0,
+                  finishPath: [13],
+                  foffset: 0
+                })
+              ),
+              NamedChain.bundle((data: any) => {
+                const root = data.inline.element();
+                const path = data.path;
+                const range = Cursors.calculate(root, path);
+                range.start().dom().scrollIntoView();
+                return Result.value(data);
+              }),
 
-                // Update the anchor
-                NamedChain.write('anchor', cSetupAnchor)
-              ]
-            ),
+              // Update the anchor
+              NamedChain.write('anchor', cSetupAnchor)
+            ]),
 
-            PositionTestUtils.cTestSink(
-              'Relative, Selected: 13rd paragraph, large scroll, no editor scroll',
-              'relative'
-            ),
-            PositionTestUtils.cTestSink(
-              'Fixed, Selected: 13rd paragraph, large scroll, no editor scroll',
-              'fixed'
-            )
+            PositionTestUtils.cTestSink('Relative, Selected: 13rd paragraph, large scroll, no editor scroll', 'relative'),
+            PositionTestUtils.cTestSink('Fixed, Selected: 13rd paragraph, large scroll, no editor scroll', 'fixed')
           ])
         ])
       ];

@@ -23,17 +23,14 @@ UnitTest.asynctest('MouseTest', function (success, failure) {
   let repository = [];
 
   // TODO: Free handlers.
-  const handlers = Arr.bind(
-    ['mousedown', 'mouseup', 'mouseover', 'click', 'focus', 'contextmenu'],
-    (evt) => [
-      DomEvent.bind(container, evt, () => {
-        repository.push('container.' + evt);
-      }),
-      DomEvent.bind(input, evt, () => {
-        repository.push('input.' + evt);
-      })
-    ]
-  );
+  const handlers = Arr.bind(['mousedown', 'mouseup', 'mouseover', 'click', 'focus', 'contextmenu'], (evt) => [
+    DomEvent.bind(container, evt, () => {
+      repository.push('container.' + evt);
+    }),
+    DomEvent.bind(input, evt, () => {
+      repository.push('input.' + evt);
+    })
+  ]);
 
   const clearRepository = Step.sync(() => {
     repository = [];
@@ -44,12 +41,7 @@ UnitTest.asynctest('MouseTest', function (success, failure) {
       Assertions.assertEq(label, expected, repository);
     });
 
-  const runStep = (label, expected, step) =>
-    GeneralSteps.sequence([
-      clearRepository,
-      step,
-      assertRepository(label, expected)
-    ]);
+  const runStep = (label, expected, step) => GeneralSteps.sequence([clearRepository, step, assertRepository(label, expected)]);
 
   const isUnfocusedFirefox = () =>
     // Focus events are not fired until the window has focus: https://bugzilla.mozilla.org/show_bug.cgi?id=566671
@@ -61,11 +53,7 @@ UnitTest.asynctest('MouseTest', function (success, failure) {
     {},
     [
       runStep('Initial test', [], Step.pass),
-      runStep(
-        'sClickOn (container > input)',
-        ['input.click', 'container.click'],
-        Mouse.sClickOn(container, 'input')
-      ),
+      runStep('sClickOn (container > input)', ['input.click', 'container.click'], Mouse.sClickOn(container, 'input')),
 
       runStep(
         'point test',
@@ -87,14 +75,7 @@ UnitTest.asynctest('MouseTest', function (success, failure) {
               'input.focus'
             ]
           : isUnfocusedFirefox()
-          ? [
-              'input.mousedown',
-              'container.mousedown',
-              'input.mouseup',
-              'container.mouseup',
-              'input.click',
-              'container.click'
-            ]
+          ? ['input.mousedown', 'container.mousedown', 'input.mouseup', 'container.mouseup', 'input.click', 'container.click']
           : [
               'input.focus',
               'input.mousedown',
@@ -110,40 +91,17 @@ UnitTest.asynctest('MouseTest', function (success, failure) {
       // Running again won't call focus
       runStep(
         'sTrueClickOn (container > input)',
-        [
-          'input.mousedown',
-          'container.mousedown',
-          'input.mouseup',
-          'container.mouseup',
-          'input.click',
-          'container.click'
-        ],
+        ['input.mousedown', 'container.mousedown', 'input.mouseup', 'container.mouseup', 'input.click', 'container.click'],
         Mouse.sTrueClickOn(container, 'input')
       ),
 
-      runStep(
-        'sHoverOn (container > input)',
-        ['input.mouseover', 'container.mouseover'],
-        Mouse.sHoverOn(container, 'input')
-      ),
+      runStep('sHoverOn (container > input)', ['input.mouseover', 'container.mouseover'], Mouse.sHoverOn(container, 'input')),
 
-      runStep(
-        'sContextMenu (container > input)',
-        ['input.contextmenu', 'container.contextmenu'],
-        Mouse.sContextMenuOn(container, 'input')
-      ),
+      runStep('sContextMenu (container > input)', ['input.contextmenu', 'container.contextmenu'], Mouse.sContextMenuOn(container, 'input')),
 
-      runStep(
-        'cClick input',
-        ['input.click', 'container.click'],
-        Chain.asStep(container, [UiFinder.cFindIn('input'), Mouse.cClick])
-      ),
+      runStep('cClick input', ['input.click', 'container.click'], Chain.asStep(container, [UiFinder.cFindIn('input'), Mouse.cClick])),
 
-      runStep(
-        'cClickOn (container > input)',
-        ['input.click', 'container.click'],
-        Chain.asStep(container, [Mouse.cClickOn('input')])
-      ),
+      runStep('cClickOn (container > input)', ['input.click', 'container.click'], Chain.asStep(container, [Mouse.cClickOn('input')])),
 
       runStep(
         'cContextMenu input',

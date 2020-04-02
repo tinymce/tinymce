@@ -3,10 +3,7 @@ import { Pipeline } from '@ephox/agar';
 import Node from 'tinymce/core/api/html/Node';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   const ok = function (value, label?) {
@@ -74,16 +71,8 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (
     ok(root.lastChild === node, 'root.firstChild');
     ok(root.firstChild.next === node, 'root.firstChild.next');
     LegacyUnit.equal(root.firstChild.prev, undefined, 'root.firstChild.prev');
-    LegacyUnit.equal(
-      root.firstChild.firstChild,
-      undefined,
-      'root.firstChild.firstChild'
-    );
-    LegacyUnit.equal(
-      root.firstChild.lastChild,
-      undefined,
-      'root.firstChild.lastChild'
-    );
+    LegacyUnit.equal(root.firstChild.firstChild, undefined, 'root.firstChild.firstChild');
+    LegacyUnit.equal(root.firstChild.lastChild, undefined, 'root.firstChild.lastChild');
     ok(node2.parent === root, 'node2.parent === root');
     ok(node2.next === node, 'node2.next');
     LegacyUnit.equal(node2.prev, undefined, 'node2.prev');
@@ -443,19 +432,11 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (
 
     root = new Node('#frag', 11);
     node1 = root.append(new Node('span', 1));
-    LegacyUnit.equal(
-      root.isEmpty({ img: 1 }, {}, isSpan),
-      false,
-      'Should be false since the predicate says true.'
-    );
+    LegacyUnit.equal(root.isEmpty({ img: 1 }, {}, isSpan), false, 'Should be false since the predicate says true.');
 
     root = new Node('#frag', 11);
     node1 = root.append(new Node('b', 1));
-    LegacyUnit.equal(
-      root.isEmpty({ img: 1 }, {}, isSpan),
-      true,
-      'Should be true since the predicate says false.'
-    );
+    LegacyUnit.equal(root.isEmpty({ img: 1 }, {}, isSpan), true, 'Should be true since the predicate says false.');
   });
 
   Pipeline.async(

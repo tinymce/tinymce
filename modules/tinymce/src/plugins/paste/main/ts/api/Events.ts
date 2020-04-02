@@ -8,12 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import { HTMLElement } from '@ephox/dom-globals';
 
-const firePastePreProcess = function (
-  editor: Editor,
-  html: string,
-  internal: boolean,
-  isWordHtml: boolean
-) {
+const firePastePreProcess = function (editor: Editor, html: string, internal: boolean, isWordHtml: boolean) {
   return editor.fire('PastePreProcess', {
     content: html,
     internal,
@@ -21,12 +16,7 @@ const firePastePreProcess = function (
   });
 };
 
-const firePastePostProcess = function (
-  editor: Editor,
-  node: HTMLElement,
-  internal: boolean,
-  isWordHtml: boolean
-) {
+const firePastePostProcess = function (editor: Editor, node: HTMLElement, internal: boolean, isWordHtml: boolean) {
   return editor.fire('PastePostProcess', {
     node,
     internal,
@@ -42,9 +32,4 @@ const firePaste = function (editor: Editor, ieFake: boolean) {
   return editor.fire('paste', { ieFake });
 };
 
-export {
-  firePastePreProcess,
-  firePastePostProcess,
-  firePastePlainTextToggle,
-  firePaste
-};
+export { firePastePreProcess, firePastePostProcess, firePastePlainTextToggle, firePaste };

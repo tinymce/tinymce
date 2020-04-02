@@ -31,11 +31,7 @@ export default {
     api.close();
   },
   onAction: (api, detail) => {
-    if (
-      detail.name === 'alert-banner' &&
-      detail.value &&
-      detail.value.substr(0, 4) === 'http'
-    ) {
+    if (detail.name === 'alert-banner' && detail.value && detail.value.substr(0, 4) === 'http') {
       window.open(detail.value);
     }
   }

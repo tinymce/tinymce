@@ -38,11 +38,7 @@ UnitTest.test('Obj.map: unit test', () => {
 
   checkMapToArray([], {}, stringify);
   checkMapToArray(['a :: a'], { a: 'a' }, stringify);
-  checkMapToArray(
-    ['a :: a', 'b :: b', 'c :: c'],
-    { a: 'a', b: 'b', c: 'c' },
-    stringify
-  );
+  checkMapToArray(['a :: a', 'b :: b', 'c :: c'], { a: 'a', b: 'b', c: 'c' }, stringify);
 });
 
 UnitTest.test('Obj.map: map id obj = obj', () => {
@@ -54,22 +50,15 @@ UnitTest.test('Obj.map: map id obj = obj', () => {
   );
 });
 
-UnitTest.test(
-  'map constant obj means that values(obj) are all the constant',
-  () => {
-    fc.assert(
-      fc.property(
-        fc.dictionary(fc.asciiString(), fc.integer()),
-        fc.integer(),
-        (obj, x) => {
-          const output = Obj.map(obj, Fun.constant(x));
-          const values = Obj.values(output);
-          return Arr.forall(values, (v) => v === x);
-        }
-      )
-    );
-  }
-);
+UnitTest.test('map constant obj means that values(obj) are all the constant', () => {
+  fc.assert(
+    fc.property(fc.dictionary(fc.asciiString(), fc.integer()), fc.integer(), (obj, x) => {
+      const output = Obj.map(obj, Fun.constant(x));
+      const values = Obj.values(output);
+      return Arr.forall(values, (v) => v === x);
+    })
+  );
+});
 
 UnitTest.test('tupleMap obj (x, i) -> { k: i, v: x }', () => {
   fc.assert(

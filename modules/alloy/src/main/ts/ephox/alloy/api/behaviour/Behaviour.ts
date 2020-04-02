@@ -39,9 +39,7 @@ export type BehaviourModeSpec<
   E extends BehaviourTypes.BehaviourExtraRecord<E> = {}
 > = BehaviourTypes.BehaviourModeSpec<D, S, A, E>;
 
-const derive = (
-  capabilities: Array<NamedConfiguredBehaviour<any, any, any>>
-): AlloyBehaviourRecord => Objects.wrapAll(capabilities);
+const derive = (capabilities: Array<NamedConfiguredBehaviour<any, any, any>>): AlloyBehaviourRecord => Objects.wrapAll(capabilities);
 
 const simpleSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.strict('fields'),
@@ -61,19 +59,8 @@ const create = <
 >(
   data: AlloyBehaviourConfig<D, S, A, E>
 ) => {
-  const value = ValueSchema.asRawOrDie(
-    'Creating behaviour: ' + data.name,
-    simpleSchema,
-    data
-  );
-  return CommonBehaviour.create<C, D, S, A, E>(
-    value.fields,
-    value.name,
-    value.active,
-    value.apis,
-    value.extra,
-    value.state
-  );
+  const value = ValueSchema.asRawOrDie('Creating behaviour: ' + data.name, simpleSchema, data);
+  return CommonBehaviour.create<C, D, S, A, E>(value.fields, value.name, value.active, value.apis, value.extra, value.state);
 };
 
 const modeSchema: Processor = ValueSchema.objOfOnly([
@@ -95,11 +82,7 @@ const createModes = <
 >(
   data: BehaviourModeSpec<D, S, A, E>
 ) => {
-  const value = ValueSchema.asRawOrDie(
-    'Creating behaviour: ' + data.name,
-    modeSchema,
-    data
-  );
+  const value = ValueSchema.asRawOrDie('Creating behaviour: ' + data.name, modeSchema, data);
   return CommonBehaviour.createModes<C, D, S, A, E>(
     ValueSchema.choose(value.branchKey, value.branches),
     value.name,

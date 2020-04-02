@@ -27,26 +27,11 @@ export interface DragApi {
   delayDrop: (evt?: EventArgs) => void;
 }
 
-export const DragMode: (value: DragMode) => DragMode = Contracts.exactly([
-  'compare',
-  'extract',
-  'mutate',
-  'sink'
-]);
+export const DragMode: (value: DragMode) => DragMode = Contracts.exactly(['compare', 'extract', 'mutate', 'sink']);
 
-export const DragSink: (value: DragSink) => DragSink = Contracts.exactly([
-  'element',
-  'start',
-  'stop',
-  'destroy'
-]);
+export const DragSink: (value: DragSink) => DragSink = Contracts.exactly(['element', 'start', 'stop', 'destroy']);
 
-export const DragApi: (value: DragApi) => DragApi = Contracts.exactly([
-  'forceDrop',
-  'drop',
-  'move',
-  'delayDrop'
-]);
+export const DragApi: (value: DragApi) => DragApi = Contracts.exactly(['forceDrop', 'drop', 'move', 'delayDrop']);
 
 // API for backwards compatibility
 const mode = DragMode;

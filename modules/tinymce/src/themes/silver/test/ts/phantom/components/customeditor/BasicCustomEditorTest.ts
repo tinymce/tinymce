@@ -1,12 +1,5 @@
 // TODO: Expose properly through alloy.
-import {
-  ApproxStructure,
-  Assertions,
-  Logger,
-  Step,
-  Waiter,
-  Cleaner
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Logger, Step, Waiter, Cleaner } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Global, Cell } from '@ephox/katamari';
@@ -86,11 +79,7 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
         component.element()
       ),
 
-      RepresentingSteps.sAssertRoundtrip(
-        'Roundtripping before initialised',
-        component,
-        'foo'
-      ),
+      RepresentingSteps.sAssertRoundtrip('Roundtripping before initialised', component, 'foo'),
 
       Logger.t(
         'Set to initialised',
@@ -116,11 +105,7 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
         )
       ),
 
-      RepresentingSteps.sAssertRoundtrip(
-        'Roundtripping after initialised',
-        component,
-        'bar'
-      )
+      RepresentingSteps.sAssertRoundtrip('Roundtripping after initialised', component, 'bar')
     ],
     cleanup.wrap(success),
     cleanup.wrap(failure)

@@ -14,9 +14,7 @@ UnitTest.test('DomDescentTest', function () {
 
   const toRef = function (v: number[], k: string) {
     return {
-      element: Hierarchy.follow(root, v).getOrDie(
-        'Could not find path: ' + v + ' for key: ' + k
-      ),
+      element: Hierarchy.follow(root, v).getOrDie('Could not find path: ' + v + ' for key: ' + k),
       path: v
     };
   };
@@ -40,9 +38,7 @@ UnitTest.test('DomDescentTest', function () {
   }
 
   const check = function (expected: CheckItem, actual: SpotPoint<Element>) {
-    const aPath = Hierarchy.path(root, actual.element()).getOrDie(
-      'Could not extract path'
-    );
+    const aPath = Hierarchy.path(root, actual.element()).getOrDie('Could not extract path');
     assert.eq(expected.path, aPath);
     assert.eq(expected.offset, actual.offset());
   };
@@ -55,13 +51,7 @@ UnitTest.test('DomDescentTest', function () {
   // But freefalling into div should take you to first paragraph text.
   check({ path: [1, 0], offset: 0 }, DomDescent.freefallLtr(refs.div.element));
   // But freefalling (RTL) into div should take you to the end of last cell
-  check(
-    { path: refs.tdtext.path, offset: 'Hi'.length },
-    DomDescent.freefallRtl(refs.div.element)
-  );
+  check({ path: refs.tdtext.path, offset: 'Hi'.length }, DomDescent.freefallRtl(refs.div.element));
   // Frefalling into the table should take you to the start of the first cell
-  check(
-    { path: refs.tdtext.path, offset: ''.length },
-    DomDescent.freefallLtr(refs.table.element)
-  );
+  check({ path: refs.tdtext.path, offset: ''.length }, DomDescent.freefallLtr(refs.table.element));
 });

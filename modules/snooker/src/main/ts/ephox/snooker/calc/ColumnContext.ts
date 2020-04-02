@@ -7,13 +7,7 @@ type MiddleHandler<T> = (prev: number, index: number, next: number) => T;
 type RightHandler<T> = (prev: number, index: number) => T;
 
 export interface ColumnContext {
-  fold: <T>(
-    none: NoneHandler<T>,
-    only: OnlyHandler<T>,
-    left: LeftHandler<T>,
-    middle: MiddleHandler<T>,
-    right: RightHandler<T>
-  ) => T;
+  fold: <T>(none: NoneHandler<T>, only: OnlyHandler<T>, left: LeftHandler<T>, middle: MiddleHandler<T>, right: RightHandler<T>) => T;
   match: <T>(branches: {
     none: NoneHandler<T>;
     only: OnlyHandler<T>;

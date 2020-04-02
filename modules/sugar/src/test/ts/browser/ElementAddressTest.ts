@@ -52,12 +52,8 @@ UnitTest.test('ElementAddressTest', function () {
   Insert.append(Body.body(), page);
 
   const checkChild = function (expected, path) {
-    const element = Hierarchy.follow(page, path).getOrDie(
-      'Could not find path: ' + path.join(',')
-    );
-    const actual = ElementAddress.childOf(element, page).getOrDie(
-      'Expected to find in line to ancestor'
-    );
+    const element = Hierarchy.follow(page, path).getOrDie('Could not find path: ' + path.join(','));
+    const actual = ElementAddress.childOf(element, page).getOrDie('Expected to find in line to ancestor');
     Assert.eq('eq', expected, toStr(actual));
   };
 
@@ -83,12 +79,8 @@ UnitTest.test('ElementAddressTest', function () {
   checkChild('p#p1', [0, 1, 0]);
 
   const checkInParentOfSelector = function (expected, startPath, selector) {
-    const element = Hierarchy.follow(page, startPath).getOrDie(
-      'Could not find: ' + startPath
-    );
-    const actual = ElementAddress.selectorsInParent(element, selector).getOrDie(
-      'None for inParent'
-    );
+    const element = Hierarchy.follow(page, startPath).getOrDie('Could not find: ' + startPath);
+    const actual = ElementAddress.selectorsInParent(element, selector).getOrDie('None for inParent');
     Assert.eq('eq', expected.parent, toStr(actual.parent()));
     Assert.eq('eq', expected.children, Arr.map(actual.children(), toStr));
     Assert.eq('eq', expected.element, toStr(actual.element()));
@@ -96,12 +88,8 @@ UnitTest.test('ElementAddressTest', function () {
   };
 
   const checkInParentOfAny = function (expected, startPath) {
-    const element = Hierarchy.follow(page, startPath).getOrDie(
-      'Could not find: ' + startPath
-    );
-    const actual = ElementAddress.indexInParent(element).getOrDie(
-      'None for inParent'
-    );
+    const element = Hierarchy.follow(page, startPath).getOrDie('Could not find: ' + startPath);
+    const actual = ElementAddress.indexInParent(element).getOrDie('None for inParent');
     Assert.eq('eq', expected.parent, toStr(actual.parent()));
     Assert.eq('eq', expected.children, Arr.map(actual.children(), toStr));
     Assert.eq('eq', expected.element, toStr(actual.element()));
@@ -109,9 +97,7 @@ UnitTest.test('ElementAddressTest', function () {
   };
 
   const checkNoneInParentOfSelector = function (startPath, ancestorSelector) {
-    const element = Hierarchy.follow(page, startPath).getOrDie(
-      'Could not find: ' + startPath
-    );
+    const element = Hierarchy.follow(page, startPath).getOrDie('Could not find: ' + startPath);
     const actual = ElementAddress.selectorsInParent(element, ancestorSelector);
     KAssert.eqNone('should be none', actual);
   };
@@ -154,68 +140,32 @@ UnitTest.test('ElementAddressTest', function () {
   checkInParentOfAny(
     {
       parent: 'p#p1',
-      children: [
-        '#text',
-        'span#s1',
-        '#text',
-        'span#s2',
-        '#text',
-        'span#s3',
-        '#text'
-      ],
+      children: ['#text', 'span#s1', '#text', 'span#s2', '#text', 'span#s3', '#text'],
       element: 'span#s2',
       index: 3
     },
     [0, 3]
   );
 
-  const checkInAncestorOfSelector = function (
-    expected,
-    startPath,
-    ancestorSelector,
-    descendantSelector
-  ) {
-    const element = Hierarchy.follow(page, startPath).getOrDie(
-      'Could not find: ' + startPath
-    );
-    const actual = ElementAddress.descendantsInAncestor(
-      element,
-      ancestorSelector,
-      descendantSelector
-    ).getOrDie('None for inAncestor');
+  const checkInAncestorOfSelector = function (expected, startPath, ancestorSelector, descendantSelector) {
+    const element = Hierarchy.follow(page, startPath).getOrDie('Could not find: ' + startPath);
+    const actual = ElementAddress.descendantsInAncestor(element, ancestorSelector, descendantSelector).getOrDie('None for inAncestor');
     Assert.eq('eq', expected.ancestor, toStr(actual.ancestor()));
     Assert.eq('eq', expected.descendants, Arr.map(actual.descendants(), toStr));
     Assert.eq('eq', expected.element, toStr(actual.element()));
     Assert.eq('eq', expected.index, actual.index());
   };
 
-  const checkNoneInAncestorOfSelector = function (
-    startPath,
-    ancestorSelector,
-    descendantSelector
-  ) {
-    const element = Hierarchy.follow(page, startPath).getOrDie(
-      'Could not find: ' + startPath
-    );
-    const actual = ElementAddress.descendantsInAncestor(
-      element,
-      ancestorSelector,
-      descendantSelector
-    );
+  const checkNoneInAncestorOfSelector = function (startPath, ancestorSelector, descendantSelector) {
+    const element = Hierarchy.follow(page, startPath).getOrDie('Could not find: ' + startPath);
+    const actual = ElementAddress.descendantsInAncestor(element, ancestorSelector, descendantSelector);
     KAssert.eqNone('should be none', actual);
   };
 
   checkInAncestorOfSelector(
     {
       ancestor: 'table',
-      descendants: [
-        '<th>Name</th>',
-        '<th>Occupation</th>',
-        '<th>Entitlement</th>',
-        '<th>A</th>',
-        '<th>B</th>',
-        '<th>C</th>'
-      ],
+      descendants: ['<th>Name</th>', '<th>Occupation</th>', '<th>Entitlement</th>', '<th>A</th>', '<th>B</th>', '<th>C</th>'],
       element: '<th>B</th>',
       index: 4
     },
@@ -239,11 +189,7 @@ UnitTest.test('ElementAddressTest', function () {
   checkInAncestorOfSelector(
     {
       ancestor: 'thead',
-      descendants: [
-        '<th>Name</th>',
-        '<th>Occupation</th>',
-        '<th>Entitlement</th>'
-      ],
+      descendants: ['<th>Name</th>', '<th>Occupation</th>', '<th>Entitlement</th>'],
       element: '<th>Entitlement</th>',
       index: 2
     },
@@ -258,34 +204,12 @@ UnitTest.test('ElementAddressTest', function () {
     const alpha = Element.fromTag('div');
     const beta = Element.fromTag('div');
     const gamma = Element.fromTag('div');
-    KAssert.eqNone(
-      'Expected nothing in list.',
-      ElementAddress.indexOf([], alpha)
-    );
-    KAssert.eqSome(
-      'alpha indexOf([alpha]) = 0',
-      0,
-      ElementAddress.indexOf([alpha], alpha)
-    );
-    KAssert.eqNone(
-      'Alpha not in list [beta]',
-      ElementAddress.indexOf([beta], alpha)
-    );
-    KAssert.eqSome(
-      'beta indexOf([alpha,beta]) = 1',
-      1,
-      ElementAddress.indexOf([alpha, beta], beta)
-    );
-    KAssert.eqSome(
-      'gamma indexOf([alpha,beta,gamma]) = 1',
-      2,
-      ElementAddress.indexOf([alpha, beta, gamma], gamma)
-    );
-    KAssert.eqSome(
-      'beta indexOf([alpha,beta,gamma]) = 1',
-      1,
-      ElementAddress.indexOf([alpha, beta, gamma], beta)
-    );
+    KAssert.eqNone('Expected nothing in list.', ElementAddress.indexOf([], alpha));
+    KAssert.eqSome('alpha indexOf([alpha]) = 0', 0, ElementAddress.indexOf([alpha], alpha));
+    KAssert.eqNone('Alpha not in list [beta]', ElementAddress.indexOf([beta], alpha));
+    KAssert.eqSome('beta indexOf([alpha,beta]) = 1', 1, ElementAddress.indexOf([alpha, beta], beta));
+    KAssert.eqSome('gamma indexOf([alpha,beta,gamma]) = 1', 2, ElementAddress.indexOf([alpha, beta, gamma], gamma));
+    KAssert.eqSome('beta indexOf([alpha,beta,gamma]) = 1', 1, ElementAddress.indexOf([alpha, beta, gamma], beta));
   })();
 
   Remove.remove(page);

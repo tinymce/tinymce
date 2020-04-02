@@ -8,11 +8,9 @@
 import { Arr, Unicode } from '@ephox/katamari';
 
 // Don't compare other unicode spaces here, as we're only concerned about whitespace the browser would collapse
-const isCollapsibleWhitespace = (c: string): boolean =>
-  ' \f\t\v'.indexOf(c) !== -1;
+const isCollapsibleWhitespace = (c: string): boolean => ' \f\t\v'.indexOf(c) !== -1;
 const isNewLineChar = (c: string): boolean => c === '\n' || c === '\r';
-const isNewline = (text: string, idx: number): boolean =>
-  idx < text.length && idx >= 0 ? isNewLineChar(text[idx]) : false;
+const isNewline = (text: string, idx: number): boolean => (idx < text.length && idx >= 0 ? isNewLineChar(text[idx]) : false);
 
 // Converts duplicate whitespace to alternating space/nbsps
 const normalizeWhitespace = (text: string): string => {
@@ -23,12 +21,7 @@ const normalizeWhitespace = (text: string): string => {
       if (isCollapsibleWhitespace(c) || c === Unicode.nbsp) {
         // If the previous char is a space, we are at the start or end, or if the next char is a new line char, then we need
         // to convert the space to a nbsp
-        if (
-          acc.pcIsSpace ||
-          acc.str === '' ||
-          acc.str.length === text.length - 1 ||
-          isNewline(text, acc.str.length + 1)
-        ) {
+        if (acc.pcIsSpace || acc.str === '' || acc.str.length === text.length - 1 || isNewline(text, acc.str.length + 1)) {
           return { pcIsSpace: false, str: acc.str + Unicode.nbsp };
         } else {
           return { pcIsSpace: true, str: acc.str + ' ' };

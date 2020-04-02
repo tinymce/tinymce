@@ -11,12 +11,7 @@ UnitTest.test('WordDecisionTest', function () {
         TextGene('this_is_', 'This is '),
         Gene('br1', 'br'),
         TextGene('going_', 'going '),
-        Gene('s1', 'span', [
-          TextGene('to', 'to'),
-          Gene('b1', 'b', [TextGene('_b', ' b')]),
-          TextGene('e', 'e'),
-          TextGene('_more', ' more')
-        ])
+        Gene('s1', 'span', [TextGene('to', 'to'), Gene('b1', 'b', [TextGene('_b', ' b')]), TextGene('e', 'e'), TextGene('_more', ' more')])
       ])
     ])
   );
@@ -29,12 +24,7 @@ UnitTest.test('WordDecisionTest', function () {
     _currLanguage: Option<string>
   ) {
     const isCustomBoundary = Fun.constant(false);
-    const actual = WordDecision.decide(
-      universe,
-      universe.find(universe.get(), id).getOrDie(),
-      slicer,
-      isCustomBoundary
-    );
+    const actual = WordDecision.decide(universe, universe.find(universe.get(), id).getOrDie(), slicer, isCustomBoundary);
     assert.eq(
       items,
       Arr.map(actual.items, function (item) {

@@ -5,17 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AddEventsBehaviour,
-  AlloyEvents,
-  Behaviour,
-  Container,
-  GuiFactory,
-  Keying,
-  Toggling,
-  Toolbar,
-  ToolbarGroup
-} from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, Container, GuiFactory, Keying, Toggling, Toolbar, ToolbarGroup } from '@ephox/alloy';
 import { Arr, Cell, Fun } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 
@@ -26,16 +16,9 @@ import * as UiDomFactory from '../util/UiDomFactory';
 
 export default function () {
   const makeGroup = function (gSpec) {
-    const scrollClass =
-      gSpec.scrollable === true ? '${prefix}-toolbar-scrollable-group' : '';
+    const scrollClass = gSpec.scrollable === true ? '${prefix}-toolbar-scrollable-group' : '';
     return {
-      dom: UiDomFactory.dom(
-        '<div aria-label="' +
-          gSpec.label +
-          '" class="${prefix}-toolbar-group ' +
-          scrollClass +
-          '"></div>'
-      ),
+      dom: UiDomFactory.dom('<div aria-label="' + gSpec.label + '" class="${prefix}-toolbar-group ' + scrollClass + '"></div>'),
 
       tgroupBehaviours: Behaviour.derive([
         AddEventsBehaviour.config(

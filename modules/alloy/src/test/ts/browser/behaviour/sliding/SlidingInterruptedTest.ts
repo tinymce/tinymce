@@ -54,35 +54,19 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
       ),
     (doc, _body, _gui, component, _store) => {
       const sIsGrowing = Step.sync(() => {
-        Assertions.assertEq(
-          'Ensuring still growing',
-          true,
-          Class.has(component.element(), 'test-sliding-width-growing')
-        );
+        Assertions.assertEq('Ensuring still growing', true, Class.has(component.element(), 'test-sliding-width-growing'));
       });
 
       const sIsNotGrowing = Step.sync(() => {
-        Assertions.assertEq(
-          'Ensuring stopped growing',
-          false,
-          Class.has(component.element(), 'test-sliding-width-growing')
-        );
+        Assertions.assertEq('Ensuring stopped growing', false, Class.has(component.element(), 'test-sliding-width-growing'));
       });
 
       const sIsShrinking = Step.sync(() => {
-        Assertions.assertEq(
-          'Ensuring still shrinking',
-          true,
-          Class.has(component.element(), 'test-sliding-width-shrinking')
-        );
+        Assertions.assertEq('Ensuring still shrinking', true, Class.has(component.element(), 'test-sliding-width-shrinking'));
       });
 
       const sIsNotShrinking = Step.sync(() => {
-        Assertions.assertEq(
-          'Ensuring stopped shrinking',
-          false,
-          Class.has(component.element(), 'test-sliding-width-shrinking')
-        );
+        Assertions.assertEq('Ensuring stopped shrinking', false, Class.has(component.element(), 'test-sliding-width-shrinking'));
       });
 
       const sGrow = Step.sync(() => Sliding.grow(component));
@@ -91,49 +75,37 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
       return [
         GuiSetup.mAddStyles(doc, slidingStyles),
 
-        Log.stepsAsStep('TBA', 'Grow should have growing and not shrinking', [
+        Log.stepsAsStep('TBA', 'Grow should have growing and not shrinking', [sGrow, sIsGrowing, sIsNotShrinking]),
+
+        Step.wait(100),
+
+        Log.stepsAsStep('TBA', 'Shrink during a grow should have shrinking and not growing', [sShrink, sIsNotGrowing, sIsShrinking]),
+
+        Step.wait(100),
+
+        Log.stepsAsStep('TBA', 'Grow while shrinking should have growing and not shrinking', [
+          Step.stateful((value, next, _die) => {
+            next({
+              ...value,
+              width: Width.get(component.element())
+            });
+          }),
           sGrow,
+          Logger.t(
+            'Check when the shrinking bar starts growing again, its width does not jump to either 0 or max',
+            Step.stateful((value, next, _die) => {
+              const actualWidth = Width.get(component.element());
+              Assertions.assertEq(
+                `Width should stay about the same. Should have been about: ${value.width}px, was: ${actualWidth}px`,
+                true,
+                Math.abs(actualWidth - value.width) < 20
+              );
+              next(value);
+            })
+          ),
           sIsGrowing,
           sIsNotShrinking
-        ]),
-
-        Step.wait(100),
-
-        Log.stepsAsStep(
-          'TBA',
-          'Shrink during a grow should have shrinking and not growing',
-          [sShrink, sIsNotGrowing, sIsShrinking]
-        ),
-
-        Step.wait(100),
-
-        Log.stepsAsStep(
-          'TBA',
-          'Grow while shrinking should have growing and not shrinking',
-          [
-            Step.stateful((value, next, _die) => {
-              next({
-                ...value,
-                width: Width.get(component.element())
-              });
-            }),
-            sGrow,
-            Logger.t(
-              'Check when the shrinking bar starts growing again, its width does not jump to either 0 or max',
-              Step.stateful((value, next, _die) => {
-                const actualWidth = Width.get(component.element());
-                Assertions.assertEq(
-                  `Width should stay about the same. Should have been about: ${value.width}px, was: ${actualWidth}px`,
-                  true,
-                  Math.abs(actualWidth - value.width) < 20
-                );
-                next(value);
-              })
-            ),
-            sIsGrowing,
-            sIsNotShrinking
-          ]
-        )
+        ])
       ];
     },
     () => {

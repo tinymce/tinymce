@@ -24,28 +24,17 @@ export default () => {
       // required by its behaviours and put it in the cache.
       const info = {
         events: Obj.hasNonNullableKey(spec, 'events') ? spec.events : {},
-        eventOrder: Obj.hasNonNullableKey(spec, 'eventOrder')
-          ? spec.eventOrder
-          : {}
+        eventOrder: Obj.hasNonNullableKey(spec, 'eventOrder') ? spec.eventOrder : {}
       };
 
       // NOTE: Note all behaviours are supported at the moment
-      const bInfo = CompBehaviours.generateFrom(spec, [
-        Toggling,
-        Dragging,
-        Pinching
-      ]);
+      const bInfo = CompBehaviours.generateFrom(spec, [Toggling, Dragging, Pinching]);
       const baseEvents = {
         'alloy.base.behaviour': info.events
       };
 
       const bData = BehaviourBlob.getData(bInfo);
-      return ComponentEvents.combine(
-        bData,
-        info.eventOrder,
-        [Toggling, Dragging, Pinching],
-        baseEvents
-      ).getOrDie();
+      return ComponentEvents.combine(bData, info.eventOrder, [Toggling, Dragging, Pinching], baseEvents).getOrDie();
     });
 
     return {

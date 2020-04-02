@@ -2,12 +2,7 @@ import * as Attr from 'ephox/sugar/api/properties/Attr';
 import Element from 'ephox/sugar/api/node/Element';
 import Div from 'ephox/sugar/test/Div';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
-import {
-  Node,
-  Comment,
-  HTMLDivElement,
-  HTMLSpanElement
-} from '@ephox/dom-globals';
+import { Node, Comment, HTMLDivElement, HTMLSpanElement } from '@ephox/dom-globals';
 import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('AttrTest', function () {
@@ -66,61 +61,23 @@ UnitTest.test('AttrTest', function () {
 
   check('name', 'black', 'blue');
 
-  Assert.eq(
-    'hasNone',
-    true,
-    Attr.hasNone(Element.fromHtml<HTMLDivElement>('<div></div>'))
-  );
-  Assert.eq(
-    'hasNone',
-    true,
-    Attr.hasNone(Element.fromHtml<HTMLDivElement>('<div>Dog</div>'))
-  );
-  Assert.eq(
-    'hasNone',
-    true,
-    Attr.hasNone(
-      Element.fromHtml<HTMLDivElement>('<div><span id="cat"></span></div>')
-    )
-  );
-  Assert.eq(
-    'hasNone',
-    false,
-    Attr.hasNone(
-      Element.fromHtml<HTMLDivElement>(
-        '<div name="container"><span id="cat"></span></div>'
-      )
-    )
-  );
+  Assert.eq('hasNone', true, Attr.hasNone(Element.fromHtml<HTMLDivElement>('<div></div>')));
+  Assert.eq('hasNone', true, Attr.hasNone(Element.fromHtml<HTMLDivElement>('<div>Dog</div>')));
+  Assert.eq('hasNone', true, Attr.hasNone(Element.fromHtml<HTMLDivElement>('<div><span id="cat"></span></div>')));
+  Assert.eq('hasNone', false, Attr.hasNone(Element.fromHtml<HTMLDivElement>('<div name="container"><span id="cat"></span></div>')));
 
   /*
    * Note: IE returns true for an empty style attribute.
    * Assert.eq(false, Attr.hasNone(Element.fromHtml<HTMLDivElement>('<div style=""><span id="cat"></span></div>')));
    *
    */
-  Assert.eq(
-    'hasNone',
-    false,
-    Attr.hasNone(
-      Element.fromHtml<HTMLDivElement>(
-        '<div style="display: block;"><span id="cat"></span></div>'
-      )
-    )
-  );
+  Assert.eq('hasNone', false, Attr.hasNone(Element.fromHtml<HTMLDivElement>('<div style="display: block;"><span id="cat"></span></div>')));
 
-  Assert.eq(
-    'clone',
-    { id: 'cat' },
-    Attr.clone(Element.fromHtml<HTMLSpanElement>('<span id="cat"></span>'))
-  );
+  Assert.eq('clone', { id: 'cat' }, Attr.clone(Element.fromHtml<HTMLSpanElement>('<span id="cat"></span>')));
   Assert.eq(
     'clone',
     { 'name': 'foo', 'data-ephox-foo': 'bar' },
-    Attr.clone(
-      Element.fromHtml<HTMLSpanElement>(
-        '<span name="foo" data-ephox-foo="bar"></span>'
-      )
-    )
+    Attr.clone(Element.fromHtml<HTMLSpanElement>('<span name="foo" data-ephox-foo="bar"></span>'))
   );
 
   Attr.set(c, 'tabindex', -1);

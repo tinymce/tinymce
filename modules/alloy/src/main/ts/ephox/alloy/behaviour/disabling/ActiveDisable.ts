@@ -13,16 +13,12 @@ const exhibit = (base: DomDefinitionDetail, disableConfig: DisableConfig) =>
   DomModification.nu({
     // Do not add the attribute yet, because it will depend on the node name
     // if we use "aria-disabled" or just "disabled"
-    classes: disableConfig.disabled
-      ? disableConfig.disableClass.map(Arr.pure).getOr([])
-      : []
+    classes: disableConfig.disabled ? disableConfig.disableClass.map(Arr.pure).getOr([]) : []
   });
 
 const events = (disableConfig: DisableConfig, disableState: Stateless) =>
   AlloyEvents.derive([
-    AlloyEvents.abort(SystemEvents.execute(), (component, _simulatedEvent) =>
-      DisableApis.isDisabled(component, disableConfig)
-    ),
+    AlloyEvents.abort(SystemEvents.execute(), (component, _simulatedEvent) => DisableApis.isDisabled(component, disableConfig)),
     Behaviour.loadEvent(disableConfig, disableState, DisableApis.onLoad)
   ]);
 

@@ -50,9 +50,7 @@ const insertTableHtml = (editor: Editor, cols: number, rows: number) => {
 };
 
 const insertTable = function (editor: Editor, cols: number, rows: number) {
-  editor.plugins.table
-    ? editor.plugins.table.insertTable(cols, rows)
-    : insertTableHtml(editor, cols, rows);
+  editor.plugins.table ? editor.plugins.table.insertTable(cols, rows) : insertTableHtml(editor, cols, rows);
 };
 
 const insertBlob = function (editor: Editor, base64: string, blob: Blob) {
@@ -62,9 +60,7 @@ const insertBlob = function (editor: Editor, base64: string, blob: Blob) {
   blobInfo = blobCache.create(Id.generate('mceu'), blob, base64);
   blobCache.add(blobInfo);
 
-  editor.insertContent(
-    editor.dom.createHTML('img', { src: blobInfo.blobUri() })
-  );
+  editor.insertContent(editor.dom.createHTML('img', { src: blobInfo.blobUri() }));
 };
 
 export { insertTable, insertBlob };

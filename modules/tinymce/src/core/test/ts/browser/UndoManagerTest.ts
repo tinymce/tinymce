@@ -8,10 +8,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import * as HtmlUtils from '../module/test/HtmlUtils';
 import * as KeyUtils from '../module/test/KeyUtils';
 
-UnitTest.asynctest('browser.tinymce.core.UndoManager', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failure) {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
@@ -320,17 +317,13 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (
     });
 
     editor.getBody().innerHTML =
-      'test' +
-      '<img src="about:blank" data-mce-selected="1" />' +
-      '<table data-mce-selected="1"><tr><td>x</td></tr></table>';
+      'test' + '<img src="about:blank" data-mce-selected="1" />' + '<table data-mce-selected="1"><tr><td>x</td></tr></table>';
 
     editor.undoManager.add();
     LegacyUnit.equal(count, 1);
     LegacyUnit.equal(
       HtmlUtils.cleanHtml(lastLevel.content),
-      'test' +
-        '<img src="about:blank">' +
-        '<table><tbody><tr><td>x</td></tr></tbody></table>'
+      'test' + '<img src="about:blank">' + '<table><tbody><tr><td>x</td></tr></tbody></table>'
     );
 
     editor.getBody().innerHTML =
@@ -371,10 +364,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (
     LegacyUnit.setSelection(editor, 'p', 4, 'p', 9);
     KeyUtils.type(editor, '\b');
 
-    LegacyUnit.equal(
-      HtmlUtils.cleanHtml(lastLevel.content),
-      '<p>some text</p>'
-    );
+    LegacyUnit.equal(HtmlUtils.cleanHtml(lastLevel.content), '<p>some text</p>');
     editor.fire('blur');
     LegacyUnit.equal(HtmlUtils.cleanHtml(lastLevel.content), '<p>some</p>');
 
@@ -404,10 +394,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (
     editor.setContent('<p>b</p>');
     editor.undoManager.add();
 
-    LegacyUnit.equal(
-      HtmlUtils.cleanHtml(lastEvt.lastLevel.content),
-      '<p>a</p>'
-    );
+    LegacyUnit.equal(HtmlUtils.cleanHtml(lastEvt.lastLevel.content), '<p>a</p>');
     LegacyUnit.equal(HtmlUtils.cleanHtml(lastEvt.level.content), '<p>b</p>');
 
     editor.on('BeforeAddUndo', blockEvent);
@@ -419,10 +406,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (
     editor.setContent('<p>c</p>');
     editor.undoManager.add(null, { data: 1 });
 
-    LegacyUnit.equal(
-      HtmlUtils.cleanHtml(lastEvt.lastLevel.content),
-      '<p>b</p>'
-    );
+    LegacyUnit.equal(HtmlUtils.cleanHtml(lastEvt.lastLevel.content), '<p>b</p>');
     LegacyUnit.equal(HtmlUtils.cleanHtml(lastEvt.level.content), '<p>c</p>');
     LegacyUnit.equal(lastEvt.originalEvent.data, 1);
     ok(!addUndoEvt, 'Event level produced when it should be blocked');
@@ -471,9 +455,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (
     ok(editor.isDirty(), 'Dirty state should be true');
   });
 
-  suite.test('ExecCommand while typing should produce undo level', function (
-    editor
-  ) {
+  suite.test('ExecCommand while typing should produce undo level', function (editor) {
     editor.undoManager.clear();
     editor.setDirty(false);
     editor.setContent('<p>a</p>');
@@ -491,9 +473,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (
     LegacyUnit.equal(editor.undoManager.data[2].content, '<p>aBC</p>');
   });
 
-  suite.test('transact while typing should produce undo level', function (
-    editor
-  ) {
+  suite.test('transact while typing should produce undo level', function (editor) {
     editor.undoManager.clear();
     editor.setDirty(false);
     editor.setContent('<p>a</p>');

@@ -6,10 +6,7 @@ import * as TestTheme from '../../module/test/theme/TestTheme';
 import * as TestUi from '../../module/test/ui/TestUi';
 import { TestHelpers } from '@ephox/alloy';
 
-UnitTest.asynctest('Browser Test: features.ListTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('Browser Test: features.ListTest', function (success, failure) {
   /* This test is going to create a toolbar with both list items on it */
   const body = Body.body();
 
@@ -21,24 +18,9 @@ UnitTest.asynctest('Browser Test: features.ListTest', function (
     success,
     failure
   ).use(function (realm, apis, toolbar, socket, buttons, onSuccess, onFailure) {
-    const sSetP1 = apis.sSetSelection(
-      [0, 0, 0],
-      'Thi'.length,
-      [0, 0, 0],
-      'Thi'.length
-    );
-    const sSetP2 = apis.sSetSelection(
-      [1, 0],
-      'Norma'.length,
-      [1, 0],
-      'Norma'.length
-    );
-    const sSetP3 = apis.sSetSelection(
-      [2, 0, 0],
-      'Bu'.length,
-      [2, 0, 0],
-      'Bu'.length
-    );
+    const sSetP1 = apis.sSetSelection([0, 0, 0], 'Thi'.length, [0, 0, 0], 'Thi'.length);
+    const sSetP2 = apis.sSetSelection([1, 0], 'Norma'.length, [1, 0], 'Norma'.length);
+    const sSetP3 = apis.sSetSelection([2, 0, 0], 'Bu'.length, [2, 0, 0], 'Bu'.length);
 
     const sCheckComponent = function (label, state) {
       return function (memento) {
@@ -48,14 +30,8 @@ UnitTest.asynctest('Browser Test: features.ListTest', function (
 
     const sCheckLists = function (situation, stateOfNumlist, stateOfBullist) {
       return GeneralSteps.sequence([
-        sCheckComponent(
-          'checking numlist: ' + situation,
-          stateOfNumlist
-        )(buttons.numlist),
-        sCheckComponent(
-          'checking bullist: ' + situation,
-          stateOfBullist
-        )(buttons.bullist)
+        sCheckComponent('checking numlist: ' + situation, stateOfNumlist)(buttons.numlist),
+        sCheckComponent('checking bullist: ' + situation, stateOfBullist)(buttons.bullist)
       ]);
     };
 
@@ -93,9 +69,7 @@ UnitTest.asynctest('Browser Test: features.ListTest', function (
           '.tinymce-mobile-icon-ordered-list:before { content: "ol"; }'
         ]),
         apis.sFocus(),
-        apis.sSetContent(
-          '<ol><li>This is an ordered list</li></ol><p>Normal paragraph</p><ul><li>Bullet list</li></ul>'
-        ),
+        apis.sSetContent('<ol><li>This is an ordered list</li></ol><p>Normal paragraph</p><ul><li>Bullet list</li></ul>'),
         sCheckP1('initial selection in ol'),
         sCheckP2('ol >>> p'),
         sCheckP3('p >>> ul'),

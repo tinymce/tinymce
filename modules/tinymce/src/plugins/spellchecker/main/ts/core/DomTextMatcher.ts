@@ -22,11 +22,7 @@ export interface DomTextMatcher {
   matchFromElement: (element: HTMLElement) => Match;
   elementFromMatch: (match: Match) => HTMLElement;
   find: (regex: RegExp, data: Record<string, string>) => DomTextMatcher;
-  add: (
-    start: number,
-    length: number,
-    data: Record<string, string>
-  ) => DomTextMatcher;
+  add: (start: number, length: number, data: Record<string, string>) => DomTextMatcher;
   wrap: (cb: Function) => DomTextMatcher;
   unwrap: (match?: Match) => DomTextMatcher;
   replace: (match: Match, text: string) => Range;
@@ -47,9 +43,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
 
   function createMatch(m, data) {
     if (!m[0]) {
-      throw new Error(
-        'findAndReplaceDOMText cannot handle zero-length matches'
-      );
+      throw new Error('findAndReplaceDOMText cannot handle zero-length matches');
     }
 
     return {
@@ -67,10 +61,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
       return node.data;
     }
 
-    if (
-      hiddenTextElementsMap[node.nodeName] &&
-      !blockElementsMap[node.nodeName]
-    ) {
+    if (hiddenTextElementsMap[node.nodeName] && !blockElementsMap[node.nodeName]) {
       return '';
     }
 
@@ -80,10 +71,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
 
     txt = '';
 
-    if (
-      blockElementsMap[node.nodeName] ||
-      shortEndedElementsMap[node.nodeName]
-    ) {
+    if (blockElementsMap[node.nodeName] || shortEndedElementsMap[node.nodeName]) {
       txt += '\n';
     }
 
@@ -116,11 +104,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
 
     out: while (true) {
       // eslint-disable-line no-constant-condition
-      if (
-        blockElementsMap[curNode.nodeName] ||
-        shortEndedElementsMap[curNode.nodeName] ||
-        isContentEditableFalse(curNode)
-      ) {
+      if (blockElementsMap[curNode.nodeName] || shortEndedElementsMap[curNode.nodeName] || isContentEditableFalse(curNode)) {
         atIndex++;
       }
 
@@ -167,11 +151,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
         if (!matchLocation) {
           break; // no more matches
         }
-      } else if (
-        (!hiddenTextElementsMap[curNode.nodeName] ||
-          blockElementsMap[curNode.nodeName]) &&
-        curNode.firstChild
-      ) {
+      } else if ((!hiddenTextElementsMap[curNode.nodeName] || blockElementsMap[curNode.nodeName]) && curNode.firstChild) {
         if (!isContentEditableFalse(curNode)) {
           // Move down
           curNode = curNode.firstChild;
@@ -235,9 +215,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
         parentNode = node.parentNode;
         if (range.startNodeIndex > 0) {
           // Add "before" text node (before the match)
-          before = doc.createTextNode(
-            node.data.substring(0, range.startNodeIndex)
-          );
+          before = doc.createTextNode(node.data.substring(0, range.startNodeIndex));
           parentNode.insertBefore(before, node);
         }
 
@@ -256,14 +234,9 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
       }
 
       // Replace startNode -> [innerNodes...] -> endNode (in that order)
-      before = doc.createTextNode(
-        startNode.data.substring(0, range.startNodeIndex)
-      );
+      before = doc.createTextNode(startNode.data.substring(0, range.startNodeIndex));
       after = doc.createTextNode(endNode.data.substring(range.endNodeIndex));
-      const elA = makeReplacementNode(
-        startNode.data.substring(range.startNodeIndex),
-        matchIndex
-      );
+      const elA = makeReplacementNode(startNode.data.substring(range.startNodeIndex), matchIndex);
       const innerEls = [];
 
       for (let i = 0, l = range.innerNodes.length; i < l; ++i) {
@@ -273,10 +246,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
         innerEls.push(innerEl);
       }
 
-      const elB = makeReplacementNode(
-        endNode.data.substring(0, range.endNodeIndex),
-        matchIndex
-      );
+      const elB = makeReplacementNode(endNode.data.substring(0, range.endNodeIndex), matchIndex);
 
       parentNode = startNode.parentNode;
       parentNode.insertBefore(before, startNode);

@@ -3,18 +3,11 @@ import { Pipeline } from '@ephox/agar';
 import Entities from 'tinymce/core/api/html/Entities';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('encodeRaw', function () {
-    LegacyUnit.equal(
-      Entities.encodeRaw(`<>"'&\u00e5\u00e4\u00f6\u0060`),
-      `&lt;&gt;"'&amp;\u00e5\u00e4\u00f6\u0060`,
-      'Raw encoding text'
-    );
+    LegacyUnit.equal(Entities.encodeRaw(`<>"'&\u00e5\u00e4\u00f6\u0060`), `&lt;&gt;"'&amp;\u00e5\u00e4\u00f6\u0060`, 'Raw encoding text');
     LegacyUnit.equal(
       Entities.encodeRaw(`<>"'&\u00e5\u00e4\u00f6\u0060`, true),
       `&lt;&gt;&quot;'&amp;\u00e5\u00e4\u00f6&#96;`,
@@ -23,11 +16,7 @@ UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function (
   });
 
   suite.test('encodeAllRaw', function () {
-    LegacyUnit.equal(
-      Entities.encodeAllRaw(`<>"'&\u00e5\u00e4\u00f6`),
-      '&lt;&gt;&quot;&#39;&amp;\u00e5\u00e4\u00f6',
-      'Raw encoding all'
-    );
+    LegacyUnit.equal(Entities.encodeAllRaw(`<>"'&\u00e5\u00e4\u00f6`), '&lt;&gt;&quot;&#39;&amp;\u00e5\u00e4\u00f6', 'Raw encoding all');
   });
 
   suite.test('encodeNumeric', function () {
@@ -44,11 +33,7 @@ UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function (
   });
 
   suite.test('encodeNamed', function () {
-    LegacyUnit.equal(
-      Entities.encodeNamed(`<>"'&\u00e5\u00e4\u00f6`),
-      `&lt;&gt;"'&amp;&aring;&auml;&ouml;`,
-      'Named encoding text'
-    );
+    LegacyUnit.equal(Entities.encodeNamed(`<>"'&\u00e5\u00e4\u00f6`), `&lt;&gt;"'&amp;&aring;&auml;&ouml;`, 'Named encoding text');
     LegacyUnit.equal(
       Entities.encodeNamed(`<>"'&\u00e5\u00e4\u00f6`, true),
       `&lt;&gt;&quot;'&amp;&aring;&auml;&ouml;`,
@@ -70,114 +55,42 @@ UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function (
     let encodeFunc;
 
     encodeFunc = Entities.getEncodeFunc('raw');
-    LegacyUnit.equal(
-      encodeFunc(`<>"'&\u00e5\u00e4\u00f6`),
-      `&lt;&gt;"'&amp;\u00e5\u00e4\u00f6`,
-      'Raw encoding text'
-    );
-    LegacyUnit.equal(
-      encodeFunc(`<>"'&\u00e5\u00e4\u00f6`, true),
-      `&lt;&gt;&quot;'&amp;\u00e5\u00e4\u00f6`,
-      'Raw encoding attribute'
-    );
-    LegacyUnit.equal(
-      encodeFunc('\ud87e\udc04'),
-      '\ud87e\udc04',
-      'Raw high-byte encoding text'
-    );
-    LegacyUnit.equal(
-      encodeFunc('\ud87e\udc04', true),
-      '\ud87e\udc04',
-      'Raw high-byte encoding attribute'
-    );
+    LegacyUnit.equal(encodeFunc(`<>"'&\u00e5\u00e4\u00f6`), `&lt;&gt;"'&amp;\u00e5\u00e4\u00f6`, 'Raw encoding text');
+    LegacyUnit.equal(encodeFunc(`<>"'&\u00e5\u00e4\u00f6`, true), `&lt;&gt;&quot;'&amp;\u00e5\u00e4\u00f6`, 'Raw encoding attribute');
+    LegacyUnit.equal(encodeFunc('\ud87e\udc04'), '\ud87e\udc04', 'Raw high-byte encoding text');
+    LegacyUnit.equal(encodeFunc('\ud87e\udc04', true), '\ud87e\udc04', 'Raw high-byte encoding attribute');
 
     encodeFunc = Entities.getEncodeFunc('named');
-    LegacyUnit.equal(
-      encodeFunc(`<>"'&\u00e5\u00e4\u00f6`),
-      `&lt;&gt;"'&amp;&aring;&auml;&ouml;`,
-      'Named encoding text'
-    );
-    LegacyUnit.equal(
-      encodeFunc(`<>"'&\u00e5\u00e4\u00f6`, true),
-      `&lt;&gt;&quot;'&amp;&aring;&auml;&ouml;`,
-      'Named encoding attribute'
-    );
-    LegacyUnit.equal(
-      encodeFunc('\ud87e\udc04'),
-      '\ud87e\udc04',
-      'Named high-byte encoding text'
-    );
-    LegacyUnit.equal(
-      encodeFunc('\ud87e\udc04', true),
-      '\ud87e\udc04',
-      'Named high-byte encoding attribute'
-    );
+    LegacyUnit.equal(encodeFunc(`<>"'&\u00e5\u00e4\u00f6`), `&lt;&gt;"'&amp;&aring;&auml;&ouml;`, 'Named encoding text');
+    LegacyUnit.equal(encodeFunc(`<>"'&\u00e5\u00e4\u00f6`, true), `&lt;&gt;&quot;'&amp;&aring;&auml;&ouml;`, 'Named encoding attribute');
+    LegacyUnit.equal(encodeFunc('\ud87e\udc04'), '\ud87e\udc04', 'Named high-byte encoding text');
+    LegacyUnit.equal(encodeFunc('\ud87e\udc04', true), '\ud87e\udc04', 'Named high-byte encoding attribute');
 
     encodeFunc = Entities.getEncodeFunc('numeric');
-    LegacyUnit.equal(
-      encodeFunc(`<>"'&\u00e5\u00e4\u00f6`),
-      `&lt;&gt;"'&amp;&#229;&#228;&#246;`,
-      'Numeric encoding text'
-    );
-    LegacyUnit.equal(
-      encodeFunc(`<>"'&\u00e5\u00e4\u00f6`, true),
-      `&lt;&gt;&quot;'&amp;&#229;&#228;&#246;`,
-      'Numeric encoding attribute'
-    );
-    LegacyUnit.equal(
-      encodeFunc('\ud87e\udc04'),
-      '&#194564;',
-      'Numeric high-byte encoding text'
-    );
-    LegacyUnit.equal(
-      encodeFunc('\ud87e\udc04', true),
-      '&#194564;',
-      'Numeric high-byte encoding attribute'
-    );
+    LegacyUnit.equal(encodeFunc(`<>"'&\u00e5\u00e4\u00f6`), `&lt;&gt;"'&amp;&#229;&#228;&#246;`, 'Numeric encoding text');
+    LegacyUnit.equal(encodeFunc(`<>"'&\u00e5\u00e4\u00f6`, true), `&lt;&gt;&quot;'&amp;&#229;&#228;&#246;`, 'Numeric encoding attribute');
+    LegacyUnit.equal(encodeFunc('\ud87e\udc04'), '&#194564;', 'Numeric high-byte encoding text');
+    LegacyUnit.equal(encodeFunc('\ud87e\udc04', true), '&#194564;', 'Numeric high-byte encoding attribute');
 
     encodeFunc = Entities.getEncodeFunc('named+numeric', '229,aring');
-    LegacyUnit.equal(
-      encodeFunc(`<>"'&\u00e5\u00e4\u00f6`),
-      `&lt;&gt;"'&amp;&aring;&#228;&#246;`,
-      'Named+numeric encoding text'
-    );
+    LegacyUnit.equal(encodeFunc(`<>"'&\u00e5\u00e4\u00f6`), `&lt;&gt;"'&amp;&aring;&#228;&#246;`, 'Named+numeric encoding text');
     LegacyUnit.equal(
       encodeFunc(`<>"'&\u00e5\u00e4\u00f6`, true),
       `&lt;&gt;&quot;'&amp;&aring;&#228;&#246;`,
       'Named+numeric encoding attribute'
     );
-    LegacyUnit.equal(
-      encodeFunc('\ud87e\udc04'),
-      '&#194564;',
-      'Named+numeric high-byte encoding text'
-    );
-    LegacyUnit.equal(
-      encodeFunc('\ud87e\udc04', true),
-      '&#194564;',
-      'Named+numeric high-byte encoding attribute'
-    );
+    LegacyUnit.equal(encodeFunc('\ud87e\udc04'), '&#194564;', 'Named+numeric high-byte encoding text');
+    LegacyUnit.equal(encodeFunc('\ud87e\udc04', true), '&#194564;', 'Named+numeric high-byte encoding attribute');
 
     encodeFunc = Entities.getEncodeFunc('named,numeric', '229,aring');
-    LegacyUnit.equal(
-      encodeFunc(`<>"'&\u00e5\u00e4\u00f6`),
-      `&lt;&gt;"'&amp;&aring;&#228;&#246;`,
-      'Named+numeric encoding text'
-    );
+    LegacyUnit.equal(encodeFunc(`<>"'&\u00e5\u00e4\u00f6`), `&lt;&gt;"'&amp;&aring;&#228;&#246;`, 'Named+numeric encoding text');
     LegacyUnit.equal(
       encodeFunc(`<>"'&\u00e5\u00e4\u00f6`, true),
       `&lt;&gt;&quot;'&amp;&aring;&#228;&#246;`,
       'Named+numeric encoding attribute'
     );
-    LegacyUnit.equal(
-      encodeFunc('\ud87e\udc04'),
-      '&#194564;',
-      'Named+numeric high-byte encoding text'
-    );
-    LegacyUnit.equal(
-      encodeFunc('\ud87e\udc04', true),
-      '&#194564;',
-      'Named+numeric high-byte encoding attribute'
-    );
+    LegacyUnit.equal(encodeFunc('\ud87e\udc04'), '&#194564;', 'Named+numeric high-byte encoding text');
+    LegacyUnit.equal(encodeFunc('\ud87e\udc04', true), '&#194564;', 'Named+numeric high-byte encoding attribute');
   });
 
   suite.test('decode', function () {
@@ -186,26 +99,10 @@ UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function (
       `<>"'&\u00e5\u00e4\u00f6&unknown;`,
       'Decode text with various entities'
     );
-    LegacyUnit.equal(
-      Entities.decode('&#65;&#66;&#039;'),
-      `AB'`,
-      'Decode numeric entities'
-    );
-    LegacyUnit.equal(
-      Entities.decode('&#x4F;&#X4F;&#x27;'),
-      `OO'`,
-      'Decode hexanumeric entities'
-    );
-    LegacyUnit.equal(
-      Entities.decode('&#65&#66&#x43'),
-      'ABC',
-      'Decode numeric entities with no semicolon'
-    );
-    LegacyUnit.equal(
-      Entities.decode('&test'),
-      '&test',
-      'Dont decode invalid entity name without semicolon'
-    );
+    LegacyUnit.equal(Entities.decode('&#65;&#66;&#039;'), `AB'`, 'Decode numeric entities');
+    LegacyUnit.equal(Entities.decode('&#x4F;&#X4F;&#x27;'), `OO'`, 'Decode hexanumeric entities');
+    LegacyUnit.equal(Entities.decode('&#65&#66&#x43'), 'ABC', 'Decode numeric entities with no semicolon');
+    LegacyUnit.equal(Entities.decode('&test'), '&test', 'Dont decode invalid entity name without semicolon');
 
     LegacyUnit.equal(
       Entities.encodeNumeric(
@@ -221,11 +118,7 @@ UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function (
       'Entity decode ascii'
     );
 
-    LegacyUnit.equal(
-      Entities.encodeNumeric(Entities.decode('&#194564;')),
-      '&#194564;',
-      'High byte non western character.'
-    );
+    LegacyUnit.equal(Entities.encodeNumeric(Entities.decode('&#194564;')), '&#194564;', 'High byte non western character.');
   });
 
   Pipeline.async(

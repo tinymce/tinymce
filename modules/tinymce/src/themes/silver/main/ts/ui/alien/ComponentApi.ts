@@ -5,13 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent,
-  Disabling,
-  Replacing,
-  Representing,
-  Toggling
-} from '@ephox/alloy';
+import { AlloyComponent, Disabling, Replacing, Representing, Toggling } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
 
 // Purpose to wrap internal bits we don't want to expose, like alloy component.

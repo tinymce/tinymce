@@ -1,11 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  Guard,
-  UiFinder,
-  Waiter
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Guard, UiFinder, Waiter } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { Body } from '@ephox/sugar';
 
@@ -20,9 +13,7 @@ interface AutocompleterGridStructure {
   groups: { title: string; icon?: string; boldText?: string }[][];
 }
 
-type AutocompleterStructure =
-  | AutocompleterListStructure
-  | AutocompleterGridStructure;
+type AutocompleterStructure = AutocompleterListStructure | AutocompleterGridStructure;
 
 const structWithTitleAndIconAndText = (d) => (s, str, arr) =>
   s.element('div', {
@@ -94,11 +85,7 @@ const sAssertAutocompleterStructure = (structure: AutocompleterStructure) =>
             classes: [arr.has('tox-autocompleter')],
             children: [
               s.element('div', {
-                classes: [
-                  arr.has('tox-menu'),
-                  arr.has(`tox-collection--${structure.type}`),
-                  arr.has('tox-collection')
-                ],
+                classes: [arr.has('tox-menu'), arr.has(`tox-collection--${structure.type}`), arr.has('tox-collection')],
                 children: Arr.map(structure.groups, (group) =>
                   s.element('div', {
                     classes: [arr.has('tox-collection__group')],

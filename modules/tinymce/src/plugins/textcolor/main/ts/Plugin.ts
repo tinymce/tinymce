@@ -11,8 +11,6 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 export default function () {
   PluginManager.add('textcolor', function () {
     // tslint:disable-next-line:no-console
-    console.warn(
-      'Text color plugin is now built in to the core editor, please remove it from your editor configuration'
-    );
+    console.warn('Text color plugin is now built in to the core editor, please remove it from your editor configuration');
   });
 }

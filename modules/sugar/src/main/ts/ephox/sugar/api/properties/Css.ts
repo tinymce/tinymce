@@ -1,10 +1,4 @@
-import {
-  console,
-  HTMLElement,
-  window,
-  Element as DomElement,
-  Node as DomNode
-} from '@ephox/dom-globals';
+import { console, HTMLElement, window, Element as DomElement, Node as DomNode } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Strings, Type } from '@ephox/katamari';
 import * as Style from '../../impl/Style';
 import * as Body from '../node/Body';
@@ -18,14 +12,7 @@ const internalSet = function (dom: DomNode, property: string, value: string) {
   // we're going to be explicit; strings only.
   if (!Type.isString(value)) {
     // tslint:disable-next-line:no-console
-    console.error(
-      'Invalid call to CSS.set. Property ',
-      property,
-      ':: Value ',
-      value,
-      ':: Element ',
-      dom
-    );
+    console.error('Invalid call to CSS.set. Property ', property, ':: Value ', value, ':: Element ', dom);
     throw new Error('CSS value must be a string: ' + value);
   }
 
@@ -47,19 +34,12 @@ const internalRemove = function (dom: DomNode, property: string) {
   }
 };
 
-const set = function (
-  element: Element<DomNode>,
-  property: string,
-  value: string
-): void {
+const set = function (element: Element<DomNode>, property: string, value: string): void {
   const dom = element.dom();
   internalSet(dom, property, value);
 };
 
-const setAll = function (
-  element: Element<DomNode>,
-  css: Record<string, string>
-): void {
+const setAll = function (element: Element<DomNode>, css: Record<string, string>): void {
   const dom = element.dom();
 
   Obj.each(css, function (v, k) {
@@ -67,10 +47,7 @@ const setAll = function (
   });
 };
 
-const setOptions = function (
-  element: Element<DomNode>,
-  css: Record<string, Option<string>>
-): void {
+const setOptions = function (element: Element<DomNode>, css: Record<string, Option<string>>): void {
   const dom = element.dom();
 
   Obj.each(css, function (v, k) {
@@ -91,10 +68,7 @@ const setOptions = function (
  *
  * https://developer.mozilla.org/en-US/docs/Web/CSS/used_value
  */
-const get = function (
-  element: Element<DomElement>,
-  property: string
-): string | undefined {
+const get = function (element: Element<DomElement>, property: string): string | undefined {
   const dom = element.dom();
   /*
    * IE9 and above per
@@ -110,8 +84,7 @@ const get = function (
 
   // jquery-ism: If r is an empty string, check that the element is not in a document. If it isn't, return the raw value.
   // Turns out we do this a lot.
-  const v =
-    r === '' && !Body.inBody(element) ? getUnsafeProperty(dom, property) : r;
+  const v = r === '' && !Body.inBody(element) ? getUnsafeProperty(dom, property) : r;
 
   // undefined is the more appropriate value for JS. JQuery coerces to an empty string, but screw that!
   return v === null ? undefined : v;
@@ -163,19 +136,13 @@ const remove = function (element: Element<DomNode>, property: string) {
 
   internalRemove(dom, property);
 
-  if (
-    Attr.has(element, 'style') &&
-    Strings.trim(Attr.get(element as Element<DomElement>, 'style')) === ''
-  ) {
+  if (Attr.has(element, 'style') && Strings.trim(Attr.get(element as Element<DomElement>, 'style')) === '') {
     // No more styles left, remove the style attribute as well
     Attr.remove(element as Element<DomElement>, 'style');
   }
 };
 
-const preserve = function <E extends DomElement, T>(
-  element: Element<E>,
-  f: (e: Element<E>) => T
-) {
+const preserve = function <E extends DomElement, T>(element: Element<E>, f: (e: Element<E>) => T) {
   const oldStyles = Attr.get(element, 'style');
   const result = f(element);
   const restore = oldStyles === undefined ? Attr.remove : Attr.set;
@@ -199,11 +166,7 @@ const reflow = function (e: Element<HTMLElement>) {
   return e.dom().offsetWidth;
 };
 
-const transferOne = function (
-  source: Element<DomNode>,
-  destination: Element<DomNode>,
-  style: string
-) {
+const transferOne = function (source: Element<DomNode>, destination: Element<DomNode>, style: string) {
   getRaw(source, style).each(function (value) {
     // NOTE: We don't want to clobber any existing inline styles.
     if (getRaw(destination, style).isNone()) {
@@ -212,11 +175,7 @@ const transferOne = function (
   });
 };
 
-const transfer = function (
-  source: Element<DomNode>,
-  destination: Element<DomNode>,
-  styles: string[]
-) {
+const transfer = function (source: Element<DomNode>, destination: Element<DomNode>, styles: string[]) {
   if (!Node.isElement(source) || !Node.isElement(destination)) {
     return;
   }
@@ -225,17 +184,4 @@ const transfer = function (
   });
 };
 
-export {
-  copy,
-  set,
-  preserve,
-  setAll,
-  setOptions,
-  remove,
-  get,
-  getRaw,
-  getAllRaw,
-  isValidValue,
-  reflow,
-  transfer
-};
+export { copy, set, preserve, setAll, setOptions, remove, get, getRaw, getAllRaw, isValidValue, reflow, transfer };

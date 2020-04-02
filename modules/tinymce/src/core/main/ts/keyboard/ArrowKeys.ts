@@ -16,11 +16,7 @@ import * as MatchKeys from './MatchKeys';
 import VK from '../api/util/VK';
 import Editor from '../api/Editor';
 
-const executeKeydownOverride = function (
-  editor: Editor,
-  caret: Cell<Text>,
-  evt: KeyboardEvent
-) {
+const executeKeydownOverride = function (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) {
   const os = PlatformDetection.detect().os;
 
   MatchKeys.execute(

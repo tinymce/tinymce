@@ -26,71 +26,39 @@ const schema = [
 
 // TODO: Remove dupe.
 // TODO: Probably use this for not just execution.
-const findCurrent = (
-  component: AlloyComponent,
-  flowConfig: FlowConfig
-): Option<Element> =>
-  flowConfig.focusManager
-    .get(component)
-    .bind((elem) => SelectorFind.closest(elem, flowConfig.selector));
+const findCurrent = (component: AlloyComponent, flowConfig: FlowConfig): Option<Element> =>
+  flowConfig.focusManager.get(component).bind((elem) => SelectorFind.closest(elem, flowConfig.selector));
 
-const execute = (
-  component: AlloyComponent,
-  simulatedEvent: NativeSimulatedEvent,
-  flowConfig: FlowConfig
-): Option<boolean> =>
-  findCurrent(component, flowConfig).bind((focused) =>
-    flowConfig.execute(component, simulatedEvent, focused)
-  );
+const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, flowConfig: FlowConfig): Option<boolean> =>
+  findCurrent(component, flowConfig).bind((focused) => flowConfig.execute(component, simulatedEvent, focused));
 
-const focusIn = (
-  component: AlloyComponent,
-  flowConfig: FlowConfig,
-  _state: Stateless
-): void => {
+const focusIn = (component: AlloyComponent, flowConfig: FlowConfig, _state: Stateless): void => {
   flowConfig
     .getInitial(component)
-    .orThunk(() =>
-      SelectorFind.descendant(component.element(), flowConfig.selector)
-    )
+    .orThunk(() => SelectorFind.descendant(component.element(), flowConfig.selector))
     .each((first) => {
       flowConfig.focusManager.set(component, first);
     });
 };
 
-const moveLeft = (
-  element: Element,
-  focused: Element,
-  info: FlowConfig
-): Option<Element> =>
+const moveLeft = (element: Element, focused: Element, info: FlowConfig): Option<Element> =>
   DomNavigation.horizontal(element, info.selector, focused, -1);
 
-const moveRight = (
-  element: Element,
-  focused: Element,
-  info: FlowConfig
-): Option<Element> =>
+const moveRight = (element: Element, focused: Element, info: FlowConfig): Option<Element> =>
   DomNavigation.horizontal(element, info.selector, focused, +1);
 
-const doMove = (
-  movement: KeyRuleHandler<FlowConfig, Stateless>
-): KeyRuleHandler<FlowConfig, Stateless> => (
+const doMove = (movement: KeyRuleHandler<FlowConfig, Stateless>): KeyRuleHandler<FlowConfig, Stateless> => (
   component,
   simulatedEvent,
   flowConfig,
   flowState
 ) =>
   movement(component, simulatedEvent, flowConfig, flowState).bind(() =>
-    flowConfig.executeOnMove
-      ? execute(component, simulatedEvent, flowConfig)
-      : Option.some<boolean>(true)
+    flowConfig.executeOnMove ? execute(component, simulatedEvent, flowConfig) : Option.some<boolean>(true)
   );
 
-const doEscape: KeyRuleHandler<FlowConfig, Stateless> = (
-  component,
-  simulatedEvent,
-  flowConfig
-) => flowConfig.onEscape(component, simulatedEvent);
+const doEscape: KeyRuleHandler<FlowConfig, Stateless> = (component, simulatedEvent, flowConfig) =>
+  flowConfig.onEscape(component, simulatedEvent);
 
 const getKeydownRules = (
   _component: AlloyComponent,
@@ -98,37 +66,19 @@ const getKeydownRules = (
   flowConfig: FlowConfig,
   _flowState: Stateless
 ): Array<KeyRules.KeyRule<FlowConfig, Stateless>> => {
-  const westMovers = Keys.LEFT().concat(
-    flowConfig.allowVertical ? Keys.UP() : []
-  );
-  const eastMovers = Keys.RIGHT().concat(
-    flowConfig.allowVertical ? Keys.DOWN() : []
-  );
+  const westMovers = Keys.LEFT().concat(flowConfig.allowVertical ? Keys.UP() : []);
+  const eastMovers = Keys.RIGHT().concat(flowConfig.allowVertical ? Keys.DOWN() : []);
   return [
-    KeyRules.rule(
-      KeyMatch.inSet(westMovers),
-      doMove(DomMovement.west(moveLeft, moveRight))
-    ),
-    KeyRules.rule(
-      KeyMatch.inSet(eastMovers),
-      doMove(DomMovement.east(moveLeft, moveRight))
-    ),
+    KeyRules.rule(KeyMatch.inSet(westMovers), doMove(DomMovement.west(moveLeft, moveRight))),
+    KeyRules.rule(KeyMatch.inSet(eastMovers), doMove(DomMovement.east(moveLeft, moveRight))),
     KeyRules.rule(KeyMatch.inSet(Keys.ENTER()), execute),
     KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), execute),
     KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), doEscape)
   ];
 };
 
-const getKeyupRules: () => Array<
-  KeyRules.KeyRule<FlowConfig, Stateless>
-> = Fun.constant([
+const getKeyupRules: () => Array<KeyRules.KeyRule<FlowConfig, Stateless>> = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
 ]);
 
-export default KeyingType.typical(
-  schema,
-  NoState.init,
-  getKeydownRules,
-  getKeyupRules,
-  () => Option.some(focusIn)
-);
+export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Option.some(focusIn));

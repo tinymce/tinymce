@@ -41,12 +41,7 @@ export default (): void => {
     })
   );
 
-  const makeExample = (
-    id: string,
-    ltrDescription: string,
-    rtlDescription: string,
-    layouts: Layouts
-  ) =>
+  const makeExample = (id: string, ltrDescription: string, rtlDescription: string, layouts: Layouts) =>
     HtmlDisplay.section(
       gui,
       'Position anchoring to text selection',
@@ -81,18 +76,8 @@ export default (): void => {
                 sink,
                 {
                   anchor: 'node',
-                  root: button
-                    .getSystem()
-                    .getByUid(`inner-${id}-editor`)
-                    .getOrDie()
-                    .element(),
-                  node: Option.from(
-                    button
-                      .getSystem()
-                      .getByUid(`inner-${id}-editor`)
-                      .getOrDie()
-                      .element()
-                  ),
+                  root: button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element(),
+                  node: Option.from(button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element()),
                   layouts
                 },
                 popup

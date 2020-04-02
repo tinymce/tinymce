@@ -4,38 +4,22 @@ import { Attr, Node } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AriaTogglingConfig } from './TogglingTypes';
 
-const updatePressed = (
-  component: AlloyComponent,
-  ariaInfo: AriaTogglingConfig,
-  status: boolean
-): void => {
+const updatePressed = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {
   Attr.set(component.element(), 'aria-pressed', status);
   if (ariaInfo.syncWithExpanded) {
     updateExpanded(component, ariaInfo, status);
   }
 };
 
-const updateSelected = (
-  component: AlloyComponent,
-  ariaInfo: AriaTogglingConfig,
-  status: boolean
-): void => {
+const updateSelected = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {
   Attr.set(component.element(), 'aria-selected', status);
 };
 
-const updateChecked = (
-  component: AlloyComponent,
-  ariaInfo: AriaTogglingConfig,
-  status: boolean
-): void => {
+const updateChecked = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {
   Attr.set(component.element(), 'aria-checked', status);
 };
 
-const updateExpanded = (
-  component: AlloyComponent,
-  ariaInfo: AriaTogglingConfig,
-  status: boolean
-): void => {
+const updateExpanded = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {
   Attr.set(component.element(), 'aria-expanded', status);
 };
 
@@ -54,10 +38,7 @@ const roleAttributes: Record<string, string[]> = {
 const detectFromTag = (component: AlloyComponent): Option<string[]> => {
   const elem = component.element();
   const rawTag = Node.name(elem);
-  const suffix =
-    rawTag === 'input' && Attr.has(elem, 'type')
-      ? ':' + Attr.get(elem, 'type')
-      : '';
+  const suffix = rawTag === 'input' && Attr.has(elem, 'type') ? ':' + Attr.get(elem, 'type') : '';
   return Obj.get(tagAttributes, rawTag + suffix);
 };
 
@@ -71,11 +52,7 @@ const detectFromRole = (component: AlloyComponent): Option<string[]> => {
   }
 };
 
-const updateAuto = (
-  component: AlloyComponent,
-  _ariaInfo: void,
-  status: boolean
-): void => {
+const updateAuto = (component: AlloyComponent, _ariaInfo: void, status: boolean): void => {
   // Role has priority
   const attributes = detectFromRole(component)
     .orThunk(() => detectFromTag(component))
@@ -85,10 +62,4 @@ const updateAuto = (
   });
 };
 
-export {
-  updatePressed,
-  updateSelected,
-  updateChecked,
-  updateExpanded,
-  updateAuto
-};
+export { updatePressed, updateSelected, updateChecked, updateExpanded, updateAuto };

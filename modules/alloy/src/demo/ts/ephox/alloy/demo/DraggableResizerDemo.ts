@@ -21,11 +21,7 @@ export default (): void => {
   Attachment.attachSystem(body, gui);
   Css.set(body, 'margin-bottom', '2000px');
 
-  const onDrag = (
-    comp: AlloyComponent,
-    targetElement: Element,
-    delta: Position
-  ) => {
+  const onDrag = (comp: AlloyComponent, targetElement: Element, delta: Position) => {
     Traverse.parent(targetElement)
       .bind(Traverse.parent)
       .bind(Traverse.firstChild)
@@ -82,9 +78,7 @@ export default (): void => {
 
               buttonBehaviours: Behaviour.derive([
                 Dragging.config({
-                  mode: PlatformDetection.detect().deviceType.isTouch()
-                    ? 'touch'
-                    : 'mouse',
+                  mode: PlatformDetection.detect().deviceType.isTouch() ? 'touch' : 'mouse',
                   blockerClass: 'blocker',
                   repositionTarget: false,
                   onDrag

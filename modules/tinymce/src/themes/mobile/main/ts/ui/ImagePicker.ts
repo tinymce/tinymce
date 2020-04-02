@@ -5,13 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyEvents,
-  Button,
-  Memento,
-  NativeEvents,
-  SketchSpec
-} from '@ephox/alloy';
+import { AlloyEvents, Button, Memento, NativeEvents, SketchSpec } from '@ephox/alloy';
 import { BlobConversions } from '@ephox/imagetools';
 import { Id, Option } from '@ephox/katamari';
 

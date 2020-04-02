@@ -15,11 +15,7 @@ export interface ImageResult {
   toCanvas(): Promise<HTMLCanvasElement>;
 }
 
-function create(
-  getCanvas: Promise<HTMLCanvasElement>,
-  blob: Blob,
-  uri: string
-): ImageResult {
+function create(getCanvas: Promise<HTMLCanvasElement>, blob: Blob, uri: string): ImageResult {
   const initialType = blob.type;
 
   const getType = Fun.constant(initialType);
@@ -74,10 +70,7 @@ function fromBlob(blob: Blob): Promise<ImageResult> {
   });
 }
 
-function fromCanvas(
-  canvas: HTMLCanvasElement,
-  type?: string
-): Promise<ImageResult> {
+function fromCanvas(canvas: HTMLCanvasElement, type?: string): Promise<ImageResult> {
   return Conversions.canvasToBlob(canvas, type).then(function (blob) {
     return create(Promise.resolve(canvas), blob, canvas.toDataURL());
   });

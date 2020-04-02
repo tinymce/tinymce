@@ -55,13 +55,7 @@ const diff = function (left, right) {
         }
       }
     } else {
-      buildScript(
-        start1,
-        middle.start,
-        start2,
-        middle.start - middle.diag,
-        script
-      );
+      buildScript(start1, middle.start, start2, middle.start - middle.diag, script);
       for (let i2 = middle.start; i2 < middle.end; ++i2) {
         script.push([KEEP, left[i2]]);
       }

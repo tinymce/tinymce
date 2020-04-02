@@ -13,11 +13,7 @@ import { isWhiteSpace } from '../text/CharType';
 import { getChildNodeAtRelativeOffset } from './CaretUtils';
 import { Element, Css } from '@ephox/sugar';
 
-const isChar = (
-  forward: boolean,
-  predicate: (chr: string) => boolean,
-  pos: CaretPosition
-) =>
+const isChar = (forward: boolean, predicate: (chr: string) => boolean, pos: CaretPosition) =>
   Option.from(pos.container())
     .filter(NodeType.isText)
     .exists((text: Text) => {
@@ -33,20 +29,15 @@ const isEmptyText = (pos: CaretPosition) => {
   return NodeType.isText(container) && container.data.length === 0;
 };
 
-const matchesElementPosition = (
-  before: boolean,
-  predicate: (node: DomNode) => boolean
-) => (pos: CaretPosition) =>
+const matchesElementPosition = (before: boolean, predicate: (node: DomNode) => boolean) => (pos: CaretPosition) =>
   Option.from(getChildNodeAtRelativeOffset(before ? 0 : -1, pos))
     .filter(predicate)
     .isSome();
 
 const isImageBlock = (node: DomNode) =>
-  node.nodeName === 'IMG' &&
-  Css.get(Element.fromDom(node as HTMLImageElement), 'display') === 'block';
+  node.nodeName === 'IMG' && Css.get(Element.fromDom(node as HTMLImageElement), 'display') === 'block';
 
-const isCefNode = (node: DomNode) =>
-  NodeType.isContentEditableFalse(node) && !NodeType.isBogusAll(node);
+const isCefNode = (node: DomNode) => NodeType.isContentEditableFalse(node) && !NodeType.isBogusAll(node);
 
 const isBeforeImageBlock = matchesElementPosition(true, isImageBlock);
 const isAfterImageBlock = matchesElementPosition(false, isImageBlock);

@@ -14,10 +14,7 @@ const getData = (item: DataTransferItem): Option<string> => {
   return Option.from(itemObj[dataId]);
 };
 
-const createDataTransferItemFromFile = (
-  dataTransfer: DataTransfer,
-  file: File
-): DataTransferItem => {
+const createDataTransferItemFromFile = (dataTransfer: DataTransfer, file: File): DataTransferItem => {
   const transferItem: DataTransferItem = {
     kind: 'file',
     type: file.type,
@@ -37,11 +34,7 @@ const createDataTransferItemFromFile = (
   return transferItem;
 };
 
-const createDataTransferItemFromString = (
-  dataTransfer: DataTransfer,
-  type: string,
-  data: string
-): DataTransferItem => {
+const createDataTransferItemFromString = (dataTransfer: DataTransfer, type: string, data: string): DataTransferItem => {
   const transferItem: DataTransferItem = {
     kind: 'string',
     type,
@@ -61,8 +54,4 @@ const createDataTransferItemFromString = (
   return transferItem;
 };
 
-export {
-  createDataTransferItemFromFile,
-  createDataTransferItemFromString,
-  getData
-};
+export { createDataTransferItemFromFile, createDataTransferItemFromString, getData };

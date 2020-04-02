@@ -8,11 +8,7 @@ import * as DragCoord from 'ephox/alloy/api/data/DragCoord';
 interface TestConversion {
   mode: string;
   nu: (x: number, y: number) => DragCoord.CoordAdt<number>;
-  asPoint: (
-    coord: DragCoord.CoordAdt<number>,
-    scroll: Position,
-    origin: Position
-  ) => Position;
+  asPoint: (coord: DragCoord.CoordAdt<number>, scroll: Position, origin: Position) => Position;
 }
 
 UnitTest.test('DragCoordTest', () => {
@@ -30,10 +26,7 @@ UnitTest.test('DragCoordTest', () => {
       actual.top() +
       ')';
 
-    return Jsc.eq(expected.left(), actual.left()) &&
-      Jsc.eq(expected.top(), actual.top())
-      ? true
-      : comparing;
+    return Jsc.eq(expected.left(), actual.left()) && Jsc.eq(expected.top(), actual.top()) ? true : comparing;
   };
 
   const arbConversions = Jsc.elements([
@@ -46,8 +39,7 @@ UnitTest.test('DragCoordTest', () => {
     Jsc.tuple([Jsc.integer, Jsc.integer]).smap(
       (arr: [number, number]) => Position(arr[0], arr[1]),
       (pos: Position) => [pos.left(), pos.top()],
-      (pos: Position) =>
-        name + ': { left: ' + pos.left() + ', top: ' + pos.top() + '}'
+      (pos: Position) => name + ': { left: ' + pos.left() + ', top: ' + pos.top() + '}'
     );
 
   Jsc.property(
@@ -57,18 +49,10 @@ UnitTest.test('DragCoordTest', () => {
     arbPosition('point'),
     arbPosition('scroll'),
     arbPosition('origin'),
-    (
-      original: TestConversion,
-      transformations: TestConversion[],
-      coord: Position,
-      scroll: Position,
-      origin: Position
-    ) => {
+    (original: TestConversion, transformations: TestConversion[], coord: Position, scroll: Position, origin: Position) => {
       const o = original.nu(coord.left(), coord.top());
 
-      const label = [original.mode].concat(
-        Arr.map(transformations, (t) => t.mode)
-      );
+      const label = [original.mode].concat(Arr.map(transformations, (t) => t.mode));
 
       const result = Arr.foldl(
         transformations,

@@ -8,21 +8,10 @@ import { SpotPoints, Wrapter } from '../data/Types';
 type NuApi = <E, D>(universe: Universe<E, D>, item: E) => Wrapter<E>;
 const nu: NuApi = Wraps;
 
-type WrapWithApi = <E, D>(
-  universe: Universe<E, D>,
-  base: E,
-  baseOffset: number,
-  end: E,
-  endOffset: number,
-  nu: () => Wrapter<E>
-) => E[];
+type WrapWithApi = <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, nu: () => Wrapter<E>) => E[];
 const wrapWith: WrapWithApi = Wrapper.wrapWith;
 
-type WrapperApi = <E, D>(
-  universe: Universe<E, D>,
-  wrapped: E[],
-  nu: () => Wrapter<E>
-) => E[];
+type WrapperApi = <E, D>(universe: Universe<E, D>, wrapped: E[], nu: () => Wrapter<E>) => E[];
 const wrapper: WrapperApi = Wrapper.wrapper;
 
 type LeavesApi = <E, D>(

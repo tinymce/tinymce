@@ -104,15 +104,8 @@ export default function () {
         { label: 'StyleButton', button: 'styleselect' }
       ],
       ({ label, button }) => {
-        const groups = identifyButtons(
-          mockEditor,
-          { buttons, toolbar: button, allowToolbarGroups: true },
-          helpers.extras,
-          Option.none()
-        );
-        const buttonComponents = Arr.flatten(
-          Arr.map(groups, (group) => group.items)
-        );
+        const groups = identifyButtons(mockEditor, { buttons, toolbar: button, allowToolbarGroups: true }, helpers.extras, Option.none());
+        const buttonComponents = Arr.flatten(Arr.map(groups, (group) => group.items));
         return {
           dom: {
             tag: 'div',

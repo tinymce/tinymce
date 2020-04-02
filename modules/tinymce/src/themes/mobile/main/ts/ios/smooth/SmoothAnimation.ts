@@ -21,14 +21,7 @@ const adjust = function (value, destination, amount) {
 const create = function () {
   let interval = null;
 
-  const animate = function (
-    getCurrent,
-    destination,
-    amount,
-    increment,
-    doFinish,
-    rate
-  ) {
+  const animate = function (getCurrent, destination, amount, increment, doFinish, rate) {
     let finished = false;
 
     const finish = function (v) {
@@ -55,10 +48,7 @@ const create = function () {
           if (!finished) {
             const newValue = getCurrent();
             // Jump to the end if the increment is no longer working.
-            if (
-              newValue !== s ||
-              Math.abs(newValue - destination) > Math.abs(value - destination)
-            ) {
+            if (newValue !== s || Math.abs(newValue - destination) > Math.abs(value - destination)) {
               Delay.clearInterval(interval);
               finish(destination);
             }

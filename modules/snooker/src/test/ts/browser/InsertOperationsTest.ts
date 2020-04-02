@@ -11,10 +11,7 @@ UnitTest.test('InsertOperationsTest', function () {
       '<tr><td>A2</td><td>B2</td></tr>' +
       '</tbody></table>',
 
-    '<table><tbody>' +
-      '<tr><td>A1</td><td>B1</td></tr>' +
-      '<tr><td>A2</td><td>B2</td></tr>' +
-      '</tbody></table>',
+    '<table><tbody>' + '<tr><td>A1</td><td>B1</td></tr>' + '<tr><td>A2</td><td>B2</td></tr>' + '</tbody></table>',
 
     TableOperations.insertRowBefore,
     0,
@@ -30,10 +27,7 @@ UnitTest.test('InsertOperationsTest', function () {
       '<tr><td>A2</td><td>B2</td></tr>' +
       '</tbody></table>',
 
-    '<table><tbody>' +
-      '<tr><td>A1</td><td>B1</td></tr>' +
-      '<tr><td>A2</td><td>B2</td></tr>' +
-      '</tbody></table>',
+    '<table><tbody>' + '<tr><td>A1</td><td>B1</td></tr>' + '<tr><td>A2</td><td>B2</td></tr>' + '</tbody></table>',
 
     TableOperations.insertRowBefore,
     0,
@@ -107,10 +101,7 @@ UnitTest.test('InsertOperationsTest', function () {
       '<tr><td>?</td><td>?</td></tr>' +
       '</tbody></table>',
 
-    '<table><tbody>' +
-      '<tr><td>A1</td><td>B1</td></tr>' +
-      '<tr><td>A2</td><td>B2</td></tr>' +
-      '</tbody></table>',
+    '<table><tbody>' + '<tr><td>A1</td><td>B1</td></tr>' + '<tr><td>A2</td><td>B2</td></tr>' + '</tbody></table>',
 
     TableOperations.insertRowAfter,
     0,
@@ -305,15 +296,7 @@ UnitTest.test('InsertOperationsTest', function () {
 
   Assertions.checkStructure(
     { section: 0, row: 1, column: 1 },
-    [
-      ['A', '?', 'B', 'C'],
-      ['D', '?', 'E'],
-      ['F'],
-      ['G'],
-      ['H'],
-      ['I', '?', 'J', 'K'],
-      ['L', 'M']
-    ],
+    [['A', '?', 'B', 'C'], ['D', '?', 'E'], ['F'], ['G'], ['H'], ['I', '?', 'J', 'K'], ['L', 'M']],
 
     '<table style="width: 400px; border-collapse: collapse;">' +
       '<tbody>' +
@@ -344,10 +327,7 @@ UnitTest.test('InsertOperationsTest', function () {
       '<tr><td>?</td><td>?</td><td>?</td></tr>' +
       '</tbody></table>',
 
-    '<table><tbody>' +
-      '<tr><td>A1</td><td>B1</td><td>IRREGULAR CELL</td></tr>' +
-      '<tr><td>A2</td><td>B2</td></tr>' +
-      '</tbody></table>',
+    '<table><tbody>' + '<tr><td>A1</td><td>B1</td><td>IRREGULAR CELL</td></tr>' + '<tr><td>A2</td><td>B2</td></tr>' + '</tbody></table>',
 
     TableOperations.insertRowAfter,
     0,
@@ -365,12 +345,7 @@ UnitTest.test('InsertOperationsTest', function () {
       '<tr><td>A2</td><td>B2</td></tr>' +
       '</tbody></table>',
 
-    '<table><thead>' +
-      '<tr><td>A1</td><td>B1</td></tr>' +
-      '</thead>' +
-      '<tbody>' +
-      '<tr><td>A2</td><td>B2</td></tr>' +
-      '</tbody></table>',
+    '<table><thead>' + '<tr><td>A1</td><td>B1</td></tr>' + '</thead>' + '<tbody>' + '<tr><td>A2</td><td>B2</td></tr>' + '</tbody></table>',
 
     TableOperations.insertRowBefore,
     0,
@@ -388,12 +363,7 @@ UnitTest.test('InsertOperationsTest', function () {
       '<tr><td>A2</td><td>B2</td></tr>' +
       '</tbody></table>',
 
-    '<table><thead>' +
-      '<tr><td>A1</td><td>B1</td></tr>' +
-      '</thead>' +
-      '<tbody>' +
-      '<tr><td>A2</td><td>B2</td></tr>' +
-      '</tbody></table>',
+    '<table><thead>' + '<tr><td>A1</td><td>B1</td></tr>' + '</thead>' + '<tbody>' + '<tr><td>A2</td><td>B2</td></tr>' + '</tbody></table>',
 
     TableOperations.insertRowBefore,
     1,
@@ -411,12 +381,7 @@ UnitTest.test('InsertOperationsTest', function () {
       '<tr><td>A2</td><td>B2</td></tr>' +
       '</tbody></table>',
 
-    '<table><thead>' +
-      '<tr><td>A1</td><td>B1</td></tr>' +
-      '</thead>' +
-      '<tbody>' +
-      '<tr><td>A2</td><td>B2</td></tr>' +
-      '</tbody></table>',
+    '<table><thead>' + '<tr><td>A1</td><td>B1</td></tr>' + '</thead>' + '<tbody>' + '<tr><td>A2</td><td>B2</td></tr>' + '</tbody></table>',
 
     TableOperations.insertRowAfter,
     0,
@@ -434,12 +399,7 @@ UnitTest.test('InsertOperationsTest', function () {
       '<tr><td>?</td><td>?</td></tr>' +
       '</tbody></table>',
 
-    '<table><thead>' +
-      '<tr><td>A1</td><td>B1</td></tr>' +
-      '</thead>' +
-      '<tbody>' +
-      '<tr><td>A2</td><td>B2</td></tr>' +
-      '</tbody></table>',
+    '<table><thead>' + '<tr><td>A1</td><td>B1</td></tr>' + '</thead>' + '<tbody>' + '<tr><td>A2</td><td>B2</td></tr>' + '</tbody></table>',
 
     TableOperations.insertRowAfter,
     1,
@@ -455,10 +415,7 @@ UnitTest.test('InsertOperationsTest', function () {
       '<tr><td>A2</td><td>B2</td></tr>' +
       '</tbody></table>',
 
-    '<table><tbody>' +
-      '<tr><td>A1</td><td>B1</td></tr>' +
-      '<tr><td rowspan="2">A2</td><td>B2</td></tr>' +
-      '</tbody></table>',
+    '<table><tbody>' + '<tr><td>A1</td><td>B1</td></tr>' + '<tr><td rowspan="2">A2</td><td>B2</td></tr>' + '</tbody></table>',
 
     TableOperations.insertRowBefore,
     0,

@@ -26,21 +26,12 @@ UnitTest.test('DomSplitTest', function () {
     );
   };
 
-  const checkSplitByPair = function (
-    expected: string[],
-    element: Element<DomText>,
-    start: number,
-    end: number
-  ) {
+  const checkSplitByPair = function (expected: string[], element: Element<DomText>, start: number, end: number) {
     DomSplit.splitByPair(element, start, end);
     check(expected, element);
   };
 
-  const checkSplit = function (
-    expected: string[],
-    element: Element<DomText>,
-    offset: number
-  ) {
+  const checkSplit = function (expected: string[], element: Element<DomText>, offset: number) {
     DomSplit.split(element, offset);
     check(expected, element);
   };

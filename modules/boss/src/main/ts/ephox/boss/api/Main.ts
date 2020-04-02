@@ -12,14 +12,4 @@ import * as Logger from '../mutant/Logger';
 // used by soldier tests
 import * as Locator from '../mutant/Locator';
 
-export {
-  BasicPage,
-  CommentGene,
-  DomUniverse,
-  Gene,
-  TestUniverse,
-  TextGene,
-  Logger,
-  Locator,
-  Universe
-};
+export { BasicPage, CommentGene, DomUniverse, Gene, TestUniverse, TextGene, Logger, Locator, Universe };

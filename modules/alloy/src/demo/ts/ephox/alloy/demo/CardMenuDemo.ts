@@ -118,10 +118,7 @@ export default (): void => {
     },
     onOpenSubmenu(container, item, submenu) {
       const w = Width.get(container.element());
-      const menu = SelectorFind.ancestor(
-        item.element(),
-        '[role="menu"]'
-      ).getOrDie('hacky');
+      const menu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
       const menuComp = container.getSystem().getByDom(menu).getOrDie();
       Width.set(submenu.element(), w);
 
@@ -133,10 +130,7 @@ export default (): void => {
     },
 
     onCollapseMenu(container, item, menu) {
-      const submenu = SelectorFind.ancestor(
-        item.element(),
-        '[role="menu"]'
-      ).getOrDie('hacky');
+      const submenu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
       const submenuComp = container.getSystem().getByDom(submenu).getOrDie();
       if (Transitioning.progressTo) {
         Transitioning.progressTo(submenuComp, 'after');
@@ -164,11 +158,7 @@ export default (): void => {
           makeItem('h3', 'Header 3')
         ]),
 
-        inline: makeMenu('Inline', [
-          makeBack('< Back'),
-          makeItem('bold', 'Bold'),
-          makeItem('italic', 'Italic')
-        ]),
+        inline: makeMenu('Inline', [makeBack('< Back'), makeItem('bold', 'Bold'), makeItem('italic', 'Italic')]),
 
         blocks: makeMenu('Blocks', [
           makeBack('< Back'),
@@ -177,10 +167,7 @@ export default (): void => {
           makeItem('div', 'Div')
         ]),
 
-        alignment: makeMenu('Alignment', [
-          makeBack('< Back'),
-          makeItem('alignleft', 'Left')
-        ])
+        alignment: makeMenu('Alignment', [makeBack('< Back'), makeItem('alignleft', 'Left')])
       },
       {
         headers: 'headers',

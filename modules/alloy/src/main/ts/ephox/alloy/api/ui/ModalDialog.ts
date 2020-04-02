@@ -12,13 +12,7 @@ import * as AriaLabel from '../../aria/AriaLabel';
 import { CustomEvent } from '../../events/SimulatedEvent';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ModalDialogSchema from '../../ui/schema/ModalDialogSchema';
-import {
-  GetBusySpec,
-  ModalDialogApis,
-  ModalDialogDetail,
-  ModalDialogSketcher,
-  ModalDialogSpec
-} from '../../ui/types/ModalDialogTypes';
+import { GetBusySpec, ModalDialogApis, ModalDialogDetail, ModalDialogSketcher, ModalDialogSpec } from '../../ui/types/ModalDialogTypes';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
@@ -29,12 +23,7 @@ import * as Attachment from '../system/Attachment';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (
-  detail,
-  components,
-  spec,
-  externals
-) => {
+const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (detail, components, spec, externals) => {
   const dialogBusyEvent = Id.generate('alloy.dialog.busy');
   const dialogIdleEvent = Id.generate('alloy.dialog.idle');
 
@@ -62,9 +51,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (
 
     const blocker = sink.getSystem().build({
       ...externalBlocker,
-      components: externalBlocker.components.concat([
-        GuiFactory.premade(dialog)
-      ]),
+      components: externalBlocker.components.concat([GuiFactory.premade(dialog)]),
       behaviours: Behaviour.derive([
         Focusing.config({}),
         AddEventsBehaviour.config('dialog-blocker-events', [
@@ -114,11 +101,9 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (
     });
   };
 
-  const getDialogBody = (dialog: AlloyComponent) =>
-    AlloyParts.getPartOrDie(dialog, detail, 'body');
+  const getDialogBody = (dialog: AlloyComponent) => AlloyParts.getPartOrDie(dialog, detail, 'body');
 
-  const getDialogFooter = (dialog: AlloyComponent) =>
-    AlloyParts.getPartOrDie(dialog, detail, 'footer');
+  const getDialogFooter = (dialog: AlloyComponent) => AlloyParts.getPartOrDie(dialog, detail, 'footer');
 
   const setBusy = (dialog: AlloyComponent, getBusySpec: AlloySpec) => {
     AlloyTriggers.emitWith(dialog, dialogBusyEvent, {
@@ -133,9 +118,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (
   const modalEventsId = Id.generate('modal-events');
   const eventOrder = {
     ...detail.eventOrder,
-    'alloy.system.attached': [modalEventsId].concat(
-      detail.eventOrder['alloy.system.attached'] || []
-    )
+    'alloy.system.attached': [modalEventsId].concat(detail.eventOrder['alloy.system.attached'] || [])
   };
 
   return {
@@ -167,25 +150,15 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (
       }),
       AddEventsBehaviour.config(modalEventsId, [
         AlloyEvents.runOnAttached((c) => {
-          AriaLabel.labelledBy(
-            c.element(),
-            AlloyParts.getPartOrDie(c, detail, 'title').element()
-          );
-          AriaDescribe.describedBy(
-            c.element(),
-            AlloyParts.getPartOrDie(c, detail, 'body').element()
-          );
+          AriaLabel.labelledBy(c.element(), AlloyParts.getPartOrDie(c, detail, 'title').element());
+          AriaDescribe.describedBy(c.element(), AlloyParts.getPartOrDie(c, detail, 'body').element());
         })
       ])
     ])
   };
 };
 
-const ModalDialog: ModalDialogSketcher = Sketcher.composite<
-  ModalDialogSpec,
-  ModalDialogDetail,
-  ModalDialogApis
->({
+const ModalDialog: ModalDialogSketcher = Sketcher.composite<ModalDialogSpec, ModalDialogDetail, ModalDialogApis>({
   name: 'ModalDialog',
   configFields: ModalDialogSchema.schema(),
   partFields: ModalDialogSchema.parts(),

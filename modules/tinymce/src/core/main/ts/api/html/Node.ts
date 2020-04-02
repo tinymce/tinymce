@@ -41,11 +41,7 @@ const walk = function (node: Node, root: Node | null, prev?: boolean): Node {
     }
 
     // Walk up the parents to look for siblings
-    for (
-      let parent = node.parent;
-      parent && parent !== root;
-      parent = parent.parent
-    ) {
+    for (let parent = node.parent; parent && parent !== root; parent = parent.parent) {
       sibling = parent[siblingName];
 
       if (sibling) {
@@ -63,11 +59,7 @@ const isEmptyTextNode = (node: Node) => {
 
   // Parent is not a span and only spaces or is a span but has styles
   const parentNode = node.parent;
-  if (
-    parentNode &&
-    (parentNode.name !== 'span' || parentNode.attr('style')) &&
-    /^[ ]+$/.test(node.value)
-  ) {
+  if (parentNode && (parentNode.name !== 'span' || parentNode.attr('style')) && /^[ ]+$/.test(node.value)) {
     return false;
   }
 
@@ -76,14 +68,8 @@ const isEmptyTextNode = (node: Node) => {
 
 // Check if node contains data-bookmark attribute, name attribute, id attribute or is a named anchor
 const isNonEmptyElement = (node: Node) => {
-  const isNamedAnchor =
-    node.name === 'a' && !node.attr('href') && node.attr('id');
-  return (
-    node.attr('name') ||
-    (node.attr('id') && !node.firstChild) ||
-    node.attr('data-mce-bookmark') ||
-    isNamedAnchor
-  );
+  const isNamedAnchor = node.name === 'a' && !node.attr('href') && node.attr('id');
+  return node.attr('name') || (node.attr('id') && !node.firstChild) || node.attr('data-mce-bookmark') || isNamedAnchor;
 };
 
 /**
@@ -188,10 +174,7 @@ class Node {
   public attr(name: string, value: string): string | Node;
   public attr(name: Record<string, string>): Node;
   public attr(name: string): string;
-  public attr(
-    name: string | Record<string, string>,
-    value?: string
-  ): string | Node {
+  public attr(name: string | Record<string, string>, value?: string): string | Node {
     const self = this;
     let attrs: Attributes;
 
@@ -507,11 +490,7 @@ class Node {
    * @param {function} predicate Optional predicate that gets called after the other rules determine that the node is empty. Should return true if the node is a content node.
    * @return {Boolean} true/false if the node is empty or not.
    */
-  public isEmpty(
-    elements: SchemaMap,
-    whitespace: SchemaMap = {},
-    predicate?: (node: Node) => boolean
-  ) {
+  public isEmpty(elements: SchemaMap, whitespace: SchemaMap = {}, predicate?: (node: Node) => boolean) {
     const self = this;
     let node = self.firstChild;
 
@@ -548,12 +527,7 @@ class Node {
         }
 
         // Keep whitespace preserve elements
-        if (
-          node.type === 3 &&
-          node.parent &&
-          whitespace[node.parent.name] &&
-          whiteSpaceRegExp.test(node.value)
-        ) {
+        if (node.type === 3 && node.parent && whitespace[node.parent.name] && whiteSpaceRegExp.test(node.value)) {
           return false;
         }
 

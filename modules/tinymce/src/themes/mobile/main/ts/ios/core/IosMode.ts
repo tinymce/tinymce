@@ -78,15 +78,7 @@ const create = function (platform, mask) {
         api.syncHeight();
       });
 
-      iosEvents.set(
-        IosEvents.initEvents(
-          editorApi,
-          iosApi,
-          platform.toolstrip,
-          platform.socket,
-          platform.dropup
-        )
-      );
+      iosEvents.set(IosEvents.initEvents(editorApi, iosApi, platform.toolstrip, platform.socket, platform.dropup));
     });
   };
 

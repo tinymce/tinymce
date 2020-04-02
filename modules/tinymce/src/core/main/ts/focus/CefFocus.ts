@@ -21,11 +21,7 @@ const setup = function (editor: Editor) {
       const rng = editor.selection.getRng();
       if (rng.collapsed) {
         // see TINY-1479
-        const caretRange = CefUtils.renderRangeCaret(
-          editor,
-          editor.selection.getRng(),
-          false
-        );
+        const caretRange = CefUtils.renderRangeCaret(editor, editor.selection.getRng(), false);
         editor.selection.setRng(caretRange);
       }
     }

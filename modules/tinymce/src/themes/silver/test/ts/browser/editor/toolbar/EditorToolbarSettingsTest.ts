@@ -1,11 +1,4 @@
-import {
-  Log,
-  Pipeline,
-  UiFinder,
-  NamedChain,
-  Assertions,
-  ApproxStructure
-} from '@ephox/agar';
+import { Log, Pipeline, UiFinder, NamedChain, Assertions, ApproxStructure } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Result, Arr, Id } from '@ephox/katamari';
 import { Editor as McagarEditor } from '@ephox/mcagar';
@@ -17,13 +10,7 @@ import { cCountNumber, cExtractOnlyOne } from '../../../module/UiChainUtils';
 UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
   SilverTheme();
 
-  const cCreateEditorWithToolbar = (
-    toolbarVal,
-    toolbarVal1?,
-    toolbarVal2?,
-    toolbarVal9?,
-    toolbarVal20?
-  ) =>
+  const cCreateEditorWithToolbar = (toolbarVal, toolbarVal1?, toolbarVal2?, toolbarVal9?, toolbarVal20?) =>
     McagarEditor.cFromSettings({
       toolbar: toolbarVal,
       toolbar1: toolbarVal1,
@@ -49,133 +36,70 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
   Pipeline.async(
     {},
     [
-      Log.chainsAsStep(
-        'TBA',
-        'Testing toolbar: false should not create toolbar at all',
-        [
-          NamedChain.asChain([
-            NamedChain.writeValue('body', Body.body()),
-            NamedChain.write('editor', cCreateEditorWithToolbar(false)),
-            NamedChain.direct(
-              'body',
-              UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'),
-              '_menubar'
-            ),
-            NamedChain.direct(
-              'body',
-              cCountNumber('.tox-toolbar'),
-              'numToolbars'
-            ),
-            NamedChain.direct(
-              'numToolbars',
-              Assertions.cAssertEq('Should be no toolbars', 0),
-              Id.generate('')
-            ),
-            NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
-            NamedChain.bundle(Result.value)
-          ])
-        ]
-      ),
+      Log.chainsAsStep('TBA', 'Testing toolbar: false should not create toolbar at all', [
+        NamedChain.asChain([
+          NamedChain.writeValue('body', Body.body()),
+          NamedChain.write('editor', cCreateEditorWithToolbar(false)),
+          NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+          NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'numToolbars'),
+          NamedChain.direct('numToolbars', Assertions.cAssertEq('Should be no toolbars', 0), Id.generate('')),
+          NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+          NamedChain.bundle(Result.value)
+        ])
+      ]),
 
-      Log.chainsAsStep(
-        'TBA',
-        'Testing toolbar: true should create default toolbar',
-        [
-          NamedChain.asChain([
-            NamedChain.writeValue('body', Body.body()),
-            NamedChain.write('editor', cCreateEditorWithToolbar(true)),
-            NamedChain.direct(
-              'body',
-              UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'),
-              '_menubar'
-            ),
-            NamedChain.direct(
-              'body',
-              cExtractOnlyOne('.tox-toolbar'),
-              'toolbar'
-            ),
-            NamedChain.direct(
-              'toolbar',
-              cAssertIsDefaultToolbar,
-              Id.generate('')
-            ),
-            NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
-            NamedChain.bundle(Result.value)
-          ])
-        ]
-      ),
+      Log.chainsAsStep('TBA', 'Testing toolbar: true should create default toolbar', [
+        NamedChain.asChain([
+          NamedChain.writeValue('body', Body.body()),
+          NamedChain.write('editor', cCreateEditorWithToolbar(true)),
+          NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+          NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
+          NamedChain.direct('toolbar', cAssertIsDefaultToolbar, Id.generate('')),
+          NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+          NamedChain.bundle(Result.value)
+        ])
+      ]),
 
-      Log.chainsAsStep(
-        'TBA',
-        'Testing toolbar: undefined should create default toolbar',
-        [
-          NamedChain.asChain([
-            NamedChain.writeValue('body', Body.body()),
-            NamedChain.write('editor', cCreateEditorWithToolbar(undefined)),
-            NamedChain.direct(
-              'body',
-              UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'),
-              '_menubar'
-            ),
-            NamedChain.direct(
-              'body',
-              cExtractOnlyOne('.tox-toolbar'),
-              'toolbar'
-            ),
-            NamedChain.direct(
-              'toolbar',
-              cAssertIsDefaultToolbar,
-              Id.generate('')
-            ),
-            NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
-            NamedChain.bundle(Result.value)
-          ])
-        ]
-      ),
+      Log.chainsAsStep('TBA', 'Testing toolbar: undefined should create default toolbar', [
+        NamedChain.asChain([
+          NamedChain.writeValue('body', Body.body()),
+          NamedChain.write('editor', cCreateEditorWithToolbar(undefined)),
+          NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+          NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
+          NamedChain.direct('toolbar', cAssertIsDefaultToolbar, Id.generate('')),
+          NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+          NamedChain.bundle(Result.value)
+        ])
+      ]),
 
-      Log.chainsAsStep(
-        'TBA',
-        'Testing toolbar: "bold italic" should create "bold italic" toolbar',
-        [
-          NamedChain.asChain([
-            NamedChain.writeValue('body', Body.body()),
-            NamedChain.write('editor', cCreateEditorWithToolbar('bold italic')),
-            NamedChain.direct(
-              'body',
-              UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'),
-              '_menubar'
+      Log.chainsAsStep('TBA', 'Testing toolbar: "bold italic" should create "bold italic" toolbar', [
+        NamedChain.asChain([
+          NamedChain.writeValue('body', Body.body()),
+          NamedChain.write('editor', cCreateEditorWithToolbar('bold italic')),
+          NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+          NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
+          NamedChain.direct(
+            'toolbar',
+            Assertions.cAssertStructure(
+              'Checking toolbar should have just bold and italic',
+              ApproxStructure.build((s, str, arr) =>
+                s.element('div', {
+                  classes: [arr.has('tox-toolbar')],
+                  children: [
+                    s.element('div', {
+                      classes: [arr.has('tox-toolbar__group')],
+                      children: [s.element('button', {}), s.element('button', {})]
+                    })
+                  ]
+                })
+              )
             ),
-            NamedChain.direct(
-              'body',
-              cExtractOnlyOne('.tox-toolbar'),
-              'toolbar'
-            ),
-            NamedChain.direct(
-              'toolbar',
-              Assertions.cAssertStructure(
-                'Checking toolbar should have just bold and italic',
-                ApproxStructure.build((s, str, arr) =>
-                  s.element('div', {
-                    classes: [arr.has('tox-toolbar')],
-                    children: [
-                      s.element('div', {
-                        classes: [arr.has('tox-toolbar__group')],
-                        children: [
-                          s.element('button', {}),
-                          s.element('button', {})
-                        ]
-                      })
-                    ]
-                  })
-                )
-              ),
-              Id.generate('')
-            ),
-            NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
-            NamedChain.bundle(Result.value)
-          ])
-        ]
-      ),
+            Id.generate('')
+          ),
+          NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+          NamedChain.bundle(Result.value)
+        ])
+      ]),
 
       Log.chainsAsStep(
         'TBA',
@@ -183,22 +107,9 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         [
           NamedChain.asChain([
             NamedChain.writeValue('body', Body.body()),
-            NamedChain.write(
-              'editor',
-              cCreateEditorWithToolbar(
-                'bold italic | stufffffed | strikethrough underline'
-              )
-            ),
-            NamedChain.direct(
-              'body',
-              UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'),
-              '_menubar'
-            ),
-            NamedChain.direct(
-              'body',
-              cExtractOnlyOne('.tox-toolbar'),
-              'toolbar'
-            ),
+            NamedChain.write('editor', cCreateEditorWithToolbar('bold italic | stufffffed | strikethrough underline')),
+            NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+            NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
             NamedChain.direct(
               'toolbar',
               Assertions.cAssertStructure(
@@ -209,17 +120,11 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                     children: [
                       s.element('div', {
                         classes: [arr.has('tox-toolbar__group')],
-                        children: [
-                          s.element('button', {}),
-                          s.element('button', {})
-                        ]
+                        children: [s.element('button', {}), s.element('button', {})]
                       }),
                       s.element('div', {
                         classes: [arr.has('tox-toolbar__group')],
-                        children: [
-                          s.element('button', {}),
-                          s.element('button', {})
-                        ]
+                        children: [s.element('button', {}), s.element('button', {})]
                       })
                     ]
                   })
@@ -239,29 +144,11 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         [
           NamedChain.asChain([
             NamedChain.writeValue('body', Body.body()),
-            NamedChain.write(
-              'editor',
-              cCreateEditorWithToolbar([
-                'bold italic',
-                'underline | strikethrough'
-              ])
-            ),
-            NamedChain.direct(
-              'body',
-              UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'),
-              '_menubar'
-            ),
-            NamedChain.direct(
-              'body',
-              cExtractOnlyOne('.tox-toolbar-overlord'),
-              'multiple-toolbars'
-            ),
+            NamedChain.write('editor', cCreateEditorWithToolbar(['bold italic', 'underline | strikethrough'])),
+            NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+            NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
             NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'toolbars'),
-            NamedChain.direct(
-              'toolbars',
-              Assertions.cAssertEq('Should be two toolbars', 2),
-              'toolbars'
-            ),
+            NamedChain.direct('toolbars', Assertions.cAssertEq('Should be two toolbars', 2), 'toolbars'),
             NamedChain.direct(
               'multiple-toolbars',
               Assertions.cAssertStructure(
@@ -275,10 +162,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                         children: [
                           s.element('div', {
                             classes: [arr.has('tox-toolbar__group')],
-                            children: [
-                              s.element('button', {}),
-                              s.element('button', {})
-                            ]
+                            children: [s.element('button', {}), s.element('button', {})]
                           })
                         ]
                       }),
@@ -307,84 +191,52 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         ]
       ),
 
-      Log.chainsAsStep(
-        'TBA',
-        'Testing toolbar: ["bold"] should create "bold" toolbar',
-        [
-          NamedChain.asChain([
-            NamedChain.writeValue('body', Body.body()),
-            NamedChain.write('editor', cCreateEditorWithToolbar(['bold'])),
-            NamedChain.direct(
-              'body',
-              UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'),
-              '_menubar'
+      Log.chainsAsStep('TBA', 'Testing toolbar: ["bold"] should create "bold" toolbar', [
+        NamedChain.asChain([
+          NamedChain.writeValue('body', Body.body()),
+          NamedChain.write('editor', cCreateEditorWithToolbar(['bold'])),
+          NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+          NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
+          NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
+          NamedChain.direct(
+            'multiple-toolbars',
+            Assertions.cAssertStructure(
+              'Checking toolbar should have just bold',
+              ApproxStructure.build((s, str, arr) =>
+                s.element('div', {
+                  classes: [arr.has('tox-toolbar-overlord')],
+                  children: [
+                    s.element('div', {
+                      classes: [arr.has('tox-toolbar')],
+                      children: [
+                        s.element('div', {
+                          classes: [arr.has('tox-toolbar__group')],
+                          children: [s.element('button', {})]
+                        })
+                      ]
+                    })
+                  ]
+                })
+              )
             ),
-            NamedChain.direct(
-              'body',
-              cExtractOnlyOne('.tox-toolbar-overlord'),
-              'multiple-toolbars'
-            ),
-            NamedChain.direct(
-              'body',
-              cExtractOnlyOne('.tox-toolbar'),
-              'toolbar'
-            ),
-            NamedChain.direct(
-              'multiple-toolbars',
-              Assertions.cAssertStructure(
-                'Checking toolbar should have just bold',
-                ApproxStructure.build((s, str, arr) =>
-                  s.element('div', {
-                    classes: [arr.has('tox-toolbar-overlord')],
-                    children: [
-                      s.element('div', {
-                        classes: [arr.has('tox-toolbar')],
-                        children: [
-                          s.element('div', {
-                            classes: [arr.has('tox-toolbar__group')],
-                            children: [s.element('button', {})]
-                          })
-                        ]
-                      })
-                    ]
-                  })
-                )
-              ),
-              Id.generate('')
-            ),
-            NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
-            NamedChain.bundle(Result.value)
-          ])
-        ]
-      ),
+            Id.generate('')
+          ),
+          NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+          NamedChain.bundle(Result.value)
+        ])
+      ]),
 
-      Log.chainsAsStep(
-        'TBA',
-        'Testing toolbar: empty array should not create toolbar at all',
-        [
-          NamedChain.asChain([
-            NamedChain.writeValue('body', Body.body()),
-            NamedChain.write('editor', cCreateEditorWithToolbar([])),
-            NamedChain.direct(
-              'body',
-              UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'),
-              '_menubar'
-            ),
-            NamedChain.direct(
-              'body',
-              cCountNumber('.tox-toolbar'),
-              'numToolbars'
-            ),
-            NamedChain.direct(
-              'numToolbars',
-              Assertions.cAssertEq('Should be no toolbars', 0),
-              Id.generate('')
-            ),
-            NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
-            NamedChain.bundle(Result.value)
-          ])
-        ]
-      ),
+      Log.chainsAsStep('TBA', 'Testing toolbar: empty array should not create toolbar at all', [
+        NamedChain.asChain([
+          NamedChain.writeValue('body', Body.body()),
+          NamedChain.write('editor', cCreateEditorWithToolbar([])),
+          NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+          NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'numToolbars'),
+          NamedChain.direct('numToolbars', Assertions.cAssertEq('Should be no toolbars', 0), Id.generate('')),
+          NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+          NamedChain.bundle(Result.value)
+        ])
+      ]),
 
       Log.chainsAsStep(
         'TBA',
@@ -392,30 +244,11 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         [
           NamedChain.asChain([
             NamedChain.writeValue('body', Body.body()),
-            NamedChain.write(
-              'editor',
-              cCreateEditorWithToolbar(
-                'link',
-                'bold italic underline',
-                'strikethrough'
-              )
-            ),
-            NamedChain.direct(
-              'body',
-              UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'),
-              '_menubar'
-            ),
-            NamedChain.direct(
-              'body',
-              cExtractOnlyOne('.tox-toolbar-overlord'),
-              'multiple-toolbars'
-            ),
+            NamedChain.write('editor', cCreateEditorWithToolbar('link', 'bold italic underline', 'strikethrough')),
+            NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+            NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
             NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'toolbars'),
-            NamedChain.direct(
-              'toolbars',
-              Assertions.cAssertEq('Should be two toolbars', 2),
-              'toolbars'
-            ),
+            NamedChain.direct('toolbars', Assertions.cAssertEq('Should be two toolbars', 2), 'toolbars'),
             NamedChain.direct(
               'multiple-toolbars',
               Assertions.cAssertStructure(
@@ -429,11 +262,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                         children: [
                           s.element('div', {
                             classes: [arr.has('tox-toolbar__group')],
-                            children: [
-                              s.element('button', {}),
-                              s.element('button', {}),
-                              s.element('button', {})
-                            ]
+                            children: [s.element('button', {}), s.element('button', {}), s.element('button', {})]
                           })
                         ]
                       }),
@@ -464,27 +293,10 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         [
           NamedChain.asChain([
             NamedChain.writeValue('body', Body.body()),
-            NamedChain.write(
-              'editor',
-              cCreateEditorWithToolbar(true, 'bold italic underline', [
-                'strikethrough'
-              ])
-            ),
-            NamedChain.direct(
-              'body',
-              UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'),
-              '_menubar'
-            ),
-            NamedChain.direct(
-              'body',
-              cExtractOnlyOne('.tox-toolbar-overlord'),
-              'multiple-toolbars'
-            ),
-            NamedChain.direct(
-              'body',
-              cExtractOnlyOne('.tox-toolbar'),
-              'toolbars'
-            ),
+            NamedChain.write('editor', cCreateEditorWithToolbar(true, 'bold italic underline', ['strikethrough'])),
+            NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+            NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
+            NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbars'),
             NamedChain.direct(
               'multiple-toolbars',
               Assertions.cAssertStructure(
@@ -498,11 +310,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                         children: [
                           s.element('div', {
                             classes: [arr.has('tox-toolbar__group')],
-                            children: [
-                              s.element('button', {}),
-                              s.element('button', {}),
-                              s.element('button', {})
-                            ]
+                            children: [s.element('button', {}), s.element('button', {}), s.element('button', {})]
                           })
                         ]
                       })
@@ -524,25 +332,10 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         [
           NamedChain.asChain([
             NamedChain.writeValue('body', Body.body()),
-            NamedChain.write(
-              'editor',
-              cCreateEditorWithToolbar(false, false, 'bold italic')
-            ),
-            NamedChain.direct(
-              'body',
-              UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'),
-              '_menubar'
-            ),
-            NamedChain.direct(
-              'body',
-              cExtractOnlyOne('.tox-toolbar-overlord'),
-              'multiple-toolbars'
-            ),
-            NamedChain.direct(
-              'body',
-              cExtractOnlyOne('.tox-toolbar'),
-              'toolbars'
-            ),
+            NamedChain.write('editor', cCreateEditorWithToolbar(false, false, 'bold italic')),
+            NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+            NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
+            NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbars'),
             NamedChain.direct(
               'multiple-toolbars',
               Assertions.cAssertStructure(
@@ -556,10 +349,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                         children: [
                           s.element('div', {
                             classes: [arr.has('tox-toolbar__group')],
-                            children: [
-                              s.element('button', {}),
-                              s.element('button', {})
-                            ]
+                            children: [s.element('button', {}), s.element('button', {})]
                           })
                         ]
                       })
@@ -581,26 +371,11 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         [
           NamedChain.asChain([
             NamedChain.writeValue('body', Body.body()),
-            NamedChain.write(
-              'editor',
-              cCreateEditorWithToolbar([], 'bold italic', 'strikethrough')
-            ),
-            NamedChain.direct(
-              'body',
-              UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'),
-              '_menubar'
-            ),
-            NamedChain.direct(
-              'body',
-              cExtractOnlyOne('.tox-toolbar-overlord'),
-              'multiple-toolbars'
-            ),
+            NamedChain.write('editor', cCreateEditorWithToolbar([], 'bold italic', 'strikethrough')),
+            NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+            NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
             NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'toolbars'),
-            NamedChain.direct(
-              'toolbars',
-              Assertions.cAssertEq('Should be two toolbars', 2),
-              'toolbars'
-            ),
+            NamedChain.direct('toolbars', Assertions.cAssertEq('Should be two toolbars', 2), 'toolbars'),
             NamedChain.direct(
               'multiple-toolbars',
               Assertions.cAssertStructure(
@@ -614,10 +389,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                         children: [
                           s.element('div', {
                             classes: [arr.has('tox-toolbar__group')],
-                            children: [
-                              s.element('button', {}),
-                              s.element('button', {})
-                            ]
+                            children: [s.element('button', {}), s.element('button', {})]
                           })
                         ]
                       }),
@@ -648,25 +420,10 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         [
           NamedChain.asChain([
             NamedChain.writeValue('body', Body.body()),
-            NamedChain.write(
-              'editor',
-              cCreateEditorWithToolbar(true, false, 'bold italic underline')
-            ),
-            NamedChain.direct(
-              'body',
-              UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'),
-              '_menubar'
-            ),
-            NamedChain.direct(
-              'body',
-              cExtractOnlyOne('.tox-toolbar-overlord'),
-              'multiple-toolbars'
-            ),
-            NamedChain.direct(
-              'body',
-              cExtractOnlyOne('.tox-toolbar'),
-              'toolbars'
-            ),
+            NamedChain.write('editor', cCreateEditorWithToolbar(true, false, 'bold italic underline')),
+            NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+            NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
+            NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbars'),
             NamedChain.direct(
               'multiple-toolbars',
               Assertions.cAssertStructure(
@@ -680,11 +437,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                         children: [
                           s.element('div', {
                             classes: [arr.has('tox-toolbar__group')],
-                            children: [
-                              s.element('button', {}),
-                              s.element('button', {}),
-                              s.element('button', {})
-                            ]
+                            children: [s.element('button', {}), s.element('button', {}), s.element('button', {})]
                           })
                         ]
                       })
@@ -706,31 +459,11 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         [
           NamedChain.asChain([
             NamedChain.writeValue('body', Body.body()),
-            NamedChain.write(
-              'editor',
-              cCreateEditorWithToolbar(
-                true,
-                'bold italic | underline',
-                false,
-                'strikethrough'
-              )
-            ),
-            NamedChain.direct(
-              'body',
-              UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'),
-              '_menubar'
-            ),
-            NamedChain.direct(
-              'body',
-              cExtractOnlyOne('.tox-toolbar-overlord'),
-              'multiple-toolbars'
-            ),
+            NamedChain.write('editor', cCreateEditorWithToolbar(true, 'bold italic | underline', false, 'strikethrough')),
+            NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+            NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
             NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'toolbars'),
-            NamedChain.direct(
-              'toolbars',
-              Assertions.cAssertEq('Should be two toolbars', 2),
-              'toolbars'
-            ),
+            NamedChain.direct('toolbars', Assertions.cAssertEq('Should be two toolbars', 2), 'toolbars'),
             NamedChain.direct(
               'multiple-toolbars',
               Assertions.cAssertStructure(
@@ -744,10 +477,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                         children: [
                           s.element('div', {
                             classes: [arr.has('tox-toolbar__group')],
-                            children: [
-                              s.element('button', {}),
-                              s.element('button', {})
-                            ]
+                            children: [s.element('button', {}), s.element('button', {})]
                           }),
                           s.element('div', {
                             classes: [arr.has('tox-toolbar__group')],
@@ -776,101 +506,41 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         ]
       ),
 
-      Log.chainsAsStep(
-        'TBA',
-        'Testing multiple toolbars: toolbar1: [] and toolbar2: false should create default toolbar',
-        [
-          NamedChain.asChain([
-            NamedChain.writeValue('body', Body.body()),
-            NamedChain.write(
-              'editor',
-              cCreateEditorWithToolbar(true, [], false)
-            ),
-            NamedChain.direct(
-              'body',
-              UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'),
-              '_menubar'
-            ),
-            NamedChain.direct(
-              'body',
-              cExtractOnlyOne('.tox-toolbar'),
-              'toolbar'
-            ),
-            NamedChain.direct(
-              'toolbar',
-              cAssertIsDefaultToolbar,
-              Id.generate('')
-            ),
-            NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
-            NamedChain.bundle(Result.value)
-          ])
-        ]
-      ),
+      Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar1: [] and toolbar2: false should create default toolbar', [
+        NamedChain.asChain([
+          NamedChain.writeValue('body', Body.body()),
+          NamedChain.write('editor', cCreateEditorWithToolbar(true, [], false)),
+          NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+          NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
+          NamedChain.direct('toolbar', cAssertIsDefaultToolbar, Id.generate('')),
+          NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+          NamedChain.bundle(Result.value)
+        ])
+      ]),
 
-      Log.chainsAsStep(
-        'TBA',
-        'Testing multiple toolbars: toolbar25: "bold italic underline" should create default toolbar',
-        [
-          NamedChain.asChain([
-            NamedChain.writeValue('body', Body.body()),
-            NamedChain.write(
-              'editor',
-              cCreateEditorWithToolbar(
-                true,
-                false,
-                false,
-                false,
-                'bold italic underline'
-              )
-            ),
-            NamedChain.direct(
-              'body',
-              UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'),
-              '_menubar'
-            ),
-            NamedChain.direct(
-              'body',
-              cExtractOnlyOne('.tox-toolbar'),
-              'toolbar'
-            ),
-            NamedChain.direct(
-              'toolbar',
-              cAssertIsDefaultToolbar,
-              Id.generate('')
-            ),
-            NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
-            NamedChain.bundle(Result.value)
-          ])
-        ]
-      ),
+      Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar25: "bold italic underline" should create default toolbar', [
+        NamedChain.asChain([
+          NamedChain.writeValue('body', Body.body()),
+          NamedChain.write('editor', cCreateEditorWithToolbar(true, false, false, false, 'bold italic underline')),
+          NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+          NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
+          NamedChain.direct('toolbar', cAssertIsDefaultToolbar, Id.generate('')),
+          NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+          NamedChain.bundle(Result.value)
+        ])
+      ]),
 
-      Log.chainsAsStep(
-        'TBA',
-        'Testing invalid toolbar type should not create a toolbar at all',
-        [
-          NamedChain.asChain([
-            NamedChain.writeValue('body', Body.body()),
-            NamedChain.write('editor', cCreateEditorWithToolbar(1)),
-            NamedChain.direct(
-              'body',
-              UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'),
-              '_menubar'
-            ),
-            NamedChain.direct(
-              'body',
-              cCountNumber('.tox-toolbar'),
-              'numToolbars'
-            ),
-            NamedChain.direct(
-              'numToolbars',
-              Assertions.cAssertEq('Should be no toolbars', 0),
-              Id.generate('')
-            ),
-            NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
-            NamedChain.bundle(Result.value)
-          ])
-        ]
-      ),
+      Log.chainsAsStep('TBA', 'Testing invalid toolbar type should not create a toolbar at all', [
+        NamedChain.asChain([
+          NamedChain.writeValue('body', Body.body()),
+          NamedChain.write('editor', cCreateEditorWithToolbar(1)),
+          NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+          NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'numToolbars'),
+          NamedChain.direct('numToolbars', Assertions.cAssertEq('Should be no toolbars', 0), Id.generate('')),
+          NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+          NamedChain.bundle(Result.value)
+        ])
+      ]),
 
       Log.chainsAsStep(
         'TBA',
@@ -885,16 +555,8 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                 { name: 'formatting', items: ['bold', 'italic'] }
               ])
             ),
-            NamedChain.direct(
-              'body',
-              UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'),
-              '_menubar'
-            ),
-            NamedChain.direct(
-              'body',
-              cExtractOnlyOne('.tox-toolbar'),
-              'toolbar'
-            ),
+            NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
+            NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
             NamedChain.direct(
               'toolbar',
               Assertions.cAssertStructure(
@@ -908,20 +570,14 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
                         attrs: {
                           title: str.is('history')
                         },
-                        children: [
-                          s.element('button', {}),
-                          s.element('button', {})
-                        ]
+                        children: [s.element('button', {}), s.element('button', {})]
                       }),
                       s.element('div', {
                         classes: [arr.has('tox-toolbar__group')],
                         attrs: {
                           title: str.is('formatting')
                         },
-                        children: [
-                          s.element('button', {}),
-                          s.element('button', {})
-                        ]
+                        children: [s.element('button', {}), s.element('button', {})]
                       })
                     ]
                   })

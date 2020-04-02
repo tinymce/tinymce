@@ -34,10 +34,7 @@ const getEmptyCaretContainers = function (node: Node) {
   const nodes = [];
 
   while (node) {
-    if (
-      (node.nodeType === 3 && node.nodeValue !== ZWSP) ||
-      node.childNodes.length > 1
-    ) {
+    if ((node.nodeType === 3 && node.nodeValue !== ZWSP) || node.childNodes.length > 1) {
       return [];
     }
 
@@ -96,21 +93,12 @@ const trimZwspFromCaretContainer = function (caretContainerNode: Node) {
   return textNode;
 };
 
-const removeCaretContainerNode = (
-  editor: Editor,
-  node: Node,
-  moveCaret: boolean = true
-) => {
+const removeCaretContainerNode = (editor: Editor, node: Node, moveCaret: boolean = true) => {
   const dom = editor.dom,
     selection = editor.selection;
 
   if (isCaretContainerEmpty(node)) {
-    DeleteElement.deleteElement(
-      editor,
-      false,
-      Element.fromDom(node),
-      moveCaret
-    );
+    DeleteElement.deleteElement(editor, false, Element.fromDom(node), moveCaret);
   } else {
     const rng = selection.getRng();
     const block = dom.getParent(node, dom.isBlock);
@@ -135,11 +123,7 @@ const removeCaretContainerNode = (
 };
 
 // Removes the caret container for the specified node or all on the current document
-const removeCaretContainer = function (
-  editor: Editor,
-  node: Node,
-  moveCaret: boolean = true
-) {
+const removeCaretContainer = function (editor: Editor, node: Node, moveCaret: boolean = true) {
   const dom = editor.dom,
     selection = editor.selection;
   if (!node) {
@@ -155,16 +139,9 @@ const removeCaretContainer = function (
   }
 };
 
-const insertCaretContainerNode = function (
-  editor: Editor,
-  caretContainer: Node,
-  formatNode: Node
-) {
+const insertCaretContainerNode = function (editor: Editor, caretContainer: Node, formatNode: Node) {
   const dom = editor.dom,
-    block = dom.getParent(
-      formatNode,
-      Fun.curry(FormatUtils.isTextBlock, editor)
-    );
+    block = dom.getParent(formatNode, Fun.curry(FormatUtils.isTextBlock, editor));
 
   if (block && dom.isEmpty(block)) {
     // Replace formatNode with caretContainer when removing format from empty block like <p><b>|</b></p>
@@ -184,10 +161,7 @@ const appendNode = function (parentNode: Node, node: Node) {
   return node;
 };
 
-const insertFormatNodesIntoCaretContainer = function (
-  formatNodes: Node[],
-  caretContainer: Node
-) {
+const insertFormatNodesIntoCaretContainer = function (formatNodes: Node[], caretContainer: Node) {
   const innerMostFormatNode = Arr.foldr(
     formatNodes,
     function (parentNode, formatNode) {
@@ -196,17 +170,10 @@ const insertFormatNodesIntoCaretContainer = function (
     caretContainer
   );
 
-  return appendNode(
-    innerMostFormatNode,
-    innerMostFormatNode.ownerDocument.createTextNode(ZWSP)
-  );
+  return appendNode(innerMostFormatNode, innerMostFormatNode.ownerDocument.createTextNode(ZWSP));
 };
 
-const applyCaretFormat = function (
-  editor: Editor,
-  name: string,
-  vars: FormatVars
-) {
+const applyCaretFormat = function (editor: Editor, name: string, vars: FormatVars) {
   let rng, caretContainer, textNode, offset, bookmark, container, text;
   const selection = editor.selection;
 
@@ -215,10 +182,7 @@ const applyCaretFormat = function (
   container = rng.startContainer;
   text = container.nodeValue;
 
-  caretContainer = getParentCaretContainer(
-    editor.getBody(),
-    selection.getStart()
-  );
+  caretContainer = getParentCaretContainer(editor.getBody(), selection.getStart());
   if (caretContainer) {
     textNode = findFirstTextNode(caretContainer);
   }
@@ -250,10 +214,7 @@ const applyCaretFormat = function (
   } else {
     if (!caretContainer || textNode.nodeValue !== ZWSP) {
       // Need to import the node into the document on IE or we get a lovely WrongDocument exception
-      caretContainer = importNode(
-        editor.getDoc(),
-        createCaretContainer(true).dom()
-      );
+      caretContainer = importNode(editor.getDoc(), createCaretContainer(true).dom());
       textNode = caretContainer.firstChild;
 
       rng.insertNode(caretContainer);
@@ -269,12 +230,7 @@ const applyCaretFormat = function (
   }
 };
 
-const removeCaretFormat = function (
-  editor: Editor,
-  name: string,
-  vars: FormatVars,
-  similar: boolean
-) {
+const removeCaretFormat = function (editor: Editor, name: string, vars: FormatVars, similar: boolean) {
   const dom = editor.dom,
     selection: Selection = editor.selection;
   let container, offset, bookmark;
@@ -322,12 +278,7 @@ const removeCaretFormat = function (
     rng.collapse(true);
 
     // Expand the range to the closest word and split it at those points
-    let expandedRng = ExpandRange.expandRng(
-      editor,
-      rng,
-      editor.formatter.get(name),
-      true
-    );
+    let expandedRng = ExpandRange.expandRng(editor, rng, editor.formatter.get(name), true);
     expandedRng = SplitRange.split(expandedRng);
 
     // TODO: Figure out how on earth this works, as it shouldn't since remove format
@@ -337,10 +288,7 @@ const removeCaretFormat = function (
   } else {
     caretContainer = getParentCaretContainer(editor.getBody(), formatNode);
     const newCaretContainer = createCaretContainer(false).dom();
-    const caretNode = insertFormatNodesIntoCaretContainer(
-      parents,
-      newCaretContainer
-    );
+    const caretNode = insertFormatNodesIntoCaretContainer(parents, newCaretContainer);
 
     if (caretContainer) {
       insertCaretContainerNode(editor, newCaretContainer, caretContainer);
@@ -364,23 +312,13 @@ const disableCaretContainer = function (editor: Editor, keyCode: number) {
   removeCaretContainer(editor, null, false);
 
   // Remove caret container if it's empty
-  if (
-    (keyCode === 8 || keyCode === 46) &&
-    selection.isCollapsed() &&
-    selection.getStart().innerHTML === ZWSP
-  ) {
-    removeCaretContainer(
-      editor,
-      getParentCaretContainer(body, selection.getStart())
-    );
+  if ((keyCode === 8 || keyCode === 46) && selection.isCollapsed() && selection.getStart().innerHTML === ZWSP) {
+    removeCaretContainer(editor, getParentCaretContainer(body, selection.getStart()));
   }
 
   // Remove caret container on keydown and it's left/right arrow keys
   if (keyCode === 37 || keyCode === 39) {
-    removeCaretContainer(
-      editor,
-      getParentCaretContainer(body, selection.getStart())
-    );
+    removeCaretContainer(editor, getParentCaretContainer(body, selection.getStart()));
   }
 };
 
@@ -390,15 +328,9 @@ const setup = function (editor: Editor) {
   });
 };
 
-const replaceWithCaretFormat = function (
-  targetNode: Node,
-  formatNodes: Node[]
-) {
+const replaceWithCaretFormat = function (targetNode: Node, formatNodes: Node[]) {
   const caretContainer = createCaretContainer(false);
-  const innerMost = insertFormatNodesIntoCaretContainer(
-    formatNodes,
-    caretContainer.dom()
-  );
+  const innerMost = insertFormatNodesIntoCaretContainer(formatNodes, caretContainer.dom());
   Insert.before(Element.fromDom(targetNode), caretContainer);
   Remove.remove(Element.fromDom(targetNode));
 
@@ -407,22 +339,11 @@ const replaceWithCaretFormat = function (
 
 const isFormatElement = function (editor: Editor, element: Element) {
   const inlineElements = editor.schema.getTextInlineElements();
-  return (
-    inlineElements.hasOwnProperty(SugarNode.name(element)) &&
-    !isCaretNode(element.dom()) &&
-    !NodeType.isBogus(element.dom())
-  );
+  return inlineElements.hasOwnProperty(SugarNode.name(element)) && !isCaretNode(element.dom()) && !NodeType.isBogus(element.dom());
 };
 
 const isEmptyCaretFormatElement = function (element: Element) {
   return isCaretNode(element.dom()) && isCaretContainerEmpty(element.dom());
 };
 
-export {
-  setup,
-  applyCaretFormat,
-  removeCaretFormat,
-  replaceWithCaretFormat,
-  isFormatElement,
-  isEmptyCaretFormatElement
-};
+export { setup, applyCaretFormat, removeCaretFormat, replaceWithCaretFormat, isFormatElement, isEmptyCaretFormatElement };

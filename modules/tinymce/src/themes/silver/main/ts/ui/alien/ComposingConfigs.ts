@@ -22,10 +22,7 @@ const memento = (mem: MementoRecord) =>
 
 const childAt = (index: number) =>
   Composing.config({
-    find: (comp: AlloyComponent) =>
-      Traverse.child(comp.element(), index).bind((element) =>
-        comp.getSystem().getByDom(element).toOption()
-      )
+    find: (comp: AlloyComponent) => Traverse.child(comp.element(), index).bind((element) => comp.getSystem().getByDom(element).toOption())
   });
 
 export const ComposingConfigs = {

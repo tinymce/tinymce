@@ -45,10 +45,6 @@ const highlight = function (words: string[], nu: () => Wrapter<Element>) {
   });
 };
 
-const ephoxUi = Element.fromDom(
-  Option.from(document.getElementById('ephox-ui')).getOrDie(
-    'No element with id "ephox-id"'
-  )
-);
+const ephoxUi = Element.fromDom(Option.from(document.getElementById('ephox-ui')).getOrDie('No element with id "ephox-id"'));
 Insert.append(ephoxUi, p);
 Insert.append(ephoxUi, button);

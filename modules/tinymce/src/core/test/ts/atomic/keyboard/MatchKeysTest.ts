@@ -3,10 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Cell } from '@ephox/katamari';
 import * as MatchKeys from 'tinymce/core/keyboard/MatchKeys';
 
-UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (success, failure) {
   const state = Cell([]);
 
   const event = function (evt) {
@@ -38,21 +35,13 @@ UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (
         return pattern.action();
       });
 
-      Assertions.assertEq(
-        'Should have the expected state',
-        expectedData,
-        state.get()
-      );
+      Assertions.assertEq('Should have the expected state', expectedData, state.get());
     });
   };
 
   const sTestMatchNone = function (patterns, event) {
     return Step.sync(function () {
-      Assertions.assertEq(
-        'Should not produce any matches',
-        0,
-        MatchKeys.match(patterns, event).length
-      );
+      Assertions.assertEq('Should not produce any matches', 0, MatchKeys.match(patterns, event).length);
     });
   };
 
@@ -61,16 +50,8 @@ UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (
       state.set([]);
 
       const result = MatchKeys.execute(patterns, event);
-      Assertions.assertEq(
-        'Should be expected match',
-        expectedMatch,
-        result.getOrDie()
-      );
-      Assertions.assertEq(
-        'Should have the expected state',
-        expectedData,
-        state.get()
-      );
+      Assertions.assertEq('Should be expected match', expectedMatch, result.getOrDie());
+      Assertions.assertEq('Should have the expected state', expectedData, state.get());
     });
   };
 
@@ -82,33 +63,12 @@ UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (
     [
       sTestMatchNone([], {}),
       sTestMatchNone([], event({ keyCode: 65 })),
-      sTestMatchNone(
-        [{ keyCode: 65, action: actionA }],
-        event({ keyCode: 13 })
-      ),
-      sTestMatch([{ keyCode: 65, action: actionA }], event({ keyCode: 65 }), [
-        'a'
-      ]),
-      sTestMatch(
-        [{ keyCode: 65, shiftKey: true, action: actionA }],
-        event({ keyCode: 65, shiftKey: true }),
-        ['a']
-      ),
-      sTestMatch(
-        [{ keyCode: 65, altKey: true, action: actionA }],
-        event({ keyCode: 65, altKey: true }),
-        ['a']
-      ),
-      sTestMatch(
-        [{ keyCode: 65, ctrlKey: true, action: actionA }],
-        event({ keyCode: 65, ctrlKey: true }),
-        ['a']
-      ),
-      sTestMatch(
-        [{ keyCode: 65, metaKey: true, action: actionA }],
-        event({ keyCode: 65, metaKey: true }),
-        ['a']
-      ),
+      sTestMatchNone([{ keyCode: 65, action: actionA }], event({ keyCode: 13 })),
+      sTestMatch([{ keyCode: 65, action: actionA }], event({ keyCode: 65 }), ['a']),
+      sTestMatch([{ keyCode: 65, shiftKey: true, action: actionA }], event({ keyCode: 65, shiftKey: true }), ['a']),
+      sTestMatch([{ keyCode: 65, altKey: true, action: actionA }], event({ keyCode: 65, altKey: true }), ['a']),
+      sTestMatch([{ keyCode: 65, ctrlKey: true, action: actionA }], event({ keyCode: 65, ctrlKey: true }), ['a']),
+      sTestMatch([{ keyCode: 65, metaKey: true, action: actionA }], event({ keyCode: 65, metaKey: true }), ['a']),
       sTestMatch(
         [
           {
@@ -157,11 +117,7 @@ UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (
             3
           );
 
-          Assertions.assertEq(
-            'Should return the parameters passed in',
-            [1, 2, 3],
-            action()
-          );
+          Assertions.assertEq('Should return the parameters passed in', [1, 2, 3], action());
         })
       )
     ],

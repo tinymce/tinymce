@@ -20,14 +20,8 @@ type ShallowMerge<A, B> = {
 type ShallowMergeFunc = {
   <A, B>(a: A, b: B): ShallowMerge<A, B>;
   <A, B, C>(a: A, b: B, c: C): ShallowMerge<ShallowMerge<A, B>, C>;
-  <A, B, C, D>(a: A, b: B, c: C, d: D): ShallowMerge<
-    ShallowMerge<ShallowMerge<A, B>, C>,
-    D
-  >;
-  <A, B, C, D, E>(a: A, b: B, c: C, d: D, e: E): ShallowMerge<
-    ShallowMerge<ShallowMerge<ShallowMerge<A, B>, C>, D>,
-    E
-  >;
+  <A, B, C, D>(a: A, b: B, c: C, d: D): ShallowMerge<ShallowMerge<ShallowMerge<A, B>, C>, D>;
+  <A, B, C, D, E>(a: A, b: B, c: C, d: D, e: E): ShallowMerge<ShallowMerge<ShallowMerge<ShallowMerge<A, B>, C>, D>, E>;
   <A, B, C, D, E, F>(a: A, b: B, c: C, d: D, e: E, f: F): ShallowMerge<
     ShallowMerge<ShallowMerge<ShallowMerge<ShallowMerge<A, B>, C>, D>, E>,
     F
@@ -46,9 +40,7 @@ const deep = function (old: Record<string, any>, nu: Record<string, any>) {
   return bothObjects ? deepMerge(old, nu) : nu;
 };
 
-const baseMerge = function (
-  merger: MergeStrategy
-): (...objs: Array<Record<string, any>>) => any {
+const baseMerge = function (merger: MergeStrategy): (...objs: Array<Record<string, any>>) => any {
   return function () {
     // Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
     const objects = new Array(arguments.length);

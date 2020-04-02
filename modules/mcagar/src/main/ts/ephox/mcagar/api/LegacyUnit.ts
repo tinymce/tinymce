@@ -4,11 +4,7 @@ import { TinyDom } from './TinyDom';
 import { Editor } from '../alien/EditorTypes';
 
 type SyncTestCallback<T> = (initValue: T) => void;
-type AsyncTestCallback<T> = (
-  initValue: T,
-  done: () => void,
-  die: (err?: any) => void
-) => void;
+type AsyncTestCallback<T> = (initValue: T, done: () => void, die: (err?: any) => void) => void;
 type Offset = 'after' | 'afterNextCharacter' | number;
 
 const test = function <T>(message: string, fn: SyncTestCallback<T>) {
@@ -53,21 +49,13 @@ const createSuite = function <T = any>() {
   };
 };
 
-const execCommand = function <T extends Editor = Editor>(
-  editor: T,
-  cmd: string,
-  ui?: boolean,
-  value?: any
-) {
+const execCommand = function <T extends Editor = Editor>(editor: T, cmd: string, ui?: boolean, value?: any) {
   if (editor.editorCommands.hasCustomCommand(cmd)) {
     editor.execCommand(cmd, ui, value);
   }
 };
 
-const findContainer = function <T extends Editor = Editor>(
-  editor: T,
-  selector: string | DomNode
-) {
+const findContainer = function <T extends Editor = Editor>(editor: T, selector: string | DomNode) {
   let container;
 
   if (typeof selector === 'string') {
@@ -91,17 +79,10 @@ const setSelection = function <T extends Editor = Editor>(
   endOffset?: Offset
 ) {
   const startContainer = findContainer(editor, startSelector);
-  const endContainer = findContainer(
-    editor,
-    endSelector ? endSelector : startSelector
-  );
+  const endContainer = findContainer(editor, endSelector ? endSelector : startSelector);
   const rng = editor.dom.createRng();
 
-  const setRange = function (
-    container: DomNode,
-    offset: Offset | undefined,
-    start: boolean
-  ) {
+  const setRange = function (container: DomNode, offset: Offset | undefined, start: boolean) {
     offset = offset ? offset : 0;
 
     if (offset === 'after') {
@@ -133,11 +114,7 @@ const trimBrs = function (html: string) {
   return html.toLowerCase().replace(/<br[^>]*>|[\r\n]+/gi, '');
 };
 
-const equalDom = function <T extends DomNode>(
-  actual: T,
-  expected: T,
-  message?: string
-) {
+const equalDom = function <T extends DomNode>(actual: T, expected: T, message?: string) {
   Assertions.assertDomEq(
     typeof message !== 'undefined' ? message : 'Nodes are not equal',
     TinyDom.fromDom(expected),
@@ -146,25 +123,10 @@ const equalDom = function <T extends DomNode>(
 };
 
 const equal = function <T>(actual: T, expected: T, message?: string) {
-  Assertions.assertEq(
-    typeof message !== 'undefined' ? message : 'No message specified',
-    expected,
-    actual
-  );
+  Assertions.assertEq(typeof message !== 'undefined' ? message : 'No message specified', expected, actual);
 };
 
 const strictEqual = equal;
 const deepEqual = equal;
 
-export {
-  test,
-  asyncTest,
-  createSuite,
-  execCommand,
-  setSelection,
-  trimBrs,
-  equal,
-  equalDom,
-  strictEqual,
-  deepEqual
-};
+export { test, asyncTest, createSuite, execCommand, setSelection, trimBrs, equal, equalDom, strictEqual, deepEqual };

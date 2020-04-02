@@ -13,10 +13,7 @@ import { Omit } from '../Omit';
 
 type GridSpec = Omit<Types.Grid.Grid, 'type'>;
 
-export const renderGrid = (
-  spec: GridSpec,
-  backstage: UiFactoryBackstageShared
-): SimpleSpec => ({
+export const renderGrid = (spec: GridSpec, backstage: UiFactoryBackstageShared): SimpleSpec => ({
   dom: {
     tag: 'div',
     classes: ['tox-form__grid', `tox-form__grid--${spec.columns}col`]

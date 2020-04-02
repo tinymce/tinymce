@@ -26,12 +26,7 @@ const preprocessRelative = function (startSitu: Situ, finishSitu: Situ) {
   return Selection.relative(start, finish);
 };
 
-const preprocessExact = function (
-  start: Element<DomNode>,
-  soffset: number,
-  finish: Element<DomNode>,
-  foffset: number
-) {
+const preprocessExact = function (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
   const startSitu = beforeSpecial(start, soffset);
   const finishSitu = beforeSpecial(finish, foffset);
   return Selection.relative(startSitu, finishSitu);

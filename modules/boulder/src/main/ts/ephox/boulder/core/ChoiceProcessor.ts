@@ -2,13 +2,7 @@ import { Obj } from '@ephox/katamari';
 import { missingBranch, missingKey } from './SchemaError';
 import { Processor } from './ValueProcessor';
 
-const chooseFrom = function (
-  path,
-  strength,
-  input,
-  branches: Record<string, Processor>,
-  ch: string
-) {
+const chooseFrom = function (path, strength, input, branches: Record<string, Processor>, ch: string) {
   const fields = Obj.get(branches, ch);
   return fields.fold(
     function () {

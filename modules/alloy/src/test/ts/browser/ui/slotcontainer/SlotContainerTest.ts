@@ -1,10 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  Step,
-  StructAssert
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Step, StructAssert } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
 
@@ -24,10 +18,7 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
             classes: ['test-slot-container']
           },
           components: [
-            parts.slot(
-              'inputA',
-              Input.sketch({ inputClasses: ['slot-input'] })
-            ),
+            parts.slot('inputA', Input.sketch({ inputClasses: ['slot-input'] })),
             {
               dom: {
                 tag: 'p',
@@ -59,26 +50,13 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
       ),
     (_doc, _body, _gui, component, _store) => {
       const cGetSlot = (slot: string) =>
-        Chain.binder(() =>
-          SlotContainer.getSlot(component, slot).fold(
-            () => Result.error('Could not find slot: ' + slot),
-            Result.value
-          )
-        );
+        Chain.binder(() => SlotContainer.getSlot(component, slot).fold(() => Result.error('Could not find slot: ' + slot), Result.value));
 
-      const sAssertSlotStructure = (
-        label: string,
-        slot: string,
-        expectedStructure: ApproxStructure.Builder<StructAssert>
-      ) =>
+      const sAssertSlotStructure = (label: string, slot: string, expectedStructure: ApproxStructure.Builder<StructAssert>) =>
         Chain.asStep({}, [
           cGetSlot(slot),
           Chain.op((c) => {
-            Assertions.assertStructure(
-              label,
-              ApproxStructure.build(expectedStructure),
-              c.element()
-            );
+            Assertions.assertStructure(label, ApproxStructure.build(expectedStructure), c.element());
           })
         ]);
 
@@ -130,23 +108,12 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
           })
         );
 
-      const cSlotShowing = (slot: string) =>
-        Chain.mapper(() => SlotContainer.isShowing(component, slot));
+      const cSlotShowing = (slot: string) => Chain.mapper(() => SlotContainer.isShowing(component, slot));
 
-      const sAssertSlotShowing = (slot: string, expectedShowing: boolean) => (
-        label: string
-      ) =>
+      const sAssertSlotShowing = (slot: string, expectedShowing: boolean) => (label: string) =>
         Chain.asStep({}, [
           cSlotShowing(slot),
-          Assertions.cAssertEq(
-            'SlotContainer.isShowing(_,"' +
-              slot +
-              '") !== ' +
-              expectedShowing +
-              ' - ' +
-              label,
-            expectedShowing
-          )
+          Assertions.cAssertEq('SlotContainer.isShowing(_,"' + slot + '") !== ' + expectedShowing + ' - ' + label, expectedShowing)
         ]);
 
       const sAssertButtonSlotShowing = sAssertSlotShowing('buttonB', true);
@@ -154,14 +121,10 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
       const sAssertInputSlotShowing = sAssertSlotShowing('inputA', true);
       const sAssertInputSlotHidden = sAssertSlotShowing('inputA', false);
 
-      const cGetSlotNames = () =>
-        Chain.mapper(() => SlotContainer.getSlotNames(component));
+      const cGetSlotNames = () => Chain.mapper(() => SlotContainer.getSlotNames(component));
 
       const sAssertGetSlotNames = (label: string, expectedSlots: string[]) =>
-        Chain.asStep({}, [
-          cGetSlotNames(),
-          Assertions.cAssertEq(label, expectedSlots)
-        ]);
+        Chain.asStep({}, [cGetSlotNames(), Assertions.cAssertEq(label, expectedSlots)]);
 
       const sShowSlot = (slot: string) =>
         Step.sync(() => {

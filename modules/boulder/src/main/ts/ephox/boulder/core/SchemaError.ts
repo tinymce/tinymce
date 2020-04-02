@@ -13,12 +13,7 @@ const nu = function (path, getErrorInfo) {
 
 const missingStrict = function (path, key, obj) {
   return nu(path, function () {
-    return (
-      'Could not find valid *strict* value for "' +
-      key +
-      '" in ' +
-      formatObj(obj)
-    );
+    return 'Could not find valid *strict* value for "' + key + '" in ' + formatObj(obj);
   });
 };
 
@@ -30,20 +25,13 @@ const missingKey = function (path, key) {
 
 const missingBranch = function (path, branches, branch) {
   return nu(path, function () {
-    return (
-      'The chosen schema: "' +
-      branch +
-      '" did not exist in branches: ' +
-      formatObj(branches)
-    );
+    return 'The chosen schema: "' + branch + '" did not exist in branches: ' + formatObj(branches);
   });
 };
 
 const unsupportedFields = function (path, unsupported) {
   return nu(path, function () {
-    return (
-      'There are unsupported fields: [' + unsupported.join(', ') + '] specified'
-    );
+    return 'There are unsupported fields: [' + unsupported.join(', ') + '] specified';
   });
 };
 
@@ -54,16 +42,7 @@ const custom = function (path, err) {
 };
 
 const toString = function (error) {
-  return (
-    'Failed path: (' + error.path.join(' > ') + ')\n' + error.getErrorInfo()
-  );
+  return 'Failed path: (' + error.path.join(' > ') + ')\n' + error.getErrorInfo();
 };
 
-export {
-  missingStrict,
-  missingKey,
-  missingBranch,
-  unsupportedFields,
-  custom,
-  toString
-};
+export { missingStrict, missingKey, missingBranch, unsupportedFields, custom, toString };

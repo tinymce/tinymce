@@ -39,13 +39,4 @@ const setClass = function (cell: Element, value: string) {
   Attr.set(cell, 'class', value);
 };
 
-export {
-  setBorderColor,
-  setBackgroundColor,
-  setHeight,
-  setWidth,
-  setType,
-  setScope,
-  setStyle,
-  setClass
-};
+export { setBorderColor, setBackgroundColor, setHeight, setWidth, setType, setScope, setStyle, setClass };

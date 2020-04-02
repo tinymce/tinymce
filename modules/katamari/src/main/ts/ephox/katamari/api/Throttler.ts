@@ -3,10 +3,7 @@ import { clearTimeout, setTimeout } from '@ephox/dom-globals';
 // Run a function fn after rate ms. If another invocation occurs
 // during the time it is waiting, update the arguments f will run
 // with (but keep the current schedule)
-export const adaptable = function <A extends any[], B>(
-  fn: (...a: A) => B,
-  rate: number
-) {
+export const adaptable = function <A extends any[], B>(fn: (...a: A) => B, rate: number) {
   let timer: number | null = null;
   let args: A | null = null;
   const cancel = function () {

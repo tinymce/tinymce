@@ -1,24 +1,12 @@
 import { Adt, Arr, Fun, Option } from '@ephox/katamari';
 
-import {
-  KeyModifiers,
-  MixedKeyModifiers,
-  newModifiers
-} from '../keyboard/FakeKeys';
+import { KeyModifiers, MixedKeyModifiers, newModifiers } from '../keyboard/FakeKeys';
 import * as SeleniumAction from '../server/SeleniumAction';
 import { Step } from './Step';
 
 interface KeyPressAdt {
-  fold: <T>(
-    combo: (modifiers: Modifiers, letters: string) => T,
-    text: (s: string) => T,
-    backspace: () => T
-  ) => T;
-  match: <T>(branches: {
-    combo: (modifiers: Modifiers, letters: string) => T;
-    text: (s: string) => T;
-    backspace: () => T;
-  }) => T;
+  fold: <T>(combo: (modifiers: Modifiers, letters: string) => T, text: (s: string) => T, backspace: () => T) => T;
+  match: <T>(branches: { combo: (modifiers: Modifiers, letters: string) => T; text: (s: string) => T; backspace: () => T }) => T;
   log: (label: string) => void;
 }
 
@@ -26,11 +14,7 @@ const adt: {
   combo: (modifiers: Modifiers, letter: string) => KeyPressAdt;
   text: (s: string) => KeyPressAdt;
   backspace: () => KeyPressAdt;
-} = Adt.generate([
-  { combo: ['modifiers', 'letter'] },
-  { text: ['s'] },
-  { backspace: [] }
-]);
+} = Adt.generate([{ combo: ['modifiers', 'letter'] }, { text: ['s'] }, { backspace: [] }]);
 
 interface Modifiers {
   ctrlKey: () => Option<boolean>;

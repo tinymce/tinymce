@@ -23,29 +23,19 @@ export const readList = <T>(
   return Result.value<T[], string>(list);
 };
 
-export const readByte = (reader: BinaryReader, idx: number) =>
-  reader.read(idx, 1);
+export const readByte = (reader: BinaryReader, idx: number) => reader.read(idx, 1);
 
-export const readShort = (reader: BinaryReader, idx: number) =>
-  reader.read(idx, 2);
+export const readShort = (reader: BinaryReader, idx: number) => reader.read(idx, 2);
 
-export const readLong = (reader: BinaryReader, idx: number) =>
-  reader.read(idx, 4);
+export const readLong = (reader: BinaryReader, idx: number) => reader.read(idx, 4);
 
-export const byteToChar = (num: number) =>
-  Result.value<string, string>(String.fromCharCode(num));
+export const byteToChar = (num: number) => Result.value<string, string>(String.fromCharCode(num));
 
-export const longToSignedLong = (num: number) =>
-  Result.value<number, string>(num > 2147483647 ? num - 4294967296 : num);
+export const longToSignedLong = (num: number) => Result.value<number, string>(num > 2147483647 ? num - 4294967296 : num);
 
-export const readSignedLong = (reader: BinaryReader, idx: number) =>
-  readLong(reader, idx).bind(longToSignedLong);
+export const readSignedLong = (reader: BinaryReader, idx: number) => readLong(reader, idx).bind(longToSignedLong);
 
-export const readChar = (reader: BinaryReader, idx: number) =>
-  readByte(reader, idx).bind(byteToChar);
+export const readChar = (reader: BinaryReader, idx: number) => readByte(reader, idx).bind(byteToChar);
 
-export const readString = (
-  reader: BinaryReader,
-  idx: number,
-  length: number = 1
-) => readList(reader, idx, 1, length, readChar).map((chars) => chars.join(''));
+export const readString = (reader: BinaryReader, idx: number, length: number = 1) =>
+  readList(reader, idx, 1, length, readChar).map((chars) => chars.join(''));

@@ -16,9 +16,7 @@ UnitTest.test('TextContentTest', function () {
   assert.eq('new text value', TextContent.get(textnode));
   assert.eq('new text value', Text.get(textnode));
 
-  const comment = Element.fromDom(
-    document.createComment('commenting checking')
-  );
+  const comment = Element.fromDom(document.createComment('commenting checking'));
   assert.eq('commenting checking', TextContent.get(comment));
   TextContent.set(comment, 'new comment value');
   assert.eq('new comment value', TextContent.get(comment));

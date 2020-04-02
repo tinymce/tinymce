@@ -48,10 +48,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
         ]
       }),
     (doc, _body, _gui, testContainer, store) => {
-      const menubarEl = SelectorFind.descendant(
-        testContainer.element(),
-        '.test-menubar'
-      ).getOrDie('Could not find menubar to test');
+      const menubarEl = SelectorFind.descendant(testContainer.element(), '.test-menubar').getOrDie('Could not find menubar to test');
 
       const menubar = testContainer.getSystem().getByDom(menubarEl).getOrDie();
 
@@ -59,25 +56,15 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
         FocusTools.sTryOnSelector(
           'Focus should be on a toggle menu item containing: ' + itemText,
           doc,
-          '.tox-selected-menu [role=menuitemcheckbox]:contains("' +
-            itemText +
-            '")'
+          '.tox-selected-menu [role=menuitemcheckbox]:contains("' + itemText + '")'
         );
 
       const sAssertActiveToggleItemHasOneCheckmark = (itemText: string) =>
         Chain.asStep(sink, [
-          UiFinder.cFindIn(
-            '.tox-selected-menu [role=menuitemcheckbox]:contains("' +
-              itemText +
-              '")'
-          ),
+          UiFinder.cFindIn('.tox-selected-menu [role=menuitemcheckbox]:contains("' + itemText + '")'),
           Chain.op((_menu) => {
             const checkMarks = Selectors.all('.tox-collection__item-icon');
-            Assertions.assertEq(
-              'only one check mark is displayed for active toggled menu items',
-              1,
-              checkMarks.length
-            );
+            Assertions.assertEq('only one check mark is displayed for active toggled menu items', 1, checkMarks.length);
           })
         ]);
 
@@ -97,16 +84,10 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
 
       const sWaitForMenuToAppear = () =>
         // Wait for menu to appear
-        Waiter.sTryUntil(
-          'Waiting for menu to be in DOM',
-          UiFinder.sExists(sink, '.tox-menu')
-        );
+        Waiter.sTryUntil('Waiting for menu to be in DOM', UiFinder.sExists(sink, '.tox-menu'));
 
       const sWaitForMenuToDisappear = () =>
-        Waiter.sTryUntil(
-          'Waiting for menu to NO LONGER be in DOM',
-          UiFinder.sNotExists(sink, '.tox-menu')
-        );
+        Waiter.sTryUntil('Waiting for menu to NO LONGER be in DOM', UiFinder.sNotExists(sink, '.tox-menu'));
 
       const sAssertMenuItemGroups = (label: string, groups: string[][]) =>
         Logger.t(
@@ -131,19 +112,13 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
                             }),
                             s.element('div', {
                               classes: [arr.has('tox-collection__item-label')],
-                              html: str.is(
-                                hasCaret
-                                  ? itemText.substring(0, itemText.length - 1)
-                                  : itemText
-                              )
+                              html: str.is(hasCaret ? itemText.substring(0, itemText.length - 1) : itemText)
                             })
                           ].concat(
                             hasCaret
                               ? [
                                   s.element('div', {
-                                    classes: [
-                                      arr.has('tox-collection__item-caret')
-                                    ]
+                                    classes: [arr.has('tox-collection__item-caret')]
                                   })
                                 ]
                               : []
@@ -300,9 +275,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
           'Pressing <enter> on an item without a submenu should trigger it and close the menu',
           GeneralSteps.sequence([
             sWaitForMenuToDisappear(),
-            store.sAssertEq('Store should have evidence of item triggered', [
-              'menuitem-2 action'
-            ])
+            store.sAssertEq('Store should have evidence of item triggered', ['menuitem-2 action'])
           ])
         ),
 
@@ -313,55 +286,27 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
         sAssertFocusOnMenuButton('Changes'),
 
         Keyboard.sKeydown(doc, Keys.escape(), {}),
-        store.sAssertEq('Pressing escape in menubar should fire event', [
-          'Menubar.escape'
-        ]),
+        store.sAssertEq('Pressing escape in menubar should fire event', ['Menubar.escape']),
 
-        Log.stepsAsStep(
-          'TBA',
-          'AP-307: Once a menu is expanded, hovering on buttons should switch which menu is expanded',
-          [
-            Mouse.sHoverOn(
-              menubar.element(),
-              'button[role="menuitem"]:contains("Basic Menu Button")'
-            ),
-            Step.wait(100),
-            UiFinder.sNotExists(sink, '[role="menu"]'),
-            Mouse.sClickOn(
-              menubar.element(),
-              'button[role="menuitem"]:contains("Changes")'
-            ),
-            UiFinder.sWaitForVisible(
-              'Waiting for changes menu',
-              sink,
-              '.tox-collection__item:contains("Remember me")'
-            ),
-            sAssertMenuItemGroups('After clicking on "Changes"', [
-              ['Remember me']
-            ]),
-            Mouse.sHoverOn(
-              menubar.element(),
-              'button[role="menuitem"]:contains("Basic Menu Button")'
-            ),
-            UiFinder.sWaitForVisible(
-              'Waiting for basic menu',
-              sink,
-              '.tox-collection__item:contains("Item1")'
-            ),
-            // Focus the menu item, not the toolbar item
-            Keyboard.sKeydown(doc, Keys.down(), {}),
-            UiFinder.sWaitForVisible(
-              'Wait for basic menu to get selected class',
-              sink,
-              '.tox-selected-menu .tox-collection__item:contains("Item1")'
-            ),
-            // This is failing because tox-selected-menu is not set.
-            sAssertMenuItemGroups(
-              'After hovering on Basic (after another menu was open)',
-              [['Item1'], ['Item2', 'Nested menu>']]
-            )
-          ]
-        )
+        Log.stepsAsStep('TBA', 'AP-307: Once a menu is expanded, hovering on buttons should switch which menu is expanded', [
+          Mouse.sHoverOn(menubar.element(), 'button[role="menuitem"]:contains("Basic Menu Button")'),
+          Step.wait(100),
+          UiFinder.sNotExists(sink, '[role="menu"]'),
+          Mouse.sClickOn(menubar.element(), 'button[role="menuitem"]:contains("Changes")'),
+          UiFinder.sWaitForVisible('Waiting for changes menu', sink, '.tox-collection__item:contains("Remember me")'),
+          sAssertMenuItemGroups('After clicking on "Changes"', [['Remember me']]),
+          Mouse.sHoverOn(menubar.element(), 'button[role="menuitem"]:contains("Basic Menu Button")'),
+          UiFinder.sWaitForVisible('Waiting for basic menu', sink, '.tox-collection__item:contains("Item1")'),
+          // Focus the menu item, not the toolbar item
+          Keyboard.sKeydown(doc, Keys.down(), {}),
+          UiFinder.sWaitForVisible(
+            'Wait for basic menu to get selected class',
+            sink,
+            '.tox-selected-menu .tox-collection__item:contains("Item1")'
+          ),
+          // This is failing because tox-selected-menu is not set.
+          sAssertMenuItemGroups('After hovering on Basic (after another menu was open)', [['Item1'], ['Item2', 'Nested menu>']])
+        ])
       ];
     },
     () => {

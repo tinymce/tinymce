@@ -14,12 +14,7 @@ export interface SeparatorMenuItem {
   text: Option<string>;
 }
 
-export const separatorMenuItemSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
-  FieldSchema.optionString('text')
-]);
+export const separatorMenuItemSchema = ValueSchema.objOf([FieldSchema.strictString('type'), FieldSchema.optionString('text')]);
 
-export const createSeparatorMenuItem = (
-  spec: SeparatorMenuItemApi
-): Result<SeparatorMenuItem, ValueSchema.SchemaError<any>> =>
+export const createSeparatorMenuItem = (spec: SeparatorMenuItemApi): Result<SeparatorMenuItem, ValueSchema.SchemaError<any>> =>
   ValueSchema.asRaw('separatormenuitem', separatorMenuItemSchema, spec);

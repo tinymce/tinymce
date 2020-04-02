@@ -21,11 +21,7 @@ UnitTest.test('CopySelectedTest', function () {
 
   // data objects for input/expected
   const data = function (selected: boolean) {
-    return function (
-      text: string,
-      rowspan?: number,
-      colspan?: number
-    ): TestData {
+    return function (text: string, rowspan?: number, colspan?: number): TestData {
       return {
         selected,
         html: text,
@@ -72,11 +68,7 @@ UnitTest.test('CopySelectedTest', function () {
     return table;
   };
 
-  const check = function (
-    label: string,
-    expected: TestData[][],
-    input: TestData[][]
-  ) {
+  const check = function (label: string, expected: TestData[][], input: TestData[][]) {
     const table = generateInput(input);
 
     CopySelected.extract(table, '.' + SEL_CLASS);
@@ -86,18 +78,7 @@ UnitTest.test('CopySelectedTest', function () {
       assert.eq(
         exp,
         actual,
-        () =>
-          'expected ' +
-          info +
-          ' "' +
-          exp +
-          '", was "' +
-          actual +
-          '"' +
-          ', test "' +
-          label +
-          '". Output HTML:\n' +
-          Html.getOuter(table)
+        () => 'expected ' + info + ' "' + exp + '", was "' + actual + '"' + ', test "' + label + '". Output HTML:\n' + Html.getOuter(table)
       );
     };
 
@@ -105,21 +86,13 @@ UnitTest.test('CopySelectedTest', function () {
     assertWithInfo(expected.length, domRows.length, 'number of rows');
     Arr.each(expected, function (row, i) {
       const domCells = traverseChildElements(domRows[i]);
-      assertWithInfo(
-        row.length,
-        domCells.length,
-        'number of cells in output row ' + i + ' to be '
-      );
+      assertWithInfo(row.length, domCells.length, 'number of cells in output row ' + i + ' to be ');
       Arr.each(row, function (cell, j) {
         const domCell = domCells[j];
         assertWithInfo(cell.html, Html.get(domCell), 'cell text');
         assertWithInfo(cell.rowspan, Attr.get(domCell, 'rowspan'), 'rowspan');
         assertWithInfo(cell.colspan, Attr.get(domCell, 'colspan'), 'colspan');
-        assertWithInfo(
-          cell.selected,
-          Class.has(domCell, SEL_CLASS),
-          'selected class'
-        );
+        assertWithInfo(cell.selected, Class.has(domCell, SEL_CLASS), 'selected class');
       });
     });
   };
@@ -139,11 +112,7 @@ UnitTest.test('CopySelectedTest', function () {
     ]
   );
   // //////////////////////////////////////////////////
-  const entireComplex = [
-    [s('A', 2, 2), s('B', 1, 1)],
-    [s('C', 1, 1)],
-    [s('D', 1, 1), s('E', 1, 1), s('F', 1, 1)]
-  ];
+  const entireComplex = [[s('A', 2, 2), s('B', 1, 1)], [s('C', 1, 1)], [s('D', 1, 1), s('E', 1, 1), s('F', 1, 1)]];
   check('entire table, complex', entireComplex, entireComplex);
   // //////////////////////////////////////////////////
   check(
@@ -258,14 +227,7 @@ UnitTest.test('CopySelectedTest', function () {
   // //////////////////////////////////////////////////
   check(
     'non rectangular complex middle of complex table from polish demo',
-    [
-      [gen(), s('B', 2, 2), gen()],
-      [gen(), gen()],
-      [s('F', 3, 3), gen()],
-      [gen()],
-      [gen()],
-      [gen(), s('J', 1, 1), s('K', 1, 2)]
-    ],
+    [[gen(), s('B', 2, 2), gen()], [gen(), gen()], [s('F', 3, 3), gen()], [gen()], [gen()], [gen(), s('J', 1, 1), s('K', 1, 2)]],
     [
       // B F J K
       [ns('A', 1, 1), s('B', 2, 2), ns('C', 1, 1)],

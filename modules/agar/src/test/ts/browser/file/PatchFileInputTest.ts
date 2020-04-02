@@ -1,22 +1,8 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import {
-  Chain,
-  GeneralSteps,
-  Logger,
-  Pipeline,
-  Step
-} from 'ephox/agar/api/Main';
+import { Chain, GeneralSteps, Logger, Pipeline, Step } from 'ephox/agar/api/Main';
 import { createFile } from 'ephox/agar/api/Files';
-import {
-  Blob,
-  FileList,
-  HTMLInputElement,
-  navigator
-} from '@ephox/dom-globals';
-import {
-  cRunOnPatchedFileInput,
-  sRunOnPatchedFileInput
-} from 'ephox/agar/api/FileInput';
+import { Blob, FileList, HTMLInputElement, navigator } from '@ephox/dom-globals';
+import { cRunOnPatchedFileInput, sRunOnPatchedFileInput } from 'ephox/agar/api/FileInput';
 import { Body, Element, Insert, Remove } from '@ephox/sugar';
 import { Cell, Option } from '@ephox/katamari';
 
@@ -34,9 +20,7 @@ UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
     elm.dom().click();
   };
 
-  const cPickFiles = Chain.async<Element, FileList>((input, next, _die) =>
-    pickFiles(input, next)
-  );
+  const cPickFiles = Chain.async<Element, FileList>((input, next, _die) => pickFiles(input, next));
   const sPickFiles = Step.async((next, _die) =>
     pickFiles(Body.body(), (files) => {
       filesState.set(Option.some(files));
@@ -60,22 +44,14 @@ UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
             GeneralSteps.sequence([
               sRunOnPatchedFileInput(files, sPickFiles),
               Step.sync(() => {
-                const files = filesState
-                  .get()
-                  .getOrDie('Failed to get files state');
+                const files = filesState.get().getOrDie('Failed to get files state');
                 assetFiles(files);
                 filesState.set(Option.none());
               })
             ])
           ),
 
-          Logger.t(
-            'Patch file input chain',
-            Chain.asStep(Body.body(), [
-              cRunOnPatchedFileInput(files, cPickFiles),
-              Chain.op(assetFiles)
-            ])
-          )
+          Logger.t('Patch file input chain', Chain.asStep(Body.body(), [cRunOnPatchedFileInput(files, cPickFiles), Chain.op(assetFiles)]))
         ],
     success,
     failure

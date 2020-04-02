@@ -1,16 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { DomStructure } from '@ephox/robin';
-import {
-  Compare,
-  CursorPosition,
-  Element,
-  InsertAll,
-  Node,
-  PredicateFind,
-  Remove,
-  Text,
-  Traverse
-} from '@ephox/sugar';
+import { Compare, CursorPosition, Element, InsertAll, Node, PredicateFind, Remove, Text, Traverse } from '@ephox/sugar';
 
 const merge = function (cells: Element[]) {
   const isBr = function (el: Element) {
@@ -24,10 +14,7 @@ const merge = function (cells: Element[]) {
   };
 
   const isListItem = function (el: Element) {
-    return (
-      Node.name(el) === 'li' ||
-      PredicateFind.ancestor(el, DomStructure.isList).isSome()
-    );
+    return Node.name(el) === 'li' || PredicateFind.ancestor(el, DomStructure.isList).isSome();
   };
 
   const siblingIsBlock = function (el: Element) {

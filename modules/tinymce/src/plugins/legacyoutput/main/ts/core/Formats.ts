@@ -99,8 +99,7 @@ const overrideFormats = (editor: Editor) => {
 };
 
 const overrideSettings = (editor: Editor) => {
-  const defaultFontsizeFormats =
-    '8pt=1 10pt=2 12pt=3 14pt=4 18pt=5 24pt=6 36pt=7';
+  const defaultFontsizeFormats = '8pt=1 10pt=2 12pt=3 14pt=4 18pt=5 24pt=6 36pt=7';
   const defaultFontsFormats =
     'Andale Mono=andale mono,monospace;' +
     'Arial=arial,helvetica,sans-serif;' +

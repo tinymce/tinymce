@@ -1,15 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  FocusTools,
-  Keyboard,
-  Keys,
-  Logger,
-  Mouse,
-  Pipeline,
-  UiFinder
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
@@ -34,11 +23,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
         {},
         Logger.ts('Check structure of toolbar collection', [
           Mouse.sClickOn(Body.body(), '.tox-split-button__chevron'),
-          UiFinder.sWaitForVisible(
-            'Waiting for menu',
-            Body.body(),
-            '[role="menu"]'
-          ),
+          UiFinder.sWaitForVisible('Waiting for menu', Body.body(), '[role="menu"]'),
           Chain.asStep(Body.body(), [
             UiFinder.cFindIn('[role="menu"]'),
             Assertions.cAssertStructure(
@@ -56,10 +41,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
                       classes: [arr.has('tox-collection__group')],
                       children: [
                         s.element('div', {
-                          classes: [
-                            arr.has('tox-collection__item'),
-                            arr.not('tox-tbtn')
-                          ],
+                          classes: [arr.has('tox-collection__item'), arr.not('tox-tbtn')],
                           attrs: {
                             title: str.is('A-button')
                           },
@@ -71,10 +53,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
                           ]
                         }),
                         s.element('div', {
-                          classes: [
-                            arr.has('tox-collection__item'),
-                            arr.not('tox-tbtn')
-                          ],
+                          classes: [arr.has('tox-collection__item'), arr.not('tox-tbtn')],
                           attrs: {
                             title: str.is('B-button')
                           },
@@ -86,10 +65,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
                           ]
                         }),
                         s.element('div', {
-                          classes: [
-                            arr.has('tox-collection__item'),
-                            arr.not('tox-tbtn')
-                          ],
+                          classes: [arr.has('tox-collection__item'), arr.not('tox-tbtn')],
                           attrs: {
                             title: str.is('C-button')
                           },
@@ -106,10 +82,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
                       classes: [arr.has('tox-collection__group')],
                       children: [
                         s.element('div', {
-                          classes: [
-                            arr.has('tox-collection__item'),
-                            arr.not('tox-tbtn')
-                          ],
+                          classes: [arr.has('tox-collection__item'), arr.not('tox-tbtn')],
                           attrs: {
                             title: str.is('D-button')
                           },
@@ -121,10 +94,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
                           ]
                         }),
                         s.element('div', {
-                          classes: [
-                            arr.has('tox-collection__item'),
-                            arr.not('tox-tbtn')
-                          ],
+                          classes: [arr.has('tox-collection__item'), arr.not('tox-tbtn')],
                           attrs: {
                             title: str.is('E-button')
                           },
@@ -136,10 +106,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
                           ]
                         }),
                         s.element('div', {
-                          classes: [
-                            arr.has('tox-collection__item'),
-                            arr.not('tox-tbtn')
-                          ],
+                          classes: [arr.has('tox-collection__item'), arr.not('tox-tbtn')],
                           attrs: {
                             title: str.is('F-button')
                           },
@@ -157,23 +124,11 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
               )
             )
           ]),
-          FocusTools.sTryOnSelector(
-            'Focus should start on A',
-            doc,
-            '.tox-collection__item[title="A-button"]'
-          ),
+          FocusTools.sTryOnSelector('Focus should start on A', doc, '.tox-collection__item[title="A-button"]'),
           Keyboard.sKeydown(doc, Keys.down(), {}),
-          FocusTools.sTryOnSelector(
-            'Focus should move to D',
-            doc,
-            '.tox-collection__item[title="D-button"]'
-          ),
+          FocusTools.sTryOnSelector('Focus should move to D', doc, '.tox-collection__item[title="D-button"]'),
           Keyboard.sKeydown(doc, Keys.right(), {}),
-          FocusTools.sTryOnSelector(
-            'Focus should move to E',
-            doc,
-            '.tox-collection__item[title="E-button"]'
-          )
+          FocusTools.sTryOnSelector('Focus should move to E', doc, '.tox-collection__item[title="E-button"]')
         ]),
         onSuccess,
         onFailure

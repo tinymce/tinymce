@@ -10,8 +10,7 @@ UnitTest.test('TableMergeTest', function () {
   const start = Structs.address;
   const suite = TableMerge.suite;
 
-  const en = (fakeElement: any, isNew: boolean) =>
-    Structs.elementnew(fakeElement as Element, isNew);
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as Element, isNew);
 
   // Advanced Spans
   const gridAdvancedOne = function () {
@@ -45,13 +44,7 @@ UnitTest.test('TableMergeTest', function () {
   };
 
   const gridBee = function () {
-    return [
-      [en('bee1', true)],
-      [en('bee2', true)],
-      [en('bee3', true)],
-      [en('bee3', true)],
-      [en('bee3', true)]
-    ];
+    return [[en('bee1', true)], [en('bee2', true)], [en('bee3', true)], [en('bee3', true)], [en('bee3', true)]];
   };
 
   const gridcicada = function () {
@@ -114,26 +107,8 @@ UnitTest.test('TableMergeTest', function () {
       colDelta: -5
     },
     [
-      [
-        en('a', false),
-        en('b', false),
-        en('c', false),
-        en('?_0', true),
-        en('?_1', true),
-        en('?_2', true),
-        en('?_3', true),
-        en('?_4', true)
-      ],
-      [
-        en('d', false),
-        en('e', false),
-        en('f', false),
-        en('?_5', true),
-        en('?_6', true),
-        en('?_7', true),
-        en('?_8', true),
-        en('?_9', true)
-      ],
+      [en('a', false), en('b', false), en('c', false), en('?_0', true), en('?_1', true), en('?_2', true), en('?_3', true), en('?_4', true)],
+      [en('d', false), en('e', false), en('f', false), en('?_5', true), en('?_6', true), en('?_7', true), en('?_8', true), en('?_9', true)],
       [
         en('g', false),
         en('h', false),
@@ -156,16 +131,7 @@ UnitTest.test('TableMergeTest', function () {
       ]
     ],
     [
-      [
-        en('a', false),
-        en('b', false),
-        en('c', false),
-        en('?_0', true),
-        en('?_1', true),
-        en('?_2', true),
-        en('?_3', true),
-        en('?_4', true)
-      ],
+      [en('a', false), en('b', false), en('c', false), en('?_0', true), en('?_1', true), en('?_2', true), en('?_3', true), en('?_4', true)],
       [
         en('h(cic1)_0', true),
         en('h(cic2)_1', true),
@@ -221,18 +187,8 @@ UnitTest.test('TableMergeTest', function () {
     ],
     [
       [en('A', false), en('B', false), en('?_0', true), en('C', false)],
-      [
-        en('h(alpha)_0', true),
-        en('h(alpha)_1', true),
-        en('?_2', true),
-        en('E', false)
-      ],
-      [
-        en('h(beta)_2', true),
-        en('h(charlie)_3', true),
-        en('?_4', true),
-        en('E', false)
-      ],
+      [en('h(alpha)_0', true), en('h(alpha)_1', true), en('?_2', true), en('E', false)],
+      [en('h(beta)_2', true), en('h(charlie)_3', true), en('?_4', true), en('E', false)],
       [en('?_5', true), en('?_6', true), en('?_7', true), en('G', false)],
       [en('?_8', true), en('?_9', true), en('?_10', true), en('H', false)],
       [en('I', false), en('J', false), en('K', false), en('K', false)],
@@ -252,120 +208,24 @@ UnitTest.test('TableMergeTest', function () {
       colDelta: -1
     },
     [
-      [
-        en('A', false),
-        en('B', false),
-        en('B', false),
-        en('C', false),
-        en('?_0', true)
-      ],
-      [
-        en('D', false),
-        en('B', false),
-        en('B', false),
-        en('E', false),
-        en('?_1', true)
-      ],
-      [
-        en('F', false),
-        en('F', false),
-        en('F', false),
-        en('E', false),
-        en('?_2', true)
-      ],
-      [
-        en('F', false),
-        en('F', false),
-        en('F', false),
-        en('G', false),
-        en('?_3', true)
-      ],
-      [
-        en('F', false),
-        en('F', false),
-        en('F', false),
-        en('H', false),
-        en('?_4', true)
-      ],
-      [
-        en('I', false),
-        en('J', false),
-        en('K', false),
-        en('K', false),
-        en('?_5', true)
-      ],
-      [
-        en('I', false),
-        en('L', false),
-        en('L', false),
-        en('M', false),
-        en('?_6', true)
-      ],
-      [
-        en('?_7', true),
-        en('?_8', true),
-        en('?_9', true),
-        en('?_10', true),
-        en('?_11', true)
-      ]
+      [en('A', false), en('B', false), en('B', false), en('C', false), en('?_0', true)],
+      [en('D', false), en('B', false), en('B', false), en('E', false), en('?_1', true)],
+      [en('F', false), en('F', false), en('F', false), en('E', false), en('?_2', true)],
+      [en('F', false), en('F', false), en('F', false), en('G', false), en('?_3', true)],
+      [en('F', false), en('F', false), en('F', false), en('H', false), en('?_4', true)],
+      [en('I', false), en('J', false), en('K', false), en('K', false), en('?_5', true)],
+      [en('I', false), en('L', false), en('L', false), en('M', false), en('?_6', true)],
+      [en('?_7', true), en('?_8', true), en('?_9', true), en('?_10', true), en('?_11', true)]
     ],
     [
-      [
-        en('A', false),
-        en('B', false),
-        en('B', false),
-        en('C', false),
-        en('?_0', true)
-      ],
-      [
-        en('D', false),
-        en('B', false),
-        en('B', false),
-        en('E', false),
-        en('?_1', true)
-      ],
-      [
-        en('F', false),
-        en('F', false),
-        en('F', false),
-        en('E', false),
-        en('?_2', true)
-      ],
-      [
-        en('F', false),
-        en('F', false),
-        en('F', false),
-        en('G', false),
-        en('?_3', true)
-      ],
-      [
-        en('F', false),
-        en('F', false),
-        en('F', false),
-        en('H', false),
-        en('?_4', true)
-      ],
-      [
-        en('I', false),
-        en('J', false),
-        en('K', false),
-        en('K', false),
-        en('?_5', true)
-      ],
-      [
-        en('I', false),
-        en('L', false),
-        en('L', false),
-        en('h(alpha)_0', true),
-        en('h(alpha)_1', true)
-      ],
-      [
-        en('?_7', true),
-        en('?_8', true),
-        en('?_9', true),
-        en('h(beta)_2', true),
-        en('h(charlie)_3', true)
-      ]
+      [en('A', false), en('B', false), en('B', false), en('C', false), en('?_0', true)],
+      [en('D', false), en('B', false), en('B', false), en('E', false), en('?_1', true)],
+      [en('F', false), en('F', false), en('F', false), en('E', false), en('?_2', true)],
+      [en('F', false), en('F', false), en('F', false), en('G', false), en('?_3', true)],
+      [en('F', false), en('F', false), en('F', false), en('H', false), en('?_4', true)],
+      [en('I', false), en('J', false), en('K', false), en('K', false), en('?_5', true)],
+      [en('I', false), en('L', false), en('L', false), en('h(alpha)_0', true), en('h(alpha)_1', true)],
+      [en('?_7', true), en('?_8', true), en('?_9', true), en('h(beta)_2', true), en('h(charlie)_3', true)]
     ]
   );
 
@@ -391,18 +251,8 @@ UnitTest.test('TableMergeTest', function () {
     ],
     [
       [en('A', false), en('B', false), en('?_0', true), en('C', false)],
-      [
-        en('D', false),
-        en('?_1', true),
-        en('h(alpha)_0', true),
-        en('h(alpha)_1', true)
-      ],
-      [
-        en('F', false),
-        en('?_4', true),
-        en('h(beta)_2', true),
-        en('h(charlie)_3', true)
-      ],
+      [en('D', false), en('?_1', true), en('h(alpha)_0', true), en('h(alpha)_1', true)],
+      [en('F', false), en('?_4', true), en('h(beta)_2', true), en('h(charlie)_3', true)],
       [en('?_6', true), en('?_7', true), en('?_8', true), en('G', false)],
       [en('?_9', true), en('?_10', true), en('?_11', true), en('H', false)],
       [en('I', false), en('J', false), en('K', false), en('K', false)],
@@ -437,20 +287,10 @@ UnitTest.test('TableMergeTest', function () {
       [en('D', false), en('B', false), en('B', false), en('E', false)],
       [en('F', false), en('?_8', true), en('?_9', true), en('E', false)],
       [en('?_10', true), en('?_11', true), en('?_12', true), en('G', false)],
-      [
-        en('h(bee1)_0', true),
-        en('?_14', true),
-        en('?_15', true),
-        en('H', false)
-      ],
+      [en('h(bee1)_0', true), en('?_14', true), en('?_15', true), en('H', false)],
       [en('h(bee2)_1', true), en('J', false), en('K', false), en('K', false)],
       [en('h(bee3)_2', true), en('L', false), en('L', false), en('M', false)],
-      [
-        en('h(bee3)_3', true),
-        en('?_1', true),
-        en('?_2', true),
-        en('?_3', true)
-      ],
+      [en('h(bee3)_3', true), en('?_1', true), en('?_2', true), en('?_3', true)],
       [en('h(bee3)_4', true), en('?_5', true), en('?_6', true), en('?_7', true)]
     ]
   );
@@ -467,26 +307,8 @@ UnitTest.test('TableMergeTest', function () {
       colDelta: -4
     },
     [
-      [
-        en('A', false),
-        en('B', false),
-        en('B', false),
-        en('C', false),
-        en('?_0', true),
-        en('?_1', true),
-        en('?_2', true),
-        en('?_3', true)
-      ],
-      [
-        en('D', false),
-        en('B', false),
-        en('B', false),
-        en('E', false),
-        en('?_4', true),
-        en('?_5', true),
-        en('?_6', true),
-        en('?_7', true)
-      ],
+      [en('A', false), en('B', false), en('B', false), en('C', false), en('?_0', true), en('?_1', true), en('?_2', true), en('?_3', true)],
+      [en('D', false), en('B', false), en('B', false), en('E', false), en('?_4', true), en('?_5', true), en('?_6', true), en('?_7', true)],
       [
         en('F', false),
         en('F', false),
@@ -539,26 +361,8 @@ UnitTest.test('TableMergeTest', function () {
       ]
     ],
     [
-      [
-        en('A', false),
-        en('B', false),
-        en('B', false),
-        en('C', false),
-        en('?_0', true),
-        en('?_1', true),
-        en('?_2', true),
-        en('?_3', true)
-      ],
-      [
-        en('D', false),
-        en('B', false),
-        en('B', false),
-        en('E', false),
-        en('?_4', true),
-        en('?_5', true),
-        en('?_6', true),
-        en('?_7', true)
-      ],
+      [en('A', false), en('B', false), en('B', false), en('C', false), en('?_0', true), en('?_1', true), en('?_2', true), en('?_3', true)],
+      [en('D', false), en('B', false), en('B', false), en('E', false), en('?_4', true), en('?_5', true), en('?_6', true), en('?_7', true)],
       [
         en('F', false),
         en('F', false),

@@ -16,17 +16,14 @@ UnitTest.test('ResizeTest', function () {
 
   const direction = ResizeDirection.ltr;
 
-  const boundBox =
-    '<div style="width: 800px; height: 600px; display: block;"></div>';
+  const boundBox = '<div style="width: 800px; height: 600px; display: block;"></div>';
   const box = Element.fromHtml<HTMLDivElement>(boundBox);
   Insert.append(Body.body(), box);
 
   const percentTablePercentCellsTest = function () {
     const delta = 200;
 
-    const table = Element.fromHtml<
-      HTMLTableElement
-    >(`<table style="border-collapse: collapse; width: 100%;">
+    const table = Element.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 100%;">
     <tbody>
     <tr>
     <td style="width: 50%;">A</td>
@@ -75,9 +72,7 @@ UnitTest.test('ResizeTest', function () {
   const percentTablePixelCellsTest = function () {
     const delta = 200;
 
-    const table = Element.fromHtml<
-      HTMLTableElement
-    >(`<table style="border-collapse: collapse; width: 100%;">
+    const table = Element.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 100%;">
     <tbody>
     <tr>
     <td style="width: 400px;">A</td>
@@ -135,9 +130,7 @@ UnitTest.test('ResizeTest', function () {
   const pixelTablePixelCellsTest = function () {
     const delta = 200;
 
-    const table = Element.fromHtml<
-      HTMLTableElement
-    >(`<table style="border-collapse: collapse; width: 800px;">
+    const table = Element.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 800px;">
     <tbody>
     <tr>
     <td style="width: 400px;">A</td>
@@ -182,9 +175,7 @@ UnitTest.test('ResizeTest', function () {
   const pixelTablePercentCellsTest = function () {
     const delta = 200;
 
-    const table = Element.fromHtml<
-      HTMLTableElement
-    >(`<table style="border-collapse: collapse; width: 800px;">
+    const table = Element.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 800px;">
     <tbody>
     <tr>
     <td style="width: 50%;">A</td>

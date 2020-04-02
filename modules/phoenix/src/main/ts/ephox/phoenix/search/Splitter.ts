@@ -8,15 +8,9 @@ import * as Spot from '../api/data/Spot';
  *
  * Returns a PositionArray of the result.
  */
-const subdivide = function <E, D>(
-  universe: Universe<E, D>,
-  item: E,
-  positions: number[]
-) {
+const subdivide = function <E, D>(universe: Universe<E, D>, item: E, positions: number[]) {
   const text = universe.property().getText(item);
-  const pieces = Arr.filter(Strings.splits(text, positions), function (
-    section
-  ) {
+  const pieces = Arr.filter(Strings.splits(text, positions), function (section) {
     return section.length > 0;
   });
 

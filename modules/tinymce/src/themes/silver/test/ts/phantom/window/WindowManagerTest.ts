@@ -1,15 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  GeneralSteps,
-  Logger,
-  Mouse,
-  Pipeline,
-  Step,
-  UiFinder,
-  Waiter
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
 import { document, HTMLInputElement } from '@ephox/dom-globals';
@@ -55,17 +44,11 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
 
   const sTeardown = GeneralSteps.sequence([
     Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),
-    Waiter.sTryUntil(
-      'Waiting for blocker to disappear after clicking close',
-      UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap')
-    )
+    Waiter.sTryUntil('Waiting for blocker to disappear after clicking close', UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap'))
   ]);
 
   const sAssertSinkStructure = (asserter) =>
-    Chain.asStep(Body.body(), [
-      UiFinder.cWaitFor('Looking for sink', '.mce-silver-sink'),
-      Chain.op(asserter)
-    ]);
+    Chain.asStep(Body.body(), [UiFinder.cWaitFor('Looking for sink', '.mce-silver-sink'), Chain.op(asserter)]);
 
   const createTest = (label, conf, asserter, drag?) =>
     Logger.t(
@@ -73,19 +56,10 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
       GeneralSteps.sequence([
         Waiter.sTryUntil(
           'Waiting for any other dialogs to disappear',
-          UiFinder.sNotExists(
-            Body.body(),
-            '.tox-button--icon[aria-label="Close"]'
-          )
+          UiFinder.sNotExists(Body.body(), '.tox-button--icon[aria-label="Close"]')
         ),
-        drag
-          ? sSetupDialogWithDragging(conf)
-          : sSetupDialogWithoutDragging(conf),
-        UiFinder.sWaitFor(
-          'Waiting for dialog to appear',
-          Body.body(),
-          '.tox-button--icon[aria-label="Close"]'
-        ),
+        drag ? sSetupDialogWithDragging(conf) : sSetupDialogWithoutDragging(conf),
+        UiFinder.sWaitFor('Waiting for dialog to appear', Body.body(), '.tox-button--icon[aria-label="Close"]'),
         sAssertSinkStructure(asserter),
         sTeardown
       ])
@@ -102,11 +76,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
     },
     (err) => {
       const message = err.message.split('\n');
-      Assertions.assertEq(
-        'This should throw a configuration error: showing the exact failure',
-        message[1],
-        'Failed path: (dialog > body)'
-      );
+      Assertions.assertEq('This should throw a configuration error: showing the exact failure', message[1], 'Failed path: (dialog > body)');
       Assertions.assertEq(
         'This should throw a configuration error: showing the exact failure',
         message[2],
@@ -304,9 +274,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
         };
 
         const instanceApi = windowManager.open(conf, {}, Fun.noop);
-        const dialogBody = SugarElement.fromDom(
-          document.querySelector('.tox-dialog__body')
-        );
+        const dialogBody = SugarElement.fromDom(document.querySelector('.tox-dialog__body'));
 
         Assertions.assertStructure(
           'It should load with form components in the dom structure',
@@ -348,22 +316,12 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
           dialogBody
         );
 
-        const inputElement: HTMLInputElement = document.querySelector(
-          'input.tox-textfield'
-        );
-        Assertions.assertEq(
-          'The input value should equal the initial data',
-          conf.initialData.fooname,
-          inputElement.value
-        );
+        const inputElement: HTMLInputElement = document.querySelector('input.tox-textfield');
+        Assertions.assertEq('The input value should equal the initial data', conf.initialData.fooname, inputElement.value);
 
         const nuData = { fooname: 'Bonjour Universe' };
         instanceApi.setData(nuData);
-        Assertions.assertEq(
-          'Calling setData, should update the data',
-          nuData,
-          instanceApi.getData()
-        );
+        Assertions.assertEq('Calling setData, should update the data', nuData, instanceApi.getData());
 
         const badData = { fooname: ['not right'] };
 
@@ -371,16 +329,8 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
           instanceApi.setData(badData);
         } catch (error) {
           const message = error.message.split('\n');
-          Assertions.assertEq(
-            'Calling setData, with invalid data should throw: ',
-            message[1],
-            'Failed path: (data > fooname)'
-          );
-          Assertions.assertEq(
-            'Calling setData, with invalid data should throw: ',
-            message[2],
-            'Expected type: string but got: object'
-          );
+          Assertions.assertEq('Calling setData, with invalid data should throw: ', message[1], 'Failed path: (data > fooname)');
+          Assertions.assertEq('Calling setData, with invalid data should throw: ', message[2], 'Expected type: string but got: object');
         }
         Assertions.assertEq(
           'Calling setData, with invalid data, should not change the data, it should remain the same',

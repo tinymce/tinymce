@@ -1,12 +1,7 @@
 import { SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ExpandableFormSchema from '../../ui/schema/ExpandableFormSchema';
-import {
-  ExpandableFormApis,
-  ExpandableFormDetail,
-  ExpandableFormSketcher,
-  ExpandableFormSpec
-} from '../../ui/types/ExpandableFormTypes';
+import { ExpandableFormApis, ExpandableFormDetail, ExpandableFormSketcher, ExpandableFormSpec } from '../../ui/types/ExpandableFormTypes';
 import { Representing } from '../behaviour/Representing';
 import { Sliding } from '../behaviour/Sliding';
 import { AlloyComponent } from '../component/ComponentApi';
@@ -15,19 +10,12 @@ import { Form } from './Form';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const runOnExtra = (
-  detail: ExpandableFormDetail,
-  operation: (comp: AlloyComponent) => void
-) => (anyComp: AlloyComponent) => {
+const runOnExtra = (detail: ExpandableFormDetail, operation: (comp: AlloyComponent) => void) => (anyComp: AlloyComponent) => {
   AlloyParts.getPart(anyComp, detail, 'extra').each(operation);
 };
 
-const factory: CompositeSketchFactory<
-  ExpandableFormDetail,
-  ExpandableFormSpec
-> = (detail, components, _spec, _externals): SketchSpec => {
-  const getParts = (form: AlloyComponent) =>
-    AlloyParts.getPartsOrDie(form, detail, ['minimal', 'extra']);
+const factory: CompositeSketchFactory<ExpandableFormDetail, ExpandableFormSpec> = (detail, components, _spec, _externals): SketchSpec => {
+  const getParts = (form: AlloyComponent) => AlloyParts.getPartsOrDie(form, detail, ['minimal', 'extra']);
 
   return {
     uid: detail.uid,
@@ -62,21 +50,13 @@ const factory: CompositeSketchFactory<
       getField(form: AlloyComponent, key: string) {
         return AlloyParts.getPart(form, detail, 'minimal')
           .bind((minimal) => Form.getField(minimal, key))
-          .orThunk(() =>
-            AlloyParts.getPart(form, detail, 'extra').bind((extra) =>
-              Form.getField(extra, key)
-            )
-          );
+          .orThunk(() => AlloyParts.getPart(form, detail, 'extra').bind((extra) => Form.getField(extra, key)));
       }
     }
   };
 };
 
-const ExpandableForm: ExpandableFormSketcher = Sketcher.composite<
-  ExpandableFormSpec,
-  ExpandableFormDetail,
-  ExpandableFormApis
->({
+const ExpandableForm: ExpandableFormSketcher = Sketcher.composite<ExpandableFormSpec, ExpandableFormDetail, ExpandableFormApis>({
   name: 'ExpandableForm',
   configFields: ExpandableFormSchema.schema(),
   partFields: ExpandableFormSchema.parts(),

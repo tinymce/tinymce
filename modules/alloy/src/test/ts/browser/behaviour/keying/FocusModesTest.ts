@@ -1,11 +1,4 @@
-import {
-  FocusTools,
-  GeneralSteps,
-  Keyboard,
-  Keys,
-  Log,
-  Step
-} from '@ephox/agar';
+import { FocusTools, GeneralSteps, Keyboard, Keys, Log, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Body, Element, Focus, SelectorFind } from '@ephox/sugar';
 
@@ -21,10 +14,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 UnitTest.asynctest('Focus Modes Test', (success, failure) => {
   GuiSetup.setup(
     (_store, _doc, _body) => {
-      const makeContainer = (
-        name: string,
-        mode: FocusInsideModes
-      ): AlloySpec => ({
+      const makeContainer = (name: string, mode: FocusInsideModes): AlloySpec => ({
         dom: {
           tag: 'div',
           classes: [name]
@@ -73,17 +63,11 @@ UnitTest.asynctest('Focus Modes Test', (success, failure) => {
         .bind((elem) => component.getSystem().getByDom(elem).toOption())
         .getOrDie('Could not find "onApi" div');
 
-      const onEnterOrSpaceComp = SelectorFind.descendant(
-        component.element(),
-        '.onKeyboard'
-      )
+      const onEnterOrSpaceComp = SelectorFind.descendant(component.element(), '.onKeyboard')
         .bind((elem) => component.getSystem().getByDom(elem).toOption())
         .getOrDie('Could not find "onKeyboard" div');
 
-      const onFocusComp = SelectorFind.descendant(
-        component.element(),
-        '.onFocus'
-      )
+      const onFocusComp = SelectorFind.descendant(component.element(), '.onFocus')
         .bind((elem) => component.getSystem().getByDom(elem).toOption())
         .getOrDie('Could not find "onFocus" div');
 
@@ -108,17 +92,9 @@ UnitTest.asynctest('Focus Modes Test', (success, failure) => {
           GeneralSteps.sequence([
             sResetFocus,
             sTriggerFocus(onApiComp.element()),
-            FocusTools.sTryOnSelector(
-              'Focus should move to onApi container',
-              doc,
-              '.onApi'
-            ),
+            FocusTools.sTryOnSelector('Focus should move to onApi container', doc, '.onApi'),
             Keyboard.sKeydown(doc, Keys.enter(), {}),
-            FocusTools.sTryOnSelector(
-              'Focus should not move because of *enter*',
-              doc,
-              '.onApi'
-            )
+            FocusTools.sTryOnSelector('Focus should not move because of *enter*', doc, '.onApi')
           ])
         ),
 
@@ -128,11 +104,7 @@ UnitTest.asynctest('Focus Modes Test', (success, failure) => {
           GeneralSteps.sequence([
             sResetFocus,
             sFocusIn(onApiComp),
-            FocusTools.sTryOnSelector(
-              'Focus should move within container',
-              doc,
-              '.onApi-button'
-            )
+            FocusTools.sTryOnSelector('Focus should move within container', doc, '.onApi-button')
           ])
         ),
 
@@ -141,17 +113,9 @@ UnitTest.asynctest('Focus Modes Test', (success, failure) => {
           'Check FocusMode.onEnterOrSpace response to System focus',
           GeneralSteps.sequence([
             sTriggerFocus(onEnterOrSpaceComp.element()),
-            FocusTools.sTryOnSelector(
-              'Focus should move to onKeyboard container',
-              doc,
-              '.onKeyboard'
-            ),
+            FocusTools.sTryOnSelector('Focus should move to onKeyboard container', doc, '.onKeyboard'),
             Keyboard.sKeydown(doc, Keys.enter(), {}),
-            FocusTools.sTryOnSelector(
-              'Focus should move inside',
-              doc,
-              '.onKeyboard-button'
-            )
+            FocusTools.sTryOnSelector('Focus should move inside', doc, '.onKeyboard-button')
           ])
         ),
 
@@ -161,11 +125,7 @@ UnitTest.asynctest('Focus Modes Test', (success, failure) => {
           GeneralSteps.sequence([
             sResetFocus,
             sFocusIn(onEnterOrSpaceComp),
-            FocusTools.sTryOnSelector(
-              'Focus should move within container',
-              doc,
-              '.onKeyboard-button'
-            )
+            FocusTools.sTryOnSelector('Focus should move within container', doc, '.onKeyboard-button')
           ])
         ),
 
@@ -174,11 +134,7 @@ UnitTest.asynctest('Focus Modes Test', (success, failure) => {
           'Check FocusMode.onFocus response to System focus',
           GeneralSteps.sequence([
             sTriggerFocus(onFocusComp.element()),
-            FocusTools.sTryOnSelector(
-              'Focus should move immediately inside',
-              doc,
-              '.onFocus-button'
-            )
+            FocusTools.sTryOnSelector('Focus should move immediately inside', doc, '.onFocus-button')
           ])
         ),
 
@@ -188,11 +144,7 @@ UnitTest.asynctest('Focus Modes Test', (success, failure) => {
           GeneralSteps.sequence([
             sResetFocus,
             sFocusIn(onFocusComp),
-            FocusTools.sTryOnSelector(
-              'Focus should move within container',
-              doc,
-              '.onFocus-button'
-            )
+            FocusTools.sTryOnSelector('Focus should move within container', doc, '.onFocus-button')
           ])
         )
       ];

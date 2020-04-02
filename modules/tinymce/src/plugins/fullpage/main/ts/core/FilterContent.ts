@@ -45,12 +45,7 @@ const handleSetContent = function (editor: Editor, headState, footState, evt) {
 
   // Fixed so new document/setContent('') doesn't remove existing header/footer except when it's in source code view
   if (content.length === 0 && !evt.source_view) {
-    content =
-      Tools.trim(headState.get()) +
-      '\n' +
-      Tools.trim(content) +
-      '\n' +
-      Tools.trim(footState.get());
+    content = Tools.trim(headState.get()) + '\n' + Tools.trim(content) + '\n' + Tools.trim(footState.get());
   }
 
   // Parse out head, body and footer
@@ -102,13 +97,8 @@ const handleSetContent = function (editor: Editor, headState, footState, evt) {
   }
 
   const currentStyleSheetsMap: Record<string, HTMLLinkElement> = {};
-  Tools.each(headElm.getElementsByTagName('link'), function (
-    stylesheet: HTMLLinkElement
-  ) {
-    if (
-      stylesheet.rel === 'stylesheet' &&
-      stylesheet.getAttribute('data-mce-fullpage')
-    ) {
+  Tools.each(headElm.getElementsByTagName('link'), function (stylesheet: HTMLLinkElement) {
+    if (stylesheet.rel === 'stylesheet' && stylesheet.getAttribute('data-mce-fullpage')) {
       currentStyleSheetsMap[stylesheet.href] = stylesheet;
     }
   });
@@ -120,10 +110,7 @@ const handleSetContent = function (editor: Editor, headState, footState, evt) {
       return true;
     }
 
-    if (
-      !currentStyleSheetsMap[href] &&
-      stylesheet.attr('rel') === 'stylesheet'
-    ) {
+    if (!currentStyleSheetsMap[href] && stylesheet.attr('rel') === 'stylesheet') {
       dom.add(headElm, 'link', {
         'rel': 'stylesheet',
         'text': 'text/css',
@@ -148,10 +135,7 @@ const getDefaultHeader = function (editor) {
 
   if (Settings.getDefaultXmlPi(editor)) {
     const piEncoding = Settings.getDefaultEncoding(editor);
-    header +=
-      '<?xml version="1.0" encoding="' +
-      (piEncoding ? piEncoding : 'ISO-8859-1') +
-      '" ?>\n';
+    header += '<?xml version="1.0" encoding="' + (piEncoding ? piEncoding : 'ISO-8859-1') + '" ?>\n';
   }
 
   header += Settings.getDefaultDocType(editor);
@@ -162,10 +146,7 @@ const getDefaultHeader = function (editor) {
   }
 
   if ((value = Settings.getDefaultEncoding(editor))) {
-    header +=
-      '<meta http-equiv="Content-Type" content="text/html; charset=' +
-      value +
-      '" />\n';
+    header += '<meta http-equiv="Content-Type" content="text/html; charset=' + value + '" />\n';
   }
 
   if ((value = Settings.getDefaultFontFamily(editor))) {
@@ -180,24 +161,14 @@ const getDefaultHeader = function (editor) {
     styles += 'color: ' + value + ';';
   }
 
-  header +=
-    '</head>\n<body' + (styles ? ' style="' + styles + '"' : '') + '>\n';
+  header += '</head>\n<body' + (styles ? ' style="' + styles + '"' : '') + '>\n';
 
   return header;
 };
 
 const handleGetContent = function (editor: Editor, head, foot, evt) {
-  if (
-    !evt.selection &&
-    (!evt.source_view || !Settings.shouldHideInSourceView(editor))
-  ) {
-    evt.content = Protect.unprotectHtml(
-      Tools.trim(head) +
-        '\n' +
-        Tools.trim(evt.content) +
-        '\n' +
-        Tools.trim(foot)
-    );
+  if (!evt.selection && (!evt.source_view || !Settings.shouldHideInSourceView(editor))) {
+    evt.content = Protect.unprotectHtml(Tools.trim(head) + '\n' + Tools.trim(evt.content) + '\n' + Tools.trim(foot));
   }
 };
 

@@ -62,13 +62,8 @@ export default (): void => {
       dom: {
         classes: ['my-widget']
       },
-      containerBehaviours: Behaviour.derive([
-        Keying.config({ mode: 'cyclic' })
-      ]),
-      components: [
-        Input.sketch({ tag: 'input' }),
-        Input.sketch({ tag: 'input' })
-      ]
+      containerBehaviours: Behaviour.derive([Keying.config({ mode: 'cyclic' })]),
+      components: [Input.sketch({ tag: 'input' }), Input.sketch({ tag: 'input' })]
     })
   });
 
@@ -150,9 +145,7 @@ export default (): void => {
           items: [wDoubleInput]
         });
 
-        return Future.pure(menu).map(() =>
-          Option.some(TieredMenu.singleData('demo.2.menu', menu))
-        );
+        return Future.pure(menu).map(() => Option.some(TieredMenu.singleData('demo.2.menu', menu)));
       }
     })
   );
@@ -201,9 +194,7 @@ export default (): void => {
               items: [wDoubleInput]
             });
 
-            return Future.pure(menu).map(() =>
-              Option.some(TieredMenu.singleData('demo.2.menu', menu))
-            );
+            return Future.pure(menu).map(() => Option.some(TieredMenu.singleData('demo.2.menu', menu)));
           }
         })
       ]
@@ -232,12 +223,7 @@ export default (): void => {
       },
       fetch() {
         const data = Arr.map(
-          [
-            makeItem('alpha', '+Alpha'),
-            makeItem('beta', '+Beta'),
-            makeItem('gamma', '+Gamma'),
-            makeItem('delta', '+Delta')
-          ],
+          [makeItem('alpha', '+Alpha'), makeItem('beta', '+Beta'), makeItem('gamma', '+Gamma'), makeItem('delta', '+Delta')],
           DemoRenders.gridItem
         );
 
@@ -306,9 +292,7 @@ export default (): void => {
         });
       },
       onExecute(sandbox, item) {
-        console.log(
-          '*** dropdown demo execute on: ' + Representing.getValue(item)
-        );
+        console.log('*** dropdown demo execute on: ' + Representing.getValue(item));
       }
     })
   );
@@ -336,11 +320,7 @@ export default (): void => {
 
       onExecute(sandbox, item) {
         console.trace();
-        console.log(
-          '*** dropdown menu demo execute on: ' +
-            Representing.getValue(item).value +
-            ' ***'
-        );
+        console.log('*** dropdown menu demo execute on: ' + Representing.getValue(item).value + ' ***');
       },
       fetch() {
         const future = Future.pure({
@@ -373,9 +353,7 @@ export default (): void => {
                               display: 'inline-block',
                               width: '50px'
                             },
-                            inputBehaviours: Behaviour.derive([
-                              Tabstopping.config({})
-                            ])
+                            inputBehaviours: Behaviour.derive([Tabstopping.config({})])
                           }),
                           Container.sketch({
                             components: [
@@ -421,40 +399,22 @@ export default (): void => {
               'packages-menu': {
                 value: 'packages',
                 text: 'packages',
-                items: Arr.map(
-                  [makeItem('sortby', 'SortBy', '')],
-                  DemoRenders.item
-                )
+                items: Arr.map([makeItem('sortby', 'SortBy', '')], DemoRenders.item)
               },
               'sortby-menu': {
                 value: 'sortby',
                 text: 'sortby',
-                items: Arr.map(
-                  [
-                    makeItem('strings', 'Strings', ''),
-                    makeItem('numbers', 'Numbers', '')
-                  ],
-                  DemoRenders.item
-                )
+                items: Arr.map([makeItem('strings', 'Strings', ''), makeItem('numbers', 'Numbers', '')], DemoRenders.item)
               },
               'strings-menu': {
                 value: 'strings',
                 text: 'strings',
-                items: Arr.map(
-                  [
-                    makeItem('version', 'Versions', ''),
-                    makeItem('alphabetic', 'Alphabetic', '')
-                  ],
-                  DemoRenders.item
-                )
+                items: Arr.map([makeItem('version', 'Versions', ''), makeItem('alphabetic', 'Alphabetic', '')], DemoRenders.item)
               },
               'numbers-menu': {
                 value: 'numbers',
                 text: 'numbers',
-                items: Arr.map(
-                  [makeItem('doubled', 'Double Digits', '')],
-                  DemoRenders.item
-                )
+                items: Arr.map([makeItem('doubled', 'Double Digits', '')], DemoRenders.item)
               }
             },
             DemoRenders.menu
@@ -467,9 +427,7 @@ export default (): void => {
           }
         });
 
-        return future.map((f) =>
-          Option.from(TieredMenu.tieredData(f.primary, f.menus, f.expansions))
-        );
+        return future.map((f) => Option.from(TieredMenu.tieredData(f.primary, f.menus, f.expansions)));
       }
     })
   );

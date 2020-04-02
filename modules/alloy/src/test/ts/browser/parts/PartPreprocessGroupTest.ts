@@ -20,10 +20,7 @@ UnitTest.test('Browser Test: parts.PartProcessGroupTest', () => {
     pname: 'groupB-pname'
   });
 
-  const placeholders = AlloyParts.generate('owner', [
-    groupWithPreprocess,
-    group
-  ]);
+  const placeholders = AlloyParts.generate('owner', [groupWithPreprocess, group]);
 
   const detail = {
     partUids: {},
@@ -62,17 +59,10 @@ UnitTest.test('Browser Test: parts.PartProcessGroupTest', () => {
     ]
   } as any;
 
-  const subs = PartSubstitutes.subs('owner', detail, [
-    groupWithPreprocess,
-    group
-  ]);
+  const subs = PartSubstitutes.subs('owner', detail, [groupWithPreprocess, group]);
 
   // Work out the components by substituting internals
-  const components: any = AlloyParts.components(
-    'owner',
-    detail,
-    subs.internals()
-  );
+  const components: any = AlloyParts.components('owner', detail, subs.internals());
 
   Assertions.assertEq(
     'Checking components generated altogether',

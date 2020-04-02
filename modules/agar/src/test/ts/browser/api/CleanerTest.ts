@@ -9,10 +9,6 @@ UnitTest.test('Cleaner', () => {
     args = [a, b, c, d];
     return token;
   })('a', 3, 2, 'cat');
-  assert.eq(
-    ['a', 3, 2, 'cat'],
-    args,
-    'Cleaner.wrap should pass arguments through'
-  );
+  assert.eq(['a', 3, 2, 'cat'], args, 'Cleaner.wrap should pass arguments through');
   assert.eq(token, ret, 'Cleaner.wrap should pass return value up');
 });

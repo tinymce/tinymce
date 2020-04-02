@@ -27,17 +27,12 @@ interface TextMungerSpec {
   label: string;
 }
 
-const invalidation = (
-  validate: (v: string) => Result<Record<string, string>, string>,
-  invalidUid: string
-) =>
+const invalidation = (validate: (v: string) => Result<Record<string, string>, string>, invalidUid: string) =>
   Invalidating.config({
     invalidClass: 'invalid-input',
     notify: {
       getContainer(input) {
-        return ComponentUtil.getByUid(input, invalidUid).map(
-          ComponentUtil.toElem
-        );
+        return ComponentUtil.getByUid(input, invalidUid).map(ComponentUtil.toElem);
       }
     },
     validator: {
@@ -56,13 +51,7 @@ const rawTextMunger = (spec: TextMungerSpec) => {
   const pField = FormField.parts().field({
     factory: Input,
     inputBehaviours: Behaviour.derive([
-      invalidation(
-        (v) =>
-          v.indexOf('a') === 0
-            ? Result.error('Do not start with a!')
-            : Result.value({}),
-        invalidUid
-      ),
+      invalidation((v) => (v.indexOf('a') === 0 ? Result.error('Do not start with a!') : Result.value({})), invalidUid),
       Tabstopping.config({})
     ])
   });
@@ -80,10 +69,7 @@ const textMunger = (spec: TextMungerSpec): SketchSpec => {
   return FormField.sketch(m);
 };
 
-const selectMunger = (spec: {
-  label: string;
-  options: Array<{ value: string; text: string }>;
-}): SketchSpec => {
+const selectMunger = (spec: { label: string; options: Array<{ value: string; text: string }> }): SketchSpec => {
   const pLabel = FormField.parts().label({
     dom: { tag: 'label', innerHtml: spec.label }
   });
@@ -109,10 +95,7 @@ const selectMunger = (spec: {
   });
 };
 
-const chooserMunger = (spec: {
-  legend: string;
-  choices: Array<{ text: string; value: string }>;
-}): SketchSpec => {
+const chooserMunger = (spec: { legend: string; choices: Array<{ text: string; value: string }> }): SketchSpec => {
   const pLegend = FormChooser.parts().legend({
     dom: {
       innerHtml: spec.legend
@@ -136,10 +119,7 @@ const chooserMunger = (spec: {
   });
 };
 
-const coupledTextMunger = (spec: {
-  field1: TextMungerSpec;
-  field2: TextMungerSpec;
-}): SketchSpec => {
+const coupledTextMunger = (spec: { field1: TextMungerSpec; field2: TextMungerSpec }): SketchSpec => {
   const pField1 = FormCoupledInputs.parts().field1(rawTextMunger(spec.field1));
   const pField2 = FormCoupledInputs.parts().field2(rawTextMunger(spec.field2));
 
@@ -164,11 +144,7 @@ const coupledTextMunger = (spec: {
   });
 };
 
-const typeaheadMunger = (spec: {
-  label: string;
-  lazySink: LazySink;
-  dataset: any[];
-}): SketchSpec => {
+const typeaheadMunger = (spec: { label: string; lazySink: LazySink; dataset: any[] }): SketchSpec => {
   const pLabel = FormField.parts().label({
     dom: {
       tag: 'label',
@@ -187,12 +163,7 @@ const typeaheadMunger = (spec: {
       const matching: DemoRenders.DemoItems[] = Arr.bind(spec.dataset, (d) => {
         const index = d.indexOf(text.toLowerCase());
         if (index > -1) {
-          const html =
-            d.substring(0, index) +
-            '<b>' +
-            d.substring(index, index + text.length) +
-            '</b>' +
-            d.substring(index + text.length);
+          const html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' + d.substring(index + text.length);
           return [
             {
               'type': 'item',
@@ -246,10 +217,4 @@ const typeaheadMunger = (spec: {
   });
 };
 
-export {
-  textMunger,
-  selectMunger,
-  chooserMunger,
-  coupledTextMunger,
-  typeaheadMunger
-};
+export { textMunger, selectMunger, chooserMunger, coupledTextMunger, typeaheadMunger };

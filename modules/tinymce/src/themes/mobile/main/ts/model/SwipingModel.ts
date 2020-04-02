@@ -28,8 +28,7 @@ const move = function (model, xValue) {
   // If the direction is the same as the previous direction, the change the last point
   // in the points array (because we have a new edge point). If the direction is different,
   // add a new point to the points array (because we have changed direction)
-  const currentDirection =
-    xValue - model.xValue > 0 ? SWIPING_LEFT : SWIPING_RIGHT;
+  const currentDirection = xValue - model.xValue > 0 ? SWIPING_LEFT : SWIPING_RIGHT;
 
   const newPoint = { direction: currentDirection, xValue };
 
@@ -38,9 +37,7 @@ const move = function (model, xValue) {
       return [];
     } else {
       const prev = model.points[model.points.length - 1];
-      return prev.direction === currentDirection
-        ? model.points.slice(0, model.points.length - 1)
-        : model.points;
+      return prev.direction === currentDirection ? model.points.slice(0, model.points.length - 1) : model.points;
     }
   })();
 

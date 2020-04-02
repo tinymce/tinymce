@@ -13,11 +13,7 @@ export interface UrlImageAsset {
   raw: () => Element;
 }
 
-export type BlobCallback<T> = (
-  id: string,
-  imageresult: ImageResult,
-  objurl: string
-) => T;
+export type BlobCallback<T> = (id: string, imageresult: ImageResult, objurl: string) => T;
 export type UrlCallback<T> = (id: string, url: string, raw: Element) => T;
 
 export interface ImageAssetAdt {

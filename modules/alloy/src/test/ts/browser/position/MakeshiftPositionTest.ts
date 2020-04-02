@@ -49,16 +49,10 @@ UnitTest.asynctest('MakeshiftPositionTest', (success, failure) => {
           y
         }));
 
-      const cAssertPopupNotInNoFitPosition = Chain.op(
-        (popup: AlloyComponent) => {
-          const box = popup.element().dom().getBoundingClientRect();
-          Assertions.assertEq(
-            'Assert not attached to the bottom of the viewport (eg nofit)',
-            true,
-            box.bottom !== window.innerHeight
-          );
-        }
-      );
+      const cAssertPopupNotInNoFitPosition = Chain.op((popup: AlloyComponent) => {
+        const box = popup.element().dom().getBoundingClientRect();
+        Assertions.assertEq('Assert not attached to the bottom of the viewport (eg nofit)', true, box.bottom !== window.innerHeight);
+      });
 
       return [
         Chain.asStep({}, [
@@ -76,10 +70,7 @@ UnitTest.asynctest('MakeshiftPositionTest', (success, failure) => {
 
             PositionTestUtils.cScrollDown('button', '2000px'),
             NamedChain.write('anchor', cSetupAnchor(100, 2100)),
-            PositionTestUtils.cTestSink(
-              'Relative, scrolled 2000px',
-              'relative'
-            ),
+            PositionTestUtils.cTestSink('Relative, scrolled 2000px', 'relative'),
             PositionTestUtils.cTestSink('Fixed, scrolled 2000px', 'fixed'),
             NamedChain.direct('popup', cAssertPopupNotInNoFitPosition, '_')
           ])

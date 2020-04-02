@@ -54,42 +54,34 @@ UnitTest.test('Checking struct with one fewer argument', () => {
 
 UnitTest.test('Checking struct with fewer arguments', () => {
   fc.assert(
-    fc.property(
-      fc.array(fc.string(), 1, 40),
-      fc.integer(1, 10),
-      (rawValues: string[], numToExclude: number) => {
-        // Remove duplications.
-        const values = toUnique(rawValues);
+    fc.property(fc.array(fc.string(), 1, 40), fc.integer(1, 10), (rawValues: string[], numToExclude: number) => {
+      // Remove duplications.
+      const values = toUnique(rawValues);
 
-        const struct = Struct.immutable.apply(undefined, values);
-        try {
-          struct.apply(undefined, values.slice(numToExclude));
-          return false;
-        } catch (err) {
-          return err.message.indexOf('Wrong number') > -1;
-        }
+      const struct = Struct.immutable.apply(undefined, values);
+      try {
+        struct.apply(undefined, values.slice(numToExclude));
+        return false;
+      } catch (err) {
+        return err.message.indexOf('Wrong number') > -1;
       }
-    )
+    })
   );
 });
 
 UnitTest.test('Checking struct with more arguments', () => {
   fc.assert(
-    fc.property(
-      fc.array(fc.string(), 1, 40),
-      fc.array(fc.string(), 1, 40),
-      (rawValues: string[], extra: string[]) => {
-        // Remove duplications.
-        const values = toUnique(rawValues);
+    fc.property(fc.array(fc.string(), 1, 40), fc.array(fc.string(), 1, 40), (rawValues: string[], extra: string[]) => {
+      // Remove duplications.
+      const values = toUnique(rawValues);
 
-        const struct = Struct.immutable.apply(undefined, values);
-        try {
-          struct.apply(undefined, values.concat(extra));
-          return false;
-        } catch (err) {
-          return err.message.indexOf('Wrong number') > -1;
-        }
+      const struct = Struct.immutable.apply(undefined, values);
+      try {
+        struct.apply(undefined, values.concat(extra));
+        return false;
+      } catch (err) {
+        return err.message.indexOf('Wrong number') > -1;
       }
-    )
+    })
   );
 });

@@ -5,13 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  document,
-  Element,
-  HTMLFormElement,
-  Window,
-  BeforeUnloadEvent
-} from '@ephox/dom-globals';
+import { document, Element, HTMLFormElement, Window, BeforeUnloadEvent } from '@ephox/dom-globals';
 import { Arr, Type, Obj } from '@ephox/katamari';
 import AddOnManager from './AddOnManager';
 import Editor from './Editor';
@@ -113,11 +107,7 @@ const removeEditorFromList = function (targetEditor: Editor) {
 
 const purgeDestroyedEditor = function (editor) {
   // User has manually destroyed the editor lets clean up the mess
-  if (
-    editor &&
-    editor.initialized &&
-    !(editor.getContainer() || editor.getBody()).parentNode
-  ) {
+  if (editor && editor.initialized && !(editor.getContainer() || editor.getBody()).parentNode) {
     removeEditorFromList(editor);
     editor.unbindAllNativeEvents();
     editor.destroy(true);
@@ -246,9 +236,7 @@ const EditorManager: EditorManager = {
     // Check if the URL is a document based format like: http://site/dir/file and file:///
     // leave other formats like applewebdata://... intact
     if (/^[^:]+:\/\/\/?[^\/]+\//.test(documentBaseURL)) {
-      documentBaseURL = documentBaseURL
-        .replace(/[\?#].*$/, '')
-        .replace(/[\/\\][^\/]+$/, '');
+      documentBaseURL = documentBaseURL.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
 
       if (!/[\/\\]$/.test(documentBaseURL)) {
         documentBaseURL += '/';
@@ -393,9 +381,7 @@ const EditorManager: EditorManager = {
     );
 
     const isInvalidInlineTarget = function (settings, elm) {
-      return (
-        settings.inline && elm.tagName.toLowerCase() in invalidInlineTargets
-      );
+      return settings.inline && elm.tagName.toLowerCase() in invalidInlineTargets;
     };
 
     const createId = function (elm) {
@@ -429,9 +415,7 @@ const EditorManager: EditorManager = {
     };
 
     const hasClass = function (elm, className) {
-      return className.constructor === RegExp
-        ? className.test(elm.className)
-        : DOM.hasClass(elm, className);
+      return className.constructor === RegExp ? className.test(elm.className) : DOM.hasClass(elm, className);
     };
 
     const findTargets = function (settings): Element[] {
@@ -446,8 +430,7 @@ const EditorManager: EditorManager = {
         return [];
       } else if (isQuirksMode) {
         ErrorReporter.initError(
-          'Failed to initialize the editor as the document is not in standards mode. ' +
-            'TinyMCE requires standards mode.'
+          'Failed to initialize the editor as the document is not in standards mode. ' + 'TinyMCE requires standards mode.'
         );
         return [];
       }
@@ -493,17 +476,11 @@ const EditorManager: EditorManager = {
         case 'textareas':
         case 'specific_textareas':
           each(DOM.select('textarea'), function (elm) {
-            if (
-              settings.editor_deselector &&
-              hasClass(elm, settings.editor_deselector)
-            ) {
+            if (settings.editor_deselector && hasClass(elm, settings.editor_deselector)) {
               return;
             }
 
-            if (
-              !settings.editor_selector ||
-              hasClass(elm, settings.editor_selector)
-            ) {
+            if (!settings.editor_selector || hasClass(elm, settings.editor_selector)) {
               targets.push(elm);
             }
           });
@@ -571,10 +548,7 @@ const EditorManager: EditorManager = {
       } else {
         each(targets, function (elm) {
           if (isInvalidInlineTarget(settings, elm)) {
-            ErrorReporter.initError(
-              'Could not initialize inline editor on invalid inline target element',
-              elm
-            );
+            ErrorReporter.initError('Could not initialize inline editor on invalid inline target element', elm);
           } else {
             createEditor(createId(elm), settings, elm);
           }
@@ -877,9 +851,7 @@ const EditorManager: EditorManager = {
   },
 
   _setBaseUrl(baseUrl: string) {
-    this.baseURL = new URI(this.documentBaseURL).toAbsolute(
-      baseUrl.replace(/\/+$/, '')
-    );
+    this.baseURL = new URI(this.documentBaseURL).toAbsolute(baseUrl.replace(/\/+$/, ''));
     this.baseURI = new URI(this.baseURL);
   }
 };

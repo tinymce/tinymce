@@ -22,20 +22,9 @@ promiseTest(
       const lazy = lazyCounter();
 
       lazy.get((val) => {
-        eqAsync(
-          'LazyValue.get. The counter should be 1 after 1 call',
-          1,
-          val,
-          reject
-        );
+        eqAsync('LazyValue.get. The counter should be 1 after 1 call', 1, val, reject);
         lazy.get((val2) => {
-          eqAsync(
-            'LazyValue.get. The counter should still be 1 because it is cached. Was: ' +
-              val2,
-            1,
-            val2,
-            reject
-          );
+          eqAsync('LazyValue.get. The counter should still be 1 because it is cached. Was: ' + val2, 1, val2, reject);
           resolve();
         });
       });
@@ -55,12 +44,7 @@ promiseTest(
       });
 
       lazy.map(f).get((fx) => {
-        eqAsync(
-          'LazyValue.map. Expected: extrahello, was: ' + fx,
-          'extrahello',
-          fx,
-          reject
-        );
+        eqAsync('LazyValue.map. Expected: extrahello, was: ' + fx, 'extrahello', fx, reject);
         resolve();
       });
     })
@@ -76,19 +60,9 @@ promiseTest(
         }, 50);
       });
 
-      eqAsync(
-        'LazyValue.isReady. Lazy value should not be ready yet.',
-        false,
-        lazy.isReady(),
-        reject
-      );
+      eqAsync('LazyValue.isReady. Lazy value should not be ready yet.', false, lazy.isReady(), reject);
       lazy.get((_v) => {
-        eqAsync(
-          'LazyValue.isReady. Lazy value should now be ready',
-          true,
-          lazy.isReady(),
-          reject
-        );
+        eqAsync('LazyValue.isReady. Lazy value should now be ready', true, lazy.isReady(), reject);
         resolve();
       });
     })

@@ -32,17 +32,7 @@ const dfreeBodyConfig = {
   selector: '.dfree-body',
   menubar: false,
   inline: true,
-  plugins: [
-    'autolink',
-    'codesample',
-    'contextmenu',
-    'link',
-    'lists',
-    'table',
-    'textcolor',
-    'image',
-    'quickbars'
-  ],
+  plugins: ['autolink', 'codesample', 'contextmenu', 'link', 'lists', 'table', 'textcolor', 'image', 'quickbars'],
   toolbar: false,
   quickbars_insert_toolbar: 'bold italic | quicklink h2 h3 blockquote',
   quickbars_selection_toolbar: 'bold italic | h2 h3 | blockquote quicklink',

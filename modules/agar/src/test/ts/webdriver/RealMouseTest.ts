@@ -1,16 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
-import {
-  Attr,
-  Class,
-  Css,
-  DomEvent,
-  Element,
-  Html,
-  Insert,
-  Remove
-} from '@ephox/sugar';
+import { Attr, Class, Css, DomEvent, Element, Html, Insert, Remove } from '@ephox/sugar';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as Guard from 'ephox/agar/api/Guard';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
@@ -24,11 +15,7 @@ UnitTest.asynctest('RealMouseTest', (success, failure) => {
   const detection = PlatformDetection.detect();
 
   // IE never passes unless watched and Safari/Edge 18 fails to hover on mousemove
-  if (
-    detection.browser.isIE() ||
-    detection.browser.isEdge() ||
-    detection.browser.isSafari()
-  ) {
+  if (detection.browser.isIE() || detection.browser.isEdge() || detection.browser.isSafari()) {
     return success();
   }
 
@@ -76,11 +63,7 @@ UnitTest.asynctest('RealMouseTest', (success, failure) => {
         UiFinder.cFindIn('button[data-test]'),
         Chain.control(
           Chain.op((button) => {
-            Assert.eq(
-              'After hovering',
-              Css.get(other, 'background-color'),
-              Css.get(button, 'background-color')
-            );
+            Assert.eq('After hovering', Css.get(other, 'background-color'), Css.get(button, 'background-color'));
           }),
           Guard.tryUntil('Waiting for button to turn blue')
         ),

@@ -13,19 +13,12 @@ import DOMUtils from '../api/dom/DOMUtils';
 
 const isEq = FormatUtils.isEq;
 
-const matchesUnInheritedFormatSelector = function (
-  ed: Editor,
-  node: Node,
-  name: string
-) {
+const matchesUnInheritedFormatSelector = function (ed: Editor, node: Node, name: string) {
   const formatList = ed.formatter.get(name);
 
   if (formatList) {
     for (let i = 0; i < formatList.length; i++) {
-      if (
-        formatList[i].inherit === false &&
-        ed.dom.is(node, formatList[i].selector)
-      ) {
+      if (formatList[i].inherit === false && ed.dom.is(node, formatList[i].selector)) {
         return true;
       }
     }
@@ -34,12 +27,7 @@ const matchesUnInheritedFormatSelector = function (
   return false;
 };
 
-const matchParents = function (
-  editor: Editor,
-  node: Node,
-  name: string,
-  vars: FormatVars
-) {
+const matchParents = function (editor: Editor, node: Node, name: string, vars: FormatVars) {
   const root = editor.dom.getRoot();
 
   if (node === root) {
@@ -52,9 +40,7 @@ const matchParents = function (
       return true;
     }
 
-    return (
-      node.parentNode === root || !!matchNode(editor, node, name, vars, true)
-    );
+    return node.parentNode === root || !!matchNode(editor, node, name, vars, true);
   });
 
   // Do an exact check on the similar format element
@@ -78,14 +64,7 @@ const matchName = function (dom: DOMUtils, node: Node, format) {
   }
 };
 
-const matchItems = function (
-  dom: DOMUtils,
-  node: Node,
-  format,
-  itemName: string,
-  similar: boolean,
-  vars: FormatVars
-) {
+const matchItems = function (dom: DOMUtils, node: Node, format, itemName: string, similar: boolean, vars: FormatVars) {
   let key, value;
   const items = format[itemName];
   let i;
@@ -113,14 +92,7 @@ const matchItems = function (
 
           if (
             (!similar || format.exact) &&
-            !isEq(
-              value,
-              FormatUtils.normalizeStyleValue(
-                dom,
-                FormatUtils.replaceVars(items[key], vars),
-                key
-              )
-            )
+            !isEq(value, FormatUtils.normalizeStyleValue(dom, FormatUtils.replaceVars(items[key], vars), key))
           ) {
             return;
           }
@@ -129,11 +101,7 @@ const matchItems = function (
     } else {
       // Only one match needed for indexed arrays
       for (i = 0; i < items.length; i++) {
-        if (
-          itemName === 'attributes'
-            ? dom.getAttrib(node, items[i])
-            : FormatUtils.getStyle(dom, node, items[i])
-        ) {
+        if (itemName === 'attributes' ? dom.getAttrib(node, items[i]) : FormatUtils.getStyle(dom, node, items[i])) {
           return format;
         }
       }
@@ -143,13 +111,7 @@ const matchItems = function (
   return format;
 };
 
-const matchNode = function (
-  ed: Editor,
-  node: Node,
-  name: string,
-  vars?: FormatVars,
-  similar?: boolean
-) {
+const matchNode = function (ed: Editor, node: Node, name: string, vars?: FormatVars, similar?: boolean) {
   const formatList = ed.formatter.get(name);
   let format, i, x, classes;
   const dom = ed.dom;
@@ -261,11 +223,4 @@ const canApply = function (editor: Editor, name: string) {
   return false;
 };
 
-export {
-  matchNode,
-  matchName,
-  match,
-  matchAll,
-  canApply,
-  matchesUnInheritedFormatSelector
-};
+export { matchNode, matchName, match, matchAll, canApply, matchesUnInheritedFormatSelector };

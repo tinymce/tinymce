@@ -1,13 +1,5 @@
 import { Arr, Fun, Obj, Option, Options } from '@ephox/katamari';
-import {
-  Attr,
-  Css,
-  Element,
-  Hierarchy,
-  Insert,
-  Node,
-  Replication
-} from '@ephox/sugar';
+import { Attr, Css, Element, Hierarchy, Insert, Node, Replication } from '@ephox/sugar';
 import { Generators } from 'ephox/snooker/api/Generators';
 import { Structs } from '../../../../../../main/ts/ephox/snooker/api/Main';
 import { TargetMergable } from '../../../../../../main/ts/ephox/snooker/model/RunOperation';
@@ -34,14 +26,7 @@ const targetStub = function (
     mergable: Fun.constant(
       Option.some({
         cells: Fun.constant(cells),
-        bounds: Fun.constant(
-          Structs.bounds(
-            bounds.startRow,
-            bounds.startCol,
-            bounds.finishRow,
-            bounds.finishCol
-          )
-        )
+        bounds: Fun.constant(Structs.bounds(bounds.startRow, bounds.startCol, bounds.finishRow, bounds.finishCol))
       })
     )
   };

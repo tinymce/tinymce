@@ -1,9 +1,6 @@
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Result } from 'ephox/katamari/api/Result';
-import {
-  arbResultError,
-  arbResultValue
-} from 'ephox/katamari/test/arb/ArbDataTypes';
+import { arbResultError, arbResultValue } from 'ephox/katamari/test/arb/ArbDataTypes';
 import fc from 'fast-check';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import { tResult } from 'ephox/katamari/api/ResultInstances';
@@ -21,11 +18,7 @@ UnitTest.test('Result.value: unit tests', () => {
   );
   Assert.eq('eq', 5, s.getOrDie());
   Assert.eq('eq', 5, s.or(Result.value(6)).getOrDie());
-  Assert.eq(
-    'eq',
-    5,
-    s.orThunk(() => Result.error('Should not get here.')).getOrDie()
-  );
+  Assert.eq('eq', 5, s.orThunk(() => Result.error('Should not get here.')).getOrDie());
 
   Assert.eq(
     'eq',
@@ -91,12 +84,7 @@ UnitTest.test('Checking value.getOrDie() does not throw', () => {
 UnitTest.test('Checking value.or(oValue) === value', () => {
   fc.assert(
     fc.property(fc.integer(), fc.integer(), (a, b) => {
-      Assert.eq(
-        'eq value',
-        Result.value(a),
-        Result.value(a).or(Result.value(b)),
-        tResult()
-      );
+      Assert.eq('eq value', Result.value(a), Result.value(a).or(Result.value(b)), tResult());
     })
   );
 });
@@ -104,12 +92,7 @@ UnitTest.test('Checking value.or(oValue) === value', () => {
 UnitTest.test('Checking error.or(value) === value', () => {
   fc.assert(
     fc.property(fc.integer(), fc.integer(), (a, b) => {
-      Assert.eq(
-        'eq or',
-        Result.value(b),
-        Result.error(a).or(Result.value(b)),
-        tResult()
-      );
+      Assert.eq('eq or', Result.value(b), Result.error(a).or(Result.value(b)), tResult());
     })
   );
 });
@@ -126,11 +109,7 @@ UnitTest.test('Checking value.fold(die, id) === value.getOrDie()', () => {
   fc.assert(
     fc.property(arbResultValue(fc.integer()), (res) => {
       const actual = res.getOrDie();
-      Assert.eq(
-        'eq',
-        actual,
-        res.fold(Fun.die('should not get here'), Fun.identity)
-      );
+      Assert.eq('eq', actual, res.fold(Fun.die('should not get here'), Fun.identity));
     })
   );
 });
@@ -152,79 +131,43 @@ UnitTest.test('Checking value.each(f) === undefined', () => {
   );
 });
 
-UnitTest.test(
-  'Given f :: s -> RV, checking value.bind(f).getOrDie() === f(value.getOrDie()).getOrDie()',
-  () => {
-    fc.assert(
-      fc.property(
-        arbResultValue(fc.integer()),
-        fc.func(arbResultValue(fc.integer())),
-        (res, f) => {
-          Assert.eq('eq', res.bind(f).getOrDie(), f(res.getOrDie()).getOrDie());
-        }
-      )
-    );
-  }
-);
+UnitTest.test('Given f :: s -> RV, checking value.bind(f).getOrDie() === f(value.getOrDie()).getOrDie()', () => {
+  fc.assert(
+    fc.property(arbResultValue(fc.integer()), fc.func(arbResultValue(fc.integer())), (res, f) => {
+      Assert.eq('eq', res.bind(f).getOrDie(), f(res.getOrDie()).getOrDie());
+    })
+  );
+});
 
-UnitTest.test(
-  'Given f :: s -> RE, checking value.bind(f).fold(id, die) === f(value.getOrDie()).fold(id, die)',
-  () => {
-    fc.assert(
-      fc.property(
-        arbResultValue(fc.integer()),
-        fc.func(arbResultError(fc.integer())),
-        (res, f) => {
-          const toErrString = (r) =>
-            r.fold(Fun.identity, Fun.die('Not a Result.error'));
-          Assert.eq(
-            'eq',
-            toErrString(res.bind(f)),
-            toErrString(f(res.getOrDie()))
-          );
-        }
-      )
-    );
-  }
-);
+UnitTest.test('Given f :: s -> RE, checking value.bind(f).fold(id, die) === f(value.getOrDie()).fold(id, die)', () => {
+  fc.assert(
+    fc.property(arbResultValue(fc.integer()), fc.func(arbResultError(fc.integer())), (res, f) => {
+      const toErrString = (r) => r.fold(Fun.identity, Fun.die('Not a Result.error'));
+      Assert.eq('eq', toErrString(res.bind(f)), toErrString(f(res.getOrDie())));
+    })
+  );
+});
 
-UnitTest.test(
-  'Checking value.forall is true iff. f(value.getOrDie() === true)',
-  () => {
-    fc.assert(
-      fc.property(
-        arbResultValue(fc.integer()),
-        fc.func(fc.boolean()),
-        (res, f) => {
-          Assert.eq('eq', f(res.getOrDie()), res.forall(f));
-        }
-      )
-    );
-  }
-);
+UnitTest.test('Checking value.forall is true iff. f(value.getOrDie() === true)', () => {
+  fc.assert(
+    fc.property(arbResultValue(fc.integer()), fc.func(fc.boolean()), (res, f) => {
+      Assert.eq('eq', f(res.getOrDie()), res.forall(f));
+    })
+  );
+});
 
-UnitTest.test(
-  'Checking value.exists is true iff. f(value.getOrDie() === true)',
-  () => {
-    fc.assert(
-      fc.property(
-        arbResultValue(fc.integer()),
-        fc.func(fc.boolean()),
-        (res, f) => {
-          Assert.eq('eq', f(res.getOrDie()), res.exists(f));
-        }
-      )
-    );
-  }
-);
+UnitTest.test('Checking value.exists is true iff. f(value.getOrDie() === true)', () => {
+  fc.assert(
+    fc.property(arbResultValue(fc.integer()), fc.func(fc.boolean()), (res, f) => {
+      Assert.eq('eq', f(res.getOrDie()), res.exists(f));
+    })
+  );
+});
 
-UnitTest.test(
-  'Checking value.toOption is always Option.some(value.getOrDie())',
-  () => {
-    fc.assert(
-      fc.property(arbResultValue(fc.integer()), (res) => {
-        Assert.eq('eq', res.getOrDie(), res.toOption().getOrDie());
-      })
-    );
-  }
-);
+UnitTest.test('Checking value.toOption is always Option.some(value.getOrDie())', () => {
+  fc.assert(
+    fc.property(arbResultValue(fc.integer()), (res) => {
+      Assert.eq('eq', res.getOrDie(), res.toOption().getOrDie());
+    })
+  );
+});

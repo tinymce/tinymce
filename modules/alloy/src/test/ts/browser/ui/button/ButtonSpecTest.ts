@@ -67,14 +67,8 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
           Mouse.sClickOn(gui.element(), 'button'),
           store.sAssertEq('step 2: post click', ['button.action']),
           store.sClear,
-          Chain.asStep(gui.element(), [
-            UiFinder.cFindIn('button'),
-            Cursors.cFollow([0]),
-            Mouse.cClick
-          ]),
-          store.sAssertEq('step 3: post click on button text', [
-            'button.action'
-          ]),
+          Chain.asStep(gui.element(), [UiFinder.cFindIn('button'), Cursors.cFollow([0]), Mouse.cClick]),
+          store.sAssertEq('step 3: post click on button text', ['button.action']),
           store.sClear
         ])
       );
@@ -86,11 +80,7 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
           Touch.sTapOn(gui.element(), 'button'),
           store.sAssertEq('step 2: post tap', ['button.action']),
           store.sClear,
-          Chain.asStep(gui.element(), [
-            UiFinder.cFindIn('button'),
-            Cursors.cFollow([0]),
-            Touch.cTap
-          ]),
+          Chain.asStep(gui.element(), [UiFinder.cFindIn('button'), Cursors.cFollow([0]), Touch.cTap]),
           store.sAssertEq('step 3: post tap on button text', ['button.action']),
           store.sClear
         ])
@@ -112,16 +102,8 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
       const testFocusing = Logger.t(
         'test focusing',
         GeneralSteps.sequence([
-          FocusTools.sSetFocus(
-            'Setting focus on button',
-            gui.element(),
-            '.test-button'
-          ),
-          FocusTools.sTryOnSelector(
-            'Checking focus on button',
-            doc,
-            '.test-button'
-          )
+          FocusTools.sSetFocus('Setting focus on button', gui.element(), '.test-button'),
+          FocusTools.sTryOnSelector('Checking focus on button', doc, '.test-button')
         ])
       );
 

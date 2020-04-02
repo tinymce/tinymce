@@ -39,8 +39,7 @@ const setGroups = (tb: AlloyComponent, gs: Array<{ items: AlloySpec[] }>) => {
   Toolbar.setGroups(tb, gps);
 };
 
-const createGroups = (gs: Array<{ items: AlloySpec[] }>) =>
-  Arr.map(gs, Fun.compose(ToolbarGroup.sketch, munge));
+const createGroups = (gs: Array<{ items: AlloySpec[] }>) => Arr.map(gs, Fun.compose(ToolbarGroup.sketch, munge));
 
 const markers = () => itemMarkers;
 

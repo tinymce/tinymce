@@ -62,8 +62,7 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
     Insert.append(Body.body(), iframe);
   };
 
-  const ifr =
-    '<iframe src="/project/@ephox/sugar/src/test/data/scrollTest.html"></iframe>';
+  const ifr = '<iframe src="/project/@ephox/sugar/src/test/data/scrollTest.html"></iframe>';
   testOne(
     ifr,
     {
@@ -110,28 +109,12 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
     assert.eq(
       true,
       within(x, scr.left(), epsX),
-      msg +
-        ' (' +
-        doc.dir +
-        ') Expected scrollCheck x=' +
-        x +
-        ', got=' +
-        scr.left() +
-        ', eps=' +
-        epsX
+      msg + ' (' + doc.dir + ') Expected scrollCheck x=' + x + ', got=' + scr.left() + ', eps=' + epsX
     );
     assert.eq(
       true,
       within(y, scr.top(), epsY),
-      msg +
-        ' (' +
-        doc.dir +
-        ') Expected scrollCheck y=' +
-        y +
-        ', got=' +
-        scr.top() +
-        ', eps=' +
-        epsY
+      msg + ' (' + doc.dir + ') Expected scrollCheck y=' + y + ', got=' + scr.top() + ', eps=' + epsY
     );
   };
 
@@ -150,14 +133,7 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
   const scrollBy = function (x, y, doc, msg) {
     const scr0 = Scroll.get(doc.rawDoc);
     Scroll.by(x, y, doc.rawDoc);
-    scrollCheck(
-      scr0.left() + x,
-      scr0.top() + y,
-      0,
-      0,
-      doc,
-      'scrollBy(' + x + ',' + y + '): ' + msg
-    );
+    scrollCheck(scr0.left() + x, scr0.top() + y, 0, 0, doc, 'scrollBy(' + x + ',' + y + '): ' + msg);
   };
 
   const runTests = function (doc) {
@@ -174,8 +150,7 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
 
     assert.eq(
       true,
-      (scrollBarWidth > 5 && scrollBarWidth < 50) ||
-        (platform.os.isOSX() && scrollBarWidth === 0),
+      (scrollBarWidth > 5 && scrollBarWidth < 50) || (platform.os.isOSX() && scrollBarWidth === 0),
       'scroll bar width, got=' + scrollBarWidth
     );
 
@@ -197,34 +172,14 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
 
       // scroll to top el
       const pos = Location.absolute(doc.byId('top1'));
-      setToElement(
-        doc,
-        doc.byId('top1'),
-        pos.left(),
-        pos.top(),
-        0,
-        0,
-        'set to top'
-      );
+      setToElement(doc, doc.byId('top1'), pos.left(), pos.top(), 0, 0, 'set to top');
 
       scrollTo(x, cY, doc); // scroll back to centre
 
       // scroll to bottom el
       const bot1Pos = Location.absolute(doc.byId('top1'));
-      const bot =
-        hgt +
-        2 * bodyBorder +
-        2 * mar -
-        (doc.rawWin.innerHeight - scrollBarWidth); // content height minus viewport-excluding-the-bottom-scrollbar
-      setToElement(
-        doc,
-        doc.byId('bot1'),
-        bot1Pos.left(),
-        bot,
-        0,
-        20,
-        'set to bottom'
-      );
+      const bot = hgt + 2 * bodyBorder + 2 * mar - (doc.rawWin.innerHeight - scrollBarWidth); // content height minus viewport-excluding-the-bottom-scrollbar
+      setToElement(doc, doc.byId('bot1'), bot1Pos.left(), bot, 0, 20, 'set to bottom');
 
       scrollTo(x, cY, doc); // scroll back to centre
       Scroll.preserve(doc.rawDoc, function () {

@@ -35,13 +35,7 @@ const convert = function (formats, memMenuThunk) {
     'Styles',
     [].concat(
       Arr.map(formats.items, function (k) {
-        return makeItem(
-          getValue(k),
-          k.title,
-          k.isSelected(),
-          k.getPreview(),
-          Obj.hasNonNullableKey(formats.expansions, getValue(k))
-        );
+        return makeItem(getValue(k), k.title, k.isSelected(), k.getPreview(), Obj.hasNonNullableKey(formats.expansions, getValue(k)));
       })
     ),
     memMenuThunk,
@@ -151,11 +145,7 @@ const makeMenu = function (value, items, memMenuThunk, collapsable) {
           AddEventsBehaviour.config('adhoc-scrollable-menu', [
             AlloyEvents.runOnAttached(function (component, _simulatedEvent) {
               Css.set(component.element(), 'overflow-y', 'auto');
-              Css.set(
-                component.element(),
-                '-webkit-overflow-scrolling',
-                'touch'
-              );
+              Css.set(component.element(), '-webkit-overflow-scrolling', 'touch');
               Scrollable.register(component.element());
             }),
 
@@ -217,10 +207,7 @@ const sketch = function (settings) {
       },
       onOpenSubmenu(container, item, submenu) {
         const w = Width.get(container.element());
-        const menu = SelectorFind.ancestor(
-          item.element(),
-          '[role="menu"]'
-        ).getOrDie('hacky');
+        const menu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
         const menuComp = container.getSystem().getByDom(menu).getOrDie();
 
         Width.set(submenu.element(), w);
@@ -231,10 +218,7 @@ const sketch = function (settings) {
       },
 
       onCollapseMenu(container, item, menu) {
-        const submenu = SelectorFind.ancestor(
-          item.element(),
-          '[role="menu"]'
-        ).getOrDie('hacky');
+        const submenu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
         const submenuComp = container.getSystem().getByDom(submenu).getOrDie();
         Transitioning.progressTo(submenuComp, 'after');
         Transitioning.progressTo(menu, 'current');

@@ -25,10 +25,7 @@ UnitTest.test('Arr.mapToObject', () => {
       const output = Arr.mapToObject(inputKeys, f);
       const outputKeys = Arr.sort(Obj.keys(output));
 
-      return (
-        Eq.eqArray(Eq.eqString).eq(inputKeys, outputKeys) &&
-        Arr.forall(outputKeys, (ok) => f(ok) === output[ok])
-      );
+      return Eq.eqArray(Eq.eqString).eq(inputKeys, outputKeys) && Arr.forall(outputKeys, (ok) => f(ok) === output[ok]);
     })
   );
 });

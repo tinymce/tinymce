@@ -35,26 +35,18 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
         replaceClass: string
       ) =>
         Logger.t(
-          `${label}: Check replaceAt(${replaceeIndex}, "${replaceClass}") for data: [${inputClasses.join(
-            ', '
-          )}]`,
+          `${label}: Check replaceAt(${replaceeIndex}, "${replaceClass}") for data: [${inputClasses.join(', ')}]`,
           Step.sync(() => {
             Replacing.set(
               component,
               Arr.map(inputClasses, (ic) => makeTag('div', [ic]))
             );
-            Replacing.replaceAt(
-              component,
-              replaceeIndex,
-              Option.some(makeTag('div', [replaceClass]))
-            );
+            Replacing.replaceAt(component, replaceeIndex, Option.some(makeTag('div', [replaceClass])));
             Assertions.assertStructure(
               'Asserting structure',
               ApproxStructure.build((s, _str, arr) =>
                 s.element('div', {
-                  children: Arr.map(expectedClasses, (ec) =>
-                    s.element('div', { classes: [arr.has(ec)] })
-                  )
+                  children: Arr.map(expectedClasses, (ec) => s.element('div', { classes: [arr.has(ec)] }))
                 })
               ),
               component.element()
@@ -87,18 +79,11 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
           component.element()
         ),
         Step.sync(() => {
-          Assert.eq(
-            'Should have no contents',
-            [],
-            Replacing.contents(component)
-          );
+          Assert.eq('Should have no contents', [], Replacing.contents(component));
         }),
 
         Step.sync(() => {
-          Replacing.set(component, [
-            Container.sketch({ uid: 'first' }),
-            Container.sketch({ uid: 'second' })
-          ]);
+          Replacing.set(component, [Container.sketch({ uid: 'first' }), Container.sketch({ uid: 'second' })]);
         }),
 
         Assertions.sAssertStructure(
@@ -111,20 +96,13 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
           component.element()
         ),
         Step.sync(() => {
-          Assert.eq(
-            'Should have 2 children',
-            2,
-            Replacing.contents(component).length
-          );
+          Assert.eq('Should have 2 children', 2, Replacing.contents(component).length);
         }),
 
         Logger.t(
           'Repeating adding the same uids to check clearing is working',
           Step.sync(() => {
-            Replacing.set(component, [
-              Container.sketch({ uid: 'first' }),
-              Container.sketch({ uid: 'second' })
-            ]);
+            Replacing.set(component, [Container.sketch({ uid: 'first' }), Container.sketch({ uid: 'second' })]);
           })
         ),
         Assertions.sAssertStructure(
@@ -137,41 +115,26 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
           component.element()
         ),
         Step.sync(() => {
-          Assert.eq(
-            'Should have 2 children still',
-            2,
-            Replacing.contents(component).length
-          );
+          Assert.eq('Should have 2 children still', 2, Replacing.contents(component).length);
         }),
 
         Logger.t(
           'Replacing.append to put a new thing at the end.',
           Step.sync(() => {
-            Replacing.append(
-              component,
-              Container.sketch({ dom: { tag: 'span' } })
-            );
+            Replacing.append(component, Container.sketch({ dom: { tag: 'span' } }));
           })
         ),
         Assertions.sAssertStructure(
           'After append(span)',
           ApproxStructure.build((s, _str, _arr) =>
             s.element('div', {
-              children: [
-                s.element('div', {}),
-                s.element('div', {}),
-                s.element('span', {})
-              ]
+              children: [s.element('div', {}), s.element('div', {}), s.element('span', {})]
             })
           ),
           component.element()
         ),
         Step.sync(() => {
-          Assert.eq(
-            'Should have 3 children now',
-            3,
-            Replacing.contents(component).length
-          );
+          Assert.eq('Should have 3 children now', 3, Replacing.contents(component).length);
         }),
 
         Logger.t(
@@ -192,22 +155,13 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
           'After prepend(label)',
           ApproxStructure.build((s, _str, _arr) =>
             s.element('div', {
-              children: [
-                s.element('label', {}),
-                s.element('div', {}),
-                s.element('div', {}),
-                s.element('span', {})
-              ]
+              children: [s.element('label', {}), s.element('div', {}), s.element('div', {}), s.element('span', {})]
             })
           ),
           component.element()
         ),
         Step.sync(() => {
-          Assert.eq(
-            'Should have 4 children now',
-            4,
-            Replacing.contents(component).length
-          );
+          Assert.eq('Should have 4 children now', 4, Replacing.contents(component).length);
         }),
 
         Logger.t(
@@ -222,21 +176,13 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
           'After remove(second)',
           ApproxStructure.build((s, _str, _arr) =>
             s.element('div', {
-              children: [
-                s.element('label', {}),
-                s.element('div', {}),
-                s.element('span', {})
-              ]
+              children: [s.element('label', {}), s.element('div', {}), s.element('span', {})]
             })
           ),
           component.element()
         ),
         Step.sync(() => {
-          Assert.eq(
-            'Should have 3 children again',
-            3,
-            Replacing.contents(component).length
-          );
+          Assert.eq('Should have 3 children again', 3, Replacing.contents(component).length);
         }),
 
         Logger.t(
@@ -250,39 +196,18 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
           'After append(second) after remove(second)',
           ApproxStructure.build((s, _str, _arr) =>
             s.element('div', {
-              children: [
-                s.element('label', {}),
-                s.element('div', {}),
-                s.element('span', {}),
-                s.element('div', {})
-              ]
+              children: [s.element('label', {}), s.element('div', {}), s.element('span', {}), s.element('div', {})]
             })
           ),
           component.element()
         ),
         Step.sync(() => {
-          Assert.eq(
-            'Should have 4 children again',
-            4,
-            Replacing.contents(component).length
-          );
+          Assert.eq('Should have 4 children again', 4, Replacing.contents(component).length);
         }),
 
-        sCheckReplaceAt(
-          '.replaceAt 0 of 0 - should do nothing',
-          [],
-          [],
-          0,
-          'replaceAt-0'
-        ),
+        sCheckReplaceAt('.replaceAt 0 of 0 - should do nothing', [], [], 0, 'replaceAt-0'),
 
-        sCheckReplaceAt(
-          '.replaceAt 0 of 1',
-          ['replaceAt-0'],
-          ['original'],
-          0,
-          'replaceAt-0'
-        ),
+        sCheckReplaceAt('.replaceAt 0 of 1', ['replaceAt-0'], ['original'], 0, 'replaceAt-0'),
 
         sCheckReplaceAt(
           '.replaceAt 0 of 3',

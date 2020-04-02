@@ -1,32 +1,13 @@
-import {
-  ClientRect,
-  DOMRect,
-  Element as DomElement,
-  Window
-} from '@ephox/dom-globals';
+import { ClientRect, DOMRect, Element as DomElement, Window } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import {
-  Element,
-  RawRect,
-  Rect,
-  Scroll,
-  Selection,
-  SimRange,
-  Situ,
-  WindowSelection
-} from '@ephox/sugar';
+import { Element, RawRect, Rect, Scroll, Selection, SimRange, Situ, WindowSelection } from '@ephox/sugar';
 import { Situs } from '../selection/Situs';
 import * as Util from '../selection/Util';
 
 export interface WindowBridge {
   elementFromPoint: (x: number, y: number) => Option<Element>;
   getRect: (element: Element) => ClientRect | DOMRect;
-  getRangedRect: (
-    start: Element,
-    soffset: number,
-    finish: Element,
-    foffset: number
-  ) => Option<RawRect>;
+  getRangedRect: (start: Element, soffset: number, finish: Element, foffset: number) => Option<RawRect>;
   getSelection: () => Option<SimRange>;
   fromSitus: (situs: Situs) => SimRange;
   situsFromPoint: (x: number, y: number) => Option<Situs>;
@@ -49,12 +30,7 @@ export const WindowBridge = function (win: Window): WindowBridge {
     return (element.dom() as DomElement).getBoundingClientRect();
   };
 
-  const getRangedRect = function (
-    start: Element,
-    soffset: number,
-    finish: Element,
-    foffset: number
-  ): Option<RawRect> {
+  const getRangedRect = function (start: Element, soffset: number, finish: Element, foffset: number): Option<RawRect> {
     const sel = Selection.exact(start, soffset, finish, foffset);
     return WindowSelection.getFirstRect(win, sel).map(Rect.toRaw);
   };
@@ -72,12 +48,7 @@ export const WindowBridge = function (win: Window): WindowBridge {
 
   const situsFromPoint = function (x: number, y: number) {
     return WindowSelection.getAtPoint(win, x, y).map(function (exact) {
-      return Situs.create(
-        exact.start(),
-        exact.soffset(),
-        exact.finish(),
-        exact.foffset()
-      );
+      return Situs.create(exact.start(), exact.soffset(), exact.finish(), exact.foffset());
     });
   };
 
@@ -107,13 +78,7 @@ export const WindowBridge = function (win: Window): WindowBridge {
   };
 
   const setSelection = function (sel: SimRange) {
-    WindowSelection.setExact(
-      win,
-      sel.start(),
-      sel.soffset(),
-      sel.finish(),
-      sel.foffset()
-    );
+    WindowSelection.setExact(win, sel.start(), sel.soffset(), sel.finish(), sel.foffset());
   };
 
   const setRelativeSelection = function (start: Situ, finish: Situ) {

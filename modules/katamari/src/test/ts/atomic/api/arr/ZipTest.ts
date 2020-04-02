@@ -25,15 +25,7 @@ UnitTest.test('Zip: unit tests', () => {
 
     const sortTuples = (a: Array<{ k: string; v: string }>) =>
       sort(a, (a: { k: string; v: string }, b: { k: string; v: string }) =>
-        a.k === b.k
-          ? a.v === b.v
-            ? eq
-            : a.v > b.v
-            ? gt
-            : lt
-          : a.k > b.k
-          ? gt
-          : lt
+        a.k === b.k ? (a.v === b.v ? eq : a.v > b.v ? gt : lt) : a.k > b.k ? gt : lt
       );
 
     expectedZipToObject.fold(
@@ -49,11 +41,7 @@ UnitTest.test('Zip: unit tests', () => {
         Assert.throws('boom', () => Zip.zipToTuples(keys, values));
       },
       (expected) => {
-        Assert.eq(
-          'eq',
-          sortTuples(expected),
-          sortTuples(Zip.zipToTuples(keys, values))
-        );
+        Assert.eq('eq', sortTuples(expected), sortTuples(Zip.zipToTuples(keys, values)));
       }
     );
   };
@@ -103,24 +91,18 @@ UnitTest.test('zipToObject has matching keys and values', () => {
 
 UnitTest.test('zipToTuples matches corresponding tuples', () => {
   fc.assert(
-    fc.property(
-      fc.array(fc.integer()),
-      fc.array(fc.integer()),
-      (keys, values) => {
-        if (keys.length !== values.length) {
-          Assert.throws('Should throw with different lengths', () =>
-            Zip.zipToTuples(keys, values)
-          );
-        } else {
-          const output = Zip.zipToTuples(keys, values);
-          Assert.eq('Output keys did not match', keys.length, output.length);
-          Assert.eq(
-            '',
-            true,
-            Arr.forall(output, (x, i) => x.k === keys[i] && x.v === values[i])
-          );
-        }
+    fc.property(fc.array(fc.integer()), fc.array(fc.integer()), (keys, values) => {
+      if (keys.length !== values.length) {
+        Assert.throws('Should throw with different lengths', () => Zip.zipToTuples(keys, values));
+      } else {
+        const output = Zip.zipToTuples(keys, values);
+        Assert.eq('Output keys did not match', keys.length, output.length);
+        Assert.eq(
+          '',
+          true,
+          Arr.forall(output, (x, i) => x.k === keys[i] && x.v === values[i])
+        );
       }
-    )
+    })
   );
 });

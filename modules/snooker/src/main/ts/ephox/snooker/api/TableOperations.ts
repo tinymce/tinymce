@@ -20,13 +20,7 @@ import * as MergingOperations from '../operate/MergingOperations';
 import * as ModificationOperations from '../operate/ModificationOperations';
 import * as TransformOperations from '../operate/TransformOperations';
 import * as Adjustments from '../resize/Adjustments';
-import {
-  GeneratorsModification,
-  GeneratorsTransform,
-  GeneratorsMerging,
-  Generators,
-  SimpleGenerators
-} from './Generators';
+import { GeneratorsModification, GeneratorsTransform, GeneratorsMerging, Generators, SimpleGenerators } from './Generators';
 import * as Structs from './Structs';
 import * as TableContent from './TableContent';
 import * as TableLookup from './TableLookup';
@@ -45,29 +39,18 @@ const prune = function (table: Element) {
   }
 };
 
-const outcome = (
-  grid: Structs.RowCells[],
-  cursor: Option<Element>
-): TableOperationResult => ({
+const outcome = (grid: Structs.RowCells[], cursor: Option<Element>): TableOperationResult => ({
   grid: Fun.constant(grid),
   cursor: Fun.constant(cursor)
 });
 
-const elementFromGrid = function (
-  grid: Structs.RowCells[],
-  row: number,
-  column: number
-) {
+const elementFromGrid = function (grid: Structs.RowCells[], row: number, column: number) {
   return findIn(grid, row, column).orThunk(function () {
     return findIn(grid, 0, 0);
   });
 };
 
-const findIn = function (
-  grid: Structs.RowCells[],
-  row: number,
-  column: number
-) {
+const findIn = function (grid: Structs.RowCells[], row: number, column: number) {
   return Option.from(grid[row]).bind(function (r) {
     return Option.from(r.cells()[column]).bind(function (c) {
       return Option.from(c.element());
@@ -75,11 +58,7 @@ const findIn = function (
   });
 };
 
-const bundle = function (
-  grid: Structs.RowCells[],
-  row: number,
-  column: number
-) {
+const bundle = function (grid: Structs.RowCells[], row: number, column: number) {
   return outcome(grid, findIn(grid, row, column));
 };
 
@@ -123,13 +102,7 @@ const opInsertRowBefore = function (
 ) {
   const example = detail.row();
   const targetIndex = detail.row();
-  const newGrid = ModificationOperations.insertRowAt(
-    grid,
-    targetIndex,
-    example,
-    comparator,
-    genWrappers.getOrInit
-  );
+  const newGrid = ModificationOperations.insertRowAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
   return bundle(newGrid, targetIndex, detail.column());
 };
 
@@ -145,13 +118,7 @@ const opInsertRowsBefore = function (
   const newGrid = Arr.foldl(
     rows,
     function (newG, _row) {
-      return ModificationOperations.insertRowAt(
-        newG,
-        targetIndex,
-        example,
-        comparator,
-        genWrappers.getOrInit
-      );
+      return ModificationOperations.insertRowAt(newG, targetIndex, example, comparator, genWrappers.getOrInit);
     },
     grid
   );
@@ -166,13 +133,7 @@ const opInsertRowAfter = function (
 ) {
   const example = detail.row();
   const targetIndex = detail.row() + detail.rowspan();
-  const newGrid = ModificationOperations.insertRowAt(
-    grid,
-    targetIndex,
-    example,
-    comparator,
-    genWrappers.getOrInit
-  );
+  const newGrid = ModificationOperations.insertRowAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
   return bundle(newGrid, targetIndex, detail.column());
 };
 
@@ -184,18 +145,11 @@ const opInsertRowsAfter = function (
 ) {
   const rows = uniqueRows(details);
   const example = rows[rows.length - 1].row();
-  const targetIndex =
-    rows[rows.length - 1].row() + rows[rows.length - 1].rowspan();
+  const targetIndex = rows[rows.length - 1].row() + rows[rows.length - 1].rowspan();
   const newGrid = Arr.foldl(
     rows,
     function (newG, _row) {
-      return ModificationOperations.insertRowAt(
-        newG,
-        targetIndex,
-        example,
-        comparator,
-        genWrappers.getOrInit
-      );
+      return ModificationOperations.insertRowAt(newG, targetIndex, example, comparator, genWrappers.getOrInit);
     },
     grid
   );
@@ -210,13 +164,7 @@ const opInsertColumnBefore = function (
 ) {
   const example = detail.column();
   const targetIndex = detail.column();
-  const newGrid = ModificationOperations.insertColumnAt(
-    grid,
-    targetIndex,
-    example,
-    comparator,
-    genWrappers.getOrInit
-  );
+  const newGrid = ModificationOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
   return bundle(newGrid, detail.row(), targetIndex);
 };
 
@@ -232,13 +180,7 @@ const opInsertColumnsBefore = function (
   const newGrid = Arr.foldl(
     columns,
     function (newG, _row) {
-      return ModificationOperations.insertColumnAt(
-        newG,
-        targetIndex,
-        example,
-        comparator,
-        genWrappers.getOrInit
-      );
+      return ModificationOperations.insertColumnAt(newG, targetIndex, example, comparator, genWrappers.getOrInit);
     },
     grid
   );
@@ -253,13 +195,7 @@ const opInsertColumnAfter = function (
 ) {
   const example = detail.column();
   const targetIndex = detail.column() + detail.colspan();
-  const newGrid = ModificationOperations.insertColumnAt(
-    grid,
-    targetIndex,
-    example,
-    comparator,
-    genWrappers.getOrInit
-  );
+  const newGrid = ModificationOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
   return bundle(newGrid, detail.row(), targetIndex);
 };
 
@@ -270,20 +206,12 @@ const opInsertColumnsAfter = function (
   genWrappers: GeneratorsModification
 ) {
   const example = details[details.length - 1].column();
-  const targetIndex =
-    details[details.length - 1].column() +
-    details[details.length - 1].colspan();
+  const targetIndex = details[details.length - 1].column() + details[details.length - 1].colspan();
   const columns = uniqueColumns(details);
   const newGrid = Arr.foldl(
     columns,
     function (newG, _row) {
-      return ModificationOperations.insertColumnAt(
-        newG,
-        targetIndex,
-        example,
-        comparator,
-        genWrappers.getOrInit
-      );
+      return ModificationOperations.insertColumnAt(newG, targetIndex, example, comparator, genWrappers.getOrInit);
     },
     grid
   );
@@ -296,12 +224,7 @@ const opMakeRowHeader = function (
   comparator: CompElm,
   genWrappers: GeneratorsTransform
 ) {
-  const newGrid = TransformOperations.replaceRow(
-    grid,
-    detail.row(),
-    comparator,
-    genWrappers.replaceOrInit
-  );
+  const newGrid = TransformOperations.replaceRow(grid, detail.row(), comparator, genWrappers.replaceOrInit);
   return bundle(newGrid, detail.row(), detail.column());
 };
 
@@ -311,12 +234,7 @@ const opMakeColumnHeader = function (
   comparator: CompElm,
   genWrappers: GeneratorsTransform
 ) {
-  const newGrid = TransformOperations.replaceColumn(
-    grid,
-    detail.column(),
-    comparator,
-    genWrappers.replaceOrInit
-  );
+  const newGrid = TransformOperations.replaceColumn(grid, detail.column(), comparator, genWrappers.replaceOrInit);
   return bundle(newGrid, detail.row(), detail.column());
 };
 
@@ -326,12 +244,7 @@ const opUnmakeRowHeader = function (
   comparator: CompElm,
   genWrappers: GeneratorsTransform
 ) {
-  const newGrid = TransformOperations.replaceRow(
-    grid,
-    detail.row(),
-    comparator,
-    genWrappers.replaceOrInit
-  );
+  const newGrid = TransformOperations.replaceRow(grid, detail.row(), comparator, genWrappers.replaceOrInit);
   return bundle(newGrid, detail.row(), detail.column());
 };
 
@@ -341,12 +254,7 @@ const opUnmakeColumnHeader = function (
   comparator: CompElm,
   genWrappers: GeneratorsTransform
 ) {
-  const newGrid = TransformOperations.replaceColumn(
-    grid,
-    detail.column(),
-    comparator,
-    genWrappers.replaceOrInit
-  );
+  const newGrid = TransformOperations.replaceColumn(grid, detail.column(), comparator, genWrappers.replaceOrInit);
   return bundle(newGrid, detail.row(), detail.column());
 };
 
@@ -356,13 +264,7 @@ const opSplitCellIntoColumns = function (
   comparator: CompElm,
   genWrappers: GeneratorsModification
 ) {
-  const newGrid = ModificationOperations.splitCellIntoColumns(
-    grid,
-    detail.row(),
-    detail.column(),
-    comparator,
-    genWrappers.getOrInit
-  );
+  const newGrid = ModificationOperations.splitCellIntoColumns(grid, detail.row(), detail.column(), comparator, genWrappers.getOrInit);
   return bundle(newGrid, detail.row(), detail.column());
 };
 
@@ -372,13 +274,7 @@ const opSplitCellIntoRows = function (
   comparator: CompElm,
   genWrappers: GeneratorsModification
 ) {
-  const newGrid = ModificationOperations.splitCellIntoRows(
-    grid,
-    detail.row(),
-    detail.column(),
-    comparator,
-    genWrappers.getOrInit
-  );
+  const newGrid = ModificationOperations.splitCellIntoRows(grid, detail.row(), detail.column(), comparator, genWrappers.getOrInit);
   return bundle(newGrid, detail.row(), detail.column());
 };
 
@@ -390,16 +286,8 @@ const opEraseColumns = function (
 ) {
   const columns = uniqueColumns(details);
 
-  const newGrid = ModificationOperations.deleteColumnsAt(
-    grid,
-    columns[0].column(),
-    columns[columns.length - 1].column()
-  );
-  const cursor = elementFromGrid(
-    newGrid,
-    details[0].row(),
-    details[0].column()
-  );
+  const newGrid = ModificationOperations.deleteColumnsAt(grid, columns[0].column(), columns[columns.length - 1].column());
+  const cursor = elementFromGrid(newGrid, details[0].row(), details[0].column());
   return outcome(newGrid, cursor);
 };
 
@@ -411,51 +299,23 @@ const opEraseRows = function (
 ) {
   const rows = uniqueRows(details);
 
-  const newGrid = ModificationOperations.deleteRowsAt(
-    grid,
-    rows[0].row(),
-    rows[rows.length - 1].row()
-  );
-  const cursor = elementFromGrid(
-    newGrid,
-    details[0].row(),
-    details[0].column()
-  );
+  const newGrid = ModificationOperations.deleteRowsAt(grid, rows[0].row(), rows[rows.length - 1].row());
+  const cursor = elementFromGrid(newGrid, details[0].row(), details[0].column());
   return outcome(newGrid, cursor);
 };
 
-const opMergeCells = function (
-  grid: Structs.RowCells[],
-  mergable: ExtractMergable,
-  comparator: CompElm,
-  _genWrappers: GeneratorsMerging
-) {
+const opMergeCells = function (grid: Structs.RowCells[], mergable: ExtractMergable, comparator: CompElm, _genWrappers: GeneratorsMerging) {
   const cells = mergable.cells();
   TableContent.merge(cells);
-  const newGrid = MergingOperations.merge(
-    grid,
-    mergable.bounds(),
-    comparator,
-    Fun.constant(cells[0])
-  );
+  const newGrid = MergingOperations.merge(grid, mergable.bounds(), comparator, Fun.constant(cells[0]));
   return outcome(newGrid, Option.from(cells[0]));
 };
 
-const opUnmergeCells = function (
-  grid: Structs.RowCells[],
-  unmergable: Element[],
-  comparator: CompElm,
-  genWrappers: GeneratorsMerging
-) {
+const opUnmergeCells = function (grid: Structs.RowCells[], unmergable: Element[], comparator: CompElm, genWrappers: GeneratorsMerging) {
   const newGrid = Arr.foldr(
     unmergable,
     function (b, cell) {
-      return MergingOperations.unmerge(
-        b,
-        cell,
-        comparator,
-        genWrappers.combine(cell)
-      );
+      return MergingOperations.unmerge(b, cell, comparator, genWrappers.combine(cell));
     },
     grid
   );
@@ -474,37 +334,20 @@ const opPasteCells = function (
     return Transitions.toGrid(wh, generators, true);
   };
   const gridB = gridify(pasteDetails.clipboard(), pasteDetails.generators());
-  const startAddress = Structs.address(
-    pasteDetails.row(),
-    pasteDetails.column()
-  );
-  const mergedGrid = TableMerge.merge(
-    startAddress,
-    grid,
-    gridB,
-    pasteDetails.generators(),
-    comparator
-  );
+  const startAddress = Structs.address(pasteDetails.row(), pasteDetails.column());
+  const mergedGrid = TableMerge.merge(startAddress, grid, gridB, pasteDetails.generators(), comparator);
   return mergedGrid.fold(
     function () {
       return outcome(grid, Option.some(pasteDetails.element()));
     },
     function (nuGrid) {
-      const cursor = elementFromGrid(
-        nuGrid,
-        pasteDetails.row(),
-        pasteDetails.column()
-      );
+      const cursor = elementFromGrid(nuGrid, pasteDetails.row(), pasteDetails.column());
       return outcome(nuGrid, cursor);
     }
   );
 };
 
-const gridifyRows = function (
-  rows: Element[],
-  generators: Generators,
-  example: Structs.RowCells
-) {
+const gridifyRows = function (rows: Element[], generators: Generators, example: Structs.RowCells) {
   const pasteDetails = DetailsList.fromPastedRows(rows, example);
   const wh = Warehouse.generate(pasteDetails);
   return Transitions.toGrid(wh, generators, true);
@@ -518,23 +361,9 @@ const opPasteRowsBefore = function (
 ) {
   const example = grid[pasteDetails.cells[0].row()];
   const index = pasteDetails.cells[0].row();
-  const gridB = gridifyRows(
-    pasteDetails.clipboard(),
-    pasteDetails.generators(),
-    example
-  );
-  const mergedGrid = TableMerge.insert(
-    index,
-    grid,
-    gridB,
-    pasteDetails.generators(),
-    comparator
-  );
-  const cursor = elementFromGrid(
-    mergedGrid,
-    pasteDetails.cells[0].row(),
-    pasteDetails.cells[0].column()
-  );
+  const gridB = gridifyRows(pasteDetails.clipboard(), pasteDetails.generators(), example);
+  const mergedGrid = TableMerge.insert(index, grid, gridB, pasteDetails.generators(), comparator);
+  const cursor = elementFromGrid(mergedGrid, pasteDetails.cells[0].row(), pasteDetails.cells[0].column());
   return outcome(mergedGrid, cursor);
 };
 
@@ -545,176 +374,34 @@ const opPasteRowsAfter = function (
   _genWrappers: GeneratorsModification
 ) {
   const example = grid[pasteDetails.cells[0].row()];
-  const index =
-    pasteDetails.cells[pasteDetails.cells.length - 1].row() +
-    pasteDetails.cells[pasteDetails.cells.length - 1].rowspan();
-  const gridB = gridifyRows(
-    pasteDetails.clipboard(),
-    pasteDetails.generators(),
-    example
-  );
-  const mergedGrid = TableMerge.insert(
-    index,
-    grid,
-    gridB,
-    pasteDetails.generators(),
-    comparator
-  );
-  const cursor = elementFromGrid(
-    mergedGrid,
-    pasteDetails.cells[0].row(),
-    pasteDetails.cells[0].column()
-  );
+  const index = pasteDetails.cells[pasteDetails.cells.length - 1].row() + pasteDetails.cells[pasteDetails.cells.length - 1].rowspan();
+  const gridB = gridifyRows(pasteDetails.clipboard(), pasteDetails.generators(), example);
+  const mergedGrid = TableMerge.insert(index, grid, gridB, pasteDetails.generators(), comparator);
+  const cursor = elementFromGrid(mergedGrid, pasteDetails.cells[0].row(), pasteDetails.cells[0].column());
   return outcome(mergedGrid, cursor);
 };
 
 // Only column modifications force a resizing. Everything else just tries to preserve the table as is.
 const resize = Adjustments.adjustWidthTo;
 
-export const insertRowBefore = run(
-  opInsertRowBefore,
-  onCell,
-  Fun.noop,
-  Fun.noop,
-  Generators.modification
-);
-export const insertRowsBefore = run(
-  opInsertRowsBefore,
-  onCells,
-  Fun.noop,
-  Fun.noop,
-  Generators.modification
-);
-export const insertRowAfter = run(
-  opInsertRowAfter,
-  onCell,
-  Fun.noop,
-  Fun.noop,
-  Generators.modification
-);
-export const insertRowsAfter = run(
-  opInsertRowsAfter,
-  onCells,
-  Fun.noop,
-  Fun.noop,
-  Generators.modification
-);
-export const insertColumnBefore = run(
-  opInsertColumnBefore,
-  onCell,
-  resize,
-  Fun.noop,
-  Generators.modification
-);
-export const insertColumnsBefore = run(
-  opInsertColumnsBefore,
-  onCells,
-  resize,
-  Fun.noop,
-  Generators.modification
-);
-export const insertColumnAfter = run(
-  opInsertColumnAfter,
-  onCell,
-  resize,
-  Fun.noop,
-  Generators.modification
-);
-export const insertColumnsAfter = run(
-  opInsertColumnsAfter,
-  onCells,
-  resize,
-  Fun.noop,
-  Generators.modification
-);
-export const splitCellIntoColumns = run(
-  opSplitCellIntoColumns,
-  onCell,
-  resize,
-  Fun.noop,
-  Generators.modification
-);
-export const splitCellIntoRows = run(
-  opSplitCellIntoRows,
-  onCell,
-  Fun.noop,
-  Fun.noop,
-  Generators.modification
-);
-export const eraseColumns = run(
-  opEraseColumns,
-  onCells,
-  resize,
-  prune,
-  Generators.modification
-);
-export const eraseRows = run(
-  opEraseRows,
-  onCells,
-  Fun.noop,
-  prune,
-  Generators.modification
-);
-export const makeColumnHeader = run(
-  opMakeColumnHeader,
-  onCell,
-  Fun.noop,
-  Fun.noop,
-  Generators.transform('row', 'th')
-);
-export const unmakeColumnHeader = run(
-  opUnmakeColumnHeader,
-  onCell,
-  Fun.noop,
-  Fun.noop,
-  Generators.transform(null, 'td')
-);
-export const makeRowHeader = run(
-  opMakeRowHeader,
-  onCell,
-  Fun.noop,
-  Fun.noop,
-  Generators.transform('col', 'th')
-);
-export const unmakeRowHeader = run(
-  opUnmakeRowHeader,
-  onCell,
-  Fun.noop,
-  Fun.noop,
-  Generators.transform(null, 'td')
-);
-export const mergeCells = run(
-  opMergeCells,
-  onMergable,
-  Fun.noop,
-  Fun.noop,
-  Generators.merging
-);
-export const unmergeCells = run(
-  opUnmergeCells,
-  onUnmergable,
-  resize,
-  Fun.noop,
-  Generators.merging
-);
-export const pasteCells = run(
-  opPasteCells,
-  onPaste,
-  resize,
-  Fun.noop,
-  Generators.modification
-);
-export const pasteRowsBefore = run(
-  opPasteRowsBefore,
-  onPasteRows,
-  Fun.noop,
-  Fun.noop,
-  Generators.modification
-);
-export const pasteRowsAfter = run(
-  opPasteRowsAfter,
-  onPasteRows,
-  Fun.noop,
-  Fun.noop,
-  Generators.modification
-);
+export const insertRowBefore = run(opInsertRowBefore, onCell, Fun.noop, Fun.noop, Generators.modification);
+export const insertRowsBefore = run(opInsertRowsBefore, onCells, Fun.noop, Fun.noop, Generators.modification);
+export const insertRowAfter = run(opInsertRowAfter, onCell, Fun.noop, Fun.noop, Generators.modification);
+export const insertRowsAfter = run(opInsertRowsAfter, onCells, Fun.noop, Fun.noop, Generators.modification);
+export const insertColumnBefore = run(opInsertColumnBefore, onCell, resize, Fun.noop, Generators.modification);
+export const insertColumnsBefore = run(opInsertColumnsBefore, onCells, resize, Fun.noop, Generators.modification);
+export const insertColumnAfter = run(opInsertColumnAfter, onCell, resize, Fun.noop, Generators.modification);
+export const insertColumnsAfter = run(opInsertColumnsAfter, onCells, resize, Fun.noop, Generators.modification);
+export const splitCellIntoColumns = run(opSplitCellIntoColumns, onCell, resize, Fun.noop, Generators.modification);
+export const splitCellIntoRows = run(opSplitCellIntoRows, onCell, Fun.noop, Fun.noop, Generators.modification);
+export const eraseColumns = run(opEraseColumns, onCells, resize, prune, Generators.modification);
+export const eraseRows = run(opEraseRows, onCells, Fun.noop, prune, Generators.modification);
+export const makeColumnHeader = run(opMakeColumnHeader, onCell, Fun.noop, Fun.noop, Generators.transform('row', 'th'));
+export const unmakeColumnHeader = run(opUnmakeColumnHeader, onCell, Fun.noop, Fun.noop, Generators.transform(null, 'td'));
+export const makeRowHeader = run(opMakeRowHeader, onCell, Fun.noop, Fun.noop, Generators.transform('col', 'th'));
+export const unmakeRowHeader = run(opUnmakeRowHeader, onCell, Fun.noop, Fun.noop, Generators.transform(null, 'td'));
+export const mergeCells = run(opMergeCells, onMergable, Fun.noop, Fun.noop, Generators.merging);
+export const unmergeCells = run(opUnmergeCells, onUnmergable, resize, Fun.noop, Generators.merging);
+export const pasteCells = run(opPasteCells, onPaste, resize, Fun.noop, Generators.modification);
+export const pasteRowsBefore = run(opPasteRowsBefore, onPasteRows, Fun.noop, Fun.noop, Generators.modification);
+export const pasteRowsAfter = run(opPasteRowsAfter, onPasteRows, Fun.noop, Fun.noop, Generators.modification);

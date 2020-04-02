@@ -275,12 +275,7 @@ export default (): void => {
           },
           components: []
         }),
-      setupItem: (
-        mToolbar: AlloyComponent,
-        tc: AlloyComponent,
-        data: any,
-        _index: number
-      ) => {
+      setupItem: (mToolbar: AlloyComponent, tc: AlloyComponent, data: any, _index: number) => {
         Toolbar.setGroups(tc, data);
       }
     })

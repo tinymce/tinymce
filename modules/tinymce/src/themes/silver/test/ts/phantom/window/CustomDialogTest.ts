@@ -1,17 +1,4 @@
-import {
-  Assertions,
-  Chain,
-  FocusTools,
-  GeneralSteps,
-  Keyboard,
-  Keys,
-  Logger,
-  Mouse,
-  Pipeline,
-  Step,
-  UiFinder,
-  Waiter
-} from '@ephox/agar';
+import { Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
@@ -36,11 +23,7 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
       Chain.asStep(doc, [
         FocusTools.cGetFocused,
         Chain.op((checkbox) => {
-          Assertions.assertEq(
-            'Checking checked status',
-            expected,
-            checkbox.dom().checked
-          );
+          Assertions.assertEq('Checking checked status', expected, checkbox.dom().checked);
         })
       ])
     );
@@ -180,53 +163,25 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
         );
       }),
 
-      FocusTools.sTryOnSelector(
-        'Focus should start on first input',
-        doc,
-        selectors.field1
-      ),
+      FocusTools.sTryOnSelector('Focus should start on first input', doc, selectors.field1),
 
       Keyboard.sKeydown(doc, Keys.tab(), {}),
-      FocusTools.sTryOnSelector(
-        'Focus should move to second input (textarea)',
-        doc,
-        selectors.field2
-      ),
+      FocusTools.sTryOnSelector('Focus should move to second input (textarea)', doc, selectors.field2),
 
       Keyboard.sKeydown(doc, Keys.tab(), {}),
-      FocusTools.sTryOnSelector(
-        'Focus should move to urlinput',
-        doc,
-        selectors.field3
-      ),
+      FocusTools.sTryOnSelector('Focus should move to urlinput', doc, selectors.field3),
 
       Keyboard.sKeydown(doc, Keys.tab(), {}),
-      FocusTools.sTryOnSelector(
-        'Focus should move to browse button',
-        doc,
-        selectors.browseButton
-      ),
+      FocusTools.sTryOnSelector('Focus should move to browse button', doc, selectors.browseButton),
 
       Keyboard.sKeydown(doc, Keys.tab(), {}),
-      FocusTools.sTryOnSelector(
-        'Focus should move to charmap character a',
-        doc,
-        selectors.field4_a
-      ),
+      FocusTools.sTryOnSelector('Focus should move to charmap character a', doc, selectors.field4_a),
 
       Keyboard.sKeydown(doc, Keys.right(), {}),
-      FocusTools.sTryOnSelector(
-        'Focus should move to charmap character b',
-        doc,
-        selectors.field4_b
-      ),
+      FocusTools.sTryOnSelector('Focus should move to charmap character b', doc, selectors.field4_b),
 
       Keyboard.sKeydown(doc, Keys.tab(), {}),
-      FocusTools.sTryOnSelector(
-        'Focus should move to focusable part of checkboxes',
-        doc,
-        selectors.field5
-      ),
+      FocusTools.sTryOnSelector('Focus should move to focusable part of checkboxes', doc, selectors.field5),
 
       Keyboard.sKeydown(doc, Keys.enter(), {}),
       sAssertFocusedCheckbox('Pressing <enter> on checked checkbox', false),
@@ -235,32 +190,16 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
       sAssertFocusedCheckbox('Pressing <space> on unchecked checkbox', true),
 
       Keyboard.sKeydown(doc, Keys.tab(), {}),
-      FocusTools.sTryOnSelector(
-        'Focus should move to first nested input',
-        doc,
-        selectors.field6
-      ),
+      FocusTools.sTryOnSelector('Focus should move to first nested input', doc, selectors.field6),
 
       Keyboard.sKeydown(doc, Keys.tab(), {}),
-      FocusTools.sTryOnSelector(
-        'Focus should move to second nested input',
-        doc,
-        selectors.field7
-      ),
+      FocusTools.sTryOnSelector('Focus should move to second nested input', doc, selectors.field7),
 
       Keyboard.sKeydown(doc, Keys.tab(), {}),
-      FocusTools.sTryOnSelector(
-        'Focus should skip over disabled button',
-        doc,
-        selectors.field8
-      ),
+      FocusTools.sTryOnSelector('Focus should skip over disabled button', doc, selectors.field8),
 
       Keyboard.sKeydown(doc, Keys.tab(), {}),
-      FocusTools.sTryOnSelector(
-        'Focus should move to ok',
-        doc,
-        selectors.field9
-      ),
+      FocusTools.sTryOnSelector('Focus should move to ok', doc, selectors.field9),
 
       Logger.t(
         'Now, navigate backwards',
@@ -279,11 +218,7 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
             ],
             (dest) => [
               Keyboard.sKeydown(doc, Keys.tab(), { shiftKey: true }),
-              FocusTools.sTryOnSelector(
-                'Focus should move to ' + dest.label,
-                doc,
-                dest.selector
-              )
+              FocusTools.sTryOnSelector('Focus should move to ' + dest.label, doc, dest.selector)
             ]
           )
         )
@@ -308,13 +243,7 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
 
       GeneralSteps.sequence([
         Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),
-        Waiter.sTryUntil(
-          'Wait for the dialog to disappear',
-          UiFinder.sNotExists(
-            Body.body(),
-            '.tox-button--icon[aria-label="Close"]'
-          )
-        )
+        Waiter.sTryUntil('Wait for the dialog to disappear', UiFinder.sNotExists(Body.body(), '.tox-button--icon[aria-label="Close"]'))
       ])
     ],
     () => {

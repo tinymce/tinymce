@@ -4,12 +4,7 @@ import { Element, Event } from '@ephox/dom-globals';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import {
-  AddEventsBehaviour,
-  AllowBubbling,
-  AlloyComponent,
-  AlloyEvents
-} from 'ephox/alloy/api/Main';
+import { AddEventsBehaviour, AllowBubbling, AlloyComponent, AlloyEvents } from 'ephox/alloy/api/Main';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 
@@ -49,9 +44,7 @@ UnitTest.asynctest('AllowBubblingTest', (success, failure) => {
         'Should fire simulated scroll event',
         StepSequence.sequenceSame([
           sDispatchScrollEvent(component),
-          store.sAssertEq('Should have fired simulated scroll event', [
-            'bubbled.scroll'
-          ])
+          store.sAssertEq('Should have fired simulated scroll event', ['bubbled.scroll'])
         ])
       ),
     () => {

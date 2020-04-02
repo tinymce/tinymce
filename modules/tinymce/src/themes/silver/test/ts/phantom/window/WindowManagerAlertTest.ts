@@ -1,15 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  FocusTools,
-  GeneralSteps,
-  Logger,
-  Mouse,
-  Pipeline,
-  Step,
-  UiFinder,
-  Waiter
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
@@ -24,10 +13,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
 
   const sTeardown = GeneralSteps.sequence([
     Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),
-    Waiter.sTryUntil(
-      'Waiting for blocker to disappear after clicking close',
-      UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap')
-    )
+    Waiter.sTryUntil('Waiting for blocker to disappear after clicking close', UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap'))
   ]);
 
   const sHasBasicStructure = (label: string) =>
@@ -64,11 +50,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
                               html: str.is('')
                             }),
                             s.element('button', {
-                              classes: [
-                                arr.has('tox-button'),
-                                arr.has('tox-button--icon'),
-                                arr.has('tox-button--naked')
-                              ],
+                              classes: [arr.has('tox-button'), arr.has('tox-button--icon'), arr.has('tox-button--naked')],
                               attrs: {
                                 'aria-label': str.is('Close'),
                                 'data-alloy-tabstop': str.is('true'),
@@ -132,12 +114,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
       windowManager.alert(message, callback);
     });
 
-  const sWaitForDialog = Waiter.sTryUntil(
-    'alert dialog shows',
-    UiFinder.sExists(Body.body(), '.tox-dialog__body'),
-    10,
-    10000
-  );
+  const sWaitForDialog = Waiter.sTryUntil('alert dialog shows', UiFinder.sExists(Body.body(), '.tox-dialog__body'), 10, 10000);
 
   const sInsertTheCorrectMessage = (label: string) =>
     GeneralSteps.sequence([
@@ -176,23 +153,12 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
           calls++;
         };
         windowManager.alert(label, testCallback);
-        Assertions.assertEq(
-          'callback should not have been called yet',
-          0,
-          calls
-        );
+        Assertions.assertEq('callback should not have been called yet', 0, calls);
       }),
       Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),
-      Waiter.sTryUntil(
-        'Waiting for blocker to disappear after clicking close',
-        UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap')
-      ),
+      Waiter.sTryUntil('Waiting for blocker to disappear after clicking close', UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap')),
       Step.sync(() => {
-        Assertions.assertEq(
-          'Clicking on close should call the callback fn once',
-          1,
-          calls
-        );
+        Assertions.assertEq('Clicking on close should call the callback fn once', 1, calls);
       })
     ]);
   };
@@ -215,11 +181,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
       'button:contains(OK)'
     ),
     Mouse.sTrueClickOn(Element.fromDom(document), '.tox-dialog'),
-    FocusTools.sTryOnSelector(
-      'Focus should still be on the ok button',
-      Element.fromDom(document),
-      'button:contains(OK)'
-    ),
+    FocusTools.sTryOnSelector('Focus should still be on the ok button', Element.fromDom(document), 'button:contains(OK)'),
     sTeardown
   ]);
 

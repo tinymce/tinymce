@@ -5,18 +5,9 @@ import { document } from '@ephox/dom-globals';
 import { Editor } from '../alien/EditorTypes';
 
 export interface ActionChains {
-  cContentKeypress: <T extends Editor>(
-    code: number,
-    modifiers?: Record<string, any>
-  ) => Chain<T, T>;
-  cContentKeydown: <T extends Editor>(
-    code: number,
-    modifiers?: Record<string, any>
-  ) => Chain<T, T>;
-  cContentKeystroke: <T extends Editor>(
-    code: number,
-    modifiers?: Record<string, any>
-  ) => Chain<T, T>;
+  cContentKeypress: <T extends Editor>(code: number, modifiers?: Record<string, any>) => Chain<T, T>;
+  cContentKeydown: <T extends Editor>(code: number, modifiers?: Record<string, any>) => Chain<T, T>;
+  cContentKeystroke: <T extends Editor>(code: number, modifiers?: Record<string, any>) => Chain<T, T>;
 
   cUiKeydown: <T>(code: number, modifiers?: Record<string, any>) => Chain<T, T>;
 }

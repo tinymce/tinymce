@@ -1,23 +1,10 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import {
-  Body,
-  Compare,
-  Element,
-  Insert,
-  Remove,
-  SelectorFilter,
-  SelectorFind
-} from '@ephox/sugar';
+import { Body, Compare, Element, Insert, Remove, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import * as TableLookup from 'ephox/snooker/api/TableLookup';
 
 UnitTest.test('TableLookupTest', function () {
-  const testerFound = function (
-    html: string,
-    triggerSelector: string,
-    resultSelector: string,
-    label: string
-  ) {
+  const testerFound = function (html: string, triggerSelector: string, resultSelector: string, label: string) {
     const element = Element.fromHtml(html);
     Insert.append(Body.body(), element);
 
@@ -27,23 +14,12 @@ UnitTest.test('TableLookupTest', function () {
       },
       function (triggerElement) {
         const result = TableLookup.cell(triggerElement);
-        assert.eq(
-          true,
-          result.isSome(),
-          label + ': Expected the result to find something'
-        );
-        const expectedElement = SelectorFilter.descendants(
-          Body.body(),
-          resultSelector
-        );
+        assert.eq(true, result.isSome(), label + ': Expected the result to find something');
+        const expectedElement = SelectorFilter.descendants(Body.body(), resultSelector);
         assert.eq(
           true,
           expectedElement.length === 1,
-          label +
-            ': Expected to find only one element in the DOM with the selector ' +
-            resultSelector +
-            ' found: ' +
-            expectedElement.length
+          label + ': Expected to find only one element in the DOM with the selector ' + resultSelector + ' found: ' + expectedElement.length
         );
         assert.eq(
           true,
@@ -55,11 +31,7 @@ UnitTest.test('TableLookupTest', function () {
     );
   };
 
-  const testerShouldNotFind = function (
-    html: string,
-    selector: string,
-    label: string
-  ) {
+  const testerShouldNotFind = function (html: string, selector: string, label: string) {
     const element = Element.fromHtml(html);
     Insert.append(Body.body(), element);
 
@@ -69,11 +41,7 @@ UnitTest.test('TableLookupTest', function () {
       },
       function (triggerElement) {
         const result = TableLookup.cell(triggerElement);
-        assert.eq(
-          false,
-          result.isSome(),
-          label + ': Expected the result to find nothing'
-        );
+        assert.eq(false, result.isSome(), label + ': Expected the result to find nothing');
         Remove.remove(element);
       }
     );
@@ -82,25 +50,18 @@ UnitTest.test('TableLookupTest', function () {
   const htmlA =
     '<table style="border-collapse: collapse; width: 1088px; float: none; height: 60px;" summary="Skin burns" border="1"><caption>Outer table<br></caption><tbody><tr style="height: 20px;"><td style="width: 242px; height: 20px;"><br></td><td style="width: 10px; height: 20px;"><br></td><td style="height: 60px; width: 815px;"><table style="border-collapse: collapse; width: 400px; float: none; height: 200px;" border="1"><caption>Inner table</caption><tbody><tr style="height: 0px;"><td style="width: 399px; height: 0px;" colspan="3" rowspan="3"><span class="ephox-cram-annotation-wrap ephox-cram_4309642597121480569760068" aria-invalid="spelling" data-ephox-cram-highlight-id="ephox-cram_4309642597121480569760068" data-ephox-cram-annotation="eee" data-ephox-cram-lingo="en_us">eee</span></td></tr><tr style="height: 0px;"></tr><tr></tr></tbody></table><br></td><td style="width: 11px;"><br></td><td style="width: 10px; height: 20px;"><br></td></tr><tr style="height: 20px;"><td style="width: 242px; height: 20px;"><br></td><td style="width: 10px; height: 20px;"><br></td><td style="width: 815px;"><br></td><td style="width: 11px;"><br></td><td style="width: 10px; height: 20px;"><br></td></tr><tr style="height: 20px;"><td style="width: 242px; height: 20px;"><br></td><td style="width: 10px; height: 20px;"><br></td><td style="width: 815px;"><br></td><td style="width: 11px;"><br></td><td style="width: 10px; height: 20px;"><br></td></tr></tbody></table>';
   const testTableRoWClick = function () {
-    const triggerSelector =
-      'table > tbody > tr:nth-child(1) > td:nth-child(3) > table > tbody > tr:nth-child(1)';
+    const triggerSelector = 'table > tbody > tr:nth-child(1) > td:nth-child(3) > table > tbody > tr:nth-child(1)';
     testerShouldNotFind(htmlA, triggerSelector, 'testTableRoWClick');
   };
 
   const testOuterTableCellClick = function () {
     const triggerSelector = 'table > tbody > tr:nth-child(1) > td:nth-child(3)';
     const resultSelector = triggerSelector;
-    testerFound(
-      htmlA,
-      triggerSelector,
-      resultSelector,
-      'testOuterTableCellClick'
-    );
+    testerFound(htmlA, triggerSelector, resultSelector, 'testOuterTableCellClick');
   };
 
   const testInnerTableCaptionClick = function () {
-    const triggerSelector =
-      'table > tbody > tr:nth-child(1) > td:nth-child(3) > table > caption';
+    const triggerSelector = 'table > tbody > tr:nth-child(1) > td:nth-child(3) > table > caption';
     testerShouldNotFind(htmlA, triggerSelector, 'testInnerTableCaptionClick');
   };
 
@@ -117,30 +78,17 @@ UnitTest.test('TableLookupTest', function () {
   };
 
   const testOuterTableMergedCellClick = function () {
-    const triggerSelector =
-      'body > table > tbody > tr:nth-child(3) > td:nth-child(1)';
+    const triggerSelector = 'body > table > tbody > tr:nth-child(3) > td:nth-child(1)';
     const resultSelector = triggerSelector;
-    testerFound(
-      htmlB,
-      triggerSelector,
-      resultSelector,
-      'testOuterTableMergedCellClick'
-    );
+    testerFound(htmlB, triggerSelector, resultSelector, 'testOuterTableMergedCellClick');
   };
 
   const testOuterTableMergedCaptionClick = function () {
     const triggerSelector = 'body > table > caption';
-    testerShouldNotFind(
-      htmlB,
-      triggerSelector,
-      'testOuterTableMergedCaptionClick'
-    );
+    testerShouldNotFind(htmlB, triggerSelector, 'testOuterTableMergedCaptionClick');
   };
 
-  const testCellShouldAlwaysReturnTheSameCell = function (
-    html: string,
-    label: string
-  ) {
+  const testCellShouldAlwaysReturnTheSameCell = function (html: string, label: string) {
     const element = Element.fromHtml(html);
     Insert.append(Body.body(), element);
 
@@ -150,16 +98,8 @@ UnitTest.test('TableLookupTest', function () {
     } else {
       Arr.each(cells, function (cell) {
         const result = TableLookup.cell(cell);
-        assert.eq(
-          true,
-          result.isSome(),
-          label + ': Expected the result to find something'
-        );
-        assert.eq(
-          true,
-          Compare.eq(cell, result.getOrDie()),
-          label + ': The result and the expectation should be the same element'
-        );
+        assert.eq(true, result.isSome(), label + ': Expected the result to find something');
+        assert.eq(true, Compare.eq(cell, result.getOrDie()), label + ': The result and the expectation should be the same element');
       });
 
       Remove.remove(element);
@@ -176,11 +116,7 @@ UnitTest.test('TableLookupTest', function () {
     } else {
       Arr.each(rows, function (row) {
         const result = TableLookup.cell(row);
-        assert.eq(
-          false,
-          result.isSome(),
-          label + ': Expected the result to find nothing'
-        );
+        assert.eq(false, result.isSome(), label + ': Expected the result to find nothing');
       });
       Remove.remove(element);
     }

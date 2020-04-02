@@ -16,8 +16,7 @@ export const registerAutosaveItems = () => {
         buttonApi.setDisabled(state);
       };
       editor.on('StoreDraft RestoreDraft RemoveDraft', editorOffCallback);
-      return () =>
-        editor.off('StoreDraft RestoreDraft RemoveDraft', editorOffCallback);
+      return () => editor.off('StoreDraft RestoreDraft RemoveDraft', editorOffCallback);
     },
     onAction: (_buttonApi) => {
       // apply restore draft command

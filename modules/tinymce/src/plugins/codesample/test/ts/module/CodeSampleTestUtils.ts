@@ -1,21 +1,9 @@
-import {
-  Logger,
-  Step,
-  Assertions,
-  Waiter,
-  ApproxStructure,
-  UiFinder,
-  Chain,
-  Mouse,
-  FocusTools,
-  GeneralSteps
-} from '@ephox/agar';
+import { Logger, Step, Assertions, Waiter, ApproxStructure, UiFinder, Chain, Mouse, FocusTools, GeneralSteps } from '@ephox/agar';
 import { Element, TextContent } from '@ephox/sugar';
 import { document } from '@ephox/dom-globals';
 
 const dialogSelector = 'div.tox-dialog';
-const toolbarButtonSelector =
-  '[role="toolbar"] button[aria-label="Insert/edit code sample"]';
+const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert/edit code sample"]';
 
 const sSetLanguage = (newLanguage) =>
   Logger.t(
@@ -30,9 +18,7 @@ const sSetTextareaContent = (content) =>
   Logger.t(
     'Changing textarea content to ' + content,
     Step.sync(() => {
-      const textarea: any = document.querySelector(
-        'div[role="dialog"] textarea'
-      );
+      const textarea: any = document.querySelector('div[role="dialog"] textarea');
       textarea.value = content;
     })
   );
@@ -42,19 +28,9 @@ const sAssertCodeSampleDialog = (expectedLanguage, expectedContent) =>
     'Assert dialog language and content',
     Step.sync(() => {
       const select: any = document.querySelector('div[role="dialog"] select');
-      Assertions.assertEq(
-        'Asseting language dropdown is ' + expectedLanguage,
-        select.value,
-        expectedLanguage
-      );
-      const textarea: any = document.querySelector(
-        'div[role="dialog"] textarea'
-      );
-      Assertions.assertEq(
-        'Asserting textarea content is ' + expectedContent,
-        textarea.value,
-        expectedContent
-      );
+      Assertions.assertEq('Asseting language dropdown is ' + expectedLanguage, select.value, expectedLanguage);
+      const textarea: any = document.querySelector('div[role="dialog"] textarea');
+      Assertions.assertEq('Asserting textarea content is ' + expectedContent, textarea.value, expectedContent);
     })
   );
 
@@ -92,11 +68,7 @@ const sAssertPreText = (container: Element, selector, expected) =>
       UiFinder.cFindIn(selector),
       Chain.op((snippet) => {
         const text = TextContent.get(snippet);
-        return Assertions.assertEq(
-          'Assert ' + selector + ' has innerText ' + expected,
-          expected,
-          text
-        );
+        return Assertions.assertEq('Assert ' + selector + ' has innerText ' + expected, expected, text);
       })
     ])
   );
@@ -104,46 +76,26 @@ const sAssertPreText = (container: Element, selector, expected) =>
 const sOpenDialogAndAssertInitial = (editor, docBody, language, content) =>
   GeneralSteps.sequence(
     Logger.ts('Open dialog and assert initial language and content', [
-      Mouse.sClickOn(
-        Element.fromDom(editor.getContainer()),
-        toolbarButtonSelector
-      ),
-      UiFinder.sWaitForVisible(
-        'Waited for dialog to be visible',
-        docBody,
-        dialogSelector
-      ),
+      Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
+      UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
       sAssertCodeSampleDialog(language, content)
     ])
   );
 
 const sSubmitDialog = (docBody) =>
   GeneralSteps.sequence(
-    Logger.ts(
-      'Focus on the dialog and click on the Save button to close the dialog',
-      [
-        FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
-        Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
-        Waiter.sTryUntil(
-          'Dialog should close',
-          UiFinder.sNotExists(docBody, dialogSelector),
-          100,
-          3000
-        )
-      ]
-    )
+    Logger.ts('Focus on the dialog and click on the Save button to close the dialog', [
+      FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
+      Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
+      Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 100, 3000)
+    ])
   );
 
 const sCancelDialog = (docBody) =>
   GeneralSteps.sequence(
     Logger.ts('Click on the Cancel button to close the dialog', [
       Mouse.sClickOn(docBody, 'button:contains(Cancel)'),
-      Waiter.sTryUntil(
-        'Dialog should close',
-        UiFinder.sNotExists(docBody, dialogSelector),
-        100,
-        3000
-      )
+      Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 100, 3000)
     ])
   );
 

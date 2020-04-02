@@ -5,22 +5,12 @@ import { DieFn, NextFn, RunFn } from '../pipe/Pipe';
 import * as Logger from './Logger';
 import { TestLogs, addLogEntry } from './TestLogs';
 
-export type GuardFn<T, U, V> = (
-  run: RunFn<T, U>,
-  value: T,
-  next: NextFn<V>,
-  die: DieFn,
-  logs: TestLogs
-) => void;
+export type GuardFn<T, U, V> = (run: RunFn<T, U>, value: T, next: NextFn<V>, die: DieFn, logs: TestLogs) => void;
 
 const defaultInterval = 10;
 const defaultAmount = 3000;
 
-const tryUntilNot = <T, U>(
-  label: string,
-  interval: number = defaultInterval,
-  amount: number = defaultAmount
-): GuardFn<T, U, T> => (
+const tryUntilNot = <T, U>(label: string, interval: number = defaultInterval, amount: number = defaultAmount): GuardFn<T, U, T> => (
   f: RunFn<T, U>,
   value: T,
   next: NextFn<T>,
@@ -34,16 +24,8 @@ const tryUntilNot = <T, U>(
         const elapsed = Date.now() - startTime;
         if (elapsed >= amount) {
           die(
-            new Error(
-              'Waited for ' +
-                amount +
-                'ms for something to be unsuccessful. ' +
-                label
-            ),
-            addLogEntry(
-              newLogs,
-              'WaitErr: ' + label + ' = Failed (after ' + amount + 'ms)'
-            )
+            new Error('Waited for ' + amount + 'ms for something to be unsuccessful. ' + label),
+            addLogEntry(newLogs, 'WaitErr: ' + label + ' = Failed (after ' + amount + 'ms)')
           );
         } else {
           setTimeout(() => {
@@ -58,10 +40,7 @@ const tryUntilNot = <T, U>(
         if (Error.prototype.isPrototypeOf(err)) {
           die(err, newLogs);
         } else {
-          next(
-            value,
-            addLogEntry(newLogs, 'WaitErr: ' + label + ' = SUCCESS!')
-          );
+          next(value, addLogEntry(newLogs, 'WaitErr: ' + label + ' = SUCCESS!'));
         }
       },
       logs
@@ -70,11 +49,7 @@ const tryUntilNot = <T, U>(
   repeat(Date.now());
 };
 
-const tryUntil = <T, U>(
-  label: string,
-  interval: number = defaultInterval,
-  amount: number = defaultAmount
-): GuardFn<T, U, U> => (
+const tryUntil = <T, U>(label: string, interval: number = defaultInterval, amount: number = defaultAmount): GuardFn<T, U, U> => (
   f: RunFn<T, U>,
   value: T,
   next: NextFn<U>,
@@ -91,17 +66,8 @@ const tryUntil = <T, U>(
         const elapsed = Date.now() - startTime;
         if (elapsed >= amount) {
           die(
-            ErrorTypes.enrichWith(
-              'Waited for ' +
-                amount +
-                'ms for something to be successful. ' +
-                label,
-              err
-            ),
-            addLogEntry(
-              newLogs,
-              'Wait: ' + label + ' = FAILED (after ' + amount + 'ms)'
-            )
+            ErrorTypes.enrichWith('Waited for ' + amount + 'ms for something to be successful. ' + label, err),
+            addLogEntry(newLogs, 'Wait: ' + label + ' = FAILED (after ' + amount + 'ms)')
           );
         } else {
           setTimeout(() => {
@@ -153,12 +119,7 @@ const timeout = <T, U>(label: string, limit: number): GuardFn<T, U, U> => (
   );
 };
 
-const addLogging = <T, U>(label: string): GuardFn<T, U, U> => (
-  f: RunFn<T, U>,
-  value: T,
-  next: NextFn<U>,
-  die: DieFn,
-  logs: TestLogs
-) => Logger.t(label, { runStep: f }).runStep(value, next, die, logs);
+const addLogging = <T, U>(label: string): GuardFn<T, U, U> => (f: RunFn<T, U>, value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) =>
+  Logger.t(label, { runStep: f }).runStep(value, next, die, logs);
 
 export { timeout, tryUntil, tryUntilNot, addLogging };

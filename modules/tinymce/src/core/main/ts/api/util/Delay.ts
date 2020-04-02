@@ -5,15 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  clearInterval,
-  clearTimeout,
-  document,
-  HTMLElement,
-  setInterval,
-  setTimeout,
-  window
-} from '@ephox/dom-globals';
+import { clearInterval, clearTimeout, document, HTMLElement, setInterval, setTimeout, window } from '@ephox/dom-globals';
 import Editor from '../Editor';
 import Promise from './Promise';
 
@@ -21,11 +13,7 @@ type DebounceFunc = (...args: any[]) => { stop: () => void };
 
 interface Delay {
   requestAnimationFrame(callback: () => void, element?: HTMLElement): void;
-  setEditorInterval(
-    editor: Editor,
-    callback: () => void,
-    time?: number
-  ): number;
+  setEditorInterval(editor: Editor, callback: () => void, time?: number): number;
   setEditorTimeout(editor: Editor, callback: () => void, time?: number): number;
   setInterval(callback: () => void, time?: number): number;
   setTimeout(callback: () => void, time?: number): number;
@@ -71,10 +59,7 @@ const wrappedSetTimeout = function (callback, time?) {
   return setTimeout(callback, time);
 };
 
-const wrappedSetInterval = function (
-  callback: Function,
-  time?: number
-): number {
+const wrappedSetInterval = function (callback: Function, time?: number): number {
   if (typeof time !== 'number') {
     time = 1; // IE 8 needs it to be > 0
   }
@@ -90,10 +75,7 @@ const wrappedClearInterval = function (id: number) {
   return clearInterval(id);
 };
 
-const debounce = function (
-  callback: (...args: any[]) => void,
-  time?: number
-): DebounceFunc {
+const debounce = function (callback: (...args: any[]) => void, time?: number): DebounceFunc {
   let timer, func;
 
   func = function (...args) {

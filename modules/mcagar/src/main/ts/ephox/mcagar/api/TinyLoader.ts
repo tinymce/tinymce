@@ -6,10 +6,7 @@ import { setTinymceBaseUrl } from '../loader/Urls';
 const setupBaseUrl = (tinymce: any, settings: Record<string, any>) => {
   if (settings.base_url) {
     setTinymceBaseUrl(tinymce, settings.base_url);
-  } else if (
-    !Type.isString(tinymce.baseURL) ||
-    !Strings.contains(tinymce.baseURL, '/project/')
-  ) {
+  } else if (!Type.isString(tinymce.baseURL) || !Strings.contains(tinymce.baseURL, '/project/')) {
     setTinymceBaseUrl(tinymce, '/project/node_modules/tinymce');
   }
 };

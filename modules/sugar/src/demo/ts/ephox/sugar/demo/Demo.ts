@@ -11,10 +11,7 @@ import { document, console } from '@ephox/dom-globals';
 const container = Element.fromTag('div');
 
 const instructions = Element.fromTag('p');
-Html.set(
-  instructions,
-  'Clicking on the button will remove "width" from the blue rectangle. Clicking it again will do nothing.'
-);
+Html.set(instructions, 'Clicking on the button will remove "width" from the blue rectangle. Clicking it again will do nothing.');
 Insert.append(container, instructions);
 
 const button = Element.fromTag('button');

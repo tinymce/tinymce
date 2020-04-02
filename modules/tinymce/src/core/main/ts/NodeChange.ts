@@ -69,11 +69,7 @@ class NodeChange {
         return;
       }
 
-      if (
-        hasAnyRanges(editor) &&
-        !self.isSameElementPath(startElm) &&
-        editor.dom.isChildOf(startElm, editor.getBody())
-      ) {
+      if (hasAnyRanges(editor) && !self.isSameElementPath(startElm) && editor.dom.isChildOf(startElm, editor.getBody())) {
         editor.nodeChanged({ selectionChange: true });
       }
     });
@@ -106,21 +102,13 @@ class NodeChange {
     let node, parents, root;
 
     // Fix for bug #1896577 it seems that this can not be fired while the editor is loading
-    if (
-      this.editor.initialized &&
-      selection &&
-      !this.editor.settings.disable_nodechange &&
-      !this.editor.mode.isReadOnly()
-    ) {
+    if (this.editor.initialized && selection && !this.editor.settings.disable_nodechange && !this.editor.mode.isReadOnly()) {
       // Get start node
       root = this.editor.getBody();
       node = selection.getStart(true) || root;
 
       // Make sure the node is within the editor root or is the editor root
-      if (
-        node.ownerDocument !== this.editor.getDoc() ||
-        !this.editor.dom.isChildOf(node, root)
-      ) {
+      if (node.ownerDocument !== this.editor.getDoc() || !this.editor.dom.isChildOf(node, root)) {
         node = root;
       }
 
@@ -151,10 +139,7 @@ class NodeChange {
   private isSameElementPath(startElm) {
     let i, currentPath;
 
-    currentPath = this.editor
-      .$(startElm)
-      .parentsUntil(this.editor.getBody())
-      .add(startElm);
+    currentPath = this.editor.$(startElm).parentsUntil(this.editor.getBody()).add(startElm);
     if (currentPath.length === this.lastPath.length) {
       for (i = currentPath.length; i >= 0; i--) {
         if (currentPath[i] !== this.lastPath[i]) {

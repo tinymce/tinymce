@@ -2,14 +2,7 @@ import { FieldSchema, Processor, ValueSchema } from '@ephox/boulder';
 import { clearTimeout, KeyboardEvent, setTimeout } from '@ephox/dom-globals';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import {
-  DomEvent,
-  Element,
-  EventArgs,
-  EventUnbinder,
-  Node,
-  SelectorExists
-} from '@ephox/sugar';
+import { DomEvent, Element, EventArgs, EventUnbinder, Node, SelectorExists } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
 import * as SystemEvents from '../api/events/SystemEvents';
@@ -39,10 +32,7 @@ const settingsSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.defaulted('stopBackspace', true)
 ]);
 
-const bindFocus = (
-  container: Element,
-  handler: (evt: EventArgs) => void
-): EventUnbinder => {
+const bindFocus = (container: Element, handler: (evt: EventArgs) => void): EventUnbinder => {
   if (isFirefox) {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=687787
     return DomEvent.capture(container, 'focus', handler);
@@ -51,10 +41,7 @@ const bindFocus = (
   }
 };
 
-const bindBlur = (
-  container: Element,
-  handler: (evt: EventArgs) => void
-): EventUnbinder => {
+const bindBlur = (container: Element, handler: (evt: EventArgs) => void): EventUnbinder => {
   if (isFirefox) {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=687787
     return DomEvent.capture(container, 'blur', handler);
@@ -64,11 +51,7 @@ const bindBlur = (
 };
 
 const setup = (container: Element, rawSettings: {}): { unbind: () => void } => {
-  const settings: GuiEventSettings = ValueSchema.asRawOrDie(
-    'Getting GUI events settings',
-    settingsSchema,
-    rawSettings
-  );
+  const settings: GuiEventSettings = ValueSchema.asRawOrDie('Getting GUI events settings', settingsSchema, rawSettings);
 
   const pointerEvents = [
     'touchstart',

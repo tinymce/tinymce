@@ -16,10 +16,7 @@ interface Element<T = any> {
   dom: () => T;
 }
 
-const fromHtml = function <E extends DomNode = DomNode & ChildNode>(
-  html: string,
-  scope?: Document
-): Element<E> {
+const fromHtml = function <E extends DomNode = DomNode & ChildNode>(html: string, scope?: Document): Element<E> {
   const doc = scope || document;
   const div = doc.createElement('div');
   div.innerHTML = html;
@@ -32,9 +29,7 @@ const fromHtml = function <E extends DomNode = DomNode & ChildNode>(
 };
 
 const fromTag: {
-  <K extends keyof HTMLElementTagNameMap>(tag: K, scope?: Document): Element<
-    HTMLElementTagNameMap[K]
-  >;
+  <K extends keyof HTMLElementTagNameMap>(tag: K, scope?: Document): Element<HTMLElementTagNameMap[K]>;
   (tag: string, scope?: Document): Element<HTMLElement>;
 } = function (tag: string, scope?: Document): Element {
   const doc = scope || document;
@@ -57,11 +52,7 @@ const fromDom = function <T extends DomNode | Window>(node: T): Element<T> {
   };
 };
 
-const fromPoint = function (
-  docElm: Element,
-  x: number,
-  y: number
-): Option<Element<DomElement>> {
+const fromPoint = function (docElm: Element, x: number, y: number): Option<Element<DomElement>> {
   const doc = docElm.dom() as Document;
   return Option.from(doc.elementFromPoint(x, y)).map(fromDom);
 };

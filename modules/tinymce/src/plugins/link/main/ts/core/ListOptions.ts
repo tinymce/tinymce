@@ -10,17 +10,12 @@ import Tools from 'tinymce/core/api/util/Tools';
 import { ListItem } from '../ui/DialogTypes';
 import { Types } from '@ephox/bridge';
 
-const getValue = (item): string =>
-  Type.isString(item.value) ? item.value : '';
+const getValue = (item): string => (Type.isString(item.value) ? item.value : '');
 
 const sanitizeList = (list, extractValue: (item) => string): ListItem[] => {
   const out: ListItem[] = [];
   Tools.each(list, function (item) {
-    const text: string = Type.isString(item.text)
-      ? item.text
-      : Type.isString(item.title)
-      ? item.title
-      : '';
+    const text: string = Type.isString(item.text) ? item.text : Type.isString(item.title) ? item.title : '';
     if (item.menu !== undefined) {
       // TODO TINY-2236 re-enable this (support will need to be added to bridge)
       /*
@@ -35,18 +30,13 @@ const sanitizeList = (list, extractValue: (item) => string): ListItem[] => {
   return out;
 };
 
-const sanitizeWith = (extracter: (item: any) => string = getValue) => (
-  list: any[]
-): Option<ListItem[]> =>
+const sanitizeWith = (extracter: (item: any) => string = getValue) => (list: any[]): Option<ListItem[]> =>
   Option.from(list).map((list) => sanitizeList(list, extracter));
 
-const sanitize = (list: any[]): Option<ListItem[]> =>
-  sanitizeWith(getValue)(list);
+const sanitize = (list: any[]): Option<ListItem[]> => sanitizeWith(getValue)(list);
 
 // NOTE: May need to care about flattening.
-const createUi = (name: string, label: string) => (
-  items: ListItem[]
-): Types.Dialog.BodyComponentApi => ({
+const createUi = (name: string, label: string) => (items: ListItem[]): Types.Dialog.BodyComponentApi => ({
   name,
   type: 'selectbox',
   label,

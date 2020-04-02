@@ -58,31 +58,21 @@ const createFromEditor = function (editor: Editor): UndoLevel {
   });
   content = trimmedFragments.join('');
 
-  return hasIframes(content)
-    ? createFragmentedLevel(trimmedFragments)
-    : createCompleteLevel(content);
+  return hasIframes(content) ? createFragmentedLevel(trimmedFragments) : createCompleteLevel(content);
 };
 
-const applyToEditor = function (
-  editor: Editor,
-  level: UndoLevel,
-  before: boolean
-) {
+const applyToEditor = function (editor: Editor, level: UndoLevel, before: boolean) {
   if (level.type === UndoLevelType.Fragmented) {
     Fragments.write(level.fragments, editor.getBody());
   } else {
     editor.setContent(level.content, { format: 'raw' });
   }
 
-  editor.selection.moveToBookmark(
-    before ? level.beforeBookmark : level.bookmark
-  );
+  editor.selection.moveToBookmark(before ? level.beforeBookmark : level.bookmark);
 };
 
 const getLevelContent = function (level: UndoLevel): string {
-  return level.type === UndoLevelType.Fragmented
-    ? level.fragments.join('')
-    : level.content;
+  return level.type === UndoLevelType.Fragmented ? level.fragments.join('') : level.content;
 };
 
 const getCleanLevelContent = (level: UndoLevel): string => {
@@ -92,13 +82,10 @@ const getCleanLevelContent = (level: UndoLevel): string => {
   return Html.get(elm);
 };
 
-const hasEqualContent = (level1: UndoLevel, level2: UndoLevel): boolean =>
-  getLevelContent(level1) === getLevelContent(level2);
+const hasEqualContent = (level1: UndoLevel, level2: UndoLevel): boolean => getLevelContent(level1) === getLevelContent(level2);
 
-const hasEqualCleanedContent = (
-  level1: UndoLevel,
-  level2: UndoLevel
-): boolean => getCleanLevelContent(level1) === getCleanLevelContent(level2);
+const hasEqualCleanedContent = (level1: UndoLevel, level2: UndoLevel): boolean =>
+  getCleanLevelContent(level1) === getCleanLevelContent(level2);
 
 // Most of the time the contents is equal so it's faster to first check that using strings then fallback to a cleaned dom comparison
 const isEq = function (level1: UndoLevel, level2: UndoLevel): boolean {
@@ -111,10 +98,4 @@ const isEq = function (level1: UndoLevel, level2: UndoLevel): boolean {
   }
 };
 
-export {
-  createFragmentedLevel,
-  createCompleteLevel,
-  createFromEditor,
-  applyToEditor,
-  isEq
-};
+export { createFragmentedLevel, createCompleteLevel, createFromEditor, applyToEditor, isEq };

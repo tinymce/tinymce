@@ -1,16 +1,7 @@
 import { assert, UnitTest, TestLabel } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import {
-  Attr,
-  Body,
-  Css,
-  Element,
-  Html,
-  Insert,
-  Remove,
-  SelectorFilter
-} from '@ephox/sugar';
+import { Attr, Body, Css, Element, Html, Insert, Remove, SelectorFilter } from '@ephox/sugar';
 import * as RuntimeSize from 'ephox/snooker/resize/RuntimeSize';
 
 UnitTest.test('Runtime Size Test', function () {
@@ -28,17 +19,11 @@ UnitTest.test('Runtime Size Test', function () {
     return Math.round(elm.dom().getBoundingClientRect().height);
   };
 
-  const measureCells = function (
-    getSize: (e: Element) => number,
-    table: Element
-  ) {
+  const measureCells = function (getSize: (e: Element) => number, table: Element) {
     return Arr.map(SelectorFilter.descendants(table, 'td'), getSize);
   };
 
-  const measureTable = function (
-    table: Element,
-    getSize: (e: Element) => number
-  ) {
+  const measureTable = function (table: Element, getSize: (e: Element) => number) {
     return {
       total: getSize(table),
       cells: measureCells(getSize, table)
@@ -77,38 +62,17 @@ UnitTest.test('Runtime Size Test', function () {
     message: string
   ) {
     const s2 = measureTable(table, getOuterSize);
-    const cellAssertEq =
-      platform.browser.isIE() || platform.browser.isEdge()
-        ? fuzzyAssertEq
-        : assert.eq;
+    const cellAssertEq = platform.browser.isIE() || platform.browser.isEdge() ? fuzzyAssertEq : assert.eq;
 
     assert.eq(
       s1.total,
       s2.total,
-      () =>
-        message +
-        ', expected table size: ' +
-        s1.total +
-        ', actual: ' +
-        s2.total +
-        ', table: ' +
-        Html.getOuter(table)
+      () => message + ', expected table size: ' + s1.total + ', actual: ' + s2.total + ', table: ' + Html.getOuter(table)
     );
 
     Arr.each(s1.cells, function (cz1, i) {
       const cz2 = s2.cells[i];
-      cellAssertEq(
-        cz1,
-        cz2,
-        () =>
-          message +
-          ', expected cell size: ' +
-          cz1 +
-          ', actual: ' +
-          cz2 +
-          ', table: ' +
-          Html.getOuter(table)
-      );
+      cellAssertEq(cz1, cz2, () => message + ', expected cell size: ' + cz1 + ', actual: ' + cz2 + ', table: ' + Html.getOuter(table));
     });
   };
 
@@ -232,10 +196,7 @@ UnitTest.test('Runtime Size Test', function () {
     return table;
   };
 
-  const resizeModel = function (
-    size: { total: number; cells: number[] },
-    delta: number
-  ) {
+  const resizeModel = function (size: { total: number; cells: number[] }, delta: number) {
     const deltaTotal = delta * size.cells.length;
     const cells = Arr.map(size.cells, function (cz) {
       return cz + delta;
@@ -258,20 +219,10 @@ UnitTest.test('Runtime Size Test', function () {
       const beforeSize = measureTable(table, getOuterSize);
 
       resizeTableBy(table, setSize, measureTable(table, getSize), 0);
-      assertSize(
-        beforeSize,
-        table,
-        getOuterSize,
-        'Should be unchanged in size'
-      );
+      assertSize(beforeSize, table, getOuterSize, 'Should be unchanged in size');
 
       resizeTableBy(table, setSize, measureTable(table, getSize), 10);
-      assertSize(
-        resizeModel(beforeSize, 10),
-        table,
-        getOuterSize,
-        'Should be changed by 10 size'
-      );
+      assertSize(resizeModel(beforeSize, 10), table, getOuterSize, 'Should be changed by 10 size');
 
       Remove.remove(table);
     };
@@ -281,17 +232,6 @@ UnitTest.test('Runtime Size Test', function () {
     Arr.each(Arr.range(n, Fun.identity), generator);
   };
 
-  generateTest(
-    testTableSize(createTableH, getOuterWidth, RuntimeSize.getWidth, setWidth),
-    50
-  );
-  generateTest(
-    testTableSize(
-      createTableV,
-      getOuterHeight,
-      RuntimeSize.getHeight,
-      setHeight
-    ),
-    50
-  );
+  generateTest(testTableSize(createTableH, getOuterWidth, RuntimeSize.getWidth, setWidth), 50);
+  generateTest(testTableSize(createTableV, getOuterHeight, RuntimeSize.getHeight, setHeight), 50);
 });

@@ -32,11 +32,7 @@ UnitTest.asynctest('ButtonSpaceTest (webdriver)', (success, failure) => {
         ]
       }),
     (_doc, _body, _gui, component, store) => [
-      FocusTools.sSetFocus(
-        'Focusing <button>',
-        component.element(),
-        '.test-button-for-space'
-      ),
+      FocusTools.sSetFocus('Focusing <button>', component.element(), '.test-button-for-space'),
       RealKeys.sSendKeysOn('.test-button-for-space', [
         // Press space.
         RealKeys.text('\uE00D')
@@ -45,11 +41,7 @@ UnitTest.asynctest('ButtonSpaceTest (webdriver)', (success, failure) => {
       store.sAssertEq('Clicked should only have fired once', ['clicked']),
       store.sClear,
 
-      FocusTools.sSetFocus(
-        'Focusing <button>',
-        component.element(),
-        '.test-fake-button-for-space'
-      ),
+      FocusTools.sSetFocus('Focusing <button>', component.element(), '.test-fake-button-for-space'),
       RealKeys.sSendKeysOn('.test-fake-button-for-space', [
         // Press space.
         RealKeys.text('\uE00D')

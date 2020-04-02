@@ -17,40 +17,21 @@ import * as TextPoint from './TextPoint';
  * (repartee does something similar).
  */
 
-const searchInChildren = function (
-  doc: Element<Document>,
-  node: Element<DomNode>,
-  x: number,
-  y: number
-): Option<Range> {
+const searchInChildren = function (doc: Element<Document>, node: Element<DomNode>, x: number, y: number): Option<Range> {
   const r = doc.dom().createRange();
   const nodes = Traverse.children(node);
   return Arr.findMap(nodes, function (n) {
     // slight mutation because we assume creating ranges is expensive
     r.selectNode(n.dom());
-    return Geometry.inRect(r.getBoundingClientRect(), x, y)
-      ? locateNode(doc, n, x, y)
-      : Option.none<Range>();
+    return Geometry.inRect(r.getBoundingClientRect(), x, y) ? locateNode(doc, n, x, y) : Option.none<Range>();
   });
 };
 
-const locateNode = function (
-  doc: Element<Document>,
-  node: Element<DomNode>,
-  x: number,
-  y: number
-) {
-  return Node.isText(node)
-    ? TextPoint.locate(doc, node, x, y)
-    : searchInChildren(doc, node, x, y);
+const locateNode = function (doc: Element<Document>, node: Element<DomNode>, x: number, y: number) {
+  return Node.isText(node) ? TextPoint.locate(doc, node, x, y) : searchInChildren(doc, node, x, y);
 };
 
-const locate = function (
-  doc: Element<Document>,
-  node: Element<DomNode>,
-  x: number,
-  y: number
-) {
+const locate = function (doc: Element<Document>, node: Element<DomNode>, x: number, y: number) {
   const r = doc.dom().createRange();
   r.selectNode(node.dom());
   const rect = r.getBoundingClientRect();

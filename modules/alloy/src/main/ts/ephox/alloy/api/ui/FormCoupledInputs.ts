@@ -16,10 +16,12 @@ import { SketchBehaviours } from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<
-  FormCoupledInputsDetail,
-  FormCoupledInputsSpec
-> = (detail, components, _spec, _externals): SketchSpec => ({
+const factory: CompositeSketchFactory<FormCoupledInputsDetail, FormCoupledInputsSpec> = (
+  detail,
+  components,
+  _spec,
+  _externals
+): SketchSpec => ({
   uid: detail.uid,
   dom: detail.dom,
   components,
@@ -31,20 +33,14 @@ const factory: CompositeSketchFactory<
       store: {
         mode: 'manual',
         getValue(comp) {
-          const parts = AlloyParts.getPartsOrDie(comp, detail, [
-            'field1',
-            'field2'
-          ]);
+          const parts = AlloyParts.getPartsOrDie(comp, detail, ['field1', 'field2']);
           return {
             [detail.field1Name]: Representing.getValue(parts.field1()),
             [detail.field2Name]: Representing.getValue(parts.field2())
           };
         },
         setValue(comp, value) {
-          const parts = AlloyParts.getPartsOrDie(comp, detail, [
-            'field1',
-            'field2'
-          ]);
+          const parts = AlloyParts.getPartsOrDie(comp, detail, ['field1', 'field2']);
           if (Obj.hasNonNullableKey(value, detail.field1Name)) {
             Representing.setValue(parts.field1(), value[detail.field1Name]);
           }
@@ -56,12 +52,9 @@ const factory: CompositeSketchFactory<
     })
   ]),
   apis: {
-    getField1: (component: AlloyComponent) =>
-      AlloyParts.getPart(component, detail, 'field1'),
-    getField2: (component: AlloyComponent) =>
-      AlloyParts.getPart(component, detail, 'field2'),
-    getLock: (component: AlloyComponent) =>
-      AlloyParts.getPart(component, detail, 'lock')
+    getField1: (component: AlloyComponent) => AlloyParts.getPart(component, detail, 'field1'),
+    getField2: (component: AlloyComponent) => AlloyParts.getPart(component, detail, 'field2'),
+    getLock: (component: AlloyComponent) => AlloyParts.getPart(component, detail, 'lock')
   }
 });
 

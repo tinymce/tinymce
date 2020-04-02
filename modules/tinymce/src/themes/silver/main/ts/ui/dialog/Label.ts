@@ -5,13 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  Behaviour,
-  Keying,
-  Replacing,
-  SimpleSpec,
-  AlloySpec
-} from '@ephox/alloy';
+import { Behaviour, Keying, Replacing, SimpleSpec, AlloySpec } from '@ephox/alloy';
 import { Option, Arr } from '@ephox/katamari';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -22,10 +16,7 @@ import { Omit } from '../Omit';
 
 type LabelSpec = Omit<Types.Label.Label, 'type'>;
 
-export const renderLabel = (
-  spec: LabelSpec,
-  backstageShared: UiFactoryBackstageShared
-): SimpleSpec => {
+export const renderLabel = (spec: LabelSpec, backstageShared: UiFactoryBackstageShared): SimpleSpec => {
   const label = {
     dom: {
       tag: 'label',

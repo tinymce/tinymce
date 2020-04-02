@@ -8,10 +8,7 @@ import { Gene } from 'ephox/boss/api/Gene';
 
 UnitTest.test('RemovalTest', function () {
   const data = function (): Gene {
-    return Gene('A', '.', [
-      Gene('B', '.'),
-      Gene('C', '.', [Gene('D', '.', [Gene('E', '.')]), Gene('F', '.')])
-    ]);
+    return Gene('A', '.', [Gene('B', '.'), Gene('C', '.', [Gene('D', '.', [Gene('E', '.')]), Gene('F', '.')])]);
   };
 
   const check = function (expected: string, input: Gene, itemId: string) {

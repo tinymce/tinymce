@@ -96,18 +96,12 @@ UnitTest.asynctest('TransitioningTest', (success, failure) => {
         ),
         component.element()
       ),
-      Waiter.sTryUntil(
-        'Waiting until state gets to beta',
-        store.sAssertEq('Checking state', ['finish: beta', 'gamma->beta'])
-      ),
+      Waiter.sTryUntil('Waiting until state gets to beta', store.sAssertEq('Checking state', ['finish: beta', 'gamma->beta'])),
       store.sClear,
       Step.sync(() => {
         Transitioning.progressTo(component, 'alpha');
       }),
-      Waiter.sTryUntil(
-        'Waiting until state gets to alpha',
-        store.sAssertEq('Checking state', ['finish: alpha', 'beta->alpha'])
-      )
+      Waiter.sTryUntil('Waiting until state gets to alpha', store.sAssertEq('Checking state', ['finish: alpha', 'beta->alpha']))
     ],
     () => {
       success();

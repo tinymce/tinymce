@@ -10,31 +10,15 @@ import Editor from 'tinymce/core/api/Editor';
 import * as EditorSettings from '../alien/EditorSettings';
 
 const getTextSelectionToolbarItems = function (editor: Editor): string {
-  return EditorSettings.getToolbarItemsOr(
-    editor,
-    'quickbars_selection_toolbar',
-    'bold italic | quicklink h2 h3 blockquote'
-  );
+  return EditorSettings.getToolbarItemsOr(editor, 'quickbars_selection_toolbar', 'bold italic | quicklink h2 h3 blockquote');
 };
 
 const getInsertToolbarItems = function (editor: Editor): string {
-  return EditorSettings.getToolbarItemsOr(
-    editor,
-    'quickbars_insert_toolbar',
-    'quickimage quicktable'
-  );
+  return EditorSettings.getToolbarItemsOr(editor, 'quickbars_insert_toolbar', 'quickimage quicktable');
 };
 
 const getImageToolbarItems = function (editor: Editor): string {
-  return EditorSettings.getToolbarItemsOr(
-    editor,
-    'quickbars_image_toolbar',
-    'alignleft aligncenter alignright'
-  );
+  return EditorSettings.getToolbarItemsOr(editor, 'quickbars_image_toolbar', 'alignleft aligncenter alignright');
 };
 
-export {
-  getTextSelectionToolbarItems,
-  getInsertToolbarItems,
-  getImageToolbarItems
-};
+export { getTextSelectionToolbarItems, getInsertToolbarItems, getImageToolbarItems };

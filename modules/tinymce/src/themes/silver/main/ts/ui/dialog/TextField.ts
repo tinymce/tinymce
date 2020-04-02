@@ -24,23 +24,15 @@ import {
 import { Types } from '@ephox/bridge';
 import { Arr, Fun, Future, Option, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
-import {
-  renderFormFieldWith,
-  renderLabel
-} from 'tinymce/themes/silver/ui/alien/FieldLabeller';
+import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formChangeEvent, formSubmitEvent } from '../general/FormEvents';
 import { Omit } from '../Omit';
 import * as ReadOnly from '../../ReadOnly';
 
-const renderTextField = function (
-  spec: TextField,
-  providersBackstage: UiFactoryBackstageProviders
-) {
-  const pLabel = spec.label.map((label) =>
-    renderLabel(label, providersBackstage)
-  );
+const renderTextField = function (spec: TextField, providersBackstage: UiFactoryBackstageProviders) {
+  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   const baseInputBehaviours = [
     Disabling.config({
@@ -78,9 +70,7 @@ const renderTextField = function (
           validate(input) {
             const v = Representing.getValue(input);
             const result = vl.validator(v);
-            return Future.pure(
-              result === true ? Result.value(v) : Result.error(result)
-            );
+            return Future.pure(result === true ? Result.value(v) : Result.error(result));
           },
           validateOnLoad: vl.validateOnLoad
         }
@@ -105,21 +95,17 @@ const renderTextField = function (
     inputAttributes,
     inputClasses: [spec.classname],
     inputBehaviours: Behaviour.derive(
-      Arr.flatten<
-        Behaviour.NamedConfiguredBehaviour<
-          Behaviour.BehaviourConfigSpec,
-          Behaviour.BehaviourConfigDetail
-        >
-      >([baseInputBehaviours, validatingBehaviours])
+      Arr.flatten<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>([
+        baseInputBehaviours,
+        validatingBehaviours
+      ])
     ),
     selectOnFocus: false,
     factory: AlloyInput
   });
 
   const extraClasses = spec.flex ? ['tox-form__group--stretched'] : [];
-  const extraClasses2 = extraClasses.concat(
-    spec.maximized ? ['tox-form-group--maximize'] : []
-  );
+  const extraClasses2 = extraClasses.concat(spec.maximized ? ['tox-form-group--maximize'] : []);
 
   const extraBehaviours = [
     Disabling.config({
@@ -159,10 +145,7 @@ type InputSpec = Omit<Types.Input.Input, 'type'>;
 
 type TextAreaSpec = Omit<Types.TextArea.TextArea, 'type'>;
 
-const renderInput = (
-  spec: InputSpec,
-  providersBackstage: UiFactoryBackstageProviders
-): SketchSpec =>
+const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec =>
   renderTextField(
     {
       name: spec.name,
@@ -179,10 +162,7 @@ const renderInput = (
     providersBackstage
   );
 
-const renderTextarea = (
-  spec: TextAreaSpec,
-  providersBackstage: UiFactoryBackstageProviders
-): SketchSpec =>
+const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec =>
   renderTextField(
     {
       name: spec.name,

@@ -4,10 +4,7 @@ import * as NodePath from 'tinymce/core/dom/NodePath';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.dom.NodePathTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.dom.NodePathTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 
@@ -23,38 +20,20 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodePathTest', function (
     setupHtml('<p>a<b>12<input></b></p>');
 
     LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild), [0]);
-    LegacyUnit.deepEqual(
-      NodePath.create(getRoot(), getRoot().firstChild.firstChild),
-      [0, 0]
-    );
-    LegacyUnit.deepEqual(
-      NodePath.create(getRoot(), getRoot().firstChild.lastChild.lastChild),
-      [1, 1, 0]
-    );
+    LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild.firstChild), [0, 0]);
+    LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild.lastChild.lastChild), [1, 1, 0]);
   });
 
   suite.test('resolve', function () {
     setupHtml('<p>a<b>12<input></b></p>');
 
+    LegacyUnit.equalDom(NodePath.resolve(getRoot(), NodePath.create(getRoot(), getRoot().firstChild)), getRoot().firstChild);
     LegacyUnit.equalDom(
-      NodePath.resolve(
-        getRoot(),
-        NodePath.create(getRoot(), getRoot().firstChild)
-      ),
-      getRoot().firstChild
-    );
-    LegacyUnit.equalDom(
-      NodePath.resolve(
-        getRoot(),
-        NodePath.create(getRoot(), getRoot().firstChild.firstChild)
-      ),
+      NodePath.resolve(getRoot(), NodePath.create(getRoot(), getRoot().firstChild.firstChild)),
       getRoot().firstChild.firstChild
     );
     LegacyUnit.equalDom(
-      NodePath.resolve(
-        getRoot(),
-        NodePath.create(getRoot(), getRoot().firstChild.lastChild.lastChild)
-      ),
+      NodePath.resolve(getRoot(), NodePath.create(getRoot(), getRoot().firstChild.lastChild.lastChild)),
       getRoot().firstChild.lastChild.lastChild
     );
   });

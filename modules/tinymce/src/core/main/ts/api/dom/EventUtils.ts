@@ -43,10 +43,7 @@ const deprecated = {
 
 // Checks if it is our own isDefaultPrevented function
 const hasIsDefaultPrevented = function (event) {
-  return (
-    event.isDefaultPrevented === returnTrue ||
-    event.isDefaultPrevented === returnFalse
-  );
+  return event.isDefaultPrevented === returnTrue || event.isDefaultPrevented === returnFalse;
 };
 
 // Dummy function that gets replaced on the delegation state functions
@@ -100,10 +97,7 @@ const getTargetFromShadowDom = function (event, defaultTarget) {
 /**
  * Normalizes a native event object or just adds the event specific methods on a custom event.
  */
-const fix = function <T extends any>(
-  originalEvent: T,
-  data?
-): EventUtilsEvent<T> {
+const fix = function <T extends any>(originalEvent: T, data?): EventUtilsEvent<T> {
   let name;
   const event = data || {};
 
@@ -126,12 +120,7 @@ const fix = function <T extends any>(
   }
 
   // Calculate pageX/Y if missing and clientX/Y available
-  if (
-    originalEvent &&
-    mouseEventRe.test(originalEvent.type) &&
-    originalEvent.pageX === undefined &&
-    originalEvent.clientX !== undefined
-  ) {
+  if (originalEvent && mouseEventRe.test(originalEvent.type) && originalEvent.pageX === undefined && originalEvent.clientX !== undefined) {
     const eventDoc = event.target.ownerDocument || document;
     const doc = eventDoc.documentElement;
     const body = eventDoc.body;
@@ -212,10 +201,7 @@ const bindOnReady = function (win, callback, eventUtils) {
   const isDocReady = function () {
     // Check complete or interactive state if there is a body
     // element on some iframes IE 8 will produce a null body
-    return (
-      doc.readyState === 'complete' ||
-      (doc.readyState === 'interactive' && doc.body)
-    );
+    return doc.readyState === 'complete' || (doc.readyState === 'interactive' && doc.body);
   };
 
   // Gets called when the DOM is ready
@@ -286,18 +272,8 @@ class EventUtils {
     callback: EventUtilsCallback<HTMLElementEventMap[K]>,
     scope?: {}
   ): EventUtilsCallback<HTMLElementEventMap[K]>;
-  public bind<T = any>(
-    target: any,
-    names: string,
-    callback: EventUtilsCallback<T>,
-    scope?: {}
-  ): EventUtilsCallback<T>;
-  public bind(
-    target: any,
-    names: string,
-    callback: EventUtilsCallback<any>,
-    scope?: {}
-  ): EventUtilsCallback<any> {
+  public bind<T = any>(target: any, names: string, callback: EventUtilsCallback<T>, scope?: {}): EventUtilsCallback<T>;
+  public bind(target: any, names: string, callback: EventUtilsCallback<any>, scope?: {}): EventUtilsCallback<any> {
     const self = this;
     let id, callbackList, i, name, fakeName, nativeHandler, capture;
     const win = window;
@@ -338,11 +314,7 @@ class EventUtils {
       }
 
       // DOM is already ready
-      if (
-        self.domLoaded &&
-        name === 'ready' &&
-        target.readyState === 'complete'
-      ) {
+      if (self.domLoaded && name === 'ready' && target.readyState === 'complete') {
         callback.call(scope, fix({ type: name }));
         continue;
       }
@@ -433,22 +405,10 @@ class EventUtils {
    * @param {function} callback Optional callback function to unbind.
    * @return {EventUtils} Event utils instance.
    */
-  public unbind<K extends keyof HTMLElementEventMap>(
-    target: any,
-    name: K,
-    callback?: EventUtilsCallback<HTMLElementEventMap[K]>
-  ): this;
-  public unbind<T = any>(
-    target: any,
-    names: string,
-    callback?: EventUtilsCallback<T>
-  ): this;
+  public unbind<K extends keyof HTMLElementEventMap>(target: any, name: K, callback?: EventUtilsCallback<HTMLElementEventMap[K]>): this;
+  public unbind<T = any>(target: any, names: string, callback?: EventUtilsCallback<T>): this;
   public unbind(target: any): this;
-  public unbind(
-    target: any,
-    names?: string,
-    callback?: EventUtilsCallback<any>
-  ): this {
+  public unbind(target: any, names?: string, callback?: EventUtilsCallback<any>): this {
     let id, callbackList, i, ci, name, eventMap;
 
     // Don't bind to text nodes or comments
@@ -481,9 +441,7 @@ class EventUtils {
                     capture = callbackList.capture;
 
                   // Clone callbackList since unbind inside a callback would otherwise break the handlers loop
-                  callbackList = callbackList
-                    .slice(0, ci)
-                    .concat(callbackList.slice(ci + 1));
+                  callbackList = callbackList.slice(0, ci).concat(callbackList.slice(ci + 1));
                   callbackList.nativeHandler = nativeHandler;
                   callbackList.fakeName = fakeName;
                   callbackList.capture = capture;
@@ -496,24 +454,14 @@ class EventUtils {
             // Remove all callbacks if there isn't a specified callback or there is no callbacks left
             if (!callback || callbackList.length === 0) {
               delete eventMap[name];
-              removeEvent(
-                target,
-                callbackList.fakeName || name,
-                callbackList.nativeHandler,
-                callbackList.capture
-              );
+              removeEvent(target, callbackList.fakeName || name, callbackList.nativeHandler, callbackList.capture);
             }
           }
         }
       } else {
         // All events for a specific element
         Obj.each(eventMap, (callbackList, name) => {
-          removeEvent(
-            target,
-            callbackList.fakeName || name,
-            callbackList.nativeHandler,
-            callbackList.capture
-          );
+          removeEvent(target, callbackList.fakeName || name, callbackList.nativeHandler, callbackList.capture);
         });
 
         eventMap = {};
@@ -572,11 +520,7 @@ class EventUtils {
       }
 
       // Walk up the DOM
-      target =
-        target.parentNode ||
-        target.ownerDocument ||
-        target.defaultView ||
-        target.parentWindow;
+      target = target.parentNode || target.ownerDocument || target.defaultView || target.parentWindow;
     } while (target && !event.isPropagationStopped());
 
     return this;

@@ -8,17 +8,9 @@ import * as Contiguous from 'ephox/phoenix/util/Contiguous';
 UnitTest.test('Contiguous Text Nodes Test', function () {
   const doc = TestUniverse(
     Gene('root', 'root', [
-      Gene('1', 'span', [
-        TextGene('1.1', 'alpha'),
-        TextGene('1.2', 'beta'),
-        TextGene('1.3', 'gamma')
-      ]),
+      Gene('1', 'span', [TextGene('1.1', 'alpha'), TextGene('1.2', 'beta'), TextGene('1.3', 'gamma')]),
       Gene('2', 'span', [TextGene('1.4', '')]),
-      Gene('3', 'span', [
-        TextGene('1.5', ''),
-        Gene('img', 'img'),
-        TextGene('1.6', '')
-      ])
+      Gene('3', 'span', [TextGene('1.5', ''), Gene('img', 'img'), TextGene('1.6', '')])
     ])
   );
 
@@ -37,10 +29,7 @@ UnitTest.test('Contiguous Text Nodes Test', function () {
     });
   };
 
-  check(
-    [{ parent: '1', children: ['1.1', '1.2', '1.3'] }],
-    ['1.1', '1.2', '1.3']
-  );
+  check([{ parent: '1', children: ['1.1', '1.2', '1.3'] }], ['1.1', '1.2', '1.3']);
 
   check(
     [

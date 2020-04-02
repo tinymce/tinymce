@@ -20,10 +20,7 @@ interface TabData {
   names: string[];
 }
 
-const parseHelpTabsSetting = (
-  tabsFromSettings: Settings.HelpTabsSetting,
-  tabs: TabSpecs
-): TabData => {
+const parseHelpTabsSetting = (tabsFromSettings: Settings.HelpTabsSetting, tabs: TabSpecs): TabData => {
   const newTabs = {};
   const names = Arr.map(tabsFromSettings, (t) => {
     if (typeof t === 'string') {
@@ -70,20 +67,14 @@ const parseCustomTabs = (editor: Editor, customTabs: CustomTabSpecs) => {
 
   return Settings.getHelpTabs(editor).fold(
     () => getNamesFromTabs(tabs),
-    (tabsFromSettings: Settings.HelpTabsSetting) =>
-      parseHelpTabsSetting(tabsFromSettings, tabs)
+    (tabsFromSettings: Settings.HelpTabsSetting) => parseHelpTabsSetting(tabsFromSettings, tabs)
   );
 };
 
-const init = (
-  editor: Editor,
-  customTabs: CustomTabSpecs
-): (() => void) => () => {
+const init = (editor: Editor, customTabs: CustomTabSpecs): (() => void) => () => {
   // const tabSpecs: Record<string, Types.Dialog.TabApi> = customTabs.get();
   const { tabs, names } = parseCustomTabs(editor, customTabs);
-  const foundTabs: Option<Types.Dialog.TabApi>[] = Arr.map(names, (name) =>
-    Obj.get(tabs, name)
-  );
+  const foundTabs: Option<Types.Dialog.TabApi>[] = Arr.map(names, (name) => Obj.get(tabs, name));
   const dialogTabs: Types.Dialog.TabApi[] = Options.cat(foundTabs);
 
   const body: Types.Dialog.TabPanelApi = {

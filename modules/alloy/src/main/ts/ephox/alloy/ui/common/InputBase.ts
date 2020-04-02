@@ -43,9 +43,7 @@ const behaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => ({
       store: {
         mode: 'manual',
         // Propagating its Option
-        ...detail.data
-          .map((data) => ({ initialValue: data } as { initialValue?: string }))
-          .getOr({}),
+        ...detail.data.map((data) => ({ initialValue: data } as { initialValue?: string })).getOr({}),
         getValue(input) {
           return Value.get(input.element());
         },

@@ -14,11 +14,7 @@ const register = Thunk.cached((gui: GuiSystem) => {
   Debugging.registerInspector('htmldisplay', gui);
 });
 
-const section = (
-  gui: GuiSystem,
-  instructions: string,
-  spec: AlloySpec
-): AlloyComponent => {
+const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyComponent => {
   register(gui);
   const information = Container.sketch({
     dom: {

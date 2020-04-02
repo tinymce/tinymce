@@ -12,36 +12,25 @@ UnitTest.asynctest('tinymce.lists.browser.IndentTest', (success, failure) => {
   Plugin();
   Theme();
 
-  suite.test(
-    'TestCase-TBA: Lists: Remove UL in inline body element contained in LI',
-    function (editor) {
-      editor.setContent('<ul><li>a</li></ul>');
-      editor.selection.setCursorLocation();
-      editor.execCommand('InsertUnorderedList');
-      LegacyUnit.equal(editor.getContent(), '<p>a</p>');
-    }
-  );
+  suite.test('TestCase-TBA: Lists: Remove UL in inline body element contained in LI', function (editor) {
+    editor.setContent('<ul><li>a</li></ul>');
+    editor.selection.setCursorLocation();
+    editor.execCommand('InsertUnorderedList');
+    LegacyUnit.equal(editor.getContent(), '<p>a</p>');
+  });
 
-  suite.test(
-    'TestCase-TBA: Lists: Backspace in LI in UL in inline body element contained within LI',
-    function (editor) {
-      editor.setContent('<ul><li>a</li></ul>');
-      editor.focus();
-      editor.selection.select(editor.getBody(), true);
-      editor.selection.collapse(true);
-      editor.plugins.lists.backspaceDelete();
-      LegacyUnit.equal(editor.getContent(), '<p>a</p>');
-    }
-  );
+  suite.test('TestCase-TBA: Lists: Backspace in LI in UL in inline body element contained within LI', function (editor) {
+    editor.setContent('<ul><li>a</li></ul>');
+    editor.focus();
+    editor.selection.select(editor.getBody(), true);
+    editor.selection.collapse(true);
+    editor.plugins.lists.backspaceDelete();
+    LegacyUnit.equal(editor.getContent(), '<p>a</p>');
+  });
 
   TinyLoader.setupLight(
     function (editor, onSuccess, onFailure) {
-      Pipeline.async(
-        {},
-        Log.steps('TBA', 'Lists: Inline tests', suite.toSteps(editor)),
-        onSuccess,
-        onFailure
-      );
+      Pipeline.async({}, Log.steps('TBA', 'Lists: Inline tests', suite.toSteps(editor)), onSuccess, onFailure);
     },
     {
       inline: true,
@@ -51,8 +40,7 @@ UnitTest.asynctest('tinymce.lists.browser.IndentTest', (success, failure) => {
       indent: false,
       entities: 'raw',
       valid_elements:
-        'li[style|class|data-custom],ol[style|class|data-custom],' +
-        'ul[style|class|data-custom],dl,dt,dd,em,strong,span,#p,div,br',
+        'li[style|class|data-custom],ol[style|class|data-custom],' + 'ul[style|class|data-custom],dl,dt,dd,em,strong,span,#p,div,br',
       valid_styles: {
         '*':
           'color,font-size,font-family,background-color,font-weight,' +

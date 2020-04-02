@@ -6,12 +6,7 @@ import * as MergingOperations from '../operate/MergingOperations';
 import { SimpleGenerators } from '../api/Generators';
 import { Element } from '@ephox/sugar';
 
-const isSpanning = function (
-  grid: Structs.RowCells[],
-  row: number,
-  col: number,
-  comparator: (a: Element, b: Element) => boolean
-) {
+const isSpanning = function (grid: Structs.RowCells[], row: number, col: number, comparator: (a: Element, b: Element) => boolean) {
   const candidate = GridRow.getCell(grid[row], col);
   const matching = Fun.curry(comparator, candidate.element());
   const currentRow = grid[row];
@@ -24,12 +19,10 @@ const isSpanning = function (
     // search down, if we're not on the bottom edge
     ((col > 0 && matching(GridRow.getCellElement(currentRow, col - 1))) ||
       // search right, if we're not on the right edge
-      (col < currentRow.cells().length - 1 &&
-        matching(GridRow.getCellElement(currentRow, col + 1))) ||
+      (col < currentRow.cells().length - 1 && matching(GridRow.getCellElement(currentRow, col + 1))) ||
       // search up, if we're not on the top edge
       (row > 0 && matching(GridRow.getCellElement(grid[row - 1], col))) ||
-      (row < grid.length - 1 &&
-        matching(GridRow.getCellElement(grid[row + 1], col))))
+      (row < grid.length - 1 && matching(GridRow.getCellElement(grid[row + 1], col))))
   );
 };
 
@@ -53,12 +46,7 @@ const mergeTables = function (
     for (let c = startCol; c < endCol; c++) {
       if (isSpanning(gridA, r, c, comparator)) {
         // mutation within mutation, it's mutatception
-        MergingOperations.unmerge(
-          gridA,
-          GridRow.getCellElement(gridA[r], c),
-          comparator,
-          generator.cell
-        );
+        MergingOperations.unmerge(gridA, GridRow.getCellElement(gridA[r], c), comparator, generator.cell);
       }
       const newCell = GridRow.getCellElement(gridB[r - startRow], c - startCol);
       const replacement = generator.replace(newCell);
@@ -97,10 +85,7 @@ const insert = function (
   const secondDelta = Fitment.measureWidth(gridA, fittedNewGrid);
   const fittedOldGrid = Fitment.tailor(gridA, secondDelta, generator);
 
-  return fittedOldGrid
-    .slice(0, index)
-    .concat(fittedNewGrid)
-    .concat(fittedOldGrid.slice(index, fittedOldGrid.length));
+  return fittedOldGrid.slice(0, index).concat(fittedNewGrid).concat(fittedOldGrid.slice(index, fittedOldGrid.length));
 };
 
 export { merge, insert };

@@ -7,11 +7,7 @@ import { LazySink } from '../../api/component/CommonTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
-import {
-  SingleSketch,
-  SingleSketchDetail,
-  SingleSketchSpec
-} from '../../api/ui/Sketcher';
+import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import { TieredData, TieredMenuSpec } from './TieredMenuTypes';
 
@@ -62,34 +58,11 @@ export interface InlineMenuSpec {
 }
 
 export interface InlineViewApis {
-  showAt: (
-    component: AlloyComponent,
-    anchor: AnchorSpec,
-    thing: AlloySpec
-  ) => void;
-  showWithin: (
-    component: AlloyComponent,
-    anchor: AnchorSpec,
-    thing: AlloySpec,
-    boxElement: Option<Element>
-  ) => void;
-  showWithinBounds: (
-    component: AlloyComponent,
-    anchor: AnchorSpec,
-    thing: AlloySpec,
-    getBounds: () => Option<Bounds>
-  ) => void;
-  showMenuAt: (
-    component: AlloyComponent,
-    anchor: AnchorSpec,
-    menuSpec: InlineMenuSpec
-  ) => void;
-  showMenuWithinBounds: (
-    component: AlloyComponent,
-    anchor: AnchorSpec,
-    menuSpec: InlineMenuSpec,
-    getBounds: () => Option<Bounds>
-  ) => void;
+  showAt: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) => void;
+  showWithin: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, boxElement: Option<Element>) => void;
+  showWithinBounds: (component: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, getBounds: () => Option<Bounds>) => void;
+  showMenuAt: (component: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => void;
+  showMenuWithinBounds: (component: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, getBounds: () => Option<Bounds>) => void;
   hide: (component: AlloyComponent) => void;
   isOpen: (component: AlloyComponent) => boolean;
   getContent: (component: AlloyComponent) => Option<AlloyComponent>;
@@ -97,6 +70,4 @@ export interface InlineViewApis {
   reposition: (component: AlloyComponent) => void;
 }
 
-export interface InlineViewSketcher
-  extends SingleSketch<InlineViewSpec>,
-    InlineViewApis {}
+export interface InlineViewSketcher extends SingleSketch<InlineViewSpec>, InlineViewApis {}

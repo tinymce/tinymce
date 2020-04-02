@@ -8,9 +8,7 @@
 import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
-const toggleActiveState = (editor: Editor, enabledStated: Cell<boolean>) => (
-  api
-) => {
+const toggleActiveState = (editor: Editor, enabledStated: Cell<boolean>) => (api) => {
   api.setActive(enabledStated.get());
   const editorEventCallback = (e) => api.setActive(e.state);
   editor.on('VisualChars', editorEventCallback);

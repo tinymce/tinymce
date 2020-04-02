@@ -21,11 +21,7 @@ UnitTest.test('BreakerTest', function () {
   };
 
   const doc1 = generator();
-  breakToRight(
-    doc1,
-    doc1.find(doc1.get(), 'ol1').getOrDie(),
-    doc1.find(doc1.get(), 'li3').getOrDie()
-  );
+  breakToRight(doc1, doc1.find(doc1.get(), 'ol1').getOrDie(), doc1.find(doc1.get(), 'li3').getOrDie());
   assert.eq(
     'root(' +
       'd1(' +

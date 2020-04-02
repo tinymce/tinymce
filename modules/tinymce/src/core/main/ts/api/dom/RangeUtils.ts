@@ -57,14 +57,11 @@ function RangeUtils(dom: DOMUtils): RangeUtils {
    * @return {Boolean} True/false if the specified range was normalized or not.
    */
   const normalize = function (rng: Range): boolean {
-    return NormalizeRange.normalize(dom, rng).fold(
-      Fun.constant(false),
-      function (normalizedRng) {
-        rng.setStart(normalizedRng.startContainer, normalizedRng.startOffset);
-        rng.setEnd(normalizedRng.endContainer, normalizedRng.endOffset);
-        return true;
-      }
-    );
+    return NormalizeRange.normalize(dom, rng).fold(Fun.constant(false), function (normalizedRng) {
+      rng.setStart(normalizedRng.startContainer, normalizedRng.startOffset);
+      rng.setEnd(normalizedRng.endContainer, normalizedRng.endOffset);
+      return true;
+    });
   };
 
   return {
@@ -96,15 +93,9 @@ namespace RangeUtils {
    * @param {Document} doc Document that x/y are relative to
    * @returns {Range} caret range
    */
-  export const getCaretRangeFromPoint = CaretRangeFromPoint.fromPoint as (
-    clientX: number,
-    clientY: number,
-    doc: Document
-  ) => Range;
+  export const getCaretRangeFromPoint = CaretRangeFromPoint.fromPoint as (clientX: number, clientY: number, doc: Document) => Range;
 
-  export const getSelectedNode = RangeNodes.getSelectedNode as (
-    range: Range
-  ) => Node;
+  export const getSelectedNode = RangeNodes.getSelectedNode as (range: Range) => Node;
   export const getNode = RangeNodes.getNode;
 }
 

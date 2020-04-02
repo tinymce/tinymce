@@ -15,9 +15,7 @@ type AccOrSkip = <E>(rest: Data<E>, parent: E, item: E) => Data<E>;
 const nextlist = function <E>(rest: Data<E>, parent: E, item: E): Data<E> {
   return {
     groups:
-      rest.current.length > 0 && rest.parent !== null
-        ? rest.groups.concat({ parent: rest.parent, children: rest.current })
-        : rest.groups,
+      rest.current.length > 0 && rest.parent !== null ? rest.groups.concat({ parent: rest.parent, children: rest.current }) : rest.groups,
     current: [item],
     parent
   };
@@ -32,18 +30,12 @@ const accumulate = function <E>(rest: Data<E>, parent: E, item: E): Data<E> {
   };
 };
 
-const inspect = function <E, D>(
-  universe: Universe<E, D>,
-  rest: Data<E>,
-  item: E
-) {
+const inspect = function <E, D>(universe: Universe<E, D>, rest: Data<E>, item: E) {
   // Conditions:
   // 1. There is nothing in the current list ... start a current list with item (nextlist)
   // 2. The item is the right sibling of the last thing on the current list ... accumulate into current list. (accumulate)
   // 3. Otherwise ... close off current, and start a new current with item (nextlist)
-  const nextSibling = Option.from(rest.current[rest.current.length - 1]).bind(
-    universe.query().nextSibling
-  );
+  const nextSibling = Option.from(rest.current[rest.current.length - 1]).bind(universe.query().nextSibling);
   return nextSibling
     .bind<AccOrSkip>(function (next) {
       const same = universe.eq(next, item);

@@ -1,11 +1,8 @@
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
-export interface FocusingBehaviour
-  extends Behaviour.AlloyBehaviour<FocusingConfigSpec, FocusingConfig> {
-  config: (
-    config: FocusingConfigSpec
-  ) => Behaviour.NamedConfiguredBehaviour<FocusingConfigSpec, FocusingConfig>;
+export interface FocusingBehaviour extends Behaviour.AlloyBehaviour<FocusingConfigSpec, FocusingConfig> {
+  config: (config: FocusingConfigSpec) => Behaviour.NamedConfiguredBehaviour<FocusingConfigSpec, FocusingConfig>;
   focus: (component: AlloyComponent) => void;
   isFocused: (component: AlloyComponent) => boolean;
 }

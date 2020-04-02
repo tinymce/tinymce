@@ -5,26 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  Node,
-  HTMLTableElement,
-  HTMLTableCellElement,
-  HTMLTableRowElement,
-  Element,
-  Range
-} from '@ephox/dom-globals';
+import { Node, HTMLTableElement, HTMLTableCellElement, HTMLTableRowElement, Element, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { ResizeWire, TableDirection, TableResize } from '@ephox/snooker';
 import { Element as SugarElement } from '@ephox/sugar';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Direction from '../queries/Direction';
 import * as TableWire from './TableWire';
-import {
-  hasTableResizeBars,
-  hasObjectResizing,
-  isPixelsForced,
-  isPercentagesForced
-} from '../api/Settings';
+import { hasTableResizeBars, hasObjectResizing, isPixelsForced, isPercentagesForced } from '../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
 import * as Util from '../alien/Util';
@@ -49,8 +37,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
   };
 
   const getRawWidth = function (elm: Element) {
-    const raw =
-      editor.dom.getStyle(elm, 'width') || editor.dom.getAttrib(elm, 'width');
+    const raw = editor.dom.getStyle(elm, 'width') || editor.dom.getAttrib(elm, 'width');
     return Option.from(raw).filter((s) => s.length > 0);
   };
 
@@ -85,12 +72,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
 
       sz.events.beforeResize.bind(function (event) {
         const rawTable = event.table().dom();
-        Events.fireObjectResizeStart(
-          editor,
-          rawTable,
-          Util.getPixelWidth(rawTable),
-          Util.getPixelHeight(rawTable)
-        );
+        Events.fireObjectResizeStart(editor, rawTable, Util.getPixelWidth(rawTable), Util.getPixelHeight(rawTable));
       });
 
       sz.events.afterResize.bind(function (event) {
@@ -103,12 +85,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
           editor.focus();
         });
 
-        Events.fireObjectResized(
-          editor,
-          rawTable,
-          Util.getPixelWidth(rawTable),
-          Util.getPixelHeight(rawTable)
-        );
+        Events.fireObjectResized(editor, rawTable, Util.getPixelWidth(rawTable), Util.getPixelHeight(rawTable));
         editor.undoManager.add();
       });
 
@@ -146,9 +123,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
       const table = targetElm;
 
       if (percentageBasedSizeRegex.test(startRawW)) {
-        const percentW = parseFloat(
-          percentageBasedSizeRegex.exec(startRawW)[1]
-        );
+        const percentW = parseFloat(percentageBasedSizeRegex.exec(startRawW)[1]);
         const targetPercentW = (e.width * percentW) / startW;
         editor.dom.setStyle(table, 'width', targetPercentW + '%');
       } else {

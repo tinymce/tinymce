@@ -79,9 +79,7 @@ const applyDiff = function (diff, elm: Element) {
 };
 
 const read = function (elm: Element): string[] {
-  return Arr.filter(Arr.map(Arr.from(elm.childNodes), getOuterHtml), function (
-    item
-  ) {
+  return Arr.filter(Arr.map(Arr.from(elm.childNodes), getOuterHtml), function (item) {
     return item.length > 0;
   });
 };

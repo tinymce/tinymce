@@ -16,9 +16,7 @@ import { Arr } from '@ephox/katamari';
 
 const each = Tools.each,
   trim = Tools.trim;
-const queryParts = 'source protocol authority userInfo user password host port relative path directory file query anchor'.split(
-  ' '
-);
+const queryParts = 'source protocol authority userInfo user password host port relative path directory file query anchor'.split(' ');
 const DEFAULT_PORTS = {
   ftp: 21,
   http: 80,
@@ -35,12 +33,7 @@ export interface URIConstructor {
 
   new (url: string, settings?: URISettings): URI;
 
-  getDocumentBaseUrl(loc: {
-    protocol: string;
-    host?: string;
-    href?: string;
-    pathname?: string;
-  }): string;
+  getDocumentBaseUrl(loc: { protocol: string; host?: string; href?: string; pathname?: string }): string;
   parseDataUri(uri: string): { type: string; data: string };
 }
 
@@ -61,12 +54,7 @@ class URI {
     };
   }
 
-  public static getDocumentBaseUrl(loc: {
-    protocol: string;
-    host?: string;
-    href?: string;
-    pathname?: string;
-  }): string {
+  public static getDocumentBaseUrl(loc: { protocol: string; host?: string; href?: string; pathname?: string }): string {
     let baseUrl;
 
     // Pass applewebdata:// and other non web protocols though
@@ -128,25 +116,18 @@ class URI {
 
     // Absolute path with no host, fake host and protocol
     if (url.indexOf('/') === 0 && !isProtocolRelative) {
-      url =
-        (baseUri ? baseUri.protocol || 'http' : 'http') + '://mce_host' + url;
+      url = (baseUri ? baseUri.protocol || 'http' : 'http') + '://mce_host' + url;
     }
 
     // Relative path http:// or protocol relative //path
     if (!/^[\w\-]*:?\/\//.test(url)) {
-      const baseUrl = this.settings.base_uri
-        ? this.settings.base_uri.path
-        : new URI(document.location.href).directory;
+      const baseUrl = this.settings.base_uri ? this.settings.base_uri.path : new URI(document.location.href).directory;
       // eslint-disable-next-line eqeqeq
       if (this.settings.base_uri && this.settings.base_uri.protocol == '') {
         url = '//mce_host' + self.toAbsPath(baseUrl, url);
       } else {
         const match = /([^#?]*)([#?]?.*)/.exec(url);
-        url =
-          ((baseUri && baseUri.protocol) || 'http') +
-          '://mce_host' +
-          self.toAbsPath(baseUrl, match[1]) +
-          match[2];
+        url = ((baseUri && baseUri.protocol) || 'http') + '://mce_host' + self.toAbsPath(baseUrl, match[1]) + match[2];
       }
     }
 
@@ -233,9 +214,7 @@ class URI {
 
     // Not on same domain/port or protocol
     if (
-      (relativeUri.host !== 'mce_host' &&
-        this.host !== relativeUri.host &&
-        relativeUri.host) ||
+      (relativeUri.host !== 'mce_host' && this.host !== relativeUri.host && relativeUri.host) ||
       this.port !== relativeUri.port ||
       (this.protocol !== relativeUri.protocol && relativeUri.protocol !== '')
     ) {
@@ -246,10 +225,7 @@ class URI {
       uu = relativeUri.getURI();
 
     // Allow usage of the base_uri when relative_urls = true
-    if (
-      tu === uu ||
-      (tu.charAt(tu.length - 1) === '/' && tu.substr(0, tu.length - 1) === uu)
-    ) {
+    if (tu === uu || (tu.charAt(tu.length - 1) === '/' && tu.substr(0, tu.length - 1) === uu)) {
       return tu;
     }
 
@@ -425,8 +401,7 @@ class URI {
     if (i <= 0) {
       outPath = Arr.reverse(o).join('/');
     } else {
-      outPath =
-        normalizedBase.slice(0, i).join('/') + '/' + Arr.reverse(o).join('/');
+      outPath = normalizedBase.slice(0, i).join('/') + '/' + Arr.reverse(o).join('/');
     }
 
     // Add front / if it's needed

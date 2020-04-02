@@ -8,10 +8,7 @@ import { Option } from '@ephox/katamari';
 
 type BlockBoundary = BlockMergeBoundary.BlockBoundary;
 
-UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (success, failure) {
   const viewBlock = ViewBlock();
 
   const cSetHtml = function (html) {
@@ -22,10 +19,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (
 
   const cReadBlockBoundary = function (forward, cursorPath, cursorOffset) {
     return Chain.mapper(function (viewBlock: any) {
-      const container = Hierarchy.follow(
-        Element.fromDom(viewBlock.get()),
-        cursorPath
-      ).getOrDie();
+      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), cursorPath).getOrDie();
       const rng = document.createRange();
       rng.setStart(container.dom(), cursorOffset);
       rng.setEnd(container.dom(), cursorOffset);
@@ -39,39 +33,15 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (
     toPath,
     toOffset
   ): Chain<Option<BlockBoundary>, Option<BlockBoundary>> {
-    return Chain.op(function (
-      blockBoundaryOption: Option<BlockMergeBoundary.BlockBoundary>
-    ) {
-      const fromContainer = Hierarchy.follow(
-        Element.fromDom(viewBlock.get()),
-        fromPath
-      ).getOrDie();
-      const toContainer = Hierarchy.follow(
-        Element.fromDom(viewBlock.get()),
-        toPath
-      ).getOrDie();
+    return Chain.op(function (blockBoundaryOption: Option<BlockMergeBoundary.BlockBoundary>) {
+      const fromContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), fromPath).getOrDie();
+      const toContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), toPath).getOrDie();
       const blockBoundary = blockBoundaryOption.getOrDie();
 
-      Assertions.assertDomEq(
-        'Should be expected from container',
-        fromContainer,
-        Element.fromDom(blockBoundary.from.position.container())
-      );
-      Assertions.assertEq(
-        'Should be expected from offset',
-        fromOffset,
-        blockBoundary.from.position.offset()
-      );
-      Assertions.assertDomEq(
-        'Should be expected to container',
-        toContainer,
-        Element.fromDom(blockBoundary.to.position.container())
-      );
-      Assertions.assertEq(
-        'Should be expected to offset',
-        toOffset,
-        blockBoundary.to.position.offset()
-      );
+      Assertions.assertDomEq('Should be expected from container', fromContainer, Element.fromDom(blockBoundary.from.position.container()));
+      Assertions.assertEq('Should be expected from offset', fromOffset, blockBoundary.from.position.offset());
+      Assertions.assertDomEq('Should be expected to container', toContainer, Element.fromDom(blockBoundary.to.position.container()));
+      Assertions.assertEq('Should be expected to offset', toOffset, blockBoundary.to.position.offset());
     });
   };
 
@@ -80,37 +50,17 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (
     toBlockPath: number[]
   ): Chain<Option<BlockBoundary>, Option<BlockBoundary>> {
     return Chain.op(function (blockBoundaryOption: Option<BlockBoundary>) {
-      const expectedFromBlock = Hierarchy.follow(
-        Element.fromDom(viewBlock.get()),
-        fromBlockPath
-      ).getOrDie();
-      const expectedToBlock = Hierarchy.follow(
-        Element.fromDom(viewBlock.get()),
-        toBlockPath
-      ).getOrDie();
+      const expectedFromBlock = Hierarchy.follow(Element.fromDom(viewBlock.get()), fromBlockPath).getOrDie();
+      const expectedToBlock = Hierarchy.follow(Element.fromDom(viewBlock.get()), toBlockPath).getOrDie();
       const blockBoundary = blockBoundaryOption.getOrDie();
 
-      Assertions.assertDomEq(
-        'Should be expected from block',
-        expectedFromBlock,
-        blockBoundary.from.block
-      );
-      Assertions.assertDomEq(
-        'Should be expected to block',
-        expectedToBlock,
-        blockBoundary.to.block
-      );
+      Assertions.assertDomEq('Should be expected from block', expectedFromBlock, blockBoundary.from.block);
+      Assertions.assertDomEq('Should be expected to block', expectedToBlock, blockBoundary.to.block);
     });
   };
 
-  const cAssertBlockBoundaryNone = Chain.op(function (
-    blockBoundaryOption: Option<BlockBoundary>
-  ) {
-    Assertions.assertEq(
-      'BlockBoundary should be none',
-      true,
-      blockBoundaryOption.isNone()
-    );
+  const cAssertBlockBoundaryNone = Chain.op(function (blockBoundaryOption: Option<BlockBoundary>) {
+    Assertions.assertEq('BlockBoundary should be none', true, blockBoundaryOption.isNone());
   });
 
   viewBlock.attach();
@@ -122,35 +72,19 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (
         GeneralSteps.sequence([
           Logger.t(
             'Should be none since it is a single block',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<p>a</p>'),
-              cReadBlockBoundary(true, [0, 0], 0),
-              cAssertBlockBoundaryNone
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<p>a</p>'), cReadBlockBoundary(true, [0, 0], 0), cAssertBlockBoundaryNone])
           ),
           Logger.t(
             'Should be none since it is a single block',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<p>a</p>'),
-              cReadBlockBoundary(false, [0, 0], 1),
-              cAssertBlockBoundaryNone
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<p>a</p>'), cReadBlockBoundary(false, [0, 0], 1), cAssertBlockBoundaryNone])
           ),
           Logger.t(
             'Should be none since it is in the middle of a block',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<p>ab</p><p>c</p>'),
-              cReadBlockBoundary(true, [0, 0], 1),
-              cAssertBlockBoundaryNone
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<p>ab</p><p>c</p>'), cReadBlockBoundary(true, [0, 0], 1), cAssertBlockBoundaryNone])
           ),
           Logger.t(
             'Should be none since it is in the middle of a block',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<p>c</p><p>ab</p>'),
-              cReadBlockBoundary(true, [1, 0], 1),
-              cAssertBlockBoundaryNone
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<p>c</p><p>ab</p>'), cReadBlockBoundary(true, [1, 0], 1), cAssertBlockBoundaryNone])
           )
         ])
       ),

@@ -30,9 +30,7 @@ const insertCodeSample = (editor: Editor, language: string, code: string) => {
 
     return node.fold(
       () => {
-        editor.insertContent(
-          '<pre id="__new" class="language-' + language + '">' + code + '</pre>'
-        );
+        editor.insertContent('<pre id="__new" class="language-' + language + '">' + code + '</pre>');
         editor.selection.select(editor.$('#__new').removeAttr('id')[0]);
       },
       (n) => {

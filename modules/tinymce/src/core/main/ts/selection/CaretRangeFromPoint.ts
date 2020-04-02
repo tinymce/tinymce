@@ -10,10 +10,7 @@ import Tools from '../api/util/Tools';
 import { Document, Range } from '@ephox/dom-globals';
 
 const hasCeProperty = function (node) {
-  return (
-    NodeType.isContentEditableTrue(node) ||
-    NodeType.isContentEditableFalse(node)
-  );
+  return NodeType.isContentEditableTrue(node) || NodeType.isContentEditableFalse(node);
 };
 
 const findParent = function (node, rootNode, predicate) {
@@ -69,18 +66,10 @@ const findClosestIeRange = function (clientX, clientY, doc) {
 
 const moveOutOfContentEditableFalse = function (rng, rootNode) {
   const parentElement = rng && rng.parentElement ? rng.parentElement() : null;
-  return NodeType.isContentEditableFalse(
-    findParent(parentElement, rootNode, hasCeProperty)
-  )
-    ? null
-    : rng;
+  return NodeType.isContentEditableFalse(findParent(parentElement, rootNode, hasCeProperty)) ? null : rng;
 };
 
-const fromPoint = function (
-  clientX: number,
-  clientY: number,
-  doc: Document
-): Range {
+const fromPoint = function (clientX: number, clientY: number, doc: Document): Range {
   let rng, point;
   const pointDoc = doc as any;
 

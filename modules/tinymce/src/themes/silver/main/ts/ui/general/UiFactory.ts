@@ -33,30 +33,18 @@ import { renderPanel } from '../dialog/Panel';
 
 // tslint:disable:no-console
 
-export type FormPartRenderer = (
-  parts: FormTypes.FormParts,
-  spec: BridgedType,
-  backstage: UiFactoryBackstage
-) => AlloySpec;
-export type NoFormRenderer = (
-  spec: BridgedType,
-  backstage: UiFactoryBackstage
-) => AlloySpec;
+export type FormPartRenderer = (parts: FormTypes.FormParts, spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
+export type NoFormRenderer = (spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
 
 const make = function (render: NoFormRenderer): FormPartRenderer {
   return (parts, spec, backstage) =>
     Obj.get(spec, 'name').fold(
       () => render(spec, backstage),
-      (fieldName) =>
-        parts.field(fieldName, render(spec, backstage) as SimpleOrSketchSpec)
+      (fieldName) => parts.field(fieldName, render(spec, backstage) as SimpleOrSketchSpec)
     );
 };
 
-const makeIframe = (render: NoFormRenderer): FormPartRenderer => (
-  parts,
-  spec,
-  backstage
-) => {
+const makeIframe = (render: NoFormRenderer): FormPartRenderer => (parts, spec, backstage) => {
   const iframeSpec = Merger.deepMerge(spec, {
     source: 'dynamic'
   });
@@ -65,53 +53,25 @@ const makeIframe = (render: NoFormRenderer): FormPartRenderer => (
 
 const factories: Record<string, FormPartRenderer> = {
   bar: make((spec, backstage) => renderBar(spec, backstage.shared)),
-  collection: make((spec, backstage) =>
-    renderCollection(spec, backstage.shared.providers)
-  ),
-  alertbanner: make((spec, backstage) =>
-    renderAlertBanner(spec, backstage.shared.providers)
-  ),
-  input: make((spec, backstage) =>
-    renderInput(spec, backstage.shared.providers)
-  ),
-  textarea: make((spec, backstage) =>
-    renderTextarea(spec, backstage.shared.providers)
-  ),
+  collection: make((spec, backstage) => renderCollection(spec, backstage.shared.providers)),
+  alertbanner: make((spec, backstage) => renderAlertBanner(spec, backstage.shared.providers)),
+  input: make((spec, backstage) => renderInput(spec, backstage.shared.providers)),
+  textarea: make((spec, backstage) => renderTextarea(spec, backstage.shared.providers)),
   label: make((spec, backstage) => renderLabel(spec, backstage.shared)),
-  iframe: makeIframe((spec, backstage) =>
-    renderIFrame(spec, backstage.shared.providers)
-  ),
-  button: make((spec, backstage) =>
-    renderDialogButton(spec, backstage.shared.providers)
-  ),
-  checkbox: make((spec, backstage) =>
-    renderCheckbox(spec, backstage.shared.providers)
-  ),
-  colorinput: make((spec, backstage) =>
-    renderColorInput(spec, backstage.shared, backstage.colorinput)
-  ),
+  iframe: makeIframe((spec, backstage) => renderIFrame(spec, backstage.shared.providers)),
+  button: make((spec, backstage) => renderDialogButton(spec, backstage.shared.providers)),
+  checkbox: make((spec, backstage) => renderCheckbox(spec, backstage.shared.providers)),
+  colorinput: make((spec, backstage) => renderColorInput(spec, backstage.shared, backstage.colorinput)),
   colorpicker: make(renderColorPicker), // Not sure if this needs name.
-  dropzone: make((spec, backstage) =>
-    renderDropZone(spec, backstage.shared.providers)
-  ),
+  dropzone: make((spec, backstage) => renderDropZone(spec, backstage.shared.providers)),
   grid: make((spec, backstage) => renderGrid(spec, backstage.shared)),
-  selectbox: make((spec, backstage) =>
-    renderSelectBox(spec, backstage.shared.providers)
-  ),
-  sizeinput: make((spec, backstage) =>
-    renderSizeInput(spec, backstage.shared.providers)
-  ),
-  urlinput: make((spec, backstage) =>
-    renderUrlInput(spec, backstage, backstage.urlinput)
-  ),
+  selectbox: make((spec, backstage) => renderSelectBox(spec, backstage.shared.providers)),
+  sizeinput: make((spec, backstage) => renderSizeInput(spec, backstage.shared.providers)),
+  urlinput: make((spec, backstage) => renderUrlInput(spec, backstage, backstage.urlinput)),
   customeditor: make(renderCustomEditor),
   htmlpanel: make(renderHtmlPanel),
-  imagetools: make((spec, backstage) =>
-    renderImageTools(spec, backstage.shared.providers)
-  ),
-  table: make((spec, backstage) =>
-    renderTable(spec, backstage.shared.providers)
-  ),
+  imagetools: make((spec, backstage) => renderImageTools(spec, backstage.shared.providers)),
+  table: make((spec, backstage) => renderTable(spec, backstage.shared.providers)),
   panel: make((spec, backstage) => renderPanel(spec, backstage))
 };
 
@@ -134,19 +94,13 @@ const interpretInForm = (parts, spec, oldBackstage) => {
 const interpretParts: FormPartRenderer = (parts, spec, backstage) =>
   Obj.get(factories, spec.type).fold(
     () => {
-      console.error(
-        `Unknown factory type "${spec.type}", defaulting to container: `,
-        spec
-      );
+      console.error(`Unknown factory type "${spec.type}", defaulting to container: `, spec);
       return spec as AlloySpec;
     },
     (factory: FormPartRenderer) => factory(parts, spec, backstage)
   );
 
-const interpretWithoutForm: NoFormRenderer = (
-  spec,
-  backstage: UiFactoryBackstage
-) => {
+const interpretWithoutForm: NoFormRenderer = (spec, backstage: UiFactoryBackstage) => {
   const parts = noFormParts;
   return interpretParts(parts, spec, backstage);
 };

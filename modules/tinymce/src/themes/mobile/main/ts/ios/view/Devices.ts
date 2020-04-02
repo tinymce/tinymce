@@ -71,9 +71,6 @@ export const findDevice = function (deviceWidth, deviceHeight): Keyboard {
   ];
 
   return Arr.findMap<Device, Keyboard>(devices, (device) =>
-    Options.someIf(
-      deviceWidth <= device.width && deviceHeight <= device.height,
-      device.keyboard
-    )
+    Options.someIf(deviceWidth <= device.width && deviceHeight <= device.height, device.keyboard)
   ).getOr({ portrait: deviceHeight / 5, landscape: deviceWidth / 4 });
 };

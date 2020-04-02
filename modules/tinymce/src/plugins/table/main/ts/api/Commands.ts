@@ -31,31 +31,28 @@ const registerCommands = (
 ) => {
   const isRoot = Util.getIsRoot(editor);
   const eraseTable = () => {
-    TableSelection.getSelectionStartCellOrCaption(editor).each(
-      (cellOrCaption) => {
-        const tableOpt = TableLookup.table(cellOrCaption, isRoot);
-        tableOpt.filter(Fun.not(isRoot)).each((table) => {
-          const cursor = Element.fromText('');
-          Insert.after(table, cursor);
-          Remove.remove(table);
+    TableSelection.getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
+      const tableOpt = TableLookup.table(cellOrCaption, isRoot);
+      tableOpt.filter(Fun.not(isRoot)).each((table) => {
+        const cursor = Element.fromText('');
+        Insert.after(table, cursor);
+        Remove.remove(table);
 
-          if (editor.dom.isEmpty(editor.getBody())) {
-            editor.setContent('');
-            editor.selection.setCursorLocation();
-          } else {
-            const rng = editor.dom.createRng();
-            rng.setStart(cursor.dom(), 0);
-            rng.setEnd(cursor.dom(), 0);
-            editor.selection.setRng(rng);
-            editor.nodeChanged();
-          }
-        });
-      }
-    );
+        if (editor.dom.isEmpty(editor.getBody())) {
+          editor.setContent('');
+          editor.selection.setCursorLocation();
+        } else {
+          const rng = editor.dom.createRng();
+          rng.setStart(cursor.dom(), 0);
+          rng.setEnd(cursor.dom(), 0);
+          editor.selection.setRng(rng);
+          editor.nodeChanged();
+        }
+      });
+    });
   };
 
-  const getTableFromCell = (cell: Element): Option<Element> =>
-    TableLookup.table(cell, isRoot);
+  const getTableFromCell = (cell: Element): Option<Element> => TableLookup.table(cell, isRoot);
 
   const getSize = (table) => ({
     width: Util.getPixelWidth(table.dom()),
@@ -66,18 +63,8 @@ const registerCommands = (
     const newSize = getSize(table);
 
     if (oldSize.width !== newSize.width || oldSize.height !== newSize.height) {
-      Events.fireObjectResizeStart(
-        editor,
-        table.dom(),
-        oldSize.width,
-        oldSize.height
-      );
-      Events.fireObjectResized(
-        editor,
-        table.dom(),
-        newSize.width,
-        newSize.height
-      );
+      Events.fireObjectResizeStart(editor, table.dom(), oldSize.width, oldSize.height);
+      Events.fireObjectResized(editor, table.dom(), newSize.width, newSize.height);
     }
   };
 
@@ -102,11 +89,7 @@ const registerCommands = (
       getTableFromCell(cell).bind((table) => {
         const doc = Element.fromDom(editor.getDoc());
         const targets = TableTargets.forMenu(selections, table, cell);
-        const generators = TableFill.cellOperations(
-          Fun.noop,
-          doc,
-          Option.none()
-        );
+        const generators = TableFill.cellOperations(Fun.noop, doc, Option.none());
         return CopyRows.copyRows(table, targets, generators);
       })
     );
@@ -119,13 +102,7 @@ const registerCommands = (
         getTableFromCell(cell).each((table) => {
           const doc = Element.fromDom(editor.getDoc());
           const generators = TableFill.paste(doc);
-          const targets = TableTargets.pasteRows(
-            selections,
-            table,
-            cell,
-            clonedRows,
-            generators
-          );
+          const targets = TableTargets.pasteRows(selections, table, cell, clonedRows, generators);
           execute(table, targets).each((rng) => {
             editor.selection.setRng(rng);
             editor.focus();

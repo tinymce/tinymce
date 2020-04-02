@@ -39,19 +39,10 @@ UnitTest.asynctest('KeyboardTest', (success, failure) => {
           const raw = event.raw();
           listener.unbind();
 
-          sAssertEvent(type, code, modifiers, raw).runStep(
-            value,
-            next,
-            die,
-            logs
-          );
+          sAssertEvent(type, code, modifiers, raw).runStep(value, next, die, logs);
         });
 
-        f(Element.fromDom(document), code, modifiers).runStep(
-          value,
-          () => {},
-          die
-        );
+        f(Element.fromDom(document), code, modifiers).runStep(value, () => {}, die);
       }),
       Guard.timeout('Key event did not fire in time: ' + type, 1000)
     );
@@ -59,41 +50,25 @@ UnitTest.asynctest('KeyboardTest', (success, failure) => {
   const listenOnKeystroke = (code, modifiers) =>
     Step.control(
       Step.raw((value: { container: any }, next, die, initLogs) => {
-        const keydownListener = DomEvent.bind(
-          value.container,
-          'keydown',
-          (dEvent) => {
-            keydownListener.unbind();
+        const keydownListener = DomEvent.bind(value.container, 'keydown', (dEvent) => {
+          keydownListener.unbind();
 
-            const keyupListener = DomEvent.bind(
-              value.container,
-              'keyup',
-              (uEvent) => {
-                keyupListener.unbind();
+          const keyupListener = DomEvent.bind(value.container, 'keyup', (uEvent) => {
+            keyupListener.unbind();
 
-                Pipeline.async(
-                  {},
-                  [
-                    sAssertEvent('keydown', code, modifiers, dEvent.raw()),
-                    sAssertEvent('keyup', code, modifiers, uEvent.raw())
-                  ],
-                  (v, newLogs) => {
-                    next(value, newLogs);
-                  },
-                  die,
-                  initLogs
-                );
-              }
+            Pipeline.async(
+              {},
+              [sAssertEvent('keydown', code, modifiers, dEvent.raw()), sAssertEvent('keyup', code, modifiers, uEvent.raw())],
+              (v, newLogs) => {
+                next(value, newLogs);
+              },
+              die,
+              initLogs
             );
-          }
-        );
+          });
+        });
 
-        Keyboard.sKeystroke(Element.fromDom(document), code, modifiers).runStep(
-          value,
-          () => {},
-          die,
-          TestLogs.init()
-        );
+        Keyboard.sKeystroke(Element.fromDom(document), code, modifiers).runStep(value, () => {}, die, TestLogs.init());
       }),
       Guard.timeout('keystroke (keydown + keyup) did not fire', 1000)
     );

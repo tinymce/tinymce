@@ -10,11 +10,7 @@ import * as Settings from '../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
 
 const rangeEqualsDelimiterOrSpace = function (rangeString, delimiter) {
-  return (
-    rangeString === delimiter ||
-    rangeString === ' ' ||
-    rangeString.charCodeAt(0) === 160
-  );
+  return rangeString === delimiter || rangeString === ' ' || rangeString.charCodeAt(0) === 160;
 };
 
 const handleEclipse = function (editor) {
@@ -62,16 +58,7 @@ const setEnd = function (rng, container, offset) {
 };
 
 const parseCurrentLine = function (editor, endOffset, delimiter) {
-  let rng,
-    end,
-    start,
-    endContainer,
-    bookmark,
-    text,
-    matches,
-    prev,
-    len,
-    rngText;
+  let rng, end, start, endContainer, bookmark, text, matches, prev, len, rngText;
   const autoLinkPattern = Settings.getAutoLinkPattern(editor);
   const defaultLinkTarget = Settings.getDefaultLinkTarget(editor);
 
@@ -88,10 +75,7 @@ const parseCurrentLine = function (editor, endOffset, delimiter) {
     // The previous text node contains the URL.
     prev = rng.endContainer.previousSibling;
     if (!prev) {
-      if (
-        !rng.endContainer.firstChild ||
-        !rng.endContainer.firstChild.nextSibling
-      ) {
+      if (!rng.endContainer.firstChild || !rng.endContainer.firstChild.nextSibling) {
         return;
       }
 
@@ -141,13 +125,7 @@ const parseCurrentLine = function (editor, endOffset, delimiter) {
     rngText = rng.toString();
 
     // Loop until one of the following is found: a blank space, &nbsp;, delimiter, (end-2) >= 0
-  } while (
-    rngText !== ' ' &&
-    rngText !== '' &&
-    rngText.charCodeAt(0) !== 160 &&
-    end - 2 >= 0 &&
-    rngText !== delimiter
-  );
+  } while (rngText !== ' ' && rngText !== '' && rngText.charCodeAt(0) !== 160 && end - 2 >= 0 && rngText !== delimiter);
 
   if (rangeEqualsDelimiterOrSpace(rng.toString(), delimiter)) {
     setStart(rng, endContainer, end);
@@ -185,11 +163,7 @@ const parseCurrentLine = function (editor, endOffset, delimiter) {
     editor.execCommand('createlink', false, matches[1] + matches[2]);
 
     if (defaultLinkTarget !== false) {
-      editor.dom.setAttrib(
-        editor.selection.getNode(),
-        'target',
-        defaultLinkTarget
-      );
+      editor.dom.setAttrib(editor.selection.getNode(), 'target', defaultLinkTarget);
     }
 
     editor.selection.moveToBookmark(bookmark);

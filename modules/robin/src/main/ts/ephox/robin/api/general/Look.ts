@@ -6,10 +6,7 @@ const selector = function <E, D>(_universe: Universe<E, D>, sel: string) {
   return Look.selector(sel);
 };
 
-const predicate = function <E, D>(
-  _universe: Universe<E, D>,
-  pred: (e: E) => boolean
-) {
+const predicate = function <E, D>(_universe: Universe<E, D>, pred: (e: E) => boolean) {
   return Look.predicate(pred);
 };
 

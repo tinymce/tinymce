@@ -1,11 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  FocusTools,
-  Mouse,
-  UiFinder
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, Mouse, UiFinder } from '@ephox/agar';
 import { GuiFactory, NativeEvents, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
@@ -30,21 +23,12 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
         )
       ),
     (doc, _body, _gui, component, _store) => {
-      const sTriggerInput = DomSteps.sTriggerEventOnFocused(
-        'input("input")',
-        component,
-        NativeEvents.input()
-      );
+      const sTriggerInput = DomSteps.sTriggerEventOnFocused('input("input")', component, NativeEvents.input());
 
-      const sSetDimensions = (width: string, height: string) =>
-        RepresentingSteps.sSetValue('dimensions', component, { width, height });
+      const sSetDimensions = (width: string, height: string) => RepresentingSteps.sSetValue('dimensions', component, { width, height });
 
       const sAssertDimensions = (width: string, height: string) =>
-        RepresentingSteps.sAssertValue(
-          'dimensions',
-          { width, height },
-          component
-        );
+        RepresentingSteps.sAssertValue('dimensions', { width, height }, component);
 
       const sAssertLocked = (locked: boolean) =>
         Chain.asStep(component.element(), [
@@ -54,11 +38,7 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
               'Checking lock has toggled',
               ApproxStructure.build((s, _str, arr) =>
                 s.element('button', {
-                  classes: [
-                    arr.has('tox-lock'),
-                    arr.has('tox-button'),
-                    (locked ? arr.has : arr.not)('tox-locked')
-                  ]
+                  classes: [arr.has('tox-lock'), arr.has('tox-button'), (locked ? arr.has : arr.not)('tox-locked')]
                 })
               ),
               lock
@@ -114,11 +94,7 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
                           html: str.is('&nbsp;')
                         }),
                         s.element('button', {
-                          classes: [
-                            arr.has('tox-lock'),
-                            arr.has('tox-button'),
-                            arr.has('tox-locked')
-                          ]
+                          classes: [arr.has('tox-lock'), arr.has('tox-button'), arr.has('tox-locked')]
                         })
                       ]
                     })
@@ -131,11 +107,7 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
         ),
         sAssertLocked(true),
         sSetDimensions('100px', '200px'),
-        FocusTools.sSetFocus(
-          'Focusing the first field',
-          component.element(),
-          'input:first'
-        ),
+        FocusTools.sSetFocus('Focusing the first field', component.element(), 'input:first'),
         FocusTools.sSetActiveValue(doc, '50'),
         sTriggerInput,
         sAssertDimensions('50', '100px'),
@@ -143,11 +115,7 @@ UnitTest.asynctest('SizeInput component Test', (success, failure) => {
         Mouse.sClickOn(component.element(), 'button.tox-lock'),
         sAssertLocked(false),
         // now when we update the first field it will not update the second field
-        FocusTools.sSetFocus(
-          'Focusing the first field',
-          component.element(),
-          'input:first'
-        ),
+        FocusTools.sSetFocus('Focusing the first field', component.element(), 'input:first'),
         FocusTools.sSetActiveValue(doc, '300px'),
         sTriggerInput,
         sAssertDimensions('300px', '100px')

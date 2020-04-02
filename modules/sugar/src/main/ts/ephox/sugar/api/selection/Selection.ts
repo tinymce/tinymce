@@ -9,22 +9,12 @@ export interface Selection {
   fold: <U>(
     domRange: (rng: Range) => U,
     relative: (startSitu: Situ, finishSitu: Situ) => U,
-    exact: (
-      start: Element<DomNode>,
-      soffset: number,
-      finish: Element<DomNode>,
-      foffset: number
-    ) => U
+    exact: (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => U
   ) => U;
   match: <U>(branches: {
     domRange: (rng: Range) => U;
     relative: (startSitu: Situ, finishSitu: Situ) => U;
-    exact: (
-      start: Element<DomNode>,
-      soffset: number,
-      finish: Element<DomNode>,
-      foffset: number
-    ) => U;
+    exact: (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => U;
   }) => U;
   log: (label: string) => void;
 }
@@ -33,25 +23,11 @@ export interface Selection {
 const adt: {
   domRange: (rng: Range) => Selection;
   relative: (startSitu: Situ, finishSitu: Situ) => Selection;
-  exact: (
-    start: Element<DomNode>,
-    soffset: number,
-    finish: Element<DomNode>,
-    foffset: number
-  ) => Selection;
-} = Adt.generate([
-  { domRange: ['rng'] },
-  { relative: ['startSitu', 'finishSitu'] },
-  { exact: ['start', 'soffset', 'finish', 'foffset'] }
-]);
+  exact: (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => Selection;
+} = Adt.generate([{ domRange: ['rng'] }, { relative: ['startSitu', 'finishSitu'] }, { exact: ['start', 'soffset', 'finish', 'foffset'] }]);
 
 const exactFromRange = function (simRange: SimRange) {
-  return adt.exact(
-    simRange.start(),
-    simRange.soffset(),
-    simRange.finish(),
-    simRange.foffset()
-  );
+  return adt.exact(simRange.start(), simRange.soffset(), simRange.finish(), simRange.foffset());
 };
 
 const getStart = function (selection: Selection) {

@@ -26,45 +26,13 @@ UnitTest.test('Words.StringMapperTest', function () {
     assert.eq([ALETTER, ALETTER, ALETTER], classify('abc'.split('')));
     assert.eq([ALETTER, ALETTER, ALETTER], classify('åäö'.split('')));
     assert.eq([ALETTER, NUMERIC, ALETTER], classify('a2c'.split('')));
-    assert.eq(
-      [
-        ALETTER,
-        MIDNUMLET,
-        ALETTER,
-        ALETTER,
-        OTHER,
-        ALETTER,
-        ALETTER,
-        ALETTER,
-        ALETTER,
-        ALETTER
-      ],
-      classify(`a'la carte`.split(''))
-    );
-    assert.eq(
-      [ALETTER, ALETTER, ALETTER, OTHER, LF, OTHER, ALETTER, ALETTER, ALETTER],
-      classify('one \n two'.split(''))
-    );
-    assert.eq(
-      [NUMERIC, MIDNUM, NUMERIC, NUMERIC, NUMERIC, MIDNUMLET, NUMERIC, NUMERIC],
-      classify('3,500.10'.split(''))
-    );
+    assert.eq([ALETTER, MIDNUMLET, ALETTER, ALETTER, OTHER, ALETTER, ALETTER, ALETTER, ALETTER, ALETTER], classify(`a'la carte`.split('')));
+    assert.eq([ALETTER, ALETTER, ALETTER, OTHER, LF, OTHER, ALETTER, ALETTER, ALETTER], classify('one \n two'.split('')));
+    assert.eq([NUMERIC, MIDNUM, NUMERIC, NUMERIC, NUMERIC, MIDNUMLET, NUMERIC, NUMERIC], classify('3,500.10'.split('')));
     assert.eq([OTHER, KATAKANA, KATAKANA], classify('愛ラブ'.split('')));
     assert.eq([OTHER, OTHER], classify('ねこ'.split('')));
     assert.eq([MIDLETTER], classify('·'.split('')));
-    assert.eq(
-      [
-        EXTENDNUMLET,
-        MIDNUMLET,
-        MIDNUM,
-        MIDNUM,
-        MIDNUM,
-        MIDNUM,
-        EXTENDNUMLET,
-        EXTENDNUMLET
-      ],
-      classify('=-+±*/⋉≥'.split(''))
-    );
+    assert.eq([EXTENDNUMLET, MIDNUMLET, MIDNUM, MIDNUM, MIDNUM, MIDNUM, EXTENDNUMLET, EXTENDNUMLET], classify('=-+±*/⋉≥'.split('')));
     assert.eq([CR], classify('\r'.split('')));
     assert.eq([EXTEND], classify('̀'.split('')));
     assert.eq([NEWLINE], classify('\x0B'.split('')));

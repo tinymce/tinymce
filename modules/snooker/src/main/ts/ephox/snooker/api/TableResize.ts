@@ -40,10 +40,7 @@ export interface TableResize {
   readonly events: TableResizeEventRegistry;
 }
 
-const create = (
-  wire: ResizeWire,
-  vdirection: BarPositions<ColInfo>
-): TableResize => {
+const create = (wire: ResizeWire, vdirection: BarPositions<ColInfo>): TableResize => {
   const hdirection = BarPositions.height;
   const manager = BarManager(wire, vdirection, hdirection);
 

@@ -8,13 +8,8 @@ import { Assert } from '@ephox/bedrock-client';
 const sPreserved = '..preserved..';
 
 // We expect it to fail, and we are checking that the error is the right one
-const assertError = (
-  label: string,
-  expectedError: any,
-  actualError: any
-): Result<any, any> => {
-  const errMessage =
-    actualError.message !== undefined ? actualError.message : actualError;
+const assertError = (label: string, expectedError: any, actualError: any): Result<any, any> => {
+  const errMessage = actualError.message !== undefined ? actualError.message : actualError;
   try {
     Assert.eq(
       label +
@@ -33,12 +28,7 @@ const assertError = (
   }
 };
 
-const assertPprintError = (
-  label: string,
-  expectedExpectedValue: any,
-  expectedActualValue: any,
-  actualError: any
-): Result<any, any> => {
+const assertPprintError = (label: string, expectedExpectedValue: any, expectedActualValue: any, actualError: any): Result<any, any> => {
   try {
     Assert.eq('checking expected diff of error', actualError.diff, {
       actual: expectedActualValue,
@@ -51,24 +41,11 @@ const assertPprintError = (
 };
 
 // We expect it to fail, and we somehow succeeded
-const failOnSuccess = (
-  label: string,
-  expectedError: any,
-  unexpectedSuccess: any
-): string =>
-  label +
-  ': Should not have passed. Expected error: ' +
-  expectedError +
-  '. ' +
-  'Received success: ' +
-  unexpectedSuccess;
+const failOnSuccess = (label: string, expectedError: any, unexpectedSuccess: any): string =>
+  label + ': Should not have passed. Expected error: ' + expectedError + '. ' + 'Received success: ' + unexpectedSuccess;
 
 // We expect it to pass, so we are checking that the passing value is the right one
-const assertSuccess = (
-  label: string,
-  expected: any,
-  actual: any
-): Result<any, any> => {
+const assertSuccess = (label: string, expected: any, actual: any): Result<any, any> => {
   try {
     Assert.eq(label + ': checking successful value', expected, actual);
     return Result.value(actual);
@@ -78,22 +55,9 @@ const assertSuccess = (
 };
 
 // We expect it to pass, but we received an unexpected failure
-const failOnError = (
-  label: string,
-  expectedSuccess: any,
-  unexpectedError: any
-): string => {
-  const errMessage =
-    unexpectedError.message !== undefined
-      ? unexpectedError.message
-      : unexpectedError;
-  return (
-    label +
-    '\nExpected success: ' +
-    expectedSuccess +
-    '.\nInstead, failed: ' +
-    errMessage
-  );
+const failOnError = (label: string, expectedSuccess: any, unexpectedError: any): string => {
+  const errMessage = unexpectedError.message !== undefined ? unexpectedError.message : unexpectedError;
+  return label + '\nExpected success: ' + expectedSuccess + '.\nInstead, failed: ' + errMessage;
 };
 
 const failed = (label, expected, step: Step<any, any>) =>
@@ -191,11 +155,7 @@ const testStepFail = (expected, step: Step<any, any>) =>
     );
   });
 
-const testStepFailPprintError = (
-  expectedExpectedValue,
-  expectedActualValue,
-  step: Step<any, any>
-) =>
+const testStepFailPprintError = (expectedExpectedValue, expectedActualValue, step: Step<any, any>) =>
   Step.raw((value, next, die, initLogs) => {
     step.runStep(
       value,
@@ -204,12 +164,7 @@ const testStepFailPprintError = (
         die(msg, newLogs);
       },
       (err, newLogs) => {
-        assertPprintError(
-          'testStepFail',
-          expectedExpectedValue,
-          expectedActualValue,
-          err
-        ).fold(
+        assertPprintError('testStepFail', expectedExpectedValue, expectedActualValue, err).fold(
           (err) => die(err, newLogs),
           (_) => next(value, newLogs)
         );

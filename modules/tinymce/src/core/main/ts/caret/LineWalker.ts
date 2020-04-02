@@ -24,26 +24,11 @@ export enum VDirection {
   Down = 1
 }
 
-type PosPredicate = (
-  rect1: ClientRect.ClientRect,
-  rect2: ClientRect.ClientRect
-) => boolean;
+type PosPredicate = (rect1: ClientRect.ClientRect, rect2: ClientRect.ClientRect) => boolean;
 type RectPredicate = (rect: ClientRectLine) => boolean;
 
-const findUntil = (
-  direction: VDirection,
-  root: Node,
-  predicateFn: (node: Node) => boolean,
-  node: Node
-): void => {
-  while (
-    (node = CaretUtils.findNode(
-      node,
-      direction,
-      CaretCandidate.isEditableCaretCandidate,
-      root
-    ))
-  ) {
+const findUntil = (direction: VDirection, root: Node, predicateFn: (node: Node) => boolean, node: Node): void => {
+  while ((node = CaretUtils.findNode(node, direction, CaretCandidate.isEditableCaretCandidate, root))) {
     if (predicateFn(node)) {
       return;
     }
@@ -103,37 +88,20 @@ const walkUntil = (
   return result;
 };
 
-const aboveLineNumber = (lineNumber: number, clientRect: ClientRectLine) =>
-  clientRect.line > lineNumber;
-const isLineNumber = (lineNumber: number, clientRect: ClientRectLine) =>
-  clientRect.line === lineNumber;
-const upUntil = Fun.curry(
-  walkUntil,
-  VDirection.Up,
-  ClientRect.isAbove,
-  ClientRect.isBelow
-) as (
+const aboveLineNumber = (lineNumber: number, clientRect: ClientRectLine) => clientRect.line > lineNumber;
+const isLineNumber = (lineNumber: number, clientRect: ClientRectLine) => clientRect.line === lineNumber;
+const upUntil = Fun.curry(walkUntil, VDirection.Up, ClientRect.isAbove, ClientRect.isBelow) as (
   root: Node,
   predicateFn: RectPredicate,
   caretPosition: CaretPosition
 ) => ClientRectLine[];
-const downUntil = Fun.curry(
-  walkUntil,
-  VDirection.Down,
-  ClientRect.isBelow,
-  ClientRect.isAbove
-) as (
+const downUntil = Fun.curry(walkUntil, VDirection.Down, ClientRect.isBelow, ClientRect.isAbove) as (
   root: Node,
   predicateFn: RectPredicate,
   caretPosition: CaretPosition
 ) => ClientRectLine[];
 
-const positionsUntil = (
-  direction: VDirection,
-  root: Node,
-  predicateFn: RectPredicate,
-  node: Node
-): ClientRectLine[] => {
+const positionsUntil = (direction: VDirection, root: Node, predicateFn: RectPredicate, node: Node): ClientRectLine[] => {
   const caretWalker = CaretWalker(root);
   let walkFn, isBelowFn, isAboveFn, caretPosition;
   const result = [];
@@ -192,9 +160,7 @@ const positionsUntil = (
   return result;
 };
 
-const isAboveLine = (lineNumber: number) => (clientRect: ClientRectLine) =>
-  aboveLineNumber(lineNumber, clientRect);
-const isLine = (lineNumber: number) => (clientRect: ClientRectLine) =>
-  isLineNumber(lineNumber, clientRect);
+const isAboveLine = (lineNumber: number) => (clientRect: ClientRectLine) => aboveLineNumber(lineNumber, clientRect);
+const isLine = (lineNumber: number) => (clientRect: ClientRectLine) => isLineNumber(lineNumber, clientRect);
 
 export { upUntil, downUntil, positionsUntil, isAboveLine, isLine };

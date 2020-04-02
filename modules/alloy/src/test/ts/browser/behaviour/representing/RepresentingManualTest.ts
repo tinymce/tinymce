@@ -33,24 +33,11 @@ UnitTest.asynctest('RepresentingTest (mode: manual)', (success, failure) => {
         ])
       }),
     (_doc, _body, _gui, component, store) => [
-      store.sAssertEq('Should have called setValue on init', [
-        'setValue(init-value)'
-      ]),
-      RepresentPipes.sAssertValue(
-        'Checking initial value',
-        'init-value',
-        component
-      ),
-      store.sAssertEq('Should have called setValue on init', [
-        'setValue(init-value)',
-        'getValue'
-      ]),
+      store.sAssertEq('Should have called setValue on init', ['setValue(init-value)']),
+      RepresentPipes.sAssertValue('Checking initial value', 'init-value', component),
+      store.sAssertEq('Should have called setValue on init', ['setValue(init-value)', 'getValue']),
       RepresentPipes.sSetValue(component, 'new-value'),
-      store.sAssertEq('Should have called setValue on init', [
-        'setValue(init-value)',
-        'getValue',
-        'setValue(new-value)'
-      ]),
+      store.sAssertEq('Should have called setValue on init', ['setValue(init-value)', 'getValue', 'setValue(new-value)']),
       RepresentPipes.sAssertValue('Checking 2nd value', 'new-value', component)
     ],
     () => {

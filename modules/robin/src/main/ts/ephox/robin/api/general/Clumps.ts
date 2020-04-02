@@ -55,8 +55,7 @@ const fracture = function <E, D>(
   foffset: number,
   ceiling?: (e: E) => E
 ) {
-  const sameText =
-    universe.property().isText(start) && universe.eq(start, finish);
+  const sameText = universe.property().isText(start) && universe.eq(start, finish);
   return sameText
     ? same(universe, isRoot, start, soffset, foffset, ceiling)
     : diff(universe, isRoot, start, soffset, finish, foffset, ceiling);
@@ -71,24 +70,9 @@ const fractures = function <E, D>(
   foffset: number,
   ceiling?: (e: E) => E
 ) {
-  const clumps = Clumps.collect(
-    universe,
-    isRoot,
-    start,
-    soffset,
-    finish,
-    foffset
-  );
+  const clumps = Clumps.collect(universe, isRoot, start, soffset, finish, foffset);
   return Arr.bind(clumps, function (clump) {
-    return fracture(
-      universe,
-      isRoot,
-      clump.start,
-      clump.soffset,
-      clump.finish,
-      clump.foffset,
-      ceiling
-    ).toArray();
+    return fracture(universe, isRoot, clump.start, clump.soffset, clump.finish, clump.foffset, ceiling).toArray();
   });
 };
 

@@ -10,11 +10,7 @@ UnitTest.test('DomSearchTest', function () {
   const container = Element.fromTag('div');
   Insert.append(body, container);
 
-  const check = function (
-    expected: string,
-    rawTexts: string[],
-    words: string[]
-  ) {
+  const check = function (expected: string, rawTexts: string[], words: string[]) {
     const elements = Arr.map(rawTexts, function (x) {
       return Element.fromText(x);
     });
@@ -39,24 +35,10 @@ UnitTest.test('DomSearchTest', function () {
   check(
     '<span data-word="Sed">Sed</span> ut perspiciatis <span data-word="unde">u</span><span data-word="unde">nde</span>' +
       ' omnis <span data-word="iste">iste</span> natus error <span data-word="sit">sit</span> voluptatem',
-    [
-      'Sed',
-      ' ut per',
-      'spiciatis u',
-      'nde om',
-      'ni',
-      's iste',
-      ' natus',
-      ' error',
-      ' sit voluptatem'
-    ],
+    ['Sed', ' ut per', 'spiciatis u', 'nde om', 'ni', 's iste', ' natus', ' error', ' sit voluptatem'],
     ['Sed', 'iste', 'unde', 'sit']
   );
-  check(
-    '<span data-word="Sed">Sed</span> <span data-word="ut">ut</span> per',
-    ['Sed', ' ut per'],
-    ['Sed', 'ut']
-  );
+  check('<span data-word="Sed">Sed</span> <span data-word="ut">ut</span> per', ['Sed', ' ut per'], ['Sed', 'ut']);
 
   Remove.remove(container);
 });

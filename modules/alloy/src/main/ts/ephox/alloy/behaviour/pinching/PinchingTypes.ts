@@ -9,37 +9,18 @@ export interface PinchDragData {
   readonly deltaDistance: number;
 }
 
-export interface PinchingBehaviour
-  extends Behaviour.AlloyBehaviour<PinchingConfigSpec, PinchingConfig> {
-  readonly config: (
-    config: PinchingConfigSpec
-  ) => Behaviour.NamedConfiguredBehaviour<PinchingConfigSpec, PinchingConfig>;
+export interface PinchingBehaviour extends Behaviour.AlloyBehaviour<PinchingConfigSpec, PinchingConfig> {
+  readonly config: (config: PinchingConfigSpec) => Behaviour.NamedConfiguredBehaviour<PinchingConfigSpec, PinchingConfig>;
 }
 
 export interface PinchingConfig extends Behaviour.BehaviourConfigDetail {
-  readonly onPinch: (
-    element: Element,
-    changeX: number,
-    changeY: number
-  ) => void;
-  readonly onPunch: (
-    element: Element,
-    changeX: number,
-    changeY: number
-  ) => void;
+  readonly onPinch: (element: Element, changeX: number, changeY: number) => void;
+  readonly onPunch: (element: Element, changeX: number, changeY: number) => void;
 }
 
 export interface PinchingConfigSpec extends Behaviour.BehaviourConfigSpec {
-  readonly onPinch: (
-    element: Element,
-    changeX: number,
-    changeY: number
-  ) => void;
-  readonly onPunch: (
-    element: Element,
-    changeX: number,
-    changeY: number
-  ) => void;
+  readonly onPinch: (element: Element, changeX: number, changeY: number) => void;
+  readonly onPunch: (element: Element, changeX: number, changeY: number) => void;
 }
 
 export interface PinchingState extends BaseDraggingState<PinchDragData> {}

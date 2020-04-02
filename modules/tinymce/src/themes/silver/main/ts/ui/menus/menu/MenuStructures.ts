@@ -5,12 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloySpec,
-  Menu as AlloyMenu,
-  RawDomSchema,
-  ItemTypes
-} from '@ephox/alloy';
+import { AlloySpec, Menu as AlloyMenu, RawDomSchema, ItemTypes } from '@ephox/alloy';
 import { Arr, Fun, Obj } from '@ephox/katamari';
 
 const chunk = <I>(rowDom: RawDomSchema, numColumns: number) => (items: I[]) => {
@@ -54,12 +49,7 @@ const forToolbar = (columns: number) => ({
   dom: {
     tag: 'div',
     // TODO: Configurable lg setting?
-    classes: [
-      'tox-menu',
-      'tox-collection',
-      'tox-collection--toolbar',
-      'tox-collection--toolbar-lg'
-    ]
+    classes: ['tox-menu', 'tox-collection', 'tox-collection--toolbar', 'tox-collection--toolbar-lg']
   },
   components: [
     AlloyMenu.parts().items({
@@ -75,10 +65,7 @@ const forToolbar = (columns: number) => ({
 });
 
 // NOTE: That type signature isn't quite true.
-const preprocessCollection = (
-  items: ItemTypes.ItemSpec[],
-  isSeparator: (a: ItemTypes.ItemSpec, index: number) => boolean
-): AlloySpec[] => {
+const preprocessCollection = (items: ItemTypes.ItemSpec[], isSeparator: (a: ItemTypes.ItemSpec, index: number) => boolean): AlloySpec[] => {
   const allSplits = [];
   let currentSplit = [];
   Arr.each(items, (item, i) => {
@@ -108,16 +95,10 @@ const preprocessCollection = (
   }));
 };
 
-const forCollection = (
-  columns: number | 'auto',
-  initItems,
-  _hasIcons: boolean = true
-) => ({
+const forCollection = (columns: number | 'auto', initItems, _hasIcons: boolean = true) => ({
   dom: {
     tag: 'div',
-    classes: ['tox-menu', 'tox-collection'].concat(
-      columns === 1 ? ['tox-collection--list'] : ['tox-collection--grid']
-    )
+    classes: ['tox-menu', 'tox-collection'].concat(columns === 1 ? ['tox-collection--list'] : ['tox-collection--grid'])
   },
   components: [
     // TODO: Clean up code and test atomically
@@ -132,10 +113,7 @@ const forCollection = (
             columns
           )(items);
         } else {
-          return preprocessCollection(
-            items,
-            (_item, i) => initItems[i].type === 'separator'
-          );
+          return preprocessCollection(items, (_item, i) => initItems[i].type === 'separator');
         }
       }
     })
@@ -149,11 +127,7 @@ const forHorizontalCollection = (initItems, _hasIcons: boolean = true) => ({
   },
   components: [
     AlloyMenu.parts().items({
-      preprocess: (items: ItemTypes.ItemSpec[]) =>
-        preprocessCollection(
-          items,
-          (_item, i) => initItems[i].type === 'separator'
-        )
+      preprocess: (items: ItemTypes.ItemSpec[]) => preprocessCollection(items, (_item, i) => initItems[i].type === 'separator')
     })
   ]
 });

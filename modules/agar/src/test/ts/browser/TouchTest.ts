@@ -22,24 +22,15 @@ UnitTest.asynctest('TouchTest', (success, failure) => {
 
   let repository = [];
 
-  const handlers = Arr.bind(
-    ['touchstart', 'touchend', 'touchmove', 'focus'],
-    (evt) => [
-      DomEvent.bind(container, evt, () => repository.push('container.' + evt)),
-      DomEvent.bind(input, evt, () => repository.push('input.' + evt))
-    ]
-  );
+  const handlers = Arr.bind(['touchstart', 'touchend', 'touchmove', 'focus'], (evt) => [
+    DomEvent.bind(container, evt, () => repository.push('container.' + evt)),
+    DomEvent.bind(input, evt, () => repository.push('input.' + evt))
+  ]);
 
   const clearRepository = Step.sync(() => (repository = []));
-  const assertRepository = (label, expected) =>
-    Step.sync(() => Assertions.assertEq(label, expected, repository));
+  const assertRepository = (label, expected) => Step.sync(() => Assertions.assertEq(label, expected, repository));
 
-  const runStep = (label, expected, step) =>
-    GeneralSteps.sequence([
-      clearRepository,
-      step,
-      assertRepository(label, expected)
-    ]);
+  const runStep = (label, expected, step) => GeneralSteps.sequence([clearRepository, step, assertRepository(label, expected)]);
 
   const isUnfocusedFirefox = () =>
     // Focus events are not fired until the window has focus: https://bugzilla.mozilla.org/show_bug.cgi?id=566671
@@ -62,38 +53,16 @@ UnitTest.asynctest('TouchTest', (success, failure) => {
         'sTrueTapOn (container > input)',
         // IE seems to fire input.focus at the end.
         platform.browser.isIE()
-          ? [
-              'input.touchstart',
-              'container.touchstart',
-              'input.touchend',
-              'container.touchend',
-              'input.focus'
-            ]
+          ? ['input.touchstart', 'container.touchstart', 'input.touchend', 'container.touchend', 'input.focus']
           : isUnfocusedFirefox()
-          ? [
-              'input.touchstart',
-              'container.touchstart',
-              'input.touchend',
-              'container.touchend'
-            ]
-          : [
-              'input.focus',
-              'input.touchstart',
-              'container.touchstart',
-              'input.touchend',
-              'container.touchend'
-            ],
+          ? ['input.touchstart', 'container.touchstart', 'input.touchend', 'container.touchend']
+          : ['input.focus', 'input.touchstart', 'container.touchstart', 'input.touchend', 'container.touchend'],
         Touch.sTrueTapOn(container, 'input')
       ),
 
       runStep(
         'cTap input',
-        [
-          'input.touchstart',
-          'container.touchstart',
-          'input.touchend',
-          'container.touchend'
-        ],
+        ['input.touchstart', 'container.touchstart', 'input.touchend', 'container.touchend'],
         Chain.asStep(container, [UiFinder.cFindIn('input'), Touch.cTap])
       ),
 

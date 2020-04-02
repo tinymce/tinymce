@@ -2,11 +2,7 @@ import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Option, Result } from '@ephox/katamari';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
-import {
-  ComponentDetail,
-  SimpleOrSketchSpec,
-  StructDomSchema
-} from '../api/component/SpecTypes';
+import { ComponentDetail, SimpleOrSketchSpec, StructDomSchema } from '../api/component/SpecTypes';
 import { AlloyEventRecord } from '../api/events/AlloyEvents';
 import { DomDefinitionDetail } from '../dom/DomDefinition';
 import { DomModification, nu as NuModification } from '../dom/DomModification';
@@ -55,37 +51,13 @@ const toInfo = <A>(spec: ComponentDetail): Result<CustomDetail<A>, any> =>
         'eventOrder',
         FieldPresence.mergeWith({
           // Note, not using constant behaviour names to avoid code size of unused behaviours
-          'alloy.execute': [
-            'disabling',
-            'alloy.base.behaviour',
-            'toggling',
-            'typeaheadevents'
-          ],
+          'alloy.execute': ['disabling', 'alloy.base.behaviour', 'toggling', 'typeaheadevents'],
           'alloy.focus': ['alloy.base.behaviour', 'focusing', 'keying'],
-          'alloy.system.init': [
-            'alloy.base.behaviour',
-            'disabling',
-            'toggling',
-            'representing'
-          ],
-          'input': [
-            'alloy.base.behaviour',
-            'representing',
-            'streaming',
-            'invalidating'
-          ],
-          'alloy.system.detached': [
-            'alloy.base.behaviour',
-            'representing',
-            'item-events',
-            'tooltipping'
-          ],
+          'alloy.system.init': ['alloy.base.behaviour', 'disabling', 'toggling', 'representing'],
+          'input': ['alloy.base.behaviour', 'representing', 'streaming', 'invalidating'],
+          'alloy.system.detached': ['alloy.base.behaviour', 'representing', 'item-events', 'tooltipping'],
           'mousedown': ['focusing', 'alloy.base.behaviour', 'item-type-events'],
-          'touchstart': [
-            'focusing',
-            'alloy.base.behaviour',
-            'item-type-events'
-          ],
+          'touchstart': ['focusing', 'alloy.base.behaviour', 'item-type-events'],
           'mouseover': ['item-type-events', 'tooltipping'],
           'alloy.receive': ['receiving', 'reflecting']
         }),

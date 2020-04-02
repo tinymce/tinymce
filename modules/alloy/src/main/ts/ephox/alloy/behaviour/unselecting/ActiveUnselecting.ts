@@ -17,9 +17,6 @@ const exhibit = () =>
     }
   });
 
-const events = (): AlloyEvents.AlloyEventRecord =>
-  AlloyEvents.derive([
-    AlloyEvents.abort(NativeEvents.selectstart(), Fun.constant(true))
-  ]);
+const events = (): AlloyEvents.AlloyEventRecord => AlloyEvents.derive([AlloyEvents.abort(NativeEvents.selectstart(), Fun.constant(true))]);
 
 export { events, exhibit };

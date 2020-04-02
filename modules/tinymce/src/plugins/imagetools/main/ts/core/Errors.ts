@@ -57,9 +57,7 @@ const getServiceErrorMsg = function (type) {
 const getServiceError = function (text) {
   const serviceError = Utils.parseJson(text);
   const errorType = Utils.traverse(serviceError, ['error', 'type']);
-  const errorMsg = errorType
-    ? getServiceErrorMsg(errorType)
-    : 'Invalid JSON in service error message';
+  const errorMsg = errorType ? getServiceErrorMsg(errorType) : 'Invalid JSON in service error message';
 
   return 'ImageProxy Service error: ' + errorMsg;
 };
@@ -73,14 +71,7 @@ const handleServiceError = function (status, blob) {
 };
 
 const handleServiceErrorResponse = function (status, blob) {
-  return isServiceErrorCode(status)
-    ? handleServiceError(status, blob)
-    : handleHttpError(status);
+  return isServiceErrorCode(status) ? handleServiceError(status, blob) : handleHttpError(status);
 };
 
-export {
-  handleServiceErrorResponse,
-  handleHttpError,
-  getHttpErrorMsg,
-  getServiceErrorMsg
-};
+export { handleServiceErrorResponse, handleHttpError, getHttpErrorMsg, getServiceErrorMsg };

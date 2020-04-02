@@ -25,13 +25,7 @@ export interface CropRect extends Observable<any> {
   destroy: () => void;
 }
 
-const create = (
-  currentRect,
-  viewPortRect,
-  clampRect,
-  containerElm,
-  action
-): CropRect => {
+const create = (currentRect, viewPortRect, clampRect, containerElm, action): CropRect => {
   let instance;
   let dragHelpers;
   let blockers;
@@ -100,10 +94,7 @@ const create = (
     h: relativeRect.h
   });
 
-  const getRelativeRect = (
-    outerRect: GeomRect,
-    innerRect: GeomRect
-  ): GeomRect => ({
+  const getRelativeRect = (outerRect: GeomRect, innerRect: GeomRect): GeomRect => ({
     x: innerRect.x - outerRect.x,
     y: innerRect.y - outerRect.y,
     w: innerRect.w,
@@ -133,11 +124,7 @@ const create = (
       h = 20;
     }
 
-    rect = currentRect = Rect.clamp(
-      { x, y, w, h },
-      clampRect,
-      handle.name === 'move'
-    );
+    rect = currentRect = Rect.clamp({ x, y, w, h }, clampRect, handle.name === 'move');
     rect = getRelativeRect(clampRect, rect);
 
     instance.fire('updateRect', { rect });
@@ -161,24 +148,13 @@ const create = (
       });
     }
 
-    DomQuery(
-      '<div id="' +
-        id +
-        '" class="' +
-        prefix +
-        'croprect-container"' +
-        ' role="grid" aria-dropeffect="execute">'
-    ).appendTo(containerElm);
+    DomQuery('<div id="' + id + '" class="' + prefix + 'croprect-container"' + ' role="grid" aria-dropeffect="execute">').appendTo(
+      containerElm
+    );
 
     Tools.each(blockers, function (blocker) {
       DomQuery('#' + id, containerElm).append(
-        '<div id="' +
-          id +
-          '-' +
-          blocker +
-          '"class="' +
-          prefix +
-          'croprect-block" style="display: none" data-mce-bogus="all">'
+        '<div id="' + id + '-' + blocker + '"class="' + prefix + 'croprect-block" style="display: none" data-mce-bogus="all">'
       );
     });
 
@@ -209,10 +185,7 @@ const create = (
     repaint(currentRect);
 
     DomQuery(containerElm).on('focusin focusout', function (e) {
-      DomQuery(e.target).attr(
-        'aria-grabbed',
-        e.type === 'focus' ? 'true' : 'false'
-      );
+      DomQuery(e.target).attr('aria-grabbed', e.type === 'focus' ? 'true' : 'false');
     });
 
     DomQuery(containerElm).on('keydown', function (e) {

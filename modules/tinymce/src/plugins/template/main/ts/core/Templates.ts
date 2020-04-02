@@ -82,35 +82,17 @@ const insertTemplate = function (editor, ui, html) {
 
   Tools.each(dom.select('*', el), function (n) {
     // Replace cdate
-    if (
-      hasClass(n, Settings.getCreationDateClasses(editor).replace(/\s+/g, '|'))
-    ) {
-      n.innerHTML = DateTimeHelper.getDateTime(
-        editor,
-        Settings.getCdateFormat(editor)
-      );
+    if (hasClass(n, Settings.getCreationDateClasses(editor).replace(/\s+/g, '|'))) {
+      n.innerHTML = DateTimeHelper.getDateTime(editor, Settings.getCdateFormat(editor));
     }
 
     // Replace mdate
-    if (
-      hasClass(
-        n,
-        Settings.getModificationDateClasses(editor).replace(/\s+/g, '|')
-      )
-    ) {
-      n.innerHTML = DateTimeHelper.getDateTime(
-        editor,
-        Settings.getMdateFormat(editor)
-      );
+    if (hasClass(n, Settings.getModificationDateClasses(editor).replace(/\s+/g, '|'))) {
+      n.innerHTML = DateTimeHelper.getDateTime(editor, Settings.getMdateFormat(editor));
     }
 
     // Replace selection
-    if (
-      hasClass(
-        n,
-        Settings.getSelectedContentClasses(editor).replace(/\s+/g, '|')
-      )
-    ) {
+    if (hasClass(n, Settings.getSelectedContentClasses(editor).replace(/\s+/g, '|'))) {
       n.innerHTML = sel;
     }
   });
@@ -121,9 +103,4 @@ const insertTemplate = function (editor, ui, html) {
   editor.addVisual();
 };
 
-export {
-  createTemplateList,
-  replaceTemplateValues,
-  replaceVals,
-  insertTemplate
-};
+export { createTemplateList, replaceTemplateValues, replaceVals, insertTemplate };

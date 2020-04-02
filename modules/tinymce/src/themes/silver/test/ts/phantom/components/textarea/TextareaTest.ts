@@ -52,11 +52,7 @@ UnitTest.asynctest('Textarea component Test', (success, failure) => {
         RepresentingSteps.sAssertComposedValue('basic', 'New-Value', component),
 
         // Disabling state
-        DisablingSteps.sAssertDisabled(
-          'Initial disabled state',
-          false,
-          component
-        ),
+        DisablingSteps.sAssertDisabled('Initial disabled state', false, component),
         DisablingSteps.sSetDisabled('set disabled', component, true),
         DisablingSteps.sAssertDisabled('enabled > disabled', true, component)
       ],

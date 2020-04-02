@@ -20,30 +20,19 @@ import { AlloySpec } from '../component/SpecTypes';
 import { FloatingToolbarButton } from './FloatingToolbarButton';
 import * as Sketcher from './Sketcher';
 
-const buildGroups = (comps: AlloyComponent[]): AlloySpec[] =>
-  Arr.map(comps, (g) => GuiFactory.premade(g));
+const buildGroups = (comps: AlloyComponent[]): AlloySpec[] => Arr.map(comps, (g) => GuiFactory.premade(g));
 
-const refresh = (
-  toolbar: AlloyComponent,
-  memFloatingToolbarButton: Memento.MementoRecord,
-  detail: SplitFloatingToolbarDetail
-) => {
+const refresh = (toolbar: AlloyComponent, memFloatingToolbarButton: Memento.MementoRecord, detail: SplitFloatingToolbarDetail) => {
   SplitToolbarUtils.refresh(toolbar, detail, (overflowGroups) => {
     detail.overflowGroups.set(overflowGroups);
 
     memFloatingToolbarButton.getOpt(toolbar).each((floatingToolbarButton) => {
-      FloatingToolbarButton.setGroups(
-        floatingToolbarButton,
-        buildGroups(overflowGroups)
-      );
+      FloatingToolbarButton.setGroups(floatingToolbarButton, buildGroups(overflowGroups));
     });
   });
 };
 
-const factory: CompositeSketchFactory<
-  SplitFloatingToolbarDetail,
-  SplitFloatingToolbarSpec
-> = (detail, components, spec, externals) => {
+const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingToolbarSpec> = (detail, components, spec, externals) => {
   const memFloatingToolbarButton = Memento.record(
     FloatingToolbarButton.sketch({
       fetch: () =>
@@ -90,28 +79,19 @@ const factory: CompositeSketchFactory<
         detail.builtGroups.set(Arr.map(groups, toolbar.getSystem().build));
         refresh(toolbar, memFloatingToolbarButton, detail);
       },
-      refresh: (toolbar: AlloyComponent) =>
-        refresh(toolbar, memFloatingToolbarButton, detail),
+      refresh: (toolbar: AlloyComponent) => refresh(toolbar, memFloatingToolbarButton, detail),
       toggle: (toolbar: AlloyComponent) => {
-        memFloatingToolbarButton
-          .getOpt(toolbar)
-          .each((floatingToolbarButton) => {
-            FloatingToolbarButton.toggle(floatingToolbarButton);
-          });
+        memFloatingToolbarButton.getOpt(toolbar).each((floatingToolbarButton) => {
+          FloatingToolbarButton.toggle(floatingToolbarButton);
+        });
       },
       reposition: (toolbar: AlloyComponent) => {
-        memFloatingToolbarButton
-          .getOpt(toolbar)
-          .each((floatingToolbarButton) => {
-            FloatingToolbarButton.reposition(floatingToolbarButton);
-          });
+        memFloatingToolbarButton.getOpt(toolbar).each((floatingToolbarButton) => {
+          FloatingToolbarButton.reposition(floatingToolbarButton);
+        });
       },
       getOverflow: (toolbar: AlloyComponent) =>
-        memFloatingToolbarButton
-          .getOpt(toolbar)
-          .bind((floatingToolbarButton) =>
-            FloatingToolbarButton.getToolbar(floatingToolbarButton)
-          )
+        memFloatingToolbarButton.getOpt(toolbar).bind((floatingToolbarButton) => FloatingToolbarButton.getToolbar(floatingToolbarButton))
     },
 
     domModification: {

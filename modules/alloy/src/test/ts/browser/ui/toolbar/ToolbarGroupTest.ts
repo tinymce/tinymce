@@ -1,11 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  FocusTools,
-  Keyboard,
-  Keys,
-  Step
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
@@ -60,13 +53,7 @@ UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
 
             tgroupBehaviours: Behaviour.derive([Tabstopping.config({})]),
 
-            items: Arr.map(
-              [
-                { data: { value: 'a', text: 'A' } },
-                { data: { value: 'b', text: 'B' } }
-              ],
-              mungeItem
-            ),
+            items: Arr.map([{ data: { value: 'a', text: 'A' } }, { data: { value: 'b', text: 'B' } }], mungeItem),
             markers: {
               itemSelector: '.toolbar-item'
             }
@@ -76,11 +63,7 @@ UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
     (doc, _body, _gui, component: AlloyComponent, _store) => {
       const group1 = component
         .getSystem()
-        .getByDom(
-          SelectorFind.descendant(component.element(), '.test-group1').getOrDie(
-            'Could not find test-group1'
-          )
-        )
+        .getByDom(SelectorFind.descendant(component.element(), '.test-group1').getOrDie('Could not find test-group1'))
         .getOrDie();
 
       return [
@@ -112,17 +95,9 @@ UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
           Keying.focusIn(group1);
         }),
 
-        FocusTools.sTryOnSelector(
-          'Focus should start on A',
-          doc,
-          'button:contains("A")'
-        ),
+        FocusTools.sTryOnSelector('Focus should start on A', doc, 'button:contains("A")'),
         Keyboard.sKeydown(doc, Keys.right(), {}),
-        FocusTools.sTryOnSelector(
-          'Focus should move to B',
-          doc,
-          'button:contains("B")'
-        )
+        FocusTools.sTryOnSelector('Focus should move to B', doc, 'button:contains("B")')
       ];
     },
     () => {

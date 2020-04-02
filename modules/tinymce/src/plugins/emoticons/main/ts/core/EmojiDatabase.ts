@@ -45,8 +45,7 @@ export interface EmojiDatabase {
   listCategories: () => string[];
 }
 
-const translateCategory = (categories: Record<string, string>, name: string) =>
-  Obj.has(categories, name) ? categories[name] : name;
+const translateCategory = (categories: Record<string, string>, name: string) => (Obj.has(categories, name) ? categories[name] : name);
 
 const getUserDefinedEmoticons = (editor: Editor) => {
   const userDefinedEmoticons = Settings.getAppendedEmoticons(editor);
@@ -57,11 +56,7 @@ const getUserDefinedEmoticons = (editor: Editor) => {
 };
 
 // TODO: Consider how to share this loading across different editors
-const initDatabase = (
-  editor: Editor,
-  databaseUrl: string,
-  databaseId: string
-): EmojiDatabase => {
+const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): EmojiDatabase => {
   const categories = Cell<Option<Record<string, EmojiEntry[]>>>(Option.none());
   const all = Cell<Option<EmojiEntry[]>>(Option.none());
 
@@ -77,8 +72,7 @@ const initDatabase = (
         char: lib.char,
         category: translateCategory(categoryNameMap, lib.category)
       };
-      const current =
-        cats[entry.category] !== undefined ? cats[entry.category] : [];
+      const current = cats[entry.category] !== undefined ? cats[entry.category] : [];
       cats[entry.category] = current.concat([entry]);
       everything.push(entry);
     });
@@ -142,8 +136,7 @@ const initDatabase = (
     }
   };
 
-  const hasLoaded = (): boolean =>
-    categories.get().isSome() && all.get().isSome();
+  const hasLoaded = (): boolean => categories.get().isSome() && all.get().isSome();
 
   return {
     listCategories,

@@ -1,22 +1,11 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Logger,
-  Mouse,
-  Step,
-  Waiter
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Logger, Mouse, Step, Waiter } from '@ephox/agar';
 import { AlloyComponent, GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Menu, Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { Attr, Class, SelectorFind } from '@ephox/sugar';
 import { renderMenuButton } from 'tinymce/themes/silver/ui/button/MenuButton';
-import {
-  renderSplitButton,
-  renderToolbarButton,
-  renderToolbarToggleButton
-} from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
+import { renderSplitButton, renderToolbarButton, renderToolbarToggleButton } from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
 import TestExtras from '../../module/TestExtras';
 import TestProviders from '../../module/TestProviders';
 
@@ -121,10 +110,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                     api.setDisabled(shouldDisable.get());
                     api.setActive(shouldActivate.get());
                   },
-                  onItemAction: (
-                    api: Toolbar.ToolbarToggleButtonInstanceApi,
-                    _value: string
-                  ) => {
+                  onItemAction: (api: Toolbar.ToolbarToggleButtonInstanceApi, _value: string) => {
                     store.adder('onItemAction.3')();
                     api.setActive(true);
                   }
@@ -173,18 +159,10 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
       const getButton = (selector: string) =>
         component
           .getSystem()
-          .getByDom(
-            SelectorFind.descendant(component.element(), selector).getOrDie(
-              `Could not find button defined by: ${selector}`
-            )
-          )
+          .getByDom(SelectorFind.descendant(component.element(), selector).getOrDie(`Could not find button defined by: ${selector}`))
           .getOrDie();
 
-      const sAssertButtonDisabledState = (
-        label: string,
-        expected: boolean,
-        button: AlloyComponent
-      ) =>
+      const sAssertButtonDisabledState = (label: string, expected: boolean, button: AlloyComponent) =>
         Step.sync(() => {
           Assertions.assertEq(
             'Checking if disabled class is present: ' + label,
@@ -193,24 +171,12 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
           );
         });
 
-      const sAssertButtonActiveState = (
-        label: string,
-        expected: boolean,
-        button: AlloyComponent
-      ) =>
+      const sAssertButtonActiveState = (label: string, expected: boolean, button: AlloyComponent) =>
         Step.sync(() => {
-          Assertions.assertEq(
-            label,
-            expected,
-            Class.has(button.element(), 'tox-tbtn--enabled')
-          );
+          Assertions.assertEq(label, expected, Class.has(button.element(), 'tox-tbtn--enabled'));
         });
 
-      const sAssertSplitButtonDisabledState = (
-        label: string,
-        expected: boolean,
-        button: AlloyComponent
-      ) =>
+      const sAssertSplitButtonDisabledState = (label: string, expected: boolean, button: AlloyComponent) =>
         Step.sync(() => {
           Assertions.assertEq(
             'Checking if aria-disabled attr is present: ' + label,
@@ -224,29 +190,13 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
           );
         });
 
-      const sAssertSplitButtonActiveState = (
-        label: string,
-        expected: boolean,
-        button: AlloyComponent
-      ) =>
+      const sAssertSplitButtonActiveState = (label: string, expected: boolean, button: AlloyComponent) =>
         Step.sync(() => {
-          Assertions.assertEq(
-            label,
-            expected,
-            Attr.get(button.element(), 'aria-pressed') === 'true'
-          );
+          Assertions.assertEq(label, expected, Attr.get(button.element(), 'aria-pressed') === 'true');
         });
 
       return Arr.flatten([
-        (() => [
-          store.sAssertEq('Store should have setups only', [
-            'onSetup.1',
-            'onSetup.2',
-            'onSetup.3',
-            'onSetup.4'
-          ]),
-          store.sClear
-        ])(),
+        (() => [store.sAssertEq('Store should have setups only', ['onSetup.1', 'onSetup.2', 'onSetup.3', 'onSetup.4']), store.sClear])(),
 
         (() => {
           const button1 = getButton('.button1-container .tox-tbtn');
@@ -283,10 +233,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
             sAssertButtonDisabledState('Disabled', true, button1),
             store.sClear,
             Mouse.sClickOn(component.element(), '.button1-container .tox-tbtn'),
-            store.sAssertEq(
-              'No actions should come through a disabled button',
-              []
-            )
+            store.sAssertEq('No actions should come through a disabled button', [])
           ]);
         })(),
 
@@ -326,9 +273,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
               shouldDisable.set(true);
             }),
             Mouse.sClickOn(component.element(), '.button2-container .tox-tbtn'),
-            store.sAssertEq('Store should now have action2', [
-              'onToggleAction.2'
-            ]),
+            store.sAssertEq('Store should now have action2', ['onToggleAction.2']),
             store.sClear,
             sAssertButtonDisabledState('Disabled', true, button2),
             sAssertButtonActiveState('Off still', false, button2)
@@ -357,28 +302,20 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                       attrs: {
                         role: str.is('presentation')
                       },
-                      classes: [
-                        arr.has('tox-tbtn'),
-                        arr.has('tox-tbtn--select')
-                      ]
+                      classes: [arr.has('tox-tbtn'), arr.has('tox-tbtn--select')]
                     }),
                     s.element('span', {
                       attrs: {
                         role: str.is('presentation')
                       },
-                      classes: [
-                        arr.has('tox-tbtn'),
-                        arr.has('tox-split-button__chevron')
-                      ]
+                      classes: [arr.has('tox-tbtn'), arr.has('tox-split-button__chevron')]
                     }),
                     s.element('span', {
                       attrs: {
                         'aria-hidden': str.is('true'),
                         'style': str.contains('display: none;')
                       },
-                      children: [
-                        s.text(str.is('To open the popup, press Shift+Enter'))
-                      ]
+                      children: [s.text(str.is('To open the popup, press Shift+Enter'))]
                     })
                   ]
                 })
@@ -391,27 +328,16 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
               shouldActivate.set(false);
             }),
             // Toggle button
-            Mouse.sClickOn(
-              component.element(),
-              '.button3-container .tox-split-button .tox-tbtn'
-            ),
+            Mouse.sClickOn(component.element(), '.button3-container .tox-split-button .tox-tbtn'),
             store.sAssertEq('Store should have action3', ['onToggleAction.3']),
             store.sClear,
             sAssertSplitButtonDisabledState('Enabled', false, button3),
             sAssertSplitButtonActiveState('Off', false, button3),
 
             // Menu item selected
-            Mouse.sClickOn(
-              component.element(),
-              '.button3-container .tox-split-button .tox-split-button__chevron'
-            ),
-            Waiter.sTryUntil(
-              'Wait for split button menu item to show',
-              Mouse.sClickOn(body, '.tox-collection .tox-collection__item')
-            ),
-            store.sAssertEq('Store should have item action3', [
-              'onItemAction.3'
-            ]),
+            Mouse.sClickOn(component.element(), '.button3-container .tox-split-button .tox-split-button__chevron'),
+            Waiter.sTryUntil('Wait for split button menu item to show', Mouse.sClickOn(body, '.tox-collection .tox-collection__item')),
+            store.sAssertEq('Store should have item action3', ['onItemAction.3']),
             store.sClear,
             sAssertSplitButtonDisabledState('Enabled', false, button3),
             sAssertSplitButtonActiveState('Off', true, button3),
@@ -419,10 +345,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
             Step.sync(() => {
               shouldActivate.set(true);
             }),
-            Mouse.sClickOn(
-              component.element(),
-              '.button3-container .tox-split-button .tox-tbtn'
-            ),
+            Mouse.sClickOn(component.element(), '.button3-container .tox-split-button .tox-tbtn'),
             store.sAssertEq('Store should have action3', ['onToggleAction.3']),
             store.sClear,
             sAssertSplitButtonDisabledState('Disabled', false, button3),
@@ -431,10 +354,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
             Step.sync(() => {
               shouldActivate.set(false);
             }),
-            Mouse.sClickOn(
-              component.element(),
-              '.button3-container .tox-split-button .tox-tbtn'
-            ),
+            Mouse.sClickOn(component.element(), '.button3-container .tox-split-button .tox-tbtn'),
             store.sAssertEq('Store should have action3', ['onToggleAction.3']),
             store.sClear,
             sAssertSplitButtonDisabledState('Disabled', false, button3),
@@ -443,13 +363,8 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
             Step.sync(() => {
               shouldDisable.set(true);
             }),
-            Mouse.sClickOn(
-              component.element(),
-              '.button3-container .tox-split-button .tox-tbtn'
-            ),
-            store.sAssertEq('Store should now have action3', [
-              'onToggleAction.3'
-            ]),
+            Mouse.sClickOn(component.element(), '.button3-container .tox-split-button .tox-tbtn'),
+            store.sAssertEq('Store should now have action3', ['onToggleAction.3']),
             store.sClear,
             sAssertSplitButtonDisabledState('Disabled', true, button3),
             sAssertSplitButtonActiveState('Off still', false, button3)
@@ -487,10 +402,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
 
             // Select menu item
             Mouse.sClickOn(component.element(), '.button4-container .tox-mbtn'),
-            Waiter.sTryUntil(
-              'Wait for button menu to show',
-              Mouse.sClickOn(body, '.tox-collection .tox-collection__item')
-            ),
+            Waiter.sTryUntil('Wait for button menu to show', Mouse.sClickOn(body, '.tox-collection .tox-collection__item')),
             store.sAssertEq('Store should have item action4', ['onAction.4']),
             store.sClear
           ]);

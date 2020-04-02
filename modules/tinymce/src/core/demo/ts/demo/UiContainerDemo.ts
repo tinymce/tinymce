@@ -71,8 +71,7 @@ export default function () {
       {
         title: 'Some title 2',
         description: 'Some desc 2',
-        content:
-          '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>'
+        content: '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>'
       }
     ],
     template_cdate_format: '[CDATE: %m/%d/%Y : %H:%M:%S]',

@@ -58,10 +58,7 @@ UnitTest.asynctest('IFrame Dialog Test (webdriver)', (success, failure) => {
                     '<!doctype html><html><head>' +
                     '</head>' +
                     '<body><h1>Heading</h1>' +
-                    Arr.map(
-                      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                      (n) => '<p>This is paragraph: ' + n + '</p>'
-                    ).join('\n') +
+                    Arr.map([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], (n) => '<p>This is paragraph: ' + n + '</p>').join('\n') +
                     '</body>'
                 }
               },
@@ -79,11 +76,7 @@ UnitTest.asynctest('IFrame Dialog Test (webdriver)', (success, failure) => {
 
           RealKeys.sSendKeysOn('iframe => body', [RealKeys.text('\u0009')]),
 
-          FocusTools.sTryOnSelector(
-            'focus should be on button (cancel)',
-            doc,
-            'button:contains("cancel")'
-          ),
+          FocusTools.sTryOnSelector('focus should be on button (cancel)', doc, 'button:contains("cancel")'),
 
           // Tag it for using with selenium. Note, I should just
           // implement the automatic id tagging in agar, and
@@ -94,25 +87,13 @@ UnitTest.asynctest('IFrame Dialog Test (webdriver)', (success, failure) => {
             });
           }),
 
-          RealKeys.sSendKeysOn('.cancel-button', [
-            RealKeys.combo({ shiftKey: true }, '\u0009')
-          ]),
+          RealKeys.sSendKeysOn('.cancel-button', [RealKeys.combo({ shiftKey: true }, '\u0009')]),
 
-          FocusTools.sTryOnSelector(
-            'focus should move back to iframe (button >> iframe)',
-            doc,
-            'iframe'
-          ),
+          FocusTools.sTryOnSelector('focus should move back to iframe (button >> iframe)', doc, 'iframe'),
 
-          RealKeys.sSendKeysOn('iframe => body', [
-            RealKeys.combo({ shiftKey: true }, '\u0009')
-          ]),
+          RealKeys.sSendKeysOn('iframe => body', [RealKeys.combo({ shiftKey: true }, '\u0009')]),
 
-          FocusTools.sTryOnSelector(
-            'focus should move back to input (iframe >> input)',
-            doc,
-            'input'
-          )
+          FocusTools.sTryOnSelector('focus should move back to input (iframe >> input)', doc, 'input')
         ];
 
   Pipeline.async(

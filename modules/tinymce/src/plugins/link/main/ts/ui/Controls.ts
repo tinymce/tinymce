@@ -64,10 +64,7 @@ const setupContextMenu = function (editor: Editor) {
   const inLink = 'link unlink openlink';
   const noLink = 'link';
   editor.ui.registry.addContextMenu('link', {
-    update: (element) =>
-      Utils.hasLinks(editor.dom.getParents(element, 'a') as HTMLAnchorElement[])
-        ? inLink
-        : noLink
+    update: (element) => (Utils.hasLinks(editor.dom.getParents(element, 'a') as HTMLAnchorElement[]) ? inLink : noLink)
   });
 };
 
@@ -90,9 +87,7 @@ const setupContextToolbars = function (editor: Editor) {
       onSetup: Actions.toggleActiveState(editor)
     },
     label: 'Link',
-    predicate: (node) =>
-      !!Utils.getAnchorElement(editor, node) &&
-      Settings.hasContextToolbar(editor),
+    predicate: (node) => !!Utils.getAnchorElement(editor, node) && Settings.hasContextToolbar(editor),
     initValue: () => {
       const elm = Utils.getAnchorElement(editor);
       return !!elm ? Utils.getHref(elm) : '';
@@ -114,9 +109,7 @@ const setupContextToolbars = function (editor: Editor) {
           const value = formApi.getValue();
           if (!anchor) {
             const attachState = { href: value, attach: () => {} };
-            const onlyText = Utils.isOnlyTextSelected(
-              editor.selection.getContent()
-            );
+            const onlyText = Utils.isOnlyTextSelected(editor.selection.getContent());
             const text: Option<string> = onlyText
               ? Option.some(Utils.getAnchorText(editor.selection, anchor))
                   .filter((t) => t.length > 0)

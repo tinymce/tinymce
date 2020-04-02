@@ -17,11 +17,7 @@ UnitTest.test('atomic.tinymce.plugins.charmap.ScanTest', () => {
   };
 
   const testCharCode = () => {
-    Assertions.assertEq(
-      '$ should match the dollar sign',
-      [{ value: '$', icon: '$', text: 'dollar sign' }],
-      Scan.scan(charMap, '$')
-    );
+    Assertions.assertEq('$ should match the dollar sign', [{ value: '$', icon: '$', text: 'dollar sign' }], Scan.scan(charMap, '$'));
     Assertions.assertEq(
       'À should match the "A - grave" and "a - grave"',
       [

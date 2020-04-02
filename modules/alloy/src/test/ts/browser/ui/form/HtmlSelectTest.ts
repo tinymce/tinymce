@@ -1,10 +1,4 @@
-import {
-  Logger,
-  Pipeline,
-  Step,
-  ApproxStructure,
-  Assertions
-} from '@ephox/agar';
+import { Logger, Pipeline, Step, ApproxStructure, Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -28,29 +22,13 @@ UnitTest.asynctest('HtmlSelectTest', (success, failure) => {
           })
         ),
       (_doc, _body, _gui, component, _store) => [
-        RepresentPipes.sAssertValue(
-          'Checking initial value',
-          'alpha',
-          component
-        ),
+        RepresentPipes.sAssertValue('Checking initial value', 'alpha', component),
         RepresentPipes.sSetValue(component, 'beta'),
-        RepresentPipes.sAssertValue(
-          'Checking value after valid set',
-          'beta',
-          component
-        ),
+        RepresentPipes.sAssertValue('Checking value after valid set', 'beta', component),
         RepresentPipes.sSetValue(component, 'delta'),
-        RepresentPipes.sAssertValue(
-          'Checking value after invalid set (should still be on beta)',
-          'beta',
-          component
-        ),
+        RepresentPipes.sAssertValue('Checking value after invalid set (should still be on beta)', 'beta', component),
         RepresentPipes.sSetValue(component, 'gamma'),
-        RepresentPipes.sAssertValue(
-          'Checking value after valid set (should now be gamma)',
-          'gamma',
-          component
-        )
+        RepresentPipes.sAssertValue('Checking value after valid set (should now be gamma)', 'gamma', component)
       ],
       next,
       die
@@ -103,35 +81,15 @@ UnitTest.asynctest('HtmlSelectTest', (success, failure) => {
           component.element()
         ),
 
-        RepresentPipes.sAssertValue(
-          'Checking initial value',
-          'gamma',
-          component
-        ),
+        RepresentPipes.sAssertValue('Checking initial value', 'gamma', component),
         RepresentPipes.sSetValue(component, 'beta'),
-        RepresentPipes.sAssertValue(
-          'Checking value after valid set',
-          'beta',
-          component
-        ),
+        RepresentPipes.sAssertValue('Checking value after valid set', 'beta', component),
         RepresentPipes.sSetValue(component, 'delta'),
-        RepresentPipes.sAssertValue(
-          'Checking value after invalid set (should still be on beta)',
-          'beta',
-          component
-        ),
+        RepresentPipes.sAssertValue('Checking value after invalid set (should still be on beta)', 'beta', component),
         RepresentPipes.sSetValue(component, 'gamma'),
-        RepresentPipes.sAssertValue(
-          'Checking value after valid set (should now be gamma)',
-          'gamma',
-          component
-        ),
+        RepresentPipes.sAssertValue('Checking value after valid set (should now be gamma)', 'gamma', component),
         RepresentPipes.sSetValue(component, 'alpha'),
-        RepresentPipes.sAssertValue(
-          'Checking value after valid set (should now be alpha)',
-          'alpha',
-          component
-        )
+        RepresentPipes.sAssertValue('Checking value after valid set (should now be alpha)', 'alpha', component)
       ],
       next,
       die
@@ -140,10 +98,7 @@ UnitTest.asynctest('HtmlSelectTest', (success, failure) => {
 
   Pipeline.async(
     {},
-    [
-      Logger.t('Scenario: no initial value', sNoInitialValue),
-      Logger.t('Scenario: has initial value gamma', sHasInitialValue)
-    ],
+    [Logger.t('Scenario: no initial value', sNoInitialValue), Logger.t('Scenario: has initial value gamma', sHasInitialValue)],
     () => {
       success();
     },

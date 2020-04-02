@@ -1,11 +1,4 @@
-import {
-  Assertions,
-  Chain,
-  GeneralSteps,
-  Logger,
-  Pipeline,
-  UiFinder
-} from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Logger, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Strings } from '@ephox/katamari';
@@ -13,10 +6,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element, TextContent } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, failure) {
   Theme();
 
   const systemFontStackVariants = [
@@ -29,10 +19,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (
     return Chain.asStep(Element.fromDom(document.body), [
       UiFinder.cFindIn('*[title="' + title + '"]'),
       Chain.mapper(Fun.compose(Strings.trim, TextContent.get)),
-      Assertions.cAssertEq(
-        'Should be the expected display value',
-        expectedValue
-      )
+      Assertions.cAssertEq('Should be the expected display value', expectedValue)
     ]);
   };
 
@@ -80,9 +67,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (
           Logger.t(
             'Font family and font size on paragraph with styles that do match font size select values',
             GeneralSteps.sequence([
-              tinyApis.sSetContent(
-                '<p style="font-family: Times; font-size: 17px;">a</p>'
-              ),
+              tinyApis.sSetContent('<p style="font-family: Times; font-size: 17px;">a</p>'),
               tinyApis.sFocus(),
               tinyApis.sSetCursor([0, 0], 0),
               tinyApis.sNodeChanged(),
@@ -95,9 +80,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (
           Logger.t(
             'Font family and font size on paragraph with styles that do not match font size select values',
             GeneralSteps.sequence([
-              tinyApis.sSetContent(
-                '<p style="font-family: Times; font-size: 18px;">a</p>'
-              ),
+              tinyApis.sSetContent('<p style="font-family: Times; font-size: 18px;">a</p>'),
               tinyApis.sFocus(),
               tinyApis.sSetCursor([0, 0], 0),
               tinyApis.sNodeChanged(),
@@ -110,9 +93,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (
           Logger.t(
             'Font family and font size on paragraph with legacy font elements',
             GeneralSteps.sequence([
-              tinyApis.sSetRawContent(
-                '<p><font face="Times" size="1">a</font></p>'
-              ),
+              tinyApis.sSetRawContent('<p><font face="Times" size="1">a</font></p>'),
               tinyApis.sFocus(),
               tinyApis.sSetCursor([0, 0, 0], 0),
               tinyApis.sNodeChanged(),
@@ -125,15 +106,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (
             'System font stack variants on a paragraph show "System Font" as the font name',
             GeneralSteps.sequence([
               tinyApis.sSetContent(
-                Arr.foldl(
-                  systemFontStackVariants,
-                  (acc, font) =>
-                    acc +
-                    '<p style="font-family: ' +
-                    font.replace(/"/g, `'`) +
-                    '"></p>',
-                  ''
-                )
+                Arr.foldl(systemFontStackVariants, (acc, font) => acc + '<p style="font-family: ' + font.replace(/"/g, `'`) + '"></p>', '')
               ),
               tinyApis.sFocus(),
               ...Arr.bind(systemFontStackVariants, (_, idx) => [

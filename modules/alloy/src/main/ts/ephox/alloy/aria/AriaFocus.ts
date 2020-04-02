@@ -6,9 +6,7 @@ const preserve = <T>(f: (e: Element) => T, container: Element): T => {
 
   const refocus = Focus.active(ownerDoc).bind((focused: Element) => {
     const hasFocus = (elem: Element) => Compare.eq(focused, elem);
-    return hasFocus(container)
-      ? Option.some(container)
-      : PredicateFind.descendant(container, hasFocus);
+    return hasFocus(container) ? Option.some(container) : PredicateFind.descendant(container, hasFocus);
   });
 
   const result = f(container);

@@ -9,11 +9,7 @@ import { Strings, Obj } from '@ephox/katamari';
 import Tools from '../util/Tools';
 import Entities from './Entities';
 import Schema from './Schema';
-import {
-  extractBase64DataUris,
-  restoreDataUris,
-  Base64Extract
-} from '../../html/Base64Uris';
+import { extractBase64DataUris, restoreDataUris, Base64Extract } from '../../html/Base64Uris';
 
 /**
  * This class parses HTML code using pure JavaScript and executes various events for each item it finds. It will
@@ -103,17 +99,13 @@ const enum MatchType {
   Attribute = 9
 }
 
-const isValidPrefixAttrName = (name: string): boolean =>
-  name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
+const isValidPrefixAttrName = (name: string): boolean => name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
 
 const isInvalidUri = (settings: SaxParserSettings, uri: string) => {
   if (settings.allow_html_data_urls) {
     return false;
   } else if (/^data:image\//i.test(uri)) {
-    return (
-      settings.allow_svg_data_urls === false &&
-      /^data:image\/svg\+xml/i.test(uri)
-    );
+    return settings.allow_svg_data_urls === false && /^data:image\/svg\+xml/i.test(uri);
   } else {
     return /^data:/i.test(uri);
   }
@@ -130,11 +122,7 @@ const isInvalidUri = (settings: SaxParserSettings, uri: string) => {
  * @param {Number} startIndex Index to start searching at should be after the start tag.
  * @return {Number} Index of the end tag.
  */
-const findEndTagIndex = (
-  schema: Schema,
-  html: string,
-  startIndex: number
-): number => {
+const findEndTagIndex = (schema: Schema, html: string, startIndex: number): number => {
   let count = 1,
     index,
     matches,
@@ -168,19 +156,11 @@ const findEndTagIndex = (
   return index;
 };
 
-const isConditionalComment = (html: string, startIndex: number) =>
-  /^\s*\[if [\w\W]+\]>.*<!\[endif\](--!?)?>/.test(html.substr(startIndex));
+const isConditionalComment = (html: string, startIndex: number) => /^\s*\[if [\w\W]+\]>.*<!\[endif\](--!?)?>/.test(html.substr(startIndex));
 
-const findCommentEndIndex = (
-  html: string,
-  isBogus: boolean,
-  startIndex: number = 0
-) => {
+const findCommentEndIndex = (html: string, isBogus: boolean, startIndex: number = 0) => {
   const lcHtml = html.toLowerCase();
-  if (
-    lcHtml.indexOf('[if ', startIndex) !== -1 &&
-    isConditionalComment(lcHtml, startIndex)
-  ) {
+  if (lcHtml.indexOf('[if ', startIndex) !== -1 && isConditionalComment(lcHtml, startIndex)) {
     const endIfIndex = lcHtml.indexOf('[endif]', startIndex);
     return lcHtml.indexOf('>', endIfIndex);
   } else {
@@ -196,19 +176,14 @@ const findCommentEndIndex = (
   }
 };
 
-const checkBogusAttribute = (
-  regExp: RegExp,
-  attrString: string
-): string | null => {
+const checkBogusAttribute = (regExp: RegExp, attrString: string): string | null => {
   const matches = regExp.exec(attrString);
 
   if (matches) {
     const name = matches[1];
     const value = matches[2];
 
-    return typeof name === 'string' && name.toLowerCase() === 'data-mce-bogus'
-      ? value
-      : null;
+    return typeof name === 'string' && name.toLowerCase() === 'data-mce-bogus' ? value : null;
   } else {
     return null;
   }
@@ -239,10 +214,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
   const pi = settings.pi ? settings.pi : noop;
   const doctype = settings.doctype ? settings.doctype : noop;
 
-  const parseInternal = (
-    base64Extract: Base64Extract,
-    format: ParserFormat = 'html'
-  ) => {
+  const parseInternal = (base64Extract: Base64Extract, format: ParserFormat = 'html') => {
     const html = base64Extract.html;
     let matches,
       index = 0,
@@ -250,18 +222,8 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
       endRegExp;
     const stack = [];
     let attrList, i, textData, name;
-    let isInternalElement,
-      removeInternalElements,
-      shortEndedElements,
-      fillAttrsMap,
-      isShortEnded;
-    let validate,
-      elementRule,
-      isValidElement,
-      attr,
-      attribsValue,
-      validAttributesMap,
-      validAttributePatterns;
+    let isInternalElement, removeInternalElements, shortEndedElements, fillAttrsMap, isShortEnded;
+    let validate, elementRule, isValidElement, attr, attribsValue, validAttributesMap, validAttributePatterns;
     let attributesRequired, attributesDefault, attributesForced, processHtml;
     let anyAttributesRequired,
       selfClosing,
@@ -272,9 +234,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
       idCount = 0;
     const decode = Entities.decode;
     let fixSelfClosing;
-    const filteredUrlAttrs = Tools.makeMap(
-      'src,href,data,background,formaction,poster,xlink:href'
-    );
+    const filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster,xlink:href');
     const scriptUriRegExp = /((java|vb)script|mhtml):/i;
     const parsingMode = format === 'html' ? ParsingMode.Html : ParsingMode.Xml;
 
@@ -305,8 +265,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
       }
     };
 
-    const processText = (value: string, raw?: boolean) =>
-      text(restoreDataUris(value, base64Extract), raw);
+    const processText = (value: string, raw?: boolean) => text(restoreDataUris(value, base64Extract), raw);
 
     const processComment = (value: string) => {
       // Ignore empty comments
@@ -319,18 +278,14 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
         value = ' ' + value;
       }
 
-      if (
-        !settings.allow_conditional_comments &&
-        value.substr(0, 3).toLowerCase() === '[if'
-      ) {
+      if (!settings.allow_conditional_comments && value.substr(0, 3).toLowerCase() === '[if') {
         value = ' ' + value;
       }
 
       comment(restoreDataUris(value, base64Extract));
     };
 
-    const processAttr = (value: string) =>
-      Obj.get(base64Extract.uris, value).getOr(value);
+    const processAttr = (value: string) => Obj.get(base64Extract.uris, value).getOr(value);
 
     const processMalformedComment = (value: string, startIndex: number) => {
       const startTag = value || '';
@@ -345,27 +300,15 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
       return endIndex + 1;
     };
 
-    const parseAttribute = (
-      match: string,
-      name: string,
-      value?: string,
-      val2?: string,
-      val3?: string
-    ) => {
+    const parseAttribute = (match: string, name: string, value?: string, val2?: string, val3?: string) => {
       let attrRule, i;
       const trimRegExp = /[\s\u0000-\u001F]+/g;
 
       name = name.toLowerCase();
-      value = processAttr(
-        name in fillAttrsMap ? name : decode(value || val2 || val3 || '')
-      ); // Handle boolean attribute than value attribute
+      value = processAttr(name in fillAttrsMap ? name : decode(value || val2 || val3 || '')); // Handle boolean attribute than value attribute
 
       // Validate name and value pass through all data- attributes
-      if (
-        validate &&
-        !isInternalElement &&
-        isValidPrefixAttrName(name) === false
-      ) {
+      if (validate && !isInternalElement && isValidPrefixAttrName(name) === false) {
         attrRule = validAttributesMap[name];
 
         // Find rule by pattern matching
@@ -417,10 +360,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
       }
 
       // Block data or event attributes on elements marked as internal
-      if (
-        isInternalElement &&
-        (name in filteredUrlAttrs || name.indexOf('on') === 0)
-      ) {
+      if (isInternalElement && (name in filteredUrlAttrs || name.indexOf('on') === 0)) {
         return;
       }
 
@@ -450,8 +390,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
 
     // Setup lookup tables for empty elements and boolean attributes
     shortEndedElements = schema.getShortEndedElements();
-    selfClosing =
-      settings.self_closing_elements || schema.getSelfClosingElements();
+    selfClosing = settings.self_closing_elements || schema.getSelfClosingElements();
     fillAttrsMap = schema.getBoolAttrs();
     validate = settings.validate;
     removeInternalElements = settings.remove_internals;
@@ -498,20 +437,12 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
         isShortEnded = value in shortEndedElements;
 
         // Is self closing tag for example an <li> after an open <li>
-        if (
-          fixSelfClosing &&
-          selfClosing[value] &&
-          stack.length > 0 &&
-          stack[stack.length - 1].name === value
-        ) {
+        if (fixSelfClosing && selfClosing[value] && stack.length > 0 && stack[stack.length - 1].name === value) {
           processEndTag(value);
         }
 
         // Always invalidate element if it's marked as bogus
-        const bogusValue = checkBogusAttribute(
-          attrRegExp,
-          matches[MatchType.Attribute]
-        );
+        const bogusValue = checkBogusAttribute(attrRegExp, matches[MatchType.Attribute]);
         if (bogusValue !== null) {
           if (bogusValue === 'all') {
             index = findEndTagIndex(schema, html, tokenRegExp.lastIndex);
@@ -662,10 +593,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
 
         // Push value on to stack
         if (!isShortEnded) {
-          if (
-            !attribsValue ||
-            attribsValue.indexOf('/') !== attribsValue.length - 1
-          ) {
+          if (!attribsValue || attribsValue.indexOf('/') !== attribsValue.length - 1) {
             stack.push({ name: value, valid: isValidElement });
           } else if (isValidElement) {
             end(value);
@@ -681,8 +609,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
         const isValidCdataSection =
           parsingMode === ParsingMode.Xml ||
           settings.preserve_cdata ||
-          (stack.length > 0 &&
-            schema.isValidChild(stack[stack.length - 1].name, '#cdata'));
+          (stack.length > 0 && schema.isValidChild(stack[stack.length - 1].name, '#cdata'));
         if (isValidCdataSection) {
           cdata(value);
         } else {
@@ -693,15 +620,9 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
       } else if ((value = matches[MatchType.Doctype])) {
         // DOCTYPE
         doctype(value);
-      } else if (
-        (value = matches[MatchType.MalformedComment]) ||
-        matchText === '<!'
-      ) {
+      } else if ((value = matches[MatchType.MalformedComment]) || matchText === '<!') {
         // Malformed comment
-        index = processMalformedComment(
-          value,
-          matches.index + matchText.length
-        );
+        index = processMalformedComment(value, matches.index + matchText.length);
         tokenRegExp.lastIndex = index;
         continue;
       } else if ((value = matches[MatchType.ProcessingInstruction])) {

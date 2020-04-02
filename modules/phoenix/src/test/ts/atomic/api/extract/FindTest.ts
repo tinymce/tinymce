@@ -8,10 +8,7 @@ UnitTest.test('api.Extract.find', function () {
   const doc = TestUniverse(
     Gene('root', 'root', [
       Gene('1', 'div', [
-        Gene('1.1', 'p', [
-          Gene('1.1.1', 'img', []),
-          TextGene('1.1.2', 'post-image text')
-        ]),
+        Gene('1.1', 'p', [Gene('1.1.1', 'img', []), TextGene('1.1.2', 'post-image text')]),
         Gene('1.2', 'p', [
           TextGene('1.2.1', 'This is text'),
           Gene('1.2.2', 'span', [TextGene('1.2.2.1', 'inside a span')]),
@@ -23,11 +20,7 @@ UnitTest.test('api.Extract.find', function () {
     ])
   );
 
-  const check = function (
-    expected: Option<{ id: string; offset: number }>,
-    topId: string,
-    offset: number
-  ) {
+  const check = function (expected: Option<{ id: string; offset: number }>, topId: string, offset: number) {
     const top = Finder.get(doc, topId);
     const actual = Extract.find(doc, top, offset);
     expected.fold(
@@ -50,9 +43,5 @@ UnitTest.test('api.Extract.find', function () {
 
   /* Note, it's hard to know whether something should favour being at the end of the previous or the start of the next */
   check(Option.some({ id: '1.1.2', offset: 2 }), 'root', 3);
-  check(
-    Option.some({ id: '1.2.4.1', offset: 3 }),
-    '1.2',
-    'This is textinside a spanMore textIns'.length
-  );
+  check(Option.some({ id: '1.2.4.1', offset: 3 }), '1.2', 'This is textinside a spanMore textIns'.length);
 });

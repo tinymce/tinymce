@@ -5,10 +5,7 @@ import { Gene } from '../api/Gene';
 
 const extract = function (item: Gene): string[] {
   const self = item.id;
-  const rest =
-    item.children && item.children.length > 0
-      ? Arr.bind(item.children, extract)
-      : [];
+  const rest = item.children && item.children.length > 0 ? Arr.bind(item.children, extract) : [];
   return [self].concat(rest);
 };
 
@@ -54,9 +51,7 @@ const nextSibling = function (item: Gene): Option<Gene> {
     return item.id === x.id;
   });
   return itemIndex.bind(function (iIndex) {
-    return iIndex < kin.length - 1
-      ? Option.some(kin[iIndex + 1])
-      : Option.none();
+    return iIndex < kin.length - 1 ? Option.some(kin[iIndex + 1]) : Option.none();
   });
 };
 

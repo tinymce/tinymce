@@ -4,16 +4,12 @@ import * as Comparator from './Comparator';
 
 const selector = function (item: Gene, query: string): Option<Gene> {
   return item.parent.bind(function (parent) {
-    return Comparator.is(parent, query)
-      ? Option.some(parent)
-      : selector(parent, query);
+    return Comparator.is(parent, query) ? Option.some(parent) : selector(parent, query);
   });
 };
 
 const closest = function (scope: Gene, query: string) {
-  return Comparator.is(scope, query)
-    ? Option.some(scope)
-    : selector(scope, query);
+  return Comparator.is(scope, query) ? Option.some(scope) : selector(scope, query);
 };
 
 const top = function (item: Gene): Gene {

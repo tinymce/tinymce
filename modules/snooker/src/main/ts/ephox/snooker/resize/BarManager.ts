@@ -1,24 +1,12 @@
 import { Dragger } from '@ephox/dragster';
 import { Fun, Option } from '@ephox/katamari';
 import { Event, Events, Bindable } from '@ephox/porkbun';
-import {
-  Attr,
-  Body,
-  Class,
-  Compare,
-  Css,
-  DomEvent,
-  Element,
-  SelectorFind
-} from '@ephox/sugar';
+import { Attr, Body, Class, Compare, Css, DomEvent, Element, SelectorFind } from '@ephox/sugar';
 import * as Styles from '../style/Styles';
 import * as CellUtils from '../util/CellUtils';
 import { BarMutation } from './BarMutation';
 import * as Bars from './Bars';
-import {
-  isContentEditableTrue,
-  findClosestContentEditable
-} from '../alien/ContentEditable';
+import { isContentEditableTrue, findClosestContentEditable } from '../alien/ContentEditable';
 import { ResizeWire } from '../api/ResizeWire';
 import { BarPositions, RowInfo, ColInfo } from './BarPositions';
 
@@ -49,11 +37,7 @@ export interface DragAdjustEvents {
 
 const resizeBarDragging = Styles.resolve('resizer-bar-dragging');
 
-export const BarManager = function (
-  wire: ResizeWire,
-  direction: BarPositions<ColInfo>,
-  hdirection: BarPositions<RowInfo>
-) {
+export const BarManager = function (wire: ResizeWire, direction: BarPositions<ColInfo>, hdirection: BarPositions<RowInfo>) {
   const mutation = BarMutation();
   const resizing = Dragger.transform(mutation, {});
 

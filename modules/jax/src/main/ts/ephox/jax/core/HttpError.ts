@@ -16,8 +16,5 @@ export interface HttpError {
   responseText: string;
 }
 
-export const httpError = <T>(
-  status: number,
-  message: string,
-  responseText: string
-): Result<T, HttpError> => Result.error<T>({ message, status, responseText });
+export const httpError = <T>(status: number, message: string, responseText: string): Result<T, HttpError> =>
+  Result.error<T>({ message, status, responseText });

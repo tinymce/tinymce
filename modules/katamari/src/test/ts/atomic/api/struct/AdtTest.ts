@@ -25,12 +25,9 @@ UnitTest.test('ADT Test', () => {
   };
 
   const checkInvalidGenerate = (cases, message) => {
-    checkInvalid(
-      'generate() did not throw an error. Input: "' + message + '"',
-      () => {
-        Adt.generate(cases);
-      }
-    );
+    checkInvalid('generate() did not throw an error. Input: "' + message + '"', () => {
+      Adt.generate(cases);
+    });
   };
 
   checkInvalidGenerate({}, 'object instead of array');
@@ -115,21 +112,13 @@ UnitTest.test('ADT Test', () => {
   Assert.eq('eq', 'cheese', adtActual.fold(die, die, die, cheese));
 });
 
-const newAdt = Adt.generate([
-  { nothing: [] },
-  { unknown: ['guesses'] },
-  { exact: ['value', 'precision'] }
-]);
+const newAdt = Adt.generate([{ nothing: [] }, { unknown: ['guesses'] }, { exact: ['value', 'precision'] }]);
 
 const arbNothing = fc.constant(newAdt.nothing());
 
-const arbUnknown = fc
-  .array(fc.string())
-  .map((guesses) => newAdt.unknown(guesses));
+const arbUnknown = fc.array(fc.string()).map((guesses) => newAdt.unknown(guesses));
 
-const arbExact = fc
-  .tuple(fc.integer(), fc.integer())
-  .map((arr) => newAdt.exact(arr[0], arr[1]));
+const arbExact = fc.tuple(fc.integer(), fc.integer()).map((arr) => newAdt.exact(arr[0], arr[1]));
 
 const arbAdt = fc.oneof(arbNothing, arbUnknown, arbExact);
 
@@ -178,11 +167,7 @@ UnitTest.test('adt.nothing.match should be same as fold', () => {
         exact: Fun.die('should not be exact')
       });
 
-      const folded = subject.fold(
-        record,
-        Fun.die('should not be unknown'),
-        Fun.die('should not be exact')
-      );
+      const folded = subject.fold(record, Fun.die('should not be unknown'), Fun.die('should not be exact'));
       Assert.eq('eq', matched, folded);
     })
   );
@@ -210,31 +195,24 @@ UnitTest.test('adt.unknown.match should be same as fold', () => {
         exact: Fun.die('should not be exact')
       });
 
-      const folded = subject.fold(
-        Fun.die('should not be nothing'),
-        record,
-        Fun.die('should not be exact')
-      );
+      const folded = subject.fold(Fun.die('should not be nothing'), record, Fun.die('should not be exact'));
       Assert.eq('eq', matched, folded);
     })
   );
 });
 
-UnitTest.test(
-  'adt.exact.match should pass 2 parameters [ value, precision ]',
-  () => {
-    fc.assert(
-      fc.property(arbExact, (subject) => {
-        const contents = subject.match({
-          nothing: Fun.die('should not be nothing'),
-          unknown: Fun.die('should not be unknown'),
-          exact: record
-        });
-        Assert.eq('eq', 2, contents.length);
-      })
-    );
-  }
-);
+UnitTest.test('adt.exact.match should pass 2 parameters [ value, precision ]', () => {
+  fc.assert(
+    fc.property(arbExact, (subject) => {
+      const contents = subject.match({
+        nothing: Fun.die('should not be nothing'),
+        unknown: Fun.die('should not be unknown'),
+        exact: record
+      });
+      Assert.eq('eq', 2, contents.length);
+    })
+  );
+});
 
 UnitTest.test('adt.exact.match should be same as fold', () => {
   fc.assert(
@@ -245,32 +223,25 @@ UnitTest.test('adt.exact.match should be same as fold', () => {
         exact: record
       });
 
-      const folded = subject.fold(
-        Fun.die('should not be nothing'),
-        Fun.die('should not be unknown'),
-        record
-      );
+      const folded = subject.fold(Fun.die('should not be nothing'), Fun.die('should not be unknown'), record);
       Assert.eq('eq', matched, folded);
     })
   );
 });
 
-UnitTest.test(
-  'adt.match must have the right arguments, not just the right number',
-  () => {
-    fc.assert(
-      fc.property(arbAdt, (subject) => {
-        try {
-          subject.match({
-            not: Fun.identity,
-            the: Fun.identity,
-            right: Fun.identity
-          });
-          return false;
-        } catch (err) {
-          return err.message.indexOf('nothing') > -1;
-        }
-      })
-    );
-  }
-);
+UnitTest.test('adt.match must have the right arguments, not just the right number', () => {
+  fc.assert(
+    fc.property(arbAdt, (subject) => {
+      try {
+        subject.match({
+          not: Fun.identity,
+          the: Fun.identity,
+          right: Fun.identity
+        });
+        return false;
+      } catch (err) {
+        return err.message.indexOf('nothing') > -1;
+      }
+    })
+  );
+});

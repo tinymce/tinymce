@@ -9,10 +9,7 @@ UnitTest.test('GroupTest', function () {
   const doc = TestUniverse(
     Gene('root', 'root', [
       Gene('1', 'div', [
-        Gene('1.1', 'p', [
-          Gene('1.1.1', 'img', []),
-          TextGene('1.1.2', 'post-image text')
-        ]),
+        Gene('1.1', 'p', [Gene('1.1.1', 'img', []), TextGene('1.1.2', 'post-image text')]),
         Gene('1.2', 'p', [
           TextGene('1.2.1', 'This is text'),
           Gene('1.2.2', 'span', [TextGene('1.2.2.1', 'inside a span')]),
@@ -41,13 +38,7 @@ UnitTest.test('GroupTest', function () {
     [
       ['empty(1.1.1)'],
       ['text("post-image text")'],
-      [
-        'text("This is text")',
-        'text("inside a span")',
-        'text("More text")',
-        'text("Inside em")',
-        'text("Last piece of text")'
-      ]
+      ['text("This is text")', 'text("inside a span")', 'text("More text")', 'text("Inside em")', 'text("Last piece of text")']
     ],
     ['1']
   );

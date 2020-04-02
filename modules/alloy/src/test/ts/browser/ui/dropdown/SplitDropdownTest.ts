@@ -1,14 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  FocusTools,
-  Keyboard,
-  Keys,
-  Mouse,
-  Touch,
-  UiFinder,
-  Waiter
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, Touch, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Future, Option, Result } from '@ephox/katamari';
 import { Attr } from '@ephox/sugar';
@@ -53,20 +43,14 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
           onExecute(dropdown, button) {
             const arg0Name = Attr.get(dropdown.element(), 'data-test-id');
             const arg1Name = Attr.get(button.element(), 'data-test-id');
-            store.adderH(
-              'dropdown.execute(' + arg0Name + ', ' + arg1Name + ')'
-            )();
+            store.adderH('dropdown.execute(' + arg0Name + ', ' + arg1Name + ')')();
           },
           onItemExecute(dropdown, tieredMenu, item) {
             const arg0Name = Attr.get(dropdown.element(), 'data-test-id');
             const arg1Name = Attr.get(tieredMenu.element(), 'data-test-id');
             const arg2Name = Attr.get(item.element(), 'data-test-id');
             AlloyTriggers.emit(item, SystemEvents.sandboxClose());
-            store.adderH(
-              'dropdown.item.execute(' +
-                [arg0Name, arg1Name, arg2Name].join(', ') +
-                ')'
-            )();
+            store.adderH('dropdown.item.execute(' + [arg0Name, arg1Name, arg2Name].join(', ') + ')')();
           },
 
           components: [
@@ -100,11 +84,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
           ],
 
           lazySink: (c: AlloyComponent) => {
-            TestDropdownMenu.assertLazySinkArgs(
-              'span',
-              'test-split-dropdown',
-              c
-            );
+            TestDropdownMenu.assertLazySinkArgs('span', 'test-split-dropdown', c);
             // Only gets here is the above assertion passes.
             return Result.value(sink.get(c));
           },
@@ -177,23 +157,14 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
         store.sClear,
         store.sAssertEq('Should be empty', []),
         Mouse.sClickOn(gui.element(), '.test-split-button-action'),
-        store.sAssertEq('After clicking on action', [
-          'dropdown.execute(split-dropdown, split-dropdown-button)'
-        ]),
+        store.sAssertEq('After clicking on action', ['dropdown.execute(split-dropdown, split-dropdown-button)']),
         UiFinder.sNotExists(gui.element(), '[role="menu"]'),
         store.sClear,
 
         Mouse.sClickOn(gui.element(), '.test-split-button-arrow'),
         store.sAssertEq('After clicking on action', []),
-        Waiter.sTryUntil(
-          'Waiting until menu appears',
-          UiFinder.sExists(gui.element(), '[role="menu"]')
-        ),
-        FocusTools.sTryOnSelector(
-          'Focus should be on alpha',
-          doc,
-          'li:contains("Alpha")'
-        ),
+        Waiter.sTryUntil('Waiting until menu appears', UiFinder.sExists(gui.element(), '[role="menu"]')),
+        FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains("Alpha")'),
         Assertions.sAssertStructure(
           'Check menu opened structure',
           ApproxStructure.build((s, str, arr) =>
@@ -227,37 +198,24 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
         // Now, let's do some keyboard testing. Pressing space and enter should trigger execute
         store.sAssertEq('Before keyboard testing: should be clear', []),
         Keyboard.sKeydown(doc, Keys.space(), {}),
-        store.sAssertEq('After space on button', [
-          'dropdown.execute(split-dropdown, split-dropdown-button)'
-        ]),
+        store.sAssertEq('After space on button', ['dropdown.execute(split-dropdown, split-dropdown-button)']),
         // NOTE: this sNotExists isn't 100% fool-proof. We should probably wait first because
         // it is async ... however, how long to wait?
         UiFinder.sNotExists(gui.element(), '[role="menu"]'),
         store.sClear,
         Keyboard.sKeydown(doc, Keys.enter(), {}),
-        store.sAssertEq('After enter on button', [
-          'dropdown.execute(split-dropdown, split-dropdown-button)'
-        ]),
+        store.sAssertEq('After enter on button', ['dropdown.execute(split-dropdown, split-dropdown-button)']),
         UiFinder.sNotExists(gui.element(), '[role="menu"]'),
         store.sClear,
 
         Keyboard.sKeydown(doc, Keys.down(), {}),
         store.sAssertEq('After down on button', []),
-        Waiter.sTryUntil(
-          'Waiting until menu appears',
-          UiFinder.sExists(gui.element(), '[role="menu"]')
-        ),
-        FocusTools.sTryOnSelector(
-          'Focus should be on alpha',
-          doc,
-          'li:contains("Alpha")'
-        ),
+        Waiter.sTryUntil('Waiting until menu appears', UiFinder.sExists(gui.element(), '[role="menu"]')),
+        FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains("Alpha")'),
 
         // Now press enter on one of the items
         Keyboard.sKeydown(doc, Keys.enter(), {}),
-        store.sAssertEq('After enter on item', [
-          'dropdown.item.execute(split-dropdown, split-tiered-menu, item-alpha)'
-        ]),
+        store.sAssertEq('After enter on item', ['dropdown.item.execute(split-dropdown, split-tiered-menu, item-alpha)']),
         // NOTE: This is due to the itemExecute handler here.
         UiFinder.sNotExists(gui.element(), '[role="menu"]'),
         store.sClear,
@@ -265,23 +223,14 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
         // Test to make sure tapping on the button/arrow also works
         store.sAssertEq('Should be empty', []),
         Touch.sTapOn(gui.element(), '.test-split-button-action'),
-        store.sAssertEq('After tapping on action', [
-          'dropdown.execute(split-dropdown, split-dropdown-button)'
-        ]),
+        store.sAssertEq('After tapping on action', ['dropdown.execute(split-dropdown, split-dropdown-button)']),
         UiFinder.sNotExists(gui.element(), '[role="menu"]'),
         store.sClear,
 
         Touch.sTapOn(gui.element(), '.test-split-button-arrow'),
         store.sAssertEq('After tapping on action', []),
-        Waiter.sTryUntil(
-          'Waiting until menu appears',
-          UiFinder.sExists(gui.element(), '[role="menu"]')
-        ),
-        FocusTools.sTryOnSelector(
-          'Focus should be on alpha',
-          doc,
-          'li:contains("Alpha")'
-        ),
+        Waiter.sTryUntil('Waiting until menu appears', UiFinder.sExists(gui.element(), '[role="menu"]')),
+        FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains("Alpha")'),
         store.sClear
       ];
     },

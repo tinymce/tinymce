@@ -7,6 +7,4 @@ export interface GatherResult {
 
 type GatherResultConstructor = (result: any, pruned: boolean) => GatherResult;
 
-export const GatherResult = <GatherResultConstructor>(
-  Struct.immutable('result', 'pruned')
-);
+export const GatherResult = <GatherResultConstructor>Struct.immutable('result', 'pruned');

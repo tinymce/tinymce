@@ -15,28 +15,16 @@ const hasSelectionModifyApi = function (editor: Editor) {
   return Type.isFunction((<any>editor.selection.getSel()).modify);
 };
 
-const moveRel = function (
-  forward: boolean,
-  selection: Selection,
-  pos: CaretPosition
-) {
+const moveRel = function (forward: boolean, selection: Selection, pos: CaretPosition) {
   const delta = forward ? 1 : -1;
-  selection.setRng(
-    CaretPosition(pos.container(), pos.offset() + delta).toRange()
-  );
-  (<any>selection.getSel()).modify(
-    'move',
-    forward ? 'forward' : 'backward',
-    'word'
-  );
+  selection.setRng(CaretPosition(pos.container(), pos.offset() + delta).toRange());
+  (<any>selection.getSel()).modify('move', forward ? 'forward' : 'backward', 'word');
   return true;
 };
 
 const moveByWord = function (forward: boolean, editor: Editor) {
   const rng = editor.selection.getRng();
-  const pos = forward
-    ? CaretPosition.fromRangeEnd(rng)
-    : CaretPosition.fromRangeStart(rng);
+  const pos = forward ? CaretPosition.fromRangeEnd(rng) : CaretPosition.fromRangeStart(rng);
 
   if (!hasSelectionModifyApi(editor)) {
     return false;

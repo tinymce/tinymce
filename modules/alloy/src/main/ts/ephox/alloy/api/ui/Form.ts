@@ -1,20 +1,11 @@
 import { Arr, Obj, Option, Result } from '@ephox/katamari';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import {
-  AlloySpec,
-  SimpleOrSketchSpec,
-  SketchSpec
-} from '../../api/component/SpecTypes';
+import { AlloySpec, SimpleOrSketchSpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyLogger from '../../log/AlloyLogger';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
-import {
-  FormApis,
-  FormDetail,
-  FormSketcher,
-  FormSpecBuilder
-} from '../../ui/types/FormTypes';
+import { FormApis, FormDetail, FormSketcher, FormSpecBuilder } from '../../ui/types/FormTypes';
 import { Composing } from '../behaviour/Composing';
 import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
@@ -31,10 +22,7 @@ const sketch = (fSpec: FormSpecBuilder): SketchSpec => {
   const parts = (() => {
     const record: string[] = [];
 
-    const field = (
-      name: string,
-      config: SimpleOrSketchSpec
-    ): AlloyParts.ConfiguredPart => {
+    const field = (name: string, config: SimpleOrSketchSpec): AlloyParts.ConfiguredPart => {
       record.push(name);
       return AlloyParts.generateOne(owner, getPartName(name), config);
     };
@@ -52,15 +40,12 @@ const sketch = (fSpec: FormSpecBuilder): SketchSpec => {
   const partNames = parts.record();
   // Unlike other sketches, a form does not know its parts in advance (as they represent each field
   // in a particular form). Therefore, it needs to calculate the part names on the fly
-  const fieldParts = Arr.map(partNames, (n) =>
-    PartType.required({ name: n, pname: getPartName(n) })
-  );
+  const fieldParts = Arr.map(partNames, (n) => PartType.required({ name: n, pname: getPartName(n) }));
 
   return UiSketcher.composite(owner, schema, fieldParts, make, spec);
 };
 
-const toResult = <T, E>(o: Option<T>, e: E) =>
-  o.fold(() => Result.error(e), Result.value);
+const toResult = <T, E>(o: Option<T>, e: E) => o.fold(() => Result.error(e), Result.value);
 
 const make = (detail: FormDetail, components: AlloySpec[]) => ({
   uid: detail.uid,
@@ -111,10 +96,7 @@ const make = (detail: FormDetail, components: AlloySpec[]) => ({
 });
 
 const Form = {
-  getField: GuiTypes.makeApi(
-    (apis: FormApis, component: AlloyComponent, key: string) =>
-      apis.getField(component, key)
-  ),
+  getField: GuiTypes.makeApi((apis: FormApis, component: AlloyComponent, key: string) => apis.getField(component, key)),
   sketch
 } as FormSketcher;
 

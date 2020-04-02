@@ -1,15 +1,4 @@
-import {
-  Pipeline,
-  Step,
-  FocusTools,
-  Mouse,
-  Waiter,
-  UiFinder,
-  Assertions,
-  Log,
-  Logger,
-  GeneralSteps
-} from '@ephox/agar';
+import { Pipeline, Step, FocusTools, Mouse, Waiter, UiFinder, Assertions, Log, Logger, GeneralSteps } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document, HTMLInputElement } from '@ephox/dom-globals';
 import { TinyLoader } from '@ephox/mcagar';
@@ -38,11 +27,7 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
     return Logger.t(
       'Asserting color',
       Step.sync(function () {
-        Assertions.assertEq(
-          'Asserting current colour is ' + expected,
-          expected,
-          currentColor
-        );
+        Assertions.assertEq('Asserting current colour is ' + expected, expected, currentColor);
       })
     );
   };
@@ -51,10 +36,7 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
     Logger.t(
       'Changing textarea content to ' + hex,
       Step.sync(() => {
-        const inputs = SelectorFilter.descendants<HTMLInputElement>(
-          docBody,
-          'div[role="dialog"] input'
-        );
+        const inputs = SelectorFilter.descendants<HTMLInputElement>(docBody, 'div[role="dialog"] input');
         const hexInput = inputs[inputs.length - 1];
         hexInput.dom().value = hex;
       })
@@ -67,11 +49,7 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
           const dialog = ColorSwatch.colorPickerDialog(editor);
           dialog(setColor, '#ffffff');
         }),
-        UiFinder.sWaitForVisible(
-          'Waited for dialog to be visible',
-          docBody,
-          dialogSelector
-        )
+        UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector)
       ])
     );
 
@@ -86,18 +64,9 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
   const sSubmitDialog = GeneralSteps.sequence(
     Logger.ts('Click Save and close dialog', [
       FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
-      Waiter.sTryUntil(
-        'Button is not disabled',
-        UiFinder.sNotExists(
-          docBody,
-          'button.tox-button:contains("Save")[disabled]'
-        )
-      ),
+      Waiter.sTryUntil('Button is not disabled', UiFinder.sNotExists(docBody, 'button.tox-button:contains("Save")[disabled]')),
       Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
-      Waiter.sTryUntil(
-        'Dialog should close',
-        UiFinder.sNotExists(docBody, dialogSelector)
-      )
+      Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector))
     ])
   );
 
@@ -105,10 +74,7 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
     Logger.ts('Click Cancel and close dialog', [
       FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
       Mouse.sClickOn(docBody, 'button.tox-button:contains(Cancel)'),
-      Waiter.sTryUntil(
-        'Dialog should close',
-        UiFinder.sNotExists(docBody, dialogSelector)
-      )
+      Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector))
     ])
   );
 
@@ -117,33 +83,25 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
       Pipeline.async(
         {},
         [
-          Log.stepsAsStep(
-            'TBA',
-            'ColorPicker: Open dialog, click Save and assert color is white',
-            [sOpenDialog(editor, docBody), sSubmitDialog, sAssertColorWhite]
-          ),
+          Log.stepsAsStep('TBA', 'ColorPicker: Open dialog, click Save and assert color is white', [
+            sOpenDialog(editor, docBody),
+            sSubmitDialog,
+            sAssertColorWhite
+          ]),
 
-          Log.stepsAsStep(
-            'TBA',
-            'ColorPicker: Open dialog, pick a color, click Save and assert color changes to picked color',
-            [
-              sOpenDialog(editor, docBody),
-              sSetHexBlack,
-              sSubmitDialog,
-              sAssertColorBlack
-            ]
-          ),
+          Log.stepsAsStep('TBA', 'ColorPicker: Open dialog, pick a color, click Save and assert color changes to picked color', [
+            sOpenDialog(editor, docBody),
+            sSetHexBlack,
+            sSubmitDialog,
+            sAssertColorBlack
+          ]),
 
-          Log.stepsAsStep(
-            'TBA',
-            'ColorPicker: Open dialog, pick a different color, click Cancel and assert color does not change',
-            [
-              sOpenDialog(editor, docBody),
-              sSetHexWhite,
-              sCancelDialog,
-              sAssertColorBlack
-            ]
-          )
+          Log.stepsAsStep('TBA', 'ColorPicker: Open dialog, pick a different color, click Cancel and assert color does not change', [
+            sOpenDialog(editor, docBody),
+            sSetHexWhite,
+            sCancelDialog,
+            sAssertColorBlack
+          ])
         ],
         onSuccess,
         onFailure

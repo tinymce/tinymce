@@ -20,11 +20,7 @@ const adt: {
   before: (element: Element<DomNode>) => Situ;
   on: (element: Element<DomNode>, offset: number) => Situ;
   after: (element: Element<DomNode>) => Situ;
-} = Adt.generate([
-  { before: ['element'] },
-  { on: ['element', 'offset'] },
-  { after: ['element'] }
-]);
+} = Adt.generate([{ before: ['element'] }, { on: ['element', 'offset'] }, { after: ['element'] }]);
 
 // Probably don't need this given that we now have "match"
 const cata = function <U>(

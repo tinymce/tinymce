@@ -1,13 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  Keyboard,
-  Keys,
-  Logger,
-  Step,
-  UiFinder
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Keyboard, Keys, Logger, Step, UiFinder } from '@ephox/agar';
 import { GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { HTMLInputElement } from '@ephox/dom-globals';
@@ -48,16 +39,8 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
             UiFinder.cFindIn('input'),
             Chain.op((input) => {
               const node = input.dom() as HTMLInputElement;
-              Assertions.assertEq(
-                'Checking "checked" flag',
-                expChecked,
-                node.checked
-              );
-              Assertions.assertEq(
-                'Checking "indeterminate" flag',
-                false,
-                node.indeterminate
-              );
+              Assertions.assertEq('Checking "checked" flag', expChecked, node.checked);
+              Assertions.assertEq('Checking "indeterminate" flag', false, node.indeterminate);
             })
           ])
         );
@@ -92,17 +75,11 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
                   classes: [arr.has('tox-checkbox__icons')],
                   children: [
                     s.element('span', {
-                      classes: [
-                        arr.has('tox-icon'),
-                        arr.has('tox-checkbox-icon__checked')
-                      ],
+                      classes: [arr.has('tox-icon'), arr.has('tox-checkbox-icon__checked')],
                       html: str.startsWith('<svg')
                     }),
                     s.element('span', {
-                      classes: [
-                        arr.has('tox-icon'),
-                        arr.has('tox-checkbox-icon__unchecked')
-                      ],
+                      classes: [arr.has('tox-icon'), arr.has('tox-checkbox-icon__unchecked')],
                       html: str.startsWith('<svg')
                     })
                   ]
@@ -119,11 +96,7 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
 
         // Representing state updates
         sAssertCheckboxState('Initial checkbox state', false),
-        DisablingSteps.sAssertDisabled(
-          'Initial disabled state',
-          false,
-          component
-        ),
+        DisablingSteps.sAssertDisabled('Initial disabled state', false, component),
         sSetCheckboxState(true),
         sAssertCheckboxState('initial > checked', true),
         sSetCheckboxState(false),

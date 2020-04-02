@@ -4,10 +4,7 @@ import * as Structs from '../api/Structs';
 import * as TableLookup from '../api/TableLookup';
 
 const detect = function (cell: Element) {
-  const getIndex = function (
-    getChildren: (parent: Element) => Option<Element[]>,
-    elem: Element
-  ) {
+  const getIndex = function (getChildren: (parent: Element) => Option<Element[]>, elem: Element) {
     return getChildren(elem).bind(function (children) {
       return Arr.findIndex(children, function (child) {
         return Compare.eq(child, elem);

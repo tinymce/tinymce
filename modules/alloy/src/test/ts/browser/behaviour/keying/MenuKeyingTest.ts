@@ -42,16 +42,8 @@ UnitTest.asynctest('MenuKeyingTest', (success, failure) => {
       );
     },
     (doc, body, _gui, component, store) => {
-      const checkStore = (
-        label: string,
-        steps: Array<Step<any, any>>,
-        expected: string[]
-      ) =>
-        GeneralSteps.sequence(
-          [store.sClear]
-            .concat(steps)
-            .concat([store.sAssertEq(label, expected)])
-        );
+      const checkStore = (label: string, steps: Array<Step<any, any>>, expected: string[]) =>
+        GeneralSteps.sequence([store.sClear].concat(steps).concat([store.sAssertEq(label, expected)]));
 
       return [
         GuiSetup.mSetupKeyLogger(body),
@@ -63,60 +55,28 @@ UnitTest.asynctest('MenuKeyingTest', (success, failure) => {
 
         store.sAssertEq('Initially empty', []),
 
-        FocusTools.sTryOnSelector(
-          'Focus should still be on alpha',
-          doc,
-          '.alpha'
-        ),
+        FocusTools.sTryOnSelector('Focus should still be on alpha', doc, '.alpha'),
 
-        checkStore(
-          'pressing tab',
-          [Keyboard.sKeydown(doc, Keys.tab(), {})],
-          []
-        ),
+        checkStore('pressing tab', [Keyboard.sKeydown(doc, Keys.tab(), {})], []),
         FocusTools.sTryOnSelector('Focus should now be on beta', doc, '.beta'),
 
-        checkStore(
-          'pressing tab',
-          [Keyboard.sKeydown(doc, Keys.tab(), {})],
-          []
-        ),
+        checkStore('pressing tab', [Keyboard.sKeydown(doc, Keys.tab(), {})], []),
 
-        FocusTools.sTryOnSelector(
-          'Focus should now be on gamma',
-          doc,
-          '.gamma'
-        ),
+        FocusTools.sTryOnSelector('Focus should now be on gamma', doc, '.gamma'),
 
-        checkStore(
-          'pressing tab',
-          [Keyboard.sKeydown(doc, Keys.tab(), { shift: true })],
-          []
-        ),
+        checkStore('pressing tab', [Keyboard.sKeydown(doc, Keys.tab(), { shift: true })], []),
 
         FocusTools.sTryOnSelector('Focus should now be on beta', doc, '.beta'),
 
         checkStore('pressing up', [Keyboard.sKeydown(doc, Keys.up(), {})], []),
 
-        FocusTools.sTryOnSelector(
-          'Focus should now be on alpha',
-          doc,
-          '.alpha'
-        ),
+        FocusTools.sTryOnSelector('Focus should now be on alpha', doc, '.alpha'),
 
-        checkStore(
-          'pressing down',
-          [Keyboard.sKeydown(doc, Keys.down(), {})],
-          []
-        ),
+        checkStore('pressing down', [Keyboard.sKeydown(doc, Keys.down(), {})], []),
 
         FocusTools.sTryOnSelector('Focus should now be on beta', doc, '.beta'),
 
-        checkStore(
-          'pressing enter',
-          [Keyboard.sKeydown(doc, Keys.enter(), {})],
-          []
-        ),
+        checkStore('pressing enter', [Keyboard.sKeydown(doc, Keys.enter(), {})], []),
 
         GuiSetup.mTeardownKeyLogger(body, [])
       ];

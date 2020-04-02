@@ -199,13 +199,7 @@ promiseTest('FutureResult: value bindFuture value', () =>
           FutureResult.value(i)
             .bindFuture((x) => FutureResult.value(f(x)))
             .get((actual) => {
-              eqAsync(
-                'bind result',
-                Result.value(f(i)),
-                actual,
-                reject,
-                tResult(tNumber)
-              );
+              eqAsync('bind result', Result.value(f(i)), actual, reject, tResult(tNumber));
               resolve();
             });
         })
@@ -223,13 +217,7 @@ promiseTest('FutureResult: bindFuture: value bindFuture error', () =>
           FutureResult.value(i)
             .bindFuture(() => FutureResult.error(s))
             .get((actual) => {
-              eqAsync(
-                'bind result',
-                Result.error(s),
-                actual,
-                reject,
-                tResult(tNumber)
-              );
+              eqAsync('bind result', Result.error(s), actual, reject, tResult(tNumber));
               resolve();
             });
         })
@@ -246,13 +234,7 @@ promiseTest('FutureResult: error bindFuture', () =>
           FutureResult.error(i)
             .bindFuture(Fun.die('⊥'))
             .get((actual) => {
-              eqAsync(
-                'bind result',
-                Result.error(i),
-                actual,
-                reject,
-                tResult(tNumber)
-              );
+              eqAsync('bind result', Result.error(i), actual, reject, tResult(tNumber));
               resolve();
             });
         })

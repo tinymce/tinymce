@@ -39,9 +39,7 @@ const defaultPatterns = [
 ];
 
 const getPatternSet = (editorSettings): PatternSet => {
-  const patterns = Obj.get(editorSettings, 'textpattern_patterns').getOr(
-    defaultPatterns
-  );
+  const patterns = Obj.get(editorSettings, 'textpattern_patterns').getOr(defaultPatterns);
   if (!Type.isArray(patterns)) {
     error('The setting textpattern_patterns should be an array');
     return {

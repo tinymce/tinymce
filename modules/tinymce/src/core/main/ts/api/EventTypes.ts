@@ -6,16 +6,7 @@
  */
 
 import { Types } from '@ephox/bridge';
-import {
-  Element,
-  Event,
-  FocusEvent,
-  HTMLElement,
-  Node,
-  Range,
-  TouchEvent,
-  UIEvent
-} from '@ephox/dom-globals';
+import { Element, Event, FocusEvent, HTMLElement, Node, Range, TouchEvent, UIEvent } from '@ephox/dom-globals';
 import { GetContentArgs } from '../content/GetContent';
 import { SetContentArgs } from '../content/SetContent';
 import { UndoLevel } from '../undo/UndoManagerTypes';

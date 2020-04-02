@@ -6,54 +6,26 @@
  */
 
 import { Arr, Fun, Option } from '@ephox/katamari';
-import {
-  Compare,
-  Css,
-  Element,
-  Node,
-  Traverse,
-  PredicateFind
-} from '@ephox/sugar';
+import { Compare, Css, Element, Node, Traverse, PredicateFind } from '@ephox/sugar';
 import { Node as DomNode } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 
-const candidatesArray = [
-  '9px',
-  '10px',
-  '11px',
-  '12px',
-  '14px',
-  '16px',
-  '18px',
-  '20px',
-  '24px',
-  '32px',
-  '36px'
-];
+const candidatesArray = ['9px', '10px', '11px', '12px', '14px', '16px', '18px', '20px', '24px', '32px', '36px'];
 
 const defaultSize = 'medium';
 const defaultIndex = 2;
 
-const indexToSize = (index): Option<string> =>
-  Option.from(candidatesArray[index]);
+const indexToSize = (index): Option<string> => Option.from(candidatesArray[index]);
 
-const sizeToIndex = (size): Option<number> =>
-  Arr.findIndex(candidatesArray, (v) => v === size);
+const sizeToIndex = (size): Option<number> => Arr.findIndex(candidatesArray, (v) => v === size);
 
-const getRawOrComputed = (
-  isRoot: (e: Element<DomNode>) => boolean,
-  rawStart: Element<any>
-): string => {
-  const optStart = Node.isElement(rawStart)
-    ? Option.some(rawStart)
-    : Traverse.parent(rawStart).filter(Node.isElement);
+const getRawOrComputed = (isRoot: (e: Element<DomNode>) => boolean, rawStart: Element<any>): string => {
+  const optStart = Node.isElement(rawStart) ? Option.some(rawStart) : Traverse.parent(rawStart).filter(Node.isElement);
   return optStart
     .map((start) => {
-      const inline = PredicateFind.closest(
-        start,
-        (elem) => Css.getRaw(elem, 'font-size').isSome(),
-        isRoot
-      ).bind((elem) => Css.getRaw(elem, 'font-size'));
+      const inline = PredicateFind.closest(start, (elem) => Css.getRaw(elem, 'font-size').isSome(), isRoot).bind((elem) =>
+        Css.getRaw(elem, 'font-size')
+      );
 
       return inline.getOrThunk(() => Css.get(start, 'font-size'));
     })
@@ -69,9 +41,7 @@ const getSize = (editor: Editor): string => {
   const isRoot = (e) => Compare.eq(root, e);
 
   const elemSize = getRawOrComputed(isRoot, elem);
-  return Arr.find(candidatesArray, (size) => elemSize === size).getOr(
-    defaultSize
-  );
+  return Arr.find(candidatesArray, (size) => elemSize === size).getOr(defaultSize);
 };
 
 const applySize = (editor: Editor, value: string): void => {

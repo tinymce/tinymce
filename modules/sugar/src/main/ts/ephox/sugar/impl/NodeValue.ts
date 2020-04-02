@@ -11,16 +11,12 @@ export default function (is: (e: Element<Node>) => boolean, name: string) {
   };
 
   const getOption = function (element: Element<Node>): Option<string> {
-    return is(element)
-      ? Option.from(element.dom().nodeValue)
-      : Option.none<string>();
+    return is(element) ? Option.from(element.dom().nodeValue) : Option.none<string>();
   };
 
   const set = function (element: Element<Node>, value: string): void {
     if (!is(element)) {
-      throw new Error(
-        'Can only set raw ' + name + ' value of a ' + name + ' node'
-      );
+      throw new Error('Can only set raw ' + name + ' value of a ' + name + ' node');
     }
     element.dom().nodeValue = value;
   };

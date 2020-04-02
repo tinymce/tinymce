@@ -18,10 +18,7 @@ export interface AlertBannerWrapper extends AlertBannerSpec {
   iconTooltip: string;
 }
 
-export const renderAlertBanner = (
-  spec: AlertBannerWrapper,
-  providersBackstage: UiFactoryBackstageProviders
-): SketchSpec =>
+export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: UiFactoryBackstageProviders): SketchSpec =>
   // For using the alert banner inside a dialog
   Container.sketch({
     dom: {
@@ -29,11 +26,7 @@ export const renderAlertBanner = (
       attributes: {
         role: 'alert'
       },
-      classes: [
-        'tox-notification',
-        'tox-notification--in',
-        `tox-notification--${spec.level}`
-      ]
+      classes: ['tox-notification', 'tox-notification--in', `tox-notification--${spec.level}`]
     },
     components: [
       {

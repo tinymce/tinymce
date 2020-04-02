@@ -4,10 +4,7 @@ import * as Fragments from 'tinymce/core/undo/Fragments';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.undo.FragmentsTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.undo.FragmentsTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   const div = function (html) {
@@ -25,11 +22,7 @@ UnitTest.asynctest('browser.tinymce.core.undo.FragmentsTest', function (
     LegacyUnit.deepEqual(Fragments.read(div('a')), ['a']);
     LegacyUnit.deepEqual(Fragments.read(div('<!--a-->')), ['<!--a-->']);
     LegacyUnit.deepEqual(Fragments.read(div('<b>a</b>')), ['<b>a</b>']);
-    LegacyUnit.deepEqual(Fragments.read(div('a<!--b--><b>c</b>')), [
-      'a',
-      '<!--b-->',
-      '<b>c</b>'
-    ]);
+    LegacyUnit.deepEqual(Fragments.read(div('a<!--b--><b>c</b>')), ['a', '<!--b-->', '<b>c</b>']);
   });
 
   suite.test('read and exclude zero length text nodes', function () {
@@ -44,20 +37,9 @@ UnitTest.asynctest('browser.tinymce.core.undo.FragmentsTest', function (
     LegacyUnit.deepEqual(html(Fragments.write(['a'], div(''))), 'a');
     LegacyUnit.deepEqual(html(Fragments.write(['a'], div('a'))), 'a');
     LegacyUnit.deepEqual(html(Fragments.write(['a'], div('b'))), 'a');
-    LegacyUnit.deepEqual(
-      html(Fragments.write(['a', '<b>c</b>'], div('a<b>b</b>'))),
-      'a<b>c</b>'
-    );
-    LegacyUnit.deepEqual(
-      html(Fragments.write(['<b>c</b>', '<b>d</b>'], div('a<b>b</b>'))),
-      '<b>c</b><b>d</b>'
-    );
-    LegacyUnit.deepEqual(
-      html(
-        Fragments.write(['<b>c</b>', '<b>d</b>', '<!--e-->'], div('a<b>b</b>'))
-      ),
-      '<b>c</b><b>d</b><!--e-->'
-    );
+    LegacyUnit.deepEqual(html(Fragments.write(['a', '<b>c</b>'], div('a<b>b</b>'))), 'a<b>c</b>');
+    LegacyUnit.deepEqual(html(Fragments.write(['<b>c</b>', '<b>d</b>'], div('a<b>b</b>'))), '<b>c</b><b>d</b>');
+    LegacyUnit.deepEqual(html(Fragments.write(['<b>c</b>', '<b>d</b>', '<!--e-->'], div('a<b>b</b>'))), '<b>c</b><b>d</b><!--e-->');
   });
 
   Pipeline.async(

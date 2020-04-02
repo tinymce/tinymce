@@ -33,10 +33,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
                 Dragging.snap({
                   sensor: DragCoord.fixed(300, 10),
                   range: Position(1000, 30),
-                  output: DragCoord.fixed(
-                    Option.none<number>(),
-                    Option.some(10)
-                  )
+                  output: DragCoord.fixed(Option.none<number>(), Option.some(10))
                 })
               ];
             },
@@ -66,14 +63,11 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
         })
       ),
     (_doc, _body, gui, component, _store) => {
-      const cSubject = Chain.injectThunked(() =>
-        subject.get(component).element()
-      );
+      const cSubject = Chain.injectThunked(() => subject.get(component).element());
 
       const cEnsurePositionChanged = Chain.control(
         Chain.binder((all: any) =>
-          all.box_position1.left !== all.box_position2.left &&
-          all.box_position2.left !== all.box_position3.left
+          all.box_position1.left !== all.box_position2.left && all.box_position2.left !== all.box_position3.left
             ? Result.value({})
             : Result.error(
                 'Positions did not change.\nPosition data: ' +
@@ -88,9 +82,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
                   )
               )
         ),
-        Guard.addLogging(
-          'Ensuring that the position information read from the different stages was different'
-        )
+        Guard.addLogging('Ensuring that the position information read from the different stages was different')
       );
       const cEnsureBound = Chain.control(
         Chain.binder((all: any) => {
@@ -121,15 +113,12 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
                   )
               );
         }),
-        Guard.addLogging(
-          'Checking bounding behaviour at left and right of screen'
-        )
+        Guard.addLogging('Checking bounding behaviour at left and right of screen')
       );
       const cEnsureScrollBound = Chain.control(
         Chain.binder((all: any) => {
           const boundBottom =
-            all.box_scrolled_position9.top ===
-              all.box_scrolled_position10_bound.top &&
+            all.box_scrolled_position9.top === all.box_scrolled_position10_bound.top &&
             all.box_scrolled_position9.top === '400px' &&
             all.box_scrolled_position10_bound.left === '50px';
           return boundBottom
@@ -199,10 +188,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
         NamedChain.direct('blocker', Mouse.cMouseUp, '_'),
         NamedChain.direct(
           'container',
-          Chain.control(
-            UiFinder.cFindIn('.test-blocker'),
-            Guard.tryUntilNot('There should no longer be a blocker')
-          ),
+          Chain.control(UiFinder.cFindIn('.test-blocker'), Guard.tryUntilNot('There should no longer be a blocker')),
           'blocker'
         ),
 
@@ -220,11 +206,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
         ),
 
         NamedChain.direct('box', Mouse.cMouseDown, '_'),
-        NamedChain.direct(
-          'container',
-          UiFinder.cFindIn('.test-blocker'),
-          'blocker'
-        )
+        NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker')
       ]);
 
       return [
@@ -233,11 +215,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
             NamedChain.write('box', cSubject),
             NamedChain.direct('box', Mouse.cMouseDown, '_'),
             NamedChain.writeValue('container', gui.element()),
-            NamedChain.direct(
-              'container',
-              UiFinder.cFindIn('.test-blocker'),
-              'blocker'
-            ),
+            NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
 
             NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 200), '_'),
             NamedChain.direct('blocker', Mouse.cMouseMoveTo(120, 200), '_'),
@@ -274,11 +252,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
             NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 1400), '_'),
             NamedChain.direct('box', cRecordPosition, 'box_scrolled_position9'),
             NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 1500), '_'),
-            NamedChain.direct(
-              'box',
-              cRecordPosition,
-              'box_scrolled_position10_bound'
-            ),
+            NamedChain.direct('box', cRecordPosition, 'box_scrolled_position10_bound'),
             NamedChain.write('_', cEnsureScrollBound),
 
             cScrollTo(0, 0),

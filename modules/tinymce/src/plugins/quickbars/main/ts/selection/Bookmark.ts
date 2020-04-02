@@ -76,10 +76,7 @@ const resolve = function (dom, bookmark) {
         }
 
         // Skip data-mce-type=bookmark nodes
-        if (
-          node.nodeType !== 1 ||
-          node.getAttribute('data-mce-type') !== 'bookmark'
-        ) {
+        if (node.nodeType !== 1 || node.getAttribute('data-mce-type') !== 'bookmark') {
           idx++;
         }
 

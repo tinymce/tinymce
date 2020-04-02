@@ -39,10 +39,7 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
       'Spell Checker Pro'
     ];
 
-    const premiumPluginList = Arr.map(
-      premiumPlugins,
-      (plugin) => '<li>' + I18n.translate(plugin) + '</li>'
-    ).join('');
+    const premiumPluginList = Arr.map(premiumPlugins, (plugin) => '<li>' + I18n.translate(plugin) + '</li>').join('');
 
     return (
       '<div data-mce-tabstop="1" tabindex="-1">' +
@@ -59,8 +56,7 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
     );
   };
 
-  const makeLink = (p: { name: string; url: string }): string =>
-    `<a href="${p.url}" target="_blank" rel="noopener">${p.name}</a>`;
+  const makeLink = (p: { name: string; url: string }): string => `<a href="${p.url}" target="_blank" rel="noopener">${p.name}</a>`;
 
   const maybeUrlize = (editor, key: string) =>
     Arr.find(PluginUrls.urls, function (x: PluginUrlType) {
@@ -68,9 +64,7 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
     }).fold(
       function () {
         const getMetadata = editor.plugins[key].getMetadata;
-        return typeof getMetadata === 'function'
-          ? makeLink(getMetadata())
-          : key;
+        return typeof getMetadata === 'function' ? makeLink(getMetadata()) : key;
       },
       function (x) {
         return makeLink({
@@ -82,12 +76,7 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
 
   const getPluginKeys = (editor) => {
     const keys = Obj.keys(editor.plugins);
-    return editor.settings.forced_plugins === undefined
-      ? keys
-      : Arr.filter(
-          keys,
-          (k) => !Arr.contains(editor.settings.forced_plugins, k)
-        );
+    return editor.settings.forced_plugins === undefined ? keys : Arr.filter(keys, (k) => !Arr.contains(editor.settings.forced_plugins, k));
   };
 
   const pluginLister = (editor) => {
@@ -98,13 +87,7 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
     const count = pluginLis.length;
     const pluginsString = pluginLis.join('');
 
-    const html =
-      '<p><b>' +
-      I18n.translate(['Plugins installed ({0}):', count]) +
-      '</b></p>' +
-      '<ul>' +
-      pluginsString +
-      '</ul>';
+    const html = '<p><b>' + I18n.translate(['Plugins installed ({0}):', count]) + '</b></p>' + '<ul>' + pluginsString + '</ul>';
 
     return html;
   };
@@ -113,11 +96,7 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
     if (editor == null) {
       return '';
     }
-    return (
-      '<div data-mce-tabstop="1" tabindex="-1">' +
-      pluginLister(editor) +
-      '</div>'
-    );
+    return '<div data-mce-tabstop="1" tabindex="-1">' + pluginLister(editor) + '</div>';
   };
 
   const htmlPanel: Types.Dialog.BodyComponentApi = {

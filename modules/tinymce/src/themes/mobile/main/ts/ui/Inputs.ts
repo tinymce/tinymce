@@ -54,9 +54,7 @@ const field = function (name, placeholder) {
 
   const buttonSpec = Memento.record(
     Button.sketch({
-      dom: UiDomFactory.dom(
-        '<button class="${prefix}-input-container-x ${prefix}-icon-cancel-circle ${prefix}-icon"></button>'
-      ),
+      dom: UiDomFactory.dom('<button class="${prefix}-input-container-x ${prefix}-icon-cancel-circle ${prefix}-icon"></button>'),
       action(button) {
         const input = inputSpec.get(button);
         Representing.setValue(input, '');

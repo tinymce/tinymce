@@ -31,9 +31,7 @@ const closest = function <A>(
 ): Option<A> {
   const current = transform(scope);
   return current.orThunk(function () {
-    return isRoot(scope)
-      ? Option.none<A>()
-      : ancestor(scope, transform, isRoot);
+    return isRoot(scope) ? Option.none<A>() : ancestor(scope, transform, isRoot);
   });
 };
 

@@ -9,11 +9,7 @@ import { nu as NuAnchor, HotspotAnchor, Anchoring } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
-const placement = (
-  component: AlloyComponent,
-  anchorInfo: HotspotAnchor,
-  origin: Origins.OriginAdt
-): Option<Anchoring> => {
+const placement = (component: AlloyComponent, anchorInfo: HotspotAnchor, origin: Origins.OriginAdt): Option<Anchoring> => {
   const hotspot = anchorInfo.hotspot;
   const anchorBox = Origins.toBox(origin, hotspot.element());
 

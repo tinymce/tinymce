@@ -207,37 +207,34 @@ const dataToHtml = function (editor, data, head) {
   }
 
   // Add/update/remove meta
-  Tools.each(
-    'keywords,description,author,copyright,robots'.split(','),
-    function (name) {
-      const nodes = headerFragment.getAll('meta');
-      let i, meta;
-      const value = data[name];
+  Tools.each('keywords,description,author,copyright,robots'.split(','), function (name) {
+    const nodes = headerFragment.getAll('meta');
+    let i, meta;
+    const value = data[name];
 
-      for (i = 0; i < nodes.length; i++) {
-        meta = nodes[i];
+    for (i = 0; i < nodes.length; i++) {
+      meta = nodes[i];
 
-        if (meta.attr('name') === name) {
-          if (value) {
-            meta.attr('content', value);
-          } else {
-            meta.remove();
-          }
-
-          return;
+      if (meta.attr('name') === name) {
+        if (value) {
+          meta.attr('content', value);
+        } else {
+          meta.remove();
         }
-      }
 
-      if (value) {
-        elm = new Node('meta', 1);
-        elm.attr('name', name);
-        elm.attr('content', value);
-        elm.shortEnded = true;
-
-        addHeadNode(elm);
+        return;
       }
     }
-  );
+
+    if (value) {
+      elm = new Node('meta', 1);
+      elm.attr('name', name);
+      elm.attr('content', value);
+      elm.shortEnded = true;
+
+      addHeadNode(elm);
+    }
+  });
 
   const currentStyleSheetsMap: Record<string, HTMLLinkElement> = {};
   Tools.each(headerFragment.getAll('link'), function (stylesheet) {

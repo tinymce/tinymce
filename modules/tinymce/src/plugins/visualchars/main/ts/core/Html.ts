@@ -8,13 +8,7 @@
 import * as Data from './Data';
 
 const wrapCharWithSpan = function (value) {
-  return (
-    '<span data-mce-bogus="1" class="mce-' +
-    Data.charMap[value] +
-    '">' +
-    value +
-    '</span>'
-  );
+  return '<span data-mce-bogus="1" class="mce-' + Data.charMap[value] + '">' + value + '</span>';
 };
 
 export { wrapCharWithSpan };

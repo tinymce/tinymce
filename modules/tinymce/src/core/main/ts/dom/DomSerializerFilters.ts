@@ -14,11 +14,7 @@ import { DomSerializerSettings } from './DomSerializer';
 
 declare const unescape: any;
 
-const register = (
-  htmlParser: DomParser,
-  settings: DomSerializerSettings,
-  dom: DOMUtils
-) => {
+const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: DOMUtils) => {
   // Convert tabindex back to elements when serializing contents
   htmlParser.addAttributeFilter('data-mce-tabindex', function (nodes, name) {
     let i = nodes.length,
@@ -90,9 +86,7 @@ const register = (
 
       if (node.attr('data-mce-type') === 'bookmark' && !args.cleanup) {
         // We maybe dealing with a "filled" bookmark. If so just remove the node, otherwise unwrap it
-        const hasChildren = Option.from(node.firstChild).exists(
-          (firstChild) => !Zwsp.isZwsp(firstChild.value)
-        );
+        const hasChildren = Option.from(node.firstChild).exists((firstChild) => !Zwsp.isZwsp(firstChild.value));
         if (hasChildren) {
           node.unwrap();
         } else {
@@ -132,10 +126,7 @@ const register = (
           /^\s*((<!--)?(\s*\/\/)?\s*<!\[CDATA\[|(<!--\s*)?\/\*\s*<!\[CDATA\[\s*\*\/|(\/\/)?\s*<!--|\/\*\s*<!--\s*\*\/)\s*[\r\n]*/gi,
           ''
         )
-        .replace(
-          /\s*(\/\*\s*\]\]>\s*\*\/(-->)?|\s*\/\/\s*\]\]>(-->)?|\/\/\s*(-->)?|\]\]>|\/\*\s*-->\s*\*\/|\s*-->\s*)\s*$/g,
-          ''
-        );
+        .replace(/\s*(\/\*\s*\]\]>\s*\*\/(-->)?|\s*\/\/\s*\]\]>(-->)?|\/\/\s*(-->)?|\]\]>|\/\*\s*-->\s*\*\/|\s*-->\s*)\s*$/g, '');
     };
 
     while (i--) {
@@ -147,10 +138,7 @@ const register = (
         // a script element without type attribute
         type = node.attr('type');
         if (type) {
-          node.attr(
-            'type',
-            type === 'mce-no/type' ? null : type.replace(/^mce\-/, '')
-          );
+          node.attr('type', type === 'mce-no/type' ? null : type.replace(/^mce\-/, ''));
         }
 
         if (settings.element_format === 'xhtml' && value.length > 0) {

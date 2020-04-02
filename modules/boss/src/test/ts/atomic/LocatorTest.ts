@@ -9,14 +9,7 @@ import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('LocatorTest', function () {
   const family = Tracks.track(
-    Gene('A', '.', [
-      Gene('B', '.'),
-      Gene('C', '.', [
-        Gene('D', '.', [Gene('E', '.')]),
-        Gene('F', '.'),
-        Creator.text('cattle')
-      ])
-    ]),
+    Gene('A', '.', [Gene('B', '.'), Gene('C', '.', [Gene('D', '.', [Gene('E', '.')]), Gene('F', '.'), Creator.text('cattle')])]),
     Option.none()
   );
 

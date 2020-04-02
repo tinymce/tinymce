@@ -29,8 +29,7 @@ const defaultMenus = {
   },
   view: {
     title: 'View',
-    items:
-      'code | visualaid visualchars visualblocks | spellchecker | preview fullscreen | showcomments'
+    items: 'code | visualaid visualchars visualblocks | spellchecker | preview fullscreen | showcomments'
   },
   insert: {
     title: 'Insert',
@@ -48,17 +47,12 @@ const defaultMenus = {
   },
   table: {
     title: 'Table',
-    items:
-      'inserttable | cell row column | advtablesort | tableprops deletetable'
+    items: 'inserttable | cell row column | advtablesort | tableprops deletetable'
   },
   help: { title: 'Help', items: 'help' }
 };
 
-const make = (
-  menu: { title: string; items: string[] },
-  registry: MenuRegistry,
-  editor
-): MenubarItemSpec => {
+const make = (menu: { title: string; items: string[] }, registry: MenuRegistry, editor): MenubarItemSpec => {
   const removedMenuItems = getRemovedMenuItems(editor).split(/[ ,]/);
   return {
     text: menu.title,
@@ -67,12 +61,7 @@ const make = (
         const itemName = i.toLowerCase();
         if (itemName.trim().length === 0) {
           return [];
-        } else if (
-          Arr.exists(
-            removedMenuItems,
-            (removedMenuItem) => removedMenuItem === itemName
-          )
-        ) {
+        } else if (Arr.exists(removedMenuItems, (removedMenuItem) => removedMenuItem === itemName)) {
           return [];
         } else if (itemName === 'separator' || itemName === '|') {
           return [
@@ -96,10 +85,7 @@ const parseItemsString = (items: string): string[] => {
   return items;
 };
 
-const identifyMenus = (
-  editor: Editor,
-  registry: MenuRegistry
-): MenubarItemSpec[] => {
+const identifyMenus = (editor: Editor, registry: MenuRegistry): MenubarItemSpec[] => {
   const rawMenuData = { ...defaultMenus, ...registry.menus };
   const userDefinedMenus = Obj.keys(registry.menus).length > 0;
 
@@ -109,27 +95,20 @@ const identifyMenus = (
       : parseItemsString(registry.menubar === false ? '' : registry.menubar);
   const validMenus = Arr.filter(menubar, (menuName) =>
     userDefinedMenus
-      ? (registry.menus.hasOwnProperty(menuName) &&
-          registry.menus[menuName].hasOwnProperty('items')) ||
+      ? (registry.menus.hasOwnProperty(menuName) && registry.menus[menuName].hasOwnProperty('items')) ||
         defaultMenus.hasOwnProperty(menuName)
       : defaultMenus.hasOwnProperty(menuName)
   );
 
   const menus: MenubarItemSpec[] = Arr.map(validMenus, (menuName) => {
     const menuData = rawMenuData[menuName];
-    return make(
-      { title: menuData.title, items: parseItemsString(menuData.items) },
-      registry,
-      editor
-    );
+    return make({ title: menuData.title, items: parseItemsString(menuData.items) }, registry, editor);
   });
 
   return Arr.filter(menus, (menu) => {
     // Filter out menus that have no items, or only separators
     const isNotSeparator = (item) => item.type !== 'separator';
-    return (
-      menu.getItems().length > 0 && Arr.exists(menu.getItems(), isNotSeparator)
-    );
+    return menu.getItems().length > 0 && Arr.exists(menu.getItems(), isNotSeparator);
   });
 };
 

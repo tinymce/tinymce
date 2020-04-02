@@ -7,10 +7,7 @@ import * as Preview from 'tinymce/core/fmt/Preview';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as HtmlUtils from '../../module/test/HtmlUtils';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function (success, failure) {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
@@ -38,64 +35,38 @@ UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function (
       return Preview.getCssText(editor, format);
     };
 
-    ok(
-      /font-weight\:(bold|700)/.test(getCssText('bold')),
-      'Bold not found in preview style'
-    );
+    ok(/font-weight\:(bold|700)/.test(getCssText('bold')), 'Bold not found in preview style');
+
+    ok(/font-weight\:(bold|700)/.test(getCssText({ inline: 'b' })), 'Bold not found in preview style');
 
     ok(
-      /font-weight\:(bold|700)/.test(getCssText({ inline: 'b' })),
-      'Bold not found in preview style'
-    );
-
-    ok(
-      !/font-weight\:(bold|700)/.test(
-        getCssText({ inline: 'b', preview: 'font-size' })
-      ),
+      !/font-weight\:(bold|700)/.test(getCssText({ inline: 'b', preview: 'font-size' })),
       'Bold should not be when we only preview font-size'
     );
 
-    ok(
-      /color\:rgb\(255, 0, 0\)/.test(
-        getCssText({ inline: 'custom', styles: { color: '#ff0000' } })
-      ),
-      'Test preview of a custom element.'
-    );
+    ok(/color\:rgb\(255, 0, 0\)/.test(getCssText({ inline: 'custom', styles: { color: '#ff0000' } })), 'Test preview of a custom element.');
 
     ok(
-      /color\:rgb\(255, 0, 0\)/.test(
-        getCssText({ inline: 'invalid', styles: { color: '#ff0000' } })
-      ),
+      /color\:rgb\(255, 0, 0\)/.test(getCssText({ inline: 'invalid', styles: { color: '#ff0000' } })),
       `Test preview of an invalid element shouldn't crash the editor .`
     );
 
     ok(
-      /color\:rgb\(0, 255, 0\)/.test(
-        getCssText({ selector: 'tr', classes: ['preview'] })
-      ),
+      /color\:rgb\(0, 255, 0\)/.test(getCssText({ selector: 'tr', classes: ['preview'] })),
       'Style is properly inherited in preview for partial element (like TR).'
     );
 
     ok(
-      /color\:rgb\(255, 0, 0\)/.test(
-        getCssText({ selector: 'li', classes: ['preview'] })
-      ),
+      /color\:rgb\(255, 0, 0\)/.test(getCssText({ selector: 'li', classes: ['preview'] })),
       'For LI element default required parent is UL.'
     );
 
     ok(
-      /color\:rgb\(0, 0, 255\)/.test(
-        getCssText({ selector: 'ol li', classes: ['preview'] })
-      ),
+      /color\:rgb\(0, 0, 255\)/.test(getCssText({ selector: 'ol li', classes: ['preview'] })),
       'Parent explicitly present in the selector will have preference.'
     );
 
-    ok(
-      /color\:rgb\(0, 0, 255\)/.test(
-        getCssText({ selector: 'ol > li', classes: ['preview'] })
-      ),
-      'ol > li previewed properly.'
-    );
+    ok(/color\:rgb\(0, 0, 255\)/.test(getCssText({ selector: 'ol > li', classes: ['preview'] })), 'ol > li previewed properly.');
 
     ok(
       /color\:rgb\(0, 0, 255\)/.test(
@@ -117,12 +88,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function (
       'ul + ol.someClass > li#someId previewed properly.'
     );
 
-    ok(
-      /color\:rgb\(0, 0, 255\)/.test(
-        getCssText({ selector: 'ul li ol li', classes: ['preview'] })
-      ),
-      'ul li ol li previewed properly.'
-    );
+    ok(/color\:rgb\(0, 0, 255\)/.test(getCssText({ selector: 'ul li ol li', classes: ['preview'] })), 'ul li ol li previewed properly.');
   });
 
   suite.test('Preview.parseSelector()', function () {
@@ -257,70 +223,34 @@ UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function (
     };
 
     const selectorToHtml = function (selector) {
-      return HtmlUtils.normalizeHtml(
-        Preview.selectorToHtml(selector).outerHTML
-      );
+      return HtmlUtils.normalizeHtml(Preview.selectorToHtml(selector).outerHTML);
     };
 
     LegacyUnit.equal(
       selectorToHtml('ul > li.class1'),
-      trimSpaces(
-        ['<div>', '<ul>', '<li class="class1"></li>', '</ul>', '</div>'].join(
-          ''
-        )
-      ),
+      trimSpaces(['<div>', '<ul>', '<li class="class1"></li>', '</ul>', '</div>'].join('')),
       'ul > li.class1 ok'
     );
 
     LegacyUnit.equal(
       selectorToHtml('ol + ul#id1 > li.class1[title="Some Title"]'),
       trimSpaces(
-        [
-          '<div>',
-          '<div>',
-          '<ol></ol>',
-          '<ul id="id1">',
-          '  <li class="class1" title="Some Title"></li>',
-          '</ul>',
-          '</div>',
-          '</div>'
-        ].join('')
+        ['<div>', '<div>', '<ol></ol>', '<ul id="id1">', '  <li class="class1" title="Some Title"></li>', '</ul>', '</div>', '</div>'].join(
+          ''
+        )
       ),
       'ol + ul#id1 > li.class1[title="Some Title"] ok'
     );
 
     LegacyUnit.equal(
       selectorToHtml('tr > th + td'),
-      trimSpaces(
-        [
-          '<div>',
-          '<table>',
-          '<tbody>',
-          '<tr>',
-          '<th></th>',
-          '<td></td>',
-          '</tr>',
-          '</tbody>',
-          '</table>',
-          '</div>'
-        ].join('')
-      ),
+      trimSpaces(['<div>', '<table>', '<tbody>', '<tr>', '<th></th>', '<td></td>', '</tr>', '</tbody>', '</table>', '</div>'].join('')),
       'tr > th + td (required parental structure properly rebuilt) ok'
     );
 
     LegacyUnit.equal(
       selectorToHtml('p li[title="Some Title"][alt="Some Alt"]'),
-      trimSpaces(
-        [
-          '<div>',
-          '<p>',
-          '<ul>',
-          '<li alt="Some Alt" title="Some Title"></li>',
-          '</ul>',
-          '</p>',
-          '</div>'
-        ].join('')
-      ),
+      trimSpaces(['<div>', '<p>', '<ul>', '<li alt="Some Alt" title="Some Title"></li>', '</ul>', '</p>', '</div>'].join('')),
       'p li[title="Some Title"][alt="Some Alt"] (test multiple spaced attributes) ok'
     );
   });
@@ -337,16 +267,8 @@ UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest', function (
             Waiter.sTryUntil(
               'Expected styles where not loaded',
               Step.sync(function () {
-                const color = editor.dom.getStyle(
-                  editor.dom.select('p'),
-                  'color',
-                  true
-                );
-                Assertions.assertEq(
-                  'Did not get a color value of 255',
-                  true,
-                  color.indexOf('255') !== -1
-                );
+                const color = editor.dom.getStyle(editor.dom.select('p'), 'color', true);
+                Assertions.assertEq('Did not get a color value of 255', true, color.indexOf('255') !== -1);
               }),
               10,
               3000

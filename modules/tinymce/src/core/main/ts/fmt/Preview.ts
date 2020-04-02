@@ -57,9 +57,7 @@ const parsedSelectorToHtml = function (ancestry, editor: Editor) {
     const parentsRequired = elmRule && elmRule.parentsRequired;
 
     if (parentsRequired && parentsRequired.length) {
-      return candidate && Tools.inArray(parentsRequired, candidate) !== -1
-        ? candidate
-        : parentsRequired[0];
+      return candidate && Tools.inArray(parentsRequired, candidate) !== -1 ? candidate : parentsRequired[0];
     } else {
       return false;
     }
@@ -104,11 +102,7 @@ const parsedSelectorToHtml = function (ancestry, editor: Editor) {
       });
     }
 
-    return wrapInHtml(
-      parent,
-      ancestry,
-      parentCandidate && parentCandidate.siblings
-    );
+    return wrapInHtml(parent, ancestry, parentCandidate && parentCandidate.siblings);
   };
 
   if (ancestry && ancestry.length) {
@@ -137,41 +131,33 @@ const parseSelectorItem = function (item) {
 
   if (item !== '*') {
     // matching IDs, CLASSes, ATTRIBUTES and PSEUDOs
-    tagName = item.replace(
-      /(?:([#\.]|::?)([\w\-]+)|(\[)([^\]]+)\]?)/g,
-      function ($0, $1, $2, $3, $4) {
-        switch ($1) {
-          case '#':
-            obj.attrs.id = $2;
-            break;
+    tagName = item.replace(/(?:([#\.]|::?)([\w\-]+)|(\[)([^\]]+)\]?)/g, function ($0, $1, $2, $3, $4) {
+      switch ($1) {
+        case '#':
+          obj.attrs.id = $2;
+          break;
 
-          case '.':
-            obj.classes.push($2);
-            break;
+        case '.':
+          obj.classes.push($2);
+          break;
 
-          case ':':
-            if (
-              Tools.inArray(
-                'checked disabled enabled read-only required'.split(' '),
-                $2
-              ) !== -1
-            ) {
-              obj.attrs[$2] = $2;
-            }
-            break;
-        }
-
-        // atribute matched
-        if ($3 === '[') {
-          const m = $4.match(/([\w\-]+)(?:\=\"([^\"]+))?/);
-          if (m) {
-            obj.attrs[m[1]] = m[2];
+        case ':':
+          if (Tools.inArray('checked disabled enabled read-only required'.split(' '), $2) !== -1) {
+            obj.attrs[$2] = $2;
           }
-        }
-
-        return '';
+          break;
       }
-    );
+
+      // atribute matched
+      if ($3 === '[') {
+        const m = $4.match(/([\w\-]+)(?:\=\"([^\"]+))?/);
+        if (m) {
+          obj.attrs[m[1]] = m[2];
+        }
+      }
+
+      return '';
+    });
   }
 
   obj.name = tagName || 'div';
@@ -297,18 +283,13 @@ const getCssText = function (editor: Editor, format) {
 
   // Get parent container font size so we can compute px values out of em/% for older IE:s
   parentFontSize = dom.getStyle(editor.getBody(), 'fontSize', true);
-  parentFontSize = /px$/.test(parentFontSize)
-    ? parseInt(parentFontSize, 10)
-    : 0;
+  parentFontSize = /px$/.test(parentFontSize) ? parseInt(parentFontSize, 10) : 0;
 
   each(previewStyles.split(' '), function (name) {
     let value = dom.getStyle(previewElm, name, true);
 
     // If background is transparent then check if the body has a background color we can use
-    if (
-      name === 'background-color' &&
-      /transparent|rgba\s*\([^)]+,\s*0\)/.test(value)
-    ) {
+    if (name === 'background-color' && /transparent|rgba\s*\([^)]+,\s*0\)/.test(value)) {
       value = dom.getStyle(editor.getBody(), name, true);
 
       // Ignore white since it's the default color, not the nicest fix

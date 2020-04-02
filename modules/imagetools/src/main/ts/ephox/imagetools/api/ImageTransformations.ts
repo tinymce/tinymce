@@ -19,26 +19,15 @@ const gamma = function (ir: ImageResult, value: number): Promise<ImageResult> {
   return Filters.gamma(ir, value);
 };
 
-const exposure = function (
-  ir: ImageResult,
-  value: number
-): Promise<ImageResult> {
+const exposure = function (ir: ImageResult, value: number): Promise<ImageResult> {
   return Filters.exposure(ir, value);
 };
 
-const colorize = function (
-  ir: ImageResult,
-  adjustR: number,
-  adjustG: number,
-  adjustB: number
-): Promise<ImageResult> {
+const colorize = function (ir: ImageResult, adjustR: number, adjustG: number, adjustB: number): Promise<ImageResult> {
   return Filters.colorize(ir, adjustR, adjustG, adjustB);
 };
 
-const brightness = function (
-  ir: ImageResult,
-  adjust: number
-): Promise<ImageResult> {
+const brightness = function (ir: ImageResult, adjust: number): Promise<ImageResult> {
   return Filters.brightness(ir, adjust);
 };
 
@@ -46,24 +35,15 @@ const hue = function (ir: ImageResult, adjust: number): Promise<ImageResult> {
   return Filters.hue(ir, adjust);
 };
 
-const saturate = function (
-  ir: ImageResult,
-  adjust: number
-): Promise<ImageResult> {
+const saturate = function (ir: ImageResult, adjust: number): Promise<ImageResult> {
   return Filters.saturate(ir, adjust);
 };
 
-const contrast = function (
-  ir: ImageResult,
-  adjust: number
-): Promise<ImageResult> {
+const contrast = function (ir: ImageResult, adjust: number): Promise<ImageResult> {
   return Filters.contrast(ir, adjust);
 };
 
-const grayscale = function (
-  ir: ImageResult,
-  adjust: number
-): Promise<ImageResult> {
+const grayscale = function (ir: ImageResult, adjust: number): Promise<ImageResult> {
   return Filters.grayscale(ir, adjust);
 };
 
@@ -75,21 +55,11 @@ const flip = function (ir: ImageResult, axis: 'h' | 'v'): Promise<ImageResult> {
   return ImageTools.flip(ir, axis);
 };
 
-const crop = function (
-  ir: ImageResult,
-  x: number,
-  y: number,
-  w: number,
-  h: number
-): Promise<ImageResult> {
+const crop = function (ir: ImageResult, x: number, y: number, w: number, h: number): Promise<ImageResult> {
   return ImageTools.crop(ir, x, y, w, h);
 };
 
-const resize = function (
-  ir: ImageResult,
-  w: number,
-  h: number
-): Promise<ImageResult> {
+const resize = function (ir: ImageResult, w: number, h: number): Promise<ImageResult> {
   return ImageTools.resize(ir, w, h);
 };
 

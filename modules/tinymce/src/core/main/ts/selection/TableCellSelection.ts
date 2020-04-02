@@ -12,17 +12,11 @@ import * as MultiRange from './MultiRange';
 import Editor from '../api/Editor';
 
 const getCellsFromRanges = function (ranges) {
-  return Arr.filter(
-    MultiRange.getSelectedNodes(ranges),
-    ElementType.isTableCell
-  );
+  return Arr.filter(MultiRange.getSelectedNodes(ranges), ElementType.isTableCell);
 };
 
 const getCellsFromElement = function (elm) {
-  return SelectorFilter.descendants(
-    elm,
-    'td[data-mce-selected],th[data-mce-selected]'
-  );
+  return SelectorFilter.descendants(elm, 'td[data-mce-selected],th[data-mce-selected]');
 };
 
 const getCellsFromElementOrRanges = function (ranges, element) {
@@ -32,15 +26,7 @@ const getCellsFromElementOrRanges = function (ranges, element) {
 };
 
 const getCellsFromEditor = function (editor: Editor) {
-  return getCellsFromElementOrRanges(
-    MultiRange.getRanges(editor.selection.getSel()),
-    Element.fromDom(editor.getBody())
-  );
+  return getCellsFromElementOrRanges(MultiRange.getRanges(editor.selection.getSel()), Element.fromDom(editor.getBody()));
 };
 
-export {
-  getCellsFromRanges,
-  getCellsFromElement,
-  getCellsFromElementOrRanges,
-  getCellsFromEditor
-};
+export { getCellsFromRanges, getCellsFromElement, getCellsFromElementOrRanges, getCellsFromEditor };

@@ -12,12 +12,7 @@ interface SubstitutedPart extends ConfiguredPart {
 
 UnitTest.test('UiSubstitutesTest', () => {
   Logger.sync('Testing empty components', () => {
-    const actual = UiSubstitutes.substitutePlaces(
-      Option.some('detail'),
-      {} as CompositeSketchDetail,
-      [],
-      {}
-    );
+    const actual = UiSubstitutes.substitutePlaces(Option.some('detail'), {} as CompositeSketchDetail, [], {});
     Assert.eq('Components should stay empty', [], actual);
   });
 
@@ -28,21 +23,14 @@ UnitTest.test('UiSubstitutesTest', () => {
       [{ uiType: 'normal' }] as ConfiguredPart[],
       {}
     );
-    Assert.eq(
-      'Normal should be returned as is',
-      ([{ uiType: 'normal', components: [] }] as unknown) as SubstitutedPart[],
-      actual
-    );
+    Assert.eq('Normal should be returned as is', ([{ uiType: 'normal', components: [] }] as unknown) as SubstitutedPart[], actual);
   });
 
   Logger.sync('Testing one level with a dependent', () => {
     const actual = UiSubstitutes.substitutePlaces(
       Option.some('owner'),
       ('detail' as unknown) as CompositeSketchDetail,
-      [
-        { uiType: 'normal' },
-        { uiType: 'placeholder', name: 'foo', owner: 'owner' }
-      ] as ConfiguredPart[],
+      [{ uiType: 'normal' }, { uiType: 'placeholder', name: 'foo', owner: 'owner' }] as ConfiguredPart[],
       {
         foo: UiSubstitutes.single(
           true,

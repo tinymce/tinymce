@@ -7,20 +7,11 @@ UnitTest.test('ParentsTest', function () {
   const doc = TestUniverse(
     Gene('root', 'root', [
       Gene('a', '', [
-        Gene('aa', '', [
-          Gene('aaa', '', []),
-          Gene('aab', '', [
-            Gene('aaba', '', [Gene('aabaa', '', []), Gene('aabab', '', [])])
-          ])
-        ]),
+        Gene('aa', '', [Gene('aaa', '', []), Gene('aab', '', [Gene('aaba', '', [Gene('aabaa', '', []), Gene('aabab', '', [])])])]),
         Gene('ab', '', [
           Gene('aba', '', []),
           Gene('abb', '', []),
-          Gene('abc', '', [
-            Gene('abca', '', []),
-            Gene('abcb', '', []),
-            Gene('abcc', '', [Gene('abcca', '', [])])
-          ])
+          Gene('abc', '', [Gene('abca', '', []), Gene('abcb', '', []), Gene('abcc', '', [Gene('abcca', '', [])])])
         ]),
         Gene('ac', '', [Gene('aca', '', [])])
       ]),

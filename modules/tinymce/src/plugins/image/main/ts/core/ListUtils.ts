@@ -11,17 +11,12 @@ import { ListItem, ListGroup, ListValue } from '../ui/DialogTypes';
 
 export type ListExtractor = (item: any) => string;
 
-const getValue: ListExtractor = (item) =>
-  Type.isString(item.value) ? item.value : '';
+const getValue: ListExtractor = (item) => (Type.isString(item.value) ? item.value : '');
 
 const sanitizeList = (list: any, extractValue: ListExtractor): ListItem[] => {
   const out: ListItem[] = [];
   Tools.each(list, function (item) {
-    const text: string = Type.isString(item.text)
-      ? item.text
-      : Type.isString(item.title)
-      ? item.title
-      : '';
+    const text: string = Type.isString(item.text) ? item.text : Type.isString(item.title) ? item.title : '';
     if (item.menu !== undefined) {
       const items = sanitizeList(item.menu, extractValue);
       out.push({ text, items }); // list group
@@ -43,13 +38,9 @@ const sanitizer = (extracter = getValue) => (list: any): Option<ListItem[]> => {
 
 const sanitize = (list: any) => sanitizer(getValue)(list);
 
-const isGroup = (item: ListItem): item is ListGroup =>
-  Object.prototype.hasOwnProperty.call(item, 'items');
+const isGroup = (item: ListItem): item is ListGroup => Object.prototype.hasOwnProperty.call(item, 'items');
 
-const findEntryDelegate = (
-  list: ListItem[],
-  value: string
-): Option<ListValue> =>
+const findEntryDelegate = (list: ListItem[], value: string): Option<ListValue> =>
   Arr.findMap(list, (item) => {
     if (isGroup(item)) {
       return findEntryDelegate(item.items, value);
@@ -60,8 +51,7 @@ const findEntryDelegate = (
     }
   });
 
-const findEntry = (optList: Option<ListItem[]>, value: string) =>
-  optList.bind((list) => findEntryDelegate(list, value));
+const findEntry = (optList: Option<ListItem[]>, value: string) => optList.bind((list) => findEntryDelegate(list, value));
 
 export const ListUtils = {
   sanitizer,

@@ -35,24 +35,15 @@ UnitTest.asynctest('McagarTutorialTest', (success, failure) => {
       Pipeline.async(
         {},
         [
-          ui.sClickOnToolbar(
-            'Clicking on button',
-            'button:contains("tutorial")'
-          ),
+          ui.sClickOnToolbar('Clicking on button', 'button:contains("tutorial")'),
           apis.sAssertContent('<p>tutorial content</p>'),
           Step.wait(400),
           apis.sAssertSelection([], 0, [], 1),
-          ui.sClickOnToolbar(
-            'Clicking on button to change to alternate',
-            'button:contains("tutorial")'
-          ),
+          ui.sClickOnToolbar('Clicking on button to change to alternate', 'button:contains("tutorial")'),
           apis.sAssertContent('<p>alternate content</p>'),
           Step.wait(400),
           apis.sAssertSelection([0], 1, [0], 1),
-          ui.sClickOnToolbar(
-            'Clicking on button to change to tutorial again',
-            'button:contains("tutorial")'
-          ),
+          ui.sClickOnToolbar('Clicking on button to change to tutorial again', 'button:contains("tutorial")'),
           apis.sAssertContent('<p>tutorial content</p>'),
           Step.wait(400),
           apis.sAssertSelection([], 0, [], 1)

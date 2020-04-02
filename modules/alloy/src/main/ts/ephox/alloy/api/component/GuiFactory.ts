@@ -2,11 +2,7 @@ import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun, Obj, Option, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
-import {
-  AlloySpec,
-  PremadeSpec,
-  SimpleOrSketchSpec
-} from '../../api/component/SpecTypes';
+import { AlloySpec, PremadeSpec, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import * as DefaultEvents from '../../events/DefaultEvents';
 import * as Tagger from '../../registry/Tagger';
 import * as CustomSpec from '../../spec/CustomSpec';
@@ -21,12 +17,8 @@ const buildSubcomponents = (spec: SimpleOrSketchSpec): AlloyComponent[] => {
   return Arr.map(components, build);
 };
 
-const buildFromSpec = (
-  userSpec: SimpleOrSketchSpec
-): Result<AlloyComponent, string> => {
-  const { events: specEvents, ...spec }: SimpleOrSketchSpec = CustomSpec.make(
-    userSpec
-  );
+const buildFromSpec = (userSpec: SimpleOrSketchSpec): Result<AlloyComponent, string> => {
+  const { events: specEvents, ...spec }: SimpleOrSketchSpec = CustomSpec.make(userSpec);
 
   // Build the subcomponents. A spec hierarchy is built from the bottom up.
   const components: AlloyComponent[] = buildSubcomponents(spec);
@@ -60,14 +52,7 @@ const external = (spec: ExternalElement): PremadeSpec => {
   const extSpec: {
     uid: Option<string>;
     element: Element;
-  } = ValueSchema.asRawOrDie(
-    'external.component',
-    ValueSchema.objOfOnly([
-      FieldSchema.strict('element'),
-      FieldSchema.option('uid')
-    ]),
-    spec
-  );
+  } = ValueSchema.asRawOrDie('external.component', ValueSchema.objOfOnly([FieldSchema.strict('element'), FieldSchema.option('uid')]), spec);
 
   const systemApi = Cell(NoContextApi());
 

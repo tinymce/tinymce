@@ -8,20 +8,11 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
-UnitTest.asynctest('browser.plugins.media.DataAttributeTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.plugins.media.DataAttributeTest', function (success, failure) {
   Plugin();
   Theme();
 
-  const sTestEmbedContentFromUrlWithAttribute = function (
-    editor: Editor,
-    api: TinyApis,
-    ui: TinyUi,
-    url: string,
-    content: string
-  ) {
+  const sTestEmbedContentFromUrlWithAttribute = function (editor: Editor, api: TinyApis, ui: TinyUi, url: string, content: string) {
     return Logger.t(
       `Assert embeded ${content} from ${url} with attribute`,
       GeneralSteps.sequence([
@@ -68,37 +59,28 @@ UnitTest.asynctest('browser.plugins.media.DataAttributeTest', function (
 
       Pipeline.async(
         {},
-        Log.steps(
-          'TBA',
-          'Media: Test embeded content from url with attribute',
-          [
-            sTestEmbedContentFromUrlWithAttribute(
-              editor,
-              api,
-              ui,
-              'a',
-              '<div data-ephox-embed-iri="a" style="max-width: 300px; max-height: 150px"></div>'
-            ),
-            sTestEmbedContentFromUrl2(
-              editor,
-              api,
-              ui,
-              'a',
-              'b',
-              '<div data-ephox-embed-iri="a" style="max-width: 300px; max-height: 150px"></div>',
-              '<div data-ephox-embed-iri="b" style="max-width: 300px; max-height: 150px"></div>'
-            ),
-            Utils.sTestEmbedContentFromUrl(
-              api,
-              ui,
-              'a',
-              '<div data-ephox-embed-iri="a" style="max-width: 300px; max-height: 150px"></div>'
-            ),
-            Utils.sAssertSizeRecalcConstrained(ui),
-            Utils.sAssertSizeRecalcUnconstrained(ui),
-            Utils.sAssertSizeRecalcConstrainedReopen(ui)
-          ]
-        ),
+        Log.steps('TBA', 'Media: Test embeded content from url with attribute', [
+          sTestEmbedContentFromUrlWithAttribute(
+            editor,
+            api,
+            ui,
+            'a',
+            '<div data-ephox-embed-iri="a" style="max-width: 300px; max-height: 150px"></div>'
+          ),
+          sTestEmbedContentFromUrl2(
+            editor,
+            api,
+            ui,
+            'a',
+            'b',
+            '<div data-ephox-embed-iri="a" style="max-width: 300px; max-height: 150px"></div>',
+            '<div data-ephox-embed-iri="b" style="max-width: 300px; max-height: 150px"></div>'
+          ),
+          Utils.sTestEmbedContentFromUrl(api, ui, 'a', '<div data-ephox-embed-iri="a" style="max-width: 300px; max-height: 150px"></div>'),
+          Utils.sAssertSizeRecalcConstrained(ui),
+          Utils.sAssertSizeRecalcUnconstrained(ui),
+          Utils.sAssertSizeRecalcConstrainedReopen(ui)
+        ]),
         onSuccess,
         onFailure
       );
@@ -109,10 +91,7 @@ UnitTest.asynctest('browser.plugins.media.DataAttributeTest', function (
       theme: 'silver',
       media_url_resolver(data, resolve) {
         resolve({
-          html:
-            '<div data-ephox-embed-iri="' +
-            data.url +
-            '" style="max-width: 300px; max-height: 150px"></div>'
+          html: '<div data-ephox-embed-iri="' + data.url + '" style="max-width: 300px; max-height: 150px"></div>'
         });
       },
       base_url: '/project/tinymce/js/tinymce'

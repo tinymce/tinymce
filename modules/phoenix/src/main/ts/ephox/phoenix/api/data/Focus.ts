@@ -7,6 +7,4 @@ export interface Focus<E> {
 }
 type FocusConstructor = <E>(left: any, element: E, right: any) => Focus<E>;
 
-export const Focus = <FocusConstructor>(
-  Struct.immutable('left', 'element', 'right')
-);
+export const Focus = <FocusConstructor>Struct.immutable('left', 'element', 'right');

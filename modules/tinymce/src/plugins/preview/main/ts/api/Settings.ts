@@ -18,12 +18,6 @@ const getContentStyle = function (editor: Editor) {
   return editor.getParam('content_style', '');
 };
 
-const shouldUseContentCssCors = (editor: Editor): boolean =>
-  editor.getParam('content_css_cors', false, 'boolean');
+const shouldUseContentCssCors = (editor: Editor): boolean => editor.getParam('content_css_cors', false, 'boolean');
 
-export {
-  getPreviewDialogWidth,
-  getPreviewDialogHeight,
-  getContentStyle,
-  shouldUseContentCssCors
-};
+export { getPreviewDialogWidth, getPreviewDialogHeight, getContentStyle, shouldUseContentCssCors };

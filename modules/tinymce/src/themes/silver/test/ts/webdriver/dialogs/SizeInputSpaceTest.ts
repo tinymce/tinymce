@@ -1,12 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  FocusTools,
-  Logger,
-  RealKeys,
-  UiFinder
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, Logger, RealKeys, UiFinder } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
@@ -54,11 +46,7 @@ UnitTest.asynctest('SizeInput <space> webdriver Test', (success, failure) => {
       ]);
 
       return [
-        FocusTools.sSetFocus(
-          'Focus the constrain button',
-          component.element(),
-          '.tox-lock'
-        ),
+        FocusTools.sSetFocus('Focus the constrain button', component.element(), '.tox-lock'),
         sAssertLockedStatus('Initially: ', true),
         sSendRealSpace,
         sAssertLockedStatus('Firing space on a pressed button', false),

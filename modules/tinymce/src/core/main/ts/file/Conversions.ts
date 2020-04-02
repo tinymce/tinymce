@@ -19,11 +19,7 @@ import { Option } from '@ephox/katamari';
 const blobUriToBlob = function (url: string): Promise<Blob> {
   return new Promise(function (resolve, reject) {
     const rejectWithError = function () {
-      reject(
-        'Cannot convert ' +
-          url +
-          ' to Blob. Resource might not exist or is inaccessible.'
-      );
+      reject('Cannot convert ' + url + ' to Blob. Resource might not exist or is inaccessible.');
     };
 
     try {

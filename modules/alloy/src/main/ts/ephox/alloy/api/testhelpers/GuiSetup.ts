@@ -1,14 +1,7 @@
 import { Assertions, Pipeline, Step, TestLogs } from '@ephox/agar';
 import { document, HTMLDocument } from '@ephox/dom-globals';
 import { Merger } from '@ephox/katamari';
-import {
-  DomEvent,
-  Element,
-  EventUnbinder,
-  Html,
-  Insert,
-  Remove
-} from '@ephox/sugar';
+import { DomEvent, Element, EventUnbinder, Html, Insert, Remove } from '@ephox/sugar';
 
 import { AlloyComponent } from '../component/ComponentApi';
 import * as Attachment from '../system/Attachment';
@@ -25,18 +18,8 @@ interface KeyLoggerState {
  * TODO: remove and inline
  */
 const setup = (
-  createComponent: (
-    store: TestStore,
-    doc: Element,
-    body: Element
-  ) => AlloyComponent,
-  f: (
-    doc: Element,
-    body: Element,
-    gui: Gui.GuiSystem,
-    component: AlloyComponent,
-    store: TestStore
-  ) => Array<Step<any, any>>,
+  createComponent: (store: TestStore, doc: Element, body: Element) => AlloyComponent,
+  f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Array<Step<any, any>>,
   success: () => void,
   failure: (err: any, logs?: TestLogs) => void
 ) => {
@@ -78,27 +61,12 @@ const setup = (
  * @param failure
  */
 const guiSetup = <A, B>(
-  createComponent: (
-    store: TestStore,
-    doc: Element,
-    body: Element
-  ) => AlloyComponent,
-  f: (
-    doc: Element,
-    body: Element,
-    gui: Gui.GuiSystem,
-    component: AlloyComponent,
-    store: TestStore
-  ) => Step<A, B>,
+  createComponent: (store: TestStore, doc: Element, body: Element) => AlloyComponent,
+  f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Step<A, B>,
   success: () => void,
   failure: (err: any, logs?: TestLogs) => void
 ) => {
-  setup(
-    createComponent,
-    (doc, body, gui, component, store) => [f(doc, body, gui, component, store)],
-    success,
-    failure
-  );
+  setup(createComponent, (doc, body, gui, component, store) => [f(doc, body, gui, component, store)], success, failure);
 };
 
 const mSetupKeyLogger = (body: Element) =>
@@ -118,11 +86,7 @@ const mSetupKeyLogger = (body: Element) =>
 
 const mTeardownKeyLogger = (body: Element, expected: string[]) =>
   Step.stateful((state: KeyLoggerState, next, _die) => {
-    Assertions.assertEq(
-      'Checking key log outside context (on teardown)',
-      expected,
-      state.log
-    );
+    Assertions.assertEq('Checking key log outside context (on teardown)', expected, state.log);
     state.onKeydown.unbind();
     const { onKeydown, log, ...rest } = state;
     next(rest);
@@ -147,11 +111,4 @@ const mRemoveStyles = Step.stateful((value: any, next, _die) => {
   next(value);
 });
 
-export {
-  setup,
-  guiSetup,
-  mSetupKeyLogger,
-  mTeardownKeyLogger,
-  mAddStyles,
-  mRemoveStyles
-};
+export { setup, guiSetup, mSetupKeyLogger, mTeardownKeyLogger, mAddStyles, mRemoveStyles };

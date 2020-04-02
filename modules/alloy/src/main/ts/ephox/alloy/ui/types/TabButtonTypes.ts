@@ -4,15 +4,8 @@ import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
-import {
-  SingleSketch,
-  SingleSketchDetail,
-  SingleSketchSpec
-} from '../../api/ui/Sketcher';
-import {
-  DomModification,
-  DomModificationSpec
-} from '../../dom/DomModification';
+import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
+import { DomModification, DomModificationSpec } from '../../dom/DomModification';
 
 export type ButtonAction = (comp: AlloyComponent) => void;
 

@@ -115,11 +115,7 @@ export default (): void => {
     Container.sketch({
       components: [
         Container.sketch({
-          components: [
-            createDropZone('copy'),
-            createDropZone('link'),
-            createDropZone('move')
-          ]
+          components: [createDropZone('copy'), createDropZone('link'), createDropZone('move')]
         }),
 
         Container.sketch({

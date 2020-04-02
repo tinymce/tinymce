@@ -37,9 +37,7 @@ interface PromisePolyfill<T> extends Promise<T> {
     onRejected?: Callback<any, TResult2> | undefined | null
   ): PromisePolyfill<TResult1 | TResult2>;
 
-  catch<TResult = never>(
-    onRejected?: Callback<any, TResult> | undefined | null
-  ): Promise<T | TResult>;
+  catch<TResult = never>(onRejected?: Callback<any, TResult> | undefined | null): Promise<T | TResult>;
 }
 
 interface PromisePolyfillConstructor extends PromiseConstructor {
@@ -115,17 +113,10 @@ const promise = <T>(): PromisePolyfillConstructor => {
       if (newValue === this) {
         throw new TypeError('A promise cannot be resolved with itself.');
       }
-      if (
-        newValue &&
-        (typeof newValue === 'object' || typeof newValue === 'function')
-      ) {
+      if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
         const then = newValue.then;
         if (typeof then === 'function') {
-          doResolve(
-            bind(then, newValue),
-            bind(resolve, this),
-            bind(reject, this)
-          );
+          doResolve(bind(then, newValue), bind(resolve, this), bind(reject, this));
           return;
         }
       }
@@ -201,9 +192,7 @@ const promise = <T>(): PromisePolyfillConstructor => {
     }
   }
 
-  Promise.prototype.catch = function <TResult = never>(
-    onRejected?: Callback<any, TResult> | null
-  ): PromisePolyfill<T | TResult> {
+  Promise.prototype.catch = function <TResult = never>(onRejected?: Callback<any, TResult> | null): PromisePolyfill<T | TResult> {
     return this.then(null, onRejected);
   };
 
@@ -213,17 +202,12 @@ const promise = <T>(): PromisePolyfillConstructor => {
   ): PromisePolyfill<TResult1 | TResult2> {
     const me = this;
     return new Promise(function (resolve, reject) {
-      handle.call(
-        me,
-        new (Handler as any)(onFulfilled, onRejected, resolve, reject)
-      );
+      handle.call(me, new (Handler as any)(onFulfilled, onRejected, resolve, reject));
     });
   };
 
   Promise.all = function <U>(...values: any[]): PromisePolyfill<any> {
-    const args = Array.prototype.slice.call(
-      values.length === 1 && isArray(values[0]) ? values[0] : values
-    );
+    const args = Array.prototype.slice.call(values.length === 1 && isArray(values[0]) ? values[0] : values);
 
     return new Promise(function (resolve, reject) {
       if (args.length === 0) {
@@ -259,14 +243,8 @@ const promise = <T>(): PromisePolyfillConstructor => {
     });
   };
 
-  Promise.resolve = function <U>(
-    value?: U | PromiseLike<U>
-  ): PromisePolyfill<U | void> {
-    if (
-      value &&
-      typeof value === 'object' &&
-      (value as {}).constructor === Promise
-    ) {
+  Promise.resolve = function <U>(value?: U | PromiseLike<U>): PromisePolyfill<U | void> {
+    if (value && typeof value === 'object' && (value as {}).constructor === Promise) {
       return value as PromisePolyfill<U | void>;
     }
 

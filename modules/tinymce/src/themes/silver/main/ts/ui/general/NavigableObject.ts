@@ -5,13 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyTriggers,
-  Behaviour,
-  Focusing,
-  NativeEvents,
-  Tabstopping
-} from '@ephox/alloy';
+import { AlloyTriggers, Behaviour, Focusing, NativeEvents, Tabstopping } from '@ephox/alloy';
 import { Fun, Id } from '@ephox/katamari';
 import { Class, SelectorExists } from '@ephox/sugar';
 
@@ -34,10 +28,7 @@ const craftWithClasses = function (classes) {
       },
       classes
     },
-    behaviours: Behaviour.derive([
-      Focusing.config({ ignore: true }),
-      Tabstopping.config({})
-    ])
+    behaviours: Behaviour.derive([Focusing.config({ ignore: true }), Tabstopping.config({})])
   };
 };
 
@@ -47,11 +38,7 @@ const craft = function (spec) {
       tag: 'div',
       classes: ['tox-navobj']
     },
-    components: [
-      craftWithClasses([beforeObject]),
-      spec,
-      craftWithClasses([afterObject])
-    ],
+    components: [craftWithClasses([beforeObject]), spec, craftWithClasses([afterObject])],
     behaviours: Behaviour.derive([ComposingConfigs.childAt(1)])
   };
 };
@@ -77,11 +64,7 @@ const onFocus = function (container, targetComp) {
 };
 
 const isPseudoStop = function (element) {
-  return SelectorExists.closest(
-    element,
-    ['.' + beforeObject, '.' + afterObject].join(','),
-    Fun.constant(false)
-  );
+  return SelectorExists.closest(element, ['.' + beforeObject, '.' + afterObject].join(','), Fun.constant(false));
 };
 
 export { isPseudoStop, onFocus, craft };

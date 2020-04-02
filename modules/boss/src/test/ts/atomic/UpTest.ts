@@ -8,20 +8,15 @@ import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('UpTest', () => {
   const family = Tracks.track(
-    Gene('A', '_A_', [
-      Gene('B', '_B_'),
-      Gene('C', '_C_', [Gene('D', '_D_', [Gene('E', '_E_')]), Gene('F', '_F_')])
-    ]),
+    Gene('A', '_A_', [Gene('B', '_B_'), Gene('C', '_C_', [Gene('D', '_D_', [Gene('E', '_E_')]), Gene('F', '_F_')])]),
     Option.none()
   );
 
   const getId = (x: Gene) => x.id;
 
-  const selectorId = (item: Gene, query: string): Option<string> =>
-    Up.selector(item, query).map(getId);
+  const selectorId = (item: Gene, query: string): Option<string> => Up.selector(item, query).map(getId);
 
-  const closestId = (item: Gene, query: string): Option<string> =>
-    Up.closest(item, query).map(getId);
+  const closestId = (item: Gene, query: string): Option<string> => Up.closest(item, query).map(getId);
 
   const d = Locator.byId(family, 'D').getOrDie();
   KAssert.eqSome('eq', 'A', selectorId(d, '_A_'));
@@ -41,11 +36,7 @@ UnitTest.test('UpTest', () => {
   KAssert.eqNone('eq', selectorId(d, '_B_,_Z_'));
   KAssert.eqNone('eq', closestId(d, '_B_,_Z_'));
 
-  KAssert.eqSome(
-    'eq',
-    'A',
-    Up.predicate(d, (item: Gene) => item.id === 'A').map(getId)
-  );
+  KAssert.eqSome('eq', 'A', Up.predicate(d, (item: Gene) => item.id === 'A').map(getId));
 
   KAssert.eqNone(
     'eq',

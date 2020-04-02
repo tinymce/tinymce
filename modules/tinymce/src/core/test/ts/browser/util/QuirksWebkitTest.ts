@@ -6,10 +6,7 @@ import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as HtmlUtils from '../../module/test/HtmlUtils';
 
-UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function (success, failure) {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
@@ -18,10 +15,7 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function (
     editor.getBody().innerHTML = '<h1>a</h1><p>b</p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('Delete');
-    LegacyUnit.equal(
-      HtmlUtils.cleanHtml(editor.getBody().innerHTML),
-      '<h1>ab</h1>'
-    );
+    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<h1>ab</h1>');
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
@@ -29,18 +23,12 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function (
     editor.getBody().innerHTML = '<p>a</p><p><br></p><p><br></p><p>b</p>';
     LegacyUnit.setSelection(editor, 'p:last', 0);
     editor.execCommand('Delete');
-    LegacyUnit.equal(
-      HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)),
-      '<p>a</p><p><br /></p><p>b</p>'
-    );
+    LegacyUnit.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<p>a</p><p><br /></p><p>b</p>');
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('Delete range from middle of H1 to middle of span in P', function (
-    editor
-  ) {
-    editor.getBody().innerHTML =
-      '<h1>ab</h1><p>b<span style="color:red">cd</span></p>';
+  suite.test('Delete range from middle of H1 to middle of span in P', function (editor) {
+    editor.getBody().innerHTML = '<h1>ab</h1><p>b<span style="color:red">cd</span></p>';
     LegacyUnit.setSelection(editor, 'h1', 1, 'span', 1);
     editor.execCommand('Delete');
     LegacyUnit.equal(
@@ -50,104 +38,59 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function (
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
-  suite.test(
-    'Delete from beginning of P with style span inside into H1 with inline block',
-    function (editor) {
-      editor.getBody().innerHTML =
-        '<h1>a<input type="text"></h1><p>b<span style="color:red">c</span></p>';
-      LegacyUnit.setSelection(editor, 'p', 0);
-      editor.execCommand('Delete');
-      LegacyUnit.equal(
-        editor.getContent(),
-        '<h1>a<input type="text" />b<span style="color: red;">c</span></h1>'
-      );
-      LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
-    }
-  );
-
-  suite.test(
-    'Delete from beginning of P with style span inside into H1',
-    function (editor) {
-      editor.getBody().innerHTML =
-        '<h1>a</h1><p>b<span style="color:red">c</span></p>';
-      LegacyUnit.setSelection(editor, 'p', 0);
-      editor.execCommand('Delete');
-      LegacyUnit.equal(
-        editor.getContent(),
-        '<h1>ab<span style="color: red;">c</span></h1>'
-      );
-      LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
-    }
-  );
-
-  suite.test(
-    'Delete from beginning of P into H1 with contentEditable:false',
-    function (editor) {
-      editor.getBody().innerHTML =
-        '<h1 contentEditable="false">a</h1><p>b<span style="color:red">c</span></p>';
-      LegacyUnit.setSelection(editor, 'p', 0);
-      editor.execCommand('Delete');
-      LegacyUnit.equal(
-        editor.getContent(),
-        '<h1 contenteditable="false">a</h1><p>b<span style="color: red;">c</span></p>'
-      );
-      LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
-    }
-  );
-
-  suite.test(
-    'Delete from beginning of P with style span inside into H1 with trailing BR',
-    function (editor) {
-      editor.getBody().innerHTML =
-        '<h1>a<br></h1><p>b<span style="color:red">c</span></p>';
-      LegacyUnit.setSelection(editor, 'p', 0);
-      editor.execCommand('Delete');
-      LegacyUnit.equal(
-        editor.getContent(),
-        '<h1>ab<span style="color: red;">c</span></h1>'
-      );
-      LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
-    }
-  );
-
-  suite.test('Delete from empty P with style span inside into H1', function (
-    editor
-  ) {
-    editor.getBody().innerHTML =
-      '<h1>a<br></h1><p><span style="color:red">b</span></p>';
-    LegacyUnit.setSelection(editor, 'span', 0);
+  suite.test('Delete from beginning of P with style span inside into H1 with inline block', function (editor) {
+    editor.getBody().innerHTML = '<h1>a<input type="text"></h1><p>b<span style="color:red">c</span></p>';
+    LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('Delete');
-    LegacyUnit.equal(
-      editor.getContent(),
-      '<h1>a<span style="color: red;">b</span></h1>'
-    );
+    LegacyUnit.equal(editor.getContent(), '<h1>a<input type="text" />b<span style="color: red;">c</span></h1>');
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
   });
 
-  suite.test('Delete from beginning of P with span style to H1', function (
-    editor
-  ) {
-    editor.getBody().innerHTML =
-      '<h1>a</h1><p><span style="color:red">b</span></p>';
+  suite.test('Delete from beginning of P with style span inside into H1', function (editor) {
+    editor.getBody().innerHTML = '<h1>a</h1><p>b<span style="color:red">c</span></p>';
+    LegacyUnit.setSelection(editor, 'p', 0);
+    editor.execCommand('Delete');
+    LegacyUnit.equal(editor.getContent(), '<h1>ab<span style="color: red;">c</span></h1>');
+    LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
+  });
+
+  suite.test('Delete from beginning of P into H1 with contentEditable:false', function (editor) {
+    editor.getBody().innerHTML = '<h1 contentEditable="false">a</h1><p>b<span style="color:red">c</span></p>';
+    LegacyUnit.setSelection(editor, 'p', 0);
+    editor.execCommand('Delete');
+    LegacyUnit.equal(editor.getContent(), '<h1 contenteditable="false">a</h1><p>b<span style="color: red;">c</span></p>');
+    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+  });
+
+  suite.test('Delete from beginning of P with style span inside into H1 with trailing BR', function (editor) {
+    editor.getBody().innerHTML = '<h1>a<br></h1><p>b<span style="color:red">c</span></p>';
+    LegacyUnit.setSelection(editor, 'p', 0);
+    editor.execCommand('Delete');
+    LegacyUnit.equal(editor.getContent(), '<h1>ab<span style="color: red;">c</span></h1>');
+    LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
+  });
+
+  suite.test('Delete from empty P with style span inside into H1', function (editor) {
+    editor.getBody().innerHTML = '<h1>a<br></h1><p><span style="color:red">b</span></p>';
     LegacyUnit.setSelection(editor, 'span', 0);
     editor.execCommand('Delete');
-    LegacyUnit.equal(
-      editor.getContent(),
-      '<h1>a<span style="color: red;">b</span></h1>'
-    );
+    LegacyUnit.equal(editor.getContent(), '<h1>a<span style="color: red;">b</span></h1>');
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
   });
 
-  suite.test('Delete from beginning of P with BR line to H1', function (
-    editor
-  ) {
+  suite.test('Delete from beginning of P with span style to H1', function (editor) {
+    editor.getBody().innerHTML = '<h1>a</h1><p><span style="color:red">b</span></p>';
+    LegacyUnit.setSelection(editor, 'span', 0);
+    editor.execCommand('Delete');
+    LegacyUnit.equal(editor.getContent(), '<h1>a<span style="color: red;">b</span></h1>');
+    LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
+  });
+
+  suite.test('Delete from beginning of P with BR line to H1', function (editor) {
     editor.getBody().innerHTML = '<h1>a</h1><p>b<br>c</p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('Delete');
-    LegacyUnit.equal(
-      HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)),
-      '<h1>ab<br />c</h1>'
-    );
+    LegacyUnit.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<h1>ab<br />c</h1>');
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
@@ -158,75 +101,43 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function (
     rng.setEndAfter(editor.dom.select('img')[0]);
     editor.selection.setRng(rng);
     editor.execCommand('Delete');
-    LegacyUnit.equal(
-      HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)),
-      '<p>a</p><p><br /></p>'
-    );
+    LegacyUnit.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<p>a</p><p><br /></p>');
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('ForwardDelete from end of H1 to P with style span', function (
-    editor
-  ) {
-    editor.getBody().innerHTML =
-      '<h1>a</h1><p><span style="color:red">b</span></p>';
+  suite.test('ForwardDelete from end of H1 to P with style span', function (editor) {
+    editor.getBody().innerHTML = '<h1>a</h1><p><span style="color:red">b</span></p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.execCommand('ForwardDelete');
-    LegacyUnit.equal(
-      editor.getContent(),
-      '<h1>a<span style="color: red;">b</span></h1>'
-    );
+    LegacyUnit.equal(editor.getContent(), '<h1>a<span style="color: red;">b</span></h1>');
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
   });
 
-  suite.test(
-    'ForwardDelete from end of H1 with trailing BR to P with style span',
-    function (editor) {
-      editor.getBody().innerHTML =
-        '<h1>a<br></h1><p><span style="color:red">b</span></p>';
-      LegacyUnit.setSelection(editor, 'h1', 1);
-      editor.execCommand('ForwardDelete');
-      LegacyUnit.equal(
-        editor.getContent(),
-        '<h1>a<span style="color: red;">b</span></h1>'
-      );
-      LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
-    }
-  );
+  suite.test('ForwardDelete from end of H1 with trailing BR to P with style span', function (editor) {
+    editor.getBody().innerHTML = '<h1>a<br></h1><p><span style="color:red">b</span></p>';
+    LegacyUnit.setSelection(editor, 'h1', 1);
+    editor.execCommand('ForwardDelete');
+    LegacyUnit.equal(editor.getContent(), '<h1>a<span style="color: red;">b</span></h1>');
+    LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
+  });
 
-  suite.test(
-    'ForwardDelete from end of H1 with two trailing BR:s to P with style span',
-    function (editor) {
-      editor.getBody().innerHTML =
-        '<h1>a<br><br></h1><p><span style="color:red">b</span></p>';
-      LegacyUnit.setSelection(editor, 'h1', 1);
-      editor.execCommand('ForwardDelete');
-      LegacyUnit.equal(
-        editor.getContent(),
-        '<h1>a</h1><p><span style="color: red;">b</span></p>'
-      );
-      LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
-    }
-  );
+  suite.test('ForwardDelete from end of H1 with two trailing BR:s to P with style span', function (editor) {
+    editor.getBody().innerHTML = '<h1>a<br><br></h1><p><span style="color:red">b</span></p>';
+    LegacyUnit.setSelection(editor, 'h1', 1);
+    editor.execCommand('ForwardDelete');
+    LegacyUnit.equal(editor.getContent(), '<h1>a</h1><p><span style="color: red;">b</span></p>');
+    LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
+  });
 
-  suite.test(
-    'ForwardDelete from end of H1 to P with style and inline block element',
-    function (editor) {
-      editor.getBody().innerHTML =
-        '<h1>a</h1><p><input type="text"><span style="color:red">b</span></p>';
-      LegacyUnit.setSelection(editor, 'h1', 1);
-      editor.execCommand('ForwardDelete');
-      LegacyUnit.equal(
-        editor.getContent(),
-        '<h1>a<input type="text" /><span style="color: red;">b</span></h1>'
-      );
-      LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
-    }
-  );
+  suite.test('ForwardDelete from end of H1 to P with style and inline block element', function (editor) {
+    editor.getBody().innerHTML = '<h1>a</h1><p><input type="text"><span style="color:red">b</span></p>';
+    LegacyUnit.setSelection(editor, 'h1', 1);
+    editor.execCommand('ForwardDelete');
+    LegacyUnit.equal(editor.getContent(), '<h1>a<input type="text" /><span style="color: red;">b</span></h1>');
+    LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
+  });
 
-  suite.test('ForwardDelete from end of H1 with BR line to P', function (
-    editor
-  ) {
+  suite.test('ForwardDelete from end of H1 with BR line to P', function (editor) {
     editor.getBody().innerHTML = '<h1>a<br>b</h1><p>c</p>';
 
     const rng = editor.selection.getRng();
@@ -235,10 +146,7 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function (
     editor.selection.setRng(rng);
 
     editor.execCommand('ForwardDelete');
-    LegacyUnit.equal(
-      HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)),
-      '<h1>a<br />bc</h1>'
-    );
+    LegacyUnit.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<h1>a<br />bc</h1>');
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
@@ -246,40 +154,24 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function (
     editor.getBody().innerHTML = '<h1>a</h1><p>b</p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.execCommand('ForwardDelete');
-    LegacyUnit.equal(
-      HtmlUtils.cleanHtml(editor.getBody().innerHTML),
-      '<h1>ab</h1>'
-    );
+    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<h1>ab</h1>');
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
-  suite.test(
-    'ForwardDelete from end of H1 into P with contentEditable:false',
-    function (editor) {
-      editor.getBody().innerHTML = '<h1>a</h1><p contentEditable="false">b</p>';
-      LegacyUnit.setSelection(editor, 'h1', 1);
-      editor.execCommand('ForwardDelete');
-      LegacyUnit.equal(
-        editor.getContent(),
-        '<h1>a</h1><p contenteditable="false">b</p>'
-      );
-    }
-  );
+  suite.test('ForwardDelete from end of H1 into P with contentEditable:false', function (editor) {
+    editor.getBody().innerHTML = '<h1>a</h1><p contentEditable="false">b</p>';
+    LegacyUnit.setSelection(editor, 'h1', 1);
+    editor.execCommand('ForwardDelete');
+    LegacyUnit.equal(editor.getContent(), '<h1>a</h1><p contenteditable="false">b</p>');
+  });
 
-  suite.test(
-    'ForwardDelete from end of H1 into P with style span inside',
-    function (editor) {
-      editor.getBody().innerHTML =
-        '<h1>a</h1><p>b<span style="color: #010203">c</span></p>';
-      LegacyUnit.setSelection(editor, 'h1', 1);
-      editor.execCommand('ForwardDelete');
-      LegacyUnit.equal(
-        editor.getContent(),
-        '<h1>ab<span style="color: #010203;">c</span></h1>'
-      );
-      LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
-    }
-  );
+  suite.test('ForwardDelete from end of H1 into P with style span inside', function (editor) {
+    editor.getBody().innerHTML = '<h1>a</h1><p>b<span style="color: #010203">c</span></p>';
+    LegacyUnit.setSelection(editor, 'h1', 1);
+    editor.execCommand('ForwardDelete');
+    LegacyUnit.equal(editor.getContent(), '<h1>ab<span style="color: #010203;">c</span></h1>');
+    LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
+  });
 
   suite.test('Backspace key from beginning of P into H1', function (editor) {
     editor.getBody().innerHTML = '<h1>a</h1><p>b</p>';
@@ -291,10 +183,7 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function (
       altKey: false,
       metaKey: false
     });
-    LegacyUnit.equal(
-      HtmlUtils.cleanHtml(editor.getBody().innerHTML),
-      '<h1>ab</h1>'
-    );
+    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<h1>ab</h1>');
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
   });
 
@@ -308,10 +197,7 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function (
       altKey: false,
       metaKey: false
     });
-    LegacyUnit.equal(
-      HtmlUtils.cleanHtml(editor.getBody().innerHTML),
-      '<h1>ab</h1>'
-    );
+    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<h1>ab</h1>');
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
   });
   /*
@@ -432,10 +318,7 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function (
     editor.getBody().innerHTML = '<p>abc</p>';
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);
     editor.fire('keydown', { keyCode: 46 });
-    LegacyUnit.equal(
-      HtmlUtils.cleanHtml(editor.getBody().innerHTML),
-      '<p><br data-mce-bogus="1"></p>'
-    );
+    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p><br data-mce-bogus="1"></p>');
     LegacyUnit.equal(editor.selection.getStart(true).nodeName, 'P');
   });
 
@@ -443,10 +326,7 @@ UnitTest.asynctest('browser.tinymce.util.QuirksWekbitTest', function (
     editor.getBody().innerHTML = '<p>abc</p>';
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);
     editor.fire('keydown', { keyCode: 8 });
-    LegacyUnit.equal(
-      HtmlUtils.cleanHtml(editor.getBody().innerHTML),
-      '<p><br data-mce-bogus="1"></p>'
-    );
+    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p><br data-mce-bogus="1"></p>');
     LegacyUnit.equal(editor.selection.getStart(true).nodeName, 'P');
   });
 

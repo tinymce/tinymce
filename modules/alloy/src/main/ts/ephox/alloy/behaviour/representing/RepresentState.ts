@@ -2,12 +2,7 @@ import { Arr, Cell, Obj, Option } from '@ephox/katamari';
 
 import { ItemDataTuple } from '../../ui/types/ItemTypes';
 import { nuState } from '../common/BehaviourState';
-import {
-  DatasetRepresentingState,
-  ManualRepresentingState,
-  MemoryRepresentingState,
-  RepresentingConfig
-} from './RepresentingTypes';
+import { DatasetRepresentingState, ManualRepresentingState, MemoryRepresentingState, RepresentingConfig } from './RepresentingTypes';
 
 const memory = (): MemoryRepresentingState => {
   const data = Cell<any>(null);
@@ -58,9 +53,7 @@ const dataset = (): DatasetRepresentingState => {
   // itemString can be matching value or text.
   // TODO: type problem - impossible to correctly return value when type parameter only exists in return type
   const lookup = <T extends ItemDataTuple>(itemString: string): Option<T> =>
-    Obj.get<any, string>(dataByValue.get(), itemString).orThunk(() =>
-      Obj.get<any, string>(dataByText.get(), itemString)
-    );
+    Obj.get<any, string>(dataByValue.get(), itemString).orThunk(() => Obj.get<any, string>(dataByText.get(), itemString));
 
   const update = <T extends ItemDataTuple>(items: T[]): void => {
     const currentDataByValue = dataByValue.get();

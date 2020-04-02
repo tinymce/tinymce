@@ -42,8 +42,7 @@ UnitTest.test('ContractsTest', () => {
   })();
 
   (() => {
-    const expected =
-      'All values need to be of type: function. Keys (element, events) were not.';
+    const expected = 'All values need to be of type: function. Keys (element, events) were not.';
     try {
       bagger({
         element: 'element',
@@ -58,8 +57,7 @@ UnitTest.test('ContractsTest', () => {
   })();
 
   (() => {
-    const expected =
-      'All values need to be of type: function. Keys (element, events) were not.';
+    const expected = 'All values need to be of type: function. Keys (element, events) were not.';
     try {
       baggerMin({
         element: 'element',
@@ -104,8 +102,7 @@ UnitTest.test('ContractsTest', () => {
   })();
 
   (() => {
-    const expected =
-      'All values need to be of type: 10 if mustBe10. Keys (mustBe10) were not.';
+    const expected = 'All values need to be of type: 10 if mustBe10. Keys (mustBe10) were not.';
     try {
       baggerMin10({
         mustBe10: 'dog',

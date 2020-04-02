@@ -18,9 +18,7 @@ import { DialogConfirms } from './DialogConfirms';
 import { DialogInfo } from './DialogInfo';
 import { LinkDialogData, LinkDialogInfo } from './DialogTypes';
 
-const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (
-  api: Types.Dialog.DialogInstanceApi<LinkDialogData>
-) => {
+const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Types.Dialog.DialogInstanceApi<LinkDialogData>) => {
   const data: LinkDialogData = api.getData();
 
   if (!data.url.value) {
@@ -32,8 +30,7 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (
 
   // Check if a key is defined, meaning it was a field in the dialog. If it is,
   // then check if it's changed and return none if nothing has changed.
-  const getChangedValue = (key: string) =>
-    Option.from(data[key]).filter((value) => !info.anchor[key].is(value));
+  const getChangedValue = (key: string) => Option.from(data[key]).filter((value) => !info.anchor[key].is(value));
 
   const changedData = {
     href: data.url.value,
@@ -46,10 +43,7 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (
 
   const attachState = {
     href: data.url.value,
-    attach:
-      data.url.meta !== undefined && data.url.meta.attach
-        ? data.url.meta.attach
-        : () => {}
+    attach: data.url.meta !== undefined && data.url.meta.attach ? data.url.meta.attach : () => {}
   };
 
   DialogConfirms.preprocess(editor, changedData).then((pData) => {
@@ -64,10 +58,7 @@ const collectData = (editor): Promise<LinkDialogInfo> => {
   return DialogInfo.collect(editor, anchorNode);
 };
 
-const getInitialData = (
-  info: LinkDialogInfo,
-  defaultTarget: Option<string>
-): LinkDialogData => ({
+const getInitialData = (info: LinkDialogInfo, defaultTarget: Option<string>): LinkDialogData => ({
   url: {
     value: info.anchor.url.getOr(''),
     meta: {
@@ -90,11 +81,7 @@ const getInitialData = (
   linkClass: info.anchor.linkClass.getOr('')
 });
 
-const makeDialog = (
-  settings: LinkDialogInfo,
-  onSubmit,
-  editor: Editor
-): Types.Dialog.DialogApi<LinkDialogData> => {
+const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Types.Dialog.DialogApi<LinkDialogData> => {
   const urlInput: Types.Dialog.BodyComponentApi[] = [
     {
       name: 'url',
@@ -122,9 +109,7 @@ const makeDialog = (
       ]
     : [];
 
-  const defaultTarget: Option<string> = Option.from(
-    Settings.getDefaultLinkTarget(editor)
-  );
+  const defaultTarget: Option<string> = Option.from(Settings.getDefaultLinkTarget(editor));
 
   const initialData = getInitialData(settings, defaultTarget);
   const dialogDelta = DialogChanges.init(initialData, settings);
@@ -163,10 +148,7 @@ const makeDialog = (
       }
     ],
     initialData,
-    onChange: (
-      api: Types.Dialog.DialogInstanceApi<LinkDialogData>,
-      { name }
-    ) => {
+    onChange: (api: Types.Dialog.DialogInstanceApi<LinkDialogData>, { name }) => {
       dialogDelta.onChange(api.getData, { name }).each((newData) => {
         api.setData(newData);
       });

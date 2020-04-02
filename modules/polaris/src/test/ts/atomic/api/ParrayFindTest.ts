@@ -5,11 +5,7 @@ import * as Parrays from 'ephox/polaris/test/Parrays';
 import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('api.PositionArray.find', function () {
-  const check = function (
-    expected: Option<string>,
-    input: string[],
-    value: string | null
-  ) {
+  const check = function (expected: Option<string>, input: string[], value: string | null) {
     const pred = function (unit: Parrays.PArrayTestItem) {
       return unit.item() === value;
     };
@@ -27,24 +23,8 @@ UnitTest.test('api.PositionArray.find', function () {
   check(Option.some('a'), ['a'], 'a');
   check(Option.some('a'), ['a'], 'a');
   check(Option.none(), ['a'], 'b');
-  check(
-    Option.some('cat'),
-    ['this', 'was', 'a', 'cat', 'today', 'and', 'tomorrow'],
-    'cat'
-  );
-  check(
-    Option.some('tomorrow'),
-    ['this', 'was', 'a', 'cat', 'today', 'and', 'tomorrow'],
-    'tomorrow'
-  );
-  check(
-    Option.none(),
-    ['this', 'was', 'a', 'cat', 'today', 'and', 'tomorrow'],
-    'yesterday'
-  );
-  check(
-    Option.some('this'),
-    ['this', 'was', 'a', 'cat', 'today', 'and', 'tomorrow'],
-    'this'
-  );
+  check(Option.some('cat'), ['this', 'was', 'a', 'cat', 'today', 'and', 'tomorrow'], 'cat');
+  check(Option.some('tomorrow'), ['this', 'was', 'a', 'cat', 'today', 'and', 'tomorrow'], 'tomorrow');
+  check(Option.none(), ['this', 'was', 'a', 'cat', 'today', 'and', 'tomorrow'], 'yesterday');
+  check(Option.some('this'), ['this', 'was', 'a', 'cat', 'today', 'and', 'tomorrow'], 'this');
 });

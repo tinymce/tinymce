@@ -10,10 +10,7 @@ export interface DropEvent extends SimulatedEvent<EventArgs<DragEvent>> {
   files: File[];
 }
 
-export const createDropEventDetails = (
-  config: DroppingConfig,
-  event: SimulatedEvent<EventArgs<DragEvent>>
-): DropEvent => {
+export const createDropEventDetails = (config: DroppingConfig, event: SimulatedEvent<EventArgs<DragEvent>>): DropEvent => {
   const rawEvent = event.event().raw();
   const transfer = rawEvent.dataTransfer;
   const data = DataTransfers.getData(transfer, config.type);

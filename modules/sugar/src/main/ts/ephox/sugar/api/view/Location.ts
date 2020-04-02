@@ -29,10 +29,7 @@ const absolute = function (element: Element<DomElement>) {
   const clientTop = firstDefinedOrZero(html.clientTop, body.clientTop);
   const clientLeft = firstDefinedOrZero(html.clientLeft, body.clientLeft);
 
-  return viewport(element).translate(
-    scrollLeft - clientLeft,
-    scrollTop - clientTop
-  );
+  return viewport(element).translate(scrollLeft - clientLeft, scrollTop - clientTop);
 };
 
 // This is the old $.position(), but JQuery does nonsense calculations.

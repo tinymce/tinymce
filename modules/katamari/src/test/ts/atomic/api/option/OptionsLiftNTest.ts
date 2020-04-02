@@ -12,217 +12,79 @@ const boom = function (): string {
 };
 
 UnitTest.test('Options.lift2', () => {
-  assertOption(
-    Option.none<string>(),
-    Options.lift2(Option.none<string>(), Option.none<number>(), boom)
-  );
-  assertOption(
-    Option.none<string>(),
-    Options.lift2(Option.none<string>(), Option.some<number>(3), boom)
-  );
-  assertOption(
-    Option.none<string>(),
-    Options.lift2(Option.some<string>('a'), Option.none<number>(), boom)
-  );
+  assertOption(Option.none<string>(), Options.lift2(Option.none<string>(), Option.none<number>(), boom));
+  assertOption(Option.none<string>(), Options.lift2(Option.none<string>(), Option.some<number>(3), boom));
+  assertOption(Option.none<string>(), Options.lift2(Option.some<string>('a'), Option.none<number>(), boom));
   assertOption(
     Option.some<string>('a11'),
-    Options.lift2(
-      Option.some<string>('a'),
-      Option.some<number>(11),
-      (a, b) => a + b
-    )
+    Options.lift2(Option.some<string>('a'), Option.some<number>(11), (a, b) => a + b)
   );
 });
 
 UnitTest.test('Options.lift3', () => {
-  assertOption(
-    Option.none<string>(),
-    Options.lift3(
-      Option.none<string>(),
-      Option.none<string>(),
-      Option.none<number>(),
-      boom
-    )
-  );
-  assertOption(
-    Option.none<string>(),
-    Options.lift3(
-      Option.none<string>(),
-      Option.none<string>(),
-      Option.some<number>(3),
-      boom
-    )
-  );
-  assertOption(
-    Option.none<string>(),
-    Options.lift3(
-      Option.none<string>(),
-      Option.some<string>('a'),
-      Option.none<number>(),
-      boom
-    )
-  );
+  assertOption(Option.none<string>(), Options.lift3(Option.none<string>(), Option.none<string>(), Option.none<number>(), boom));
+  assertOption(Option.none<string>(), Options.lift3(Option.none<string>(), Option.none<string>(), Option.some<number>(3), boom));
+  assertOption(Option.none<string>(), Options.lift3(Option.none<string>(), Option.some<string>('a'), Option.none<number>(), boom));
 
-  assertOption(
-    Option.none<string>(),
-    Options.lift3(
-      Option.some<string>('z'),
-      Option.none<string>(),
-      Option.none<number>(),
-      boom
-    )
-  );
-  assertOption(
-    Option.none<string>(),
-    Options.lift3(
-      Option.some<string>('z'),
-      Option.none<string>(),
-      Option.some<number>(3),
-      boom
-    )
-  );
-  assertOption(
-    Option.none<string>(),
-    Options.lift3(
-      Option.some<string>('z'),
-      Option.some<string>('a'),
-      Option.none<number>(),
-      boom
-    )
-  );
+  assertOption(Option.none<string>(), Options.lift3(Option.some<string>('z'), Option.none<string>(), Option.none<number>(), boom));
+  assertOption(Option.none<string>(), Options.lift3(Option.some<string>('z'), Option.none<string>(), Option.some<number>(3), boom));
+  assertOption(Option.none<string>(), Options.lift3(Option.some<string>('z'), Option.some<string>('a'), Option.none<number>(), boom));
 
   assertOption(
     Option.some<string>('za11'),
-    Options.lift3(
-      Option.some<string>('z'),
-      Option.some<string>('a'),
-      Option.some<number>(11),
-      (a, b, c) => a + b + c
-    )
+    Options.lift3(Option.some<string>('z'), Option.some<string>('a'), Option.some<number>(11), (a, b, c) => a + b + c)
   );
 });
 
 UnitTest.test('Options.lift4', () => {
   assertOption(
     Option.none<string>(),
-    Options.lift4(
-      Option.none<number>(),
-      Option.none<string>(),
-      Option.none<string>(),
-      Option.none<number>(),
-      boom
-    )
+    Options.lift4(Option.none<number>(), Option.none<string>(), Option.none<string>(), Option.none<number>(), boom)
   );
   assertOption(
     Option.none<string>(),
-    Options.lift4(
-      Option.none<number>(),
-      Option.none<string>(),
-      Option.none<string>(),
-      Option.some<number>(3),
-      boom
-    )
+    Options.lift4(Option.none<number>(), Option.none<string>(), Option.none<string>(), Option.some<number>(3), boom)
   );
   assertOption(
     Option.none<string>(),
-    Options.lift4(
-      Option.none<number>(),
-      Option.none<string>(),
-      Option.some<string>('a'),
-      Option.none<number>(),
-      boom
-    )
+    Options.lift4(Option.none<number>(), Option.none<string>(), Option.some<string>('a'), Option.none<number>(), boom)
   );
   assertOption(
     Option.none<string>(),
-    Options.lift4(
-      Option.none<number>(),
-      Option.some<string>('z'),
-      Option.none<string>(),
-      Option.none<number>(),
-      boom
-    )
+    Options.lift4(Option.none<number>(), Option.some<string>('z'), Option.none<string>(), Option.none<number>(), boom)
   );
   assertOption(
     Option.none<string>(),
-    Options.lift4(
-      Option.none<number>(),
-      Option.some<string>('z'),
-      Option.none<string>(),
-      Option.some<number>(3),
-      boom
-    )
+    Options.lift4(Option.none<number>(), Option.some<string>('z'), Option.none<string>(), Option.some<number>(3), boom)
   );
   assertOption(
     Option.none<string>(),
-    Options.lift4(
-      Option.none<number>(),
-      Option.some<string>('z'),
-      Option.some<string>('a'),
-      Option.none<number>(),
-      boom
-    )
+    Options.lift4(Option.none<number>(), Option.some<string>('z'), Option.some<string>('a'), Option.none<number>(), boom)
   );
 
   assertOption(
     Option.none<string>(),
-    Options.lift4(
-      Option.some<number>(1),
-      Option.none<string>(),
-      Option.none<string>(),
-      Option.none<number>(),
-      boom
-    )
+    Options.lift4(Option.some<number>(1), Option.none<string>(), Option.none<string>(), Option.none<number>(), boom)
   );
   assertOption(
     Option.none<string>(),
-    Options.lift4(
-      Option.some<number>(1),
-      Option.none<string>(),
-      Option.none<string>(),
-      Option.some<number>(3),
-      boom
-    )
+    Options.lift4(Option.some<number>(1), Option.none<string>(), Option.none<string>(), Option.some<number>(3), boom)
   );
   assertOption(
     Option.none<string>(),
-    Options.lift4(
-      Option.some<number>(1),
-      Option.none<string>(),
-      Option.some<string>('a'),
-      Option.none<number>(),
-      boom
-    )
+    Options.lift4(Option.some<number>(1), Option.none<string>(), Option.some<string>('a'), Option.none<number>(), boom)
   );
   assertOption(
     Option.none<string>(),
-    Options.lift4(
-      Option.some<number>(1),
-      Option.some<string>('z'),
-      Option.none<string>(),
-      Option.none<number>(),
-      boom
-    )
+    Options.lift4(Option.some<number>(1), Option.some<string>('z'), Option.none<string>(), Option.none<number>(), boom)
   );
   assertOption(
     Option.none<string>(),
-    Options.lift4(
-      Option.some<number>(1),
-      Option.some<string>('z'),
-      Option.none<string>(),
-      Option.some<number>(3),
-      boom
-    )
+    Options.lift4(Option.some<number>(1), Option.some<string>('z'), Option.none<string>(), Option.some<number>(3), boom)
   );
   assertOption(
     Option.none<string>(),
-    Options.lift4(
-      Option.some<number>(1),
-      Option.some<string>('z'),
-      Option.some<string>('a'),
-      Option.none<number>(),
-      boom
-    )
+    Options.lift4(Option.some<number>(1), Option.some<string>('z'), Option.some<string>('a'), Option.none<number>(), boom)
   );
 
   assertOption(
@@ -240,25 +102,11 @@ UnitTest.test('Options.lift4', () => {
 UnitTest.test('Options.lift5', () => {
   assertOption(
     Option.none<string>(),
-    Options.lift5(
-      Option.none<boolean>(),
-      Option.none<number>(),
-      Option.none<string>(),
-      Option.none<string>(),
-      Option.none<number>(),
-      boom
-    )
+    Options.lift5(Option.none<boolean>(), Option.none<number>(), Option.none<string>(), Option.none<string>(), Option.none<number>(), boom)
   );
   assertOption(
     Option.none<string>(),
-    Options.lift5(
-      Option.none<boolean>(),
-      Option.none<number>(),
-      Option.none<string>(),
-      Option.none<string>(),
-      Option.some<number>(3),
-      boom
-    )
+    Options.lift5(Option.none<boolean>(), Option.none<number>(), Option.none<string>(), Option.none<string>(), Option.some<number>(3), boom)
   );
   assertOption(
     Option.none<string>(),
@@ -306,14 +154,7 @@ UnitTest.test('Options.lift5', () => {
   );
   assertOption(
     Option.none<string>(),
-    Options.lift5(
-      Option.none<boolean>(),
-      Option.some<number>(1),
-      Option.none<string>(),
-      Option.none<string>(),
-      Option.none<number>(),
-      boom
-    )
+    Options.lift5(Option.none<boolean>(), Option.some<number>(1), Option.none<string>(), Option.none<string>(), Option.none<number>(), boom)
   );
   assertOption(
     Option.none<string>(),

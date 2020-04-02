@@ -1,13 +1,9 @@
 import { Adt, Fun } from '@ephox/katamari';
 
 export type StrictField<T> = () => T;
-export type DefaultedThunkField<T> = (
-  fallbackThunk: (...rest: any[]) => any
-) => T;
+export type DefaultedThunkField<T> = (fallbackThunk: (...rest: any[]) => any) => T;
 export type AsOptionField<T> = () => T;
-export type AsDefaultedOptionThunkField<T> = (
-  fallbackThunk: (...rest: any[]) => any
-) => T;
+export type AsDefaultedOptionThunkField<T> = (fallbackThunk: (...rest: any[]) => any) => T;
 export type MergeWithThunkField<T> = (baseThunk: (...rest: any[]) => any) => T;
 export interface FieldPresenceAdt {
   fold: <T>(
@@ -59,13 +55,4 @@ const defaultedThunk = adt.defaultedThunk;
 const asDefaultedOptionThunk = adt.asDefaultedOptionThunk;
 const mergeWithThunk = adt.mergeWithThunk;
 
-export {
-  strict,
-  asOption,
-  defaulted,
-  defaultedThunk,
-  asDefaultedOption,
-  asDefaultedOptionThunk,
-  mergeWith,
-  mergeWithThunk
-};
+export { strict, asOption, defaulted, defaultedThunk, asDefaultedOption, asDefaultedOptionThunk, mergeWith, mergeWithThunk };

@@ -3,10 +3,7 @@ import { Attr, Class } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Stateless } from '../../behaviour/common/BehaviourState';
-import {
-  TransitioningConfig,
-  TransitionProperties
-} from './TransitioningTypes';
+import { TransitioningConfig, TransitionProperties } from './TransitioningTypes';
 
 export interface TransitionRoute {
   destination: string;
@@ -20,16 +17,10 @@ const findRoute = function (
   transState: Stateless,
   route: TransitionRoute
 ): Option<TransitionProperties> {
-  return Obj.get(transConfig.routes, route.start).bind((sConfig) =>
-    Obj.get(sConfig, route.destination)
-  );
+  return Obj.get(transConfig.routes, route.start).bind((sConfig) => Obj.get(sConfig, route.destination));
 };
 
-const getTransition = (
-  comp: AlloyComponent,
-  transConfig: TransitioningConfig,
-  transState: Stateless
-) => {
+const getTransition = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless) => {
   const route = getCurrentRoute(comp, transConfig, transState);
   return route.bind((r) => getTransitionOf(comp, transConfig, transState, r));
 };
@@ -43,19 +34,14 @@ const getTransitionOf = (
   transition: { property: string; transitionClass: string };
   route: TransitionProperties;
 }> =>
-  findRoute(comp, transConfig, transState, route).bind(
-    (r: TransitionProperties) =>
-      r.transition.map((t) => ({
-        transition: t,
-        route: r
-      }))
+  findRoute(comp, transConfig, transState, route).bind((r: TransitionProperties) =>
+    r.transition.map((t) => ({
+      transition: t,
+      route: r
+    }))
   );
 
-const disableTransition = (
-  comp: AlloyComponent,
-  transConfig: TransitioningConfig,
-  transState: Stateless
-) => {
+const disableTransition = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless) => {
   // Disable the current transition
   getTransition(comp, transConfig, transState).each((routeTransition) => {
     const t = routeTransition.transition;
@@ -74,11 +60,7 @@ const getNewRoute = (
   destination
 });
 
-const getCurrentRoute = (
-  comp: AlloyComponent,
-  transConfig: TransitioningConfig,
-  _transState: Stateless
-): Option<TransitionRoute> => {
+const getCurrentRoute = (comp: AlloyComponent, transConfig: TransitioningConfig, _transState: Stateless): Option<TransitionRoute> => {
   const el = comp.element();
   return Attr.has(el, transConfig.destinationAttr)
     ? Option.some({
@@ -88,46 +70,24 @@ const getCurrentRoute = (
     : Option.none();
 };
 
-const jumpTo = (
-  comp: AlloyComponent,
-  transConfig: TransitioningConfig,
-  transState: Stateless,
-  destination: string
-): void => {
+const jumpTo = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, destination: string): void => {
   // Remove the previous transition
   disableTransition(comp, transConfig, transState);
   // Only call finish if there was an original state
-  if (
-    Attr.has(comp.element(), transConfig.stateAttr) &&
-    Attr.get(comp.element(), transConfig.stateAttr) !== destination
-  ) {
+  if (Attr.has(comp.element(), transConfig.stateAttr) && Attr.get(comp.element(), transConfig.stateAttr) !== destination) {
     transConfig.onFinish(comp, destination);
   }
   Attr.set(comp.element(), transConfig.stateAttr, destination);
 };
 
-const fasttrack = (
-  comp: AlloyComponent,
-  transConfig: TransitioningConfig,
-  _transState: Stateless,
-  _destination: string
-) => {
+const fasttrack = (comp: AlloyComponent, transConfig: TransitioningConfig, _transState: Stateless, _destination: string) => {
   if (Attr.has(comp.element(), transConfig.destinationAttr)) {
-    Attr.set(
-      comp.element(),
-      transConfig.stateAttr,
-      Attr.get(comp.element(), transConfig.destinationAttr)
-    );
+    Attr.set(comp.element(), transConfig.stateAttr, Attr.get(comp.element(), transConfig.destinationAttr));
     Attr.remove(comp.element(), transConfig.destinationAttr);
   }
 };
 
-const progressTo = (
-  comp: AlloyComponent,
-  transConfig: TransitioningConfig,
-  transState: Stateless,
-  destination: string
-) => {
+const progressTo = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, destination: string) => {
   fasttrack(comp, transConfig, transState, destination);
   const route = getNewRoute(comp, transConfig, transState, destination);
   getTransitionOf(comp, transConfig, transState, route).fold(
@@ -143,22 +103,9 @@ const progressTo = (
   );
 };
 
-const getState = (
-  comp: AlloyComponent,
-  transConfig: TransitioningConfig,
-  _transState: Stateless
-): Option<string> => {
+const getState = (comp: AlloyComponent, transConfig: TransitioningConfig, _transState: Stateless): Option<string> => {
   const e = comp.element();
-  return Attr.has(e, transConfig.stateAttr)
-    ? Option.some(Attr.get(e, transConfig.stateAttr))
-    : Option.none();
+  return Attr.has(e, transConfig.stateAttr) ? Option.some(Attr.get(e, transConfig.stateAttr)) : Option.none();
 };
 
-export {
-  findRoute,
-  disableTransition,
-  getCurrentRoute,
-  jumpTo,
-  progressTo,
-  getState
-};
+export { findRoute, disableTransition, getCurrentRoute, jumpTo, progressTo, getState };

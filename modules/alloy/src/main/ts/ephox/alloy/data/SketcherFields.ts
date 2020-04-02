@@ -10,12 +10,7 @@ import { Representing } from '../api/behaviour/Representing';
 // Unfortunately there appears to be a cyclical dependency or something that's preventing it, but for now this will do as it's home
 const sandboxFields = (): FieldProcessorAdt[] => [
   FieldSchema.defaulted('sandboxClasses', []),
-  SketchBehaviours.field('sandboxBehaviours', [
-    Composing,
-    Receiving,
-    Sandboxing,
-    Representing
-  ])
+  SketchBehaviours.field('sandboxBehaviours', [Composing, Receiving, Sandboxing, Representing])
 ];
 
 export { sandboxFields };

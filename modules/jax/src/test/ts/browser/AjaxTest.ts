@@ -23,11 +23,7 @@ const expectError = (label: string, response: FutureResult<any, HttpError>) =>
     });
   });
 
-const expectValue = (
-  label: string,
-  value: any,
-  response: FutureResult<any, HttpError>
-) =>
+const expectValue = (label: string, value: any, response: FutureResult<any, HttpError>) =>
   FutureResult.nu((callback) => {
     response.get((res) => {
       res.fold(
@@ -47,11 +43,7 @@ const expectValue = (
     });
   });
 
-const expectBlobJson = (
-  label: string,
-  value: any,
-  response: FutureResult<Blob, HttpError>
-) =>
+const expectBlobJson = (label: string, value: any, response: FutureResult<Blob, HttpError>) =>
   FutureResult.nu((callback) => {
     response.get((res) => {
       res.fold(
@@ -277,11 +269,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
     )
   ];
 
-  Arr.foldr(
-    responses,
-    (res, rest) => rest.bindFuture(() => res),
-    FutureResult.pure({})
-  ).get((v) => {
+  Arr.foldr(responses, (res, rest) => rest.bindFuture(() => res), FutureResult.pure({})).get((v) => {
     v.fold(
       (err) => {
         failure(err);

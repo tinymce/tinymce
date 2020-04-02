@@ -16,11 +16,7 @@ import * as Utils from '../core/Utils';
 import { LinkDialogOutput } from './DialogTypes';
 
 // Delay confirm since onSubmit will move focus
-const delayedConfirm = function (
-  editor: Editor,
-  message: string,
-  callback: (state: boolean) => void
-) {
+const delayedConfirm = function (editor: Editor, message: string, callback: (state: boolean) => void) {
   const rng = editor.selection.getRng();
 
   Delay.setEditorTimeout(editor, function () {
@@ -38,29 +34,22 @@ interface Transformer {
 
 const tryEmailTransform = (data: LinkDialogOutput): Option<Transformer> => {
   const url = data.href;
-  const suggestMailTo =
-    url.indexOf('@') > 0 &&
-    url.indexOf('//') === -1 &&
-    url.indexOf('mailto:') === -1;
+  const suggestMailTo = url.indexOf('@') > 0 && url.indexOf('//') === -1 && url.indexOf('mailto:') === -1;
   return suggestMailTo
     ? Option.some({
-        message:
-          'The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?',
+        message: 'The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?',
         preprocess: (oldData) => ({ ...oldData, href: 'mailto:' + url })
       })
     : Option.none();
 };
 
-const tryProtocolTransform = (
-  assumeExternalTargets: AssumeExternalTargets,
-  defaultLinkProtocol: string
-) => (data: LinkDialogOutput): Option<Transformer> => {
+const tryProtocolTransform = (assumeExternalTargets: AssumeExternalTargets, defaultLinkProtocol: string) => (
+  data: LinkDialogOutput
+): Option<Transformer> => {
   const url = data.href;
   const suggestProtocol =
-    (assumeExternalTargets === AssumeExternalTargets.WARN &&
-      !Utils.hasProtocol(url)) ||
-    (assumeExternalTargets === AssumeExternalTargets.OFF &&
-      /^\s*www[\.|\d\.]/i.test(url));
+    (assumeExternalTargets === AssumeExternalTargets.WARN && !Utils.hasProtocol(url)) ||
+    (assumeExternalTargets === AssumeExternalTargets.OFF && /^\s*www[\.|\d\.]/i.test(url));
 
   return suggestProtocol
     ? Option.some({
@@ -73,18 +62,9 @@ const tryProtocolTransform = (
     : Option.none();
 };
 
-const preprocess = (
-  editor: Editor,
-  data: LinkDialogOutput
-): Promise<LinkDialogOutput> =>
+const preprocess = (editor: Editor, data: LinkDialogOutput): Promise<LinkDialogOutput> =>
   Arr.findMap(
-    [
-      tryEmailTransform,
-      tryProtocolTransform(
-        Settings.assumeExternalTargets(editor),
-        Settings.getDefaultLinkProtocol(editor)
-      )
-    ],
+    [tryEmailTransform, tryProtocolTransform(Settings.assumeExternalTargets(editor), Settings.getDefaultLinkProtocol(editor))],
     (f) => f(data)
   ).fold(
     () => Promise.resolve(data),

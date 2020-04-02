@@ -5,18 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent,
-  AlloySpec,
-  Behaviour,
-  Gui,
-  GuiFactory,
-  Keying,
-  Memento,
-  Positioning,
-  SimpleSpec,
-  VerticalDir
-} from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, VerticalDir } from '@ephox/alloy';
 import { HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
@@ -42,9 +31,7 @@ import * as Events from './Events';
 import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
 import * as FormatControls from './ui/core/FormatControls';
-import OuterContainer, {
-  OuterContainerSketchSpec
-} from './ui/general/OuterContainer';
+import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterContainer';
 import * as StaticHeader from './ui/header/StaticHeader';
 import * as StickyHeader from './ui/header/StickyHeader';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
@@ -80,10 +67,7 @@ export interface RenderUiComponents {
   outerContainer: AlloyComponent;
 }
 
-export type ToolbarConfig =
-  | Array<string | ToolbarGroupSetting>
-  | string
-  | boolean;
+export type ToolbarConfig = Array<string | ToolbarGroupSetting> | string | boolean;
 
 export interface RenderToolbarConfig {
   toolbar: ToolbarConfig;
@@ -132,9 +116,7 @@ const setup = (editor: Editor): RenderInfo => {
 
   const verticalDirAttributes = {
     attributes: {
-      [VerticalDir.Attribute]: isToolbarTop
-        ? VerticalDir.AttributeValue.TopToBottom
-        : VerticalDir.AttributeValue.BottomToTop
+      [VerticalDir.Attribute]: isToolbarTop ? VerticalDir.AttributeValue.TopToBottom : VerticalDir.AttributeValue.BottomToTop
     }
   };
 
@@ -145,9 +127,7 @@ const setup = (editor: Editor): RenderInfo => {
   const sink = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: ['tox', 'tox-silver-sink', 'tox-tinymce-aux']
-        .concat(platformClasses)
-        .concat(deviceClasses),
+      classes: ['tox', 'tox-silver-sink', 'tox-tinymce-aux'].concat(platformClasses).concat(deviceClasses),
       ...dirAttributes
     },
     behaviours: Behaviour.derive([
@@ -167,25 +147,15 @@ const setup = (editor: Editor): RenderInfo => {
   });
 
   const lazyAnchorBar = () =>
-    lazyOuterContainer
-      .bind((container) => memAnchorBar.getOpt(container))
-      .getOrDie('Could not find a anchor bar element');
+    lazyOuterContainer.bind((container) => memAnchorBar.getOpt(container)).getOrDie('Could not find a anchor bar element');
 
   const lazyToolbar = () =>
-    lazyOuterContainer
-      .bind((container) => OuterContainer.getToolbar(container))
-      .getOrDie('Could not find more toolbar element');
+    lazyOuterContainer.bind((container) => OuterContainer.getToolbar(container)).getOrDie('Could not find more toolbar element');
 
   const lazyThrobber = () =>
-    lazyOuterContainer
-      .bind((container) => OuterContainer.getThrobber(container))
-      .getOrDie('Could not find throbber element');
+    lazyOuterContainer.bind((container) => OuterContainer.getThrobber(container)).getOrDie('Could not find throbber element');
 
-  const backstage: Backstage.UiFactoryBackstage = Backstage.init(
-    sink,
-    editor,
-    lazyAnchorBar
-  );
+  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar);
 
   const partMenubar: AlloySpec = OuterContainer.parts().menubar({
     dom: {
@@ -216,9 +186,7 @@ const setup = (editor: Editor): RenderInfo => {
     ...verticalDirAttributes
   });
 
-  const partMultipleToolbar: AlloySpec = OuterContainer.parts()[
-    'multiple-toolbar'
-  ]({
+  const partMultipleToolbar: AlloySpec = OuterContainer.parts()['multiple-toolbar']({
     dom: {
       tag: 'div',
       classes: ['tox-toolbar-overlord']
@@ -253,9 +221,7 @@ const setup = (editor: Editor): RenderInfo => {
   const sb = editor.getParam('statusbar', true, 'boolean');
 
   const statusbar: Option<AlloySpec> =
-    sb && !isInline
-      ? Option.some(renderStatusbar(editor, backstage.shared.providers))
-      : Option.none<AlloySpec>();
+    sb && !isInline ? Option.some(renderStatusbar(editor, backstage.shared.providers)) : Option.none<AlloySpec>();
 
   const socketSidebarContainer: SimpleSpec = {
     dom: {
@@ -384,9 +350,7 @@ const setup = (editor: Editor): RenderInfo => {
 
   const setEditorSize = () => {
     // Set height and width if they were given, though height only applies to iframe mode
-    const parsedHeight = Utils.numToPx(
-      EditorSize.getHeightWithFallback(editor)
-    );
+    const parsedHeight = Utils.numToPx(EditorSize.getHeightWithFallback(editor));
     const parsedWidth = Utils.numToPx(EditorSize.getWidthWithFallback(editor));
 
     if (!editor.inline) {
@@ -418,15 +382,8 @@ const setup = (editor: Editor): RenderInfo => {
     });
 
     // Apply Bridge types
-    const {
-      buttons,
-      menuItems,
-      contextToolbars,
-      sidebars
-    } = editor.ui.registry.getAll();
-    const toolbarOpt: Option<ToolbarConfig> = getMultipleToolbarsSetting(
-      editor
-    );
+    const { buttons, menuItems, contextToolbars, sidebars } = editor.ui.registry.getAll();
+    const toolbarOpt: Option<ToolbarConfig> = getMultipleToolbarsSetting(editor);
     const rawUiConfig: RenderUiConfig = {
       menuItems,
 

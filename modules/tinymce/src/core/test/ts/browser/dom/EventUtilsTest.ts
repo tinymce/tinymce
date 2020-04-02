@@ -7,10 +7,7 @@ import { window } from '@ephox/dom-globals';
 
 declare const document: any;
 
-UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
   const eventUtils = EventUtils.Event;
 
@@ -427,16 +424,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (
     eventUtils.fire(window, 'keyup', event);
 
     LegacyUnit.equal(true, event.isDefaultPrevented(), 'Default is prevented.');
-    LegacyUnit.equal(
-      true,
-      event.isPropagationStopped(),
-      'Propagation is stopped.'
-    );
-    LegacyUnit.equal(
-      true,
-      event.isImmediatePropagationStopped(),
-      'Immediate propagation is stopped.'
-    );
+    LegacyUnit.equal(true, event.isPropagationStopped(), 'Propagation is stopped.');
+    LegacyUnit.equal(true, event.isImmediatePropagationStopped(), 'Immediate propagation is stopped.');
 
     LegacyUnit.deepEqual(result, { keydown: true, keyup: true });
   });
@@ -483,11 +472,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (
     try {
       document.readyState = 'loading';
     } catch (e) {
-      LegacyUnit.equal(
-        true,
-        true,
-        `IE doesn't allow us to set document.readyState`
-      );
+      LegacyUnit.equal(true, true, `IE doesn't allow us to set document.readyState`);
       return;
     }
 
@@ -514,30 +499,15 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (
     testObj.isDefaultPrevented = testCallback;
     eventUtils.fire(window, 'testEvent', testObj);
 
-    LegacyUnit.equal(
-      testObj.isDefaultPrevented !== testCallback,
-      true,
-      'Is overwritten by our isDefaultPrevented'
-    );
-    LegacyUnit.equal(
-      typeof testObj.isPropagationStopped,
-      'function',
-      'Has our isPropagationStopped'
-    );
-    LegacyUnit.equal(
-      typeof testObj.isImmediatePropagationStopped,
-      'function',
-      'Has our isImmediatePropagationStopped'
-    );
+    LegacyUnit.equal(testObj.isDefaultPrevented !== testCallback, true, 'Is overwritten by our isDefaultPrevented');
+    LegacyUnit.equal(typeof testObj.isPropagationStopped, 'function', 'Has our isPropagationStopped');
+    LegacyUnit.equal(typeof testObj.isImmediatePropagationStopped, 'function', 'Has our isImmediatePropagationStopped');
   });
 
   const sAddTestDiv = Step.sync(function () {
     const testDiv = document.createElement('div');
     testDiv.id = 'testDiv';
-    testDiv.innerHTML =
-      '<div id="content" tabindex="0">' +
-      '<div id="inner" tabindex="0"></div>' +
-      '</div>';
+    testDiv.innerHTML = '<div id="content" tabindex="0">' + '<div id="inner" tabindex="0"></div>' + '</div>';
 
     document.body.appendChild(testDiv);
   });

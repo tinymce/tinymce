@@ -25,10 +25,7 @@ const dropUntil = function <E, D>(parray: TypedItem<E, D>[], target: E) {
  *
  * The generation function for making a PositionArray out of a list of TypedItems.
  */
-const gen = function <E, D>(
-  unit: TypedItem<E, D>,
-  start: number
-): Option<SpotRange<E>> {
+const gen = function <E, D>(unit: TypedItem<E, D>, start: number): Option<SpotRange<E>> {
   return unit.fold(
     () => Option.none(),
     function (e) {

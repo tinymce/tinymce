@@ -8,11 +8,7 @@ export interface Walks {
     next: Transition;
     fallback: Option<Transition>;
   }[];
-  inclusion: <E, D>(
-    universe: Universe<E, D>,
-    next: Traverse<E>,
-    item: E
-  ) => boolean;
+  inclusion: <E, D>(universe: Universe<E, D>, next: Traverse<E>, item: E) => boolean;
 }
 
 const top: Walks = {
@@ -52,8 +48,7 @@ const top: Walks = {
 const all: Walks = {
   // rules === undefined, so use default.
   rules: undefined,
-  inclusion: <E, D>(universe: Universe<E, D>, next: Traverse<E>, _item: E) =>
-    universe.property().isText(next.item())
+  inclusion: <E, D>(universe: Universe<E, D>, next: Traverse<E>, _item: E) => universe.property().isText(next.item())
 };
 
 export const Walks = {

@@ -17,11 +17,7 @@ import { MobileWebApp } from 'tinymce/themes/mobile/api/IosWebapp';
 
 // TODO: Remove dupe with IosWebapp
 const produce = function (raw: { any }): MobileWebApp {
-  const mobile = ValueSchema.asRawOrDie(
-    'Getting AndroidWebapp schema',
-    MobileSchema,
-    raw
-  );
+  const mobile = ValueSchema.asRawOrDie('Getting AndroidWebapp schema', MobileSchema, raw);
 
   /* Make the toolbar */
   Css.set(mobile.toolstrip, 'width', '100%');

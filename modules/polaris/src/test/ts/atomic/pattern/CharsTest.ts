@@ -32,8 +32,7 @@ UnitTest.test('CharsTest', function () {
   const extras: Record<string, Extra> = {
     fr: {
       label: 'French language',
-      html:
-        'http://character-code.com/french-html-codes.php || https://www.cs.tut.fi/~jkorpela/html/french.html',
+      html: 'http://character-code.com/french-html-codes.php || https://www.cs.tut.fi/~jkorpela/html/french.html',
       chars: 'àÀâÂèÈéÉêÊëËîÎïÏôÔùÙûÛüÜÿŸçÇœŒ' + 'ÀàÂâÆæÇçÈèÉéÊêËëÎîÏïÔôŒœÙùÛûÜü'
     },
     en_au: {
@@ -130,12 +129,7 @@ UnitTest.test('CharsTest', function () {
     assert.eq(
       0,
       leftovers.length,
-      'Test: ' +
-        label +
-        '\nExpected all characters in: \n\n"' +
-        str +
-        '" to be known. \nUnknown: ' +
-        leftovers
+      'Test: ' + label + '\nExpected all characters in: \n\n"' + str + '" to be known. \nUnknown: ' + leftovers
     );
   };
 

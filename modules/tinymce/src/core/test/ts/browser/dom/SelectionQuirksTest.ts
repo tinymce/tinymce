@@ -1,21 +1,10 @@
-import {
-  Assertions,
-  GeneralSteps,
-  Keys,
-  Keyboard,
-  Logger,
-  Pipeline,
-  Step
-} from '@ephox/agar';
+import { Assertions, GeneralSteps, Keys, Keyboard, Logger, Pipeline, Step } from '@ephox/agar';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function (success, failure) {
   Theme();
 
   TinyLoader.setupLight(
@@ -40,11 +29,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function (
 
       const sAssertNormalizeCounter = function (expected) {
         return Step.sync(function () {
-          Assertions.assertEq(
-            'checking normalization counter',
-            expected,
-            count
-          );
+          Assertions.assertEq('checking normalization counter', expected, count);
         });
       };
 
@@ -66,22 +51,12 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function (
           Logger.t(
             'Test normalization for floated images',
             GeneralSteps.sequence([
-              tinyApis.sSetContent(
-                '<p>a<img src="about:blank" style="float: right"></p>'
-              ),
+              tinyApis.sSetContent('<p>a<img src="about:blank" style="float: right"></p>'),
               tinyApis.sSetSelection([0], 1, [0], 2),
               Step.sync(function () {
                 const selection = editor.selection.getSel();
-                Assertions.assertEq(
-                  'Anchor node should be the paragraph not the text node',
-                  'P',
-                  selection.anchorNode.nodeName
-                );
-                Assertions.assertEq(
-                  'Anchor offset should be the element index',
-                  1,
-                  selection.anchorOffset
-                );
+                Assertions.assertEq('Anchor node should be the paragraph not the text node', 'P', selection.anchorNode.nodeName);
+                Assertions.assertEq('Anchor offset should be the element index', 1, selection.anchorOffset);
               })
             ])
           ),

@@ -37,10 +37,8 @@ interface CellEvent extends CustomEvent {
 }
 
 const makeCell = (row, col, labelId) => {
-  const emitCellOver = (c: AlloyComponent) =>
-    AlloyTriggers.emitWith(c, cellOverEvent, { row, col });
-  const emitExecute = (c: AlloyComponent) =>
-    AlloyTriggers.emitWith(c, cellExecuteEvent, { row, col });
+  const emitCellOver = (c: AlloyComponent) => AlloyTriggers.emitWith(c, cellOverEvent, { row, col });
+  const emitExecute = (c: AlloyComponent) => AlloyTriggers.emitWith(c, cellExecuteEvent, { row, col });
 
   const onClick = (c: AlloyComponent, se: NativeSimulatedEvent) => {
     se.stop();
@@ -83,13 +81,7 @@ const makeCells = (labelId, numRows, numCols) => {
   return cells;
 };
 
-const selectCells = (
-  cells,
-  selectedRow,
-  selectedColumn,
-  numRows,
-  numColumns
-) => {
+const selectCells = (cells, selectedRow, selectedColumn, numRows, numColumns) => {
   for (let i = 0; i < numRows; i++) {
     for (let j = 0; j < numColumns; j++) {
       Toggling.set(cells[i][j], i <= selectedRow && j <= selectedColumn);
@@ -97,16 +89,12 @@ const selectCells = (
   }
 };
 
-const makeComponents = (
-  cells: Array<Array<AlloyComponent>>
-): Array<AlloySpec> =>
+const makeComponents = (cells: Array<Array<AlloyComponent>>): Array<AlloySpec> =>
   Arr.bind(cells, (cellRow) => Arr.map(cellRow, GuiFactory.premade));
 
 const makeLabelText = (row, col) => GuiFactory.text(`${col + 1}x${row + 1}`);
 
-export function renderInsertTableMenuItem(
-  spec: Menu.FancyMenuItem
-): ItemTypes.WidgetItemSpec {
+export function renderInsertTableMenuItem(spec: Menu.FancyMenuItem): ItemTypes.WidgetItemSpec {
   const numRows = 10;
   const numColumns = 10;
   const sizeLabelId = Id.generate('size-label');
@@ -147,16 +135,13 @@ export function renderInsertTableMenuItem(
               selectCells(cells, row, col, numRows, numColumns);
               Replacing.set(memLabel.get(c), [makeLabelText(row, col)]);
             }),
-            AlloyEvents.runWithTarget<CellEvent>(
-              cellExecuteEvent,
-              (c, _, e) => {
-                spec.onAction({
-                  numRows: e.event().row() + 1,
-                  numColumns: e.event().col() + 1
-                });
-                AlloyTriggers.emit(c, SystemEvents.sandboxClose());
-              }
-            )
+            AlloyEvents.runWithTarget<CellEvent>(cellExecuteEvent, (c, _, e) => {
+              spec.onAction({
+                numRows: e.event().row() + 1,
+                numColumns: e.event().col() + 1
+              });
+              AlloyTriggers.emit(c, SystemEvents.sandboxClose());
+            })
           ]),
           Keying.config({
             initSize: {

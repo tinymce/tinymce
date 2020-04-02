@@ -9,9 +9,7 @@ import { Node, Range } from '@ephox/dom-globals';
 import * as NodeType from '../dom/NodeType';
 import { Unicode } from '@ephox/katamari';
 
-const isAfterNbsp = (container: Node, offset: number) =>
-  NodeType.isText(container) &&
-  container.nodeValue[offset - 1] === Unicode.nbsp;
+const isAfterNbsp = (container: Node, offset: number) => NodeType.isText(container) && container.nodeValue[offset - 1] === Unicode.nbsp;
 
 const trimOrPadLeftRight = (rng: Range, html: string): string => {
   let container, offset;

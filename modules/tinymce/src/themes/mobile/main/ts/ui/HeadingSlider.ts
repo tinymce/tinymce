@@ -41,20 +41,14 @@ const sketch = (realm: MobileRealm, editor): SketchSpec => {
         (e) => Compare.eq(e, Element.fromDom(editor.getBody()))
       );
 
-      return heading
-        .bind((elm) => Arr.indexOf(headings, Node.name(elm)))
-        .getOr(0);
+      return heading.bind((elm) => Arr.indexOf(headings, Node.name(elm))).getOr(0);
     }
   };
 
   return ToolbarWidgets.button(
     realm,
     'heading',
-    () => [
-      Buttons.getToolbarIconButton('small-heading', editor),
-      makeSlider(spec),
-      Buttons.getToolbarIconButton('large-heading', editor)
-    ],
+    () => [Buttons.getToolbarIconButton('small-heading', editor), makeSlider(spec), Buttons.getToolbarIconButton('large-heading', editor)],
     editor
   );
 };

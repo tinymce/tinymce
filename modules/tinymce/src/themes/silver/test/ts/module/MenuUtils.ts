@@ -1,12 +1,4 @@
-import {
-  Assertions,
-  Chain,
-  GeneralSteps,
-  Logger,
-  Mouse,
-  UiFinder,
-  Waiter
-} from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Logger, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
 import { Body } from '@ephox/sugar';
 
@@ -30,9 +22,7 @@ const sOpenMenuWithSelector = (label: string, selector: string) =>
     `Trying to open menu: ${label}`,
     GeneralSteps.sequence([
       Mouse.sClickOn(Body.body(), selector),
-      Chain.asStep(Body.body(), [
-        UiFinder.cWaitForVisible('Waiting for menu', '[role="menu"]')
-      ])
+      Chain.asStep(Body.body(), [UiFinder.cWaitForVisible('Waiting for menu', '[role="menu"]')])
     ])
   );
 
@@ -41,11 +31,7 @@ const sOpenMore = (type: ToolbarMode) =>
     'Trying to open more drawer',
     GeneralSteps.sequence([
       Mouse.sClickOn(Body.body(), 'button[title="More..."]'),
-      UiFinder.sWaitForVisible(
-        'Waiting for more drawer to open',
-        Body.body(),
-        getToolbarSelector(type, true)
-      )
+      UiFinder.sWaitForVisible('Waiting for more drawer to open', Body.body(), getToolbarSelector(type, true))
     ])
   );
 
@@ -54,10 +40,7 @@ const sCloseMore = (type: ToolbarMode) =>
     'Trying to close more drawer',
     GeneralSteps.sequence([
       Mouse.sClickOn(Body.body(), 'button[title="More..."]'),
-      Waiter.sTryUntil(
-        'Waiting for more drawer to close',
-        UiFinder.sNotExists(Body.body(), getToolbarSelector(type, false))
-      )
+      Waiter.sTryUntil('Waiting for more drawer to close', UiFinder.sNotExists(Body.body(), getToolbarSelector(type, false)))
     ])
   );
 
@@ -67,8 +50,7 @@ const sOpenAlignMenu = (label: string) => {
 };
 
 const sOpenMenu = (label: string, menuText: string) => {
-  const menuTextParts =
-    menuText.indexOf(':') > -1 ? menuText.split(':') : [menuText];
+  const menuTextParts = menuText.indexOf(':') > -1 ? menuText.split(':') : [menuText];
   const btnText = menuTextParts[0];
   const pseudo = menuTextParts.length > 1 ? ':' + menuTextParts[1] : '';
   const selector = `button:contains(${btnText})${pseudo}`;
@@ -76,9 +58,7 @@ const sOpenMenu = (label: string, menuText: string) => {
 };
 
 const sOpenNestedMenus = (menus: OpenNestedMenus[]) => {
-  const openMenusSequence = menus.map((menu) =>
-    sOpenMenuWithSelector(menu.label, menu.selector)
-  );
+  const openMenusSequence = menus.map((menu) => sOpenMenuWithSelector(menu.label, menu.selector));
   return GeneralSteps.sequence(openMenusSequence);
 };
 
@@ -89,13 +69,8 @@ const sAssertMoreDrawerInViewport = (type: ToolbarMode) =>
       const winBox = Boxes.win();
       const drawerBox = Boxes.box(drawer);
       // -1 from the bottom to account for the negative margin
-      const inViewport =
-        drawerBox.x >= winBox.x && drawerBox.bottom - 1 <= winBox.bottom;
-      Assertions.assertEq(
-        'Check more drawer is shown within the viewport',
-        inViewport,
-        true
-      );
+      const inViewport = drawerBox.x >= winBox.x && drawerBox.bottom - 1 <= winBox.bottom;
+      Assertions.assertEq('Check more drawer is shown within the viewport', inViewport, true);
     })
   ]);
 

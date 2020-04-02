@@ -4,15 +4,12 @@ import { EventArgs } from '@ephox/sugar';
 
 export type KeyMatcher = (evt: EventArgs) => boolean;
 
-const inSet = (keys: number[]): KeyMatcher => (
-  event: EventArgs<KeyboardEvent>
-) => {
+const inSet = (keys: number[]): KeyMatcher => (event: EventArgs<KeyboardEvent>) => {
   const raw = event.raw();
   return Arr.contains(keys, raw.which);
 };
 
-const and = (preds: KeyMatcher[]): KeyMatcher => (event: EventArgs) =>
-  Arr.forall(preds, (pred) => pred(event));
+const and = (preds: KeyMatcher[]): KeyMatcher => (event: EventArgs) => Arr.forall(preds, (pred) => pred(event));
 
 const is = (key: number): KeyMatcher => (event: EventArgs<KeyboardEvent>) => {
   const raw = event.raw();
@@ -29,11 +26,7 @@ const isControl = (event: EventArgs<KeyboardEvent>): boolean => {
   return raw.ctrlKey === true;
 };
 
-const isNotControl: (event: EventArgs<KeyboardEvent>) => boolean = Fun.not(
-  isControl
-);
-const isNotShift: (event: EventArgs<KeyboardEvent>) => boolean = Fun.not(
-  isShift
-);
+const isNotControl: (event: EventArgs<KeyboardEvent>) => boolean = Fun.not(isControl);
+const isNotShift: (event: EventArgs<KeyboardEvent>) => boolean = Fun.not(isShift);
 
 export { inSet, and, is, isShift, isNotShift, isControl, isNotControl };

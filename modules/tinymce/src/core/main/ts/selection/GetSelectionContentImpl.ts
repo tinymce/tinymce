@@ -38,14 +38,9 @@ const getSerializedContent = (editor: Editor, args: any): Content => {
   const rng = editor.selection.getRng(),
     tmpElm = editor.dom.create('body');
   const sel = editor.selection.getSel();
-  const ranges = EventProcessRanges.processRanges(
-    editor,
-    MultiRange.getRanges(sel)
-  );
+  const ranges = EventProcessRanges.processRanges(editor, MultiRange.getRanges(sel));
 
-  const fragment = args.contextual
-    ? FragmentReader.read(Element.fromDom(editor.getBody()), ranges).dom()
-    : rng.cloneContents();
+  const fragment = args.contextual ? FragmentReader.read(Element.fromDom(editor.getBody()), ranges).dom() : rng.cloneContents();
   if (fragment) {
     tmpElm.appendChild(fragment);
   }
@@ -53,11 +48,7 @@ const getSerializedContent = (editor: Editor, args: any): Content => {
   return editor.selection.serializer.serialize(tmpElm, args);
 };
 
-export const getSelectedContentInternal = (
-  editor: Editor,
-  format: ContentFormat,
-  args: any = {}
-): Content => {
+export const getSelectedContentInternal = (editor: Editor, format: ContentFormat, args: any = {}): Content => {
   args.get = true;
   args.format = format;
   args.selection = true;

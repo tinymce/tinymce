@@ -40,10 +40,7 @@ UnitTest.test('CssTest', function () {
 
     // NOTE: Safari and Firefox 71+ seems to support styles for math ml tags, so the Css.copy(m, c2) clobbers the previous style
     const browser = PlatformDetection.detect().browser;
-    if (
-      browser.isSafari() ||
-      (browser.isFirefox() && browser.version.major >= 71)
-    ) {
+    if (browser.isSafari() || (browser.isFirefox() && browser.version.major >= 71)) {
       Css.copy(c, c2);
     }
 
@@ -63,11 +60,7 @@ UnitTest.test('CssTest', function () {
     Assert.eq('getRaw display 1', true, Css.getRaw(d, 'display').isNone());
     Css.set(d, 'display', 'inline-block');
     Assert.eq('getRaw display 2', true, Css.getRaw(d, 'display').isSome());
-    Assert.eq(
-      'getRaw display 3',
-      'inline-block',
-      Css.getRaw(d, 'display').getOrDie('Option expecting: inline-block')
-    );
+    Assert.eq('getRaw display 3', 'inline-block', Css.getRaw(d, 'display').getOrDie('Option expecting: inline-block'));
     Css.remove(d, 'display');
     Assert.eq('getRaw display 4', true, Css.getRaw(d, 'display').isNone());
     Assert.eq('has', false, Attr.has(d, 'style'));
@@ -79,9 +72,7 @@ UnitTest.test('CssTest', function () {
     Assert.eq(
       'getRaw background-color',
       'rgb(12, 213, 12)',
-      Css.getRaw(d, 'background-color').getOrDie(
-        'Option expecting: rgb(12,213,12)'
-      )
+      Css.getRaw(d, 'background-color').getOrDie('Option expecting: rgb(12,213,12)')
     );
     Css.remove(d, 'background-color');
 
@@ -97,47 +88,15 @@ UnitTest.test('CssTest', function () {
     Attr.remove(d, 'style');
 
     // validate
-    Assert.eq(
-      'isValidValue',
-      true,
-      Css.isValidValue('span', 'font-size', 'small')
-    );
-    Assert.eq(
-      'isValidValue',
-      true,
-      Css.isValidValue('span', 'font-size', '12px')
-    );
-    Assert.eq(
-      'isValidValue',
-      false,
-      Css.isValidValue('span', 'font-size', 'biggest')
-    );
-    Assert.eq(
-      'isValidValue',
-      true,
-      Css.isValidValue('span', 'display', 'inline-block')
-    );
+    Assert.eq('isValidValue', true, Css.isValidValue('span', 'font-size', 'small'));
+    Assert.eq('isValidValue', true, Css.isValidValue('span', 'font-size', '12px'));
+    Assert.eq('isValidValue', false, Css.isValidValue('span', 'font-size', 'biggest'));
+    Assert.eq('isValidValue', true, Css.isValidValue('span', 'display', 'inline-block'));
     Assert.eq('isValidValue', false, Css.isValidValue('span', 'display', 'on'));
-    Assert.eq(
-      'isValidValue',
-      true,
-      Css.isValidValue('span', 'background-color', '#232323')
-    );
-    Assert.eq(
-      'isValidValue',
-      false,
-      Css.isValidValue('span', 'backgroundColor', '#2323')
-    );
-    Assert.eq(
-      'isValidValue',
-      false,
-      Css.isValidValue('span', 'font-size', 'value')
-    );
-    Assert.eq(
-      'isValidValue',
-      true,
-      Css.isValidValue('span', 'margin-top', '23px')
-    );
+    Assert.eq('isValidValue', true, Css.isValidValue('span', 'background-color', '#232323'));
+    Assert.eq('isValidValue', false, Css.isValidValue('span', 'backgroundColor', '#2323'));
+    Assert.eq('isValidValue', false, Css.isValidValue('span', 'font-size', 'value'));
+    Assert.eq('isValidValue', true, Css.isValidValue('span', 'margin-top', '23px'));
 
     const play = Div();
     if (connected) {
@@ -148,14 +107,8 @@ UnitTest.test('CssTest', function () {
     Css.preserve(play, function (e) {
       Css.set(e, 'left', '0px');
     });
-    if (
-      !(Attr.get(play, 'style') === '' || Attr.get(play, 'style') === undefined)
-    ) {
-      Assert.fail(
-        'lack of styles should have been preserved, was "' +
-          Attr.get(play, 'style') +
-          '"'
-      );
+    if (!(Attr.get(play, 'style') === '' || Attr.get(play, 'style') === undefined)) {
+      Assert.fail('lack of styles should have been preserved, was "' + Attr.get(play, 'style') + '"');
     }
 
     Css.setAll(play, {
@@ -168,11 +121,7 @@ UnitTest.test('CssTest', function () {
       Css.remove(el, 'font-size');
       Assert.eq('getRaw', false, Css.getRaw(play, 'font-size').isSome());
     });
-    Assert.eq(
-      'Font size should have been preserved',
-      true,
-      Css.getRaw(play, 'font-size').isSome()
-    );
+    Assert.eq('Font size should have been preserved', true, Css.getRaw(play, 'font-size').isSome());
 
     Css.setOptions(play, {
       'left': Option.none(),
@@ -188,11 +137,7 @@ UnitTest.test('CssTest', function () {
     KAssert.eqNone('getRaw font-size', Css.getRaw(play, 'font-size'));
     KAssert.eqSome('getRaw top', '0px', Css.getRaw(play, 'top'));
     KAssert.eqSome('getRaw bottom', '0px', Css.getRaw(play, 'bottom'));
-    KAssert.eqSome(
-      'getRaw font-family',
-      'Arial',
-      Css.getRaw(play, 'font-family')
-    );
+    KAssert.eqSome('getRaw font-family', 'Arial', Css.getRaw(play, 'font-family'));
 
     // final cleanup
     Arr.each([c, d, play], Remove.remove);

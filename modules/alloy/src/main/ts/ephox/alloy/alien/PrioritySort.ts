@@ -14,22 +14,12 @@ const sortKeys = <T extends Record<string, () => any>, K extends keyof T>(
       const bIndex = order.indexOf(bKey);
       if (aIndex === -1) {
         throw new Error(
-          'The ordering for ' +
-            label +
-            ' does not have an entry for ' +
-            aKey +
-            '.\nOrder specified: ' +
-            JSON.stringify(order, null, 2)
+          'The ordering for ' + label + ' does not have an entry for ' + aKey + '.\nOrder specified: ' + JSON.stringify(order, null, 2)
         );
       }
       if (bIndex === -1) {
         throw new Error(
-          'The ordering for ' +
-            label +
-            ' does not have an entry for ' +
-            bKey +
-            '.\nOrder specified: ' +
-            JSON.stringify(order, null, 2)
+          'The ordering for ' + label + ' does not have an entry for ' + bKey + '.\nOrder specified: ' + JSON.stringify(order, null, 2)
         );
       }
       if (aIndex < bIndex) {

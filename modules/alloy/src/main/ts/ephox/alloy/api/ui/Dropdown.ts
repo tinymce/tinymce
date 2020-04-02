@@ -8,12 +8,7 @@ import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import { SimulatedEvent } from '../../events/SimulatedEvent';
 import * as ButtonBase from '../../ui/common/ButtonBase';
 import * as DropdownSchema from '../../ui/schema/DropdownSchema';
-import {
-  DropdownApis,
-  DropdownDetail,
-  DropdownSketcher,
-  DropdownSpec
-} from '../../ui/types/DropdownTypes';
+import { DropdownApis, DropdownDetail, DropdownSketcher, DropdownSpec } from '../../ui/types/DropdownTypes';
 import { Coupling } from '../behaviour/Coupling';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
@@ -31,8 +26,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (
   _spec: DropdownSpec,
   externals
 ): SketchSpec => {
-  const lookupAttr = (attr: string) =>
-    Obj.get(detail.dom, 'attributes').bind((attrs) => Obj.get(attrs, attr));
+  const lookupAttr = (attr: string) => Obj.get(detail.dom, 'attributes').bind((attrs) => Obj.get(attrs, attr));
 
   const switchToMenu = (sandbox: AlloyComponent) => {
     Sandboxing.getState(sandbox).each((tmenu) => {
@@ -42,52 +36,26 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (
 
   const action = (component: AlloyComponent): void => {
     const onOpenSync = switchToMenu;
-    DropdownUtils.togglePopup(
-      detail,
-      (x) => x,
-      component,
-      externals,
-      onOpenSync,
-      DropdownUtils.HighlightOnOpen.HighlightFirst
-    ).get(Fun.noop);
+    DropdownUtils.togglePopup(detail, (x) => x, component, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(
+      Fun.noop
+    );
   };
 
   const apis: DropdownApis = {
     expand: (comp) => {
       if (!Toggling.isOn(comp)) {
-        DropdownUtils.togglePopup(
-          detail,
-          (x) => x,
-          comp,
-          externals,
-          Fun.noop,
-          DropdownUtils.HighlightOnOpen.HighlightNone
-        ).get(Fun.noop);
+        DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightNone).get(Fun.noop);
       }
     },
     open: (comp) => {
       if (!Toggling.isOn(comp)) {
-        DropdownUtils.togglePopup(
-          detail,
-          (x) => x,
-          comp,
-          externals,
-          Fun.noop,
-          DropdownUtils.HighlightOnOpen.HighlightFirst
-        ).get(Fun.noop);
+        DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
       }
     },
     isOpen: Toggling.isOn,
     close: (comp) => {
       if (Toggling.isOn(comp)) {
-        DropdownUtils.togglePopup(
-          detail,
-          (x) => x,
-          comp,
-          externals,
-          Fun.noop,
-          DropdownUtils.HighlightOnOpen.HighlightFirst
-        ).get(Fun.noop);
+        DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
       }
     },
     // If we are open, refresh the menus in the tiered menu system
@@ -98,10 +66,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (
     }
   };
 
-  const triggerExecute = (
-    comp: AlloyComponent,
-    _se: SimulatedEvent<EventArgs>
-  ): Option<boolean> => {
+  const triggerExecute = (comp: AlloyComponent, _se: SimulatedEvent<EventArgs>): Option<boolean> => {
     AlloyTriggers.emitExecute(comp);
     return Option.some<boolean>(true);
   };
@@ -162,11 +127,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (
     eventOrder: {
       ...detail.eventOrder,
       // Order, the button state is toggled first, so assumed !selected means close.
-      [SystemEvents.execute()]: [
-        'disabling',
-        'toggling',
-        'alloy.base.behaviour'
-      ]
+      [SystemEvents.execute()]: ['disabling', 'toggling', 'alloy.base.behaviour']
     },
 
     apis,
@@ -178,19 +139,13 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (
           () => ({}),
           (role) => ({ role })
         ),
-        ...(detail.dom.tag === 'button'
-          ? { type: lookupAttr('type').getOr('button') }
-          : {})
+        ...(detail.dom.tag === 'button' ? { type: lookupAttr('type').getOr('button') } : {})
       }
     }
   };
 };
 
-const Dropdown: DropdownSketcher = Sketcher.composite<
-  DropdownSpec,
-  DropdownDetail,
-  DropdownApis
->({
+const Dropdown: DropdownSketcher = Sketcher.composite<DropdownSpec, DropdownDetail, DropdownApis>({
   name: 'Dropdown',
   configFields: DropdownSchema.schema(),
   partFields: DropdownSchema.parts(),

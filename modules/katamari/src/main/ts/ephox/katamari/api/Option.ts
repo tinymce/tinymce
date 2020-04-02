@@ -66,10 +66,7 @@ export interface Option<T> {
   readonly equals: (opt: Option<T>) => boolean;
 
   /** Compare two Options using a specified comparator. */
-  readonly equals_: <T2>(
-    opt: Option<T2>,
-    equality: (a: T, b: T2) => boolean
-  ) => boolean;
+  readonly equals_: <T2>(opt: Option<T2>, equality: (a: T, b: T2) => boolean) => boolean;
 
   /** Returns all the values in this Option as an array */
   readonly toArray: () => T[];
@@ -147,8 +144,7 @@ const some = <T>(a: T): Option<T> => {
     bind,
     exists: bind,
     forall: bind,
-    filter: <Q extends T>(f: (value: T) => value is Q): Option<Q> =>
-      f(a) ? (me as Option<Q>) : NONE,
+    filter: <Q extends T>(f: (value: T) => value is Q): Option<Q> => (f(a) ? (me as Option<Q>) : NONE),
     toArray: () => [a],
     toString: () => 'some(' + a + ')',
     equals(o: Option<T>) {
@@ -163,8 +159,7 @@ const some = <T>(a: T): Option<T> => {
   return me;
 };
 
-const from = <T>(value: T | undefined | null): Option<T> =>
-  value === null || value === undefined ? NONE : some(value);
+const from = <T>(value: T | undefined | null): Option<T> => (value === null || value === undefined ? NONE : some(value));
 
 export const Option = {
   some,

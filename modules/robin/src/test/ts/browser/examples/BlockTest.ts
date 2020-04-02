@@ -7,11 +7,7 @@ import * as DomStructure from 'ephox/robin/api/dom/DomStructure';
 import * as BrowserCheck from 'ephox/robin/test/BrowserCheck';
 
 UnitTest.test('BlockTest', function () {
-  const check = function (
-    expected: string,
-    input: string,
-    look: (e: Element) => Option<Element>
-  ) {
+  const check = function (expected: string, input: string, look: (e: Element) => Option<Element>) {
     BrowserCheck.run(input, function (node) {
       const actual = DomParent.sharedOne(look, [node]);
       actual.fold(
@@ -25,29 +21,17 @@ UnitTest.test('BlockTest', function () {
     });
   };
 
-  const checkNone = function (
-    input: string,
-    look: (e: Element) => Option<Element>
-  ) {
+  const checkNone = function (input: string, look: (e: Element) => Option<Element>) {
     BrowserCheck.run(input, function (node) {
       const actual = DomParent.sharedOne(look, [node]);
       actual.each(function (a) {
-        assert.fail(
-          'Expected no common tag matching the look. Received: ' + Node.name(a)
-        );
+        assert.fail('Expected no common tag matching the look. Received: ' + Node.name(a));
       });
     });
   };
 
-  check(
-    'p',
-    '<p>this<span class="me"> is it </span></p>',
-    DomLook.selector('p')
-  );
-  checkNone(
-    '<p>this<span class="me"> is it</span></p>',
-    DomLook.selector('blockquote')
-  );
+  check('p', '<p>this<span class="me"> is it </span></p>', DomLook.selector('p'));
+  checkNone('<p>this<span class="me"> is it</span></p>', DomLook.selector('blockquote'));
 
   check(
     'p',
@@ -57,19 +41,10 @@ UnitTest.test('BlockTest', function () {
     })
   );
 
-  check(
-    'p',
-    '<p>this<span class="me"> is it </span></p>',
-    DomLook.predicate(DomStructure.isBlock)
-  );
+  check('p', '<p>this<span class="me"> is it </span></p>', DomLook.predicate(DomStructure.isBlock));
 
-  BrowserCheck.run('<p>this<span class="child"> is it </span></p>', function (
-    node
-  ) {
-    const actual = DomParent.sharedOne(
-      DomLook.exact(Traverse.parent(node).getOrDie()),
-      [node]
-    );
+  BrowserCheck.run('<p>this<span class="child"> is it </span></p>', function (node) {
+    const actual = DomParent.sharedOne(DomLook.exact(Traverse.parent(node).getOrDie()), [node]);
     actual.fold(
       function () {
         assert.fail('Expected a common tag');

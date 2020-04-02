@@ -53,27 +53,16 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
         }
       }));
 
-      const cAssertLayoutDirection = (
-        direction: 'top' | 'bottom'
-      ): Chain<any, any> =>
+      const cAssertLayoutDirection = (direction: 'top' | 'bottom'): Chain<any, any> =>
         Chain.op((data: { popup: AlloyComponent }) => {
           const popup = data.popup.element();
           // Swap the direction name, as the style used is opposite
           const style = direction === 'top' ? 'bottom' : 'top';
-          Assertions.assertEq(
-            `Assert layout direction is ${direction}`,
-            true,
-            Css.getRaw(popup, style).isSome()
-          );
+          Assertions.assertEq(`Assert layout direction is ${direction}`, true, Css.getRaw(popup, style).isSome());
         });
 
       const win = Boxes.win();
-      const bounds100PixelsFromTop = Boxes.bounds(
-        win.x,
-        win.y + 100,
-        win.width,
-        win.height - 100
-      );
+      const bounds100PixelsFromTop = Boxes.bounds(win.x, win.y + 100, win.width, win.height - 100);
 
       return [
         Chain.asStep({}, [
@@ -87,30 +76,14 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
 
             NamedChain.direct('hotspot', cSetupAnchor, 'anchor'),
 
-            PositionTestUtils.cTestSinkWithinBounds(
-              'Relative, not scrolled',
-              'relative',
-              win
-            ),
+            PositionTestUtils.cTestSinkWithinBounds('Relative, not scrolled', 'relative', win),
             cAssertLayoutDirection('top'),
-            PositionTestUtils.cTestSinkWithinBounds(
-              'Fixed, not scrolled',
-              'fixed',
-              win
-            ),
+            PositionTestUtils.cTestSinkWithinBounds('Fixed, not scrolled', 'fixed', win),
             cAssertLayoutDirection('top'),
 
-            PositionTestUtils.cTestSinkWithinBounds(
-              'Relative, bounds 50px from top',
-              'relative',
-              bounds100PixelsFromTop
-            ),
+            PositionTestUtils.cTestSinkWithinBounds('Relative, bounds 50px from top', 'relative', bounds100PixelsFromTop),
             cAssertLayoutDirection('bottom'),
-            PositionTestUtils.cTestSinkWithinBounds(
-              'Fixed, bounds 50px from top',
-              'fixed',
-              bounds100PixelsFromTop
-            ),
+            PositionTestUtils.cTestSinkWithinBounds('Fixed, bounds 50px from top', 'fixed', bounds100PixelsFromTop),
             cAssertLayoutDirection('bottom')
           ])
         ])

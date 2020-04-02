@@ -39,9 +39,7 @@ export interface AdvancedSelectDataset extends SelectData {
 
 export type SelectDataset = BasicSelectDataset | AdvancedSelectDataset;
 
-const buildBasicStaticDataset = (
-  data: Array<BasicSelectItem>
-): BasicSelectDataset => ({
+const buildBasicStaticDataset = (data: Array<BasicSelectItem>): BasicSelectDataset => ({
   type: 'basic',
   data
 });
@@ -59,12 +57,7 @@ const split = (rawFormats: string, delimiter: Delimiter): string[] => {
   }
 };
 
-const buildBasicSettingsDataset = (
-  editor: Editor,
-  settingName,
-  defaults,
-  delimiter: Delimiter
-): BasicSelectDataset => {
+const buildBasicSettingsDataset = (editor: Editor, settingName, defaults, delimiter: Delimiter): BasicSelectDataset => {
   const rawFormats = Obj.get(editor.settings, settingName).getOr(defaults);
   const data = process(split(rawFormats, delimiter));
   return {

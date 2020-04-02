@@ -22,12 +22,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant(
     FieldSchema.defaulted('getHotspot', Option.some),
     FieldSchema.defaulted('getAnchorOverrides', Fun.constant({})),
     AnchorLayouts.schema(),
-    SketchBehaviours.field('dropdownBehaviours', [
-      Toggling,
-      Coupling,
-      Keying,
-      Focusing
-    ]),
+    SketchBehaviours.field('dropdownBehaviours', [Toggling, Coupling, Keying, Focusing]),
     FieldSchema.strict('toggleClass'),
     FieldSchema.defaulted('eventOrder', {}),
     FieldSchema.option('lazySink'),

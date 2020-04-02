@@ -29,10 +29,7 @@ const ancestors = function <T extends DomElement = DomElement>(
   );
 };
 
-const siblings = function <T extends DomElement = DomElement>(
-  scope: Element<DomNode>,
-  selector: string
-) {
+const siblings = function <T extends DomElement = DomElement>(scope: Element<DomNode>, selector: string) {
   // It may surprise you to learn this is exactly what JQuery does
   // TODO: Avoid all the wrapping and unwrapping
   return PredicateFilter.siblings(scope, function (e): e is Element<T> {
@@ -40,10 +37,7 @@ const siblings = function <T extends DomElement = DomElement>(
   });
 };
 
-const children = function <T extends DomElement = DomElement>(
-  scope: Element<DomNode>,
-  selector: string
-) {
+const children = function <T extends DomElement = DomElement>(scope: Element<DomNode>, selector: string) {
   // It may surprise you to learn this is exactly what JQuery does
   // TODO: Avoid all the wrapping and unwrapping
   return PredicateFilter.children(scope, function (e): e is Element<T> {
@@ -51,10 +45,7 @@ const children = function <T extends DomElement = DomElement>(
   });
 };
 
-const descendants = function <T extends DomElement = DomElement>(
-  scope: Element<DomNode>,
-  selector: string
-) {
+const descendants = function <T extends DomElement = DomElement>(scope: Element<DomNode>, selector: string) {
   return Selectors.all<T>(selector, scope);
 };
 

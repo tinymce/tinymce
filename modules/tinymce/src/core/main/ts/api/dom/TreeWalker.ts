@@ -58,12 +58,7 @@ class TreeWalker {
    * @return {Node} Current node where the walker is after moving to the next node.
    */
   public next(shallow?: boolean): Node {
-    this.node = this.findSibling(
-      this.node,
-      'firstChild',
-      'nextSibling',
-      shallow
-    );
+    this.node = this.findSibling(this.node, 'firstChild', 'nextSibling', shallow);
     return this.node;
   }
 
@@ -74,22 +69,12 @@ class TreeWalker {
    * @return {Node} Current node where the walker is after moving to the previous node.
    */
   public prev(shallow?: boolean): Node {
-    this.node = this.findSibling(
-      this.node,
-      'lastChild',
-      'previousSibling',
-      shallow
-    );
+    this.node = this.findSibling(this.node, 'lastChild', 'previousSibling', shallow);
     return this.node;
   }
 
   public prev2(shallow?: boolean): Node {
-    this.node = this.findPreviousNode(
-      this.node,
-      'lastChild',
-      'previousSibling',
-      shallow
-    );
+    this.node = this.findPreviousNode(this.node, 'lastChild', 'previousSibling', shallow);
     return this.node;
   }
 
@@ -115,11 +100,7 @@ class TreeWalker {
         }
 
         // Walk up the parents to look for siblings
-        for (
-          parent = node.parentNode;
-          parent && parent !== this.rootNode;
-          parent = parent.parentNode
-        ) {
+        for (parent = node.parentNode; parent && parent !== this.rootNode; parent = parent.parentNode) {
           sibling = parent[siblingName];
           if (sibling) {
             return sibling;
@@ -129,12 +110,7 @@ class TreeWalker {
     }
   }
 
-  private findPreviousNode(
-    node: Node,
-    startName: 'lastChild',
-    siblingName: 'previousSibling',
-    shallow?: boolean
-  ) {
+  private findPreviousNode(node: Node, startName: 'lastChild', siblingName: 'previousSibling', shallow?: boolean) {
     let sibling: Node, parent: Node, child: Node;
 
     if (node) {

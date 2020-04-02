@@ -30,21 +30,12 @@ const extractChildren = (block: Element) => {
 
 const removeEmptyRoot = (rootNode: Element, block: Element) => {
   const parents = Parents.parentsAndSelf(block, rootNode);
-  return Arr.find(parents.reverse(), (element) => Empty.isEmpty(element)).each(
-    Remove.remove
-  );
+  return Arr.find(parents.reverse(), (element) => Empty.isEmpty(element)).each(Remove.remove);
 };
 
-const isEmptyBefore = (el: Element) =>
-  Arr.filter(Traverse.prevSiblings(el), (el) => !Empty.isEmpty(el)).length ===
-  0;
+const isEmptyBefore = (el: Element) => Arr.filter(Traverse.prevSiblings(el), (el) => !Empty.isEmpty(el)).length === 0;
 
-const nestedBlockMerge = (
-  rootNode: Element,
-  fromBlock: Element,
-  toBlock: Element,
-  insertionPoint: Element
-): Option<CaretPosition> => {
+const nestedBlockMerge = (rootNode: Element, fromBlock: Element, toBlock: Element, insertionPoint: Element): Option<CaretPosition> => {
   if (Empty.isEmpty(toBlock)) {
     PaddingBr.fillWithPaddingBr(toBlock);
     return CaretFinder.firstPositionIn(toBlock.dom());
@@ -54,10 +45,7 @@ const nestedBlockMerge = (
     Insert.before(insertionPoint, Element.fromTag('br'));
   }
 
-  const position = CaretFinder.prevPosition(
-    toBlock.dom(),
-    CaretPosition.before(insertionPoint.dom())
-  );
+  const position = CaretFinder.prevPosition(toBlock.dom(), CaretPosition.before(insertionPoint.dom()));
   Arr.each(extractChildren(fromBlock), (child) => {
     Insert.before(insertionPoint, child);
   });
@@ -65,11 +53,7 @@ const nestedBlockMerge = (
   return position;
 };
 
-const sidelongBlockMerge = (
-  rootNode: Element,
-  fromBlock: Element,
-  toBlock: Element
-): Option<CaretPosition> => {
+const sidelongBlockMerge = (rootNode: Element, fromBlock: Element, toBlock: Element): Option<CaretPosition> => {
   if (Empty.isEmpty(toBlock)) {
     Remove.remove(toBlock);
     if (Empty.isEmpty(fromBlock)) {
@@ -91,13 +75,8 @@ const findInsertionPoint = (toBlock: Element, block: Element) => {
   return Option.from(parentsAndSelf[parentsAndSelf.length - 1]);
 };
 
-const getInsertionPoint = (
-  fromBlock: Element,
-  toBlock: Element
-): Option<Element> =>
-  Compare.contains(toBlock, fromBlock)
-    ? findInsertionPoint(toBlock, fromBlock)
-    : Option.none();
+const getInsertionPoint = (fromBlock: Element, toBlock: Element): Option<Element> =>
+  Compare.contains(toBlock, fromBlock) ? findInsertionPoint(toBlock, fromBlock) : Option.none();
 
 const trimBr = (first: boolean, block: Element) => {
   CaretFinder.positionIn(first, block.dom())
@@ -107,11 +86,7 @@ const trimBr = (first: boolean, block: Element) => {
     .each(Remove.remove);
 };
 
-const mergeBlockInto = (
-  rootNode: Element,
-  fromBlock: Element,
-  toBlock: Element
-): Option<CaretPosition> => {
+const mergeBlockInto = (rootNode: Element, fromBlock: Element, toBlock: Element): Option<CaretPosition> => {
   trimBr(true, fromBlock);
   trimBr(false, toBlock);
 
@@ -121,14 +96,7 @@ const mergeBlockInto = (
   );
 };
 
-const mergeBlocks = (
-  rootNode: Element,
-  forward: boolean,
-  block1: Element,
-  block2: Element
-) =>
-  forward
-    ? mergeBlockInto(rootNode, block2, block1)
-    : mergeBlockInto(rootNode, block1, block2);
+const mergeBlocks = (rootNode: Element, forward: boolean, block1: Element, block2: Element) =>
+  forward ? mergeBlockInto(rootNode, block2, block1) : mergeBlockInto(rootNode, block1, block2);
 
 export { mergeBlocks };

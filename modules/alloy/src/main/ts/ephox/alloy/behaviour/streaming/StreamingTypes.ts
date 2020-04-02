@@ -5,11 +5,8 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { EventFormat, SimulatedEvent } from '../../events/SimulatedEvent';
 import { BehaviourState } from '../common/BehaviourState';
 
-export interface StreamingBehaviour
-  extends Behaviour.AlloyBehaviour<StreamingConfigSpec, StreamingConfig> {
-  config: (
-    config: StreamingConfigSpec
-  ) => Behaviour.NamedConfiguredBehaviour<StreamingConfigSpec, StreamingConfig>;
+export interface StreamingBehaviour extends Behaviour.AlloyBehaviour<StreamingConfigSpec, StreamingConfig> {
+  config: (config: StreamingConfigSpec) => Behaviour.NamedConfiguredBehaviour<StreamingConfigSpec, StreamingConfig>;
 }
 
 export interface ThrottleStreamingConfig extends StreamingModeConfig {
@@ -19,10 +16,7 @@ export interface ThrottleStreamingConfig extends StreamingModeConfig {
 
 export interface StreamingModeConfig {
   streams: {
-    setup: (
-      config: StreamingConfig,
-      state: StreamingState
-    ) => (comp: AlloyComponent, evt: SimulatedEvent<EventFormat>) => void;
+    setup: (config: StreamingConfig, state: StreamingState) => (comp: AlloyComponent, evt: SimulatedEvent<EventFormat>) => void;
     state: (config: StreamingConfig) => StreamingState;
   };
 }
@@ -31,10 +25,7 @@ export interface StreamingConfig extends Behaviour.BehaviourConfigDetail {
   event: string;
   cancelEvent: Option<string>;
   stream: StreamingModeConfig;
-  onStream: (
-    component: AlloyComponent,
-    simulatedEvent: SimulatedEvent<EventFormat>
-  ) => void;
+  onStream: (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventFormat>) => void;
 }
 
 export interface CancellableStreamer {
@@ -54,10 +45,7 @@ export interface StreamingConfigSpec extends Behaviour.BehaviourConfigSpec {
   };
   event?: string;
   cancelEvent?: string;
-  onStream: (
-    component: AlloyComponent,
-    simulatedEvent: SimulatedEvent<EventFormat>
-  ) => void;
+  onStream: (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventFormat>) => void;
 }
 
 export type StreamMode = 'throttle';

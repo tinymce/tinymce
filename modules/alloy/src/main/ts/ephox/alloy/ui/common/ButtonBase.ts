@@ -9,13 +9,8 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { ButtonAction } from '../types/ButtonTypes';
 
-const pointerEvents = (): Array<
-  AlloyEvents.AlloyEventKeyAndHandler<EventArgs>
-> => {
-  const onClick = (
-    component: AlloyComponent,
-    simulatedEvent: NativeSimulatedEvent
-  ) => {
+const pointerEvents = (): Array<AlloyEvents.AlloyEventKeyAndHandler<EventArgs>> => {
+  const onClick = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
     simulatedEvent.stop();
     AlloyTriggers.emitExecute(component);
   };
@@ -31,9 +26,7 @@ const pointerEvents = (): Array<
   ];
 };
 
-const events = (
-  optAction: Option<(comp: AlloyComponent) => void>
-): AlloyEvents.AlloyEventRecord => {
+const events = (optAction: Option<(comp: AlloyComponent) => void>): AlloyEvents.AlloyEventRecord => {
   const executeHandler = (action: ButtonAction) =>
     AlloyEvents.runOnExecute((component, simulatedEvent) => {
       action(component);

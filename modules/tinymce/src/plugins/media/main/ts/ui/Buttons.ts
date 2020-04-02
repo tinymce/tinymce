@@ -8,13 +8,8 @@
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from '@ephox/bridge';
 
-const stateSelectorAdapter = (editor: Editor, selector: string[]) => (
-  buttonApi: Toolbar.ToolbarToggleButtonInstanceApi
-) =>
-  editor.selection.selectorChangedWithUnbind(
-    selector.join(','),
-    buttonApi.setActive
-  ).unbind;
+const stateSelectorAdapter = (editor: Editor, selector: string[]) => (buttonApi: Toolbar.ToolbarToggleButtonInstanceApi) =>
+  editor.selection.selectorChangedWithUnbind(selector.join(','), buttonApi.setActive).unbind;
 
 const register = function (editor: Editor) {
   editor.ui.registry.addToggleButton('media', {
@@ -23,11 +18,7 @@ const register = function (editor: Editor) {
     onAction: () => {
       editor.execCommand('mceMedia');
     },
-    onSetup: stateSelectorAdapter(editor, [
-      'img[data-mce-object]',
-      'span[data-mce-object]',
-      'div[data-ephox-embed-iri]'
-    ])
+    onSetup: stateSelectorAdapter(editor, ['img[data-mce-object]', 'span[data-mce-object]', 'div[data-ephox-embed-iri]'])
   });
 
   editor.ui.registry.addMenuItem('media', {

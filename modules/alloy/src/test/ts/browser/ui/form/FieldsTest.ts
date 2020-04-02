@@ -20,10 +20,7 @@ import * as Tagger from 'ephox/alloy/registry/Tagger';
 import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 
 UnitTest.asynctest('FieldsTest', (success, failure) => {
-  const renderChoice = (choiceSpec: {
-    value: string;
-    text: string;
-  }): AlloySpec & { value: string } => ({
+  const renderChoice = (choiceSpec: { value: string; text: string }): AlloySpec & { value: string } => ({
     value: choiceSpec.value,
     dom: {
       tag: 'span',
@@ -82,10 +79,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         dom: {
           tag: 'div'
         },
-        components: [
-          FormChooser.parts().legend({}),
-          FormChooser.parts().choices({})
-        ],
+        components: [FormChooser.parts().legend({}), FormChooser.parts().choices({})],
 
         markers: {
           choiceClass: 'test-choice',
@@ -160,30 +154,18 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
       const dataE = component.getSystem().getByUid('data-e').getOrDie();
 
       return [
-        GuiSetup.mAddStyles(doc, [
-          '.test-selected-choice, .coupled-lock { background: #cadbee }'
-        ]),
+        GuiSetup.mAddStyles(doc, ['.test-selected-choice, .coupled-lock { background: #cadbee }']),
 
         RepresentPipes.sAssertValue('Checking input-a value', 'init', inputA),
 
         Assertions.sAssertStructure(
           'Check the input-a DOM',
           ApproxStructure.build((s, str, _arr) => {
-            const input = SelectorFind.descendant(
-              inputA.element(),
-              'input'
-            ).getOrDie('input element child was not found');
-            const span = SelectorFind.descendant(
-              inputA.element(),
-              'span'
-            ).getOrDie('span element child was not found');
+            const input = SelectorFind.descendant(inputA.element(), 'input').getOrDie('input element child was not found');
+            const span = SelectorFind.descendant(inputA.element(), 'span').getOrDie('span element child was not found');
 
-            const inputID = Option.from(Attr.get(input, 'id')).getOrDie(
-              'Expected value for input.id'
-            );
-            const spanID = Option.from(Attr.get(span, 'id')).getOrDie(
-              'Expected value for span.id'
-            );
+            const inputID = Option.from(Attr.get(input, 'id')).getOrDie('Expected value for input.id');
+            const spanID = Option.from(Attr.get(span, 'id')).getOrDie('Expected value for span.id');
             return s.element('div', {
               children: [
                 s.element('input', {
@@ -228,11 +210,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
           chooserC.element()
         ),
 
-        RepresentPipes.sAssertValue(
-          'Checking select-b value',
-          'select-b-init',
-          selectB
-        ),
+        RepresentPipes.sAssertValue('Checking select-b value', 'select-b-init', selectB),
 
         Step.sync(() => {
           const val = Representing.getValue(chooserC).getOrDie();
@@ -240,18 +218,12 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
 
           Representing.setValue(chooserC, 'choice3');
           const val2 = Representing.getValue(chooserC).getOrDie();
-          Assertions.assertEq(
-            'Checking chooser-c value after set',
-            'choice3',
-            val2
-          );
+          Assertions.assertEq('Checking chooser-c value after set', 'choice3', val2);
         }),
 
         Assertions.sAssertStructure(
           'Checking the data field (E)',
-          ApproxStructure.build((s, _str, _arr) =>
-            s.element('span', { children: [] })
-          ),
+          ApproxStructure.build((s, _str, _arr) => s.element('span', { children: [] })),
           dataE.element()
         ),
 
@@ -260,22 +232,14 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
           Assertions.assertEq('Checking data-e value', 'data-e-init', val);
 
           Representing.setValue(dataE, 'data-e-new');
-          Assertions.assertEq(
-            'Checking data-e value after set',
-            'data-e-new',
-            Representing.getValue(dataE)
-          );
+          Assertions.assertEq('Checking data-e value after set', 'data-e-new', Representing.getValue(dataE));
 
           // Remove it from the container
           Replacing.remove(component, dataE);
 
           // Add it back the the container
           Replacing.append(component, GuiFactory.premade(dataE));
-          Assertions.assertEq(
-            'Checking data-e value was reset when added back to DOM',
-            'data-e-init',
-            Representing.getValue(dataE)
-          );
+          Assertions.assertEq('Checking data-e value was reset when added back to DOM', 'data-e-init', Representing.getValue(dataE));
         }),
 
         Step.sync(() => {
@@ -285,11 +249,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
             },
             (comp) => {
               const alloyId = Tagger.readOrDie(comp.element());
-              Assertions.assertEq(
-                'FormField should have an api that returns the input field',
-                'input-a-field',
-                alloyId
-              );
+              Assertions.assertEq('FormField should have an api that returns the input field', 'input-a-field', alloyId);
             }
           );
 
@@ -299,11 +259,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
             },
             (comp) => {
               const alloyId = Tagger.readOrDie(comp.element());
-              Assertions.assertEq(
-                'FormField should have an api that returns the input Label',
-                'input-a-label',
-                alloyId
-              );
+              Assertions.assertEq('FormField should have an api that returns the input Label', 'input-a-label', alloyId);
             }
           );
         }),

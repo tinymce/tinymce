@@ -11,10 +11,7 @@ const before = function (anchor: Gene, item: Gene) {
     const detached = Detach.detach(Up.top(anchor), item).getOr(item);
     detached.parent = Option.some(parent);
     index.each(function (ind) {
-      parent.children = parent.children
-        .slice(0, ind)
-        .concat([detached])
-        .concat(parent.children.slice(ind));
+      parent.children = parent.children.slice(0, ind).concat([detached]).concat(parent.children.slice(ind));
     });
   });
 };

@@ -156,8 +156,7 @@ const error = function <T = any, E = any>(message: E): Result<T, E> {
   };
 };
 
-const fromOption = <T, E>(opt: Option<T>, err: E): Result<T, E> =>
-  opt.fold(() => error(err), value);
+const fromOption = <T, E>(opt: Option<T>, err: E): Result<T, E> => opt.fold(() => error(err), value);
 
 export const Result = {
   value,

@@ -9,12 +9,7 @@ import * as Origins from '../layout/Origins';
 import { nu as NuAnchor, SelectionAnchor, NodeAnchor } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 
-const capRect = (
-  left: number,
-  top: number,
-  width: number,
-  height: number
-): Option<Boxes.BoxByPoint> => {
+const capRect = (left: number, top: number, width: number, height: number): Option<Boxes.BoxByPoint> => {
   let newLeft = left,
     newTop = top,
     newWidth = width,
@@ -48,30 +43,13 @@ const calcNewAnchor = (
       () => CssPosition.sumAsFixed(points)
     );
 
-    const anchorBox = Boxes.rect(
-      topLeft.left(),
-      topLeft.top(),
-      box.width,
-      box.height
-    );
+    const anchorBox = Boxes.rect(topLeft.left(), topLeft.top(), box.width, box.height);
 
-    const layoutsLtr = anchorInfo.showAbove
-      ? Layout.aboveOrBelow()
-      : Layout.belowOrAbove();
+    const layoutsLtr = anchorInfo.showAbove ? Layout.aboveOrBelow() : Layout.belowOrAbove();
 
-    const layoutsRtl = anchorInfo.showAbove
-      ? Layout.belowOrAboveRtl()
-      : Layout.belowOrAboveRtl();
+    const layoutsRtl = anchorInfo.showAbove ? Layout.belowOrAboveRtl() : Layout.belowOrAboveRtl();
 
-    const layouts = AnchorLayouts.get(
-      elem,
-      anchorInfo,
-      layoutsLtr,
-      layoutsRtl,
-      layoutsLtr,
-      layoutsRtl,
-      Option.none()
-    );
+    const layouts = AnchorLayouts.get(elem, anchorInfo, layoutsLtr, layoutsRtl, layoutsLtr, layoutsRtl, Option.none());
 
     return NuAnchor({
       anchorBox,

@@ -7,10 +7,7 @@ import * as ExpandRange from 'tinymce/core/fmt/ExpandRange';
 import Theme from 'tinymce/themes/silver/Theme';
 import Editor from 'tinymce/core/api/Editor';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (success, failure) {
   Theme();
 
   const cSetRawContent = function (html: string) {
@@ -28,14 +25,8 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (
     excludeTrailingSpaces: boolean = false
   ) {
     return Chain.mapper(function (editor: Editor) {
-      const startContainer = Hierarchy.follow(
-        Element.fromDom(editor.getBody()),
-        startPath
-      ).getOrDie();
-      const endContainer = Hierarchy.follow(
-        Element.fromDom(editor.getBody()),
-        endPath
-      ).getOrDie();
+      const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
+      const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
 
       const rng = editor.dom.createRng();
       rng.setStart(startContainer.dom(), startOffset);
@@ -45,43 +36,15 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (
     });
   };
 
-  const cAssertRange = function (
-    editor: Editor,
-    startPath: number[],
-    startOffset: number,
-    endPath: number[],
-    endOffset: number
-  ) {
+  const cAssertRange = function (editor: Editor, startPath: number[], startOffset: number, endPath: number[], endOffset: number) {
     return Chain.op(function (rng: Range) {
-      const startContainer = Hierarchy.follow(
-        Element.fromDom(editor.getBody()),
-        startPath
-      ).getOrDie();
-      const endContainer = Hierarchy.follow(
-        Element.fromDom(editor.getBody()),
-        endPath
-      ).getOrDie();
+      const startContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), startPath).getOrDie();
+      const endContainer = Hierarchy.follow(Element.fromDom(editor.getBody()), endPath).getOrDie();
 
-      Assertions.assertDomEq(
-        'Should be expected start container',
-        startContainer,
-        Element.fromDom(rng.startContainer)
-      );
-      Assertions.assertEq(
-        'Should be expected start offset',
-        startOffset,
-        rng.startOffset
-      );
-      Assertions.assertDomEq(
-        'Should be expected end container',
-        endContainer,
-        Element.fromDom(rng.endContainer)
-      );
-      Assertions.assertEq(
-        'Should be expected end offset',
-        endOffset,
-        rng.endOffset
-      );
+      Assertions.assertDomEq('Should be expected start container', startContainer, Element.fromDom(rng.startContainer));
+      Assertions.assertEq('Should be expected start offset', startOffset, rng.startOffset);
+      Assertions.assertDomEq('Should be expected end container', endContainer, Element.fromDom(rng.endContainer));
+      Assertions.assertEq('Should be expected end offset', endOffset, rng.endOffset);
     });
   };
 
@@ -91,9 +54,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (
       const inlineFormat = [{ inline: 'b' }];
       const blockFormat = [{ block: 'div' }];
       const selectorFormat = [{ selector: 'div', classes: 'b' }];
-      const selectorFormatCollapsed = [
-        { selector: 'div', classes: 'b', collapsed: true }
-      ];
+      const selectorFormatCollapsed = [{ selector: 'div', classes: 'b', collapsed: true }];
 
       Pipeline.async(
         {},
@@ -210,31 +171,15 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (
                 'Whole word selected wrapped in multiple inlines',
                 Chain.asStep(editor, [
                   cSetRawContent('<p><b><i>c</i></b></p>'),
-                  cExpandRng(
-                    [0, 0, 0, 0],
-                    0,
-                    [0, 0, 0, 0],
-                    1,
-                    inlineFormat,
-                    false
-                  ),
+                  cExpandRng([0, 0, 0, 0], 0, [0, 0, 0, 0], 1, inlineFormat, false),
                   cAssertRange(editor, [], 0, [], 1)
                 ])
               ),
               Logger.t(
                 'Whole word inside td',
                 Chain.asStep(editor, [
-                  cSetRawContent(
-                    '<table><tbody><tr><td>a</td></tr></tbody></table>'
-                  ),
-                  cExpandRng(
-                    [0, 0, 0, 0, 0],
-                    0,
-                    [0, 0, 0, 0, 0],
-                    1,
-                    inlineFormat,
-                    false
-                  ),
+                  cSetRawContent('<table><tbody><tr><td>a</td></tr></tbody></table>'),
+                  cExpandRng([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 1, inlineFormat, false),
                   cAssertRange(editor, [0, 0, 0], 0, [0, 0, 0], 1)
                 ])
               ),
@@ -257,9 +202,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (
               Logger.t(
                 'In middle of word inside bookmark then exclude bookmark',
                 Chain.asStep(editor, [
-                  cSetRawContent(
-                    '<p><span data-mce-type="bookmark">ab cd ef</span></p>'
-                  ),
+                  cSetRawContent('<p><span data-mce-type="bookmark">ab cd ef</span></p>'),
                   cExpandRng([0, 0, 0], 3, [0, 0, 0], 5, inlineFormat, false),
                   cAssertRange(editor, [], 0, [], 1)
                 ])
@@ -303,17 +246,8 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (
               Logger.t(
                 'Whole word inside td',
                 Chain.asStep(editor, [
-                  cSetRawContent(
-                    '<table><tbody><tr><td>a</td></tr></tbody></table>'
-                  ),
-                  cExpandRng(
-                    [0, 0, 0, 0, 0],
-                    0,
-                    [0, 0, 0, 0, 0],
-                    1,
-                    blockFormat,
-                    false
-                  ),
+                  cSetRawContent('<table><tbody><tr><td>a</td></tr></tbody></table>'),
+                  cExpandRng([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 1, blockFormat, false),
                   cAssertRange(editor, [0, 0, 0], 0, [0, 0, 0], 1)
                 ])
               )
@@ -334,9 +268,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (
               Logger.t(
                 'Do not expand outside of element if selector does not match - from bookmark at middle',
                 Chain.asStep(editor, [
-                  cSetRawContent(
-                    '<p>a<span data-mce-type="bookmark">&#65279;</span>b</p>'
-                  ),
+                  cSetRawContent('<p>a<span data-mce-type="bookmark">&#65279;</span>b</p>'),
                   cExpandRng([0, 1, 0], 0, [0, 1, 0], 0, selectorFormat, false),
                   cAssertRange(editor, [0, 0], 0, [0, 2], 1)
                 ])
@@ -344,9 +276,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (
               Logger.t(
                 'Do not expand outside of element if selector does not match - from bookmark at start',
                 Chain.asStep(editor, [
-                  cSetRawContent(
-                    '<p><span data-mce-type="bookmark">&#65279;</span>ab</p>'
-                  ),
+                  cSetRawContent('<p><span data-mce-type="bookmark">&#65279;</span>ab</p>'),
                   cExpandRng([0, 0, 0], 0, [0, 0, 0], 0, selectorFormat, false),
                   cAssertRange(editor, [0], 0, [0, 1], 2)
                 ])
@@ -354,9 +284,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (
               Logger.t(
                 'Do not expand outside of element if selector does not match - from bookmark at end',
                 Chain.asStep(editor, [
-                  cSetRawContent(
-                    '<p>ab<span data-mce-type="bookmark">&#65279;</span></p>'
-                  ),
+                  cSetRawContent('<p>ab<span data-mce-type="bookmark">&#65279;</span></p>'),
                   cExpandRng([0, 1, 0], 0, [0, 1, 0], 0, selectorFormat, false),
                   cAssertRange(editor, [0, 0], 0, [0], 2)
                 ])
@@ -387,14 +315,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (
                 'Expand since selector matches collapsed on collapsed format',
                 Chain.asStep(editor, [
                   cSetRawContent('<div>ab</div>'),
-                  cExpandRng(
-                    [0, 0],
-                    1,
-                    [0, 0],
-                    1,
-                    selectorFormatCollapsed,
-                    false
-                  ),
+                  cExpandRng([0, 0], 1, [0, 0], 1, selectorFormatCollapsed, false),
                   cAssertRange(editor, [], 0, [], 1)
                 ])
               ),
@@ -402,14 +323,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.ExpandRangeTest', function (
                 'Expand since selector matches non collapsed on collapsed format',
                 Chain.asStep(editor, [
                   cSetRawContent('<div>ab</div>'),
-                  cExpandRng(
-                    [0, 0],
-                    1,
-                    [0, 0],
-                    2,
-                    selectorFormatCollapsed,
-                    false
-                  ),
+                  cExpandRng([0, 0], 1, [0, 0], 2, selectorFormatCollapsed, false),
                   cAssertRange(editor, [0, 0], 1, [0, 0], 2)
                 ])
               )

@@ -1,9 +1,4 @@
-import {
-  document,
-  HTMLCanvasElement,
-  WebGLRenderingContext,
-  CanvasRenderingContext2D
-} from '@ephox/dom-globals';
+import { document, HTMLCanvasElement, WebGLRenderingContext, CanvasRenderingContext2D } from '@ephox/dom-globals';
 
 function create(width: number, height: number) {
   return resize(document.createElement('canvas'), width, height);

@@ -20,17 +20,8 @@ export default [
   FieldSchema.strictOf(
     'dimension',
     ValueSchema.choose('property', {
-      width: [
-        Fields.output('property', 'width'),
-        Fields.output('getDimension', (elem: Element) => Width.get(elem) + 'px')
-      ],
-      height: [
-        Fields.output('property', 'height'),
-        Fields.output(
-          'getDimension',
-          (elem: Element) => Height.get(elem) + 'px'
-        )
-      ]
+      width: [Fields.output('property', 'width'), Fields.output('getDimension', (elem: Element) => Width.get(elem) + 'px')],
+      height: [Fields.output('property', 'height'), Fields.output('getDimension', (elem: Element) => Height.get(elem) + 'px')]
     })
   )
 ];

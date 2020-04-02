@@ -13,11 +13,9 @@ import * as StylesMenu from '../ui/StylesMenu';
 import * as StyleConversions from './StyleConversions';
 
 const register = (editor, settings) => {
-  const isSelectedFor = (format) => (): boolean =>
-    editor.formatter.match(format);
+  const isSelectedFor = (format) => (): boolean => editor.formatter.match(format);
 
-  const getPreview = (format) => (): string =>
-    editor.formatter.getCssText(format);
+  const getPreview = (format) => (): string => editor.formatter.getCssText(format);
 
   const enrichSupported = (item) =>
     Merger.deepMerge(item, {
@@ -69,9 +67,7 @@ const prune = (editor, formats) => {
         const newItems = doPrune(item.items);
         return newItems.length > 0 ? [item] : [];
       } else {
-        const keep = Obj.hasNonNullableKey(item, 'format')
-          ? editor.formatter.canApply(item.format)
-          : true;
+        const keep = Obj.hasNonNullableKey(item, 'format') ? editor.formatter.canApply(item.format) : true;
         return keep ? [item] : [];
       }
     });

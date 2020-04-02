@@ -1,13 +1,6 @@
 import { HTMLFrameElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import {
-  Compare,
-  Element,
-  Location,
-  Position,
-  Scroll,
-  Traverse
-} from '@ephox/sugar';
+import { Compare, Element, Location, Position, Scroll, Traverse } from '@ephox/sugar';
 
 import * as CssPosition from '../../alien/CssPosition';
 import { AlloyComponent } from '../../api/component/ComponentApi';

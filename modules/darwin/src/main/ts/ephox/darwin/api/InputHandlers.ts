@@ -18,12 +18,7 @@ interface RC {
 
 const rc = (rows: number, cols: number): RC => ({ rows, cols });
 
-const mouse = function (
-  win: Window,
-  container: Element,
-  isRoot: (e: Element) => boolean,
-  annotations: SelectionAnnotation
-) {
+const mouse = function (win: Window, container: Element, isRoot: (e: Element) => boolean, annotations: SelectionAnnotation) {
   const bridge = WindowBridge(win);
 
   const handlers = MouseSelection(bridge, container, isRoot, annotations);
@@ -35,12 +30,7 @@ const mouse = function (
   };
 };
 
-const keyboard = function (
-  win: Window,
-  container: Element,
-  isRoot: (e: Element) => boolean,
-  annotations: SelectionAnnotation
-) {
+const keyboard = function (win: Window, container: Element, isRoot: (e: Element) => boolean, annotations: SelectionAnnotation) {
   const bridge = WindowBridge(win);
 
   const clearToNavigate = function () {
@@ -60,57 +50,20 @@ const keyboard = function (
     const keycode = realEvent.which;
     const shiftKey = realEvent.shiftKey === true;
 
-    const handler = CellSelection.retrieve(
-      container,
-      annotations.selectedSelector
-    ).fold(
+    const handler = CellSelection.retrieve(container, annotations.selectedSelector).fold(
       function () {
         // Shift down should predict the movement and set the selection.
         if (SelectionKeys.isDown(keycode) && shiftKey) {
-          return Fun.curry(
-            VerticalMovement.select,
-            bridge,
-            container,
-            isRoot,
-            KeyDirection.down,
-            finish,
-            start,
-            annotations.selectRange
-          );
+          return Fun.curry(VerticalMovement.select, bridge, container, isRoot, KeyDirection.down, finish, start, annotations.selectRange);
         } else if (SelectionKeys.isUp(keycode) && shiftKey) {
           // Shift up should predict the movement and set the selection.
-          return Fun.curry(
-            VerticalMovement.select,
-            bridge,
-            container,
-            isRoot,
-            KeyDirection.up,
-            finish,
-            start,
-            annotations.selectRange
-          );
+          return Fun.curry(VerticalMovement.select, bridge, container, isRoot, KeyDirection.up, finish, start, annotations.selectRange);
         } else if (SelectionKeys.isDown(keycode)) {
           // Down should predict the movement and set the cursor
-          return Fun.curry(
-            VerticalMovement.navigate,
-            bridge,
-            isRoot,
-            KeyDirection.down,
-            finish,
-            start,
-            VerticalMovement.lastDownCheck
-          );
+          return Fun.curry(VerticalMovement.navigate, bridge, isRoot, KeyDirection.down, finish, start, VerticalMovement.lastDownCheck);
         } else if (SelectionKeys.isUp(keycode)) {
           // Up should predict the movement and set the cursor
-          return Fun.curry(
-            VerticalMovement.navigate,
-            bridge,
-            isRoot,
-            KeyDirection.up,
-            finish,
-            start,
-            VerticalMovement.firstUpCheck
-          );
+          return Fun.curry(VerticalMovement.navigate, bridge, isRoot, KeyDirection.up, finish, start, VerticalMovement.firstUpCheck);
         } else {
           return Option.none;
         }
@@ -119,13 +72,7 @@ const keyboard = function (
         const update = function (attempts: RC[]) {
           return function () {
             const navigation = Arr.findMap(attempts, function (delta) {
-              return KeySelection.update(
-                delta.rows,
-                delta.cols,
-                container,
-                selected,
-                annotations
-              );
+              return KeySelection.update(delta.rows, delta.cols, container, selected, annotations);
             });
 
             // Shift the selected rows and update the selection.
@@ -133,20 +80,11 @@ const keyboard = function (
               function () {
                 // The cell selection went outside the table, so clear it and bridge from the first box to before/after
                 // the table
-                return CellSelection.getEdges(
-                  container,
-                  annotations.firstSelectedSelector,
-                  annotations.lastSelectedSelector
-                ).map(function (edges) {
-                  const relative =
-                    SelectionKeys.isDown(keycode) ||
-                    direction.isForward(keycode)
-                      ? Situ.after
-                      : Situ.before;
-                  bridge.setRelativeSelection(
-                    Situ.on(edges.first(), 0),
-                    relative(edges.table())
-                  );
+                return CellSelection.getEdges(container, annotations.firstSelectedSelector, annotations.lastSelectedSelector).map(function (
+                  edges
+                ) {
+                  const relative = SelectionKeys.isDown(keycode) || direction.isForward(keycode) ? Situ.after : Situ.before;
+                  bridge.setRelativeSelection(Situ.on(edges.first(), 0), relative(edges.table()));
                   annotations.clear(container);
                   return Response.create(Option.none(), true);
                 });
@@ -179,16 +117,8 @@ const keyboard = function (
     return handler();
   };
 
-  const keyup = function (
-    event: EventArgs,
-    start: Element,
-    soffset: number,
-    finish: Element,
-    foffset: number
-  ) {
-    return CellSelection.retrieve(container, annotations.selectedSelector).fold<
-      Option<Response>
-    >(function () {
+  const keyup = function (event: EventArgs, start: Element, soffset: number, finish: Element, foffset: number) {
+    return CellSelection.retrieve(container, annotations.selectedSelector).fold<Option<Response>>(function () {
       const realEvent = event.raw() as KeyboardEvent;
       const keycode = realEvent.which;
       const shiftKey = realEvent.shiftKey === true;
@@ -196,15 +126,7 @@ const keyboard = function (
         return Option.none<Response>();
       }
       if (SelectionKeys.isNavigation(keycode)) {
-        return KeySelection.sync(
-          container,
-          isRoot,
-          start,
-          soffset,
-          finish,
-          foffset,
-          annotations.selectRange
-        );
+        return KeySelection.sync(container, isRoot, start, soffset, finish, foffset, annotations.selectRange);
       } else {
         return Option.none<Response>();
       }
@@ -217,12 +139,7 @@ const keyboard = function (
   };
 };
 
-const external = (
-  win: Window,
-  container: Element,
-  isRoot: (e: Element) => boolean,
-  annotations: SelectionAnnotation
-) => {
+const external = (win: Window, container: Element, isRoot: (e: Element) => boolean, annotations: SelectionAnnotation) => {
   const bridge = WindowBridge(win);
 
   return (start: Element, finish: Element) => {

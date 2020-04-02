@@ -9,12 +9,7 @@ UnitTest.test('WrapperTest', function () {
       Gene('a', '', [
         Gene('aa', '', [
           TextGene('aaa', 'once upon a time'),
-          Gene('aab', '', [
-            Gene('aaba', '', [
-              Gene('aabaa', 'img', []),
-              TextGene('aabab', ' there was a dragon')
-            ])
-          ])
+          Gene('aab', '', [Gene('aaba', '', [Gene('aabaa', 'img', []), TextGene('aabab', ' there was a dragon')])])
         ]),
         Gene('ab', '', [
           TextGene('aba', ' called '),
@@ -41,9 +36,7 @@ UnitTest.test('WrapperTest', function () {
 
   const dump = function () {
     return Logger.custom(doc.get(), function (item) {
-      return doc.property().isText(item)
-        ? item.id + '("' + item.text + '")'
-        : item.id;
+      return doc.property().isText(item) ? item.id + '("' + item.text + '")' : item.id;
     });
   };
 
@@ -54,23 +47,9 @@ UnitTest.test('WrapperTest', function () {
     endOffset: number;
   }
 
-  const check = function (
-    overall: string,
-    expResult: ExpResult,
-    startId: string,
-    startOffset: number,
-    endId: string,
-    endOffset: number
-  ) {
+  const check = function (overall: string, expResult: ExpResult, startId: string, startOffset: number, endId: string, endOffset: number) {
     counter = 0;
-    const actual = Wrapping.leaves(
-      doc,
-      Finder.get(doc, startId),
-      startOffset,
-      Finder.get(doc, endId),
-      endOffset,
-      factory
-    ).getOrDie();
+    const actual = Wrapping.leaves(doc, Finder.get(doc, startId), startOffset, Finder.get(doc, endId), endOffset, factory).getOrDie();
     assert.eq(overall, dump());
     assert.eq(expResult.beginId, actual.begin().element().id);
     assert.eq(expResult.beginOffset, actual.begin().offset());

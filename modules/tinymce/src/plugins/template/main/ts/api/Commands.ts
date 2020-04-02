@@ -9,10 +9,7 @@ import { Fun } from '@ephox/katamari';
 import * as Templates from '../core/Templates';
 
 const register = function (editor) {
-  editor.addCommand(
-    'mceInsertTemplate',
-    Fun.curry(Templates.insertTemplate, editor)
-  );
+  editor.addCommand('mceInsertTemplate', Fun.curry(Templates.insertTemplate, editor));
 };
 
 export { register };

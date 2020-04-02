@@ -43,11 +43,7 @@ const htmlDiff: (v1: string, v2: string) => string = (() => {
 
     for (i in ns) {
       if (hasOwn.call(ns, i)) {
-        if (
-          ns[i].rows.length === 1 &&
-          hasOwn.call(os, i) &&
-          os[i].rows.length === 1
-        ) {
+        if (ns[i].rows.length === 1 && hasOwn.call(os, i) && os[i].rows.length === 1) {
           n[ns[i].rows[0]] = {
             text: n[ns[i].rows[0]],
             row: os[i].rows[0]
@@ -80,13 +76,7 @@ const htmlDiff: (v1: string, v2: string) => string = (() => {
     }
 
     for (i = n.length - 1; i > 0; i--) {
-      if (
-        n[i].text != null &&
-        n[i - 1].text == null &&
-        n[i].row > 0 &&
-        o[n[i].row - 1].text == null &&
-        n[i - 1] === o[n[i].row - 1]
-      ) {
+      if (n[i].text != null && n[i - 1].text == null && n[i].row > 0 && o[n[i].row - 1].text == null && n[i - 1] === o[n[i].row - 1]) {
         n[i - 1] = {
           text: n[i - 1],
           row: n[i].row - 1
@@ -113,10 +103,7 @@ const htmlDiff: (v1: string, v2: string) => string = (() => {
       str = '',
       oSpace = o.match(/\s+/g),
       nSpace = n.match(/\s+/g);
-    const out = diff(
-      o === '' ? [] : o.split(/\s+/),
-      n === '' ? [] : n.split(/\s+/)
-    );
+    const out = diff(o === '' ? [] : o.split(/\s+/), n === '' ? [] : n.split(/\s+/));
 
     if (oSpace == null) {
       oSpace = [' '];
@@ -148,11 +135,7 @@ const htmlDiff: (v1: string, v2: string) => string = (() => {
           // `pre` initialized at top of scope
           pre = '';
 
-          for (
-            n = out.n[i].row + 1;
-            n < out.o.length && out.o[n].text == null;
-            n++
-          ) {
+          for (n = out.n[i].row + 1; n < out.o.length && out.o[n].text == null; n++) {
             pre += '<del>' + out.o[n] + oSpace[n] + '</del>';
           }
           str += ' ' + out.n[i].text + nSpace[i] + pre;

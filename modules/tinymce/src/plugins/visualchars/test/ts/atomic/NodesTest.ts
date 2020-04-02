@@ -16,15 +16,7 @@ UnitTest.test('atomic.tinymce.plugins.visualchars.NodesTest', function () {
 
   const testFilterDescendants = function () {
     const div = document.createElement('div');
-    div.innerHTML =
-      '<p>a</p>' +
-      '<p>b' +
-      Unicode.nbsp +
-      '</p>' +
-      '<p>c</p>' +
-      '<p>d' +
-      Unicode.softHyphen +
-      '</p>';
+    div.innerHTML = '<p>a</p>' + '<p>b' + Unicode.nbsp + '</p>' + '<p>c</p>' + '<p>d' + Unicode.softHyphen + '</p>';
 
     Assertions.assertEq(
       'should return list with nodes with shy or nbsp in it',

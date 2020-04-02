@@ -14,8 +14,7 @@ UnitTest.test('DraggerTest', function () {
 
   const mode = DragMode({
     compare: (old: any, nu: any) => ((nu - old) as unknown) as Position,
-    extract: (raw: any) =>
-      Option.from((parseInt(raw, 10) as unknown) as Position),
+    extract: (raw: any) => Option.from((parseInt(raw, 10) as unknown) as Position),
     mutate: (mutation, data) => {
       assert.eq(argumentToMutate, mutation);
       mutations.push((data as any) as number);

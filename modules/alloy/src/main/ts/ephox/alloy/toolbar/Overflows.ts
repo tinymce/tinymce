@@ -24,11 +24,7 @@ interface Widths {
 
 type GetLengthFunc<T> = (comp: T) => number;
 
-const apportion = <T>(
-  units: T[],
-  total: number,
-  len: GetLengthFunc<T>
-): Widths => {
+const apportion = <T>(units: T[], total: number, len: GetLengthFunc<T>): Widths => {
   const parray: Pos[] = PositionArray.generate(units, (unit, current) => {
     const width = len(unit);
     return Option.some({
@@ -58,34 +54,19 @@ const fitLast = (within: Pos[], extra: Pos[], withinWidth: number) => {
   return output(fits, [], withinWidth);
 };
 
-const overflow = <T>(
-  within: Pos[],
-  extra: Pos[],
-  overflower: T,
-  withinWidth: number
-) => {
+const overflow = <T>(within: Pos[], extra: Pos[], overflower: T, withinWidth: number) => {
   const fits = toUnit(within).concat([overflower]);
   return output(fits, toUnit(extra), withinWidth);
 };
 
-const fitAll = (within: Pos[], extra: Pos[], withinWidth: number) =>
-  output(toUnit(within), [], withinWidth);
+const fitAll = (within: Pos[], extra: Pos[], withinWidth: number) => output(toUnit(within), [], withinWidth);
 
-const tryFit = <T>(
-  total: number,
-  units: T[],
-  len: GetLengthFunc<T>
-): Option<Widths> => {
+const tryFit = <T>(total: number, units: T[], len: GetLengthFunc<T>): Option<Widths> => {
   const divide = apportion(units, total, len);
   return divide.extra().length === 0 ? Option.some(divide) : Option.none();
 };
 
-const partition = <T>(
-  total: number,
-  units: T[],
-  len: GetLengthFunc<T>,
-  overflower: T
-) => {
+const partition = <T>(total: number, units: T[], len: GetLengthFunc<T>, overflower: T) => {
   // Firstly, we try without the overflower.
   const divide = tryFit(total, units, len).getOrThunk(() =>
     // If that doesn't work, overflow

@@ -25,10 +25,7 @@ const runWithApi = <T>(info: GetApiType<T>, comp: AlloyComponent) => {
   };
 };
 
-const onControlAttached = <T>(
-  info: OnControlAttachedType<T>,
-  editorOffCell: Cell<OnDestroy<T>>
-) =>
+const onControlAttached = <T>(info: OnControlAttachedType<T>, editorOffCell: Cell<OnDestroy<T>>) =>
   AlloyEvents.runOnAttached((comp) => {
     const run = runWithApi(info, comp);
     run((api) => {
@@ -39,12 +36,7 @@ const onControlAttached = <T>(
     });
   });
 
-const onControlDetached = <T>(
-  getApi: GetApiType<T>,
-  editorOffCell: Cell<OnDestroy<T>>
-) =>
-  AlloyEvents.runOnDetached((comp) =>
-    runWithApi(getApi, comp)(editorOffCell.get())
-  );
+const onControlDetached = <T>(getApi: GetApiType<T>, editorOffCell: Cell<OnDestroy<T>>) =>
+  AlloyEvents.runOnDetached((comp) => runWithApi(getApi, comp)(editorOffCell.get()));
 
 export { runWithApi, onControlAttached, onControlDetached };

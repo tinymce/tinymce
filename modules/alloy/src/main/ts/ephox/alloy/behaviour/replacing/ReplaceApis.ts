@@ -9,12 +9,7 @@ import { Stateless } from '../../behaviour/common/BehaviourState';
 import * as InternalAttachment from '../../system/InternalAttachment';
 import { ReplacingConfig } from './ReplacingTypes';
 
-const set = (
-  component: AlloyComponent,
-  replaceConfig: ReplacingConfig,
-  replaceState: Stateless,
-  data: AlloySpec[]
-): void => {
+const set = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, data: AlloySpec[]): void => {
   // NOTE: we may want to create a behaviour which allows you to switch
   // between predefined layouts, which would make a noop detection easier.
   // Until then, we'll just use AriaFocus like redesigning does.
@@ -34,44 +29,24 @@ const insert = (
   Attachment.attachWith(component, child, insertion);
 };
 
-const append = (
-  component: AlloyComponent,
-  replaceConfig: ReplacingConfig,
-  replaceState: Stateless,
-  appendee: AlloySpec
-): void => {
+const append = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, appendee: AlloySpec): void => {
   insert(component, replaceConfig, Insert.append, appendee);
 };
 
-const prepend = (
-  component: AlloyComponent,
-  replaceConfig: ReplacingConfig,
-  replaceState: Stateless,
-  prependee: AlloySpec
-): void => {
+const prepend = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, prependee: AlloySpec): void => {
   insert(component, replaceConfig, Insert.prepend, prependee);
 };
 
 // NOTE: Removee is going to be a component, not a spec.
-const remove = (
-  component: AlloyComponent,
-  replaceConfig: ReplacingConfig,
-  replaceState: Stateless,
-  removee: AlloyComponent
-): void => {
+const remove = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, removee: AlloyComponent): void => {
   const children = contents(component, replaceConfig);
-  const foundChild = Arr.find(children, (child) =>
-    Compare.eq(removee.element(), child.element())
-  );
+  const foundChild = Arr.find(children, (child) => Compare.eq(removee.element(), child.element()));
 
   foundChild.each(Attachment.detach);
 };
 
 // TODO: Rename
-const contents = (
-  component: AlloyComponent,
-  _replaceConfig: ReplacingConfig
-): AlloyComponent[] => component.components();
+const contents = (component: AlloyComponent, _replaceConfig: ReplacingConfig): AlloyComponent[] => component.components();
 
 const replaceAt = (
   component: AlloyComponent,

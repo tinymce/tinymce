@@ -26,12 +26,7 @@ const sAssertSpanStruct = sAssertStruct(
 );
 
 const sAssertNbspStruct = sAssertStruct(
-  ApproxStructure.build((s, str) => [
-    s.text(str.is('a')),
-    s.text(str.is(Unicode.nbsp)),
-    s.text(str.is(Unicode.nbsp)),
-    s.text(str.is('b'))
-  ])
+  ApproxStructure.build((s, str) => [s.text(str.is('a')), s.text(str.is(Unicode.nbsp)), s.text(str.is(Unicode.nbsp)), s.text(str.is('b'))])
 );
 
 export { sAssertStruct, sAssertNbspStruct, sAssertSpanStruct };

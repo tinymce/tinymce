@@ -1,11 +1,4 @@
-import {
-  Assertions,
-  GeneralSteps,
-  Logger,
-  Step,
-  UiFinder,
-  Waiter
-} from '@ephox/agar';
+import { Assertions, GeneralSteps, Logger, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Option, Result } from '@ephox/katamari';
 
@@ -44,9 +37,7 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
           },
 
           inlineBehaviours: Behaviour.derive([
-            AddEventsBehaviour.config('inline-dismiss-test', [
-              AlloyEvents.run('test-dismiss', store.adder('test-dismiss-fired'))
-            ])
+            AddEventsBehaviour.config('inline-dismiss-test', [AlloyEvents.run('test-dismiss', store.adder('test-dismiss-fired'))])
           ])
         })
       );
@@ -69,16 +60,9 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
         Logger.t(
           label,
           GeneralSteps.sequence([
-            Waiter.sTryUntil(
-              'Test inline should not be DOM',
-              UiFinder.sExists(gui.element(), '.test-inline')
-            ),
+            Waiter.sTryUntil('Test inline should not be DOM', UiFinder.sExists(gui.element(), '.test-inline')),
             Step.sync(() => {
-              Assertions.assertEq(
-                'Checking isOpen API',
-                true,
-                InlineView.isOpen(inline)
-              );
+              Assertions.assertEq('Checking isOpen API', true, InlineView.isOpen(inline));
             })
           ])
         );
@@ -87,16 +71,9 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
         Logger.t(
           label,
           GeneralSteps.sequence([
-            Waiter.sTryUntil(
-              'Test inline should not be in DOM',
-              UiFinder.sNotExists(gui.element(), '.test-inline')
-            ),
+            Waiter.sTryUntil('Test inline should not be in DOM', UiFinder.sNotExists(gui.element(), '.test-inline')),
             Step.sync(() => {
-              Assertions.assertEq(
-                'Checking isOpen API',
-                false,
-                InlineView.isOpen(inline)
-              );
+              Assertions.assertEq('Checking isOpen API', false, InlineView.isOpen(inline));
             })
           ])
         );
@@ -154,46 +131,19 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
         sCheckOpen('Should still be open with a button'),
         store.sClear,
 
-        TestBroadcasts.sDismissOn(
-          'toolbar: should not close',
-          gui,
-          '.bold-button'
-        ),
+        TestBroadcasts.sDismissOn('toolbar: should not close', gui, '.bold-button'),
 
-        sCheckOpen(
-          'Broadcasting dismiss on button should not close inline toolbar'
-        ),
-        store.sAssertEq(
-          'Broadcasting on button should not fire dismiss event',
-          []
-        ),
+        sCheckOpen('Broadcasting dismiss on button should not close inline toolbar'),
+        store.sAssertEq('Broadcasting on button should not fire dismiss event', []),
 
-        TestBroadcasts.sDismiss(
-          'related element: should not close',
-          gui,
-          related.element()
-        ),
-        sCheckOpen(
-          'The inline view should not have fired dismiss event when broadcasting on related'
-        ),
-        store.sAssertEq(
-          'Broadcasting on related element should not fire dismiss event',
-          []
-        ),
+        TestBroadcasts.sDismiss('related element: should not close', gui, related.element()),
+        sCheckOpen('The inline view should not have fired dismiss event when broadcasting on related'),
+        store.sAssertEq('Broadcasting on related element should not fire dismiss event', []),
 
-        TestBroadcasts.sDismiss(
-          'outer gui element: should close',
-          gui,
-          gui.element()
-        ),
+        TestBroadcasts.sDismiss('outer gui element: should close', gui, gui.element()),
 
-        sCheckOpen(
-          'Dialog should stay open, because we are firing an event instead of dismissing automatically'
-        ),
-        store.sAssertEq(
-          'Broadcasting on outer element SHOULD fire dismiss event',
-          ['test-dismiss-fired']
-        )
+        sCheckOpen('Dialog should stay open, because we are firing an event instead of dismissing automatically'),
+        store.sAssertEq('Broadcasting on outer element SHOULD fire dismiss event', ['test-dismiss-fired'])
       ];
     },
     () => {

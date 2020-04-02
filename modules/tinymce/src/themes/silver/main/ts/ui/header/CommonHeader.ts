@@ -20,9 +20,7 @@ export interface HeaderSpec extends SimpleSpec {
 
 const renderHeader = (spec: HeaderSpec): AlloySpec => {
   const editor = spec.editor;
-  const getBehaviours = spec.sticky
-    ? StickyHeader.getBehaviours
-    : StaticHeader.getBehaviours;
+  const getBehaviours = spec.sticky ? StickyHeader.getBehaviours : StaticHeader.getBehaviours;
   return {
     uid: spec.uid,
     dom: spec.dom,

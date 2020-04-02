@@ -8,10 +8,7 @@ const inSelection = function (bounds: Bounds, detail: DetailExt) {
   const topEdge = detail.row();
   const bottomEdge = detail.row() + detail.rowspan() - 1;
   return (
-    leftEdge <= bounds.finishCol() &&
-    rightEdge >= bounds.startCol() &&
-    topEdge <= bounds.finishRow() &&
-    bottomEdge >= bounds.startRow()
+    leftEdge <= bounds.finishCol() && rightEdge >= bounds.startCol() && topEdge <= bounds.finishRow() && bottomEdge >= bounds.startRow()
   );
 };
 
@@ -31,8 +28,7 @@ const isRectangular = function (warehouse: Warehouse, bounds: Bounds) {
 
   for (let i = bounds.startRow(); i <= bounds.finishRow(); i++) {
     for (let j = bounds.startCol(); j <= bounds.finishCol(); j++) {
-      isRect =
-        isRect && Warehouse.getAt(warehouse, i, j).exists(detailIsWithin);
+      isRect = isRect && Warehouse.getAt(warehouse, i, j).exists(detailIsWithin);
     }
   }
 

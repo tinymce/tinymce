@@ -1,18 +1,7 @@
 import { document } from '@ephox/dom-globals';
-import {
-  Class,
-  Element,
-  Elements,
-  Html,
-  Insert,
-  InsertAll,
-  Remove
-} from '@ephox/sugar';
+import { Class, Element, Elements, Html, Insert, InsertAll, Remove } from '@ephox/sugar';
 
-export const init = (
-  name: string,
-  f: (success: () => void, failure: (err: any) => void) => Element[]
-): void => {
+export const init = (name: string, f: (success: () => void, failure: (err: any) => void) => Element[]): void => {
   const container = Element.fromTag('div');
   Class.add(container, 'demo-container');
   Html.set(container, '<p>' + name + '</p>');
@@ -27,11 +16,7 @@ export const init = (
 
   // Taken from tunic
   const htmlentities = (str: string): string =>
-    String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+    String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
   const keepMarkers = (html: string): string =>
     html
@@ -44,10 +29,7 @@ export const init = (
     Class.add(outcome, 'failure');
     Remove.empty(outcome);
     if (err.diff) {
-      InsertAll.append(
-        outcome,
-        Elements.fromHtml(keepMarkers(htmlentities(err.diff.comparison)))
-      );
+      InsertAll.append(outcome, Elements.fromHtml(keepMarkers(htmlentities(err.diff.comparison))));
     } else {
       Insert.append(outcome, Element.fromText(err));
     }

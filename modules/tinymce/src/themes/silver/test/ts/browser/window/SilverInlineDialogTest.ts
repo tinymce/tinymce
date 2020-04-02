@@ -1,16 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  FocusTools,
-  GeneralSteps,
-  Logger,
-  Mouse,
-  Pipeline,
-  Step,
-  UiFinder,
-  Waiter
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
@@ -98,20 +86,11 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
         const dialogSelector = `.tox-${type}-dialog`;
         return GeneralSteps.sequence([
           store.sClear,
-          Mouse.sTrueClickOn(
-            Body.body(),
-            '[role=dialog] button:contains(' + buttonSelector + ')'
-          ),
+          Mouse.sTrueClickOn(Body.body(), '[role=dialog] button:contains(' + buttonSelector + ')'),
           DialogUtils.sWaitForOpen(dialogSelector),
           store.sAssertEq('Checking onAction called', ['onAction']),
-          Mouse.sTrueClickOn(
-            Body.body(),
-            dialogSelector + ' .tox-dialog__footer button'
-          ),
-          Waiter.sTryUntil(
-            'Wait for dialog to close',
-            UiFinder.sNotExists(Body.body(), dialogSelector)
-          )
+          Mouse.sTrueClickOn(Body.body(), dialogSelector + ' .tox-dialog__footer button'),
+          Waiter.sTryUntil('Wait for dialog to close', UiFinder.sNotExists(Body.body(), dialogSelector))
         ]);
       };
 
@@ -122,28 +101,17 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
             '.tox-dialog { background: white; border: 2px solid black; padding: 1em; margin: 1em; }'
           ]),
           sTestOpen({ inline: 'magic' }),
-          FocusTools.sTryOnSelector(
-            'Focus should start on the input',
-            Element.fromDom(document),
-            'input'
-          ),
+          FocusTools.sTryOnSelector('Focus should start on the input', Element.fromDom(document), 'input'),
           Step.sync(() => {
             currentApi.get().disable('barny');
           }),
           DialogUtils.sClose,
-          Waiter.sTryUntil(
-            'Waiting for all dialog events when closing',
-            store.sAssertEq('Checking stuff', ['onCancel', 'onClose'])
-          ),
+          Waiter.sTryUntil('Waiting for all dialog events when closing', store.sAssertEq('Checking stuff', ['onCancel', 'onClose'])),
 
           store.sClear,
 
           sTestOpen({ inline: 'toolbar' }),
-          FocusTools.sTryOnSelector(
-            'Focus should start on the input',
-            Element.fromDom(document),
-            'input'
-          ),
+          FocusTools.sTryOnSelector('Focus should start on the input', Element.fromDom(document), 'input'),
           Assertions.sAssertStructure(
             '"tox-dialog__scroll-disable" should not have been added to the body',
             ApproxStructure.build((s, str, arr) =>
@@ -165,10 +133,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
             'Waiting for all dialog events when closing via dismiss',
             store.sAssertEq('Checking stuff', ['onCancel', 'onClose'])
           ),
-          Logger.t(
-            'After broadcasting dismiss, dialog should be removed',
-            UiFinder.sNotExists(Body.body(), '[role="dialog"]')
-          ),
+          Logger.t('After broadcasting dismiss, dialog should be removed', UiFinder.sNotExists(Body.body(), '[role="dialog"]')),
           TestHelpers.GuiSetup.mRemoveStyles
         ],
         onSuccess,

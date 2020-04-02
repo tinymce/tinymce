@@ -1,16 +1,5 @@
 import { Arr, Obj, Option } from '@ephox/katamari';
-import {
-  Attr,
-  Compare,
-  Css,
-  CursorPosition,
-  Element,
-  Insert,
-  Node,
-  Replication,
-  SelectorFilter,
-  Traverse
-} from '@ephox/sugar';
+import { Attr, Compare, Css, CursorPosition, Element, Insert, Node, Replication, SelectorFilter, Traverse } from '@ephox/sugar';
 import { Generators, CellSpan, SimpleGenerators } from './Generators';
 import { HTMLElementTagNameMap } from '@ephox/dom-globals';
 
@@ -49,23 +38,15 @@ const newRow = function (doc: Element) {
   };
 };
 
-const cloneFormats = function (
-  oldCell: Element,
-  newCell: Element,
-  formats: string[]
-) {
+const cloneFormats = function (oldCell: Element, newCell: Element, formats: string[]) {
   const first = CursorPosition.first(oldCell);
   return first
     .map(function (firstText) {
       const formatSelector = formats.join(',');
       // Find the ancestors of the first text node that match the given formats.
-      const parents = SelectorFilter.ancestors(
-        firstText,
-        formatSelector,
-        function (element) {
-          return Compare.eq(element, oldCell);
-        }
-      );
+      const parents = SelectorFilter.ancestors(firstText, formatSelector, function (element) {
+        return Compare.eq(element, oldCell);
+      });
       // Add the matched ancestors to the new cell, then return the new cell.
       return Arr.foldr(
         parents,
@@ -81,35 +62,15 @@ const cloneFormats = function (
     .getOr(newCell);
 };
 
-const cellOperations = function (
-  mutate: (e1: Element, e2: Element) => void,
-  doc: Element,
-  formatsToClone: Option<string[]>
-): Generators {
+const cellOperations = function (mutate: (e1: Element, e2: Element) => void, doc: Element, formatsToClone: Option<string[]>): Generators {
   const newCell = function (prev: CellSpan) {
     const docu = Traverse.owner(prev.element());
     const td = Element.fromTag(Node.name(prev.element()), docu.dom());
 
-    const formats = formatsToClone.getOr([
-      'strong',
-      'em',
-      'b',
-      'i',
-      'span',
-      'font',
-      'h1',
-      'h2',
-      'h3',
-      'h4',
-      'h5',
-      'h6',
-      'p',
-      'div'
-    ]);
+    const formats = formatsToClone.getOr(['strong', 'em', 'b', 'i', 'span', 'font', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div']);
 
     // If we aren't cloning the child formatting, we can just give back the new td immediately.
-    const lastNode =
-      formats.length > 0 ? cloneFormats(prev.element(), td, formats) : td;
+    const lastNode = formats.length > 0 ? cloneFormats(prev.element(), td, formats) : td;
 
     Insert.append(lastNode, Element.fromTag('br'));
     // inherit the style and width, dont inherit the row height

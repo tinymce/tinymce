@@ -24,9 +24,7 @@ const getTableCaptionDeltaY = function (elm) {
         return Node.name(elm) === 'caption';
       })
       .bind(function (caption) {
-        return firstElement(Traverse.nextSiblings(caption)).map(function (
-          body
-        ) {
+        return firstElement(Traverse.nextSiblings(caption)).map(function (body) {
           const bodyTop = body.dom().offsetTop;
           const captionTop = caption.dom().offsetTop;
           const captionHeight = caption.dom().offsetHeight;
@@ -39,8 +37,7 @@ const getTableCaptionDeltaY = function (elm) {
   }
 };
 
-const hasChild = (elm, child) =>
-  elm.children && Arr.contains(elm.children, child);
+const hasChild = (elm, child) => elm.children && Arr.contains(elm.children, child);
 
 const getPos = function (body, elm, rootElm) {
   let x = 0,
@@ -54,46 +51,26 @@ const getPos = function (body, elm, rootElm) {
   if (elm) {
     // Use getBoundingClientRect if it exists since it's faster than looping offset nodes
     // Fallback to offsetParent calculations if the body isn't static better since it stops at the body root
-    if (
-      rootElm === body &&
-      elm.getBoundingClientRect &&
-      Css.get(Element.fromDom(body), 'position') === 'static'
-    ) {
+    if (rootElm === body && elm.getBoundingClientRect && Css.get(Element.fromDom(body), 'position') === 'static') {
       pos = elm.getBoundingClientRect();
 
       // Add scroll offsets from documentElement or body since IE with the wrong box model will use d.body and so do WebKit
       // Also remove the body/documentelement clientTop/clientLeft on IE 6, 7 since they offset the position
-      x =
-        pos.left +
-        (doc.documentElement.scrollLeft || body.scrollLeft) -
-        doc.documentElement.clientLeft;
-      y =
-        pos.top +
-        (doc.documentElement.scrollTop || body.scrollTop) -
-        doc.documentElement.clientTop;
+      x = pos.left + (doc.documentElement.scrollLeft || body.scrollLeft) - doc.documentElement.clientLeft;
+      y = pos.top + (doc.documentElement.scrollTop || body.scrollTop) - doc.documentElement.clientTop;
 
       return { x, y };
     }
 
     offsetParent = elm;
-    while (
-      offsetParent &&
-      offsetParent !== rootElm &&
-      offsetParent.nodeType &&
-      !hasChild(offsetParent, rootElm)
-    ) {
+    while (offsetParent && offsetParent !== rootElm && offsetParent.nodeType && !hasChild(offsetParent, rootElm)) {
       x += offsetParent.offsetLeft || 0;
       y += offsetParent.offsetTop || 0;
       offsetParent = offsetParent.offsetParent;
     }
 
     offsetParent = elm.parentNode;
-    while (
-      offsetParent &&
-      offsetParent !== rootElm &&
-      offsetParent.nodeType &&
-      !hasChild(offsetParent, rootElm)
-    ) {
+    while (offsetParent && offsetParent !== rootElm && offsetParent.nodeType && !hasChild(offsetParent, rootElm)) {
       x -= offsetParent.scrollLeft || 0;
       y -= offsetParent.scrollTop || 0;
       offsetParent = offsetParent.parentNode;

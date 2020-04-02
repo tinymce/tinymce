@@ -10,13 +10,9 @@ const charpos = (ch: string, offset: number): CharPos => ({
   offset
 });
 
-const locate = (text: string, offset: number): CharPos =>
-  charpos(text.charAt(offset), offset);
+const locate = (text: string, offset: number): CharPos => charpos(text.charAt(offset), offset);
 
-const previous = (
-  text: string,
-  offsetOption: Option<number>
-): Option<CharPos> => {
+const previous = (text: string, offsetOption: Option<number>): Option<CharPos> => {
   const max = offsetOption.getOr(text.length);
   for (let i = max - 1; i >= 0; i--) {
     if (text.charAt(i) !== Unicode.zeroWidth) {
@@ -40,10 +36,7 @@ const rfind = (str: string, regex: RegExp): Option<number> => {
   regex.lastIndex = -1;
   const reversed = Arr.reverse(str).join('');
   const match = reversed.match(regex);
-  return match !== undefined &&
-    match !== null &&
-    match.index !== undefined &&
-    match.index >= 0
+  return match !== undefined && match !== null && match.index !== undefined && match.index >= 0
     ? Option.some(reversed.length - 1 - match.index)
     : Option.none<number>();
 };
@@ -51,10 +44,7 @@ const rfind = (str: string, regex: RegExp): Option<number> => {
 const lfind = (str: string, regex: RegExp): Option<number> => {
   regex.lastIndex = -1;
   const match = str.match(regex);
-  return match !== undefined &&
-    match !== null &&
-    match.index !== undefined &&
-    match.index >= 0
+  return match !== undefined && match !== null && match.index !== undefined && match.index >= 0
     ? Option.some(match.index)
     : Option.none<number>();
 };

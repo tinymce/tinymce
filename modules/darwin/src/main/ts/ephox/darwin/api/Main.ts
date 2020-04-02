@@ -5,11 +5,4 @@ import * as SelectionKeys from './SelectionKeys';
 import * as TableSelection from './TableSelection';
 import { WindowBridge } from './WindowBridge';
 
-export {
-  Ephemera,
-  InputHandlers,
-  SelectionAnnotation,
-  SelectionKeys,
-  TableSelection,
-  WindowBridge
-};
+export { Ephemera, InputHandlers, SelectionAnnotation, SelectionKeys, TableSelection, WindowBridge };

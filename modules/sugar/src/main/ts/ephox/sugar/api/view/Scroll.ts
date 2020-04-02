@@ -1,10 +1,4 @@
-import {
-  document,
-  Window,
-  HTMLDivElement,
-  Document,
-  Element as DomElement
-} from '@ephox/dom-globals';
+import { document, Window, HTMLDivElement, Document, Element as DomElement } from '@ephox/dom-globals';
 import { Option, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import * as Insert from '../dom/Insert';
@@ -82,10 +76,7 @@ const capture = function (doc: Element<Document>) {
 // TBIO-4472 Safari 10 - Scrolling typeahead with keyboard scrolls page
 const intoView = function (element: Element<DomElement>, alignToTop: boolean) {
   // this method isn't in TypeScript
-  if (
-    isSafari &&
-    Type.isFunction((element.dom() as any).scrollIntoViewIfNeeded)
-  ) {
+  if (isSafari && Type.isFunction((element.dom() as any).scrollIntoViewIfNeeded)) {
     (element.dom() as any).scrollIntoViewIfNeeded(false); // false=align to nearest edge
   } else {
     element.dom().scrollIntoView(alignToTop); // true=to top, false=to bottom
@@ -93,10 +84,7 @@ const intoView = function (element: Element<DomElement>, alignToTop: boolean) {
 };
 
 // If the element is above the container, or below the container, then scroll to the top or bottom
-const intoViewIfNeeded = function (
-  element: Element<DomElement>,
-  container: Element<DomElement>
-) {
+const intoViewIfNeeded = function (element: Element<DomElement>, container: Element<DomElement>) {
   const containerBox = container.dom().getBoundingClientRect();
   const elementBox = element.dom().getBoundingClientRect();
   if (elementBox.top < containerBox.top) {
@@ -120,14 +108,4 @@ const scrollBarWidth = function () {
   return w;
 };
 
-export {
-  get,
-  to,
-  by,
-  preserve,
-  capture,
-  intoView,
-  intoViewIfNeeded,
-  setToElement,
-  scrollBarWidth
-};
+export { get, to, by, preserve, capture, intoView, intoViewIfNeeded, setToElement, scrollBarWidth };

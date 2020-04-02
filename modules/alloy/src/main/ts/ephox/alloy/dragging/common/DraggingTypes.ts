@@ -11,19 +11,8 @@ import { MouseDraggingConfigSpec } from '../mouse/MouseDraggingTypes';
 import { MouseOrTouchDraggingConfigSpec } from '../mouseortouch/MouseOrTouchDraggingTypes';
 import { TouchDraggingConfigSpec } from '../touch/TouchDraggingTypes';
 
-export interface DraggingBehaviour<E>
-  extends Behaviour.AlloyBehaviour<
-    DraggingConfigSpec<E>,
-    DraggingConfig<E>,
-    DraggingState
-  > {
-  config: (
-    config: DraggingConfigSpec<E>
-  ) => Behaviour.NamedConfiguredBehaviour<
-    DraggingConfigSpec<E>,
-    DraggingConfig<E>,
-    DraggingState
-  >;
+export interface DraggingBehaviour<E> extends Behaviour.AlloyBehaviour<DraggingConfigSpec<E>, DraggingConfig<E>, DraggingState> {
+  config: (config: DraggingConfigSpec<E>) => Behaviour.NamedConfiguredBehaviour<DraggingConfigSpec<E>, DraggingConfig<E>, DraggingState>;
   snap: (sConfig: SnapConfigSpec<E>) => SnapConfig<E>;
   snapTo: (component: AlloyComponent, sConfig: SnapConfig<E>) => void;
 }
@@ -85,18 +74,11 @@ export interface DraggingConfig<E> {
   readonly snaps: Option<SnapsConfig<E>>;
   readonly onDrop: (comp: AlloyComponent, target: Element) => void;
   readonly repositionTarget: boolean;
-  readonly onDrag: (
-    comp: AlloyComponent,
-    target: Element,
-    delta: Position
-  ) => void;
+  readonly onDrag: (comp: AlloyComponent, target: Element, delta: Position) => void;
   readonly getBounds: () => Bounds;
   readonly blockerClass: string;
   readonly dragger: {
-    readonly handlers: (
-      dragConfig: DraggingConfig<E>,
-      dragState: DraggingState
-    ) => AlloyEvents.AlloyEventRecord;
+    readonly handlers: (dragConfig: DraggingConfig<E>, dragState: DraggingState) => AlloyEvents.AlloyEventRecord;
   };
 }
 
@@ -104,21 +86,14 @@ export interface CommonDraggingConfigSpec<E> {
   readonly useFixed?: () => boolean;
   readonly onDrop?: (comp: AlloyComponent, target: Element) => void;
   readonly repositionTarget?: boolean;
-  readonly onDrag?: (
-    comp: AlloyComponent,
-    target: Element,
-    delta: Position
-  ) => void;
+  readonly onDrag?: (comp: AlloyComponent, target: Element, delta: Position) => void;
   readonly getTarget?: (elem: Element) => Element;
   readonly getBounds?: () => Bounds;
   readonly snaps?: SnapsConfigSpec<E>;
   readonly blockerClass: string;
 }
 
-export type DraggingConfigSpec<E> =
-  | MouseDraggingConfigSpec<E>
-  | TouchDraggingConfigSpec<E>
-  | MouseOrTouchDraggingConfigSpec<E>;
+export type DraggingConfigSpec<E> = MouseDraggingConfigSpec<E> | TouchDraggingConfigSpec<E> | MouseOrTouchDraggingConfigSpec<E>;
 
 export interface DragModeDeltas<T> {
   readonly getData: (event: EventArgs) => Option<T>;

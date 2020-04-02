@@ -12,28 +12,13 @@ UnitTest.test('atomic - AutocompleteContext', () => {
     assert.eq(4, AutocompleteContext.findChar('@def@abc', 40, '@').getOr(null));
     assert.eq(0, AutocompleteContext.findChar('@def@abc', 4, '@').getOr(null));
     // Whitespace
-    assert.eq(
-      null,
-      AutocompleteContext.findChar('@abc x', 40, '@').getOr(null)
-    );
-    assert.eq(
-      null,
-      AutocompleteContext.findChar('@abc\u00a0x', 40, '@').getOr(null)
-    );
-    assert.eq(
-      null,
-      AutocompleteContext.findChar('@abc\tx', 40, '@').getOr(null)
-    );
-    assert.eq(
-      null,
-      AutocompleteContext.findChar('@abc\nx', 40, '@').getOr(null)
-    );
+    assert.eq(null, AutocompleteContext.findChar('@abc x', 40, '@').getOr(null));
+    assert.eq(null, AutocompleteContext.findChar('@abc\u00a0x', 40, '@').getOr(null));
+    assert.eq(null, AutocompleteContext.findChar('@abc\tx', 40, '@').getOr(null));
+    assert.eq(null, AutocompleteContext.findChar('@abc\nx', 40, '@').getOr(null));
     assert.eq(0, AutocompleteContext.findChar('@abc 123', 4, '@').getOr(null));
     // Fake caret
-    assert.eq(
-      0,
-      AutocompleteContext.findChar('@abc\uFFEFx', 40, '@').getOr(null)
-    );
+    assert.eq(0, AutocompleteContext.findChar('@abc\uFFEFx', 40, '@').getOr(null));
   };
 
   testFindChar();

@@ -3,11 +3,7 @@ import { Attr, SelectorFilter } from '@ephox/sugar';
 
 import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
 import * as FormChooserSchema from '../../ui/schema/FormChooserSchema';
-import {
-  FormChooserDetail,
-  FormChooserSketcher,
-  FormChooserSpec
-} from '../../ui/types/FormChooserTypes';
+import { FormChooserDetail, FormChooserSketcher, FormChooserSpec } from '../../ui/types/FormChooserTypes';
 import { Composing } from '../behaviour/Composing';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
@@ -26,13 +22,8 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (
   _externals
 ): SketchSpec => {
   const findByValue = (chooser: AlloyComponent, value: any) => {
-    const choices = SelectorFilter.descendants(
-      chooser.element(),
-      '.' + detail.markers.choiceClass
-    );
-    const choiceComps = Arr.map(choices, (c) =>
-      chooser.getSystem().getByDom(c).getOrDie()
-    );
+    const choices = SelectorFilter.descendants(chooser.element(), '.' + detail.markers.choiceClass);
+    const choiceComps = Arr.map(choices, (c) => chooser.getSystem().getByDom(c).getOrDie());
 
     return Arr.find(choiceComps, (c) => Representing.getValue(c) === value);
   };
@@ -48,9 +39,7 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (
         selector: '.' + detail.markers.choiceClass,
         executeOnMove: true,
         getInitial(chooser) {
-          return Highlighting.getHighlighted(chooser).map((choice) =>
-            choice.element()
-          );
+          return Highlighting.getHighlighted(chooser).map((choice) => choice.element());
         },
         // TODO CLEANUP: See if this execute handler can be removed, because execute is handled by bubbling to formchooser root
         execute(chooser, simulatedEvent, focused) {
@@ -90,9 +79,7 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (
             });
           },
           getValue(chooser) {
-            return Highlighting.getHighlighted(chooser).map(
-              Representing.getValue
-            );
+            return Highlighting.getHighlighted(chooser).map(Representing.getValue);
           }
         }
       })

@@ -21,34 +21,25 @@ const getBodySetting = (editor: Editor, name: string, defaultValue: string) => {
 
   if (value.indexOf('=') !== -1) {
     const bodyObj = editor.getParam(name, '', 'hash');
-    return bodyObj.hasOwnProperty(editor.id)
-      ? bodyObj[editor.id]
-      : defaultValue;
+    return bodyObj.hasOwnProperty(editor.id) ? bodyObj[editor.id] : defaultValue;
   } else {
     return value;
   }
 };
 
-const getIframeAttrs = (editor: Editor): Record<string, string> =>
-  editor.getParam('iframe_attrs', {});
+const getIframeAttrs = (editor: Editor): Record<string, string> => editor.getParam('iframe_attrs', {});
 
-const getDocType = (editor: Editor): string =>
-  editor.getParam('doctype', '<!DOCTYPE html>');
+const getDocType = (editor: Editor): string => editor.getParam('doctype', '<!DOCTYPE html>');
 
-const getDocumentBaseUrl = (editor: Editor): string =>
-  editor.getParam('document_base_url', '');
+const getDocumentBaseUrl = (editor: Editor): string => editor.getParam('document_base_url', '');
 
-const getBodyId = (editor: Editor): string =>
-  getBodySetting(editor, 'body_id', 'tinymce');
+const getBodyId = (editor: Editor): string => getBodySetting(editor, 'body_id', 'tinymce');
 
-const getBodyClass = (editor: Editor): string =>
-  getBodySetting(editor, 'body_class', '');
+const getBodyClass = (editor: Editor): string => getBodySetting(editor, 'body_class', '');
 
-const getContentSecurityPolicy = (editor: Editor): string =>
-  editor.getParam('content_security_policy', '');
+const getContentSecurityPolicy = (editor: Editor): string => editor.getParam('content_security_policy', '');
 
-const shouldPutBrInPre = (editor: Editor): boolean =>
-  editor.getParam('br_in_pre', true);
+const shouldPutBrInPre = (editor: Editor): boolean => editor.getParam('br_in_pre', true);
 
 const getForcedRootBlock = (editor: Editor): string => {
   // Legacy option
@@ -66,81 +57,53 @@ const getForcedRootBlock = (editor: Editor): string => {
   }
 };
 
-const getForcedRootBlockAttrs = (editor: Editor): Record<string, string> =>
-  editor.getParam('forced_root_block_attrs', {});
+const getForcedRootBlockAttrs = (editor: Editor): Record<string, string> => editor.getParam('forced_root_block_attrs', {});
 
-const getBrNewLineSelector = (editor: Editor): string =>
-  editor.getParam('br_newline_selector', '.mce-toc h2,figcaption,caption');
+const getBrNewLineSelector = (editor: Editor): string => editor.getParam('br_newline_selector', '.mce-toc h2,figcaption,caption');
 
-const getNoNewLineSelector = (editor: Editor): string =>
-  editor.getParam('no_newline_selector', '');
+const getNoNewLineSelector = (editor: Editor): string => editor.getParam('no_newline_selector', '');
 
-const shouldKeepStyles = (editor: Editor): boolean =>
-  editor.getParam('keep_styles', true);
+const shouldKeepStyles = (editor: Editor): boolean => editor.getParam('keep_styles', true);
 
-const shouldEndContainerOnEmptyBlock = (editor: Editor): boolean =>
-  editor.getParam('end_container_on_empty_block', false);
+const shouldEndContainerOnEmptyBlock = (editor: Editor): boolean => editor.getParam('end_container_on_empty_block', false);
 
 const getFontStyleValues = (editor: Editor): string[] =>
-  Tools.explode(
-    editor.getParam(
-      'font_size_style_values',
-      'xx-small,x-small,small,medium,large,x-large,xx-large'
-    )
-  );
+  Tools.explode(editor.getParam('font_size_style_values', 'xx-small,x-small,small,medium,large,x-large,xx-large'));
 
-const getFontSizeClasses = (editor: Editor): string[] =>
-  Tools.explode(editor.getParam('font_size_classes', ''));
+const getFontSizeClasses = (editor: Editor): string[] => Tools.explode(editor.getParam('font_size_classes', ''));
 
-const getImagesDataImgFilter = (
-  editor: Editor
-): ((imgElm: HTMLImageElement) => boolean) =>
+const getImagesDataImgFilter = (editor: Editor): ((imgElm: HTMLImageElement) => boolean) =>
   editor.getParam('images_dataimg_filter', Fun.constant(true), 'function');
 
-const isAutomaticUploadsEnabled = (editor: Editor): boolean =>
-  editor.getParam('automatic_uploads', true, 'boolean');
+const isAutomaticUploadsEnabled = (editor: Editor): boolean => editor.getParam('automatic_uploads', true, 'boolean');
 
-const shouldReuseFileName = (editor: Editor): boolean =>
-  editor.getParam('images_reuse_filename', false, 'boolean');
+const shouldReuseFileName = (editor: Editor): boolean => editor.getParam('images_reuse_filename', false, 'boolean');
 
-const shouldReplaceBlobUris = (editor: Editor): boolean =>
-  editor.getParam('images_replace_blob_uris', true, 'boolean');
+const shouldReplaceBlobUris = (editor: Editor): boolean => editor.getParam('images_replace_blob_uris', true, 'boolean');
 
-const getIconPackName = (editor: Editor) =>
-  editor.getParam('icons', '', 'string');
+const getIconPackName = (editor: Editor) => editor.getParam('icons', '', 'string');
 
-const getIconsUrl = (editor: Editor): string =>
-  editor.getParam('icons_url', '', 'string');
+const getIconsUrl = (editor: Editor): string => editor.getParam('icons_url', '', 'string');
 
-const getImageUploadUrl = (editor: Editor): string =>
-  editor.getParam('images_upload_url', '', 'string');
+const getImageUploadUrl = (editor: Editor): string => editor.getParam('images_upload_url', '', 'string');
 
-const getImageUploadBasePath = (editor: Editor): string =>
-  editor.getParam('images_upload_base_path', '', 'string');
+const getImageUploadBasePath = (editor: Editor): string => editor.getParam('images_upload_base_path', '', 'string');
 
-const getImagesUploadCredentials = (editor: Editor): boolean =>
-  editor.getParam('images_upload_credentials', false, 'boolean');
+const getImagesUploadCredentials = (editor: Editor): boolean => editor.getParam('images_upload_credentials', false, 'boolean');
 
-const getImagesUploadHandler = (editor: Editor): UploadHandler =>
-  editor.getParam('images_upload_handler', null, 'function');
+const getImagesUploadHandler = (editor: Editor): UploadHandler => editor.getParam('images_upload_handler', null, 'function');
 
-const shouldUseContentCssCors = (editor: Editor): boolean =>
-  editor.getParam('content_css_cors', false, 'boolean');
+const shouldUseContentCssCors = (editor: Editor): boolean => editor.getParam('content_css_cors', false, 'boolean');
 
-const getReferrerPolicy = (editor: Editor): ReferrerPolicy =>
-  editor.getParam('referrer_policy', '', 'string') as ReferrerPolicy;
+const getReferrerPolicy = (editor: Editor): ReferrerPolicy => editor.getParam('referrer_policy', '', 'string') as ReferrerPolicy;
 
-const getLanguageCode = (editor: Editor): string =>
-  editor.getParam('language', 'en', 'string');
+const getLanguageCode = (editor: Editor): string => editor.getParam('language', 'en', 'string');
 
-const getLanguageUrl = (editor: Editor): string =>
-  editor.getParam('language_url', '', 'string');
+const getLanguageUrl = (editor: Editor): string => editor.getParam('language_url', '', 'string');
 
-const shouldIndentUseMargin = (editor: Editor): boolean =>
-  editor.getParam('indent_use_margin', false);
+const shouldIndentUseMargin = (editor: Editor): boolean => editor.getParam('indent_use_margin', false);
 
-const getIndentation = (editor: Editor): string =>
-  editor.getParam('indentation', '40px', 'string');
+const getIndentation = (editor: Editor): string => editor.getParam('indentation', '40px', 'string');
 
 const getContentCss = (editor: Editor): string[] => {
   const contentCss = editor.settings.content_css;
@@ -156,29 +119,18 @@ const getContentCss = (editor: Editor): string[] => {
   }
 };
 
-const getDirectionality = (editor: Editor): string | undefined =>
-  editor.getParam('directionality', I18n.isRtl() ? 'rtl' : undefined);
+const getDirectionality = (editor: Editor): string | undefined => editor.getParam('directionality', I18n.isRtl() ? 'rtl' : undefined);
 
 const getInlineBoundarySelector = (editor: Editor): string =>
-  editor.getParam(
-    'inline_boundaries_selector',
-    'a[href],code,.mce-annotation',
-    'string'
-  );
+  editor.getParam('inline_boundaries_selector', 'a[href],code,.mce-annotation', 'string');
 
-const getObjectResizing = (editor: Editor) =>
-  editor.getParam('object_resizing');
+const getObjectResizing = (editor: Editor) => editor.getParam('object_resizing');
 
-const getResizeImgProportional = (editor: Editor): boolean =>
-  editor.getParam('resize_img_proportional', true, 'boolean');
+const getResizeImgProportional = (editor: Editor): boolean => editor.getParam('resize_img_proportional', true, 'boolean');
 
 const getPlaceholder = (editor: Editor): string =>
   // Fallback to the original elements placeholder if not set in the settings
-  editor.getParam(
-    'placeholder',
-    DOM.getAttrib(editor.getElement(), 'placeholder'),
-    'string'
-  );
+  editor.getParam('placeholder', DOM.getAttrib(editor.getElement(), 'placeholder'), 'string');
 
 export {
   getIframeAttrs,

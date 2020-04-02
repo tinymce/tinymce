@@ -84,7 +84,5 @@ const panelFields = [
 
 export const panelSchema = ValueSchema.objOf(panelFields);
 
-export const createPanel = (
-  spec: PanelApi
-): Result<Panel, ValueSchema.SchemaError<any>> =>
+export const createPanel = (spec: PanelApi): Result<Panel, ValueSchema.SchemaError<any>> =>
   ValueSchema.asRaw<Panel>('panel', panelSchema, spec);

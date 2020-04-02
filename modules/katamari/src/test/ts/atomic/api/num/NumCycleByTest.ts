@@ -17,24 +17,15 @@ UnitTest.test('CycleBy: Unit tests', () => {
   Assert.eq('eq', 5, Num.cycleBy(50, -150, -5, 5));
 });
 
-UnitTest.test(
-  'CycleBy should have an adjustment of delta, or be the min or max',
-  () => {
-    fc.assert(
-      fc.property(
-        fc.nat(),
-        fc.integer(),
-        fc.nat(),
-        fc.nat(),
-        (value, delta, min, range) => {
-          const max = min + range;
-          const actual = Num.cycleBy(value, delta, min, max);
-          return actual - value === delta || actual === min || actual === max;
-        }
-      )
-    );
-  }
-);
+UnitTest.test('CycleBy should have an adjustment of delta, or be the min or max', () => {
+  fc.assert(
+    fc.property(fc.nat(), fc.integer(), fc.nat(), fc.nat(), (value, delta, min, range) => {
+      const max = min + range;
+      const actual = Num.cycleBy(value, delta, min, max);
+      return actual - value === delta || actual === min || actual === max;
+    })
+  );
+});
 
 UnitTest.test('CycleBy 0 has no effect', () => {
   fc.assert(

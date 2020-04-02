@@ -39,10 +39,7 @@ const isTextNodeWithCursorPosition = function (el: Element<DomNode>) {
 const elementsWithCursorPosition = ['img', 'br'];
 const isCursorPosition = function (elem: Element<DomNode>) {
   const hasCursorPosition = isTextNodeWithCursorPosition(elem);
-  return (
-    hasCursorPosition ||
-    Arr.contains(elementsWithCursorPosition, Node.name(elem))
-  );
+  return hasCursorPosition || Arr.contains(elementsWithCursorPosition, Node.name(elem));
 };
 
 export { getEnd, isEnd, isStart, isCursorPosition };

@@ -39,15 +39,9 @@ const isSkinContentCss = function (editor: Editor, href: string) {
     skin = settings.skin !== false ? settings.skin || 'oxide' : false;
 
   if (skin) {
-    const skinUrl = settings.skin_url
-      ? editor.documentBaseURI.toAbsolute(settings.skin_url)
-      : EditorManager.baseURL + '/skins/ui/' + skin;
+    const skinUrl = settings.skin_url ? editor.documentBaseURI.toAbsolute(settings.skin_url) : EditorManager.baseURL + '/skins/ui/' + skin;
     const contentSkinUrlPart = EditorManager.baseURL + '/skins/content/';
-    return (
-      href ===
-        skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css' ||
-      href.indexOf(contentSkinUrlPart) !== -1
-    );
+    return href === skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css' || href.indexOf(contentSkinUrlPart) !== -1;
   }
 
   return false;
@@ -77,11 +71,7 @@ const getSelectors = function (editor: Editor, doc, fileFilter) {
 
     href = removeCacheSuffix(href);
 
-    if (
-      !href ||
-      !fileFilter(href, imported) ||
-      isSkinContentCss(editor, href)
-    ) {
+    if (!href || !fileFilter(href, imported) || isSkinContentCss(editor, href)) {
       return;
     }
 
@@ -128,16 +118,11 @@ const getSelectors = function (editor: Editor, doc, fileFilter) {
   return selectors;
 };
 
-const defaultConvertSelectorToFormat = function (
-  editor: Editor,
-  selectorText: string
-) {
+const defaultConvertSelectorToFormat = function (editor: Editor, selectorText: string) {
   let format;
 
   // Parse simple element.class1, .class1
-  const selector = /^(?:([a-z0-9\-_]+))?(\.[a-z0-9_\-\.]+)$/i.exec(
-    selectorText
-  );
+  const selector = /^(?:([a-z0-9\-_]+))?(\.[a-z0-9_\-\.]+)$/i.exec(selectorText);
   if (!selector) {
     return;
   }
@@ -155,10 +140,7 @@ const defaultConvertSelectorToFormat = function (
     if (editor.schema.getTextBlockElements()[elementName]) {
       // Text block format ex: h1.class1
       format.block = elementName;
-    } else if (
-      editor.schema.getBlockElements()[elementName] ||
-      inlineSelectorElements[elementName.toLowerCase()]
-    ) {
+    } else if (editor.schema.getBlockElements()[elementName] || inlineSelectorElements[elementName.toLowerCase()]) {
       // Block elements such as table.class and special inline elements such as a.class or img.class
       format.selector = elementName;
     } else {
@@ -184,10 +166,7 @@ const defaultConvertSelectorToFormat = function (
   return format;
 };
 
-const getGroupsBySelector = function (
-  groups: Group[],
-  selector: string
-): Group[] {
+const getGroupsBySelector = function (groups: Group[], selector: string): Group[] {
   return Tools.grep(groups, function (group) {
     return !group.filter || group.filter(selector);
   });
@@ -218,23 +197,11 @@ const isExclusiveMode = function (editor: Editor, group: StyleGroup) {
   return group === null || Settings.shouldImportExclusive(editor) !== false;
 };
 
-const isUniqueSelector = function (
-  editor: Editor,
-  selector: string,
-  group: StyleGroup,
-  globallyUniqueSelectors: Record<string, any>
-) {
-  return !(isExclusiveMode(editor, group)
-    ? selector in globallyUniqueSelectors
-    : selector in group.selectors);
+const isUniqueSelector = function (editor: Editor, selector: string, group: StyleGroup, globallyUniqueSelectors: Record<string, any>) {
+  return !(isExclusiveMode(editor, group) ? selector in globallyUniqueSelectors : selector in group.selectors);
 };
 
-const markUniqueSelector = function (
-  editor: Editor,
-  selector: string,
-  group: StyleGroup,
-  globallyUniqueSelectors: Record<string, any>
-) {
+const markUniqueSelector = function (editor: Editor, selector: string, group: StyleGroup, globallyUniqueSelectors: Record<string, any>) {
   if (isExclusiveMode(editor, group)) {
     globallyUniqueSelectors[selector] = true;
   } else {
@@ -270,12 +237,7 @@ const setup = function (editor: Editor) {
       if (isUniqueSelector(editor, selector, group, globallyUniqueSelectors)) {
         markUniqueSelector(editor, selector, group, globallyUniqueSelectors);
 
-        const format = convertSelectorToFormat(
-          editor,
-          editor.plugins.importcss,
-          selector,
-          group
-        );
+        const format = convertSelectorToFormat(editor, editor.plugins.importcss, selector, group);
         if (format) {
           const formatName = format.name || DOMUtils.DOM.uniqueId();
           editor.formatter.register(formatName, format);
@@ -295,34 +257,27 @@ const setup = function (editor: Editor) {
       return null;
     };
 
-    Tools.each(
-      getSelectors(
-        editor,
-        editor.getDoc(),
-        compileFilter(Settings.getFileFilter(editor))
-      ),
-      function (selector: string) {
-        if (selector.indexOf('.mce-') === -1) {
-          if (!selectorFilter || selectorFilter(selector)) {
-            const selectorGroups = getGroupsBySelector(groups, selector);
+    Tools.each(getSelectors(editor, editor.getDoc(), compileFilter(Settings.getFileFilter(editor))), function (selector: string) {
+      if (selector.indexOf('.mce-') === -1) {
+        if (!selectorFilter || selectorFilter(selector)) {
+          const selectorGroups = getGroupsBySelector(groups, selector);
 
-            if (selectorGroups.length > 0) {
-              Tools.each(selectorGroups, function (group) {
-                const menuItem = processSelector(selector, group);
-                if (menuItem) {
-                  model.addItemToGroup(group.title, menuItem);
-                }
-              });
-            } else {
-              const menuItem = processSelector(selector, null);
+          if (selectorGroups.length > 0) {
+            Tools.each(selectorGroups, function (group) {
+              const menuItem = processSelector(selector, group);
               if (menuItem) {
-                model.addItem(menuItem);
+                model.addItemToGroup(group.title, menuItem);
               }
+            });
+          } else {
+            const menuItem = processSelector(selector, null);
+            if (menuItem) {
+              model.addItem(menuItem);
             }
           }
         }
       }
-    );
+    });
 
     const items = model.toFormats();
     editor.fire('addStyleModifications', {

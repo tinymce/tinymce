@@ -7,8 +7,7 @@
 
 import { Range } from '@ephox/dom-globals';
 
-export const isValidTextRange = (rng: Range): boolean =>
-  rng.collapsed && rng.startContainer.nodeType === 3;
+export const isValidTextRange = (rng: Range): boolean => rng.collapsed && rng.startContainer.nodeType === 3;
 
 // Normalize the text by replacing non-breaking spaces with regular spaces and stripping zero-width spaces (fake carets).
 export const getText = (rng: Range) =>
@@ -17,5 +16,4 @@ export const getText = (rng: Range) =>
     .replace(/\u00A0/g, ' ')
     .replace(/\uFEFF/g, '');
 
-export const isWhitespace = (chr: string) =>
-  chr !== '' && ' \u00a0\f\n\r\t\v'.indexOf(chr) !== -1;
+export const isWhitespace = (chr: string) => chr !== '' && ' \u00a0\f\n\r\t\v'.indexOf(chr) !== -1;

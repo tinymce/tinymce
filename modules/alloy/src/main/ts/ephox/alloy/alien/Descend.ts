@@ -5,19 +5,13 @@ export interface ElementAndOffset<T> {
   readonly offset: number;
 }
 
-const point = <T>(
-  element: Element<T>,
-  offset: number
-): ElementAndOffset<T> => ({
+const point = <T>(element: Element<T>, offset: number): ElementAndOffset<T> => ({
   element,
   offset
 });
 
 // NOTE: This only descends once.
-const descendOnce = <T>(
-  element: Element,
-  offset: number
-): ElementAndOffset<T> => {
+const descendOnce = <T>(element: Element, offset: number): ElementAndOffset<T> => {
   const children: Element[] = Traverse.children(element);
   if (children.length === 0) {
     return point(element, offset);
@@ -25,9 +19,7 @@ const descendOnce = <T>(
     return point(children[offset], 0);
   } else {
     const last = children[children.length - 1];
-    const len = Node.isText(last)
-      ? Text.get(last).length
-      : Traverse.children(last).length;
+    const len = Node.isText(last) ? Text.get(last).length : Traverse.children(last).length;
     return point(last, len);
   }
 };

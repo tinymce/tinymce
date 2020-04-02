@@ -1,12 +1,4 @@
-import {
-  ApproxStructure,
-  GeneralSteps,
-  Pipeline,
-  Waiter,
-  Logger,
-  Log,
-  StructAssert
-} from '@ephox/agar';
+import { ApproxStructure, GeneralSteps, Pipeline, Waiter, Logger, Log, StructAssert } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
@@ -20,14 +12,7 @@ UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
   Plugin();
   Theme();
 
-  const sTestPlaceholder = function (
-    ui: TinyUi,
-    editor: Editor,
-    apis: TinyApis,
-    url: string,
-    expected: string,
-    struct: StructAssert
-  ) {
+  const sTestPlaceholder = function (ui: TinyUi, editor: Editor, apis: TinyApis, url: string, expected: string, struct: StructAssert) {
     return Logger.t(
       `Test placeholder ${expected}`,
       GeneralSteps.sequence([
@@ -35,36 +20,21 @@ UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
         Utils.sSetFormItemNoEvent(ui, url),
         ui.sClickOnUi('click checkbox', Utils.selectors.saveButton),
         Utils.sAssertEditorContent(apis, editor, expected),
-        Waiter.sTryUntil(
-          'Wait for structure check',
-          apis.sAssertContentStructure(struct)
-        ),
+        Waiter.sTryUntil('Wait for structure check', apis.sAssertContentStructure(struct)),
         apis.sSetContent('')
       ])
     );
   };
 
-  const sTestScriptPlaceholder = function (
-    ui: TinyUi,
-    editor: Editor,
-    apis: TinyApis,
-    expected: string,
-    struct: StructAssert
-  ) {
+  const sTestScriptPlaceholder = function (ui: TinyUi, editor: Editor, apis: TinyApis, expected: string, struct: StructAssert) {
     return Logger.t(
       `Test script placeholder ${expected}`,
       GeneralSteps.sequence([
         apis.sSetContent(
-          '<script src="http://media1.tinymce.com/123456"></script>' +
-            '<script src="http://media2.tinymce.com/123456"></script>'
+          '<script src="http://media1.tinymce.com/123456"></script>' + '<script src="http://media2.tinymce.com/123456"></script>'
         ),
         apis.sNodeChanged(),
-        Waiter.sTryUntil(
-          'Wait for structure check',
-          apis.sAssertContentStructure(struct),
-          10,
-          500
-        ),
+        Waiter.sTryUntil('Wait for structure check', apis.sAssertContentStructure(struct), 10, 500),
         Utils.sAssertEditorContent(apis, editor, expected),
         apis.sSetContent('')
       ])
@@ -131,44 +101,40 @@ UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
 
       Pipeline.async(
         {},
-        Log.steps(
-          'TBA',
-          'Media: Set and assert script placeholder and placeholder structure',
-          [
-            Utils.sSetSetting(editor.settings, 'media_live_embeds', false),
-            sTestScriptPlaceholder(
-              ui,
-              editor,
-              apis,
-              '<p>\n' +
-                '<script src="http://media1.tinymce.com/123456" type="text/javascript"></sc' +
-                'ript>\n' +
-                '<script src="http://media2.tinymce.com/123456" type="text/javascript"></sc' +
-                'ript>\n' +
-                '</p>',
-              scriptStruct
-            ),
-            sTestPlaceholder(
-              ui,
-              editor,
-              apis,
-              'https://www.youtube.com/watch?v=P_205ZY52pY',
-              '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
-                'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
-              placeholderStructure
-            ),
-            Utils.sSetSetting(editor.settings, 'media_live_embeds', true),
-            sTestPlaceholder(
-              ui,
-              editor,
-              apis,
-              'https://www.youtube.com/watch?v=P_205ZY52pY',
-              '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
-                'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
-              iframeStructure
-            )
-          ]
-        ),
+        Log.steps('TBA', 'Media: Set and assert script placeholder and placeholder structure', [
+          Utils.sSetSetting(editor.settings, 'media_live_embeds', false),
+          sTestScriptPlaceholder(
+            ui,
+            editor,
+            apis,
+            '<p>\n' +
+              '<script src="http://media1.tinymce.com/123456" type="text/javascript"></sc' +
+              'ript>\n' +
+              '<script src="http://media2.tinymce.com/123456" type="text/javascript"></sc' +
+              'ript>\n' +
+              '</p>',
+            scriptStruct
+          ),
+          sTestPlaceholder(
+            ui,
+            editor,
+            apis,
+            'https://www.youtube.com/watch?v=P_205ZY52pY',
+            '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
+              'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
+            placeholderStructure
+          ),
+          Utils.sSetSetting(editor.settings, 'media_live_embeds', true),
+          sTestPlaceholder(
+            ui,
+            editor,
+            apis,
+            'https://www.youtube.com/watch?v=P_205ZY52pY',
+            '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
+              'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
+            iframeStructure
+          )
+        ]),
         onSuccess,
         onFailure
       );
@@ -178,10 +144,7 @@ UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
       toolbar: 'media',
       theme: 'silver',
       extended_valid_elements: 'script[src|type]',
-      media_scripts: [
-        { filter: 'http://media1.tinymce.com' },
-        { filter: 'http://media2.tinymce.com', width: 100, height: 200 }
-      ],
+      media_scripts: [{ filter: 'http://media1.tinymce.com' }, { filter: 'http://media2.tinymce.com', width: 100, height: 200 }],
       base_url: '/project/tinymce/js/tinymce'
     },
     success,

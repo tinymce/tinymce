@@ -65,15 +65,9 @@ const nodeAtIndex = (container: Node, offset: number): Node => {
   return null;
 };
 
-const getCaretCandidatePosition = (
-  direction: HDirection,
-  node: Node
-): CaretPosition => {
+const getCaretCandidatePosition = (direction: HDirection, node: Node): CaretPosition => {
   if (isForwards(direction)) {
-    if (
-      isCaretCandidate(node.previousSibling) &&
-      !isText(node.previousSibling)
-    ) {
+    if (isCaretCandidate(node.previousSibling) && !isText(node.previousSibling)) {
       return CaretPosition.before(node);
     }
 
@@ -113,19 +107,11 @@ const moveForwardFromBr = (root: Element, nextNode: Node) => {
       return CaretPosition.before(nextSibling);
     }
   } else {
-    return findCaretPosition(
-      HDirection.Forwards,
-      CaretPosition.after(nextNode),
-      root
-    );
+    return findCaretPosition(HDirection.Forwards, CaretPosition.after(nextNode), root);
   }
 };
 
-const findCaretPosition = (
-  direction: HDirection,
-  startPos: CaretPosition,
-  root: Node
-): CaretPosition => {
+const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root: Node): CaretPosition => {
   let node, nextNode, innerNode;
   let rootContentEditableFalseElm, caretPosition;
 
@@ -135,14 +121,8 @@ const findCaretPosition = (
 
   if (startPos.isEqual(CaretPosition.after(root)) && root.lastChild) {
     caretPosition = CaretPosition.after(root.lastChild);
-    if (
-      isBackwards(direction) &&
-      isCaretCandidate(root.lastChild) &&
-      isElement(root.lastChild)
-    ) {
-      return isBr(root.lastChild)
-        ? CaretPosition.before(root.lastChild)
-        : caretPosition;
+    if (isBackwards(direction) && isCaretCandidate(root.lastChild) && isElement(root.lastChild)) {
+      return isBr(root.lastChild) ? CaretPosition.before(root.lastChild) : caretPosition;
     }
   } else {
     caretPosition = startPos;
@@ -166,12 +146,7 @@ const findCaretPosition = (
       nextNode = nodeAtIndex(container, offset - 1);
       if (isCaretCandidate(nextNode)) {
         if (!isAtomic(nextNode)) {
-          innerNode = findNode(
-            nextNode,
-            direction,
-            isEditableCaretCandidate,
-            nextNode
-          );
+          innerNode = findNode(nextNode, direction, isEditableCaretCandidate, nextNode);
           if (innerNode) {
             if (isText(innerNode)) {
               return CaretPosition(innerNode, innerNode.data.length);
@@ -197,12 +172,7 @@ const findCaretPosition = (
         }
 
         if (!isAtomic(nextNode)) {
-          innerNode = findNode(
-            nextNode,
-            direction,
-            isEditableCaretCandidate,
-            nextNode
-          );
+          innerNode = findNode(nextNode, direction, isEditableCaretCandidate, nextNode);
           if (innerNode) {
             if (isText(innerNode)) {
               return CaretPosition(innerNode, 0);
@@ -223,10 +193,7 @@ const findCaretPosition = (
     node = nextNode ? nextNode : caretPosition.getNode();
   }
 
-  if (
-    (isForwards(direction) && caretPosition.isAtEnd()) ||
-    (isBackwards(direction) && caretPosition.isAtStart())
-  ) {
+  if ((isForwards(direction) && caretPosition.isAtEnd()) || (isBackwards(direction) && caretPosition.isAtStart())) {
     node = findNode(node, direction, Fun.constant(true), root, true);
     if (isEditableCaretCandidate(node, root)) {
       return getCaretCandidatePosition(direction, node);
@@ -235,13 +202,8 @@ const findCaretPosition = (
 
   nextNode = findNode(node, direction, isEditableCaretCandidate, root);
 
-  rootContentEditableFalseElm = ArrUtils.last(
-    Arr.filter(getParents(container, root), isContentEditableFalse)
-  );
-  if (
-    rootContentEditableFalseElm &&
-    (!nextNode || !rootContentEditableFalseElm.contains(nextNode))
-  ) {
+  rootContentEditableFalseElm = ArrUtils.last(Arr.filter(getParents(container, root), isContentEditableFalse));
+  if (rootContentEditableFalseElm && (!nextNode || !rootContentEditableFalseElm.contains(nextNode))) {
     if (isForwards(direction)) {
       caretPosition = CaretPosition.after(rootContentEditableFalseElm);
     } else {

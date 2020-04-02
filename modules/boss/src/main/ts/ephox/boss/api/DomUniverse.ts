@@ -45,13 +45,10 @@ export default function (): Universe<Element, Document> {
     return Arr.contains(['br', 'img', 'hr', 'input'], Node.name(element));
   };
 
-  const isNonEditable = (element: Element) =>
-    Node.isElement(element) && Attr.get(element, 'contenteditable') === 'false';
+  const isNonEditable = (element: Element) => Node.isElement(element) && Attr.get(element, 'contenteditable') === 'false';
 
   const comparePosition = function (element: Element, other: Element) {
-    return (element.dom() as DomNode).compareDocumentPosition(
-      other.dom() as DomNode
-    );
+    return (element.dom() as DomNode).compareDocumentPosition(other.dom() as DomNode);
   };
 
   const copyAttributesTo = function (source: Element, destination: Element) {

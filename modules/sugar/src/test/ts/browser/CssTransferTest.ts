@@ -30,13 +30,7 @@ UnitTest.test('CssTransfer', function () {
     return r;
   };
 
-  const check = function (
-    expectedPresent,
-    expectedAbsent,
-    source,
-    destination,
-    styles
-  ) {
+  const check = function (expectedPresent, expectedAbsent, source, destination, styles) {
     Css.transfer(source, destination, styles);
     Arr.each(expectedAbsent, function (k) {
       if (Css.getRaw(destination, k).isSome()) {
@@ -45,9 +39,7 @@ UnitTest.test('CssTransfer', function () {
     });
 
     Obj.each(expectedPresent, function (v, k) {
-      const value = Css.getRaw(destination, k).getOrDie(
-        'Result should have style: ' + k
-      );
+      const value = Css.getRaw(destination, k).getOrDie('Result should have style: ' + k);
       assert.eq(v, value);
     });
   };

@@ -10,10 +10,7 @@ import { Fun } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
-import {
-  isAfterContentEditableFalse,
-  isBeforeContentEditableFalse
-} from '../caret/CaretPositionPredicates';
+import { isAfterContentEditableFalse, isBeforeContentEditableFalse } from '../caret/CaretPositionPredicates';
 import * as CaretUtils from '../caret/CaretUtils';
 import { CaretWalker, HDirection } from '../caret/CaretWalker';
 import * as NodeType from '../dom/NodeType';
@@ -34,13 +31,7 @@ const deleteContentAndShowCaret = (
   forward: boolean,
   peekCaretPosition: CaretPosition
 ) => {
-  const caretRange = CefUtils.showCaret(
-    direction,
-    editor,
-    peekCaretPosition.getNode(!forward) as Element,
-    forward,
-    true
-  );
+  const caretRange = CefUtils.showCaret(direction, editor, peekCaretPosition.getNode(!forward) as Element, forward, true);
   // Delete the selected content
   if (range.collapsed) {
     const deleteRange = range.cloneRange();
@@ -68,61 +59,25 @@ const deleteCefBoundaryText = function (editor: Editor, forward: boolean) {
 
   const direction = forward ? HDirection.Forwards : HDirection.Backwards;
   const caretWalker = CaretWalker(editor.getBody());
-  const getNextVisualCaretPosition = Fun.curry(
-    CaretUtils.getVisualCaretPosition,
-    caretWalker.next
-  );
-  const getPrevVisualCaretPosition = Fun.curry(
-    CaretUtils.getVisualCaretPosition,
-    caretWalker.prev
-  );
-  const getNextPosFn = forward
-    ? getNextVisualCaretPosition
-    : getPrevVisualCaretPosition;
-  const isBeforeContentEditableFalseFn = forward
-    ? isBeforeContentEditableFalse
-    : isAfterContentEditableFalse;
+  const getNextVisualCaretPosition = Fun.curry(CaretUtils.getVisualCaretPosition, caretWalker.next);
+  const getPrevVisualCaretPosition = Fun.curry(CaretUtils.getVisualCaretPosition, caretWalker.prev);
+  const getNextPosFn = forward ? getNextVisualCaretPosition : getPrevVisualCaretPosition;
+  const isBeforeContentEditableFalseFn = forward ? isBeforeContentEditableFalse : isAfterContentEditableFalse;
 
   // Get the next caret position. ie where it'll be after the delete
-  const caretPosition = CaretUtils.getNormalizedRangeEndPoint(
-    direction,
-    editor.getBody(),
-    range
-  );
-  const nextCaretPosition = InlineUtils.normalizePosition(
-    forward,
-    getNextPosFn(caretPosition)
-  );
-  if (
-    !nextCaretPosition ||
-    !CaretUtils.isMoveInsideSameBlock(caretPosition, nextCaretPosition)
-  ) {
+  const caretPosition = CaretUtils.getNormalizedRangeEndPoint(direction, editor.getBody(), range);
+  const nextCaretPosition = InlineUtils.normalizePosition(forward, getNextPosFn(caretPosition));
+  if (!nextCaretPosition || !CaretUtils.isMoveInsideSameBlock(caretPosition, nextCaretPosition)) {
     return false;
   } else if (isBeforeContentEditableFalseFn(nextCaretPosition)) {
-    return deleteContentAndShowCaret(
-      editor,
-      range,
-      caretPosition.getNode(),
-      direction,
-      forward,
-      nextCaretPosition
-    );
+    return deleteContentAndShowCaret(editor, range, caretPosition.getNode(), direction, forward, nextCaretPosition);
   }
 
   // Peek ahead and see if the next element is a cef element
   const peekCaretPosition = getNextPosFn(nextCaretPosition);
   if (peekCaretPosition && isBeforeContentEditableFalseFn(peekCaretPosition)) {
-    if (
-      CaretUtils.isMoveInsideSameBlock(nextCaretPosition, peekCaretPosition)
-    ) {
-      return deleteContentAndShowCaret(
-        editor,
-        range,
-        caretPosition.getNode(),
-        direction,
-        forward,
-        peekCaretPosition
-      );
+    if (CaretUtils.isMoveInsideSameBlock(nextCaretPosition, peekCaretPosition)) {
+      return deleteContentAndShowCaret(editor, range, caretPosition.getNode(), direction, forward, peekCaretPosition);
     }
   }
 

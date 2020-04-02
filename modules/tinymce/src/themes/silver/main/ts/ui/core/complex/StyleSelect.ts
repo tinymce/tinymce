@@ -12,21 +12,13 @@ import Editor from 'tinymce/core/api/Editor';
 import { getStyleFormats } from 'tinymce/themes/silver/ui/core/complex/StyleFormat';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
-import {
-  createMenuItems,
-  createSelectButton,
-  SelectSpec
-} from './BespokeSelect';
+import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { AdvancedSelectDataset, SelectDataset } from './SelectDatasets';
-import {
-  findNearest,
-  getCurrentSelectionParents
-} from './utils/FormatDetection';
+import { findNearest, getCurrentSelectionParents } from './utils/FormatDetection';
 import { onActionToggleFormat } from './utils/Utils';
 
 const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
-  const isSelectedFor = (format: string) => () =>
-    editor.formatter.match(format);
+  const isSelectedFor = (format: string) => () => editor.formatter.match(format);
 
   const getPreviewFor = (format: string) => () => {
     const fmt = editor.formatter.get(format);
@@ -41,9 +33,7 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
   const updateSelectMenuText = (parents: Element[], comp: AlloyComponent) => {
     const getFormatItems = (fmt) => {
       const subs = fmt.items;
-      return subs !== undefined && subs.length > 0
-        ? Arr.bind(subs, getFormatItems)
-        : [{ title: fmt.title, format: fmt.format }];
+      return subs !== undefined && subs.length > 0 ? Arr.bind(subs, getFormatItems) : [{ title: fmt.title, format: fmt.format }];
     };
     const flattenedItems = Arr.bind(getStyleFormats(editor), getFormatItems);
     const detectedFormat = findNearest(editor, () => flattenedItems, parents);
@@ -56,9 +46,7 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
     });
   };
 
-  const nodeChangeHandler = Option.some((comp: AlloyComponent) => (e) =>
-    updateSelectMenuText(e.parents, comp)
-  );
+  const nodeChangeHandler = Option.some((comp: AlloyComponent) => (e) => updateSelectMenuText(e.parents, comp));
 
   const setInitialValue = Option.some((comp: AlloyComponent) => {
     const parents = getCurrentSelectionParents(editor);
@@ -93,15 +81,10 @@ const styleSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
     type: 'advanced',
     ...backstage.styleselect
   };
-  const menuItems = createMenuItems(
-    editor,
-    backstage,
-    getSpec(editor, dataset)
-  );
+  const menuItems = createMenuItems(editor, backstage, getSpec(editor, dataset));
   editor.ui.registry.addNestedMenuItem('formats', {
     text: 'Formats',
-    getSubmenuItems: () =>
-      menuItems.items.validateItems(menuItems.getStyleItems())
+    getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });
 };
 

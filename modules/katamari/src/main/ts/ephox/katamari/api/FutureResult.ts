@@ -8,16 +8,11 @@ export interface FutureResult<A, E> extends Future<Result<A, E>> {
   bindResult: <B>(f: (value: A) => Result<B, E>) => FutureResult<B, E>;
   mapResult: <B>(f: (value: A) => B) => FutureResult<B, E>;
   mapError: <B>(f: (error: E) => B) => FutureResult<A, B>;
-  foldResult: <X>(
-    whenError: (error: E) => X,
-    whenValue: (value: A) => X
-  ) => Future<X>;
+  foldResult: <X>(whenError: (error: E) => X, whenValue: (value: A) => X) => Future<X>;
   withTimeout: (timeout: number, errorThunk: () => E) => FutureResult<A, E>;
 }
 
-const wrap = function <A = any, E = any>(
-  delegate: Future<Result<A, E>>
-): FutureResult<A, E> {
+const wrap = function <A = any, E = any>(delegate: Future<Result<A, E>>): FutureResult<A, E> {
   const toCached = function () {
     return wrap(delegate.toCached());
   };
@@ -45,10 +40,7 @@ const wrap = function <A = any, E = any>(
     return wrap(delegate.map((resA) => resA.mapError(f)));
   };
 
-  const foldResult = function <X>(
-    whenError: (error: E) => X,
-    whenValue: (value: A) => X
-  ) {
+  const foldResult = function <X>(whenError: (error: E) => X, whenValue: (value: A) => X) {
     return delegate.map((res) => res.fold(whenError, whenValue));
   };
 
@@ -83,9 +75,7 @@ const wrap = function <A = any, E = any>(
   };
 };
 
-const nu = function <A = any, E = any>(
-  worker: (completer: (result: Result<A, E>) => void) => void
-) {
+const nu = function <A = any, E = any>(worker: (completer: (result: Result<A, E>) => void) => void) {
   return wrap(Future.nu(worker));
 };
 

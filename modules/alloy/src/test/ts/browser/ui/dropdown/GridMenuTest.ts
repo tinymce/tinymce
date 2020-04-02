@@ -1,13 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  Keyboard,
-  Keys,
-  NamedChain,
-  StructAssert,
-  UiFinder
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Keyboard, Keys, NamedChain, StructAssert, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
@@ -85,12 +76,7 @@ UnitTest.asynctest('GridMenuTest', (success, failure) => {
           },
 
           menuBehaviours: Behaviour.derive([
-            AddEventsBehaviour.config('menu-test-behaviour', [
-              AlloyEvents.run(
-                MenuEvents.focus(),
-                store.adder('menu.events.focus')
-              )
-            ])
+            AddEventsBehaviour.config('menu-test-behaviour', [AlloyEvents.run(MenuEvents.focus(), store.adder('menu.events.focus'))])
           ])
         })
       ),
@@ -115,34 +101,22 @@ UnitTest.asynctest('GridMenuTest', (success, failure) => {
                 classes: [arr.has('test-menu')],
                 children: [
                   s.element('li', {
-                    classes: [
-                      (expected[0] ? arr.has : arr.not)('selected-item')
-                    ]
+                    classes: [(expected[0] ? arr.has : arr.not)('selected-item')]
                   }),
                   s.element('li', {
-                    classes: [
-                      (expected[1] ? arr.has : arr.not)('selected-item')
-                    ]
+                    classes: [(expected[1] ? arr.has : arr.not)('selected-item')]
                   }),
                   s.element('li', {
-                    classes: [
-                      (expected[2] ? arr.has : arr.not)('selected-item')
-                    ]
+                    classes: [(expected[2] ? arr.has : arr.not)('selected-item')]
                   }),
                   s.element('li', {
-                    classes: [
-                      (expected[3] ? arr.has : arr.not)('selected-item')
-                    ]
+                    classes: [(expected[3] ? arr.has : arr.not)('selected-item')]
                   }),
                   s.element('li', {
-                    classes: [
-                      (expected[4] ? arr.has : arr.not)('selected-item')
-                    ]
+                    classes: [(expected[4] ? arr.has : arr.not)('selected-item')]
                   }),
                   s.element('li', {
-                    classes: [
-                      (expected[5] ? arr.has : arr.not)('selected-item')
-                    ]
+                    classes: [(expected[5] ? arr.has : arr.not)('selected-item')]
                   })
                 ]
               })
@@ -155,57 +129,23 @@ UnitTest.asynctest('GridMenuTest', (success, failure) => {
         Chain.asStep({}, [
           NamedChain.asChain([
             NamedChain.writeValue('menu', component.element()),
-            NamedChain.direct(
-              'menu',
-              UiFinder.cFindIn('li[data-value="alpha"]'),
-              'alpha'
-            ),
-            NamedChain.direct(
-              'menu',
-              UiFinder.cFindIn('li[data-value="beta"]'),
-              'beta'
-            ),
-            NamedChain.direct(
-              'menu',
-              UiFinder.cFindIn('li[data-value="alpha"]'),
-              'gamma'
-            ),
-            NamedChain.direct(
-              'menu',
-              UiFinder.cFindIn('li[data-value="beta"]'),
-              'delta'
-            ),
+            NamedChain.direct('menu', UiFinder.cFindIn('li[data-value="alpha"]'), 'alpha'),
+            NamedChain.direct('menu', UiFinder.cFindIn('li[data-value="beta"]'), 'beta'),
+            NamedChain.direct('menu', UiFinder.cFindIn('li[data-value="alpha"]'), 'gamma'),
+            NamedChain.direct('menu', UiFinder.cFindIn('li[data-value="beta"]'), 'delta'),
 
             store.cAssertEq('Before focusItem event', []),
 
             NamedChain.direct('alpha', cTriggerFocusItem, '_'),
 
-            cAssertSelectedStates('After focusing item on alpha', [
-              true,
-              false,
-              false,
-              false,
-              false,
-              false
-            ]),
+            cAssertSelectedStates('After focusing item on alpha', [true, false, false, false, false, false]),
 
-            store.cAssertEq('After focusItem event (alpha)', [
-              'menu.events.focus'
-            ]),
+            store.cAssertEq('After focusItem event (alpha)', ['menu.events.focus']),
 
             store.cClear,
             NamedChain.direct('beta', cTriggerFocusItem, '_'),
-            cAssertSelectedStates('After focusing item on beta', [
-              false,
-              true,
-              false,
-              false,
-              false,
-              false
-            ]),
-            store.cAssertEq('After focusItem event (beta)', [
-              'menu.events.focus'
-            ]),
+            cAssertSelectedStates('After focusing item on beta', [false, true, false, false, false, false]),
+            store.cAssertEq('After focusItem event (beta)', ['menu.events.focus']),
             store.cClear,
 
             NamedChain.direct(
@@ -216,13 +156,8 @@ UnitTest.asynctest('GridMenuTest', (success, failure) => {
               '_'
             ),
 
-            cAssertSelectedStates(
-              'After pressing down on menu (with beta focus)',
-              [false, false, false, false, true, false]
-            ),
-            store.cAssertEq('After pressing down on beta', [
-              'menu.events.focus'
-            ]),
+            cAssertSelectedStates('After pressing down on menu (with beta focus)', [false, false, false, false, true, false]),
+            store.cAssertEq('After pressing down on beta', ['menu.events.focus']),
             store.cClear,
 
             NamedChain.direct(
@@ -233,13 +168,8 @@ UnitTest.asynctest('GridMenuTest', (success, failure) => {
               '_'
             ),
 
-            cAssertSelectedStates(
-              'After pressing left on menu (with epsilon focus)',
-              [false, false, false, true, false, false]
-            ),
-            store.cAssertEq('After pressing left on epsilon', [
-              'menu.events.focus'
-            ]),
+            cAssertSelectedStates('After pressing left on menu (with epsilon focus)', [false, false, false, true, false, false]),
+            store.cAssertEq('After pressing left on epsilon', ['menu.events.focus']),
             store.cClear
           ])
         ])

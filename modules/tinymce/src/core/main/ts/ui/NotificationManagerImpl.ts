@@ -7,9 +7,7 @@
 
 export function NotificationManagerImpl() {
   const unimplemented = function () {
-    throw new Error(
-      'Theme did not provide a NotificationManager implementation.'
-    );
+    throw new Error('Theme did not provide a NotificationManager implementation.');
   };
 
   return {

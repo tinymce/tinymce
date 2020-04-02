@@ -1,32 +1,16 @@
-import {
-  Attachment,
-  Behaviour,
-  Channels,
-  Debugging,
-  DomFactory,
-  Gui,
-  GuiFactory,
-  Positioning
-} from '@ephox/alloy';
+import { Attachment, Behaviour, Channels, Debugging, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
 import { console, document, window } from '@ephox/dom-globals';
 import { Fun, Future, Id, Option, Result } from '@ephox/katamari';
 import { Body, Class } from '@ephox/sugar';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
-import {
-  LinkInformation,
-  ApiUrlData,
-  UrlValidationHandler
-} from 'tinymce/themes/silver/backstage/UrlInputBackstage';
+import { LinkInformation, ApiUrlData, UrlValidationHandler } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 import I18n from 'tinymce/core/api/util/I18n';
 import Editor from 'tinymce/core/api/Editor';
 
 const setupDemo = () => {
   const oldSink = document.querySelectorAll('.mce-silver-sink');
   if (oldSink.length > 0) {
-    throw Error(
-      'old sinks found, a previous demo did not call helpers.destroy() leaving artifacts, found: ' +
-        oldSink.length
-    );
+    throw Error('old sinks found, a previous demo did not call helpers.destroy() leaving artifacts, found: ' + oldSink.length);
   }
 
   // begin of demo helpers
@@ -69,9 +53,7 @@ const setupDemo = () => {
         level: 1,
         attach: () => {
           // tslint:disable-next-line:no-console
-          console.log(
-            'This is where the ID would be attached to the header so it can be linked'
-          );
+          console.log('This is where the ID would be attached to the header so it can be linked');
         }
       }
     ],
@@ -80,15 +62,9 @@ const setupDemo = () => {
   };
 
   const fakeValidator: UrlValidationHandler = (info, callback) => {
-    if (
-      info.url === 'test-valid' ||
-      /^https?:\/\/www\.google\.com\/google\.jpg$/.test(info.url)
-    ) {
+    if (info.url === 'test-valid' || /^https?:\/\/www\.google\.com\/google\.jpg$/.test(info.url)) {
       callback({ message: `Yep, that's valid...`, status: 'valid' });
-    } else if (
-      info.url === 'test-unknown' ||
-      /\.(?:jpg|png|gif)$/.test(info.url)
-    ) {
+    } else if (info.url === 'test-unknown' || /\.(?:jpg|png|gif)$/.test(info.url)) {
       callback({ message: `Hmm, I don't know...`, status: 'unknown' });
     } else if (info.url === 'test-invalid') {
       callback({
@@ -183,12 +159,7 @@ const setupDemo = () => {
       getValidationHandler: () => Option.some(fakeValidator),
       getUrlPicker: (_filetype) =>
         Option.some((entry: ApiUrlData) => {
-          const newUrl = Option.from(
-            window.prompt(
-              'File browser would show instead of this...',
-              entry.value
-            )
-          );
+          const newUrl = Option.from(window.prompt('File browser would show instead of this...', entry.value));
           return Future.pure({ ...entry, value: newUrl.getOr(entry.value) });
         })
     }

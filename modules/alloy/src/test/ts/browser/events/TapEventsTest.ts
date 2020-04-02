@@ -45,9 +45,7 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
           sFireIfReady(touches(0, 0, alpha), NativeEvents.touchstart()),
           store.sAssertEq('After touch start, empty', []),
           sFireIfReady(touches(0, 0, alpha), NativeEvents.touchend()),
-          store.sAssertEq('After touch start > no move > touchend = tap', [
-            SystemEvents.tap()
-          ]),
+          store.sAssertEq('After touch start > no move > touchend = tap', [SystemEvents.tap()]),
           store.sClear
         ])
       ),
@@ -61,10 +59,7 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
           sFireIfReady(touches(3, 3, alpha), NativeEvents.touchmove()),
           store.sAssertEq('After touch move, empty', []),
           sFireIfReady(touches(0, 0, alpha), NativeEvents.touchend()),
-          store.sAssertEq(
-            'After touch start > minor movement > touchend = tap',
-            [SystemEvents.tap()]
-          ),
+          store.sAssertEq('After touch start > minor movement > touchend = tap', [SystemEvents.tap()]),
           store.sClear
         ])
       ),
@@ -82,10 +77,7 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
           store.sAssertEq('After touch move 2, empty', []),
 
           sFireIfReady(touches(0, 0, alpha), NativeEvents.touchend()),
-          store.sAssertEq(
-            'After touch start > several small movements > touchend = no tap',
-            []
-          ),
+          store.sAssertEq('After touch start > several small movements > touchend = no tap', []),
           store.sClear
         ])
       ),
@@ -100,10 +92,7 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
           store.sAssertEq('After touch move, empty', []),
 
           sFireIfReady(touches(0, 0, alpha), NativeEvents.touchend()),
-          store.sAssertEq(
-            'After touch start > major movement > touchend = no tap',
-            []
-          ),
+          store.sAssertEq('After touch start > major movement > touchend = no tap', []),
           store.sClear
         ])
       ),
@@ -116,10 +105,7 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
           store.sAssertEq('After touch start, empty', []),
           sFireIfReady(touches(10, 10, alpha), NativeEvents.touchmove()),
           store.sAssertEq('After touch move, empty', []),
-          Waiter.sTryUntil(
-            'After touch start > major movement > wait = no longpress',
-            store.sAssertEq('[]', [])
-          ),
+          Waiter.sTryUntil('After touch start > major movement > wait = no longpress', store.sAssertEq('[]', [])),
           store.sClear
         ])
       ),
@@ -131,10 +117,7 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
           sFireIfReady(touches(0, 0, alpha), NativeEvents.touchstart()),
           store.sAssertEq('After touch start, empty', []),
 
-          Waiter.sTryUntil(
-            'After touch start > major movement > wait = no longpress',
-            store.sAssertEq('', [SystemEvents.longpress()])
-          ),
+          Waiter.sTryUntil('After touch start > major movement > wait = no longpress', store.sAssertEq('', [SystemEvents.longpress()])),
           store.sClear
         ])
       )

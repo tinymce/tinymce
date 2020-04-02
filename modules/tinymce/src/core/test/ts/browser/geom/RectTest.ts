@@ -4,10 +4,7 @@ import Rect from 'tinymce/core/api/geom/Rect';
 import Tools from 'tinymce/core/api/util/Tools';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('relativePosition', function () {
@@ -49,12 +46,7 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function (
 
     Tools.each(tests, function (item: any[]) {
       LegacyUnit.equal(
-        Rect.findBestRelativePosition(
-          sourceRect,
-          targetRect,
-          Rect.create(item[1], item[2], item[3], item[4]),
-          item[0]
-        ),
+        Rect.findBestRelativePosition(sourceRect, targetRect, Rect.create(item[1], item[2], item[3], item[4]), item[0]),
         item[5],
         item[5]
       );
@@ -62,87 +54,51 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function (
   });
 
   suite.test('inflate', function () {
-    LegacyUnit.deepEqual(
-      Rect.inflate(Rect.create(10, 20, 30, 40), 5, 10),
-      Rect.create(5, 10, 40, 60)
-    );
+    LegacyUnit.deepEqual(Rect.inflate(Rect.create(10, 20, 30, 40), 5, 10), Rect.create(5, 10, 40, 60));
   });
 
   suite.test('intersect', function () {
-    LegacyUnit.equal(
-      Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 20, 30, 40)),
-      {
-        x: 10,
-        y: 20,
-        w: 30,
-        h: 40
-      }
-    );
-    LegacyUnit.equal(
-      Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(15, 25, 30, 40)),
-      {
-        x: 15,
-        y: 25,
-        w: 25,
-        h: 35
-      }
-    );
-    LegacyUnit.equal(
-      Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(15, 25, 5, 5)),
-      {
-        x: 15,
-        y: 25,
-        w: 5,
-        h: 5
-      }
-    );
-    LegacyUnit.equal(
-      Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(0, 10, 5, 5)),
-      null
-    );
-    LegacyUnit.equal(
-      Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(45, 20, 5, 5)),
-      null
-    );
-    LegacyUnit.equal(
-      Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 65, 5, 5)),
-      null
-    );
-    LegacyUnit.equal(
-      Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(40, 20, 30, 40)),
-      {
-        x: 40,
-        y: 20,
-        w: 0,
-        h: 40
-      }
-    );
-    LegacyUnit.equal(
-      Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 60, 30, 40)),
-      {
-        x: 10,
-        y: 60,
-        w: 30,
-        h: 0
-      }
-    );
+    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 20, 30, 40)), {
+      x: 10,
+      y: 20,
+      w: 30,
+      h: 40
+    });
+    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(15, 25, 30, 40)), {
+      x: 15,
+      y: 25,
+      w: 25,
+      h: 35
+    });
+    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(15, 25, 5, 5)), {
+      x: 15,
+      y: 25,
+      w: 5,
+      h: 5
+    });
+    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(0, 10, 5, 5)), null);
+    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(45, 20, 5, 5)), null);
+    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 65, 5, 5)), null);
+    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(40, 20, 30, 40)), {
+      x: 40,
+      y: 20,
+      w: 0,
+      h: 40
+    });
+    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 60, 30, 40)), {
+      x: 10,
+      y: 60,
+      w: 30,
+      h: 0
+    });
   });
 
   suite.test('clamp', function () {
-    LegacyUnit.deepEqual(
-      Rect.clamp(Rect.create(10, 20, 30, 40), Rect.create(10, 20, 30, 40)),
-      Rect.create(10, 20, 30, 40)
-    );
+    LegacyUnit.deepEqual(Rect.clamp(Rect.create(10, 20, 30, 40), Rect.create(10, 20, 30, 40)), Rect.create(10, 20, 30, 40));
 
-    LegacyUnit.deepEqual(
-      Rect.clamp(Rect.create(5, 20, 30, 40), Rect.create(10, 20, 30, 40)),
-      Rect.create(10, 20, 25, 40)
-    );
+    LegacyUnit.deepEqual(Rect.clamp(Rect.create(5, 20, 30, 40), Rect.create(10, 20, 30, 40)), Rect.create(10, 20, 25, 40));
 
-    LegacyUnit.deepEqual(
-      Rect.clamp(Rect.create(5, 20, 30, 40), Rect.create(10, 20, 30, 40), true),
-      Rect.create(10, 20, 30, 40)
-    );
+    LegacyUnit.deepEqual(Rect.clamp(Rect.create(5, 20, 30, 40), Rect.create(10, 20, 30, 40), true), Rect.create(10, 20, 30, 40));
   });
 
   suite.test('create', function () {

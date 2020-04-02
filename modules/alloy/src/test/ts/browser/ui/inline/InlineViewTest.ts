@@ -1,15 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  GeneralSteps,
-  Logger,
-  Mouse,
-  Step,
-  Touch,
-  UiFinder,
-  Waiter
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Step, Touch, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Future, Option, Result } from '@ephox/katamari';
 import { Compare, Css, Html } from '@ephox/sugar';
@@ -37,11 +26,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
           },
 
           lazySink(comp) {
-            Assertions.assertEq(
-              'Checking InlineView passed through to lazySink',
-              true,
-              Compare.eq(inline.element(), comp.element())
-            );
+            Assertions.assertEq('Checking InlineView passed through to lazySink', true, Compare.eq(inline.element(), comp.element()));
             return Result.value(component);
           },
 
@@ -70,16 +55,9 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
         Logger.t(
           label,
           GeneralSteps.sequence([
-            Waiter.sTryUntil(
-              'Test inline should not be DOM',
-              UiFinder.sExists(gui.element(), '.test-inline')
-            ),
+            Waiter.sTryUntil('Test inline should not be DOM', UiFinder.sExists(gui.element(), '.test-inline')),
             Step.sync(() => {
-              Assertions.assertEq(
-                'Checking isOpen API',
-                true,
-                InlineView.isOpen(inline)
-              );
+              Assertions.assertEq('Checking isOpen API', true, InlineView.isOpen(inline));
             })
           ])
         );
@@ -88,16 +66,9 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
         Logger.t(
           label,
           GeneralSteps.sequence([
-            Waiter.sTryUntil(
-              'Test inline should not be in DOM',
-              UiFinder.sNotExists(gui.element(), '.test-inline')
-            ),
+            Waiter.sTryUntil('Test inline should not be in DOM', UiFinder.sNotExists(gui.element(), '.test-inline')),
             Step.sync(() => {
-              Assertions.assertEq(
-                'Checking isOpen API',
-                false,
-                InlineView.isOpen(inline)
-              );
+              Assertions.assertEq('Checking isOpen API', false, InlineView.isOpen(inline));
             })
           ])
         );
@@ -216,16 +187,8 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
           Chain.asStep(gui.element(), [
             UiFinder.cFindIn('.test-inline'),
             Chain.op((value) => {
-              Assertions.assertEq(
-                'Check view CSS top is 50px',
-                '50px',
-                Css.getRaw(value, 'top').getOr('no top found')
-              );
-              Assertions.assertEq(
-                'Check view CSS left is 50px',
-                '50px',
-                Css.getRaw(value, 'left').getOr('no left found')
-              );
+              Assertions.assertEq('Check view CSS top is 50px', '50px', Css.getRaw(value, 'top').getOr('no top found'));
+              Assertions.assertEq('Check view CSS left is 50px', '50px', Css.getRaw(value, 'left').getOr('no left found'));
             })
           ])
         ),
@@ -327,15 +290,9 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
 
         sCheckOpen('Should still be open with buttons and a dropdown'),
 
-        TestBroadcasts.sDismissOn(
-          'toolbar: should not close',
-          gui,
-          '.bold-button'
-        ),
+        TestBroadcasts.sDismissOn('toolbar: should not close', gui, '.bold-button'),
 
-        sCheckOpen(
-          'Broadcasting dismiss on button should not close inline toolbar'
-        ),
+        sCheckOpen('Broadcasting dismiss on button should not close inline toolbar'),
 
         store.sAssertEq('Check that the store is empty initially', []),
         Mouse.sClickOn(gui.element(), 'button:contains("B")'),
@@ -354,18 +311,9 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
             // Click on the dropdown
             Mouse.sClickOn(gui.element(), 'button:contains(+)'),
             // Wait until dropdown loads.
-            Waiter.sTryUntil(
-              'Waiting for dropdown list to appear',
-              UiFinder.sExists(gui.element(), 'li:contains("Option-1")')
-            ),
-            TestBroadcasts.sDismissOn(
-              'dropdown item: should not close',
-              gui,
-              'li:contains("Option-2")'
-            ),
-            sCheckOpen(
-              'Broadcasting dismiss on a dropdown item should not close inline toolbar'
-            )
+            Waiter.sTryUntil('Waiting for dropdown list to appear', UiFinder.sExists(gui.element(), 'li:contains("Option-1")')),
+            TestBroadcasts.sDismissOn('dropdown item: should not close', gui, 'li:contains("Option-2")'),
+            sCheckOpen('Broadcasting dismiss on a dropdown item should not close inline toolbar')
           ])
         ),
 
@@ -375,39 +323,18 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
             // Tap on the dropdown
             Touch.sTapOn(gui.element(), 'button:contains(-)'),
             // Wait until dropdown loads.
-            Waiter.sTryUntil(
-              'Waiting for dropdown list to appear',
-              UiFinder.sExists(gui.element(), 'li:contains("Item-1")')
-            ),
-            TestBroadcasts.sDismissOn(
-              'dropdown item: should not close',
-              gui,
-              'li:contains("Item-2")'
-            ),
-            sCheckOpen(
-              'Broadcasting dismiss on a dropdown item should not close inline toolbar'
-            )
+            Waiter.sTryUntil('Waiting for dropdown list to appear', UiFinder.sExists(gui.element(), 'li:contains("Item-1")')),
+            TestBroadcasts.sDismissOn('dropdown item: should not close', gui, 'li:contains("Item-2")'),
+            sCheckOpen('Broadcasting dismiss on a dropdown item should not close inline toolbar')
           ])
         ),
 
-        TestBroadcasts.sDismiss(
-          'related element: should not close',
-          gui,
-          related.element()
-        ),
-        sCheckOpen(
-          'The inline view should not have closed when broadcasting on related'
-        ),
+        TestBroadcasts.sDismiss('related element: should not close', gui, related.element()),
+        sCheckOpen('The inline view should not have closed when broadcasting on related'),
 
-        TestBroadcasts.sDismiss(
-          'outer gui element: should close',
-          gui,
-          gui.element()
-        ),
+        TestBroadcasts.sDismiss('outer gui element: should close', gui, gui.element()),
 
-        sCheckClosed(
-          'Broadcasting dismiss on a external element should close inline toolbar'
-        )
+        sCheckClosed('Broadcasting dismiss on a external element should close inline toolbar')
       ];
     },
     () => {

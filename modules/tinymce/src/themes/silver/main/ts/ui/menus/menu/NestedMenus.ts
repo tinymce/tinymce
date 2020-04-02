@@ -28,16 +28,8 @@ const build = (
     return Option.none();
   }
 
-  const mainMenu = createPartialMenu(
-    primary,
-    data.items,
-    itemResponse,
-    backstage,
-    isHorizontalMenu
-  );
-  const submenus = Obj.map(data.menus, (menuItems, menuName) =>
-    createPartialMenu(menuName, menuItems, itemResponse, backstage, false)
-  );
+  const mainMenu = createPartialMenu(primary, data.items, itemResponse, backstage, isHorizontalMenu);
+  const submenus = Obj.map(data.menus, (menuItems, menuName) => createPartialMenu(menuName, menuItems, itemResponse, backstage, false));
   const menus = Merger.deepMerge(submenus, Objects.wrap(primary, mainMenu));
   return Option.from(TieredMenu.tieredData(primary, menus, data.expansions));
 };

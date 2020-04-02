@@ -24,11 +24,7 @@ const os = platform.os;
 const deviceType = platform.deviceType;
 
 const webkit = /WebKit/.test(userAgent) && !browser.isEdge();
-const fileApi =
-  'FormData' in window &&
-  'FileReader' in window &&
-  'URL' in window &&
-  !!URL.createObjectURL;
+const fileApi = 'FormData' in window && 'FileReader' in window && 'URL' in window && !!URL.createObjectURL;
 const windowsPhone = userAgent.indexOf('Windows Phone') !== -1;
 
 interface Version {
@@ -196,8 +192,7 @@ const Env: Env = {
    * @type Boolean
    * @final
    */
-  transparentSrc:
-    'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+  transparentSrc: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
 
   /**
    * Returns <code>true</code>/<code>false</code> if the browser can or can't place the caret after a inline block like an image.

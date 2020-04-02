@@ -27,13 +27,7 @@ import { formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Icons from '../icons/Icons';
-import {
-  formatSize,
-  makeRatioConverter,
-  noSizeConversion,
-  parseSize,
-  SizeConversion
-} from '../sizeinput/SizeInputModel';
+import { formatSize, makeRatioConverter, noSizeConversion, parseSize, SizeConversion } from '../sizeinput/SizeInputModel';
 import { Omit } from '../Omit';
 import * as ReadOnly from '../../ReadOnly';
 
@@ -43,10 +37,7 @@ interface RatioEvent extends CustomEvent {
 
 type SizeInputSpec = Omit<Types.SizeInput.SizeInput, 'type'>;
 
-export const renderSizeInput = (
-  spec: SizeInputSpec,
-  providersBackstage: UiFactoryBackstageProviders
-): SketchSpec => {
+export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   let converter: SizeConversion = noSizeConversion;
 
   const ratioEvent = Id.generate('ratio-event');
@@ -54,16 +45,9 @@ export const renderSizeInput = (
   const pLock = AlloyFormCoupledInputs.parts().lock({
     dom: {
       tag: 'button',
-      classes: [
-        'tox-lock',
-        'tox-button',
-        'tox-button--naked',
-        'tox-button--icon'
-      ],
+      classes: ['tox-lock', 'tox-button', 'tox-button--naked', 'tox-button--icon'],
       attributes: {
-        title: providersBackstage.translate(
-          spec.label.getOr('Constrain proportions')
-        ) // TODO: tooltips AP-213
+        title: providersBackstage.translate(spec.label.getOr('Constrain proportions')) // TODO: tooltips AP-213
       }
     },
     components: [
@@ -110,16 +94,10 @@ export const renderSizeInput = (
         ReadOnly.receivingConfig(),
         Tabstopping.config({}),
         AddEventsBehaviour.config('size-input-events', [
-          AlloyEvents.run(NativeEvents.focusin(), function (
-            component,
-            _simulatedEvent
-          ) {
+          AlloyEvents.run(NativeEvents.focusin(), function (component, _simulatedEvent) {
             AlloyTriggers.emitWith(component, ratioEvent, { isField1 });
           }),
-          AlloyEvents.run(NativeEvents.change(), function (
-            component,
-            _simulatedEvent
-          ) {
+          AlloyEvents.run(NativeEvents.change(), function (component, _simulatedEvent) {
             AlloyTriggers.emitWith(component, formChangeEvent, {
               name: spec.name
             });
@@ -138,17 +116,11 @@ export const renderSizeInput = (
   });
 
   const widthField = AlloyFormCoupledInputs.parts().field1(
-    formGroup([
-      AlloyFormField.parts().label(getLabel('Width')),
-      getFieldPart(true)
-    ])
+    formGroup([AlloyFormField.parts().label(getLabel('Width')), getFieldPart(true)])
   );
 
   const heightField = AlloyFormCoupledInputs.parts().field2(
-    formGroup([
-      AlloyFormField.parts().label(getLabel('Height')),
-      getFieldPart(false)
-    ])
+    formGroup([AlloyFormField.parts().label(getLabel('Height')), getFieldPart(false)])
   );
 
   return AlloyFormCoupledInputs.sketch({
@@ -177,11 +149,7 @@ export const renderSizeInput = (
     markers: {
       lockClass: 'tox-locked'
     },
-    onLockedChange(
-      current: AlloyComponent,
-      other: AlloyComponent,
-      _lock: AlloyComponent
-    ) {
+    onLockedChange(current: AlloyComponent, other: AlloyComponent, _lock: AlloyComponent) {
       parseSize(Representing.getValue(current)).each((size) => {
         converter(size).each((newSize) => {
           Representing.setValue(other, formatSize(newSize));
@@ -192,40 +160,23 @@ export const renderSizeInput = (
       Disabling.config({
         disabled: spec.disabled || providersBackstage.isReadonly(),
         onDisabled: (comp) => {
-          AlloyFormCoupledInputs.getField1(comp)
-            .bind(AlloyFormField.getField)
-            .each(Disabling.disable);
-          AlloyFormCoupledInputs.getField2(comp)
-            .bind(AlloyFormField.getField)
-            .each(Disabling.disable);
+          AlloyFormCoupledInputs.getField1(comp).bind(AlloyFormField.getField).each(Disabling.disable);
+          AlloyFormCoupledInputs.getField2(comp).bind(AlloyFormField.getField).each(Disabling.disable);
           AlloyFormCoupledInputs.getLock(comp).each(Disabling.disable);
         },
         onEnabled: (comp) => {
-          AlloyFormCoupledInputs.getField1(comp)
-            .bind(AlloyFormField.getField)
-            .each(Disabling.enable);
-          AlloyFormCoupledInputs.getField2(comp)
-            .bind(AlloyFormField.getField)
-            .each(Disabling.enable);
+          AlloyFormCoupledInputs.getField1(comp).bind(AlloyFormField.getField).each(Disabling.enable);
+          AlloyFormCoupledInputs.getField2(comp).bind(AlloyFormField.getField).each(Disabling.enable);
           AlloyFormCoupledInputs.getLock(comp).each(Disabling.enable);
         }
       }),
       ReadOnly.receivingConfig(),
       AddEventsBehaviour.config('size-input-events2', [
-        AlloyEvents.run<RatioEvent>(ratioEvent, function (
-          component,
-          simulatedEvent
-        ) {
+        AlloyEvents.run<RatioEvent>(ratioEvent, function (component, simulatedEvent) {
           const isField1 = simulatedEvent.event().isField1();
-          const optCurrent = isField1
-            ? AlloyFormCoupledInputs.getField1(component)
-            : AlloyFormCoupledInputs.getField2(component);
-          const optOther = isField1
-            ? AlloyFormCoupledInputs.getField2(component)
-            : AlloyFormCoupledInputs.getField1(component);
-          const value1 = optCurrent
-            .map<string>(Representing.getValue)
-            .getOr('');
+          const optCurrent = isField1 ? AlloyFormCoupledInputs.getField1(component) : AlloyFormCoupledInputs.getField2(component);
+          const optOther = isField1 ? AlloyFormCoupledInputs.getField2(component) : AlloyFormCoupledInputs.getField1(component);
+          const value1 = optCurrent.map<string>(Representing.getValue).getOr('');
           const value2 = optOther.map<string>(Representing.getValue).getOr('');
           converter = makeRatioConverter(value1, value2);
         })

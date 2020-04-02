@@ -5,11 +5,7 @@ import fc from 'fast-check';
 UnitTest.test('Arr.reverse: unit tests', () => {
   const check = (expected, input) => {
     Assert.eq('reverse', expected, Arr.reverse(input));
-    Assert.eq(
-      'reverse frozen',
-      expected,
-      Arr.reverse(Object.freeze(input.slice()))
-    );
+    Assert.eq('reverse frozen', expected, Arr.reverse(Object.freeze(input.slice())));
   };
 
   check([], []);

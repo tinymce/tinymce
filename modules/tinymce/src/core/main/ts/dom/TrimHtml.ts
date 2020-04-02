@@ -39,9 +39,7 @@ const trimInternal = function (serializer, html) {
       endTagIndex = SaxParser.findEndTag(schema, content, index);
     }
 
-    content =
-      content.substring(0, index - matchLength) +
-      content.substring(endTagIndex);
+    content = content.substring(0, index - matchLength) + content.substring(endTagIndex);
     bogusAllRegExp.lastIndex = index - matchLength;
   }
 

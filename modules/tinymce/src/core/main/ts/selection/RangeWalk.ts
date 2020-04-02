@@ -24,14 +24,9 @@ const clampToExistingChildren = (container: Node, index: number) => {
   return childNodes[index] || container;
 };
 
-const getEndChild = (container: Node, index: number) =>
-  clampToExistingChildren(container, index - 1);
+const getEndChild = (container: Node, index: number) => clampToExistingChildren(container, index - 1);
 
-const walk = function (
-  dom: DOMUtils,
-  rng: RangeLikeObject,
-  callback: (nodes: Node[]) => void
-) {
+const walk = function (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => void) {
   let startContainer = rng.startContainer;
   const startOffset = rng.startOffset;
   let endContainer = rng.endContainer;
@@ -60,22 +55,13 @@ const walk = function (
 
     // First node is excluded
     node = nodes[0];
-    if (
-      node.nodeType === 3 &&
-      node === startContainer &&
-      startOffset >= node.nodeValue.length
-    ) {
+    if (node.nodeType === 3 && node === startContainer && startOffset >= node.nodeValue.length) {
       nodes.splice(0, 1);
     }
 
     // Last node is excluded
     node = nodes[nodes.length - 1];
-    if (
-      endOffset === 0 &&
-      nodes.length > 0 &&
-      node === endContainer &&
-      node.nodeType === 3
-    ) {
+    if (endOffset === 0 && nodes.length > 0 && node === endContainer && node.nodeType === 3) {
       nodes.splice(nodes.length - 1, 1);
     }
 
@@ -102,23 +88,12 @@ const walk = function (
     } while (node);
   };
 
-  const walkBoundary = function (
-    startNode: Node,
-    endNode: Node,
-    next?: boolean
-  ) {
+  const walkBoundary = function (startNode: Node, endNode: Node, next?: boolean) {
     const siblingName = next ? 'nextSibling' : 'previousSibling';
 
-    for (
-      let node = startNode, parent = node.parentNode;
-      node && node !== endNode;
-      node = parent
-    ) {
+    for (let node = startNode, parent = node.parentNode; node && node !== endNode; node = parent) {
       parent = node.parentNode;
-      const siblings = collectSiblings(
-        node === startNode ? node : node[siblingName],
-        siblingName
-      );
+      const siblings = collectSiblings(node === startNode ? node : node[siblingName], siblingName);
 
       if (siblings.length) {
         if (!next) {

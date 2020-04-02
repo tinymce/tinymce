@@ -7,12 +7,7 @@ const traverse = <E>(item: E, mode: Transition): Traverse<E> => ({
   mode: Fun.constant(mode)
 });
 
-const backtrack: Transition = function (
-  universe,
-  item,
-  _direction,
-  transition = sidestep
-) {
+const backtrack: Transition = function (universe, item, _direction, transition = sidestep) {
   return universe
     .property()
     .parent(item)
@@ -21,23 +16,13 @@ const backtrack: Transition = function (
     });
 };
 
-const sidestep: Transition = function (
-  universe,
-  item,
-  direction,
-  transition = advance
-) {
+const sidestep: Transition = function (universe, item, direction, transition = advance) {
   return direction.sibling(universe, item).map(function (p) {
     return traverse(p, transition);
   });
 };
 
-const advance: Transition = function (
-  universe,
-  item,
-  direction,
-  transition = advance
-) {
+const advance: Transition = function (universe, item, direction, transition = advance) {
   const children = universe.property().children(item);
   const result = direction.first(children);
   return result.map(function (r) {
@@ -72,13 +57,11 @@ const go = function <E, D>(
 
   return ruleOpt.bind(function (rule) {
     // Attempt the current mode. If not, use the fallback and try again.
-    return rule
-      .current(universe, item, direction, rule.next)
-      .orThunk(function () {
-        return rule.fallback.bind(function (fb) {
-          return go(universe, item, fb, direction);
-        });
+    return rule.current(universe, item, direction, rule.next).orThunk(function () {
+      return rule.fallback.bind(function (fb) {
+        return go(universe, item, fb, direction);
       });
+    });
   });
 };
 

@@ -8,9 +8,7 @@ export interface LazyValue<T> {
   isReady: () => boolean;
 }
 
-const nu = function <T>(
-  baseFn: (completer: (value: T) => void) => void
-): LazyValue<T> {
+const nu = function <T>(baseFn: (completer: (value: T) => void) => void): LazyValue<T> {
   let data = Option.none<T>();
   let callbacks: ((value: T) => void)[] = [];
 

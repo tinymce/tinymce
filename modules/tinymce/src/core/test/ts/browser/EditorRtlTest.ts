@@ -30,20 +30,11 @@ UnitTest.asynctest('browser.tinymce.core.EditorRtlTest', (success, failure) => {
       Pipeline.async(
         {},
         [
-          sAssertRtl(
-            'Should be in rtl mode after creating an editor in arabic',
-            true
-          ),
+          sAssertRtl('Should be in rtl mode after creating an editor in arabic', true),
           sSetLangCode('en'),
-          sAssertRtl(
-            'Should not be in rtl mode when switching back to english',
-            false
-          ),
+          sAssertRtl('Should not be in rtl mode when switching back to english', false),
           sSetLangCode('ar'),
-          sAssertRtl(
-            'Should be in rtl mode after switching back to arabic',
-            true
-          ),
+          sAssertRtl('Should be in rtl mode after switching back to arabic', true),
           sSetLangCode('en')
         ],
         function () {

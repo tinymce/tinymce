@@ -16,12 +16,7 @@ import { FormChooserDetail } from '../types/FormChooserTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('choices'),
-  SketchBehaviours.field('chooserBehaviours', [
-    Keying,
-    Highlighting,
-    Composing,
-    Representing
-  ]),
+  SketchBehaviours.field('chooserBehaviours', [Keying, Highlighting, Composing, Representing]),
   Fields.markers(['choiceClass', 'selectedClass'])
 ]);
 

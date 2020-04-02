@@ -20,33 +20,20 @@ export interface DialogData {
   wholewords: boolean;
 }
 
-const open = function (
-  editor: Editor,
-  currentSearchState: Cell<Actions.SearchState>
-) {
-  const dialogApi = Singleton.value<
-    Types.Dialog.DialogInstanceApi<DialogData>
-  >();
+const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchState>) {
+  const dialogApi = Singleton.value<Types.Dialog.DialogInstanceApi<DialogData>>();
   editor.undoManager.add();
 
-  const selectedText = Tools.trim(
-    editor.selection.getContent({ format: 'text' })
-  );
+  const selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
 
   function updateButtonStates(api: Types.Dialog.DialogInstanceApi<DialogData>) {
-    const updateNext = Actions.hasNext(editor, currentSearchState)
-      ? api.enable
-      : api.disable;
+    const updateNext = Actions.hasNext(editor, currentSearchState) ? api.enable : api.disable;
     updateNext('next');
-    const updatePrev = Actions.hasPrev(editor, currentSearchState)
-      ? api.enable
-      : api.disable;
+    const updatePrev = Actions.hasPrev(editor, currentSearchState) ? api.enable : api.disable;
     updatePrev('prev');
   }
 
-  const updateSearchState = (
-    api: Types.Dialog.DialogInstanceApi<DialogData>
-  ) => {
+  const updateSearchState = (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
     const data = api.getData();
     const current = currentSearchState.get();
 
@@ -57,35 +44,22 @@ const open = function (
     });
   };
 
-  const disableAll = function (
-    api: Types.Dialog.DialogInstanceApi<DialogData>,
-    disable: boolean
-  ) {
+  const disableAll = function (api: Types.Dialog.DialogInstanceApi<DialogData>, disable: boolean) {
     const buttons = ['replace', 'replaceall', 'prev', 'next'];
     const toggle = disable ? api.disable : api.enable;
     Arr.each(buttons, toggle);
   };
 
   function notFoundAlert(api: Types.Dialog.DialogInstanceApi<DialogData>) {
-    editor.windowManager.alert(
-      'Could not find the specified string.',
-      function () {
-        api.focus('findtext');
-      }
-    );
+    editor.windowManager.alert('Could not find the specified string.', function () {
+      api.focus('findtext');
+    });
   }
 
   // Temporarily workaround for iOS/iPadOS dialog placement to hide the keyboard
   // TODO: Remove in 5.2 once iOS fixed positioning is fixed. See TINY-4441
-  const focusButtonIfRequired = (
-    api: Types.Dialog.DialogInstanceApi<DialogData>,
-    name: string
-  ) => {
-    if (
-      Env.browser.isSafari() &&
-      Env.deviceType.isTouch() &&
-      (name === 'find' || name === 'replace' || name === 'replaceall')
-    ) {
+  const focusButtonIfRequired = (api: Types.Dialog.DialogInstanceApi<DialogData>, name: string) => {
+    if (Env.browser.isSafari() && Env.deviceType.isTouch() && (name === 'find' || name === 'replace' || name === 'replaceall')) {
       api.focus(name);
     }
   };
@@ -109,21 +83,11 @@ const open = function (
     }
 
     // Same search text, so treat the find as a next click instead
-    if (
-      last.text === data.findtext &&
-      last.matchCase === data.matchcase &&
-      last.wholeWord === data.wholewords
-    ) {
+    if (last.text === data.findtext && last.matchCase === data.matchcase && last.wholeWord === data.wholewords) {
       Actions.next(editor, currentSearchState);
     } else {
       // Find new matches
-      const count = Actions.find(
-        editor,
-        currentSearchState,
-        data.findtext,
-        data.matchcase,
-        data.wholewords
-      );
+      const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords);
       if (count <= 0) {
         notFoundAlert(api);
       }
@@ -243,13 +207,7 @@ const open = function (
           }
           break;
         case 'replaceall':
-          Actions.replace(
-            editor,
-            currentSearchState,
-            data.replacetext,
-            true,
-            true
-          );
+          Actions.replace(editor, currentSearchState, data.replacetext, true, true);
           reset(api);
           break;
         case 'prev':

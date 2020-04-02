@@ -20,16 +20,9 @@ interface SelectionContentData {
 const hasWorkingClipboardApi = (clipboardData: DataTransfer) =>
   // iOS supports the clipboardData API but it doesn't do anything for cut operations
   // Edge 15 has a broken HTML Clipboard API see https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11780845/
-  Env.iOS === false &&
-  clipboardData !== undefined &&
-  typeof clipboardData.setData === 'function' &&
-  Utils.isMsEdge() !== true;
+  Env.iOS === false && clipboardData !== undefined && typeof clipboardData.setData === 'function' && Utils.isMsEdge() !== true;
 
-const setHtml5Clipboard = (
-  clipboardData: DataTransfer,
-  html: string,
-  text: string
-) => {
+const setHtml5Clipboard = (clipboardData: DataTransfer, html: string, text: string) => {
   if (hasWorkingClipboardApi(clipboardData)) {
     try {
       clipboardData.clearData();
@@ -48,12 +41,7 @@ const setHtml5Clipboard = (
 type DoneFn = () => void;
 type FallbackFn = (html: string, done: DoneFn) => void;
 
-const setClipboardData = (
-  evt: ClipboardEvent,
-  data: SelectionContentData,
-  fallback: FallbackFn,
-  done: DoneFn
-) => {
+const setClipboardData = (evt: ClipboardEvent, data: SelectionContentData, fallback: FallbackFn, done: DoneFn) => {
   if (setHtml5Clipboard(evt.clipboardData, data.html, data.text)) {
     evt.preventDefault();
     done();
@@ -68,11 +56,7 @@ const fallback = (editor: Editor): FallbackFn => (html, done) => {
     'contenteditable': 'false',
     'data-mce-bogus': 'all'
   });
-  const inner = editor.dom.create(
-    'div',
-    { contenteditable: 'true' },
-    markedHtml
-  );
+  const inner = editor.dom.create('div', { contenteditable: 'true' }, markedHtml);
   editor.dom.setStyles(outer, {
     position: 'fixed',
     top: '0',
@@ -103,14 +87,9 @@ const getData = (editor: Editor): SelectionContentData => ({
 });
 
 const isTableSelection = (editor: Editor): boolean =>
-  !!editor.dom.getParent(
-    editor.selection.getStart(),
-    'td[data-mce-selected],th[data-mce-selected]',
-    editor.getBody()
-  );
+  !!editor.dom.getParent(editor.selection.getStart(), 'td[data-mce-selected],th[data-mce-selected]', editor.getBody());
 
-const hasSelectedContent = (editor: Editor): boolean =>
-  !editor.selection.isCollapsed() || isTableSelection(editor);
+const hasSelectedContent = (editor: Editor): boolean => !editor.selection.isCollapsed() || isTableSelection(editor);
 
 const cut = (editor: Editor) => (evt: ClipboardEvent) => {
   if (hasSelectedContent(editor)) {

@@ -16,11 +16,7 @@ interface DragActionEvents {
   };
 }
 
-const setup = function (
-  mutation: DragMutation,
-  mode: DragMode,
-  settings: Partial<BlockerOptions>
-) {
+const setup = function (mutation: DragMutation, mode: DragMode, settings: Partial<BlockerOptions>) {
   let active = false;
 
   const events = Events.create({

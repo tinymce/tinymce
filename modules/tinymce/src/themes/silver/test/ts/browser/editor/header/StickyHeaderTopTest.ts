@@ -2,10 +2,7 @@ import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
-import {
-  ToolbarMode,
-  ToolbarLocation
-} from 'tinymce/themes/silver/api/Settings';
+import { ToolbarMode, ToolbarLocation } from 'tinymce/themes/silver/api/Settings';
 import Theme from 'tinymce/themes/silver/Theme';
 import { sTestStickyHeader } from '../../../module/StickyHeaderStep';
 

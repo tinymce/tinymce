@@ -4,12 +4,7 @@ import { Attr } from '@ephox/sugar';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as TabSectionSchema from '../../ui/schema/TabSectionSchema';
-import {
-  TabSectionApis,
-  TabSectionDetail,
-  TabSectionSketcher,
-  TabSectionSpec
-} from '../../ui/types/TabSectionTypes';
+import { TabSectionApis, TabSectionDetail, TabSectionSketcher, TabSectionSpec } from '../../ui/types/TabSectionTypes';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Replacing } from '../behaviour/Replacing';
 import { Representing } from '../behaviour/Representing';
@@ -20,12 +15,7 @@ import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (
-  detail,
-  components,
-  _spec,
-  _externals
-) => {
+const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detail, components, _spec, _externals) => {
   const changeTab = (button: AlloyComponent) => {
     const tabValue = Representing.getValue(button);
     AlloyParts.getPart(button, detail, 'tabview').each((tabview) => {
@@ -44,10 +34,7 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (
     });
   };
 
-  const changeTabBy = (
-    section: AlloyComponent,
-    byPred: (tbar: AlloyComponent) => Option<AlloyComponent>
-  ) => {
+  const changeTabBy = (section: AlloyComponent, byPred: (tbar: AlloyComponent) => Option<AlloyComponent>) => {
     AlloyParts.getPart(section, detail, 'tabbar').each((tabbar) => {
       byPred(tabbar).each(AlloyTriggers.emitExecute);
     });
@@ -70,20 +57,14 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (
           : [],
 
         [
-          AlloyEvents.run<SystemEvents.AlloyChangeTabEvent>(
-            SystemEvents.changeTab(),
-            (section, simulatedEvent) => {
-              const button = simulatedEvent.event().button();
-              changeTab(button);
-            }
-          ),
-          AlloyEvents.run<SystemEvents.AlloyDismissTabEvent>(
-            SystemEvents.dismissTab(),
-            (section, simulatedEvent) => {
-              const button = simulatedEvent.event().button();
-              detail.onDismissTab(section, button);
-            }
-          )
+          AlloyEvents.run<SystemEvents.AlloyChangeTabEvent>(SystemEvents.changeTab(), (section, simulatedEvent) => {
+            const button = simulatedEvent.event().button();
+            changeTab(button);
+          }),
+          AlloyEvents.run<SystemEvents.AlloyDismissTabEvent>(SystemEvents.dismissTab(), (section, simulatedEvent) => {
+            const button = simulatedEvent.event().button();
+            detail.onDismissTab(section, button);
+          })
         ]
       ])
     ),
@@ -101,14 +82,9 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (
         // the whole "dismiss" issue out of the equation.
         const getTabIfNotActive = (tabbar: AlloyComponent) => {
           const candidates = Highlighting.getCandidates(tabbar);
-          const optTab = Arr.find(
-            candidates,
-            (c) => Representing.getValue(c) === tabKey
-          );
+          const optTab = Arr.find(candidates, (c) => Representing.getValue(c) === tabKey);
 
-          return optTab.filter(
-            (tab) => !Highlighting.isHighlighted(tabbar, tab)
-          );
+          return optTab.filter((tab) => !Highlighting.isHighlighted(tabbar, tab));
         };
 
         changeTabBy(section, getTabIfNotActive);
@@ -117,11 +93,7 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (
   };
 };
 
-const TabSection: TabSectionSketcher = Sketcher.composite<
-  TabSectionSpec,
-  TabSectionDetail,
-  TabSectionApis
->({
+const TabSection: TabSectionSketcher = Sketcher.composite<TabSectionSpec, TabSectionDetail, TabSectionApis>({
   name: 'TabSection',
   configFields: TabSectionSchema.schema(),
   partFields: TabSectionSchema.parts(),

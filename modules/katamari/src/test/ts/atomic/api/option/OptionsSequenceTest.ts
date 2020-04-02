@@ -37,12 +37,7 @@ UnitTest.test('Options.sequence: unit tests', () => {
 UnitTest.test('Options.sequence: Single some value', () => {
   fc.assert(
     fc.property(fc.integer(), (n) => {
-      Assert.eq(
-        'eq',
-        Option.some([n]),
-        Options.sequence([Option.some(n)]),
-        tOption()
-      );
+      Assert.eq('eq', Option.some([n]), Options.sequence([Option.some(n)]), tOption());
     })
   );
 });
@@ -64,12 +59,7 @@ UnitTest.test('Options.sequence: Array of numbers', () => {
   fc.assert(
     fc.property(fc.array(fc.integer()), (n) => {
       const someNumbers = Arr.map(n, (x) => Option.some(x));
-      Assert.eq(
-        'eq',
-        Option.some(n),
-        Options.sequence<number>(someNumbers),
-        tOption()
-      );
+      Assert.eq('eq', Option.some(n), Options.sequence<number>(someNumbers), tOption());
     })
   );
 });

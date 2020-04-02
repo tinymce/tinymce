@@ -69,8 +69,7 @@ export default function () {
     selector: 'textarea.tiny-text2',
     theme: 'silver',
     toolbar: 'styleselect',
-    block_formats:
-      'Paragraph=p;Header 1=h1;Header 2=h2;Separator Name=|;Header 3=h3',
+    block_formats: 'Paragraph=p;Header 1=h1;Header 2=h2;Separator Name=|;Header 3=h3',
     plugins: ['lists', 'autolink', 'autosave', 'insertdatetime']
   });
 }

@@ -232,25 +232,10 @@ class EventDispatcher<T extends NativeEventMap> {
    *     // Callback logic
    * });
    */
-  public on<K extends keyof T>(
-    name: K,
-    callback: (event: EditorEvent<T[K]>) => void,
-    prepend?: boolean,
-    extra?: {}
-  ): this;
-  public on<U = any>(
-    name: string,
-    callback: (event: EditorEvent<U>) => void,
-    prepend?: boolean,
-    extra?: {}
-  ): this;
+  public on<K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void, prepend?: boolean, extra?: {}): this;
+  public on<U = any>(name: string, callback: (event: EditorEvent<U>) => void, prepend?: boolean, extra?: {}): this;
   public on(name: string, callback: false, prepend?: boolean, extra?: {}): this;
-  public on(
-    name: string,
-    callback: false | ((event: EditorEvent<any>) => void),
-    prepend?: boolean,
-    extra?: {}
-  ): this {
+  public on(name: string, callback: false | ((event: EditorEvent<any>) => void), prepend?: boolean, extra?: {}): this {
     let handlers, names, i;
 
     if (callback === false) {
@@ -304,19 +289,10 @@ class EventDispatcher<T extends NativeEventMap> {
    * // Unbind all events
    * instance.off();
    */
-  public off<K extends keyof T>(
-    name: K,
-    callback: (event: EditorEvent<T[K]>) => void
-  ): this;
-  public off<U = any>(
-    name: string,
-    callback: (event: EditorEvent<U>) => void
-  ): this;
+  public off<K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void): this;
+  public off<U = any>(name: string, callback: (event: EditorEvent<U>) => void): this;
   public off(name?: string): this;
-  public off(
-    name?: string,
-    callback?: (event: EditorEvent<any>) => void
-  ): this {
+  public off(name?: string, callback?: (event: EditorEvent<any>) => void): this {
     let i, handlers, names, hi;
 
     if (name) {
@@ -382,21 +358,9 @@ class EventDispatcher<T extends NativeEventMap> {
    *     // Callback logic
    * });
    */
-  public once<K extends keyof T>(
-    name: K,
-    callback: (event: EditorEvent<T[K]>) => void,
-    prepend?: boolean
-  ): this;
-  public once<U = any>(
-    name: string,
-    callback: (event: EditorEvent<U>) => void,
-    prepend?: boolean
-  ): this;
-  public once(
-    name: string,
-    callback: (event: EditorEvent<any>) => void,
-    prepend?: boolean
-  ): this {
+  public once<K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void, prepend?: boolean): this;
+  public once<U = any>(name: string, callback: (event: EditorEvent<U>) => void, prepend?: boolean): this;
+  public once(name: string, callback: (event: EditorEvent<any>) => void, prepend?: boolean): this {
     return this.on(name, callback, prepend, { once: true });
   }
 

@@ -59,8 +59,7 @@ export default (): void => {
         tag: 'button',
         styles: {
           'background-color': 'black',
-          'background-image':
-            'url(http://yamaha/textbox/icons/Transforms13.png)',
+          'background-image': 'url(http://yamaha/textbox/icons/Transforms13.png)',
           'width': '20px',
           'height': '20px'
         }
@@ -112,10 +111,7 @@ export default (): void => {
         console.log('*** ButtonDemo click ***');
       },
 
-      buttonBehaviours: Behaviour.derive([
-        catBehaviour.config({}),
-        redBehaviour.config({})
-      ])
+      buttonBehaviours: Behaviour.derive([catBehaviour.config({}), redBehaviour.config({})])
     })
   );
 };

@@ -23,10 +23,7 @@ import { AlloyComponent } from './ComponentApi';
 const getDomDefinition = (
   info: CustomDefinition.CustomDetail<any>,
   bList: Array<AlloyBehaviour<any, any>>,
-  bData: Record<
-    string,
-    () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>
-  >
+  bData: Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>
 ): DomDefinitionDetail => {
   // Get the current DOM definition from the spec
   const definition = CustomDefinition.toDefinition(info);
@@ -40,10 +37,7 @@ const getDomDefinition = (
   };
 
   // Combine the modifications from any defined behaviours
-  const modification =
-    bList.length > 0
-      ? ComponentDom.combine(bData, baseModification, bList, definition)
-      : infoModification;
+  const modification = bList.length > 0 ? ComponentDom.combine(bData, baseModification, bList, definition) : infoModification;
 
   // Transform the DOM definition with the combined dom modifications to make a new DOM definition
   return DomModification.merge(definition, modification);
@@ -52,20 +46,12 @@ const getDomDefinition = (
 const getEvents = (
   info: CustomDefinition.CustomDetail<any>,
   bList: Array<AlloyBehaviour<any, any>>,
-  bData: Record<
-    string,
-    () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>
-  >
+  bData: Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>
 ): Record<string, UncurriedHandler> => {
   const baseEvents = {
     'alloy.base.behaviour': CustomDefinition.toEvents(info)
   };
-  return ComponentEvents.combine(
-    bData,
-    info.eventOrder,
-    bList,
-    baseEvents
-  ).getOrDie();
+  return ComponentEvents.combine(bData, info.eventOrder, bList, baseEvents).getOrDie();
 };
 
 const build = (spec: ComponentDetail): AlloyComponent => {
@@ -73,9 +59,7 @@ const build = (spec: ComponentDetail): AlloyComponent => {
 
   const systemApi = Cell(singleton);
 
-  const info: CustomDefinition.CustomDetail<any> = ValueSchema.getOrDie(
-    CustomDefinition.toInfo(spec)
-  );
+  const info: CustomDefinition.CustomDetail<any> = ValueSchema.getOrDie(CustomDefinition.toInfo(spec));
   const bBlob = CompBehaviours.generate(spec);
 
   const bList = BehaviourBlob.getBehaviours(bBlob);
@@ -114,25 +98,17 @@ const build = (spec: ComponentDetail): AlloyComponent => {
   };
 
   // TYPIFY (any here is for the info.apis() pathway)
-  const config = (
-    behaviour: AlloyBehaviour<any, any>
-  ): Option<BehaviourBlob.BehaviourConfigAndState<any, any>> => {
+  const config = (behaviour: AlloyBehaviour<any, any>): Option<BehaviourBlob.BehaviourConfigAndState<any, any>> => {
     const b = bData;
     const f = Type.isFunction(b[behaviour.name()])
       ? b[behaviour.name()]
       : () => {
-          throw new Error(
-            'Could not find ' +
-              behaviour.name() +
-              ' in ' +
-              JSON.stringify(spec, null, 2)
-          );
+          throw new Error('Could not find ' + behaviour.name() + ' in ' + JSON.stringify(spec, null, 2));
         };
     return f();
   };
 
-  const hasConfigured = (behaviour: AlloyBehaviour<any, any>): boolean =>
-    Type.isFunction(bData[behaviour.name()]);
+  const hasConfigured = (behaviour: AlloyBehaviour<any, any>): boolean => Type.isFunction(bData[behaviour.name()]);
 
   const getApis = <A>(): A => info.apis;
 

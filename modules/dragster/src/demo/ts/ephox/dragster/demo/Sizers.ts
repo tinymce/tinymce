@@ -1,15 +1,5 @@
 import { Arr, Fun } from '@ephox/katamari';
-import {
-  Css,
-  Element,
-  Height,
-  InsertAll,
-  Location,
-  Remove,
-  SelectorFind,
-  Visibility,
-  Width
-} from '@ephox/sugar';
+import { Css, Element, Height, InsertAll, Location, Remove, SelectorFind, Visibility, Width } from '@ephox/sugar';
 
 export default function () {
   const box = function () {

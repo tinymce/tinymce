@@ -1,15 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  GeneralSteps,
-  Mouse,
-  Pipeline,
-  UiFinder,
-  Waiter,
-  FocusTools,
-  Step
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, GeneralSteps, Mouse, Pipeline, UiFinder, Waiter, FocusTools, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Body, Element } from '@ephox/sugar';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
@@ -87,11 +76,7 @@ UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
     {},
     [
       sTestOpen,
-      FocusTools.sTryOnSelector(
-        'Focus should start on the input',
-        Element.fromDom(document),
-        'input'
-      ),
+      FocusTools.sTryOnSelector('Focus should start on the input', Element.fromDom(document), 'input'),
       Assertions.sAssertStructure(
         '"tox-dialog__scroll-disable" should exist on the body',
         ApproxStructure.build((s, str, arr) =>
@@ -105,10 +90,7 @@ UnitTest.asynctest('WindowManager:simple-dialog Test', (success, failure) => {
         currentApi.get().disable('barny');
       }),
       sTestClose,
-      Waiter.sTryUntil(
-        'Waiting for all dialog events when closing',
-        store.sAssertEq('Checking stuff', ['closeWindow', 'onClose'])
-      ),
+      Waiter.sTryUntil('Waiting for all dialog events when closing', store.sAssertEq('Checking stuff', ['closeWindow', 'onClose'])),
       Assertions.sAssertStructure(
         '"tox-dialog__scroll-disable" should have been removed from the body',
         ApproxStructure.build((s, str, arr) =>

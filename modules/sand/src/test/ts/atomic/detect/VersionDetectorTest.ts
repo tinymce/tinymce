@@ -4,12 +4,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 UnitTest.test('VersionDetectorTest', function () {
   const edgeRegex = /.*?edge\/ ?([0-9]+)\.([0-9]+)$/;
 
-  const check = function (
-    label: string,
-    expected: Version,
-    versionRegexes: RegExp[],
-    agent: string
-  ) {
+  const check = function (label: string, expected: Version, versionRegexes: RegExp[], agent: string) {
     const actual = Version.detect(versionRegexes, agent);
     Assert.eq(label, expected, actual);
   };

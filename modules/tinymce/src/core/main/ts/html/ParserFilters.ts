@@ -17,10 +17,7 @@ import Env from '../api/Env';
 
 const isInternalImageSource = (src: string) => src === Env.transparentSrc;
 
-const registerBase64ImageFilter = (
-  parser: DomParser,
-  settings: DomParserSettings
-) => {
+const registerBase64ImageFilter = (parser: DomParser, settings: DomParserSettings) => {
   const { blob_cache: blobCache } = settings;
   const processImage = (img: Node): void => {
     const inputSrc = img.attr('src');
@@ -76,10 +73,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
             prevName = prev.name;
 
             // Ignore bookmarks
-            if (
-              prevName !== 'span' ||
-              prev.attr('data-mce-type') !== 'bookmark'
-            ) {
+            if (prevName !== 'span' || prev.attr('data-mce-type') !== 'bookmark') {
               // Found a non BR element
               if (prevName !== 'br') {
                 break;
@@ -116,11 +110,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
           // Replaces BR elements inside inline elements like <p><b><i><br></i></b></p>
           // so they become <p><b><i>&nbsp;</i></b></p>
           lastParent = node;
-          while (
-            parent &&
-            parent.firstChild === lastParent &&
-            parent.lastChild === lastParent
-          ) {
+          while (parent && parent.firstChild === lastParent && parent.lastChild === lastParent) {
             lastParent = parent;
 
             if (blockElements[parent.name]) {

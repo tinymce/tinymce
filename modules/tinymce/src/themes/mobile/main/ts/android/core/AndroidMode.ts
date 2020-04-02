@@ -30,18 +30,11 @@ const create = function (platform, mask) {
     // TM-48 Prevent browser refresh by swipe/scroll on android devices
     Class.add(platform.body, Styles.resolve('android-scroll-reload'));
 
-    androidApi.set(
-      AndroidSetup.setup(
-        platform.win,
-        PlatformEditor.getWin(platform.editor).getOrDie('no')
-      )
-    );
+    androidApi.set(AndroidSetup.setup(platform.win, PlatformEditor.getWin(platform.editor).getOrDie('no')));
 
     PlatformEditor.getActiveApi(platform.editor).each(function (editorApi) {
       Thor.clobberStyles(platform.container, editorApi.body());
-      androidEvents.set(
-        AndroidEvents.initEvents(editorApi, platform.toolstrip, platform.alloy)
-      );
+      androidEvents.set(AndroidEvents.initEvents(editorApi, platform.toolstrip, platform.alloy));
     });
   };
 

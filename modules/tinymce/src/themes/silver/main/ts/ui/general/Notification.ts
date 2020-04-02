@@ -5,17 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent,
-  AlloySpec,
-  Behaviour,
-  Button,
-  GuiFactory,
-  Memento,
-  Replacing,
-  Sketcher,
-  UiSketcher
-} from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, Behaviour, Button, GuiFactory, Memento, Replacing, Sketcher, UiSketcher } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Option } from '@ephox/katamari';
 import { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
@@ -50,9 +40,7 @@ export interface NotificationSketchDetail extends Sketcher.SingleSketchDetail {
   translationProvider: (text: Untranslated) => TranslatedString;
 }
 
-export interface NotificationSketcher
-  extends Sketcher.SingleSketch<NotificationSketchSpec>,
-    NotificationSketchApis {}
+export interface NotificationSketcher extends Sketcher.SingleSketch<NotificationSketchSpec>, NotificationSketchApis {}
 
 const notificationIconMap = {
   success: 'checkmark',
@@ -63,10 +51,7 @@ const notificationIconMap = {
   info: 'info'
 };
 
-const factory: UiSketcher.SingleSketchFactory<
-  NotificationSketchDetail,
-  NotificationSketchSpec
-> = (detail) => {
+const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, NotificationSketchSpec> = (detail) => {
   // For using the alert banner as a standalone banner
   const memBannerText = Memento.record({
     dom: {
@@ -97,9 +82,7 @@ const factory: UiSketcher.SingleSketchFactory<
   const memBannerProgress = Memento.record({
     dom: {
       tag: 'div',
-      classes: detail.progress
-        ? ['tox-progress-bar', 'tox-progress-indicator']
-        : ['tox-progress-bar']
+      classes: detail.progress ? ['tox-progress-bar', 'tox-progress-indicator'] : ['tox-progress-bar']
     },
     components: [
       {
@@ -114,10 +97,7 @@ const factory: UiSketcher.SingleSketchFactory<
     behaviours: Behaviour.derive([Replacing.config({})])
   });
 
-  const updateProgress: NotificationSketchApis['updateProgress'] = (
-    comp,
-    percent
-  ) => {
+  const updateProgress: NotificationSketchApis['updateProgress'] = (comp, percent) => {
     if (comp.getSystem().isConnected()) {
       memBannerProgress.getOpt(comp).each((progress) => {
         Replacing.set(progress, [
@@ -149,9 +129,7 @@ const factory: UiSketcher.SingleSketchFactory<
   const iconChoices = Arr.flatten([
     detail.icon.toArray(),
     detail.level.toArray(),
-    detail.level
-      .bind((level) => Option.from(notificationIconMap[level]))
-      .toArray()
+    detail.level.bind((level) => Option.from(notificationIconMap[level])).toArray()
   ]);
 
   return {
@@ -162,11 +140,7 @@ const factory: UiSketcher.SingleSketchFactory<
         role: 'alert'
       },
       classes: detail.level
-        .map((level) => [
-          'tox-notification',
-          'tox-notification--in',
-          `tox-notification--${level}`
-        ])
+        .map((level) => ['tox-notification', 'tox-notification--in', `tox-notification--${level}`])
         .getOr(['tox-notification', 'tox-notification--in'])
     },
     components: [
@@ -194,12 +168,7 @@ const factory: UiSketcher.SingleSketchFactory<
               Button.sketch({
                 dom: {
                   tag: 'button',
-                  classes: [
-                    'tox-notification__dismiss',
-                    'tox-button',
-                    'tox-button--naked',
-                    'tox-button--icon'
-                  ]
+                  classes: ['tox-notification__dismiss', 'tox-button', 'tox-button--naked', 'tox-button--icon']
                 },
                 components: [
                   {
@@ -237,18 +206,10 @@ export const Notification: NotificationSketcher = Sketcher.single({
     FieldSchema.defaultedBoolean('closeButton', true)
   ],
   apis: {
-    updateProgress: (
-      apis: NotificationSketchApis,
-      comp: AlloyComponent,
-      percent: number
-    ) => {
+    updateProgress: (apis: NotificationSketchApis, comp: AlloyComponent, percent: number) => {
       apis.updateProgress(comp, percent);
     },
-    updateText: (
-      apis: NotificationSketchApis,
-      comp: AlloyComponent,
-      text: string
-    ) => {
+    updateText: (apis: NotificationSketchApis, comp: AlloyComponent, text: string) => {
       apis.updateText(comp, text);
     }
   }

@@ -1,10 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  GeneralSteps,
-  Logger,
-  Step
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, GeneralSteps, Logger, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 
@@ -46,29 +40,14 @@ UnitTest.asynctest('InputTest', (success, failure) => {
         );
       });
 
-      const sCheckInputSelection = (
-        label: string,
-        expected: { start: number; end: number }
-      ) =>
+      const sCheckInputSelection = (label: string, expected: { start: number; end: number }) =>
         Step.sync(() => {
-          Assertions.assertEq(
-            label + '\nChecking selectionStart',
-            expected.start,
-            component.element().dom().selectionStart
-          );
-          Assertions.assertEq(
-            label + '\nChecking selectionEnd',
-            expected.end,
-            component.element().dom().selectionEnd
-          );
+          Assertions.assertEq(label + '\nChecking selectionStart', expected.start, component.element().dom().selectionStart);
+          Assertions.assertEq(label + '\nChecking selectionEnd', expected.end, component.element().dom().selectionEnd);
         });
 
       const defaultCursor =
-        platform.browser.isChrome() ||
-        platform.browser.isSafari() ||
-        platform.browser.isFirefox()
-          ? 'Initial Value'.length
-          : 0;
+        platform.browser.isChrome() || platform.browser.isSafari() || platform.browser.isFirefox() ? 'Initial Value'.length : 0;
 
       const testFocus = Logger.t(
         'Testing input.focus selects text inside',

@@ -3,11 +3,8 @@ import { Option } from '@ephox/katamari';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
-export interface ComposingBehaviour
-  extends Behaviour.AlloyBehaviour<ComposingConfigSpec, ComposingConfig> {
-  config: (
-    config: ComposingConfigSpec
-  ) => Behaviour.NamedConfiguredBehaviour<ComposingConfigSpec, ComposingConfig>;
+export interface ComposingBehaviour extends Behaviour.AlloyBehaviour<ComposingConfigSpec, ComposingConfig> {
+  config: (config: ComposingConfigSpec) => Behaviour.NamedConfiguredBehaviour<ComposingConfigSpec, ComposingConfig>;
   getCurrent: (sandbox: AlloyComponent) => Option<AlloyComponent>;
 }
 

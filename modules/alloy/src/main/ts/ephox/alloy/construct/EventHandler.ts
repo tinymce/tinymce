@@ -3,19 +3,9 @@ import { Arr, Fun, Obj, Type } from '@ephox/katamari';
 import { AlloyEventHandler, EventRunHandler } from '../api/events/AlloyEvents';
 import { EventFormat, SimulatedEvent } from '../events/SimulatedEvent';
 
-const nu = <T extends EventFormat>(
-  parts: Partial<AlloyEventHandler<T>>
-): AlloyEventHandler<T> => {
-  if (
-    !Obj.hasNonNullableKey(parts, 'can') &&
-    !Obj.hasNonNullableKey(parts, 'abort') &&
-    !Obj.hasNonNullableKey(parts, 'run')
-  ) {
-    throw new Error(
-      'EventHandler defined by: ' +
-        JSON.stringify(parts, null, 2) +
-        ' does not have can, abort, or run!'
-    );
+const nu = <T extends EventFormat>(parts: Partial<AlloyEventHandler<T>>): AlloyEventHandler<T> => {
+  if (!Obj.hasNonNullableKey(parts, 'can') && !Obj.hasNonNullableKey(parts, 'abort') && !Obj.hasNonNullableKey(parts, 'run')) {
+    throw new Error('EventHandler defined by: ' + JSON.stringify(parts, null, 2) + ' does not have can, abort, or run!');
   }
   return ValueSchema.asRawOrDie(
     'Extracting event.handler',
@@ -28,29 +18,13 @@ const nu = <T extends EventFormat>(
   );
 };
 
-const all = <T extends EventFormat>(
-  handlers: Array<AlloyEventHandler<T>>,
-  f: (handler: AlloyEventHandler<T>) => any
-) => (...args: any[]) =>
-  Arr.foldl(
-    handlers,
-    (acc, handler) => acc && f(handler).apply(undefined, args),
-    true
-  );
+const all = <T extends EventFormat>(handlers: Array<AlloyEventHandler<T>>, f: (handler: AlloyEventHandler<T>) => any) => (...args: any[]) =>
+  Arr.foldl(handlers, (acc, handler) => acc && f(handler).apply(undefined, args), true);
 
-const any = <T extends EventFormat>(
-  handlers: Array<AlloyEventHandler<T>>,
-  f: (handler: AlloyEventHandler<T>) => any
-) => (...args: any[]) =>
-  Arr.foldl(
-    handlers,
-    (acc, handler) => acc || f(handler).apply(undefined, args),
-    false
-  );
+const any = <T extends EventFormat>(handlers: Array<AlloyEventHandler<T>>, f: (handler: AlloyEventHandler<T>) => any) => (...args: any[]) =>
+  Arr.foldl(handlers, (acc, handler) => acc || f(handler).apply(undefined, args), false);
 
-const read = <T extends EventFormat>(
-  handler: (() => SimulatedEvent<T>) | AlloyEventHandler<T>
-) =>
+const read = <T extends EventFormat>(handler: (() => SimulatedEvent<T>) | AlloyEventHandler<T>) =>
   Type.isFunction(handler)
     ? {
         can: Fun.constant(true),

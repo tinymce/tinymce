@@ -1,10 +1,6 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Option, Result } from '@ephox/katamari';
-import {
-  DialogNormalButton,
-  DialogNormalButtonApi,
-  dialogButtonFields
-} from './Dialog';
+import { DialogNormalButton, DialogNormalButtonApi, dialogButtonFields } from './Dialog';
 
 export interface UrlDialogInstanceApi {
   block: (msg: string) => void;
@@ -24,16 +20,10 @@ export interface UrlDialogMessage {
   [key: string]: any;
 }
 
-export type UrlDialogActionHandler = (
-  api: UrlDialogInstanceApi,
-  actions: UrlDialogActionDetails
-) => void;
+export type UrlDialogActionHandler = (api: UrlDialogInstanceApi, actions: UrlDialogActionDetails) => void;
 export type UrlDialogCloseHandler = () => void;
 export type UrlDialogCancelHandler = (api: UrlDialogInstanceApi) => void;
-export type UrlDialogMessageHandler = (
-  api: UrlDialogInstanceApi,
-  message: UrlDialogMessage
-) => void;
+export type UrlDialogMessageHandler = (api: UrlDialogInstanceApi, message: UrlDialogMessage) => void;
 
 // Allow the same button structure as dialogs, but remove the ability to have submit buttons
 export interface UrlDialogButtonApi extends DialogNormalButtonApi {
@@ -78,10 +68,7 @@ export interface UrlDialog {
   onMessage: UrlDialogMessageHandler;
 }
 
-export const urlDialogButtonSchema = ValueSchema.objOf([
-  FieldSchema.strictStringEnum('type', ['cancel', 'custom']),
-  ...dialogButtonFields
-]);
+export const urlDialogButtonSchema = ValueSchema.objOf([FieldSchema.strictStringEnum('type', ['cancel', 'custom']), ...dialogButtonFields]);
 
 export const urlDialogSchema = ValueSchema.objOf([
   FieldSchema.strictString('title'),
@@ -95,7 +82,5 @@ export const urlDialogSchema = ValueSchema.objOf([
   FieldSchema.defaultedFunction('onMessage', Fun.noop)
 ]);
 
-export const createUrlDialog = (
-  spec: UrlDialogApi
-): Result<UrlDialog, ValueSchema.SchemaError<any>> =>
+export const createUrlDialog = (spec: UrlDialogApi): Result<UrlDialog, ValueSchema.SchemaError<any>> =>
   ValueSchema.asRaw('dialog', urlDialogSchema, spec);

@@ -27,10 +27,7 @@ const firstWord = function (text: string) {
  * Returns the index position of a break when going left (i.e. last word break)
  */
 const leftBreak = function (text: string) {
-  const indices = Search.findall(
-    text,
-    Pattern.custom(Pattern.wordbreak(), zero, zero, Option.none())
-  );
+  const indices = Search.findall(text, Pattern.custom(Pattern.wordbreak(), zero, zero, Option.none()));
   return Option.from(indices[indices.length - 1]).map(function (match) {
     return match.start();
   });

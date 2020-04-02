@@ -13,22 +13,14 @@ export interface WordDecision<E> {
   readonly abort: boolean;
 }
 
-const make = <E>(
-  item: E,
-  start: number,
-  finish: number,
-  text: string
-): WordDecisionItem<E> => ({
+const make = <E>(item: E, start: number, finish: number, text: string): WordDecisionItem<E> => ({
   item,
   start,
   finish,
   text
 });
 
-const decision = <E>(
-  items: WordDecisionItem<E>[],
-  abort: boolean
-): WordDecision<E> => ({
+const decision = <E>(items: WordDecisionItem<E>[], abort: boolean): WordDecision<E> => ({
   items,
   abort
 });
@@ -39,52 +31,28 @@ const detail = function <E, D>(universe: Universe<E, D>, item: E) {
 };
 
 const fromItem = function <E, D>(universe: Universe<E, D>, item: E) {
-  return universe.property().isText(item)
-    ? detail(universe, item)
-    : make(item, 0, 0, '');
+  return universe.property().isText(item) ? detail(universe, item) : make(item, 0, 0, '');
 };
 
-const onEdge = function <E, D>(
-  _universe: Universe<E, D>,
-  _item: E,
-  _slicer: (text: string) => Option<[number, number]>
-) {
+const onEdge = function <E, D>(_universe: Universe<E, D>, _item: E, _slicer: (text: string) => Option<[number, number]>) {
   return decision<E>([], true);
 };
 
-const onOther = function <E, D>(
-  _universe: Universe<E, D>,
-  _item: E,
-  _slicer: (text: string) => Option<[number, number]>
-) {
+const onOther = function <E, D>(_universe: Universe<E, D>, _item: E, _slicer: (text: string) => Option<[number, number]>) {
   return decision<E>([], false);
 };
 
 // Returns: a 'decision' Struct with the items slot containing an empty array if None
 //   or  a zero-width [start, end] range was returned by slicer, or 1-element array of the
 //   [start, end] substring otherwise.
-const onText = function <E, D>(
-  universe: Universe<E, D>,
-  item: E,
-  slicer: (text: string) => Option<[number, number]>
-) {
+const onText = function <E, D>(universe: Universe<E, D>, item: E, slicer: (text: string) => Option<[number, number]>) {
   const text = universe.property().getText(item);
   return slicer(text).fold(
     function () {
       return decision([make(item, 0, text.length, text)], false);
     },
     function (splits) {
-      const items =
-        splits[0] === splits[1]
-          ? []
-          : [
-              make(
-                item,
-                splits[0],
-                splits[1],
-                text.substring(splits[0], splits[1])
-              )
-            ];
+      const items = splits[0] === splits[1] ? [] : [make(item, splits[0], splits[1], text.substring(splits[0], splits[1]))];
       return decision(items, true);
     }
   );

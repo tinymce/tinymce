@@ -8,27 +8,15 @@ import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('WalkerTest', function () {
   const universe = TestUniverse(
-    Gene('a', 'node', [
-      Gene('b', 'node', []),
-      Gene('c', 'node', [Gene('d', 'node', []), Gene('e', 'node', [])])
-    ])
+    Gene('a', 'node', [Gene('b', 'node', []), Gene('c', 'node', [Gene('d', 'node', []), Gene('e', 'node', [])])])
   );
 
-  const checkNone = function (
-    id: string,
-    traverse: Transition,
-    direction: Direction
-  ) {
+  const checkNone = function (id: string, traverse: Transition, direction: Direction) {
     const item = Finder.get(universe, id);
     KAssert.eqNone('eq', traverse(universe, item, direction));
   };
 
-  const check = function (
-    expected: string,
-    id: string,
-    traverse: Transition,
-    direction: Direction
-  ) {
+  const check = function (expected: string, id: string, traverse: Transition, direction: Direction) {
     const item = Finder.get(universe, id);
     const actual = traverse(universe, item, direction).map((x) => x.item().id);
     KAssert.eqSome('eq', expected, actual);

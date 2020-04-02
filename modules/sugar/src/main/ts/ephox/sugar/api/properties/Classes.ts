@@ -48,9 +48,7 @@ const getNative = function (element: Element<DomElement>) {
 };
 
 const get = function (element: Element<DomElement>) {
-  return ClassList.supports(element)
-    ? getNative(element)
-    : ClassList.get(element);
+  return ClassList.supports(element) ? getNative(element) : ClassList.get(element);
 };
 
 export { add, remove, toggle, hasAll, hasAny, get };

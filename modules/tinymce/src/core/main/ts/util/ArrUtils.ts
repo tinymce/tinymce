@@ -135,15 +135,4 @@ const last = function (collection) {
   return collection[collection.length - 1];
 };
 
-export {
-  isArray,
-  toArray,
-  each,
-  map,
-  filter,
-  indexOf,
-  reduce,
-  findIndex,
-  find,
-  last
-};
+export { isArray, toArray, each, map, filter, indexOf, reduce, findIndex, find, last };

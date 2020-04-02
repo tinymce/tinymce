@@ -3,15 +3,8 @@ import { Option } from '@ephox/katamari';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import {
-  RawDomSchema,
-  SimpleOrSketchSpec,
-  SketchSpec
-} from '../../api/component/SpecTypes';
-import {
-  CompositeSketchDetail,
-  CompositeSketchSpec
-} from '../../api/ui/Sketcher';
+import { RawDomSchema, SimpleOrSketchSpec, SketchSpec } from '../../api/component/SpecTypes';
+import { CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { ConfiguredPart } from '../../parts/AlloyParts';
 
 export interface FormDetail extends CompositeSketchDetail {

@@ -40,23 +40,14 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
   /* The test editor puts execCommand and insertContent calls into the store */
   const tEditor = TestEditor();
 
-  const memAlpha = Memento.record(
-    Buttons.forToolbarCommand(tEditor.editor(), 'alpha')
-  );
+  const memAlpha = Memento.record(Buttons.forToolbarCommand(tEditor.editor(), 'alpha'));
 
-  const memBeta = Memento.record(
-    Buttons.forToolbarStateCommand(tEditor.editor(), 'beta')
-  );
+  const memBeta = Memento.record(Buttons.forToolbarStateCommand(tEditor.editor(), 'beta'));
 
   const memGamma = Memento.record(
-    Buttons.forToolbarStateAction(
-      tEditor.editor(),
-      'gamma-class',
-      'gamma-query',
-      function () {
-        tEditor.adder('gamma-action')();
-      }
-    )
+    Buttons.forToolbarStateAction(tEditor.editor(), 'gamma-class', 'gamma-query', function () {
+      tEditor.adder('gamma-action')();
+    })
   );
 
   const sClickAlpha = TestUi.sClickComponent(realm, memAlpha);
@@ -130,12 +121,7 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
     tEditor.sClear,
     sCheckComponent('Initially, gamma should be unselected', false)(memGamma),
     // Fire a format change
-    TestUi.sBroadcastState(
-      realm,
-      [TinyChannels.formatChanged],
-      'gamma-query',
-      true
-    ),
+    TestUi.sBroadcastState(realm, [TinyChannels.formatChanged], 'gamma-query', true),
     sCheckComponent('After broadcast, gamma should be selected', true)(memGamma)
   ]);
 

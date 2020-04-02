@@ -83,9 +83,7 @@ export default function (id, settings) {
 
     // Grab cursor from handle so we can place it on overlay
     if (window.getComputedStyle) {
-      cursor = window
-        .getComputedStyle(handleElm, null)
-        .getPropertyValue('cursor');
+      cursor = window.getComputedStyle(handleElm, null).getPropertyValue('cursor');
     } else {
       cursor = handleElm.runtimeStyle.cursor;
     }
@@ -125,9 +123,7 @@ export default function (id, settings) {
   stop = function (e) {
     updateWithTouchData(e);
 
-    DomQuery(doc)
-      .off('mousemove touchmove', drag)
-      .off('mouseup touchend', stop);
+    DomQuery(doc).off('mousemove touchmove', drag).off('mouseup touchend', stop);
 
     $eventOverlay.remove();
 

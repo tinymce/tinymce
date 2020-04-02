@@ -18,18 +18,10 @@ export interface SimpleValue<A> {
   svalue: A;
 }
 
-const fold = <B, E, A>(
-  res: SimpleResult<E, A>,
-  onError: (err: E) => B,
-  onValue: (val: A) => B
-): B =>
-  res.stype === SimpleResultType.Error
-    ? onError(res.serror)
-    : onValue(res.svalue);
+const fold = <B, E, A>(res: SimpleResult<E, A>, onError: (err: E) => B, onValue: (val: A) => B): B =>
+  res.stype === SimpleResultType.Error ? onError(res.serror) : onValue(res.svalue);
 
-const partition = <E, A>(
-  results: Array<SimpleResult<E[], any>>
-): { values: any[]; errors: E[][] } => {
+const partition = <E, A>(results: Array<SimpleResult<E[], any>>): { values: any[]; errors: E[][] } => {
   const values = [];
   const errors = [];
   Arr.each(results, (obj) => {
@@ -42,10 +34,7 @@ const partition = <E, A>(
   return { values, errors };
 };
 
-const mapError = <F, E, A>(
-  res: SimpleResult<E, A>,
-  f: (e: E) => F
-): SimpleResult<F, A> => {
+const mapError = <F, E, A>(res: SimpleResult<E, A>, f: (e: E) => F): SimpleResult<F, A> => {
   if (res.stype === SimpleResultType.Error) {
     return { stype: SimpleResultType.Error, serror: f(res.serror) };
   } else {
@@ -53,10 +42,7 @@ const mapError = <F, E, A>(
   }
 };
 
-const map = <B, E, A>(
-  res: SimpleResult<E, A>,
-  f: (a: A) => B
-): SimpleResult<E, B> => {
+const map = <B, E, A>(res: SimpleResult<E, A>, f: (a: A) => B): SimpleResult<E, B> => {
   if (res.stype === SimpleResultType.Value) {
     return { stype: SimpleResultType.Value, svalue: f(res.svalue) };
   } else {
@@ -64,10 +50,7 @@ const map = <B, E, A>(
   }
 };
 
-const bind = <B, E, A>(
-  res: SimpleResult<E, A>,
-  f: (a: A) => SimpleResult<E, B>
-): SimpleResult<E, B> => {
+const bind = <B, E, A>(res: SimpleResult<E, A>, f: (a: A) => SimpleResult<E, B>): SimpleResult<E, B> => {
   if (res.stype === SimpleResultType.Value) {
     return f(res.svalue);
   } else {
@@ -75,10 +58,7 @@ const bind = <B, E, A>(
   }
 };
 
-const bindError = <F, E, A>(
-  res: SimpleResult<E, A>,
-  f: (e: E) => SimpleResult<F, A>
-): SimpleResult<F, A> => {
+const bindError = <F, E, A>(res: SimpleResult<E, A>, f: (e: E) => SimpleResult<F, A>): SimpleResult<F, A> => {
   if (res.stype === SimpleResultType.Error) {
     return f(res.serror);
   } else {
@@ -96,11 +76,9 @@ const serror = <E, A>(e: E): SimpleResult<E, A> => ({
   serror: e
 });
 
-const toResult = <E, A>(res: SimpleResult<E, A>): Result<A, E> =>
-  fold(res, Result.error, Result.value);
+const toResult = <E, A>(res: SimpleResult<E, A>): Result<A, E> => fold(res, Result.error, Result.value);
 
-const fromResult = <E, A>(res: Result<A, E>): SimpleResult<E, A> =>
-  res.fold<SimpleResult<E, A>>(serror, svalue);
+const fromResult = <E, A>(res: Result<A, E>): SimpleResult<E, A> => res.fold<SimpleResult<E, A>>(serror, svalue);
 
 export const SimpleResult = {
   fromResult,

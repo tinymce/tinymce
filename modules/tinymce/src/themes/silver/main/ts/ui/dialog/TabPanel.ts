@@ -40,10 +40,7 @@ export type TabData = Record<string, any>;
 
 type TabPanelSpec = Omit<Types.Dialog.TabPanel, 'type'>;
 
-export const renderTabPanel = (
-  spec: TabPanelSpec,
-  backstage: UiFactoryBackstage
-): SketchSpec => {
+export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage): SketchSpec => {
   const storedValue = Cell<TabData>({});
 
   const updateDataWithForm = (form: AlloyComponent): void => {
@@ -61,60 +58,55 @@ export const renderTabPanel = (
 
   const oldTab = Cell(null);
 
-  const allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>> = Arr.map(
-    spec.tabs,
-    function (tab) {
-      return {
-        value: tab.name,
-        dom: {
-          tag: 'div',
-          classes: ['tox-dialog__body-nav-item'],
-          innerHtml: backstage.shared.providers.translate(tab.title)
-        },
-        view() {
-          return [
-            // Dupe with SilverDialog
-            AlloyForm.sketch((parts) => ({
-              dom: {
-                tag: 'div',
-                classes: ['tox-form']
-              },
-              components: Arr.map(tab.items, (item) =>
-                interpretInForm(parts, item, backstage)
-              ),
-              formBehaviours: Behaviour.derive([
-                Keying.config({
-                  mode: 'acyclic',
-                  useTabstopAt: Fun.not(NavigableObject.isPseudoStop)
-                }),
+  const allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>> = Arr.map(spec.tabs, function (tab) {
+    return {
+      value: tab.name,
+      dom: {
+        tag: 'div',
+        classes: ['tox-dialog__body-nav-item'],
+        innerHtml: backstage.shared.providers.translate(tab.title)
+      },
+      view() {
+        return [
+          // Dupe with SilverDialog
+          AlloyForm.sketch((parts) => ({
+            dom: {
+              tag: 'div',
+              classes: ['tox-form']
+            },
+            components: Arr.map(tab.items, (item) => interpretInForm(parts, item, backstage)),
+            formBehaviours: Behaviour.derive([
+              Keying.config({
+                mode: 'acyclic',
+                useTabstopAt: Fun.not(NavigableObject.isPseudoStop)
+              }),
 
-                AddEventsBehaviour.config('TabView.form.events', [
-                  AlloyEvents.runOnAttached(setDataOnForm),
-                  AlloyEvents.runOnDetached(updateDataWithForm)
-                ]),
-                Receiving.config({
-                  channels: Objects.wrapAll([
-                    {
-                      key: SendDataToSectionChannel,
-                      value: {
-                        onReceive: updateDataWithForm
-                      }
-                    },
-                    {
-                      key: SendDataToViewChannel,
-                      value: {
-                        onReceive: setDataOnForm
-                      }
+              AddEventsBehaviour.config('TabView.form.events', [
+                AlloyEvents.runOnAttached(setDataOnForm),
+                AlloyEvents.runOnDetached(updateDataWithForm)
+              ]),
+              Receiving.config({
+                channels: Objects.wrapAll([
+                  {
+                    key: SendDataToSectionChannel,
+                    value: {
+                      onReceive: updateDataWithForm
                     }
-                  ])
-                })
-              ])
-            }))
-          ];
-        }
-      };
-    }
-  );
+                  },
+                  {
+                    key: SendDataToViewChannel,
+                    value: {
+                      onReceive: setDataOnForm
+                    }
+                  }
+                ])
+              })
+            ])
+          }))
+        ];
+      }
+    };
+  });
 
   // Assign fixed height or variable height to the tabs
   const tabMode = setMode(allTabs).smartTabHeight;

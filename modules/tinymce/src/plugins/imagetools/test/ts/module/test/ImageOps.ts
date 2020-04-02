@@ -1,12 +1,4 @@
-import {
-  Chain,
-  Guard,
-  Mouse,
-  Pipeline,
-  Step,
-  UiFinder,
-  Logger
-} from '@ephox/agar';
+import { Chain, Guard, Mouse, Pipeline, Step, UiFinder, Logger } from '@ephox/agar';
 import { Fun, Result } from '@ephox/katamari';
 import { TinyDom, TinyUi } from '@ephox/mcagar';
 import { Attr } from '@ephox/sugar';
@@ -17,28 +9,18 @@ export default function (editor) {
   const cHasState = function (predicate) {
     return Chain.control(
       Chain.binder(function (element) {
-        return predicate(element)
-          ? Result.value(element)
-          : Result.error(`Predicate didn't match.`);
+        return predicate(element) ? Result.value(element) : Result.error(`Predicate didn't match.`);
       }),
       Guard.addLogging('Assert element has state')
     );
   };
 
   const cWaitForState = function (predicate) {
-    return Chain.control(
-      cHasState(predicate),
-      Guard.tryUntil('Predicate has failed.', 10, 3000)
-    );
+    return Chain.control(cHasState(predicate), Guard.tryUntil('Predicate has failed.', 10, 3000));
   };
 
   const cDragDrop = Chain.control(
-    Chain.fromChains([
-      UiFinder.cFindIn('.tox-slider__handle'),
-      Mouse.cMouseDown,
-      Mouse.cMouseMoveTo(5, 0),
-      Mouse.cMouseUpTo(5, 0)
-    ]),
+    Chain.fromChains([UiFinder.cFindIn('.tox-slider__handle'), Mouse.cMouseDown, Mouse.cMouseMoveTo(5, 0), Mouse.cMouseUpTo(5, 0)]),
     Guard.addLogging('Drag and drop')
   );
 
@@ -69,44 +51,32 @@ export default function (editor) {
     return Chain.control(
       Chain.fromChains([
         cClickToolbarButton('Edit image'),
-        Chain.fromParent(
-          ui.cWaitForPopup('wait for Edit Image dialog', '[role="dialog"]'),
-          [
-            ui.cWaitForUi('wait for canvas', '.tox-image-tools__image > img'),
-            Chain.wait(200),
-            cClickToolbarButton(label),
-            cInteractWithUi,
-            Chain.wait(200),
-            cClickButton('Apply'),
-            cClickButton('Save'),
-            cWaitForDialogClose()
-          ]
-        )
+        Chain.fromParent(ui.cWaitForPopup('wait for Edit Image dialog', '[role="dialog"]'), [
+          ui.cWaitForUi('wait for canvas', '.tox-image-tools__image > img'),
+          Chain.wait(200),
+          cClickToolbarButton(label),
+          cInteractWithUi,
+          Chain.wait(200),
+          cClickButton('Apply'),
+          cClickButton('Save'),
+          cWaitForDialogClose()
+        ])
       ]),
       Guard.addLogging(`Execute ${label} command from dialog`)
     );
   };
 
   const cWaitForUi = function (label, selector) {
-    return Chain.control(
-      UiFinder.cWaitForState(label, selector, Fun.constant(true)),
-      Guard.addLogging('Wait for UI')
-    );
+    return Chain.control(UiFinder.cWaitForState(label, selector, Fun.constant(true)), Guard.addLogging('Wait for UI'));
   };
 
   const cWaitForDialogClose = () =>
-    Chain.control(
-      UiFinder.cNotExists('[role="dialog"]'),
-      Guard.tryUntil('Waiting for dialog to go away', 10, 3000)
-    );
+    Chain.control(UiFinder.cNotExists('[role="dialog"]'), Guard.tryUntil('Waiting for dialog to go away', 10, 3000));
 
   const cClickButton = function (text) {
     return Chain.control(
       Chain.fromChains([
-        cWaitForUi(
-          'wait for ' + text + ' button',
-          'button:contains(' + text + ')'
-        ),
+        cWaitForUi('wait for ' + text + ' button', 'button:contains(' + text + ')'),
         cWaitForState(function (el) {
           return Attr.get(el, 'disabled') === undefined;
         }),
@@ -152,13 +122,8 @@ export default function (editor) {
           [
             Chain.asStep(imgEl, [
               Mouse.cClick,
-              ui.cWaitForPopup(
-                'wait for Imagetools toolbar',
-                '.tox-pop__dialog div'
-              ),
-              execFromToolbar
-                ? cClickToolbarButton(label)
-                : cExecCommandFromDialog(label)
+              ui.cWaitForPopup('wait for Imagetools toolbar', '.tox-pop__dialog div'),
+              execFromToolbar ? cClickToolbarButton(label) : cExecCommandFromDialog(label)
             ]),
             sWaitForUrlChange(imgEl, origUrl)
           ],

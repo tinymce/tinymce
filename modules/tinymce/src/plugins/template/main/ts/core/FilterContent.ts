@@ -18,14 +18,7 @@ const setup = function (editor) {
     Tools.each(dom.select('div', o.node), function (e) {
       if (dom.hasClass(e, 'mceTmpl')) {
         Tools.each(dom.select('*', e), function (e) {
-          if (
-            dom.hasClass(
-              e,
-              editor
-                .getParam('template_mdate_classes', 'mdate')
-                .replace(/\s+/g, '|')
-            )
-          ) {
+          if (dom.hasClass(e, editor.getParam('template_mdate_classes', 'mdate').replace(/\s+/g, '|'))) {
             e.innerHTML = DateTimeHelper.getDateTime(editor, dateFormat);
           }
         });

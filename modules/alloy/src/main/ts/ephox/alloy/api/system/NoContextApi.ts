@@ -9,11 +9,7 @@ const NoContextApi = (getComp?: () => AlloyComponent): AlloySystemApi => {
     throw new Error(
       'The component must be in a context to send: ' +
         event +
-        (getComp
-          ? '\n' +
-            AlloyLogger.element(getComp().element()) +
-            ' is not in context.'
-          : '')
+        (getComp ? '\n' + AlloyLogger.element(getComp().element()) + ' is not in context.' : '')
     );
   };
 

@@ -34,19 +34,11 @@ UnitTest.asynctest('SpecialKeyingTest', (success, failure) => {
       ),
     (doc, body, gui, _component, store) => {
       const press = (expected: string, key: number, modifiers: {}) =>
-        GeneralSteps.sequence([
-          store.sClear,
-          Keyboard.sKeydown(doc, key, modifiers),
-          store.sAssertEq('Pressing ' + expected, [expected])
-        ]);
+        GeneralSteps.sequence([store.sClear, Keyboard.sKeydown(doc, key, modifiers), store.sAssertEq('Pressing ' + expected, [expected])]);
 
       return [
         GuiSetup.mSetupKeyLogger(body),
-        FocusTools.sSetFocus(
-          'Start on component',
-          gui.element(),
-          '.special-keying'
-        ),
+        FocusTools.sSetFocus('Start on component', gui.element(), '.special-keying'),
         press('space', Keys.space(), {}),
         press('enter', Keys.enter(), {}),
         press('shift+enter', Keys.enter(), { shift: true }),

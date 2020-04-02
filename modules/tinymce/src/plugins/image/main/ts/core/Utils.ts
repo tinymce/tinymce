@@ -5,13 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  Blob,
-  document,
-  Element,
-  FileReader,
-  HTMLElement
-} from '@ephox/dom-globals';
+import { Blob, document, Element, FileReader, HTMLElement } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -25,8 +19,7 @@ export interface ImageDimensions {
 }
 
 // TODO: Figure out if these would ever be something other than numbers. This was added in: #TINY-1350
-const parseIntAndGetMax = (val1: any, val2: any) =>
-  Math.max(parseInt(val1, 10), parseInt(val2, 10));
+const parseIntAndGetMax = (val1: any, val2: any) => Math.max(parseInt(val1, 10), parseInt(val2, 10));
 
 const getImageSize = (url: string): Promise<ImageDimensions> =>
   new Promise((callback) => {
@@ -112,10 +105,7 @@ const mergeMargins = (css: StyleMap) => {
 };
 
 // TODO: Input on this callback should really be validated
-const createImageList = (
-  editor: Editor,
-  callback: (imageList: any) => void
-) => {
+const createImageList = (editor: Editor, callback: (imageList: any) => void) => {
   const imageList = Settings.getImageList(editor);
 
   if (typeof imageList === 'string') {
@@ -132,11 +122,7 @@ const createImageList = (
   }
 };
 
-const waitLoadImage = (
-  editor: Editor,
-  data: ImageData,
-  imgElm: HTMLElement
-) => {
+const waitLoadImage = (editor: Editor, data: ImageData, imgElm: HTMLElement) => {
   const selectImage = () => {
     imgElm.onload = imgElm.onerror = null;
 
@@ -173,17 +159,6 @@ const blobToDataUri = (blob: Blob) =>
   });
 
 const isPlaceholderImage = (imgElm: Element): boolean =>
-  imgElm.nodeName === 'IMG' &&
-  (imgElm.hasAttribute('data-mce-object') ||
-    imgElm.hasAttribute('data-mce-placeholder'));
+  imgElm.nodeName === 'IMG' && (imgElm.hasAttribute('data-mce-object') || imgElm.hasAttribute('data-mce-placeholder'));
 
-export {
-  getImageSize,
-  removePixelSuffix,
-  addPixelSuffix,
-  mergeMargins,
-  createImageList,
-  waitLoadImage,
-  blobToDataUri,
-  isPlaceholderImage
-};
+export { getImageSize, removePixelSuffix, addPixelSuffix, mergeMargins, createImageList, waitLoadImage, blobToDataUri, isPlaceholderImage };

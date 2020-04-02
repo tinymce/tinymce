@@ -7,20 +7,13 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { TypeaheadModelDetail } from '../types/TypeaheadTypes';
 
 // When showing a value in an input field, which part of the item do we use?
-const setValueFromItem = (
-  model: TypeaheadModelDetail,
-  input: AlloyComponent,
-  item: AlloyComponent
-) => {
+const setValueFromItem = (model: TypeaheadModelDetail, input: AlloyComponent, item: AlloyComponent) => {
   const itemData = Representing.getValue(item);
   Representing.setValue(input, itemData);
   setCursorAtEnd(input);
 };
 
-const setSelectionOn = (
-  input: AlloyComponent,
-  f: (node: HTMLInputElement, value: string) => void
-) => {
+const setSelectionOn = (input: AlloyComponent, f: (node: HTMLInputElement, value: string) => void) => {
   const el = input.element();
   const value = Value.get(el);
   const node = el.dom() as HTMLInputElement;
@@ -31,25 +24,14 @@ const setSelectionOn = (
 };
 
 const setCursorAtEnd = (input: AlloyComponent): void => {
-  setSelectionOn(input, (node, value) =>
-    node.setSelectionRange(value.length, value.length)
-  );
+  setSelectionOn(input, (node, value) => node.setSelectionRange(value.length, value.length));
 };
 
-const setSelectionToEnd = (
-  input: AlloyComponent,
-  startOffset: number
-): void => {
-  setSelectionOn(input, (node, value) =>
-    node.setSelectionRange(startOffset, value.length)
-  );
+const setSelectionToEnd = (input: AlloyComponent, startOffset: number): void => {
+  setSelectionOn(input, (node, value) => node.setSelectionRange(startOffset, value.length));
 };
 
-const attemptSelectOver = (
-  model: TypeaheadModelDetail,
-  input: AlloyComponent,
-  item: AlloyComponent
-): Option<() => void> => {
+const attemptSelectOver = (model: TypeaheadModelDetail, input: AlloyComponent, item: AlloyComponent): Option<() => void> => {
   if (!model.selectsOver) {
     return Option.none();
   } else {

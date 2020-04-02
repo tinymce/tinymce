@@ -4,12 +4,7 @@ import { Arr, Option, Options } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderChoiceItem } from '../item/build/ChoiceItem';
 import ItemResponse from '../item/ItemResponse';
-import {
-  createPartialMenuWithAlloyItems,
-  handleError,
-  menuHasIcons,
-  PartialMenuSpec
-} from './MenuUtils';
+import { createPartialMenuWithAlloyItems, handleError, menuHasIcons, PartialMenuSpec } from './MenuUtils';
 import { SingleMenuItemApi } from './SingleMenuTypes';
 
 export const createPartialChoiceMenu = (
@@ -24,22 +19,8 @@ export const createPartialChoiceMenu = (
 ): PartialMenuSpec => {
   const hasIcons = menuHasIcons(items);
   const presetItemTypes = presets !== 'color' ? 'normal' : 'color';
-  const alloyItems = createChoiceItems(
-    items,
-    onItemValueHandler,
-    columns,
-    presetItemTypes,
-    itemResponse,
-    select,
-    providersBackstage
-  );
-  return createPartialMenuWithAlloyItems(
-    value,
-    hasIcons,
-    alloyItems,
-    columns,
-    presets
-  );
+  const alloyItems = createChoiceItems(items, onItemValueHandler, columns, presetItemTypes, itemResponse, select, providersBackstage);
+  return createPartialMenuWithAlloyItems(value, hasIcons, alloyItems, columns, presets);
 };
 
 export const createChoiceItems = (
@@ -54,20 +35,10 @@ export const createChoiceItems = (
   Options.cat(
     Arr.map(items, (item) => {
       if (item.type === 'choiceitem') {
-        return BridgeMenu.createChoiceMenuItem(item).fold(
-          handleError,
-          (d: BridgeMenu.ChoiceMenuItem) =>
-            Option.some(
-              renderChoiceItem(
-                d,
-                columns === 1,
-                itemPresets,
-                onItemValueHandler,
-                select(item.value),
-                itemResponse,
-                providersBackstage
-              )
-            )
+        return BridgeMenu.createChoiceMenuItem(item).fold(handleError, (d: BridgeMenu.ChoiceMenuItem) =>
+          Option.some(
+            renderChoiceItem(d, columns === 1, itemPresets, onItemValueHandler, select(item.value), itemResponse, providersBackstage)
+          )
         );
       } else {
         return Option.none();

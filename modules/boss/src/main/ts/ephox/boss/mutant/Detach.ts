@@ -11,9 +11,7 @@ const detach = function (root: Gene, target: Gene) {
       });
 
       return index.map(function (ind) {
-        parent.children = parent.children
-          .slice(0, ind)
-          .concat(parent.children.slice(ind + 1));
+        parent.children = parent.children.slice(0, ind).concat(parent.children.slice(ind + 1));
         return item;
       });
     });

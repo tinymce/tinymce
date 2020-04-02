@@ -53,10 +53,7 @@ const Writer = function (settings?: WriterSettings): Writer {
   indent = settings.indent;
   indentBefore = makeMap(settings.indent_before || '');
   indentAfter = makeMap(settings.indent_after || '');
-  encode = Entities.getEncodeFunc(
-    settings.entity_encoding || 'raw',
-    settings.entities
-  );
+  encode = Entities.getEncodeFunc(settings.entity_encoding || 'raw', settings.entities);
   htmlOutput = settings.element_format === 'html';
 
   return {

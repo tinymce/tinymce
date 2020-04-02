@@ -13,15 +13,7 @@ const fractures = function (
   foffset: number,
   ceiling?: (e: Element) => Element
 ) {
-  return Clumps.fractures(
-    universe,
-    isRoot,
-    start,
-    soffset,
-    finish,
-    foffset,
-    ceiling
-  );
+  return Clumps.fractures(universe, isRoot, start, soffset, finish, foffset, ceiling);
 };
 
 const fracture = function (
@@ -32,15 +24,7 @@ const fracture = function (
   foffset: number,
   ceiling?: (e: Element) => Element
 ) {
-  return Clumps.fracture(
-    universe,
-    isRoot,
-    start,
-    soffset,
-    finish,
-    foffset,
-    ceiling
-  );
+  return Clumps.fracture(universe, isRoot, start, soffset, finish, foffset, ceiling);
 };
 
 export { fractures, fracture };

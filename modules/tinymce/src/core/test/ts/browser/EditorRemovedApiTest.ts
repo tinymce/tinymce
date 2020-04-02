@@ -3,10 +3,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.EditorApiTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.EditorApiTest', function (success, failure) {
   Theme();
 
   const sRemoveEditor = function (editor) {
@@ -24,11 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorApiTest', function (
   const sTryAccess = function (editor, name, expectedValue) {
     return Step.sync(function () {
       const result = editor[name]();
-      Assertions.assertEq(
-        'Should be expected value on a removed editor',
-        expectedValue,
-        result
-      );
+      Assertions.assertEq('Should be expected value on a removed editor', expectedValue, result);
     });
   };
 

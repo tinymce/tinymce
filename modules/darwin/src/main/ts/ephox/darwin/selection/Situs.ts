@@ -6,12 +6,7 @@ export interface Situs {
   finish: () => Situ;
 }
 
-const create = function (
-  start: Element,
-  soffset: number,
-  finish: Element,
-  foffset: number
-): Situs {
+const create = function (start: Element, soffset: number, finish: Element, foffset: number): Situs {
   return {
     start: Fun.constant(Situ.on(start, soffset)),
     finish: Fun.constant(Situ.on(finish, foffset))

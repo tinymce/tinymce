@@ -18,9 +18,7 @@ const getAnchors = (editor): Option<ListValue[]> => {
     return id ? [{ text: id, value: '#' + id }] : [];
   });
 
-  return anchors.length > 0
-    ? Option.some([{ text: 'None', value: '' }].concat(anchors))
-    : Option.none();
+  return anchors.length > 0 ? Option.some([{ text: 'None', value: '' }].concat(anchors)) : Option.none();
 };
 
 export const AnchorListOptions = {

@@ -39,28 +39,24 @@ UnitTest.test('ObjFindTest', function () {
 
 UnitTest.test('the value found by find always passes predicate', () => {
   fc.assert(
-    fc.property(
-      fc.dictionary(fc.asciiString(), fc.json()),
-      fc.func(fc.boolean()),
-      function (obj, pred) {
-        // It looks like the way that fc.fun works is it cares about all of its arguments, so therefore
-        // we have to only pass in one if we want it to be deterministic. Just an assumption
-        const value = Obj.find(obj, function (v) {
-          return pred(v);
-        });
-        return value.fold(
-          function () {
-            const values = Obj.values(obj);
-            return !Arr.exists(values, function (v) {
-              return pred(v);
-            });
-          },
-          function (v) {
+    fc.property(fc.dictionary(fc.asciiString(), fc.json()), fc.func(fc.boolean()), function (obj, pred) {
+      // It looks like the way that fc.fun works is it cares about all of its arguments, so therefore
+      // we have to only pass in one if we want it to be deterministic. Just an assumption
+      const value = Obj.find(obj, function (v) {
+        return pred(v);
+      });
+      return value.fold(
+        function () {
+          const values = Obj.values(obj);
+          return !Arr.exists(values, function (v) {
             return pred(v);
-          }
-        );
-      }
-    )
+          });
+        },
+        function (v) {
+          return pred(v);
+        }
+      );
+    })
   );
 });
 
@@ -82,15 +78,12 @@ UnitTest.test('If object is empty, find is always none', () => {
   );
 });
 
-UnitTest.test(
-  'If predicate is always true, then value is always the some(first), or none if dict is empty',
-  () => {
-    fc.assert(
-      fc.property(fc.dictionary(fc.asciiString(), fc.json()), function (obj) {
-        const value = Obj.find(obj, Fun.constant(true));
-        // No order is specified, so we cannot know what "first" is
-        return Obj.keys(obj).length === 0 ? value.isNone() : true;
-      })
-    );
-  }
-);
+UnitTest.test('If predicate is always true, then value is always the some(first), or none if dict is empty', () => {
+  fc.assert(
+    fc.property(fc.dictionary(fc.asciiString(), fc.json()), function (obj) {
+      const value = Obj.find(obj, Fun.constant(true));
+      // No order is specified, so we cannot know what "first" is
+      return Obj.keys(obj).length === 0 ? value.isNone() : true;
+    })
+  );
+});

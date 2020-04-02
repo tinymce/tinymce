@@ -7,15 +7,7 @@ UnitTest.test('LanguageGetTest', function () {
   const check = function (doc: TestUniverse, id: string, lang: Option<string>) {
     const item = doc.find(doc.get(), id).getOrDie();
     const itemLang = LanguageZones.calculate(doc, item);
-    Assert.eq(
-      () =>
-        'check lang(). Expected: ' +
-        lang.getOr('none') +
-        ', actual: ' +
-        itemLang.getOr('none'),
-      true,
-      lang.equals(itemLang)
-    );
+    Assert.eq(() => 'check lang(). Expected: ' + lang.getOr('none') + ', actual: ' + itemLang.getOr('none'), true, lang.equals(itemLang));
   };
 
   const doc = TestUniverse(
@@ -26,13 +18,7 @@ UnitTest.test('LanguageGetTest', function () {
           TextGene('p1sp', 'sp'),
           Gene('p1s2', 'span', [
             TextGene('p1l', 'l'),
-            Gene(
-              'p1s3',
-              'span',
-              [TextGene('p1it', 'it'), TextGene('p1word', 'word')],
-              {},
-              { lang: 'FR' }
-            ),
+            Gene('p1s3', 'span', [TextGene('p1it', 'it'), TextGene('p1word', 'word')], {}, { lang: 'FR' }),
             TextGene('p1and', 'and')
           ]),
           TextGene('p1_not_', ' not ')
@@ -48,10 +34,7 @@ UnitTest.test('LanguageGetTest', function () {
             TextGene('p2sp', 'sp'),
             Gene('p2s2', 'span', [
               TextGene('p2l', 'l'),
-              Gene('p2s3', 'span', [
-                TextGene('p2it', 'it'),
-                TextGene('p2word', 'word')
-              ]),
+              Gene('p2s3', 'span', [TextGene('p2it', 'it'), TextGene('p2word', 'word')]),
               TextGene('p2and', 'and')
             ]),
             TextGene('p2_not_', ' not ')
@@ -70,13 +53,7 @@ UnitTest.test('LanguageGetTest', function () {
             TextGene('p3sp', 'sp'),
             Gene('p3s2', 'span', [
               TextGene('p3l', 'l'),
-              Gene(
-                'p3s3',
-                'span',
-                [TextGene('p3it', 'it'), TextGene('p3word', 'word')],
-                {},
-                { lang: 'FR' }
-              ),
+              Gene('p3s3', 'span', [TextGene('p3it', 'it'), TextGene('p3word', 'word')], {}, { lang: 'FR' }),
               TextGene('p3and', 'and')
             ]),
             TextGene('p3_not_', ' not ')

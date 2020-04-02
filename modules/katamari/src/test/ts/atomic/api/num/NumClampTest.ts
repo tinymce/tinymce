@@ -9,11 +9,7 @@ UnitTest.test('Num.clamp', () => {
       const med = low + b;
       const high = med + c;
       // low <= med <= high
-      Assert.eq(
-        'Number should be unchanged when item is within bounds',
-        med,
-        Num.clamp(med, low, high)
-      );
+      Assert.eq('Number should be unchanged when item is within bounds', med, Num.clamp(med, low, high));
       Assert.eq('Number should snap to min', med, Num.clamp(med, low, high));
       Assert.eq('Number should snap to max', med, Num.clamp(high, low, med));
     })

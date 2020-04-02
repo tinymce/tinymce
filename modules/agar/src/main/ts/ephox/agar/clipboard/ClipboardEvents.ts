@@ -1,16 +1,6 @@
-import {
-  document,
-  Window,
-  DataTransfer,
-  ClipboardEvent
-} from '@ephox/dom-globals';
+import { document, Window, DataTransfer, ClipboardEvent } from '@ephox/dom-globals';
 
-const createClipboardEvent = (name: string) => (
-  win: Window,
-  x: number,
-  y: number,
-  dataTransfer: DataTransfer
-): ClipboardEvent => {
+const createClipboardEvent = (name: string) => (win: Window, x: number, y: number, dataTransfer: DataTransfer): ClipboardEvent => {
   const event: any = document.createEvent('CustomEvent');
   event.initCustomEvent(name, true, true, null);
 

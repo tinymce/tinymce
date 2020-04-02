@@ -7,13 +7,4 @@ import * as ImageExtract from '../assets/ImageExtract';
 import * as ImageAssetTypes from '../assets/ImageAssetTypes';
 import ImageAsset from '../assets/ImageAsset';
 
-export {
-  BlobConversions,
-  ImageTransformations,
-  ResultConversions,
-  JPEGMeta,
-  ImageResult,
-  ImageAsset,
-  ImageExtract,
-  ImageAssetTypes
-};
+export { BlobConversions, ImageTransformations, ResultConversions, JPEGMeta, ImageResult, ImageAsset, ImageExtract, ImageAssetTypes };

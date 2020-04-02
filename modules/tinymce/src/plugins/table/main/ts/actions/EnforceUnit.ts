@@ -30,11 +30,7 @@ const enforcePercentage = (rawTable: HTMLTableElement) => {
 };
 
 const enforcePixels = (table: HTMLTableElement) => {
-  Css.set(
-    Element.fromDom(table),
-    'width',
-    getPixelWidth(table).toString() + 'px'
-  );
+  Css.set(Element.fromDom(table), 'width', getPixelWidth(table).toString() + 'px');
 };
 
 export { enforcePercentage, enforcePixels };

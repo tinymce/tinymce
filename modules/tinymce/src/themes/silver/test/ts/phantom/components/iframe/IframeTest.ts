@@ -1,10 +1,5 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import {
-  AlloyComponent,
-  Composing,
-  GuiFactory,
-  TestHelpers
-} from '@ephox/alloy';
+import { AlloyComponent, Composing, GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
@@ -14,10 +9,7 @@ import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 import TestProviders from '../../../module/TestProviders';
 
 UnitTest.asynctest('IFrame component Test', (success, failure) => {
-  const platformNeedsSandboxing = !(
-    PlatformDetection.detect().browser.isIE() ||
-    PlatformDetection.detect().browser.isEdge()
-  );
+  const platformNeedsSandboxing = !(PlatformDetection.detect().browser.isIE() || PlatformDetection.detect().browser.isEdge());
 
   const sAssertInitialIframeStructure = (component: AlloyComponent) =>
     Assertions.sAssertStructure(
@@ -59,10 +51,7 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
       component.element()
     );
 
-  const sAssertSandboxedIframeContent = (
-    frame: AlloyComponent,
-    content: string
-  ) =>
+  const sAssertSandboxedIframeContent = (frame: AlloyComponent, content: string) =>
     // Can't check content inside the iframe due to permission issues.
     // So instead, check that there is a source tag now.
     Assertions.sAssertStructure(
@@ -107,18 +96,14 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
         )
       ),
     (_doc, _body, _gui, component, _store) => {
-      const frame = Composing.getCurrent(component).getOrDie(
-        'Could not find internal frame field'
-      );
+      const frame = Composing.getCurrent(component).getOrDie('Could not find internal frame field');
 
       // TODO: Make a webdriver test re: keyboard navigation.
       const content = '<p><span class="me">Me</span></p>';
       return [
         sAssertInitialIframeStructure(component),
         RepresentingSteps.sSetValue('Setting to a paragraph', frame, content),
-        platformNeedsSandboxing
-          ? sAssertSandboxedIframeContent(frame, content)
-          : sAssertStandardIframeContent(frame)
+        platformNeedsSandboxing ? sAssertSandboxedIframeContent(frame, content) : sAssertStandardIframeContent(frame)
       ];
     },
     success,

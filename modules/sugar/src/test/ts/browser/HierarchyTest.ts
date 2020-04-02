@@ -35,18 +35,9 @@ UnitTest.test('HierarchyTest', function () {
   assert.eq(true, Compare.eq(p1, Hierarchy.follow(div, [0]).getOrDie()));
   assert.eq(true, Compare.eq(p2, Hierarchy.follow(div, [1]).getOrDie()));
   assert.eq(true, Compare.eq(p1text, Hierarchy.follow(div, [0, 0]).getOrDie()));
-  assert.eq(
-    true,
-    Compare.eq(p1textb, Hierarchy.follow(div, [0, 1]).getOrDie())
-  );
+  assert.eq(true, Compare.eq(p1textb, Hierarchy.follow(div, [0, 1]).getOrDie()));
   assert.eq(true, Compare.eq(p1span, Hierarchy.follow(div, [0, 2]).getOrDie()));
-  assert.eq(
-    true,
-    Compare.eq(p1span1, Hierarchy.follow(div, [0, 2, 0]).getOrDie())
-  );
-  assert.eq(
-    true,
-    Compare.eq(p1span2, Hierarchy.follow(div, [0, 2, 1]).getOrDie())
-  );
+  assert.eq(true, Compare.eq(p1span1, Hierarchy.follow(div, [0, 2, 0]).getOrDie()));
+  assert.eq(true, Compare.eq(p1span2, Hierarchy.follow(div, [0, 2, 1]).getOrDie()));
   assert.eq(true, Compare.eq(p2br, Hierarchy.follow(div, [1, 0]).getOrDie()));
 });

@@ -1,9 +1,4 @@
-import {
-  clearInterval,
-  setInterval,
-  MutationObserver,
-  HTMLElement
-} from '@ephox/dom-globals';
+import { clearInterval, setInterval, MutationObserver, HTMLElement } from '@ephox/dom-globals';
 import { Fun, Throttler } from '@ephox/katamari';
 import Element from '../node/Element';
 import * as Traverse from '../search/Traverse';
@@ -47,15 +42,9 @@ const mutate = function (element: Element<HTMLElement>, f: () => void) {
 };
 
 // IE11 and above, not using numerosity so we can poll on IE10
-const wait =
-  window.MutationObserver !== undefined && window.MutationObserver !== null
-    ? mutate
-    : poll;
+const wait = window.MutationObserver !== undefined && window.MutationObserver !== null ? mutate : poll;
 
-const onShow = function (
-  element: Element<HTMLElement>,
-  f: () => void
-): () => void {
+const onShow = function (element: Element<HTMLElement>, f: () => void): () => void {
   if (Visibility.isVisible(element)) {
     window.requestAnimationFrame(f);
     return Fun.noop;

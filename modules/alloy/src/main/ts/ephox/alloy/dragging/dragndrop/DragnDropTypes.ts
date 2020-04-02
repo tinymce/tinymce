@@ -10,11 +10,8 @@ import { NativeSimulatedEvent, EventFormat } from '../../events/SimulatedEvent';
 import { DropEvent } from './DropEvent';
 import { DragnDropImageClone } from './ImageClone';
 
-export interface DragnDropBehaviour
-  extends Behaviour.AlloyBehaviour<DragnDropConfigSpec, DragnDropConfig> {
-  config: (
-    config: DragnDropConfigSpec
-  ) => Behaviour.NamedConfiguredBehaviour<DragnDropConfigSpec, DragnDropConfig>;
+export interface DragnDropBehaviour extends Behaviour.AlloyBehaviour<DragnDropConfigSpec, DragnDropConfig> {
+  config: (config: DragnDropConfigSpec) => Behaviour.NamedConfiguredBehaviour<DragnDropConfigSpec, DragnDropConfig>;
 }
 
 export type DragnDropConfig = DragStartingConfig | DroppingConfig;
@@ -28,18 +25,9 @@ export interface StartingDragndropConfigSpec {
   getImageParent?: (component: AlloyComponent) => Element;
   getImage?: (component: AlloyComponent) => DragnDropImageClone;
   canDrag?: (component: AlloyComponent, target: Element) => boolean;
-  onDragstart?: (
-    component: AlloyComponent,
-    simulatedEvent: NativeSimulatedEvent
-  ) => void;
-  onDragover?: (
-    component: AlloyComponent,
-    simulatedEvent: NativeSimulatedEvent
-  ) => void;
-  onDragend?: (
-    component: AlloyComponent,
-    simulatedEvent: NativeSimulatedEvent
-  ) => void;
+  onDragstart?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+  onDragover?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+  onDragend?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
 }
 
 export interface DragStartingConfig {
@@ -58,23 +46,11 @@ export interface DragStartingConfig {
     }
   >;
   canDrag: (component: AlloyComponent, target: Element) => boolean;
-  onDragstart: (
-    component: AlloyComponent,
-    simulatedEvent: NativeSimulatedEvent
-  ) => void;
-  onDragover: (
-    component: AlloyComponent,
-    simulatedEvent: NativeSimulatedEvent
-  ) => void;
-  onDragend: (
-    component: AlloyComponent,
-    simulatedEvent: NativeSimulatedEvent
-  ) => void;
+  onDragstart: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+  onDragover: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+  onDragend: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   instance: {
-    exhibit: (
-      base: DomDefinitionDetail,
-      dragInfo: DragStartingConfig
-    ) => DomModification;
+    exhibit: (base: DomDefinitionDetail, dragInfo: DragStartingConfig) => DomModification;
     handlers: (
       dragInfo: DragStartingConfig
     ) => {
@@ -90,49 +66,22 @@ export interface DropDragndropConfigSpec {
   type?: string;
   dropEffect?: string;
   onDrop?: (component: AlloyComponent, dropEvent: DropEvent) => void;
-  onDrag?: (
-    component: AlloyComponent,
-    simulatedEvent: NativeSimulatedEvent
-  ) => void;
-  onDragover?: (
-    component: AlloyComponent,
-    simulatedEvent: NativeSimulatedEvent
-  ) => void;
-  onDragenter?: (
-    component: AlloyComponent,
-    simulatedEvent: NativeSimulatedEvent
-  ) => void;
-  onDragleave?: (
-    component: AlloyComponent,
-    simulatedEvent: NativeSimulatedEvent
-  ) => void;
+  onDrag?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+  onDragover?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+  onDragenter?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+  onDragleave?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
 }
 
 export interface DroppingConfig {
   type: string;
   dropEffect: string;
   onDrop: (component: AlloyComponent, dropEvent: DropEvent) => void;
-  onDrag: (
-    component: AlloyComponent,
-    simulatedEvent: NativeSimulatedEvent
-  ) => void;
-  onDragover: (
-    component: AlloyComponent,
-    simulatedEvent: NativeSimulatedEvent
-  ) => void;
-  onDragenter: (
-    component: AlloyComponent,
-    simulatedEvent: NativeSimulatedEvent
-  ) => void;
-  onDragleave: (
-    component: AlloyComponent,
-    simulatedEvent: NativeSimulatedEvent
-  ) => void;
+  onDrag: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+  onDragover: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+  onDragenter: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+  onDragleave: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   instance: {
-    exhibit: (
-      base: DomDefinitionDetail,
-      dragInfo: DragStartingConfig
-    ) => DomModification;
+    exhibit: (base: DomDefinitionDetail, dragInfo: DragStartingConfig) => DomModification;
     handlers: (
       dragInfo: DroppingConfig
     ) => {
@@ -145,6 +94,4 @@ export interface DroppingConfig {
   };
 }
 
-export type DragnDropConfigSpec =
-  | StartingDragndropConfigSpec
-  | DropDragndropConfigSpec;
+export type DragnDropConfigSpec = StartingDragndropConfigSpec | DropDragndropConfigSpec;

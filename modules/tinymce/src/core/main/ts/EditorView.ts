@@ -31,22 +31,13 @@ const isInsideElementContentArea = function (bodyElm, clientX, clientY) {
   const clientWidth = getClientWidth(bodyElm);
   const clientHeight = getClientHeight(bodyElm);
 
-  return (
-    clientX >= 0 &&
-    clientY >= 0 &&
-    clientX <= clientWidth &&
-    clientY <= clientHeight
-  );
+  return clientX >= 0 && clientY >= 0 && clientX <= clientWidth && clientY <= clientHeight;
 };
 
 const transpose = function (inline, elm, clientX, clientY) {
   const clientRect = getBoundingClientRect(elm);
-  const deltaX = inline
-    ? clientRect.left + elm.dom().clientLeft + getMarginLeft(elm)
-    : 0;
-  const deltaY = inline
-    ? clientRect.top + elm.dom().clientTop + getMarginTop(elm)
-    : 0;
+  const deltaX = inline ? clientRect.left + elm.dom().clientLeft + getMarginLeft(elm) : 0;
+  const deltaY = inline ? clientRect.top + elm.dom().clientTop + getMarginTop(elm) : 0;
   const x = clientX - deltaX;
   const y = clientY - deltaY;
 
@@ -59,11 +50,7 @@ const isXYInContentArea = function (editor: Editor, clientX, clientY) {
   const targetElm = editor.inline ? bodyElm : Traverse.documentElement(bodyElm);
   const transposedPoint = transpose(editor.inline, targetElm, clientX, clientY);
 
-  return isInsideElementContentArea(
-    targetElm,
-    transposedPoint.x,
-    transposedPoint.y
-  );
+  return isInsideElementContentArea(targetElm, transposedPoint.x, transposedPoint.y);
 };
 
 const fromDomSafe = function (node) {
@@ -71,9 +58,7 @@ const fromDomSafe = function (node) {
 };
 
 const isEditorAttachedToDom = function (editor: Editor) {
-  const rawContainer = editor.inline
-    ? editor.getBody()
-    : editor.getContentAreaContainer();
+  const rawContainer = editor.inline ? editor.getBody() : editor.getContentAreaContainer();
 
   return fromDomSafe(rawContainer)
     .map(function (container) {

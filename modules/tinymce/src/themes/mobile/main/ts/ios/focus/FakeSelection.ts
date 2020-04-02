@@ -6,17 +6,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import {
-  Class,
-  Classes,
-  Css,
-  DomEvent,
-  Element,
-  Insert,
-  InsertAll,
-  Remove,
-  Traverse
-} from '@ephox/sugar';
+import { Class, Classes, Css, DomEvent, Element, Insert, InsertAll, Remove, Traverse } from '@ephox/sugar';
 
 import * as Styles from '../../style/Styles';
 import * as Rectangles from '../../util/Rectangles';
@@ -50,10 +40,7 @@ export default function (win, frame) {
 
   const make = function (rectangle) {
     const span = Element.fromTag('span');
-    Classes.add(span, [
-      Styles.resolve('layer-editor'),
-      Styles.resolve('unfocused-selection')
-    ]);
+    Classes.add(span, [Styles.resolve('layer-editor'), Styles.resolve('unfocused-selection')]);
     Css.setAll(span, {
       left: rectangle.left() + 'px',
       top: rectangle.top() + 'px',

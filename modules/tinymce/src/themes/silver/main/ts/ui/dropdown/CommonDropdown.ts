@@ -31,15 +31,8 @@ import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
-import {
-  renderLabel,
-  renderReplacableIconFromPack
-} from '../button/ButtonSlices';
-import {
-  onControlAttached,
-  onControlDetached,
-  OnDestroy
-} from '../controls/Controls';
+import { renderLabel, renderReplacableIconFromPack } from '../button/ButtonSlices';
+import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Controls';
 import * as Icons from '../icons/Icons';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import * as MenuParts from '../menus/menu/MenuParts';
@@ -68,28 +61,15 @@ export interface CommonDropdownSpec<T> {
   columns: Types.ColumnTypes;
   presets: Types.PresetTypes;
   classes: string[];
-  dropdownBehaviours: Array<
-    Behaviour.NamedConfiguredBehaviour<
-      Behaviour.BehaviourConfigSpec,
-      Behaviour.BehaviourConfigDetail
-    >
-  >;
+  dropdownBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
 }
 
 // TODO: Use renderCommonStructure here.
-const renderCommonDropdown = <T>(
-  spec: CommonDropdownSpec<T>,
-  prefix: string,
-  sharedBackstage: UiFactoryBackstageShared
-): SketchSpec => {
+const renderCommonDropdown = <T>(spec: CommonDropdownSpec<T>, prefix: string, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
-  const optMemDisplayText = spec.text.map((text) =>
-    Memento.record(renderLabel(text, prefix, sharedBackstage.providers))
-  );
+  const optMemDisplayText = spec.text.map((text) => Memento.record(renderLabel(text, prefix, sharedBackstage.providers)));
   const optMemDisplayIcon = spec.icon.map((iconName) =>
-    Memento.record(
-      renderReplacableIconFromPack(iconName, sharedBackstage.providers.icons)
-    )
+    Memento.record(renderReplacableIconFromPack(iconName, sharedBackstage.providers.icons))
   );
 
   /*
@@ -100,10 +80,7 @@ const renderCommonDropdown = <T>(
    *   expand it (without highlighting any items in the expanded menu).
    *   It also needs to close the previous menu
    */
-  const onLeftOrRightInMenu = (
-    comp: AlloyComponent,
-    se: SimulatedEvent<EventArgs>
-  ) => {
+  const onLeftOrRightInMenu = (comp: AlloyComponent, se: SimulatedEvent<EventArgs>) => {
     // The originating dropdown is stored on the sandbox itself.
     const dropdown: AlloyComponent = Representing.getValue(comp);
 
@@ -140,9 +117,7 @@ const renderCommonDropdown = <T>(
       ...role,
       dom: {
         tag: 'button',
-        classes: [prefix, `${prefix}--select`].concat(
-          Arr.map(spec.classes, (c) => `${prefix}--${c}`)
-        ),
+        classes: [prefix, `${prefix}--select`].concat(Arr.map(spec.classes, (c) => `${prefix}--${c}`)),
         attributes: {
           ...tooltipAttributes
         }
@@ -154,10 +129,7 @@ const renderCommonDropdown = <T>(
           dom: {
             tag: 'div',
             classes: [`${prefix}__select-chevron`],
-            innerHtml: Icons.get(
-              'chevron-down',
-              sharedBackstage.providers.icons
-            )
+            innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons)
           }
         })
       ]),
@@ -167,49 +139,30 @@ const renderCommonDropdown = <T>(
       // TODO: Not quite working. Can still get the button focused.
       dropdownBehaviours: Behaviour.derive([
         ...spec.dropdownBehaviours,
-        DisablingConfigs.button(
-          spec.disabled || sharedBackstage.providers.isReadonly()
-        ),
+        DisablingConfigs.button(spec.disabled || sharedBackstage.providers.isReadonly()),
         ReadOnly.receivingConfig(),
         Unselecting.config({}),
         Replacing.config({}),
-        AddEventsBehaviour.config('dropdown-events', [
-          onControlAttached(spec, editorOffCell),
-          onControlDetached(spec, editorOffCell)
-        ]),
+        AddEventsBehaviour.config('dropdown-events', [onControlAttached(spec, editorOffCell), onControlDetached(spec, editorOffCell)]),
         AddEventsBehaviour.config('menubutton-update-display-text', [
           AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
             optMemDisplayText
               .bind((mem) => mem.getOpt(comp))
               .each((displayText) => {
-                Replacing.set(displayText, [
-                  GuiFactory.text(
-                    sharedBackstage.providers.translate(se.event().text())
-                  )
-                ]);
+                Replacing.set(displayText, [GuiFactory.text(sharedBackstage.providers.translate(se.event().text()))]);
               });
           }),
           AlloyEvents.run<UpdateMenuIconEvent>(updateMenuIcon, (comp, se) => {
             optMemDisplayIcon
               .bind((mem) => mem.getOpt(comp))
               .each((displayIcon) => {
-                Replacing.set(displayIcon, [
-                  renderReplacableIconFromPack(
-                    se.event().icon(),
-                    sharedBackstage.providers.icons
-                  )
-                ]);
+                Replacing.set(displayIcon, [renderReplacableIconFromPack(se.event().icon(), sharedBackstage.providers.icons)]);
               });
           })
         ])
       ]),
       eventOrder: Merger.deepMerge(toolbarButtonEventOrder, {
-        mousedown: [
-          'focusing',
-          'alloy.base.behaviour',
-          'item-type-events',
-          'normal-dropdown-events'
-        ]
+        mousedown: ['focusing', 'alloy.base.behaviour', 'item-type-events', 'normal-dropdown-events']
       }),
 
       sandboxBehaviours: Behaviour.derive([

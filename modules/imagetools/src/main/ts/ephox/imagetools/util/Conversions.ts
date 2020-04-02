@@ -1,13 +1,4 @@
-import {
-  atob,
-  Blob,
-  HTMLCanvasElement,
-  HTMLImageElement,
-  Image,
-  FileReader,
-  URL,
-  XMLHttpRequest
-} from '@ephox/dom-globals';
+import { atob, Blob, HTMLCanvasElement, HTMLImageElement, Image, FileReader, URL, XMLHttpRequest } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import * as Canvas from './Canvas';
 import * as ImageSize from './ImageSize';
@@ -82,8 +73,7 @@ function anyUriToBlob(url: string): Promise<Blob> {
         return obj;
       };
 
-      const genericError = () =>
-        new Error('Error ' + this.status + ' downloading image');
+      const genericError = () => new Error('Error ' + this.status + ' downloading image');
       reject(this.status === 0 ? corsError() : genericError());
     };
 
@@ -144,11 +134,7 @@ function uriToBlob(url: string): Promise<Blob> | null {
   return null;
 }
 
-function canvasToBlob(
-  canvas: HTMLCanvasElement,
-  type?: string,
-  quality?: number
-): Promise<Blob> {
+function canvasToBlob(canvas: HTMLCanvasElement, type?: string, quality?: number): Promise<Blob> {
   type = type || 'image/png';
 
   if (HTMLCanvasElement.prototype.toBlob) {
@@ -170,11 +156,7 @@ function canvasToBlob(
   }
 }
 
-function canvasToDataURL(
-  canvas: HTMLCanvasElement,
-  type?: string,
-  quality?: number
-): string {
+function canvasToDataURL(canvas: HTMLCanvasElement, type?: string, quality?: number): string {
   type = type || 'image/png';
   return canvas.toDataURL(type, quality);
 }
@@ -184,10 +166,7 @@ function blobToCanvas(blob: Blob): Promise<HTMLCanvasElement> {
     // we aren't retaining the image, so revoke the URL immediately
     revokeImageUrl(image);
 
-    const canvas = Canvas.create(
-      ImageSize.getWidth(image),
-      ImageSize.getHeight(image)
-    );
+    const canvas = Canvas.create(ImageSize.getWidth(image), ImageSize.getHeight(image));
     const context = Canvas.get2dContext(canvas);
     context.drawImage(image, 0, 0);
 

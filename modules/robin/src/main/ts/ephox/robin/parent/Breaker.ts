@@ -27,21 +27,13 @@ const leftRight = <E>(left: E, right: E): LeftRight<E> => ({
   right
 });
 
-const brokenPath = <E>(
-  first: E,
-  second: Option<E>,
-  splits: BrokenPathSplits<E>[]
-): BrokenPath<E> => ({
+const brokenPath = <E>(first: E, second: Option<E>, splits: BrokenPathSplits<E>[]): BrokenPath<E> => ({
   first,
   second,
   splits
 });
 
-const bisect = function <E, D>(
-  universe: Universe<E, D>,
-  parent: E,
-  child: E
-): Option<Bisect<E>> {
+const bisect = function <E, D>(universe: Universe<E, D>, parent: E, child: E): Option<Bisect<E>> {
   const children = universe.property().children(parent);
   const index = Arr.findIndex(children, Fun.curry(universe.eq, child));
   return index.map(function (ind) {
@@ -56,11 +48,7 @@ const bisect = function <E, D>(
  * Clone parent to the RIGHT and move everything after child in the parent element into
  * a clone of the parent (placed after parent).
  */
-const breakToRight = function <E, D>(
-  universe: Universe<E, D>,
-  parent: E,
-  child: E
-) {
+const breakToRight = function <E, D>(universe: Universe<E, D>, parent: E, child: E) {
   return bisect(universe, parent, child).map(function (parts) {
     const second = universe.create().clone(parent);
     universe.insert().appendAll(second, parts.after);
@@ -73,11 +61,7 @@ const breakToRight = function <E, D>(
  * Clone parent to the LEFT and move everything before and including child into
  * the a clone of the parent (placed before parent)
  */
-const breakToLeft = function <E, D>(
-  universe: Universe<E, D>,
-  parent: E,
-  child: E
-) {
+const breakToLeft = function <E, D>(universe: Universe<E, D>, parent: E, child: E) {
   return bisect(universe, parent, child).map(function (parts) {
     const prior = universe.create().clone(parent);
     universe.insert().appendAll(prior, parts.before.concat([child]));
@@ -98,17 +82,9 @@ const breakPath = function <E, D>(
   universe: Universe<E, D>,
   item: E,
   isTop: (e: E) => boolean,
-  breaker: (
-    universe: Universe<E, D>,
-    parent: E,
-    child: E
-  ) => Option<LeftRight<E>>
+  breaker: (universe: Universe<E, D>, parent: E, child: E) => Option<LeftRight<E>>
 ) {
-  const next = function (
-    child: E,
-    group: Option<E>,
-    splits: BrokenPathSplits<E>[]
-  ): BrokenPath<E> {
+  const next = function (child: E, group: Option<E>, splits: BrokenPathSplits<E>[]): BrokenPath<E> {
     const fallback = brokenPath(child, Option.none(), splits);
     // Found the top, so stop.
     if (isTop(child)) {
@@ -123,11 +99,7 @@ const breakPath = function <E, D>(
             const extra = [{ first: breakage.left, second: breakage.right }];
             // Our isTop is based on the left-side parent, so keep it regardless of split.
             const nextChild = isTop(parent) ? parent : breakage.left;
-            return next(
-              nextChild,
-              Option.some(breakage.right),
-              splits.concat(extra)
-            );
+            return next(nextChild, Option.some(breakage.right), splits.concat(extra));
           });
         })
         .getOr(fallback);

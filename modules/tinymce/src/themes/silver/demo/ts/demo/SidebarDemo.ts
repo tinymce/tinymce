@@ -8,24 +8,13 @@ import Editor from 'tinymce/core/api/Editor';
 declare let tinymce: any;
 
 export default function () {
-  const makeSidebar = (
-    ed: Editor,
-    name: string,
-    background: string,
-    width: number
-  ) => {
+  const makeSidebar = (ed: Editor, name: string, background: string, width: number) => {
     ed.ui.registry.addSidebar(name, {
       icon: 'comment',
       tooltip: 'Tooltip for ' + name,
       onSetup: (api) => {
         console.log('onSetup ' + name);
-        const box = Element.fromHtml(
-          '<div style="width: ' +
-            width +
-            'px; background: ' +
-            background +
-            ';"></div>'
-        );
+        const box = Element.fromHtml('<div style="width: ' + width + 'px; background: ' + background + ';"></div>');
         api.element().appendChild(box.dom());
         return () => {
           api.element().removeChild(box.dom());

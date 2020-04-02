@@ -11,11 +11,7 @@ import * as Tagger from 'ephox/alloy/registry/Tagger';
 import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 import { PartialMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
 
-const renderMenu = (spec: {
-  value: string;
-  text?: string;
-  items: ItemSpec[];
-}): PartialMenuSpec => ({
+const renderMenu = (spec: { value: string; text?: string; items: ItemSpec[] }): PartialMenuSpec => ({
   dom: {
     tag: 'ol',
     classes: ['menu'],
@@ -30,12 +26,7 @@ const renderMenu = (spec: {
   components: [Menu.parts().items({})]
 });
 
-const renderItem = (spec: {
-  type: any;
-  widget?: any;
-  data: { value: string; meta: any };
-  hasSubmenu?: boolean;
-}): ItemSpec =>
+const renderItem = (spec: { type: any; widget?: any; data: { value: string; meta: any }; hasSubmenu?: boolean }): ItemSpec =>
   spec.type === 'widget'
     ? {
         type: 'widget',
@@ -78,9 +69,7 @@ const part = (store: TestStore) => ({
 
 const mStoreMenuUid = (component: AlloyComponent) =>
   Step.stateful((value: any, next, _die) => {
-    const menu = SelectorFind.descendant(component.element(), '.menu').getOrDie(
-      'Could not find menu'
-    );
+    const menu = SelectorFind.descendant(component.element(), '.menu').getOrDie('Could not find menu');
     const uid = Tagger.readOrDie(menu);
     next(Merger.deepMerge(value, { menuUid: uid }));
   });
@@ -103,11 +92,7 @@ const mWaitForNewMenu = (component: AlloyComponent) =>
     ).runStep(value, next, die, logs);
   });
 
-const assertLazySinkArgs = (
-  expectedTag: string,
-  expectedClass: string,
-  comp: AlloyComponent
-) => {
+const assertLazySinkArgs = (expectedTag: string, expectedClass: string, comp: AlloyComponent) => {
   Assertions.assertStructure(
     'Lazy sink should get passed the split button',
     ApproxStructure.build((s, _str, arr) =>
@@ -129,12 +114,4 @@ const itemMarkers = {
 
 const markers = () => itemMarkers;
 
-export {
-  assertLazySinkArgs,
-  renderItem,
-  renderMenu,
-  part,
-  markers,
-  mWaitForNewMenu,
-  mStoreMenuUid
-};
+export { assertLazySinkArgs, renderItem, renderMenu, part, markers, mWaitForNewMenu, mStoreMenuUid };

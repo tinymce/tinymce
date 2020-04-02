@@ -54,31 +54,13 @@ export interface ScriptLoaderConstructor {
 
 interface ScriptLoader {
   loadScript(url: string, success?: () => void, failure?: () => void): void;
-  loadScripts(
-    url: string[],
-    success?: () => void,
-    failure?: (urls: string[]) => void
-  ): void;
+  loadScripts(url: string[], success?: () => void, failure?: (urls: string[]) => void): void;
   isDone(url: string): boolean;
   markDone(url: string): void;
-  add(
-    url: string,
-    success?: () => void,
-    scope?: {},
-    failure?: () => void
-  ): void;
-  load(
-    url: string,
-    success?: () => void,
-    scope?: {},
-    failure?: () => void
-  ): void;
+  add(url: string, success?: () => void, scope?: {}, failure?: () => void): void;
+  load(url: string, success?: () => void, scope?: {}, failure?: () => void): void;
   remove(url: string);
-  loadQueue(
-    success?: () => void,
-    scope?: {},
-    failure?: (urls: string[]) => void
-  ): void;
+  loadQueue(success?: () => void, scope?: {}, failure?: (urls: string[]) => void): void;
   _setReferrerPolicy(referrerPolicy: ReferrerPolicy): void;
 }
 
@@ -93,10 +75,7 @@ class ScriptLoader {
   private settings: Partial<ScriptLoaderSettings>;
   private states: Record<string, number> = {};
   private queue: string[] = [];
-  private scriptLoadedCallbacks: Record<
-    string,
-    Array<{ success: () => void; failure: () => void; scope: any }>
-  > = {};
+  private scriptLoadedCallbacks: Record<string, Array<{ success: () => void; failure: () => void; scope: any }>> = {};
   private queueLoadedCallbacks: Array<{
     success: () => void;
     failure: (urls: string[]) => void;
@@ -172,9 +151,7 @@ class ScriptLoader {
     elm.onerror = error;
 
     // Add script to document
-    (document.getElementsByTagName('head')[0] || document.body).appendChild(
-      elm
-    );
+    (document.getElementsByTagName('head')[0] || document.body).appendChild(elm);
   }
 
   /**
@@ -208,12 +185,7 @@ class ScriptLoader {
    * @param {Object} scope Optional scope to execute callback in.
    * @param {function} failure Optional failure callback function to execute when the script failed to load.
    */
-  public add(
-    url: string,
-    success?: () => void,
-    scope?: {},
-    failure?: () => void
-  ) {
+  public add(url: string, success?: () => void, scope?: {}, failure?: () => void) {
     const state = this.states[url];
 
     // Add url to load queue
@@ -236,12 +208,7 @@ class ScriptLoader {
     }
   }
 
-  public load(
-    url: string,
-    success?: () => void,
-    scope?: {},
-    failure?: () => void
-  ) {
+  public load(url: string, success?: () => void, scope?: {}, failure?: () => void) {
     return this.add(url, success, scope, failure);
   }
 
@@ -258,11 +225,7 @@ class ScriptLoader {
    * @param {function} failure Optional callback to execute when queued items failed to load.
    * @param {Object} scope Optional scope to execute the callback in.
    */
-  public loadQueue(
-    success?: () => void,
-    scope?: {},
-    failure?: (urls: string[]) => void
-  ) {
+  public loadQueue(success?: () => void, scope?: {}, failure?: (urls: string[]) => void) {
     this.loadScripts(this.queue, success, scope, failure);
   }
 
@@ -276,12 +239,7 @@ class ScriptLoader {
    * @param {Object} scope Optional scope to execute callback in.
    * @param {function} failure Optional callback to execute if scripts failed to load.
    */
-  public loadScripts(
-    scripts: string[],
-    success?: () => void,
-    scope?: {},
-    failure?: (urls: string[]) => void
-  ) {
+  public loadScripts(scripts: string[], success?: () => void, scope?: {}, failure?: (urls: string[]) => void) {
     const self = this;
     let loadScripts;
     const failures = [];

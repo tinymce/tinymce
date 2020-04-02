@@ -18,13 +18,7 @@ import * as ToolbarSchema from './ToolbarSchema';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant(
   [
-    Fields.markers([
-      'closedClass',
-      'openClass',
-      'shrinkingClass',
-      'growingClass',
-      'overflowToggledClass'
-    ]),
+    Fields.markers(['closedClass', 'openClass', 'shrinkingClass', 'growingClass', 'overflowToggledClass']),
     Fields.onHandler('onOpened'),
     Fields.onHandler('onClosed')
   ].concat(SplitToolbarBase.schema())
@@ -53,12 +47,10 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             shrinkingClass: detail.markers.shrinkingClass,
             growingClass: detail.markers.growingClass,
             onShrunk: (comp) => {
-              AlloyParts.getPart(comp, detail, 'overflow-button').each(
-                (button) => {
-                  Toggling.off(button);
-                  Focusing.focus(button);
-                }
-              );
+              AlloyParts.getPart(comp, detail, 'overflow-button').each((button) => {
+                Toggling.off(button);
+                Focusing.focus(button);
+              });
               detail.onClosed(comp);
             },
             onGrown: (comp) => {
@@ -66,17 +58,13 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
               detail.onOpened(comp);
             },
             onStartGrow: (comp) => {
-              AlloyParts.getPart(comp, detail, 'overflow-button').each(
-                Toggling.on
-              );
+              AlloyParts.getPart(comp, detail, 'overflow-button').each(Toggling.on);
             }
           }),
           Keying.config({
             mode: 'acyclic',
             onEscape: (comp) => {
-              AlloyParts.getPart(comp, detail, 'overflow-button').each(
-                Focusing.focus
-              );
+              AlloyParts.getPart(comp, detail, 'overflow-button').each(Focusing.focus);
               return Option.some<boolean>(true);
             }
           })

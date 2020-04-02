@@ -15,12 +15,8 @@ import { UnitTest, assert } from '@ephox/bedrock-client';
 import { window, HTMLParagraphElement } from '@ephox/dom-globals';
 
 UnitTest.test('Browser Test: SelectionTest', function () {
-  const p1 = Element.fromHtml<HTMLParagraphElement>(
-    '<p>This is the <strong>first</strong> paragraph</p>'
-  );
-  const p2 = Element.fromHtml<HTMLParagraphElement>(
-    '<p>This is the <em>second</em> paragraph</p>'
-  );
+  const p1 = Element.fromHtml<HTMLParagraphElement>('<p>This is the <strong>first</strong> paragraph</p>');
+  const p2 = Element.fromHtml<HTMLParagraphElement>('<p>This is the <em>second</em> paragraph</p>');
 
   const p1text = Hierarchy.follow(p1, [0]).getOrDie('Looking for text in p1');
   const p2text = Hierarchy.follow(p2, [0]).getOrDie('Looking for text in p1');
@@ -37,39 +33,15 @@ UnitTest.test('Browser Test: SelectionTest', function () {
     });
   };
 
-  const assertSelection = function (
-    label,
-    expStart,
-    expSoffset,
-    expFinish,
-    expFoffset
-  ) {
+  const assertSelection = function (label, expStart, expSoffset, expFinish, expFoffset) {
     WindowSelection.getExact(window).fold(
       function () {
-        assert.fail(
-          'After setting selection ' + label + ', could not find a selection'
-        );
+        assert.fail('After setting selection ' + label + ', could not find a selection');
       },
       function (sel) {
-        assert.eq(
-          true,
-          Compare.eq(sel.start(), expStart),
-          () =>
-            'Start container should be: ' +
-            Html.getOuter(expStart) +
-            '\n' +
-            label
-        );
+        assert.eq(true, Compare.eq(sel.start(), expStart), () => 'Start container should be: ' + Html.getOuter(expStart) + '\n' + label);
         assert.eq(expSoffset, sel.soffset());
-        assert.eq(
-          true,
-          Compare.eq(sel.finish(), expFinish),
-          () =>
-            'Finish container should be ' +
-            Html.getOuter(expFinish) +
-            '\n' +
-            label
-        );
+        assert.eq(true, Compare.eq(sel.finish(), expFinish), () => 'Finish container should be ' + Html.getOuter(expFinish) + '\n' + label);
         assert.eq(expFoffset, sel.foffset());
       }
     );
@@ -85,13 +57,7 @@ UnitTest.test('Browser Test: SelectionTest', function () {
   if (!PlatformDetection.detect().browser.isIE()) {
     assertSelection('(p2text, 2) -> (p1text, 3)', p2text, 2, p1text, 3);
   } else {
-    assertSelection(
-      'reversed (p1text, 3) -> (p2text, 2)',
-      p1text,
-      3,
-      p2text,
-      2
-    );
+    assertSelection('reversed (p1text, 3) -> (p2text, 2)', p1text, 3, p2text, 2);
   }
 
   const assertFragmentHtml = function (expected, fragment) {
@@ -101,17 +67,10 @@ UnitTest.test('Browser Test: SelectionTest', function () {
   };
 
   const p1Selected = WindowSelection.forElement(window, p1);
-  const clone = WindowSelection.clone(
-    window,
-    Selection.exactFromRange(p1Selected)
-  );
+  const clone = WindowSelection.clone(window, Selection.exactFromRange(p1Selected));
   assertFragmentHtml('This is the <strong>first</strong> paragraph', clone);
 
-  WindowSelection.replace(
-    window,
-    Selection.exactFromRange(p1Selected),
-    Elements.fromHtml('<a>link</a><span>word</span>')
-  );
+  WindowSelection.replace(window, Selection.exactFromRange(p1Selected), Elements.fromHtml('<a>link</a><span>word</span>'));
   assert.eq('<a>link</a><span>word</span>', Html.get(p1));
 
   WindowSelection.deleteAt(
@@ -129,30 +88,12 @@ UnitTest.test('Browser Test: SelectionTest', function () {
   Remove.remove(p1);
   Remove.remove(p2);
 
-  const assertRng = function (
-    selection,
-    expStart,
-    expSoffset,
-    expFinish,
-    expFoffset
-  ) {
+  const assertRng = function (selection, expStart, expSoffset, expFinish, expFoffset) {
     const r = WindowSelection.toNative(selection);
 
-    assert.eq(
-      expStart.dom(),
-      r.startContainer,
-      () => 'Start Container should be: ' + Html.getOuter(expStart)
-    );
-    assert.eq(
-      expSoffset,
-      r.startOffset,
-      'Start offset should be: ' + expSoffset
-    );
-    assert.eq(
-      expFinish.dom(),
-      r.endContainer,
-      () => 'End Container should be: ' + Html.getOuter(expFinish)
-    );
+    assert.eq(expStart.dom(), r.startContainer, () => 'Start Container should be: ' + Html.getOuter(expStart));
+    assert.eq(expSoffset, r.startOffset, 'Start offset should be: ' + expSoffset);
+    assert.eq(expFinish.dom(), r.endContainer, () => 'End Container should be: ' + Html.getOuter(expFinish));
     assert.eq(expFoffset, r.endOffset, 'End offset should be: ' + expFoffset);
 
     return r;

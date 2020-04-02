@@ -1,10 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Step,
-  StructAssert,
-  Waiter
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Step, StructAssert, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
@@ -96,20 +90,14 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
       const group1 = ApproxStructure.build((s, str, arr) =>
         s.element('div', {
           classes: [arr.has('test-toolbar-group')],
-          children: [
-            s.element('button', { html: str.is('A') }),
-            s.element('button', { html: str.is('B') })
-          ]
+          children: [s.element('button', { html: str.is('A') }), s.element('button', { html: str.is('B') })]
         })
       );
 
       const group2 = ApproxStructure.build((s, str, arr) =>
         s.element('div', {
           classes: [arr.has('test-toolbar-group')],
-          children: [
-            s.element('button', { html: str.is('C') }),
-            s.element('button', { html: str.is('D') })
-          ]
+          children: [s.element('button', { html: str.is('C') }), s.element('button', { html: str.is('D') })]
         })
       );
 
@@ -131,11 +119,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
         })
       );
 
-      const sAssertGroups = (
-        label: string,
-        pGroups: StructAssert[],
-        oGroups: StructAssert[]
-      ) =>
+      const sAssertGroups = (label: string, pGroups: StructAssert[], oGroups: StructAssert[]) =>
         Assertions.sAssertStructure(
           label,
           ApproxStructure.build((s, _str, arr) =>
@@ -176,20 +160,14 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
             { items: Arr.map([{ text: 'A' }, { text: 'B' }], makeButton) },
             { items: Arr.map([{ text: 'C' }, { text: 'D' }], makeButton) },
             {
-              items: Arr.map(
-                [{ text: 'E' }, { text: 'F' }, { text: 'G' }],
-                makeButton
-              )
+              items: Arr.map([{ text: 'E' }, { text: 'F' }, { text: 'G' }], makeButton)
             }
           ]);
           SplitSlidingToolbar.setGroups(component, groups);
           SplitSlidingToolbar.toggle(component);
         }),
 
-        Waiter.sTryUntil(
-          'Wait for toolbar to be completely open',
-          store.sAssertEq('Assert store contains opened state', ['onOpened'])
-        ),
+        Waiter.sTryUntil('Wait for toolbar to be completely open', store.sAssertEq('Assert store contains opened state', ['onOpened'])),
         store.sClear,
 
         sAssertGroups('width=400px (1 +)', [group1, oGroup], [group2, group3]),
@@ -199,11 +177,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
         sAssertGroups('width=300px (1 +)', [group1, oGroup], [group2, group3]),
 
         sResetWidth('249px'),
-        sAssertGroups(
-          'width=300px (+) (not enough space for the group and the +)',
-          [oGroup],
-          [group1, group2, group3]
-        ),
+        sAssertGroups('width=300px (+) (not enough space for the group and the +)', [oGroup], [group1, group2, group3]),
 
         sResetWidth('400px'),
         sAssertGroups('width=400px (1 +)', [group1, oGroup], [group2, group3]),
@@ -212,11 +186,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
         sAssertGroups('width=450px (1 +)', [group1, group2, oGroup], [group3]),
 
         sResetWidth('670px'),
-        sAssertGroups(
-          'width=670px, (1 2 +)',
-          [group1, group2, oGroup],
-          [group3]
-        ),
+        sAssertGroups('width=670px, (1 2 +)', [group1, group2, oGroup], [group3]),
 
         sResetWidth('700px'),
         sAssertGroups('width=700px, (1 2 +)', [group1, group2, group3], []),
@@ -227,10 +197,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
         Step.sync(() => {
           SplitSlidingToolbar.toggle(component);
         }),
-        Waiter.sTryUntil(
-          'Wait for toolbar to be completely closed',
-          store.sAssertEq('Assert store contains closed state', ['onClosed'])
-        ),
+        Waiter.sTryUntil('Wait for toolbar to be completely closed', store.sAssertEq('Assert store contains closed state', ['onClosed'])),
 
         // TODO: Add testing for sliding?
         GuiSetup.mRemoveStyles

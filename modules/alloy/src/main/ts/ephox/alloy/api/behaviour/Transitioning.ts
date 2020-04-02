@@ -11,9 +11,7 @@ import {
 import TransitionSchema from '../../behaviour/transitioning/TransitionSchema';
 import * as Behaviour from './Behaviour';
 
-const createRoutes = (
-  routes: Record<string, TransitionPropertiesSpec>
-): TransitioningConfigSpec['routes'] => {
+const createRoutes = (routes: Record<string, TransitionPropertiesSpec>): TransitioningConfigSpec['routes'] => {
   const r: TransitioningConfigSpec['routes'] = {};
   Obj.each(routes, (v: TransitionPropertiesSpec, k: string) => {
     const waypoints = k.split('<->');
@@ -23,11 +21,7 @@ const createRoutes = (
   return r;
 };
 
-const createBistate = (
-  first: string,
-  second: string,
-  transitions: TransitionPropertiesSpec
-): TransitioningConfigSpec['routes'] =>
+const createBistate = (first: string, second: string, transitions: TransitionPropertiesSpec): TransitioningConfigSpec['routes'] =>
   Objects.wrapAll([
     { key: first, value: Objects.wrap(second, transitions) },
     { key: second, value: Objects.wrap(first, transitions) }

@@ -39,10 +39,7 @@ export interface SwatchPanelButtonSpec {
   layouts?: Layouts;
 }
 
-export const renderPanelButton = (
-  spec: SwatchPanelButtonSpec,
-  sharedBackstage: UiFactoryBackstageShared
-): SketchSpec =>
+export const renderPanelButton = (spec: SwatchPanelButtonSpec, sharedBackstage: UiFactoryBackstageShared): SketchSpec =>
   AlloyDropdown.sketch({
     dom: spec.dom,
     components: spec.components,

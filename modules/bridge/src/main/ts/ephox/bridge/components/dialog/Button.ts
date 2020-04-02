@@ -38,7 +38,5 @@ const buttonFields = [
 
 export const buttonSchema = ValueSchema.objOf(buttonFields);
 
-export const createButton = (
-  spec: ButtonApi
-): Result<Button, ValueSchema.SchemaError<any>> =>
+export const createButton = (spec: ButtonApi): Result<Button, ValueSchema.SchemaError<any>> =>
   ValueSchema.asRaw<Button>('button', buttonSchema, spec);

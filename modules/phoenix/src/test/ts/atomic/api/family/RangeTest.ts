@@ -10,12 +10,7 @@ UnitTest.test('RangeTest', function () {
       Gene('a', 'div', [
         Gene('aa', 'div', [
           TextGene('aaa', 'once upon a time'),
-          Gene('aab', 'div', [
-            Gene('aaba', 'div', [
-              Gene('aabaa', 'img', []),
-              TextGene('aabab', ' there was a dragon')
-            ])
-          ])
+          Gene('aab', 'div', [Gene('aaba', 'div', [Gene('aabaa', 'img', []), TextGene('aabab', ' there was a dragon')])])
         ]),
         Gene('ab', 'div', [
           TextGene('aba', ' called '),
@@ -33,13 +28,7 @@ UnitTest.test('RangeTest', function () {
     ])
   );
 
-  const check = function (
-    expected: string[],
-    startId: string,
-    finishId: string,
-    delta1: number,
-    delta2: number
-  ) {
+  const check = function (expected: string[], startId: string, finishId: string, delta1: number, delta2: number) {
     const start = Finder.get(doc, startId);
     const finish = Finder.get(doc, finishId);
     const actual = Family.range(doc, start, delta1, finish, delta2);
@@ -55,21 +44,9 @@ UnitTest.test('RangeTest', function () {
   check(['aaa', 'aabab', 'aba', 'abb'], 'aaa', 'abca', 0, 0);
   check(['aaa'], 'aaa', 'aaa', 1, 1);
   check(['aabab', 'aba', 'abb', 'abcb', 'abcc', 'abcda'], 'aabab', 'aca', 0, 0);
-  check(
-    ['aabab', 'aba', 'abb', 'abcb', 'abcc', 'abcda', 'aca'],
-    'aabab',
-    'aca',
-    0,
-    1
-  );
+  check(['aabab', 'aba', 'abb', 'abcb', 'abcc', 'abcda', 'aca'], 'aabab', 'aca', 0, 1);
   check(['aba', 'abb', 'abcb', 'abcc', 'abcda', 'aca'], 'aabab', 'aca', 1, 1);
 
   check(['abcb', 'abcc'], 'abc', 'abcda', 0, 0);
-  check(
-    ['aaa', 'aabab', 'aba', 'abb', 'abcb', 'abcc', 'abcda'],
-    'aa',
-    'ac',
-    0,
-    1
-  );
+  check(['aaa', 'aabab', 'aba', 'abb', 'abcb', 'abcc', 'abcda'], 'aa', 'ac', 0, 1);
 });

@@ -12,9 +12,7 @@ export interface Step<T, U> {
 
 const raw = <T, U>(f: RunFn<T, U>): Step<T, U> => ({ runStep: Pipe(f) });
 
-const stateful = <T, U>(
-  f: (v: T, next: (v: U) => void, die: (err) => void) => void
-): Step<T, U> =>
+const stateful = <T, U>(f: (v: T, next: (v: U) => void, die: (err) => void) => void): Step<T, U> =>
   raw<T, U>((value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => {
     f(
       value,
@@ -24,10 +22,7 @@ const stateful = <T, U>(
   });
 
 // Chiefly used for limiting things with timeouts.
-const control = <T, U, V>(
-  step: Step<T, U>,
-  guard: GuardFn<T, U, V>
-): Step<T, V> =>
+const control = <T, U, V>(step: Step<T, U>, guard: GuardFn<T, U, V>): Step<T, V> =>
   raw<T, V>((value: T, next: NextFn<V>, die: DieFn, logs: TestLogs) => {
     guard(step.runStep, value, next, die, logs);
   });
@@ -38,9 +33,7 @@ const sync = <T>(f: () => void): Step<T, T> =>
     next(value, logs);
   });
 
-const async = <T>(
-  f: (next: () => void, die: (err) => void) => void
-): Step<T, T> =>
+const async = <T>(f: (next: () => void, die: (err) => void) => void): Step<T, T> =>
   raw<T, T>((value: T, next: NextFn<T>, die: DieFn, logs: TestLogs) => {
     f(
       () => next(value, logs),
@@ -58,14 +51,11 @@ const log = <T>(message: string): Step<T, T> =>
     next(value, addLogEntry(logs, message));
   });
 
-const label = <T, U>(label: string, chain: Step<T, U>): Step<T, U> =>
-  control(chain, addLogging(label));
+const label = <T, U>(label: string, chain: Step<T, U>): Step<T, U> => control(chain, addLogging(label));
 
-const wait = <T>(amount: number): Step<T, T> =>
-  async(AsyncActions.delay(amount));
+const wait = <T>(amount: number): Step<T, T> => async(AsyncActions.delay(amount));
 
-const fail = <T>(message: string): Step<T, T> =>
-  async(AsyncActions.fail(message));
+const fail = <T>(message: string): Step<T, T> => async(AsyncActions.fail(message));
 
 const pass: Step<any, any> = sync<any>(GeneralActions.pass);
 

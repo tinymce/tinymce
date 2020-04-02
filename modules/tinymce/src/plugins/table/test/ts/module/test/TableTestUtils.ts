@@ -23,15 +23,8 @@ const sAssertTableStructure = (editor, structure) =>
   Logger.t(
     'Assert table structure ' + structure,
     Step.sync(() => {
-      const table = SelectorFind.descendant(
-        Element.fromDom(editor.getBody()),
-        'table'
-      ).getOrDie('Should exist a table');
-      Assertions.assertStructure(
-        'Should be a table the expected structure',
-        structure,
-        table
-      );
+      const table = SelectorFind.descendant(Element.fromDom(editor.getBody()), 'table').getOrDie('Should exist a table');
+      Assertions.assertStructure('Should be a table the expected structure', structure, table);
     })
   );
 
@@ -55,18 +48,11 @@ const sOpenTableDialog = (ui: TinyUi) =>
     GeneralSteps.sequence([
       Waiter.sTryUntil(
         'Click table properties toolbar button',
-        ui.sClickOnToolbar(
-          'Click on toolbar button',
-          'button:not(.tox-tbtn--disabled)'
-        ),
+        ui.sClickOnToolbar('Click on toolbar button', 'button:not(.tox-tbtn--disabled)'),
         50,
         1000
       ),
-      UiFinder.sWaitForVisible(
-        'wait for dialog',
-        TinyDom.fromDom(document.body),
-        '.tox-dialog[role="dialog"]'
-      )
+      UiFinder.sWaitForVisible('wait for dialog', TinyDom.fromDom(document.body), '.tox-dialog[role="dialog"]')
     ])
   );
 
@@ -80,9 +66,7 @@ const sAssertElementStructure = (editor, selector, expected) =>
       Assertions.assertStructure(
         'Asserting HTML structure of the element: ' + selector,
         ApproxStructure.fromHtml(expected),
-        SelectorFind.descendant(Element.fromDom(body), selector).getOrDie(
-          'Nothing in the Editor matches selector: ' + selector
-        )
+        SelectorFind.descendant(Element.fromDom(body), selector).getOrDie('Nothing in the Editor matches selector: ' + selector)
       );
     })
   );
@@ -97,9 +81,7 @@ const sAssertApproxElementStructure = (editor, selector, expected) =>
       Assertions.assertStructure(
         'Asserting HTML structure of the element: ' + selector,
         expected,
-        SelectorFind.descendant(Element.fromDom(body), selector).getOrDie(
-          'Nothing in the Editor matches selector: ' + selector
-        )
+        SelectorFind.descendant(Element.fromDom(body), selector).getOrDie('Nothing in the Editor matches selector: ' + selector)
       );
     })
   );
@@ -108,18 +90,10 @@ const sClickDialogButton = (label: string, isSave: boolean) =>
   Logger.t(
     'Close dialog and wait to confirm dialog goes away',
     GeneralSteps.sequence([
-      Mouse.sClickOn(
-        TinyDom.fromDom(document.body),
-        '[role="dialog"].tox-dialog button:contains("' +
-          (isSave ? 'Save' : 'Cancel') +
-          '")'
-      ),
+      Mouse.sClickOn(TinyDom.fromDom(document.body), '[role="dialog"].tox-dialog button:contains("' + (isSave ? 'Save' : 'Cancel') + '")'),
       Waiter.sTryUntil(
         'Waiting for confirm dialog to go away',
-        UiFinder.sNotExists(
-          TinyDom.fromDom(document.body),
-          '.tox-confirm-dialog'
-        ),
+        UiFinder.sNotExists(TinyDom.fromDom(document.body), '.tox-confirm-dialog'),
         100,
         1000
       )
@@ -128,29 +102,19 @@ const sClickDialogButton = (label: string, isSave: boolean) =>
 
 const cSetInputValue = (section, newValue) =>
   Chain.control(
-    Chain.fromChains([
-      UiFinder.cFindIn(`label:contains(${section}) + div > input`),
-      UiControls.cSetValue(newValue)
-    ]),
+    Chain.fromChains([UiFinder.cFindIn(`label:contains(${section}) + div > input`), UiControls.cSetValue(newValue)]),
     Guard.addLogging('Set input value' + newValue)
   );
 
 const cWaitForDialog = Chain.control(
-  Chain.fromChains([
-    Chain.inject(Body.body()),
-    UiFinder.cWaitFor('Waiting for dialog', '[role="dialog"]')
-  ]),
+  Chain.fromChains([Chain.inject(Body.body()), UiFinder.cWaitFor('Waiting for dialog', '[role="dialog"]')]),
   Guard.addLogging('Wait for dialog to be visible')
 );
 
 const sChooseTab = (tabName: string) =>
   Logger.t(
     'Choose tab ' + tabName,
-    Chain.asStep(Body.body(), [
-      cWaitForDialog,
-      UiFinder.cFindIn(`[role="tab"]:contains(${tabName})`),
-      Mouse.cClick
-    ])
+    Chain.asStep(Body.body(), [cWaitForDialog, UiFinder.cFindIn(`[role="tab"]:contains(${tabName})`), Mouse.cClick])
   );
 
 const sAssertDialogPresence = (label, expected) =>
@@ -169,9 +133,7 @@ const sAssertSelectValue = (label, section, expected) =>
     'Assert selected value ' + expected,
     Chain.asStep({}, [
       cWaitForDialog,
-      UiFinder.cFindIn(
-        'label:contains("' + section + '") + .tox-selectfield select'
-      ),
+      UiFinder.cFindIn('label:contains("' + section + '") + .tox-selectfield select'),
       UiControls.cGetValue,
       Assertions.cAssertEq('Checking select: ' + label, expected)
     ])
@@ -185,9 +147,7 @@ const cGetBody = Chain.control(
 );
 
 const cInsertTable = (cols: number, rows: number) =>
-  Chain.mapper((editor: Editor) =>
-    TinyDom.fromDom(editor.plugins.table.insertTable(cols, rows))
-  );
+  Chain.mapper((editor: Editor) => TinyDom.fromDom(editor.plugins.table.insertTable(cols, rows)));
 
 const cInsertRaw = (html: string) =>
   Chain.mapper((editor: Editor) => {
@@ -195,10 +155,7 @@ const cInsertRaw = (html: string) =>
     Attr.set(element, 'data-mce-id', '__mce');
     editor.insertContent(Html.getOuter(element));
 
-    return SelectorFind.descendant(
-      Element.fromDom(editor.getBody()),
-      '[data-mce-id="__mce"]'
-    )
+    return SelectorFind.descendant(Element.fromDom(editor.getBody()), '[data-mce-id="__mce"]')
       .map((el) => {
         Attr.remove(el, 'data-mce-id');
         return el;
@@ -250,19 +207,11 @@ const cDragHandle = function (id, deltaH, deltaV) {
       NamedChain.direct('editor', cGetBody, 'editorBody'),
       NamedChain.read(
         'editorBody',
-        Chain.control(
-          UiFinder.cFindIn('#mceResizeHandle' + id),
-          Guard.tryUntil('wait for resize handlers', 100, 40000)
-        )
+        Chain.control(UiFinder.cFindIn('#mceResizeHandle' + id), Guard.tryUntil('wait for resize handlers', 100, 40000))
       ),
       NamedChain.read(
         'editorBody',
-        Chain.fromChains([
-          UiFinder.cFindIn('#mceResizeHandle' + id),
-          Mouse.cMouseDown,
-          Mouse.cMouseMoveTo(deltaH, deltaV),
-          Mouse.cMouseUp
-        ])
+        Chain.fromChains([UiFinder.cFindIn('#mceResizeHandle' + id), Mouse.cMouseDown, Mouse.cMouseMoveTo(deltaH, deltaV), Mouse.cMouseUp])
       ),
       NamedChain.outputInput
     ]),
@@ -286,10 +235,7 @@ const cGetWidth = Chain.control(
 );
 
 const cGetInput = (selector: string) =>
-  Chain.control(
-    Chain.fromChains([Chain.inject(Body.body()), UiFinder.cFindIn(selector)]),
-    Guard.addLogging('Get input')
-  );
+  Chain.control(Chain.fromChains([Chain.inject(Body.body()), UiFinder.cFindIn(selector)]), Guard.addLogging('Get input'));
 
 const sAssertInputValue = (label, selector, expected) =>
   Logger.t(
@@ -298,18 +244,10 @@ const sAssertInputValue = (label, selector, expected) =>
       cGetInput(selector),
       Chain.op((element) => {
         if (element.dom().type === 'checkbox') {
-          Assertions.assertEq(
-            `The input value for ${label} should be: `,
-            expected,
-            element.dom().checked
-          );
+          Assertions.assertEq(`The input value for ${label} should be: `, expected, element.dom().checked);
           return;
         }
-        Assertions.assertEq(
-          `The input value for ${label} should be: `,
-          expected,
-          Value.get(element)
-        );
+        Assertions.assertEq(`The input value for ${label} should be: `, expected, Value.get(element));
       })
     ])
   );
@@ -329,25 +267,14 @@ const sSetInputValue = (label, selector, value) =>
     ])
   );
 
-const sGotoGeneralTab = Chain.asStep({}, [
-  Chain.inject(Body.body()),
-  UiFinder.cFindIn('div.tox-tab:contains(General)'),
-  Mouse.cClick
-]);
+const sGotoGeneralTab = Chain.asStep({}, [Chain.inject(Body.body()), UiFinder.cFindIn('div.tox-tab:contains(General)'), Mouse.cClick]);
 
-const sGotoAdvancedTab = Chain.asStep({}, [
-  Chain.inject(Body.body()),
-  UiFinder.cFindIn('div.tox-tab:contains(Advanced)'),
-  Mouse.cClick
-]);
+const sGotoAdvancedTab = Chain.asStep({}, [Chain.inject(Body.body()), UiFinder.cFindIn('div.tox-tab:contains(Advanced)'), Mouse.cClick]);
 
 const advSelectors = {
-  borderstyle:
-    'label.tox-label:contains(Border style) + div.tox-selectfield>select',
-  bordercolor:
-    'label.tox-label:contains(Border color) + div>input.tox-textfield',
-  backgroundcolor:
-    'label.tox-label:contains(Background color) + div>input.tox-textfield'
+  borderstyle: 'label.tox-label:contains(Border style) + div.tox-selectfield>select',
+  bordercolor: 'label.tox-label:contains(Border color) + div>input.tox-textfield',
+  backgroundcolor: 'label.tox-label:contains(Background color) + div>input.tox-textfield'
 };
 
 const sSetTabInputValues = (data, tabSelectors) => {

@@ -13,10 +13,7 @@ import { Omit } from '../Omit';
 
 type TableSpec = Omit<Types.Table.Table, 'type'>;
 
-export const renderTable = (
-  spec: TableSpec,
-  providersBackstage: UiFactoryBackstageProviders
-): SimpleSpec => {
+export const renderTable = (spec: TableSpec, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const renderTh = (text: string) => ({
     dom: {
       tag: 'th',

@@ -12,35 +12,20 @@ import { Step } from './Step';
   modifiers - { shift: BOOL, alt: BOOL }
   dispatcher - dispatch event from some element
 */
-const fakeKeys = (types: string[]) => (
-  value: number,
-  modifiers: MixedKeyModifiers,
-  dispatcher: Element<any>
-) => {
+const fakeKeys = (types: string[]) => (value: number, modifiers: MixedKeyModifiers, dispatcher: Element<any>) => {
   const doc = Traverse.owner(dispatcher);
   Arr.each(types, (type) => {
     keyevent(type, doc, value, modifiers, dispatcher);
   });
 };
 
-const cFakeKey = (
-  types: string[],
-  keyvalue: number,
-  modifiers: MixedKeyModifiers
-) =>
+const cFakeKey = (types: string[], keyvalue: number, modifiers: MixedKeyModifiers) =>
   Chain.op((dispatcher: Element<any>) => {
     fakeKeys(types)(keyvalue, modifiers, dispatcher);
   });
 
-const sFakeKey = (types: string[]) => <T>(
-  doc: Element<any>,
-  keyvalue: number,
-  modifiers: MixedKeyModifiers
-): Step<T, T> =>
-  Chain.asStep<T, Element>(doc, [
-    FocusTools.cGetFocused,
-    cFakeKey(types, keyvalue, modifiers)
-  ]);
+const sFakeKey = (types: string[]) => <T>(doc: Element<any>, keyvalue: number, modifiers: MixedKeyModifiers): Step<T, T> =>
+  Chain.asStep<T, Element>(doc, [FocusTools.cGetFocused, cFakeKey(types, keyvalue, modifiers)]);
 
 const keydownTypes = ['keydown'];
 const keyupTypes = ['keyup'];
@@ -58,13 +43,4 @@ const sKeyup = sFakeKey(keyupTypes);
 const sKeypress = sFakeKey(keypressTypes);
 const sKeystroke = sFakeKey(keystrokeTypes);
 
-export {
-  keydown,
-  keyup,
-  keypress,
-  keystroke,
-  sKeydown,
-  sKeyup,
-  sKeypress,
-  sKeystroke
-};
+export { keydown, keyup, keypress, keystroke, sKeydown, sKeyup, sKeypress, sKeystroke };

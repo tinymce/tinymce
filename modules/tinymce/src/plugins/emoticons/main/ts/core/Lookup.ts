@@ -11,9 +11,7 @@ import { EmojiEntry } from './EmojiDatabase';
 
 const emojiMatches = (emoji: EmojiEntry, lowerCasePattern: string): boolean =>
   Strings.contains(emoji.title.toLowerCase(), lowerCasePattern) ||
-  Arr.exists(emoji.keywords, (k) =>
-    Strings.contains(k.toLowerCase(), lowerCasePattern)
-  );
+  Arr.exists(emoji.keywords, (k) => Strings.contains(k.toLowerCase(), lowerCasePattern));
 
 const emojisFrom = (
   list: EmojiEntry[],

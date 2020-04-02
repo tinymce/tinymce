@@ -21,12 +21,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 export type SuccessCallback = (path: string) => void;
 export type FailureCallback = (error: string) => void;
 export type ProgressCallback = (percent: number) => void;
-export type UploadHandler = (
-  blobInfo: BlobInfo,
-  success: SuccessCallback,
-  failure: FailureCallback,
-  progress: ProgressCallback
-) => void;
+export type UploadHandler = (blobInfo: BlobInfo, success: SuccessCallback, failure: FailureCallback, progress: ProgressCallback) => void;
 
 export interface UploaderSettings {
   url?: string;
@@ -44,12 +39,7 @@ const pathJoin = (path1: string | undefined, path2: string) => {
 };
 
 export default (settings: UploaderSettings) => {
-  const defaultHandler = (
-    blobInfo: BlobInfo,
-    success: SuccessCallback,
-    failure: FailureCallback,
-    progress: ProgressCallback
-  ) => {
+  const defaultHandler = (blobInfo: BlobInfo, success: SuccessCallback, failure: FailureCallback, progress: ProgressCallback) => {
     let xhr, formData;
 
     xhr = new XMLHttpRequest();
@@ -61,9 +51,7 @@ export default (settings: UploaderSettings) => {
     };
 
     xhr.onerror = () => {
-      failure(
-        'Image upload failed due to a XHR Transport error. Code: ' + xhr.status
-      );
+      failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
     };
 
     xhr.onload = () => {

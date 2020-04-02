@@ -64,12 +64,8 @@ const sketch = function (rawSpec): SketchSpec {
 
     components: [
       Slider.parts().spectrum({
-        dom: UiDomFactory.dom(
-          '<div class="${prefix}-slider-size-container"></div>'
-        ),
-        components: [
-          UiDomFactory.spec('<div class="${prefix}-slider-size-line"></div>')
-        ]
+        dom: UiDomFactory.dom('<div class="${prefix}-slider-size-container"></div>'),
+        components: [UiDomFactory.spec('<div class="${prefix}-slider-size-line"></div>')]
       }),
 
       Slider.parts().thumb({

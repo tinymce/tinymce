@@ -9,12 +9,7 @@ import * as Buttons from './Buttons';
 import { SketchSpec } from '@ephox/alloy';
 import { MobileRealm } from './IosRealm';
 
-const button = (
-  realm: MobileRealm,
-  clazz: string,
-  makeItems,
-  editor
-): SketchSpec =>
+const button = (realm: MobileRealm, clazz: string, makeItems, editor): SketchSpec =>
   Buttons.forToolbar(
     clazz,
     () => {

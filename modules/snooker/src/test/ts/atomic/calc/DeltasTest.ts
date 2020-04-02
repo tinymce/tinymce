@@ -5,12 +5,7 @@ import { TableSize } from 'ephox/snooker/resize/Types';
 
 UnitTest.test('Deltas', function () {
   const min = 10;
-  const check = function (
-    expected: number[],
-    input: number[],
-    column: number,
-    step: number
-  ) {
+  const check = function (expected: number[], input: number[], column: number, step: number) {
     const singleColumnWidth = function (width: number, _delta: number) {
       const newNext = Math.max(min, width + step);
       return [newNext - width];
@@ -19,12 +14,7 @@ UnitTest.test('Deltas', function () {
       minCellWidth: Fun.constant(10),
       singleColumnWidth
     };
-    const actual = Deltas.determine(
-      input,
-      column,
-      step,
-      tableSize as TableSize
-    );
+    const actual = Deltas.determine(input, column, step, tableSize as TableSize);
     assert.eq(expected, actual);
   };
 

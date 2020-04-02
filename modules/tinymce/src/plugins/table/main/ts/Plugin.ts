@@ -28,21 +28,11 @@ function Plugin(editor: Editor) {
   const selections = Selections(editor);
   const selectionTargets = getSelectionTargets(editor, selections);
   const resizeHandler = getResizeHandler(editor);
-  const cellSelection = CellSelection(
-    editor,
-    resizeHandler.lazyResize,
-    selectionTargets
-  );
+  const cellSelection = CellSelection(editor, resizeHandler.lazyResize, selectionTargets);
   const actions = TableActions(editor, resizeHandler.lazyWire);
   const clipboardRows = Cell(Option.none<Element<any>[]>());
 
-  Commands.registerCommands(
-    editor,
-    actions,
-    cellSelection,
-    selections,
-    clipboardRows
-  );
+  Commands.registerCommands(editor, actions, cellSelection, selections, clipboardRows);
   Clipboard.registerEvents(editor, selections, actions, cellSelection);
 
   MenuItems.addMenuItems(editor, selectionTargets);

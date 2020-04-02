@@ -40,31 +40,20 @@ import * as ReadOnly from '../../ReadOnly';
 const extensionsAccepted = '.jpg,.jpeg,.png,.gif';
 
 const filterByExtension = function (files: FileList) {
-  const re = new RegExp(
-    '(' + extensionsAccepted.split(/\s*,\s*/).join('|') + ')$',
-    'i'
-  );
+  const re = new RegExp('(' + extensionsAccepted.split(/\s*,\s*/).join('|') + ')$', 'i');
   return Arr.filter(Arr.from(files), (file) => re.test(file.name));
 };
 
 type DropZoneSpec = Omit<Types.DropZone.DropZone, 'type'>;
 
-export const renderDropZone = (
-  spec: DropZoneSpec,
-  providersBackstage: UiFactoryBackstageProviders
-): SimpleSpec => {
+export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   // TODO: Consider moving to alloy
-  const stopper: AlloyEvents.EventRunHandler<EventArgs> = (
-    _: AlloyComponent,
-    se: SimulatedEvent<EventArgs>
-  ): void => {
+  const stopper: AlloyEvents.EventRunHandler<EventArgs> = (_: AlloyComponent, se: SimulatedEvent<EventArgs>): void => {
     se.stop();
   };
 
   // TODO: Consider moving to alloy
-  const sequence = (
-    actions: Array<AlloyEvents.EventRunHandler<EventArgs>>
-  ): AlloyEvents.EventRunHandler<EventArgs> => (comp, se) => {
+  const sequence = (actions: Array<AlloyEvents.EventRunHandler<EventArgs>>): AlloyEvents.EventRunHandler<EventArgs> => (comp, se) => {
     Arr.each(actions, (a) => {
       a(comp, se);
     });
@@ -99,10 +88,7 @@ export const renderDropZone = (
       }
     },
     behaviours: Behaviour.derive([
-      AddEventsBehaviour.config('input-file-events', [
-        AlloyEvents.cutter(NativeEvents.click()),
-        AlloyEvents.cutter(SystemEvents.tap())
-      ])
+      AddEventsBehaviour.config('input-file-events', [AlloyEvents.cutter(NativeEvents.click()), AlloyEvents.cutter(SystemEvents.tap())])
     ])
   });
 
@@ -167,17 +153,10 @@ export const renderDropZone = (
     ]
   });
 
-  const pLabel = spec.label.map((label) =>
-    renderLabel(label, providersBackstage)
-  );
+  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
   const pField = AlloyFormField.parts().field({
     factory: { sketch: renderField }
   });
 
-  return renderFormFieldWith(
-    pLabel,
-    pField,
-    ['tox-form__group--stretched'],
-    []
-  );
+  return renderFormFieldWith(pLabel, pField, ['tox-form__group--stretched'], []);
 };

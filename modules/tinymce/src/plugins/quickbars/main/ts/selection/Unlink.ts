@@ -19,11 +19,7 @@ import { HTMLElement, Node } from '@ephox/dom-globals';
  *  a[b<a href="x">c]d</a>e -> a[bc]<a href="x">d</a>e
  */
 
-const getSelectedElements = function (
-  rootElm: HTMLElement,
-  startNode: Node,
-  endNode: Node
-) {
+const getSelectedElements = function (rootElm: HTMLElement, startNode: Node, endNode: Node) {
   let node;
   const elms = [];
 
@@ -70,16 +66,10 @@ const getSelectedAnchors = function (editor: Editor) {
   selection = editor.selection;
   dom = editor.dom;
   rng = selection.getRng();
-  startElm = getParentAnchorOrSelf(
-    dom,
-    RangeUtils.getNode(rng.startContainer, rng.startOffset)
-  );
+  startElm = getParentAnchorOrSelf(dom, RangeUtils.getNode(rng.startContainer, rng.startOffset));
   endElm = RangeUtils.getNode(rng.endContainer, rng.endOffset);
   rootElm = editor.getBody();
-  anchorElms = Tools.grep(
-    getSelectedElements(rootElm, startElm, endElm),
-    isLink
-  );
+  anchorElms = Tools.grep(getSelectedElements(rootElm, startElm, endElm), isLink);
 
   return anchorElms;
 };

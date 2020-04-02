@@ -79,8 +79,7 @@ const monitor = (settings: GuiEventSettings) => {
   const handleTouchend = (event: EventArgs): Option<boolean> => {
     longpress.cancel();
 
-    const isSame = (data: TouchHistoryData) =>
-      Compare.eq(data.target, event.target());
+    const isSame = (data: TouchHistoryData) => Compare.eq(data.target, event.target());
 
     return startData
       .get()
@@ -95,17 +94,13 @@ const monitor = (settings: GuiEventSettings) => {
       });
   };
 
-  const handlers: Record<
-    string,
-    (event: EventArgs) => Option<boolean>
-  > = Objects.wrapAll([
+  const handlers: Record<string, (event: EventArgs) => Option<boolean>> = Objects.wrapAll([
     { key: NativeEvents.touchstart(), value: handleTouchstart },
     { key: NativeEvents.touchmove(), value: handleTouchmove },
     { key: NativeEvents.touchend(), value: handleTouchend }
   ]);
 
-  const fireIfReady = (event: EventArgs, type: string): Option<boolean> =>
-    Obj.get(handlers, type).bind((handler) => handler(event));
+  const fireIfReady = (event: EventArgs, type: string): Option<boolean> => Obj.get(handlers, type).bind((handler) => handler(event));
 
   return {
     fireIfReady

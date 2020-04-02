@@ -23,27 +23,20 @@ UnitTest.asynctest('Browser Test: .MetadataTest', (success, failure) => {
 
       Pipeline.async(
         {},
-        Log.steps(
-          'TBA',
-          'Help: Assert Help Plugin list contains getMetadata functionality',
-          [
-            ui.sClickOnToolbar(
-              'Click help button',
-              selectors.toolbarHelpButton
-            ),
-            PluginAssert.sAssert(
-              'Failed to list fake plugins',
-              {
-                'li a:contains("Help")': 1,
-                'li a:contains("Fake")': 1,
-                'li:contains("nometafake")': 1,
-                'button:contains("Close")': 1
-              },
-              selectors.dialog,
-              selectors.pluginsTab
-            )
-          ]
-        ),
+        Log.steps('TBA', 'Help: Assert Help Plugin list contains getMetadata functionality', [
+          ui.sClickOnToolbar('Click help button', selectors.toolbarHelpButton),
+          PluginAssert.sAssert(
+            'Failed to list fake plugins',
+            {
+              'li a:contains("Help")': 1,
+              'li a:contains("Fake")': 1,
+              'li:contains("nometafake")': 1,
+              'button:contains("Close")': 1
+            },
+            selectors.dialog,
+            selectors.pluginsTab
+          )
+        ]),
         onSuccess,
         onFailure
       );

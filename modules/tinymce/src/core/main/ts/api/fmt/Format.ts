@@ -8,10 +8,7 @@
 import { Node } from '@ephox/dom-globals';
 
 export type ApplyFormat = BlockFormat | InlineFormat | SelectorFormat;
-export type RemoveFormat =
-  | RemoveBlockFormat
-  | RemoveInlineFormat
-  | RemoveSelectorFormat;
+export type RemoveFormat = RemoveBlockFormat | RemoveInlineFormat | RemoveSelectorFormat;
 export type Format = ApplyFormat | RemoveFormat;
 export type Formats = Record<string, Format | Format[]>;
 
@@ -65,17 +62,14 @@ export interface CommonRemoveFormat<T> extends CommonFormat<T> {
   deep?: boolean;
 }
 
-export interface RemoveBlockFormat
-  extends CommonRemoveFormat<RemoveBlockFormat> {
+export interface RemoveBlockFormat extends CommonRemoveFormat<RemoveBlockFormat> {
   block: string;
 }
 
-export interface RemoveInlineFormat
-  extends CommonRemoveFormat<RemoveInlineFormat> {
+export interface RemoveInlineFormat extends CommonRemoveFormat<RemoveInlineFormat> {
   inline: string;
 }
 
-export interface RemoveSelectorFormat
-  extends CommonRemoveFormat<RemoveSelectorFormat> {
+export interface RemoveSelectorFormat extends CommonRemoveFormat<RemoveSelectorFormat> {
   selector: string;
 }

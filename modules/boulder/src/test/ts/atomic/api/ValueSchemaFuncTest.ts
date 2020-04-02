@@ -12,35 +12,18 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
       function (err) {
         const message = ValueSchema.formatError(err);
         Assert.eq(
-          label +
-            '. Was looking to see if contained: ' +
-            expectedPart +
-            '.\nWas: ' +
-            message,
+          label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message,
           true,
           message.indexOf(expectedPart) > -1
         );
       },
       function (val) {
-        assert.fail(
-          label +
-            '\nExpected error: ' +
-            expectedPart +
-            '\nWas success(' +
-            JSON.stringify(val, null, 2) +
-            ')'
-        );
+        assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(val, null, 2) + ')');
       }
     );
   };
 
-  const checkRawErrIs = function (
-    label,
-    expectedPart,
-    applicator,
-    f,
-    processor
-  ) {
+  const checkRawErrIs = function (label, expectedPart, applicator, f, processor) {
     Logger.sync(label, function () {
       const newF = ValueSchema.asRaw<any>(label, processor, f).getOrDie();
       let passed = null;
@@ -51,36 +34,19 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
       } catch (err) {
         const message = err.message;
         Assert.eq(
-          label +
-            '. Was looking to see if contained: ' +
-            expectedPart +
-            '.\nWas: ' +
-            message,
+          label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message,
           true,
           message.indexOf(expectedPart) > -1
         );
       }
 
       if (passed !== null) {
-        assert.fail(
-          label +
-            '\nExpected error: ' +
-            expectedPart +
-            '\nWas success(' +
-            JSON.stringify(passed, null, 2) +
-            ')'
-        );
+        assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(passed, null, 2) + ')');
       }
     });
   };
 
-  const checkRawResultIs = function (
-    label,
-    expected,
-    applicator,
-    f,
-    processor
-  ) {
+  const checkRawResultIs = function (label, expected, applicator, f, processor) {
     Logger.sync(label, function () {
       const actual = ValueSchema.asRawOrDie(label, processor, f);
       const result = applicator(actual);
@@ -93,12 +59,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
     return args.join('.');
   };
 
-  checkErr(
-    'Not passing through a function',
-    'Not a function',
-    10,
-    ValueSchema.funcOrDie(['a', 'b'], ValueSchema.anyValue())
-  );
+  checkErr('Not passing through a function', 'Not a function', 10, ValueSchema.funcOrDie(['a', 'b'], ValueSchema.anyValue()));
 
   checkRawResultIs(
     'Trim an argument, no postprocess',
@@ -169,12 +130,6 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
       return f('cat', 'dog', 'elephant');
     },
     getter3,
-    ValueSchema.funcOrDie(
-      ['one', 'two'],
-      ValueSchema.arrOfObj([
-        FieldSchema.strict('firstname'),
-        FieldSchema.strict('surname')
-      ])
-    )
+    ValueSchema.funcOrDie(['one', 'two'], ValueSchema.arrOfObj([FieldSchema.strict('firstname'), FieldSchema.strict('surname')]))
   );
 });

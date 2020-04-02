@@ -3,11 +3,7 @@ import * as Helpers from './Helpers';
 import { getTableClassList, hasAppearanceOptions } from '../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
 
-const getItems = (
-  editor: Editor,
-  hasClasses: boolean,
-  insertNewTable: boolean
-) => {
+const getItems = (editor: Editor, hasClasses: boolean, insertNewTable: boolean) => {
   const rowColCountItems: Types.Dialog.BodyComponentApi[] = !insertNewTable
     ? []
     : [
@@ -38,9 +34,7 @@ const getItems = (
     }
   ];
 
-  const appearanceItems: Types.Dialog.BodyComponentApi[] = hasAppearanceOptions(
-    editor
-  )
+  const appearanceItems: Types.Dialog.BodyComponentApi[] = hasAppearanceOptions(editor)
     ? [
         {
           type: 'input',
@@ -106,11 +100,7 @@ const getItems = (
       ]
     : [];
 
-  return rowColCountItems
-    .concat(alwaysItems)
-    .concat(appearanceItems)
-    .concat(alignmentItem)
-    .concat(classListItem);
+  return rowColCountItems.concat(alwaysItems).concat(appearanceItems).concat(alignmentItem).concat(classListItem);
 };
 
 export { getItems };

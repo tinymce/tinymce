@@ -14,11 +14,7 @@ import { addToHistory, getHistory } from './UrlInputHistory';
 import { Types } from '@ephox/bridge';
 
 type PickerCallback = (value: string, meta: Record<string, any>) => void;
-type Picker = (
-  callback: PickerCallback,
-  value: string,
-  meta: Record<string, any>
-) => void;
+type Picker = (callback: PickerCallback, value: string, meta: Record<string, any>) => void;
 
 export interface LinkInformation {
   targets: LinkTarget[];
@@ -40,10 +36,7 @@ export interface UrlValidationQuery {
 
 export type UrlValidationCallback = (result: ValidationResult) => void;
 
-export type UrlValidationHandler = (
-  info: UrlValidationQuery,
-  callback: UrlValidationCallback
-) => any;
+export type UrlValidationHandler = (info: UrlValidationQuery, callback: UrlValidationCallback) => any;
 
 export interface ApiUrlData {
   value: string;
@@ -68,33 +61,22 @@ const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 const isTruthy = (value: any) => !!value;
 
-const makeMap = (value: any): Record<string, boolean> =>
-  Obj.map(Tools.makeMap(value, /[, ]/), isTruthy);
+const makeMap = (value: any): Record<string, boolean> => Obj.map(Tools.makeMap(value, /[, ]/), isTruthy);
 
 const getOpt = <T, K extends keyof T>(obj: T, key: K): Option<T[K]> =>
   hasOwnProperty.call(obj, key) ? Option.some(obj[key]) : Option.none();
 
-const getTextSetting = (
-  settings: Record<string, any>,
-  name: string,
-  defaultValue: string
-): Option<string> => {
+const getTextSetting = (settings: Record<string, any>, name: string, defaultValue: string): Option<string> => {
   const value = getOpt(settings, name).getOr(defaultValue);
   return Type.isString(value) ? Option.some(value) : Option.none();
 };
 
 const getPicker = (settings: Record<string, any>): Option<Picker> =>
-  Option.some(settings.file_picker_callback).filter(Type.isFunction) as Option<
-    Picker
-  >;
+  Option.some(settings.file_picker_callback).filter(Type.isFunction) as Option<Picker>;
 
-const getPickerTypes = (
-  settings: Record<string, any>
-): boolean | Record<string, boolean> => {
+const getPickerTypes = (settings: Record<string, any>): boolean | Record<string, boolean> => {
   const optFileTypes = Option.some(settings.file_picker_types).filter(isTruthy);
-  const optLegacyTypes = Option.some(
-    settings.file_browser_callback_types
-  ).filter(isTruthy);
+  const optLegacyTypes = Option.some(settings.file_browser_callback_types).filter(isTruthy);
   const optTypes = optFileTypes.or(optLegacyTypes).map(makeMap);
   return getPicker(settings).fold(
     () => false,
@@ -106,10 +88,7 @@ const getPickerTypes = (
   );
 };
 
-const getPickerSetting = (
-  settings: Record<string, any>,
-  filetype: string
-): Option<Picker> => {
+const getPickerSetting = (settings: Record<string, any>, filetype: string): Option<Picker> => {
   const pickerTypes = getPickerTypes(settings);
   if (Type.isBoolean(pickerTypes)) {
     return pickerTypes ? getPicker(settings) : Option.none();
@@ -119,27 +98,26 @@ const getPickerSetting = (
 };
 
 const getUrlPicker = (editor: Editor, filetype: string): Option<UrlPicker> =>
-  getPickerSetting(editor.settings, filetype).map(
-    (picker) => (entry: InternalUrlData): Future<ApiUrlData> =>
-      Future.nu((completer) => {
-        const handler = (value: string, meta?: Record<string, any>) => {
-          if (!Type.isString(value)) {
-            throw new Error('Expected value to be string');
-          }
-          if (meta !== undefined && !Type.isObject(meta)) {
-            throw new Error('Expected meta to be a object');
-          }
-          const r: ApiUrlData = { value, meta };
-          completer(r);
-        };
-        const meta = {
-          filetype,
-          fieldname: entry.fieldname,
-          ...Option.from(entry.meta).getOr({})
-        };
-        // file_picker_callback(callback, currentValue, metaData)
-        picker.call(editor, handler, entry.value, meta);
-      })
+  getPickerSetting(editor.settings, filetype).map((picker) => (entry: InternalUrlData): Future<ApiUrlData> =>
+    Future.nu((completer) => {
+      const handler = (value: string, meta?: Record<string, any>) => {
+        if (!Type.isString(value)) {
+          throw new Error('Expected value to be string');
+        }
+        if (meta !== undefined && !Type.isObject(meta)) {
+          throw new Error('Expected meta to be a object');
+        }
+        const r: ApiUrlData = { value, meta };
+        completer(r);
+      };
+      const meta = {
+        filetype,
+        fieldname: entry.fieldname,
+        ...Option.from(entry.meta).getOr({})
+      };
+      // file_picker_callback(callback, currentValue, metaData)
+      picker.call(editor, handler, entry.value, meta);
+    })
   );
 
 export const getLinkInformation = (editor: Editor): Option<LinkInformation> => {
@@ -149,39 +127,19 @@ export const getLinkInformation = (editor: Editor): Option<LinkInformation> => {
 
   return Option.some({
     targets: LinkTargets.find(editor.getBody()),
-    anchorTop: getTextSetting(
-      editor.settings,
-      'anchor_top',
-      '#top'
-    ).getOrUndefined(),
-    anchorBottom: getTextSetting(
-      editor.settings,
-      'anchor_bottom',
-      '#bottom'
-    ).getOrUndefined()
+    anchorTop: getTextSetting(editor.settings, 'anchor_top', '#top').getOrUndefined(),
+    anchorBottom: getTextSetting(editor.settings, 'anchor_bottom', '#bottom').getOrUndefined()
   });
 };
 
-export const getValidationHandler = (
-  editor: Editor
-): Option<UrlValidationHandler> => {
-  const optValidator = Option.from(
-    editor.settings.file_picker_validator_handler
-  ).filter(Type.isFunction);
-  return optValidator.orThunk(() =>
-    Option.from(editor.settings.filepicker_validator_handler).filter(
-      Type.isFunction
-    )
-  );
+export const getValidationHandler = (editor: Editor): Option<UrlValidationHandler> => {
+  const optValidator = Option.from(editor.settings.file_picker_validator_handler).filter(Type.isFunction);
+  return optValidator.orThunk(() => Option.from(editor.settings.filepicker_validator_handler).filter(Type.isFunction));
 };
 
-export const getUrlPickerTypes = (
-  editor: Editor
-): boolean | Record<string, boolean> => getPickerTypes(editor.settings);
+export const getUrlPickerTypes = (editor: Editor): boolean | Record<string, boolean> => getPickerTypes(editor.settings);
 
-export const UrlInputBackstage = (
-  editor: Editor
-): UiFactoryBackstageForUrlInput => ({
+export const UrlInputBackstage = (editor: Editor): UiFactoryBackstageForUrlInput => ({
   getHistory,
   addToHistory,
   getLinkInformation: () => getLinkInformation(editor),

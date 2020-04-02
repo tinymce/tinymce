@@ -5,10 +5,7 @@ import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 
-UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', function (success, failure) {
   const viewBlock = ViewBlock();
 
   const cSetHtml = function (html) {
@@ -19,50 +16,24 @@ UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', function (
 
   const cAssertHtml = function (expectedHtml) {
     return Chain.op(function () {
-      Assertions.assertHtml(
-        'Should equal html',
-        expectedHtml,
-        viewBlock.get().innerHTML
-      );
+      Assertions.assertHtml('Should equal html', expectedHtml, viewBlock.get().innerHTML);
     });
   };
 
   const cMergeBlocks = function (forward, block1Path, block2Path) {
     return Chain.mapper(function (viewBlock: any) {
-      const block1 = Hierarchy.follow(
-        Element.fromDom(viewBlock.get()),
-        block1Path
-      ).getOrDie();
-      const block2 = Hierarchy.follow(
-        Element.fromDom(viewBlock.get()),
-        block2Path
-      ).getOrDie();
-      return MergeBlocks.mergeBlocks(
-        Element.fromDom(viewBlock.get()),
-        forward,
-        block1,
-        block2
-      );
+      const block1 = Hierarchy.follow(Element.fromDom(viewBlock.get()), block1Path).getOrDie();
+      const block2 = Hierarchy.follow(Element.fromDom(viewBlock.get()), block2Path).getOrDie();
+      return MergeBlocks.mergeBlocks(Element.fromDom(viewBlock.get()), forward, block1, block2);
     });
   };
 
   const cAssertPosition = function (expectedPath, expectedOffset) {
     return Chain.op(function (position: Option<any>) {
-      const container = Hierarchy.follow(
-        Element.fromDom(viewBlock.get()),
-        expectedPath
-      ).getOrDie();
+      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), expectedPath).getOrDie();
 
-      Assertions.assertDomEq(
-        'Should be expected container',
-        container,
-        Element.fromDom(position.getOrDie().container())
-      );
-      Assertions.assertEq(
-        'Should be expected offset',
-        expectedOffset,
-        position.getOrDie().offset()
-      );
+      Assertions.assertDomEq('Should be expected container', container, Element.fromDom(position.getOrDie().container()));
+      Assertions.assertEq('Should be expected offset', expectedOffset, position.getOrDie().offset());
     });
   };
 

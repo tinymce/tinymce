@@ -1,11 +1,4 @@
-import {
-  Assertions,
-  Chain,
-  GeneralSteps,
-  Logger,
-  Pipeline,
-  UiFinder
-} from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Logger, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Fun, Strings } from '@ephox/katamari';
@@ -13,20 +6,14 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element, TextContent } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.FontSelectCustomTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.FontSelectCustomTest', function (success, failure) {
   Theme();
 
   const sAssertSelectBoxDisplayValue = function (editor, title, expectedValue) {
     return Chain.asStep(Element.fromDom(document.body), [
       UiFinder.cFindIn('*[title="' + title + '"]'),
       Chain.mapper(Fun.compose(Strings.trim, TextContent.get)),
-      Assertions.cAssertEq(
-        'Should be the expected display value',
-        expectedValue
-      )
+      Assertions.cAssertEq('Should be the expected display value', expectedValue)
     ]);
   };
 
@@ -48,45 +35,31 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectCustomTest', function (
           Logger.t(
             'Font family with spaces and numbers in the name with legacy font elements',
             GeneralSteps.sequence([
-              tinyApis.sSetRawContent(
-                `<p><font face="'bookshelf symbol 7'" size="1">a</font></p>`
-              ),
+              tinyApis.sSetRawContent(`<p><font face="'bookshelf symbol 7'" size="1">a</font></p>`),
               tinyApis.sFocus(),
               tinyApis.sSetCursor([0, 0, 0], 0),
               tinyApis.sNodeChanged(),
               sAssertSelectBoxDisplayValue(editor, 'Font sizes', '8pt'),
-              sAssertSelectBoxDisplayValue(
-                editor,
-                'Fonts',
-                'Bookshelf Symbol 7'
-              )
+              sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Bookshelf Symbol 7')
             ])
           ),
 
           Logger.t(
             'Font family with spaces and numbers in the name',
             GeneralSteps.sequence([
-              tinyApis.sSetContent(
-                `<p style="font-family: 'bookshelf symbol 7';" </p>`
-              ),
+              tinyApis.sSetContent(`<p style="font-family: 'bookshelf symbol 7';" </p>`),
               tinyApis.sFocus(),
               tinyApis.sSetCursor([0, 0], 0),
               tinyApis.sNodeChanged(),
               sAssertSelectBoxDisplayValue(editor, 'Font sizes', '12px'),
-              sAssertSelectBoxDisplayValue(
-                editor,
-                'Fonts',
-                'Bookshelf Symbol 7'
-              )
+              sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Bookshelf Symbol 7')
             ])
           ),
 
           Logger.t(
             'Font family with quoted font names',
             GeneralSteps.sequence([
-              tinyApis.sSetContent(
-                `<p style="font-family: 'bauhaus 93';" </p>`
-              ),
+              tinyApis.sSetContent(`<p style="font-family: 'bauhaus 93';" </p>`),
               tinyApis.sFocus(),
               tinyApis.sSetCursor([0, 0], 0),
               tinyApis.sNodeChanged(),

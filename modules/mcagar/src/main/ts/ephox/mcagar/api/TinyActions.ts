@@ -4,18 +4,9 @@ import { document } from '@ephox/dom-globals';
 import { Editor } from '../alien/EditorTypes';
 
 export interface TinyActions {
-  sContentKeydown: <T>(
-    code: number,
-    modifiers?: Record<string, any>
-  ) => Step<T, T>;
-  sContentKeystroke: <T>(
-    code: number,
-    modifiers?: Record<string, any>
-  ) => Step<T, T>;
-  sContentKeypress: <T>(
-    code: number,
-    modifiers?: Record<string, any>
-  ) => Step<T, T>;
+  sContentKeydown: <T>(code: number, modifiers?: Record<string, any>) => Step<T, T>;
+  sContentKeystroke: <T>(code: number, modifiers?: Record<string, any>) => Step<T, T>;
+  sContentKeypress: <T>(code: number, modifiers?: Record<string, any>) => Step<T, T>;
 
   sUiKeydown: <T>(code: number, modifiers?: Record<string, any>) => Step<T, T>;
 }

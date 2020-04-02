@@ -28,9 +28,7 @@ import { dialogChannel } from './DialogChannels';
 import { renderModalHeader } from './SilverDialogHeader';
 
 export interface WindowExtra {
-  redial?: <T extends Types.Dialog.DialogData>(
-    newConfig: Types.Dialog.DialogApi<T>
-  ) => DialogManager.DialogInit<T>;
+  redial?: <T extends Types.Dialog.DialogData>(newConfig: Types.Dialog.DialogApi<T>) => DialogManager.DialogInit<T>;
   closeWindow: () => void;
 }
 
@@ -73,9 +71,7 @@ const getEventExtras = (lazyDialog, extra: WindowExtra) => ({
       behaviours: bs,
       components: [
         {
-          dom: DomFactory.fromHtml(
-            '<div class="tox-spinner"><div></div><div></div><div></div></div>'
-          )
+          dom: DomFactory.fromHtml('<div class="tox-spinner"><div></div><div></div><div></div></div>')
         }
       ]
     }));
@@ -112,31 +108,15 @@ const renderModalDialog = (
       dialogEvents,
       eventOrder: {
         [SystemEvents.receive()]: ['reflecting', 'receiving'],
-        [SystemEvents.attachedToDom()]: [
-          'scroll-lock',
-          'reflecting',
-          'messages',
-          'dialog-events',
-          'alloy.base.behaviour'
-        ],
-        [SystemEvents.detachedFromDom()]: [
-          'alloy.base.behaviour',
-          'dialog-events',
-          'messages',
-          'reflecting',
-          'scroll-lock'
-        ]
+        [SystemEvents.attachedToDom()]: ['scroll-lock', 'reflecting', 'messages', 'dialog-events', 'alloy.base.behaviour'],
+        [SystemEvents.detachedFromDom()]: ['alloy.base.behaviour', 'dialog-events', 'messages', 'reflecting', 'scroll-lock']
       }
     })
   );
 };
 
-const mapMenuButtons = (
-  buttons: Types.Dialog.DialogButton[]
-): (Types.Dialog.DialogButton | StoragedMenuButton)[] => {
-  const mapItems = (
-    button: Types.Dialog.DialogMenuButton
-  ): StoragedMenuButton => {
+const mapMenuButtons = (buttons: Types.Dialog.DialogButton[]): (Types.Dialog.DialogButton | StoragedMenuButton)[] => {
+  const mapItems = (button: Types.Dialog.DialogMenuButton): StoragedMenuButton => {
     const items = Arr.map(
       button.items,
       (item: Types.Dialog.DialogToggleMenuItem): StoragedMenuItem => {
@@ -161,13 +141,7 @@ const mapMenuButtons = (
   });
 };
 
-const extractCellsToObject = (
-  buttons: (
-    | StoragedMenuButton
-    | Types.Dialog.DialogMenuButton
-    | Types.Dialog.DialogNormalButton
-  )[]
-) =>
+const extractCellsToObject = (buttons: (StoragedMenuButton | Types.Dialog.DialogMenuButton | Types.Dialog.DialogNormalButton)[]) =>
   Arr.foldl(
     buttons,
     (acc, button) => {
@@ -187,10 +161,4 @@ const extractCellsToObject = (
     {}
   );
 
-export {
-  getHeader,
-  getEventExtras,
-  renderModalDialog,
-  mapMenuButtons,
-  extractCellsToObject
-};
+export { getHeader, getEventExtras, renderModalDialog, mapMenuButtons, extractCellsToObject };

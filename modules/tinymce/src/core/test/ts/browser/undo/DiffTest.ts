@@ -3,10 +3,7 @@ import { Pipeline } from '@ephox/agar';
 import * as Diff from 'tinymce/core/undo/Diff';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.undo.DiffTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.undo.DiffTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   const KEEP = Diff.KEEP,

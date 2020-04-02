@@ -18,35 +18,18 @@ import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
 
 const isInlineTarget = function (editor: Editor, elm: Node): boolean {
-  return Selectors.is(
-    Element.fromDom(elm),
-    Settings.getInlineBoundarySelector(editor)
-  );
+  return Selectors.is(Element.fromDom(elm), Settings.getInlineBoundarySelector(editor));
 };
 
 const isRtl = function (element: Node) {
-  return (
-    DOMUtils.DOM.getStyle(element, 'direction', true) === 'rtl' ||
-    Bidi.hasStrongRtl(element.textContent)
-  );
+  return DOMUtils.DOM.getStyle(element, 'direction', true) === 'rtl' || Bidi.hasStrongRtl(element.textContent);
 };
 
-const findInlineParents = function (
-  isInlineTarget: (node: Node) => boolean,
-  rootNode: Node,
-  pos: CaretPosition
-) {
-  return Arr.filter(
-    DOMUtils.DOM.getParents(pos.container(), '*', rootNode),
-    isInlineTarget
-  );
+const findInlineParents = function (isInlineTarget: (node: Node) => boolean, rootNode: Node, pos: CaretPosition) {
+  return Arr.filter(DOMUtils.DOM.getParents(pos.container(), '*', rootNode), isInlineTarget);
 };
 
-const findRootInline = function (
-  isInlineTarget: (node: Node) => boolean,
-  rootNode: Node,
-  pos: CaretPosition
-) {
+const findRootInline = function (isInlineTarget: (node: Node) => boolean, rootNode: Node, pos: CaretPosition) {
   const parents = findInlineParents(isInlineTarget, rootNode, pos);
   return Option.from(parents[parents.length - 1]);
 };
@@ -58,9 +41,7 @@ const hasSameParentBlock = function (rootNode: Node, node1: Node, node2: Node) {
 };
 
 const isAtZwsp = function (pos: CaretPosition) {
-  return (
-    CaretContainer.isBeforeInline(pos) || CaretContainer.isAfterInline(pos)
-  );
+  return CaretContainer.isBeforeInline(pos) || CaretContainer.isAfterInline(pos);
 };
 
 const normalizePosition = function (forward: boolean, pos: CaretPosition) {
@@ -79,46 +60,24 @@ const normalizePosition = function (forward: boolean, pos: CaretPosition) {
         return CaretPosition.after(container);
       }
     } else {
-      return CaretContainer.isBeforeInline(pos)
-        ? CaretPosition(container, offset + 1)
-        : pos;
+      return CaretContainer.isBeforeInline(pos) ? CaretPosition(container, offset + 1) : pos;
     }
   } else {
     if (CaretContainer.isCaretContainerInline(container)) {
       if (NodeType.isText(container.previousSibling)) {
-        return CaretPosition(
-          container.previousSibling,
-          container.previousSibling.data.length
-        );
+        return CaretPosition(container.previousSibling, container.previousSibling.data.length);
       } else {
         return CaretPosition.before(container);
       }
     } else {
-      return CaretContainer.isAfterInline(pos)
-        ? CaretPosition(container, offset - 1)
-        : pos;
+      return CaretContainer.isAfterInline(pos) ? CaretPosition(container, offset - 1) : pos;
     }
   }
 };
 
 type NormalisePostionFn = (pos: CaretPosition) => CaretPosition;
 
-const normalizeForwards = Fun.curry(
-  normalizePosition,
-  true
-) as NormalisePostionFn;
-const normalizeBackwards = Fun.curry(
-  normalizePosition,
-  false
-) as NormalisePostionFn;
+const normalizeForwards = Fun.curry(normalizePosition, true) as NormalisePostionFn;
+const normalizeBackwards = Fun.curry(normalizePosition, false) as NormalisePostionFn;
 
-export {
-  isInlineTarget,
-  findRootInline,
-  isRtl,
-  isAtZwsp,
-  normalizePosition,
-  normalizeForwards,
-  normalizeBackwards,
-  hasSameParentBlock
-};
+export { isInlineTarget, findRootInline, isRtl, isAtZwsp, normalizePosition, normalizeForwards, normalizeBackwards, hasSameParentBlock };

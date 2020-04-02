@@ -19,11 +19,6 @@ export interface FormComponentWithLabel extends FormComponent {
   label: Option<string>;
 }
 
-export const formComponentFields = [
-  FieldSchema.strictString('type'),
-  FieldSchema.strictString('name')
-];
+export const formComponentFields = [FieldSchema.strictString('type'), FieldSchema.strictString('name')];
 
-export const formComponentWithLabelFields = formComponentFields.concat([
-  FieldSchema.optionString('label')
-]);
+export const formComponentWithLabelFields = formComponentFields.concat([FieldSchema.optionString('label')]);

@@ -23,14 +23,7 @@ UnitTest.test('Arr.map: unit tests', () => {
 
 UnitTest.test('Arr.map: functor laws', () => {
   fc.assert(
-    fc.property(fc.array(fc.nat()), (xs) =>
-      Assert.eq(
-        'map id = id',
-        Fun.identity(xs),
-        Arr.map(xs, Fun.identity),
-        tArray(tNumber)
-      )
-    )
+    fc.property(fc.array(fc.nat()), (xs) => Assert.eq('map id = id', Fun.identity(xs), Arr.map(xs, Fun.identity), tArray(tNumber)))
   );
 
   const f = plus3;
@@ -38,12 +31,7 @@ UnitTest.test('Arr.map: functor laws', () => {
 
   fc.assert(
     fc.property(fc.array(fc.nat()), (xs) =>
-      Assert.eq(
-        'map (f . g) = map f . map g',
-        Arr.map(xs, Fun.compose(f, g)),
-        Arr.map(Arr.map(xs, g), f),
-        tArray(tNumber)
-      )
+      Assert.eq('map (f . g) = map f . map g', Arr.map(xs, Fun.compose(f, g)), Arr.map(Arr.map(xs, g), f), tArray(tNumber))
     )
   );
 });

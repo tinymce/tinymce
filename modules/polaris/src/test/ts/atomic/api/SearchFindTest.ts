@@ -6,11 +6,7 @@ import * as Safe from 'ephox/polaris/pattern/Safe';
 import { PRegExp } from 'ephox/polaris/pattern/Types';
 
 UnitTest.test('api.Search.findall (using api.Pattern)', function () {
-  const checkAll = function (
-    expected: [number, number][],
-    input: string,
-    pattern: PRegExp
-  ) {
+  const checkAll = function (expected: [number, number][], input: string, pattern: PRegExp) {
     const actual = Search.findall(input, pattern);
     assert.eq(expected.length, actual.length);
     Arr.each(expected, function (exp, i) {
@@ -18,19 +14,9 @@ UnitTest.test('api.Search.findall (using api.Pattern)', function () {
       assert.eq(exp[1], actual[i].finish());
     });
   };
-  const testData: (
-    pattern: PRegExp,
-    name: string
-  ) => { pattern: () => PRegExp; name: () => string } = Struct.immutable(
-    'pattern',
-    'name'
-  );
+  const testData: (pattern: PRegExp, name: string) => { pattern: () => PRegExp; name: () => string } = Struct.immutable('pattern', 'name');
 
-  const checkMany = function (
-    expected: [number, number, string][],
-    text: string,
-    targets: ReturnType<typeof testData>[]
-  ) {
+  const checkMany = function (expected: [number, number, string][], text: string, targets: ReturnType<typeof testData>[]) {
     const actual = Search.findmany(text, targets);
     assert.eq(expected.length, actual.length);
     Arr.each(expected, function (exp, i) {
@@ -105,28 +91,17 @@ UnitTest.test('api.Search.findall (using api.Pattern)', function () {
   );
 
   checkAll(
-    [
-      [
-        'this '.length,
-        'this e'.length + Unicode.zeroWidth.length + 'nds'.length
-      ]
-    ],
+    [['this '.length, 'this e'.length + Unicode.zeroWidth.length + 'nds'.length]],
     'this e' + Unicode.zeroWidth + 'nds here',
     Pattern.unsafeword('e' + Unicode.zeroWidth + 'nds')
   );
 
   const prefix = Safe.sanitise('[');
   const suffix = Safe.sanitise(']');
-  checkAll(
-    [[1, 5]],
-    ' [wo] and more',
-    Pattern.unsafetoken(prefix + '[^' + suffix + ']*' + suffix)
-  );
+  checkAll([[1, 5]], ' [wo] and more', Pattern.unsafetoken(prefix + '[^' + suffix + ']*' + suffix));
 
   checkMany([], '', []);
-  checkMany([[1, 3, 'alpha']], ' aa bb cc', [
-    testData(Pattern.safeword('aa'), 'alpha')
-  ]);
+  checkMany([[1, 3, 'alpha']], ' aa bb cc', [testData(Pattern.safeword('aa'), 'alpha')]);
 
   checkMany(
     [

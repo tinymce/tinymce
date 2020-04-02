@@ -22,11 +22,7 @@ export interface XHRSettings {
   url: string;
   error_scope?: {};
   success_scope?: {};
-  error?(
-    message: 'TIMED_OUT' | 'GENERAL',
-    xhr: XMLHttpRequest,
-    settings: XHRSettings
-  ): void;
+  error?(message: 'TIMED_OUT' | 'GENERAL', xhr: XMLHttpRequest, settings: XHRSettings): void;
   success?(text: string, xhr: XMLHttpRequest, settings: XHRSettings): void;
 }
 
@@ -75,19 +71,9 @@ const XHR: XHR = {
     const ready = function () {
       if (!settings.async || xhr.readyState === 4 || count++ > 10000) {
         if (settings.success && count < 10000 && xhr.status === 200) {
-          settings.success.call(
-            settings.success_scope,
-            '' + xhr.responseText,
-            xhr,
-            settings
-          );
+          settings.success.call(settings.success_scope, '' + xhr.responseText, xhr, settings);
         } else if (settings.error) {
-          settings.error.call(
-            settings.error_scope,
-            count > 10000 ? 'TIMED_OUT' : 'GENERAL',
-            xhr,
-            settings
-          );
+          settings.error.call(settings.error_scope, count > 10000 ? 'TIMED_OUT' : 'GENERAL', xhr, settings);
         }
 
         xhr = null;
@@ -112,11 +98,7 @@ const XHR: XHR = {
         xhr.overrideMimeType(settings.content_type);
       }
 
-      xhr.open(
-        settings.type || (settings.data ? 'POST' : 'GET'),
-        settings.url,
-        settings.async
-      );
+      xhr.open(settings.type || (settings.data ? 'POST' : 'GET'), settings.url, settings.async);
 
       if (settings.crossDomain) {
         xhr.withCredentials = true;

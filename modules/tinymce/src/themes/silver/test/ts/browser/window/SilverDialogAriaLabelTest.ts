@@ -1,11 +1,4 @@
-import {
-  Chain,
-  Pipeline,
-  UiFinder,
-  NamedChain,
-  GeneralSteps,
-  Logger
-} from '@ephox/agar';
+import { Chain, Pipeline, UiFinder, NamedChain, GeneralSteps, Logger } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
@@ -25,9 +18,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
       const cGetDialogLabelId = Chain.binder((dialogE: Element) => {
         if (Attr.has(dialogE, 'aria-labelledby')) {
           const labelId = Attr.get(dialogE, 'aria-labelledby');
-          return labelId.length > 0
-            ? Result.value(labelId)
-            : Result.error('Dialog has zero length aria-labelledby attribute');
+          return labelId.length > 0 ? Result.value(labelId) : Result.error('Dialog has zero length aria-labelledby attribute');
         } else {
           return Result.error('Dialog has no aria-labelledby attribute');
         }
@@ -35,15 +26,9 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
 
       const sAssertDialogLabelledBy = Chain.asStep(Body.body(), [
         NamedChain.asChain([
-          NamedChain.direct(
-            NamedChain.inputName(),
-            UiFinder.cFindIn('[role="dialog"]'),
-            'dialog'
-          ),
+          NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('[role="dialog"]'), 'dialog'),
           NamedChain.direct('dialog', cGetDialogLabelId, 'labelId'),
-          NamedChain.bundle((obj) =>
-            UiFinder.findIn(obj.dialog, `#${obj.labelId}`)
-          )
+          NamedChain.bundle((obj) => UiFinder.findIn(obj.dialog, `#${obj.labelId}`))
         ])
       ]);
 
@@ -59,14 +44,8 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
 
       const sTestDialogLabelled = (params: { inline?: string }) =>
         Logger.t(
-          `Dialog should have "aria-labelledby" for config "${JSON.stringify(
-            params
-          )}"`,
-          GeneralSteps.sequence([
-            DialogUtils.sOpen(editor, dialogSpec, params),
-            sAssertDialogLabelledBy,
-            DialogUtils.sClose
-          ])
+          `Dialog should have "aria-labelledby" for config "${JSON.stringify(params)}"`,
+          GeneralSteps.sequence([DialogUtils.sOpen(editor, dialogSpec, params), sAssertDialogLabelledBy, DialogUtils.sClose])
         );
 
       Pipeline.async(

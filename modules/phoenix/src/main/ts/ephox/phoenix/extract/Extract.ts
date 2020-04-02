@@ -16,11 +16,7 @@ import * as TypedList from './TypedList';
  *  Otherwise returns []
  * TODO: for TBIO-470 for Multi-Language spell checking: deal with the element LANG, adding language to typeditem so this nested information is not lost
  */
-const typed = function <E, D>(
-  universe: Universe<E, D>,
-  item: E,
-  optimise?: (e: E) => boolean
-): TypedItem<E, D>[] {
+const typed = function <E, D>(universe: Universe<E, D>, item: E, optimise?: (e: E) => boolean): TypedItem<E, D>[] {
   if (universe.property().isText(item)) {
     return [TypedItem.text(item, universe)];
   } else if (universe.property().isEmptyTag(item)) {
@@ -29,9 +25,7 @@ const typed = function <E, D>(
     return []; // Do not include this at all
   } else if (universe.property().isElement(item)) {
     const children = universe.property().children(item);
-    const boundary = universe.property().isBoundary(item)
-      ? [TypedItem.boundary(item, universe)]
-      : [];
+    const boundary = universe.property().isBoundary(item) ? [TypedItem.boundary(item, universe)] : [];
     const rest =
       optimise !== undefined && optimise(item)
         ? []
@@ -47,11 +41,7 @@ const typed = function <E, D>(
 /**
  * Returns just the actual elements from a call to typed().
  */
-const items = function <E, D>(
-  universe: Universe<E, D>,
-  item: E,
-  optimise?: (e: E) => boolean
-) {
+const items = function <E, D>(universe: Universe<E, D>, item: E, optimise?: (e: E) => boolean) {
   const typedItemList = typed(universe, item, optimise);
 
   const raw = function (item: E, _universe: Universe<E, D>) {
@@ -63,13 +53,7 @@ const items = function <E, D>(
   });
 };
 
-const extractToElem = function <E, D>(
-  universe: Universe<E, D>,
-  child: E,
-  offset: number,
-  item: E,
-  optimise?: (e: E) => boolean
-) {
+const extractToElem = function <E, D>(universe: Universe<E, D>, child: E, offset: number, item: E, optimise?: (e: E) => boolean) {
   const extractions = typed(universe, item, optimise);
   const prior = TypedList.dropUntil(extractions, child);
   const count = TypedList.count(prior);
@@ -82,12 +66,7 @@ const extractToElem = function <E, D>(
  *
  * To find the exact reference later, use Find.
  */
-const extract = function <E, D>(
-  universe: Universe<E, D>,
-  child: E,
-  offset: number,
-  optimise?: (e: E) => boolean
-) {
+const extract = function <E, D>(universe: Universe<E, D>, child: E, offset: number, optimise?: (e: E) => boolean) {
   return universe
     .property()
     .parent(child)

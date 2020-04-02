@@ -15,11 +15,8 @@ const cTrigger = (selector: string, action: (ele: Element) => void) =>
     );
   });
 
-const sTriggerWith = <T>(
-  container: Element,
-  selector: string,
-  action: (ele: Element) => void
-) => Chain.asStep<T, Element>(container, [cTrigger(selector, action)]);
+const sTriggerWith = <T>(container: Element, selector: string, action: (ele: Element) => void) =>
+  Chain.asStep<T, Element>(container, [cTrigger(selector, action)]);
 
 const trueClick = function (elem: Element) {
   // The closest event queue to a true Click
@@ -29,26 +26,19 @@ const trueClick = function (elem: Element) {
   Clicks.trigger(elem);
 };
 
-const sClickOn = <T>(container: Element, selector: string) =>
-  sTriggerWith<T>(container, selector, Clicks.trigger);
+const sClickOn = <T>(container: Element, selector: string) => sTriggerWith<T>(container, selector, Clicks.trigger);
 
-const sHoverOn = <T>(container: Element, selector: string) =>
-  sTriggerWith<T>(container, selector, Clicks.mouseover);
+const sHoverOn = <T>(container: Element, selector: string) => sTriggerWith<T>(container, selector, Clicks.mouseover);
 
-const sTrueClickOn = <T>(container: Element, selector: string) =>
-  sTriggerWith<T>(container, selector, trueClick);
+const sTrueClickOn = <T>(container: Element, selector: string) => sTriggerWith<T>(container, selector, trueClick);
 
-const sContextMenuOn = <T>(container: Element, selector: string) =>
-  sTriggerWith<T>(container, selector, Clicks.contextmenu);
+const sContextMenuOn = <T>(container: Element, selector: string) => sTriggerWith<T>(container, selector, Clicks.contextmenu);
 
-const cClickOn = (selector: string): Chain<Element, Element> =>
-  cTrigger(selector, Clicks.trigger);
+const cClickOn = (selector: string): Chain<Element, Element> => cTrigger(selector, Clicks.trigger);
 
-const cMouseUpTo = (dx: number, dy: number) =>
-  Chain.op(Clicks.mouseupTo(dx, dy));
+const cMouseUpTo = (dx: number, dy: number) => Chain.op(Clicks.mouseupTo(dx, dy));
 
-const cMouseMoveTo = (dx: number, dy: number) =>
-  Chain.op(Clicks.mousemoveTo(dx, dy));
+const cMouseMoveTo = (dx: number, dy: number) => Chain.op(Clicks.mousemoveTo(dx, dy));
 
 const point = Clicks.point;
 

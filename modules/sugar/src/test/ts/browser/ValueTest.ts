@@ -4,9 +4,7 @@ import { UnitTest, assert } from '@ephox/bedrock-client';
 import { HTMLTextAreaElement } from '@ephox/dom-globals';
 
 UnitTest.test('ValueTest', function () {
-  const ta = Element.fromHtml<HTMLTextAreaElement>(
-    '<textarea>sometexthere</textarea>'
-  );
+  const ta = Element.fromHtml<HTMLTextAreaElement>('<textarea>sometexthere</textarea>');
   assert.eq('sometexthere', Value.get(ta));
   Value.set(ta, 'one');
   assert.eq('one', ta.dom().value);

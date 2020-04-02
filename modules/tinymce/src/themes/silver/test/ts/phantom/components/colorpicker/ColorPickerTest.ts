@@ -1,11 +1,4 @@
-import {
-  Assertions,
-  Chain,
-  Logger,
-  UiControls,
-  UiFinder,
-  Waiter
-} from '@ephox/agar';
+import { Assertions, Chain, Logger, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
@@ -23,11 +16,7 @@ UnitTest.asynctest('ColorPicker component Test', (success, failure) => {
         })
       ),
     (_doc, _body, _gui, component, _store) => {
-      const sAssertColour = (
-        label: string,
-        expected: string,
-        labelText: string
-      ) =>
+      const sAssertColour = (label: string, expected: string, labelText: string) =>
         Logger.t(
           label,
           Waiter.sTryUntil(
@@ -41,21 +30,13 @@ UnitTest.asynctest('ColorPicker component Test', (success, failure) => {
         );
 
       return [
-        RepresentingSteps.sSetComposedValue(
-          'Let us set the colour picker!',
-          component,
-          '#ccaa33'
-        ),
+        RepresentingSteps.sSetComposedValue('Let us set the colour picker!', component, '#ccaa33'),
 
         sAssertColour('Red', '204', 'R'),
         sAssertColour('Green', '170', 'G'),
         sAssertColour('Blue', '51', 'B'),
 
-        RepresentingSteps.sAssertComposedValue(
-          'Checking composed value worked',
-          '#ccaa33',
-          component
-        )
+        RepresentingSteps.sAssertComposedValue('Checking composed value worked', '#ccaa33', component)
       ];
     },
     success,

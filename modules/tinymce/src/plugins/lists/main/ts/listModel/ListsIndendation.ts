@@ -33,25 +33,15 @@ const indentedComposer = (editor: Editor, entries: Entry[]): Element[] => {
 const composeEntries = (editor, entries: Entry[]): Element[] =>
   Arr.bind(Arr.groupBy(entries, isIndented), (entries) => {
     const groupIsIndented = Arr.head(entries).map(isIndented).getOr(false);
-    return groupIsIndented
-      ? indentedComposer(editor, entries)
-      : outdentedComposer(editor, entries);
+    return groupIsIndented ? indentedComposer(editor, entries) : outdentedComposer(editor, entries);
   });
 
-const indentSelectedEntries = (
-  entries: Entry[],
-  indentation: Indentation
-): void => {
-  Arr.each(Arr.filter(entries, isSelected), (entry) =>
-    indentEntry(indentation, entry)
-  );
+const indentSelectedEntries = (entries: Entry[], indentation: Indentation): void => {
+  Arr.each(Arr.filter(entries, isSelected), (entry) => indentEntry(indentation, entry));
 };
 
 const getItemSelection = (editor: Editor): Option<ItemSelection> => {
-  const selectedListItems = Arr.map(
-    Selection.getSelectedListItems(editor),
-    Element.fromDom
-  );
+  const selectedListItems = Arr.map(Selection.getSelectedListItems(editor), Element.fromDom);
 
   return Options.lift2(
     Arr.find(selectedListItems, Fun.not(hasFirstChildList)),
@@ -60,24 +50,14 @@ const getItemSelection = (editor: Editor): Option<ItemSelection> => {
   );
 };
 
-const listIndentation = (
-  editor: Editor,
-  lists: Element[],
-  indentation: Indentation
-) => {
+const listIndentation = (editor: Editor, lists: Element[], indentation: Indentation) => {
   const entrySets: EntrySet[] = parseLists(lists, getItemSelection(editor));
 
   Arr.each(entrySets, (entrySet) => {
     indentSelectedEntries(entrySet.entries, indentation);
     const composedLists = composeEntries(editor, entrySet.entries);
     Arr.each(composedLists, (composedList) => {
-      fireListEvent(
-        editor,
-        indentation === Indentation.Indent
-          ? ListAction.IndentList
-          : ListAction.OutdentList,
-        composedList.dom()
-      );
+      fireListEvent(editor, indentation === Indentation.Indent ? ListAction.IndentList : ListAction.OutdentList, composedList.dom());
     });
     InsertAll.before(entrySet.sourceList, composedLists);
     Remove.remove(entrySet.sourceList);

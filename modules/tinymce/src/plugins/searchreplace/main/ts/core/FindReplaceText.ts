@@ -16,13 +16,7 @@ function isContentEditableFalse(node: HTMLElement) {
 // released under UNLICENSE that is compatible with LGPL
 // TODO: Handle contentEditable edgecase:
 // <p>text<span contentEditable="false">text<span contentEditable="true">text</span>text</span>text</p>
-function findAndReplaceDOMText(
-  regex: RegExp,
-  node: Node,
-  replacementNode: Node,
-  captureGroup: number | false,
-  schema: Schema
-) {
+function findAndReplaceDOMText(regex: RegExp, node: Node, replacementNode: Node, captureGroup: number | false, schema: Schema) {
   let m;
   const matches = [];
   let text,
@@ -39,9 +33,7 @@ function findAndReplaceDOMText(
     captureGroup = captureGroup || 0;
 
     if (!m[0]) {
-      throw new Error(
-        'findAndReplaceDOMText cannot handle zero-length matches'
-      );
+      throw new Error('findAndReplaceDOMText cannot handle zero-length matches');
     }
 
     let index = m.index;
@@ -67,10 +59,7 @@ function findAndReplaceDOMText(
       return node.data;
     }
 
-    if (
-      hiddenTextElementsMap[node.nodeName] &&
-      !blockElementsMap[node.nodeName]
-    ) {
+    if (hiddenTextElementsMap[node.nodeName] && !blockElementsMap[node.nodeName]) {
       return '';
     }
 
@@ -80,10 +69,7 @@ function findAndReplaceDOMText(
       return '\n';
     }
 
-    if (
-      blockElementsMap[node.nodeName] ||
-      shortEndedElementsMap[node.nodeName]
-    ) {
+    if (blockElementsMap[node.nodeName] || shortEndedElementsMap[node.nodeName]) {
       txt += '\n';
     }
 
@@ -108,11 +94,7 @@ function findAndReplaceDOMText(
       matchIndex = 0;
 
     out: while (true) {
-      if (
-        blockElementsMap[curNode.nodeName] ||
-        shortEndedElementsMap[curNode.nodeName] ||
-        isContentEditableFalse(curNode)
-      ) {
+      if (blockElementsMap[curNode.nodeName] || shortEndedElementsMap[curNode.nodeName] || isContentEditableFalse(curNode)) {
         atIndex++;
       }
 
@@ -159,11 +141,7 @@ function findAndReplaceDOMText(
         if (!matchLocation) {
           break; // no more matches
         }
-      } else if (
-        (!hiddenTextElementsMap[curNode.nodeName] ||
-          blockElementsMap[curNode.nodeName]) &&
-        curNode.firstChild
-      ) {
+      } else if ((!hiddenTextElementsMap[curNode.nodeName] || blockElementsMap[curNode.nodeName]) && curNode.firstChild) {
         if (!isContentEditableFalse(curNode)) {
           // Move down
           curNode = curNode.firstChild;
@@ -197,9 +175,7 @@ function findAndReplaceDOMText(
     let makeReplacementNode;
 
     if (typeof nodeName !== 'function') {
-      const stencilNode = nodeName.nodeType
-        ? nodeName
-        : doc.createElement(nodeName);
+      const stencilNode = nodeName.nodeType ? nodeName : doc.createElement(nodeName);
 
       makeReplacementNode = function (fill, matchIndex) {
         const clone = stencilNode.cloneNode(false);
@@ -230,9 +206,7 @@ function findAndReplaceDOMText(
         parentNode = node.parentNode;
         if (range.startNodeIndex > 0) {
           // Add `before` text node (before the match)
-          before = doc.createTextNode(
-            node.data.substring(0, range.startNodeIndex)
-          );
+          before = doc.createTextNode(node.data.substring(0, range.startNodeIndex));
           parentNode.insertBefore(before, node);
         }
 
@@ -251,14 +225,9 @@ function findAndReplaceDOMText(
       }
 
       // Replace startNode -> [innerNodes...] -> endNode (in that order)
-      before = doc.createTextNode(
-        startNode.data.substring(0, range.startNodeIndex)
-      );
+      before = doc.createTextNode(startNode.data.substring(0, range.startNodeIndex));
       after = doc.createTextNode(endNode.data.substring(range.endNodeIndex));
-      const elA = makeReplacementNode(
-        startNode.data.substring(range.startNodeIndex),
-        matchIndex
-      );
+      const elA = makeReplacementNode(startNode.data.substring(range.startNodeIndex), matchIndex);
       const innerEls = [];
 
       for (let i = 0, l = range.innerNodes.length; i < l; ++i) {
@@ -268,10 +237,7 @@ function findAndReplaceDOMText(
         innerEls.push(innerEl);
       }
 
-      const elB = makeReplacementNode(
-        endNode.data.substring(0, range.endNodeIndex),
-        matchIndex
-      );
+      const elB = makeReplacementNode(endNode.data.substring(0, range.endNodeIndex), matchIndex);
 
       parentNode = startNode.parentNode;
       parentNode.insertBefore(before, startNode);

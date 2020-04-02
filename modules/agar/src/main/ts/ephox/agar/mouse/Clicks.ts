@@ -15,17 +15,9 @@ const trigger = function (element: Element<any>): any {
   return undefined;
 };
 
-const point = (
-  type: string,
-  button: number,
-  element: Element<any>,
-  x: number,
-  y: number
-): void => {
+const point = (type: string, button: number, element: Element<any>, x: number, y: number): void => {
   // Adapted from: http://stackoverflow.com/questions/17468611/triggering-click-event-phantomjs
-  const ev: MouseEvent = (<Document>element.dom().ownerDocument).createEvent(
-    'MouseEvents'
-  );
+  const ev: MouseEvent = (<Document>element.dom().ownerDocument).createEvent('MouseEvents');
   ev.initMouseEvent(
     type,
     true /* bubble */,
@@ -46,17 +38,12 @@ const point = (
   element.dom().dispatchEvent(ev);
 };
 
-const click = (eventType: string, button: number) => (
-  element: Element<any>
-): void => {
+const click = (eventType: string, button: number) => (element: Element<any>): void => {
   const position = Location.absolute(element);
   point(eventType, button, element, position.left(), position.top());
 };
 
-const clickAt = (eventType: string, button: number) => (
-  dx: number,
-  dy: number
-) => (element: Element<any>): void => {
+const clickAt = (eventType: string, button: number) => (dx: number, dy: number) => (element: Element<any>): void => {
   const position = Location.absolute(element);
   point(eventType, button, element, position.left() + dx, position.top() + dy);
 };
@@ -70,15 +57,4 @@ const mouseover = click('mouseover', LEFT_CLICK);
 const mouseout = click('mouseout', LEFT_CLICK);
 const contextmenu = click('contextmenu', RIGHT_CLICK);
 
-export {
-  trigger,
-  mousedown,
-  mouseup,
-  mouseupTo,
-  mousemove,
-  mousemoveTo,
-  mouseover,
-  mouseout,
-  contextmenu,
-  point
-};
+export { trigger, mousedown, mouseup, mouseupTo, mousemove, mousemoveTo, mouseover, mouseout, contextmenu, point };

@@ -21,11 +21,7 @@ import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { single } from './Sketcher';
 
-const tieredData = (
-  primary: string,
-  menus: TieredMenuRecord,
-  expansions: Record<string, string>
-): TieredData => ({
+const tieredData = (primary: string, menus: TieredMenuRecord, expansions: Record<string, string>): TieredData => ({
   primary,
   menus,
   expansions
@@ -44,12 +40,7 @@ const collapseItem = (text: string): ItemDataTuple => ({
   }
 });
 
-const tieredMenu: TieredMenuSketcher = single<
-  TieredMenuSpecType,
-  TieredMenuDetail,
-  TieredMenuApis,
-  TieredMenuExtras
->({
+const tieredMenu: TieredMenuSketcher = single<TieredMenuSpecType, TieredMenuDetail, TieredMenuApis, TieredMenuExtras>({
   name: 'TieredMenu',
   configFields: [
     Fields.onStrictKeyboardHandler('onExecute'),
@@ -62,11 +53,7 @@ const tieredMenu: TieredMenuSketcher = single<
 
     FieldSchema.defaulted('highlightImmediately', true),
 
-    FieldSchema.strictObjOf('data', [
-      FieldSchema.strict('primary'),
-      FieldSchema.strict('menus'),
-      FieldSchema.strict('expansions')
-    ]),
+    FieldSchema.strictObjOf('data', [FieldSchema.strict('primary'), FieldSchema.strict('menus'), FieldSchema.strict('expansions')]),
 
     FieldSchema.defaulted('fakeFocus', false),
     Fields.onHandler('onHighlight'),
@@ -78,12 +65,7 @@ const tieredMenu: TieredMenuSketcher = single<
     FieldSchema.defaulted('navigateOnHover', true),
     FieldSchema.defaulted('stayInDom', false),
 
-    SketchBehaviours.field('tmenuBehaviours', [
-      Keying,
-      Highlighting,
-      Composing,
-      Replacing
-    ]),
+    SketchBehaviours.field('tmenuBehaviours', [Keying, Highlighting, Composing, Replacing]),
     FieldSchema.defaulted('eventOrder', {})
   ],
 

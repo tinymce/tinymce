@@ -2,12 +2,7 @@ import { UnitTest, assert } from '@ephox/bedrock-client';
 import { Result, Arr } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
-import {
-  parseSize,
-  Size,
-  nuSize,
-  SizeUnit
-} from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
+import { parseSize, Size, nuSize, SizeUnit } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
 import { units, largeSensible } from './SizeInputShared';
 
 UnitTest.test('SizeInputParsingTest', () => {
@@ -20,21 +15,14 @@ UnitTest.test('SizeInputParsingTest', () => {
             assert.eq(err, resultErr);
           },
           (resultValue) => {
-            assert.fail(
-              'parseSize should have failed but succeeded with value:\n' +
-                JSON.stringify(resultValue)
-            );
+            assert.fail('parseSize should have failed but succeeded with value:\n' + JSON.stringify(resultValue));
           }
         );
       },
       (value: Size) => {
         result.fold(
           (resultErr) => {
-            assert.fail(
-              'parseSize should have succeeded but failed with err: "' +
-                resultErr +
-                '"'
-            );
+            assert.fail('parseSize should have succeeded but failed with err: "' + resultErr + '"');
           },
           (resultValue) => {
             assert.eq(value, resultValue);
@@ -82,13 +70,7 @@ UnitTest.test('SizeInputParsingTest', () => {
     arbPad,
     Jsc.oneof(Jsc.elements(units)),
     arbPad,
-    function (
-      pad1: string,
-      nonNegNumber: number,
-      pad2: string,
-      unit: SizeUnit,
-      pad3: string
-    ) {
+    function (pad1: string, nonNegNumber: number, pad2: string, unit: SizeUnit, pad3: string) {
       const str = pad1 + nonNegNumber + pad2 + unit + pad3;
       const parsed = parseSize(str);
       const size = parsed.toOption().getOrNull();

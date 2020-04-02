@@ -3,11 +3,7 @@ import { Result } from '@ephox/katamari';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as GeneralSteps from 'ephox/agar/api/GeneralSteps';
 import * as Logger from 'ephox/agar/api/Logger';
-import {
-  _outputName,
-  _outputUnset,
-  NamedChain
-} from 'ephox/agar/api/NamedChain';
+import { _outputName, _outputUnset, NamedChain } from 'ephox/agar/api/NamedChain';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as StepAssertions from 'ephox/agar/test/StepAssertions';
 
@@ -86,11 +82,7 @@ UnitTest.asynctest('NamedChainTest', (success, failure) => {
         GeneralSteps.sequence([
           StepAssertions.testStepsPass({}, [
             Chain.asStep({}, [
-              NamedChain.asChain([
-                NamedChain.write('x', Chain.inject(5)),
-                NamedChain.write('y', Chain.inject(8)),
-                NamedChain.output('y')
-              ]),
+              NamedChain.asChain([NamedChain.write('x', Chain.inject(5)), NamedChain.write('y', Chain.inject(8)), NamedChain.output('y')]),
               cIsEqual(8)
             ])
           ]),
@@ -121,28 +113,17 @@ UnitTest.asynctest('NamedChainTest', (success, failure) => {
           StepAssertions.testStepsPass({}, [
             Chain.asStep({}, [
               Chain.inject('input.name.value'),
-              NamedChain.asChain([
-                NamedChain.write('x', Chain.inject(5)),
-                NamedChain.write('y', Chain.inject(8)),
-                NamedChain.outputInput
-              ]),
+              NamedChain.asChain([NamedChain.write('x', Chain.inject(5)), NamedChain.write('y', Chain.inject(8)), NamedChain.outputInput]),
               cIsEqual('input.name.value')
             ])
           ]),
 
-          StepAssertions.testStepsFail(
-            'z is not a field in the index object.',
-            [
-              Chain.asStep({}, [
-                NamedChain.asChain([
-                  NamedChain.write('x', Chain.inject(5)),
-                  NamedChain.write('y', Chain.inject(8)),
-                  NamedChain.output('z')
-                ]),
-                cIsEqual(8)
-              ])
-            ]
-          )
+          StepAssertions.testStepsFail('z is not a field in the index object.', [
+            Chain.asStep({}, [
+              NamedChain.asChain([NamedChain.write('x', Chain.inject(5)), NamedChain.write('y', Chain.inject(8)), NamedChain.output('z')]),
+              cIsEqual(8)
+            ])
+          ])
         ])
       )
     ],

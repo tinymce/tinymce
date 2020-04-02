@@ -22,21 +22,9 @@ export interface Delta {
     - assumptions: All grids used by this module should be rectangular
 */
 
-const measure = function (
-  startAddress: Structs.Address,
-  gridA: Structs.RowCells[],
-  gridB: Structs.RowCells[]
-): Result<Delta, string> {
-  if (
-    startAddress.row() >= gridA.length ||
-    startAddress.column() > GridRow.cellLength(gridA[0])
-  ) {
-    return Result.error(
-      'invalid start address out of table bounds, row: ' +
-        startAddress.row() +
-        ', column: ' +
-        startAddress.column()
-    );
+const measure = function (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: Structs.RowCells[]): Result<Delta, string> {
+  if (startAddress.row() >= gridA.length || startAddress.column() > GridRow.cellLength(gridA[0])) {
+    return Result.error('invalid start address out of table bounds, row: ' + startAddress.row() + ', column: ' + startAddress.column());
   }
   const rowRemainder = gridA.slice(startAddress.row());
   const colRemainder = rowRemainder[0].cells().slice(startAddress.column());
@@ -49,10 +37,7 @@ const measure = function (
   });
 };
 
-const measureWidth = function (
-  gridA: Structs.RowCells[],
-  gridB: Structs.RowCells[]
-): Delta {
+const measureWidth = function (gridA: Structs.RowCells[], gridB: Structs.RowCells[]): Delta {
   const colLengthA = GridRow.cellLength(gridA[0]);
   const colLengthB = GridRow.cellLength(gridB[0]);
 
@@ -68,39 +53,21 @@ const fill = function <T>(cells: T[], generator: SimpleGenerators) {
   });
 };
 
-const rowFill = function (
-  grid: Structs.RowCells[],
-  amount: number,
-  generator: SimpleGenerators
-): Structs.RowCells[] {
+const rowFill = function (grid: Structs.RowCells[], amount: number, generator: SimpleGenerators): Structs.RowCells[] {
   return grid.concat(
     Util.repeat(amount, function (_row) {
-      return GridRow.setCells(
-        grid[grid.length - 1],
-        fill(grid[grid.length - 1].cells(), generator)
-      );
+      return GridRow.setCells(grid[grid.length - 1], fill(grid[grid.length - 1].cells(), generator));
     })
   );
 };
 
-const colFill = function (
-  grid: Structs.RowCells[],
-  amount: number,
-  generator: SimpleGenerators
-): Structs.RowCells[] {
+const colFill = function (grid: Structs.RowCells[], amount: number, generator: SimpleGenerators): Structs.RowCells[] {
   return Arr.map(grid, function (row) {
-    return GridRow.setCells(
-      row,
-      row.cells().concat(fill(Util.range(0, amount), generator))
-    );
+    return GridRow.setCells(row, row.cells().concat(fill(Util.range(0, amount), generator)));
   });
 };
 
-const tailor = function (
-  gridA: Structs.RowCells[],
-  delta: Delta,
-  generator: SimpleGenerators
-): Structs.RowCells[] {
+const tailor = function (gridA: Structs.RowCells[], delta: Delta, generator: SimpleGenerators): Structs.RowCells[] {
   const fillCols = delta.colDelta < 0 ? colFill : Fun.identity;
   const fillRows = delta.rowDelta < 0 ? rowFill : Fun.identity;
 

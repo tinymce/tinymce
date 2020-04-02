@@ -5,14 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent,
-  AlloyTriggers,
-  Disabling,
-  MementoRecord,
-  SketchSpec,
-  Tabstopping
-} from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, Disabling, MementoRecord, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Menu, Toolbar, Types } from '@ephox/bridge';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { Attr, Class, Focus } from '@ephox/sugar';
@@ -26,9 +19,7 @@ import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
 export type MenuButtonSpec = Omit<Toolbar.ToolbarMenuButton, 'type'>;
 
-const getMenuButtonApi = (
-  component: AlloyComponent
-): Toolbar.ToolbarMenuButtonInstanceApi => ({
+const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonInstanceApi => ({
   isDisabled: () => Disabling.isDisabled(component),
   setDisabled: (state: boolean) => Disabling.set(component, state),
   setActive: (state: boolean) => {
@@ -46,12 +37,7 @@ const getMenuButtonApi = (
   isActive: () => Class.has(component.element(), ToolbarButtonClasses.Ticked)
 });
 
-const renderMenuButton = (
-  spec: MenuButtonSpec,
-  prefix: string,
-  backstage: UiFactoryBackstage,
-  role: Option<string>
-): SketchSpec =>
+const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Option<string>): SketchSpec =>
   renderCommonDropdown(
     {
       text: spec.text,
@@ -61,14 +47,7 @@ const renderMenuButton = (
       role,
       fetch: (callback) => {
         spec.fetch((items) => {
-          callback(
-            NestedMenus.build(
-              items,
-              ItemResponse.CLOSE_ON_EXECUTE,
-              backstage,
-              false
-            )
-          );
+          callback(NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false));
         });
       },
       onSetup: spec.onSetup,
@@ -86,19 +65,12 @@ interface StoragedMenuItem extends Types.Dialog.DialogToggleMenuItem {
   storage: Cell<boolean>;
 }
 
-interface StoragedMenuButton
-  extends Omit<Types.Dialog.DialogMenuButton, 'items'> {
+interface StoragedMenuButton extends Omit<Types.Dialog.DialogMenuButton, 'items'> {
   items: StoragedMenuItem[];
 }
 
-const getFetch = (
-  items: StoragedMenuItem[],
-  getButton: () => MementoRecord,
-  backstage: UiFactoryBackstage
-) => {
-  const getMenuItemAction = (item: StoragedMenuItem) => (
-    api: Menu.ToggleMenuItemInstanceApi
-  ) => {
+const getFetch = (items: StoragedMenuItem[], getButton: () => MementoRecord, backstage: UiFactoryBackstage) => {
+  const getMenuItemAction = (item: StoragedMenuItem) => (api: Menu.ToggleMenuItemInstanceApi) => {
     // Update the menu item state
     const newValue = !api.isActive();
     api.setActive(newValue);
@@ -118,9 +90,7 @@ const getFetch = (
     });
   };
 
-  const getMenuItemSetup = (item: StoragedMenuItem) => (
-    api: Menu.ToggleMenuItemInstanceApi
-  ) => {
+  const getMenuItemSetup = (item: StoragedMenuItem) => (api: Menu.ToggleMenuItemInstanceApi) => {
     api.setActive(item.storage.get());
   };
 

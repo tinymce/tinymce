@@ -29,9 +29,7 @@ const get = function (outerWindow) {
 const getActualWidth = function (outerWindow) {
   const isIos = PlatformDetection.detect().os.isiOS();
   const isPortrait = get(outerWindow).isPortrait();
-  return isIos && !isPortrait
-    ? outerWindow.screen.height
-    : outerWindow.screen.width;
+  return isIos && !isPortrait ? outerWindow.screen.height : outerWindow.screen.width;
 };
 
 const onChange = function (outerWindow, listeners) {

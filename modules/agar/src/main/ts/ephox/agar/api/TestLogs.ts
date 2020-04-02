@@ -43,9 +43,7 @@ const modifyStartedEntryTo = (entries: TestLogEntry[], f): TestLogEntry[] =>
               ]);
             } else {
               // We have no further nesting, so just modify us
-              return entries
-                .slice(0, entries.length - 1)
-                .concat([f(lastEntry)]);
+              return entries.slice(0, entries.length - 1).concat([f(lastEntry)]);
             }
           }
         );
@@ -91,10 +89,7 @@ const modifyLastEntry = (logs: TestLogs, f): TestLogs => ({
 });
 
 // Determine if we are inside a subentry
-const addLogEntryTo = (
-  entries: TestLogEntry[],
-  newEntry: TestLogEntry
-): TestLogEntry[] => {
+const addLogEntryTo = (entries: TestLogEntry[], newEntry: TestLogEntry): TestLogEntry[] => {
   if (entries.length === 0) {
     return [newEntry];
   } else {
@@ -157,10 +152,7 @@ export const popLogLevel = (logs: TestLogs): TestLogs => {
   }));
 };
 
-export const addStackTrace = (
-  logs: TestLogs,
-  err: { stack: any }
-): TestLogs => {
+export const addStackTrace = (logs: TestLogs, err: { stack: any }): TestLogs => {
   if (DISABLE_LOGGING) {
     return logs;
   }
@@ -177,7 +169,6 @@ const initLogsWith = (history: TestLogEntry[]) => ({
 });
 
 export const TestLogs = {
-  getOrInit: (logs: TestLogs): TestLogs =>
-    logs !== undefined ? logs : initLogsWith([]),
+  getOrInit: (logs: TestLogs): TestLogs => (logs !== undefined ? logs : initLogsWith([])),
   init: (): TestLogs => initLogsWith([])
 };

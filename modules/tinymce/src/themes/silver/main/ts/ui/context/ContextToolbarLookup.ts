@@ -18,24 +18,13 @@ export type LookupResult = {
   elem: Element;
 };
 
-const matchTargetWith = (
-  elem: Element,
-  toolbars: Array<Toolbar.ContextToolbar | Toolbar.ContextForm>
-): Option<LookupResult> =>
-  Arr.findMap(toolbars, (toolbarApi) =>
-    toolbarApi.predicate(elem.dom())
-      ? Option.some({ toolbarApi, elem })
-      : Option.none()
-  );
+const matchTargetWith = (elem: Element, toolbars: Array<Toolbar.ContextToolbar | Toolbar.ContextForm>): Option<LookupResult> =>
+  Arr.findMap(toolbars, (toolbarApi) => (toolbarApi.predicate(elem.dom()) ? Option.some({ toolbarApi, elem }) : Option.none()));
 
-const lookup = (
-  scopes: ScopedToolbars,
-  editor: Editor
-): Option<LookupResult> => {
+const lookup = (scopes: ScopedToolbars, editor: Editor): Option<LookupResult> => {
   const rootElem = Element.fromDom(editor.getBody());
   const isRoot = (elem: Element<DomNode>) => Compare.eq(elem, rootElem);
-  const isOutsideRoot = (startNode: Element<DomNode>) =>
-    !isRoot(startNode) && !Compare.contains(rootElem, startNode);
+  const isOutsideRoot = (startNode: Element<DomNode>) => !isRoot(startNode) && !Compare.contains(rootElem, startNode);
 
   const startNode = Element.fromDom(editor.selection.getNode());
 
@@ -50,11 +39,7 @@ const lookup = (
       if (isRoot(startNode)) {
         return Option.none();
       } else {
-        return TransformFind.ancestor(
-          startNode,
-          (elem) => matchTargetWith(elem, scopes.inNodeScope),
-          isRoot
-        );
+        return TransformFind.ancestor(startNode, (elem) => matchTargetWith(elem, scopes.inNodeScope), isRoot);
       }
     })
   );

@@ -5,29 +5,19 @@ import * as DeleteElement from 'tinymce/core/delete/DeleteElement';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function (success, failure) {
   Theme();
 
   const sDeleteElementPath = function (editor, forward, path) {
     return Step.sync(function () {
-      const element = Hierarchy.follow(
-        Element.fromDom(editor.getBody()),
-        path
-      ).getOrDie();
+      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie();
       DeleteElement.deleteElement(editor, forward, element);
     });
   };
 
   const sAssertCaretDirection = function (editor, expectedCaretData) {
     return Step.sync(function () {
-      Assertions.assertEq(
-        'Should have the right caret data',
-        expectedCaretData,
-        editor.selection.getNode().getAttribute('data-mce-caret')
-      );
+      Assertions.assertEq('Should have the right caret data', expectedCaretData, editor.selection.getNode().getAttribute('data-mce-caret'));
     });
   };
 
@@ -172,9 +162,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function (
           Logger.t(
             'Delete forwards paragraph before paragraph with caret position (element)',
             GeneralSteps.sequence([
-              tinyApis.sSetContent(
-                '<p><img src="#1" /></p><p><img src="#2" /></p>'
-              ),
+              tinyApis.sSetContent('<p><img src="#1" /></p><p><img src="#2" /></p>'),
               tinyApis.sSetCursor([0], 1),
               sDeleteElementPath(editor, true, [0]),
               tinyApis.sAssertContent('<p><img src="#2" /></p>'),
@@ -184,9 +172,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function (
           Logger.t(
             'Delete backwards paragraph after paragraph with caret position (element)',
             GeneralSteps.sequence([
-              tinyApis.sSetContent(
-                '<p><img src="#1" /></p><p><img src="#2" /></p>'
-              ),
+              tinyApis.sSetContent('<p><img src="#1" /></p><p><img src="#2" /></p>'),
               tinyApis.sSetCursor([1], 0),
               sDeleteElementPath(editor, false, [0]),
               tinyApis.sAssertContent('<p><img src="#2" /></p>'),
@@ -196,14 +182,10 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function (
           Logger.t(
             'Delete backwards on cef block between cef blocks',
             GeneralSteps.sequence([
-              tinyApis.sSetContent(
-                '<p contenteditable="false">a</p><p contenteditable="false">b</p><p contenteditable="false">c</p>'
-              ),
+              tinyApis.sSetContent('<p contenteditable="false">a</p><p contenteditable="false">b</p><p contenteditable="false">c</p>'),
               tinyApis.sSetSelection([], 1, [], 2),
               sDeleteElementPath(editor, false, [1]),
-              tinyApis.sAssertContent(
-                '<p contenteditable="false">a</p><p contenteditable="false">c</p>'
-              ),
+              tinyApis.sAssertContent('<p contenteditable="false">a</p><p contenteditable="false">c</p>'),
               tinyApis.sAssertSelection([1], 0, [1], 0),
               sAssertCaretDirection(editor, 'after')
             ])
@@ -211,14 +193,10 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function (
           Logger.t(
             'Delete forwards on cef block between cef blocks',
             GeneralSteps.sequence([
-              tinyApis.sSetContent(
-                '<p contenteditable="false">a</p><p contenteditable="false">b</p><p contenteditable="false">c</p>'
-              ),
+              tinyApis.sSetContent('<p contenteditable="false">a</p><p contenteditable="false">b</p><p contenteditable="false">c</p>'),
               tinyApis.sSetSelection([], 1, [], 2),
               sDeleteElementPath(editor, true, [1]),
-              tinyApis.sAssertContent(
-                '<p contenteditable="false">a</p><p contenteditable="false">c</p>'
-              ),
+              tinyApis.sAssertContent('<p contenteditable="false">a</p><p contenteditable="false">c</p>'),
               tinyApis.sAssertSelection([1], 0, [1], 0),
               sAssertCaretDirection(editor, 'before')
             ])

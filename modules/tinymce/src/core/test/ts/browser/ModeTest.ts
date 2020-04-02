@@ -11,16 +11,9 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
 
   const sAssertBodyClass = (editor: Editor, cls: string, state: boolean) =>
     Step.label(
-      'sAssertBodyClass: checking editor ' +
-        (state ? 'has' : `doesn't have`) +
-        ' class ' +
-        cls,
+      'sAssertBodyClass: checking editor ' + (state ? 'has' : `doesn't have`) + ' class ' + cls,
       Step.sync(() => {
-        Assertions.assertEq(
-          'Should be the expected class state',
-          state,
-          Class.has(Element.fromDom(editor.getBody()), cls)
-        );
+        Assertions.assertEq('Should be the expected class state', state, Class.has(Element.fromDom(editor.getBody()), cls));
       })
     );
 
@@ -84,11 +77,7 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
         Step.label(
           'sAssertMode: checking editor is in mode ' + expectedMode,
           Step.sync(() => {
-            Assertions.assertEq(
-              'Should be the expected mode',
-              expectedMode,
-              editor.mode.get()
-            );
+            Assertions.assertEq('Should be the expected mode', expectedMode, editor.mode.get());
           })
         );
 
@@ -122,24 +111,18 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
             sAssertMode('customReadonly'),
             sAssertBodyClass(editor, 'mce-content-readonly', true)
           ]),
-          Logger.ts(
-            'test failing to activate a readonly-like mode leaves the editor in design',
-            [
-              sSetMode('design'),
-              sSetMode('failingActivateReadonly'),
-              sAssertMode('design'),
-              sAssertBodyClass(editor, 'mce-content-readonly', false)
-            ]
-          ),
-          Logger.ts(
-            'test failing to deactivate a design-like mode still switches to readonly',
-            [
-              sSetMode('failingDeactivateDesign'),
-              sSetMode('readonly'),
-              sAssertMode('readonly'),
-              sAssertBodyClass(editor, 'mce-content-readonly', true)
-            ]
-          )
+          Logger.ts('test failing to activate a readonly-like mode leaves the editor in design', [
+            sSetMode('design'),
+            sSetMode('failingActivateReadonly'),
+            sAssertMode('design'),
+            sAssertBodyClass(editor, 'mce-content-readonly', false)
+          ]),
+          Logger.ts('test failing to deactivate a design-like mode still switches to readonly', [
+            sSetMode('failingDeactivateDesign'),
+            sSetMode('readonly'),
+            sAssertMode('readonly'),
+            sAssertBodyClass(editor, 'mce-content-readonly', true)
+          ])
         ]),
         onSuccess,
         onFailure

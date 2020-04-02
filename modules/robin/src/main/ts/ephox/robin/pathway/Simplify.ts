@@ -5,11 +5,7 @@ const eq = function <E, D>(universe: Universe<E, D>, e1: E) {
   return Fun.curry(universe.eq, e1);
 };
 
-const isDuplicate = function <E, D>(
-  universe: Universe<E, D>,
-  rest: E[],
-  item: E
-) {
+const isDuplicate = function <E, D>(universe: Universe<E, D>, rest: E[], item: E) {
   return Arr.exists(rest, eq(universe, item));
 };
 

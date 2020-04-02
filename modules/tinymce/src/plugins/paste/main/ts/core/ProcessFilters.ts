@@ -24,55 +24,26 @@ const preProcess = (editor: Editor, html: string) => {
     forced_root_block: false,
     isRootContent: true
   });
-  return Serializer(
-    { validate: editor.settings.validate },
-    editor.schema
-  ).serialize(fragment);
+  return Serializer({ validate: editor.settings.validate }, editor.schema).serialize(fragment);
 };
 
 const processResult = function (content: string, cancelled: boolean) {
   return { content, cancelled };
 };
 
-const postProcessFilter = function (
-  editor: Editor,
-  html: string,
-  internal: boolean,
-  isWordHtml: boolean
-) {
+const postProcessFilter = function (editor: Editor, html: string, internal: boolean, isWordHtml: boolean) {
   const tempBody = editor.dom.create('div', { style: 'display:none' }, html);
-  const postProcessArgs = Events.firePastePostProcess(
-    editor,
-    tempBody,
-    internal,
-    isWordHtml
-  );
-  return processResult(
-    postProcessArgs.node.innerHTML,
-    postProcessArgs.isDefaultPrevented()
-  );
+  const postProcessArgs = Events.firePastePostProcess(editor, tempBody, internal, isWordHtml);
+  return processResult(postProcessArgs.node.innerHTML, postProcessArgs.isDefaultPrevented());
 };
 
-const filterContent = function (
-  editor: Editor,
-  content: string,
-  internal: boolean,
-  isWordHtml: boolean
-) {
-  const preProcessArgs = Events.firePastePreProcess(
-    editor,
-    content,
-    internal,
-    isWordHtml
-  );
+const filterContent = function (editor: Editor, content: string, internal: boolean, isWordHtml: boolean) {
+  const preProcessArgs = Events.firePastePreProcess(editor, content, internal, isWordHtml);
 
   // Filter the content to remove potentially dangerous content (eg scripts)
   const filteredContent = preProcess(editor, preProcessArgs.content);
 
-  if (
-    editor.hasEventListeners('PastePostProcess') &&
-    !preProcessArgs.isDefaultPrevented()
-  ) {
+  if (editor.hasEventListeners('PastePostProcess') && !preProcessArgs.isDefaultPrevented()) {
     return postProcessFilter(editor, filteredContent, internal, isWordHtml);
   } else {
     return processResult(filteredContent, preProcessArgs.isDefaultPrevented());

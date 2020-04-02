@@ -52,16 +52,8 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
       Pipeline.async(
         {},
         Log.steps('TINY-4163', 'Test Dialog.unwrap() ', [
-          Assertions.sAssertEq(
-            'Test unwrap without dimensions',
-            outputData,
-            Dialog.unwrap(inputData, 'source')
-          ),
-          Assertions.sAssertEq(
-            'Test unwrap with dimensions',
-            outputDataWithDimensions,
-            Dialog.unwrap(inputDataWithDimensions, 'source')
-          )
+          Assertions.sAssertEq('Test unwrap without dimensions', outputData, Dialog.unwrap(inputData, 'source')),
+          Assertions.sAssertEq('Test unwrap with dimensions', outputDataWithDimensions, Dialog.unwrap(inputDataWithDimensions, 'source'))
         ]),
         onSuccess,
         onFailure

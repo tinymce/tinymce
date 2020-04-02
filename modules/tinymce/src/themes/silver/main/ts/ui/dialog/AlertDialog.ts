@@ -5,13 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyEvents,
-  Focusing,
-  GuiFactory,
-  Memento,
-  ModalDialog
-} from '@ephox/alloy';
+import { AlloyEvents, Focusing, GuiFactory, Memento, ModalDialog } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 import { renderFooterButton } from '../general/Button';
 import { formCancelEvent, FormCancelEvent } from '../general/FormEvents';
@@ -49,16 +43,12 @@ export const setup = (extras) => {
         lazySink: () => sharedBackstage.getSink(),
         header: Dialogs.hiddenHeader(titleSpec, closeSpec),
         body: Dialogs.pBodyMessage(message, sharedBackstage.providers),
-        footer: Option.some(
-          Dialogs.pFooter(Dialogs.pFooterGroup([], [memFooterClose.asSpec()]))
-        ),
+        footer: Option.some(Dialogs.pFooter(Dialogs.pFooterGroup([], [memFooterClose.asSpec()]))),
         onEscape: closeDialog,
         extraClasses: ['tox-alert-dialog'],
         extraBehaviours: [],
         extraStyles: {},
-        dialogEvents: [
-          AlloyEvents.run<FormCancelEvent>(formCancelEvent, closeDialog)
-        ],
+        dialogEvents: [AlloyEvents.run<FormCancelEvent>(formCancelEvent, closeDialog)],
         eventOrder: {}
       })
     );

@@ -41,10 +41,7 @@ function innerText(html: string) {
   const domParser = DomParser({}, schema);
   let text = '';
   const shortEndedElements = schema.getShortEndedElements();
-  const ignoreElements = Tools.makeMap(
-    'script noscript style textarea video audio iframe object',
-    ' '
-  );
+  const ignoreElements = Tools.makeMap('script noscript style textarea video audio iframe object', ' ');
   const blockElements = schema.getBlockElements();
 
   function walk(node) {

@@ -26,13 +26,7 @@ const setup = function (editor) {
   function tabHandler(e) {
     let x, el, v, i;
 
-    if (
-      e.keyCode !== VK.TAB ||
-      e.ctrlKey ||
-      e.altKey ||
-      e.metaKey ||
-      e.isDefaultPrevented()
-    ) {
+    if (e.keyCode !== VK.TAB || e.ctrlKey || e.altKey || e.metaKey || e.isDefaultPrevented()) {
       return;
     }
 
@@ -42,20 +36,12 @@ const setup = function (editor) {
       function canSelectRecursive(e) {
         return (
           e.nodeName === 'BODY' ||
-          (e.type !== 'hidden' &&
-            e.style.display !== 'none' &&
-            e.style.visibility !== 'hidden' &&
-            canSelectRecursive(e.parentNode))
+          (e.type !== 'hidden' && e.style.display !== 'none' && e.style.visibility !== 'hidden' && canSelectRecursive(e.parentNode))
         );
       }
 
       function canSelect(el) {
-        return (
-          /INPUT|TEXTAREA|BUTTON/.test(el.tagName) &&
-          EditorManager.get(e.id) &&
-          el.tabIndex !== -1 &&
-          canSelectRecursive(el)
-        );
+        return /INPUT|TEXTAREA|BUTTON/.test(el.tagName) && EditorManager.get(e.id) && el.tabIndex !== -1 && canSelectRecursive(el);
       }
 
       Tools.each(el, function (e, i) {

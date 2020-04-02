@@ -13,10 +13,7 @@ import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
 import { UnitTest, assert } from '@ephox/bedrock-client';
 import { setTimeout, HTMLIFrameElement } from '@ephox/dom-globals';
 
-UnitTest.asynctest('Browser Test: Selection.getAtPoint', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('Browser Test: Selection.getAtPoint', function (success, failure) {
   const browser = PlatformDetection.detect().browser;
   if (!browser.isIE()) {
     // This is an IE test, as other platforms have native implementations (including Edge)
@@ -48,34 +45,20 @@ UnitTest.asynctest('Browser Test: Selection.getAtPoint', function (
     const iframeDoc = Element.fromDom(iframeWin.document);
 
     const get = function (selector) {
-      return Selectors.one(selector, iframeDoc).getOrDie(
-        'element with selector "' + selector + '" not found'
-      );
+      return Selectors.one(selector, iframeDoc).getOrDie('element with selector "' + selector + '" not found');
     };
 
     const check = function (x, y, expected) {
       const found = WindowSelection.getAtPoint(iframeWin, x, y);
       const raw = found.getOrDie('point ' + x + ',' + y + ' not found');
-      WindowSelection.setExact(
-        iframeWin,
-        raw.start(),
-        raw.soffset(),
-        raw.finish(),
-        raw.foffset()
-      );
+      WindowSelection.setExact(iframeWin, raw.start(), raw.soffset(), raw.finish(), raw.foffset());
 
-      const range = WindowSelection.getExact(iframeWin).getOrDie(
-        'Could not get window selection after setting it'
-      );
+      const range = WindowSelection.getExact(iframeWin).getOrDie('Could not get window selection after setting it');
       const starts = Compare.eq(expected.start(), range.start());
       assert.eq(
         true,
         starts,
-        () =>
-          'start elements were not equal, was ' +
-          Node.name(range.start()) +
-          ', expected ' +
-          Node.name(expected.start())
+        () => 'start elements were not equal, was ' + Node.name(range.start()) + ', expected ' + Node.name(expected.start())
       );
       assert.eq(expected.soffset(), range.soffset());
       assert.eq(

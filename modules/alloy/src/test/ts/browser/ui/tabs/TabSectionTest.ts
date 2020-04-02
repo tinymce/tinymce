@@ -1,11 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  GeneralSteps,
-  Logger,
-  Step,
-  StructAssert
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, GeneralSteps, Logger, Step, StructAssert } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Element, SelectorFind } from '@ephox/sugar';
 
@@ -91,19 +84,10 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
       const beta = component.getSystem().getByUid('beta-tab').getOrDie();
       const tview = component
         .getSystem()
-        .getByDom(
-          SelectorFind.descendant(
-            component.element(),
-            '.test-tabview'
-          ).getOrDie('Could not find tabview')
-        )
+        .getByDom(SelectorFind.descendant(component.element(), '.test-tabview').getOrDie('Could not find tabview'))
         .getOrDie();
 
-      const sAssertTabSelection = (
-        label: string,
-        expected: boolean,
-        element: Element
-      ) =>
+      const sAssertTabSelection = (label: string, expected: boolean, element: Element) =>
         Assertions.sAssertStructure(
           label + ' (asserting structure)',
           ApproxStructure.build((s, str, arr) =>
@@ -111,18 +95,13 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
               attrs: {
                 'aria-selected': expected ? str.is('true') : str.is('false')
               },
-              classes: [
-                (expected ? arr.has : arr.not)('selected-test-tab-button')
-              ]
+              classes: [(expected ? arr.has : arr.not)('selected-test-tab-button')]
             })
           ),
           element
         );
 
-      const sAssertTabView = (
-        label: string,
-        expected: ApproxStructure.Builder<StructAssert[]>
-      ) =>
+      const sAssertTabView = (label: string, expected: ApproxStructure.Builder<StructAssert[]>) =>
         Assertions.sAssertStructure(
           label + ' (asserting structure)',
           ApproxStructure.build((s, str, arr) =>
@@ -134,9 +113,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
         );
 
       return [
-        GuiSetup.mAddStyles(doc, [
-          '.selected-test-tab-button { background: #cadbee; }'
-        ]),
+        GuiSetup.mAddStyles(doc, ['.selected-test-tab-button { background: #cadbee; }']),
         Assertions.sAssertStructure(
           'Checking initial tab section',
           ApproxStructure.build((s, str, arr) =>

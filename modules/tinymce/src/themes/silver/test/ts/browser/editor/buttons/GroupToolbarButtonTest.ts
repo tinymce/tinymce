@@ -1,14 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  Log,
-  Mouse,
-  NamedChain,
-  Pipeline,
-  StructAssert,
-  UiFinder
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Log, Mouse, NamedChain, Pipeline, StructAssert, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
@@ -53,10 +43,7 @@ UnitTest.asynctest('GroupToolbarButtonTest', (success, failure) => {
     })
   );
 
-  const cTestWithEditor = (
-    settings: Record<string, any>,
-    chains: NamedChain[]
-  ): Chain<any, any> =>
+  const cTestWithEditor = (settings: Record<string, any>, chains: NamedChain[]): Chain<any, any> =>
     NamedChain.asChain([
       NamedChain.writeValue('body', Body.body()),
       NamedChain.write(
@@ -68,11 +55,7 @@ UnitTest.asynctest('GroupToolbarButtonTest', (success, failure) => {
           ...settings
         })
       ),
-      NamedChain.direct(
-        'body',
-        UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'),
-        '_menubar'
-      ),
+      NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
       ...chains,
       NamedChain.read('editor', McEditor.cRemove),
       NamedChain.outputInput
@@ -87,18 +70,8 @@ UnitTest.asynctest('GroupToolbarButtonTest', (success, failure) => {
     Chain.asStep({}, [
       cTestWithEditor(settings, [
         NamedChain.read('body', Mouse.cClickOn(buttonSelector)),
-        NamedChain.direct(
-          'body',
-          cExtractOnlyOne(toolbarSelector),
-          'toolbarGroup'
-        ),
-        NamedChain.read(
-          'toolbarGroup',
-          Assertions.cAssertStructure(
-            'Checking structure of the toolbar group',
-            expectedStruct
-          )
-        )
+        NamedChain.direct('body', cExtractOnlyOne(toolbarSelector), 'toolbarGroup'),
+        NamedChain.read('toolbarGroup', Assertions.cAssertStructure('Checking structure of the toolbar group', expectedStruct))
       ])
     ]);
 
@@ -108,12 +81,7 @@ UnitTest.asynctest('GroupToolbarButtonTest', (success, failure) => {
       Log.step(
         'TINY-4229',
         'Register floating group toolbar button via editor settings',
-        sTestToolbarGroup(
-          defaultToolbarGroupSettings,
-          'button[title="Formatting"]',
-          '.tox-toolbar__overflow',
-          defaultToolbarGroupStruct
-        )
+        sTestToolbarGroup(defaultToolbarGroupSettings, 'button[title="Formatting"]', '.tox-toolbar__overflow', defaultToolbarGroupStruct)
       ),
       Log.step(
         'TINY-4229',
@@ -170,14 +138,8 @@ UnitTest.asynctest('GroupToolbarButtonTest', (success, failure) => {
               toolbar_mode: 'wrap'
             },
             [
-              NamedChain.read(
-                'body',
-                UiFinder.cNotExists('button[title="Formatting"]')
-              ),
-              NamedChain.read(
-                'body',
-                UiFinder.cExists('button[title="Underline"]')
-              )
+              NamedChain.read('body', UiFinder.cNotExists('button[title="Formatting"]')),
+              NamedChain.read('body', UiFinder.cExists('button[title="Underline"]'))
             ]
           )
         ])

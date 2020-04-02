@@ -23,13 +23,9 @@ const makeSlider = (spec): SketchSpec =>
   });
 
 const makeItems = (spec) => [
-  UiDomFactory.spec(
-    '<span class="${prefix}-toolbar-button ${prefix}-icon-small-font ${prefix}-icon"></span>'
-  ),
+  UiDomFactory.spec('<span class="${prefix}-toolbar-button ${prefix}-icon-small-font ${prefix}-icon"></span>'),
   makeSlider(spec),
-  UiDomFactory.spec(
-    '<span class="${prefix}-toolbar-button ${prefix}-icon-large-font ${prefix}-icon"></span>'
-  )
+  UiDomFactory.spec('<span class="${prefix}-toolbar-button ${prefix}-icon-large-font ${prefix}-icon"></span>')
 ];
 
 const sketch = (realm: MobileRealm, editor): SketchSpec => {
@@ -42,12 +38,7 @@ const sketch = (realm: MobileRealm, editor): SketchSpec => {
     }
   };
 
-  return ToolbarWidgets.button(
-    realm,
-    'font-size',
-    () => makeItems(spec),
-    editor
-  );
+  return ToolbarWidgets.button(realm, 'font-size', () => makeItems(spec), editor);
 };
 
 export { makeItems, sketch };

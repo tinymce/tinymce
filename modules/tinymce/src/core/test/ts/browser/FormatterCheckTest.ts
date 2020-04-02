@@ -4,10 +4,7 @@ import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (success, failure) {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
@@ -20,11 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (
     rng.setStart(editor.dom.select('b')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(
-      editor.formatter.match('bold'),
-      true,
-      'Selected style element text'
-    );
+    LegacyUnit.equal(editor.formatter.match('bold'), true, 'Selected style element text');
   });
 
   suite.test('Selected style element with css styles', function (editor) {
@@ -32,34 +25,22 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (
       inline: 'span',
       styles: { color: '#ff0000' }
     });
-    editor.getBody().innerHTML =
-      '<p><span style="color:#ff0000">1234</span></p>';
+    editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(
-      editor.formatter.match('color'),
-      true,
-      'Selected style element with css styles'
-    );
+    LegacyUnit.equal(editor.formatter.match('color'), true, 'Selected style element with css styles');
   });
 
-  suite.test('Selected style element with css styles indexed', function (
-    editor
-  ) {
+  suite.test('Selected style element with css styles indexed', function (editor) {
     editor.formatter.register('color', { inline: 'span', styles: ['color'] });
-    editor.getBody().innerHTML =
-      '<p><span style="color:#ff0000">1234</span></p>';
+    editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(
-      editor.formatter.match('color'),
-      true,
-      'Selected style element with css styles'
-    );
+    LegacyUnit.equal(editor.formatter.match('color'), true, 'Selected style element with css styles');
   });
 
   suite.test('Selected style element with attributes', function (editor) {
@@ -72,28 +53,17 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (
     rng.setStart(editor.dom.select('font')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('font')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(
-      editor.formatter.match('fontsize'),
-      true,
-      'Selected style element with attributes'
-    );
+    LegacyUnit.equal(editor.formatter.match('fontsize'), true, 'Selected style element with attributes');
   });
 
   suite.test('Selected style element text multiple formats', function (editor) {
-    editor.formatter.register('multiple', [
-      { inline: 'b' },
-      { inline: 'strong' }
-    ]);
+    editor.formatter.register('multiple', [{ inline: 'b' }, { inline: 'strong' }]);
     editor.getBody().innerHTML = '<p><strong>1234</strong></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('strong')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('strong')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(
-      editor.formatter.match('multiple'),
-      true,
-      'Selected style element text multiple formats'
-    );
+    LegacyUnit.equal(editor.formatter.match('multiple'), true, 'Selected style element text multiple formats');
   });
 
   suite.test('Selected complex style element', function (editor) {
@@ -101,17 +71,12 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (
       inline: 'span',
       styles: { fontWeight: 'bold' }
     });
-    editor.getBody().innerHTML =
-      '<p><span style="color:#ff0000; font-weight:bold">1234</span></p>';
+    editor.getBody().innerHTML = '<p><span style="color:#ff0000; font-weight:bold">1234</span></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(
-      editor.formatter.match('complex'),
-      true,
-      'Selected complex style element'
-    );
+    LegacyUnit.equal(editor.formatter.match('complex'), true, 'Selected complex style element');
   });
 
   suite.test('Selected non style element text', function (editor) {
@@ -121,11 +86,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (
     rng.setStart(editor.dom.select('p')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(
-      editor.formatter.match('bold'),
-      false,
-      'Selected non style element text'
-    );
+    LegacyUnit.equal(editor.formatter.match('bold'), false, 'Selected non style element text');
   });
 
   suite.test('Selected partial style element (start)', function (editor) {
@@ -135,11 +96,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (
     rng.setStart(editor.dom.select('b')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('p')[0].lastChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(
-      editor.formatter.match('bold'),
-      true,
-      'Selected partial style element (start)'
-    );
+    LegacyUnit.equal(editor.formatter.match('bold'), true, 'Selected partial style element (start)');
   });
 
   suite.test('Selected partial style element (end)', function (editor) {
@@ -149,27 +106,17 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (
     rng.setStart(editor.dom.select('p')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('b')[0].lastChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(
-      editor.formatter.match('bold'),
-      false,
-      'Selected partial style element (end)'
-    );
+    LegacyUnit.equal(editor.formatter.match('bold'), false, 'Selected partial style element (end)');
   });
 
-  suite.test('Selected element text with parent inline element', function (
-    editor
-  ) {
+  suite.test('Selected element text with parent inline element', function (editor) {
     editor.formatter.register('bold', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b><em><span>1234</span></em></b></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(
-      editor.formatter.match('bold'),
-      true,
-      'Selected element text with parent inline element'
-    );
+    LegacyUnit.equal(editor.formatter.match('bold'), true, 'Selected element text with parent inline element');
   });
 
   suite.test('Selected element match with variable', function (editor) {
@@ -177,22 +124,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (
       inline: 'span',
       styles: { color: '%color' }
     });
-    editor.getBody().innerHTML =
-      '<p><span style="color:#ff0000">1234</span></p>';
+    editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(
-      editor.formatter.match('complex', { color: '#ff0000' }),
-      true,
-      'Selected element match with variable'
-    );
+    LegacyUnit.equal(editor.formatter.match('complex', { color: '#ff0000' }), true, 'Selected element match with variable');
   });
 
-  suite.test('Selected element match with variable and function', function (
-    editor
-  ) {
+  suite.test('Selected element match with variable and function', function (editor) {
     editor.formatter.register('complex', {
       inline: 'span',
       styles: {
@@ -202,26 +142,18 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (
       }
     });
 
-    editor.getBody().innerHTML =
-      '<p><span style="color:#ff0000">1234</span></p>';
+    editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(
-      editor.formatter.match('complex', { color: '#ff00' }),
-      true,
-      'Selected element match with variable and function'
-    );
+    LegacyUnit.equal(editor.formatter.match('complex', { color: '#ff00' }), true, 'Selected element match with variable and function');
   });
 
   suite.test('matchAll', function (editor) {
     editor.getBody().innerHTML = '<p><b><i>a</i></b></p>';
     LegacyUnit.setSelection(editor, 'i', 0, 'i', 1);
-    LegacyUnit.equal(
-      editor.formatter.matchAll(['bold', 'italic', 'underline']),
-      ['italic', 'bold']
-    );
+    LegacyUnit.equal(editor.formatter.matchAll(['bold', 'italic', 'underline']), ['italic', 'bold']);
   });
 
   suite.test('canApply', function (editor) {
@@ -238,33 +170,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (
       }
     });
 
-    editor.setContent(
-      '<p><span class="a">a</span><span class="x">b</span></p>'
-    );
-    LegacyUnit.setSelection(
-      editor,
-      'span:nth-child(1)',
-      0,
-      'span:nth-child(1)',
-      0
-    );
-    LegacyUnit.equal(
-      editor.formatter.match('format'),
-      false,
-      'Should not match since the onmatch matches on x classes.'
-    );
-    LegacyUnit.setSelection(
-      editor,
-      'span:nth-child(2)',
-      0,
-      'span:nth-child(2)',
-      0
-    );
-    LegacyUnit.equal(
-      editor.formatter.match('format'),
-      true,
-      'Should match since the onmatch matches on x classes.'
-    );
+    editor.setContent('<p><span class="a">a</span><span class="x">b</span></p>');
+    LegacyUnit.setSelection(editor, 'span:nth-child(1)', 0, 'span:nth-child(1)', 0);
+    LegacyUnit.equal(editor.formatter.match('format'), false, 'Should not match since the onmatch matches on x classes.');
+    LegacyUnit.setSelection(editor, 'span:nth-child(2)', 0, 'span:nth-child(2)', 0);
+    LegacyUnit.equal(editor.formatter.match('format'), true, 'Should match since the onmatch matches on x classes.');
   });
 
   suite.test('formatChanged complex format', function (editor) {
@@ -314,11 +224,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (
     rng.setStart(editor.dom.select('b')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(
-      editor.formatter.match('bold'),
-      true,
-      'Selected style element text'
-    );
+    LegacyUnit.equal(editor.formatter.match('bold'), true, 'Selected style element text');
   });
 
   TinyLoader.setupLight(

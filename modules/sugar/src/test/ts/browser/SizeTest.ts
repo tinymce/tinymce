@@ -26,18 +26,12 @@ UnitTest.test('SizeTest', function () {
 
     api.set(c, 100);
     assert.eq(100, api.get(c));
-    checkExc(
-      cssProp + '.set accepts only positive integer values. Value was 100%',
-      function () {
-        api.set(c, '100%');
-      }
-    );
-    checkExc(
-      cssProp + '.set accepts only positive integer values. Value was 100px',
-      function () {
-        api.set(c, '100px');
-      }
-    );
+    checkExc(cssProp + '.set accepts only positive integer values. Value was 100%', function () {
+      api.set(c, '100%');
+    });
+    checkExc(cssProp + '.set accepts only positive integer values. Value was 100px', function () {
+      api.set(c, '100px');
+    });
     assert.eq('100px', exact());
 
     Css.set(c, cssProp, '85%');

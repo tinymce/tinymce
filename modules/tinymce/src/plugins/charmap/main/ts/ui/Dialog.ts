@@ -48,10 +48,7 @@ const open = function (editor: Editor, charMap: CharMap[]) {
 
   const currentTab = charMap.length === 1 ? Cell(UserDefined) : Cell('All');
 
-  const scanAndSet = (
-    dialogApi: Types.Dialog.DialogInstanceApi<typeof initialData>,
-    pattern: string
-  ) => {
+  const scanAndSet = (dialogApi: Types.Dialog.DialogInstanceApi<typeof initialData>, pattern: string) => {
     Arr.find(charMap, (group) => group.name === currentTab.get()).each((f) => {
       const items = Scan.scan(f, pattern);
       dialogApi.setData({
@@ -62,13 +59,10 @@ const open = function (editor: Editor, charMap: CharMap[]) {
 
   const SEARCH_DELAY = 40;
 
-  const updateFilter = Throttler.last(
-    (dialogApi: Types.Dialog.DialogInstanceApi<typeof initialData>) => {
-      const pattern = dialogApi.getData().pattern;
-      scanAndSet(dialogApi, pattern);
-    },
-    SEARCH_DELAY
-  );
+  const updateFilter = Throttler.last((dialogApi: Types.Dialog.DialogInstanceApi<typeof initialData>) => {
+    const pattern = dialogApi.getData().pattern;
+    scanAndSet(dialogApi, pattern);
+  }, SEARCH_DELAY);
 
   const body = charMap.length === 1 ? makePanel() : makeTabPanel();
 

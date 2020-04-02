@@ -28,14 +28,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
               classes: ['behaviour-a-exhibit']
             });
           },
-          events: Fun.constant(
-            AlloyEvents.derive([
-              AlloyEvents.run(
-                'alloy.custom.test.event',
-                store.adder('behaviour.a.event')
-              )
-            ])
-          )
+          events: Fun.constant(AlloyEvents.derive([AlloyEvents.run('alloy.custom.test.event', store.adder('behaviour.a.event'))]))
         },
         apis: {
           behaveA(_comp) {
@@ -59,14 +52,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
             return DomModification.nu(extra);
           },
 
-          events: Fun.constant(
-            AlloyEvents.derive([
-              AlloyEvents.run(
-                'alloy.custom.test.event',
-                store.adder('behaviour.b.event')
-              )
-            ])
-          )
+          events: Fun.constant(AlloyEvents.derive([AlloyEvents.run('alloy.custom.test.event', store.adder('behaviour.b.event'))]))
         }
       });
 
@@ -102,10 +88,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
         'Checking initial DOM modification',
         ApproxStructure.build((s, str, arr) =>
           s.element('div', {
-            classes: [
-              arr.has('behaviour-a-exhibit'),
-              arr.has('base-dom-modification')
-            ],
+            classes: [arr.has('behaviour-a-exhibit'), arr.has('base-dom-modification')],
             attrs: {
               'behaviour-b-exhibit': str.is('exhibition'),
               // This should no longer appear
@@ -116,11 +99,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
         component.element()
       ),
       Step.sync(() => {
-        Assertions.assertEq(
-          'Tagger should read custom-uid',
-          'custom-uid',
-          Tagger.readOrDie(component.element())
-        );
+        Assertions.assertEq('Tagger should read custom-uid', 'custom-uid', Tagger.readOrDie(component.element()));
       }),
 
       store.sAssertEq('Nothing in store yet', []),
@@ -133,27 +112,19 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
         });
       }),
 
-      store.sAssertEq(
-        'Should now have a behaviour.a and behaviour.b event log with a before b',
-        ['behaviour.a.event', 'behaviour.b.event']
-      ),
+      store.sAssertEq('Should now have a behaviour.a and behaviour.b event log with a before b', [
+        'behaviour.a.event',
+        'behaviour.b.event'
+      ]),
 
       Step.sync(() => {
         bA.get()?.behaveA(component);
       }),
 
-      store.sAssertEq('Should now have an Api log', [
-        'behaviour.a.event',
-        'behaviour.b.event',
-        'behaveA'
-      ]),
+      store.sAssertEq('Should now have an Api log', ['behaviour.a.event', 'behaviour.b.event', 'behaveA']),
 
       Step.sync(() => {
-        Assertions.assertEq(
-          'There should be no internal APIs on component',
-          false,
-          Obj.hasNonNullableKey<any, string>(component, 'apis')
-        );
+        Assertions.assertEq('There should be no internal APIs on component', false, Obj.hasNonNullableKey<any, string>(component, 'apis'));
       })
     ],
     success,

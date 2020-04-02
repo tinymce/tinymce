@@ -45,11 +45,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       FieldSchema.strict('expected')
     ]);
 
-    const scenario = ValueSchema.asRawOrDie(
-      rawScenario.label,
-      schema,
-      rawScenario
-    );
+    const scenario = ValueSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
 
     Logger.sync('getInfo ... ' + scenario.label, function () {
       editorState.start.set(Element.fromText(scenario.nodeText).dom());
@@ -77,34 +73,19 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       FieldSchema.strict('expected')
     ]);
 
-    const scenario = ValueSchema.asRawOrDie(
-      rawScenario.label,
-      schema,
-      rawScenario
-    );
+    const scenario = ValueSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
 
-    Logger.sync(
-      'getInfo ... ' + scenario.label + ', link: ' + scenario.linkHtml,
-      function () {
-        editorState.start.set(Element.fromHtml(scenario.linkHtml).dom());
-        editorState.content.set(scenario.selection);
-        const info = LinkBridge.getInfo(editor);
-        Assert.eq(
-          'Checking getInfo (link)',
-          scenario.expected,
-          Objects.narrow(info, ['url', 'text', 'target', 'title'])
-        );
-        Assert.eq('Checking link is set', true, info.link.isSome());
-      }
-    );
+    Logger.sync('getInfo ... ' + scenario.label + ', link: ' + scenario.linkHtml, function () {
+      editorState.start.set(Element.fromHtml(scenario.linkHtml).dom());
+      editorState.content.set(scenario.selection);
+      const info = LinkBridge.getInfo(editor);
+      Assert.eq('Checking getInfo (link)', scenario.expected, Objects.narrow(info, ['url', 'text', 'target', 'title']));
+      Assert.eq('Checking link is set', true, info.link.isSome());
+    });
   };
 
   const checkApply = function (rawScenario) {
-    const toResult = (info, param) =>
-      Option.from(info[param]).fold(
-        () => Result.error('Missing ' + param),
-        Result.value
-      );
+    const toResult = (info, param) => Option.from(info[param]).fold(() => Result.error('Missing ' + param), Result.value);
     const scenario = {
       label: Option.from(rawScenario.label).getOrDie('Missing label'),
       info: Option.from(rawScenario.info)
@@ -335,8 +316,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
   });
 
   checkApply({
-    label:
-      'Applying to complex link (http://foo), Foo with url, text, and title',
+    label: 'Applying to complex link (http://foo), Foo with url, text, and title',
     info: {
       url: 'hi',
       text: 'new-text',

@@ -9,39 +9,25 @@ import { Option, Fun } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import CaretPosition from '../caret/CaretPosition';
 import Editor from '../api/Editor';
-import {
-  insertNbspAtPosition,
-  insertSpaceAtPosition
-} from '../caret/InsertText';
+import { insertNbspAtPosition, insertSpaceAtPosition } from '../caret/InsertText';
 import * as InlineUtils from './InlineUtils';
 import * as BoundaryLocation from './BoundaryLocation';
 import { needsToHaveNbsp } from './Nbsps';
 import * as CaretFinder from '../caret/CaretFinder';
 
-const insertSpaceOrNbspAtPosition = (
-  root: Element,
-  pos: CaretPosition
-): Option<CaretPosition> =>
-  needsToHaveNbsp(root, pos)
-    ? insertNbspAtPosition(pos)
-    : insertSpaceAtPosition(pos);
+const insertSpaceOrNbspAtPosition = (root: Element, pos: CaretPosition): Option<CaretPosition> =>
+  needsToHaveNbsp(root, pos) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
 
 const locationToCaretPosition = (root: Element) => (location) =>
   location.fold(
-    (element) =>
-      CaretFinder.prevPosition(root.dom(), CaretPosition.before(element)),
+    (element) => CaretFinder.prevPosition(root.dom(), CaretPosition.before(element)),
     (element) => CaretFinder.firstPositionIn(element),
     (element) => CaretFinder.lastPositionIn(element),
-    (element) =>
-      CaretFinder.nextPosition(root.dom(), CaretPosition.after(element))
+    (element) => CaretFinder.nextPosition(root.dom(), CaretPosition.after(element))
   );
 
-const insertInlineBoundarySpaceOrNbsp = (root: Element, pos: CaretPosition) => (
-  checkPos: CaretPosition
-) =>
-  needsToHaveNbsp(root, checkPos)
-    ? insertNbspAtPosition(pos)
-    : insertSpaceAtPosition(pos);
+const insertInlineBoundarySpaceOrNbsp = (root: Element, pos: CaretPosition) => (checkPos: CaretPosition) =>
+  needsToHaveNbsp(root, checkPos) ? insertNbspAtPosition(pos) : insertSpaceAtPosition(pos);
 
 const setSelection = (editor: Editor) => (pos: CaretPosition) => {
   editor.selection.setRng(pos.toRange());
@@ -55,15 +41,9 @@ const insertSpaceOrNbspAtSelection = (editor: Editor): boolean => {
 
   if (editor.selection.isCollapsed()) {
     const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
-    const caretPosition = CaretPosition.fromRangeStart(
-      editor.selection.getRng()
-    );
+    const caretPosition = CaretPosition.fromRangeStart(editor.selection.getRng());
 
-    return BoundaryLocation.readLocation(
-      isInlineTarget,
-      editor.getBody(),
-      caretPosition
-    )
+    return BoundaryLocation.readLocation(isInlineTarget, editor.getBody(), caretPosition)
       .bind(locationToCaretPosition(root))
       .bind(insertInlineBoundarySpaceOrNbsp(root, pos))
       .exists(setSelection(editor));

@@ -30,10 +30,7 @@ export const par = function <A, T, C>(
     if (asyncValues.length === 0) {
       callback([]);
     } else {
-      Arr.each(asyncValues, function (
-        asyncValue: A & { get: (callback: (value: T) => void) => void },
-        i
-      ) {
+      Arr.each(asyncValues, function (asyncValue: A & { get: (callback: (value: T) => void) => void }, i) {
         asyncValue.get(cb(i));
       });
     }

@@ -47,16 +47,9 @@ const collapse = (rect: ClientRect, toStart: boolean): ClientRect => {
 };
 
 const isEqual = (rect1: ClientRect, rect2: ClientRect): boolean =>
-  rect1.left === rect2.left &&
-  rect1.top === rect2.top &&
-  rect1.bottom === rect2.bottom &&
-  rect1.right === rect2.right;
+  rect1.left === rect2.left && rect1.top === rect2.top && rect1.bottom === rect2.bottom && rect1.right === rect2.right;
 
-const isValidOverflow = (
-  overflowY: number,
-  rect1: ClientRect,
-  rect2: ClientRect
-): boolean =>
+const isValidOverflow = (overflowY: number, rect1: ClientRect, rect2: ClientRect): boolean =>
   overflowY >= 0 && overflowY <= Math.min(rect1.height, rect2.height) / 2;
 
 const isAbove = (rect1: ClientRect, rect2: ClientRect): boolean => {
@@ -83,10 +76,8 @@ const isBelow = (rect1: ClientRect, rect2: ClientRect): boolean => {
   return isValidOverflow(rect2.bottom - rect1.top, rect1, rect2);
 };
 
-const isLeft = (rect1: ClientRect, rect2: ClientRect): boolean =>
-  rect1.left < rect2.left;
-const isRight = (rect1: ClientRect, rect2: ClientRect): boolean =>
-  rect1.right > rect2.right;
+const isLeft = (rect1: ClientRect, rect2: ClientRect): boolean => rect1.left < rect2.left;
+const isRight = (rect1: ClientRect, rect2: ClientRect): boolean => rect1.right > rect2.right;
 
 const compare = (rect1: ClientRect, rect2: ClientRect): number => {
   if (isAbove(rect1, rect2)) {
@@ -108,23 +99,14 @@ const compare = (rect1: ClientRect, rect2: ClientRect): number => {
   return 0;
 };
 
-const containsXY = (
-  rect: ClientRect,
-  clientX: number,
-  clientY: number
-): boolean =>
-  clientX >= rect.left &&
-  clientX <= rect.right &&
-  clientY >= rect.top &&
-  clientY <= rect.bottom;
+const containsXY = (rect: ClientRect, clientX: number, clientY: number): boolean =>
+  clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom;
 
 const overflowX = (outer: ClientRect, inner: ClientRect) => {
   if (inner.left > outer.left && inner.right < outer.right) {
     return 0;
   } else {
-    return inner.left < outer.left
-      ? inner.left - outer.left
-      : inner.right - outer.right;
+    return inner.left < outer.left ? inner.left - outer.left : inner.right - outer.right;
   }
 };
 
@@ -132,9 +114,7 @@ const overflowY = (outer: ClientRect, inner: ClientRect) => {
   if (inner.top > outer.top && inner.bottom < outer.bottom) {
     return 0;
   } else {
-    return inner.top < outer.top
-      ? inner.top - outer.top
-      : inner.bottom - outer.bottom;
+    return inner.top < outer.top ? inner.top - outer.top : inner.bottom - outer.bottom;
   }
 };
 
@@ -143,15 +123,4 @@ const getOverflow = (outer: ClientRect, inner: ClientRect) => ({
   y: overflowY(outer, inner)
 });
 
-export {
-  clone,
-  collapse,
-  isEqual,
-  isAbove,
-  isBelow,
-  isLeft,
-  isRight,
-  compare,
-  containsXY,
-  getOverflow
-};
+export { clone, collapse, isEqual, isAbove, isBelow, isLeft, isRight, compare, containsXY, getOverflow };

@@ -12,16 +12,9 @@ UnitTest.asynctest('TinySelectionTest', (success, failure) => {
         {},
         [
           apis.sFocus(),
-          apis.sSetContent(
-            '<p>this is one paragraph</p><p>This is another</p>'
-          ),
+          apis.sSetContent('<p>this is one paragraph</p><p>This is another</p>'),
           apis.sSetSelection([0, 0], 'this'.length, [1, 0], 'This is'.length),
-          apis.sAssertSelection(
-            [0, 0],
-            'this'.length,
-            [1, 0],
-            'This is'.length
-          ),
+          apis.sAssertSelection([0, 0], 'this'.length, [1, 0], 'This is'.length),
 
           apis.sSetCursor([0, 0], 't'.length),
           apis.sAssertSelection([0, 0], 't'.length, [0, 0], 't'.length),

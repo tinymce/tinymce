@@ -1,14 +1,4 @@
-import {
-  Assertions,
-  ApproxStructure,
-  Chain,
-  FocusTools,
-  Keyboard,
-  Keys,
-  Log,
-  Pipeline,
-  UiFinder
-} from '@ephox/agar';
+import { Assertions, ApproxStructure, Chain, FocusTools, Keyboard, Keys, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { document } from '@ephox/dom-globals';
@@ -37,30 +27,17 @@ const tableCellsApprox = (s, arr, selectedRows, selectedCols) => {
 
 const insertTablePickerApprox = (s, str, arr, selectedRows, selectedCols) =>
   s.element('div', {
-    classes: [
-      arr.has('tox-menu'),
-      arr.has('tox-collection'),
-      arr.has('tox-collection--list')
-    ],
+    classes: [arr.has('tox-menu'), arr.has('tox-collection'), arr.has('tox-collection--list')],
     children: [
       s.element('div', {
         classes: [arr.has('tox-collection__group')],
         children: [
           s.element('div', {
-            classes: [
-              arr.has('tox-menu-nav__js'),
-              arr.has('tox-fancymenuitem'),
-              arr.not('tox-collection__item')
-            ],
+            classes: [arr.has('tox-menu-nav__js'), arr.has('tox-fancymenuitem'), arr.not('tox-collection__item')],
             children: [
               s.element('div', {
                 classes: [arr.has('tox-insert-table-picker')],
-                children: tableCellsApprox(
-                  s,
-                  arr,
-                  selectedRows,
-                  selectedCols
-                ).concat(
+                children: tableCellsApprox(s, arr, selectedRows, selectedCols).concat(
                   s.element('span', {
                     classes: [arr.has('tox-insert-table-picker__label')],
                     html: str.is(`${selectedCols}x${selectedRows}`)
@@ -86,41 +63,25 @@ UnitTest.asynctest('OxideTablePickerMenuTest', (success, failure) => {
         {},
         Log.steps('TBA', 'Check structure of table picker', [
           tinyUi.sClickOnToolbar('Click on toolbar button', 'button'),
-          UiFinder.sWaitForVisible(
-            'Waiting for menu',
-            Body.body(),
-            '[role="menu"]'
-          ),
+          UiFinder.sWaitForVisible('Waiting for menu', Body.body(), '[role="menu"]'),
           Chain.asStep(Body.body(), [
             UiFinder.cFindIn('[role="menu"]'),
             Assertions.cAssertStructure(
               'Checking structure',
-              ApproxStructure.build((s, str, arr) =>
-                insertTablePickerApprox(s, str, arr, 1, 1)
-              )
+              ApproxStructure.build((s, str, arr) => insertTablePickerApprox(s, str, arr, 1, 1))
             )
           ]),
-          FocusTools.sTryOnSelector(
-            'Focus should be on first table cell',
-            doc,
-            '.tox-insert-table-picker__selected:last'
-          ),
+          FocusTools.sTryOnSelector('Focus should be on first table cell', doc, '.tox-insert-table-picker__selected:last'),
           Keyboard.sKeydown(doc, Keys.down(), {}),
           Keyboard.sKeydown(doc, Keys.right(), {}),
           Chain.asStep(Body.body(), [
             UiFinder.cFindIn('[role="menu"]'),
             Assertions.cAssertStructure(
               'Checking structure',
-              ApproxStructure.build((s, str, arr) =>
-                insertTablePickerApprox(s, str, arr, 2, 2)
-              )
+              ApproxStructure.build((s, str, arr) => insertTablePickerApprox(s, str, arr, 2, 2))
             )
           ]),
-          FocusTools.sTryOnSelector(
-            'Focus should be on 2 down, 2 across table cell',
-            doc,
-            '.tox-insert-table-picker__selected:last'
-          )
+          FocusTools.sTryOnSelector('Focus should be on 2 down, 2 across table cell', doc, '.tox-insert-table-picker__selected:last')
         ]),
         onSuccess,
         onFailure

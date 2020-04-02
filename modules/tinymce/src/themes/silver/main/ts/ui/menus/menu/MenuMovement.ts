@@ -11,10 +11,7 @@ import { markers as getMenuMarkers } from './MenuParts';
 import { selectableClass, colorClass } from '../item/ItemClasses';
 import { MenuTypes, KeyingConfigSpec } from '@ephox/alloy';
 
-export const deriveMenuMovement = (
-  columns: number | 'auto',
-  presets: Types.PresetTypes
-): MenuTypes.MenuMovementSpec => {
+export const deriveMenuMovement = (columns: number | 'auto', presets: Types.PresetTypes): MenuTypes.MenuMovementSpec => {
   const menuMarkers = getMenuMarkers(presets);
   if (columns === 1) {
     return {
@@ -31,8 +28,7 @@ export const deriveMenuMovement = (
       }
     } as MenuTypes.MenuGridMovementSpec;
   } else {
-    const rowClass =
-      presets === 'color' ? 'tox-swatches__row' : 'tox-collection__group';
+    const rowClass = presets === 'color' ? 'tox-swatches__row' : 'tox-collection__group';
     return {
       mode: 'matrix',
       rowSelector: '.' + rowClass
@@ -40,10 +36,7 @@ export const deriveMenuMovement = (
   }
 };
 
-export const deriveCollectionMovement = (
-  columns: number | 'auto',
-  presets: Types.PresetTypes
-): KeyingConfigSpec => {
+export const deriveCollectionMovement = (columns: number | 'auto', presets: Types.PresetTypes): KeyingConfigSpec => {
   if (columns === 1) {
     return {
       mode: 'menu',
@@ -63,8 +56,7 @@ export const deriveCollectionMovement = (
     return {
       mode: 'matrix',
       selectors: {
-        row:
-          presets === 'color' ? '.tox-swatches__row' : '.tox-collection__group',
+        row: presets === 'color' ? '.tox-swatches__row' : '.tox-collection__group',
         cell: presets === 'color' ? `.${colorClass}` : `.${selectableClass}`
       }
     };

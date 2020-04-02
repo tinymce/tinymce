@@ -18,10 +18,7 @@ const open = (editor: Editor) => {
     () => '',
     (l) => l.value
   );
-  const currentLanguage: string = Languages.getCurrentLanguage(
-    editor,
-    defaultLanguage
-  );
+  const currentLanguage: string = Languages.getCurrentLanguage(editor, defaultLanguage);
   const currentCode: string = CodeSample.getCurrentCode(editor);
 
   editor.windowManager.open({

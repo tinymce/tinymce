@@ -5,27 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent,
-  AlloySpec,
-  Behaviour,
-  DomFactory,
-  Focusing,
-  Keying,
-  Replacing
-} from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, Behaviour, DomFactory, Focusing, Keying, Replacing } from '@ephox/alloy';
 import { Cell, Option, Type } from '@ephox/katamari';
 import { Attr, Css } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
-import {
-  UiFactoryBackstageProviders,
-  UiFactoryBackstageShared
-} from '../../backstage/Backstage';
+import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../backstage/Backstage';
 
-const renderSpinner = (
-  providerBackstage: UiFactoryBackstageProviders
-): AlloySpec => ({
+const renderSpinner = (providerBackstage: UiFactoryBackstageProviders): AlloySpec => ({
   dom: {
     tag: 'div',
     attributes: {
@@ -35,9 +22,7 @@ const renderSpinner = (
   },
   components: [
     {
-      dom: DomFactory.fromHtml(
-        '<div class="tox-spinner"><div></div><div></div><div></div></div>'
-      )
+      dom: DomFactory.fromHtml('<div class="tox-spinner"><div></div><div></div><div></div></div>')
     }
   ],
   behaviours: Behaviour.derive([
@@ -51,11 +36,7 @@ const renderSpinner = (
   ])
 });
 
-const toggleThrobber = (
-  comp: AlloyComponent,
-  state: boolean,
-  providerBackstage: UiFactoryBackstageProviders
-) => {
+const toggleThrobber = (comp: AlloyComponent, state: boolean, providerBackstage: UiFactoryBackstageProviders) => {
   const element = comp.element();
   if (state === true) {
     Replacing.set(comp, [renderSpinner(providerBackstage)]);
@@ -84,11 +65,7 @@ const renderThrobber = (spec): AlloySpec => ({
   components: []
 });
 
-const setup = (
-  editor: Editor,
-  lazyThrobber: () => AlloyComponent,
-  sharedBackstage: UiFactoryBackstageShared
-) => {
+const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBackstage: UiFactoryBackstageShared) => {
   const throbberState = Cell<boolean>(false);
   const timer = Cell<Option<number>>(Option.none());
 
@@ -102,11 +79,7 @@ const setup = (
   editor.on('ProgressState', (e) => {
     timer.get().each(Delay.clearTimeout);
     if (Type.isNumber(e.time)) {
-      const timerId = Delay.setEditorTimeout(
-        editor,
-        () => toggle(e.state),
-        e.time
-      );
+      const timerId = Delay.setEditorTimeout(editor, () => toggle(e.state), e.time);
       timer.set(Option.some(timerId));
     } else {
       toggle(e.state);

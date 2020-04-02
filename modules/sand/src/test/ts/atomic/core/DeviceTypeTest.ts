@@ -8,52 +8,31 @@ UnitTest.test('DeviceTypeTest', function () {
 
   const checkTablet = function (expected: boolean, userAgent: string) {
     const platform = getPlatform(userAgent);
-    assert.eq(
-      expected,
-      platform.deviceType.isTablet(),
-      'Tablet incorrect: ' + userAgent
-    );
+    assert.eq(expected, platform.deviceType.isTablet(), 'Tablet incorrect: ' + userAgent);
   };
 
   const checkiPad = function (expected: boolean, userAgent: string) {
     const platform = getPlatform(userAgent);
-    assert.eq(
-      expected,
-      platform.deviceType.isiPad(),
-      'iPad incorrect: ' + userAgent
-    );
+    assert.eq(expected, platform.deviceType.isiPad(), 'iPad incorrect: ' + userAgent);
   };
 
   const checkiPhone = function (expected: boolean, userAgent: string) {
     const platform = getPlatform(userAgent);
-    assert.eq(
-      expected,
-      platform.deviceType.isiPhone(),
-      'iPhone incorrect: ' + userAgent
-    );
+    assert.eq(expected, platform.deviceType.isiPhone(), 'iPhone incorrect: ' + userAgent);
   };
 
   const checkIsWebView = function (expected: boolean, userAgent: string) {
     const platform = getPlatform(userAgent);
-    assert.eq(
-      expected,
-      platform.deviceType.isWebView(),
-      'WebView incorrect: ' + userAgent
-    );
+    assert.eq(expected, platform.deviceType.isWebView(), 'WebView incorrect: ' + userAgent);
   };
 
   const checkDesktop = function (expected: boolean, userAgent: string) {
     const platform = getPlatform(userAgent);
-    assert.eq(
-      expected,
-      platform.deviceType.isDesktop(),
-      'desktop incorrect: ' + userAgent
-    );
+    assert.eq(expected, platform.deviceType.isDesktop(), 'desktop incorrect: ' + userAgent);
   };
 
   // iPad ios10 wkWebview
-  const ipad_ios10_wkWebview =
-    'Mozilla/5.0 (iPad; CPU OS 10_0 like Mac OS X) AppleWebKit/602.1.40 (KHTML, like Gecko) Mobile/14A5309d';
+  const ipad_ios10_wkWebview = 'Mozilla/5.0 (iPad; CPU OS 10_0 like Mac OS X) AppleWebKit/602.1.40 (KHTML, like Gecko) Mobile/14A5309d';
   checkiPad(true, ipad_ios10_wkWebview);
   checkiPhone(false, ipad_ios10_wkWebview);
   checkTablet(true, ipad_ios10_wkWebview);
@@ -68,8 +47,7 @@ UnitTest.test('DeviceTypeTest', function () {
   checkIsWebView(false, ipad_ios10_safari);
 
   // iPad iOS 9 wkWebview ~ same UA as iPad Pro
-  const ipad_ios9_wkWebview =
-    'Mozilla/5.0 (iPad; CPU OS 9_3_2 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13F69';
+  const ipad_ios9_wkWebview = 'Mozilla/5.0 (iPad; CPU OS 9_3_2 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13F69';
   checkiPad(true, ipad_ios9_wkWebview);
   checkiPhone(false, ipad_ios9_wkWebview);
   checkTablet(true, ipad_ios9_wkWebview);

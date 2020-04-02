@@ -4,10 +4,7 @@ import { MenuItemApi } from '../components/menu/MenuItem';
 import { NestedMenuItemApi } from '../components/menu/NestedMenuItem';
 import { ToggleMenuItemApi } from '../components/menu/ToggleMenuItem';
 import { SidebarApi } from '../components/sidebar/Sidebar';
-import {
-  ContextFormApi,
-  ContextToolbarApi
-} from '../components/toolbar/ContextToolbar';
+import { ContextFormApi, ContextToolbarApi } from '../components/toolbar/ContextToolbar';
 import { GroupToolbarButtonApi } from '../components/toolbar/GroupToolbarButton';
 import { ToolbarButtonApi } from '../components/toolbar/ToolbarButton';
 import { ToolbarMenuButtonApi } from '../components/toolbar/ToolbarMenuButton';
@@ -36,16 +33,9 @@ export interface Registry {
   getAll: () => {
     buttons: Record<
       string,
-      | ToolbarButtonApi
-      | GroupToolbarButtonApi
-      | ToolbarMenuButtonApi
-      | ToolbarSplitButtonApi
-      | ToolbarToggleButtonApi
+      ToolbarButtonApi | GroupToolbarButtonApi | ToolbarMenuButtonApi | ToolbarSplitButtonApi | ToolbarToggleButtonApi
     >;
-    menuItems: Record<
-      string,
-      MenuItemApi | NestedMenuItemApi | ToggleMenuItemApi
-    >;
+    menuItems: Record<string, MenuItemApi | NestedMenuItemApi | ToggleMenuItemApi>;
     popups: Record<string, AutocompleterApi>;
     contextMenus: Record<string, ContextMenuApi>;
     contextToolbars: Record<string, ContextToolbarApi | ContextFormApi>;
@@ -55,26 +45,15 @@ export interface Registry {
 }
 
 export const create = (): Registry => {
-  const buttons: Record<
-    string,
-    | ToolbarButtonApi
-    | ToolbarMenuButtonApi
-    | ToolbarSplitButtonApi
-    | ToolbarToggleButtonApi
-  > = {};
+  const buttons: Record<string, ToolbarButtonApi | ToolbarMenuButtonApi | ToolbarSplitButtonApi | ToolbarToggleButtonApi> = {};
   const menuItems: Record<string, MenuItemApi | ToggleMenuItemApi> = {};
   const popups: Record<string, AutocompleterApi> = {};
   const icons: Record<string, string> = {};
   const contextMenus: Record<string, ContextMenuApi> = {};
-  const contextToolbars: Record<
-    string,
-    ContextToolbarApi | ContextFormApi
-  > = {};
+  const contextToolbars: Record<string, ContextToolbarApi | ContextFormApi> = {};
   const sidebars: Record<string, SidebarApi> = {};
-  const add = (collection, type: string) => (name: string, spec: any): void =>
-    (collection[name.toLowerCase()] = { ...spec, type });
-  const addIcon = (name: string, svgData: string) =>
-    (icons[name.toLowerCase()] = svgData);
+  const add = (collection, type: string) => (name: string, spec: any): void => (collection[name.toLowerCase()] = { ...spec, type });
+  const addIcon = (name: string, svgData: string) => (icons[name.toLowerCase()] = svgData);
 
   return {
     addButton: add(buttons, 'button'),

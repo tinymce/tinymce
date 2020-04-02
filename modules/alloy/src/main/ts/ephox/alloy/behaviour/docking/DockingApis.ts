@@ -4,30 +4,17 @@ import * as Boxes from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Dockables from './Dockables';
 import { DockingConfig, DockingState } from './DockingTypes';
-import {
-  applyPositionCss,
-  PositionCss
-} from '../../positioning/view/PositionCss';
+import { applyPositionCss, PositionCss } from '../../positioning/view/PositionCss';
 import { Arr, Fun } from '@ephox/katamari';
 
-const morphToStatic = (
-  component: AlloyComponent,
-  config: DockingConfig
-): void => {
-  Arr.each(['left', 'right', 'top', 'bottom', 'position'], (prop) =>
-    Css.remove(component.element(), prop)
-  );
+const morphToStatic = (component: AlloyComponent, config: DockingConfig): void => {
+  Arr.each(['left', 'right', 'top', 'bottom', 'position'], (prop) => Css.remove(component.element(), prop));
   config.onUndocked(component);
 };
 
-const morphToCoord = (
-  component: AlloyComponent,
-  config: DockingConfig,
-  position: PositionCss
-): void => {
+const morphToCoord = (component: AlloyComponent, config: DockingConfig, position: PositionCss): void => {
   applyPositionCss(component.element(), position);
-  const method =
-    position.position() === 'fixed' ? config.onDocked : config.onUndocked;
+  const method = position.position() === 'fixed' ? config.onDocked : config.onUndocked;
   method(component);
 };
 
@@ -60,11 +47,7 @@ const updateVisibility = (
   });
 };
 
-const refreshInternal = (
-  component: AlloyComponent,
-  config: DockingConfig,
-  state: DockingState
-) => {
+const refreshInternal = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {
   // Absolute coordinates (considers scroll)
   const viewport = config.lazyViewport(component);
   // If docked then check if we need to hide/show the component
@@ -88,11 +71,7 @@ const refreshInternal = (
   });
 };
 
-const resetInternal = (
-  component: AlloyComponent,
-  config: DockingConfig,
-  state: DockingState
-) => {
+const resetInternal = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {
   // Morph back to the original position
   const elem = component.element();
   state.setDocked(false);
@@ -107,11 +86,7 @@ const resetInternal = (
   // Remove contextual visibility classes
   state.setVisible(true);
   config.contextual.each((contextInfo) => {
-    Classes.remove(elem, [
-      contextInfo.fadeInClass,
-      contextInfo.fadeOutClass,
-      contextInfo.transitionClass
-    ]);
+    Classes.remove(elem, [contextInfo.fadeInClass, contextInfo.fadeOutClass, contextInfo.transitionClass]);
     contextInfo.onShow(component);
   });
 
@@ -119,11 +94,7 @@ const resetInternal = (
   refresh(component, config, state);
 };
 
-const refresh = (
-  component: AlloyComponent,
-  config: DockingConfig,
-  state: DockingState
-) => {
+const refresh = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {
   // Ensure the component is attached to the document/world, if not then do nothing as we can't
   // check if the component should be docked or not when in a detached state
   if (component.getSystem().isConnected()) {
@@ -131,11 +102,7 @@ const refresh = (
   }
 };
 
-const reset = (
-  component: AlloyComponent,
-  config: DockingConfig,
-  state: DockingState
-) => {
+const reset = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {
   // If the component is not docked then there's no need to reset the state,
   // so only reset when docked
   if (state.isDocked()) {
@@ -143,10 +110,6 @@ const reset = (
   }
 };
 
-const isDocked = (
-  component: AlloyComponent,
-  config: DockingConfig,
-  state: DockingState
-) => state.isDocked();
+const isDocked = (component: AlloyComponent, config: DockingConfig, state: DockingState) => state.isDocked();
 
 export { refresh, reset, isDocked };

@@ -15,10 +15,7 @@ import * as ScrollIntoView from '../dom/ScrollIntoView';
 
 const firstNonWhiteSpaceNodeSibling = function (node) {
   while (node) {
-    if (
-      node.nodeType === 1 ||
-      (node.nodeType === 3 && node.data && /[\r\n\s]/.test(node.data))
-    ) {
+    if (node.nodeType === 1 || (node.nodeType === 3 && node.data && /[\r\n\s]/.test(node.data))) {
       return node;
     }
 
@@ -109,9 +106,7 @@ const getEditableRoot = function (dom, node) {
 };
 
 const getParentBlock = function (editor: Editor) {
-  return Option.from(
-    editor.dom.getParent(editor.selection.getStart(true), editor.dom.isBlock)
-  );
+  return Option.from(editor.dom.getParent(editor.selection.getStart(true), editor.dom.isBlock));
 };
 
 const getParentBlockName = function (editor: Editor) {
@@ -128,10 +123,4 @@ const isListItemParentBlock = function (editor: Editor) {
     .isSome();
 };
 
-export {
-  moveToCaretPosition,
-  getEditableRoot,
-  getParentBlock,
-  getParentBlockName,
-  isListItemParentBlock
-};
+export { moveToCaretPosition, getEditableRoot, getParentBlock, getParentBlockName, isListItemParentBlock };

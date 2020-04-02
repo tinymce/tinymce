@@ -26,28 +26,22 @@ const applyRelTargetRules = (rel: string, isUnsafe: boolean): string => {
   const rules = ['noopener'];
   const rels = rel ? rel.split(/\s+/) : [];
 
-  const toString = (rels: string[]): string =>
-    Tools.trim(rels.sort().join(' '));
+  const toString = (rels: string[]): string => Tools.trim(rels.sort().join(' '));
 
   const addTargetRules = (rels: string[]): string[] => {
     rels = removeTargetRules(rels);
     return rels.length > 0 ? rels.concat(rules) : rules;
   };
 
-  const removeTargetRules = (rels: string[]): string[] =>
-    rels.filter((val) => Tools.inArray(rules, val) === -1);
+  const removeTargetRules = (rels: string[]): string[] => rels.filter((val) => Tools.inArray(rules, val) === -1);
 
   const newRels = isUnsafe ? addTargetRules(rels) : removeTargetRules(rels);
   return newRels.length > 0 ? toString(newRels) : '';
 };
 
-const trimCaretContainers = (text: string): string =>
-  text.replace(/\uFEFF/g, '');
+const trimCaretContainers = (text: string): string => text.replace(/\uFEFF/g, '');
 
-const getAnchorElement = (
-  editor: Editor,
-  selectedElm?: Element
-): HTMLAnchorElement => {
+const getAnchorElement = (editor: Editor, selectedElm?: Element): HTMLAnchorElement => {
   selectedElm = selectedElm || editor.selection.getNode();
   if (isImageFigure(selectedElm)) {
     // for an image contained in a figure we look for a link inside the selected element
@@ -58,32 +52,24 @@ const getAnchorElement = (
 };
 
 const getAnchorText = (selection, anchorElm: HTMLAnchorElement) => {
-  const text = anchorElm
-    ? anchorElm.innerText || anchorElm.textContent
-    : selection.getContent({ format: 'text' });
+  const text = anchorElm ? anchorElm.innerText || anchorElm.textContent : selection.getContent({ format: 'text' });
   return trimCaretContainers(text);
 };
 
-const isLink = (elm: Element): elm is HTMLAnchorElement =>
-  elm && elm.nodeName === 'A' && !!getHref(elm);
+const isLink = (elm: Element): elm is HTMLAnchorElement => elm && elm.nodeName === 'A' && !!getHref(elm);
 
-const hasLinks = (elements: Element[]) =>
-  Tools.grep(elements, isLink).length > 0;
+const hasLinks = (elements: Element[]) => Tools.grep(elements, isLink).length > 0;
 
 const isOnlyTextSelected = (html: string) => {
   // Partial html and not a fully selected anchor element
-  if (
-    /</.test(html) &&
-    (!/^<a [^>]+>[^<]+<\/a>$/.test(html) || html.indexOf('href=') === -1)
-  ) {
+  if (/</.test(html) && (!/^<a [^>]+>[^<]+<\/a>$/.test(html) || html.indexOf('href=') === -1)) {
     return false;
   }
 
   return true;
 };
 
-const isImageFigure = (elm: Element) =>
-  elm && elm.nodeName === 'FIGURE' && /\bimage\b/i.test(elm.className);
+const isImageFigure = (elm: Element) => elm && elm.nodeName === 'FIGURE' && /\bimage\b/i.test(elm.className);
 
 const getLinkAttrs = (data: LinkDialogOutput): Record<string, string> =>
   Arr.foldl(
@@ -100,13 +86,9 @@ const getLinkAttrs = (data: LinkDialogOutput): Record<string, string> =>
     }
   );
 
-const handleExternalTargets = (
-  href: string,
-  assumeExternalTargets: AssumeExternalTargets
-): string => {
+const handleExternalTargets = (href: string, assumeExternalTargets: AssumeExternalTargets): string => {
   if (
-    (assumeExternalTargets === AssumeExternalTargets.ALWAYS_HTTP ||
-      assumeExternalTargets === AssumeExternalTargets.ALWAYS_HTTPS) &&
+    (assumeExternalTargets === AssumeExternalTargets.ALWAYS_HTTP || assumeExternalTargets === AssumeExternalTargets.ALWAYS_HTTPS) &&
     !hasProtocol(href)
   ) {
     return assumeExternalTargets + '://' + href;
@@ -114,43 +96,23 @@ const handleExternalTargets = (
   return href;
 };
 
-const applyLinkOverrides = (
-  editor: Editor,
-  linkAttrs: Record<string, string>
-) => {
+const applyLinkOverrides = (editor: Editor, linkAttrs: Record<string, string>) => {
   const newLinkAttrs = { ...linkAttrs };
-  if (
-    !(Settings.getRelList(editor).length > 0) &&
-    Settings.allowUnsafeLinkTarget(editor) === false
-  ) {
-    const newRel = applyRelTargetRules(
-      newLinkAttrs.rel,
-      newLinkAttrs.target === '_blank'
-    );
+  if (!(Settings.getRelList(editor).length > 0) && Settings.allowUnsafeLinkTarget(editor) === false) {
+    const newRel = applyRelTargetRules(newLinkAttrs.rel, newLinkAttrs.target === '_blank');
     newLinkAttrs.rel = newRel ? newRel : null;
   }
 
-  if (
-    Option.from(newLinkAttrs.target).isNone() &&
-    Settings.getTargetList(editor) === false
-  ) {
+  if (Option.from(newLinkAttrs.target).isNone() && Settings.getTargetList(editor) === false) {
     newLinkAttrs.target = Settings.getDefaultLinkTarget(editor);
   }
 
-  newLinkAttrs.href = handleExternalTargets(
-    newLinkAttrs.href,
-    Settings.assumeExternalTargets(editor)
-  );
+  newLinkAttrs.href = handleExternalTargets(newLinkAttrs.href, Settings.assumeExternalTargets(editor));
 
   return newLinkAttrs;
 };
 
-const updateLink = (
-  editor: Editor,
-  anchorElm: HTMLAnchorElement,
-  text: Option<string>,
-  linkAttrs: Record<string, string>
-) => {
+const updateLink = (editor: Editor, anchorElm: HTMLAnchorElement, text: Option<string>, linkAttrs: Record<string, string>) => {
   // If we have text, then update the anchor elements text content
   text.each((text) => {
     if (anchorElm.hasOwnProperty('innerText')) {
@@ -164,12 +126,7 @@ const updateLink = (
   editor.selection.select(anchorElm);
 };
 
-const createLink = (
-  editor: Editor,
-  selectedElm: Element,
-  text: Option<string>,
-  linkAttrs: Record<string, string>
-) => {
+const createLink = (editor: Editor, selectedElm: Element, text: Option<string>, linkAttrs: Record<string, string>) => {
   if (isImageFigure(selectedElm)) {
     linkImageFigure(editor, selectedElm, linkAttrs);
   } else {
@@ -178,19 +135,13 @@ const createLink = (
         editor.execCommand('mceInsertLink', false, linkAttrs);
       },
       (text) => {
-        editor.insertContent(
-          editor.dom.createHTML('a', linkAttrs, editor.dom.encode(text))
-        );
+        editor.insertContent(editor.dom.createHTML('a', linkAttrs, editor.dom.encode(text)));
       }
     );
   }
 };
 
-const linkDomMutation = (
-  editor: Editor,
-  attachState: AttachState,
-  data: LinkDialogOutput
-) => {
+const linkDomMutation = (editor: Editor, attachState: AttachState, data: LinkDialogOutput) => {
   const selectedElm = editor.selection.getNode();
   const anchorElm = getAnchorElement(editor, selectedElm);
   const linkAttrs = applyLinkOverrides(editor, getLinkAttrs(data));
@@ -240,20 +191,12 @@ const unwrapOptions = (data: LinkDialogOutput) => {
   );
 };
 
-const link = (
-  editor: Editor,
-  attachState: AttachState,
-  data: LinkDialogOutput
-) => {
-  hasRtcPlugin(editor)
-    ? editor.execCommand('createlink', false, unwrapOptions(data))
-    : linkDomMutation(editor, attachState, data);
+const link = (editor: Editor, attachState: AttachState, data: LinkDialogOutput) => {
+  hasRtcPlugin(editor) ? editor.execCommand('createlink', false, unwrapOptions(data)) : linkDomMutation(editor, attachState, data);
 };
 
 const unlink = (editor: Editor) => {
-  hasRtcPlugin(editor)
-    ? editor.execCommand('unlink')
-    : unlinkDomMutation(editor);
+  hasRtcPlugin(editor) ? editor.execCommand('unlink') : unlinkDomMutation(editor);
 };
 
 const unlinkImageFigure = (editor: Editor, fig: Element) => {
@@ -267,11 +210,7 @@ const unlinkImageFigure = (editor: Editor, fig: Element) => {
   }
 };
 
-const linkImageFigure = (
-  editor: Editor,
-  fig: Element,
-  attrs: Record<string, string>
-) => {
+const linkImageFigure = (editor: Editor, fig: Element, attrs: Record<string, string>) => {
   const img = editor.dom.select('img', fig)[0];
   if (img) {
     const a = editor.dom.create('a', attrs);
@@ -280,15 +219,4 @@ const linkImageFigure = (
   }
 };
 
-export {
-  link,
-  unlink,
-  isLink,
-  hasLinks,
-  getHref,
-  isOnlyTextSelected,
-  getAnchorElement,
-  getAnchorText,
-  applyRelTargetRules,
-  hasProtocol
-};
+export { link, unlink, isLink, hasLinks, getHref, isOnlyTextSelected, getAnchorElement, getAnchorText, applyRelTargetRules, hasProtocol };

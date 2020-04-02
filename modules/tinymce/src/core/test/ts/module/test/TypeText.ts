@@ -56,9 +56,7 @@ const sTypeChar = function (doc, chr) {
 };
 
 const sTypeContentAtSelection = function (doc, text) {
-  return GeneralSteps.sequence(
-    Arr.map(text.split(''), Fun.curry(sTypeChar, doc))
-  );
+  return GeneralSteps.sequence(Arr.map(text.split(''), Fun.curry(sTypeChar, doc)));
 };
 
 export { sTypeContentAtSelection };

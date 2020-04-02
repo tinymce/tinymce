@@ -1,10 +1,6 @@
-import {
-  CommonDraggingConfigSpec,
-  DraggingConfig
-} from '../common/DraggingTypes';
+import { CommonDraggingConfigSpec, DraggingConfig } from '../common/DraggingTypes';
 
-export interface MouseOrTouchDraggingConfigSpec<E>
-  extends CommonDraggingConfigSpec<E> {
+export interface MouseOrTouchDraggingConfigSpec<E> extends CommonDraggingConfigSpec<E> {
   mode: 'mouseOrTouch';
 }
 

@@ -114,10 +114,7 @@ UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
                       attrs: {
                         role: str.is('toolbar')
                       },
-                      children: [
-                        s.element('button', { html: str.is('a1') }),
-                        s.element('button', { html: str.is('a2') })
-                      ]
+                      children: [s.element('button', { html: str.is('a1') }), s.element('button', { html: str.is('a2') })]
                     })
                   ]
                 }),
@@ -159,10 +156,7 @@ UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
                       attrs: {
                         role: str.is('toolbar')
                       },
-                      children: [
-                        s.element('button', { html: str.is('a1') }),
-                        s.element('button', { html: str.is('a2') })
-                      ]
+                      children: [s.element('button', { html: str.is('a1') }), s.element('button', { html: str.is('a2') })]
                     })
                   ]
                 }),
@@ -177,10 +171,7 @@ UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
                           attrs: {
                             role: str.is('toolbar')
                           },
-                          children: [
-                            s.element('button', { html: str.is('b1') }),
-                            s.element('button', { html: str.is('b2') })
-                          ]
+                          children: [s.element('button', { html: str.is('b1') }), s.element('button', { html: str.is('b2') })]
                         })
                       ]
                     })

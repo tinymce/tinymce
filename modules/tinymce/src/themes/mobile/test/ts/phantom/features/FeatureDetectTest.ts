@@ -29,15 +29,7 @@ UnitTest.test('features.FeatureDetectTest', function () {
 
   check('Empty toolbar', [], '');
 
-  check(
-    'Toolbar with everything',
-    ['alpha', 'gamma', 'delta'],
-    ['alpha', 'beta', 'gamma', 'delta', 'epsilon']
-  );
+  check('Toolbar with everything', ['alpha', 'gamma', 'delta'], ['alpha', 'beta', 'gamma', 'delta', 'epsilon']);
 
-  check(
-    'Toolbar with everything',
-    ['alpha', 'gamma', 'delta'],
-    ['alpha', 'beta', 'alpha', 'gamma', 'delta', 'epsilon']
-  );
+  check('Toolbar with everything', ['alpha', 'gamma', 'delta'], ['alpha', 'beta', 'alpha', 'gamma', 'delta', 'epsilon']);
 });

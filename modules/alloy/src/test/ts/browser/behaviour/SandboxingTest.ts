@@ -1,11 +1,4 @@
-import {
-  Assertions,
-  Chain,
-  GeneralSteps,
-  Logger,
-  Step,
-  UiFinder
-} from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Logger, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { Node } from '@ephox/sugar';
@@ -33,11 +26,7 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
           containerBehaviours: Behaviour.derive([
             Sandboxing.config({
               getAttachPoint(c) {
-                Assertions.assertEq(
-                  'Checking getAttachPoint gets given sandbox',
-                  sandbox.element(),
-                  c.element()
-                );
+                Assertions.assertEq('Checking getAttachPoint gets given sandbox', sandbox.element(), c.element());
                 return sink;
               },
 
@@ -62,45 +51,29 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
       const sCheckShowing = (label: string, expected: boolean) =>
         Step.sync(() => {
           Assertions.assertEq(
-            label +
-              '\nSandbox should ' +
-              (expected === false ? '*not* ' : '') +
-              'be open',
+            label + '\nSandbox should ' + (expected === false ? '*not* ' : '') + 'be open',
             expected,
             Sandboxing.isOpen(sandbox)
           );
         });
 
-      const sCheckOpenState = (
-        label: string,
-        expected: { data: string; store: string[] }
-      ) =>
+      const sCheckOpenState = (label: string, expected: { data: string; store: string[] }) =>
         Logger.t(
           label,
           GeneralSteps.sequence([
             sCheckShowing(label, true),
-            UiFinder.sExists(
-              gui.element(),
-              'input[data-test-input="' + expected.data + '"]'
-            ),
+            UiFinder.sExists(gui.element(), 'input[data-test-input="' + expected.data + '"]'),
             UiFinder.sExists(gui.element(), '.test-sandbox'),
             store.sAssertEq('Checking store', expected.store),
             store.sClear,
             Step.sync(() => {
               const state = Sandboxing.getState(sandbox);
-              Assertions.assertEq(
-                label + '\nChecking state node name',
-                'input',
-                Node.name(state.getOrDie().element())
-              );
+              Assertions.assertEq(label + '\nChecking state node name', 'input', Node.name(state.getOrDie().element()));
             })
           ])
         );
 
-      const sCheckClosedState = (
-        label: string,
-        expected: { store: string[] }
-      ) =>
+      const sCheckClosedState = (label: string, expected: { store: string[] }) =>
         Logger.t(
           label,
           GeneralSteps.sequence([
@@ -111,11 +84,7 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
             store.sClear,
             Step.sync(() => {
               const state = Sandboxing.getState(sandbox);
-              Assertions.assertEq(
-                label + '\nChecking state is not set',
-                true,
-                state.isNone()
-              );
+              Assertions.assertEq(label + '\nChecking state is not set', true, state.isNone());
             })
           ])
         );
@@ -143,10 +112,7 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
         }),
 
         // opening sandbox again
-        Logger.t(
-          'Opening sandbox while it is already open',
-          sOpenWith(secondOpening)
-        ),
+        Logger.t('Opening sandbox while it is already open', sOpenWith(secondOpening)),
         sCheckOpenState('Opening sandbox while it is already open', {
           data: 'second-opening',
           store: ['onOpen']
@@ -156,17 +122,11 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
         Logger.t('Closing sandbox 2', sClose),
         sCheckClosedState('After closing 2', { store: ['onClose'] }),
 
-        Logger.t(
-          'Opening sandbox with a uid that has already been used: try and re-open firstOpening',
-          sOpenWith(firstOpening)
-        ),
-        sCheckOpenState(
-          'Opening sandbox with a uid that has already been used',
-          {
-            data: 'first-opening',
-            store: ['onOpen']
-          }
-        ),
+        Logger.t('Opening sandbox with a uid that has already been used: try and re-open firstOpening', sOpenWith(firstOpening)),
+        sCheckOpenState('Opening sandbox with a uid that has already been used', {
+          data: 'first-opening',
+          store: ['onOpen']
+        }),
 
         Logger.t(
           'Firing sandbox close system event',
@@ -175,11 +135,7 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
             Chain.inject(sandbox.element()),
             UiFinder.cFindIn('input'),
             Chain.op((input) => {
-              AlloyTriggers.dispatch(
-                sandbox,
-                input,
-                SystemEvents.sandboxClose()
-              );
+              AlloyTriggers.dispatch(sandbox, input, SystemEvents.sandboxClose());
             })
           ])
         ),

@@ -7,10 +7,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 import { HTMLElement } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (success, failure) {
   const viewBlock = ViewBlock();
 
   const cSetHtml = function (html) {
@@ -21,10 +18,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (
 
   const cCreateFromPosition = function (path, offset) {
     return Chain.mapper(function (viewBlock: any) {
-      const container = Hierarchy.follow(
-        Element.fromDom(viewBlock.get()),
-        path
-      ).getOrDie();
+      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
       return CaretPosition(container.dom(), offset);
     });
   };
@@ -32,20 +26,9 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (
   const cAssertCaretPosition = function (path, expectedOffset) {
     return Chain.op(function (posOption: Option<any>) {
       const pos = posOption.getOrDie();
-      const expectedContainer = Hierarchy.follow(
-        Element.fromDom(viewBlock.get()),
-        path
-      ).getOrDie();
-      Assertions.assertDomEq(
-        'Should be the expected container',
-        expectedContainer,
-        Element.fromDom(pos.container())
-      );
-      Assertions.assertEq(
-        'Should be the expected offset',
-        expectedOffset,
-        pos.offset()
-      );
+      const expectedContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+      Assertions.assertDomEq('Should be the expected container', expectedContainer, Element.fromDom(pos.container()));
+      Assertions.assertEq('Should be the expected offset', expectedOffset, pos.offset());
     });
   };
 
@@ -67,10 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (
 
   const cPositionIn = function (forward, path) {
     return Chain.injectThunked(function () {
-      const element = Hierarchy.follow(
-        Element.fromDom(viewBlock.get()),
-        path
-      ).getOrDie() as Element<HTMLElement>;
+      const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie() as Element<HTMLElement>;
       return CaretFinder.positionIn(forward, element.dom());
     });
   };
@@ -120,12 +100,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (
           ),
           Logger.t(
             'Should not walk anywhere since there is nothing to walk to',
-            Chain.asStep(viewBlock, [
-              cSetHtml(''),
-              cCreateFromPosition([], 0),
-              cFromPosition(false),
-              cAssertNone
-            ])
+            Chain.asStep(viewBlock, [cSetHtml(''), cCreateFromPosition([], 0), cFromPosition(false), cAssertNone])
           )
         ])
       ),
@@ -229,9 +204,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (
               Logger.t(
                 'should walk from after last text node offset to before CEF span',
                 Chain.asStep(viewBlock, [
-                  cSetHtml(
-                    '<p>a<br><span contenteditable="false">b</span></p>'
-                  ),
+                  cSetHtml('<p>a<br><span contenteditable="false">b</span></p>'),
                   cCreateFromPosition([0, 0], 1),
                   cNavigate(true),
                   cAssertCaretPosition([0], 2)
@@ -266,30 +239,15 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (
               ),
               Logger.t(
                 'Should not walk anywhere since there is nothing to walk to',
-                Chain.asStep(viewBlock, [
-                  cSetHtml(''),
-                  cCreateFromPosition([], 0),
-                  cNavigate(true),
-                  cAssertNone
-                ])
+                Chain.asStep(viewBlock, [cSetHtml(''), cCreateFromPosition([], 0), cNavigate(true), cAssertNone])
               ),
               Logger.t(
                 'Should not walk anywhere since there is nothing to walk to',
-                Chain.asStep(viewBlock, [
-                  cSetHtml('<p>a</p>'),
-                  cCreateFromPosition([0, 0], 1),
-                  cNavigate(true),
-                  cAssertNone
-                ])
+                Chain.asStep(viewBlock, [cSetHtml('<p>a</p>'), cCreateFromPosition([0, 0], 1), cNavigate(true), cAssertNone])
               ),
               Logger.t(
                 'Should not walk anywhere since there is nothing to walk to',
-                Chain.asStep(viewBlock, [
-                  cSetHtml('<p><input></p>'),
-                  cCreateFromPosition([0], 1),
-                  cNavigate(true),
-                  cAssertNone
-                ])
+                Chain.asStep(viewBlock, [cSetHtml('<p><input></p>'), cCreateFromPosition([0], 1), cNavigate(true), cAssertNone])
               )
             ])
           ),
@@ -416,41 +374,20 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (
               ),
               Logger.t(
                 'Should not walk anywhere since there is nothing to walk to',
-                Chain.asStep(viewBlock, [
-                  cSetHtml(''),
-                  cCreateFromPosition([], 0),
-                  cNavigate(false),
-                  cAssertNone
-                ])
+                Chain.asStep(viewBlock, [cSetHtml(''), cCreateFromPosition([], 0), cNavigate(false), cAssertNone])
               ),
               Logger.t(
                 'Should not walk anywhere since there is nothing to walk to',
-                Chain.asStep(viewBlock, [
-                  cSetHtml('<p>a</p>'),
-                  cCreateFromPosition([0, 0], 0),
-                  cNavigate(false),
-                  cAssertNone
-                ])
+                Chain.asStep(viewBlock, [cSetHtml('<p>a</p>'), cCreateFromPosition([0, 0], 0), cNavigate(false), cAssertNone])
               ),
               Logger.t(
                 'Should not walk anywhere since there is nothing to walk to',
-                Chain.asStep(viewBlock, [
-                  cSetHtml('<p><input></p>'),
-                  cCreateFromPosition([0], 0),
-                  cNavigate(false),
-                  cAssertNone
-                ])
+                Chain.asStep(viewBlock, [cSetHtml('<p><input></p>'), cCreateFromPosition([0], 0), cNavigate(false), cAssertNone])
               ),
               Logger.t(
                 'Should jump over bogus elements',
                 Chain.asStep(viewBlock, [
-                  cSetHtml(
-                    [
-                      '<p>1</p>',
-                      '<p data-mce-bogus="all"></p>',
-                      '<p>2</p>'
-                    ].join('')
-                  ),
+                  cSetHtml(['<p>1</p>', '<p data-mce-bogus="all"></p>', '<p>2</p>'].join('')),
                   cCreateFromPosition([], 2),
                   cNavigate(false),
                   cAssertCaretPosition([0, 0], 1)
@@ -466,107 +403,55 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (
         GeneralSteps.sequence([
           Logger.t(
             'Should walk to first text node offset',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<p>a</p>'),
-              cPositionIn(true, [0]),
-              cAssertCaretPosition([0, 0], 0)
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<p>a</p>'), cPositionIn(true, [0]), cAssertCaretPosition([0, 0], 0)])
           ),
           Logger.t(
             'Should walk to last text node offset',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<p>a</p>'),
-              cPositionIn(false, [0]),
-              cAssertCaretPosition([0, 0], 1)
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<p>a</p>'), cPositionIn(false, [0]), cAssertCaretPosition([0, 0], 1)])
           ),
           Logger.t(
             'Should walk to first element offset',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<p><input></p>'),
-              cPositionIn(true, [0]),
-              cAssertCaretPosition([0], 0)
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<p><input></p>'), cPositionIn(true, [0]), cAssertCaretPosition([0], 0)])
           ),
           Logger.t(
             'Should walk to last element offset',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<p><input></p>'),
-              cPositionIn(false, [0]),
-              cAssertCaretPosition([0], 1)
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<p><input></p>'), cPositionIn(false, [0]), cAssertCaretPosition([0], 1)])
           ),
           Logger.t(
             'Should walk to last element offset skip br',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<p><input><br></p>'),
-              cPositionIn(false, [0]),
-              cAssertCaretPosition([0], 1)
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<p><input><br></p>'), cPositionIn(false, [0]), cAssertCaretPosition([0], 1)])
           ),
           Logger.t(
             'Should walk to first inner element offset',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<p><b><input></b></p>'),
-              cPositionIn(true, [0]),
-              cAssertCaretPosition([0, 0], 0)
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<p><b><input></b></p>'), cPositionIn(true, [0]), cAssertCaretPosition([0, 0], 0)])
           ),
           Logger.t(
             'Should walk to last inner element offset',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<p><b><input></b></p>'),
-              cPositionIn(false, [0]),
-              cAssertCaretPosition([0, 0], 1)
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<p><b><input></b></p>'), cPositionIn(false, [0]), cAssertCaretPosition([0, 0], 1)])
           ),
           Logger.t(
             'Should not find any position in an empty element',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<p></p>'),
-              cPositionIn(true, [0]),
-              cAssertNone
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<p></p>'), cPositionIn(true, [0]), cAssertNone])
           ),
           Logger.t(
             'Should not find any position in an empty element',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<p></p>'),
-              cPositionIn(false, [0]),
-              cAssertNone
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<p></p>'), cPositionIn(false, [0]), cAssertNone])
           ),
           Logger.t(
             'Should not find any position in an empty element and not walk outside backwards',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<p>a</p><p></p><p>b</p>'),
-              cPositionIn(false, [1]),
-              cAssertNone
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<p>a</p><p></p><p>b</p>'), cPositionIn(false, [1]), cAssertNone])
           ),
           Logger.t(
             'Should not find any position in an empty element and not walk outside forwards',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<p>a</p><p></p><p>b</p>'),
-              cPositionIn(true, [1]),
-              cAssertNone
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<p>a</p><p></p><p>b</p>'), cPositionIn(true, [1]), cAssertNone])
           ),
           Logger.t(
             'Should walk past comment node backwards',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<p><!-- a-->b<!-- c --></p>'),
-              cPositionIn(false, []),
-              cAssertCaretPosition([0, 1], 1)
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<p><!-- a-->b<!-- c --></p>'), cPositionIn(false, []), cAssertCaretPosition([0, 1], 1)])
           ),
           Logger.t(
             'Should walk past comment node forwards',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<p><!-- a-->b<!-- c --></p>'),
-              cPositionIn(true, []),
-              cAssertCaretPosition([0, 1], 0)
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<p><!-- a-->b<!-- c --></p>'), cPositionIn(true, []), cAssertCaretPosition([0, 1], 0)])
           )
         ])
       )

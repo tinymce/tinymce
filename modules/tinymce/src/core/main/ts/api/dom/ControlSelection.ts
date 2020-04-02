@@ -50,25 +50,11 @@ const getContentEditableRoot = function (root: Node, node: Node) {
   return null;
 };
 
-const ControlSelection = (
-  selection: Selection,
-  editor: Editor
-): ControlSelection => {
+const ControlSelection = (selection: Selection, editor: Editor): ControlSelection => {
   const dom = editor.dom,
     each = Tools.each;
-  let selectedElm,
-    selectedElmGhost,
-    resizeHelper,
-    resizeHandles,
-    selectedHandle;
-  let startX,
-    startY,
-    selectedElmX,
-    selectedElmY,
-    startW,
-    startH,
-    ratio,
-    resizeStarted;
+  let selectedElm, selectedElmGhost, resizeHelper, resizeHandles, selectedHandle;
+  let startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;
   let width, height;
   const editableDoc = editor.getDoc(),
     rootDocument = document;
@@ -87,33 +73,22 @@ const ControlSelection = (
   };
 
   const isImage = function (elm) {
-    return (
-      elm && (elm.nodeName === 'IMG' || editor.dom.is(elm, 'figure.image'))
-    );
+    return elm && (elm.nodeName === 'IMG' || editor.dom.is(elm, 'figure.image'));
   };
 
   const isEventOnImageOutsideRange = function (evt, range) {
     if (evt.type === 'longpress' || evt.type.indexOf('touch') === 0) {
       const touch = evt.touches[0];
-      return (
-        isImage(evt.target) &&
-        !RangePoint.isXYWithinRange(touch.clientX, touch.clientY, range)
-      );
+      return isImage(evt.target) && !RangePoint.isXYWithinRange(touch.clientX, touch.clientY, range);
     } else {
-      return (
-        isImage(evt.target) &&
-        !RangePoint.isXYWithinRange(evt.clientX, evt.clientY, range)
-      );
+      return isImage(evt.target) && !RangePoint.isXYWithinRange(evt.clientX, evt.clientY, range);
     }
   };
 
   const contextMenuSelectImage = function (evt) {
     const target = evt.target;
 
-    if (
-      isEventOnImageOutsideRange(evt, editor.selection.getRng()) &&
-      !evt.isDefaultPrevented()
-    ) {
+    if (isEventOnImageOutsideRange(evt, editor.selection.getRng()) && !evt.isDefaultPrevented()) {
       editor.selection.select(target);
     }
   };
@@ -160,10 +135,7 @@ const ControlSelection = (
     width = width < 5 ? 5 : width;
     height = height < 5 ? 5 : height;
 
-    if (
-      isImage(selectedElm) &&
-      Settings.getResizeImgProportional(editor) !== false
-    ) {
+    if (isImage(selectedElm) && Settings.getResizeImgProportional(editor) !== false) {
       proportional = !VK.modifierPressed(e);
     } else {
       proportional = VK.modifierPressed(e);
@@ -234,10 +206,7 @@ const ControlSelection = (
     const setSizeProp = function (name, value) {
       if (value) {
         // Resize by using style or attribute
-        if (
-          selectedElm.style[name] ||
-          !editor.schema.isValid(selectedElm.nodeName.toLowerCase(), name)
-        ) {
+        if (selectedElm.style[name] || !editor.schema.isValid(selectedElm.nodeName.toLowerCase(), name)) {
           dom.setStyle(getResizeTarget(selectedElm), name, value);
         } else {
           dom.setAttrib(getResizeTarget(selectedElm), name, value);
@@ -375,10 +344,8 @@ const ControlSelection = (
 
         // Position element
         dom.setStyles(handleElm, {
-          left:
-            targetWidth * handle[0] + selectedElmX - handleElm.offsetWidth / 2,
-          top:
-            targetHeight * handle[1] + selectedElmY - handleElm.offsetHeight / 2
+          left: targetWidth * handle[0] + selectedElmX - handleElm.offsetWidth / 2,
+          top: targetHeight * handle[1] + selectedElmY - handleElm.offsetHeight / 2
         });
       });
     } else {
@@ -423,9 +390,7 @@ const ControlSelection = (
     }
 
     // Remove data-mce-selected from all elements since they might have been copied using Ctrl+c/v
-    each(dom.select('img[data-mce-selected],hr[data-mce-selected]'), function (
-      img
-    ) {
+    each(dom.select('img[data-mce-selected],hr[data-mce-selected]'), function (img) {
       img.removeAttribute('data-mce-selected');
     });
 
@@ -436,10 +401,7 @@ const ControlSelection = (
       disableGeckoResize();
       startElm = selection.getStart(true);
 
-      if (
-        isChildOrEqual(startElm, controlElm) &&
-        isChildOrEqual(selection.getEnd(true), controlElm)
-      ) {
+      if (isChildOrEqual(startElm, controlElm) && isChildOrEqual(selection.getEnd(true), controlElm)) {
         showResizeRect(controlElm);
         return;
       }
@@ -449,9 +411,7 @@ const ControlSelection = (
   };
 
   const isWithinContentEditableFalse = function (elm) {
-    return isContentEditableFalse(
-      getContentEditableRoot(editor.getBody(), elm)
-    );
+    return isContentEditableFalse(getContentEditableRoot(editor.getBody(), elm));
   };
 
   const unbindResizeHandleEvents = function () {
@@ -483,11 +443,7 @@ const ControlSelection = (
         const target = e.target,
           nodeName = target.nodeName;
 
-        if (
-          !resizeStarted &&
-          /^(TABLE|IMG|HR)$/.test(nodeName) &&
-          !isWithinContentEditableFalse(target)
-        ) {
+        if (!resizeStarted && /^(TABLE|IMG|HR)$/.test(nodeName) && !isWithinContentEditableFalse(target)) {
           if (e.button !== 2) {
             editor.selection.select(target, nodeName === 'TABLE');
           }
@@ -522,9 +478,7 @@ const ControlSelection = (
       };
 
       dom.bind(rootElement, 'mscontrolselect', handleMSControlSelect);
-      editor.on('remove', () =>
-        dom.unbind(rootElement, 'mscontrolselect', handleMSControlSelect)
-      );
+      editor.on('remove', () => dom.unbind(rootElement, 'mscontrolselect', handleMSControlSelect));
     }
 
     const throttledUpdateResizeRect = Delay.throttle(function (e) {
@@ -533,10 +487,7 @@ const ControlSelection = (
       }
     });
 
-    editor.on(
-      'nodechange ResizeEditor ResizeWindow ResizeContent drop FullscreenStateChanged',
-      throttledUpdateResizeRect
-    );
+    editor.on('nodechange ResizeEditor ResizeWindow ResizeContent drop FullscreenStateChanged', throttledUpdateResizeRect);
 
     // Update resize rect while typing in a table
     editor.on('keyup compositionend', function (e) {

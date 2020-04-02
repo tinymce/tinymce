@@ -6,16 +6,7 @@
  */
 
 import { ColourPicker } from '@ephox/acid';
-import {
-  AlloyTriggers,
-  Behaviour,
-  Composing,
-  Form,
-  Memento,
-  NativeEvents,
-  Representing,
-  SimpleSpec
-} from '@ephox/alloy';
+import { AlloyTriggers, Behaviour, Composing, Form, Memento, NativeEvents, Representing, SimpleSpec } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
@@ -40,8 +31,7 @@ const english = {
   'colorcustom.sb.brightness': 'Brightness',
   'colorcustom.sb.picker': 'Saturation and Brightness Picker',
   'colorcustom.sb.palette': 'Saturation and Brightness Palette',
-  'colorcustom.sb.instructions':
-    'Use arrow keys to select saturation and brightness, on x and y axes',
+  'colorcustom.sb.instructions': 'Use arrow keys to select saturation and brightness, on x and y axes',
   'colorcustom.hue.hue': 'Hue',
   'colorcustom.hue.slider': 'Hue Slider',
   'colorcustom.hue.palette': 'Hue Palette',

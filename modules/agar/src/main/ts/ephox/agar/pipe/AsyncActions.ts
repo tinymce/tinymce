@@ -9,10 +9,7 @@ const delay = (amount: number) => (next: () => void, _die: DieFn): void => {
 };
 
 // Not really async, but can fail.
-const fail = (message: string) => (
-  next: () => void,
-  die: (err) => void
-): void => {
+const fail = (message: string) => (next: () => void, die: (err) => void): void => {
   die('Fake failure: ' + message);
 };
 

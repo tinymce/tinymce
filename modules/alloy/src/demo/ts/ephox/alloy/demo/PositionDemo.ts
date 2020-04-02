@@ -155,11 +155,7 @@ export default (): void => {
               sink,
               {
                 anchor: 'selection',
-                root: button
-                  .getSystem()
-                  .getByUid('text-editor')
-                  .getOrDie()
-                  .element()
+                root: button.getSystem().getByUid('text-editor').getOrDie().element()
               },
               popup
             );
@@ -174,10 +170,7 @@ export default (): void => {
   const onLoad = DomEvent.bind(frame, 'load', () => {
     onLoad.unbind();
 
-    const html =
-      '<!doctype html><html><body contenteditable="true">' +
-      DemoContent.generate(20) +
-      '</body></html>';
+    const html = '<!doctype html><html><body contenteditable="true">' + DemoContent.generate(20) + '</body></html>';
     Frames.write(frame, html);
   });
 
@@ -201,9 +194,7 @@ export default (): void => {
               sink,
               {
                 anchor: 'selection',
-                root: Element.fromDom(
-                  Traverse.defaultView(frame).dom().document.body
-                )
+                root: Element.fromDom(Traverse.defaultView(frame).dom().document.body)
               },
               popup
             );

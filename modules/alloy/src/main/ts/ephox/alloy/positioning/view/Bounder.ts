@@ -8,40 +8,20 @@ import { RepositionDecision } from './Reposition';
 import { SpotInfo } from './SpotInfo';
 
 export interface BounderAttemptAdt {
-  fold: <T>(
-    fit: (reposition: RepositionDecision) => T,
-    nofit: (reposition: RepositionDecision, deltaW: number, deltaH: number) => T
-  ) => T;
+  fold: <T>(fit: (reposition: RepositionDecision) => T, nofit: (reposition: RepositionDecision, deltaW: number, deltaH: number) => T) => T;
   match: <T>(branches: {
     fit: (reposition: RepositionDecision) => T;
-    nofit: (
-      reposition: RepositionDecision,
-      deltaW: number,
-      deltaH: number
-    ) => T;
+    nofit: (reposition: RepositionDecision, deltaW: number, deltaH: number) => T;
   }) => T;
   log: (label: string) => void;
 }
 
 const adt: {
   fit: (reposition: RepositionDecision) => BounderAttemptAdt;
-  nofit: (
-    reposition: RepositionDecision,
-    deltaW: number,
-    deltaH: number
-  ) => BounderAttemptAdt;
-} = Adt.generate([
-  { fit: ['reposition'] },
-  { nofit: ['reposition', 'deltaW', 'deltaH'] }
-]);
+  nofit: (reposition: RepositionDecision, deltaW: number, deltaH: number) => BounderAttemptAdt;
+} = Adt.generate([{ fit: ['reposition'] }, { nofit: ['reposition', 'deltaW', 'deltaH'] }]);
 
-const calcReposition = (
-  newX: number,
-  newY: number,
-  width: number,
-  height: number,
-  bounds: Boxes.Bounds
-) => {
+const calcReposition = (newX: number, newY: number, width: number, height: number, bounds: Boxes.Bounds) => {
   const boundsX = bounds.x;
   const boundsY = bounds.y;
   const boundsWidth = bounds.width;
@@ -58,18 +38,8 @@ const calcReposition = (
   const sizeInBounds = xFit && yFit;
 
   // measure how much of the width and height are visible. deltaW isn't necessary in the fit case but it's cleaner to read here.
-  const deltaW = Math.abs(
-    Math.min(
-      width,
-      xInBounds ? boundsX + boundsWidth - newX : boundsX - (newX + width)
-    )
-  );
-  const deltaH = Math.abs(
-    Math.min(
-      height,
-      yInBounds ? boundsY + boundsHeight - newY : boundsY - (newY + height)
-    )
-  );
+  const deltaW = Math.abs(Math.min(width, xInBounds ? boundsX + boundsWidth - newX : boundsX - (newX + width)));
+  const deltaH = Math.abs(Math.min(height, yInBounds ? boundsY + boundsHeight - newY : boundsY - (newY + height)));
 
   // measure the maximum x and y, taking into account the height and width of the element
   const maxX = Math.max(bounds.x, bounds.right - width);
@@ -91,12 +61,7 @@ const calcReposition = (
   };
 };
 
-const attempt = (
-  candidate: SpotInfo,
-  width: number,
-  height: number,
-  bounds: Boxes.Bounds
-): BounderAttemptAdt => {
+const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Boxes.Bounds): BounderAttemptAdt => {
   const candidateX = candidate.x();
   const candidateY = candidate.y();
   const bubbleOffsets = candidate.bubble().offset();
@@ -104,11 +69,7 @@ const attempt = (
   const bubbleTop = bubbleOffsets.top();
 
   // adjust the bounds to account for the layout and bubble restrictions
-  const adjustedBounds = LayoutBounds.adjustBounds(
-    bounds,
-    candidate.boundsRestriction(),
-    bubbleOffsets
-  );
+  const adjustedBounds = LayoutBounds.adjustBounds(bounds, candidate.boundsRestriction(), bubbleOffsets);
   const boundsY = adjustedBounds.y;
   const boundsBottom = adjustedBounds.bottom;
   const boundsX = adjustedBounds.x;
@@ -118,35 +79,18 @@ const attempt = (
   const newX = candidateX + bubbleLeft;
   const newY = candidateY + bubbleTop;
 
-  const {
-    originInBounds,
-    sizeInBounds,
-    limitX,
-    limitY,
-    deltaW,
-    deltaH
-  } = calcReposition(newX, newY, width, height, adjustedBounds);
+  const { originInBounds, sizeInBounds, limitX, limitY, deltaW, deltaH } = calcReposition(newX, newY, width, height, adjustedBounds);
 
   // TBIO-3367 + TBIO-3387:
   // Futz with the "height" of the popup to ensure if it doesn't fit it's capped at the available height.
   // As of TBIO-4291, we provide all available space for both up and down.
   const upAvailable = Fun.constant(limitY + deltaH - boundsY);
   const downAvailable = Fun.constant(boundsBottom - limitY);
-  const maxHeight = Direction.cataVertical(
-    candidate.direction(),
-    downAvailable,
-    /* middle */ downAvailable,
-    upAvailable
-  );
+  const maxHeight = Direction.cataVertical(candidate.direction(), downAvailable, /* middle */ downAvailable, upAvailable);
 
   const westAvailable = Fun.constant(limitX + deltaW - boundsX);
   const eastAvailable = Fun.constant(boundsRight - limitX);
-  const maxWidth = Direction.cataHorizontal(
-    candidate.direction(),
-    eastAvailable,
-    /* middle */ eastAvailable,
-    westAvailable
-  );
+  const maxWidth = Direction.cataHorizontal(candidate.direction(), eastAvailable, /* middle */ eastAvailable, westAvailable);
 
   const reposition: RepositionDecision = {
     x: limitX,
@@ -190,9 +134,7 @@ const attempt = (
 
   // Take special note that we don't use the futz values in the nofit case; whether this position is a good fit is separate
   // to ensuring that if we choose it the popup is actually on screen properly.
-  return originInBounds && sizeInBounds
-    ? adt.fit(reposition)
-    : adt.nofit(reposition, deltaW, deltaH);
+  return originInBounds && sizeInBounds ? adt.fit(reposition) : adt.nofit(reposition, deltaW, deltaH);
 };
 
 /**
@@ -213,28 +155,18 @@ const attempts = (
 ): RepositionDecision => {
   const panelWidth = elementBox.width;
   const panelHeight = elementBox.height;
-  const attemptBestFit = (
-    layout: AnchorLayout,
-    reposition: RepositionDecision,
-    deltaW: number,
-    deltaH: number
-  ) => {
+  const attemptBestFit = (layout: AnchorLayout, reposition: RepositionDecision, deltaW: number, deltaH: number) => {
     const next: SpotInfo = layout(anchorBox, elementBox, bubbles);
     const attemptLayout = attempt(next, panelWidth, panelHeight, bounds);
 
     // unwrapping fit only to rewrap seems... silly
-    return attemptLayout.fold(
-      adt.fit,
-      (newReposition, newDeltaW, newDeltaH) => {
-        // console.log(`label: ${next.label()}, newDeltaW: ${newDeltaW}, deltaW: ${deltaW}, newDeltaH: ${newDeltaH}, deltaH: ${deltaH}`);
-        const improved = newDeltaH > deltaH || newDeltaW > deltaW;
-        // console.log('improved? ', improved);
-        // re-wrap in the ADT either way
-        return improved
-          ? adt.nofit(newReposition, newDeltaW, newDeltaH)
-          : adt.nofit(reposition, deltaW, deltaH);
-      }
-    );
+    return attemptLayout.fold(adt.fit, (newReposition, newDeltaW, newDeltaH) => {
+      // console.log(`label: ${next.label()}, newDeltaW: ${newDeltaW}, deltaW: ${deltaW}, newDeltaH: ${newDeltaH}, deltaH: ${deltaH}`);
+      const improved = newDeltaH > deltaH || newDeltaW > deltaW;
+      // console.log('improved? ', improved);
+      // re-wrap in the ADT either way
+      return improved ? adt.nofit(newReposition, newDeltaW, newDeltaH) : adt.nofit(reposition, deltaW, deltaH);
+    });
   };
 
   const abc = Arr.foldl(

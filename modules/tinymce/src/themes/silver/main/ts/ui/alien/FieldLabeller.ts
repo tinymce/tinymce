@@ -5,13 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  FormField as AlloyFormField,
-  SketchSpec,
-  RawDomSchema,
-  AlloySpec,
-  Behaviour
-} from '@ephox/alloy';
+import { FormField as AlloyFormField, SketchSpec, RawDomSchema, AlloySpec, Behaviour } from '@ephox/alloy';
 // TODO: Export properly from alloy.
 import { Option } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -22,19 +16,11 @@ const renderFormFieldWith = (
   extraClasses: string[],
   extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[]
 ): SketchSpec => {
-  const spec = renderFormFieldSpecWith(
-    pLabel,
-    pField,
-    extraClasses,
-    extraBehaviours
-  );
+  const spec = renderFormFieldSpecWith(pLabel, pField, extraClasses, extraBehaviours);
   return AlloyFormField.sketch(spec);
 };
 
-const renderFormField = (
-  pLabel: Option<AlloySpec>,
-  pField: AlloySpec
-): SketchSpec => renderFormFieldWith(pLabel, pField, [], []);
+const renderFormField = (pLabel: Option<AlloySpec>, pField: AlloySpec): SketchSpec => renderFormFieldWith(pLabel, pField, [], []);
 
 const renderFormFieldSpec = (pLabel: Option<AlloySpec>, pField: AlloySpec) => ({
   dom: renderFormFieldDom(),
@@ -59,10 +45,7 @@ const renderFormFieldDomWith = (extraClasses): RawDomSchema => ({
   classes: ['tox-form__group'].concat(extraClasses)
 });
 
-const renderLabel = (
-  label: string,
-  providersBackstage: UiFactoryBackstageProviders
-): AlloySpec =>
+const renderLabel = (label: string, providersBackstage: UiFactoryBackstageProviders): AlloySpec =>
   AlloyFormField.parts().label({
     dom: {
       tag: 'label',
@@ -71,10 +54,4 @@ const renderLabel = (
     }
   });
 
-export {
-  renderFormField,
-  renderFormFieldWith,
-  renderFormFieldSpec,
-  renderFormFieldDom,
-  renderLabel
-};
+export { renderFormField, renderFormFieldWith, renderFormFieldSpec, renderFormFieldDom, renderLabel };

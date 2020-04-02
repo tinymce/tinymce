@@ -34,10 +34,7 @@ export enum HighlightOnOpen {
   HighlightNone
 }
 
-const getAnchor = (
-  detail: CommonDropdownDetail<TieredData>,
-  component: AlloyComponent
-): HotspotAnchorSpec => {
+const getAnchor = (detail: CommonDropdownDetail<TieredData>, component: AlloyComponent): HotspotAnchorSpec => {
   const hotspot = detail.getHotspot(component).getOr(component);
   // type required on TS3.3, can remove once we upgrade to 3.4
   const anchor: 'hotspot' = 'hotspot';
@@ -66,11 +63,7 @@ const openF = (
   externals: any,
   highlightOnOpen: HighlightOnOpen
 ): Future<Option<SketchSpec>> => {
-  const futureData: Future<Option<TieredData>> = fetch(
-    detail,
-    mapFetch,
-    component
-  );
+  const futureData: Future<Option<TieredData>> = fetch(detail, mapFetch, component);
 
   const getLazySink = getSink(component, detail);
 
@@ -84,8 +77,7 @@ const openF = (
           uid: Tagger.generate(''),
           data,
 
-          highlightImmediately:
-            highlightOnOpen === HighlightOnOpen.HighlightFirst,
+          highlightImmediately: highlightOnOpen === HighlightOnOpen.HighlightFirst,
 
           onOpenMenu(tmenu, menu) {
             const sink = getLazySink().getOrDie();
@@ -110,11 +102,7 @@ const openF = (
             const sink = getLazySink().getOrDie();
             Positioning.position(sink, anchor, primaryMenu);
             Arr.each(submenuTriggers, (st) => {
-              Positioning.position(
-                sink,
-                { anchor: 'submenu', item: st.triggeringItem },
-                st.triggeredMenu
-              );
+              Positioning.position(sink, { anchor: 'submenu', item: st.triggeringItem }, st.triggeredMenu);
             });
           },
 
@@ -142,15 +130,7 @@ const open = (
   highlightOnOpen: HighlightOnOpen
 ) => {
   const anchor = getAnchor(detail, hotspot);
-  const processed = openF(
-    detail,
-    mapFetch,
-    anchor,
-    hotspot,
-    sandbox,
-    externals,
-    highlightOnOpen
-  );
+  const processed = openF(detail, mapFetch, anchor, hotspot, sandbox, externals, highlightOnOpen);
   return processed.map((tdata) => {
     // If we have data, display a menu. Else, close the menu if it was open
     tdata.fold(
@@ -194,22 +174,10 @@ const togglePopup = (
   const showing = Sandboxing.isOpen(sandbox);
 
   const action = showing ? close : open;
-  return action(
-    detail,
-    mapFetch,
-    hotspot,
-    sandbox,
-    externals,
-    onOpenSync,
-    highlightOnOpen
-  );
+  return action(detail, mapFetch, hotspot, sandbox, externals, onOpenSync, highlightOnOpen);
 };
 
-const matchWidth = (
-  hotspot: AlloyComponent,
-  container: AlloyComponent,
-  useMinWidth: boolean
-) => {
+const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent, useMinWidth: boolean) => {
   const menu = Composing.getCurrent(container).getOr(container);
   const buttonWidth = Width.get(hotspot.element());
   if (useMinWidth) {
@@ -224,22 +192,14 @@ interface SinkDetail {
   lazySink: Option<LazySink>;
 }
 
-const getSink = (
-  anyInSystem: AlloyComponent,
-  sinkDetail: SinkDetail
-): (() => ReturnType<LazySink>) =>
+const getSink = (anyInSystem: AlloyComponent, sinkDetail: SinkDetail): (() => ReturnType<LazySink>) =>
   anyInSystem
     .getSystem()
     .getByUid(sinkDetail.uid + '-' + InternalSink.suffix())
     .map((internalSink) => () => Result.value(internalSink))
     .getOrThunk(() =>
       sinkDetail.lazySink.fold(
-        () => () =>
-          Result.error(
-            new Error(
-              'No internal sink is specified, nor could an external sink be found'
-            )
-          ),
+        () => () => Result.error(new Error('No internal sink is specified, nor could an external sink be found')),
         (lazySinkFn) => () => lazySinkFn(anyInSystem)
       )
     );
@@ -250,11 +210,7 @@ const doRepositionMenus = (sandbox: AlloyComponent) => {
   });
 };
 
-const makeSandbox = (
-  detail: CommonDropdownDetail<TieredData>,
-  hotspot: AlloyComponent,
-  extras?: SandboxExtras
-) => {
+const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyComponent, extras?: SandboxExtras) => {
   const ariaOwner = AriaOwner.manager();
 
   const onOpen = (component: AlloyComponent, menu: AlloyComponent) => {
@@ -298,15 +254,8 @@ const makeSandbox = (
       Sandboxing.config({
         onOpen,
         onClose,
-        isPartOf(
-          container: AlloyComponent,
-          data: AlloyComponent,
-          queryElem: Element
-        ): boolean {
-          return (
-            ComponentStructure.isPartOf(data, queryElem) ||
-            ComponentStructure.isPartOf(hotspot, queryElem)
-          );
+        isPartOf(container: AlloyComponent, data: AlloyComponent, queryElem: Element): boolean {
+          return ComponentStructure.isPartOf(data, queryElem) || ComponentStructure.isPartOf(hotspot, queryElem);
         },
         getAttachPoint() {
           return lazySink().getOrDie();
@@ -314,9 +263,7 @@ const makeSandbox = (
       }),
       Composing.config({
         find(sandbox: AlloyComponent): Option<AlloyComponent> {
-          return Sandboxing.getState(sandbox).bind((menu) =>
-            Composing.getCurrent(menu)
-          );
+          return Sandboxing.getState(sandbox).bind((menu) => Composing.getCurrent(menu));
         }
       }),
       Receiving.config({

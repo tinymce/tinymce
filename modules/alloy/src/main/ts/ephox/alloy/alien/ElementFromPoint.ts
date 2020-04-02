@@ -5,30 +5,17 @@ import { Element, Node, Traverse } from '@ephox/sugar';
 import { AlloyComponent } from '../api/component/ComponentApi';
 
 // Note, elementFromPoint gives a different answer than caretRangeFromPoint
-const elementFromPoint = (
-  doc: Element<HTMLDocument>,
-  x: number,
-  y: number
-): Option<Element> =>
+const elementFromPoint = (doc: Element<HTMLDocument>, x: number, y: number): Option<Element> =>
   Option.from(doc.dom().elementFromPoint(x, y)).map(Element.fromDom);
 
-const insideComponent = (
-  component: AlloyComponent,
-  x: number,
-  y: number
-): Option<Element> => {
-  const isInside = (node: Element) =>
-    component.element().dom().contains(node.dom());
+const insideComponent = (component: AlloyComponent, x: number, y: number): Option<Element> => {
+  const isInside = (node: Element) => component.element().dom().contains(node.dom());
 
   const hasValidRect = (node: Element): boolean => {
-    const elem: Option<Element> = Node.isText(node)
-      ? Traverse.parent(node)
-      : Option.some(node);
+    const elem: Option<Element> = Node.isText(node) ? Traverse.parent(node) : Option.some(node);
     return elem.exists((e) => {
       const rect = e.dom().getBoundingClientRect();
-      return (
-        x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom
-      );
+      return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
     });
   };
 

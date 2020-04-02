@@ -1,24 +1,10 @@
-import {
-  ApproxStructure,
-  Assertions,
-  GeneralSteps,
-  Keyboard,
-  Keys,
-  Log,
-  Mouse,
-  Step
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, GeneralSteps, Keyboard, Keys, Log, Mouse, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Future, Result } from '@ephox/katamari';
 import { SelectorExists } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import {
-  Behaviour,
-  FloatingToolbarButton,
-  SketchSpec,
-  Tabstopping
-} from 'ephox/alloy/api/Main';
+import { Behaviour, FloatingToolbarButton, SketchSpec, Tabstopping } from 'ephox/alloy/api/Main';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import * as Layout from 'ephox/alloy/positioning/layout/Layout';
@@ -80,9 +66,7 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
       const sAssertButtonStructure = (active: boolean) =>
         GeneralSteps.sequence([
           Assertions.sAssertStructure(
-            `Floating toolbar button should ${
-              active ? 'have' : 'not have'
-            } toggle class`,
+            `Floating toolbar button should ${active ? 'have' : 'not have'} toggle class`,
             ApproxStructure.build((s, str, arr) =>
               s.element('button', {
                 classes: active ? [arr.has('test-button-toggle')] : [],
@@ -111,19 +95,13 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
                           ApproxStructure.build((s, str, arr) =>
                             s.element('div', {
                               classes: [arr.has('test-toolbar-group')],
-                              children: [
-                                s.element('button', { html: str.is('A') }),
-                                s.element('button', { html: str.is('B') })
-                              ]
+                              children: [s.element('button', { html: str.is('A') }), s.element('button', { html: str.is('B') })]
                             })
                           ),
                           ApproxStructure.build((s, str, arr) =>
                             s.element('div', {
                               classes: [arr.has('test-toolbar-group')],
-                              children: [
-                                s.element('button', { html: str.is('C') }),
-                                s.element('button', { html: str.is('D') })
-                              ]
+                              children: [s.element('button', { html: str.is('C') }), s.element('button', { html: str.is('D') })]
                             })
                           )
                         ]
@@ -139,20 +117,13 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
 
       const sAssertFloatingToolbarClosed = () =>
         Step.sync(() => {
-          Assertions.assertEq(
-            'Floating toolbar should not exist',
-            false,
-            SelectorExists.descendant(sinkComp.element(), 'test-toolbar')
-          );
+          Assertions.assertEq('Floating toolbar should not exist', false, SelectorExists.descendant(sinkComp.element(), 'test-toolbar'));
         });
 
       return [
         GuiSetup.mAddStyles(doc, ['.test-toolbar { display: flex; }']),
 
-        Log.stepsAsStep('', 'Assert initial structure', [
-          sAssertButtonStructure(false),
-          sAssertFloatingToolbarClosed()
-        ]),
+        Log.stepsAsStep('', 'Assert initial structure', [sAssertButtonStructure(false), sAssertFloatingToolbarClosed()]),
 
         Log.stepsAsStep('', 'Clicking on button should open floating toolbar', [
           Mouse.sClickOn(gui.element(), 'button'),

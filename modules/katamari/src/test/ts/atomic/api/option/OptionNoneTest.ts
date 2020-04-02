@@ -18,12 +18,7 @@ UnitTest.test('Option.none: unit tests', () => {
     s.map((v) => v * 2),
     tOption()
   );
-  Assert.eq(
-    'map bottom is none',
-    Option.none(),
-    s.map(Fun.die('boom')),
-    tOption()
-  );
+  Assert.eq('map bottom is none', Option.none(), s.map(Fun.die('boom')), tOption());
 
   Assert.eq(
     'bind none some is none',
@@ -33,23 +28,10 @@ UnitTest.test('Option.none: unit tests', () => {
   );
 
   Assert.eq('from null is none', Option.none(), Option.from(null), tOption());
-  Assert.eq(
-    'from undefined is none',
-    Option.none(),
-    Option.from(undefined),
-    tOption()
-  );
+  Assert.eq('from undefined is none', Option.none(), Option.from(undefined), tOption());
 
-  Assert.eq(
-    'none or some(7) is some(s)',
-    true,
-    Option.none().or(Option.some(7)).equals(Option.some(7))
-  );
-  Assert.eq(
-    'none or none is none',
-    true,
-    Option.none().or(Option.none()).equals(Option.none())
-  );
+  Assert.eq('none or some(7) is some(s)', true, Option.none().or(Option.some(7)).equals(Option.some(7)));
+  Assert.eq('none or none is none', true, Option.none().or(Option.none()).equals(Option.none()));
 
   Assert.eq('none to array is empty array', [], Option.none().toArray());
 
@@ -66,25 +48,12 @@ UnitTest.test('Option.none: unit tests', () => {
     }, Fun.die('boom'))
   );
 
-  Assert.eq(
-    'fold #3',
-    'b',
-    Option.none().fold(Fun.constant('b'), Fun.die('boom'))
-  );
-  Assert.eq(
-    'bind',
-    Option.none(),
-    Option.none().bind(Fun.die('boom')),
-    tOption()
-  );
+  Assert.eq('fold #3', 'b', Option.none().fold(Fun.constant('b'), Fun.die('boom')));
+  Assert.eq('bind', Option.none(), Option.none().bind(Fun.die('boom')), tOption());
   Assert.eq('each', undefined, Option.none().each(Fun.die('boom')));
 
   Assert.eq('forall none is true', true, Option.none().forall(Fun.die('boom')));
-  Assert.eq(
-    'exists none is false',
-    false,
-    Option.none().exists(Fun.die('boom'))
-  );
+  Assert.eq('exists none is false', false, Option.none().exists(Fun.die('boom')));
 
   Assert.eq('toString', 'none()', Option.none().toString());
 });
@@ -92,10 +61,7 @@ UnitTest.test('Option.none: unit tests', () => {
 UnitTest.test('Checking none.fold(_ -> x, die) === x', () => {
   fc.assert(
     fc.property(fc.integer(), (i) => {
-      const actual = Option.none<string>().fold(
-        Fun.constant(i),
-        Fun.die('Should not die')
-      );
+      const actual = Option.none<string>().fold(Fun.constant(i), Fun.die('Should not die'));
       Assert.eq('eq', i, actual);
     })
   );

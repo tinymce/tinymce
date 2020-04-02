@@ -1,11 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  GeneralSteps,
-  Logger,
-  Step,
-  Waiter
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, GeneralSteps, Logger, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Class, Css, Traverse } from '@ephox/sugar';
 
@@ -74,19 +67,11 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
       ),
     (doc, _body, _gui, component, store) => {
       const sIsNotGrowing = Step.sync(() => {
-        Assertions.assertEq(
-          'Ensuring stopped growing',
-          false,
-          Class.has(component.element(), 'test-sliding-width-growing')
-        );
+        Assertions.assertEq('Ensuring stopped growing', false, Class.has(component.element(), 'test-sliding-width-growing'));
       });
 
       const sIsNotShrinking = Step.sync(() => {
-        Assertions.assertEq(
-          'Ensuring stopped shrinking',
-          false,
-          Class.has(component.element(), 'test-sliding-width-shrinking')
-        );
+        Assertions.assertEq('Ensuring stopped shrinking', false, Class.has(component.element(), 'test-sliding-width-shrinking'));
       });
 
       const sGrowingSteps = (label: string) =>
@@ -112,25 +97,13 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
               component.element()
             ),
 
-            Waiter.sTryUntil(
-              'Waiting for animation to stop (growing)',
-              sIsNotGrowing,
-              10,
-              4000
-            ),
+            Waiter.sTryUntil('Waiting for animation to stop (growing)', sIsNotGrowing, 10, 4000),
 
             Step.sync(() => {
-              Assertions.assertEq(
-                'Checking hasGrown = true',
-                true,
-                Sliding.hasGrown(component)
-              );
+              Assertions.assertEq('Checking hasGrown = true', true, Sliding.hasGrown(component));
             }),
 
-            store.sAssertEq('After finished growing', [
-              'onStartGrow',
-              'onGrown'
-            ]),
+            store.sAssertEq('After finished growing', ['onStartGrow', 'onGrown']),
             store.sClear
           ])
         );
@@ -158,25 +131,13 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
               component.element()
             ),
 
-            Waiter.sTryUntil(
-              label + '\nWaiting for animation to stop (shrinking)',
-              sIsNotShrinking,
-              10,
-              4000
-            ),
+            Waiter.sTryUntil(label + '\nWaiting for animation to stop (shrinking)', sIsNotShrinking, 10, 4000),
 
             Step.sync(() => {
-              Assertions.assertEq(
-                'Checking hasGrown = false',
-                false,
-                Sliding.hasGrown(component)
-              );
+              Assertions.assertEq('Checking hasGrown = false', false, Sliding.hasGrown(component));
             }),
 
-            store.sAssertEq('After finished shrinking', [
-              'onStartShrink',
-              'onShrunk'
-            ]),
+            store.sAssertEq('After finished shrinking', ['onStartShrink', 'onShrunk']),
             store.sClear
           ])
         );
@@ -250,11 +211,7 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
           component.element()
         ),
         Step.sync(() => {
-          Assertions.assertEq(
-            'Checking hasGrown = false (immediateShrink)',
-            false,
-            Sliding.hasGrown(component)
-          );
+          Assertions.assertEq('Checking hasGrown = false (immediateShrink)', false, Sliding.hasGrown(component));
         }),
         store.sClear,
         Step.sync(() => {
@@ -274,10 +231,11 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
 
         Waiter.sTryUntil(
           'toggleGrow x 2 in quick succession',
-          store.sAssertEq(
-            'Two toggles (one after the other) should fire all events even though no transitioning occurs',
-            ['onStartGrow', 'onStartShrink', 'onShrunk']
-          ),
+          store.sAssertEq('Two toggles (one after the other) should fire all events even though no transitioning occurs', [
+            'onStartGrow',
+            'onStartShrink',
+            'onShrunk'
+          ]),
           10,
           4000
         ),

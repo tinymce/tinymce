@@ -44,20 +44,13 @@ export interface WindowManagerSetup {
   editor: Editor;
 }
 
-type InlineDialogAnchor =
-  | HotspotAnchorSpec
-  | MakeshiftAnchorSpec
-  | NodeAnchorSpec
-  | SelectionAnchorSpec;
+type InlineDialogAnchor = HotspotAnchorSpec | MakeshiftAnchorSpec | NodeAnchorSpec | SelectionAnchorSpec;
 
-const validateData = <T extends Types.Dialog.DialogData>(
-  data: T,
-  validator: Processor
-) => ValueSchema.getOrDie(ValueSchema.asRaw('data', validator, data));
+const validateData = <T extends Types.Dialog.DialogData>(data: T, validator: Processor) =>
+  ValueSchema.getOrDie(ValueSchema.asRaw('data', validator, data));
 
 const isAlertOrConfirmDialog = (target: Element): boolean =>
-  SelectorExists.closest(target, '.tox-alert-dialog') ||
-  SelectorExists.closest(target, '.tox-confirm-dialog');
+  SelectorExists.closest(target, '.tox-alert-dialog') || SelectorExists.closest(target, '.tox-confirm-dialog');
 
 const inlineAdditionalBehaviours = (
   editor: Editor,
@@ -73,10 +66,7 @@ const inlineAdditionalBehaviours = (
     return [
       Docking.config({
         contextual: {
-          lazyContext: () =>
-            Option.some(
-              Boxes.box(Element.fromDom(editor.getContentAreaContainer()))
-            ),
+          lazyContext: () => Option.some(Boxes.box(Element.fromDom(editor.getContentAreaContainer()))),
           fadeInClass: 'tox-dialog-dock-fadein',
           fadeOutClass: 'tox-dialog-dock-fadeout',
           transitionClass: 'tox-dialog-dock-transition'
@@ -102,36 +92,22 @@ const setup = (extras: WindowManagerSetup) => {
     closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void
   ): Types.Dialog.DialogInstanceApi<T> => {
     if (params !== undefined && params.inline === 'toolbar') {
-      return openInlineDialog(
-        config,
-        backstage.shared.anchors.inlineDialog(),
-        closeWindow,
-        params.ariaAttrs
-      );
+      return openInlineDialog(config, backstage.shared.anchors.inlineDialog(), closeWindow, params.ariaAttrs);
     } else if (params !== undefined && params.inline === 'cursor') {
-      return openInlineDialog(
-        config,
-        backstage.shared.anchors.cursor(),
-        closeWindow,
-        params.ariaAttrs
-      );
+      return openInlineDialog(config, backstage.shared.anchors.cursor(), closeWindow, params.ariaAttrs);
     } else {
       return openModalDialog(config, closeWindow);
     }
   };
 
-  const openUrl = (
-    config: Types.UrlDialog.UrlDialogApi,
-    closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void
-  ) => openModalUrlDialog(config, closeWindow);
+  const openUrl = (config: Types.UrlDialog.UrlDialogApi, closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void) =>
+    openModalUrlDialog(config, closeWindow);
 
   const openModalUrlDialog = (
     config: Types.UrlDialog.UrlDialogApi,
     closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void
   ) => {
-    const factory = (
-      contents: Types.UrlDialog.UrlDialog
-    ): Types.UrlDialog.UrlDialogInstanceApi => {
+    const factory = (contents: Types.UrlDialog.UrlDialog): Types.UrlDialog.UrlDialogInstanceApi => {
       const dialog = renderUrlDialog(
         contents,
         {
@@ -246,11 +222,7 @@ const setup = (extras: WindowManagerSetup) => {
                 AlloyTriggers.emit(dialogUi.dialog, formCancelEvent);
               })
             ]),
-            ...inlineAdditionalBehaviours(
-              editor,
-              isStickyToolbar,
-              isToolbarLocationTop
-            )
+            ...inlineAdditionalBehaviours(editor, isStickyToolbar, isToolbarLocationTop)
           ]),
           // Treat alert or confirm dialogs as part of the inline dialog
           isExtraPart: (_comp, target) => isAlertOrConfirmDialog(target)
@@ -259,12 +231,7 @@ const setup = (extras: WindowManagerSetup) => {
       inlineDialog.set(inlineDialogComp);
 
       // Position the inline dialog
-      InlineView.showWithin(
-        inlineDialogComp,
-        anchor,
-        GuiFactory.premade(dialogUi.dialog),
-        Option.some(Body.body())
-      );
+      InlineView.showWithin(inlineDialogComp, anchor, GuiFactory.premade(dialogUi.dialog), Option.some(Body.body()));
 
       // Refresh the docking position if not using a sticky toolbar
       if (!isStickyToolbar || !isToolbarLocationTop) {
@@ -297,9 +264,7 @@ const setup = (extras: WindowManagerSetup) => {
     });
   };
 
-  const close = <T extends Types.Dialog.DialogData>(
-    instanceApi: Types.Dialog.DialogInstanceApi<T>
-  ) => {
+  const close = <T extends Types.Dialog.DialogData>(instanceApi: Types.Dialog.DialogInstanceApi<T>) => {
     instanceApi.close();
   };
 

@@ -10,11 +10,9 @@ const strSelectedSelector = 'td[' + strSelected + '],th[' + strSelected + ']';
 // used with not selectors
 const strAttributeSelector = '[' + strSelected + ']';
 const strFirstSelected = 'data-mce-first-selected';
-const strFirstSelectedSelector =
-  'td[' + strFirstSelected + '],th[' + strFirstSelected + ']';
+const strFirstSelectedSelector = 'td[' + strFirstSelected + '],th[' + strFirstSelected + ']';
 const strLastSelected = 'data-mce-last-selected';
-const strLastSelectedSelector =
-  'td[' + strLastSelected + '],th[' + strLastSelected + ']';
+const strLastSelectedSelector = 'td[' + strLastSelected + '],th[' + strLastSelected + ']';
 
 export const selected = strSelected;
 export const selectedSelector = strSelectedSelector;

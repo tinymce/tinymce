@@ -11,12 +11,7 @@ UnitTest.test('Arr.bind: unit tests', () => {
 
   const check = (expected, input: any[], f) => {
     Assert.eq('check', expected, Arr.bind(input, f), tArray(tNumber));
-    Assert.eq(
-      'check frozen',
-      expected,
-      Arr.bind(Object.freeze(input.slice()), f),
-      tArray(tNumber)
-    );
+    Assert.eq('check frozen', expected, Arr.bind(Object.freeze(input.slice()), f), tArray(tNumber));
   };
 
   check([], [], len);
@@ -25,32 +20,19 @@ UnitTest.test('Arr.bind: unit tests', () => {
   check([2, 0, 1, 2, 0], [[1, 2], [], [3], [4, 5], []], len);
 });
 
-UnitTest.test(
-  'Arr.bind: binding an array of empty arrays with identity equals an empty array',
-  () => {
-    fc.assert(
-      fc.property(fc.array(fc.constant<number[]>([])), (arr) => {
-        Assert.eq(
-          'bind empty arrays',
-          [],
-          Arr.bind(arr, Fun.identity),
-          tArray(tNumber)
-        );
-      })
-    );
-  }
-);
+UnitTest.test('Arr.bind: binding an array of empty arrays with identity equals an empty array', () => {
+  fc.assert(
+    fc.property(fc.array(fc.constant<number[]>([])), (arr) => {
+      Assert.eq('bind empty arrays', [], Arr.bind(arr, Fun.identity), tArray(tNumber));
+    })
+  );
+});
 
 UnitTest.test('Arr.bind: bind (pure .) is map', () => {
   fc.assert(
     fc.property(fc.array(fc.integer()), fc.integer(), (arr, j) => {
       const f = (x: number) => x + j;
-      Assert.eq(
-        'bind pure',
-        Arr.map(arr, f),
-        Arr.bind(arr, Fun.compose(Arr.pure, f)),
-        tArray(tNumber)
-      );
+      Assert.eq('bind pure', Arr.map(arr, f), Arr.bind(arr, Fun.compose(Arr.pure, f)), tArray(tNumber));
     })
   );
 });

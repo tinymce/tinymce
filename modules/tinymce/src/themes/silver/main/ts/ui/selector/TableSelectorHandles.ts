@@ -69,10 +69,7 @@ const calcSnap = (
       return Dragging.snap({
         sensor: DragCoord.absolute(sensorLeft, sensorTop),
         range: Position(sensorWidth, sensorHeight),
-        output: DragCoord.absolute(
-          Option.some(x - rect.width / 2),
-          Option.some(y - rect.height / 2)
-        ),
+        output: DragCoord.absolute(Option.some(x - rect.width / 2), Option.some(y - rect.height / 2)),
         extra: {
           td
         }
@@ -86,10 +83,8 @@ const getSnapsConfig = (
   onChange: (td: Element<HTMLTableDataCellElement>) => void
 ): DraggingTypes.SnapsConfigSpec<SnapExtra> => {
   // Can't use Option.is() here since we need to do a dom compare, not an equality compare
-  const isSameCell = (
-    cellOpt: Option<Element<HTMLTableDataCellElement>>,
-    td: Element<HTMLTableDataCellElement>
-  ) => cellOpt.exists((currentTd) => Compare.eq(currentTd, td));
+  const isSameCell = (cellOpt: Option<Element<HTMLTableDataCellElement>>, td: Element<HTMLTableDataCellElement>) =>
+    cellOpt.exists((currentTd) => Compare.eq(currentTd, td));
 
   return {
     getSnapPoints,
@@ -134,23 +129,12 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
   const tlTds = Cell<Element<HTMLTableDataCellElement>[]>([]);
   const brTds = Cell<Element<HTMLTableDataCellElement>[]>([]);
   const isVisible = Cell<Boolean>(false);
-  const startCell = Cell<Option<Element<HTMLTableDataCellElement>>>(
-    Option.none()
-  );
-  const finishCell = Cell<Option<Element<HTMLTableDataCellElement>>>(
-    Option.none()
-  );
+  const startCell = Cell<Option<Element<HTMLTableDataCellElement>>>(Option.none());
+  const finishCell = Cell<Option<Element<HTMLTableDataCellElement>>>(Option.none());
 
   const getTopLeftSnap = (td: Element<HTMLTableDataCellElement>) => {
     const box = Boxes.absolute(td);
-    return calcSnap(
-      memTopLeft.getOpt(sink),
-      td,
-      box.x,
-      box.y,
-      box.width,
-      box.height
-    );
+    return calcSnap(memTopLeft.getOpt(sink), td, box.x, box.y, box.width, box.height);
   };
 
   const getTopLeftSnaps = () =>
@@ -163,14 +147,7 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
 
   const getBottomRightSnap = (td: Element<HTMLTableDataCellElement>) => {
     const box = Boxes.absolute(td);
-    return calcSnap(
-      memBottomRight.getOpt(sink),
-      td,
-      box.right,
-      box.bottom,
-      box.width,
-      box.height
-    );
+    return calcSnap(memBottomRight.getOpt(sink), td, box.right, box.bottom, box.width, box.height);
   };
 
   const getBottomRightSnaps = () =>
@@ -187,15 +164,11 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
     });
   });
 
-  const bottomRightSnaps = getSnapsConfig(
-    getBottomRightSnaps,
-    finishCell,
-    (finish) => {
-      startCell.get().each((start) => {
-        editor.fire('TableSelectorChange', { start, finish });
-      });
-    }
-  );
+  const bottomRightSnaps = getSnapsConfig(getBottomRightSnaps, finishCell, (finish) => {
+    startCell.get().each((start) => {
+      editor.fire('TableSelectorChange', { start, finish });
+    });
+  });
 
   const memTopLeft = createSelector(topLeftSnaps);
   const memBottomRight = createSelector(bottomRightSnaps);
@@ -211,9 +184,7 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
   ) => {
     const cellRect = cell.dom().getBoundingClientRect();
     Css.remove(selector.element(), 'display');
-    const viewportHeight = Traverse.defaultView(
-      Element.fromDom(editor.getBody())
-    ).dom().innerHeight;
+    const viewportHeight = Traverse.defaultView(Element.fromDom(editor.getBody())).dom().innerHeight;
     const aboveViewport = isAbove(cellRect);
     const belowViewport = isBelow(cellRect, viewportHeight);
     if (aboveViewport || belowViewport) {
@@ -224,25 +195,20 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
   const snapTo = (
     selector: AlloyComponent,
     cell: Element<HTMLTableDataCellElement>,
-    getSnapConfig: (
-      cell: Element<HTMLTableDataCellElement>
-    ) => DraggingTypes.SnapConfig<SnapExtra>,
+    getSnapConfig: (cell: Element<HTMLTableDataCellElement>) => DraggingTypes.SnapConfig<SnapExtra>,
     pos: 'top' | 'bottom'
   ) => {
     const snap = getSnapConfig(cell);
     Dragging.snapTo(selector, snap);
     const isAbove = (rect: ClientRect) => rect[pos] < 0;
-    const isBelow = (rect: ClientRect, viewportHeight: number) =>
-      rect[pos] > viewportHeight;
+    const isBelow = (rect: ClientRect, viewportHeight: number) => rect[pos] > viewportHeight;
     showOrHideHandle(selector, cell, isAbove, isBelow);
   };
 
-  const snapTopLeft = (cell: Element<HTMLTableDataCellElement>) =>
-    snapTo(topLeft, cell, getTopLeftSnap, 'top');
+  const snapTopLeft = (cell: Element<HTMLTableDataCellElement>) => snapTo(topLeft, cell, getTopLeftSnap, 'top');
   const snapLastTopLeft = () => startCell.get().each(snapTopLeft);
 
-  const snapBottomRight = (cell: Element<HTMLTableDataCellElement>) =>
-    snapTo(bottomRight, cell, getBottomRightSnap, 'bottom');
+  const snapBottomRight = (cell: Element<HTMLTableDataCellElement>) => snapTo(bottomRight, cell, getBottomRightSnap, 'bottom');
   const snapLastBottomRight = () => finishCell.get().each(snapBottomRight);
 
   // TODO: Make this work for desktop maybe?

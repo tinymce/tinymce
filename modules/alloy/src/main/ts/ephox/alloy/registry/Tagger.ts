@@ -25,10 +25,7 @@ const read = (elem: Element): Option<string> => {
   return Option.from(id);
 };
 
-const readOrDie = (elem: Element): string =>
-  read(elem).getOrDie(
-    'Could not find alloy uid in: ' + AlloyLogger.element(elem)
-  );
+const readOrDie = (elem: Element): string => read(elem).getOrDie('Could not find alloy uid in: ' + AlloyLogger.element(elem));
 
 const generate = (prefix: string): string => Id.generate(prefix);
 

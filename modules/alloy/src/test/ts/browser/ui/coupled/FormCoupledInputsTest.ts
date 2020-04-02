@@ -1,11 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  Mouse,
-  UiControls,
-  UiFinder
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Mouse, UiControls, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
 import { Class } from '@ephox/sugar';
@@ -45,10 +38,7 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
       tag: 'div',
       classes: [className]
     },
-    components: [
-      FormField.parts().label(labelSpec),
-      FormField.parts().field({ factory: Input })
-    ]
+    components: [FormField.parts().label(labelSpec), FormField.parts().field({ factory: Input })]
   });
 
   const lockSpec = {
@@ -99,9 +89,7 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
           make({
             className: 'behaviour-tester',
             coupledFieldBehaviours: Behaviour.derive([
-              AddEventsBehaviour.config('test', [
-                AlloyEvents.run(NativeEvents.click(), store.adder('click'))
-              ])
+              AddEventsBehaviour.config('test', [AlloyEvents.run(NativeEvents.click(), store.adder('click'))])
             ])
           })
         ]
@@ -114,10 +102,7 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
             'Checking initial structure',
             ApproxStructure.build((s, str, arr) => {
               const inputStruct = s.element('div', {
-                children: [
-                  s.element('label', { html: str.is('Label') }),
-                  s.element('input', { attrs: { type: str.is('text') } })
-                ]
+                children: [s.element('label', { html: str.is('Label') }), s.element('input', { attrs: { type: str.is('text') } })]
               });
               return s.element('div', {
                 children: [
@@ -133,12 +118,7 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
           )
         ]);
 
-      const sTestRepresentingSetValue = (
-        selector: string,
-        value: any,
-        field1: string,
-        field2: string
-      ) =>
+      const sTestRepresentingSetValue = (selector: string, value: any, field1: string, field2: string) =>
         Chain.asStep(component.element(), [
           Chain.fromParent(UiFinder.cFindIn(selector), [
             Chain.fromChains([
@@ -160,12 +140,7 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
           ])
         ]);
 
-      const sTestCopying = (
-        selector: string,
-        inputSelector: string,
-        valueIn: any,
-        valueOut: any
-      ) =>
+      const sTestCopying = (selector: string, inputSelector: string, valueIn: any, valueOut: any) =>
         Chain.asStep(component.element(), [
           Chain.fromParent(UiFinder.cFindIn(selector), [
             Chain.fromChains([
@@ -177,15 +152,11 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
             Chain.fromChains([
               UiFinder.cFindIn(inputSelector),
               Chain.binder((elem) => component.getSystem().getByDom(elem)),
-              Chain.op((input) =>
-                AlloyTriggers.emit(input, NativeEvents.input())
-              )
+              Chain.op((input) => AlloyTriggers.emit(input, NativeEvents.input()))
             ]),
             Chain.fromChains([
               Chain.binder((elem) => component.getSystem().getByDom(elem)),
-              Chain.mapper((subcomponent) =>
-                Representing.getValue(subcomponent)
-              ),
+              Chain.mapper((subcomponent) => Representing.getValue(subcomponent)),
               Assertions.cAssertEq('Checking represented data', valueOut)
             ])
           ])
@@ -198,48 +169,21 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
             Chain.binder((elem) => component.getSystem().getByDom(elem)),
             [
               Chain.fromChains([
-                Chain.binder((comp) =>
-                  FormCoupledInputs.getField1(comp).fold(
-                    () => Result.error('did not find'),
-                    Result.value
-                  )
-                ),
+                Chain.binder((comp) => FormCoupledInputs.getField1(comp).fold(() => Result.error('did not find'), Result.value)),
                 Chain.op((comp) => {
-                  Assertions.assertEq(
-                    'Not field1',
-                    true,
-                    Class.has(comp.element(), 'field1')
-                  );
+                  Assertions.assertEq('Not field1', true, Class.has(comp.element(), 'field1'));
                 })
               ]),
               Chain.fromChains([
-                Chain.binder((comp) =>
-                  FormCoupledInputs.getField2(comp).fold(
-                    () => Result.error('did not find'),
-                    Result.value
-                  )
-                ),
+                Chain.binder((comp) => FormCoupledInputs.getField2(comp).fold(() => Result.error('did not find'), Result.value)),
                 Chain.op((comp) => {
-                  Assertions.assertEq(
-                    'Not field2',
-                    true,
-                    Class.has(comp.element(), 'field2')
-                  );
+                  Assertions.assertEq('Not field2', true, Class.has(comp.element(), 'field2'));
                 })
               ]),
               Chain.fromChains([
-                Chain.binder((comp) =>
-                  FormCoupledInputs.getLock(comp).fold(
-                    () => Result.error('did not find'),
-                    Result.value
-                  )
-                ),
+                Chain.binder((comp) => FormCoupledInputs.getLock(comp).fold(() => Result.error('did not find'), Result.value)),
                 Chain.op((comp) => {
-                  Assertions.assertEq(
-                    'Not lock',
-                    true,
-                    Class.has(comp.element(), 'lock')
-                  );
+                  Assertions.assertEq('Not lock', true, Class.has(comp.element(), 'lock'));
                 })
               ])
             ]
@@ -249,70 +193,20 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
       return [
         sTestStructure('.default', false),
         sTestStructure('.start-locked', true),
-        sTestRepresentingSetValue(
-          '.default',
-          { field1: 'asdf', field2: 'hjkl' },
-          'asdf',
-          'hjkl'
-        ),
-        sTestRepresentingSetValue(
-          '.renamed-fields',
-          { width: '100px', height: '200px' },
-          '100px',
-          '200px'
-        ),
-        sTestCopying(
-          '.default',
-          '.field1 input',
-          { field1: 'asdf', field2: '' },
-          { field1: 'asdf', field2: '' }
-        ),
-        sTestCopying(
-          '.default',
-          '.field2 input',
-          { field1: '', field2: 'dfgh' },
-          { field1: '', field2: 'dfgh' }
-        ),
-        sTestCopying(
-          '.start-locked',
-          '.field1 input',
-          { field1: 'asdf', field2: '' },
-          { field1: 'asdf', field2: 'asdf' }
-        ),
-        sTestCopying(
-          '.start-locked',
-          '.field2 input',
-          { field1: '', field2: 'lkjh' },
-          { field1: 'lkjh', field2: 'lkjh' }
-        ),
+        sTestRepresentingSetValue('.default', { field1: 'asdf', field2: 'hjkl' }, 'asdf', 'hjkl'),
+        sTestRepresentingSetValue('.renamed-fields', { width: '100px', height: '200px' }, '100px', '200px'),
+        sTestCopying('.default', '.field1 input', { field1: 'asdf', field2: '' }, { field1: 'asdf', field2: '' }),
+        sTestCopying('.default', '.field2 input', { field1: '', field2: 'dfgh' }, { field1: '', field2: 'dfgh' }),
+        sTestCopying('.start-locked', '.field1 input', { field1: 'asdf', field2: '' }, { field1: 'asdf', field2: 'asdf' }),
+        sTestCopying('.start-locked', '.field2 input', { field1: '', field2: 'lkjh' }, { field1: 'lkjh', field2: 'lkjh' }),
         Mouse.sClickOn(component.element(), '.default .lock'),
         Mouse.sClickOn(component.element(), '.start-locked .lock'),
         sTestStructure('.default', true),
         sTestStructure('.start-locked', false),
-        sTestCopying(
-          '.start-locked',
-          '.field1 input',
-          { field1: 'asdf', field2: '' },
-          { field1: 'asdf', field2: '' }
-        ),
-        sTestCopying(
-          '.start-locked',
-          '.field2 input',
-          { field1: '', field2: 'dfgh' },
-          { field1: '', field2: 'dfgh' }
-        ),
-        sTestCopying(
-          '.default',
-          '.field1 input',
-          { field1: 'asdf', field2: '' },
-          { field1: 'asdf', field2: 'asdf' }
-        ),
-        sTestCopying(
-          '.default',
-          '.field2 input',
-          { field1: '', field2: 'lkjh' },
-          { field1: 'lkjh', field2: 'lkjh' }
-        ),
+        sTestCopying('.start-locked', '.field1 input', { field1: 'asdf', field2: '' }, { field1: 'asdf', field2: '' }),
+        sTestCopying('.start-locked', '.field2 input', { field1: '', field2: 'dfgh' }, { field1: '', field2: 'dfgh' }),
+        sTestCopying('.default', '.field1 input', { field1: 'asdf', field2: '' }, { field1: 'asdf', field2: 'asdf' }),
+        sTestCopying('.default', '.field2 input', { field1: '', field2: 'lkjh' }, { field1: 'lkjh', field2: 'lkjh' }),
         store.sAssertEq('click', []),
         Mouse.sClickOn(component.element(), '.behaviour-tester'),
         store.sAssertEq('click', ['click']),

@@ -86,10 +86,7 @@ const makeItems = (info: ImageDialogInfo) => {
       {
         type: 'grid',
         columns: 2,
-        items: Arr.flatten([
-          classList.toArray(),
-          info.hasImageCaption ? [caption] : []
-        ])
+        items: Arr.flatten([classList.toArray(), info.hasImageCaption ? [caption] : []])
       }
     ]
   ]);

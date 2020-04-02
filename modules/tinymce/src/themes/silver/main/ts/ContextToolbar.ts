@@ -31,18 +31,12 @@ import { Css, Element, Focus, Scroll } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { getToolbarMode, ToolbarMode } from './api/Settings';
-import {
-  hideContextToolbarEvent,
-  showContextToolbarEvent
-} from './ui/context/ContextEditorEvents';
+import { hideContextToolbarEvent, showContextToolbarEvent } from './ui/context/ContextEditorEvents';
 import { ContextForm } from './ui/context/ContextForm';
 import { getContextToolbarBounds } from './ui/context/ContextToolbarBounds';
 import * as ToolbarLookup from './ui/context/ContextToolbarLookup';
 import * as ToolbarScopes from './ui/context/ContextToolbarScopes';
-import {
-  forwardSlideEvent,
-  renderContextToolbar
-} from './ui/context/ContextUi';
+import { forwardSlideEvent, renderContextToolbar } from './ui/context/ContextUi';
 import { renderToolbar } from './ui/toolbar/CommonToolbar';
 import { identifyButtons } from './ui/toolbar/Integration';
 
@@ -128,10 +122,7 @@ const mobileAnchorSpecLayouts = {
   ]
 };
 
-const getAnchorLayout = (
-  position: Toolbar.ContextToolbarPosition,
-  isTouch: boolean
-): Partial<AnchorSpec> => {
+const getAnchorLayout = (position: Toolbar.ContextToolbarPosition, isTouch: boolean): Partial<AnchorSpec> => {
   if (position === 'line') {
     return {
       bubble: Bubble.nu(bubbleSize, 0, bubbleAlignments),
@@ -165,12 +156,8 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
 
   const getBounds = () => getContextToolbarBounds(editor);
 
-  const isRangeOverlapping = (
-    aTop: number,
-    aBottom: number,
-    bTop: number,
-    bBottom: number
-  ) => Math.max(aTop, bTop) <= Math.min(aBottom, bBottom);
+  const isRangeOverlapping = (aTop: number, aBottom: number, bTop: number, bBottom: number) =>
+    Math.max(aTop, bTop) <= Math.min(aBottom, bBottom);
 
   const getLastElementVerticalBound = () => {
     const nodeBounds = lastElement
@@ -179,9 +166,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
       .getOrThunk(() => editor.selection.getRng().getBoundingClientRect());
 
     // Translate to the top level document, as nodeBounds is relative to the iframe viewport
-    const diffTop = editor.inline
-      ? Scroll.get().top()
-      : Boxes.absolute(Element.fromDom(editor.getBody())).y;
+    const diffTop = editor.inline ? Scroll.get().top() : Boxes.absolute(Element.fromDom(editor.getBody())).y;
 
     return {
       y: nodeBounds.top + diffTop,
@@ -199,12 +184,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     const contextToolbarBounds = getBounds();
 
     // If the element bound isn't overlapping with the contexToolbarBound, the contextToolbar should hide
-    return !isRangeOverlapping(
-      lastElementBounds.y,
-      lastElementBounds.bottom,
-      contextToolbarBounds.y,
-      contextToolbarBounds.bottom
-    );
+    return !isRangeOverlapping(lastElementBounds.y, lastElementBounds.bottom, contextToolbarBounds.y, contextToolbarBounds.bottom);
   };
 
   const forceHide = () => {
@@ -219,12 +199,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
       if (shouldContextToolbarHide()) {
         Css.set(contextBarEle, 'display', 'none');
       } else {
-        Positioning.positionWithinBounds(
-          sink,
-          anchor,
-          contextbar,
-          Option.some(getBounds())
-        );
+        Positioning.positionWithinBounds(sink, anchor, contextbar, Option.some(getBounds()));
       }
     });
   };
@@ -246,9 +221,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
 
       AddEventsBehaviour.config('pop-dialog-wrap-events', [
         AlloyEvents.runOnAttached((comp) => {
-          editor.shortcuts.add('ctrl+F9', 'focus statusbar', () =>
-            Keying.focusIn(comp)
-          );
+          editor.shortcuts.add('ctrl+F9', 'focus statusbar', () => Keying.focusIn(comp));
         }),
         AlloyEvents.runOnDetached((_comp) => {
           editor.shortcuts.remove('ctrl+F9');
@@ -271,10 +244,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
 
     // For context toolbars we don't want to use floating or sliding, so just restrict this
     // to scrolling or wrapping (default)
-    const toolbarType =
-      getToolbarMode(editor) === ToolbarMode.scrolling
-        ? ToolbarMode.scrolling
-        : ToolbarMode.default;
+    const toolbarType = getToolbarMode(editor) === ToolbarMode.scrolling ? ToolbarMode.scrolling : ToolbarMode.default;
 
     const scopes = getScopes();
     return ctx.type === 'contexttoolbar'
@@ -299,42 +269,25 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
             providers: extras.backstage.shared.providers
           });
         })()
-      : (() =>
-          ContextForm.renderContextForm(
-            toolbarType,
-            ctx,
-            extras.backstage.shared.providers
-          ))();
+      : (() => ContextForm.renderContextForm(toolbarType, ctx, extras.backstage.shared.providers))();
   };
 
   editor.on(showContextToolbarEvent, (e) => {
     const scopes = getScopes();
     // TODO: Have this stored in a better structure
     Obj.get(scopes.lookupTable, e.toolbarKey).each((ctx) => {
-      launchContext(
-        ctx,
-        e.target === editor ? Option.none() : Option.some(e as DomElement)
-      );
+      launchContext(ctx, e.target === editor ? Option.none() : Option.some(e as DomElement));
       // Forms launched via this way get immediate focus
       InlineView.getContent(contextbar).each(Keying.focusIn);
     });
   });
 
-  const getAnchor = (
-    position: Toolbar.ContextToolbarPosition,
-    element: Option<Element>
-  ): AnchorSpec => {
-    const anchorage =
-      position === 'node'
-        ? extras.backstage.shared.anchors.node(element)
-        : extras.backstage.shared.anchors.cursor();
+  const getAnchor = (position: Toolbar.ContextToolbarPosition, element: Option<Element>): AnchorSpec => {
+    const anchorage = position === 'node' ? extras.backstage.shared.anchors.node(element) : extras.backstage.shared.anchors.cursor();
     return Merger.deepMerge(anchorage, getAnchorLayout(position, isTouch()));
   };
 
-  const launchContext = (
-    toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm,
-    elem: Option<DomElement>
-  ) => {
+  const launchContext = (toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm, elem: Option<DomElement>) => {
     clearTimer();
 
     // If a mobile context menu is open, don't launch else they'll probably overlap. For android, specifically.
@@ -349,12 +302,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     lastElement.set(elem);
     const contextBarEle = contextbar.element();
     Css.remove(contextBarEle, 'display');
-    InlineView.showWithinBounds(
-      contextbar,
-      anchor,
-      wrapInPopDialog(toolbarSpec),
-      () => Option.some(getBounds())
-    );
+    InlineView.showWithinBounds(contextbar, anchor, wrapInPopDialog(toolbarSpec), () => Option.some(getBounds()));
 
     // It's possible we may have launched offscreen, if so then hide
     if (shouldContextToolbarHide()) {
@@ -396,10 +344,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
 
   editor.on('init', () => {
     editor.on(hideContextToolbarEvent, forceHide);
-    editor.on(
-      'ScrollContent ScrollWindow longpress',
-      hideOrRepositionIfNecessary
-    );
+    editor.on('ScrollContent ScrollWindow longpress', hideOrRepositionIfNecessary);
 
     // FIX: Make it go away when the action makes it go away. E.g. deleting a column deletes the table.
     editor.on('click keyup focus SetContent ObjectResized ResizeEditor', () => {
@@ -411,10 +356,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
       Delay.setEditorTimeout(
         editor,
         () => {
-          if (
-            Focus.search(sink.element()).isNone() &&
-            Focus.search(contextbar.element()).isNone()
-          ) {
+          if (Focus.search(sink.element()).isNone() && Focus.search(contextbar.element()).isNone()) {
             lastAnchor.set(Option.none());
             InlineView.hide(contextbar);
           }

@@ -77,9 +77,7 @@ const tokens: TokensApi = function (value: string, parameters: string[]) {
   return value.replace(/\{(\d+)\}/g, function (match, contents: string) {
     const index = parseInt(contents, 10);
     if (parameters[index] === undefined) {
-      throw new Error(
-        'No value for token: ' + match + ' in translation: ' + value
-      );
+      throw new Error('No value for token: ' + match + ' in translation: ' + value);
     }
     return parameters[index];
   });

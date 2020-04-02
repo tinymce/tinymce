@@ -8,15 +8,7 @@ import { UnitTest, assert } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 
 UnitTest.test('NodeTest', function () {
-  const check = function (
-    node,
-    nodeType,
-    nodeName,
-    nodeValue,
-    isElement,
-    isText,
-    isDocument
-  ) {
+  const check = function (node, nodeType, nodeName, nodeValue, isElement, isText, isDocument) {
     assert.eq(nodeType, Node.type(node));
     assert.eq(nodeName, Node.name(node));
     assert.eq(nodeValue, Node.value(node));
@@ -27,25 +19,9 @@ UnitTest.test('NodeTest', function () {
 
   check(EphoxElement('p'), NodeTypes.ELEMENT, 'p', null, true, false, false);
 
-  check(
-    Element.fromDom(document.createTextNode('gobble')),
-    NodeTypes.TEXT,
-    '#text',
-    'gobble',
-    false,
-    true,
-    false
-  );
+  check(Element.fromDom(document.createTextNode('gobble')), NodeTypes.TEXT, '#text', 'gobble', false, true, false);
 
-  check(
-    Element.fromDom(document),
-    NodeTypes.DOCUMENT,
-    '#document',
-    null,
-    false,
-    false,
-    true
-  );
+  check(Element.fromDom(document), NodeTypes.DOCUMENT, '#document', null, false, false, true);
 
   const checkIs = function (expected, predicate, inputs) {
     const actual = Arr.map(inputs, function (raw) {
@@ -57,11 +33,7 @@ UnitTest.test('NodeTest', function () {
     assert.eq(expected, actual);
   };
 
-  const data = [
-    '<div>Hello</div>',
-    '<div><span>Hello</span></div>',
-    '<div><!-- I am a comment --></div>'
-  ];
+  const data = ['<div>Hello</div>', '<div><span>Hello</span></div>', '<div><!-- I am a comment --></div>'];
 
   checkIs([true, false, false], Node.isText, data);
   checkIs([false, false, true], Node.isComment, data);

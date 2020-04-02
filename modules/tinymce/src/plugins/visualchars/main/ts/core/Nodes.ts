@@ -17,10 +17,7 @@ const isMatch = (n: Element) => {
 };
 
 // inlined sugars PredicateFilter.descendants for file size
-const filterDescendants = (
-  scope: Element,
-  predicate: (x: Element) => boolean
-) => {
+const filterDescendants = (scope: Element, predicate: (x: Element) => boolean) => {
   let result: Element[] = [];
   const dom = scope.dom();
   const children = Arr.map(dom.childNodes, Element.fromDom);
@@ -43,7 +40,6 @@ const findParentElm = (elm: Node, rootElm: Node) => {
   }
 };
 
-const replaceWithSpans = (text: string) =>
-  text.replace(Data.regExpGlobal, Html.wrapCharWithSpan);
+const replaceWithSpans = (text: string) => text.replace(Data.regExpGlobal, Html.wrapCharWithSpan);
 
 export { isMatch, filterDescendants, findParentElm, replaceWithSpans };

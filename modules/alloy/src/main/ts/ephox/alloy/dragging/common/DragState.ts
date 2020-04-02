@@ -2,11 +2,7 @@ import { Fun, Option } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
 import { nuState } from '../../behaviour/common/BehaviourState';
-import {
-  DragModeDeltas,
-  DragStartData,
-  BaseDraggingState
-} from './DraggingTypes';
+import { DragModeDeltas, DragStartData, BaseDraggingState } from './DraggingTypes';
 
 // NOTE: mode refers to the way that information is retrieved from
 // the user interaction. It can be things like MouseData, TouchData etc.

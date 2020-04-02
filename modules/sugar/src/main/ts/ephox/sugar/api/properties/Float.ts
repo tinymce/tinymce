@@ -22,9 +22,7 @@ const divine = function (element: Element<DomElement>) {
     const val = Css.getRaw(element, 'float').getOrThunk(function () {
       return Css.get(element, 'float');
     });
-    return val !== undefined && val !== null && val.length > 0
-      ? Option.some(val)
-      : Option.none<string>();
+    return val !== undefined && val !== null && val.length > 0 ? Option.some(val) : Option.none<string>();
   }
 };
 

@@ -18,12 +18,9 @@ const init = (dragApi: BlockerDragApi): AlloyEvents.AlloyEventRecord =>
 
     // As the user moves their finger around (while pressed down), we move the
     // component around
-    AlloyEvents.run<EventArgs<TouchEvent>>(
-      NativeEvents.touchmove(),
-      (comp, simulatedEvent) => {
-        dragApi.move(simulatedEvent.event());
-      }
-    )
+    AlloyEvents.run<EventArgs<TouchEvent>>(NativeEvents.touchmove(), (comp, simulatedEvent) => {
+      dragApi.move(simulatedEvent.event());
+    })
   ]);
 
 export { init };

@@ -12,36 +12,12 @@ UnitTest.test('Merger', function () {
   Assert.eq('eq', { a: 'A' }, Merger.merge({}, { a: 'A' }, {}));
   Assert.eq('eq', { a: 'A' }, Merger.merge({}, {}, { a: 'A' }));
 
-  Assert.eq(
-    'eq',
-    { a: 'A', b: { bb: 'BB' } },
-    Merger.merge({ b: { bb: 'BB' } }, { a: 'A' })
-  );
-  Assert.eq(
-    'eq',
-    { a: 'A', b: { bb: 'BB' } },
-    Merger.merge({}, { a: 'A', b: { bb: 'BB' } })
-  );
-  Assert.eq(
-    'eq',
-    { a: 'A', b: { bb: 'BB' } },
-    Merger.merge({ b: { bb: 'B' } }, { a: 'A', b: { bb: 'BB' } })
-  );
-  Assert.eq(
-    'eq',
-    { a: 'A', b: { bb: 'BB' } },
-    Merger.merge({ b: { bb: 'BB' } }, { a: 'A' })
-  );
-  Assert.eq(
-    'eq',
-    { a: 'A', b: { bb: 'BB' } },
-    Merger.merge({ b: { bb: 'BB' } }, { a: 'A' })
-  );
-  Assert.eq(
-    'eq',
-    { a: 'A', b: { bb: 'BB' } },
-    Merger.merge({ b: { bb: 'BB' } }, { a: 'A' })
-  );
+  Assert.eq('eq', { a: 'A', b: { bb: 'BB' } }, Merger.merge({ b: { bb: 'BB' } }, { a: 'A' }));
+  Assert.eq('eq', { a: 'A', b: { bb: 'BB' } }, Merger.merge({}, { a: 'A', b: { bb: 'BB' } }));
+  Assert.eq('eq', { a: 'A', b: { bb: 'BB' } }, Merger.merge({ b: { bb: 'B' } }, { a: 'A', b: { bb: 'BB' } }));
+  Assert.eq('eq', { a: 'A', b: { bb: 'BB' } }, Merger.merge({ b: { bb: 'BB' } }, { a: 'A' }));
+  Assert.eq('eq', { a: 'A', b: { bb: 'BB' } }, Merger.merge({ b: { bb: 'BB' } }, { a: 'A' }));
+  Assert.eq('eq', { a: 'A', b: { bb: 'BB' } }, Merger.merge({ b: { bb: 'BB' } }, { a: 'A' }));
 
   Assert.eq(
     'eq',
@@ -152,18 +128,14 @@ UnitTest.test('Merge(a, Merge(b, c)) === Merge(Merge(a, b), c)', () => {
 
 UnitTest.test('Merge(a, b) contains all the keys of b', () => {
   fc.assert(
-    fc.property(
-      fc.dictionary(fc.asciiString(), fc.json()),
-      fc.dictionary(fc.asciiString(), fc.json()),
-      function (a, b) {
-        const output = Merger.merge(a, b);
-        const keys = Obj.keys(b);
-        const oKeys = Obj.keys(output);
-        return Arr.forall(keys, function (k) {
-          return Arr.contains(oKeys, k);
-        });
-      }
-    )
+    fc.property(fc.dictionary(fc.asciiString(), fc.json()), fc.dictionary(fc.asciiString(), fc.json()), function (a, b) {
+      const output = Merger.merge(a, b);
+      const keys = Obj.keys(b);
+      const oKeys = Obj.keys(output);
+      return Arr.forall(keys, function (k) {
+        return Arr.contains(oKeys, k);
+      });
+    })
   );
 });
 
@@ -191,37 +163,30 @@ UnitTest.test('Deep-merged with itself is itself', () => {
   );
 });
 
-UnitTest.test(
-  'Deep-merge(a, Deep-merge(b, c)) === Deep-merge(Deep-merge(a, b), c)',
-  () => {
-    fc.assert(
-      fc.property(
-        fc.dictionary(fc.asciiString(), fc.json()),
-        fc.dictionary(fc.asciiString(), fc.json()),
-        fc.dictionary(fc.asciiString(), fc.json()),
-        function (a, b, c) {
-          const one = Merger.merge(a, Merger.merge(b, c));
-          const other = Merger.merge(Merger.merge(a, b), c);
-          Assert.eq('eq', one, other);
-        }
-      )
-    );
-  }
-);
-
-UnitTest.test('Deep-merge(a, b) contains all the keys of b', () => {
+UnitTest.test('Deep-merge(a, Deep-merge(b, c)) === Deep-merge(Deep-merge(a, b), c)', () => {
   fc.assert(
     fc.property(
       fc.dictionary(fc.asciiString(), fc.json()),
       fc.dictionary(fc.asciiString(), fc.json()),
-      function (a, b) {
-        const output = Merger.deepMerge(a, b);
-        const keys = Obj.keys(b);
-        const oKeys = Obj.keys(output);
-        return Arr.forall(keys, function (k) {
-          return Arr.contains(oKeys, k);
-        });
+      fc.dictionary(fc.asciiString(), fc.json()),
+      function (a, b, c) {
+        const one = Merger.merge(a, Merger.merge(b, c));
+        const other = Merger.merge(Merger.merge(a, b), c);
+        Assert.eq('eq', one, other);
       }
     )
+  );
+});
+
+UnitTest.test('Deep-merge(a, b) contains all the keys of b', () => {
+  fc.assert(
+    fc.property(fc.dictionary(fc.asciiString(), fc.json()), fc.dictionary(fc.asciiString(), fc.json()), function (a, b) {
+      const output = Merger.deepMerge(a, b);
+      const keys = Obj.keys(b);
+      const oKeys = Obj.keys(output);
+      return Arr.forall(keys, function (k) {
+        return Arr.contains(oKeys, k);
+      });
+    })
   );
 });

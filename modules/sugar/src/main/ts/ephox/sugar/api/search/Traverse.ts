@@ -32,10 +32,7 @@ const findIndex = function (element: Element<DomNode>) {
   });
 };
 
-const parents = function (
-  element: Element<DomNode>,
-  isRoot?: (e: Element<DomNode>) => boolean
-) {
+const parents = function (element: Element<DomNode>, isRoot?: (e: Element<DomNode>) => boolean) {
   const stop = Type.isFunction(isRoot) ? isRoot : Fun.never;
 
   // This is used a *lot* so it needs to be performant, not recursive
@@ -123,14 +120,9 @@ const spot = <E>(element: Element<E>, offset: number): ElementAndOffset<E> => ({
   offset: Fun.constant(offset)
 });
 
-const leaf = function (
-  element: Element<DomNode>,
-  offset: number
-): ElementAndOffset<DomNode> {
+const leaf = function (element: Element<DomNode>, offset: number): ElementAndOffset<DomNode> {
   const cs = children(element);
-  return cs.length > 0 && offset < cs.length
-    ? spot(cs[offset], 0)
-    : spot(element, offset);
+  return cs.length > 0 && offset < cs.length ? spot(cs[offset], 0) : spot(element, offset);
 };
 
 export {

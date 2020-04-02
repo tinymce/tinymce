@@ -1,13 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  GeneralSteps,
-  Logger,
-  Pipeline,
-  Step,
-  UiFinder
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
@@ -21,11 +12,7 @@ import { sOpenMore } from '../../module/MenuUtils';
 UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
   Theme();
 
-  const sStructureTest = (
-    editor: Editor,
-    container: Element,
-    maxWidth: number
-  ) =>
+  const sStructureTest = (editor: Editor, container: Element, maxWidth: number) =>
     Logger.t(
       'Check basic container structure and actions',
       GeneralSteps.sequence([
@@ -66,26 +53,14 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
       ])
     );
 
-  const sAssetWidth = (
-    uiContainer: Element,
-    maxWidth: number,
-    minWidth: number = 0
-  ) =>
+  const sAssetWidth = (uiContainer: Element, maxWidth: number, minWidth: number = 0) =>
     Chain.asStep(uiContainer, [
       UiFinder.cFindIn('.tox-toolbar-overlord'),
       Chain.op((toolbar) => {
         const widthString = Css.get(toolbar, 'width') || '0px';
         const width = parseInt(widthString.replace('px', ''), 10);
-        Assertions.assertEq(
-          `Toolbar with should be less than ${maxWidth}px - ${width}<=${maxWidth}`,
-          true,
-          width <= maxWidth
-        );
-        Assertions.assertEq(
-          `Toolbar with should be greater than ${minWidth}px - ${width}>=${minWidth}`,
-          true,
-          width >= minWidth
-        );
+        Assertions.assertEq(`Toolbar with should be less than ${maxWidth}px - ${width}<=${maxWidth}`, true, width <= maxWidth);
+        Assertions.assertEq(`Toolbar with should be greater than ${minWidth}px - ${width}>=${minWidth}`, true, width >= minWidth);
       })
     ]);
 
@@ -93,9 +68,7 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
     label: string,
     settings: Record<string, any>,
     expectedWidth: number,
-    additionalSteps: (editor: Editor, apis) => Step<any, any>[] = Fun.constant(
-      []
-    )
+    additionalSteps: (editor: Editor, apis) => Step<any, any>[] = Fun.constant([])
   ) =>
     Step.label(
       label,
@@ -114,11 +87,7 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
                 sAssetWidth(uiContainer, expectedWidth, expectedWidth - 100),
                 tinyApis.sSetContent(Arr.range(100, () => '<p></p>').join('')),
                 Step.sync(() => Scroll.to(0, 500)),
-                UiFinder.sWaitForVisible(
-                  'Wait to be docked',
-                  Body.body(),
-                  '.tox-tinymce--toolbar-sticky-on .tox-editor-header'
-                ),
+                UiFinder.sWaitForVisible('Wait to be docked', Body.body(), '.tox-tinymce--toolbar-sticky-on .tox-editor-header'),
                 sAssetWidth(uiContainer, expectedWidth, expectedWidth - 100),
                 ...additionalSteps(editor, tinyApis)
               ],
@@ -144,11 +113,7 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
   Pipeline.async(
     {},
     [
-      sTestRender(
-        'Check max-width is 400px when set via init',
-        { width: 400 },
-        400
-      ),
+      sTestRender('Check max-width is 400px when set via init', { width: 400 }, 400),
       sTestRender(
         'Check max-width is 400px when set via element',
         {
@@ -179,10 +144,7 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
           width: 400
         },
         400,
-        (editor) => [
-          sOpenMore(ToolbarMode.sliding),
-          sAssetWidth(Element.fromDom(editor.getContainer()), 400, 300)
-        ]
+        (editor) => [sOpenMore(ToolbarMode.sliding), sAssetWidth(Element.fromDom(editor.getContainer()), 400, 300)]
       )
     ],
     success,

@@ -16,8 +16,7 @@ const install = () => {
   return uninstall;
 };
 
-const testScript = (id: string, data: string) =>
-  `data:text/javascript,tinymce.Resource.add('${id}', '${data}')`;
+const testScript = (id: string, data: string) => `data:text/javascript,tinymce.Resource.add('${id}', '${data}')`;
 
 const cScriptAdd = (id: string, data: string) =>
   Chain.op<any>((_value) => {
@@ -43,11 +42,7 @@ const cAssertLoadSuccess = (expectedData: string) =>
         assert.fail('Load failed with error: ' + err);
       },
       (data) => {
-        Assertions.assertEq(
-          'Load succeeded but data did not match expected',
-          expectedData,
-          data
-        );
+        Assertions.assertEq('Load succeeded but data did not match expected', expectedData, data);
       }
     );
   });
@@ -56,11 +51,7 @@ const cAssertLoadFailure = (expectedErr: string) =>
   Chain.op<Result<string, string>>((actual) => {
     actual.fold(
       (err) => {
-        Assertions.assertEq(
-          'Load failed but error did not match expected',
-          expectedErr,
-          err
-        );
+        Assertions.assertEq('Load failed but error did not match expected', expectedErr, err);
       },
       (data) => {
         assert.fail('Expected failure but succeeded with value: ' + data);
@@ -76,32 +67,19 @@ UnitTest.asynctest('Scripts test', (success, failure) => {
     [
       Step.label(
         'bundling',
-        Chain.asStep({}, [
-          cScriptAdd('script.1', 'value.1'),
-          cScriptLoad('script.1', '/custom/404'),
-          cAssertLoadSuccess('value.1')
-        ])
+        Chain.asStep({}, [cScriptAdd('script.1', 'value.1'), cScriptLoad('script.1', '/custom/404'), cAssertLoadSuccess('value.1')])
       ),
       Step.label(
         'async loading',
-        Chain.asStep({}, [
-          cScriptLoad('script.2', testScript('script.2', 'value.2')),
-          cAssertLoadSuccess('value.2')
-        ])
+        Chain.asStep({}, [cScriptLoad('script.2', testScript('script.2', 'value.2')), cAssertLoadSuccess('value.2')])
       ),
       Step.label(
         'return cached value',
-        Chain.asStep({}, [
-          cScriptLoad('script.2', testScript('script.2', 'value.3')),
-          cAssertLoadSuccess('value.2')
-        ])
+        Chain.asStep({}, [cScriptLoad('script.2', testScript('script.2', 'value.3')), cAssertLoadSuccess('value.2')])
       ),
       Step.label(
         'invalid URL fails',
-        Chain.asStep({}, [
-          cScriptLoad('script.3', '/custom/404'),
-          cAssertLoadFailure('Script at URL "/custom/404" failed to load')
-        ])
+        Chain.asStep({}, [cScriptLoad('script.3', '/custom/404'), cAssertLoadFailure('Script at URL "/custom/404" failed to load')])
       ),
       Step.label(
         'invalid id fails',

@@ -5,11 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  BlobConversions,
-  ImageTransformations,
-  ResultConversions
-} from '@ephox/imagetools';
+import { BlobConversions, ImageTransformations, ResultConversions } from '@ephox/imagetools';
 import { Option } from '@ephox/katamari';
 
 import Delay from 'tinymce/core/api/util/Delay';
@@ -31,19 +27,13 @@ const getFigureImg = (elem) => SelectorFind.child(Element.fromDom(elem), 'img');
 const isFigure = (editor: Editor, elem) => editor.dom.is(elem, 'figure');
 
 const getEditableImage = function (editor: Editor, elem) {
-  const isImage = (imgNode) =>
-    editor.dom.is(imgNode, 'img:not([data-mce-object],[data-mce-placeholder])');
+  const isImage = (imgNode) => editor.dom.is(imgNode, 'img:not([data-mce-object],[data-mce-placeholder])');
   const isEditable = (imgNode) =>
-    isImage(imgNode) &&
-    (isLocalImage(editor, imgNode) ||
-      isCorsImage(editor, imgNode) ||
-      editor.settings.imagetools_proxy);
+    isImage(imgNode) && (isLocalImage(editor, imgNode) || isCorsImage(editor, imgNode) || editor.settings.imagetools_proxy);
 
   if (isFigure(editor, elem)) {
     const imgOpt = getFigureImg(elem);
-    return imgOpt.map((img) =>
-      isEditable(img.dom()) ? Option.some(img.dom()) : Option.none()
-    );
+    return imgOpt.map((img) => (isEditable(img.dom()) ? Option.some(img.dom()) : Option.none()));
   }
   return isEditable(elem) ? Option.some(elem) : Option.none();
 };
@@ -79,26 +69,15 @@ const createId = function () {
 const isLocalImage = function (editor: Editor, img) {
   const url = img.src;
 
-  return (
-    url.indexOf('data:') === 0 ||
-    url.indexOf('blob:') === 0 ||
-    new URI(url).host === editor.documentBaseURI.host
-  );
+  return url.indexOf('data:') === 0 || url.indexOf('blob:') === 0 || new URI(url).host === editor.documentBaseURI.host;
 };
 
 const isCorsImage = function (editor: Editor, img) {
-  return (
-    Tools.inArray(Settings.getCorsHosts(editor), new URI(img.src).host) !== -1
-  );
+  return Tools.inArray(Settings.getCorsHosts(editor), new URI(img.src).host) !== -1;
 };
 
 const isCorsWithCredentialsImage = function (editor: Editor, img) {
-  return (
-    Tools.inArray(
-      Settings.getCredentialsHosts(editor),
-      new URI(img.src).host
-    ) !== -1
-  );
+  return Tools.inArray(Settings.getCredentialsHosts(editor), new URI(img.src).host) !== -1;
 };
 
 const defaultFetchImage = (editor: Editor, img: HTMLImageElement) => {
@@ -111,10 +90,7 @@ const defaultFetchImage = (editor: Editor, img: HTMLImageElement) => {
 
   if (!isLocalImage(editor, img)) {
     src = Settings.getProxyUrl(editor);
-    src +=
-      (src.indexOf('?') === -1 ? '?' : '&') +
-      'url=' +
-      encodeURIComponent(img.src);
+    src += (src.indexOf('?') === -1 ? '?' : '&') + 'url=' + encodeURIComponent(img.src);
     apiKey = Settings.getApiKey(editor);
     return Proxy.getUrl(src, apiKey, false);
   }
@@ -154,14 +130,7 @@ const cancelTimedUpload = function (imageUploadTimerState) {
   Delay.clearTimeout(imageUploadTimerState.get());
 };
 
-const updateSelectedImage = function (
-  editor: Editor,
-  ir,
-  uploadImmediately,
-  imageUploadTimerState,
-  selectedImage,
-  size?
-) {
+const updateSelectedImage = function (editor: Editor, ir, uploadImmediately, imageUploadTimerState, selectedImage, size?) {
   return ir.toBlob().then(function (blob) {
     let uri, name, blobCache, blobInfo;
 
@@ -221,12 +190,7 @@ const updateSelectedImage = function (
   });
 };
 
-const selectedImageOperation = function (
-  editor: Editor,
-  imageUploadTimerState,
-  fn,
-  size?
-) {
+const selectedImageOperation = function (editor: Editor, imageUploadTimerState, fn, size?) {
   return function () {
     const imgOpt = getSelectedImage(editor);
     return imgOpt.fold(
@@ -241,14 +205,7 @@ const selectedImageOperation = function (
           .then(fn)
           .then(
             function (imageResult) {
-              return updateSelectedImage(
-                editor,
-                imageResult,
-                false,
-                imageUploadTimerState,
-                img.dom(),
-                size
-              );
+              return updateSelectedImage(editor, imageResult, false, imageUploadTimerState, img.dom(), size);
             },
             function (error) {
               displayError(editor, error);
@@ -282,21 +239,13 @@ const rotate = function (editor: Editor, imageUploadTimerState, angle) {
 
 const flip = function (editor: Editor, imageUploadTimerState, axis) {
   return function () {
-    return selectedImageOperation(editor, imageUploadTimerState, function (
-      imageResult
-    ) {
+    return selectedImageOperation(editor, imageUploadTimerState, function (imageResult) {
       return ImageTransformations.flip(imageResult, axis);
     })();
   };
 };
 
-const handleDialogBlob = function (
-  editor: Editor,
-  imageUploadTimerState,
-  img,
-  originalSize,
-  blob: Blob
-) {
+const handleDialogBlob = function (editor: Editor, imageUploadTimerState, img, originalSize, blob: Blob) {
   return BlobConversions.blobToImage(blob)
     .then(function (newImage) {
       const newSize = ImageSize.getNaturalImageSize(newImage);
@@ -313,13 +262,7 @@ const handleDialogBlob = function (
     .then(ResultConversions.blobToImageResult)
     .then(
       function (imageResult) {
-        return updateSelectedImage(
-          editor,
-          imageResult,
-          true,
-          imageUploadTimerState,
-          img
-        );
+        return updateSelectedImage(editor, imageResult, true, imageUploadTimerState, img);
       },
       function () {
         // Close dialog
@@ -327,12 +270,4 @@ const handleDialogBlob = function (
     );
 };
 
-export {
-  rotate,
-  flip,
-  getEditableImage,
-  cancelTimedUpload,
-  findBlob,
-  getSelectedImage,
-  handleDialogBlob
-};
+export { rotate, flip, getEditableImage, cancelTimedUpload, findBlob, getSelectedImage, handleDialogBlob };

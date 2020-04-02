@@ -4,10 +4,7 @@ import { Hierarchy, Element, Node } from '@ephox/sugar';
 import * as Parents from 'tinymce/core/dom/Parents';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function (success, failure) {
   const cCreateStructure = function (html) {
     return Chain.injectThunked(function () {
       return Element.fromHtml(html);
@@ -60,11 +57,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function (
         GeneralSteps.sequence([
           Logger.t(
             'parentsUntil root',
-            Chain.asStep({}, [
-              cCreateStructure('<p><b>a</b></p>'),
-              cParentsUntil([0, 0], [], hasName('p')),
-              cAssertElementNames(['b'])
-            ])
+            Chain.asStep({}, [cCreateStructure('<p><b>a</b></p>'), cParentsUntil([0, 0], [], hasName('p')), cAssertElementNames(['b'])])
           ),
 
           Logger.t(
@@ -96,11 +89,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function (
 
           Logger.t(
             'parentsUntil end at b',
-            Chain.asStep({}, [
-              cCreateStructure('<p><b>a</b></p>'),
-              cParentsUntil([0, 0], [], hasName('b')),
-              cAssertElementNames([])
-            ])
+            Chain.asStep({}, [cCreateStructure('<p><b>a</b></p>'), cParentsUntil([0, 0], [], hasName('b')), cAssertElementNames([])])
           ),
 
           Logger.t(

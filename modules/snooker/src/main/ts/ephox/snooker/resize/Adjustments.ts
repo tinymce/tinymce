@@ -30,12 +30,7 @@ const getTableWarehouse = function (table: Element) {
   return getWarehouse(list);
 };
 
-const adjustWidth = function (
-  table: Element,
-  delta: number,
-  index: number,
-  direction: BarPositions<ColInfo>
-) {
+const adjustWidth = function (table: Element, delta: number, index: number, direction: BarPositions<ColInfo>) {
   const tableSize = TableSize.getTableSize(table);
   const step = tableSize.getCellDelta(delta);
   const warehouse = getTableWarehouse(table);
@@ -59,12 +54,7 @@ const adjustWidth = function (
   }
 };
 
-const adjustHeight = function (
-  table: Element,
-  delta: number,
-  index: number,
-  direction: BarPositions<RowInfo>
-) {
+const adjustHeight = function (table: Element, delta: number, index: number, direction: BarPositions<RowInfo>) {
   const warehouse = getTableWarehouse(table);
   const heights = ColumnSizes.getPixelHeights(warehouse, direction);
 
@@ -88,11 +78,7 @@ const adjustHeight = function (
 };
 
 // Ensure that the width of table cells match the passed in table information.
-const adjustWidthTo = function <T extends Detail>(
-  table: Element,
-  list: RowData<T>[],
-  direction: BarPositions<ColInfo>
-) {
+const adjustWidthTo = function <T extends Detail>(table: Element, list: RowData<T>[], direction: BarPositions<ColInfo>) {
   const tableSize = TableSize.getTableSize(table);
   const warehouse = getWarehouse(list);
   const widths = tableSize.getWidths(warehouse, direction, tableSize);

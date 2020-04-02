@@ -19,11 +19,7 @@ UnitTest.test('removeLeading: unit tests', () => {
 UnitTest.test('removeLeading removes prefix', () => {
   fc.assert(
     fc.property(fc.asciiString(), fc.asciiString(), (prefix, suffix) => {
-      Assert.eq(
-        'removeLeading',
-        suffix,
-        Strings.removeLeading(prefix + suffix, prefix)
-      );
+      Assert.eq('removeLeading', suffix, Strings.removeLeading(prefix + suffix, prefix));
     })
   );
 });

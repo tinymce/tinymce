@@ -1,12 +1,4 @@
-import {
-  AlloyComponent,
-  Attachment,
-  Behaviour,
-  Gui,
-  GuiFactory,
-  Memento,
-  Replacing
-} from '@ephox/alloy';
+import { AlloyComponent, Attachment, Behaviour, Gui, GuiFactory, Memento, Replacing } from '@ephox/alloy';
 import { Arr, Fun } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 

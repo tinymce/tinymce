@@ -17,11 +17,7 @@ interface TextWalker {
   prev2(): Option<Text>;
 }
 
-const TextWalker = (
-  startNode: Node,
-  rootNode: Node,
-  isBoundary: (node: Node) => boolean = Fun.never
-): TextWalker => {
+const TextWalker = (startNode: Node, rootNode: Node, isBoundary: (node: Node) => boolean = Fun.never): TextWalker => {
   const walker = new TreeWalker(startNode, rootNode);
 
   const walk = (direction: 'next' | 'prev' | 'prev2'): Option<Text> => {

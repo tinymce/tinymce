@@ -8,13 +8,7 @@ export const Immutable = <T extends string>(...fields: T[]) =>
     [key in T]: () => any;
   } {
     if (fields.length !== values.length) {
-      throw new Error(
-        'Wrong number of arguments to struct. Expected "[' +
-          fields.length +
-          ']", got ' +
-          values.length +
-          ' arguments'
-      );
+      throw new Error('Wrong number of arguments to struct. Expected "[' + fields.length + ']", got ' + values.length + ' arguments');
     }
 
     const struct = {} as { [key in T]: () => any };

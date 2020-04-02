@@ -6,11 +6,7 @@ import * as Waiter from 'ephox/agar/api/Waiter';
 import * as StepAssertions from 'ephox/agar/test/StepAssertions';
 
 UnitTest.asynctest('WaiterChainTest', (success, failure) => {
-  const makeTryUntilChain = (
-    label: string,
-    interval: number,
-    amount: number
-  ) => {
+  const makeTryUntilChain = (label: string, interval: number, amount: number) => {
     let counter = 0;
     return Waiter.cTryUntil(
       label + ': TryUntil counter',
@@ -27,11 +23,7 @@ UnitTest.asynctest('WaiterChainTest', (success, failure) => {
     );
   };
 
-  const makeTryUntilNotChain = (
-    label: string,
-    interval: number,
-    amount: number
-  ) => {
+  const makeTryUntilNotChain = (label: string, interval: number, amount: number) => {
     let counter = 0;
     return Waiter.cTryUntilNot(
       label + ': TryUntilNot counter',
@@ -72,10 +64,7 @@ UnitTest.asynctest('WaiterChainTest', (success, failure) => {
       ),
 
       // // tryUntilNot with enough time
-      StepAssertions.testChain(
-        {},
-        makeTryUntilNotChain('enough time', 10, 2000)
-      ),
+      StepAssertions.testChain({}, makeTryUntilNotChain('enough time', 10, 2000)),
       // 'tryUntilNot with *NOT* enough time'
       StepAssertions.testChainFail(
         'Waited for 100ms for something to be unsuccessful. not enough time: TryUntilNot counter',

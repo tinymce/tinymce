@@ -1,16 +1,4 @@
-import {
-  Assertions,
-  FocusTools,
-  GeneralSteps,
-  Keyboard,
-  Keys,
-  Logger,
-  Mouse,
-  Step,
-  Touch,
-  UiFinder,
-  Waiter
-} from '@ephox/agar';
+import { Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, Touch, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Focus, Value } from '@ephox/sugar';
 
@@ -95,9 +83,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
                 components: [
                   FormField.parts().field({
                     factory: HtmlSelect,
-                    selectBehaviours: Behaviour.derive([
-                      Tabstopping.config({})
-                    ]),
+                    selectBehaviours: Behaviour.derive([Tabstopping.config({})]),
                     options: [
                       { value: 'select-b-init', text: 'Select-b-init' },
                       { value: 'select-b-set', text: 'Select-b-set' },
@@ -208,14 +194,8 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
           'Retrieve the ant field directly and check its value (in minimal)',
           GeneralSteps.sequence([
             Step.sync(() => {
-              const field = Form.getField(component, 'form.ant').getOrDie(
-                'Could not find field for ant'
-              );
-              Assertions.assertEq(
-                'Checking value',
-                'first.set',
-                Value.get(field.element())
-              );
+              const field = Form.getField(component, 'form.ant').getOrDie('Could not find field for ant');
+              Assertions.assertEq('Checking value', 'first.set', Value.get(field.element()));
             })
           ])
         ),
@@ -224,14 +204,8 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
           'Retrieve the bull field directly and check its value (in extra)',
           GeneralSteps.sequence([
             Step.sync(() => {
-              const field = Form.getField(component, 'form.bull').getOrDie(
-                'Could not find field for bull'
-              );
-              Assertions.assertEq(
-                'Checking value',
-                'select-b-set',
-                Value.get(field.element())
-              );
+              const field = Form.getField(component, 'form.bull').getOrDie('Could not find field for bull');
+              Assertions.assertEq('Checking value', 'select-b-set', Value.get(field.element()));
             })
           ])
         ),
@@ -240,50 +214,23 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
           Keying.focusIn(component);
         }),
 
-        FocusTools.sTryOnSelector(
-          'Focus should start on input field',
-          doc,
-          'input'
-        ),
+        FocusTools.sTryOnSelector('Focus should start on input field', doc, 'input'),
         Keyboard.sKeydown(doc, Keys.tab(), {}),
-        FocusTools.sTryOnSelector(
-          'Focus should move to expand/collapse button',
-          doc,
-          'button:contains("+")'
-        ),
+        FocusTools.sTryOnSelector('Focus should move to expand/collapse button', doc, 'button:contains("+")'),
         Keyboard.sKeydown(doc, Keys.tab(), {}),
         FocusTools.sTryOnSelector('Focus should move to select', doc, 'select'),
         Keyboard.sKeydown(doc, Keys.tab(), {}),
-        FocusTools.sTryOnSelector(
-          'Focus should move to shrink',
-          doc,
-          'button:contains("Shrink!")'
-        ),
+        FocusTools.sTryOnSelector('Focus should move to shrink', doc, 'button:contains("Shrink!")'),
 
         Keyboard.sKeydown(doc, Keys.enter(), {}),
-        Logger.t(
-          'Shrinking immediately should not cause any animation',
-          UiFinder.sNotExists(gui.element(), '.expandable-shrinking')
-        ),
+        Logger.t('Shrinking immediately should not cause any animation', UiFinder.sNotExists(gui.element(), '.expandable-shrinking')),
         // Check immediately
         Keyboard.sKeydown(doc, Keys.tab(), {}),
-        FocusTools.sTryOnSelector(
-          'Focus should start on input field',
-          doc,
-          'input'
-        ),
+        FocusTools.sTryOnSelector('Focus should start on input field', doc, 'input'),
         Keyboard.sKeydown(doc, Keys.tab(), {}),
-        FocusTools.sTryOnSelector(
-          'Focus should move to expand/collapse button',
-          doc,
-          'button:contains("+")'
-        ),
+        FocusTools.sTryOnSelector('Focus should move to expand/collapse button', doc, 'button:contains("+")'),
         Keyboard.sKeydown(doc, Keys.tab(), {}),
-        FocusTools.sTryOnSelector(
-          'Focus should skip the collapsed select and jump to shrink',
-          doc,
-          'button:contains("Shrink!")'
-        ),
+        FocusTools.sTryOnSelector('Focus should skip the collapsed select and jump to shrink', doc, 'button:contains("Shrink!")'),
 
         Logger.t(
           'Checking the representing value is still the same when collapsed',
@@ -298,31 +245,16 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
           'Expanding form, focusing part in extra, clicking on expand, and checking focus still in dialog',
           GeneralSteps.sequence([
             Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
-            FocusTools.sTryOnSelector(
-              'Focus should move back to expand/collapse button',
-              doc,
-              'button:contains("+")'
-            ),
+            FocusTools.sTryOnSelector('Focus should move back to expand/collapse button', doc, 'button:contains("+")'),
             Keyboard.sKeydown(doc, Keys.enter(), {}),
 
-            Waiter.sTryUntil(
-              'Waiting until it has stopped growing',
-              UiFinder.sNotExists(gui.element(), '.expandable-growing')
-            ),
+            Waiter.sTryUntil('Waiting until it has stopped growing', UiFinder.sNotExists(gui.element(), '.expandable-growing')),
 
             Keyboard.sKeydown(doc, Keys.tab(), {}),
-            FocusTools.sTryOnSelector(
-              'Focus should move onto select',
-              doc,
-              'select'
-            ),
+            FocusTools.sTryOnSelector('Focus should move onto select', doc, 'select'),
 
             Keyboard.sKeydown(doc, Keys.tab(), { shiftKey: true }),
-            FocusTools.sTryOnSelector(
-              'Focus should move onto select',
-              doc,
-              '.test-expander-button'
-            ),
+            FocusTools.sTryOnSelector('Focus should move onto select', doc, '.test-expander-button'),
             Keyboard.sKeydown(doc, Keys.enter(), {}),
 
             Waiter.sTryUntil(
@@ -334,10 +266,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
 
             Mouse.sClickOn(gui.element(), '.test-expander-button'),
 
-            Waiter.sTryUntil(
-              'Waiting until it has stopped growing',
-              UiFinder.sNotExists(gui.element(), '.expandable-growing')
-            ),
+            Waiter.sTryUntil('Waiting until it has stopped growing', UiFinder.sNotExists(gui.element(), '.expandable-growing')),
 
             Step.async((next, die) => {
               Focus.search(component.element()).fold(() => {
@@ -366,23 +295,13 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
           ExpandableForm.expandForm(component);
         }),
         UiFinder.sExists(gui.element(), '.expandable-growing'),
-        Waiter.sTryUntil(
-          'Waiting until it has stopped growing',
-          UiFinder.sNotExists(gui.element(), '.expandable-growing'),
-          10,
-          10000
-        ),
+        Waiter.sTryUntil('Waiting until it has stopped growing', UiFinder.sNotExists(gui.element(), '.expandable-growing'), 10, 10000),
 
         Step.sync(() => {
           ExpandableForm.collapseForm(component);
         }),
         UiFinder.sExists(gui.element(), '.expandable-shrinking'),
-        Waiter.sTryUntil(
-          'Waiting until it has stopped shrinking',
-          UiFinder.sNotExists(gui.element(), '.expandable-shrinking'),
-          10,
-          10000
-        ),
+        Waiter.sTryUntil('Waiting until it has stopped shrinking', UiFinder.sNotExists(gui.element(), '.expandable-shrinking'), 10, 10000),
 
         GuiSetup.mRemoveStyles
       ];

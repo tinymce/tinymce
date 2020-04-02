@@ -79,11 +79,7 @@ const open = function (editor: Editor, headState: Cell<string>) {
     onSubmit: (api) => {
       const nuData = api.getData();
 
-      const headHtml = Parser.dataToHtml(
-        editor,
-        Tools.extend(data, nuData),
-        headState.get()
-      );
+      const headHtml = Parser.dataToHtml(editor, Tools.extend(data, nuData), headState.get());
 
       headState.set(headHtml);
 

@@ -20,10 +20,7 @@ type AttrList = Array<{ name: string; value: string }> & {
   map: Record<string, string>;
 };
 
-const setAttributes = function (
-  attrs: AttrList,
-  updatedAttrs: Record<string, any>
-) {
+const setAttributes = function (attrs: AttrList, updatedAttrs: Record<string, any>) {
   let i;
   let attr;
 
@@ -65,11 +62,7 @@ const normalizeHtml = function (html: string): string {
 
 const sources = ['source', 'altsource'];
 
-const updateHtmlSax = function (
-  html: string,
-  data: Partial<MediaData>,
-  updateAll?: boolean
-): string {
+const updateHtmlSax = function (html: string, data: Partial<MediaData>, updateAll?: boolean): string {
   const writer = Writer();
   let sourceCount = 0;
   let hasImage;
@@ -201,10 +194,7 @@ const isEphoxEmbed = function (html: string): boolean {
   return DOM.getAttrib(fragment.firstChild, 'data-ephox-embed-iri') !== '';
 };
 
-const updateEphoxEmbed = function (
-  html: string,
-  data: Partial<MediaData>
-): string {
+const updateEphoxEmbed = function (html: string, data: Partial<MediaData>): string {
   const fragment = DOM.createFragment(html);
   const div = fragment.firstChild as HTMLElement;
 
@@ -214,14 +204,8 @@ const updateEphoxEmbed = function (
   return normalizeHtml(div.outerHTML);
 };
 
-const updateHtml = function (
-  html: string,
-  data: Partial<MediaData>,
-  updateAll?: boolean
-) {
-  return isEphoxEmbed(html)
-    ? updateEphoxEmbed(html, data)
-    : updateHtmlSax(html, data, updateAll);
+const updateHtml = function (html: string, data: Partial<MediaData>, updateAll?: boolean) {
+  return isEphoxEmbed(html) ? updateEphoxEmbed(html, data) : updateHtmlSax(html, data, updateAll);
 };
 
 export { updateHtml };

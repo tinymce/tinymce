@@ -16,11 +16,7 @@ const processors = ValueSchema.objOf([
 ]);
 
 const memento = (mem: MementoRecord, rawProcessors) => {
-  const ps = ValueSchema.asRawOrDie(
-    'RepresentingConfigs.memento processors',
-    processors,
-    rawProcessors
-  );
+  const ps = ValueSchema.asRawOrDie('RepresentingConfigs.memento processors', processors, rawProcessors);
   return Representing.config({
     store: {
       mode: 'manual',
@@ -38,11 +34,7 @@ const memento = (mem: MementoRecord, rawProcessors) => {
   });
 };
 
-const withComp = <D>(
-  optInitialValue: Option<D>,
-  getter: (c: AlloyComponent) => D,
-  setter: (c: AlloyComponent, v: D) => void
-) =>
+const withComp = <D>(optInitialValue: Option<D>, getter: (c: AlloyComponent) => D, setter: (c: AlloyComponent, v: D) => void) =>
   Representing.config(
     Merger.deepMerge(
       {
@@ -62,22 +54,16 @@ const withComp = <D>(
     )
   );
 
-const withElement = <D>(
-  initialValue: Option<D>,
-  getter: (elem: Element) => D,
-  setter: (elem: Element, v: D) => void
-) =>
+const withElement = <D>(initialValue: Option<D>, getter: (elem: Element) => D, setter: (elem: Element, v: D) => void) =>
   withComp(
     initialValue,
     (c) => getter(c.element()),
     (c, v) => setter(c.element(), v)
   );
 
-const domValue = (optInitialValue: Option<string>) =>
-  withElement(optInitialValue, Value.get, Value.set);
+const domValue = (optInitialValue: Option<string>) => withElement(optInitialValue, Value.get, Value.set);
 
-const domHtml = (optInitialValue: Option<string>) =>
-  withElement(optInitialValue, Html.get, Html.set);
+const domHtml = (optInitialValue: Option<string>) => withElement(optInitialValue, Html.get, Html.set);
 
 const memory = <D>(initialValue) =>
   Representing.config({

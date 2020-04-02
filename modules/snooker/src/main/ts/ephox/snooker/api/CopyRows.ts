@@ -6,11 +6,7 @@ import * as Redraw from '../operate/Redraw';
 import { Element } from '@ephox/sugar';
 import { Generators } from './Generators';
 
-const copyRows = function (
-  table: Element,
-  target: TargetSelection,
-  generators: Generators
-) {
+const copyRows = function (table: Element, target: TargetSelection, generators: Generators) {
   const list = DetailsList.fromTable(table);
   const house = Warehouse.generate(list);
   const details = onCells(house, target);
@@ -18,8 +14,7 @@ const copyRows = function (
     const grid = Transitions.toGrid(house, generators, false);
     const slicedGrid = grid.slice(
       selectedCells[0].row(),
-      selectedCells[selectedCells.length - 1].row() +
-        selectedCells[selectedCells.length - 1].rowspan()
+      selectedCells[selectedCells.length - 1].row() + selectedCells[selectedCells.length - 1].rowspan()
     );
     const slicedDetails = toDetailList(slicedGrid, generators);
     return Redraw.copy(slicedDetails);

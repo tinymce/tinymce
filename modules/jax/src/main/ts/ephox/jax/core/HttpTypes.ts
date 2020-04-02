@@ -31,20 +31,12 @@ export interface HttpResponse<T extends ResponseBody> {
 }
 
 export type JwtToken = string;
-export type JwtTokenFactory = (
-  fresh: boolean
-) => FutureResult<JwtToken, HttpError>;
+export type JwtTokenFactory = (fresh: boolean) => FutureResult<JwtToken, HttpError>;
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
-export type PostPutInit<T extends ResponseBodyDataTypes> = Omit<
-  HttpRequest<T>,
-  'method'
->;
-export type GetDelInit<T extends ResponseBodyDataTypes> = Omit<
-  HttpRequest<T>,
-  'method' | 'body'
->;
+export type PostPutInit<T extends ResponseBodyDataTypes> = Omit<HttpRequest<T>, 'method'>;
+export type GetDelInit<T extends ResponseBodyDataTypes> = Omit<HttpRequest<T>, 'method' | 'body'>;
 
 export interface DownloadHttpRequest {
   url: string;

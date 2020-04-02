@@ -14,32 +14,19 @@ const ancestor = function (
   return PredicateFind.ancestor(scope, predicate, isRoot).isSome();
 };
 
-const closest = function (
-  scope: Element<DomNode>,
-  predicate: (e: Element<DomNode>) => boolean,
-  isRoot?: (e: Element<DomNode>) => boolean
-) {
+const closest = function (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean, isRoot?: (e: Element<DomNode>) => boolean) {
   return PredicateFind.closest(scope, predicate, isRoot).isSome();
 };
 
-const sibling = function (
-  scope: Element<DomNode>,
-  predicate: (e: Element<DomNode>) => boolean
-) {
+const sibling = function (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean) {
   return PredicateFind.sibling(scope, predicate).isSome();
 };
 
-const child = function (
-  scope: Element<DomNode>,
-  predicate: (e: Element<DomNode>) => boolean
-) {
+const child = function (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean) {
   return PredicateFind.child(scope, predicate).isSome();
 };
 
-const descendant = function (
-  scope: Element<DomNode>,
-  predicate: (e: Element<DomNode>) => boolean
-) {
+const descendant = function (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean) {
   return PredicateFind.descendant(scope, predicate).isSome();
 };
 

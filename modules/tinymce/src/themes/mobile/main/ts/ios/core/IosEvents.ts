@@ -10,13 +10,7 @@ import { Compare, DomEvent, Height } from '@ephox/sugar';
 
 import * as TappingEvent from '../../util/TappingEvent';
 
-const initEvents = (
-  editorApi,
-  iosApi,
-  toolstrip,
-  socket,
-  _dropup
-): { destroy: () => void } => {
+const initEvents = (editorApi, iosApi, toolstrip, socket, _dropup): { destroy: () => void } => {
   const saveSelectionFirst = () => {
     iosApi.run((api) => {
       api.highlightSelection();
@@ -131,10 +125,7 @@ const initEvents = (
     // If the user is touching outside the content, but on the body(?) or html elements, find the nearest selection
     // and focus that.
     DomEvent.bind(editorApi.doc(), 'touchend', (touchEvent) => {
-      if (
-        Compare.eq(editorApi.html(), touchEvent.target()) ||
-        Compare.eq(editorApi.body(), touchEvent.target())
-      ) {
+      if (Compare.eq(editorApi.html(), touchEvent.target()) || Compare.eq(editorApi.body(), touchEvent.target())) {
         // IosHacks.setSelectionAtTouch(editorApi, touchEvent);
       }
     }),

@@ -34,16 +34,12 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
           Dragging.config({
             mode: 'mouse',
             getTarget(handle) {
-              return SelectorFind.ancestor(handle, '[role="dialog"]').getOr(
-                handle
-              );
+              return SelectorFind.ancestor(handle, '[role="dialog"]').getOr(handle);
             },
             blockerClass: detail.dragBlockClass.getOrDie(
               // TODO: Support errors in Option getOrDie.
-              new Error(
-                'The drag blocker class was not specified for a dialog with a drag handle: \n' +
-                  JSON.stringify(spec, null, 2)
-              ).message
+              new Error('The drag blocker class was not specified for a dialog with a drag handle: \n' + JSON.stringify(spec, null, 2))
+                .message
             ),
             getBounds: detail.getDragBounds
           })

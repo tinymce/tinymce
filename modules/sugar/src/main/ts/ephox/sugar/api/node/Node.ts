@@ -34,9 +34,7 @@ const isComment = function (element: Element): element is Element<Comment> {
   return type(element) === NodeTypes.COMMENT || name(element) === '#comment';
 };
 
-const isHTMLElement = function (
-  element: Element<any>
-): element is Element<DomHTMLElement> {
+const isHTMLElement = function (element: Element<any>): element is Element<DomHTMLElement> {
   return HTMLElement.isPrototypeOf(element.dom());
 };
 
@@ -44,18 +42,7 @@ const isElement = isType<DomElement>(NodeTypes.ELEMENT);
 const isText = isType<Text>(NodeTypes.TEXT);
 const isDocument = isType<Document>(NodeTypes.DOCUMENT);
 
-const isTag = <K extends keyof HTMLElementTagNameMap>(tag: K) => (
-  e: Element<any>
-): e is Element<HTMLElementTagNameMap[K]> => isElement(e) && name(e) === tag;
+const isTag = <K extends keyof HTMLElementTagNameMap>(tag: K) => (e: Element<any>): e is Element<HTMLElementTagNameMap[K]> =>
+  isElement(e) && name(e) === tag;
 
-export {
-  name,
-  type,
-  value,
-  isElement,
-  isHTMLElement,
-  isText,
-  isDocument,
-  isComment,
-  isTag
-};
+export { name, type, value, isElement, isHTMLElement, isText, isDocument, isComment, isTag };

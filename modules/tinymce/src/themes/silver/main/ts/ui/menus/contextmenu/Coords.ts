@@ -5,11 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  NodeAnchorSpec,
-  MakeshiftAnchorSpec,
-  SelectionAnchorSpec
-} from '@ephox/alloy';
+import { NodeAnchorSpec, MakeshiftAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -33,8 +29,7 @@ const transpose = function (pos: Position, dx: number, dy: number) {
   return nu(pos.x + dx, pos.y + dy);
 };
 
-const isTouchEvent = (e: MouseEvent | TouchEvent): e is TouchEvent =>
-  e.type === 'longpress' || e.type.indexOf('touch') === 0;
+const isTouchEvent = (e: MouseEvent | TouchEvent): e is TouchEvent => e.type === 'longpress' || e.type.indexOf('touch') === 0;
 
 const fromPageXY = function (e: MouseEvent | TouchEvent) {
   if (isTouchEvent(e)) {
@@ -54,36 +49,25 @@ const fromClientXY = function (e: MouseEvent | TouchEvent) {
   }
 };
 
-const transposeContentAreaContainer = function (
-  element: HTMLElement,
-  pos: Position
-) {
+const transposeContentAreaContainer = function (element: HTMLElement, pos: Position) {
   const containerPos = DOMUtils.DOM.getPos(element);
   return transpose(pos, containerPos.x, containerPos.y);
 };
 
-export const getPointAnchor = function (
-  editor: Editor,
-  e: MouseEvent | TouchEvent
-) {
+export const getPointAnchor = function (editor: Editor, e: MouseEvent | TouchEvent) {
   // If the contextmenu event is fired via the editor.fire() API or some other means, fall back to selection anchor
   if (e.type === 'contextmenu' || e.type === 'longpress') {
     if (editor.inline) {
       return fromPageXY(e);
     } else {
-      return transposeContentAreaContainer(
-        editor.getContentAreaContainer(),
-        fromClientXY(e)
-      );
+      return transposeContentAreaContainer(editor.getContentAreaContainer(), fromClientXY(e));
     }
   } else {
     return getSelectionAnchor(editor);
   }
 };
 
-export const getSelectionAnchor = function (
-  editor: Editor
-): SelectionAnchorSpec {
+export const getSelectionAnchor = function (editor: Editor): SelectionAnchorSpec {
   return {
     anchor: 'selection',
     root: Element.fromDom(editor.selection.getNode())

@@ -5,22 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyEvents,
-  Focusing,
-  GuiFactory,
-  Memento,
-  ModalDialog
-} from '@ephox/alloy';
+import { AlloyEvents, Focusing, GuiFactory, Memento, ModalDialog } from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderFooterButton } from '../general/Button';
-import {
-  formCancelEvent,
-  FormCancelEvent,
-  formSubmitEvent,
-  FormSubmitEvent
-} from '../general/FormEvents';
+import { formCancelEvent, FormCancelEvent, formSubmitEvent, FormSubmitEvent } from '../general/FormEvents';
 import * as Dialogs from './Dialogs';
 
 export interface ConfirmDialogSetup {
@@ -64,32 +53,21 @@ export const setup = (extras: ConfirmDialogSetup) => {
     );
 
     const titleSpec = Dialogs.pUntitled();
-    const closeSpec = Dialogs.pClose(
-      () => closeDialog(false),
-      sharedBackstage.providers
-    );
+    const closeSpec = Dialogs.pClose(() => closeDialog(false), sharedBackstage.providers);
 
     const confirmDialog = GuiFactory.build(
       Dialogs.renderDialog({
         lazySink: () => sharedBackstage.getSink(),
         header: Dialogs.hiddenHeader(titleSpec, closeSpec),
         body: Dialogs.pBodyMessage(message, sharedBackstage.providers),
-        footer: Option.some(
-          Dialogs.pFooter(
-            Dialogs.pFooterGroup([], [footerNo, memFooterYes.asSpec()])
-          )
-        ),
+        footer: Option.some(Dialogs.pFooter(Dialogs.pFooterGroup([], [footerNo, memFooterYes.asSpec()]))),
         onEscape: () => closeDialog(false),
         extraClasses: ['tox-confirm-dialog'],
         extraBehaviours: [],
         extraStyles: {},
         dialogEvents: [
-          AlloyEvents.run<FormCancelEvent>(formCancelEvent, () =>
-            closeDialog(false)
-          ),
-          AlloyEvents.run<FormSubmitEvent>(formSubmitEvent, () =>
-            closeDialog(true)
-          )
+          AlloyEvents.run<FormCancelEvent>(formCancelEvent, () => closeDialog(false)),
+          AlloyEvents.run<FormSubmitEvent>(formSubmitEvent, () => closeDialog(true))
         ],
         eventOrder: {}
       })

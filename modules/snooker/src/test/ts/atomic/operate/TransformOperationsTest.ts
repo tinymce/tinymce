@@ -7,8 +7,7 @@ import TestGenerator from 'ephox/snooker/test/TestGenerator';
 import { Element } from '@ephox/sugar';
 
 UnitTest.test('TransformOperationsTest', function () {
-  const en = (fakeElement: any, isNew: boolean) =>
-    Structs.elementnew(fakeElement as Element, isNew);
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as Element, isNew);
 
   const mapToStructGrid = function (grid: Structs.ElementNew[][]) {
     return Arr.map(grid, function (row) {
@@ -16,10 +15,7 @@ UnitTest.test('TransformOperationsTest', function () {
     });
   };
 
-  const assertGrids = function (
-    expected: Structs.RowCells[],
-    actual: Structs.RowCells[]
-  ) {
+  const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowCells[]) {
     assert.eq(expected.length, actual.length);
     Arr.each(expected, function (row, i) {
       Arr.each(row.cells(), function (cell, j) {
@@ -32,11 +28,7 @@ UnitTest.test('TransformOperationsTest', function () {
 
   // Test basic changing to header (column)
   (function () {
-    const check = function (
-      expected: Structs.ElementNew[][],
-      grid: Structs.ElementNew[][],
-      index: number
-    ) {
+    const check = function (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       const actual = TransformOperations.replaceColumn(
@@ -111,11 +103,7 @@ UnitTest.test('TransformOperationsTest', function () {
 
   // Test basic changing to header (row)
   (function () {
-    const check = function (
-      expected: Structs.ElementNew[][],
-      grid: Structs.ElementNew[][],
-      index: number
-    ) {
+    const check = function (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       const actual = TransformOperations.replaceRow(
@@ -174,24 +162,9 @@ UnitTest.test('TransformOperationsTest', function () {
 
     check(
       [
-        [
-          en('h(a)_0', true),
-          en('h(a)_0', true),
-          en('h(b)_1', true),
-          en('h(f)_2', true)
-        ],
-        [
-          en('h(a)_0', true),
-          en('h(a)_0', true),
-          en('c', false),
-          en('h(f)_2', true)
-        ],
-        [
-          en('h(a)_0', true),
-          en('h(a)_0', true),
-          en('d', false),
-          en('h(f)_2', true)
-        ]
+        [en('h(a)_0', true), en('h(a)_0', true), en('h(b)_1', true), en('h(f)_2', true)],
+        [en('h(a)_0', true), en('h(a)_0', true), en('c', false), en('h(f)_2', true)],
+        [en('h(a)_0', true), en('h(a)_0', true), en('d', false), en('h(f)_2', true)]
       ],
       [
         [en('a', false), en('a', false), en('b', false), en('f', false)],

@@ -20,11 +20,7 @@ const base = function (handleUnsupported: HandleFn, required: string[]) {
 };
 
 // Ensure that the object has all required fields. They must satisy predicates.
-const baseWith = function (
-  handleUnsupported: HandleFn,
-  required: string[],
-  pred: ContractCondition
-) {
+const baseWith = function (handleUnsupported: HandleFn, required: string[], pred: ContractCondition) {
   if (required.length === 0) {
     throw new Error('You must specify at least one required field.');
   }
@@ -73,5 +69,4 @@ const allowExtra = Fun.noop;
 
 export const exactly = (required: string[]) => base(handleExact, required);
 export const ensure = (required: string[]) => base(allowExtra, required);
-export const ensureWith = (required: string[], condition: ContractCondition) =>
-  baseWith(allowExtra, required, condition);
+export const ensureWith = (required: string[], condition: ContractCondition) => baseWith(allowExtra, required, condition);

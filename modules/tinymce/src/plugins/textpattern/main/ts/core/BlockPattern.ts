@@ -35,9 +35,7 @@ const stripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern) => {
 const applyPattern = (editor: Editor, match: BlockPatternMatch): boolean => {
   const dom = editor.dom;
   const pattern = match.pattern;
-  const rng = resolvePathRange(dom.getRoot(), match.range).getOrDie(
-    'Unable to resolve path range'
-  );
+  const rng = resolvePathRange(dom.getRoot(), match.range).getOrDie('Unable to resolve path range');
 
   Utils.getParentBlock(editor, rng).each((block) => {
     if (pattern.type === 'block-format') {
@@ -59,16 +57,10 @@ const applyPattern = (editor: Editor, match: BlockPatternMatch): boolean => {
 };
 
 // Finds a matching pattern to the specified text
-const findPattern = <P extends Pattern>(
-  patterns: P[],
-  text: string
-): Option<P> => {
+const findPattern = <P extends Pattern>(patterns: P[], text: string): Option<P> => {
   const nuText = text.replace(Unicode.nbsp, ' ');
   return Arr.find(patterns, (pattern) => {
-    if (
-      text.indexOf(pattern.start) !== 0 &&
-      nuText.indexOf(pattern.start) !== 0
-    ) {
+    if (text.indexOf(pattern.start) !== 0 && nuText.indexOf(pattern.start) !== 0) {
       return false;
     }
 
@@ -76,19 +68,14 @@ const findPattern = <P extends Pattern>(
   });
 };
 
-const findPatterns = (
-  editor: Editor,
-  patterns: BlockPattern[]
-): BlockPatternMatch[] => {
+const findPatterns = (editor: Editor, patterns: BlockPattern[]): BlockPatternMatch[] => {
   const dom = editor.dom;
   const rng = editor.selection.getRng();
 
   return Utils.getParentBlock(editor, rng)
     .filter((block) => {
       const forcedRootBlock = Settings.getForcedRootBlock(editor);
-      const matchesForcedRootBlock =
-        (forcedRootBlock === '' && dom.is(block, 'body')) ||
-        dom.is(block, forcedRootBlock);
+      const matchesForcedRootBlock = (forcedRootBlock === '' && dom.is(block, 'body')) || dom.is(block, forcedRootBlock);
       return block !== null && matchesForcedRootBlock;
     })
     .bind((block) => {

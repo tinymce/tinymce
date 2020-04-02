@@ -27,9 +27,7 @@ const choice = function <T>(options: ChoiceOption<T>[], fallback: T): T {
     options,
     function (b, option) {
       return b.orThunk(function () {
-        return option.predicate()
-          ? Option.some(option.value())
-          : Option.none<T>();
+        return option.predicate() ? Option.some(option.value()) : Option.none<T>();
       });
     },
     Option.none<T>()
@@ -58,12 +56,4 @@ const isSmallAndroid = function () {
   return isSmallTouch() && isAndroid();
 };
 
-export {
-  isTouch,
-  choice,
-  isLarge,
-  isLargeTouch,
-  isSmallTouch,
-  isLargeDesktop,
-  isSmallAndroid
-};
+export { isTouch, choice, isLarge, isLargeTouch, isSmallTouch, isLargeDesktop, isSmallAndroid };

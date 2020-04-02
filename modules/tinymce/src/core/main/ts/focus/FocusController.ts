@@ -27,11 +27,7 @@ const isEditorContentAreaElement = function (elm: Element) {
   if (classList !== undefined) {
     // tox-edit-area__iframe === iframe container element
     // mce-content-body === inline body element
-    return (
-      classList.contains('tox-edit-area') ||
-      classList.contains('tox-edit-area__iframe') ||
-      classList.contains('mce-content-body')
-    );
+    return classList.contains('tox-edit-area') || classList.contains('tox-edit-area__iframe') || classList.contains('mce-content-body');
   } else {
     return false;
   }
@@ -40,10 +36,7 @@ const isEditorContentAreaElement = function (elm: Element) {
 const isUIElement = function (editor: Editor, elm: Element) {
   const customSelector = editor ? editor.settings.custom_ui_selector : '';
   const parent = DOM.getParent(elm, function (elm) {
-    return (
-      isEditorUIElement(elm) ||
-      (customSelector ? editor.dom.is(elm, customSelector) : false)
-    );
+    return isEditorUIElement(elm) || (customSelector ? editor.dom.is(elm, customSelector) : false);
   });
   return parent !== null;
 };
@@ -58,10 +51,7 @@ const getActiveElement = function (): Element {
   }
 };
 
-const registerEvents = function (
-  editorManager: EditorManager,
-  e: { editor: Editor }
-) {
+const registerEvents = function (editorManager: EditorManager, e: { editor: Editor }) {
   const editor = e.editor;
 
   SelectionRestore.register(editor);
@@ -106,11 +96,7 @@ const registerEvents = function (
 
       if (activeEditor && target.ownerDocument === document) {
         // Fire a blur event if the element isn't a UI element
-        if (
-          target !== document.body &&
-          !isUIElement(activeEditor, target) &&
-          editorManager.focusedEditor === activeEditor
-        ) {
+        if (target !== document.body && !isUIElement(activeEditor, target) && editorManager.focusedEditor === activeEditor) {
           activeEditor.fire('blur', { focusedEditor: null });
           editorManager.focusedEditor = null;
         }
@@ -121,10 +107,7 @@ const registerEvents = function (
   }
 };
 
-const unregisterDocumentEvents = function (
-  editorManager: EditorManager,
-  e: { editor: Editor }
-) {
+const unregisterDocumentEvents = function (editorManager: EditorManager, e: { editor: Editor }) {
   if (editorManager.focusedEditor === e.editor) {
     editorManager.focusedEditor = null;
   }
@@ -137,10 +120,7 @@ const unregisterDocumentEvents = function (
 
 const setup = function (editorManager: EditorManager) {
   editorManager.on('AddEditor', Fun.curry(registerEvents, editorManager));
-  editorManager.on(
-    'RemoveEditor',
-    Fun.curry(unregisterDocumentEvents, editorManager)
-  );
+  editorManager.on('RemoveEditor', Fun.curry(unregisterDocumentEvents, editorManager));
 };
 
 export { setup, isEditorUIElement, isEditorContentAreaElement, isUIElement };

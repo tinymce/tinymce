@@ -5,16 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent,
-  Memento,
-  Replacing,
-  Behaviour,
-  GuiFactory,
-  AlloyEvents,
-  AddEventsBehaviour,
-  Container
-} from '@ephox/alloy';
+import { AlloyComponent, Memento, Replacing, Behaviour, GuiFactory, AlloyEvents, AddEventsBehaviour, Container } from '@ephox/alloy';
 import { Element, Attr, Css, Width, Height } from '@ephox/sugar';
 import { Cell, Option } from '@ephox/katamari';
 import { CropRect } from './CropRect';
@@ -125,10 +116,7 @@ const renderImagePanel = (initialUrl: string) => {
     });
   };
 
-  const updateSrc = (
-    anyInSystem: AlloyComponent,
-    url: string
-  ): Promise<Option<Element>> => {
+  const updateSrc = (anyInSystem: AlloyComponent, url: string): Promise<Option<Element>> => {
     const img = Element.fromTag('img');
     Attr.set(img, 'src', url);
     return loadImage(img.dom()).then(() =>
@@ -162,10 +150,7 @@ const renderImagePanel = (initialUrl: string) => {
 
   const zoom = (anyInSystem: AlloyComponent, direction: number): void => {
     const currentZoom = zoomState.get();
-    const newZoom =
-      direction > 0
-        ? Math.min(2, currentZoom + 0.1)
-        : Math.max(0.1, currentZoom - 0.1);
+    const newZoom = direction > 0 ? Math.min(2, currentZoom + 0.1) : Math.max(0.1, currentZoom - 0.1);
     zoomState.set(newZoom);
 
     memContainer.getOpt(anyInSystem).each((panel) => {

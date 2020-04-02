@@ -30,8 +30,7 @@ type Keyboard = Devices.Keyboard;
 
 */
 
-const softKeyboardLimits = (outerWindow): Keyboard =>
-  Devices.findDevice(outerWindow.screen.width, outerWindow.screen.height);
+const softKeyboardLimits = (outerWindow): Keyboard => Devices.findDevice(outerWindow.screen.width, outerWindow.screen.height);
 
 const accountableKeyboardHeight = (outerWindow: Window): number => {
   const portrait = Orientation.get(outerWindow).isPortrait();
@@ -39,9 +38,7 @@ const accountableKeyboardHeight = (outerWindow: Window): number => {
 
   const keyboard = portrait ? limits.portrait : limits.landscape;
 
-  const visualScreenHeight = portrait
-    ? outerWindow.screen.height
-    : outerWindow.screen.width;
+  const visualScreenHeight = portrait ? outerWindow.screen.height : outerWindow.screen.width;
 
   // This is our attempt to detect when we are in a webview. If the DOM window height is smaller than the
   // actual screen height by about the size of a keyboard, we assume that's because a keyboard is
@@ -49,10 +46,7 @@ const accountableKeyboardHeight = (outerWindow: Window): number => {
   return visualScreenHeight - outerWindow.innerHeight > keyboard ? 0 : keyboard;
 };
 
-const getGreenzone = (
-  socket: Element<HTMLElement>,
-  dropup: Element<HTMLElement>
-): number => {
+const getGreenzone = (socket: Element<HTMLElement>, dropup: Element<HTMLElement>): number => {
   const outerWindow = Traverse.owner(socket).dom().defaultView;
   // Include the dropup for this calculation because it represents the total viewable height.
   const viewportHeight = Height.get(socket) + Height.get(dropup);
@@ -60,11 +54,7 @@ const getGreenzone = (
   return viewportHeight - acc;
 };
 
-const updatePadding = (
-  contentBody: Element<DomNode>,
-  socket: Element<HTMLElement>,
-  dropup: Element<HTMLElement>
-): void => {
+const updatePadding = (contentBody: Element<DomNode>, socket: Element<HTMLElement>, dropup: Element<HTMLElement>): void => {
   const greenzoneHeight = getGreenzone(socket, dropup);
   const deltaHeight = Height.get(socket) + Height.get(dropup) - greenzoneHeight;
   // TBIO-3878 Changed the element that was receiving the padding from the iframe to the body of the

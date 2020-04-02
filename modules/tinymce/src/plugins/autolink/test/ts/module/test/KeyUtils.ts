@@ -61,10 +61,7 @@ const needsNbsp = (rng: Range, chr: string) => {
   const offset = rng.startOffset;
 
   if (chr === ' ' && NodeType.isText(container)) {
-    if (
-      container.data[offset - 1] === ' ' ||
-      offset === container.data.length
-    ) {
+    if (container.data[offset - 1] === ' ' || offset === container.data.length) {
       return true;
     }
   }
@@ -134,12 +131,7 @@ const type = function (editor, chr) {
 
             // If caret is at <p>abc|</p> and after the abc text node then move it to the end of the text node
             // Expand the range to include the last char <p>ab[c]</p> since IE 11 doesn't delete otherwise
-            if (
-              rng.startOffset >= nodes.length - 1 &&
-              lastNode &&
-              lastNode.nodeType === 3 &&
-              lastNode.data.length > 0
-            ) {
+            if (rng.startOffset >= nodes.length - 1 && lastNode && lastNode.nodeType === 3 && lastNode.data.length > 0) {
               rng.setStart(lastNode, lastNode.data.length - 1);
               rng.setEnd(lastNode, lastNode.data.length);
               editor.selection.setRng(rng);
@@ -162,10 +154,7 @@ const type = function (editor, chr) {
       rng = editor.selection.getRng(true);
 
       if (rng.startContainer.nodeType === 3 && rng.collapsed) {
-        rng.startContainer.insertData(
-          rng.startOffset,
-          needsNbsp(rng, chr) ? Unicode.nbsp : chr
-        );
+        rng.startContainer.insertData(rng.startOffset, needsNbsp(rng, chr) ? Unicode.nbsp : chr);
         rng.setStart(rng.startContainer, rng.startOffset + 1);
         rng.collapse(true);
         editor.selection.setRng(rng);

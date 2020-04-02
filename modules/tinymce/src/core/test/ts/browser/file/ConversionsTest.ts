@@ -4,10 +4,7 @@ import * as Conversions from 'tinymce/core/file/Conversions';
 import Env from 'tinymce/core/api/Env';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.file.ConversionsTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.file.ConversionsTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
   const invalidBlobUriSrc = 'blob:70BE8432-BA4D-4787-9AB9-86563351FBF7';
 
@@ -23,10 +20,7 @@ UnitTest.asynctest('browser.tinymce.core.file.ConversionsTest', function (
     Conversions.uriToBlob('data:text/plain;base64,SGVsbG8sIFdvcmxkIQ%3D%3D')
       .then(Conversions.blobToDataUri)
       .then(function (dataUri) {
-        LegacyUnit.equal(
-          dataUri,
-          'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
-        );
+        LegacyUnit.equal(dataUri, 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==');
       })
       .then(done);
   });

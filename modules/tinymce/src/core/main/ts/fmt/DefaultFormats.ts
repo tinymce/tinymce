@@ -198,8 +198,7 @@ const get = function (dom: DOMUtils) {
 
     removeformat: [
       {
-        selector:
-          'b,strong,em,i,font,u,strike,sub,sup,dfn,code,samp,kbd,var,cite,mark,q,del,ins',
+        selector: 'b,strong,em,i,font,u,strike,sub,sup,dfn,code,samp,kbd,var,cite,mark,q,del,ins',
         remove: 'all',
         split: true,
         expand: false,
@@ -224,12 +223,9 @@ const get = function (dom: DOMUtils) {
     ]
   };
 
-  Tools.each(
-    'p h1 h2 h3 h4 h5 h6 div address pre div dt dd samp'.split(/\s/),
-    function (name) {
-      formats[name] = { block: name, remove: 'all' };
-    }
-  );
+  Tools.each('p h1 h2 h3 h4 h5 h6 div address pre div dt dd samp'.split(/\s/), function (name) {
+    formats[name] = { block: name, remove: 'all' };
+  });
 
   return formats;
 };

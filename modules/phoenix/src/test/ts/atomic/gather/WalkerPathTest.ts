@@ -11,40 +11,19 @@ UnitTest.test('WalkerPathTest', function () {
     Gene('root', 'root', [
       Gene('1', 'node', [
         Gene('1.1', 'node', [Gene('1.1.1', 'node', [])]),
-        Gene('1.2', 'node', [
-          Gene('1.2.1', 'node', [
-            Gene('1.2.1.1', 'node', []),
-            Gene('1.2.1.2', 'node', [])
-          ])
-        ]),
+        Gene('1.2', 'node', [Gene('1.2.1', 'node', [Gene('1.2.1.1', 'node', []), Gene('1.2.1.2', 'node', [])])]),
         Gene('1.3', 'node', [])
       ]),
-      Gene('2', 'node', [
-        Gene('2.1', 'node', []),
-        Gene('2.2', 'node', [
-          Gene('2.2.1', 'node', []),
-          Gene('2.2.2', 'node', [])
-        ])
-      ]),
+      Gene('2', 'node', [Gene('2.1', 'node', []), Gene('2.2', 'node', [Gene('2.2.1', 'node', []), Gene('2.2.2', 'node', [])])]),
       Gene('3', 'node', [
         Gene('3.1', 'node', []),
-        Gene('3.2', 'node', [
-          Gene('3.2.1', 'node', [
-            Gene('3.2.1.1', 'node', []),
-            Gene('3.2.1.2', 'node', [])
-          ]),
-          Gene('3.2.2', 'node', [])
-        ]),
+        Gene('3.2', 'node', [Gene('3.2.1', 'node', [Gene('3.2.1.1', 'node', []), Gene('3.2.1.2', 'node', [])]), Gene('3.2.2', 'node', [])]),
         Gene('3.3', 'node', [])
       ])
     ])
   );
 
-  const checkPath = function (
-    expected: string[],
-    id: string,
-    direction: Direction
-  ) {
+  const checkPath = function (expected: string[], id: string, direction: Direction) {
     const start = Finder.get(universe, id);
     let path: string[] = [];
     let current: Option<Traverse<Gene>> = Option.some({

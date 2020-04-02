@@ -9,17 +9,9 @@ UnitTest.test('WrapperTest', function () {
   const make = function () {
     return TestUniverse(
       Gene('root', 'root', [
-        Gene('1', 'span', [
-          TextGene('1.1', 'alpha'),
-          TextGene('1.2', 'beta'),
-          TextGene('1.3', 'gamma')
-        ]),
+        Gene('1', 'span', [TextGene('1.1', 'alpha'), TextGene('1.2', 'beta'), TextGene('1.3', 'gamma')]),
         Gene('2', 'span', [TextGene('1.4', 'delta')]),
-        Gene('3', 'span', [
-          TextGene('1.5', 'rho'),
-          Gene('img', 'img'),
-          TextGene('1.6', 'epsilon')
-        ]),
+        Gene('3', 'span', [TextGene('1.5', 'rho'), Gene('img', 'img'), TextGene('1.6', 'epsilon')]),
         Gene('4', 'br', [])
       ])
     );
@@ -46,22 +38,12 @@ UnitTest.test('WrapperTest', function () {
       return Wraps(doc, Gene('new-span-' + counter, 'span', []));
     };
 
-    const actual = Wrapper.reuse(
-      doc,
-      start,
-      startOffset,
-      finish,
-      finishOffset,
-      predicate,
-      nu
-    );
+    const actual = Wrapper.reuse(doc, start, startOffset, finish, finishOffset, predicate, nu);
     assert.eq(expected, TestRenders.ids(actual));
     assert.eq(
       postTest,
       doc.shortlog(function (item) {
-        return item.name === 'TEXT_GENE'
-          ? 'text("' + item.text + '")'
-          : item.id;
+        return item.name === 'TEXT_GENE' ? 'text("' + item.text + '")' : item.id;
       })
     );
   };

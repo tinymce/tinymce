@@ -1,20 +1,12 @@
 import { Arr, Option } from '@ephox/katamari';
 import Element from '../node/Element';
 import * as NodeTypes from '../node/NodeTypes';
-import {
-  document,
-  Element as DomElement,
-  Node as DomNode,
-  Document
-} from '@ephox/dom-globals';
+import { document, Element as DomElement, Node as DomNode, Document } from '@ephox/dom-globals';
 
 const ELEMENT = NodeTypes.ELEMENT;
 const DOCUMENT = NodeTypes.DOCUMENT;
 
-const is = function <T extends DomElement = DomElement>(
-  element: Element<DomNode>,
-  selector: string
-): element is Element<T> {
+const is = function <T extends DomElement = DomElement>(element: Element<DomNode>, selector: string): element is Element<T> {
   const dom = element.dom();
   if (dom.nodeType !== ELEMENT) {
     return false;
@@ -44,29 +36,16 @@ const bypassSelector = function (dom: DomNode) {
   );
 };
 
-const all = function <T extends DomElement = DomElement>(
-  selector: string,
-  scope?: Element<DomNode>
-): Element<T>[] {
+const all = function <T extends DomElement = DomElement>(selector: string, scope?: Element<DomNode>): Element<T>[] {
   const base = scope === undefined ? document : scope.dom();
-  return bypassSelector(base)
-    ? []
-    : Arr.map(
-        (base as DomElement | Document).querySelectorAll<T>(selector),
-        Element.fromDom
-      );
+  return bypassSelector(base) ? [] : Arr.map((base as DomElement | Document).querySelectorAll<T>(selector), Element.fromDom);
 };
 
-const one = function <T extends DomElement = DomElement>(
-  selector: string,
-  scope?: Element<DomNode>
-) {
+const one = function <T extends DomElement = DomElement>(selector: string, scope?: Element<DomNode>) {
   const base = scope === undefined ? document : scope.dom();
   return bypassSelector(base)
     ? Option.none<Element<T>>()
-    : Option.from(
-        (base as DomElement | Document).querySelector<T>(selector)
-      ).map(Element.fromDom);
+    : Option.from((base as DomElement | Document).querySelector<T>(selector)).map(Element.fromDom);
 };
 
 export { all, is, one };

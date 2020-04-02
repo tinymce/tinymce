@@ -4,37 +4,21 @@ import { Fun } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
 import { NoState } from '../common/BehaviourState';
-import {
-  ManualRepresentingState,
-  ManualStoreConfig,
-  RepresentingConfig
-} from './RepresentingTypes';
+import { ManualRepresentingState, ManualStoreConfig, RepresentingConfig } from './RepresentingTypes';
 
 interface ManualRepresentingConfig extends RepresentingConfig {
   store: ManualStoreConfig;
 }
 
-const getValue = (
-  component: AlloyComponent,
-  repConfig: ManualRepresentingConfig,
-  _repState: ManualRepresentingState
-) => repConfig.store.getValue(component);
+const getValue = (component: AlloyComponent, repConfig: ManualRepresentingConfig, _repState: ManualRepresentingState) =>
+  repConfig.store.getValue(component);
 
-const setValue = (
-  component: AlloyComponent,
-  repConfig: ManualRepresentingConfig,
-  _repState: ManualRepresentingState,
-  data: any
-) => {
+const setValue = (component: AlloyComponent, repConfig: ManualRepresentingConfig, _repState: ManualRepresentingState, data: any) => {
   repConfig.store.setValue(component, data);
   repConfig.onSetValue(component, data);
 };
 
-const onLoad = (
-  component: AlloyComponent,
-  repConfig: ManualRepresentingConfig,
-  _repState: ManualRepresentingState
-) => {
+const onLoad = (component: AlloyComponent, repConfig: ManualRepresentingConfig, _repState: ManualRepresentingState) => {
   repConfig.store.initialValue.each((data) => {
     repConfig.store.setValue(component, data);
   });

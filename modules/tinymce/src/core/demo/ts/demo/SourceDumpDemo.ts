@@ -1,8 +1,4 @@
-import {
-  document,
-  HTMLTextAreaElement,
-  HTMLInputElement
-} from '@ephox/dom-globals';
+import { document, HTMLTextAreaElement, HTMLInputElement } from '@ephox/dom-globals';
 
 declare let tinymce: any;
 
@@ -20,8 +16,7 @@ export default function () {
       {
         title: 'Some title 2',
         description: 'Some desc 2',
-        content:
-          '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>'
+        content: '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>'
       }
     ],
     image_caption: true,
@@ -44,8 +39,6 @@ export default function () {
   const dumpSource = (editor) => {
     const textArea = document.getElementById('source') as HTMLTextAreaElement;
     const raw = document.getElementById('raw') as HTMLInputElement;
-    textArea.value = raw.checked
-      ? editor.getBody().innerHTML
-      : editor.getContent();
+    textArea.value = raw.checked ? editor.getBody().innerHTML : editor.getContent();
   };
 }

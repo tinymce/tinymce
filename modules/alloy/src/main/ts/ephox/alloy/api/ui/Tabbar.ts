@@ -1,23 +1,14 @@
 import { Attr } from '@ephox/sugar';
 
 import * as TabbarSchema from '../../ui/schema/TabbarSchema';
-import {
-  TabbarDetail,
-  TabbarSketcher,
-  TabbarSpec
-} from '../../ui/types/TabbarTypes';
+import { TabbarDetail, TabbarSketcher, TabbarSpec } from '../../ui/types/TabbarTypes';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (
-  detail,
-  components,
-  _spec,
-  _externals
-) => ({
+const factory: CompositeSketchFactory<TabbarDetail, TabbarSpec> = (detail, components, _spec, _externals) => ({
   'uid': detail.uid,
   'dom': detail.dom,
   components,

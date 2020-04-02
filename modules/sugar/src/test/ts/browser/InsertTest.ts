@@ -34,10 +34,7 @@ UnitTest.test('InsertTest', function () {
   Insert.after(li1, li2);
   Insert.after(li2, li4);
 
-  assert.eq(
-    '<ol><li></li><li class="second third"></li><li class="l4"></li></ol><p><span></span></p><p></p>',
-    Html.get(container)
-  );
+  assert.eq('<ol><li></li><li class="second third"></li><li class="l4"></li></ol><p><span></span></p><p></p>', Html.get(container));
 
   Insert.before(li4, li3);
 

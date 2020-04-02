@@ -3,12 +3,7 @@ import * as PositionArray from 'ephox/polaris/api/PositionArray';
 import * as Parrays from 'ephox/polaris/test/Parrays';
 
 UnitTest.test('api.PositionArray.sublist', function () {
-  const check = function (
-    expected: string[],
-    input: string[],
-    start: number,
-    finish: number
-  ) {
+  const check = function (expected: string[], input: string[], start: number, finish: number) {
     const parray = Parrays.make(input);
     const actual = PositionArray.sublist(parray, start, finish);
     assert.eq(expected, Parrays.dump(actual));

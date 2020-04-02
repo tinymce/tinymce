@@ -35,10 +35,8 @@ const dataProcessors = {
   togglemenuitem: dialogToggleMenuItemDataProcessor
 };
 
-const getDataProcessor = (item): Option<Processor> =>
-  Option.from(dataProcessors[item.type]);
+const getDataProcessor = (item): Option<Processor> => Option.from(dataProcessors[item.type]);
 
-const getNamedItems = (structure) =>
-  Arr.filter(getAllObjects(structure), isNamedItem);
+const getNamedItems = (structure) => Arr.filter(getAllObjects(structure), isNamedItem);
 
 export { getDataProcessor, getNamedItems };

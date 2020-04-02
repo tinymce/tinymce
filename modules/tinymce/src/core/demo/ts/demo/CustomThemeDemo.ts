@@ -36,30 +36,22 @@ export default function () {
         dom.bind(button, 'click', function (e) {
           e.preventDefault();
 
-          editor.execCommand(
-            dom.getAttrib(e.target, 'data-mce-command'),
-            false,
-            dom.getAttrib(e.target, 'data-mce-value')
-          );
+          editor.execCommand(dom.getAttrib(e.target, 'data-mce-command'), false, dom.getAttrib(e.target, 'data-mce-value'));
         });
       });
 
       editor.on(function () {
         tinymce.each(dom.select('button', editorContainer), function (button) {
-          editor.formatter.formatChanged(
-            dom.getAttrib(button, 'data-mce-command'),
-            function (state) {
-              button.style.color = state ? 'red' : '';
-            }
-          );
+          editor.formatter.formatChanged(dom.getAttrib(button, 'data-mce-command'), function (state) {
+            button.style.color = state ? 'red' : '';
+          });
         });
       });
 
       return {
         editorContainer,
         iframeContainer: editorContainer.lastChild,
-        iframeHeight:
-          target.offsetHeight - editorContainer.firstChild.offsetHeight
+        iframeHeight: target.offsetHeight - editorContainer.firstChild.offsetHeight
       };
     },
     height: 600

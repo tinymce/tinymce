@@ -25,10 +25,7 @@ export default function () {
     Buttons.register(editor);
 
     editor.on('init', function () {
-      if (
-        Settings.shouldRestoreWhenEmpty(editor) &&
-        editor.dom.isEmpty(editor.getBody())
-      ) {
+      if (Settings.shouldRestoreWhenEmpty(editor) && editor.dom.isEmpty(editor.getBody())) {
         Storage.restoreDraft(editor);
       }
     });

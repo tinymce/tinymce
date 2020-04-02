@@ -1,10 +1,7 @@
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Result } from 'ephox/katamari/api/Result';
 import { Option } from 'ephox/katamari/api/Option';
-import {
-  arbResultValue,
-  arbResultError
-} from 'ephox/katamari/test/arb/ArbDataTypes';
+import { arbResultValue, arbResultError } from 'ephox/katamari/test/arb/ArbDataTypes';
 import fc from 'fast-check';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import { tResult } from 'ephox/katamari/api/ResultInstances';
@@ -55,8 +52,7 @@ UnitTest.test('Result.error: unit tests', () => {
   Assert.eq('eq', Option.none(), Result.error(4).toOption(), tOption(tNumber));
 });
 
-const getErrorOrDie = (res) =>
-  res.fold((err) => err, Fun.die('Was not an error!'));
+const getErrorOrDie = (res) => res.fold((err) => err, Fun.die('Was not an error!'));
 
 UnitTest.test('Result.error: error.is === false', () => {
   fc.assert(
@@ -103,12 +99,7 @@ UnitTest.test('Result.error: error.getOrDie() always throws', () => {
 UnitTest.test('Result.error: error.or(oValue) === oValue', () => {
   fc.assert(
     fc.property(fc.integer(), fc.string(), (i, s) => {
-      Assert.eq(
-        'eq',
-        Result.value(i),
-        Result.error<number, string>(s).or(Result.value(i)),
-        tResult()
-      );
+      Assert.eq('eq', Result.value(i), Result.error<number, string>(s).or(Result.value(i)), tResult());
     })
   );
 });
@@ -138,12 +129,7 @@ UnitTest.test('Result.error: error.fold(_ -> x, die) === x', () => {
 UnitTest.test('Result.error: error.map(⊥) === error', () => {
   fc.assert(
     fc.property(fc.integer(), (i) => {
-      Assert.eq(
-        'eq',
-        Result.error(i),
-        Result.error(i).map(Fun.die('⊥')),
-        tResult()
-      );
+      Assert.eq('eq', Result.error(i), Result.error(i).map(Fun.die('⊥')), tResult());
     })
   );
 });
@@ -152,12 +138,7 @@ UnitTest.test('Result.error: error.mapError(f) === f(error)', () => {
   fc.assert(
     fc.property(fc.integer(), (i) => {
       const f = (x) => x % 3;
-      Assert.eq(
-        'eq',
-        Result.error(f(i)),
-        Result.error(i).mapError(f),
-        tResult()
-      );
+      Assert.eq('eq', Result.error(f(i)), Result.error(i).mapError(f), tResult());
     })
   );
 });
@@ -171,58 +152,36 @@ UnitTest.test('Result.error: error.each(⊥) === undefined', () => {
   );
 });
 
-UnitTest.test(
-  'Given f :: s -> RV, Result.error: error.bind(f) === error',
-  () => {
-    fc.assert(
-      fc.property(
-        arbResultError<number, number>(fc.integer()),
-        fc.func(arbResultValue<number, number>(fc.integer())),
-        (res, f) => {
-          const actual = res.bind(f);
-          Assert.eq('eq', true, getErrorOrDie(res) === getErrorOrDie(actual));
-        }
-      )
-    );
-  }
-);
+UnitTest.test('Given f :: s -> RV, Result.error: error.bind(f) === error', () => {
+  fc.assert(
+    fc.property(arbResultError<number, number>(fc.integer()), fc.func(arbResultValue<number, number>(fc.integer())), (res, f) => {
+      const actual = res.bind(f);
+      Assert.eq('eq', true, getErrorOrDie(res) === getErrorOrDie(actual));
+    })
+  );
+});
 
-UnitTest.test(
-  'Given f :: s -> RE, Result.error: error.bind(f) === error',
-  () => {
-    fc.assert(
-      fc.property(
-        arbResultError(fc.integer()),
-        fc.func(arbResultError(fc.integer())),
-        (res, f) => {
-          const actual = res.bind(f);
-          Assert.eq('eq', true, getErrorOrDie(res) === getErrorOrDie(actual));
-        }
-      )
-    );
-  }
-);
+UnitTest.test('Given f :: s -> RE, Result.error: error.bind(f) === error', () => {
+  fc.assert(
+    fc.property(arbResultError(fc.integer()), fc.func(arbResultError(fc.integer())), (res, f) => {
+      const actual = res.bind(f);
+      Assert.eq('eq', true, getErrorOrDie(res) === getErrorOrDie(actual));
+    })
+  );
+});
 
 UnitTest.test('Result.error: error.forall === true', () => {
   fc.assert(
-    fc.property(
-      arbResultError(fc.integer()),
-      fc.func(fc.boolean()),
-      (res, f) => {
-        Assert.eq('eq', true, res.forall(f));
-      }
-    )
+    fc.property(arbResultError(fc.integer()), fc.func(fc.boolean()), (res, f) => {
+      Assert.eq('eq', true, res.forall(f));
+    })
   );
 });
 
 UnitTest.test('Result.error: error.exists === false', () => {
   fc.assert(
     fc.property(fc.integer(), (i) => {
-      Assert.eq(
-        'eq',
-        false,
-        Result.error<unknown, number>(i).exists(Fun.die('⊥'))
-      );
+      Assert.eq('eq', false, Result.error<unknown, number>(i).exists(Fun.die('⊥')));
     })
   );
 });

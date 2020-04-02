@@ -5,7 +5,4 @@ export interface BeforeAfter {
   after: () => Option<number>;
 }
 
-export const BeforeAfter: (
-  before: Option<number>,
-  after: Option<number>
-) => BeforeAfter = Struct.immutable('before', 'after');
+export const BeforeAfter: (before: Option<number>, after: Option<number>) => BeforeAfter = Struct.immutable('before', 'after');

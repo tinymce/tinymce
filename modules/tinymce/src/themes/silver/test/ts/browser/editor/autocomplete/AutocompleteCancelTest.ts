@@ -1,14 +1,4 @@
-import {
-  ApproxStructure,
-  GeneralSteps,
-  Keys,
-  Logger,
-  Pipeline,
-  StructAssert,
-  Waiter,
-  Mouse,
-  Step
-} from '@ephox/agar';
+import { ApproxStructure, GeneralSteps, Keys, Logger, Pipeline, StructAssert, Waiter, Mouse, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
@@ -38,10 +28,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
       children: [s.text(str.is(content), true)]
     });
 
-  const expectedAutocompletePara = (content: string) => (
-    s,
-    str
-  ): StructAssert =>
+  const expectedAutocompletePara = (content: string) => (s, str): StructAssert =>
     s.element('p', {
       children: [
         s.element('span', {
@@ -60,17 +47,9 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
       const tinyUi = TinyUi(editor);
       const tinyApis = TinyApis(editor);
 
-      const sWaitForMenuToOpen = tinyUi.sWaitForPopup(
-        'wait for autocompleter to appear',
-        '.tox-autocompleter div[role="menu"]'
-      );
+      const sWaitForMenuToOpen = tinyUi.sWaitForPopup('wait for autocompleter to appear', '.tox-autocompleter div[role="menu"]');
 
-      const sSetContentAndTrigger = (
-        content: string,
-        triggerCharCode: number,
-        template?: string,
-        elementPath?: number[]
-      ) => {
+      const sSetContentAndTrigger = (content: string, triggerCharCode: number, template?: string, elementPath?: number[]) => {
         const htmlTemplate = template || '<p>CONTENT</p>';
         return GeneralSteps.sequence([
           tinyApis.sSetContent(htmlTemplate.replace('CONTENT', content)),
@@ -82,22 +61,13 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
       const sInsertContentAndTrigger = (content: string) =>
         GeneralSteps.sequence([
           tinyApis.sExecCommand('mceInsertContent', content),
-          tinyActions.sContentKeypress(
-            content.charCodeAt(content.length - 1),
-            {}
-          )
+          tinyActions.sContentKeypress(content.charCodeAt(content.length - 1), {})
         ]);
 
       const sSetCursor = (elementPath: number[], offset: number) =>
-        GeneralSteps.sequence([
-          tinyApis.sSetCursor(elementPath, offset),
-          tinyApis.sNodeChanged()
-        ]);
+        GeneralSteps.sequence([tinyApis.sSetCursor(elementPath, offset), tinyApis.sNodeChanged()]);
 
-      const sAssertContent = (
-        label: string,
-        expected: (s, str, arr) => StructAssert[]
-      ) =>
+      const sAssertContent = (label: string, expected: (s, str, arr) => StructAssert[]) =>
         Waiter.sTryUntil(
           label,
           tinyApis.sAssertContentStructure(
@@ -109,20 +79,12 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
           )
         );
 
-      const sTriggerAndAssertInitialContent = (
-        template?: string,
-        elementPath?: number[],
-        expected?: (s, str, arr) => StructAssert[]
-      ) =>
+      const sTriggerAndAssertInitialContent = (template?: string, elementPath?: number[], expected?: (s, str, arr) => StructAssert[]) =>
         GeneralSteps.sequence([
           sSetContentAndTrigger(':a', ':'.charCodeAt(0), template, elementPath),
           sWaitForMenuToOpen,
-          sAssertContent(
-            'Check initial content with autocompleter active',
-            (s, str, arr) =>
-              expected
-                ? expected(s, str, arr)
-                : [expectedAutocompletePara(':a')(s, str)]
+          sAssertContent('Check initial content with autocompleter active', (s, str, arr) =>
+            expected ? expected(s, str, arr) : [expectedAutocompletePara(':a')(s, str)]
           )
         ]);
 
@@ -132,10 +94,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
           scenario.action,
           sWaitForAutocompleteToClose,
           ...(scenario.postAction ? [scenario.postAction] : []),
-          sAssertContent(
-            'Check autocompleter was cancelled',
-            scenario.assertion
-          )
+          sAssertContent('Check autocompleter was cancelled', scenario.assertion)
         ]);
 
       const sTestEscapeMenu = sTestAutocompleter({
@@ -146,10 +105,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
       const sTestNewline = sTestAutocompleter({
         action: sInsertContentAndTrigger('aa'),
         postAction: tinyActions.sContentKeystroke(Keys.enter(), {}),
-        assertion: (s, str) => [
-          expectedSimplePara(':aaa')(s, str),
-          s.element('p', {})
-        ]
+        assertion: (s, str) => [expectedSimplePara(':aaa')(s, str), s.element('p', {})]
       });
 
       const sTestBackspace = sTestAutocompleter({
@@ -167,22 +123,14 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
 
       const sTestKeyNavigation = (key: number) =>
         sTestAutocompleter({
-          setup: sTriggerAndAssertInitialContent(
-            '<p></p></p><p>CONTENT</p><p></p>',
-            [1, 0],
-            (s, str) => [
-              s.element('p', {}),
-              expectedAutocompletePara(':a')(s, str),
-              s.element('p', {})
-            ]
-          ),
+          setup: sTriggerAndAssertInitialContent('<p></p></p><p>CONTENT</p><p></p>', [1, 0], (s, str) => [
+            s.element('p', {}),
+            expectedAutocompletePara(':a')(s, str),
+            s.element('p', {})
+          ]),
           action: sInsertContentAndTrigger('aa'),
           postAction: tinyActions.sContentKeystroke(key, {}),
-          assertion: (s, str) => [
-            s.element('p', {}),
-            expectedSimplePara(':aaa')(s, str),
-            s.element('p', {})
-          ]
+          assertion: (s, str) => [s.element('p', {}), expectedSimplePara(':aaa')(s, str), s.element('p', {})]
         });
 
       const sTestContinueTypingWithNoMatch = sTestAutocompleter({
@@ -191,45 +139,25 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
       });
 
       const sTestNodeChange = GeneralSteps.sequence([
-        sTriggerAndAssertInitialContent(
-          '<p>CONTENT</p><p>new node</p>',
-          [0, 0],
-          (s, str) => [
-            expectedAutocompletePara(':a')(s, str),
-            s.element('p', {})
-          ]
-        ),
+        sTriggerAndAssertInitialContent('<p>CONTENT</p><p>new node</p>', [0, 0], (s, str) => [
+          expectedAutocompletePara(':a')(s, str),
+          s.element('p', {})
+        ]),
         sInsertContentAndTrigger('aa'),
         sSetCursor([0, 0, 0], 2),
         sWaitForAutocompleteToClose,
-        sAssertContent('Check autocompleter was not cancelled', (s, str) => [
-          expectedAutocompletePara(':aaa')(s, str),
-          s.element('p', {})
-        ]),
+        sAssertContent('Check autocompleter was not cancelled', (s, str) => [expectedAutocompletePara(':aaa')(s, str), s.element('p', {})]),
         sSetCursor([1, 0], 0),
-        sAssertContent('Check autocompleter was cancelled', (s, str) => [
-          expectedSimplePara(':aaa')(s, str),
-          s.element('p', {})
-        ])
+        sAssertContent('Check autocompleter was cancelled', (s, str) => [expectedSimplePara(':aaa')(s, str), s.element('p', {})])
       ]);
 
       const sTestClickOutsideMenu = sTestAutocompleter({
-        setup: sTriggerAndAssertInitialContent(
-          '<p>CONTENT</p><p>new node</p>',
-          [0, 0],
-          (s, str) => [
-            expectedAutocompletePara(':a')(s, str),
-            s.element('p', {})
-          ]
-        ),
-        action: Mouse.sTrueClickOn(
-          Element.fromDom(editor.getBody()),
-          'p:contains(new node)'
-        ),
-        assertion: (s, str) => [
-          expectedSimplePara(':a')(s, str),
+        setup: sTriggerAndAssertInitialContent('<p>CONTENT</p><p>new node</p>', [0, 0], (s, str) => [
+          expectedAutocompletePara(':a')(s, str),
           s.element('p', {})
-        ]
+        ]),
+        action: Mouse.sTrueClickOn(Element.fromDom(editor.getBody()), 'p:contains(new node)'),
+        assertion: (s, str) => [expectedSimplePara(':a')(s, str), s.element('p', {})]
       });
 
       Pipeline.async(
@@ -238,47 +166,20 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
           'Trigger autocompleter',
           [
             tinyApis.sFocus(),
-            Logger.t(
-              'Checking escape in menu cancels the autocompleter',
-              sTestEscapeMenu
-            ),
-            Logger.t(
-              'Checking inserting a new line cancels the autocompleter',
-              sTestNewline
-            ),
-            Logger.t(
-              'Checking inserting at least 10 chars after no matches cancels the autocompleter',
-              sTestContinueTypingWithNoMatch
-            ),
-            Logger.t(
-              'Checking changing to different node cancels the autocompleter',
-              sTestNodeChange
-            ),
-            Logger.t(
-              'Checking pressing down cancels the autocompleter',
-              sTestKeyNavigation(Keys.down())
-            ),
-            Logger.t(
-              'Checking pressing up cancels the autocompleter',
-              sTestKeyNavigation(Keys.up())
-            ),
-            Logger.t(
-              'Checking clicking outside cancels the autocompleter',
-              sTestClickOutsideMenu
-            )
+            Logger.t('Checking escape in menu cancels the autocompleter', sTestEscapeMenu),
+            Logger.t('Checking inserting a new line cancels the autocompleter', sTestNewline),
+            Logger.t('Checking inserting at least 10 chars after no matches cancels the autocompleter', sTestContinueTypingWithNoMatch),
+            Logger.t('Checking changing to different node cancels the autocompleter', sTestNodeChange),
+            Logger.t('Checking pressing down cancels the autocompleter', sTestKeyNavigation(Keys.down())),
+            Logger.t('Checking pressing up cancels the autocompleter', sTestKeyNavigation(Keys.up())),
+            Logger.t('Checking clicking outside cancels the autocompleter', sTestClickOutsideMenu)
             // TODO: IE 11 doesn't send the keydown event for these tests (works outside tests), so investigate why that's happening
           ].concat(
             platform.browser.isIE()
               ? []
               : [
-                  Logger.t(
-                    'Checking escape in menu cancels the autocompleter',
-                    sTestEscapeMenu
-                  ),
-                  Logger.t(
-                    'Checking deleting trigger char cancels the autocompleter',
-                    sTestBackspace
-                  )
+                  Logger.t('Checking escape in menu cancels the autocompleter', sTestEscapeMenu),
+                  Logger.t('Checking deleting trigger char cancels the autocompleter', sTestBackspace)
                 ]
           )
         ),
@@ -295,10 +196,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
           minChars: 1,
           columns: 'auto',
           fetch: (pattern, _maxResults) => {
-            const filteredItems = Arr.filter(
-              ['a', 'b', 'c', 'd'],
-              (item) => item.indexOf(pattern) !== -1
-            );
+            const filteredItems = Arr.filter(['a', 'b', 'c', 'd'], (item) => item.indexOf(pattern) !== -1);
             return new Promise((resolve) => {
               resolve(
                 Arr.map(filteredItems, (item) => ({

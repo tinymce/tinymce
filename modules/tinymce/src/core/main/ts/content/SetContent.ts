@@ -11,8 +11,4 @@ import { Content, SetContentArgs } from './SetContentImpl';
 
 export { Content, SetContentArgs } from './SetContentImpl';
 
-export const setContent = (
-  editor: Editor,
-  content: Content,
-  args: SetContentArgs = {}
-): Content => Rtc.setContent(editor, content, args);
+export const setContent = (editor: Editor, content: Content, args: SetContentArgs = {}): Content => Rtc.setContent(editor, content, args);

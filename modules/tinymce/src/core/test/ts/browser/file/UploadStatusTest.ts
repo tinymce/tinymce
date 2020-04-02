@@ -3,10 +3,7 @@ import { LegacyUnit } from '@ephox/mcagar';
 import UploadStatus from 'tinymce/core/file/UploadStatus';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.file.UploadStatusTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.file.UploadStatusTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('hasBlobUri/markPending', function () {

@@ -8,11 +8,7 @@ import { Warehouse } from '../model/Warehouse';
 import { TableSize } from './Types';
 import { BarPositions, RowInfo, ColInfo } from './BarPositions';
 
-const getRaw = function (
-  cell: Element,
-  property: string,
-  getter: (e: Element) => number
-) {
+const getRaw = function (cell: Element, property: string, getter: (e: Element) => number) {
   return Css.getRaw(cell, property).fold(
     function () {
       return getter(cell) + 'px';
@@ -24,9 +20,7 @@ const getRaw = function (
 };
 
 const getRawW = function (cell: Element, tableSize: TableSize) {
-  return getRaw(cell, 'width', (e: Element) =>
-    Sizes.getPixelWidth(e, tableSize)
-  );
+  return getRaw(cell, 'width', (e: Element) => Sizes.getPixelWidth(e, tableSize));
 };
 
 const getRawH = function (cell: Element) {
@@ -70,20 +64,12 @@ const getDeduced = function (deduced: Option<number>) {
     .getOr('');
 };
 
-const getRawWidths = function (
-  warehouse: Warehouse,
-  direction: BarPositions<ColInfo>,
-  tableSize: TableSize
-) {
+const getRawWidths = function (warehouse: Warehouse, direction: BarPositions<ColInfo>, tableSize: TableSize) {
   // Warning, changed signature!
   return getWidthFrom(warehouse, direction, getRawW, getDeduced, tableSize);
 };
 
-const getPercentageWidths = function (
-  warehouse: Warehouse,
-  direction: BarPositions<ColInfo>,
-  tableSize: TableSize
-) {
+const getPercentageWidths = function (warehouse: Warehouse, direction: BarPositions<ColInfo>, tableSize: TableSize) {
   return getWidthFrom(
     warehouse,
     direction,
@@ -102,11 +88,7 @@ const getPercentageWidths = function (
   );
 };
 
-const getPixelWidths = function (
-  warehouse: Warehouse,
-  direction: BarPositions<ColInfo>,
-  tableSize: TableSize
-) {
+const getPixelWidths = function (warehouse: Warehouse, direction: BarPositions<ColInfo>, tableSize: TableSize) {
   return getWidthFrom(
     warehouse,
     direction,
@@ -146,28 +128,14 @@ const getHeightFrom = function <T>(
   });
 };
 
-const getPixelHeights = function (
-  warehouse: Warehouse,
-  direction: BarPositions<RowInfo>
-) {
-  return getHeightFrom(warehouse, direction, Sizes.getHeight, function (
-    deduced: Option<number>
-  ) {
+const getPixelHeights = function (warehouse: Warehouse, direction: BarPositions<RowInfo>) {
+  return getHeightFrom(warehouse, direction, Sizes.getHeight, function (deduced: Option<number>) {
     return deduced.getOrThunk(CellUtils.minHeight);
   });
 };
 
-const getRawHeights = function (
-  warehouse: Warehouse,
-  direction: BarPositions<RowInfo>
-) {
+const getRawHeights = function (warehouse: Warehouse, direction: BarPositions<RowInfo>) {
   return getHeightFrom(warehouse, direction, getRawH, getDeduced);
 };
 
-export {
-  getRawWidths,
-  getPixelWidths,
-  getPercentageWidths,
-  getPixelHeights,
-  getRawHeights
-};
+export { getRawWidths, getPixelWidths, getPercentageWidths, getPixelHeights, getRawHeights };

@@ -29,12 +29,7 @@ UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
               },
               components: []
             }),
-          setupItem: (
-            _mToolbar: AlloyComponent,
-            tc: AlloyComponent,
-            data: any,
-            _index: number
-          ) => {
+          setupItem: (_mToolbar: AlloyComponent, tc: AlloyComponent, data: any, _index: number) => {
             Toolbar.setGroups(tc, data);
           }
         })
@@ -71,17 +66,11 @@ UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
           children: [
             s.element('div', {
               classes: [arr.has('test-toolbar-group')],
-              children: [
-                s.element('button', { html: str.is('A') }),
-                s.element('button', { html: str.is('B') })
-              ]
+              children: [s.element('button', { html: str.is('A') }), s.element('button', { html: str.is('B') })]
             }),
             s.element('div', {
               classes: [arr.has('test-toolbar-group')],
-              children: [
-                s.element('button', { html: str.is('C') }),
-                s.element('button', { html: str.is('D') })
-              ]
+              children: [s.element('button', { html: str.is('C') }), s.element('button', { html: str.is('D') })]
             }),
             s.element('div', {
               classes: [arr.has('test-toolbar-group')],
@@ -107,16 +96,10 @@ UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
           component.element()
         );
 
-      const toolbarList = component
-        .getSystem()
-        .getByUid('multiple-toolbar')
-        .getOrDie();
+      const toolbarList = component.getSystem().getByUid('multiple-toolbar').getOrDie();
 
       return [
-        GuiSetup.mAddStyles(doc, [
-          '.test-single-toolbar { display: flex; }',
-          '.test-single-toolbar button { width: 100px; }'
-        ]),
+        GuiSetup.mAddStyles(doc, ['.test-single-toolbar { display: flex; }', '.test-single-toolbar button { width: 100px; }']),
 
         Step.sync(() => {
           const groups = Arr.map(
@@ -128,10 +111,7 @@ UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
                 items: Arr.map([{ text: 'C' }, { text: 'D' }], makeToolbarItem)
               },
               {
-                items: Arr.map(
-                  [{ text: 'E' }, { text: 'F' }, { text: 'G' }],
-                  makeToolbarItem
-                )
+                items: Arr.map([{ text: 'E' }, { text: 'F' }, { text: 'G' }], makeToolbarItem)
               }
             ],
             makeToolbarGroup

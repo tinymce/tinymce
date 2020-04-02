@@ -11,10 +11,6 @@ const builder = (detail: SeparatorItemDetail) => ({
   events: AlloyEvents.derive([AlloyEvents.stopper(SystemEvents.focusItem())])
 });
 
-const schema = [
-  FieldSchema.strict('dom'),
-  FieldSchema.strict('components'),
-  Fields.output('builder', builder)
-];
+const schema = [FieldSchema.strict('dom'), FieldSchema.strict('components'), Fields.output('builder', builder)];
 
 export default schema;

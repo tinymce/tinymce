@@ -13,30 +13,14 @@ UnitTest.test('browser.tinymce.core.dom.TrimHtmlTest', function () {
     '<p id="a" data-mce-abc="1">a</p>',
     TrimHtml.trimInternal(serializer, '<p id="a" data-mce-abc="1">a</p>')
   );
-  Assert.eq(
-    'Should not have internal attr',
-    '<p>a</p>',
-    TrimHtml.trimInternal(serializer, '<p data-mce-selected="1">a</p>')
-  );
-  Assert.eq(
-    'Should trim zwsp',
-    '<p>ab</p>',
-    TrimHtml.trimInternal(serializer, '<p>a' + Zwsp.ZWSP + 'b</p>')
-  );
+  Assert.eq('Should not have internal attr', '<p>a</p>', TrimHtml.trimInternal(serializer, '<p data-mce-selected="1">a</p>'));
+  Assert.eq('Should trim zwsp', '<p>ab</p>', TrimHtml.trimInternal(serializer, '<p>a' + Zwsp.ZWSP + 'b</p>'));
 
   Assert.eq(
     'Should be unchanged',
     '<p id="a" data-mce-abc="1">a</p>',
     TrimHtml.trimExternal(serializer, '<p id="a" data-mce-abc="1">a</p>')
   );
-  Assert.eq(
-    'Should not have internal attr',
-    '<p>a</p>',
-    TrimHtml.trimExternal(serializer, '<p data-mce-selected="1">a</p>')
-  );
-  Assert.eq(
-    'Should not have zwsp',
-    '<p>ab</p>',
-    TrimHtml.trimExternal(serializer, '<p>a' + Zwsp.ZWSP + 'b</p>')
-  );
+  Assert.eq('Should not have internal attr', '<p>a</p>', TrimHtml.trimExternal(serializer, '<p data-mce-selected="1">a</p>'));
+  Assert.eq('Should not have zwsp', '<p>ab</p>', TrimHtml.trimExternal(serializer, '<p>a' + Zwsp.ZWSP + 'b</p>'));
 });

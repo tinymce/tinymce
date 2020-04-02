@@ -5,14 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloySpec,
-  AlloyTriggers,
-  Behaviour,
-  Input,
-  Keying,
-  Memento
-} from '@ephox/alloy';
+import { AlloySpec, AlloyTriggers, Behaviour, Input, Keying, Memento } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Id, Option } from '@ephox/katamari';
 
@@ -21,11 +14,7 @@ import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderToolbar } from '../toolbar/CommonToolbar';
 import { generate } from './ContextFormButtons';
 
-const renderContextForm = (
-  toolbarType: ToolbarMode,
-  ctx: Toolbar.ContextForm,
-  providers: UiFactoryBackstageProviders
-) => {
+const renderContextForm = (toolbarType: ToolbarMode, ctx: Toolbar.ContextForm, providers: UiFactoryBackstageProviders) => {
   // Cannot use the FormField.sketch, because the DOM structure doesn't have a wrapping group
   const inputAttributes = ctx.label.fold(
     () => ({}),

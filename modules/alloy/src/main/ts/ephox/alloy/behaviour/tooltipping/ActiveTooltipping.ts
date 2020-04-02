@@ -12,17 +12,10 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Attachment from '../../api/system/Attachment';
 import { ReceivingInternalEvent } from '../../events/SimulatedEvent';
 import * as TooltippingApis from './TooltippingApis';
-import {
-  ExclusivityChannel,
-  HideTooltipEvent,
-  ShowTooltipEvent
-} from './TooltippingCommunication';
+import { ExclusivityChannel, HideTooltipEvent, ShowTooltipEvent } from './TooltippingCommunication';
 import { TooltippingConfig, TooltippingState } from './TooltippingTypes';
 
-const events = (
-  tooltipConfig: TooltippingConfig,
-  state: TooltippingState
-): AlloyEvents.AlloyEventRecord => {
+const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): AlloyEvents.AlloyEventRecord => {
   const hide = (comp: AlloyComponent) => {
     state.getTooltip().each((p) => {
       Attachment.detach(p);

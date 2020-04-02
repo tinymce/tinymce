@@ -1,12 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Cleaner,
-  Logger,
-  Step,
-  Waiter,
-  GeneralSteps
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Cleaner, Logger, Step, Waiter, GeneralSteps } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { window } from '@ephox/dom-globals';
 import { DomEvent, Element } from '@ephox/sugar';
@@ -170,10 +162,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
             absoluteBox.element()
           )
         ),
-        store.sAssertEq('When docked', [
-          'static.onDocked',
-          'absolute.onDocked'
-        ]),
+        store.sAssertEq('When docked', ['static.onDocked', 'absolute.onDocked']),
         store.sClear,
 
         Logger.t(
@@ -199,14 +188,8 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
             absoluteBox.element()
           )
         ),
-        store.sAssertEq('After undocked', [
-          'static.onUndocked',
-          'absolute.onUndocked'
-        ]),
-        Logger.t(
-          'After undocking, the structure of the docked elements should be what it originally was',
-          sAssertInitialStructure
-        )
+        store.sAssertEq('After undocked', ['static.onUndocked', 'absolute.onUndocked']),
+        Logger.t('After undocking, the structure of the docked elements should be what it originally was', sAssertInitialStructure)
       ];
     },
     cleanup.wrap(success),

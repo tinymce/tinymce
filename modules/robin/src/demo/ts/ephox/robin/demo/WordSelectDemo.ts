@@ -44,18 +44,9 @@ const getSelection = function () {
 DomEvent.bind(editor, 'click', function (_event) {
   const current = getSelection();
   if (current !== null && current.collapsed()) {
-    const wordRange = DomSmartSelect.word(
-      current.startContainer(),
-      current.startOffset(),
-      Fun.constant(false)
-    );
+    const wordRange = DomSmartSelect.word(current.startContainer(), current.startOffset(), Fun.constant(false));
     wordRange.each(function (wr) {
-      select(
-        wr.startContainer(),
-        wr.startOffset(),
-        wr.endContainer(),
-        wr.endOffset()
-      );
+      select(wr.startContainer(), wr.startOffset(), wr.endContainer(), wr.endOffset());
     });
   }
 });

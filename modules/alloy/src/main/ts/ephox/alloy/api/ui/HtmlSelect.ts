@@ -3,21 +3,14 @@ import { Arr } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 
 import { SketchSpec } from '../../api/component/SpecTypes';
-import {
-  HtmlSelectDetail,
-  HtmlSelectSketcher,
-  HtmlSelectSpec
-} from '../../ui/types/HtmlSelectTypes';
+import { HtmlSelectDetail, HtmlSelectSketcher, HtmlSelectSpec } from '../../ui/types/HtmlSelectTypes';
 import { Focusing } from '../behaviour/Focusing';
 import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from './UiSketcher';
 
-const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (
-  detail,
-  _spec
-): SketchSpec => {
+const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, _spec): SketchSpec => {
   const options = Arr.map(detail.options, (option) => ({
     dom: {
       tag: 'option',
@@ -26,9 +19,7 @@ const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (
     }
   }));
 
-  const initialValues = detail.data
-    .map((v) => Objects.wrap('initialValue', v))
-    .getOr({});
+  const initialValues = detail.data.map((v) => Objects.wrap('initialValue', v)).getOr({});
 
   return {
     uid: detail.uid,
@@ -48,10 +39,7 @@ const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (
           },
           setValue(select, newValue) {
             // This is probably generically useful ... may become a part of Representing.
-            const found = Arr.find(
-              detail.options,
-              (opt) => opt.value === newValue
-            );
+            const found = Arr.find(detail.options, (opt) => opt.value === newValue);
             if (found.isSome()) {
               Value.set(select.element(), newValue);
             }

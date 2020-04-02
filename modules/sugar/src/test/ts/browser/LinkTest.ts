@@ -22,16 +22,8 @@ UnitTest.test('LinkTest', function () {
   // counting headNodes as "zero"
   const url1 = document.head.children[headNodes];
   const url2 = document.head.children[headNodes + 1];
-  assert.eq(
-    true,
-    Compare.eq(firstLink, Element.fromDom(url1)),
-    'first link element was not equal'
-  );
-  assert.eq(
-    true,
-    Compare.eq(secondLink, Element.fromDom(url2)),
-    'second link element was not equal'
-  );
+  assert.eq(true, Compare.eq(firstLink, Element.fromDom(url1)), 'first link element was not equal');
+  assert.eq(true, Compare.eq(secondLink, Element.fromDom(url2)), 'second link element was not equal');
   assertStylesheetLink(url1, 'fake://url1/');
   assertStylesheetLink(url2, 'fake://url2/');
 

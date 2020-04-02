@@ -6,10 +6,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 
-UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (success, failure) {
   Theme();
 
   const mBindEventMutator = function (editor, eventName, mutator) {
@@ -39,11 +36,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (
 
   const mAssertSetSelectionEventArgs = function (editor, expectedForward) {
     return Step.stateful(function (value: any, next, _die) {
-      Assertions.assertEq(
-        'Should be expected forward flag',
-        expectedForward,
-        value.eventArgs.get().forward
-      );
+      Assertions.assertEq('Should be expected forward flag', expectedForward, value.eventArgs.get().forward);
       assertSelectAllRange(editor, value.eventArgs.get().range);
       next(value);
     });
@@ -79,11 +72,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (
       Element.fromDom(actualRng.startContainer)
     );
 
-    Assertions.assertDomEq(
-      'Should be expected endContainer',
-      Element.fromDom(editor.getBody()),
-      Element.fromDom(actualRng.endContainer)
-    );
+    Assertions.assertDomEq('Should be expected endContainer', Element.fromDom(editor.getBody()), Element.fromDom(actualRng.endContainer));
   };
 
   TinyLoader.setupLight(
@@ -114,11 +103,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (
               tinyApis.sSetContent('<p>a</p>'),
               sSetRng(editor, undefined),
               Step.stateful(function (value, next, _die) {
-                Assertions.assertEq(
-                  '',
-                  'undefined',
-                  typeof value.eventArgs.get().forward
-                );
+                Assertions.assertEq('', 'undefined', typeof value.eventArgs.get().forward);
                 next(value);
               }),
               sSetRng(editor, true),

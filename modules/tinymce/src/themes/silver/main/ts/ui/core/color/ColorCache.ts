@@ -12,9 +12,7 @@ const storageName = 'tinymce-custom-colors';
 
 export default (max: number = 10) => {
   const storageString = LocalStorage.getItem(storageName);
-  const localstorage = Type.isString(storageString)
-    ? JSON.parse(storageString)
-    : [];
+  const localstorage = Type.isString(storageString) ? JSON.parse(storageString) : [];
 
   const prune = (list: string[]): string[] => {
     // When the localStorage cache is too big,

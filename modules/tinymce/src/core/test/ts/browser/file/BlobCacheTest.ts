@@ -16,8 +16,7 @@ UnitTest.test('browser.tinymce.core.file.BlobCacheTest', function () {
   };
 
   const id = 'blob0';
-  const base64 =
-    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='; // 1x1 transparent png
+  const base64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='; // 1x1 transparent png
   const blob = uriToBlob(base64, 'image/png');
   const name = 'blank';
   const filename = 'blank.png';
@@ -36,37 +35,17 @@ UnitTest.test('browser.tinymce.core.file.BlobCacheTest', function () {
   blobCache.add(blobInfo);
 
   Assertions.assertEq('Testing get()', blobInfo, blobCache.get(id));
-  Assertions.assertEq(
-    'BlobInfo instance has blobUri() accessor',
-    true,
-    blobInfo.blobUri().indexOf('blob:') === 0
-  );
-  Assertions.assertEq(
-    'Testing getByUri(), findFirst()',
-    blobInfo,
-    blobCache.getByUri(blobInfo.blobUri())
-  );
+  Assertions.assertEq('BlobInfo instance has blobUri() accessor', true, blobInfo.blobUri().indexOf('blob:') === 0);
+  Assertions.assertEq('Testing getByUri(), findFirst()', blobInfo, blobCache.getByUri(blobInfo.blobUri()));
 
   blobCache.removeByUri(blobInfo.blobUri());
-  Assertions.assertEq(
-    'Testing removeByUri()',
-    undefined,
-    blobCache.getByUri(blobInfo.blobUri())
-  );
+  Assertions.assertEq('Testing removeByUri()', undefined, blobCache.getByUri(blobInfo.blobUri()));
 
   try {
     blobInfo = blobCache.create({ blob } as BlobInfoData);
-    Assertions.assertEq(
-      'Exception should be thrown if BlobInfo is created without blob or base64 entries',
-      false,
-      true
-    );
+    Assertions.assertEq('Exception should be thrown if BlobInfo is created without blob or base64 entries', false, true);
   } catch (ex) {
-    Assertions.assertEq(
-      'Exception should be thrown if BlobInfo is created without blob or base64 entries',
-      true,
-      true
-    );
+    Assertions.assertEq('Exception should be thrown if BlobInfo is created without blob or base64 entries', true, true);
   }
 
   blobInfo = blobCache.create({

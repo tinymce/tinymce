@@ -111,9 +111,7 @@ export const renderColorInput = (
     selectOnFocus: false
   });
 
-  const pLabel: Option<AlloySpec> = spec.label.map((label) =>
-    renderLabel(label, sharedBackstage.providers)
-  );
+  const pLabel: Option<AlloySpec> = spec.label.map((label) => renderLabel(label, sharedBackstage.providers));
 
   const emitSwatchChange = (colorBit, value) => {
     AlloyTriggers.emitWith(colorBit, colorSwatchChangeEvent, {
@@ -155,10 +153,7 @@ export const renderColorInput = (
           onLtr: () => [Layout.southeast, Layout.southwest, Layout.south]
         },
         components: [],
-        fetch: ColorSwatch.getFetch(
-          colorInputBackstage.getColors(),
-          colorInputBackstage.hasCustomColors()
-        ),
+        fetch: ColorSwatch.getFetch(colorInputBackstage.getColors(), colorInputBackstage.hasCustomColors()),
         columns: colorInputBackstage.getColorCols(),
         presets: 'color',
         onItemAction
@@ -184,37 +179,24 @@ export const renderColorInput = (
 
     fieldBehaviours: Behaviour.derive([
       AddEventsBehaviour.config('form-field-events', [
-        AlloyEvents.run<ColorInputChangeEvent>(
-          colorInputChangeEvent,
-          (comp, se) => {
-            memColorButton.getOpt(comp).each((colorButton) => {
-              Css.set(
-                colorButton.element(),
-                'background-color',
-                se.event().color()
-              );
-            });
-            AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
-          }
-        ),
-        AlloyEvents.run<ColorSwatchChangeEvent>(
-          colorSwatchChangeEvent,
-          (comp, se) => {
-            FormField.getField(comp).each((field) => {
-              Representing.setValue(field, se.event().value());
-              // Focus the field now that we've set its value
-              Composing.getCurrent(comp).each(Focusing.focus);
-            });
-          }
-        ),
-        AlloyEvents.run<ColorPickerCancelEvent>(
-          colorPickerCancelEvent,
-          (comp, _se) => {
-            FormField.getField(comp).each((_field) => {
-              Composing.getCurrent(comp).each(Focusing.focus);
-            });
-          }
-        )
+        AlloyEvents.run<ColorInputChangeEvent>(colorInputChangeEvent, (comp, se) => {
+          memColorButton.getOpt(comp).each((colorButton) => {
+            Css.set(colorButton.element(), 'background-color', se.event().color());
+          });
+          AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
+        }),
+        AlloyEvents.run<ColorSwatchChangeEvent>(colorSwatchChangeEvent, (comp, se) => {
+          FormField.getField(comp).each((field) => {
+            Representing.setValue(field, se.event().value());
+            // Focus the field now that we've set its value
+            Composing.getCurrent(comp).each(Focusing.focus);
+          });
+        }),
+        AlloyEvents.run<ColorPickerCancelEvent>(colorPickerCancelEvent, (comp, _se) => {
+          FormField.getField(comp).each((_field) => {
+            Composing.getCurrent(comp).each(Focusing.focus);
+          });
+        })
       ])
     ])
   });

@@ -29,10 +29,7 @@ UnitTest.test('IdentifyTest', function () {
     1,
     'b',
     2,
-    Gene('root', 'root', [
-      TextGene('a', 'Caterpillar'),
-      TextGene('b', 'Gorilla')
-    ])
+    Gene('root', 'root', [TextGene('a', 'Caterpillar'), TextGene('b', 'Gorilla')])
   );
 
   check(
@@ -42,11 +39,7 @@ UnitTest.test('IdentifyTest', function () {
     1,
     'b',
     2,
-    Gene('root', 'root', [
-      TextGene('a', 'Caterpillar'),
-      TextGene('_', 'Mogel'),
-      TextGene('b', 'Gorilla')
-    ])
+    Gene('root', 'root', [TextGene('a', 'Caterpillar'), TextGene('_', 'Mogel'), TextGene('b', 'Gorilla')])
   );
 
   check(
@@ -56,11 +49,7 @@ UnitTest.test('IdentifyTest', function () {
     0,
     'b',
     7,
-    Gene('root', 'root', [
-      TextGene('a', 'Caterpillar'),
-      TextGene('_', 'Mogel'),
-      TextGene('b', 'Gorilla')
-    ])
+    Gene('root', 'root', [TextGene('a', 'Caterpillar'), TextGene('_', 'Mogel'), TextGene('b', 'Gorilla')])
   );
 
   check(
@@ -70,11 +59,7 @@ UnitTest.test('IdentifyTest', function () {
     1,
     'b',
     7,
-    Gene('root', 'root', [
-      TextGene('a', 'Caterpillar'),
-      TextGene('_', 'Mogel'),
-      TextGene('b', 'Gorilla')
-    ])
+    Gene('root', 'root', [TextGene('a', 'Caterpillar'), TextGene('_', 'Mogel'), TextGene('b', 'Gorilla')])
   );
 
   check(
@@ -84,11 +69,7 @@ UnitTest.test('IdentifyTest', function () {
     1,
     'b',
     0,
-    Gene('root', 'root', [
-      TextGene('a', 'Caterpillar'),
-      TextGene('_', 'Mogel'),
-      TextGene('b', 'Gorilla')
-    ])
+    Gene('root', 'root', [TextGene('a', 'Caterpillar'), TextGene('_', 'Mogel'), TextGene('b', 'Gorilla')])
   );
 
   check(
@@ -98,11 +79,7 @@ UnitTest.test('IdentifyTest', function () {
     11,
     'b',
     0,
-    Gene('root', 'root', [
-      TextGene('a', 'Caterpillar'),
-      TextGene('_', 'Mogel'),
-      TextGene('b', 'Gorilla')
-    ])
+    Gene('root', 'root', [TextGene('a', 'Caterpillar'), TextGene('_', 'Mogel'), TextGene('b', 'Gorilla')])
   );
 
   check(
@@ -112,11 +89,7 @@ UnitTest.test('IdentifyTest', function () {
     11,
     'b',
     1,
-    Gene('root', 'root', [
-      TextGene('a', 'Caterpillar'),
-      TextGene('_', 'Mogel'),
-      TextGene('b', 'Gorilla')
-    ])
+    Gene('root', 'root', [TextGene('a', 'Caterpillar'), TextGene('_', 'Mogel'), TextGene('b', 'Gorilla')])
   );
 
   check(
@@ -126,10 +99,6 @@ UnitTest.test('IdentifyTest', function () {
     1,
     'a',
     11,
-    Gene('root', 'root', [
-      TextGene('a', 'Caterpillar'),
-      TextGene('_', 'Mogel'),
-      TextGene('b', 'Gorilla')
-    ])
+    Gene('root', 'root', [TextGene('a', 'Caterpillar'), TextGene('_', 'Mogel'), TextGene('b', 'Gorilla')])
   );
 });

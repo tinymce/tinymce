@@ -6,12 +6,7 @@ import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ButtonBase from '../../ui/common/ButtonBase';
 import * as SplitDropdownSchema from '../../ui/schema/SplitDropdownSchema';
-import {
-  SplitDropdownApis,
-  SplitDropdownDetail,
-  SplitDropdownSketcher,
-  SplitDropdownSpec
-} from '../../ui/types/SplitDropdownTypes';
+import { SplitDropdownApis, SplitDropdownDetail, SplitDropdownSketcher, SplitDropdownSpec } from '../../ui/types/SplitDropdownTypes';
 import { Composing } from '../behaviour/Composing';
 import { Coupling } from '../behaviour/Coupling';
 import { Focusing } from '../behaviour/Focusing';
@@ -24,10 +19,7 @@ import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<
-  SplitDropdownDetail,
-  SplitDropdownSpec
-> = (detail, components, spec, externals) => {
+const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = (detail, components, spec, externals) => {
   const switchToMenu = (sandbox: AlloyComponent) => {
     Composing.getCurrent(sandbox).each((current) => {
       Highlighting.highlightFirst(current);
@@ -37,14 +29,9 @@ const factory: CompositeSketchFactory<
 
   const action = (component: AlloyComponent) => {
     const onOpenSync = switchToMenu;
-    DropdownUtils.togglePopup(
-      detail,
-      (x) => x,
-      component,
-      externals,
-      onOpenSync,
-      DropdownUtils.HighlightOnOpen.HighlightFirst
-    ).get(Fun.noop);
+    DropdownUtils.togglePopup(detail, (x) => x, component, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(
+      Fun.noop
+    );
   };
 
   const openMenu = (comp: AlloyComponent) => {
@@ -61,11 +48,7 @@ const factory: CompositeSketchFactory<
   const buttonEvents = {
     ...AlloyEvents.derive([
       AlloyEvents.runOnAttached((component, _simulatedEvent) => {
-        const ariaDescriptor = AlloyParts.getPart(
-          component,
-          detail,
-          'aria-descriptor'
-        );
+        const ariaDescriptor = AlloyParts.getPart(component, detail, 'aria-descriptor');
         ariaDescriptor.each((descriptor) => {
           const descriptorId = Id.generate('aria');
           Attr.set(descriptor.element(), 'id', descriptorId);
@@ -141,11 +124,7 @@ const factory: CompositeSketchFactory<
   };
 };
 
-const SplitDropdown: SplitDropdownSketcher = Sketcher.composite<
-  SplitDropdownSpec,
-  SplitDropdownDetail,
-  SplitDropdownApis
->({
+const SplitDropdown: SplitDropdownSketcher = Sketcher.composite<SplitDropdownSpec, SplitDropdownDetail, SplitDropdownApis>({
   name: 'SplitDropdown',
   configFields: SplitDropdownSchema.schema(),
   partFields: SplitDropdownSchema.parts(),

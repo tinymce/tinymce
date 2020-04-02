@@ -1,15 +1,7 @@
 import { DataTransfer, setTimeout } from '@ephox/dom-globals';
 import { Arr, Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import {
-  Attr,
-  Css,
-  DomEvent,
-  Element,
-  Insert,
-  Remove,
-  Replication
-} from '@ephox/sugar';
+import { Attr, Css, DomEvent, Element, Insert, Remove, Replication } from '@ephox/sugar';
 
 import * as DataTransfers from './DataTransfers';
 
@@ -40,11 +32,7 @@ const createGhostClone = (image: DragnDropImageClone) => {
 // Fire dragDrop on that image
 // remove the image in a setTimeout( 0 )
 // http://jsfiddle.net/stevendwood/akScu/21/
-const setDragImageFromClone = (
-  transfer: DataTransfer,
-  parent: Element,
-  image: DragnDropImageClone
-) => {
+const setDragImageFromClone = (transfer: DataTransfer, parent: Element, image: DragnDropImageClone) => {
   const ghost = createGhostClone(image);
 
   Insert.append(parent, ghost);
@@ -83,11 +71,7 @@ const blockDefaultGhost = (target: Element) => {
 
 // Edge doesn't have setDragImage support and just hiding the target element will position the drop icon incorrectly so we need custom ghost
 // TODO: Get rid of this once Edge switches to Chromium we feature detect setDragImage support so once they have it should use that instead
-const setDragImageFromCloneEdgeFallback = (
-  image: DragnDropImageClone,
-  parent: Element,
-  target: Element
-) => {
+const setDragImageFromCloneEdgeFallback = (image: DragnDropImageClone, parent: Element, target: Element) => {
   const ghostState = Cell(Option.none<Element<any>>());
 
   const drag = DomEvent.bind(target, 'drag', (evt) => {
@@ -128,12 +112,7 @@ const setDragImageFromCloneEdgeFallback = (
   blockDefaultGhost(target);
 };
 
-const setImageClone = (
-  transfer: DataTransfer,
-  image: DragnDropImageClone,
-  parent: Element,
-  target: Element
-) => {
+const setImageClone = (transfer: DataTransfer, image: DragnDropImageClone, parent: Element, target: Element) => {
   if (DataTransfers.hasDragImageSupport(transfer)) {
     setDragImageFromClone(transfer, parent, image);
   } else if (platform.browser.isEdge()) {

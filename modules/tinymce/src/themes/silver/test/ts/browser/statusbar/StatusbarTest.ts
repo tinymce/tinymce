@@ -1,14 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  Log,
-  Mouse,
-  NamedChain,
-  Pipeline,
-  UiFinder,
-  Waiter
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Log, Mouse, NamedChain, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Editor } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
@@ -37,9 +27,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
         }),
         s.element('span', {
           classes: [arr.has('tox-statusbar__branding')],
-          children: [
-            s.element('a', { children: [s.text(str.is('Powered by Tiny'))] })
-          ]
+          children: [s.element('a', { children: [s.text(str.is('Powered by Tiny'))] })]
         })
       ]
     }),
@@ -65,9 +53,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
         }),
         s.element('span', {
           classes: [arr.has('tox-statusbar__branding')],
-          children: [
-            s.element('a', { children: [s.text(str.is('Powered by Tiny'))] })
-          ]
+          children: [s.element('a', { children: [s.text(str.is('Powered by Tiny'))] })]
         })
       ]
     }),
@@ -93,17 +79,13 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
         }),
         s.element('span', {
           classes: [arr.has('tox-statusbar__branding')],
-          children: [
-            s.element('a', { children: [s.text(str.is('Powered by Tiny'))] })
-          ]
+          children: [s.element('a', { children: [s.text(str.is('Powered by Tiny'))] })]
         })
       ]
     })
   ];
 
-  const cGetContainer = Chain.mapper((editor: any) =>
-    Element.fromDom(editor.editorContainer)
-  );
+  const cGetContainer = Chain.mapper((editor: any) => Element.fromDom(editor.editorContainer));
 
   const cSetContent = (content: string) =>
     Chain.mapper(function (editor: any) {
@@ -115,18 +97,11 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
       Editor.cFromSettings(config),
       NamedChain.asChain([
         NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-        NamedChain.direct(
-          'editor',
-          cSetContent('<p><strong>hello world</strong></p>'),
-          ''
-        ),
+        NamedChain.direct('editor', cSetContent('<p><strong>hello world</strong></p>'), ''),
         NamedChain.direct('editor', cGetContainer, 'editorContainer'),
         NamedChain.direct(
           'editorContainer',
-          Waiter.cTryUntil(
-            '',
-            Assertions.cAssertStructure(structureLabel, editorStructure)
-          ),
+          Waiter.cTryUntil('', Assertions.cAssertStructure(structureLabel, editorStructure)),
           'assertion'
         ),
         NamedChain.output('editor')
@@ -251,11 +226,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
           }),
           NamedChain.asChain([
             NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-            NamedChain.direct(
-              'editor',
-              cSetContent('<p><strong>hello</strong></p>'),
-              'content'
-            ),
+            NamedChain.direct('editor', cSetContent('<p><strong>hello</strong></p>'), 'content'),
             NamedChain.direct('editor', cGetContainer, 'editorContainer'),
             NamedChain.direct(
               'editorContainer',
@@ -272,9 +243,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
                           classes: [arr.has('tox-statusbar')],
                           children: [
                             s.element('div', {
-                              classes: [
-                                arr.has('tox-statusbar__text-container')
-                              ],
+                              classes: [arr.has('tox-statusbar__text-container')],
                               children: [
                                 s.element('div', {
                                   classes: [arr.has('tox-statusbar__path')],
@@ -302,11 +271,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
               ),
               'assertion1'
             ),
-            NamedChain.direct(
-              'editorContainer',
-              UiFinder.cFindIn('button[aria-label="Bold"]'),
-              'button'
-            ),
+            NamedChain.direct('editorContainer', UiFinder.cFindIn('button[aria-label="Bold"]'), 'button'),
             NamedChain.direct('button', Mouse.cTrueClick, 'click'),
             NamedChain.direct(
               'editorContainer',
@@ -323,9 +288,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
                           classes: [arr.has('tox-statusbar')],
                           children: [
                             s.element('div', {
-                              classes: [
-                                arr.has('tox-statusbar__text-container')
-                              ],
+                              classes: [arr.has('tox-statusbar__text-container')],
                               children: [
                                 s.element('div', {
                                   classes: [arr.has('tox-statusbar__path')],

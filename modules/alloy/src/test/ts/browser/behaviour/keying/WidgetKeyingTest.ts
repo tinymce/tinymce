@@ -46,10 +46,7 @@ UnitTest.asynctest('Widget Keying Test', (success, failure) => {
             background: 'green'
           }
         },
-        components: [
-          makeButton('button1', 'Button1'),
-          makeButton('button2', 'Button2')
-        ],
+        components: [makeButton('button1', 'Button1'), makeButton('button2', 'Button2')],
 
         behaviours: Behaviour.derive([
           Keying.config({
@@ -81,11 +78,7 @@ UnitTest.asynctest('Widget Keying Test', (success, failure) => {
               mode: 'cyclic'
             })
           ]),
-          components: [
-            makeWidget(['one']),
-            makeWidget(['two']),
-            makeWidget(['three'])
-          ]
+          components: [makeWidget(['one']), makeWidget(['two']), makeWidget(['three'])]
         })
       );
     },
@@ -99,42 +92,22 @@ UnitTest.asynctest('Widget Keying Test', (success, failure) => {
       Keyboard.sKeydown(doc, Keys.tab(), {}),
       FocusTools.sTryOnSelector('Focus should be on widget 2', doc, 'div.two'),
       Keyboard.sKeydown(doc, Keys.tab(), {}),
-      FocusTools.sTryOnSelector(
-        'Focus should be on widget 3',
-        doc,
-        'div.three'
-      ),
+      FocusTools.sTryOnSelector('Focus should be on widget 3', doc, 'div.three'),
 
       Keyboard.sKeydown(doc, Keys.tab(), {}),
       FocusTools.sTryOnSelector('Focus should be on widget 1', doc, 'div.one'),
 
       Keyboard.sKeydown(doc, Keys.enter(), {}),
-      FocusTools.sTryOnSelector(
-        'Focus should move inside widget to button1 inside widget',
-        doc,
-        'div.one button:contains("Button1")'
-      ),
+      FocusTools.sTryOnSelector('Focus should move inside widget to button1 inside widget', doc, 'div.one button:contains("Button1")'),
 
       Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
-      FocusTools.sTryOnSelector(
-        'Focus should move to button 2',
-        doc,
-        'button:contains("Button2")'
-      ),
+      FocusTools.sTryOnSelector('Focus should move to button 2', doc, 'button:contains("Button2")'),
 
       Keyboard.sKeydown(doc, Keys.escape(), {}),
-      FocusTools.sTryOnSelector(
-        'Focus should move back to widget',
-        doc,
-        'div.one'
-      ),
+      FocusTools.sTryOnSelector('Focus should move back to widget', doc, 'div.one'),
 
       Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
-      FocusTools.sTryOnSelector(
-        'Focus should move to widget 3',
-        doc,
-        'div.three'
-      ),
+      FocusTools.sTryOnSelector('Focus should move to widget 3', doc, 'div.three'),
 
       GuiSetup.mRemoveStyles,
       GuiSetup.mTeardownKeyLogger(body, [])

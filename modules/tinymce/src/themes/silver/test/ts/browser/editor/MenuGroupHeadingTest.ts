@@ -1,12 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  Log,
-  Logger,
-  Pipeline,
-  UiFinder
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Log, Logger, Pipeline, UiFinder } from '@ephox/agar';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -22,67 +14,48 @@ UnitTest.asynctest('Menu group heading test', (success, failure) => {
       Pipeline.async(
         {},
         Logger.ts('Check basic structure and actions', [
-          Log.stepsAsStep(
-            'TINY-2226',
-            'Menu should contain a group heading with the correct classes and text',
-            [
-              tinyUi.sClickOnToolbar(
-                'Click on styleselect toolbar button',
-                'button'
-              ),
-              tinyUi.sWaitForUi(
-                'Wait for styleselect menu',
-                '.tox-menu.tox-collection'
-              ),
-              Chain.asStep(Body.body(), [
-                UiFinder.cFindIn('.tox-menu.tox-collection'),
-                Assertions.cAssertStructure(
-                  'Container structure',
-                  ApproxStructure.build((s, str, arr) =>
-                    s.element('div', {
-                      classes: [
-                        arr.has('tox-menu'),
-                        arr.has('tox-collection'),
-                        arr.has('tox-collection--list'),
-                        arr.has('tox-selected-menu')
-                      ],
-                      children: [
-                        s.element('div', {
-                          classes: [arr.has('tox-collection__group')],
-                          children: [
-                            s.element('div', {
-                              classes: [
-                                arr.has('tox-menu-nav__js'),
-                                arr.has('tox-collection__item')
-                              ]
-                            })
-                          ]
-                        }),
-                        s.element('div', {
-                          classes: [arr.has('tox-collection__group')],
-                          children: [
-                            s.element('div', {
-                              classes: [
-                                arr.has('tox-collection__item'),
-                                arr.has('tox-collection__group-heading')
-                              ],
-                              children: [s.text(str.is('Table styles'))]
-                            }),
-                            s.element('div', {
-                              classes: [
-                                arr.has('tox-menu-nav__js'),
-                                arr.has('tox-collection__item')
-                              ]
-                            })
-                          ]
-                        })
-                      ]
-                    })
-                  )
+          Log.stepsAsStep('TINY-2226', 'Menu should contain a group heading with the correct classes and text', [
+            tinyUi.sClickOnToolbar('Click on styleselect toolbar button', 'button'),
+            tinyUi.sWaitForUi('Wait for styleselect menu', '.tox-menu.tox-collection'),
+            Chain.asStep(Body.body(), [
+              UiFinder.cFindIn('.tox-menu.tox-collection'),
+              Assertions.cAssertStructure(
+                'Container structure',
+                ApproxStructure.build((s, str, arr) =>
+                  s.element('div', {
+                    classes: [
+                      arr.has('tox-menu'),
+                      arr.has('tox-collection'),
+                      arr.has('tox-collection--list'),
+                      arr.has('tox-selected-menu')
+                    ],
+                    children: [
+                      s.element('div', {
+                        classes: [arr.has('tox-collection__group')],
+                        children: [
+                          s.element('div', {
+                            classes: [arr.has('tox-menu-nav__js'), arr.has('tox-collection__item')]
+                          })
+                        ]
+                      }),
+                      s.element('div', {
+                        classes: [arr.has('tox-collection__group')],
+                        children: [
+                          s.element('div', {
+                            classes: [arr.has('tox-collection__item'), arr.has('tox-collection__group-heading')],
+                            children: [s.text(str.is('Table styles'))]
+                          }),
+                          s.element('div', {
+                            classes: [arr.has('tox-menu-nav__js'), arr.has('tox-collection__item')]
+                          })
+                        ]
+                      })
+                    ]
+                  })
                 )
-              ])
-            ]
-          )
+              )
+            ])
+          ])
         ]),
         onSuccess,
         onFailure

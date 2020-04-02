@@ -47,8 +47,7 @@ const renderInlineDialog = <T>(
   const dialogLabelId = Id.generate('dialog-label');
   const dialogContentId = Id.generate('dialog-content');
 
-  const updateState = (_comp, incoming: DialogManager.DialogInit<T>) =>
-    Option.some(incoming);
+  const updateState = (_comp, incoming: DialogManager.DialogInit<T>) => Option.some(incoming);
 
   const memHeader = Memento.record(
     renderInlineHeader(
@@ -72,13 +71,9 @@ const renderInlineDialog = <T>(
     ) as SimpleSpec
   );
 
-  const storagedMenuButtons = SilverDialogCommon.mapMenuButtons(
-    dialogInit.internalDialog.buttons
-  );
+  const storagedMenuButtons = SilverDialogCommon.mapMenuButtons(dialogInit.internalDialog.buttons);
 
-  const objOfCells = SilverDialogCommon.extractCellsToObject(
-    storagedMenuButtons
-  );
+  const objOfCells = SilverDialogCommon.extractCellsToObject(storagedMenuButtons);
 
   const memFooter = Memento.record(
     renderInlineFooter(
@@ -126,9 +121,7 @@ const renderInlineDialog = <T>(
           return Option.some(true);
         },
         useTabstopAt: (elem) =>
-          !NavigableObject.isPseudoStop(elem) &&
-          (Node.name(elem) !== 'button' ||
-            Attr.get(elem, 'disabled') !== 'disabled')
+          !NavigableObject.isPseudoStop(elem) && (Node.name(elem) !== 'button' || Attr.get(elem, 'disabled') !== 'disabled')
       }),
       Reflecting.config({
         channel: dialogChannel,

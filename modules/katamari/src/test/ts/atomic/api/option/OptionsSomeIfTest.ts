@@ -7,12 +7,7 @@ import { UnitTest, Assert } from '@ephox/bedrock-client';
 UnitTest.test('Option.someIf: false -> none', () => {
   fc.assert(
     fc.property(fc.integer(), (n) => {
-      Assert.eq(
-        'eq',
-        Option.none(),
-        Options.someIf<number>(false, n),
-        tOption()
-      );
+      Assert.eq('eq', Option.none(), Options.someIf<number>(false, n), tOption());
     })
   );
 });
@@ -20,12 +15,7 @@ UnitTest.test('Option.someIf: false -> none', () => {
 UnitTest.test('Option.someIf: true -> some', () => {
   fc.assert(
     fc.property(fc.integer(), (n) => {
-      Assert.eq(
-        'eq',
-        Option.some(n),
-        Options.someIf<number>(true, n),
-        tOption()
-      );
+      Assert.eq('eq', Option.some(n), Options.someIf<number>(true, n), tOption());
     })
   );
 });

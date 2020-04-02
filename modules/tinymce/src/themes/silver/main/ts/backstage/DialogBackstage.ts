@@ -12,11 +12,8 @@ export interface UiFactoryBackstageForDialog {
   isDraggableModal: () => boolean;
 }
 
-const isDraggableModal = (editor: Editor) => (): boolean =>
-  Settings.isDraggableModal(editor);
+const isDraggableModal = (editor: Editor) => (): boolean => Settings.isDraggableModal(editor);
 
-export const DialogBackstage = (
-  editor: Editor
-): UiFactoryBackstageForDialog => ({
+export const DialogBackstage = (editor: Editor): UiFactoryBackstageForDialog => ({
   isDraggableModal: isDraggableModal(editor)
 });

@@ -11,9 +11,7 @@ export interface BaseMenuButtonApi {
   tooltip?: string;
   icon?: string;
   fetch: (success: SuccessCallback) => void;
-  onSetup?: (
-    api: BaseMenuButtonInstanceApi
-  ) => (api: BaseMenuButtonInstanceApi) => void;
+  onSetup?: (api: BaseMenuButtonInstanceApi) => (api: BaseMenuButtonInstanceApi) => void;
 }
 
 export interface BaseMenuButton {
@@ -21,9 +19,7 @@ export interface BaseMenuButton {
   tooltip: Option<string>;
   icon: Option<string>;
   fetch: (success: SuccessCallback) => void;
-  onSetup: (
-    api: BaseMenuButtonInstanceApi
-  ) => (api: BaseMenuButtonInstanceApi) => void;
+  onSetup: (api: BaseMenuButtonInstanceApi) => (api: BaseMenuButtonInstanceApi) => void;
 }
 
 export interface BaseMenuButtonInstanceApi {

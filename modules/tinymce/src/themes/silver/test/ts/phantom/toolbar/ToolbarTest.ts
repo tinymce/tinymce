@@ -1,30 +1,10 @@
-import {
-  ApproxStructure,
-  Assertions,
-  FocusTools,
-  GeneralSteps,
-  Keyboard,
-  Keys,
-  Logger,
-  Step
-} from '@ephox/agar';
-import {
-  AlloyComponent,
-  Behaviour,
-  Focusing,
-  GuiFactory,
-  Keying,
-  TestHelpers,
-  Toolbar
-} from '@ephox/alloy';
+import { ApproxStructure, Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Step } from '@ephox/agar';
+import { AlloyComponent, Behaviour, Focusing, GuiFactory, Keying, TestHelpers, Toolbar } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Option } from '@ephox/katamari';
 
 import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
-import {
-  renderToolbar,
-  renderToolbarGroup
-} from 'tinymce/themes/silver/ui/toolbar/CommonToolbar';
+import { renderToolbar, renderToolbarGroup } from 'tinymce/themes/silver/ui/toolbar/CommonToolbar';
 import TestProviders from '../../module/TestProviders';
 
 UnitTest.asynctest('Toolbar Test', (success, failure) => {
@@ -132,24 +112,12 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
       Logger.t(
         'General navigation of toolbar',
         GeneralSteps.sequence([
-          FocusTools.sTryOnSelector(
-            'Checking focus is on "one"',
-            doc,
-            'span:contains("one")'
-          ),
+          FocusTools.sTryOnSelector('Checking focus is on "one"', doc, 'span:contains("one")'),
           Keyboard.sKeydown(doc, Keys.right(), {}),
-          FocusTools.sTryOnSelector(
-            'Checking focus is on "two"',
-            doc,
-            'span:contains("two")'
-          ),
+          FocusTools.sTryOnSelector('Checking focus is on "two"', doc, 'span:contains("two")'),
 
           Keyboard.sKeydown(doc, Keys.tab(), {}),
-          FocusTools.sTryOnSelector(
-            'Checking focus is on "four"',
-            doc,
-            'span:contains("four")'
-          )
+          FocusTools.sTryOnSelector('Checking focus is on "four"', doc, 'span:contains("four")')
         ])
       ),
 
@@ -177,24 +145,12 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
       Logger.t(
         'General navigation of changed toolbar',
         GeneralSteps.sequence([
-          FocusTools.sTryOnSelector(
-            'Checking focus is on "A"',
-            doc,
-            'span:contains("A")'
-          ),
+          FocusTools.sTryOnSelector('Checking focus is on "A"', doc, 'span:contains("A")'),
           Keyboard.sKeydown(doc, Keys.right(), {}),
-          FocusTools.sTryOnSelector(
-            'Checking focus is on "B"',
-            doc,
-            'span:contains("B")'
-          ),
+          FocusTools.sTryOnSelector('Checking focus is on "B"', doc, 'span:contains("B")'),
 
           Keyboard.sKeydown(doc, Keys.tab(), {}),
-          FocusTools.sTryOnSelector(
-            'Checking focus is on "C"',
-            doc,
-            'span:contains("C")'
-          )
+          FocusTools.sTryOnSelector('Checking focus is on "C"', doc, 'span:contains("C")')
         ])
       ),
 

@@ -25,10 +25,7 @@ UnitTest.asynctest('CouplingTest', (success, failure) => {
                     dom: {
                       tag: 'button'
                     },
-                    action: store.adder(
-                      'clicked on coupled button of: ' +
-                        Tagger.read(primary.element()).getOr('No UID')
-                    )
+                    action: store.adder('clicked on coupled button of: ' + Tagger.read(primary.element()).getOr('No UID'))
                   });
                 }
               }
@@ -50,20 +47,13 @@ UnitTest.asynctest('CouplingTest', (success, failure) => {
         Step.sync(() => {
           const secondary1 = Coupling.getCoupled(component, 'secondary-1');
           const button1 = secondary1.element();
-          Assertions.assertEq(
-            'secondary1 should be a button',
-            'button',
-            Node.name(button1)
-          );
+          Assertions.assertEq('secondary1 should be a button', 'button', Node.name(button1));
           Attr.set(button1, 'data-test', 'marked');
 
           Assertions.assertEq(
             'secondary1 is not recreated. Should still have attribute: data-test',
             'marked',
-            Attr.get(
-              Coupling.getCoupled(component, 'secondary-1').element(),
-              'data-test'
-            )
+            Attr.get(Coupling.getCoupled(component, 'secondary-1').element(), 'data-test')
           );
         })
       ),
@@ -74,9 +64,7 @@ UnitTest.asynctest('CouplingTest', (success, failure) => {
         gui.add(secondary1);
         secondary1.element().dom().click();
       }),
-      store.sAssertEq('After clicking, store should have message', [
-        'clicked on coupled button of: primary'
-      ])
+      store.sAssertEq('After clicking, store should have message', ['clicked on coupled button of: primary'])
     ],
     () => {
       success();

@@ -17,11 +17,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 const create = function (rootNode, targetNode, normalized?) {
   const path = [];
 
-  for (
-    ;
-    targetNode && targetNode !== rootNode;
-    targetNode = targetNode.parentNode
-  ) {
+  for (; targetNode && targetNode !== rootNode; targetNode = targetNode.parentNode) {
     path.push(DOMUtils.nodeIndex(targetNode, normalized));
   }
 

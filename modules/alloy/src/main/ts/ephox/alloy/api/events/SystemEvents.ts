@@ -39,10 +39,7 @@ const tap = alloy.tap;
  * Tap event for touch device, otherwise click event
  * @deprecated
  */
-const tapOrClick = () =>
-  PlatformDetection.detect().deviceType.isTouch()
-    ? alloy.tap()
-    : NativeEvents.click();
+const tapOrClick = () => (PlatformDetection.detect().deviceType.isTouch() ? alloy.tap() : NativeEvents.click());
 
 // This event represents a longpress on the same location
 const longpress = Fun.constant('alloy.longpress');

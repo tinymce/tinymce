@@ -82,12 +82,7 @@ const schema: FieldProcessorAdt[] = [
   FieldSchema.option('toggling'),
 
   // Maybe this needs to have fewer behaviours
-  SketchBehaviours.field('itemBehaviours', [
-    Toggling,
-    Focusing,
-    Keying,
-    Representing
-  ]),
+  SketchBehaviours.field('itemBehaviours', [Toggling, Focusing, Keying, Representing]),
 
   FieldSchema.defaulted('ignoreFocus', false),
   FieldSchema.defaulted('domModification', {}),

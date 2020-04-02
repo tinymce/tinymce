@@ -1,14 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  Logger,
-  Mouse,
-  Pipeline,
-  Step,
-  UiFinder,
-  Waiter
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
@@ -29,11 +19,7 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
         {},
         Logger.ts('Check structure of font format', [
           tinyUi.sClickOnToolbar('Click on toolbar button', 'button'),
-          UiFinder.sWaitForVisible(
-            'Waiting for dialog',
-            Body.body(),
-            '[role="dialog"]'
-          ),
+          UiFinder.sWaitForVisible('Waiting for dialog', Body.body(), '[role="dialog"]'),
           Mouse.sClickOn(Body.body(), 'button:contains("Make Busy")'),
           Waiter.sTryUntil(
             'Waiting for busy structure to match expected',

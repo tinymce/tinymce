@@ -38,10 +38,7 @@ UnitTest.asynctest('Real Effects Test', (success, failure) => {
     Insert.append(container, input);
 
     const css = Element.fromTag('style');
-    Html.set(
-      css,
-      'button { border: 1px solid black; }\nbutton.test:hover { border: 1px solid white }'
-    );
+    Html.set(css, 'button { border: 1px solid black; }\nbutton.test:hover { border: 1px solid white }');
     Insert.append(head, css);
 
     const button = Element.fromTag('button');
@@ -53,10 +50,7 @@ UnitTest.asynctest('Real Effects Test', (success, failure) => {
 
   const sCheckInput = (label, expected) =>
     Chain.asStep(body, [
-      Chain.control(
-        UiFinder.cFindIn('input'),
-        Guard.addLogging(label + '\nlooking for input to check expected')
-      ),
+      Chain.control(UiFinder.cFindIn('input'), Guard.addLogging(label + '\nlooking for input to check expected')),
       UiControls.cGetValue,
       Assertions.cAssertEq(label + '\nChecking the input value', expected)
     ]);
@@ -66,17 +60,10 @@ UnitTest.asynctest('Real Effects Test', (success, failure) => {
       UiFinder.cFindIn('button.test'),
       Chain.mapper((button) => {
         const prop =
-          platform.browser.isFirefox() ||
-          platform.browser.isEdge() ||
-          platform.browser.isIE()
-            ? 'border-right-color'
-            : 'border-color';
+          platform.browser.isFirefox() || platform.browser.isEdge() || platform.browser.isIE() ? 'border-right-color' : 'border-color';
         return Css.get(button, prop);
       }),
-      Assertions.cAssertEq(
-        label + '\nChecking color of button border',
-        expected
-      )
+      Assertions.cAssertEq(label + '\nChecking color of button border', expected)
     ]);
 
   Pipeline.async(
@@ -87,21 +74,13 @@ UnitTest.asynctest('Real Effects Test', (success, failure) => {
       RealKeys.sSendKeysOn('input', [RealKeys.text('I am typing thos')]),
       sCheckInput('Initial typing', 'I am typing thos'),
       Step.wait(50),
-      RealKeys.sSendKeysOn('input', [
-        RealKeys.backspace(),
-        RealKeys.backspace()
-      ]),
+      RealKeys.sSendKeysOn('input', [RealKeys.backspace(), RealKeys.backspace()]),
       sCheckInput('After backspacing incorrect letters', 'I am typing th'),
       Step.wait(50),
       RealKeys.sSendKeysOn('input', [RealKeys.text('is')]),
       sCheckInput('After correcting "this"', 'I am typing this'),
       Step.wait(50),
-      RealKeys.sSendKeysOn('input', [
-        RealKeys.combo(
-          platform.os.isOSX() ? { metaKey: true } : { ctrlKey: true },
-          'a'
-        )
-      ]),
+      RealKeys.sSendKeysOn('input', [RealKeys.combo(platform.os.isOSX() ? { metaKey: true } : { ctrlKey: true }, 'a')]),
       Step.wait(50),
       RealClipboard.sCopy('input'),
       sCheckInput('After triggering copy', 'I am typing this'),
@@ -114,19 +93,10 @@ UnitTest.asynctest('Real Effects Test', (success, failure) => {
       sCheckInput('Post paste', 'I am typing this'),
       Step.wait(100),
       RealMouse.sMoveToOn('input'),
-      sCheckButtonBorder(
-        'Checking initial state of button border',
-        'rgb(0, 0, 0)'
-      ),
+      sCheckButtonBorder('Checking initial state of button border', 'rgb(0, 0, 0)'),
 
       RealMouse.sMoveToOn('button.test'),
-      Waiter.sTryUntil(
-        'Waiting for hovered state',
-        sCheckButtonBorder(
-          'Checking hovered state of button border',
-          'rgb(255, 255, 255)'
-        )
-      )
+      Waiter.sTryUntil('Waiting for hovered state', sCheckButtonBorder('Checking hovered state of button border', 'rgb(255, 255, 255)'))
     ],
     () => {
       Remove.remove(container);

@@ -32,9 +32,7 @@ const buildMenuItems = function (listName: string, languageValues) {
 };
 
 const getItems = function (editor) {
-  return Tools.map(Settings.getLanguages(editor).split(','), function (
-    langPair
-  ) {
+  return Tools.map(Settings.getLanguages(editor).split(','), function (langPair) {
     langPair = langPair.split('=');
 
     return {
@@ -54,14 +52,7 @@ const register = function (
 ) {
   const languageMenuItems = buildMenuItems('Language', getItems(editor));
   const startSpellchecking = function () {
-    Actions.spellcheck(
-      editor,
-      pluginUrl,
-      startedState,
-      textMatcherState,
-      lastSuggestionsState,
-      currentLanguageState
-    );
+    Actions.spellcheck(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
   };
 
   const buttonArgs: Toolbar.ToolbarToggleButtonApi = {

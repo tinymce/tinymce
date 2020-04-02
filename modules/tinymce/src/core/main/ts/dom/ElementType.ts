@@ -7,12 +7,7 @@
 
 import { Arr, Fun } from '@ephox/katamari';
 import { Node, Element } from '@ephox/sugar';
-import {
-  HTMLHeadingElement,
-  HTMLElement,
-  HTMLTableElement,
-  HTMLBRElement
-} from '@ephox/dom-globals';
+import { HTMLHeadingElement, HTMLElement, HTMLTableElement, HTMLBRElement } from '@ephox/dom-globals';
 
 const blocks = [
   'article',
@@ -130,12 +125,9 @@ const lazyLookup = function <T = HTMLElement>(items) {
 
 const isHeading = lazyLookup<HTMLHeadingElement>(headings);
 const isBlock = lazyLookup(blocks);
-const isTable = (node: Element): node is Element<HTMLTableElement> =>
-  Node.name(node) === 'table';
-const isInline = (node: Element): node is Element<HTMLElement> =>
-  Node.isElement(node) && !isBlock(node);
-const isBr = (node: Element): node is Element<HTMLBRElement> =>
-  Node.isElement(node) && Node.name(node) === 'br';
+const isTable = (node: Element): node is Element<HTMLTableElement> => Node.name(node) === 'table';
+const isInline = (node: Element): node is Element<HTMLElement> => Node.isElement(node) && !isBlock(node);
+const isBr = (node: Element): node is Element<HTMLBRElement> => Node.isElement(node) && Node.name(node) === 'br';
 const isTextBlock = lazyLookup(textBlocks);
 const isList = lazyLookup(lists);
 const isListItem = lazyLookup(listItems);

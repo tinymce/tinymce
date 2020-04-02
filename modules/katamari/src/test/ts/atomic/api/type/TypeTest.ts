@@ -7,22 +7,9 @@ import { Pprint, Testable } from '@ephox/dispute';
 const { tNumber } = Testable;
 
 UnitTest.test('Type.is*: Unit tests', () => {
-  const check = (method: (u: unknown) => boolean, methodName: string) => (
-    expected: boolean,
-    input: unknown
-  ) => {
+  const check = (method: (u: unknown) => boolean, methodName: string) => (expected: boolean, input: unknown) => {
     const actual = method(input);
-    Assert.eq(
-      () =>
-        'Expected: ' +
-        methodName +
-        '(' +
-        Pprint.render(input, Pprint.pprintAny) +
-        ') to be ' +
-        expected,
-      expected,
-      actual
-    );
+    Assert.eq(() => 'Expected: ' + methodName + '(' + Pprint.render(input, Pprint.pprintAny) + ') to be ' + expected, expected, actual);
   };
 
   // eslint-disable-next-line no-new-wrappers

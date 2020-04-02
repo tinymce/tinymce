@@ -7,12 +7,7 @@ export interface WordRange<E> {
   endOffset: () => number;
 }
 
-export const WordRange: <E>(
-  startContainer: E,
-  startOffset: number,
-  endContainer: E,
-  endOffset: number
-) => WordRange<E> = Struct.immutable(
+export const WordRange: <E>(startContainer: E, startOffset: number, endContainer: E, endOffset: number) => WordRange<E> = Struct.immutable(
   'startContainer',
   'startOffset',
   'endContainer',

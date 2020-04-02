@@ -78,11 +78,7 @@ UnitTest.test('Arr.eachr: property test', () => {
         values.push(x);
       });
       Assert.eq('Return undefined', undefined, output);
-      Assert.eq(
-        'Captures all input in reverse order',
-        Arr.reverse(arr),
-        values
-      );
+      Assert.eq('Captures all input in reverse order', Arr.reverse(arr), values);
     })
   );
 });

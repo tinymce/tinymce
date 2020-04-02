@@ -21,19 +21,12 @@ UnitTest.asynctest('StepTest', (success, failure) => {
       Logger.t('[Basic API: Step.fail]\n', Step.fail('last test'))
     ],
     () => {
-      failure(
-        'The last test should have failed, so the pipeline should have failed.\n' +
-          'Expected: Fake failure: last test'
-      );
+      failure('The last test should have failed, so the pipeline should have failed.\n' + 'Expected: Fake failure: last test');
     },
     (err) => {
       const expected = '[Basic API: Step.fail]\n\nFake failure: last test';
       try {
-        assert.eq(
-          expected,
-          err,
-          '\nFailure incorrect. \nExpected:\n' + expected + '\nActual: ' + err
-        );
+        assert.eq(expected, err, '\nFailure incorrect. \nExpected:\n' + expected + '\nActual: ' + err);
       } catch (e) {
         failure(e);
       }
@@ -52,19 +45,12 @@ UnitTest.asynctest('Step.predicate false Test', (success, failure) => {
       )
     ],
     () => {
-      failure(
-        'The last test should have failed, so the pipeline should have failed.\n' +
-          'Expected: Fake failure: last test'
-      );
+      failure('The last test should have failed, so the pipeline should have failed.\n' + 'Expected: Fake failure: last test');
     },
     (err) => {
       const expected = '[ Predicate false ]\npredicate did not succeed';
       try {
-        assert.eq(
-          expected,
-          err,
-          '\nFailure incorrect. \nExpected:\n' + expected + '\nActual: ' + err
-        );
+        assert.eq(expected, err, '\nFailure incorrect. \nExpected:\n' + expected + '\nActual: ' + err);
       } catch (e) {
         failure(e);
       }

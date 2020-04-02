@@ -7,23 +7,7 @@
 
 import { Option, Options, Result } from '@ephox/katamari';
 
-export type SizeUnit =
-  | ''
-  | 'cm'
-  | 'mm'
-  | 'in'
-  | 'px'
-  | 'pt'
-  | 'pc'
-  | 'em'
-  | 'ex'
-  | 'ch'
-  | 'rem'
-  | 'vw'
-  | 'vh'
-  | 'vmin'
-  | 'vmax'
-  | '%';
+export type SizeUnit = '' | 'cm' | 'mm' | 'in' | 'px' | 'pt' | 'pc' | 'em' | 'ex' | 'ch' | 'rem' | 'vw' | 'vh' | 'vmin' | 'vmax' | '%';
 
 export interface Size {
   value: number;
@@ -80,8 +64,7 @@ export const convertUnit = (size: Size, unit: SizeUnit): Option<number> => {
     'in': 1
   };
   type ConvertableSizeUnit = keyof typeof inInch;
-  const supported = (u: SizeUnit): u is ConvertableSizeUnit =>
-    Object.prototype.hasOwnProperty.call(inInch, u);
+  const supported = (u: SizeUnit): u is ConvertableSizeUnit => Object.prototype.hasOwnProperty.call(inInch, u);
   if (size.unit === unit) {
     return Option.some(size.value);
   } else if (supported(size.unit) && supported(unit)) {
@@ -99,16 +82,10 @@ export type SizeConversion = (input: Size) => Option<Size>;
 
 export const noSizeConversion: SizeConversion = (_input: Size) => Option.none();
 
-export const ratioSizeConversion = (
-  scale: number,
-  unit: SizeUnit
-): SizeConversion => (size: Size) =>
+export const ratioSizeConversion = (scale: number, unit: SizeUnit): SizeConversion => (size: Size) =>
   convertUnit(size, unit).map((value) => ({ value: value * scale, unit }));
 
-export const makeRatioConverter = (
-  currentFieldText: string,
-  otherFieldText: string
-): SizeConversion => {
+export const makeRatioConverter = (currentFieldText: string, otherFieldText: string): SizeConversion => {
   const cValue = parseSize(currentFieldText).toOption();
   const oValue = parseSize(otherFieldText).toOption();
   return Options.lift2(cValue, oValue, (cSize: Size, oSize: Size) =>

@@ -14,22 +14,12 @@ export interface CharItem {
   text: string;
 }
 
-const charMatches = (
-  charCode: number,
-  name: string,
-  lowerCasePattern: string
-): boolean => {
-  if (
-    Strings.contains(
-      Strings.fromCodePoint(charCode).toLowerCase(),
-      lowerCasePattern
-    )
-  ) {
+const charMatches = (charCode: number, name: string, lowerCasePattern: string): boolean => {
+  if (Strings.contains(Strings.fromCodePoint(charCode).toLowerCase(), lowerCasePattern)) {
     return true;
   } else {
     return (
-      Strings.contains(name.toLowerCase(), lowerCasePattern) ||
-      Strings.contains(name.toLowerCase().replace(/\s+/g, ''), lowerCasePattern)
+      Strings.contains(name.toLowerCase(), lowerCasePattern) || Strings.contains(name.toLowerCase().replace(/\s+/g, ''), lowerCasePattern)
     );
   }
 };

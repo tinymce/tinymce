@@ -20,11 +20,7 @@ import { Input } from 'ephox/alloy/api/ui/Input';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import {
-  AnchorSpec,
-  SelectionAnchorSpec,
-  SubmenuAnchorSpec
-} from 'ephox/alloy/positioning/mode/Anchoring';
+import { AnchorSpec, SelectionAnchorSpec, SubmenuAnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
 
 import * as DemoRenders from './forms/DemoRenders';
 
@@ -145,13 +141,7 @@ export default (): void => {
         }),
         'gamma-menu': DemoRenders.menu({
           value: 'gamma-menu',
-          items: Arr.map(
-            [
-              makeItem('gamma-1', 'Gamma-1', 'gamma-1'),
-              makeItem('gamma-2', 'Gamma-2', 'gamma-2')
-            ],
-            DemoRenders.item
-          ),
+          items: Arr.map([makeItem('gamma-1', 'Gamma-1', 'gamma-1'), makeItem('gamma-2', 'Gamma-2', 'gamma-2')], DemoRenders.item),
           textkey: 'gamma-menu'
         })
       },
@@ -174,21 +164,18 @@ export default (): void => {
         }
       },
       events: AlloyEvents.derive([
-        AlloyEvents.run<EventArgs>(
-          NativeEvents.contextmenu(),
-          (component, simulatedEvent) => {
-            simulatedEvent.event().kill();
-            InlineView.showAt(
-              inlineComp,
-              {
-                anchor: 'makeshift',
-                x: simulatedEvent.event().x(),
-                y: simulatedEvent.event().y()
-              },
-              inlineMenu
-            );
-          }
-        )
+        AlloyEvents.run<EventArgs>(NativeEvents.contextmenu(), (component, simulatedEvent) => {
+          simulatedEvent.event().kill();
+          InlineView.showAt(
+            inlineComp,
+            {
+              anchor: 'makeshift',
+              x: simulatedEvent.event().x(),
+              y: simulatedEvent.event().y()
+            },
+            inlineMenu
+          );
+        })
       ])
     })
   );
@@ -225,10 +212,7 @@ export default (): void => {
                   root: gui.element()
                 };
 
-                const anchor: AnchorSpec =
-                  Value.get(input.element()).length > 0
-                    ? nonEmptyAnchor
-                    : emptyAnchor;
+                const anchor: AnchorSpec = Value.get(input.element()).length > 0 ? nonEmptyAnchor : emptyAnchor;
                 InlineView.showAt(
                   inlineComp,
                   anchor,

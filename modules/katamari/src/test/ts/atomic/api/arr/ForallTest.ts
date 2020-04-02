@@ -29,26 +29,20 @@ UnitTest.test('forall of an empty array is true', () => {
   );
 });
 
-UnitTest.test(
-  'forall of a non-empty array with a predicate that always returns false is false',
-  () => {
-    fc.assert(
-      fc.property(fc.array(fc.integer(), 1, 30), (xs) => {
-        const output = Arr.forall(xs, Fun.constant(false));
-        Assert.eq('eq', false, output);
-      })
-    );
-  }
-);
+UnitTest.test('forall of a non-empty array with a predicate that always returns false is false', () => {
+  fc.assert(
+    fc.property(fc.array(fc.integer(), 1, 30), (xs) => {
+      const output = Arr.forall(xs, Fun.constant(false));
+      Assert.eq('eq', false, output);
+    })
+  );
+});
 
-UnitTest.test(
-  'forall of a non-empty array with a predicate that always returns true is true',
-  () => {
-    fc.assert(
-      fc.property(fc.array(fc.integer(), 1, 30), (xs) => {
-        const output = Arr.forall(xs, Fun.constant(true));
-        Assert.eq('eq', true, output);
-      })
-    );
-  }
-);
+UnitTest.test('forall of a non-empty array with a predicate that always returns true is true', () => {
+  fc.assert(
+    fc.property(fc.array(fc.integer(), 1, 30), (xs) => {
+      const output = Arr.forall(xs, Fun.constant(true));
+      Assert.eq('eq', true, output);
+    })
+  );
+});

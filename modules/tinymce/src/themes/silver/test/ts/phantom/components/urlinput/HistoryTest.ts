@@ -1,10 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 
-import {
-  addToHistory,
-  clearHistory,
-  getHistory
-} from 'tinymce/themes/silver/backstage/UrlInputHistory';
+import { addToHistory, clearHistory, getHistory } from 'tinymce/themes/silver/backstage/UrlInputHistory';
 
 UnitTest.test('HistoryTest', () => {
   const filetype = 'test';
@@ -26,13 +22,7 @@ UnitTest.test('HistoryTest', () => {
     addToHistory('http://example.com/' + i + '/', filetype);
   }
   assert.eq(
-    [
-      'http://example.com/5/',
-      'http://example.com/4/',
-      'http://example.com/3/',
-      'http://example.com/2/',
-      'http://example.com/1/'
-    ],
+    ['http://example.com/5/', 'http://example.com/4/', 'http://example.com/3/', 'http://example.com/2/', 'http://example.com/1/'],
     getHistory(filetype)
   );
   // multiple types of history can be kept independently
@@ -41,13 +31,7 @@ UnitTest.test('HistoryTest', () => {
   addToHistory('http://www.abc.net.au/news/', filetype2);
   assert.eq(['http://www.abc.net.au/news/'], getHistory(filetype2));
   assert.eq(
-    [
-      'http://example.com/5/',
-      'http://example.com/4/',
-      'http://example.com/3/',
-      'http://example.com/2/',
-      'http://example.com/1/'
-    ],
+    ['http://example.com/5/', 'http://example.com/4/', 'http://example.com/3/', 'http://example.com/2/', 'http://example.com/1/'],
     getHistory(filetype)
   );
 });

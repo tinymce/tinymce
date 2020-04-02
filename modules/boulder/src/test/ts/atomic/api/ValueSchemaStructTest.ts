@@ -4,34 +4,20 @@ import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
 
 UnitTest.test('ValueSchemaStuct Test', function () {
-  const actualVal = ValueSchema.asStructOrDie(
-    'test.struct.val',
-    ValueSchema.anyValue(),
-    10
-  );
+  const actualVal = ValueSchema.asStructOrDie('test.struct.val', ValueSchema.anyValue(), 10);
   assert.eq(10, actualVal);
 
-  const actualObj = ValueSchema.asStructOrDie(
-    'test.struct.obj',
-    ValueSchema.objOf([FieldSchema.strict('a')]),
-    {
-      a: 'alpha'
-    }
-  );
+  const actualObj = ValueSchema.asStructOrDie('test.struct.obj', ValueSchema.objOf([FieldSchema.strict('a')]), {
+    a: 'alpha'
+  });
   assert.eq('alpha', actualObj.a());
 
-  const actualArray = ValueSchema.asStructOrDie(
-    'test.struct.arr',
-    ValueSchema.arrOf(ValueSchema.anyValue()),
-    ['a', 'b', 'c']
-  );
+  const actualArray = ValueSchema.asStructOrDie('test.struct.arr', ValueSchema.arrOf(ValueSchema.anyValue()), ['a', 'b', 'c']);
   assert.eq('c', actualArray[2]);
 
   const actualArrayOfObj = ValueSchema.asStructOrDie(
     'test.struct.arrof.obj',
-    ValueSchema.arrOf(
-      ValueSchema.objOf([FieldSchema.strict('a'), FieldSchema.strict('b')])
-    ),
+    ValueSchema.arrOf(ValueSchema.objOf([FieldSchema.strict('a'), FieldSchema.strict('b')])),
     [{ a: 'alpha', b: 'Beta' }]
   );
   assert.eq('Beta', actualArrayOfObj[0].b());
@@ -39,25 +25,10 @@ UnitTest.test('ValueSchemaStuct Test', function () {
   const nestedObj = ValueSchema.asStructOrDie(
     'test.struct.nested.obj',
     ValueSchema.objOf([
-      FieldSchema.field(
-        'first',
-        'first',
-        FieldPresence.strict(),
-        ValueSchema.objOf([FieldSchema.strict('first.a')])
-      ),
+      FieldSchema.field('first', 'first', FieldPresence.strict(), ValueSchema.objOf([FieldSchema.strict('first.a')])),
       FieldSchema.strict('second'),
-      FieldSchema.field(
-        'third',
-        'third',
-        FieldPresence.defaulted('third.fallback'),
-        ValueSchema.anyValue()
-      ),
-      FieldSchema.field(
-        'fourth',
-        'fourth',
-        FieldPresence.asOption(),
-        ValueSchema.objOf([FieldSchema.strict('fourth.a')])
-      )
+      FieldSchema.field('third', 'third', FieldPresence.defaulted('third.fallback'), ValueSchema.anyValue()),
+      FieldSchema.field('fourth', 'fourth', FieldPresence.asOption(), ValueSchema.objOf([FieldSchema.strict('fourth.a')]))
     ]),
     {
       first: {
@@ -87,10 +58,7 @@ UnitTest.test('ValueSchemaStuct Test', function () {
             'aus',
             'aus',
             FieldPresence.strict(),
-            ValueSchema.objOf([
-              FieldSchema.strict('brisbane'),
-              FieldSchema.strict('sydney')
-            ])
+            ValueSchema.objOf([FieldSchema.strict('brisbane'), FieldSchema.strict('sydney')])
           )
         ])
       )

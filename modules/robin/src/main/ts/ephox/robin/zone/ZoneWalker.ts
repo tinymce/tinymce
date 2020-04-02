@@ -26,18 +26,10 @@ interface ZoneWalkerState<E> {
 }
 
 const adt: {
-  inline: <E>(
-    item: E,
-    mode: Transition,
-    lang: Option<string>
-  ) => ZoneWalkerState<E>;
+  inline: <E>(item: E, mode: Transition, lang: Option<string>) => ZoneWalkerState<E>;
   text: <E>(item: E, mode: Transition) => ZoneWalkerState<E>;
   empty: <E>(item: E, mode: Transition) => ZoneWalkerState<E>;
-  boundary: <E>(
-    item: E,
-    mode: Transition,
-    lang: Option<string>
-  ) => ZoneWalkerState<E>;
+  boundary: <E>(item: E, mode: Transition, lang: Option<string>) => ZoneWalkerState<E>;
   concluded: <E>(item: E, mode: Transition) => ZoneWalkerState<E>;
 } = Adt.generate([
   // an inline element, so use the lang to identify if a new zone is needed
@@ -51,16 +43,9 @@ const adt: {
   { concluded: ['item', 'mode'] }
 ]);
 
-const analyse = function <E, D>(
-  universe: Universe<E, D>,
-  item: E,
-  mode: Transition,
-  stopOn: (item: E, mode: Transition) => boolean
-) {
+const analyse = function <E, D>(universe: Universe<E, D>, item: E, mode: Transition, stopOn: (item: E, mode: Transition) => boolean) {
   // Find if the current item has a lang property on it.
-  const currentLang = universe.property().isElement(item)
-    ? Option.from(universe.attrs().get(item, 'lang'))
-    : Option.none<string>();
+  const currentLang = universe.property().isElement(item) ? Option.from(universe.attrs().get(item, 'lang')) : Option.none<string>();
 
   if (universe.property().isText(item)) {
     return adt.text(item, mode);
@@ -75,12 +60,7 @@ const analyse = function <E, D>(
   }
 };
 
-const takeStep = function <E, D>(
-  universe: Universe<E, D>,
-  item: E,
-  mode: Transition,
-  stopOn: (item: E, mode: Transition) => boolean
-) {
+const takeStep = function <E, D>(universe: Universe<E, D>, item: E, mode: Transition, stopOn: (item: E, mode: Transition) => boolean) {
   return Gather.walk(universe, item, mode, Gather.walkers().right()).fold(
     function () {
       return adt.concluded(item, mode);
@@ -105,36 +85,18 @@ const process = function <E, D>(
         // inline(aItem, aMode, aLang)
         const opening = aMode === Gather.advance;
         (opening ? stack.openInline : stack.closeInline)(aLang, aItem);
-        return doWalk(
-          universe,
-          aItem,
-          aMode,
-          stopOn,
-          stack,
-          transform,
-          viewport
-        );
+        return doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
       },
       function (aItem, aMode) {
         const detail = transform(universe, aItem);
         // text (aItem, aMode)
         stack.addDetail(detail);
-        return !stopOn(aItem, aMode)
-          ? doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport)
-          : Trampoline.stop();
+        return !stopOn(aItem, aMode) ? doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport) : Trampoline.stop();
       },
       function (aItem, aMode) {
         // empty (aItem, aMode)
         stack.addEmpty(aItem);
-        return doWalk(
-          universe,
-          aItem,
-          aMode,
-          stopOn,
-          stack,
-          transform,
-          viewport
-        );
+        return doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
       },
       function (aItem, aMode, aLang) {
         // Use boundary positions to assess whether we have moved out of the viewport.
@@ -145,15 +107,7 @@ const process = function <E, D>(
             // We are before the viewport, so skip
             // Only sidestep if we hadn't already tried it. Otherwise, we'll loop forever.
             if (aMode !== Gather.backtrack) {
-              return doWalk(
-                universe,
-                aItem,
-                Gather.sidestep,
-                stopOn,
-                stack,
-                transform,
-                viewport
-              );
+              return doWalk(universe, aItem, Gather.sidestep, stopOn, stack, transform, viewport);
             } else {
               return Trampoline.stop();
             }
@@ -162,15 +116,7 @@ const process = function <E, D>(
             // We are in the viewport, so process normally
             const opening = aMode === Gather.advance;
             (opening ? stack.openBoundary : stack.closeBoundary)(aLang, aItem);
-            return doWalk(
-              universe,
-              aItem,
-              aMode,
-              stopOn,
-              stack,
-              transform,
-              viewport
-            );
+            return doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
           },
           function (_belowBlock) {
             // We've gone past the end of the viewport, so stop completely
@@ -213,9 +159,7 @@ const walk = function <E, D>(
   const stopOn = function (sItem: E, sMode: Transition) {
     return (
       universe.eq(sItem, finish) &&
-      (sMode !== Gather.advance ||
-        universe.property().isText(sItem) ||
-        universe.property().children(sItem).length === 0)
+      (sMode !== Gather.advance || universe.property().isText(sItem) || universe.property().children(sItem).length === 0)
     );
   };
 
@@ -224,9 +168,7 @@ const walk = function <E, D>(
   const mode = Gather.advance;
   const initial = analyse(universe, start, mode, stopOn);
 
-  Trampoline.run(
-    process(universe, initial, stopOn, stack, transform, viewport)
-  );
+  Trampoline.run(process(universe, initial, stopOn, stack, transform, viewport));
 
   return stack.done();
 };

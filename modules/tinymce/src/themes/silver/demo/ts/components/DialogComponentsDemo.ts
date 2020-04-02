@@ -1,12 +1,4 @@
-import {
-  AlloyEvents,
-  DomFactory,
-  GuiFactory,
-  Input as AlloyInput,
-  Memento,
-  Representing,
-  SimpleSpec
-} from '@ephox/alloy';
+import { AlloyEvents, DomFactory, GuiFactory, Input as AlloyInput, Memento, Representing, SimpleSpec } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { ValueSchema } from '@ephox/boulder';
 import { console } from '@ephox/dom-globals';
@@ -22,16 +14,10 @@ import { renderGrid } from 'tinymce/themes/silver/ui/dialog/Grid';
 import { renderIFrame } from 'tinymce/themes/silver/ui/dialog/IFrame';
 import { renderSelectBox } from 'tinymce/themes/silver/ui/dialog/SelectBox';
 import { renderSizeInput } from 'tinymce/themes/silver/ui/dialog/SizeInput';
-import {
-  renderInput,
-  renderTextarea
-} from 'tinymce/themes/silver/ui/dialog/TextField';
+import { renderInput, renderTextarea } from 'tinymce/themes/silver/ui/dialog/TextField';
 import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
 import { renderButton } from 'tinymce/themes/silver/ui/general/Button';
-import {
-  UiFactoryBackstageShared,
-  UiFactoryBackstage
-} from 'tinymce/themes/silver/backstage/Backstage';
+import { UiFactoryBackstageShared, UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
 import { renderCollection } from 'tinymce/themes/silver/ui/dialog/Collection';
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
@@ -135,9 +121,7 @@ export default () => {
                   borderless: false
                 },
                 () => {
-                  console.log(
-                    'clicked on the button in the grid wrapped by a label'
-                  );
+                  console.log('clicked on the button in the grid wrapped by a label');
                 },
                 sharedBackstage.providers
               ) as any,
@@ -379,11 +363,7 @@ export default () => {
       tag: 'div',
       styles: { border: '1px solid #aaa', margin: '1em', padding: '1em' }
     },
-    components: [
-      { dom: DomFactory.fromHtml('<h3>' + label + '</h3>') },
-      { dom: { tag: 'hr' } },
-      spec
-    ]
+    components: [{ dom: DomFactory.fromHtml('<h3>' + label + '</h3>') }, { dom: { tag: 'hr' } }, spec]
   });
 
   const memCollection = Memento.record(
@@ -427,32 +407,28 @@ export default () => {
   memCollection.getOpt(everything).each((collection) => {
     Representing.setValue(
       collection,
-      ValueSchema.asRawOrDie(
-        'dialogComponentsDemo.collection',
-        Types.Collection.collectionDataProcessor,
-        [
-          {
-            value: 'a',
-            text: 'A',
-            icon: 'a'
-          },
-          {
-            value: 'b',
-            text: 'B',
-            icon: 'b'
-          },
-          {
-            value: 'c',
-            text: 'C',
-            icon: 'c'
-          },
-          {
-            value: 'd',
-            text: 'D',
-            icon: 'd'
-          }
-        ]
-      )
+      ValueSchema.asRawOrDie('dialogComponentsDemo.collection', Types.Collection.collectionDataProcessor, [
+        {
+          value: 'a',
+          text: 'A',
+          icon: 'a'
+        },
+        {
+          value: 'b',
+          text: 'B',
+          icon: 'b'
+        },
+        {
+          value: 'c',
+          text: 'C',
+          icon: 'c'
+        },
+        {
+          value: 'd',
+          text: 'D',
+          icon: 'd'
+        }
+      ])
     );
   });
 };

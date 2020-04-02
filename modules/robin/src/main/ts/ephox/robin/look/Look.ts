@@ -21,9 +21,7 @@ const predicate = function <E>(f: (e: E) => boolean) {
  */
 const selector = function (sel: string) {
   return function <E, D>(universe: Universe<E, D>, item: E) {
-    return universe.is(item, sel)
-      ? Option.some(item)
-      : universe.up().selector(item, sel);
+    return universe.is(item, sel) ? Option.some(item) : universe.up().selector(item, sel);
   };
 };
 

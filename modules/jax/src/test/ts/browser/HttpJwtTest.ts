@@ -8,12 +8,7 @@ import { HttpError } from 'ephox/jax/core/HttpError';
 
 /* tslint:disable:no-console */
 
-const expectError = (
-  label: string,
-  response: FutureResult<any, HttpError>,
-  expectedCalls: string[],
-  actualCalls: string[]
-) =>
+const expectError = (label: string, response: FutureResult<any, HttpError>, expectedCalls: string[], actualCalls: string[]) =>
   FutureResult.nu((callback) => {
     response.get((res) => {
       res.fold(
@@ -30,13 +25,7 @@ const expectError = (
     });
   });
 
-const expectValue = (
-  label: string,
-  value: any,
-  response: FutureResult<any, HttpError>,
-  expectedCalls: string[],
-  actualCalls: string[]
-) =>
+const expectValue = (label: string, value: any, response: FutureResult<any, HttpError>, expectedCalls: string[], actualCalls: string[]) =>
   FutureResult.nu((callback) => {
     response.get((res) => {
       res.fold(

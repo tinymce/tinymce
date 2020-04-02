@@ -59,19 +59,10 @@ const allAlignments: Array<keyof BubbleAlignments> = [
   'right'
 ];
 
-const nu = (
-  width: number,
-  yoffset: number,
-  classes: BubbleAlignments
-): Bubble => {
-  const getClasses = (prop: keyof BubbleAlignments): string[] =>
-    Obj.get(classes, prop).getOr([]);
+const nu = (width: number, yoffset: number, classes: BubbleAlignments): Bubble => {
+  const getClasses = (prop: keyof BubbleAlignments): string[] => Obj.get(classes, prop).getOr([]);
 
-  const make = (
-    xDelta: number,
-    yDelta: number,
-    alignmentsOn: Array<keyof BubbleAlignments>
-  ) => {
+  const make = (xDelta: number, yDelta: number, alignmentsOn: Array<keyof BubbleAlignments>) => {
     const alignmentsOff = Arr.difference(allAlignments, alignmentsOn);
     return {
       offset: () => Position(xDelta, yDelta),

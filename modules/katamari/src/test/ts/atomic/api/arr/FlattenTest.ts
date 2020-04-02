@@ -34,11 +34,7 @@ UnitTest.test('Arr.flatten: Wrap then flatten array is identity', () => {
 UnitTest.test('Mapping pure then flattening array is identity', () => {
   fc.assert(
     fc.property(fc.array(fc.integer()), (arr) => {
-      Assert.eq(
-        'map pure then flatten',
-        Arr.flatten(Arr.map(arr, Arr.pure)),
-        arr
-      );
+      Assert.eq('map pure then flatten', Arr.flatten(Arr.map(arr, Arr.pure)), arr);
     })
   );
 });

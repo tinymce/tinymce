@@ -67,11 +67,7 @@ UnitTest.asynctest('SwappingTest', (success, failure) => {
           assertClasses(label, [OMEGA_CLS()], [ALPHA_CLS()]);
         });
 
-      const testPredicates = (
-        label: string,
-        isAlpha: boolean,
-        isOmega: boolean
-      ) =>
+      const testPredicates = (label: string, isAlpha: boolean, isOmega: boolean) =>
         Step.sync(() => {
           Assertions.assertEq(label, isAlpha, Swapping.isAlpha(component));
           Assertions.assertEq(label, isOmega, Swapping.isOmega(component));

@@ -7,12 +7,7 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import { EventFormat } from '../../events/SimulatedEvent';
 import * as Snappables from '../snap/Snappables';
 import * as BlockerUtils from './BlockerUtils';
-import {
-  DraggingConfig,
-  DraggingState,
-  DragModeDeltas,
-  DragStartData
-} from './DraggingTypes';
+import { DraggingConfig, DraggingState, DragModeDeltas, DragStartData } from './DraggingTypes';
 import * as DragMovement from './DragMovement';
 
 type EventsFunc<C extends DraggingConfig<E>, A extends EventFormat, E> = (
@@ -21,10 +16,7 @@ type EventsFunc<C extends DraggingConfig<E>, A extends EventFormat, E> = (
   updateStartState: (comp: AlloyComponent) => void
 ) => Array<AlloyEvents.AlloyEventKeyAndHandler<A>>;
 
-const calcStartData = <E>(
-  dragConfig: DraggingConfig<E>,
-  comp: AlloyComponent
-): DragStartData => ({
+const calcStartData = <E>(dragConfig: DraggingConfig<E>, comp: AlloyComponent): DragStartData => ({
   bounds: dragConfig.getBounds(),
   height: Height.getOuter(comp.element()),
   width: Width.getOuter(comp.element())
@@ -38,20 +30,13 @@ const move = <E>(
   event: EventArgs
 ) => {
   const delta = dragState.update(dragMode, event);
-  const dragStartData = dragState
-    .getStartData()
-    .getOrThunk(() => calcStartData(dragConfig, component));
+  const dragStartData = dragState.getStartData().getOrThunk(() => calcStartData(dragConfig, component));
   delta.each((dlt) => {
     DragMovement.dragBy(component, dragConfig, dragStartData, dlt);
   });
 };
 
-const stop = <E>(
-  component: AlloyComponent,
-  blocker: Option<AlloyComponent>,
-  dragConfig: DraggingConfig<E>,
-  dragState: DraggingState
-) => {
+const stop = <E>(component: AlloyComponent, blocker: Option<AlloyComponent>, dragConfig: DraggingConfig<E>, dragState: DraggingState) => {
   blocker.each(BlockerUtils.discard);
   dragConfig.snaps.each((snapInfo) => {
     Snappables.stopDrag(component, snapInfo);
@@ -61,9 +46,7 @@ const stop = <E>(
   dragConfig.onDrop(component, target);
 };
 
-const handlers = <C extends DraggingConfig<E>, A extends EventFormat, E>(
-  events: EventsFunc<C, A, E>
-) => (
+const handlers = <C extends DraggingConfig<E>, A extends EventFormat, E>(events: EventsFunc<C, A, E>) => (
   dragConfig: C,
   dragState: DraggingState
 ): AlloyEvents.AlloyEventRecord => {

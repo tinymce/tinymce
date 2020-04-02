@@ -9,10 +9,7 @@ import { Node as DomNode } from '@ephox/dom-globals';
  * a) path: Generates a list of child indices from the ancestor to the descendant
  * b) follow: Follows a path of child indices from an ancestor to reach a descendant
  */
-const up = function (
-  descendant: Element<DomNode>,
-  stopper: (e: Element<DomNode>) => boolean
-): Option<number[]> {
+const up = function (descendant: Element<DomNode>, stopper: (e: Element<DomNode>) => boolean): Option<number[]> {
   if (stopper(descendant)) {
     return Option.some([]);
   }
@@ -25,20 +22,12 @@ const up = function (
   });
 };
 
-const path = function (
-  ancestor: Element<DomNode>,
-  descendant: Element<DomNode>
-) {
+const path = function (ancestor: Element<DomNode>, descendant: Element<DomNode>) {
   const stopper = Fun.curry(Compare.eq, ancestor);
-  return Compare.eq(ancestor, descendant)
-    ? Option.some<number[]>([])
-    : up(descendant, stopper);
+  return Compare.eq(ancestor, descendant) ? Option.some<number[]>([]) : up(descendant, stopper);
 };
 
-const follow = function (
-  ancestor: Element<DomNode>,
-  descendantPath: number[]
-): Option<Element<DomNode>> {
+const follow = function (ancestor: Element<DomNode>, descendantPath: number[]): Option<Element<DomNode>> {
   if (descendantPath.length === 0) {
     return Option.some(ancestor);
   } else {

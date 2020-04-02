@@ -14,9 +14,7 @@ UnitTest.asynctest('ImageSizeTest', function (success, failure) {
   canvas.width = 320;
   canvas.height = 200;
 
-  const uriToBlobPromise = Conversions.uriToBlob(canvas.toDataURL()) as Promise<
-    Blob
-  >;
+  const uriToBlobPromise = Conversions.uriToBlob(canvas.toDataURL()) as Promise<Blob>;
   uriToBlobPromise.then(function (blob) {
     Conversions.blobToImage(blob)
       .then(function (image) {

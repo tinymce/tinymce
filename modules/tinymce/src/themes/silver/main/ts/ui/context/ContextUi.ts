@@ -39,10 +39,7 @@ export interface ChangeSlideEvent extends CustomEvent {
 
 const resizingClass = 'tox-pop--resizing';
 
-const renderContextToolbar = (spec: {
-  onEscape: () => Option<boolean>;
-  sink: AlloyComponent;
-}) => {
+const renderContextToolbar = (spec: { onEscape: () => Option<boolean>; sink: AlloyComponent }) => {
   const stack = Cell([]);
 
   return InlineView.sketch({
@@ -65,13 +62,10 @@ const renderContextToolbar = (spec: {
 
     inlineBehaviours: Behaviour.derive([
       AddEventsBehaviour.config('context-toolbar-events', [
-        AlloyEvents.runOnSource<EventArgs>(
-          NativeEvents.transitionend(),
-          (comp, _se) => {
-            Class.remove(comp.element(), resizingClass);
-            Css.remove(comp.element(), 'width');
-          }
-        ),
+        AlloyEvents.runOnSource<EventArgs>(NativeEvents.transitionend(), (comp, _se) => {
+          Class.remove(comp.element(), resizingClass);
+          Css.remove(comp.element(), 'width');
+        }),
 
         AlloyEvents.run<ChangeSlideEvent>(changeSlideEvent, (comp, se) => {
           // If it was partially through a slide, clear that and measure afresh

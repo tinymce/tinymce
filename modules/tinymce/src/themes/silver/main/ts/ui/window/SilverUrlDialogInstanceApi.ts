@@ -9,16 +9,10 @@ import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Type } from '@ephox/katamari';
 
-import {
-  formBlockEvent,
-  formCloseEvent,
-  formUnblockEvent
-} from '../general/FormEvents';
+import { formBlockEvent, formCloseEvent, formUnblockEvent } from '../general/FormEvents';
 import { bodySendMessageChannel } from '../window/DialogChannels';
 
-const getUrlDialogApi = (
-  root: AlloyComponent
-): Types.UrlDialog.UrlDialogInstanceApi => {
+const getUrlDialogApi = (root: AlloyComponent): Types.UrlDialog.UrlDialogInstanceApi => {
   const withRoot = <T>(f: (r: AlloyComponent) => void): void => {
     if (root.getSystem().isConnected()) {
       f(root);
@@ -27,9 +21,7 @@ const getUrlDialogApi = (
 
   const block = (message: string) => {
     if (!Type.isString(message)) {
-      throw new Error(
-        'The urlDialogInstanceAPI.block function should be passed a blocking message of type string as an argument'
-      );
+      throw new Error('The urlDialogInstanceAPI.block function should be passed a blocking message of type string as an argument');
     }
     withRoot((root) => {
       AlloyTriggers.emitWith(root, formBlockEvent, { message });

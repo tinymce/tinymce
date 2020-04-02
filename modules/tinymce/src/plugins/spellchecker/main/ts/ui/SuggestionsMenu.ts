@@ -46,15 +46,7 @@ const getSuggestions = (
     items.push({
       text: 'Add to dictionary',
       onAction: () => {
-        Actions.addToDictionary(
-          editor,
-          pluginUrl,
-          startedState,
-          textMatcherState,
-          currentLanguageState,
-          word,
-          spans
-        );
+        Actions.addToDictionary(editor, pluginUrl, startedState, textMatcherState, currentLanguageState, word, spans);
       }
     });
   }
@@ -73,14 +65,7 @@ const getSuggestions = (
     {
       text: 'Ignore all',
       onAction: () => {
-        Actions.ignoreWord(
-          editor,
-          startedState,
-          textMatcherState,
-          word,
-          spans,
-          ignoreAll
-        );
+        Actions.ignoreWord(editor, startedState, textMatcherState, word, spans, ignoreAll);
       }
     }
   ]);
@@ -98,10 +83,7 @@ const setup = function (
   const update = (element: HTMLElement) => {
     const target = element;
     if (target.className === 'mce-spellchecker-word') {
-      const spans = Actions.findSpansByIndex(
-        editor,
-        Actions.getElmIndex(target)
-      );
+      const spans = Actions.findSpansByIndex(editor, Actions.getElmIndex(target));
       if (spans.length > 0) {
         const rng = editor.dom.createRng();
         rng.setStartBefore(spans[0]);

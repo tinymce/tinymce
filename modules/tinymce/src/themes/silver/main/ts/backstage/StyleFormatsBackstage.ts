@@ -26,9 +26,7 @@ export const init = (editor: Editor) => {
 
   const flatten = (fmt): string[] => {
     const subs = fmt.items;
-    return subs !== undefined && subs.length > 0
-      ? Arr.bind(subs, flatten)
-      : [fmt.format];
+    return subs !== undefined && subs.length > 0 ? Arr.bind(subs, flatten) : [fmt.format];
   };
 
   const settingsFormats = Cell<FormatItem[]>([]);
@@ -41,24 +39,14 @@ export const init = (editor: Editor) => {
 
   editor.on('PreInit', (_e) => {
     const formats = getStyleFormats(editor);
-    const enriched = FormatRegister.register(
-      editor,
-      formats,
-      isSelectedFor,
-      getPreviewFor
-    );
+    const enriched = FormatRegister.register(editor, formats, isSelectedFor, getPreviewFor);
     settingsFormats.set(enriched);
     settingsFlattenedFormats.set(Arr.bind(enriched, flatten));
   });
 
   editor.on('addStyleModifications', (e) => {
     // Is there going to be an order issue here?
-    const modifications = FormatRegister.register(
-      editor,
-      e.items,
-      isSelectedFor,
-      getPreviewFor
-    );
+    const modifications = FormatRegister.register(editor, e.items, isSelectedFor, getPreviewFor);
     eventsFormats.set(modifications);
     replaceSettings.set(e.replace);
 
@@ -72,9 +60,7 @@ export const init = (editor: Editor) => {
   };
 
   const getFlattenedKeys = () => {
-    const fromSettings = replaceSettings.get()
-      ? []
-      : settingsFlattenedFormats.get();
+    const fromSettings = replaceSettings.get() ? [] : settingsFlattenedFormats.get();
     const fromEvents = eventsFlattenedFormats.get();
     return fromSettings.concat(fromEvents);
   };

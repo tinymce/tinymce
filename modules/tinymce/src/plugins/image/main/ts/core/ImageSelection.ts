@@ -7,22 +7,13 @@
 
 import { HTMLElement, Node } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
-import {
-  create,
-  defaultData,
-  ImageData,
-  isFigure,
-  read,
-  write
-} from './ImageData';
+import { create, defaultData, ImageData, isFigure, read, write } from './ImageData';
 import * as Utils from './Utils';
 
 const normalizeCss = (editor: Editor, cssText: string): string => {
   const css = editor.dom.styles.parse(cssText);
   const mergedCss = Utils.mergeMargins(css);
-  const compressed = editor.dom.styles.parse(
-    editor.dom.styles.serialize(mergedCss)
-  );
+  const compressed = editor.dom.styles.parse(editor.dom.styles.serialize(mergedCss));
   return editor.dom.styles.serialize(compressed);
 };
 
@@ -34,10 +25,7 @@ const getSelectedImage = (editor: Editor): HTMLElement => {
     return editor.dom.select('img', figureElm)[0];
   }
 
-  if (
-    imgElm &&
-    (imgElm.nodeName !== 'IMG' || Utils.isPlaceholderImage(imgElm))
-  ) {
+  if (imgElm && (imgElm.nodeName !== 'IMG' || Utils.isPlaceholderImage(imgElm))) {
     return null;
   }
 
@@ -62,9 +50,7 @@ const splitTextBlock = (editor: Editor, figure: HTMLElement) => {
 
 const readImageDataFromSelection = (editor: Editor): ImageData => {
   const image = getSelectedImage(editor);
-  return image
-    ? read((css) => normalizeCss(editor, css), image)
-    : defaultData();
+  return image ? read((css) => normalizeCss(editor, css), image) : defaultData();
 };
 
 const insertImageAtCaret = (editor: Editor, data: ImageData) => {
@@ -91,9 +77,7 @@ const syncSrcAttr = (editor: Editor, image: HTMLElement) => {
 
 const deleteImage = (editor: Editor, image: HTMLElement) => {
   if (image) {
-    const elm = editor.dom.is(image.parentNode, 'figure.image')
-      ? image.parentNode
-      : image;
+    const elm = editor.dom.is(image.parentNode, 'figure.image') ? image.parentNode : image;
 
     editor.dom.remove(elm);
     editor.focus();
@@ -122,10 +106,7 @@ const writeImageDataToSelection = (editor: Editor, data: ImageData) => {
   }
 };
 
-const insertOrUpdateImage = (
-  editor: Editor,
-  partialData: Partial<ImageData>
-) => {
+const insertOrUpdateImage = (editor: Editor, partialData: Partial<ImageData>) => {
   const image = getSelectedImage(editor);
   if (image) {
     const selectedImageData = read((css) => normalizeCss(editor, css), image);

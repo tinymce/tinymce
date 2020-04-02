@@ -17,17 +17,10 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
   const compareTabNames = (expectedNames: string[]) =>
     Chain.op((editor: Editor) => {
       editor.execCommand('mceHelp');
-      const actualTabs = UiFinder.findAllIn(
-        doc,
-        'div.tox-dialog__body-nav-item.tox-tab'
-      );
+      const actualTabs = UiFinder.findAllIn(doc, 'div.tox-dialog__body-nav-item.tox-tab');
       const actualNames: string[] = Arr.map(actualTabs, (tab) => Html.get(tab));
       Arr.map(expectedNames, (x, i) =>
-        assert.eq(
-          x,
-          actualNames[i],
-          `Tab names did not match. Expected: ${expectedNames}. Actual: ${actualNames}`
-        )
+        assert.eq(x, actualNames[i], `Tab names did not match. Expected: ${expectedNames}. Actual: ${actualNames}`)
       );
     });
 
@@ -118,13 +111,7 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
               });
             }
           },
-          [
-            'Handy Shortcuts',
-            'Keyboard Navigation',
-            'Plugins',
-            'Extra1',
-            'Version'
-          ]
+          ['Handy Shortcuts', 'Keyboard Navigation', 'Plugins', 'Extra1', 'Version']
         )
       ),
 
@@ -179,8 +166,7 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
                   items: [
                     {
                       type: 'htmlpanel',
-                      html:
-                        '<p>This is yet another extra tab, but this one should not render</p>'
+                      html: '<p>This is yet another extra tab, but this one should not render</p>'
                     }
                   ]
                 });

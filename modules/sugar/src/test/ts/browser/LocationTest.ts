@@ -24,10 +24,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
 
   const asserteq = function (expected, actual, message) {
     // I wish assert.eq printed expected and actual on failure
-    const m =
-      message === undefined
-        ? undefined
-        : 'expected ' + expected + ', was ' + actual + ': ' + message;
+    const m = message === undefined ? undefined : 'expected ' + expected + ', was ' + actual + ': ' + message;
     assert.eq(expected, actual, m);
   };
 
@@ -70,8 +67,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     Insert.append(Body.body(), iframe);
   };
 
-  const ifr =
-    '<iframe src="/project/@ephox/sugar/src/test/data/locationTest.html"></iframe>';
+  const ifr = '<iframe src="/project/@ephox/sugar/src/test/data/locationTest.html"></iframe>';
 
   testOne(
     ifr,
@@ -140,8 +136,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     assert.eq(0, pos.left());
     assert.eq(
       true,
-      (scrollBarWidth > 5 && scrollBarWidth < 50) ||
-        (platform.os.isOSX() && scrollBarWidth === 0),
+      (scrollBarWidth > 5 && scrollBarWidth < 50) || (platform.os.isOSX() && scrollBarWidth === 0),
       'scroll bar width, got=' + scrollBarWidth
     );
   };
@@ -437,18 +432,12 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     // the difference between table.getBoundingClientRect() and cell.getBoundingClientRect() is correct.
     // I don't want to make every browser pay for Chrome's mistake in a scenario we don't need for TBIO, so we're living with it.
     // Firefox 71 has also started behaving the same as chrome
-    if (
-      platform.browser.isChrome() ||
-      (platform.browser.isFirefox() && platform.browser.version.major >= 71)
-    ) {
+    if (platform.browser.isChrome() || (platform.browser.isFirefox() && platform.browser.version.major >= 71)) {
       const chromeDifference = -2;
       Arr.each(tests, function (t) {
         if (t.id !== 'table-1') {
           // tslint:disable-next-line:no-console
-          console.log(
-            '> Note - fix for Chrome bug - subtracting from relative top and left: ',
-            chromeDifference
-          );
+          console.log('> Note - fix for Chrome bug - subtracting from relative top and left: ', chromeDifference);
           t.relative.top += chromeDifference;
           t.relative.left.ltr += chromeDifference;
           t.relative.left.rtl += chromeDifference;
@@ -494,10 +483,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     ];
 
     // relative scroll
-    const leftScroll =
-      doc.rtl && (platform.browser.isIE() || platform.browser.isEdge())
-        ? -1000
-        : 1000; // IE has RTL -ve direction from left to right
+    const leftScroll = doc.rtl && (platform.browser.isIE() || platform.browser.isEdge()) ? -1000 : 1000; // IE has RTL -ve direction from left to right
     const topScroll = 2000;
     // GUESS: 1px differences from JQuery is due to the 1px margin on the body
     const withScroll = [
@@ -584,25 +570,13 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
 
       let pos = Location.absolute(div);
       asserteq(t.absolute.top, pos.top(), '.absolute().top  ' + t.id);
-      asserteq(
-        t.absolute.left[doc.dir],
-        pos.left(),
-        '.absolute().left.' + doc.dir + ' ' + t.id
-      );
+      asserteq(t.absolute.left[doc.dir], pos.left(), '.absolute().left.' + doc.dir + ' ' + t.id);
       pos = Location.relative(div);
       asserteq(t.relative.top, pos.top(), '.relative().top  ' + t.id);
-      asserteq(
-        t.relative.left[doc.dir],
-        pos.left(),
-        '.relative().left.' + doc.dir + ' ' + t.id
-      );
+      asserteq(t.relative.left[doc.dir], pos.left(), '.relative().left.' + doc.dir + ' ' + t.id);
       pos = Location.viewport(div);
       asserteq(t.viewport.top, pos.top(), '.viewport().top  ' + t.id);
-      asserteq(
-        t.viewport.left[doc.dir],
-        pos.left(),
-        '.viewport().left.' + doc.dir + ' ' + t.id
-      );
+      asserteq(t.viewport.left[doc.dir], pos.left(), '.viewport().left.' + doc.dir + ' ' + t.id);
     });
   };
 });

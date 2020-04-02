@@ -1,16 +1,5 @@
 import { Arr, Option } from '@ephox/katamari';
-import {
-  Class,
-  Css,
-  Height,
-  Insert,
-  Location,
-  Remove,
-  SelectorFilter,
-  Width,
-  Element,
-  Position
-} from '@ephox/sugar';
+import { Class, Css, Height, Insert, Location, Remove, SelectorFilter, Width, Element, Position } from '@ephox/sugar';
 import * as Blocks from '../lookup/Blocks';
 import * as DetailsList from '../model/DetailsList';
 import { Warehouse } from '../model/Warehouse';
@@ -29,11 +18,7 @@ const destroy = function (wire: ResizeWire) {
   Arr.each(previous, Remove.remove);
 };
 
-const drawBar = function <T>(
-  wire: ResizeWire,
-  positions: Option<T>[],
-  create: (origin: Position, info: T) => Element
-) {
+const drawBar = function <T>(wire: ResizeWire, positions: Option<T>[], create: (origin: Position, info: T) => Element) {
   const origin = wire.origin();
   Arr.each(positions, function (cpOption) {
     cpOption.each(function (cp) {
@@ -44,39 +29,17 @@ const drawBar = function <T>(
   });
 };
 
-const refreshCol = function (
-  wire: ResizeWire,
-  colPositions: Option<ColInfo>[],
-  position: Position,
-  tableHeight: number
-) {
+const refreshCol = function (wire: ResizeWire, colPositions: Option<ColInfo>[], position: Position, tableHeight: number) {
   drawBar(wire, colPositions, function (origin, cp) {
-    const colBar = Bar.col(
-      cp.col,
-      cp.x - origin.left(),
-      position.top() - origin.top(),
-      BAR_THICKNESS,
-      tableHeight
-    );
+    const colBar = Bar.col(cp.col, cp.x - origin.left(), position.top() - origin.top(), BAR_THICKNESS, tableHeight);
     Class.add(colBar, resizeColBar);
     return colBar;
   });
 };
 
-const refreshRow = function (
-  wire: ResizeWire,
-  rowPositions: Option<RowInfo>[],
-  position: Position,
-  tableWidth: number
-) {
+const refreshRow = function (wire: ResizeWire, rowPositions: Option<RowInfo>[], position: Position, tableWidth: number) {
   drawBar(wire, rowPositions, function (origin, cp) {
-    const rowBar = Bar.row(
-      cp.row,
-      position.left() - origin.left(),
-      cp.y - origin.top(),
-      tableWidth,
-      BAR_THICKNESS
-    );
+    const rowBar = Bar.row(cp.row, position.left() - origin.left(), cp.y - origin.top(), tableWidth, BAR_THICKNESS);
     Class.add(rowBar, resizeRowBar);
     return rowBar;
   });
@@ -98,12 +61,7 @@ const refreshGrid = function (
   refreshCol(wire, colPositions, position, Height.getOuter(table));
 };
 
-const refresh = function (
-  wire: ResizeWire,
-  table: Element,
-  hdirection: BarPositions<RowInfo>,
-  vdirection: BarPositions<ColInfo>
-) {
+const refresh = function (wire: ResizeWire, table: Element, hdirection: BarPositions<RowInfo>, vdirection: BarPositions<ColInfo>) {
   destroy(wire);
 
   const list = DetailsList.fromTable(table);
@@ -114,10 +72,7 @@ const refresh = function (
   refreshGrid(wire, table, rows, cols, hdirection, vdirection);
 };
 
-const each = function (
-  wire: ResizeWire,
-  f: (bar: Element, idx: number) => void
-) {
+const each = function (wire: ResizeWire, f: (bar: Element, idx: number) => void) {
   const bars = SelectorFilter.descendants(wire.parent(), '.' + resizeBar);
   Arr.each(bars, f);
 };

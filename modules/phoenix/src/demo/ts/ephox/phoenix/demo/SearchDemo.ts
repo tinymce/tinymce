@@ -1,15 +1,6 @@
 import { document } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
-import {
-  Attr,
-  Class,
-  Css,
-  DomEvent,
-  Element,
-  Insert,
-  InsertAll,
-  Value
-} from '@ephox/sugar';
+import { Attr, Class, Css, DomEvent, Element, Insert, InsertAll, Value } from '@ephox/sugar';
 import * as DomSearch from 'ephox/phoenix/api/dom/DomSearch';
 import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
 import { SearchResult } from 'ephox/phoenix/api/data/Types';
@@ -77,9 +68,5 @@ const highlight = function (matches: SearchResult<Element>[]) {
 
 InsertAll.append(container, [input, button, buttonWord, content]);
 
-const ephoxUi = Element.fromDom(
-  Option.from(document.getElementById('ephox-ui')).getOrDie(
-    'No element with id "ephox-id"'
-  )
-);
+const ephoxUi = Element.fromDom(Option.from(document.getElementById('ephox-ui')).getOrDie('No element with id "ephox-id"'));
 Insert.append(ephoxUi, container);

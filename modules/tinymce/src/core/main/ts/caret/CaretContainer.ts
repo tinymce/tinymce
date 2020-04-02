@@ -29,12 +29,9 @@ const isCaretContainerBlock = (node: Node): boolean => {
   return isElement(node) && node.hasAttribute('data-mce-caret');
 };
 
-const isCaretContainerInline = (node: Node) =>
-  isText(node) && Zwsp.isZwsp(node.data);
-const isCaretContainer = (node: Node): boolean =>
-  isCaretContainerBlock(node) || isCaretContainerInline(node);
-const hasContent = (node: Node): boolean =>
-  node.firstChild !== node.lastChild || !NodeType.isBr(node.firstChild);
+const isCaretContainerInline = (node: Node) => isText(node) && Zwsp.isZwsp(node.data);
+const isCaretContainer = (node: Node): boolean => isCaretContainerBlock(node) || isCaretContainerInline(node);
+const hasContent = (node: Node): boolean => node.firstChild !== node.lastChild || !NodeType.isBr(node.firstChild);
 
 const insertInline = (node: Node, before: boolean): Node => {
   let doc, sibling, textNode, parentNode;
@@ -110,10 +107,7 @@ const isBeforeInline = (pos: CaretPosition): boolean => {
   }
 
   // The text nodes may not be normalized, so check the current node and the previous one
-  return (
-    container.data.charAt(pos.offset()) === Zwsp.ZWSP ||
-    (pos.isAtStart() && isCaretContainerInline(container.previousSibling))
-  );
+  return container.data.charAt(pos.offset()) === Zwsp.ZWSP || (pos.isAtStart() && isCaretContainerInline(container.previousSibling));
 };
 
 const isAfterInline = (pos: CaretPosition): boolean => {
@@ -123,10 +117,7 @@ const isAfterInline = (pos: CaretPosition): boolean => {
   }
 
   // The text nodes may not be normalized, so check the current node and the next one
-  return (
-    container.data.charAt(pos.offset() - 1) === Zwsp.ZWSP ||
-    (pos.isAtEnd() && isCaretContainerInline(container.nextSibling))
-  );
+  return container.data.charAt(pos.offset() - 1) === Zwsp.ZWSP || (pos.isAtEnd() && isCaretContainerInline(container.nextSibling));
 };
 
 const createBogusBr = (): Element => {
@@ -158,10 +149,8 @@ const insertBlock = (blockName: string, node: Node, before: boolean): Node => {
   return blockNode;
 };
 
-const startsWithCaretContainer = (node: Node): boolean =>
-  isText(node) && node.data[0] === Zwsp.ZWSP;
-const endsWithCaretContainer = (node: Node): boolean =>
-  isText(node) && node.data[node.data.length - 1] === Zwsp.ZWSP;
+const startsWithCaretContainer = (node: Node): boolean => isText(node) && node.data[0] === Zwsp.ZWSP;
+const endsWithCaretContainer = (node: Node): boolean => isText(node) && node.data[node.data.length - 1] === Zwsp.ZWSP;
 
 const trimBogusBr = (elm: Element): void => {
   const brs = elm.getElementsByTagName('br');
@@ -184,8 +173,7 @@ const showCaretContainerBlock = (caretContainer: Element): Element => {
   return null;
 };
 
-const isRangeInCaretContainerBlock = (range: Range): boolean =>
-  isCaretContainerBlock(range.startContainer);
+const isRangeInCaretContainerBlock = (range: Range): boolean => isCaretContainerBlock(range.startContainer);
 
 export {
   isCaretContainer,

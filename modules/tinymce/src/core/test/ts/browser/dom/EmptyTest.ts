@@ -3,19 +3,12 @@ import { Element } from '@ephox/sugar';
 import * as Empty from 'tinymce/core/dom/Empty';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.dom.EmptyTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.dom.EmptyTest', function (success, failure) {
   const sTestEmpty = function (html, expected) {
     return Step.sync(function () {
       const elm = Element.fromHtml(html);
       const expectedLabel = expected ? 'empty' : 'not empty';
-      Assertions.assertEq(
-        html + ' should be treated as ' + expectedLabel,
-        expected,
-        Empty.isEmpty(elm)
-      );
+      Assertions.assertEq(html + ' should be treated as ' + expectedLabel, expected, Empty.isEmpty(elm));
     });
   };
 
@@ -37,10 +30,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.EmptyTest', function (
           sTestEmpty('<p><br></p>', true),
           sTestEmpty('<p><i><b></b></i><b><i></i></b></p>', true),
           sTestEmpty('<span></span>', true),
-          sTestEmpty(
-            '<p><i><b></b></i><b><i data-mce-bogus="all"><img src="#"></i></b></p>',
-            true
-          ),
+          sTestEmpty('<p><i><b></b></i><b><i data-mce-bogus="all"><img src="#"></i></b></p>', true),
           sTestEmpty('<p><br data-mce-bogus="1"><br></p>', true)
         ])
       ),

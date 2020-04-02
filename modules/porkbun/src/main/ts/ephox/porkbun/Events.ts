@@ -3,9 +3,7 @@ import { Event, Bindable } from './Event';
 
 /** :: {name : Event} -> Events */
 const create = function (typeDefs: Record<string, Event>) {
-  const registry: Record<string, Bindable<any>> = Obj.map(typeDefs, function (
-    event
-  ) {
+  const registry: Record<string, Bindable<any>> = Obj.map(typeDefs, function (event) {
     return {
       bind: event.bind,
       unbind: event.unbind

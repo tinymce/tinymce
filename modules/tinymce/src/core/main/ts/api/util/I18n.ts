@@ -26,19 +26,16 @@ export type TranslatedString = string;
 
 export type TranslateIfNeeded = Untranslated | TranslatedString;
 
-const isRaw = (str: any): str is RawString =>
-  Type.isObject(str) && Obj.has(str, 'raw');
+const isRaw = (str: any): str is RawString => Type.isObject(str) && Obj.has(str, 'raw');
 
-const isTokenised = (str: any): str is TokenisedString =>
-  Type.isArray(str) && str.length > 1;
+const isTokenised = (str: any): str is TokenisedString => Type.isArray(str) && str.length > 1;
 
 const data: Record<string, Record<string, string>> = {};
 const currentCode = Cell('en');
 
 const getLanguageData = () => Obj.get(data, currentCode.get());
 
-const getData = (): Record<string, Record<string, string>> =>
-  Obj.map(data, (value) => ({ ...value }));
+const getData = (): Record<string, Record<string, string>> => Obj.map(data, (value) => ({ ...value }));
 
 /**
  * Sets the current language code.
@@ -111,15 +108,12 @@ const translate = (text: Untranslated): TranslatedString => {
     return !isEmpty(obj) ? '' + obj : '';
   };
 
-  const isEmpty = (text: Untranslated) =>
-    text === '' || text === null || text === undefined;
+  const isEmpty = (text: Untranslated) => text === '' || text === null || text === undefined;
 
   const getLangData = (text: Untranslated) => {
     // make sure we work on a string and return a string
     const textstr = toString(text);
-    return Obj.get(langData, textstr.toLowerCase())
-      .map(toString)
-      .getOr(textstr);
+    return Obj.get(langData, textstr.toLowerCase()).map(toString).getOr(textstr);
   };
 
   const removeContext = (str: string) => str.replace(/{context:\w+}$/, '');
@@ -141,9 +135,7 @@ const translate = (text: Untranslated): TranslatedString => {
   // Tokenised {translations}
   if (isTokenised(text)) {
     const values = text.slice(1);
-    const substitued = getLangData(text[0]).replace(/\{([0-9]+)\}/g, ($1, $2) =>
-      Obj.has(values, $2) ? toString(values[$2]) : $1
-    );
+    const substitued = getLangData(text[0]).replace(/\{([0-9]+)\}/g, ($1, $2) => (Obj.has(values, $2) ? toString(values[$2]) : $1));
     return translated(removeContext(substitued));
   }
 

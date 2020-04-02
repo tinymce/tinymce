@@ -52,10 +52,7 @@ UnitTest.asynctest('Cyclic Keying Test', (success, failure) => {
                   height: '20px'
                 }
               },
-              containerBehaviours: Behaviour.derive([
-                Tabstopping.config({}),
-                Focusing.config({})
-              ])
+              containerBehaviours: Behaviour.derive([Tabstopping.config({}), Focusing.config({})])
             })
           ]
         })
@@ -66,51 +63,23 @@ UnitTest.asynctest('Cyclic Keying Test', (success, failure) => {
       Step.sync(() => {
         Keying.focusIn(component);
       }),
-      FocusTools.sTryOnSelector(
-        'Focus should be on button 1 after focusIn',
-        doc,
-        'button:contains("Button1")'
-      ),
+      FocusTools.sTryOnSelector('Focus should be on button 1 after focusIn', doc, 'button:contains("Button1")'),
       Keyboard.sKeydown(doc, Keys.tab(), {}),
-      FocusTools.sTryOnSelector(
-        'Focus should move from button 1 to button 2',
-        doc,
-        'button:contains("Button2")'
-      ),
+      FocusTools.sTryOnSelector('Focus should move from button 1 to button 2', doc, 'button:contains("Button2")'),
       Keyboard.sKeydown(doc, Keys.tab(), {}),
-      FocusTools.sTryOnSelector(
-        'Focus should move from button 2 to span',
-        doc,
-        'span.focusable-span'
-      ),
+      FocusTools.sTryOnSelector('Focus should move from button 2 to span', doc, 'span.focusable-span'),
 
       Keyboard.sKeydown(doc, Keys.tab(), {}),
-      FocusTools.sTryOnSelector(
-        'Focus should move from span to button 1',
-        doc,
-        'button:contains("Button1")'
-      ),
+      FocusTools.sTryOnSelector('Focus should move from span to button 1', doc, 'button:contains("Button1")'),
 
       Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
-      FocusTools.sTryOnSelector(
-        'Focus should move from button1 to span',
-        doc,
-        'span.focusable-span'
-      ),
+      FocusTools.sTryOnSelector('Focus should move from button1 to span', doc, 'span.focusable-span'),
 
       Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
-      FocusTools.sTryOnSelector(
-        'Focus should move from span to button 2',
-        doc,
-        'button:contains("Button2")'
-      ),
+      FocusTools.sTryOnSelector('Focus should move from span to button 2', doc, 'button:contains("Button2")'),
 
       Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
-      FocusTools.sTryOnSelector(
-        'Focus should move from button2 to button 1',
-        doc,
-        'button:contains("Button1")'
-      ),
+      FocusTools.sTryOnSelector('Focus should move from button2 to button 1', doc, 'button:contains("Button1")'),
       GuiSetup.mTeardownKeyLogger(body, [])
     ],
     () => {

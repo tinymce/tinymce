@@ -23,9 +23,7 @@ UnitTest.test('SearcherTest', function () {
         TextGene('p1-a', 'An example of some '),
         Gene('span1', 'span', [TextGene('span1-a', 'test')]),
         TextGene('p1-b', ' data. The word being looked for will be w'),
-        Gene('span1b', 'span', [
-          Gene('span1ba', 'span', [TextGene('p1-c', 'or')])
-        ]),
+        Gene('span1b', 'span', [Gene('span1ba', 'span', [TextGene('p1-c', 'or')])]),
         TextGene('p1-d', 'd and for.')
       ]),
       Gene('p2', 'p', [
@@ -43,20 +41,10 @@ UnitTest.test('SearcherTest', function () {
     exact: string;
   }
 
-  const checkWords = function (
-    expected: CheckItem[],
-    itemIds: string[],
-    words: string[],
-    input: Gene
-  ) {
+  const checkWords = function (expected: CheckItem[], itemIds: string[], words: string[], input: Gene) {
     const universe = TestUniverse(input);
     const items = Finder.getAll(universe, itemIds);
-    const actual = Searcher.safeWords(
-      universe,
-      items,
-      words,
-      Fun.constant(false) as (e: Gene) => boolean
-    );
+    const actual = Searcher.safeWords(universe, items, words, Fun.constant(false) as (e: Gene) => boolean);
 
     const processed = Arr.map(actual, function (match): CheckItem {
       return {

@@ -1,9 +1,4 @@
-import {
-  document,
-  window,
-  HTMLTableElement,
-  HTMLStyleElement
-} from '@ephox/dom-globals';
+import { document, window, HTMLTableElement, HTMLStyleElement } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import {
   Attr,
@@ -102,24 +97,13 @@ Insert.append(Body.body(), cloneDiv);
 
 Insert.append(Body.body(), Element.fromHtml('<span id="coords">(0, 0)</span>'));
 DomEvent.bind(Body.body(), 'mousemove', function (event) {
-  Option.from(document.querySelector('#coords')).getOrDie(
-    'Could not find ID "coords"'
-  ).innerHTML = '(' + event.raw().clientX + ', ' + event.raw().clientY + ')';
+  Option.from(document.querySelector('#coords')).getOrDie('Could not find ID "coords"').innerHTML =
+    '(' + event.raw().clientX + ', ' + event.raw().clientY + ')';
 });
 
 const annotations = SelectionAnnotation.byClass(Ephemera);
-const mouseHandlers = InputHandlers.mouse(
-  window,
-  ephoxUi,
-  Fun.curry(Compare.eq, table),
-  annotations
-);
-const keyHandlers = InputHandlers.keyboard(
-  window,
-  ephoxUi,
-  Fun.curry(Compare.eq, table),
-  annotations
-);
+const mouseHandlers = InputHandlers.mouse(window, ephoxUi, Fun.curry(Compare.eq, table), annotations);
+const keyHandlers = InputHandlers.keyboard(window, ephoxUi, Fun.curry(Compare.eq, table), annotations);
 
 DomEvent.bind(ephoxUi, 'mousedown', mouseHandlers.mousedown);
 DomEvent.bind(ephoxUi, 'mouseover', mouseHandlers.mouseover);
@@ -133,30 +117,18 @@ const handleResponse = function (event: EventArgs, response: Response) {
     // ns is {start(): Situ, finish(): Situ}
     const relative = Selection.relative(ns.start(), ns.finish());
     const range = Util.convertToRange(window, relative);
-    WindowSelection.setExact(
-      window,
-      range.start(),
-      range.soffset(),
-      range.finish(),
-      range.foffset()
-    );
+    WindowSelection.setExact(window, range.start(), range.soffset(), range.finish(), range.foffset());
     // WindowSelection.setExact(window, ns.start(), ns.soffset(), ns.finish(), ns.foffset());
   });
 };
 
 DomEvent.bind(ephoxUi, 'keyup', function (event) {
   // Note, this is an optimisation.
-  if (
-    event.raw().shiftKey &&
-    event.raw().which >= 37 &&
-    event.raw().which <= 40
-  ) {
+  if (event.raw().shiftKey && event.raw().which >= 37 && event.raw().which <= 40) {
     WindowSelection.getExact(window).each(function (sel) {
-      keyHandlers
-        .keyup(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset())
-        .each(function (response) {
-          handleResponse(event, response);
-        });
+      keyHandlers.keyup(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset()).each(function (response) {
+        handleResponse(event, response);
+      });
     });
   }
 });
@@ -164,20 +136,10 @@ DomEvent.bind(ephoxUi, 'keyup', function (event) {
 DomEvent.bind(ephoxUi, 'keydown', function (event) {
   // This might get expensive.
   WindowSelection.getExact(window).each(function (sel) {
-    const target = (Node.isText(sel.start())
-      ? Traverse.parent(sel.start())
-      : Option.some(sel.start())
-    ).filter(Node.isElement);
+    const target = (Node.isText(sel.start()) ? Traverse.parent(sel.start()) : Option.some(sel.start())).filter(Node.isElement);
     const direction = target.map(Direction.getDirection).getOr('ltr');
     keyHandlers
-      .keydown(
-        event,
-        sel.start(),
-        sel.soffset(),
-        sel.finish(),
-        sel.foffset(),
-        direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl
-      )
+      .keydown(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset(), direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl)
       .each(function (response) {
         handleResponse(event, response);
       });

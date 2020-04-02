@@ -1,24 +1,12 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Result } from '@ephox/katamari';
 import { BodyComponentApi as BodyComponentApiType } from './BodyComponent';
-import {
-  Panel as PanelType,
-  PanelApi as PanelApiType,
-  panelSchema
-} from './Panel';
-import {
-  TabApi as TabApiType,
-  Tab as TabType,
-  TabPanel as TabPanelType,
-  TabPanelApi as TabPanelApiType,
-  tabPanelSchema
-} from './TabPanel';
+import { Panel as PanelType, PanelApi as PanelApiType, panelSchema } from './Panel';
+import { TabApi as TabApiType, Tab as TabType, TabPanel as TabPanelType, TabPanelApi as TabPanelApiType, tabPanelSchema } from './TabPanel';
 import * as FooterButton from './FooterButton';
 
 export type DialogMenuButtonItemTypes = FooterButton.DialogMenuButtonItemTypes;
-export type SuccessCallback = (
-  menu: string | DialogMenuButtonItemTypes[]
-) => void;
+export type SuccessCallback = (menu: string | DialogMenuButtonItemTypes[]) => void;
 
 export type DialogNormalButtonApi = FooterButton.DialogNormalButtonApi;
 export type DialogMenuButtonApi = FooterButton.DialogMenuButtonApi;
@@ -65,21 +53,12 @@ export interface DialogTabChangeDetails {
   oldTabName: string;
 }
 
-export type DialogActionHandler<T> = (
-  api: DialogInstanceApi<T>,
-  details: DialogActionDetails
-) => void;
-export type DialogChangeHandler<T> = (
-  api: DialogInstanceApi<T>,
-  details: DialogChangeDetails<T>
-) => void;
+export type DialogActionHandler<T> = (api: DialogInstanceApi<T>, details: DialogActionDetails) => void;
+export type DialogChangeHandler<T> = (api: DialogInstanceApi<T>, details: DialogChangeDetails<T>) => void;
 export type DialogSubmitHandler<T> = (api: DialogInstanceApi<T>) => void;
 export type DialogCloseHandler = () => void;
 export type DialogCancelHandler<T> = (api: DialogInstanceApi<T>) => void;
-export type DialogTabChangeHandler<T> = (
-  api: DialogInstanceApi<T>,
-  details: DialogTabChangeDetails
-) => void;
+export type DialogTabChangeHandler<T> = (api: DialogInstanceApi<T>, details: DialogTabChangeDetails) => void;
 
 export type DialogSize = 'normal' | 'medium' | 'large';
 export interface DialogApi<T extends DialogData> {
@@ -150,7 +129,5 @@ export const dialogSchema = ValueSchema.objOf([
   FieldSchema.defaulted('onTabChange', Fun.noop)
 ]);
 
-export const createDialog = <T>(
-  spec: DialogApi<T>
-): Result<Dialog<T>, ValueSchema.SchemaError<any>> =>
+export const createDialog = <T>(spec: DialogApi<T>): Result<Dialog<T>, ValueSchema.SchemaError<any>> =>
   ValueSchema.asRaw('dialog', dialogSchema, spec);

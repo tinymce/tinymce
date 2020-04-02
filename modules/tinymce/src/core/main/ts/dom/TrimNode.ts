@@ -11,18 +11,13 @@ import * as NodeType from './NodeType';
 import Tools from '../api/util/Tools';
 
 const surroundedBySpans = function (node) {
-  const previousIsSpan =
-    node.previousSibling && node.previousSibling.nodeName === 'SPAN';
+  const previousIsSpan = node.previousSibling && node.previousSibling.nodeName === 'SPAN';
   const nextIsSpan = node.nextSibling && node.nextSibling.nodeName === 'SPAN';
   return previousIsSpan && nextIsSpan;
 };
 
 const isBookmarkNode = function (node) {
-  return (
-    node &&
-    node.tagName === 'SPAN' &&
-    node.getAttribute('data-mce-type') === 'bookmark'
-  );
+  return node && node.tagName === 'SPAN' && node.getAttribute('data-mce-type') === 'bookmark';
 };
 
 // W3C valid browsers tend to leave empty nodes to the left/right side of the contents - this makes sense

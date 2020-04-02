@@ -8,11 +8,7 @@ UnitTest.test('features.IdentifyToolbarTest', function () {
     Assertions.assertEq(label, expected, actual);
   };
 
-  check(
-    'Default toolbar',
-    ['undo', 'bold', 'italic', 'link', 'image', 'bullist', 'styleselect'],
-    {}
-  );
+  check('Default toolbar', ['undo', 'bold', 'italic', 'link', 'image', 'bullist', 'styleselect'], {});
   check('Empty toolbar', [], { toolbar: '' });
   check('Empty toolbar (array)', [], { toolbar: [] });
 
@@ -29,13 +25,9 @@ UnitTest.test('features.IdentifyToolbarTest', function () {
     toolbar: [['undo'], [], ['bold redo', 'italic']]
   });
 
-  check(
-    'Toolbar with pipes',
-    ['undo', 'bold', 'italic', 'bullist', 'styleselect'],
-    {
-      toolbar: [['undo | bold | italic'], ['bullist styleselect']]
-    }
-  );
+  check('Toolbar with pipes', ['undo', 'bold', 'italic', 'bullist', 'styleselect'], {
+    toolbar: [['undo | bold | italic'], ['bullist styleselect']]
+  });
 
   check(
     'Unknown identifiers',

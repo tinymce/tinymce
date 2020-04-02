@@ -5,29 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent,
-  AlloyEvents,
-  AlloyTriggers,
-  Disabling,
-  Memento,
-  MementoRecord,
-  Representing,
-  SystemEvents
-} from '@ephox/alloy';
+import { AlloyComponent, AlloyEvents, AlloyTriggers, Disabling, Memento, MementoRecord, Representing, SystemEvents } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Fun, Option } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import {
-  internalToolbarButtonExecute,
-  InternalToolbarButtonExecuteEvent
-} from '../toolbar/button/ButtonEvents';
-import {
-  renderToolbarButtonWith,
-  renderToolbarToggleButtonWith
-} from '../toolbar/button/ToolbarButtons';
+import { internalToolbarButtonExecute, InternalToolbarButtonExecuteEvent } from '../toolbar/button/ButtonEvents';
+import { renderToolbarButtonWith, renderToolbarToggleButtonWith } from '../toolbar/button/ToolbarButtons';
 
 // Can probably generalise.
 
@@ -36,24 +21,14 @@ const getFormApi = (input): Toolbar.ContextFormInstanceApi => ({
   getValue: () => Representing.getValue(input)
 });
 
-const runOnExecute = <T>(
-  memInput: MementoRecord,
-  original: { onAction: (formApi, buttonApi: T) => void }
-) =>
-  AlloyEvents.run<InternalToolbarButtonExecuteEvent<T>>(
-    internalToolbarButtonExecute,
-    (comp, se) => {
-      const input = memInput.get(comp);
-      const formApi = getFormApi(input);
-      original.onAction(formApi, se.event().buttonApi());
-    }
-  );
+const runOnExecute = <T>(memInput: MementoRecord, original: { onAction: (formApi, buttonApi: T) => void }) =>
+  AlloyEvents.run<InternalToolbarButtonExecuteEvent<T>>(internalToolbarButtonExecute, (comp, se) => {
+    const input = memInput.get(comp);
+    const formApi = getFormApi(input);
+    original.onAction(formApi, se.event().buttonApi());
+  });
 
-const renderContextButton = (
-  memInput: MementoRecord,
-  button: Toolbar.ContextButton,
-  extras
-) => {
+const renderContextButton = (memInput: MementoRecord, button: Toolbar.ContextButton, extras) => {
   const { primary, ...rest } = button.original;
   const bridged = ValueSchema.getOrDie(
     Toolbar.createToolbarButton({
@@ -68,11 +43,7 @@ const renderContextButton = (
   ]);
 };
 
-const renderContextToggleButton = (
-  memInput: MementoRecord,
-  button: Toolbar.ContextToggleButton,
-  extras
-) => {
+const renderContextToggleButton = (memInput: MementoRecord, button: Toolbar.ContextToggleButton, extras) => {
   const { primary, ...rest } = button.original;
   const bridged = ValueSchema.getOrDie(
     Toolbar.createToggleButton({
@@ -82,11 +53,9 @@ const renderContextToggleButton = (
     })
   );
 
-  return renderToolbarToggleButtonWith(
-    bridged,
-    extras.backstage.shared.providers,
-    [runOnExecute<Toolbar.ToolbarButtonInstanceApi>(memInput, button)]
-  );
+  return renderToolbarToggleButtonWith(bridged, extras.backstage.shared.providers, [
+    runOnExecute<Toolbar.ToolbarButtonInstanceApi>(memInput, button)
+  ]);
 };
 
 const generateOne = (
@@ -114,9 +83,7 @@ const generate = (
   buttons: Array<Toolbar.ContextToggleButton | Toolbar.ContextButton>,
   providersBackstage: UiFactoryBackstageProviders
 ) => {
-  const mementos = Arr.map(buttons, (button) =>
-    Memento.record(generateOne(memInput, button, providersBackstage))
-  );
+  const mementos = Arr.map(buttons, (button) => Memento.record(generateOne(memInput, button, providersBackstage)));
 
   const asSpecs = () => Arr.map(mementos, (mem) => mem.asSpec());
 

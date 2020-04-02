@@ -8,11 +8,7 @@ const sAssertValue = (label, expected, component, selector) =>
     Chain.asStep(component.element(), [
       UiFinder.cFindIn(selector),
       Chain.op((elem) => {
-        Assertions.assertEq(
-          'Checking value of ' + selector,
-          expected,
-          Value.get(elem)
-        );
+        Assertions.assertEq('Checking value of ' + selector, expected, Value.get(elem));
       })
     ])
   );

@@ -14,10 +14,7 @@ import { largeSensible, units } from './SizeInputShared';
 import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('SizeInputConverterTest', () => {
-  const check = (converter: SizeConversion) => (
-    expected: Option<Size>,
-    input: Size
-  ) => {
+  const check = (converter: SizeConversion) => (expected: Option<Size>, input: Size) => {
     const result = converter(input);
     KAssert.eqOption('eq', expected, result);
   };
@@ -48,14 +45,12 @@ UnitTest.test('SizeInputConverterTest', () => {
     }
   );
 
-  Jsc.property(
-    'noSizeConversion always returns none',
-    Jsc.number(0, largeSensible),
-    Jsc.oneof(Jsc.elements(units)),
-    function (value: number, unit: SizeUnit) {
-      return Jsc.eq(true, noSizeConversion({ value, unit }).isNone());
-    }
-  );
+  Jsc.property('noSizeConversion always returns none', Jsc.number(0, largeSensible), Jsc.oneof(Jsc.elements(units)), function (
+    value: number,
+    unit: SizeUnit
+  ) {
+    return Jsc.eq(true, noSizeConversion({ value, unit }).isNone());
+  });
 
   const checkRatioConv2 = check(makeRatioConverter('96px', '2in'));
   checkRatioConv2(Option.some(nuSize(1, 'in')), nuSize(0.5, 'in'));

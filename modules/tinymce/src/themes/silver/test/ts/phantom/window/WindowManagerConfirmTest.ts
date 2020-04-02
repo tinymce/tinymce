@@ -1,15 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  FocusTools,
-  GeneralSteps,
-  Logger,
-  Mouse,
-  Pipeline,
-  Step,
-  UiFinder,
-  Waiter
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
@@ -24,10 +13,7 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
 
   const sTeardown = GeneralSteps.sequence([
     Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),
-    Waiter.sTryUntil(
-      'Waiting for blocker to disappear after clicking close',
-      UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap')
-    )
+    Waiter.sTryUntil('Waiting for blocker to disappear after clicking close', UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap'))
   ]);
 
   const sHasBasicStructure = (label: string) =>
@@ -64,11 +50,7 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
                               html: str.is('')
                             }),
                             s.element('button', {
-                              classes: [
-                                arr.has('tox-button'),
-                                arr.has('tox-button--icon'),
-                                arr.has('tox-button--naked')
-                              ],
+                              classes: [arr.has('tox-button'), arr.has('tox-button--icon'), arr.has('tox-button--naked')],
                               attrs: {
                                 'aria-label': str.is('Close'),
                                 'data-alloy-tabstop': str.is('true'),
@@ -104,10 +86,7 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
                               children: [
                                 s.element('button', {
                                   html: str.is('No'),
-                                  classes: [
-                                    arr.has('tox-button'),
-                                    arr.has('tox-button--secondary')
-                                  ],
+                                  classes: [arr.has('tox-button'), arr.has('tox-button--secondary')],
                                   attrs: {
                                     'type': str.is('button'),
                                     'data-alloy-tabstop': str.is('true')
@@ -138,18 +117,12 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
       sTeardown
     ]);
 
-  const sCreateConfirm = <T>(
-    message: string,
-    callback: (state: boolean) => void
-  ) =>
+  const sCreateConfirm = <T>(message: string, callback: (state: boolean) => void) =>
     Step.sync<T>(() => {
       windowManager.confirm(message, callback);
     });
 
-  const sWaitForDialog = Waiter.sTryUntil(
-    'confirm dialog shows',
-    UiFinder.sExists(Body.body(), '.tox-dialog__body')
-  );
+  const sWaitForDialog = Waiter.sTryUntil('confirm dialog shows', UiFinder.sExists(Body.body(), '.tox-dialog__body'));
 
   const sInsertTheCorrectMessage = (label: string) =>
     GeneralSteps.sequence([
@@ -188,23 +161,12 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
           calls++;
         };
         windowManager.confirm(label, testCallback);
-        Assertions.assertEq(
-          'callback should not have been called yet',
-          0,
-          calls
-        );
+        Assertions.assertEq('callback should not have been called yet', 0, calls);
       }),
       Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),
-      Waiter.sTryUntil(
-        'Waiting for blocker to disappear after clicking close',
-        UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap')
-      ),
+      Waiter.sTryUntil('Waiting for blocker to disappear after clicking close', UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap')),
       Step.sync(() => {
-        Assertions.assertEq(
-          'Clicking on close should call the callback fn once',
-          1,
-          calls
-        );
+        Assertions.assertEq('Clicking on close should call the callback fn once', 1, calls);
       })
     ]);
   };
@@ -227,11 +189,7 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
       'button:contains(Yes)'
     ),
     Mouse.sTrueClickOn(Element.fromDom(document), '.tox-dialog'),
-    FocusTools.sTryOnSelector(
-      'Focus should be on the first button (no)',
-      Element.fromDom(document),
-      'button:contains(No)'
-    ),
+    FocusTools.sTryOnSelector('Focus should be on the first button (no)', Element.fromDom(document), 'button:contains(No)'),
     sTeardown
   ]);
 

@@ -5,11 +5,7 @@ import { ZoneViewports } from '../general/ZoneViewports';
 
 const universe = DomUniverse();
 
-const single = function (
-  element: Element,
-  envLang: string,
-  viewport: ZoneViewports<Element>
-) {
+const single = function (element: Element, envLang: string, viewport: ZoneViewports<Element>) {
   return TextZones.single(universe, element, envLang, viewport);
 };
 
@@ -21,15 +17,7 @@ const range = function (
   envLang: string,
   viewport: ZoneViewports<Element>
 ) {
-  return TextZones.range(
-    universe,
-    start,
-    soffset,
-    finish,
-    foffset,
-    envLang,
-    viewport
-  );
+  return TextZones.range(universe, start, soffset, finish, foffset, envLang, viewport);
 };
 
 const empty = function () {

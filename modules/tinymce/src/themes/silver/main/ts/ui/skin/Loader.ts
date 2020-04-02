@@ -17,9 +17,7 @@ const loadSkin = (isInline: boolean, editor: Editor) => {
 
   if (skinUrl) {
     skinUiCss = skinUrl + '/skin.min.css';
-    editor.contentCSS.push(
-      skinUrl + (isInline ? '/content.inline' : '/content') + '.min.css'
-    );
+    editor.contentCSS.push(skinUrl + (isInline ? '/content.inline' : '/content') + '.min.css');
   }
 
   // In Modern Inline, this is explicitly called in editor.on('focus', ...) as well as in render().

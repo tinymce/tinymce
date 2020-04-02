@@ -23,7 +23,6 @@ const fireSkinLoaded = (editor: Editor) => {
   };
 };
 
-const fireSkinLoadError = (editor: Editor, err: string) => () =>
-  Events.fireSkinLoadError(editor, { message: err });
+const fireSkinLoadError = (editor: Editor, err: string) => () => Events.fireSkinLoadError(editor, { message: err });
 
 export { fireSkinLoaded, fireSkinLoadError };

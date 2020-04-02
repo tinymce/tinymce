@@ -41,10 +41,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
           });
         });
 
-      const sCheckLastButtonGroup = (
-        label: string,
-        children: (s, str, arr) => any
-      ) =>
+      const sCheckLastButtonGroup = (label: string, children: (s, str, arr) => any) =>
         Chain.asStep(Body.body(), [
           UiFinder.cFindIn('.tox-pop .tox-toolbar__group:last'),
           Assertions.cAssertStructure(
@@ -85,10 +82,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
         editor.nodeChanged();
       });
 
-      const sCheckNoPopDialog = Waiter.sTryUntil(
-        'Pop dialog should disappear (soon)',
-        UiFinder.sNotExists(Body.body(), '.tox-pop')
-      );
+      const sCheckNoPopDialog = Waiter.sTryUntil('Pop dialog should disappear (soon)', UiFinder.sNotExists(Body.body(), '.tox-pop'));
 
       Pipeline.async(
         {},
@@ -102,73 +96,27 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
               Step.label('Open context form', sOpen('test-form')),
               Step.label(
                 'Check focus is on the input',
-                FocusTools.sTryOnSelector(
-                  'Focus should now be on input in context form',
-                  doc,
-                  'input'
-                )
+                FocusTools.sTryOnSelector('Focus should now be on input in context form', doc, 'input')
               ),
               Step.label('Press tab', Keyboard.sKeydown(doc, Keys.tab(), {})),
               Step.label(
                 'Check focus is on the button "A"',
-                FocusTools.sTryOnSelector(
-                  'Focus should now be on button in context form',
-                  doc,
-                  'button[aria-label="A"]'
-                )
+                FocusTools.sTryOnSelector('Focus should now be on button in context form', doc, 'button[aria-label="A"]')
               ),
-              Step.label(
-                'Press tab (again)',
-                Keyboard.sKeydown(doc, Keys.tab(), {})
-              ),
+              Step.label('Press tab (again)', Keyboard.sKeydown(doc, Keys.tab(), {})),
               Step.label(
                 'Check focus returned to the input',
-                FocusTools.sTryOnSelector(
-                  'Focus should go back to input in context form',
-                  doc,
-                  'input'
-                )
+                FocusTools.sTryOnSelector('Focus should go back to input in context form', doc, 'input')
               ),
-              Step.label(
-                'Set the active focus (input) value to "Words"',
-                FocusTools.sSetActiveValue(doc, 'Words')
-              ),
-              Step.label(
-                'Press enter',
-                Keyboard.sKeydown(doc, Keys.enter(), {})
-              ),
-              Step.label(
-                'Check the action of button "B" fired',
-                store.sAssertEq('B should have fired because it is primary', [
-                  'B.Words'
-                ])
-              ),
-              Step.label(
-                'Check that a dialog is displayed',
-                sHasDialog(
-                  'Immediate context form should have an inner dialog class'
-                )
-              ),
-              Step.label(
-                'Press escape',
-                Keyboard.sKeydown(doc, Keys.escape(), {})
-              ),
-              Step.label(
-                'Check that the context popup still exists',
-                UiFinder.sExists(Body.body(), '.tox-pop')
-              ),
-              Step.label(
-                'Check that the editor still has focus',
-                tinyApis.sTryAssertFocus()
-              ),
-              Step.label(
-                'Simulate clicking elsewhere in the editor (fire node change)',
-                sClickAway
-              ),
-              Step.label(
-                'Check that the popup dialog closes',
-                sCheckNoPopDialog
-              )
+              Step.label('Set the active focus (input) value to "Words"', FocusTools.sSetActiveValue(doc, 'Words')),
+              Step.label('Press enter', Keyboard.sKeydown(doc, Keys.enter(), {})),
+              Step.label('Check the action of button "B" fired', store.sAssertEq('B should have fired because it is primary', ['B.Words'])),
+              Step.label('Check that a dialog is displayed', sHasDialog('Immediate context form should have an inner dialog class')),
+              Step.label('Press escape', Keyboard.sKeydown(doc, Keys.escape(), {})),
+              Step.label('Check that the context popup still exists', UiFinder.sExists(Body.body(), '.tox-pop')),
+              Step.label('Check that the editor still has focus', tinyApis.sTryAssertFocus()),
+              Step.label('Simulate clicking elsewhere in the editor (fire node change)', sClickAway),
+              Step.label('Check that the popup dialog closes', sCheckNoPopDialog)
             ])
           ),
 
@@ -182,154 +130,92 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
                 Step.label('Open a context toolbar', sOpen('test-toolbar')),
                 Step.label(
                   'Check focus is on the button in context toolbar',
-                  FocusTools.sTryOnSelector(
-                    'Focus should now be on button in context toolbar',
-                    doc,
-                    '.tox-pop button'
-                  )
+                  FocusTools.sTryOnSelector('Focus should now be on button in context toolbar', doc, '.tox-pop button')
                 ),
                 Step.label(
                   'Check for inner dialog class on context toolbar',
-                  sHasDialog(
-                    'Iniital context toolbar should have an inner dialog class'
-                  )
+                  sHasDialog('Iniital context toolbar should have an inner dialog class')
                 ),
-                Step.label(
-                  'Press enter',
-                  Keyboard.sKeydown(doc, Keys.enter(), {})
-                ),
+                Step.label('Press enter', Keyboard.sKeydown(doc, Keys.enter(), {})),
                 Step.label(
                   'Check focus is on input in context form',
-                  FocusTools.sTryOnSelector(
-                    'Focus should now be on input in context form that was launched by button',
-                    doc,
-                    'input'
-                  )
+                  FocusTools.sTryOnSelector('Focus should now be on input in context form that was launched by button', doc, 'input')
                 ),
                 Step.label(
                   'Check for inner dialog class on context form',
-                  sHasDialog(
-                    'Launched context form should have an inner dialog class'
-                  )
+                  sHasDialog('Launched context form should have an inner dialog class')
                 ),
-                Step.label(
-                  'Press escape',
-                  Keyboard.sKeydown(doc, Keys.escape(), {})
-                ),
+                Step.label('Press escape', Keyboard.sKeydown(doc, Keys.escape(), {})),
                 // IE fails here
                 Step.label(
                   'Check focus returns to context toolbar',
-                  FocusTools.sTryOnSelector(
-                    'Focus should have shifted back to the triggering toolbar',
-                    doc,
-                    '.tox-pop button'
-                  )
+                  FocusTools.sTryOnSelector('Focus should have shifted back to the triggering toolbar', doc, '.tox-pop button')
                 ),
                 Step.label(
                   'Check context toolbar has inner dialog class',
-                  sHasDialog(
-                    'Restored context toolbar (esc from form) should have an inner dialog class'
-                  )
+                  sHasDialog('Restored context toolbar (esc from form) should have an inner dialog class')
                 ),
-                Step.label(
-                  'Press escape (again)',
-                  Keyboard.sKeydown(doc, Keys.escape(), {})
-                ),
-                Step.label(
-                  'Check that the context popup still exists',
-                  UiFinder.sExists(Body.body(), '.tox-pop')
-                ),
-                Step.label(
-                  'Check that the editor still has focus',
-                  tinyApis.sTryAssertFocus()
-                ),
-                Step.label(
-                  'Simulate clicking elsewhere in the editor (fire node change)',
-                  sClickAway
-                ),
-                Step.label(
-                  'Check that the popup dialog closes',
-                  sCheckNoPopDialog
-                )
+                Step.label('Press escape (again)', Keyboard.sKeydown(doc, Keys.escape(), {})),
+                Step.label('Check that the context popup still exists', UiFinder.sExists(Body.body(), '.tox-pop')),
+                Step.label('Check that the editor still has focus', tinyApis.sTryAssertFocus()),
+                Step.label('Simulate clicking elsewhere in the editor (fire node change)', sClickAway),
+                Step.label('Check that the popup dialog closes', sCheckNoPopDialog)
               ])
             )
           ),
 
-          Log.stepsAsStep(
-            'TBA',
-            'Launching context form does not work if the context toolbar launcher is disabled',
-            [
-              sOpen('test-toolbar'),
-              sFire('test.updateButtonABC', { disable: true }),
-              sCheckLastButtonGroup(
-                'Checking button is disabled after event',
-                (s, str, arr) => [
-                  s.element('button', {
-                    classes: [arr.has('tox-tbtn--disabled')],
-                    attrs: { 'aria-disabled': str.is('true') }
-                  })
-                ]
-              ),
-              sFire('test.updateButtonABC', { disable: false }),
-              sCheckLastButtonGroup(
-                'Checking button is re-enabled after event',
-                (s, _str, arr) => [
-                  s.element('button', {
-                    classes: [arr.not('tox-tbtn--disabled')]
-                  })
-                ]
-              ),
+          Log.stepsAsStep('TBA', 'Launching context form does not work if the context toolbar launcher is disabled', [
+            sOpen('test-toolbar'),
+            sFire('test.updateButtonABC', { disable: true }),
+            sCheckLastButtonGroup('Checking button is disabled after event', (s, str, arr) => [
+              s.element('button', {
+                classes: [arr.has('tox-tbtn--disabled')],
+                attrs: { 'aria-disabled': str.is('true') }
+              })
+            ]),
+            sFire('test.updateButtonABC', { disable: false }),
+            sCheckLastButtonGroup('Checking button is re-enabled after event', (s, _str, arr) => [
+              s.element('button', {
+                classes: [arr.not('tox-tbtn--disabled')]
+              })
+            ]),
 
-              sFire('test.updateButtonABC', { active: true }),
-              sCheckLastButtonGroup(
-                'Checking button is pressed after event',
-                (s, str, _arr) => [
-                  s.element('button', {
-                    attrs: {
-                      'aria-pressed': str.is('true')
-                    }
-                  })
-                ]
-              ),
+            sFire('test.updateButtonABC', { active: true }),
+            sCheckLastButtonGroup('Checking button is pressed after event', (s, str, _arr) => [
+              s.element('button', {
+                attrs: {
+                  'aria-pressed': str.is('true')
+                }
+              })
+            ]),
 
-              sFire('test.updateButtonABC', { active: false }),
-              sCheckLastButtonGroup(
-                'Checking button is *not* pressed after event',
-                (s, str, _arr) => [
-                  s.element('button', {
-                    attrs: {
-                      'aria-pressed': str.is('false')
-                    }
-                  })
-                ]
-              )
-            ]
-          ),
+            sFire('test.updateButtonABC', { active: false }),
+            sCheckLastButtonGroup('Checking button is *not* pressed after event', (s, str, _arr) => [
+              s.element('button', {
+                attrs: {
+                  'aria-pressed': str.is('false')
+                }
+              })
+            ])
+          ]),
 
-          Log.stepsAsStep(
-            'TBA',
-            'Checking that context form buttons have a working disabled/active api',
-            [
-              sOpen('test-form'),
-              sFire('test.updateButtonA', { disable: true }),
-              sFire('test.updateButtonC', { active: true }),
-              sCheckLastButtonGroup(
-                'Checking buttons have right state',
-                (s, str, arr) => [
-                  s.element('button', {
-                    classes: [arr.has('tox-tbtn--disabled')],
-                    attrs: { 'aria-disabled': str.is('true') }
-                  }),
-                  s.element('button', {
-                    classes: [arr.not('tox-tbtn--disabled')]
-                  }),
-                  s.element('button', {
-                    attrs: { 'aria-pressed': str.is('true') }
-                  })
-                ]
-              )
-            ]
-          )
+          Log.stepsAsStep('TBA', 'Checking that context form buttons have a working disabled/active api', [
+            sOpen('test-form'),
+            sFire('test.updateButtonA', { disable: true }),
+            sFire('test.updateButtonC', { active: true }),
+            sCheckLastButtonGroup('Checking buttons have right state', (s, str, arr) => [
+              s.element('button', {
+                classes: [arr.has('tox-tbtn--disabled')],
+                attrs: { 'aria-disabled': str.is('true') }
+              }),
+              s.element('button', {
+                classes: [arr.not('tox-tbtn--disabled')]
+              }),
+              s.element('button', {
+                attrs: { 'aria-pressed': str.is('true') }
+              })
+            ])
+          ])
         ],
         onSuccess,
         onFailure
@@ -361,8 +247,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
             }
           },
 
-          predicate: (node) =>
-            node.nodeName && node.nodeName.toLowerCase() === 'a',
+          predicate: (node) => node.nodeName && node.nodeName.toLowerCase() === 'a',
           commands: [
             {
               type: 'contextformbutton',
@@ -381,16 +266,14 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
                   ed.off('test.updateButtonA', f);
                 };
               },
-              onAction: (formApi, _buttonApi) =>
-                store.adder('A.' + formApi.getValue())()
+              onAction: (formApi, _buttonApi) => store.adder('A.' + formApi.getValue())()
             },
             {
               type: 'contextformbutton',
               icon: 'fake-icon-name',
               tooltip: 'B',
               primary: true,
-              onAction: (formApi, _buttonApi) =>
-                store.adder('B.' + formApi.getValue())()
+              onAction: (formApi, _buttonApi) => store.adder('B.' + formApi.getValue())()
             },
             {
               type: 'contextformtogglebutton',
@@ -411,8 +294,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
                   ed.off('test.updateButtonC', f);
                 };
               },
-              onAction: (formApi, _buttonApi) =>
-                store.adder('C.' + formApi.getValue())()
+              onAction: (formApi, _buttonApi) => store.adder('C.' + formApi.getValue())()
             }
           ]
         });

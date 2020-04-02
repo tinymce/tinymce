@@ -2,11 +2,7 @@ import { UnitTest, assert } from '@ephox/bedrock-client';
 
 import { Bounds, bounds } from 'ephox/alloy/alien/Boxes';
 import * as Bubble from 'ephox/alloy/positioning/layout/Bubble';
-import {
-  AnchorBox,
-  AnchorElement,
-  AnchorLayout
-} from 'ephox/alloy/positioning/layout/LayoutTypes';
+import { AnchorBox, AnchorElement, AnchorLayout } from 'ephox/alloy/positioning/layout/LayoutTypes';
 import * as LinkedLayout from 'ephox/alloy/positioning/layout/LinkedLayout';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 
@@ -36,12 +32,7 @@ UnitTest.test('BounderMenuTest', () => {
   };
 
   // LinkedLayout is for submenus (vertically aligned to opposite side of menu)
-  const four = [
-    LinkedLayout.southeast,
-    LinkedLayout.southwest,
-    LinkedLayout.northeast,
-    LinkedLayout.northwest
-  ];
+  const four = [LinkedLayout.southeast, LinkedLayout.southwest, LinkedLayout.northeast, LinkedLayout.northwest];
 
   // empty input array is now invalid, just returns anchor coordinates
   check(

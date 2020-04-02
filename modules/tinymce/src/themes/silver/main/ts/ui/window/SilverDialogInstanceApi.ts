@@ -5,45 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent,
-  AlloyTriggers,
-  Composing,
-  Disabling,
-  Focusing,
-  Form,
-  Reflecting,
-  Representing,
-  TabSection
-} from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, Composing, Disabling, Focusing, Form, Reflecting, Representing, TabSection } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
 import { DialogManager, Types } from '@ephox/bridge';
 import { Cell, Obj, Option, Type } from '@ephox/katamari';
 
-import {
-  formBlockEvent,
-  formCloseEvent,
-  formUnblockEvent
-} from '../general/FormEvents';
-import {
-  bodyChannel,
-  dialogChannel,
-  footerChannel,
-  titleChannel
-} from './DialogChannels';
+import { formBlockEvent, formCloseEvent, formUnblockEvent } from '../general/FormEvents';
+import { bodyChannel, dialogChannel, footerChannel, titleChannel } from './DialogChannels';
 
-const getCompByName = (
-  access: DialogAccess,
-  name: string
-): Option<AlloyComponent> => {
+const getCompByName = (access: DialogAccess, name: string): Option<AlloyComponent> => {
   // TODO: Add API to alloy to find the inner most component of a Composing chain.
   const root = access.getRoot();
   // This is just to avoid throwing errors if the dialog closes before this. We should take it out
   // while developing (probably), and put it back in for the real thing.
   if (root.getSystem().isConnected()) {
-    const form = Composing.getCurrent(access.getFormWrapper()).getOr(
-      access.getFormWrapper()
-    );
+    const form = Composing.getCurrent(access.getFormWrapper()).getOr(access.getFormWrapper());
     return Form.getField(form, name).fold(
       () => {
         const footer = access.getFooter();
@@ -61,11 +37,7 @@ const validateData = <T>(access: DialogAccess, data) => {
   const root = access.getRoot();
   return Reflecting.getState(root)
     .get()
-    .map((dialogState: DialogManager.DialogInit<T>) =>
-      ValueSchema.getOrDie(
-        ValueSchema.asRaw('data', dialogState.dataValidator, data)
-      )
-    )
+    .map((dialogState: DialogManager.DialogInit<T>) => ValueSchema.getOrDie(ValueSchema.asRaw('data', dialogState.dataValidator, data)))
     .getOr(data);
 };
 
@@ -78,9 +50,7 @@ export interface DialogAccess {
 
 const getDialogApi = <T extends Types.Dialog.DialogData>(
   access: DialogAccess,
-  doRedial: (
-    newConfig: Types.Dialog.DialogApi<T>
-  ) => DialogManager.DialogInit<T>,
+  doRedial: (newConfig: Types.Dialog.DialogApi<T>) => DialogManager.DialogInit<T>,
   menuItemStates: Record<string, Cell<Boolean>>
 ): Types.Dialog.DialogInstanceApi<T> => {
   const withRoot = (f: (r: AlloyComponent) => void): void => {
@@ -92,13 +62,9 @@ const getDialogApi = <T extends Types.Dialog.DialogData>(
 
   const getData = (): T => {
     const root = access.getRoot();
-    const valueComp = root.getSystem().isConnected()
-      ? access.getFormWrapper()
-      : root;
+    const valueComp = root.getSystem().isConnected() ? access.getFormWrapper() : root;
     const representedValues = Representing.getValue(valueComp);
-    const menuItemCurrentState = Obj.map(menuItemStates, (cell: any) =>
-      cell.get()
-    );
+    const menuItemCurrentState = Obj.map(menuItemStates, (cell: any) => cell.get());
     return {
       ...representedValues,
       ...menuItemCurrentState
@@ -135,9 +101,7 @@ const getDialogApi = <T extends Types.Dialog.DialogData>(
 
   const block = (message: string) => {
     if (!Type.isString(message)) {
-      throw new Error(
-        'The dialogInstanceAPI.block function should be passed a blocking message of type string as an argument'
-      );
+      throw new Error('The dialogInstanceAPI.block function should be passed a blocking message of type string as an argument');
     }
     withRoot((root) => {
       AlloyTriggers.emitWith(root, formBlockEvent, { message });

@@ -27,10 +27,7 @@ const fakeTranslate = (key: string): string =>
 
 const fakeGetClass = (key: string): string => key;
 
-const colourPickerFactory = ColourPicker.makeFactory(
-  fakeTranslate,
-  fakeGetClass
-);
+const colourPickerFactory = ColourPicker.makeFactory(fakeTranslate, fakeGetClass);
 
 const colourPicker = GuiFactory.build(
   colourPickerFactory.sketch({

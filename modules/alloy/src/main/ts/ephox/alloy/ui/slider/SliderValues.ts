@@ -1,10 +1,6 @@
 import { Option } from '@ephox/katamari';
 
-import {
-  HorizontalSliderDetail,
-  SliderDetail,
-  VerticalSliderDetail
-} from '../types/SliderTypes';
+import { HorizontalSliderDetail, SliderDetail, VerticalSliderDetail } from '../types/SliderTypes';
 
 const t = 'top',
   r = 'right',
@@ -24,16 +20,11 @@ const maxY = (detail: VerticalSliderDetail): number => detail.model.maxY;
 const max1X = (detail: HorizontalSliderDetail): number => detail.model.maxX + 1;
 const max1Y = (detail: VerticalSliderDetail): number => detail.model.maxY + 1;
 
-const range = <T extends SliderDetail>(
-  detail: T,
-  max: (detail: T) => number,
-  min: (detail: T) => number
-): number => max(detail) - min(detail);
+const range = <T extends SliderDetail>(detail: T, max: (detail: T) => number, min: (detail: T) => number): number =>
+  max(detail) - min(detail);
 
-const xRange = (detail: HorizontalSliderDetail): number =>
-  range(detail, maxX, minX);
-const yRange = (detail: VerticalSliderDetail): number =>
-  range(detail, maxY, minY);
+const xRange = (detail: HorizontalSliderDetail): number => range(detail, maxX, minX);
+const yRange = (detail: VerticalSliderDetail): number => range(detail, maxY, minY);
 
 const halfX = (detail: HorizontalSliderDetail): number => xRange(detail) / 2;
 const halfY = (detail: VerticalSliderDetail): number => yRange(detail) / 2;
@@ -44,8 +35,7 @@ const snapStart = (detail: SliderDetail): Option<number> => detail.snapStart;
 const rounded = (detail: SliderDetail): boolean => detail.rounded;
 
 // Not great but... /shrug
-const hasEdge = (detail: SliderDetail, edgeName: string): boolean =>
-  (detail as any)[edgeName + '-edge'] !== undefined;
+const hasEdge = (detail: SliderDetail, edgeName: string): boolean => (detail as any)[edgeName + '-edge'] !== undefined;
 
 const hasLEdge = (detail: SliderDetail): boolean => hasEdge(detail, l);
 const hasREdge = (detail: SliderDetail): boolean => hasEdge(detail, r);

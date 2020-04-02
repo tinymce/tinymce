@@ -14,9 +14,7 @@ UnitTest.asynctest('tinymce.lists.browser.RemoveTest', (success, failure) => {
   Theme();
 
   suite.test('TestCase-TBA: Lists: Remove UL at single LI', function (editor) {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<ul>' + '<li>a</li>' + '</ul>'
-    );
+    editor.getBody().innerHTML = LegacyUnit.trimBrs('<ul>' + '<li>a</li>' + '</ul>');
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'li', 0);
@@ -27,207 +25,134 @@ UnitTest.asynctest('tinymce.lists.browser.RemoveTest', (success, failure) => {
   });
 
   suite.test('TestCase-TBA: Lists: Remove UL at start LI', function (editor) {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<ul>' + '<li>a</li>' + '<li>b</li>' + '<li>c</li>' + '</ul>'
-    );
+    editor.getBody().innerHTML = LegacyUnit.trimBrs('<ul>' + '<li>a</li>' + '<li>b</li>' + '<li>c</li>' + '</ul>');
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'li', 0);
     LegacyUnit.execCommand(editor, 'InsertUnorderedList');
 
-    LegacyUnit.equal(
-      editor.getContent(),
-      '<p>a</p>' + '<ul>' + '<li>b</li>' + '<li>c</li>' + '</ul>'
-    );
+    LegacyUnit.equal(editor.getContent(), '<p>a</p>' + '<ul>' + '<li>b</li>' + '<li>c</li>' + '</ul>');
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at start empty LI', function (
-    editor
-  ) {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<ul>' + '<li><br></li>' + '<li>b</li>' + '<li>c</li>' + '</ul>'
-    );
+  suite.test('TestCase-TBA: Lists: Remove UL at start empty LI', function (editor) {
+    editor.getBody().innerHTML = LegacyUnit.trimBrs('<ul>' + '<li><br></li>' + '<li>b</li>' + '<li>c</li>' + '</ul>');
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'li', 0);
     LegacyUnit.execCommand(editor, 'InsertUnorderedList');
 
-    LegacyUnit.equal(
-      editor.getContent(),
-      '<p>\u00a0</p>' + '<ul>' + '<li>b</li>' + '<li>c</li>' + '</ul>'
-    );
+    LegacyUnit.equal(editor.getContent(), '<p>\u00a0</p>' + '<ul>' + '<li>b</li>' + '<li>c</li>' + '</ul>');
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
   suite.test('TestCase-TBA: Lists: Remove UL at middle LI', function (editor) {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<ul>' + '<li>a</li>' + '<li>b</li>' + '<li>c</li>' + '</ul>'
-    );
+    editor.getBody().innerHTML = LegacyUnit.trimBrs('<ul>' + '<li>a</li>' + '<li>b</li>' + '<li>c</li>' + '</ul>');
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'li:nth-child(2)', 1);
     LegacyUnit.execCommand(editor, 'InsertUnorderedList');
 
-    LegacyUnit.equal(
-      editor.getContent(),
-      '<ul>' +
-        '<li>a</li>' +
-        '</ul>' +
-        '<p>b</p>' +
-        '<ul>' +
-        '<li>c</li>' +
-        '</ul>'
-    );
+    LegacyUnit.equal(editor.getContent(), '<ul>' + '<li>a</li>' + '</ul>' + '<p>b</p>' + '<ul>' + '<li>c</li>' + '</ul>');
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at middle empty LI', function (
-    editor
-  ) {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<ul>' + '<li>a</li>' + '<li><br></li>' + '<li>c</li>' + '</ul>'
-    );
+  suite.test('TestCase-TBA: Lists: Remove UL at middle empty LI', function (editor) {
+    editor.getBody().innerHTML = LegacyUnit.trimBrs('<ul>' + '<li>a</li>' + '<li><br></li>' + '<li>c</li>' + '</ul>');
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0);
     LegacyUnit.execCommand(editor, 'InsertUnorderedList');
 
-    LegacyUnit.equal(
-      editor.getContent(),
-      '<ul>' +
-        '<li>a</li>' +
-        '</ul>' +
-        '<p>\u00a0</p>' +
-        '<ul>' +
-        '<li>c</li>' +
-        '</ul>'
-    );
+    LegacyUnit.equal(editor.getContent(), '<ul>' + '<li>a</li>' + '</ul>' + '<p>\u00a0</p>' + '<ul>' + '<li>c</li>' + '</ul>');
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
   suite.test('TestCase-TBA: Lists: Remove UL at end LI', function (editor) {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<ul>' + '<li>a</li>' + '<li>b</li>' + '<li>c</li>' + '</ul>'
-    );
+    editor.getBody().innerHTML = LegacyUnit.trimBrs('<ul>' + '<li>a</li>' + '<li>b</li>' + '<li>c</li>' + '</ul>');
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'li:last', 1);
     LegacyUnit.execCommand(editor, 'InsertUnorderedList');
 
-    LegacyUnit.equal(
-      editor.getContent(),
-      '<ul>' + '<li>a</li>' + '<li>b</li>' + '</ul>' + '<p>c</p>'
-    );
+    LegacyUnit.equal(editor.getContent(), '<ul>' + '<li>a</li>' + '<li>b</li>' + '</ul>' + '<p>c</p>');
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at end empty LI', function (
-    editor
-  ) {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<ul>' + '<li>a</li>' + '<li>b</li>' + '<li><br></li>' + '</ul>'
-    );
+  suite.test('TestCase-TBA: Lists: Remove UL at end empty LI', function (editor) {
+    editor.getBody().innerHTML = LegacyUnit.trimBrs('<ul>' + '<li>a</li>' + '<li>b</li>' + '<li><br></li>' + '</ul>');
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'li:last', 0);
     LegacyUnit.execCommand(editor, 'InsertUnorderedList');
 
-    LegacyUnit.equal(
-      editor.getContent(),
-      '<ul>' + '<li>a</li>' + '<li>b</li>' + '</ul>' + '<p>\u00a0</p>'
-    );
+    LegacyUnit.equal(editor.getContent(), '<ul>' + '<li>a</li>' + '<li>b</li>' + '</ul>' + '<p>\u00a0</p>');
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test(
-    'TestCase-TBA: Lists: Remove UL at middle LI inside parent OL',
-    function (editor) {
-      editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  suite.test('TestCase-TBA: Lists: Remove UL at middle LI inside parent OL', function (editor) {
+    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+      '<ol>' + '<li>a</li>' + '<ul>' + '<li>b</li>' + '<li>c</li>' + '<li>d</li>' + '</ul>' + '<li>e</li>' + '</ol>'
+    );
+
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'ul li:nth-child(2)', 1);
+    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<ol>' +
+        '<li>a' +
+        '<ul>' +
+        '<li>b</li>' +
+        '</ul>' +
+        '</li>' +
+        '</ol>' +
+        '<p>c</p>' +
         '<ol>' +
-          '<li>a</li>' +
-          '<ul>' +
-          '<li>b</li>' +
-          '<li>c</li>' +
-          '<li>d</li>' +
-          '</ul>' +
-          '<li>e</li>' +
-          '</ol>'
-      );
+        '<li style="list-style-type: none;">' +
+        '<ul>' +
+        '<li>d</li>' +
+        '</ul>' +
+        '</li>' +
+        '<li>e</li>' +
+        '</ol>'
+    );
+    LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
+  });
 
-      editor.focus();
-      LegacyUnit.setSelection(editor, 'ul li:nth-child(2)', 1);
-      LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+  suite.test('TestCase-TBA: Lists: Remove UL at middle LI inside parent OL (html5)', function (editor) {
+    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+      '<ol>' + '<li>a' + '<ul>' + '<li>b</li>' + '<li>c</li>' + '<li>d</li>' + '</ul>' + '</li>' + '<li>e</li>' + '</ol>'
+    );
 
-      LegacyUnit.equal(
-        editor.getContent(),
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'ul li:nth-child(2)', 1);
+    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<ol>' +
+        '<li>a' +
+        '<ul>' +
+        '<li>b</li>' +
+        '</ul>' +
+        '</li>' +
+        '</ol>' +
+        '<p>c</p>' +
         '<ol>' +
-          '<li>a' +
-          '<ul>' +
-          '<li>b</li>' +
-          '</ul>' +
-          '</li>' +
-          '</ol>' +
-          '<p>c</p>' +
-          '<ol>' +
-          '<li style="list-style-type: none;">' +
-          '<ul>' +
-          '<li>d</li>' +
-          '</ul>' +
-          '</li>' +
-          '<li>e</li>' +
-          '</ol>'
-      );
-      LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
-    }
-  );
+        '<li style="list-style-type: none;">' +
+        '<ul>' +
+        '<li>d</li>' +
+        '</ul>' +
+        '</li>' +
+        '<li>e</li>' +
+        '</ol>'
+    );
+    LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
+  });
 
-  suite.test(
-    'TestCase-TBA: Lists: Remove UL at middle LI inside parent OL (html5)',
-    function (editor) {
-      editor.getBody().innerHTML = LegacyUnit.trimBrs(
-        '<ol>' +
-          '<li>a' +
-          '<ul>' +
-          '<li>b</li>' +
-          '<li>c</li>' +
-          '<li>d</li>' +
-          '</ul>' +
-          '</li>' +
-          '<li>e</li>' +
-          '</ol>'
-      );
-
-      editor.focus();
-      LegacyUnit.setSelection(editor, 'ul li:nth-child(2)', 1);
-      LegacyUnit.execCommand(editor, 'InsertUnorderedList');
-
-      LegacyUnit.equal(
-        editor.getContent(),
-        '<ol>' +
-          '<li>a' +
-          '<ul>' +
-          '<li>b</li>' +
-          '</ul>' +
-          '</li>' +
-          '</ol>' +
-          '<p>c</p>' +
-          '<ol>' +
-          '<li style="list-style-type: none;">' +
-          '<ul>' +
-          '<li>d</li>' +
-          '</ul>' +
-          '</li>' +
-          '<li>e</li>' +
-          '</ol>'
-      );
-      LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
-    }
-  );
-
-  suite.test('TestCase-TBA: Lists: Remove OL on a deep nested LI', function (
-    editor
-  ) {
+  suite.test('TestCase-TBA: Lists: Remove OL on a deep nested LI', function (editor) {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
         '<li>a' +
@@ -286,130 +211,55 @@ UnitTest.asynctest('tinymce.lists.browser.RemoveTest', (success, failure) => {
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test(
-    'TestCase-TBA: Lists: Remove empty UL between two textblocks',
-    function (editor) {
-      editor.getBody().innerHTML = LegacyUnit.trimBrs(
-        '<div>a</div>' + '<ul>' + '<li></li>' + '</ul>' + '<div>b</div>'
-      );
+  suite.test('TestCase-TBA: Lists: Remove empty UL between two textblocks', function (editor) {
+    editor.getBody().innerHTML = LegacyUnit.trimBrs('<div>a</div>' + '<ul>' + '<li></li>' + '</ul>' + '<div>b</div>');
 
-      editor.focus();
-      LegacyUnit.setSelection(editor, 'li:first', 0);
-      LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'li:first', 0);
+    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
 
-      LegacyUnit.equal(
-        editor.getContent(),
-        '<div>a</div>' + '<p>\u00a0</p>' + '<div>b</div>'
-      );
-      LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
-    }
-  );
+    LegacyUnit.equal(editor.getContent(), '<div>a</div>' + '<p>\u00a0</p>' + '<div>b</div>');
+    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+  });
 
-  suite.test(
-    'TestCase-TBA: Lists: Remove indented list with single item',
-    function (editor) {
-      editor.getBody().innerHTML = LegacyUnit.trimBrs(
-        '<ul>' +
-          '<li>a' +
-          '<ul>' +
-          '<li>b</li>' +
-          '</ul>' +
-          '</li>' +
-          '<li>c</li>' +
-          '</ul>'
-      );
+  suite.test('TestCase-TBA: Lists: Remove indented list with single item', function (editor) {
+    editor.getBody().innerHTML = LegacyUnit.trimBrs('<ul>' + '<li>a' + '<ul>' + '<li>b</li>' + '</ul>' + '</li>' + '<li>c</li>' + '</ul>');
 
-      editor.focus();
-      LegacyUnit.setSelection(editor, 'li li', 0, 'li li', 1);
-      LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'li li', 0, 'li li', 1);
+    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
 
-      LegacyUnit.equal(
-        editor.getContent(),
-        '<ul>' +
-          '<li>a</li>' +
-          '</ul>' +
-          '<p>b</p>' +
-          '<ul>' +
-          '<li>c</li>' +
-          '</ul>'
-      );
-      LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
-    }
-  );
+    LegacyUnit.equal(editor.getContent(), '<ul>' + '<li>a</li>' + '</ul>' + '<p>b</p>' + '<ul>' + '<li>c</li>' + '</ul>');
+    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+  });
 
-  suite.test(
-    'TestCase-TBA: Lists: Remove indented list with multiple items',
-    function (editor) {
-      editor.getBody().innerHTML = LegacyUnit.trimBrs(
-        '<ul>' +
-          '<li>a' +
-          '<ul>' +
-          '<li>b</li>' +
-          '<li>c</li>' +
-          '</ul>' +
-          '</li>' +
-          '<li>d</li>' +
-          '</ul>'
-      );
+  suite.test('TestCase-TBA: Lists: Remove indented list with multiple items', function (editor) {
+    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+      '<ul>' + '<li>a' + '<ul>' + '<li>b</li>' + '<li>c</li>' + '</ul>' + '</li>' + '<li>d</li>' + '</ul>'
+    );
 
-      editor.focus();
-      LegacyUnit.setSelection(editor, 'li li:first', 0, 'li li:last', 1);
-      LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'li li:first', 0, 'li li:last', 1);
+    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
 
-      LegacyUnit.equal(
-        editor.getContent(),
-        '<ul>' +
-          '<li>a</li>' +
-          '</ul>' +
-          '<p>b</p>' +
-          '<p>c</p>' +
-          '<ul>' +
-          '<li>d</li>' +
-          '</ul>'
-      );
-      LegacyUnit.equal(
-        (editor.selection.getStart().firstChild as Text).data,
-        'b'
-      );
-      LegacyUnit.equal(
-        (editor.selection.getEnd().firstChild as Text).data,
-        'c'
-      );
-    }
-  );
+    LegacyUnit.equal(editor.getContent(), '<ul>' + '<li>a</li>' + '</ul>' + '<p>b</p>' + '<p>c</p>' + '<ul>' + '<li>d</li>' + '</ul>');
+    LegacyUnit.equal((editor.selection.getStart().firstChild as Text).data, 'b');
+    LegacyUnit.equal((editor.selection.getEnd().firstChild as Text).data, 'c');
+  });
 
-  suite.test(
-    'TestCase-TBA: Lists: Remove indented list with multiple items',
-    function (editor) {
-      editor.getBody().innerHTML = LegacyUnit.trimBrs(
-        '<ul>' + '<li>a</li>' + '<li><p>b</p></li>' + '<li>c</li>' + '</ul>'
-      );
+  suite.test('TestCase-TBA: Lists: Remove indented list with multiple items', function (editor) {
+    editor.getBody().innerHTML = LegacyUnit.trimBrs('<ul>' + '<li>a</li>' + '<li><p>b</p></li>' + '<li>c</li>' + '</ul>');
 
-      editor.focus();
-      LegacyUnit.setSelection(editor, 'p', 0);
-      LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'p', 0);
+    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
 
-      LegacyUnit.equal(
-        editor.getContent(),
-        '<ul>' +
-          '<li>a</li>' +
-          '</ul>' +
-          '<p>b</p>' +
-          '<ul>' +
-          '<li>c</li>' +
-          '</ul>'
-      );
-    }
-  );
+    LegacyUnit.equal(editor.getContent(), '<ul>' + '<li>a</li>' + '</ul>' + '<p>b</p>' + '<ul>' + '<li>c</li>' + '</ul>');
+  });
 
   TinyLoader.setupLight(
     function (editor, onSuccess, onFailure) {
-      Pipeline.async(
-        {},
-        Log.steps('TBA', 'Link: Remove tests', suite.toSteps(editor)),
-        onSuccess,
-        onFailure
-      );
+      Pipeline.async({}, Log.steps('TBA', 'Link: Remove tests', suite.toSteps(editor)), onSuccess, onFailure);
     },
     {
       plugins: 'lists',
@@ -418,8 +268,7 @@ UnitTest.asynctest('tinymce.lists.browser.RemoveTest', (success, failure) => {
       indent: false,
       entities: 'raw',
       valid_elements:
-        'li[style|class|data-custom],ol[style|class|data-custom],' +
-        'ul[style|class|data-custom],dl,dt,dd,em,strong,span,#p,div,br',
+        'li[style|class|data-custom],ol[style|class|data-custom],' + 'ul[style|class|data-custom],dl,dt,dd,em,strong,span,#p,div,br',
       valid_styles: {
         '*':
           'color,font-size,font-family,background-color,font-weight,' +

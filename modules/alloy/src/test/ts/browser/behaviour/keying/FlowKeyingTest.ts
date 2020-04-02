@@ -23,15 +23,11 @@ UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
               width: '20px',
               height: '20px',
               margin: '2px',
-              border:
-                '1px solid ' +
-                (Arr.contains(classes, 'stay') ? 'blue' : 'yellow')
+              border: '1px solid ' + (Arr.contains(classes, 'stay') ? 'blue' : 'yellow')
             },
             classes
           },
-          events: AlloyEvents.derive([
-            AlloyEvents.runOnExecute(store.adder('item.execute: ' + name))
-          ]),
+          events: AlloyEvents.derive([AlloyEvents.runOnExecute(store.adder('item.execute: ' + name))]),
           containerBehaviours: Behaviour.derive([Focusing.config({})])
         });
 
@@ -73,50 +69,18 @@ UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
       return [
         GuiSetup.mSetupKeyLogger(body),
         FocusTools.sSetFocus('Initial focus', gui.element(), '.one'),
-        NavigationUtils.sequence(doc, Keys.right(), {}, [
-          targets.two,
-          targets.five,
-          targets.one,
-          targets.two,
-          targets.five,
-          targets.one
-        ]),
-        NavigationUtils.sequence(doc, Keys.left(), {}, [
-          targets.five,
-          targets.two,
-          targets.one,
-          targets.five,
-          targets.two,
-          targets.one
-        ]),
-        NavigationUtils.sequence(doc, Keys.up(), {}, [
-          targets.five,
-          targets.two,
-          targets.one,
-          targets.five,
-          targets.two,
-          targets.one
-        ]),
-        NavigationUtils.sequence(doc, Keys.down(), {}, [
-          targets.two,
-          targets.five,
-          targets.one,
-          targets.two,
-          targets.five,
-          targets.one
-        ]),
+        NavigationUtils.sequence(doc, Keys.right(), {}, [targets.two, targets.five, targets.one, targets.two, targets.five, targets.one]),
+        NavigationUtils.sequence(doc, Keys.left(), {}, [targets.five, targets.two, targets.one, targets.five, targets.two, targets.one]),
+        NavigationUtils.sequence(doc, Keys.up(), {}, [targets.five, targets.two, targets.one, targets.five, targets.two, targets.one]),
+        NavigationUtils.sequence(doc, Keys.down(), {}, [targets.two, targets.five, targets.one, targets.two, targets.five, targets.one]),
 
         // Test execute
         Keyboard.sKeydown(doc, Keys.enter(), {}),
-        store.sAssertEq('Check that execute has fired on the right target', [
-          'item.execute: one'
-        ]),
+        store.sAssertEq('Check that execute has fired on the right target', ['item.execute: one']),
         store.sClear,
 
         Keyboard.sKeydown(doc, Keys.escape(), {}),
-        store.sAssertEq('Check that escape handler has fired', [
-          'flow.onEscape'
-        ]),
+        store.sAssertEq('Check that escape handler has fired', ['flow.onEscape']),
 
         GuiSetup.mTeardownKeyLogger(body, [])
       ];

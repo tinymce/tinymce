@@ -54,11 +54,7 @@ UnitTest.asynctest('Matrix Keying Test', (success, failure) => {
             },
             classes: ['cell'].concat(classes)
           },
-          events: AlloyEvents.derive([
-            AlloyEvents.runOnExecute(
-              store.adder('item.execute: ' + classes.join(','))
-            )
-          ]),
+          events: AlloyEvents.derive([AlloyEvents.runOnExecute(store.adder('item.execute: ' + classes.join(',')))]),
           containerBehaviours: Behaviour.derive([Focusing.config({})])
         });
 
@@ -140,23 +136,9 @@ UnitTest.asynctest('Matrix Keying Test', (success, failure) => {
           targets.c03,
           targets.c21
         ]),
-        NavigationUtils.sequence(doc, Keys.right(), {}, [
-          targets.c19,
-          targets.c20,
-          targets.c21,
-          targets.c19,
-          targets.c20,
-          targets.c21
-        ]),
+        NavigationUtils.sequence(doc, Keys.right(), {}, [targets.c19, targets.c20, targets.c21, targets.c19, targets.c20, targets.c21]),
 
-        NavigationUtils.sequence(doc, Keys.left(), {}, [
-          targets.c20,
-          targets.c19,
-          targets.c21,
-          targets.c20,
-          targets.c19,
-          targets.c21
-        ]),
+        NavigationUtils.sequence(doc, Keys.left(), {}, [targets.c20, targets.c19, targets.c21, targets.c20, targets.c19, targets.c21]),
 
         // Test execute
         Keyboard.sKeydown(doc, Keys.enter(), {}),

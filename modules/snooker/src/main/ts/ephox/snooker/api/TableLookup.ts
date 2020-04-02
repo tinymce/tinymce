@@ -1,22 +1,10 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
-import {
-  Attr,
-  Element,
-  Node,
-  SelectorFilter,
-  SelectorFind,
-  Selectors,
-  Traverse
-} from '@ephox/sugar';
+import { Attr, Element, Node, SelectorFilter, SelectorFind, Selectors, Traverse } from '@ephox/sugar';
 import * as LayerSelector from '../util/LayerSelector';
 import * as Structs from './Structs';
 
 // lookup inside this table
-const lookup = function (
-  tags: string[],
-  element: Element,
-  isRoot: (e: Element) => boolean = Fun.never
-): Option<Element> {
+const lookup = function (tags: string[], element: Element, isRoot: (e: Element) => boolean = Fun.never): Option<Element> {
   // If the element we're inspecting is the root, we definitely don't want it.
   if (isRoot(element)) {
     return Option.none();
@@ -84,16 +72,4 @@ const grid = function (element: Element, rowProp: string, colProp: string) {
   return Structs.grid(rowsCount, cols);
 };
 
-export {
-  cell,
-  firstCell,
-  cells,
-  neighbourCells,
-  table,
-  row,
-  rows,
-  notCell,
-  neighbourRows,
-  attr,
-  grid
-};
+export { cell, firstCell, cells, neighbourCells, table, row, rows, notCell, neighbourRows, attr, grid };

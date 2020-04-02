@@ -22,15 +22,7 @@ import * as LinkButton from '../ui/LinkButton';
 import * as StyleFormats from '../util/StyleFormats';
 import { MobileRealm } from '../ui/IosRealm';
 
-const defaults = [
-  'undo',
-  'bold',
-  'italic',
-  'link',
-  'image',
-  'bullist',
-  'styleselect'
-];
+const defaults = ['undo', 'bold', 'italic', 'link', 'image', 'bullist', 'styleselect'];
 
 const extract = function (rawToolbar) {
   // Ignoring groups
@@ -177,9 +169,7 @@ const detect = function (settings, features) {
   const present = {};
   return Arr.bind(itemNames, function (iName) {
     const r =
-      !Obj.hasNonNullableKey<any, string>(present, iName) &&
-      Obj.hasNonNullableKey(features, iName) &&
-      features[iName].isSupported()
+      !Obj.hasNonNullableKey<any, string>(present, iName) && Obj.hasNonNullableKey(features, iName) && features[iName].isSupported()
         ? [features[iName].sketch()]
         : [];
     // NOTE: Could use fold to avoid mutation, but it might be overkill and not performant

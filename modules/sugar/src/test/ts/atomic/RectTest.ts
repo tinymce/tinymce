@@ -11,14 +11,7 @@ UnitTest.test('Rect', function () {
     Jsc.number,
     Jsc.number,
     Jsc.number,
-    (
-      left: number,
-      right: number,
-      top: number,
-      bottom: number,
-      width: number,
-      height: number
-    ) =>
+    (left: number, right: number, top: number, bottom: number, width: number, height: number) =>
       Jsc.eq(
         {
           left,

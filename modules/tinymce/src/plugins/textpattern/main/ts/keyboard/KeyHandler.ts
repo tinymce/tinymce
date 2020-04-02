@@ -22,15 +22,8 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
   }
 
   // Find any matches
-  const inlineMatches = InlinePattern.findPatterns(
-    editor,
-    patternSet.inlinePatterns,
-    false
-  );
-  const blockMatches = BlockPattern.findPatterns(
-    editor,
-    patternSet.blockPatterns
-  );
+  const inlineMatches = InlinePattern.findPatterns(editor, patternSet.inlinePatterns, false);
+  const blockMatches = BlockPattern.findPatterns(editor, patternSet.blockPatterns);
   if (blockMatches.length > 0 || inlineMatches.length > 0) {
     editor.undoManager.add();
     editor.undoManager.extra(
@@ -44,22 +37,14 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
         BlockPattern.applyMatches(editor, blockMatches);
         // find the spot before the cursor position
         const range = editor.selection.getRng();
-        const spot = textBefore(
-          range.startContainer,
-          range.startOffset,
-          editor.dom.getRoot()
-        );
+        const spot = textBefore(range.startContainer, range.startOffset, editor.dom.getRoot());
         editor.execCommand('mceInsertNewLine');
         // clean up the cursor position we used to preserve the format
         spot.each((s) => {
           const node = s.container;
           if (node.data.charAt(s.offset - 1) === Unicode.zeroWidth) {
             node.deleteData(s.offset - 1, 1);
-            cleanEmptyNodes(
-              editor.dom,
-              node.parentNode,
-              (e: Node) => e === editor.dom.getRoot()
-            );
+            cleanEmptyNodes(editor.dom, node.parentNode, (e: Node) => e === editor.dom.getRoot());
           }
         });
       }
@@ -70,11 +55,7 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
 };
 
 const handleInlineKey = (editor: Editor, patternSet: PatternSet): void => {
-  const inlineMatches = InlinePattern.findPatterns(
-    editor,
-    patternSet.inlinePatterns,
-    true
-  );
+  const inlineMatches = InlinePattern.findPatterns(editor, patternSet.inlinePatterns, true);
   if (inlineMatches.length > 0) {
     editor.undoManager.transact(() => {
       InlinePattern.applyMatches(editor, inlineMatches);

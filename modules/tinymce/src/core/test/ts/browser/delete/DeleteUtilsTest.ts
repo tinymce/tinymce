@@ -6,10 +6,7 @@ import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 
-UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function (success, failure) {
   const viewBlock = ViewBlock();
 
   const cSetHtml = function (html) {
@@ -20,61 +17,29 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function (
 
   const cGetParentTextBlock = function (elementPath) {
     return Chain.mapper(function (viewBlock: any) {
-      const element = Hierarchy.follow(
-        Element.fromDom(viewBlock.get()),
-        elementPath
-      ).getOrDie();
-      return DeleteUtils.getParentBlock(
-        Element.fromDom(viewBlock.get()),
-        element
-      );
+      const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
+      return DeleteUtils.getParentBlock(Element.fromDom(viewBlock.get()), element);
     });
   };
 
   const cAssertBlock = function (elementPath) {
     return Chain.op(function (actualBlock: Option<any>) {
-      const expectedBlock = Hierarchy.follow(
-        Element.fromDom(viewBlock.get()),
-        elementPath
-      ).getOrDie();
-      Assertions.assertDomEq(
-        'Should be the expected block element',
-        expectedBlock,
-        actualBlock.getOrDie()
-      );
+      const expectedBlock = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
+      Assertions.assertDomEq('Should be the expected block element', expectedBlock, actualBlock.getOrDie());
     });
   };
 
-  const cWillDeleteLastPositionInElement = function (
-    forward,
-    caretPath,
-    caretOffset,
-    elementPath
-  ) {
+  const cWillDeleteLastPositionInElement = function (forward, caretPath, caretOffset, elementPath) {
     return Chain.injectThunked(function () {
-      const element = Hierarchy.follow(
-        Element.fromDom(viewBlock.get()),
-        elementPath
-      ).getOrDie();
-      const caretNode = Hierarchy.follow(
-        Element.fromDom(viewBlock.get()),
-        caretPath
-      ).getOrDie();
+      const element = Hierarchy.follow(Element.fromDom(viewBlock.get()), elementPath).getOrDie();
+      const caretNode = Hierarchy.follow(Element.fromDom(viewBlock.get()), caretPath).getOrDie();
 
-      return DeleteUtils.willDeleteLastPositionInElement(
-        forward,
-        CaretPosition(caretNode.dom(), caretOffset),
-        element.dom()
-      );
+      return DeleteUtils.willDeleteLastPositionInElement(forward, CaretPosition(caretNode.dom(), caretOffset), element.dom());
     });
   };
 
   const cAssertNone = Chain.op(function (actualBlock: Option<any>) {
-    Assertions.assertEq(
-      'Should be the none but got some',
-      true,
-      actualBlock.isNone()
-    );
+    Assertions.assertEq('Should be the none but got some', true, actualBlock.isNone());
   });
 
   viewBlock.attach();
@@ -86,44 +51,18 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function (
         GeneralSteps.sequence([
           Logger.t(
             'Should be the paragraph block',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<p>a</p>'),
-              cGetParentTextBlock([0, 0]),
-              cAssertBlock([0])
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<p>a</p>'), cGetParentTextBlock([0, 0]), cAssertBlock([0])])
           ),
           Logger.t(
             'Should be the paragraph block inside the div',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<div><p>a</p></div>'),
-              cGetParentTextBlock([0, 0, 0]),
-              cAssertBlock([0, 0])
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<div><p>a</p></div>'), cGetParentTextBlock([0, 0, 0]), cAssertBlock([0, 0])])
           ),
           Logger.t(
             'Should be none in inline elements',
-            Chain.asStep(viewBlock, [
-              cSetHtml('<span>a</span>'),
-              cGetParentTextBlock([0, 0]),
-              cAssertNone
-            ])
+            Chain.asStep(viewBlock, [cSetHtml('<span>a</span>'), cGetParentTextBlock([0, 0]), cAssertNone])
           ),
-          Logger.t(
-            'Should be none text nodes',
-            Chain.asStep(viewBlock, [
-              cSetHtml('a'),
-              cGetParentTextBlock([0]),
-              cAssertNone
-            ])
-          ),
-          Logger.t(
-            'Should be none on root element',
-            Chain.asStep(viewBlock, [
-              cSetHtml(''),
-              cGetParentTextBlock([]),
-              cAssertNone
-            ])
-          ),
+          Logger.t('Should be none text nodes', Chain.asStep(viewBlock, [cSetHtml('a'), cGetParentTextBlock([0]), cAssertNone])),
+          Logger.t('Should be none on root element', Chain.asStep(viewBlock, [cSetHtml(''), cGetParentTextBlock([]), cAssertNone])),
           Logger.t(
             'Will delete last position',
             GeneralSteps.sequence([

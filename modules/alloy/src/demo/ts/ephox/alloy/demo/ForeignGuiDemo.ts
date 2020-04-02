@@ -1,19 +1,7 @@
 import { document } from '@ephox/dom-globals';
 import { Option, Options } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import {
-  Css,
-  DomEvent,
-  Element,
-  Elements,
-  EventArgs,
-  Height,
-  Insert,
-  InsertAll,
-  Node,
-  SelectorFind,
-  Width
-} from '@ephox/sugar';
+import { Css, DomEvent, Element, Elements, EventArgs, Height, Insert, InsertAll, Node, SelectorFind, Width } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
@@ -47,8 +35,7 @@ export default (): void => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
   const platform = PlatformDetection.detect();
 
-  const onNode = (name: string) => (elem: Element): Option<Element> =>
-    Options.someIf(Node.name(elem) === name, elem);
+  const onNode = (name: string) => (elem: Element): Option<Element> => Options.someIf(Node.name(elem) === name, elem);
 
   const contents =
     '<div><strong>drag1</strong> and <code>click1</code> and <strong>drag2</strong> ' +
@@ -93,17 +80,11 @@ export default (): void => {
             ]),
 
             events: AlloyEvents.derive([
-              AlloyEvents.run<EventArgs>(
-                NativeEvents.click(),
-                (component, simulatedEvent) => {
-                  // We have to remove the proxy first, because we are during a proxied event (click)
-                  connection.unproxy(component);
-                  connection.dispatchTo(
-                    SystemEvents.execute(),
-                    simulatedEvent.event()
-                  );
-                }
-              )
+              AlloyEvents.run<EventArgs>(NativeEvents.click(), (component, simulatedEvent) => {
+                // We have to remove the proxy first, because we are during a proxied event (click)
+                connection.unproxy(component);
+                connection.dispatchTo(SystemEvents.execute(), simulatedEvent.event());
+              })
             ])
           }
         },

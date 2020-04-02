@@ -9,11 +9,7 @@ import * as Origins from '../layout/Origins';
 import { Anchoring, nu as NuAnchoring, SubmenuAnchor } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 
-const placement = (
-  component: AlloyComponent,
-  submenuInfo: SubmenuAnchor,
-  origin: Origins.OriginAdt
-): Option<Anchoring> => {
+const placement = (component: AlloyComponent, submenuInfo: SubmenuAnchor, origin: Origins.OriginAdt): Option<Anchoring> => {
   const anchorBox = Origins.toBox(origin, submenuInfo.item.element());
 
   const layouts = AnchorLayouts.get(

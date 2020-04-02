@@ -5,12 +5,7 @@ const eq = function <E, D>(universe: Universe<E, D>, item: E) {
   return Fun.curry(universe.eq, item);
 };
 
-const unsafeSubset = function <E, D>(
-  universe: Universe<E, D>,
-  common: E,
-  ps1: E[],
-  ps2: E[]
-) {
+const unsafeSubset = function <E, D>(universe: Universe<E, D>, common: E, ps1: E[], ps2: E[]) {
   const children = universe.property().children(common);
   if (universe.eq(common, ps1[0])) {
     return Option.some([ps1[0]]);
@@ -25,8 +20,7 @@ const unsafeSubset = function <E, D>(
 
     // find the child of common in the ps array
     const index = Arr.findIndex(topDown, eq(universe, common)).getOr(-1);
-    const item =
-      index < topDown.length - 1 ? topDown[index + 1] : topDown[index];
+    const item = index < topDown.length - 1 ? topDown[index + 1] : topDown[index];
 
     // find the index of that child in the common children
     return Arr.findIndex(children, eq(universe, item));
@@ -48,12 +42,7 @@ const unsafeSubset = function <E, D>(
 };
 
 // Note: this can be exported if it is required in the future.
-const ancestors = function <E, D>(
-  universe: Universe<E, D>,
-  start: E,
-  end: E,
-  isRoot: (x: E) => boolean = Fun.never
-) {
+const ancestors = function <E, D>(universe: Universe<E, D>, start: E, end: E, isRoot: (x: E) => boolean = Fun.never) {
   // Inefficient if no isRoot is supplied.
   // TODO: Andy knows there is a graph-based algorithm to find a common parent, but can't remember it
   //        This also includes something to get the subset after finding the common parent

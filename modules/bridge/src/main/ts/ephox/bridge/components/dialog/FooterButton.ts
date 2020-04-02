@@ -1,10 +1,6 @@
 import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Id, Option } from '@ephox/katamari';
-import {
-  DialogToggleMenuItemApi,
-  dialogToggleMenuItemSchema,
-  DialogToggleMenuItem as DialogToggleMenuItemType
-} from './ToggleMenuItem';
+import { DialogToggleMenuItemApi, dialogToggleMenuItemSchema, DialogToggleMenuItem as DialogToggleMenuItemType } from './ToggleMenuItem';
 
 export type DialogMenuButtonItemTypes = DialogToggleMenuItemApi;
 export type DialogToggleMenuItem = DialogToggleMenuItemType;
@@ -69,15 +65,9 @@ const baseButtonFields = [
   FieldSchema.defaultedBoolean('disabled', false)
 ];
 
-export const dialogButtonFields = [
-  ...baseButtonFields,
-  FieldSchema.strictString('text')
-];
+export const dialogButtonFields = [...baseButtonFields, FieldSchema.strictString('text')];
 
-const normalButtonFields = [
-  FieldSchema.strictStringEnum('type', ['submit', 'cancel', 'custom']),
-  ...dialogButtonFields
-];
+const normalButtonFields = [FieldSchema.strictStringEnum('type', ['submit', 'cancel', 'custom']), ...dialogButtonFields];
 
 const menuButtonFields = [
   FieldSchema.strictStringEnum('type', ['menu']),

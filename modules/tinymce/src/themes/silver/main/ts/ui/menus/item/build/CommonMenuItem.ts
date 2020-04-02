@@ -20,31 +20,21 @@ import {
 import { Arr, Cell, Fun, Option } from '@ephox/katamari';
 
 import { DisablingConfigs } from 'tinymce/themes/silver/ui/alien/DisablingConfigs';
-import {
-  onControlAttached,
-  onControlDetached,
-  OnDestroy
-} from 'tinymce/themes/silver/ui/controls/Controls';
+import { onControlAttached, onControlDetached, OnDestroy } from 'tinymce/themes/silver/ui/controls/Controls';
 import { menuItemEventOrder, onMenuItemExecute } from '../ItemEvents';
 import ItemResponse from '../ItemResponse';
 import { ItemStructure } from '../structure/ItemStructure';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import * as ReadOnly from 'tinymce/themes/silver/ReadOnly';
 
-export const componentRenderPipeline = (xs: Array<Option<AlloySpec>>) =>
-  Arr.bind(xs, (o) => o.toArray());
+export const componentRenderPipeline = (xs: Array<Option<AlloySpec>>) => Arr.bind(xs, (o) => o.toArray());
 
 export interface CommonMenuItemSpec<T> {
   onAction: (itemApi: T) => void;
   onSetup: (itemApi: T) => OnDestroy<T>;
   triggersSubmenu: boolean;
   disabled: boolean;
-  itemBehaviours: Array<
-    Behaviour.NamedConfiguredBehaviour<
-      Behaviour.BehaviourConfigSpec,
-      Behaviour.BehaviourConfigDetail
-    >
-  >;
+  itemBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
   getApi: (comp: AlloyComponent) => T;
   data: ItemDataOutput;
 }
@@ -100,9 +90,7 @@ const renderCommonChoice = <T>(
     components: componentRenderPipeline(structure.optComponents),
     eventOrder: menuItemEventOrder,
     buttonBehaviours: Behaviour.derive([
-      AddEventsBehaviour.config('item-events', [
-        AlloyEvents.run(NativeEvents.mouseover(), Focusing.focus)
-      ]),
+      AddEventsBehaviour.config('item-events', [AlloyEvents.run(NativeEvents.mouseover(), Focusing.focus)]),
       DisablingConfigs.item(spec.disabled || providersbackstage.isReadonly()),
       ReadOnly.receivingConfig()
     ]),

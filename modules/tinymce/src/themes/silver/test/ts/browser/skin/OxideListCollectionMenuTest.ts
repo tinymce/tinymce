@@ -1,14 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  FocusTools,
-  Keyboard,
-  Keys,
-  Logger,
-  Pipeline,
-  UiFinder
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
@@ -32,26 +22,16 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
       Pipeline.async(
         {},
         Logger.ts('Check structure of list collection', [
-          TestHelpers.GuiSetup.mAddStyles(doc, [
-            ':focus { background-color: rgb(222, 224, 226); }'
-          ]),
+          TestHelpers.GuiSetup.mAddStyles(doc, [':focus { background-color: rgb(222, 224, 226); }']),
           tinyUi.sClickOnToolbar('Click on toolbar button', 'button'),
-          UiFinder.sWaitForVisible(
-            'Waiting for menu',
-            Body.body(),
-            '[role="menu"]'
-          ),
+          UiFinder.sWaitForVisible('Waiting for menu', Body.body(), '[role="menu"]'),
           Chain.asStep(Body.body(), [
             UiFinder.cFindIn('[role="menu"]'),
             Assertions.cAssertStructure(
               'Checking structure',
               ApproxStructure.build((s, str, arr) =>
                 s.element('div', {
-                  classes: [
-                    arr.has('tox-menu'),
-                    arr.has('tox-collection'),
-                    arr.has('tox-collection--list')
-                  ],
+                  classes: [arr.has('tox-menu'), arr.has('tox-collection'), arr.has('tox-collection--list')],
                   children: [
                     s.element('div', {
                       classes: [arr.has('tox-collection__group')],
@@ -63,19 +43,14 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                           },
                           children: [
                             s.element('div', {
-                              classes: [
-                                arr.has('tox-collection__item-icon'),
-                                arr.has('tox-collection__item-checkmark')
-                              ],
+                              classes: [arr.has('tox-collection__item-icon'), arr.has('tox-collection__item-checkmark')],
                               children: [s.element('svg', {})]
                             }),
                             s.element('div', {
                               classes: [arr.has('tox-collection__item-label')]
                             }),
                             s.element('div', {
-                              classes: [
-                                arr.has('tox-collection__item-accessory')
-                              ]
+                              classes: [arr.has('tox-collection__item-accessory')]
                             })
                           ]
                         }),
@@ -116,9 +91,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                               classes: [arr.has('tox-collection__item-label')]
                             }),
                             s.element('div', {
-                              classes: [
-                                arr.has('tox-collection__item-accessory')
-                              ]
+                              classes: [arr.has('tox-collection__item-accessory')]
                             })
                           ]
                         })
@@ -129,23 +102,11 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
               )
             )
           ]),
-          FocusTools.sTryOnSelector(
-            'Focus should be on Alpha',
-            doc,
-            '.tox-collection__item:contains(Alpha)'
-          ),
+          FocusTools.sTryOnSelector('Focus should be on Alpha', doc, '.tox-collection__item:contains(Alpha)'),
           Keyboard.sKeydown(doc, Keys.down(), {}),
-          FocusTools.sTryOnSelector(
-            'Focus should be on Beta',
-            doc,
-            '.tox-collection__item:contains(Beta)'
-          ),
+          FocusTools.sTryOnSelector('Focus should be on Beta', doc, '.tox-collection__item:contains(Beta)'),
           Keyboard.sKeydown(doc, Keys.down(), {}),
-          FocusTools.sTryOnSelector(
-            'Focus should be on Gamma',
-            doc,
-            '.tox-collection__item:contains(Gamma)'
-          ),
+          FocusTools.sTryOnSelector('Focus should be on Gamma', doc, '.tox-collection__item:contains(Gamma)'),
           TestHelpers.GuiSetup.mRemoveStyles
         ]),
         onSuccess,

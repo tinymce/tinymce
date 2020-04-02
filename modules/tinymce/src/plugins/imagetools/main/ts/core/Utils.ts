@@ -23,11 +23,7 @@ const traverse = function (json, path) {
   return isValue(value) ? value : null;
 };
 
-const requestUrlAsBlob = function (
-  url: string,
-  headers: Record<string, string>,
-  withCredentials: boolean
-) {
+const requestUrlAsBlob = function (url: string, headers: Record<string, string>, withCredentials: boolean) {
   return new Promise<{ status: number; blob: Blob }>(function (resolve) {
     let xhr;
 

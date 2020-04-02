@@ -8,10 +8,7 @@
 import { Css, Element, Focus, Insert, Remove } from '@ephox/sugar';
 import { HTMLInputElement, Node as DomNode } from '@ephox/dom-globals';
 
-const input = (
-  parent: Element<DomNode>,
-  operation: (e: Element<HTMLInputElement>) => void
-): void => {
+const input = (parent: Element<DomNode>, operation: (e: Element<HTMLInputElement>) => void): void => {
   // to capture focus allowing the keyboard to remain open with no 'real' selection
   const input: Element<HTMLInputElement> = Element.fromTag('input');
   Css.setAll(input, {

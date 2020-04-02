@@ -8,35 +8,21 @@ import { Testable } from '@ephox/dispute';
 const { tNumber } = Testable;
 
 UnitTest.test('Arr.find: Unit tests', () => {
-  const checkNoneHelper = (
-    input: ArrayLike<number>,
-    pred: (n: number, i: number) => boolean
-  ): void => {
+  const checkNoneHelper = (input: ArrayLike<number>, pred: (n: number, i: number) => boolean): void => {
     Assert.eq('none', Option.none(), Arr.find(input, pred), tOption(tNumber));
   };
 
-  const checkNone = (
-    input: ArrayLike<number>,
-    pred: (n: number, i: number) => boolean
-  ) => {
+  const checkNone = (input: ArrayLike<number>, pred: (n: number, i: number) => boolean) => {
     checkNoneHelper(input, pred);
     checkNoneHelper(Object.freeze(input), pred);
   };
 
-  const checkArrHelper = (
-    expected: number,
-    input: ArrayLike<number>,
-    pred: (n: number, i: number) => boolean
-  ): void => {
+  const checkArrHelper = (expected: number, input: ArrayLike<number>, pred: (n: number, i: number) => boolean): void => {
     const actual = Arr.find(input, pred);
     Assert.eq('some', Option.some(expected), actual, tOption(tNumber));
   };
 
-  const checkArr = (
-    expected: number,
-    input: ArrayLike<number>,
-    pred: (n: number, i: number) => boolean
-  ): void => {
+  const checkArr = (expected: number, input: ArrayLike<number>, pred: (n: number, i: number) => boolean): void => {
     checkArrHelper(expected, input, pred);
     checkArrHelper(expected, Object.freeze(input), pred);
   };
@@ -56,22 +42,12 @@ UnitTest.test('Arr.find: Unit tests', () => {
 
 UnitTest.test('Arr.find: finds a value in the array', () => {
   fc.assert(
-    fc.property(
-      fc.array(fc.integer()),
-      fc.integer(),
-      fc.array(fc.integer()),
-      (prefix, i, suffix) => {
-        const arr = prefix.concat([i]).concat(suffix);
-        const pred = (x) => x === i;
-        const result = Arr.find(arr, pred);
-        Assert.eq(
-          'Element found in array',
-          Option.some(i),
-          result,
-          tOption(tNumber)
-        );
-      }
-    )
+    fc.property(fc.array(fc.integer()), fc.integer(), fc.array(fc.integer()), (prefix, i, suffix) => {
+      const arr = prefix.concat([i]).concat(suffix);
+      const pred = (x) => x === i;
+      const result = Arr.find(arr, pred);
+      Assert.eq('Element found in array', Option.some(i), result, tOption(tNumber));
+    })
   );
 });
 
@@ -79,12 +55,7 @@ UnitTest.test('Arr.find: value not found', () => {
   fc.assert(
     fc.property(fc.array(fc.integer()), (arr) => {
       const result = Arr.find(arr, () => false);
-      Assert.eq(
-        'Element not found in array',
-        Option.none(),
-        result,
-        tOption(tNumber)
-      );
+      Assert.eq('Element not found in array', Option.none(), result, tOption(tNumber));
     })
   );
 });

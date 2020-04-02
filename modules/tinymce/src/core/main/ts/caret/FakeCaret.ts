@@ -34,18 +34,10 @@ interface CaretState {
 const browser = PlatformDetection.detect().browser;
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
-const isTableCell = (node: Node) =>
-  NodeType.isElement(node) && /^(TD|TH)$/i.test(node.tagName);
+const isTableCell = (node: Node) => NodeType.isElement(node) && /^(TD|TH)$/i.test(node.tagName);
 
-const getAbsoluteClientRect = (
-  root: HTMLElement,
-  element: HTMLElement,
-  before: boolean
-): GeomClientRect.ClientRect => {
-  const clientRect = GeomClientRect.collapse(
-    element.getBoundingClientRect(),
-    before
-  );
+const getAbsoluteClientRect = (root: HTMLElement, element: HTMLElement, before: boolean): GeomClientRect.ClientRect => {
+  const clientRect = GeomClientRect.collapse(element.getBoundingClientRect(), before);
   let docElm, scrollX, scrollY, margin, rootRect;
 
   if (root.tagName === 'BODY') {
@@ -109,12 +101,7 @@ const trimInlineCaretContainers = (root: Node): void => {
   }
 };
 
-export const FakeCaret = (
-  editor: Editor,
-  root: HTMLElement,
-  isBlock: (node: Node) => boolean,
-  hasFocus: () => boolean
-): FakeCaret => {
+export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Node) => boolean, hasFocus: () => boolean): FakeCaret => {
   const lastVisualCaret = Cell<Option<CaretState>>(Option.none());
   let cursorInterval, caretContainerNode;
   const rootBlock = Settings.getForcedRootBlock(editor);
@@ -130,19 +117,11 @@ export const FakeCaret = (
     }
 
     if (isBlock(element)) {
-      caretContainerNode = CaretContainer.insertBlock(
-        caretBlock,
-        element,
-        before
-      );
+      caretContainerNode = CaretContainer.insertBlock(caretBlock, element, before);
       clientRect = getAbsoluteClientRect(root, element, before);
       DomQuery(caretContainerNode).css('top', clientRect.top);
 
-      const caret = DomQuery(
-        '<div class="mce-visual-caret" data-mce-bogus="all"></div>'
-      )
-        .css(clientRect)
-        .appendTo(root)[0];
+      const caret = DomQuery('<div class="mce-visual-caret" data-mce-bogus="all"></div>').css(clientRect).appendTo(root)[0];
       lastVisualCaret.set(Option.some({ caret, element, before }));
 
       lastVisualCaret.get().each((caretState) => {
@@ -193,24 +172,16 @@ export const FakeCaret = (
   const startBlink = () => {
     cursorInterval = Delay.setInterval(() => {
       if (hasFocus()) {
-        DomQuery('div.mce-visual-caret', root).toggleClass(
-          'mce-visual-caret-hidden'
-        );
+        DomQuery('div.mce-visual-caret', root).toggleClass('mce-visual-caret-hidden');
       } else {
-        DomQuery('div.mce-visual-caret', root).addClass(
-          'mce-visual-caret-hidden'
-        );
+        DomQuery('div.mce-visual-caret', root).addClass('mce-visual-caret-hidden');
       }
     }, 500);
   };
 
   const reposition = () => {
     lastVisualCaret.get().each((caretState) => {
-      const clientRect = getAbsoluteClientRect(
-        root,
-        caretState.element,
-        caretState.before
-      );
+      const clientRect = getAbsoluteClientRect(root, caretState.element, caretState.before);
       DomQuery(caretState.caret).css({ ...clientRect });
     });
   };
@@ -245,9 +216,7 @@ export const FakeCaret = (
   };
 };
 
-export const isFakeCaretTableBrowser = (): boolean =>
-  browser.isIE() || browser.isEdge() || browser.isFirefox();
+export const isFakeCaretTableBrowser = (): boolean => browser.isIE() || browser.isEdge() || browser.isFirefox();
 
 export const isFakeCaretTarget = (node: Node): boolean =>
-  isContentEditableFalse(node) ||
-  (NodeType.isTable(node) && isFakeCaretTableBrowser());
+  isContentEditableFalse(node) || (NodeType.isTable(node) && isFakeCaretTableBrowser());

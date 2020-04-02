@@ -18,12 +18,7 @@ export default function () {
   ThemeManager.add(
     'silver',
     (editor): Theme => {
-      const {
-        uiMothership,
-        backstage,
-        renderUI,
-        getUi
-      }: RenderInfo = Render.setup(editor);
+      const { uiMothership, backstage, renderUI, getUi }: RenderInfo = Render.setup(editor);
 
       Autocompleter.register(editor, backstage.shared);
 
@@ -32,8 +27,7 @@ export default function () {
       return {
         renderUI,
         getWindowManagerImpl: Fun.constant(windowMgr),
-        getNotificationManagerImpl: () =>
-          NotificationManagerImpl(editor, { backstage }, uiMothership),
+        getNotificationManagerImpl: () => NotificationManagerImpl(editor, { backstage }, uiMothership),
         // TODO: move to editor.ui namespace
         ui: getUi()
       };

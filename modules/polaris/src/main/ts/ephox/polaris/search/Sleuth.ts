@@ -21,10 +21,7 @@ const sort = function <T extends PRange>(array: T[]) {
  *
  * Then sort the result by start point.
  */
-const search = function <T extends { pattern: () => PRegExp }>(
-  text: string,
-  targets: T[]
-) {
+const search = function <T extends { pattern: () => PRegExp }>(text: string, targets: T[]) {
   const unsorted = Arr.bind(targets, function (t) {
     const results = Find.all(text, t.pattern());
     return Arr.map(results, function (r) {

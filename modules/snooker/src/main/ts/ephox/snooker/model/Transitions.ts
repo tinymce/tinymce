@@ -5,22 +5,14 @@ import { Warehouse } from './Warehouse';
 import { Generators } from '../api/Generators';
 import { Element } from '@ephox/sugar';
 
-const toDetails = function (
-  grid: Structs.RowCells[],
-  comparator: (a: Element, b: Element) => boolean
-) {
+const toDetails = function (grid: Structs.RowCells[], comparator: (a: Element, b: Element) => boolean) {
   const seen = Arr.map(grid, function (row) {
     return Arr.map(row.cells(), function () {
       return false;
     });
   });
 
-  const updateSeen = function (
-    ri: number,
-    ci: number,
-    rowspan: number,
-    colspan: number
-  ) {
+  const updateSeen = function (ri: number, ci: number, rowspan: number, colspan: number) {
     for (let r = ri; r < ri + rowspan; r++) {
       for (let c = ci; c < ci + colspan; c++) {
         seen[r][c] = true;
@@ -34,14 +26,7 @@ const toDetails = function (
       if (seen[ri][ci] === false) {
         const result = TableGrid.subgrid(grid, ri, ci, comparator);
         updateSeen(ri, ci, result.rowspan, result.colspan);
-        return [
-          Structs.detailnew(
-            cell.element(),
-            result.rowspan,
-            result.colspan,
-            cell.isNew()
-          )
-        ];
+        return [Structs.detailnew(cell.element(), result.rowspan, result.colspan, cell.isNew())];
       } else {
         return [] as Structs.DetailNew[];
       }
@@ -50,11 +35,7 @@ const toDetails = function (
   });
 };
 
-const toGrid = function (
-  warehouse: Warehouse,
-  generators: Generators,
-  isNew: boolean
-) {
+const toGrid = function (warehouse: Warehouse, generators: Generators, isNew: boolean) {
   const grid: Structs.RowCells[] = [];
   for (let i = 0; i < warehouse.grid.rows(); i++) {
     const rowCells: Structs.ElementNew[] = [];

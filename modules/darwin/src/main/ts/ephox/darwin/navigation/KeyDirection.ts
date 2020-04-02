@@ -9,10 +9,7 @@ import { Situs } from '../selection/Situs';
 
 export interface KeyDirection {
   traverse: (element: Element) => Option<Element>;
-  gather: (
-    element: Element,
-    isRoot: (e: Element) => boolean
-  ) => Option<Element>;
+  gather: (element: Element, isRoot: (e: Element) => boolean) => Option<Element>;
   relative: (element: Element) => Situ;
   otherRetry: (bridge: WindowBridge, caret: Carets) => Option<Situs>;
   ieRetry: (bridge: WindowBridge, caret: Carets) => Option<Situs>;

@@ -1,13 +1,6 @@
 import { document, window } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import {
-  Css,
-  DomEvent,
-  Element,
-  Insert,
-  Node,
-  SelectorFind
-} from '@ephox/sugar';
+import { Css, DomEvent, Element, Insert, Node, SelectorFind } from '@ephox/sugar';
 import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
 
 const editor = Element.fromTag('div');
@@ -44,5 +37,4 @@ DomEvent.bind(Element.fromDom(document), 'keydown', function (event) {
 
 Insert.append(ephoxUi, editor);
 
-editor.dom().innerHTML =
-  'Hello <span style="background-color: blue;">world</span> again<br/>, this is Earth.';
+editor.dom().innerHTML = 'Hello <span style="background-color: blue;">world</span> again<br/>, this is Earth.';

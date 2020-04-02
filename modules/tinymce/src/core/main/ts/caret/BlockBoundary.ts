@@ -15,44 +15,24 @@ import { isInSameBlock } from './CaretUtils';
 import { Element as DomElement } from '@ephox/dom-globals';
 import { isEmptyText } from './CaretPositionPredicates';
 
-const navigateIgnoreEmptyTextNodes = (
-  forward: boolean,
-  root: DomElement,
-  from: CaretPosition
-) => CaretFinder.navigateIgnore(forward, root, from, isEmptyText);
+const navigateIgnoreEmptyTextNodes = (forward: boolean, root: DomElement, from: CaretPosition) =>
+  CaretFinder.navigateIgnore(forward, root, from, isEmptyText);
 
 const getClosestBlock = (root: Element, pos: CaretPosition) =>
-  Arr.find(
-    Parents.parentsAndSelf(Element.fromDom(pos.container()), root),
-    ElementType.isBlock
-  );
+  Arr.find(Parents.parentsAndSelf(Element.fromDom(pos.container()), root), ElementType.isBlock);
 
-const isAtBeforeAfterBlockBoundary = (
-  forward: boolean,
-  root: Element,
-  pos: CaretPosition
-) =>
+const isAtBeforeAfterBlockBoundary = (forward: boolean, root: Element, pos: CaretPosition) =>
   navigateIgnoreEmptyTextNodes(forward, root.dom(), pos).forall((newPos) =>
     getClosestBlock(root, pos).fold(
       () => isInSameBlock(newPos, pos, root.dom()) === false,
-      (fromBlock) =>
-        isInSameBlock(newPos, pos, root.dom()) === false &&
-        Compare.contains(fromBlock, Element.fromDom(newPos.container()))
+      (fromBlock) => isInSameBlock(newPos, pos, root.dom()) === false && Compare.contains(fromBlock, Element.fromDom(newPos.container()))
     )
   );
 
-const isAtBlockBoundary = (
-  forward: boolean,
-  root: Element,
-  pos: CaretPosition
-) =>
+const isAtBlockBoundary = (forward: boolean, root: Element, pos: CaretPosition) =>
   getClosestBlock(root, pos).fold(
-    () =>
-      navigateIgnoreEmptyTextNodes(forward, root.dom(), pos).forall(
-        (newPos) => isInSameBlock(newPos, pos, root.dom()) === false
-      ),
-    (parent) =>
-      navigateIgnoreEmptyTextNodes(forward, parent.dom(), pos).isNone()
+    () => navigateIgnoreEmptyTextNodes(forward, root.dom(), pos).forall((newPos) => isInSameBlock(newPos, pos, root.dom()) === false),
+    (parent) => navigateIgnoreEmptyTextNodes(forward, parent.dom(), pos).isNone()
   );
 
 const isAtStartOfBlock = Fun.curry(isAtBlockBoundary, false);

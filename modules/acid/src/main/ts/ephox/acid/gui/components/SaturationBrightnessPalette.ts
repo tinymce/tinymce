@@ -17,22 +17,16 @@ import * as RgbaColour from '../../api/colour/RgbaColour';
 import * as ColourEvents from '../ColourEvents';
 
 // tslint:disable:no-empty-interface
-export interface SaturationBrightnessPaletteDetail
-  extends Sketcher.SingleSketchDetail {}
+export interface SaturationBrightnessPaletteDetail extends Sketcher.SingleSketchDetail {}
 
-export interface SaturationBrightnessPaletteSpec
-  extends Sketcher.SingleSketchSpec {}
+export interface SaturationBrightnessPaletteSpec extends Sketcher.SingleSketchSpec {}
 // tslint:enable:no-empty-interface
 
-export interface SaturationBrightnessPaletteSketcher
-  extends Sketcher.SingleSketch<SaturationBrightnessPaletteSpec> {
+export interface SaturationBrightnessPaletteSketcher extends Sketcher.SingleSketch<SaturationBrightnessPaletteSpec> {
   setRgba: (slider: AlloyComponent, colour: Rgba) => void;
 }
 
-const paletteFactory = (
-  _translate: (key: string) => string,
-  getClass: (key: string) => string
-): SaturationBrightnessPaletteSketcher => {
+const paletteFactory = (_translate: (key: string) => string, getClass: (key: string) => string): SaturationBrightnessPaletteSketcher => {
   const spectrumPart = Slider.parts().spectrum({
     dom: {
       tag: 'canvas',
@@ -50,9 +44,7 @@ const paletteFactory = (
         role: 'presentation'
       },
       classes: [getClass('sv-palette-thumb')],
-      innerHtml: `<div class=${getClass(
-        'sv-palette-inner-thumb'
-      )} role="presentation"></div>`
+      innerHtml: `<div class=${getClass('sv-palette-inner-thumb')} role="presentation"></div>`
     }
   });
 
@@ -85,20 +77,15 @@ const paletteFactory = (
     setColour(canvas, RgbaColour.toString(rgba));
   };
 
-  const factory: UiSketcher.SingleSketchFactory<
-    SaturationBrightnessPaletteDetail,
-    SaturationBrightnessPaletteSpec
-  > = (_detail): SketchSpec => {
+  const factory: UiSketcher.SingleSketchFactory<SaturationBrightnessPaletteDetail, SaturationBrightnessPaletteSpec> = (
+    _detail
+  ): SketchSpec => {
     const getInitialValue = Fun.constant({
       x: Fun.constant(0),
       y: Fun.constant(0)
     });
 
-    const onChange = (
-      slider: AlloyComponent,
-      _thumb: AlloyComponent,
-      value: number | SliderTypes.SliderValue
-    ) => {
+    const onChange = (slider: AlloyComponent, _thumb: AlloyComponent, value: number | SliderTypes.SliderValue) => {
       AlloyTriggers.emitWith(slider, ColourEvents.paletteUpdate, {
         value
       });

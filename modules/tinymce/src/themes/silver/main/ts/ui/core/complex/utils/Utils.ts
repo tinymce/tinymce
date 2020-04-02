@@ -12,9 +12,7 @@ import { FormatterFormatItem } from '../BespokeSelect';
 
 type Unbinder = () => void;
 
-const onSetupFormatToggle = (editor: Editor, name: string) => (
-  api: Toolbar.ToolbarToggleButtonInstanceApi
-) => {
+const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
   const unbindCell = Cell<Option<Unbinder>>(Option.none());
 
   const init = () => {
@@ -29,9 +27,7 @@ const onSetupFormatToggle = (editor: Editor, name: string) => (
   return () => unbindCell.get().each((unbind) => unbind());
 };
 
-const onActionToggleFormat = (editor: Editor) => (
-  rawItem: FormatterFormatItem
-) => () => {
+const onActionToggleFormat = (editor: Editor) => (rawItem: FormatterFormatItem) => () => {
   editor.undoManager.transact(() => {
     editor.focus();
     editor.execCommand('mceToggleFormat', false, rawItem.format);

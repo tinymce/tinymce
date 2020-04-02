@@ -18,28 +18,19 @@ UnitTest.asynctest('UiControlsTest', function (success, failure) {
 
       Chain.asStep(input, [
         UiControls.cGetValue,
-        Assertions.cAssertEq(
-          'Checking that sSetValueOn sets the value and cGetValue reads it',
-          'step.value.1'
-        )
+        Assertions.cAssertEq('Checking that sSetValueOn sets the value and cGetValue reads it', 'step.value.1')
       ]),
 
       UiControls.sSetValue(input, 'step.value.2'),
       Chain.asStep(input, [
         UiControls.cGetValue,
-        Assertions.cAssertEq(
-          'Checking that sSetValue sets the value and cGetValue reads it',
-          'step.value.2'
-        )
+        Assertions.cAssertEq('Checking that sSetValue sets the value and cGetValue reads it', 'step.value.2')
       ]),
 
       Chain.asStep(input, [
         UiControls.cSetValue('chain.value.1'),
         UiControls.cGetValue,
-        Assertions.cAssertEq(
-          'Checking that cSetValue sets the value and cGetValue reads it',
-          'chain.value.1'
-        )
+        Assertions.cAssertEq('Checking that cSetValue sets the value and cGetValue reads it', 'chain.value.1')
       ])
     ],
     () => {

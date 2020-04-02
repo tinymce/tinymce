@@ -42,10 +42,7 @@ addPostProcessHook('pre', function (editor: Editor) {
   let isPre, blocks;
 
   const hasPreSibling = function (pre) {
-    return (
-      isPre(pre.previousSibling) &&
-      ArrUtils.indexOf(blocks, pre.previousSibling) !== -1
-    );
+    return isPre(pre.previousSibling) && ArrUtils.indexOf(blocks, pre.previousSibling) !== -1;
   };
 
   const joinPre = function (pre1, pre2) {

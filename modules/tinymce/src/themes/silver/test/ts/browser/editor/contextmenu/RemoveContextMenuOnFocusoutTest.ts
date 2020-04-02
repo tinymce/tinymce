@@ -1,15 +1,7 @@
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor, ApiChains } from '@ephox/mcagar';
-import {
-  Pipeline,
-  Logger,
-  Chain,
-  Step,
-  UiFinder,
-  Assertions,
-  Guard
-} from '@ephox/agar';
+import { Pipeline, Logger, Chain, Step, UiFinder, Assertions, Guard } from '@ephox/agar';
 import { Cell, Fun } from '@ephox/katamari';
 import { Element, Body, Insert, Remove, Focus } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -38,11 +30,7 @@ UnitTest.asynctest('Remove context menu on focusout', (success, failure) => {
       Chain.op(() => {
         const contextToolbar = UiFinder.findIn(Body.body(), '.tox-pop');
 
-        Assertions.assertEq(
-          'no context toolbar',
-          state,
-          contextToolbar.isValue()
-        );
+        Assertions.assertEq('no context toolbar', state, contextToolbar.isValue());
       }),
       Guard.tryUntil('Wait for context menu to appear.')
     );

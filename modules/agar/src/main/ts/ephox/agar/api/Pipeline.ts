@@ -9,12 +9,7 @@ const assertSteps = (steps: Step<any, any>[]) => {
   Arr.each(steps, (s: Step<any, any>, i: number) => {
     let msg: string;
     if (s === undefined) {
-      msg =
-        'step ' +
-        i +
-        ' was undefined. All steps: ' +
-        JSON.stringify(steps) +
-        '\n';
+      msg = 'step ' + i + ' was undefined. All steps: ' + JSON.stringify(steps) + '\n';
     } else if (Type.isArray(s)) {
       msg = 'step ' + i + ' was an array';
     }
@@ -32,13 +27,7 @@ const assertSteps = (steps: Step<any, any>[]) => {
  *
  * If you need to run a sequence of steps, compose them using the functions in StepSequence
  */
-const runStep = <T, U>(
-  initial: T,
-  step: Step<T, U>,
-  onSuccess: NextFn<U>,
-  onFailure: DieFn,
-  initLogs?: TestLogs
-): void => {
+const runStep = <T, U>(initial: T, step: Step<T, U>, onSuccess: NextFn<U>, onFailure: DieFn, initLogs?: TestLogs): void => {
   step.runStep(initial, onSuccess, onFailure, TestLogs.getOrInit(initLogs));
 };
 
@@ -46,13 +35,7 @@ const runStep = <T, U>(
  * @deprecated Use runStep instead
  * TODO: Remove
  */
-const async = (
-  initial: any,
-  steps: Step<any, any>[],
-  onSuccess: NextFn<any>,
-  onFailure: DieFn,
-  initLogs?: TestLogs
-): void => {
+const async = (initial: any, steps: Step<any, any>[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs?: TestLogs): void => {
   assertSteps(steps);
 
   const chain = (lastLink: any, logs: TestLogs, index: number) => {
@@ -60,10 +43,7 @@ const async = (
       const asyncOperation = steps[index];
       // FIX: Make this test elsewhere without creating a circular dependency on Chain
       if ('runChain' in asyncOperation) {
-        return onFailure(
-          'You cannot create a pipeline out of chains. Use Chain.asStep to turns chains into steps',
-          logs
-        );
+        return onFailure('You cannot create a pipeline out of chains. Use Chain.asStep to turns chains into steps', logs);
       }
       try {
         const nextStep = (result, newLogs) => {

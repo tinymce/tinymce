@@ -1,13 +1,4 @@
-import {
-  Adt,
-  Arr,
-  Fun,
-  Merger,
-  Obj,
-  Option,
-  Thunk,
-  Type
-} from '@ephox/katamari';
+import { Adt, Arr, Fun, Merger, Obj, Option, Thunk, Type } from '@ephox/katamari';
 import { SimpleResult, SimpleResultType } from '../alien/SimpleResult';
 
 import * as FieldPresence from '../api/FieldPresence';
@@ -17,43 +8,20 @@ import * as ObjWriter from './ObjWriter';
 import * as SchemaError from './SchemaError';
 
 // TODO: Handle the fact that strength shouldn't be pushed outside this project.
-export type ValueValidator = (
-  a,
-  strength?: () => any
-) => SimpleResult<string, any>;
-export type PropExtractor = (
-  path: string[],
-  strength,
-  val: any
-) => SimpleResult<any, any>;
-export type ValueExtractor = (
-  label: string,
-  prop: Processor,
-  strength: () => any,
-  obj: any
-) => SimpleResult<any, string>;
+export type ValueValidator = (a, strength?: () => any) => SimpleResult<string, any>;
+export type PropExtractor = (path: string[], strength, val: any) => SimpleResult<any, any>;
+export type ValueExtractor = (label: string, prop: Processor, strength: () => any, obj: any) => SimpleResult<any, string>;
 export interface Processor {
   extract: PropExtractor;
   toString: () => string;
 }
 
-export type FieldValueProcessor<T> = (
-  key: string,
-  okey: string,
-  presence: FieldPresence.FieldPresenceAdt,
-  prop: Processor
-) => T;
-export type StateValueProcessor<T> = (
-  okey: string,
-  instantiator: (obj: any) => any
-) => T;
+export type FieldValueProcessor<T> = (key: string, okey: string, presence: FieldPresence.FieldPresenceAdt, prop: Processor) => T;
+export type StateValueProcessor<T> = (okey: string, instantiator: (obj: any) => any) => T;
 
 export interface ValueProcessorAdt {
   fold: <T>(field: FieldValueProcessor<T>, state: StateValueProcessor<T>) => T;
-  match: <T>(branches: {
-    field: FieldValueProcessor<T>;
-    state: StateValueProcessor<T>;
-  }) => T;
+  match: <T>(branches: { field: FieldValueProcessor<T>; state: StateValueProcessor<T> }) => T;
   log: (label: string) => void;
 }
 export type FieldProcessorAdt = ValueProcessorAdt;
@@ -64,10 +32,7 @@ export interface ValueProcessor {
 }
 
 // data ValueAdt = Field fields | state
-const adt: ValueProcessor = Adt.generate([
-  { field: ['key', 'okey', 'presence', 'prop'] },
-  { state: ['okey', 'instantiator'] }
-]);
+const adt: ValueProcessor = Adt.generate([{ field: ['key', 'okey', 'presence', 'prop'] }, { state: ['okey', 'instantiator'] }]);
 
 const output = function (okey, value): ValueProcessorAdt {
   return adt.state(okey, Fun.constant(value));
@@ -107,9 +72,7 @@ const cExtractOne = function (path, obj, field, strength) {
     function (key, okey, presence, prop) {
       const bundle = function (av) {
         const result = prop.extract(path.concat([key]), strength, av);
-        return SimpleResult.map(result, (res) =>
-          ObjWriter.wrap(okey, strength(res))
-        );
+        return SimpleResult.map(result, (res) => ObjWriter.wrap(okey, strength(res)));
       };
 
       const bundleAsOption = function (optValue) {
@@ -119,11 +82,7 @@ const cExtractOne = function (path, obj, field, strength) {
             return SimpleResult.svalue(outcome);
           },
           function (ov) {
-            const result: SimpleResult<any, any> = prop.extract(
-              path.concat([key]),
-              strength,
-              ov
-            );
+            const result: SimpleResult<any, any> = prop.extract(path.concat([key]), strength, ov);
             return SimpleResult.map(result, function (res) {
               return ObjWriter.wrap(okey, strength(Option.some(res)));
             });
@@ -137,27 +96,18 @@ const cExtractOne = function (path, obj, field, strength) {
             return SimpleResult.bind(strictAccess(path, obj, key), bundle);
           },
           function (fallbackThunk) {
-            return SimpleResult.bind(
-              fallbackAccess(obj, key, fallbackThunk),
-              bundle
-            );
+            return SimpleResult.bind(fallbackAccess(obj, key, fallbackThunk), bundle);
           },
           function () {
             return SimpleResult.bind(optionAccess(obj, key), bundleAsOption);
           },
           function (fallbackThunk) {
             // Defaulted option access
-            return SimpleResult.bind(
-              optionDefaultedAccess(obj, key, fallbackThunk),
-              bundleAsOption
-            );
+            return SimpleResult.bind(optionDefaultedAccess(obj, key, fallbackThunk), bundleAsOption);
           },
           function (baseThunk) {
             const base = baseThunk(obj);
-            const result = SimpleResult.map(
-              fallbackAccess(obj, key, Fun.constant({})),
-              (v) => Merger.deepMerge(base, v)
-            );
+            const result = SimpleResult.map(fallbackAccess(obj, key, Fun.constant({})), (v) => Merger.deepMerge(base, v));
             return SimpleResult.bind(result, bundle);
           }
         );
@@ -241,9 +191,7 @@ const objOfOnly = function (fields: ValueProcessorAdt[]): Processor {
       return !Obj.hasNonNullableKey(fieldNames, k);
     });
 
-    return extra.length === 0
-      ? delegate.extract(path, strength, o)
-      : SchemaError.unsupportedFields(path, extra);
+    return extra.length === 0 ? delegate.extract(path, strength, o) : SchemaError.unsupportedFields(path, extra);
   };
 
   return {
@@ -296,11 +244,7 @@ const arrOf = function (prop: Processor): Processor {
 };
 
 const oneOf = function (props: Processor[]): Processor {
-  const extract = function (
-    path: string[],
-    strength,
-    val: any
-  ): SimpleResult<any, any> {
+  const extract = function (path: string[], strength, val: any): SimpleResult<any, any> {
     const errors: Array<SimpleResult<string[], any>> = [];
 
     // Return on first match
@@ -317,9 +261,7 @@ const oneOf = function (props: Processor[]): Processor {
   };
 
   const toString = function () {
-    return (
-      'oneOf(' + Arr.map(props, (prop) => prop.toString()).join(', ') + ')'
-    );
+    return 'oneOf(' + Arr.map(props, (prop) => prop.toString()).join(', ') + ')';
   };
 
   return {
@@ -356,11 +298,7 @@ const setOf = function (validator: ValueValidator, prop: Processor): Processor {
 };
 
 // retriever is passed in. See funcOrDie in ValueSchema
-const func = function (
-  args: string[],
-  schema: Processor,
-  retriever
-): Processor {
+const func = function (args: string[], schema: Processor, retriever): Processor {
   const delegate = value(function (f, strength) {
     return Type.isFunction(f)
       ? SimpleResult.svalue<any, () => any>(function () {
@@ -405,20 +343,4 @@ const arrOfObj = Fun.compose(arrOf, objOf);
 const state = adt.state;
 const field = adt.field;
 
-export {
-  anyValue,
-  value,
-  valueThunk,
-  objOf,
-  objOfOnly,
-  arrOf,
-  oneOf,
-  setOf,
-  arrOfObj,
-  state,
-  field,
-  output,
-  snapshot,
-  thunk,
-  func
-};
+export { anyValue, value, valueThunk, objOf, objOfOnly, arrOf, oneOf, setOf, arrOfObj, state, field, output, snapshot, thunk, func };

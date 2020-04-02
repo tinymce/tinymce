@@ -12,11 +12,7 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import {
-  SliderValue,
-  SliderValueX,
-  SliderValueY
-} from 'ephox/alloy/ui/types/SliderTypes';
+import { SliderValue, SliderValueX, SliderValueY } from 'ephox/alloy/ui/types/SliderTypes';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export default (): void => {
@@ -144,8 +140,7 @@ export default (): void => {
   }
 
   const setColor = (thumb: AlloyComponent, hue: number) => {
-    const color =
-      hue < 0 ? 'black' : hue > 360 ? 'white' : 'hsl(' + hue + ', 100%, 50%)';
+    const color = hue < 0 ? 'black' : hue > 360 ? 'white' : 'hsl(' + hue + ', 100%, 50%)';
     Css.set(thumb.element(), 'background', color);
   };
 

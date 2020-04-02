@@ -9,10 +9,7 @@ import { WordDecisionItem } from 'ephox/robin/words/WordDecision';
 import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
 
 UnitTest.test('ClusteringTest', function () {
-  const checkWords = function (
-    universe: TestUniverse,
-    words: WordDecisionItem<Gene>[]
-  ) {
+  const checkWords = function (universe: TestUniverse, words: WordDecisionItem<Gene>[]) {
     return Arr.map(words, function (a) {
       const text = universe.property().getText(a.item);
       return text.substring(a.start, a.finish);
@@ -29,42 +26,17 @@ UnitTest.test('ClusteringTest', function () {
     id: string
   ) {
     Logger.sync(id + ' => check: ' + label, function () {
-      const act = Clustering.byLanguage(
-        universe,
-        universe.find(universe.get(), id).getOrDie()
-      );
+      const act = Clustering.byLanguage(universe, universe.find(universe.get(), id).getOrDie());
+      Assert.eq('start: ' + id + ', check left()', expLeft, checkWords(universe, act.left));
+      Assert.eq('start: ' + id + ', check middle()', expMiddle, checkWords(universe, act.middle));
+      Assert.eq('start: ' + id + ', check right()', expRight, checkWords(universe, act.right));
       Assert.eq(
-        'start: ' + id + ', check left()',
-        expLeft,
-        checkWords(universe, act.left)
-      );
-      Assert.eq(
-        'start: ' + id + ', check middle()',
-        expMiddle,
-        checkWords(universe, act.middle)
-      );
-      Assert.eq(
-        'start: ' + id + ', check right()',
-        expRight,
-        checkWords(universe, act.right)
-      );
-      Assert.eq(
-        () =>
-          'start: ' +
-          id +
-          ', check lang(): expected: ' +
-          expLang.toString() +
-          ', actual: ' +
-          act.lang.toString(),
+        () => 'start: ' + id + ', check lang(): expected: ' + expLang.toString() + ', actual: ' + act.lang.toString(),
         true,
         expLang.equals(act.lang)
       );
       // .all() is:  tfel + middle + right
-      Assert.eq(
-        'start: ' + id + ', check all()',
-        Arr.reverse(expLeft).concat(expMiddle).concat(expRight),
-        checkWords(universe, act.all)
-      );
+      Assert.eq('start: ' + id + ', check all()', Arr.reverse(expLeft).concat(expMiddle).concat(expRight), checkWords(universe, act.all));
     });
   };
 
@@ -86,13 +58,7 @@ UnitTest.test('ClusteringTest', function () {
             TextGene('p2.text1.id', 'z3a'),
             TextGene('p2.text2.id', 'z3b'),
             Gene('p2.span1.id', 'span', [TextGene('p2.span1.text1.id', 'z3c')]),
-            Gene(
-              'p2.span2.id',
-              'span',
-              [TextGene('p2.span2.text1.id', 'z4a')],
-              {},
-              { lang: 'FR' }
-            )
+            Gene('p2.span2.id', 'span', [TextGene('p2.span2.text1.id', 'z4a')], {}, { lang: 'FR' })
           ],
           {},
           { lang: 'DE' }
@@ -106,35 +72,11 @@ UnitTest.test('ClusteringTest', function () {
       ])
     );
 
-    check(
-      'Left: stopped by p1, middle: itself, right: stopped by img',
-      universe,
-      [],
-      ['z1a'],
-      ['z1b'],
-      Option.none(),
-      'p1.text1.id'
-    );
+    check('Left: stopped by p1, middle: itself, right: stopped by img', universe, [], ['z1a'], ['z1b'], Option.none(), 'p1.text1.id');
 
-    check(
-      'Left: stopped by p1, middle: itself, right: stopped by img',
-      universe,
-      ['z1a'],
-      ['z1b'],
-      [],
-      Option.none(),
-      'p1.text2.id'
-    );
+    check('Left: stopped by p1, middle: itself, right: stopped by img', universe, ['z1a'], ['z1b'], [], Option.none(), 'p1.text2.id');
 
-    check(
-      'Left: stopped by img, middle: itself, right: stopped by p2',
-      universe,
-      [],
-      ['z2a'],
-      [],
-      Option.none(),
-      'p1.text3.id'
-    );
+    check('Left: stopped by img, middle: itself, right: stopped by p2', universe, [], ['z2a'], [], Option.none(), 'p1.text3.id');
 
     check(
       'Left: stopped by p2, middle: itself, right: stopped by p1.span2 lang',
@@ -225,16 +167,8 @@ UnitTest.test('ClusteringTest', function () {
     readonly lang: Option<string>;
   }
 
-  const checkProps = function (
-    universe: TestUniverse,
-    textIds: string[],
-    start: Gene,
-    actual: ClusteringLangs
-  ) {
-    const checkGroup = function (
-      label: string,
-      group: WordDecisionItem<Gene>[]
-    ) {
+  const checkProps = function (universe: TestUniverse, textIds: string[], start: Gene, actual: ClusteringLangs) {
+    const checkGroup = function (label: string, group: WordDecisionItem<Gene>[]) {
       const items = Arr.map(group, function (g) {
         return g.item;
       });
@@ -244,11 +178,7 @@ UnitTest.test('ClusteringTest', function () {
           LanguageZones.calculate(universe, x).getOr('none'),
           actual.lang.getOr('none')
         );
-        Assert.eq(
-          'Check that everything in the ' + label + ' is a text node',
-          true,
-          universe.property().isText(x)
-        );
+        Assert.eq('Check that everything in the ' + label + ' is a text node', true, universe.property().isText(x));
       });
     };
 
@@ -265,50 +195,36 @@ UnitTest.test('ClusteringTest', function () {
       if (i > 0) {
         const prev = actual.all[i - 1].item.id;
         const current = x.item.id;
-        Assert.eq(
-          'The text nodes should be one after the other',
-          +1,
-          textIds.indexOf(current) - textIds.indexOf(prev)
-        );
+        Assert.eq('The text nodes should be one after the other', +1, textIds.indexOf(current) - textIds.indexOf(prev));
       }
     });
 
-    const blockParent = universe
-      .up()
-      .predicate(start, universe.property().isBoundary)
-      .getOrDie('No block parent tag found');
+    const blockParent = universe.up().predicate(start, universe.property().isBoundary).getOrDie('No block parent tag found');
     Arr.each(actual.all, function (x) {
       Assert.eq(
         'All block ancestor tags should be the same as the original',
         blockParent,
-        universe
-          .up()
-          .predicate(x.item, universe.property().isBoundary)
-          .getOrDie('No block parent tag found')
+        universe.up().predicate(x.item, universe.property().isBoundary).getOrDie('No block parent tag found')
       );
     });
   };
 
   const propertyTest = function (label: string, universe: TestUniverse) {
     Logger.sync(label, function () {
-      Jsc.property(
-        label + ': Checking that text nodes have consistent zones',
-        arbTextIds(universe),
-        function (idInfo: ArbTextIds) {
-          const startId = idInfo.startId;
-          const textIds = idInfo.textIds;
-          if (startId === 'root') {
-            return true;
-          }
-          const start = universe.find(universe.get(), startId).getOrDie();
-          if (universe.property().isBoundary(start)) {
-            return true;
-          }
-          const actual = Clustering.byLanguage(universe, start);
-          checkProps(universe, textIds, start, actual);
+      Jsc.property(label + ': Checking that text nodes have consistent zones', arbTextIds(universe), function (idInfo: ArbTextIds) {
+        const startId = idInfo.startId;
+        const textIds = idInfo.textIds;
+        if (startId === 'root') {
           return true;
         }
-      );
+        const start = universe.find(universe.get(), startId).getOrDie();
+        if (universe.property().isBoundary(start)) {
+          return true;
+        }
+        const actual = Clustering.byLanguage(universe, start);
+        checkProps(universe, textIds, start, actual);
+        return true;
+      });
     });
   };
 
@@ -333,28 +249,16 @@ UnitTest.test('ClusteringTest', function () {
           TextGene('a', 'a'),
           TextGene('n', 'n'),
           TextGene('one_', 'one '),
-          Gene('i1', 'i', [
-            TextGene('para', 'para'),
-            TextGene('graph', 'graph')
-          ])
+          Gene('i1', 'i', [TextGene('para', 'para'), TextGene('graph', 'graph')])
         ]),
-        Gene('p3', 'p', [
-          Gene('p3s1', 'span', [
-            Gene('p3s2', 'span', [
-              Gene('p3s3', 'span', [TextGene('end', 'end')])
-            ])
-          ])
-        ]),
+        Gene('p3', 'p', [Gene('p3s1', 'span', [Gene('p3s2', 'span', [Gene('p3s3', 'span', [TextGene('end', 'end')])])])]),
 
         Gene('p4', 'p', [
           Gene('p4s1', 'span', [
             TextGene('p4sp', 'sp'),
             Gene('p4s2', 'span', [
               TextGene('p4l', 'l'),
-              Gene('p4s3', 'span', [
-                TextGene('p4it', 'it'),
-                TextGene('p4word', 'word')
-              ]),
+              Gene('p4s3', 'span', [TextGene('p4it', 'it'), TextGene('p4word', 'word')]),
               TextGene('p4and', 'and')
             ]),
             TextGene('p4_not_', ' not ')
@@ -374,13 +278,7 @@ UnitTest.test('ClusteringTest', function () {
             TextGene('p1sp', 'sp'),
             Gene('p1s2', 'span', [
               TextGene('p1l', 'l'),
-              Gene(
-                'p1s3',
-                'span',
-                [TextGene('p1it', 'it'), TextGene('p1word', 'word')],
-                {},
-                { lang: 'FR' }
-              ),
+              Gene('p1s3', 'span', [TextGene('p1it', 'it'), TextGene('p1word', 'word')], {}, { lang: 'FR' }),
               TextGene('p1and', 'and')
             ]),
             TextGene('p1_not_', ' not ')
@@ -395,10 +293,7 @@ UnitTest.test('ClusteringTest', function () {
               TextGene('p2sp', 'sp'),
               Gene('p2s2', 'span', [
                 TextGene('p2l', 'l'),
-                Gene('p2s3', 'span', [
-                  TextGene('p2it', 'it'),
-                  TextGene('p2word', 'word')
-                ]),
+                Gene('p2s3', 'span', [TextGene('p2it', 'it'), TextGene('p2word', 'word')]),
                 TextGene('p2and', 'and')
               ]),
               TextGene('p2_not_', ' not ')
@@ -416,13 +311,7 @@ UnitTest.test('ClusteringTest', function () {
               TextGene('p3sp', 'sp'),
               Gene('p3s2', 'span', [
                 TextGene('p3l', 'l'),
-                Gene(
-                  'p3s3',
-                  'span',
-                  [TextGene('p3it', 'it'), TextGene('p3word', 'word')],
-                  {},
-                  { lang: 'FR' }
-                ),
+                Gene('p3s3', 'span', [TextGene('p3it', 'it'), TextGene('p3word', 'word')], {}, { lang: 'FR' }),
                 TextGene('p3and', 'and')
               ]),
               TextGene('p3_not_', ' not ')
@@ -448,13 +337,7 @@ UnitTest.test('ClusteringTest', function () {
               TextGene('p1sp', 'sp'),
               Gene('p1s2', 'span', [
                 TextGene('p1l', 'l'),
-                Gene(
-                  'p1s3',
-                  'span',
-                  [TextGene('p1it', 'it'), TextGene('p1word', 'word')],
-                  {},
-                  { lang: 'FR' }
-                ),
+                Gene('p1s3', 'span', [TextGene('p1it', 'it'), TextGene('p1word', 'word')], {}, { lang: 'FR' }),
                 TextGene('p1and', 'and')
               ]),
               TextGene('p1_not_', ' not ')

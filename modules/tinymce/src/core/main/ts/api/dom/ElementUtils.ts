@@ -49,11 +49,7 @@ const ElementUtils = function (dom: DOMUtils) {
         const name = attr.nodeName.toLowerCase();
 
         // Don't compare internal attributes or style
-        if (
-          name.indexOf('_') !== 0 &&
-          name !== 'style' &&
-          name.indexOf('data-') !== 0
-        ) {
+        if (name.indexOf('_') !== 0 && name !== 'style' && name.indexOf('data-') !== 0) {
           attribs[name] = dom.getAttrib(node, name);
         }
       });
@@ -109,12 +105,7 @@ const ElementUtils = function (dom: DOMUtils) {
     }
 
     // Styles are not the same
-    if (
-      !compareObjects(
-        dom.parseStyle(dom.getAttrib(node1, 'style')),
-        dom.parseStyle(dom.getAttrib(node2, 'style'))
-      )
-    ) {
+    if (!compareObjects(dom.parseStyle(dom.getAttrib(node1, 'style')), dom.parseStyle(dom.getAttrib(node2, 'style')))) {
       return false;
     }
 

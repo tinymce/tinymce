@@ -58,6 +58,4 @@ export interface ExpandableFormApis {
   expandForm: (component: AlloyComponent) => void;
 }
 
-export interface ExpandableFormSketcher
-  extends CompositeSketch<ExpandableFormSpec>,
-    ExpandableFormApis {}
+export interface ExpandableFormSketcher extends CompositeSketch<ExpandableFormSpec>, ExpandableFormApis {}

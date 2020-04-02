@@ -6,24 +6,12 @@ UnitTest.test('BoundariesTest', function () {
     return a === b;
   };
 
-  const check = function (
-    items: string[],
-    l: string,
-    r: string,
-    pred: (a: string, b: string) => boolean,
-    expected: string[]
-  ) {
+  const check = function (items: string[], l: string, r: string, pred: (a: string, b: string) => boolean, expected: string[]) {
     assert.eq(Boundaries.boundAt(items, l, r, pred), expected);
   };
 
   check(['a', 'b', 'c', 'd', 'e'], 'b', 'd', comparator, ['b', 'c', 'd']);
-  check(['a', 'b', 'c', 'd', 'e'], 'a', 'e', comparator, [
-    'a',
-    'b',
-    'c',
-    'd',
-    'e'
-  ]);
+  check(['a', 'b', 'c', 'd', 'e'], 'a', 'e', comparator, ['a', 'b', 'c', 'd', 'e']);
   check(['a'], 'a', 'a', comparator, ['a']);
   check([], '1', '3', comparator, []);
   check(['a', 'b', 'c'], 'd', 'e', comparator, ['a', 'b', 'c']);

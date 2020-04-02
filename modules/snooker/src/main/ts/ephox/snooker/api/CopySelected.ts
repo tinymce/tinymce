@@ -13,22 +13,14 @@ interface StatsStruct {
   readonly maxCol: number;
 }
 
-const statsStruct = (
-  minRow: number,
-  minCol: number,
-  maxRow: number,
-  maxCol: number
-): StatsStruct => ({
+const statsStruct = (minRow: number, minCol: number, maxRow: number, maxCol: number): StatsStruct => ({
   minRow,
   minCol,
   maxRow,
   maxCol
 });
 
-const findSelectedStats = (
-  house: Warehouse,
-  isSelected: (detail: DetailExt) => boolean
-): StatsStruct => {
+const findSelectedStats = (house: Warehouse, isSelected: (detail: DetailExt) => boolean): StatsStruct => {
   const totalColumns = house.grid.columns();
   const totalRows = house.grid.rows();
 
@@ -59,11 +51,7 @@ const findSelectedStats = (
   return statsStruct(minRow, minCol, maxRow, maxCol);
 };
 
-const makeCell = <T>(
-  list: RowData<T>[],
-  seenSelected: boolean,
-  rowIndex: number
-): void => {
+const makeCell = <T>(list: RowData<T>[], seenSelected: boolean, rowIndex: number): void => {
   // no need to check bounds, as anything outside this index is removed in the nested for loop
   const row = list[rowIndex].element();
   const td = Element.fromTag('td');
@@ -72,30 +60,16 @@ const makeCell = <T>(
   f(row, td);
 };
 
-const fillInGaps = <T>(
-  list: RowData<T>[],
-  house: Warehouse,
-  stats: StatsStruct,
-  isSelected: (detail: DetailExt) => boolean
-) => {
+const fillInGaps = <T>(list: RowData<T>[], house: Warehouse, stats: StatsStruct, isSelected: (detail: DetailExt) => boolean) => {
   const totalColumns = house.grid.columns();
   const totalRows = house.grid.rows();
   // unselected cells have been deleted, now fill in the gaps in the model
   for (let i = 0; i < totalRows; i++) {
     let seenSelected = false;
     for (let j = 0; j < totalColumns; j++) {
-      if (
-        !(
-          i < stats.minRow ||
-          i > stats.maxRow ||
-          j < stats.minCol ||
-          j > stats.maxCol
-        )
-      ) {
+      if (!(i < stats.minRow || i > stats.maxRow || j < stats.minCol || j > stats.maxCol)) {
         // if there is a hole in the table itself, or it's an unselected position, we need a cell
-        const needCell = Warehouse.getAt(house, i, j)
-          .filter(isSelected)
-          .isNone();
+        const needCell = Warehouse.getAt(house, i, j).filter(isSelected).isNone();
         if (needCell) {
           makeCell(list, seenSelected, i);
         } else {
@@ -131,8 +105,7 @@ const clean = (table: Element, stats: StatsStruct): void => {
 };
 
 const extract = (table: Element, selectedSelector: string): Element => {
-  const isSelected = (detail: DetailExt) =>
-    Selectors.is(detail.element(), selectedSelector);
+  const isSelected = (detail: DetailExt) => Selectors.is(detail.element(), selectedSelector);
 
   const list = DetailsList.fromTable(table);
   const house = Warehouse.generate(list);
@@ -140,13 +113,8 @@ const extract = (table: Element, selectedSelector: string): Element => {
   const stats = findSelectedStats(house, isSelected);
 
   // remove unselected cells
-  const selector =
-    'th:not(' + selectedSelector + ')' + ',td:not(' + selectedSelector + ')';
-  const unselectedCells = LayerSelector.filterFirstLayer(
-    table,
-    'th,td',
-    (cell) => Selectors.is(cell, selector)
-  );
+  const selector = 'th:not(' + selectedSelector + ')' + ',td:not(' + selectedSelector + ')';
+  const unselectedCells = LayerSelector.filterFirstLayer(table, 'th,td', (cell) => Selectors.is(cell, selector));
   Arr.each(unselectedCells, Remove.remove);
 
   fillInGaps(list, house, stats, isSelected);

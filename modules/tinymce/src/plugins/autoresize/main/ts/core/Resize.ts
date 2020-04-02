@@ -21,20 +21,13 @@ import * as Settings from '../api/Settings';
  * @private
  */
 
-const isFullscreen = (editor: Editor) =>
-  editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
+const isFullscreen = (editor: Editor) => editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
 
 /**
  * Calls the resize x times in 100ms intervals. We can't wait for load events since
  * the CSS files might load async.
  */
-const wait = (
-  editor: Editor,
-  oldSize: Cell<number>,
-  times: number,
-  interval: number,
-  callback?: Function
-) => {
+const wait = (editor: Editor, oldSize: Cell<number>, times: number, interval: number, callback?: Function) => {
   Delay.setEditorTimeout(
     editor,
     () => {
@@ -60,12 +53,7 @@ const toggleScrolling = (editor: Editor, state: boolean) => {
   }
 };
 
-const parseCssValueToInt = (
-  dom: DOMUtils,
-  elm: Element,
-  name: string,
-  computed: boolean
-): number => {
+const parseCssValueToInt = (dom: DOMUtils, elm: Element, name: string, computed: boolean): number => {
   const value = parseInt(dom.getStyle(elm, name, computed), 10);
   // The value maybe be an empty string, so in that case treat it as being 0
   return isNaN(value) ? 0 : value;
@@ -95,8 +83,7 @@ const resize = (editor: Editor, oldSize: Cell<number>) => {
   // Calculate outer height of the doc element using CSS styles
   const marginTop = parseCssValueToInt(dom, docEle, 'margin-top', true);
   const marginBottom = parseCssValueToInt(dom, docEle, 'margin-bottom', true);
-  contentHeight =
-    docEle.offsetHeight + marginTop + marginBottom + resizeBottomMargin;
+  contentHeight = docEle.offsetHeight + marginTop + marginBottom + resizeBottomMargin;
 
   // Make sure we have a valid height
   // Note: Previously we had to do some fallbacks here for IE/Webkit, as the height calculation above didn't work.
@@ -164,12 +151,9 @@ const setup = (editor: Editor, oldSize: Cell<number>) => {
     });
   });
 
-  editor.on(
-    'NodeChange SetContent keyup FullscreenStateChanged ResizeContent',
-    () => {
-      resize(editor, oldSize);
-    }
-  );
+  editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', () => {
+    resize(editor, oldSize);
+  });
 
   if (Settings.shouldAutoResizeOnInit(editor)) {
     editor.on('init', () => {

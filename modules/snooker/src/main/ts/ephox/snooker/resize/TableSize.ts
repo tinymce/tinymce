@@ -19,11 +19,7 @@ const percentageSize = function (width: string, element: Element): TableSize {
   const minCellWidth = function () {
     return (CellUtils.minWidth() / pixelWidth) * 100;
   };
-  const setTableWidth = function (
-    table: Element,
-    _newWidths: number[],
-    delta: number
-  ) {
+  const setTableWidth = function (table: Element, _newWidths: number[], delta: number) {
     const ratio = delta / 100;
     const change = ratio * floatWidth;
     Sizes.setPercentageWidth(table, floatWidth + change);
@@ -46,11 +42,7 @@ const pixelSize = function (width: number): TableSize {
     const newNext = Math.max(CellUtils.minWidth(), w + delta);
     return [newNext - w];
   };
-  const setTableWidth = function (
-    table: Element,
-    newWidths: number[],
-    _delta: number
-  ) {
+  const setTableWidth = function (table: Element, newWidths: number[], _delta: number) {
     const total = Arr.foldr(
       newWidths,
       function (b, a) {

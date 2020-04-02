@@ -1,9 +1,4 @@
-import {
-  HTMLCanvasElement,
-  HTMLImageElement,
-  WebGLProgram,
-  WebGLRenderingContext
-} from '@ephox/dom-globals';
+import { HTMLCanvasElement, HTMLImageElement, WebGLProgram, WebGLRenderingContext } from '@ephox/dom-globals';
 import { Promise } from '../util/Promise';
 import * as Canvas from '../util/Canvas';
 import * as ImageSize from '../util/ImageSize';
@@ -16,11 +11,7 @@ import * as ImageSize from '../util/ImageSize';
  * @param dH {Number} Height that the image should be scaled to
  * @returns {Promise}
  */
-function scale(
-  image: HTMLImageElement,
-  dW: number,
-  dH: number
-): Promise<HTMLCanvasElement> {
+function scale(image: HTMLImageElement, dW: number, dH: number): Promise<HTMLCanvasElement> {
   return new Promise(function (resolve, reject) {
     const sW = ImageSize.getWidth(image);
     const sH = ImageSize.getHeight(image);
@@ -124,12 +115,7 @@ const shaders: Shaders = {
   }
 };
 
-function _drawImage(
-  canvas: HTMLCanvasElement,
-  image: HTMLImageElement,
-  wRatio: number,
-  hRatio: number
-): void {
+function _drawImage(canvas: HTMLCanvasElement, image: HTMLImageElement, wRatio: number, hRatio: number): void {
   const gl = Canvas.get3dContext(canvas);
   if (!gl) {
     throw new Error(`Your environment doesn't support WebGL.`);
@@ -137,11 +123,7 @@ function _drawImage(
 
   const maxTexSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
   if (image.width > maxTexSize || image.height > maxTexSize) {
-    throw new Error(
-      'Width or/and height of the original image exceed max allowed texture size (of ' +
-        maxTexSize +
-        ' px).'
-    );
+    throw new Error('Width or/and height of the original image exceed max allowed texture size (of ' + maxTexSize + ' px).');
   }
 
   // we need a gap around the edges to avoid a black frame
@@ -179,11 +161,7 @@ function _drawImage(
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
 
   const uResolution = gl.getUniformLocation(program, 'u_wh');
-  gl.uniform2f(
-    uResolution,
-    ImageSize.getWidth(image),
-    ImageSize.getHeight(image)
-  );
+  gl.uniform2f(uResolution, ImageSize.getWidth(image), ImageSize.getHeight(image));
 
   const uRatio = gl.getUniformLocation(program, 'u_ratio');
   gl.uniform2f(uRatio, wRatio, hRatio);

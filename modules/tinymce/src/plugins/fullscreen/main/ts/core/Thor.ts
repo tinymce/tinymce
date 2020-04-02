@@ -24,17 +24,11 @@ const matchColor = function (editorBody: SugarElement) {
   // in iOS you can overscroll, sometimes when you overscroll you can reveal the bgcolor of an element beneath,
   // by matching the bg color and clobbering ensures any reveals are 'camouflaged' the same color
   const color = Css.get(editorBody, 'background-color');
-  return color !== undefined && color !== ''
-    ? 'background-color:' + color + '!important'
-    : bgFallback;
+  return color !== undefined && color !== '' ? 'background-color:' + color + '!important' : bgFallback;
 };
 
 // We clobber all tags, direct ancestors to the editorBody get ancestorStyles, everything else gets siblingStyles
-const clobberStyles = function (
-  dom: DOMUtils,
-  container: SugarElement,
-  editorBody: SugarElement
-) {
+const clobberStyles = function (dom: DOMUtils, container: SugarElement, editorBody: SugarElement) {
   const gatherSibilings = function (element) {
     return SelectorFilter.siblings(element, '*:not(.tox-silver-sink)');
   };

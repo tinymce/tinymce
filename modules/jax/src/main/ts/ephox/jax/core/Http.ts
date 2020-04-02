@@ -1,32 +1,11 @@
-import {
-  Blob,
-  XMLHttpRequest,
-  FormData,
-  File,
-  fetch,
-  Response,
-  Headers
-} from '@ephox/dom-globals';
-import {
-  FutureResult,
-  Result,
-  Option,
-  Obj,
-  Type,
-  Strings,
-  Global
-} from '@ephox/katamari';
+import { Blob, XMLHttpRequest, FormData, File, fetch, Response, Headers } from '@ephox/dom-globals';
+import { FutureResult, Result, Option, Obj, Type, Strings, Global } from '@ephox/katamari';
 import * as ResponseError from './ResponseError';
 import * as ResponseSuccess from './ResponseSuccess';
 import * as HttpTypes from './HttpTypes';
 import { HttpError, HttpErrorCode } from './HttpError';
 import { DataType } from './DataType';
-import {
-  RequestBody,
-  ResponseBodyDataTypes,
-  ResponseTypeMap,
-  textData
-} from './HttpData';
+import { RequestBody, ResponseBodyDataTypes, ResponseTypeMap, textData } from './HttpData';
 import { buildUrl } from './UrlBuilder';
 
 const getContentType = (requestBody: RequestBody): Option<string> =>
@@ -58,9 +37,7 @@ const getAccept = (responseType: ResponseBodyDataTypes) => {
   }
 };
 
-const getResponseType = (
-  responseType: ResponseBodyDataTypes
-): Option<'blob' | 'text'> => {
+const getResponseType = (responseType: ResponseBodyDataTypes): Option<'blob' | 'text'> => {
   switch (responseType) {
     case DataType.JSON:
       return Option.none();
@@ -73,22 +50,13 @@ const getResponseType = (
   }
 };
 
-const createOptions = <T extends keyof ResponseTypeMap>(
-  init: HttpTypes.HttpRequest<T>
-) => {
+const createOptions = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>) => {
   const contentType = getContentType(init.body);
-  const credentials: Option<boolean> =
-    init.credentials === true
-      ? Option.some<boolean>(true)
-      : Option.none<boolean>();
+  const credentials: Option<boolean> = init.credentials === true ? Option.some<boolean>(true) : Option.none<boolean>();
   const accept = getAccept(init.responseType) + ', */*; q=0.01';
   const headers = init.headers !== undefined ? init.headers : {};
   const responseType = getResponseType(init.responseType);
-  const progress: Option<HttpTypes.ProgressFunction> = Type.isFunction(
-    init.progress
-  )
-    ? Option.some(init.progress)
-    : Option.none();
+  const progress: Option<HttpTypes.ProgressFunction> = Type.isFunction(init.progress) ? Option.some(init.progress) : Option.none();
 
   return {
     contentType,
@@ -100,29 +68,18 @@ const createOptions = <T extends keyof ResponseTypeMap>(
   };
 };
 
-const applyOptions = (
-  request: XMLHttpRequest,
-  options: ReturnType<typeof createOptions>
-) => {
-  options.contentType.each((contentType) =>
-    request.setRequestHeader('Content-Type', contentType)
-  );
+const applyOptions = (request: XMLHttpRequest, options: ReturnType<typeof createOptions>) => {
+  options.contentType.each((contentType) => request.setRequestHeader('Content-Type', contentType));
   request.setRequestHeader('Accept', options.accept);
   options.credentials.each((creds) => (request.withCredentials = creds));
-  options.responseType.each(
-    (responseType) => (request.responseType = responseType)
-  );
+  options.responseType.each((responseType) => (request.responseType = responseType));
   options.progress.each((progressFunction) =>
-    request.upload.addEventListener('progress', (event) =>
-      progressFunction(event.loaded, event.total)
-    )
+    request.upload.addEventListener('progress', (event) => progressFunction(event.loaded, event.total))
   );
   Obj.each(options.headers, (v, k) => request.setRequestHeader(k, v));
 };
 
-const toNativeFormData = (
-  formDataInput: Record<string, string | Blob | File>
-) => {
+const toNativeFormData = (formDataInput: Record<string, string | Blob | File>) => {
   const nativeFormData = new FormData();
   Obj.each(formDataInput, (value, key) => {
     nativeFormData.append(key, value);
@@ -143,24 +100,16 @@ const getData = (body: RequestBody) =>
     }
   });
 
-const send = <T extends keyof ResponseTypeMap>(
-  init: HttpTypes.HttpRequest<T>
-) =>
+const send = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>) =>
   FutureResult.nu<ResponseTypeMap[T], HttpError>((callback) => {
     const request = new XMLHttpRequest();
-    request.open(
-      init.method,
-      buildUrl(init.url, Option.from(init.query)),
-      true
-    ); // enforced async! enforced type as String!
+    request.open(init.method, buildUrl(init.url, Option.from(init.query)), true); // enforced async! enforced type as String!
 
     const options = createOptions(init);
     applyOptions(request, options);
 
     const onError = () => {
-      ResponseError.handle(init.url, init.responseType, request).get((err) =>
-        callback(Result.error(err))
-      );
+      ResponseError.handle(init.url, init.responseType, request).get((err) => callback(Result.error(err)));
     };
 
     const onLoad = () => {
@@ -188,12 +137,9 @@ const send = <T extends keyof ResponseTypeMap>(
 
 const empty = () => textData('');
 
-const post = <T extends keyof ResponseTypeMap>(
-  init: HttpTypes.PostPutInit<T>
-) => send({ ...init, method: HttpTypes.HttpMethod.Post });
+const post = <T extends keyof ResponseTypeMap>(init: HttpTypes.PostPutInit<T>) => send({ ...init, method: HttpTypes.HttpMethod.Post });
 
-const put = <T extends keyof ResponseTypeMap>(init: HttpTypes.PostPutInit<T>) =>
-  send({ ...init, method: HttpTypes.HttpMethod.Put });
+const put = <T extends keyof ResponseTypeMap>(init: HttpTypes.PostPutInit<T>) => send({ ...init, method: HttpTypes.HttpMethod.Put });
 
 const get = <T extends keyof ResponseTypeMap>(init: HttpTypes.GetDelInit<T>) =>
   send({ ...init, method: HttpTypes.HttpMethod.Get, body: empty() });
@@ -212,12 +158,9 @@ const sendProgress = (init: HttpTypes.DownloadHttpRequest, loaded: number) => {
   }
 };
 
-const getMimeType = (headers: Headers) =>
-  Option.from(headers.get('content-type')).map((value) => value.split(';')[0]);
+const getMimeType = (headers: Headers) => Option.from(headers.get('content-type')).map((value) => value.split(';')[0]);
 
-const fetchDownload = (
-  init: HttpTypes.DownloadHttpRequest
-): FutureResult<Blob, HttpError> =>
+const fetchDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, HttpError> =>
   FutureResult.nu((resolve) => {
     const fail = (message: string, status: number) => {
       resolve(
@@ -275,9 +218,7 @@ const fetchDownload = (
       .catch(failOnError);
   });
 
-const fallbackDownload = (
-  init: HttpTypes.DownloadHttpRequest
-): FutureResult<Blob, HttpError> => {
+const fallbackDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, HttpError> => {
   sendProgress(init, 0);
 
   return get({
@@ -290,11 +231,7 @@ const fallbackDownload = (
   });
 };
 
-const download = (
-  init: HttpTypes.DownloadHttpRequest
-): FutureResult<Blob, HttpError> =>
-  Obj.get(Global, 'fetch').exists(Type.isFunction)
-    ? fetchDownload(init)
-    : fallbackDownload(init);
+const download = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, HttpError> =>
+  Obj.get(Global, 'fetch').exists(Type.isFunction) ? fetchDownload(init) : fallbackDownload(init);
 
 export { send, post, put, get, del, download };

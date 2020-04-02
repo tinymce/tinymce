@@ -31,9 +31,7 @@ UnitTest.asynctest('ComponentApisTest', (success, failure) => {
           Step.sync(() => {
             component.getApis<TestApiInterface>().doFirstThing();
           }),
-          store.sAssertEq('First thing API should have been called', [
-            'doFirstThing'
-          ]),
+          store.sAssertEq('First thing API should have been called', ['doFirstThing']),
           store.sClear
         ])
       ),
@@ -44,9 +42,7 @@ UnitTest.asynctest('ComponentApisTest', (success, failure) => {
           Step.sync(() => {
             component.getApis<TestApiInterface>().doSecondThing();
           }),
-          store.sAssertEq('Second thing API should have been called', [
-            'doSecondThing'
-          ]),
+          store.sAssertEq('Second thing API should have been called', ['doSecondThing']),
           store.sClear
         ])
       ),
@@ -56,11 +52,7 @@ UnitTest.asynctest('ComponentApisTest', (success, failure) => {
         GeneralSteps.sequence([
           Step.sync(() => {
             const value = component.getApis<TestApiInterface>().doThirdThing();
-            Assertions.assertEq(
-              'Checking api return value',
-              'thirdThing',
-              value
-            );
+            Assertions.assertEq('Checking api return value', 'thirdThing', value);
           })
         ])
       )

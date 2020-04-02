@@ -14,28 +14,15 @@ const all = function (element: Element, optimise?: (e: Element) => boolean) {
   return Extract.all(universe, element, optimise);
 };
 
-const extract = function (
-  child: Element,
-  offset: number,
-  optimise?: (e: Element) => boolean
-) {
+const extract = function (child: Element, offset: number, optimise?: (e: Element) => boolean) {
   return Extract.extract(universe, child, offset, optimise);
 };
 
-const extractTo = function (
-  child: Element,
-  offset: number,
-  pred: (e: Element) => boolean,
-  optimise?: (e: Element) => boolean
-) {
+const extractTo = function (child: Element, offset: number, pred: (e: Element) => boolean, optimise?: (e: Element) => boolean) {
   return Extract.extractTo(universe, child, offset, pred, optimise);
 };
 
-const find = function (
-  parent: Element,
-  offset: number,
-  optimise?: (e: Element) => boolean
-): Option<SpotPoint<Element>> {
+const find = function (parent: Element, offset: number, optimise?: (e: Element) => boolean): Option<SpotPoint<Element>> {
   return Extract.find(universe, parent, offset, optimise);
 };
 

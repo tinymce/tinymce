@@ -21,11 +21,7 @@ import * as PageBreakDelete from '../delete/ImageBlockDelete';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import * as Outdent from '../delete/Outdent';
 
-const executeKeydownOverride = function (
-  editor: Editor,
-  caret: Cell<Text>,
-  evt: KeyboardEvent
-) {
+const executeKeydownOverride = function (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) {
   MatchKeys.execute(
     [
       {
@@ -42,37 +38,19 @@ const executeKeydownOverride = function (
       },
       {
         keyCode: VK.BACKSPACE,
-        action: MatchKeys.action(
-          CefBoundaryDelete.backspaceDelete,
-          editor,
-          false
-        )
+        action: MatchKeys.action(CefBoundaryDelete.backspaceDelete, editor, false)
       },
       {
         keyCode: VK.DELETE,
-        action: MatchKeys.action(
-          CefBoundaryDelete.backspaceDelete,
-          editor,
-          true
-        )
+        action: MatchKeys.action(CefBoundaryDelete.backspaceDelete, editor, true)
       },
       {
         keyCode: VK.BACKSPACE,
-        action: MatchKeys.action(
-          InlineBoundaryDelete.backspaceDelete,
-          editor,
-          caret,
-          false
-        )
+        action: MatchKeys.action(InlineBoundaryDelete.backspaceDelete, editor, caret, false)
       },
       {
         keyCode: VK.DELETE,
-        action: MatchKeys.action(
-          InlineBoundaryDelete.backspaceDelete,
-          editor,
-          caret,
-          true
-        )
+        action: MatchKeys.action(InlineBoundaryDelete.backspaceDelete, editor, caret, true)
       },
       {
         keyCode: VK.BACKSPACE,
@@ -92,11 +70,7 @@ const executeKeydownOverride = function (
       },
       {
         keyCode: VK.BACKSPACE,
-        action: MatchKeys.action(
-          BlockRangeDelete.backspaceDelete,
-          editor,
-          false
-        )
+        action: MatchKeys.action(BlockRangeDelete.backspaceDelete, editor, false)
       },
       {
         keyCode: VK.DELETE,
@@ -104,35 +78,19 @@ const executeKeydownOverride = function (
       },
       {
         keyCode: VK.BACKSPACE,
-        action: MatchKeys.action(
-          BlockBoundaryDelete.backspaceDelete,
-          editor,
-          false
-        )
+        action: MatchKeys.action(BlockBoundaryDelete.backspaceDelete, editor, false)
       },
       {
         keyCode: VK.DELETE,
-        action: MatchKeys.action(
-          BlockBoundaryDelete.backspaceDelete,
-          editor,
-          true
-        )
+        action: MatchKeys.action(BlockBoundaryDelete.backspaceDelete, editor, true)
       },
       {
         keyCode: VK.BACKSPACE,
-        action: MatchKeys.action(
-          InlineFormatDelete.backspaceDelete,
-          editor,
-          false
-        )
+        action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, false)
       },
       {
         keyCode: VK.DELETE,
-        action: MatchKeys.action(
-          InlineFormatDelete.backspaceDelete,
-          editor,
-          true
-        )
+        action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, true)
       }
     ],
     evt

@@ -389,21 +389,14 @@ const getCharsFromSetting = function (settingValue) {
 const extendCharMap = function (editor: Editor, charmap: CharMap[]) {
   const userCharMap = Settings.getCharMap(editor);
   if (userCharMap) {
-    charmap = [
-      { name: UserDefined, characters: getCharsFromSetting(userCharMap) }
-    ];
+    charmap = [{ name: UserDefined, characters: getCharsFromSetting(userCharMap) }];
   }
 
   const userCharMapAppend = Settings.getCharMapAppend(editor);
   if (userCharMapAppend) {
-    const userDefinedGroup = Tools.grep(
-      charmap,
-      (cg) => cg.name === UserDefined
-    );
+    const userDefinedGroup = Tools.grep(charmap, (cg) => cg.name === UserDefined);
     if (userDefinedGroup.length) {
-      userDefinedGroup[0].characters = []
-        .concat(userDefinedGroup[0].characters)
-        .concat(getCharsFromSetting(userCharMapAppend));
+      userDefinedGroup[0].characters = [].concat(userDefinedGroup[0].characters).concat(getCharsFromSetting(userCharMapAppend));
       return charmap;
     }
     return [].concat(charmap).concat({

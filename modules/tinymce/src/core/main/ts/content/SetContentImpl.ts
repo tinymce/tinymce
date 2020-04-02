@@ -36,9 +36,7 @@ const moveSelection = (editor: Editor) => {
   if (EditorFocus.hasFocus(editor)) {
     CaretFinder.firstPositionIn(editor.getBody()).each((pos) => {
       const node = pos.getNode();
-      const caretPos = NodeType.isTable(node)
-        ? CaretFinder.firstPositionIn(node).getOr(pos)
-        : pos;
+      const caretPos = NodeType.isTable(node) ? CaretFinder.firstPositionIn(node).getOr(pos) : pos;
       editor.selection.setRng(caretPos.toRange());
     });
   }
@@ -49,12 +47,7 @@ const setEditorHtml = (editor: Editor, html: string) => {
   moveSelection(editor);
 };
 
-const setContentString = (
-  editor: Editor,
-  body: HTMLElement,
-  content: string,
-  args: SetContentArgs
-): string => {
+const setContentString = (editor: Editor, body: HTMLElement, content: string, args: SetContentArgs): string => {
   let forcedRootBlockName, padd;
 
   // Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
@@ -73,19 +66,9 @@ const setContentString = (
     forcedRootBlockName = Settings.getForcedRootBlock(editor);
 
     // Check if forcedRootBlock is configured and that the block is a valid child of the body
-    if (
-      forcedRootBlockName &&
-      editor.schema.isValidChild(
-        body.nodeName.toLowerCase(),
-        forcedRootBlockName.toLowerCase()
-      )
-    ) {
+    if (forcedRootBlockName && editor.schema.isValidChild(body.nodeName.toLowerCase(), forcedRootBlockName.toLowerCase())) {
       content = padd;
-      content = editor.dom.createHTML(
-        forcedRootBlockName,
-        editor.settings.forced_root_block_attrs,
-        content
-      );
+      content = editor.dom.createHTML(forcedRootBlockName, editor.settings.forced_root_block_attrs, content);
     } else if (!content) {
       // We need to add a BR when forced_root_block is disabled on non IE browsers to place the caret
       content = '<br data-mce-bogus="1">';
@@ -101,14 +84,10 @@ const setContentString = (
           validate: editor.validate
         },
         editor.schema
-      ).serialize(
-        editor.parser.parse(content, { isRootContent: true, insert: true })
-      );
+      ).serialize(editor.parser.parse(content, { isRootContent: true, insert: true }));
     }
 
-    args.content = isWsPreserveElement(Element.fromDom(body))
-      ? content
-      : Tools.trim(content);
+    args.content = isWsPreserveElement(Element.fromDom(body)) ? content : Tools.trim(content);
     setEditorHtml(editor, args.content);
 
     if (!args.no_events) {
@@ -119,26 +98,12 @@ const setContentString = (
   return args.content;
 };
 
-const setContentTree = (
-  editor: Editor,
-  body: HTMLElement,
-  content: Node,
-  args: SetContentArgs
-): Node => {
-  FilterNode.filter(
-    editor.parser.getNodeFilters(),
-    editor.parser.getAttributeFilters(),
-    content
-  );
+const setContentTree = (editor: Editor, body: HTMLElement, content: Node, args: SetContentArgs): Node => {
+  FilterNode.filter(editor.parser.getNodeFilters(), editor.parser.getAttributeFilters(), content);
 
-  const html = Serializer(
-    { validate: editor.validate },
-    editor.schema
-  ).serialize(content);
+  const html = Serializer({ validate: editor.validate }, editor.schema).serialize(content);
 
-  args.content = isWsPreserveElement(Element.fromDom(body))
-    ? html
-    : Tools.trim(html);
+  args.content = isWsPreserveElement(Element.fromDom(body)) ? html : Tools.trim(html);
   setEditorHtml(editor, args.content);
 
   if (!args.no_events) {
@@ -148,11 +113,7 @@ const setContentTree = (
   return content;
 };
 
-export const setContentInternal = (
-  editor: Editor,
-  content: Content,
-  args: SetContentArgs
-): Content => {
+export const setContentInternal = (editor: Editor, content: Content, args: SetContentArgs): Content => {
   args.format = args.format ? args.format : defaultFormat;
   args.set = true;
   args.content = isTreeNode(content) ? '' : content;
@@ -163,8 +124,6 @@ export const setContentInternal = (
   }
 
   return Option.from(editor.getBody()).fold(Fun.constant(content), (body) =>
-    isTreeNode(content)
-      ? setContentTree(editor, body, content, args)
-      : setContentString(editor, body, content, args)
+    isTreeNode(content) ? setContentTree(editor, body, content, args) : setContentString(editor, body, content, args)
   );
 };

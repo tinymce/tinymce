@@ -1,10 +1,4 @@
-import {
-  Range,
-  Selection as DomSelection,
-  Window,
-  Node as DomNode,
-  Element as DomElement
-} from '@ephox/dom-globals';
+import { Range, Selection as DomSelection, Window, Node as DomNode, Element as DomElement } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import * as NativeRange from '../../selection/core/NativeRange';
 import * as SelectionDirection from '../../selection/core/SelectionDirection';
@@ -26,22 +20,12 @@ const doSetNativeRange = (win: Window, rng: Range): void => {
   });
 };
 
-const doSetRange = (
-  win: Window,
-  start: Element<DomNode>,
-  soffset: number,
-  finish: Element<DomNode>,
-  foffset: number
-): void => {
+const doSetRange = (win: Window, start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number): void => {
   const rng = NativeRange.exactToNative(win, start, soffset, finish, foffset);
   doSetNativeRange(win, rng);
 };
 
-const findWithin = (
-  win: Window,
-  selection: Selection,
-  selector: string
-): Element<DomElement>[] => Within.find(win, selection, selector);
+const findWithin = (win: Window, selection: Selection, selector: string): Element<DomElement>[] => Within.find(win, selection, selector);
 
 const setLegacyRtlRange = (
   win: Window,
@@ -79,13 +63,7 @@ const setRangeFromRelative = (win: Window, relative: Selection): void =>
     }
   });
 
-const setExact = (
-  win: Window,
-  start: Element<DomNode>,
-  soffset: number,
-  finish: Element<DomNode>,
-  foffset: number
-): void => {
+const setExact = (win: Window, start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number): void => {
   const relative = Prefilter.preprocessExact(start, soffset, finish, foffset);
 
   setRangeFromRelative(win, relative);
@@ -99,12 +77,8 @@ const setRelative = (win: Window, startSitu: Situ, finishSitu: Situ): void => {
 
 const toNative = (selection: Selection): Range => {
   const win: Window = Selection.getWin(selection).dom();
-  const getDomRange = (
-    start: Element<DomNode>,
-    soffset: number,
-    finish: Element<DomNode>,
-    foffset: number
-  ) => NativeRange.exactToNative(win, start, soffset, finish, foffset);
+  const getDomRange = (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) =>
+    NativeRange.exactToNative(win, start, soffset, finish, foffset);
   const filtered = Prefilter.preprocess(selection);
   return SelectionDirection.diagnose(win, filtered).match({
     ltr: getDomRange,
@@ -138,20 +112,8 @@ const doGetExact = (selection: DomSelection) => {
   const focus = Element.fromDom(selection.focusNode);
 
   // if this returns true anchor is _after_ focus, so we need a custom selection object to maintain the RTL selection
-  return DocumentPosition.after(
-    anchor,
-    selection.anchorOffset,
-    focus,
-    selection.focusOffset
-  )
-    ? Option.some(
-        SimRange.create(
-          anchor,
-          selection.anchorOffset,
-          focus,
-          selection.focusOffset
-        )
-      )
+  return DocumentPosition.after(anchor, selection.anchorOffset, focus, selection.focusOffset)
+    ? Option.some(SimRange.create(anchor, selection.anchorOffset, focus, selection.focusOffset))
     : readRange(selection);
 };
 
@@ -162,12 +124,7 @@ const setToElement = (win: Window, element: Element<DomNode>) => {
 
 const forElement = (win: Window, element: Element<DomNode>) => {
   const rng = NativeRange.selectNodeContents(win, element);
-  return SimRange.create(
-    Element.fromDom(rng.startContainer),
-    rng.startOffset,
-    Element.fromDom(rng.endContainer),
-    rng.endOffset
-  );
+  return SimRange.create(Element.fromDom(rng.startContainer), rng.startOffset, Element.fromDom(rng.endContainer), rng.endOffset);
 };
 
 const getExact = (win: Window) =>
@@ -177,15 +134,7 @@ const getExact = (win: Window) =>
     .bind(doGetExact);
 
 // TODO: Test this.
-const get = (win: Window) =>
-  getExact(win).map((range) =>
-    Selection.exact(
-      range.start(),
-      range.soffset(),
-      range.finish(),
-      range.foffset()
-    )
-  );
+const get = (win: Window) => getExact(win).map((range) => Selection.exact(range.start(), range.soffset(), range.finish(), range.foffset()));
 
 const getFirstRect = (win: Window, selection: Selection) => {
   const rng = SelectionDirection.asLtrRange(win, selection);
@@ -197,8 +146,7 @@ const getBounds = (win: Window, selection: Selection) => {
   return NativeRange.getBounds(rng);
 };
 
-const getAtPoint = (win: Window, x: number, y: number) =>
-  CaretRange.fromPoint(win, x, y);
+const getAtPoint = (win: Window, x: number, y: number) => CaretRange.fromPoint(win, x, y);
 
 const getAsString = (win: Window, selection: Selection) => {
   const rng = SelectionDirection.asLtrRange(win, selection);
@@ -215,11 +163,7 @@ const clone = (win: Window, selection: Selection) => {
   return NativeRange.cloneFragment(rng);
 };
 
-const replace = (
-  win: Window,
-  selection: Selection,
-  elements: Element<DomNode>[]
-) => {
+const replace = (win: Window, selection: Selection, elements: Element<DomNode>[]) => {
   const rng = SelectionDirection.asLtrRange(win, selection);
   const fragment = Fragment.fromElements(elements, win.document);
   NativeRange.replaceWith(rng, fragment);
@@ -230,12 +174,8 @@ const deleteAt = (win: Window, selection: Selection) => {
   NativeRange.deleteContents(rng);
 };
 
-const isCollapsed = (
-  start: Element<DomNode>,
-  soffset: number,
-  finish: Element<DomNode>,
-  foffset: number
-) => Compare.eq(start, finish) && soffset === foffset;
+const isCollapsed = (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) =>
+  Compare.eq(start, finish) && soffset === foffset;
 
 export {
   setExact,

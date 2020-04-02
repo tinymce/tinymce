@@ -29,11 +29,7 @@ UnitTest.test('FamilyGroupTest', function () {
   // is a section that is bounded by blocks.
 
   const check = function (expected: string[][], input: Element[]) {
-    const rawActual = Family.group(
-      universe,
-      input,
-      Fun.constant(false) as (e: Element) => boolean
-    );
+    const rawActual = Family.group(universe, input, Fun.constant(false) as (e: Element) => boolean);
     const actual = Arr.map(rawActual, function (a) {
       return Arr.map(a, toStr);
     });
@@ -43,11 +39,7 @@ UnitTest.test('FamilyGroupTest', function () {
   check([['"text"']], [Element.fromHtml('text')]);
 
   check(
-    [
-      ['"Dogs and cats"'],
-      ['"Living together "', '"Mass hysteria"', '"."'],
-      ['"-- Ghostbusters"']
-    ],
+    [['"Dogs and cats"'], ['"Living together "', '"Mass hysteria"', '"."'], ['"-- Ghostbusters"']],
     [
       Element.fromHtml('<p>Dogs and cats</p>'),
       Element.fromHtml('<p>Living together <span>Mass hysteria</span>.</p>'),
@@ -56,21 +48,10 @@ UnitTest.test('FamilyGroupTest', function () {
   );
 
   check(
-    [
-      ['"Dogs and cats"'],
-      ['"Living tog"'],
-      ['/'],
-      ['"ether "', '"Mass hyste"'],
-      ['/'],
-      ['"ria"', '"."'],
-      ['/'],
-      ['"-- Ghostbusters"']
-    ],
+    [['"Dogs and cats"'], ['"Living tog"'], ['/'], ['"ether "', '"Mass hyste"'], ['/'], ['"ria"', '"."'], ['/'], ['"-- Ghostbusters"']],
     [
       Element.fromHtml('<p>Dogs and cats</p>'),
-      Element.fromHtml(
-        '<p>Living tog<img />ether <span>Mass hyste<br />ria</span>.</p>'
-      ),
+      Element.fromHtml('<p>Living tog<img />ether <span>Mass hyste<br />ria</span>.</p>'),
       Element.fromHtml('<hr />'),
       Element.fromText('-- Ghostbusters')
     ]
@@ -91,9 +72,7 @@ UnitTest.test('FamilyGroupTest', function () {
     ],
     [
       Element.fromHtml('<p>Dogs and cats</p>'),
-      Element.fromHtml(
-        '<p>Living tog<img />ether <span>Mass hyste<br />ria</span>.</p>'
-      ),
+      Element.fromHtml('<p>Living tog<img />ether <span>Mass hyste<br />ria</span>.</p>'),
       Element.fromText('-- Ghostbusters'),
       Element.fromHtml('<div><p>One</p><p>Two</p><p>Three</p></div>')
     ]
@@ -103,9 +82,7 @@ UnitTest.test('FamilyGroupTest', function () {
     [['"Dogs and cats"'], ['"Living together "']],
     [
       Element.fromHtml('<p>Dogs and cats</p>'),
-      Element.fromHtml(
-        '<p>Living together <span contenteditable="false">Mass hysteria</span></p>'
-      )
+      Element.fromHtml('<p>Living together <span contenteditable="false">Mass hysteria</span></p>')
     ]
   );
 });

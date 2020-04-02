@@ -7,22 +7,11 @@ import { ElementAndHandler, UidAndHandler } from './EventRegistry';
 import * as EventSource from './EventSource';
 import { EventFormat, fromExternal, fromSource } from './SimulatedEvent';
 
-type LookupEvent = (
-  eventName: string,
-  target: Element
-) => Option<ElementAndHandler>;
+type LookupEvent = (eventName: string, target: Element) => Option<ElementAndHandler>;
 
 export interface TriggerAdt {
-  fold: <T>(
-    stopped: () => T,
-    resume: (elem: Element) => T,
-    complete: () => T
-  ) => T;
-  match: <T>(branches: {
-    stopped: () => T;
-    resume: (elem: Element) => T;
-    complete: () => T;
-  }) => T;
+  fold: <T>(stopped: () => T, resume: (elem: Element) => T, complete: () => T) => T;
+  match: <T>(branches: { stopped: () => T; resume: (elem: Element) => T; complete: () => T }) => T;
   log: (label: string) => void;
 }
 
@@ -57,36 +46,20 @@ const doTriggerHandler = (
 
       // Now, check if the event was stopped.
       if (simulatedEvent.isStopped()) {
-        logger.logEventStopped(
-          eventType,
-          handlerInfo.element,
-          descHandler.purpose()
-        );
+        logger.logEventStopped(eventType, handlerInfo.element, descHandler.purpose());
         return adt.stopped();
       } else if (simulatedEvent.isCut()) {
-        logger.logEventCut(
-          eventType,
-          handlerInfo.element,
-          descHandler.purpose()
-        );
+        logger.logEventCut(eventType, handlerInfo.element, descHandler.purpose());
         return adt.complete();
       } else {
         return Traverse.parent(handlerInfo.element).fold(
           () => {
-            logger.logNoParent(
-              eventType,
-              handlerInfo.element,
-              descHandler.purpose()
-            );
+            logger.logNoParent(eventType, handlerInfo.element, descHandler.purpose());
             // No parent, so complete.
             return adt.complete();
           },
           (parent) => {
-            logger.logEventResponse(
-              eventType,
-              handlerInfo.element,
-              descHandler.purpose()
-            );
+            logger.logEventResponse(eventType, handlerInfo.element, descHandler.purpose());
             // Resume at parent
             return adt.resume(parent);
           }
@@ -110,14 +83,7 @@ const doTriggerOnUntilStopped = (
       true,
     (parent) =>
       // Go again.
-      doTriggerOnUntilStopped(
-        lookup,
-        eventType,
-        rawEvent,
-        parent,
-        source,
-        logger
-      ),
+      doTriggerOnUntilStopped(lookup, eventType, rawEvent, parent, source, logger),
     () =>
       // completed
       false
@@ -134,11 +100,7 @@ const triggerHandler = <T extends EventFormat>(
   return doTriggerHandler(lookup, eventType, rawEvent, target, source, logger);
 };
 
-const broadcast = (
-  listeners: UidAndHandler[],
-  rawEvent: EventFormat,
-  _logger?: DebuggerLogger
-): boolean => {
+const broadcast = (listeners: UidAndHandler[], rawEvent: EventFormat, _logger?: DebuggerLogger): boolean => {
   const simulatedEvent = fromExternal(rawEvent);
 
   Arr.each(listeners, (listener) => {
@@ -150,12 +112,7 @@ const broadcast = (
   return simulatedEvent.isStopped();
 };
 
-const triggerUntilStopped = (
-  lookup: LookupEvent,
-  eventType: string,
-  rawEvent: EventFormat,
-  logger: DebuggerLogger
-): boolean => {
+const triggerUntilStopped = (lookup: LookupEvent, eventType: string, rawEvent: EventFormat, logger: DebuggerLogger): boolean => {
   const rawTarget = rawEvent.target();
   return triggerOnUntilStopped(lookup, eventType, rawEvent, rawTarget, logger);
 };
@@ -168,19 +125,7 @@ const triggerOnUntilStopped = (
   logger: DebuggerLogger
 ): boolean => {
   const source = EventSource.derive(rawEvent, rawTarget);
-  return doTriggerOnUntilStopped(
-    lookup,
-    eventType,
-    rawEvent,
-    rawTarget,
-    source,
-    logger
-  );
+  return doTriggerOnUntilStopped(lookup, eventType, rawEvent, rawTarget, source, logger);
 };
 
-export {
-  triggerHandler,
-  triggerUntilStopped,
-  triggerOnUntilStopped,
-  broadcast
-};
+export { triggerHandler, triggerUntilStopped, triggerOnUntilStopped, broadcast };

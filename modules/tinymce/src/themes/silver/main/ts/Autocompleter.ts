@@ -22,28 +22,13 @@ import { Arr, Cell, Option, Throttler, Thunk } from '@ephox/katamari';
 import { Element, Remove } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import {
-  AutocompleteContext,
-  getContext
-} from './autocomplete/AutocompleteContext';
-import {
-  AutocompleterEditorEvents,
-  AutocompleterUiApi
-} from './autocomplete/AutocompleteEditorEvents';
-import {
-  AutocompleteLookupInfo,
-  AutocompleteLookupData,
-  lookup,
-  lookupWithContext
-} from './autocomplete/AutocompleteLookup';
+import { AutocompleteContext, getContext } from './autocomplete/AutocompleteContext';
+import { AutocompleterEditorEvents, AutocompleterUiApi } from './autocomplete/AutocompleteEditorEvents';
+import { AutocompleteLookupInfo, AutocompleteLookupData, lookup, lookupWithContext } from './autocomplete/AutocompleteLookup';
 import * as AutocompleteTag from './autocomplete/AutocompleteTag';
 import * as Autocompleters from './autocomplete/Autocompleters';
 import { UiFactoryBackstageShared } from './backstage/Backstage';
-import {
-  createAutocompleteItems,
-  createMenuFrom,
-  FocusMode
-} from './ui/menus/menu/SingleMenu';
+import { createAutocompleteItems, createMenuFrom, FocusMode } from './ui/menus/menu/SingleMenu';
 import { createPartialMenuWithAlloyItems } from './ui/menus/menu/MenuUtils';
 import ItemResponse from './ui/menus/item/ItemResponse';
 
@@ -53,10 +38,7 @@ interface ActiveAutocompleter {
   matchLength: number;
 }
 
-const register = (
-  editor: Editor,
-  sharedBackstage: UiFactoryBackstageShared
-) => {
+const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => {
   const activeAutocompleter = Cell<Option<ActiveAutocompleter>>(Option.none());
   const processingAction = Cell<boolean>(false);
 
@@ -69,11 +51,7 @@ const register = (
       components: [],
       fireDismissalEventInstead: {},
       inlineBehaviours: Behaviour.derive([
-        AddEventsBehaviour.config('dismissAutocompleter', [
-          AlloyEvents.run(SystemEvents.dismissRequested(), () =>
-            cancelIfNecessary()
-          )
-        ])
+        AddEventsBehaviour.config('dismissAutocompleter', [AlloyEvents.run(SystemEvents.dismissRequested(), () => cancelIfNecessary())])
       ]),
       lazySink: sharedBackstage.getSink
     })
@@ -92,9 +70,7 @@ const register = (
     if (isActive()) {
       // Unwrap the content if an incomplete mention
       const lastElement = activeAutocompleter.get().map((ac) => ac.element);
-      AutocompleteTag.detect(
-        lastElement.getOr(Element.fromDom(editor.selection.getNode()))
-      ).each(Remove.unwrap);
+      AutocompleteTag.detect(lastElement.getOr(Element.fromDom(editor.selection.getNode()))).each(Remove.unwrap);
 
       // Hide the menu and reset
       hideIfNecessary();
@@ -107,17 +83,10 @@ const register = (
   // before `init` or other keydown / keypress listeners will fire first. Therefore,
   // this is a thunk so that its value is calculated just once when it is used for the
   // first time, and after that it's value is stored.
-  const getAutocompleters: () => Autocompleters.AutocompleterDatabase = Thunk.cached(
-    () => Autocompleters.register(editor)
-  );
+  const getAutocompleters: () => Autocompleters.AutocompleterDatabase = Thunk.cached(() => Autocompleters.register(editor));
 
-  const getCombinedItems = (
-    triggerChar: string,
-    matches: AutocompleteLookupData[]
-  ): ItemTypes.ItemSpec[] => {
-    const columns = Arr.findMap(matches, (m) => Option.from(m.columns)).getOr(
-      1
-    );
+  const getCombinedItems = (triggerChar: string, matches: AutocompleteLookupData[]): ItemTypes.ItemSpec[] => {
+    const columns = Arr.findMap(matches, (m) => Option.from(m.columns)).getOr(1);
 
     return Arr.bind(matches, (match) => {
       const choices = match.items;
@@ -181,9 +150,7 @@ const register = (
     ac.matchLength = context.text.length;
 
     // Display the autocompleter menu
-    const columns: Types.ColumnTypes = Arr.findMap(lookupData, (ld) =>
-      Option.from(ld.columns)
-    ).getOr(1);
+    const columns: Types.ColumnTypes = Arr.findMap(lookupData, (ld) => Option.from(ld.columns)).getOr(1);
     InlineView.showAt(
       autocompleter,
       {
@@ -193,13 +160,7 @@ const register = (
       },
       Menu.sketch(
         createMenuFrom(
-          createPartialMenuWithAlloyItems(
-            'autocompleter-value',
-            true,
-            items,
-            columns,
-            'normal'
-          ),
+          createPartialMenuWithAlloyItems('autocompleter-value', true, items, columns, 'normal'),
           columns,
           FocusMode.ContentFocus,
           // Use the constant.
@@ -211,17 +172,11 @@ const register = (
     InlineView.getContent(autocompleter).each(Highlighting.highlightFirst);
   };
 
-  const doLookup = (
-    fetchOptions?: Record<string, any>
-  ): Option<AutocompleteLookupInfo> =>
+  const doLookup = (fetchOptions?: Record<string, any>): Option<AutocompleteLookupInfo> =>
     activeAutocompleter
       .get()
       .map((ac) =>
-        getContext(
-          editor.dom,
-          editor.selection.getRng(),
-          ac.triggerChar
-        ).bind((newContext) =>
+        getContext(editor.dom, editor.selection.getRng(), ac.triggerChar).bind((newContext) =>
           lookupWithContext(editor, getAutocompleters, newContext, fetchOptions)
         )
       )
@@ -240,10 +195,7 @@ const register = (
           // Ensure the active autocompleter trigger matches, as the old one may have closed
           // and a new one may have opened. If it doesn't match, then do nothing.
           if (ac.triggerChar === context.triggerChar) {
-            const combinedItems = getCombinedItems(
-              context.triggerChar,
-              lookupData
-            );
+            const combinedItems = getCombinedItems(context.triggerChar, lookupData);
 
             // Open the autocompleter if there are items to show
             if (combinedItems.length > 0) {

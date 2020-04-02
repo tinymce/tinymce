@@ -32,13 +32,7 @@ UnitTest.test('ObjectsTest', () => {
       const narrowed = Objects.narrow(input.obj, input.fields);
       Obj.each(narrowed, (_, k) => {
         if (!Arr.contains(input.fields, k)) {
-          throw new Error(
-            'Narrowed object contained property: ' +
-              k +
-              ' which was not in fields: [' +
-              input.fields.join(', ') +
-              ']'
-          );
+          throw new Error('Narrowed object contained property: ' + k + ' which was not in fields: [' + input.fields.join(', ') + ']');
         }
       });
       return true;
@@ -70,10 +64,7 @@ UnitTest.test('ObjectsTest', () => {
       Obj.each(excluded, (_, k) => {
         if (Arr.contains(input.fields, k)) {
           throw new Error(
-            'Excluded object contained property: ' +
-              ' which should have been excluded by: [' +
-              input.fields.join(', ') +
-              ']'
+            'Excluded object contained property: ' + ' which should have been excluded by: [' + input.fields.join(', ') + ']'
           );
         }
       });
@@ -88,11 +79,7 @@ UnitTest.test('ObjectsTest', () => {
     // TODO: Think of a good way to property test.
     const subject = { alpha: 'Alpha' };
 
-    KAssert.eqSome(
-      'readOptFrom(alpha) => some(Alpha)',
-      'Alpha',
-      Obj.get(subject, 'alpha')
-    );
+    KAssert.eqSome('readOptFrom(alpha) => some(Alpha)', 'Alpha', Obj.get(subject, 'alpha'));
   };
 
   const testConsolidate = () => {
@@ -111,11 +98,7 @@ UnitTest.test('ObjectsTest', () => {
     checkErr(
       '[ failure {1,2,3} ]',
       ['failure.1', 'failure.2', 'failure.3'],
-      [
-        Result.error(['failure.1']),
-        Result.error(['failure.2']),
-        Result.error(['failure.3'])
-      ],
+      [Result.error(['failure.1']), Result.error(['failure.2']), Result.error(['failure.3'])],
       {}
     );
 
@@ -124,22 +107,14 @@ UnitTest.test('ObjectsTest', () => {
     checkVal(
       '[ value.{a,b,c} ]',
       { a: 'A', b: 'B', c: 'C' },
-      [
-        Result.value({ a: 'A' }),
-        Result.value({ b: 'B' }),
-        Result.value({ c: 'C' })
-      ],
+      [Result.value({ a: 'A' }), Result.value({ b: 'B' }), Result.value({ c: 'C' })],
       {}
     );
 
     checkErr(
       '[ value.a, failure.1, value.b ]',
       ['failure.1'],
-      [
-        Result.value({ a: 'A' }),
-        Result.error(['failure.1']),
-        Result.value({ b: 'B' })
-      ],
+      [Result.value({ a: 'A' }), Result.error(['failure.1']), Result.value({ b: 'B' })],
       {}
     );
 
@@ -159,12 +134,7 @@ UnitTest.test('ObjectsTest', () => {
     checkErr(
       '[ value.{a,b,c} ]',
       ['failure.last'],
-      [
-        Result.value({ a: 'A' }),
-        Result.value({ b: 'B' }),
-        Result.value({ c: 'C' }),
-        Result.error(['failure.last'])
-      ],
+      [Result.value({ a: 'A' }), Result.value({ b: 'B' }), Result.value({ c: 'C' }), Result.error(['failure.last'])],
       {}
     );
 
@@ -172,9 +142,7 @@ UnitTest.test('ObjectsTest', () => {
     const resultList = Jsc.bless({
       generator: Jsc.dict(smallSet).generator.flatMap((obj) =>
         Jsc.bool.generator.flatMap((flag) =>
-          flag
-            ? Jsc.constant(Result.value(obj)).generator
-            : (() => Jsc.array(Jsc.nestring).generator.map(Result.error))()
+          flag ? Jsc.constant(Result.value(obj)).generator : (() => Jsc.array(Jsc.nestring).generator.map(Result.error))()
         )
       )
     });
@@ -194,47 +162,24 @@ UnitTest.test('ObjectsTest', () => {
       const hasError = Arr.exists(input.results, (res) => res.isError());
 
       if (hasError) {
-        Assert.eq(
-          'Error contained in list, so should be error overall',
-          true,
-          actual.isError()
-        );
+        Assert.eq('Error contained in list, so should be error overall', true, actual.isError());
       } else {
-        Assert.eq(
-          'No errors in list, so should be value overall',
-          true,
-          actual.isValue()
-        );
+        Assert.eq('No errors in list, so should be value overall', true, actual.isValue());
       }
       return true;
     });
 
-    Jsc.syncProperty(
-      'Testing consolidate with base',
-      [inputList, Jsc.nestring, Jsc.json],
-      (input, baseKey: string, baseValue) => {
-        const actual = Objects.consolidate(
-          input.results,
-          Objects.wrap(baseKey, baseValue)
-        );
-        const hasError = Arr.exists(input.results, (res) => res.isError());
+    Jsc.syncProperty('Testing consolidate with base', [inputList, Jsc.nestring, Jsc.json], (input, baseKey: string, baseValue) => {
+      const actual = Objects.consolidate(input.results, Objects.wrap(baseKey, baseValue));
+      const hasError = Arr.exists(input.results, (res) => res.isError());
 
-        if (hasError) {
-          return Jsc.eq(true, actual.isError())
-            ? true
-            : 'Error contained in list, so should be error overall';
-        } else {
-          Assert.eq(
-            'No errors in list, so should be value overall',
-            true,
-            actual.isValue()
-          );
-          return Jsc.eq(true, Obj.has(actual.getOrDie() as any, baseKey))
-            ? true
-            : 'Missing base key: ' + baseKey;
-        }
+      if (hasError) {
+        return Jsc.eq(true, actual.isError()) ? true : 'Error contained in list, so should be error overall';
+      } else {
+        Assert.eq('No errors in list, so should be value overall', true, actual.isValue());
+        return Jsc.eq(true, Obj.has(actual.getOrDie() as any, baseKey)) ? true : 'Missing base key: ' + baseKey;
       }
-    );
+    });
   };
 
   testNarrow();

@@ -13,10 +13,7 @@ import Editor from '../api/Editor';
 const matchesSelector = function (editor: Editor, selector: string) {
   return NewLineUtils.getParentBlock(editor)
     .filter(function (parentBlock) {
-      return (
-        selector.length > 0 &&
-        Selectors.is(Element.fromDom(parentBlock), selector)
-      );
+      return selector.length > 0 && Selectors.is(Element.fromDom(parentBlock), selector);
     })
     .isSome();
 };

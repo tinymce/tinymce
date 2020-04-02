@@ -21,17 +21,9 @@ UnitTest.test('DirectionTest', function () {
     Remove.remove(element);
   };
 
-  const assertOnDirection = function (
-    element,
-    isLeftReturnThis,
-    isRightReturnThis,
-    expectedOn
-  ) {
+  const assertOnDirection = function (element, isLeftReturnThis, isRightReturnThis, expectedOn) {
     appendToDom(element);
-    const onDirection = Direction.onDirection(
-      isLeftReturnThis,
-      isRightReturnThis
-    );
+    const onDirection = Direction.onDirection(isLeftReturnThis, isRightReturnThis);
     assert.eq(expectedOn, onDirection(element));
     Remove.remove(element);
   };

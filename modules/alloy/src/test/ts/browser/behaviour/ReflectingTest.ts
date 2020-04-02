@@ -1,10 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  Step,
-  UiFinder
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Option, Arr } from '@ephox/katamari';
 
@@ -32,12 +26,8 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
         },
         behaviours: Behaviour.derive([
           AddEventsBehaviour.config('child-events', [
-            AlloyEvents.runOnAttached(
-              store.adder('child.' + label + '.attached')
-            ),
-            AlloyEvents.runOnDetached(
-              store.adder('child.' + label + '.detached')
-            )
+            AlloyEvents.runOnAttached(store.adder('child.' + label + '.attached')),
+            AlloyEvents.runOnDetached(store.adder('child.' + label + '.detached'))
           ])
         ])
       });
@@ -109,8 +99,7 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
               behaviours: Behaviour.derive([
                 Reflecting.config({
                   channel: 'channel-3',
-                  renderComponents: (_input, state) =>
-                    Arr.map(state.map((s) => s.state).getOr([]), makeChild),
+                  renderComponents: (_input, state) => Arr.map(state.map((s) => s.state).getOr([]), makeChild),
                   updateState: (_c, input) => Option.some({ state: input })
                 })
               ])
@@ -120,39 +109,28 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
       );
     },
     (_doc, _body, gui, component, store) => {
-      const sAssertReflectState = (
-        label: string,
-        expected: any,
-        selector: string
-      ) =>
+      const sAssertReflectState = (label: string, expected: any, selector: string) =>
         Chain.asStep(component.element(), [
           UiFinder.cFindIn(selector),
           Chain.binder(component.getSystem().getByDom),
           Chain.op((r1) => {
             const actual = Reflecting.getState(r1).get().getOrDie();
-            Assertions.assertEq(
-              'Checking state for: ' + label,
-              expected,
-              actual.state
-            );
+            Assertions.assertEq('Checking state for: ' + label, expected, actual.state);
           })
         ]);
 
       return [
-        store.sAssertEq(
-          'Checking the original sequence of attached and detached',
-          [
-            'child.state-changes-only.attached',
-            'child.2a-cat.attached',
-            'child.2a-dog.attached',
+        store.sAssertEq('Checking the original sequence of attached and detached', [
+          'child.state-changes-only.attached',
+          'child.2a-cat.attached',
+          'child.2a-dog.attached',
 
-            // This one is removed immediately due to initialData being set
-            'child.render-only-inital-component.attached',
-            'child.render-only-inital-component.detached',
-            'child.2b-cat.attached',
-            'child.2b-dog.attached'
-          ]
-        ),
+          // This one is removed immediately due to initialData being set
+          'child.render-only-inital-component.attached',
+          'child.render-only-inital-component.detached',
+          'child.2b-cat.attached',
+          'child.2b-dog.attached'
+        ]),
         store.sClear,
         Assertions.sAssertStructure(
           'Checking initial structure',
@@ -201,21 +179,18 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
           gui.broadcastOn(['channel-2'], ['alpha', 'beta']);
         }),
 
-        store.sAssertEq(
-          'Attached and detached should have occurred when broadcasting on channel 2',
-          [
-            'child.2a-cat.detached',
-            'child.2a-dog.detached',
-            'child.alpha.attached',
-            'child.beta.attached',
-            'child.2b-cat.detached',
-            'child.2b-dog.detached',
-            'child.alpha.attached',
-            'child.beta.attached',
-            'child.alpha.attached',
-            'child.beta.attached'
-          ]
-        ),
+        store.sAssertEq('Attached and detached should have occurred when broadcasting on channel 2', [
+          'child.2a-cat.detached',
+          'child.2a-dog.detached',
+          'child.alpha.attached',
+          'child.beta.attached',
+          'child.2b-cat.detached',
+          'child.2b-dog.detached',
+          'child.alpha.attached',
+          'child.beta.attached',
+          'child.alpha.attached',
+          'child.beta.attached'
+        ]),
 
         Assertions.sAssertStructure(
           'Checking structure after broadcast on channel-2',
@@ -291,9 +266,7 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
                   ]
                 }),
                 s.element('div', {
-                  children: [
-                    s.element('span', { children: [s.text(str.is('gamma'))] })
-                  ]
+                  children: [s.element('span', { children: [s.text(str.is('gamma'))] })]
                 })
               ]
             })

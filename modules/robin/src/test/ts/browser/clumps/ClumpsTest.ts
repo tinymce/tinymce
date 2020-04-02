@@ -1,14 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { DomUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
-import {
-  Body,
-  Compare,
-  Element,
-  Hierarchy,
-  Insert,
-  Remove
-} from '@ephox/sugar';
+import { Body, Compare, Element, Hierarchy, Insert, Remove } from '@ephox/sugar';
 import * as Clumps from 'ephox/robin/clumps/Clumps';
 
 UnitTest.test('ClumpsTest', function () {
@@ -16,9 +9,7 @@ UnitTest.test('ClumpsTest', function () {
    * inline clumps
    */
   const find = function (path: number[]) {
-    return Hierarchy.follow(container, path).getOrDie(
-      'Could not find the path: ' + path.join(',')
-    );
+    return Hierarchy.follow(container, path).getOrDie('Could not find the path: ' + path.join(','));
   };
 
   const body = Body.body();
@@ -41,28 +32,12 @@ UnitTest.test('ClumpsTest', function () {
     end: number[];
   }
 
-  const check = function (
-    expected: Expected[],
-    start: number[],
-    soffset: number,
-    finish: number[],
-    foffset: number
-  ) {
-    const actual = Clumps.collect(
-      DomUniverse(),
-      isRoot,
-      find(start),
-      soffset,
-      find(finish),
-      foffset
-    );
+  const check = function (expected: Expected[], start: number[], soffset: number, finish: number[], foffset: number) {
+    const actual = Clumps.collect(DomUniverse(), isRoot, find(start), soffset, find(finish), foffset);
     assert.eq(
       expected.length,
       actual.length,
-      'The length of Clumps was different. Expected: ' +
-        expected.length +
-        ', actual: ' +
-        actual.length
+      'The length of Clumps was different. Expected: ' + expected.length + ', actual: ' + actual.length
     );
     Arr.each(expected, function (exp, i) {
       const act = actual[i];
@@ -159,8 +134,7 @@ UnitTest.test('ClumpsTest', function () {
     'h'.length
   );
 
-  container.dom().innerHTML =
-    '<table><tbody><tr><td>One</td></td><td>Two</td></tr></tbody></table><p>Paragraph</p>';
+  container.dom().innerHTML = '<table><tbody><tr><td>One</td></td><td>Two</td></tr></tbody></table><p>Paragraph</p>';
   check(
     [
       // One -> One
@@ -174,8 +148,7 @@ UnitTest.test('ClumpsTest', function () {
     1
   );
 
-  container.dom().innerHTML =
-    '<p>Text</p><table><tbody><tr><td>One</td></td><td>Two</td></tr></tbody></table><p>Paragraph</p>';
+  container.dom().innerHTML = '<p>Text</p><table><tbody><tr><td>One</td></td><td>Two</td></tr></tbody></table><p>Paragraph</p>';
   check(
     [
       { start: [1, 0, 0, 0, 0], end: [1, 0, 0, 0, 0] },

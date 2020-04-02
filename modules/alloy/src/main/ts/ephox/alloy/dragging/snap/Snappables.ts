@@ -3,12 +3,7 @@ import { Position } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as DragCoord from '../../api/data/DragCoord';
-import {
-  SnapConfig,
-  SnapOutput,
-  SnapPin,
-  SnapsConfig
-} from '../common/DraggingTypes';
+import { SnapConfig, SnapOutput, SnapPin, SnapsConfig } from '../common/DraggingTypes';
 import * as Presnaps from './Presnaps';
 
 // Types of coordinates
@@ -88,10 +83,7 @@ const moveOrSnap = <E>(
   );
 };
 
-const stopDrag = <E>(
-  component: AlloyComponent,
-  snapInfo: SnapsConfig<E>
-): void => {
+const stopDrag = <E>(component: AlloyComponent, snapInfo: SnapsConfig<E>): void => {
   Presnaps.clear(component, snapInfo);
 };
 
@@ -103,14 +95,7 @@ const findMatchingSnap = <E>(
 ): Option<SnapOutput<E>> =>
   Arr.findMap(snaps, (snap) => {
     const sensor = snap.sensor;
-    const inRange = DragCoord.withinRange(
-      newCoord,
-      sensor,
-      snap.range.left(),
-      snap.range.top(),
-      scroll,
-      origin
-    );
+    const inRange = DragCoord.withinRange(newCoord, sensor, snap.range.left(), snap.range.top(), scroll, origin);
     return inRange
       ? Option.some({
           output: DragCoord.absorb(snap.output, newCoord, scroll, origin),
@@ -141,14 +126,7 @@ const findClosestSnap = <E>(
         snaps,
         (acc: SnapCandidate<E>, snap: SnapConfig<E>): SnapCandidate<E> => {
           const sensor = snap.sensor;
-          const deltas = DragCoord.getDeltas(
-            newCoord,
-            sensor,
-            snap.range.left(),
-            snap.range.top(),
-            scroll,
-            origin
-          );
+          const deltas = DragCoord.getDeltas(newCoord, sensor, snap.range.left(), snap.range.top(), scroll, origin);
           return acc.deltas.fold(
             () => ({
               deltas: Option.some(deltas),
@@ -201,11 +179,7 @@ const findSnap = <E>(
   return findMatchingSnap(snaps, newCoord, scroll, origin);
 };
 
-const snapTo = <E>(
-  snap: SnapConfig<E>,
-  scroll: Position,
-  origin: Position
-): SnapPin<E> => ({
+const snapTo = <E>(snap: SnapConfig<E>, scroll: Position, origin: Position): SnapPin<E> => ({
   // TODO: This looks to be incorrect and needs fixing as DragCoord definitely needs a number
   // based drag coord for the second argument here, so this is probably a bug.
   coord: DragCoord.absorb(snap.output, snap.output as any, scroll, origin),

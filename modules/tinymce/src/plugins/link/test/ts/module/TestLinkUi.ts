@@ -1,16 +1,4 @@
-import {
-  Chain,
-  FocusTools,
-  GeneralSteps,
-  Guard,
-  Logger,
-  Mouse,
-  Step,
-  UiFinder,
-  Waiter,
-  Assertions,
-  UiControls
-} from '@ephox/agar';
+import { Chain, FocusTools, GeneralSteps, Guard, Logger, Mouse, Step, UiFinder, Waiter, Assertions, UiControls } from '@ephox/agar';
 import { document, Event, localStorage } from '@ephox/dom-globals';
 import { Type, Obj } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyUi } from '@ephox/mcagar';
@@ -22,8 +10,7 @@ const selectors = {
   href: 'label.tox-label:contains(URL) + div>div>input.tox-textfield',
   text: 'label.tox-label:contains(Text to display) + input.tox-textfield',
   title: 'label.tox-label:contains(Title) + input.tox-textfield',
-  target:
-    'label.tox-label:contains(Open link in...) + div.tox-selectfield>select',
+  target: 'label.tox-label:contains(Open link in...) + div.tox-selectfield>select',
   linklist: 'label.tox-label:contains(Link list) + div.tox-selectfield>select'
 };
 
@@ -32,11 +19,7 @@ const sOpenLinkDialog = (ui: TinyUi) =>
     'Open link dialog',
     GeneralSteps.sequence([
       ui.sClickOnToolbar('Click toolbar button', 'button'),
-      UiFinder.sWaitForVisible(
-        'wait for link dialog',
-        TinyDom.fromDom(document.body),
-        '[role="dialog"]'
-      )
+      UiFinder.sWaitForVisible('wait for link dialog', TinyDom.fromDom(document.body), '[role="dialog"]')
     ])
   );
 
@@ -49,10 +32,7 @@ const sClickOnDialog = (label: string, selector: string) =>
         TinyDom.fromDom(document.body),
         '[role="dialog"]:not(.tox-confirm-dialog) ' + selector
       ),
-      Mouse.sClickOn(
-        TinyDom.fromDom(document.body),
-        '[role="dialog"]:not(.tox-confirm-dialog) ' + selector
-      )
+      Mouse.sClickOn(TinyDom.fromDom(document.body), '[role="dialog"]:not(.tox-confirm-dialog) ' + selector)
     ])
   );
 
@@ -62,16 +42,11 @@ const sClickOnConfirmDialog = (label: string, state: boolean) =>
     GeneralSteps.sequence([
       Mouse.sClickOn(
         TinyDom.fromDom(document.body),
-        '[role="dialog"].tox-confirm-dialog button:contains("' +
-          (state ? 'Yes' : 'No') +
-          '")'
+        '[role="dialog"].tox-confirm-dialog button:contains("' + (state ? 'Yes' : 'No') + '")'
       ),
       Waiter.sTryUntil(
         'Waiting for confirm dialog to go away',
-        UiFinder.sNotExists(
-          TinyDom.fromDom(document.body),
-          '.tox-confirm-dialog'
-        ),
+        UiFinder.sNotExists(TinyDom.fromDom(document.body), '.tox-confirm-dialog'),
         100,
         1000
       )
@@ -102,10 +77,7 @@ const cFireEvent = (event: string) =>
   );
 
 const cGetInput = (selector: string) =>
-  Chain.control(
-    Chain.fromChains([Chain.inject(Body.body()), UiFinder.cFindIn(selector)]),
-    Guard.addLogging('Get input')
-  );
+  Chain.control(Chain.fromChains([Chain.inject(Body.body()), UiFinder.cFindIn(selector)]), Guard.addLogging('Get input'));
 
 const sAssertInputValue = (label, selector, expected) =>
   Logger.t(
@@ -114,18 +86,10 @@ const sAssertInputValue = (label, selector, expected) =>
       cGetInput(selector),
       Chain.op((element) => {
         if (element.dom().type === 'checkbox') {
-          Assertions.assertEq(
-            `The input value for ${label} should be: `,
-            expected,
-            element.dom().checked
-          );
+          Assertions.assertEq(`The input value for ${label} should be: `, expected, element.dom().checked);
           return;
         }
-        Assertions.assertEq(
-          `The input value for ${label} should be: `,
-          expected,
-          Value.get(element)
-        );
+        Assertions.assertEq(`The input value for ${label} should be: `, expected, Value.get(element));
       })
     ])
   );
@@ -143,51 +107,24 @@ const sAssertDialogContents = (expected: Record<string, any>) => {
 const sWaitForUi = (label: string, selector: string) =>
   Logger.t(
     'Wait for UI',
-    Waiter.sTryUntil(
-      label,
-      UiFinder.sWaitForVisible(
-        'Waiting',
-        TinyDom.fromDom(document.body),
-        selector
-      ),
-      100,
-      1000
-    )
+    Waiter.sTryUntil(label, UiFinder.sWaitForVisible('Waiting', TinyDom.fromDom(document.body), selector), 100, 1000)
   );
 
 const sInsertLink = function (ui: TinyUi, url: string) {
-  return Logger.t(
-    'Insert link',
-    GeneralSteps.sequence([
-      sOpenLinkDialog(ui),
-      FocusTools.sSetActiveValue(doc, url),
-      sClickSave
-    ])
-  );
+  return Logger.t('Insert link', GeneralSteps.sequence([sOpenLinkDialog(ui), FocusTools.sSetActiveValue(doc, url), sClickSave]));
 };
 
-const sAssertContentPresence = (
-  api: TinyApis,
-  presence: Record<string, number>
-) =>
+const sAssertContentPresence = (api: TinyApis, presence: Record<string, number>) =>
   Logger.t(
     'Assert content presence',
-    Waiter.sTryUntil(
-      'Waiting for content to have expected presence',
-      api.sAssertContentPresence(presence),
-      100,
-      1000
-    )
+    Waiter.sTryUntil('Waiting for content to have expected presence', api.sAssertContentPresence(presence), 100, 1000)
   );
 
 const sWaitForDialogClose = Logger.t(
   'Wait for dialog to close',
   Waiter.sTryUntil(
     'Waiting for dialog to go away',
-    UiFinder.sNotExists(
-      TinyDom.fromDom(document.body),
-      '[role="dialog"]:not(.tox-confirm-dialog)'
-    ),
+    UiFinder.sNotExists(TinyDom.fromDom(document.body), '[role="dialog"]:not(.tox-confirm-dialog)'),
     100,
     1000
   )
@@ -197,10 +134,7 @@ const sWaitForConfirmClose = Logger.t(
   'Wait to confirm close',
   Waiter.sTryUntil(
     'Waiting for confirm dialog to go away',
-    UiFinder.sNotExists(
-      TinyDom.fromDom(document.body),
-      '[role="dialog"].tox-confirm-dialog'
-    ),
+    UiFinder.sNotExists(TinyDom.fromDom(document.body), '[role="dialog"].tox-confirm-dialog'),
     100,
     1000
   )
@@ -208,43 +142,28 @@ const sWaitForConfirmClose = Logger.t(
 
 const sClickSave = Logger.t(
   'Click Save',
-  GeneralSteps.sequence([
-    sClickOnDialog('click save button', 'button:contains("Save")'),
-    sWaitForDialogClose
-  ])
+  GeneralSteps.sequence([sClickOnDialog('click save button', 'button:contains("Save")'), sWaitForDialogClose])
 );
 
 const sClickCancel = Logger.t(
   'Click Cancel',
-  GeneralSteps.sequence([
-    sClickOnDialog('click cancel button', 'button:contains("Cancel")'),
-    sWaitForDialogClose
-  ])
+  GeneralSteps.sequence([sClickOnDialog('click cancel button', 'button:contains("Cancel")'), sWaitForDialogClose])
 );
 
 const sClickConfirmYes = Logger.t(
   'Click confirm yes',
-  GeneralSteps.sequence([
-    sClickOnConfirmDialog('click "Yes"', true),
-    sWaitForConfirmClose
-  ])
+  GeneralSteps.sequence([sClickOnConfirmDialog('click "Yes"', true), sWaitForConfirmClose])
 );
 
 const sClickConfirmNo = Logger.t(
   'Click confirm no',
-  GeneralSteps.sequence([
-    sClickOnConfirmDialog('click "No"', false),
-    sWaitForConfirmClose
-  ])
+  GeneralSteps.sequence([sClickOnConfirmDialog('click "No"', false), sWaitForConfirmClose])
 );
 
 const cGetDialog = Chain.control(
   Chain.fromChains([
     Chain.inject(TinyDom.fromDom(document.body)),
-    Chain.control(
-      UiFinder.cFindIn('[role="dialog"]'),
-      Guard.tryUntil('Waiting for dialog', 100, 1000)
-    )
+    Chain.control(UiFinder.cFindIn('[role="dialog"]'), Guard.tryUntil('Waiting for dialog', 100, 1000))
   ]),
   Guard.addLogging('Get dialog')
 );
@@ -253,10 +172,7 @@ const cFindInDialog = (selector) =>
   Chain.control(
     Chain.fromChains([
       Chain.inject(TinyDom.fromDom(document.body)),
-      Chain.control(
-        UiFinder.cFindIn('[role="dialog"]'),
-        Guard.tryUntil('Waiting for dialog', 100, 1000)
-      ),
+      Chain.control(UiFinder.cFindIn('[role="dialog"]'), Guard.tryUntil('Waiting for dialog', 100, 1000)),
       UiFinder.cFindIn(selector)
     ]),
     Guard.addLogging('Find in dialog')
@@ -270,9 +186,7 @@ const sSetHtmlSelectValue = (group: string, newValue) =>
   Logger.t(
     'Set html select value',
     Chain.asStep({}, [
-      cFindInDialog(
-        'label:contains("' + group + '") + .tox-selectfield select'
-      ),
+      cFindInDialog('label:contains("' + group + '") + .tox-selectfield select'),
       UiControls.cSetValue(newValue),
       cFireEvent('change')
     ])
@@ -281,11 +195,7 @@ const sSetHtmlSelectValue = (group: string, newValue) =>
 const sSetInputFieldValue = (group: string, newValue: string) =>
   Logger.t(
     'Set input field value',
-    Chain.asStep({}, [
-      cFindInDialog('label:contains("' + group + '") + input'),
-      UiControls.cSetValue(newValue),
-      cFireEvent('input')
-    ])
+    Chain.asStep({}, [cFindInDialog('label:contains("' + group + '") + input'), UiControls.cSetValue(newValue), cFireEvent('input')])
   );
 
 export const TestLinkUi = {

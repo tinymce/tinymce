@@ -8,21 +8,13 @@
 import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
 import { Fun, Arr } from '@ephox/katamari';
-import {
-  Insert,
-  Element,
-  Compare,
-  PredicateFind,
-  Node,
-  Attr
-} from '@ephox/sugar';
+import { Insert, Element, Compare, PredicateFind, Node, Attr } from '@ephox/sugar';
 import * as Settings from '../api/Settings';
 import { document } from '@ephox/dom-globals';
 import * as ElementType from '../dom/ElementType';
 import { isAtLastLine, isAtFirstLine } from '../caret/LineReader';
 
-const isTarget = (node: Element) =>
-  Arr.contains(['figcaption'], Node.name(node));
+const isTarget = (node: Element) => Arr.contains(['figcaption'], Node.name(node));
 
 const rangeBefore = (target: Element) => {
   const rng = document.createRange();
@@ -45,12 +37,7 @@ const insertBr = (root: Element, forward: boolean) => {
   return rangeBefore(br);
 };
 
-const insertBlock = (
-  root: Element,
-  forward: boolean,
-  blockName: string,
-  attrs: Record<string, string>
-) => {
+const insertBlock = (root: Element, forward: boolean, blockName: string, attrs: Record<string, string>) => {
   const block = Element.fromTag(blockName);
   const br = Element.fromTag('br');
 
@@ -61,12 +48,7 @@ const insertBlock = (
   return rangeBefore(br);
 };
 
-const insertEmptyLine = (
-  root: Element,
-  rootBlockName: string,
-  attrs: Record<string, string>,
-  forward: boolean
-) => {
+const insertEmptyLine = (root: Element, rootBlockName: string, attrs: Record<string, string>, forward: boolean) => {
   if (rootBlockName === '') {
     return insertBr(root, forward);
   } else {
@@ -76,18 +58,11 @@ const insertEmptyLine = (
 
 const getClosestTargetBlock = (pos: CaretPosition, root: Element) => {
   const isRoot = Fun.curry(Compare.eq, root);
-  return PredicateFind.closest(
-    Element.fromDom(pos.container()),
-    ElementType.isBlock,
-    isRoot
-  ).filter(isTarget);
+  return PredicateFind.closest(Element.fromDom(pos.container()), ElementType.isBlock, isRoot).filter(isTarget);
 };
 
-const isAtFirstOrLastLine = (
-  root: Element,
-  forward: boolean,
-  pos: CaretPosition
-) => (forward ? isAtLastLine(root.dom(), pos) : isAtFirstLine(root.dom(), pos));
+const isAtFirstOrLastLine = (root: Element, forward: boolean, pos: CaretPosition) =>
+  forward ? isAtLastLine(root.dom(), pos) : isAtFirstLine(root.dom(), pos);
 
 const moveCaretToNewEmptyLine = (editor: Editor, forward: boolean) => {
   const root = Element.fromDom(editor.getBody());

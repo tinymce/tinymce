@@ -48,12 +48,7 @@ const relaxDomain = function (editor: Editor, ifr) {
   return false;
 };
 
-const createIframeElement = function (
-  id: string,
-  title: TranslatedString,
-  height: number,
-  customAttrs: {}
-) {
+const createIframeElement = function (id: string, title: TranslatedString, height: number, customAttrs: {}) {
   const iframe = Element.fromTag('iframe');
 
   Attr.setAll(iframe, customAttrs);
@@ -81,42 +76,25 @@ const getIframeHtml = function (editor: Editor) {
     iframeHTML += '<base href="' + editor.documentBaseURI.getURI() + '" />';
   }
 
-  iframeHTML +=
-    '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
+  iframeHTML += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
 
   bodyId = Settings.getBodyId(editor);
   bodyClass = Settings.getBodyClass(editor);
 
   if (Settings.getContentSecurityPolicy(editor)) {
-    iframeHTML +=
-      '<meta http-equiv="Content-Security-Policy" content="' +
-      Settings.getContentSecurityPolicy(editor) +
-      '" />';
+    iframeHTML += '<meta http-equiv="Content-Security-Policy" content="' + Settings.getContentSecurityPolicy(editor) + '" />';
   }
 
   iframeHTML +=
-    '</head><body id="' +
-    bodyId +
-    '" class="mce-content-body ' +
-    bodyClass +
-    '" data-id="' +
-    editor.id +
-    '"><br></body></html>';
+    '</head><body id="' + bodyId + '" class="mce-content-body ' + bodyClass + '" data-id="' + editor.id + '"><br></body></html>';
 
   return iframeHTML;
 };
 
 const createIframe = function (editor: Editor, o) {
-  const title = editor.editorManager.translate(
-    'Rich Text Area. Press ALT-0 for help.'
-  );
+  const title = editor.editorManager.translate('Rich Text Area. Press ALT-0 for help.');
 
-  const ifr = createIframeElement(
-    editor.id,
-    title,
-    o.height,
-    Settings.getIframeAttrs(editor)
-  ).dom();
+  const ifr = createIframeElement(editor.id, title, o.height, Settings.getIframeAttrs(editor)).dom();
 
   ifr.onload = function () {
     ifr.onload = null;

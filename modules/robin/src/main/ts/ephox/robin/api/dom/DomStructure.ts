@@ -36,13 +36,4 @@ const isInline = function (element: Element) {
   return Structure.isInline(universe, element);
 };
 
-export {
-  isBlock,
-  isList,
-  isFormatting,
-  isHeading,
-  isContainer,
-  isEmptyTag,
-  isFrame,
-  isInline
-};
+export { isBlock, isList, isFormatting, isHeading, isContainer, isEmptyTag, isFrame, isInline };

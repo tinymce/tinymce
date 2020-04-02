@@ -16,17 +16,11 @@ import * as Utils from '../core/Utils';
 import { ImageDialogInfo, ListItem } from './DialogTypes';
 
 const collect = (editor: Editor): Promise<ImageDialogInfo> => {
-  const urlListSanitizer = ListUtils.sanitizer((item) =>
-    editor.convertURL(item.value || item.url, 'src')
-  );
+  const urlListSanitizer = ListUtils.sanitizer((item) => editor.convertURL(item.value || item.url, 'src'));
 
   const futureImageList = new Promise<Option<ListItem[]>>((completer) => {
     Utils.createImageList(editor, (imageList) => {
-      completer(
-        urlListSanitizer(imageList).map((items) =>
-          Arr.flatten([[{ text: 'None', value: '' }], items])
-        )
-      );
+      completer(urlListSanitizer(imageList).map((items) => Arr.flatten([[{ text: 'None', value: '' }], items])));
     });
   });
 
@@ -46,9 +40,9 @@ const collect = (editor: Editor): Promise<ImageDialogInfo> => {
   const credentials = Settings.getUploadCredentials(editor);
   const handler = Settings.getUploadHandler(editor);
   const automaticUploads = Settings.isAutomaticUploadsEnabled(editor);
-  const prependURL: Option<string> = Option.some(
-    Settings.getPrependUrl(editor)
-  ).filter((preUrl) => Type.isString(preUrl) && preUrl.length > 0);
+  const prependURL: Option<string> = Option.some(Settings.getPrependUrl(editor)).filter(
+    (preUrl) => Type.isString(preUrl) && preUrl.length > 0
+  );
 
   return futureImageList.then(
     (imageList): ImageDialogInfo => ({

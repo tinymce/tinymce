@@ -9,10 +9,7 @@ export default [
     ValueSchema.setOf(
       // Allow any keys.
       Result.value,
-      ValueSchema.objOfOnly([
-        Fields.onStrictHandler('onReceive'),
-        FieldSchema.defaulted('schema', ValueSchema.anyValue())
-      ])
+      ValueSchema.objOfOnly([Fields.onStrictHandler('onReceive'), FieldSchema.defaulted('schema', ValueSchema.anyValue())])
     )
   )
 ];

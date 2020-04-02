@@ -74,15 +74,11 @@ const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
       itemSelector:
         '*:not(.tox-split-button) > .tox-tbtn:not([disabled]), .tox-split-button:not([disabled]), .tox-toolbar-nav-js:not([disabled])'
     },
-    tgroupBehaviours: Behaviour.derive([
-      Tabstopping.config({}),
-      Focusing.config({})
-    ])
+    tgroupBehaviours: Behaviour.derive([Tabstopping.config({}), Focusing.config({})])
   };
 };
 
-const renderToolbarGroup = (toolbarGroup: ToolbarGroup) =>
-  AlloyToolbarGroup.sketch(renderToolbarGroupCommon(toolbarGroup));
+const renderToolbarGroup = (toolbarGroup: ToolbarGroup) => AlloyToolbarGroup.sketch(renderToolbarGroupCommon(toolbarGroup));
 
 const getToolbarbehaviours = (toolbarSpec: ToolbarSpec, modeName) => {
   const onAttached = AlloyEvents.runOnAttached(function (component) {
@@ -208,14 +204,10 @@ const renderSlidingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
       overflowToggledClass: ToolbarButtonClasses.Ticked
     },
     onOpened: (comp) => {
-      comp
-        .getSystem()
-        .broadcastOn([Channels.toolbarHeightChange()], { type: 'opened' });
+      comp.getSystem().broadcastOn([Channels.toolbarHeightChange()], { type: 'opened' });
     },
     onClosed: (comp) => {
-      comp
-        .getSystem()
-        .broadcastOn([Channels.toolbarHeightChange()], { type: 'closed' });
+      comp.getSystem().broadcastOn([Channels.toolbarHeightChange()], { type: 'closed' });
     }
   });
 };
@@ -227,11 +219,7 @@ const renderToolbar = (toolbarSpec: ToolbarSpec) => {
     uid: toolbarSpec.uid,
     dom: {
       tag: 'div',
-      classes: ['tox-toolbar'].concat(
-        toolbarSpec.type === ToolbarMode.scrolling
-          ? ['tox-toolbar--scrolling']
-          : []
-      )
+      classes: ['tox-toolbar'].concat(toolbarSpec.type === ToolbarMode.scrolling ? ['tox-toolbar--scrolling'] : [])
     },
     components: [AlloyToolbar.parts().groups({})],
 
@@ -239,9 +227,4 @@ const renderToolbar = (toolbarSpec: ToolbarSpec) => {
   });
 };
 
-export {
-  renderToolbarGroup,
-  renderToolbar,
-  renderFloatingMoreToolbar,
-  renderSlidingMoreToolbar
-};
+export { renderToolbarGroup, renderToolbar, renderFloatingMoreToolbar, renderSlidingMoreToolbar };

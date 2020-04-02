@@ -1,8 +1,4 @@
-export default function (
-  turnOff: () => void,
-  turnOn: () => void,
-  initial: boolean
-) {
+export default function (turnOff: () => void, turnOn: () => void, initial: boolean) {
   let active = initial || false;
 
   const on = function () {

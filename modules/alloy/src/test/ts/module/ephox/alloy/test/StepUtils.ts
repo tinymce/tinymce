@@ -8,11 +8,7 @@ const sAssertFailIs = (label: string, expected: string, f: () => void) =>
         f();
         passed = true;
       } catch (err) {
-        Assertions.assertEq(
-          'Checking exist error match',
-          expected,
-          err.message
-        );
+        Assertions.assertEq('Checking exist error match', expected, err.message);
       }
 
       if (passed) {
@@ -30,11 +26,7 @@ const sAssertFailContains = (label: string, expected: string, f: () => void) =>
         f();
         passed = true;
       } catch (err) {
-        Assertions.assertEq(
-          'Checking err message contains: ' + expected,
-          true,
-          err.message.indexOf(expected) > -1
-        );
+        Assertions.assertEq('Checking err message contains: ' + expected, true, err.message.indexOf(expected) > -1);
       }
 
       if (passed) {

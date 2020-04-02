@@ -1,22 +1,11 @@
-import {
-  ApproxStructure,
-  GeneralSteps,
-  Keyboard,
-  Keys,
-  Logger,
-  Pipeline,
-  Step
-} from '@ephox/agar';
+import { ApproxStructure, GeneralSteps, Keyboard, Keys, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (success, failure) {
   Theme();
 
   const sKeyUp = function (editor, key) {
@@ -33,19 +22,13 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (
     ]);
   };
 
-  const sTestDeletePadd = function (
-    editor: Editor,
-    tinyApis: TinyApis,
-    tinyActions: TinyActions
-  ) {
+  const sTestDeletePadd = function (editor: Editor, tinyApis: TinyApis, tinyActions: TinyActions) {
     return GeneralSteps.sequence([
       tinyApis.sFocus(),
       Logger.t(
         'Should padd empty ce=true inside ce=false when everything is deleted',
         GeneralSteps.sequence([
-          tinyApis.sSetContent(
-            '<div contenteditable="false">a<p contenteditable="true">a</p>b</div>'
-          ),
+          tinyApis.sSetContent('<div contenteditable="false">a<p contenteditable="true">a</p>b</div>'),
           tinyApis.sSetSelection([1, 1, 0], 0, [1, 1, 0], 1),
           sFakeBackspaceKeyOnRange(editor),
           tinyApis.sAssertContentStructure(
@@ -77,9 +60,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (
       Logger.t(
         'Should not padd an non empty ce=true inside ce=false',
         GeneralSteps.sequence([
-          tinyApis.sSetContent(
-            '<div contenteditable="false">a<p contenteditable="true">ab</p>b</div>'
-          ),
+          tinyApis.sSetContent('<div contenteditable="false">a<p contenteditable="true">ab</p>b</div>'),
           tinyApis.sSetSelection([1, 1, 0], 0, [1, 1, 0], 1),
           sFakeBackspaceKeyOnRange(editor),
           tinyApis.sAssertContentStructure(
@@ -184,12 +165,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (
       const tinyApis = TinyApis(editor);
       const tinyActions = TinyActions(editor);
 
-      Pipeline.async(
-        {},
-        [sTestDeletePadd(editor, tinyApis, tinyActions)],
-        onSuccess,
-        onFailure
-      );
+      Pipeline.async({}, [sTestDeletePadd(editor, tinyApis, tinyActions)], onSuccess, onFailure);
     },
     {
       base_url: '/project/tinymce/js/tinymce'

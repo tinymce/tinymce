@@ -55,14 +55,8 @@ const renderClose = (providersBackstage: UiFactoryBackstageProviders) =>
     }
   });
 
-const renderTitle = (
-  spec: WindowHeaderSpec,
-  id: Option<string>,
-  providersBackstage: UiFactoryBackstageProviders
-): AlloySpec => {
-  const renderComponents = (data: WindowHeaderSpec) => [
-    GuiFactory.text(providersBackstage.translate(data.title))
-  ];
+const renderTitle = (spec: WindowHeaderSpec, id: Option<string>, providersBackstage: UiFactoryBackstageProviders): AlloySpec => {
+  const renderComponents = (data: WindowHeaderSpec) => [GuiFactory.text(providersBackstage.translate(data.title))];
 
   return {
     dom: {
@@ -86,18 +80,10 @@ const renderDragHandle = () => ({
   dom: DomFactory.fromHtml('<div class="tox-dialog__draghandle"></div>')
 });
 
-const renderInlineHeader = (
-  spec: WindowHeaderSpec,
-  titleId: string,
-  providersBackstage: UiFactoryBackstageProviders
-): AlloySpec =>
+const renderInlineHeader = (spec: WindowHeaderSpec, titleId: string, providersBackstage: UiFactoryBackstageProviders): AlloySpec =>
   Container.sketch({
     dom: DomFactory.fromHtml('<div class="tox-dialog__header"></div>'),
-    components: [
-      renderTitle(spec, Option.some(titleId), providersBackstage),
-      renderDragHandle(),
-      renderClose(providersBackstage)
-    ],
+    components: [renderTitle(spec, Option.some(titleId), providersBackstage), renderDragHandle(), renderClose(providersBackstage)],
     containerBehaviours: Behaviour.derive([
       Dragging.config({
         mode: 'mouse',
@@ -114,21 +100,14 @@ const renderInlineHeader = (
     ])
   });
 
-const renderModalHeader = (
-  spec: WindowHeaderSpec,
-  providersBackstage: UiFactoryBackstageProviders
-): AlloySpec => {
-  const pTitle = ModalDialog.parts().title(
-    renderTitle(spec, Option.none(), providersBackstage)
-  );
+const renderModalHeader = (spec: WindowHeaderSpec, providersBackstage: UiFactoryBackstageProviders): AlloySpec => {
+  const pTitle = ModalDialog.parts().title(renderTitle(spec, Option.none(), providersBackstage));
 
   const pHandle = ModalDialog.parts().draghandle(renderDragHandle());
 
   const pClose = ModalDialog.parts().close(renderClose(providersBackstage));
 
-  const components = [pTitle]
-    .concat(spec.draggable ? [pHandle] : [])
-    .concat([pClose]);
+  const components = [pTitle].concat(spec.draggable ? [pHandle] : []).concat([pClose]);
   return Container.sketch({
     dom: DomFactory.fromHtml('<div class="tox-dialog__header"></div>'),
     components

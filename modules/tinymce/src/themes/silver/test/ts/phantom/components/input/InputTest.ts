@@ -47,23 +47,11 @@ UnitTest.asynctest('Input component Test', (success, failure) => {
         component.element()
       ),
 
-      RepresentingSteps.sSetValue(
-        'Setting to new value',
-        component,
-        'New-Value'
-      ),
-      RepresentingSteps.sAssertComposedValue(
-        'After setting value on form field',
-        'New-Value',
-        component
-      ),
+      RepresentingSteps.sSetValue('Setting to new value', component, 'New-Value'),
+      RepresentingSteps.sAssertComposedValue('After setting value on form field', 'New-Value', component),
 
       // Disabling state
-      DisablingSteps.sAssertDisabled(
-        'Initial disabled state',
-        false,
-        component
-      ),
+      DisablingSteps.sAssertDisabled('Initial disabled state', false, component),
       DisablingSteps.sSetDisabled('set disabled', component, true),
       DisablingSteps.sAssertDisabled('enabled > disabled', true, component)
     ],

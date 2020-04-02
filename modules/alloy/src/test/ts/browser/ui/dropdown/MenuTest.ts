@@ -1,11 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  NamedChain,
-  StructAssert,
-  UiFinder
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, NamedChain, StructAssert, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
@@ -54,12 +47,7 @@ UnitTest.asynctest('MenuTest', (success, failure) => {
           },
 
           menuBehaviours: Behaviour.derive([
-            AddEventsBehaviour.config('menu-test-behaviour', [
-              AlloyEvents.run(
-                MenuEvents.focus(),
-                store.adder('menu.events.focus')
-              )
-            ])
+            AddEventsBehaviour.config('menu-test-behaviour', [AlloyEvents.run(MenuEvents.focus(), store.adder('menu.events.focus'))])
           ])
         })
       ),
@@ -87,16 +75,8 @@ UnitTest.asynctest('MenuTest', (success, failure) => {
         Chain.asStep({}, [
           NamedChain.asChain([
             NamedChain.writeValue('menu', component.element()),
-            NamedChain.direct(
-              'menu',
-              UiFinder.cFindIn('li[data-value="alpha"]'),
-              'alpha'
-            ),
-            NamedChain.direct(
-              'menu',
-              UiFinder.cFindIn('li[data-value="beta"]'),
-              'beta'
-            ),
+            NamedChain.direct('menu', UiFinder.cFindIn('li[data-value="alpha"]'), 'alpha'),
+            NamedChain.direct('menu', UiFinder.cFindIn('li[data-value="beta"]'), 'beta'),
 
             NamedChain.read('menu', cAssertStore('Before focusItem event', [])),
 
@@ -119,12 +99,7 @@ UnitTest.asynctest('MenuTest', (success, failure) => {
               '_'
             ),
 
-            NamedChain.read(
-              'menu',
-              cAssertStore('After focusItem event (alpha)', [
-                'menu.events.focus'
-              ])
-            ),
+            NamedChain.read('menu', cAssertStore('After focusItem event (alpha)', ['menu.events.focus'])),
 
             NamedChain.read('menu', cClearStore),
             NamedChain.direct('beta', cTriggerFocusItem, '_'),
@@ -144,12 +119,7 @@ UnitTest.asynctest('MenuTest', (success, failure) => {
               ),
               '_'
             ),
-            NamedChain.read(
-              'menu',
-              cAssertStore('After focusItem event (beta)', [
-                'menu.events.focus'
-              ])
-            ),
+            NamedChain.read('menu', cAssertStore('After focusItem event (beta)', ['menu.events.focus'])),
             NamedChain.read('menu', cClearStore)
           ])
         ])

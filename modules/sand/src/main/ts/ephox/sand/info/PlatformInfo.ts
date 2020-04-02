@@ -31,23 +31,14 @@ const browsers: PlatformInfo[] = [
     name: 'Chrome',
     versionRegexes: [/.*?chrome\/([0-9]+)\.([0-9]+).*/, normalVersionRegex],
     search(uastring) {
-      return (
-        Strings.contains(uastring, 'chrome') &&
-        !Strings.contains(uastring, 'chromeframe')
-      );
+      return Strings.contains(uastring, 'chrome') && !Strings.contains(uastring, 'chromeframe');
     }
   },
   {
     name: 'IE',
-    versionRegexes: [
-      /.*?msie\ ?([0-9]+)\.([0-9]+).*/,
-      /.*?rv:([0-9]+)\.([0-9]+).*/
-    ],
+    versionRegexes: [/.*?msie\ ?([0-9]+)\.([0-9]+).*/, /.*?rv:([0-9]+)\.([0-9]+).*/],
     search(uastring) {
-      return (
-        Strings.contains(uastring, 'msie') ||
-        Strings.contains(uastring, 'trident')
-      );
+      return Strings.contains(uastring, 'msie') || Strings.contains(uastring, 'trident');
     }
   },
   // INVESTIGATE: Is this still the Opera user agent?
@@ -65,11 +56,7 @@ const browsers: PlatformInfo[] = [
     name: 'Safari',
     versionRegexes: [normalVersionRegex, /.*?cpu os ([0-9]+)_([0-9]+).*/],
     search(uastring) {
-      return (
-        (Strings.contains(uastring, 'safari') ||
-          Strings.contains(uastring, 'mobile/')) &&
-        Strings.contains(uastring, 'applewebkit')
-      );
+      return (Strings.contains(uastring, 'safari') || Strings.contains(uastring, 'mobile/')) && Strings.contains(uastring, 'applewebkit');
     }
   }
 ];
@@ -83,16 +70,9 @@ const oses: PlatformInfo[] = [
   {
     name: 'iOS',
     search(uastring) {
-      return (
-        Strings.contains(uastring, 'iphone') ||
-        Strings.contains(uastring, 'ipad')
-      );
+      return Strings.contains(uastring, 'iphone') || Strings.contains(uastring, 'ipad');
     },
-    versionRegexes: [
-      /.*?version\/\ ?([0-9]+)\.([0-9]+).*/,
-      /.*cpu os ([0-9]+)_([0-9]+).*/,
-      /.*cpu iphone os ([0-9]+)_([0-9]+).*/
-    ]
+    versionRegexes: [/.*?version\/\ ?([0-9]+)\.([0-9]+).*/, /.*cpu os ([0-9]+)_([0-9]+).*/, /.*cpu iphone os ([0-9]+)_([0-9]+).*/]
   },
   {
     name: 'Android',

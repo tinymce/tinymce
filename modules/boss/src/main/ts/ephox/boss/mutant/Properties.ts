@@ -27,11 +27,7 @@ const isComment = function (item: Gene) {
 };
 
 const isElement = function (item: Gene) {
-  return (
-    item.name !== undefined &&
-    item.name !== 'TEXT_GENE' &&
-    item.name !== 'COMMENT_GENE'
-  );
+  return item.name !== undefined && item.name !== 'TEXT_GENE' && item.name !== 'COMMENT_GENE';
 };
 
 const getText = function (item: Gene) {
@@ -54,17 +50,4 @@ const isNonEditable = function (item: Gene) {
   return isElement(item) && item.attrs.contenteditable === 'false';
 };
 
-export {
-  children,
-  name,
-  parent,
-  document,
-  isText,
-  isComment,
-  isElement,
-  getText,
-  setText,
-  isEmptyTag,
-  isBoundary,
-  isNonEditable
-};
+export { children, name, parent, document, isText, isComment, isElement, getText, setText, isEmptyTag, isBoundary, isNonEditable };

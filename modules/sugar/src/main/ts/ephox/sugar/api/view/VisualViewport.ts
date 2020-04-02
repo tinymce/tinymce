@@ -1,9 +1,4 @@
-import {
-  Event,
-  EventListenerOrEventListenerObject,
-  Window,
-  window
-} from '@ephox/dom-globals';
+import { Event, EventListenerOrEventListenerObject, Window, window } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { fromRawEvent } from '../../impl/FilteredEvent';
 import { EventHandler } from '../events/Types';
@@ -28,14 +23,8 @@ interface VisualViewport {
   readonly width: number;
   readonly height: number;
   readonly scale: number;
-  readonly addEventListener: (
-    event: string,
-    handler: EventListenerOrEventListenerObject
-  ) => void;
-  readonly removeEventListener: (
-    event: string,
-    handler: EventListenerOrEventListenerObject
-  ) => void;
+  readonly addEventListener: (event: string, handler: EventListenerOrEventListenerObject) => void;
+  readonly removeEventListener: (event: string, handler: EventListenerOrEventListenerObject) => void;
 }
 
 const get = (_win?: Window): Option<VisualViewport> => {
@@ -44,12 +33,7 @@ const get = (_win?: Window): Option<VisualViewport> => {
   return Option.from(win['visualViewport']);
 };
 
-const bounds = (
-  x: number,
-  y: number,
-  width: number,
-  height: number
-): Bounds => ({
+const bounds = (x: number, y: number, width: number, height: number): Bounds => ({
   x,
   y,
   width,

@@ -4,11 +4,7 @@ import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
-import {
-  SingleSketch,
-  SingleSketchDetail,
-  SingleSketchSpec
-} from '../../api/ui/Sketcher';
+import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
 import { LayeredItemTrigger } from '../../menu/layered/LayeredState';
 import { ItemDataTuple } from './ItemTypes';
 import { MenuSpec } from './MenuTypes';
@@ -33,22 +29,9 @@ export interface TieredMenuDetail extends SingleSketchDetail {
   onEscape: (comp: AlloyComponent, item: AlloyComponent) => Option<boolean>;
   onExecute: (comp: AlloyComponent, item: AlloyComponent) => Option<boolean>;
   onOpenMenu: (comp: AlloyComponent, menu: AlloyComponent) => void;
-  onOpenSubmenu: (
-    comp: AlloyComponent,
-    item: AlloyComponent,
-    activeMenu: AlloyComponent,
-    triggeringPath: string[]
-  ) => void;
-  onCollapseMenu: (
-    comp: AlloyComponent,
-    item: AlloyComponent,
-    activeMenu: AlloyComponent
-  ) => void;
-  onRepositionMenu: (
-    comp: AlloyComponent,
-    item: AlloyComponent,
-    triggers: LayeredItemTrigger[]
-  ) => void;
+  onOpenSubmenu: (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent, triggeringPath: string[]) => void;
+  onCollapseMenu: (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent) => void;
+  onRepositionMenu: (comp: AlloyComponent, item: AlloyComponent, triggers: LayeredItemTrigger[]) => void;
   onHover: (comp: AlloyComponent, item: AlloyComponent) => void;
 
   navigateOnHover: boolean;
@@ -70,22 +53,9 @@ export interface TieredMenuSpec extends SingleSketchSpec {
   onEscape: (comp: AlloyComponent, item: AlloyComponent) => Option<boolean>;
   onExecute: (comp: AlloyComponent, item: AlloyComponent) => Option<boolean>;
   onOpenMenu: (comp: AlloyComponent, menu: AlloyComponent) => void;
-  onOpenSubmenu: (
-    comp: AlloyComponent,
-    item: AlloyComponent,
-    activeMenu: AlloyComponent,
-    triggeringPath: string[]
-  ) => void;
-  onCollapseMenu?: (
-    comp: AlloyComponent,
-    item: AlloyComponent,
-    activeMenu: AlloyComponent
-  ) => void;
-  onRepositionMenu?: (
-    comp: AlloyComponent,
-    item: AlloyComponent,
-    triggers: LayeredItemTrigger[]
-  ) => void;
+  onOpenSubmenu: (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent, triggeringPath: string[]) => void;
+  onCollapseMenu?: (comp: AlloyComponent, item: AlloyComponent, activeMenu: AlloyComponent) => void;
+  onRepositionMenu?: (comp: AlloyComponent, item: AlloyComponent, triggers: LayeredItemTrigger[]) => void;
   onHover?: (comp: AlloyComponent, item: AlloyComponent) => void;
   onHighlight?: (comp: AlloyComponent, target: AlloyComponent) => void;
 
@@ -128,16 +98,9 @@ export interface TieredMenuApis {
 }
 
 export interface TieredMenuExtras {
-  tieredData: (
-    primary: string,
-    menus: TieredMenuRecord,
-    expansions: Record<string, string>
-  ) => TieredData;
+  tieredData: (primary: string, menus: TieredMenuRecord, expansions: Record<string, string>) => TieredData;
   singleData: (name: string, menu: PartialMenuSpec) => TieredData;
   collapseItem: (text: string) => ItemDataTuple;
 }
 
-export interface TieredMenuSketcher
-  extends SingleSketch<TieredMenuSpec>,
-    TieredMenuApis,
-    TieredMenuExtras {}
+export interface TieredMenuSketcher extends SingleSketch<TieredMenuSpec>, TieredMenuApis, TieredMenuExtras {}

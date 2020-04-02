@@ -33,14 +33,10 @@ const deleteTableElement = (editor: Editor, table) => {
 
 const deleteCellRange = (editor: Editor, rootElm, rng: Range) =>
   TableDeleteAction.getActionFromRange(rootElm, rng).map((action) =>
-    action.fold(
-      Fun.curry(deleteTableElement, editor),
-      Fun.curry(emptyCells, editor)
-    )
+    action.fold(Fun.curry(deleteTableElement, editor), Fun.curry(emptyCells, editor))
   );
 
-const deleteCaptionRange = (editor: Editor, caption) =>
-  emptyElement(editor, caption);
+const deleteCaptionRange = (editor: Editor, caption) => emptyElement(editor, caption);
 
 const deleteTableRange = (editor: Editor, rootElm, rng: Range, startElm) =>
   getParentCaption(rootElm, startElm)
@@ -55,31 +51,16 @@ const deleteRange = (editor: Editor, startElm) => {
   const rng = editor.selection.getRng();
   const selectedCells = TableCellSelection.getCellsFromEditor(editor);
 
-  return selectedCells.length !== 0
-    ? emptyCells(editor, selectedCells)
-    : deleteTableRange(editor, rootNode, rng, startElm);
+  return selectedCells.length !== 0 ? emptyCells(editor, selectedCells) : deleteTableRange(editor, rootNode, rng, startElm);
 };
 
-const getParentCell = (rootElm, elm) =>
-  Arr.find(Parents.parentsAndSelf(elm, rootElm), ElementType.isTableCell);
+const getParentCell = (rootElm, elm) => Arr.find(Parents.parentsAndSelf(elm, rootElm), ElementType.isTableCell);
 
-const getParentCaption = (rootElm, elm) =>
-  Arr.find(
-    Parents.parentsAndSelf(elm, rootElm),
-    (elm) => Node.name(elm) === 'caption'
-  );
+const getParentCaption = (rootElm, elm) => Arr.find(Parents.parentsAndSelf(elm, rootElm), (elm) => Node.name(elm) === 'caption');
 
-const deleteBetweenCells = (
-  editor: Editor,
-  rootElm,
-  forward: boolean,
-  fromCell,
-  from: CaretPosition
-) =>
+const deleteBetweenCells = (editor: Editor, rootElm, forward: boolean, fromCell, from: CaretPosition) =>
   CaretFinder.navigate(forward, editor.getBody(), from).bind((to) =>
-    getParentCell(rootElm, Element.fromDom(to.getNode())).map(
-      (toCell) => Compare.eq(toCell, fromCell) === false
-    )
+    getParentCell(rootElm, Element.fromDom(to.getNode())).map((toCell) => Compare.eq(toCell, fromCell) === false)
   );
 
 const emptyElement = (editor: Editor, elm) => {
@@ -88,18 +69,11 @@ const emptyElement = (editor: Editor, elm) => {
   return Option.some(true);
 };
 
-const isDeleteOfLastCharPos = (
-  fromCaption,
-  forward: boolean,
-  from: CaretPosition,
-  to: CaretPosition
-) =>
+const isDeleteOfLastCharPos = (fromCaption, forward: boolean, from: CaretPosition, to: CaretPosition) =>
   CaretFinder.firstPositionIn(fromCaption.dom())
     .bind((first) =>
       CaretFinder.lastPositionIn(fromCaption.dom()).map((last) =>
-        forward
-          ? from.isEqual(first) && to.isEqual(last)
-          : from.isEqual(last) && to.isEqual(first)
+        forward ? from.isEqual(first) && to.isEqual(last) : from.isEqual(last) && to.isEqual(first)
       )
     )
     .getOr(true);
@@ -107,17 +81,9 @@ const isDeleteOfLastCharPos = (
 const emptyCaretCaption = (editor: Editor, elm) => emptyElement(editor, elm);
 
 const validateCaretCaption = (rootElm, fromCaption, to: CaretPosition) =>
-  getParentCaption(rootElm, Element.fromDom(to.getNode())).map(
-    (toCaption) => Compare.eq(toCaption, fromCaption) === false
-  );
+  getParentCaption(rootElm, Element.fromDom(to.getNode())).map((toCaption) => Compare.eq(toCaption, fromCaption) === false);
 
-const deleteCaretInsideCaption = (
-  editor: Editor,
-  rootElm,
-  forward: boolean,
-  fromCaption,
-  from: CaretPosition
-) =>
+const deleteCaretInsideCaption = (editor: Editor, rootElm, forward: boolean, fromCaption, from: CaretPosition) =>
   CaretFinder.navigate(forward, editor.getBody(), from)
     .bind((to) =>
       isDeleteOfLastCharPos(fromCaption, forward, from, to)
@@ -126,36 +92,23 @@ const deleteCaretInsideCaption = (
     )
     .or(Option.some(true));
 
-const deleteCaretCells = (
-  editor: Editor,
-  forward: boolean,
-  rootElm,
-  startElm
-) => {
+const deleteCaretCells = (editor: Editor, forward: boolean, rootElm, startElm) => {
   const from = CaretPosition.fromRangeStart(editor.selection.getRng());
   return getParentCell(rootElm, startElm)
     .bind((fromCell) =>
-      Empty.isEmpty(fromCell)
-        ? emptyElement(editor, fromCell)
-        : deleteBetweenCells(editor, rootElm, forward, fromCell, from)
+      Empty.isEmpty(fromCell) ? emptyElement(editor, fromCell) : deleteBetweenCells(editor, rootElm, forward, fromCell, from)
     )
     .getOr(false);
 };
 
-const deleteCaretCaption = (
-  editor: Editor,
-  forward: boolean,
-  rootElm,
-  fromCaption
-) => {
+const deleteCaretCaption = (editor: Editor, forward: boolean, rootElm, fromCaption) => {
   const from = CaretPosition.fromRangeStart(editor.selection.getRng());
   return Empty.isEmpty(fromCaption)
     ? emptyElement(editor, fromCaption)
     : deleteCaretInsideCaption(editor, rootElm, forward, fromCaption, from);
 };
 
-const isNearTable = (forward: boolean, pos: CaretPosition) =>
-  forward ? isBeforeTable(pos) : isAfterTable(pos);
+const isNearTable = (forward: boolean, pos: CaretPosition) => (forward ? isBeforeTable(pos) : isAfterTable(pos));
 
 const isBeforeOrAfterTable = (editor: Editor, forward: boolean) => {
   const fromPos = CaretPosition.fromRangeStart(editor.selection.getRng());
@@ -172,11 +125,8 @@ const deleteCaret = (editor: Editor, forward: boolean, startElm: Element) => {
   const rootElm = Element.fromDom(editor.getBody());
 
   return getParentCaption(rootElm, startElm).fold(
-    () =>
-      deleteCaretCells(editor, forward, rootElm, startElm) ||
-      isBeforeOrAfterTable(editor, forward),
-    (fromCaption) =>
-      deleteCaretCaption(editor, forward, rootElm, fromCaption).getOr(false)
+    () => deleteCaretCells(editor, forward, rootElm, startElm) || isBeforeOrAfterTable(editor, forward),
+    (fromCaption) => deleteCaretCaption(editor, forward, rootElm, fromCaption).getOr(false)
   );
 };
 
@@ -184,9 +134,7 @@ const backspaceDelete = (editor: Editor, forward?: boolean) => {
   const startElm = Element.fromDom(editor.selection.getStart(true));
   const cells = TableCellSelection.getCellsFromEditor(editor);
 
-  return editor.selection.isCollapsed() && cells.length === 0
-    ? deleteCaret(editor, forward, startElm)
-    : deleteRange(editor, startElm);
+  return editor.selection.isCollapsed() && cells.length === 0 ? deleteCaret(editor, forward, startElm) : deleteRange(editor, startElm);
 };
 
 export { backspaceDelete };

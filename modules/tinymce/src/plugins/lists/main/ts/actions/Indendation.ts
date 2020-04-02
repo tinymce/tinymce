@@ -14,18 +14,9 @@ import { dlIndentation } from '../core/DlIndentation';
 import * as Range from '../core/Range';
 import * as Selection from '../core/Selection';
 
-const selectionIndentation = (
-  editor: Editor,
-  indentation: Indentation
-): boolean => {
-  const lists = Arr.map(
-    Selection.getSelectedListRoots(editor),
-    Element.fromDom
-  );
-  const dlItems = Arr.map(
-    Selection.getSelectedDlItems(editor),
-    Element.fromDom
-  );
+const selectionIndentation = (editor: Editor, indentation: Indentation): boolean => {
+  const lists = Arr.map(Selection.getSelectedListRoots(editor), Element.fromDom);
+  const dlItems = Arr.map(Selection.getSelectedDlItems(editor), Element.fromDom);
   let isHandled = false;
 
   if (lists.length || dlItems.length) {
@@ -43,13 +34,10 @@ const selectionIndentation = (
   return isHandled;
 };
 
-const indentListSelection = (editor: Editor): boolean =>
-  selectionIndentation(editor, Indentation.Indent);
+const indentListSelection = (editor: Editor): boolean => selectionIndentation(editor, Indentation.Indent);
 
-const outdentListSelection = (editor: Editor): boolean =>
-  selectionIndentation(editor, Indentation.Outdent);
+const outdentListSelection = (editor: Editor): boolean => selectionIndentation(editor, Indentation.Outdent);
 
-const flattenListSelection = (editor: Editor): boolean =>
-  selectionIndentation(editor, Indentation.Flatten);
+const flattenListSelection = (editor: Editor): boolean => selectionIndentation(editor, Indentation.Flatten);
 
 export { indentListSelection, outdentListSelection, flattenListSelection };

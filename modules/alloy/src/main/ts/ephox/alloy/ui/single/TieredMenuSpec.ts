@@ -1,12 +1,5 @@
 import { Arr, Cell, Fun, Obj, Option, Options } from '@ephox/katamari';
-import {
-  Attr,
-  Body,
-  Class,
-  Classes,
-  SelectorFilter,
-  SelectorFind
-} from '@ephox/sugar';
+import { Attr, Body, Class, Classes, SelectorFilter, SelectorFind } from '@ephox/sugar';
 
 import * as EditableFields from '../../alien/EditableFields';
 import { Composing } from '../../api/behaviour/Composing';
@@ -28,12 +21,7 @@ import { CustomEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { LayeredState } from '../../menu/layered/LayeredState';
 import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
-import {
-  PartialMenuSpec,
-  TieredMenuApis,
-  TieredMenuDetail,
-  TieredMenuSpec
-} from '../types/TieredMenuTypes';
+import { PartialMenuSpec, TieredMenuApis, TieredMenuDetail, TieredMenuSpec } from '../types/TieredMenuTypes';
 
 export type MenuPreparation = MenuPrepared | MenuNotBuilt;
 
@@ -47,13 +35,8 @@ export interface MenuNotBuilt {
   nbMenu: () => AlloySpec;
 }
 
-const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (
-  detail,
-  _rawUiSpec
-) => {
-  const submenuParentItems: Cell<Option<Record<string, AlloyComponent>>> = Cell(
-    Option.none()
-  );
+const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _rawUiSpec) => {
+  const submenuParentItems: Cell<Option<Record<string, AlloyComponent>>> = Cell(Option.none());
 
   const buildMenus = (
     container: AlloyComponent,
@@ -73,9 +56,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (
           fakeFocus: detail.fakeFocus,
           onHighlight: detail.onHighlight,
 
-          focusManager: detail.fakeFocus
-            ? FocusManagers.highlights()
-            : FocusManagers.dom()
+          focusManager: detail.fakeFocus ? FocusManagers.highlights() : FocusManagers.dom()
         });
 
       // Only build the primary at first. Build the others as needed.
@@ -93,30 +74,16 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (
   const layeredState: LayeredState = LayeredState.init();
 
   const setup = (container: AlloyComponent): Option<AlloyComponent> => {
-    const componentMap = buildMenus(
-      container,
-      detail.data.primary,
-      detail.data.menus
-    );
+    const componentMap = buildMenus(container, detail.data.primary, detail.data.menus);
     const directory = toDirectory(container);
-    layeredState.setContents(
-      detail.data.primary,
-      componentMap,
-      detail.data.expansions,
-      directory
-    );
+    layeredState.setContents(detail.data.primary, componentMap, detail.data.expansions, directory);
     return layeredState.getPrimary();
   };
 
-  const getItemValue = (item: AlloyComponent): string =>
-    Representing.getValue(item).value;
+  const getItemValue = (item: AlloyComponent): string => Representing.getValue(item).value;
 
   // Find the first item with value `itemValue` in any of the menus inside this tiered menu structure
-  const getItemByValue = (
-    _container: AlloyComponent,
-    menus: AlloyComponent[],
-    itemValue: string
-  ): Option<AlloyComponent> =>
+  const getItemByValue = (_container: AlloyComponent, menus: AlloyComponent[], itemValue: string): Option<AlloyComponent> =>
     // Can *greatly* improve the performance of this by calculating things up front.
     Arr.findMap(menus, (menu) => {
       if (!menu.getSystem().isConnected()) {
@@ -127,47 +94,23 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (
     });
 
   const toDirectory = (_container: AlloyComponent): Record<string, string[]> =>
-    Obj.map(detail.data.menus, (data, _menuName) =>
-      Arr.bind(data.items, (item) =>
-        item.type === 'separator' ? [] : [item.data.value]
-      )
-    );
+    Obj.map(detail.data.menus, (data, _menuName) => Arr.bind(data.items, (item) => (item.type === 'separator' ? [] : [item.data.value])));
 
-  const setActiveMenu = (
-    container: AlloyComponent,
-    menu: AlloyComponent
-  ): void => {
+  const setActiveMenu = (container: AlloyComponent, menu: AlloyComponent): void => {
     Highlighting.highlight(container, menu);
     Highlighting.getHighlighted(menu)
       .orThunk(() => Highlighting.getFirst(menu))
       .each((item) => {
-        AlloyTriggers.dispatch(
-          container,
-          item.element(),
-          SystemEvents.focusItem()
-        );
+        AlloyTriggers.dispatch(container, item.element(), SystemEvents.focusItem());
       });
   };
 
-  const getMenus = (
-    state: LayeredState,
-    menuValues: string[]
-  ): AlloyComponent[] =>
+  const getMenus = (state: LayeredState, menuValues: string[]): AlloyComponent[] =>
     Options.cat(
-      Arr.map(menuValues, (mv) =>
-        state
-          .lookupMenu(mv)
-          .bind((prep) =>
-            prep.type === 'prepared' ? Option.some(prep.menu) : Option.none()
-          )
-      )
+      Arr.map(menuValues, (mv) => state.lookupMenu(mv).bind((prep) => (prep.type === 'prepared' ? Option.some(prep.menu) : Option.none())))
     );
 
-  const closeOthers = (
-    container: AlloyComponent,
-    state: LayeredState,
-    path: string[]
-  ): void => {
+  const closeOthers = (container: AlloyComponent, state: LayeredState, path: string[]): void => {
     const others = getMenus(state, state.otherMenus(path));
     Arr.each(others, (o) => {
       // May not need to do the active menu thing.
@@ -178,19 +121,11 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (
     });
   };
 
-  const getSubmenuParents = (
-    container: AlloyComponent
-  ): Record<string, AlloyComponent> =>
+  const getSubmenuParents = (container: AlloyComponent): Record<string, AlloyComponent> =>
     submenuParentItems.get().getOrThunk(() => {
       const r: Record<string, AlloyComponent> = {};
-      const items = SelectorFilter.descendants(
-        container.element(),
-        `.${detail.markers.item}`
-      );
-      const parentItems = Arr.filter(
-        items,
-        (i) => Attr.get(i, 'aria-haspopup') === 'true'
-      );
+      const items = SelectorFilter.descendants(container.element(), `.${detail.markers.item}`);
+      const parentItems = Arr.filter(items, (i) => Attr.get(i, 'aria-haspopup') === 'true');
       Arr.each(parentItems, (i) => {
         container
           .getSystem()
@@ -214,11 +149,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (
     });
   };
 
-  const updateMenuPath = (
-    container: AlloyComponent,
-    state: LayeredState,
-    path: string[]
-  ): Option<AlloyComponent> =>
+  const updateMenuPath = (container: AlloyComponent, state: LayeredState, path: string[]): Option<AlloyComponent> =>
     Option.from(path[0]).bind((latestMenuName) =>
       state.lookupMenu(latestMenuName).bind((menuPrep: MenuPreparation) => {
         if (menuPrep.type === 'notbuilt') {
@@ -248,11 +179,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (
     HighlightParent
   }
 
-  const buildIfRequired = (
-    container: AlloyComponent,
-    menuName: string,
-    menuPrep: MenuPreparation
-  ) => {
+  const buildIfRequired = (container: AlloyComponent, menuName: string, menuPrep: MenuPreparation) => {
     if (menuPrep.type === 'notbuilt') {
       const menu = container.getSystem().build(menuPrep.nbMenu());
       layeredState.setMenuBuilt(menuName, menu);
@@ -274,11 +201,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (
       // When expanding, always select the first.
       return Option.from(path[0]).bind((menuName) =>
         layeredState.lookupMenu(menuName).bind((activeMenuPrep) => {
-          const activeMenu = buildIfRequired(
-            container,
-            menuName,
-            activeMenuPrep
-          );
+          const activeMenu = buildIfRequired(container, menuName, activeMenuPrep);
 
           // DUPE with above. Fix later.
           if (!Body.inBody(activeMenu.element())) {
@@ -300,10 +223,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (
     });
   };
 
-  const collapseLeft = (
-    container: AlloyComponent,
-    item: AlloyComponent
-  ): Option<AlloyComponent> => {
+  const collapseLeft = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => {
     const value = getItemValue(item);
     return layeredState.collapse(value).bind((path) => {
       // Called when submenus are closed because of KEYBOARD navigation
@@ -315,10 +235,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (
     });
   };
 
-  const updateView = (
-    container: AlloyComponent,
-    item: AlloyComponent
-  ): Option<AlloyComponent> => {
+  const updateView = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => {
     const value = getItemValue(item);
     return layeredState.refresh(value).bind((path) => {
       // Only this function collapses irrelevant submenus when navigating by HOVERING.
@@ -329,77 +246,46 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (
     });
   };
 
-  const onRight = (
-    container: AlloyComponent,
-    item: AlloyComponent
-  ): Option<AlloyComponent> =>
-    EditableFields.inside(item.element())
-      ? Option.none()
-      : expandRight(container, item, ExpandHighlightDecision.HighlightSubmenu);
+  const onRight = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> =>
+    EditableFields.inside(item.element()) ? Option.none() : expandRight(container, item, ExpandHighlightDecision.HighlightSubmenu);
 
-  const onLeft = (
-    container: AlloyComponent,
-    item: AlloyComponent
-  ): Option<AlloyComponent> =>
+  const onLeft = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> =>
     // Exclude inputs, textareas etc.
-    EditableFields.inside(item.element())
-      ? Option.none()
-      : collapseLeft(container, item);
+    EditableFields.inside(item.element()) ? Option.none() : collapseLeft(container, item);
 
-  const onEscape = (
-    container: AlloyComponent,
-    item: AlloyComponent
-  ): Option<AlloyComponent> =>
+  const onEscape = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> =>
     collapseLeft(container, item).orThunk(() =>
       // This should only fire when the user presses ESC ... not any other close.
       detail.onEscape(container, item).map(() => container)
     );
 
-  type KeyHandler = (
-    container: AlloyComponent,
-    simulatedEvent: NativeSimulatedEvent
-  ) => Option<boolean>;
-  const keyOnItem = (
-    f: (
-      container: AlloyComponent,
-      item: AlloyComponent
-    ) => Option<AlloyComponent>
-  ): KeyHandler => (
+  type KeyHandler = (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
+  const keyOnItem = (f: (container: AlloyComponent, item: AlloyComponent) => Option<AlloyComponent>): KeyHandler => (
     container: AlloyComponent,
     simulatedEvent: NativeSimulatedEvent
   ): Option<boolean> =>
-    SelectorFind.closest(
-      simulatedEvent.getSource(),
-      '.' + detail.markers.item
-    ).bind((target) =>
+    SelectorFind.closest(simulatedEvent.getSource(), '.' + detail.markers.item).bind((target) =>
       container
         .getSystem()
         .getByDom(target)
         .toOption()
-        .bind((item: AlloyComponent) =>
-          f(container, item).map((): boolean => true)
-        )
+        .bind((item: AlloyComponent) => f(container, item).map((): boolean => true))
     );
 
   const events = AlloyEvents.derive(
     [
       // Set "active-menu" for the menu with focus
-      AlloyEvents.run<CustomEvent>(
-        MenuEvents.focus(),
-        (sandbox, simulatedEvent) => {
-          // Ensure the item is actually part of this menu structure, and not part of another menu structure that's bubbling.
-          const item = simulatedEvent.event().item();
-          layeredState.lookupItem(getItemValue(item)).each(() => {
-            const menu = simulatedEvent.event().menu();
-            Highlighting.highlight(sandbox, menu);
+      AlloyEvents.run<CustomEvent>(MenuEvents.focus(), (sandbox, simulatedEvent) => {
+        // Ensure the item is actually part of this menu structure, and not part of another menu structure that's bubbling.
+        const item = simulatedEvent.event().item();
+        layeredState.lookupItem(getItemValue(item)).each(() => {
+          const menu = simulatedEvent.event().menu();
+          Highlighting.highlight(sandbox, menu);
 
-            const value = getItemValue(simulatedEvent.event().item());
-            layeredState
-              .refresh(value)
-              .each((path) => closeOthers(sandbox, layeredState, path));
-          });
-        }
-      ),
+          const value = getItemValue(simulatedEvent.event().item());
+          layeredState.refresh(value).each((path) => closeOthers(sandbox, layeredState, path));
+        });
+      }),
 
       AlloyEvents.runOnExecute((component, simulatedEvent) => {
         // Trigger on execute on the targeted element
@@ -416,11 +302,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (
               collapseLeft(component, item);
             }
 
-            expandRight(
-              component,
-              item,
-              ExpandHighlightDecision.HighlightSubmenu
-            ).fold(
+            expandRight(component, item, ExpandHighlightDecision.HighlightSubmenu).fold(
               () => {
                 detail.onExecute(component, item);
               },
@@ -444,19 +326,12 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (
         ? [
             // Hide any irrelevant submenus and expand any submenus based
             // on hovered item
-            AlloyEvents.run<CustomEvent>(
-              ItemEvents.hover(),
-              (sandbox, simulatedEvent) => {
-                const item = simulatedEvent.event().item();
-                updateView(sandbox, item);
-                expandRight(
-                  sandbox,
-                  item,
-                  ExpandHighlightDecision.HighlightParent
-                );
-                detail.onHover(sandbox, item);
-              }
-            )
+            AlloyEvents.run<CustomEvent>(ItemEvents.hover(), (sandbox, simulatedEvent) => {
+              const item = simulatedEvent.event().item();
+              updateView(sandbox, item);
+              expandRight(sandbox, item, ExpandHighlightDecision.HighlightParent);
+              detail.onHover(sandbox, item);
+            })
           ]
         : []
     )
@@ -478,9 +353,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (
   };
 
   const extractMenuFromContainer = (container: AlloyComponent) =>
-    Option.from(container.components()[0]).filter(
-      (comp) => Attr.get(comp.element(), 'role') === 'menu'
-    );
+    Option.from(container.components()[0]).filter((comp) => Attr.get(comp.element(), 'role') === 'menu');
 
   const repositionMenus = (container: AlloyComponent): void => {
     // Get the primary menu
@@ -489,15 +362,9 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (
       getActiveItem(container)
         .bind((currentItem) => {
           const itemValue = getItemValue(currentItem);
-          const allMenus: MenuPreparation[] = Obj.values(
-            layeredState.getMenus()
-          );
-          const preparedMenus: AlloyComponent[] = Options.cat(
-            Arr.map(allMenus, LayeredState.extractPreparedMenu)
-          );
-          return layeredState.getTriggeringPath(itemValue, (v) =>
-            getItemByValue(container, preparedMenus, v)
-          );
+          const allMenus: MenuPreparation[] = Obj.values(layeredState.getMenus());
+          const preparedMenus: AlloyComponent[] = Options.cat(Arr.map(allMenus, LayeredState.extractPreparedMenu));
+          return layeredState.getTriggeringPath(itemValue, (v) => getItemByValue(container, preparedMenus, v));
         })
         .map((triggeringPath) => ({ primary, triggeringPath }))
     );
@@ -534,11 +401,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (
         onEscape: keyOnItem(onEscape),
         focusIn(container, _keyInfo) {
           layeredState.getPrimary().each((primary) => {
-            AlloyTriggers.dispatch(
-              container,
-              primary.element(),
-              SystemEvents.focusItem()
-            );
+            AlloyTriggers.dispatch(container, primary.element(), SystemEvents.focusItem());
           });
         }
       }),

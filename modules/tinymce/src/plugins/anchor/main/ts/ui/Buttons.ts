@@ -12,11 +12,7 @@ const register = (editor: Editor) => {
     icon: 'bookmark',
     tooltip: 'Anchor',
     onAction: () => editor.execCommand('mceAnchor'),
-    onSetup: (buttonApi) =>
-      editor.selection.selectorChangedWithUnbind(
-        'a:not([href])',
-        buttonApi.setActive
-      ).unbind
+    onSetup: (buttonApi) => editor.selection.selectorChangedWithUnbind('a:not([href])', buttonApi.setActive).unbind
   });
 
   editor.ui.registry.addMenuItem('anchor', {

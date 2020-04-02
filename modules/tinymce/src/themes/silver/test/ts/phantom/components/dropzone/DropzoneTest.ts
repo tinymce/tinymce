@@ -1,18 +1,5 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  Logger,
-  Step,
-  UiFinder
-} from '@ephox/agar';
-import {
-  AlloyTriggers,
-  Composing,
-  GuiFactory,
-  Representing,
-  TestHelpers
-} from '@ephox/alloy';
+import { ApproxStructure, Assertions, Chain, Logger, Step, UiFinder } from '@ephox/agar';
+import { AlloyTriggers, Composing, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
 
@@ -58,11 +45,7 @@ UnitTest.asynctest('Dropzone component Test', (success, failure) => {
             AlloyTriggers.emitWith(zone, 'drop', {
               raw: {
                 dataTransfer: {
-                  files: [
-                    { name: 'image1.png' },
-                    { name: 'image2.bmp' },
-                    { name: 'image3.jpg' }
-                  ]
+                  files: [{ name: 'image1.png' }, { name: 'image2.bmp' }, { name: 'image3.jpg' }]
                 }
               }
             });
@@ -71,15 +54,9 @@ UnitTest.asynctest('Dropzone component Test', (success, failure) => {
       ),
 
       Step.sync(() => {
-        const zone = Composing.getCurrent(component).getOrDie(
-          'Failed trying to get the zone from the container'
-        );
+        const zone = Composing.getCurrent(component).getOrDie('Failed trying to get the zone from the container');
         const filesValue = Representing.getValue(zone);
-        Assertions.assertEq(
-          'Checking value of dropzone',
-          [{ name: 'image1.png' }, { name: 'image3.jpg' }],
-          filesValue
-        );
+        Assertions.assertEq('Checking value of dropzone', [{ name: 'image1.png' }, { name: 'image3.jpg' }], filesValue);
       })
     ],
     success,

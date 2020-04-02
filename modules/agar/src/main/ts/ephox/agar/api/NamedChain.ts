@@ -34,41 +34,32 @@ const asChain = <T>(chains: NamedChain[]): Chain<T, any> =>
 // Write merges in its output into input because it knows that it was
 // given a complete input.
 const write = (name: string, chain: Chain<NamedData, any>) =>
-  Chain.on(
-    (
-      input: NamedData,
-      next: NextFn<NamedData>,
-      die: DieFn,
-      initLogs: TestLogs
-    ) => {
-      chain.runChain(
-        input,
-        (output: any, newLogs: TestLogs) => {
-          const self = wrapSingle(name, output);
-          return next({ ...input, ...self }, newLogs);
-        },
-        die,
-        initLogs
-      );
-    }
-  );
+  Chain.on((input: NamedData, next: NextFn<NamedData>, die: DieFn, initLogs: TestLogs) => {
+    chain.runChain(
+      input,
+      (output: any, newLogs: TestLogs) => {
+        const self = wrapSingle(name, output);
+        return next({ ...input, ...self }, newLogs);
+      },
+      die,
+      initLogs
+    );
+  });
 
 // Partial write does not try and merge in input, because it knows that it
 // might not be getting the full input
 const partialWrite = (name: string, chain: Chain<any, any>) =>
-  Chain.on(
-    (input: any, next: NextFn<NamedData>, die: DieFn, initLogs: TestLogs) => {
-      chain.runChain(
-        input,
-        (output: any, newLogs: TestLogs) => {
-          const self = wrapSingle(name, output);
-          return next(self, newLogs);
-        },
-        die,
-        initLogs
-      );
-    }
-  );
+  Chain.on((input: any, next: NextFn<NamedData>, die: DieFn, initLogs: TestLogs) => {
+    chain.runChain(
+      input,
+      (output: any, newLogs: TestLogs) => {
+        const self = wrapSingle(name, output);
+        return next(self, newLogs);
+      },
+      die,
+      initLogs
+    );
+  });
 
 const wrapSingle = (name: string, value: any): NamedData => {
   if (name === '_') {
@@ -85,53 +76,33 @@ const combine = (input: NamedData, name: string, value: any): NamedData => ({
 });
 
 const process = (name: string, chain: Chain<any, any>) =>
-  Chain.on(
-    (input: NamedData, next: NextFn<NamedData>, die, initLogs: TestLogs) => {
-      if (Object.prototype.hasOwnProperty.call(input, name)) {
-        const part = input[name];
-        chain.runChain(
-          part,
-          (other, newLogs: TestLogs) => {
-            const merged: NamedData = { ...input, ...other };
-            next(merged, newLogs);
-          },
-          die,
-          initLogs
-        );
-      } else {
-        die(name + ' is not a field in the index object.', initLogs);
-      }
-    }
-  );
-
-const direct = (
-  inputName: string,
-  chain: Chain<any, any>,
-  outputName: string
-) => process(inputName, partialWrite(outputName, chain));
-
-const overwrite = (inputName: string, chain: Chain<any, any>) =>
-  direct(inputName, chain, inputName);
-
-const writeValue = (name: string, value: any) =>
-  Chain.mapper((input: NamedData) => combine(input, name, value));
-
-const read = (name: string, chain: Chain<any, any>) =>
-  Chain.on(
-    (
-      input: NamedData,
-      next: NextFn<NamedData>,
-      die: DieFn,
-      initLogs: TestLogs
-    ) => {
+  Chain.on((input: NamedData, next: NextFn<NamedData>, die, initLogs: TestLogs) => {
+    if (Object.prototype.hasOwnProperty.call(input, name)) {
+      const part = input[name];
       chain.runChain(
-        input[name],
-        (_, newLogs) => next(input, newLogs),
+        part,
+        (other, newLogs: TestLogs) => {
+          const merged: NamedData = { ...input, ...other };
+          next(merged, newLogs);
+        },
         die,
         initLogs
       );
+    } else {
+      die(name + ' is not a field in the index object.', initLogs);
     }
-  );
+  });
+
+const direct = (inputName: string, chain: Chain<any, any>, outputName: string) => process(inputName, partialWrite(outputName, chain));
+
+const overwrite = (inputName: string, chain: Chain<any, any>) => direct(inputName, chain, inputName);
+
+const writeValue = (name: string, value: any) => Chain.mapper((input: NamedData) => combine(input, name, value));
+
+const read = (name: string, chain: Chain<any, any>) =>
+  Chain.on((input: NamedData, next: NextFn<NamedData>, die: DieFn, initLogs: TestLogs) => {
+    chain.runChain(input[name], (_, newLogs) => next(input, newLogs), die, initLogs);
+  });
 
 const merge = (names: string[], combinedName: string) =>
   Chain.mapper((input: NamedData) => {
@@ -142,19 +113,13 @@ const merge = (names: string[], combinedName: string) =>
     return combine(input, combinedName, r);
   });
 
-const bundle = <T, E>(f: (input: NamedData) => Result<T, E>) =>
-  write(outputNameId, Chain.binder(f));
+const bundle = <T, E>(f: (input: NamedData) => Result<T, E>) => write(outputNameId, Chain.binder(f));
 
 const output = (name: string) => direct(name, Chain.identity, outputNameId);
 
 const outputInput = output(inputNameId);
 
-const pipeline = (
-  namedChains: NamedChain[],
-  onSuccess: NextFn<any>,
-  onFailure: DieFn,
-  initLogs: TestLogs
-) => {
+const pipeline = (namedChains: NamedChain[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs: TestLogs) => {
   Chain.pipeline([asChain(namedChains)], onSuccess, onFailure, initLogs);
 };
 

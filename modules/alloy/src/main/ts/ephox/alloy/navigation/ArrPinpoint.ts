@@ -5,10 +5,7 @@ export interface IndexInfo<A> {
   candidates: () => A[];
 }
 
-export const locate = <A>(
-  candidates: A[],
-  predicate: (a: A) => boolean
-): Option<IndexInfo<A>> =>
+export const locate = <A>(candidates: A[], predicate: (a: A) => boolean): Option<IndexInfo<A>> =>
   Arr.findIndex(candidates, predicate).map((index) => ({
     index: Fun.constant(index),
     candidates: Fun.constant(candidates)

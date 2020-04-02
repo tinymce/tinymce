@@ -1,10 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Logger,
-  Pipeline,
-  Step
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import * as Render from 'ephox/snooker/operate/Render';
 

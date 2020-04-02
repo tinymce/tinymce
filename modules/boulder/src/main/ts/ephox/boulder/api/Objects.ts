@@ -15,16 +15,11 @@ const wrap = function <V>(key: string, value: V): { [key: string]: V } {
   return ObjWriter.wrap(key, value);
 };
 
-const wrapAll = function (
-  keyvalues: Array<{ key: string; value: any }>
-): Record<string, any> {
+const wrapAll = function (keyvalues: Array<{ key: string; value: any }>): Record<string, any> {
   return ObjWriter.wrapAll(keyvalues);
 };
 
-const indexOnKey = function <T>(
-  array: Array<{ [T: string]: any }>,
-  key: string
-): { [T: string]: any } {
+const indexOnKey = function <T>(array: Array<{ [T: string]: any }>, key: string): { [T: string]: any } {
   return ObjChanger.indexOnKey(array, key);
 };
 
@@ -43,9 +38,7 @@ const mergeErrors = function (errors) {
 
 const consolidate = function (objs, base: {}): Result<{}, string> {
   const partitions = Results.partition(objs);
-  return partitions.errors.length > 0
-    ? mergeErrors(partitions.errors)
-    : mergeValues(partitions.values, base);
+  return partitions.errors.length > 0 ? mergeErrors(partitions.errors) : mergeValues(partitions.values, base);
 };
 
 export { narrow, exclude, wrap, wrapAll, indexOnKey, consolidate };

@@ -15,23 +15,7 @@ const openLink = function (target) {
   link.rel = 'noreferrer noopener';
 
   const nuEvt = document.createEvent('MouseEvents');
-  nuEvt.initMouseEvent(
-    'click',
-    true,
-    true,
-    window,
-    0,
-    0,
-    0,
-    0,
-    0,
-    false,
-    false,
-    false,
-    false,
-    0,
-    null
-  );
+  nuEvt.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
 
   document.body.appendChild(link);
   link.dispatchEvent(nuEvt);

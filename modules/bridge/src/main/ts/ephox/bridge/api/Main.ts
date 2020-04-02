@@ -7,13 +7,4 @@ import * as Menu from './Menu';
 import * as InlineContent from './InlineContent';
 import * as Sidebar from './Sidebar';
 
-export {
-  Registry,
-  DialogManager,
-  PublicTypes,
-  Types,
-  Toolbar,
-  Menu,
-  InlineContent,
-  Sidebar
-};
+export { Registry, DialogManager, PublicTypes, Types, Toolbar, Menu, InlineContent, Sidebar };

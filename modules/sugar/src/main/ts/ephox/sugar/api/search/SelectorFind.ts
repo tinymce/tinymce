@@ -25,28 +25,19 @@ const ancestor = function <T extends DomElement = DomElement>(
   );
 };
 
-const sibling = function <T extends DomElement = DomElement>(
-  scope: Element<DomNode>,
-  selector: string
-) {
+const sibling = function <T extends DomElement = DomElement>(scope: Element<DomNode>, selector: string) {
   return PredicateFind.sibling(scope, function (e): e is Element<T> {
     return Selectors.is<T>(e, selector);
   });
 };
 
-const child = function <T extends DomElement = DomElement>(
-  scope: Element<DomNode>,
-  selector: string
-) {
+const child = function <T extends DomElement = DomElement>(scope: Element<DomNode>, selector: string) {
   return PredicateFind.child(scope, function (e): e is Element<T> {
     return Selectors.is<T>(e, selector);
   });
 };
 
-const descendant = function <T extends DomElement = DomElement>(
-  scope: Element<DomNode>,
-  selector: string
-) {
+const descendant = function <T extends DomElement = DomElement>(scope: Element<DomNode>, selector: string) {
   return Selectors.one<T>(selector, scope);
 };
 
@@ -56,13 +47,7 @@ const closest = function <T extends DomElement = DomElement>(
   selector: string,
   isRoot?: (e: Element<DomNode>) => boolean
 ) {
-  return ClosestOrAncestor<string>(
-    Selectors.is,
-    ancestor,
-    scope,
-    selector,
-    isRoot
-  ) as Option<Element<T>>;
+  return ClosestOrAncestor<string>(Selectors.is, ancestor, scope, selector, isRoot) as Option<Element<T>>;
 };
 
 export { first, ancestor, sibling, child, descendant, closest };

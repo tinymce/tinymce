@@ -16,10 +16,7 @@ import * as SketcherFields from '../../data/SketcherFields';
 import * as PartType from '../../parts/PartType';
 import * as InputBase from '../common/InputBase';
 import * as TypeaheadEvents from '../composite/TypeaheadEvents';
-import {
-  attemptSelectOver,
-  setValueFromItem
-} from '../typeahead/TypeaheadModel';
+import { attemptSelectOver, setValueFromItem } from '../typeahead/TypeaheadModel';
 import { TieredMenuSpec } from '../types/TieredMenuTypes';
 import { TypeaheadData, TypeaheadDetail } from '../types/TypeaheadTypes';
 
@@ -37,9 +34,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant(
     FieldSchema.defaulted('eventOrder', {}),
     FieldSchema.defaultedObjOf('model', {}, [
       FieldSchema.defaulted('getDisplayText', (itemData: TypeaheadData) =>
-        itemData.meta !== undefined && itemData.meta.text !== undefined
-          ? itemData.meta.text
-          : itemData.value
+        itemData.meta !== undefined && itemData.meta.text !== undefined ? itemData.meta.text : itemData.value
       ),
       FieldSchema.defaulted('selectsOver', true),
       FieldSchema.defaulted('populateFromBrowse', true)
@@ -57,14 +52,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant(
     Fields.markers(['openClass']),
     FieldSchema.option('initialData'),
 
-    SketchBehaviours.field('typeaheadBehaviours', [
-      Focusing,
-      Representing,
-      Streaming,
-      Keying,
-      Toggling,
-      Coupling
-    ]),
+    SketchBehaviours.field('typeaheadBehaviours', [Focusing, Representing, Streaming, Keying, Toggling, Coupling]),
 
     FieldSchema.state('previewing', () => Cell(true))
   ]

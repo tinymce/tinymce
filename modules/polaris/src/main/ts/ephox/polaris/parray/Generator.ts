@@ -7,11 +7,7 @@ import { Arr, Fun, Option } from '@ephox/katamari';
  * f:      thing -> Optional unit
  * start: sets the start position to search at
  */
-const make = function <T, R extends { finish: () => number }>(
-  xs: T[],
-  f: (x: T, offset: number) => Option<R>,
-  start: number = 0
-) {
+const make = function <T, R extends { finish: () => number }>(xs: T[], f: (x: T, offset: number) => Option<R>, start: number = 0) {
   const init = {
     len: start,
     list: [] as R[]

@@ -8,10 +8,7 @@ import { AlloyComponent } from '../api/component/ComponentApi';
 import * as AlloyTriggers from '../api/events/AlloyTriggers';
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as Channels from '../api/messages/Channels';
-import {
-  ReceivingConfig,
-  ReceivingConfigSpec
-} from '../behaviour/receiving/ReceivingTypes';
+import { ReceivingConfig, ReceivingConfigSpec } from '../behaviour/receiving/ReceivingTypes';
 
 export interface RepositionReceivingDetail {
   doReposition: (sandbox: AlloyComponent) => void;
@@ -28,15 +25,11 @@ export interface RepositionReceivingSpec {
 }
 
 const schema = ValueSchema.objOfOnly([
-  FieldSchema.optionObjOf('fireEventInstead', [
-    FieldSchema.defaulted('event', SystemEvents.repositionRequested())
-  ]),
+  FieldSchema.optionObjOf('fireEventInstead', [FieldSchema.defaulted('event', SystemEvents.repositionRequested())]),
   FieldSchema.strictFunction('doReposition')
 ]);
 
-const receivingConfig = (
-  rawSpec: RepositionReceivingSpec
-): NamedConfiguredBehaviour<ReceivingConfigSpec, ReceivingConfig> => {
+const receivingConfig = (rawSpec: RepositionReceivingSpec): NamedConfiguredBehaviour<ReceivingConfigSpec, ReceivingConfig> => {
   const c = receivingChannel(rawSpec);
   return Receiving.config({
     channels: c
@@ -44,11 +37,7 @@ const receivingConfig = (
 };
 
 const receivingChannel = (rawSpec: RepositionReceivingSpec) => {
-  const detail: RepositionReceivingDetail = ValueSchema.asRawOrDie(
-    'Reposition',
-    schema,
-    rawSpec
-  );
+  const detail: RepositionReceivingDetail = ValueSchema.asRawOrDie('Reposition', schema, rawSpec);
   return {
     [Channels.repositionPopups()]: {
       onReceive(sandbox: AlloyComponent) {

@@ -33,12 +33,4 @@ const getFileFilter = function (editor) {
   return editor.getParam('importcss_file_filter');
 };
 
-export {
-  shouldMergeClasses,
-  shouldImportExclusive,
-  getSelectorConverter,
-  getSelectorFilter,
-  getCssGroups,
-  shouldAppend,
-  getFileFilter
-};
+export { shouldMergeClasses, shouldImportExclusive, getSelectorConverter, getSelectorFilter, getCssGroups, shouldAppend, getFileFilter };

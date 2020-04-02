@@ -5,34 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyEvents,
-  FocusManagers,
-  ItemTypes,
-  Keying,
-  MenuTypes,
-  TieredMenu,
-  TieredMenuTypes
-} from '@ephox/alloy';
+import { AlloyEvents, FocusManagers, ItemTypes, Keying, MenuTypes, TieredMenu, TieredMenuTypes } from '@ephox/alloy';
 import { InlineContent, Menu as BridgeMenu, Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Arr, Option, Options } from '@ephox/katamari';
-import {
-  UiFactoryBackstage,
-  UiFactoryBackstageShared
-} from 'tinymce/themes/silver/backstage/Backstage';
+import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
 import ItemResponse from '../item/ItemResponse';
 import * as MenuItems from '../item/MenuItems';
 import { deriveMenuMovement } from './MenuMovement';
 import { markers as getMenuMarkers } from './MenuParts';
-import {
-  createHorizontalPartialMenuWithAlloyItems,
-  createPartialMenuWithAlloyItems,
-  handleError,
-  PartialMenuSpec
-} from './MenuUtils';
+import { createHorizontalPartialMenuWithAlloyItems, createPartialMenuWithAlloyItems, handleError, PartialMenuSpec } from './MenuUtils';
 import { SingleMenuItemApi } from './SingleMenuTypes';
 
 export type ItemChoiceActionHandler = (value: string) => void;
@@ -42,13 +26,8 @@ export enum FocusMode {
   UiFocus
 }
 
-const hasIcon = (item) =>
-  item.icon !== undefined ||
-  item.type === 'togglemenuitem' ||
-  item.type === 'choicemenuitem';
-const menuHasIcons = (
-  xs: Array<SingleMenuItemApi | InlineContent.AutocompleterContents>
-) => Arr.exists(xs, hasIcon);
+const hasIcon = (item) => item.icon !== undefined || item.type === 'togglemenuitem' || item.type === 'choicemenuitem';
+const menuHasIcons = (xs: Array<SingleMenuItemApi | InlineContent.AutocompleterContents>) => Arr.exists(xs, hasIcon);
 
 const createMenuItemFromBridge = (
   item: SingleMenuItemApi,
@@ -71,47 +50,22 @@ const createMenuItemFromBridge = (
   switch (item.type) {
     case 'menuitem':
       return BridgeMenu.createMenuItem(item).fold(handleError, (d) =>
-        Option.some(
-          MenuItems.normal(
-            parseForHorizontalMenu(d),
-            itemResponse,
-            providersBackstage,
-            menuHasIcons
-          )
-        )
+        Option.some(MenuItems.normal(parseForHorizontalMenu(d), itemResponse, providersBackstage, menuHasIcons))
       );
 
     case 'nestedmenuitem':
       return BridgeMenu.createNestedMenuItem(item).fold(handleError, (d) =>
-        Option.some(
-          MenuItems.nested(
-            parseForHorizontalMenu(d),
-            itemResponse,
-            providersBackstage,
-            menuHasIcons,
-            isHorizontalMenu
-          )
-        )
+        Option.some(MenuItems.nested(parseForHorizontalMenu(d), itemResponse, providersBackstage, menuHasIcons, isHorizontalMenu))
       );
 
     case 'togglemenuitem':
       return BridgeMenu.createToggleMenuItem(item).fold(handleError, (d) =>
-        Option.some(
-          MenuItems.toggle(
-            parseForHorizontalMenu(d),
-            itemResponse,
-            providersBackstage
-          )
-        )
+        Option.some(MenuItems.toggle(parseForHorizontalMenu(d), itemResponse, providersBackstage))
       );
     case 'separator':
-      return BridgeMenu.createSeparatorMenuItem(item).fold(handleError, (d) =>
-        Option.some(MenuItems.separator(d))
-      );
+      return BridgeMenu.createSeparatorMenuItem(item).fold(handleError, (d) => Option.some(MenuItems.separator(d)));
     case 'fancymenuitem':
-      return BridgeMenu.createFancyMenuItem(item).fold(handleError, (d) =>
-        MenuItems.fancy(parseForHorizontalMenu(d), backstage)
-      );
+      return BridgeMenu.createFancyMenuItem(item).fold(handleError, (d) => MenuItems.fancy(parseForHorizontalMenu(d), backstage));
     default: {
       // tslint:disable-next-line:no-console
       console.error('Unknown item in general menu', item);
@@ -123,10 +77,7 @@ const createMenuItemFromBridge = (
 export const createAutocompleteItems = (
   items: InlineContent.AutocompleterContents[],
   matchText: string,
-  onItemValueHandler: (
-    itemValue: string,
-    itemMeta: Record<string, any>
-  ) => void,
+  onItemValueHandler: (itemValue: string, itemMeta: Record<string, any>) => void,
   columns: 'auto' | number,
   itemResponse: ItemResponse,
   sharedBackstage: UiFactoryBackstageShared
@@ -137,25 +88,12 @@ export const createAutocompleteItems = (
   return Options.cat(
     Arr.map(items, (item) => {
       if (item.type === 'separator') {
-        return InlineContent.createSeparatorItem(item).fold(handleError, (d) =>
-          Option.some(MenuItems.separator(d))
-        );
+        return InlineContent.createSeparatorItem(item).fold(handleError, (d) => Option.some(MenuItems.separator(d)));
       } else {
-        return InlineContent.createAutocompleterItem(item).fold(
-          handleError,
-          (d: InlineContent.AutocompleterItem) =>
-            Option.some(
-              MenuItems.autocomplete(
-                d,
-                matchText,
-                renderText,
-                'normal',
-                onItemValueHandler,
-                itemResponse,
-                sharedBackstage,
-                renderIcons
-              )
-            )
+        return InlineContent.createAutocompleterItem(item).fold(handleError, (d: InlineContent.AutocompleterItem) =>
+          Option.some(
+            MenuItems.autocomplete(d, matchText, renderText, 'normal', onItemValueHandler, itemResponse, sharedBackstage, renderIcons)
+          )
         );
       }
     })
@@ -176,35 +114,20 @@ export const createPartialMenu = (
       // Have to check each item for an icon, instead of as part of hasIcons above,
       // else in horizontal menus, items with an icon but without text will display
       // with neither
-      const itemHasIcon = (i) =>
-        isHorizontalMenu ? !i.hasOwnProperty('text') : hasIcons;
-      const createItem = (i: SingleMenuItemApi) =>
-        createMenuItemFromBridge(
-          i,
-          itemResponse,
-          backstage,
-          itemHasIcon(i),
-          isHorizontalMenu
-        );
-      if (
-        item.type === 'nestedmenuitem' &&
-        item.getSubmenuItems().length <= 0
-      ) {
+      const itemHasIcon = (i) => (isHorizontalMenu ? !i.hasOwnProperty('text') : hasIcons);
+      const createItem = (i: SingleMenuItemApi) => createMenuItemFromBridge(i, itemResponse, backstage, itemHasIcon(i), isHorizontalMenu);
+      if (item.type === 'nestedmenuitem' && item.getSubmenuItems().length <= 0) {
         return createItem({ ...item, disabled: true });
       } else {
         return createItem(item);
       }
     })
   );
-  const createPartial = isHorizontalMenu
-    ? createHorizontalPartialMenuWithAlloyItems
-    : createPartialMenuWithAlloyItems;
+  const createPartial = isHorizontalMenu ? createHorizontalPartialMenuWithAlloyItems : createPartialMenuWithAlloyItems;
   return createPartial(value, hasIcons, alloyItems, 1, 'normal');
 };
 
-export const createTieredDataFrom = (
-  partialMenu: TieredMenuTypes.PartialMenuSpec
-) => TieredMenu.singleData(partialMenu.value, partialMenu);
+export const createTieredDataFrom = (partialMenu: TieredMenuTypes.PartialMenuSpec) => TieredMenu.singleData(partialMenu.value, partialMenu);
 
 export const createMenuFrom = (
   partialMenu: PartialMenuSpec,
@@ -212,10 +135,7 @@ export const createMenuFrom = (
   focusMode: FocusMode,
   presets: Types.PresetTypes
 ): MenuTypes.MenuSpec => {
-  const focusManager =
-    focusMode === FocusMode.ContentFocus
-      ? FocusManagers.highlights()
-      : FocusManagers.dom();
+  const focusManager = focusMode === FocusMode.ContentFocus ? FocusManagers.highlights() : FocusManagers.dom();
 
   const movement = deriveMenuMovement(columns, presets);
   const menuMarkers = getMenuMarkers(presets);
@@ -238,11 +158,9 @@ export const createMenuFrom = (
         ? []
         : [
             AlloyEvents.runOnAttached((comp, _se) => {
-              detectSize(comp, 4, menuMarkers.item).each(
-                ({ numColumns, numRows }) => {
-                  Keying.setGridSize(comp, numRows, numColumns);
-                }
-              );
+              detectSize(comp, 4, menuMarkers.item).each(({ numColumns, numRows }) => {
+                Keying.setGridSize(comp, numRows, numColumns);
+              });
             })
           ]
     )

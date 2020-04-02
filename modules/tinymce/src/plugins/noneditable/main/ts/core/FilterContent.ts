@@ -58,14 +58,7 @@ const convertRegExpsToNonEditable = function (editor, nonEditableRegExps, e) {
   }
 
   while (i--) {
-    content = content.replace(
-      nonEditableRegExps[i],
-      replaceMatchWithSpan(
-        editor,
-        content,
-        Settings.getNonEditableClass(editor)
-      )
-    );
+    content = content.replace(nonEditableRegExps[i], replaceMatchWithSpan(editor, content, Settings.getNonEditableClass(editor)));
   }
 
   e.content = content;
@@ -104,9 +97,7 @@ const setup = function (editor) {
       }
     });
 
-    editor.serializer.addAttributeFilter(contentEditableAttrName, function (
-      nodes
-    ) {
+    editor.serializer.addAttributeFilter(contentEditableAttrName, function (nodes) {
       let i = nodes.length,
         node;
 

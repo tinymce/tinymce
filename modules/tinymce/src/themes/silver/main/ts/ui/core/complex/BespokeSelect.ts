@@ -42,10 +42,7 @@ export interface SeparatorFormatItem {
   title?: TranslateIfNeeded;
 }
 
-export type FormatItem =
-  | FormatterFormatItem
-  | SubMenuFormatItem
-  | SeparatorFormatItem;
+export type FormatItem = FormatterFormatItem | SubMenuFormatItem | SeparatorFormatItem;
 
 export interface SelectSpec {
   tooltip: string;
@@ -86,11 +83,7 @@ const enum IrrelevantStyleItemResponse {
   Disable
 }
 
-const generateSelectItems = (
-  _editor: Editor,
-  backstage: UiFactoryBackstage,
-  spec: SelectSpec
-) => {
+const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
   const generateItem = (
     rawItem: FormatItem,
     response: IrrelevantStyleItemResponse,
@@ -104,9 +97,7 @@ const generateSelectItems = (
         text: translatedText
       });
     } else if (rawItem.type === 'submenu') {
-      const items = Arr.bind(rawItem.getStyleItems(), (si) =>
-        validate(si, response, value)
-      );
+      const items = Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response, value));
       if (response === IrrelevantStyleItemResponse.Hide && items.length <= 0) {
         return Option.none();
       } else {
@@ -114,10 +105,7 @@ const generateSelectItems = (
           type: 'nestedmenuitem',
           text: translatedText,
           disabled: items.length <= 0,
-          getSubmenuItems: () =>
-            Arr.bind(rawItem.getStyleItems(), (si) =>
-              validate(si, response, value)
-            )
+          getSubmenuItems: () => Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response, value))
         });
       }
     } else {
@@ -138,18 +126,12 @@ const generateSelectItems = (
     }
   };
 
-  const validate = (
-    item: FormatItem,
-    response: IrrelevantStyleItemResponse,
-    value: Option<any>
-  ): Menu.NestedMenuItemContents[] => {
+  const validate = (item: FormatItem, response: IrrelevantStyleItemResponse, value: Option<any>): Menu.NestedMenuItemContents[] => {
     const invalid = item.type === 'formatter' && spec.isInvalid(item);
 
     // If we are making them disappear based on some setting
     if (response === IrrelevantStyleItemResponse.Hide) {
-      return invalid
-        ? []
-        : generateItem(item, response, false, value).toArray();
+      return invalid ? [] : generateItem(item, response, false, value).toArray();
     } else {
       return generateItem(item, response, invalid, value).toArray();
     }
@@ -157,24 +139,14 @@ const generateSelectItems = (
 
   const validateItems = (preItems: FormatItem[]) => {
     const value = spec.getCurrentValue();
-    const response = spec.shouldHide
-      ? IrrelevantStyleItemResponse.Hide
-      : IrrelevantStyleItemResponse.Disable;
+    const response = spec.shouldHide ? IrrelevantStyleItemResponse.Hide : IrrelevantStyleItemResponse.Disable;
     return Arr.bind(preItems, (item) => validate(item, response, value));
   };
 
-  const getFetch = (
-    backstage: UiFactoryBackstage,
-    getStyleItems: () => FormatItem[]
-  ) => (callback: (menu: Option<TieredData>) => null) => {
+  const getFetch = (backstage: UiFactoryBackstage, getStyleItems: () => FormatItem[]) => (callback: (menu: Option<TieredData>) => null) => {
     const preItems = getStyleItems();
     const items = validateItems(preItems);
-    const menu = NestedMenus.build(
-      items,
-      ItemResponse.CLOSE_ON_EXECUTE,
-      backstage,
-      false
-    );
+    const menu = NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false);
     callback(menu);
   };
 
@@ -184,22 +156,11 @@ const generateSelectItems = (
   };
 };
 
-const createMenuItems = (
-  editor: Editor,
-  backstage: UiFactoryBackstage,
-  spec: SelectSpec
-) => {
+const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
   const dataset = spec.dataset; // needs to be a var for tsc to understand the ternary
   const getStyleItems =
     dataset.type === 'basic'
-      ? () =>
-          Arr.map(dataset.data, (d) =>
-            FormatRegister.processBasic(
-              d,
-              spec.isSelectedFor,
-              spec.getPreviewFor
-            )
-          )
+      ? () => Arr.map(dataset.data, (d) => FormatRegister.processBasic(d, spec.isSelectedFor, spec.getPreviewFor))
       : dataset.getData;
   return {
     items: generateSelectItems(editor, backstage, spec),
@@ -207,11 +168,7 @@ const createMenuItems = (
   };
 };
 
-const createSelectButton = (
-  editor: Editor,
-  backstage: UiFactoryBackstage,
-  spec: SelectSpec
-) => {
+const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
   const { items, getStyleItems } = createMenuItems(editor, backstage, spec);
 
   const getApi = (comp: AlloyComponent): BespokeSelectApi => ({

@@ -1,14 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  GeneralSteps,
-  Mouse,
-  Pipeline,
-  Step,
-  UiFinder,
-  Waiter
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, GeneralSteps, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Body } from '@ephox/sugar';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
@@ -72,10 +62,7 @@ UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
         ),
         Body.body()
       ),
-      Waiter.sTryUntil(
-        'Waiting for an initial message to be received from the iframe',
-        store.sAssertEq('Checking stuff', ['onMessage'])
-      ),
+      Waiter.sTryUntil('Waiting for an initial message to be received from the iframe', store.sAssertEq('Checking stuff', ['onMessage'])),
       Step.label(
         'Sending message to iframe',
         Step.sync(() => {
@@ -91,13 +78,7 @@ UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
       sTestClose,
       Waiter.sTryUntil(
         'Waiting for all dialog events when closing',
-        store.sAssertEq('Checking stuff', [
-          'onMessage',
-          'onMessage',
-          'onAction',
-          'closeWindow',
-          'onClose'
-        ])
+        store.sAssertEq('Checking stuff', ['onMessage', 'onMessage', 'onAction', 'closeWindow', 'onClose'])
       ),
       Assertions.sAssertStructure(
         '"tox-dialog__scroll-disable" should have been removed from the body',

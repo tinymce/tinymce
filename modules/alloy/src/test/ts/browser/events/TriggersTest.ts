@@ -2,14 +2,7 @@ import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Obj } from '@ephox/katamari';
-import {
-  Attr,
-  Element,
-  EventArgs,
-  Html,
-  Insert,
-  SelectorFind
-} from '@ephox/sugar';
+import { Attr, Element, EventArgs, Html, Insert, SelectorFind } from '@ephox/sugar';
 
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
 import * as Triggers from 'ephox/alloy/events/Triggers';
@@ -87,30 +80,13 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
   const container = Element.fromTag('div');
   const body = Element.fromDom(document.body);
 
-  const sCheck = (
-    label: string,
-    expected: string[],
-    target: string,
-    eventType: string
-  ) =>
+  const sCheck = (label: string, expected: string[], target: string, eventType: string) =>
     Logger.t(
       label,
       Step.sync(() => {
-        Html.set(
-          container,
-          '<div data-event-id="alpha"><div data-event-id="beta"><div data-event-id="gamma"></div></div></div>'
-        );
-        const targetEl = SelectorFind.descendant(
-          container,
-          '[data-event-id="' + target + '"]'
-        ).getOrDie();
-        Triggers.triggerOnUntilStopped(
-          lookup,
-          eventType,
-          {} as any,
-          targetEl,
-          logger
-        );
+        Html.set(container, '<div data-event-id="alpha"><div data-event-id="beta"><div data-event-id="gamma"></div></div></div>');
+        const targetEl = SelectorFind.descendant(container, '[data-event-id="' + target + '"]').getOrDie();
+        Triggers.triggerOnUntilStopped(lookup, eventType, {} as any, targetEl, logger);
         Assertions.assertEq(label, expected, log.slice(0));
         log = [];
       })
@@ -156,14 +132,7 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
     { expected: ['alpha'], target: 'alpha', type: 'all.stop' }
   ];
 
-  const steps = Arr.map(cases, (c) =>
-    sCheck(
-      'fire(' + c.target + ') using event: ' + c.type,
-      c.expected,
-      c.target,
-      c.type
-    )
-  );
+  const steps = Arr.map(cases, (c) => sCheck('fire(' + c.target + ') using event: ' + c.type, c.expected, c.target, c.type));
 
   Pipeline.async(
     {},

@@ -4,10 +4,7 @@ export interface PositionableUnit {
   finish: () => number;
 }
 
-const generate = <T, U extends PositionableUnit>(
-  xs: T[],
-  f: (thing: T, n: number) => Option<U>
-): U[] => {
+const generate = <T, U extends PositionableUnit>(xs: T[], f: (thing: T, n: number) => Option<U>): U[] => {
   const init = {
     len: 0,
     list: [] as U[]

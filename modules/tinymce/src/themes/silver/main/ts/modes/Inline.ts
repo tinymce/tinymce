@@ -14,12 +14,7 @@ import * as Events from '../api/Events';
 import { getUiContainer, isToolbarLocationTop } from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import * as ReadOnly from '../ReadOnly';
-import {
-  ModeRenderInfo,
-  RenderArgs,
-  RenderUiComponents,
-  RenderUiConfig
-} from '../Render';
+import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { InlineHeader } from '../ui/header/InlineHeader';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
@@ -42,8 +37,7 @@ const setupEvents = (editor: Editor, targetElm: Element, ui: InlineHeader) => {
     const { pos, bounds } = getTargetPosAndBounds(targetElm, isToolbarTop);
     const { pos: prevPos, bounds: prevBounds } = prevPosAndBounds.get();
 
-    const hasResized =
-      bounds.height !== prevBounds.height || bounds.width !== prevBounds.width;
+    const hasResized = bounds.height !== prevBounds.height || bounds.width !== prevBounds.width;
     prevPosAndBounds.set({ pos, bounds });
 
     if (hasResized) {
@@ -74,9 +68,7 @@ const setupEvents = (editor: Editor, targetElm: Element, ui: InlineHeader) => {
 
   // Bind to async load events and trigger a content resize event if the size has changed
   const elementLoad = Singleton.unbindable();
-  elementLoad.set(
-    DomEvent.capture(Element.fromDom(editor.getBody()), 'load', resizeContent)
-  );
+  elementLoad.set(DomEvent.capture(Element.fromDom(editor.getBody()), 'load', resizeContent));
 
   editor.on('remove', () => {
     elementLoad.clear();
@@ -111,10 +103,7 @@ const render = (
 
     setToolbar(editor, uiComponents, rawUiConfig, backstage);
 
-    OuterContainer.setMenubar(
-      outerContainer,
-      identifyMenus(editor, rawUiConfig)
-    );
+    OuterContainer.setMenubar(outerContainer, identifyMenus(editor, rawUiConfig));
 
     // Initialise the toolbar - set initial positioning then show
     ui.show();

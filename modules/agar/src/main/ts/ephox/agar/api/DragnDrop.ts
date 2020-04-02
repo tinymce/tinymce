@@ -18,11 +18,7 @@ import { Step } from './Step';
 
 const isDraggable = (element: Element<any>): boolean => {
   const name = Node.name(element);
-  return (
-    name === 'img' ||
-    (name === 'a' && Attr.has(element, 'href')) ||
-    Attr.get(element, 'draggable') === 'true'
-  );
+  return name === 'img' || (name === 'a' && Attr.has(element, 'href')) || Attr.get(element, 'draggable') === 'true';
 };
 
 const checkDefaultPrevented = (evt: DragEvent): void => {
@@ -42,36 +38,12 @@ const dragnDrop = (from: Element<any>, to: Element<any>): void => {
     throw new Error('Can not drag a non draggable element.');
   }
 
-  dispatchDndEvent(
-    createDragstartEvent(fromWin, fromRect.left, fromRect.top, transfer),
-    from
-  );
-  dispatchDndEvent(
-    createDragEvent(fromWin, fromRect.left, fromRect.top, transfer),
-    from
-  );
-  checkDefaultPrevented(
-    dispatchDndEvent(
-      createDragenterEvent(toWin, toRect.left, toRect.top, transfer),
-      to
-    )
-  );
-  checkDefaultPrevented(
-    dispatchDndEvent(
-      createDragoverEvent(toWin, toRect.left, toRect.top, transfer),
-      to
-    )
-  );
-  checkDefaultPrevented(
-    dispatchDndEvent(
-      createDropEvent(toWin, toRect.left, toRect.top, transfer),
-      to
-    )
-  );
-  dispatchDndEvent(
-    createDragendEvent(fromWin, fromRect.left, fromRect.top, transfer),
-    from
-  );
+  dispatchDndEvent(createDragstartEvent(fromWin, fromRect.left, fromRect.top, transfer), from);
+  dispatchDndEvent(createDragEvent(fromWin, fromRect.left, fromRect.top, transfer), from);
+  checkDefaultPrevented(dispatchDndEvent(createDragenterEvent(toWin, toRect.left, toRect.top, transfer), to));
+  checkDefaultPrevented(dispatchDndEvent(createDragoverEvent(toWin, toRect.left, toRect.top, transfer), to));
+  checkDefaultPrevented(dispatchDndEvent(createDropEvent(toWin, toRect.left, toRect.top, transfer), to));
+  dispatchDndEvent(createDragendEvent(fromWin, fromRect.left, fromRect.top, transfer), from);
 };
 
 const dropFiles = (files: File[], to: Element<any>): void => {
@@ -83,37 +55,15 @@ const dropFiles = (files: File[], to: Element<any>): void => {
     transfer.items.add(file);
   });
 
-  dispatchDndEvent(
-    createDragenterEvent(toWin, toRect.left, toRect.top, transfer),
-    to
-  );
-  dispatchDndEvent(
-    createDragoverEvent(toWin, toRect.left, toRect.top, transfer),
-    to
-  );
-  checkDefaultPrevented(
-    dispatchDndEvent(
-      createDropEvent(toWin, toRect.left, toRect.top, transfer),
-      to
-    )
-  );
+  dispatchDndEvent(createDragenterEvent(toWin, toRect.left, toRect.top, transfer), to);
+  dispatchDndEvent(createDragoverEvent(toWin, toRect.left, toRect.top, transfer), to);
+  checkDefaultPrevented(dispatchDndEvent(createDropEvent(toWin, toRect.left, toRect.top, transfer), to));
 };
 
-const cDragnDrop = <T>(
-  fromSelector: string,
-  toSelector: string
-): Chain<Element<T>, Element<T>> =>
+const cDragnDrop = <T>(fromSelector: string, toSelector: string): Chain<Element<T>, Element<T>> =>
   NamedChain.asChain([
-    NamedChain.direct(
-      NamedChain.inputName(),
-      UiFinder.cFindIn(fromSelector),
-      'from'
-    ),
-    NamedChain.direct(
-      NamedChain.inputName(),
-      UiFinder.cFindIn(toSelector),
-      'to'
-    ),
+    NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn(fromSelector), 'from'),
+    NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn(toSelector), 'to'),
     Chain.op((obj) => dragnDrop(obj.from, obj.to)),
     NamedChain.output(NamedChain.inputName())
   ]);
@@ -129,13 +79,4 @@ const cDropFiles = <T>(files: File[]): Chain<Element<T>, Element<T>> =>
     dropFiles(files, elm);
   });
 
-export {
-  isDraggable,
-  dragnDrop,
-  dropFiles,
-  cDragnDrop,
-  sDragnDrop,
-  sDropFiles,
-  cDropFiles,
-  getDragImage
-};
+export { isDraggable, dragnDrop, dropFiles, cDragnDrop, sDragnDrop, sDropFiles, cDropFiles, getDragImage };

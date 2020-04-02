@@ -8,12 +8,7 @@ import { Testable } from '@ephox/dispute';
 const { tNumber } = Testable;
 
 UnitTest.test('Arr.head: empty', () => {
-  Assert.eq(
-    'empty',
-    Option.none<number>(),
-    Arr.head<number>([]),
-    tOption(tNumber)
-  );
+  Assert.eq('empty', Option.none<number>(), Arr.head<number>([]), tOption(tNumber));
 });
 
 UnitTest.test('Arr.head: nonEmpty', () => {

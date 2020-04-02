@@ -25,20 +25,14 @@ import * as Sketcher from './Sketcher';
 import { Toolbar } from './Toolbar';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const toggleToolbar = (
-  toolbar: AlloyComponent,
-  detail: SplitSlidingToolbarDetail
-) => {
+const toggleToolbar = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) => {
   AlloyParts.getPart(toolbar, detail, 'overflow').each((overf) => {
     refresh(toolbar, detail);
     Sliding.toggleGrow(overf);
   });
 };
 
-const refresh = (
-  toolbar: AlloyComponent,
-  detail: SplitSlidingToolbarDetail
-) => {
+const refresh = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) => {
   AlloyParts.getPart(toolbar, detail, 'overflow').each((overflow) => {
     SplitToolbarUtils.refresh(toolbar, detail, (groups) => {
       const builtGroups = Arr.map(groups, (g) => GuiFactory.premade(g));
@@ -55,10 +49,7 @@ const refresh = (
   });
 };
 
-const factory: CompositeSketchFactory<
-  SplitSlidingToolbarDetail,
-  SplitSlidingToolbarSpec
-> = (detail, components, spec, externals) => {
+const factory: CompositeSketchFactory<SplitSlidingToolbarDetail, SplitSlidingToolbarSpec> = (detail, components, spec, externals) => {
   const toolbarToggleEvent = 'alloy.toolbar.toggle';
 
   const doSetGroups = (toolbar: AlloyComponent, groups: AlloySpec[]) => {

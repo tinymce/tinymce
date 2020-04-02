@@ -21,10 +21,6 @@ export default function () {
     Buttons.register(editor);
     ContextToolbar.register(editor);
 
-    UploadSelectedImage.setup(
-      editor,
-      imageUploadTimerState,
-      lastSelectedImageState
-    );
+    UploadSelectedImage.setup(editor, imageUploadTimerState, lastSelectedImageState);
   });
 }

@@ -12,22 +12,11 @@ const curried = (handler: Function, purpose: string): CurriedHandler => ({
   purpose: Fun.constant(purpose)
 });
 
-const curryArgs = (
-  descHandler: UncurriedHandler,
-  extraArgs: any[]
-): CurriedHandler =>
-  curried(
-    Fun.curry.apply(
-      undefined,
-      ([descHandler.handler] as any).concat(extraArgs)
-    ),
-    descHandler.purpose()
-  );
+const curryArgs = (descHandler: UncurriedHandler, extraArgs: any[]): CurriedHandler =>
+  curried(Fun.curry.apply(undefined, ([descHandler.handler] as any).concat(extraArgs)), descHandler.purpose());
 
-const getCurried = (descHandler: CurriedHandler): Function =>
-  descHandler.cHandler;
+const getCurried = (descHandler: CurriedHandler): Function => descHandler.cHandler;
 
-const getUncurried = (descHandler: UncurriedHandler): Function =>
-  descHandler.handler;
+const getUncurried = (descHandler: UncurriedHandler): Function => descHandler.handler;
 
 export { curried, uncurried, curryArgs, getCurried, getUncurried };

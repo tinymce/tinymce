@@ -50,9 +50,7 @@ const simulate = function (
         return Option.none<Simulated>();
       }
       return TableKeys.handle(bridge, isRoot, direction).bind(function (range) {
-        return SelectorFind.closest(range.finish(), 'td,th', isRoot).map<
-          Simulated
-        >(function (finish) {
+        return SelectorFind.closest(range.finish(), 'td,th', isRoot).map<Simulated>(function (finish) {
           return {
             start: Fun.constant(start),
             finish: Fun.constant(finish),
@@ -70,44 +68,24 @@ const navigate = function (
   direction: KeyDirection,
   initial: Element,
   anchor: Element,
-  precheck: (
-    initial: Element,
-    isRoot: (e: Element) => boolean
-  ) => Option<Response>
+  precheck: (initial: Element, isRoot: (e: Element) => boolean) => Option<Response>
 ) {
   // Do not override the up/down keys on IE.
   if (detection.browser.isIE()) {
     return Option.none<Response>();
   } else {
     return precheck(initial, isRoot).orThunk(function () {
-      return simulate(bridge, isRoot, direction, initial, anchor).map(function (
-        info
-      ) {
+      return simulate(bridge, isRoot, direction, initial, anchor).map(function (info) {
         const range = info.range();
-        return Response.create(
-          Option.some(
-            Util.makeSitus(
-              range.start(),
-              range.soffset(),
-              range.finish(),
-              range.foffset()
-            )
-          ),
-          true
-        );
+        return Response.create(Option.some(Util.makeSitus(range.start(), range.soffset(), range.finish(), range.foffset())), true);
       });
     });
   }
 };
 
-const firstUpCheck = function (
-  initial: Element,
-  isRoot: (e: Element) => boolean
-) {
+const firstUpCheck = function (initial: Element, isRoot: (e: Element) => boolean) {
   return SelectorFind.closest(initial, 'tr', isRoot).bind(function (startRow) {
-    return SelectorFind.closest(startRow, 'table', isRoot).bind(function (
-      table
-    ) {
+    return SelectorFind.closest(startRow, 'table', isRoot).bind(function (table) {
       const rows = SelectorFilter.descendants(table, 'tr');
       if (Compare.eq(startRow, rows[0])) {
         return DomGather.seekLeft(
@@ -118,10 +96,7 @@ const firstUpCheck = function (
           isRoot
         ).map(function (last) {
           const lastOffset = Awareness.getEnd(last);
-          return Response.create(
-            Option.some(Util.makeSitus(last, lastOffset, last, lastOffset)),
-            true
-          );
+          return Response.create(Option.some(Util.makeSitus(last, lastOffset, last, lastOffset)), true);
         });
       } else {
         return Option.none<Response>();
@@ -130,14 +105,9 @@ const firstUpCheck = function (
   });
 };
 
-const lastDownCheck = function (
-  initial: Element,
-  isRoot: (e: Element) => boolean
-) {
+const lastDownCheck = function (initial: Element, isRoot: (e: Element) => boolean) {
   return SelectorFind.closest(initial, 'tr', isRoot).bind(function (startRow) {
-    return SelectorFind.closest(startRow, 'table', isRoot).bind(function (
-      table
-    ) {
+    return SelectorFind.closest(startRow, 'table', isRoot).bind(function (table) {
       const rows = SelectorFilter.descendants(table, 'tr');
       if (Compare.eq(startRow, rows[rows.length - 1])) {
         return DomGather.seekRight(
@@ -147,10 +117,7 @@ const lastDownCheck = function (
           },
           isRoot
         ).map(function (first) {
-          return Response.create(
-            Option.some(Util.makeSitus(first, 0, first, 0)),
-            true
-          );
+          return Response.create(Option.some(Util.makeSitus(first, 0, first, 0)), true);
         });
       } else {
         return Option.none<Response>();
@@ -166,23 +133,10 @@ const select = function (
   direction: KeyDirection,
   initial: Element,
   anchor: Element,
-  selectRange: (
-    container: Element,
-    boxes: Element[],
-    start: Element,
-    finish: Element
-  ) => void
+  selectRange: (container: Element, boxes: Element[], start: Element, finish: Element) => void
 ) {
-  return simulate(bridge, isRoot, direction, initial, anchor).bind(function (
-    info
-  ) {
-    return KeySelection.detect(
-      container,
-      isRoot,
-      info.start(),
-      info.finish(),
-      selectRange
-    );
+  return simulate(bridge, isRoot, direction, initial, anchor).bind(function (info) {
+    return KeySelection.detect(container, isRoot, info.start(), info.finish(), selectRange);
   });
 };
 

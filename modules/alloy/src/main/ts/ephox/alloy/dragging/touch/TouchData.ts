@@ -15,7 +15,6 @@ const getData = (event: EventArgs<TouchEvent>): Option<Position> => {
 
 // When dragging the touch, the delta is simply the difference
 // between the two touch positions (previous/old and next/nu)
-const getDelta = (old: Position, nu: Position): Position =>
-  Position(nu.left() - old.left(), nu.top() - old.top());
+const getDelta = (old: Position, nu: Position): Position => Position(nu.left() - old.left(), nu.top() - old.top());
 
 export { getData, getDelta };

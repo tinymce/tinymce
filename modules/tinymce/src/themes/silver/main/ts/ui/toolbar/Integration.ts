@@ -11,11 +11,7 @@ import { Toolbar } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Result, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import {
-  getToolbarMode,
-  isToolbarLocationTop,
-  ToolbarMode
-} from '../../api/Settings';
+import { getToolbarMode, isToolbarLocationTop, ToolbarMode } from '../../api/Settings';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RenderToolbarConfig, ToolbarGroupSetting } from '../../Render';
@@ -26,12 +22,7 @@ import { createFontsizeSelect } from '../core/complex/FontsizeSelect';
 import { createFormatSelect } from '../core/complex/FormatSelect';
 import { createStyleSelect } from '../core/complex/StyleSelect';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
-import {
-  renderFloatingToolbarButton,
-  renderSplitButton,
-  renderToolbarButton,
-  renderToolbarToggleButton
-} from './button/ToolbarButtons';
+import { renderFloatingToolbarButton, renderSplitButton, renderToolbarButton, renderToolbarToggleButton } from './button/ToolbarButtons';
 import { ToolbarGroup } from './CommonToolbar';
 
 export const handleError = (error) => {
@@ -92,87 +83,50 @@ const renderFromBridge = <BI, ToolbarButton>(
 };
 
 const types = {
-  button: renderFromBridge(
-    Toolbar.createToolbarButton,
-    (s: Toolbar.ToolbarButton, extras) =>
-      renderToolbarButton(s, extras.backstage.shared.providers)
+  button: renderFromBridge(Toolbar.createToolbarButton, (s: Toolbar.ToolbarButton, extras) =>
+    renderToolbarButton(s, extras.backstage.shared.providers)
   ),
 
-  togglebutton: renderFromBridge(
-    Toolbar.createToggleButton,
-    (s: Toolbar.ToolbarToggleButton, extras) =>
-      renderToolbarToggleButton(s, extras.backstage.shared.providers)
+  togglebutton: renderFromBridge(Toolbar.createToggleButton, (s: Toolbar.ToolbarToggleButton, extras) =>
+    renderToolbarToggleButton(s, extras.backstage.shared.providers)
   ),
 
-  menubutton: renderFromBridge<
-    Toolbar.ToolbarMenuButtonApi,
-    Toolbar.ToolbarMenuButton
-  >(Toolbar.createMenuButton, (s: Toolbar.ToolbarMenuButton, extras) =>
-    renderMenuButton(
-      s,
-      ToolbarButtonClasses.Button,
-      extras.backstage,
-      Option.none()
-    )
+  menubutton: renderFromBridge<Toolbar.ToolbarMenuButtonApi, Toolbar.ToolbarMenuButton>(
+    Toolbar.createMenuButton,
+    (s: Toolbar.ToolbarMenuButton, extras) => renderMenuButton(s, ToolbarButtonClasses.Button, extras.backstage, Option.none())
   ),
 
-  splitbutton: renderFromBridge(
-    Toolbar.createSplitButton,
-    (s: Toolbar.ToolbarSplitButton, extras) =>
-      renderSplitButton(s, extras.backstage.shared)
+  splitbutton: renderFromBridge(Toolbar.createSplitButton, (s: Toolbar.ToolbarSplitButton, extras) =>
+    renderSplitButton(s, extras.backstage.shared)
   ),
 
-  grouptoolbarbutton: renderFromBridge(
-    Toolbar.createGroupToolbarButton,
-    (s: Toolbar.GroupToolbarButton, extras, editor: Editor) => {
-      const buttons = editor.ui.registry.getAll().buttons;
-      const identify = (toolbar: string | ToolbarGroupSetting[]) =>
-        identifyButtons(
-          editor,
-          { buttons, toolbar, allowToolbarGroups: false },
-          extras,
-          Option.none()
-        );
-      const attributes = {
-        [VerticalDir.Attribute]: isToolbarLocationTop(editor)
-          ? VerticalDir.AttributeValue.TopToBottom
-          : VerticalDir.AttributeValue.BottomToTop
-      };
+  grouptoolbarbutton: renderFromBridge(Toolbar.createGroupToolbarButton, (s: Toolbar.GroupToolbarButton, extras, editor: Editor) => {
+    const buttons = editor.ui.registry.getAll().buttons;
+    const identify = (toolbar: string | ToolbarGroupSetting[]) =>
+      identifyButtons(editor, { buttons, toolbar, allowToolbarGroups: false }, extras, Option.none());
+    const attributes = {
+      [VerticalDir.Attribute]: isToolbarLocationTop(editor)
+        ? VerticalDir.AttributeValue.TopToBottom
+        : VerticalDir.AttributeValue.BottomToTop
+    };
 
-      switch (getToolbarMode(editor)) {
-        case ToolbarMode.floating:
-          return renderFloatingToolbarButton(
-            s,
-            extras.backstage,
-            identify,
-            attributes
-          );
-        default:
-          // TODO change this message and add a case when sliding is available
-          throw new Error(
-            'Toolbar groups are only supported when using floating toolbar mode'
-          );
-      }
+    switch (getToolbarMode(editor)) {
+      case ToolbarMode.floating:
+        return renderFloatingToolbarButton(s, extras.backstage, identify, attributes);
+      default:
+        // TODO change this message and add a case when sliding is available
+        throw new Error('Toolbar groups are only supported when using floating toolbar mode');
     }
-  ),
+  }),
 
-  styleSelectButton: (editor: Editor, extras: Extras) =>
-    createStyleSelect(editor, extras.backstage),
-  fontsizeSelectButton: (editor: Editor, extras: Extras) =>
-    createFontsizeSelect(editor, extras.backstage),
-  fontSelectButton: (editor: Editor, extras: Extras) =>
-    createFontSelect(editor, extras.backstage),
-  formatButton: (editor: Editor, extras: Extras) =>
-    createFormatSelect(editor, extras.backstage),
-  alignMenuButton: (editor: Editor, extras: Extras) =>
-    createAlignSelect(editor, extras.backstage)
+  styleSelectButton: (editor: Editor, extras: Extras) => createStyleSelect(editor, extras.backstage),
+  fontsizeSelectButton: (editor: Editor, extras: Extras) => createFontsizeSelect(editor, extras.backstage),
+  fontSelectButton: (editor: Editor, extras: Extras) => createFontSelect(editor, extras.backstage),
+  formatButton: (editor: Editor, extras: Extras) => createFormatSelect(editor, extras.backstage),
+  alignMenuButton: (editor: Editor, extras: Extras) => createAlignSelect(editor, extras.backstage)
 };
 
-const extractFrom = (
-  spec: ToolbarButton,
-  extras: Extras,
-  editor: Editor
-): Option<AlloySpec> =>
+const extractFrom = (spec: ToolbarButton, extras: Extras, editor: Editor): Option<AlloySpec> =>
   Obj.get(types, spec.type).fold(
     () => {
       // tslint:disable-next-line:no-console
@@ -182,10 +136,7 @@ const extractFrom = (
     (render) => Option.some(render(spec, extras, editor))
   );
 
-const bespokeButtons: Record<
-  string,
-  (editor: Editor, extras: Extras) => SketchSpec
-> = {
+const bespokeButtons: Record<string, (editor: Editor, extras: Extras) => SketchSpec> = {
   styleselect: types.styleSelectButton,
   fontsizeselect: types.fontsizeSelectButton,
   fontselect: types.fontSelectButton,
@@ -195,11 +146,7 @@ const bespokeButtons: Record<
 
 const removeUnusedDefaults = (buttons) => {
   const filteredItemGroups = Arr.map(defaultToolbar, (group) => {
-    const items = Arr.filter(
-      group.items,
-      (subItem) =>
-        Obj.has(buttons, subItem) || Obj.has(bespokeButtons as any, subItem)
-    );
+    const items = Arr.filter(group.items, (subItem) => Obj.has(buttons, subItem) || Obj.has(bespokeButtons as any, subItem));
     return {
       name: group.name,
       items
@@ -215,13 +162,8 @@ const convertStringToolbar = (strToolbar) => {
   }));
 };
 
-const isToolbarGroupSettingArray = (
-  toolbar
-): toolbar is ToolbarGroupSetting[] =>
-  Type.isArrayOf(
-    toolbar,
-    (t): t is ToolbarGroupSetting => Obj.has(t, 'name') && Obj.has(t, 'items')
-  );
+const isToolbarGroupSettingArray = (toolbar): toolbar is ToolbarGroupSetting[] =>
+  Type.isArrayOf(toolbar, (t): t is ToolbarGroupSetting => Obj.has(t, 'name') && Obj.has(t, 'items'));
 
 // Toolbar settings
 // false = disabled
@@ -229,9 +171,7 @@ const isToolbarGroupSettingArray = (
 // string = enabled with specified buttons and groups
 // string array = enabled with specified buttons and groups
 // object array = enabled with specified buttons, groups and group titles
-const createToolbar = (
-  toolbarConfig: RenderToolbarConfig
-): ToolbarGroupSetting[] => {
+const createToolbar = (toolbarConfig: RenderToolbarConfig): ToolbarGroupSetting[] => {
   const toolbar = toolbarConfig.toolbar;
   const buttons = toolbarConfig.buttons;
   if (toolbar === false) {
@@ -244,9 +184,7 @@ const createToolbar = (
     return toolbar;
   } else {
     // tslint:disable-next-line:no-console
-    console.error(
-      'Toolbar type should be string, string[], boolean or ToolbarGroup[]'
-    );
+    console.error('Toolbar type should be string, string[], boolean or ToolbarGroup[]');
     return [];
   }
 };
@@ -260,13 +198,7 @@ const lookupButton = (
   prefixes: Option<string[]>
 ): Option<AlloySpec> =>
   Obj.get(buttons, toolbarItem.toLowerCase())
-    .orThunk(() =>
-      prefixes.bind((ps) =>
-        Arr.findMap(ps, (prefix) =>
-          Obj.get(buttons, prefix + toolbarItem.toLowerCase())
-        )
-      )
-    )
+    .orThunk(() => prefixes.bind((ps) => Arr.findMap(ps, (prefix) => Obj.get(buttons, prefix + toolbarItem.toLowerCase()))))
     .fold(
       () =>
         Obj.get(bespokeButtons, toolbarItem.toLowerCase())
@@ -301,14 +233,7 @@ const identifyButtons = (
     const items = Arr.bind(group.items, (toolbarItem) =>
       toolbarItem.trim().length === 0
         ? []
-        : lookupButton(
-            editor,
-            toolbarConfig.buttons,
-            toolbarItem,
-            toolbarConfig.allowToolbarGroups,
-            extras,
-            prefixes
-          ).toArray()
+        : lookupButton(editor, toolbarConfig.buttons, toolbarItem, toolbarConfig.allowToolbarGroups, extras, prefixes).toArray()
     );
     return {
       title: Option.from(editor.translate(group.name)),

@@ -1,15 +1,7 @@
 import * as FocusTools from 'ephox/agar/api/FocusTools';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as DemoContainer from 'ephox/agar/demo/DemoContainer';
-import {
-  Attr,
-  Css,
-  DomEvent,
-  Element,
-  Html,
-  InsertAll,
-  Traverse
-} from '@ephox/sugar';
+import { Attr, Css, DomEvent, Element, Html, InsertAll, Traverse } from '@ephox/sugar';
 
 export const demo = (): void => {
   DemoContainer.init('Focus demos', (success, failure) => {
@@ -37,13 +29,7 @@ export const demo = (): void => {
 
       Pipeline.async(
         {},
-        [
-          FocusTools.sTryOnSelector(
-            'You were not fast enough',
-            Traverse.owner(game),
-            'input'
-          )
-        ],
+        [FocusTools.sTryOnSelector('You were not fast enough', Traverse.owner(game), 'input')],
         () => {
           Css.set(game, 'color', 'blue');
           success();

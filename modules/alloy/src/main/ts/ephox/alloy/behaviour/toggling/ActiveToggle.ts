@@ -8,24 +8,11 @@ import { TogglingConfig, TogglingState } from './TogglingTypes';
 
 const exhibit = () => DomModification.nu({});
 
-const events = (
-  toggleConfig: TogglingConfig,
-  toggleState: TogglingState
-): AlloyEvents.AlloyEventRecord => {
-  const execute = Behaviour.executeEvent(
-    toggleConfig,
-    toggleState,
-    ToggleApis.toggle
-  );
-  const load = Behaviour.loadEvent(
-    toggleConfig,
-    toggleState,
-    ToggleApis.onLoad
-  );
+const events = (toggleConfig: TogglingConfig, toggleState: TogglingState): AlloyEvents.AlloyEventRecord => {
+  const execute = Behaviour.executeEvent(toggleConfig, toggleState, ToggleApis.toggle);
+  const load = Behaviour.loadEvent(toggleConfig, toggleState, ToggleApis.onLoad);
 
-  return AlloyEvents.derive(
-    Arr.flatten([toggleConfig.toggleOnExecute ? [execute] : [], [load]])
-  );
+  return AlloyEvents.derive(Arr.flatten([toggleConfig.toggleOnExecute ? [execute] : [], [load]]));
 };
 
 export { exhibit, events };

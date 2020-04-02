@@ -20,11 +20,7 @@ import Tools from '../api/util/Tools';
  */
 
 export interface StyleSheetLoader {
-  load: (
-    url: string,
-    loadedCallback: Function,
-    errorCallback?: Function
-  ) => void;
+  load: (url: string, loadedCallback: Function, errorCallback?: Function) => void;
   loadAll: (urls: string[], success: Function, failure: Function) => void;
   _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
 }
@@ -35,10 +31,7 @@ export interface StyleSheetLoaderSettings {
   referrerPolicy: ReferrerPolicy;
 }
 
-export function StyleSheetLoader(
-  document,
-  settings: Partial<StyleSheetLoaderSettings> = {}
-): StyleSheetLoader {
+export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
   let idCount = 0;
   const loadedStates = {};
   let maxLoadTime;
@@ -61,11 +54,7 @@ export function StyleSheetLoader(
    * @param {Function} loadedCallback Callback to be executed when loaded.
    * @param {Function} errorCallback Callback to be executed when failed loading.
    */
-  const load = function (
-    url: string,
-    loadedCallback: Function,
-    errorCallback?: Function
-  ) {
+  const load = function (url: string, loadedCallback: Function, errorCallback?: Function) {
     let link, style, startTime, state;
 
     const resolve = (status: number) => {
@@ -131,9 +120,7 @@ export function StyleSheetLoader(
 
         while (i--) {
           styleSheet = styleSheets[i];
-          owner = styleSheet.ownerNode
-            ? styleSheet.ownerNode
-            : styleSheet.owningElement;
+          owner = styleSheet.ownerNode ? styleSheet.ownerNode : styleSheet.owningElement;
           if (owner && owner.id === link.id) {
             passed();
             return true;
@@ -210,11 +197,7 @@ export function StyleSheetLoader(
 
     if (settings.referrerPolicy) {
       // Note: Don't use link.referrerPolicy = ... here as it doesn't work on Safari
-      Attr.set(
-        Element.fromDom(link),
-        'referrerpolicy',
-        settings.referrerPolicy
-      );
+      Attr.set(Element.fromDom(link), 'referrerpolicy', settings.referrerPolicy);
     }
 
     // Feature detect onload on link element and sniff older webkits since it has an broken onload event
@@ -242,11 +225,7 @@ export function StyleSheetLoader(
 
   const loadF = function (url) {
     return Future.nu(function (resolve) {
-      load(
-        url,
-        Fun.compose(resolve, Fun.constant(Result.value(url))),
-        Fun.compose(resolve, Fun.constant(Result.error(url)))
-      );
+      load(url, Fun.compose(resolve, Fun.constant(Result.value(url))), Fun.compose(resolve, Fun.constant(Result.error(url))));
     });
   };
 
@@ -254,11 +233,7 @@ export function StyleSheetLoader(
     return result.fold(Fun.identity, Fun.identity);
   };
 
-  const loadAll = function (
-    urls: string[],
-    success: Function,
-    failure: Function
-  ) {
+  const loadAll = function (urls: string[], success: Function, failure: Function) {
     Futures.par(Arr.map(urls, loadF)).get(function (result) {
       const parts = Arr.partition(result, function (r) {
         return r.isValue();

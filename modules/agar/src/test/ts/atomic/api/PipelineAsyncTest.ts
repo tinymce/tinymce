@@ -14,11 +14,7 @@ UnitTest.asynctest('PipelineSuite Test', (success, failure) => {
 
   Pipeline.async(
     {},
-    [
-      mutator('name', 'testfile'),
-      mutator('purpose', 'unknown'),
-      mutator('correctness', 'tbd')
-    ],
+    [mutator('name', 'testfile'), mutator('purpose', 'unknown'), mutator('correctness', 'tbd')],
     (result) => {
       Assert.eq(
         'Should have all state properties',

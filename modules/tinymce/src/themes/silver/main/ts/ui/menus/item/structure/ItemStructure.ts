@@ -12,13 +12,7 @@ import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import * as Icons from '../../../icons/Icons';
 import * as ItemClasses from '../ItemClasses';
-import {
-  renderHtml,
-  renderIcon,
-  renderShortcut,
-  renderStyledText,
-  renderText
-} from './ItemSlices';
+import { renderHtml, renderIcon, renderShortcut, renderStyledText, renderText } from './ItemSlices';
 
 export interface ItemStructure {
   dom: RawDomSchema;
@@ -60,15 +54,7 @@ const renderColorStructure = (
   const getDom = () => {
     const common = ItemClasses.colorClass;
     const icon = iconSvg.getOr('');
-    const attributes = itemText
-      .map(
-        (text) =>
-          ({ title: providerBackstage.translate(text) } as Record<
-            string,
-            string
-          >)
-      )
-      .getOr({});
+    const attributes = itemText.map((text) => ({ title: providerBackstage.translate(text) } as Record<string, string>)).getOr({});
 
     const baseDom = {
       tag: 'div',
@@ -118,9 +104,7 @@ const renderNormalItemStructure = (
   rtlClass: boolean
 ): ItemStructure => {
   // checkmark has priority, otherwise render icon if we have one, otherwise empty icon for spacing
-  const leftIcon: Option<AlloySpec> = renderIcons
-    ? info.checkMark.orThunk(() => icon.or(Option.some('')).map(renderIcon))
-    : Option.none();
+  const leftIcon: Option<AlloySpec> = renderIcons ? info.checkMark.orThunk(() => icon.or(Option.some('')).map(renderIcon)) : Option.none();
   const domTitle = info.ariaLabel
     .map((label): { attributes?: { title: string } } => ({
       attributes: {
@@ -133,9 +117,7 @@ const renderNormalItemStructure = (
 
   const dom = {
     tag: 'div',
-    classes: [ItemClasses.navClass, ItemClasses.selectableClass].concat(
-      rtlClass ? [ItemClasses.iconClassRtl] : []
-    ),
+    classes: [ItemClasses.navClass, ItemClasses.selectableClass].concat(rtlClass ? [ItemClasses.iconClassRtl] : []),
     ...domTitle
   };
 
@@ -146,12 +128,7 @@ const renderNormalItemStructure = (
 
   const menuItem = {
     dom,
-    optComponents: [
-      leftIcon,
-      content,
-      info.shortcutContent.map(renderShortcut),
-      info.caret
-    ]
+    optComponents: [leftIcon, content, info.shortcutContent.map(renderShortcut), info.caret]
   };
   return menuItem;
 };
@@ -168,11 +145,7 @@ const rtlIcon = [
 ];
 
 // Icons that need to be transformed in RTL
-const rtlTransform = [
-  'list-bull-circle',
-  'list-bull-default',
-  'list-bull-square'
-];
+const rtlTransform = ['list-bull-circle', 'list-bull-default', 'list-bull-square'];
 
 // TODO: Maybe need aria-label
 const renderItemStructure = <T>(
@@ -184,44 +157,24 @@ const renderItemStructure = <T>(
   // If RTL and icon is in whitelist, add RTL icon class for icons that don't have a `-rtl` icon available.
   // Use `-rtl` icon suffix for icons that do.
   const getIconName = (iconName: Option<string>): Option<string> =>
-    iconName.map((name) =>
-      I18n.isRtl() && Arr.contains(rtlIcon, name) ? name + '-rtl' : name
-    );
+    iconName.map((name) => (I18n.isRtl() && Arr.contains(rtlIcon, name) ? name + '-rtl' : name));
 
-  const needRtlClass =
-    I18n.isRtl() &&
-    info.iconContent.exists((name) => Arr.contains(rtlTransform, name));
+  const needRtlClass = I18n.isRtl() && info.iconContent.exists((name) => Arr.contains(rtlTransform, name));
 
   // TODO: TINY-3036 Work out a better way of dealing with custom icons
-  const icon = getIconName(info.iconContent).map((iconName) =>
-    Icons.getOr(iconName, providersBackstage.icons, fallbackIcon)
-  );
+  const icon = getIconName(info.iconContent).map((iconName) => Icons.getOr(iconName, providersBackstage.icons, fallbackIcon));
 
   // Style items and autocompleter both have meta. Need to branch on style
   // This could probably be more stable...
   const textRender: (text: string) => AlloySpec = Option.from(info.meta).fold(
     () => renderText,
-    (meta) =>
-      Obj.has(meta, 'style')
-        ? Fun.curry(renderStyledText, meta.style)
-        : renderText
+    (meta) => (Obj.has(meta, 'style') ? Fun.curry(renderStyledText, meta.style) : renderText)
   );
 
   if (info.presets === 'color') {
-    return renderColorStructure(
-      info.ariaLabel,
-      info.value,
-      icon,
-      providersBackstage
-    );
+    return renderColorStructure(info.ariaLabel, info.value, icon, providersBackstage);
   } else {
-    return renderNormalItemStructure(
-      info,
-      icon,
-      renderIcons,
-      textRender,
-      needRtlClass
-    );
+    return renderNormalItemStructure(info, icon, renderIcons, textRender, needRtlClass);
   }
 };
 

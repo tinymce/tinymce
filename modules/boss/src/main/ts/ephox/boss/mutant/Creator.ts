@@ -3,10 +3,7 @@ import { Gene } from '../api/Gene';
 import { TextGene } from '../api/TextGene';
 
 const isNu = function (item: Gene) {
-  return (
-    item.id === 'nu_' + item.name ||
-    Option.from(item.text).exists((text) => item.id === '?_' + text)
-  );
+  return item.id === 'nu_' + item.name || Option.from(item.text).exists((text) => item.id === '?_' + text);
 };
 
 const seed = function () {

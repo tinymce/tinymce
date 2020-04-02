@@ -11,15 +11,9 @@ const t = <T, U>(label: string, f: Step<T, U>): Step<T, U> => {
 
   return Step.raw((value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => {
     const updatedLogs = pushLogLevel(addLogEntry(logs, label));
-    const dieWith: DieFn = (err, newLogs) =>
-      die(enrich(err), popLogLevel(newLogs));
+    const dieWith: DieFn = (err, newLogs) => die(enrich(err), popLogLevel(newLogs));
     try {
-      return f.runStep(
-        value,
-        (v, newLogs) => next(v, popLogLevel(newLogs)),
-        dieWith,
-        updatedLogs
-      );
+      return f.runStep(value, (v, newLogs) => next(v, popLogLevel(newLogs)), dieWith, updatedLogs);
     } catch (err) {
       dieWith(err, updatedLogs);
     }

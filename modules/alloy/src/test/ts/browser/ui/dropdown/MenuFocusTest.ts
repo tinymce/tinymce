@@ -40,9 +40,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
           ],
           widgetBehaviours: Behaviour.derive([
             AddEventsBehaviour.config('widget-item-test-behaviour', [
-              AlloyEvents.runOnAttached(
-                store.adder('widget.item.' + suffix + '.attached')
-              )
+              AlloyEvents.runOnAttached(store.adder('widget.item.' + suffix + '.attached'))
             ])
           ])
         } as WidgetItemSpec,
@@ -58,9 +56,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
           components: [],
           itemBehaviours: Behaviour.derive([
             AddEventsBehaviour.config('normal-item-test-behaviour', [
-              AlloyEvents.runOnAttached(
-                store.adder('normal.item.' + suffix + '.attached')
-              )
+              AlloyEvents.runOnAttached(store.adder('normal.item.' + suffix + '.attached'))
             ])
           ])
         } as NormalItemSpec
@@ -109,19 +105,11 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
       });
     },
     (doc, _body, _gui, component, store) => {
-      const sAssertFocusShift = (
-        label: string,
-        expected: string,
-        focusTarget: string
-      ) =>
+      const sAssertFocusShift = (label: string, expected: string, focusTarget: string) =>
         Logger.t(
           label,
           GeneralSteps.sequence([
-            FocusTools.sSetFocus(
-              'Focus input field',
-              component.element(),
-              'input'
-            ),
+            FocusTools.sSetFocus('Focus input field', component.element(), 'input'),
             Chain.asStep(component.element(), [
               UiFinder.cFindIn(focusTarget),
               Chain.op((alphaWidget) => {
@@ -145,27 +133,11 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
           'widget.item.2.attached',
           'normal.item.2.attached'
         ]),
-        sAssertFocusShift(
-          'Focusing on alpha-widget-1',
-          '.alpha-widget-1',
-          '.alpha-widget-1'
-        ),
-        sAssertFocusShift(
-          'Focusing on beta-item-1',
-          '.beta-item-1',
-          '.beta-item-1'
-        ),
+        sAssertFocusShift('Focusing on alpha-widget-1', '.alpha-widget-1', '.alpha-widget-1'),
+        sAssertFocusShift('Focusing on beta-item-1', '.beta-item-1', '.beta-item-1'),
 
-        sAssertFocusShift(
-          'Focusing on alpha-widget-2 (fakeFocus)',
-          'input',
-          '.alpha-widget-2'
-        ),
-        sAssertFocusShift(
-          'Focusing on beta-item-2 (fakeFocus)',
-          'input',
-          '.beta-item-2'
-        )
+        sAssertFocusShift('Focusing on alpha-widget-2 (fakeFocus)', 'input', '.alpha-widget-2'),
+        sAssertFocusShift('Focusing on beta-item-2 (fakeFocus)', 'input', '.beta-item-2')
       ];
     },
     () => {

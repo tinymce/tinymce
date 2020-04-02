@@ -52,14 +52,9 @@ const appendStyle = function (editor: Editor, text: string) {
   Insert.append(head, tag);
 };
 
-const getRootName = (editor: Editor): string =>
-  editor.inline ? editor.getElement().nodeName.toLowerCase() : undefined;
+const getRootName = (editor: Editor): string => (editor.inline ? editor.getElement().nodeName.toLowerCase() : undefined);
 
-const removeUndefined = <T>(obj: T): T =>
-  Obj.filter(
-    obj as Record<string, unknown>,
-    (v) => Type.isUndefined(v) === false
-  ) as T;
+const removeUndefined = <T>(obj: T): T => Obj.filter(obj as Record<string, unknown>, (v) => Type.isUndefined(v) === false) as T;
 
 const mkParserSettings = (editor: Editor): DomParserSettings => {
   const settings = editor.settings;
@@ -110,8 +105,7 @@ const mkSerializerSettings = (editor: Editor): SerializerSettings => {
       extended_valid_elements: settings.extended_valid_elements,
       invalid_elements: settings.invalid_elements,
       invalid_styles: settings.invalid_styles,
-      move_caret_before_on_enter_elements:
-        settings.move_caret_before_on_enter_elements,
+      move_caret_before_on_enter_elements: settings.move_caret_before_on_enter_elements,
       non_empty_elements: settings.non_empty_elements,
       schema: settings.schema,
       self_closing_elements: settings.self_closing_elements,
@@ -243,16 +237,11 @@ const moveSelectionToFirstCaretPosition = (editor: Editor) => {
   // We don't do this on inline because then it selects the editor container
   // This must run AFTER editor.focus!
   const root = editor.dom.getRoot();
-  if (
-    !editor.inline &&
-    (!hasAnyRanges(editor) || editor.selection.getStart(true) === root)
-  ) {
+  if (!editor.inline && (!hasAnyRanges(editor) || editor.selection.getStart(true) === root)) {
     CaretFinder.firstPositionIn(root).each((pos: CaretPosition) => {
       const node = pos.getNode();
       // If a table is the first caret pos, then walk down one more level
-      const caretPos = NodeType.isTable(node)
-        ? CaretFinder.firstPositionIn(node).getOr(pos)
-        : pos;
+      const caretPos = NodeType.isTable(node) ? CaretFinder.firstPositionIn(node).getOr(pos) : pos;
       // Don't set the selection on IE, as since it's a single selection model setting the selection will cause
       // it to grab focus, so instead store the selection in the bookmark
       if (Env.browser.isIE()) {
@@ -419,12 +408,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
 
   editor.parser = createParser(editor);
   editor.serializer = DomSerializer(mkSerializerSettings(editor), editor);
-  editor.selection = Selection(
-    editor.dom,
-    editor.getWin(),
-    editor.serializer,
-    editor
-  );
+  editor.selection = Selection(editor.dom, editor.getWin(), editor.serializer, editor);
   editor.annotator = Annotator(editor);
   editor.formatter = Formatter(editor);
   editor.undoManager = UndoManager(editor);

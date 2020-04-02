@@ -31,11 +31,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant(
     FieldSchema.option('lazySink'),
     FieldSchema.strict('dom'),
     Fields.onHandler('onOpen'),
-    SketchBehaviours.field('splitDropdownBehaviours', [
-      Coupling,
-      Keying,
-      Focusing
-    ]),
+    SketchBehaviours.field('splitDropdownBehaviours', [Coupling, Keying, Focusing]),
     FieldSchema.defaulted('matchWidth', false),
     FieldSchema.defaulted('useMinWidth', false),
     FieldSchema.defaulted('eventOrder', {}),

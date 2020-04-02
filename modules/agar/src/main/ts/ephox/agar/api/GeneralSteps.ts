@@ -25,12 +25,7 @@ const sequenceRepeat = <T>(amount: number, step: Step<T, T>): Step<T, T> => {
 };
 
 // TODO deprecate? This function is weird and we don't seem to use it.
-const repeatUntil = <T, U>(
-  label: string,
-  repeatStep: Step<T, T>,
-  successStep: Step<T, U>,
-  numAttempts: number
-) =>
+const repeatUntil = <T, U>(label: string, repeatStep: Step<T, T>, successStep: Step<T, U>, numAttempts: number) =>
   Step.raw((value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => {
     const again = (num: number) => {
       if (num <= 0) {
@@ -58,12 +53,7 @@ const repeatUntil = <T, U>(
     again(numAttempts);
   });
 
-const waitForPredicate = <T>(
-  label: string,
-  interval: number,
-  amount: number,
-  predicate: () => boolean
-) =>
+const waitForPredicate = <T>(label: string, interval: number, amount: number, predicate: () => boolean) =>
   Step.async<T>((next, die) => {
     if (predicate()) {
       // Must use a setTimeout here otherwise FontSizeTest gets 'too much recursion' on Firefox
@@ -89,17 +79,7 @@ const waitForPredicate = <T>(
 
       if (counter > amount) {
         clearInterval(timer);
-        die(
-          'Waited for ' +
-            label +
-            ' for ' +
-            amount +
-            '(' +
-            counter +
-            '/' +
-            interval +
-            ') ms. Predicate condition failed.'
-        );
+        die('Waited for ' + label + ' for ' + amount + '(' + counter + '/' + interval + ') ms. Predicate condition failed.');
       }
     }, interval);
   });

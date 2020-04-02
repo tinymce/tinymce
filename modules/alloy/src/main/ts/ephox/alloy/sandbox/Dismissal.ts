@@ -9,10 +9,7 @@ import { AlloyComponent } from '../api/component/ComponentApi';
 import * as AlloyTriggers from '../api/events/AlloyTriggers';
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as Channels from '../api/messages/Channels';
-import {
-  ReceivingConfig,
-  ReceivingConfigSpec
-} from '../behaviour/receiving/ReceivingTypes';
+import { ReceivingConfig, ReceivingConfigSpec } from '../behaviour/receiving/ReceivingTypes';
 
 interface DismissalReceivingDetail {
   isExtraPart: (sandbox: AlloyComponent, target: () => Element) => boolean;
@@ -30,14 +27,10 @@ export interface DismissalReceivingSpec {
 
 const schema = ValueSchema.objOfOnly([
   FieldSchema.defaulted('isExtraPart', Fun.constant(false)),
-  FieldSchema.optionObjOf('fireEventInstead', [
-    FieldSchema.defaulted('event', SystemEvents.dismissRequested())
-  ])
+  FieldSchema.optionObjOf('fireEventInstead', [FieldSchema.defaulted('event', SystemEvents.dismissRequested())])
 ]);
 
-const receivingConfig = (
-  rawSpec: DismissalReceivingSpec
-): NamedConfiguredBehaviour<ReceivingConfigSpec, ReceivingConfig> => {
+const receivingConfig = (rawSpec: DismissalReceivingSpec): NamedConfiguredBehaviour<ReceivingConfigSpec, ReceivingConfig> => {
   const c = receivingChannel(rawSpec);
   return Receiving.config({
     channels: c
@@ -45,19 +38,13 @@ const receivingConfig = (
 };
 
 const receivingChannel = (rawSpec: DismissalReceivingSpec) => {
-  const detail: DismissalReceivingDetail = ValueSchema.asRawOrDie(
-    'Dismissal',
-    schema,
-    rawSpec
-  );
+  const detail: DismissalReceivingDetail = ValueSchema.asRawOrDie('Dismissal', schema, rawSpec);
   return {
     [Channels.dismissPopups()]: {
       schema: ValueSchema.objOfOnly([FieldSchema.strict('target')]),
       onReceive(sandbox: AlloyComponent, data: { target: () => Element }) {
         if (Sandboxing.isOpen(sandbox)) {
-          const isPart =
-            Sandboxing.isPartOf(sandbox, data.target) ||
-            detail.isExtraPart(sandbox, data.target);
+          const isPart = Sandboxing.isPartOf(sandbox, data.target) || detail.isExtraPart(sandbox, data.target);
           if (!isPart) {
             detail.fireEventInstead.fold(
               () => Sandboxing.close(sandbox),

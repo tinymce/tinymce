@@ -15,31 +15,24 @@ export interface Chain<T, U> {
 
 export type ChainGuard<T, U, V> = GuardFn<T, U, V>;
 
-const on = <T, U>(
-  f: (value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => void
-): Chain<T, U> => {
-  const runChain = Pipe(
-    (input: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => {
-      f(
-        input,
-        (v: U, newLogs) => {
-          next(v, newLogs);
-        },
-        (err, newLogs) => die(err, newLogs),
-        logs
-      );
-    }
-  );
+const on = <T, U>(f: (value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => void): Chain<T, U> => {
+  const runChain = Pipe((input: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => {
+    f(
+      input,
+      (v: U, newLogs) => {
+        next(v, newLogs);
+      },
+      (err, newLogs) => die(err, newLogs),
+      logs
+    );
+  });
 
   return {
     runChain
   };
 };
 
-const control = <T, U, V>(
-  chain: Chain<T, U>,
-  guard: ChainGuard<T, U, V>
-): Chain<T, V> =>
+const control = <T, U, V>(chain: Chain<T, U>, guard: ChainGuard<T, U, V>): Chain<T, V> =>
   on((input: T, next: NextFn<V>, die: DieFn, logs: TestLogs) => {
     guard(
       chain.runChain,
@@ -77,9 +70,7 @@ const op = <T>(fx: (value: T) => void): Chain<T, T> =>
     next(input, logs);
   });
 
-const async = <T, U>(
-  fx: (input: T, next: (v: U) => void, die: (err) => void) => void
-) =>
+const async = <T, U>(fx: (input: T, next: (v: U) => void, die: (err) => void) => void) =>
   on<T, U>((v, n, d, logs) =>
     fx(
       v,
@@ -102,9 +93,7 @@ const extract = <T, U>(chain: Chain<T, U>): Step<T, U> => ({
   runStep: chain.runChain
 });
 
-const fromChains = <T = any, U = any>(
-  chains: Chain<any, any>[]
-): Chain<T, U> => {
+const fromChains = <T = any, U = any>(chains: Chain<any, any>[]): Chain<T, U> => {
   const cs = Arr.map(chains, extract);
 
   return on<T, U>((value, next, die, initLogs) => {
@@ -112,15 +101,10 @@ const fromChains = <T = any, U = any>(
   });
 };
 
-const fromChainsWith = <T, U = any, V = any>(
-  initial: T,
-  chains: Chain<any, any>[]
-): Chain<U, V> => fromChains<U, V>([inject(initial)].concat(chains));
+const fromChainsWith = <T, U = any, V = any>(initial: T, chains: Chain<any, any>[]): Chain<U, V> =>
+  fromChains<U, V>([inject(initial)].concat(chains));
 
-const fromParent = <T, U, V>(
-  parent: Chain<T, U>,
-  chains: Chain<U, V>[]
-): Chain<T, U> =>
+const fromParent = <T, U, V>(parent: Chain<T, U>, chains: Chain<U, V>[]): Chain<T, U> =>
   on((cvalue: T, cnext: NextFn<U>, cdie: DieFn, clogs: TestLogs) => {
     Pipeline.async(
       cvalue,
@@ -201,20 +185,14 @@ const log = <T>(message: string): Chain<T, T> =>
     next(input, addLogEntry(logs, message));
   });
 
-const label = <T, U>(label: string, chain: Chain<T, U>): Chain<T, U> =>
-  control(chain, addLogging(label));
+const label = <T, U>(label: string, chain: Chain<T, U>): Chain<T, U> => control(chain, addLogging(label));
 
 const wait = <T>(amount: number): Chain<T, T> =>
   on<T, T>((input: T, next: NextFn<T>, die: DieFn, logs: TestLogs) => {
     AsyncActions.delay(amount)(() => next(input, logs), die);
   });
 
-const pipeline = (
-  chains: Chain<any, any>[],
-  onSuccess: NextFn<any>,
-  onFailure: DieFn,
-  initLogs?: TestLogs
-) => {
+const pipeline = (chains: Chain<any, any>[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs?: TestLogs) => {
   Pipeline.async(
     {},
     Arr.map(chains, extract),
@@ -226,24 +204,14 @@ const pipeline = (
   );
 };
 
-const runStepsOnValue = <I, O>(
-  getSteps: (value: I) => Step<I, O>[]
-): Chain<I, O> =>
+const runStepsOnValue = <I, O>(getSteps: (value: I) => Step<I, O>[]): Chain<I, O> =>
   Chain.on((input: I, next, die, initLogs) => {
     const steps = getSteps(input);
-    Pipeline.async(
-      input,
-      steps,
-      (stepsOutput, newLogs) => next(stepsOutput, newLogs),
-      die,
-      initLogs
-    );
+    Pipeline.async(input, steps, (stepsOutput, newLogs) => next(stepsOutput, newLogs), die, initLogs);
   });
 
 const predicate = <T>(p: (value: T) => boolean): Chain<T, T> =>
-  on((input, next, die, logs) =>
-    p(input) ? next(input, logs) : die('predicate did not succeed', logs)
-  );
+  on((input, next, die, logs) => (p(input) ? next(input, logs) : die('predicate did not succeed', logs)));
 
 export const Chain = {
   on,

@@ -33,10 +33,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
   GuiSetup.setup(
     (_store, _doc, _body) => Sinks.relativeSink(),
     (doc, _body, gui, sink, store) => {
-      const focusAndTab = Behaviour.derive([
-        Focusing.config({}),
-        Tabstopping.config({})
-      ]);
+      const focusAndTab = Behaviour.derive([Focusing.config({}), Tabstopping.config({})]);
 
       const pDraghandle = ModalDialog.parts().draghandle({
         dom: {
@@ -115,11 +112,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
 
           dragBlockClass: 'drag-blocker',
           lazySink(comp) {
-            Assertions.assertEq(
-              'Checking dialog passed through to lazySink',
-              true,
-              Compare.eq(comp.element(), dialog.element())
-            );
+            Assertions.assertEq('Checking dialog passed through to lazySink', true, Compare.eq(comp.element(), dialog.element()));
             return Result.value(sink);
           },
 
@@ -128,12 +121,8 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
           },
 
           modalBehaviours: Behaviour.derive([
-            AddEventsBehaviour.config('modal-events-1', [
-              AlloyEvents.runOnAttached(store.adder('modal.attached.1'))
-            ]),
-            AddEventsBehaviour.config('modal-events-2', [
-              AlloyEvents.runOnAttached(store.adder('modal.attached.2'))
-            ])
+            AddEventsBehaviour.config('modal-events-1', [AlloyEvents.runOnAttached(store.adder('modal.attached.1'))]),
+            AddEventsBehaviour.config('modal-events-2', [AlloyEvents.runOnAttached(store.adder('modal.attached.2'))])
           ]),
 
           eventOrder: {
@@ -165,41 +154,22 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
             Chain.inject(gui.element()),
             UiFinder.cFindIn('.test-dialog'),
             Chain.op((dlg) => {
-              Assertions.assertStructure(
-                'Checking dialog structure',
-                expected,
-                dlg
-              );
+              Assertions.assertStructure('Checking dialog structure', expected, dlg);
             })
           ])
         );
 
       return [
-        Logger.t(
-          'No dialog should be in DOM before it appears',
-          UiFinder.sNotExists(gui.element(), '.test-dialog')
-        ),
-        Logger.t(
-          'No dialog blocker should be in DOM before it appears',
-          UiFinder.sNotExists(gui.element(), '.test-dialog-blocker')
-        ),
+        Logger.t('No dialog should be in DOM before it appears', UiFinder.sNotExists(gui.element(), '.test-dialog')),
+        Logger.t('No dialog blocker should be in DOM before it appears', UiFinder.sNotExists(gui.element(), '.test-dialog-blocker')),
         Step.sync(() => {
           ModalDialog.show(dialog);
         }),
-        Logger.t(
-          'After showing, dialog should be in DOM',
-          UiFinder.sExists(gui.element(), '.test-dialog')
-        ),
-        store.sAssertEq('Attached event should have fired', [
-          'modal.attached.1',
-          'modal.attached.2'
-        ]),
+        Logger.t('After showing, dialog should be in DOM', UiFinder.sExists(gui.element(), '.test-dialog')),
+        store.sAssertEq('Attached event should have fired', ['modal.attached.1', 'modal.attached.2']),
         store.sClear,
 
-        Logger.t(
-          'After showing, dialog blocker should be in DOM',
-          UiFinder.sExists(gui.element(), '.test-dialog-blocker')
-        ),
+        Logger.t('After showing, dialog blocker should be in DOM', UiFinder.sExists(gui.element(), '.test-dialog-blocker')),
         sCheckDialogStructure(
           'After showing',
           ApproxStructure.build((s, str, arr) =>
@@ -238,34 +208,14 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
           'Dialog should have aria-labelledby with title id',
           Chain.asStep(gui.element(), [
             NamedChain.asChain([
-              NamedChain.direct(
-                NamedChain.inputName(),
-                UiFinder.cFindIn('.test-dialog-title'),
-                'title'
-              ),
-              NamedChain.direct(
-                NamedChain.inputName(),
-                UiFinder.cFindIn('.test-dialog'),
-                'dialog'
-              ),
+              NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog-title'), 'title'),
+              NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog'), 'dialog'),
               NamedChain.bundle((f) => {
                 const titleId = Attr.get(f.title, 'id');
-                Assertions.assertEq(
-                  'titleId should be set',
-                  true,
-                  Attr.has(f.title, 'id')
-                );
-                Assertions.assertEq(
-                  'titleId should not be empty',
-                  true,
-                  titleId.length > 0
-                );
+                Assertions.assertEq('titleId should be set', true, Attr.has(f.title, 'id'));
+                Assertions.assertEq('titleId should not be empty', true, titleId.length > 0);
                 const dialogLabelledBy = Attr.get(f.dialog, 'aria-labelledby');
-                Assertions.assertEq(
-                  'Labelledby blah better error message',
-                  titleId,
-                  dialogLabelledBy
-                );
+                Assertions.assertEq('Labelledby blah better error message', titleId, dialogLabelledBy);
                 return Result.value(f);
               })
             ])
@@ -276,79 +226,32 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
           'Dialog should have aria-describedby with body describe id',
           Chain.asStep(gui.element(), [
             NamedChain.asChain([
-              NamedChain.direct(
-                NamedChain.inputName(),
-                UiFinder.cFindIn('.test-dialog-body'),
-                'body'
-              ),
-              NamedChain.direct(
-                NamedChain.inputName(),
-                UiFinder.cFindIn('.test-dialog'),
-                'dialog'
-              ),
+              NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog-body'), 'body'),
+              NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog'), 'dialog'),
               NamedChain.bundle((f) => {
                 const describeId = Attr.get(f.body, 'id');
-                Assertions.assertEq(
-                  'describeId should be set',
-                  true,
-                  Attr.has(f.body, 'id')
-                );
-                Assertions.assertEq(
-                  'describeId should not be empty',
-                  true,
-                  describeId.length > 0
-                );
-                const dialogDescribedBy = Attr.get(
-                  f.dialog,
-                  'aria-describedby'
-                );
-                Assertions.assertEq(
-                  'aria-describedby should be set to describeId',
-                  describeId,
-                  dialogDescribedBy
-                );
+                Assertions.assertEq('describeId should be set', true, Attr.has(f.body, 'id'));
+                Assertions.assertEq('describeId should not be empty', true, describeId.length > 0);
+                const dialogDescribedBy = Attr.get(f.dialog, 'aria-describedby');
+                Assertions.assertEq('aria-describedby should be set to describeId', describeId, dialogDescribedBy);
                 return Result.value(f);
               })
             ])
           ])
         ),
 
-        FocusTools.sTryOnSelector(
-          'Focus should be on title',
-          doc,
-          '.test-dialog-title'
-        ),
+        FocusTools.sTryOnSelector('Focus should be on title', doc, '.test-dialog-title'),
         Keyboard.sKeydown(doc, Keys.tab(), {}),
-        FocusTools.sTryOnSelector(
-          'Focus should be on body now',
-          doc,
-          '.test-dialog-body'
-        ),
+        FocusTools.sTryOnSelector('Focus should be on body now', doc, '.test-dialog-body'),
         Keyboard.sKeydown(doc, Keys.tab(), {}),
-        FocusTools.sTryOnSelector(
-          'Focus should be on footer now',
-          doc,
-          '.test-dialog-footer'
-        ),
+        FocusTools.sTryOnSelector('Focus should be on footer now', doc, '.test-dialog-footer'),
         Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
-        FocusTools.sTryOnSelector(
-          'Focus should be back to body now',
-          doc,
-          '.test-dialog-body'
-        ),
+        FocusTools.sTryOnSelector('Focus should be back to body now', doc, '.test-dialog-body'),
         Keyboard.sKeydown(doc, Keys.tab(), { shift: true }),
-        FocusTools.sTryOnSelector(
-          'Focus should be back to title now',
-          doc,
-          '.test-dialog-title'
-        ),
+        FocusTools.sTryOnSelector('Focus should be back to title now', doc, '.test-dialog-title'),
 
         Mouse.sTrueClickOn(doc, '.test-dialog-blocker'),
-        FocusTools.sTryOnSelector(
-          'Focus should move to first focusable element when clicking the blocker',
-          doc,
-          '.test-dialog-title'
-        ),
+        FocusTools.sTryOnSelector('Focus should move to first focusable element when clicking the blocker', doc, '.test-dialog-title'),
 
         Step.sync(() => {
           const body = ModalDialog.getBody(dialog);
@@ -356,11 +259,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         }),
 
         Keyboard.sKeydown(doc, Keys.tab(), {}),
-        FocusTools.sTryOnSelector(
-          'Focus should skip untabbable body',
-          doc,
-          '.test-dialog-footer'
-        ),
+        FocusTools.sTryOnSelector('Focus should skip untabbable body', doc, '.test-dialog-footer'),
 
         store.sAssertEq('Should be clear before <esc> and <enter>', []),
         Keyboard.sKeydown(doc, Keys.enter(), {}),
@@ -398,14 +297,8 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         Step.sync(() => {
           ModalDialog.hide(dialog);
         }),
-        Logger.t(
-          'After hiding, dialog should no longer be in DOM',
-          UiFinder.sNotExists(gui.element(), '.test-dialog')
-        ),
-        Logger.t(
-          'After hiding, dialog blocker should no longer be in DOM',
-          UiFinder.sNotExists(gui.element(), '.test-dialog-blocker')
-        ),
+        Logger.t('After hiding, dialog should no longer be in DOM', UiFinder.sNotExists(gui.element(), '.test-dialog')),
+        Logger.t('After hiding, dialog blocker should no longer be in DOM', UiFinder.sNotExists(gui.element(), '.test-dialog-blocker')),
 
         Step.sync(() => {
           ModalDialog.show(dialog);
@@ -467,18 +360,10 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
           )
         ),
 
-        FocusTools.sTryOnSelector(
-          'Focus should be on loading message',
-          doc,
-          '.test-busy-class'
-        ),
+        FocusTools.sTryOnSelector('Focus should be on loading message', doc, '.test-busy-class'),
         // NOTE: Without real key testing ... this isn't really that useful.
         Keyboard.sKeydown(doc, Keys.tab(), {}),
-        FocusTools.sTryOnSelector(
-          'Focus should STILL be on loading message',
-          doc,
-          '.test-busy-class'
-        ),
+        FocusTools.sTryOnSelector('Focus should STILL be on loading message', doc, '.test-busy-class'),
 
         Logger.t(
           'Set the dialog to busy again without setting it to idle first',

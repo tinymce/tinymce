@@ -31,8 +31,7 @@ const register = (editor: Editor): AutocompleterDatabase => {
 
   const datasetValues = Obj.values(dataset);
 
-  const lookupByChar = (ch: string): InlineContent.Autocompleter[] =>
-    Arr.filter(datasetValues, (dv) => dv.ch === ch);
+  const lookupByChar = (ch: string): InlineContent.Autocompleter[] => Arr.filter(datasetValues, (dv) => dv.ch === ch);
 
   return {
     dataset,

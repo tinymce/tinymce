@@ -1,12 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  GeneralSteps,
-  Logger,
-  Mouse,
-  Step
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Focus } from '@ephox/sugar';
 
@@ -39,16 +31,11 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
       GuiFactory.build(
         Container.sketch({
           components: [subject.asSpec()],
-          events: AlloyEvents.derive([
-            AlloyEvents.runOnExecute(store.adder('execute.reached'))
-          ])
+          events: AlloyEvents.derive([AlloyEvents.runOnExecute(store.adder('execute.reached'))])
         })
       ),
     (_doc, _body, _gui, component, store) => {
-      const sClickButton = Chain.asStep({}, [
-        Chain.mapper(() => subject.get(component).element()),
-        Mouse.cClick
-      ]);
+      const sClickButton = Chain.asStep({}, [Chain.mapper(() => subject.get(component).element()), Mouse.cClick]);
 
       const button = subject.get(component);
       return [
@@ -103,9 +90,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
               Focus.focus(button.element());
             }),
             sClickButton,
-            store.sAssertEq('Execute did not get past disabled button', [
-              'execute.reached'
-            ])
+            store.sAssertEq('Execute did not get past disabled button', ['execute.reached'])
           ])
         ),
 

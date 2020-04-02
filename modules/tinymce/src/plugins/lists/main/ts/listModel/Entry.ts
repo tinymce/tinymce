@@ -43,11 +43,7 @@ const cloneItemContent = (li: Element): Element[] => {
   return Arr.map(content, Replication.deep);
 };
 
-const createEntry = (
-  li: Element,
-  depth: number,
-  isSelected: boolean
-): Option<Entry> =>
+const createEntry = (li: Element, depth: number, isSelected: boolean): Option<Entry> =>
   Traverse.parent(li)
     .filter(Node.isElement)
     .map((list) => ({

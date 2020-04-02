@@ -1,11 +1,4 @@
-import {
-  document,
-  HTMLButtonElement,
-  HTMLElement,
-  HTMLFormElement,
-  HTMLImageElement,
-  HTMLSelectElement
-} from '@ephox/dom-globals';
+import { document, HTMLButtonElement, HTMLElement, HTMLFormElement, HTMLImageElement, HTMLSelectElement } from '@ephox/dom-globals';
 import * as ResultConversions from 'ephox/imagetools/api/ResultConversions';
 import * as ImageTransformations from 'ephox/imagetools/api/ImageTransformations';
 import { ImageResult } from 'ephox/imagetools/util/ImageResult';
@@ -27,11 +20,9 @@ function getValue(el: HTMLSelectElement | HTMLButtonElement): string {
 function modify(image: HTMLImageElement, op: string, args: any[]) {
   ResultConversions.imageToImageResult(image).then(function (ir) {
     args.unshift(ir);
-    return (ImageTransformations as any)[op]
-      .apply(null, args)
-      .then(function (imageResult: ImageResult) {
-        image.src = imageResult.toDataURL();
-      });
+    return (ImageTransformations as any)[op].apply(null, args).then(function (imageResult: ImageResult) {
+      image.src = imageResult.toDataURL();
+    });
   });
 }
 

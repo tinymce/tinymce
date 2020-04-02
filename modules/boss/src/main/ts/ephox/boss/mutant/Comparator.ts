@@ -5,9 +5,7 @@ import { Gene } from '../api/Gene';
 const ATTR_REGEX = /^\[(.*)\]$/;
 
 const eq = function (a: Gene, b: Gene) {
-  return a.id === undefined && b.id === undefined
-    ? a.name === b.name
-    : a.id === b.id;
+  return a.id === undefined && b.id === undefined ? a.name === b.name : a.id === b.id;
 };
 
 // Obviously, we can't support full selector syntax, so ...

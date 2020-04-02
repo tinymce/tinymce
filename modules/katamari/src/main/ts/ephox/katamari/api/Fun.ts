@@ -2,10 +2,7 @@ const noop: (...args: any[]) => void = () => {};
 
 const noarg: <T>(f: () => T) => (...args: any[]) => void = (f) => () => f();
 
-const compose = function <T extends any[], U, V>(
-  fa: (v: U) => V,
-  fb: (...x: T) => U
-): (...x: T) => V {
+const compose = function <T extends any[], U, V>(fa: (v: U) => V, fb: (...x: T) => U): (...x: T) => V {
   return function (...args: T) {
     return fa(fb.apply(null, args));
   };
@@ -25,18 +22,9 @@ const tripleEquals = function <T>(a: T, b: T): boolean {
   return a === b;
 };
 
-function curry<REST extends any[], OUT>(
-  fn: (...restArgs: REST) => OUT
-): (...restArgs: REST) => OUT;
-function curry<A, REST extends any[], OUT>(
-  fn: (a: A, ...restArgs: REST) => OUT,
-  a: A
-): (...restArgs: REST) => OUT;
-function curry<A, B, REST extends any[], OUT>(
-  fn: (a: A, b: B, ...restArgs: REST) => OUT,
-  a: A,
-  b: B
-): (...restArgs: REST) => OUT;
+function curry<REST extends any[], OUT>(fn: (...restArgs: REST) => OUT): (...restArgs: REST) => OUT;
+function curry<A, REST extends any[], OUT>(fn: (a: A, ...restArgs: REST) => OUT, a: A): (...restArgs: REST) => OUT;
+function curry<A, B, REST extends any[], OUT>(fn: (a: A, b: B, ...restArgs: REST) => OUT, a: A, b: B): (...restArgs: REST) => OUT;
 function curry<A, B, C, REST extends any[], OUT>(
   fn: (a: A, b: B, c: C, ...restArgs: REST) => OUT,
   a: A,
@@ -78,17 +66,7 @@ function curry<A, B, C, D, E, F, G, REST extends any[], OUT>(
   g: G
 ): (...restArgs: REST) => OUT;
 function curry<A, B, C, D, E, F, G, H, REST extends any[], OUT>(
-  fn: (
-    a: A,
-    b: B,
-    c: C,
-    d: D,
-    e: E,
-    f: F,
-    g: G,
-    h: H,
-    ...restArgs: REST
-  ) => OUT,
+  fn: (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, ...restArgs: REST) => OUT,
   a: A,
   b: B,
   c: C,
@@ -99,18 +77,7 @@ function curry<A, B, C, D, E, F, G, H, REST extends any[], OUT>(
   h: H
 ): (...restArgs: REST) => OUT;
 function curry<A, B, C, D, E, F, G, H, I, REST extends any[], OUT>(
-  fn: (
-    a: A,
-    b: B,
-    c: C,
-    d: D,
-    e: E,
-    f: F,
-    g: G,
-    h: H,
-    i: I,
-    ...restArgs: REST
-  ) => OUT,
+  fn: (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, ...restArgs: REST) => OUT,
   a: A,
   b: B,
   c: C,
@@ -122,19 +89,7 @@ function curry<A, B, C, D, E, F, G, H, I, REST extends any[], OUT>(
   i: I
 ): (...restArgs: REST) => OUT;
 function curry<A, B, C, D, E, F, G, H, I, J, REST extends any[], OUT>(
-  fn: (
-    a: A,
-    b: B,
-    c: C,
-    d: D,
-    e: E,
-    f: F,
-    g: G,
-    h: H,
-    i: I,
-    j: J,
-    ...restArgs: REST
-  ) => OUT,
+  fn: (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, ...restArgs: REST) => OUT,
   a: A,
   b: B,
   c: C,
@@ -146,10 +101,7 @@ function curry<A, B, C, D, E, F, G, H, I, J, REST extends any[], OUT>(
   i: I,
   j: J
 ): (...restArgs: REST) => OUT;
-function curry<OUT>(
-  fn: (...allArgs: any[]) => OUT,
-  ...initialArgs: any[]
-): (...restArgs: any[]) => OUT {
+function curry<OUT>(fn: (...allArgs: any[]) => OUT, ...initialArgs: any[]): (...restArgs: any[]) => OUT {
   return function (...restArgs: any[]) {
     const all = initialArgs.concat(restArgs);
     return fn.apply(null, all);
@@ -175,18 +127,4 @@ const call = function (f: () => any) {
 const never = constant<false>(false) as (...args: any[]) => false;
 const always = constant<true>(true) as (...args: any[]) => true;
 
-export {
-  noop,
-  noarg,
-  compose,
-  constant,
-  identity,
-  tripleEquals,
-  curry,
-  not,
-  die,
-  apply,
-  call,
-  never,
-  always
-};
+export { noop, noarg, compose, constant, identity, tripleEquals, curry, not, die, apply, call, never, always };

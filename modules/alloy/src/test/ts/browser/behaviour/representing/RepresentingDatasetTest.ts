@@ -46,10 +46,7 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
         })
       ),
     (doc, _body, gui, component, _store) => {
-      const sAssertRepValue = (
-        label: string,
-        expected: { value: string; meta: { text: string } }
-      ) =>
+      const sAssertRepValue = (label: string, expected: { value: string; meta: { text: string } }) =>
         Step.sync(() => {
           const v = Representing.getValue(component);
           Assertions.assertEq(label, expected, v);
@@ -57,9 +54,7 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
 
       const sUpdateDataset = (newItems: TypeaheadData[]) =>
         Step.sync(() => {
-          const repState = Representing.getState(
-            component
-          ) as DatasetRepresentingState;
+          const repState = Representing.getState(component) as DatasetRepresentingState;
           repState.update(newItems);
         });
 
@@ -79,11 +74,7 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
           meta: { text: 'Hund' }
         }),
 
-        FocusTools.sSetFocus(
-          'Setting of focus on input field',
-          gui.element(),
-          'input'
-        ),
+        FocusTools.sSetFocus('Setting of focus on input field', gui.element(), 'input'),
         FocusTools.sSetActiveValue(doc, 'Katze'),
 
         sAssertRepValue('Checking represented value after change', {
@@ -95,27 +86,21 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
 
         FocusTools.sSetActiveValue(doc, 'Elephant'),
 
-        sAssertRepValue(
-          'Checking represented value after set input but before update',
-          {
-            value: 'fallback.elephant',
-            meta: {
-              text: 'Elephant'
-            }
+        sAssertRepValue('Checking represented value after set input but before update', {
+          value: 'fallback.elephant',
+          meta: {
+            text: 'Elephant'
           }
-        ),
+        }),
 
         sUpdateDataset([{ value: 'big.e', meta: { text: 'Elephant' } }]),
 
-        sAssertRepValue(
-          'Checking represented value after set input but after update',
-          {
-            value: 'big.e',
-            meta: {
-              text: 'Elephant'
-            }
+        sAssertRepValue('Checking represented value after set input but after update', {
+          value: 'big.e',
+          meta: {
+            text: 'Elephant'
           }
-        ),
+        }),
         Assertions.sAssertStructure(
           'Test will be Elephant."',
           ApproxStructure.build((s, str, _arr) =>

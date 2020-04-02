@@ -4,11 +4,7 @@ import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { RawDomSchema } from '../../api/component/SpecTypes';
-import {
-  SingleSketch,
-  SingleSketchDetail,
-  SingleSketchSpec
-} from '../../api/ui/Sketcher';
+import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
 
 // The V is because this is shared with Typeahead.
 export interface InputDetail extends SingleSketchDetail {

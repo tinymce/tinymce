@@ -31,13 +31,7 @@ const get = function (
   };
 
   const markErrors = function (data: Data) {
-    Actions.markErrors(
-      editor,
-      startedState,
-      textMatcherState,
-      lastSuggestionsState,
-      data
-    );
+    Actions.markErrors(editor, startedState, textMatcherState, lastSuggestionsState, data);
   };
 
   const getTextMatcher = function () {

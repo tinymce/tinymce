@@ -30,34 +30,18 @@ UnitTest.test('OptionSomeTest', () => {
   Assert.eq('from', Option.some(5), Option.from(5), tOption(tNumber));
 
   Assert.eq('toArray 1', [1], Option.some(1).toArray());
-  Assert.eq(
-    'toArray 2',
-    [{ cat: 'dog' }],
-    Option.some({ cat: 'dog' }).toArray()
-  );
+  Assert.eq('toArray 2', [{ cat: 'dog' }], Option.some({ cat: 'dog' }).toArray());
   Assert.eq('toArray 3', [[1]], Option.some([1]).toArray());
 
-  Assert.eq(
-    'or some',
-    true,
-    Option.some(6).or(Option.some(7)).equals(Option.some(6))
-  );
-  Assert.eq(
-    'or none',
-    true,
-    Option.some(3).or(Option.none()).equals(Option.some(3))
-  );
+  Assert.eq('or some', true, Option.some(6).or(Option.some(7)).equals(Option.some(6)));
+  Assert.eq('or none', true, Option.some(3).or(Option.none()).equals(Option.some(3)));
 
   Assert.eq(
     'fold 1',
     11,
     s.fold(boom, (v) => v + 6)
   );
-  Assert.eq(
-    'fold 2',
-    'a',
-    Option.some('a').fold(Fun.die('boom'), Fun.identity)
-  );
+  Assert.eq('fold 2', 'a', Option.some('a').fold(Fun.die('boom'), Fun.identity));
   Assert.eq(
     'fold 3',
     ['z'],
@@ -104,13 +88,9 @@ UnitTest.test('Checking some(x).isNone === false', () => {
 
 UnitTest.test('Checking some(x).getOr(v) === x', () => {
   fc.assert(
-    fc.property(
-      arbOptionSome(fc.integer()),
-      arbOptionSome(fc.integer()),
-      (a, b) => {
-        Assert.eq('eq', a, Option.some(a).getOr(b));
-      }
-    )
+    fc.property(arbOptionSome(fc.integer()), arbOptionSome(fc.integer()), (a, b) => {
+      Assert.eq('eq', a, Option.some(a).getOr(b));
+    })
   );
 });
 
@@ -172,50 +152,30 @@ UnitTest.test('Checking some(x).each(f) === undefined and f gets x', () => {
   );
 });
 
-UnitTest.test(
-  'Given f :: s -> some(b), checking some(x).bind(f) === some(b)',
-  () => {
-    fc.assert(
-      fc.property(
-        fc.integer(),
-        fc.func(arbOptionSome(fc.integer())),
-        (i, f) => {
-          const actual = Option.some(i).bind(f);
-          Assert.eq('eq', f(i), actual, tOption(tNumber));
-        }
-      )
-    );
-  }
-);
+UnitTest.test('Given f :: s -> some(b), checking some(x).bind(f) === some(b)', () => {
+  fc.assert(
+    fc.property(fc.integer(), fc.func(arbOptionSome(fc.integer())), (i, f) => {
+      const actual = Option.some(i).bind(f);
+      Assert.eq('eq', f(i), actual, tOption(tNumber));
+    })
+  );
+});
 
 UnitTest.test('Given f :: s -> none, checking some(x).bind(f) === none', () => {
   fc.assert(
-    fc.property(
-      arbOptionSome(fc.integer()),
-      fc.func(arbOptionNone()),
-      (opt, f) => {
-        const actual = opt.bind(f);
-        Assert.eq('eq', Option.none(), actual, tOption(tNumber));
-      }
-    )
+    fc.property(arbOptionSome(fc.integer()), fc.func(arbOptionNone()), (opt, f) => {
+      const actual = opt.bind(f);
+      Assert.eq('eq', Option.none(), actual, tOption(tNumber));
+    })
   );
 });
 
 UnitTest.test('Checking some(x).exists(_ -> false) === false', () => {
-  fc.assert(
-    fc.property(
-      arbOptionSome(fc.integer()),
-      (opt) => !opt.exists(Fun.constant(false))
-    )
-  );
+  fc.assert(fc.property(arbOptionSome(fc.integer()), (opt) => !opt.exists(Fun.constant(false))));
 });
 
 UnitTest.test('Checking some(x).exists(_ -> true) === true', () => {
-  fc.assert(
-    fc.property(arbOptionSome(fc.integer()), (opt) =>
-      opt.exists(Fun.constant(true))
-    )
-  );
+  fc.assert(fc.property(arbOptionSome(fc.integer()), (opt) => opt.exists(Fun.constant(true))));
 });
 
 UnitTest.test('Checking some(x).exists(f) iff. f(x)', () => {
@@ -232,20 +192,11 @@ UnitTest.test('Checking some(x).exists(f) iff. f(x)', () => {
 });
 
 UnitTest.test('Checking some(x).forall(_ -> false) === false', () => {
-  fc.assert(
-    fc.property(
-      arbOptionSome(fc.integer()),
-      (opt) => !opt.forall(Fun.constant(false))
-    )
-  );
+  fc.assert(fc.property(arbOptionSome(fc.integer()), (opt) => !opt.forall(Fun.constant(false))));
 });
 
 UnitTest.test('Checking some(x).forall(_ -> true) === true', () => {
-  fc.assert(
-    fc.property(arbOptionSome(fc.integer()), (opt) =>
-      opt.forall(Fun.constant(true))
-    )
-  );
+  fc.assert(fc.property(arbOptionSome(fc.integer()), (opt) => opt.forall(Fun.constant(true))));
 });
 
 UnitTest.test('Checking some(x).forall(f) iff. f(x)', () => {

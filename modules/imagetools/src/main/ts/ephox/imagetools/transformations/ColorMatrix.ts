@@ -26,17 +26,7 @@ export type Matrix = [
   number
 ];
 
-export type ConvolutionMatrix = [
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number
-];
+export type ConvolutionMatrix = [number, number, number, number, number, number, number, number, number];
 
 function clamp(value: string | number, min: number, max: number): number {
   let parsedValue = typeof value === 'string' ? parseFloat(value) : value;
@@ -51,33 +41,7 @@ function clamp(value: string | number, min: number, max: number): number {
 }
 
 function identity(): Matrix {
-  return [
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1
-  ];
+  return [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1];
 }
 
 const DELTA_INDEX = [
@@ -237,9 +201,7 @@ function adjustContrast(matrix: Matrix, value: number) {
       x = DELTA_INDEX[value];
     } else {
       // use linear interpolation for more granularity.
-      x =
-        DELTA_INDEX[Math.floor(value)] * (1 - x) +
-        DELTA_INDEX[Math.floor(value) + 1] * x;
+      x = DELTA_INDEX[Math.floor(value)] * (1 - x) + DELTA_INDEX[Math.floor(value) + 1] * x;
     }
 
     x = x * 127 + 127;
@@ -350,72 +312,15 @@ function adjustHue(matrix: Matrix, angle: number): Matrix {
 function adjustBrightness(matrix: Matrix, value: number): Matrix {
   value = clamp(255 * value, -255, 255);
 
-  return multiply(matrix, [
-    1,
-    0,
-    0,
-    0,
-    value,
-    0,
-    1,
-    0,
-    0,
-    value,
-    0,
-    0,
-    1,
-    0,
-    value,
-    0,
-    0,
-    0,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1
-  ]);
+  return multiply(matrix, [1, 0, 0, 0, value, 0, 1, 0, 0, value, 0, 0, 1, 0, value, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]);
 }
 
-function adjustColors(
-  matrix: Matrix,
-  adjustR: number,
-  adjustG: number,
-  adjustB: number
-): Matrix {
+function adjustColors(matrix: Matrix, adjustR: number, adjustG: number, adjustB: number): Matrix {
   adjustR = clamp(adjustR, 0, 2);
   adjustG = clamp(adjustG, 0, 2);
   adjustB = clamp(adjustB, 0, 2);
 
-  return multiply(matrix, [
-    adjustR,
-    0,
-    0,
-    0,
-    0,
-    0,
-    adjustG,
-    0,
-    0,
-    0,
-    0,
-    0,
-    adjustB,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1
-  ]);
+  return multiply(matrix, [adjustR, 0, 0, 0, 0, 0, adjustG, 0, 0, 0, 0, 0, adjustB, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]);
 }
 
 function adjustSepia(matrix: Matrix, value: number): Matrix {
@@ -423,36 +328,7 @@ function adjustSepia(matrix: Matrix, value: number): Matrix {
 
   return multiply(
     matrix,
-    adjust(
-      [
-        0.393,
-        0.769,
-        0.189,
-        0,
-        0,
-        0.349,
-        0.686,
-        0.168,
-        0,
-        0,
-        0.272,
-        0.534,
-        0.131,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1
-      ],
-      value
-    )
+    adjust([0.393, 0.769, 0.189, 0, 0, 0.349, 0.686, 0.168, 0, 0, 0.272, 0.534, 0.131, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], value)
   );
 }
 
@@ -461,36 +337,7 @@ function adjustGrayscale(matrix: Matrix, value: number): Matrix {
 
   return multiply(
     matrix,
-    adjust(
-      [
-        0.33,
-        0.34,
-        0.33,
-        0,
-        0,
-        0.33,
-        0.34,
-        0.33,
-        0,
-        0,
-        0.33,
-        0.34,
-        0.33,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1
-      ],
-      value
-    )
+    adjust([0.33, 0.34, 0.33, 0, 0, 0.33, 0.34, 0.33, 0, 0, 0.33, 0.34, 0.33, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], value)
   );
 }
 

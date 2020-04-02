@@ -24,11 +24,7 @@ const insertInlinePos = function (pos: CaretPosition, before: boolean) {
 
 const isPosCaretContainer = function (pos: CaretPosition, caret: Cell<Text>) {
   const caretNode = (<Cell<any>>caret).get();
-  return (
-    caretNode &&
-    pos.container() === caretNode &&
-    CaretContainer.isCaretContainerInline(caretNode)
-  );
+  return caretNode && pos.container() === caretNode && CaretContainer.isCaretContainerInline(caretNode);
 };
 
 const renderCaret = function (caret: Cell<Text>, location) {

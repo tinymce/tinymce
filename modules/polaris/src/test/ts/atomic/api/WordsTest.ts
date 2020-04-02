@@ -7,18 +7,12 @@ UnitTest.test('api.Words.words', () => {
     char: string;
   }
 
-  const parseString = (str: string): Char[] =>
-    Arr.map(str.split(''), (char) => ({ char }));
+  const parseString = (str: string): Char[] => Arr.map(str.split(''), (char) => ({ char }));
 
   // In order to simplify the assertions
-  const simplifySets = (charSets: Char[][]): string[] =>
-    Arr.map(charSets, (set) => Arr.map(set, (char) => char.char).join(''));
+  const simplifySets = (charSets: Char[][]): string[] => Arr.map(charSets, (set) => Arr.map(set, (char) => char.char).join(''));
 
-  const assertWords = (
-    expected: string[],
-    input: string,
-    options?: WordOptions
-  ) => {
+  const assertWords = (expected: string[], input: string, options?: WordOptions) => {
     const chars: Char[] = parseString(input);
     const wordSets: Char[][] = getWords(chars, (char) => char.char, options);
     const actual = simplifySets(wordSets);
@@ -37,10 +31,7 @@ UnitTest.test('api.Words.words', () => {
     includePunctuation: true
   });
   // does not split on katakana words
-  assertWords(
-    ['僕', 'の', '名', '前', 'は', 'マティアス'],
-    '僕の名前はマティアス'
-  );
+  assertWords(['僕', 'の', '名', '前', 'は', 'マティアス'], '僕の名前はマティアス');
   // does not split on numeric separators
   assertWords(['the', 'price', 'is', '3,500.50'], 'the price is 3,500.50');
 

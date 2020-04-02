@@ -53,17 +53,12 @@ function removeExplorerBrElementsAfterBlocks(editor: Editor, html: string) {
   // Produce block regexp based on the block elements in schema
   const blockElements = [];
 
-  Tools.each(editor.schema.getBlockElements(), function (
-    block: Element,
-    blockName: string
-  ) {
+  Tools.each(editor.schema.getBlockElements(), function (block: Element, blockName: string) {
     blockElements.push(blockName);
   });
 
   const explorerBlocksRegExp = new RegExp(
-    '(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*(<\\/?(' +
-      blockElements.join('|') +
-      ')[^>]*>)(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*',
+    '(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*(<\\/?(' + blockElements.join('|') + ')[^>]*>)(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*',
     'g'
   );
 
@@ -89,12 +84,7 @@ function removeExplorerBrElementsAfterBlocks(editor: Editor, html: string) {
  *  paste_webkit_styles: "all", // Keep all of them
  *  paste_webkit_styles: "font-weight color" // Keep specific ones
  */
-function removeWebKitStyles(
-  editor: Editor,
-  content: string,
-  internal: boolean,
-  isWordHtml: boolean
-) {
+function removeWebKitStyles(editor: Editor, content: string, internal: boolean, isWordHtml: boolean) {
   // WordFilter has already processed styles at this point and internal doesn't need any processing
   if (isWordHtml || internal) {
     return content;
@@ -104,10 +94,7 @@ function removeWebKitStyles(
   const webKitStylesSetting = Settings.getWebkitStyles(editor);
   let webKitStyles: string[] | string;
 
-  if (
-    Settings.shouldRemoveWebKitStyles(editor) === false ||
-    webKitStylesSetting === 'all'
-  ) {
+  if (Settings.shouldRemoveWebKitStyles(editor) === false || webKitStylesSetting === 'all') {
     return content;
   }
 
@@ -120,12 +107,7 @@ function removeWebKitStyles(
     const dom = editor.dom,
       node = editor.selection.getNode();
 
-    content = content.replace(/(<[^>]+) style="([^"]*)"([^>]*>)/gi, function (
-      all,
-      before,
-      value,
-      after
-    ) {
+    content = content.replace(/(<[^>]+) style="([^"]*)"([^>]*>)/gi, function (all, before, value, after) {
       const inputStyles = dom.parseStyle(dom.decode(value));
       let outputStyles = {};
 
@@ -160,12 +142,9 @@ function removeWebKitStyles(
   }
 
   // Keep internal styles
-  content = content.replace(
-    /(<[^>]+) data-mce-style="([^"]+)"([^>]*>)/gi,
-    function (all, before, value, after) {
-      return before + ' style="' + value + '"' + after;
-    }
-  );
+  content = content.replace(/(<[^>]+) data-mce-style="([^"]+)"([^>]*>)/gi, function (all, before, value, after) {
+    return before + ' style="' + value + '"' + after;
+  });
 
   return content;
 }

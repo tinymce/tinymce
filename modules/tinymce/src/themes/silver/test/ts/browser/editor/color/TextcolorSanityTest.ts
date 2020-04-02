@@ -18,9 +18,7 @@ UnitTest.asynctest('TextcolorSanityTest', (success, failure) => {
           children: [
             s.element('span', {
               styles: {
-                color: str.is(
-                  Env.ie && Env.ie <= 11 ? '#236FA1' : 'rgb(35, 111, 161)'
-                )
+                color: str.is(Env.ie && Env.ie <= 11 ? '#236FA1' : 'rgb(35, 111, 161)')
               }
             }),
             s.text(str.is(' test'))
@@ -61,60 +59,24 @@ UnitTest.asynctest('TextcolorSanityTest', (success, failure) => {
                 tinyApis.sFocus(),
                 tinyApis.sSetContent('hello test'),
                 tinyApis.sSetSelection([0, 0], 0, [0, 0], 5),
-                tinyUi.sClickOnToolbar(
-                  'click forecolor',
-                  '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron'
-                ),
-                tinyUi.sWaitForUi(
-                  'wait for color swatch to open',
-                  '.tox-swatches'
-                ),
-                tinyUi.sClickOnUi(
-                  'click green color',
-                  'div[data-mce-color="#2DC26B"]'
-                ),
-                tinyUi.sClickOnToolbar(
-                  'click forecolor again',
-                  '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron'
-                ),
-                tinyUi.sWaitForUi(
-                  'wait for color swatch to open',
-                  '.tox-swatches'
-                ),
-                tinyUi.sClickOnUi(
-                  'click on dark blue color',
-                  'div[data-mce-color="#236FA1"]'
-                ),
+                tinyUi.sClickOnToolbar('click forecolor', '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron'),
+                tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
+                tinyUi.sClickOnUi('click green color', 'div[data-mce-color="#2DC26B"]'),
+                tinyUi.sClickOnToolbar('click forecolor again', '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron'),
+                tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
+                tinyUi.sClickOnUi('click on dark blue color', 'div[data-mce-color="#236FA1"]'),
                 tinyApis.sAssertContentStructure(forecolorStruct)
               ]),
               Log.stepsAsStep('TBA', 'TextColor: backcolor', [
                 tinyApis.sFocus(),
                 tinyApis.sSetContent('hello test'),
                 tinyApis.sSetSelection([0, 0], 0, [0, 0], 5),
-                tinyUi.sClickOnToolbar(
-                  'click backcolor',
-                  '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron'
-                ),
-                tinyUi.sWaitForUi(
-                  'wait for color swatch to open',
-                  '.tox-swatches'
-                ),
-                tinyUi.sClickOnUi(
-                  'click green color',
-                  'div[data-mce-color="#2DC26B"]'
-                ),
-                tinyUi.sClickOnToolbar(
-                  'click backcolor again',
-                  '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron'
-                ),
-                tinyUi.sWaitForUi(
-                  'wait for color swatch to open',
-                  '.tox-swatches'
-                ),
-                tinyUi.sClickOnUi(
-                  'click on dark blue color',
-                  'div[data-mce-color="#236FA1"]'
-                ),
+                tinyUi.sClickOnToolbar('click backcolor', '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron'),
+                tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
+                tinyUi.sClickOnUi('click green color', 'div[data-mce-color="#2DC26B"]'),
+                tinyUi.sClickOnToolbar('click backcolor again', '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron'),
+                tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
+                tinyUi.sClickOnUi('click on dark blue color', 'div[data-mce-color="#236FA1"]'),
                 tinyApis.sAssertContentStructure(backcolorStruct)
               ])
             ],

@@ -19,9 +19,5 @@ UnitTest.test('startsWith: unit tests', () => {
 });
 
 UnitTest.test('startsWith: property test', () => {
-  fc.assert(
-    fc.property(fc.asciiString(), fc.asciiString(), (str, contents) =>
-      Strings.startsWith(contents + str, contents)
-    )
-  );
+  fc.assert(fc.property(fc.asciiString(), fc.asciiString(), (str, contents) => Strings.startsWith(contents + str, contents)));
 });

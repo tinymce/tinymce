@@ -6,8 +6,7 @@ import * as ArbChildrenSchema from './ArbChildrenSchema';
 import * as ArbNodes from './ArbNodes';
 import { WeightedChoice } from './WeightedChoice';
 
-const toTags = (detail) =>
-  Obj.mapToArray(detail.tags, (v, k) => Merger.deepMerge(v, { tag: k }));
+const toTags = (detail) => Obj.mapToArray(detail.tags, (v, k) => Merger.deepMerge(v, { tag: k }));
 
 const flattenTag = (tag) => {
   const r = {};
@@ -26,12 +25,8 @@ const conform = (detail) => {
 };
 
 const addDecorations = (detail, element) => {
-  const attrDecorator =
-    detail.attributes !== undefined
-      ? detail.attributes
-      : Jsc.constant({}).generator;
-  const styleDecorator =
-    detail.styles !== undefined ? detail.styles : Jsc.constant({}).generator;
+  const attrDecorator = detail.attributes !== undefined ? detail.attributes : Jsc.constant({}).generator;
+  const styleDecorator = detail.styles !== undefined ? detail.styles : Jsc.constant({}).generator;
   return attrDecorator.flatMap((attrs) => {
     Attr.setAll(element, attrs);
     return styleDecorator.map((styles) => {
@@ -56,11 +51,7 @@ export const create = (construct) => {
     const tags = toTags(conform(detail));
 
     const generator = WeightedChoice.generator(tags).flatMap((choiceOption) => {
-      const choice = choiceOption.getOrDie(
-        'Every entry in tags for: ' +
-          JSON.stringify(detail) +
-          ' must have a tag'
-      );
+      const choice = choiceOption.getOrDie('Every entry in tags for: ' + JSON.stringify(detail) + ' must have a tag');
       return childGenerator.flatMap((children) => {
         const parent = makeTag(choice);
         InsertAll.append(parent, children);
@@ -77,22 +68,14 @@ export const create = (construct) => {
   };
 
   const composite = (detail) => (rawDepth) => {
-    const childGenerator = ArbChildrenSchema.composite(
-      rawDepth,
-      detail,
-      construct
-    );
+    const childGenerator = ArbChildrenSchema.composite(rawDepth, detail, construct);
     return combine(detail, childGenerator);
   };
 
   const leaf = (detail) => (_) => combine(detail, ArbChildrenSchema.none);
 
   const structure = (detail) => (rawDepth) => {
-    const childGenerator = ArbChildrenSchema.structure(
-      rawDepth,
-      detail,
-      construct
-    );
+    const childGenerator = ArbChildrenSchema.structure(rawDepth, detail, construct);
     return combine(detail, childGenerator);
   };
 

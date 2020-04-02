@@ -87,28 +87,18 @@ const getBannerAnchor = (
   return useEditableAreaAnchor ? editableAreaAnchor : standardAnchor;
 };
 
-const getCursorAnchor = (
-  editor: Editor,
-  bodyElement: () => Element
-) => (): SelectionAnchorSpec => ({
+const getCursorAnchor = (editor: Editor, bodyElement: () => Element) => (): SelectionAnchorSpec => ({
   anchor: 'selection',
   root: bodyElement(),
   getSelection: () => {
     const rng = editor.selection.getRng();
     return Option.some(
-      Selection.range(
-        Element.fromDom(rng.startContainer),
-        rng.startOffset,
-        Element.fromDom(rng.endContainer),
-        rng.endOffset
-      )
+      Selection.range(Element.fromDom(rng.startContainer), rng.startOffset, Element.fromDom(rng.endContainer), rng.endOffset)
     );
   }
 });
 
-const getNodeAnchor = (bodyElement) => (
-  element: Option<Element>
-): NodeAnchorSpec => ({
+const getNodeAnchor = (bodyElement) => (element: Option<Element>): NodeAnchorSpec => ({
   anchor: 'node',
   root: bodyElement(),
   node: element
@@ -117,25 +107,15 @@ const getNodeAnchor = (bodyElement) => (
 const getAnchors = (editor: Editor, lazyAnchorbar: () => AlloyComponent) => {
   const useFixedToolbarContainer: boolean = useFixedContainer(editor);
   const bodyElement = (): Element => Element.fromDom(editor.getBody());
-  const contentAreaElement = (): Element =>
-    Element.fromDom(editor.getContentAreaContainer());
+  const contentAreaElement = (): Element => Element.fromDom(editor.getContentAreaContainer());
 
   // If using fixed_toolbar_container or if the toolbar is positioned at the bottom
   // of the editor, some things should anchor to the top of the editable area.
-  const useEditableAreaAnchor =
-    useFixedToolbarContainer || !isToolbarLocationTop(editor);
+  const useEditableAreaAnchor = useFixedToolbarContainer || !isToolbarLocationTop(editor);
 
   return {
-    inlineDialog: getInlineDialogAnchor(
-      contentAreaElement,
-      lazyAnchorbar,
-      useEditableAreaAnchor
-    ),
-    banner: getBannerAnchor(
-      contentAreaElement,
-      lazyAnchorbar,
-      useEditableAreaAnchor
-    ),
+    inlineDialog: getInlineDialogAnchor(contentAreaElement, lazyAnchorbar, useEditableAreaAnchor),
+    banner: getBannerAnchor(contentAreaElement, lazyAnchorbar, useEditableAreaAnchor),
     cursor: getCursorAnchor(editor, bodyElement),
     node: getNodeAnchor(bodyElement)
   };

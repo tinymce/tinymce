@@ -1,18 +1,6 @@
 import { assert } from '@ephox/bedrock-client';
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
-import {
-  Attr,
-  Body,
-  Css,
-  Element,
-  Hierarchy,
-  Html,
-  Insert,
-  Remove,
-  SelectorFilter,
-  SelectorFind,
-  Traverse
-} from '@ephox/sugar';
+import { Attr, Body, Css, Element, Hierarchy, Html, Insert, Remove, SelectorFilter, SelectorFind, Traverse } from '@ephox/sugar';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
@@ -20,18 +8,9 @@ import * as Bars from 'ephox/snooker/resize/Bars';
 import * as Bridge from 'ephox/snooker/test/Bridge';
 import { BarPositions, ColInfo } from 'ephox/snooker/resize/BarPositions';
 import { PlatformDetection } from '@ephox/sand';
-import {
-  RunOperationOutput,
-  TargetSelection,
-  TargetElement,
-  TargetPasteRows
-} from 'ephox/snooker/model/RunOperation';
+import { RunOperationOutput, TargetSelection, TargetElement, TargetPasteRows } from 'ephox/snooker/model/RunOperation';
 import { SimpleGenerators, Generators } from 'ephox/snooker/api/Generators';
-import {
-  HTMLTableElement,
-  HTMLTableDataCellElement,
-  HTMLTableHeaderCellElement
-} from '@ephox/dom-globals';
+import { HTMLTableElement, HTMLTableDataCellElement, HTMLTableHeaderCellElement } from '@ephox/dom-globals';
 
 type Op<T> = (
   wire: ResizeWire,
@@ -58,18 +37,13 @@ const checkOld = function <T>(
     wire,
     table,
     {
-      element: Fun.constant(
-        Hierarchy.follow(table, [section, row, column, 0]).getOrDie()
-      )
+      element: Fun.constant(Hierarchy.follow(table, [section, row, column, 0]).getOrDie())
     },
     Bridge.generators,
     direction
   );
 
-  const actualPath = Hierarchy.path(
-    table,
-    result.getOrDie().cursor().getOrDie()
-  ).getOrDie('could not find path');
+  const actualPath = Hierarchy.path(table, result.getOrDie().cursor().getOrDie()).getOrDie('could not find path');
   assert.eq([expCell.section, expCell.row, expCell.column], actualPath);
 
   // Presence.assertHas(expected, table, 'checking the operation on table: ' + Html.getOuter(table));
@@ -100,19 +74,13 @@ const checkPaste = function (
   Insert.append(Body.body(), table);
   const wire = ResizeWire.only(Body.body());
 
-  const pasteTable = Element.fromHtml<HTMLTableElement>(
-    '<table><tbody>' + pasteHtml + '</tbody></table>'
-  );
+  const pasteTable = Element.fromHtml<HTMLTableElement>('<table><tbody>' + pasteHtml + '</tbody></table>');
   operation(
     wire,
     table,
     {
-      selection: Fun.constant([
-        Hierarchy.follow(table, [section, row, column, 0]).getOrDie()
-      ]),
-      clipboard: Fun.constant([
-        SelectorFind.descendant(pasteTable, 'tr').getOrDie()
-      ]),
+      selection: Fun.constant([Hierarchy.follow(table, [section, row, column, 0]).getOrDie()]),
+      clipboard: Fun.constant([SelectorFind.descendant(pasteTable, 'tr').getOrDie()]),
       generators: Fun.constant(Bridge.generators as SimpleGenerators) // Impossible type! This might work in some restricted circumstances.
     },
     Bridge.generators,
@@ -142,26 +110,19 @@ const checkStructure = function (
     wire,
     table,
     {
-      element: Fun.constant(
-        Hierarchy.follow(table, [section, row, column, 0]).getOrDie()
-      )
+      element: Fun.constant(Hierarchy.follow(table, [section, row, column, 0]).getOrDie())
     },
     Bridge.generators,
     direction
   );
 
-  const actualPath = Hierarchy.path(
-    table,
-    result.getOrDie().cursor().getOrDie()
-  ).getOrDie('could not find path');
+  const actualPath = Hierarchy.path(table, result.getOrDie().cursor().getOrDie()).getOrDie('could not find path');
   assert.eq([expCell.section, expCell.row, expCell.column], actualPath);
 
   // Presence.assertHas(expected, table, 'checking the operation on table: ' + Html.getOuter(table));
   const rows = SelectorFilter.descendants(table, 'tr');
   const actual = Arr.map(rows, function (r) {
-    const cells = SelectorFilter.descendants<
-      HTMLTableDataCellElement | HTMLTableHeaderCellElement
-    >(r, 'td,th');
+    const cells = SelectorFilter.descendants<HTMLTableDataCellElement | HTMLTableHeaderCellElement>(r, 'td,th');
     return Arr.map(cells, Html.get);
   });
   assert.eq(expected, actual);
@@ -182,12 +143,7 @@ const checkDelete = function (
   Insert.append(Body.body(), table);
   const wire = ResizeWire.only(Body.body());
   const cellz = Arr.map(cells, function (cell) {
-    return Hierarchy.follow(table, [
-      cell.section,
-      cell.row,
-      cell.column,
-      0
-    ]).getOrDie('Could not find cell');
+    return Hierarchy.follow(table, [cell.section, cell.row, cell.column, 0]).getOrDie('Could not find cell');
   });
 
   const result = operation(
@@ -202,10 +158,7 @@ const checkDelete = function (
 
   // The operation might delete the whole table
   optExpCell.each(function (expCell) {
-    const actualPath = Hierarchy.path(
-      table,
-      result.getOrDie().cursor().getOrDie('could not find cursor')
-    ).getOrDie('could not find path');
+    const actualPath = Hierarchy.path(table, result.getOrDie().cursor().getOrDie('could not find cursor')).getOrDie('could not find path');
     assert.eq([expCell.section, expCell.row, expCell.column], actualPath);
   });
 
@@ -220,11 +173,7 @@ const checkDelete = function (
       // the result of a delete operation can be by definition the deletion of the table itself.
       // If that is the case our table should not have any parent element because has been removed
       // from the DOM
-      assert.eq(
-        false,
-        Traverse.parent(table).isSome(),
-        'The table was expected to be removed from the DOM'
-      );
+      assert.eq(false, Traverse.parent(table).isSome(), 'The table was expected to be removed from the DOM');
     },
     function (expectedHtml) {
       if (platform.browser.isIE() || platform.browser.isEdge()) {
@@ -296,13 +245,7 @@ const checkUnmerge = function (
 
   const unmergable = Option.some(Options.cat(unmergables));
 
-  TableOperations.unmergeCells(
-    wire,
-    table,
-    { unmergable: Fun.constant(unmergable) },
-    Bridge.generators,
-    direction
-  );
+  TableOperations.unmergeCells(wire, table, { unmergable: Fun.constant(unmergable) }, Bridge.generators, direction);
   // Presence.assertHas(expected, table, 'checking the operation on table: ' + Html.getOuter(table));
 
   // Let's get rid of size information.
@@ -316,11 +259,4 @@ const checkUnmerge = function (
   Bars.destroy(wire);
 };
 
-export {
-  checkOld,
-  checkPaste,
-  checkStructure,
-  checkDelete,
-  checkMerge,
-  checkUnmerge
-};
+export { checkOld, checkPaste, checkStructure, checkDelete, checkMerge, checkUnmerge };

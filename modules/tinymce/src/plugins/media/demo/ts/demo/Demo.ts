@@ -12,10 +12,7 @@ tinymce.init({
       callback('https://youtu.be/a4tNU2jgTZU');
     }
   },
-  media_scripts: [
-    { filter: 'http://media1.tinymce.com' },
-    { filter: 'http://media2.tinymce.com', width: 100, height: 200 }
-  ],
+  media_scripts: [{ filter: 'http://media1.tinymce.com' }, { filter: 'http://media2.tinymce.com', width: 100, height: 200 }],
   // media_url_resolver: function (data, resolve) {
   //   setTimeout(function () {
   //     resolve({

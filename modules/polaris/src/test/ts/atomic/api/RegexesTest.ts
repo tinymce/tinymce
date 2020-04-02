@@ -133,11 +133,7 @@ UnitTest.test('RegexesTest', function () {
 
   Arr.each(trueCases, function (cs) {
     const matched = Regexes.link().exec(cs);
-    assert.eq(
-      cs,
-      matched !== null && matched[0],
-      'expected true but was false: ' + cs
-    );
+    assert.eq(cs, matched !== null && matched[0], 'expected true but was false: ' + cs);
     if (matched !== null && matched.length > 1) {
       console.log('matched groups:');
       Arr.each(matched, function (s, i) {
@@ -149,11 +145,7 @@ UnitTest.test('RegexesTest', function () {
 
   Arr.each(falseCases, function (cs) {
     const match = Regexes.link().exec(cs);
-    assert.eq(
-      false,
-      match !== null && cs === match[0],
-      'expected false but was true: ' + cs
-    );
+    assert.eq(false, match !== null && cs === match[0], 'expected false but was true: ' + cs);
   });
 
   const autolinks = {
@@ -184,12 +176,9 @@ UnitTest.test('RegexesTest', function () {
     'http://google.com?x=y': 'http://google.com?x=y',
     'http://google.com#a-b_c': 'http://google.com#a-b_c',
     'http://google.com?x=y#a-b_c%20': 'http://google.com?x=y#a-b_c%20',
-    'http://google.com?x=y&a=1&c=2#a-b_c%20':
-      'http://google.com?x=y&a=1&c=2#a-b_c%20',
-    'http://google.com:80/a/path/ok/?x=y#a-b_c%20':
-      'http://google.com:80/a/path/ok/?x=y#a-b_c%20',
-    'https://mike:pass@google.com:80/a/path/ok/?x=y#a-b_c%20':
-      'https://mike:pass@google.com:80/a/path/ok/?x=y#a-b_c%20',
+    'http://google.com?x=y&a=1&c=2#a-b_c%20': 'http://google.com?x=y&a=1&c=2#a-b_c%20',
+    'http://google.com:80/a/path/ok/?x=y#a-b_c%20': 'http://google.com:80/a/path/ok/?x=y#a-b_c%20',
+    'https://mike:pass@google.com:80/a/path/ok/?x=y#a-b_c%20': 'https://mike:pass@google.com:80/a/path/ok/?x=y#a-b_c%20',
     'http://eg.com?cc=you%40eg.com&x=y': 'http://eg.com?cc=you%40eg.com&x=y',
     'http://eg.com?m=bob%40eg.com': 'http://eg.com?m=bob%40eg.com',
     // same again with www.
@@ -216,8 +205,7 @@ UnitTest.test('RegexesTest', function () {
     'www.google.com}': 'www.google.com',
     'www.google.com(': 'www.google.com',
     'www.google.com)': 'www.google.com',
-    'www.google.com:80/a/path/ok/?x=y#a-b_c%20':
-      'www.google.com:80/a/path/ok/?x=y#a-b_c%20',
+    'www.google.com:80/a/path/ok/?x=y#a-b_c%20': 'www.google.com:80/a/path/ok/?x=y#a-b_c%20',
     // Mailto
     'mailto:me@eg.com': 'mailto:me@eg.com',
     'mailto:me@eg.com.': 'mailto:me@eg.com',
@@ -225,8 +213,7 @@ UnitTest.test('RegexesTest', function () {
     'mailto:me@eg.com)': 'mailto:me@eg.com',
     'mailto:me@eg.com?cc=you%40eg.com': 'mailto:me@eg.com?cc=you%40eg.com',
     // 'mailto:me@eg.com,you@eg.com': 'mailto:me@eg.com,you@eg.com', // not supported at the moment
-    'mailto:me@eg.com?cc=you%40eg.com&x=y':
-      'mailto:me@eg.com?cc=you%40eg.com&x=y',
+    'mailto:me@eg.com?cc=you%40eg.com&x=y': 'mailto:me@eg.com?cc=you%40eg.com&x=y',
     // ftp
     'ftp://google.com': 'ftp://google.com',
     'ftp://google.com.': 'ftp://google.com',

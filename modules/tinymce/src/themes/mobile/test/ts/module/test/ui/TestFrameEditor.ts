@@ -7,20 +7,12 @@ import TestEditor from './TestEditor';
 
 export default function () {
   const frame = Element.fromTag('iframe');
-  Attr.set(
-    frame,
-    'src',
-    '/project/tinymce/src/themes/mobile/test/html/editor.html'
-  );
+  Attr.set(frame, 'src', '/project/tinymce/src/themes/mobile/test/html/editor.html');
 
   const sWaitForEditorLoaded = Waiter.sTryUntil(
     'Waiting for iframe to load',
     Step.sync(() => {
-      Assertions.assertEq(
-        'Check for a content editable body',
-        'true',
-        frame.dom().contentWindow.document.body.contentEditable
-      );
+      Assertions.assertEq('Check for a content editable body', 'true', frame.dom().contentWindow.document.body.contentEditable);
     }),
     100,
     8000

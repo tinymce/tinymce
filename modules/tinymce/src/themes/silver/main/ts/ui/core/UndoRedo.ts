@@ -8,13 +8,8 @@
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from '@ephox/bridge';
 
-const toggleUndoRedoState = (
-  api: Menu.MenuItemInstanceApi,
-  editor: Editor,
-  type: 'hasUndo' | 'hasRedo'
-) => {
-  const checkState = () =>
-    editor.undoManager ? editor.undoManager[type]() : false;
+const toggleUndoRedoState = (api: Menu.MenuItemInstanceApi, editor: Editor, type: 'hasUndo' | 'hasRedo') => {
+  const checkState = () => (editor.undoManager ? editor.undoManager[type]() : false);
 
   const onUndoStateChange = () => {
     api.setDisabled(editor.mode.isReadOnly() || !checkState());
@@ -22,15 +17,8 @@ const toggleUndoRedoState = (
 
   api.setDisabled(!checkState());
 
-  editor.on(
-    'Undo Redo AddUndo TypingUndo ClearUndos SwitchMode',
-    onUndoStateChange
-  );
-  return () =>
-    editor.off(
-      'Undo Redo AddUndo TypingUndo ClearUndos SwitchMode',
-      onUndoStateChange
-    );
+  editor.on('Undo Redo AddUndo TypingUndo ClearUndos SwitchMode', onUndoStateChange);
+  return () => editor.off('Undo Redo AddUndo TypingUndo ClearUndos SwitchMode', onUndoStateChange);
 };
 
 const registerMenuItems = (editor: Editor) => {

@@ -9,9 +9,7 @@ import { getAttrs, getClasses } from './DomFactory';
 // for now though lets just cast the types
 const readText = (elem: Element<DomText>) => {
   const text = Text.get(elem);
-  return text.trim().length > 0
-    ? (([{ text }] as unknown) as SimpleOrSketchSpec[])
-    : [];
+  return text.trim().length > 0 ? (([{ text }] as unknown) as SimpleOrSketchSpec[]) : [];
 };
 
 const readChildren = (elem: Element<DomNode>): SimpleOrSketchSpec[] => {
@@ -24,9 +22,7 @@ const readChildren = (elem: Element<DomNode>): SimpleOrSketchSpec[] => {
     const classes = getClasses(elem);
     const children = Traverse.children(elem);
 
-    const components = Arr.bind(children, (child) =>
-      Node.isText(child) ? readText(child) : readChildren(child)
-    );
+    const components = Arr.bind(children, (child) => (Node.isText(child) ? readText(child) : readChildren(child)));
 
     return [
       {
@@ -61,9 +57,7 @@ const read = (elem: Element<DomNode>): SimpleOrSketchSpec => {
 
 const readHtml = (html: string): Result<SimpleOrSketchSpec, string> => {
   const elem = Element.fromHtml(html);
-  return Node.isText(elem)
-    ? Result.error('Template text must contain an element!')
-    : Result.value(read(elem));
+  return Node.isText(elem) ? Result.error('Template text must contain an element!') : Result.value(read(elem));
 };
 
 export { readHtml };

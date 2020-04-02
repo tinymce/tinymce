@@ -8,10 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import { Type } from '@ephox/katamari';
 
-const validDefaultOrDie = (
-  value: any,
-  predicate: (value: any) => boolean
-): boolean => {
+const validDefaultOrDie = (value: any, predicate: (value: any) => boolean): boolean => {
   if (predicate(value)) {
     return true;
   }
@@ -34,11 +31,7 @@ const items = (value: boolean | string, defaultValue: string): string => {
   return value;
 };
 
-const getToolbarItemsOr_ = (predicate: (value: any) => boolean) => (
-  editor: Editor,
-  name: string,
-  defaultValue: string
-): string => {
+const getToolbarItemsOr_ = (predicate: (value: any) => boolean) => (editor: Editor, name: string, defaultValue: string): string => {
   validDefaultOrDie(defaultValue, predicate);
   const value = editor.getParam(name, defaultValue);
   return items(value, defaultValue);

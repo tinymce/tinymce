@@ -7,17 +7,7 @@
 
 import { Document, Range } from '@ephox/dom-globals';
 import { Arr, Cell, Id, Option, Unicode } from '@ephox/katamari';
-import {
-  Attr,
-  Class,
-  Classes,
-  Element,
-  Html,
-  Insert,
-  Node,
-  Replication,
-  Traverse
-} from '@ephox/sugar';
+import { Attr, Class, Classes, Element, Html, Insert, Node, Replication, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as GetBookmark from '../bookmark/GetBookmark';
 import * as ExpandRange from '../fmt/ExpandRange';
@@ -61,23 +51,12 @@ const makeAnnotation = (
   return master;
 };
 
-const annotate = (
-  editor: Editor,
-  rng: Range,
-  annotationName: string,
-  decorate: Decorator,
-  data
-): any[] => {
+const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: Decorator, data): any[] => {
   // Setup all the wrappers that are going to be used.
   const newWrappers = [];
 
   // Setup the spans for the comments
-  const master = makeAnnotation(
-    editor.getDoc(),
-    data,
-    annotationName,
-    decorate
-  );
+  const master = makeAnnotation(editor.getDoc(), data, annotationName, decorate);
 
   // Set the current wrapping element
   const wrapper = Cell(Option.none<Element<any>>());
@@ -141,12 +120,7 @@ const annotate = (
   return newWrappers;
 };
 
-const annotateWithBookmark = (
-  editor: Editor,
-  name: string,
-  settings: AnnotatorSettings,
-  data: {}
-): void => {
+const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorSettings, data: {}): void => {
   editor.undoManager.transact(() => {
     const initialRng = editor.selection.getRng();
     if (initialRng.collapsed) {
@@ -156,12 +130,7 @@ const annotateWithBookmark = (
     // Even after applying word grab, we could not find a selection. Therefore,
     // just make a wrapper and insert it at the current cursor
     if (editor.selection.getRng().collapsed) {
-      const wrapper = makeAnnotation(
-        editor.getDoc(),
-        data,
-        name,
-        settings.decorate
-      );
+      const wrapper = makeAnnotation(editor.getDoc(), data, name, settings.decorate);
       // Put something visible in the marker
       Html.set(wrapper, Unicode.nbsp);
       editor.selection.getRng().insertNode(wrapper.dom());
@@ -170,10 +139,7 @@ const annotateWithBookmark = (
       // The bookmark is responsible for splitting the nodes beforehand at the selection points
       // The "false" here means a zero width cursor is NOT put in the bookmark. It seems to be required
       // to stop an empty paragraph splitting into two paragraphs. Probably a better way exists.
-      const bookmark = GetBookmark.getPersistentBookmark(
-        editor.selection,
-        false
-      );
+      const bookmark = GetBookmark.getPersistentBookmark(editor.selection, false);
       const rng = editor.selection.getRng();
       annotate(editor, rng, name, settings.decorate, data);
       editor.selection.moveToBookmark(bookmark);

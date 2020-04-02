@@ -1,11 +1,7 @@
 import { Cell } from '@ephox/katamari';
 import { nuState } from '../common/BehaviourState';
 
-import {
-  CancellableStreamer,
-  StreamingConfig,
-  StreamingState
-} from './StreamingTypes';
+import { CancellableStreamer, StreamingConfig, StreamingState } from './StreamingTypes';
 
 const throttle = (_config: StreamingConfig): StreamingState => {
   const state = Cell<CancellableStreamer | null>(null);
@@ -32,7 +28,6 @@ const throttle = (_config: StreamingConfig): StreamingState => {
   });
 };
 
-const init = (spec: StreamingConfig): StreamingState =>
-  spec.stream.streams.state(spec);
+const init = (spec: StreamingConfig): StreamingState => spec.stream.streams.state(spec);
 
 export { throttle, init };

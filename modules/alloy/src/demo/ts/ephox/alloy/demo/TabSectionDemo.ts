@@ -17,11 +17,7 @@ export default (): void => {
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  const makeTab = (tabSpec: {
-    view: () => PremadeSpec[];
-    value: string;
-    text: string;
-  }) => ({
+  const makeTab = (tabSpec: { view: () => PremadeSpec[]; value: string; text: string }) => ({
     view: tabSpec.view,
     value: tabSpec.value,
     dom: {
@@ -79,11 +75,7 @@ export default (): void => {
     })
   );
 
-  const subject = HtmlDisplay.section(
-    gui,
-    'A basic tab view (refactoring)',
-    memTabSection.asSpec()
-  );
+  const subject = HtmlDisplay.section(gui, 'A basic tab view (refactoring)', memTabSection.asSpec());
 
   setTimeout(() => {
     const chosenTab = prompt('Move to tab?');

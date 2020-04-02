@@ -20,11 +20,7 @@ interface Tools {
   trim(str: string): string;
   toArray<T>(obj: ArrayLike<T>): T[];
   hasOwn(obj: any, name: string): boolean;
-  makeMap<T>(
-    items: ArrayLike<T> | string,
-    delim?: string | RegExp,
-    map?: Record<string, T | string>
-  ): Record<string, T | string>;
+  makeMap<T>(items: ArrayLike<T> | string, delim?: string | RegExp, map?: Record<string, T | string>): Record<string, T | string>;
   each<T>(arr: ArrayLike<T>, cb: ArrayCallback<T, any>, scope?: any): void;
   each<T>(obj: T, cb: ObjCallback<T, any>, scope?: any): void;
   map<T, U>(arr: ArrayLike<T>, cb: ArrayCallback<T, U>, scope?: any): Array<U>;
@@ -55,9 +51,7 @@ interface Tools {
 const whiteSpaceRegExp = /^\s*|\s*$/g;
 
 const trim = function (str) {
-  return str === null || str === undefined
-    ? ''
-    : ('' + str).replace(whiteSpaceRegExp, '');
+  return str === null || str === undefined ? '' : ('' + str).replace(whiteSpaceRegExp, '');
 };
 
 /**

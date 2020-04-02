@@ -14,8 +14,7 @@ import * as NodeType from '../dom/NodeType';
 import * as CaretFinder from '../caret/CaretFinder';
 import * as RangeNormalizer from './RangeNormalizer';
 
-const isTextBlockNode = (node: Node): node is Element =>
-  NodeType.isElement(node) && isTextBlock(SugarElement.fromDom(node));
+const isTextBlockNode = (node: Node): node is Element => NodeType.isElement(node) && isTextBlock(SugarElement.fromDom(node));
 
 const normalizeSelection = (editor: Editor) => {
   const rng = editor.selection.getRng();
@@ -25,18 +24,14 @@ const normalizeSelection = (editor: Editor) => {
   if (CaretPosition.isElementPosition(startPos)) {
     const container = startPos.container();
     if (isTextBlockNode(container)) {
-      CaretFinder.firstPositionIn(container).each((pos) =>
-        rng.setStart(pos.container(), pos.offset())
-      );
+      CaretFinder.firstPositionIn(container).each((pos) => rng.setStart(pos.container(), pos.offset()));
     }
   }
 
   if (CaretPosition.isElementPosition(endPos)) {
     const container = startPos.container();
     if (isTextBlockNode(container)) {
-      CaretFinder.lastPositionIn(container).each((pos) =>
-        rng.setEnd(pos.container(), pos.offset())
-      );
+      CaretFinder.lastPositionIn(container).each((pos) => rng.setEnd(pos.container(), pos.offset()));
     }
   }
 

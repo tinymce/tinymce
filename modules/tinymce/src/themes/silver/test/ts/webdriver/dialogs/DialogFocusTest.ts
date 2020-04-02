@@ -55,11 +55,7 @@ UnitTest.asynctest('Dialog Focus Test (webdriver)', (success, failure) => {
           );
         }),
 
-        FocusTools.sTryOnSelector(
-          'focus should start on input',
-          doc,
-          '.tox-textfield'
-        ),
+        FocusTools.sTryOnSelector('focus should start on input', doc, '.tox-textfield'),
 
         RealMouse.sClickOn('body'),
 
@@ -67,27 +63,15 @@ UnitTest.asynctest('Dialog Focus Test (webdriver)', (success, failure) => {
 
         RealMouse.sClickOn('.tox-dialog'),
 
-        FocusTools.sTryOnSelector(
-          'focus should move to input after clicking on the dialog',
-          doc,
-          '.tox-textfield'
-        ),
+        FocusTools.sTryOnSelector('focus should move to input after clicking on the dialog', doc, '.tox-textfield'),
 
         RealMouse.sClickOn('body'),
 
-        FocusTools.sTryOnSelector(
-          'focus should be on body (again)',
-          doc,
-          'body'
-        ),
+        FocusTools.sTryOnSelector('focus should be on body (again)', doc, 'body'),
 
         RealMouse.sClickOn('.tox-dialog__footer'),
 
-        FocusTools.sTryOnSelector(
-          'focus should move to input after clicking on the dialog footer',
-          doc,
-          '.tox-textfield'
-        )
+        FocusTools.sTryOnSelector('focus should move to input after clicking on the dialog footer', doc, '.tox-textfield')
       ];
 
   Pipeline.async(

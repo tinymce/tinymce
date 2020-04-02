@@ -46,11 +46,7 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
       expansions: {
         beta: 'beta'
       },
-      items: [
-        { title: 'alpha' },
-        { title: 'beta', menu: true },
-        { title: 'gamma' }
-      ]
+      items: [{ title: 'alpha' }, { title: 'beta', menu: true }, { title: 'gamma' }]
     },
     [
       { title: 'alpha' },
@@ -71,11 +67,7 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
       expansions: {
         beta: 'beta'
       },
-      items: [
-        { title: 'alpha' },
-        { title: 'beta', menu: true },
-        { title: 'gamma' }
-      ]
+      items: [{ title: 'alpha' }, { title: 'beta', menu: true }, { title: 'gamma' }]
     },
     [
       { title: 'alpha' },
@@ -96,11 +88,7 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
       expansions: {
         beta: 'beta'
       },
-      items: [
-        { title: 'alpha' },
-        { title: 'beta', menu: true },
-        { title: 'gamma' }
-      ]
+      items: [{ title: 'alpha' }, { title: 'beta', menu: true }, { title: 'gamma' }]
     },
     [
       { title: 'alpha' },
@@ -117,22 +105,14 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
       ', with last subitem having a menu with no items (beta-3)',
     {
       menus: {
-        'beta': [
-          { title: 'beta-1' },
-          { title: 'beta-2' },
-          { title: 'beta-3', menu: true }
-        ],
+        'beta': [{ title: 'beta-1' }, { title: 'beta-2' }, { title: 'beta-3', menu: true }],
         'beta-3': []
       },
       expansions: {
         'beta': 'beta',
         'beta-3': 'beta-3'
       },
-      items: [
-        { title: 'alpha' },
-        { title: 'beta', menu: true },
-        { title: 'gamma' }
-      ]
+      items: [{ title: 'alpha' }, { title: 'beta', menu: true }, { title: 'gamma' }]
     },
     [
       { title: 'alpha' },
@@ -157,11 +137,7 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
       ' having one item (beta-3-1-1)',
     {
       menus: {
-        'beta': [
-          { title: 'beta-1' },
-          { title: 'beta-2' },
-          { title: 'beta-3', menu: true }
-        ],
+        'beta': [{ title: 'beta-1' }, { title: 'beta-2' }, { title: 'beta-3', menu: true }],
         'beta-3': [{ title: 'beta-3-1', menu: true }, { title: 'beta-3-2' }],
         'beta-3-1': [{ title: 'beta-3-1-1' }]
       },
@@ -170,11 +146,7 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
         'beta-3': 'beta-3',
         'beta-3-1': 'beta-3-1'
       },
-      items: [
-        { title: 'alpha' },
-        { title: 'beta', menu: true },
-        { title: 'gamma' }
-      ]
+      items: [{ title: 'alpha' }, { title: 'beta', menu: true }, { title: 'gamma' }]
     },
     [
       { title: 'alpha' },

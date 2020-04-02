@@ -6,11 +6,7 @@ import { Editor } from '../alien/EditorTypes';
 
 export type SuccessCallback = (v?: any, logs?: TestLogs) => void;
 export type FailureCallback = (err: Error | string, logs?: TestLogs) => void;
-export type RunCallback = (
-  editor: any,
-  success: SuccessCallback,
-  failure: FailureCallback
-) => void;
+export type RunCallback = (editor: any, success: SuccessCallback, failure: FailureCallback) => void;
 
 interface Callbacks {
   preInit: (tinymce: any, settings: Record<string, any>) => void;
@@ -65,8 +61,7 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>) => {
     callbacks.failure(err, logs);
   };
 
-  const settingsSetup =
-    settings.setup !== undefined ? settings.setup : Fun.noop;
+  const settingsSetup = settings.setup !== undefined ? settings.setup : Fun.noop;
 
   const tinymce = Global.tinymce;
   if (!tinymce) {

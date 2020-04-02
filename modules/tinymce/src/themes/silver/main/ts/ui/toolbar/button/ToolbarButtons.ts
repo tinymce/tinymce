@@ -32,21 +32,13 @@ import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
 import { Attr, SelectorFind } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
-import {
-  UiFactoryBackstage,
-  UiFactoryBackstageProviders,
-  UiFactoryBackstageShared
-} from 'tinymce/themes/silver/backstage/Backstage';
+import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { ToolbarGroupSetting } from '../../../Render';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
 import { renderIconFromPack, renderLabel } from '../../button/ButtonSlices';
-import {
-  onControlAttached,
-  onControlDetached,
-  OnDestroy
-} from '../../controls/Controls';
+import { onControlAttached, onControlDetached, OnDestroy } from '../../controls/Controls';
 import * as Icons from '../../icons/Icons';
 import { componentRenderPipeline } from '../../menus/item/build/CommonMenuItem';
 import { classForPreset } from '../../menus/item/ItemClasses';
@@ -56,34 +48,22 @@ import { deriveMenuMovement } from '../../menus/menu/MenuMovement';
 import * as MenuParts from '../../menus/menu/MenuParts';
 import { createTieredDataFrom } from '../../menus/menu/SingleMenu';
 import { ToolbarButtonClasses } from '../button/ButtonClasses';
-import {
-  onToolbarButtonExecute,
-  toolbarButtonEventOrder
-} from '../button/ButtonEvents';
+import { onToolbarButtonExecute, toolbarButtonEventOrder } from '../button/ButtonEvents';
 import { renderToolbarGroup, ToolbarGroup } from '../CommonToolbar';
 import * as ReadOnly from '../../../ReadOnly';
 
 interface Specialisation<T> {
-  toolbarButtonBehaviours: Array<
-    Behaviour.NamedConfiguredBehaviour<
-      Behaviour.BehaviourConfigSpec,
-      Behaviour.BehaviourConfigDetail
-    >
-  >;
+  toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
   getApi: (comp: AlloyComponent) => T;
   onSetup: (api: T) => OnDestroy<T>;
 }
 
-const getButtonApi = (
-  component: AlloyComponent
-): Toolbar.ToolbarButtonInstanceApi => ({
+const getButtonApi = (component: AlloyComponent): Toolbar.ToolbarButtonInstanceApi => ({
   isDisabled: () => Disabling.isDisabled(component),
   setDisabled: (state: boolean) => Disabling.set(component, state)
 });
 
-const getToggleApi = (
-  component: AlloyComponent
-): Toolbar.ToolbarToggleButtonInstanceApi => ({
+const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonInstanceApi => ({
   setActive: (state) => {
     Toggling.set(component, state);
   },
@@ -92,10 +72,7 @@ const getToggleApi = (
   setDisabled: (state: boolean) => Disabling.set(component, state)
 });
 
-const getTooltipAttributes = (
-  tooltip: Option<string>,
-  providersBackstage: UiFactoryBackstageProviders
-) =>
+const getTooltipAttributes = (tooltip: Option<string>, providersBackstage: UiFactoryBackstageProviders) =>
   tooltip
     .map<{}>((tooltip) => ({
       'aria-label': providersBackstage.translate(tooltip),
@@ -118,36 +95,21 @@ const focusButtonEvent = Id.generate('focus-button');
 const rtlIcon = ['checklist', 'ordered-list'];
 
 // Icons that need to be transformed in RTL
-const rtlTransform = [
-  'indent',
-  'outdent',
-  'table-insert-column-after',
-  'table-insert-column-before',
-  'unordered-list'
-];
+const rtlTransform = ['indent', 'outdent', 'table-insert-column-after', 'table-insert-column-before', 'unordered-list'];
 
 const renderCommonStructure = (
   icon: Option<string>,
   text: Option<string>,
   tooltip: Option<string>,
   receiver: Option<string>,
-  behaviours: Option<
-    Behaviour.NamedConfiguredBehaviour<
-      Behaviour.BehaviourConfigSpec,
-      Behaviour.BehaviourConfigDetail
-    >[]
-  >,
+  behaviours: Option<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[]>,
   providersBackstage: UiFactoryBackstageProviders
 ) => {
   // If RTL and icon is in whitelist, add RTL icon class for icons that don't have a `-rtl` icon available.
   // Use `-rtl` icon suffix for icons that do.
 
-  const getIconName = (iconName: string): string =>
-    I18n.isRtl() && Arr.contains(rtlIcon, iconName)
-      ? iconName + '-rtl'
-      : iconName;
-  const needsRtlClass =
-    I18n.isRtl() && icon.exists((name) => Arr.contains(rtlTransform, name));
+  const getIconName = (iconName: string): string => (I18n.isRtl() && Arr.contains(rtlIcon, iconName) ? iconName + '-rtl' : iconName);
+  const needsRtlClass = I18n.isRtl() && icon.exists((name) => Arr.contains(rtlTransform, name));
 
   return {
     dom: {
@@ -158,20 +120,12 @@ const renderCommonStructure = (
       attributes: getTooltipAttributes(tooltip, providersBackstage)
     },
     components: componentRenderPipeline([
-      icon.map((iconName) =>
-        renderIconFromPack(getIconName(iconName), providersBackstage.icons)
-      ),
-      text.map((text) =>
-        renderLabel(text, ToolbarButtonClasses.Button, providersBackstage)
-      )
+      icon.map((iconName) => renderIconFromPack(getIconName(iconName), providersBackstage.icons)),
+      text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
     ]),
 
     eventOrder: {
-      [NativeEvents.mousedown()]: [
-        'focusing',
-        'alloy.base.behaviour',
-        'common-button-display-events'
-      ]
+      [NativeEvents.mousedown()]: ['focusing', 'alloy.base.behaviour', 'common-button-display-events']
     },
 
     buttonBehaviours: Behaviour.derive(
@@ -193,19 +147,8 @@ const renderCommonStructure = (
                 initialData: { icon, text },
                 renderComponents: (data, _state) =>
                   componentRenderPipeline([
-                    data.icon.map((iconName) =>
-                      renderIconFromPack(
-                        getIconName(iconName),
-                        providersBackstage.icons
-                      )
-                    ),
-                    data.text.map((text) =>
-                      renderLabel(
-                        text,
-                        ToolbarButtonClasses.Button,
-                        providersBackstage
-                      )
-                    )
+                    data.icon.map((iconName) => renderIconFromPack(getIconName(iconName), providersBackstage.icons)),
+                    data.text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
                   ])
               })
             )
@@ -234,14 +177,7 @@ const renderFloatingToolbarButton = (
       toggledClass: ToolbarButtonClasses.Ticked
     },
     parts: {
-      button: renderCommonStructure(
-        spec.icon,
-        spec.text,
-        spec.tooltip,
-        Option.none(),
-        Option.none(),
-        sharedBackstage.providers
-      ),
+      button: renderCommonStructure(spec.icon, spec.text, spec.tooltip, Option.none(), Option.none(), sharedBackstage.providers),
       toolbar: {
         dom: {
           tag: 'div',
@@ -259,14 +195,7 @@ const renderCommonToolbarButton = <T>(
   providersBackstage: UiFactoryBackstageProviders
 ) => {
   const editorOffCell = Cell(Fun.noop);
-  const structure = renderCommonStructure(
-    spec.icon,
-    spec.text,
-    spec.tooltip,
-    Option.none(),
-    Option.none(),
-    providersBackstage
-  );
+  const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Option.none(), Option.none(), providersBackstage);
   return AlloyButton.sketch({
     dom: structure.dom,
     components: structure.components,
@@ -282,19 +211,15 @@ const renderCommonToolbarButton = <T>(
           onControlAttached(specialisation, editorOffCell),
           onControlDetached(specialisation, editorOffCell)
         ]),
-        DisablingConfigs.toolbarButton(
-          spec.disabled || providersBackstage.isReadonly()
-        ),
+        DisablingConfigs.toolbarButton(spec.disabled || providersBackstage.isReadonly()),
         ReadOnly.receivingConfig()
       ].concat(specialisation.toolbarButtonBehaviours)
     )
   });
 };
 
-const renderToolbarButton = (
-  spec: Toolbar.ToolbarButton,
-  providersBackstage: UiFactoryBackstageProviders
-) => renderToolbarButtonWith(spec, providersBackstage, []);
+const renderToolbarButton = (spec: Toolbar.ToolbarButton, providersBackstage: UiFactoryBackstageProviders) =>
+  renderToolbarButtonWith(spec, providersBackstage, []);
 
 const renderToolbarButtonWith = (
   spec: Toolbar.ToolbarButton,
@@ -318,10 +243,8 @@ const renderToolbarButtonWith = (
     providersBackstage
   );
 
-const renderToolbarToggleButton = (
-  spec: Toolbar.ToolbarToggleButton,
-  providersBackstage: UiFactoryBackstageProviders
-) => renderToolbarToggleButtonWith(spec, providersBackstage, []);
+const renderToolbarToggleButton = (spec: Toolbar.ToolbarToggleButton, providersBackstage: UiFactoryBackstageProviders) =>
+  renderToolbarToggleButtonWith(spec, providersBackstage, []);
 
 const renderToolbarToggleButtonWith = (
   spec: Toolbar.ToolbarToggleButton,
@@ -343,10 +266,7 @@ const renderToolbarToggleButtonWith = (
           bonusEvents.length > 0
             ? [
                 // TODO: May have to pass through eventOrder if events start clashing
-                AddEventsBehaviour.config(
-                  'toolbarToggleButtonWith',
-                  bonusEvents
-                )
+                AddEventsBehaviour.config('toolbarToggleButtonWith', bonusEvents)
               ]
             : []
         ),
@@ -361,18 +281,13 @@ interface ChoiceFetcher {
   fetch: (callback: Function) => void;
   columns: 'auto' | number;
   presets: Types.PresetTypes;
-  onItemAction: (
-    api: Toolbar.ToolbarSplitButtonInstanceApi,
-    value: string
-  ) => void;
+  onItemAction: (api: Toolbar.ToolbarSplitButtonInstanceApi, value: string) => void;
   select: Option<(value: string) => boolean>;
 }
 
-const fetchChoices = (
-  getApi,
-  spec: ChoiceFetcher,
-  providersBackstage: UiFactoryBackstageProviders
-) => (comp: AlloyComponent): Future<Option<TieredData>> =>
+const fetchChoices = (getApi, spec: ChoiceFetcher, providersBackstage: UiFactoryBackstageProviders) => (
+  comp: AlloyComponent
+): Future<Option<TieredData>> =>
   Future.nu((callback) => spec.fetch(callback)).map((items) =>
     Option.from(
       createTieredDataFrom(
@@ -396,11 +311,9 @@ const fetchChoices = (
                 ? []
                 : [
                     AlloyEvents.runOnAttached((comp, _se) => {
-                      detectSize(comp, 4, classForPreset(spec.presets)).each(
-                        ({ numRows, numColumns }) => {
-                          Keying.setGridSize(comp, numRows, numColumns);
-                        }
-                      );
+                      detectSize(comp, 4, classForPreset(spec.presets)).each(({ numRows, numColumns }) => {
+                        Keying.setGridSize(comp, numRows, numColumns);
+                      });
                     })
                   ]
             )
@@ -411,31 +324,20 @@ const fetchChoices = (
   );
 
 // TODO: hookup onSetup and onDestroy
-const renderSplitButton = (
-  spec: Toolbar.ToolbarSplitButton,
-  sharedBackstage: UiFactoryBackstageShared
-): SketchSpec => {
+const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
   // This is used to change the icon on the button. Normally, affected by the select call.
   const displayChannel = Id.generate('channel-update-split-dropdown-display');
 
-  const getApi = (
-    comp: AlloyComponent
-  ): Toolbar.ToolbarSplitButtonInstanceApi => ({
+  const getApi = (comp: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => ({
     isDisabled: () => Disabling.isDisabled(comp),
     setDisabled: (state: boolean) => Disabling.set(comp, state),
     setIconFill: (id, value) => {
-      SelectorFind.descendant(
-        comp.element(),
-        'svg path[id="' + id + '"], rect[id="' + id + '"]'
-      ).each((underlinePath) => {
+      SelectorFind.descendant(comp.element(), 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
         Attr.set(underlinePath, 'fill', value);
       });
     },
     setIconStroke: (id, value) => {
-      SelectorFind.descendant(
-        comp.element(),
-        'svg path[id="' + id + '"], rect[id="' + id + '"]'
-      ).each((underlinePath) => {
+      SelectorFind.descendant(comp.element(), 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
         Attr.set(underlinePath, 'stroke', value);
       });
     },
@@ -451,9 +353,7 @@ const renderSplitButton = (
       });
     },
     isActive: () =>
-      SelectorFind.descendant(comp.element(), 'span').exists((button) =>
-        comp.getSystem().getByDom(button).exists(Toggling.isOn)
-      )
+      SelectorFind.descendant(comp.element(), 'span').exists((button) => comp.getSystem().getByDom(button).exists(Toggling.isOn))
   });
 
   const editorOffCell = Cell(Fun.noop);
@@ -489,10 +389,7 @@ const renderSplitButton = (
     ]),
 
     eventOrder: {
-      [SystemEvents.attachedToDom()]: [
-        'alloy.base.behaviour',
-        'split-dropdown-events'
-      ]
+      [SystemEvents.attachedToDom()]: ['alloy.base.behaviour', 'split-dropdown-events']
     },
 
     toggleClass: ToolbarButtonClasses.Ticked,
@@ -532,9 +429,7 @@ const renderSplitButton = (
         ])
       }),
       AlloySplitDropdown.parts()['aria-descriptor']({
-        text: sharedBackstage.providers.translate(
-          'To open the popup, press Shift+Enter'
-        )
+        text: sharedBackstage.providers.translate('To open the popup, press Shift+Enter')
       })
     ]
   });

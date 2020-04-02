@@ -35,9 +35,7 @@ const hasContentEditableState = function (value: string) {
         return true;
       }
 
-      if (
-        (<HTMLElement>node).getAttribute('data-mce-contenteditable') === value
-      ) {
+      if ((<HTMLElement>node).getAttribute('data-mce-contenteditable') === value) {
         return true;
       }
     }
@@ -49,13 +47,7 @@ const hasContentEditableState = function (value: string) {
 const isContentEditableTrue = hasContentEditableState('true');
 const isContentEditableFalse = hasContentEditableState('false');
 
-const create = function (
-  type: LinkTargetType,
-  title: string,
-  url: string,
-  level: number,
-  attach: () => void
-): LinkTarget {
+const create = function (type: LinkTargetType, title: string, url: string, level: number, attach: () => void): LinkTarget {
   return {
     type,
     title,
@@ -77,12 +69,9 @@ const isChildOfContentEditableTrue = function (node: Node) {
 };
 
 const select = function (selector: string, root: HTMLElement) {
-  return Arr.map(
-    SelectorFilter.descendants<HTMLElement>(Element.fromDom(root), selector),
-    function (element) {
-      return element.dom();
-    }
-  );
+  return Arr.map(SelectorFilter.descendants<HTMLElement>(Element.fromDom(root), selector), function (element) {
+    return element.dom();
+  });
 };
 
 const getElementText = function (elm: HTMLElement) {
@@ -94,11 +83,7 @@ const getOrGenerateId = function (elm: HTMLElement) {
 };
 
 const isAnchor = function (elm: HTMLElement) {
-  return (
-    elm &&
-    elm.nodeName === 'A' &&
-    (elm.id || (<HTMLAnchorElement>elm).name) !== undefined
-  );
+  return elm && elm.nodeName === 'A' && (elm.id || (<HTMLAnchorElement>elm).name) !== undefined;
 };
 
 const isValidAnchor = function (elm: HTMLElement) {
@@ -128,26 +113,14 @@ const headerTarget = function (elm: HTMLElement) {
     elm.id = headerId;
   };
 
-  return create(
-    'header',
-    getElementText(elm),
-    '#' + headerId,
-    getLevel(elm),
-    attach
-  );
+  return create('header', getElementText(elm), '#' + headerId, getLevel(elm), attach);
 };
 
 const anchorTarget = function (elm: HTMLAnchorElement) {
   const anchorId = elm.id || elm.name;
   const anchorText = getElementText(elm);
 
-  return create(
-    'anchor',
-    anchorText ? anchorText : '#' + anchorId,
-    '#' + anchorId,
-    0,
-    Fun.noop
-  );
+  return create('anchor', anchorText ? anchorText : '#' + anchorId, '#' + anchorId, 0, Fun.noop);
 };
 
 const getHeaderTargets = function (elms: HTMLElement[]) {
@@ -169,10 +142,7 @@ const hasTitle = function (target: LinkTarget) {
 
 const find = function (elm: HTMLElement): LinkTarget[] {
   const elms = getTargetElements(elm);
-  return Arr.filter(
-    getHeaderTargets(elms).concat(getAnchorTargets(elms)),
-    hasTitle
-  );
+  return Arr.filter(getHeaderTargets(elms).concat(getAnchorTargets(elms)), hasTitle);
 };
 
 export const LinkTargets = {

@@ -14,13 +14,7 @@ import Editor from '../api/Editor';
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 
-const showCaret = (
-  direction,
-  editor: Editor,
-  node: Element,
-  before: boolean,
-  scrollIntoView: boolean
-): Range =>
+const showCaret = (direction, editor: Editor, node: Element, before: boolean, scrollIntoView: boolean): Range =>
   // TODO: Figure out a better way to handle this dependency
   editor._selectionOverrides.showCaret(direction, node, before, scrollIntoView);
 
@@ -39,24 +33,14 @@ const selectNode = (editor, node: Element): Range => {
   return getNodeRange(node);
 };
 
-const renderCaretAtRange = (
-  editor: Editor,
-  range: Range,
-  scrollIntoView: boolean
-): Range => {
+const renderCaretAtRange = (editor: Editor, range: Range, scrollIntoView: boolean): Range => {
   const normalizedRange = CaretUtils.normalizeRange(1, editor.getBody(), range);
   const caretPosition = CaretPosition.fromRangeStart(normalizedRange);
 
   const caretPositionNode = caretPosition.getNode();
 
   if (isContentEditableFalse(caretPositionNode)) {
-    return showCaret(
-      1,
-      editor,
-      caretPositionNode,
-      !caretPosition.isAtEnd(),
-      false
-    );
+    return showCaret(1, editor, caretPositionNode, !caretPosition.isAtEnd(), false);
   }
 
   const caretPositionBeforeNode = caretPosition.getNode(true);
@@ -66,10 +50,7 @@ const renderCaretAtRange = (
   }
 
   // TODO: Should render caret before/after depending on where you click on the page forces after now
-  const ceRoot = editor.dom.getParent(
-    caretPosition.getNode(),
-    (node) => isContentEditableFalse(node) || isContentEditableTrue(node)
-  );
+  const ceRoot = editor.dom.getParent(caretPosition.getNode(), (node) => isContentEditableFalse(node) || isContentEditableTrue(node));
   if (isContentEditableFalse(ceRoot)) {
     return showCaret(1, editor, ceRoot, false, scrollIntoView);
   }
@@ -77,11 +58,7 @@ const renderCaretAtRange = (
   return null;
 };
 
-const renderRangeCaret = (
-  editor: Editor,
-  range: Range,
-  scrollIntoView: boolean
-): Range => {
+const renderRangeCaret = (editor: Editor, range: Range, scrollIntoView: boolean): Range => {
   if (!range || !range.collapsed) {
     return range;
   }

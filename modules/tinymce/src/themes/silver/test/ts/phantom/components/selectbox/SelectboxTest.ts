@@ -82,24 +82,11 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
       ),
 
       RepresentingSteps.sSetValue('Choosing three', component, 'three'),
-      DomSteps.sAssertValue(
-        'After setting "three"',
-        'three',
-        component,
-        'select'
-      ),
-      RepresentingSteps.sAssertComposedValue(
-        'Checking is three',
-        'three',
-        component
-      ),
+      DomSteps.sAssertValue('After setting "three"', 'three', component, 'select'),
+      RepresentingSteps.sAssertComposedValue('Checking is three', 'three', component),
 
       // Disabling state
-      DisablingSteps.sAssertDisabled(
-        'Initial disabled state',
-        false,
-        component
-      ),
+      DisablingSteps.sAssertDisabled('Initial disabled state', false, component),
       DisablingSteps.sSetDisabled('set disabled', component, true),
       DisablingSteps.sAssertDisabled('enabled > disabled', true, component)
     ],

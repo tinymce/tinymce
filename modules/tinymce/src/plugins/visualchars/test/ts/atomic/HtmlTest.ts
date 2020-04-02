@@ -11,9 +11,7 @@ UnitTest.test('atomic.tinymce.plugins.visualchars.HtmlTest', function () {
 
   Assert.eq(
     'should return correct span',
-    '<span data-mce-bogus="1" class="mce-shy">' +
-      Unicode.softHyphen +
-      '</span>',
+    '<span data-mce-bogus="1" class="mce-shy">' + Unicode.softHyphen + '</span>',
     Html.wrapCharWithSpan(Unicode.softHyphen)
   );
 });

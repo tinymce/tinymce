@@ -111,9 +111,7 @@ const applyInfo = function (editor, info) {
         activeLink.fold(
           function () {
             const text = info.text.toOption().filter(isNotEmpty).getOr(url);
-            editor.insertContent(
-              editor.dom.createHTML('a', attrs, editor.dom.encode(text))
-            );
+            editor.insertContent(editor.dom.createHTML('a', attrs, editor.dom.encode(text)));
           },
           function (link) {
             const text = getTextToApply(link, url, info);

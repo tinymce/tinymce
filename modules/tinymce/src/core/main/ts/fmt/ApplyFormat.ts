@@ -29,21 +29,10 @@ import DOMUtils from '../api/dom/DOMUtils';
 const each = Tools.each;
 
 const isElementNode = function (node: Node) {
-  return (
-    node &&
-    node.nodeType === 1 &&
-    !Bookmarks.isBookmarkNode(node) &&
-    !isCaretNode(node) &&
-    !NodeType.isBogus(node)
-  );
+  return node && node.nodeType === 1 && !Bookmarks.isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
 };
 
-const applyFormat = function (
-  ed: Editor,
-  name: string,
-  vars?: FormatVars,
-  node?: Node | RangeLikeObject
-) {
+const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject) {
   const formatList = ed.formatter.get(name);
   const format = formatList[0];
   let bookmark, rng;
@@ -111,12 +100,7 @@ const applyFormat = function (
     return found;
   };
 
-  const applyRngStyle = function (
-    dom: DOMUtils,
-    rng: RangeLikeObject,
-    bookmark: IdBookmark | IndexBookmark,
-    nodeSpecific?: boolean
-  ) {
+  const applyRngStyle = function (dom: DOMUtils, rng: RangeLikeObject, bookmark: IdBookmark | IndexBookmark, nodeSpecific?: boolean) {
     const newWrappers: Node[] = [];
     let wrapName: string,
       wrapElm: Node,
@@ -199,12 +183,7 @@ const applyFormat = function (
           !hasContentEditableState &&
           FormatUtils.isValid(ed, wrapName, nodeName) &&
           FormatUtils.isValid(ed, parentName, wrapName) &&
-          !(
-            !nodeSpecific &&
-            node.nodeType === 3 &&
-            node.nodeValue.length === 1 &&
-            node.nodeValue.charCodeAt(0) === 65279
-          ) &&
+          !(!nodeSpecific && node.nodeType === 3 && node.nodeValue.length === 1 && node.nodeValue.charCodeAt(0) === 65279) &&
           !isCaretNode(node) &&
           (!format.inline || !dom.isBlock(node))
         ) {
@@ -259,10 +238,7 @@ const applyFormat = function (
         let count = 0;
 
         each(node.childNodes, function (node) {
-          if (
-            !FormatUtils.isEmptyTextNode(node) &&
-            !Bookmarks.isBookmarkNode(node)
-          ) {
+          if (!FormatUtils.isEmptyTextNode(node) && !Bookmarks.isBookmarkNode(node)) {
             count++;
           }
         });
@@ -287,11 +263,7 @@ const applyFormat = function (
         child = getChildElementNode(node);
 
         // If child was found and of the same type as the current node
-        if (
-          child &&
-          !Bookmarks.isBookmarkNode(child) &&
-          MatchFormat.matchName(dom, child, format)
-        ) {
+        if (child && !Bookmarks.isBookmarkNode(child) && MatchFormat.matchName(dom, child, format)) {
           clone = dom.clone(child, false);
           setElementFormat(clone);
 
@@ -330,10 +302,7 @@ const applyFormat = function (
   if (dom.getContentEditable(selection.getNode()) === 'false') {
     node = selection.getNode();
     for (let i = 0, l = formatList.length; i < l; i++) {
-      if (
-        formatList[i].ceFalseOverride &&
-        dom.is(node, formatList[i].selector)
-      ) {
+      if (formatList[i].ceFalseOverride && dom.is(node, formatList[i].selector)) {
         setElementFormat(node, formatList[i]);
         return;
       }
@@ -349,44 +318,27 @@ const applyFormat = function (
           rng = dom.createRng();
           rng.setStartBefore(node);
           rng.setEndAfter(node);
-          applyRngStyle(
-            dom,
-            ExpandRange.expandRng(ed, rng, formatList),
-            null,
-            true
-          );
+          applyRngStyle(dom, ExpandRange.expandRng(ed, rng, formatList), null, true);
         }
       } else {
         applyRngStyle(dom, node, null, true);
       }
     } else {
-      if (
-        !isCollapsed ||
-        !format.inline ||
-        dom.select('td[data-mce-selected],th[data-mce-selected]').length
-      ) {
+      if (!isCollapsed || !format.inline || dom.select('td[data-mce-selected],th[data-mce-selected]').length) {
         // Obtain selection node before selection is unselected by applyRngStyle
         const curSelNode = ed.selection.getNode();
 
         // If the formats have a default block and we can't find a parent block then
         // start wrapping it with a DIV this is for forced_root_blocks: false
         // It's kind of a hack but people should be using the default block type P since all desktop editors work that way
-        if (
-          !ed.settings.forced_root_block &&
-          formatList[0].defaultBlock &&
-          !dom.getParent(curSelNode, dom.isBlock)
-        ) {
+        if (!ed.settings.forced_root_block && formatList[0].defaultBlock && !dom.getParent(curSelNode, dom.isBlock)) {
           applyFormat(ed, formatList[0].defaultBlock);
         }
 
         // Apply formatting to selection
         ed.selection.setRng(RangeNormalizer.normalize(ed.selection.getRng()));
         bookmark = GetBookmark.getPersistentBookmark(ed.selection, true);
-        applyRngStyle(
-          dom,
-          ExpandRange.expandRng(ed, selection.getRng(), formatList),
-          bookmark
-        );
+        applyRngStyle(dom, ExpandRange.expandRng(ed, selection.getRng(), formatList), bookmark);
 
         if (format.styles) {
           MergeFormats.mergeUnderlineAndColor(dom, format, vars, curSelNode);

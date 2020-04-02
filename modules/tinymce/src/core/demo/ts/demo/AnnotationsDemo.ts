@@ -19,8 +19,7 @@ export default function () {
     toolbar: 'annotate-alpha',
     plugins: [],
 
-    content_style:
-      '.mce-annotation { background-color: darkgreen; color: white; }',
+    content_style: '.mce-annotation { background-color: darkgreen; color: white; }',
 
     setup: (editor: Editor) => {
       editor.ui.registry.addButton('annotate-alpha', {

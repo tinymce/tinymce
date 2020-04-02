@@ -54,11 +54,7 @@ UnitTest.test('MatchSplitterTest', function () {
     assert.eq(all, TestRenders.texts(universe.get().children));
   };
 
-  const match = function (
-    start: number,
-    finish: number,
-    word: string
-  ): PRange & { word: () => string } {
+  const match = function (start: number, finish: number, word: string): PRange & { word: () => string } {
     return {
       start: Fun.constant(start),
       finish: Fun.constant(finish),
@@ -82,12 +78,7 @@ UnitTest.test('MatchSplitterTest', function () {
       { text: ['L', 'MNO'], exact: 'LMNO', word: 'w4' }
     ],
     ['1', '2', '3', '4', '5'],
-    [
-      match(2, 4, 'w1'),
-      match(5, 7, 'w2'),
-      match(8, 11, 'w3'),
-      match(11, 15, 'w4')
-    ],
+    [match(2, 4, 'w1'), match(5, 7, 'w2'), match(8, 11, 'w3'), match(11, 15, 'w4')],
     data()
   );
 });

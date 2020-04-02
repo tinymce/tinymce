@@ -1,24 +1,5 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  Keyboard,
-  Keys,
-  Logger,
-  Mouse,
-  Step,
-  UiControls,
-  UiFinder,
-  Waiter
-} from '@ephox/agar';
-import {
-  AlloyTriggers,
-  Focusing,
-  GuiFactory,
-  NativeEvents,
-  Representing,
-  TestHelpers
-} from '@ephox/alloy';
+import { ApproxStructure, Assertions, Chain, Keyboard, Keys, Logger, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
+import { AlloyTriggers, Focusing, GuiFactory, NativeEvents, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Future, Option } from '@ephox/katamari';
@@ -84,25 +65,14 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
     (doc, _body, _gui, component, store) => {
       const input = component
         .getSystem()
-        .getByDom(
-          SelectorFind.descendant(component.element(), 'input').getOrDie(
-            'Could not find input'
-          )
-        )
+        .getByDom(SelectorFind.descendant(component.element(), 'input').getOrDie('Could not find input'))
         .getOrDie();
 
       return [
-        TestHelpers.GuiSetup.mAddStyles(doc, [
-          '.tox-menu { background: white; }',
-          '.tox-collection__item--active { background: #cadbee }'
-        ]),
+        TestHelpers.GuiSetup.mAddStyles(doc, ['.tox-menu { background: white; }', '.tox-collection__item--active { background: #cadbee }']),
 
         // Disabling state
-        DisablingSteps.sAssertDisabled(
-          'Initial disabled state',
-          false,
-          component
-        ),
+        DisablingSteps.sAssertDisabled('Initial disabled state', false, component),
         DisablingSteps.sSetDisabled('set disabled', component, true),
         DisablingSteps.sAssertDisabled('enabled > disabled', true, component),
         DisablingSteps.sSetDisabled('set enabled', component, false),
@@ -113,10 +83,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
         }),
         Keyboard.sKeydown(doc, Keys.down(), {}),
 
-        Waiter.sTryUntil(
-          'Waiting for menu to appear',
-          UiFinder.sExists(sink, '.tox-menu .tox-collection__item')
-        ),
+        Waiter.sTryUntil('Waiting for menu to appear', UiFinder.sExists(sink, '.tox-menu .tox-collection__item')),
 
         Chain.asStep(sink, [
           UiFinder.cFindIn('[role="menu"]'),
@@ -124,26 +91,18 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
             'Checking structure of menu (especially text)',
             ApproxStructure.build((s, str, arr) =>
               s.element('div', {
-                classes: [
-                  arr.has('tox-menu'),
-                  arr.has('tox-collection--list'),
-                  arr.has('tox-collection')
-                ],
+                classes: [arr.has('tox-menu'), arr.has('tox-collection--list'), arr.has('tox-collection')],
                 children: [
                   s.element('div', {
                     classes: [arr.has('tox-collection__group')],
                     children: [
                       s.element('div', {
                         classes: [arr.has('tox-collection__item')],
-                        children: [
-                          s.element('div', { html: str.is('Header1') })
-                        ]
+                        children: [s.element('div', { html: str.is('Header1') })]
                       }),
                       s.element('div', {
                         classes: [arr.has('tox-collection__item')],
-                        children: [
-                          s.element('div', { html: str.is('Header2') })
-                        ]
+                        children: [s.element('div', { html: str.is('Header2') })]
                       })
                     ]
                   }),
@@ -151,9 +110,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                     classes: [arr.has('tox-collection__group')],
                     children: [
                       s.element('div', {
-                        children: [
-                          s.element('div', { html: str.is('&lt;top&gt;') })
-                        ]
+                        children: [s.element('div', { html: str.is('&lt;top&gt;') })]
                       })
                     ]
                   })
@@ -184,26 +141,18 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
             'Checking the menu shows items that match the input string',
             ApproxStructure.build((s, str, arr) =>
               s.element('div', {
-                classes: [
-                  arr.has('tox-menu'),
-                  arr.has('tox-collection--list'),
-                  arr.has('tox-collection')
-                ],
+                classes: [arr.has('tox-menu'), arr.has('tox-collection--list'), arr.has('tox-collection')],
                 children: [
                   s.element('div', {
                     classes: [arr.has('tox-collection__group')],
                     children: [
                       s.element('div', {
                         classes: [arr.has('tox-collection__item')],
-                        children: [
-                          s.element('div', { html: str.is('Header1') })
-                        ]
+                        children: [s.element('div', { html: str.is('Header1') })]
                       }),
                       s.element('div', {
                         classes: [arr.has('tox-collection__item')],
-                        children: [
-                          s.element('div', { html: str.is('Header2') })
-                        ]
+                        children: [s.element('div', { html: str.is('Header2') })]
                       })
                     ]
                   })
@@ -216,11 +165,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
         store.sAssertEq('nothing in store ... before selecting item', []),
         Keyboard.sKeydown(doc, Keys.enter(), {}),
         Step.sync(() => {
-          Assertions.assertEq(
-            'Checking Value.get',
-            '#header',
-            Value.get(input.element())
-          );
+          Assertions.assertEq('Checking Value.get', '#header', Value.get(input.element()));
           const repValue = Representing.getValue(input);
           Assertions.assertEq(
             'Checking Rep.getValue',
@@ -237,9 +182,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
           );
         }),
 
-        store.sAssertEq('addToHistory called ... before firing attach', [
-          'addToHistory'
-        ]),
+        store.sAssertEq('addToHistory called ... before firing attach', ['addToHistory']),
         Logger.t(
           'Check that attach fires',
           Step.sync(() => {
@@ -247,22 +190,13 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
             repValue.meta.attach();
           })
         ),
-        store.sAssertEq('Attach should be in store ... after firing attach', [
-          'addToHistory',
-          'header1.attach'
-        ]),
+        store.sAssertEq('Attach should be in store ... after firing attach', ['addToHistory', 'header1.attach']),
 
         Mouse.sClickOn(component.element(), 'button'),
 
-        store.sAssertEq(
-          'URL picker should have been opened ... after clicking button',
-          ['addToHistory', 'header1.attach', 'urlpicker']
-        ),
+        store.sAssertEq('URL picker should have been opened ... after clicking button', ['addToHistory', 'header1.attach', 'urlpicker']),
 
-        Waiter.sTryUntilPredicate(
-          'Checking Value.get',
-          () => 'http://tiny.cloud' === Value.get(input.element())
-        ),
+        Waiter.sTryUntilPredicate('Checking Value.get', () => 'http://tiny.cloud' === Value.get(input.element())),
 
         Step.sync(() => {
           const repValue = Representing.getValue(input);

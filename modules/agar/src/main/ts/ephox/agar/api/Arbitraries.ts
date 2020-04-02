@@ -19,7 +19,6 @@ const scenario = (component, overrides, exclusions) => {
   });
 };
 
-const content = (component, overrides?) =>
-  ArbContent.arbOf(component, overrides);
+const content = (component, overrides?) => ArbContent.arbOf(component, overrides);
 
 export { scenario, content };

@@ -8,11 +8,6 @@ export enum AttributeValue {
 export const Attribute = 'data-alloy-vertical-dir';
 
 const isBottomToTopDir = (el: Element) =>
-  PredicateExists.closest(
-    el,
-    (current) =>
-      Node.isElement(current) &&
-      Attr.get(current, Attribute) === AttributeValue.BottomToTop
-  );
+  PredicateExists.closest(el, (current) => Node.isElement(current) && Attr.get(current, Attribute) === AttributeValue.BottomToTop);
 
 export { isBottomToTopDir };

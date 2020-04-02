@@ -20,31 +20,13 @@ UnitTest.test('Options.bindFrom', () => {
     Options.bindFrom(3, (_x) => Option.none()),
     tOption(tNumber)
   );
-  Assert.eq(
-    'bindFrom null',
-    Option.none(),
-    Options.bindFrom<number, number>(null, Fun.die('boom')),
-    tOption()
-  );
-  Assert.eq(
-    'bindFrom undefined',
-    Option.none(),
-    Options.bindFrom<number, number>(undefined, Fun.die('boom')),
-    tOption(tNumber)
-  );
+  Assert.eq('bindFrom null', Option.none(), Options.bindFrom<number, number>(null, Fun.die('boom')), tOption());
+  Assert.eq('bindFrom undefined', Option.none(), Options.bindFrom<number, number>(undefined, Fun.die('boom')), tOption(tNumber));
 });
 
 UnitTest.test('Options.bindFrom === Options.bind().from()', () => {
-  const check = (
-    input: number | null | undefined,
-    f: (a: number) => Option<number>
-  ) => {
-    Assert.eq(
-      'bindFrom equivalent ot bind',
-      Option.from(input).bind(f),
-      Options.bindFrom(input, f),
-      tOption(tNumber)
-    );
+  const check = (input: number | null | undefined, f: (a: number) => Option<number>) => {
+    Assert.eq('bindFrom equivalent ot bind', Option.from(input).bind(f), Options.bindFrom(input, f), tOption(tNumber));
   };
 
   const s = (x: number) => Option.some<number>(x + 1);

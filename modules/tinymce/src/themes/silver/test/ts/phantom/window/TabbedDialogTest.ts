@@ -1,14 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  Mouse,
-  NamedChain,
-  Pipeline,
-  Step,
-  UiFinder,
-  StructAssert
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Mouse, NamedChain, Pipeline, Step, UiFinder, StructAssert } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Body, Element } from '@ephox/sugar';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
@@ -18,10 +8,7 @@ UnitTest.asynctest('WindowManager:tabbed-dialog Test', (success, failure) => {
   const helpers = TestExtras();
   const windowManager = WindowManager.setup(helpers.extras);
 
-  const cAssertFormContents = (
-    label: string,
-    f: (s, str, arr) => StructAssert
-  ) =>
+  const cAssertFormContents = (label: string, f: (s, str, arr) => StructAssert) =>
     Chain.op((tabview: Element) => {
       Assertions.assertStructure(
         'Checking tabview: ' + label,
@@ -122,31 +109,11 @@ UnitTest.asynctest('WindowManager:tabbed-dialog Test', (success, failure) => {
         Chain.asStep({}, [
           NamedChain.asChain([
             NamedChain.writeValue('page', Body.body()),
-            NamedChain.direct(
-              'page',
-              UiFinder.cFindIn('[role="dialog"]'),
-              'dialog'
-            ),
-            NamedChain.direct(
-              'dialog',
-              UiFinder.cFindIn('[role="tab"]:contains("Basic")'),
-              'basicTab'
-            ),
-            NamedChain.direct(
-              'dialog',
-              UiFinder.cFindIn('[role="tab"]:contains("Advanced")'),
-              'advancedTab'
-            ),
-            NamedChain.direct(
-              'dialog',
-              UiFinder.cFindIn('[role="tabpanel"]'),
-              'tabview'
-            ),
-            NamedChain.direct(
-              'dialog',
-              Mouse.cClickOn('button:contains("-> Basic")'),
-              '_'
-            ),
+            NamedChain.direct('page', UiFinder.cFindIn('[role="dialog"]'), 'dialog'),
+            NamedChain.direct('dialog', UiFinder.cFindIn('[role="tab"]:contains("Basic")'), 'basicTab'),
+            NamedChain.direct('dialog', UiFinder.cFindIn('[role="tab"]:contains("Advanced")'), 'advancedTab'),
+            NamedChain.direct('dialog', UiFinder.cFindIn('[role="tabpanel"]'), 'tabview'),
+            NamedChain.direct('dialog', Mouse.cClickOn('button:contains("-> Basic")'), '_'),
             NamedChain.direct(
               'tabview',
               cAssertFormContents('Clicking Basic button', (s, str, _arr) =>
@@ -157,36 +124,24 @@ UnitTest.asynctest('WindowManager:tabbed-dialog Test', (success, failure) => {
               '_'
             ),
 
-            NamedChain.direct(
-              'dialog',
-              Mouse.cClickOn('button:contains("-> Advanced")'),
-              '_'
-            ),
+            NamedChain.direct('dialog', Mouse.cClickOn('button:contains("-> Advanced")'), '_'),
             NamedChain.direct(
               'tabview',
-              cAssertFormContents(
-                'Clicking Advanced button (not tab)',
-                (s, str, _arr) =>
-                  s.element('textarea', {
-                    value: str.is('Textarea value')
-                  })
+              cAssertFormContents('Clicking Advanced button (not tab)', (s, str, _arr) =>
+                s.element('textarea', {
+                  value: str.is('Textarea value')
+                })
               ),
               '_'
             ),
 
-            NamedChain.direct(
-              'dialog',
-              Mouse.cClickOn('button:contains("-> Basic")'),
-              '_'
-            ),
+            NamedChain.direct('dialog', Mouse.cClickOn('button:contains("-> Basic")'), '_'),
             NamedChain.direct(
               'tabview',
-              cAssertFormContents(
-                'Clicking Basic button again (not tab)',
-                (s, str, _arr) =>
-                  s.element('input', {
-                    value: str.is('First tab value')
-                  })
+              cAssertFormContents('Clicking Basic button again (not tab)', (s, str, _arr) =>
+                s.element('input', {
+                  value: str.is('First tab value')
+                })
               ),
               '_'
             )

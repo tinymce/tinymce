@@ -17,11 +17,7 @@ const removeAttrs = (node: Node, names: string[]) => {
   });
 };
 
-const addFontToSpansFilter = (
-  domParser: DomParser,
-  styles: Styles,
-  fontSizes: string[]
-) => {
+const addFontToSpansFilter = (domParser: DomParser, styles: Styles, fontSizes: string[]) => {
   domParser.addNodeFilter('font', (nodes) => {
     Arr.each(nodes, (node) => {
       const props = styles.parse(node.attr('style'));
@@ -65,11 +61,7 @@ const addFilters = (domParser: DomParser, settings: DomParserSettings) => {
   const styles = Styles();
 
   if (settings.convert_fonts_to_spans) {
-    addFontToSpansFilter(
-      domParser,
-      styles,
-      Tools.explode(settings.font_size_legacy_values)
-    );
+    addFontToSpansFilter(domParser, styles, Tools.explode(settings.font_size_legacy_values));
   }
 
   addStrikeToSpanFilter(domParser, styles);

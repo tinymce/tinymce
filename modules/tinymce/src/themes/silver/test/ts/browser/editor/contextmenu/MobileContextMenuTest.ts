@@ -27,8 +27,7 @@ import SilverTheme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
   const detection = PlatformDetection.detect();
   const browser = detection.browser;
-  const runTests =
-    browser.isChrome() || browser.isFirefox() || browser.isSafari();
+  const runTests = browser.isChrome() || browser.isFirefox() || browser.isSafari();
   if (!runTests) {
     return success();
   }
@@ -66,10 +65,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
           Touch.cTouchEnd,
           Chain.wait(100),
           Chain.inject(dialogRoot),
-          tinyUi.cWaitForPopup(
-            'trigger context menu',
-            '.tox-silver-sink .tox-collection--horizontal [role="menuitem"]'
-          )
+          tinyUi.cWaitForPopup('trigger context menu', '.tox-silver-sink .tox-collection--horizontal [role="menuitem"]')
         ]);
 
       // Wait for dialog to open and close dialog
@@ -78,21 +74,14 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
           tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'),
           Touch.cTapOn('.tox-button:contains("Cancel")')
         ]),
-        Waiter.sTryUntil(
-          'Wait for dialog to close',
-          UiFinder.sNotExists(
-            TinyDom.fromDom(document.body),
-            'div[role="dialog"]'
-          )
-        )
+        Waiter.sTryUntil('Wait for dialog to close', UiFinder.sNotExists(TinyDom.fromDom(document.body), 'div[role="dialog"]'))
       ]);
 
       const sPressDownArrowKey = Keyboard.sKeydown(doc, Keys.down(), {});
       const sPressEnterKey = Keyboard.sKeydown(doc, Keys.enter(), {});
       const sPressEscKey = Keyboard.sKeydown(doc, Keys.escape(), {});
 
-      const sRepeatDownArrowKey = (index) =>
-        GeneralSteps.sequence(Arr.range(index, () => sPressDownArrowKey));
+      const sRepeatDownArrowKey = (index) => GeneralSteps.sequence(Arr.range(index, () => sPressDownArrowKey));
 
       const tableHtml =
         '<table style="width: 100%;">' +
@@ -111,25 +100,13 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
       const imgSrc = '../img/dogleft.jpg';
 
       const contentInTableHtml = (content: string) =>
-        '<table style="width: 100%;">' +
-        '<tbody>' +
-        '<tr>' +
-        `<td>${content}</td>` +
-        '</tr>' +
-        '</tbody>' +
-        '</table>';
+        '<table style="width: 100%;">' + '<tbody>' + '<tr>' + `<td>${content}</td>` + '</tr>' + '</tbody>' + '</table>';
 
-      const imageInTableHtml = contentInTableHtml(
-        '<img src="' + imgSrc + '" width="160" height="100"/>'
-      );
+      const imageInTableHtml = contentInTableHtml('<img src="' + imgSrc + '" width="160" height="100"/>');
       const placeholderImageInTableHtml = contentInTableHtml(
-        '<img src="' +
-          imgSrc +
-          '" width="160" height="100" data-mce-placeholder="1"/>'
+        '<img src="' + imgSrc + '" width="160" height="100" data-mce-placeholder="1"/>'
       );
-      const linkInTableHtml = contentInTableHtml(
-        '<a href="http://tiny.cloud/">Tiny</a>'
-      );
+      const linkInTableHtml = contentInTableHtml('<a href="http://tiny.cloud/">Tiny</a>');
 
       // In Firefox we add a a bogus br element after the link that fixes a gecko link bug when,
       // a link is placed at the end of block elements there is no way to move the caret behind the link.
@@ -139,10 +116,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
           s.element('body', {
             children: [
               s.element('p', {
-                children: [
-                  s.text(str.is('Tiny')),
-                  s.zeroOrOne(s.element('br', {}))
-                ]
+                children: [s.text(str.is('Tiny')), s.zeroOrOne(s.element('br', {}))]
               })
             ]
           })
@@ -151,12 +125,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
       );
 
       const sAssertMenuItems = (items: string[]) =>
-        Chain.asStep(Body.body(), [
-          Chain.fromParent(
-            UiFinder.cFindIn(mobileContextMenuSelector),
-            Arr.map(items, UiFinder.cExists)
-          )
-        ]);
+        Chain.asStep(Body.body(), [Chain.fromParent(UiFinder.cFindIn(mobileContextMenuSelector), Arr.map(items, UiFinder.cExists))]);
 
       const mobileContextMenuSelector = 'div.tox-collection--horizontal';
       const selectors = {
@@ -181,25 +150,12 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
         ]),
         Log.stepsAsStep('TBA', 'Test context menus on a link', [
           tinyApis.sSetContent('<p><a href="http://tiny.cloud/">Tiny</a></p>'),
-          tinyApis.sSetSelection(
-            [0, 0, 0],
-            'Ti'.length,
-            [0, 0, 0],
-            'Ti'.length
-          ),
+          tinyApis.sSetSelection([0, 0, 0], 'Ti'.length, [0, 0, 0], 'Ti'.length),
           sOpenContextMenu('a'),
-          sAssertMenuItems([
-            selectors.link,
-            selectors.removelink,
-            selectors.openlink
-          ]),
+          sAssertMenuItems([selectors.link, selectors.removelink, selectors.openlink]),
           sPressEscKey,
           sOpenContextMenu('a'),
-          FocusTools.sSetFocus(
-            'focus the first menu item',
-            Body.body(),
-            selectors.link
-          ),
+          FocusTools.sSetFocus('focus the first menu item', Body.body(), selectors.link),
           sPressDownArrowKey,
           sPressEnterKey,
           sAssertRemoveLinkHtmlStructure
@@ -207,19 +163,8 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
         Log.stepsAsStep('TBA', 'Test context menus on a table', [
           tinyApis.sSetContent(tableHtml),
           sOpenContextMenu('td'),
-          sAssertMenuItems([
-            selectors.link,
-            selectors.cell,
-            selectors.row,
-            selectors.column,
-            selectors.tableprops,
-            selectors.deletetable
-          ]),
-          FocusTools.sSetFocus(
-            'focus the table props item',
-            Body.body(),
-            selectors.tableprops
-          ),
+          sAssertMenuItems([selectors.link, selectors.cell, selectors.row, selectors.column, selectors.tableprops, selectors.deletetable]),
+          FocusTools.sSetFocus('focus the table props item', Body.body(), selectors.tableprops),
           sPressEnterKey,
           sWaitForAndCloseDialog
         ]),
@@ -236,20 +181,12 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
             selectors.tableprops,
             selectors.deletetable
           ]),
-          FocusTools.sSetFocus(
-            'focus the image item',
-            Body.body(),
-            selectors.image
-          ),
+          FocusTools.sSetFocus('focus the image item', Body.body(), selectors.image),
           sPressEnterKey,
           sWaitForAndCloseDialog,
           sOpenContextMenu('img'),
           // Navigate to the "Image tools" menu item
-          FocusTools.sSetFocus(
-            'focus the first menu item',
-            Body.body(),
-            selectors.link
-          ),
+          FocusTools.sSetFocus('focus the first menu item', Body.body(), selectors.link),
           sRepeatDownArrowKey(2),
           sPressEnterKey,
           sWaitForAndCloseDialog
@@ -268,24 +205,13 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
             selectors.deletetable
           ])
         ]),
-        Log.stepsAsStep(
-          'TBA',
-          'Test context menus on placeholder image inside a table',
-          [
-            // Placeholder images shouldn't show the image/image tools options
-            tinyApis.sSetContent(placeholderImageInTableHtml),
-            tinyApis.sSelect('img', []),
-            sOpenContextMenu('img'),
-            sAssertMenuItems([
-              selectors.link,
-              selectors.cell,
-              selectors.row,
-              selectors.column,
-              selectors.tableprops,
-              selectors.deletetable
-            ])
-          ]
-        )
+        Log.stepsAsStep('TBA', 'Test context menus on placeholder image inside a table', [
+          // Placeholder images shouldn't show the image/image tools options
+          tinyApis.sSetContent(placeholderImageInTableHtml),
+          tinyApis.sSelect('img', []),
+          sOpenContextMenu('img'),
+          sAssertMenuItems([selectors.link, selectors.cell, selectors.row, selectors.column, selectors.tableprops, selectors.deletetable])
+        ])
       ];
 
       Pipeline.async({}, steps, onSuccess, onFailure);

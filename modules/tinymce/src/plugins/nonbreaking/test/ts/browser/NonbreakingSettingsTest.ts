@@ -13,22 +13,16 @@ UnitTest.test('browser.tinymce.plugins.nonbreaking.SettingsTest', function () {
   Assertions.assertEq(
     'TestCase-TBA: NonBreaking: Should return 3 if set to true',
     3,
-    Settings.getKeyboardSpaces(
-      new Editor('x', { nonbreaking_force_tab: true }, EditorManager)
-    )
+    Settings.getKeyboardSpaces(new Editor('x', { nonbreaking_force_tab: true }, EditorManager))
   );
   Assertions.assertEq(
     'TestCase-TBA: NonBreaking: Should return 0 if set to false',
     0,
-    Settings.getKeyboardSpaces(
-      new Editor('x', { nonbreaking_force_tab: false }, EditorManager)
-    )
+    Settings.getKeyboardSpaces(new Editor('x', { nonbreaking_force_tab: false }, EditorManager))
   );
   Assertions.assertEq(
     'TestCase-TBA: NonBreaking: Should return number if set',
     4,
-    Settings.getKeyboardSpaces(
-      new Editor('x', { nonbreaking_force_tab: 4 }, EditorManager)
-    )
+    Settings.getKeyboardSpaces(new Editor('x', { nonbreaking_force_tab: 4 }, EditorManager))
   );
 });

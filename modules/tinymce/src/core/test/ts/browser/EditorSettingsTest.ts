@@ -9,10 +9,7 @@ import { EditorSettings as EditorSettingsType } from 'tinymce/core/api/SettingsT
 import * as EditorSettings from 'tinymce/core/EditorSettings';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success, failure) {
   const detection = PlatformDetection.detect();
   const isTouch = detection.deviceType.isTouch();
   const isPhone = detection.deviceType.isPhone();
@@ -49,19 +46,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
           Logger.t(
             'default desktop settings',
             Step.sync(() => {
-              const defaultSettings = EditorSettings.getDefaultSettings(
-                {},
-                'id',
-                'documentBaseUrl',
-                false,
-                editor
-              );
+              const defaultSettings = EditorSettings.getDefaultSettings({}, 'id', 'documentBaseUrl', false, editor);
               Obj.each(expectedDefaultSettings, (value, key) => {
-                Assertions.assertEq(
-                  `Should have default ${key} setting`,
-                  value,
-                  Obj.get(defaultSettings, key).getOrUndefined()
-                );
+                Assertions.assertEq(`Should have default ${key} setting`, value, Obj.get(defaultSettings, key).getOrUndefined());
               });
               Obj.each(expectedPhoneDefaultSettings, (value, key) => {
                 Assertions.assertEq(
@@ -76,19 +63,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
           Logger.t(
             'default touch device settings',
             Step.sync(() => {
-              const defaultSettings = EditorSettings.getDefaultSettings(
-                {},
-                'id',
-                'documentBaseUrl',
-                true,
-                editor
-              );
+              const defaultSettings = EditorSettings.getDefaultSettings({}, 'id', 'documentBaseUrl', true, editor);
               Obj.each(expectedTouchDefaultSettings, (value, key) => {
-                Assertions.assertEq(
-                  `Should have default ${key} setting`,
-                  value,
-                  Obj.get(defaultSettings, key).getOrUndefined()
-                );
+                Assertions.assertEq(`Should have default ${key} setting`, value, Obj.get(defaultSettings, key).getOrUndefined());
               });
             })
           ),
@@ -100,66 +77,31 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
                 toolbar_drawer: 'sliding'
               };
 
-              const defaultSettings = EditorSettings.getDefaultSettings(
-                toolbarSettings,
-                'id',
-                'documentBaseUrl',
-                true,
-                editor
-              );
-              Assertions.assertEq(
-                'Should fall back to value of toolbar_drawer',
-                true,
-                defaultSettings.toolbar_mode === 'sliding'
-              );
+              const defaultSettings = EditorSettings.getDefaultSettings(toolbarSettings, 'id', 'documentBaseUrl', true, editor);
+              Assertions.assertEq('Should fall back to value of toolbar_drawer', true, defaultSettings.toolbar_mode === 'sliding');
 
-              const mobileDefaultSettings = EditorSettings.getDefaultMobileSettings(
-                toolbarSettings,
-                false
-              );
-              Assertions.assertEq(
-                'Should fall back to value of toolbar_drawer',
-                true,
-                mobileDefaultSettings.toolbar_mode === 'sliding'
-              );
+              const mobileDefaultSettings = EditorSettings.getDefaultMobileSettings(toolbarSettings, false);
+              Assertions.assertEq('Should fall back to value of toolbar_drawer', true, mobileDefaultSettings.toolbar_mode === 'sliding');
             })
           ),
 
           Logger.t(
             'default tablet settings',
             Step.sync(() => {
-              const defaultSettings = EditorSettings.getDefaultMobileSettings(
-                {},
-                false
-              );
+              const defaultSettings = EditorSettings.getDefaultMobileSettings({}, false);
               Obj.each(expectedTabletDefaultSettings, (value, key) => {
-                Assertions.assertEq(
-                  `Should have default ${key} setting`,
-                  value,
-                  Obj.get(defaultSettings, key).getOrUndefined()
-                );
+                Assertions.assertEq(`Should have default ${key} setting`, value, Obj.get(defaultSettings, key).getOrUndefined());
               });
-              Assertions.assertEq(
-                'Should not have menubar setting',
-                undefined,
-                Obj.get(defaultSettings, 'menubar').getOrUndefined()
-              );
+              Assertions.assertEq('Should not have menubar setting', undefined, Obj.get(defaultSettings, 'menubar').getOrUndefined());
             })
           ),
 
           Logger.t(
             'default phone settings',
             Step.sync(() => {
-              const defaultSettings = EditorSettings.getDefaultMobileSettings(
-                {},
-                true
-              );
+              const defaultSettings = EditorSettings.getDefaultMobileSettings({}, true);
               Obj.each(expectedPhoneDefaultSettings, (value, key) => {
-                Assertions.assertEq(
-                  `Should have default ${key} setting`,
-                  value,
-                  Obj.get(defaultSettings, key).getOrUndefined()
-                );
+                Assertions.assertEq(`Should have default ${key} setting`, value, Obj.get(defaultSettings, key).getOrUndefined());
               });
             })
           ),
@@ -184,41 +126,13 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
                     }
                   );
 
-                  Assertions.assertEq(
-                    'Should have the specified id',
-                    'id',
-                    settings.id
-                  );
-                  Assertions.assertEq(
-                    'Should have the specified documentBaseUrl',
-                    'documentBaseUrl',
-                    settings.document_base_url
-                  );
-                  Assertions.assertEq(
-                    'Should have the specified userSetting',
-                    'b',
-                    settings.userSetting
-                  );
-                  Assertions.assertEq(
-                    'Should have the forced validate setting',
-                    true,
-                    settings.validate
-                  );
-                  Assertions.assertEq(
-                    'Should have the default theme',
-                    isPhone ? 'mobile' : 'silver',
-                    settings.theme
-                  );
-                  Assertions.assertEq(
-                    'Should have the specified default plugin',
-                    isPhone ? '' : 'a',
-                    settings.plugins
-                  );
-                  Assertions.assertEq(
-                    'Should have the default setting',
-                    'a',
-                    settings.defaultSetting
-                  );
+                  Assertions.assertEq('Should have the specified id', 'id', settings.id);
+                  Assertions.assertEq('Should have the specified documentBaseUrl', 'documentBaseUrl', settings.document_base_url);
+                  Assertions.assertEq('Should have the specified userSetting', 'b', settings.userSetting);
+                  Assertions.assertEq('Should have the forced validate setting', true, settings.validate);
+                  Assertions.assertEq('Should have the default theme', isPhone ? 'mobile' : 'silver', settings.theme);
+                  Assertions.assertEq('Should have the specified default plugin', isPhone ? '' : 'a', settings.plugins);
+                  Assertions.assertEq('Should have the default setting', 'a', settings.defaultSetting);
                 })
               ),
 
@@ -233,19 +147,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
                     plugins: ['c', 'd']
                   };
 
-                  const settings = EditorSettings.getEditorSettings(
-                    editor,
-                    'id',
-                    'documentBaseUrl',
-                    defaultSettings,
-                    userSettings
-                  );
+                  const settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
 
-                  Assertions.assertEq(
-                    'Should be both forced and user plugins',
-                    isPhone ? 'a b' : 'a b c d',
-                    settings.plugins
-                  );
+                  Assertions.assertEq('Should be both forced and user plugins', isPhone ? 'a b' : 'a b c d', settings.plugins);
                 })
               ),
 
@@ -260,19 +164,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
                     plugins: 'c d'
                   };
 
-                  const settings = EditorSettings.getEditorSettings(
-                    editor,
-                    'id',
-                    'documentBaseUrl',
-                    defaultSettings,
-                    userSettings
-                  );
+                  const settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
 
-                  Assertions.assertEq(
-                    'Should be both forced and user plugins',
-                    isPhone ? 'a b' : 'a b c d',
-                    settings.plugins
-                  );
+                  Assertions.assertEq('Should be both forced and user plugins', isPhone ? 'a b' : 'a b c d', settings.plugins);
                 })
               ),
 
@@ -287,19 +181,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
                     plugins: [' c ', '  d   e ']
                   };
 
-                  const settings = EditorSettings.getEditorSettings(
-                    editor,
-                    'id',
-                    'documentBaseUrl',
-                    defaultSettings,
-                    userSettings
-                  );
+                  const settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
 
-                  Assertions.assertEq(
-                    'Should be both forced and user plugins',
-                    isPhone ? 'a b' : 'a b c d e',
-                    settings.plugins
-                  );
+                  Assertions.assertEq('Should be both forced and user plugins', isPhone ? 'a b' : 'a b c d e', settings.plugins);
                 })
               ),
 
@@ -312,19 +196,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
 
                   const userSettings = {};
 
-                  const settings = EditorSettings.getEditorSettings(
-                    editor,
-                    'id',
-                    'documentBaseUrl',
-                    defaultSettings,
-                    userSettings
-                  );
+                  const settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
 
-                  Assertions.assertEq(
-                    'Should be just default plugins',
-                    'a b',
-                    settings.plugins
-                  );
+                  Assertions.assertEq('Should be just default plugins', 'a b', settings.plugins);
                 })
               ),
 
@@ -337,19 +211,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
                     plugins: ['a', 'b']
                   };
 
-                  const settings = EditorSettings.getEditorSettings(
-                    editor,
-                    'id',
-                    'documentBaseUrl',
-                    defaultSettings,
-                    userSettings
-                  );
+                  const settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
 
-                  Assertions.assertEq(
-                    'Should be just user plugins',
-                    isPhone ? '' : 'a b',
-                    settings.plugins
-                  );
+                  Assertions.assertEq('Should be just user plugins', isPhone ? '' : 'a b', settings.plugins);
                 })
               ),
 
@@ -365,19 +229,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
                     plugins: ['c', 'd']
                   };
 
-                  const settings = EditorSettings.getEditorSettings(
-                    editor,
-                    'id',
-                    'documentBaseUrl',
-                    defaultSettings,
-                    userSettings
-                  );
+                  const settings = EditorSettings.getEditorSettings(editor, 'id', 'documentBaseUrl', defaultSettings, userSettings);
 
-                  Assertions.assertEq(
-                    'Should be just forced and user plugins',
-                    isPhone ? 'a b' : 'a b c d',
-                    settings.plugins
-                  );
+                  Assertions.assertEq('Should be just forced and user plugins', isPhone ? 'a b' : 'a b c d', settings.plugins);
                 })
               ),
 
@@ -420,65 +274,29 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
                     undefined,
                     EditorSettings.getParam(fakeEditor, 'undef')
                   );
-                  Assertions.assertEq(
-                    'Should be some for existing string setting',
-                    'a',
-                    EditorSettings.getParam(fakeEditor, 'string')
-                  );
-                  Assertions.assertEq(
-                    'Should be some for existing number setting',
-                    1,
-                    EditorSettings.getParam(fakeEditor, 'number')
-                  );
-                  Assertions.assertEq(
-                    'Should be some for existing bool setting',
-                    true,
-                    EditorSettings.getParam(fakeEditor, 'boolTrue')
-                  );
-                  Assertions.assertEq(
-                    'Should be some for existing bool setting',
-                    false,
-                    EditorSettings.getParam(fakeEditor, 'boolFalse')
-                  );
+                  Assertions.assertEq('Should be some for existing string setting', 'a', EditorSettings.getParam(fakeEditor, 'string'));
+                  Assertions.assertEq('Should be some for existing number setting', 1, EditorSettings.getParam(fakeEditor, 'number'));
+                  Assertions.assertEq('Should be some for existing bool setting', true, EditorSettings.getParam(fakeEditor, 'boolTrue'));
+                  Assertions.assertEq('Should be some for existing bool setting', false, EditorSettings.getParam(fakeEditor, 'boolFalse'));
                   Assertions.assertEq(
                     'Should be undefined for non existing setting',
                     undefined,
-                    EditorSettings.getParam(
-                      fakeEditor,
-                      'non_existing',
-                      undefined,
-                      'string'
-                    )
+                    EditorSettings.getParam(fakeEditor, 'non_existing', undefined, 'string')
                   );
                   Assertions.assertEq(
                     'Should be some for existing string setting',
                     'a',
-                    EditorSettings.getParam(
-                      fakeEditor,
-                      'string',
-                      undefined,
-                      'string'
-                    )
+                    EditorSettings.getParam(fakeEditor, 'string', undefined, 'string')
                   );
                   Assertions.assertEq(
                     'Should be undefined for existing number setting',
                     undefined,
-                    EditorSettings.getParam(
-                      fakeEditor,
-                      'number',
-                      undefined,
-                      'string'
-                    )
+                    EditorSettings.getParam(fakeEditor, 'number', undefined, 'string')
                   );
                   Assertions.assertEq(
                     'Should be undefined for existing bool setting',
                     undefined,
-                    EditorSettings.getParam(
-                      fakeEditor,
-                      'boolTrue',
-                      undefined,
-                      'string'
-                    )
+                    EditorSettings.getParam(fakeEditor, 'boolTrue', undefined, 'string')
                   );
                 })
               ),
@@ -541,13 +359,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
                       external_plugins: {},
                       plugins: ''
                     },
-                    EditorSettings.combineSettings(
-                      false,
-                      false,
-                      { a: 1, b: 1, c: 1 },
-                      { b: 2 },
-                      { c: 3 }
-                    )
+                    EditorSettings.combineSettings(false, false, { a: 1, b: 1, c: 1 }, { b: 2 }, { c: 3 })
                   );
                 })
               ),
@@ -563,13 +375,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
                       forced_plugins: ['a'],
                       plugins: 'a b'
                     },
-                    EditorSettings.combineSettings(
-                      false,
-                      false,
-                      {},
-                      { forced_plugins: ['a'] },
-                      { plugins: ['b'] }
-                    )
+                    EditorSettings.combineSettings(false, false, {}, { forced_plugins: ['a'] }, { plugins: ['b'] })
                   );
                 })
               ),
@@ -586,13 +392,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
                       forced_plugins: ['a'],
                       plugins: 'a b'
                     },
-                    EditorSettings.combineSettings(
-                      true,
-                      true,
-                      {},
-                      { forced_plugins: ['a'] },
-                      { plugins: ['b'] }
-                    )
+                    EditorSettings.combineSettings(true, true, {}, { forced_plugins: ['a'] }, { plugins: ['b'] })
                   );
                 })
               ),
@@ -688,13 +488,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
                       forced_plugins: ['b'],
                       plugins: 'a'
                     },
-                    EditorSettings.combineSettings(
-                      false,
-                      false,
-                      {},
-                      { forced_plugins: ['a'] },
-                      { forced_plugins: ['b'] }
-                    )
+                    EditorSettings.combineSettings(false, false, {}, { forced_plugins: ['a'] }, { forced_plugins: ['b'] })
                   );
                 })
               ),
@@ -790,13 +584,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
                       external_plugins: {},
                       plugins: ''
                     },
-                    EditorSettings.combineSettings(
-                      true,
-                      true,
-                      {},
-                      {},
-                      { mobile: { plugins: '' } }
-                    )
+                    EditorSettings.combineSettings(true, true, {}, {}, { mobile: { plugins: '' } })
                   );
                 })
               ),
@@ -935,35 +723,14 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
                 { a: 'a', b: 'b', c: 'c' },
                 EditorSettings.getParam(editor, 'hash1', {}, 'hash')
               );
-              Assertions.assertEq(
-                'Should be expected object',
-                { a: 'a' },
-                EditorSettings.getParam(editor, 'hash2', {}, 'hash')
-              );
-              Assertions.assertEq(
-                'Should be expected object',
-                { a: 'b' },
-                EditorSettings.getParam(editor, 'hash3', {}, 'hash')
-              );
-              Assertions.assertEq(
-                'Should be expected object',
-                { a: 'b', c: 'd,e' },
-                EditorSettings.getParam(editor, 'hash4', {}, 'hash')
-              );
-              Assertions.assertEq(
-                'Should be expected object',
-                { a: 'b', c: 'd' },
-                EditorSettings.getParam(editor, 'hash5', {}, 'hash')
-              );
+              Assertions.assertEq('Should be expected object', { a: 'a' }, EditorSettings.getParam(editor, 'hash2', {}, 'hash'));
+              Assertions.assertEq('Should be expected object', { a: 'b' }, EditorSettings.getParam(editor, 'hash3', {}, 'hash'));
+              Assertions.assertEq('Should be expected object', { a: 'b', c: 'd,e' }, EditorSettings.getParam(editor, 'hash4', {}, 'hash'));
+              Assertions.assertEq('Should be expected object', { a: 'b', c: 'd' }, EditorSettings.getParam(editor, 'hash5', {}, 'hash'));
               Assertions.assertEq(
                 'Should be expected default object',
                 { b: 2 },
-                EditorSettings.getParam(
-                  editor,
-                  'hash_undefined',
-                  { b: 2 },
-                  'hash'
-                )
+                EditorSettings.getParam(editor, 'hash_undefined', { b: 2 }, 'hash')
               );
             })
           ),
@@ -985,31 +752,11 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
                 EditorManager
               );
 
-              Assertions.assertEq(
-                'Should be expected bool',
-                true,
-                EditorSettings.getParam(editor, 'bool', false, 'boolean')
-              );
-              Assertions.assertEq(
-                'Should be expected string',
-                'a',
-                EditorSettings.getParam(editor, 'str', 'x', 'string')
-              );
-              Assertions.assertEq(
-                'Should be expected number',
-                2,
-                EditorSettings.getParam(editor, 'num', 1, 'number')
-              );
-              Assertions.assertEq(
-                'Should be expected object',
-                { a: 1 },
-                EditorSettings.getParam(editor, 'obj', {}, 'object')
-              );
-              Assertions.assertEq(
-                'Should be expected array',
-                ['a'],
-                EditorSettings.getParam(editor, 'arr', [], 'array')
-              );
+              Assertions.assertEq('Should be expected bool', true, EditorSettings.getParam(editor, 'bool', false, 'boolean'));
+              Assertions.assertEq('Should be expected string', 'a', EditorSettings.getParam(editor, 'str', 'x', 'string'));
+              Assertions.assertEq('Should be expected number', 2, EditorSettings.getParam(editor, 'num', 1, 'number'));
+              Assertions.assertEq('Should be expected object', { a: 1 }, EditorSettings.getParam(editor, 'obj', {}, 'object'));
+              Assertions.assertEq('Should be expected array', ['a'], EditorSettings.getParam(editor, 'arr', [], 'array'));
               Assertions.assertEq(
                 'Should be expected function',
                 'function',
@@ -1018,42 +765,20 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (
               Assertions.assertEq(
                 'Should be expected default bool',
                 false,
-                EditorSettings.getParam(
-                  editor,
-                  'bool_undefined',
-                  false,
-                  'boolean'
-                )
+                EditorSettings.getParam(editor, 'bool_undefined', false, 'boolean')
               );
               Assertions.assertEq(
                 'Should be expected default string',
                 'x',
                 EditorSettings.getParam(editor, 'str_undefined', 'x', 'string')
               );
-              Assertions.assertEq(
-                'Should be expected default number',
-                1,
-                EditorSettings.getParam(editor, 'num_undefined', 1, 'number')
-              );
-              Assertions.assertEq(
-                'Should be expected default object',
-                {},
-                EditorSettings.getParam(editor, 'obj_undefined', {}, 'object')
-              );
-              Assertions.assertEq(
-                'Should be expected default array',
-                [],
-                EditorSettings.getParam(editor, 'arr_undefined', [], 'array')
-              );
+              Assertions.assertEq('Should be expected default number', 1, EditorSettings.getParam(editor, 'num_undefined', 1, 'number'));
+              Assertions.assertEq('Should be expected default object', {}, EditorSettings.getParam(editor, 'obj_undefined', {}, 'object'));
+              Assertions.assertEq('Should be expected default array', [], EditorSettings.getParam(editor, 'arr_undefined', [], 'array'));
               Assertions.assertEq(
                 'Should be expected default function',
                 null,
-                EditorSettings.getParam(
-                  editor,
-                  'fun_undefined',
-                  null,
-                  'function'
-                )
+                EditorSettings.getParam(editor, 'fun_undefined', null, 'function')
               );
               Assertions.assertEq(
                 'Should be expected string array',

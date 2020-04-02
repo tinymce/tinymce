@@ -10,14 +10,10 @@ import { window } from '@ephox/dom-globals';
 
 const hasProPlugin = function (editor) {
   // draw back if power version is requested and registered
-  if (
-    /(^|[ ,])tinymcespellchecker([, ]|$)/.test(editor.settings.plugins) &&
-    PluginManager.get('tinymcespellchecker')
-  ) {
+  if (/(^|[ ,])tinymcespellchecker([, ]|$)/.test(editor.settings.plugins) && PluginManager.get('tinymcespellchecker')) {
     if (typeof window.console !== 'undefined' && window.console.log) {
       window.console.log(
-        `Spell Checker Pro is incompatible with Spell Checker plugin! ` +
-          `Remove 'spellchecker' from the 'plugins' option.`
+        `Spell Checker Pro is incompatible with Spell Checker plugin! ` + `Remove 'spellchecker' from the 'plugins' option.`
       );
     }
     return true;

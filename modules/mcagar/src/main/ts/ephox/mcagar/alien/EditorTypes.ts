@@ -34,12 +34,7 @@ export interface Editor {
   getContent: () => string;
   setContent: (content: string) => void;
 
-  execCommand: (
-    command: string,
-    ui?: boolean,
-    value?: any,
-    args?: any
-  ) => boolean;
+  execCommand: (command: string, ui?: boolean, value?: any, args?: any) => boolean;
 
   nodeChanged: () => void;
   focus: () => void;

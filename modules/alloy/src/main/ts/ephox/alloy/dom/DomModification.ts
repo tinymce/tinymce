@@ -22,10 +22,7 @@ const modToStr = (mod: DomModification): string => {
 
 const modToRaw = (mod: DomModification): any => mod;
 
-const merge = (
-  defnA: DomDefinitionDetail,
-  mod: DomModification
-): DomDefinitionDetail => ({
+const merge = (defnA: DomDefinitionDetail, mod: DomModification): DomDefinitionDetail => ({
   ...defnA,
   attributes: { ...defnA.attributes, ...mod.attributes },
   styles: { ...defnA.styles, ...mod.styles },

@@ -10,21 +10,12 @@ export interface PlatformDetection {
   deviceType: DeviceType;
 }
 
-const detect = function (
-  userAgent: string,
-  mediaMatch: (query: string) => boolean
-): PlatformDetection {
+const detect = function (userAgent: string, mediaMatch: (query: string) => boolean): PlatformDetection {
   const browsers = PlatformInfo.browsers();
   const oses = PlatformInfo.oses();
 
-  const browser = UaString.detectBrowser(browsers, userAgent).fold(
-    Browser.unknown,
-    Browser.nu
-  );
-  const os = UaString.detectOs(oses, userAgent).fold(
-    OperatingSystem.unknown,
-    OperatingSystem.nu
-  );
+  const browser = UaString.detectBrowser(browsers, userAgent).fold(Browser.unknown, Browser.nu);
+  const os = UaString.detectOs(oses, userAgent).fold(OperatingSystem.unknown, OperatingSystem.nu);
   const deviceType = DeviceType(os, browser, userAgent, mediaMatch);
 
   return {

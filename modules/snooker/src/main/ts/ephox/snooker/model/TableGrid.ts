@@ -13,10 +13,7 @@ const getRow = function (grid: RowCells[], index: number) {
   return grid[index];
 };
 
-const findDiff = function (
-  xs: ElementNew[],
-  comp: (a: Element, b: Element) => boolean
-) {
+const findDiff = function (xs: ElementNew[], comp: (a: Element, b: Element) => boolean) {
   if (xs.length === 0) {
     return 0;
   }

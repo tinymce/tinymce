@@ -37,20 +37,12 @@ const styleValueToText = function (styleValue) {
 
 const isWithinList = (editor: Editor, e, nodeName) => {
   const tableCellIndex = findIndex(e.parents, ListUtils.isTableCellNode);
-  const parents =
-    tableCellIndex !== -1 ? e.parents.slice(0, tableCellIndex) : e.parents;
+  const parents = tableCellIndex !== -1 ? e.parents.slice(0, tableCellIndex) : e.parents;
   const lists = Tools.grep(parents, ListUtils.isListNode(editor));
   return lists.length > 0 && lists[0].nodeName === nodeName;
 };
 
-const addSplitButton = function (
-  editor: Editor,
-  id,
-  tooltip,
-  cmd,
-  nodeName,
-  styles
-) {
+const addSplitButton = function (editor: Editor, id, tooltip, cmd, nodeName, styles) {
   editor.ui.registry.addSplitButton(id, {
     tooltip,
     icon: nodeName === ListType.OrderedList ? 'ordered-list' : 'unordered-list',
@@ -61,10 +53,7 @@ const addSplitButton = function (
         styles,
         (styleValue): Menu.ChoiceMenuItemApi => {
           const iconStyle = nodeName === ListType.OrderedList ? 'num' : 'bull';
-          const iconName =
-            styleValue === 'disc' || styleValue === 'decimal'
-              ? 'default'
-              : styleValue;
+          const iconName = styleValue === 'disc' || styleValue === 'decimal' ? 'default' : styleValue;
           const itemValue = styleValue === 'default' ? '' : styleValue;
           const displayText = styleValueToText(styleValue);
           return {
@@ -96,14 +85,7 @@ const addSplitButton = function (
   });
 };
 
-const addButton = function (
-  editor: Editor,
-  id,
-  tooltip,
-  cmd,
-  nodeName,
-  _styles
-) {
+const addButton = function (editor: Editor, id, tooltip, cmd, nodeName, _styles) {
   editor.ui.registry.addToggleButton(id, {
     active: false,
     tooltip,
@@ -129,22 +111,8 @@ const addControl = function (editor, id, tooltip, cmd, nodeName, styles) {
 };
 
 const register = function (editor) {
-  addControl(
-    editor,
-    'numlist',
-    'Numbered list',
-    'InsertOrderedList',
-    ListType.OrderedList,
-    Settings.getNumberStyles(editor)
-  );
-  addControl(
-    editor,
-    'bullist',
-    'Bullet list',
-    'InsertUnorderedList',
-    ListType.UnorderedList,
-    Settings.getBulletStyles(editor)
-  );
+  addControl(editor, 'numlist', 'Numbered list', 'InsertOrderedList', ListType.OrderedList, Settings.getNumberStyles(editor));
+  addControl(editor, 'bullist', 'Bullet list', 'InsertUnorderedList', ListType.UnorderedList, Settings.getBulletStyles(editor));
 };
 
 export { register };

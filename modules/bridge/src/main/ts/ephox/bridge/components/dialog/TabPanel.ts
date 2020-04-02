@@ -36,14 +36,9 @@ export const tabFields = [
   FieldSchema.strictArrayOf('items', itemSchema)
 ];
 
-export const tabPanelFields = [
-  FieldSchema.strictString('type'),
-  FieldSchema.strictArrayOfObj('tabs', tabFields)
-];
+export const tabPanelFields = [FieldSchema.strictString('type'), FieldSchema.strictArrayOfObj('tabs', tabFields)];
 
 export const tabPanelSchema = ValueSchema.objOf(tabPanelFields);
 
-export const createTabPanel = (
-  spec: TabPanelApi
-): Result<TabPanel, ValueSchema.SchemaError<any>> =>
+export const createTabPanel = (spec: TabPanelApi): Result<TabPanel, ValueSchema.SchemaError<any>> =>
   ValueSchema.asRaw<TabPanel>('tabpanel', tabPanelSchema, spec);

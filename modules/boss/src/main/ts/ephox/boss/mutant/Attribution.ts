@@ -1,10 +1,6 @@
 import { Gene } from '../api/Gene';
 
-const set = function (
-  item: Gene,
-  property: string,
-  value: string | number | boolean
-) {
+const set = function (item: Gene, property: string, value: string | number | boolean) {
   item.attrs = {
     ...item.attrs,
     [property]: String(value)

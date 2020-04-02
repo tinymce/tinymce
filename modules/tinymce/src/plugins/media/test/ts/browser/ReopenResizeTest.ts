@@ -8,10 +8,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
-UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (success, failure) {
   Plugin();
   Theme();
 
@@ -19,11 +16,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (
     return Waiter.sTryUntil(
       'Wait for new width value',
       Step.sync(function () {
-        Assert.eq(
-          'Resize handle should exist',
-          editor.dom.select('#mceResizeHandlenw').length,
-          1
-        );
+        Assert.eq('Resize handle should exist', editor.dom.select('#mceResizeHandlenw').length, 1);
       })
     );
   };
@@ -61,12 +54,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (
             Utils.sChangeWidthValue(ui, '500'),
             ui.sClickOnUi('Click on close button', 'button:contains("Save")'),
             sWaitForResizeHandles(editor),
-            Waiter.sTryUntil(
-              'Try assert content',
-              sRawAssertImagePresence(editor),
-              10,
-              3000
-            )
+            Waiter.sTryUntil('Try assert content', sRawAssertImagePresence(editor), 10, 3000)
           ]
         ),
         onSuccess,

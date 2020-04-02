@@ -36,8 +36,7 @@ export default function (sink?: AlloyComponent): UiFactoryBackstage {
       addToHistory: () => {},
       getLinkInformation: () => Option.none(),
       getValidationHandler: () => Option.none(),
-      getUrlPicker: (_filetype) =>
-        Option.some((entry: ApiUrlData) => Future.pure(entry))
+      getUrlPicker: (_filetype) => Option.some((entry: ApiUrlData) => Future.pure(entry))
     },
     dialog: {
       isDraggableModal: () => false

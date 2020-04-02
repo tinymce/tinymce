@@ -20,18 +20,16 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
   const changeHandlers = Cell([]);
 
   const findTargets = (): Option<Targets> =>
-    TableSelection.getSelectionStartCellOrCaption(editor).bind(
-      (cellOrCaption) => {
-        const table = TableLookup.table(cellOrCaption);
-        return table.map((table) => {
-          if (Node.name(cellOrCaption) === 'caption') {
-            return TableTargets.notCell(cellOrCaption);
-          } else {
-            return TableTargets.forMenu(selections, table, cellOrCaption);
-          }
-        });
-      }
-    );
+    TableSelection.getSelectionStartCellOrCaption(editor).bind((cellOrCaption) => {
+      const table = TableLookup.table(cellOrCaption);
+      return table.map((table) => {
+        if (Node.name(cellOrCaption) === 'caption') {
+          return TableTargets.notCell(cellOrCaption);
+        } else {
+          return TableTargets.forMenu(selections, table, cellOrCaption);
+        }
+      });
+    });
 
   const resetTargets = () => {
     // Reset the targets
@@ -59,19 +57,14 @@ export const getSelectionTargets = (editor: Editor, selections: Selections) => {
     changeHandlers.set(changeHandlers.get().concat([handler]));
 
     return () => {
-      changeHandlers.set(
-        Arr.filter(changeHandlers.get(), (h) => h !== handler)
-      );
+      changeHandlers.set(Arr.filter(changeHandlers.get(), (h) => h !== handler));
     };
   };
 
   const onSetupTable = (api) => onSetup(api, (_) => false);
-  const onSetupCellOrRow = (api) =>
-    onSetup(api, (targets) => Node.name(targets.element()) === 'caption');
-  const onSetupMergeable = (api) =>
-    onSetup(api, (targets) => targets.mergable().isNone());
-  const onSetupUnmergeable = (api) =>
-    onSetup(api, (targets) => targets.unmergable().isNone());
+  const onSetupCellOrRow = (api) => onSetup(api, (targets) => Node.name(targets.element()) === 'caption');
+  const onSetupMergeable = (api) => onSetup(api, (targets) => targets.mergable().isNone());
+  const onSetupUnmergeable = (api) => onSetup(api, (targets) => targets.unmergable().isNone());
 
   editor.on('NodeChange TableSelectorChange', resetTargets);
 

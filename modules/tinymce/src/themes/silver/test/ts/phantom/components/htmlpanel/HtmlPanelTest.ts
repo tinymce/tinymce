@@ -21,11 +21,7 @@ UnitTest.asynctest('HtmlPanel component Test', (success, failure) => {
             attrs: {
               role: str.is('presentation')
             },
-            children: [
-              s.element('br', {}),
-              s.element('br', {}),
-              s.element('hr', {})
-            ]
+            children: [s.element('br', {}), s.element('br', {}), s.element('hr', {})]
           })
         ),
         component.element()

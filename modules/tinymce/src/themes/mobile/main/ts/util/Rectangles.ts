@@ -6,15 +6,7 @@
  */
 
 import { Arr, Fun } from '@ephox/katamari';
-import {
-  Awareness,
-  Element,
-  RawRect,
-  Selection,
-  StructRect,
-  Traverse,
-  WindowSelection
-} from '@ephox/sugar';
+import { Awareness, Element, RawRect, Selection, StructRect, Traverse, WindowSelection } from '@ephox/sugar';
 import { Range, Window } from '@ephox/dom-globals';
 
 const COLLAPSED_WIDTH = 2;
@@ -44,16 +36,8 @@ const getRectsFromRange = (range: Range): StructRect[] => {
     const start = Element.fromDom(range.startContainer);
     return Traverse.parent(start)
       .bind((parent) => {
-        const selection = Selection.exact(
-          start,
-          range.startOffset,
-          parent,
-          Awareness.getEnd(parent)
-        );
-        const optRect = WindowSelection.getFirstRect(
-          range.startContainer.ownerDocument.defaultView,
-          selection
-        );
+        const selection = Selection.exact(start, range.startOffset, parent, Awareness.getEnd(parent));
+        const optRect = WindowSelection.getFirstRect(range.startContainer.ownerDocument.defaultView, selection);
         return optRect.map(collapsedRect).map(Arr.pure);
       })
       .getOr([]);
@@ -64,9 +48,7 @@ const getRectangles = (cWin: Window): StructRect[] => {
   const sel = cWin.getSelection();
   // In the Android WebView for some reason cWin.getSelection returns undefined.
   // The undefined check it is to avoid throwing of a JS error.
-  return sel !== undefined && sel.rangeCount > 0
-    ? getRectsFromRange(sel.getRangeAt(0))
-    : [];
+  return sel !== undefined && sel.rangeCount > 0 ? getRectsFromRange(sel.getRangeAt(0)) : [];
 };
 
 export { getRectangles };

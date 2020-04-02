@@ -1,9 +1,6 @@
 import { Logger } from '@ephox/agar';
 
-import {
-  DialogChanges,
-  DialogDelta
-} from 'tinymce/plugins/link/ui/DialogChanges';
+import { DialogChanges, DialogDelta } from 'tinymce/plugins/link/ui/DialogChanges';
 import { LinkDialogData, ListItem } from 'tinymce/plugins/link/ui/DialogTypes';
 import { Fun } from '@ephox/katamari';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
@@ -21,44 +18,19 @@ UnitTest.test('DialogChanges', () => {
         } */
     ];
 
-    const assertNone = (
-      label: string,
-      previousText: string,
-      catalog: ListItem[],
-      data: Partial<LinkDialogData>
-    ) => {
+    const assertNone = (label: string, previousText: string, catalog: ListItem[], data: Partial<LinkDialogData>) => {
       Logger.sync('assertNone(' + label + ')', () => {
-        const actual = DialogChanges.getDelta(
-          previousText,
-          'anchor',
-          catalog,
-          data
-        );
+        const actual = DialogChanges.getDelta(previousText, 'anchor', catalog, data);
         actual.each((_a) => {
           throw new Error('Should not have found replacement text');
         });
       });
     };
 
-    const assertSome = (
-      label: string,
-      expected: DialogDelta,
-      previousText: string,
-      catalog: ListItem[],
-      data: Partial<LinkDialogData>
-    ) => {
+    const assertSome = (label: string, expected: DialogDelta, previousText: string, catalog: ListItem[], data: Partial<LinkDialogData>) => {
       Logger.sync('assertSome(' + label + ')', () => {
-        const actual = DialogChanges.getDelta(
-          previousText,
-          'anchor',
-          catalog,
-          data
-        );
-        Assert.eq(
-          'Checking replacement text',
-          expected,
-          actual.getOrDie('Should be some')
-        );
+        const actual = DialogChanges.getDelta(previousText, 'anchor', catalog, data);
+        Assert.eq('Checking replacement text', expected, actual.getOrDie('Should be some'));
       });
     };
 

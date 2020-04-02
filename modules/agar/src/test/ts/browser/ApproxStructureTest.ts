@@ -104,21 +104,14 @@ UnitTest.asynctest('ApproxStructureTest', (success, _failure) => {
   );
 
   check(struct2, '<div><span class="hello"></span><div></div></div>');
-  check(
-    struct2,
-    '<div><span class="hello"></span><div></div><span class="bye"></span></div>'
-  );
+  check(struct2, '<div><span class="hello"></span><div></div><span class="bye"></span></div>');
   check(
     struct2,
     '<div><span class="hello"></span><span class="hello"></span><span class="hello"></span><span class="hello"></span><div></div><span class="bye"></span></div>'
   );
 
   const container = Element.fromTag('div');
-  InsertAll.append(container, [
-    Element.fromText('hello'),
-    Element.fromText(' '),
-    Element.fromText('world')
-  ]);
+  InsertAll.append(container, [Element.fromText('hello'), Element.fromText(' '), Element.fromText('world')]);
 
   Assertions.assertStructure(
     'Test',
@@ -134,10 +127,7 @@ UnitTest.asynctest('ApproxStructureTest', (success, _failure) => {
     'Test',
     ApproxStructure.build((s, str, _arr) =>
       s.element('div', {
-        children: [
-          s.text(str.is('hello'), false),
-          s.text(str.is(' world'), true)
-        ]
+        children: [s.text(str.is('hello'), false), s.text(str.is(' world'), true)]
       })
     ),
     container

@@ -9,12 +9,7 @@ export interface TinyDom {
 const fromDom = (elm: DomNode): Element<DomNode> => Element.fromDom(elm);
 
 const fromRange = (rng: Range): SimRange =>
-  SimRange.create(
-    Element.fromDom(rng.startContainer),
-    rng.startOffset,
-    Element.fromDom(rng.endContainer),
-    rng.endOffset
-  );
+  SimRange.create(Element.fromDom(rng.startContainer), rng.startOffset, Element.fromDom(rng.endContainer), rng.endOffset);
 
 export const TinyDom: TinyDom = {
   fromDom,

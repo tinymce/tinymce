@@ -7,10 +7,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import * as HtmlUtils from '../module/test/HtmlUtils';
 import * as KeyUtils from '../module/test/KeyUtils';
 
-UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (success, failure) {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
@@ -28,16 +25,10 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (
     rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
-    LegacyUnit.equal(
-      getContent(editor),
-      '<p>1234</p>',
-      'Inline element on selected text'
-    );
+    LegacyUnit.equal(getContent(editor), '<p>1234</p>', 'Inline element on selected text');
   });
 
-  suite.test('Inline element on selected text with remove=all', function (
-    editor
-  ) {
+  suite.test('Inline element on selected text with remove=all', function (editor) {
     editor.formatter.register('format', { selector: 'b', remove: 'all' });
     editor.getBody().innerHTML = '<p><b title="text">1234</b></p>';
     const rng = editor.dom.createRng();
@@ -45,44 +36,30 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (
     rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
-    LegacyUnit.equal(
-      getContent(editor),
-      '<p>1234</p>',
-      'Inline element on selected text with remove=all'
-    );
+    LegacyUnit.equal(getContent(editor), '<p>1234</p>', 'Inline element on selected text with remove=all');
   });
 
-  suite.test('Inline element on selected text with remove=none', function (
-    editor
-  ) {
+  suite.test('Inline element on selected text with remove=none', function (editor) {
     editor.formatter.register('format', {
       selector: 'span',
       styles: { fontWeight: 'bold' },
       remove: 'none'
     });
-    editor.getBody().innerHTML =
-      '<p><span style="font-weight:bold">1234</span></p>';
+    editor.getBody().innerHTML = '<p><span style="font-weight:bold">1234</span></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0], 0);
     rng.setEnd(editor.dom.select('p')[0], 1);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
-    LegacyUnit.equal(
-      getContent(editor),
-      '<p><span>1234</span></p>',
-      'Inline element on selected text with remove=none'
-    );
+    LegacyUnit.equal(getContent(editor), '<p><span>1234</span></p>', 'Inline element on selected text with remove=none');
   });
 
-  suite.test('Inline element style where element is format root', function (
-    editor
-  ) {
+  suite.test('Inline element style where element is format root', function (editor) {
     editor.formatter.register('format', {
       inline: 'span',
       styles: { fontWeight: 'bold' }
     });
-    editor.getBody().innerHTML =
-      '<p><span style="font-weight:bold; color:#FF0000"><em>1234</em></span></p>';
+    editor.getBody().innerHTML = '<p><span style="font-weight:bold; color:#FF0000"><em>1234</em></span></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('em')[0].firstChild, 1);
     rng.setEnd(editor.dom.select('em')[0].firstChild, 3);
@@ -106,16 +83,10 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (
     rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
-    LegacyUnit.equal(
-      getContent(editor),
-      '<p><b>12</b>34</p>',
-      'Partially selected inline element text'
-    );
+    LegacyUnit.equal(getContent(editor), '<p><b>12</b>34</p>', 'Partially selected inline element text');
   });
 
-  suite.test('Partially selected inline element text with children', function (
-    editor
-  ) {
+  suite.test('Partially selected inline element text with children', function (editor) {
     editor.formatter.register('format', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b><em><span>1234</span></em></b></p>';
     const rng = editor.dom.createRng();
@@ -130,28 +101,25 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (
     );
   });
 
-  suite.test(
-    'Partially selected inline element text with complex children',
-    function (editor) {
-      editor.formatter.register('format', {
-        inline: 'span',
-        styles: { fontWeight: 'bold' }
-      });
-      editor.getBody().innerHTML =
-        '<p><span style="font-weight:bold"><em><span style="color:#ff0000;font-weight:bold">1234</span></em></span></p>';
-      const rng = editor.dom.createRng();
-      rng.setStart(editor.dom.select('span')[1].firstChild, 2);
-      rng.setEnd(editor.dom.select('span')[1].firstChild, 4);
-      editor.selection.setRng(rng);
-      editor.formatter.remove('format');
-      LegacyUnit.equal(
-        getContent(editor),
-        '<p><span style="font-weight: bold;"><em><span style="color: #ff0000; font-weight: bold;">12</span>' +
-          '</em></span><em><span style="color: #ff0000;">34</span></em></p>',
-        'Partially selected inline element text with complex children'
-      );
-    }
-  );
+  suite.test('Partially selected inline element text with complex children', function (editor) {
+    editor.formatter.register('format', {
+      inline: 'span',
+      styles: { fontWeight: 'bold' }
+    });
+    editor.getBody().innerHTML =
+      '<p><span style="font-weight:bold"><em><span style="color:#ff0000;font-weight:bold">1234</span></em></span></p>';
+    const rng = editor.dom.createRng();
+    rng.setStart(editor.dom.select('span')[1].firstChild, 2);
+    rng.setEnd(editor.dom.select('span')[1].firstChild, 4);
+    editor.selection.setRng(rng);
+    editor.formatter.remove('format');
+    LegacyUnit.equal(
+      getContent(editor),
+      '<p><span style="font-weight: bold;"><em><span style="color: #ff0000; font-weight: bold;">12</span>' +
+        '</em></span><em><span style="color: #ff0000;">34</span></em></p>',
+      'Partially selected inline element text with complex children'
+    );
+  });
 
   suite.test('Inline elements with exact flag', function (editor) {
     editor.formatter.register('format', {
@@ -228,43 +196,29 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (
     rng.setEnd(editor.dom.select('b')[0], 2);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
-    LegacyUnit.equal(
-      getContent(editor),
-      '<p>12345678</p>',
-      'End within start element'
-    );
+    LegacyUnit.equal(getContent(editor), '<p>12345678</p>', 'End within start element');
   });
 
   suite.test('Start and end within similar format 1', function (editor) {
     editor.formatter.register('format', { inline: 'b' });
-    editor.getBody().innerHTML =
-      '<p><b><em><b>1234<b>5678</b></b></em></b></p>';
+    editor.getBody().innerHTML = '<p><b><em><b>1234<b>5678</b></b></em></b></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('em')[0], 0);
     rng.setEnd(editor.dom.select('b')[1], 2);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
-    LegacyUnit.equal(
-      getContent(editor),
-      '<p><em>12345678</em></p>',
-      'Start and end within similar format 1'
-    );
+    LegacyUnit.equal(getContent(editor), '<p><em>12345678</em></p>', 'Start and end within similar format 1');
   });
 
   suite.test('Start and end within similar format 2', function (editor) {
     editor.formatter.register('format', { inline: 'b' });
-    editor.getBody().innerHTML =
-      '<p><b><em><b>1234</b><b>5678</b></em></b></p>';
+    editor.getBody().innerHTML = '<p><b><em><b>1234</b><b>5678</b></em></b></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('em')[0], 0);
     rng.setEnd(editor.dom.select('em')[0], 1);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
-    LegacyUnit.equal(
-      getContent(editor),
-      '<p><em>1234</em><b><em><b>5678</b></em></b></p>',
-      'Start and end within similar format 2'
-    );
+    LegacyUnit.equal(getContent(editor), '<p><em>1234</em><b><em><b>5678</b></em></b></p>', 'Start and end within similar format 2');
   });
 
   suite.test('Start and end within similar format 3', function (editor) {
@@ -275,11 +229,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (
     rng.setEnd(editor.dom.select('em')[0], 1);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
-    LegacyUnit.equal(
-      getContent(editor),
-      '<p><em>1234</em></p>',
-      'Start and end within similar format 3'
-    );
+    LegacyUnit.equal(getContent(editor), '<p><em>1234</em></p>', 'Start and end within similar format 3');
   });
 
   suite.test('End within start', function (editor) {
@@ -290,11 +240,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (
     rng.setEnd(editor.dom.select('b')[1].firstChild, 3);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
-    LegacyUnit.equal(
-      getContent(editor),
-      '<p><em>x</em><em>abc</em><b><em>y</em></b></p>',
-      'End within start'
-    );
+    LegacyUnit.equal(getContent(editor), '<p><em>x</em><em>abc</em><b><em>y</em></b></p>', 'End within start');
   });
 
   suite.test('Remove block format', function (editor) {
@@ -316,11 +262,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (
     rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
-    LegacyUnit.equal(
-      getContent(editor),
-      '<p>text</p>',
-      'Remove wrapper block format'
-    );
+    LegacyUnit.equal(getContent(editor), '<p>text</p>', 'Remove wrapper block format');
   });
 
   suite.test('Remove span format within block with style', function (editor) {
@@ -333,8 +275,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (
       deep: true
     });
     const rng = editor.dom.createRng();
-    editor.getBody().innerHTML =
-      '<p style="color:#ff0000"><span style="color:#00ff00">text</span></p>';
+    editor.getBody().innerHTML = '<p style="color:#ff0000"><span style="color:#00ff00">text</span></p>';
     rng.setStart(editor.dom.select('span')[0].firstChild, 1);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 3);
     editor.selection.setRng(rng);
@@ -358,25 +299,19 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test(
-    'Remove with selection collapsed ensure correct caret position',
-    function (editor) {
-      const content = '<p>test</p><p>testing</p>';
+  suite.test('Remove with selection collapsed ensure correct caret position', function (editor) {
+    const content = '<p>test</p><p>testing</p>';
 
-      editor.formatter.register('format', { block: 'p' });
-      const rng = editor.dom.createRng();
-      editor.getBody().innerHTML = content;
-      rng.setStart(editor.dom.select('p')[0].firstChild, 4);
-      rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
-      editor.selection.setRng(rng);
-      editor.formatter.remove('format');
-      LegacyUnit.equal(getContent(editor), content);
-      LegacyUnit.equalDom(
-        editor.selection.getStart(),
-        editor.dom.select('p')[0]
-      );
-    }
-  );
+    editor.formatter.register('format', { block: 'p' });
+    const rng = editor.dom.createRng();
+    editor.getBody().innerHTML = content;
+    rng.setStart(editor.dom.select('p')[0].firstChild, 4);
+    rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
+    editor.selection.setRng(rng);
+    editor.formatter.remove('format');
+    LegacyUnit.equal(getContent(editor), content);
+    LegacyUnit.equalDom(editor.selection.getStart(), editor.dom.select('p')[0]);
+  });
 
   suite.test('Caret format at middle of text', function (editor) {
     editor.setContent('<p><b>abc</b></p>');
@@ -395,9 +330,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (
     LegacyUnit.equal(editor.getContent(), '<p><b>abc</b>d</p>');
   });
 
-  suite.test('Caret format at end of text inside other format', function (
-    editor
-  ) {
+  suite.test('Caret format at end of text inside other format', function (editor) {
     editor.setContent('<p><em><b>abc</b></em></p>');
     editor.formatter.register('format', { inline: 'b' });
     LegacyUnit.setSelection(editor, 'b', 3, 'b', 3);
@@ -406,108 +339,77 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (
     LegacyUnit.equal(editor.getContent(), '<p><em><b>abc</b>d</em></p>');
   });
 
-  suite.test(
-    'Caret format at end of text inside other format with text after 1',
-    function (editor) {
-      editor.setContent('<p><em><b>abc</b></em>e</p>');
-      editor.formatter.register('format', { inline: 'b' });
-      LegacyUnit.setSelection(editor, 'b', 3, 'b', 3);
-      editor.formatter.remove('format');
-      KeyUtils.type(editor, 'd');
-      LegacyUnit.equal(editor.getContent(), '<p><em><b>abc</b>d</em>e</p>');
-    }
-  );
+  suite.test('Caret format at end of text inside other format with text after 1', function (editor) {
+    editor.setContent('<p><em><b>abc</b></em>e</p>');
+    editor.formatter.register('format', { inline: 'b' });
+    LegacyUnit.setSelection(editor, 'b', 3, 'b', 3);
+    editor.formatter.remove('format');
+    KeyUtils.type(editor, 'd');
+    LegacyUnit.equal(editor.getContent(), '<p><em><b>abc</b>d</em>e</p>');
+  });
 
-  suite.test(
-    'Caret format at end of text inside other format with text after 2',
-    function (editor) {
-      editor.setContent('<p><em><b>abc</b></em>e</p>');
-      editor.formatter.register('format', { inline: 'em' });
-      LegacyUnit.setSelection(editor, 'b', 3, 'b', 3);
-      editor.formatter.remove('format');
-      KeyUtils.type(editor, 'd');
-      LegacyUnit.equal(
-        editor.getContent(),
-        '<p><em><b>abc</b></em><b>d</b>e</p>'
-      );
-    }
-  );
+  suite.test('Caret format at end of text inside other format with text after 2', function (editor) {
+    editor.setContent('<p><em><b>abc</b></em>e</p>');
+    editor.formatter.register('format', { inline: 'em' });
+    LegacyUnit.setSelection(editor, 'b', 3, 'b', 3);
+    editor.formatter.remove('format');
+    KeyUtils.type(editor, 'd');
+    LegacyUnit.equal(editor.getContent(), '<p><em><b>abc</b></em><b>d</b>e</p>');
+  });
 
-  suite.test(
-    `Toggle styles at the end of the content don' removes the format where it is not needed.`,
-    function (editor) {
-      editor.setContent('<p><em><b>abce</b></em></p>');
-      editor.formatter.register('b', { inline: 'b' });
-      editor.formatter.register('em', { inline: 'em' });
-      LegacyUnit.setSelection(editor, 'b', 4, 'b', 4);
-      editor.formatter.remove('b');
-      editor.formatter.remove('em');
-      LegacyUnit.equal(editor.getContent(), '<p><em><b>abce</b></em></p>');
-    }
-  );
+  suite.test(`Toggle styles at the end of the content don' removes the format where it is not needed.`, function (editor) {
+    editor.setContent('<p><em><b>abce</b></em></p>');
+    editor.formatter.register('b', { inline: 'b' });
+    editor.formatter.register('em', { inline: 'em' });
+    LegacyUnit.setSelection(editor, 'b', 4, 'b', 4);
+    editor.formatter.remove('b');
+    editor.formatter.remove('em');
+    LegacyUnit.equal(editor.getContent(), '<p><em><b>abce</b></em></p>');
+  });
 
   suite.test('Caret format on second word in table cell', function (editor) {
-    editor.setContent(
-      '<table><tbody><tr><td>one <b>two</b></td></tr></tbody></table>'
-    );
+    editor.setContent('<table><tbody><tr><td>one <b>two</b></td></tr></tbody></table>');
     editor.formatter.register('format', { inline: 'b' });
     LegacyUnit.setSelection(editor, 'b', 2, 'b', 2);
     editor.formatter.remove('format');
+    LegacyUnit.equal(editor.getContent(), '<table><tbody><tr><td>one two</td></tr></tbody></table>');
+  });
+
+  suite.test('contentEditable: false on start and contentEditable: true on end', function (editor) {
+    if (Env.ie) {
+      // Skipped since IE doesn't support selection of parts of a cE=false element
+      return;
+    }
+
+    editor.formatter.register('format', { inline: 'b' });
+    editor.setContent('<p>abc</p><p contenteditable="false"><b>def</b></p><p><b>ghj</b></p>');
+    const rng = editor.dom.createRng();
+    rng.setStart(editor.dom.select('b')[0].firstChild, 0);
+    rng.setEnd(editor.dom.select('b')[1].firstChild, 3);
+    editor.selection.setRng(rng);
+    editor.formatter.remove('format');
     LegacyUnit.equal(
       editor.getContent(),
-      '<table><tbody><tr><td>one two</td></tr></tbody></table>'
+      '<p>abc</p><p contenteditable="false"><b>def</b></p><p>ghj</p>',
+      'Text in last paragraph is not bold'
     );
   });
 
-  suite.test(
-    'contentEditable: false on start and contentEditable: true on end',
-    function (editor) {
-      if (Env.ie) {
-        // Skipped since IE doesn't support selection of parts of a cE=false element
-        return;
-      }
-
-      editor.formatter.register('format', { inline: 'b' });
-      editor.setContent(
-        '<p>abc</p><p contenteditable="false"><b>def</b></p><p><b>ghj</b></p>'
-      );
-      const rng = editor.dom.createRng();
-      rng.setStart(editor.dom.select('b')[0].firstChild, 0);
-      rng.setEnd(editor.dom.select('b')[1].firstChild, 3);
-      editor.selection.setRng(rng);
-      editor.formatter.remove('format');
-      LegacyUnit.equal(
-        editor.getContent(),
-        '<p>abc</p><p contenteditable="false"><b>def</b></p><p>ghj</p>',
-        'Text in last paragraph is not bold'
-      );
-    }
-  );
-
-  suite.test(
-    'contentEditable: true on start and contentEditable: false on end',
-    function (editor) {
-      editor.formatter.register('format', { inline: 'b' });
-      editor.setContent(
-        '<p>abc</p><p><b>def</b></p><p contenteditable="false"><b>ghj</b></p>'
-      );
-      LegacyUnit.setSelection(editor, 'p:nth-child(2) b', 0, 'p:last b', 3);
-      editor.formatter.remove('format');
-      LegacyUnit.equal(
-        editor.getContent(),
-        '<p>abc</p><p>def</p><p contenteditable="false"><b>ghj</b></p>',
-        'Text in first paragraph is not bold'
-      );
-    }
-  );
-
-  suite.test('contentEditable: true inside contentEditable: false', function (
-    editor
-  ) {
+  suite.test('contentEditable: true on start and contentEditable: false on end', function (editor) {
     editor.formatter.register('format', { inline: 'b' });
-    editor.setContent(
-      '<p>abc</p><p contenteditable="false"><span contenteditable="true"><b>def</b></span></p>'
+    editor.setContent('<p>abc</p><p><b>def</b></p><p contenteditable="false"><b>ghj</b></p>');
+    LegacyUnit.setSelection(editor, 'p:nth-child(2) b', 0, 'p:last b', 3);
+    editor.formatter.remove('format');
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p>abc</p><p>def</p><p contenteditable="false"><b>ghj</b></p>',
+      'Text in first paragraph is not bold'
     );
+  });
+
+  suite.test('contentEditable: true inside contentEditable: false', function (editor) {
+    editor.formatter.register('format', { inline: 'b' });
+    editor.setContent('<p>abc</p><p contenteditable="false"><span contenteditable="true"><b>def</b></span></p>');
     LegacyUnit.setSelection(editor, 'b', 0, 'b', 3);
     editor.formatter.remove('format');
     LegacyUnit.equal(
@@ -517,70 +419,44 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (
     );
   });
 
-  suite.test('remove format block on contentEditable: false block', function (
-    editor
-  ) {
+  suite.test('remove format block on contentEditable: false block', function (editor) {
     editor.formatter.register('format', { block: 'h1' });
     editor.setContent('<p>abc</p><h1 contenteditable="false">def</h1>');
     LegacyUnit.setSelection(editor, 'h1:nth-child(2)', 0, 'h1:nth-child(2)', 3);
     editor.formatter.remove('format');
-    LegacyUnit.equal(
-      editor.getContent(),
-      '<p>abc</p><h1 contenteditable="false">def</h1>',
-      'H1 is still not h1'
-    );
+    LegacyUnit.equal(editor.getContent(), '<p>abc</p><h1 contenteditable="false">def</h1>', 'H1 is still not h1');
   });
 
-  suite.test('remove format on del using removeformat format', function (
-    editor
-  ) {
+  suite.test('remove format on del using removeformat format', function (editor) {
     editor.getBody().innerHTML = '<p><del>abc</del></p>';
     LegacyUnit.setSelection(editor, 'del', 0, 'del', 3);
     editor.formatter.remove('removeformat');
-    LegacyUnit.equal(
-      HtmlUtils.cleanHtml(editor.getBody().innerHTML),
-      '<p>abc</p>'
-    );
+    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>abc</p>');
   });
 
-  suite.test(
-    'remove format on span with class using removeformat format',
-    function (editor) {
-      editor.getBody().innerHTML = '<p><span class="x">abc</span></p>';
-      LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
-      editor.formatter.remove('removeformat');
-      LegacyUnit.equal(
-        HtmlUtils.cleanHtml(editor.getBody().innerHTML),
-        '<p>abc</p>'
-      );
-    }
-  );
+  suite.test('remove format on span with class using removeformat format', function (editor) {
+    editor.getBody().innerHTML = '<p><span class="x">abc</span></p>';
+    LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
+    editor.formatter.remove('removeformat');
+    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>abc</p>');
+  });
 
-  suite.test(
-    'remove format on span with internal class using removeformat format',
-    function (editor) {
-      editor.getBody().innerHTML =
-        '<p><span class="mce-item-internal">abc</span></p>';
-      LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
-      editor.formatter.remove('removeformat');
-      LegacyUnit.equal(
-        HtmlUtils.normalizeHtml(
-          HtmlUtils.cleanHtml(editor.getBody().innerHTML)
-        ),
-        '<p><span class="mce-item-internal">abc</span></p>'
-      );
-    }
-  );
+  suite.test('remove format on span with internal class using removeformat format', function (editor) {
+    editor.getBody().innerHTML = '<p><span class="mce-item-internal">abc</span></p>';
+    LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
+    editor.formatter.remove('removeformat');
+    LegacyUnit.equal(
+      HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)),
+      '<p><span class="mce-item-internal">abc</span></p>'
+    );
+  });
 
   suite.test('Remove format of nested elements at start', function (editor) {
     editor.setContent('<p><b><i>ab</i>c</b></p>');
     editor.formatter.register('format', { inline: 'b' });
     LegacyUnit.setSelection(editor, 'i', 1, 'i', 2);
     editor.formatter.remove('format');
-    LegacyUnit.equal(
-      editor.getContent(),
-      '<p><b><i>a</i></b><i>b</i><b>c</b></p>'
-    );
+    LegacyUnit.equal(editor.getContent(), '<p><b><i>a</i></b><i>b</i><b>c</b></p>');
   });
 
   suite.test('Remove format of nested elements at end', function (editor) {
@@ -588,22 +464,16 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (
     editor.formatter.register('format', { inline: 'b' });
     LegacyUnit.setSelection(editor, 'i', 0, 'i', 1);
     editor.formatter.remove('format');
-    LegacyUnit.equal(
-      editor.getContent(),
-      '<p><b>a</b><i>b</i><b><i>c</i></b></p>'
-    );
+    LegacyUnit.equal(editor.getContent(), '<p><b>a</b><i>b</i><b><i>c</i></b></p>');
   });
 
-  suite.test(
-    'Remove format of nested elements at end with text after ',
-    function (editor) {
-      editor.setContent('<p><b>a<i>bc</i></b>d</p>');
-      editor.formatter.register('format', { inline: 'b' });
-      LegacyUnit.setSelection(editor, 'i', 0, 'i', 2);
-      editor.formatter.remove('format');
-      LegacyUnit.equal(editor.getContent(), '<p><b>a</b><i>bc</i>d</p>');
-    }
-  );
+  suite.test('Remove format of nested elements at end with text after ', function (editor) {
+    editor.setContent('<p><b>a<i>bc</i></b>d</p>');
+    editor.formatter.register('format', { inline: 'b' });
+    LegacyUnit.setSelection(editor, 'i', 0, 'i', 2);
+    editor.formatter.remove('format');
+    LegacyUnit.equal(editor.getContent(), '<p><b>a</b><i>bc</i>d</p>');
+  });
 
   suite.test('Remove format bug 2', function (editor) {
     editor.setContent('<p>ab<b>c</b></p>');
@@ -629,11 +499,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (
     editor.getBody().innerHTML = '<p><span class="a b c">a</span></p>';
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 1);
     editor.formatter.remove('format');
-    LegacyUnit.equal(
-      getContent(editor),
-      '<p><span class="c">a</span></p>',
-      'Element should only have c left'
-    );
+    LegacyUnit.equal(getContent(editor), '<p><span class="c">a</span></p>', 'Element should only have c left');
   });
 
   suite.test('Remove format on specified node', function (editor) {
@@ -644,40 +510,25 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (
   });
 
   suite.test('Remove ceFalseOverride format', function (editor) {
-    editor.setContent(
-      '<p class="a" contenteditable="false">a</p><div class="a" contenteditable="false">b</div>'
-    );
+    editor.setContent('<p class="a" contenteditable="false">a</p><div class="a" contenteditable="false">b</div>');
     editor.formatter.register('format', [
       { selector: 'div', classes: ['a'], ceFalseOverride: true },
       { selector: 'p', classes: ['a'], ceFalseOverride: true }
     ]);
     editor.selection.select(editor.dom.select('div')[0]);
     editor.formatter.remove('format');
-    LegacyUnit.equal(
-      getContent(editor),
-      '<p class="a" contenteditable="false">a</p><div contenteditable="false">b</div>'
-    );
+    LegacyUnit.equal(getContent(editor), '<p class="a" contenteditable="false">a</p><div contenteditable="false">b</div>');
     editor.selection.select(editor.dom.select('p')[0]);
     editor.formatter.remove('format');
-    LegacyUnit.equal(
-      getContent(editor),
-      '<p contenteditable="false">a</p><div contenteditable="false">b</div>'
-    );
+    LegacyUnit.equal(getContent(editor), '<p contenteditable="false">a</p><div contenteditable="false">b</div>');
   });
 
-  suite.test('Remove format from first position in table cell', function (
-    editor
-  ) {
+  suite.test('Remove format from first position in table cell', function (editor) {
     editor.formatter.register('format', { inline: 'b' });
-    editor.getBody().innerHTML =
-      '<table><tbody><tr><td><b>ab</b> cd</td></tr></tbody></table>';
+    editor.getBody().innerHTML = '<table><tbody><tr><td><b>ab</b> cd</td></tr></tbody></table>';
     LegacyUnit.setSelection(editor, 'b', 0, 'b', 2);
     editor.formatter.remove('format');
-    LegacyUnit.equal(
-      getContent(editor),
-      '<table><tbody><tr><td>ab cd</td></tr></tbody></table>',
-      'Should have removed format.'
-    );
+    LegacyUnit.equal(getContent(editor), '<table><tbody><tr><td>ab cd</td></tr></tbody></table>', 'Should have removed format.');
   });
 
   TinyLoader.setupLight(

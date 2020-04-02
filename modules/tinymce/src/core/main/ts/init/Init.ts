@@ -22,15 +22,10 @@ import * as InitIframe from './InitIframe';
 
 const DOM = DOMUtils.DOM;
 
-const initPlugin = function (
-  editor: Editor,
-  initializedPlugins: string[],
-  plugin: string
-) {
+const initPlugin = function (editor: Editor, initializedPlugins: string[], plugin: string) {
   const Plugin = PluginManager.get(plugin);
 
-  const pluginUrl =
-    PluginManager.urls[plugin] || editor.documentBaseUrl.replace(/\/$/, '');
+  const pluginUrl = PluginManager.urls[plugin] || editor.documentBaseUrl.replace(/\/$/, '');
   plugin = Tools.trim(plugin);
   if (Plugin && Tools.inArray(initializedPlugins, plugin) === -1) {
     Tools.each(PluginManager.dependencies(plugin), function (dep) {
@@ -96,11 +91,7 @@ const initTheme = function (editor: Editor) {
     editor.theme = new Theme(editor, ThemeManager.urls[theme]);
 
     if (editor.theme.init) {
-      editor.theme.init(
-        editor,
-        ThemeManager.urls[theme] || editor.documentBaseUrl.replace(/\/$/, ''),
-        editor.$
-      );
+      editor.theme.init(editor, ThemeManager.urls[theme] || editor.documentBaseUrl.replace(/\/$/, ''), editor.$);
     }
   } else {
     // Theme set to false or null doesn't produce a theme api
@@ -123,8 +114,7 @@ const renderFromThemeFunc = function (editor: Editor) {
   }
 
   if (info.iframeContainer && info.iframeContainer.nodeType) {
-    info.iframeContainer.id =
-      info.iframeContainer.id || editor.id + '_iframecontainer';
+    info.iframeContainer.id = info.iframeContainer.id || editor.id + '_iframecontainer';
   }
 
   info.height = info.iframeHeight ? info.iframeHeight : elm.offsetHeight;
@@ -149,9 +139,7 @@ const renderThemeFalseIframe = function (targetElement: Element) {
 
 const renderThemeFalse = function (editor: Editor) {
   const targetElement = editor.getElement();
-  return editor.inline
-    ? createThemeFalseResult(null)
-    : renderThemeFalseIframe(targetElement);
+  return editor.inline ? createThemeFalseResult(null) : renderThemeFalseIframe(targetElement);
 };
 
 const renderThemeUi = function (editor: Editor) {
@@ -175,9 +163,7 @@ const init = function (editor: Editor) {
   initTheme(editor);
   initPlugins(editor);
   const boxInfo = renderThemeUi(editor);
-  editor.editorContainer = boxInfo.editorContainer
-    ? boxInfo.editorContainer
-    : null;
+  editor.editorContainer = boxInfo.editorContainer ? boxInfo.editorContainer : null;
   appendContentCssFromSettings(editor);
 
   // Content editable mode ends here

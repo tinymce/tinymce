@@ -54,10 +54,7 @@ UnitTest.asynctest('Init events order test', (success, failure) => {
     {
       base_url: '/project/tinymce/js/tinymce',
       setup: (editor) => {
-        editor.on(
-          'preinit addeditor scriptsloaded init visualaid loadcontent beforesetcontent setcontent postrender',
-          addEvent
-        );
+        editor.on('preinit addeditor scriptsloaded init visualaid loadcontent beforesetcontent setcontent postrender', addEvent);
       }
     },
     success,

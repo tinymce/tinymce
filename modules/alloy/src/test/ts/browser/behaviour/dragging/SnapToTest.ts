@@ -65,9 +65,7 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
         })
       ),
     (_doc, _body, _gui, component, _store) => {
-      const cSubject = Chain.injectThunked(() =>
-        subject.get(component).element()
-      );
+      const cSubject = Chain.injectThunked(() => subject.get(component).element());
 
       const cRecordPosition = Chain.fromChains([
         Chain.control(
@@ -103,9 +101,7 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
                   )
               )
         ),
-        Guard.addLogging(
-          'Ensuring that the position information read from the different stages was different'
-        )
+        Guard.addLogging('Ensuring that the position information read from the different stages was different')
       );
 
       const cSnapTo = Chain.op(() => {

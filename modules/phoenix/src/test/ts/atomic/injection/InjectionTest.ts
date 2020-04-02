@@ -8,32 +8,21 @@ UnitTest.test('InsertAtTest', function () {
     return TestUniverse(
       Gene('root', 'root', [
         Gene('a', 'node', [
-          Gene('aa', 'node', [
-            TextGene('aaa', 'aaa'),
-            TextGene('aab', 'aab'),
-            TextGene('aac', 'aac')
-          ]),
+          Gene('aa', 'node', [TextGene('aaa', 'aaa'), TextGene('aab', 'aab'), TextGene('aac', 'aac')]),
           Gene('ab', 'node', [TextGene('aba', 'aba'), TextGene('abb', 'abb')])
         ])
       ])
     );
   };
 
-  const check = function (
-    expected: string,
-    element: string,
-    offset: number,
-    injection: Gene
-  ) {
+  const check = function (expected: string, element: string, offset: number, injection: Gene) {
     const universe = makeUniverse();
     const start = Finder.get(universe, element);
     Injection.atStartOf(universe, start, offset, injection);
     assert.eq(
       expected,
       universe.shortlog(function (item) {
-        return item.name === 'TEXT_GENE'
-          ? 'text("' + item.text + '")'
-          : item.id;
+        return item.name === 'TEXT_GENE' ? 'text("' + item.text + '")' : item.id;
       })
     );
   };
@@ -86,10 +75,5 @@ UnitTest.test('InsertAtTest', function () {
   );
 
   // Invalid child of parent.
-  check(
-    'root(a(aa(text("aaa"),text("aab"),text("aac")),ab(text("aba"),text("abb"))))',
-    'aa',
-    6,
-    TextGene('INJECTED', 'INJECTED')
-  );
+  check('root(a(aa(text("aaa"),text("aab"),text("aac")),ab(text("aba"),text("abb"))))', 'aa', 6, TextGene('INJECTED', 'INJECTED'));
 });

@@ -14,16 +14,10 @@ interface Resource {
   add(id: string, data: any): void;
 }
 
-const awaiter = (
-  resolveCb: (data: any) => void,
-  rejectCb: (err?: any) => void,
-  timeout = 1000
-) => {
+const awaiter = (resolveCb: (data: any) => void, rejectCb: (err?: any) => void, timeout = 1000) => {
   let done = false;
   let timer = null;
-  const complete = <T extends any[]>(completer: (...args: T) => void) => (
-    ...args: T
-  ) => {
+  const complete = <T extends any[]>(completer: (...args: T) => void) => (...args: T) => {
     if (!done) {
       done = true;
       if (timer !== null) {

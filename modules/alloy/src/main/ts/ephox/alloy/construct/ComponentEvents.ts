@@ -29,28 +29,19 @@ import * as EventHandler from './EventHandler';
  * So at the end, you should have Result(eventName -> single function)
  */
 
-type Info = Record<
-  string,
-  () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>
->;
+type Info = Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>;
 
 type BehaviourTuple<T extends EventFormat> = {
   name: () => string;
   handler: () => AlloyEventHandler<T>;
 };
 
-const behaviourTuple = <T extends EventFormat>(
-  name: string,
-  handler: AlloyEventHandler<T>
-): BehaviourTuple<T> => ({
+const behaviourTuple = <T extends EventFormat>(name: string, handler: AlloyEventHandler<T>): BehaviourTuple<T> => ({
   name: Fun.constant(name),
   handler: Fun.constant(handler)
 });
 
-const nameToHandlers = (
-  behaviours: Array<AlloyBehaviour<any, any>>,
-  info: Info
-) => {
+const nameToHandlers = (behaviours: Array<AlloyBehaviour<any, any>>, info: Info) => {
   const r: Record<string, any> = {};
   Arr.each(behaviours, (behaviour) => {
     r[behaviour.name()] = behaviour.handlers(info);
@@ -58,15 +49,8 @@ const nameToHandlers = (
   return r;
 };
 
-const groupByEvents = (
-  info: Info,
-  behaviours: Array<AlloyBehaviour<any, any>>,
-  base: Record<string, AlloyEventRecord>
-) => {
-  const behaviourEvents: Record<
-    string,
-    Record<string, AlloyEventHandler<any>>
-  > = {
+const groupByEvents = (info: Info, behaviours: Array<AlloyBehaviour<any, any>>, base: Record<string, AlloyEventRecord>) => {
+  const behaviourEvents: Record<string, Record<string, AlloyEventHandler<any>>> = {
     ...base,
     ...nameToHandlers(behaviours, info)
   };
@@ -80,21 +64,13 @@ const combine = (
   behaviours: Array<AlloyBehaviour<any, any, any>>,
   base: Record<string, AlloyEventRecord>
 ): Result<Record<string, UncurriedHandler>, string> => {
-  const byEventName: Record<string, Array<BehaviourTuple<any>>> = groupByEvents(
-    info,
-    behaviours,
-    base
-  );
+  const byEventName: Record<string, Array<BehaviourTuple<any>>> = groupByEvents(info, behaviours, base);
   return combineGroups(byEventName, eventOrder);
 };
 
 const assemble = <T extends EventFormat>(rawHandler: AlloyEventHandler<T>) => {
   const handler = EventHandler.read(rawHandler);
-  return (
-    component: AlloyComponent,
-    simulatedEvent: SimulatedEvent<T>,
-    ...rest: any[]
-  ) => {
+  return (component: AlloyComponent, simulatedEvent: SimulatedEvent<T>, ...rest: any[]) => {
     const args = ([component, simulatedEvent] as any).concat(rest);
     if (handler.abort.apply(undefined, args)) {
       simulatedEvent.stop();
@@ -104,10 +80,7 @@ const assemble = <T extends EventFormat>(rawHandler: AlloyEventHandler<T>) => {
   };
 };
 
-const missingOrderError = <T>(
-  eventName: string,
-  tuples: Array<BehaviourTuple<any>>
-): Result<T, string[]> =>
+const missingOrderError = <T>(eventName: string, tuples: Array<BehaviourTuple<any>>): Result<T, string[]> =>
   Result.error([
     'The event (' +
       eventName +
@@ -131,12 +104,7 @@ const fuse = <T extends EventFormat>(
   if (!order) {
     return missingOrderError(eventName, tuples);
   } else {
-    return PrioritySort.sortKeys(
-      'Event: ' + eventName,
-      'name',
-      tuples,
-      order
-    ).map((sortedTuples) => {
+    return PrioritySort.sortKeys('Event: ' + eventName, 'name', tuples, order).map((sortedTuples) => {
       const handlers = Arr.map(sortedTuples, (tuple) => tuple.handler());
       return EventHandler.fuse(handlers);
     });
@@ -149,21 +117,14 @@ const combineGroups = <T extends EventFormat>(
 ) => {
   const r = Obj.mapToArray(byEventName, (tuples, eventName) => {
     const combined: Result<AlloyEventHandler<T>, any[]> =
-      tuples.length === 1
-        ? Result.value(tuples[0].handler())
-        : fuse<T>(tuples, eventOrder, eventName);
+      tuples.length === 1 ? Result.value(tuples[0].handler()) : fuse<T>(tuples, eventOrder, eventName);
     return combined.map((handler) => {
       const assembled = assemble(handler);
       const purpose =
         tuples.length > 1
-          ? Arr.filter(eventOrder[eventName], (o) =>
-              Arr.exists(tuples, (t) => t.name() === o)
-            ).join(' > ')
+          ? Arr.filter(eventOrder[eventName], (o) => Arr.exists(tuples, (t) => t.name() === o)).join(' > ')
           : tuples[0].name();
-      return Objects.wrap(
-        eventName,
-        DescribedHandler.uncurried(assembled, purpose)
-      );
+      return Objects.wrap(eventName, DescribedHandler.uncurried(assembled, purpose));
     });
   });
 

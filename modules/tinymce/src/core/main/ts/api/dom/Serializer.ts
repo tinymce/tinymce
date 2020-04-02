@@ -21,10 +21,7 @@ interface Serializer extends DomSerializer {}
  * @class tinymce.dom.Serializer
  */
 
-const Serializer = function (
-  settings: SerializerSettings,
-  editor?: Editor
-): Serializer {
+const Serializer = function (settings: SerializerSettings, editor?: Editor): Serializer {
   const domSerializer = DomSerializer(settings, editor);
 
   // Return public methods

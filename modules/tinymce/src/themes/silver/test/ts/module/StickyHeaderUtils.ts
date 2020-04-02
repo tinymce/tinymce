@@ -15,11 +15,7 @@ import {
 import { document, window } from '@ephox/dom-globals';
 import { Body, Css, Element, Focus, Scroll, SelectorFind } from '@ephox/sugar';
 
-const staticPartsOuter = (
-  s: ApproxStructure.StructApi,
-  _str: ApproxStructure.StringApi,
-  arr: ApproxStructure.ArrayApi
-): StructAssert[] =>
+const staticPartsOuter = (s: ApproxStructure.StructApi, _str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] =>
   // should not change
   [
     s.element('div', {
@@ -27,11 +23,7 @@ const staticPartsOuter = (
     })
   ];
 
-const staticPartsInner = (
-  s: ApproxStructure.StructApi,
-  _str: ApproxStructure.StringApi,
-  arr: ApproxStructure.ArrayApi
-): StructAssert[] =>
+const staticPartsInner = (s: ApproxStructure.StructApi, _str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] =>
   // should not change
   [
     s.element('div', {
@@ -64,9 +56,7 @@ const sAssertHeaderDocked = (assertDockedTop: boolean) =>
           s.element('div', {
             styles: {
               position: str.is('fixed'),
-              ...(assertDockedTop
-                ? { top: str.is('0px') }
-                : { bottom: str.is('0px') })
+              ...(assertDockedTop ? { top: str.is('0px') } : { bottom: str.is('0px') })
             }
           })
         )
@@ -75,11 +65,7 @@ const sAssertHeaderDocked = (assertDockedTop: boolean) =>
     )
   ]);
 
-const expectedHalfView = (
-  s: ApproxStructure.StructApi,
-  str: ApproxStructure.StringApi,
-  arr: ApproxStructure.ArrayApi
-): StructAssert[] => [
+const expectedHalfView = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] => [
   s.element('div', {
     classes: [arr.has('tox-editor-header'), arr.not('tox-editor-dock-fadeout')],
     styles: {
@@ -97,11 +83,7 @@ const expectedEditorHidden = (
   arr: ApproxStructure.ArrayApi
 ): StructAssert[] => [
   s.element('div', {
-    classes: [
-      arr.has('tox-editor-header'),
-      arr.has('tox-editor-dock-fadeout'),
-      arr.not('tox-editor-dock-fadein')
-    ],
+    classes: [arr.has('tox-editor-header'), arr.has('tox-editor-dock-fadeout'), arr.not('tox-editor-dock-fadein')],
     styles: {
       position: str.contains('fixed'),
       width: str.is('398px') // 400px - 1px for each border
@@ -124,28 +106,19 @@ const expectedInFullView = (s, str, arr): StructAssert[] => [
 
 const cScrollRelativeEditor = (delta: number, scrollRelativeTop: boolean) =>
   Chain.op(() => {
-    const editorContainer = SelectorFind.descendant(
-      Body.body(),
-      '.tox-tinymce'
-    ).getOrDie();
+    const editorContainer = SelectorFind.descendant(Body.body(), '.tox-tinymce').getOrDie();
     editorContainer.dom().scrollIntoView(scrollRelativeTop);
     Scroll.to(0, window.pageYOffset + (scrollRelativeTop ? delta : -delta));
   });
 
-const cAssertSinkVisibility = (
-  label: string,
-  visibility: 'hidden' | 'visible'
-) =>
+const cAssertSinkVisibility = (label: string, visibility: 'hidden' | 'visible') =>
   NamedChain.asChain([
     NamedChain.writeValue('body', Body.body()),
     NamedChain.direct('body', UiFinder.cFindIn('.tox-tinymce-aux'), 'sink'),
     NamedChain.direct(
       'sink',
       Chain.control(
-        Chain.fromChains([
-          Chain.mapper((sink) => Css.get(sink, 'visibility')),
-          Assertions.cAssertEq(label, visibility)
-        ]),
+        Chain.fromChains([Chain.mapper((sink) => Css.get(sink, 'visibility')), Assertions.cAssertEq(label, visibility)]),
         Guard.tryUntil(`Wait for sink visibility to be ${visibility}`)
       ),
       '_'
@@ -173,40 +146,19 @@ const cAssertMenuStructure = (label: string, position: string) =>
 const sTestMenuScroll = (top: boolean) =>
   Chain.asStep(Body.body(), [
     UiFinder.cFindIn('[role="menu"]'),
-    cAssertMenuStructure(
-      'Checking the opened menus default positioning',
-      'absolute'
-    ),
+    cAssertMenuStructure('Checking the opened menus default positioning', 'absolute'),
     cScrollRelativeEditor(200, top),
-    cAssertMenuStructure(
-      'When the top of the editor scrolls off screen, menus should become sticky',
-      'fixed'
-    ),
+    cAssertMenuStructure('When the top of the editor scrolls off screen, menus should become sticky', 'fixed'),
     cScrollRelativeEditor(500, top),
-    cAssertSinkVisibility(
-      'When the editor is scrolled off the screen, sticky menus and toolbars should become HIDDEN',
-      'hidden'
-    ),
+    cAssertSinkVisibility('When the editor is scrolled off the screen, sticky menus and toolbars should become HIDDEN', 'hidden'),
     cScrollRelativeEditor(200, top),
-    cAssertSinkVisibility(
-      'When the editor is partially scrolled on screen, sticky menus and toolbars should become VISIBLE',
-      'visible'
-    ),
-    cAssertMenuStructure(
-      'When the editor is partially viewable, it should still be sticky',
-      'fixed'
-    ),
+    cAssertSinkVisibility('When the editor is partially scrolled on screen, sticky menus and toolbars should become VISIBLE', 'visible'),
+    cAssertMenuStructure('When the editor is partially viewable, it should still be sticky', 'fixed'),
     cScrollRelativeEditor(-100, top),
-    cAssertMenuStructure(
-      'When the editor is in full view, menus and toolbars should not be sticky',
-      'absolute'
-    )
+    cAssertMenuStructure('When the editor is in full view, menus and toolbars should not be sticky', 'absolute')
   ]);
 
-const sAssertEditorContainer = (
-  isToolbarTop: boolean,
-  expectedPart: (s, str, arr) => StructAssert[]
-) =>
+const sAssertEditorContainer = (isToolbarTop: boolean, expectedPart: (s, str, arr) => StructAssert[]) =>
   Chain.asStep(Body.body(), [
     UiFinder.cFindIn('.tox-editor-container'),
     Chain.control(
@@ -225,11 +177,7 @@ const sAssertEditorContainer = (
     )
   ]);
 
-const sScrollAndAssertStructure = (
-  isToolbarTop: boolean,
-  scrollY: number,
-  expectedPart: (s, str, arr) => StructAssert[]
-) =>
+const sScrollAndAssertStructure = (isToolbarTop: boolean, scrollY: number, expectedPart: (s, str, arr) => StructAssert[]) =>
   Chain.asStep(Body.body(), [
     cScrollRelativeEditor(scrollY, isToolbarTop),
     UiFinder.cFindIn('.tox-editor-container'),
@@ -271,53 +219,25 @@ const sCloseMenus = (numOpenedMenus: number) =>
     GeneralSteps.sequenceRepeat(
       numOpenedMenus,
       Chain.asStep(Body.body(), [
-        UiFinder.cWaitForVisible(
-          'Wait for selected menu to be visible',
-          '.tox-selected-menu'
-        ),
+        UiFinder.cWaitForVisible('Wait for selected menu to be visible', '.tox-selected-menu'),
         Chain.control(
-          Chain.op((menuElem) =>
-            Assertions.assertEq(
-              'Assert menu item is focused',
-              true,
-              Focus.search(menuElem).isSome()
-            )
-          ),
+          Chain.op((menuElem) => Assertions.assertEq('Assert menu item is focused', true, Focus.search(menuElem).isSome())),
           Guard.tryUntil('Wait for menu item to be focused')
         ),
         Chain.op(() => {
-          const focusedElem = Focus.active(Element.fromDom(document)).getOrDie(
-            'Could not find active menu item'
-          );
+          const focusedElem = Focus.active(Element.fromDom(document)).getOrDie('Could not find active menu item');
           Keyboard.keydown(Keys.escape(), {}, focusedElem);
         }),
         Chain.control(
-          Chain.op((menuElem) =>
-            Assertions.assertEq(
-              'Assert menu has been closed',
-              false,
-              Body.inBody(menuElem)
-            )
-          ),
+          Chain.op((menuElem) => Assertions.assertEq('Assert menu has been closed', false, Body.inBody(menuElem))),
           Guard.tryUntil('Wait for menu to be closed')
         )
       ])
     )
   );
 
-const sOpenMenuAndTestScrolling = (
-  sOpenMenu: Step<any, any>,
-  numMenusToClose: number,
-  top: boolean
-) =>
-  Logger.t(
-    'Begin opening the menu ',
-    GeneralSteps.sequence([
-      sOpenMenu,
-      sTestMenuScroll(top),
-      sCloseMenus(numMenusToClose)
-    ])
-  );
+const sOpenMenuAndTestScrolling = (sOpenMenu: Step<any, any>, numMenusToClose: number, top: boolean) =>
+  Logger.t('Begin opening the menu ', GeneralSteps.sequence([sOpenMenu, sTestMenuScroll(top), sCloseMenus(numMenusToClose)]));
 
 export {
   expectedHalfView,

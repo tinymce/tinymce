@@ -16,20 +16,17 @@ UnitTest.test('BounderCalcRepositionTest', () => {
           Jsc.integer(boundsY, maxBounds).generator.flatMap((newY: number) =>
             zeroableArb.generator.flatMap((width: number) =>
               zeroableArb.generator.flatMap((height: number) =>
-                Jsc.integer(newX + width, maxBounds).generator.flatMap(
-                  (boundsW: number) =>
-                    Jsc.integer(newY + height, maxBounds).generator.map(
-                      (boundsH: number) => ({
-                        newX,
-                        newY,
-                        width,
-                        height,
-                        boundsX,
-                        boundsY,
-                        boundsW,
-                        boundsH
-                      })
-                    )
+                Jsc.integer(newX + width, maxBounds).generator.flatMap((boundsW: number) =>
+                  Jsc.integer(newY + height, maxBounds).generator.map((boundsH: number) => ({
+                    newX,
+                    newY,
+                    width,
+                    height,
+                    boundsX,
+                    boundsY,
+                    boundsW,
+                    boundsH
+                  }))
                 )
               )
             )
@@ -52,26 +49,11 @@ UnitTest.test('BounderCalcRepositionTest', () => {
       boundsW: number;
       boundsH: number;
     }) => {
-      const bounds = makeBounds(
-        input.boundsX,
-        input.boundsY,
-        input.boundsW,
-        input.boundsH
-      );
-      const output = Bounder.calcReposition(
-        input.newX,
-        input.newY,
-        input.width,
-        input.height,
-        bounds
-      );
+      const bounds = makeBounds(input.boundsX, input.boundsY, input.boundsW, input.boundsH);
+      const output = Bounder.calcReposition(input.newX, input.newY, input.width, input.height, bounds);
 
-      const xIsVisible =
-        output.limitX <= bounds.right - input.width &&
-        output.limitX >= bounds.x;
-      const yIsVisible =
-        output.limitY <= bounds.bottom - input.height &&
-        output.limitY >= bounds.y;
+      const xIsVisible = output.limitX <= bounds.right - input.width && output.limitX >= bounds.x;
+      const yIsVisible = output.limitY <= bounds.bottom - input.height && output.limitY >= bounds.y;
       if (!xIsVisible) {
         return 'X is not inside bounds. Returned: ' + JSON.stringify(output);
       } else if (!yIsVisible) {

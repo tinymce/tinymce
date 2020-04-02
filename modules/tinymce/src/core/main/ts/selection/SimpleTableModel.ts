@@ -6,22 +6,10 @@
  */
 
 import { Arr, Fun, Option } from '@ephox/katamari';
-import {
-  Compare,
-  Insert,
-  InsertAll,
-  Replication,
-  Element,
-  Attr,
-  SelectorFilter
-} from '@ephox/sugar';
+import { Compare, Insert, InsertAll, Replication, Element, Attr, SelectorFilter } from '@ephox/sugar';
 import { HTMLTableCellElement } from '@ephox/dom-globals';
 
-const tableModel = (
-  element: Element<unknown>,
-  width: number,
-  rows: Element<unknown>[]
-) => ({
+const tableModel = (element: Element<unknown>, width: number, rows: Element<unknown>[]) => ({
   element: Fun.constant(element),
   width: Fun.constant(width),
   rows: Fun.constant(rows)
@@ -118,10 +106,7 @@ const subTable = function (table, startPos, endPos) {
     sy = startPos.y();
   const ex = endPos.x(),
     ey = endPos.y();
-  const newRows =
-    sy < ey
-      ? extractRows(table, sx, sy, ex, ey)
-      : extractRows(table, sx, ey, ex, sy);
+  const newRows = sy < ey ? extractRows(table, sx, sy, ex, ey) : extractRows(table, sx, ey, ex, sy);
 
   return tableModel(table.element(), getWidth(newRows), newRows);
 };
@@ -138,9 +123,7 @@ const createDomTable = function (table, rows) {
 
 const modelRowsToDomRows = function (table) {
   return Arr.map(table.rows(), function (row) {
-    const cells = Arr.map(row.cells(), function (
-      cell: Element<HTMLTableCellElement>
-    ) {
+    const cells = Arr.map(row.cells(), function (cell: Element<HTMLTableCellElement>) {
       const td = Replication.deep(cell);
       Attr.remove(td, 'colspan');
       Attr.remove(td, 'rowspan');

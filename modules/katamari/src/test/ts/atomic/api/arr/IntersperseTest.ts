@@ -13,14 +13,7 @@ UnitTest.test('Intersperse', () => {
   const checkErr = (expected, input, delimiter) => {
     try {
       Jam.intersperse(input, delimiter);
-      Assert.fail(
-        'Excpected exception: ' +
-          expected +
-          ' from input: ' +
-          input +
-          ' with delimiter: ' +
-          delimiter
-      );
+      Assert.fail('Excpected exception: ' + expected + ' from input: ' + input + ' with delimiter: ' + delimiter);
     } catch (e) {
       Assert.eq('eq', expected, e.message);
     }
@@ -48,26 +41,17 @@ UnitTest.test('Every odd element matches delimiter', () => {
   fc.assert(
     fc.property(fc.array(fc.integer()), fc.integer(), (arr, delimiter) => {
       const actual = Jam.intersperse(arr, delimiter);
-      return Arr.forall(actual, (x, i) =>
-        i % 2 === 1 ? x === delimiter : true
-      );
+      return Arr.forall(actual, (x, i) => (i % 2 === 1 ? x === delimiter : true));
     })
   );
 });
 
-UnitTest.test(
-  'Filtering out delimiters (assuming different type to array to avoid removing original array) should equal original',
-  () => {
-    fc.assert(
-      fc.property(
-        fc.array(fc.nat()),
-        arbNegativeInteger(),
-        (arr, delimiter) => {
-          const actual = Jam.intersperse(arr, delimiter);
-          const filtered = Arr.filter(actual, (a) => a !== delimiter);
-          Assert.eq('eq', arr, filtered);
-        }
-      )
-    );
-  }
-);
+UnitTest.test('Filtering out delimiters (assuming different type to array to avoid removing original array) should equal original', () => {
+  fc.assert(
+    fc.property(fc.array(fc.nat()), arbNegativeInteger(), (arr, delimiter) => {
+      const actual = Jam.intersperse(arr, delimiter);
+      const filtered = Arr.filter(actual, (a) => a !== delimiter);
+      Assert.eq('eq', arr, filtered);
+    })
+  );
+});

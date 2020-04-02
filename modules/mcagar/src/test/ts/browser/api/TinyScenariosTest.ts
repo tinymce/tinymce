@@ -14,17 +14,13 @@ UnitTest.asynctest('TinyScenariosTest', (success, failure) => {
   const platform = PlatformDetection.detect();
   if (isPhantom) {
     // tslint:disable-next-line:no-console
-    console.log(
-      'Skipping TinyScenariosTest as PhantomJS has dodgy selection/style implementation and returns false positives.'
-    );
+    console.log('Skipping TinyScenariosTest as PhantomJS has dodgy selection/style implementation and returns false positives.');
     success();
     return;
   }
   if (platform.browser.isFirefox()) {
     // tslint:disable-next-line:no-console
-    console.log(
-      'Skipping TinyScenariosTest as it triggers a tinymce bug in Firefox'
-    );
+    console.log('Skipping TinyScenariosTest as it triggers a tinymce bug in Firefox');
     success();
     return;
   }
@@ -59,23 +55,18 @@ UnitTest.asynctest('TinyScenariosTest', (success, failure) => {
         {},
         [
           apis.sFocus(),
-          scenarios.sAsyncProperty(
-            'Test',
-            Arbitraries.content('inline', {}).generator,
-            sAssertion(editor),
-            {
-              property: {
-                tests: 100
-                // Rename to seed.
-                // rngState: '8cce615fb3d2a47809'
-              },
-              scenario: {
-                exclusions: {
-                  containers: (elem) => !Node.isText(elem)
-                }
+          scenarios.sAsyncProperty('Test', Arbitraries.content('inline', {}).generator, sAssertion(editor), {
+            property: {
+              tests: 100
+              // Rename to seed.
+              // rngState: '8cce615fb3d2a47809'
+            },
+            scenario: {
+              exclusions: {
+                containers: (elem) => !Node.isText(elem)
               }
             }
-          )
+          })
         ],
         loadSuccess,
         loadFailure

@@ -21,9 +21,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('lazySink'),
   FieldSchema.strictFunction('fetch'),
   FieldSchema.optionFunction('getBounds'),
-  FieldSchema.optionObjOf('fireDismissalEventInstead', [
-    FieldSchema.defaulted('event', SystemEvents.dismissRequested())
-  ]),
+  FieldSchema.optionObjOf('fireDismissalEventInstead', [FieldSchema.defaulted('event', SystemEvents.dismissRequested())]),
   AnchorLayouts.schema()
 ]);
 

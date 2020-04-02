@@ -26,16 +26,9 @@ const enum WordCountMode {
   Characters = 'characters'
 }
 
-export const renderWordCount = (
-  editor: Editor,
-  providersBackstage: UiFactoryBackstageProviders
-): SimpleSpec => {
+export const renderWordCount = (editor: Editor, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const replaceCountText = (comp, count, mode) =>
-    Replacing.set(comp, [
-      GuiFactory.text(
-        providersBackstage.translate(['{0} ' + mode, count[mode]])
-      )
-    ]);
+    Replacing.set(comp, [GuiFactory.text(providersBackstage.translate(['{0} ' + mode, count[mode]]))]);
 
   return Button.sketch({
     dom: {
@@ -62,10 +55,7 @@ export const renderWordCount = (
       AddEventsBehaviour.config('wordcount-events', [
         AlloyEvents.runOnExecute((comp) => {
           const currentVal = Representing.getValue(comp);
-          const newMode =
-            currentVal.mode === WordCountMode.Words
-              ? WordCountMode.Characters
-              : WordCountMode.Words;
+          const newMode = currentVal.mode === WordCountMode.Words ? WordCountMode.Characters : WordCountMode.Words;
           Representing.setValue(comp, {
             mode: newMode,
             count: currentVal.count

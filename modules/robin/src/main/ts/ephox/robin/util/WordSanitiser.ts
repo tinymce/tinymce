@@ -15,11 +15,7 @@ const trimStart = function (ws: WordScope) {
 
 const trimEnd = function (ws: WordScope) {
   const word = ws.word();
-  return WordScope(
-    word.substring(0, word.length - 1),
-    ws.left(),
-    Option.some(word.charAt(word.length - 1))
-  );
+  return WordScope(word.substring(0, word.length - 1), ws.left(), Option.some(word.charAt(word.length - 1)));
 };
 
 const isQuote = function (s: string) {
@@ -28,10 +24,7 @@ const isQuote = function (s: string) {
 
 const rhs = function (ws: WordScope) {
   const word = ws.word();
-  const trailing =
-    word.length >= 2 &&
-    isQuote(word.charAt(word.length - 1)) &&
-    !isQuote(word.charAt(word.length - 2));
+  const trailing = word.length >= 2 && isQuote(word.charAt(word.length - 1)) && !isQuote(word.charAt(word.length - 2));
   return trailing ? trimEnd(ws) : ws;
 };
 
@@ -44,8 +37,7 @@ const lhs = function (ws: WordScope) {
   const apostrophes = whitelisted ? 2 : 1;
   const quoted = word.substring(0, apostrophes);
 
-  const leading =
-    Arr.forall(quoted, isQuote) && !isQuote(word.charAt(apostrophes));
+  const leading = Arr.forall(quoted, isQuote) && !isQuote(word.charAt(apostrophes));
 
   return leading ? trimStart(ws) : ws;
 };

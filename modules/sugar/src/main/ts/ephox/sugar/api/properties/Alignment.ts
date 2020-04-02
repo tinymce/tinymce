@@ -20,22 +20,13 @@ const lookups = {
   'match-parent': normal('match-parent')
 };
 
-const getAlignment = function (
-  element: Element<DomElement>,
-  property: string
-): string {
+const getAlignment = function (element: Element<DomElement>, property: string): string {
   const raw = Css.get(element, property);
   return lookups[raw] !== undefined ? lookups[raw](element) : raw;
 };
 
-const hasAlignment = function (
-  element: Element<DomElement>,
-  property: string,
-  value: string
-) {
-  return Node.isText(element)
-    ? false
-    : getAlignment(element, property) === value;
+const hasAlignment = function (element: Element<DomElement>, property: string, value: string) {
+  return Node.isText(element) ? false : getAlignment(element, property) === value;
 };
 
 export { hasAlignment };

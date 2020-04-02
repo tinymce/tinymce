@@ -55,9 +55,7 @@ const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemApi[] {
   const byteAsHex = (colorByte: number, alphaByte: number) => {
     const bg = 255;
     const alpha = alphaByte / 255;
-    const colorByteWithWhiteBg = Math.round(
-      colorByte * alpha + bg * (1 - alpha)
-    );
+    const colorByteWithWhiteBg = Math.round(colorByte * alpha + bg * (1 - alpha));
     return ('0' + colorByteWithWhiteBg.toString(16)).slice(-2).toUpperCase();
   };
 
@@ -91,11 +89,9 @@ const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemApi[] {
   return colors;
 };
 
-const getColorCols = (editor: Editor, defaultCols: number): number =>
-  editor.getParam('color_cols', defaultCols, 'number');
+const getColorCols = (editor: Editor, defaultCols: number): number => editor.getParam('color_cols', defaultCols, 'number');
 
-const hasCustomColors = (editor: Editor): boolean =>
-  editor.getParam('custom_colors') !== false;
+const hasCustomColors = (editor: Editor): boolean => editor.getParam('custom_colors') !== false;
 
 const getColorMap = (editor: Editor): string[] => editor.getParam('color_map');
 
@@ -115,12 +111,4 @@ const addColor = (color: string) => {
   colorCache.add(color);
 };
 
-export {
-  mapColors,
-  getColorCols,
-  hasCustomColors,
-  getColorMap,
-  getColors,
-  getCurrentColors,
-  addColor
-};
+export { mapColors, getColorCols, hasCustomColors, getColorMap, getColors, getCurrentColors, addColor };

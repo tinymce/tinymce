@@ -3,10 +3,7 @@ import { Pipeline } from '@ephox/agar';
 import JSON from 'tinymce/core/api/util/JSON';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.util.JsonTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.util.JsonTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('serialize', function () {

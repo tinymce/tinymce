@@ -21,9 +21,7 @@ const addToEditor = (editor: Editor) => {
           () =>
             PredicateFind.closest(
               sugarNode,
-              (elem) =>
-                Node.name(elem) in textBlockElementsMap &&
-                editor.dom.isEmpty(elem.dom()),
+              (elem) => Node.name(elem) in textBlockElementsMap && editor.dom.isEmpty(elem.dom()),
               isRoot
             ).isSome(),
           () => false

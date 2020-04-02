@@ -88,9 +88,7 @@ const rgbFormFactory = (
       validator: {
         validate: (comp: AlloyComponent) => {
           const value = Representing.getValue(comp);
-          const res = isValid(value)
-            ? Result.value(true)
-            : Result.error(translate('aria.input.invalid'));
+          const res = isValid(value) ? Result.value(true) : Result.error(translate('aria.input.invalid'));
           return Future.pure(res);
         },
         validateOnLoad: false
@@ -124,10 +122,7 @@ const rgbFormFactory = (
       inputClasses: [getClass('textfield')],
 
       // Have basic invalidating and tabstopping behaviour.
-      inputBehaviours: Behaviour.derive([
-        invalidation(name, isValid),
-        Tabstopping.config({})
-      ]),
+      inputBehaviours: Behaviour.derive([invalidation(name, isValid), Tabstopping.config({})]),
 
       // If it was invalid, and the value was set, run validation against it.
       onSetValue: (input: AlloyComponent) => {
@@ -201,10 +196,7 @@ const rgbFormFactory = (
     });
   };
 
-  const factory: UiSketcher.SingleSketchFactory<
-    RgbFormDetail,
-    RgbFormSpec
-  > = (): SketchSpec => {
+  const factory: UiSketcher.SingleSketchFactory<RgbFormDetail, RgbFormSpec> = (): SketchSpec => {
     const state = {
       red: Cell(Option.some(255)),
       green: Cell(Option.some(255)),
@@ -225,11 +217,7 @@ const rgbFormFactory = (
     };
 
     const getValueRgb = () =>
-      get('red').bind((red) =>
-        get('green').bind((green) =>
-          get('blue').map((blue) => RgbaColour.rgbaColour(red, green, blue, 1))
-        )
-      );
+      get('red').bind((red) => get('green').bind((green) => get('blue').map((blue) => RgbaColour.rgbaColour(red, green, blue, 1))));
 
     // TODO: Find way to use this for palette and slider updates
     const setValueRgb = (rgb: Rgba): void => {
@@ -241,10 +229,7 @@ const rgbFormFactory = (
       set('blue', Option.some(blue));
     };
 
-    const onInvalidInput = (
-      form: AlloyComponent,
-      simulatedEvent: SimulatedEvent<InputEvent>
-    ) => {
+    const onInvalidInput = (form: AlloyComponent, simulatedEvent: SimulatedEvent<InputEvent>) => {
       const data = simulatedEvent.event();
       if (data.type() !== 'hex') {
         set(data.type(), Option.none());
@@ -269,11 +254,7 @@ const rgbFormFactory = (
       updatePreview(form, hex);
     };
 
-    const onValidRgb = (
-      form: AlloyComponent,
-      prop: 'red' | 'green' | 'blue',
-      value: string
-    ) => {
+    const onValidRgb = (form: AlloyComponent, prop: 'red' | 'green' | 'blue', value: string) => {
       const val = parseInt(value, 10);
       set(prop, Option.some(val));
       getValueRgb().each((rgb) => {
@@ -282,13 +263,9 @@ const rgbFormFactory = (
       });
     };
 
-    const isHexInputEvent = (data: InputEvent): data is HexInputEvent =>
-      data.type() === 'hex';
+    const isHexInputEvent = (data: InputEvent): data is HexInputEvent => data.type() === 'hex';
 
-    const onValidInput = (
-      form: AlloyComponent,
-      simulatedEvent: SimulatedEvent<InputEvent>
-    ) => {
+    const onValidInput = (form: AlloyComponent, simulatedEvent: SimulatedEvent<InputEvent>) => {
       const data = simulatedEvent.event();
       if (isHexInputEvent(data)) {
         onValidHex(form, data.value());
@@ -318,51 +295,19 @@ const rgbFormFactory = (
         components: [
           parts.field(
             'red',
-            FormField.sketch(
-              renderTextField(
-                RgbaColour.isRgbaComponent,
-                'red',
-                redStrings.label,
-                redStrings.description,
-                255
-              )
-            )
+            FormField.sketch(renderTextField(RgbaColour.isRgbaComponent, 'red', redStrings.label, redStrings.description, 255))
           ),
           parts.field(
             'green',
-            FormField.sketch(
-              renderTextField(
-                RgbaColour.isRgbaComponent,
-                'green',
-                greenStrings.label,
-                greenStrings.description,
-                255
-              )
-            )
+            FormField.sketch(renderTextField(RgbaColour.isRgbaComponent, 'green', greenStrings.label, greenStrings.description, 255))
           ),
           parts.field(
             'blue',
-            FormField.sketch(
-              renderTextField(
-                RgbaColour.isRgbaComponent,
-                'blue',
-                blueStrings.label,
-                blueStrings.description,
-                255
-              )
-            )
+            FormField.sketch(renderTextField(RgbaColour.isRgbaComponent, 'blue', blueStrings.label, blueStrings.description, 255))
           ),
           parts.field(
             'hex',
-            FormField.sketch(
-              renderTextField(
-                HexColour.isHexString,
-                'hex',
-                hexStrings.label,
-                hexStrings.description,
-                'ffffff'
-              )
-            )
+            FormField.sketch(renderTextField(HexColour.isHexString, 'hex', hexStrings.label, hexStrings.description, 'ffffff'))
           ),
           memPreview.asSpec()
         ],

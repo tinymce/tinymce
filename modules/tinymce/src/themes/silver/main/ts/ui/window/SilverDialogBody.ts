@@ -5,15 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloySpec,
-  Behaviour,
-  Focusing,
-  Keying,
-  ModalDialog,
-  Reflecting,
-  Tabstopping
-} from '@ephox/alloy';
+import { AlloySpec, Behaviour, Focusing, Keying, ModalDialog, Reflecting, Tabstopping } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Fun, Option } from '@ephox/katamari';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
@@ -30,12 +22,7 @@ type WindowBodySpec = {
 
 // ariaAttrs is being passed through to silver inline dialog
 // from the WindowManager as a property of 'params'
-const renderBody = (
-  spec: WindowBodySpec,
-  id: Option<string>,
-  backstage: UiFactoryBackstage,
-  ariaAttrs: boolean
-): AlloySpec => {
+const renderBody = (spec: WindowBodySpec, id: Option<string>, backstage: UiFactoryBackstage, ariaAttrs: boolean): AlloySpec => {
   const renderComponents = (incoming: WindowBodySpec) => {
     switch (incoming.body.type) {
       case 'tabpanel': {
@@ -79,17 +66,10 @@ const renderBody = (
   };
 };
 
-const renderInlineBody = (
-  spec: WindowBodySpec,
-  contentId: string,
-  backstage: UiFactoryBackstage,
-  ariaAttrs: boolean
-) => renderBody(spec, Option.some(contentId), backstage, ariaAttrs);
+const renderInlineBody = (spec: WindowBodySpec, contentId: string, backstage: UiFactoryBackstage, ariaAttrs: boolean) =>
+  renderBody(spec, Option.some(contentId), backstage, ariaAttrs);
 
-const renderModalBody = (
-  spec: WindowBodySpec,
-  backstage: UiFactoryBackstage
-) => {
+const renderModalBody = (spec: WindowBodySpec, backstage: UiFactoryBackstage) => {
   const bodySpec = renderBody(spec, Option.none(), backstage, false);
   return ModalDialog.parts().body(bodySpec);
 };
@@ -114,10 +94,7 @@ const renderIframeBody = (spec: Types.UrlDialog.UrlDialog) => {
                 src: spec.url
               }
             },
-            behaviours: Behaviour.derive([
-              Tabstopping.config({}),
-              Focusing.config({})
-            ])
+            behaviours: Behaviour.derive([Tabstopping.config({}), Focusing.config({})])
           })
         ]
       }

@@ -11,11 +11,7 @@ import * as SystemEvents from '../api/events/SystemEvents';
 import * as FocusManagers from '../api/focus/FocusManagers';
 import { BehaviourState } from '../behaviour/common/BehaviourState';
 import * as Fields from '../data/Fields';
-import {
-  EventFormat,
-  NativeSimulatedEvent,
-  SimulatedEvent
-} from '../events/SimulatedEvent';
+import { EventFormat, NativeSimulatedEvent, SimulatedEvent } from '../events/SimulatedEvent';
 import { inSet } from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import { FocusInsideModes, GeneralKeyingConfig } from './KeyingModeTypes';
@@ -30,21 +26,9 @@ type GetRulesFunc<C extends GeneralKeyingConfig, S extends BehaviourState> = (
 const typical = <C extends GeneralKeyingConfig, S extends BehaviourState>(
   infoSchema: FieldProcessorAdt[],
   stateInit: (config: C) => BehaviourState,
-  getKeydownRules: (
-    comp: AlloyComponent,
-    se: NativeSimulatedEvent,
-    config: C,
-    state: S
-  ) => Array<KeyRules.KeyRule<C, S>>,
-  getKeyupRules: (
-    comp: AlloyComponent,
-    se: NativeSimulatedEvent,
-    config: C,
-    state: S
-  ) => Array<KeyRules.KeyRule<C, S>>,
-  optFocusIn: (
-    config: C
-  ) => Option<(comp: AlloyComponent, config: C, state: S) => void>
+  getKeydownRules: (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state: S) => Array<KeyRules.KeyRule<C, S>>,
+  getKeyupRules: (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state: S) => Array<KeyRules.KeyRule<C, S>>,
+  optFocusIn: (config: C) => Option<(comp: AlloyComponent, config: C, state: S) => void>
 ) => {
   const schema = () =>
     infoSchema.concat([
@@ -53,9 +37,7 @@ const typical = <C extends GeneralKeyingConfig, S extends BehaviourState>(
         'focusInside',
         'onFocus',
         ValueSchema.valueOf((val) =>
-          Arr.contains(['onFocus', 'onEnterOrSpace', 'onApi'], val)
-            ? Result.value(val)
-            : Result.error('Invalid value for focusInside')
+          Arr.contains(['onFocus', 'onEnterOrSpace', 'onApi'], val) ? Result.value(val) : Result.error('Invalid value for focusInside')
         )
       ),
       Fields.output('handler', me),
@@ -70,43 +52,25 @@ const typical = <C extends GeneralKeyingConfig, S extends BehaviourState>(
     keyingConfig: C,
     keyingState: S
   ): Option<boolean> => {
-    const rules = getRules(
-      component,
-      simulatedEvent,
-      keyingConfig,
-      keyingState
-    );
+    const rules = getRules(component, simulatedEvent, keyingConfig, keyingState);
 
-    return KeyRules.choose(rules, simulatedEvent.event()).bind((rule) =>
-      rule(component, simulatedEvent, keyingConfig, keyingState)
-    );
+    return KeyRules.choose(rules, simulatedEvent.event()).bind((rule) => rule(component, simulatedEvent, keyingConfig, keyingState));
   };
 
-  const toEvents = (
-    keyingConfig: C,
-    keyingState: S
-  ): AlloyEvents.AlloyEventRecord => {
+  const toEvents = (keyingConfig: C, keyingState: S): AlloyEvents.AlloyEventRecord => {
     const onFocusHandler =
       keyingConfig.focusInside !== FocusInsideModes.OnFocusMode
         ? Option.none<AlloyEvents.AlloyEventKeyAndHandler<EventFormat>>()
         : optFocusIn(keyingConfig).map((focusIn) =>
-            AlloyEvents.run<EventArgs>(
-              SystemEvents.focus(),
-              (component, simulatedEvent) => {
-                focusIn(component, keyingConfig, keyingState);
-                simulatedEvent.stop();
-              }
-            )
+            AlloyEvents.run<EventArgs>(SystemEvents.focus(), (component, simulatedEvent) => {
+              focusIn(component, keyingConfig, keyingState);
+              simulatedEvent.stop();
+            })
           );
 
     // On enter or space on root element, if using EnterOrSpace focus mode, fire a focusIn on the component
-    const tryGoInsideComponent = (
-      component: AlloyComponent,
-      simulatedEvent: SimulatedEvent<EventArgs>
-    ) => {
-      const isEnterOrSpace = inSet(Keys.SPACE().concat(Keys.ENTER()))(
-        simulatedEvent.event()
-      );
+    const tryGoInsideComponent = (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventArgs>) => {
+      const isEnterOrSpace = inSet(Keys.SPACE().concat(Keys.ENTER()))(simulatedEvent.event());
 
       if (
         keyingConfig.focusInside === FocusInsideModes.OnEnterOrSpaceMode &&
@@ -122,40 +86,22 @@ const typical = <C extends GeneralKeyingConfig, S extends BehaviourState>(
 
     return AlloyEvents.derive(
       onFocusHandler.toArray().concat([
-        AlloyEvents.run<EventArgs>(
-          NativeEvents.keydown(),
-          (component, simulatedEvent) => {
-            processKey(
-              component,
-              simulatedEvent,
-              getKeydownRules,
-              keyingConfig,
-              keyingState
-            ).fold(
-              () => {
-                // Key wasn't handled ... so see if we should enter into the component (focusIn)
-                tryGoInsideComponent(component, simulatedEvent);
-              },
-              (_) => {
-                simulatedEvent.stop();
-              }
-            );
-          }
-        ),
-        AlloyEvents.run<EventArgs>(
-          NativeEvents.keyup(),
-          (component, simulatedEvent) => {
-            processKey(
-              component,
-              simulatedEvent,
-              getKeyupRules,
-              keyingConfig,
-              keyingState
-            ).each((_) => {
+        AlloyEvents.run<EventArgs>(NativeEvents.keydown(), (component, simulatedEvent) => {
+          processKey(component, simulatedEvent, getKeydownRules, keyingConfig, keyingState).fold(
+            () => {
+              // Key wasn't handled ... so see if we should enter into the component (focusIn)
+              tryGoInsideComponent(component, simulatedEvent);
+            },
+            (_) => {
               simulatedEvent.stop();
-            });
-          }
-        )
+            }
+          );
+        }),
+        AlloyEvents.run<EventArgs>(NativeEvents.keyup(), (component, simulatedEvent) => {
+          processKey(component, simulatedEvent, getKeyupRules, keyingConfig, keyingState).each((_) => {
+            simulatedEvent.stop();
+          });
+        })
       ])
     );
   };

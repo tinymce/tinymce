@@ -12,10 +12,7 @@ import { Content, GetContentArgs } from './GetContentImpl';
 export { Content, GetContentArgs } from './GetContentImpl';
 
 const defaultFormat = 'html';
-export const getContent = (
-  editor: Editor,
-  args: GetContentArgs = {}
-): Content => {
+export const getContent = (editor: Editor, args: GetContentArgs = {}): Content => {
   const format = args.format ? args.format : defaultFormat;
 
   return Rtc.getContent(editor, args, format);

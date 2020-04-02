@@ -27,8 +27,7 @@ const isNodeType = function (type) {
 
 // Firefox can allow you to get a selection on a restricted node, such as file/number inputs. These nodes
 // won't implement the Object prototype, so Object.getPrototypeOf() will return null or something similar.
-const isRestrictedNode = (node: Node): boolean =>
-  !!node && !Object.getPrototypeOf(node);
+const isRestrictedNode = (node: Node): boolean => !!node && !Object.getPrototypeOf(node);
 
 const isElement = isNodeType(1) as (node: Node) => node is HTMLElement;
 
@@ -53,10 +52,7 @@ const matchStyleValues = function (name: string, values: string) {
 
     if (isElement(node)) {
       for (i = 0; i < items.length; i++) {
-        const computed = node.ownerDocument.defaultView.getComputedStyle(
-          node,
-          null
-        );
+        const computed = node.ownerDocument.defaultView.getComputedStyle(node, null);
         cssValue = computed ? computed.getPropertyValue(name) : null;
         if (cssValue === items[i]) {
           return true;
@@ -86,12 +82,9 @@ const hasAttributeValue = function (attrName: string, attrValue: string) {
   };
 };
 
-const isBogus = (node: Node): node is Element =>
-  isElement(node) && node.hasAttribute('data-mce-bogus');
-const isBogusAll = (node: Node): node is Element =>
-  isElement(node) && node.getAttribute('data-mce-bogus') === 'all';
-const isTable = (node: Node): node is Element =>
-  isElement(node) && node.tagName === 'TABLE';
+const isBogus = (node: Node): node is Element => isElement(node) && node.hasAttribute('data-mce-bogus');
+const isBogusAll = (node: Node): node is Element => isElement(node) && node.getAttribute('data-mce-bogus') === 'all';
+const isTable = (node: Node): node is Element => isElement(node) && node.tagName === 'TABLE';
 
 const hasContentEditableState = function (value: string) {
   return function (node: Node) {
@@ -109,23 +102,15 @@ const hasContentEditableState = function (value: string) {
   };
 };
 
-const isTextareaOrInput = matchNodeNames<
-  HTMLTextAreaElement | HTMLInputElement
->(['textarea', 'input']);
+const isTextareaOrInput = matchNodeNames<HTMLTextAreaElement | HTMLInputElement>(['textarea', 'input']);
 
 const isText = isNodeType(3) as (node: Node) => node is Text;
 const isComment = isNodeType(8) as (node: Node) => node is Comment;
 const isDocument = isNodeType(9) as (node: Node) => node is Document;
-const isDocumentFragment = isNodeType(11) as (
-  node: Node
-) => node is DocumentFragment;
+const isDocumentFragment = isNodeType(11) as (node: Node) => node is DocumentFragment;
 const isBr = matchNodeNames<HTMLBRElement>(['br']);
-const isContentEditableTrue = hasContentEditableState('true') as (
-  node: Node
-) => node is HTMLElement;
-const isContentEditableFalse = hasContentEditableState('false') as (
-  node: Node
-) => node is HTMLElement;
+const isContentEditableTrue = hasContentEditableState('true') as (node: Node) => node is HTMLElement;
+const isContentEditableFalse = hasContentEditableState('false') as (node: Node) => node is HTMLElement;
 
 export {
   isText,

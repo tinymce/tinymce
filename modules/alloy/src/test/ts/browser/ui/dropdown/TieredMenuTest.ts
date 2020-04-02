@@ -1,12 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Keyboard,
-  Keys,
-  Mouse,
-  Step,
-  StructAssert
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, Step, StructAssert } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Objects } from '@ephox/boulder';
 import { Arr, Obj } from '@ephox/katamari';
@@ -86,12 +78,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
           },
 
           tmenuBehaviours: Behaviour.derive([
-            AddEventsBehaviour.config('tiered-menu-test', [
-              AlloyEvents.run(
-                MenuEvents.focus(),
-                store.adder('menu.events.focus')
-              )
-            ])
+            AddEventsBehaviour.config('tiered-menu-test', [AlloyEvents.run(MenuEvents.focus(), store.adder('menu.events.focus'))])
           ]),
 
           eventOrder: Objects.wrapAll([
@@ -130,45 +117,29 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
       //   store.clear();
       // });
 
-      const structureMenu = (
-        selected: boolean,
-        itemSelections: boolean[],
-        hasPopups: boolean[],
-        isExpandeds: boolean[]
-      ) => (
+      const structureMenu = (selected: boolean, itemSelections: boolean[], hasPopups: boolean[], isExpandeds: boolean[]) => (
         s: ApproxStructure.StructApi,
         str: ApproxStructure.StringApi,
         arr: ApproxStructure.ArrayApi
       ) =>
         s.element('ol', {
-          classes: [
-            arr.has('menu'),
-            (selected ? arr.has : arr.not)('selected-menu')
-          ],
+          classes: [arr.has('menu'), (selected ? arr.has : arr.not)('selected-menu')],
           children: Arr.map(itemSelections, (sel, i) =>
             s.element('li', {
-              classes: [
-                arr.has('item'),
-                (sel ? arr.has : arr.not)('selected-item')
-              ],
+              classes: [arr.has('item'), (sel ? arr.has : arr.not)('selected-item')],
               attrs: {
                 'aria-haspopup': str.is(hasPopups[i].toString()),
                 ...(hasPopups[i]
                   ? { 'aria-expanded': str.is(isExpandeds[i].toString()) }
                   : {
-                      'aria-expanded': str.none(
-                        'aria-expanded should not exist'
-                      )
+                      'aria-expanded': str.none('aria-expanded should not exist')
                     })
               }
             })
           )
         });
 
-      const sAssertMenu = (
-        label: string,
-        structureMenus: Array<ApproxStructure.Builder<StructAssert>>
-      ) =>
+      const sAssertMenu = (label: string, structureMenus: Array<ApproxStructure.Builder<StructAssert>>) =>
         Assertions.sAssertStructure(
           label,
           ApproxStructure.build((s, str, arr) =>
@@ -186,14 +157,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
           ApproxStructure.build((s, str, arr) =>
             s.element('div', {
               classes: [arr.has('test-menu')],
-              children: [
-                structureMenu(
-                  true,
-                  [true, false, false],
-                  [false, true, false],
-                  [false, false, false]
-                )(s, str, arr)
-              ]
+              children: [structureMenu(true, [true, false, false], [false, true, false], [false, false, false])(s, str, arr)]
             })
           ),
           component.element()
@@ -202,72 +166,39 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
         Step.sync(() => {
           Keying.focusIn(component);
         }),
-        store.sAssertEq('Focus is fired as soon as the tiered menu is active', [
-          'onOpenMenu',
-          'menu.events.focus'
-        ]),
+        store.sAssertEq('Focus is fired as soon as the tiered menu is active', ['onOpenMenu', 'menu.events.focus']),
         Keyboard.sKeydown(doc, Keys.down(), {}),
         Keyboard.sKeydown(doc, Keys.right(), {}),
 
         sAssertMenu('Post expansion of submenu with <right> structure test', [
-          structureMenu(
-            false,
-            [false, true, false],
-            [false, true, false],
-            [false, true, false]
-          ),
+          structureMenu(false, [false, true, false], [false, true, false], [false, true, false]),
           structureMenu(true, [true], [false], [false])
         ]),
 
         Keyboard.sKeydown(doc, Keys.left(), {}),
         sAssertMenu('Post collapse of submenu with <left> structure test', [
-          structureMenu(
-            true,
-            [false, true, false],
-            [false, true, false],
-            [false, false, false]
-          )
+          structureMenu(true, [false, true, false], [false, true, false], [false, false, false])
         ]),
         Keyboard.sKeydown(doc, Keys.enter(), {}),
         sAssertMenu('Post exansion of submenu with <enter> structure test', [
-          structureMenu(
-            false,
-            [false, true, false],
-            [false, true, false],
-            [false, true, false]
-          ),
+          structureMenu(false, [false, true, false], [false, true, false], [false, true, false]),
           structureMenu(true, [true], [false], [false])
         ]),
 
         Keyboard.sKeydown(doc, Keys.escape(), {}),
         sAssertMenu('Post collapse of submenu with <escape> structure test', [
-          structureMenu(
-            true,
-            [false, true, false],
-            [false, true, false],
-            [false, false, false]
-          )
+          structureMenu(true, [false, true, false], [false, true, false], [false, false, false])
         ]),
 
         Mouse.sHoverOn(component.element(), 'li:contains("a-Beta")'),
         sAssertMenu('Post hover on item with submenu structure test', [
-          structureMenu(
-            true,
-            [false, true, false],
-            [false, true, false],
-            [false, true, false]
-          ),
+          structureMenu(true, [false, true, false], [false, true, false], [false, true, false]),
           structureMenu(false, [false], [false], [false])
         ]),
 
         Keyboard.sKeydown(doc, Keys.right(), {}),
         sAssertMenu('Post right on item with expanded submenu structure test', [
-          structureMenu(
-            false,
-            [false, true, false],
-            [false, true, false],
-            [false, true, false]
-          ),
+          structureMenu(false, [false, true, false], [false, true, false], [false, true, false]),
           structureMenu(true, [true], [false], [false])
         ])
         // TODO: Beef up tests

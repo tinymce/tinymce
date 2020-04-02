@@ -9,16 +9,8 @@ import { arbNegativeInteger } from 'ephox/katamari/test/arb/ArbDataTypes';
 const { tNumber } = Testable;
 
 UnitTest.test('Arr.findIndex: unit tests', () => {
-  const checkNoneHelper = (
-    input: ArrayLike<number>,
-    pred: (x: number) => boolean
-  ): void => {
-    Assert.eq(
-      'should be none',
-      Option.none(),
-      Arr.findIndex(input, pred),
-      tOption(tNumber)
-    );
+  const checkNoneHelper = (input: ArrayLike<number>, pred: (x: number) => boolean): void => {
+    Assert.eq('should be none', Option.none(), Arr.findIndex(input, pred), tOption(tNumber));
   };
 
   const checkNone = (input: number[], pred: (x: number) => boolean): void => {
@@ -26,24 +18,11 @@ UnitTest.test('Arr.findIndex: unit tests', () => {
     checkNoneHelper(Object.freeze(input.slice()), pred);
   };
 
-  const checkHelper = (
-    expected: number,
-    input: ArrayLike<number>,
-    pred: (x: number) => boolean
-  ): void => {
-    Assert.eq(
-      'should be some',
-      Option.some(expected),
-      Arr.findIndex(input, pred),
-      tOption(tNumber)
-    );
+  const checkHelper = (expected: number, input: ArrayLike<number>, pred: (x: number) => boolean): void => {
+    Assert.eq('should be some', Option.some(expected), Arr.findIndex(input, pred), tOption(tNumber));
   };
 
-  const check = (
-    expected: number,
-    input: number[],
-    pred: (x: number) => boolean
-  ): void => {
+  const check = (expected: number, input: number[], pred: (x: number) => boolean): void => {
     checkHelper(expected, input, pred);
     checkHelper(expected, Object.freeze(input), pred);
   };
@@ -58,20 +37,15 @@ UnitTest.test('Arr.findIndex: unit tests', () => {
 
 UnitTest.test('Arr.findIndex: find in middle of array', () => {
   fc.assert(
-    fc.property(
-      fc.array(fc.nat()),
-      arbNegativeInteger(),
-      fc.array(fc.nat()),
-      (prefix, element, suffix) => {
-        const arr = prefix.concat([element]).concat(suffix);
-        Assert.eq(
-          'Element should be found immediately after the prefix array',
-          Option.some(prefix.length),
-          Arr.findIndex(arr, (x) => x === element),
-          tOption(tNumber)
-        );
-      }
-    )
+    fc.property(fc.array(fc.nat()), arbNegativeInteger(), fc.array(fc.nat()), (prefix, element, suffix) => {
+      const arr = prefix.concat([element]).concat(suffix);
+      Assert.eq(
+        'Element should be found immediately after the prefix array',
+        Option.some(prefix.length),
+        Arr.findIndex(arr, (x) => x === element),
+        tOption(tNumber)
+      );
+    })
   );
 });
 
@@ -84,21 +58,18 @@ UnitTest.test('Arr.findIndex: Element found passes predicate', () => {
   );
 });
 
-UnitTest.test(
-  'Arr.findIndex: If predicate is always false, then index is always none',
-  () => {
-    fc.assert(
-      fc.property(fc.array(fc.integer()), (arr) => {
-        Assert.eq(
-          'should be none',
-          Option.none(),
-          Arr.findIndex(arr, () => false),
-          tOption(tNumber)
-        );
-      })
-    );
-  }
-);
+UnitTest.test('Arr.findIndex: If predicate is always false, then index is always none', () => {
+  fc.assert(
+    fc.property(fc.array(fc.integer()), (arr) => {
+      Assert.eq(
+        'should be none',
+        Option.none(),
+        Arr.findIndex(arr, () => false),
+        tOption(tNumber)
+      );
+    })
+  );
+});
 
 UnitTest.test('Arr.findIndex: consistent with find', () => {
   fc.assert(
@@ -118,11 +89,7 @@ UnitTest.test('Arr.findIndex: consistent with exists', () => {
   fc.assert(
     fc.property(fc.array(fc.integer()), (arr) => {
       const pred = (x) => x % 6 === 0;
-      Assert.eq(
-        'findIndex vs find',
-        Arr.exists(arr, pred),
-        Arr.findIndex(arr, pred).isSome()
-      );
+      Assert.eq('findIndex vs find', Arr.exists(arr, pred), Arr.findIndex(arr, pred).isSome());
     })
   );
 });

@@ -21,25 +21,14 @@ import {
 } from '@ephox/alloy';
 import { console } from '@ephox/dom-globals';
 import { Fun, Merger, Option } from '@ephox/katamari';
-import {
-  formActionEvent,
-  formCancelEvent,
-  formSubmitEvent
-} from 'tinymce/themes/silver/ui/general/FormEvents';
+import { formActionEvent, formCancelEvent, formSubmitEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
-import {
-  UiFactoryBackstageProviders,
-  UiFactoryBackstage
-} from '../../backstage/Backstage';
+import { UiFactoryBackstageProviders, UiFactoryBackstage } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { renderIconFromPack } from '../button/ButtonSlices';
-import {
-  renderMenuButton,
-  getFetch,
-  StoragedMenuButton
-} from '../button/MenuButton';
+import { renderMenuButton, getFetch, StoragedMenuButton } from '../button/MenuButton';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 import { Types } from '@ephox/bridge';
@@ -48,9 +37,7 @@ import { renderFormField } from '../alien/FieldLabeller';
 import * as ReadOnly from '../../ReadOnly';
 
 type ButtonSpec = Omit<Types.Button.Button, 'type'>;
-type FooterButtonSpec =
-  | Omit<Types.Dialog.DialogNormalButton, 'type'>
-  | Omit<Types.Dialog.DialogMenuButton, 'type'>;
+type FooterButtonSpec = Omit<Types.Dialog.DialogNormalButton, 'type'> | Omit<Types.Dialog.DialogMenuButton, 'type'>;
 
 export interface IconButtonWrapper extends Omit<ButtonSpec, 'text'> {
   tooltip: Option<string>;
@@ -74,15 +61,10 @@ const renderCommonSpec = (
   const common = {
     buttonBehaviours: Behaviour.derive(
       [
-        DisablingConfigs.button(
-          spec.disabled || providersBackstage.isReadonly()
-        ),
+        DisablingConfigs.button(spec.disabled || providersBackstage.isReadonly()),
         ReadOnly.receivingConfig(),
         Tabstopping.config({}),
-        AddEventsBehaviour.config('button press', [
-          AlloyEvents.preventDefault('click'),
-          AlloyEvents.preventDefault('mousedown')
-        ])
+        AddEventsBehaviour.config('button press', [AlloyEvents.preventDefault('click'), AlloyEvents.preventDefault('mousedown')])
       ].concat(extraBehaviours)
     ),
     eventOrder: {
@@ -112,18 +94,9 @@ export const renderIconButtonSpec = (
     classes: [ToolbarButtonClasses.Button],
     attributes: tooltipAttributes
   };
-  const icon = spec.icon.map((iconName) =>
-    renderIconFromPack(iconName, providersBackstage.icons)
-  );
+  const icon = spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons));
   const components = componentRenderPipeline([icon]);
-  return renderCommonSpec(
-    spec,
-    action,
-    extraBehaviours,
-    dom,
-    components,
-    providersBackstage
-  );
+  return renderCommonSpec(spec, action, extraBehaviours, dom, components, providersBackstage);
 };
 
 export const renderIconButton = (
@@ -132,12 +105,7 @@ export const renderIconButton = (
   providersBackstage: UiFactoryBackstageProviders,
   extraBehaviours = []
 ): SketchSpec => {
-  const iconButtonSpec = renderIconButtonSpec(
-    spec,
-    Option.some(action),
-    providersBackstage,
-    extraBehaviours
-  );
+  const iconButtonSpec = renderIconButtonSpec(spec, Option.some(action), providersBackstage, extraBehaviours);
   return AlloyButton.sketch(iconButtonSpec);
 };
 
@@ -153,9 +121,7 @@ export const renderButtonSpec = (
   const translatedText = providersBackstage.translate(spec.text);
 
   const icon: Option<AlloySpec> = spec.icon
-    ? spec.icon.map((iconName) =>
-        renderIconFromPack(iconName, providersBackstage.icons)
-      )
+    ? spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons))
     : Option.none();
   const components = icon.isSome() ? componentRenderPipeline([icon]) : [];
 
@@ -166,9 +132,7 @@ export const renderButtonSpec = (
       };
 
   const classes = [
-    ...(!spec.primary && !spec.borderless
-      ? ['tox-button', 'tox-button--secondary']
-      : ['tox-button']),
+    ...(!spec.primary && !spec.borderless ? ['tox-button', 'tox-button--secondary'] : ['tox-button']),
     ...(icon.isSome() ? ['tox-button--icon'] : []),
     ...(spec.borderless ? ['tox-button--naked'] : []),
     ...extraClasses
@@ -182,14 +146,7 @@ export const renderButtonSpec = (
       title: translatedText // TODO: tooltips AP-213
     }
   };
-  return renderCommonSpec(
-    spec,
-    action,
-    extraBehaviours,
-    dom,
-    components,
-    providersBackstage
-  );
+  return renderCommonSpec(spec, action, extraBehaviours, dom, components, providersBackstage);
 };
 
 export const renderButton = (
@@ -199,19 +156,11 @@ export const renderButton = (
   extraBehaviours = [],
   extraClasses = []
 ): SketchSpec => {
-  const buttonSpec = renderButtonSpec(
-    spec,
-    Option.some(action),
-    providersBackstage,
-    extraBehaviours,
-    extraClasses
-  );
+  const buttonSpec = renderButtonSpec(spec, Option.some(action), providersBackstage, extraBehaviours, extraClasses);
   return AlloyButton.sketch(buttonSpec);
 };
 
-const getAction = (name: string, buttonType: string) => (
-  comp: AlloyComponent
-) => {
+const getAction = (name: string, buttonType: string) => (comp: AlloyComponent) => {
   if (buttonType === 'custom') {
     AlloyTriggers.emitWith(comp, formActionEvent, {
       name,
@@ -227,22 +176,12 @@ const getAction = (name: string, buttonType: string) => (
   }
 };
 
-const isMenuFooterButtonSpec = (
-  spec: FooterButtonSpec,
-  buttonType: string
-): spec is Types.Dialog.DialogMenuButton => buttonType === 'menu';
+const isMenuFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Types.Dialog.DialogMenuButton => buttonType === 'menu';
 
-const isNormalFooterButtonSpec = (
-  spec: FooterButtonSpec,
-  buttonType: string
-): spec is Types.Dialog.DialogNormalButton =>
+const isNormalFooterButtonSpec = (spec: FooterButtonSpec, buttonType: string): spec is Types.Dialog.DialogNormalButton =>
   buttonType === 'custom' || buttonType === 'cancel' || buttonType === 'submit';
 
-export const renderFooterButton = (
-  spec: FooterButtonSpec,
-  buttonType: string,
-  backstage: UiFactoryBackstage
-): SimpleOrSketchSpec => {
+export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, backstage: UiFactoryBackstage): SimpleOrSketchSpec => {
   if (isMenuFooterButtonSpec(spec, buttonType)) {
     const getButton = () => memButton;
 
@@ -257,14 +196,7 @@ export const renderFooterButton = (
       fetch: getFetch(menuButtonSpec.items, getButton, backstage)
     };
 
-    const memButton = Memento.record(
-      renderMenuButton(
-        fixedSpec,
-        ToolbarButtonClasses.Button,
-        backstage,
-        Option.none()
-      )
-    );
+    const memButton = Memento.record(renderMenuButton(fixedSpec, ToolbarButtonClasses.Button, backstage, Option.none()));
 
     return memButton.asSpec();
   } else if (isNormalFooterButtonSpec(spec, buttonType)) {
@@ -280,19 +212,13 @@ export const renderFooterButton = (
   }
 };
 
-export const renderDialogButton = (
-  spec: ButtonSpec,
-  providersBackstage: UiFactoryBackstageProviders
-): SketchSpec => {
+export const renderDialogButton = (spec: ButtonSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const action = getAction(spec.name, 'custom');
   return renderFormField(
     Option.none(),
     AlloyFormField.parts().field({
       factory: AlloyButton,
-      ...renderButtonSpec(spec, Option.some(action), providersBackstage, [
-        RepresentingConfigs.memory(''),
-        ComposingConfigs.self()
-      ])
+      ...renderButtonSpec(spec, Option.some(action), providersBackstage, [RepresentingConfigs.memory(''), ComposingConfigs.self()])
     })
   );
 };

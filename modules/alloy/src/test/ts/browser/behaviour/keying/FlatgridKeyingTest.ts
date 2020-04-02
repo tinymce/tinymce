@@ -52,11 +52,7 @@ UnitTest.asynctest('Flat Grid Keying Test', (success, failure) => {
             },
             classes: ['square'].concat(classes)
           },
-          events: AlloyEvents.derive([
-            AlloyEvents.runOnExecute(
-              store.adder('item.execute: ' + classes.join(','))
-            )
-          ]),
+          events: AlloyEvents.derive([AlloyEvents.runOnExecute(store.adder('item.execute: ' + classes.join(',')))]),
           containerBehaviours: Behaviour.derive([Focusing.config({})])
         });
 
@@ -135,23 +131,9 @@ UnitTest.asynctest('Flat Grid Keying Test', (success, failure) => {
           targets.s03,
           targets.s21
         ]),
-        NavigationUtils.sequence(doc, Keys.right(), {}, [
-          targets.s19,
-          targets.s20,
-          targets.s21,
-          targets.s19,
-          targets.s20,
-          targets.s21
-        ]),
+        NavigationUtils.sequence(doc, Keys.right(), {}, [targets.s19, targets.s20, targets.s21, targets.s19, targets.s20, targets.s21]),
 
-        NavigationUtils.sequence(doc, Keys.left(), {}, [
-          targets.s20,
-          targets.s19,
-          targets.s21,
-          targets.s20,
-          targets.s19,
-          targets.s21
-        ]),
+        NavigationUtils.sequence(doc, Keys.left(), {}, [targets.s20, targets.s19, targets.s21, targets.s20, targets.s19, targets.s21]),
 
         // Test execute
         Keyboard.sKeydown(doc, Keys.enter(), {}),

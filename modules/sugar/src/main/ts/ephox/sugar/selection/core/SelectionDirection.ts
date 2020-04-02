@@ -4,22 +4,11 @@ import Element from '../../api/node/Element';
 import * as NativeRange from './NativeRange';
 import { Selection } from '../../api/selection/Selection';
 
-type SelectionDirectionHandler<U> = (
-  start: Element<DomNode>,
-  soffset: number,
-  finish: Element<DomNode>,
-  foffset: number
-) => U;
+type SelectionDirectionHandler<U> = (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => U;
 
 export interface SelectionDirection {
-  fold: <U>(
-    ltr: SelectionDirectionHandler<U>,
-    rtl: SelectionDirectionHandler<U>
-  ) => U;
-  match: <U>(branches: {
-    ltr: SelectionDirectionHandler<U>;
-    rtl: SelectionDirectionHandler<U>;
-  }) => U;
+  fold: <U>(ltr: SelectionDirectionHandler<U>, rtl: SelectionDirectionHandler<U>) => U;
+  match: <U>(branches: { ltr: SelectionDirectionHandler<U>; rtl: SelectionDirectionHandler<U> }) => U;
   log: (label: string) => void;
 }
 
@@ -33,22 +22,10 @@ type SelectionDirectionConstructor = (
 const adt: {
   ltr: SelectionDirectionConstructor;
   rtl: SelectionDirectionConstructor;
-} = Adt.generate([
-  { ltr: ['start', 'soffset', 'finish', 'foffset'] },
-  { rtl: ['start', 'soffset', 'finish', 'foffset'] }
-]);
+} = Adt.generate([{ ltr: ['start', 'soffset', 'finish', 'foffset'] }, { rtl: ['start', 'soffset', 'finish', 'foffset'] }]);
 
-const fromRange = function (
-  win: Window,
-  type: SelectionDirectionConstructor,
-  range: Range
-) {
-  return type(
-    Element.fromDom(range.startContainer),
-    range.startOffset,
-    Element.fromDom(range.endContainer),
-    range.endOffset
-  );
+const fromRange = function (win: Window, type: SelectionDirectionConstructor, range: Range) {
+  return type(Element.fromDom(range.startContainer), range.startOffset, Element.fromDom(range.endContainer), range.endOffset);
 };
 
 interface LtrRtlRanges {
@@ -70,32 +47,17 @@ const getRanges = function (win: Window, selection: Selection): LtrRtlRanges {
           return NativeRange.relativeToNative(win, startSitu, finishSitu);
         }),
         rtl: Thunk.cached(function () {
-          return Option.some(
-            NativeRange.relativeToNative(win, finishSitu, startSitu)
-          );
+          return Option.some(NativeRange.relativeToNative(win, finishSitu, startSitu));
         })
       };
     },
-    exact(
-      start: Element<DomNode>,
-      soffset: number,
-      finish: Element<DomNode>,
-      foffset: number
-    ) {
+    exact(start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
       return {
         ltr: Thunk.cached(function () {
-          return NativeRange.exactToNative(
-            win,
-            start,
-            soffset,
-            finish,
-            foffset
-          );
+          return NativeRange.exactToNative(win, start, soffset, finish, foffset);
         }),
         rtl: Thunk.cached(function () {
-          return Option.some(
-            NativeRange.exactToNative(win, finish, foffset, start, soffset)
-          );
+          return Option.some(NativeRange.exactToNative(win, finish, foffset, start, soffset));
         })
       };
     }
@@ -114,12 +76,7 @@ const doDiagnose = function (win: Window, ranges: LtrRtlRanges) {
     return reversed
       .map(function (rev) {
         // We need to use "reversed" here, because the original only has one point (collapsed)
-        return adt.rtl(
-          Element.fromDom(rev.endContainer),
-          rev.endOffset,
-          Element.fromDom(rev.startContainer),
-          rev.startOffset
-        );
+        return adt.rtl(Element.fromDom(rev.endContainer), rev.endOffset, Element.fromDom(rev.startContainer), rev.startOffset);
       })
       .getOrThunk(function () {
         return fromRange(win, adt.ltr, rng);

@@ -1,11 +1,4 @@
-import {
-  ApproxStructure,
-  Assertions,
-  GeneralSteps,
-  Logger,
-  Pipeline,
-  Step
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { Text } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
@@ -14,15 +7,9 @@ import * as TypeText from '../../module/test/TypeText';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
-import {
-  isCaretNode,
-  getParentCaretContainer
-} from 'tinymce/core/fmt/FormatContainer';
+import { isCaretNode, getParentCaretContainer } from 'tinymce/core/fmt/FormatContainer';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success, failure) {
   Theme();
 
   const sApplyCaretFormat = function (editor, name, vars) {
@@ -42,11 +29,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (
       const rawBody = editor.getBody().cloneNode(true);
       rawBody.normalize();
 
-      Assertions.assertStructure(
-        'Asserting the normalized structure of tiny content.',
-        expected,
-        Element.fromDom(rawBody)
-      );
+      Assertions.assertStructure('Asserting the normalized structure of tiny content.', expected, Element.fromDom(rawBody));
     });
   };
 
@@ -64,10 +47,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (
               tinyApis.sSetContent('<p>a</p>'),
               tinyApis.sSetCursor([0, 0], 1),
               sApplyCaretFormat(editor, 'bold', {}),
-              TypeText.sTypeContentAtSelection(
-                Element.fromDom(editor.getDoc()),
-                'x'
-              ),
+              TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'x'),
               tinyApis.sAssertContent('<p>a<strong>x</strong></p>'),
               tinyApis.sAssertContentStructure(
                 ApproxStructure.build(function (s, str) {
@@ -127,10 +107,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (
               tinyApis.sSetContent('<p><strong>a</strong></p>'),
               tinyApis.sSetCursor([0, 0, 0], 1),
               sRemoveCaretFormat(editor, 'bold', {}),
-              TypeText.sTypeContentAtSelection(
-                Element.fromDom(editor.getDoc()),
-                'x'
-              ),
+              TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'x'),
               tinyApis.sAssertContent('<p><strong>a</strong>x</p>'),
               tinyApis.sAssertContentStructure(
                 ApproxStructure.build(function (s, str) {
@@ -185,10 +162,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (
               tinyApis.sSetCursor([0, 0], 1),
               sApplyCaretFormat(editor, 'bold', {}),
               sRemoveCaretFormat(editor, 'bold', {}),
-              TypeText.sTypeContentAtSelection(
-                Element.fromDom(editor.getDoc()),
-                'x'
-              ),
+              TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'x'),
               tinyApis.sAssertContent('<p>ax</p>'),
               tinyApis.sAssertContentStructure(
                 ApproxStructure.build(function (s, str) {
@@ -216,13 +190,8 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (
               tinyApis.sSetCursor([0, 0], 1),
               sRemoveCaretFormat(editor, 'bold', {}),
               sApplyCaretFormat(editor, 'bold', {}),
-              TypeText.sTypeContentAtSelection(
-                Element.fromDom(editor.getDoc()),
-                'x'
-              ),
-              tinyApis.sAssertContent(
-                '<p><strong>a</strong><strong>x</strong></p>'
-              ),
+              TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'x'),
+              tinyApis.sAssertContent('<p><strong>a</strong><strong>x</strong></p>'),
               tinyApis.sAssertContentStructure(
                 ApproxStructure.build(function (s, str) {
                   return s.element('body', {
@@ -258,10 +227,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (
               tinyApis.sSetRawContent('<p>a<br></p>'),
               tinyApis.sSetCursor([0, 0], 1),
               sApplyCaretFormat(editor, 'bold', {}),
-              TypeText.sTypeContentAtSelection(
-                Element.fromDom(editor.getDoc()),
-                'x'
-              ),
+              TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'x'),
               tinyApis.sAssertContent('<p>a<strong>x</strong></p>'),
               sAssertNormalizedContentStructure(
                 editor,
@@ -298,10 +264,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (
               tinyApis.sSetRawContent('<p><strong>a<br></strong></p>'),
               tinyApis.sSetCursor([0, 0, 0], 1),
               sRemoveCaretFormat(editor, 'bold', {}),
-              TypeText.sTypeContentAtSelection(
-                Element.fromDom(editor.getDoc()),
-                'x'
-              ),
+              TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'x'),
               tinyApis.sAssertContent('<p><strong>a</strong>x</p>'),
               tinyApis.sAssertContentStructure(
                 ApproxStructure.build(function (s, str) {
@@ -358,10 +321,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (
                 })
               ),
               tinyApis.sSetCursor([0, 0], 1),
-              TypeText.sTypeContentAtSelection(
-                Element.fromDom(editor.getDoc()),
-                'x'
-              ),
+              TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'x'),
               tinyApis.sAssertContent('<p>ax</p>\n<p>&nbsp;</p>'),
               tinyApis.sAssertContentStructure(
                 ApproxStructure.build(function (s, str) {
@@ -382,11 +342,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (
           Logger.t(
             'isCaretNode',
             Step.sync(function () {
-              Assertions.assertEq(
-                'Should be false since it is not a caret node',
-                false,
-                isCaretNode(editor.dom.create('b'))
-              );
+              Assertions.assertEq('Should be false since it is not a caret node', false, isCaretNode(editor.dom.create('b')));
               Assertions.assertEq(
                 'Should be true since it is a caret node',
                 true,
@@ -435,60 +391,33 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (
           Logger.t(
             'getParentCaretContainer',
             Step.sync(function () {
-              const body = Element.fromHtml(
-                '<div><span id="_mce_caret">a</span></div>'
-              );
+              const body = Element.fromHtml('<div><span id="_mce_caret">a</span></div>');
               const caret = Element.fromDom(body.dom().firstChild);
 
               Assertions.assertDomEq(
                 'Should be caret element on child',
                 caret,
-                Element.fromDom(
-                  getParentCaretContainer(body.dom(), caret.dom().firstChild)
-                )
+                Element.fromDom(getParentCaretContainer(body.dom(), caret.dom().firstChild))
               );
               Assertions.assertDomEq(
                 'Should be caret element on self',
                 caret,
-                Element.fromDom(
-                  getParentCaretContainer(body.dom(), caret.dom())
-                )
+                Element.fromDom(getParentCaretContainer(body.dom(), caret.dom()))
               );
-              Assertions.assertEq(
-                'Should not be caret element',
-                null,
-                getParentCaretContainer(
-                  body.dom(),
-                  Element.fromTag('span').dom()
-                )
-              );
-              Assertions.assertEq(
-                'Should not be caret element',
-                null,
-                getParentCaretContainer(caret.dom(), caret.dom())
-              );
+              Assertions.assertEq('Should not be caret element', null, getParentCaretContainer(body.dom(), Element.fromTag('span').dom()));
+              Assertions.assertEq('Should not be caret element', null, getParentCaretContainer(caret.dom(), caret.dom()));
             })
           ),
           Logger.t(
             'replaceWithCaretFormat',
             Step.sync(function () {
               const body = Element.fromHtml('<div><br /></div>');
-              const formats = [
-                Element.fromTag('b').dom(),
-                Element.fromTag('i').dom()
-              ];
+              const formats = [Element.fromTag('b').dom(), Element.fromTag('i').dom()];
 
-              const pos = CaretFormat.replaceWithCaretFormat(
-                body.dom().firstChild,
-                formats
-              );
+              const pos = CaretFormat.replaceWithCaretFormat(body.dom().firstChild, formats);
 
               Assertions.assertEq('Should be at first offset', 0, pos.offset());
-              Assertions.assertEq(
-                'Should the zwsp text node',
-                Zwsp.ZWSP,
-                (<Text>pos.container()).data
-              );
+              Assertions.assertEq('Should the zwsp text node', Zwsp.ZWSP, (<Text>pos.container()).data);
 
               Assertions.assertStructure(
                 'Asserting the normalized structure of tiny content.',
@@ -520,59 +449,26 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (
           Logger.t(
             'isFormatElement',
             Step.sync(function () {
+              Assertions.assertEq('Should be format element', true, CaretFormat.isFormatElement(editor, Element.fromTag('b')));
+              Assertions.assertEq('Should be format element', true, CaretFormat.isFormatElement(editor, Element.fromTag('i')));
+              Assertions.assertEq('Should be format element', true, CaretFormat.isFormatElement(editor, Element.fromTag('u')));
+              Assertions.assertEq('Should be format element', true, CaretFormat.isFormatElement(editor, Element.fromTag('span')));
+              Assertions.assertEq('Should not be format element', false, CaretFormat.isFormatElement(editor, Element.fromTag('p')));
+              Assertions.assertEq('Should not be format element', false, CaretFormat.isFormatElement(editor, Element.fromTag('div')));
               Assertions.assertEq(
-                'Should be format element',
-                true,
-                CaretFormat.isFormatElement(editor, Element.fromTag('b'))
-              );
-              Assertions.assertEq(
-                'Should be format element',
-                true,
-                CaretFormat.isFormatElement(editor, Element.fromTag('i'))
-              );
-              Assertions.assertEq(
-                'Should be format element',
-                true,
-                CaretFormat.isFormatElement(editor, Element.fromTag('u'))
-              );
-              Assertions.assertEq(
-                'Should be format element',
-                true,
-                CaretFormat.isFormatElement(editor, Element.fromTag('span'))
+                'Should not be format element',
+                false,
+                CaretFormat.isFormatElement(editor, Element.fromHtml('<a href="#"></a>'))
               );
               Assertions.assertEq(
                 'Should not be format element',
                 false,
-                CaretFormat.isFormatElement(editor, Element.fromTag('p'))
+                CaretFormat.isFormatElement(editor, Element.fromHtml('<span data-mce-bogus="1"></span>'))
               );
               Assertions.assertEq(
                 'Should not be format element',
                 false,
-                CaretFormat.isFormatElement(editor, Element.fromTag('div'))
-              );
-              Assertions.assertEq(
-                'Should not be format element',
-                false,
-                CaretFormat.isFormatElement(
-                  editor,
-                  Element.fromHtml('<a href="#"></a>')
-                )
-              );
-              Assertions.assertEq(
-                'Should not be format element',
-                false,
-                CaretFormat.isFormatElement(
-                  editor,
-                  Element.fromHtml('<span data-mce-bogus="1"></span>')
-                )
-              );
-              Assertions.assertEq(
-                'Should not be format element',
-                false,
-                CaretFormat.isFormatElement(
-                  editor,
-                  Element.fromHtml('<span id="_mce_caret"></span>')
-                )
+                CaretFormat.isFormatElement(editor, Element.fromHtml('<span id="_mce_caret"></span>'))
               );
             })
           )

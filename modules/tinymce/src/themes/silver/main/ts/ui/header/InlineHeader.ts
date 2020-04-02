@@ -42,13 +42,10 @@ export const InlineHeader = (
   const DOM = DOMUtils.DOM;
   const useFixedToolbarContainer = useFixedContainer(editor);
   const isSticky = isStickyToolbar(editor);
-  const editorMaxWidthOpt = getMaxWidthSetting(editor).or(
-    EditorSize.getWidth(editor)
-  );
+  const editorMaxWidthOpt = getMaxWidthSetting(editor).or(EditorSize.getWidth(editor));
 
   const toolbarMode = getToolbarMode(editor);
-  const isSplitToolbar =
-    toolbarMode === ToolbarMode.sliding || toolbarMode === ToolbarMode.floating;
+  const isSplitToolbar = toolbarMode === ToolbarMode.sliding || toolbarMode === ToolbarMode.floating;
   const isToolbarTop = isToolbarLocationTop(editor);
 
   const visible = Cell(false);
@@ -57,14 +54,8 @@ export const InlineHeader = (
     // Update the max width of the inline toolbar
     const maxWidth = editorMaxWidthOpt.getOrThunk(() => {
       // No max width, so use the body width, minus the left pos as the maximum
-      const bodyMargin = Utils.parseToInt(
-        Css.get(Body.body(), 'margin-left')
-      ).getOr(0);
-      return (
-        Width.get(Body.body()) -
-        Location.absolute(targetElm).left() +
-        bodyMargin
-      );
+      const bodyMargin = Utils.parseToInt(Css.get(Body.body(), 'margin-left')).getOr(0);
+      return Width.get(Body.body()) - Location.absolute(targetElm).left() + bodyMargin;
     });
     Css.set(floatContainer.get().element(), 'max-width', maxWidth + 'px');
   };
@@ -76,18 +67,14 @@ export const InlineHeader = (
           () => 0,
           (tbar) =>
             // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
-            tbar.components().length > 1
-              ? Height.get(tbar.components()[1].element())
-              : 0
+            tbar.components().length > 1 ? Height.get(tbar.components()[1].element()) : 0
         )
       : 0;
 
     // The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
     // so we need to round this to account for that.
     const targetBounds = Boxes.box(targetElm);
-    const top = isToolbarTop
-      ? targetBounds.y - Height.get(floatContainer.get().element()) + offset
-      : targetBounds.bottom;
+    const top = isToolbarTop ? targetBounds.y - Height.get(floatContainer.get().element()) + offset : targetBounds.bottom;
 
     Css.setAll(outerContainer.element(), {
       position: 'absolute',
@@ -124,9 +111,7 @@ export const InlineHeader = (
     // Docking
     if (isSticky) {
       const floatContainerComp = floatContainer.get();
-      resetDocking
-        ? Docking.reset(floatContainerComp)
-        : Docking.refresh(floatContainerComp);
+      resetDocking ? Docking.reset(floatContainerComp) : Docking.refresh(floatContainerComp);
     }
 
     // Floating toolbar

@@ -12,27 +12,15 @@ import { DetailExt, RowData } from './Structs';
 type ColInfo = BarPositions.ColInfo;
 type BarPositions<A> = BarPositions.BarPositions<A>;
 
-const redistributeToW = function (
-  newWidths: string[],
-  cells: DetailExt[],
-  unit: string
-) {
+const redistributeToW = function (newWidths: string[], cells: DetailExt[], unit: string) {
   Arr.each(cells, function (cell) {
-    const widths = newWidths.slice(
-      cell.column(),
-      cell.colspan() + cell.column()
-    );
+    const widths = newWidths.slice(cell.column(), cell.colspan() + cell.column());
     const w = Redistribution.sum(widths, CellUtils.minWidth());
     Css.set(cell.element(), 'width', w + unit);
   });
 };
 
-const redistributeToH = function <T>(
-  newHeights: string[],
-  rows: RowData<T>[],
-  cells: DetailExt[],
-  unit: string
-) {
+const redistributeToH = function <T>(newHeights: string[], rows: RowData<T>[], cells: DetailExt[], unit: string) {
   Arr.each(cells, function (cell) {
     const heights = newHeights.slice(cell.row(), cell.rowspan() + cell.row());
     const h = Redistribution.sum(heights, CellUtils.minHeight());
@@ -45,21 +33,12 @@ const redistributeToH = function <T>(
 };
 
 const getUnit = function (newSize: string) {
-  return Redistribution.validate(newSize).fold(
-    Fun.constant('px'),
-    Fun.constant('px'),
-    Fun.constant('%')
-  );
+  return Redistribution.validate(newSize).fold(Fun.constant('px'), Fun.constant('px'), Fun.constant('%'));
 };
 
 // Procedure to resize table dimensions to optWidth x optHeight and redistribute cell and row dimensions.
 // Updates CSS of the table, rows, and cells.
-const redistribute = function (
-  table: Element,
-  optWidth: Option<string>,
-  optHeight: Option<string>,
-  direction: BarPositions<ColInfo>
-) {
+const redistribute = function (table: Element, optWidth: Option<string>, optHeight: Option<string>, direction: BarPositions<ColInfo>) {
   const list = DetailsList.fromTable(table);
   const warehouse = Warehouse.generate(list);
   const rows = warehouse.all;
@@ -70,11 +49,7 @@ const redistribute = function (
     const wUnit = getUnit(newWidth);
     const totalWidth = Width.get(table);
     const oldWidths = ColumnSizes.getRawWidths(warehouse, direction, tableSize);
-    const nuWidths = Redistribution.redistribute(
-      oldWidths,
-      totalWidth,
-      newWidth
-    );
+    const nuWidths = Redistribution.redistribute(oldWidths, totalWidth, newWidth);
     redistributeToW(nuWidths, cells, wUnit);
     Css.set(table, 'width', newWidth);
   });
@@ -82,15 +57,8 @@ const redistribute = function (
   optHeight.each(function (newHeight) {
     const hUnit = getUnit(newHeight);
     const totalHeight = Height.get(table);
-    const oldHeights = ColumnSizes.getRawHeights(
-      warehouse,
-      BarPositions.height
-    );
-    const nuHeights = Redistribution.redistribute(
-      oldHeights,
-      totalHeight,
-      newHeight
-    );
+    const oldHeights = ColumnSizes.getRawHeights(warehouse, BarPositions.height);
+    const nuHeights = Redistribution.redistribute(oldHeights, totalHeight, newHeight);
     redistributeToH(nuHeights, rows, cells, hUnit);
     Css.set(table, 'height', newHeight);
   });

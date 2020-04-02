@@ -1,9 +1,4 @@
-import {
-  Option,
-  OptionInstances,
-  Result,
-  ResultInstances
-} from '@ephox/katamari';
+import { Option, OptionInstances, Result, ResultInstances } from '@ephox/katamari';
 import { Assert, TestLabel } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
 
@@ -14,22 +9,13 @@ type Testable<A> = Testable.Testable<A>;
 
 // NOTE: Don't use this within Agar - use tOption directly
 
-export const eqOption = <A>(
-  message: TestLabel,
-  expected: Option<A>,
-  actual: Option<A>,
-  testableA: Testable<A> = tAny
-): void => Assert.eq(message, expected, actual, tOption(testableA));
+export const eqOption = <A>(message: TestLabel, expected: Option<A>, actual: Option<A>, testableA: Testable<A> = tAny): void =>
+  Assert.eq(message, expected, actual, tOption(testableA));
 
-export const eqNone = <A>(message: TestLabel, actual: Option<A>): void =>
-  eqOption(message, Option.none<A>(), actual, tAny);
+export const eqNone = <A>(message: TestLabel, actual: Option<A>): void => eqOption(message, Option.none<A>(), actual, tAny);
 
-export const eqSome = <A>(
-  message: TestLabel,
-  expected: A,
-  actual: Option<A>,
-  testableA: Testable<A> = tAny
-): void => eqOption(message, Option.some<A>(expected), actual, testableA);
+export const eqSome = <A>(message: TestLabel, expected: A, actual: Option<A>, testableA: Testable<A> = tAny): void =>
+  eqOption(message, Option.some<A>(expected), actual, testableA);
 
 export const eqResult = <A, E>(
   message: TestLabel,

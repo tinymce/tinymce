@@ -39,10 +39,7 @@ const changeZIndex = (blocker: AlloyComponent): void => {
     });
 };
 
-const instigate = (
-  anyComponent: AlloyComponent,
-  blocker: AlloyComponent
-): void => {
+const instigate = (anyComponent: AlloyComponent, blocker: AlloyComponent): void => {
   anyComponent.getSystem().addToGui(blocker);
   changeZIndex(blocker);
 };
@@ -52,11 +49,7 @@ const discard = (blocker: AlloyComponent): void => {
   blocker.getSystem().removeFromGui(blocker);
 };
 
-const createComponent = (
-  component: AlloyComponent,
-  blockerClass: string,
-  blockerEvents: AlloyEventRecord
-) =>
+const createComponent = (component: AlloyComponent, blockerClass: string, blockerEvents: AlloyEventRecord) =>
   component.getSystem().build(
     Container.sketch({
       dom: {

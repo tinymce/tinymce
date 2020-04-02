@@ -12,10 +12,7 @@ const mapToStructGrid = function (grid: Structs.ElementNew[][]) {
   });
 };
 
-const assertGrids = function (
-  expected: Structs.RowCells[],
-  actual: Structs.RowCells[]
-) {
+const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowCells[]) {
   assert.eq(expected.length, actual.length);
   Arr.each(expected, function (row, i) {
     Arr.each(row.cells(), function (cell, j) {
@@ -35,13 +32,7 @@ const mergeTest = function (
   comparator: (a: Element, b: Element) => boolean
 ) {
   // The last step, merge cells from gridB into gridA
-  const nuGrid = TableMerge.merge(
-    startAddress,
-    mapToStructGrid(gridA()),
-    mapToStructGrid(gridB()),
-    generator(),
-    comparator
-  );
+  const nuGrid = TableMerge.merge(startAddress, mapToStructGrid(gridA()), mapToStructGrid(gridB()), generator(), comparator);
   nuGrid.fold(
     function (err) {
       if ('error' in expected) {
@@ -54,9 +45,7 @@ const mergeTest = function (
       if (!('error' in expected)) {
         assertGrids(mapToStructGrid(expected), grid);
       } else {
-        assert.fail(
-          'Expected failure "' + expected.error + '" but instead got grid'
-        );
+        assert.fail('Expected failure "' + expected.error + '" but instead got grid');
       }
     }
   );
@@ -114,21 +103,8 @@ const suite = function (
   expectedMergeGrids: Structs.ElementNew[][]
 ) {
   Fitment.measureTest(expectedMeasure, startAddress, gridA, gridB);
-  Fitment.tailorTest(
-    expectedTailor,
-    startAddress,
-    gridA,
-    expectedMeasure,
-    generator
-  );
-  mergeTest(
-    expectedMergeGrids,
-    startAddress,
-    gridA,
-    gridB,
-    generator,
-    comparator
-  );
+  Fitment.tailorTest(expectedTailor, startAddress, gridA, expectedMeasure, generator);
+  mergeTest(expectedMergeGrids, startAddress, gridA, gridB, generator, comparator);
 };
 
 export { mergeTest, mergeIVTest, suite };

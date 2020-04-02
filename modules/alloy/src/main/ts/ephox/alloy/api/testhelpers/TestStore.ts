@@ -56,8 +56,7 @@ export const TestStore = (): TestStore => {
       assertEq(label, expected);
     });
 
-  const assertEq = (label: string, expected: any[]) =>
-    Assert.eq(label, expected, array.slice(0));
+  const assertEq = (label: string, expected: any[]) => Assert.eq(label, expected, array.slice(0));
 
   const sAssertSortedEq = (label: string, expected: any[]) =>
     Step.sync(() =>

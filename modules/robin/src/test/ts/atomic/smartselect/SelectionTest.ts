@@ -35,13 +35,7 @@ UnitTest.test('SelectionTest', function () {
     ])
   );
 
-  const doc3 = TestUniverse(
-    Gene('root', 'root', [
-      TextGene('a', ' \uFEFF'),
-      TextGene('b', '\uFEFF\uFEFF'),
-      TextGene('c', '\uFEFF ')
-    ])
-  );
+  const doc3 = TestUniverse(Gene('root', 'root', [TextGene('a', ' \uFEFF'), TextGene('b', '\uFEFF\uFEFF'), TextGene('c', '\uFEFF ')]));
 
   interface Expected {
     startContainer: string;
@@ -50,42 +44,17 @@ UnitTest.test('SelectionTest', function () {
     endOffset: number;
   }
 
-  const check = function (
-    expected: Expected,
-    doc: TestUniverse,
-    id: string,
-    offset: number
-  ) {
+  const check = function (expected: Expected, doc: TestUniverse, id: string, offset: number) {
     const item = doc.find(doc.get(), id).getOrDie('Could not find item: ' + id);
-    const actual = Selection.word(doc, item, offset).getOrDie(
-      'Selection for: (' + id + ', ' + offset + ') yielded nothing'
-    );
-    Assert.eq(
-      'Selection for: (' + id + ', ' + offset + ') => startContainer',
-      expected.startContainer,
-      actual.startContainer().id
-    );
-    Assert.eq(
-      'Selection for: (' + id + ', ' + offset + ') => startOffset',
-      expected.startOffset,
-      actual.startOffset()
-    );
-    Assert.eq(
-      'Selection for: (' + id + ', ' + offset + ') => endContainer',
-      expected.endContainer,
-      actual.endContainer().id
-    );
-    Assert.eq(
-      'Selection for: (' + id + ', ' + offset + ') => endOffset',
-      expected.endOffset,
-      actual.endOffset()
-    );
+    const actual = Selection.word(doc, item, offset).getOrDie('Selection for: (' + id + ', ' + offset + ') yielded nothing');
+    Assert.eq('Selection for: (' + id + ', ' + offset + ') => startContainer', expected.startContainer, actual.startContainer().id);
+    Assert.eq('Selection for: (' + id + ', ' + offset + ') => startOffset', expected.startOffset, actual.startOffset());
+    Assert.eq('Selection for: (' + id + ', ' + offset + ') => endContainer', expected.endContainer, actual.endContainer().id);
+    Assert.eq('Selection for: (' + id + ', ' + offset + ') => endOffset', expected.endOffset, actual.endOffset());
   };
 
   const checkNone = function (doc: TestUniverse, id: string, offset: number) {
-    const actual = doc
-      .find(doc.get(), id)
-      .bind((item) => Selection.word(doc, item, offset));
+    const actual = doc.find(doc.get(), id).bind((item) => Selection.word(doc, item, offset));
     KAssert.eqNone('eq', actual);
   };
 
@@ -168,11 +137,7 @@ UnitTest.test('SelectionTest', function () {
 
   checkNone(doc2, 'h', 'plus again'.length);
 
-  checkNone(
-    TestUniverse(Gene('root', 'root', [TextGene('alpha', '\uFEFFfeff')])),
-    'alpha',
-    Unicode.zeroWidth.length
-  );
+  checkNone(TestUniverse(Gene('root', 'root', [TextGene('alpha', '\uFEFFfeff')])), 'alpha', Unicode.zeroWidth.length);
 
   checkNone(doc3, 'b', ''.length);
   checkNone(doc3, 'b', Unicode.zeroWidth.length);
@@ -180,46 +145,10 @@ UnitTest.test('SelectionTest', function () {
 
   const doc4 = TestUniverse(
     Gene('root', 'root', [
-      Gene(
-        's1-fr',
-        'span',
-        [
-          TextGene('t1-fr', 'da'),
-          TextGene('t2-fr', 'aa bo'),
-          TextGene('t3-fr', 'dytag')
-        ],
-        {},
-        { lang: 'fr' }
-      ),
-      Gene(
-        's2-en',
-        'span',
-        [TextGene('t4-en', 'span'), TextGene('t5-en', 'ning')],
-        {},
-        { lang: 'en' }
-      ),
-      Gene(
-        's3-en',
-        'span',
-        [
-          TextGene('t6-en', 'bound'),
-          TextGene('t7-en', 'aries and'),
-          TextGene('t8-en', 'more')
-        ],
-        {},
-        { lang: 'en' }
-      ),
-      Gene(
-        's4-de',
-        'span',
-        [
-          TextGene('t9-de', 'di'),
-          TextGene('t10-de', 'ee '),
-          TextGene('t11-de', ' der')
-        ],
-        {},
-        { lang: 'de' }
-      )
+      Gene('s1-fr', 'span', [TextGene('t1-fr', 'da'), TextGene('t2-fr', 'aa bo'), TextGene('t3-fr', 'dytag')], {}, { lang: 'fr' }),
+      Gene('s2-en', 'span', [TextGene('t4-en', 'span'), TextGene('t5-en', 'ning')], {}, { lang: 'en' }),
+      Gene('s3-en', 'span', [TextGene('t6-en', 'bound'), TextGene('t7-en', 'aries and'), TextGene('t8-en', 'more')], {}, { lang: 'en' }),
+      Gene('s4-de', 'span', [TextGene('t9-de', 'di'), TextGene('t10-de', 'ee '), TextGene('t11-de', ' der')], {}, { lang: 'de' })
     ])
   );
 

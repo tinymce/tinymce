@@ -45,14 +45,7 @@ const moveScrollAndTop = function (element, destination, finalTop) {
       callback(destination);
     };
 
-    animator.animate(
-      getCurrent,
-      destination,
-      ANIMATION_STEP,
-      update,
-      finish,
-      ANIMATION_RATE
-    );
+    animator.animate(getCurrent, destination, ANIMATION_STEP, update, finish, ANIMATION_RATE);
   });
 };
 
@@ -82,14 +75,7 @@ const moveOnlyScroll = function (element, destination) {
     // Identify the number of steps based on distance (consistent time)
     const distance = Math.abs(destination - getCurrent());
     const step = Math.ceil(distance / NUM_TOP_ANIMATION_FRAMES);
-    animator.animate(
-      getCurrent,
-      destination,
-      step,
-      update,
-      finish,
-      ANIMATION_RATE
-    );
+    animator.animate(getCurrent, destination, step, update, finish, ANIMATION_RATE);
   });
 };
 
@@ -108,14 +94,7 @@ const moveOnlyTop = function (element, destination) {
 
     const distance = Math.abs(destination - getCurrent());
     const step = Math.ceil(distance / NUM_TOP_ANIMATION_FRAMES);
-    animator.animate(
-      getCurrent,
-      destination,
-      step,
-      update,
-      finish,
-      ANIMATION_RATE
-    );
+    animator.animate(getCurrent, destination, step, update, finish, ANIMATION_RATE);
   });
 };
 

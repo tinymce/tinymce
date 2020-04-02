@@ -15,10 +15,7 @@ import * as RemoveFormat from './RemoveFormat';
 const toggle = (editor: Editor, name: string, vars: FormatVars, node: Node) => {
   const fmt = editor.formatter.get(name);
 
-  if (
-    MatchFormat.match(editor, name, vars, node) &&
-    (!('toggle' in fmt[0]) || fmt[0].toggle)
-  ) {
+  if (MatchFormat.match(editor, name, vars, node) && (!('toggle' in fmt[0]) || fmt[0].toggle)) {
     RemoveFormat.remove(editor, name, vars, node);
   } else {
     ApplyFormat.applyFormat(editor, name, vars, node);

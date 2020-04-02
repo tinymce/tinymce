@@ -12,16 +12,13 @@ const sActionOn = <T>(selector: string, type: string): Step<T, T> =>
     type
   });
 
-const sMoveToOn = <T>(selector: string): Step<T, T> =>
-  sActionOn<T>(selector, 'move');
+const sMoveToOn = <T>(selector: string): Step<T, T> => sActionOn<T>(selector, 'move');
 
-const sDownOn = <T>(selector: string): Step<T, T> =>
-  sActionOn<T>(selector, 'down');
+const sDownOn = <T>(selector: string): Step<T, T> => sActionOn<T>(selector, 'down');
 
 const sUpOn = <T>(selector: string): Step<T, T> => sActionOn<T>(selector, 'up');
 
-const sClickOn = <T>(selector: string): Step<T, T> =>
-  sActionOn<T>(selector, 'click');
+const sClickOn = <T>(selector: string): Step<T, T> => sActionOn<T>(selector, 'click');
 
 const cAction = (action) =>
   Chain.fromChains([

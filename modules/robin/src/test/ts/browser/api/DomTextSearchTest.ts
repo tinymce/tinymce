@@ -3,10 +3,7 @@ import { Spot } from '@ephox/phoenix';
 import { Pattern } from '@ephox/polaris';
 import { Compare, Element, Html, Insert, InsertAll } from '@ephox/sugar';
 import * as DomTextSearch from 'ephox/robin/api/dom/DomTextSearch';
-import {
-  TextSeekerOutcome,
-  TextSeekerPhaseConstructor
-} from 'ephox/robin/textdata/TextSeeker';
+import { TextSeekerOutcome, TextSeekerPhaseConstructor } from 'ephox/robin/textdata/TextSeeker';
 import { KAssert } from '@ephox/katamari-assertions';
 import { Unicode } from '@ephox/katamari';
 
@@ -18,20 +15,11 @@ UnitTest.test('DomTextSearchTest', function () {
     return new RegExp(Pattern.wordchar(), 'i');
   };
 
-  const stopAtGap = function <E>(
-    phase: TextSeekerPhaseConstructor,
-    element: E,
-    text: string,
-    index: number
-  ) {
+  const stopAtGap = function <E>(phase: TextSeekerPhaseConstructor, element: E, text: string, index: number) {
     return phase.finish(Spot.point(element, index));
   };
 
-  const checkInfo = function (
-    result: TextSeekerOutcome<Element>,
-    expectedElement: Element,
-    expectedOffset: number
-  ) {
+  const checkInfo = function (result: TextSeekerOutcome<Element>, expectedElement: Element, expectedOffset: number) {
     result.fold(
       function () {
         Assert.fail('Unexpected abort');
@@ -47,10 +35,7 @@ UnitTest.test('DomTextSearchTest', function () {
     );
   };
 
-  const checkEdge = function (
-    result: TextSeekerOutcome<Element>,
-    expectedElement: Element
-  ) {
+  const checkEdge = function (result: TextSeekerOutcome<Element>, expectedElement: Element) {
     result.fold(
       function () {
         Assert.fail('Unexpected abort');
@@ -252,11 +237,7 @@ UnitTest.test('DomTextSearchTest', function () {
   Assert.eq('eq', 3, element.dom().childNodes.length); // Range offsets [0, 3)
   Assert.eq('eq', 1, span2.dom().childNodes.length); // Range offsets [0, 1)
   Assert.eq('eq', 9, w1.dom().length); // Range offsets [0, 7)
-  Assert.eq(
-    'eq',
-    '<div>  wordy  <span>  words  </span>  wordd  </div>',
-    Html.getOuter(element)
-  );
+  Assert.eq('eq', '<div>  wordy  <span>  words  </span>  wordd  </div>', Html.getOuter(element));
 
   const r0 = DomTextSearch.expandRight(w1, 0, {
     regex: wordfinder,
@@ -365,68 +346,24 @@ UnitTest.test('DomTextSearchTest', function () {
     const deltaText = Element.fromText(Unicode.zeroWidth);
     const epsilonText = Element.fromText('epsilon');
 
-    InsertAll.append(container, [
-      alphaText,
-      betaSpan,
-      gammaText,
-      deltaText,
-      epsilonText
-    ]);
+    InsertAll.append(container, [alphaText, betaSpan, gammaText, deltaText, epsilonText]);
     InsertAll.append(betaSpan, [betaText1, betaText2]);
 
-    const checkNoneScan = function (
-      label: string,
-      start: Element,
-      offset: number
-    ) {
-      KAssert.eqNone(
-        'There should be no scanning (' + label + ')',
-        DomTextSearch.scanRight(start, offset)
-      );
+    const checkNoneScan = function (label: string, start: Element, offset: number) {
+      KAssert.eqNone('There should be no scanning (' + label + ')', DomTextSearch.scanRight(start, offset));
     };
 
-    const checkScan = function (
-      label: string,
-      expected: { element: Element; offset: number },
-      start: Element,
-      offset: number
-    ) {
-      const actual = DomTextSearch.scanRight(start, offset).getOrDie(
-        'Could not find scan result for: ' + label
-      );
+    const checkScan = function (label: string, expected: { element: Element; offset: number }, start: Element, offset: number) {
+      const actual = DomTextSearch.scanRight(start, offset).getOrDie('Could not find scan result for: ' + label);
       Assert.eq('eq', expected.offset, actual.offset());
-      Assert.eq(
-        'Element did not match scan: (' + label + ')',
-        true,
-        Compare.eq(expected.element, actual.element())
-      );
+      Assert.eq('Element did not match scan: (' + label + ')', true, Compare.eq(expected.element, actual.element()));
     };
 
     checkNoneScan('Alpha:exceed', alphaText, 'alphabeta\uFEFFepisilon!'.length);
-    checkScan(
-      'Alpha:eof',
-      { element: epsilonText, offset: 'epsilon'.length },
-      alphaText,
-      'alphabeta\uFEFFepsilon'.length
-    );
+    checkScan('Alpha:eof', { element: epsilonText, offset: 'epsilon'.length }, alphaText, 'alphabeta\uFEFFepsilon'.length);
     checkScan('Alpha:2', { element: alphaText, offset: 2 }, alphaText, 2);
-    checkScan(
-      'Alpha:into beta:2',
-      { element: betaText1, offset: 'be'.length },
-      alphaText,
-      'alphabe'.length
-    );
-    checkScan(
-      'Alpha:into beta:3',
-      { element: betaText2, offset: 't'.length },
-      alphaText,
-      'alphabet'.length
-    );
-    checkScan(
-      'Beta:0',
-      { element: betaText1, offset: 0 },
-      betaText1,
-      ''.length
-    );
+    checkScan('Alpha:into beta:2', { element: betaText1, offset: 'be'.length }, alphaText, 'alphabe'.length);
+    checkScan('Alpha:into beta:3', { element: betaText2, offset: 't'.length }, alphaText, 'alphabet'.length);
+    checkScan('Beta:0', { element: betaText1, offset: 0 }, betaText1, ''.length);
   })();
 });

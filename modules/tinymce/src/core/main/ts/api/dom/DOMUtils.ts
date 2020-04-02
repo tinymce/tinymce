@@ -72,21 +72,12 @@ interface AttrHooks {
   };
 }
 
-const setupAttrHooks = function (
-  styles: Styles,
-  settings: Partial<DOMUtilsSettings>,
-  getContext
-): AttrHooks {
+const setupAttrHooks = function (styles: Styles, settings: Partial<DOMUtilsSettings>, getContext): AttrHooks {
   const keepValues: boolean = settings.keep_values;
   const keepUrlHook = {
     set($elm, value: string, name: string) {
       if (settings.url_converter) {
-        value = settings.url_converter.call(
-          settings.url_converter_scope || getContext(),
-          value,
-          name,
-          $elm[0]
-        );
+        value = settings.url_converter.call(settings.url_converter_scope || getContext(), value, name, $elm[0]);
       }
 
       $elm.attr('data-mce-' + name, value).attr(name, value);
@@ -154,11 +145,7 @@ const findNodeIndex = function (node: Node, normalized?: boolean) {
     nodeType;
 
   if (node) {
-    for (
-      lastNodeType = node.nodeType, node = node.previousSibling;
-      node;
-      node = node.previousSibling
-    ) {
+    for (lastNodeType = node.nodeType, node = node.previousSibling; node; node = node.previousSibling) {
       nodeType = node.nodeType;
 
       // Normalize text nodes
@@ -221,38 +208,16 @@ interface DOMUtils {
     w: number;
     h: number;
   };
-  getParent(
-    node: string | Node,
-    selector?: string | ((node: HTMLElement) => boolean | void),
-    root?: Node
-  ): Element;
-  getParents(
-    elm: string | Node,
-    selector?: string | ((node: HTMLElement) => boolean | void),
-    root?: Node,
-    collect?: boolean
-  ): Element[];
+  getParent(node: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node): Element;
+  getParents(elm: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node, collect?: boolean): Element[];
   get(elm: string | Node): HTMLElement;
   getNext(node: Node, selector: string | Function): Node;
   getPrev(node: Node, selector: string | Function): Node;
-  select<K extends keyof HTMLElementTagNameMap>(
-    selector: K,
-    scope?: string | Node
-  ): Array<HTMLElementTagNameMap[K]>;
+  select<K extends keyof HTMLElementTagNameMap>(selector: K, scope?: string | Node): Array<HTMLElementTagNameMap[K]>;
   select(selector: string, scope?: string | Node): HTMLElement[];
   is(elm: Node | Node[], selector: string): boolean;
-  add(
-    parentElm: RunArguments,
-    name: string | Node,
-    attrs?: Record<string, any>,
-    html?: string | Node,
-    create?: boolean
-  ): HTMLElement;
-  create(
-    name: string,
-    attrs?: Record<string, string | number>,
-    html?: string | Node
-  ): HTMLElement;
+  add(parentElm: RunArguments, name: string | Node, attrs?: Record<string, any>, html?: string | Node, create?: boolean): HTMLElement;
+  create(name: string, attrs?: Record<string, string | number>, html?: string | Node): HTMLElement;
   createHTML(name: string, attrs?: Record<string, any>, html?: string): string;
   createFragment(html?: string): DocumentFragment;
   remove(node: string | Node | Node[], keepChildren?: boolean): any;
@@ -299,28 +264,10 @@ interface DOMUtils {
   createRng(): Range;
   nodeIndex(node: Node, normalized?: boolean): number;
   split(parentElm: Node, splitElm: Node, replacementElm?: Node): Node;
-  bind<K extends keyof HTMLElementEventMap>(
-    target: Target,
-    name: K,
-    func: EventUtilsCallback<HTMLElementEventMap[K]>,
-    scope?: {}
-  ): any;
-  bind<T = any>(
-    target: Target,
-    name: string,
-    func: EventUtilsCallback<T>,
-    scope?: {}
-  ): any;
-  unbind<K extends keyof HTMLElementEventMap>(
-    target: Target,
-    name: K,
-    func: EventUtilsCallback<HTMLElementEventMap[K]>
-  ): any;
-  unbind<T = any>(
-    target: Target,
-    name?: string,
-    func?: EventUtilsCallback<T>
-  ): any;
+  bind<K extends keyof HTMLElementEventMap>(target: Target, name: K, func: EventUtilsCallback<HTMLElementEventMap[K]>, scope?: {}): any;
+  bind<T = any>(target: Target, name: string, func: EventUtilsCallback<T>, scope?: {}): any;
+  unbind<K extends keyof HTMLElementEventMap>(target: Target, name: K, func: EventUtilsCallback<HTMLElementEventMap[K]>): any;
+  unbind<T = any>(target: Target, name?: string, func?: EventUtilsCallback<T>): any;
   fire(target: Target, name: string, evt?: {}): EventUtils;
   getContentEditable(node: Node): string;
   getContentEditableParent(node: Node): any;
@@ -337,10 +284,7 @@ interface DOMUtils {
  * @param {Document} doc Document reference to bind the utility class to.
  * @param {settings} settings Optional settings collection.
  */
-function DOMUtils(
-  doc: Document,
-  settings: Partial<DOMUtilsSettings> = {}
-): DOMUtils {
+function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMUtils {
   let attrHooks;
   const addedStyles = {};
 
@@ -419,11 +363,7 @@ function DOMUtils(
     return $(elm);
   };
 
-  const getAttrib = (
-    elm: string | Node,
-    name: string,
-    defaultVal?: string
-  ): string => {
+  const getAttrib = (elm: string | Node, name: string, defaultVal?: string): string => {
     let hook, value;
 
     const $elm = $$(elm);
@@ -516,17 +456,10 @@ function DOMUtils(
     };
   };
 
-  const getPos = (elm: string | Node, rootElm?: Node) =>
-    Position.getPos(doc.body, get(elm), rootElm);
+  const getPos = (elm: string | Node, rootElm?: Node) => Position.getPos(doc.body, get(elm), rootElm);
 
-  const setStyle = (
-    elm: string | Node,
-    name: string | StyleMap,
-    value?: string | number
-  ) => {
-    const $elm = Type.isString(name)
-      ? $$(elm).css(name, value)
-      : $$(elm).css(name);
+  const setStyle = (elm: string | Node, name: string | StyleMap, value?: string | number) => {
+    const $elm = Type.isString(name) ? $$(elm).css(name, value) : $$(elm).css(name);
 
     if (settings.update_styles) {
       updateInternalStyleAttr(styles, $elm);
@@ -541,11 +474,7 @@ function DOMUtils(
     }
   };
 
-  const getStyle = (
-    elm: string | Node,
-    name: string,
-    computed?: boolean
-  ): string => {
+  const getStyle = (elm: string | Node, name: string, computed?: boolean): string => {
     const $elm = $$(elm);
 
     if (computed) {
@@ -639,9 +568,7 @@ function DOMUtils(
     const elms = !Array.isArray(elm) ? [elm] : elm;
 
     /* eslint new-cap:0 */
-    return (
-      Sizzle(selector, elms[0].ownerDocument || elms[0], null, elms).length > 0
-    );
+    return Sizzle(selector, elms[0].ownerDocument || elms[0], null, elms).length > 0;
   };
 
   const getParents = (
@@ -657,8 +584,7 @@ function DOMUtils(
     collect = collect === undefined;
 
     // Default root on inline mode
-    root =
-      root || (getRoot().nodeName !== 'BODY' ? getRoot().parentNode : null);
+    root = root || (getRoot().nodeName !== 'BODY' ? getRoot().parentNode : null);
 
     // Wrap node name as func
     if (Tools.is(selector, 'string')) {
@@ -694,11 +620,7 @@ function DOMUtils(
     return collect ? result : null;
   };
 
-  const getParent = (
-    node: string | Node,
-    selector?: string | ((node: HTMLElement) => boolean | void),
-    root?: Node
-  ): Element => {
+  const getParent = (node: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node): Element => {
     const parents = getParents(node, selector, root, false);
     return parents && parents.length > 0 ? parents[0] : null;
   };
@@ -725,14 +647,11 @@ function DOMUtils(
     return null;
   };
 
-  const getNext = (node: Node, selector: string | Function) =>
-    _findSib(node, selector, 'nextSibling');
+  const getNext = (node: Node, selector: string | Function) => _findSib(node, selector, 'nextSibling');
 
-  const getPrev = (node: Node, selector: string | Function) =>
-    _findSib(node, selector, 'previousSibling');
+  const getPrev = (node: Node, selector: string | Function) => _findSib(node, selector, 'previousSibling');
 
-  const select = (selector: string, scope?: Node | string) =>
-    Sizzle(selector, get(scope) || settings.root_element || doc, []);
+  const select = (selector: string, scope?: Node | string) => Sizzle(selector, get(scope) || settings.root_element || doc, []);
 
   const run = (elm: RunArguments, func: (node: Element) => any, scope?) => {
     let result;
@@ -828,31 +747,20 @@ function DOMUtils(
       return !create ? parentElm.appendChild(newElm) : newElm;
     });
 
-  const create = (
-    name: string,
-    attrs?: Record<string, string | number>,
-    html?: string | Node
-  ): HTMLElement => add(doc.createElement(name), name, attrs, html, true);
+  const create = (name: string, attrs?: Record<string, string | number>, html?: string | Node): HTMLElement =>
+    add(doc.createElement(name), name, attrs, html, true);
 
   const decode = Entities.decode;
   const encode = Entities.encodeAllRaw;
 
-  const createHTML = (
-    name: string,
-    attrs?: Record<string, any>,
-    html?: string
-  ): string => {
+  const createHTML = (name: string, attrs?: Record<string, any>, html?: string): string => {
     let outHtml = '',
       key;
 
     outHtml += '<' + name;
 
     for (key in attrs) {
-      if (
-        attrs.hasOwnProperty(key) &&
-        attrs[key] !== null &&
-        typeof attrs[key] !== 'undefined'
-      ) {
+      if (attrs.hasOwnProperty(key) && attrs[key] !== null && typeof attrs[key] !== 'undefined') {
         outHtml += ' ' + key + '="' + encode(attrs[key]) + '"';
       }
     }
@@ -882,10 +790,7 @@ function DOMUtils(
     return frag;
   };
 
-  const remove = (
-    node: string | Node | Node[] | DomQuery,
-    keepChildren?: boolean
-  ) => {
+  const remove = (node: string | Node | Node[] | DomQuery, keepChildren?: boolean) => {
     const $node = $$(node);
 
     if (keepChildren) {
@@ -918,11 +823,9 @@ function DOMUtils(
       }
     });
 
-  const parseStyle = (cssText: string): Record<string, string> =>
-    styles.parse(cssText);
+  const parseStyle = (cssText: string): Record<string, string> => styles.parse(cssText);
 
-  const serializeStyle = (stylesArg: StyleMap, name?: string) =>
-    styles.serialize(stylesArg, name);
+  const serializeStyle = (stylesArg: StyleMap, name?: string) => styles.serialize(stylesArg, name);
 
   const addStyle = (cssText: string) => {
     let head, styleElm;
@@ -989,20 +892,14 @@ function DOMUtils(
         type: 'text/css',
         href: url,
         ...(settings.contentCssCors ? { crossOrigin: 'anonymous' } : {}),
-        ...(settings.referrerPolicy
-          ? { referrerPolicy: settings.referrerPolicy }
-          : {})
+        ...(settings.referrerPolicy ? { referrerPolicy: settings.referrerPolicy } : {})
       });
 
       head.appendChild(link);
     });
   };
 
-  const toggleClass = (
-    elm: string | Node | Node[],
-    cls: string,
-    state?: boolean
-  ) => {
+  const toggleClass = (elm: string | Node | Node[], cls: string, state?: boolean) => {
     $$(elm)
       .toggleClass(cls, state)
       .each(function () {
@@ -1037,9 +934,7 @@ function DOMUtils(
   const getOuterHTML = (elm: string | Node): string => {
     const node = typeof elm === 'string' ? get(elm) : elm;
 
-    return NodeType.isElement(node)
-      ? node.outerHTML
-      : DomQuery('<div></div>').append(DomQuery(node).clone()).html();
+    return NodeType.isElement(node) ? node.outerHTML : DomQuery('<div></div>').append(DomQuery(node).clone()).html();
   };
 
   const setOuterHTML = (elm: string | Node, html: string) => {
@@ -1078,11 +973,7 @@ function DOMUtils(
     });
   };
 
-  const replace = (
-    newElm: Node,
-    oldElm: RunArguments,
-    keepChildren?: boolean
-  ) =>
+  const replace = (newElm: Node, oldElm: RunArguments, keepChildren?: boolean) =>
     run(oldElm, function (oldElm) {
       if (Tools.is(oldElm, 'array')) {
         newElm = newElm.cloneNode(true);
@@ -1146,15 +1037,8 @@ function DOMUtils(
   // Check if element has a data-bookmark attribute, name attribute or is a named anchor
   const isNonEmptyElement = (node: Node) => {
     if (NodeType.isElement(node)) {
-      const isNamedAnchor =
-        node.nodeName.toLowerCase() === 'a' &&
-        !getAttrib(node, 'href') &&
-        getAttrib(node, 'id');
-      if (
-        getAttrib(node, 'name') ||
-        getAttrib(node, 'data-mce-bookmark') ||
-        isNamedAnchor
-      ) {
+      const isNamedAnchor = node.nodeName.toLowerCase() === 'a' && !getAttrib(node, 'href') && getAttrib(node, 'id');
+      if (getAttrib(node, 'name') || getAttrib(node, 'data-mce-bookmark') || isNamedAnchor) {
         return true;
       }
     }
@@ -1218,12 +1102,7 @@ function DOMUtils(
         }
 
         // Keep whitespace preserve elements
-        if (
-          type === 3 &&
-          node.parentNode &&
-          whitespace[node.parentNode.nodeName] &&
-          whiteSpaceRegExp.test(node.nodeValue)
-        ) {
+        if (type === 3 && node.parentNode && whitespace[node.parentNode.nodeName] && whiteSpaceRegExp.test(node.nodeValue)) {
           return false;
         }
 
@@ -1274,12 +1153,7 @@ function DOMUtils(
     }
   };
 
-  const bind = (
-    target: Target,
-    name: string,
-    func: EventUtilsCallback<any>,
-    scope?: any
-  ) => {
+  const bind = (target: Target, name: string, func: EventUtilsCallback<any>, scope?: any) => {
     if (Tools.isArray(target)) {
       let i = target.length;
       const rv = [];
@@ -1299,11 +1173,7 @@ function DOMUtils(
     return events.bind(target, name, func, scope || self);
   };
 
-  const unbind = (
-    target: Target,
-    name?: string,
-    func?: EventUtilsCallback<any>
-  ) => {
+  const unbind = (target: Target, name?: string, func?: EventUtilsCallback<any>) => {
     let i;
 
     if (Tools.isArray(target)) {
@@ -1324,11 +1194,7 @@ function DOMUtils(
       while (i--) {
         const item = boundEvents[i];
 
-        if (
-          target === item[0] &&
-          (!name || name === item[1]) &&
-          (!func || func === item[2])
-        ) {
+        if (target === item[0] && (!name || name === item[1]) && (!func || func === item[2])) {
           events.unbind(item[0], item[1], item[2]);
         }
       }
@@ -1337,8 +1203,7 @@ function DOMUtils(
     return events.unbind(target, name, func);
   };
 
-  const fire = (target: Target, name: string, evt?) =>
-    events.fire(target, name, evt);
+  const fire = (target: Target, name: string, evt?) => events.fire(target, name, evt);
 
   const getContentEditable = (node: Node) => {
     if (node && NodeType.isElement(node)) {

@@ -15,14 +15,7 @@ export interface MediaData {
   poster: string;
   altsource: string;
   altsourcemime?: string;
-  type?:
-    | 'ephox-embed-iri'
-    | 'script'
-    | 'object'
-    | 'iframe'
-    | 'embed'
-    | 'video'
-    | 'audio';
+  type?: 'ephox-embed-iri' | 'script' | 'object' | 'iframe' | 'embed' | 'video' | 'audio';
 }
 
 export interface DialogSubData {

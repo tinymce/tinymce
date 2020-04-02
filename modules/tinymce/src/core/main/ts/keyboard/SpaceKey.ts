@@ -17,10 +17,7 @@ const executeKeydownOverride = function (editor: Editor, evt: KeyboardEvent) {
     [
       {
         keyCode: VK.SPACEBAR,
-        action: MatchKeys.action(
-          InsertSpace.insertSpaceOrNbspAtSelection,
-          editor
-        )
+        action: MatchKeys.action(InsertSpace.insertSpaceOrNbspAtSelection, editor)
       }
     ],
     evt

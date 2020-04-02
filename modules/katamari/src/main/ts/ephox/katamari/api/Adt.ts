@@ -13,9 +13,7 @@ export interface Adt {
  * Generates a church encoded ADT (https://en.wikipedia.org/wiki/Church_encoding)
  * For syntax and use, look at the test code.
  */
-const generate = function <T = Record<string, (...data: any[]) => Adt>>(
-  cases: { [key: string]: string[] }[]
-): T {
+const generate = function <T = Record<string, (...data: any[]) => Adt>>(cases: { [key: string]: string[] }[]): T {
   // validation
   if (!Type.isArray(cases)) {
     throw new Error('cases must be an array');
@@ -58,16 +56,7 @@ const generate = function <T = Record<string, (...data: any[]) => Adt>>(
 
       // validation
       if (argLength !== value.length) {
-        throw new Error(
-          'Wrong number of arguments to case ' +
-            key +
-            '. Expected ' +
-            value.length +
-            ' (' +
-            value +
-            '), got ' +
-            argLength
-        );
+        throw new Error('Wrong number of arguments to case ' + key + '. Expected ' + value.length + ' (' + value + '), got ' + argLength);
       }
 
       // Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
@@ -79,12 +68,7 @@ const generate = function <T = Record<string, (...data: any[]) => Adt>>(
       const match = function (branches: { [branch: string]: Function }) {
         const branchKeys: string[] = Obj.keys(branches);
         if (constructors.length !== branchKeys.length) {
-          throw new Error(
-            'Wrong number of arguments to match. Expected: ' +
-              constructors.join(',') +
-              '\nActual: ' +
-              branchKeys.join(',')
-          );
+          throw new Error('Wrong number of arguments to match. Expected: ' + constructors.join(',') + '\nActual: ' + branchKeys.join(','));
         }
 
         const allReqd = Arr.forall(constructors, function (reqKey) {
@@ -110,12 +94,7 @@ const generate = function <T = Record<string, (...data: any[]) => Adt>>(
         fold(/* arguments */) {
           // runtime validation
           if (arguments.length !== cases.length) {
-            throw new Error(
-              'Wrong number of arguments to fold. Expected ' +
-                cases.length +
-                ', got ' +
-                arguments.length
-            );
+            throw new Error('Wrong number of arguments to fold. Expected ' + cases.length + ', got ' + arguments.length);
           }
           const target = arguments[count];
           return target.apply(null, args);

@@ -5,12 +5,7 @@ import { AlloySpec, SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
-import {
-  ItemDataTuple,
-  ItemSpec,
-  SeparatorItemSpec,
-  WidgetItemSpec
-} from 'ephox/alloy/ui/types/ItemTypes';
+import { ItemDataTuple, ItemSpec, SeparatorItemSpec, WidgetItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 import { PartialMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
 
 export interface DemoItem {
@@ -70,40 +65,22 @@ const demoItem = ValueSchema.objOf([
 ]);
 
 const demoWidgetItem = ValueSchema.objOf([
-  FieldSchema.strictObjOf('data', [
-    FieldSchema.strict('value'),
-    FieldSchema.strictObjOf('meta', [FieldSchema.strict('text')])
-  ]),
+  FieldSchema.strictObjOf('data', [FieldSchema.strict('value'), FieldSchema.strictObjOf('meta', [FieldSchema.strict('text')])]),
   FieldSchema.strict('type'),
   FieldSchema.defaulted('autofocus', false),
   FieldSchema.strict('widget')
 ]);
 
-const demoMenu = ValueSchema.objOf([
-  FieldSchema.strict('value'),
-  FieldSchema.strict('items')
-]);
+const demoMenu = ValueSchema.objOf([FieldSchema.strict('value'), FieldSchema.strict('items')]);
 
-const demoGridMenu = ValueSchema.objOf([
-  FieldSchema.strict('columns'),
-  FieldSchema.strict('rows'),
-  FieldSchema.strict('items')
-]);
+const demoGridMenu = ValueSchema.objOf([FieldSchema.strict('columns'), FieldSchema.strict('rows'), FieldSchema.strict('items')]);
 
 const demoChoice = ValueSchema.objOf([]);
 
 const choice = (choiceSpec: { value: string; text: string }) => {
-  const spec = ValueSchema.asRawOrDie(
-    'DemoRenders.choice',
-    demoChoice,
-    choiceSpec
-  );
+  const spec = ValueSchema.asRawOrDie('DemoRenders.choice', demoChoice, choiceSpec);
   return {
-    dom: DomFactory.fromHtml(
-      '<span class="ephox-pastry-independent-button" title="' +
-        spec.text +
-        '" style="display: flex;"></span>'
-    ),
+    dom: DomFactory.fromHtml('<span class="ephox-pastry-independent-button" title="' + spec.text + '" style="display: flex;"></span>'),
     value: choiceSpec.value
   };
 };
@@ -160,11 +137,7 @@ const item = (itemSpec: DemoItems): ItemSpec => {
 };
 
 const gridItem = (itemSpec: DemoItem): ItemSpec => {
-  const spec = ValueSchema.asRawOrDie(
-    'DemoRenders.gridItem',
-    demoItem,
-    itemSpec
-  );
+  const spec = ValueSchema.asRawOrDie('DemoRenders.gridItem', demoItem, itemSpec);
   const html = (() => {
     if (spec.data && spec.data.meta && spec.data.meta.text) {
       return spec.data.meta.text;
@@ -191,11 +164,7 @@ const gridItem = (itemSpec: DemoItem): ItemSpec => {
 };
 
 const widgetItem = (itemSpec: DemoWidgetItem): WidgetItemSpec => {
-  const spec = ValueSchema.asRawOrDie(
-    'DemoRenders.widgetItem',
-    demoWidgetItem,
-    itemSpec
-  );
+  const spec = ValueSchema.asRawOrDie('DemoRenders.widgetItem', demoWidgetItem, itemSpec);
   return {
     type: spec.type,
     data: spec.data,
@@ -209,11 +178,7 @@ const widgetItem = (itemSpec: DemoWidgetItem): WidgetItemSpec => {
 };
 
 const gridMenu = (menuSpec: DemoMenu & { columns: number; rows: number }) => {
-  const spec = ValueSchema.asRawOrDie(
-    'DemoRenders.gridMenu',
-    demoGridMenu,
-    menuSpec
-  );
+  const spec = ValueSchema.asRawOrDie('DemoRenders.gridMenu', demoGridMenu, menuSpec);
   return {
     movement: {
       mode: 'grid',
@@ -314,16 +279,4 @@ const tieredMarkers = () => ({
   backgroundMenu: 'demo-alloy-menu-background'
 });
 
-export {
-  item,
-  gridItem,
-  widgetItem,
-  menu,
-  gridMenu,
-  choice,
-  orb,
-  toolbarItem,
-  toolbarGroup,
-  tieredMarkers,
-  orbMarkers
-};
+export { item, gridItem, widgetItem, menu, gridMenu, choice, orb, toolbarItem, toolbarGroup, tieredMarkers, orbMarkers };

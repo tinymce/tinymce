@@ -4,10 +4,7 @@ import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
   let nodes;
@@ -72,11 +69,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function (
       actualNodes.push(walker.current());
     }
 
-    LegacyUnit.equal(
-      compareNodeLists(nodes, actualNodes),
-      true,
-      'Should be the same'
-    );
+    LegacyUnit.equal(compareNodeLists(nodes, actualNodes), true, 'Should be the same');
   });
 
   suite.test('prev2', function () {
@@ -89,11 +82,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function (
     }
 
     actualNodes = actualNodes.reverse();
-    LegacyUnit.equal(
-      compareNodeLists(nodes, actualNodes),
-      true,
-      'Should be the same'
-    );
+    LegacyUnit.equal(compareNodeLists(nodes, actualNodes), true, 'Should be the same');
   });
 
   suite.test('prev2(shallow:true)', function () {
@@ -106,11 +95,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function (
     }
 
     actualNodes = actualNodes.reverse();
-    LegacyUnit.equal(
-      compareNodeLists(viewBlock.get().childNodes, actualNodes),
-      true,
-      'Should be the same'
-    );
+    LegacyUnit.equal(compareNodeLists(viewBlock.get().childNodes, actualNodes), true, 'Should be the same');
   });
 
   viewBlock.attach();

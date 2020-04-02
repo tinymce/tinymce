@@ -3,10 +3,7 @@ import { Pipeline } from '@ephox/agar';
 import Schema from 'tinymce/core/api/html/Schema';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   const ok = function (value, label?) {
@@ -29,28 +26,19 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (
       id: {},
       class: {}
     });
-    LegacyUnit.deepEqual(schema.getElementRule('b').attributesOrder, [
-      'id',
-      'class'
-    ]);
+    LegacyUnit.deepEqual(schema.getElementRule('b').attributesOrder, ['id', 'class']);
 
     schema = Schema({ valid_elements: 'b*[id|class]' });
     LegacyUnit.deepEqual(schema.getElementRule('b').attributes, {
       id: {},
       class: {}
     });
-    LegacyUnit.deepEqual(schema.getElementRule('b').attributesOrder, [
-      'id',
-      'class'
-    ]);
+    LegacyUnit.deepEqual(schema.getElementRule('b').attributesOrder, ['id', 'class']);
     LegacyUnit.deepEqual(schema.getElementRule('body').attributes, {
       id: {},
       class: {}
     });
-    LegacyUnit.deepEqual(schema.getElementRule('body').attributesOrder, [
-      'id',
-      'class'
-    ]);
+    LegacyUnit.deepEqual(schema.getElementRule('body').attributesOrder, ['id', 'class']);
     LegacyUnit.equal(schema.getElementRule('img'), undefined);
 
     schema = Schema({ valid_elements: 'b?[id|class]' });
@@ -58,18 +46,12 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (
       id: {},
       class: {}
     });
-    LegacyUnit.deepEqual(schema.getElementRule('b').attributesOrder, [
-      'id',
-      'class'
-    ]);
+    LegacyUnit.deepEqual(schema.getElementRule('b').attributesOrder, ['id', 'class']);
     LegacyUnit.deepEqual(schema.getElementRule('bx').attributes, {
       id: {},
       class: {}
     });
-    LegacyUnit.deepEqual(schema.getElementRule('bx').attributesOrder, [
-      'id',
-      'class'
-    ]);
+    LegacyUnit.deepEqual(schema.getElementRule('bx').attributesOrder, ['id', 'class']);
     LegacyUnit.equal(schema.getElementRule('body'), undefined);
 
     schema = Schema({ valid_elements: 'b+[id|class]' });
@@ -77,18 +59,12 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (
       id: {},
       class: {}
     });
-    LegacyUnit.deepEqual(schema.getElementRule('body').attributesOrder, [
-      'id',
-      'class'
-    ]);
+    LegacyUnit.deepEqual(schema.getElementRule('body').attributesOrder, ['id', 'class']);
     LegacyUnit.deepEqual(schema.getElementRule('bx').attributes, {
       id: {},
       class: {}
     });
-    LegacyUnit.deepEqual(schema.getElementRule('bx').attributesOrder, [
-      'id',
-      'class'
-    ]);
+    LegacyUnit.deepEqual(schema.getElementRule('bx').attributesOrder, ['id', 'class']);
     LegacyUnit.equal(schema.getElementRule('b'), undefined);
   });
 
@@ -100,10 +76,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (
       id: {},
       class: {}
     });
-    LegacyUnit.deepEqual(schema.getElementRule('b').attributesOrder, [
-      'id',
-      'class'
-    ]);
+    LegacyUnit.deepEqual(schema.getElementRule('b').attributesOrder, ['id', 'class']);
     ok(schema.getElementRule('b').attributePatterns[0].pattern.test('x'));
 
     schema = Schema({ valid_elements: 'b[id|class|x?]' });
@@ -111,10 +84,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (
       id: {},
       class: {}
     });
-    LegacyUnit.deepEqual(schema.getElementRule('b').attributesOrder, [
-      'id',
-      'class'
-    ]);
+    LegacyUnit.deepEqual(schema.getElementRule('b').attributesOrder, ['id', 'class']);
     ok(schema.getElementRule('b').attributePatterns[0].pattern.test('xy'));
     ok(!schema.getElementRule('b').attributePatterns[0].pattern.test('xba'));
     ok(!schema.getElementRule('b').attributePatterns[0].pattern.test('a'));
@@ -124,10 +94,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (
       id: {},
       class: {}
     });
-    LegacyUnit.deepEqual(schema.getElementRule('b').attributesOrder, [
-      'id',
-      'class'
-    ]);
+    LegacyUnit.deepEqual(schema.getElementRule('b').attributesOrder, ['id', 'class']);
     ok(!schema.getElementRule('b').attributePatterns[0].pattern.test('x'));
     ok(schema.getElementRule('b').attributePatterns[0].pattern.test('xb'));
     ok(schema.getElementRule('b').attributePatterns[0].pattern.test('xba'));
@@ -209,19 +176,9 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (
     let schema;
 
     schema = Schema();
-    LegacyUnit.deepEqual(schema.getElementRule('tr').parentsRequired, [
-      'tbody',
-      'thead',
-      'tfoot'
-    ]);
-    LegacyUnit.deepEqual(schema.getElementRule('li').parentsRequired, [
-      'ul',
-      'ol'
-    ]);
-    LegacyUnit.deepEqual(
-      schema.getElementRule('div').parentsRequired,
-      undefined
-    );
+    LegacyUnit.deepEqual(schema.getElementRule('tr').parentsRequired, ['tbody', 'thead', 'tfoot']);
+    LegacyUnit.deepEqual(schema.getElementRule('li').parentsRequired, ['ul', 'ol']);
+    LegacyUnit.deepEqual(schema.getElementRule('div').parentsRequired, undefined);
   });
 
   suite.test('Remove empty elements', function () {
@@ -253,19 +210,16 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (
     });
   });
 
-  suite.test(
-    `addValidElements when there's a colon in an attribute name`,
-    function () {
-      let schema;
+  suite.test(`addValidElements when there's a colon in an attribute name`, function () {
+    let schema;
 
-      schema = Schema({ valid_elements: '@[xml\\:space]' });
-      schema.addValidElements('pre[xml\\:lang]');
-      LegacyUnit.deepEqual(schema.getElementRule('pre'), {
-        attributes: { 'xml:space': {}, 'xml:lang': {} },
-        attributesOrder: ['xml:space', 'xml:lang']
-      });
-    }
-  );
+    schema = Schema({ valid_elements: '@[xml\\:space]' });
+    schema.addValidElements('pre[xml\\:lang]');
+    LegacyUnit.deepEqual(schema.getElementRule('pre'), {
+      attributes: { 'xml:space': {}, 'xml:lang': {} },
+      attributesOrder: ['xml:space', 'xml:lang']
+    });
+  });
 
   suite.test('setValidElements', function () {
     let schema;

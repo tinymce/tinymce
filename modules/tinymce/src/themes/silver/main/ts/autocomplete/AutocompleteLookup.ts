@@ -23,12 +23,7 @@ export interface AutocompleteLookupData {
   matchText: string;
   items: InlineContent.AutocompleterContents[];
   columns: Types.ColumnTypes;
-  onAction: (
-    autoApi: InlineContent.AutocompleterInstanceApi,
-    rng: Range,
-    value: string,
-    meta: Record<string, any>
-  ) => void;
+  onAction: (autoApi: InlineContent.AutocompleterInstanceApi, rng: Range, value: string, meta: Record<string, any>) => void;
 }
 
 export interface AutocompleteLookupInfo {
@@ -38,13 +33,7 @@ export interface AutocompleteLookupInfo {
 
 const isPreviousCharContent = (dom: DOMUtils, leaf: Spot.SpotPoint<Node>) =>
   // If at the start of the range, then we need to look backwards one more place. Otherwise we just need to look at the current text
-  repeatLeft(
-    dom,
-    leaf.container,
-    leaf.offset,
-    (element, offset) => (offset === 0 ? -1 : offset),
-    dom.getRoot()
-  )
+  repeatLeft(dom, leaf.container, leaf.offset, (element, offset) => (offset === 0 ? -1 : offset), dom.getRoot())
     .filter((spot) => {
       const char = spot.container.data.charAt(spot.offset - 1);
       return !isWhitespace(char);
@@ -56,23 +45,14 @@ const isStartOfWord = (dom: DOMUtils) => (rng: Range) => {
   return !isPreviousCharContent(dom, leaf);
 };
 
-const getTriggerContext = (
-  dom: DOMUtils,
-  initRange: Range,
-  database: AutocompleterDatabase
-): Option<AutocompleteContext> =>
+const getTriggerContext = (dom: DOMUtils, initRange: Range, database: AutocompleterDatabase): Option<AutocompleteContext> =>
   Arr.findMap(database.triggerChars, (ch) => getContext(dom, initRange, ch));
 
-const lookup = (
-  editor: Editor,
-  getDatabase: () => AutocompleterDatabase
-): Option<AutocompleteLookupInfo> => {
+const lookup = (editor: Editor, getDatabase: () => AutocompleterDatabase): Option<AutocompleteLookupInfo> => {
   const database = getDatabase();
   const rng = editor.selection.getRng();
 
-  return getTriggerContext(editor.dom, rng, database).bind((context) =>
-    lookupWithContext(editor, getDatabase, context)
-  );
+  return getTriggerContext(editor.dom, rng, database).bind((context) => lookupWithContext(editor, getDatabase, context));
 };
 
 const lookupWithContext = (
@@ -89,11 +69,7 @@ const lookupWithContext = (
     database.lookupByChar(context.triggerChar),
     (autocompleter) =>
       context.text.length >= autocompleter.minChars &&
-      autocompleter.matches.getOrThunk(() => isStartOfWord(editor.dom))(
-        context.range,
-        startText,
-        context.text
-      )
+      autocompleter.matches.getOrThunk(() => isStartOfWord(editor.dom))(context.range, startText, context.text)
   );
 
   if (autocompleters.length === 0) {

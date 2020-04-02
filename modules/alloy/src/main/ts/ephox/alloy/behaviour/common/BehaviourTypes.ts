@@ -8,68 +8,46 @@ import { DomModification } from '../../dom/DomModification';
 import { BehaviourConfigAndState } from './BehaviourBlob';
 import { BehaviourState, BehaviourStateInitialiser } from './BehaviourState';
 
-export type BehaviourApiFunc<
-  D extends BehaviourConfigDetail,
-  S extends BehaviourState
-> = (component: AlloyComponent, bConfig: D, bState: S, ...rest: any[]) => any;
+export type BehaviourApiFunc<D extends BehaviourConfigDetail, S extends BehaviourState> = (
+  component: AlloyComponent,
+  bConfig: D,
+  bState: S,
+  ...rest: any[]
+) => any;
 
-export type BehaviourRecord = Record<
-  string,
-  ConfiguredBehaviour<any, any, any>
->;
-export type BehaviourApisRecord<
-  D extends BehaviourConfigDetail,
-  S extends BehaviourState
-> = {
+export type BehaviourRecord = Record<string, ConfiguredBehaviour<any, any, any>>;
+export type BehaviourApisRecord<D extends BehaviourConfigDetail, S extends BehaviourState> = {
   [key: string]: BehaviourApiFunc<D, S>;
 };
 export type BehaviourExtraRecord<E> = { [K in keyof E]: Function };
 
-export type BehaviourInfo<
-  D extends BehaviourConfigDetail,
-  S extends BehaviourState
-> = Record<string, () => Option<BehaviourConfigAndState<D, S>>>;
+export type BehaviourInfo<D extends BehaviourConfigDetail, S extends BehaviourState> = Record<
+  string,
+  () => Option<BehaviourConfigAndState<D, S>>
+>;
 
 export interface BehaviourConfigSpec {}
 export interface BehaviourConfigDetail {}
 
-export interface BehaviourActiveSpec<
-  D extends BehaviourConfigDetail,
-  S extends BehaviourState
-> {
+export interface BehaviourActiveSpec<D extends BehaviourConfigDetail, S extends BehaviourState> {
   exhibit?: (base: DomDefinitionDetail, config: D, state: S) => DomModification;
   events?: (config: D, state: S) => AlloyEventRecord;
 }
-export interface NamedConfiguredBehaviour<
-  C extends BehaviourConfigSpec,
-  D extends BehaviourConfigDetail,
-  S extends BehaviourState
-> {
+export interface NamedConfiguredBehaviour<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState> {
   key: string;
   value: ConfiguredBehaviour<C, D, S>;
 }
 
-export interface AlloyBehaviour<
-  C extends BehaviourConfigSpec,
-  D extends BehaviourConfigDetail,
-  S extends BehaviourState
-> {
+export interface AlloyBehaviour<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState> {
   config: (spec: C) => NamedConfiguredBehaviour<C, D, S>;
-  exhibit: (
-    info: BehaviourInfo<D, S>,
-    base: DomDefinitionDetail
-  ) => DomModification;
+  exhibit: (info: BehaviourInfo<D, S>, base: DomDefinitionDetail) => DomModification;
   handlers: (info: BehaviourInfo<D, S>) => {};
   name: () => string;
   revoke: () => NamedConfiguredBehaviour<C, D, S>;
   schema: () => FieldProcessorAdt;
 }
 
-export interface ConfiguredBehaviour<
-  C extends BehaviourConfigSpec,
-  D extends BehaviourConfigDetail,
-  S extends BehaviourState
-> {
+export interface ConfiguredBehaviour<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState> {
   config: D;
   configAsRaw: () => D;
   initialConfig: C;

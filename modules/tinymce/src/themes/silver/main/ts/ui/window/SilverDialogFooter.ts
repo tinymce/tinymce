@@ -34,28 +34,15 @@ export interface WindowFooterSpec {
   buttons: Types.Dialog.DialogButton[];
 }
 
-const makeButton = (
-  button: Types.Dialog.DialogButton,
-  backstage: UiFactoryBackstage
-) => renderFooterButton(button, button.type, backstage);
+const makeButton = (button: Types.Dialog.DialogButton, backstage: UiFactoryBackstage) => renderFooterButton(button, button.type, backstage);
 
-const lookup = (
-  compInSystem: AlloyComponent,
-  footerButtons: DialogMemButton[],
-  buttonName: string
-) =>
-  Arr.find(
-    footerButtons,
-    (button) => button.name === buttonName
-  ).bind((memButton) => memButton.memento.getOpt(compInSystem));
+const lookup = (compInSystem: AlloyComponent, footerButtons: DialogMemButton[], buttonName: string) =>
+  Arr.find(footerButtons, (button) => button.name === buttonName).bind((memButton) => memButton.memento.getOpt(compInSystem));
 
 const renderComponents = (_data, state) => {
   // default group is 'end'
   const footerButtons = state.map((s) => s.footerButtons).getOr([]);
-  const buttonGroups = Arr.partition(
-    footerButtons,
-    (button) => button.align === 'start'
-  );
+  const buttonGroups = Arr.partition(footerButtons, (button) => button.align === 'start');
 
   const makeGroup = (edge, buttons): SketchSpec =>
     Container.sketch({
@@ -71,10 +58,7 @@ const renderComponents = (_data, state) => {
   return [startButtons, endButtons];
 };
 
-const renderFooter = (
-  initSpec: WindowFooterSpec,
-  backstage: UiFactoryBackstage
-) => {
+const renderFooter = (initSpec: WindowFooterSpec, backstage: UiFactoryBackstage) => {
   const updateState = (_comp, data: WindowFooterSpec) => {
     const footerButtons: DialogMemButton[] = Arr.map(data.buttons, (button) => {
       const memButton = Memento.record(makeButton(button, backstage));
@@ -85,8 +69,7 @@ const renderFooter = (
       };
     });
 
-    const lookupByName = (compInSystem: AlloyComponent, buttonName: string) =>
-      lookup(compInSystem, footerButtons, buttonName);
+    const lookupByName = (compInSystem: AlloyComponent, buttonName: string) => lookup(compInSystem, footerButtons, buttonName);
 
     return Option.some({
       lookupByName,
@@ -108,14 +91,9 @@ const renderFooter = (
   };
 };
 
-const renderInlineFooter = (
-  initSpec: WindowFooterSpec,
-  backstage: UiFactoryBackstage
-) => renderFooter(initSpec, backstage);
+const renderInlineFooter = (initSpec: WindowFooterSpec, backstage: UiFactoryBackstage) => renderFooter(initSpec, backstage);
 
-const renderModalFooter = (
-  initSpec: WindowFooterSpec,
-  backstage: UiFactoryBackstage
-) => ModalDialog.parts().footer(renderFooter(initSpec, backstage));
+const renderModalFooter = (initSpec: WindowFooterSpec, backstage: UiFactoryBackstage) =>
+  ModalDialog.parts().footer(renderFooter(initSpec, backstage));
 
 export { renderInlineFooter, renderModalFooter };

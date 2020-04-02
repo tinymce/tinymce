@@ -10,9 +10,7 @@ import * as Anchor from '../core/Anchor';
 
 const insertAnchor = (editor: Editor, newId: string) => {
   if (!Anchor.isValidId(newId)) {
-    editor.windowManager.alert(
-      'Id should start with a letter, followed only by letters, numbers, dashes, dots, colons or underscores.'
-    );
+    editor.windowManager.alert('Id should start with a letter, followed only by letters, numbers, dashes, dots, colons or underscores.');
     return false;
   } else {
     Anchor.insert(editor, newId);

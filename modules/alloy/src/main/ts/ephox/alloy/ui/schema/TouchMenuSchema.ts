@@ -40,11 +40,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant(
     Fields.onHandler('onHoverOn'),
     Fields.onHandler('onHoverOff'),
     Fields.onHandler('onMiss'),
-    SketchBehaviours.field('touchmenuBehaviours', [
-      Toggling,
-      Unselecting,
-      Coupling
-    ]),
+    SketchBehaviours.field('touchmenuBehaviours', [Toggling, Unselecting, Coupling]),
     FieldSchema.strict('toggleClass'),
     FieldSchema.option('lazySink'),
     FieldSchema.option('role'),

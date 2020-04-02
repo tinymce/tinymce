@@ -29,10 +29,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
-import {
-  onControlAttached,
-  onControlDetached
-} from 'tinymce/themes/silver/ui/controls/Controls';
+import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
 import { ValueSchema } from '@ephox/boulder';
 
 export type SidebarConfig = Record<string, BridgeSidebar.SidebarApi>;
@@ -43,8 +40,7 @@ const setup = (editor: Editor) => {
   // Setup each registered sidebar
   Arr.each(Obj.keys(sidebars), (name) => {
     const spec = sidebars[name];
-    const isActive = () =>
-      Option.from(editor.queryCommandValue('ToggleSidebar')).is(name);
+    const isActive = () => Option.from(editor.queryCommandValue('ToggleSidebar')).is(name);
     editor.ui.registry.addToggleButton(name, {
       icon: spec.icon,
       tooltip: spec.tooltip,
@@ -67,10 +63,7 @@ const getApi = (comp: AlloyComponent): BridgeSidebar.SidebarInstanceApi => ({
   element: (): HTMLElement => comp.element().dom()
 });
 
-const makePanels = (
-  parts: SlotContainerTypes.SlotContainerParts,
-  panelConfigs: SidebarConfig
-) => {
+const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: SidebarConfig) => {
   const specs = Arr.map(Obj.keys(panelConfigs), (name) => {
     const spec = panelConfigs[name];
     const bridged = ValueSchema.getOrDie(BridgeSidebar.createSidebar(spec));
@@ -93,22 +86,14 @@ const makePanels = (
       behaviours: SimpleBehaviours.unnamedEvents([
         onControlAttached(spec, editorOffCell),
         onControlDetached(spec, editorOffCell),
-        AlloyEvents.run<SystemEvents.AlloySlotVisibilityEvent>(
-          SystemEvents.slotVisibility(),
-          (sidepanel, se) => {
-            const data = se.event();
-            const optSidePanelSpec = Arr.find(
-              specs,
-              (config) => config.name === data.name()
-            );
-            optSidePanelSpec.each((sidePanelSpec) => {
-              const handler = data.visible()
-                ? sidePanelSpec.onShow
-                : sidePanelSpec.onHide;
-              handler(sidePanelSpec.getApi(sidepanel));
-            });
-          }
-        )
+        AlloyEvents.run<SystemEvents.AlloySlotVisibilityEvent>(SystemEvents.slotVisibility(), (sidepanel, se) => {
+          const data = se.event();
+          const optSidePanelSpec = Arr.find(specs, (config) => config.name === data.name());
+          optSidePanelSpec.each((sidePanelSpec) => {
+            const handler = data.visible() ? sidePanelSpec.onShow : sidePanelSpec.onHide;
+            handler(sidePanelSpec.getApi(sidepanel));
+          });
+        })
       ])
     });
   });
@@ -122,17 +107,13 @@ const makeSidebar = (panelConfigs: SidebarConfig) =>
     },
     components: makePanels(parts, panelConfigs),
     slotBehaviours: SimpleBehaviours.unnamedEvents([
-      AlloyEvents.runOnAttached((slotContainer) =>
-        SlotContainer.hideAllSlots(slotContainer)
-      )
+      AlloyEvents.runOnAttached((slotContainer) => SlotContainer.hideAllSlots(slotContainer))
     ])
   }));
 
 const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig) => {
   const optSlider = Composing.getCurrent(sidebar);
-  optSlider.each((slider) =>
-    Replacing.set(slider, [makeSidebar(panelConfigs)])
-  );
+  optSlider.each((slider) => Replacing.set(slider, [makeSidebar(panelConfigs)]));
 };
 
 const toggleSidebar = (sidebar: AlloyComponent, name: string) => {
@@ -165,9 +146,7 @@ const whichSidebar = (sidebar: AlloyComponent): Option<string> => {
     if (sidebarOpen) {
       const optSlotContainer = Composing.getCurrent(slider);
       return optSlotContainer.bind((slotContainer) =>
-        Arr.find(SlotContainer.getSlotNames(slotContainer), (name) =>
-          SlotContainer.isShowing(slotContainer, name)
-        )
+        Arr.find(SlotContainer.getSlotNames(slotContainer), (name) => SlotContainer.isShowing(slotContainer, name))
       );
     } else {
       return Option.none();

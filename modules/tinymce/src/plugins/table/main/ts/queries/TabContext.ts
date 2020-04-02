@@ -8,16 +8,7 @@
 import { KeyboardEvent } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { CellNavigation, TableLookup } from '@ephox/snooker';
-import {
-  Compare,
-  CursorPosition,
-  Element,
-  Node,
-  Selection,
-  SelectorFilter,
-  SelectorFind,
-  WindowSelection
-} from '@ephox/sugar';
+import { Compare, CursorPosition, Element, Node, Selection, SelectorFilter, SelectorFind, WindowSelection } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
@@ -72,12 +63,7 @@ const go: any = function (editor: Editor, isRoot, cell, actions, _lazyWire) {
 
 const rootElements = ['table', 'li', 'dl'];
 
-const handle = function (
-  event: KeyboardEvent,
-  editor: Editor,
-  actions: TableActions,
-  lazyWire
-) {
+const handle = function (event: KeyboardEvent, editor: Editor, actions: TableActions, lazyWire) {
   if (event.keyCode === VK.TAB) {
     const body = Util.getBody(editor);
     const isRoot = function (element) {

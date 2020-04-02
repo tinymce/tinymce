@@ -13,10 +13,8 @@ UnitTest.test('tinymce.plugins.paste.browser.NewlinesTest', function () {
   // testing Newlines.isPlainText()
   const textCases = [
     {
-      label:
-        'TestCase-TBA: Paste: Basic Chrome markup (including span-wrapped tab)',
-      content:
-        '<div><span style="white-space:pre">  </span>a</div><div><br></div><div>b</div>',
+      label: 'TestCase-TBA: Paste: Basic Chrome markup (including span-wrapped tab)',
+      content: '<div><span style="white-space:pre">  </span>a</div><div><br></div><div>b</div>',
       isText: true
     },
     {
@@ -40,15 +38,12 @@ UnitTest.test('tinymce.plugins.paste.browser.NewlinesTest', function () {
       isText: true
     },
     {
-      label:
-        'TestCase-TBA: Paste: White-space wrapper (Chrome) with additional styles',
-      content:
-        '<div><span style="white-space: pre; color: red;"> </span>a</div>',
+      label: 'TestCase-TBA: Paste: White-space wrapper (Chrome) with additional styles',
+      content: '<div><span style="white-space: pre; color: red;"> </span>a</div>',
       isText: false
     },
     {
-      label:
-        'TestCase-TBA: Paste: Allowed tag but with attributes qualifies string as not a plain text',
+      label: 'TestCase-TBA: Paste: Allowed tag but with attributes qualifies string as not a plain text',
       content: '<br data-mce-bogus="all" />',
       isText: false
     }
@@ -62,11 +57,7 @@ UnitTest.test('tinymce.plugins.paste.browser.NewlinesTest', function () {
     function (tag) {
       const content = '<p>a</p><' + tag + '>b</' + tag + '><p>c<br>d</p>';
       textCases.push({
-        label:
-          tag.toUpperCase() +
-          ' tag should qualify content (' +
-          content +
-          ') as not a plain text',
+        label: tag.toUpperCase() + ' tag should qualify content (' + content + ') as not a plain text',
         content,
         isText: false
       });
@@ -74,10 +65,6 @@ UnitTest.test('tinymce.plugins.paste.browser.NewlinesTest', function () {
   );
 
   Arr.each(textCases, function (c) {
-    Assertions.assertEq(
-      c.label || 'Asserting: ' + c.content,
-      c.isText,
-      Newlines.isPlainText(c.content)
-    );
+    Assertions.assertEq(c.label || 'Asserting: ' + c.content, c.isText, Newlines.isPlainText(c.content));
   });
 });

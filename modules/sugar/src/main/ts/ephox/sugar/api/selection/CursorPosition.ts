@@ -15,14 +15,8 @@ const last = function (element: Element<DomNode>) {
 
 // Note, sugar probably needs some RTL traversals.
 const descendantRtl: {
-  <T extends DomNode = DomNode>(
-    scope: Element<DomNode>,
-    predicate: (e: Element<DomNode>) => e is Element<T>
-  ): Option<Element<T>>;
-  (
-    scope: Element<DomNode>,
-    predicate: (e: Element<DomNode>) => boolean
-  ): Option<Element<DomNode>>;
+  <T extends DomNode = DomNode>(scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>): Option<Element<T>>;
+  (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => boolean): Option<Element<DomNode>>;
 } = function <T extends DomNode = DomNode>(
   scope: Element<DomNode>,
   predicate: (e: Element<DomNode>) => e is Element<T>

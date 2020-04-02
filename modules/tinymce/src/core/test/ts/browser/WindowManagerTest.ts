@@ -4,10 +4,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import Editor from 'tinymce/core/api/Editor';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.WindowManagerTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.WindowManagerTest', function (success, failure) {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();

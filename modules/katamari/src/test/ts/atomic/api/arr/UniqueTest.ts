@@ -22,20 +22,14 @@ UnitTest.test('Arr.unique: unit tests', () => {
   check(['three', 'three', 'two', 'two', 'one', 'one', 'three', 'two', 'one']);
 });
 
-UnitTest.test(
-  'Arr.unique: each element is not found in the rest of the array',
-  () => {
-    fc.assert(
-      fc.property(fc.array(fc.string()), (arr) => {
-        const unique = Unique.stringArray(arr);
-        return Arr.forall(
-          unique,
-          (x, i) => !Arr.contains(unique.slice(i + 1), x)
-        );
-      })
-    );
-  }
-);
+UnitTest.test('Arr.unique: each element is not found in the rest of the array', () => {
+  fc.assert(
+    fc.property(fc.array(fc.string()), (arr) => {
+      const unique = Unique.stringArray(arr);
+      return Arr.forall(unique, (x, i) => !Arr.contains(unique.slice(i + 1), x));
+    })
+  );
+});
 
 UnitTest.test('Arr.unique is idempotent', () => {
   fc.assert(

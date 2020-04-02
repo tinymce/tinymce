@@ -100,35 +100,20 @@ const coords = (x: number, y: number): Coords => ({
   y: Fun.constant(y)
 });
 
-const detail = (
-  element: Element,
-  rowspan: number,
-  colspan: number
-): Detail => ({
+const detail = (element: Element, rowspan: number, colspan: number): Detail => ({
   element: Fun.constant(element),
   rowspan: Fun.constant(rowspan),
   colspan: Fun.constant(colspan)
 });
 
-const detailnew = (
-  element: Element,
-  rowspan: number,
-  colspan: number,
-  isNew: boolean
-): DetailNew => ({
+const detailnew = (element: Element, rowspan: number, colspan: number, isNew: boolean): DetailNew => ({
   element: Fun.constant(element),
   rowspan: Fun.constant(rowspan),
   colspan: Fun.constant(colspan),
   isNew: Fun.constant(isNew)
 });
 
-const extended = (
-  element: Element,
-  rowspan: number,
-  colspan: number,
-  row: number,
-  column: number
-): DetailExt => ({
+const extended = (element: Element, rowspan: number, colspan: number, row: number, column: number): DetailExt => ({
   element: Fun.constant(element),
   rowspan: Fun.constant(rowspan),
   colspan: Fun.constant(colspan),
@@ -136,11 +121,7 @@ const extended = (
   column: Fun.constant(column)
 });
 
-const rowdata = <T>(
-  element: Element,
-  cells: T[],
-  section: Section
-): RowData<T> => ({
+const rowdata = <T>(element: Element, cells: T[], section: Section): RowData<T> => ({
   element: Fun.constant(element),
   cells: Fun.constant(cells),
   section: Fun.constant(section)
@@ -151,12 +132,7 @@ const elementnew = (element: Element, isNew: boolean): ElementNew => ({
   isNew: Fun.constant(isNew)
 });
 
-const rowdatanew = <T>(
-  element: Element,
-  cells: T[],
-  section: Section,
-  isNew: boolean
-): RowDataNew<T> => ({
+const rowdatanew = <T>(element: Element, cells: T[], section: Section, isNew: boolean): RowDataNew<T> => ({
   element: Fun.constant(element),
   cells: Fun.constant(cells),
   section: Fun.constant(section),
@@ -173,12 +149,7 @@ const rowdetails = (details: DetailNew[], section: Section): RowDetails => ({
   section: Fun.constant(section)
 });
 
-const bounds = (
-  startRow: number,
-  startCol: number,
-  finishRow: number,
-  finishCol: number
-): Bounds => ({
+const bounds = (startRow: number, startCol: number, finishRow: number, finishCol: number): Bounds => ({
   startRow: Fun.constant(startRow),
   startCol: Fun.constant(startCol),
   finishRow: Fun.constant(finishRow),

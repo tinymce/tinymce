@@ -21,11 +21,7 @@ const redistributeToPercent = function (widths: string[], totalWidth: number) {
   });
 };
 
-const redistributeToPx = function (
-  widths: string[],
-  totalWidth: number,
-  newTotalWidth: number
-) {
+const redistributeToPx = function (widths: string[], totalWidth: number, newTotalWidth: number) {
   const scale = newTotalWidth / totalWidth;
   return Arr.map(widths, function (w) {
     const colType = Size.from(w);
@@ -60,11 +56,7 @@ const redistributeEmpty = function (newWidthType: Size, columns: number) {
   return Util.repeat(columns, f);
 };
 
-const redistributeValues = function (
-  newWidthType: Size,
-  widths: string[],
-  totalWidth: number
-) {
+const redistributeValues = function (newWidthType: Size, widths: string[], totalWidth: number) {
   return newWidthType.fold(
     function () {
       return widths;
@@ -78,11 +70,7 @@ const redistributeValues = function (
   );
 };
 
-const redistribute = function (
-  widths: string[],
-  totalWidth: number,
-  newWidth: string
-) {
+const redistribute = function (widths: string[], totalWidth: number, newWidth: string) {
   const newType = Size.from(newWidth);
   const floats = Arr.forall(widths, function (s) {
     return s === '0px';
@@ -99,9 +87,7 @@ const sum = function (values: string[], fallback: number) {
   return Arr.foldr(
     values,
     function (rest, v) {
-      return (
-        Size.from(v).fold(Fun.constant(0), Fun.identity, Fun.identity) + rest
-      );
+      return Size.from(v).fold(Fun.constant(0), Fun.identity, Fun.identity) + rest;
     },
     0
   );
@@ -152,9 +138,7 @@ const toIntegers = function (values: string[]) {
   );
 
   const r = scan.output;
-  return r
-    .slice(0, r.length - 1)
-    .concat([add(r[r.length - 1], Math.round(scan.remainder))]);
+  return r.slice(0, r.length - 1).concat([add(r[r.length - 1], Math.round(scan.remainder))]);
 };
 
 const validate = Size.from;

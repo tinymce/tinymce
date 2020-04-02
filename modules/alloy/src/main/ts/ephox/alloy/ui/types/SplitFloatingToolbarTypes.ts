@@ -4,12 +4,7 @@ import { Bounds } from '../../alien/Boxes';
 import { LazySink } from '../../api/component/CommonTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
-import {
-  SplitToolbarBaseDetail,
-  SplitToolbarBaseSpec,
-  SplitToolbarBaseSketcher,
-  SplitToolbarBaseApis
-} from './SplitToolbarBaseTypes';
+import { SplitToolbarBaseDetail, SplitToolbarBaseSpec, SplitToolbarBaseSketcher, SplitToolbarBaseApis } from './SplitToolbarBaseTypes';
 import { ToolbarGroupSpec } from './ToolbarGroupTypes';
 import { ToolbarSpec } from './ToolbarTypes';
 
@@ -44,6 +39,4 @@ export interface SplitFloatingToolbarSpec extends SplitToolbarBaseSpec {
   };
 }
 
-export interface SplitFloatingToolbarSketcher
-  extends SplitToolbarBaseSketcher<SplitFloatingToolbarSpec>,
-    SplitFloatingToolbarApis {}
+export interface SplitFloatingToolbarSketcher extends SplitToolbarBaseSketcher<SplitFloatingToolbarSpec>, SplitFloatingToolbarApis {}

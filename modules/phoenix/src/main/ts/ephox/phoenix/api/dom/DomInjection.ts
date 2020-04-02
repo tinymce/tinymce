@@ -4,11 +4,7 @@ import * as Injection from '../general/Injection';
 
 const universe = DomUniverse();
 
-const atStartOf = function (
-  element: Element,
-  offset: number,
-  injection: Element
-) {
+const atStartOf = function (element: Element, offset: number, injection: Element) {
   Injection.atStartOf(universe, element, offset, injection);
 };
 

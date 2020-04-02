@@ -13,8 +13,4 @@ export interface AnchorElement {
   readonly height: number;
 }
 
-export type AnchorLayout = (
-  anchor: AnchorBox,
-  element: AnchorElement,
-  bubbles: Bubble
-) => SpotInfo;
+export type AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => SpotInfo;

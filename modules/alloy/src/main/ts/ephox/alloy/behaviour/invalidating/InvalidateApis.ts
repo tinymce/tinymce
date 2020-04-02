@@ -12,10 +12,7 @@ const isAriaElement = (elem: Element) => {
   return Arr.contains(ariaElements, name);
 };
 
-const markValid = (
-  component: AlloyComponent,
-  invalidConfig: InvalidatingConfig
-): void => {
+const markValid = (component: AlloyComponent, invalidConfig: InvalidatingConfig): void => {
   const elem = invalidConfig.getRoot(component).getOr(component.element());
   Class.remove(elem, invalidConfig.invalidClass);
   invalidConfig.notify.each((notifyInfo) => {
@@ -30,12 +27,7 @@ const markValid = (
   });
 };
 
-const markInvalid = (
-  component: AlloyComponent,
-  invalidConfig: InvalidatingConfig,
-  invalidState: Stateless,
-  text: string
-): void => {
+const markInvalid = (component: AlloyComponent, invalidConfig: InvalidatingConfig, invalidState: Stateless, text: string): void => {
   const elem = invalidConfig.getRoot(component).getOr(component.element());
   Class.add(elem, invalidConfig.invalidClass);
   invalidConfig.notify.each((notifyInfo) => {
@@ -51,49 +43,36 @@ const markInvalid = (
   });
 };
 
-const query = (
-  component: AlloyComponent,
-  invalidConfig: InvalidatingConfig,
-  _invalidState: Stateless
-): Future<Result<any, string>> =>
+const query = (component: AlloyComponent, invalidConfig: InvalidatingConfig, _invalidState: Stateless): Future<Result<any, string>> =>
   invalidConfig.validator.fold(
     () => Future.pure(Result.value(true)),
     (validatorInfo) => validatorInfo.validate(component)
   );
 
-const run = (
-  component: AlloyComponent,
-  invalidConfig: InvalidatingConfig,
-  invalidState: Stateless
-): Future<Result<any, string>> => {
+const run = (component: AlloyComponent, invalidConfig: InvalidatingConfig, invalidState: Stateless): Future<Result<any, string>> => {
   invalidConfig.notify.each((notifyInfo) => {
     notifyInfo.onValidate(component);
   });
 
-  return query(component, invalidConfig, invalidState).map(
-    (valid: Result<any, string>) => {
-      if (component.getSystem().isConnected()) {
-        return valid.fold(
-          (err) => {
-            markInvalid(component, invalidConfig, invalidState, err);
-            return Result.error(err);
-          },
-          (v) => {
-            markValid(component, invalidConfig);
-            return Result.value(v);
-          }
-        );
-      } else {
-        return Result.error('No longer in system');
-      }
+  return query(component, invalidConfig, invalidState).map((valid: Result<any, string>) => {
+    if (component.getSystem().isConnected()) {
+      return valid.fold(
+        (err) => {
+          markInvalid(component, invalidConfig, invalidState, err);
+          return Result.error(err);
+        },
+        (v) => {
+          markValid(component, invalidConfig);
+          return Result.value(v);
+        }
+      );
+    } else {
+      return Result.error('No longer in system');
     }
-  );
+  });
 };
 
-const isInvalid = (
-  component: AlloyComponent,
-  invalidConfig: InvalidatingConfig
-): boolean => {
+const isInvalid = (component: AlloyComponent, invalidConfig: InvalidatingConfig): boolean => {
   const elem = invalidConfig.getRoot(component).getOr(component.element());
   return Class.has(elem, invalidConfig.invalidClass);
 };

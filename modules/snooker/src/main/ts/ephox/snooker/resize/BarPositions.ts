@@ -83,23 +83,20 @@ const negate = function (step: number) {
 
 const height: BarPositions<RowInfo> = {
   delta: Fun.identity,
-  positions: (optElements: Option<Element>[]) =>
-    findPositions(getTopEdge, getBottomEdge, optElements),
+  positions: (optElements: Option<Element>[]) => findPositions(getTopEdge, getBottomEdge, optElements),
   edge: getTop
 };
 
 const ltr: BarPositions<ColInfo> = {
   delta: Fun.identity,
   edge: ltrEdge,
-  positions: (optElements: Option<Element>[]) =>
-    findPositions(getLeftEdge, getRightEdge, optElements)
+  positions: (optElements: Option<Element>[]) => findPositions(getLeftEdge, getRightEdge, optElements)
 };
 
 const rtl: BarPositions<ColInfo> = {
   delta: negate,
   edge: rtlEdge,
-  positions: (optElements: Option<Element>[]) =>
-    findPositions(getRightEdge, getLeftEdge, optElements)
+  positions: (optElements: Option<Element>[]) => findPositions(getRightEdge, getLeftEdge, optElements)
 };
 
 export { height, rtl, ltr };

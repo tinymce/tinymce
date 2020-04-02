@@ -22,11 +22,7 @@ export interface MobileWebApp {
 }
 
 const produce = function (raw: { any }): MobileWebApp {
-  const mobile = ValueSchema.asRawOrDie(
-    'Getting IosWebapp schema',
-    MobileSchema,
-    raw
-  );
+  const mobile = ValueSchema.asRawOrDie('Getting IosWebapp schema', MobileSchema, raw);
 
   /* Make the toolbar */
   Css.set(mobile.toolstrip, 'width', '100%');

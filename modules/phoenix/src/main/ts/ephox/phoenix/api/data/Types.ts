@@ -38,12 +38,7 @@ export interface Direction {
   readonly first: <E>(children: E[]) => Option<E>;
 }
 
-export type Transition = <E, D>(
-  universe: Universe<E, D>,
-  item: E,
-  direction: Direction,
-  _transition?: Transition
-) => Option<Traverse<E>>;
+export type Transition = <E, D>(universe: Universe<E, D>, item: E, direction: Direction, _transition?: Transition) => Option<Traverse<E>>;
 
 export interface Traverse<E> {
   readonly item: () => E;

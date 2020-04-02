@@ -3,19 +3,11 @@ import { Arr } from '@ephox/katamari';
 import { DieFn, NextFn } from '../pipe/Pipe';
 import { TestLogs } from '@ephox/agar';
 
-export const compose = <A, B, C>(
-  sab: Step<A, B>,
-  sbc: Step<B, C>
-): Step<A, C> =>
+export const compose = <A, B, C>(sab: Step<A, B>, sbc: Step<B, C>): Step<A, C> =>
   // don't Pipe them - assume that the base actions have already been piped
   ({
     runStep: (a: A, next: NextFn<C>, die: DieFn, logs: TestLogs): void =>
-      sab.runStep(
-        a,
-        (b: B, blogs) => sbc.runStep(b, next, die, blogs),
-        die,
-        logs
-      )
+      sab.runStep(a, (b: B, blogs) => sbc.runStep(b, next, die, blogs), die, logs)
   });
 
 /*
@@ -136,44 +128,10 @@ export const sequence = <
     | [Step<A1, A2>, Step<A2, A3>, Step<A3, T>]
     | [Step<A1, A2>, Step<A2, A3>, Step<A3, A4>, Step<A4, T>]
     | [Step<A1, A2>, Step<A2, A3>, Step<A3, A4>, Step<A4, A5>, Step<A5, T>]
-    | [
-        Step<A1, A2>,
-        Step<A2, A3>,
-        Step<A3, A4>,
-        Step<A4, A5>,
-        Step<A5, A6>,
-        Step<A6, T>
-      ]
-    | [
-        Step<A1, A2>,
-        Step<A2, A3>,
-        Step<A3, A4>,
-        Step<A4, A5>,
-        Step<A5, A6>,
-        Step<A6, A7>,
-        Step<A7, T>
-      ]
-    | [
-        Step<A1, A2>,
-        Step<A2, A3>,
-        Step<A3, A4>,
-        Step<A4, A5>,
-        Step<A5, A6>,
-        Step<A6, A7>,
-        Step<A7, A8>,
-        Step<A8, T>
-      ]
-    | [
-        Step<A1, A2>,
-        Step<A2, A3>,
-        Step<A3, A4>,
-        Step<A4, A5>,
-        Step<A5, A6>,
-        Step<A6, A7>,
-        Step<A7, A8>,
-        Step<A8, A9>,
-        Step<A9, T>
-      ]
+    | [Step<A1, A2>, Step<A2, A3>, Step<A3, A4>, Step<A4, A5>, Step<A5, A6>, Step<A6, T>]
+    | [Step<A1, A2>, Step<A2, A3>, Step<A3, A4>, Step<A4, A5>, Step<A5, A6>, Step<A6, A7>, Step<A7, T>]
+    | [Step<A1, A2>, Step<A2, A3>, Step<A3, A4>, Step<A4, A5>, Step<A5, A6>, Step<A6, A7>, Step<A7, A8>, Step<A8, T>]
+    | [Step<A1, A2>, Step<A2, A3>, Step<A3, A4>, Step<A4, A5>, Step<A5, A6>, Step<A6, A7>, Step<A7, A8>, Step<A8, A9>, Step<A9, T>]
     | [
         Step<A1, A2>,
         Step<A2, A3>,
@@ -5366,10 +5324,7 @@ export const sequence = <
   return sequenceUnsafe(s);
 };
 
-export const sequenceSame = <T>(steps: Step<T, T>[]): Step<T, T> =>
-  sequenceUnsafe(steps);
+export const sequenceSame = <T>(steps: Step<T, T>[]): Step<T, T> => sequenceUnsafe(steps);
 
 export const sequenceUnsafe = (steps: Step<any, any>[]): Step<any, any> =>
-  steps.length === 0
-    ? Step.pass
-    : Arr.foldl(steps, (acc, step) => compose(acc, step), Step.pass);
+  steps.length === 0 ? Step.pass : Arr.foldl(steps, (acc, step) => compose(acc, step), Step.pass);

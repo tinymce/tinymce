@@ -44,22 +44,8 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
     )
   });
 
-  const arbData = Jsc.tuple([
-    arbRanged,
-    arb1Up,
-    Jsc.bool,
-    Jsc.bool,
-    Jsc.bool
-  ]).smap(
-    (
-      arr: [
-        { min: number; max: number; value: number },
-        number,
-        boolean,
-        boolean,
-        boolean
-      ]
-    ) => ({
+  const arbData = Jsc.tuple([arbRanged, arb1Up, Jsc.bool, Jsc.bool, Jsc.bool]).smap(
+    (arr: [{ min: number; max: number; value: number }, number, boolean, boolean, boolean]) => ({
       min: arr[0].min,
       max: arr[0].max,
       value: arr[0].value,
@@ -69,11 +55,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
       hasLedge: arr[3],
       hasRedge: arr[4]
     }),
-    (r: TestData) => [
-      { min: r.min, max: r.max, value: r.value },
-      r.stepSize,
-      r.snapToGrid
-    ]
+    (r: TestData) => [{ min: r.min, max: r.max, value: r.value }, r.stepSize, r.snapToGrid]
   );
 
   const arbBounds = Jsc.bless({
@@ -90,17 +72,8 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
     'Reducing never goes beyond min-1',
     [arbData],
     (data: TestData) => {
-      const newValue = SliderModel.reduceBy(
-        data.value,
-        data.min,
-        data.max,
-        data.stepSize
-      );
-      Assert.eq(
-        'Checking value',
-        true,
-        newValue <= data.value && newValue >= data.min - 1
-      );
+      const newValue = SliderModel.reduceBy(data.value, data.min, data.max, data.stepSize);
+      Assert.eq('Checking value', true, newValue <= data.value && newValue >= data.min - 1);
       return true;
     },
     {}
@@ -110,17 +83,8 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
     'Increasing never goes beyond max+1',
     [arbData],
     (data: TestData) => {
-      const newValue = SliderModel.increaseBy(
-        data.value,
-        data.min,
-        data.max,
-        data.stepSize
-      );
-      Assert.eq(
-        'Checking value',
-        true,
-        newValue >= data.value && newValue <= data.max + 1
-      );
+      const newValue = SliderModel.increaseBy(data.value, data.min, data.max, data.stepSize);
+      Assert.eq('Checking value', true, newValue >= data.value && newValue <= data.max + 1);
       return true;
     },
     {}
@@ -148,11 +112,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
       const newValue = SliderModel.findValueOf(args);
       const f = Math.abs((newValue - data.min) / data.stepSize);
       const actual =
-        Math.floor(f) === f ||
-        newValue === data.min ||
-        newValue === data.max ||
-        newValue === data.min - 1 ||
-        newValue === data.max + 1;
+        Math.floor(f) === f || newValue === data.min || newValue === data.max || newValue === data.min - 1 || newValue === data.max + 1;
       Assert.eq('Checking factors correctly', true, actual);
       return true;
     },
@@ -162,12 +122,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
   Jsc.syncProperty(
     'Finding value of snapped always results in a factorable value with a snap start',
     [arbData, arbBounds, Jsc.nat, Jsc.nat],
-    (
-      data: TestData,
-      bounds: TestBounds,
-      xValue: number,
-      snapOffset: number
-    ) => {
+    (data: TestData, bounds: TestBounds, xValue: number, snapOffset: number) => {
       const args = {
         min: data.min,
         max: data.max,
@@ -188,11 +143,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
       Assert.eq(
         'Checking factors correctly: ' + newValue,
         true,
-        Math.floor(f) === f ||
-          newValue === data.min ||
-          newValue === data.max ||
-          newValue === data.min - 1 ||
-          newValue === data.max + 1
+        Math.floor(f) === f || newValue === data.min || newValue === data.max || newValue === data.min - 1 || newValue === data.max + 1
       );
       return true;
     },
@@ -219,11 +170,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
         screenRange: bounds.width
       };
       const newValue = SliderModel.findValueOf(args);
-      Assert.eq(
-        'Assert within range: ' + newValue,
-        true,
-        newValue >= data.min - 1 && newValue <= data.max + 1
-      );
+      Assert.eq('Assert within range: ' + newValue, true, newValue >= data.min - 1 && newValue <= data.max + 1);
       return true;
     }
   );
@@ -231,12 +178,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
   Jsc.syncProperty(
     'Finding value of any value always fits in the [min - 1, max + 1] range with a snap start',
     [arbData, arbBounds, Jsc.nat, Jsc.nat],
-    (
-      data: TestData,
-      bounds: TestBounds,
-      xValue: number,
-      snapOffset: number
-    ) => {
+    (data: TestData, bounds: TestBounds, xValue: number, snapOffset: number) => {
       const args = {
         min: data.min,
         max: data.max,
@@ -244,9 +186,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
         value: xValue,
         step: data.stepSize,
         snap: data.snapToGrid,
-        snapStart: Option.some(
-          snapOffset + data.min <= data.max ? snapOffset + data.min : data.max
-        ),
+        snapStart: Option.some(snapOffset + data.min <= data.max ? snapOffset + data.min : data.max),
         rounded: data.rounded,
         hasMinEdge: data.hasLedge,
         hasMaxEdge: data.hasRedge,
@@ -255,11 +195,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
         screenRange: bounds.width
       };
       const newValue = SliderModel.findValueOf(args);
-      Assert.eq(
-        'Assert within range: ' + newValue,
-        true,
-        newValue >= data.min - 1 && newValue <= data.max + 1
-      );
+      Assert.eq('Assert within range: ' + newValue, true, newValue >= data.min - 1 && newValue <= data.max + 1);
       return true;
     }
   );

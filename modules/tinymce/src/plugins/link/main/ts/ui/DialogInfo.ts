@@ -19,11 +19,7 @@ import { LinkListOptions } from './sections/LinkListOptions';
 import { RelOptions } from './sections/RelOptions';
 import { TargetOptions } from './sections/TargetOptions';
 
-const nonEmptyAttr = (
-  dom: DOMUtils,
-  elem: string | Element,
-  name: string
-): Option<string> => {
+const nonEmptyAttr = (dom: DOMUtils, elem: string | Element, name: string): Option<string> => {
   const val: string | null = dom.getAttrib(elem, name);
   return val !== null && val.length > 0 ? Option.some(val) : Option.none();
 };
@@ -31,15 +27,9 @@ const nonEmptyAttr = (
 const extractFromAnchor = (editor: Editor, anchor: HTMLAnchorElement) => {
   const dom = editor.dom;
   const onlyText = Utils.isOnlyTextSelected(editor.selection.getContent());
-  const text: Option<string> = onlyText
-    ? Option.some(Utils.getAnchorText(editor.selection, anchor))
-    : Option.none();
-  const url: Option<string> = anchor
-    ? Option.some(dom.getAttrib(anchor, 'href'))
-    : Option.none();
-  const target: Option<string> = anchor
-    ? Option.from(dom.getAttrib(anchor, 'target'))
-    : Option.none();
+  const text: Option<string> = onlyText ? Option.some(Utils.getAnchorText(editor.selection, anchor)) : Option.none();
+  const url: Option<string> = anchor ? Option.some(dom.getAttrib(anchor, 'href')) : Option.none();
+  const target: Option<string> = anchor ? Option.from(dom.getAttrib(anchor, 'target')) : Option.none();
   const rel = nonEmptyAttr(dom, anchor, 'rel');
   const linkClass = nonEmptyAttr(dom, anchor, 'class');
   const title = nonEmptyAttr(dom, anchor, 'title');
@@ -54,10 +44,7 @@ const extractFromAnchor = (editor: Editor, anchor: HTMLAnchorElement) => {
   };
 };
 
-const collect = (
-  editor: Editor,
-  linkNode: HTMLAnchorElement
-): Promise<LinkDialogInfo> =>
+const collect = (editor: Editor, linkNode: HTMLAnchorElement): Promise<LinkDialogInfo> =>
   LinkListOptions.getLinks(editor).then((links) => {
     const anchor = extractFromAnchor(editor, linkNode);
     return {

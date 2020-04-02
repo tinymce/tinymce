@@ -5,11 +5,7 @@ import fc from 'fast-check';
 UnitTest.test('Arr.contains: unit test', () => {
   const check = (expected, input: any[], value) => {
     Assert.eq('contains', expected, Arr.contains(input, value));
-    Assert.eq(
-      'contains frozen',
-      expected,
-      Arr.contains(Object.freeze(input.slice()), value)
-    );
+    Assert.eq('contains frozen', expected, Arr.contains(Object.freeze(input.slice()), value));
   };
 
   check(false, [], 1);
@@ -33,14 +29,9 @@ UnitTest.test('Arr.contains: empty', () => {
 
 UnitTest.test('Arr.contains: array contains element', () => {
   fc.assert(
-    fc.property(
-      fc.array(fc.integer()),
-      fc.integer(),
-      fc.array(fc.integer()),
-      (prefix, element, suffix) => {
-        const arr2 = Arr.flatten([prefix, [element], suffix]);
-        Assert.eq('in array', true, Arr.contains(arr2, element));
-      }
-    )
+    fc.property(fc.array(fc.integer()), fc.integer(), fc.array(fc.integer()), (prefix, element, suffix) => {
+      const arr2 = Arr.flatten([prefix, [element], suffix]);
+      Assert.eq('in array', true, Arr.contains(arr2, element));
+    })
   );
 });

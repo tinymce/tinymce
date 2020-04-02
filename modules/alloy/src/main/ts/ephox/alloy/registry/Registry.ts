@@ -2,10 +2,7 @@ import { Obj, Option } from '@ephox/katamari';
 import { Body, Element } from '@ephox/sugar';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
-import EventRegistry, {
-  ElementAndHandler,
-  UidAndHandler
-} from '../events/EventRegistry';
+import EventRegistry, { ElementAndHandler, UidAndHandler } from '../events/EventRegistry';
 import * as AlloyLogger from '../log/AlloyLogger';
 import * as Tagger from './Tagger';
 
@@ -65,14 +62,10 @@ export default () => {
 
   const filter = (type: string): UidAndHandler[] => events.filterByType(type);
 
-  const find = (
-    isAboveRoot: (elem: Element) => boolean,
-    type: string,
-    target: Element
-  ): Option<ElementAndHandler> => events.find(isAboveRoot, type, target);
+  const find = (isAboveRoot: (elem: Element) => boolean, type: string, target: Element): Option<ElementAndHandler> =>
+    events.find(isAboveRoot, type, target);
 
-  const getById = (id: string): Option<AlloyComponent> =>
-    Obj.get(components, id);
+  const getById = (id: string): Option<AlloyComponent> => Obj.get(components, id);
 
   return {
     find,

@@ -34,28 +34,18 @@ const generatePath = (root: Node, node: Node, offset: number): number[] => {
   return current === root ? p.reverse() : [];
 };
 
-const generatePathRange = (
-  root: Node,
-  startNode: Node,
-  startOffset: number,
-  endNode: Node,
-  endOffset: number
-): PathRange => {
+const generatePathRange = (root: Node, startNode: Node, startOffset: number, endNode: Node, endOffset: number): PathRange => {
   const start = generatePath(root, startNode, startOffset);
   const end = generatePath(root, endNode, endOffset);
   return { start, end };
 };
 
-const resolvePath = (
-  root: Node,
-  path: number[]
-): Option<{ node: Node; offset: number }> => {
+const resolvePath = (root: Node, path: number[]): Option<{ node: Node; offset: number }> => {
   const nodePath = path.slice();
   const offset = nodePath.pop();
   return Arr.foldl(
     nodePath,
-    (optNode: Option<Node>, index: number) =>
-      optNode.bind((node) => Option.from(node.childNodes[index])),
+    (optNode: Option<Node>, index: number) => optNode.bind((node) => Option.from(node.childNodes[index])),
     Option.some(root)
   ).bind((node) => {
     if (Utils.isText(node) && offset >= 0 && offset <= node.data.length) {
@@ -67,31 +57,16 @@ const resolvePath = (
 };
 
 const resolvePathRange = (root: Node, range: PathRange): Option<Range> =>
-  resolvePath(root, range.start).bind(
-    ({ node: startNode, offset: startOffset }) =>
-      resolvePath(root, range.end).map(
-        ({ node: endNode, offset: endOffset }) => {
-          const rng = document.createRange();
-          rng.setStart(startNode, startOffset);
-          rng.setEnd(endNode, endOffset);
-          return rng;
-        }
-      )
+  resolvePath(root, range.start).bind(({ node: startNode, offset: startOffset }) =>
+    resolvePath(root, range.end).map(({ node: endNode, offset: endOffset }) => {
+      const rng = document.createRange();
+      rng.setStart(startNode, startOffset);
+      rng.setEnd(endNode, endOffset);
+      return rng;
+    })
   );
 
 const generatePathRangeFromRange = (root: Node, range: Range): PathRange =>
-  generatePathRange(
-    root,
-    range.startContainer,
-    range.startOffset,
-    range.endContainer,
-    range.endOffset
-  );
+  generatePathRange(root, range.startContainer, range.startOffset, range.endContainer, range.endOffset);
 
-export {
-  generatePath,
-  generatePathRange,
-  generatePathRangeFromRange,
-  resolvePath,
-  resolvePathRange
-};
+export { generatePath, generatePathRange, generatePathRangeFromRange, resolvePath, resolvePathRange };

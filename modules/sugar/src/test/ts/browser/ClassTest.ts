@@ -23,11 +23,7 @@ UnitTest.test('ClassTest', function () {
 
   Class.remove(c, 'blob');
   check(false, false, false, false);
-  assert.eq(
-    false,
-    Attr.has(c, 'class'),
-    'empty class attribute was not removed'
-  );
+  assert.eq(false, Attr.has(c, 'class'), 'empty class attribute was not removed');
 
   Class.add(c, 'blob');
   check(true, false, false, false);
@@ -55,11 +51,7 @@ UnitTest.test('ClassTest', function () {
 
   Class.remove(c, 'spot');
   check(false, false, false, false);
-  assert.eq(
-    false,
-    Attr.has(c, 'class'),
-    'empty class attribute was not removed'
-  );
+  assert.eq(false, Attr.has(c, 'class'), 'empty class attribute was not removed');
 
   const incorrect = Element.fromText('a');
   assert.eq(false, Class.has(incorrect, 'anything'));

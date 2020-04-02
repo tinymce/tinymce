@@ -1,9 +1,4 @@
-import {
-  FieldPresence,
-  FieldProcessorAdt,
-  FieldSchema,
-  ValueSchema
-} from '@ephox/boulder';
+import { FieldPresence, FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Id, Option } from '@ephox/katamari';
 
 export interface CommonMenuItemApi {

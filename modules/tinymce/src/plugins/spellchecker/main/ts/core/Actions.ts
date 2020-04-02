@@ -29,17 +29,8 @@ const getTextMatcher = function (editor, textMatcherState) {
   return textMatcherState.get();
 };
 
-const defaultSpellcheckCallback = function (
-  editor: Editor,
-  pluginUrl: string,
-  currentLanguageState: Cell<string>
-) {
-  return function (
-    method: string,
-    text: string,
-    doneCallback: Function,
-    errorCallback: Function
-  ) {
+const defaultSpellcheckCallback = function (editor: Editor, pluginUrl: string, currentLanguageState: Cell<string>) {
+  return function (method: string, text: string, doneCallback: Function, errorCallback: Function) {
     const data = { method, lang: currentLanguageState.get() };
     let postData = '';
 
@@ -61,9 +52,7 @@ const defaultSpellcheckCallback = function (
         const parseResult = JSON.parse(result);
 
         if (!parseResult) {
-          const message = editor.translate(
-            `Server response wasn't proper JSON.`
-          );
+          const message = editor.translate(`Server response wasn't proper JSON.`);
           errorCallback(message);
         } else if (parseResult.error) {
           errorCallback(parseResult.error);
@@ -72,10 +61,7 @@ const defaultSpellcheckCallback = function (
         }
       },
       error() {
-        const message =
-          editor.translate('The spelling service was not found: (') +
-          Settings.getRpcUrl(editor) +
-          editor.translate(')');
+        const message = editor.translate('The spelling service was not found: (') + Settings.getRpcUrl(editor) + editor.translate(')');
         errorCallback(message);
       }
     });
@@ -95,13 +81,7 @@ const sendRpcCall = function (
   const spellCheckCallback = userSpellcheckCallback
     ? userSpellcheckCallback
     : defaultSpellcheckCallback(editor, pluginUrl, currentLanguageState);
-  spellCheckCallback.call(
-    editor.plugins.spellchecker,
-    name,
-    data,
-    successCallback,
-    errorCallback
-  );
+  spellCheckCallback.call(editor.plugins.spellchecker, name, data, successCallback, errorCallback);
 };
 
 const spellcheck = function (
@@ -123,13 +103,7 @@ const spellcheck = function (
   };
 
   const successCallback = function (data: Data) {
-    markErrors(
-      editor,
-      startedState,
-      textMatcherState,
-      lastSuggestionsState,
-      data
-    );
+    markErrors(editor, startedState, textMatcherState, lastSuggestionsState, data);
   };
 
   editor.setProgressState(true);
@@ -145,11 +119,7 @@ const spellcheck = function (
   editor.focus();
 };
 
-const checkIfFinished = function (
-  editor: Editor,
-  startedState: Cell<boolean>,
-  textMatcherState: Cell<DomTextMatcher>
-) {
+const checkIfFinished = function (editor: Editor, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>) {
   if (!editor.dom.select('span.mce-spellchecker-word').length) {
     finish(editor, startedState, textMatcherState);
   }
@@ -195,9 +165,7 @@ const ignoreWord = function (
   editor.selection.collapse();
 
   if (all) {
-    Tools.each(editor.dom.select('span.mce-spellchecker-word'), function (
-      span
-    ) {
+    Tools.each(editor.dom.select('span.mce-spellchecker-word'), function (span) {
       if (span.getAttribute('data-mce-word') === word) {
         editor.dom.remove(span, true);
       }
@@ -209,11 +177,7 @@ const ignoreWord = function (
   checkIfFinished(editor, startedState, textMatcherState);
 };
 
-const finish = function (
-  editor: Editor,
-  startedState: Cell<boolean>,
-  textMatcherState: Cell<DomTextMatcher>
-) {
+const finish = function (editor: Editor, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>) {
   const bookmark = editor.selection.getBookmark();
   getTextMatcher(editor, textMatcherState).reset();
   editor.selection.moveToBookmark(bookmark);
@@ -310,12 +274,4 @@ const markErrors = function (
   Events.fireSpellcheckStart(editor);
 };
 
-export {
-  spellcheck,
-  checkIfFinished,
-  addToDictionary,
-  ignoreWord,
-  findSpansByIndex,
-  getElmIndex,
-  markErrors
-};
+export { spellcheck, checkIfFinished, addToDictionary, ignoreWord, findSpansByIndex, getElmIndex, markErrors };

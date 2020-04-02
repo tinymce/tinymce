@@ -1,10 +1,4 @@
-import {
-  HTMLInputElement,
-  File,
-  Window,
-  document,
-  Event
-} from '@ephox/dom-globals';
+import { HTMLInputElement, File, Window, document, Event } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
 import { Step, GeneralSteps, Chain } from '@ephox/agar';
 import { createFileList } from './FileList';
@@ -36,10 +30,7 @@ const createChangeEvent = (win: Window): Event => {
 const cPatchInputElement = (files: File[]) =>
   Chain.op<any>(() => {
     const currentProps = {
-      files: Object.getOwnPropertyDescriptor(
-        HTMLInputElement.prototype,
-        'files'
-      ),
+      files: Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'files'),
       click: HTMLInputElement.prototype.click
     };
 
@@ -61,20 +52,10 @@ const cUnpatchInputElement = Chain.op<any>(() => {
   });
 });
 
-const sRunOnPatchedFileInput = (
-  files: File[],
-  step: Step<any, any>
-): Step<any, any> =>
-  GeneralSteps.sequence([
-    Chain.asStep({}, [cPatchInputElement(files)]),
-    step,
-    Chain.asStep({}, [cUnpatchInputElement])
-  ]);
+const sRunOnPatchedFileInput = (files: File[], step: Step<any, any>): Step<any, any> =>
+  GeneralSteps.sequence([Chain.asStep({}, [cPatchInputElement(files)]), step, Chain.asStep({}, [cUnpatchInputElement])]);
 
-const cRunOnPatchedFileInput = (
-  files: File[],
-  chain: Chain<any, any>
-): Chain<any, any> =>
+const cRunOnPatchedFileInput = (files: File[], chain: Chain<any, any>): Chain<any, any> =>
   Chain.fromChains([cPatchInputElement(files), chain, cUnpatchInputElement]);
 
 export { sRunOnPatchedFileInput, cRunOnPatchedFileInput };

@@ -3,10 +3,7 @@ import { Pipeline } from '@ephox/agar';
 import Writer from 'tinymce/core/api/html/Writer';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function (
-  success,
-  failure
-) {
+UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('Comment', function () {
@@ -112,10 +109,7 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function (
       ],
       true
     );
-    LegacyUnit.equal(
-      writer.getContent(),
-      '<img attr1="value1" attr2="value2" />'
-    );
+    LegacyUnit.equal(writer.getContent(), '<img attr1="value1" attr2="value2" />');
 
     writer = Writer();
     writer.start('br', null, true);
@@ -158,28 +152,19 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function (
     writer.start('p', [{ name: 'title', value: `<>"'&\u00e5\u00e4\u00f6` }]);
     writer.text(`<>"'&\u00e5\u00e4\u00f6`);
     writer.end('p');
-    LegacyUnit.equal(
-      writer.getContent(),
-      `<p title="&lt;&gt;&quot;'&amp;\u00e5\u00e4\u00f6">&lt;&gt;"'&amp;\u00e5\u00e4\u00f6</p>`
-    );
+    LegacyUnit.equal(writer.getContent(), `<p title="&lt;&gt;&quot;'&amp;\u00e5\u00e4\u00f6">&lt;&gt;"'&amp;\u00e5\u00e4\u00f6</p>`);
 
     writer = Writer({ entity_encoding: 'numeric' });
     writer.start('p', [{ name: 'title', value: `<>"'&\u00e5\u00e4\u00f6` }]);
     writer.text(`<>"'&\u00e5\u00e4\u00f6`);
     writer.end('p');
-    LegacyUnit.equal(
-      writer.getContent(),
-      `<p title="&lt;&gt;&quot;'&amp;&#229;&#228;&#246;">&lt;&gt;"'&amp;&#229;&#228;&#246;</p>`
-    );
+    LegacyUnit.equal(writer.getContent(), `<p title="&lt;&gt;&quot;'&amp;&#229;&#228;&#246;">&lt;&gt;"'&amp;&#229;&#228;&#246;</p>`);
 
     writer = Writer({ entity_encoding: 'named' });
     writer.start('p', [{ name: 'title', value: `<>"'&\u00e5\u00e4\u00f6` }]);
     writer.text(`<>"'&\u00e5\u00e4\u00f6`);
     writer.end('p');
-    LegacyUnit.equal(
-      writer.getContent(),
-      `<p title="&lt;&gt;&quot;'&amp;&aring;&auml;&ouml;">&lt;&gt;"'&amp;&aring;&auml;&ouml;</p>`
-    );
+    LegacyUnit.equal(writer.getContent(), `<p title="&lt;&gt;&quot;'&amp;&aring;&auml;&ouml;">&lt;&gt;"'&amp;&aring;&auml;&ouml;</p>`);
   });
 
   Pipeline.async(

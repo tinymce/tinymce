@@ -1,10 +1,7 @@
 import { Cell, Option } from '@ephox/katamari';
 
 import { nuState } from '../common/BehaviourState';
-import {
-  FlatgridState,
-  GeneralKeyingConfig
-} from '../../keying/KeyingModeTypes';
+import { FlatgridState, GeneralKeyingConfig } from '../../keying/KeyingModeTypes';
 
 interface RowsCols {
   readonly numRows: number;

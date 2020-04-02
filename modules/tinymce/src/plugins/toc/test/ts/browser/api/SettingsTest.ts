@@ -32,11 +32,7 @@ UnitTest.test('browser.tinymce.plugins.toc.api.SettingsTest', function () {
     Settings.getTocHeader(new Editor('x', { toc_header: 'h75' }, EditorManager))
   );
 
-  Assertions.assertEq(
-    'TestCase-TBA: TableOfContents: Should be default 3',
-    3,
-    Settings.getTocDepth(new Editor('x', {}, EditorManager))
-  );
+  Assertions.assertEq('TestCase-TBA: TableOfContents: Should be default 3', 3, Settings.getTocDepth(new Editor('x', {}, EditorManager)));
   Assertions.assertEq(
     'TestCase-TBA: TableOfContents: Should be specified toc depth (string)',
     5,

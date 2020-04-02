@@ -53,15 +53,7 @@ import * as GuiFactory from './component/GuiFactory';
 import * as GuiTemplate from './component/GuiTemplate';
 import * as Memento from './component/Memento';
 import * as SketchBehaviours from './component/SketchBehaviours';
-import {
-  AlloySpec,
-  ComponentSpec,
-  PremadeSpec,
-  RawDomSchema,
-  SimpleOrSketchSpec,
-  SimpleSpec,
-  SketchSpec
-} from './component/SpecTypes';
+import { AlloySpec, ComponentSpec, PremadeSpec, RawDomSchema, SimpleOrSketchSpec, SimpleSpec, SketchSpec } from './component/SpecTypes';
 import * as Composite from './composite/Parts';
 import * as DragCoord from './data/DragCoord';
 import * as AlloyEvents from './events/AlloyEvents';

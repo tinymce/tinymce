@@ -17,9 +17,7 @@ UnitTest.test('NodeValue Test', function () {
     });
 
     Assert.throws('should have thrown', () => {
-      const n = Element.fromDom(
-        document.createComment('Llamas are bigger than frogs.')
-      );
+      const n = Element.fromDom(document.createComment('Llamas are bigger than frogs.'));
       NodeValue(Node.isElement, 'tt').get(n);
     });
   }

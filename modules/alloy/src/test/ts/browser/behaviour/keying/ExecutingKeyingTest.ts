@@ -27,9 +27,7 @@ UnitTest.asynctest('ExecutingKeyingTest', (success, failure) => {
                   mode: 'execution'
                 })
               ]),
-              events: AlloyEvents.derive([
-                AlloyEvents.runOnExecute(store.adder('event.execute'))
-              ])
+              events: AlloyEvents.derive([AlloyEvents.runOnExecute(store.adder('event.execute'))])
             })
           ),
         (doc, body, _gui, component, store) => [
@@ -68,9 +66,7 @@ UnitTest.asynctest('ExecutingKeyingTest', (success, failure) => {
                   useSpace: true
                 })
               ]),
-              events: AlloyEvents.derive([
-                AlloyEvents.runOnExecute(store.adder('event.execute'))
-              ])
+              events: AlloyEvents.derive([AlloyEvents.runOnExecute(store.adder('event.execute'))])
             })
           ),
         (doc, body, _gui, component, store) => [
@@ -84,10 +80,7 @@ UnitTest.asynctest('ExecutingKeyingTest', (success, failure) => {
           Keyboard.sKeydown(doc, Keys.space(), {}),
           store.sAssertEq('Post space', ['event.execute']),
           Keyboard.sKeydown(doc, Keys.enter(), { ctrl: true }),
-          store.sAssertEq('Post ctrl+enter', [
-            'event.execute',
-            'event.execute'
-          ]),
+          store.sAssertEq('Post ctrl+enter', ['event.execute', 'event.execute']),
           GuiSetup.mTeardownKeyLogger(body, [
             // Enter was not handled
             'keydown.to.body: 13'

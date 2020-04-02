@@ -107,21 +107,13 @@ UnitTest.asynctest('ExifReaderTest', function (success, failure) {
         if (jpeg.expect) {
           Obj.each(jpeg.expect, function (info, type) {
             Obj.each(info, function (value, key) {
-              Assertion.assertEq(
-                value,
-                meta[type][key],
-                `Testing for ${key} on ${jpeg.path}`
-              );
+              Assertion.assertEq(value, meta[type][key], `Testing for ${key} on ${jpeg.path}`);
             });
           });
         }
 
         if (jpeg.hasThumb) {
-          Assertion.assertEq(
-            true,
-            meta.thumb instanceof ArrayBuffer,
-            `Thumb is found on ${jpeg.path}`
-          );
+          Assertion.assertEq(true, meta.thumb instanceof ArrayBuffer, `Thumb is found on ${jpeg.path}`);
         }
       });
   });

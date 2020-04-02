@@ -30,11 +30,7 @@ UnitTest.test('TraverseTest', function () {
   InsertAll.append(mother, [youngest, middle, oldest]);
 
   const checkNone = function (subject) {
-    KAssert.eqNone(
-      () =>
-        'Expected "' + Attr.get(subject, 'name') + '" not to have a parent.',
-      Traverse.findIndex(subject)
-    );
+    KAssert.eqNone(() => 'Expected "' + Attr.get(subject, 'name') + '" not to have a parent.', Traverse.findIndex(subject));
   };
 
   const checkIndex = function (expected: number, subject: Element<DomElement>) {

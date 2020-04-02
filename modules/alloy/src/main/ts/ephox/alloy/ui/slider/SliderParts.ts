@@ -30,16 +30,8 @@ const edgePart = (name: keyof EdgeActions): PartType.PartTypeAdt =>
         () => ({}),
         (a) => ({
           events: AlloyEvents.derive([
-            AlloyEvents.runActionExtra(
-              NativeEvents.touchstart(),
-              (comp, se, d) => a(comp, d),
-              [detail]
-            ),
-            AlloyEvents.runActionExtra(
-              NativeEvents.mousedown(),
-              (comp, se, d) => a(comp, d),
-              [detail]
-            ),
+            AlloyEvents.runActionExtra(NativeEvents.touchstart(), (comp, se, d) => a(comp, d), [detail]),
+            AlloyEvents.runActionExtra(NativeEvents.mousedown(), (comp, se, d) => a(comp, d), [detail]),
             AlloyEvents.runActionExtra(
               NativeEvents.mousemove(),
               (comp, se, det: SliderDetail) => {
@@ -80,10 +72,7 @@ const blEdgePart = edgePart('bottom-left');
 const ledgePart = edgePart('left');
 
 // The thumb part needs to have position absolute to be positioned correctly
-const thumbPart = PartType.required<
-  SliderDetail,
-  { dom: OptionalDomSchema; events: AlloyEvents.AlloyEventRecord }
->({
+const thumbPart = PartType.required<SliderDetail, { dom: OptionalDomSchema; events: AlloyEvents.AlloyEventRecord }>({
   name: 'thumb',
   defaults: Fun.constant({
     dom: {
@@ -95,28 +84,12 @@ const thumbPart = PartType.required<
       events: AlloyEvents.derive([
         // If the user touches the thumb itself, pretend they touched the spectrum instead. This
         // allows sliding even when they touchstart the current value
-        AlloyEvents.redirectToPart(
-          NativeEvents.touchstart(),
-          detail,
-          'spectrum'
-        ),
-        AlloyEvents.redirectToPart(
-          NativeEvents.touchmove(),
-          detail,
-          'spectrum'
-        ),
+        AlloyEvents.redirectToPart(NativeEvents.touchstart(), detail, 'spectrum'),
+        AlloyEvents.redirectToPart(NativeEvents.touchmove(), detail, 'spectrum'),
         AlloyEvents.redirectToPart(NativeEvents.touchend(), detail, 'spectrum'),
 
-        AlloyEvents.redirectToPart(
-          NativeEvents.mousedown(),
-          detail,
-          'spectrum'
-        ),
-        AlloyEvents.redirectToPart(
-          NativeEvents.mousemove(),
-          detail,
-          'spectrum'
-        ),
+        AlloyEvents.redirectToPart(NativeEvents.mousedown(), detail, 'spectrum'),
+        AlloyEvents.redirectToPart(NativeEvents.mousemove(), detail, 'spectrum'),
         AlloyEvents.redirectToPart(NativeEvents.mouseup(), detail, 'spectrum')
       ])
     };
@@ -130,15 +103,8 @@ const spectrumPart = PartType.required({
     const modelDetail = detail.model;
     const model = modelDetail.manager;
 
-    const setValueFrom = (
-      component: AlloyComponent,
-      simulatedEvent: NativeSimulatedEvent
-    ) =>
-      model
-        .getValueFromEvent(simulatedEvent)
-        .map((value: number | Position) =>
-          model.setValueFrom(component, detail, value)
-        );
+    const setValueFrom = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) =>
+      model.getValueFromEvent(simulatedEvent).map((value: number | Position) => model.setValueFrom(component, detail, value));
 
     return {
       behaviours: Behaviour.derive([

@@ -1,11 +1,5 @@
 import { Keyboard, FocusTools, Keys } from '@ephox/agar';
-import {
-  GuiFactory,
-  Behaviour,
-  AddEventsBehaviour,
-  AlloyEvents,
-  TestHelpers
-} from '@ephox/alloy';
+import { GuiFactory, Behaviour, AddEventsBehaviour, AlloyEvents, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';

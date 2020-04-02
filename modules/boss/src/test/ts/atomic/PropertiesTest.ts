@@ -9,11 +9,7 @@ UnitTest.test('PropertiesTest', function () {
   const t = TextGene('-gene-', 'post-image text');
   const c = CommentGene('-comment-', 'comment');
 
-  const check = function (
-    expected: boolean,
-    element: Gene,
-    pred: (e: Gene) => boolean
-  ) {
+  const check = function (expected: boolean, element: Gene, pred: (e: Gene) => boolean) {
     assert.eq(expected, pred(element));
   };
 

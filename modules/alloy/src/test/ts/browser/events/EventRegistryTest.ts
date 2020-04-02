@@ -1,30 +1,11 @@
-import {
-  Assertions,
-  Chain,
-  GeneralSteps,
-  Logger,
-  NamedChain,
-  Pipeline,
-  Step,
-  UiFinder
-} from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 import { Arr, Fun, Result } from '@ephox/katamari';
-import {
-  Attr,
-  Compare,
-  Element,
-  Html,
-  Insert,
-  SelectorFilter,
-  Truncate
-} from '@ephox/sugar';
+import { Attr, Compare, Element, Html, Insert, SelectorFilter, Truncate } from '@ephox/sugar';
 
 import * as DescribedHandler from 'ephox/alloy/events/DescribedHandler';
-import EventRegistry, {
-  ElementAndHandler
-} from 'ephox/alloy/events/EventRegistry';
+import EventRegistry, { ElementAndHandler } from 'ephox/alloy/events/EventRegistry';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 type ExpectedType = {
@@ -64,21 +45,12 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
   const events = EventRegistry();
 
   events.registerId(['extra-args'], 'comp-1', {
-    'event.alpha': DescribedHandler.uncurried(
-      (extra: string) => 'event.alpha.1(' + extra + ')',
-      'event.alpha.1.handler'
-    ),
-    'event.only': DescribedHandler.uncurried(
-      (extra: string) => 'event.only(' + extra + ')',
-      'event.only.handler'
-    )
+    'event.alpha': DescribedHandler.uncurried((extra: string) => 'event.alpha.1(' + extra + ')', 'event.alpha.1.handler'),
+    'event.only': DescribedHandler.uncurried((extra: string) => 'event.only(' + extra + ')', 'event.only.handler')
   });
 
   events.registerId(['extra-args'], 'comp-4', {
-    'event.alpha': DescribedHandler.uncurried(
-      (extra: string) => 'event.alpha.4(' + extra + ')',
-      'event.alpha.4.handler'
-    )
+    'event.alpha': DescribedHandler.uncurried((extra: string) => 'event.alpha.4(' + extra + ')', 'event.alpha.4.handler')
   });
 
   const sAssertFilterByType = (expected: ExpectedType[], type: string) =>
@@ -99,22 +71,12 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
         }
       });
 
-      Assertions.assertEq(
-        () => 'filter(' + type + ') = ' + JSON.stringify(expected),
-        expected,
-        raw
-      );
+      Assertions.assertEq(() => 'filter(' + type + ') = ' + JSON.stringify(expected), expected, raw);
     });
 
   const sAssertNotFound = (label: string, type: string, id: string) =>
     Logger.t(
-      'Test: ' +
-        label +
-        '\nLooking for handlers for  id = ' +
-        id +
-        ' and event = ' +
-        type +
-        '. Should not find any',
+      'Test: ' + label + '\nLooking for handlers for  id = ' + id + ' and event = ' + type + '. Should not find any',
       GeneralSteps.sequence([
         Chain.asStep(page, [
           UiFinder.cFindIn('[data-test-uid="' + id + '"]'),
@@ -137,58 +99,26 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
       ])
     );
 
-  const sAssertFind = (
-    label: string,
-    expected: ExpectedType,
-    type: string,
-    id: string
-  ) => {
+  const sAssertFind = (label: string, expected: ExpectedType, type: string, id: string) => {
     const cFindHandler = Chain.binder((target: Element) =>
-      events
-        .find(isRoot, type, target)
-        .fold(
-          () =>
-            Result.error(
-              'No event handler for ' + type + ' on ' + target.dom()
-            ),
-          Result.value
-        )
+      events.find(isRoot, type, target).fold(() => Result.error('No event handler for ' + type + ' on ' + target.dom()), Result.value)
     );
 
     return Logger.t(
-      'Test: ' +
-        label +
-        '\nLooking for handlers for  id = ' +
-        id +
-        ' and event = ' +
-        type,
+      'Test: ' + label + '\nLooking for handlers for  id = ' + id + ' and event = ' + type,
       GeneralSteps.sequence([
         Chain.asStep({}, [
           NamedChain.asChain([
             NamedChain.writeValue('page', page),
-            NamedChain.direct(
-              'page',
-              UiFinder.cFindIn('[data-test-uid="' + id + '"]'),
-              'target'
-            ),
+            NamedChain.direct('page', UiFinder.cFindIn('[data-test-uid="' + id + '"]'), 'target'),
             NamedChain.direct('target', cFindHandler, 'handler'),
             NamedChain.bundle(Result.value)
           ]),
           Chain.op((actual) => {
             const section: ElementAndHandler = actual.handler;
+            Assertions.assertEq('find(' + type + ', ' + id + ') = true', expected.target, Attr.get(section.element, 'data-test-uid'));
             Assertions.assertEq(
-              'find(' + type + ', ' + id + ') = true',
-              expected.target,
-              Attr.get(section.element, 'data-test-uid')
-            );
-            Assertions.assertEq(
-              () =>
-                'find(' +
-                type +
-                ', ' +
-                id +
-                ') = ' +
-                JSON.stringify(expected.handler),
+              () => 'find(' + type + ', ' + id + ') = ' + JSON.stringify(expected.handler),
               expected.handler,
               section.descHandler.cHandler()
             );
@@ -229,39 +159,15 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
         'comp-1'
       ),
 
-      sAssertFind(
-        'comp-2 > comp-1',
-        { handler: 'event.alpha.1(extra-args)', target: 'comp-1' },
-        'event.alpha',
-        'comp-2'
-      ),
+      sAssertFind('comp-2 > comp-1', { handler: 'event.alpha.1(extra-args)', target: 'comp-1' }, 'event.alpha', 'comp-2'),
 
-      sAssertFind(
-        'comp-3 > comp-2 > comp-1',
-        { handler: 'event.alpha.1(extra-args)', target: 'comp-1' },
-        'event.alpha',
-        'comp-3'
-      ),
+      sAssertFind('comp-3 > comp-2 > comp-1', { handler: 'event.alpha.1(extra-args)', target: 'comp-1' }, 'event.alpha', 'comp-3'),
 
-      sAssertFind(
-        'comp-4!',
-        { handler: 'event.alpha.4(extra-args)', target: 'comp-4' },
-        'event.alpha',
-        'comp-4'
-      ),
+      sAssertFind('comp-4!', { handler: 'event.alpha.4(extra-args)', target: 'comp-4' }, 'event.alpha', 'comp-4'),
 
-      sAssertFind(
-        'comp-5 > comp-4!',
-        { handler: 'event.alpha.4(extra-args)', target: 'comp-4' },
-        'event.alpha',
-        'comp-5'
-      ),
+      sAssertFind('comp-5 > comp-4!', { handler: 'event.alpha.4(extra-args)', target: 'comp-4' }, 'event.alpha', 'comp-5'),
 
-      sAssertNotFound(
-        'comp-5 > comp-4 > comp-3 > comp-2 > comp-1 > NOT FOUND',
-        'event.beta',
-        'comp-5'
-      ),
+      sAssertNotFound('comp-5 > comp-4 > comp-3 > comp-2 > comp-1 > NOT FOUND', 'event.beta', 'comp-5'),
 
       sAssertFind(
         'comp-5 > comp-4 > comp-3 > comp-2 > comp-1!',

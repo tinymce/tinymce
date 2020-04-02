@@ -19,15 +19,12 @@ const findFirstCaretElement = (editor: Editor) =>
     return NodeType.isText(container) ? container.parentNode : container;
   });
 
-const isRangeAtStartOfNode = (rng: Range, root: Node) =>
-  rng.startContainer === root && rng.startOffset === 0;
+const isRangeAtStartOfNode = (rng: Range, root: Node) => rng.startContainer === root && rng.startOffset === 0;
 
 const getCaretElement = (editor: Editor): Option<Node> =>
   Option.from(editor.selection.getRng()).bind((rng) => {
     const root = editor.getBody();
-    return isRangeAtStartOfNode(rng, root)
-      ? Option.none()
-      : Option.from(editor.selection.getStart(true));
+    return isRangeAtStartOfNode(rng, root) ? Option.none() : Option.from(editor.selection.getStart(true));
   });
 
 const fromFontSizeNumber = (editor: Editor, value: string): string => {
@@ -55,10 +52,7 @@ const fromFontSizeNumber = (editor: Editor, value: string): string => {
 const normalizeFontNames = (font: string) => {
   const fonts = font.split(/\s*,\s*/);
   return Arr.map(fonts, (font) => {
-    if (
-      font.indexOf(' ') !== -1 &&
-      !(Strings.startsWith(font, '"') || Strings.startsWith(font, `'`))
-    ) {
+    if (font.indexOf(' ') !== -1 && !(Strings.startsWith(font, '"') || Strings.startsWith(font, `'`))) {
       // TINY-3801: The font has spaces, so need to wrap with quotes as the browser sometimes automatically handles this, but not always
       return `'${font}'`;
     } else {
@@ -77,9 +71,7 @@ export const fontNameQuery = (editor: Editor) =>
   getCaretElement(editor).fold(
     () =>
       findFirstCaretElement(editor)
-        .map((caretElement) =>
-          FontInfo.getFontFamily(editor.getBody(), caretElement)
-        )
+        .map((caretElement) => FontInfo.getFontFamily(editor.getBody(), caretElement))
         .getOr(''),
     (caretElement) => FontInfo.getFontFamily(editor.getBody(), caretElement)
   );
@@ -95,9 +87,7 @@ export const fontSizeQuery = (editor: Editor) =>
   getCaretElement(editor).fold(
     () =>
       findFirstCaretElement(editor)
-        .map((caretElement) =>
-          FontInfo.getFontSize(editor.getBody(), caretElement)
-        )
+        .map((caretElement) => FontInfo.getFontSize(editor.getBody(), caretElement))
         .getOr(''),
     (caretElement) => FontInfo.getFontSize(editor.getBody(), caretElement)
   );

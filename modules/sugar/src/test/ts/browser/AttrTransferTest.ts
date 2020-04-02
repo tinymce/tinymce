@@ -30,13 +30,7 @@ UnitTest.test('AttrTransfer', function () {
     return r;
   };
 
-  const check = function (
-    expectedPresent,
-    expectedAbsent,
-    source,
-    destination,
-    attributes
-  ) {
+  const check = function (expectedPresent, expectedAbsent, source, destination, attributes) {
     Attr.transfer(source, destination, attributes);
     Arr.each(expectedAbsent, function (k) {
       if (Attr.has(destination, k)) {

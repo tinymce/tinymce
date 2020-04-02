@@ -11,29 +11,13 @@ interface Replacement {
   replace: () => UiSubstitutesAdt;
 }
 
-type ValueThunkFn<R> = <D extends CompositeSketchDetail>(
-  detail: D,
-  spec?: Record<string, any>,
-  partValidated?: Record<string, any>
-) => R;
-type SingleSubstitution<T> = (
-  required: boolean,
-  valueThunk: ValueThunkFn<AlloySpec>
-) => T;
-type MultipleSubstitution<T> = (
-  required: boolean,
-  valueThunk: ValueThunkFn<AlloySpec[]>
-) => T;
+type ValueThunkFn<R> = <D extends CompositeSketchDetail>(detail: D, spec?: Record<string, any>, partValidated?: Record<string, any>) => R;
+type SingleSubstitution<T> = (required: boolean, valueThunk: ValueThunkFn<AlloySpec>) => T;
+type MultipleSubstitution<T> = (required: boolean, valueThunk: ValueThunkFn<AlloySpec[]>) => T;
 
 export interface UiSubstitutesAdt {
-  fold: <T>(
-    single: SingleSubstitution<T>,
-    multiple: MultipleSubstitution<T>
-  ) => T;
-  match: <T>(branches: {
-    single: SingleSubstitution<T>;
-    multiple: MultipleSubstitution<T>;
-  }) => T;
+  fold: <T>(single: SingleSubstitution<T>, multiple: MultipleSubstitution<T>) => T;
+  match: <T>(branches: { single: SingleSubstitution<T>; multiple: MultipleSubstitution<T> }) => T;
   log: (label: string) => void;
 }
 
@@ -42,13 +26,9 @@ const _placeholder = 'placeholder';
 const adt: {
   single: SingleSubstitution<UiSubstitutesAdt>;
   multiple: MultipleSubstitution<UiSubstitutesAdt>;
-} = Adt.generate([
-  { single: ['required', 'valueThunk'] },
-  { multiple: ['required', 'valueThunks'] }
-]);
+} = Adt.generate([{ single: ['required', 'valueThunk'] }, { multiple: ['required', 'valueThunks'] }]);
 
-const isSubstituted = (spec: any): spec is ConfiguredPart =>
-  Obj.has(spec, 'uiType');
+const isSubstituted = (spec: any): spec is ConfiguredPart => Obj.has(spec, 'uiType');
 
 const subPlaceholder = <D extends CompositeSketchDetail>(
   owner: Option<string>,
@@ -102,13 +82,9 @@ const substitute = <D extends CompositeSketchDetail>(
 
   return base.fold(
     (req, valueThunk) => {
-      const value = isSubstituted(compSpec)
-        ? valueThunk(detail, compSpec.config, compSpec.validated)
-        : valueThunk(detail);
+      const value = isSubstituted(compSpec) ? valueThunk(detail, compSpec.config, compSpec.validated) : valueThunk(detail);
       const childSpecs = Obj.get(value as any, 'components').getOr([]);
-      const substituted = Arr.bind(childSpecs, (c) =>
-        substitute(owner, detail, c, placeholders)
-      );
+      const substituted = Arr.bind(childSpecs, (c) => substitute(owner, detail, c, placeholders));
       return [
         {
           ...value,
@@ -134,22 +110,16 @@ const substituteAll = <D extends CompositeSketchDetail>(
   detail: D,
   components: AlloySpec[],
   placeholders: Record<string, Replacement>
-): AlloySpec[] =>
-  Arr.bind(components, (c) => substitute(owner, detail, c, placeholders));
+): AlloySpec[] => Arr.bind(components, (c) => substitute(owner, detail, c, placeholders));
 
-const oneReplace = (
-  label: string,
-  replacements: UiSubstitutesAdt
-): Replacement => {
+const oneReplace = (label: string, replacements: UiSubstitutesAdt): Replacement => {
   let called = false;
 
   const used = () => called;
 
   const replace = () => {
     if (called) {
-      throw new Error(
-        'Trying to use the same placeholder more than once: ' + label
-      );
+      throw new Error('Trying to use the same placeholder more than once: ' + label);
     }
     called = true;
     return replacements;
@@ -195,10 +165,7 @@ const substitutePlaces = <D extends CompositeSketchDetail>(
   return outcome;
 };
 
-const singleReplace = <D extends CompositeSketchDetail>(
-  detail: D,
-  p: UiSubstitutesAdt
-) =>
+const singleReplace = <D extends CompositeSketchDetail>(detail: D, p: UiSubstitutesAdt) =>
   p.fold(
     (req, valueThunk) => [valueThunk(detail)],
     (req, valuesThunk) => valuesThunk(detail)
@@ -208,11 +175,4 @@ const single = adt.single;
 const multiple = adt.multiple;
 const placeholder = Fun.constant(_placeholder);
 
-export {
-  single,
-  multiple,
-  placeholder,
-  substituteAll,
-  substitutePlaces,
-  singleReplace
-};
+export { single, multiple, placeholder, substituteAll, substitutePlaces, singleReplace };

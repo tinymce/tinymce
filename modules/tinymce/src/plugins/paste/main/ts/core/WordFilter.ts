@@ -27,9 +27,7 @@ import { Unicode } from '@ephox/katamari';
  */
 function isWordContent(content) {
   return (
-    /<font face="Times New Roman"|class="?Mso|style="[^"]*\bmso-|style='[^'']*\bmso-|w:WordDocument/i.test(
-      content
-    ) ||
+    /<font face="Times New Roman"|class="?Mso|style="[^"]*\bmso-|style='[^'']*\bmso-|w:WordDocument/i.test(content) ||
     /class="OutlineElement/.test(content) ||
     /id="?docs\-internal\-guid\-/.test(content)
   );
@@ -300,10 +298,7 @@ function filterStyles(editor, validStyles, node, styleValue) {
     }
 
     // Output only valid styles
-    if (
-      Settings.getRetainStyleProps(editor) === 'all' ||
-      (validStyles && validStyles[name])
-    ) {
+    if (Settings.getRetainStyleProps(editor) === 'all' || (validStyles && validStyles[name])) {
       outputStyles[name] = value;
     }
   });
@@ -407,10 +402,7 @@ const filterWordContent = function (editor: Editor, content: string) {
 
     while (i--) {
       node = nodes[i];
-      node.attr(
-        'style',
-        filterStyles(editor, validStyles, node, node.attr('style'))
-      );
+      node.attr('style', filterStyles(editor, validStyles, node, node.attr('style')));
 
       // Remove pointess spans
       if (node.name === 'span' && node.parent && !node.attributes.length) {
@@ -507,9 +499,7 @@ const filterWordContent = function (editor: Editor, content: string) {
 };
 
 const preProcess = function (editor: Editor, content) {
-  return Settings.shouldUseDefaultFilters(editor)
-    ? filterWordContent(editor, content)
-    : content;
+  return Settings.shouldUseDefaultFilters(editor) ? filterWordContent(editor, content) : content;
 };
 
 export { preProcess, isWordContent };

@@ -7,10 +7,7 @@ import * as FocusApis from './FocusApis';
 import { FocusingConfig } from './FocusingTypes';
 
 // TODO: DomModification types
-const exhibit = (
-  base: DomDefinitionDetail,
-  focusConfig: FocusingConfig
-): any => {
+const exhibit = (base: DomDefinitionDetail, focusConfig: FocusingConfig): any => {
   const mod = focusConfig.ignore
     ? {}
     : {

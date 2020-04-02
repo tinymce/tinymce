@@ -1,18 +1,7 @@
-import {
-  Document,
-  Touch,
-  TouchEvent,
-  UIEvent,
-  window
-} from '@ephox/dom-globals';
+import { Document, Touch, TouchEvent, UIEvent, window } from '@ephox/dom-globals';
 import { Element, Location, Node, Traverse } from '@ephox/sugar';
 
-const point = (
-  type: string,
-  element: Element<any>,
-  x: number,
-  y: number
-): void => {
+const point = (type: string, element: Element<any>, x: number, y: number): void => {
   const touch = {
     identifier: Date.now(),
     target: element.dom(),
@@ -62,18 +51,12 @@ const point = (
 };
 
 const touch = (eventType: string) => (element: Element<any>): void => {
-  const position = Location.absolute(
-    Node.isText(element) ? Traverse.parent(element).getOrDie() : element
-  );
+  const position = Location.absolute(Node.isText(element) ? Traverse.parent(element).getOrDie() : element);
   point(eventType, element, position.left(), position.top());
 };
 
-const touchAt = (eventType: string) => (dx: number, dy: number) => (
-  element: Element<any>
-): void => {
-  const position = Location.absolute(
-    Node.isText(element) ? Traverse.parent(element).getOrDie() : element
-  );
+const touchAt = (eventType: string) => (dx: number, dy: number) => (element: Element<any>): void => {
+  const position = Location.absolute(Node.isText(element) ? Traverse.parent(element).getOrDie() : element);
   point(eventType, element, position.left() + dx, position.top() + dy);
 };
 
@@ -84,12 +67,4 @@ const touchendAt = touchAt('touchend');
 const touchmove = touch('touchmove');
 const touchmoveTo = touchAt('touchmove');
 
-export {
-  touchstart,
-  touchstartAt,
-  touchend,
-  touchendAt,
-  touchmove,
-  touchmoveTo,
-  point
-};
+export { touchstart, touchstartAt, touchend, touchendAt, touchmove, touchmoveTo, point };

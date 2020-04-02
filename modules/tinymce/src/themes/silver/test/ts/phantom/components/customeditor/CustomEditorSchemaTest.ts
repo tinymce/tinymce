@@ -6,11 +6,7 @@ import { Blob } from '@ephox/dom-globals';
 UnitTest.test('Custom Editor Schema Test', () => {
   const schema = Types.CustomEditor.customEditorSchema;
 
-  Assert.eq(
-    'Expect empty not not be valid',
-    true,
-    ValueSchema.asRaw('empty', schema, {}).isError()
-  );
+  Assert.eq('Expect empty not not be valid', true, ValueSchema.asRaw('empty', schema, {}).isError());
 
   const base = {
     type: 'customeditor',
@@ -18,11 +14,7 @@ UnitTest.test('Custom Editor Schema Test', () => {
     tag: 'textarea'
   };
 
-  Assert.eq(
-    'Expect missing scriptId + scriptUrl or init to not be valid',
-    true,
-    ValueSchema.asRaw('.', schema, base).isError()
-  );
+  Assert.eq('Expect missing scriptId + scriptUrl or init to not be valid', true, ValueSchema.asRaw('.', schema, base).isError());
 
   Assert.eq(
     'Expect missing scriptUrl to not be valid',

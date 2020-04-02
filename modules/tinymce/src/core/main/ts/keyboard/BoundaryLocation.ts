@@ -12,12 +12,7 @@ import * as InlineUtils from './InlineUtils';
 import * as LazyEvaluator from '../util/LazyEvaluator';
 import { getParentCaretContainer } from '../fmt/FormatContainer';
 
-const Location = Adt.generate([
-  { before: ['element'] },
-  { start: ['element'] },
-  { end: ['element'] },
-  { after: ['element'] }
-]);
+const Location = Adt.generate([{ before: ['element'] }, { start: ['element'] }, { end: ['element'] }, { after: ['element'] }]);
 
 const rescope = function (rootNode, node) {
   const parentBlock = CaretUtils.getParentBlock(node, rootNode);
@@ -27,16 +22,13 @@ const rescope = function (rootNode, node) {
 const before = function (isInlineTarget, rootNode, pos) {
   const nPos = InlineUtils.normalizeForwards(pos);
   const scope = rescope(rootNode, nPos.container());
-  return InlineUtils.findRootInline(isInlineTarget, scope, nPos).fold(
-    function () {
-      return CaretFinder.nextPosition(scope, nPos)
-        .bind(Fun.curry(InlineUtils.findRootInline, isInlineTarget, scope))
-        .map(function (inline) {
-          return Location.before(inline);
-        });
-    },
-    Option.none
-  );
+  return InlineUtils.findRootInline(isInlineTarget, scope, nPos).fold(function () {
+    return CaretFinder.nextPosition(scope, nPos)
+      .bind(Fun.curry(InlineUtils.findRootInline, isInlineTarget, scope))
+      .map(function (inline) {
+        return Location.before(inline);
+      });
+  }, Option.none);
 };
 
 const isNotInsideFormatCaretContainer = function (rootNode, elm) {
@@ -44,28 +36,20 @@ const isNotInsideFormatCaretContainer = function (rootNode, elm) {
 };
 
 const findInsideRootInline = function (isInlineTarget, rootNode, pos) {
-  return InlineUtils.findRootInline(isInlineTarget, rootNode, pos).filter(
-    Fun.curry(isNotInsideFormatCaretContainer, rootNode)
-  );
+  return InlineUtils.findRootInline(isInlineTarget, rootNode, pos).filter(Fun.curry(isNotInsideFormatCaretContainer, rootNode));
 };
 
 const start = function (isInlineTarget, rootNode, pos) {
   const nPos = InlineUtils.normalizeBackwards(pos);
-  return findInsideRootInline(isInlineTarget, rootNode, nPos).bind(function (
-    inline
-  ) {
+  return findInsideRootInline(isInlineTarget, rootNode, nPos).bind(function (inline) {
     const prevPos = CaretFinder.prevPosition(inline, nPos);
-    return prevPos.isNone()
-      ? Option.some(Location.start(inline))
-      : Option.none();
+    return prevPos.isNone() ? Option.some(Location.start(inline)) : Option.none();
   });
 };
 
 const end = function (isInlineTarget, rootNode, pos) {
   const nPos = InlineUtils.normalizeForwards(pos);
-  return findInsideRootInline(isInlineTarget, rootNode, nPos).bind(function (
-    inline
-  ) {
+  return findInsideRootInline(isInlineTarget, rootNode, nPos).bind(function (inline) {
     const nextPos = CaretFinder.nextPosition(inline, nPos);
     return nextPos.isNone() ? Option.some(Location.end(inline)) : Option.none();
   });
@@ -74,16 +58,13 @@ const end = function (isInlineTarget, rootNode, pos) {
 const after = function (isInlineTarget, rootNode, pos) {
   const nPos = InlineUtils.normalizeBackwards(pos);
   const scope = rescope(rootNode, nPos.container());
-  return InlineUtils.findRootInline(isInlineTarget, scope, nPos).fold(
-    function () {
-      return CaretFinder.prevPosition(scope, nPos)
-        .bind(Fun.curry(InlineUtils.findRootInline, isInlineTarget, scope))
-        .map(function (inline) {
-          return Location.after(inline);
-        });
-    },
-    Option.none
-  );
+  return InlineUtils.findRootInline(isInlineTarget, scope, nPos).fold(function () {
+    return CaretFinder.prevPosition(scope, nPos)
+      .bind(Fun.curry(InlineUtils.findRootInline, isInlineTarget, scope))
+      .map(function (inline) {
+        return Location.after(inline);
+      });
+  }, Option.none);
 };
 
 const isValidLocation = function (location) {
@@ -91,10 +72,7 @@ const isValidLocation = function (location) {
 };
 
 const readLocation = function (isInlineTarget, rootNode, pos) {
-  const location = LazyEvaluator.evaluateUntil(
-    [before, start, end, after],
-    [isInlineTarget, rootNode, pos]
-  );
+  const location = LazyEvaluator.evaluateUntil([before, start, end, after], [isInlineTarget, rootNode, pos]);
 
   return location.filter(isValidLocation);
 };
@@ -136,28 +114,15 @@ const inside = function (location) {
 };
 
 const isEq = function (location1, location2) {
-  return (
-    getName(location1) === getName(location2) &&
-    getElement(location1) === getElement(location2)
-  );
+  return getName(location1) === getName(location2) && getElement(location1) === getElement(location2);
 };
 
-const betweenInlines = function (
-  forward,
-  isInlineTarget,
-  rootNode,
-  from,
-  to,
-  location
-) {
+const betweenInlines = function (forward, isInlineTarget, rootNode, from, to, location) {
   return Options.lift2(
     InlineUtils.findRootInline(isInlineTarget, rootNode, from),
     InlineUtils.findRootInline(isInlineTarget, rootNode, to),
     function (fromInline, toInline) {
-      if (
-        fromInline !== toInline &&
-        InlineUtils.hasSameParentBlock(rootNode, fromInline, toInline)
-      ) {
+      if (fromInline !== toInline && InlineUtils.hasSameParentBlock(rootNode, fromInline, toInline)) {
         // Force after since some browsers normalize and lean left into the closest inline
         return Location.after(forward ? fromInline : toInline);
       } else {
@@ -173,17 +138,9 @@ const skipNoMovement = function (fromLocation, toLocation) {
   });
 };
 
-const findLocationTraverse = function (
-  forward,
-  isInlineTarget,
-  rootNode,
-  fromLocation,
-  pos
-) {
+const findLocationTraverse = function (forward, isInlineTarget, rootNode, fromLocation, pos) {
   const from = InlineUtils.normalizePosition(forward, pos);
-  const to = CaretFinder.fromPosition(forward, rootNode, from).map(
-    Fun.curry(InlineUtils.normalizePosition, forward)
-  );
+  const to = CaretFinder.fromPosition(forward, rootNode, from).map(Fun.curry(InlineUtils.normalizePosition, forward));
 
   const location = to.fold(
     function () {
@@ -191,9 +148,7 @@ const findLocationTraverse = function (
     },
     function (to) {
       return readLocation(isInlineTarget, rootNode, to)
-        .map(
-          Fun.curry(betweenInlines, forward, isInlineTarget, rootNode, from, to)
-        )
+        .map(Fun.curry(betweenInlines, forward, isInlineTarget, rootNode, from, to))
         .filter(Fun.curry(skipNoMovement, fromLocation));
     }
   );
@@ -226,25 +181,11 @@ const findLocation = function (forward, isInlineTarget, rootNode, pos) {
   return readLocation(isInlineTarget, rootNode, from)
     .bind(Fun.curry(findLocationSimple, forward))
     .orThunk(function () {
-      return findLocationTraverse(
-        forward,
-        isInlineTarget,
-        rootNode,
-        fromLocation,
-        pos
-      );
+      return findLocationTraverse(forward, isInlineTarget, rootNode, fromLocation, pos);
     });
 };
 
 const prevLocation = Fun.curry(findLocation, false);
 const nextLocation = Fun.curry(findLocation, true);
 
-export {
-  readLocation,
-  findLocation,
-  prevLocation,
-  nextLocation,
-  getElement,
-  outside,
-  inside
-};
+export { readLocation, findLocation, prevLocation, nextLocation, getElement, outside, inside };

@@ -19,9 +19,7 @@ const composite = (rawDepth, detail, construct) => {
 
   const genComponent = (choice, depth) => {
     const newDepth = choice.useDepth === true ? depth - 1 : depth;
-    return Jsc.generator.nearray(
-      construct(choice.component, newDepth).generator
-    );
+    return Jsc.generator.nearray(construct(choice.component, newDepth).generator);
   };
 
   const repeat = WeightedChoice.generator(components).flatMap((choice) =>
@@ -31,9 +29,7 @@ const composite = (rawDepth, detail, construct) => {
     )
   );
 
-  return depth === 0
-    ? Jsc.constant([]).generator
-    : Jsc.generator.nearray(repeat).map(Arr.flatten);
+  return depth === 0 ? Jsc.constant([]).generator : Jsc.generator.nearray(repeat).map(Arr.flatten);
 };
 
 const structure = (rawDepth, detail, construct) => {
@@ -42,10 +38,7 @@ const structure = (rawDepth, detail, construct) => {
     // TODO: Allow the order to be mixed up?
     const children = Arr.foldl(
       components,
-      (b, component) =>
-        random <= component.chance
-          ? b.concat([construct(component.component, rawDepth)])
-          : b,
+      (b, component) => (random <= component.chance ? b.concat([construct(component.component, rawDepth)]) : b),
       []
     );
     return Jsc.tuple(children).generator;

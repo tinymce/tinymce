@@ -11,11 +11,7 @@ UnitTest.test('Seeker Test', function () {
   const universe = TestUniverse(
     Gene('root', 'root', [
       Gene('a', 'node', [
-        Gene('aa', 'node', [
-          TextGene('aaa', 'aaa'),
-          TextGene('aab', 'aab'),
-          TextGene('aac', 'aac')
-        ]),
+        Gene('aa', 'node', [TextGene('aaa', 'aaa'), TextGene('aab', 'aab'), TextGene('aac', 'aac')]),
         Gene('ab', 'node', [TextGene('aba', 'aba'), TextGene('abb', 'abb')]),
         Gene('b', 'node', [TextGene('ba', 'ba')]),
         Gene('c', 'node', [

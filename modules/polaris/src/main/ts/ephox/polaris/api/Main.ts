@@ -9,16 +9,4 @@ import { Splitting } from './Splitting';
 import * as Strings from './Strings';
 import * as Words from './Words';
 
-export {
-  Arrays,
-  Pattern,
-  PositionArray,
-  PRange,
-  PRegExp,
-  Regexes,
-  Search,
-  Splitting,
-  Strings,
-  Words,
-  WordOptions
-};
+export { Arrays, Pattern, PositionArray, PRange, PRegExp, Regexes, Search, Splitting, Strings, Words, WordOptions };

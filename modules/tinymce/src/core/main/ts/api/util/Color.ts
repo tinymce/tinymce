@@ -220,11 +220,7 @@ const Color = function (value?): Color {
         hsvToRgb(value.h, value.s, value.v);
       }
     } else {
-      if (
-        (matches = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)[^\)]*\)/gi.exec(
-          value
-        ))
-      ) {
+      if ((matches = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)[^\)]*\)/gi.exec(value))) {
         r = parseInt(matches[1], 10);
         g = parseInt(matches[2], 10);
         b = parseInt(matches[3], 10);

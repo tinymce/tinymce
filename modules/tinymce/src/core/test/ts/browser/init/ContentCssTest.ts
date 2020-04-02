@@ -7,11 +7,7 @@ UnitTest.test('browser.tinymce.core.init.ContentCssTest', () => {
   const baseUrl = EditorManager.documentBaseURL.replace(/\/$/, '');
   const skinsBaseUrl = EditorManager.baseURL + '/skins/content';
 
-  const testContentCss = (
-    label: string,
-    expectedContentCss: string[],
-    inputContentCss: string[] | string | boolean
-  ) => {
+  const testContentCss = (label: string, expectedContentCss: string[], inputContentCss: string[] | string | boolean) => {
     const editor = new Editor(
       'id',
       {
@@ -27,21 +23,9 @@ UnitTest.test('browser.tinymce.core.init.ContentCssTest', () => {
 
   testContentCss('Expected empty array on empty input', [], []);
   testContentCss('Expected empty array on boolean false value', [], false);
-  testContentCss(
-    'Expected default content css on undefined value',
-    [`${skinsBaseUrl}/default/content.css`],
-    undefined
-  );
-  testContentCss(
-    'Expected array with absolute url from .css file name',
-    [`${baseUrl}/test.css`],
-    'test.css'
-  );
-  testContentCss(
-    'Expected array with absolute url from relative string',
-    [`${baseUrl}/content/test.css`],
-    '/content/test.css'
-  );
+  testContentCss('Expected default content css on undefined value', [`${skinsBaseUrl}/default/content.css`], undefined);
+  testContentCss('Expected array with absolute url from .css file name', [`${baseUrl}/test.css`], 'test.css');
+  testContentCss('Expected array with absolute url from relative string', [`${baseUrl}/content/test.css`], '/content/test.css');
   testContentCss(
     'Expected array with absolute url from array with relative string',
     [`${baseUrl}/content/test.css`],
@@ -57,16 +41,8 @@ UnitTest.test('browser.tinymce.core.init.ContentCssTest', () => {
     ['http://localhost/a/b/test.css'],
     'http://localhost/a/b/test.css'
   );
-  testContentCss(
-    'Expected array with absolute url from string with skin name',
-    [`${skinsBaseUrl}/document/content.css`],
-    'document'
-  );
-  testContentCss(
-    'Expected array with absolute url from array with skin name',
-    [`${skinsBaseUrl}/document/content.css`],
-    ['document']
-  );
+  testContentCss('Expected array with absolute url from string with skin name', [`${skinsBaseUrl}/document/content.css`], 'document');
+  testContentCss('Expected array with absolute url from array with skin name', [`${skinsBaseUrl}/document/content.css`], ['document']);
   testContentCss(
     'Expected array with absolute url from string with skin name with dash',
     [`${skinsBaseUrl}/business-letter/content.css`],
@@ -79,15 +55,7 @@ UnitTest.test('browser.tinymce.core.init.ContentCssTest', () => {
     'a.css,b.css'
   );
 
-  const inlineEditor = new Editor(
-    'id',
-    { content_css: 'document', inline: true },
-    EditorManager
-  );
+  const inlineEditor = new Editor('id', { content_css: 'document', inline: true }, EditorManager);
   appendContentCssFromSettings(inlineEditor);
-  Assert.eq(
-    'Content skins should not load in inline mode',
-    [`${baseUrl}/document`],
-    inlineEditor.contentCSS
-  );
+  Assert.eq('Content skins should not load in inline mode', [`${baseUrl}/document`], inlineEditor.contentCSS);
 });

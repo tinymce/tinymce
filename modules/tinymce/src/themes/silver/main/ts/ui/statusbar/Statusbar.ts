@@ -15,10 +15,7 @@ import { resize, ResizeTypes } from '../sizing/Resize';
 import * as ElementPath from './ElementPath';
 import { renderWordCount } from './WordCount';
 
-const renderStatusbar = (
-  editor: Editor,
-  providersBackstage: UiFactoryBackstageProviders
-): SimpleSpec => {
+const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const renderResizeHandlerIcon = (resizeType: ResizeTypes): SimpleSpec => ({
     dom: {
       tag: 'div',
@@ -70,9 +67,7 @@ const renderStatusbar = (
     const components: SimpleSpec[] = [];
 
     if (editor.getParam('elementpath', true, 'boolean')) {
-      components.push(
-        ElementPath.renderElementPath(editor, {}, providersBackstage)
-      );
+      components.push(ElementPath.renderElementPath(editor, {}, providersBackstage));
     }
 
     if (Strings.contains(editor.settings.plugins, 'wordcount')) {
