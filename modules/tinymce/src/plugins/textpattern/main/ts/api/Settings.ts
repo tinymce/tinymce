@@ -13,8 +13,10 @@ import { createPatternSet, normalizePattern } from './Pattern';
 
 const error = function (...args: Parameters<Console['error']>) {
   const console: Console = Global.console;
-  if (console) { // Skip test env
-    if (console.error) { // tslint:disable-line:no-console
+  if (console) {
+    // Skip test env
+    if (console.error) {
+      // tslint:disable-line:no-console
       console.error.apply(console, args); // tslint:disable-line:no-console
     } else {
       console.log.apply(console, args); // tslint:disable-line:no-console
@@ -37,12 +39,14 @@ const defaultPatterns = [
 ];
 
 const getPatternSet = (editorSettings): PatternSet => {
-  const patterns = Obj.get(editorSettings, 'textpattern_patterns').getOr(defaultPatterns);
+  const patterns = Obj.get(editorSettings, 'textpattern_patterns').getOr(
+    defaultPatterns
+  );
   if (!Type.isArray(patterns)) {
     error('The setting textpattern_patterns should be an array');
     return {
       inlinePatterns: [],
-      blockPatterns: [],
+      blockPatterns: []
     };
   }
   const normalized = Results.partition(Arr.map(patterns, normalizePattern));
@@ -61,7 +65,4 @@ const getForcedRootBlock = (editor: Editor): string => {
   }
 };
 
-export {
-  getForcedRootBlock,
-  getPatternSet
-};
+export { getForcedRootBlock, getPatternSet };

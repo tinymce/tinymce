@@ -9,7 +9,14 @@ import { KeyboardEvent } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { CellNavigation, TableLookup } from '@ephox/snooker';
 import {
-  Compare, CursorPosition, Element, Node, Selection, SelectorFilter, SelectorFind, WindowSelection
+  Compare,
+  CursorPosition,
+  Element,
+  Node,
+  Selection,
+  SelectorFilter,
+  SelectorFind,
+  WindowSelection
 } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -41,25 +48,36 @@ const getNewRowCursorPosition = function (editor: Editor, table) {
   });
 };
 
-const go: any = function (editor: Editor, isRoot, cell, actions, _lazyWire) { // TODO: forwars/backward is calling without actions
-  return cell.fold(Option.none, Option.none, function (current, next) {
-    return CursorPosition.first(next).map(function (cell) {
-      return getCellFirstCursorPosition(editor, cell);
-    });
-  }, function (current) {
-    return TableLookup.table(current, isRoot).bind(function (table) {
-      const targets = TableTargets.noMenu(current);
-      editor.undoManager.transact(function () {
-        actions.insertRowsAfter(table, targets);
+const go: any = function (editor: Editor, isRoot, cell, actions, _lazyWire) {
+  // TODO: forwars/backward is calling without actions
+  return cell.fold(
+    Option.none,
+    Option.none,
+    function (current, next) {
+      return CursorPosition.first(next).map(function (cell) {
+        return getCellFirstCursorPosition(editor, cell);
       });
-      return getNewRowCursorPosition(editor, table);
-    });
-  });
+    },
+    function (current) {
+      return TableLookup.table(current, isRoot).bind(function (table) {
+        const targets = TableTargets.noMenu(current);
+        editor.undoManager.transact(function () {
+          actions.insertRowsAfter(table, targets);
+        });
+        return getNewRowCursorPosition(editor, table);
+      });
+    }
+  );
 };
 
-const rootElements = [ 'table', 'li', 'dl' ];
+const rootElements = ['table', 'li', 'dl'];
 
-const handle = function (event: KeyboardEvent, editor: Editor, actions: TableActions, lazyWire) {
+const handle = function (
+  event: KeyboardEvent,
+  editor: Editor,
+  actions: TableActions,
+  lazyWire
+) {
   if (event.keyCode === VK.TAB) {
     const body = Util.getBody(editor);
     const isRoot = function (element) {
@@ -82,6 +100,4 @@ const handle = function (event: KeyboardEvent, editor: Editor, actions: TableAct
   }
 };
 
-export {
-  handle
-};
+export { handle };

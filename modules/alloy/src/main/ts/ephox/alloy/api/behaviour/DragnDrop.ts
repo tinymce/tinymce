@@ -19,6 +19,4 @@ const DragnDrop: DragnDropBehaviour = Behaviour.createModes({
   }
 });
 
-export {
-  DragnDrop
-};
+export { DragnDrop };

@@ -1,5 +1,14 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Class, Element, Html, Insert, InsertAll, Remove, SelectorFind, Traverse } from '@ephox/sugar';
+import {
+  Class,
+  Element,
+  Html,
+  Insert,
+  InsertAll,
+  Remove,
+  SelectorFind,
+  Traverse
+} from '@ephox/sugar';
 import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
 
 UnitTest.test('DomWrappingTest', function () {
@@ -23,7 +32,15 @@ UnitTest.test('DomWrappingTest', function () {
     Remove.remove(container);
   };
 
-  const checker = function (expected: string, p1: number[], offset1: number, p2: number[], offset2: number, input: Element[], initial: string) {
+  const checker = function (
+    expected: string,
+    p1: number[],
+    offset1: number,
+    p2: number[],
+    offset2: number,
+    input: Element[],
+    initial: string
+  ) {
     check(input, function (container: Element) {
       assert.eq(initial, Html.get(container));
       const first = c(container, p1);
@@ -45,50 +62,45 @@ UnitTest.test('DomWrappingTest', function () {
 
   checker(
     '<span><span class="me">this is</span><span><span class="me"> ath</span>ens!</span></span>',
-    [ 0, 0 ], 0,
-    [ 0, 1, 0 ], 4,
-    [
-      s('span', [
-        t('this is'),
-        s('span', [
-          t(' athens!')
-        ])
-      ])
-    ],
+    [0, 0],
+    0,
+    [0, 1, 0],
+    4,
+    [s('span', [t('this is'), s('span', [t(' athens!')])])],
     '<span>this is<span> athens!</span></span>'
   );
 
   checker(
     '<span><span class="me">this is</span><br><span><span class="me"> ath</span>ens!</span></span>',
-    [ 0, 0 ], 0,
-    [ 0, 2, 0 ], 4,
-    [ s('span', [
-      t('this is'),
-      Element.fromTag('br'),
+    [0, 0],
+    0,
+    [0, 2, 0],
+    4,
+    [
       s('span', [
-        t(' athens!')
+        t('this is'),
+        Element.fromTag('br'),
+        s('span', [t(' athens!')])
       ])
-    ]) ],
+    ],
     '<span>this is<br><span> athens!</span></span>'
   );
 
   checker(
-    '<p><span>th<span class="me">is is</span><br><span><span class="me"> athens!</span></span></span></p><p><span class=\"me\">Mo</span>re</p>',
-    [ 0, 0, 0 ], 2,
-    [ 1, 0 ], 2,
+    '<p><span>th<span class="me">is is</span><br><span><span class="me"> athens!</span></span></span></p><p><span class="me">Mo</span>re</p>',
+    [0, 0, 0],
+    2,
+    [1, 0],
+    2,
     [
       s('p', [
         s('span', [
           t('this is'),
           Element.fromTag('br'),
-          s('span', [
-            t(' athens!')
-          ])
+          s('span', [t(' athens!')])
         ])
       ]),
-      s('p', [
-        t('More')
-      ])
+      s('p', [t('More')])
     ],
     '<p><span>this is<br><span> athens!</span></span></p><p>More</p>'
   );

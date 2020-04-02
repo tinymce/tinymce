@@ -28,25 +28,29 @@ const insertCodeSample = (editor: Editor, language: string, code: string) => {
 
     code = DOMUtils.DOM.encode(code);
 
-    return node.fold(() => {
-      editor.insertContent('<pre id="__new" class="language-' + language + '">' + code + '</pre>');
-      editor.selection.select(editor.$('#__new').removeAttr('id')[0]);
-    }, (n) => {
-      editor.dom.setAttrib(n, 'class', 'language-' + language);
-      n.innerHTML = code;
-      Prism.get(editor).highlightElement(n);
-      editor.selection.select(n);
-    });
+    return node.fold(
+      () => {
+        editor.insertContent(
+          '<pre id="__new" class="language-' + language + '">' + code + '</pre>'
+        );
+        editor.selection.select(editor.$('#__new').removeAttr('id')[0]);
+      },
+      (n) => {
+        editor.dom.setAttrib(n, 'class', 'language-' + language);
+        n.innerHTML = code;
+        Prism.get(editor).highlightElement(n);
+        editor.selection.select(n);
+      }
+    );
   });
 };
 
 const getCurrentCode = (editor: Editor): string => {
   const node = getSelectedCodeSample(editor);
-  return node.fold(() => '', (n) => n.textContent);
+  return node.fold(
+    () => '',
+    (n) => n.textContent
+  );
 };
 
-export {
-  getSelectedCodeSample,
-  insertCodeSample,
-  getCurrentCode
-};
+export { getSelectedCodeSample, insertCodeSample, getCurrentCode };

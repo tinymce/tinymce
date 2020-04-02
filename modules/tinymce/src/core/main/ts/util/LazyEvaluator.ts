@@ -18,6 +18,4 @@ const evaluateUntil = function (fns, args) {
   return Option.none();
 };
 
-export {
-  evaluateUntil
-};
+export { evaluateUntil };

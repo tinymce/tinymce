@@ -5,7 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, GuiFactory, InlineView, Keying, NativeEvents, } from '@ephox/alloy';
+import {
+  AddEventsBehaviour,
+  AlloyComponent,
+  AlloyEvents,
+  AlloySpec,
+  AlloyTriggers,
+  Behaviour,
+  CustomEvent,
+  GuiFactory,
+  InlineView,
+  Keying,
+  NativeEvents
+} from '@ephox/alloy';
 import { Arr, Cell, Id, Option, Result } from '@ephox/katamari';
 import { Class, Css, Element, EventArgs, Focus, Width } from '@ephox/sugar';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -17,7 +29,7 @@ export interface ForwardSlideEvent extends CustomEvent {
 
 const backSlideEvent = Id.generate('backward-slide');
 // tslint:disable-next-line:no-empty-interface
-export interface BackwardSlideEvent extends CustomEvent { }
+export interface BackwardSlideEvent extends CustomEvent {}
 
 const changeSlideEvent = Id.generate('change-slide-event');
 export interface ChangeSlideEvent extends CustomEvent {
@@ -27,20 +39,23 @@ export interface ChangeSlideEvent extends CustomEvent {
 
 const resizingClass = 'tox-pop--resizing';
 
-const renderContextToolbar = (spec: { onEscape: () => Option<boolean>; sink: AlloyComponent }) => {
-  const stack = Cell([ ]);
+const renderContextToolbar = (spec: {
+  onEscape: () => Option<boolean>;
+  sink: AlloyComponent;
+}) => {
+  const stack = Cell([]);
 
   return InlineView.sketch({
     dom: {
       tag: 'div',
-      classes: [ 'tox-pop' ]
+      classes: ['tox-pop']
     },
     fireDismissalEventInstead: {
       event: 'doNotDismissYet'
     },
 
     onShow: (comp) => {
-      stack.set([ ]);
+      stack.set([]);
       InlineView.getContent(comp).each((c) => {
         Css.remove(c.element(), 'visibility');
       });
@@ -50,10 +65,13 @@ const renderContextToolbar = (spec: { onEscape: () => Option<boolean>; sink: All
 
     inlineBehaviours: Behaviour.derive([
       AddEventsBehaviour.config('context-toolbar-events', [
-        AlloyEvents.runOnSource<EventArgs>(NativeEvents.transitionend(), (comp, _se) => {
-          Class.remove(comp.element(), resizingClass);
-          Css.remove(comp.element(), 'width');
-        }),
+        AlloyEvents.runOnSource<EventArgs>(
+          NativeEvents.transitionend(),
+          (comp, _se) => {
+            Class.remove(comp.element(), resizingClass);
+            Css.remove(comp.element(), 'width');
+          }
+        ),
 
         AlloyEvents.run<ChangeSlideEvent>(changeSlideEvent, (comp, se) => {
           // If it was partially through a slide, clear that and measure afresh
@@ -65,13 +83,16 @@ const renderContextToolbar = (spec: { onEscape: () => Option<boolean>; sink: All
           const newWidth = Width.get(comp.element());
           Css.set(comp.element(), 'width', currentWidth + 'px');
           InlineView.getContent(comp).each((newContents) => {
-            se.event().focus().bind((f) => {
-              Focus.focus(f);
-              return Focus.search(comp.element());
-            }).orThunk(() => {
-              Keying.focusIn(newContents);
-              return Focus.active();
-            });
+            se.event()
+              .focus()
+              .bind((f) => {
+                Focus.focus(f);
+                return Focus.search(comp.element());
+              })
+              .orThunk(() => {
+                Keying.focusIn(newContents);
+                return Focus.active();
+              });
           });
           Delay.setTimeout(() => {
             Css.set(comp.element(), 'width', newWidth + 'px');
@@ -80,13 +101,15 @@ const renderContextToolbar = (spec: { onEscape: () => Option<boolean>; sink: All
 
         AlloyEvents.run<ForwardSlideEvent>(forwardSlideEvent, (comp, se) => {
           InlineView.getContent(comp).each((oldContents) => {
-            stack.set(stack.get().concat([
-              {
-                bar: oldContents,
-                // TODO: Not working
-                focus: Focus.active()
-              }
-            ]));
+            stack.set(
+              stack.get().concat([
+                {
+                  bar: oldContents,
+                  // TODO: Not working
+                  focus: Focus.active()
+                }
+              ])
+            );
           });
           AlloyTriggers.emitWith(comp, changeSlideEvent, {
             contents: se.event().forwardContents(),
@@ -104,29 +127,24 @@ const renderContextToolbar = (spec: { onEscape: () => Option<boolean>; sink: All
               focus: last.focus
             });
           });
-        }),
-
+        })
       ]),
       Keying.config({
         mode: 'special',
-        onEscape: (comp) => Arr.last(stack.get()).fold(
-          () =>
-          // Escape just focuses the content. It no longer closes the toolbar.
-            spec.onEscape(),
-          (_) => {
-            AlloyTriggers.emit(comp, backSlideEvent);
-            return Option.some(true);
-          }
-        )
+        onEscape: (comp) =>
+          Arr.last(stack.get()).fold(
+            () =>
+              // Escape just focuses the content. It no longer closes the toolbar.
+              spec.onEscape(),
+            (_) => {
+              AlloyTriggers.emit(comp, backSlideEvent);
+              return Option.some(true);
+            }
+          )
       })
     ]),
     lazySink: () => Result.value(spec.sink)
   });
-
 };
 
-export {
-  renderContextToolbar,
-  forwardSlideEvent,
-  backSlideEvent
-};
+export { renderContextToolbar, forwardSlideEvent, backSlideEvent };

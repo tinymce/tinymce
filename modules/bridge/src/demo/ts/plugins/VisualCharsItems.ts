@@ -1,7 +1,7 @@
 import { getDemoRegistry } from './../buttons/DemoRegistry';
 
 const editor = {
-  on: (_s, _f) => { },
+  on: (_s, _f) => {},
   isDirty: () => true
 };
 
@@ -13,11 +13,10 @@ export const registerVisualCharsItems = () => {
       editor.on('VisualChars', (e) => {
         buttonApi.setActive(e);
       });
-      return () => { };
+      return () => {};
     },
     onAction: (_buttonApi) => {
       // toggles visual chars
-
     }
   });
 };

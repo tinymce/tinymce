@@ -7,7 +7,17 @@
 
 import { Document, Range } from '@ephox/dom-globals';
 import { Arr, Cell, Id, Option, Unicode } from '@ephox/katamari';
-import { Attr, Class, Classes, Element, Html, Insert, Node, Replication, Traverse } from '@ephox/sugar';
+import {
+  Attr,
+  Class,
+  Classes,
+  Element,
+  Html,
+  Insert,
+  Node,
+  Replication,
+  Traverse
+} from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as GetBookmark from '../bookmark/GetBookmark';
 import * as ExpandRange from '../fmt/ExpandRange';
@@ -23,7 +33,7 @@ export type Decorator = (
   uid: string,
   data: DecoratorData
 ) => {
-  attributes?: { };
+  attributes?: {};
   classes?: string[];
 };
 
@@ -34,24 +44,40 @@ const applyWordGrab = (editor: Editor, rng: Range): void => {
   editor.selection.setRng(rng);
 };
 
-const makeAnnotation = (eDoc: Document, { uid = Id.generate('mce-annotation'), ...data }, annotationName: string, decorate: Decorator): Element => {
+const makeAnnotation = (
+  eDoc: Document,
+  { uid = Id.generate('mce-annotation'), ...data },
+  annotationName: string,
+  decorate: Decorator
+): Element => {
   const master = Element.fromTag('span', eDoc);
   Class.add(master, Markings.annotation());
   Attr.set(master, `${Markings.dataAnnotationId()}`, uid);
   Attr.set(master, `${Markings.dataAnnotation()}`, annotationName);
 
-  const { attributes = { }, classes = [ ] } = decorate(uid, data);
+  const { attributes = {}, classes = [] } = decorate(uid, data);
   Attr.setAll(master, attributes);
   Classes.add(master, classes);
   return master;
 };
 
-const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: Decorator, data): any[] => {
+const annotate = (
+  editor: Editor,
+  rng: Range,
+  annotationName: string,
+  decorate: Decorator,
+  data
+): any[] => {
   // Setup all the wrappers that are going to be used.
-  const newWrappers = [ ];
+  const newWrappers = [];
 
   // Setup the spans for the comments
-  const master = makeAnnotation(editor.getDoc(), data, annotationName, decorate);
+  const master = makeAnnotation(
+    editor.getDoc(),
+    data,
+    annotationName,
+    decorate
+  );
 
   // Set the current wrapping element
   const wrapper = Cell(Option.none<Element<any>>());
@@ -115,7 +141,12 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
   return newWrappers;
 };
 
-const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorSettings, data: { }): void => {
+const annotateWithBookmark = (
+  editor: Editor,
+  name: string,
+  settings: AnnotatorSettings,
+  data: {}
+): void => {
   editor.undoManager.transact(() => {
     const initialRng = editor.selection.getRng();
     if (initialRng.collapsed) {
@@ -124,8 +155,13 @@ const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorS
 
     // Even after applying word grab, we could not find a selection. Therefore,
     // just make a wrapper and insert it at the current cursor
-    if (editor.selection.getRng().collapsed)  {
-      const wrapper = makeAnnotation(editor.getDoc(), data, name, settings.decorate);
+    if (editor.selection.getRng().collapsed) {
+      const wrapper = makeAnnotation(
+        editor.getDoc(),
+        data,
+        name,
+        settings.decorate
+      );
       // Put something visible in the marker
       Html.set(wrapper, Unicode.nbsp);
       editor.selection.getRng().insertNode(wrapper.dom());
@@ -134,7 +170,10 @@ const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorS
       // The bookmark is responsible for splitting the nodes beforehand at the selection points
       // The "false" here means a zero width cursor is NOT put in the bookmark. It seems to be required
       // to stop an empty paragraph splitting into two paragraphs. Probably a better way exists.
-      const bookmark = GetBookmark.getPersistentBookmark(editor.selection, false);
+      const bookmark = GetBookmark.getPersistentBookmark(
+        editor.selection,
+        false
+      );
       const rng = editor.selection.getRng();
       annotate(editor, rng, name, settings.decorate, data);
       editor.selection.moveToBookmark(bookmark);
@@ -142,6 +181,4 @@ const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorS
   });
 };
 
-export {
-  annotateWithBookmark
-};
+export { annotateWithBookmark };

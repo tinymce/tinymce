@@ -12,7 +12,9 @@ export type DeviceType = DeviceTypeCore;
 
 const mediaMatch = (query: string) => window.matchMedia(query).matches;
 
-const platform = Cell<PlatformDetection>(PlatformDetection.detect(navigator.userAgent, mediaMatch));
+const platform = Cell<PlatformDetection>(
+  PlatformDetection.detect(navigator.userAgent, mediaMatch)
+);
 
 export const detect = (): PlatformDetection => platform.get();
 

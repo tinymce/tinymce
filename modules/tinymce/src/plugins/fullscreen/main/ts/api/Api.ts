@@ -13,6 +13,4 @@ const get = function (fullscreenState) {
   };
 };
 
-export {
-  get
-};
+export { get };

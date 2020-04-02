@@ -60,7 +60,7 @@ export default {
                     value: 'left'
                   }
                 ]
-              },
+              }
             ]
           }
         ]
@@ -91,7 +91,7 @@ export default {
             label: 'Background color'
           }
         ]
-      },
+      }
     ]
   },
   buttons: [

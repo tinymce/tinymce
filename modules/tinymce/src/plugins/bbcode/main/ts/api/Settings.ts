@@ -10,6 +10,4 @@ const getDialect = function (editor) {
   return editor.getParam('bbcode_dialect', 'punbb').toLowerCase();
 };
 
-export {
-  getDialect
-};
+export { getDialect };

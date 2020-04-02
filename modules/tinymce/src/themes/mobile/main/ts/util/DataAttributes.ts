@@ -13,6 +13,4 @@ const safeParse = (element: Element<DomElement>, attribute: string): number => {
   return isNaN(parsed) ? 0 : parsed;
 };
 
-export {
-  safeParse
-};
+export { safeParse };

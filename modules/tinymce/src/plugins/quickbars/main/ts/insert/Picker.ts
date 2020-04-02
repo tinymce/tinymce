@@ -11,43 +11,42 @@ import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
 import Promise from 'tinymce/core/api/util/Promise';
 
-const pickFile = (editor: Editor) => new Promise((resolve: (files: File[]) => void) => {
-  const fileInput: HTMLInputElement = document.createElement('input');
-  fileInput.type = 'file';
-  fileInput.accept = 'image/*';
-  fileInput.style.position = 'fixed';
-  fileInput.style.left = '0';
-  fileInput.style.top = '0';
-  fileInput.style.opacity = '0.001';
-  document.body.appendChild(fileInput);
+const pickFile = (editor: Editor) =>
+  new Promise((resolve: (files: File[]) => void) => {
+    const fileInput: HTMLInputElement = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.style.position = 'fixed';
+    fileInput.style.left = '0';
+    fileInput.style.top = '0';
+    fileInput.style.opacity = '0.001';
+    document.body.appendChild(fileInput);
 
-  const changeHandler = (e) => {
-    resolve(Array.prototype.slice.call((e.target).files));
-  };
-
-  fileInput.addEventListener('change', changeHandler);
-
-  const cancelHandler = (e) => {
-    const cleanup = () => {
-      resolve([]);
-      fileInput.parentNode.removeChild(fileInput);
+    const changeHandler = (e) => {
+      resolve(Array.prototype.slice.call(e.target.files));
     };
 
-    // Android will fire focusin before the input change event
-    // so we need to do a slight delay to get outside the event loop
-    if (Env.os.isAndroid() && e.type !== 'remove') {
-      Delay.setEditorTimeout(editor, cleanup, 0);
-    } else {
-      cleanup();
-    }
-    editor.off('focusin remove', cancelHandler);
-  };
+    fileInput.addEventListener('change', changeHandler);
 
-  editor.on('focusin remove', cancelHandler);
+    const cancelHandler = (e) => {
+      const cleanup = () => {
+        resolve([]);
+        fileInput.parentNode.removeChild(fileInput);
+      };
 
-  fileInput.click();
-});
+      // Android will fire focusin before the input change event
+      // so we need to do a slight delay to get outside the event loop
+      if (Env.os.isAndroid() && e.type !== 'remove') {
+        Delay.setEditorTimeout(editor, cleanup, 0);
+      } else {
+        cleanup();
+      }
+      editor.off('focusin remove', cancelHandler);
+    };
 
-export {
-  pickFile
-};
+    editor.on('focusin remove', cancelHandler);
+
+    fileInput.click();
+  });
+
+export { pickFile };

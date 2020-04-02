@@ -13,7 +13,6 @@ import * as StylesMenu from '../ui/StylesMenu';
 import * as StyleConversions from './StyleConversions';
 
 const register = (editor, settings) => {
-
   const isSelectedFor = (format) => (): boolean =>
     editor.formatter.match(format);
 
@@ -46,36 +45,36 @@ const register = (editor, settings) => {
 
   const formats = Obj.get(settings, 'style_formats').getOr(DefaultStyleFormats);
 
-  const doEnrich = (items) => Arr.map(items, (item) => {
-    if (Obj.hasNonNullableKey(item, 'items')) {
-      const newItems = doEnrich(item.items);
-      return Merger.deepMerge(
-        enrichMenu(item),
-        {
+  const doEnrich = (items) =>
+    Arr.map(items, (item) => {
+      if (Obj.hasNonNullableKey(item, 'items')) {
+        const newItems = doEnrich(item.items);
+        return Merger.deepMerge(enrichMenu(item), {
           items: newItems
-        }
-      );
-    } else if (Obj.hasNonNullableKey(item, 'format')) {
-      return enrichSupported(item);
-    } else {
-      return enrichCustom(item);
-    }
-  });
+        });
+      } else if (Obj.hasNonNullableKey(item, 'format')) {
+        return enrichSupported(item);
+      } else {
+        return enrichCustom(item);
+      }
+    });
 
   return doEnrich(formats);
 };
 
 const prune = (editor, formats) => {
-
-  const doPrune = (items) => Arr.bind(items, (item) => {
-    if (item.items !== undefined) {
-      const newItems = doPrune(item.items);
-      return newItems.length > 0 ? [ item ] : [];
-    } else {
-      const keep = Obj.hasNonNullableKey(item, 'format') ? editor.formatter.canApply(item.format) : true;
-      return keep ? [ item ] : [];
-    }
-  });
+  const doPrune = (items) =>
+    Arr.bind(items, (item) => {
+      if (item.items !== undefined) {
+        const newItems = doPrune(item.items);
+        return newItems.length > 0 ? [item] : [];
+      } else {
+        const keep = Obj.hasNonNullableKey(item, 'format')
+          ? editor.formatter.canApply(item.format)
+          : true;
+        return keep ? [item] : [];
+      }
+    });
 
   const prunedItems = doPrune(formats);
   return StyleConversions.expand(prunedItems);
@@ -99,7 +98,4 @@ const ui = (editor, formats, onDone) => {
   });
 };
 
-export {
-  register,
-  ui
-};
+export { register, ui };

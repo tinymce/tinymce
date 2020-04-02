@@ -12,12 +12,20 @@ import * as Templates from './Templates';
 
 const setup = function (editor) {
   editor.on('PreProcess', function (o) {
-    const dom = editor.dom, dateFormat = Settings.getMdateFormat(editor);
+    const dom = editor.dom,
+      dateFormat = Settings.getMdateFormat(editor);
 
     Tools.each(dom.select('div', o.node), function (e) {
       if (dom.hasClass(e, 'mceTmpl')) {
         Tools.each(dom.select('*', e), function (e) {
-          if (dom.hasClass(e, editor.getParam('template_mdate_classes', 'mdate').replace(/\s+/g, '|'))) {
+          if (
+            dom.hasClass(
+              e,
+              editor
+                .getParam('template_mdate_classes', 'mdate')
+                .replace(/\s+/g, '|')
+            )
+          ) {
             e.innerHTML = DateTimeHelper.getDateTime(editor, dateFormat);
           }
         });
@@ -28,6 +36,4 @@ const setup = function (editor) {
   });
 };
 
-export {
-  setup
-};
+export { setup };

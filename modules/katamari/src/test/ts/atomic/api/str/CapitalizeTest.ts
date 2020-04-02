@@ -23,14 +23,18 @@ UnitTest.test('capitalize: unit tests', () => {
 });
 
 UnitTest.test('capitalize: tail of the string is unchanged', () => {
-  fc.assert(fc.property(fc.ascii(), fc.asciiString(30), (h, t) => {
-    Assert.eq('tail', t, Strings.capitalize(h + t).substring(1), tString);
-  }));
+  fc.assert(
+    fc.property(fc.ascii(), fc.asciiString(30), (h, t) => {
+      Assert.eq('tail', t, Strings.capitalize(h + t).substring(1), tString);
+    })
+  );
 });
 
 UnitTest.test('capitalize: head is uppercase', () => {
-  fc.assert(fc.property(fc.ascii(), fc.asciiString(30), (h, t) => {
-    const actualH = Strings.capitalize(h + t).charAt(0);
-    Assert.eq('head is uppercase', h.toUpperCase(), actualH, tString);
-  }));
+  fc.assert(
+    fc.property(fc.ascii(), fc.asciiString(30), (h, t) => {
+      const actualH = Strings.capitalize(h + t).charAt(0);
+      Assert.eq('head is uppercase', h.toUpperCase(), actualH, tString);
+    })
+  );
 });

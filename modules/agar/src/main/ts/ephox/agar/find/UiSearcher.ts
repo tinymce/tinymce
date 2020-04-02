@@ -5,7 +5,7 @@ import * as SizzleFind from '../alien/SizzleFind';
 import { TestLabel } from '@ephox/bedrock-client';
 
 interface TargetAdt {
-  fold: <T> (
+  fold: <T>(
     self: (element: Element<any>, selector: string) => T,
     children: (element: Element<any>, selector: string) => T,
     descendants: (element: Element<any>, selector: string) => T
@@ -23,9 +23,9 @@ const targets: {
   children: (element: Element<any>, selector: string) => TargetAdt;
   descendants: (element: Element<any>, selector: string) => TargetAdt;
 } = Adt.generate([
-  { self: [ 'element', 'selector' ] },
-  { children: [ 'element', 'selector' ] },
-  { descendants: [ 'element', 'selector' ] }
+  { self: ['element', 'selector'] },
+  { children: ['element', 'selector'] },
+  { descendants: ['element', 'selector'] }
 ]);
 
 const derive = (element: Element<any>, selector: string) => {
@@ -41,40 +41,54 @@ const derive = (element: Element<any>, selector: string) => {
   }
 };
 
-const matchesSelf = (element: Element<any>, selector: string): Option<Element<any>> =>
+const matchesSelf = (
+  element: Element<any>,
+  selector: string
+): Option<Element<any>> =>
   SizzleFind.matches(element, selector) ? Option.some(element) : Option.none();
 
-const select = (element: Element<any>, selector: string): Option<Element<any>> =>
+const select = (
+  element: Element<any>,
+  selector: string
+): Option<Element<any>> =>
   derive(element, selector).fold(
     matchesSelf,
     SizzleFind.child,
     SizzleFind.descendant
   );
 
-const selectAll = (element: Element<any>, selector: string): Array<Element<any>> =>
+const selectAll = (
+  element: Element<any>,
+  selector: string
+): Array<Element<any>> =>
   derive(element, selector).fold(
     (element, selector) => matchesSelf(element, selector).toArray(),
     SizzleFind.children,
     SizzleFind.descendants
   );
 
-const toResult = <T>(message: TestLabel, option: Option<T>): Result<T, TestLabel> =>
-  option.fold(
-    () => Result.error<T, TestLabel>(message),
-    Result.value
-  );
+const toResult = <T>(
+  message: TestLabel,
+  option: Option<T>
+): Result<T, TestLabel> =>
+  option.fold(() => Result.error<T, TestLabel>(message), Result.value);
 
-const findIn = (container: Element<any>, selector: string): Result<Element<any>, TestLabel> =>
+const findIn = (
+  container: Element<any>,
+  selector: string
+): Result<Element<any>, TestLabel> =>
   toResult(
-    () => 'Could not find selector: ' + selector + ' in ' + Truncate.getHtml(container),
+    () =>
+      'Could not find selector: ' +
+      selector +
+      ' in ' +
+      Truncate.getHtml(container),
     select(container, selector)
   );
 
-const findAllIn = (container: Element<any>, selector: string): Array<Element<any>> =>
-  selectAll(container, selector);
+const findAllIn = (
+  container: Element<any>,
+  selector: string
+): Array<Element<any>> => selectAll(container, selector);
 
-export {
-  select,
-  findIn,
-  findAllIn
-};
+export { select, findIn, findAllIn };

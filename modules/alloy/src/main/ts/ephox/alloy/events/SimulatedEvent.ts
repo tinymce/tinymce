@@ -41,7 +41,10 @@ export interface FocusingEvent extends EventFormat {
   originator: () => Element;
 }
 
-const fromSource = <T extends EventFormat>(event: T, source: Cell<Element>): SimulatedEvent<T> => {
+const fromSource = <T extends EventFormat>(
+  event: T,
+  source: Cell<Element>
+): SimulatedEvent<T> => {
   const stopper = Cell(false);
 
   const cutter = Cell(false);
@@ -86,13 +89,12 @@ const fromExternal = <T extends EventFormat>(event: T): SimulatedEvent<T> => {
   };
 };
 
-const fromTarget = <T extends EventFormat>(event: T, target: Element): SimulatedEvent<T> => {
+const fromTarget = <T extends EventFormat>(
+  event: T,
+  target: Element
+): SimulatedEvent<T> => {
   const source = Cell(target);
   return fromSource(event, source);
 };
 
-export {
-  fromSource,
-  fromExternal,
-  fromTarget
-};
+export { fromSource, fromExternal, fromTarget };

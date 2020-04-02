@@ -1,4 +1,9 @@
-import { setTimeout, window, HTMLElement, Node as DomNode } from '@ephox/dom-globals';
+import {
+  setTimeout,
+  window,
+  HTMLElement,
+  Node as DomNode
+} from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import * as Monitors from '../../impl/Monitors';
 import * as Compare from '../dom/Compare';
@@ -124,7 +129,9 @@ const listener = function () {
 
 let interval = Option.none<EventUnbinder>();
 const start = function () {
-  interval = Option.some(DomEvent.bind(Element.fromDom(window), 'resize', listener));
+  interval = Option.some(
+    DomEvent.bind(Element.fromDom(window), 'resize', listener)
+  );
 };
 
 const stop = function () {
@@ -134,4 +141,4 @@ const stop = function () {
   });
 };
 
-export { bind, unbind, };
+export { bind, unbind };

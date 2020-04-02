@@ -11,6 +11,4 @@ const Coupling: CouplingBehaviour = Behaviour.create({
   state: CouplingState
 });
 
-export {
-  Coupling
-};
+export { Coupling };

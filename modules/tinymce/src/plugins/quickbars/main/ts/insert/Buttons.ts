@@ -37,6 +37,4 @@ const setupButtons = function (editor: Editor) {
   });
 };
 
-export {
-  setupButtons
-};
+export { setupButtons };

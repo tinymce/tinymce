@@ -11,18 +11,22 @@ export default (): void => {
 
   // Naive resize handler
   const resize = (element: Element, changeX: number, changeY: number) => {
-    const width = Css.getRaw(element, 'width').map((w) => parseInt(w, 10)).getOrThunk(() => Width.get(element));
+    const width = Css.getRaw(element, 'width')
+      .map((w) => parseInt(w, 10))
+      .getOrThunk(() => Width.get(element));
 
-    const height = Css.getRaw(element, 'height').map((h) => parseInt(h, 10)).getOrThunk(() => Height.get(element));
+    const height = Css.getRaw(element, 'height')
+      .map((h) => parseInt(h, 10))
+      .getOrThunk(() => Height.get(element));
 
-    Css.set(element, 'width', (width + changeX) + 'px');
-    Css.set(element, 'height', (height + changeY) + 'px');
+    Css.set(element, 'width', width + changeX + 'px');
+    Css.set(element, 'height', height + changeY + 'px');
   };
 
   const box = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: [ 'demo-pinch-box' ],
+      classes: ['demo-pinch-box'],
       styles: {
         width: '200px',
         height: '200px',

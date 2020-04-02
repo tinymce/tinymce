@@ -42,11 +42,17 @@ const makeSlider = (spec): SketchSpec => {
   };
 
   return Slider.sketch({
-    dom: UiDomFactory.dom('<div class="${prefix}-slider ${prefix}-hue-slider-container"></div>'),
+    dom: UiDomFactory.dom(
+      '<div class="${prefix}-slider ${prefix}-hue-slider-container"></div>'
+    ),
     components: [
-      Slider.parts()['left-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-black"></div>')),
+      Slider.parts()['left-edge'](
+        UiDomFactory.spec('<div class="${prefix}-hue-slider-black"></div>')
+      ),
       Slider.parts().spectrum({
-        dom: UiDomFactory.dom('<div class="${prefix}-slider-gradient-container"></div>'),
+        dom: UiDomFactory.dom(
+          '<div class="${prefix}-slider-gradient-container"></div>'
+        ),
         components: [
           UiDomFactory.spec('<div class="${prefix}-slider-gradient"></div>')
         ],
@@ -56,7 +62,9 @@ const makeSlider = (spec): SketchSpec => {
           })
         ])
       }),
-      Slider.parts()['right-edge'](UiDomFactory.spec('<div class="${prefix}-hue-slider-white"></div>')),
+      Slider.parts()['right-edge'](
+        UiDomFactory.spec('<div class="${prefix}-hue-slider-white"></div>')
+      ),
       Slider.parts().thumb({
         dom: UiDomFactory.dom('<div class="${prefix}-slider-thumb"></div>'),
         behaviours: Behaviour.derive([
@@ -85,15 +93,11 @@ const makeSlider = (spec): SketchSpec => {
       })
     },
 
-    sliderBehaviours: Behaviour.derive([
-      Receivers.orientation(Slider.refresh)
-    ])
+    sliderBehaviours: Behaviour.derive([Receivers.orientation(Slider.refresh)])
   });
 };
 
-const makeItems = (spec): SketchSpec[] => [
-  makeSlider(spec)
-];
+const makeItems = (spec): SketchSpec[] => [makeSlider(spec)];
 
 const sketch = (realm: MobileRealm, editor: Editor) => {
   const spec = {
@@ -109,10 +113,12 @@ const sketch = (realm: MobileRealm, editor: Editor) => {
     }
   };
 
-  return ToolbarWidgets.button(realm, 'color-levels', () => makeItems(spec), editor);
+  return ToolbarWidgets.button(
+    realm,
+    'color-levels',
+    () => makeItems(spec),
+    editor
+  );
 };
 
-export {
-  makeItems,
-  sketch
-};
+export { makeItems, sketch };

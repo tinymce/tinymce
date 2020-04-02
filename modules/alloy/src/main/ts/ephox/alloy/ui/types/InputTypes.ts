@@ -4,16 +4,20 @@ import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { RawDomSchema } from '../../api/component/SpecTypes';
-import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
+import {
+  SingleSketch,
+  SingleSketchDetail,
+  SingleSketchSpec
+} from '../../api/ui/Sketcher';
 
 // The V is because this is shared with Typeahead.
 export interface InputDetail extends SingleSketchDetail {
   uid: string;
   dom: RawDomSchema;
   inputBehaviours: SketchBehaviours;
-  inputStyles: { };
+  inputStyles: {};
   inputClasses: string[];
-  inputAttributes: { };
+  inputAttributes: {};
   tag: string;
   data: Option<string>;
   onSetValue: (comp: AlloyComponent, data: string) => void;
@@ -25,8 +29,8 @@ export interface InputSpec extends SingleSketchSpec {
   uid?: string;
   tag?: string;
   inputClasses?: string[];
-  inputAttributes?: { };
-  inputStyles?: { };
+  inputAttributes?: {};
+  inputStyles?: {};
   inputBehaviours?: AlloyBehaviourRecord;
   data?: string;
 
@@ -35,4 +39,4 @@ export interface InputSpec extends SingleSketchSpec {
   onSetValue?: (comp: AlloyComponent, data: string) => void;
 }
 
-export interface InputSketcher extends SingleSketch<InputSpec> { }
+export interface InputSketcher extends SingleSketch<InputSpec> {}

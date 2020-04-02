@@ -1,6 +1,7 @@
 import Element from '../node/Element';
 
-export interface EventArgs<T = any> { // Set to any since there might be a lot of code working directly with the sub types of Event
+export interface EventArgs<T = any> {
+  // Set to any since there might be a lot of code working directly with the sub types of Event
   target: () => Element;
   x: () => number;
   y: () => number;

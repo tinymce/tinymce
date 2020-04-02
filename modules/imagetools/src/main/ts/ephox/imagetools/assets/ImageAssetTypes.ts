@@ -13,18 +13,16 @@ export interface UrlImageAsset {
   raw: () => Element;
 }
 
-export type BlobCallback<T> = (id: string, imageresult: ImageResult, objurl: string) => T;
+export type BlobCallback<T> = (
+  id: string,
+  imageresult: ImageResult,
+  objurl: string
+) => T;
 export type UrlCallback<T> = (id: string, url: string, raw: Element) => T;
 
 export interface ImageAssetAdt {
-  fold: <T> (
-    blob: BlobCallback<T>,
-    url: UrlCallback<T>
-  ) => T;
-  match: <T> (branches: {
-    blob: BlobCallback<T>;
-    url: UrlCallback<T>;
-  }) => T;
+  fold: <T>(blob: BlobCallback<T>, url: UrlCallback<T>) => T;
+  match: <T>(branches: { blob: BlobCallback<T>; url: UrlCallback<T> }) => T;
   log: (label: string) => void;
 }
 

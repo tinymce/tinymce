@@ -25,7 +25,7 @@ const dom = DOMUtils.DOM;
 
 const parsedSelectorToHtml = function (ancestry, editor: Editor) {
   let elm, item, fragment;
-  const schema = editor && editor.schema || Schema({});
+  const schema = (editor && editor.schema) || Schema({});
 
   const decorate = function (elm, item) {
     if (item.classes.length) {
@@ -37,11 +37,14 @@ const parsedSelectorToHtml = function (ancestry, editor: Editor) {
   const createElement = function (sItem) {
     let elm;
 
-    item = typeof sItem === 'string' ? {
-      name: sItem,
-      classes: [],
-      attrs: {}
-    } : sItem;
+    item =
+      typeof sItem === 'string'
+        ? {
+            name: sItem,
+            classes: [],
+            attrs: {}
+          }
+        : sItem;
 
     elm = dom.create(item.name);
     decorate(elm, item);
@@ -54,7 +57,9 @@ const parsedSelectorToHtml = function (ancestry, editor: Editor) {
     const parentsRequired = elmRule && elmRule.parentsRequired;
 
     if (parentsRequired && parentsRequired.length) {
-      return candidate && Tools.inArray(parentsRequired, candidate) !== -1 ? candidate : parentsRequired[0];
+      return candidate && Tools.inArray(parentsRequired, candidate) !== -1
+        ? candidate
+        : parentsRequired[0];
     } else {
       return false;
     }
@@ -99,7 +104,11 @@ const parsedSelectorToHtml = function (ancestry, editor: Editor) {
       });
     }
 
-    return wrapInHtml(parent, ancestry, parentCandidate && parentCandidate.siblings);
+    return wrapInHtml(
+      parent,
+      ancestry,
+      parentCandidate && parentCandidate.siblings
+    );
   };
 
   if (ancestry && ancestry.length) {
@@ -128,33 +137,41 @@ const parseSelectorItem = function (item) {
 
   if (item !== '*') {
     // matching IDs, CLASSes, ATTRIBUTES and PSEUDOs
-    tagName = item.replace(/(?:([#\.]|::?)([\w\-]+)|(\[)([^\]]+)\]?)/g, function ($0, $1, $2, $3, $4) {
-      switch ($1) {
-        case '#':
-          obj.attrs.id = $2;
-          break;
+    tagName = item.replace(
+      /(?:([#\.]|::?)([\w\-]+)|(\[)([^\]]+)\]?)/g,
+      function ($0, $1, $2, $3, $4) {
+        switch ($1) {
+          case '#':
+            obj.attrs.id = $2;
+            break;
 
-        case '.':
-          obj.classes.push($2);
-          break;
+          case '.':
+            obj.classes.push($2);
+            break;
 
-        case ':':
-          if (Tools.inArray('checked disabled enabled read-only required'.split(' '), $2) !== -1) {
-            obj.attrs[$2] = $2;
-          }
-          break;
-      }
-
-      // atribute matched
-      if ($3 === '[') {
-        const m = $4.match(/([\w\-]+)(?:\=\"([^\"]+))?/);
-        if (m) {
-          obj.attrs[m[1]] = m[2];
+          case ':':
+            if (
+              Tools.inArray(
+                'checked disabled enabled read-only required'.split(' '),
+                $2
+              ) !== -1
+            ) {
+              obj.attrs[$2] = $2;
+            }
+            break;
         }
-      }
 
-      return '';
-    });
+        // atribute matched
+        if ($3 === '[') {
+          const m = $4.match(/([\w\-]+)(?:\=\"([^\"]+))?/);
+          if (m) {
+            obj.attrs[m[1]] = m[2];
+          }
+        }
+
+        return '';
+      }
+    );
   }
 
   obj.name = tagName || 'div';
@@ -187,7 +204,9 @@ const parseSelector = function (selector: string) {
 
 const getCssText = function (editor: Editor, format) {
   let name, previewFrag, previewElm, items;
-  let previewCss = '', parentFontSize, previewStyles;
+  let previewCss = '',
+    parentFontSize,
+    previewStyles;
 
   previewStyles = editor.settings.preview_styles;
 
@@ -198,7 +217,8 @@ const getCssText = function (editor: Editor, format) {
 
   // Default preview
   if (typeof previewStyles !== 'string') {
-    previewStyles = 'font-family font-size font-weight font-style text-decoration ' +
+    previewStyles =
+      'font-family font-size font-weight font-style text-decoration ' +
       'text-transform color background-color border border-radius outline text-shadow';
   }
 
@@ -230,13 +250,14 @@ const getCssText = function (editor: Editor, format) {
 
   items = parseSelector(format.selector);
   if (items.length) {
-    if (!items[0].name) { // e.g. something like ul > .someClass was provided
+    if (!items[0].name) {
+      // e.g. something like ul > .someClass was provided
       items[0].name = name;
     }
     name = format.selector;
     previewFrag = parsedSelectorToHtml(items, editor);
   } else {
-    previewFrag = parsedSelectorToHtml([ name ], editor);
+    previewFrag = parsedSelectorToHtml([name], editor);
   }
 
   previewElm = dom.select(name, previewFrag)[0] || previewFrag.firstChild;
@@ -271,18 +292,23 @@ const getCssText = function (editor: Editor, format) {
   editor.fire('PreviewFormats');
 
   // Add the previewElm outside the visual area
-  dom.setStyles(previewFrag, { position: 'absolute', left: -0xFFFF });
+  dom.setStyles(previewFrag, { position: 'absolute', left: -0xffff });
   editor.getBody().appendChild(previewFrag);
 
   // Get parent container font size so we can compute px values out of em/% for older IE:s
   parentFontSize = dom.getStyle(editor.getBody(), 'fontSize', true);
-  parentFontSize = /px$/.test(parentFontSize) ? parseInt(parentFontSize, 10) : 0;
+  parentFontSize = /px$/.test(parentFontSize)
+    ? parseInt(parentFontSize, 10)
+    : 0;
 
   each(previewStyles.split(' '), function (name) {
     let value = dom.getStyle(previewElm, name, true);
 
     // If background is transparent then check if the body has a background color we can use
-    if (name === 'background-color' && /transparent|rgba\s*\([^)]+,\s*0\)/.test(value)) {
+    if (
+      name === 'background-color' &&
+      /transparent|rgba\s*\([^)]+,\s*0\)/.test(value)
+    ) {
       value = dom.getStyle(editor.getBody(), name, true);
 
       // Ignore white since it's the default color, not the nicest fix
@@ -309,7 +335,7 @@ const getCssText = function (editor: Editor, format) {
 
         // Convert font size from em/% to px
         const numValue = parseFloat(value) / (/%$/.test(value) ? 100 : 1);
-        value = (numValue * parentFontSize) + 'px';
+        value = numValue * parentFontSize + 'px';
       }
     }
 
@@ -329,8 +355,4 @@ const getCssText = function (editor: Editor, format) {
   return previewCss;
 };
 
-export {
-  getCssText,
-  parseSelector,
-  selectorToHtml
-};
+export { getCssText, parseSelector, selectorToHtml };

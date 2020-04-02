@@ -5,7 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Form as AlloyForm, Keying, Memento, SimpleSpec } from '@ephox/alloy';
+import {
+  Behaviour,
+  Form as AlloyForm,
+  Keying,
+  Memento,
+  SimpleSpec
+} from '@ephox/alloy';
 import { console } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 
@@ -20,33 +26,36 @@ import { Types } from '@ephox/bridge';
 
 export type BodyPanelSpec = Omit<Types.Dialog.Panel, 'type'>;
 
-const renderBodyPanel = (spec: BodyPanelSpec, backstage: UiFactoryBackstage): SimpleSpec => {
+const renderBodyPanel = (
+  spec: BodyPanelSpec,
+  backstage: UiFactoryBackstage
+): SimpleSpec => {
   const memForm = Memento.record(
     AlloyForm.sketch((parts) => ({
       dom: {
         tag: 'div',
-        classes: [ 'tox-form' ].concat(spec.classes)
+        classes: ['tox-form'].concat(spec.classes)
       },
       // All of the items passed through the form need to be put through the interpreter
       // with their form part preserved.
-      components: Arr.map(spec.items, (item) => interpretInForm(parts, item, backstage))
+      components: Arr.map(spec.items, (item) =>
+        interpretInForm(parts, item, backstage)
+      )
     }))
   );
 
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-dialog__body' ]
+      classes: ['tox-dialog__body']
     },
     components: [
       {
         dom: {
           tag: 'div',
-          classes: [ 'tox-dialog__body-content' ]
+          classes: ['tox-dialog__body-content']
         },
-        components: [
-          memForm.asSpec()
-        ]
+        components: [memForm.asSpec()]
       }
     ],
     behaviours: Behaviour.derive([
@@ -56,19 +65,18 @@ const renderBodyPanel = (spec: BodyPanelSpec, backstage: UiFactoryBackstage): Si
       }),
       ComposingConfigs.memento(memForm),
       RepresentingConfigs.memento(memForm, {
-        postprocess: (formValue) => FormValues.toValidValues(formValue).fold(
-          (err) => {
-            // tslint:disable-next-line:no-console
-            console.error(err);
-            return { };
-          },
-          (vals) => vals
-        )
+        postprocess: (formValue) =>
+          FormValues.toValidValues(formValue).fold(
+            (err) => {
+              // tslint:disable-next-line:no-console
+              console.error(err);
+              return {};
+            },
+            (vals) => vals
+          )
       })
     ])
   };
 };
 
-export {
-  renderBodyPanel
-};
+export { renderBodyPanel };

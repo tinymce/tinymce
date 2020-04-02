@@ -35,9 +35,13 @@ export default (): void => {
   });
 
   const pClose = ModalDialog.parts().close({
-    dom: DomFactory.fromHtml('<button type="button" aria-hidden="true" class="mce-close"></button>'),
+    dom: DomFactory.fromHtml(
+      '<button type="button" aria-hidden="true" class="mce-close"></button>'
+    ),
     components: [
-      Container.sketch({ dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] }})
+      Container.sketch({
+        dom: { tag: 'i', classes: ['mce-ico', 'mce-i-remove'] }
+      })
     ]
   });
 
@@ -45,7 +49,9 @@ export default (): void => {
     dom: DomFactory.fromHtml('<div></div>'),
     components: [
       Container.sketch({
-        dom: DomFactory.fromHtml('<div style="width: 400px; height: 200px;"></div>')
+        dom: DomFactory.fromHtml(
+          '<div style="width: 400px; height: 200px;"></div>'
+        )
       }),
       Button.sketch({
         dom: {
@@ -79,7 +85,8 @@ export default (): void => {
                     zoom: '1',
                     position: 'absolute',
                     top: '0px',
-                    background: '#fff url(../css/image/loader.gif) no-repeat center center'
+                    background:
+                      '#fff url(../css/image/loader.gif) no-repeat center center'
                   }
                 }
               }
@@ -102,30 +109,30 @@ export default (): void => {
 
   const dialog = GuiFactory.build(
     ModalDialog.sketch({
-      dom: DomFactory.fromHtml('<div class="mce-container mce-panel mce-floatpanel mce-window mce-in" style="position: relative;"></div>'),
+      dom: DomFactory.fromHtml(
+        '<div class="mce-container mce-panel mce-floatpanel mce-window mce-in" style="position: relative;"></div>'
+      ),
       components: [
         Container.sketch({
-          dom: DomFactory.fromHtml('<div class="mce-reset" role="application"></div>'),
+          dom: DomFactory.fromHtml(
+            '<div class="mce-reset" role="application"></div>'
+          ),
           components: [
             Container.sketch({
               dom: DomFactory.fromHtml('<div class="mce-window-head"></div>'),
-              components: [
-                pTitle,
-                pDraghandle,
-                pClose
-              ]
+              components: [pTitle, pDraghandle, pClose]
             }),
             Container.sketch({
-              dom: DomFactory.fromHtml('<div class="mce-container-body mce-window-body mce-abs-layout"></div>'),
-              components: [
-                pBody
-              ]
+              dom: DomFactory.fromHtml(
+                '<div class="mce-container-body mce-window-body mce-abs-layout"></div>'
+              ),
+              components: [pBody]
             }),
             Container.sketch({
-              dom: DomFactory.fromHtml('<div class="mce-container mce-panel mce-foot"></div>'),
-              components: [
-                pFooter
-              ]
+              dom: DomFactory.fromHtml(
+                '<div class="mce-container mce-panel mce-foot"></div>'
+              ),
+              components: [pFooter]
             })
           ]
         })
@@ -142,8 +149,8 @@ export default (): void => {
         blocker: {
           dom: {
             tag: 'div',
-            classes: [ 'blocker-main' ],
-            styles: { }
+            classes: ['blocker-main'],
+            styles: {}
           },
           components: [
             {

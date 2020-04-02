@@ -13,27 +13,36 @@ import { HTMLElement } from '@ephox/dom-globals';
 import { ResizeHandler } from '../actions/ResizeHandler';
 import { SelectionTargets } from '../selection/SelectionTargets';
 
-const getClipboardRows = (clipboardRows): HTMLElement[] => clipboardRows.get().fold(function () {
-  return;
-}, function (rows) {
-  return Arr.map(rows, function (row) {
-    return row.dom();
-  });
-});
+const getClipboardRows = (clipboardRows): HTMLElement[] =>
+  clipboardRows.get().fold(
+    function () {
+      return;
+    },
+    function (rows) {
+      return Arr.map(rows, function (row) {
+        return row.dom();
+      });
+    }
+  );
 
 const setClipboardRows = (rows: HTMLElement[], clipboardRows) => {
   const sugarRows = Arr.map(rows, Element.fromDom);
   clipboardRows.set(Option.from(sugarRows));
 };
 
-const getApi = (editor: Editor, clipboardRows: Cell<Option<any>>, resizeHandler: ResizeHandler, selectionTargets: SelectionTargets) => ({
-  insertTable: (columns: number, rows: number) => InsertTable.insert(editor, columns, rows),
-  setClipboardRows: (rows: HTMLElement[]) => setClipboardRows(rows, clipboardRows),
+const getApi = (
+  editor: Editor,
+  clipboardRows: Cell<Option<any>>,
+  resizeHandler: ResizeHandler,
+  selectionTargets: SelectionTargets
+) => ({
+  insertTable: (columns: number, rows: number) =>
+    InsertTable.insert(editor, columns, rows),
+  setClipboardRows: (rows: HTMLElement[]) =>
+    setClipboardRows(rows, clipboardRows),
   getClipboardRows: () => getClipboardRows(clipboardRows),
   resizeHandler,
   selectionTargets
 });
 
-export {
-  getApi
-};
+export { getApi };

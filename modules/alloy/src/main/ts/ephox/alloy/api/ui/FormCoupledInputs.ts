@@ -3,7 +3,12 @@ import { Obj, Option } from '@ephox/katamari';
 import { SketchSpec } from '../../api/component/SpecTypes';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as FormCoupledInputsSchema from '../../ui/schema/FormCoupledInputsSchema';
-import { FormCoupledInputsApis, FormCoupledInputsDetail, FormCoupledInputsSketcher, FormCoupledInputsSpec } from '../../ui/types/FormCoupledInputsTypes';
+import {
+  FormCoupledInputsApis,
+  FormCoupledInputsDetail,
+  FormCoupledInputsSketcher,
+  FormCoupledInputsSpec
+} from '../../ui/types/FormCoupledInputsTypes';
 import { Composing } from '../behaviour/Composing';
 import { Representing } from '../behaviour/Representing';
 import { AlloyComponent } from '../component/ComponentApi';
@@ -11,44 +16,60 @@ import { SketchBehaviours } from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<FormCoupledInputsDetail, FormCoupledInputsSpec> = (detail, components, _spec, _externals): SketchSpec => ({
+const factory: CompositeSketchFactory<
+  FormCoupledInputsDetail,
+  FormCoupledInputsSpec
+> = (detail, components, _spec, _externals): SketchSpec => ({
   uid: detail.uid,
   dom: detail.dom,
   components,
 
-  behaviours: SketchBehaviours.augment(
-    detail.coupledFieldBehaviours,
-    [
-      Composing.config({ find: Option.some }),
+  behaviours: SketchBehaviours.augment(detail.coupledFieldBehaviours, [
+    Composing.config({ find: Option.some }),
 
-      Representing.config({
-        store: {
-          mode: 'manual',
-          getValue(comp) {
-
-            const parts = AlloyParts.getPartsOrDie(comp, detail, [ 'field1', 'field2' ]);
-            return {
-              [detail.field1Name]: Representing.getValue(parts.field1()),
-              [detail.field2Name]: Representing.getValue(parts.field2())
-            };
-          },
-          setValue(comp, value) {
-            const parts = AlloyParts.getPartsOrDie(comp, detail, [ 'field1', 'field2' ]);
-            if (Obj.hasNonNullableKey(value, detail.field1Name)) { Representing.setValue(parts.field1(), value[detail.field1Name]); }
-            if (Obj.hasNonNullableKey(value, detail.field2Name)) { Representing.setValue(parts.field2(), value[detail.field2Name]); }
+    Representing.config({
+      store: {
+        mode: 'manual',
+        getValue(comp) {
+          const parts = AlloyParts.getPartsOrDie(comp, detail, [
+            'field1',
+            'field2'
+          ]);
+          return {
+            [detail.field1Name]: Representing.getValue(parts.field1()),
+            [detail.field2Name]: Representing.getValue(parts.field2())
+          };
+        },
+        setValue(comp, value) {
+          const parts = AlloyParts.getPartsOrDie(comp, detail, [
+            'field1',
+            'field2'
+          ]);
+          if (Obj.hasNonNullableKey(value, detail.field1Name)) {
+            Representing.setValue(parts.field1(), value[detail.field1Name]);
+          }
+          if (Obj.hasNonNullableKey(value, detail.field2Name)) {
+            Representing.setValue(parts.field2(), value[detail.field2Name]);
           }
         }
-      })
-    ]
-  ),
+      }
+    })
+  ]),
   apis: {
-    getField1: (component: AlloyComponent) => AlloyParts.getPart(component, detail, 'field1'),
-    getField2: (component: AlloyComponent) => AlloyParts.getPart(component, detail, 'field2'),
-    getLock: (component: AlloyComponent) => AlloyParts.getPart(component, detail, 'lock')
+    getField1: (component: AlloyComponent) =>
+      AlloyParts.getPart(component, detail, 'field1'),
+    getField2: (component: AlloyComponent) =>
+      AlloyParts.getPart(component, detail, 'field2'),
+    getLock: (component: AlloyComponent) =>
+      AlloyParts.getPart(component, detail, 'lock')
   }
 });
 
-const FormCoupledInputs: FormCoupledInputsSketcher = Sketcher.composite<FormCoupledInputsSpec, FormCoupledInputsDetail, FormCoupledInputsApis>({
+const FormCoupledInputs: FormCoupledInputsSketcher = Sketcher.composite<
+  FormCoupledInputsSpec,
+  FormCoupledInputsDetail,
+  FormCoupledInputsApis
+>({
   name: 'FormCoupledInputs',
   configFields: FormCoupledInputsSchema.schema(),
   partFields: FormCoupledInputsSchema.parts(),
@@ -60,6 +81,4 @@ const FormCoupledInputs: FormCoupledInputsSketcher = Sketcher.composite<FormCoup
   }
 });
 
-export {
-  FormCoupledInputs
-};
+export { FormCoupledInputs };

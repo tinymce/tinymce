@@ -1,24 +1,38 @@
 import { Arr } from '@ephox/katamari';
 import * as Structs from '../api/Structs';
 
-const addCell = function (gridRow: Structs.RowCells, index: number, cell: Structs.ElementNew) {
+const addCell = function (
+  gridRow: Structs.RowCells,
+  index: number,
+  cell: Structs.ElementNew
+) {
   const cells = gridRow.cells();
   const before = cells.slice(0, index);
   const after = cells.slice(index);
-  const newCells = before.concat([ cell ]).concat(after);
+  const newCells = before.concat([cell]).concat(after);
   return setCells(gridRow, newCells);
 };
 
-const mutateCell = function (gridRow: Structs.RowCells, index: number, cell: Structs.ElementNew) {
+const mutateCell = function (
+  gridRow: Structs.RowCells,
+  index: number,
+  cell: Structs.ElementNew
+) {
   const cells = gridRow.cells();
   cells[index] = cell;
 };
 
-const setCells = function (gridRow: Structs.RowCells, cells: Structs.ElementNew[]) {
+const setCells = function (
+  gridRow: Structs.RowCells,
+  cells: Structs.ElementNew[]
+) {
   return Structs.rowcells(cells, gridRow.section());
 };
 
-const mapCells = function (gridRow: Structs.RowCells, f: (ex: Structs.ElementNew, c: number) => Structs.ElementNew) {
+const mapCells = function (
+  gridRow: Structs.RowCells,
+  f: (ex: Structs.ElementNew, c: number) => Structs.ElementNew
+) {
   const cells = gridRow.cells();
   const r = Arr.map(cells, f);
   return Structs.rowcells(r, gridRow.section());

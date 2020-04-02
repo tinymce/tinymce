@@ -71,7 +71,11 @@ const createPreviewIframeNode = function (editor: Editor, node: Node) {
   return previewWrapper;
 };
 
-const retainAttributesAndInnerHtml = function (editor: Editor, sourceNode: Node, targetNode: Node) {
+const retainAttributesAndInnerHtml = function (
+  editor: Editor,
+  sourceNode: Node,
+  targetNode: Node
+) {
   let attrName;
   let attrValue;
   let attribs;
@@ -99,7 +103,10 @@ const retainAttributesAndInnerHtml = function (editor: Editor, sourceNode: Node,
   // This enables us to copy/paste the fake object
   innerHtml = sourceNode.firstChild && sourceNode.firstChild.value;
   if (innerHtml) {
-    targetNode.attr('data-mce-html', escape(Sanitize.sanitize(editor, innerHtml)));
+    targetNode.attr(
+      'data-mce-html',
+      escape(Sanitize.sanitize(editor, innerHtml))
+    );
     targetNode.firstChild = null;
   }
 };
@@ -136,7 +143,10 @@ const placeHolderConverter = function (editor: Editor) {
       }
 
       if (node.name === 'script') {
-        videoScript = VideoScript.getVideoScriptMatch(Settings.getScripts(editor), node.attr('src'));
+        videoScript = VideoScript.getVideoScriptMatch(
+          Settings.getScripts(editor),
+          node.attr('src')
+        );
         if (!videoScript) {
           continue;
         }
@@ -152,7 +162,11 @@ const placeHolderConverter = function (editor: Editor) {
         }
       }
 
-      if (node.name === 'iframe' && Settings.hasLiveEmbeds(editor) && Env.ceFalse) {
+      if (
+        node.name === 'iframe' &&
+        Settings.hasLiveEmbeds(editor) &&
+        Env.ceFalse
+      ) {
         if (!isWithinEmbedWrapper(node)) {
           node.replace(createPreviewIframeNode(editor, node));
         }
@@ -165,8 +179,4 @@ const placeHolderConverter = function (editor: Editor) {
   };
 };
 
-export {
-  createPreviewIframeNode,
-  createPlaceholderNode,
-  placeHolderConverter
-};
+export { createPreviewIframeNode, createPlaceholderNode, placeHolderConverter };

@@ -30,16 +30,21 @@ const isValidTarget = function (blockElements, node) {
   if (NodeType.isText(node)) {
     return true;
   } else if (NodeType.isElement(node)) {
-    return !isBlockElement(blockElements, node) && !Bookmarks.isBookmarkNode(node);
+    return (
+      !isBlockElement(blockElements, node) && !Bookmarks.isBookmarkNode(node)
+    );
   } else {
     return false;
   }
 };
 
 const hasBlockParent = function (blockElements, root, node) {
-  return Arr.exists(Parents.parents(Element.fromDom(node), Element.fromDom(root)), function (elm) {
-    return isBlockElement(blockElements, elm.dom());
-  });
+  return Arr.exists(
+    Parents.parents(Element.fromDom(node), Element.fromDom(root)),
+    function (elm) {
+      return isBlockElement(blockElements, elm.dom());
+    }
+  );
 };
 
 // const is
@@ -48,7 +53,10 @@ const shouldRemoveTextNode = (blockElements, node) => {
   if (NodeType.isText(node)) {
     if (node.nodeValue.length === 0) {
       return true;
-    } else if (/^\s+$/.test(node.nodeValue) && (!node.nextSibling || isBlockElement(blockElements, node.nextSibling))) {
+    } else if (
+      /^\s+$/.test(node.nodeValue) &&
+      (!node.nextSibling || isBlockElement(blockElements, node.nextSibling))
+    ) {
       return true;
     }
   }
@@ -57,8 +65,10 @@ const shouldRemoveTextNode = (blockElements, node) => {
 };
 
 const addRootBlocks = function (editor: Editor) {
-  const dom = editor.dom, selection = editor.selection;
-  const schema = editor.schema, blockElements = schema.getBlockElements();
+  const dom = editor.dom,
+    selection = editor.selection;
+  const schema = editor.schema,
+    blockElements = schema.getBlockElements();
   let node: Node = selection.getStart();
   const rootNode = editor.getBody();
   let rng;
@@ -72,7 +82,10 @@ const addRootBlocks = function (editor: Editor) {
   }
 
   rootNodeName = rootNode.nodeName.toLowerCase();
-  if (!schema.isValidChild(rootNodeName, forcedRootBlock.toLowerCase()) || hasBlockParent(blockElements, rootNode, node)) {
+  if (
+    !schema.isValidChild(rootNodeName, forcedRootBlock.toLowerCase()) ||
+    hasBlockParent(blockElements, rootNode, node)
+  ) {
     return;
   }
 
@@ -97,7 +110,10 @@ const addRootBlocks = function (editor: Editor) {
       }
 
       if (!rootBlockNode) {
-        rootBlockNode = dom.create(forcedRootBlock, Settings.getForcedRootBlockAttrs(editor));
+        rootBlockNode = dom.create(
+          forcedRootBlock,
+          Settings.getForcedRootBlockAttrs(editor)
+        );
         node.parentNode.insertBefore(rootBlockNode, node);
         wrapped = true;
       }
@@ -125,6 +141,4 @@ const setup = function (editor: Editor) {
   }
 };
 
-export {
-  setup
-};
+export { setup };

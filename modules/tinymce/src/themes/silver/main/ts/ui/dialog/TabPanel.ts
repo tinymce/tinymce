@@ -40,12 +40,15 @@ export type TabData = Record<string, any>;
 
 type TabPanelSpec = Omit<Types.Dialog.TabPanel, 'type'>;
 
-export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage): SketchSpec => {
-  const storedValue = Cell<TabData>({ });
+export const renderTabPanel = (
+  spec: TabPanelSpec,
+  backstage: UiFactoryBackstage
+): SketchSpec => {
+  const storedValue = Cell<TabData>({});
 
   const updateDataWithForm = (form: AlloyComponent): void => {
     const formData = Representing.getValue(form);
-    const validData = toValidValues(formData).getOr({ });
+    const validData = toValidValues(formData).getOr({});
     const currentData = storedValue.get();
     const newData = Merger.deepMerge(currentData, validData);
     storedValue.set(newData);
@@ -58,55 +61,60 @@ export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage
 
   const oldTab = Cell(null);
 
-  const allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>> = Arr.map(spec.tabs, function (tab) {
-    return {
-      value: tab.name,
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-dialog__body-nav-item' ],
-        innerHtml: backstage.shared.providers.translate(tab.title)
-      },
-      view() {
-        return [
-          // Dupe with SilverDialog
-          AlloyForm.sketch((parts) => ({
-            dom: {
-              tag: 'div',
-              classes: [ 'tox-form' ]
-            },
-            components: Arr.map(tab.items, (item) => interpretInForm(parts, item, backstage)),
-            formBehaviours: Behaviour.derive([
-              Keying.config({
-                mode: 'acyclic',
-                useTabstopAt: Fun.not(NavigableObject.isPseudoStop)
-              }),
+  const allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>> = Arr.map(
+    spec.tabs,
+    function (tab) {
+      return {
+        value: tab.name,
+        dom: {
+          tag: 'div',
+          classes: ['tox-dialog__body-nav-item'],
+          innerHtml: backstage.shared.providers.translate(tab.title)
+        },
+        view() {
+          return [
+            // Dupe with SilverDialog
+            AlloyForm.sketch((parts) => ({
+              dom: {
+                tag: 'div',
+                classes: ['tox-form']
+              },
+              components: Arr.map(tab.items, (item) =>
+                interpretInForm(parts, item, backstage)
+              ),
+              formBehaviours: Behaviour.derive([
+                Keying.config({
+                  mode: 'acyclic',
+                  useTabstopAt: Fun.not(NavigableObject.isPseudoStop)
+                }),
 
-              AddEventsBehaviour.config('TabView.form.events', [
-                AlloyEvents.runOnAttached(setDataOnForm),
-                AlloyEvents.runOnDetached(updateDataWithForm)
-              ]),
-              Receiving.config({
-                channels: Objects.wrapAll([
-                  {
-                    key: SendDataToSectionChannel,
-                    value:  {
-                      onReceive: updateDataWithForm
+                AddEventsBehaviour.config('TabView.form.events', [
+                  AlloyEvents.runOnAttached(setDataOnForm),
+                  AlloyEvents.runOnDetached(updateDataWithForm)
+                ]),
+                Receiving.config({
+                  channels: Objects.wrapAll([
+                    {
+                      key: SendDataToSectionChannel,
+                      value: {
+                        onReceive: updateDataWithForm
+                      }
+                    },
+                    {
+                      key: SendDataToViewChannel,
+                      value: {
+                        onReceive: setDataOnForm
+                      }
                     }
-                  },
-                  {
-                    key: SendDataToViewChannel,
-                    value: {
-                      onReceive: setDataOnForm
-                    }
-                  }
-                ])
-              })
-            ])
-          }))
-        ];
-      }
-    };
-  });
+                  ])
+                })
+              ])
+            }))
+          ];
+        }
+      };
+    }
+  );
 
   // Assign fixed height or variable height to the tabs
   const tabMode = setMode(allTabs).smartTabHeight;
@@ -114,7 +122,7 @@ export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage
   return AlloyTabSection.sketch({
     dom: {
       tag: 'div',
-      classes: [ 'tox-dialog__body' ]
+      classes: ['tox-dialog__body']
     },
 
     onChangeTab: (section, button, _viewItems) => {
@@ -132,24 +140,20 @@ export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage
       AlloyTabSection.parts().tabbar({
         dom: {
           tag: 'div',
-          classes: [ 'tox-dialog__body-nav' ]
+          classes: ['tox-dialog__body-nav']
         },
-        components: [
-          AlloyTabbar.parts().tabs({ })
-        ],
+        components: [AlloyTabbar.parts().tabs({})],
         markers: {
           tabClass: 'tox-tab',
           selectedClass: 'tox-dialog__body-nav-item--active'
         },
 
-        tabbarBehaviours: Behaviour.derive([
-          Tabstopping.config({ })
-        ])
+        tabbarBehaviours: Behaviour.derive([Tabstopping.config({})])
       }),
       AlloyTabSection.parts().tabview({
         dom: {
           tag: 'div',
-          classes: [ 'tox-dialog__body-content' ]
+          classes: ['tox-dialog__body-content']
         }
       })
     ],
@@ -172,12 +176,12 @@ export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage
           mode: 'manual',
           getValue: (tsection: AlloyComponent) => {
             // NOTE: Assumes synchronous updating of store.
-            tsection.getSystem().broadcastOn([ SendDataToSectionChannel ], { });
+            tsection.getSystem().broadcastOn([SendDataToSectionChannel], {});
             return storedValue.get();
           },
           setValue: (tsection: AlloyComponent, value: TabData) => {
             storedValue.set(value);
-            tsection.getSystem().broadcastOn([ SendDataToViewChannel ], { });
+            tsection.getSystem().broadcastOn([SendDataToViewChannel], {});
           }
         }
       })

@@ -15,16 +15,19 @@ import { resize, ResizeTypes } from '../sizing/Resize';
 import * as ElementPath from './ElementPath';
 import { renderWordCount } from './WordCount';
 
-const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
+const renderStatusbar = (
+  editor: Editor,
+  providersBackstage: UiFactoryBackstageProviders
+): SimpleSpec => {
   const renderResizeHandlerIcon = (resizeType: ResizeTypes): SimpleSpec => ({
     dom: {
       tag: 'div',
-      classes: [ 'tox-statusbar__resize-handle' ],
+      classes: ['tox-statusbar__resize-handle'],
       attributes: {
         'title': providersBackstage.translate('Resize'), // TODO: tooltips AP-213
         'aria-hidden': 'true'
       },
-      innerHtml: getIcon('resize-handle', providersBackstage.icons),
+      innerHtml: getIcon('resize-handle', providersBackstage.icons)
     },
     behaviours: Behaviour.derive([
       Dragging.config({
@@ -39,12 +42,12 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
   });
 
   const renderBranding = (): SimpleSpec => {
-    const label = I18n.translate([ 'Powered by {0}', 'Tiny' ]);
+    const label = I18n.translate(['Powered by {0}', 'Tiny']);
     const linkHtml = `<a href="https://www.tiny.cloud/?utm_campaign=editor_referral&amp;utm_medium=poweredby&amp;utm_source=tinymce&amp;utm_content=v5" rel="noopener" target="_blank" tabindex="-1" aria-label="${label}">${label}</a>`;
     return {
       dom: {
         tag: 'span',
-        classes: [ 'tox-statusbar__branding' ],
+        classes: ['tox-statusbar__branding'],
         innerHtml: linkHtml
       }
     };
@@ -67,7 +70,9 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
     const components: SimpleSpec[] = [];
 
     if (editor.getParam('elementpath', true, 'boolean')) {
-      components.push(ElementPath.renderElementPath(editor, { }, providersBackstage));
+      components.push(
+        ElementPath.renderElementPath(editor, {}, providersBackstage)
+      );
     }
 
     if (Strings.contains(editor.settings.plugins, 'wordcount')) {
@@ -79,13 +84,15 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
     }
 
     if (components.length > 0) {
-      return [{
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-statusbar__text-container' ]
-        },
-        components,
-      }];
+      return [
+        {
+          dom: {
+            tag: 'div',
+            classes: ['tox-statusbar__text-container']
+          },
+          components
+        }
+      ];
     }
     return [];
   };
@@ -103,9 +110,9 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-statusbar' ],
+      classes: ['tox-statusbar']
     },
-    components: getComponents(),
+    components: getComponents()
   };
 };
 

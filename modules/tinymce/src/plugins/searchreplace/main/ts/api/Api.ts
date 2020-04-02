@@ -39,6 +39,4 @@ const get = function (editor: Editor, currentState: Cell<Actions.SearchState>) {
   };
 };
 
-export {
-  get
-};
+export { get };

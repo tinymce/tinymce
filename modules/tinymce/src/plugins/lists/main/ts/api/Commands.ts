@@ -6,11 +6,18 @@
  */
 
 import * as ToggleList from '../actions/ToggleList';
-import { indentListSelection, outdentListSelection, flattenListSelection } from '../actions/Indendation';
+import {
+  indentListSelection,
+  outdentListSelection,
+  flattenListSelection
+} from '../actions/Indendation';
 
 const queryListCommandState = function (editor, listName) {
   return function () {
-    const parentList = editor.dom.getParent(editor.selection.getStart(), 'UL,OL,DL');
+    const parentList = editor.dom.getParent(
+      editor.selection.getStart(),
+      'UL,OL,DL'
+    );
     return parentList && parentList.nodeName === listName;
   };
 };
@@ -42,11 +49,18 @@ const register = function (editor) {
     flattenListSelection(editor);
   });
 
-  editor.addQueryStateHandler('InsertUnorderedList', queryListCommandState(editor, 'UL'));
-  editor.addQueryStateHandler('InsertOrderedList', queryListCommandState(editor, 'OL'));
-  editor.addQueryStateHandler('InsertDefinitionList', queryListCommandState(editor, 'DL'));
+  editor.addQueryStateHandler(
+    'InsertUnorderedList',
+    queryListCommandState(editor, 'UL')
+  );
+  editor.addQueryStateHandler(
+    'InsertOrderedList',
+    queryListCommandState(editor, 'OL')
+  );
+  editor.addQueryStateHandler(
+    'InsertDefinitionList',
+    queryListCommandState(editor, 'DL')
+  );
 };
 
-export {
-  register
-};
+export { register };

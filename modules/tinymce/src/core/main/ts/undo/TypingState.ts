@@ -8,7 +8,11 @@
 import { isUnlocked } from './Locks';
 import { UndoManager, Locks } from './UndoManagerTypes';
 
-export const setTyping = (undoManager: UndoManager, typing: boolean, locks: Locks) => {
+export const setTyping = (
+  undoManager: UndoManager,
+  typing: boolean,
+  locks: Locks
+) => {
   if (isUnlocked(locks)) {
     undoManager.typing = typing;
   }

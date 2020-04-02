@@ -4,7 +4,6 @@ import Editor from 'tinymce/core/api/Editor';
 declare let tinymce: any;
 
 export default function () {
-
   const button = document.createElement('button');
   button.innerHTML = 'Get all annotations';
   button.addEventListener('click', () => {
@@ -18,9 +17,10 @@ export default function () {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     selector: 'textarea.tinymce',
     toolbar: 'annotate-alpha',
-    plugins: [ ],
+    plugins: [],
 
-    content_style: '.mce-annotation { background-color: darkgreen; color: white; }',
+    content_style:
+      '.mce-annotation { background-color: darkgreen; color: white; }',
 
     setup: (editor: Editor) => {
       editor.ui.registry.addButton('annotate-alpha', {

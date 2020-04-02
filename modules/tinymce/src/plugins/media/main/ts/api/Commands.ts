@@ -15,6 +15,4 @@ const register = function (editor) {
   editor.addCommand('mceMedia', showDialog);
 };
 
-export {
-  register
-};
+export { register };

@@ -16,7 +16,11 @@ interface DragActionEvents {
   };
 }
 
-const setup = function (mutation: DragMutation, mode: DragMode, settings: Partial<BlockerOptions>) {
+const setup = function (
+  mutation: DragMutation,
+  mode: DragMode,
+  settings: Partial<BlockerOptions>
+) {
   let active = false;
 
   const events = Events.create({
@@ -60,7 +64,7 @@ const setup = function (mutation: DragMutation, mode: DragMode, settings: Partia
     // acivate some events here?
   };
 
-  const runIfActive = function <F extends (...args: any[]) => any> (f: F) {
+  const runIfActive = function <F extends (...args: any[]) => any>(f: F) {
     return function (...args: Parameters<F>) {
       if (active) {
         f.apply(null, args);
@@ -68,14 +72,17 @@ const setup = function (mutation: DragMutation, mode: DragMode, settings: Partia
     };
   };
 
-  const sink = mode.sink(DragApi({
-    // ASSUMPTION: runIfActive is not needed for mousedown. This is pretty much a safety measure for
-    // inconsistent situations so that we don't block input.
-    forceDrop: drop,
-    drop: runIfActive(drop),
-    move: runIfActive(mousemove),
-    delayDrop: runIfActive(throttledDrop.throttle)
-  }), settings);
+  const sink = mode.sink(
+    DragApi({
+      // ASSUMPTION: runIfActive is not needed for mousedown. This is pretty much a safety measure for
+      // inconsistent situations so that we don't block input.
+      forceDrop: drop,
+      drop: runIfActive(drop),
+      move: runIfActive(mousemove),
+      delayDrop: runIfActive(throttledDrop.throttle)
+    }),
+    settings
+  );
 
   const destroy = function () {
     sink.destroy();
@@ -91,6 +98,4 @@ const setup = function (mutation: DragMutation, mode: DragMode, settings: Partia
   };
 };
 
-export {
-  setup
-};
+export { setup };

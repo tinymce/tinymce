@@ -11,6 +11,4 @@ const register = function (editor) {
   });
 };
 
-export {
-  register
-};
+export { register };

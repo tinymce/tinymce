@@ -7,7 +7,15 @@
 
 import { Document } from '@ephox/dom-globals';
 import { Arr, Option, Options } from '@ephox/katamari';
-import { Attr, Css, Element, Insert, InsertAll, Node, Replication } from '@ephox/sugar';
+import {
+  Attr,
+  Css,
+  Element,
+  Insert,
+  InsertAll,
+  Node,
+  Replication
+} from '@ephox/sugar';
 import { Entry } from './Entry';
 import { ListType } from './Util';
 
@@ -39,7 +47,11 @@ const createSegment = (scope: Document, listType: ListType): Segment => {
   return segment;
 };
 
-const createSegments = (scope: Document, entry: Entry, size: number): Segment[] => {
+const createSegments = (
+  scope: Document,
+  entry: Entry,
+  size: number
+): Segment[] => {
   const segments: Segment[] = [];
   for (let i = 0; i < size; i++) {
     segments.push(createSegment(scope, entry.listType));
@@ -65,7 +77,11 @@ const normalizeSegment = (segment: Segment, entry: Entry): void => {
   Attr.setAll(segment.list, entry.listAttributes);
 };
 
-const createItem = (scope: Document, attr: Record<string, any>, content: Element[]): Element => {
+const createItem = (
+  scope: Document,
+  attr: Record<string, any>,
+  content: Element[]
+): Element => {
   const item = Element.fromTag('li', scope);
   Attr.setAll(item, attr);
   InsertAll.append(item, content);
@@ -77,7 +93,11 @@ const appendItem = (segment: Segment, item: Element): void => {
   segment.item = item;
 };
 
-const writeShallow = (scope: Document, cast: Segment[], entry: Entry): Segment[] => {
+const writeShallow = (
+  scope: Document,
+  cast: Segment[],
+  entry: Entry
+): Segment[] => {
   const newCast = cast.slice(0, entry.depth);
 
   Arr.last(newCast).each((segment) => {
@@ -89,7 +109,11 @@ const writeShallow = (scope: Document, cast: Segment[], entry: Entry): Segment[]
   return newCast;
 };
 
-const writeDeep = (scope: Document, cast: Segment[], entry: Entry): Segment[] => {
+const writeDeep = (
+  scope: Document,
+  cast: Segment[],
+  entry: Entry
+): Segment[] => {
   const segments = createSegments(scope, entry, entry.depth - cast.length);
   joinSegments(segments);
   populateSegments(segments, entry);
@@ -99,7 +123,14 @@ const writeDeep = (scope: Document, cast: Segment[], entry: Entry): Segment[] =>
 };
 
 const composeList = (scope: Document, entries: Entry[]): Option<Element> => {
-  const cast: Segment[] = Arr.foldl(entries, (cast, entry) => entry.depth > cast.length ? writeDeep(scope, cast, entry) : writeShallow(scope, cast, entry), []);
+  const cast: Segment[] = Arr.foldl(
+    entries,
+    (cast, entry) =>
+      entry.depth > cast.length
+        ? writeDeep(scope, cast, entry)
+        : writeShallow(scope, cast, entry),
+    []
+  );
 
   return Arr.head(cast).map((segment) => segment.list);
 };

@@ -16,6 +16,4 @@ const schema: FieldProcessorAdt[] = [
   SnapSchema
 ];
 
-export {
-  schema
-};
+export { schema };

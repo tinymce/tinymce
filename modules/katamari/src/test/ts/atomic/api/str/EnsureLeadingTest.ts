@@ -16,7 +16,9 @@ UnitTest.test('ensureLeading', () => {
 });
 
 UnitTest.test('startsWith a prefix', () => {
-  fc.assert(fc.property(fc.string(), fc.string(),
-    (prefix, suffix) => Strings.startsWith(prefix + suffix, prefix)
-  ));
+  fc.assert(
+    fc.property(fc.string(), fc.string(), (prefix, suffix) =>
+      Strings.startsWith(prefix + suffix, prefix)
+    )
+  );
 });

@@ -3,19 +3,26 @@ import { Obj } from '@ephox/katamari';
 
 import { SketchSpec } from '../../api/component/SpecTypes';
 import * as ButtonBase from '../../ui/common/ButtonBase';
-import { ButtonDetail, ButtonSketcher, ButtonSpec } from '../../ui/types/ButtonTypes';
+import {
+  ButtonDetail,
+  ButtonSketcher,
+  ButtonSpec
+} from '../../ui/types/ButtonTypes';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import { SketchBehaviours } from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from './UiSketcher';
 
-const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchSpec => {
+const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (
+  detail
+): SketchSpec => {
   const events = ButtonBase.events(detail.action);
 
   const tag = detail.dom.tag;
 
-  const lookupAttr = (attr: string) => Obj.get(detail.dom, 'attributes').bind((attrs) => Obj.get(attrs, attr));
+  const lookupAttr = (attr: string) =>
+    Obj.get(detail.dom, 'attributes').bind((attrs) => Obj.get(attrs, attr));
 
   // Button tags should not have a default role of button, and only buttons should
   // get a type of button.
@@ -24,9 +31,9 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
       // Default to type button, unless specified otherwise
       const type = lookupAttr('type').getOr('button');
       // Only use a role if it is specified
-      const roleAttrs = lookupAttr('role').map(
-        (role): Record<string, string | number | boolean> => ({ role })
-      ).getOr({ });
+      const roleAttrs = lookupAttr('role')
+        .map((role): Record<string, string | number | boolean> => ({ role }))
+        .getOr({});
 
       return {
         type,
@@ -45,19 +52,17 @@ const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchS
     dom: detail.dom,
     components: detail.components,
     events,
-    behaviours: SketchBehaviours.augment(
-      detail.buttonBehaviours, [
-        Focusing.config({ }),
-        Keying.config({
-          mode: 'execution',
-          // Note execution will capture keyup when the focus is on the button
-          // on Firefox, because otherwise it will fire a click event and double
-          // up on the action
-          useSpace: true,
-          useEnter: true
-        })
-      ]
-    ),
+    behaviours: SketchBehaviours.augment(detail.buttonBehaviours, [
+      Focusing.config({}),
+      Keying.config({
+        mode: 'execution',
+        // Note execution will capture keyup when the focus is on the button
+        // on Firefox, because otherwise it will fire a click event and double
+        // up on the action
+        useSpace: true,
+        useEnter: true
+      })
+    ]),
     domModification: {
       attributes: getModAttributes()
     },
@@ -71,14 +76,12 @@ const Button: ButtonSketcher = Sketcher.single({
   configFields: [
     FieldSchema.defaulted('uid', undefined),
     FieldSchema.strict('dom'),
-    FieldSchema.defaulted('components', [ ]),
-    SketchBehaviours.field('buttonBehaviours', [ Focusing, Keying ]),
+    FieldSchema.defaulted('components', []),
+    SketchBehaviours.field('buttonBehaviours', [Focusing, Keying]),
     FieldSchema.option('action'),
     FieldSchema.option('role'),
-    FieldSchema.defaulted('eventOrder', { })
+    FieldSchema.defaulted('eventOrder', {})
   ]
 });
 
-export {
-  Button
-};
+export { Button };

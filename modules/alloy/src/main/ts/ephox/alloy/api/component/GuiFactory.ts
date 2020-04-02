@@ -2,7 +2,11 @@ import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun, Obj, Option, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 
-import { AlloySpec, PremadeSpec, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
+import {
+  AlloySpec,
+  PremadeSpec,
+  SimpleOrSketchSpec
+} from '../../api/component/SpecTypes';
 import * as DefaultEvents from '../../events/DefaultEvents';
 import * as Tagger from '../../registry/Tagger';
 import * as CustomSpec from '../../spec/CustomSpec';
@@ -13,19 +17,23 @@ import * as Component from './Component';
 import { AlloyComponent } from './ComponentApi';
 
 const buildSubcomponents = (spec: SimpleOrSketchSpec): AlloyComponent[] => {
-  const components = Obj.get(spec, 'components').getOr([ ]);
+  const components = Obj.get(spec, 'components').getOr([]);
   return Arr.map(components, build);
 };
 
-const buildFromSpec = (userSpec: SimpleOrSketchSpec): Result<AlloyComponent, string> => {
-  const { events: specEvents, ...spec }: SimpleOrSketchSpec = CustomSpec.make(userSpec);
+const buildFromSpec = (
+  userSpec: SimpleOrSketchSpec
+): Result<AlloyComponent, string> => {
+  const { events: specEvents, ...spec }: SimpleOrSketchSpec = CustomSpec.make(
+    userSpec
+  );
 
   // Build the subcomponents. A spec hierarchy is built from the bottom up.
   const components: AlloyComponent[] = buildSubcomponents(spec);
 
   const completeSpec = {
     ...spec,
-    events:  { ...DefaultEvents, ...specEvents },
+    events: { ...DefaultEvents, ...specEvents },
     components
   };
 
@@ -44,12 +52,22 @@ const text = (textContent: string): PremadeSpec => {
 };
 
 // Rename.
-export interface ExternalElement { uid?: string; element: Element }
+export interface ExternalElement {
+  uid?: string;
+  element: Element;
+}
 const external = (spec: ExternalElement): PremadeSpec => {
-  const extSpec: { uid: Option<string>; element: Element } = ValueSchema.asRawOrDie('external.component', ValueSchema.objOfOnly([
-    FieldSchema.strict('element'),
-    FieldSchema.option('uid')
-  ]), spec);
+  const extSpec: {
+    uid: Option<string>;
+    element: Element;
+  } = ValueSchema.asRawOrDie(
+    'external.component',
+    ValueSchema.objOfOnly([
+      FieldSchema.strict('element'),
+      FieldSchema.option('uid')
+    ]),
+    spec
+  );
 
   const systemApi = Cell(NoContextApi());
 
@@ -71,13 +89,13 @@ const external = (spec: ExternalElement): PremadeSpec => {
     hasConfigured: Fun.constant(false),
     connect,
     disconnect,
-    getApis: <A>(): A => ({ } as any),
+    getApis: <A>(): A => ({} as any),
     element: Fun.constant(extSpec.element),
     spec: Fun.constant(spec),
     readState: Fun.constant('No state'),
     syncComponents: Fun.noop,
-    components: Fun.constant([ ]),
-    events: Fun.constant({ })
+    components: Fun.constant([]),
+    events: Fun.constant({})
   };
   return GuiTypes.premade(me);
 };
@@ -91,20 +109,21 @@ const external = (spec: ExternalElement): PremadeSpec => {
 const uids = Tagger.generate;
 
 // INVESTIGATE: A better way to provide 'meta-specs'
-const build = (spec: AlloySpec): AlloyComponent => GuiTypes.getPremade(spec).fold(() => {
-  // EFFICIENCY: Consider not merging here, and passing uid through separately
-  const userSpecWithUid = spec.hasOwnProperty('uid') ? spec as SimpleOrSketchSpec : {
-    uid: uids(''),
-    ...spec,
-  } as SimpleOrSketchSpec;
-  return buildFromSpec(userSpecWithUid).getOrDie();
-}, (prebuilt) => prebuilt);
+const build = (spec: AlloySpec): AlloyComponent =>
+  GuiTypes.getPremade(spec).fold(
+    () => {
+      // EFFICIENCY: Consider not merging here, and passing uid through separately
+      const userSpecWithUid = spec.hasOwnProperty('uid')
+        ? (spec as SimpleOrSketchSpec)
+        : ({
+            uid: uids(''),
+            ...spec
+          } as SimpleOrSketchSpec);
+      return buildFromSpec(userSpecWithUid).getOrDie();
+    },
+    (prebuilt) => prebuilt
+  );
 
 const premade = GuiTypes.premade;
 
-export {
-  build,
-  premade,
-  external,
-  text
-};
+export { build, premade, external, text };

@@ -22,24 +22,27 @@ import UrlDialogDemo from './UrlDialogDemo';
 declare let window: any;
 
 const demo = () => {
-  Arr.map([
-    CustomRediallingSpec,
-    AlertBannerDialogSpec,
-    AnchorDialogSpec,
-    CharmapDialogSpec,
-    CodeSampleDialogSpec,
-    ColorPickerDialogSpec,
-    DocumentPropsDialogSpec,
-    FindReplaceDialogSpec,
-    ImageDialogSpec,
-    LinkDialogSpec,
-    MediaDialogSpec,
-    PreviewDialogSpec,
-    TableCellDialogSpec,
-    TableDialogSpec,
-    TableRowDialogSpec,
-    TemplateDialogSpec
-  ], buildDemoDialog);
+  Arr.map(
+    [
+      CustomRediallingSpec,
+      AlertBannerDialogSpec,
+      AnchorDialogSpec,
+      CharmapDialogSpec,
+      CodeSampleDialogSpec,
+      ColorPickerDialogSpec,
+      DocumentPropsDialogSpec,
+      FindReplaceDialogSpec,
+      ImageDialogSpec,
+      LinkDialogSpec,
+      MediaDialogSpec,
+      PreviewDialogSpec,
+      TableCellDialogSpec,
+      TableDialogSpec,
+      TableRowDialogSpec,
+      TemplateDialogSpec
+    ],
+    buildDemoDialog
+  );
 };
 
 window.dialogdemos = {

@@ -11,7 +11,13 @@ import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { updateMenuIcon } from '../../dropdown/CommonDropdown';
 import { onActionToggleFormat } from './utils/Utils';
-import { createMenuItems, createSelectButton, FormatItem, PreviewSpec, SelectSpec } from './BespokeSelect';
+import {
+  createMenuItems,
+  createSelectButton,
+  FormatItem,
+  PreviewSpec,
+  SelectSpec
+} from './BespokeSelect';
 import { buildBasicStaticDataset } from './SelectDatasets';
 import { IsSelectedForType } from './utils/FormatRegister';
 
@@ -23,23 +29,32 @@ const alignMenuItems = [
 ];
 
 const getSpec = (editor: Editor): SelectSpec => {
-  const getMatchingValue = (): Option<Partial<FormatItem>> => Arr.find(alignMenuItems, (item) => editor.formatter.match(item.format));
+  const getMatchingValue = (): Option<Partial<FormatItem>> =>
+    Arr.find(alignMenuItems, (item) => editor.formatter.match(item.format));
 
-  const isSelectedFor: IsSelectedForType = (format: string) => () => editor.formatter.match(format);
+  const isSelectedFor: IsSelectedForType = (format: string) => () =>
+    editor.formatter.match(format);
 
   const getPreviewFor = (_format: string) => () => Option.none<PreviewSpec>();
 
   const updateSelectMenuIcon = (comp: AlloyComponent) => {
     const match = getMatchingValue();
-    const alignment = match.fold(() => 'left', (item) => item.title.toLowerCase());
+    const alignment = match.fold(
+      () => 'left',
+      (item) => item.title.toLowerCase()
+    );
     AlloyTriggers.emitWith(comp, updateMenuIcon, {
       icon: `align-${alignment}`
     });
   };
 
-  const nodeChangeHandler = Option.some((comp: AlloyComponent) => () => updateSelectMenuIcon(comp));
+  const nodeChangeHandler = Option.some((comp: AlloyComponent) => () =>
+    updateSelectMenuIcon(comp)
+  );
 
-  const setInitialValue = Option.some((comp: AlloyComponent) => updateSelectMenuIcon(comp));
+  const setInitialValue = Option.some((comp: AlloyComponent) =>
+    updateSelectMenuIcon(comp)
+  );
 
   const dataset = buildBasicStaticDataset(alignMenuItems);
 
@@ -58,13 +73,15 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
-const createAlignSelect = (editor, backstage: UiFactoryBackstage) => createSelectButton(editor, backstage, getSpec(editor));
+const createAlignSelect = (editor, backstage: UiFactoryBackstage) =>
+  createSelectButton(editor, backstage, getSpec(editor));
 
 const alignSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('align', {
     text: backstage.shared.providers.translate('Align'),
-    getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
+    getSubmenuItems: () =>
+      menuItems.items.validateItems(menuItems.getStyleItems())
   });
 };
 

@@ -17,7 +17,9 @@ const isTableCellNode = function (node) {
 
 const isListNode = function (editor) {
   return function (node) {
-    return node && (/^(OL|UL|DL)$/).test(node.nodeName) && isChildOfBody(editor, node);
+    return (
+      node && /^(OL|UL|DL)$/.test(node.nodeName) && isChildOfBody(editor, node)
+    );
   };
 };
 
@@ -27,8 +29,4 @@ const getSelectedStyleType = function (editor): Option<string> {
   return Option.from(style);
 };
 
-export {
-  isTableCellNode,
-  isListNode,
-  getSelectedStyleType
-};
+export { isTableCellNode, isListNode, getSelectedStyleType };

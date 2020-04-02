@@ -9,7 +9,7 @@ import { CompositeSketch, CompositeSketchDetail } from '../../api/ui/Sketcher';
 export interface ExpandableFormDetail extends CompositeSketchDetail {
   uid: string;
   dom: RawDomSchema;
-  components: AlloySpec[ ];
+  components: AlloySpec[];
   expandableBehaviours: SketchBehaviours;
   action: Option<ExpandableFormAction>;
   role: Option<string>;
@@ -58,4 +58,6 @@ export interface ExpandableFormApis {
   expandForm: (component: AlloyComponent) => void;
 }
 
-export interface ExpandableFormSketcher extends CompositeSketch<ExpandableFormSpec>, ExpandableFormApis { }
+export interface ExpandableFormSketcher
+  extends CompositeSketch<ExpandableFormSpec>,
+    ExpandableFormApis {}

@@ -45,7 +45,8 @@ const replaceTemplateValues = function (html, templateValues) {
 };
 
 const replaceVals = function (editor, e) {
-  const dom = editor.dom, vl = Settings.getTemplateReplaceValues(editor);
+  const dom = editor.dom,
+    vl = Settings.getTemplateReplaceValues(editor);
 
   Tools.each(dom.select('*', e), function (e) {
     Tools.each(vl, function (v, k) {
@@ -81,17 +82,35 @@ const insertTemplate = function (editor, ui, html) {
 
   Tools.each(dom.select('*', el), function (n) {
     // Replace cdate
-    if (hasClass(n, Settings.getCreationDateClasses(editor).replace(/\s+/g, '|'))) {
-      n.innerHTML = DateTimeHelper.getDateTime(editor, Settings.getCdateFormat(editor));
+    if (
+      hasClass(n, Settings.getCreationDateClasses(editor).replace(/\s+/g, '|'))
+    ) {
+      n.innerHTML = DateTimeHelper.getDateTime(
+        editor,
+        Settings.getCdateFormat(editor)
+      );
     }
 
     // Replace mdate
-    if (hasClass(n, Settings.getModificationDateClasses(editor).replace(/\s+/g, '|'))) {
-      n.innerHTML = DateTimeHelper.getDateTime(editor, Settings.getMdateFormat(editor));
+    if (
+      hasClass(
+        n,
+        Settings.getModificationDateClasses(editor).replace(/\s+/g, '|')
+      )
+    ) {
+      n.innerHTML = DateTimeHelper.getDateTime(
+        editor,
+        Settings.getMdateFormat(editor)
+      );
     }
 
     // Replace selection
-    if (hasClass(n, Settings.getSelectedContentClasses(editor).replace(/\s+/g, '|'))) {
+    if (
+      hasClass(
+        n,
+        Settings.getSelectedContentClasses(editor).replace(/\s+/g, '|')
+      )
+    ) {
       n.innerHTML = sel;
     }
   });

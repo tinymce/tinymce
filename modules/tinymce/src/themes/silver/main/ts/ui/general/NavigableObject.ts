@@ -5,7 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyTriggers, Behaviour, Focusing, NativeEvents, Tabstopping } from '@ephox/alloy';
+import {
+  AlloyTriggers,
+  Behaviour,
+  Focusing,
+  NativeEvents,
+  Tabstopping
+} from '@ephox/alloy';
 import { Fun, Id } from '@ephox/katamari';
 import { Class, SelectorExists } from '@ephox/sugar';
 
@@ -29,8 +35,8 @@ const craftWithClasses = function (classes) {
       classes
     },
     behaviours: Behaviour.derive([
-      Focusing.config( { ignore: true }),
-      Tabstopping.config({ })
+      Focusing.config({ ignore: true }),
+      Tabstopping.config({})
     ])
   };
 };
@@ -39,16 +45,14 @@ const craft = function (spec) {
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-navobj' ]
+      classes: ['tox-navobj']
     },
     components: [
-      craftWithClasses([ beforeObject ]),
+      craftWithClasses([beforeObject]),
       spec,
-      craftWithClasses([ afterObject ])
+      craftWithClasses([afterObject])
     ],
-    behaviours: Behaviour.derive([
-      ComposingConfigs.childAt(1)
-    ])
+    behaviours: Behaviour.derive([ComposingConfigs.childAt(1)])
   };
 };
 
@@ -65,15 +69,19 @@ const triggerTab = function (placeholder, shiftKey) {
 const onFocus = function (container, targetComp) {
   const target = targetComp.element();
   // If focus has shifted naturally to a before object, the tab direction is backwards.
-  if (Class.has(target, beforeObject)) { triggerTab(container, true); } else if (Class.has(target, afterObject)) { triggerTab(container, false); }
+  if (Class.has(target, beforeObject)) {
+    triggerTab(container, true);
+  } else if (Class.has(target, afterObject)) {
+    triggerTab(container, false);
+  }
 };
 
 const isPseudoStop = function (element) {
-  return SelectorExists.closest(element, [ '.' + beforeObject, '.' + afterObject ].join(','), Fun.constant(false));
+  return SelectorExists.closest(
+    element,
+    ['.' + beforeObject, '.' + afterObject].join(','),
+    Fun.constant(false)
+  );
 };
 
-export {
-  isPseudoStop,
-  onFocus,
-  craft
-};
+export { isPseudoStop, onFocus, craft };

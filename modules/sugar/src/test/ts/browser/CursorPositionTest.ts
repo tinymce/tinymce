@@ -18,24 +18,48 @@ UnitTest.test('Browser Test: CursorPositionTest', function () {
   const child3c = Element.fromText('');
   const child3d = Element.fromTag('br');
   const child3e = Element.fromText('');
-  InsertAll.append(child3, [ child3a, child3b, child3c, child3d, child3e ]);
+  InsertAll.append(child3, [child3a, child3b, child3c, child3d, child3e]);
 
   const child4 = Element.fromTag('br');
   const child5 = Element.fromText('');
 
-  InsertAll.append(container, [ child1, child2, child3, child4, child5 ]);
+  InsertAll.append(container, [child1, child2, child3, child4, child5]);
 
   const checkFirst = function (label, expected, root) {
-    const actual = CursorPosition.first(root).getOrDie('No cursor position found for: ' + label);
-    assert.eq(true, Compare.eq(expected, actual), () => 'Incorrect element. \nExpected: ' + Html.getOuter(expected) + '\nWas: ' + Html.getOuter(actual));
+    const actual = CursorPosition.first(root).getOrDie(
+      'No cursor position found for: ' + label
+    );
+    assert.eq(
+      true,
+      Compare.eq(expected, actual),
+      () =>
+        'Incorrect element. \nExpected: ' +
+        Html.getOuter(expected) +
+        '\nWas: ' +
+        Html.getOuter(actual)
+    );
   };
 
   const checkLast = function (label, expected, root) {
-    const actual = CursorPosition.last(root).getOrDie('No cursor position found for: ' + label);
-    assert.eq(true, Compare.eq(expected, actual), () => 'Incorrect element. \nExpected: ' + Html.getOuter(expected) + '\nWas: ' + Html.getOuter(actual));
+    const actual = CursorPosition.last(root).getOrDie(
+      'No cursor position found for: ' + label
+    );
+    assert.eq(
+      true,
+      Compare.eq(expected, actual),
+      () =>
+        'Incorrect element. \nExpected: ' +
+        Html.getOuter(expected) +
+        '\nWas: ' +
+        Html.getOuter(actual)
+    );
   };
 
-  checkFirst('First of container (should skip empty container)', child3a, container);
+  checkFirst(
+    'First of container (should skip empty container)',
+    child3a,
+    container
+  );
   checkFirst('First of span', child3a, child3);
   checkLast('Last of container (should be <br>)', child4, container);
   checkLast('Last of span (should be <br>)', child3d, child3);

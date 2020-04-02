@@ -15,7 +15,14 @@ const token = function (input: string) {
  * These are consumed by the regex and then excluded by prefix/suffix lengths.
  */
 const word = function (input: string) {
-  const regex = `((?:^'?)|(?:` + Chars.wordbreak() + `+'?))` + input + `((?:'?$)|(?:'?` + Chars.wordbreak() + '+))';
+  const regex =
+    `((?:^'?)|(?:` +
+    Chars.wordbreak() +
+    `+'?))` +
+    input +
+    `((?:'?$)|(?:'?` +
+    Chars.wordbreak() +
+    '+))';
 
   // ASSUMPTION: There are no groups in their input
   const prefix = function (match: RegExpExecArray) {
@@ -29,7 +36,4 @@ const word = function (input: string) {
   return Custom(regex, prefix, suffix, Option.none());
 };
 
-export {
-  token,
-  word
-};
+export { token, word };

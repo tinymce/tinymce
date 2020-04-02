@@ -42,7 +42,12 @@ const scrollToBr = function (dom: DOMUtils, selection: Selection, brElm) {
   dom.remove(marker);
 };
 
-const moveSelectionToBr = function (dom: DOMUtils, selection: Selection, brElm, extraBr) {
+const moveSelectionToBr = function (
+  dom: DOMUtils,
+  selection: Selection,
+  brElm,
+  extraBr
+) {
   const rng = dom.createRng();
 
   if (!extraBr) {
@@ -77,7 +82,9 @@ const insertBrAtCaret = function (editor: Editor, evt?) {
   if (container.nodeType === 1 && container.hasChildNodes()) {
     const isAfterLastNodeInContainer = offset > container.childNodes.length - 1;
 
-    container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
+    container =
+      container.childNodes[Math.min(offset, container.childNodes.length - 1)] ||
+      container;
     if (isAfterLastNodeInContainer && container.nodeType === 3) {
       offset = container.nodeValue.length;
     } else {
@@ -86,8 +93,12 @@ const insertBrAtCaret = function (editor: Editor, evt?) {
   }
 
   let parentBlock = dom.getParent(container, dom.isBlock);
-  const containerBlock = parentBlock ? dom.getParent(parentBlock.parentNode, dom.isBlock) : null;
-  const containerBlockName = containerBlock ? containerBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
+  const containerBlock = parentBlock
+    ? dom.getParent(parentBlock.parentNode, dom.isBlock)
+    : null;
+  const containerBlockName = containerBlock
+    ? containerBlock.nodeName.toUpperCase()
+    : ''; // IE < 9 & HTML5
 
   // Enter inside block contained within a LI then split or insert before/after LI
   const isControlKey = !!(evt && evt.ctrlKey);
@@ -95,7 +106,11 @@ const insertBrAtCaret = function (editor: Editor, evt?) {
     parentBlock = containerBlock;
   }
 
-  if (container && container.nodeType === 3 && offset >= container.nodeValue.length) {
+  if (
+    container &&
+    container.nodeType === 3 &&
+    offset >= container.nodeValue.length
+  ) {
     // Insert extra BR element at the end block elements
     if (!hasRightSideContent(editor.schema, container, parentBlock)) {
       brElm = dom.create('br');
@@ -140,9 +155,11 @@ const hasBrAfter = function (rootNode, startNode) {
   if (isBeforeBr(CaretPosition.after(startNode))) {
     return true;
   } else {
-    return CaretFinder.nextPosition(rootNode, CaretPosition.after(startNode)).map(function (pos) {
-      return NodeType.isBr(pos.getNode());
-    }).getOr(false);
+    return CaretFinder.nextPosition(rootNode, CaretPosition.after(startNode))
+      .map(function (pos) {
+        return NodeType.isBr(pos.getNode());
+      })
+      .getOr(false);
   }
 };
 
@@ -162,7 +179,11 @@ const isInsideAnchor = function (location) {
 const readInlineAnchorLocation = function (editor: Editor) {
   const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
   const position = CaretPosition.fromRangeStart(editor.selection.getRng());
-  return BoundaryLocation.readLocation(isInlineTarget, editor.getBody(), position).filter(isInsideAnchor);
+  return BoundaryLocation.readLocation(
+    isInlineTarget,
+    editor.getBody(),
+    position
+  ).filter(isInsideAnchor);
 };
 
 const insertBrOutsideAnchor = function (editor: Editor, location) {
@@ -184,6 +205,4 @@ const insert = function (editor: Editor, evt?) {
   }
 };
 
-export {
-  insert
-};
+export { insert };

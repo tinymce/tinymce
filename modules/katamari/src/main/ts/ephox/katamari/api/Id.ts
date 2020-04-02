@@ -12,8 +12,8 @@
 let unique = 0;
 
 export const generate = function (prefix: string) {
-  const date   = new Date();
-  const time   = date.getTime();
+  const date = new Date();
+  const time = date.getTime();
   const random = Math.floor(Math.random() * 1000000000);
 
   unique++;

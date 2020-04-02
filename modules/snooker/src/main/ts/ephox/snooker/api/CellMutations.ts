@@ -10,6 +10,4 @@ const halve = function (main: Element, other: Element) {
   });
 };
 
-export {
-  halve
-};
+export { halve };

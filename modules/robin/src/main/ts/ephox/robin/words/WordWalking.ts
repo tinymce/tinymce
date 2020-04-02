@@ -13,14 +13,14 @@ const right = walkers.right();
 
 const breakToLeft = function (text: string) {
   return WordUtil.leftBreak(text).map(function (index) {
-    return [ index + 1, text.length ] as [number, number];
+    return [index + 1, text.length] as [number, number];
   });
 };
 
 const breakToRight = function (text: string) {
   // Will need to generalise the word breaks.
   return WordUtil.rightBreak(text).map(function (index) {
-    return [ 0, index ] as [number, number];
+    return [0, index] as [number, number];
   });
 };
 

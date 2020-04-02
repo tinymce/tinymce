@@ -9,6 +9,4 @@ import Editor from 'tinymce/core/api/Editor';
 
 const fireResizeEditor = (editor: Editor) => editor.fire('ResizeEditor');
 
-export {
-  fireResizeEditor
-};
+export { fireResizeEditor };

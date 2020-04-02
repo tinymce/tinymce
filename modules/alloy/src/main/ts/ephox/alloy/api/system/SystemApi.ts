@@ -20,7 +20,10 @@ export interface AlloySystemApi {
 
   isConnected: () => boolean;
   // Weird method. Required?
-  triggerEscape: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
+  triggerEscape: (
+    component: AlloyComponent,
+    simulatedEvent: NativeSimulatedEvent
+  ) => void;
 
   triggerEvent: (eventName: string, target: Element, data: {}) => void;
   triggerFocus: (target: Element, originator: Element) => void;

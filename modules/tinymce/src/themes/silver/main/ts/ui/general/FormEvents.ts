@@ -13,14 +13,10 @@ export interface FormChangeEvent<T> extends CustomEvent {
 }
 
 // tslint:disable-next-line:no-empty-interface
-export interface FormCloseEvent extends CustomEvent {
-
-}
+export interface FormCloseEvent extends CustomEvent {}
 
 // tslint:disable-next-line:no-empty-interface
-export interface FormCancelEvent extends CustomEvent {
-
-}
+export interface FormCancelEvent extends CustomEvent {}
 
 export interface FormActionEvent extends CustomEvent {
   name: () => string;
@@ -28,9 +24,7 @@ export interface FormActionEvent extends CustomEvent {
 }
 
 // tslint:disable-next-line:no-empty-interface
-export interface FormSubmitEvent extends CustomEvent {
-
-}
+export interface FormSubmitEvent extends CustomEvent {}
 
 // tslint:disable-next-line:no-empty-interface
 export interface FormBlockEvent extends CustomEvent {
@@ -38,9 +32,7 @@ export interface FormBlockEvent extends CustomEvent {
 }
 
 // tslint:disable-next-line:no-empty-interface
-export interface FormUnblockEvent extends CustomEvent {
-
-}
+export interface FormUnblockEvent extends CustomEvent {}
 
 export interface FormTabChangeEvent extends CustomEvent {
   name: () => string;

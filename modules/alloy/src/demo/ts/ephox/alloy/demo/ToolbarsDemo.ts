@@ -30,76 +30,94 @@ export default (): void => {
 
   const lazySink: LazySink = (_) => Result.value(sink);
 
-  const groups = () => Arr.map([
-    {
-      label: 'group-1',
-      items: Arr.map([
-        { text: '1a', action() { } },
-        { text: '1b', action() { } },
-        { text: '1c', action() { } }
-
-      ], DemoRenders.toolbarItem)
-    },
-    {
-      label: 'group-2',
-      items: Arr.map([
-        { text: '2a', action() { } },
-        { text: '2b', action() { } },
-        { text: '2c', action() { } }
-
-      ], DemoRenders.toolbarItem)
-    },
-    {
-      label: 'group-3',
-      items: Arr.map([
-        { text: '3a', action() { } },
-        { text: '3b', action() { } },
-        { text: '3c', action() { } }
-
-      ], DemoRenders.toolbarItem)
-    },
-    {
-      label: 'group-4',
-      items: Arr.map([
-        { text: '4a', action() { } },
-        { text: '4b', action() { } },
-        { text: '4c', action() { } }
-
-      ], DemoRenders.toolbarItem)
-    },
-    {
-      label: 'group-5',
-      items: Arr.map([
-        { text: '5a', action() { } },
-        { text: '5b', action() { } },
-        { text: '5c', action() { } }
-
-      ], DemoRenders.toolbarItem)
-    },
-    {
-      label: 'group-6',
-      items: Arr.map([
-        { text: '6a', action() { } },
-        { text: '6b', action() { } }
-
-      ], DemoRenders.toolbarItem)
-    },
-    {
-      label: 'group-7',
-      items: Arr.map([
-        { text: '7a', action() { } },
-        { text: '7b', action() { } }
-
-      ], DemoRenders.toolbarItem)
-    }
-  ], DemoRenders.toolbarGroup);
+  const groups = () =>
+    Arr.map(
+      [
+        {
+          label: 'group-1',
+          items: Arr.map(
+            [
+              { text: '1a', action() {} },
+              { text: '1b', action() {} },
+              { text: '1c', action() {} }
+            ],
+            DemoRenders.toolbarItem
+          )
+        },
+        {
+          label: 'group-2',
+          items: Arr.map(
+            [
+              { text: '2a', action() {} },
+              { text: '2b', action() {} },
+              { text: '2c', action() {} }
+            ],
+            DemoRenders.toolbarItem
+          )
+        },
+        {
+          label: 'group-3',
+          items: Arr.map(
+            [
+              { text: '3a', action() {} },
+              { text: '3b', action() {} },
+              { text: '3c', action() {} }
+            ],
+            DemoRenders.toolbarItem
+          )
+        },
+        {
+          label: 'group-4',
+          items: Arr.map(
+            [
+              { text: '4a', action() {} },
+              { text: '4b', action() {} },
+              { text: '4c', action() {} }
+            ],
+            DemoRenders.toolbarItem
+          )
+        },
+        {
+          label: 'group-5',
+          items: Arr.map(
+            [
+              { text: '5a', action() {} },
+              { text: '5b', action() {} },
+              { text: '5c', action() {} }
+            ],
+            DemoRenders.toolbarItem
+          )
+        },
+        {
+          label: 'group-6',
+          items: Arr.map(
+            [
+              { text: '6a', action() {} },
+              { text: '6b', action() {} }
+            ],
+            DemoRenders.toolbarItem
+          )
+        },
+        {
+          label: 'group-7',
+          items: Arr.map(
+            [
+              { text: '7a', action() {} },
+              { text: '7b', action() {} }
+            ],
+            DemoRenders.toolbarItem
+          )
+        }
+      ],
+      DemoRenders.toolbarGroup
+    );
 
   const subject = HtmlDisplay.section(
     gui,
     'This demo plays around with skinning for the Ui',
     Container.sketch({
       dom: {
-        classes: [ 'mce-container' ]
+        classes: ['mce-container']
       },
       components: [
         Toolbar.sketch({
@@ -111,9 +129,7 @@ export default (): void => {
               'display': 'flex'
             }
           },
-          components: [
-            Toolbar.parts().groups({ })
-          ]
+          components: [Toolbar.parts().groups({})]
         })
       ]
     })
@@ -134,7 +150,7 @@ export default (): void => {
       },
       parts: {
         'overflow-group': DemoRenders.toolbarGroup({
-          items: [ ]
+          items: []
         }),
         'overflow-button': {
           dom: {
@@ -189,7 +205,7 @@ export default (): void => {
       lazySink,
       parts: {
         'overflow-group': DemoRenders.toolbarGroup({
-          items: [ ]
+          items: []
         }),
         'overflow-button': {
           dom: {
@@ -236,7 +252,7 @@ export default (): void => {
     CustomList.sketch({
       dom: {
         tag: 'div',
-        classes: [ 'multiple-toolbar' ]
+        classes: ['multiple-toolbar']
       },
       components: [
         // Does not get applied when shell is true
@@ -248,19 +264,23 @@ export default (): void => {
         // })
       ],
       shell: true,
-      makeItem: () => Toolbar.sketch(
-        {
+      makeItem: () =>
+        Toolbar.sketch({
           dom: {
             tag: 'div',
-            classes: [ 'single-toolbar' ],
+            classes: ['single-toolbar'],
             styles: {
               display: 'flex'
             }
           },
-          components: [ ]
-        }
-      ),
-      setupItem: (mToolbar: AlloyComponent, tc: AlloyComponent, data: any, _index: number) => {
+          components: []
+        }),
+      setupItem: (
+        mToolbar: AlloyComponent,
+        tc: AlloyComponent,
+        data: any,
+        _index: number
+      ) => {
         Toolbar.setGroups(tc, data);
       }
     })
@@ -282,20 +302,20 @@ export default (): void => {
     ]);
 
     setTimeout(() => {
-      CustomList.setItems(subject4, [ ]);
+      CustomList.setItems(subject4, []);
 
       setTimeout(() => {
         CustomList.setItems(subject4, [
           Arr.map(groups(), ToolbarGroup.sketch),
           Arr.map(groups(), ToolbarGroup.sketch),
-          Arr.map(groups(), ToolbarGroup.sketch),
+          Arr.map(groups(), ToolbarGroup.sketch)
         ]);
 
         setTimeout(() => {
           CustomList.setItems(subject4, [
             Arr.map(groups().slice(0, 1), ToolbarGroup.sketch),
             Arr.map(groups(), ToolbarGroup.sketch),
-            Arr.map(groups(), ToolbarGroup.sketch),
+            Arr.map(groups(), ToolbarGroup.sketch)
           ]);
         }, 2000);
       }, 2000);

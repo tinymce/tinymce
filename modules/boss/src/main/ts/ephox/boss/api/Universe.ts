@@ -2,9 +2,21 @@ import { Option } from '@ephox/katamari';
 
 export interface Universe<E, D> {
   up: () => {
-    selector: (scope: E, selector: string, isRoot?: (e: E) => boolean) => Option<E>;
-    closest: (scope: E, selector: string, isRoot?: (e: E) => boolean) => Option<E>;
-    predicate: (scope: E, predicate: (e: E) => boolean, isRoot?: (e: E) => boolean) => Option<E>;
+    selector: (
+      scope: E,
+      selector: string,
+      isRoot?: (e: E) => boolean
+    ) => Option<E>;
+    closest: (
+      scope: E,
+      selector: string,
+      isRoot?: (e: E) => boolean
+    ) => Option<E>;
+    predicate: (
+      scope: E,
+      predicate: (e: E) => boolean,
+      isRoot?: (e: E) => boolean
+    ) => Option<E>;
     all: (element: E, isRoot?: (e: E) => boolean) => E[];
   };
   down: () => {

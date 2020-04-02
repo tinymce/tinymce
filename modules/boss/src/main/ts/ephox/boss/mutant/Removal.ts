@@ -15,11 +15,17 @@ const unwrap = function (item: Gene) {
       return Comparator.eq(sibling, item);
     });
 
-    index.fold(function () {
-      parent.children = parent.children.concat(children);
-    }, function (ind) {
-      parent.children = parent.children.slice(0, ind).concat(children).concat(parent.children.slice(ind + 1));
-    });
+    index.fold(
+      function () {
+        parent.children = parent.children.concat(children);
+      },
+      function (ind) {
+        parent.children = parent.children
+          .slice(0, ind)
+          .concat(children)
+          .concat(parent.children.slice(ind + 1));
+      }
+    );
   });
 };
 
@@ -31,8 +37,4 @@ const detach = function (item: Gene) {
   Detach.detach(Up.top(item), item);
 };
 
-export {
-  unwrap,
-  remove,
-  detach
-};
+export { unwrap, remove, detach };

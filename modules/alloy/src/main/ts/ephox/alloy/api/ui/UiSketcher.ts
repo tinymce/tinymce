@@ -10,19 +10,48 @@ import {
   CompositeSketchDetail,
   CompositeSketchSpec,
   SingleSketchDetail,
-  SingleSketchSpec,
+  SingleSketchSpec
 } from './Sketcher';
 
-export type SingleSketchFactory<D extends SingleSketchDetail, S extends SingleSketchSpec> = (detail: D, specWithUid: S) => SketchSpec;
-export type CompositeSketchFactory<D extends CompositeSketchDetail, S extends CompositeSketchSpec> = (detail: D, components: AlloySpec[], spec: S, externals: any) => SketchSpec;
+export type SingleSketchFactory<
+  D extends SingleSketchDetail,
+  S extends SingleSketchSpec
+> = (detail: D, specWithUid: S) => SketchSpec;
+export type CompositeSketchFactory<
+  D extends CompositeSketchDetail,
+  S extends CompositeSketchSpec
+> = (detail: D, components: AlloySpec[], spec: S, externals: any) => SketchSpec;
 
-const single = function <D extends SingleSketchDetail, S extends SingleSketchSpec> (owner: string, schema: FieldProcessorAdt[], factory: SingleSketchFactory<D, S>, spec: S): SketchSpec {
+const single = function <
+  D extends SingleSketchDetail,
+  S extends SingleSketchSpec
+>(
+  owner: string,
+  schema: FieldProcessorAdt[],
+  factory: SingleSketchFactory<D, S>,
+  spec: S
+): SketchSpec {
   const specWithUid = supplyUid<S>(spec);
-  const detail = SpecSchema.asRawOrDie<D, S>(owner, schema, specWithUid, [ ], [ ]);
+  const detail = SpecSchema.asRawOrDie<D, S>(
+    owner,
+    schema,
+    specWithUid,
+    [],
+    []
+  );
   return factory(detail, specWithUid);
 };
 
-const composite = function <D extends CompositeSketchDetail, S extends CompositeSketchSpec> (owner: string, schema: FieldProcessorAdt[], partTypes: PartTypeAdt[], factory: CompositeSketchFactory<D, S>, spec: S): SketchSpec {
+const composite = function <
+  D extends CompositeSketchDetail,
+  S extends CompositeSketchSpec
+>(
+  owner: string,
+  schema: FieldProcessorAdt[],
+  partTypes: PartTypeAdt[],
+  factory: CompositeSketchFactory<D, S>,
+  spec: S
+): SketchSpec {
   const specWithUid = supplyUid(spec);
 
   // Identify any information required for external parts
@@ -31,7 +60,13 @@ const composite = function <D extends CompositeSketchDetail, S extends Composite
   // Generate partUids for all parts (external and otherwise)
   const partUidsSchema = AlloyParts.defaultUidsSchema(partTypes);
 
-  const detail = SpecSchema.asRawOrDie<D, S>(owner, schema, specWithUid, partSchemas, [ partUidsSchema ]);
+  const detail = SpecSchema.asRawOrDie<D, S>(
+    owner,
+    schema,
+    specWithUid,
+    partSchemas,
+    [partUidsSchema]
+  );
 
   // Create (internals, externals) substitutions
   const subs = AlloyParts.substitutes(owner, detail, partTypes);
@@ -42,17 +77,16 @@ const composite = function <D extends CompositeSketchDetail, S extends Composite
   return factory(detail, components, specWithUid, subs.externals());
 };
 
-const hasUid = <S>(spec: S): spec is S & {uid: string} => Obj.has(spec as any, 'uid');
+const hasUid = <S>(spec: S): spec is S & { uid: string } =>
+  Obj.has(spec as any, 'uid');
 
-const supplyUid = function <S> (spec: S): S & { uid: string } {
-  return hasUid(spec) ? spec : {
-    ...spec,
-    uid: Tagger.generate('uid')
-  };
+const supplyUid = function <S>(spec: S): S & { uid: string } {
+  return hasUid(spec)
+    ? spec
+    : {
+        ...spec,
+        uid: Tagger.generate('uid')
+      };
 };
 
-export {
-  supplyUid,
-  single,
-  composite
-};
+export { supplyUid, single, composite };

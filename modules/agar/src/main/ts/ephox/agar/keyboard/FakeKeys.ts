@@ -18,15 +18,33 @@ export interface KeyModifiers {
 
 export type MixedKeyModifiers = OldKeyModifiers | KeyModifiers;
 
-const isNewKeyModifiers = (modifiers: MixedKeyModifiers): modifiers is KeyModifiers =>
-  'shiftKey' in modifiers || 'metaKey' in modifiers || 'ctrlKey' in modifiers || 'altKey' in modifiers;
+const isNewKeyModifiers = (
+  modifiers: MixedKeyModifiers
+): modifiers is KeyModifiers =>
+  'shiftKey' in modifiers ||
+  'metaKey' in modifiers ||
+  'ctrlKey' in modifiers ||
+  'altKey' in modifiers;
 
-const newModifiers = (modifiers: MixedKeyModifiers): KeyModifiers => isNewKeyModifiers(modifiers) ? modifiers :
-  { shiftKey: modifiers.shift, metaKey: modifiers.meta, ctrlKey: modifiers.ctrl, altKey: modifiers.alt };
+const newModifiers = (modifiers: MixedKeyModifiers): KeyModifiers =>
+  isNewKeyModifiers(modifiers)
+    ? modifiers
+    : {
+        shiftKey: modifiers.shift,
+        metaKey: modifiers.meta,
+        ctrlKey: modifiers.ctrl,
+        altKey: modifiers.alt
+      };
 
 // Take from Orwellophile's answer on
 // http://stackoverflow.com/questions/10455626/keydown-simulation-in-chrome-fires-normally-but-not-the-correct-key
-const keyevent = (type: string, doc: Element<any>, value: number, modifiers: MixedKeyModifiers, focus?: Element<any>): void => {
+const keyevent = (
+  type: string,
+  doc: Element<any>,
+  value: number,
+  modifiers: MixedKeyModifiers,
+  focus?: Element<any>
+): void => {
   const domDoc: Document = doc.dom();
   const mod = newModifiers(modifiers);
   const oEvent = domDoc.createEvent('KeyboardEvent');
@@ -40,8 +58,11 @@ const keyevent = (type: string, doc: Element<any>, value: number, modifiers: Mix
   if (platform.browser.isSafari() || platform.browser.isIE()) {
     safari(type, doc, value, mod, dispatcher);
   } else {
-
-    if (platform.browser.isChrome() || platform.browser.isEdge() || platform.browser.isFirefox()) {
+    if (
+      platform.browser.isChrome() ||
+      platform.browser.isEdge() ||
+      platform.browser.isFirefox()
+    ) {
       defineGetter(oEvent, 'keyCode', getter);
       defineGetter(oEvent, 'which', getter);
       defineGetter(oEvent, 'shiftKey', () => mod.shiftKey === true);
@@ -59,31 +80,56 @@ const keyevent = (type: string, doc: Element<any>, value: number, modifiers: Mix
 
     if (oEvent.initKeyboardEvent) {
       // Note: typescript thinks the arguments are wrong so we should probably test it
-      (<any> oEvent).initKeyboardEvent(type, canBubble, cancellable, domDoc.defaultView, ctrlKey, altKey, shiftKey, metaKey, value, value);
+      (<any>oEvent).initKeyboardEvent(
+        type,
+        canBubble,
+        cancellable,
+        domDoc.defaultView,
+        ctrlKey,
+        altKey,
+        shiftKey,
+        metaKey,
+        value,
+        value
+      );
     } else {
       // this is unknown to typescript
-      (<any> oEvent).initKeyEvent(type, canBubble, cancellable, domDoc.defaultView, ctrlKey, altKey, shiftKey, metaKey, value, type === 'keypress' && platform.browser.isFirefox() ? value : 0);
+      (<any>oEvent).initKeyEvent(
+        type,
+        canBubble,
+        cancellable,
+        domDoc.defaultView,
+        ctrlKey,
+        altKey,
+        shiftKey,
+        metaKey,
+        value,
+        type === 'keypress' && platform.browser.isFirefox() ? value : 0
+      );
     }
 
     dispatcher.dom().dispatchEvent(oEvent);
   }
 };
 
-const safari = (type: string, doc: Element<any>, value: number, modifiers: KeyModifiers, dispatcher: Element<any>): void => {
-  const oEvent = (<Document> doc.dom()).createEvent('Events');
+const safari = (
+  type: string,
+  doc: Element<any>,
+  value: number,
+  modifiers: KeyModifiers,
+  dispatcher: Element<any>
+): void => {
+  const oEvent = (<Document>doc.dom()).createEvent('Events');
   oEvent.initEvent(type, true, true);
 
-  (<any> oEvent).which = value;
-  (<any> oEvent).keyCode = value;
-  (<any> oEvent).shiftKey = modifiers.shiftKey === true;
-  (<any> oEvent).ctrlKey = modifiers.ctrlKey === true;
-  (<any> oEvent).metaKey = modifiers.metaKey === true;
-  (<any> oEvent).altKey = modifiers.altKey === true;
+  (<any>oEvent).which = value;
+  (<any>oEvent).keyCode = value;
+  (<any>oEvent).shiftKey = modifiers.shiftKey === true;
+  (<any>oEvent).ctrlKey = modifiers.ctrlKey === true;
+  (<any>oEvent).metaKey = modifiers.metaKey === true;
+  (<any>oEvent).altKey = modifiers.altKey === true;
 
-  (<HTMLElement> dispatcher.dom()).dispatchEvent(oEvent);
+  (<HTMLElement>dispatcher.dom()).dispatchEvent(oEvent);
 };
 
-export {
-  newModifiers,
-  keyevent
-};
+export { newModifiers, keyevent };

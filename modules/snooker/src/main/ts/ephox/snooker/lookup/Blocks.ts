@@ -18,9 +18,13 @@ const columns = function (warehouse: Warehouse): Option<Element>[] {
   return Arr.map(cols, function (col) {
     const getBlock = function () {
       return Arr.bind(rowsArr, function (r) {
-        return Warehouse.getAt(warehouse, r, col).filter(function (detail) {
-          return detail.column() === col;
-        }).fold(Fun.constant([] as DetailExt[]), function (detail) { return [ detail ]; });
+        return Warehouse.getAt(warehouse, r, col)
+          .filter(function (detail) {
+            return detail.column() === col;
+          })
+          .fold(Fun.constant([] as DetailExt[]), function (detail) {
+            return [detail];
+          });
       });
     };
 
@@ -36,7 +40,11 @@ const columns = function (warehouse: Warehouse): Option<Element>[] {
   });
 };
 
-const decide = function (getBlock: () => DetailExt[], isSingle: (detail: DetailExt) => boolean, getFallback: () => Option<DetailExt>): Option<Element> {
+const decide = function (
+  getBlock: () => DetailExt[],
+  isSingle: (detail: DetailExt) => boolean,
+  getFallback: () => Option<DetailExt>
+): Option<Element> {
   const inBlock = getBlock();
   const singleInBlock = Arr.find(inBlock, isSingle);
 
@@ -44,7 +52,9 @@ const decide = function (getBlock: () => DetailExt[], isSingle: (detail: DetailE
     return Option.from(inBlock[0]).orThunk(getFallback);
   });
 
-  return detailOption.map(function (detail) { return detail.element(); });
+  return detailOption.map(function (detail) {
+    return detail.element();
+  });
 };
 
 const rows = function (warehouse: Warehouse): Option<Element>[] {
@@ -53,12 +63,15 @@ const rows = function (warehouse: Warehouse): Option<Element>[] {
   const cols = Util.range(0, grid.columns());
 
   return Arr.map(rowsArr, function (row) {
-
     const getBlock = function () {
       return Arr.bind(cols, function (c) {
-        return Warehouse.getAt(warehouse, row, c).filter(function (detail) {
-          return detail.row() === row;
-        }).fold(Fun.constant([] as DetailExt[]), function (detail) { return [ detail ]; });
+        return Warehouse.getAt(warehouse, row, c)
+          .filter(function (detail) {
+            return detail.row() === row;
+          })
+          .fold(Fun.constant([] as DetailExt[]), function (detail) {
+            return [detail];
+          });
       });
     };
 
@@ -71,12 +84,7 @@ const rows = function (warehouse: Warehouse): Option<Element>[] {
     };
 
     return decide(getBlock, isSingle, getFallback);
-
   });
-
 };
 
-export {
-  columns,
-  rows
-};
+export { columns, rows };

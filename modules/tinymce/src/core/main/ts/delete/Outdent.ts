@@ -17,7 +17,10 @@ const backspaceDelete = function (editor: Editor, _caret, _forward?: boolean) {
     const rng = editor.selection.getRng();
     const pos = CaretPosition.fromRangeStart(rng);
     const block = dom.getParent(rng.startContainer, dom.isBlock);
-    if (block !== null && BlockBoundary.isAtStartOfBlock(Element.fromDom(block), pos)) {
+    if (
+      block !== null &&
+      BlockBoundary.isAtStartOfBlock(Element.fromDom(block), pos)
+    ) {
       IndentOutdent.handle(editor, 'outdent');
       return true;
     }
@@ -26,6 +29,4 @@ const backspaceDelete = function (editor: Editor, _caret, _forward?: boolean) {
   return false;
 };
 
-export {
-  backspaceDelete
-};
+export { backspaceDelete };

@@ -39,11 +39,13 @@ const makeItems = (info: ImageDialogInfo) => {
   const isDecorative = {
     type: 'label',
     label: 'Accessibility',
-    items: [{
-      name: 'isDecorative',
-      type: 'checkbox',
-      label: 'Image is decorative'
-    }]
+    items: [
+      {
+        name: 'isDecorative',
+        type: 'checkbox',
+        label: 'Image is decorative'
+      }
+    ]
   };
 
   interface DialogItems {
@@ -53,12 +55,14 @@ const makeItems = (info: ImageDialogInfo) => {
     items?: Array<DialogItems | ListItem>;
   }
   // TODO: the original listbox supported styled items but bridge does not seem to support this
-  const classList = info.classList.map((items): DialogItems  => ({
-    name: 'classes',
-    type: 'selectbox',
-    label: 'Class',
-    items
-  }));
+  const classList = info.classList.map(
+    (items): DialogItems => ({
+      name: 'classes',
+      type: 'selectbox',
+      label: 'Class',
+      items
+    })
+  );
   const caption: DialogItems = {
     type: 'label',
     label: 'Caption',
@@ -72,20 +76,22 @@ const makeItems = (info: ImageDialogInfo) => {
   };
 
   return Arr.flatten<any>([
-    [ imageUrl ],
+    [imageUrl],
     imageList.toArray(),
-    info.hasAccessibilityOptions && info.hasDescription ? [ isDecorative ] : [],
-    info.hasDescription ? [ imageDescription ] : [],
-    info.hasImageTitle ? [ imageTitle ] : [],
-    info.hasDimensions ? [ imageDimensions ] : [],
-    [{
-      type: 'grid',
-      columns: 2,
-      items: Arr.flatten([
-        classList.toArray(),
-        info.hasImageCaption ? [ caption ] : []
-      ])
-    }]
+    info.hasAccessibilityOptions && info.hasDescription ? [isDecorative] : [],
+    info.hasDescription ? [imageDescription] : [],
+    info.hasImageTitle ? [imageTitle] : [],
+    info.hasDimensions ? [imageDimensions] : [],
+    [
+      {
+        type: 'grid',
+        columns: 2,
+        items: Arr.flatten([
+          classList.toArray(),
+          info.hasImageCaption ? [caption] : []
+        ])
+      }
+    ]
   ]);
 };
 

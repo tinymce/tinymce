@@ -11,13 +11,11 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('shell', false),
   FieldSchema.strict('makeItem'),
   FieldSchema.defaulted('setupItem', Fun.noop),
-  SketchBehaviours.field('listBehaviours', [ Replacing ])
+  SketchBehaviours.field('listBehaviours', [Replacing])
 ]);
 
 const customListDetail = () => ({
-  behaviours: Behaviour.derive([
-    Replacing.config({ })
-  ])
+  behaviours: Behaviour.derive([Replacing.config({})])
 });
 
 const itemsPart = PartType.optional<CustomListDetail>({
@@ -25,14 +23,8 @@ const itemsPart = PartType.optional<CustomListDetail>({
   overrides: customListDetail
 });
 
-const parts: () => PartType.PartTypeAdt[] = Fun.constant([
-  itemsPart
-]);
+const parts: () => PartType.PartTypeAdt[] = Fun.constant([itemsPart]);
 
 const name = Fun.constant('CustomList');
 
-export {
-  name,
-  schema,
-  parts
-};
+export { name, schema, parts };

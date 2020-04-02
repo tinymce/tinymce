@@ -14,15 +14,15 @@ export interface BaseToolbarButtonInstanceApi {
   setDisabled: (state: boolean) => void;
 }
 
-export interface ToolbarButtonApi extends BaseToolbarButtonApi<ToolbarButtonInstanceApi> {
+export interface ToolbarButtonApi
+  extends BaseToolbarButtonApi<ToolbarButtonInstanceApi> {
   type?: 'button';
   onAction: (api: ToolbarButtonInstanceApi) => void;
 }
 
 // tslint:disable-next-line:no-empty-interface
-export interface ToolbarButtonInstanceApi extends BaseToolbarButtonInstanceApi {
-
-}
+export interface ToolbarButtonInstanceApi
+  extends BaseToolbarButtonInstanceApi {}
 
 export interface BaseToolbarButton<I extends BaseToolbarButtonInstanceApi> {
   disabled: boolean;
@@ -32,7 +32,8 @@ export interface BaseToolbarButton<I extends BaseToolbarButtonInstanceApi> {
   onSetup: (api: I) => (api: I) => void;
 }
 
-export interface ToolbarButton extends BaseToolbarButton<ToolbarButtonInstanceApi> {
+export interface ToolbarButton
+  extends BaseToolbarButton<ToolbarButtonInstanceApi> {
   type: 'button';
   onAction: (api: ToolbarButtonInstanceApi) => void;
 }
@@ -45,9 +46,14 @@ export const baseToolbarButtonFields = [
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
 ];
 
-export const toolbarButtonSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
-  FieldSchema.strictFunction('onAction')
-].concat(baseToolbarButtonFields));
+export const toolbarButtonSchema = ValueSchema.objOf(
+  [
+    FieldSchema.strictString('type'),
+    FieldSchema.strictFunction('onAction')
+  ].concat(baseToolbarButtonFields)
+);
 
-export const createToolbarButton = (spec: ToolbarButtonApi): Result<ToolbarButton, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('toolbarbutton', toolbarButtonSchema, spec);
+export const createToolbarButton = (
+  spec: ToolbarButtonApi
+): Result<ToolbarButton, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw('toolbarbutton', toolbarButtonSchema, spec);

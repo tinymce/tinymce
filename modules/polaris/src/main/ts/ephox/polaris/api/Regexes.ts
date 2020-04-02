@@ -69,7 +69,7 @@ const autolink: AutolinkApi = function () {
    * TBIO calls this method every time space or enter is pressed.
    */
   const linksource = link().source;
-  return new RegExp('(' + linksource + ')[-.~*+=!&;:\'%@?#^${}(),]*', 'g');
+  return new RegExp('(' + linksource + ")[-.~*+=!&;:'%@?#^${}(),]*", 'g');
 };
 
 type TokensApi = (value: string, parameters: string[]) => string;
@@ -77,14 +77,12 @@ const tokens: TokensApi = function (value: string, parameters: string[]) {
   return value.replace(/\{(\d+)\}/g, function (match, contents: string) {
     const index = parseInt(contents, 10);
     if (parameters[index] === undefined) {
-      throw new Error('No value for token: ' + match + ' in translation: ' + value);
+      throw new Error(
+        'No value for token: ' + match + ' in translation: ' + value
+      );
     }
     return parameters[index];
   });
 };
 
-export {
-  tokens,
-  link,
-  autolink
-};
+export { tokens, link, autolink };

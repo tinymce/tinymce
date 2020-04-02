@@ -25,6 +25,4 @@ const register = function (editor: Editor, database: EmojiDatabase): void {
   });
 };
 
-export {
-  register
-};
+export { register };

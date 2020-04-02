@@ -14,7 +14,10 @@ const cloneListProperties = (target: Entry, source: Entry): void => {
 };
 
 // Closest entry above in the same list
-const previousSiblingEntry = (entries: Entry[], start: number): Option<Entry> => {
+const previousSiblingEntry = (
+  entries: Entry[],
+  start: number
+): Option<Entry> => {
   const depth = entries[start].depth;
   for (let i = start - 1; i >= 0; i--) {
     if (entries[i].depth === depth) {
@@ -35,6 +38,4 @@ const normalizeEntries = (entries: Entry[]): void => {
   });
 };
 
-export {
-  normalizeEntries
-};
+export { normalizeEntries };

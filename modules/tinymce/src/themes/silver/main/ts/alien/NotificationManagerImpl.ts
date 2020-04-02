@@ -5,18 +5,33 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Gui, GuiFactory, InlineView, Layout, LayoutInside, NodeAnchorSpec } from '@ephox/alloy';
+import {
+  Gui,
+  GuiFactory,
+  InlineView,
+  Layout,
+  LayoutInside,
+  NodeAnchorSpec
+} from '@ephox/alloy';
 import { Element as DomElement } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { Body, Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { NotificationApi, NotificationManagerImpl, NotificationSpec } from 'tinymce/core/api/NotificationManager';
+import {
+  NotificationApi,
+  NotificationManagerImpl,
+  NotificationSpec
+} from 'tinymce/core/api/NotificationManager';
 import Delay from 'tinymce/core/api/util/Delay';
 import * as Settings from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import { Notification } from '../ui/general/Notification';
 
-export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): NotificationManagerImpl {
+export default function (
+  editor: Editor,
+  extras,
+  uiMothership: Gui.GuiSystem
+): NotificationManagerImpl {
   const backstage: UiFactoryBackstage = extras.backstage;
   const isToolbarLocationTop = Settings.isToolbarLocationTop(editor);
 
@@ -42,7 +57,9 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
 
   const positionNotifications = (notifications: NotificationApi[]) => {
     if (notifications.length > 0) {
-      Arr.head(notifications).each((firstItem) => firstItem.moveRel(null, 'banner'));
+      Arr.head(notifications).each((firstItem) =>
+        firstItem.moveRel(null, 'banner')
+      );
       Arr.each(notifications, (notification, index) => {
         if (index > 0) {
           notification.moveRel(notifications[index - 1].getEl(), 'bc-tc');
@@ -56,8 +73,14 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
     positionNotifications(notifications);
   };
 
-  const open = (settings: NotificationSpec, closeCallback: () => void): NotificationApi => {
-    const hideCloseButton = !settings.closeButton && settings.timeout && (settings.timeout > 0 || settings.timeout < 0);
+  const open = (
+    settings: NotificationSpec,
+    closeCallback: () => void
+  ): NotificationApi => {
+    const hideCloseButton =
+      !settings.closeButton &&
+      settings.timeout &&
+      (settings.timeout > 0 || settings.timeout < 0);
 
     const close = () => {
       closeCallback();
@@ -67,7 +90,12 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
     const notification = GuiFactory.build(
       Notification.sketch({
         text: settings.text,
-        level: Arr.contains([ 'success', 'error', 'warning', 'warn', 'info' ], settings.type) ? settings.type : undefined,
+        level: Arr.contains(
+          ['success', 'error', 'warning', 'warn', 'info'],
+          settings.type
+        )
+          ? settings.type
+          : undefined,
         progress: settings.progressBar === true,
         icon: Option.from(settings.icon),
         closeButton: !hideCloseButton,
@@ -81,11 +109,11 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
       InlineView.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'tox-notifications-container' ]
+          classes: ['tox-notifications-container']
         },
         lazySink: extras.backstage.shared.getSink,
-        fireDismissalEventInstead: { },
-        ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { }},
+        fireDismissalEventInstead: {},
+        ...(isToolbarLocationTop ? {} : { fireRepositionEventInstead: {} })
       })
     );
 
@@ -100,13 +128,20 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
     return {
       close,
       moveTo: (x: number, y: number) => {
-        InlineView.showAt(notificationWrapper, {
-          anchor: 'makeshift',
-          x,
-          y
-        }, GuiFactory.premade(notification));
+        InlineView.showAt(
+          notificationWrapper,
+          {
+            anchor: 'makeshift',
+            x,
+            y
+          },
+          GuiFactory.premade(notification)
+        );
       },
-      moveRel: (element: DomElement, rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc' | 'banner') => {
+      moveRel: (
+        element: DomElement,
+        rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc' | 'banner'
+      ) => {
         if (rel !== 'banner') {
           const layoutDirection = getLayoutDirection(rel);
           const nodeAnchor: NodeAnchorSpec = {
@@ -114,13 +149,21 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
             root: Body.body(),
             node: Option.some(Element.fromDom(element)),
             layouts: {
-              onRtl: () => [ layoutDirection ],
-              onLtr: () => [ layoutDirection ]
+              onRtl: () => [layoutDirection],
+              onLtr: () => [layoutDirection]
             }
           };
-          InlineView.showAt(notificationWrapper, nodeAnchor, GuiFactory.premade(notification));
+          InlineView.showAt(
+            notificationWrapper,
+            nodeAnchor,
+            GuiFactory.premade(notification)
+          );
         } else {
-          InlineView.showAt(notificationWrapper, extras.backstage.shared.anchors.banner(), GuiFactory.premade(notification));
+          InlineView.showAt(
+            notificationWrapper,
+            extras.backstage.shared.anchors.banner(),
+            GuiFactory.premade(notification)
+          );
         }
       },
       text: (nuText: string) => {

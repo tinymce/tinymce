@@ -24,29 +24,33 @@ const markers = (presets: Types.PresetTypes) => {
   };
 };
 
-const dom = (hasIcons: boolean, columns: Types.ColumnTypes, presets: Types.PresetTypes) => {
+const dom = (
+  hasIcons: boolean,
+  columns: Types.ColumnTypes,
+  presets: Types.PresetTypes
+) => {
   const menuClasses = getMenuClasses(presets);
   return {
     tag: 'div',
     classes: Arr.flatten([
-      [ menuClasses.menu, `tox-menu-${columns}-column` ],
-      hasIcons ? [ menuClasses.hasIcons ] : [ ]
+      [menuClasses.menu, `tox-menu-${columns}-column`],
+      hasIcons ? [menuClasses.hasIcons] : []
     ])
   };
 };
 
-const components = [
-  AlloyMenu.parts().items({ })
-];
+const components = [AlloyMenu.parts().items({})];
 
 // NOTE: Up to here.
-const part = (hasIcons: boolean, columns: Types.ColumnTypes, presets: Types.PresetTypes): Partial<TieredMenuTypes.TieredMenuSpec> => {
+const part = (
+  hasIcons: boolean,
+  columns: Types.ColumnTypes,
+  presets: Types.PresetTypes
+): Partial<TieredMenuTypes.TieredMenuSpec> => {
   const menuClasses = getMenuClasses(presets);
   const d = {
     tag: 'div',
-    classes: Arr.flatten([
-      [ menuClasses.tieredMenu ]
-    ])
+    classes: Arr.flatten([[menuClasses.tieredMenu]])
   };
 
   return {
@@ -55,9 +59,4 @@ const part = (hasIcons: boolean, columns: Types.ColumnTypes, presets: Types.Pres
   };
 };
 
-export {
-  markers,
-  dom,
-  components,
-  part
-};
+export { markers, dom, components, part };

@@ -26,7 +26,7 @@ export interface ToolbarSplitButtonApi {
 */
 
 const editor = {
-  on: (_s, _f) => { }
+  on: (_s, _f) => {}
 };
 
 export const registerAdvListItems = () => {
@@ -44,13 +44,13 @@ export const registerAdvListItems = () => {
         // FIX: This is missing.
         buttonApi.setActive(state);
       });
-      return () => { };
+      return () => {};
     },
     onAction: (_buttonApi) => {
       // apply basic list command
     },
 
-    fetch: (_callback) => { },
+    fetch: (_callback) => {},
     onItemAction: (_buttonApi) => {
       // apply list format that was chosen (specialised list command)
     }

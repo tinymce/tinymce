@@ -6,20 +6,24 @@ import { Stateless } from '../../behaviour/common/BehaviourState';
 import { DisableConfig } from './DisableTypes';
 
 // Just use "disabled" attribute for these, not "aria-disabled"
-const nativeDisabled = [
-  'input',
-  'button',
-  'textarea',
-  'select'
-];
+const nativeDisabled = ['input', 'button', 'textarea', 'select'];
 
-const onLoad = (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless): void => {
-  if (disableConfig.disabled) { disable(component, disableConfig, disableState); }
+const onLoad = (
+  component: AlloyComponent,
+  disableConfig: DisableConfig,
+  disableState: Stateless
+): void => {
+  if (disableConfig.disabled) {
+    disable(component, disableConfig, disableState);
+  }
 };
 
-const hasNative = (component: AlloyComponent, config: DisableConfig): boolean => config.useNative === true && Arr.contains(nativeDisabled, Node.name(component.element()));
+const hasNative = (component: AlloyComponent, config: DisableConfig): boolean =>
+  config.useNative === true &&
+  Arr.contains(nativeDisabled, Node.name(component.element()));
 
-const nativeIsDisabled = (component: AlloyComponent): boolean => Attr.has(component.element(), 'disabled');
+const nativeIsDisabled = (component: AlloyComponent): boolean =>
+  Attr.has(component.element(), 'disabled');
 
 const nativeDisable = (component: AlloyComponent): void => {
   Attr.set(component.element(), 'disabled', 'disabled');
@@ -29,7 +33,8 @@ const nativeEnable = (component: AlloyComponent): void => {
   Attr.remove(component.element(), 'disabled');
 };
 
-const ariaIsDisabled = (component: AlloyComponent): boolean => Attr.get(component.element(), 'aria-disabled') === 'true';
+const ariaIsDisabled = (component: AlloyComponent): boolean =>
+  Attr.get(component.element(), 'aria-disabled') === 'true';
 
 const ariaDisable = (component: AlloyComponent): void => {
   Attr.set(component.element(), 'aria-disabled', 'true');
@@ -39,7 +44,11 @@ const ariaEnable = (component: AlloyComponent): void => {
   Attr.set(component.element(), 'aria-disabled', 'false');
 };
 
-const disable = (component: AlloyComponent, disableConfig: DisableConfig, _disableState: Stateless): void => {
+const disable = (
+  component: AlloyComponent,
+  disableConfig: DisableConfig,
+  _disableState: Stateless
+): void => {
   disableConfig.disableClass.each((disableClass) => {
     Class.add(component.element(), disableClass);
   });
@@ -48,7 +57,11 @@ const disable = (component: AlloyComponent, disableConfig: DisableConfig, _disab
   disableConfig.onDisabled(component);
 };
 
-const enable = (component: AlloyComponent, disableConfig: DisableConfig, _disableState: Stateless): void => {
+const enable = (
+  component: AlloyComponent,
+  disableConfig: DisableConfig,
+  _disableState: Stateless
+): void => {
   disableConfig.disableClass.each((disableClass) => {
     Class.remove(component.element(), disableClass);
   });
@@ -57,17 +70,22 @@ const enable = (component: AlloyComponent, disableConfig: DisableConfig, _disabl
   disableConfig.onEnabled(component);
 };
 
-const isDisabled = (component: AlloyComponent, disableConfig: DisableConfig): boolean => hasNative(component, disableConfig) ? nativeIsDisabled(component) : ariaIsDisabled(component);
+const isDisabled = (
+  component: AlloyComponent,
+  disableConfig: DisableConfig
+): boolean =>
+  hasNative(component, disableConfig)
+    ? nativeIsDisabled(component)
+    : ariaIsDisabled(component);
 
-const set = (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless, disabled: boolean) => {
+const set = (
+  component: AlloyComponent,
+  disableConfig: DisableConfig,
+  disableState: Stateless,
+  disabled: boolean
+) => {
   const f = disabled ? disable : enable;
   f(component, disableConfig, disableState);
 };
 
-export {
-  enable,
-  disable,
-  isDisabled,
-  onLoad,
-  set
-};
+export { enable, disable, isDisabled, onLoad, set };

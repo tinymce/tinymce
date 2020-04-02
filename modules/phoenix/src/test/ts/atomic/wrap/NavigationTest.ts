@@ -13,13 +13,9 @@ UnitTest.test('NavigationTest', function () {
         ]),
         Gene('1.2', 'p', [
           TextGene('1.2.1', 'This is text'),
-          Gene('1.2.2', 'span', [
-            TextGene('1.2.2.1', 'inside a span')
-          ]),
+          Gene('1.2.2', 'span', [TextGene('1.2.2.1', 'inside a span')]),
           TextGene('1.2.3', 'More text'),
-          Gene('1.2.4', 'em', [
-            TextGene('1.2.4.1', 'Inside em')
-          ]),
+          Gene('1.2.4', 'em', [TextGene('1.2.4.1', 'Inside em')]),
           TextGene('1.2.5', 'Last piece of text')
         ])
       ])
@@ -50,7 +46,10 @@ UnitTest.test('NavigationTest', function () {
   };
 
   checkLower({ element: '1', offset: 2 }, '1');
-  checkLower({ element: '1.2.5', offset: 'Last piece of text'.length }, '1.2.5');
+  checkLower(
+    { element: '1.2.5', offset: 'Last piece of text'.length },
+    '1.2.5'
+  );
 
   checkLast({ element: '1.2.5', offset: 'Last piece of text'.length }, '1');
   checkLast({ element: '1.2.5', offset: 'Last piece of text'.length }, '1.2.5');
@@ -58,9 +57,17 @@ UnitTest.test('NavigationTest', function () {
   checkLeaf({ element: '1.1.2', offset: 0 }, '1.1', 1);
   checkLeaf({ element: '1.1.2', offset: 'post-image text'.length }, '1.1', 2);
   checkLeaf({ element: '1.2.2.1', offset: 0 }, '1.2', 1);
-  checkLeaf({ element: '1.2.5', offset: 'Last piece of text'.length }, '1.2', 5);
+  checkLeaf(
+    { element: '1.2.5', offset: 'Last piece of text'.length },
+    '1.2',
+    5
+  );
 
-  const checkFreeFallLtr = function (expected: CheckItem, universe: TestUniverse, elementId: string) {
+  const checkFreeFallLtr = function (
+    expected: CheckItem,
+    universe: TestUniverse,
+    elementId: string
+  ) {
     const element = Finder.get(doc, elementId);
     const actual = Navigation.freefallLtr(universe, element);
     assert.eq(element.id, elementId);
@@ -68,7 +75,11 @@ UnitTest.test('NavigationTest', function () {
     assert.eq(expected.offset, actual.offset());
   };
 
-  const checkFreeFallRtl = function (expected: CheckItem, universe: TestUniverse, elementId: string) {
+  const checkFreeFallRtl = function (
+    expected: CheckItem,
+    universe: TestUniverse,
+    elementId: string
+  ) {
     const element = Finder.get(doc, elementId);
     const actual = Navigation.freefallRtl(universe, element);
     assert.eq(element.id, elementId);
@@ -93,7 +104,7 @@ UnitTest.test('NavigationTest', function () {
   checkFreeFallRtl({ element: '1.2.5', offset: 18 }, doc, 'root');
   checkFreeFallRtl({ element: '1.2.5', offset: 18 }, doc, '1');
   checkFreeFallRtl({ element: '1.1.2', offset: 15 }, doc, '1.1');
-  checkFreeFallRtl({ element: '1.1.1', offset:  0 }, doc, '1.1.1');
+  checkFreeFallRtl({ element: '1.1.1', offset: 0 }, doc, '1.1.1');
   checkFreeFallRtl({ element: '1.1.2', offset: 15 }, doc, '1.1.2');
   checkFreeFallRtl({ element: '1.2.5', offset: 18 }, doc, '1.2');
   checkFreeFallRtl({ element: '1.2.1', offset: 12 }, doc, '1.2.1');
@@ -106,9 +117,7 @@ UnitTest.test('NavigationTest', function () {
   // Freefall with comment nodes: tbio-4938
   doc = TestUniverse(
     Gene('2-root', '2-root', [
-      Gene('2-1', 'p', [
-        TextGene('2-1.1', 'some text')
-      ])
+      Gene('2-1', 'p', [TextGene('2-1.1', 'some text')])
     ])
   );
 
@@ -136,7 +145,7 @@ UnitTest.test('NavigationTest', function () {
 
   checkFreeFallRtl({ element: '3-1.1', offset: 9 }, doc, '3-root');
   checkFreeFallRtl({ element: '3-1.1', offset: 9 }, doc, '3-1');
-  checkFreeFallRtl({ element: '3-c0', offset:  0 }, doc, '3-c0');
+  checkFreeFallRtl({ element: '3-c0', offset: 0 }, doc, '3-c0');
   checkFreeFallRtl({ element: '3-1.1', offset: 9 }, doc, '3-1.1');
 
   doc = TestUniverse(
@@ -155,12 +164,12 @@ UnitTest.test('NavigationTest', function () {
   checkFreeFallLtr({ element: '4-1.1', offset: 0 }, doc, '4-1');
   checkFreeFallLtr({ element: '4-1.1', offset: 0 }, doc, '4-c1');
   checkFreeFallLtr({ element: '4-1.1', offset: 0 }, doc, '4-1.1');
-  checkFreeFallLtr({ element: '4-c2', offset:  0 }, doc, '4-c2');
+  checkFreeFallLtr({ element: '4-c2', offset: 0 }, doc, '4-c2');
 
   checkFreeFallRtl({ element: '4-1.1', offset: 9 }, doc, '4-root');
-  checkFreeFallRtl({ element: '4-c0', offset:  0 }, doc, '4-c0');
+  checkFreeFallRtl({ element: '4-c0', offset: 0 }, doc, '4-c0');
   checkFreeFallRtl({ element: '4-1.1', offset: 9 }, doc, '4-1');
-  checkFreeFallRtl({ element: '4-c1', offset:  0 }, doc, '4-c1');
+  checkFreeFallRtl({ element: '4-c1', offset: 0 }, doc, '4-c1');
   checkFreeFallRtl({ element: '4-1.1', offset: 9 }, doc, '4-1.1');
   checkFreeFallRtl({ element: '4-1.1', offset: 9 }, doc, '4-c2');
 });

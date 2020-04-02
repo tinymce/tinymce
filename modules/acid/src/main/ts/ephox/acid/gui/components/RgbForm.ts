@@ -1,4 +1,24 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, EventFormat, Focusing, Form, FormField, FormTypes, Input, Invalidating, Memento, Representing, SimulatedEvent, Sketcher, SketchSpec, Tabstopping, UiSketcher } from '@ephox/alloy';
+import {
+  AddEventsBehaviour,
+  AlloyComponent,
+  AlloyEvents,
+  AlloyTriggers,
+  Behaviour,
+  EventFormat,
+  Focusing,
+  Form,
+  FormField,
+  FormTypes,
+  Input,
+  Invalidating,
+  Memento,
+  Representing,
+  SimulatedEvent,
+  Sketcher,
+  SketchSpec,
+  Tabstopping,
+  UiSketcher
+} from '@ephox/alloy';
 import { Cell, Fun, Future, Id, Merger, Option, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 import { Hex, Rgba } from '../../api/colour/ColourTypes';
@@ -25,11 +45,9 @@ type InputEvent = HexInputEvent | ColorInputEvent;
 const translatePrefix = 'colorcustom.rgb.';
 
 // tslint:disable:no-empty-interface
-export interface RgbFormDetail extends Sketcher.SingleSketchDetail {
-}
+export interface RgbFormDetail extends Sketcher.SingleSketchDetail {}
 
-export interface RgbFormSpec extends Sketcher.SingleSketchSpec {
-}
+export interface RgbFormSpec extends Sketcher.SingleSketchSpec {}
 // tslint:enable:no-empty-interface
 
 export interface RgbFormSketcher extends Sketcher.SingleSketch<RgbFormSpec> {
@@ -42,45 +60,58 @@ const rgbFormFactory = (
   onValidHexx: (component: AlloyComponent) => void,
   onInvalidHexx: (component: AlloyComponent) => void
 ): RgbFormSketcher => {
-  const invalidation = (label: string, isValid: (value: string) => boolean) => Invalidating.config({
-    invalidClass: getClass('invalid'),
+  const invalidation = (label: string, isValid: (value: string) => boolean) =>
+    Invalidating.config({
+      invalidClass: getClass('invalid'),
 
-    notify: {
-      onValidate: (comp: AlloyComponent) => {
-        AlloyTriggers.emitWith(comp, validatingInput, {
-          type: label
-        });
-      },
-      onValid: (comp: AlloyComponent) => {
-        AlloyTriggers.emitWith(comp, validInput, {
-          type: label,
-          value: Representing.getValue(comp)
-        });
+      notify: {
+        onValidate: (comp: AlloyComponent) => {
+          AlloyTriggers.emitWith(comp, validatingInput, {
+            type: label
+          });
+        },
+        onValid: (comp: AlloyComponent) => {
+          AlloyTriggers.emitWith(comp, validInput, {
+            type: label,
+            value: Representing.getValue(comp)
+          });
+        },
+
+        onInvalid: (comp: AlloyComponent) => {
+          AlloyTriggers.emitWith(comp, invalidInput, {
+            type: label,
+            value: Representing.getValue(comp)
+          });
+        }
       },
 
-      onInvalid: (comp: AlloyComponent) => {
-        AlloyTriggers.emitWith(comp, invalidInput, {
-          type: label,
-          value: Representing.getValue(comp)
-        });
+      validator: {
+        validate: (comp: AlloyComponent) => {
+          const value = Representing.getValue(comp);
+          const res = isValid(value)
+            ? Result.value(true)
+            : Result.error(translate('aria.input.invalid'));
+          return Future.pure(res);
+        },
+        validateOnLoad: false
       }
-    },
+    });
 
-    validator: {
-      validate: (comp: AlloyComponent) => {
-        const value = Representing.getValue(comp);
-        const res = isValid(value) ? Result.value(true) : Result.error(translate('aria.input.invalid'));
-        return Future.pure(res);
-      },
-      validateOnLoad: false
-    }
-  });
-
-  const renderTextField = (isValid: (value: string) => boolean, name: string, label: string, description: string, data: string | number) => {
+  const renderTextField = (
+    isValid: (value: string) => boolean,
+    name: string,
+    label: string,
+    description: string,
+    data: string | number
+  ) => {
     const helptext = translate(translatePrefix + 'range');
 
     const pLabel = FormField.parts().label({
-      dom: { tag: 'label', innerHtml: label, attributes: { 'aria-label': description }}
+      dom: {
+        tag: 'label',
+        innerHtml: label,
+        attributes: { 'aria-label': description }
+      }
     });
 
     const pField = FormField.parts().field({
@@ -88,9 +119,9 @@ const rgbFormFactory = (
       factory: Input,
       inputAttributes: {
         type: 'text',
-        ...name === 'hex' ? { 'aria-live': 'polite' } : {}
+        ...(name === 'hex' ? { 'aria-live': 'polite' } : {})
       },
-      inputClasses: [ getClass('textfield') ],
+      inputClasses: [getClass('textfield')],
 
       // Have basic invalidating and tabstopping behaviour.
       inputBehaviours: Behaviour.derive([
@@ -107,10 +138,15 @@ const rgbFormFactory = (
       }
     });
 
-    const comps = [ pLabel, pField ];
-    const concats = name !== 'hex' ? [ FormField.parts()['aria-descriptor']({
-      text: helptext
-    }) ] : [];
+    const comps = [pLabel, pField];
+    const concats =
+      name !== 'hex'
+        ? [
+            FormField.parts()['aria-descriptor']({
+              text: helptext
+            })
+          ]
+        : [];
     const components = comps.concat(concats);
 
     return {
@@ -140,24 +176,24 @@ const rgbFormFactory = (
   };
 
   const copyRgbToForm = (form: AlloyComponent, rgb: Rgba): void => {
-    const red = rgb.red; const green = rgb.green; const blue = rgb.blue;
+    const red = rgb.red;
+    const green = rgb.green;
+    const blue = rgb.blue;
     Representing.setValue(form, { red, green, blue });
   };
 
-  const memPreview = Memento.record(
-    {
-      dom: {
-        tag: 'div',
-        classes: [ getClass('rgba-preview') ],
-        styles: {
-          'background-color': 'white'
-        },
-        attributes: {
-          role: 'presentation'
-        }
+  const memPreview = Memento.record({
+    dom: {
+      tag: 'div',
+      classes: [getClass('rgba-preview')],
+      styles: {
+        'background-color': 'white'
+      },
+      attributes: {
+        role: 'presentation'
       }
     }
-  );
+  });
 
   const updatePreview = (anyInSystem: AlloyComponent, hex: Hex) => {
     memPreview.getOpt(anyInSystem).each((preview: AlloyComponent) => {
@@ -165,7 +201,10 @@ const rgbFormFactory = (
     });
   };
 
-  const factory: UiSketcher.SingleSketchFactory<RgbFormDetail, RgbFormSpec> = (): SketchSpec => {
+  const factory: UiSketcher.SingleSketchFactory<
+    RgbFormDetail,
+    RgbFormSpec
+  > = (): SketchSpec => {
     const state = {
       red: Cell(Option.some(255)),
       green: Cell(Option.some(255)),
@@ -185,23 +224,27 @@ const rgbFormFactory = (
       state[prop].set(value);
     };
 
-    const getValueRgb = () => get('red').bind(
-      (red) => get('green').bind(
-        (green) => get('blue').map(
-          (blue) => RgbaColour.rgbaColour(red, green, blue, 1)
+    const getValueRgb = () =>
+      get('red').bind((red) =>
+        get('green').bind((green) =>
+          get('blue').map((blue) => RgbaColour.rgbaColour(red, green, blue, 1))
         )
-      )
-    );
+      );
 
     // TODO: Find way to use this for palette and slider updates
     const setValueRgb = (rgb: Rgba): void => {
-      const red = rgb.red; const green = rgb.green; const blue = rgb.blue;
+      const red = rgb.red;
+      const green = rgb.green;
+      const blue = rgb.blue;
       set('red', Option.some(red));
       set('green', Option.some(green));
       set('blue', Option.some(blue));
     };
 
-    const onInvalidInput = (form: AlloyComponent, simulatedEvent: SimulatedEvent<InputEvent>) => {
+    const onInvalidInput = (
+      form: AlloyComponent,
+      simulatedEvent: SimulatedEvent<InputEvent>
+    ) => {
       const data = simulatedEvent.event();
       if (data.type() !== 'hex') {
         set(data.type(), Option.none());
@@ -226,7 +269,11 @@ const rgbFormFactory = (
       updatePreview(form, hex);
     };
 
-    const onValidRgb = (form: AlloyComponent, prop: 'red' | 'green' | 'blue', value: string) => {
+    const onValidRgb = (
+      form: AlloyComponent,
+      prop: 'red' | 'green' | 'blue',
+      value: string
+    ) => {
       const val = parseInt(value, 10);
       set(prop, Option.some(val));
       getValueRgb().each((rgb) => {
@@ -235,9 +282,13 @@ const rgbFormFactory = (
       });
     };
 
-    const isHexInputEvent = (data: InputEvent): data is HexInputEvent => data.type() === 'hex';
+    const isHexInputEvent = (data: InputEvent): data is HexInputEvent =>
+      data.type() === 'hex';
 
-    const onValidInput = (form: AlloyComponent, simulatedEvent: SimulatedEvent<InputEvent>) => {
+    const onValidInput = (
+      form: AlloyComponent,
+      simulatedEvent: SimulatedEvent<InputEvent>
+    ) => {
       const data = simulatedEvent.event();
       if (isHexInputEvent(data)) {
         onValidHex(form, data.value());
@@ -261,14 +312,58 @@ const rgbFormFactory = (
       Form.sketch((parts: FormTypes.FormParts) => ({
         dom: {
           tag: 'form',
-          classes: [ getClass('rgb-form') ],
+          classes: [getClass('rgb-form')],
           attributes: { 'aria-label': translate('aria.color.picker') }
         },
         components: [
-          parts.field('red', FormField.sketch(renderTextField(RgbaColour.isRgbaComponent, 'red', redStrings.label, redStrings.description, 255))),
-          parts.field('green', FormField.sketch(renderTextField(RgbaColour.isRgbaComponent, 'green', greenStrings.label, greenStrings.description, 255))),
-          parts.field('blue', FormField.sketch(renderTextField(RgbaColour.isRgbaComponent, 'blue', blueStrings.label, blueStrings.description, 255))),
-          parts.field('hex', FormField.sketch(renderTextField(HexColour.isHexString, 'hex', hexStrings.label, hexStrings.description, 'ffffff'))),
+          parts.field(
+            'red',
+            FormField.sketch(
+              renderTextField(
+                RgbaColour.isRgbaComponent,
+                'red',
+                redStrings.label,
+                redStrings.description,
+                255
+              )
+            )
+          ),
+          parts.field(
+            'green',
+            FormField.sketch(
+              renderTextField(
+                RgbaColour.isRgbaComponent,
+                'green',
+                greenStrings.label,
+                greenStrings.description,
+                255
+              )
+            )
+          ),
+          parts.field(
+            'blue',
+            FormField.sketch(
+              renderTextField(
+                RgbaColour.isRgbaComponent,
+                'blue',
+                blueStrings.label,
+                blueStrings.description,
+                255
+              )
+            )
+          ),
+          parts.field(
+            'hex',
+            FormField.sketch(
+              renderTextField(
+                HexColour.isHexString,
+                'hex',
+                hexStrings.label,
+                hexStrings.description,
+                'ffffff'
+              )
+            )
+          ),
           memPreview.asSpec()
         ],
 
@@ -317,6 +412,4 @@ const rgbFormFactory = (
   return rgbFormSketcher;
 };
 
-export {
-  rgbFormFactory
-};
+export { rgbFormFactory };

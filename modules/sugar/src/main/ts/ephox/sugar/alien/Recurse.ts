@@ -7,7 +7,7 @@ import { Option } from '@ephox/katamari';
  *
  * This is what recursion looks like when manually unravelled :)
  */
-const toArray = function  <T = any> (target: T, f: (t: T) => Option<T>) {
+const toArray = function <T = any>(target: T, f: (t: T) => Option<T>) {
   const r: T[] = [];
 
   const recurse = function (e: T) {
@@ -23,6 +23,4 @@ const toArray = function  <T = any> (target: T, f: (t: T) => Option<T>) {
   return r;
 };
 
-export {
-  toArray
-};
+export { toArray };

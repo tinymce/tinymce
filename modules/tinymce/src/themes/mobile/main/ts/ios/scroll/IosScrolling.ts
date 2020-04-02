@@ -36,7 +36,7 @@ const moveScrollAndTop = function (element, destination, finalTop) {
 
     const update = function (newScroll) {
       element.dom().scrollTop = newScroll;
-      Css.set(element, 'top', (getTop(element) + ANIMATION_STEP) + 'px');
+      Css.set(element, 'top', getTop(element) + ANIMATION_STEP + 'px');
     };
 
     const finish = function (/* dest */) {
@@ -45,7 +45,14 @@ const moveScrollAndTop = function (element, destination, finalTop) {
       callback(destination);
     };
 
-    animator.animate(getCurrent, destination, ANIMATION_STEP, update, finish, ANIMATION_RATE);
+    animator.animate(
+      getCurrent,
+      destination,
+      ANIMATION_STEP,
+      update,
+      finish,
+      ANIMATION_RATE
+    );
   });
 };
 
@@ -75,7 +82,14 @@ const moveOnlyScroll = function (element, destination) {
     // Identify the number of steps based on distance (consistent time)
     const distance = Math.abs(destination - getCurrent());
     const step = Math.ceil(distance / NUM_TOP_ANIMATION_FRAMES);
-    animator.animate(getCurrent, destination, step, update, finish, ANIMATION_RATE);
+    animator.animate(
+      getCurrent,
+      destination,
+      step,
+      update,
+      finish,
+      ANIMATION_RATE
+    );
   });
 };
 
@@ -94,12 +108,19 @@ const moveOnlyTop = function (element, destination) {
 
     const distance = Math.abs(destination - getCurrent());
     const step = Math.ceil(distance / NUM_TOP_ANIMATION_FRAMES);
-    animator.animate(getCurrent, destination, step, update, finish, ANIMATION_RATE);
+    animator.animate(
+      getCurrent,
+      destination,
+      step,
+      update,
+      finish,
+      ANIMATION_RATE
+    );
   });
 };
 
 const updateTop = function (element, amount) {
-  const newTop = (amount + IosViewport.getYFixedData(element)) + 'px';
+  const newTop = amount + IosViewport.getYFixedData(element) + 'px';
   Css.set(element, 'top', newTop);
 };
 
@@ -117,9 +138,4 @@ const moveWindowScroll = function (toolbar, viewport, destY) {
   });
 };
 
-export {
-  moveScrollAndTop,
-  moveOnlyScroll,
-  moveOnlyTop,
-  moveWindowScroll
-};
+export { moveScrollAndTop, moveOnlyScroll, moveOnlyTop, moveWindowScroll };

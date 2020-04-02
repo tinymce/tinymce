@@ -9,7 +9,11 @@ import { Strings, Obj } from '@ephox/katamari';
 import Tools from '../util/Tools';
 import Entities from './Entities';
 import Schema from './Schema';
-import { extractBase64DataUris, restoreDataUris, Base64Extract } from '../../html/Base64Uris';
+import {
+  extractBase64DataUris,
+  restoreDataUris,
+  Base64Extract
+} from '../../html/Base64Uris';
 
 /**
  * This class parses HTML code using pure JavaScript and executes various events for each item it finds. It will
@@ -52,7 +56,9 @@ import { extractBase64DataUris, restoreDataUris, Base64Extract } from '../../htm
  * @version 3.4
  */
 
-type AttrList = Array<{ name: string; value: string }> & { map: Record<string, string> };
+type AttrList = Array<{ name: string; value: string }> & {
+  map: Record<string, string>;
+};
 
 export interface SaxParserSettings {
   allow_conditional_comments?: boolean;
@@ -65,19 +71,19 @@ export interface SaxParserSettings {
   self_closing_elements?: Record<string, {}>;
   validate?: boolean;
 
-  cdata? (text: string): void;
-  comment? (text: string): void;
-  doctype? (text: string): void;
-  end? (name: string): void;
-  pi? (name: string, text: string): void;
-  start? (name: string, attrs: AttrList, empty: boolean): void;
-  text? (text: string, raw?: boolean): void;
+  cdata?(text: string): void;
+  comment?(text: string): void;
+  doctype?(text: string): void;
+  end?(name: string): void;
+  pi?(name: string, text: string): void;
+  start?(name: string, attrs: AttrList, empty: boolean): void;
+  text?(text: string, raw?: boolean): void;
 }
 
 type ParserFormat = 'html' | 'xhtml' | 'xml';
 
 interface SaxParser {
-  parse (html: string, format?: ParserFormat): void;
+  parse(html: string, format?: ParserFormat): void;
 }
 
 const enum ParsingMode {
@@ -97,13 +103,17 @@ const enum MatchType {
   Attribute = 9
 }
 
-const isValidPrefixAttrName = (name: string): boolean => name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
+const isValidPrefixAttrName = (name: string): boolean =>
+  name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
 
 const isInvalidUri = (settings: SaxParserSettings, uri: string) => {
   if (settings.allow_html_data_urls) {
     return false;
   } else if (/^data:image\//i.test(uri)) {
-    return settings.allow_svg_data_urls === false && /^data:image\/svg\+xml/i.test(uri);
+    return (
+      settings.allow_svg_data_urls === false &&
+      /^data:image\/svg\+xml/i.test(uri)
+    );
   } else {
     return /^data:/i.test(uri);
   }
@@ -120,8 +130,16 @@ const isInvalidUri = (settings: SaxParserSettings, uri: string) => {
  * @param {Number} startIndex Index to start searching at should be after the start tag.
  * @return {Number} Index of the end tag.
  */
-const findEndTagIndex = (schema: Schema, html: string, startIndex: number): number => {
-  let count = 1, index, matches, tokenRegExp, shortEndedElements;
+const findEndTagIndex = (
+  schema: Schema,
+  html: string,
+  startIndex: number
+): number => {
+  let count = 1,
+    index,
+    matches,
+    tokenRegExp,
+    shortEndedElements;
 
   shortEndedElements = schema.getShortEndedElements();
   tokenRegExp = /<([!?\/])?([A-Za-z0-9\-_\:\.]+)((?:\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\/|\s+)>/g;
@@ -130,9 +148,11 @@ const findEndTagIndex = (schema: Schema, html: string, startIndex: number): numb
   while ((matches = tokenRegExp.exec(html))) {
     index = tokenRegExp.lastIndex;
 
-    if (matches[1] === '/') { // End element
+    if (matches[1] === '/') {
+      // End element
       count--;
-    } else if (!matches[1]) { // Start element
+    } else if (!matches[1]) {
+      // Start element
       if (matches[2] in shortEndedElements) {
         continue;
       }
@@ -148,11 +168,19 @@ const findEndTagIndex = (schema: Schema, html: string, startIndex: number): numb
   return index;
 };
 
-const isConditionalComment = (html: string, startIndex: number) => /^\s*\[if [\w\W]+\]>.*<!\[endif\](--!?)?>/.test(html.substr(startIndex));
+const isConditionalComment = (html: string, startIndex: number) =>
+  /^\s*\[if [\w\W]+\]>.*<!\[endif\](--!?)?>/.test(html.substr(startIndex));
 
-const findCommentEndIndex = (html: string, isBogus: boolean, startIndex: number = 0) => {
+const findCommentEndIndex = (
+  html: string,
+  isBogus: boolean,
+  startIndex: number = 0
+) => {
   const lcHtml = html.toLowerCase();
-  if (lcHtml.indexOf('[if ', startIndex) !== -1 && isConditionalComment(lcHtml, startIndex)) {
+  if (
+    lcHtml.indexOf('[if ', startIndex) !== -1 &&
+    isConditionalComment(lcHtml, startIndex)
+  ) {
     const endIfIndex = lcHtml.indexOf('[endif]', startIndex);
     return lcHtml.indexOf('>', endIfIndex);
   } else {
@@ -168,14 +196,19 @@ const findCommentEndIndex = (html: string, isBogus: boolean, startIndex: number 
   }
 };
 
-const checkBogusAttribute = (regExp: RegExp, attrString: string): string | null => {
+const checkBogusAttribute = (
+  regExp: RegExp,
+  attrString: string
+): string | null => {
   const matches = regExp.exec(attrString);
 
   if (matches) {
     const name = matches[1];
     const value = matches[2];
 
-    return typeof name === 'string' && name.toLowerCase() === 'data-mce-bogus' ? value : null;
+    return typeof name === 'string' && name.toLowerCase() === 'data-mce-bogus'
+      ? value
+      : null;
   } else {
     return null;
   }
@@ -190,7 +223,7 @@ const checkBogusAttribute = (regExp: RegExp, attrString: string): string | null 
  * @param {tinymce.html.Schema} schema HTML Schema class to use when parsing.
  */
 function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
-  const noop = function () { };
+  const noop = function () {};
 
   settings = settings || {};
 
@@ -206,18 +239,42 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
   const pi = settings.pi ? settings.pi : noop;
   const doctype = settings.doctype ? settings.doctype : noop;
 
-  const parseInternal = (base64Extract: Base64Extract, format: ParserFormat = 'html') => {
+  const parseInternal = (
+    base64Extract: Base64Extract,
+    format: ParserFormat = 'html'
+  ) => {
     const html = base64Extract.html;
-    let matches, index = 0, value, endRegExp;
+    let matches,
+      index = 0,
+      value,
+      endRegExp;
     const stack = [];
     let attrList, i, textData, name;
-    let isInternalElement, removeInternalElements, shortEndedElements, fillAttrsMap, isShortEnded;
-    let validate, elementRule, isValidElement, attr, attribsValue, validAttributesMap, validAttributePatterns;
+    let isInternalElement,
+      removeInternalElements,
+      shortEndedElements,
+      fillAttrsMap,
+      isShortEnded;
+    let validate,
+      elementRule,
+      isValidElement,
+      attr,
+      attribsValue,
+      validAttributesMap,
+      validAttributePatterns;
     let attributesRequired, attributesDefault, attributesForced, processHtml;
-    let anyAttributesRequired, selfClosing, tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0;
+    let anyAttributesRequired,
+      selfClosing,
+      tokenRegExp,
+      attrRegExp,
+      specialElements,
+      attrValue,
+      idCount = 0;
     const decode = Entities.decode;
     let fixSelfClosing;
-    const filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster,xlink:href');
+    const filteredUrlAttrs = Tools.makeMap(
+      'src,href,data,background,formaction,poster,xlink:href'
+    );
     const scriptUriRegExp = /((java|vb)script|mhtml):/i;
     const parsingMode = format === 'html' ? ParsingMode.Html : ParsingMode.Xml;
 
@@ -248,7 +305,8 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
       }
     };
 
-    const processText = (value: string, raw?: boolean) => text(restoreDataUris(value, base64Extract), raw);
+    const processText = (value: string, raw?: boolean) =>
+      text(restoreDataUris(value, base64Extract), raw);
 
     const processComment = (value: string) => {
       // Ignore empty comments
@@ -261,14 +319,18 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
         value = ' ' + value;
       }
 
-      if (!settings.allow_conditional_comments && value.substr(0, 3).toLowerCase() === '[if') {
+      if (
+        !settings.allow_conditional_comments &&
+        value.substr(0, 3).toLowerCase() === '[if'
+      ) {
         value = ' ' + value;
       }
 
       comment(restoreDataUris(value, base64Extract));
     };
 
-    const processAttr = (value: string) => Obj.get(base64Extract.uris, value).getOr(value);
+    const processAttr = (value: string) =>
+      Obj.get(base64Extract.uris, value).getOr(value);
 
     const processMalformedComment = (value: string, startIndex: number) => {
       const startTag = value || '';
@@ -283,15 +345,27 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
       return endIndex + 1;
     };
 
-    const parseAttribute = (match: string, name: string, value?: string, val2?: string, val3?: string) => {
+    const parseAttribute = (
+      match: string,
+      name: string,
+      value?: string,
+      val2?: string,
+      val3?: string
+    ) => {
       let attrRule, i;
       const trimRegExp = /[\s\u0000-\u001F]+/g;
 
       name = name.toLowerCase();
-      value = processAttr(name in fillAttrsMap ? name : decode(value || val2 || val3 || '')); // Handle boolean attribute than value attribute
+      value = processAttr(
+        name in fillAttrsMap ? name : decode(value || val2 || val3 || '')
+      ); // Handle boolean attribute than value attribute
 
       // Validate name and value pass through all data- attributes
-      if (validate && !isInternalElement && isValidPrefixAttrName(name) === false) {
+      if (
+        validate &&
+        !isInternalElement &&
+        isValidPrefixAttrName(name) === false
+      ) {
         attrRule = validAttributesMap[name];
 
         // Find rule by pattern matching
@@ -343,7 +417,10 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
       }
 
       // Block data or event attributes on elements marked as internal
-      if (isInternalElement && (name in filteredUrlAttrs || name.indexOf('on') === 0)) {
+      if (
+        isInternalElement &&
+        (name in filteredUrlAttrs || name.indexOf('on') === 0)
+      ) {
         return;
       }
 
@@ -356,7 +433,8 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
     };
 
     // Precompile RegExps and map objects
-    tokenRegExp = new RegExp('<(?:' +
+    tokenRegExp = new RegExp(
+      '<(?:' +
       '(?:!--([\\w\\W]*?)--!?>)|' + // Comment
       '(?:!\\[CDATA\\[([\\w\\W]*?)\\]\\]>)|' + // CDATA
       '(?:![Dd][Oo][Cc][Tt][Yy][Pp][Ee]([\\w\\W]*?)>)|' + // DOCTYPE (case insensitive)
@@ -364,13 +442,16 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
       '(?:\\?([^\\s\\/<>]+) ?([\\w\\W]*?)[?/]>)|' + // PI
       '(?:\\/([A-Za-z][A-Za-z0-9\\-_\\:\\.]*)>)|' + // End element
       `(?:([A-Za-z][A-Za-z0-9\\-_\\:\\.]*)((?:\\s+[^"'>]+(?:(?:"[^"]*")|(?:'[^']*')|[^>]*))*|\\/|\\s+)>)` + // Start element
-      ')', 'g');
+        ')',
+      'g'
+    );
 
     attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:[^\"])*)\")|(?:\'((?:[^\'])*)\')|([^>\s]+)))?/g;
 
     // Setup lookup tables for empty elements and boolean attributes
     shortEndedElements = schema.getShortEndedElements();
-    selfClosing = settings.self_closing_elements || schema.getSelfClosingElements();
+    selfClosing =
+      settings.self_closing_elements || schema.getSelfClosingElements();
     fillAttrsMap = schema.getBoolAttrs();
     validate = settings.validate;
     removeInternalElements = settings.remove_internals;
@@ -378,7 +459,8 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
     specialElements = schema.getSpecialElements();
     processHtml = html + '>';
 
-    while ((matches = tokenRegExp.exec(processHtml))) { // Adds and extra '>' to keep regexps from doing catastrofic backtracking on malformed html
+    while ((matches = tokenRegExp.exec(processHtml))) {
+      // Adds and extra '>' to keep regexps from doing catastrofic backtracking on malformed html
       const matchText = matches[0];
 
       // Text
@@ -386,7 +468,8 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
         processText(decode(html.substr(index, matches.index - index)));
       }
 
-      if ((value = matches[MatchType.ElementEnd])) { // End element
+      if ((value = matches[MatchType.ElementEnd])) {
+        // End element
         value = value.toLowerCase();
 
         // IE will add a ":" in front of elements it doesn't understand like custom elements or HTML5 elements
@@ -395,7 +478,8 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
         }
 
         processEndTag(value);
-      } else if ((value = matches[MatchType.ElementStart])) { // Start element
+      } else if ((value = matches[MatchType.ElementStart])) {
+        // Start element
         // Did we consume the extra character then treat it as text
         // This handles the case with html like this: "text a<b text"
         if (matches.index + matchText.length > html.length) {
@@ -414,12 +498,20 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
         isShortEnded = value in shortEndedElements;
 
         // Is self closing tag for example an <li> after an open <li>
-        if (fixSelfClosing && selfClosing[value] && stack.length > 0 && stack[stack.length - 1].name === value) {
+        if (
+          fixSelfClosing &&
+          selfClosing[value] &&
+          stack.length > 0 &&
+          stack[stack.length - 1].name === value
+        ) {
           processEndTag(value);
         }
 
         // Always invalidate element if it's marked as bogus
-        const bogusValue = checkBogusAttribute(attrRegExp, matches[MatchType.Attribute]);
+        const bogusValue = checkBogusAttribute(
+          attrRegExp,
+          matches[MatchType.Attribute]
+        );
         if (bogusValue !== null) {
           if (bogusValue === 'all') {
             index = findEndTagIndex(schema, html, tokenRegExp.lastIndex);
@@ -570,32 +662,50 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
 
         // Push value on to stack
         if (!isShortEnded) {
-          if (!attribsValue || attribsValue.indexOf('/') !== attribsValue.length - 1) {
+          if (
+            !attribsValue ||
+            attribsValue.indexOf('/') !== attribsValue.length - 1
+          ) {
             stack.push({ name: value, valid: isValidElement });
           } else if (isValidElement) {
             end(value);
           }
         }
-      } else if ((value = matches[MatchType.Comment])) { // Comment
+      } else if ((value = matches[MatchType.Comment])) {
+        // Comment
         processComment(value);
-      } else if ((value = matches[MatchType.CData])) { // CDATA
+      } else if ((value = matches[MatchType.CData])) {
+        // CDATA
         // Ensure we are in a valid CDATA context (eg child of svg or mathml). If we aren't in a valid context then the cdata should
         // be treated as a bogus comment. See https://html.spec.whatwg.org/multipage/parsing.html#markup-declaration-open-state
-        const isValidCdataSection = parsingMode === ParsingMode.Xml || settings.preserve_cdata || stack.length > 0 && schema.isValidChild(stack[stack.length - 1].name, '#cdata');
+        const isValidCdataSection =
+          parsingMode === ParsingMode.Xml ||
+          settings.preserve_cdata ||
+          (stack.length > 0 &&
+            schema.isValidChild(stack[stack.length - 1].name, '#cdata'));
         if (isValidCdataSection) {
           cdata(value);
         } else {
-          index = processMalformedComment('', matches.index + 2 );
+          index = processMalformedComment('', matches.index + 2);
           tokenRegExp.lastIndex = index;
           continue;
         }
-      } else if ((value = matches[MatchType.Doctype])) { // DOCTYPE
+      } else if ((value = matches[MatchType.Doctype])) {
+        // DOCTYPE
         doctype(value);
-      } else if ((value = matches[MatchType.MalformedComment]) || matchText === '<!') { // Malformed comment
-        index = processMalformedComment(value, matches.index + matchText.length);
+      } else if (
+        (value = matches[MatchType.MalformedComment]) ||
+        matchText === '<!'
+      ) {
+        // Malformed comment
+        index = processMalformedComment(
+          value,
+          matches.index + matchText.length
+        );
         tokenRegExp.lastIndex = index;
         continue;
-      } else if ((value = matches[MatchType.ProcessingInstruction])) { // PI
+      } else if ((value = matches[MatchType.ProcessingInstruction])) {
+        // PI
         if (parsingMode === ParsingMode.Xml) {
           pi(value, matches[MatchType.ProcessingInstructionContent]);
         } else {

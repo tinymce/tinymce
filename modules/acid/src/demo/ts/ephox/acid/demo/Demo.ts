@@ -12,7 +12,7 @@ Insert.append(body, gui.element());
 
 DomEvent.bind(Element.fromDom(document), 'mouseup', (evt) => {
   if (evt.raw().button === 0) {
-    gui.broadcastOn([ Channels.mouseReleased() ], {
+    gui.broadcastOn([Channels.mouseReleased()], {
       target: evt.target()
     });
   }
@@ -27,13 +27,18 @@ const fakeTranslate = (key: string): string =>
 
 const fakeGetClass = (key: string): string => key;
 
-const colourPickerFactory = ColourPicker.makeFactory(fakeTranslate, fakeGetClass);
+const colourPickerFactory = ColourPicker.makeFactory(
+  fakeTranslate,
+  fakeGetClass
+);
 
-const colourPicker = GuiFactory.build(colourPickerFactory.sketch({
-  dom: {
-    tag: 'div',
-    classes: [ 'example-colour-picker' ]
-  }
-}));
+const colourPicker = GuiFactory.build(
+  colourPickerFactory.sketch({
+    dom: {
+      tag: 'div',
+      classes: ['example-colour-picker']
+    }
+  })
+);
 gui.add(colourPicker);
 Debugging.registerInspector('htmldisplay', gui);

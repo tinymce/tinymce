@@ -10,7 +10,10 @@ export interface PlatformDetection {
   deviceType: DeviceType;
 }
 
-const detect = function (userAgent: string, mediaMatch: (query: string) => boolean): PlatformDetection {
+const detect = function (
+  userAgent: string,
+  mediaMatch: (query: string) => boolean
+): PlatformDetection {
   const browsers = PlatformInfo.browsers();
   const oses = PlatformInfo.oses();
 

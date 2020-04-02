@@ -20,6 +20,4 @@ const togglePlainTextPaste = function (editor: Editor, clipboard: Clipboard) {
   editor.focus();
 };
 
-export {
-  togglePlainTextPaste
-};
+export { togglePlainTextPaste };

@@ -13,23 +13,37 @@ const getPageBreakClass = function () {
 };
 
 const getPlaceholderHtml = function () {
-  return '<img src="' + Env.transparentSrc + '" class="' + getPageBreakClass() + '" data-mce-resize="false" data-mce-placeholder />';
+  return (
+    '<img src="' +
+    Env.transparentSrc +
+    '" class="' +
+    getPageBreakClass() +
+    '" data-mce-resize="false" data-mce-placeholder />'
+  );
 };
 
 const setup = function (editor) {
   const separatorHtml = Settings.getSeparatorHtml(editor);
 
-  const pageBreakSeparatorRegExp = new RegExp(separatorHtml.replace(/[\?\.\*\[\]\(\)\{\}\+\^\$\:]/g, function (a) {
-    return '\\' + a;
-  }), 'gi');
+  const pageBreakSeparatorRegExp = new RegExp(
+    separatorHtml.replace(/[\?\.\*\[\]\(\)\{\}\+\^\$\:]/g, function (a) {
+      return '\\' + a;
+    }),
+    'gi'
+  );
 
   editor.on('BeforeSetContent', function (e) {
-    e.content = e.content.replace(pageBreakSeparatorRegExp, getPlaceholderHtml());
+    e.content = e.content.replace(
+      pageBreakSeparatorRegExp,
+      getPlaceholderHtml()
+    );
   });
 
   editor.on('PreInit', function () {
     editor.serializer.addNodeFilter('img', function (nodes) {
-      let i = nodes.length, node, className;
+      let i = nodes.length,
+        node,
+        className;
 
       while (i--) {
         node = nodes[i];
@@ -37,7 +51,10 @@ const setup = function (editor) {
         if (className && className.indexOf('mce-pagebreak') !== -1) {
           // Replace parent block node if pagebreak_split_block is enabled
           const parentNode = node.parent;
-          if (editor.schema.getBlockElements()[parentNode.name] && Settings.shouldSplitBlock(editor)) {
+          if (
+            editor.schema.getBlockElements()[parentNode.name] &&
+            Settings.shouldSplitBlock(editor)
+          ) {
             parentNode.type = 3;
             parentNode.value = separatorHtml;
             parentNode.raw = true;
@@ -54,8 +71,4 @@ const setup = function (editor) {
   });
 };
 
-export {
-  setup,
-  getPlaceholderHtml,
-  getPageBreakClass
-};
+export { setup, getPlaceholderHtml, getPageBreakClass };

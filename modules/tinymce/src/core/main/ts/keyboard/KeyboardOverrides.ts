@@ -34,6 +34,4 @@ const setup = (editor: Editor): void => {
   }
 };
 
-export {
-  setup
-};
+export { setup };

@@ -17,38 +17,52 @@ import * as MouseBlockerEvents from './MouseBlockerEvents';
 import * as MouseData from './MouseData';
 import { MouseDraggingConfig } from './MouseDraggingTypes';
 
-const events = <E>(dragConfig: MouseDraggingConfig<E>, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void) => [
-  AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mousedown(), (component, simulatedEvent) => {
-    const raw = simulatedEvent.event().raw();
-    if (raw.button !== 0) { return; }
-    simulatedEvent.stop();
-
-    const stop = () => DragUtils.stop(component, Option.some(blocker), dragConfig, dragState);
-
-    // If the user has moved something outside the area, and has not come back within
-    // 200 ms, then drop
-    const delayDrop = DelayedFunction(stop, 200);
-
-    const dragApi: BlockerDragApi = {
-      drop: stop,
-      delayDrop: delayDrop.schedule,
-      forceDrop: stop,
-      move(event) {
-        // Stop any pending drops caused by mouseout
-        delayDrop.cancel();
-        DragUtils.move(component, dragConfig, dragState, MouseData, event);
+const events = <E>(
+  dragConfig: MouseDraggingConfig<E>,
+  dragState: DraggingState,
+  updateStartState: (comp: AlloyComponent) => void
+) => [
+  AlloyEvents.run<EventArgs<MouseEvent>>(
+    NativeEvents.mousedown(),
+    (component, simulatedEvent) => {
+      const raw = simulatedEvent.event().raw();
+      if (raw.button !== 0) {
+        return;
       }
-    };
+      simulatedEvent.stop();
 
-    const blocker = BlockerUtils.createComponent(component, dragConfig.blockerClass, MouseBlockerEvents.init(dragApi));
+      const stop = () =>
+        DragUtils.stop(component, Option.some(blocker), dragConfig, dragState);
 
-    const start = () => {
-      updateStartState(component);
-      BlockerUtils.instigate(component, blocker);
-    };
+      // If the user has moved something outside the area, and has not come back within
+      // 200 ms, then drop
+      const delayDrop = DelayedFunction(stop, 200);
 
-    start();
-  })
+      const dragApi: BlockerDragApi = {
+        drop: stop,
+        delayDrop: delayDrop.schedule,
+        forceDrop: stop,
+        move(event) {
+          // Stop any pending drops caused by mouseout
+          delayDrop.cancel();
+          DragUtils.move(component, dragConfig, dragState, MouseData, event);
+        }
+      };
+
+      const blocker = BlockerUtils.createComponent(
+        component,
+        dragConfig.blockerClass,
+        MouseBlockerEvents.init(dragApi)
+      );
+
+      const start = () => {
+        updateStartState(component);
+        BlockerUtils.instigate(component, blocker);
+      };
+
+      start();
+    }
+  )
 ];
 
 const schema: FieldProcessorAdt[] = [
@@ -58,7 +72,4 @@ const schema: FieldProcessorAdt[] = [
   })
 ];
 
-export {
-  events,
-  schema
-};
+export { events, schema };

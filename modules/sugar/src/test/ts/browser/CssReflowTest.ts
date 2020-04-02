@@ -10,8 +10,9 @@ import { UnitTest, assert } from '@ephox/bedrock-client';
 import { HTMLIFrameElement, HTMLSpanElement } from '@ephox/dom-globals';
 
 UnitTest.asynctest('CssReflowTest', function (success, failure) {
-
-  const iframe = Element.fromHtml<HTMLIFrameElement>('<iframe style="height:100px; width:500px;" src="/project/@ephox/sugar/src/test/data/cssReflowTest.html"></iframe>');
+  const iframe = Element.fromHtml<HTMLIFrameElement>(
+    '<iframe style="height:100px; width:500px;" src="/project/@ephox/sugar/src/test/data/cssReflowTest.html"></iframe>'
+  );
   Insert.append(Body.body(), iframe);
   const run = DomEvent.bind(iframe, 'load', function () {
     run.unbind();
@@ -36,11 +37,12 @@ UnitTest.asynctest('CssReflowTest', function (success, failure) {
     const reflowTest = Element.fromTag('div', iframeDoc);
     Insert.append(Element.fromDom(iframeDoc.body), reflowTest);
     Html.set(reflowTest, '<span class="style">text</span>');
-    const newspan = Traverse.firstChild(reflowTest).getOrDie('test broke') as Element<HTMLSpanElement>;
+    const newspan = Traverse.firstChild(reflowTest).getOrDie(
+      'test broke'
+    ) as Element<HTMLSpanElement>;
     Css.reflow(newspan);
     // TODO: I can't actually make this fail without a reflow, we need a more stressful test. But you get the idea.
     assert.eq('solid', Css.get(newspan, 'border-left-style'));
     Remove.remove(newspan);
-
   };
 });

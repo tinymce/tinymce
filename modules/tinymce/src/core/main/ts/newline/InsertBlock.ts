@@ -5,7 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element as DomElement, DocumentFragment, KeyboardEvent } from '@ephox/dom-globals';
+import {
+  Element as DomElement,
+  DocumentFragment,
+  KeyboardEvent
+} from '@ephox/dom-globals';
 import { Arr, Option, Obj, Options } from '@ephox/katamari';
 import { PredicateFilter, Element, Css, Node } from '@ephox/sugar';
 import * as Settings from '../api/Settings';
@@ -23,10 +27,13 @@ import { EditorEvent } from '../api/util/EventDispatcher';
 import * as Bookmarks from '../bookmark/Bookmarks';
 
 const trimZwsp = (fragment: DocumentFragment) => {
-  Arr.each(PredicateFilter.descendants(Element.fromDom(fragment), Node.isText), (text) => {
-    const rawNode = text.dom();
-    rawNode.nodeValue = Zwsp.trim(rawNode.nodeValue);
-  });
+  Arr.each(
+    PredicateFilter.descendants(Element.fromDom(fragment), Node.isText),
+    (text) => {
+      const rawNode = text.dom();
+      rawNode.nodeValue = Zwsp.trim(rawNode.nodeValue);
+    }
+  );
 };
 
 const isEmptyAnchor = function (dom: DOMUtils, elm: DomElement) {
@@ -42,20 +49,30 @@ const emptyBlock = function (elm) {
 };
 
 const containerAndSiblingName = function (container, nodeName) {
-  return container.nodeName === nodeName || (container.previousSibling && container.previousSibling.nodeName === nodeName);
+  return (
+    container.nodeName === nodeName ||
+    (container.previousSibling &&
+      container.previousSibling.nodeName === nodeName)
+  );
 };
 
 // Returns true if the block can be split into two blocks or not
 const canSplitBlock = function (dom, node) {
-  return node &&
+  return (
+    node &&
     dom.isBlock(node) &&
     !/^(TD|TH|CAPTION|FORM)$/.test(node.nodeName) &&
     !/^(fixed|absolute)/i.test(node.style.position) &&
-    dom.getContentEditable(node) !== 'true';
+    dom.getContentEditable(node) !== 'true'
+  );
 };
 
 // Remove the first empty inline element of the block so this: <p><b><em></em></b>x</p> becomes this: <p>x</p>
-const trimInlineElementsOnLeftSideOfBlock = function (dom, nonEmptyElementsMap, block) {
+const trimInlineElementsOnLeftSideOfBlock = function (
+  dom,
+  nonEmptyElementsMap,
+  block
+) {
   let node = block;
   const firstChilds = [];
   let i;
@@ -70,7 +87,10 @@ const trimInlineElementsOnLeftSideOfBlock = function (dom, nonEmptyElementsMap, 
       return;
     }
 
-    if (NodeType.isElement(node) && !nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
+    if (
+      NodeType.isElement(node) &&
+      !nonEmptyElementsMap[node.nodeName.toLowerCase()]
+    ) {
       firstChilds.push(node);
     }
   }
@@ -78,7 +98,10 @@ const trimInlineElementsOnLeftSideOfBlock = function (dom, nonEmptyElementsMap, 
   i = firstChilds.length;
   while (i--) {
     node = firstChilds[i];
-    if (!node.hasChildNodes() || (node.firstChild === node.lastChild && node.firstChild.nodeValue === '')) {
+    if (
+      !node.hasChildNodes() ||
+      (node.firstChild === node.lastChild && node.firstChild.nodeValue === '')
+    ) {
       dom.remove(node);
     } else {
       if (isEmptyAnchor(dom, node)) {
@@ -92,16 +115,27 @@ const normalizeZwspOffset = function (start, container, offset) {
   if (NodeType.isText(container) === false) {
     return offset;
   } else if (start) {
-    return offset === 1 && container.data.charAt(offset - 1) === Zwsp.ZWSP ? 0 : offset;
+    return offset === 1 && container.data.charAt(offset - 1) === Zwsp.ZWSP
+      ? 0
+      : offset;
   } else {
-    return offset === container.data.length - 1 && container.data.charAt(offset) === Zwsp.ZWSP ? container.data.length : offset;
+    return offset === container.data.length - 1 &&
+      container.data.charAt(offset) === Zwsp.ZWSP
+      ? container.data.length
+      : offset;
   }
 };
 
 const includeZwspInRange = function (rng) {
   const newRng = rng.cloneRange();
-  newRng.setStart(rng.startContainer, normalizeZwspOffset(true, rng.startContainer, rng.startOffset));
-  newRng.setEnd(rng.endContainer, normalizeZwspOffset(false, rng.endContainer, rng.endOffset));
+  newRng.setStart(
+    rng.startContainer,
+    normalizeZwspOffset(true, rng.startContainer, rng.startOffset)
+  );
+  newRng.setEnd(
+    rng.endContainer,
+    normalizeZwspOffset(false, rng.endContainer, rng.endOffset)
+  );
   return newRng;
 };
 
@@ -133,7 +167,11 @@ const getEditableRoot = function (dom, node) {
   return parent !== root ? editableRoot : root;
 };
 
-const applyAttributes = (editor: Editor, node: DomElement, forcedRootBlockAttrs: Record<string, string>) => {
+const applyAttributes = (
+  editor: Editor,
+  node: DomElement,
+  forcedRootBlockAttrs: Record<string, string>
+) => {
   // Merge and apply style attribute
   Option.from(forcedRootBlockAttrs.style)
     .map(editor.dom.parseStyle)
@@ -144,34 +182,58 @@ const applyAttributes = (editor: Editor, node: DomElement, forcedRootBlockAttrs:
     });
 
   // Merge and apply class attribute
-  const attrClassesOpt = Option.from(forcedRootBlockAttrs.class).map((attrClasses) => attrClasses.split(/\s+/));
-  const currentClassesOpt = Option.from(node.className).map((currentClasses) => Arr.filter(currentClasses.split(/\s+/), (clazz) => clazz !== ''));
-  Options.lift2(attrClassesOpt, currentClassesOpt, (attrClasses, currentClasses) => {
-    const filteredClasses = Arr.filter(currentClasses, (clazz) => !Arr.contains(attrClasses, clazz));
-    const newClasses = [ ...attrClasses, ...filteredClasses ];
-    editor.dom.setAttrib(node, 'class', newClasses.join(' '));
-  });
+  const attrClassesOpt = Option.from(
+    forcedRootBlockAttrs.class
+  ).map((attrClasses) => attrClasses.split(/\s+/));
+  const currentClassesOpt = Option.from(node.className).map((currentClasses) =>
+    Arr.filter(currentClasses.split(/\s+/), (clazz) => clazz !== '')
+  );
+  Options.lift2(
+    attrClassesOpt,
+    currentClassesOpt,
+    (attrClasses, currentClasses) => {
+      const filteredClasses = Arr.filter(
+        currentClasses,
+        (clazz) => !Arr.contains(attrClasses, clazz)
+      );
+      const newClasses = [...attrClasses, ...filteredClasses];
+      editor.dom.setAttrib(node, 'class', newClasses.join(' '));
+    }
+  );
 
   // Apply any remaining forced root block attributes
-  const appliedAttrs = [ 'style', 'class' ];
-  const remainingAttrs = Obj.filter(forcedRootBlockAttrs, (_, attrs) => !Arr.contains(appliedAttrs, attrs));
+  const appliedAttrs = ['style', 'class'];
+  const remainingAttrs = Obj.filter(
+    forcedRootBlockAttrs,
+    (_, attrs) => !Arr.contains(appliedAttrs, attrs)
+  );
   editor.dom.setAttribs(node, remainingAttrs);
 };
 
 const setForcedBlockAttrs = function (editor: Editor, node) {
   const forcedRootBlockName = Settings.getForcedRootBlock(editor);
 
-  if (forcedRootBlockName && forcedRootBlockName.toLowerCase() === node.tagName.toLowerCase()) {
+  if (
+    forcedRootBlockName &&
+    forcedRootBlockName.toLowerCase() === node.tagName.toLowerCase()
+  ) {
     const forcedRootBlockAttrs = Settings.getForcedRootBlockAttrs(editor);
     applyAttributes(editor, node, forcedRootBlockAttrs);
   }
 };
 
 // Wraps any text nodes or inline elements in the specified forced root block name
-const wrapSelfAndSiblingsInDefaultBlock = function (editor: Editor, newBlockName, rng, container, offset) {
+const wrapSelfAndSiblingsInDefaultBlock = function (
+  editor: Editor,
+  newBlockName,
+  rng,
+  container,
+  offset
+) {
   let newBlock, parentBlock, startNode, node, next, rootBlockName;
   const blockName = newBlockName || 'P';
-  const dom = editor.dom, editableRoot = getEditableRoot(dom, container);
+  const dom = editor.dom,
+    editableRoot = getEditableRoot(dom, container);
 
   // Not in a block element or in a table cell or caption
   parentBlock = dom.getParent(container, dom.isBlock);
@@ -205,7 +267,10 @@ const wrapSelfAndSiblingsInDefaultBlock = function (editor: Editor, newBlockName
       node = node.previousSibling;
     }
 
-    if (startNode && editor.schema.isValidChild(rootBlockName, blockName.toLowerCase())) {
+    if (
+      startNode &&
+      editor.schema.isValidChild(rootBlockName, blockName.toLowerCase())
+    ) {
       newBlock = dom.create(blockName);
       setForcedBlockAttrs(editor, newBlock);
       startNode.parentNode.insertBefore(newBlock, startNode);
@@ -237,22 +302,35 @@ const addBrToBlockIfNeeded = function (dom, block) {
 
   // Check if the block is empty or contains a floated last child
   lastChild = block.lastChild;
-  if (!lastChild || (/^(left|right)$/gi.test(dom.getStyle(lastChild, 'float', true)))) {
+  if (
+    !lastChild ||
+    /^(left|right)$/gi.test(dom.getStyle(lastChild, 'float', true))
+  ) {
     dom.add(block, 'br');
   }
 };
 
 const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
   let tmpRng, editableRoot, container, offset, parentBlock, shiftKey;
-  let newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName, isAfterLastNodeInContainer;
+  let newBlock,
+    fragment,
+    containerBlock,
+    parentBlockName,
+    containerBlockName,
+    newBlockName,
+    isAfterLastNodeInContainer;
   const dom = editor.dom;
-  const schema = editor.schema, nonEmptyElementsMap = schema.getNonEmptyElements();
+  const schema = editor.schema,
+    nonEmptyElementsMap = schema.getNonEmptyElements();
   const rng = editor.selection.getRng();
 
   // Creates a new block element by cloning the current one or creating a new one if the name is specified
   // This function will also copy any text formatting from the parent block and add it to the new one
   const createNewBlock = function (name?) {
-    let node = container, block, clonedNode, caretNode;
+    let node = container,
+      block,
+      clonedNode,
+      caretNode;
     const textInlineElements = schema.getTextInlineElements();
 
     if (name || parentBlockName === 'TABLE' || parentBlockName === 'HR') {
@@ -303,23 +381,42 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
     const normalizedOffset = normalizeZwspOffset(start, container, offset);
 
     // Caret is in the middle of a text node like "a|b"
-    if (NodeType.isText(container) && (start ? normalizedOffset > 0 : normalizedOffset < container.nodeValue.length)) {
+    if (
+      NodeType.isText(container) &&
+      (start
+        ? normalizedOffset > 0
+        : normalizedOffset < container.nodeValue.length)
+    ) {
       return false;
     }
 
     // If after the last element in block node edge case for #5091
-    if (container.parentNode === parentBlock && isAfterLastNodeInContainer && !start) {
+    if (
+      container.parentNode === parentBlock &&
+      isAfterLastNodeInContainer &&
+      !start
+    ) {
       return true;
     }
 
     // If the caret if before the first element in parentBlock
-    if (start && NodeType.isElement(container) && container === parentBlock.firstChild) {
+    if (
+      start &&
+      NodeType.isElement(container) &&
+      container === parentBlock.firstChild
+    ) {
       return true;
     }
 
     // Caret can be before/after a table or a hr
-    if (containerAndSiblingName(container, 'TABLE') || containerAndSiblingName(container, 'HR')) {
-      return (isAfterLastNodeInContainer && !start) || (!isAfterLastNodeInContainer && start);
+    if (
+      containerAndSiblingName(container, 'TABLE') ||
+      containerAndSiblingName(container, 'HR')
+    ) {
+      return (
+        (isAfterLastNodeInContainer && !start) ||
+        (!isAfterLastNodeInContainer && start)
+      );
     }
 
     // Walk the DOM and look for text nodes or non empty elements
@@ -344,7 +441,10 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
             return false;
           }
         }
-      } else if (NodeType.isText(node) && !/^[ \t\r\n]*$/.test(node.nodeValue)) {
+      } else if (
+        NodeType.isText(node) &&
+        !/^[ \t\r\n]*$/.test(node.nodeValue)
+      ) {
         return false;
       }
 
@@ -360,14 +460,21 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
 
   const insertNewBlockAfter = function () {
     // If the caret is at the end of a header we produce a P tag after it similar to Word unless we are in a hgroup
-    if (/^(H[1-6]|PRE|FIGURE)$/.test(parentBlockName) && containerBlockName !== 'HGROUP') {
+    if (
+      /^(H[1-6]|PRE|FIGURE)$/.test(parentBlockName) &&
+      containerBlockName !== 'HGROUP'
+    ) {
       newBlock = createNewBlock(newBlockName);
     } else {
       newBlock = createNewBlock();
     }
 
     // Split the current container block element if enter is pressed inside an empty inner block element
-    if (Settings.shouldEndContainerOnEmptyBlock(editor) && canSplitBlock(dom, containerBlock) && dom.isEmpty(parentBlock)) {
+    if (
+      Settings.shouldEndContainerOnEmptyBlock(editor) &&
+      canSplitBlock(dom, containerBlock) &&
+      dom.isEmpty(parentBlock)
+    ) {
       // Split container block for example a BLOCKQUOTE at the current blockParent location for example a P
       newBlock = dom.split(containerBlock, parentBlock);
     } else {
@@ -393,7 +500,9 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
   if (NodeType.isElement(container) && container.hasChildNodes()) {
     isAfterLastNodeInContainer = offset > container.childNodes.length - 1;
 
-    container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
+    container =
+      container.childNodes[Math.min(offset, container.childNodes.length - 1)] ||
+      container;
     if (isAfterLastNodeInContainer && NodeType.isText(container)) {
       offset = container.nodeValue.length;
     } else {
@@ -413,16 +522,26 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
   // for example this <td>text|<b>text2</b></td> will become this <td><p>text|<b>text2</p></b></td>
   // This won't happen if root blocks are disabled or the shiftKey is pressed
   if ((newBlockName && !shiftKey) || (!newBlockName && shiftKey)) {
-    container = wrapSelfAndSiblingsInDefaultBlock(editor, newBlockName, rng, container, offset);
+    container = wrapSelfAndSiblingsInDefaultBlock(
+      editor,
+      newBlockName,
+      rng,
+      container,
+      offset
+    );
   }
 
   // Find parent block and setup empty block paddings
   parentBlock = dom.getParent(container, dom.isBlock);
-  containerBlock = parentBlock ? dom.getParent(parentBlock.parentNode, dom.isBlock) : null;
+  containerBlock = parentBlock
+    ? dom.getParent(parentBlock.parentNode, dom.isBlock)
+    : null;
 
   // Setup block names
   parentBlockName = parentBlock ? parentBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
-  containerBlockName = containerBlock ? containerBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
+  containerBlockName = containerBlock
+    ? containerBlock.nodeName.toUpperCase()
+    : ''; // IE < 9 & HTML5
 
   // Enter inside block contained within a LI then split or insert before/after LI
   if (containerBlockName === 'LI' && !ctrlKey) {
@@ -435,7 +554,13 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
   if (/^(LI|DT|DD)$/.test(parentBlockName)) {
     // Handle enter inside an empty list item
     if (dom.isEmpty(parentBlock)) {
-      InsertLi.insert(editor, createNewBlock, containerBlock, parentBlock, newBlockName);
+      InsertLi.insert(
+        editor,
+        createNewBlock,
+        containerBlock,
+        parentBlock,
+        newBlockName
+      );
       return;
     }
   }
@@ -460,8 +585,14 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
     insertNewBlockAfter();
   } else if (isCaretAtStartOrEndOfBlock(true)) {
     // Insert new block before
-    newBlock = parentBlock.parentNode.insertBefore(createNewBlock(), parentBlock);
-    NewLineUtils.moveToCaretPosition(editor, containerAndSiblingName(parentBlock, 'HR') ? newBlock : parentBlock);
+    newBlock = parentBlock.parentNode.insertBefore(
+      createNewBlock(),
+      parentBlock
+    );
+    NewLineUtils.moveToCaretPosition(
+      editor,
+      containerAndSiblingName(parentBlock, 'HR') ? newBlock : parentBlock
+    );
   } else {
     // Extract after fragment and insert it after the current block
     tmpRng = includeZwspInRange(rng).cloneRange();
@@ -496,6 +627,4 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
   editor.fire('NewBlock', { newBlock });
 };
 
-export {
-  insert
-};
+export { insert };

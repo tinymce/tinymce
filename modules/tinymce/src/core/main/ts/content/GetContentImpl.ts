@@ -30,11 +30,18 @@ export interface GetContentArgs {
 
 const trimEmptyContents = (editor: Editor, html: string): string => {
   const blockName = Settings.getForcedRootBlock(editor);
-  const emptyRegExp = new RegExp(`^(<${blockName}[^>]*>(&nbsp;|&#160;|\\s|\u00a0|<br \\/>|)<\\/${blockName}>[\r\n]*|<br \\/>[\r\n]*)$`);
+  const emptyRegExp = new RegExp(
+    `^(<${blockName}[^>]*>(&nbsp;|&#160;|\\s|\u00a0|<br \\/>|)<\\/${blockName}>[\r\n]*|<br \\/>[\r\n]*)$`
+  );
   return html.replace(emptyRegExp, '');
 };
 
-const getContentFromBody = (editor: Editor, args: GetContentArgs, format: ContentFormat, body: HTMLElement): Content => {
+const getContentFromBody = (
+  editor: Editor,
+  args: GetContentArgs,
+  format: ContentFormat,
+  body: HTMLElement
+): Content => {
   let content;
 
   args.format = format;
@@ -46,13 +53,18 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, format: Conten
   }
 
   if (args.format === 'raw') {
-    content = Tools.trim(TrimHtml.trimExternal(editor.serializer, body.innerHTML));
+    content = Tools.trim(
+      TrimHtml.trimExternal(editor.serializer, body.innerHTML)
+    );
   } else if (args.format === 'text') {
     content = Zwsp.trim(body.innerText || body.textContent);
   } else if (args.format === 'tree') {
     return editor.serializer.serialize(body, args);
   } else {
-    content = trimEmptyContents(editor, editor.serializer.serialize(body, args));
+    content = trimEmptyContents(
+      editor,
+      editor.serializer.serialize(body, args)
+    );
   }
 
   if (args.format !== 'text' && !isWsPreserveElement(Element.fromDom(body))) {
@@ -68,8 +80,12 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, format: Conten
   return args.content;
 };
 
-export const getContentInternal = (editor: Editor, args: GetContentArgs, format): Content => Option.from(editor.getBody())
-  .fold(
+export const getContentInternal = (
+  editor: Editor,
+  args: GetContentArgs,
+  format
+): Content =>
+  Option.from(editor.getBody()).fold(
     Fun.constant(args.format === 'tree' ? new Node('body', 11) : ''),
     (body) => getContentFromBody(editor, args, format, body)
   );

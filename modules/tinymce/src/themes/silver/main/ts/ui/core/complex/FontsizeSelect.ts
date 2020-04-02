@@ -10,7 +10,12 @@ import { Arr, Fun, Obj, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
-import { createMenuItems, createSelectButton, FormatterFormatItem, SelectSpec } from './BespokeSelect';
+import {
+  createMenuItems,
+  createSelectButton,
+  FormatterFormatItem,
+  SelectSpec
+} from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import * as FormatRegister from './utils/FormatRegister';
 
@@ -35,12 +40,13 @@ const round = (number: number, precision: number) => {
 const toPt = (fontSize: string, precision?: number): string => {
   if (/[0-9.]+px$/.test(fontSize)) {
     // Round to the nearest 0.5
-    return round(parseInt(fontSize, 10) * 72 / 96, precision || 0) + 'pt';
+    return round((parseInt(fontSize, 10) * 72) / 96, precision || 0) + 'pt';
   }
   return fontSize;
 };
 
-const toLegacy = (fontSize: string): string => Obj.get(legacyFontSizes, fontSize).getOr('');
+const toLegacy = (fontSize: string): string =>
+  Obj.get(legacyFontSizes, fontSize).getOr('');
 
 const getSpec = (editor: Editor): SelectSpec => {
   const getMatchingValue = () => {
@@ -50,24 +56,38 @@ const getSpec = (editor: Editor): SelectSpec => {
     const fontSize = editor.queryCommandValue('FontSize');
     if (fontSize) {
       // checking for three digits after decimal point, should be precise enough
-      for (let precision = 3; matchOpt.isNone() && precision >= 0; precision--) {
+      for (
+        let precision = 3;
+        matchOpt.isNone() && precision >= 0;
+        precision--
+      ) {
         const pt = toPt(fontSize, precision);
         const legacy = toLegacy(pt);
-        matchOpt = Arr.find(items, (item) => item.format === fontSize || item.format === pt || item.format === legacy);
+        matchOpt = Arr.find(
+          items,
+          (item) =>
+            item.format === fontSize ||
+            item.format === pt ||
+            item.format === legacy
+        );
       }
     }
 
     return { matchOpt, size: fontSize };
   };
 
-  const isSelectedFor = (item: string) => (valueOpt: Option<{ format: string; title: string }>) => valueOpt.exists((value) => value.format === item);
+  const isSelectedFor = (item: string) => (
+    valueOpt: Option<{ format: string; title: string }>
+  ) => valueOpt.exists((value) => value.format === item);
 
   const getCurrentValue = () => {
     const { matchOpt } = getMatchingValue();
     return matchOpt;
   };
 
-  const getPreviewFor: FormatRegister.GetPreviewForType = Fun.constant(Fun.constant(Option.none()));
+  const getPreviewFor: FormatRegister.GetPreviewForType = Fun.constant(
+    Fun.constant(Option.none())
+  );
 
   const onAction = (rawItem: FormatterFormatItem) => () => {
     editor.undoManager.transact(() => {
@@ -79,17 +99,29 @@ const getSpec = (editor: Editor): SelectSpec => {
   const updateSelectMenuText = (comp: AlloyComponent) => {
     const { matchOpt, size } = getMatchingValue();
 
-    const text = matchOpt.fold(() => size, (match) => match.title);
+    const text = matchOpt.fold(
+      () => size,
+      (match) => match.title
+    );
     AlloyTriggers.emitWith(comp, updateMenuText, {
       text
     });
   };
 
-  const nodeChangeHandler = Option.some((comp: AlloyComponent) => () => updateSelectMenuText(comp));
+  const nodeChangeHandler = Option.some((comp: AlloyComponent) => () =>
+    updateSelectMenuText(comp)
+  );
 
-  const setInitialValue = Option.some((comp: AlloyComponent) => updateSelectMenuText(comp));
+  const setInitialValue = Option.some((comp: AlloyComponent) =>
+    updateSelectMenuText(comp)
+  );
 
-  const dataset = buildBasicSettingsDataset(editor, 'fontsize_formats', defaultFontsizeFormats, Delimiter.Space);
+  const dataset = buildBasicSettingsDataset(
+    editor,
+    'fontsize_formats',
+    defaultFontsizeFormats,
+    Delimiter.Space
+  );
 
   return {
     tooltip: 'Font sizes',
@@ -106,14 +138,16 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
-const createFontsizeSelect = (editor: Editor, backstage: UiFactoryBackstage) => createSelectButton(editor, backstage, getSpec(editor));
+const createFontsizeSelect = (editor: Editor, backstage: UiFactoryBackstage) =>
+  createSelectButton(editor, backstage, getSpec(editor));
 
 // TODO: Test this!
 const fontsizeSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('fontsizes', {
     text: 'Font sizes',
-    getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
+    getSubmenuItems: () =>
+      menuItems.items.validateItems(menuItems.getStyleItems())
   });
 };
 

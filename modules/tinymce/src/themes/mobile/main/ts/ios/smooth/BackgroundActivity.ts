@@ -9,9 +9,7 @@ import { Cell, LazyValue } from '@ephox/katamari';
 
 export default function (doAction) {
   // Start the activity in idle state.
-  const action = Cell(
-    LazyValue.pure({})
-  );
+  const action = Cell(LazyValue.pure({}));
 
   const start = function (value) {
     const future = LazyValue.nu(function (callback) {

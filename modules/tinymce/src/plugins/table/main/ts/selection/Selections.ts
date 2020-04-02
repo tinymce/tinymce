@@ -19,15 +19,18 @@ export const Selections = function (editor: Editor) {
   const get = function () {
     const body = Util.getBody(editor);
 
-    return TableSelection.retrieve(body, Ephemera.selectedSelector).fold(function () {
-      if (editor.selection.getStart() === undefined) {
-        return SelectionTypes.none();
-      } else {
-        return SelectionTypes.single(editor.selection);
+    return TableSelection.retrieve(body, Ephemera.selectedSelector).fold(
+      function () {
+        if (editor.selection.getStart() === undefined) {
+          return SelectionTypes.none();
+        } else {
+          return SelectionTypes.single(editor.selection);
+        }
+      },
+      function (cells) {
+        return SelectionTypes.multiple(cells);
       }
-    }, function (cells) {
-      return SelectionTypes.multiple(cells);
-    });
+    );
   };
 
   return {

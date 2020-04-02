@@ -12,7 +12,13 @@ import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import * as Icons from '../../../icons/Icons';
 import * as ItemClasses from '../ItemClasses';
-import { renderHtml, renderIcon, renderShortcut, renderStyledText, renderText } from './ItemSlices';
+import {
+  renderHtml,
+  renderIcon,
+  renderShortcut,
+  renderStyledText,
+  renderText
+} from './ItemSlices';
 
 export interface ItemStructure {
   dom: RawDomSchema;
@@ -42,32 +48,45 @@ interface NormalItemSpec {
   ariaLabel: Option<string>;
 }
 
-const renderColorStructure = (itemText: Option<string>, itemValue: string, iconSvg: Option<string>, providerBackstage: UiFactoryBackstageProviders): ItemStructure => {
+const renderColorStructure = (
+  itemText: Option<string>,
+  itemValue: string,
+  iconSvg: Option<string>,
+  providerBackstage: UiFactoryBackstageProviders
+): ItemStructure => {
   const colorPickerCommand = 'custom';
   const removeColorCommand = 'remove';
 
   const getDom = () => {
     const common = ItemClasses.colorClass;
     const icon = iconSvg.getOr('');
-    const attributes = itemText.map((text) => ({ title: providerBackstage.translate(text) } as Record<string, string>)).getOr({ });
+    const attributes = itemText
+      .map(
+        (text) =>
+          ({ title: providerBackstage.translate(text) } as Record<
+            string,
+            string
+          >)
+      )
+      .getOr({});
 
     const baseDom = {
       tag: 'div',
       attributes,
-      classes: [ common ]
+      classes: [common]
     };
 
     if (itemValue === colorPickerCommand) {
       return {
         ...baseDom,
         tag: 'button',
-        classes: [ ...baseDom.classes, 'tox-swatches__picker-btn' ],
+        classes: [...baseDom.classes, 'tox-swatches__picker-btn'],
         innerHtml: icon
       };
     } else if (itemValue === removeColorCommand) {
       return {
         ...baseDom,
-        classes: [ ...baseDom.classes, 'tox-swatch--remove' ],
+        classes: [...baseDom.classes, 'tox-swatch--remove'],
         innerHtml: icon
       };
     } else {
@@ -86,29 +105,42 @@ const renderColorStructure = (itemText: Option<string>, itemValue: string, iconS
 
   return {
     dom: getDom(),
-    optComponents: [ ]
+    optComponents: []
   };
 };
 
 // TODO: Maybe need aria-label
-const renderNormalItemStructure = (info: NormalItemSpec, icon: Option<string>, renderIcons: boolean, textRender: (text: string) => AlloySpec, rtlClass: boolean): ItemStructure => {
+const renderNormalItemStructure = (
+  info: NormalItemSpec,
+  icon: Option<string>,
+  renderIcons: boolean,
+  textRender: (text: string) => AlloySpec,
+  rtlClass: boolean
+): ItemStructure => {
   // checkmark has priority, otherwise render icon if we have one, otherwise empty icon for spacing
-  const leftIcon: Option<AlloySpec> = renderIcons ? info.checkMark.orThunk(() => icon.or(Option.some('')).map(renderIcon)) : Option.none();
-  const domTitle = info.ariaLabel.map((label): {attributes?: {title: string}} => ({
-    attributes: {
-      // TODO: AP-213 change this temporary solution to use tooltips, ensure its aria readable still.
-      // for icon only implementations we need either a title or aria label to satisfy aria requirements.
-      title: I18n.translate(label)
-    }
-  })).getOr({});
+  const leftIcon: Option<AlloySpec> = renderIcons
+    ? info.checkMark.orThunk(() => icon.or(Option.some('')).map(renderIcon))
+    : Option.none();
+  const domTitle = info.ariaLabel
+    .map((label): { attributes?: { title: string } } => ({
+      attributes: {
+        // TODO: AP-213 change this temporary solution to use tooltips, ensure its aria readable still.
+        // for icon only implementations we need either a title or aria label to satisfy aria requirements.
+        title: I18n.translate(label)
+      }
+    }))
+    .getOr({});
 
   const dom = {
     tag: 'div',
-    classes: [ ItemClasses.navClass, ItemClasses.selectableClass ].concat(rtlClass ? [ ItemClasses.iconClassRtl ] : []),
+    classes: [ItemClasses.navClass, ItemClasses.selectableClass].concat(
+      rtlClass ? [ItemClasses.iconClassRtl] : []
+    ),
     ...domTitle
   };
 
-  const content = info.htmlContent.fold(() => info.textContent.map(textRender),
+  const content = info.htmlContent.fold(
+    () => info.textContent.map(textRender),
     (html) => Option.some(renderHtml(html))
   );
 
@@ -143,27 +175,53 @@ const rtlTransform = [
 ];
 
 // TODO: Maybe need aria-label
-const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean, fallbackIcon: Option<string> = Option.none()): { dom: RawDomSchema; optComponents: Array<Option<AlloySpec>> } => {
+const renderItemStructure = <T>(
+  info: ItemStructureSpec,
+  providersBackstage: UiFactoryBackstageProviders,
+  renderIcons: boolean,
+  fallbackIcon: Option<string> = Option.none()
+): { dom: RawDomSchema; optComponents: Array<Option<AlloySpec>> } => {
   // If RTL and icon is in whitelist, add RTL icon class for icons that don't have a `-rtl` icon available.
   // Use `-rtl` icon suffix for icons that do.
-  const getIconName = (iconName: Option<string>): Option<string> => iconName.map((name) => I18n.isRtl() && Arr.contains(rtlIcon, name) ? name + '-rtl' : name);
+  const getIconName = (iconName: Option<string>): Option<string> =>
+    iconName.map((name) =>
+      I18n.isRtl() && Arr.contains(rtlIcon, name) ? name + '-rtl' : name
+    );
 
-  const needRtlClass = I18n.isRtl() && info.iconContent.exists((name) => Arr.contains(rtlTransform, name));
+  const needRtlClass =
+    I18n.isRtl() &&
+    info.iconContent.exists((name) => Arr.contains(rtlTransform, name));
 
   // TODO: TINY-3036 Work out a better way of dealing with custom icons
-  const icon = getIconName(info.iconContent).map((iconName) => Icons.getOr(iconName, providersBackstage.icons, fallbackIcon));
+  const icon = getIconName(info.iconContent).map((iconName) =>
+    Icons.getOr(iconName, providersBackstage.icons, fallbackIcon)
+  );
 
   // Style items and autocompleter both have meta. Need to branch on style
   // This could probably be more stable...
   const textRender: (text: string) => AlloySpec = Option.from(info.meta).fold(
     () => renderText,
-    (meta) => Obj.has(meta, 'style') ? Fun.curry(renderStyledText, meta.style) : renderText
+    (meta) =>
+      Obj.has(meta, 'style')
+        ? Fun.curry(renderStyledText, meta.style)
+        : renderText
   );
 
   if (info.presets === 'color') {
-    return renderColorStructure(info.ariaLabel, info.value, icon, providersBackstage);
+    return renderColorStructure(
+      info.ariaLabel,
+      info.value,
+      icon,
+      providersBackstage
+    );
   } else {
-    return renderNormalItemStructure(info, icon, renderIcons, textRender, needRtlClass);
+    return renderNormalItemStructure(
+      info,
+      icon,
+      renderIcons,
+      textRender,
+      needRtlClass
+    );
   }
 };
 

@@ -29,23 +29,26 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 
   Fields.onHandler('onShrunk'),
   Fields.onHandler('onGrown'),
-  SketchBehaviours.field('expandableBehaviours', [ Representing ])
+  SketchBehaviours.field('expandableBehaviours', [Representing])
 ]);
 
-const runOnExtra = (detail: ExpandableFormDetail, operation: (comp: AlloyComponent) => void): (comp: AlloyComponent) => void => (anyComp) => {
+const runOnExtra = (
+  detail: ExpandableFormDetail,
+  operation: (comp: AlloyComponent) => void
+): ((comp: AlloyComponent) => void) => (anyComp) => {
   AlloyParts.getPart(anyComp, detail, 'extra').each(operation);
 };
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.required<ExpandableFormDetail>({
     // factory: Form,
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [FieldSchema.strict('dom')],
     name: 'minimal'
   }),
 
   PartType.required<ExpandableFormDetail>({
     // factory: Form,
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [FieldSchema.strict('dom')],
     name: 'extra',
     overrides(detail) {
       return {
@@ -66,16 +69,22 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
                 Keying.focusIn(comp);
               });
 
-              extra.getSystem().getByUid(detail.uid).each((form) => {
-                Class.remove(form.element(), detail.markers.expandedClass);
-                Class.add(form.element(), detail.markers.collapsedClass);
-              });
+              extra
+                .getSystem()
+                .getByUid(detail.uid)
+                .each((form) => {
+                  Class.remove(form.element(), detail.markers.expandedClass);
+                  Class.add(form.element(), detail.markers.collapsedClass);
+                });
             },
             onStartGrow(extra: AlloyComponent) {
-              extra.getSystem().getByUid(detail.uid).each((form) => {
-                Class.add(form.element(), detail.markers.expandedClass);
-                Class.remove(form.element(), detail.markers.collapsedClass);
-              });
+              extra
+                .getSystem()
+                .getByUid(detail.uid)
+                .each((form) => {
+                  Class.add(form.element(), detail.markers.expandedClass);
+                  Class.remove(form.element(), detail.markers.collapsedClass);
+                });
             },
             onShrunk(extra: AlloyComponent) {
               detail.onShrunk(extra);
@@ -84,7 +93,11 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
               detail.onGrown(extra);
             },
             getAnimationRoot(extra: AlloyComponent) {
-              return extra.getSystem().getByUid(detail.uid).getOrDie().element();
+              return extra
+                .getSystem()
+                .getByUid(detail.uid)
+                .getOrDie()
+                .element();
             }
           })
         ])
@@ -94,7 +107,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 
   PartType.required<ExpandableFormDetail, ButtonSpec>({
     factory: Button,
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [FieldSchema.strict('dom')],
     name: 'expander',
     overrides(detail) {
       return {
@@ -104,15 +117,11 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   }),
 
   PartType.required({
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [FieldSchema.strict('dom')],
     name: 'controls'
   })
 ]);
 
 const name = () => 'ExpandableForm';
 
-export {
-  name,
-  schema,
-  parts
-};
+export { name, schema, parts };

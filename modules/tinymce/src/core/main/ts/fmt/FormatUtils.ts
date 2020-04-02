@@ -13,7 +13,7 @@ import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
 import { FormatAttrOrStyleValue, FormatVars } from '../api/fmt/Format';
 
-const isNode = (node: any): node is Node => !!(node).nodeType;
+const isNode = (node: any): node is Node => !!node.nodeType;
 
 const isInlineBlock = function (node: Node): boolean {
   return node && /^(IMG)$/.test(node.nodeName);
@@ -21,7 +21,10 @@ const isInlineBlock = function (node: Node): boolean {
 
 const moveStart = function (dom: DOMUtils, selection: Selection, rng: Range) {
   const offset = rng.startOffset;
-  let container = rng.startContainer, walker, node, nodes;
+  let container = rng.startContainer,
+    walker,
+    node,
+    nodes;
 
   if (rng.startContainer === rng.endContainer) {
     if (isInlineBlock(rng.startContainer.childNodes[rng.startOffset])) {
@@ -61,7 +64,11 @@ const moveStart = function (dom: DOMUtils, selection: Selection, rng: Range) {
  * @param {boolean} inc (Optional) Include the current node in checking. Defaults to false.
  * @return {Node} Next or previous node or undefined if it wasn't found.
  */
-const getNonWhiteSpaceSibling = function (node: Node, next?: boolean, inc?: boolean) {
+const getNonWhiteSpaceSibling = function (
+  node: Node,
+  next?: boolean,
+  inc?: boolean
+) {
   if (node) {
     const nextName = next ? 'nextSibling' : 'previousSibling';
 
@@ -86,7 +93,9 @@ const isValid = function (ed: Editor, parent: string, child: string) {
 };
 
 const isWhiteSpaceNode = function (node: Node) {
-  return node && NodeType.isText(node) && /^([\t \r\n]+|)$/.test(node.nodeValue);
+  return (
+    node && NodeType.isText(node) && /^([\t \r\n]+|)$/.test(node.nodeValue)
+  );
 };
 
 const isEmptyTextNode = function (node: Node) {
@@ -101,7 +110,10 @@ const isEmptyTextNode = function (node: Node) {
  * @param {Object} vars Name/value array with variables to replace.
  * @return {String} New value with replaced variables.
  */
-const replaceVars = function (value: FormatAttrOrStyleValue, vars: FormatVars): string {
+const replaceVars = function (
+  value: FormatAttrOrStyleValue,
+  vars: FormatVars
+): string {
   if (typeof value !== 'string') {
     value = value(vars);
   } else if (vars) {

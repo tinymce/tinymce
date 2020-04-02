@@ -21,14 +21,21 @@ export default (): void => {
   Attachment.attachSystem(body, gui);
   Css.set(body, 'margin-bottom', '2000px');
 
-  const onDrag = (comp: AlloyComponent, targetElement: Element, delta: Position) => {
-    Traverse.parent(targetElement).bind(Traverse.parent).bind(Traverse.firstChild).each((box) => {
-      Css.getRaw(box, 'height').each((h) => {
-        const parsedHeight = parseInt(h, 10);
-        const newHeight = parsedHeight + delta.top();
-        Css.set(box, 'height', newHeight + 'px');
+  const onDrag = (
+    comp: AlloyComponent,
+    targetElement: Element,
+    delta: Position
+  ) => {
+    Traverse.parent(targetElement)
+      .bind(Traverse.parent)
+      .bind(Traverse.firstChild)
+      .each((box) => {
+        Css.getRaw(box, 'height').each((h) => {
+          const parsedHeight = parseInt(h, 10);
+          const newHeight = parsedHeight + delta.top();
+          Css.set(box, 'height', newHeight + 'px');
+        });
       });
-    });
   };
 
   HtmlDisplay.section(
@@ -75,16 +82,18 @@ export default (): void => {
 
               buttonBehaviours: Behaviour.derive([
                 Dragging.config({
-                  mode: PlatformDetection.detect().deviceType.isTouch() ? 'touch' : 'mouse',
+                  mode: PlatformDetection.detect().deviceType.isTouch()
+                    ? 'touch'
+                    : 'mouse',
                   blockerClass: 'blocker',
                   repositionTarget: false,
                   onDrag
                 }),
-                Unselecting.config({ })
+                Unselecting.config({})
               ]),
               eventOrder: {
                 // Because this is a button, allow dragging. It will stop clicking.
-                mousedown: [ 'dragging', 'alloy.base.behaviour' ]
+                mousedown: ['dragging', 'alloy.base.behaviour']
               }
             })
           ]
@@ -92,5 +101,4 @@ export default (): void => {
       ]
     })
   );
-
 };

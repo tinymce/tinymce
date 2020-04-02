@@ -22,7 +22,9 @@ const getCurrentColor = function (editor: Editor, format) {
   editor.dom.getParents(editor.selection.getStart(), function (elm) {
     let value;
 
-    if ((value = elm.style[format === 'forecolor' ? 'color' : 'background-color'])) {
+    if (
+      (value = elm.style[format === 'forecolor' ? 'color' : 'background-color'])
+    ) {
       color = color ? color : value;
     }
   });
@@ -78,13 +80,15 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemApi[] => {
     icon: 'color-picker',
     value: 'custom'
   };
-  return hasCustom ? [
-    remove,
-    custom
-  ] : [ remove ];
+  return hasCustom ? [remove, custom] : [remove];
 };
 
-const applyColor = function (editor: Editor, format, value, onChoice: (v: string) => void) {
+const applyColor = function (
+  editor: Editor,
+  format,
+  value,
+  onChoice: (v: string) => void
+) {
   if (value === 'custom') {
     const dialog = colorPickerDialog(editor);
     dialog((colorOpt) => {
@@ -103,41 +107,69 @@ const applyColor = function (editor: Editor, format, value, onChoice: (v: string
   }
 };
 
-const getColors = (colors: Menu.ChoiceMenuItemApi[], hasCustom: boolean): Menu.ChoiceMenuItemApi[] => colors.concat(Settings.getCurrentColors().concat(getAdditionalColors(hasCustom)));
+const getColors = (
+  colors: Menu.ChoiceMenuItemApi[],
+  hasCustom: boolean
+): Menu.ChoiceMenuItemApi[] =>
+  colors.concat(
+    Settings.getCurrentColors().concat(getAdditionalColors(hasCustom))
+  );
 
-const getFetch = (colors: Menu.ChoiceMenuItemApi[], hasCustom: boolean) => (callback) => {
+const getFetch = (colors: Menu.ChoiceMenuItemApi[], hasCustom: boolean) => (
+  callback
+) => {
   callback(getColors(colors, hasCustom));
 };
 
-const setIconColor = (splitButtonApi: Toolbar.ToolbarSplitButtonInstanceApi, name: string, newColor: string) => {
+const setIconColor = (
+  splitButtonApi: Toolbar.ToolbarSplitButtonInstanceApi,
+  name: string,
+  newColor: string
+) => {
   const setIconFillAndStroke = (pathId, color) => {
     splitButtonApi.setIconFill(pathId, color);
     splitButtonApi.setIconStroke(pathId, color);
   };
 
-  const id = name === 'forecolor' ? 'tox-icon-text-color__color' : 'tox-icon-highlight-bg-color__color';
+  const id =
+    name === 'forecolor'
+      ? 'tox-icon-text-color__color'
+      : 'tox-icon-highlight-bg-color__color';
   setIconFillAndStroke(id, newColor);
 };
 
-const registerTextColorButton = (editor: Editor, name: string, format: string, tooltip: string, lastColor: Cell<string>) => {
+const registerTextColorButton = (
+  editor: Editor,
+  name: string,
+  format: string,
+  tooltip: string,
+  lastColor: Cell<string>
+) => {
   editor.ui.registry.addSplitButton(name, {
     tooltip,
     presets: 'color',
     icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
     select: (value) => {
       const optCurrentRgb = Option.from(getCurrentColor(editor, format));
-      return optCurrentRgb.bind((currentRgb) => RgbaColour.fromString(currentRgb).map((rgba) => {
-        const currentHex = HexColour.fromRgba(rgba).value;
-        // note: value = '#FFFFFF', currentHex = 'ffffff'
-        return Strings.contains(value.toLowerCase(), currentHex);
-      })).getOr(false);
+      return optCurrentRgb
+        .bind((currentRgb) =>
+          RgbaColour.fromString(currentRgb).map((rgba) => {
+            const currentHex = HexColour.fromRgba(rgba).value;
+            // note: value = '#FFFFFF', currentHex = 'ffffff'
+            return Strings.contains(value.toLowerCase(), currentHex);
+          })
+        )
+        .getOr(false);
     },
     columns: getColorCols(editor),
-    fetch: getFetch(Settings.getColors(editor), Settings.hasCustomColors(editor)),
+    fetch: getFetch(
+      Settings.getColors(editor),
+      Settings.hasCustomColors(editor)
+    ),
     onAction: (_splitButtonApi) => {
       // do something with last color
       if (lastColor.get() !== null) {
-        applyColor(editor, format, lastColor.get(), () => { });
+        applyColor(editor, format, lastColor.get(), () => {});
       }
     },
     onItemAction: (_splitButtonApi, value) => {
@@ -163,12 +195,19 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
 
       editor.on('TextColorChange', handler);
 
-      return () => { editor.off('TextColorChange', handler); };
+      return () => {
+        editor.off('TextColorChange', handler);
+      };
     }
   });
 };
 
-const registerTextColorMenuItem = (editor: Editor, name: string, format: string, text: string) => {
+const registerTextColorMenuItem = (
+  editor: Editor,
+  name: string,
+  format: string,
+  text: string
+) => {
   editor.ui.registry.addNestedMenuItem(name, {
     text,
     icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
@@ -191,7 +230,10 @@ const colorPickerDialog = (editor: Editor) => (callback, value: string) => {
     api.close();
   };
 
-  const onAction = (api: Types.Dialog.DialogInstanceApi<ColorSwatchDialogData>, details) => {
+  const onAction = (
+    api: Types.Dialog.DialogInstanceApi<ColorSwatchDialogData>,
+    details
+  ) => {
     if (details.name === 'hex-valid') {
       if (details.value) {
         api.enable('ok');
@@ -223,7 +265,7 @@ const colorPickerDialog = (editor: Editor) => (callback, value: string) => {
       {
         type: 'cancel',
         name: 'cancel',
-        text: 'Cancel',
+        text: 'Cancel'
       },
       {
         type: 'submit',
@@ -235,7 +277,7 @@ const colorPickerDialog = (editor: Editor) => (callback, value: string) => {
     initialData,
     onAction,
     onSubmit: submit,
-    onClose: () => { },
+    onClose: () => {},
     onCancel: () => {
       callback(Option.none());
     }
@@ -246,11 +288,28 @@ const register = (editor: Editor) => {
   registerCommands(editor);
   const lastForeColor = Cell(null);
   const lastBackColor = Cell(null);
-  registerTextColorButton(editor, 'forecolor', 'forecolor', 'Text color', lastForeColor);
-  registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color', lastBackColor);
+  registerTextColorButton(
+    editor,
+    'forecolor',
+    'forecolor',
+    'Text color',
+    lastForeColor
+  );
+  registerTextColorButton(
+    editor,
+    'backcolor',
+    'hilitecolor',
+    'Background color',
+    lastBackColor
+  );
 
   registerTextColorMenuItem(editor, 'forecolor', 'forecolor', 'Text color');
-  registerTextColorMenuItem(editor, 'backcolor', 'hilitecolor', 'Background color');
+  registerTextColorMenuItem(
+    editor,
+    'backcolor',
+    'hilitecolor',
+    'Background color'
+  );
 };
 
 export {

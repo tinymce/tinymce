@@ -19,55 +19,59 @@ const sanitize = function (editor: Editor, html: string) {
   const writer = Writer();
   let blocked;
 
-  SaxParser({
-    validate: false,
-    allow_conditional_comments: false,
+  SaxParser(
+    {
+      validate: false,
+      allow_conditional_comments: false,
 
-    comment(text) {
-      writer.comment(text);
-    },
+      comment(text) {
+        writer.comment(text);
+      },
 
-    cdata(text) {
-      writer.cdata(text);
-    },
+      cdata(text) {
+        writer.cdata(text);
+      },
 
-    text(text, raw) {
-      writer.text(text, raw);
-    },
+      text(text, raw) {
+        writer.text(text, raw);
+      },
 
-    start(name, attrs, empty) {
-      blocked = true;
+      start(name, attrs, empty) {
+        blocked = true;
 
-      if (name === 'script' || name === 'noscript') {
-        return;
-      }
-
-      for (let i = 0; i < attrs.length; i++) {
-        if (attrs[i].name.indexOf('on') === 0) {
+        if (name === 'script' || name === 'noscript') {
           return;
         }
 
-        if (attrs[i].name === 'style') {
-          attrs[i].value = editor.dom.serializeStyle(editor.dom.parseStyle(attrs[i].value), name);
+        for (let i = 0; i < attrs.length; i++) {
+          if (attrs[i].name.indexOf('on') === 0) {
+            return;
+          }
+
+          if (attrs[i].name === 'style') {
+            attrs[i].value = editor.dom.serializeStyle(
+              editor.dom.parseStyle(attrs[i].value),
+              name
+            );
+          }
         }
-      }
 
-      writer.start(name, attrs, empty);
-      blocked = false;
+        writer.start(name, attrs, empty);
+        blocked = false;
+      },
+
+      end(name) {
+        if (blocked) {
+          return;
+        }
+
+        writer.end(name);
+      }
     },
-
-    end(name) {
-      if (blocked) {
-        return;
-      }
-
-      writer.end(name);
-    }
-  }, Schema({})).parse(html);
+    Schema({})
+  ).parse(html);
 
   return writer.getContent();
 };
 
-export {
-  sanitize
-};
+export { sanitize };

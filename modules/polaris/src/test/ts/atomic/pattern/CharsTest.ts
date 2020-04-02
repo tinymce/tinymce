@@ -3,7 +3,25 @@ import * as Chars from 'ephox/polaris/pattern/Chars';
 import { UnitTest, assert } from '@ephox/bedrock-client';
 
 UnitTest.test('CharsTest', function () {
-  const supported = [ 'fr', 'en_au', 'pt', 'it', 'nl', 'en_uk', 'pt_pt', 'de', 'nb', 'en_br', 'sv', 'da', 'en', 'es', 'en_gb', 'fi', 'en_us' ];
+  const supported = [
+    'fr',
+    'en_au',
+    'pt',
+    'it',
+    'nl',
+    'en_uk',
+    'pt_pt',
+    'de',
+    'nb',
+    'en_br',
+    'sv',
+    'da',
+    'en',
+    'es',
+    'en_gb',
+    'fi',
+    'en_us'
+  ];
 
   interface Extra {
     label: string;
@@ -14,9 +32,9 @@ UnitTest.test('CharsTest', function () {
   const extras: Record<string, Extra> = {
     fr: {
       label: 'French language',
-      html: 'http://character-code.com/french-html-codes.php || https://www.cs.tut.fi/~jkorpela/html/french.html',
-      chars: 'àÀâÂèÈéÉêÊëËîÎïÏôÔùÙûÛüÜÿŸçÇœŒ' +
-             'ÀàÂâÆæÇçÈèÉéÊêËëÎîÏïÔôŒœÙùÛûÜü'
+      html:
+        'http://character-code.com/french-html-codes.php || https://www.cs.tut.fi/~jkorpela/html/french.html',
+      chars: 'àÀâÂèÈéÉêÊëËîÎïÏôÔùÙûÛüÜÿŸçÇœŒ' + 'ÀàÂâÆæÇçÈèÉéÊêËëÎîÏïÔôŒœÙùÛûÜü'
     },
     en_au: {
       label: 'English (Aus)',
@@ -27,7 +45,6 @@ UnitTest.test('CharsTest', function () {
       label: 'Brazilian Portuguese',
       html: 'http://www.geocities.ws/click2speak/unicode/chars_pt.html',
       chars: 'ÀàÁáÂâÃãÉéÊêÍíÒòÓóÔôÕõÚúÜüÇç'
-
     },
     it: {
       label: 'Italian',
@@ -113,7 +130,12 @@ UnitTest.test('CharsTest', function () {
     assert.eq(
       0,
       leftovers.length,
-      'Test: ' + label + '\nExpected all characters in: \n\n"' + str + '" to be known. \nUnknown: ' + leftovers
+      'Test: ' +
+        label +
+        '\nExpected all characters in: \n\n"' +
+        str +
+        '" to be known. \nUnknown: ' +
+        leftovers
     );
   };
 

@@ -63,7 +63,4 @@ const forwardDeleteCommand = function (editor: Editor) {
   }
 };
 
-export {
-  deleteCommand,
-  forwardDeleteCommand
-};
+export { deleteCommand, forwardDeleteCommand };

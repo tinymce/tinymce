@@ -9,29 +9,35 @@ import { getAttrs, getClasses } from './DomFactory';
 // for now though lets just cast the types
 const readText = (elem: Element<DomText>) => {
   const text = Text.get(elem);
-  return text.trim().length > 0 ? [{ text }] as unknown as SimpleOrSketchSpec[] : [ ];
+  return text.trim().length > 0
+    ? (([{ text }] as unknown) as SimpleOrSketchSpec[])
+    : [];
 };
 
 const readChildren = (elem: Element<DomNode>): SimpleOrSketchSpec[] => {
   if (Node.isText(elem)) {
     return readText(elem);
   } else if (Node.isComment(elem)) {
-    return [ ];
+    return [];
   } else {
     const attributes = getAttrs(elem);
     const classes = getClasses(elem);
     const children = Traverse.children(elem);
 
-    const components = Arr.bind(children, (child) => Node.isText(child) ? readText(child) : readChildren(child));
+    const components = Arr.bind(children, (child) =>
+      Node.isText(child) ? readText(child) : readChildren(child)
+    );
 
-    return [{
-      dom: {
-        tag: Node.name(elem),
-        ...(!Obj.isEmpty(attributes) ? { attributes } : {}),
-        ...(classes.length > 0 ? { classes } : {})
-      },
-      components
-    }];
+    return [
+      {
+        dom: {
+          tag: Node.name(elem),
+          ...(!Obj.isEmpty(attributes) ? { attributes } : {}),
+          ...(classes.length > 0 ? { classes } : {})
+        },
+        components
+      }
+    ];
   }
 };
 
@@ -55,11 +61,9 @@ const read = (elem: Element<DomNode>): SimpleOrSketchSpec => {
 
 const readHtml = (html: string): Result<SimpleOrSketchSpec, string> => {
   const elem = Element.fromHtml(html);
-  return Node.isText(elem) ? Result.error('Template text must contain an element!') : Result.value(
-    read(elem)
-  );
+  return Node.isText(elem)
+    ? Result.error('Template text must contain an element!')
+    : Result.value(read(elem));
 };
 
-export {
-  readHtml
-};
+export { readHtml };

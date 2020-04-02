@@ -13,7 +13,8 @@ import * as Buttons from './ui/Buttons';
 
 export default function () {
   PluginManager.add('fullpage', function (editor) {
-    const headState = Cell(''), footState = Cell('');
+    const headState = Cell(''),
+      footState = Cell('');
 
     Commands.register(editor, headState);
     Buttons.register(editor);

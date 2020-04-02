@@ -8,11 +8,12 @@ import * as Fitment from 'ephox/snooker/test/Fitment';
 import * as TableMerge from 'ephox/snooker/test/TableMerge';
 
 UnitTest.test('FitmentIVTest', function () {
-  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as Element, isNew);
+  const en = (fakeElement: any, isNew: boolean) =>
+    Structs.elementnew(fakeElement as Element, isNew);
 
   // Spend 5 seconds running as many iterations as we can (there are three cycles, so 15s total)
   const CYCLE_TIME = 5000;
-  const GRID_MIN = 1;   // 1x1 grid is the min
+  const GRID_MIN = 1; // 1x1 grid is the min
   const GRID_MAX = 200;
 
   const measureTest = Fitment.measureTest;
@@ -40,7 +41,12 @@ UnitTest.test('FitmentIVTest', function () {
     } as any;
   };
 
-  const grid = function (isNew: boolean, rows: number, cols: number, prefix: string = '') {
+  const grid = function (
+    isNew: boolean,
+    rows: number,
+    cols: number,
+    prefix: string = ''
+  ) {
     return Arr.map(new Array(rows), function (_row, r) {
       return Arr.map(new Array(cols), function (_cs, c) {
         return en(prefix + '-' + r + '-' + c, isNew);
@@ -52,7 +58,11 @@ UnitTest.test('FitmentIVTest', function () {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
-  const inVariantRunner = function <T extends { test: () => void }>(label: string, mvTest: () => T, timelimit: number): number {
+  const inVariantRunner = function <T extends { test: () => void }>(
+    label: string,
+    mvTest: () => T,
+    timelimit: number
+  ): number {
     let times = 0;
     const startTime = Date.now();
     while (Date.now() - startTime < timelimit) {
@@ -95,8 +105,8 @@ UnitTest.test('FitmentIVTest', function () {
     const gridSpecB = gridGen(true);
     const start = startGen(gridSpecA);
 
-    const rowDelta = (gridSpecA.rows() - start.row()) - gridSpecB.rows();
-    const colDelta = (gridSpecA.cols() - start.column()) - gridSpecB.cols();
+    const rowDelta = gridSpecA.rows() - start.row() - gridSpecB.rows();
+    const colDelta = gridSpecA.cols() - start.column() - gridSpecB.cols();
 
     const info = {
       start: {
@@ -113,10 +123,17 @@ UnitTest.test('FitmentIVTest', function () {
       }
     };
 
-    const test = Fun.curry(measureTest, {
-      rowDelta,
-      colDelta
-    }, start, gridSpecA.grid, gridSpecB.grid, Fun.noop );
+    const test = Fun.curry(
+      measureTest,
+      {
+        rowDelta,
+        colDelta
+      },
+      start,
+      gridSpecA.grid,
+      gridSpecB.grid,
+      Fun.noop
+    );
 
     return {
       params: info,
@@ -128,8 +145,14 @@ UnitTest.test('FitmentIVTest', function () {
     const gridSpecA = gridGen(false);
     const start = startGen(gridSpecA);
     const delta = deltaGen();
-    const expectedRows = delta.rowDelta < 0 ? Math.abs(delta.rowDelta) + gridSpecA.rows() : gridSpecA.rows();
-    const expectedCols = delta.colDelta < 0 ? Math.abs(delta.colDelta) + gridSpecA.cols() : gridSpecA.cols();
+    const expectedRows =
+      delta.rowDelta < 0
+        ? Math.abs(delta.rowDelta) + gridSpecA.rows()
+        : gridSpecA.rows();
+    const expectedCols =
+      delta.colDelta < 0
+        ? Math.abs(delta.colDelta) + gridSpecA.cols()
+        : gridSpecA.cols();
 
     const info = {
       start: {
@@ -147,10 +170,17 @@ UnitTest.test('FitmentIVTest', function () {
       }
     };
 
-    const test = Fun.curry(tailorIVTest, {
-      rows: expectedRows,
-      cols: expectedCols
-    }, start, gridSpecA.grid, delta, generator);
+    const test = Fun.curry(
+      tailorIVTest,
+      {
+        rows: expectedRows,
+        cols: expectedCols
+      },
+      start,
+      gridSpecA.grid,
+      delta,
+      generator
+    );
 
     return {
       params: info,
@@ -177,7 +207,20 @@ UnitTest.test('FitmentIVTest', function () {
       }
     };
 
-    const queryliser2000 = function (result: Result<Structs.RowCells[], string>, s: Structs.Address, specA: { rows: () => number; cols: () => number; grid: () => Structs.ElementNew[][] }, specB: { rows: () => number; cols: () => number; grid: () => Structs.ElementNew[][] }) {
+    const queryliser2000 = function (
+      result: Result<Structs.RowCells[], string>,
+      s: Structs.Address,
+      specA: {
+        rows: () => number;
+        cols: () => number;
+        grid: () => Structs.ElementNew[][];
+      },
+      specB: {
+        rows: () => number;
+        cols: () => number;
+        grid: () => Structs.ElementNew[][];
+      }
+    ) {
       // expect to see some cell from specB at some address on specA
       const offsetRow = s.row();
       const offsetCol = s.column();
@@ -189,9 +232,19 @@ UnitTest.test('FitmentIVTest', function () {
         Arr.each(row.cells(), function (cell, ci) {
           const expected = (function () {
             // Assumption: both gridA and gridB are rectangular.
-            if (ri >= offsetRow && ri <= offsetRow + gridB.length - 1 && ci >= offsetCol && ci <= offsetCol + gridB[0].length - 1) {
+            if (
+              ri >= offsetRow &&
+              ri <= offsetRow + gridB.length - 1 &&
+              ci >= offsetCol &&
+              ci <= offsetCol + gridB[0].length - 1
+            ) {
               return gridB[ri - offsetRow][ci - offsetCol];
-            } else if (ri >= 0 && ri < gridA.length && ci >= 0 && ci < gridA[0].length) {
+            } else if (
+              ri >= 0 &&
+              ri < gridA.length &&
+              ci >= 0 &&
+              ci < gridA[0].length
+            ) {
               return gridA[ri][ci];
             } else {
               return '?';
@@ -199,7 +252,10 @@ UnitTest.test('FitmentIVTest', function () {
           })();
 
           if (expected === '?') {
-            assert.eq(true, '?_' === (cell.element() as unknown as string).substring(0, 2));
+            assert.eq(
+              true,
+              '?_' === ((cell.element() as unknown) as string).substring(0, 2)
+            );
           } else {
             assert.eq(expected.isNew(), cell.isNew());
             assert.eq(expected.element(), cell.element());
@@ -208,7 +264,15 @@ UnitTest.test('FitmentIVTest', function () {
       });
     };
 
-    const test = Fun.curry(mergeIVTest, queryliser2000, start, gridSpecA, gridSpecB, generator, Fun.tripleEquals);
+    const test = Fun.curry(
+      mergeIVTest,
+      queryliser2000,
+      start,
+      gridSpecA,
+      gridSpecB,
+      generator,
+      Fun.tripleEquals
+    );
 
     return {
       params: info,

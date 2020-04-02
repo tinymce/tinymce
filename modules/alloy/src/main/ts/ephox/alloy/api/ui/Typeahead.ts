@@ -10,6 +10,4 @@ const Typeahead: TypeaheadSketcher = Sketcher.composite({
   factory: TypeaheadSpec.make
 });
 
-export {
-  Typeahead
-};
+export { Typeahead };

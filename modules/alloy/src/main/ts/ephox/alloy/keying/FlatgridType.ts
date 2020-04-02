@@ -13,7 +13,11 @@ import * as DomPinpoint from '../navigation/DomPinpoint';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as WrapArrNavigation from '../navigation/WrapArrNavigation';
-import { FlatgridConfig, FlatgridState, KeyRuleHandler } from './KeyingModeTypes';
+import {
+  FlatgridConfig,
+  FlatgridState,
+  KeyRuleHandler
+} from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
 
@@ -25,26 +29,68 @@ const schema = [
   Fields.initSize()
 ];
 
-const focusIn = (component: AlloyComponent, gridConfig: FlatgridConfig, _gridState: FlatgridState): void => {
-  SelectorFind.descendant(component.element(), gridConfig.selector).each((first: Element) => {
-    gridConfig.focusManager.set(component, first);
-  });
+const focusIn = (
+  component: AlloyComponent,
+  gridConfig: FlatgridConfig,
+  _gridState: FlatgridState
+): void => {
+  SelectorFind.descendant(component.element(), gridConfig.selector).each(
+    (first: Element) => {
+      gridConfig.focusManager.set(component, first);
+    }
+  );
 };
 
-const findCurrent = (component: AlloyComponent, gridConfig: FlatgridConfig): Option<Element> => gridConfig.focusManager.get(component).bind((elem) => SelectorFind.closest(elem, gridConfig.selector));
+const findCurrent = (
+  component: AlloyComponent,
+  gridConfig: FlatgridConfig
+): Option<Element> =>
+  gridConfig.focusManager
+    .get(component)
+    .bind((elem) => SelectorFind.closest(elem, gridConfig.selector));
 
-const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, gridConfig: FlatgridConfig, _gridState: FlatgridState): Option<boolean> => findCurrent(component, gridConfig).bind((focused) => gridConfig.execute(component, simulatedEvent, focused));
+const execute = (
+  component: AlloyComponent,
+  simulatedEvent: NativeSimulatedEvent,
+  gridConfig: FlatgridConfig,
+  _gridState: FlatgridState
+): Option<boolean> =>
+  findCurrent(component, gridConfig).bind((focused) =>
+    gridConfig.execute(component, simulatedEvent, focused)
+  );
 
-const doMove = (cycle: WrapArrNavigation.ArrNavigationFunc<Element<HTMLElement>>): DomMovement.ElementMover<FlatgridConfig, FlatgridState> => (element, focused, gridConfig, gridState) => DomPinpoint.locateVisible(element, focused, gridConfig.selector).bind((identified) => cycle(
-  identified.candidates(),
-  identified.index(),
-  gridState.getNumRows().getOr(gridConfig.initSize.numRows),
-  gridState.getNumColumns().getOr(gridConfig.initSize.numColumns)
-));
+const doMove = (
+  cycle: WrapArrNavigation.ArrNavigationFunc<Element<HTMLElement>>
+): DomMovement.ElementMover<FlatgridConfig, FlatgridState> => (
+  element,
+  focused,
+  gridConfig,
+  gridState
+) =>
+  DomPinpoint.locateVisible(
+    element,
+    focused,
+    gridConfig.selector
+  ).bind((identified) =>
+    cycle(
+      identified.candidates(),
+      identified.index(),
+      gridState.getNumRows().getOr(gridConfig.initSize.numRows),
+      gridState.getNumColumns().getOr(gridConfig.initSize.numColumns)
+    )
+  );
 
-const handleTab: KeyRuleHandler<FlatgridConfig, FlatgridState> = (_component, _simulatedEvent, gridConfig) => gridConfig.captureTab ? Option.some<boolean>(true) : Option.none();
+const handleTab: KeyRuleHandler<FlatgridConfig, FlatgridState> = (
+  _component,
+  _simulatedEvent,
+  gridConfig
+) => (gridConfig.captureTab ? Option.some<boolean>(true) : Option.none());
 
-const doEscape: KeyRuleHandler<FlatgridConfig, FlatgridState>  = (component, simulatedEvent, gridConfig) => gridConfig.onEscape(component, simulatedEvent);
+const doEscape: KeyRuleHandler<FlatgridConfig, FlatgridState> = (
+  component,
+  simulatedEvent,
+  gridConfig
+) => gridConfig.onEscape(component, simulatedEvent);
 
 const moveLeft = doMove(WrapArrNavigation.cycleLeft);
 const moveRight = doMove(WrapArrNavigation.cycleRight);
@@ -52,21 +98,43 @@ const moveRight = doMove(WrapArrNavigation.cycleRight);
 const moveNorth = doMove(WrapArrNavigation.cycleUp);
 const moveSouth = doMove(WrapArrNavigation.cycleDown);
 
-const getKeydownRules: () => Array<KeyRules.KeyRule<FlatgridConfig, FlatgridState>> = Fun.constant([
-  KeyRules.rule(KeyMatch.inSet(Keys.LEFT()), DomMovement.west<FlatgridConfig, FlatgridState>(moveLeft, moveRight)),
-  KeyRules.rule(KeyMatch.inSet(Keys.RIGHT()), DomMovement.east(moveLeft, moveRight)),
+const getKeydownRules: () => Array<
+  KeyRules.KeyRule<FlatgridConfig, FlatgridState>
+> = Fun.constant([
+  KeyRules.rule(
+    KeyMatch.inSet(Keys.LEFT()),
+    DomMovement.west<FlatgridConfig, FlatgridState>(moveLeft, moveRight)
+  ),
+  KeyRules.rule(
+    KeyMatch.inSet(Keys.RIGHT()),
+    DomMovement.east(moveLeft, moveRight)
+  ),
   KeyRules.rule(KeyMatch.inSet(Keys.UP()), DomMovement.north(moveNorth)),
   KeyRules.rule(KeyMatch.inSet(Keys.DOWN()), DomMovement.south(moveSouth)),
-  KeyRules.rule(KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), handleTab),
-  KeyRules.rule(KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.TAB()) ]), handleTab),
+  KeyRules.rule(
+    KeyMatch.and([KeyMatch.isShift, KeyMatch.inSet(Keys.TAB())]),
+    handleTab
+  ),
+  KeyRules.rule(
+    KeyMatch.and([KeyMatch.isNotShift, KeyMatch.inSet(Keys.TAB())]),
+    handleTab
+  ),
   KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), doEscape),
 
   // Probably should make whether space is used configurable
   KeyRules.rule(KeyMatch.inSet(Keys.SPACE().concat(Keys.ENTER())), execute)
 ]);
 
-const getKeyupRules: () => Array<KeyRules.KeyRule<FlatgridConfig, FlatgridState>> = Fun.constant([
+const getKeyupRules: () => Array<
+  KeyRules.KeyRule<FlatgridConfig, FlatgridState>
+> = Fun.constant([
   KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), KeyingTypes.stopEventForFirefox)
 ]);
 
-export default KeyingType.typical(schema, KeyingState.flatgrid, getKeydownRules, getKeyupRules, () => Option.some(focusIn));
+export default KeyingType.typical(
+  schema,
+  KeyingState.flatgrid,
+  getKeydownRules,
+  getKeyupRules,
+  () => Option.some(focusIn)
+);

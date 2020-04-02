@@ -13,6 +13,4 @@ const getOrCreate = <A>(element: Element, f: () => A): A => {
   return data;
 };
 
-export {
-  getOrCreate
-};
+export { getOrCreate };

@@ -41,7 +41,10 @@ const contains = browser.isIE() ? ieContains : regularContains;
 const is = Selectors.is;
 
 export {
-  eq, isEqualNode, member, contains,
+  eq,
+  isEqualNode,
+  member,
+  contains,
   // Only used by DomUniverse. Remove (or should Selectors.is move here?)
   is
 };

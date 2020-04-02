@@ -18,10 +18,13 @@ UnitTest.test('endsWith: Unit tests', () => {
   check(false, 'caatatetatat', 'cat');
 });
 
-UnitTest.test('endsWith: A string added to a string (at the end) must have endsWith as true', () => {
-  fc.assert(fc.property(
-    fc.asciiString(),
-    fc.asciiString(),
-    (str, contents) => Strings.endsWith(str + contents, contents)
-  ));
-});
+UnitTest.test(
+  'endsWith: A string added to a string (at the end) must have endsWith as true',
+  () => {
+    fc.assert(
+      fc.property(fc.asciiString(), fc.asciiString(), (str, contents) =>
+        Strings.endsWith(str + contents, contents)
+      )
+    );
+  }
+);

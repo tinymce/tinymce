@@ -19,8 +19,8 @@ import { UrlInput, UrlInputApi } from './UrlInput';
 import { HtmlPanel, HtmlPanelApi } from './HtmlPanel';
 import { Panel, PanelApi } from './Panel';
 
-export type BodyComponentApi
-  = BarApi
+export type BodyComponentApi =
+  | BarApi
   | ButtonApi
   | CheckboxApi
   | TextAreaApi
@@ -41,8 +41,8 @@ export type BodyComponentApi
   | TableApi
   | PanelApi;
 
-export type BodyComponent
-  = Bar
+export type BodyComponent =
+  | Bar
   | Button
   | Checkbox
   | TextArea

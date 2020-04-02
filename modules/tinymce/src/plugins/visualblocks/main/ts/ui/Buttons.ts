@@ -8,7 +8,9 @@
 import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
-const toggleActiveState = (editor: Editor, enabledState: Cell<boolean>) => (api) => {
+const toggleActiveState = (editor: Editor, enabledState: Cell<boolean>) => (
+  api
+) => {
   api.setActive(enabledState.get());
   const editorEventCallback = (e) => api.setActive(e.state);
   editor.on('VisualBlocks', editorEventCallback);
@@ -30,6 +32,4 @@ const register = (editor: Editor, enabledState: Cell<boolean>) => {
   });
 };
 
-export {
-  register
-};
+export { register };

@@ -29,7 +29,10 @@ export default () => {
     selector: 'textarea.tiny-text',
     init_instance_callback: (editor) => {
       // Add in a button to open the dialog
-      editor.$('<button>openDialog()</button>').appendTo('body').on('click', () => openDialog(editor));
+      editor
+        .$('<button>openDialog()</button>')
+        .appendTo('body')
+        .on('click', () => openDialog(editor));
 
       // Open the dialog initially
       openDialog(editor);

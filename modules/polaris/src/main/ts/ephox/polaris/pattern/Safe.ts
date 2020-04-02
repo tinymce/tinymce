@@ -15,8 +15,4 @@ const token = function (input: string) {
   return Unsafe.token(value);
 };
 
-export {
-  sanitise,
-  word,
-  token
-};
+export { sanitise, word, token };

@@ -36,7 +36,10 @@ const addSizeSuffix = function (size: string) {
 };
 
 const removeDataStyle = (table) => {
-  const dataStyleCells = SelectorFilter.descendants(table, 'td[data-mce-style],th[data-mce-style]');
+  const dataStyleCells = SelectorFilter.descendants(
+    table,
+    'td[data-mce-style],th[data-mce-style]'
+  );
   Attr.remove(table, 'data-mce-style');
   Arr.each(dataStyleCells, function (cell) {
     Attr.remove(cell, 'data-mce-style');

@@ -6,11 +6,15 @@ import ManualStore from './ManualStore';
 import MemoryStore from './MemoryStore';
 
 export default [
-  FieldSchema.defaultedOf('store', { mode: 'memory' }, ValueSchema.choose('mode', {
-    memory: MemoryStore,
-    manual: ManualStore,
-    dataset: DatasetStore
-  })),
+  FieldSchema.defaultedOf(
+    'store',
+    { mode: 'memory' },
+    ValueSchema.choose('mode', {
+      memory: MemoryStore,
+      manual: ManualStore,
+      dataset: DatasetStore
+    })
+  ),
   Fields.onHandler('onSetValue'),
   FieldSchema.defaulted('resetOnDom', false)
 ];

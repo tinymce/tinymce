@@ -1,4 +1,14 @@
-import { Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import {
+  Assertions,
+  Chain,
+  GeneralSteps,
+  Logger,
+  Mouse,
+  Pipeline,
+  Step,
+  UiFinder,
+  Waiter
+} from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
@@ -13,7 +23,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
   const helpers = TestExtras();
   const windowManager = WindowManager.setup(helpers.extras);
 
-  const currentDialogApi = Cell<Types.Dialog.DialogInstanceApi<any>>({ } as any);
+  const currentDialogApi = Cell<Types.Dialog.DialogInstanceApi<any>>({} as any);
 
   const store = TestHelpers.TestStore();
 
@@ -21,8 +31,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
     title: 'DialogA',
     body: {
       type: 'panel',
-      items: [
-      ]
+      items: []
     },
     buttons: [
       {
@@ -41,9 +50,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
         text: 'Enable other'
       }
     ],
-    initialData: {
-
-    },
+    initialData: {},
     onSubmit: (api) => {
       store.adder('onSubmitA');
       api.close();
@@ -61,20 +68,20 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
     }
   };
 
-  const dialogB: Types.Dialog.DialogApi<any> =  {
+  const dialogB: Types.Dialog.DialogApi<any> = {
     title: 'DialogB',
     body: {
       type: 'panel',
-      items: [ ]
+      items: []
     },
     buttons: [
       {
         type: 'custom',
         name: 'Dest.DialogC',
         text: 'Destination: DialogC'
-      },
+      }
     ],
-    initialData: { },
+    initialData: {},
     onSubmit: (api) => {
       store.adder('onSubmitB');
       api.close();
@@ -87,7 +94,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
     }
   };
 
-  const dialogC: Types.Dialog.DialogApi<any> =  {
+  const dialogC: Types.Dialog.DialogApi<any> = {
     title: 'DialogC',
     body: {
       type: 'tabpanel',
@@ -105,9 +112,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
         {
           title: 'two',
           name: 'two',
-          items: [
-
-          ]
+          items: []
         }
       ]
     },
@@ -135,8 +140,10 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
     }
   };
 
-  const sTestOpen = Chain.asStep({ }, [
-    Chain.injectThunked(() => windowManager.open(dialogA, {}, () => store.adder('closeWindow')() )),
+  const sTestOpen = Chain.asStep({}, [
+    Chain.injectThunked(() =>
+      windowManager.open(dialogA, {}, () => store.adder('closeWindow')())
+    ),
     Chain.op((dialogApi) => {
       currentDialogApi.set(dialogApi);
     })
@@ -147,57 +154,78 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
     UiFinder.sNotExists(Body.body(), '[role="dialog"]')
   ]);
 
-  Pipeline.async({}, [
-    sTestOpen,
-    UiFinder.sExists(Body.body(), 'button:contains("Destination: DialogB"):not([disabled])'),
-    Mouse.sClickOn(Body.body(), 'button:contains("Disable other")'),
-    Logger.t(
-      'Button should be disabled',
-      UiFinder.sNotExists(Body.body(), 'button:contains("Destination: DialogB"):not([disabled])')
-    ),
+  Pipeline.async(
+    {},
+    [
+      sTestOpen,
+      UiFinder.sExists(
+        Body.body(),
+        'button:contains("Destination: DialogB"):not([disabled])'
+      ),
+      Mouse.sClickOn(Body.body(), 'button:contains("Disable other")'),
+      Logger.t(
+        'Button should be disabled',
+        UiFinder.sNotExists(
+          Body.body(),
+          'button:contains("Destination: DialogB"):not([disabled])'
+        )
+      ),
 
-    Mouse.sClickOn(Body.body(), 'button:contains("Disable other")'),
-    Mouse.sClickOn(Body.body(), 'button:contains("Destination: DialogB")'),
+      Mouse.sClickOn(Body.body(), 'button:contains("Disable other")'),
+      Mouse.sClickOn(Body.body(), 'button:contains("Destination: DialogB")'),
 
-    Mouse.sClickOn(Body.body(), 'button:contains("Enable other")'),
-    Logger.t(
-      'Button should be enabled',
-      UiFinder.sExists(Body.body(), 'button:contains("Destination: DialogB"):not([disabled])')
-    ),
-    Mouse.sClickOn(Body.body(), 'button:contains("Destination: DialogB")'),
+      Mouse.sClickOn(Body.body(), 'button:contains("Enable other")'),
+      Logger.t(
+        'Button should be enabled',
+        UiFinder.sExists(
+          Body.body(),
+          'button:contains("Destination: DialogB"):not([disabled])'
+        )
+      ),
+      Mouse.sClickOn(Body.body(), 'button:contains("Destination: DialogB")'),
 
-    Mouse.sClickOn(Body.body(), 'button:contains("Destination: DialogC")'),
-    Chain.asStep(Body.body(), [
-      UiFinder.cFindIn('input'),
-      Chain.op((input) => {
-        Assertions.assertEq('Checking input value', 'C.Alpha', Value.get(input));
-      })
-    ]),
+      Mouse.sClickOn(Body.body(), 'button:contains("Destination: DialogC")'),
+      Chain.asStep(Body.body(), [
+        UiFinder.cFindIn('input'),
+        Chain.op((input) => {
+          Assertions.assertEq(
+            'Checking input value',
+            'C.Alpha',
+            Value.get(input)
+          );
+        })
+      ]),
 
-    Step.sync(() => {
-      currentDialogApi.get().disable('tab.switch.two');
-    }),
-    UiFinder.sExists(Body.body(), 'button[disabled]:contains("Switch to Tab Two")'),
-    Step.sync(() => {
-      currentDialogApi.get().enable('tab.switch.two');
-    }),
+      Step.sync(() => {
+        currentDialogApi.get().disable('tab.switch.two');
+      }),
+      UiFinder.sExists(
+        Body.body(),
+        'button[disabled]:contains("Switch to Tab Two")'
+      ),
+      Step.sync(() => {
+        currentDialogApi.get().enable('tab.switch.two');
+      }),
 
-    Mouse.sClickOn(Body.body(), 'button:contains("Switch to Tab Two")'),
-    Logger.t(
-      'Tab "Two" should be selected',
-      UiFinder.sExists(Body.body(), '.tox-dialog__body-nav-item--active:contains("two")')
-    ),
+      Mouse.sClickOn(Body.body(), 'button:contains("Switch to Tab Two")'),
+      Logger.t(
+        'Tab "Two" should be selected',
+        UiFinder.sExists(
+          Body.body(),
+          '.tox-dialog__body-nav-item--active:contains("two")'
+        )
+      ),
 
-    sTestClose,
-    Waiter.sTryUntil(
-      'Waiting for all dialog events when closing',
-      store.sAssertEq('Checking stuff', [
-        'closeWindow',
-        'onCloseC'
-      ])
-    )
-  ], () => {
-    helpers.destroy();
-    success();
-  }, failure);
+      sTestClose,
+      Waiter.sTryUntil(
+        'Waiting for all dialog events when closing',
+        store.sAssertEq('Checking stuff', ['closeWindow', 'onCloseC'])
+      )
+    ],
+    () => {
+      helpers.destroy();
+      success();
+    },
+    failure
+  );
 });

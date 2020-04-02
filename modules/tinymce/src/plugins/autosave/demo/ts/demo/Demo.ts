@@ -7,7 +7,7 @@ tinymce.init({
   height: 600,
   autosave_interval: '10s',
   menus: {
-    File: [ 'restoredraft' ]
+    File: ['restoredraft']
   }
 });
 

@@ -21,4 +21,7 @@ const tableFields = [
 
 export const tableSchema = ValueSchema.objOf(tableFields);
 
-export const createTable = (spec: TableApi): Result<Table, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<Table>('table', tableSchema, spec);
+export const createTable = (
+  spec: TableApi
+): Result<Table, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<Table>('table', tableSchema, spec);

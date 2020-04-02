@@ -17,9 +17,10 @@ const init = (editor: Editor, all: CharMap) => {
     ch: ':',
     columns: 'auto',
     minChars: 2,
-    fetch: (pattern, _maxResults) => new Promise((resolve, _reject) => {
-      resolve(Scan.scan(all, pattern));
-    }),
+    fetch: (pattern, _maxResults) =>
+      new Promise((resolve, _reject) => {
+        resolve(Scan.scan(all, pattern));
+      }),
     onAction: (autocompleteApi, rng, value) => {
       editor.selection.setRng(rng);
       editor.insertContent(value);
@@ -28,6 +29,4 @@ const init = (editor: Editor, all: CharMap) => {
   });
 };
 
-export {
-  init
-};
+export { init };

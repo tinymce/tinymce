@@ -4,7 +4,11 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
-import { SliderModelDetailParts, SliderValueXY, TwoDSliderDetail } from '../types/SliderTypes';
+import {
+  SliderModelDetailParts,
+  SliderValueXY,
+  TwoDSliderDetail
+} from '../types/SliderTypes';
 import * as EdgeActions from './EdgeActions';
 import * as HorizontalModel from './HorizontalModel';
 import * as ModelCommon from './ModelCommon';
@@ -13,7 +17,10 @@ import { currentValue, maxX, maxY, minX, minY, step } from './SliderValues';
 import * as VerticalModel from './VerticalModel';
 
 // fire slider change event with xy value
-const fireSliderChange = (spectrum: AlloyComponent, value: SliderValueXY): void => {
+const fireSliderChange = (
+  spectrum: AlloyComponent,
+  value: SliderValueXY
+): void => {
   AlloyTriggers.emitWith(spectrum, ModelCommon.sliderChangeEvent(), { value });
 };
 
@@ -24,8 +31,16 @@ const sliderValue = (x: number, y: number): SliderValueXY => ({
 
 // find both values of x and y offsets of where the mouse was clicked from the model.
 // then fire a slider change event with those values, returning the values
-const setValueFrom = (spectrum: AlloyComponent, detail: TwoDSliderDetail, value: Position): SliderValueXY => {
-  const xValue = HorizontalModel.findValueOfOffset(spectrum, detail, value.left());
+const setValueFrom = (
+  spectrum: AlloyComponent,
+  detail: TwoDSliderDetail,
+  value: Position
+): SliderValueXY => {
+  const xValue = HorizontalModel.findValueOfOffset(
+    spectrum,
+    detail,
+    value.left()
+  );
   const yValue = VerticalModel.findValueOfOffset(spectrum, detail, value.top());
   const val = sliderValue(xValue, yValue);
   fireSliderChange(spectrum, val);
@@ -33,18 +48,31 @@ const setValueFrom = (spectrum: AlloyComponent, detail: TwoDSliderDetail, value:
 };
 
 // move in a direction by step size. Fire change at the end
-const moveBy = (direction: number, isVerticalMovement: boolean, spectrum: AlloyComponent, detail: TwoDSliderDetail): Option<number> => {
-  const f = (direction > 0) ? SliderModel.increaseBy : SliderModel.reduceBy;
-  const xValue = isVerticalMovement ? currentValue(detail).x() :
-    f(currentValue(detail).x(), minX(detail), maxX(detail), step(detail));
-  const yValue = !isVerticalMovement ? currentValue(detail).y() :
-    f(currentValue(detail).y(), minY(detail), maxY(detail), step(detail));
+const moveBy = (
+  direction: number,
+  isVerticalMovement: boolean,
+  spectrum: AlloyComponent,
+  detail: TwoDSliderDetail
+): Option<number> => {
+  const f = direction > 0 ? SliderModel.increaseBy : SliderModel.reduceBy;
+  const xValue = isVerticalMovement
+    ? currentValue(detail).x()
+    : f(currentValue(detail).x(), minX(detail), maxX(detail), step(detail));
+  const yValue = !isVerticalMovement
+    ? currentValue(detail).y()
+    : f(currentValue(detail).y(), minY(detail), maxY(detail), step(detail));
 
   fireSliderChange(spectrum, sliderValue(xValue, yValue));
   return Option.some(xValue);
 };
 
-const handleMovement = (direction: number, isVerticalMovement: boolean) => (spectrum: AlloyComponent, detail: TwoDSliderDetail): Option<boolean> => moveBy(direction, isVerticalMovement, spectrum, detail).map((): boolean => true);
+const handleMovement = (direction: number, isVerticalMovement: boolean) => (
+  spectrum: AlloyComponent,
+  detail: TwoDSliderDetail
+): Option<boolean> =>
+  moveBy(direction, isVerticalMovement, spectrum, detail).map(
+    (): boolean => true
+  );
 
 // fire a slider change event with the minimum value
 const setToMin = (spectrum: AlloyComponent, detail: TwoDSliderDetail): void => {
@@ -61,10 +89,17 @@ const setToMax = (spectrum: AlloyComponent, detail: TwoDSliderDetail): void => {
 };
 
 // get event data as a SugarPosition
-const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent): Option<Position> => ModelCommon.getEventSource(simulatedEvent);
+const getValueFromEvent = (
+  simulatedEvent: NativeSimulatedEvent
+): Option<Position> => ModelCommon.getEventSource(simulatedEvent);
 
 // update the position of the thumb from the slider's current value
-const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, detail: TwoDSliderDetail, edges: SliderModelDetailParts): void => {
+const setPositionFromValue = (
+  slider: AlloyComponent,
+  thumb: AlloyComponent,
+  detail: TwoDSliderDetail,
+  edges: SliderModelDetailParts
+): void => {
   const value = currentValue(detail);
   const xPos = HorizontalModel.findPositionOfValue(
     slider,
@@ -84,8 +119,8 @@ const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, det
   );
   const thumbXRadius = Width.get(thumb.element()) / 2;
   const thumbYRadius = Height.get(thumb.element()) / 2;
-  Css.set(thumb.element(), 'left', (xPos - thumbXRadius) + 'px');
-  Css.set(thumb.element(), 'top', (yPos - thumbYRadius) + 'px');
+  Css.set(thumb.element(), 'left', xPos - thumbXRadius + 'px');
+  Css.set(thumb.element(), 'top', yPos - thumbYRadius + 'px');
 };
 
 // Key Events
@@ -112,7 +147,6 @@ export {
   setToMax,
   getValueFromEvent,
   setPositionFromValue,
-
   onLeft,
   onRight,
   onUp,

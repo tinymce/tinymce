@@ -4,9 +4,9 @@ import { Option } from '@ephox/katamari';
 
 const toElem = (component: AlloyComponent): Element => component.element();
 
-const getByUid = (component: AlloyComponent, uid: string): Option<AlloyComponent> => component.getSystem().getByUid(uid).toOption();
+const getByUid = (
+  component: AlloyComponent,
+  uid: string
+): Option<AlloyComponent> => component.getSystem().getByUid(uid).toOption();
 
-export {
-  toElem,
-  getByUid
-};
+export { toElem, getByUid };

@@ -10,6 +10,4 @@ const Menu: MenuSketcher = Sketcher.composite({
   factory: makeMenuSpec
 });
 
-export {
-  Menu
-};
+export { Menu };

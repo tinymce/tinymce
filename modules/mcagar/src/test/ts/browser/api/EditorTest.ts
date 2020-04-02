@@ -8,14 +8,22 @@ UnitTest.asynctest('SelectionTest', (success, failure) => {
     Assertions.assertEq('asserting that editor is truthy', true, !!editor);
   });
 
-  Pipeline.async({}, [
-    Chain.asStep({}, [
-      Editor.cFromSettings({ base_url: '/project/tinymce/js/tinymce', inline: true }),
-      ApiChains.cFocus,
-      cAssertEditorExists,
-      Editor.cRemove
-    ])
-  ], () => {
-    success();
-  }, failure);
+  Pipeline.async(
+    {},
+    [
+      Chain.asStep({}, [
+        Editor.cFromSettings({
+          base_url: '/project/tinymce/js/tinymce',
+          inline: true
+        }),
+        ApiChains.cFocus,
+        cAssertEditorExists,
+        Editor.cRemove
+      ])
+    ],
+    () => {
+      success();
+    },
+    failure
+  );
 });

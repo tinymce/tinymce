@@ -19,7 +19,7 @@ interface TestEvents {
 UnitTest.test('Events', function () {
   (function () {
     const events = Events.create({
-      myEvent: Event([ 'name' ])
+      myEvent: Event(['name'])
     }) as TestEvents;
 
     let called = false;
@@ -55,31 +55,27 @@ UnitTest.test('Events', function () {
       emptyEvent: Event([])
     });
 
-    assert.throwsError(
-      function () { events.registry.emptyEvent.bind(undefined as any); },
-      'Event bind error: undefined handler'
-    );
+    assert.throwsError(function () {
+      events.registry.emptyEvent.bind(undefined as any);
+    }, 'Event bind error: undefined handler');
   })();
 
   (function () {
     const ea = Events.create({
-      chook: Event([ 'a', 'b', 'c' ])
+      chook: Event(['a', 'b', 'c'])
     });
 
     const eb = Events.create({
-      quack: SourceEvent([ 'a', 'b', 'c' ], ea.registry.chook)
+      quack: SourceEvent(['a', 'b', 'c'], ea.registry.chook)
     });
 
-    assert.throws(
-      function () {
-        try {
-          eb.trigger.quack('hay', 'bee', 'quee');
-        } catch (ex) {
-          throw ex.message;
-        }
-      },
-      'Cannot trigger a source event.'
-    );
+    assert.throws(function () {
+      try {
+        eb.trigger.quack('hay', 'bee', 'quee');
+      } catch (ex) {
+        throw ex.message;
+      }
+    }, 'Cannot trigger a source event.');
 
     eb.registry.quack.bind(function (evt) {
       assert.eq('ay', evt.a());
@@ -87,16 +83,15 @@ UnitTest.test('Events', function () {
       assert.eq('sea', evt.c());
     });
     ea.trigger.chook('ay', 'bee', 'sea');
-
   })();
 
   (function () {
     const ea = Events.create({
-      chook: Event([ 'a', 'b', 'c', 'd', 'e' ]) // superset of arguments
+      chook: Event(['a', 'b', 'c', 'd', 'e']) // superset of arguments
     });
 
     const eb = Events.create({
-      quack: SourceEvent([ 'a', 'b', 'c' ], ea.registry.chook)
+      quack: SourceEvent(['a', 'b', 'c'], ea.registry.chook)
     });
 
     eb.registry.quack.bind(function (evt) {
@@ -105,6 +100,5 @@ UnitTest.test('Events', function () {
       assert.eq('sea', evt.c());
     });
     ea.trigger.chook('ay', 'bee', 'sea', 'dee', 'eee');
-
   })();
 });

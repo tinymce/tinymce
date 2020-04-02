@@ -18,8 +18,8 @@ import Selection from './Selection';
  */
 
 interface BookmarkManager {
-  getBookmark (type: number, normalized?: boolean): Bookmark;
-  moveToBookmark (bookmark: Bookmark): boolean;
+  getBookmark(type: number, normalized?: boolean): Bookmark;
+  moveToBookmark(bookmark: Bookmark): boolean;
 }
 
 /**
@@ -48,7 +48,10 @@ function BookmarkManager(selection: Selection): BookmarkManager {
      * // Restore the selection bookmark
      * tinymce.activeEditor.selection.moveToBookmark(bm);
      */
-    getBookmark: Fun.curry(Bookmarks.getBookmark, selection) as (type: number, normalized?: boolean) => Bookmark,
+    getBookmark: Fun.curry(Bookmarks.getBookmark, selection) as (
+      type: number,
+      normalized?: boolean
+    ) => Bookmark,
 
     /**
      * Restores the selection to the specified bookmark.
@@ -65,7 +68,9 @@ function BookmarkManager(selection: Selection): BookmarkManager {
      * // Restore the selection bookmark
      * tinymce.activeEditor.selection.moveToBookmark(bm);
      */
-    moveToBookmark: Fun.curry(Bookmarks.moveToBookmark, selection) as (bookmark: Bookmark) => boolean,
+    moveToBookmark: Fun.curry(Bookmarks.moveToBookmark, selection) as (
+      bookmark: Bookmark
+    ) => boolean
   };
 }
 
@@ -78,7 +83,9 @@ namespace BookmarkManager {
    * @param {DOMNode} node DOM Node to check if it's a bookmark node or not.
    * @return {Boolean} true/false if the node is a bookmark node or not.
    */
-  export const isBookmarkNode = Bookmarks.isBookmarkNode as (node: Node) => boolean;
+  export const isBookmarkNode = Bookmarks.isBookmarkNode as (
+    node: Node
+  ) => boolean;
 }
 
 export default BookmarkManager;

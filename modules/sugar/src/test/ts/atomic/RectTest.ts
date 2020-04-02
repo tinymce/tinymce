@@ -11,21 +11,31 @@ UnitTest.test('Rect', function () {
     Jsc.number,
     Jsc.number,
     Jsc.number,
-    (left: number, right: number, top: number, bottom: number, width: number, height: number) =>
-      Jsc.eq({
-        left,
-        top,
-        right,
-        bottom,
-        width,
-        height
-      }, Rect.toRaw({
-        left: () => left,
-        top: () => top,
-        right: () => right,
-        bottom: () => bottom,
-        width: () => width,
-        height: () => height
-      }))
+    (
+      left: number,
+      right: number,
+      top: number,
+      bottom: number,
+      width: number,
+      height: number
+    ) =>
+      Jsc.eq(
+        {
+          left,
+          top,
+          right,
+          bottom,
+          width,
+          height
+        },
+        Rect.toRaw({
+          left: () => left,
+          top: () => top,
+          right: () => right,
+          bottom: () => bottom,
+          width: () => width,
+          height: () => height
+        })
+      )
   );
 });

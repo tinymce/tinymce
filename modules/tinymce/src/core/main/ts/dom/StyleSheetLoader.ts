@@ -20,7 +20,11 @@ import Tools from '../api/util/Tools';
  */
 
 export interface StyleSheetLoader {
-  load: (url: string, loadedCallback: Function, errorCallback?: Function) => void;
+  load: (
+    url: string,
+    loadedCallback: Function,
+    errorCallback?: Function
+  ) => void;
   loadAll: (urls: string[], success: Function, failure: Function) => void;
   _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
 }
@@ -31,7 +35,10 @@ export interface StyleSheetLoaderSettings {
   referrerPolicy: ReferrerPolicy;
 }
 
-export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
+export function StyleSheetLoader(
+  document,
+  settings: Partial<StyleSheetLoaderSettings> = {}
+): StyleSheetLoader {
   let idCount = 0;
   const loadedStates = {};
   let maxLoadTime;
@@ -54,7 +61,11 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
    * @param {Function} loadedCallback Callback to be executed when loaded.
    * @param {Function} errorCallback Callback to be executed when failed loading.
    */
-  const load = function (url: string, loadedCallback: Function, errorCallback?: Function) {
+  const load = function (
+    url: string,
+    loadedCallback: Function,
+    errorCallback?: Function
+  ) {
     let link, style, startTime, state;
 
     const resolve = (status: number) => {
@@ -101,7 +112,7 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
     const wait = function (testCallback, waitCallback) {
       if (!testCallback()) {
         // Wait for timeout
-        if ((new Date().getTime()) - startTime < maxLoadTime) {
+        if (new Date().getTime() - startTime < maxLoadTime) {
           Delay.setTimeout(waitCallback);
         } else {
           failed();
@@ -114,11 +125,15 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
     const waitForWebKitLinkLoaded = function () {
       wait(function () {
         const styleSheets = document.styleSheets;
-        let styleSheet, i = styleSheets.length, owner;
+        let styleSheet,
+          i = styleSheets.length,
+          owner;
 
         while (i--) {
           styleSheet = styleSheets[i];
-          owner = styleSheet.ownerNode ? styleSheet.ownerNode : styleSheet.owningElement;
+          owner = styleSheet.ownerNode
+            ? styleSheet.ownerNode
+            : styleSheet.owningElement;
           if (owner && owner.id === link.id) {
             passed();
             return true;
@@ -184,7 +199,7 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
     link = document.createElement('link');
     link.rel = 'stylesheet';
     link.type = 'text/css';
-    link.id = 'u' + (idCount++);
+    link.id = 'u' + idCount++;
     link.async = false;
     link.defer = false;
     startTime = new Date().getTime();
@@ -195,7 +210,11 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
 
     if (settings.referrerPolicy) {
       // Note: Don't use link.referrerPolicy = ... here as it doesn't work on Safari
-      Attr.set(Element.fromDom(link), 'referrerpolicy', settings.referrerPolicy);
+      Attr.set(
+        Element.fromDom(link),
+        'referrerpolicy',
+        settings.referrerPolicy
+      );
     }
 
     // Feature detect onload on link element and sniff older webkits since it has an broken onload event
@@ -235,7 +254,11 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
     return result.fold(Fun.identity, Fun.identity);
   };
 
-  const loadAll = function (urls: string[], success: Function, failure: Function) {
+  const loadAll = function (
+    urls: string[],
+    success: Function,
+    failure: Function
+  ) {
     Futures.par(Arr.map(urls, loadF)).get(function (result) {
       const parts = Arr.partition(result, function (r) {
         return r.isValue();

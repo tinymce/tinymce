@@ -9,7 +9,11 @@ const init = <S>(): ReflectingState<S> => {
   const clear = () => cell.set(Option.none<S>());
   const get = () => cell.get();
 
-  const readState = (): any => cell.get().fold<any>(() => 'none', (x) => x);
+  const readState = (): any =>
+    cell.get().fold<any>(
+      () => 'none',
+      (x) => x
+    );
 
   return {
     readState,
@@ -19,6 +23,4 @@ const init = <S>(): ReflectingState<S> => {
   };
 };
 
-export {
-  init
-};
+export { init };

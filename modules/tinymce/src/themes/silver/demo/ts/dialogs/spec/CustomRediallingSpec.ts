@@ -2,7 +2,7 @@ export default {
   title: 'Redial',
   body: {
     type: 'panel',
-    items: [ ]
+    items: []
   },
   buttons: [
     {
@@ -21,20 +21,16 @@ export default {
             {
               title: 'Alpha',
               name: 'alpha',
-              items: [
-                { type: 'input', name: 'alpha.1' }
-              ]
+              items: [{ type: 'input', name: 'alpha.1' }]
             },
             {
               title: 'Beta',
               name: 'beta',
-              items: [ ]
+              items: []
             }
           ]
         },
-        buttons: [
-
-        ],
+        buttons: [],
         initialData: {
           'alpha.1': 'A'
         }

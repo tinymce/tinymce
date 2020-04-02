@@ -24,7 +24,10 @@ const isEphoxEmbed = function (html: string): boolean {
   return getEphoxEmbedIri(fragment.firstChild) !== '';
 };
 
-const htmlToDataSax = function (prefixes: VideoScript[], html: string): MediaData {
+const htmlToDataSax = function (
+  prefixes: VideoScript[],
+  html: string
+): MediaData {
   let data: any = {};
 
   SaxParser({
@@ -35,7 +38,13 @@ const htmlToDataSax = function (prefixes: VideoScript[], html: string): MediaDat
         data.source = attrs.map.movie;
       }
 
-      if (name === 'iframe' || name === 'object' || name === 'embed' || name === 'video' || name === 'audio') {
+      if (
+        name === 'iframe' ||
+        name === 'object' ||
+        name === 'embed' ||
+        name === 'video' ||
+        name === 'audio'
+      ) {
         if (!data.type) {
           data.type = name;
         }
@@ -93,9 +102,9 @@ const ephoxEmbedHtmlToData = function (html: string): MediaData {
 };
 
 const htmlToData = function (prefixes: VideoScript[], html: string): MediaData {
-  return isEphoxEmbed(html) ? ephoxEmbedHtmlToData(html) : htmlToDataSax(prefixes, html);
+  return isEphoxEmbed(html)
+    ? ephoxEmbedHtmlToData(html)
+    : htmlToDataSax(prefixes, html);
 };
 
-export {
-  htmlToData
-};
+export { htmlToData };

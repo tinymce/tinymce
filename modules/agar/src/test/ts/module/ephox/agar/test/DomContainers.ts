@@ -21,12 +21,11 @@ interface TeardownState {
   container: Element<any>;
 }
 
-const mTeardown = Step.stateful<TeardownState, TeardownState>((state, next, _die) => {
-  Remove.remove(state.container);
-  next(state);
-});
+const mTeardown = Step.stateful<TeardownState, TeardownState>(
+  (state, next, _die) => {
+    Remove.remove(state.container);
+    next(state);
+  }
+);
 
-export {
-  mSetup,
-  mTeardown
-};
+export { mSetup, mTeardown };

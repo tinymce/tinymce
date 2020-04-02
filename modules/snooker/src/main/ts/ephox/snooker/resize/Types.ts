@@ -5,7 +5,11 @@ import { BarPositions, ColInfo } from './BarPositions';
 export interface TableSize {
   width: () => number;
   pixelWidth: () => number;
-  getWidths: (warehouse: Warehouse, direction: BarPositions<ColInfo>, tableSize: TableSize) => number[];
+  getWidths: (
+    warehouse: Warehouse,
+    direction: BarPositions<ColInfo>,
+    tableSize: TableSize
+  ) => number[];
   getCellDelta: (delta: number) => number;
   singleColumnWidth: (w: number, delta: number) => number[];
   minCellWidth: () => number;

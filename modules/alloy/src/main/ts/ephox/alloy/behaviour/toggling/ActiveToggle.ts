@@ -6,21 +6,26 @@ import * as Behaviour from '../common/Behaviour';
 import * as ToggleApis from './ToggleApis';
 import { TogglingConfig, TogglingState } from './TogglingTypes';
 
-const exhibit = () => DomModification.nu({ });
+const exhibit = () => DomModification.nu({});
 
-const events = (toggleConfig: TogglingConfig, toggleState: TogglingState): AlloyEvents.AlloyEventRecord => {
-  const execute = Behaviour.executeEvent(toggleConfig, toggleState, ToggleApis.toggle);
-  const load = Behaviour.loadEvent(toggleConfig, toggleState, ToggleApis.onLoad);
+const events = (
+  toggleConfig: TogglingConfig,
+  toggleState: TogglingState
+): AlloyEvents.AlloyEventRecord => {
+  const execute = Behaviour.executeEvent(
+    toggleConfig,
+    toggleState,
+    ToggleApis.toggle
+  );
+  const load = Behaviour.loadEvent(
+    toggleConfig,
+    toggleState,
+    ToggleApis.onLoad
+  );
 
   return AlloyEvents.derive(
-    Arr.flatten([
-      toggleConfig.toggleOnExecute ? [ execute ] : [ ],
-      [ load ]
-    ])
+    Arr.flatten([toggleConfig.toggleOnExecute ? [execute] : [], [load]])
   );
 };
 
-export {
-  exhibit,
-  events
-};
+export { exhibit, events };

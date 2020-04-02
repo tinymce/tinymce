@@ -10,7 +10,7 @@ UnitTest.test('CommentTest', function () {
     Traverse.child(span, 0).each(function (text0: Element<DomComment>) {
       span.dom().innerHTML = 'smashed';
       const v = Comment.get(text0); // Throws in IE10.
-      assert.eq('string', typeof(v));
+      assert.eq('string', typeof v);
     });
   };
 

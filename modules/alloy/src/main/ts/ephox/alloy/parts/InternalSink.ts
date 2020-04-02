@@ -7,28 +7,27 @@ import * as NativeEvents from '../api/events/NativeEvents';
 import * as PartType from './PartType';
 
 const suffix = Fun.constant('sink');
-const partType = Fun.constant(PartType.optional({
-  name: suffix(),
-  overrides: Fun.constant({
-    dom: {
-      tag: 'div'
-    },
-    behaviours: Behaviour.derive([
-      Positioning.config({
-        // TODO: Make an internal sink also be able to be used with relative layouts
-        useFixed: Fun.always
-      })
-    ]),
-    events: AlloyEvents.derive([
-      // Sinks should not let keydown or click propagate
-      AlloyEvents.cutter(NativeEvents.keydown()),
-      AlloyEvents.cutter(NativeEvents.mousedown()),
-      AlloyEvents.cutter(NativeEvents.click())
-    ])
+const partType = Fun.constant(
+  PartType.optional({
+    name: suffix(),
+    overrides: Fun.constant({
+      dom: {
+        tag: 'div'
+      },
+      behaviours: Behaviour.derive([
+        Positioning.config({
+          // TODO: Make an internal sink also be able to be used with relative layouts
+          useFixed: Fun.always
+        })
+      ]),
+      events: AlloyEvents.derive([
+        // Sinks should not let keydown or click propagate
+        AlloyEvents.cutter(NativeEvents.keydown()),
+        AlloyEvents.cutter(NativeEvents.mousedown()),
+        AlloyEvents.cutter(NativeEvents.click())
+      ])
+    })
   })
-}));
+);
 
-export {
-  partType,
-  suffix
-};
+export { partType, suffix };

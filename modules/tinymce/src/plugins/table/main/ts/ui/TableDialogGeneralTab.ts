@@ -3,21 +3,27 @@ import * as Helpers from './Helpers';
 import { getTableClassList, hasAppearanceOptions } from '../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
 
-const getItems = (editor: Editor, hasClasses: boolean, insertNewTable: boolean) => {
-  const rowColCountItems: Types.Dialog.BodyComponentApi[] = !insertNewTable ? [] : [
-    {
-      type: 'input',
-      name: 'cols',
-      label: 'Cols',
-      inputMode: 'numeric'
-    },
-    {
-      type: 'input',
-      name: 'rows',
-      label: 'Rows',
-      inputMode: 'numeric'
-    }
-  ];
+const getItems = (
+  editor: Editor,
+  hasClasses: boolean,
+  insertNewTable: boolean
+) => {
+  const rowColCountItems: Types.Dialog.BodyComponentApi[] = !insertNewTable
+    ? []
+    : [
+        {
+          type: 'input',
+          name: 'cols',
+          label: 'Cols',
+          inputMode: 'numeric'
+        },
+        {
+          type: 'input',
+          name: 'rows',
+          label: 'Rows',
+          inputMode: 'numeric'
+        }
+      ];
 
   const alwaysItems: Types.Dialog.BodyComponentApi[] = [
     {
@@ -32,36 +38,40 @@ const getItems = (editor: Editor, hasClasses: boolean, insertNewTable: boolean) 
     }
   ];
 
-  const appearanceItems: Types.Dialog.BodyComponentApi[] = hasAppearanceOptions(editor) ? [
-    {
-      type: 'input',
-      name: 'cellspacing',
-      label: 'Cell spacing',
-      inputMode: 'numeric'
-    },
-    {
-      type: 'input',
-      name: 'cellpadding',
-      label: 'Cell padding',
-      inputMode: 'numeric'
-    },
-    {
-      type: 'input',
-      name: 'border',
-      label: 'Border width'
-    },
-    {
-      type: 'label',
-      label: 'Caption',
-      items: [
+  const appearanceItems: Types.Dialog.BodyComponentApi[] = hasAppearanceOptions(
+    editor
+  )
+    ? [
         {
-          type: 'checkbox',
-          name: 'caption',
-          label: 'Show caption'
+          type: 'input',
+          name: 'cellspacing',
+          label: 'Cell spacing',
+          inputMode: 'numeric'
+        },
+        {
+          type: 'input',
+          name: 'cellpadding',
+          label: 'Cell padding',
+          inputMode: 'numeric'
+        },
+        {
+          type: 'input',
+          name: 'border',
+          label: 'Border width'
+        },
+        {
+          type: 'label',
+          label: 'Caption',
+          items: [
+            {
+              type: 'checkbox',
+              name: 'caption',
+              label: 'Show caption'
+            }
+          ]
         }
       ]
-    }
-  ] : [];
+    : [];
 
   const alignmentItem: Types.Dialog.BodyComponentApi[] = [
     {
@@ -77,25 +87,30 @@ const getItems = (editor: Editor, hasClasses: boolean, insertNewTable: boolean) 
     }
   ];
 
-  const classListItem: Types.Dialog.BodyComponentApi[] = hasClasses ? [
-    {
-      type: 'selectbox',
-      name: 'class',
-      label: 'Class',
-      items: Helpers.buildListItems(
-        getTableClassList(editor),
-        (item) => {
-          if (item.value) {
-            item.textStyle = () => editor.formatter.getCssText({ block: 'table', classes: [ item.value ] });
-          }
+  const classListItem: Types.Dialog.BodyComponentApi[] = hasClasses
+    ? [
+        {
+          type: 'selectbox',
+          name: 'class',
+          label: 'Class',
+          items: Helpers.buildListItems(getTableClassList(editor), (item) => {
+            if (item.value) {
+              item.textStyle = () =>
+                editor.formatter.getCssText({
+                  block: 'table',
+                  classes: [item.value]
+                });
+            }
+          })
         }
-      )
-    }
-  ] : [];
+      ]
+    : [];
 
-  return rowColCountItems.concat(alwaysItems).concat(appearanceItems).concat(alignmentItem).concat(classListItem);
+  return rowColCountItems
+    .concat(alwaysItems)
+    .concat(appearanceItems)
+    .concat(alignmentItem)
+    .concat(classListItem);
 };
 
-export {
-  getItems
-};
+export { getItems };

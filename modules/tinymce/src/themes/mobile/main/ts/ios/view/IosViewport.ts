@@ -6,8 +6,19 @@
  */
 
 import { Adt, Arr, Fun } from '@ephox/katamari';
-import { Attr, Css, Element, Height, SelectorFilter, Traverse } from '@ephox/sugar';
-import { Element as DomElement, Node as DomNode, HTMLElement } from '@ephox/dom-globals';
+import {
+  Attr,
+  Css,
+  Element,
+  Height,
+  SelectorFilter,
+  Traverse
+} from '@ephox/sugar';
+import {
+  Element as DomElement,
+  Node as DomNode,
+  HTMLElement
+} from '@ephox/dom-globals';
 
 import * as Styles from '../../style/Styles';
 import * as Scrollable from '../../touch/scroll/Scrollable';
@@ -15,9 +26,9 @@ import * as DataAttributes from '../../util/DataAttributes';
 import * as DeviceZones from './DeviceZones';
 
 const fixture = Adt.generate([
-  { fixed: [ 'element', 'property', 'offsetY' ] },
+  { fixed: ['element', 'property', 'offsetY'] },
   // Not supporting property yet
-  { scroller : [ 'element', 'offsetY' ] }
+  { scroller: ['element', 'offsetY'] }
 ]);
 
 const yFixedData = 'data-' + Styles.resolve('position-y-fixed');
@@ -44,16 +55,24 @@ const classifyScrolling = (element: Element<DomElement>, offsetY: number) =>
 
 const classify = (element: Element<DomElement>) => {
   const offsetY = getYFixedData(element);
-  const classifier = Attr.get(element, yScrollingData) === 'true' ? classifyScrolling : classifyFixed;
+  const classifier =
+    Attr.get(element, yScrollingData) === 'true'
+      ? classifyScrolling
+      : classifyFixed;
   return classifier(element, offsetY);
 };
 
 const findFixtures = (container: Element<DomElement>) => {
-  const candidates = SelectorFilter.descendants(container, '[' + yFixedData + ']');
+  const candidates = SelectorFilter.descendants(
+    container,
+    '[' + yFixedData + ']'
+  );
   return Arr.map(candidates, classify);
 };
 
-const takeoverToolbar = (toolbar: Element<DomElement>): { restore: () => void } => {
+const takeoverToolbar = (
+  toolbar: Element<DomElement>
+): { restore: () => void } => {
   const oldToolbarStyle = Attr.get(toolbar, 'style');
   Css.setAll(toolbar, {
     position: 'absolute',
@@ -74,7 +93,11 @@ const takeoverToolbar = (toolbar: Element<DomElement>): { restore: () => void } 
   };
 };
 
-const takeoverViewport = (toolbarHeight: number, height: number, viewport: Element<DomElement>): { restore: () => void } => {
+const takeoverViewport = (
+  toolbarHeight: number,
+  height: number,
+  viewport: Element<DomElement>
+): { restore: () => void } => {
   const oldViewportStyle = Attr.get(viewport, 'style');
 
   Scrollable.register(viewport);
@@ -103,7 +126,9 @@ const takeoverViewport = (toolbarHeight: number, height: number, viewport: Eleme
   };
 };
 
-const takeoverDropup = (dropup: Element<DomElement>): { restore: () => void } => {
+const takeoverDropup = (
+  dropup: Element<DomElement>
+): { restore: () => void } => {
   const oldDropupStyle = Attr.get(dropup, 'style');
   Css.setAll(dropup, {
     position: 'absolute',
@@ -124,7 +149,11 @@ const takeoverDropup = (dropup: Element<DomElement>): { restore: () => void } =>
   };
 };
 
-const deriveViewportHeight = (viewport: Element<DomElement>, toolbarHeight: number, dropupHeight: number) => {
+const deriveViewportHeight = (
+  viewport: Element<DomElement>,
+  toolbarHeight: number,
+  dropupHeight: number
+) => {
   // Note, Mike thinks this value changes when the URL address bar grows and shrinks. If this value is too high
   // the main problem is that scrolling into the greenzone may not scroll into an area that is viewable. Investigate.
   const outerWindow = Traverse.owner(viewport).dom().defaultView;
@@ -133,14 +162,27 @@ const deriveViewportHeight = (viewport: Element<DomElement>, toolbarHeight: numb
   return winH - toolbarHeight - dropupHeight;
 };
 
-const takeover = (viewport: Element<HTMLElement>, contentBody: Element<DomNode>, toolbar: Element<HTMLElement>, dropup: Element<HTMLElement>) => {
+const takeover = (
+  viewport: Element<HTMLElement>,
+  contentBody: Element<DomNode>,
+  toolbar: Element<HTMLElement>,
+  dropup: Element<HTMLElement>
+) => {
   const outerWindow = Traverse.owner(viewport).dom().defaultView;
   const toolbarSetup = takeoverToolbar(toolbar);
   const toolbarHeight = Height.get(toolbar);
   const dropupHeight = Height.get(dropup);
-  const viewportHeight = deriveViewportHeight(viewport, toolbarHeight, dropupHeight);
+  const viewportHeight = deriveViewportHeight(
+    viewport,
+    toolbarHeight,
+    dropupHeight
+  );
 
-  const viewportSetup = takeoverViewport(toolbarHeight, viewportHeight, viewport);
+  const viewportSetup = takeoverViewport(
+    toolbarHeight,
+    viewportHeight,
+    viewport
+  );
 
   const dropupSetup = takeoverDropup(dropup);
 
@@ -163,7 +205,11 @@ const takeover = (viewport: Element<HTMLElement>, contentBody: Element<DomNode>,
     if (isActive) {
       const newToolbarHeight = Height.get(toolbar);
       const dropupHeight = Height.get(dropup);
-      const newHeight = deriveViewportHeight(viewport, newToolbarHeight, dropupHeight);
+      const newHeight = deriveViewportHeight(
+        viewport,
+        newToolbarHeight,
+        dropupHeight
+      );
       Attr.set(viewport, yFixedData, newToolbarHeight + 'px');
       Css.set(viewport, 'height', newHeight + 'px');
 
@@ -189,8 +235,4 @@ const takeover = (viewport: Element<HTMLElement>, contentBody: Element<DomNode>,
   };
 };
 
-export {
-  findFixtures,
-  takeover,
-  getYFixedData
-};
+export { findFixtures, takeover, getYFixedData };

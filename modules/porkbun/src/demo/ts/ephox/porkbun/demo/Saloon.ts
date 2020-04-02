@@ -29,7 +29,7 @@ const create = function (): Saloon {
   };
 
   const events = Events.create({
-    shooting: Event([ 'shooter', 'target' ])
+    shooting: Event(['shooter', 'target'])
   }) as SaloonEvents;
 
   const binder = Binder.create();
@@ -78,6 +78,4 @@ const create = function (): Saloon {
   };
 };
 
-export {
-  create
-};
+export { create };

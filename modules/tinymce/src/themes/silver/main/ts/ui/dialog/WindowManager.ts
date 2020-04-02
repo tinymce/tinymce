@@ -5,7 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Boxes, Docking, GuiFactory, HotspotAnchorSpec, InlineView, Keying, MakeshiftAnchorSpec, ModalDialog, NodeAnchorSpec, SelectionAnchorSpec, SystemEvents } from '@ephox/alloy';
+import {
+  AddEventsBehaviour,
+  AlloyComponent,
+  AlloyEvents,
+  AlloyTriggers,
+  Behaviour,
+  Boxes,
+  Docking,
+  GuiFactory,
+  HotspotAnchorSpec,
+  InlineView,
+  Keying,
+  MakeshiftAnchorSpec,
+  ModalDialog,
+  NodeAnchorSpec,
+  SelectionAnchorSpec,
+  SystemEvents
+} from '@ephox/alloy';
 import { Processor, ValueSchema } from '@ephox/boulder';
 import { DialogManager, Types } from '@ephox/bridge';
 import { Option, Singleton } from '@ephox/katamari';
@@ -27,28 +44,44 @@ export interface WindowManagerSetup {
   editor: Editor;
 }
 
-type InlineDialogAnchor = HotspotAnchorSpec | MakeshiftAnchorSpec | NodeAnchorSpec | SelectionAnchorSpec;
+type InlineDialogAnchor =
+  | HotspotAnchorSpec
+  | MakeshiftAnchorSpec
+  | NodeAnchorSpec
+  | SelectionAnchorSpec;
 
-const validateData = <T extends Types.Dialog.DialogData>(data: T, validator: Processor) => ValueSchema.getOrDie(ValueSchema.asRaw('data', validator, data));
+const validateData = <T extends Types.Dialog.DialogData>(
+  data: T,
+  validator: Processor
+) => ValueSchema.getOrDie(ValueSchema.asRaw('data', validator, data));
 
-const isAlertOrConfirmDialog = (target: Element): boolean => SelectorExists.closest(target, '.tox-alert-dialog') || SelectorExists.closest(target, '.tox-confirm-dialog');
+const isAlertOrConfirmDialog = (target: Element): boolean =>
+  SelectorExists.closest(target, '.tox-alert-dialog') ||
+  SelectorExists.closest(target, '.tox-confirm-dialog');
 
-const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, isToolbarLocationTop: boolean): Behaviour.NamedConfiguredBehaviour<any, any>[] => {
+const inlineAdditionalBehaviours = (
+  editor: Editor,
+  isStickyToolbar: boolean,
+  isToolbarLocationTop: boolean
+): Behaviour.NamedConfiguredBehaviour<any, any>[] => {
   // When using sticky toolbars it already handles the docking behaviours so applying docking would
   // do nothing except add additional processing when scrolling, so we don't want to include it here
   // (Except when the toolbar is located at the bottom since the anchor will be at the top)
   if (isStickyToolbar && isToolbarLocationTop) {
-    return [ ];
+    return [];
   } else {
     return [
       Docking.config({
         contextual: {
-          lazyContext: () => Option.some(Boxes.box(Element.fromDom(editor.getContentAreaContainer()))),
+          lazyContext: () =>
+            Option.some(
+              Boxes.box(Element.fromDom(editor.getContentAreaContainer()))
+            ),
           fadeInClass: 'tox-dialog-dock-fadein',
           fadeOutClass: 'tox-dialog-dock-fadeout',
           transitionClass: 'tox-dialog-dock-transition'
         },
-        modes: [ 'top' ]
+        modes: ['top']
       })
     ];
   }
@@ -63,20 +96,42 @@ const setup = (extras: WindowManagerSetup) => {
   const alertDialog = AlertDialog.setup(extras);
   const confirmDialog = ConfirmDialog.setup(extras);
 
-  const open = <T extends Types.Dialog.DialogData>(config: Types.Dialog.DialogApi<T>, params, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void): Types.Dialog.DialogInstanceApi<T> => {
+  const open = <T extends Types.Dialog.DialogData>(
+    config: Types.Dialog.DialogApi<T>,
+    params,
+    closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void
+  ): Types.Dialog.DialogInstanceApi<T> => {
     if (params !== undefined && params.inline === 'toolbar') {
-      return openInlineDialog(config, backstage.shared.anchors.inlineDialog(), closeWindow, params.ariaAttrs);
+      return openInlineDialog(
+        config,
+        backstage.shared.anchors.inlineDialog(),
+        closeWindow,
+        params.ariaAttrs
+      );
     } else if (params !== undefined && params.inline === 'cursor') {
-      return openInlineDialog(config, backstage.shared.anchors.cursor(), closeWindow, params.ariaAttrs);
+      return openInlineDialog(
+        config,
+        backstage.shared.anchors.cursor(),
+        closeWindow,
+        params.ariaAttrs
+      );
     } else {
       return openModalDialog(config, closeWindow);
     }
   };
 
-  const openUrl = (config: Types.UrlDialog.UrlDialogApi, closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void) => openModalUrlDialog(config, closeWindow);
+  const openUrl = (
+    config: Types.UrlDialog.UrlDialogApi,
+    closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void
+  ) => openModalUrlDialog(config, closeWindow);
 
-  const openModalUrlDialog = (config: Types.UrlDialog.UrlDialogApi, closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void) => {
-    const factory = (contents: Types.UrlDialog.UrlDialog): Types.UrlDialog.UrlDialogInstanceApi => {
+  const openModalUrlDialog = (
+    config: Types.UrlDialog.UrlDialogApi,
+    closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void
+  ) => {
+    const factory = (
+      contents: Types.UrlDialog.UrlDialog
+    ): Types.UrlDialog.UrlDialogInstanceApi => {
       const dialog = renderUrlDialog(
         contents,
         {
@@ -96,8 +151,15 @@ const setup = (extras: WindowManagerSetup) => {
     return DialogManager.DialogManager.openUrl(factory, config);
   };
 
-  const openModalDialog = <T extends Types.Dialog.DialogData>(config: Types.Dialog.DialogApi<T>, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void): Types.Dialog.DialogInstanceApi<T> => {
-    const factory = (contents: Types.Dialog.Dialog<T>, internalInitialData: T, dataValidator: Processor): Types.Dialog.DialogInstanceApi<T> => {
+  const openModalDialog = <T extends Types.Dialog.DialogData>(
+    config: Types.Dialog.DialogApi<T>,
+    closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void
+  ): Types.Dialog.DialogInstanceApi<T> => {
+    const factory = (
+      contents: Types.Dialog.Dialog<T>,
+      internalInitialData: T,
+      dataValidator: Processor
+    ): Types.Dialog.DialogInstanceApi<T> => {
       // We used to validate data here, but it's done by the instanceApi.setData call below.
       const initialData = internalInitialData;
 
@@ -127,8 +189,17 @@ const setup = (extras: WindowManagerSetup) => {
     return DialogManager.DialogManager.open<T>(factory, config);
   };
 
-  const openInlineDialog = <T extends Types.Dialog.DialogData>(config/* : Types.Dialog.DialogApi<T>*/, anchor: InlineDialogAnchor, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void, ariaAttrs): Types.Dialog.DialogInstanceApi<T> => {
-    const factory = (contents: Types.Dialog.Dialog<T>, internalInitialData: T, dataValidator: Processor): Types.Dialog.DialogInstanceApi<T> => {
+  const openInlineDialog = <T extends Types.Dialog.DialogData>(
+    config /* : Types.Dialog.DialogApi<T>*/,
+    anchor: InlineDialogAnchor,
+    closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void,
+    ariaAttrs
+  ): Types.Dialog.DialogInstanceApi<T> => {
+    const factory = (
+      contents: Types.Dialog.Dialog<T>,
+      internalInitialData: T,
+      dataValidator: Processor
+    ): Types.Dialog.DialogInstanceApi<T> => {
       const initialData = validateData<T>(internalInitialData, dataValidator);
       const inlineDialog = Singleton.value<AlloyComponent>();
 
@@ -138,10 +209,11 @@ const setup = (extras: WindowManagerSetup) => {
         internalDialog: contents
       };
 
-      const refreshDocking = () => inlineDialog.on((dialog) => {
-        InlineView.reposition(dialog);
-        Docking.refresh(dialog);
-      });
+      const refreshDocking = () =>
+        inlineDialog.on((dialog) => {
+          InlineView.reposition(dialog);
+          Docking.refresh(dialog);
+        });
 
       const dialogUi = renderInlineDialog<T>(
         dialogInit,
@@ -154,29 +226,36 @@ const setup = (extras: WindowManagerSetup) => {
             closeWindow(dialogUi.instanceApi);
           }
         },
-        backstage, ariaAttrs
+        backstage,
+        ariaAttrs
       );
 
-      const inlineDialogComp = GuiFactory.build(InlineView.sketch({
-        lazySink: backstage.shared.getSink,
-        dom: {
-          tag: 'div',
-          classes: [ ]
-        },
-        // Fires the default dismiss event.
-        fireDismissalEventInstead: { },
-        ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { }},
-        inlineBehaviours: Behaviour.derive([
-          AddEventsBehaviour.config('window-manager-inline-events', [
-            AlloyEvents.run(SystemEvents.dismissRequested(), (_comp, _se) => {
-              AlloyTriggers.emit(dialogUi.dialog, formCancelEvent);
-            })
+      const inlineDialogComp = GuiFactory.build(
+        InlineView.sketch({
+          lazySink: backstage.shared.getSink,
+          dom: {
+            tag: 'div',
+            classes: []
+          },
+          // Fires the default dismiss event.
+          fireDismissalEventInstead: {},
+          ...(isToolbarLocationTop ? {} : { fireRepositionEventInstead: {} }),
+          inlineBehaviours: Behaviour.derive([
+            AddEventsBehaviour.config('window-manager-inline-events', [
+              AlloyEvents.run(SystemEvents.dismissRequested(), (_comp, _se) => {
+                AlloyTriggers.emit(dialogUi.dialog, formCancelEvent);
+              })
+            ]),
+            ...inlineAdditionalBehaviours(
+              editor,
+              isStickyToolbar,
+              isToolbarLocationTop
+            )
           ]),
-          ...inlineAdditionalBehaviours(editor, isStickyToolbar, isToolbarLocationTop)
-        ]),
-        // Treat alert or confirm dialogs as part of the inline dialog
-        isExtraPart: (_comp, target) => isAlertOrConfirmDialog(target)
-      }));
+          // Treat alert or confirm dialogs as part of the inline dialog
+          isExtraPart: (_comp, target) => isAlertOrConfirmDialog(target)
+        })
+      );
       inlineDialog.set(inlineDialogComp);
 
       // Position the inline dialog
@@ -218,7 +297,9 @@ const setup = (extras: WindowManagerSetup) => {
     });
   };
 
-  const close = <T extends Types.Dialog.DialogData>(instanceApi: Types.Dialog.DialogInstanceApi<T>) => {
+  const close = <T extends Types.Dialog.DialogData>(
+    instanceApi: Types.Dialog.DialogInstanceApi<T>
+  ) => {
     instanceApi.close();
   };
 
@@ -231,6 +312,4 @@ const setup = (extras: WindowManagerSetup) => {
   };
 };
 
-export {
-  setup
-};
+export { setup };

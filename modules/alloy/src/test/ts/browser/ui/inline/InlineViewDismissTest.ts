@@ -1,4 +1,11 @@
-import { Assertions, GeneralSteps, Logger, Step, UiFinder, Waiter } from '@ephox/agar';
+import {
+  Assertions,
+  GeneralSteps,
+  Logger,
+  Step,
+  UiFinder,
+  Waiter
+} from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Option, Result } from '@ephox/katamari';
 
@@ -14,138 +21,184 @@ import * as Sinks from 'ephox/alloy/test/Sinks';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 
 UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
+  GuiSetup.setup(
+    (_store, _doc, _body) => Sinks.relativeSink(),
+    (_doc, _body, gui, component, store) => {
+      const inline = GuiFactory.build(
+        InlineView.sketch({
+          dom: {
+            tag: 'div',
+            classes: ['test-inline']
+          },
 
-  GuiSetup.setup((_store, _doc, _body) => Sinks.relativeSink(), (_doc, _body, gui, component, store) => {
-    const inline = GuiFactory.build(
-      InlineView.sketch({
+          lazySink() {
+            return Result.value(component);
+          },
+
+          getRelated() {
+            return Option.some(related);
+          },
+
+          fireDismissalEventInstead: {
+            event: 'test-dismiss'
+          },
+
+          inlineBehaviours: Behaviour.derive([
+            AddEventsBehaviour.config('inline-dismiss-test', [
+              AlloyEvents.run('test-dismiss', store.adder('test-dismiss-fired'))
+            ])
+          ])
+        })
+      );
+
+      const related = GuiFactory.build({
         dom: {
           tag: 'div',
-          classes: [ 'test-inline' ]
-        },
-
-        lazySink() {
-          return Result.value(component);
-        },
-
-        getRelated() {
-          return Option.some(related);
-        },
-
-        fireDismissalEventInstead: {
-          event: 'test-dismiss'
-        },
-
-        inlineBehaviours: Behaviour.derive([
-          AddEventsBehaviour.config('inline-dismiss-test', [
-            AlloyEvents.run('test-dismiss', store.adder('test-dismiss-fired'))
-          ])
-        ])
-      })
-    );
-
-    const related = GuiFactory.build({
-      dom: {
-        tag: 'div',
-        classes: [ 'related-to-inline' ],
-        styles: {
-          background: 'blue',
-          width: '50px',
-          height: '50px'
-        }
-      }
-    });
-
-    gui.add(related);
-
-    const sCheckOpen = (label: string) => Logger.t(
-      label,
-      GeneralSteps.sequence([
-        Waiter.sTryUntil(
-          'Test inline should not be DOM',
-          UiFinder.sExists(gui.element(), '.test-inline')
-        ),
-        Step.sync(() => {
-          Assertions.assertEq('Checking isOpen API', true, InlineView.isOpen(inline));
-        })
-      ])
-    );
-
-    const sCheckClosed = (label: string) => Logger.t(
-      label,
-      GeneralSteps.sequence([
-        Waiter.sTryUntil(
-          'Test inline should not be in DOM',
-          UiFinder.sNotExists(gui.element(), '.test-inline')
-        ),
-        Step.sync(() => {
-          Assertions.assertEq('Checking isOpen API', false, InlineView.isOpen(inline));
-        })
-      ])
-    );
-
-    return [
-      UiFinder.sNotExists(gui.element(), '.test-inline'),
-      Step.sync(() => {
-        InlineView.showAt(inline, {
-          anchor: 'selection',
-          root: gui.element()
-        }, Container.sketch({
-          dom: {
-            innerHtml: 'Inner HTML'
+          classes: ['related-to-inline'],
+          styles: {
+            background: 'blue',
+            width: '50px',
+            height: '50px'
           }
-        }));
-      }),
-      sCheckOpen('After show'),
+        }
+      });
 
-      Step.sync(() => {
-        InlineView.hide(inline);
-      }),
+      gui.add(related);
 
-      sCheckClosed('After hide'),
+      const sCheckOpen = (label: string) =>
+        Logger.t(
+          label,
+          GeneralSteps.sequence([
+            Waiter.sTryUntil(
+              'Test inline should not be DOM',
+              UiFinder.sExists(gui.element(), '.test-inline')
+            ),
+            Step.sync(() => {
+              Assertions.assertEq(
+                'Checking isOpen API',
+                true,
+                InlineView.isOpen(inline)
+              );
+            })
+          ])
+        );
 
-      Logger.t(
-        'Show inline view again with different content',
+      const sCheckClosed = (label: string) =>
+        Logger.t(
+          label,
+          GeneralSteps.sequence([
+            Waiter.sTryUntil(
+              'Test inline should not be in DOM',
+              UiFinder.sNotExists(gui.element(), '.test-inline')
+            ),
+            Step.sync(() => {
+              Assertions.assertEq(
+                'Checking isOpen API',
+                false,
+                InlineView.isOpen(inline)
+              );
+            })
+          ])
+        );
+
+      return [
+        UiFinder.sNotExists(gui.element(), '.test-inline'),
         Step.sync(() => {
-          InlineView.showAt(inline, {
-            anchor: 'selection',
-            root: gui.element()
-          }, Container.sketch({
-            components: [
-              Button.sketch({ uid: 'bold-button', dom: { tag: 'button', innerHtml: 'B', classes: [ 'bold-button' ] }, action: store.adder('bold') })
-            ]
-          }));
-        })
-      ),
+          InlineView.showAt(
+            inline,
+            {
+              anchor: 'selection',
+              root: gui.element()
+            },
+            Container.sketch({
+              dom: {
+                innerHtml: 'Inner HTML'
+              }
+            })
+          );
+        }),
+        sCheckOpen('After show'),
 
-      sCheckOpen('Should still be open with a button'),
-      store.sClear,
+        Step.sync(() => {
+          InlineView.hide(inline);
+        }),
 
-      TestBroadcasts.sDismissOn(
-        'toolbar: should not close',
-        gui,
-        '.bold-button'
-      ),
+        sCheckClosed('After hide'),
 
-      sCheckOpen('Broadcasting dismiss on button should not close inline toolbar'),
-      store.sAssertEq('Broadcasting on button should not fire dismiss event', [ ]),
+        Logger.t(
+          'Show inline view again with different content',
+          Step.sync(() => {
+            InlineView.showAt(
+              inline,
+              {
+                anchor: 'selection',
+                root: gui.element()
+              },
+              Container.sketch({
+                components: [
+                  Button.sketch({
+                    uid: 'bold-button',
+                    dom: {
+                      tag: 'button',
+                      innerHtml: 'B',
+                      classes: ['bold-button']
+                    },
+                    action: store.adder('bold')
+                  })
+                ]
+              })
+            );
+          })
+        ),
 
-      TestBroadcasts.sDismiss(
-        'related element: should not close',
-        gui,
-        related.element()
-      ),
-      sCheckOpen('The inline view should not have fired dismiss event when broadcasting on related'),
-      store.sAssertEq('Broadcasting on related element should not fire dismiss event', [ ]),
+        sCheckOpen('Should still be open with a button'),
+        store.sClear,
 
-      TestBroadcasts.sDismiss(
-        'outer gui element: should close',
-        gui,
-        gui.element()
-      ),
+        TestBroadcasts.sDismissOn(
+          'toolbar: should not close',
+          gui,
+          '.bold-button'
+        ),
 
-      sCheckOpen('Dialog should stay open, because we are firing an event instead of dismissing automatically'),
-      store.sAssertEq('Broadcasting on outer element SHOULD fire dismiss event', [ 'test-dismiss-fired' ])
+        sCheckOpen(
+          'Broadcasting dismiss on button should not close inline toolbar'
+        ),
+        store.sAssertEq(
+          'Broadcasting on button should not fire dismiss event',
+          []
+        ),
 
-    ];
-  }, () => { success(); }, failure);
+        TestBroadcasts.sDismiss(
+          'related element: should not close',
+          gui,
+          related.element()
+        ),
+        sCheckOpen(
+          'The inline view should not have fired dismiss event when broadcasting on related'
+        ),
+        store.sAssertEq(
+          'Broadcasting on related element should not fire dismiss event',
+          []
+        ),
+
+        TestBroadcasts.sDismiss(
+          'outer gui element: should close',
+          gui,
+          gui.element()
+        ),
+
+        sCheckOpen(
+          'Dialog should stay open, because we are firing an event instead of dismissing automatically'
+        ),
+        store.sAssertEq(
+          'Broadcasting on outer element SHOULD fire dismiss event',
+          ['test-dismiss-fired']
+        )
+      ];
+    },
+    () => {
+      success();
+    },
+    failure
+  );
 });

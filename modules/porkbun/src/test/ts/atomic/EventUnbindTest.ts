@@ -4,7 +4,9 @@ import { UnitTest } from '@ephox/bedrock-client';
 UnitTest.test('EventUnbindTest', function () {
   const event = Event([]);
 
-  const first = function () { event.unbind(first); };
+  const first = function () {
+    event.unbind(first);
+  };
   const second = function () {};
 
   event.bind(first);

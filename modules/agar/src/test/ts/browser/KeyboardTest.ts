@@ -11,7 +11,6 @@ import * as DomContainers from 'ephox/agar/test/DomContainers';
 import { TestLogs } from 'ephox/agar/api/TestLogs';
 
 UnitTest.asynctest('KeyboardTest', (success, failure) => {
-
   const sAssertEvent = (type, code, modifiers, raw) =>
     Assertions.sAssertEq(
       'Checking ' + type + ' event',
@@ -22,7 +21,8 @@ UnitTest.asynctest('KeyboardTest', (success, failure) => {
         altKey: modifiers.altKey || false,
         metaKey: modifiers.metaKey || false,
         type
-      }, {
+      },
+      {
         which: raw.which,
         ctrlKey: raw.ctrlKey,
         shiftKey: raw.shiftKey,
@@ -39,55 +39,95 @@ UnitTest.asynctest('KeyboardTest', (success, failure) => {
           const raw = event.raw();
           listener.unbind();
 
-          sAssertEvent(type, code, modifiers, raw).runStep(value, next, die, logs);
+          sAssertEvent(type, code, modifiers, raw).runStep(
+            value,
+            next,
+            die,
+            logs
+          );
         });
 
-        f(Element.fromDom(document), code, modifiers).runStep(value, () => {}, die);
+        f(Element.fromDom(document), code, modifiers).runStep(
+          value,
+          () => {},
+          die
+        );
       }),
       Guard.timeout('Key event did not fire in time: ' + type, 1000)
     );
 
-  const listenOnKeystroke = (code, modifiers) => Step.control(
-    Step.raw((value: { container: any }, next, die, initLogs) => {
-      const keydownListener = DomEvent.bind(value.container, 'keydown', (dEvent) => {
-        keydownListener.unbind();
+  const listenOnKeystroke = (code, modifiers) =>
+    Step.control(
+      Step.raw((value: { container: any }, next, die, initLogs) => {
+        const keydownListener = DomEvent.bind(
+          value.container,
+          'keydown',
+          (dEvent) => {
+            keydownListener.unbind();
 
-        const keyupListener = DomEvent.bind(value.container, 'keyup', (uEvent) => {
-          keyupListener.unbind();
+            const keyupListener = DomEvent.bind(
+              value.container,
+              'keyup',
+              (uEvent) => {
+                keyupListener.unbind();
 
-          Pipeline.async({}, [
-            sAssertEvent('keydown', code, modifiers, dEvent.raw()),
-            sAssertEvent('keyup', code, modifiers, uEvent.raw())
-          ], (v, newLogs) => {
-            next(value, newLogs);
-          }, die, initLogs);
-        });
-      });
+                Pipeline.async(
+                  {},
+                  [
+                    sAssertEvent('keydown', code, modifiers, dEvent.raw()),
+                    sAssertEvent('keyup', code, modifiers, uEvent.raw())
+                  ],
+                  (v, newLogs) => {
+                    next(value, newLogs);
+                  },
+                  die,
+                  initLogs
+                );
+              }
+            );
+          }
+        );
 
-      Keyboard.sKeystroke(Element.fromDom(document), code, modifiers).runStep(value, () => {}, die, TestLogs.init());
-    }),
-    Guard.timeout('keystroke (keydown + keyup) did not fire', 1000)
+        Keyboard.sKeystroke(Element.fromDom(document), code, modifiers).runStep(
+          value,
+          () => {},
+          die,
+          TestLogs.init()
+        );
+      }),
+      Guard.timeout('keystroke (keydown + keyup) did not fire', 1000)
+    );
+
+  Pipeline.async(
+    {},
+    [
+      DomContainers.mSetup,
+      Step.stateful((state, next, _die) => {
+        Focus.focus(state.container);
+        next(state);
+      }),
+      listenOn('keydown', Keyboard.sKeydown, Keys.space(), {}),
+      listenOn('keyup', Keyboard.sKeyup, Keys.space(), {}),
+      listenOn('keypress', Keyboard.sKeypress, Keys.space(), {}),
+
+      // Test one of the fakeKeys direct calls
+      listenOn(
+        'keydown',
+        (doc, code, modifiers) =>
+          Step.sync(() => {
+            const focused = Focus.active(doc).getOrDie();
+            Keyboard.keydown(code, modifiers, focused);
+          }),
+        Keys.space(),
+        { ctrlKey: true }
+      ),
+
+      listenOnKeystroke(Keys.space(), {}),
+      DomContainers.mTeardown
+    ],
+    () => {
+      success();
+    },
+    failure
   );
-
-  Pipeline.async({}, [
-    DomContainers.mSetup,
-    Step.stateful((state, next, _die) => {
-      Focus.focus(state.container);
-      next(state);
-    }),
-    listenOn('keydown', Keyboard.sKeydown, Keys.space(), {}),
-    listenOn('keyup', Keyboard.sKeyup, Keys.space(), {}),
-    listenOn('keypress', Keyboard.sKeypress, Keys.space(), {}),
-
-    // Test one of the fakeKeys direct calls
-    listenOn('keydown', (doc, code, modifiers) => Step.sync(() => {
-      const focused = Focus.active(doc).getOrDie();
-      Keyboard.keydown(code, modifiers, focused);
-    }), Keys.space(), { ctrlKey: true }),
-
-    listenOnKeystroke(Keys.space(), {}),
-    DomContainers.mTeardown
-  ], () => {
-    success();
-  }, failure);
 });

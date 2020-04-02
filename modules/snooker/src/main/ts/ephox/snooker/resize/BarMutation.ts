@@ -27,7 +27,7 @@ export interface BarMutation {
 
 export const BarMutation = function (): BarMutation {
   const events = Events.create({
-    drag: Event([ 'xDelta', 'yDelta', 'target' ])
+    drag: Event(['xDelta', 'yDelta', 'target'])
   }) as DragDistanceEvents;
 
   let target = Option.none<Element>();

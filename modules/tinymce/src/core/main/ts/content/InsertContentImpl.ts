@@ -20,18 +20,26 @@ import * as RangeNormalizer from '../selection/RangeNormalizer';
 import Selection from '../api/dom/Selection';
 import Editor from '../api/Editor';
 import DOMUtils from '../api/dom/DOMUtils';
-import { trimOrPadLeftRight, trimNbspAfterDeleteAndPadValue, isAfterNbsp } from './NbspTrim';
+import {
+  trimOrPadLeftRight,
+  trimNbspAfterDeleteAndPadValue,
+  isAfterNbsp
+} from './NbspTrim';
 import ParserNode from '../api/html/Node';
 import Tools from '../api/util/Tools';
 
-const isTableCell = NodeType.matchNodeNames([ 'td', 'th' ]);
+const isTableCell = NodeType.matchNodeNames(['td', 'th']);
 
 const selectionSetContent = (editor: Editor, content: string) => {
   const rng = editor.selection.getRng();
   const container = rng.startContainer;
   const offset = rng.startOffset;
 
-  if (rng.collapsed && isAfterNbsp(container, offset) && NodeType.isText(container)) {
+  if (
+    rng.collapsed &&
+    isAfterNbsp(container, offset) &&
+    NodeType.isText(container)
+  ) {
     container.insertData(offset - 1, ' ');
     container.deleteData(offset, 1);
     rng.setStart(container, offset);
@@ -42,11 +50,18 @@ const selectionSetContent = (editor: Editor, content: string) => {
   editor.selection.setContent(content);
 };
 
-const validInsertion = function (editor: Editor, value: string, parentNode: DomElement) {
+const validInsertion = function (
+  editor: Editor,
+  value: string,
+  parentNode: DomElement
+) {
   // Should never insert content into bogus elements, since these can
   // be resize handles or similar
   if (parentNode.getAttribute('data-mce-bogus') === 'all') {
-    parentNode.parentNode.insertBefore(editor.dom.createFragment(value), parentNode);
+    parentNode.parentNode.insertBefore(
+      editor.dom.createFragment(value),
+      parentNode
+    );
   } else {
     // Check if parent is empty or only has one BR element then set the innerHTML of that parent
     const node = parentNode.firstChild;
@@ -60,7 +75,9 @@ const validInsertion = function (editor: Editor, value: string, parentNode: DomE
 };
 
 const trimBrsFromTableCell = function (dom: DOMUtils, elm: DomElement) {
-  Option.from(dom.getParent(elm, 'td,th')).map(Element.fromDom).each(PaddingBr.trimBlockTrailingBr);
+  Option.from(dom.getParent(elm, 'td,th'))
+    .map(Element.fromDom)
+    .each(PaddingBr.trimBlockTrailingBr);
 };
 
 const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
@@ -68,11 +85,19 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
   const dom = editor.dom;
 
   if (merge) {
-    const root = editor.getBody(), elementUtils = new ElementUtils(dom);
+    const root = editor.getBody(),
+      elementUtils = new ElementUtils(dom);
 
     Tools.each(dom.select('*[data-mce-fragment]'), function (node) {
-      for (let testNode = node.parentNode; testNode && testNode !== root; testNode = testNode.parentNode) {
-        if (textInlineElements[node.nodeName.toLowerCase()] && elementUtils.compare(testNode, node)) {
+      for (
+        let testNode = node.parentNode;
+        testNode && testNode !== root;
+        testNode = testNode.parentNode
+      ) {
+        if (
+          textInlineElements[node.nodeName.toLowerCase()] &&
+          elementUtils.compare(testNode, node)
+        ) {
           dom.remove(node, true);
         }
       }
@@ -106,7 +131,8 @@ const canHaveChildren = function (editor: Editor, node) {
 
 const moveSelectionToMarker = function (editor: Editor, marker) {
   let parentEditableFalseElm, parentBlock, nextRng;
-  const dom = editor.dom, selection = editor.selection;
+  const dom = editor.dom,
+    selection = editor.selection;
   let node, node2;
 
   const getContentEditableFalseParent = function (node: Node) {
@@ -177,7 +203,11 @@ const moveSelectionToMarker = function (editor: Editor, marker) {
     rng.setStart(parentBlock, 0);
     rng.setEnd(parentBlock, 0);
 
-    if (!isTableCell(parentBlock) && !isPartOfFragment(parentBlock) && (nextRng = findNextCaretRng(rng))) {
+    if (
+      !isTableCell(parentBlock) &&
+      !isPartOfFragment(parentBlock) &&
+      (nextRng = findNextCaretRng(rng))
+    ) {
       rng = nextRng;
       dom.remove(parentBlock);
     } else {
@@ -188,10 +218,15 @@ const moveSelectionToMarker = function (editor: Editor, marker) {
   selection.setRng(rng);
 };
 
-export const insertHtmlAtCaret = function (editor: Editor, value: string, details) {
+export const insertHtmlAtCaret = function (
+  editor: Editor,
+  value: string,
+  details
+) {
   let parser, serializer, parentNode, rootNode, fragment, args;
   let marker, rng, node, bookmarkHtml, merge;
-  const selection: Selection = editor.selection, dom = editor.dom;
+  const selection: Selection = editor.selection,
+    dom = editor.dom;
 
   // Check for whitespace before/after value
   if (/^ | $/.test(value)) {
@@ -202,16 +237,30 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
   parser = editor.parser;
   merge = details.merge;
 
-  serializer = Serializer({
-    validate: editor.settings.validate
-  }, editor.schema);
-  bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;&#x200B;</span>';
+  serializer = Serializer(
+    {
+      validate: editor.settings.validate
+    },
+    editor.schema
+  );
+  bookmarkHtml =
+    '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;&#x200B;</span>';
 
   // Run beforeSetContent handlers on the HTML to be inserted
-  args = { content: value, format: 'html', selection: true, paste: details.paste };
+  args = {
+    content: value,
+    format: 'html',
+    selection: true,
+    paste: details.paste
+  };
   args = editor.fire('BeforeSetContent', args);
   if (args.isDefaultPrevented()) {
-    editor.fire('SetContent', { content: args.content, format: 'html', selection: true, paste: details.paste });
+    editor.fire('SetContent', {
+      content: args.content,
+      format: 'html',
+      selection: true,
+      paste: details.paste
+    });
     return;
   }
 
@@ -227,10 +276,15 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
 
   // If selection is at <body>|<p></p> then move it into <body><p>|</p>
   rng = selection.getRng();
-  const caretElement = rng.startContainer || (rng.parentElement ? rng.parentElement() : null);
+  const caretElement =
+    rng.startContainer || (rng.parentElement ? rng.parentElement() : null);
   const body = editor.getBody();
   if (caretElement === body && selection.isCollapsed()) {
-    if (dom.isBlock(body.firstChild) && canHaveChildren(editor, body.firstChild) && dom.isEmpty(body.firstChild)) {
+    if (
+      dom.isBlock(body.firstChild) &&
+      canHaveChildren(editor, body.firstChild) &&
+      dom.isEmpty(body.firstChild)
+    ) {
       rng = dom.createRng();
       rng.setStart(body.firstChild, 0);
       rng.setEnd(body.firstChild, 0);
@@ -242,7 +296,9 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
   if (!selection.isCollapsed()) {
     // Fix for #2595 seems that delete removes one extra character on
     // WebKit for some odd reason if you double click select a word
-    editor.selection.setRng(RangeNormalizer.normalize(editor.selection.getRng()));
+    editor.selection.setRng(
+      RangeNormalizer.normalize(editor.selection.getRng())
+    );
     editor.getDoc().execCommand('Delete', false, null);
     value = trimNbspAfterDeleteAndPadValue(editor.selection.getRng(), value);
   }
@@ -250,12 +306,25 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
   parentNode = selection.getNode();
 
   // Parse the fragment within the context of the parent node
-  const parserArgs: any = { context: parentNode.nodeName.toLowerCase(), data: details.data, insert: true };
+  const parserArgs: any = {
+    context: parentNode.nodeName.toLowerCase(),
+    data: details.data,
+    insert: true
+  };
   fragment = parser.parse(value, parserArgs);
 
   // Custom handling of lists
-  if (details.paste === true && InsertList.isListFragment(editor.schema, fragment) && InsertList.isParentBlockLi(dom, parentNode)) {
-    rng = InsertList.insertAtCaret(serializer, dom, editor.selection.getRng(), fragment);
+  if (
+    details.paste === true &&
+    InsertList.isListFragment(editor.schema, fragment) &&
+    InsertList.isParentBlockLi(dom, parentNode)
+  ) {
+    rng = InsertList.insertAtCaret(
+      serializer,
+      dom,
+      editor.selection.getRng(),
+      fragment
+    );
     editor.selection.setRng(rng);
     editor.fire('SetContent', args);
     return;
@@ -307,13 +376,19 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
     }
 
     // Get the outer/inner HTML depending on if we are in the root and parser and serialize that
-    value = parentNode === rootNode ? rootNode.innerHTML : dom.getOuterHTML(parentNode);
+    value =
+      parentNode === rootNode
+        ? rootNode.innerHTML
+        : dom.getOuterHTML(parentNode);
     value = serializer.serialize(
       parser.parse(
         // Need to replace by using a function since $ in the contents would otherwise be a problem
-        value.replace(/<span (id="mce_marker"|id=mce_marker).+?<\/span>/i, function () {
-          return serializer.serialize(fragment);
-        })
+        value.replace(
+          /<span (id="mce_marker"|id=mce_marker).+?<\/span>/i,
+          function () {
+            return serializer.serialize(fragment);
+          }
+        )
       )
     );
 

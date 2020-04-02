@@ -3,12 +3,12 @@ import Element from '../node/Element';
 import { Node as DomNode } from '@ephox/dom-globals';
 
 export interface Situ {
-  fold: <U> (
+  fold: <U>(
     before: (element: Element<DomNode>) => U,
     on: (element: Element<DomNode>, offset: number) => U,
     after: (element: Element<DomNode>) => U
   ) => U;
-  match: <U> (branches: {
+  match: <U>(branches: {
     before: (element: Element<DomNode>) => U;
     on: (element: Element<DomNode>, offset: number) => U;
     after: (element: Element<DomNode>) => U;
@@ -21,13 +21,18 @@ const adt: {
   on: (element: Element<DomNode>, offset: number) => Situ;
   after: (element: Element<DomNode>) => Situ;
 } = Adt.generate([
-  { before: [ 'element' ] },
-  { on: [ 'element', 'offset' ] },
-  { after: [ 'element' ] }
+  { before: ['element'] },
+  { on: ['element', 'offset'] },
+  { after: ['element'] }
 ]);
 
 // Probably don't need this given that we now have "match"
-const cata = function <U> (subject: Situ, onBefore: (element: Element<DomNode>) => U, onOn: (element: Element<DomNode>, offset: number) => U, onAfter: (element: Element<DomNode>) => U) {
+const cata = function <U>(
+  subject: Situ,
+  onBefore: (element: Element<DomNode>) => U,
+  onOn: (element: Element<DomNode>, offset: number) => U,
+  onAfter: (element: Element<DomNode>) => U
+) {
   return subject.fold(onBefore, onOn, onAfter);
 };
 
@@ -45,5 +50,5 @@ export const Situ = {
   on,
   after,
   cata,
-  getStart,
+  getStart
 };

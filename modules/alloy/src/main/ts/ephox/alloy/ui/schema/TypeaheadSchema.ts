@@ -16,79 +16,94 @@ import * as SketcherFields from '../../data/SketcherFields';
 import * as PartType from '../../parts/PartType';
 import * as InputBase from '../common/InputBase';
 import * as TypeaheadEvents from '../composite/TypeaheadEvents';
-import { attemptSelectOver, setValueFromItem } from '../typeahead/TypeaheadModel';
+import {
+  attemptSelectOver,
+  setValueFromItem
+} from '../typeahead/TypeaheadModel';
 import { TieredMenuSpec } from '../types/TieredMenuTypes';
 import { TypeaheadData, TypeaheadDetail } from '../types/TypeaheadTypes';
 
-const schema: () => FieldProcessorAdt[] = Fun.constant([
-  FieldSchema.option('lazySink'),
-  FieldSchema.strict('fetch'),
-  FieldSchema.defaulted('minChars', 5),
-  FieldSchema.defaulted('responseTime', 1000),
-  Fields.onHandler('onOpen'),
-  // TODO: Remove dupe with Dropdown
-  FieldSchema.defaulted('getHotspot', Option.some),
-  FieldSchema.defaulted('getAnchorOverrides', Fun.constant({ })),
-  FieldSchema.defaulted('layouts', Option.none()),
-  FieldSchema.defaulted('eventOrder', { }),
-  FieldSchema.defaultedObjOf('model', { }, [
-    FieldSchema.defaulted('getDisplayText', (itemData: TypeaheadData) => itemData.meta !== undefined && itemData.meta.text !== undefined ? itemData.meta.text : itemData.value),
-    FieldSchema.defaulted('selectsOver', true),
-    FieldSchema.defaulted('populateFromBrowse', true)
-  ]),
+const schema: () => FieldProcessorAdt[] = Fun.constant(
+  [
+    FieldSchema.option('lazySink'),
+    FieldSchema.strict('fetch'),
+    FieldSchema.defaulted('minChars', 5),
+    FieldSchema.defaulted('responseTime', 1000),
+    Fields.onHandler('onOpen'),
+    // TODO: Remove dupe with Dropdown
+    FieldSchema.defaulted('getHotspot', Option.some),
+    FieldSchema.defaulted('getAnchorOverrides', Fun.constant({})),
+    FieldSchema.defaulted('layouts', Option.none()),
+    FieldSchema.defaulted('eventOrder', {}),
+    FieldSchema.defaultedObjOf('model', {}, [
+      FieldSchema.defaulted('getDisplayText', (itemData: TypeaheadData) =>
+        itemData.meta !== undefined && itemData.meta.text !== undefined
+          ? itemData.meta.text
+          : itemData.value
+      ),
+      FieldSchema.defaulted('selectsOver', true),
+      FieldSchema.defaulted('populateFromBrowse', true)
+    ]),
 
-  Fields.onHandler('onSetValue'),
-  Fields.onKeyboardHandler('onExecute'),
-  Fields.onHandler('onItemExecute'),
-  FieldSchema.defaulted('inputClasses', [ ]),
-  FieldSchema.defaulted('inputAttributes', { }),
-  FieldSchema.defaulted('inputStyles', { }),
-  FieldSchema.defaulted('matchWidth', true),
-  FieldSchema.defaulted('useMinWidth', false),
-  FieldSchema.defaulted('dismissOnBlur', true),
-  Fields.markers([ 'openClass' ]),
-  FieldSchema.option('initialData'),
+    Fields.onHandler('onSetValue'),
+    Fields.onKeyboardHandler('onExecute'),
+    Fields.onHandler('onItemExecute'),
+    FieldSchema.defaulted('inputClasses', []),
+    FieldSchema.defaulted('inputAttributes', {}),
+    FieldSchema.defaulted('inputStyles', {}),
+    FieldSchema.defaulted('matchWidth', true),
+    FieldSchema.defaulted('useMinWidth', false),
+    FieldSchema.defaulted('dismissOnBlur', true),
+    Fields.markers(['openClass']),
+    FieldSchema.option('initialData'),
 
-  SketchBehaviours.field('typeaheadBehaviours', [
-    Focusing, Representing, Streaming, Keying, Toggling, Coupling
-  ]),
+    SketchBehaviours.field('typeaheadBehaviours', [
+      Focusing,
+      Representing,
+      Streaming,
+      Keying,
+      Toggling,
+      Coupling
+    ]),
 
-  FieldSchema.state('previewing', () => Cell(true))
-].concat(
-  InputBase.schema()
-).concat(
-  SketcherFields.sandboxFields()
-));
+    FieldSchema.state('previewing', () => Cell(true))
+  ]
+    .concat(InputBase.schema())
+    .concat(SketcherFields.sandboxFields())
+);
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.external<TypeaheadDetail, TieredMenuSpec>({
-    schema: [
-      Fields.tieredMenuMarkers()
-    ],
+    schema: [Fields.tieredMenuMarkers()],
     name: 'menu',
     overrides(detail) {
       return {
         fakeFocus: true,
         onHighlight(menu: AlloyComponent, item: AlloyComponent): void {
-          if (! detail.previewing.get()) {
-            menu.getSystem().getByUid(detail.uid).each((input) => {
-
-              if (detail.model.populateFromBrowse) {
-                setValueFromItem(detail.model, input, item);
-              }
-            });
+          if (!detail.previewing.get()) {
+            menu
+              .getSystem()
+              .getByUid(detail.uid)
+              .each((input) => {
+                if (detail.model.populateFromBrowse) {
+                  setValueFromItem(detail.model, input, item);
+                }
+              });
           } else {
             // Highlight the rest of the text so that the user types over it.
-            menu.getSystem().getByUid(detail.uid).each((input) => {
-              attemptSelectOver(detail.model, input, item).fold(
-                // If we are in "previewing" mode, and we can't select over the
-                // thing that is first, then clear the highlight
-                // Hopefully, this doesn't cause a flicker. Find a better
-                // way to do this.
-                () => Highlighting.dehighlight(menu, item),
-                ((fn) => fn())
-              );
-            });
+            menu
+              .getSystem()
+              .getByUid(detail.uid)
+              .each((input) => {
+                attemptSelectOver(detail.model, input, item).fold(
+                  // If we are in "previewing" mode, and we can't select over the
+                  // thing that is first, then clear the highlight
+                  // Hopefully, this doesn't cause a flicker. Find a better
+                  // way to do this.
+                  () => Highlighting.dehighlight(menu, item),
+                  (fn) => fn()
+                );
+              });
           }
           detail.previewing.set(false);
         },
@@ -101,21 +116,30 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         // to show the item clicked on, and fire an execute.
         onExecute(menu: AlloyComponent, item: AlloyComponent): Option<boolean> {
           // Note: This will only work when the typeahead and menu are in the same system.
-          return menu.getSystem().getByUid(detail.uid).toOption().map((typeahead): boolean => {
-            AlloyTriggers.emitWith(typeahead, TypeaheadEvents.itemExecute(), { item });
-            return true;
-          });
+          return menu
+            .getSystem()
+            .getByUid(detail.uid)
+            .toOption()
+            .map((typeahead): boolean => {
+              AlloyTriggers.emitWith(typeahead, TypeaheadEvents.itemExecute(), {
+                item
+              });
+              return true;
+            });
         },
 
         onHover(menu: AlloyComponent, item: AlloyComponent): void {
           // Hovering is also a user-initiated action, so previewing mode is over.
           // TODO: Have a better API for managing state in between parts.
           detail.previewing.set(false);
-          menu.getSystem().getByUid(detail.uid).each((input) => {
-            if (detail.model.populateFromBrowse) {
-              setValueFromItem(detail.model, input, item);
-            }
-          });
+          menu
+            .getSystem()
+            .getByUid(detail.uid)
+            .each((input) => {
+              if (detail.model.populateFromBrowse) {
+                setValueFromItem(detail.model, input, item);
+              }
+            });
         }
       };
     }
@@ -124,8 +148,4 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 
 const name = Fun.constant('Typeahead');
 
-export {
-  name,
-  schema,
-  parts
-};
+export { name, schema, parts };

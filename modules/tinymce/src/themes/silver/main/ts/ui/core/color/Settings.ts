@@ -54,8 +54,10 @@ const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemApi[] {
 
   const byteAsHex = (colorByte: number, alphaByte: number) => {
     const bg = 255;
-    const alpha = (alphaByte / 255);
-    const colorByteWithWhiteBg = Math.round((colorByte * alpha) + (bg * (1 - alpha)));
+    const alpha = alphaByte / 255;
+    const colorByteWithWhiteBg = Math.round(
+      colorByte * alpha + bg * (1 - alpha)
+    );
     return ('0' + colorByteWithWhiteBg.toString(16)).slice(-2).toUpperCase();
   };
 
@@ -71,7 +73,10 @@ const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemApi[] {
     ctx.fillStyle = color;
     ctx.fillRect(0, 0, 1, 1);
     const rgba = ctx.getImageData(0, 0, 1, 1).data;
-    const r = rgba[0], g = rgba[1], b = rgba[2], a = rgba[3];
+    const r = rgba[0],
+      g = rgba[1],
+      b = rgba[2],
+      a = rgba[3];
     return '#' + byteAsHex(r, a) + byteAsHex(g, a) + byteAsHex(b, a);
   };
 
@@ -86,9 +91,11 @@ const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemApi[] {
   return colors;
 };
 
-const getColorCols = (editor: Editor, defaultCols: number): number => editor.getParam('color_cols', defaultCols, 'number');
+const getColorCols = (editor: Editor, defaultCols: number): number =>
+  editor.getParam('color_cols', defaultCols, 'number');
 
-const hasCustomColors = (editor: Editor): boolean => editor.getParam('custom_colors') !== false;
+const hasCustomColors = (editor: Editor): boolean =>
+  editor.getParam('custom_colors') !== false;
 
 const getColorMap = (editor: Editor): string[] => editor.getParam('color_map');
 
@@ -97,11 +104,12 @@ const getColors = (editor: Editor): Menu.ChoiceMenuItemApi[] => {
   return unmapped !== undefined ? mapColors(unmapped) : defaultColors;
 };
 
-const getCurrentColors = (): Menu.ChoiceMenuItemApi[] => Arr.map(colorCache.state(), (color) => ({
-  type: choiceItem,
-  text: color,
-  value: color
-}));
+const getCurrentColors = (): Menu.ChoiceMenuItemApi[] =>
+  Arr.map(colorCache.state(), (color) => ({
+    type: choiceItem,
+    text: color,
+    value: color
+  }));
 
 const addColor = (color: string) => {
   colorCache.add(color);

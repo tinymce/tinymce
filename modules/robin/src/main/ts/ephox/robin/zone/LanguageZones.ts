@@ -17,7 +17,7 @@ export interface LanguageZones<E> {
   done: () => ZoneDetails<E>[];
 }
 
-const nu = function <E> (defaultLang: string): LanguageZones<E> {
+const nu = function <E>(defaultLang: string): LanguageZones<E> {
   let stack: string[] = [];
 
   const zones: ZoneDetails<E>[] = [];
@@ -121,21 +121,24 @@ const nu = function <E> (defaultLang: string): LanguageZones<E> {
 //  - uses Fun.constant(false) for isRoot parameter to search even the top HTML element
 //    (regardless of 'classic'/iframe or 'inline'/div mode).
 // Note: there may be descendant elements with a different language
-const calculate = function <E, D> (universe: Universe<E, D>, item: E) {
-  return universe.up().closest(item, '[lang]', Fun.constant(false)).map(function (el) {
-    return universe.attrs().get(el, 'lang');
-  });
+const calculate = function <E, D>(universe: Universe<E, D>, item: E) {
+  return universe
+    .up()
+    .closest(item, '[lang]', Fun.constant(false))
+    .map(function (el) {
+      return universe.attrs().get(el, 'lang');
+    });
 };
 
 const strictBounder = function (envLang: string, onlyLang: string) {
-  return function <E, D> (universe: Universe<E, D>, item: E) {
+  return function <E, D>(universe: Universe<E, D>, item: E) {
     const itemLang = calculate(universe, item).getOr(envLang);
     return onlyLang !== itemLang;
   };
 };
 
 const softBounder = function (optLang: Option<string>) {
-  return function <E, D> (universe: Universe<E, D>, item: E) {
+  return function <E, D>(universe: Universe<E, D>, item: E) {
     const itemLang = calculate(universe, item);
     return !optLang.equals(itemLang);
   };

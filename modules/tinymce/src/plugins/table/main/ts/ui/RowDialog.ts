@@ -41,7 +41,11 @@ const switchRowType = (dom: DOMUtils, rowElm: HTMLElement, toType: string) => {
   }
 
   // If moving from the head to the body, add to the top of the body
-  if (toType === 'tbody' && oldParentElm.nodeName === 'THEAD' && parentElm.firstChild) {
+  if (
+    toType === 'tbody' &&
+    oldParentElm.nodeName === 'THEAD' &&
+    parentElm.firstChild
+  ) {
     parentElm.insertBefore(rowElm, parentElm.firstChild);
   } else {
     parentElm.appendChild(rowElm);
@@ -58,18 +62,23 @@ const updateAdvancedProps = (modifier: DomModifier, data: RowData): void => {
   modifier.setStyle('border-style', data.borderstyle);
 };
 
-const onSubmitRowForm = (editor: Editor, rows: HTMLElement[], oldData: RowData, api) => {
+const onSubmitRowForm = (
+  editor: Editor,
+  rows: HTMLElement[],
+  oldData: RowData,
+  api
+) => {
   const dom = editor.dom;
 
   const data: RowData = api.getData();
   api.close();
 
   // When selection length is 1, allow things to be turned off/cleared
-  const createModifier: (dom, node: Node) => DomModifier = rows.length === 1 ? DomModifier.normal : DomModifier.ifTruthy;
+  const createModifier: (dom, node: Node) => DomModifier =
+    rows.length === 1 ? DomModifier.normal : DomModifier.ifTruthy;
 
   editor.undoManager.transact(() => {
     Tools.each(rows, (rowElm) => {
-
       // Switch row type
       if (data.type !== rowElm.parentNode.nodeName.toLowerCase()) {
         switchRowType(editor.dom, rowElm, data.type);
@@ -110,7 +119,10 @@ const open = (editor: Editor) => {
 
   Tools.each(tableElm.rows, (row) => {
     Tools.each(row.cells, (cell) => {
-      if ((dom.getAttrib(cell, 'data-mce-selected') || cell === cellElm) && rows.indexOf(row) < 0) {
+      if (
+        (dom.getAttrib(cell, 'data-mce-selected') || cell === cellElm) &&
+        rows.indexOf(row) < 0
+      ) {
         rows.push(row);
         return false;
       }
@@ -124,7 +136,9 @@ const open = (editor: Editor) => {
   }
 
   // Get current data and find shared values between rows
-  const rowsData: RowData[] = Tools.map(rows, (rowElm) => Helpers.extractDataFromRowElement(editor, rowElm, hasAdvancedRowTab(editor)));
+  const rowsData: RowData[] = Tools.map(rows, (rowElm) =>
+    Helpers.extractDataFromRowElement(editor, rowElm, hasAdvancedRowTab(editor))
+  );
   const data: RowData = Helpers.getSharedValues(rowsData);
 
   const dialogTabPanel: Types.Dialog.TabPanelApi = {
@@ -157,7 +171,7 @@ const open = (editor: Editor) => {
       {
         type: 'cancel',
         name: 'cancel',
-        text: 'Cancel',
+        text: 'Cancel'
       },
       {
         type: 'submit',
@@ -167,10 +181,8 @@ const open = (editor: Editor) => {
       }
     ],
     initialData: data,
-    onSubmit: Fun.curry(onSubmitRowForm, editor, rows, data),
+    onSubmit: Fun.curry(onSubmitRowForm, editor, rows, data)
   });
 };
 
-export {
-  open
-};
+export { open };

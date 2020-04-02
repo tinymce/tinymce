@@ -33,11 +33,11 @@ export type UploadCallback = (results: UploadResult[]) => void;
 
 interface EditorUpload {
   blobCache: BlobCache;
-  addFilter (filter: (img: HTMLImageElement) => boolean): void;
-  uploadImages (callback?: UploadCallback): Promise<UploadResult[]>;
-  uploadImagesAuto (callback?: UploadCallback): void | Promise<UploadResult[]>;
-  scanForImages (): Promise<BlobInfoImagePair[]>;
-  destroy (): void;
+  addFilter(filter: (img: HTMLImageElement) => boolean): void;
+  uploadImages(callback?: UploadCallback): Promise<UploadResult[]>;
+  uploadImagesAuto(callback?: UploadCallback): void | Promise<UploadResult[]>;
+  scanForImages(): Promise<BlobInfoImagePair[]>;
+  destroy(): void;
 }
 
 const EditorUpload = function (editor: Editor): EditorUpload {
@@ -46,7 +46,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
   const uploadStatus = UploadStatus();
   const urlFilters: Array<(img: HTMLImageElement) => boolean> = [];
 
-  const aliveGuard = function <T, R> (callback?: (result: T) => R) {
+  const aliveGuard = function <T, R>(callback?: (result: T) => R) {
     return function (result: T) {
       if (editor.selection) {
         return callback(result);
@@ -56,17 +56,25 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     };
   };
 
-  const cacheInvalidator = (url: string): string => url + (url.indexOf('?') === -1 ? '?' : '&') + (new Date()).getTime();
+  const cacheInvalidator = (url: string): string =>
+    url + (url.indexOf('?') === -1 ? '?' : '&') + new Date().getTime();
 
   // Replaces strings without regexps to avoid FF regexp to big issue
-  const replaceString = function (content: string, search: string, replace: string): string {
+  const replaceString = function (
+    content: string,
+    search: string,
+    replace: string
+  ): string {
     let index = 0;
 
     do {
       index = content.indexOf(search, index);
 
       if (index !== -1) {
-        content = content.substring(0, index) + replace + content.substr(index + search.length);
+        content =
+          content.substring(0, index) +
+          replace +
+          content.substr(index + search.length);
         index += replace.length - search.length + 1;
       }
     } while (index !== -1);
@@ -74,21 +82,40 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     return content;
   };
 
-  const replaceImageUrl = function (content: string, targetUrl: string, replacementUrl: string): string {
-    content = replaceString(content, 'src="' + targetUrl + '"', 'src="' + replacementUrl + '"');
-    content = replaceString(content, 'data-mce-src="' + targetUrl + '"', 'data-mce-src="' + replacementUrl + '"');
+  const replaceImageUrl = function (
+    content: string,
+    targetUrl: string,
+    replacementUrl: string
+  ): string {
+    content = replaceString(
+      content,
+      'src="' + targetUrl + '"',
+      'src="' + replacementUrl + '"'
+    );
+    content = replaceString(
+      content,
+      'data-mce-src="' + targetUrl + '"',
+      'data-mce-src="' + replacementUrl + '"'
+    );
 
     return content;
   };
 
-  const replaceUrlInUndoStack = function (targetUrl: string, replacementUrl: string) {
+  const replaceUrlInUndoStack = function (
+    targetUrl: string,
+    replacementUrl: string
+  ) {
     Arr.each(editor.undoManager.data, function (level) {
       if (level.type === 'fragmented') {
         level.fragments = Arr.map(level.fragments, function (fragment) {
           return replaceImageUrl(fragment, targetUrl, replacementUrl);
         });
       } else {
-        level.content = replaceImageUrl(level.content, targetUrl, replacementUrl);
+        level.content = replaceImageUrl(
+          level.content,
+          targetUrl,
+          replacementUrl
+        );
       }
     });
   };
@@ -102,13 +129,18 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     });
   };
 
-  const replaceImageUriInView = (image: HTMLImageElement, resultUri: string) => {
+  const replaceImageUriInView = (
+    image: HTMLImageElement,
+    resultUri: string
+  ) => {
     const src = editor.convertURL(resultUri, 'src');
 
     replaceUrlInUndoStack(image.src, resultUri);
 
     editor.$(image).attr({
-      'src': Settings.shouldReuseFileName(editor) ? cacheInvalidator(resultUri) : resultUri,
+      'src': Settings.shouldReuseFileName(editor)
+        ? cacheInvalidator(resultUri)
+        : resultUri,
       'data-mce-src': src
     });
   };
@@ -123,36 +155,49 @@ const EditorUpload = function (editor: Editor): EditorUpload {
       });
     }
 
-    return scanForImages().then(aliveGuard((imageInfos) => {
-      const blobInfos = Arr.map(imageInfos, (imageInfo) => imageInfo.blobInfo);
+    return scanForImages().then(
+      aliveGuard((imageInfos) => {
+        const blobInfos = Arr.map(
+          imageInfos,
+          (imageInfo) => imageInfo.blobInfo
+        );
 
-      return uploader.upload(blobInfos, openNotification).then(aliveGuard((result) => {
-        const filteredResult: UploadResult[] = Arr.map(result, (uploadInfo, index) => {
-          const blobInfo = imageInfos[index].blobInfo;
-          const image = imageInfos[index].image;
+        return uploader.upload(blobInfos, openNotification).then(
+          aliveGuard((result) => {
+            const filteredResult: UploadResult[] = Arr.map(
+              result,
+              (uploadInfo, index) => {
+                const blobInfo = imageInfos[index].blobInfo;
+                const image = imageInfos[index].image;
 
-          if (uploadInfo.status && Settings.shouldReplaceBlobUris(editor)) {
-            blobCache.removeByUri(image.src);
-            replaceImageUriInView(image, uploadInfo.url);
-          } else if (uploadInfo.error) {
-            ErrorReporter.uploadError(editor, uploadInfo.error);
-          }
+                if (
+                  uploadInfo.status &&
+                  Settings.shouldReplaceBlobUris(editor)
+                ) {
+                  blobCache.removeByUri(image.src);
+                  replaceImageUriInView(image, uploadInfo.url);
+                } else if (uploadInfo.error) {
+                  ErrorReporter.uploadError(editor, uploadInfo.error);
+                }
 
-          return {
-            element: image,
-            status: uploadInfo.status,
-            uploadUri: uploadInfo.url,
-            blobInfo,
-          };
-        });
+                return {
+                  element: image,
+                  status: uploadInfo.status,
+                  uploadUri: uploadInfo.url,
+                  blobInfo
+                };
+              }
+            );
 
-        if (callback) {
-          callback(filteredResult);
-        }
+            if (callback) {
+              callback(filteredResult);
+            }
 
-        return filteredResult;
-      }));
-    }));
+            return filteredResult;
+          })
+        );
+      })
+    );
   };
 
   const uploadImagesAuto = (callback?: UploadCallback) => {
@@ -183,25 +228,30 @@ const EditorUpload = function (editor: Editor): EditorUpload {
       imageScanner = ImageScanner(uploadStatus, blobCache);
     }
 
-    return imageScanner.findAll(editor.getBody(), isValidDataUriImage).then(aliveGuard(function (result) {
-      result = Arr.filter(result, function (resultItem) {
-        // ImageScanner internally converts images that it finds, but it may fail to do so if image source is inaccessible.
-        // In such case resultItem will contain appropriate text error message, instead of image data.
-        if (typeof resultItem === 'string') {
-          ErrorReporter.displayError(editor, resultItem);
-          return false;
-        }
-        return true;
-      });
+    return imageScanner.findAll(editor.getBody(), isValidDataUriImage).then(
+      aliveGuard(function (result) {
+        result = Arr.filter(result, function (resultItem) {
+          // ImageScanner internally converts images that it finds, but it may fail to do so if image source is inaccessible.
+          // In such case resultItem will contain appropriate text error message, instead of image data.
+          if (typeof resultItem === 'string') {
+            ErrorReporter.displayError(editor, resultItem);
+            return false;
+          }
+          return true;
+        });
 
-      Arr.each(result, function (resultItem) {
-        replaceUrlInUndoStack(resultItem.image.src, resultItem.blobInfo.blobUri());
-        resultItem.image.src = resultItem.blobInfo.blobUri();
-        resultItem.image.removeAttribute('data-mce-src');
-      });
+        Arr.each(result, function (resultItem) {
+          replaceUrlInUndoStack(
+            resultItem.image.src,
+            resultItem.blobInfo.blobUri()
+          );
+          resultItem.image.src = resultItem.blobInfo.blobUri();
+          resultItem.image.removeAttribute('data-mce-src');
+        });
 
-      return result;
-    }));
+        return result;
+      })
+    );
   };
 
   const destroy = function () {
@@ -221,9 +271,17 @@ const EditorUpload = function (editor: Editor): EditorUpload {
       let blobInfo = blobCache.getByUri(blobUri);
 
       if (!blobInfo) {
-        blobInfo = Arr.foldl(editor.editorManager.get(), function (result, editor) {
-          return result || editor.editorUpload && editor.editorUpload.blobCache.getByUri(blobUri);
-        }, null);
+        blobInfo = Arr.foldl(
+          editor.editorManager.get(),
+          function (result, editor) {
+            return (
+              result ||
+              (editor.editorUpload &&
+                editor.editorUpload.blobCache.getByUri(blobUri))
+            );
+          },
+          null
+        );
       }
 
       if (blobInfo) {

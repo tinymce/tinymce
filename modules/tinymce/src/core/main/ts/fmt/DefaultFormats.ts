@@ -11,17 +11,11 @@ import { Formats } from '../api/fmt/Format';
 
 const get = function (dom: DOMUtils) {
   const formats: Formats = {
-    valigntop: [
-      { selector: 'td,th', styles: { verticalAlign: 'top' }}
-    ],
+    valigntop: [{ selector: 'td,th', styles: { verticalAlign: 'top' } }],
 
-    valignmiddle: [
-      { selector: 'td,th', styles: { verticalAlign: 'middle' }}
-    ],
+    valignmiddle: [{ selector: 'td,th', styles: { verticalAlign: 'middle' } }],
 
-    valignbottom: [
-      { selector: 'td,th', styles: { verticalAlign: 'bottom' }}
-    ],
+    valignbottom: [{ selector: 'td,th', styles: { verticalAlign: 'bottom' } }],
 
     alignleft: [
       {
@@ -129,13 +123,13 @@ const get = function (dom: DOMUtils) {
 
     bold: [
       { inline: 'strong', remove: 'all' },
-      { inline: 'span', styles: { fontWeight: 'bold' }},
+      { inline: 'span', styles: { fontWeight: 'bold' } },
       { inline: 'b', remove: 'all' }
     ],
 
     italic: [
       { inline: 'em', remove: 'all' },
-      { inline: 'span', styles: { fontStyle: 'italic' }},
+      { inline: 'span', styles: { fontStyle: 'italic' } },
       { inline: 'i', remove: 'all' }
     ],
 
@@ -145,22 +139,52 @@ const get = function (dom: DOMUtils) {
     ],
 
     strikethrough: [
-      { inline: 'span', styles: { textDecoration: 'line-through' }, exact: true },
+      {
+        inline: 'span',
+        styles: { textDecoration: 'line-through' },
+        exact: true
+      },
       { inline: 'strike', remove: 'all' }
     ],
 
-    forecolor: { inline: 'span', styles: { color: '%value' }, links: true, remove_similar: true, clear_child_styles: true },
-    hilitecolor: { inline: 'span', styles: { backgroundColor: '%value' }, links: true, remove_similar: true, clear_child_styles: true },
-    fontname: { inline: 'span', toggle: false, styles: { fontFamily: '%value' }, clear_child_styles: true },
-    fontsize: { inline: 'span', toggle: false, styles: { fontSize: '%value' }, clear_child_styles: true },
-    fontsize_class: { inline: 'span', attributes: { class: '%value' }},
+    forecolor: {
+      inline: 'span',
+      styles: { color: '%value' },
+      links: true,
+      remove_similar: true,
+      clear_child_styles: true
+    },
+    hilitecolor: {
+      inline: 'span',
+      styles: { backgroundColor: '%value' },
+      links: true,
+      remove_similar: true,
+      clear_child_styles: true
+    },
+    fontname: {
+      inline: 'span',
+      toggle: false,
+      styles: { fontFamily: '%value' },
+      clear_child_styles: true
+    },
+    fontsize: {
+      inline: 'span',
+      toggle: false,
+      styles: { fontSize: '%value' },
+      clear_child_styles: true
+    },
+    fontsize_class: { inline: 'span', attributes: { class: '%value' } },
     blockquote: { block: 'blockquote', wrapper: true, remove: 'all' },
     subscript: { inline: 'sub' },
     superscript: { inline: 'sup' },
     code: { inline: 'code' },
 
     link: {
-      inline: 'a', selector: 'a', remove: 'all', split: true, deep: true,
+      inline: 'a',
+      selector: 'a',
+      remove: 'all',
+      split: true,
+      deep: true,
       onmatch() {
         return true;
       },
@@ -174,25 +198,40 @@ const get = function (dom: DOMUtils) {
 
     removeformat: [
       {
-        selector: 'b,strong,em,i,font,u,strike,sub,sup,dfn,code,samp,kbd,var,cite,mark,q,del,ins',
+        selector:
+          'b,strong,em,i,font,u,strike,sub,sup,dfn,code,samp,kbd,var,cite,mark,q,del,ins',
         remove: 'all',
         split: true,
         expand: false,
         block_expand: true,
         deep: true
       },
-      { selector: 'span', attributes: [ 'style', 'class' ], remove: 'empty', split: true, expand: false, deep: true },
-      { selector: '*', attributes: [ 'style', 'class' ], split: false, expand: false, deep: true }
+      {
+        selector: 'span',
+        attributes: ['style', 'class'],
+        remove: 'empty',
+        split: true,
+        expand: false,
+        deep: true
+      },
+      {
+        selector: '*',
+        attributes: ['style', 'class'],
+        split: false,
+        expand: false,
+        deep: true
+      }
     ]
   };
 
-  Tools.each('p h1 h2 h3 h4 h5 h6 div address pre div dt dd samp'.split(/\s/), function (name) {
-    formats[name] = { block: name, remove: 'all' };
-  });
+  Tools.each(
+    'p h1 h2 h3 h4 h5 h6 div address pre div dt dd samp'.split(/\s/),
+    function (name) {
+      formats[name] = { block: name, remove: 'all' };
+    }
+  );
 
   return formats;
 };
 
-export {
-  get
-};
+export { get };

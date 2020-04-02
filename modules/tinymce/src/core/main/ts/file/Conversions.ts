@@ -18,9 +18,12 @@ import { Option } from '@ephox/katamari';
 
 const blobUriToBlob = function (url: string): Promise<Blob> {
   return new Promise(function (resolve, reject) {
-
     const rejectWithError = function () {
-      reject('Cannot convert ' + url + ' to Blob. Resource might not exist or is inaccessible.');
+      reject(
+        'Cannot convert ' +
+          url +
+          ' to Blob. Resource might not exist or is inaccessible.'
+      );
     };
 
     try {
@@ -81,7 +84,7 @@ const buildBlob = (type: string, data: string): Option<Blob> => {
     arr[i] = str.charCodeAt(i);
   }
 
-  return Option.some(new Blob([ arr ], { type }));
+  return Option.some(new Blob([arr], { type }));
 };
 
 const dataUriToBlob = function (uri: string): Promise<Blob> {
@@ -119,9 +122,4 @@ const blobToDataUri = function (blob: Blob): Promise<string> {
   });
 };
 
-export {
-  buildBlob,
-  uriToBlob,
-  blobToDataUri,
-  parseDataUri
-};
+export { buildBlob, uriToBlob, blobToDataUri, parseDataUri };

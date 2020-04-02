@@ -13,6 +13,4 @@ const Docking: DockingBehaviour = Behaviour.create({
   state: DockingState
 });
 
-export {
-  Docking
-};
+export { Docking };

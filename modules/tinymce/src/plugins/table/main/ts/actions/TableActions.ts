@@ -7,7 +7,11 @@
 
 import { Arr, Fun, Option } from '@ephox/katamari';
 import {
-  CellMutations, TableDirection, TableFill, TableGridSize, TableOperations
+  CellMutations,
+  TableDirection,
+  TableFill,
+  TableGridSize,
+  TableOperations
 } from '@ephox/snooker';
 import { Element, Node } from '@ephox/sugar';
 
@@ -57,45 +61,104 @@ export const TableActions = function (editor: Editor, lazyWire) {
       const doc = Element.fromDom(editor.getDoc());
       const direction = TableDirection(Direction.directionAt);
       const generators = TableFill.cellOperations(mutate, doc, cloneFormats);
-      return guard(table) ? operation(wire, table, target, generators, direction).bind(function (result) {
-        Arr.each(result.newRows(), function (row) {
-          fireNewRow(editor, row.dom());
-        });
-        Arr.each(result.newCells(), function (cell) {
-          fireNewCell(editor, cell.dom());
-        });
-        return result.cursor().map((cell) => {
-          const des = DomDescent.freefallRtl(cell);
-          const rng = editor.dom.createRng();
-          rng.setStart(des.element().dom(), des.offset());
-          rng.setEnd(des.element().dom(), des.offset());
-          return rng;
-        });
-      }) : Option.none();
+      return guard(table)
+        ? operation(wire, table, target, generators, direction).bind(function (
+            result
+          ) {
+            Arr.each(result.newRows(), function (row) {
+              fireNewRow(editor, row.dom());
+            });
+            Arr.each(result.newCells(), function (cell) {
+              fireNewCell(editor, cell.dom());
+            });
+            return result.cursor().map((cell) => {
+              const des = DomDescent.freefallRtl(cell);
+              const rng = editor.dom.createRng();
+              rng.setStart(des.element().dom(), des.offset());
+              rng.setEnd(des.element().dom(), des.offset());
+              return rng;
+            });
+          })
+        : Option.none();
     };
   };
 
-  const deleteRow = execute(TableOperations.eraseRows, lastRowGuard, Fun.noop, lazyWire);
+  const deleteRow = execute(
+    TableOperations.eraseRows,
+    lastRowGuard,
+    Fun.noop,
+    lazyWire
+  );
 
-  const deleteColumn = execute(TableOperations.eraseColumns, lastColumnGuard, Fun.noop, lazyWire);
+  const deleteColumn = execute(
+    TableOperations.eraseColumns,
+    lastColumnGuard,
+    Fun.noop,
+    lazyWire
+  );
 
-  const insertRowsBefore = execute(TableOperations.insertRowsBefore, Fun.always, Fun.noop, lazyWire);
+  const insertRowsBefore = execute(
+    TableOperations.insertRowsBefore,
+    Fun.always,
+    Fun.noop,
+    lazyWire
+  );
 
-  const insertRowsAfter = execute(TableOperations.insertRowsAfter, Fun.always, Fun.noop, lazyWire);
+  const insertRowsAfter = execute(
+    TableOperations.insertRowsAfter,
+    Fun.always,
+    Fun.noop,
+    lazyWire
+  );
 
-  const insertColumnsBefore = execute(TableOperations.insertColumnsBefore, Fun.always, CellMutations.halve, lazyWire);
+  const insertColumnsBefore = execute(
+    TableOperations.insertColumnsBefore,
+    Fun.always,
+    CellMutations.halve,
+    lazyWire
+  );
 
-  const insertColumnsAfter = execute(TableOperations.insertColumnsAfter, Fun.always, CellMutations.halve, lazyWire);
+  const insertColumnsAfter = execute(
+    TableOperations.insertColumnsAfter,
+    Fun.always,
+    CellMutations.halve,
+    lazyWire
+  );
 
-  const mergeCells = execute(TableOperations.mergeCells, Fun.always, Fun.noop, lazyWire);
+  const mergeCells = execute(
+    TableOperations.mergeCells,
+    Fun.always,
+    Fun.noop,
+    lazyWire
+  );
 
-  const unmergeCells = execute(TableOperations.unmergeCells, Fun.always, Fun.noop, lazyWire);
+  const unmergeCells = execute(
+    TableOperations.unmergeCells,
+    Fun.always,
+    Fun.noop,
+    lazyWire
+  );
 
-  const pasteRowsBefore = execute(TableOperations.pasteRowsBefore, Fun.always, Fun.noop, lazyWire);
+  const pasteRowsBefore = execute(
+    TableOperations.pasteRowsBefore,
+    Fun.always,
+    Fun.noop,
+    lazyWire
+  );
 
-  const pasteRowsAfter = execute(TableOperations.pasteRowsAfter, Fun.always, Fun.noop, lazyWire);
+  const pasteRowsAfter = execute(
+    TableOperations.pasteRowsAfter,
+    Fun.always,
+    Fun.noop,
+    lazyWire
+  );
 
-  const pasteCells = execute(TableOperations.pasteCells, Fun.always, Fun.noop, lazyWire);
+  const pasteCells = execute(
+    TableOperations.pasteCells,
+    Fun.always,
+    Fun.noop,
+    lazyWire
+  );
 
   return {
     deleteRow,

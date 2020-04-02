@@ -7,25 +7,42 @@ import { SplitPosition } from '../data/SplitPosition';
 import { TextSplit } from '../data/TextSplit';
 import { SpotRange } from '../data/Types';
 
-type SplitApi = <E, D>(universe: Universe<E, D>, item: E, position: number) => TextSplit<E>;
+type SplitApi = <E, D>(
+  universe: Universe<E, D>,
+  item: E,
+  position: number
+) => TextSplit<E>;
 const split: SplitApi = Split.split;
 
-type SplitByPairApi = <E, D>(universe: Universe<E, D>, item: E, start: number, end: number) => E;
+type SplitByPairApi = <E, D>(
+  universe: Universe<E, D>,
+  item: E,
+  start: number,
+  end: number
+) => E;
 const splitByPair: SplitByPairApi = Split.splitByPair;
 
-type RangeApi = <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number) => E[];
+type RangeApi = <E, D>(
+  universe: Universe<E, D>,
+  base: E,
+  baseOffset: number,
+  end: E,
+  endOffset: number
+) => E[];
 const range: RangeApi = Range.nodes;
 
-type SubdivideApi = <E, D>(universe: Universe<E, D>, item: E, positions: number[]) => SpotRange<E>[];
+type SubdivideApi = <E, D>(
+  universe: Universe<E, D>,
+  item: E,
+  positions: number[]
+) => SpotRange<E>[];
 const subdivide: SubdivideApi = Splitter.subdivide;
 
-type PositionApi = <E, D>(_universe: Universe<E, D>, target: TextSplit<E>) => SplitPosition<E>;
-const position: PositionApi = (_universe, target) => Positions.determine(target);
+type PositionApi = <E, D>(
+  _universe: Universe<E, D>,
+  target: TextSplit<E>
+) => SplitPosition<E>;
+const position: PositionApi = (_universe, target) =>
+  Positions.determine(target);
 
-export {
-  split,
-  splitByPair,
-  range,
-  subdivide,
-  position
-};
+export { split, splitByPair, range, subdivide, position };

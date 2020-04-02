@@ -13,6 +13,4 @@ const register = function (editor, headState) {
   });
 };
 
-export {
-  register
-};
+export { register };

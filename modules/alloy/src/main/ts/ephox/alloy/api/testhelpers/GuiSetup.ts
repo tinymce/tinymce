@@ -1,7 +1,14 @@
 import { Assertions, Pipeline, Step, TestLogs } from '@ephox/agar';
 import { document, HTMLDocument } from '@ephox/dom-globals';
 import { Merger } from '@ephox/katamari';
-import { DomEvent, Element, EventUnbinder, Html, Insert, Remove } from '@ephox/sugar';
+import {
+  DomEvent,
+  Element,
+  EventUnbinder,
+  Html,
+  Insert,
+  Remove
+} from '@ephox/sugar';
 
 import { AlloyComponent } from '../component/ComponentApi';
 import * as Attachment from '../system/Attachment';
@@ -17,8 +24,22 @@ interface KeyLoggerState {
  * @deprecated use guiSetup instead.
  * TODO: remove and inline
  */
-const setup = (createComponent: (store: TestStore, doc: Element, body: Element) => AlloyComponent,
-               f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Array<Step<any, any>>, success: () => void, failure: (err: any, logs?: TestLogs) => void) => {
+const setup = (
+  createComponent: (
+    store: TestStore,
+    doc: Element,
+    body: Element
+  ) => AlloyComponent,
+  f: (
+    doc: Element,
+    body: Element,
+    gui: Gui.GuiSystem,
+    component: AlloyComponent,
+    store: TestStore
+  ) => Array<Step<any, any>>,
+  success: () => void,
+  failure: (err: any, logs?: TestLogs) => void
+) => {
   const store = TestStore();
 
   const gui = Gui.create();
@@ -31,14 +52,20 @@ const setup = (createComponent: (store: TestStore, doc: Element, body: Element) 
   const component = createComponent(store, doc, body);
   gui.add(component);
 
-  Pipeline.async({}, f(doc, body, gui, component, store), () => {
-    Attachment.detachSystem(gui);
-    success();
-  }, (e, logs) => {
-    // tslint:disable-next-line
-    // console.error(e);
-    failure(e, logs);
-  }, TestLogs.init());
+  Pipeline.async(
+    {},
+    f(doc, body, gui, component, store),
+    () => {
+      Attachment.detachSystem(gui);
+      success();
+    },
+    (e, logs) => {
+      // tslint:disable-next-line
+      // console.error(e);
+      failure(e, logs);
+    },
+    TestLogs.init()
+  );
 };
 
 /**
@@ -50,42 +77,70 @@ const setup = (createComponent: (store: TestStore, doc: Element, body: Element) 
  * @param success
  * @param failure
  */
-const guiSetup = <A, B> (createComponent: (store: TestStore, doc: Element, body: Element) => AlloyComponent,
-  f: (doc: Element, body: Element, gui: Gui.GuiSystem, component: AlloyComponent, store: TestStore) => Step<A, B>, success: () => void, failure: (err: any, logs?: TestLogs) => void) => {
-  setup(createComponent, (doc, body, gui, component, store) => [ f(doc, body, gui, component, store) ], success, failure);
+const guiSetup = <A, B>(
+  createComponent: (
+    store: TestStore,
+    doc: Element,
+    body: Element
+  ) => AlloyComponent,
+  f: (
+    doc: Element,
+    body: Element,
+    gui: Gui.GuiSystem,
+    component: AlloyComponent,
+    store: TestStore
+  ) => Step<A, B>,
+  success: () => void,
+  failure: (err: any, logs?: TestLogs) => void
+) => {
+  setup(
+    createComponent,
+    (doc, body, gui, component, store) => [f(doc, body, gui, component, store)],
+    success,
+    failure
+  );
 };
 
-const mSetupKeyLogger = (body: Element) => Step.stateful((oldState: Record<string, any>, next, _die) => {
-  const onKeydown: EventUnbinder = DomEvent.bind(body, 'keydown', (event) => {
-    newState.log.push('keydown.to.body: ' + event.raw().which);
+const mSetupKeyLogger = (body: Element) =>
+  Step.stateful((oldState: Record<string, any>, next, _die) => {
+    const onKeydown: EventUnbinder = DomEvent.bind(body, 'keydown', (event) => {
+      newState.log.push('keydown.to.body: ' + event.raw().which);
+    });
+
+    const log: string[] = [];
+    const newState: any = {
+      ...oldState,
+      log,
+      onKeydown
+    };
+    next(newState);
   });
 
-  const log: string[] = [ ];
-  const newState: any = {
-    ...oldState,
-    log,
-    onKeydown
-  };
-  next(newState);
-});
+const mTeardownKeyLogger = (body: Element, expected: string[]) =>
+  Step.stateful((state: KeyLoggerState, next, _die) => {
+    Assertions.assertEq(
+      'Checking key log outside context (on teardown)',
+      expected,
+      state.log
+    );
+    state.onKeydown.unbind();
+    const { onKeydown, log, ...rest } = state;
+    next(rest);
+  });
 
-const mTeardownKeyLogger = (body: Element, expected: string[]) => Step.stateful((state: KeyLoggerState, next, _die) => {
-  Assertions.assertEq('Checking key log outside context (on teardown)', expected, state.log);
-  state.onKeydown.unbind();
-  const { onKeydown, log, ...rest } = state;
-  next(rest);
-});
+const mAddStyles = (doc: Element<HTMLDocument>, styles: string[]) =>
+  Step.stateful((value: any, next, _die) => {
+    const style = Element.fromTag('style');
+    const head = Element.fromDom(doc.dom().head);
+    Insert.append(head, style);
+    Html.set(style, styles.join('\n'));
 
-const mAddStyles = (doc: Element<HTMLDocument>, styles: string[]) => Step.stateful((value: any, next, _die) => {
-  const style = Element.fromTag('style');
-  const head = Element.fromDom(doc.dom().head);
-  Insert.append(head, style);
-  Html.set(style, styles.join('\n'));
-
-  next(Merger.deepMerge(value, {
-    style
-  }));
-});
+    next(
+      Merger.deepMerge(value, {
+        style
+      })
+    );
+  });
 
 const mRemoveStyles = Step.stateful((value: any, next, _die) => {
   Remove.remove(value.style);
@@ -97,7 +152,6 @@ export {
   guiSetup,
   mSetupKeyLogger,
   mTeardownKeyLogger,
-
   mAddStyles,
   mRemoveStyles
 };

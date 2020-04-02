@@ -15,7 +15,7 @@ export default [
     Fields.onHandler('onHidden')
   ]),
   FieldSchema.defaultedFunction('lazyViewport', Boxes.win),
-  FieldSchema.defaultedArrayOf('modes', [ 'top', 'bottom' ], ValueSchema.string),
+  FieldSchema.defaultedArrayOf('modes', ['top', 'bottom'], ValueSchema.string),
   Fields.onHandler('onDocked'),
   Fields.onHandler('onUndocked')
 ] as FieldProcessorAdt[];

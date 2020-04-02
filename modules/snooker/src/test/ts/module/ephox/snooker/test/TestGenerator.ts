@@ -17,10 +17,10 @@ export default function (): SimpleGenerators {
     return r;
   };
 
-  return {
+  return ({
     cell,
     gap: Fun.constant('*'),
     row: Fun.constant('tr'),
     replace
-  } as unknown as SimpleGenerators; // fake generator for atomic tests
+  } as unknown) as SimpleGenerators; // fake generator for atomic tests
 }

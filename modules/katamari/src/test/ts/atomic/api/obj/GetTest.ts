@@ -28,13 +28,21 @@ UnitTest.test('GetTest', function () {
   Assert.eq(
     'Unknown key does not exist',
     Option.none(),
-    Obj.get(<any> { a: 1 }, 'b'),
+    Obj.get(<any>{ a: 1 }, 'b'),
     tOption()
   );
   Assert.eq(
     'array option array number',
-    [ Option.none<Array<number>>(), Option.some([ 1, 8, 3, 9 ]), Option.some([ 8, 9 ]) ],
-    [ Option.none<Array<number>>(), Option.some([ 1, 8, 3, 9 ]), Option.some([ 8, 9 ]) ],
+    [
+      Option.none<Array<number>>(),
+      Option.some([1, 8, 3, 9]),
+      Option.some([8, 9])
+    ],
+    [
+      Option.none<Array<number>>(),
+      Option.some([1, 8, 3, 9]),
+      Option.some([8, 9])
+    ],
     tArray(tOption(tArray(tNumber)))
   );
 });

@@ -3,15 +3,20 @@ import { Arr, Option } from '@ephox/katamari';
 import { TypedItem } from 'ephox/phoenix/api/Main';
 
 const typeditem = function (a: TypedItem<Gene, undefined>) {
-  return a.fold(function (item) {
-    return 'boundary(' + item.id + ')';
-  }, function (item) {
-    return 'empty(' + item.id + ')';
-  }, function (item) {
-    return 'text("' + item.text + '")';
-  }, function (item) {
-    return 'text("' + item.text + '")';
-  });
+  return a.fold(
+    function (item) {
+      return 'boundary(' + item.id + ')';
+    },
+    function (item) {
+      return 'empty(' + item.id + ')';
+    },
+    function (item) {
+      return 'text("' + item.text + '")';
+    },
+    function (item) {
+      return 'text("' + item.text + '")';
+    }
+  );
 };
 
 const typeditems = function (items: TypedItem<Gene, undefined>[]) {
@@ -34,11 +39,4 @@ const text = function (item: Gene) {
   return Option.from(item.text).getOr('');
 };
 
-export {
-  typeditem,
-  typeditems,
-  ids,
-  id,
-  texts,
-  text
-};
+export { typeditem, typeditems, ids, id, texts, text };

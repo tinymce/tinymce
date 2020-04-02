@@ -14,6 +14,4 @@ const register = (editor: Editor, backstage: UiFactoryBackstage) => {
   fontsizeSelectMenu(editor, backstage);
 };
 
-export {
-  register
-};
+export { register };

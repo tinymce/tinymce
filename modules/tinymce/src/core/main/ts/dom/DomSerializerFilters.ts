@@ -14,10 +14,15 @@ import { DomSerializerSettings } from './DomSerializer';
 
 declare const unescape: any;
 
-const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: DOMUtils) => {
+const register = (
+  htmlParser: DomParser,
+  settings: DomSerializerSettings,
+  dom: DOMUtils
+) => {
   // Convert tabindex back to elements when serializing contents
   htmlParser.addAttributeFilter('data-mce-tabindex', function (nodes, name) {
-    let i = nodes.length, node;
+    let i = nodes.length,
+      node;
 
     while (i--) {
       node = nodes[i];
@@ -28,7 +33,9 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
 
   // Convert move data-mce-src, data-mce-href and data-mce-style into nodes or process them if needed
   htmlParser.addAttributeFilter('src,href,style', function (nodes, name) {
-    let i = nodes.length, node, value;
+    let i = nodes.length,
+      node,
+      value;
     const internalName = 'data-mce-' + name;
     const urlConverter = settings.url_converter;
     const urlConverterScope = settings.url_converter_scope;
@@ -58,7 +65,9 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
 
   // Remove internal classes mceItem<..> or mceSelected
   htmlParser.addAttributeFilter('class', function (nodes) {
-    let i = nodes.length, node, value;
+    let i = nodes.length,
+      node,
+      value;
 
     while (i--) {
       node = nodes[i];
@@ -73,14 +82,17 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
 
   // Remove bookmark elements
   htmlParser.addAttributeFilter('data-mce-type', function (nodes, name, args) {
-    let i = nodes.length, node;
+    let i = nodes.length,
+      node;
 
     while (i--) {
       node = nodes[i];
 
       if (node.attr('data-mce-type') === 'bookmark' && !args.cleanup) {
         // We maybe dealing with a "filled" bookmark. If so just remove the node, otherwise unwrap it
-        const hasChildren = Option.from(node.firstChild).exists((firstChild) => !Zwsp.isZwsp(firstChild.value));
+        const hasChildren = Option.from(node.firstChild).exists(
+          (firstChild) => !Zwsp.isZwsp(firstChild.value)
+        );
         if (hasChildren) {
           node.unwrap();
         } else {
@@ -91,7 +103,8 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
   });
 
   htmlParser.addNodeFilter('noscript', function (nodes) {
-    let i = nodes.length, node;
+    let i = nodes.length,
+      node;
 
     while (i--) {
       node = nodes[i].firstChild;
@@ -104,15 +117,25 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
 
   // Force script into CDATA sections and remove the mce- prefix also add comments around styles
   htmlParser.addNodeFilter('script,style', function (nodes, name) {
-    let i = nodes.length, node, value, type;
+    let i = nodes.length,
+      node,
+      value,
+      type;
 
     const trim = function (value) {
       /* jshint maxlen:255 */
       /* eslint max-len:0 */
-      return value.replace(/(<!--\[CDATA\[|\]\]-->)/g, '\n')
+      return value
+        .replace(/(<!--\[CDATA\[|\]\]-->)/g, '\n')
         .replace(/^[\r\n]*|[\r\n]*$/g, '')
-        .replace(/^\s*((<!--)?(\s*\/\/)?\s*<!\[CDATA\[|(<!--\s*)?\/\*\s*<!\[CDATA\[\s*\*\/|(\/\/)?\s*<!--|\/\*\s*<!--\s*\*\/)\s*[\r\n]*/gi, '')
-        .replace(/\s*(\/\*\s*\]\]>\s*\*\/(-->)?|\s*\/\/\s*\]\]>(-->)?|\/\/\s*(-->)?|\]\]>|\/\*\s*-->\s*\*\/|\s*-->\s*)\s*$/g, '');
+        .replace(
+          /^\s*((<!--)?(\s*\/\/)?\s*<!\[CDATA\[|(<!--\s*)?\/\*\s*<!\[CDATA\[\s*\*\/|(\/\/)?\s*<!--|\/\*\s*<!--\s*\*\/)\s*[\r\n]*/gi,
+          ''
+        )
+        .replace(
+          /\s*(\/\*\s*\]\]>\s*\*\/(-->)?|\s*\/\/\s*\]\]>(-->)?|\/\/\s*(-->)?|\]\]>|\/\*\s*-->\s*\*\/|\s*-->\s*)\s*$/g,
+          ''
+        );
     };
 
     while (i--) {
@@ -124,7 +147,10 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
         // a script element without type attribute
         type = node.attr('type');
         if (type) {
-          node.attr('type', type === 'mce-no/type' ? null : type.replace(/^mce\-/, ''));
+          node.attr(
+            'type',
+            type === 'mce-no/type' ? null : type.replace(/^mce\-/, '')
+          );
         }
 
         if (settings.element_format === 'xhtml' && value.length > 0) {
@@ -140,7 +166,8 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
 
   // Convert comments to cdata and handle protected comments
   htmlParser.addNodeFilter('#comment', function (nodes) {
-    let i = nodes.length, node;
+    let i = nodes.length,
+      node;
 
     while (i--) {
       node = nodes[i];
@@ -159,7 +186,8 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
   });
 
   htmlParser.addNodeFilter('xml:namespace,input', function (nodes, name) {
-    let i = nodes.length, node;
+    let i = nodes.length,
+      node;
 
     while (i--) {
       node = nodes[i];
@@ -188,8 +216,8 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
   // Remove internal data attributes
   htmlParser.addAttributeFilter(
     'data-mce-src,data-mce-href,data-mce-style,' +
-    'data-mce-selected,data-mce-expando,' +
-    'data-mce-type,data-mce-resize,data-mce-placeholder',
+      'data-mce-selected,data-mce-expando,' +
+      'data-mce-type,data-mce-resize,data-mce-placeholder',
 
     function (nodes, name) {
       let i = nodes.length;
@@ -228,7 +256,4 @@ const trimTrailingBr = function (rootNode) {
   }
 };
 
-export {
-  register,
-  trimTrailingBr
-};
+export { register, trimTrailingBr };

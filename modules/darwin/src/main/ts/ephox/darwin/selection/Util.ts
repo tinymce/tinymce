@@ -9,12 +9,10 @@ const convertToRange = function (win: Window, selection: Selection) {
     Element.fromDom(rng.startContainer),
     rng.startOffset,
     Element.fromDom(rng.endContainer),
-    rng.endOffset);
+    rng.endOffset
+  );
 };
 
 const makeSitus = Situs.create;
 
-export {
-  convertToRange,
-  makeSitus
-};
+export { convertToRange, makeSitus };

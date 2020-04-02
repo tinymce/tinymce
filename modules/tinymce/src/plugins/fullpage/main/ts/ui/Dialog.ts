@@ -59,7 +59,7 @@ const open = function (editor: Editor, headState: Cell<string>) {
           name: 'docencoding',
           type: 'input',
           label: 'Encoding'
-        },
+        }
       ]
     },
     buttons: [
@@ -79,7 +79,11 @@ const open = function (editor: Editor, headState: Cell<string>) {
     onSubmit: (api) => {
       const nuData = api.getData();
 
-      const headHtml = Parser.dataToHtml(editor, Tools.extend(data, nuData), headState.get());
+      const headHtml = Parser.dataToHtml(
+        editor,
+        Tools.extend(data, nuData),
+        headState.get()
+      );
 
       headState.set(headHtml);
 
@@ -88,6 +92,4 @@ const open = function (editor: Editor, headState: Cell<string>) {
   });
 };
 
-export {
-  open
-};
+export { open };

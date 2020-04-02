@@ -30,7 +30,7 @@ export const extractBase64DataUris = (html: string): Base64Extract => {
   let count = 0;
 
   while ((matches = dataImageUri.exec(html))) {
-    const [ uri ] = matches;
+    const [uri] = matches;
     const imageId = prefix + '_' + count++;
 
     uris[imageId] = uri;
@@ -54,12 +54,18 @@ export const extractBase64DataUris = (html: string): Base64Extract => {
   }
 };
 
-export const restoreDataUris = (html: string, result: Base64Extract) => html.replace(new RegExp(`${result.prefix}_[0-9]+`, 'g'), (imageId) => Obj.get(result.uris, imageId).getOr(imageId));
+export const restoreDataUris = (html: string, result: Base64Extract) =>
+  html.replace(new RegExp(`${result.prefix}_[0-9]+`, 'g'), (imageId) =>
+    Obj.get(result.uris, imageId).getOr(imageId)
+  );
 
 export const parseDataUri = (uri: string): Option<Base64UriParts> => {
   const matches = /data:([^;]+);base64,([a-z0-9\+\/=]+)/i.exec(uri);
   if (matches) {
-    return Option.some({ type: matches[1], data: decodeURIComponent(matches[2]) });
+    return Option.some({
+      type: matches[1],
+      data: decodeURIComponent(matches[2])
+    });
   } else {
     return Option.none();
   }

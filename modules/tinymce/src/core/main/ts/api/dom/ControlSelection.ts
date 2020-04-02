@@ -20,11 +20,11 @@ import Selection from './Selection';
 import { Obj } from '@ephox/katamari';
 
 interface ControlSelection {
-  isResizable (elm: Element): boolean;
-  showResizeRect (elm: Element): void;
-  hideResizeRect (): void;
-  updateResizeRect (evt: Event): void;
-  destroy (): void;
+  isResizable(elm: Element): boolean;
+  showResizeRect(elm: Element): void;
+  hideResizeRect(): void;
+  updateResizeRect(evt: Event): void;
+  destroy(): void;
 }
 
 /**
@@ -50,46 +50,70 @@ const getContentEditableRoot = function (root: Node, node: Node) {
   return null;
 };
 
-const ControlSelection = (selection: Selection, editor: Editor): ControlSelection => {
-  const dom = editor.dom, each = Tools.each;
-  let selectedElm, selectedElmGhost, resizeHelper, resizeHandles, selectedHandle;
-  let startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;
-  let width,
-    height;
+const ControlSelection = (
+  selection: Selection,
+  editor: Editor
+): ControlSelection => {
+  const dom = editor.dom,
+    each = Tools.each;
+  let selectedElm,
+    selectedElmGhost,
+    resizeHelper,
+    resizeHandles,
+    selectedHandle;
+  let startX,
+    startY,
+    selectedElmX,
+    selectedElmY,
+    startW,
+    startH,
+    ratio,
+    resizeStarted;
+  let width, height;
   const editableDoc = editor.getDoc(),
     rootDocument = document;
   const abs = Math.abs,
     round = Math.round,
     rootElement = editor.getBody();
-  let startScrollWidth,
-    startScrollHeight;
+  let startScrollWidth, startScrollHeight;
 
   // Details about each resize handle how to scale etc
   resizeHandles = {
     // Name: x multiplier, y multiplier, delta size x, delta size y
-    nw: [ 0, 0, -1, -1 ],
-    ne: [ 1, 0, 1, -1 ],
-    se: [ 1, 1, 1, 1 ],
-    sw: [ 0, 1, -1, 1 ]
+    nw: [0, 0, -1, -1],
+    ne: [1, 0, 1, -1],
+    se: [1, 1, 1, 1],
+    sw: [0, 1, -1, 1]
   };
 
   const isImage = function (elm) {
-    return elm && (elm.nodeName === 'IMG' || editor.dom.is(elm, 'figure.image'));
+    return (
+      elm && (elm.nodeName === 'IMG' || editor.dom.is(elm, 'figure.image'))
+    );
   };
 
   const isEventOnImageOutsideRange = function (evt, range) {
     if (evt.type === 'longpress' || evt.type.indexOf('touch') === 0) {
       const touch = evt.touches[0];
-      return isImage(evt.target) && !RangePoint.isXYWithinRange(touch.clientX, touch.clientY, range);
+      return (
+        isImage(evt.target) &&
+        !RangePoint.isXYWithinRange(touch.clientX, touch.clientY, range)
+      );
     } else {
-      return isImage(evt.target) && !RangePoint.isXYWithinRange(evt.clientX, evt.clientY, range);
+      return (
+        isImage(evt.target) &&
+        !RangePoint.isXYWithinRange(evt.clientX, evt.clientY, range)
+      );
     }
   };
 
   const contextMenuSelectImage = function (evt) {
     const target = evt.target;
 
-    if (isEventOnImageOutsideRange(evt, editor.selection.getRng()) && !evt.isDefaultPrevented()) {
+    if (
+      isEventOnImageOutsideRange(evt, editor.selection.getRng()) &&
+      !evt.isDefaultPrevented()
+    ) {
       editor.selection.select(target);
     }
   };
@@ -136,7 +160,10 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     width = width < 5 ? 5 : width;
     height = height < 5 ? 5 : height;
 
-    if (isImage(selectedElm) && Settings.getResizeImgProportional(editor) !== false) {
+    if (
+      isImage(selectedElm) &&
+      Settings.getResizeImgProportional(editor) !== false
+    ) {
       proportional = !VK.modifierPressed(e);
     } else {
       proportional = VK.modifierPressed(e);
@@ -207,7 +234,10 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     const setSizeProp = function (name, value) {
       if (value) {
         // Resize by using style or attribute
-        if (selectedElm.style[name] || !editor.schema.isValid(selectedElm.nodeName.toLowerCase(), name)) {
+        if (
+          selectedElm.style[name] ||
+          !editor.schema.isValid(selectedElm.nodeName.toLowerCase(), name)
+        ) {
           dom.setStyle(getResizeTarget(selectedElm), name, value);
         } else {
           dom.setAttrib(getResizeTarget(selectedElm), name, value);
@@ -249,8 +279,8 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     selectedElmX = position.x;
     selectedElmY = position.y;
     rect = targetElm.getBoundingClientRect(); // Fix for Gecko offsetHeight for table with caption
-    targetWidth = rect.width || (rect.right - rect.left);
-    targetHeight = rect.height || (rect.bottom - rect.top);
+    targetWidth = rect.width || rect.right - rect.left;
+    targetHeight = rect.height || rect.bottom - rect.top;
 
     // Reset width/height if user selects a new image/table
     if (selectedElm !== targetElm) {
@@ -303,10 +333,15 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
             dom.bind(rootDocument, 'mouseup', endGhostResize);
           }
 
-          resizeHelper = dom.add(rootElement, 'div', {
-            'class': 'mce-resize-helper',
-            'data-mce-bogus': 'all'
-          }, startW + ' &times; ' + startH);
+          resizeHelper = dom.add(
+            rootElement,
+            'div',
+            {
+              'class': 'mce-resize-helper',
+              'data-mce-bogus': 'all'
+            },
+            startW + ' &times; ' + startH
+          );
         };
 
         // Get existing or render resize handle
@@ -340,8 +375,10 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
 
         // Position element
         dom.setStyles(handleElm, {
-          left: (targetWidth * handle[0] + selectedElmX) - (handleElm.offsetWidth / 2),
-          top: (targetHeight * handle[1] + selectedElmY) - (handleElm.offsetHeight / 2)
+          left:
+            targetWidth * handle[0] + selectedElmX - handleElm.offsetWidth / 2,
+          top:
+            targetHeight * handle[1] + selectedElmY - handleElm.offsetHeight / 2
         });
       });
     } else {
@@ -386,7 +423,9 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
     }
 
     // Remove data-mce-selected from all elements since they might have been copied using Ctrl+c/v
-    each(dom.select('img[data-mce-selected],hr[data-mce-selected]'), function (img) {
+    each(dom.select('img[data-mce-selected],hr[data-mce-selected]'), function (
+      img
+    ) {
       img.removeAttribute('data-mce-selected');
     });
 
@@ -397,7 +436,10 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
       disableGeckoResize();
       startElm = selection.getStart(true);
 
-      if (isChildOrEqual(startElm, controlElm) && isChildOrEqual(selection.getEnd(true), controlElm)) {
+      if (
+        isChildOrEqual(startElm, controlElm) &&
+        isChildOrEqual(selection.getEnd(true), controlElm)
+      ) {
         showResizeRect(controlElm);
         return;
       }
@@ -407,7 +449,9 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   };
 
   const isWithinContentEditableFalse = function (elm) {
-    return isContentEditableFalse(getContentEditableRoot(editor.getBody(), elm));
+    return isContentEditableFalse(
+      getContentEditableRoot(editor.getBody(), elm)
+    );
   };
 
   const unbindResizeHandleEvents = function () {
@@ -436,9 +480,14 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
       // Needs to be mousedown for drag/drop to work on IE 11
       // Needs to be click on Edge to properly select images
       editor.on('mousedown click', function (e) {
-        const target = e.target, nodeName = target.nodeName;
+        const target = e.target,
+          nodeName = target.nodeName;
 
-        if (!resizeStarted && /^(TABLE|IMG|HR)$/.test(nodeName) && !isWithinContentEditableFalse(target)) {
+        if (
+          !resizeStarted &&
+          /^(TABLE|IMG|HR)$/.test(nodeName) &&
+          !isWithinContentEditableFalse(target)
+        ) {
           if (e.button !== 2) {
             editor.selection.select(target, nodeName === 'TABLE');
           }
@@ -473,7 +522,9 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
       };
 
       dom.bind(rootElement, 'mscontrolselect', handleMSControlSelect);
-      editor.on('remove', () => dom.unbind(rootElement, 'mscontrolselect', handleMSControlSelect));
+      editor.on('remove', () =>
+        dom.unbind(rootElement, 'mscontrolselect', handleMSControlSelect)
+      );
     }
 
     const throttledUpdateResizeRect = Delay.throttle(function (e) {
@@ -482,7 +533,10 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
       }
     });
 
-    editor.on('nodechange ResizeEditor ResizeWindow ResizeContent drop FullscreenStateChanged', throttledUpdateResizeRect);
+    editor.on(
+      'nodechange ResizeEditor ResizeWindow ResizeContent drop FullscreenStateChanged',
+      throttledUpdateResizeRect
+    );
 
     // Update resize rect while typing in a table
     editor.on('keyup compositionend', function (e) {

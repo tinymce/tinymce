@@ -29,7 +29,9 @@ const createContainer = function () {
 };
 
 const get = function (editor: Editor, _container?) {
-  return editor.inline ? ResizeWire.body(Util.getBody(editor), createContainer()) : ResizeWire.only(Element.fromDom(editor.getDoc()));
+  return editor.inline
+    ? ResizeWire.body(Util.getBody(editor), createContainer())
+    : ResizeWire.only(Element.fromDom(editor.getDoc()));
 };
 
 const remove = function (editor: Editor, wire) {
@@ -38,7 +40,4 @@ const remove = function (editor: Editor, wire) {
   }
 };
 
-export {
-  get,
-  remove
-};
+export { get, remove };

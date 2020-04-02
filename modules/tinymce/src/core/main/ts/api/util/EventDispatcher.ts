@@ -5,7 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { ClipboardEvent, DataTransfer, DragEvent, Event, FocusEvent, KeyboardEvent, MouseEvent, PointerEvent, TouchEvent, WheelEvent } from '@ephox/dom-globals';
+import {
+  ClipboardEvent,
+  DataTransfer,
+  DragEvent,
+  Event,
+  FocusEvent,
+  KeyboardEvent,
+  MouseEvent,
+  PointerEvent,
+  TouchEvent,
+  WheelEvent
+} from '@ephox/dom-globals';
 import Tools from './Tools';
 import { Fun, Obj } from '@ephox/katamari';
 
@@ -19,57 +30,57 @@ export interface InputEvent extends Event {
 }
 
 export interface NativeEventMap {
-  'beforepaste': Event;
-  'blur': FocusEvent;
-  'beforeinput': InputEvent;
-  'click': MouseEvent;
-  'compositionend': Event;
-  'compositionstart': Event;
-  'compositionupdate': Event;
-  'contextmenu': PointerEvent;
-  'copy': ClipboardEvent;
-  'cut': ClipboardEvent;
-  'dblclick': MouseEvent;
-  'drag': DragEvent;
-  'dragdrop': DragEvent;
-  'dragend': DragEvent;
-  'draggesture': DragEvent;
-  'dragover': DragEvent;
-  'dragstart': DragEvent;
-  'drop': DragEvent;
-  'focus': FocusEvent;
-  'focusin': FocusEvent;
-  'focusout': FocusEvent;
-  'input': InputEvent;
-  'keydown': KeyboardEvent;
-  'keypress': KeyboardEvent;
-  'keyup': KeyboardEvent;
-  'mousedown': MouseEvent;
-  'mouseenter': MouseEvent;
-  'mouseleave': MouseEvent;
-  'mousemove': MouseEvent;
-  'mouseout': MouseEvent;
-  'mouseover': MouseEvent;
-  'mouseup': MouseEvent;
-  'paste': ClipboardEvent;
-  'selectionchange': Event;
-  'submit': Event;
-  'touchend': TouchEvent;
-  'touchmove': TouchEvent;
-  'touchstart': TouchEvent;
-  'touchcancel': TouchEvent;
-  'wheel': WheelEvent;
+  beforepaste: Event;
+  blur: FocusEvent;
+  beforeinput: InputEvent;
+  click: MouseEvent;
+  compositionend: Event;
+  compositionstart: Event;
+  compositionupdate: Event;
+  contextmenu: PointerEvent;
+  copy: ClipboardEvent;
+  cut: ClipboardEvent;
+  dblclick: MouseEvent;
+  drag: DragEvent;
+  dragdrop: DragEvent;
+  dragend: DragEvent;
+  draggesture: DragEvent;
+  dragover: DragEvent;
+  dragstart: DragEvent;
+  drop: DragEvent;
+  focus: FocusEvent;
+  focusin: FocusEvent;
+  focusout: FocusEvent;
+  input: InputEvent;
+  keydown: KeyboardEvent;
+  keypress: KeyboardEvent;
+  keyup: KeyboardEvent;
+  mousedown: MouseEvent;
+  mouseenter: MouseEvent;
+  mouseleave: MouseEvent;
+  mousemove: MouseEvent;
+  mouseout: MouseEvent;
+  mouseover: MouseEvent;
+  mouseup: MouseEvent;
+  paste: ClipboardEvent;
+  selectionchange: Event;
+  submit: Event;
+  touchend: TouchEvent;
+  touchmove: TouchEvent;
+  touchstart: TouchEvent;
+  touchcancel: TouchEvent;
+  wheel: WheelEvent;
 }
 
 export type EditorEvent<T> = T & {
   target: any;
   type: string;
-  preventDefault (): void;
-  isDefaultPrevented (): boolean;
-  stopPropagation (): void;
-  isPropagationStopped (): boolean;
-  stopImmediatePropagation (): void;
-  isImmediatePropagationStopped (): boolean;
+  preventDefault(): void;
+  isDefaultPrevented(): boolean;
+  stopPropagation(): void;
+  isPropagationStopped(): boolean;
+  stopImmediatePropagation(): void;
+  isImmediatePropagationStopped(): boolean;
 };
 
 export interface EventDispatcherSettings {
@@ -83,7 +94,7 @@ export interface EventDispatcherConstructor<T extends NativeEventMap> {
 
   new (settings?: EventDispatcherSettings): EventDispatcher<T>;
 
-  isNative (name: string): boolean;
+  isNative(name: string): boolean;
 }
 
 /**
@@ -100,9 +111,9 @@ export interface EventDispatcherConstructor<T extends NativeEventMap> {
 
 const nativeEvents = Tools.makeMap(
   'focus blur focusin focusout click dblclick mousedown mouseup mousemove mouseover beforepaste paste cut copy selectionchange ' +
-  'mouseout mouseenter mouseleave wheel keydown keypress keyup input beforeinput contextmenu dragstart dragend dragover ' +
-  'draggesture dragdrop drop drag submit ' +
-  'compositionstart compositionend compositionupdate touchstart touchmove touchend touchcancel',
+    'mouseout mouseenter mouseleave wheel keydown keypress keyup input beforeinput contextmenu dragstart dragend dragover ' +
+    'draggesture dragdrop drop drag submit ' +
+    'compositionstart compositionend compositionupdate touchstart touchmove touchend touchcancel',
   ' '
 );
 
@@ -140,8 +151,8 @@ class EventDispatcher<T extends NativeEventMap> {
    * @example
    * instance.fire('event', {...});
    */
-  public fire <K extends keyof T>(name: K, args?: T[K]): EditorEvent<T[K]>;
-  public fire <U = any>(name: string, args?: U): EditorEvent<U>;
+  public fire<K extends keyof T>(name: K, args?: T[K]): EditorEvent<T[K]>;
+  public fire<U = any>(name: string, args?: U): EditorEvent<U>;
   public fire(name: string, args?: any): EditorEvent<any> {
     let handlers, i, l, callback;
 
@@ -221,10 +232,25 @@ class EventDispatcher<T extends NativeEventMap> {
    *     // Callback logic
    * });
    */
-  public on <K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void, prepend?: boolean, extra?: {}): this;
-  public on <U = any>(name: string, callback: (event: EditorEvent<U>) => void, prepend?: boolean, extra?: {}): this;
-  public on (name: string, callback: false, prepend?: boolean, extra?: {}): this;
-  public on(name: string, callback: false | ((event: EditorEvent<any>) => void), prepend?: boolean, extra?: {}): this {
+  public on<K extends keyof T>(
+    name: K,
+    callback: (event: EditorEvent<T[K]>) => void,
+    prepend?: boolean,
+    extra?: {}
+  ): this;
+  public on<U = any>(
+    name: string,
+    callback: (event: EditorEvent<U>) => void,
+    prepend?: boolean,
+    extra?: {}
+  ): this;
+  public on(name: string, callback: false, prepend?: boolean, extra?: {}): this;
+  public on(
+    name: string,
+    callback: false | ((event: EditorEvent<any>) => void),
+    prepend?: boolean,
+    extra?: {}
+  ): this {
     let handlers, names, i;
 
     if (callback === false) {
@@ -278,10 +304,19 @@ class EventDispatcher<T extends NativeEventMap> {
    * // Unbind all events
    * instance.off();
    */
-  public off <K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void): this;
-  public off <U = any>(name: string, callback: (event: EditorEvent<U>) => void): this;
-  public off (name?: string): this;
-  public off(name?: string, callback?: (event: EditorEvent<any>) => void): this {
+  public off<K extends keyof T>(
+    name: K,
+    callback: (event: EditorEvent<T[K]>) => void
+  ): this;
+  public off<U = any>(
+    name: string,
+    callback: (event: EditorEvent<U>) => void
+  ): this;
+  public off(name?: string): this;
+  public off(
+    name?: string,
+    callback?: (event: EditorEvent<any>) => void
+  ): this {
     let i, handlers, names, hi;
 
     if (name) {
@@ -347,9 +382,21 @@ class EventDispatcher<T extends NativeEventMap> {
    *     // Callback logic
    * });
    */
-  public once <K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void, prepend?: boolean): this;
-  public once <U = any>(name: string, callback: (event: EditorEvent<U>) => void, prepend?: boolean): this;
-  public once(name: string, callback: (event: EditorEvent<any>) => void, prepend?: boolean): this {
+  public once<K extends keyof T>(
+    name: K,
+    callback: (event: EditorEvent<T[K]>) => void,
+    prepend?: boolean
+  ): this;
+  public once<U = any>(
+    name: string,
+    callback: (event: EditorEvent<U>) => void,
+    prepend?: boolean
+  ): this;
+  public once(
+    name: string,
+    callback: (event: EditorEvent<any>) => void,
+    prepend?: boolean
+  ): this {
     return this.on(name, callback, prepend, { once: true });
   }
 

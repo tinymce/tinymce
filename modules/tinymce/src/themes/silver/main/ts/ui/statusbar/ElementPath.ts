@@ -5,7 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Button, Keying, Replacing, Tabstopping, Disabling } from '@ephox/alloy';
+import {
+  AddEventsBehaviour,
+  AlloyEvents,
+  Behaviour,
+  Button,
+  Keying,
+  Replacing,
+  Tabstopping,
+  Disabling
+} from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -26,7 +35,11 @@ const isHidden = (elm) => {
   return false;
 };
 
-const renderElementPath = (editor: Editor, settings, providersBackstage: UiFactoryBackstageProviders) => {
+const renderElementPath = (
+  editor: Editor,
+  settings,
+  providersBackstage: UiFactoryBackstageProviders
+) => {
   if (!settings.delimiter) {
     settings.delimiter = '\u00BB';
   }
@@ -34,33 +47,35 @@ const renderElementPath = (editor: Editor, settings, providersBackstage: UiFacto
   const getDataPath = (data) => {
     const parts = data || [];
 
-    const newPathElements = Arr.map(parts, (part, index) => Button.sketch({
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-statusbar__path-item' ],
-        attributes: {
-          'role': 'button',
-          'data-index': index,
-          'tab-index': -1,
-          'aria-level': index + 1
+    const newPathElements = Arr.map(parts, (part, index) =>
+      Button.sketch({
+        dom: {
+          tag: 'div',
+          classes: ['tox-statusbar__path-item'],
+          attributes: {
+            'role': 'button',
+            'data-index': index,
+            'tab-index': -1,
+            'aria-level': index + 1
+          },
+          innerHtml: part.name
         },
-        innerHtml: part.name
-      },
-      action: (_btn) => {
-        editor.focus();
-        editor.selection.select(part.element);
-        editor.nodeChanged();
-      },
-      buttonBehaviours: Behaviour.derive([
-        DisablingConfigs.button(providersBackstage.isReadonly()),
-        ReadOnly.receivingConfig()
-      ])
-    }));
+        action: (_btn) => {
+          editor.focus();
+          editor.selection.select(part.element);
+          editor.nodeChanged();
+        },
+        buttonBehaviours: Behaviour.derive([
+          DisablingConfigs.button(providersBackstage.isReadonly()),
+          ReadOnly.receivingConfig()
+        ])
+      })
+    );
 
     const divider = {
       dom: {
         tag: 'div',
-        classes: [ 'tox-statusbar__path-divider' ],
+        classes: ['tox-statusbar__path-divider'],
         attributes: {
           'aria-hidden': true
         },
@@ -68,12 +83,16 @@ const renderElementPath = (editor: Editor, settings, providersBackstage: UiFacto
       }
     };
 
-    return Arr.foldl(newPathElements.slice(1), (acc, element) => {
-      const newAcc: any[] = acc;
-      newAcc.push(divider);
-      newAcc.push(element);
-      return newAcc;
-    }, [ newPathElements[0] ]);
+    return Arr.foldl(
+      newPathElements.slice(1),
+      (acc, element) => {
+        const newAcc: any[] = acc;
+        newAcc.push(divider);
+        newAcc.push(element);
+        return newAcc;
+      },
+      [newPathElements[0]]
+    );
   };
 
   const updatePath = (parents) => {
@@ -104,7 +123,7 @@ const renderElementPath = (editor: Editor, settings, providersBackstage: UiFacto
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-statusbar__path' ],
+      classes: ['tox-statusbar__path'],
       attributes: {
         role: 'navigation'
       }
@@ -116,12 +135,14 @@ const renderElementPath = (editor: Editor, settings, providersBackstage: UiFacto
       }),
       Disabling.config({ disabled: providersBackstage.isReadonly() }),
       ReadOnly.receivingConfig(),
-      Tabstopping.config({ }),
-      Replacing.config({ }),
+      Tabstopping.config({}),
+      Replacing.config({}),
       AddEventsBehaviour.config('elementPathEvents', [
         AlloyEvents.runOnAttached((comp, _e) => {
           // NOTE: If statusbar ever gets re-rendered, we will need to free this.
-          editor.shortcuts.add('alt+F11', 'focus statusbar elementpath', () => Keying.focusIn(comp));
+          editor.shortcuts.add('alt+F11', 'focus statusbar elementpath', () =>
+            Keying.focusIn(comp)
+          );
 
           editor.on('NodeChange', (e) => {
             const newPath = updatePath(e.parents);
@@ -138,6 +159,4 @@ const renderElementPath = (editor: Editor, settings, providersBackstage: UiFacto
   };
 };
 
-export {
-  renderElementPath
-};
+export { renderElementPath };

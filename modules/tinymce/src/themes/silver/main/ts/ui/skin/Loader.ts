@@ -17,13 +17,19 @@ const loadSkin = (isInline: boolean, editor: Editor) => {
 
   if (skinUrl) {
     skinUiCss = skinUrl + '/skin.min.css';
-    editor.contentCSS.push(skinUrl + (isInline ? '/content.inline' : '/content') + '.min.css');
+    editor.contentCSS.push(
+      skinUrl + (isInline ? '/content.inline' : '/content') + '.min.css'
+    );
   }
 
   // In Modern Inline, this is explicitly called in editor.on('focus', ...) as well as in render().
   // Seems to work without, but adding a note in case things break later
   if (isSkinDisabled(editor) === false && skinUiCss) {
-    DOMUtils.DOM.styleSheetLoader.load(skinUiCss, SkinLoaded.fireSkinLoaded(editor), SkinLoaded.fireSkinLoadError(editor, 'Skin could not be loaded'));
+    DOMUtils.DOM.styleSheetLoader.load(
+      skinUiCss,
+      SkinLoaded.fireSkinLoaded(editor),
+      SkinLoaded.fireSkinLoadError(editor, 'Skin could not be loaded')
+    );
   } else {
     SkinLoaded.fireSkinLoaded(editor)();
   }
@@ -32,7 +38,4 @@ const loadSkin = (isInline: boolean, editor: Editor) => {
 const iframe = Fun.curry(loadSkin, false);
 const inline = Fun.curry(loadSkin, true);
 
-export {
-  iframe,
-  inline
-};
+export { iframe, inline };

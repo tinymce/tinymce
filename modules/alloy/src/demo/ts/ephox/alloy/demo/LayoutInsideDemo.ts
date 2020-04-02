@@ -35,85 +35,107 @@ export default (): void => {
               border: '2px solid black'
             }
           },
-          components: [
-            GuiFactory.text('This is a popup')
-          ]
+          components: [GuiFactory.text('This is a popup')]
         })
       ]
     })
   );
 
-  const makeExample = (id: string, ltrDescription: string, rtlDescription: string, layouts: Layouts) => HtmlDisplay.section(gui, 'Position anchoring to text selection', Container.sketch({
-    dom: {
-      tag: 'div'
-    },
-    components: [
+  const makeExample = (
+    id: string,
+    ltrDescription: string,
+    rtlDescription: string,
+    layouts: Layouts
+  ) =>
+    HtmlDisplay.section(
+      gui,
+      'Position anchoring to text selection',
       Container.sketch({
         dom: {
-          attributes: {
-            contenteditable: 'true'
-          },
-          styles: {
-            border: '1px solid black',
-            width: '300px',
-            height: '200px',
-            display: 'inline-block'
-          },
-          innerHtml: `Popup will appear in the ${ltrDescription} for LTR and ${rtlDescription} for RTL`
+          tag: 'div'
         },
-        uid: `inner-${id}-editor`
-      }),
-      Button.sketch({
-        dom: {
-          tag: 'button',
-          innerHtml: 'Show popup inside editor'
-        },
-        action(button) {
-          Attachment.attach(sink, popup);
-          Positioning.position(sink, {
-            anchor: 'node',
-            root: button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element(),
-            node: Option.from(button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element()),
-            layouts
-          }, popup);
-        }
+        components: [
+          Container.sketch({
+            dom: {
+              attributes: {
+                contenteditable: 'true'
+              },
+              styles: {
+                border: '1px solid black',
+                width: '300px',
+                height: '200px',
+                display: 'inline-block'
+              },
+              innerHtml: `Popup will appear in the ${ltrDescription} for LTR and ${rtlDescription} for RTL`
+            },
+            uid: `inner-${id}-editor`
+          }),
+          Button.sketch({
+            dom: {
+              tag: 'button',
+              innerHtml: 'Show popup inside editor'
+            },
+            action(button) {
+              Attachment.attach(sink, popup);
+              Positioning.position(
+                sink,
+                {
+                  anchor: 'node',
+                  root: button
+                    .getSystem()
+                    .getByUid(`inner-${id}-editor`)
+                    .getOrDie()
+                    .element(),
+                  node: Option.from(
+                    button
+                      .getSystem()
+                      .getByUid(`inner-${id}-editor`)
+                      .getOrDie()
+                      .element()
+                  ),
+                  layouts
+                },
+                popup
+              );
+            }
+          })
+        ]
       })
-    ]
-  }));
+    );
 
   // North
   makeExample('n', 'top', 'top', {
-    onLtr: () => [ LayoutInside.north ],
-    onRtl: () => [ LayoutInside.north ],
+    onLtr: () => [LayoutInside.north],
+    onRtl: () => [LayoutInside.north]
   });
 
   // South
   makeExample('s', 'bottom', 'bottom', {
-    onLtr: () => [ LayoutInside.south ],
-    onRtl: () => [ LayoutInside.south ],
+    onLtr: () => [LayoutInside.south],
+    onRtl: () => [LayoutInside.south]
   });
 
   // East/west
   makeExample('e', 'right', 'left', {
-    onLtr: () => [ LayoutInside.east ],
-    onRtl: () => [ LayoutInside.west ],
+    onLtr: () => [LayoutInside.east],
+    onRtl: () => [LayoutInside.west]
   });
 
   // West/east
   makeExample('w', 'left', 'right', {
-    onLtr: () => [ LayoutInside.west ],
-    onRtl: () => [ LayoutInside.east ],
+    onLtr: () => [LayoutInside.west],
+    onRtl: () => [LayoutInside.east]
   });
 
   // Northeast/northwest
   makeExample('ne-nw', 'top right', 'top left', {
-    onLtr: () => [ LayoutInside.northwest ],
-    onRtl: () => [ LayoutInside.northeast ],
+    onLtr: () => [LayoutInside.northwest],
+    onRtl: () => [LayoutInside.northeast]
   });
 
   // Southeast/southwestt
   makeExample('se-sw', 'bottom right', 'bottom left', {
-    onLtr: () => [ LayoutInside.southwest ],
-    onRtl: () => [ LayoutInside.southeast ],
+    onLtr: () => [LayoutInside.southwest],
+    onRtl: () => [LayoutInside.southeast]
   });
 };

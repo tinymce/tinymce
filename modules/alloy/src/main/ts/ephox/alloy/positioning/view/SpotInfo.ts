@@ -28,6 +28,4 @@ const nu = (
   label: Fun.constant(label)
 });
 
-export {
-  nu
-};
+export { nu };

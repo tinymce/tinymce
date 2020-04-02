@@ -9,10 +9,19 @@ export type MenuDirectory = Record<string, string[]>;
 
 // A tuple of (item, menu). This can be used to refresh the menu and position them next to the right
 // triggering items.
-export interface LayeredItemTrigger { triggeringItem: AlloyComponent; triggeredMenu: AlloyComponent; triggeringPath: string[] }
+export interface LayeredItemTrigger {
+  triggeringItem: AlloyComponent;
+  triggeredMenu: AlloyComponent;
+  triggeringPath: string[];
+}
 
 export interface LayeredState {
-  setContents: (sPrimary: string, sMenus: Record<string, MenuPreparation>, sExpansions: Record<string, string>, dir: MenuDirectory) => void;
+  setContents: (
+    sPrimary: string,
+    sMenus: Record<string, MenuPreparation>,
+    sExpansions: Record<string, string>,
+    dir: MenuDirectory
+  ) => void;
   setMenuBuilt: (menuName: string, built: AlloyComponent) => void;
   expand: (itemValue: string) => Option<string[]>;
   refresh: (itemValue: string) => Option<string[]>;
@@ -24,17 +33,20 @@ export interface LayeredState {
   getMenus: () => Record<string, MenuPreparation>;
   clear: () => void;
   isClear: () => boolean;
-  getTriggeringPath: (itemValue: string, getItemByValue: (itemValue: string) => Option<AlloyComponent>) => Option<LayeredItemTrigger[]>;
+  getTriggeringPath: (
+    itemValue: string,
+    getItemByValue: (itemValue: string) => Option<AlloyComponent>
+  ) => Option<LayeredItemTrigger[]>;
 }
 
 const init = (): LayeredState => {
-  const expansions: Cell<Record<string, string>> = Cell({ });
-  const menus: Cell<Record<string, MenuPreparation>> = Cell({ });
-  const paths: Cell<Record<string, string[]>> = Cell({ });
+  const expansions: Cell<Record<string, string>> = Cell({});
+  const menus: Cell<Record<string, MenuPreparation>> = Cell({});
+  const paths: Cell<Record<string, string[]>> = Cell({});
   const primary: Cell<Option<string>> = Cell(Option.none());
 
   // Probably think of a better way to store this information.
-  const directory: Cell<MenuDirectory> = Cell({ });
+  const directory: Cell<MenuDirectory> = Cell({});
 
   const clear = (): void => {
     expansions.set({});
@@ -55,7 +67,12 @@ const init = (): LayeredState => {
     });
   };
 
-  const setContents = (sPrimary: string, sMenus: Record<string, MenuPreparation>, sExpansions: Record<string, string>, dir: MenuDirectory): void => {
+  const setContents = (
+    sPrimary: string,
+    sMenus: Record<string, MenuPreparation>,
+    sExpansions: Record<string, string>,
+    dir: MenuDirectory
+  ): void => {
     primary.set(Option.some(sPrimary));
     expansions.set(sExpansions);
     menus.set(sMenus);
@@ -64,17 +81,33 @@ const init = (): LayeredState => {
     paths.set(sPaths);
   };
 
-  const getTriggeringItem = (menuValue: string): Option<string> => Obj.find(expansions.get(), (v, _k) => v === menuValue);
+  const getTriggeringItem = (menuValue: string): Option<string> =>
+    Obj.find(expansions.get(), (v, _k) => v === menuValue);
 
-  const getTriggerData = (menuValue: string, getItemByValue: (v: string) => Option<AlloyComponent>, path: string[]): Option<LayeredItemTrigger> => getPreparedMenu(menuValue).bind((menu) => getTriggeringItem(menuValue).bind((triggeringItemValue) => getItemByValue(triggeringItemValue).map((triggeredItem) => ({
-    triggeredMenu: menu,
-    triggeringItem: triggeredItem,
-    triggeringPath: path
-  }))));
+  const getTriggerData = (
+    menuValue: string,
+    getItemByValue: (v: string) => Option<AlloyComponent>,
+    path: string[]
+  ): Option<LayeredItemTrigger> =>
+    getPreparedMenu(menuValue).bind((menu) =>
+      getTriggeringItem(menuValue).bind((triggeringItemValue) =>
+        getItemByValue(triggeringItemValue).map((triggeredItem) => ({
+          triggeredMenu: menu,
+          triggeringItem: triggeredItem,
+          triggeringPath: path
+        }))
+      )
+    );
 
-  const getTriggeringPath = (itemValue: string, getItemByValue: (v: string) => Option<AlloyComponent>): Option<LayeredItemTrigger[]> => {
+  const getTriggeringPath = (
+    itemValue: string,
+    getItemByValue: (v: string) => Option<AlloyComponent>
+  ): Option<LayeredItemTrigger[]> => {
     // Get the path up to the last item
-    const extraPath: string[] = Arr.filter(lookupItem(itemValue).toArray(), (menuValue) => getPreparedMenu(menuValue).isSome());
+    const extraPath: string[] = Arr.filter(
+      lookupItem(itemValue).toArray(),
+      (menuValue) => getPreparedMenu(menuValue).isSome()
+    );
 
     return Obj.get(paths.get(), itemValue).bind((path) => {
       // remember the path is [ most-recent-menu, next-most-recent-menu ]
@@ -84,12 +117,18 @@ const init = (): LayeredState => {
       // straightforward version when prototyping
       const revPath = Arr.reverse(extraPath.concat(path));
 
-      const triggers: Array<Option<LayeredItemTrigger>> = Arr.bind(revPath, (menuValue, menuIndex) =>
-        // finding menuValue, it should match the trigger
-        getTriggerData(menuValue, getItemByValue, revPath.slice(0, menuIndex + 1)).fold(
-          () => primary.get().is(menuValue) ? [ ] : [ Option.none() ],
-          (data) => [ Option.some(data) ]
-        )
+      const triggers: Array<Option<LayeredItemTrigger>> = Arr.bind(
+        revPath,
+        (menuValue, menuIndex) =>
+          // finding menuValue, it should match the trigger
+          getTriggerData(
+            menuValue,
+            getItemByValue,
+            revPath.slice(0, menuIndex + 1)
+          ).fold(
+            () => (primary.get().is(menuValue) ? [] : [Option.none()]),
+            (data) => [Option.some(data)]
+          )
       );
 
       // Convert List<Option<X>> to Option<List<X>> if ALL are Some
@@ -98,35 +137,37 @@ const init = (): LayeredState => {
   };
 
   // Given an item, return a list of all menus including the one that it triggered (if there is one)
-  const expand = (itemValue: string): Option<string[]> => Obj.get(expansions.get(), itemValue).map((menu: string) => {
-    const current: string[] = Obj.get(paths.get(), itemValue).getOr([ ]);
-    return [ menu ].concat(current);
-  });
+  const expand = (itemValue: string): Option<string[]> =>
+    Obj.get(expansions.get(), itemValue).map((menu: string) => {
+      const current: string[] = Obj.get(paths.get(), itemValue).getOr([]);
+      return [menu].concat(current);
+    });
 
   const collapse = (itemValue: string): Option<string[]> =>
     // Look up which key has the itemValue
-    Obj.get(paths.get(), itemValue).bind((path) => path.length > 1 ? Option.some(path.slice(1)) : Option.none());
+    Obj.get(paths.get(), itemValue).bind((path) =>
+      path.length > 1 ? Option.some(path.slice(1)) : Option.none()
+    );
 
-  const refresh = (itemValue: string): Option<string[]> => Obj.get(paths.get(), itemValue);
+  const refresh = (itemValue: string): Option<string[]> =>
+    Obj.get(paths.get(), itemValue);
 
-  const getPreparedMenu = (menuValue: string): Option<AlloyComponent> => lookupMenu(menuValue).bind(extractPreparedMenu);
+  const getPreparedMenu = (menuValue: string): Option<AlloyComponent> =>
+    lookupMenu(menuValue).bind(extractPreparedMenu);
 
-  const lookupMenu = (menuValue: string): Option<MenuPreparation> => Obj.get(
-    menus.get(),
-    menuValue
-  );
+  const lookupMenu = (menuValue: string): Option<MenuPreparation> =>
+    Obj.get(menus.get(), menuValue);
 
-  const lookupItem = (itemValue: string): Option<string> => Obj.get(
-    expansions.get(),
-    itemValue
-  );
+  const lookupItem = (itemValue: string): Option<string> =>
+    Obj.get(expansions.get(), itemValue);
 
   const otherMenus = (path: string[]): string[] => {
     const menuValues = directory.get();
     return Arr.difference(Obj.keys(menuValues), path);
   };
 
-  const getPrimary = (): Option<AlloyComponent> => primary.get().bind(getPreparedMenu);
+  const getPrimary = (): Option<AlloyComponent> =>
+    primary.get().bind(getPreparedMenu);
 
   const getMenus = (): Record<string, MenuPreparation> => menus.get();
 
@@ -147,7 +188,8 @@ const init = (): LayeredState => {
   };
 };
 
-const extractPreparedMenu = (prep: MenuPreparation): Option<AlloyComponent> => prep.type === 'prepared' ? Option.some(prep.menu) : Option.none();
+const extractPreparedMenu = (prep: MenuPreparation): Option<AlloyComponent> =>
+  prep.type === 'prepared' ? Option.some(prep.menu) : Option.none();
 
 export const LayeredState = {
   init,

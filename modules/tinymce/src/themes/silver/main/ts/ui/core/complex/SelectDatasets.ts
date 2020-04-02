@@ -9,17 +9,19 @@ import { Arr, Obj } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { SelectData } from './BespokeSelect';
 
-const process = (rawFormats): Array<{ title: string; format: string}> => Arr.map(rawFormats, (item) => {
-  let title = item, format = item;
-  // Allow text=value block formats
-  const values = item.split('=');
-  if (values.length > 1) {
-    title = values[0];
-    format = values[1];
-  }
+const process = (rawFormats): Array<{ title: string; format: string }> =>
+  Arr.map(rawFormats, (item) => {
+    let title = item,
+      format = item;
+    // Allow text=value block formats
+    const values = item.split('=');
+    if (values.length > 1) {
+      title = values[0];
+      format = values[1];
+    }
 
-  return { title, format };
-});
+    return { title, format };
+  });
 
 export interface BasicSelectItem {
   title: string;
@@ -37,12 +39,17 @@ export interface AdvancedSelectDataset extends SelectData {
 
 export type SelectDataset = BasicSelectDataset | AdvancedSelectDataset;
 
-const buildBasicStaticDataset = (data: Array<BasicSelectItem>): BasicSelectDataset => ({
+const buildBasicStaticDataset = (
+  data: Array<BasicSelectItem>
+): BasicSelectDataset => ({
   type: 'basic',
   data
 });
 
-export enum Delimiter { SemiColon, Space }
+export enum Delimiter {
+  SemiColon,
+  Space
+}
 
 const split = (rawFormats: string, delimiter: Delimiter): string[] => {
   if (delimiter === Delimiter.SemiColon) {
@@ -52,7 +59,12 @@ const split = (rawFormats: string, delimiter: Delimiter): string[] => {
   }
 };
 
-const buildBasicSettingsDataset = (editor: Editor, settingName, defaults, delimiter: Delimiter): BasicSelectDataset => {
+const buildBasicSettingsDataset = (
+  editor: Editor,
+  settingName,
+  defaults,
+  delimiter: Delimiter
+): BasicSelectDataset => {
   const rawFormats = Obj.get(editor.settings, settingName).getOr(defaults);
   const data = process(split(rawFormats, delimiter));
   return {
@@ -61,7 +73,4 @@ const buildBasicSettingsDataset = (editor: Editor, settingName, defaults, delimi
   };
 };
 
-export {
-  buildBasicSettingsDataset,
-  buildBasicStaticDataset
-};
+export { buildBasicSettingsDataset, buildBasicStaticDataset };

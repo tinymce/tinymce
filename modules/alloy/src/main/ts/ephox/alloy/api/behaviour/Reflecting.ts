@@ -13,6 +13,4 @@ const Reflecting: ReflectingBehaviour<any, any> = Behaviour.create({
   state: ReflectingState
 });
 
-export {
-  Reflecting
-};
+export { Reflecting };

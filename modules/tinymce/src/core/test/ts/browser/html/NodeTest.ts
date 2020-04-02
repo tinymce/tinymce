@@ -3,7 +3,10 @@ import { Pipeline } from '@ephox/agar';
 import Node from 'tinymce/core/api/html/Node';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (
+  success,
+  failure
+) {
   const suite = LegacyUnit.createSuite();
 
   const ok = function (value, label?) {
@@ -71,8 +74,16 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
     ok(root.lastChild === node, 'root.firstChild');
     ok(root.firstChild.next === node, 'root.firstChild.next');
     LegacyUnit.equal(root.firstChild.prev, undefined, 'root.firstChild.prev');
-    LegacyUnit.equal(root.firstChild.firstChild, undefined, 'root.firstChild.firstChild');
-    LegacyUnit.equal(root.firstChild.lastChild, undefined, 'root.firstChild.lastChild');
+    LegacyUnit.equal(
+      root.firstChild.firstChild,
+      undefined,
+      'root.firstChild.firstChild'
+    );
+    LegacyUnit.equal(
+      root.firstChild.lastChild,
+      undefined,
+      'root.firstChild.lastChild'
+    );
     ok(node2.parent === root, 'node2.parent === root');
     ok(node2.next === node, 'node2.next');
     LegacyUnit.equal(node2.prev, undefined, 'node2.prev');
@@ -287,8 +298,14 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
     node.attr('attr2', 'value2');
     LegacyUnit.equal(node.attr('attr1'), 'value1');
     LegacyUnit.equal(node.attr('attr2'), 'value2');
-    LegacyUnit.deepEqual(node.attributes, [{ name: 'attr1', value: 'value1' }, { name: 'attr2', value: 'value2' }]);
-    LegacyUnit.deepEqual(node.attributes.map, { attr1: 'value1', attr2: 'value2' });
+    LegacyUnit.deepEqual(node.attributes, [
+      { name: 'attr1', value: 'value1' },
+      { name: 'attr2', value: 'value2' }
+    ]);
+    LegacyUnit.deepEqual(node.attributes.map, {
+      attr1: 'value1',
+      attr2: 'value2'
+    });
 
     node = new Node('b', 1);
     LegacyUnit.deepEqual(node.attributes, []);
@@ -300,7 +317,10 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
 
     node = new Node('b', 1);
     node.attr({ a: '1', b: '2' });
-    LegacyUnit.deepEqual(node.attributes, [{ name: 'a', value: '1' }, { name: 'b', value: '2' }]);
+    LegacyUnit.deepEqual(node.attributes, [
+      { name: 'a', value: '1' },
+      { name: 'b', value: '2' }
+    ]);
     LegacyUnit.deepEqual(node.attributes.map, { a: '1', b: '2' });
 
     node = new Node('b', 1);
@@ -340,8 +360,14 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
     clone = node.clone();
     LegacyUnit.equal(clone.name, 'b');
     LegacyUnit.equal(clone.type, 1);
-    LegacyUnit.deepEqual(clone.attributes, [{ name: 'class', value: 'class' }, { name: 'title', value: 'title' }]);
-    LegacyUnit.deepEqual(clone.attributes.map, { class: 'class', title: 'title' });
+    LegacyUnit.deepEqual(clone.attributes, [
+      { name: 'class', value: 'class' },
+      { name: 'title', value: 'title' }
+    ]);
+    LegacyUnit.deepEqual(clone.attributes.map, {
+      class: 'class',
+      title: 'title'
+    });
   });
 
   suite.test('unwrap', function () {
@@ -417,14 +443,27 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', function (success, fail
 
     root = new Node('#frag', 11);
     node1 = root.append(new Node('span', 1));
-    LegacyUnit.equal(root.isEmpty({ img: 1 }, {}, isSpan), false, 'Should be false since the predicate says true.');
+    LegacyUnit.equal(
+      root.isEmpty({ img: 1 }, {}, isSpan),
+      false,
+      'Should be false since the predicate says true.'
+    );
 
     root = new Node('#frag', 11);
     node1 = root.append(new Node('b', 1));
-    LegacyUnit.equal(root.isEmpty({ img: 1 }, {}, isSpan), true, 'Should be true since the predicate says false.');
+    LegacyUnit.equal(
+      root.isEmpty({ img: 1 }, {}, isSpan),
+      true,
+      'Should be true since the predicate says false.'
+    );
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
-    success();
-  }, failure);
+  Pipeline.async(
+    {},
+    suite.toSteps({}),
+    function () {
+      success();
+    },
+    failure
+  );
 });

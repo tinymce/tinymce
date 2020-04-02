@@ -13,12 +13,17 @@ export interface InitialDockingPosition {
   bounds: Bounds;
 }
 
-export interface DockingBehaviour extends Behaviour.AlloyBehaviour<DockingConfigSpec, DockingConfig> {
-  config: (config: DockingConfigSpec) => Behaviour.NamedConfiguredBehaviour<DockingConfigSpec, DockingConfig>;
+export interface DockingBehaviour
+  extends Behaviour.AlloyBehaviour<DockingConfigSpec, DockingConfig> {
+  config: (
+    config: DockingConfigSpec
+  ) => Behaviour.NamedConfiguredBehaviour<DockingConfigSpec, DockingConfig>;
   refresh: (component: AlloyComponent) => void;
   reset: (component: AlloyComponent) => void;
   isDocked: (component: AlloyComponent) => boolean;
-  getInitialPosition: (component: AlloyComponent) => Option<InitialDockingPosition>;
+  getInitialPosition: (
+    component: AlloyComponent
+  ) => Option<InitialDockingPosition>;
 }
 
 export interface DockingContext {

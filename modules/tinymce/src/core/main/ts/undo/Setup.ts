@@ -11,7 +11,11 @@ import * as Levels from './Levels';
 import { UndoManager, Locks, UndoLevel } from './UndoManagerTypes';
 import { endTyping, setTyping } from './TypingState';
 
-export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: Locks) => {
+export const registerEvents = (
+  editor: Editor,
+  undoManager: UndoManager,
+  locks: Locks
+) => {
   const isFirstTypedCharacter = Cell(false);
 
   const addNonTypingUndoLevel = (e?) => {
@@ -59,7 +63,12 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
       return;
     }
 
-    if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode === 45 || e.ctrlKey) {
+    if (
+      (keyCode >= 33 && keyCode <= 36) ||
+      (keyCode >= 37 && keyCode <= 40) ||
+      keyCode === 45 ||
+      e.ctrlKey
+    ) {
       addNonTypingUndoLevel();
       editor.nodeChanged();
     }
@@ -69,7 +78,12 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
     }
 
     // Fire a TypingUndo/Change event on the first character entered
-    if (isFirstTypedCharacter.get() && undoManager.typing && Levels.isEq(Levels.createFromEditor(editor), undoManager.data[0]) === false) {
+    if (
+      isFirstTypedCharacter.get() &&
+      undoManager.typing &&
+      Levels.isEq(Levels.createFromEditor(editor), undoManager.data[0]) ===
+        false
+    ) {
       if (editor.isDirty() === false) {
         editor.setDirty(true);
         editor.fire('change', { level: undoManager.data[0], lastLevel: null });
@@ -91,7 +105,11 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
     }
 
     // Is character position keys left,right,up,down,home,end,pgdown,pgup,enter
-    if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode === 45) {
+    if (
+      (keyCode >= 33 && keyCode <= 36) ||
+      (keyCode >= 37 && keyCode <= 40) ||
+      keyCode === 45
+    ) {
       if (undoManager.typing) {
         addNonTypingUndoLevel(e);
       }
@@ -101,7 +119,13 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
 
     // If key isn't Ctrl+Alt/AltGr
     const modKey = (e.ctrlKey && !e.altKey) || e.metaKey;
-    if ((keyCode < 16 || keyCode > 20) && keyCode !== 224 && keyCode !== 91 && !undoManager.typing && !modKey) {
+    if (
+      (keyCode < 16 || keyCode > 20) &&
+      keyCode !== 224 &&
+      keyCode !== 91 &&
+      !undoManager.typing &&
+      !modKey
+    ) {
       undoManager.beforeChange();
       setTyping(undoManager, true, locks);
       undoManager.add({} as UndoLevel, e);
@@ -116,13 +140,18 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
   });
 
   // Special inputType, currently only Chrome implements this: https://www.w3.org/TR/input-events-2/#x5.1.2-attributes
-  const isInsertReplacementText = (event) => event.inputType === 'insertReplacementText';
+  const isInsertReplacementText = (event) =>
+    event.inputType === 'insertReplacementText';
   // Safari just shows inputType `insertText` but with data set to null so we can use that
-  const isInsertTextDataNull = (event) => event.inputType === 'insertText' && event.data === null;
+  const isInsertTextDataNull = (event) =>
+    event.inputType === 'insertText' && event.data === null;
 
   // For detecting when user has replaced text using the browser built-in spell checker
   editor.on('input', (e) => {
-    if (e.inputType && (isInsertReplacementText(e) || isInsertTextDataNull(e))) {
+    if (
+      e.inputType &&
+      (isInsertReplacementText(e) || isInsertTextDataNull(e))
+    ) {
       addNonTypingUndoLevel(e);
     }
   });

@@ -14,11 +14,11 @@ UnitTest.asynctest('Throttler.adaptable', (success) => {
   throttler.throttle('frog');
 
   setTimeout(() => {
-    Assert.eq('eq', [ 'frog' ], data);
+    Assert.eq('eq', ['frog'], data);
     throttler.throttle('frog-goose');
     throttler.throttle('goose');
     setTimeout(() => {
-      Assert.eq('eq', [ 'frog', 'goose' ], data);
+      Assert.eq('eq', ['frog', 'goose'], data);
       success();
     }, 500);
   }, 500);
@@ -36,11 +36,11 @@ UnitTest.asynctest('Throttler.first', (success) => {
   throttler.throttle('frog');
 
   setTimeout(() => {
-    Assert.eq('eq', [ 'cat' ], data);
+    Assert.eq('eq', ['cat'], data);
     throttler.throttle('frog-goose');
     throttler.throttle('goose');
     setTimeout(() => {
-      Assert.eq('eq', [ 'cat', 'frog-goose' ], data);
+      Assert.eq('eq', ['cat', 'frog-goose'], data);
       success();
     }, 500);
   }, 500);
@@ -58,11 +58,11 @@ UnitTest.asynctest('Throttler.last', (success) => {
   throttler.throttle('frog');
 
   setTimeout(() => {
-    Assert.eq('eq', [ 'frog' ], data);
+    Assert.eq('eq', ['frog'], data);
     throttler.throttle('frog-goose');
     throttler.throttle('goose');
     setTimeout(() => {
-      Assert.eq('eq', [ 'frog', 'goose' ], data);
+      Assert.eq('eq', ['frog', 'goose'], data);
       success();
     }, 500);
   }, 500);

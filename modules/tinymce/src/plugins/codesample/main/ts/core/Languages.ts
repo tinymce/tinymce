@@ -35,13 +35,13 @@ const getLanguages = (editor: Editor): LanguageSpec[] => {
 const getCurrentLanguage = (editor: Editor, fallback: string): string => {
   const node = CodeSample.getSelectedCodeSample(editor);
 
-  return node.fold(() => fallback, (n) => {
-    const matches = n.className.match(/language-(\w+)/);
-    return matches ? matches[1] : fallback;
-  });
+  return node.fold(
+    () => fallback,
+    (n) => {
+      const matches = n.className.match(/language-(\w+)/);
+      return matches ? matches[1] : fallback;
+    }
+  );
 };
 
-export {
-  getLanguages,
-  getCurrentLanguage
-};
+export { getLanguages, getCurrentLanguage };

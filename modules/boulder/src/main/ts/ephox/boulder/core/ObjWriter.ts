@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 
-const wrap = function <K, V> (key: string, value: V): { [key: string]: V} {
+const wrap = function <K, V>(key: string, value: V): { [key: string]: V } {
   return { [key]: value };
 };
 
@@ -12,7 +12,4 @@ const wrapAll = function (keyvalues) {
   return r;
 };
 
-export {
-  wrap,
-  wrapAll
-};
+export { wrap, wrapAll };

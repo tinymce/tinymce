@@ -1,18 +1,39 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { extractBase64DataUris, Base64Extract, restoreDataUris, UriMap, parseDataUri } from 'tinymce/core/html/Base64Uris';
+import {
+  extractBase64DataUris,
+  Base64Extract,
+  restoreDataUris,
+  UriMap,
+  parseDataUri
+} from 'tinymce/core/html/Base64Uris';
 import { Logger } from '@ephox/agar';
 import { Obj, Option } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('Base64Uris Test', () => {
-  const replacePrefix = (value: string, prefix: string) => value.replace(/\$prefix/g, prefix);
-  const replaceUrisPrefix = (uris: UriMap, prefix: string): UriMap => Obj.tupleMap(uris, (value, key) => ({ k: replacePrefix(key, prefix), v: value }));
+  const replacePrefix = (value: string, prefix: string) =>
+    value.replace(/\$prefix/g, prefix);
+  const replaceUrisPrefix = (uris: UriMap, prefix: string): UriMap =>
+    Obj.tupleMap(uris, (value, key) => ({
+      k: replacePrefix(key, prefix),
+      v: value
+    }));
 
-  const testExtract = (label: string, html: string, expectedExtract: Partial<Base64Extract>) => {
+  const testExtract = (
+    label: string,
+    html: string,
+    expectedExtract: Partial<Base64Extract>
+  ) => {
     Logger.sync(label, () => {
       const actualExtract = extractBase64DataUris(html);
-      const expectedHtml = replacePrefix(expectedExtract.html, actualExtract.prefix);
-      const expectedUris = replaceUrisPrefix(expectedExtract.uris, actualExtract.prefix);
+      const expectedHtml = replacePrefix(
+        expectedExtract.html,
+        actualExtract.prefix
+      );
+      const expectedUris = replaceUrisPrefix(
+        expectedExtract.uris,
+        actualExtract.prefix
+      );
 
       Assert.eq('Should be expected html', expectedHtml, actualExtract.html);
       Assert.eq('Should have expected uris', expectedUris, actualExtract.uris);
@@ -35,7 +56,7 @@ UnitTest.test('Base64Uris Test', () => {
       {
         html: '<img src="$prefix_0">',
         uris: {
-          $prefix_0: 'data:image/gif;base64,R0/yw==',
+          $prefix_0: 'data:image/gif;base64,R0/yw=='
         }
       }
     );
@@ -46,7 +67,7 @@ UnitTest.test('Base64Uris Test', () => {
       {
         html: 'a<img src="$prefix_0">b',
         uris: {
-          $prefix_0: 'data:image/gif;base64,R0/yw==',
+          $prefix_0: 'data:image/gif;base64,R0/yw=='
         }
       }
     );
@@ -71,7 +92,7 @@ UnitTest.test('Base64Uris Test', () => {
         html: '<img src="$prefix_0"><img src="$prefix_1">',
         uris: {
           $prefix_0: 'data:image/svg+xml;base64,R0/yw==',
-          $prefix_1: 'data:image/x-icon;base64,R1/yw==',
+          $prefix_1: 'data:image/x-icon;base64,R1/yw=='
         }
       }
     );
@@ -82,13 +103,18 @@ UnitTest.test('Base64Uris Test', () => {
       {
         html: '<img src="$prefix_0">',
         uris: {
-          $prefix_0: 'data:some/thing;base64,R2/yw==',
+          $prefix_0: 'data:some/thing;base64,R2/yw=='
         }
       }
     );
   });
 
-  const testRestoreDataUris = (label: string, inputResult: Base64Extract, inputHtml: string, expectedHtml: string) => {
+  const testRestoreDataUris = (
+    label: string,
+    inputResult: Base64Extract,
+    inputHtml: string,
+    expectedHtml: string
+  ) => {
     Logger.sync(label, () => {
       const actualHtml = restoreDataUris(inputHtml, inputResult);
 
@@ -114,10 +140,30 @@ UnitTest.test('Base64Uris Test', () => {
   });
 
   Logger.sync('parseDataUri', () => {
-    KAssert.eqOption('Plain text mime', Option.some({ type: 'image/png', data: 'R0/yw==' }), parseDataUri('data:image/png;base64,R0/yw=='));
-    KAssert.eqOption('Mime with dash', Option.some({ type: 'image/x-icon', data: 'R1/yw==' }), parseDataUri('data:image/x-icon;base64,R1/yw=='));
-    KAssert.eqOption('Mime with plus', Option.some({ type: 'image/svg+xml', data: 'R2/yw==' }), parseDataUri('data:image/svg+xml;base64,R2/yw=='));
-    KAssert.eqOption('Data uri without mime', Option.none(), parseDataUri('data:base64,R3/yw=='));
-    KAssert.eqOption('Data uri without base64', Option.none(), parseDataUri('data:image/svg+xml,R4/yw=='));
+    KAssert.eqOption(
+      'Plain text mime',
+      Option.some({ type: 'image/png', data: 'R0/yw==' }),
+      parseDataUri('data:image/png;base64,R0/yw==')
+    );
+    KAssert.eqOption(
+      'Mime with dash',
+      Option.some({ type: 'image/x-icon', data: 'R1/yw==' }),
+      parseDataUri('data:image/x-icon;base64,R1/yw==')
+    );
+    KAssert.eqOption(
+      'Mime with plus',
+      Option.some({ type: 'image/svg+xml', data: 'R2/yw==' }),
+      parseDataUri('data:image/svg+xml;base64,R2/yw==')
+    );
+    KAssert.eqOption(
+      'Data uri without mime',
+      Option.none(),
+      parseDataUri('data:base64,R3/yw==')
+    );
+    KAssert.eqOption(
+      'Data uri without base64',
+      Option.none(),
+      parseDataUri('data:image/svg+xml,R4/yw==')
+    );
   });
 });

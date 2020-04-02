@@ -15,7 +15,11 @@ import DOMUtils from '../api/dom/DOMUtils';
 import { isCaretNode } from '../fmt/FormatContainer';
 import { CaretPosition } from '../caret/CaretPosition';
 
-const findParent = (node: Node, rootNode: Node, predicate: (node: Node) => boolean) => {
+const findParent = (
+  node: Node,
+  rootNode: Node,
+  predicate: (node: Node) => boolean
+) => {
   while (node && node !== rootNode) {
     if (predicate(node)) {
       return node;
@@ -27,20 +31,31 @@ const findParent = (node: Node, rootNode: Node, predicate: (node: Node) => boole
   return null;
 };
 
-const hasParent = (node: Node, rootNode: Node, predicate: (node: Node) => boolean) => findParent(node, rootNode, predicate) !== null;
+const hasParent = (
+  node: Node,
+  rootNode: Node,
+  predicate: (node: Node) => boolean
+) => findParent(node, rootNode, predicate) !== null;
 
-const hasParentWithName = (node: Node, rootNode: Node, name: string) => hasParent(node, rootNode, function (node) {
-  return node.nodeName === name;
-});
+const hasParentWithName = (node: Node, rootNode: Node, name: string) =>
+  hasParent(node, rootNode, function (node) {
+    return node.nodeName === name;
+  });
 
 const isTable = (node: Node) => node && node.nodeName === 'TABLE';
 
-const isTableCell = (node: Node) => node && /^(TD|TH|CAPTION)$/.test(node.nodeName);
+const isTableCell = (node: Node) =>
+  node && /^(TD|TH|CAPTION)$/.test(node.nodeName);
 
-const isCeFalseCaretContainer = (node: Node, rootNode: Node) => CaretContainer.isCaretContainer(node) && hasParent(node, rootNode, isCaretNode) === false;
+const isCeFalseCaretContainer = (node: Node, rootNode: Node) =>
+  CaretContainer.isCaretContainer(node) &&
+  hasParent(node, rootNode, isCaretNode) === false;
 
 const hasBrBeforeAfter = (dom: DOMUtils, node: Node, left: boolean) => {
-  const walker = new TreeWalker(node, dom.getParent(node.parentNode, dom.isBlock) || dom.getRoot());
+  const walker = new TreeWalker(
+    node,
+    dom.getParent(node.parentNode, dom.isBlock) || dom.getRoot()
+  );
 
   while ((node = walker[left ? 'prev' : 'next']())) {
     if (NodeType.isBr(node)) {
@@ -49,7 +64,8 @@ const hasBrBeforeAfter = (dom: DOMUtils, node: Node, left: boolean) => {
   }
 };
 
-const isPrevNode = (node: Node, name: string) => node.previousSibling && node.previousSibling.nodeName === name;
+const isPrevNode = (node: Node, name: string) =>
+  node.previousSibling && node.previousSibling.nodeName === name;
 
 const hasContentEditableFalseParent = (body: HTMLElement, node: Node) => {
   while (node && node !== body) {
@@ -65,32 +81,51 @@ const hasContentEditableFalseParent = (body: HTMLElement, node: Node) => {
 
 // Walks the dom left/right to find a suitable text node to move the endpoint into
 // It will only walk within the current parent block or body and will stop if it hits a block or a BR/IMG
-const findTextNodeRelative = (dom: DOMUtils, isAfterNode: boolean, collapsed: boolean, left: boolean, startNode: Node): Option<CaretPosition> => {
+const findTextNodeRelative = (
+  dom: DOMUtils,
+  isAfterNode: boolean,
+  collapsed: boolean,
+  left: boolean,
+  startNode: Node
+): Option<CaretPosition> => {
   let lastInlineElement;
   const body = dom.getRoot();
   let node;
   const nonEmptyElementsMap = dom.schema.getNonEmptyElements();
 
-  const parentBlockContainer = dom.getParent(startNode.parentNode, dom.isBlock) || body;
+  const parentBlockContainer =
+    dom.getParent(startNode.parentNode, dom.isBlock) || body;
 
   // Lean left before the BR element if it's the only BR within a block element. Gecko bug: #6680
   // This: <p><br>|</p> becomes <p>|<br></p>
-  if (left && NodeType.isBr(startNode) && isAfterNode && dom.isEmpty(parentBlockContainer)) {
-    return Option.some(CaretPosition(startNode.parentNode, dom.nodeIndex(startNode)));
+  if (
+    left &&
+    NodeType.isBr(startNode) &&
+    isAfterNode &&
+    dom.isEmpty(parentBlockContainer)
+  ) {
+    return Option.some(
+      CaretPosition(startNode.parentNode, dom.nodeIndex(startNode))
+    );
   }
 
   // Walk left until we hit a text node we can move to or a block/br/img
   const walker = new TreeWalker(startNode, parentBlockContainer);
   while ((node = walker[left ? 'prev' : 'next']())) {
     // Break if we hit a non content editable node
-    if (dom.getContentEditableParent(node) === 'false' || isCeFalseCaretContainer(node, body)) {
+    if (
+      dom.getContentEditableParent(node) === 'false' ||
+      isCeFalseCaretContainer(node, body)
+    ) {
       return Option.none();
     }
 
     // Found text node that has a length
     if (NodeType.isText(node) && node.nodeValue.length > 0) {
       if (hasParentWithName(node, body, 'A') === false) {
-        return Option.some(CaretPosition(node, left ? node.nodeValue.length : 0));
+        return Option.some(
+          CaretPosition(node, left ? node.nodeValue.length : 0)
+        );
       }
 
       return Option.none();
@@ -112,15 +147,23 @@ const findTextNodeRelative = (dom: DOMUtils, isAfterNode: boolean, collapsed: bo
   return Option.none();
 };
 
-const normalizeEndPoint = (dom: DOMUtils, collapsed: boolean, start: boolean, rng: Range): Option<CaretPosition> => {
+const normalizeEndPoint = (
+  dom: DOMUtils,
+  collapsed: boolean,
+  start: boolean,
+  rng: Range
+): Option<CaretPosition> => {
   let container, offset;
   const body = dom.getRoot();
   let node, nonEmptyElementsMap;
-  let directionLeft, isAfterNode, normalized = false;
+  let directionLeft,
+    isAfterNode,
+    normalized = false;
 
   container = rng[(start ? 'start' : 'end') + 'Container'];
   offset = rng[(start ? 'start' : 'end') + 'Offset'];
-  isAfterNode = NodeType.isElement(container) && offset === container.childNodes.length;
+  isAfterNode =
+    NodeType.isElement(container) && offset === container.childNodes.length;
   nonEmptyElementsMap = dom.schema.getNonEmptyElements();
   directionLeft = start;
 
@@ -128,7 +171,10 @@ const normalizeEndPoint = (dom: DOMUtils, collapsed: boolean, start: boolean, rn
     return Option.none();
   }
 
-  if (NodeType.isElement(container) && offset > container.childNodes.length - 1) {
+  if (
+    NodeType.isElement(container) &&
+    offset > container.childNodes.length - 1
+  ) {
     directionLeft = false;
   }
 
@@ -156,16 +202,23 @@ const normalizeEndPoint = (dom: DOMUtils, collapsed: boolean, start: boolean, rn
 
     // Resolve the index
     if (container.hasChildNodes()) {
-      offset = Math.min(!directionLeft && offset > 0 ? offset - 1 : offset, container.childNodes.length - 1);
+      offset = Math.min(
+        !directionLeft && offset > 0 ? offset - 1 : offset,
+        container.childNodes.length - 1
+      );
       container = container.childNodes[offset];
-      offset = NodeType.isText(container) && isAfterNode ? container.data.length : 0;
+      offset =
+        NodeType.isText(container) && isAfterNode ? container.data.length : 0;
 
       // Don't normalize non collapsed selections like <p>[a</p><table></table>]
       if (!collapsed && container === body.lastChild && isTable(container)) {
         return Option.none();
       }
 
-      if (hasContentEditableFalseParent(body, container) || CaretContainer.isCaretContainer(container)) {
+      if (
+        hasContentEditableFalseParent(body, container) ||
+        CaretContainer.isCaretContainer(container)
+      ) {
         return Option.none();
       }
 
@@ -176,7 +229,10 @@ const normalizeEndPoint = (dom: DOMUtils, collapsed: boolean, start: boolean, rn
         const walker = new TreeWalker(container, body);
 
         do {
-          if (NodeType.isContentEditableFalse(node) || CaretContainer.isCaretContainer(node)) {
+          if (
+            NodeType.isContentEditableFalse(node) ||
+            CaretContainer.isCaretContainer(node)
+          ) {
             normalized = false;
             break;
           }
@@ -190,7 +246,10 @@ const normalizeEndPoint = (dom: DOMUtils, collapsed: boolean, start: boolean, rn
           }
 
           // Found a BR/IMG/PRE element that we can place the caret before
-          if (nonEmptyElementsMap[node.nodeName.toLowerCase()] && !isTableCell(node)) {
+          if (
+            nonEmptyElementsMap[node.nodeName.toLowerCase()] &&
+            !isTableCell(node)
+          ) {
             offset = dom.nodeIndex(node);
             container = node.parentNode;
 
@@ -202,7 +261,7 @@ const normalizeEndPoint = (dom: DOMUtils, collapsed: boolean, start: boolean, rn
             normalized = true;
             break;
           }
-        } while ((node = (directionLeft ? walker.next() : walker.prev())));
+        } while ((node = directionLeft ? walker.next() : walker.prev()));
       }
     }
   }
@@ -213,11 +272,13 @@ const normalizeEndPoint = (dom: DOMUtils, collapsed: boolean, start: boolean, rn
     // Becomes: <b>x|</b><i>x</i>
     // Seems that only gecko has issues with this
     if (NodeType.isText(container) && offset === 0) {
-      findTextNodeRelative(dom, isAfterNode, collapsed, true, container).each(function (pos) {
-        container = pos.container();
-        offset = pos.offset();
-        normalized = true;
-      });
+      findTextNodeRelative(dom, isAfterNode, collapsed, true, container).each(
+        function (pos) {
+          container = pos.container();
+          offset = pos.offset();
+          normalized = true;
+        }
+      );
     }
 
     // Lean left into empty inline elements when the caret is before a BR
@@ -234,13 +295,20 @@ const normalizeEndPoint = (dom: DOMUtils, collapsed: boolean, start: boolean, rn
         node = container.childNodes[offset - 1];
       }
 
-      if (node && NodeType.isBr(node) && !isPrevNode(node, 'A') &&
-        !hasBrBeforeAfter(dom, node, false) && !hasBrBeforeAfter(dom, node, true)) {
-        findTextNodeRelative(dom, isAfterNode, collapsed, true, node).each(function (pos) {
-          container = pos.container();
-          offset = pos.offset();
-          normalized = true;
-        });
+      if (
+        node &&
+        NodeType.isBr(node) &&
+        !isPrevNode(node, 'A') &&
+        !hasBrBeforeAfter(dom, node, false) &&
+        !hasBrBeforeAfter(dom, node, true)
+      ) {
+        findTextNodeRelative(dom, isAfterNode, collapsed, true, node).each(
+          function (pos) {
+            container = pos.container();
+            offset = pos.offset();
+            normalized = true;
+          }
+        );
       }
     }
   }
@@ -248,19 +316,29 @@ const normalizeEndPoint = (dom: DOMUtils, collapsed: boolean, start: boolean, rn
   // Lean the start of the selection right if possible
   // So this: x[<b>x]</b>
   // Becomes: x<b>[x]</b>
-  if (directionLeft && !collapsed && NodeType.isText(container) && offset === container.nodeValue.length) {
-    findTextNodeRelative(dom, isAfterNode, collapsed, false, container).each(function (pos) {
-      container = pos.container();
-      offset = pos.offset();
-      normalized = true;
-    });
+  if (
+    directionLeft &&
+    !collapsed &&
+    NodeType.isText(container) &&
+    offset === container.nodeValue.length
+  ) {
+    findTextNodeRelative(dom, isAfterNode, collapsed, false, container).each(
+      function (pos) {
+        container = pos.container();
+        offset = pos.offset();
+        normalized = true;
+      }
+    );
   }
 
-  return normalized ? Option.some(CaretPosition(container, offset)) : Option.none();
+  return normalized
+    ? Option.some(CaretPosition(container, offset))
+    : Option.none();
 };
 
 const normalize = (dom: DOMUtils, rng: Range): Option<Range> => {
-  const collapsed = rng.collapsed, normRng = rng.cloneRange();
+  const collapsed = rng.collapsed,
+    normRng = rng.cloneRange();
   const startPos = CaretPosition.fromRangeStart(rng);
 
   normalizeEndPoint(dom, collapsed, true, normRng).each(function (pos) {
@@ -284,6 +362,4 @@ const normalize = (dom: DOMUtils, rng: Range): Option<Range> => {
   return RangeCompare.isEq(rng, normRng) ? Option.none() : Option.some(normRng);
 };
 
-export {
-  normalize
-};
+export { normalize };

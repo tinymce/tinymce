@@ -34,15 +34,15 @@ export interface WriterSettings {
 }
 
 interface Writer {
-  cdata (text: string): void;
-  comment (text: string): void;
-  doctype (text: string): void;
-  end (name: string): void;
-  getContent (): string;
-  pi (name: string, text: string): void;
-  reset (): void;
-  start (name: string, attrs?: Attributes, empty?: boolean): void;
-  text (text: string, raw?: boolean): void;
+  cdata(text: string): void;
+  comment(text: string): void;
+  doctype(text: string): void;
+  end(name: string): void;
+  getContent(): string;
+  pi(name: string, text: string): void;
+  reset(): void;
+  start(name: string, attrs?: Attributes, empty?: boolean): void;
+  text(text: string, raw?: boolean): void;
 }
 
 const Writer = function (settings?: WriterSettings): Writer {
@@ -53,7 +53,10 @@ const Writer = function (settings?: WriterSettings): Writer {
   indent = settings.indent;
   indentBefore = makeMap(settings.indent_before || '');
   indentAfter = makeMap(settings.indent_after || '');
-  encode = Entities.getEncodeFunc(settings.entity_encoding || 'raw', settings.entities);
+  encode = Entities.getEncodeFunc(
+    settings.entity_encoding || 'raw',
+    settings.entities
+  );
   htmlOutput = settings.element_format === 'html';
 
   return {

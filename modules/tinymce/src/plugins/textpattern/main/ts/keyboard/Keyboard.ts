@@ -15,16 +15,20 @@ import { PatternSet } from '../core/PatternTypes';
 import * as KeyHandler from './KeyHandler';
 
 const setup = function (editor: Editor, patternsState: Cell<PatternSet>) {
-  const charCodes = [ ',', '.', ';', ':', '!', '?' ];
-  const keyCodes = [ 32 ];
+  const charCodes = [',', '.', ';', ':', '!', '?'];
+  const keyCodes = [32];
 
-  editor.on('keydown', function (e: EditorEvent<KeyboardEvent>) {
-    if (e.keyCode === 13 && !VK.modifierPressed(e)) {
-      if (KeyHandler.handleEnter(editor, patternsState.get())) {
-        e.preventDefault();
+  editor.on(
+    'keydown',
+    function (e: EditorEvent<KeyboardEvent>) {
+      if (e.keyCode === 13 && !VK.modifierPressed(e)) {
+        if (KeyHandler.handleEnter(editor, patternsState.get())) {
+          e.preventDefault();
+        }
       }
-    }
-  }, true);
+    },
+    true
+  );
 
   editor.on('keyup', function (e: EditorEvent<KeyboardEvent>) {
     if (KeyHandler.checkKeyCode(keyCodes, e)) {
@@ -41,6 +45,4 @@ const setup = function (editor: Editor, patternsState: Cell<PatternSet>) {
   });
 };
 
-export {
-  setup
-};
+export { setup };

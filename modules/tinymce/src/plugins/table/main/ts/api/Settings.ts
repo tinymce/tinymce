@@ -12,10 +12,15 @@ export interface StringMap {
   [key: string]: string;
 }
 
-type ClassList = Array<{title: string; value: string}>;
-type ColorPickerCallback = (editor: Editor, pickValue: (value: string) => void, value: string) => void;
+type ClassList = Array<{ title: string; value: string }>;
+type ColorPickerCallback = (
+  editor: Editor,
+  pickValue: (value: string) => void,
+  value: string
+) => void;
 
-const defaultTableToolbar = 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol';
+const defaultTableToolbar =
+  'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol';
 
 const defaultStyles = {
   'border-collapse': 'collapse',
@@ -26,23 +31,40 @@ const defaultAttributes = {
   border: '1'
 };
 
-const getDefaultAttributes = (editor: Editor): StringMap => editor.getParam('table_default_attributes', defaultAttributes, 'object');
-const getDefaultStyles = (editor: Editor): StringMap => editor.getParam('table_default_styles', defaultStyles, 'object');
-const hasTableResizeBars = (editor: Editor): boolean => editor.getParam('table_resize_bars', true, 'boolean');
-const hasTabNavigation = (editor: Editor): boolean => editor.getParam('table_tab_navigation', true, 'boolean');
-const hasAdvancedCellTab = (editor: Editor): boolean => editor.getParam('table_cell_advtab', true, 'boolean');
-const hasAdvancedRowTab = (editor: Editor): boolean => editor.getParam('table_row_advtab', true, 'boolean');
-const hasAdvancedTableTab = (editor: Editor): boolean => editor.getParam('table_advtab', true, 'boolean');
-const hasAppearanceOptions = (editor: Editor): boolean => editor.getParam('table_appearance_options', true, 'boolean');
-const hasTableGrid = (editor: Editor): boolean => editor.getParam('table_grid', true, 'boolean');
-const shouldStyleWithCss = (editor: Editor): boolean => editor.getParam('table_style_by_css', false, 'boolean');
-const getCellClassList = (editor: Editor): ClassList => editor.getParam('table_cell_class_list', [], 'array');
-const getRowClassList = (editor: Editor): ClassList => editor.getParam('table_row_class_list', [], 'array');
-const getTableClassList = (editor: Editor): ClassList => editor.getParam('table_class_list', [], 'array');
-const getColorPickerCallback = (editor: Editor): ColorPickerCallback => editor.getParam('color_picker_callback');
-const isPercentagesForced = (editor: Editor): boolean => editor.getParam('table_responsive_width') === true;
-const isPixelsForced = (editor: Editor): boolean => editor.getParam('table_responsive_width') === false;
-const getToolbar = (editor: Editor): string => editor.getParam('table_toolbar', defaultTableToolbar);
+const getDefaultAttributes = (editor: Editor): StringMap =>
+  editor.getParam('table_default_attributes', defaultAttributes, 'object');
+const getDefaultStyles = (editor: Editor): StringMap =>
+  editor.getParam('table_default_styles', defaultStyles, 'object');
+const hasTableResizeBars = (editor: Editor): boolean =>
+  editor.getParam('table_resize_bars', true, 'boolean');
+const hasTabNavigation = (editor: Editor): boolean =>
+  editor.getParam('table_tab_navigation', true, 'boolean');
+const hasAdvancedCellTab = (editor: Editor): boolean =>
+  editor.getParam('table_cell_advtab', true, 'boolean');
+const hasAdvancedRowTab = (editor: Editor): boolean =>
+  editor.getParam('table_row_advtab', true, 'boolean');
+const hasAdvancedTableTab = (editor: Editor): boolean =>
+  editor.getParam('table_advtab', true, 'boolean');
+const hasAppearanceOptions = (editor: Editor): boolean =>
+  editor.getParam('table_appearance_options', true, 'boolean');
+const hasTableGrid = (editor: Editor): boolean =>
+  editor.getParam('table_grid', true, 'boolean');
+const shouldStyleWithCss = (editor: Editor): boolean =>
+  editor.getParam('table_style_by_css', false, 'boolean');
+const getCellClassList = (editor: Editor): ClassList =>
+  editor.getParam('table_cell_class_list', [], 'array');
+const getRowClassList = (editor: Editor): ClassList =>
+  editor.getParam('table_row_class_list', [], 'array');
+const getTableClassList = (editor: Editor): ClassList =>
+  editor.getParam('table_class_list', [], 'array');
+const getColorPickerCallback = (editor: Editor): ColorPickerCallback =>
+  editor.getParam('color_picker_callback');
+const isPercentagesForced = (editor: Editor): boolean =>
+  editor.getParam('table_responsive_width') === true;
+const isPixelsForced = (editor: Editor): boolean =>
+  editor.getParam('table_responsive_width') === false;
+const getToolbar = (editor: Editor): string =>
+  editor.getParam('table_toolbar', defaultTableToolbar);
 
 const getCloneElements = (editor: Editor): Option<string[]> => {
   const cloneElements = editor.getParam('table_clone_elements');
@@ -58,7 +80,9 @@ const getCloneElements = (editor: Editor): Option<string[]> => {
 
 const hasObjectResizing = (editor: Editor): boolean => {
   const objectResizing = editor.getParam('object_resizing', true);
-  return Type.isString(objectResizing) ? objectResizing === 'table' : objectResizing;
+  return Type.isString(objectResizing)
+    ? objectResizing === 'table'
+    : objectResizing;
 };
 
 export {

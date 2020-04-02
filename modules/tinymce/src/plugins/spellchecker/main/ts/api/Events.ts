@@ -15,7 +15,4 @@ const fireSpellcheckEnd = function (editor: Editor) {
   return editor.fire('SpellcheckEnd');
 };
 
-export {
-  fireSpellcheckStart,
-  fireSpellcheckEnd
-};
+export { fireSpellcheckStart, fireSpellcheckEnd };

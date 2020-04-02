@@ -17,11 +17,12 @@ const undoLevelDocument = Cell<Option<Document>>(Option.none());
 
 // We need to create a temporary document instead of using the global document since
 // innerHTML on a detached element will still make http requests to the images
-const lazyTempDocument = () => undoLevelDocument.get().getOrThunk(() => {
-  const doc = document.implementation.createHTMLDocument('undo');
-  undoLevelDocument.set(Option.some(doc));
-  return doc;
-});
+const lazyTempDocument = () =>
+  undoLevelDocument.get().getOrThunk(() => {
+    const doc = document.implementation.createHTMLDocument('undo');
+    undoLevelDocument.set(Option.some(doc));
+    return doc;
+  });
 
 const hasIframes = function (html: string) {
   return html.indexOf('</iframe>') !== -1;
@@ -53,25 +54,35 @@ const createFromEditor = function (editor: Editor): UndoLevel {
   fragments = Fragments.read(editor.getBody());
   trimmedFragments = Arr.bind(fragments, function (html) {
     const trimmed = TrimHtml.trimInternal(editor.serializer, html);
-    return trimmed.length > 0 ? [ trimmed ] : [];
+    return trimmed.length > 0 ? [trimmed] : [];
   });
   content = trimmedFragments.join('');
 
-  return hasIframes(content) ? createFragmentedLevel(trimmedFragments) : createCompleteLevel(content);
+  return hasIframes(content)
+    ? createFragmentedLevel(trimmedFragments)
+    : createCompleteLevel(content);
 };
 
-const applyToEditor = function (editor: Editor, level: UndoLevel, before: boolean) {
+const applyToEditor = function (
+  editor: Editor,
+  level: UndoLevel,
+  before: boolean
+) {
   if (level.type === UndoLevelType.Fragmented) {
     Fragments.write(level.fragments, editor.getBody());
   } else {
     editor.setContent(level.content, { format: 'raw' });
   }
 
-  editor.selection.moveToBookmark(before ? level.beforeBookmark : level.bookmark);
+  editor.selection.moveToBookmark(
+    before ? level.beforeBookmark : level.bookmark
+  );
 };
 
 const getLevelContent = function (level: UndoLevel): string {
-  return level.type === UndoLevelType.Fragmented ? level.fragments.join('') : level.content;
+  return level.type === UndoLevelType.Fragmented
+    ? level.fragments.join('')
+    : level.content;
 };
 
 const getCleanLevelContent = (level: UndoLevel): string => {
@@ -81,9 +92,13 @@ const getCleanLevelContent = (level: UndoLevel): string => {
   return Html.get(elm);
 };
 
-const hasEqualContent = (level1: UndoLevel, level2: UndoLevel): boolean => getLevelContent(level1) === getLevelContent(level2);
+const hasEqualContent = (level1: UndoLevel, level2: UndoLevel): boolean =>
+  getLevelContent(level1) === getLevelContent(level2);
 
-const hasEqualCleanedContent = (level1: UndoLevel, level2: UndoLevel): boolean => getCleanLevelContent(level1) === getCleanLevelContent(level2);
+const hasEqualCleanedContent = (
+  level1: UndoLevel,
+  level2: UndoLevel
+): boolean => getCleanLevelContent(level1) === getCleanLevelContent(level2);
 
 // Most of the time the contents is equal so it's faster to first check that using strings then fallback to a cleaned dom comparison
 const isEq = function (level1: UndoLevel, level2: UndoLevel): boolean {

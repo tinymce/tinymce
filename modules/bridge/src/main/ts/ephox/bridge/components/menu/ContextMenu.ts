@@ -15,7 +15,11 @@ export interface ContextSubMenu {
   getSubmenuItems: () => string | Array<ContextMenuContents>;
 }
 
-export type ContextMenuContents = string | ContextMenuItem | SeparatorMenuItemApi | ContextSubMenu;
+export type ContextMenuContents =
+  | string
+  | ContextMenuItem
+  | SeparatorMenuItemApi
+  | ContextSubMenu;
 
 export interface ContextMenuApi {
   update: (element: Element) => string | Array<ContextMenuContents>;

@@ -15,11 +15,12 @@ const htmlElement = function (scope: Window) {
 const isPrototypeOf = function (x: any): x is HTMLElement {
   // use Resolve to get the window object for x and just return undefined if it can't find it.
   // undefined scope later triggers using the global window.
-  const scope: Window | undefined = Resolve.resolve('ownerDocument.defaultView', x);
+  const scope: Window | undefined = Resolve.resolve(
+    'ownerDocument.defaultView',
+    x
+  );
 
   return htmlElement(scope).prototype.isPrototypeOf(x);
 };
 
-export {
-  isPrototypeOf
-};
+export { isPrototypeOf };

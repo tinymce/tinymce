@@ -7,7 +7,12 @@ import { Layouts } from '../../positioning/mode/Anchoring';
 import * as Dismissal from '../../sandbox/Dismissal';
 import * as Reposition from '../../sandbox/Reposition';
 import * as FloatingToolbarButtonSchema from '../../ui/schema/FloatingToolbarButtonSchema';
-import { FloatingToolbarButtonApis, FloatingToolbarButtonDetail, FloatingToolbarButtonSketcher, FloatingToolbarButtonSpec } from '../../ui/types/FloatingToolbarButtonTypes';
+import {
+  FloatingToolbarButtonApis,
+  FloatingToolbarButtonDetail,
+  FloatingToolbarButtonSketcher,
+  FloatingToolbarButtonSpec
+} from '../../ui/types/FloatingToolbarButtonTypes';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Coupling } from '../behaviour/Coupling';
 import { Focusing } from '../behaviour/Focusing';
@@ -33,27 +38,47 @@ const toggle = (button: AlloyComponent, externals: Record<string, any>) => {
   }
 };
 
-const position = (button: AlloyComponent, toolbar: AlloyComponent, detail: FloatingToolbarButtonDetail, layouts: Layouts | undefined) => {
+const position = (
+  button: AlloyComponent,
+  toolbar: AlloyComponent,
+  detail: FloatingToolbarButtonDetail,
+  layouts: Layouts | undefined
+) => {
   const bounds = detail.getBounds.map((bounder) => bounder());
   const sink = detail.lazySink(button).getOrDie();
 
-  Positioning.positionWithinBounds(sink, {
-    anchor: 'hotspot',
-    hotspot: button,
-    layouts,
-    overrides: {
-      maxWidthFunction: MaxWidth.expandable()
+  Positioning.positionWithinBounds(
+    sink,
+    {
+      anchor: 'hotspot',
+      hotspot: button,
+      layouts,
+      overrides: {
+        maxWidthFunction: MaxWidth.expandable()
+      }
     },
-  }, toolbar, bounds);
+    toolbar,
+    bounds
+  );
 };
 
-const setGroups = (button: AlloyComponent, toolbar: AlloyComponent, detail: FloatingToolbarButtonDetail, layouts: Layouts | undefined, groups: AlloySpec[]) => {
+const setGroups = (
+  button: AlloyComponent,
+  toolbar: AlloyComponent,
+  detail: FloatingToolbarButtonDetail,
+  layouts: Layouts | undefined,
+  groups: AlloySpec[]
+) => {
   Toolbar.setGroups(toolbar, groups);
   position(button, toolbar, detail, layouts);
   Toggling.on(button);
 };
 
-const makeSandbox = (button: AlloyComponent, spec: FloatingToolbarButtonSpec, detail: FloatingToolbarButtonDetail) => {
+const makeSandbox = (
+  button: AlloyComponent,
+  spec: FloatingToolbarButtonSpec,
+  detail: FloatingToolbarButtonDetail
+) => {
   const ariaOwner = AriaOwner.manager();
 
   const onOpen = (sandbox: AlloyComponent, toolbar: AlloyComponent) => {
@@ -78,46 +103,58 @@ const makeSandbox = (button: AlloyComponent, spec: FloatingToolbarButtonSpec, de
         id: ariaOwner.id
       }
     },
-    behaviours: Behaviour.derive(
-      [
-        Keying.config({
-          mode: 'special',
-          onEscape: (comp) => {
-            Sandboxing.close(comp);
-            return Option.some<boolean>(true);
-          }
-        }),
-        Sandboxing.config({
-          onOpen,
-          onClose,
-          isPartOf(container: AlloyComponent, data: AlloyComponent, queryElem: Element): boolean {
-            return ComponentStructure.isPartOf(data, queryElem) || ComponentStructure.isPartOf(button, queryElem);
-          },
-          getAttachPoint() {
-            return detail.lazySink(button).getOrDie();
-          }
-        }),
-        Receiving.config({
-          channels: {
-            ...Dismissal.receivingChannel({
-              isExtraPart: Fun.never,
-              ...detail.fireDismissalEventInstead.map((fe) => ({ fireEventInstead: { event: fe.event }} as any)).getOr({ })
-            }),
-            ...Reposition.receivingChannel({
-              doReposition: () => {
-                Sandboxing.getState(Coupling.getCoupled(button, 'toolbarSandbox')).each((toolbar) => {
-                  position(button, toolbar, detail, spec.layouts);
-                });
-              }
-            })
-          }
-        })
-      ]
-    )
+    behaviours: Behaviour.derive([
+      Keying.config({
+        mode: 'special',
+        onEscape: (comp) => {
+          Sandboxing.close(comp);
+          return Option.some<boolean>(true);
+        }
+      }),
+      Sandboxing.config({
+        onOpen,
+        onClose,
+        isPartOf(
+          container: AlloyComponent,
+          data: AlloyComponent,
+          queryElem: Element
+        ): boolean {
+          return (
+            ComponentStructure.isPartOf(data, queryElem) ||
+            ComponentStructure.isPartOf(button, queryElem)
+          );
+        },
+        getAttachPoint() {
+          return detail.lazySink(button).getOrDie();
+        }
+      }),
+      Receiving.config({
+        channels: {
+          ...Dismissal.receivingChannel({
+            isExtraPart: Fun.never,
+            ...detail.fireDismissalEventInstead
+              .map((fe) => ({ fireEventInstead: { event: fe.event } } as any))
+              .getOr({})
+          }),
+          ...Reposition.receivingChannel({
+            doReposition: () => {
+              Sandboxing.getState(
+                Coupling.getCoupled(button, 'toolbarSandbox')
+              ).each((toolbar) => {
+                position(button, toolbar, detail, spec.layouts);
+              });
+            }
+          })
+        }
+      })
+    ])
   };
 };
 
-const factory: CompositeSketchFactory<FloatingToolbarButtonDetail, FloatingToolbarButtonSpec> = (detail, components, spec, externals): SketchSpec => ({
+const factory: CompositeSketchFactory<
+  FloatingToolbarButtonDetail,
+  FloatingToolbarButtonSpec
+> = (detail, components, spec, externals): SketchSpec => ({
   ...Button.sketch({
     ...externals.button(),
     action(button) {
@@ -138,25 +175,33 @@ const factory: CompositeSketchFactory<FloatingToolbarButtonDetail, FloatingToolb
   }),
   apis: {
     setGroups(button: AlloyComponent, groups: AlloySpec[]) {
-      Sandboxing.getState(Coupling.getCoupled(button, 'toolbarSandbox')).each((toolbar) => {
-        setGroups(button, toolbar, detail, spec.layouts, groups);
-      });
+      Sandboxing.getState(Coupling.getCoupled(button, 'toolbarSandbox')).each(
+        (toolbar) => {
+          setGroups(button, toolbar, detail, spec.layouts, groups);
+        }
+      );
     },
     reposition(button: AlloyComponent) {
-      Sandboxing.getState(Coupling.getCoupled(button, 'toolbarSandbox')).each((toolbar) => {
-        position(button, toolbar, detail, spec.layouts);
-      });
+      Sandboxing.getState(Coupling.getCoupled(button, 'toolbarSandbox')).each(
+        (toolbar) => {
+          position(button, toolbar, detail, spec.layouts);
+        }
+      );
     },
     toggle(button: AlloyComponent) {
       toggle(button, externals);
     },
     getToolbar(button: AlloyComponent) {
       return Sandboxing.getState(Coupling.getCoupled(button, 'toolbarSandbox'));
-    },
+    }
   }
 });
 
-const FloatingToolbarButton: FloatingToolbarButtonSketcher = Sketcher.composite<FloatingToolbarButtonSpec, FloatingToolbarButtonDetail, FloatingToolbarButtonApis>({
+const FloatingToolbarButton: FloatingToolbarButtonSketcher = Sketcher.composite<
+  FloatingToolbarButtonSpec,
+  FloatingToolbarButtonDetail,
+  FloatingToolbarButtonApis
+>({
   name: 'FloatingToolbarButton',
   factory,
   configFields: FloatingToolbarButtonSchema.schema(),

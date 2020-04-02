@@ -1,7 +1,18 @@
-import { Document, Touch, TouchEvent, UIEvent, window } from '@ephox/dom-globals';
+import {
+  Document,
+  Touch,
+  TouchEvent,
+  UIEvent,
+  window
+} from '@ephox/dom-globals';
 import { Element, Location, Node, Traverse } from '@ephox/sugar';
 
-const point = (type: string, element: Element<any>, x: number, y: number): void => {
+const point = (
+  type: string,
+  element: Element<any>,
+  x: number,
+  y: number
+): void => {
   const touch = {
     identifier: Date.now(),
     target: element.dom(),
@@ -12,7 +23,7 @@ const point = (type: string, element: Element<any>, x: number, y: number): void 
     radiusX: 2.5,
     radiusY: 2.5,
     rotationAngle: 10,
-    force: 0.5,
+    force: 0.5
   };
 
   // Adapted from https://stackoverflow.com/a/42447620/11275515
@@ -23,9 +34,9 @@ const point = (type: string, element: Element<any>, x: number, y: number): void 
       cancelable: true,
       bubbles: true,
       view: window,
-      touches: [ touchAction ],
+      touches: [touchAction],
       targetTouches: [],
-      changedTouches: [ touchAction ]
+      changedTouches: [touchAction]
     });
     element.dom().dispatchEvent(ev);
   } else {
@@ -39,24 +50,30 @@ const point = (type: string, element: Element<any>, x: number, y: number): void 
       } as any);
     } else {
       // IE 11 doesn't support the UIEvent constructor, so we need to fallback to using createEvent
-      ev = (<Document> element.dom().ownerDocument).createEvent('UIEvent');
+      ev = (<Document>element.dom().ownerDocument).createEvent('UIEvent');
       ev.initUIEvent(type, true, true, window, null);
     }
     // Patch in the touch properties
-    ev.touches = [ touch ];
+    ev.touches = [touch];
     ev.targetTouches = [];
-    ev.changedTouches = [ touch ];
+    ev.changedTouches = [touch];
     element.dom().dispatchEvent(ev);
   }
 };
 
 const touch = (eventType: string) => (element: Element<any>): void => {
-  const position = Location.absolute(Node.isText(element) ? Traverse.parent(element).getOrDie() : element);
+  const position = Location.absolute(
+    Node.isText(element) ? Traverse.parent(element).getOrDie() : element
+  );
   point(eventType, element, position.left(), position.top());
 };
 
-const touchAt = (eventType: string) => (dx: number, dy: number) => (element: Element<any>): void => {
-  const position = Location.absolute(Node.isText(element) ? Traverse.parent(element).getOrDie() : element);
+const touchAt = (eventType: string) => (dx: number, dy: number) => (
+  element: Element<any>
+): void => {
+  const position = Location.absolute(
+    Node.isText(element) ? Traverse.parent(element).getOrDie() : element
+  );
   point(eventType, element, position.left() + dx, position.top() + dy);
 };
 

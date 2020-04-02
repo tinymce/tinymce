@@ -12,11 +12,11 @@ const isTextNode = function (node: Node): node is Text {
 };
 
 const isListNode = function (node: Node) {
-  return node && (/^(OL|UL|DL)$/).test(node.nodeName);
+  return node && /^(OL|UL|DL)$/.test(node.nodeName);
 };
 
 const isOlUlNode = function (node: Node) {
-  return node && (/^(OL|UL)$/).test(node.nodeName);
+  return node && /^(OL|UL)$/.test(node.nodeName);
 };
 
 const isListItemNode = function (node: Node) {
@@ -66,7 +66,10 @@ const isBogusBr = function (dom, node: Node) {
 const isEmpty = function (dom, elm, keepBookmarks?) {
   const empty = dom.isEmpty(elm);
 
-  if (keepBookmarks && dom.select('span[data-mce-type=bookmark]', elm).length > 0) {
+  if (
+    keepBookmarks &&
+    dom.select('span[data-mce-type=bookmark]', elm).length > 0
+  ) {
     return false;
   }
 

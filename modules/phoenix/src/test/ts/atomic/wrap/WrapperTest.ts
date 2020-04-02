@@ -14,9 +14,7 @@ UnitTest.test('WrapperTest', function () {
           TextGene('1.2', 'beta'),
           TextGene('1.3', 'gamma')
         ]),
-        Gene('2', 'span', [
-          TextGene('1.4', 'delta')
-        ]),
+        Gene('2', 'span', [TextGene('1.4', 'delta')]),
         Gene('3', 'span', [
           TextGene('1.5', 'rho'),
           Gene('img', 'img'),
@@ -27,7 +25,14 @@ UnitTest.test('WrapperTest', function () {
     );
   };
 
-  const check = function (postTest: string, expected: string[], startId: string, startOffset: number, finishId: string, finishOffset: number) {
+  const check = function (
+    postTest: string,
+    expected: string[],
+    startId: string,
+    startOffset: number,
+    finishId: string,
+    finishOffset: number
+  ) {
     const doc = make();
     const start = Finder.get(doc, startId);
     const finish = Finder.get(doc, finishId);
@@ -41,39 +46,68 @@ UnitTest.test('WrapperTest', function () {
       return Wraps(doc, Gene('new-span-' + counter, 'span', []));
     };
 
-    const actual = Wrapper.reuse(doc, start, startOffset, finish, finishOffset, predicate, nu);
+    const actual = Wrapper.reuse(
+      doc,
+      start,
+      startOffset,
+      finish,
+      finishOffset,
+      predicate,
+      nu
+    );
     assert.eq(expected, TestRenders.ids(actual));
-    assert.eq(postTest, doc.shortlog(function (item) {
-      return item.name === 'TEXT_GENE' ? 'text("' + item.text + '")' : item.id;
-    }));
+    assert.eq(
+      postTest,
+      doc.shortlog(function (item) {
+        return item.name === 'TEXT_GENE'
+          ? 'text("' + item.text + '")'
+          : item.id;
+      })
+    );
   };
 
-  check('root(1(new-span-1(text("alpha"),text("b")),text("eta"),text("gamma")),2(text("delta")),3(text("rho"),img,text("epsilon")),4)', [
-    'new-span-1'
-  ], '1.1', 0, '1.2', 1);
+  check(
+    'root(1(new-span-1(text("alpha"),text("b")),text("eta"),text("gamma")),2(text("delta")),3(text("rho"),img,text("epsilon")),4)',
+    ['new-span-1'],
+    '1.1',
+    0,
+    '1.2',
+    1
+  );
 
-  check('root(1(text("alpha"),text("b"),new-span-1(text("eta"),text("gamma"))),2(text("delta")),3(new-span-2(text("rho")),img,text("epsilon")),4)', [
-    'new-span-1',
-    '2',
-    'new-span-2'
-  ], '1.2', 1, '1.5', 3);
+  check(
+    'root(1(text("alpha"),text("b"),new-span-1(text("eta"),text("gamma"))),2(text("delta")),3(new-span-2(text("rho")),img,text("epsilon")),4)',
+    ['new-span-1', '2', 'new-span-2'],
+    '1.2',
+    1,
+    '1.5',
+    3
+  );
 
-  check('root(1(text("alpha"),text("beta"),text("gamma")),2(text("delta")),3(new-span-1(text("rho")),img,text("epsilon")),4)', [
-    '1',
-    '2',
-    'new-span-1'
-  ], '1.1', 0, '1.5', 3);
+  check(
+    'root(1(text("alpha"),text("beta"),text("gamma")),2(text("delta")),3(new-span-1(text("rho")),img,text("epsilon")),4)',
+    ['1', '2', 'new-span-1'],
+    '1.1',
+    0,
+    '1.5',
+    3
+  );
 
-  check('root(1(text("alpha"),text("beta"),text("gamma")),2(text("delta")),3(new-span-1(text("rho")),img,text("epsilon")),4)', [
-    '1',
-    '2',
-    'new-span-1'
-  ], '1.1', 0, '1.5', 3);
+  check(
+    'root(1(text("alpha"),text("beta"),text("gamma")),2(text("delta")),3(new-span-1(text("rho")),img,text("epsilon")),4)',
+    ['1', '2', 'new-span-1'],
+    '1.1',
+    0,
+    '1.5',
+    3
+  );
 
-  check('root(1(text("alpha"),text("beta"),text("gamma")),2(text("delta")),3(new-span-1(text("rho")),img,new-span-2(text("epsilon"))),4)', [
-    '1',
-    '2',
-    'new-span-1',
-    'new-span-2'
-  ], '1.1', 0, 'root', 3);
+  check(
+    'root(1(text("alpha"),text("beta"),text("gamma")),2(text("delta")),3(new-span-1(text("rho")),img,new-span-2(text("epsilon"))),4)',
+    ['1', '2', 'new-span-1', 'new-span-2'],
+    '1.1',
+    0,
+    'root',
+    3
+  );
 });

@@ -40,7 +40,7 @@ const restoreForm = (editor: Editor) => {
   }
 };
 
-const remove =  (editor: Editor): void => {
+const remove = (editor: Editor): void => {
   if (!editor.removed) {
     const { _selectionOverrides, editorUpload } = editor;
     const body = editor.getBody();
@@ -105,7 +105,4 @@ const destroy = (editor: Editor, automatic?: boolean): void => {
   editor.destroyed = true;
 };
 
-export {
-  remove,
-  destroy
-};
+export { remove, destroy };

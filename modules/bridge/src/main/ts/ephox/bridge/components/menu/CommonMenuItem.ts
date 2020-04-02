@@ -1,4 +1,9 @@
-import { FieldPresence, FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
+import {
+  FieldPresence,
+  FieldProcessorAdt,
+  FieldSchema,
+  ValueSchema
+} from '@ephox/boulder';
 import { Id, Option } from '@ephox/katamari';
 
 export interface CommonMenuItemApi {
@@ -32,5 +37,5 @@ export const commonMenuItemFields: FieldProcessorAdt[] = [
     FieldPresence.defaultedThunk(() => Id.generate('menuitem-value')),
     ValueSchema.anyValue()
   ),
-  FieldSchema.defaulted('meta', { })
+  FieldSchema.defaulted('meta', {})
 ];

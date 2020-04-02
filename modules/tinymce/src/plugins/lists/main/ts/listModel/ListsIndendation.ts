@@ -19,42 +19,65 @@ import { normalizeEntries } from './NormalizeEntries';
 import { EntrySet, ItemSelection, parseLists } from './ParseLists';
 import { hasFirstChildList } from './Util';
 
-const outdentedComposer = (editor: Editor, entries: Entry[]): Element[] => Arr.map(entries, (entry) => {
-  const content = Fragment.fromElements(entry.content);
-  return Element.fromDom(createTextBlock(editor, content.dom()));
-});
+const outdentedComposer = (editor: Editor, entries: Entry[]): Element[] =>
+  Arr.map(entries, (entry) => {
+    const content = Fragment.fromElements(entry.content);
+    return Element.fromDom(createTextBlock(editor, content.dom()));
+  });
 
 const indentedComposer = (editor: Editor, entries: Entry[]): Element[] => {
   normalizeEntries(entries);
   return composeList(editor.contentDocument, entries).toArray();
 };
 
-const composeEntries = (editor, entries: Entry[]): Element[] => Arr.bind(Arr.groupBy(entries, isIndented), (entries) => {
-  const groupIsIndented = Arr.head(entries).map(isIndented).getOr(false);
-  return groupIsIndented ? indentedComposer(editor, entries) : outdentedComposer(editor, entries);
-});
+const composeEntries = (editor, entries: Entry[]): Element[] =>
+  Arr.bind(Arr.groupBy(entries, isIndented), (entries) => {
+    const groupIsIndented = Arr.head(entries).map(isIndented).getOr(false);
+    return groupIsIndented
+      ? indentedComposer(editor, entries)
+      : outdentedComposer(editor, entries);
+  });
 
-const indentSelectedEntries = (entries: Entry[], indentation: Indentation): void => {
-  Arr.each(Arr.filter(entries, isSelected), (entry) => indentEntry(indentation, entry));
+const indentSelectedEntries = (
+  entries: Entry[],
+  indentation: Indentation
+): void => {
+  Arr.each(Arr.filter(entries, isSelected), (entry) =>
+    indentEntry(indentation, entry)
+  );
 };
 
 const getItemSelection = (editor: Editor): Option<ItemSelection> => {
-  const selectedListItems = Arr.map(Selection.getSelectedListItems(editor), Element.fromDom);
+  const selectedListItems = Arr.map(
+    Selection.getSelectedListItems(editor),
+    Element.fromDom
+  );
 
   return Options.lift2(
     Arr.find(selectedListItems, Fun.not(hasFirstChildList)),
     Arr.find(Arr.reverse(selectedListItems), Fun.not(hasFirstChildList)),
-    (start, end) => ({ start, end }));
+    (start, end) => ({ start, end })
+  );
 };
 
-const listIndentation = (editor: Editor, lists: Element[], indentation: Indentation) => {
+const listIndentation = (
+  editor: Editor,
+  lists: Element[],
+  indentation: Indentation
+) => {
   const entrySets: EntrySet[] = parseLists(lists, getItemSelection(editor));
 
   Arr.each(entrySets, (entrySet) => {
     indentSelectedEntries(entrySet.entries, indentation);
     const composedLists = composeEntries(editor, entrySet.entries);
     Arr.each(composedLists, (composedList) => {
-      fireListEvent(editor, indentation === Indentation.Indent ? ListAction.IndentList : ListAction.OutdentList, composedList.dom());
+      fireListEvent(
+        editor,
+        indentation === Indentation.Indent
+          ? ListAction.IndentList
+          : ListAction.OutdentList,
+        composedList.dom()
+      );
     });
     InsertAll.before(entrySet.sourceList, composedLists);
     Remove.remove(entrySet.sourceList);

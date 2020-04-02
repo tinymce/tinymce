@@ -19,10 +19,8 @@ const mockFeatureState = () => {
   return {
     get,
     set,
-    toggle,
+    toggle
   };
 };
 
-export {
-  mockFeatureState
-};
+export { mockFeatureState };

@@ -16,7 +16,16 @@ type LastSuggestion = Actions.LastSuggestion;
 
 const ignoreAll = true;
 
-const getSuggestions = (editor: Editor, pluginUrl: string, lastSuggestionsState, startedState, textMatcherState, currentLanguageState, word, spans) => {
+const getSuggestions = (
+  editor: Editor,
+  pluginUrl: string,
+  lastSuggestionsState,
+  startedState,
+  textMatcherState,
+  currentLanguageState,
+  word,
+  spans
+) => {
   const items = [];
   const suggestions = lastSuggestionsState.get().suggestions[word];
 
@@ -37,7 +46,15 @@ const getSuggestions = (editor: Editor, pluginUrl: string, lastSuggestionsState,
     items.push({
       text: 'Add to dictionary',
       onAction: () => {
-        Actions.addToDictionary(editor, pluginUrl, startedState, textMatcherState, currentLanguageState, word, spans);
+        Actions.addToDictionary(
+          editor,
+          pluginUrl,
+          startedState,
+          textMatcherState,
+          currentLanguageState,
+          word,
+          spans
+        );
       }
     });
   }
@@ -56,25 +73,50 @@ const getSuggestions = (editor: Editor, pluginUrl: string, lastSuggestionsState,
     {
       text: 'Ignore all',
       onAction: () => {
-        Actions.ignoreWord(editor, startedState, textMatcherState, word, spans, ignoreAll);
+        Actions.ignoreWord(
+          editor,
+          startedState,
+          textMatcherState,
+          word,
+          spans,
+          ignoreAll
+        );
       }
     }
   ]);
   return items;
 };
 
-const setup = function (editor: Editor, pluginUrl: string, lastSuggestionsState: Cell<LastSuggestion>, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>) {
-
+const setup = function (
+  editor: Editor,
+  pluginUrl: string,
+  lastSuggestionsState: Cell<LastSuggestion>,
+  startedState: Cell<boolean>,
+  textMatcherState: Cell<DomTextMatcher>,
+  currentLanguageState: Cell<string>
+) {
   const update = (element: HTMLElement) => {
     const target = element;
     if (target.className === 'mce-spellchecker-word') {
-      const spans = Actions.findSpansByIndex(editor, Actions.getElmIndex(target));
+      const spans = Actions.findSpansByIndex(
+        editor,
+        Actions.getElmIndex(target)
+      );
       if (spans.length > 0) {
         const rng = editor.dom.createRng();
         rng.setStartBefore(spans[0]);
         rng.setEndAfter(spans[spans.length - 1]);
         editor.selection.setRng(rng);
-        return getSuggestions(editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState, currentLanguageState, target.getAttribute('data-mce-word'), spans);
+        return getSuggestions(
+          editor,
+          pluginUrl,
+          lastSuggestionsState,
+          startedState,
+          textMatcherState,
+          currentLanguageState,
+          target.getAttribute('data-mce-word'),
+          spans
+        );
       }
     } else {
       return [];
@@ -86,6 +128,4 @@ const setup = function (editor: Editor, pluginUrl: string, lastSuggestionsState:
   });
 };
 
-export {
-  setup
-};
+export { setup };

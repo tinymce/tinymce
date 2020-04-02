@@ -19,14 +19,38 @@ export type DataToHtmlCallback = (data: MediaData) => string;
 
 const getIframeHtml = function (data: MediaData) {
   const allowFullscreen = data.allowFullscreen ? ' allowFullscreen="1"' : '';
-  return '<iframe src="' + data.source + '" width="' + data.width + '" height="' + data.height + '"' + allowFullscreen + '></iframe>';
+  return (
+    '<iframe src="' +
+    data.source +
+    '" width="' +
+    data.width +
+    '" height="' +
+    data.height +
+    '"' +
+    allowFullscreen +
+    '></iframe>'
+  );
 };
 
 const getFlashHtml = function (data: MediaData) {
-  let html = '<object data="' + data.source + '" width="' + data.width + '" height="' + data.height + '" type="application/x-shockwave-flash">';
+  let html =
+    '<object data="' +
+    data.source +
+    '" width="' +
+    data.width +
+    '" height="' +
+    data.height +
+    '" type="application/x-shockwave-flash">';
 
   if (data.poster) {
-    html += '<img src="' + data.poster + '" width="' + data.width + '" height="' + data.height + '" />';
+    html +=
+      '<img src="' +
+      data.poster +
+      '" width="' +
+      data.width +
+      '" height="' +
+      data.height +
+      '" />';
   }
 
   html += '</object>';
@@ -34,34 +58,56 @@ const getFlashHtml = function (data: MediaData) {
   return html;
 };
 
-const getAudioHtml = function (data: MediaData, audioTemplateCallback: DataToHtmlCallback) {
+const getAudioHtml = function (
+  data: MediaData,
+  audioTemplateCallback: DataToHtmlCallback
+) {
   if (audioTemplateCallback) {
     return audioTemplateCallback(data);
   } else {
     return (
-      '<audio controls="controls" src="' + data.source + '">' +
-      (
-        data.altsource ?
-          '\n<source src="' + data.altsource + '"' +
+      '<audio controls="controls" src="' +
+      data.source +
+      '">' +
+      (data.altsource
+        ? '\n<source src="' +
+          data.altsource +
+          '"' +
           (data.altsourcemime ? ' type="' + data.altsourcemime + '"' : '') +
-          ' />\n' : '') +
+          ' />\n'
+        : '') +
       '</audio>'
     );
   }
 };
 
-const getVideoHtml = function (data: MediaData, videoTemplateCallback: DataToHtmlCallback) {
+const getVideoHtml = function (
+  data: MediaData,
+  videoTemplateCallback: DataToHtmlCallback
+) {
   if (videoTemplateCallback) {
     return videoTemplateCallback(data);
   } else {
     return (
-      '<video width="' + data.width +
-      '" height="' + data.height + '"' +
-      (data.poster ? ' poster="' + data.poster + '"' : '') + ' controls="controls">\n' +
-      '<source src="' + data.source + '"' +
-      (data.sourcemime ? ' type="' + data.sourcemime + '"' : '') + ' />\n' +
-      (data.altsource ? '<source src="' + data.altsource + '"' +
-        (data.altsourcemime ? ' type="' + data.altsourcemime + '"' : '') + ' />\n' : '') +
+      '<video width="' +
+      data.width +
+      '" height="' +
+      data.height +
+      '"' +
+      (data.poster ? ' poster="' + data.poster + '"' : '') +
+      ' controls="controls">\n' +
+      '<source src="' +
+      data.source +
+      '"' +
+      (data.sourcemime ? ' type="' + data.sourcemime + '"' : '') +
+      ' />\n' +
+      (data.altsource
+        ? '<source src="' +
+          data.altsource +
+          '"' +
+          (data.altsourcemime ? ' type="' + data.altsourcemime + '"' : '') +
+          ' />\n'
+        : '') +
       '</video>'
     );
   }
@@ -75,7 +121,10 @@ const dataToHtml = function (editor: Editor, dataIn: MediaData) {
   const data: MediaData = Tools.extend({}, dataIn);
 
   if (!data.source) {
-    Tools.extend(data, HtmlToData.htmlToData(Settings.getScripts(editor), data.embed));
+    Tools.extend(
+      data,
+      HtmlToData.htmlToData(Settings.getScripts(editor), data.embed)
+    );
     if (!data.source) {
       return '';
     }
@@ -108,7 +157,10 @@ const dataToHtml = function (editor: Editor, dataIn: MediaData) {
   if (data.embed) {
     return UpdateHtml.updateHtml(data.embed, data, true);
   } else {
-    const videoScript = VideoScript.getVideoScriptMatch(Settings.getScripts(editor), data.source);
+    const videoScript = VideoScript.getVideoScriptMatch(
+      Settings.getScripts(editor),
+      data.source
+    );
     if (videoScript) {
       data.type = 'script';
       data.width = String(videoScript.width);
@@ -139,6 +191,4 @@ const dataToHtml = function (editor: Editor, dataIn: MediaData) {
   }
 };
 
-export {
-  dataToHtml
-};
+export { dataToHtml };

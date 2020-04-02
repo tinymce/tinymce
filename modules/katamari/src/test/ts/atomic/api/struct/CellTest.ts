@@ -10,19 +10,23 @@ UnitTest.test('Cell: unit test', () => {
 });
 
 UnitTest.test('Cell: cell(x).get() === x', () => {
-  fc.assert(fc.property(fc.integer(), (i) => {
-    const cell = Cell(i);
-    Assert.eq('eq', i, cell.get());
-  }));
+  fc.assert(
+    fc.property(fc.integer(), (i) => {
+      const cell = Cell(i);
+      Assert.eq('eq', i, cell.get());
+    })
+  );
 });
 
 UnitTest.test('Cell: cell.get() === last set call', () => {
-  fc.assert(fc.property(fc.integer(), fc.integer(), fc.integer(), (a, b, c) => {
-    const cell = Cell(a);
-    Assert.eq('a', a, cell.get());
-    cell.set(b);
-    Assert.eq('b', b, cell.get());
-    cell.set(c);
-    Assert.eq('c', c, cell.get());
-  }));
+  fc.assert(
+    fc.property(fc.integer(), fc.integer(), fc.integer(), (a, b, c) => {
+      const cell = Cell(a);
+      Assert.eq('a', a, cell.get());
+      cell.set(b);
+      Assert.eq('b', b, cell.get());
+      cell.set(c);
+      Assert.eq('c', c, cell.get());
+    })
+  );
 });

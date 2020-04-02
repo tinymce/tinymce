@@ -1,5 +1,13 @@
 import { Arr, Fun, Result } from '@ephox/katamari';
-import { Compare, Element, EventArgs, Focus, Node, Remove, Traverse } from '@ephox/sugar';
+import {
+  Compare,
+  Element,
+  EventArgs,
+  Focus,
+  Node,
+  Remove,
+  Traverse
+} from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Debugging from '../../debugging/Debugging';
@@ -48,48 +56,77 @@ const create = (): GuiSystem => {
 };
 
 const takeover = (root: AlloyComponent): GuiSystem => {
-  const isAboveRoot = (el: Element): boolean => Traverse.parent(root.element()).fold(
-    () => true,
-    (parent) => Compare.eq(el, parent)
-  );
+  const isAboveRoot = (el: Element): boolean =>
+    Traverse.parent(root.element()).fold(
+      () => true,
+      (parent) => Compare.eq(el, parent)
+    );
 
   const registry = Registry();
 
-  const lookup = (eventName: string, target: Element) => registry.find(isAboveRoot, eventName, target);
+  const lookup = (eventName: string, target: Element) =>
+    registry.find(isAboveRoot, eventName, target);
 
   const domEvents = GuiEvents.setup(root.element(), {
     triggerEvent(eventName: string, event: EventArgs) {
-      return Debugging.monitorEvent(eventName, event.target(), (logger: Debugging.DebuggerLogger) => Triggers.triggerUntilStopped(lookup, eventName, event, logger));
-    },
+      return Debugging.monitorEvent(
+        eventName,
+        event.target(),
+        (logger: Debugging.DebuggerLogger) =>
+          Triggers.triggerUntilStopped(lookup, eventName, event, logger)
+      );
+    }
   });
 
   const systemApi: AlloySystemApi = {
     // This is a real system
     debugInfo: Fun.constant('real'),
     triggerEvent(eventName: string, target: Element, data: any) {
-      Debugging.monitorEvent(eventName, target, (logger: Debugging.DebuggerLogger) =>
-        // The return value is not used because this is a fake event.
-        Triggers.triggerOnUntilStopped(lookup, eventName, data, target, logger)
+      Debugging.monitorEvent(
+        eventName,
+        target,
+        (logger: Debugging.DebuggerLogger) =>
+          // The return value is not used because this is a fake event.
+          Triggers.triggerOnUntilStopped(
+            lookup,
+            eventName,
+            data,
+            target,
+            logger
+          )
       );
     },
     triggerFocus(target: Element, originator: Element) {
-      Tagger.read(target).fold(() => {
-        // When the target is not within the alloy system, dispatch a normal focus event.
-        Focus.focus(target);
-      }, (_alloyId) => {
-        Debugging.monitorEvent(SystemEvents.focus(), target, (logger: Debugging.DebuggerLogger) => {
-          // NOTE: This will stop at first handler.
-          Triggers.triggerHandler<FocusingEvent>(lookup, SystemEvents.focus(), {
-            // originator is used by the default events to ensure that focus doesn't
-            // get called infinitely
-            originator: Fun.constant(originator),
-            kill: Fun.noop,
-            prevent: Fun.noop,
-            target: Fun.constant(target)
-          }, target, logger);
-          return false;
-        });
-      });
+      Tagger.read(target).fold(
+        () => {
+          // When the target is not within the alloy system, dispatch a normal focus event.
+          Focus.focus(target);
+        },
+        (_alloyId) => {
+          Debugging.monitorEvent(
+            SystemEvents.focus(),
+            target,
+            (logger: Debugging.DebuggerLogger) => {
+              // NOTE: This will stop at first handler.
+              Triggers.triggerHandler<FocusingEvent>(
+                lookup,
+                SystemEvents.focus(),
+                {
+                  // originator is used by the default events to ensure that focus doesn't
+                  // get called infinitely
+                  originator: Fun.constant(originator),
+                  kill: Fun.noop,
+                  prevent: Fun.noop,
+                  target: Fun.constant(target)
+                },
+                target,
+                logger
+              );
+              return false;
+            }
+          );
+        }
+      );
     },
 
     triggerEscape(comp, simulatedEvent) {
@@ -103,10 +140,18 @@ const takeover = (root: AlloyComponent): GuiSystem => {
       return getByDom(elem);
     },
     build: GuiFactory.build,
-    addToGui(c) { add(c); },
-    removeFromGui(c) { remove(c); },
-    addToWorld(c) { addToWorld(c); },
-    removeFromWorld(c) { removeFromWorld(c); },
+    addToGui(c) {
+      add(c);
+    },
+    removeFromGui(c) {
+      remove(c);
+    },
+    addToWorld(c) {
+      addToWorld(c);
+    },
+    removeFromWorld(c) {
+      removeFromWorld(c);
+    },
     broadcast(message) {
       broadcast(message);
     },
@@ -124,7 +169,9 @@ const takeover = (root: AlloyComponent): GuiSystem => {
     if (!Node.isText(component.element())) {
       registry.register(component);
       Arr.each(component.components(), addToWorld);
-      systemApi.triggerEvent(SystemEvents.systemInit(), component.element(), { target: Fun.constant(component.element()) });
+      systemApi.triggerEvent(SystemEvents.systemInit(), component.element(), {
+        target: Fun.constant(component.element())
+      });
     }
   };
 
@@ -150,7 +197,11 @@ const takeover = (root: AlloyComponent): GuiSystem => {
     Remove.remove(root.element());
   };
 
-  const broadcastData = (data: { universal: () => boolean; data: () => any; channels?: () => string[] }) => {
+  const broadcastData = (data: {
+    universal: () => boolean;
+    data: () => any;
+    channels?: () => string[];
+  }) => {
     const receivers = registry.filter(SystemEvents.receive());
     Arr.each(receivers, (receiver) => {
       const descHandler = receiver.descHandler();
@@ -183,9 +234,18 @@ const takeover = (root: AlloyComponent): GuiSystem => {
     return Triggers.broadcast(listeners, event);
   };
 
-  const getByUid = (uid: string) => registry.getById(uid).fold(() => Result.error(
-    new Error('Could not find component with uid: "' + uid + '" in system.')
-  ), Result.value);
+  const getByUid = (uid: string) =>
+    registry
+      .getById(uid)
+      .fold(
+        () =>
+          Result.error(
+            new Error(
+              'Could not find component with uid: "' + uid + '" in system.'
+            )
+          ),
+        Result.value
+      );
 
   const getByDom = (elem: Element): Result<AlloyComponent, Error> => {
     const uid = Tagger.read(elem).getOr('not found');
@@ -213,7 +273,4 @@ const takeover = (root: AlloyComponent): GuiSystem => {
   };
 };
 
-export {
-  create,
-  takeover
-};
+export { create, takeover };

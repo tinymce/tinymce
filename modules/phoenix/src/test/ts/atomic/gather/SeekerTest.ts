@@ -16,23 +16,12 @@ UnitTest.test('Seeker Test', function () {
           TextGene('aab', 'aab'),
           TextGene('aac', 'aac')
         ]),
-        Gene('ab', 'node', [
-          TextGene('aba', 'aba'),
-          TextGene('abb', 'abb')
-        ]),
-        Gene('b', 'node', [
-          TextGene('ba', 'ba')
-        ]),
+        Gene('ab', 'node', [TextGene('aba', 'aba'), TextGene('abb', 'abb')]),
+        Gene('b', 'node', [TextGene('ba', 'ba')]),
         Gene('c', 'node', [
-          Gene('ca', 'node', [
-            Gene('caa', 'node', [
-              TextGene('caaa', 'caaa')
-            ])
-          ]),
+          Gene('ca', 'node', [Gene('caa', 'node', [TextGene('caaa', 'caaa')])]),
           Gene('cb', 'node', []),
-          Gene('cc', 'node', [
-            TextGene('cca', 'cca')
-          ])
+          Gene('cc', 'node', [TextGene('cca', 'cca')])
         ]),
         TextGene('d', 'd')
       ])
@@ -44,7 +33,11 @@ UnitTest.test('Seeker Test', function () {
   };
 
   const check = function (expected: Option<string>, actual: Option<Gene>) {
-    KAssert.eqOption('eq', expected, actual.map((x) => x.id));
+    KAssert.eqOption(
+      'eq',
+      expected,
+      actual.map((x) => x.id)
+    );
   };
 
   const checkBefore = function (expected: Option<string>, id: string) {

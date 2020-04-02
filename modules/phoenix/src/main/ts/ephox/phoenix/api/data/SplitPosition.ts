@@ -6,13 +6,13 @@ type MiddleHandler<E, U> = (before: E, after: E) => U;
 type EndHandler<E, U> = (element: E) => U;
 
 export interface SplitPosition<E> {
-  fold: <U> (
+  fold: <U>(
     onNone: NoneHandler<U>,
     onStart: StartHandler<E, U>,
     onMiddle: MiddleHandler<E, U>,
     onEnd: EndHandler<E, U>
   ) => U;
-  match: <U> (branches: {
+  match: <U>(branches: {
     none: NoneHandler<U>;
     start: StartHandler<E, U>;
     middle: MiddleHandler<E, U>;
@@ -22,15 +22,15 @@ export interface SplitPosition<E> {
 }
 
 const adt: {
-  none: <E> () => SplitPosition<E>;
-  start: <E> (element: E) => SplitPosition<E>;
-  middle: <E> (before: E, after: E) => SplitPosition<E>;
-  end: <E> (element: E) => SplitPosition<E>;
+  none: <E>() => SplitPosition<E>;
+  start: <E>(element: E) => SplitPosition<E>;
+  middle: <E>(before: E, after: E) => SplitPosition<E>;
+  end: <E>(element: E) => SplitPosition<E>;
 } = Adt.generate([
   { none: [] },
-  { start: [ 'element' ] },
-  { middle: [ 'before', 'after' ] },
-  { end: [ 'element' ] }
+  { start: ['element'] },
+  { middle: ['before', 'after'] },
+  { end: ['element'] }
 ]);
 
 export const SplitPosition = {

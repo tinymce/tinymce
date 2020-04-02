@@ -5,21 +5,39 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloyTriggers, Container, Disabling, Memento, SketchSpec } from '@ephox/alloy';
+import {
+  AlloyComponent,
+  AlloyTriggers,
+  Container,
+  Disabling,
+  Memento,
+  SketchSpec
+} from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderIconButton } from '../../general/Button';
 import * as ImageToolsEvents from './ImageToolsEvents';
 
-const createButton = (innerHtml: string, icon: string, disabled: boolean, action: (button: AlloyComponent) => void, providersBackstage: UiFactoryBackstageProviders): SketchSpec => renderIconButton({
-  name: innerHtml,
-  icon: Option.some(icon),
-  disabled,
-  tooltip: Option.some(innerHtml),
-  primary: false,
-  borderless: false
-}, action, providersBackstage);
+const createButton = (
+  innerHtml: string,
+  icon: string,
+  disabled: boolean,
+  action: (button: AlloyComponent) => void,
+  providersBackstage: UiFactoryBackstageProviders
+): SketchSpec =>
+  renderIconButton(
+    {
+      name: innerHtml,
+      icon: Option.some(icon),
+      disabled,
+      tooltip: Option.some(innerHtml),
+      primary: false,
+      borderless: false
+    },
+    action,
+    providersBackstage
+  );
 
 const setButtonEnabled = (button: AlloyComponent, enabled: boolean): void => {
   if (enabled) {
@@ -30,7 +48,11 @@ const setButtonEnabled = (button: AlloyComponent, enabled: boolean): void => {
 };
 
 const renderSideBar = (providersBackstage: UiFactoryBackstageProviders) => {
-  const updateButtonUndoStates = (anyInSystem: AlloyComponent, undoEnabled: boolean, redoEnabled: boolean): void => {
+  const updateButtonUndoStates = (
+    anyInSystem: AlloyComponent,
+    undoEnabled: boolean,
+    redoEnabled: boolean
+  ): void => {
     memUndo.getOpt(anyInSystem).each((undo) => {
       setButtonEnabled(undo, undoEnabled);
     });
@@ -40,39 +62,63 @@ const renderSideBar = (providersBackstage: UiFactoryBackstageProviders) => {
   };
 
   const memUndo = Memento.record(
-    createButton('Undo', 'undo', true, (button) => {
-      AlloyTriggers.emitWith(button, ImageToolsEvents.internal.undo(), {
-        direction: 1
-      });
-    }, providersBackstage)
+    createButton(
+      'Undo',
+      'undo',
+      true,
+      (button) => {
+        AlloyTriggers.emitWith(button, ImageToolsEvents.internal.undo(), {
+          direction: 1
+        });
+      },
+      providersBackstage
+    )
   );
 
   const memRedo = Memento.record(
-    createButton('Redo', 'redo', true, (button) => {
-      AlloyTriggers.emitWith(button, ImageToolsEvents.internal.redo(), {
-        direction: 1
-      });
-    }, providersBackstage)
+    createButton(
+      'Redo',
+      'redo',
+      true,
+      (button) => {
+        AlloyTriggers.emitWith(button, ImageToolsEvents.internal.redo(), {
+          direction: 1
+        });
+      },
+      providersBackstage
+    )
   );
 
   const container = Container.sketch({
     dom: {
       tag: 'div',
-      classes: [ 'tox-image-tools__toolbar', 'tox-image-tools__sidebar' ]
+      classes: ['tox-image-tools__toolbar', 'tox-image-tools__sidebar']
     },
     components: [
       memUndo.asSpec(),
       memRedo.asSpec(),
-      createButton('Zoom in', 'zoom-in', false, (button) => {
-        AlloyTriggers.emitWith(button, ImageToolsEvents.internal.zoom(), {
-          direction: 1
-        });
-      }, providersBackstage),
-      createButton('Zoom out', 'zoom-out', false, (button) => {
-        AlloyTriggers.emitWith(button, ImageToolsEvents.internal.zoom(), {
-          direction: -1
-        });
-      }, providersBackstage)
+      createButton(
+        'Zoom in',
+        'zoom-in',
+        false,
+        (button) => {
+          AlloyTriggers.emitWith(button, ImageToolsEvents.internal.zoom(), {
+            direction: 1
+          });
+        },
+        providersBackstage
+      ),
+      createButton(
+        'Zoom out',
+        'zoom-out',
+        false,
+        (button) => {
+          AlloyTriggers.emitWith(button, ImageToolsEvents.internal.zoom(), {
+            direction: -1
+          });
+        },
+        providersBackstage
+      )
     ]
   });
 
@@ -82,6 +128,4 @@ const renderSideBar = (providersBackstage: UiFactoryBackstageProviders) => {
   };
 };
 
-export {
-  renderSideBar
-};
+export { renderSideBar };

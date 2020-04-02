@@ -39,16 +39,29 @@ export default (): void => {
           dom: {
             tag: 'span',
             innerHtml: 'Menu button (sketch)',
-            classes: [ 'tap-menu' ]
+            classes: ['tap-menu']
           },
           lazySink() {
             return Result.value(sink);
           },
           fetch() {
-            return Future.pure(Option.from(Arr.map([
-              { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' }}},
-              { type: 'item', data: { value: 'beta', meta: { text: 'Beta' }}}
-            ], DemoRenders.orb)));
+            return Future.pure(
+              Option.from(
+                Arr.map(
+                  [
+                    {
+                      type: 'item',
+                      data: { value: 'alpha', meta: { text: 'Alpha' } }
+                    },
+                    {
+                      type: 'item',
+                      data: { value: 'beta', meta: { text: 'Beta' } }
+                    }
+                  ],
+                  DemoRenders.orb
+                )
+              )
+            );
           },
           onExecute(component, menuComp, item, data) {
             console.log('selected', data.value);
@@ -69,9 +82,7 @@ export default (): void => {
               dom: {
                 tag: 'div'
               },
-              components: [
-                Menu.parts().items({ })
-              ],
+              components: [Menu.parts().items({})],
               items: [],
               value: 'touchmenu',
               markers: DemoRenders.orbMarkers()

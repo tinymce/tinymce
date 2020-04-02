@@ -9,9 +9,12 @@ import SaxParser from '../api/html/SaxParser';
 import * as Zwsp from '../text/Zwsp';
 
 const trimHtml = function (tempAttrs, html) {
-  const trimContentRegExp = new RegExp([
-    '\\s?(' + tempAttrs.join('|') + ')="[^"]+"' // Trim temporaty data-mce prefixed attributes like data-mce-selected
-  ].join('|'), 'gi');
+  const trimContentRegExp = new RegExp(
+    [
+      '\\s?(' + tempAttrs.join('|') + ')="[^"]+"' // Trim temporaty data-mce prefixed attributes like data-mce-selected
+    ].join('|'),
+    'gi'
+  );
 
   return html.replace(trimContentRegExp, '');
 };
@@ -36,7 +39,9 @@ const trimInternal = function (serializer, html) {
       endTagIndex = SaxParser.findEndTag(schema, content, index);
     }
 
-    content = content.substring(0, index - matchLength) + content.substring(endTagIndex);
+    content =
+      content.substring(0, index - matchLength) +
+      content.substring(endTagIndex);
     bogusAllRegExp.lastIndex = index - matchLength;
   }
 
@@ -46,7 +51,4 @@ const trimInternal = function (serializer, html) {
 // We might need external/internal trimming in the future so lets keep the separation
 const trimExternal = trimInternal;
 
-export {
-  trimExternal,
-  trimInternal
-};
+export { trimExternal, trimInternal };

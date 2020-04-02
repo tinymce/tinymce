@@ -13,6 +13,4 @@ const Toggling: TogglingBehaviour = Behaviour.create({
   state: SetupBehaviourCellState(false)
 });
 
-export {
-  Toggling
-};
+export { Toggling };

@@ -14,6 +14,4 @@ const get = function (clipboard: Clipboard, quirks) {
   };
 };
 
-export {
-  get
-};
+export { get };

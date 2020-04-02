@@ -13,7 +13,7 @@ const beforeSpecial = function (element: Element<DomNode>, offset: number) {
   const name = Node.name(element);
   if ('input' === name) {
     return Situ.after(element);
-  } else if (!Arr.contains([ 'br', 'img' ], name)) {
+  } else if (!Arr.contains(['br', 'img'], name)) {
     return Situ.on(element, offset);
   } else {
     return offset === 0 ? Situ.before(element) : Situ.after(element);
@@ -26,7 +26,12 @@ const preprocessRelative = function (startSitu: Situ, finishSitu: Situ) {
   return Selection.relative(start, finish);
 };
 
-const preprocessExact = function (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
+const preprocessExact = function (
+  start: Element<DomNode>,
+  soffset: number,
+  finish: Element<DomNode>,
+  foffset: number
+) {
   const startSitu = beforeSpecial(start, soffset);
   const finishSitu = beforeSpecial(finish, foffset);
   return Selection.relative(startSitu, finishSitu);
@@ -44,9 +49,4 @@ const preprocess = function (selection: Selection) {
   });
 };
 
-export {
-  beforeSpecial,
-  preprocess,
-  preprocessRelative,
-  preprocessExact,
-};
+export { beforeSpecial, preprocess, preprocessRelative, preprocessExact };

@@ -18,11 +18,23 @@ import * as Greenzone from '../view/Greenzone';
 import * as IosUpdates from '../view/IosUpdates';
 import * as IosViewport from '../view/IosViewport';
 import { IosKeyboardConstructor } from '../view/IosKeyboard';
-import { HTMLElement, HTMLIFrameElement, Node as DomNode, Window } from '@ephox/dom-globals';
+import {
+  HTMLElement,
+  HTMLIFrameElement,
+  Node as DomNode,
+  Window
+} from '@ephox/dom-globals';
 
 const VIEW_MARGIN = 5;
 
-const register = function (toolstrip, socket, container, outerWindow, structure, cWin) {
+const register = function (
+  toolstrip,
+  socket,
+  container,
+  outerWindow,
+  structure,
+  cWin
+) {
   const scroller = BackgroundActivity(function (y) {
     return IosScrolling.moveWindowScroll(toolstrip, socket, y);
   });
@@ -34,11 +46,15 @@ const register = function (toolstrip, socket, container, outerWindow, structure,
     const rects = Rectangles.getRectangles(cWin);
     return Option.from(rects[0]).bind(function (rect) {
       const viewTop = rect.top() - socket.dom().scrollTop;
-      const outside = viewTop > outerWindow.innerHeight + VIEW_MARGIN || viewTop < -VIEW_MARGIN;
-      return outside ? Option.some({
-        top: Fun.constant(viewTop),
-        bottom: Fun.constant(viewTop + rect.height())
-      }) : Option.none<{top: () => number; bottom: () => number}>();
+      const outside =
+        viewTop > outerWindow.innerHeight + VIEW_MARGIN ||
+        viewTop < -VIEW_MARGIN;
+      return outside
+        ? Option.some({
+            top: Fun.constant(viewTop),
+            bottom: Fun.constant(viewTop + rect.height())
+          })
+        : Option.none<{ top: () => number; bottom: () => number }>();
     });
   };
 
@@ -47,24 +63,29 @@ const register = function (toolstrip, socket, container, outerWindow, structure,
      * As soon as the window is back to 0 (idle), scroll the toolbar and socket back into place on scroll.
      */
     scroller.idle(function () {
-      IosUpdates.updatePositions(container, outerWindow.pageYOffset).get(function (/* _ */) {
-        const extraScroll = scrollBounds();
-        extraScroll.each(function (extra) {
-          // TODO: Smoothly animate this in a way that doesn't conflict with anything else.
-          socket.dom().scrollTop = socket.dom().scrollTop + extra.top();
-        });
-        scroller.start(0);
-        structure.refresh();
-      });
+      IosUpdates.updatePositions(container, outerWindow.pageYOffset).get(
+        function (/* _ */) {
+          const extraScroll = scrollBounds();
+          extraScroll.each(function (extra) {
+            // TODO: Smoothly animate this in a way that doesn't conflict with anything else.
+            socket.dom().scrollTop = socket.dom().scrollTop + extra.top();
+          });
+          scroller.start(0);
+          structure.refresh();
+        }
+      );
     });
   }, 1000);
 
-  const onScroll = DomEvent.bind(Element.fromDom(outerWindow), 'scroll', function () {
-    if (outerWindow.pageYOffset < 0) {
-      return;
-    }
+  const onScroll = DomEvent.bind(
+    Element.fromDom(outerWindow),
+    'scroll',
+    function () {
+      if (outerWindow.pageYOffset < 0) {
+        return;
+      }
 
-    /*
+      /*
     We've experimented with trying to set the socket scroll (hidden vs. scroll) based on whether the outer body
     has scrolled. When the window starts scrolling, we would lock the socket scroll, and we would
     unlock it when the window stopped scrolling. This would give a nice rubber-band effect at the end
@@ -86,10 +107,13 @@ const register = function (toolstrip, socket, container, outerWindow, structure,
     visible on the screen, even if they've scrolled to the end.
     */
 
-    scrollThrottle.throttle();
-  });
+      scrollThrottle.throttle();
+    }
+  );
 
-  IosUpdates.updatePositions(container, outerWindow.pageYOffset).get(Fun.identity);
+  IosUpdates.updatePositions(container, outerWindow.pageYOffset).get(
+    Fun.identity
+  );
 
   return {
     unbind: onScroll.unbind
@@ -135,7 +159,12 @@ const setup = function (bag: IosSetupOptions) {
   const outerBody = bag.outerBody;
 
   const structure = IosViewport.takeover(socket, ceBody, toolstrip, dropup);
-  const keyboardModel = keyboardType(outerBody, cWin, Body.body(), contentElement);
+  const keyboardModel = keyboardType(
+    outerBody,
+    cWin,
+    Body.body(),
+    contentElement
+  );
 
   const toEditing = function () {
     // Consider inlining, though it will make it harder to follow the API
@@ -163,13 +192,24 @@ const setup = function (bag: IosSetupOptions) {
     structure.refresh();
   });
 
-  const onResize = DomEvent.bind(Element.fromDom(outerWindow), 'resize', function () {
-    if (structure.isExpanding()) {
-      structure.refresh();
+  const onResize = DomEvent.bind(
+    Element.fromDom(outerWindow),
+    'resize',
+    function () {
+      if (structure.isExpanding()) {
+        structure.refresh();
+      }
     }
-  });
+  );
 
-  const onScroll = register(toolstrip, socket, outerBody, outerWindow, structure, cWin);
+  const onScroll = register(
+    toolstrip,
+    socket,
+    outerBody,
+    outerWindow,
+    structure,
+    cWin
+  );
 
   const unfocusedSelection = FakeSelection(cWin, contentElement);
 
@@ -192,7 +232,11 @@ const setup = function (bag: IosSetupOptions) {
   };
 
   const syncHeight = function () {
-    Css.set(contentElement, 'height', contentElement.dom().contentWindow.document.body.scrollHeight + 'px');
+    Css.set(
+      contentElement,
+      'height',
+      contentElement.dom().contentWindow.document.body.scrollHeight + 'px'
+    );
   };
 
   const setViewportOffset = function (newYOffset) {
@@ -229,6 +273,4 @@ const setup = function (bag: IosSetupOptions) {
   };
 };
 
-export {
-  setup
-};
+export { setup };

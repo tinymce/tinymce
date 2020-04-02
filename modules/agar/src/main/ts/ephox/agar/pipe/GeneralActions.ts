@@ -5,7 +5,4 @@ const debug = (): void => {
 
 const pass = (): void => {};
 
-export {
-  debug,
-  pass
-};
+export { debug, pass };

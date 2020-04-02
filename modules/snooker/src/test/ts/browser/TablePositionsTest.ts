@@ -1,6 +1,13 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { document, HTMLElement } from '@ephox/dom-globals';
-import { Element, Insert, InsertAll, Remove, SelectorFilter, SelectorFind } from '@ephox/sugar';
+import {
+  Element,
+  Insert,
+  InsertAll,
+  Remove,
+  SelectorFilter,
+  SelectorFind
+} from '@ephox/sugar';
 import * as TablePositions from 'ephox/snooker/api/TablePositions';
 import { Option } from '@ephox/katamari';
 
@@ -11,74 +18,87 @@ UnitTest.test('RectangularTest', function () {
 
   const table = Element.fromHtml(
     '<table id="tableA" border=1>' +
-       '<tbody>' +
-         '<tr>' +
-           '<td id="A1" rowspan=3 style="min-width: 100px;">A1</td>' +
-           '<td id="B1" style="min-width: 100px; background: #bcabee;">B1 START SELECTION<br /></td>' +
-           '<td id="C1" style="min-width: 100px;" colspan=2>C1<br /><br /><br /></td>' +
-    // '<td style="min-width: 100px;">D1</td>' +
-         '</tr>' +
-         '<tr>' +
-           // '<td style="min-width: 100px;">A2</td>' +
-           '<td id="B2" style="min-width: 100px;">B2<br /><br /></td>' +
-           '<td id="C2" style="min-width: 100px;"><p>C2</p><p>More</p></td>' +
-           '<td id="D2" style="min-width: 100px;"><br />D2</td>' +
-         '</tr>' +
-         '<tr>' +
-           // '<td style="min-width: 100px;">A3</td>' +
-           '<td id="B3" style="min-width: 100px;">B3<br /></td>' +
-           '<td id="C3" style="min-width: 100px;">C3 END SELECTION<br /></td>' +
-           '<td id="D3" style="min-width: 100px;">D3</td>' +
-         '</tr>' +
-         '<tr>' +
-           '<td id="A4" style="padding-top: 100px; background: #bcabee;" style="min-width: 100px;">A4</td>' +
-           '<td id="B4" style="padding-top: 100px;" style="min-width: 100px;">B4<br /></td>' +
-           '<td id="C4" style="padding-top: 100px;" style="min-width: 100px;">C4<br /></td>' +
-           '<td id="D4" style="padding-top: 100px;" style="min-width: 100px;">D4</td>' +
-         '</tr>' +
-       '</tbody>' +
-     '</table>'
+      '<tbody>' +
+      '<tr>' +
+      '<td id="A1" rowspan=3 style="min-width: 100px;">A1</td>' +
+      '<td id="B1" style="min-width: 100px; background: #bcabee;">B1 START SELECTION<br /></td>' +
+      '<td id="C1" style="min-width: 100px;" colspan=2>C1<br /><br /><br /></td>' +
+      // '<td style="min-width: 100px;">D1</td>' +
+      '</tr>' +
+      '<tr>' +
+      // '<td style="min-width: 100px;">A2</td>' +
+      '<td id="B2" style="min-width: 100px;">B2<br /><br /></td>' +
+      '<td id="C2" style="min-width: 100px;"><p>C2</p><p>More</p></td>' +
+      '<td id="D2" style="min-width: 100px;"><br />D2</td>' +
+      '</tr>' +
+      '<tr>' +
+      // '<td style="min-width: 100px;">A3</td>' +
+      '<td id="B3" style="min-width: 100px;">B3<br /></td>' +
+      '<td id="C3" style="min-width: 100px;">C3 END SELECTION<br /></td>' +
+      '<td id="D3" style="min-width: 100px;">D3</td>' +
+      '</tr>' +
+      '<tr>' +
+      '<td id="A4" style="padding-top: 100px; background: #bcabee;" style="min-width: 100px;">A4</td>' +
+      '<td id="B4" style="padding-top: 100px;" style="min-width: 100px;">B4<br /></td>' +
+      '<td id="C4" style="padding-top: 100px;" style="min-width: 100px;">C4<br /></td>' +
+      '<td id="D4" style="padding-top: 100px;" style="min-width: 100px;">D4</td>' +
+      '</tr>' +
+      '</tbody>' +
+      '</table>'
   );
 
-  const table2 = Element.fromHtml('<table id="tableB" border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border:none;">' +
-   '<tbody><tr>' +
+  const table2 = Element.fromHtml(
+    '<table id="tableB" border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border:none;">' +
+      '<tbody><tr>' +
       '<td id="TBA0" style="min-width: 100px; height: 40px" rowspan="3">A0</td>' +
       '<td id="TBA1" style="min-width: 100px; height: 40px">A1 </td>' +
       '<td id="TBA2" style="min-width: 100px; height: 40px">A2 </td>' +
       '<td id="TBA3" style="min-width: 100px; height: 40px">A3 </td>' +
       '<td id="TBA4" style="min-width: 100px; height: 40px">A4 </td>' +
       '<td id="TBA5" style="min-width: 100px; height: 40px">A5 </td> ' +
-    '</tr>' +
-    '<tr>' +
+      '</tr>' +
+      '<tr>' +
       '<td id="TBB1" style="min-width: 100px; height: 40px" colspan="2" rowspan=2>B1</td>' +
       '<td id="TBB2" style="min-width: 100px; height: 40px">B2 </td>' +
       '<td id="TBB3" style="min-width: 100px; height: 40px">B3 </td>' +
       '<td id="TBB4" style="min-width: 100px; height: 40px">B4 </td>' +
       '</tr>' +
-    '<tr> ' +
+      '<tr> ' +
       '<td id="TBC1" style="min-width: 100px; height: 40px">C1 </td>' +
       '<td id="TBC2" style="min-width: 100px; height: 40px" colspan=2 rowspan=2>C2 </td>' +
       // '<td id="TBC3" style="min-width: 100px; height: 40px">C3 </td>'+
       // '<td id="TBC4" style="min-width: 100px; height: 40px">C4 </td>'+
       // '<td id="TBC5" style="min-width: 100px; height: 40px">C5 </td>'+
       '</tr>' +
-    '<tr>' +
+      '<tr>' +
       '<td id="TBD1" style="min-width: 100px; height: 40px">D1 </td>' +
       '<td id="TBD2" style="min-width: 100px; height: 40px">D2 </td>' +
       '<td id="TBD3" style="min-width: 100px; height: 40px">D3 </td>' +
       '<td id="TBD4" style="min-width: 100px; height: 40px">D4 </td>' +
-  // '<td id="TBD5" style="min-width: 100px; height: 40px">D5 </td>'+
-  // '<td id="TBD6" style="min-width: 100px; height: 40px">D6 </td>'+
-    '</tr> </tbody></table>');
+      // '<td id="TBD5" style="min-width: 100px; height: 40px">D5 </td>'+
+      // '<td id="TBD6" style="min-width: 100px; height: 40px">D6 </td>'+
+      '</tr> </tbody></table>'
+  );
 
-  InsertAll.append(div, [ table, table2 ] );
+  InsertAll.append(div, [table, table2]);
 
-  const check = function (tableTarget: Element, from: string, to: string, expected: boolean) {
-    [].forEach.call(tableTarget.dom().querySelectorAll('td'), function (td: HTMLElement) {
+  const check = function (
+    tableTarget: Element,
+    from: string,
+    to: string,
+    expected: boolean
+  ) {
+    [].forEach.call(tableTarget.dom().querySelectorAll('td'), function (
+      td: HTMLElement
+    ) {
       td.style.background = '';
     });
-    Option.from(document.querySelector(from) as HTMLElement).getOrDie('Missing element for "from" selector').style.background = '#cadbee';
-    Option.from(document.querySelector(to) as HTMLElement).getOrDie('Missing element for "to" selector').style.background = '#5adb33';
+    Option.from(document.querySelector(from) as HTMLElement).getOrDie(
+      'Missing element for "from" selector'
+    ).style.background = '#cadbee';
+    Option.from(document.querySelector(to) as HTMLElement).getOrDie(
+      'Missing element for "to" selector'
+    ).style.background = '#5adb33';
     const start = SelectorFilter.descendants(tableTarget, from)[0];
     const finish = SelectorFilter.descendants(tableTarget, to)[0];
     const c = TablePositions.getBox(tableTarget, start, finish);

@@ -16,13 +16,4 @@ const execution = ExecutionType.schema();
 const menu = MenuType.schema();
 const special = SpecialType.schema();
 
-export {
-  acyclic,
-  cyclic,
-  flow,
-  flatgrid,
-  matrix,
-  execution,
-  menu,
-  special
-};
+export { acyclic, cyclic, flow, flatgrid, matrix, execution, menu, special };

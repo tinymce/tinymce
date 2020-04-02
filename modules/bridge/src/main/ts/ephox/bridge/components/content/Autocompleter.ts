@@ -2,7 +2,11 @@ import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Range } from '@ephox/dom-globals';
 import { Option, Result } from '@ephox/katamari';
 
-import { SeparatorMenuItem, SeparatorMenuItemApi, separatorMenuItemSchema } from '../menu/SeparatorMenuItem';
+import {
+  SeparatorMenuItem,
+  SeparatorMenuItemApi,
+  separatorMenuItemSchema
+} from '../menu/SeparatorMenuItem';
 import { ColumnTypes } from '../toolbar/ToolbarSplitButton';
 
 export type SeparatorItemApi = SeparatorMenuItemApi;
@@ -33,8 +37,17 @@ export interface AutocompleterApi {
   minChars?: number;
   columns?: ColumnTypes;
   matches?: (rng: Range, text: string, pattern: string) => boolean;
-  fetch: (pattern: string, maxResults: number, fetchOptions: Record<string, any>) => Promise<AutocompleterContents[]>;
-  onAction: (autocompleterApi: AutocompleterInstanceApi, rng, value: string, meta: Record<string, any>) => void;
+  fetch: (
+    pattern: string,
+    maxResults: number,
+    fetchOptions: Record<string, any>
+  ) => Promise<AutocompleterContents[]>;
+  onAction: (
+    autocompleterApi: AutocompleterInstanceApi,
+    rng,
+    value: string,
+    meta: Record<string, any>
+  ) => void;
   maxResults?: number;
 }
 
@@ -49,8 +62,17 @@ export interface Autocompleter {
   minChars: number;
   columns: ColumnTypes;
   matches: Option<(rng: Range, text: string, pattern: string) => boolean>;
-  fetch: (pattern: string, maxResults: number, fetchOptions: Record<string, any>) => Promise<AutocompleterContents[]>;
-  onAction: (autocompleterApi: AutocompleterInstanceApi, rng, value: string, meta: Record<string, any>) => void;
+  fetch: (
+    pattern: string,
+    maxResults: number,
+    fetchOptions: Record<string, any>
+  ) => Promise<AutocompleterContents[]>;
+  onAction: (
+    autocompleterApi: AutocompleterInstanceApi,
+    rng,
+    value: string,
+    meta: Record<string, any>
+  ) => void;
   maxResults: number;
 }
 
@@ -76,8 +98,21 @@ const autocompleterSchema = ValueSchema.objOf([
   FieldSchema.strictFunction('onAction')
 ]);
 
-export const createSeparatorItem = (spec: SeparatorItemApi): Result<SeparatorItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('Autocompleter.Separator', separatorMenuItemSchema, spec);
+export const createSeparatorItem = (
+  spec: SeparatorItemApi
+): Result<SeparatorItem, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw('Autocompleter.Separator', separatorMenuItemSchema, spec);
 
-export const createAutocompleterItem = (spec: AutocompleterItemApi): Result<AutocompleterItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<AutocompleterItem>('Autocompleter.Item', autocompleterItemSchema, spec);
+export const createAutocompleterItem = (
+  spec: AutocompleterItemApi
+): Result<AutocompleterItem, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<AutocompleterItem>(
+    'Autocompleter.Item',
+    autocompleterItemSchema,
+    spec
+  );
 
-export const createAutocompleter = (spec: AutocompleterApi): Result<Autocompleter, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<Autocompleter>('Autocompleter', autocompleterSchema, spec);
+export const createAutocompleter = (
+  spec: AutocompleterApi
+): Result<Autocompleter, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<Autocompleter>('Autocompleter', autocompleterSchema, spec);

@@ -28,8 +28,15 @@ const isDraggable = function (rootElm, elm) {
   return isContentEditableFalse(elm) && elm !== rootElm;
 };
 
-const isValidDropTarget = function (editor: Editor, targetElement, dragElement) {
-  if (targetElement === dragElement || editor.dom.isChildOf(targetElement, dragElement)) {
+const isValidDropTarget = function (
+  editor: Editor,
+  targetElement,
+  dragElement
+) {
+  if (
+    targetElement === dragElement ||
+    editor.dom.isChildOf(targetElement, dragElement)
+  ) {
     return false;
   }
 
@@ -83,21 +90,22 @@ const appendGhostToBody = function (ghostElm, bodyElm) {
 };
 
 const moveGhost = function (ghostElm, position, width, height, maxX, maxY) {
-  let overflowX = 0, overflowY = 0;
+  let overflowX = 0,
+    overflowY = 0;
 
   ghostElm.style.left = position.pageX + 'px';
   ghostElm.style.top = position.pageY + 'px';
 
   if (position.pageX + width > maxX) {
-    overflowX = (position.pageX + width) - maxX;
+    overflowX = position.pageX + width - maxX;
   }
 
   if (position.pageY + height > maxY) {
-    overflowY = (position.pageY + height) - maxY;
+    overflowY = position.pageY + height - maxY;
   }
 
-  ghostElm.style.width = (width - overflowX) + 'px';
-  ghostElm.style.height = (height - overflowY) + 'px';
+  ghostElm.style.width = width - overflowX + 'px';
+  ghostElm.style.height = height - overflowY + 'px';
 };
 
 const removeElement = function (elm) {
@@ -124,7 +132,10 @@ const applyRelPos = function (state, position) {
 const start = function (state, editor: Editor) {
   return function (e) {
     if (isLeftMouseButtonPressed(e)) {
-      const ceElm = Arr.find(editor.dom.getParents(e.target), Predicate.or(isContentEditableFalse, isContentEditableTrue)).getOr(null);
+      const ceElm = Arr.find(
+        editor.dom.getParents(e.target),
+        Predicate.or(isContentEditableFalse, isContentEditableTrue)
+      ).getOr(null);
 
       if (isDraggable(editor.getBody(), ceElm)) {
         const elmPos = editor.dom.getPos(ceElm);
@@ -134,8 +145,10 @@ const start = function (state, editor: Editor) {
         state.element = ceElm;
         state.screenX = e.screenX;
         state.screenY = e.screenY;
-        state.maxX = (editor.inline ? bodyElm.scrollWidth : docElm.offsetWidth) - 2;
-        state.maxY = (editor.inline ? bodyElm.scrollHeight : docElm.offsetHeight) - 2;
+        state.maxX =
+          (editor.inline ? bodyElm.scrollWidth : docElm.offsetWidth) - 2;
+        state.maxY =
+          (editor.inline ? bodyElm.scrollHeight : docElm.offsetHeight) - 2;
         state.relX = e.pageX - elmPos.x;
         state.relY = e.pageY - elmPos.y;
         state.width = ceElm.offsetWidth;
@@ -154,7 +167,10 @@ const move = function (state, editor: Editor) {
   }, 0);
 
   return function (e) {
-    const movement = Math.max(Math.abs(e.screenX - state.screenX), Math.abs(e.screenY - state.screenY));
+    const movement = Math.max(
+      Math.abs(e.screenX - state.screenX),
+      Math.abs(e.screenY - state.screenY)
+    );
 
     if (hasDraggableElement(state) && !state.dragging && movement > 10) {
       const args = editor.fire('dragstart', { target: state.element });
@@ -170,7 +186,14 @@ const move = function (state, editor: Editor) {
       const targetPos = applyRelPos(state, MousePosition.calc(editor, e));
 
       appendGhostToBody(state.ghost, editor.getBody());
-      moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY);
+      moveGhost(
+        state.ghost,
+        targetPos,
+        state.width,
+        state.height,
+        state.maxX,
+        state.maxY
+      );
 
       throttledPlaceCaretAt(e.clientX, e.clientY);
     }
@@ -181,13 +204,17 @@ const move = function (state, editor: Editor) {
 const getRawTarget = function (selection) {
   const rng = selection.getSel().getRangeAt(0);
   const startContainer = rng.startContainer;
-  return startContainer.nodeType === 3 ? startContainer.parentNode : startContainer;
+  return startContainer.nodeType === 3
+    ? startContainer.parentNode
+    : startContainer;
 };
 
 const drop = function (state, editor: Editor) {
   return function (e) {
     if (state.dragging) {
-      if (isValidDropTarget(editor, getRawTarget(editor.selection), state.element)) {
+      if (
+        isValidDropTarget(editor, getRawTarget(editor.selection), state.element)
+      ) {
         let targetClone = cloneElement(state.element);
 
         const args = editor.fire('drop', {
@@ -229,7 +256,12 @@ const removeDragState = function (state) {
 
 const bindFakeDragEvents = function (editor: Editor) {
   const state = {};
-  let pageDom, dragStartHandler, dragHandler, dropHandler, dragEndHandler, rootDocument;
+  let pageDom,
+    dragStartHandler,
+    dragHandler,
+    dropHandler,
+    dragEndHandler,
+    rootDocument;
 
   pageDom = DOMUtils.DOM;
   rootDocument = document;
@@ -254,9 +286,15 @@ const bindFakeDragEvents = function (editor: Editor) {
 const blockIeDrop = function (editor: Editor) {
   editor.on('drop', function (e) {
     // FF doesn't pass out clientX/clientY for drop since this is for IE we just use null instead
-    const realTarget = typeof e.clientX !== 'undefined' ? editor.getDoc().elementFromPoint(e.clientX, e.clientY) : null;
+    const realTarget =
+      typeof e.clientX !== 'undefined'
+        ? editor.getDoc().elementFromPoint(e.clientX, e.clientY)
+        : null;
 
-    if (isContentEditableFalse(realTarget) || isContentEditableFalse(editor.dom.getContentEditableParent(realTarget))) {
+    if (
+      isContentEditableFalse(realTarget) ||
+      isContentEditableFalse(editor.dom.getContentEditableParent(realTarget))
+    ) {
       e.preventDefault();
     }
   });
@@ -267,6 +305,4 @@ const init = function (editor: Editor) {
   blockIeDrop(editor);
 };
 
-export {
-  init
-};
+export { init };

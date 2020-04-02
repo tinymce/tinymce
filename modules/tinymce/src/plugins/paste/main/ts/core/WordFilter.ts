@@ -27,9 +27,11 @@ import { Unicode } from '@ephox/katamari';
  */
 function isWordContent(content) {
   return (
-    (/<font face="Times New Roman"|class="?Mso|style="[^"]*\bmso-|style='[^'']*\bmso-|w:WordDocument/i).test(content) ||
-    (/class="OutlineElement/).test(content) ||
-    (/id="?docs\-internal\-guid\-/.test(content))
+    /<font face="Times New Roman"|class="?Mso|style="[^"]*\bmso-|style='[^'']*\bmso-|w:WordDocument/i.test(
+      content
+    ) ||
+    /class="OutlineElement/.test(content) ||
+    /id="?docs\-internal\-guid\-/.test(content)
   );
 }
 
@@ -40,13 +42,13 @@ function isNumericList(text) {
   let found, patterns;
 
   patterns = [
-    /^[IVXLMCD]{1,2}\.[ \u00a0]/,  // Roman upper case
-    /^[ivxlmcd]{1,2}\.[ \u00a0]/,  // Roman lower case
-    /^[a-z]{1,2}[\.\)][ \u00a0]/,  // Alphabetical a-z
-    /^[A-Z]{1,2}[\.\)][ \u00a0]/,  // Alphabetical A-Z
-    /^[0-9]+\.[ \u00a0]/,          // Numeric lists
+    /^[IVXLMCD]{1,2}\.[ \u00a0]/, // Roman upper case
+    /^[ivxlmcd]{1,2}\.[ \u00a0]/, // Roman lower case
+    /^[a-z]{1,2}[\.\)][ \u00a0]/, // Alphabetical a-z
+    /^[A-Z]{1,2}[\.\)][ \u00a0]/, // Alphabetical A-Z
+    /^[0-9]+\.[ \u00a0]/, // Numeric lists
     /^[\u3007\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d]+\.[ \u00a0]/, // Japanese
-    /^[\u58f1\u5f10\u53c2\u56db\u4f0d\u516d\u4e03\u516b\u4e5d\u62fe]+\.[ \u00a0]/  // Chinese
+    /^[\u58f1\u5f10\u53c2\u56db\u4f0d\u516d\u4e03\u516b\u4e5d\u62fe]+\.[ \u00a0]/ // Chinese
   ];
 
   text = text.replace(/^[\u00a0 ]+/, '');
@@ -71,7 +73,9 @@ function isBulletList(text) {
  * @param {tinymce.html.Node} node Root node to convert children of.
  */
 function convertFakeListsToProperLists(node) {
-  let currentListNode, prevListNode, lastLevel = 1;
+  let currentListNode,
+    prevListNode,
+    lastLevel = 1;
 
   function getText(node) {
     let txt = '';
@@ -227,7 +231,8 @@ function convertFakeListsToProperLists(node) {
 }
 
 function filterStyles(editor, validStyles, node, styleValue) {
-  let outputStyles = {}, matches;
+  let outputStyles = {},
+    matches;
   const styles = editor.dom.parseStyle(styleValue);
 
   Tools.each(styles, function (value, name) {
@@ -295,7 +300,10 @@ function filterStyles(editor, validStyles, node, styleValue) {
     }
 
     // Output only valid styles
-    if (Settings.getRetainStyleProps(editor) === 'all' || (validStyles && validStyles[name])) {
+    if (
+      Settings.getRetainStyleProps(editor) === 'all' ||
+      (validStyles && validStyles[name])
+    ) {
       outputStyles[name] = value;
     }
   });
@@ -345,17 +353,23 @@ const filterWordContent = function (editor: Editor, content: string) {
     /<(!|script[^>]*>.*?<\/script(?=[>\s])|\/?(\?xml(:\w+)?|img|meta|link|style|\w:\w+)(?=[\s\/>]))[^>]*>/gi,
 
     // Convert <s> into <strike> for line-though
-    [ /<(\/?)s>/gi, '<$1strike>' ],
+    [/<(\/?)s>/gi, '<$1strike>'],
 
     // Replace nsbp entites to char since it's easier to handle
-    [ /&nbsp;/gi, Unicode.nbsp ],
+    [/&nbsp;/gi, Unicode.nbsp],
 
     // Convert <span style="mso-spacerun:yes">___</span> to string of alternating
     // breaking/non-breaking spaces of same length
-    [ /<span\s+style\s*=\s*"\s*mso-spacerun\s*:\s*yes\s*;?\s*"\s*>([\s\u00a0]*)<\/span>/gi,
+    [
+      /<span\s+style\s*=\s*"\s*mso-spacerun\s*:\s*yes\s*;?\s*"\s*>([\s\u00a0]*)<\/span>/gi,
       function (str, spaces) {
-        return (spaces.length > 0) ?
-          spaces.replace(/./, ' ').slice(Math.floor(spaces.length / 2)).split('').join(Unicode.nbsp) : '';
+        return spaces.length > 0
+          ? spaces
+              .replace(/./, ' ')
+              .slice(Math.floor(spaces.length / 2))
+              .split('')
+              .join(Unicode.nbsp)
+          : '';
       }
     ]
   ]);
@@ -388,11 +402,15 @@ const filterWordContent = function (editor: Editor, content: string) {
 
   // Filter styles to remove "mso" specific styles and convert some of them
   domParser.addAttributeFilter('style', function (nodes) {
-    let i = nodes.length, node;
+    let i = nodes.length,
+      node;
 
     while (i--) {
       node = nodes[i];
-      node.attr('style', filterStyles(editor, validStyles, node, node.attr('style')));
+      node.attr(
+        'style',
+        filterStyles(editor, validStyles, node, node.attr('style'))
+      );
 
       // Remove pointess spans
       if (node.name === 'span' && node.parent && !node.attributes.length) {
@@ -403,7 +421,9 @@ const filterWordContent = function (editor: Editor, content: string) {
 
   // Check the class attribute for comments or del items and remove those
   domParser.addAttributeFilter('class', function (nodes) {
-    let i = nodes.length, node, className;
+    let i = nodes.length,
+      node,
+      className;
 
     while (i--) {
       node = nodes[i];
@@ -428,7 +448,10 @@ const filterWordContent = function (editor: Editor, content: string) {
 
   // Keep some of the links and anchors
   domParser.addNodeFilter('a', function (nodes) {
-    let i = nodes.length, node, href, name;
+    let i = nodes.length,
+      node,
+      href,
+      name;
 
     while (i--) {
       node = nodes[i];
@@ -473,18 +496,20 @@ const filterWordContent = function (editor: Editor, content: string) {
   }
 
   // Serialize DOM back to HTML
-  content = Serializer({
-    validate: editor.settings.validate
-  }, schema).serialize(rootNode);
+  content = Serializer(
+    {
+      validate: editor.settings.validate
+    },
+    schema
+  ).serialize(rootNode);
 
   return content;
 };
 
 const preProcess = function (editor: Editor, content) {
-  return Settings.shouldUseDefaultFilters(editor) ? filterWordContent(editor, content) : content;
+  return Settings.shouldUseDefaultFilters(editor)
+    ? filterWordContent(editor, content)
+    : content;
 };
 
-export {
-  preProcess,
-  isWordContent
-};
+export { preProcess, isWordContent };

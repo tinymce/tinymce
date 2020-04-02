@@ -24,7 +24,13 @@ UnitTest.test('MatchSplitterTest', function () {
     word: string;
   }
 
-  const check = function (all: string[], expected: CheckExpect[], ids: string[], matches: (PRange & { word: () => string })[], input: Gene) {
+  const check = function (
+    all: string[],
+    expected: CheckExpect[],
+    ids: string[],
+    matches: (PRange & { word: () => string })[],
+    input: Gene
+  ) {
     const universe = TestUniverse(input);
     const items = Finder.getAll(universe, ids);
     const list = PositionArray.generate(items, function (item, start) {
@@ -34,19 +40,25 @@ UnitTest.test('MatchSplitterTest', function () {
 
     const actual = MatchSplitter.separate(universe, list, matches);
     assert.eq(expected.length, actual.length, 'Wrong sizes for MatchSplitter');
-    assert.eq(expected, Arr.map(actual, function (a) {
-      return {
-        text: TestRenders.texts(a.elements()),
-        exact: a.exact(),
-        word: a.word()
-      };
-    }));
+    assert.eq(
+      expected,
+      Arr.map(actual, function (a) {
+        return {
+          text: TestRenders.texts(a.elements()),
+          exact: a.exact(),
+          word: a.word()
+        };
+      })
+    );
 
     assert.eq(all, TestRenders.texts(universe.get().children));
-
   };
 
-  const match = function (start: number, finish: number, word: string): PRange & { word: () => string } {
+  const match = function (
+    start: number,
+    finish: number,
+    word: string
+  ): PRange & { word: () => string } {
     return {
       start: Fun.constant(start),
       finish: Fun.constant(finish),
@@ -61,10 +73,21 @@ UnitTest.test('MatchSplitterTest', function () {
     correctly. The output format is transformed significantly so this isn't testing the output value
     as transparently as was desired.
   */
-  check([ 'AB', 'C', 'D', 'E', 'FG', 'H', 'I', 'JK', 'L', 'MNO', 'P' ], [
-    { text: [ 'C', 'D' ], exact: 'CD', word: 'w1' },
-    { text: [ 'FG' ], exact: 'FG', word: 'w2' },
-    { text: [ 'I', 'JK' ], exact: 'IJK', word: 'w3' },
-    { text: [ 'L', 'MNO' ], exact: 'LMNO', word: 'w4' }
-  ], [ '1', '2', '3', '4', '5' ], [ match(2, 4, 'w1'), match(5, 7, 'w2'), match(8, 11, 'w3'), match(11, 15, 'w4') ], data());
+  check(
+    ['AB', 'C', 'D', 'E', 'FG', 'H', 'I', 'JK', 'L', 'MNO', 'P'],
+    [
+      { text: ['C', 'D'], exact: 'CD', word: 'w1' },
+      { text: ['FG'], exact: 'FG', word: 'w2' },
+      { text: ['I', 'JK'], exact: 'IJK', word: 'w3' },
+      { text: ['L', 'MNO'], exact: 'LMNO', word: 'w4' }
+    ],
+    ['1', '2', '3', '4', '5'],
+    [
+      match(2, 4, 'w1'),
+      match(5, 7, 'w2'),
+      match(8, 11, 'w3'),
+      match(11, 15, 'w4')
+    ],
+    data()
+  );
 });

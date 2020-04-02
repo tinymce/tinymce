@@ -1,6 +1,21 @@
 import { Document, Node as DomNode } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
-import { Attr, Compare, Css, Element, Insert, InsertAll, Node, PredicateFilter, PredicateFind, Remove, SelectorFilter, SelectorFind, Text, Traverse } from '@ephox/sugar';
+import {
+  Attr,
+  Compare,
+  Css,
+  Element,
+  Insert,
+  InsertAll,
+  Node,
+  PredicateFilter,
+  PredicateFind,
+  Remove,
+  SelectorFilter,
+  SelectorFind,
+  Text,
+  Traverse
+} from '@ephox/sugar';
 import TagBoundaries from '../common/TagBoundaries';
 import { Universe } from './Universe';
 
@@ -27,13 +42,16 @@ export default function (): Universe<Element, Document> {
     if (!Node.isElement(element)) {
       return false;
     }
-    return Arr.contains([ 'br', 'img', 'hr', 'input' ], Node.name(element));
+    return Arr.contains(['br', 'img', 'hr', 'input'], Node.name(element));
   };
 
-  const isNonEditable = (element: Element) => Node.isElement(element) && Attr.get(element, 'contenteditable') === 'false';
+  const isNonEditable = (element: Element) =>
+    Node.isElement(element) && Attr.get(element, 'contenteditable') === 'false';
 
   const comparePosition = function (element: Element, other: Element) {
-    return (element.dom() as DomNode).compareDocumentPosition(other.dom() as DomNode);
+    return (element.dom() as DomNode).compareDocumentPosition(
+      other.dom() as DomNode
+    );
   };
 
   const copyAttributesTo = function (source: Element, destination: Element) {

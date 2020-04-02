@@ -45,17 +45,17 @@ UnitTest.test('DimensionTest', function () {
     // Also in TBIO we don't generally care about JQuery's difference between get() and getOuter()
     Css.set(c, 'padding', '20px');
     // padding only
-    assert.eq(40, dimension.get(c));        // jQuery === 0
+    assert.eq(40, dimension.get(c)); // jQuery === 0
     assert.eq(40, dimension.getOuter(c));
 
     Css.set(c, 'border', '2px solid #fff');
     // border + padding
-    assert.eq(44, dimension.get(c));        // jQuery === 0
+    assert.eq(44, dimension.get(c)); // jQuery === 0
     assert.eq(44, dimension.getOuter(c));
 
     Css.set(c, 'margin', '3px');
     // border + padding + margin
-    assert.eq(44, dimension.get(c));        // jQuery === 0
+    assert.eq(44, dimension.get(c)); // jQuery === 0
     assert.eq(44, dimension.getOuter(c));
 
     // COMPLETE MADNESS: With border-sizing: border-box JQuery does WEIRD SHIT when you set width.
@@ -64,7 +64,7 @@ UnitTest.test('DimensionTest', function () {
     dimension.set(c, 20);
     // border + padding + width + margin
     const bpwm = borderBox ? 44 : 64;
-    assert.eq(bpwm, dimension.get(c));      // jQuery === 20 in both cases
+    assert.eq(bpwm, dimension.get(c)); // jQuery === 20 in both cases
     assert.eq(bpwm, dimension.getOuter(c)); // jQuery === 64 in both cases
 
     Css.remove(c, 'padding');
@@ -75,13 +75,13 @@ UnitTest.test('DimensionTest', function () {
 
     dimension.set(c, 20);
     // border + width + margin
-    assert.eq(bwmSize + 4, dimension.get(c));          // jQuery === 20
+    assert.eq(bwmSize + 4, dimension.get(c)); // jQuery === 20
     assert.eq(bwmSize + 4, dimension.getOuter(c));
 
     Css.remove(c, 'border');
     // width + margin
-    assert.eq(20, dimension.get(c));            // jQuery === 24 in border-box mode
-    assert.eq(20, dimension.getOuter(c));       // jQuery === 24 in border-box mode
+    assert.eq(20, dimension.get(c)); // jQuery === 24 in border-box mode
+    assert.eq(20, dimension.getOuter(c)); // jQuery === 24 in border-box mode
 
     dimension.set(c, 20);
     // width + margin
@@ -102,7 +102,7 @@ UnitTest.test('DimensionTest', function () {
       height: '30px'
     });
 
-    const allSize = borderBox ? 30 : 34;        // jQuery === 26 : 30
+    const allSize = borderBox ? 30 : 34; // jQuery === 26 : 30
     assert.eq(allSize, dimension.get(c));
     assert.eq(allSize, dimension.getOuter(c));
     Css.set(c, 'padding', '20px');
@@ -149,7 +149,15 @@ UnitTest.test('DimensionTest', function () {
   const maxHeight = 50;
   const maxWidth = 200;
 
-  Attr.set(bounds, 'title', 'I am the bounds, i should never be larger than ' + maxHeight + 'px high or ' + maxWidth + 'px wide, and my scrollHeight/Width should never exceed those limits either. k?');
+  Attr.set(
+    bounds,
+    'title',
+    'I am the bounds, i should never be larger than ' +
+      maxHeight +
+      'px high or ' +
+      maxWidth +
+      'px wide, and my scrollHeight/Width should never exceed those limits either. k?'
+  );
   Css.setAll(bounds, {
     display: 'inline-block',
     overflow: 'hidden' // for automated test purposes hidden is best for IE, scroll will add scroll bars
@@ -176,12 +184,28 @@ UnitTest.test('DimensionTest', function () {
   // Dimension.agregate takes an element and a list of propeties that return measurement values.
   // it will accumulatively add all the properties and return a cumulative total.
   const dim = Dimension('internal', () => 1);
-  const ctotal = dim.aggregate(container, [ 'padding-top', 'margin-bottom', 'border-top-width', 'border-bottom-width' ]);
-  assert.eq( ( paddingTop + marginBottom + borderWidth + borderWidth ), ctotal);
+  const ctotal = dim.aggregate(container, [
+    'padding-top',
+    'margin-bottom',
+    'border-top-width',
+    'border-bottom-width'
+  ]);
+  assert.eq(paddingTop + marginBottom + borderWidth + borderWidth, ctotal);
 
   // mixit up, add unknowns
-  const mixup = dim.aggregate(container, [ 'padding-top', 'margin-bottom', 'border-top-width', 'border-bottom-width', 'padding-bottom', 'display', 'elmos-house' ]);
-  assert.eq( ( paddingTop + marginBottom + borderWidth + borderWidth + 0 + 0 + 0), mixup);
+  const mixup = dim.aggregate(container, [
+    'padding-top',
+    'margin-bottom',
+    'border-top-width',
+    'border-bottom-width',
+    'padding-bottom',
+    'display',
+    'elmos-house'
+  ]);
+  assert.eq(
+    paddingTop + marginBottom + borderWidth + borderWidth + 0 + 0 + 0,
+    mixup
+  );
 
   // Height.setMax test
   // when we set max-height: 100px we mean it!, natively borders and padding are not included in these calculations
@@ -193,15 +217,31 @@ UnitTest.test('DimensionTest', function () {
 
   // native max-height proof of failure
   const containerHeight = Height.get(container);
-  assert.eq(true, containerHeight > maxHeight, 'failing case the parent boundary should be greater than the allowed maximum');
+  assert.eq(
+    true,
+    containerHeight > maxHeight,
+    'failing case the parent boundary should be greater than the allowed maximum'
+  );
   // we use the innerHeight value here because it has yet to hit the maxHeight
-  assert.eq( (borderWidth + paddingTop + innerHeight + borderWidth ), containerHeight, ' failing case true calculation does not match' );
+  assert.eq(
+    borderWidth + paddingTop + innerHeight + borderWidth,
+    containerHeight,
+    ' failing case true calculation does not match'
+  );
 
   const boundsHeight = Height.get(bounds);
-  assert.eq(true, boundsHeight > maxHeight, 'failing case the parent boundary should be greater than the allowed maximum');
+  assert.eq(
+    true,
+    boundsHeight > maxHeight,
+    'failing case the parent boundary should be greater than the allowed maximum'
+  );
 
   // if the child pushes the parent oversize, the parent may be forced to scroll which may not be desireable
-  assert.eq(true, boundsHeight > containerHeight, ' the parent bounds should be the same height as the child container');
+  assert.eq(
+    true,
+    boundsHeight > containerHeight,
+    ' the parent bounds should be the same height as the child container'
+  );
 
   // Passing test, the container should equal to maxHeight set!
   Height.setMax(container, maxHeight);
@@ -211,7 +251,10 @@ UnitTest.test('DimensionTest', function () {
 
   // the max-height property should be a compensated value.
   const cssMaxHeight = Css.get(container, 'max-height');
-  assert.eq(( maxHeight - paddingTop - borderWidth - borderWidth - marginBottom ) + 'px', cssMaxHeight);
+  assert.eq(
+    maxHeight - paddingTop - borderWidth - borderWidth - marginBottom + 'px',
+    cssMaxHeight
+  );
 
   // native max-width: proof of failure
   Css.set(container, 'max-width', maxWidth + 'px');
@@ -226,13 +269,19 @@ UnitTest.test('DimensionTest', function () {
   assert.eq(true, boundsWidth > maxWidth);
 
   // Table height test Firefox will exclude caption from offsetHeight
-  const tbl = Element.fromHtml<HTMLTableElement>('<table><caption style="height: 300px"></caption><tbody><tr><td style="height: 10px"></td></tr></tbody></table>');
+  const tbl = Element.fromHtml<HTMLTableElement>(
+    '<table><caption style="height: 300px"></caption><tbody><tr><td style="height: 10px"></td></tr></tbody></table>'
+  );
   Insert.append(bounds, tbl);
   assert.eq(true, Height.getOuter(tbl) > 300, 'Height should be more than 300');
 
   // Height on detached node
   const detachedElm = Element.fromHtml<HTMLDivElement>('<div>a</div>');
-  assert.eq(0, Height.getOuter(detachedElm), 'Should be zero for a detached element');
+  assert.eq(
+    0,
+    Height.getOuter(detachedElm),
+    'Should be zero for a detached element'
+  );
 
   // This test is broken in ie10, we don't understand exactly how it calculates max-width, every other platform passes.
   // Since we are not using the Width.setMax method in out codebase, commenting it out till then.

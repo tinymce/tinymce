@@ -1,7 +1,7 @@
 import { getDemoRegistry } from './../buttons/DemoRegistry';
 
 const editor = {
-  on: (_s, _f) => { }
+  on: (_s, _f) => {}
 };
 
 export const registerPasteItems = () => {
@@ -12,7 +12,7 @@ export const registerPasteItems = () => {
       editor.on('PastePlainTextToggle', (e) => {
         buttonApi.setActive(e.state);
       });
-      return () => { };
+      return () => {};
     },
     onAction: (_buttonApi) => {
       // toggles setting

@@ -5,7 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Container as AlloyContainer, SketchSpec, Behaviour, Tabstopping, Focusing } from '@ephox/alloy';
+import {
+  Container as AlloyContainer,
+  SketchSpec,
+  Behaviour,
+  Tabstopping,
+  Focusing
+} from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Omit } from '../Omit';
 
@@ -16,7 +22,7 @@ export const renderHtmlPanel = (spec: HtmlPanelSpec): SketchSpec => {
     return AlloyContainer.sketch({
       dom: {
         tag: 'div',
-        classes: [ 'tox-form__group' ],
+        classes: ['tox-form__group'],
         innerHtml: spec.html
       }
     });
@@ -24,15 +30,15 @@ export const renderHtmlPanel = (spec: HtmlPanelSpec): SketchSpec => {
     return AlloyContainer.sketch({
       dom: {
         tag: 'div',
-        classes: [ 'tox-form__group' ],
+        classes: ['tox-form__group'],
         innerHtml: spec.html,
         attributes: {
           role: 'document'
         }
       },
       containerBehaviours: Behaviour.derive([
-        Tabstopping.config({ }),
-        Focusing.config({ })
+        Tabstopping.config({}),
+        Focusing.config({})
       ])
     });
   }

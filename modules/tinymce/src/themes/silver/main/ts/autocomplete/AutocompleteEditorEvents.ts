@@ -5,7 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Highlighting, AlloyTriggers, NativeEvents } from '@ephox/alloy';
+import {
+  AlloyComponent,
+  Highlighting,
+  AlloyTriggers,
+  NativeEvents
+} from '@ephox/alloy';
 import { Event, KeyboardEvent } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
@@ -23,17 +28,20 @@ export interface AutocompleterUiApi {
 }
 
 const setup = (api: AutocompleterUiApi, editor: Editor) => {
-
   editor.on('keypress compositionend', api.onKeypress.throttle);
 
   editor.on('remove', api.onKeypress.cancel);
 
-  const redirectKeyToItem = (item: AlloyComponent, e: EditorEvent<KeyboardEvent>) => {
+  const redirectKeyToItem = (
+    item: AlloyComponent,
+    e: EditorEvent<KeyboardEvent>
+  ) => {
     AlloyTriggers.emitWith(item, NativeEvents.keydown(), { raw: e });
   };
 
   editor.on('keydown', (e) => {
-    const getItem = (): Option<AlloyComponent> => api.getView().bind(Highlighting.getHighlighted);
+    const getItem = (): Option<AlloyComponent> =>
+      api.getView().bind(Highlighting.getHighlighted);
 
     // Pressing <backspace> updates the autocompleter
     if (e.which === 8) {
@@ -68,13 +76,11 @@ const setup = (api: AutocompleterUiApi, editor: Editor) => {
           e.stopImmediatePropagation();
           // Pressing <up>, <left>, <right> gets redirected to the selected item
         } else if (e.which === 37 || e.which === 38 || e.which === 39) {
-          getItem().each(
-            (item) => {
-              redirectKeyToItem(item, e);
-              e.preventDefault();
-              e.stopImmediatePropagation();
-            }
-          );
+          getItem().each((item) => {
+            redirectKeyToItem(item, e);
+            e.preventDefault();
+            e.stopImmediatePropagation();
+          });
         }
       } else {
         // Pressing <enter>, <down> or <up> closes the autocompleter
@@ -87,7 +93,11 @@ const setup = (api: AutocompleterUiApi, editor: Editor) => {
 
   editor.on('NodeChange', (e) => {
     // Close if active, not in the middle of an onAction callback and we're no longer inside the autocompleter span
-    if (api.isActive() && !api.isProcessingAction() && AutocompleteTag.detect(Element.fromDom(e.element)).isNone()) {
+    if (
+      api.isActive() &&
+      !api.isProcessingAction() &&
+      AutocompleteTag.detect(Element.fromDom(e.element)).isNone()
+    ) {
       api.cancelIfNecessary();
     }
   });

@@ -29,72 +29,128 @@ export interface SandboxExtras {
   onOpen?: (component: AlloyComponent, menu: AlloyComponent) => void;
 }
 
-export enum HighlightOnOpen { HighlightFirst, HighlightNone }
+export enum HighlightOnOpen {
+  HighlightFirst,
+  HighlightNone
+}
 
-const getAnchor = (detail: CommonDropdownDetail<TieredData>, component: AlloyComponent): HotspotAnchorSpec => {
+const getAnchor = (
+  detail: CommonDropdownDetail<TieredData>,
+  component: AlloyComponent
+): HotspotAnchorSpec => {
   const hotspot = detail.getHotspot(component).getOr(component);
   // type required on TS3.3, can remove once we upgrade to 3.4
   const anchor: 'hotspot' = 'hotspot';
   const overrides = detail.getAnchorOverrides();
-  return detail.layouts.fold(() => ({ anchor, hotspot, overrides }), (layouts) => ({ anchor, hotspot, overrides, layouts }));
+  return detail.layouts.fold(
+    () => ({ anchor, hotspot, overrides }),
+    (layouts) => ({ anchor, hotspot, overrides, layouts })
+  );
 };
 
-const fetch = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, component: AlloyComponent): Future<Option<TieredData>> => {
+const fetch = (
+  detail: CommonDropdownDetail<TieredData>,
+  mapFetch: (tdata: Option<TieredData>) => Option<TieredData>,
+  component: AlloyComponent
+): Future<Option<TieredData>> => {
   const fetcher = detail.fetch;
   return fetcher(component).map(mapFetch);
 };
 
-const openF = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, anchor: HotspotAnchorSpec, component: AlloyComponent, sandbox: AlloyComponent, externals: any, highlightOnOpen: HighlightOnOpen): Future<Option<SketchSpec>> => {
-  const futureData: Future<Option<TieredData>> = fetch(detail, mapFetch, component);
+const openF = (
+  detail: CommonDropdownDetail<TieredData>,
+  mapFetch: (tdata: Option<TieredData>) => Option<TieredData>,
+  anchor: HotspotAnchorSpec,
+  component: AlloyComponent,
+  sandbox: AlloyComponent,
+  externals: any,
+  highlightOnOpen: HighlightOnOpen
+): Future<Option<SketchSpec>> => {
+  const futureData: Future<Option<TieredData>> = fetch(
+    detail,
+    mapFetch,
+    component
+  );
 
   const getLazySink = getSink(component, detail);
 
   // TODO: Make this potentially a single menu also
-  return futureData.map((tdata) => tdata.bind((data) => Option.from(TieredMenu.sketch({
-    ...externals.menu(),
+  return futureData.map((tdata) =>
+    tdata.bind((data) =>
+      Option.from(
+        TieredMenu.sketch({
+          ...externals.menu(),
 
-    uid: Tagger.generate(''),
-    data,
+          uid: Tagger.generate(''),
+          data,
 
-    highlightImmediately: highlightOnOpen === HighlightOnOpen.HighlightFirst,
+          highlightImmediately:
+            highlightOnOpen === HighlightOnOpen.HighlightFirst,
 
-    onOpenMenu(tmenu, menu) {
-      const sink = getLazySink().getOrDie();
-      Positioning.position(sink, anchor, menu);
-      Sandboxing.decloak(sandbox);
-    },
+          onOpenMenu(tmenu, menu) {
+            const sink = getLazySink().getOrDie();
+            Positioning.position(sink, anchor, menu);
+            Sandboxing.decloak(sandbox);
+          },
 
-    onOpenSubmenu(tmenu, item, submenu) {
-      const sink = getLazySink().getOrDie();
-      Positioning.position(sink, {
-        anchor: 'submenu',
-        item
-      }, submenu);
-      Sandboxing.decloak(sandbox);
-    },
+          onOpenSubmenu(tmenu, item, submenu) {
+            const sink = getLazySink().getOrDie();
+            Positioning.position(
+              sink,
+              {
+                anchor: 'submenu',
+                item
+              },
+              submenu
+            );
+            Sandboxing.decloak(sandbox);
+          },
 
-    onRepositionMenu(tmenu, primaryMenu, submenuTriggers) {
-      const sink = getLazySink().getOrDie();
-      Positioning.position(sink, anchor, primaryMenu);
-      Arr.each(submenuTriggers, (st) => {
-        Positioning.position(sink, { anchor: 'submenu', item: st.triggeringItem }, st.triggeredMenu);
-      });
-    },
+          onRepositionMenu(tmenu, primaryMenu, submenuTriggers) {
+            const sink = getLazySink().getOrDie();
+            Positioning.position(sink, anchor, primaryMenu);
+            Arr.each(submenuTriggers, (st) => {
+              Positioning.position(
+                sink,
+                { anchor: 'submenu', item: st.triggeringItem },
+                st.triggeredMenu
+              );
+            });
+          },
 
-    onEscape() {
-      // Focus the triggering component after escaping the menu
-      Focusing.focus(component);
-      Sandboxing.close(sandbox);
-      return Option.some(true);
-    }
-  }))));
+          onEscape() {
+            // Focus the triggering component after escaping the menu
+            Focusing.focus(component);
+            Sandboxing.close(sandbox);
+            return Option.some(true);
+          }
+        })
+      )
+    )
+  );
 };
 
 // onOpenSync is because some operations need to be applied immediately, not wrapped in a future
 // It can avoid things like flickering due to asynchronous bouncing
-const open = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, hotspot: AlloyComponent, sandbox: AlloyComponent, externals: any, onOpenSync: OnOpenSyncFunc, highlightOnOpen: HighlightOnOpen) => {
+const open = (
+  detail: CommonDropdownDetail<TieredData>,
+  mapFetch: (tdata: Option<TieredData>) => Option<TieredData>,
+  hotspot: AlloyComponent,
+  sandbox: AlloyComponent,
+  externals: any,
+  onOpenSync: OnOpenSyncFunc,
+  highlightOnOpen: HighlightOnOpen
+) => {
   const anchor = getAnchor(detail, hotspot);
-  const processed = openF(detail, mapFetch, anchor, hotspot, sandbox, externals, highlightOnOpen);
+  const processed = openF(
+    detail,
+    mapFetch,
+    anchor,
+    hotspot,
+    sandbox,
+    externals,
+    highlightOnOpen
+  );
   return processed.map((tdata) => {
     // If we have data, display a menu. Else, close the menu if it was open
     tdata.fold(
@@ -113,20 +169,47 @@ const open = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option
   });
 };
 
-const close = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, component: AlloyComponent, sandbox: AlloyComponent, _externals: any, _onOpenSync: OnOpenSyncFunc, _highlightOnOpen: HighlightOnOpen) => {
+const close = (
+  detail: CommonDropdownDetail<TieredData>,
+  mapFetch: (tdata: Option<TieredData>) => Option<TieredData>,
+  component: AlloyComponent,
+  sandbox: AlloyComponent,
+  _externals: any,
+  _onOpenSync: OnOpenSyncFunc,
+  _highlightOnOpen: HighlightOnOpen
+) => {
   Sandboxing.close(sandbox);
   return Future.pure(sandbox);
 };
 
-const togglePopup = (detail: CommonDropdownDetail<TieredData>, mapFetch: (tdata: Option<TieredData>) => Option<TieredData>, hotspot: AlloyComponent, externals: any, onOpenSync: OnOpenSyncFunc, highlightOnOpen: HighlightOnOpen) => {
+const togglePopup = (
+  detail: CommonDropdownDetail<TieredData>,
+  mapFetch: (tdata: Option<TieredData>) => Option<TieredData>,
+  hotspot: AlloyComponent,
+  externals: any,
+  onOpenSync: OnOpenSyncFunc,
+  highlightOnOpen: HighlightOnOpen
+) => {
   const sandbox = Coupling.getCoupled(hotspot, 'sandbox');
   const showing = Sandboxing.isOpen(sandbox);
 
   const action = showing ? close : open;
-  return action(detail, mapFetch, hotspot, sandbox, externals, onOpenSync, highlightOnOpen);
+  return action(
+    detail,
+    mapFetch,
+    hotspot,
+    sandbox,
+    externals,
+    onOpenSync,
+    highlightOnOpen
+  );
 };
 
-const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent, useMinWidth: boolean) => {
+const matchWidth = (
+  hotspot: AlloyComponent,
+  container: AlloyComponent,
+  useMinWidth: boolean
+) => {
   const menu = Composing.getCurrent(container).getOr(container);
   const buttonWidth = Width.get(hotspot.element());
   if (useMinWidth) {
@@ -141,11 +224,25 @@ interface SinkDetail {
   lazySink: Option<LazySink>;
 }
 
-const getSink = (anyInSystem: AlloyComponent, sinkDetail: SinkDetail): () => ReturnType<LazySink> => anyInSystem.getSystem().getByUid(sinkDetail.uid + '-' + InternalSink.suffix()).map((internalSink) => () => Result.value(internalSink)).getOrThunk(() => sinkDetail.lazySink.fold(() => () => (
-  Result.error(new Error(
-    'No internal sink is specified, nor could an external sink be found'
-  ))
-),  (lazySinkFn) => () => lazySinkFn(anyInSystem)));
+const getSink = (
+  anyInSystem: AlloyComponent,
+  sinkDetail: SinkDetail
+): (() => ReturnType<LazySink>) =>
+  anyInSystem
+    .getSystem()
+    .getByUid(sinkDetail.uid + '-' + InternalSink.suffix())
+    .map((internalSink) => () => Result.value(internalSink))
+    .getOrThunk(() =>
+      sinkDetail.lazySink.fold(
+        () => () =>
+          Result.error(
+            new Error(
+              'No internal sink is specified, nor could an external sink be found'
+            )
+          ),
+        (lazySinkFn) => () => lazySinkFn(anyInSystem)
+      )
+    );
 
 const doRepositionMenus = (sandbox: AlloyComponent) => {
   Sandboxing.getState(sandbox).each((tmenu) => {
@@ -153,20 +250,30 @@ const doRepositionMenus = (sandbox: AlloyComponent) => {
   });
 };
 
-const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyComponent, extras?: SandboxExtras) => {
+const makeSandbox = (
+  detail: CommonDropdownDetail<TieredData>,
+  hotspot: AlloyComponent,
+  extras?: SandboxExtras
+) => {
   const ariaOwner = AriaOwner.manager();
 
   const onOpen = (component: AlloyComponent, menu: AlloyComponent) => {
     const anchor = getAnchor(detail, hotspot);
     ariaOwner.link(hotspot.element());
-    if (detail.matchWidth) { matchWidth(anchor.hotspot, menu, detail.useMinWidth); }
+    if (detail.matchWidth) {
+      matchWidth(anchor.hotspot, menu, detail.useMinWidth);
+    }
     detail.onOpen(anchor, component, menu);
-    if (extras !== undefined && extras.onOpen !== undefined) { extras.onOpen(component, menu); }
+    if (extras !== undefined && extras.onOpen !== undefined) {
+      extras.onOpen(component, menu);
+    }
   };
 
   const onClose = (component: AlloyComponent, menu: AlloyComponent) => {
     ariaOwner.unlink(hotspot.element());
-    if (extras !== undefined && extras.onClose !== undefined) { extras.onClose(component, menu); }
+    if (extras !== undefined && extras.onClose !== undefined) {
+      extras.onClose(component, menu);
+    }
   };
 
   const lazySink = getSink(hotspot, detail);
@@ -181,42 +288,48 @@ const makeSandbox = (detail: CommonDropdownDetail<TieredData>, hotspot: AlloyCom
         role: 'listbox'
       }
     },
-    behaviours: SketchBehaviours.augment(
-      detail.sandboxBehaviours,
-      [
-        Representing.config({
-          store: {
-            mode: 'memory',
-            initialValue: hotspot
-          }
-        }),
-        Sandboxing.config({
-          onOpen,
-          onClose,
-          isPartOf(container: AlloyComponent, data: AlloyComponent, queryElem: Element): boolean {
-            return ComponentStructure.isPartOf(data, queryElem) || ComponentStructure.isPartOf(hotspot, queryElem);
-          },
-          getAttachPoint() {
-            return lazySink().getOrDie();
-          }
-        }),
-        Composing.config({
-          find(sandbox: AlloyComponent): Option<AlloyComponent> {
-            return Sandboxing.getState(sandbox).bind((menu) => Composing.getCurrent(menu));
-          }
-        }),
-        Receiving.config({
-          channels: {
-            ...Dismissal.receivingChannel({
-              isExtraPart: Fun.never
-            }),
-            ...Reposition.receivingChannel({
-              doReposition: doRepositionMenus
-            })
-          }
-        })
-      ]
-    )
+    behaviours: SketchBehaviours.augment(detail.sandboxBehaviours, [
+      Representing.config({
+        store: {
+          mode: 'memory',
+          initialValue: hotspot
+        }
+      }),
+      Sandboxing.config({
+        onOpen,
+        onClose,
+        isPartOf(
+          container: AlloyComponent,
+          data: AlloyComponent,
+          queryElem: Element
+        ): boolean {
+          return (
+            ComponentStructure.isPartOf(data, queryElem) ||
+            ComponentStructure.isPartOf(hotspot, queryElem)
+          );
+        },
+        getAttachPoint() {
+          return lazySink().getOrDie();
+        }
+      }),
+      Composing.config({
+        find(sandbox: AlloyComponent): Option<AlloyComponent> {
+          return Sandboxing.getState(sandbox).bind((menu) =>
+            Composing.getCurrent(menu)
+          );
+        }
+      }),
+      Receiving.config({
+        channels: {
+          ...Dismissal.receivingChannel({
+            isExtraPart: Fun.never
+          }),
+          ...Reposition.receivingChannel({
+            doReposition: doRepositionMenus
+          })
+        }
+      })
+    ])
   };
 };
 
@@ -225,11 +338,4 @@ const repositionMenus = (comp: AlloyComponent) => {
   doRepositionMenus(sandbox);
 };
 
-export {
-  makeSandbox,
-  togglePopup,
-  open,
-  repositionMenus,
-
-  getSink
-};
+export { makeSandbox, togglePopup, open, repositionMenus, getSink };

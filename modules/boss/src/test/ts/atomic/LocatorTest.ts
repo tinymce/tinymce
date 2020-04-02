@@ -12,19 +12,25 @@ UnitTest.test('LocatorTest', function () {
     Gene('A', '.', [
       Gene('B', '.'),
       Gene('C', '.', [
-        Gene('D', '.', [
-          Gene('E', '.')
-        ]),
+        Gene('D', '.', [Gene('E', '.')]),
         Gene('F', '.'),
         Creator.text('cattle')
       ])
-    ]), Option.none());
+    ]),
+    Option.none()
+  );
 
   const getId = (x: Gene) => x.id;
 
   KAssert.eqSome('locate D', 'D', Locator.byId(family, 'D').map(getId));
   KAssert.eqSome('locate A', 'A', Locator.byId(family, 'A').map(getId));
   KAssert.eqNone('cattle .', Locator.byItem(family, Gene('?_cattle', '.')));
-  KAssert.eqSome('cattle', '?_cattle', Locator.byId(family, '?_cattle').bind((x) => Locator.byItem(family, x)).map(getId));
+  KAssert.eqSome(
+    'cattle',
+    '?_cattle',
+    Locator.byId(family, '?_cattle')
+      .bind((x) => Locator.byItem(family, x))
+      .map(getId)
+  );
   KAssert.eqNone('locate Z', Locator.byId(family, 'Z'));
 });

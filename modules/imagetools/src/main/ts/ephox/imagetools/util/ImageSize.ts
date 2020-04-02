@@ -8,7 +8,4 @@ function getHeight(image: HTMLImageElement | HTMLCanvasElement): number {
   return (image as HTMLImageElement).naturalHeight || image.height;
 }
 
-export {
-  getWidth,
-  getHeight
-};
+export { getWidth, getHeight };

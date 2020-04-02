@@ -13,6 +13,4 @@ const getOrDie = function (name: string, scope?: {}) {
   return actual;
 };
 
-export {
-  getOrDie
-};
+export { getOrDie };

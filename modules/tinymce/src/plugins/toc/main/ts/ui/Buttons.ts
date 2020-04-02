@@ -10,15 +10,21 @@ import * as Toc from '../core/Toc';
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from '@ephox/bridge';
 
-const toggleState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi) => {
-  const toggleDisabledState = () => api.setDisabled(editor.mode.isReadOnly() || !Toc.hasHeaders(editor));
+const toggleState = (editor: Editor) => (
+  api: Toolbar.ToolbarButtonInstanceApi
+) => {
+  const toggleDisabledState = () =>
+    api.setDisabled(editor.mode.isReadOnly() || !Toc.hasHeaders(editor));
 
   toggleDisabledState();
   editor.on('LoadContent SetContent change', toggleDisabledState);
   return () => editor.on('LoadContent SetContent change', toggleDisabledState);
 };
 
-const isToc = (editor: Editor) => (elm) => elm && editor.dom.is(elm, '.' + Settings.getTocClass(editor)) && editor.getBody().contains(elm);
+const isToc = (editor: Editor) => (elm) =>
+  elm &&
+  editor.dom.is(elm, '.' + Settings.getTocClass(editor)) &&
+  editor.getBody().contains(elm);
 
 const register = (editor: Editor) => {
   editor.ui.registry.addButton('toc', {
@@ -49,6 +55,4 @@ const register = (editor: Editor) => {
   });
 };
 
-export {
-  register
-};
+export { register };

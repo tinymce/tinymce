@@ -5,38 +5,46 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Memento, Replacing, Behaviour, GuiFactory, AlloyEvents, AddEventsBehaviour, Container } from '@ephox/alloy';
+import {
+  AlloyComponent,
+  Memento,
+  Replacing,
+  Behaviour,
+  GuiFactory,
+  AlloyEvents,
+  AddEventsBehaviour,
+  Container
+} from '@ephox/alloy';
 import { Element, Attr, Css, Width, Height } from '@ephox/sugar';
 import { Cell, Option } from '@ephox/katamari';
 import { CropRect } from './CropRect';
 import Rect from 'tinymce/core/api/geom/Rect';
 import Promise from 'tinymce/core/api/util/Promise';
 
-const loadImage = (image): Promise<Element> => new Promise(function (resolve) {
-  const loaded = function () {
-    image.removeEventListener('load', loaded);
-    resolve(image);
-  };
+const loadImage = (image): Promise<Element> =>
+  new Promise(function (resolve) {
+    const loaded = function () {
+      image.removeEventListener('load', loaded);
+      resolve(image);
+    };
 
-  if (image.complete) {
-    resolve(image);
-  } else {
-    image.addEventListener('load', loaded);
-  }
-});
+    if (image.complete) {
+      resolve(image);
+    } else {
+      image.addEventListener('load', loaded);
+    }
+  });
 
 const renderImagePanel = (initialUrl: string) => {
-  const memBg = Memento.record(
-    {
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-image-tools__image-bg' ],
-        attributes: {
-          role: 'presentation'
-        }
+  const memBg = Memento.record({
+    dom: {
+      tag: 'div',
+      classes: ['tox-image-tools__image-bg'],
+      attributes: {
+        role: 'presentation'
       }
     }
-  );
+  });
 
   const zoomState = Cell(1);
   const cropRect = Cell(Option.none<CropRect>());
@@ -107,7 +115,7 @@ const renderImagePanel = (initialUrl: string) => {
       const panelH = Height.get(panel.element());
       const width = img.dom().naturalWidth;
       const height = img.dom().naturalHeight;
-      const zoom = Math.min((panelW) / width, (panelH) / height);
+      const zoom = Math.min(panelW / width, panelH / height);
 
       if (zoom >= 1) {
         zoomState.set(1);
@@ -117,39 +125,47 @@ const renderImagePanel = (initialUrl: string) => {
     });
   };
 
-  const updateSrc = (anyInSystem: AlloyComponent, url: string): Promise<Option<Element>> => {
+  const updateSrc = (
+    anyInSystem: AlloyComponent,
+    url: string
+  ): Promise<Option<Element>> => {
     const img = Element.fromTag('img');
     Attr.set(img, 'src', url);
-    return loadImage(img.dom()).then(() => memContainer.getOpt(anyInSystem).map((panel) => {
-      const aImg = GuiFactory.external({
-        element: img
-      });
+    return loadImage(img.dom()).then(() =>
+      memContainer.getOpt(anyInSystem).map((panel) => {
+        const aImg = GuiFactory.external({
+          element: img
+        });
 
-      Replacing.replaceAt(panel, 1, Option.some(aImg));
+        Replacing.replaceAt(panel, 1, Option.some(aImg));
 
-      const lastViewRect = viewRectState.get();
-      const viewRect = {
-        x: 0,
-        y: 0,
-        w: img.dom().naturalWidth,
-        h: img.dom().naturalHeight
-      };
-      viewRectState.set(viewRect);
-      const rect = Rect.inflate(viewRect, -20, -20);
-      rectState.set(rect);
+        const lastViewRect = viewRectState.get();
+        const viewRect = {
+          x: 0,
+          y: 0,
+          w: img.dom().naturalWidth,
+          h: img.dom().naturalHeight
+        };
+        viewRectState.set(viewRect);
+        const rect = Rect.inflate(viewRect, -20, -20);
+        rectState.set(rect);
 
-      if (lastViewRect.w !== viewRect.w || lastViewRect.h !== viewRect.h) {
-        zoomFit(panel, img);
-      }
+        if (lastViewRect.w !== viewRect.w || lastViewRect.h !== viewRect.h) {
+          zoomFit(panel, img);
+        }
 
-      repaintImg(panel, img);
-      return img;
-    }));
+        repaintImg(panel, img);
+        return img;
+      })
+    );
   };
 
   const zoom = (anyInSystem: AlloyComponent, direction: number): void => {
     const currentZoom = zoomState.get();
-    const newZoom = (direction > 0) ? Math.min(2, currentZoom + 0.1) : Math.max(0.1, currentZoom - 0.1);
+    const newZoom =
+      direction > 0
+        ? Math.min(2, currentZoom + 0.1)
+        : Math.max(0.1, currentZoom - 0.1);
     zoomState.set(newZoom);
 
     memContainer.getOpt(anyInSystem).each((panel) => {
@@ -175,7 +191,7 @@ const renderImagePanel = (initialUrl: string) => {
   const container = Container.sketch({
     dom: {
       tag: 'div',
-      classes: [ 'tox-image-tools__image' ]
+      classes: ['tox-image-tools__image']
     },
     components: [
       memBg.asSpec(),
@@ -201,7 +217,7 @@ const renderImagePanel = (initialUrl: string) => {
                   { x: 0, y: 0, w: 200, h: 200 },
                   { x: 0, y: 0, w: 200, h: 200 },
                   el,
-                  () => { } // TODO: Add back keyboard handling for cropping
+                  () => {} // TODO: Add back keyboard handling for cropping
                 );
                 cRect.toggleVisibility(false);
                 cRect.on('updateRect', (e) => {
@@ -253,6 +269,4 @@ const renderImagePanel = (initialUrl: string) => {
   };
 };
 
-export {
-  renderImagePanel
-};
+export { renderImagePanel };

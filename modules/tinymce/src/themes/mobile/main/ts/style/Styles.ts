@@ -7,10 +7,6 @@
 
 const prefix = 'tinymce-mobile';
 
-const resolve = (p) =>
-  prefix + '-' + p;
+const resolve = (p) => prefix + '-' + p;
 
-export {
-  resolve,
-  prefix
-};
+export { resolve, prefix };

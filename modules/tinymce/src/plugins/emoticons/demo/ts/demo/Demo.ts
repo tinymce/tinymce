@@ -8,7 +8,7 @@ tinymce.init({
   height: 600,
   emoticons_append: {
     brain_explode: {
-      keywords: [ 'brain', 'explode', 'blown' ],
+      keywords: ['brain', 'explode', 'blown'],
       char: '\ud83e\udd2f'
     }
   }

@@ -1,11 +1,20 @@
 import { document, Window, DataTransfer, DragEvent } from '@ephox/dom-globals';
 import { Element } from '@ephox/sugar';
-import { setReadWriteMode, setReadOnlyMode, setProtectedMode } from '../datatransfer/Mode';
+import {
+  setReadWriteMode,
+  setReadOnlyMode,
+  setProtectedMode
+} from '../datatransfer/Mode';
 import { PlatformDetection } from '@ephox/sand';
 
 const platform = PlatformDetection.detect();
 
-const createDndEvent = (name: string) => (win: Window, x: number, y: number, dataTransfer: DataTransfer): DragEvent => {
+const createDndEvent = (name: string) => (
+  win: Window,
+  x: number,
+  y: number,
+  dataTransfer: DataTransfer
+): DragEvent => {
   const event: any = document.createEvent('CustomEvent');
   event.initCustomEvent(name, true, true, null);
 
@@ -41,9 +50,13 @@ const createDragenterEvent = createDndEvent('dragenter');
 const createDropEvent = createDndEvent('drop');
 const createDragEvent = createDndEvent('drag');
 
-const isDefaultPrevented = (evt: DragEvent): boolean => evt.defaultPrevented || evt.hasOwnProperty('ieDefaultPrevented');
+const isDefaultPrevented = (evt: DragEvent): boolean =>
+  evt.defaultPrevented || evt.hasOwnProperty('ieDefaultPrevented');
 
-const dispatchDndEvent = (event: DragEvent, target: Element<any>): DragEvent => {
+const dispatchDndEvent = (
+  event: DragEvent,
+  target: Element<any>
+): DragEvent => {
   if (event.type === 'dragstart') {
     setReadWriteMode(event.dataTransfer);
   } else if (event.type === 'drop') {
@@ -57,7 +70,8 @@ const dispatchDndEvent = (event: DragEvent, target: Element<any>): DragEvent => 
   return event;
 };
 
-const getWindowFromElement = (element: Element<any>): Window => element.dom().ownerDocument.defaultView;
+const getWindowFromElement = (element: Element<any>): Window =>
+  element.dom().ownerDocument.defaultView;
 
 export {
   createDndEvent,

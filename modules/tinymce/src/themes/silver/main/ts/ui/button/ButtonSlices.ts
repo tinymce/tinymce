@@ -12,37 +12,39 @@ import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { get as getIcon, IconProvider } from '../icons/Icons';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
-const renderIcon = (iconHtml, behaviours): SimpleOrSketchSpec =>
-  ({
-    dom: {
-      tag: 'span',
-      innerHtml: iconHtml,
-      classes: [ ToolbarButtonClasses.Icon, ToolbarButtonClasses.IconWrap ]
-    },
-    ...behaviours
-  });
-
-const renderIconFromPack = (iconName: string, iconsProvider: IconProvider): SimpleOrSketchSpec => renderIcon(getIcon(iconName, iconsProvider), { });
-
-const renderReplacableIconFromPack = (iconName: string, iconsProvider: IconProvider): SimpleOrSketchSpec => renderIcon(getIcon(iconName, iconsProvider), {
-  behaviours: Behaviour.derive([
-    Replacing.config({ })
-  ])
+const renderIcon = (iconHtml, behaviours): SimpleOrSketchSpec => ({
+  dom: {
+    tag: 'span',
+    innerHtml: iconHtml,
+    classes: [ToolbarButtonClasses.Icon, ToolbarButtonClasses.IconWrap]
+  },
+  ...behaviours
 });
 
-const renderLabel = (text: TranslateIfNeeded, prefix: string, providersBackstage: UiFactoryBackstageProviders) => ({
+const renderIconFromPack = (
+  iconName: string,
+  iconsProvider: IconProvider
+): SimpleOrSketchSpec => renderIcon(getIcon(iconName, iconsProvider), {});
+
+const renderReplacableIconFromPack = (
+  iconName: string,
+  iconsProvider: IconProvider
+): SimpleOrSketchSpec =>
+  renderIcon(getIcon(iconName, iconsProvider), {
+    behaviours: Behaviour.derive([Replacing.config({})])
+  });
+
+const renderLabel = (
+  text: TranslateIfNeeded,
+  prefix: string,
+  providersBackstage: UiFactoryBackstageProviders
+) => ({
   dom: {
     tag: 'span',
     innerHtml: providersBackstage.translate(text),
-    classes: [ `${prefix}__select-label` ]
+    classes: [`${prefix}__select-label`]
   },
-  behaviours: Behaviour.derive([
-    Replacing.config({ })
-  ])
+  behaviours: Behaviour.derive([Replacing.config({})])
 });
 
-export {
-  renderIconFromPack,
-  renderReplacableIconFromPack,
-  renderLabel
-};
+export { renderIconFromPack, renderReplacableIconFromPack, renderLabel };

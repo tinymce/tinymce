@@ -45,7 +45,4 @@ const external = {
   enable
 };
 
-export {
-  internal,
-  external
-};
+export { internal, external };

@@ -57,17 +57,21 @@ interface ColorPickerCancelEvent extends CustomEvent {
 
 type ColorInputSpec = Omit<Types.ColorInput.ColorInput, 'type'>;
 
-export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactoryBackstageShared, colorInputBackstage: UiFactoryBackstageForColorInput): SimpleSpec => {
+export const renderColorInput = (
+  spec: ColorInputSpec,
+  sharedBackstage: UiFactoryBackstageShared,
+  colorInputBackstage: UiFactoryBackstageForColorInput
+): SimpleSpec => {
   const pField = FormField.parts().field({
     factory: Input,
-    inputClasses: [ 'tox-textfield' ],
+    inputClasses: ['tox-textfield'],
 
-    onSetValue: (c) => Invalidating.run(c).get(() => { }),
+    onSetValue: (c) => Invalidating.run(c).get(() => {}),
 
     inputBehaviours: Behaviour.derive([
       Disabling.config({ disabled: sharedBackstage.providers.isReadonly() }),
       ReadOnly.receivingConfig(),
-      Tabstopping.config({ }),
+      Tabstopping.config({}),
       Invalidating.config({
         invalidClass: 'tox-textbox-field-invalid',
         getRoot: (comp) => Traverse.parent(comp.element()),
@@ -107,7 +111,9 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
     selectOnFocus: false
   });
 
-  const pLabel: Option<AlloySpec> = spec.label.map((label) => renderLabel(label, sharedBackstage.providers));
+  const pLabel: Option<AlloySpec> = spec.label.map((label) =>
+    renderLabel(label, sharedBackstage.providers)
+  );
 
   const emitSwatchChange = (colorBit, value) => {
     AlloyTriggers.emitWith(colorBit, colorSwatchChangeEvent, {
@@ -136,63 +142,79 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
   };
 
   const memColorButton = Memento.record(
-    renderPanelButton({
-      dom: {
-        tag: 'span',
-        attributes: {
-          'aria-label': sharedBackstage.providers.translate('Color swatch')
-        }
+    renderPanelButton(
+      {
+        dom: {
+          tag: 'span',
+          attributes: {
+            'aria-label': sharedBackstage.providers.translate('Color swatch')
+          }
+        },
+        layouts: {
+          onRtl: () => [Layout.southwest, Layout.southeast, Layout.south],
+          onLtr: () => [Layout.southeast, Layout.southwest, Layout.south]
+        },
+        components: [],
+        fetch: ColorSwatch.getFetch(
+          colorInputBackstage.getColors(),
+          colorInputBackstage.hasCustomColors()
+        ),
+        columns: colorInputBackstage.getColorCols(),
+        presets: 'color',
+        onItemAction
       },
-      layouts: {
-        onRtl: () => [ Layout.southwest, Layout.southeast, Layout.south ],
-        onLtr: () => [ Layout.southeast, Layout.southwest, Layout.south ]
-      },
-      components: [],
-      fetch: ColorSwatch.getFetch(colorInputBackstage.getColors(), colorInputBackstage.hasCustomColors()),
-      columns: colorInputBackstage.getColorCols(),
-      presets: 'color',
-      onItemAction
-    }, sharedBackstage)
+      sharedBackstage
+    )
   );
 
   return FormField.sketch({
     dom: {
       tag: 'div',
-      classes: [ 'tox-form__group' ]
+      classes: ['tox-form__group']
     },
     components: pLabel.toArray().concat([
       {
         dom: {
           tag: 'div',
-          classes: [ 'tox-color-input' ]
+          classes: ['tox-color-input']
         },
-        components: [
-          pField,
-          memColorButton.asSpec()
-        ]
+        components: [pField, memColorButton.asSpec()]
       }
     ]),
 
     fieldBehaviours: Behaviour.derive([
       AddEventsBehaviour.config('form-field-events', [
-        AlloyEvents.run<ColorInputChangeEvent>(colorInputChangeEvent, (comp, se) => {
-          memColorButton.getOpt(comp).each((colorButton) => {
-            Css.set(colorButton.element(), 'background-color', se.event().color());
-          });
-          AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name } );
-        }),
-        AlloyEvents.run<ColorSwatchChangeEvent>(colorSwatchChangeEvent, (comp, se) => {
-          FormField.getField(comp).each((field) => {
-            Representing.setValue(field, se.event().value());
-            // Focus the field now that we've set its value
-            Composing.getCurrent(comp).each(Focusing.focus);
-          });
-        }),
-        AlloyEvents.run<ColorPickerCancelEvent>(colorPickerCancelEvent, (comp, _se) => {
-          FormField.getField(comp).each((_field) => {
-            Composing.getCurrent(comp).each(Focusing.focus);
-          });
-        })
+        AlloyEvents.run<ColorInputChangeEvent>(
+          colorInputChangeEvent,
+          (comp, se) => {
+            memColorButton.getOpt(comp).each((colorButton) => {
+              Css.set(
+                colorButton.element(),
+                'background-color',
+                se.event().color()
+              );
+            });
+            AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
+          }
+        ),
+        AlloyEvents.run<ColorSwatchChangeEvent>(
+          colorSwatchChangeEvent,
+          (comp, se) => {
+            FormField.getField(comp).each((field) => {
+              Representing.setValue(field, se.event().value());
+              // Focus the field now that we've set its value
+              Composing.getCurrent(comp).each(Focusing.focus);
+            });
+          }
+        ),
+        AlloyEvents.run<ColorPickerCancelEvent>(
+          colorPickerCancelEvent,
+          (comp, _se) => {
+            FormField.getField(comp).each((_field) => {
+              Composing.getCurrent(comp).each(Focusing.focus);
+            });
+          }
+        )
       ])
     ])
   });

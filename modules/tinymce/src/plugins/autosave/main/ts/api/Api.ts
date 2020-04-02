@@ -15,6 +15,4 @@ const get = (editor) => ({
   isEmpty: (html?: string) => Storage.isEmpty(editor, html)
 });
 
-export {
-  get
-};
+export { get };

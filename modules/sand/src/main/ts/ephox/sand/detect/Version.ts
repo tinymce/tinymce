@@ -16,7 +16,7 @@ const firstMatch = function (regexes: RegExp[], s: string): RegExp | undefined {
 const find = function (regexes: RegExp[], agent: string): Version {
   const r = firstMatch(regexes, agent);
   if (!r) {
-    return { major : 0, minor : 0 };
+    return { major: 0, minor: 0 };
   }
   const group = function (i: number) {
     return Number(agent.replace(r, '$' + i));

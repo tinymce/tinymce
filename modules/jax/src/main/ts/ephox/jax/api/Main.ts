@@ -5,11 +5,4 @@ import * as HttpData from '../core/HttpData';
 import * as HttpError from '../core/HttpError';
 import { DataType } from '../core/DataType';
 
-export {
-  Http,
-  HttpJwt,
-  HttpData,
-  HttpError,
-  Types,
-  DataType
-};
+export { Http, HttpJwt, HttpData, HttpError, Types, DataType };

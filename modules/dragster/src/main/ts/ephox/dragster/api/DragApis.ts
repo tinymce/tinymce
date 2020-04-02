@@ -53,8 +53,4 @@ const mode = DragMode;
 const sink = DragSink;
 const api = DragApi;
 
-export {
-  mode,
-  sink,
-  api
-};
+export { mode, sink, api };

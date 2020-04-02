@@ -37,15 +37,59 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
   };
 
   const rowItems = [
-    { type: 'menuitem', text: 'Insert row before', icon: 'table-insert-row-above', onAction: cmd('mceTableInsertRowBefore'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'menuitem', text: 'Insert row after', icon: 'table-insert-row-after', onAction: cmd('mceTableInsertRowAfter'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'menuitem', text: 'Delete row', icon: 'table-delete-row', onAction: cmd('mceTableDeleteRow'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'menuitem', text: 'Row properties', icon: 'table-row-properties', onAction: cmd('mceTableRowProps'), onSetup:  selectionTargets.onSetupCellOrRow },
+    {
+      type: 'menuitem',
+      text: 'Insert row before',
+      icon: 'table-insert-row-above',
+      onAction: cmd('mceTableInsertRowBefore'),
+      onSetup: selectionTargets.onSetupCellOrRow
+    },
+    {
+      type: 'menuitem',
+      text: 'Insert row after',
+      icon: 'table-insert-row-after',
+      onAction: cmd('mceTableInsertRowAfter'),
+      onSetup: selectionTargets.onSetupCellOrRow
+    },
+    {
+      type: 'menuitem',
+      text: 'Delete row',
+      icon: 'table-delete-row',
+      onAction: cmd('mceTableDeleteRow'),
+      onSetup: selectionTargets.onSetupCellOrRow
+    },
+    {
+      type: 'menuitem',
+      text: 'Row properties',
+      icon: 'table-row-properties',
+      onAction: cmd('mceTableRowProps'),
+      onSetup: selectionTargets.onSetupCellOrRow
+    },
     { type: 'separator' },
-    { type: 'menuitem', text: 'Cut row', onAction: cmd('mceTableCutRow'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'menuitem', text: 'Copy row', onAction: cmd('mceTableCopyRow'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'menuitem', text: 'Paste row before', onAction: cmd('mceTablePasteRowBefore'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'menuitem', text: 'Paste row after', onAction: cmd('mceTablePasteRowAfter'), onSetup:  selectionTargets.onSetupCellOrRow }
+    {
+      type: 'menuitem',
+      text: 'Cut row',
+      onAction: cmd('mceTableCutRow'),
+      onSetup: selectionTargets.onSetupCellOrRow
+    },
+    {
+      type: 'menuitem',
+      text: 'Copy row',
+      onAction: cmd('mceTableCopyRow'),
+      onSetup: selectionTargets.onSetupCellOrRow
+    },
+    {
+      type: 'menuitem',
+      text: 'Paste row before',
+      onAction: cmd('mceTablePasteRowBefore'),
+      onSetup: selectionTargets.onSetupCellOrRow
+    },
+    {
+      type: 'menuitem',
+      text: 'Paste row after',
+      onAction: cmd('mceTablePasteRowAfter'),
+      onSetup: selectionTargets.onSetupCellOrRow
+    }
   ] as Array<Menu.NestedMenuItemContents>;
 
   const row: Menu.NestedMenuItemApi = {
@@ -55,9 +99,27 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
   };
 
   const columnItems = [
-    { type: 'menuitem', text: 'Insert column before', icon: 'table-insert-column-before', onAction: cmd('mceTableInsertColBefore'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'menuitem', text: 'Insert column after', icon: 'table-insert-column-after', onAction: cmd('mceTableInsertColAfter'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'menuitem', text: 'Delete column', icon: 'table-delete-column', onAction: cmd('mceTableDeleteCol'), onSetup:  selectionTargets.onSetupCellOrRow }
+    {
+      type: 'menuitem',
+      text: 'Insert column before',
+      icon: 'table-insert-column-before',
+      onAction: cmd('mceTableInsertColBefore'),
+      onSetup: selectionTargets.onSetupCellOrRow
+    },
+    {
+      type: 'menuitem',
+      text: 'Insert column after',
+      icon: 'table-insert-column-after',
+      onAction: cmd('mceTableInsertColAfter'),
+      onSetup: selectionTargets.onSetupCellOrRow
+    },
+    {
+      type: 'menuitem',
+      text: 'Delete column',
+      icon: 'table-delete-column',
+      onAction: cmd('mceTableDeleteCol'),
+      onSetup: selectionTargets.onSetupCellOrRow
+    }
   ] as Array<Menu.NestedMenuItemContents>;
 
   const column: Menu.NestedMenuItemApi = {
@@ -67,9 +129,27 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
   };
 
   const cellItems = [
-    { type: 'menuitem', text: 'Cell properties', icon: 'table-cell-properties', onAction: cmd('mceTableCellProps'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'menuitem', text: 'Merge cells', icon: 'table-merge-cells', onAction: cmd('mceTableMergeCells'), onSetup: selectionTargets.onSetupMergeable },
-    { type: 'menuitem', text: 'Split cell', icon: 'table-split-cells', onAction: cmd('mceTableSplitCells'), onSetup: selectionTargets.onSetupUnmergeable }
+    {
+      type: 'menuitem',
+      text: 'Cell properties',
+      icon: 'table-cell-properties',
+      onAction: cmd('mceTableCellProps'),
+      onSetup: selectionTargets.onSetupCellOrRow
+    },
+    {
+      type: 'menuitem',
+      text: 'Merge cells',
+      icon: 'table-merge-cells',
+      onAction: cmd('mceTableMergeCells'),
+      onSetup: selectionTargets.onSetupMergeable
+    },
+    {
+      type: 'menuitem',
+      text: 'Split cell',
+      icon: 'table-split-cells',
+      onAction: cmd('mceTableSplitCells'),
+      onSetup: selectionTargets.onSetupUnmergeable
+    }
   ] as Array<Menu.NestedMenuItemContents>;
 
   const cell: Menu.NestedMenuItemApi = {
@@ -88,7 +168,13 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
     editor.ui.registry.addNestedMenuItem('inserttable', {
       text: 'Table',
       icon: 'table',
-      getSubmenuItems: () => [{ type: 'fancymenuitem', fancytype: 'inserttable', onAction: insertTableAction }]
+      getSubmenuItems: () => [
+        {
+          type: 'fancymenuitem',
+          fancytype: 'inserttable',
+          onAction: insertTableAction
+        }
+      ]
     });
   }
 
@@ -112,18 +198,19 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
       // context menu fires before node change, so check the selection here first
       selectionTargets.resetTargets();
       // ignoring element since it's monitored elsewhere
-      return selectionTargets.targets().fold(() => '', (targets) => {
-        // If clicking in a caption, then we shouldn't show the cell/row/column options
-        if (Node.name(targets.element()) === 'caption') {
-          return 'tableprops deletetable';
-        } else {
-          return 'cell row column | advtablesort | tableprops deletetable';
+      return selectionTargets.targets().fold(
+        () => '',
+        (targets) => {
+          // If clicking in a caption, then we shouldn't show the cell/row/column options
+          if (Node.name(targets.element()) === 'caption') {
+            return 'tableprops deletetable';
+          } else {
+            return 'cell row column | advtablesort | tableprops deletetable';
+          }
         }
-      });
+      );
     }
   });
 };
 
-export {
-  addMenuItems
-};
+export { addMenuItems };

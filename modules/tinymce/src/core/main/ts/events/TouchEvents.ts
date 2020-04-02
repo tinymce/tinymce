@@ -35,53 +35,66 @@ const setup = (editor: Editor) => {
     longpressFired.set(true);
   }, LONGPRESS_DELAY);
 
-  editor.on('touchstart', (e) => {
-    getTouch(e).each((touch) => {
+  editor.on(
+    'touchstart',
+    (e) => {
+      getTouch(e).each((touch) => {
+        debounceLongpress.cancel();
+
+        const data = {
+          x: Fun.constant(touch.clientX),
+          y: Fun.constant(touch.clientY),
+          target: Fun.constant(e.target)
+        };
+
+        debounceLongpress.throttle(e);
+        longpressFired.set(false);
+        startData.set(Option.some(data));
+      });
+    },
+    true
+  );
+
+  editor.on(
+    'touchmove',
+    (e) => {
+      debounceLongpress.cancel();
+      getTouch(e).each((touch) => {
+        startData.get().each((data) => {
+          if (isFarEnough(touch, data)) {
+            startData.set(Option.none());
+            longpressFired.set(false);
+            editor.fire('longpresscancel');
+          }
+        });
+      });
+    },
+    true
+  );
+
+  editor.on(
+    'touchend touchcancel',
+    (e) => {
       debounceLongpress.cancel();
 
-      const data = {
-        x: Fun.constant(touch.clientX),
-        y: Fun.constant(touch.clientY),
-        target: Fun.constant(e.target)
-      };
+      if (e.type === 'touchcancel') {
+        return;
+      }
 
-      debounceLongpress.throttle(e);
-      longpressFired.set(false);
-      startData.set(Option.some(data));
-    });
-  }, true);
-
-  editor.on('touchmove', (e) => {
-    debounceLongpress.cancel();
-    getTouch(e).each((touch) => {
-      startData.get().each((data) => {
-        if (isFarEnough(touch, data)) {
-          startData.set(Option.none());
-          longpressFired.set(false);
-          editor.fire('longpresscancel');
-        }
-      });
-    });
-  }, true);
-
-  editor.on('touchend touchcancel', (e) => {
-    debounceLongpress.cancel();
-
-    if (e.type === 'touchcancel') {
-      return;
-    }
-
-    // Cancel the touchend event if a longpress was fired, otherwise fire the tap event
-    startData.get()
-      .filter((data) => data.target().isEqualNode(e.target))
-      .each(() => {
-        if (longpressFired.get()) {
-          e.preventDefault();
-        } else {
-          editor.fire('tap', { ...e, type: 'tap' });
-        }
-      });
-  }, true);
+      // Cancel the touchend event if a longpress was fired, otherwise fire the tap event
+      startData
+        .get()
+        .filter((data) => data.target().isEqualNode(e.target))
+        .each(() => {
+          if (longpressFired.get()) {
+            e.preventDefault();
+          } else {
+            editor.fire('tap', { ...e, type: 'tap' });
+          }
+        });
+    },
+    true
+  );
 };
 
 export { setup };

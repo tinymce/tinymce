@@ -41,13 +41,13 @@ const extend = Tools.extend;
 
 export interface JSONRequestSettings {
   crossDomain?: boolean;
-  requestheaders?: Record<string, { key: string; value: string}>;
+  requestheaders?: Record<string, { key: string; value: string }>;
   type?: string;
   url?: string;
   error_scope?: {};
   success_scope?: {};
-  success? (data: any): void;
-  error? (error: any): void;
+  success?(data: any): void;
+  error?(error: any): void;
 }
 
 export interface JSONRequestArgs extends JSONRequestSettings {
@@ -62,7 +62,7 @@ export interface JSONRequestConstructor {
 
   new (settings?: JSONRequestSettings): JSONRequest;
 
-  sendRPC (o: JSONRequestArgs): void;
+  sendRPC(o: JSONRequestArgs): void;
 }
 
 class JSONRequest {
@@ -93,7 +93,8 @@ class JSONRequest {
    * @param {Object} args Call object where there are three field id, method and params this object should also contain callbacks etc.
    */
   public send(args: JSONRequestArgs) {
-    const ecb = args.error, scb = args.success;
+    const ecb = args.error,
+      scb = args.success;
 
     const xhrArgs: XHRSettings = extend(this.settings, args);
 
@@ -120,7 +121,7 @@ class JSONRequest {
     };
 
     xhrArgs.data = JSON.serialize({
-      id: args.id || 'c' + (this.count++),
+      id: args.id || 'c' + this.count++,
       method: args.method,
       params: args.params
     });

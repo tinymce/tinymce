@@ -29,7 +29,7 @@ const findPoller = function (element: Element<DomNode>) {
   }).getOr(-1);
 };
 
-const begin = function (element: Element<DomNode>, f: () => (() => void)) {
+const begin = function (element: Element<DomNode>, f: () => () => void) {
   const index = findPoller(element);
   if (index === -1) {
     const unbind = f();
@@ -56,4 +56,4 @@ const end = function (element: Element<DomNode>) {
   poller.unbind();
 };
 
-export { begin, query, end, };
+export { begin, query, end };

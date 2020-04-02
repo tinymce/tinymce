@@ -16,33 +16,57 @@ import * as Zwsp from '../text/Zwsp';
 import Tools from '../api/util/Tools';
 import Selection from '../api/dom/Selection';
 import DOMUtils from '../api/dom/DOMUtils';
-import { PathBookmark, IndexBookmark, StringPathBookmark, RangeBookmark, IdBookmark, Bookmark } from './BookmarkTypes';
+import {
+  PathBookmark,
+  IndexBookmark,
+  StringPathBookmark,
+  RangeBookmark,
+  IdBookmark,
+  Bookmark
+} from './BookmarkTypes';
 import { rangeInsertNode } from '../selection/RangeInsertNode';
 
 type TrimFn = (s: string) => string;
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 
-const getNormalizedTextOffset = function (trim: TrimFn, container: Text, offset: number): number {
+const getNormalizedTextOffset = function (
+  trim: TrimFn,
+  container: Text,
+  offset: number
+): number {
   let node, trimmedOffset;
 
   trimmedOffset = trim(container.data.slice(0, offset)).length;
-  for (node = container.previousSibling; node && NodeType.isText(node); node = node.previousSibling) {
+  for (
+    node = container.previousSibling;
+    node && NodeType.isText(node);
+    node = node.previousSibling
+  ) {
     trimmedOffset += trim(node.data).length;
   }
 
   return trimmedOffset;
 };
 
-const getPoint = function (dom: DOMUtils, trim: TrimFn, normalized: boolean, rng: Range, start: boolean) {
+const getPoint = function (
+  dom: DOMUtils,
+  trim: TrimFn,
+  normalized: boolean,
+  rng: Range,
+  start: boolean
+) {
   let container = rng[start ? 'startContainer' : 'endContainer'];
   let offset = rng[start ? 'startOffset' : 'endOffset'];
   const point = [];
-  let  childNodes, after = 0;
+  let childNodes,
+    after = 0;
   const root = dom.getRoot();
 
   if (NodeType.isText(container)) {
-    point.push(normalized ? getNormalizedTextOffset(trim, container, offset) : offset);
+    point.push(
+      normalized ? getNormalizedTextOffset(trim, container, offset) : offset
+    );
   } else {
     childNodes = container.childNodes;
 
@@ -61,8 +85,14 @@ const getPoint = function (dom: DOMUtils, trim: TrimFn, normalized: boolean, rng
   return point;
 };
 
-const getLocation = function (trim: TrimFn, selection: Selection, normalized: boolean, rng: Range): PathBookmark {
-  const dom = selection.dom, bookmark: any = {};
+const getLocation = function (
+  trim: TrimFn,
+  selection: Selection,
+  normalized: boolean,
+  rng: Range
+): PathBookmark {
+  const dom = selection.dom,
+    bookmark: any = {};
 
   bookmark.start = getPoint(dom, trim, normalized, rng, true);
 
@@ -100,7 +130,8 @@ const moveEndPoint = function (rng: Range, start: boolean) {
 
   if (NodeType.isElement(container) && container.nodeName === 'TR') {
     childNodes = container.childNodes;
-    container = childNodes[Math.min(start ? offset : offset - 1, childNodes.length - 1)];
+    container =
+      childNodes[Math.min(start ? offset : offset - 1, childNodes.length - 1)];
     if (container) {
       offset = start ? 0 : container.childNodes.length;
       rng['set' + (start ? 'Start' : 'End')](container, offset);
@@ -143,10 +174,17 @@ const findSibling = function (node: Node, offset: number): Element {
 };
 
 const findAdjacentContentEditableFalseElm = function (rng: Range) {
-  return findSibling(rng.startContainer, rng.startOffset) || findSibling(rng.endContainer, rng.endOffset);
+  return (
+    findSibling(rng.startContainer, rng.startOffset) ||
+    findSibling(rng.endContainer, rng.endOffset)
+  );
 };
 
-const getOffsetBookmark = function (trim: TrimFn, normalized: boolean, selection: Selection): IndexBookmark | PathBookmark {
+const getOffsetBookmark = function (
+  trim: TrimFn,
+  normalized: boolean,
+  selection: Selection
+): IndexBookmark | PathBookmark {
   const element = selection.getNode();
   let name = element ? element.nodeName : null;
   const rng = selection.getRng();
@@ -168,8 +206,14 @@ const getCaretBookmark = function (selection: Selection): StringPathBookmark {
   const rng = selection.getRng();
 
   return {
-    start: CaretBookmark.create(selection.dom.getRoot(), CaretPosition.fromRangeStart(rng)),
-    end: CaretBookmark.create(selection.dom.getRoot(), CaretPosition.fromRangeEnd(rng))
+    start: CaretBookmark.create(
+      selection.dom.getRoot(),
+      CaretPosition.fromRangeStart(rng)
+    ),
+    end: CaretBookmark.create(
+      selection.dom.getRoot(),
+      CaretPosition.fromRangeEnd(rng)
+    )
   };
 };
 
@@ -178,11 +222,20 @@ const getRangeBookmark = function (selection: Selection): RangeBookmark {
 };
 
 const createBookmarkSpan = (dom: DOMUtils, id: string, filled: boolean) => {
-  const args = { 'data-mce-type': 'bookmark', id, 'style': 'overflow:hidden;line-height:0px' };
-  return filled ? dom.create('span', args, '&#xFEFF;') : dom.create('span', args);
+  const args = {
+    'data-mce-type': 'bookmark',
+    id,
+    'style': 'overflow:hidden;line-height:0px'
+  };
+  return filled
+    ? dom.create('span', args, '&#xFEFF;')
+    : dom.create('span', args);
 };
 
-const getPersistentBookmark = function (selection: Selection, filled: boolean): IdBookmark | IndexBookmark {
+const getPersistentBookmark = function (
+  selection: Selection,
+  filled: boolean
+): IdBookmark | IndexBookmark {
   const dom = selection.dom;
   let rng = selection.getRng();
   const id = dom.uniqueId();
@@ -214,7 +267,11 @@ const getPersistentBookmark = function (selection: Selection, filled: boolean): 
   return { id };
 };
 
-const getBookmark = function (selection: Selection, type: number, normalized: boolean): Bookmark {
+const getBookmark = function (
+  selection: Selection,
+  type: number,
+  normalized: boolean
+): Bookmark {
   if (type === 2) {
     return getOffsetBookmark(Zwsp.trim, normalized, selection);
   } else if (type === 3) {
@@ -226,10 +283,8 @@ const getBookmark = function (selection: Selection, type: number, normalized: bo
   }
 };
 
-const getUndoBookmark = Fun.curry(getOffsetBookmark, Fun.identity, true) as (selection: Selection) => IndexBookmark | PathBookmark;
+const getUndoBookmark = Fun.curry(getOffsetBookmark, Fun.identity, true) as (
+  selection: Selection
+) => IndexBookmark | PathBookmark;
 
-export {
-  getBookmark,
-  getUndoBookmark,
-  getPersistentBookmark
-};
+export { getBookmark, getUndoBookmark, getPersistentBookmark };

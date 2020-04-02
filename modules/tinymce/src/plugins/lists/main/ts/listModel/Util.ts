@@ -14,12 +14,10 @@ export const enum ListType {
 
 const isList = (el: Element) => Compare.is(el, 'OL,UL');
 
-const hasFirstChildList = (el: Element) => Traverse.firstChild(el).map(isList).getOr(false);
+const hasFirstChildList = (el: Element) =>
+  Traverse.firstChild(el).map(isList).getOr(false);
 
-const hasLastChildList = (el: Element) => Traverse.lastChild(el).map(isList).getOr(false);
+const hasLastChildList = (el: Element) =>
+  Traverse.lastChild(el).map(isList).getOr(false);
 
-export {
-  isList,
-  hasFirstChildList,
-  hasLastChildList
-};
+export { isList, hasFirstChildList, hasLastChildList };

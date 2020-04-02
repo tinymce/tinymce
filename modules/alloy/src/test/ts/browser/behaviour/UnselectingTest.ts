@@ -8,31 +8,38 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('UnselectingTest', (success, failure) => {
-
-  GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(
-    Container.sketch({
-      containerBehaviours: Behaviour.derive([
-        Unselecting.config({ })
-      ])
-    })
-  ), (_doc, _body, _gui, component, _store) => [
-    // TODO: Add behaviour testing. Probably webdriver tests.
-    Assertions.sAssertStructure(
-      'Check initial unselecting values',
-      ApproxStructure.build((s, str, _arr) => s.element('div', {
-        styles: {
-          /* Browser dependent
+  GuiSetup.setup(
+    (_store, _doc, _body) =>
+      GuiFactory.build(
+        Container.sketch({
+          containerBehaviours: Behaviour.derive([Unselecting.config({})])
+        })
+      ),
+    (_doc, _body, _gui, component, _store) => [
+      // TODO: Add behaviour testing. Probably webdriver tests.
+      Assertions.sAssertStructure(
+        'Check initial unselecting values',
+        ApproxStructure.build((s, str, _arr) =>
+          s.element('div', {
+            styles: {
+              /* Browser dependent
               '-webkit-user-select': str.is('none'),
               'user-select': str.is('none'),
               '-ms-user-select': str.is('none'),
               '-moz-user-select': str.is('-moz-none')
               */
-        },
-        attrs: {
-          unselectable: str.is('on')
-        }
-      })),
-      component.element()
-    )
-  ], () => { success(); }, failure);
+            },
+            attrs: {
+              unselectable: str.is('on')
+            }
+          })
+        ),
+        component.element()
+      )
+    ],
+    () => {
+      success();
+    },
+    failure
+  );
 });

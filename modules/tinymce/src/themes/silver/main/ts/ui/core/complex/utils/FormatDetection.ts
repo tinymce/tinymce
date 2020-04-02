@@ -12,8 +12,12 @@ import Editor from 'tinymce/core/api/Editor';
 const findNearest = (editor: Editor, getStyles, parents: Element[]) => {
   const styles = getStyles();
 
-  return Arr.findMap(parents, (parent) => Arr.find(styles, (fmt) => editor.formatter.matchNode(parent, fmt.format))).orThunk(() => {
-    if (editor.formatter.match('p')) { return Option.some({ title: 'Paragraph', format: 'p' }); }
+  return Arr.findMap(parents, (parent) =>
+    Arr.find(styles, (fmt) => editor.formatter.matchNode(parent, fmt.format))
+  ).orThunk(() => {
+    if (editor.formatter.match('p')) {
+      return Option.some({ title: 'Paragraph', format: 'p' });
+    }
     return Option.none();
   });
 };
@@ -23,7 +27,4 @@ const getCurrentSelectionParents = (editor: Editor): Element[] => {
   return editor.dom.getParents(currentNode, () => true, editor.getBody());
 };
 
-export {
-  findNearest,
-  getCurrentSelectionParents
-};
+export { findNearest, getCurrentSelectionParents };

@@ -23,7 +23,9 @@ const createState = (blob: Blob): ImageToolsState => ({
 });
 
 const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
-  const getLoadedSpec = (currentState: ImageToolsState): Types.Dialog.DialogApi<{ imagetools: ImageToolsState }> => ({
+  const getLoadedSpec = (
+    currentState: ImageToolsState
+  ): Types.Dialog.DialogApi<{ imagetools: ImageToolsState }> => ({
     title: 'Edit Image',
     size: 'large',
     body: {
@@ -55,12 +57,18 @@ const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
       const blob = api.getData().imagetools.blob;
       originalImgOpt.each((originalImg) => {
         originalSizeOpt.each((originalSize) => {
-          Actions.handleDialogBlob(editor, imageUploadTimerState, originalImg.dom(), originalSize, blob);
+          Actions.handleDialogBlob(
+            editor,
+            imageUploadTimerState,
+            originalImg.dom(),
+            originalSize,
+            blob
+          );
         });
       });
       api.close();
     },
-    onCancel: () => { }, // TODO: reimplement me
+    onCancel: () => {}, // TODO: reimplement me
     onAction: (api, details) => {
       switch (details.name) {
         case ImageToolsEvents.saveState:
@@ -82,7 +90,9 @@ const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
   });
 
   const originalImgOpt = Actions.getSelectedImage(editor);
-  const originalSizeOpt = originalImgOpt.map((origImg) => ImageSize.getNaturalImageSize(origImg.dom()));
+  const originalSizeOpt = originalImgOpt.map((origImg) =>
+    ImageSize.getNaturalImageSize(origImg.dom())
+  );
 
   const imgOpt = Actions.getSelectedImage(editor);
   imgOpt.each((img) => {
@@ -95,6 +105,4 @@ const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
   });
 };
 
-export {
-  makeOpen
-};
+export { makeOpen };

@@ -12,9 +12,14 @@ import { console } from '@ephox/dom-globals';
 import { ModeApi } from '../api/Mode';
 import { toggleReadOnly } from './Readonly';
 
-const defaultModes = [ 'design', 'readonly' ];
+const defaultModes = ['design', 'readonly'];
 
-const switchToMode = (editor: Editor, activeMode: Cell<string>, availableModes: Record<string, ModeApi>, mode: string) => {
+const switchToMode = (
+  editor: Editor,
+  activeMode: Cell<string>,
+  availableModes: Record<string, ModeApi>,
+  mode: string
+) => {
   const oldMode = availableModes[activeMode.get()];
   const newMode = availableModes[mode];
 
@@ -34,7 +39,12 @@ const switchToMode = (editor: Editor, activeMode: Cell<string>, availableModes: 
   Events.fireSwitchMode(editor, mode);
 };
 
-const setMode = (editor: Editor, availableModes: Record<string, ModeApi>, activeMode: Cell<string>, mode: string) => {
+const setMode = (
+  editor: Editor,
+  availableModes: Record<string, ModeApi>,
+  activeMode: Cell<string>,
+  mode: string
+) => {
   if (mode === activeMode.get()) {
     return;
   } else if (!Obj.has(availableModes, mode)) {
@@ -44,11 +54,17 @@ const setMode = (editor: Editor, availableModes: Record<string, ModeApi>, active
   if (editor.initialized) {
     switchToMode(editor, activeMode, availableModes, mode);
   } else {
-    editor.on('init', () => switchToMode(editor, activeMode, availableModes, mode));
+    editor.on('init', () =>
+      switchToMode(editor, activeMode, availableModes, mode)
+    );
   }
 };
 
-const registerMode = (availableModes: Record<string, ModeApi>, mode: string, api: ModeApi): Record<string, ModeApi> => {
+const registerMode = (
+  availableModes: Record<string, ModeApi>,
+  mode: string,
+  api: ModeApi
+): Record<string, ModeApi> => {
   if (Arr.contains(defaultModes, mode)) {
     throw new Error(`Cannot override default mode ${mode}`);
   }
@@ -70,7 +86,4 @@ const registerMode = (availableModes: Record<string, ModeApi>, mode: string, api
   };
 };
 
-export {
-  setMode,
-  registerMode
-};
+export { setMode, registerMode };

@@ -2,7 +2,11 @@ import { Fun, Option } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
 import { nuState } from '../../behaviour/common/BehaviourState';
-import { DragModeDeltas, DragStartData, BaseDraggingState } from './DraggingTypes';
+import {
+  DragModeDeltas,
+  DragStartData,
+  BaseDraggingState
+} from './DraggingTypes';
 
 // NOTE: mode refers to the way that information is retrieved from
 // the user interaction. It can be things like MouseData, TouchData etc.
@@ -30,7 +34,8 @@ const init = <T>(): BaseDraggingState<T> => {
   };
 
   // NOTE: This dragEvent is the DOM touch event or mouse event
-  const update = (mode: DragModeDeltas<T>, dragEvent: EventArgs): Option<T> => mode.getData(dragEvent).bind((nuData) => calculateDelta(mode, nuData));
+  const update = (mode: DragModeDeltas<T>, dragEvent: EventArgs): Option<T> =>
+    mode.getData(dragEvent).bind((nuData) => calculateDelta(mode, nuData));
 
   const setStartData = (data: DragStartData) => {
     startData = Option.some(data);
@@ -38,7 +43,7 @@ const init = <T>(): BaseDraggingState<T> => {
 
   const getStartData = (): Option<DragStartData> => startData;
 
-  const readState = Fun.constant({ });
+  const readState = Fun.constant({});
 
   return nuState({
     readState,
@@ -49,6 +54,4 @@ const init = <T>(): BaseDraggingState<T> => {
   });
 };
 
-export {
-  init
-};
+export { init };

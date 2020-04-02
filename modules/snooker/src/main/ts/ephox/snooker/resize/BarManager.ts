@@ -1,12 +1,24 @@
 import { Dragger } from '@ephox/dragster';
 import { Fun, Option } from '@ephox/katamari';
 import { Event, Events, Bindable } from '@ephox/porkbun';
-import { Attr, Body, Class, Compare, Css, DomEvent, Element, SelectorFind } from '@ephox/sugar';
+import {
+  Attr,
+  Body,
+  Class,
+  Compare,
+  Css,
+  DomEvent,
+  Element,
+  SelectorFind
+} from '@ephox/sugar';
 import * as Styles from '../style/Styles';
 import * as CellUtils from '../util/CellUtils';
 import { BarMutation } from './BarMutation';
 import * as Bars from './Bars';
-import { isContentEditableTrue, findClosestContentEditable } from '../alien/ContentEditable';
+import {
+  isContentEditableTrue,
+  findClosestContentEditable
+} from '../alien/ContentEditable';
 import { ResizeWire } from '../api/ResizeWire';
 import { BarPositions, RowInfo, ColInfo } from './BarPositions';
 
@@ -37,7 +49,11 @@ export interface DragAdjustEvents {
 
 const resizeBarDragging = Styles.resolve('resizer-bar-dragging');
 
-export const BarManager = function (wire: ResizeWire, direction: BarPositions<ColInfo>, hdirection: BarPositions<RowInfo>) {
+export const BarManager = function (
+  wire: ResizeWire,
+  direction: BarPositions<ColInfo>,
+  hdirection: BarPositions<RowInfo>
+) {
   const mutation = BarMutation();
   const resizing = Dragger.transform(mutation, {});
 
@@ -85,7 +101,6 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
         Bars.refresh(wire, table, hdirection, direction);
       });
     });
-
   });
 
   const handler = function (target: Element, dir: string) {
@@ -112,17 +127,20 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
     return Compare.eq(e, wire.view());
   };
 
-  const findClosestEditableTable = (target: Element): Option<Element> => SelectorFind.closest(target, 'table', isRoot).filter((table) => findClosestContentEditable(table, isRoot).exists(isContentEditableTrue));
+  const findClosestEditableTable = (target: Element): Option<Element> =>
+    SelectorFind.closest(target, 'table', isRoot).filter((table) =>
+      findClosestContentEditable(table, isRoot).exists(isContentEditableTrue)
+    );
 
   /* mouseover on table: When the mouse moves within the CONTENT AREA (NOT THE TABLE), refresh the bars. */
   const mouseover = DomEvent.bind(wire.view(), 'mouseover', function (event) {
     findClosestEditableTable(event.target()).fold(
       () => {
         /*
-        * mouseout is not reliable within ContentEditable, so for all other mouseover events we clear bars.
-        * This is fairly safe to do frequently; it's a single querySelectorAll() on the content and Arr.map on the result.
-        * If we _really_ need to optimise it further, we can start caching the bar references in the wire somehow.
-        */
+         * mouseout is not reliable within ContentEditable, so for all other mouseover events we clear bars.
+         * This is fairly safe to do frequently; it's a single querySelectorAll() on the content and Arr.map on the result.
+         * If we _really_ need to optimise it further, we can start caching the bar references in the wire somehow.
+         */
         if (Body.inBody(event.target())) {
           Bars.destroy(wire);
         }
@@ -146,8 +164,8 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
   };
 
   const events = Events.create({
-    adjustHeight: Event([ 'table', 'delta', 'row' ]),
-    adjustWidth: Event([ 'table', 'delta', 'column' ]),
+    adjustHeight: Event(['table', 'delta', 'row']),
+    adjustWidth: Event(['table', 'delta', 'column']),
     startAdjust: Event([])
   }) as DragAdjustEvents;
 

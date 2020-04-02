@@ -36,7 +36,9 @@ const getBoundsFrom = function (rect) {
 
 const getBounds = function (cWin) {
   const rects = Rectangles.getRectangles(cWin);
-  return rects.length > 0 ? Option.some(rects[0]).map(getBoundsFrom) : Option.none();
+  return rects.length > 0
+    ? Option.some(rects[0]).map(getBoundsFrom)
+    : Option.none();
 };
 
 const findDelta = function (outerWindow, cBody) {
@@ -47,8 +49,11 @@ const findDelta = function (outerWindow, cBody) {
 
 const calculate = function (cWin, bounds, delta) {
   // The goal here is to shift as little as required.
-  const isOutside = bounds.top() > cWin.innerHeight || bounds.bottom() > cWin.innerHeight;
-  return isOutside ? Math.min(delta, bounds.bottom() - cWin.innerHeight + EXTRA_SPACING) : 0;
+  const isOutside =
+    bounds.top() > cWin.innerHeight || bounds.bottom() > cWin.innerHeight;
+  return isOutside
+    ? Math.min(delta, bounds.bottom() - cWin.innerHeight + EXTRA_SPACING)
+    : 0;
 };
 
 const setup = function (outerWindow, cWin) {
@@ -61,19 +66,22 @@ const setup = function (outerWindow, cWin) {
     ResumeEditing.resume(cWin);
   };
 
-  const onResize = DomEvent.bind(Element.fromDom(outerWindow), 'resize', function () {
-
-    findDelta(outerWindow, cBody).each(function (delta) {
-      getBounds(cWin).each(function (bounds) {
-        // If the top is offscreen, scroll it into view.
-        const cScrollBy = calculate(cWin, bounds, delta);
-        if (cScrollBy !== 0) {
-          cWin.scrollTo(cWin.pageXOffset, cWin.pageYOffset + cScrollBy);
-        }
+  const onResize = DomEvent.bind(
+    Element.fromDom(outerWindow),
+    'resize',
+    function () {
+      findDelta(outerWindow, cBody).each(function (delta) {
+        getBounds(cWin).each(function (bounds) {
+          // If the top is offscreen, scroll it into view.
+          const cScrollBy = calculate(cWin, bounds, delta);
+          if (cScrollBy !== 0) {
+            cWin.scrollTo(cWin.pageXOffset, cWin.pageYOffset + cScrollBy);
+          }
+        });
       });
-    });
-    setLastHeight(cBody, outerWindow.innerHeight);
-  });
+      setLastHeight(cBody, outerWindow.innerHeight);
+    }
+  );
 
   setLastHeight(cBody, outerWindow.innerHeight);
 
@@ -87,6 +95,4 @@ const setup = function (outerWindow, cWin) {
   };
 };
 
-export {
-  setup
-};
+export { setup };

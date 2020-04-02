@@ -20,7 +20,7 @@ export interface ListGroup {
 }
 
 // TODO TINY-2236 re-enable this (support will need to be added to bridge)
-export type ListItem = ListValue/*  | ListGroup */;
+export type ListItem = ListValue /*  | ListGroup */;
 
 export interface LinkDialogInfo {
   anchor: {

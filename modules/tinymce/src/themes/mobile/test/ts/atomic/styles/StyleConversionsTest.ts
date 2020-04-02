@@ -10,50 +10,38 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
   check(
     'Empty input',
     {
-      menus: { },
-      expansions: { },
-      items: [ ]
+      menus: {},
+      expansions: {},
+      items: []
     },
-    [ ]
+    []
   );
 
   check(
     'Input with one flat item',
     {
-      menus: { },
-      expansions: { },
-      items: [
-        { title: 'alpha' }
-      ]
+      menus: {},
+      expansions: {},
+      items: [{ title: 'alpha' }]
     },
-    [
-      { title: 'alpha' }
-    ]
+    [{ title: 'alpha' }]
   );
 
   check(
     'Input with three flat items',
     {
-      menus: { },
-      expansions: { },
-      items: [
-        { title: 'alpha' },
-        { title: 'beta' },
-        { title: 'gamma' }
-      ]
+      menus: {},
+      expansions: {},
+      items: [{ title: 'alpha' }, { title: 'beta' }, { title: 'gamma' }]
     },
-    [
-      { title: 'alpha' },
-      { title: 'beta' },
-      { title: 'gamma' }
-    ]
+    [{ title: 'alpha' }, { title: 'beta' }, { title: 'gamma' }]
   );
 
   check(
     'Input with three items, and an empty menu in the middle',
     {
       menus: {
-        beta: [ ]
+        beta: []
       },
       expansions: {
         beta: 'beta'
@@ -68,7 +56,7 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
       { title: 'alpha' },
       {
         title: 'beta',
-        items: [ ]
+        items: []
       },
       { title: 'gamma' }
     ]
@@ -78,9 +66,7 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
     'Input with three items, and a menu with a single item in the middle',
     {
       menus: {
-        beta: [
-          { title: 'beta-1' }
-        ]
+        beta: [{ title: 'beta-1' }]
       },
       expansions: {
         beta: 'beta'
@@ -95,9 +81,7 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
       { title: 'alpha' },
       {
         title: 'beta',
-        items: [
-          { title: 'beta-1' }
-        ]
+        items: [{ title: 'beta-1' }]
       },
       { title: 'gamma' }
     ]
@@ -107,11 +91,7 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
     'Input with three items, and a menu with three items in the middle',
     {
       menus: {
-        beta: [
-          { title: 'beta-1' },
-          { title: 'beta-2' },
-          { title: 'beta-3' }
-        ]
+        beta: [{ title: 'beta-1' }, { title: 'beta-2' }, { title: 'beta-3' }]
       },
       expansions: {
         beta: 'beta'
@@ -126,11 +106,7 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
       { title: 'alpha' },
       {
         title: 'beta',
-        items: [
-          { title: 'beta-1' },
-          { title: 'beta-2' },
-          { title: 'beta-3' }
-        ]
+        items: [{ title: 'beta-1' }, { title: 'beta-2' }, { title: 'beta-3' }]
       },
       { title: 'gamma' }
     ]
@@ -138,7 +114,7 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
 
   check(
     'Input with three items, and a menu (beta) with three items (beta1,2,3) in the middle' +
-    ', with last subitem having a menu with no items (beta-3)',
+      ', with last subitem having a menu with no items (beta-3)',
     {
       menus: {
         'beta': [
@@ -146,7 +122,7 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
           { title: 'beta-2' },
           { title: 'beta-3', menu: true }
         ],
-        'beta-3': [ ]
+        'beta-3': []
       },
       expansions: {
         'beta': 'beta',
@@ -167,7 +143,7 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
           { title: 'beta-2' },
           {
             title: 'beta-3',
-            items: [ ]
+            items: []
           }
         ]
       },
@@ -177,8 +153,8 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
 
   check(
     'Input with three items, and a menu with three items (beta-1,2,3) in the middle' +
-    ', with last subitem having a menu with two items (beta-3-1,2) items, and that first item' +
-    ' having one item (beta-3-1-1)',
+      ', with last subitem having a menu with two items (beta-3-1,2) items, and that first item' +
+      ' having one item (beta-3-1-1)',
     {
       menus: {
         'beta': [
@@ -186,13 +162,8 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
           { title: 'beta-2' },
           { title: 'beta-3', menu: true }
         ],
-        'beta-3': [
-          { title: 'beta-3-1', menu: true },
-          { title: 'beta-3-2' }
-        ],
-        'beta-3-1': [
-          { title: 'beta-3-1-1' }
-        ]
+        'beta-3': [{ title: 'beta-3-1', menu: true }, { title: 'beta-3-2' }],
+        'beta-3-1': [{ title: 'beta-3-1-1' }]
       },
       expansions: {
         'beta': 'beta',
@@ -217,9 +188,7 @@ UnitTest.test('Atomic Test: styles.StyleConversionsTest', function () {
             items: [
               {
                 title: 'beta-3-1',
-                items: [
-                  { title: 'beta-3-1-1' }
-                ]
+                items: [{ title: 'beta-3-1-1' }]
               },
               { title: 'beta-3-2' }
             ]

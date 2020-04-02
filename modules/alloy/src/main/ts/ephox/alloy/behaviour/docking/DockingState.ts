@@ -14,13 +14,12 @@ const init = (): DockingState => {
     isDocked: () => docked.get(),
     setDocked: (state: boolean) => docked.set(state),
     getInitialPosition: () => initialBounds.get(),
-    setInitialPosition: (pos: Option<InitialDockingPosition>) => initialBounds.set(pos),
+    setInitialPosition: (pos: Option<InitialDockingPosition>) =>
+      initialBounds.set(pos),
     isVisible: () => visible.get(),
     setVisible: (state: boolean) => visible.set(state),
     readState
   });
 };
 
-export {
-  init
-};
+export { init };

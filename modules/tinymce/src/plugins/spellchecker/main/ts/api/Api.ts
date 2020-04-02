@@ -14,7 +14,14 @@ import * as Settings from './Settings';
 type LastSuggestion = Actions.LastSuggestion;
 type Data = Actions.Data;
 
-const get = function (editor: Editor, startedState: Cell<boolean>, lastSuggestionsState: Cell<LastSuggestion>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, _url: string) {
+const get = function (
+  editor: Editor,
+  startedState: Cell<boolean>,
+  lastSuggestionsState: Cell<LastSuggestion>,
+  textMatcherState: Cell<DomTextMatcher>,
+  currentLanguageState: Cell<string>,
+  _url: string
+) {
   const getLanguage = function () {
     return currentLanguageState.get();
   };
@@ -24,7 +31,13 @@ const get = function (editor: Editor, startedState: Cell<boolean>, lastSuggestio
   };
 
   const markErrors = function (data: Data) {
-    Actions.markErrors(editor, startedState, textMatcherState, lastSuggestionsState, data);
+    Actions.markErrors(
+      editor,
+      startedState,
+      textMatcherState,
+      lastSuggestionsState,
+      data
+    );
   };
 
   const getTextMatcher = function () {
@@ -39,6 +52,4 @@ const get = function (editor: Editor, startedState: Cell<boolean>, lastSuggestio
   };
 };
 
-export {
-  get
-};
+export { get };

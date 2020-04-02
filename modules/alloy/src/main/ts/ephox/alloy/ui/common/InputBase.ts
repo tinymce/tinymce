@@ -12,52 +12,54 @@ import { InputDetail } from '../../ui/types/InputTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('data'),
-  FieldSchema.defaulted('inputAttributes', { }),
-  FieldSchema.defaulted('inputStyles', { }),
+  FieldSchema.defaulted('inputAttributes', {}),
+  FieldSchema.defaulted('inputStyles', {}),
   FieldSchema.defaulted('tag', 'input'),
-  FieldSchema.defaulted('inputClasses', [ ]),
+  FieldSchema.defaulted('inputClasses', []),
   Fields.onHandler('onSetValue'),
-  FieldSchema.defaulted('styles', { }),
-  FieldSchema.defaulted('eventOrder', { }),
-  SketchBehaviours.field('inputBehaviours', [ Representing, Focusing ]),
+  FieldSchema.defaulted('styles', {}),
+  FieldSchema.defaulted('eventOrder', {}),
+  SketchBehaviours.field('inputBehaviours', [Representing, Focusing]),
   FieldSchema.defaulted('selectOnFocus', true)
 ]);
 
-const focusBehaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => Behaviour.derive([
-  Focusing.config({
-    onFocus: !detail.selectOnFocus ? Fun.noop : (component) => {
-      const input = component.element();
-      const value = Value.get(input);
-      input.dom().setSelectionRange(0, value.length);
-    }
-  })
-]);
+const focusBehaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord =>
+  Behaviour.derive([
+    Focusing.config({
+      onFocus: !detail.selectOnFocus
+        ? Fun.noop
+        : (component) => {
+            const input = component.element();
+            const value = Value.get(input);
+            input.dom().setSelectionRange(0, value.length);
+          }
+    })
+  ]);
 
 const behaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => ({
   ...focusBehaviours(detail),
-  ...SketchBehaviours.augment(
-    detail.inputBehaviours,
-    [
-      Representing.config({
-        store: {
-          mode: 'manual',
-          // Propagating its Option
-          ...detail.data.map((data) => ({ initialValue: data } as { initialValue?: string })).getOr({ }),
-          getValue(input) {
-            return Value.get(input.element());
-          },
-          setValue(input, data) {
-            const current = Value.get(input.element());
-            // Only set it if it has changed ... otherwise the cursor goes to the end.
-            if (current !== data) {
-              Value.set(input.element(), data);
-            }
-          }
+  ...SketchBehaviours.augment(detail.inputBehaviours, [
+    Representing.config({
+      store: {
+        mode: 'manual',
+        // Propagating its Option
+        ...detail.data
+          .map((data) => ({ initialValue: data } as { initialValue?: string }))
+          .getOr({}),
+        getValue(input) {
+          return Value.get(input.element());
         },
-        onSetValue: detail.onSetValue
-      })
-    ]
-  )
+        setValue(input, data) {
+          const current = Value.get(input.element());
+          // Only set it if it has changed ... otherwise the cursor goes to the end.
+          if (current !== data) {
+            Value.set(input.element(), data);
+          }
+        }
+      },
+      onSetValue: detail.onSetValue
+    })
+  ])
 });
 
 const dom = (detail: InputDetail): RawDomSchema => ({
@@ -70,9 +72,4 @@ const dom = (detail: InputDetail): RawDomSchema => ({
   classes: detail.inputClasses
 });
 
-export {
-  schema,
-  behaviours,
-  focusBehaviours,
-  dom
-};
+export { schema, behaviours, focusBehaviours, dom };

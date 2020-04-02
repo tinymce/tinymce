@@ -51,7 +51,13 @@ const isFirstOrLastLi = function (containerBlock, parentBlock, first) {
 };
 
 // Inserts a block or br before/after or in the middle of a split list of the LI is empty
-const insert = function (editor: Editor, createNewBlock, containerBlock, parentBlock, newBlockName) {
+const insert = function (
+  editor: Editor,
+  createNewBlock,
+  containerBlock,
+  parentBlock,
+  newBlockName
+) {
   const dom = editor.dom;
   const rng = editor.selection.getRng();
 
@@ -65,7 +71,10 @@ const insert = function (editor: Editor, createNewBlock, containerBlock, parentB
 
   let newBlock = newBlockName ? createNewBlock(newBlockName) : dom.create('BR');
 
-  if (isFirstOrLastLi(containerBlock, parentBlock, true) && isFirstOrLastLi(containerBlock, parentBlock, false)) {
+  if (
+    isFirstOrLastLi(containerBlock, parentBlock, true) &&
+    isFirstOrLastLi(containerBlock, parentBlock, false)
+  ) {
     if (hasParent(containerBlock, 'LI')) {
       // Nested list is inside a LI
       dom.insertAfter(newBlock, getContainerBlock(containerBlock));
@@ -108,6 +117,4 @@ const insert = function (editor: Editor, createNewBlock, containerBlock, parentB
   NewLineUtils.moveToCaretPosition(editor, newBlock);
 };
 
-export {
-  insert
-};
+export { insert };

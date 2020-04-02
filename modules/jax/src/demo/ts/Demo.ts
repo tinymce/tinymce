@@ -99,7 +99,7 @@ Http.post({
   body: HttpData.multipartFormData({
     param1: 'abc',
     param2: 'abc',
-    blob1: new Blob([ 'text' ])
+    blob1: new Blob(['text'])
   }),
   responseType: DataType.JSON
 }).get((result) => {
@@ -127,11 +127,14 @@ Http.download({
 
 const jwtFactory = (_foo: boolean) => FutureResult.pure('123');
 
-HttpJwt.put({
-  url: 'https://httpbin.org/put',
-  body: HttpData.jsonData({ important: 'data' }),
-  responseType: DataType.JSON
-}, jwtFactory).get((result) => {
+HttpJwt.put(
+  {
+    url: 'https://httpbin.org/put',
+    body: HttpData.jsonData({ important: 'data' }),
+    responseType: DataType.JSON
+  },
+  jwtFactory
+).get((result) => {
   result.fold(
     () => console.log('error'),
     (json) => {

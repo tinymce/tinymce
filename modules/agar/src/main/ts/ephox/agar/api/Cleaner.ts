@@ -28,7 +28,7 @@ export const Cleaner = () => {
     tasks = [];
   };
 
-  const wrap = <T extends any[], U> (fn: (...a: T) => U) => (...args: T): U => {
+  const wrap = <T extends any[], U>(fn: (...a: T) => U) => (...args: T): U => {
     run();
     return fn.apply(null, args);
   };
@@ -36,6 +36,6 @@ export const Cleaner = () => {
   return {
     add,
     run,
-    wrap,
+    wrap
   };
 };

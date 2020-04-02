@@ -1,6 +1,12 @@
 import { Attr, Css, Element } from '@ephox/sugar';
 
-const col = function (column: number, x: number, y: number, w: number, h: number) {
+const col = function (
+  column: number,
+  x: number,
+  y: number,
+  w: number,
+  h: number
+) {
   const bar = Element.fromTag('div');
   Css.setAll(bar, {
     position: 'absolute',
@@ -28,7 +34,4 @@ const row = function (r: number, x: number, y: number, w: number, h: number) {
   return bar;
 };
 
-export {
-  col,
-  row
-};
+export { col, row };

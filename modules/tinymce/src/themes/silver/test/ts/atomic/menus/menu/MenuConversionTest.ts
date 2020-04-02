@@ -9,7 +9,10 @@ UnitTest.test('themes.silver.ui.menus.MenuConversion', () => {
     value: `${name}-value`
   });
 
-  const buildNestedMenuItem = (name: string, submenus: string | Array<Menu.NestedMenuItemContents>): Menu.NestedMenuItemApi => ({
+  const buildNestedMenuItem = (
+    name: string,
+    submenus: string | Array<Menu.NestedMenuItemContents>
+  ): Menu.NestedMenuItemApi => ({
     type: 'nestedmenuitem',
     text: name,
     value: `${name}-value`,
@@ -24,9 +27,16 @@ UnitTest.test('themes.silver.ui.menus.MenuConversion', () => {
   const menu2 = buildMenuItem('menu-2');
   const submenu1 = buildMenuItem('submenu-1');
   const submenu2a = buildMenuItem('submenu-2a');
-  const submenu2 = buildNestedMenuItem('submenu-2', [ submenu2a ]);
-  const nestedMenu = buildNestedMenuItem('nested-menu-1', [ submenu1, separator, submenu2 ]);
-  const nestedMenuWithReferences = buildNestedMenuItem('nested-menu-2', 'submenu-1 | submenu-2');
+  const submenu2 = buildNestedMenuItem('submenu-2', [submenu2a]);
+  const nestedMenu = buildNestedMenuItem('nested-menu-1', [
+    submenu1,
+    separator,
+    submenu2
+  ]);
+  const nestedMenuWithReferences = buildNestedMenuItem(
+    'nested-menu-2',
+    'submenu-1 | submenu-2'
+  );
 
   const menuItems = {
     'menu-1': menu1,
@@ -35,30 +45,33 @@ UnitTest.test('themes.silver.ui.menus.MenuConversion', () => {
     'submenu-2': submenu2
   };
 
-  const expandAndAssertEq = (items: string | Array<Menu.NestedMenuItemContents>, expected) => {
+  const expandAndAssertEq = (
+    items: string | Array<Menu.NestedMenuItemContents>,
+    expected
+  ) => {
     assert.eq(expected, MenuConversion.expand(items, menuItems));
   };
 
   // Menu reference
   expandAndAssertEq('menu-1 | menu-2', {
-    items: [ menu1, separator, menu2 ],
-    menus: { },
-    expansions: { }
+    items: [menu1, separator, menu2],
+    menus: {},
+    expansions: {}
   });
 
   // Menu reference array
-  expandAndAssertEq([ 'menu-1', '|', 'menu-2' ], {
-    items: [ menu1, separator, menu2 ],
-    menus: { },
-    expansions: { }
+  expandAndAssertEq(['menu-1', '|', 'menu-2'], {
+    items: [menu1, separator, menu2],
+    menus: {},
+    expansions: {}
   });
 
   // Menu with submenus
-  expandAndAssertEq([ nestedMenu ], {
-    items: [ nestedMenu ],
+  expandAndAssertEq([nestedMenu], {
+    items: [nestedMenu],
     menus: {
-      'nested-menu-1-value': [ submenu1, separator, submenu2 ],
-      'submenu-2-value': [ submenu2a ]
+      'nested-menu-1-value': [submenu1, separator, submenu2],
+      'submenu-2-value': [submenu2a]
     },
     expansions: {
       'nested-menu-1-value': 'nested-menu-1-value',
@@ -67,11 +80,11 @@ UnitTest.test('themes.silver.ui.menus.MenuConversion', () => {
   });
 
   // Menu with submenu references
-  expandAndAssertEq([ nestedMenuWithReferences ], {
-    items: [ nestedMenuWithReferences ],
+  expandAndAssertEq([nestedMenuWithReferences], {
+    items: [nestedMenuWithReferences],
     menus: {
-      'nested-menu-2-value': [ submenu1, separator, submenu2 ],
-      'submenu-2-value': [ submenu2a ]
+      'nested-menu-2-value': [submenu1, separator, submenu2],
+      'submenu-2-value': [submenu2a]
     },
     expansions: {
       'nested-menu-2-value': 'nested-menu-2-value',

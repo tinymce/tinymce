@@ -10,7 +10,8 @@ const all = function (input: string, pattern: PRegExp) {
   let match = term.exec(input);
   while (match) {
     const start = match.index + pattern.prefix(match);
-    const length = match[0].length - pattern.prefix(match) - pattern.suffix(match);
+    const length =
+      match[0].length - pattern.prefix(match) - pattern.suffix(match);
     r.push({
       start: Fun.constant(start),
       finish: Fun.constant(start + length)
@@ -21,6 +22,4 @@ const all = function (input: string, pattern: PRegExp) {
   return r;
 };
 
-export {
-  all
-};
+export { all };

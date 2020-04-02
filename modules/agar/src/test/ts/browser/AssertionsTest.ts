@@ -3,7 +3,7 @@ import * as Assertions from 'ephox/agar/api/Assertions';
 
 UnitTest.test('AssertionsTest', () => {
   const replaceTokens = (str, values) =>
-    str.replace(/\{\{(\w+)\}\}/gi, ($0, $1) => values[$1] ? values[$1] : '');
+    str.replace(/\{\{(\w+)\}\}/gi, ($0, $1) => (values[$1] ? values[$1] : ''));
 
   try {
     Assertions.assertEq('test 2 (assertEq)', 5, 5);
@@ -34,9 +34,14 @@ UnitTest.test('AssertionsTest', () => {
       class: 'class2 class1'
     };
 
-    const html = '<div id="container" style="{{style}}"><p class="{{class}}">some text</p></div>';
+    const html =
+      '<div id="container" style="{{style}}"><p class="{{class}}">some text</p></div>';
 
-    Assertions.assertHtmlStructure('html is the same, although styles & classes are in different order', replaceTokens(html, v1), replaceTokens(html, v2));
+    Assertions.assertHtmlStructure(
+      'html is the same, although styles & classes are in different order',
+      replaceTokens(html, v1),
+      replaceTokens(html, v2)
+    );
   } catch (err) {
     assert.fail('Unexpected error: ' + err.message);
   }

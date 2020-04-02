@@ -25,6 +25,4 @@ const setup = (editor: Editor, backstage: UiFactoryBackstage) => {
   IndentOutdent.register(editor);
 };
 
-export {
-  setup
-};
+export { setup };

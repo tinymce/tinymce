@@ -13,19 +13,20 @@ import Editor from '../api/Editor';
 import Node from '../api/html/Node';
 
 const setup = (editor: Editor, registry: AnnotationsRegistry): void => {
-  const identifyParserNode = (span: Node): Option<AnnotatorSettings> => Option.from(span.attr(Markings.dataAnnotation())).bind(registry.lookup);
+  const identifyParserNode = (span: Node): Option<AnnotatorSettings> =>
+    Option.from(span.attr(Markings.dataAnnotation())).bind(registry.lookup);
 
   editor.on('init', () => {
     editor.serializer.addNodeFilter('span', (spans) => {
       Arr.each(spans, (span) => {
         identifyParserNode(span).each((settings) => {
-          if (settings.persistent === false) { span.unwrap(); }
+          if (settings.persistent === false) {
+            span.unwrap();
+          }
         });
       });
     });
   });
 };
 
-export {
-  setup
-};
+export { setup };

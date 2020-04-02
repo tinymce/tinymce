@@ -8,21 +8,35 @@ import { AnchorBox, AnchorLayout } from '../layout/LayoutTypes';
 import { OriginAdt } from '../layout/Origins';
 
 // doPlace(component, origin, anchoring, posConfig, placee);
-export type AnchorPlacement =
-  (comp: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, getBounds: Option<() => Bounds>, placee: AlloyComponent) => void;
+export type AnchorPlacement = (
+  comp: AlloyComponent,
+  origin: OriginAdt,
+  anchoring: Anchoring,
+  getBounds: Option<() => Bounds>,
+  placee: AlloyComponent
+) => void;
 
 export interface CommonAnchorSpec {
   anchor: string;
 }
 
-export type AnchorSpec = SelectionAnchorSpec | HotspotAnchorSpec | SubmenuAnchorSpec | MakeshiftAnchorSpec | NodeAnchorSpec;
+export type AnchorSpec =
+  | SelectionAnchorSpec
+  | HotspotAnchorSpec
+  | SubmenuAnchorSpec
+  | MakeshiftAnchorSpec
+  | NodeAnchorSpec;
 
 export interface AnchorDetail<D> {
-  placement: (comp: AlloyComponent, anchor: D, origin: OriginAdt) => Option<Anchoring>;
+  placement: (
+    comp: AlloyComponent,
+    anchor: D,
+    origin: OriginAdt
+  ) => Option<Anchoring>;
 }
 
-export type MaxHeightFunction =  (elem: Element, available: number) => void;
-export type MaxWidthFunction =  (elem: Element, available: number) => void;
+export type MaxHeightFunction = (elem: Element, available: number) => void;
+export type MaxWidthFunction = (elem: Element, available: number) => void;
 export interface AnchorOverrides {
   maxHeightFunction?: MaxHeightFunction;
   maxWidthFunction?: MaxWidthFunction;
@@ -50,7 +64,9 @@ export interface HasLayoutAnchorSpec {
   layouts?: Layouts;
 }
 
-export interface SelectionAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
+export interface SelectionAnchorSpec
+  extends CommonAnchorSpec,
+    HasLayoutAnchorSpec {
   anchor: 'selection';
   getSelection?: () => Option<SimRange>;
   root: Element;
@@ -59,7 +75,9 @@ export interface SelectionAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSp
   showAbove?: boolean;
 }
 
-export interface SelectionAnchor extends AnchorDetail<SelectionAnchor>, HasLayoutAnchor {
+export interface SelectionAnchor
+  extends AnchorDetail<SelectionAnchor>,
+    HasLayoutAnchor {
   getSelection: Option<() => Option<SimRange>>;
   root: Element;
   bubble: Option<Bubble>;
@@ -84,26 +102,34 @@ export interface NodeAnchor extends AnchorDetail<NodeAnchor>, HasLayoutAnchor {
   showAbove: boolean;
 }
 
-export interface HotspotAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
+export interface HotspotAnchorSpec
+  extends CommonAnchorSpec,
+    HasLayoutAnchorSpec {
   anchor: 'hotspot';
   hotspot: AlloyComponent;
   bubble?: Bubble;
   overrides?: AnchorOverrides;
 }
 
-export interface HotspotAnchor extends AnchorDetail<HotspotAnchor>, HasLayoutAnchor {
+export interface HotspotAnchor
+  extends AnchorDetail<HotspotAnchor>,
+    HasLayoutAnchor {
   hotspot: AlloyComponent;
   bubble: Option<Bubble>;
   overrides: AnchorOverrides;
 }
 
-export interface SubmenuAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
+export interface SubmenuAnchorSpec
+  extends CommonAnchorSpec,
+    HasLayoutAnchorSpec {
   anchor: 'submenu';
   overrides?: AnchorOverrides;
   item: AlloyComponent;
 }
 
-export interface SubmenuAnchor extends AnchorDetail<SubmenuAnchor>, HasLayoutAnchor {
+export interface SubmenuAnchor
+  extends AnchorDetail<SubmenuAnchor>,
+    HasLayoutAnchor {
   item: AlloyComponent;
   overrides: AnchorOverrides;
 }
@@ -118,7 +144,9 @@ export interface MakeshiftAnchorSpec extends CommonAnchorSpec {
   overrides?: AnchorOverrides;
 }
 
-export interface MakeshiftAnchor extends AnchorDetail<MakeshiftAnchor>, HasLayoutAnchor {
+export interface MakeshiftAnchor
+  extends AnchorDetail<MakeshiftAnchor>,
+    HasLayoutAnchor {
   x: number;
   y: number;
   height: number;
@@ -137,6 +165,4 @@ export interface Anchoring {
 
 const nu: (spec: Anchoring) => Anchoring = (x) => x;
 
-export {
-  nu
-};
+export { nu };

@@ -1,4 +1,15 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Composing, Keying, Memento, RawDomSchema, SimulatedEvent, Sketcher } from '@ephox/alloy';
+import {
+  AddEventsBehaviour,
+  AlloyComponent,
+  AlloyEvents,
+  Behaviour,
+  Composing,
+  Keying,
+  Memento,
+  RawDomSchema,
+  SimulatedEvent,
+  Sketcher
+} from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun } from '@ephox/katamari';
 import { Hex } from '../api/colour/ColourTypes';
@@ -23,27 +34,31 @@ export interface ColourPickerSpec extends Sketcher.SingleSketchSpec {
   readonly onInvalidHex?: (component: AlloyComponent) => void;
 }
 
-export interface ColourPickerSketcher extends Sketcher.SingleSketch<ColourPickerSpec> {
-}
+export interface ColourPickerSketcher
+  extends Sketcher.SingleSketch<ColourPickerSpec> {}
 
 const makeFactory = (
   translate: (key: string) => string,
   getClass: (key: string) => string
 ): ColourPickerSketcher => {
   const factory = (detail: ColourPickerDetail) => {
-    const rgbForm = RgbForm.rgbFormFactory(translate, getClass, detail.onValidHex, detail.onInvalidHex);
-    const sbPalette = SaturationBrightnessPalette.paletteFactory(translate, getClass);
+    const rgbForm = RgbForm.rgbFormFactory(
+      translate,
+      getClass,
+      detail.onValidHex,
+      detail.onInvalidHex
+    );
+    const sbPalette = SaturationBrightnessPalette.paletteFactory(
+      translate,
+      getClass
+    );
 
     const state = {
       paletteRgba: Cell(RgbaColour.red)
     };
 
-    const memPalette = Memento.record(
-      sbPalette.sketch({})
-    );
-    const memRgb = Memento.record(
-      rgbForm.sketch({})
-    );
+    const memPalette = Memento.record(sbPalette.sketch({}));
+    const memRgb = Memento.record(rgbForm.sketch({}));
 
     const updatePalette = (anyInSystem: AlloyComponent, hex: Hex) => {
       memPalette.getOpt(anyInSystem).each((palette) => {
@@ -59,19 +74,30 @@ const makeFactory = (
       });
     };
 
-    const runUpdates = (anyInSystem: AlloyComponent, hex: Hex, updates: ((anyInSystem: AlloyComponent, hex: Hex) => void)[]) => {
+    const runUpdates = (
+      anyInSystem: AlloyComponent,
+      hex: Hex,
+      updates: ((anyInSystem: AlloyComponent, hex: Hex) => void)[]
+    ) => {
       Arr.each(updates, (update) => {
         update(anyInSystem, hex);
       });
     };
 
     const paletteUpdates = () => {
-      const updates = [ updateFields ];
-      return (form: AlloyComponent, simulatedEvent: SimulatedEvent<ColourEvents.PaletteUpdateEvent>) => {
+      const updates = [updateFields];
+      return (
+        form: AlloyComponent,
+        simulatedEvent: SimulatedEvent<ColourEvents.PaletteUpdateEvent>
+      ) => {
         const value = simulatedEvent.event().value;
         const oldRgb = state.paletteRgba.get();
         const hsvColour = HsvColour.fromRgb(oldRgb);
-        const newHsvColour = HsvColour.hsvColour(hsvColour.hue, value.x(), (100 - value.y()));
+        const newHsvColour = HsvColour.hsvColour(
+          hsvColour.hue,
+          value.x(),
+          100 - value.y()
+        );
         const rgb = RgbaColour.fromHsv(newHsvColour);
         const nuHex = HexColour.fromRgba(rgb);
         runUpdates(form, nuHex, updates);
@@ -79,8 +105,11 @@ const makeFactory = (
     };
 
     const sliderUpdates = () => {
-      const updates = [ updatePalette, updateFields ];
-      return (form: AlloyComponent, simulatedEvent: SimulatedEvent<ColourEvents.SliderUpdateEvent>) => {
+      const updates = [updatePalette, updateFields];
+      return (
+        form: AlloyComponent,
+        simulatedEvent: SimulatedEvent<ColourEvents.SliderUpdateEvent>
+      ) => {
         const value = simulatedEvent.event().value;
         const hex = calcHex(value.y());
         runUpdates(form, hex, updates);
@@ -125,6 +154,4 @@ const makeFactory = (
   return colourPickerSketcher;
 };
 
-export {
-  makeFactory
-};
+export { makeFactory };

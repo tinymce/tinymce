@@ -14,6 +14,4 @@ const create = function (prefix) {
   };
 };
 
-export {
-  create
-};
+export { create };

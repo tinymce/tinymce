@@ -5,7 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyEvents, Button, Memento, NativeEvents, SketchSpec } from '@ephox/alloy';
+import {
+  AlloyEvents,
+  Button,
+  Memento,
+  NativeEvents,
+  SketchSpec
+} from '@ephox/alloy';
 import { BlobConversions } from '@ephox/imagetools';
 import { Id, Option } from '@ephox/katamari';
 
@@ -17,9 +23,7 @@ const addImage = (editor: Editor, blob: Blob) => {
   BlobConversions.blobToBase64(blob).then((base64) => {
     editor.undoManager.transact(() => {
       const cache = editor.editorUpload.blobCache;
-      const info = cache.create(
-        Id.generate('mceu'), blob, base64
-      );
+      const info = cache.create(Id.generate('mceu'), blob, base64);
       cache.add(info);
       const img = editor.dom.createHTML('img', {
         src: info.blobUri()
@@ -60,9 +64,7 @@ const sketch = (editor): SketchSpec => {
 
   return Button.sketch({
     dom: Buttons.getToolbarIconButton('image', editor),
-    components: [
-      memPicker.asSpec()
-    ],
+    components: [memPicker.asSpec()],
     action(button) {
       const picker = memPicker.get(button);
       // Trigger a dom click for the file input
@@ -71,6 +73,4 @@ const sketch = (editor): SketchSpec => {
   });
 };
 
-export {
-  sketch
-};
+export { sketch };

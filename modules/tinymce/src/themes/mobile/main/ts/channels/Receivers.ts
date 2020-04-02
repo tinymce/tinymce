@@ -11,27 +11,21 @@ import * as TinyChannels from './TinyChannels';
 
 const format = function (command, update) {
   return Receiving.config({
-    channels: Objects.wrap(
-      TinyChannels.formatChanged,
-      {
-        onReceive(button, data) {
-          if (data.command === command) {
-            update(button, data.state);
-          }
+    channels: Objects.wrap(TinyChannels.formatChanged, {
+      onReceive(button, data) {
+        if (data.command === command) {
+          update(button, data.state);
         }
       }
-    )
+    })
   });
 };
 
 const orientation = function (onReceive) {
   return Receiving.config({
-    channels: Objects.wrap(
-      TinyChannels.orientationChanged,
-      {
-        onReceive
-      }
-    )
+    channels: Objects.wrap(TinyChannels.orientationChanged, {
+      onReceive
+    })
   });
 };
 
@@ -44,8 +38,4 @@ const receive = function (channel: string, onReceive) {
   };
 };
 
-export {
-  format,
-  orientation,
-  receive
-};
+export { format, orientation, receive };

@@ -16,7 +16,8 @@ export interface Marker {
   end: Node;
 }
 
-const newMarker = (dom: DOMUtils, id: string) => dom.create('span', { 'data-mce-type': 'bookmark', id });
+const newMarker = (dom: DOMUtils, id: string) =>
+  dom.create('span', { 'data-mce-type': 'bookmark', id });
 
 const rangeFromMarker = (dom: DOMUtils, marker: Marker): Range => {
   const rng = dom.createRng();
@@ -25,31 +26,45 @@ const rangeFromMarker = (dom: DOMUtils, marker: Marker): Range => {
   return rng;
 };
 
-const createMarker = (dom: DOMUtils, markerPrefix: string, pathRange: PathRange): Marker => {
+const createMarker = (
+  dom: DOMUtils,
+  markerPrefix: string,
+  pathRange: PathRange
+): Marker => {
   // Resolve the path range
-  const rng = resolvePathRange(dom.getRoot(), pathRange).getOrDie('Unable to resolve path range');
+  const rng = resolvePathRange(dom.getRoot(), pathRange).getOrDie(
+    'Unable to resolve path range'
+  );
   const startNode = rng.startContainer as Text;
   const endNode = rng.endContainer as Text;
 
   // Create the marker
-  const textEnd = rng.endOffset === 0 ? endNode : endNode.splitText(rng.endOffset);
-  const textStart = rng.startOffset === 0 ? startNode : startNode.splitText(rng.startOffset);
+  const textEnd =
+    rng.endOffset === 0 ? endNode : endNode.splitText(rng.endOffset);
+  const textStart =
+    rng.startOffset === 0 ? startNode : startNode.splitText(rng.startOffset);
   return {
     prefix: markerPrefix,
-    end: textEnd.parentNode.insertBefore(newMarker(dom, markerPrefix + '-end'), textEnd),
-    start: textStart.parentNode.insertBefore(newMarker(dom, markerPrefix + '-start'), textStart),
+    end: textEnd.parentNode.insertBefore(
+      newMarker(dom, markerPrefix + '-end'),
+      textEnd
+    ),
+    start: textStart.parentNode.insertBefore(
+      newMarker(dom, markerPrefix + '-start'),
+      textStart
+    )
   };
 };
 
-const removeMarker = (dom: DOMUtils, marker: Marker, isRoot: (node: Node) => boolean) => {
+const removeMarker = (
+  dom: DOMUtils,
+  marker: Marker,
+  isRoot: (node: Node) => boolean
+) => {
   // Note: Use dom.get() here instead of marker.end/start, as applying the format/command can
   // clone the nodes meaning the old reference isn't usable
   Utils.cleanEmptyNodes(dom, dom.get(marker.prefix + '-end'), isRoot);
   Utils.cleanEmptyNodes(dom, dom.get(marker.prefix + '-start'), isRoot);
 };
 
-export {
-  createMarker,
-  rangeFromMarker,
-  removeMarker
-};
+export { createMarker, rangeFromMarker, removeMarker };

@@ -26,7 +26,7 @@ const makeSidebar = (ed, name: string, background: string, width: number) => {
     },
     onHide: (_api) => {
       console.log('onHide ' + name);
-    },
+    }
   });
 };
 
@@ -53,18 +53,29 @@ const settings = {
   image_advtab: true,
   file_picker_callback(callback, _value, meta) {
     if (meta.fieldname === 'poster') {
-      callback('test.mp4', { altsource: 'blah.ogg', width: '400px', poster: 'testing.jpg', embed: '<p>test</p>' });
+      callback('test.mp4', {
+        altsource: 'blah.ogg',
+        width: '400px',
+        poster: 'testing.jpg',
+        embed: '<p>test</p>'
+      });
       return;
     }
     // Provide file and text for the link dialog
     if (meta.filetype === 'file') {
-      callback('https://www.google.com/logos/google.jpg', { text: 'My text', title: 'blah' });
+      callback('https://www.google.com/logos/google.jpg', {
+        text: 'My text',
+        title: 'blah'
+      });
     }
 
     // Provide image and alt text for the image dialog
     if (meta.filetype === 'image') {
       // tslint:disable-next-line: no-debugger
-      callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text', style: 'border: 10px solid black;' });
+      callback('https://www.google.com/logos/google.jpg', {
+        alt: 'My alt text',
+        style: 'border: 10px solid black;'
+      });
     }
 
     // Provide alternative source and posted for the media dialog
@@ -79,7 +90,7 @@ const settings = {
       const suggestions = {};
 
       for (let i = 0; i < words.length; i++) {
-        suggestions[words[i]] = [ 'First', 'Second' ];
+        suggestions[words[i]] = ['First', 'Second'];
       }
 
       success(suggestions);
@@ -90,8 +101,17 @@ const settings = {
     }
   },
   templates: [
-    { title: 'Some title 1', description: 'Some desc 1', content: 'My content' },
-    { title: 'Some title 2', description: 'Some desc 2', content: '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>' }
+    {
+      title: 'Some title 1',
+      description: 'Some desc 1',
+      content: 'My content'
+    },
+    {
+      title: 'Some title 2',
+      description: 'Some desc 2',
+      content:
+        '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>'
+    }
   ],
   template_cdate_format: '[CDATE: %m/%d/%Y : %H:%M:%S]',
   template_mdate_format: '[MDATE: %m/%d/%Y : %H:%M:%S]',
@@ -108,8 +128,9 @@ const settings = {
   // rtl_ui: true,
   add_unload_trigger: false,
   autosave_ask_before_unload: false,
-  toolbar: 'undo redo sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
-  'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl | fullscreen',
+  toolbar:
+    'undo redo sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+    'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl | fullscreen',
 
   // Multiple toolbar array
   // toolbar: ['undo redo sidebar1 align fontsizeselect insertfile | fontselect formatselect styleselect insertfile | styleselect | bold italic',
@@ -151,4 +172,6 @@ const settings = {
 };
 
 tinymce.init(settings);
-tinymce.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
+tinymce.init(
+  Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' })
+);

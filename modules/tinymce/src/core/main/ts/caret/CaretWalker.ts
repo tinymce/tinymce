@@ -65,9 +65,15 @@ const nodeAtIndex = (container: Node, offset: number): Node => {
   return null;
 };
 
-const getCaretCandidatePosition = (direction: HDirection, node: Node): CaretPosition => {
+const getCaretCandidatePosition = (
+  direction: HDirection,
+  node: Node
+): CaretPosition => {
   if (isForwards(direction)) {
-    if (isCaretCandidate(node.previousSibling) && !isText(node.previousSibling)) {
+    if (
+      isCaretCandidate(node.previousSibling) &&
+      !isText(node.previousSibling)
+    ) {
       return CaretPosition.before(node);
     }
 
@@ -107,11 +113,19 @@ const moveForwardFromBr = (root: Element, nextNode: Node) => {
       return CaretPosition.before(nextSibling);
     }
   } else {
-    return findCaretPosition(HDirection.Forwards, CaretPosition.after(nextNode), root);
+    return findCaretPosition(
+      HDirection.Forwards,
+      CaretPosition.after(nextNode),
+      root
+    );
   }
 };
 
-const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root: Node): CaretPosition => {
+const findCaretPosition = (
+  direction: HDirection,
+  startPos: CaretPosition,
+  root: Node
+): CaretPosition => {
   let node, nextNode, innerNode;
   let rootContentEditableFalseElm, caretPosition;
 
@@ -121,8 +135,14 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
 
   if (startPos.isEqual(CaretPosition.after(root)) && root.lastChild) {
     caretPosition = CaretPosition.after(root.lastChild);
-    if (isBackwards(direction) && isCaretCandidate(root.lastChild) && isElement(root.lastChild)) {
-      return isBr(root.lastChild) ? CaretPosition.before(root.lastChild) : caretPosition;
+    if (
+      isBackwards(direction) &&
+      isCaretCandidate(root.lastChild) &&
+      isElement(root.lastChild)
+    ) {
+      return isBr(root.lastChild)
+        ? CaretPosition.before(root.lastChild)
+        : caretPosition;
     }
   } else {
     caretPosition = startPos;
@@ -146,7 +166,12 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
       nextNode = nodeAtIndex(container, offset - 1);
       if (isCaretCandidate(nextNode)) {
         if (!isAtomic(nextNode)) {
-          innerNode = findNode(nextNode, direction, isEditableCaretCandidate, nextNode);
+          innerNode = findNode(
+            nextNode,
+            direction,
+            isEditableCaretCandidate,
+            nextNode
+          );
           if (innerNode) {
             if (isText(innerNode)) {
               return CaretPosition(innerNode, innerNode.data.length);
@@ -172,7 +197,12 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
         }
 
         if (!isAtomic(nextNode)) {
-          innerNode = findNode(nextNode, direction, isEditableCaretCandidate, nextNode);
+          innerNode = findNode(
+            nextNode,
+            direction,
+            isEditableCaretCandidate,
+            nextNode
+          );
           if (innerNode) {
             if (isText(innerNode)) {
               return CaretPosition(innerNode, 0);
@@ -193,7 +223,10 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
     node = nextNode ? nextNode : caretPosition.getNode();
   }
 
-  if ((isForwards(direction) && caretPosition.isAtEnd()) || (isBackwards(direction) && caretPosition.isAtStart())) {
+  if (
+    (isForwards(direction) && caretPosition.isAtEnd()) ||
+    (isBackwards(direction) && caretPosition.isAtStart())
+  ) {
     node = findNode(node, direction, Fun.constant(true), root, true);
     if (isEditableCaretCandidate(node, root)) {
       return getCaretCandidatePosition(direction, node);
@@ -202,8 +235,13 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
 
   nextNode = findNode(node, direction, isEditableCaretCandidate, root);
 
-  rootContentEditableFalseElm = ArrUtils.last(Arr.filter(getParents(container, root), isContentEditableFalse));
-  if (rootContentEditableFalseElm && (!nextNode || !rootContentEditableFalseElm.contains(nextNode))) {
+  rootContentEditableFalseElm = ArrUtils.last(
+    Arr.filter(getParents(container, root), isContentEditableFalse)
+  );
+  if (
+    rootContentEditableFalseElm &&
+    (!nextNode || !rootContentEditableFalseElm.contains(nextNode))
+  ) {
     if (isForwards(direction)) {
       caretPosition = CaretPosition.after(rootContentEditableFalseElm);
     } else {
@@ -222,27 +260,27 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition, root:
 
 export const CaretWalker = (root: Node): CaretWalker => ({
   /**
-     * Returns the next logical caret position from the specified input
-     * caretPosition or null if there isn't any more positions left for example
-     * at the end specified root element.
-     *
-     * @method next
-     * @param {tinymce.caret.CaretPosition} caretPosition Caret position to start from.
-     * @return {tinymce.caret.CaretPosition} CaretPosition or null if no position was found.
-     */
+   * Returns the next logical caret position from the specified input
+   * caretPosition or null if there isn't any more positions left for example
+   * at the end specified root element.
+   *
+   * @method next
+   * @param {tinymce.caret.CaretPosition} caretPosition Caret position to start from.
+   * @return {tinymce.caret.CaretPosition} CaretPosition or null if no position was found.
+   */
   next(caretPosition: CaretPosition): CaretPosition {
     return findCaretPosition(HDirection.Forwards, caretPosition, root);
   },
 
   /**
-     * Returns the previous logical caret position from the specified input
-     * caretPosition or null if there isn't any more positions left for example
-     * at the end specified root element.
-     *
-     * @method prev
-     * @param {tinymce.caret.CaretPosition} caretPosition Caret position to start from.
-     * @return {tinymce.caret.CaretPosition} CaretPosition or null if no position was found.
-     */
+   * Returns the previous logical caret position from the specified input
+   * caretPosition or null if there isn't any more positions left for example
+   * at the end specified root element.
+   *
+   * @method prev
+   * @param {tinymce.caret.CaretPosition} caretPosition Caret position to start from.
+   * @return {tinymce.caret.CaretPosition} CaretPosition or null if no position was found.
+   */
   prev(caretPosition: CaretPosition): CaretPosition {
     return findCaretPosition(HDirection.Backwards, caretPosition, root);
   }

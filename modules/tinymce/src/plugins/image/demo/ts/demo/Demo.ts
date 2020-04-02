@@ -10,9 +10,7 @@ tinymce.init({
   image_caption: true,
   image_advtab: true,
   image_title: true,
-  image_list: [
-    { text: 'Google', value: 'https://www.google.com/google.jpg' }
-  ],
+  image_list: [{ text: 'Google', value: 'https://www.google.com/google.jpg' }],
   image_class_list: [
     { title: 'None', value: '' },
     { title: 'Class1', value: 'class1' },
@@ -20,7 +18,10 @@ tinymce.init({
   ],
   images_upload_url: 'postAcceptor.php',
   file_picker_callback(callback, _value, _meta) {
-    callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text', caption: true });
+    callback('https://www.google.com/logos/google.jpg', {
+      alt: 'My alt text',
+      caption: true
+    });
   },
   images_upload_handler: (blobInfo, success, _failure, _progress) => {
     // tslint:disable-next-line:no-console
@@ -32,4 +33,4 @@ tinymce.init({
   height: 600
 });
 
-export { };
+export {};

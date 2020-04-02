@@ -15,7 +15,11 @@ const register = (editor: Editor) => {
     icon: 'image',
     tooltip: 'Insert/edit image',
     onAction: Dialog(editor).openLater,
-    onSetup: (buttonApi) => editor.selection.selectorChangedWithUnbind('img:not([data-mce-object],[data-mce-placeholder]),figure.image', buttonApi.setActive).unbind
+    onSetup: (buttonApi) =>
+      editor.selection.selectorChangedWithUnbind(
+        'img:not([data-mce-object],[data-mce-placeholder]),figure.image',
+        buttonApi.setActive
+      ).unbind
   });
 
   editor.ui.registry.addMenuItem('image', {
@@ -25,11 +29,12 @@ const register = (editor: Editor) => {
   });
 
   editor.ui.registry.addContextMenu('image', {
-    update: (element): string[] => isFigure(element) || (isImage(element) && !Utils.isPlaceholderImage(element)) ? [ 'image' ] : []
+    update: (element): string[] =>
+      isFigure(element) ||
+      (isImage(element) && !Utils.isPlaceholderImage(element))
+        ? ['image']
+        : []
   });
-
 };
 
-export {
-  register
-};
+export { register };

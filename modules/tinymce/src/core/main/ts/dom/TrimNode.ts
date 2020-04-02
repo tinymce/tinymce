@@ -11,13 +11,18 @@ import * as NodeType from './NodeType';
 import Tools from '../api/util/Tools';
 
 const surroundedBySpans = function (node) {
-  const previousIsSpan = node.previousSibling && node.previousSibling.nodeName === 'SPAN';
+  const previousIsSpan =
+    node.previousSibling && node.previousSibling.nodeName === 'SPAN';
   const nextIsSpan = node.nextSibling && node.nextSibling.nodeName === 'SPAN';
   return previousIsSpan && nextIsSpan;
 };
 
 const isBookmarkNode = function (node) {
-  return node && node.tagName === 'SPAN' && node.getAttribute('data-mce-type') === 'bookmark';
+  return (
+    node &&
+    node.tagName === 'SPAN' &&
+    node.getAttribute('data-mce-type') === 'bookmark'
+  );
 };
 
 // W3C valid browsers tend to leave empty nodes to the left/right side of the contents - this makes sense
@@ -29,7 +34,8 @@ const isBookmarkNode = function (node) {
 // this function will then trim off empty edges and produce:
 //   <p>text 1</p><b>CHOP</b><p>text 2</p>
 const trimNode = function (dom, node) {
-  let i, children = node.childNodes;
+  let i,
+    children = node.childNodes;
 
   if (NodeType.isElement(node) && isBookmarkNode(node)) {
     return;
@@ -71,6 +77,4 @@ const trimNode = function (dom, node) {
   return node;
 };
 
-export {
-  trimNode
-};
+export { trimNode };

@@ -20,8 +20,10 @@ import * as Tagger from 'ephox/alloy/registry/Tagger';
 import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 
 UnitTest.asynctest('FieldsTest', (success, failure) => {
-
-  const renderChoice = (choiceSpec: { value: string; text: string }): AlloySpec & { value: string } => ({
+  const renderChoice = (choiceSpec: {
+    value: string;
+    text: string;
+  }): AlloySpec & { value: string } => ({
     value: choiceSpec.value,
     dom: {
       tag: 'span',
@@ -30,7 +32,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         'data-value': choiceSpec.value
       }
     },
-    components: [ ]
+    components: []
   });
 
   const labelSpec: AlloySpec = {
@@ -38,223 +40,280 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
       tag: 'label',
       innerHtml: 'Label'
     },
-    components: [ ]
+    components: []
   };
 
-  GuiSetup.setup((_store, _doc, _body) => {
-    const inputA = FormField.sketch({
-      uid: 'input-a',
-      dom: {
-        tag: 'div'
-      },
-      components: [
-        FormField.parts().field({
-          factory: Input,
-          data: 'init'
-        }),
-        FormField.parts().label(labelSpec),
-        FormField.parts()['aria-descriptor']({
-          text: 'help'
-        })
-      ]
-    });
-
-    const selectB = FormField.sketch({
-      uid: 'select-b',
-      dom: {
-        tag: 'div'
-      },
-      components: [
-        // TODO: Do not recalculate
-        FormField.parts().label(labelSpec),
-        FormField.parts().field({
-          factory: HtmlSelect,
-          options: [
-            { value: 'select-b-init', text: 'Select-b-init' }
-          ]
-        })
-      ]
-    });
-
-    const chooserC = FormChooser.sketch({
-      uid: 'chooser-c',
-      dom: {
-        tag: 'div'
-      },
-      components: [
-        FormChooser.parts().legend({ }),
-        FormChooser.parts().choices({ })
-      ],
-
-      markers: {
-        choiceClass: 'test-choice',
-        selectedClass: 'test-selected-choice'
-      },
-      choices: Arr.map([
-        { value: 'choice1', text: 'Choice1' },
-        { value: 'choice2', text: 'Choice2' },
-        { value: 'choice3', text: 'Choice3' }
-      ], renderChoice)
-    });
-
-    const coupledDText = {
-      dom: {
-        tag: 'div'
-      },
-      components: [
-        FormField.parts().label(labelSpec),
-        FormField.parts().field({
-          factory: Input
-        })
-      ]
-    };
-
-    const coupledD = FormCoupledInputs.sketch({
-      dom: {
-        tag: 'div',
-        classes: [ 'coupled-group' ]
-      },
-      components: [
-        FormCoupledInputs.parts().field1(coupledDText),
-        FormCoupledInputs.parts().field2(coupledDText),
-        FormCoupledInputs.parts().lock({
-          dom: {
-            tag: 'button',
-            innerHtml: '+'
-          }
-        })
-      ],
-
-      onLockedChange(current, other) {
-        Representing.setValueFrom(other, current);
-      },
-      markers: {
-        lockClass: 'coupled-lock'
-      }
-    });
-
-    const dataE = DataField.sketch({
-      uid: 'data-e',
-      dom: {
-        tag: 'span'
-      },
-      getInitialValue: Fun.constant('data-e-init')
-    });
-
-    return GuiFactory.build(
-      Container.sketch({
+  GuiSetup.setup(
+    (_store, _doc, _body) => {
+      const inputA = FormField.sketch({
+        uid: 'input-a',
+        dom: {
+          tag: 'div'
+        },
         components: [
-          inputA,
-          selectB,
-          chooserC,
-          coupledD,
-          dataE
+          FormField.parts().field({
+            factory: Input,
+            data: 'init'
+          }),
+          FormField.parts().label(labelSpec),
+          FormField.parts()['aria-descriptor']({
+            text: 'help'
+          })
+        ]
+      });
+
+      const selectB = FormField.sketch({
+        uid: 'select-b',
+        dom: {
+          tag: 'div'
+        },
+        components: [
+          // TODO: Do not recalculate
+          FormField.parts().label(labelSpec),
+          FormField.parts().field({
+            factory: HtmlSelect,
+            options: [{ value: 'select-b-init', text: 'Select-b-init' }]
+          })
+        ]
+      });
+
+      const chooserC = FormChooser.sketch({
+        uid: 'chooser-c',
+        dom: {
+          tag: 'div'
+        },
+        components: [
+          FormChooser.parts().legend({}),
+          FormChooser.parts().choices({})
         ],
 
-        containerBehaviours: Behaviour.derive([
-          Replacing.config({ })
-        ])
-      })
-    );
+        markers: {
+          choiceClass: 'test-choice',
+          selectedClass: 'test-selected-choice'
+        },
+        choices: Arr.map(
+          [
+            { value: 'choice1', text: 'Choice1' },
+            { value: 'choice2', text: 'Choice2' },
+            { value: 'choice3', text: 'Choice3' }
+          ],
+          renderChoice
+        )
+      });
 
-  }, (doc, _body, _gui, component, _store) => {
-
-    const inputA = component.getSystem().getByUid('input-a').getOrDie();
-    const selectB = component.getSystem().getByUid('select-b').getOrDie();
-    const chooserC = component.getSystem().getByUid('chooser-c').getOrDie();
-    const dataE = component.getSystem().getByUid('data-e').getOrDie();
-
-    return [
-      GuiSetup.mAddStyles(doc, [
-        '.test-selected-choice, .coupled-lock { background: #cadbee }'
-      ]),
-
-      RepresentPipes.sAssertValue('Checking input-a value', 'init', inputA),
-
-      Assertions.sAssertStructure('Check the input-a DOM', ApproxStructure.build((s, str, _arr) => {
-        const input = SelectorFind.descendant(inputA.element(), 'input').getOrDie('input element child was not found');
-        const span = SelectorFind.descendant(inputA.element(), 'span').getOrDie('span element child was not found');
-
-        const inputID = Option.from(Attr.get(input, 'id')).getOrDie('Expected value for input.id');
-        const spanID = Option.from(Attr.get(span, 'id')).getOrDie('Expected value for span.id');
-        return s.element('div', {
-          children: [
-            s.element('input', {
-              attrs: {
-                'aria-describedby': str.is(spanID)
-              }
-            }),
-            s.element('label', {
-              attrs: {
-                for: str.is(inputID)
-              }
-            }),
-            s.element('span', { })
-          ]
-        });
-      }), inputA.element()),
-
-      Assertions.sAssertStructure('Check the select-b dom', ApproxStructure.build((s, _str, _arr) => s.element('div', {
-        children: [
-          s.element('label', { }),
-          s.element('select', { })
+      const coupledDText = {
+        dom: {
+          tag: 'div'
+        },
+        components: [
+          FormField.parts().label(labelSpec),
+          FormField.parts().field({
+            factory: Input
+          })
         ]
-      })), selectB.element()),
+      };
 
-      Assertions.sAssertStructure('Check the chooser-c dom', ApproxStructure.build((s, str, _arr) => s.element('div', {
-        children: [
-          s.element('legend', { }),
-          s.element('span', { attrs: { role: str.is('radio') }}),
-          s.element('span', { attrs: { role: str.is('radio') }}),
-          s.element('span', { attrs: { role: str.is('radio') }})
-        ]
-      })), chooserC.element()),
+      const coupledD = FormCoupledInputs.sketch({
+        dom: {
+          tag: 'div',
+          classes: ['coupled-group']
+        },
+        components: [
+          FormCoupledInputs.parts().field1(coupledDText),
+          FormCoupledInputs.parts().field2(coupledDText),
+          FormCoupledInputs.parts().lock({
+            dom: {
+              tag: 'button',
+              innerHtml: '+'
+            }
+          })
+        ],
 
-      RepresentPipes.sAssertValue('Checking select-b value', 'select-b-init', selectB),
+        onLockedChange(current, other) {
+          Representing.setValueFrom(other, current);
+        },
+        markers: {
+          lockClass: 'coupled-lock'
+        }
+      });
 
-      Step.sync(() => {
-        const val = Representing.getValue(chooserC).getOrDie();
-        Assertions.assertEq('Checking chooser-c value', 'choice1', val);
+      const dataE = DataField.sketch({
+        uid: 'data-e',
+        dom: {
+          tag: 'span'
+        },
+        getInitialValue: Fun.constant('data-e-init')
+      });
 
-        Representing.setValue(chooserC, 'choice3');
-        const val2 = Representing.getValue(chooserC).getOrDie();
-        Assertions.assertEq('Checking chooser-c value after set', 'choice3', val2);
-      }),
+      return GuiFactory.build(
+        Container.sketch({
+          components: [inputA, selectB, chooserC, coupledD, dataE],
 
-      Assertions.sAssertStructure('Checking the data field (E)', ApproxStructure.build((s, _str, _arr) => s.element('span', { children: [ ] })), dataE.element()),
+          containerBehaviours: Behaviour.derive([Replacing.config({})])
+        })
+      );
+    },
+    (doc, _body, _gui, component, _store) => {
+      const inputA = component.getSystem().getByUid('input-a').getOrDie();
+      const selectB = component.getSystem().getByUid('select-b').getOrDie();
+      const chooserC = component.getSystem().getByUid('chooser-c').getOrDie();
+      const dataE = component.getSystem().getByUid('data-e').getOrDie();
 
-      Step.sync(() => {
-        const val = Representing.getValue(dataE);
-        Assertions.assertEq('Checking data-e value', 'data-e-init', val);
+      return [
+        GuiSetup.mAddStyles(doc, [
+          '.test-selected-choice, .coupled-lock { background: #cadbee }'
+        ]),
 
-        Representing.setValue(dataE, 'data-e-new');
-        Assertions.assertEq('Checking data-e value after set', 'data-e-new', Representing.getValue(dataE));
+        RepresentPipes.sAssertValue('Checking input-a value', 'init', inputA),
 
-        // Remove it from the container
-        Replacing.remove(component, dataE);
+        Assertions.sAssertStructure(
+          'Check the input-a DOM',
+          ApproxStructure.build((s, str, _arr) => {
+            const input = SelectorFind.descendant(
+              inputA.element(),
+              'input'
+            ).getOrDie('input element child was not found');
+            const span = SelectorFind.descendant(
+              inputA.element(),
+              'span'
+            ).getOrDie('span element child was not found');
 
-        // Add it back the the container
-        Replacing.append(component, GuiFactory.premade(dataE));
-        Assertions.assertEq('Checking data-e value was reset when added back to DOM', 'data-e-init', Representing.getValue(dataE));
-      }),
+            const inputID = Option.from(Attr.get(input, 'id')).getOrDie(
+              'Expected value for input.id'
+            );
+            const spanID = Option.from(Attr.get(span, 'id')).getOrDie(
+              'Expected value for span.id'
+            );
+            return s.element('div', {
+              children: [
+                s.element('input', {
+                  attrs: {
+                    'aria-describedby': str.is(spanID)
+                  }
+                }),
+                s.element('label', {
+                  attrs: {
+                    for: str.is(inputID)
+                  }
+                }),
+                s.element('span', {})
+              ]
+            });
+          }),
+          inputA.element()
+        ),
 
-      Step.sync(() => {
-        FormField.getField(inputA).fold(() => {
-          throw new Error('The input Field could not be found');
-        },  (comp) => {
-          const alloyId = Tagger.readOrDie(comp.element());
-          Assertions.assertEq('FormField should have an api that returns the input field', 'input-a-field', alloyId);
-        });
+        Assertions.sAssertStructure(
+          'Check the select-b dom',
+          ApproxStructure.build((s, _str, _arr) =>
+            s.element('div', {
+              children: [s.element('label', {}), s.element('select', {})]
+            })
+          ),
+          selectB.element()
+        ),
 
-        FormField.getLabel(inputA).fold(() => {
-          throw new Error('The input Label could not be found');
-        },  (comp) => {
-          const alloyId = Tagger.readOrDie(comp.element());
-          Assertions.assertEq('FormField should have an api that returns the input Label', 'input-a-label', alloyId);
-        });
-      }),
+        Assertions.sAssertStructure(
+          'Check the chooser-c dom',
+          ApproxStructure.build((s, str, _arr) =>
+            s.element('div', {
+              children: [
+                s.element('legend', {}),
+                s.element('span', { attrs: { role: str.is('radio') } }),
+                s.element('span', { attrs: { role: str.is('radio') } }),
+                s.element('span', { attrs: { role: str.is('radio') } })
+              ]
+            })
+          ),
+          chooserC.element()
+        ),
 
-      GuiSetup.mRemoveStyles
-    ];
-  }, () => { success(); }, failure);
+        RepresentPipes.sAssertValue(
+          'Checking select-b value',
+          'select-b-init',
+          selectB
+        ),
+
+        Step.sync(() => {
+          const val = Representing.getValue(chooserC).getOrDie();
+          Assertions.assertEq('Checking chooser-c value', 'choice1', val);
+
+          Representing.setValue(chooserC, 'choice3');
+          const val2 = Representing.getValue(chooserC).getOrDie();
+          Assertions.assertEq(
+            'Checking chooser-c value after set',
+            'choice3',
+            val2
+          );
+        }),
+
+        Assertions.sAssertStructure(
+          'Checking the data field (E)',
+          ApproxStructure.build((s, _str, _arr) =>
+            s.element('span', { children: [] })
+          ),
+          dataE.element()
+        ),
+
+        Step.sync(() => {
+          const val = Representing.getValue(dataE);
+          Assertions.assertEq('Checking data-e value', 'data-e-init', val);
+
+          Representing.setValue(dataE, 'data-e-new');
+          Assertions.assertEq(
+            'Checking data-e value after set',
+            'data-e-new',
+            Representing.getValue(dataE)
+          );
+
+          // Remove it from the container
+          Replacing.remove(component, dataE);
+
+          // Add it back the the container
+          Replacing.append(component, GuiFactory.premade(dataE));
+          Assertions.assertEq(
+            'Checking data-e value was reset when added back to DOM',
+            'data-e-init',
+            Representing.getValue(dataE)
+          );
+        }),
+
+        Step.sync(() => {
+          FormField.getField(inputA).fold(
+            () => {
+              throw new Error('The input Field could not be found');
+            },
+            (comp) => {
+              const alloyId = Tagger.readOrDie(comp.element());
+              Assertions.assertEq(
+                'FormField should have an api that returns the input field',
+                'input-a-field',
+                alloyId
+              );
+            }
+          );
+
+          FormField.getLabel(inputA).fold(
+            () => {
+              throw new Error('The input Label could not be found');
+            },
+            (comp) => {
+              const alloyId = Tagger.readOrDie(comp.element());
+              Assertions.assertEq(
+                'FormField should have an api that returns the input Label',
+                'input-a-label',
+                alloyId
+              );
+            }
+          );
+        }),
+
+        GuiSetup.mRemoveStyles
+      ];
+    },
+    () => {
+      success();
+    },
+    failure
+  );
 });

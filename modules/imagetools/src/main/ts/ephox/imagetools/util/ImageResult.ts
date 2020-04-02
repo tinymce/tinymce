@@ -5,17 +5,21 @@ import * as Conversions from './Conversions';
 import { Promise } from './Promise';
 
 export interface ImageResult {
-  getType (): string;
-  toBlob (): Promise<Blob>;
-  toDataURL (): string;
-  toBase64 (): string;
-  toAdjustedBlob (type?: string, quality?: number): Promise<Blob>;
-  toAdjustedDataURL (type?: string, quality?: number): Promise<string>;
-  toAdjustedBase64 (type?: string, quality?: number): Promise<string>;
-  toCanvas (): Promise<HTMLCanvasElement>;
+  getType(): string;
+  toBlob(): Promise<Blob>;
+  toDataURL(): string;
+  toBase64(): string;
+  toAdjustedBlob(type?: string, quality?: number): Promise<Blob>;
+  toAdjustedDataURL(type?: string, quality?: number): Promise<string>;
+  toAdjustedBase64(type?: string, quality?: number): Promise<string>;
+  toCanvas(): Promise<HTMLCanvasElement>;
 }
 
-function create(getCanvas: Promise<HTMLCanvasElement>, blob: Blob, uri: string): ImageResult {
+function create(
+  getCanvas: Promise<HTMLCanvasElement>,
+  blob: Blob,
+  uri: string
+): ImageResult {
   const initialType = blob.type;
 
   const getType = Fun.constant(initialType);
@@ -70,7 +74,10 @@ function fromBlob(blob: Blob): Promise<ImageResult> {
   });
 }
 
-function fromCanvas(canvas: HTMLCanvasElement, type?: string): Promise<ImageResult> {
+function fromCanvas(
+  canvas: HTMLCanvasElement,
+  type?: string
+): Promise<ImageResult> {
   return Conversions.canvasToBlob(canvas, type).then(function (blob) {
     return create(Promise.resolve(canvas), blob, canvas.toDataURL());
   });
@@ -86,9 +93,4 @@ const fromBlobAndUrlSync = function (blob: Blob, url: string): ImageResult {
   return create(Conversions.blobToCanvas(blob), blob, url);
 };
 
-export {
-  fromBlob,
-  fromCanvas,
-  fromImage,
-  fromBlobAndUrlSync
-};
+export { fromBlob, fromCanvas, fromImage, fromBlobAndUrlSync };

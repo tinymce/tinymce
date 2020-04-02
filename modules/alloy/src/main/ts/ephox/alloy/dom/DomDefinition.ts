@@ -13,9 +13,7 @@ export interface GeneralDefinitionSpec<EC> {
   // defChildren?: DC[];
 }
 
-export interface DomDefinitionSpec extends GeneralDefinitionSpec<Element> {
-
-}
+export interface DomDefinitionSpec extends GeneralDefinitionSpec<Element> {}
 
 export interface GeneralDefinitionDetail<EC> {
   uid: string;
@@ -28,16 +26,16 @@ export interface GeneralDefinitionDetail<EC> {
   domChildren: EC[];
 }
 
-export interface DomDefinitionDetail extends GeneralDefinitionDetail<Element> {
-
-}
+export interface DomDefinitionDetail extends GeneralDefinitionDetail<Element> {}
 
 const defToStr = (defn: GeneralDefinitionDetail<any>): string => {
   const raw = defToRaw(defn);
   return JSON.stringify(raw, null, 2);
 };
 
-const defToRaw = (defn: GeneralDefinitionDetail<Element>): GeneralDefinitionSpec<string> => ({
+const defToRaw = (
+  defn: GeneralDefinitionDetail<Element>
+): GeneralDefinitionSpec<string> => ({
   uid: defn.uid,
   tag: defn.tag,
   classes: defn.classes,
@@ -45,10 +43,10 @@ const defToRaw = (defn: GeneralDefinitionDetail<Element>): GeneralDefinitionSpec
   styles: defn.styles,
   value: defn.value.getOr('<none>'),
   innerHtml: defn.innerHtml.getOr('<none>'),
-  domChildren: defn.domChildren.length === 0 ? '0 children, but still specified' : String(defn.domChildren.length)
+  domChildren:
+    defn.domChildren.length === 0
+      ? '0 children, but still specified'
+      : String(defn.domChildren.length)
 });
 
-export {
-  defToStr,
-  defToRaw
-};
+export { defToStr, defToRaw };

@@ -20,6 +20,4 @@ const register = (editor: Editor) => {
   });
 };
 
-export {
-  register
-};
+export { register };

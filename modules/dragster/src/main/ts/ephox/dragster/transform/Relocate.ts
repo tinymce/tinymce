@@ -19,14 +19,14 @@ const both = function (element: Element) {
   const mutate = function (x: number, y: number) {
     const location = Location.absolute(element);
     Css.setAll(element, {
-      left: (location.left() + x) + 'px',
-      top: (location.top() + y) + 'px'
+      left: location.left() + x + 'px',
+      top: location.top() + y + 'px'
     });
     events.trigger.relocate(x, y);
   };
 
   const events = Events.create({
-    relocate: Event([ 'x', 'y' ])
+    relocate: Event(['x', 'y'])
   }) as RelocateEvents;
 
   return {
@@ -35,6 +35,4 @@ const both = function (element: Element) {
   };
 };
 
-export {
-  both
-};
+export { both };

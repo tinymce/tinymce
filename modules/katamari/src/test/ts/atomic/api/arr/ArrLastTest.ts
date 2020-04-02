@@ -8,12 +8,19 @@ import fc from 'fast-check';
 const { tNumber } = Testable;
 
 UnitTest.test('Arr.last: empty', () => {
-  Assert.eq('empty', Option.none<number>(), Arr.last<number>([]), tOption(tNumber));
+  Assert.eq(
+    'empty',
+    Option.none<number>(),
+    Arr.last<number>([]),
+    tOption(tNumber)
+  );
 });
 
 UnitTest.test('Arr.last: nonEmpty', () => {
-  fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), (init, last) => {
-    const arr = init.concat([ last ]);
-    Assert.eq('nonEmpty', Option.some(last), Arr.last(arr), tOption(tNumber));
-  }));
+  fc.assert(
+    fc.property(fc.array(fc.integer()), fc.integer(), (init, last) => {
+      const arr = init.concat([last]);
+      Assert.eq('nonEmpty', Option.some(last), Arr.last(arr), tOption(tNumber));
+    })
+  );
 });

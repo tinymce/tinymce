@@ -13,12 +13,15 @@ const processValue = function (value) {
   let details;
 
   if (typeof value !== 'string') {
-    details = Tools.extend({
-      paste: value.paste,
-      data: {
-        paste: value.paste
-      }
-    }, value);
+    details = Tools.extend(
+      {
+        paste: value.paste,
+        data: {
+          paste: value.paste
+        }
+      },
+      value
+    );
 
     return {
       content: value.content,

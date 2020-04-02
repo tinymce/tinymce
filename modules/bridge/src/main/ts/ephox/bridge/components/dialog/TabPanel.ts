@@ -43,4 +43,7 @@ export const tabPanelFields = [
 
 export const tabPanelSchema = ValueSchema.objOf(tabPanelFields);
 
-export const createTabPanel = (spec: TabPanelApi): Result<TabPanel, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<TabPanel>('tabpanel', tabPanelSchema, spec);
+export const createTabPanel = (
+  spec: TabPanelApi
+): Result<TabPanel, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<TabPanel>('tabpanel', tabPanelSchema, spec);

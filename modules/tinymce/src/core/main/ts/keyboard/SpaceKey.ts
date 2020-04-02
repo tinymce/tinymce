@@ -13,9 +13,18 @@ import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
 
 const executeKeydownOverride = function (editor: Editor, evt: KeyboardEvent) {
-  MatchKeys.execute([
-    { keyCode: VK.SPACEBAR, action: MatchKeys.action(InsertSpace.insertSpaceOrNbspAtSelection, editor) }
-  ], evt).each(function (_) {
+  MatchKeys.execute(
+    [
+      {
+        keyCode: VK.SPACEBAR,
+        action: MatchKeys.action(
+          InsertSpace.insertSpaceOrNbspAtSelection,
+          editor
+        )
+      }
+    ],
+    evt
+  ).each(function (_) {
     evt.preventDefault();
   });
 };
@@ -28,6 +37,4 @@ const setup = function (editor: Editor) {
   });
 };
 
-export {
-  setup
-};
+export { setup };

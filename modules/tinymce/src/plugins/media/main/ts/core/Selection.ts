@@ -15,7 +15,10 @@ const setup = (editor: Editor) => {
   editor.on('click keyup touchend', () => {
     const selectedNode = editor.selection.getNode();
 
-    if (selectedNode && editor.dom.hasClass(selectedNode, 'mce-preview-object')) {
+    if (
+      selectedNode &&
+      editor.dom.hasClass(selectedNode, 'mce-preview-object')
+    ) {
       if (editor.dom.getAttrib(selectedNode, 'data-mce-selected')) {
         selectedNode.setAttribute('data-mce-selected', '2');
       }
@@ -38,17 +41,18 @@ const setup = (editor: Editor) => {
       html = target.getAttribute('data-mce-html');
       if (html) {
         html = unescape(html);
-        target.setAttribute('data-mce-html', escape(
-          UpdateHtml.updateHtml(html, {
-            width: String(e.width),
-            height: String(e.height)
-          })
-        ));
+        target.setAttribute(
+          'data-mce-html',
+          escape(
+            UpdateHtml.updateHtml(html, {
+              width: String(e.width),
+              height: String(e.height)
+            })
+          )
+        );
       }
     }
   });
 };
 
-export {
-  setup
-};
+export { setup };

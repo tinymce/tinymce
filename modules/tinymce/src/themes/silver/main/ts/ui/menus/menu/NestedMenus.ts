@@ -16,21 +16,32 @@ import { SingleMenuItemApi } from './SingleMenuTypes';
 import ItemResponse from '../item/ItemResponse';
 
 // TODO: Consider moving the expansion part to alloy?
-const build = (items: string | Array<string | SingleMenuItemApi>, itemResponse: ItemResponse, backstage: UiFactoryBackstage, isHorizontalMenu: boolean): Option<TieredData> => {
+const build = (
+  items: string | Array<string | SingleMenuItemApi>,
+  itemResponse: ItemResponse,
+  backstage: UiFactoryBackstage,
+  isHorizontalMenu: boolean
+): Option<TieredData> => {
   const primary = Id.generate('primary-menu');
   const data = expand(items, backstage.shared.providers.menuItems());
   if (data.items.length === 0) {
     return Option.none();
   }
 
-  const mainMenu = createPartialMenu(primary, data.items, itemResponse, backstage, isHorizontalMenu);
-  const submenus = Obj.map(data.menus, (menuItems, menuName) => createPartialMenu(menuName, menuItems, itemResponse, backstage, false));
+  const mainMenu = createPartialMenu(
+    primary,
+    data.items,
+    itemResponse,
+    backstage,
+    isHorizontalMenu
+  );
+  const submenus = Obj.map(data.menus, (menuItems, menuName) =>
+    createPartialMenu(menuName, menuItems, itemResponse, backstage, false)
+  );
   const menus = Merger.deepMerge(submenus, Objects.wrap(primary, mainMenu));
   return Option.from(TieredMenu.tieredData(primary, menus, data.expansions));
 };
 
 // Move to a separate file. Just worried about merge conflicts.
 
-export {
-  build
-};
+export { build };

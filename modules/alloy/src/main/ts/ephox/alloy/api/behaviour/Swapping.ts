@@ -9,6 +9,4 @@ const Swapping: SwappingBehaviour = Behaviour.create({
   apis: SwapApis
 });
 
-export {
-  Swapping
-};
+export { Swapping };

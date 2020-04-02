@@ -21,6 +21,4 @@ const guess = function (url: string): string {
   return mime ? mime : '';
 };
 
-export {
-  guess
-};
+export { guess };

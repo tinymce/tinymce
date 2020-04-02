@@ -13,7 +13,6 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('SnapToTest', (success, failure) => {
-
   const snap = Dragging.snap({
     sensor: DragCoord.fixed(300, 10),
     range: Position(10, 10),
@@ -38,9 +37,7 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
           blockerClass: 'test-blocker',
           snaps: {
             getSnapPoints() {
-              return [
-                snap
-              ];
+              return [snap];
             },
             leftAttr: 'data-snap-left',
             topAttr: 'data-snap-top'
@@ -54,56 +51,83 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
     })
   );
 
-  GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(
-    Container.sketch({
-      dom: {
-        tag: 'div',
-        styles: {
-          'margin-bottom': '2000px'
-        }
-      },
-      components: [
-        subject.asSpec()
-      ]
-    })
-  ), (_doc, _body, _gui, component, _store) => {
+  GuiSetup.setup(
+    (_store, _doc, _body) =>
+      GuiFactory.build(
+        Container.sketch({
+          dom: {
+            tag: 'div',
+            styles: {
+              'margin-bottom': '2000px'
+            }
+          },
+          components: [subject.asSpec()]
+        })
+      ),
+    (_doc, _body, _gui, component, _store) => {
+      const cSubject = Chain.injectThunked(() =>
+        subject.get(component).element()
+      );
 
-    const cSubject = Chain.injectThunked(() => subject.get(component).element());
+      const cRecordPosition = Chain.fromChains([
+        Chain.control(
+          Chain.binder((box) =>
+            Css.getRaw(box, 'left')
+              .bind((left) =>
+                Css.getRaw(box, 'top').map((top) =>
+                  Result.value({
+                    left,
+                    top
+                  })
+                )
+              )
+              .getOrThunk(() => Result.error('No left,top information yet'))
+          ),
+          Guard.tryUntil('Waiting for position data to record')
+        )
+      ]);
 
-    const cRecordPosition = Chain.fromChains([
-      Chain.control(
-        Chain.binder((box) => Css.getRaw(box, 'left').bind((left) => Css.getRaw(box, 'top').map((top) => Result.value({
-          left,
-          top
-        }))).getOrThunk(() => Result.error('No left,top information yet'))),
-        Guard.tryUntil('Waiting for position data to record')
-      )
-    ]);
+      const cEnsurePositionChanged = Chain.control(
+        Chain.binder((all: any) =>
+          all.box_position1.left !== all.box_position2.left
+            ? Result.value({})
+            : Result.error(
+                'Positions did not change.\nPosition data: ' +
+                  JSON.stringify(
+                    {
+                      1: all.box_position1,
+                      2: all.box_position2
+                    },
+                    null,
+                    2
+                  )
+              )
+        ),
+        Guard.addLogging(
+          'Ensuring that the position information read from the different stages was different'
+        )
+      );
 
-    const cEnsurePositionChanged = Chain.control(
-      Chain.binder((all: any) => all.box_position1.left !== all.box_position2.left ? Result.value({}) :
-        Result.error('Positions did not change.\nPosition data: ' + JSON.stringify({
-          1: all.box_position1,
-          2: all.box_position2
-        }, null, 2))),
-      Guard.addLogging('Ensuring that the position information read from the different stages was different')
-    );
+      const cSnapTo = Chain.op(() => {
+        Dragging.snapTo(subject.get(component), snap);
+      });
 
-    const cSnapTo = Chain.op(() => {
-      Dragging.snapTo(subject.get(component), snap);
-    });
-
-    return [
-      Chain.asStep({}, [
-        NamedChain.asChain([
-          NamedChain.write('box', cSubject),
-          NamedChain.direct('box', cRecordPosition, 'box_position1'),
-          NamedChain.direct('box', cSnapTo, '_'),
-          NamedChain.direct('box', cRecordPosition, 'box_position2'),
-          NamedChain.write('_', cEnsurePositionChanged),
-          NamedChain.bundle((output) => Result.value(output))
+      return [
+        Chain.asStep({}, [
+          NamedChain.asChain([
+            NamedChain.write('box', cSubject),
+            NamedChain.direct('box', cRecordPosition, 'box_position1'),
+            NamedChain.direct('box', cSnapTo, '_'),
+            NamedChain.direct('box', cRecordPosition, 'box_position2'),
+            NamedChain.write('_', cEnsurePositionChanged),
+            NamedChain.bundle((output) => Result.value(output))
+          ])
         ])
-      ])
-    ];
-  }, () => { success(); }, failure);
+      ];
+    },
+    () => {
+      success();
+    },
+    failure
+  );
 });

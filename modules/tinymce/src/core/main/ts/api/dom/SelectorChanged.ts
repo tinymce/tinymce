@@ -13,7 +13,10 @@ import Tools from '../util/Tools';
 
 const deleteFromCallbackMap = (callbackMap, selector, callback) => {
   if (callbackMap && callbackMap.hasOwnProperty(selector)) {
-    const newCallbacks = Arr.filter(callbackMap[selector], (cb) => cb !== callback);
+    const newCallbacks = Arr.filter(
+      callbackMap[selector],
+      (cb) => cb !== callback
+    );
 
     if (newCallbacks.length === 0) {
       delete callbackMap[selector];
@@ -23,20 +26,28 @@ const deleteFromCallbackMap = (callbackMap, selector, callback) => {
   }
 };
 
-type SelectorChangedCallback = (active: boolean, args: { node: Node; selector: String; parents: Element[] }) => void;
+type SelectorChangedCallback = (
+  active: boolean,
+  args: { node: Node; selector: String; parents: Element[] }
+) => void;
 
 export default (dom: DOMUtils, editor: Editor) => {
   let selectorChangedData: Record<string, SelectorChangedCallback[]>;
   let currentSelectors: Record<string, SelectorChangedCallback[]>;
 
   return {
-    selectorChangedWithUnbind(selector: string, callback: SelectorChangedCallback): { unbind: () => void } {
+    selectorChangedWithUnbind(
+      selector: string,
+      callback: SelectorChangedCallback
+    ): { unbind: () => void } {
       if (!selectorChangedData) {
         selectorChangedData = {};
         currentSelectors = {};
 
         editor.on('NodeChange', function (e) {
-          const node = e.element, parents = dom.getParents(node, null, dom.getRoot()), matchedSelectors = {};
+          const node = e.element,
+            parents = dom.getParents(node, null, dom.getRoot()),
+            matchedSelectors = {};
 
           // Check for new matching selectors
           Tools.each(selectorChangedData, function (callbacks, selector) {

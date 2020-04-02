@@ -8,7 +8,10 @@ import Theme from 'tinymce/themes/silver/Theme';
 import * as HtmlUtils from '../module/test/HtmlUtils';
 import * as KeyUtils from '../module/test/KeyUtils';
 
-UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.UndoManager', function (
+  success,
+  failure
+) {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
@@ -92,7 +95,12 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     editor.dom.fire(editor.getBody(), 'keydown', { keyCode: 13 });
     ok(!editor.undoManager.typing);
 
-    selectAllFlags = { keyCode: 65, ctrlKey: false, altKey: false, shiftKey: false };
+    selectAllFlags = {
+      keyCode: 65,
+      ctrlKey: false,
+      altKey: false,
+      shiftKey: false
+    };
 
     if (Env.mac) {
       selectAllFlags.metaKey = true;
@@ -180,11 +188,12 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     editor.dom.fire(editor.getBody(), 'keyup', evt);
 
     LegacyUnit.strictEqual(added, false);
-    LegacyUnit.deepEqual(commands, [ 'Undo' ]);
+    LegacyUnit.deepEqual(commands, ['Undo']);
   });
 
   suite.test('Transact', function (editor) {
-    let count = 0, level;
+    let count = 0,
+      level;
 
     editor.undoManager.clear();
 
@@ -204,8 +213,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
   suite.test('Transact no change', function (editor) {
     editor.undoManager.add();
 
-    const level = editor.undoManager.transact(function () {
-    });
+    const level = editor.undoManager.transact(function () {});
 
     LegacyUnit.equal(level, null);
   });
@@ -272,29 +280,33 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.undoManager.add();
 
-    editor.undoManager.extra(function () {
-      LegacyUnit.setSelection(editor, 'p', 1, 'p', 2);
-      editor.insertContent('1');
-    }, function () {
-      LegacyUnit.setSelection(editor, 'p', 1, 'p', 2);
-      editor.insertContent('2');
-    });
+    editor.undoManager.extra(
+      function () {
+        LegacyUnit.setSelection(editor, 'p', 1, 'p', 2);
+        editor.insertContent('1');
+      },
+      function () {
+        LegacyUnit.setSelection(editor, 'p', 1, 'p', 2);
+        editor.insertContent('2');
+      }
+    );
 
     data = editor.undoManager.data;
     LegacyUnit.equal(data.length, 3);
     LegacyUnit.equal(data[0].content, '<p>abc</p>');
-    LegacyUnit.deepEqual(data[0].bookmark, { start: [ 0, 0, 0 ] });
-    LegacyUnit.deepEqual(data[0].beforeBookmark, { start: [ 0, 0, 0 ] });
+    LegacyUnit.deepEqual(data[0].bookmark, { start: [0, 0, 0] });
+    LegacyUnit.deepEqual(data[0].beforeBookmark, { start: [0, 0, 0] });
     LegacyUnit.equal(data[1].content, '<p>a1c</p>');
-    LegacyUnit.deepEqual(data[1].bookmark, { start: [ 2, 0, 0 ] });
-    LegacyUnit.deepEqual(data[1].beforeBookmark, { start: [ 2, 0, 0 ] });
+    LegacyUnit.deepEqual(data[1].bookmark, { start: [2, 0, 0] });
+    LegacyUnit.deepEqual(data[1].beforeBookmark, { start: [2, 0, 0] });
     LegacyUnit.equal(data[2].content, '<p>a2c</p>');
-    LegacyUnit.deepEqual(data[2].bookmark, { start: [ 2, 0, 0 ] });
+    LegacyUnit.deepEqual(data[2].bookmark, { start: [2, 0, 0] });
     LegacyUnit.deepEqual(data[1].beforeBookmark, data[2].bookmark);
   });
 
   suite.test('Exclude internal elements', function (editor) {
-    let count = 0, lastLevel;
+    let count = 0,
+      lastLevel;
 
     editor.undoManager.clear();
     LegacyUnit.equal(count, 0);
@@ -307,21 +319,21 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
       lastLevel = e.level;
     });
 
-    editor.getBody().innerHTML = (
+    editor.getBody().innerHTML =
       'test' +
       '<img src="about:blank" data-mce-selected="1" />' +
-      '<table data-mce-selected="1"><tr><td>x</td></tr></table>'
-    );
+      '<table data-mce-selected="1"><tr><td>x</td></tr></table>';
 
     editor.undoManager.add();
     LegacyUnit.equal(count, 1);
-    LegacyUnit.equal(HtmlUtils.cleanHtml(lastLevel.content),
+    LegacyUnit.equal(
+      HtmlUtils.cleanHtml(lastLevel.content),
       'test' +
-      '<img src="about:blank">' +
-      '<table><tbody><tr><td>x</td></tr></tbody></table>'
+        '<img src="about:blank">' +
+        '<table><tbody><tr><td>x</td></tr></tbody></table>'
     );
 
-    editor.getBody().innerHTML = (
+    editor.getBody().innerHTML =
       '<span data-mce-bogus="1">x</span>' +
       '<span data-mce-bogus="1">\uFEFF</span>' +
       '<div data-mce-bogus="all"></div>' +
@@ -331,19 +343,19 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
       'test' +
       '\u200B' +
       '<img src="about:blank" />' +
-      '<table><tr><td>x</td></tr></table>'
-    );
+      '<table><tr><td>x</td></tr></table>';
 
     editor.undoManager.add();
     LegacyUnit.equal(count, 2);
-    LegacyUnit.equal(HtmlUtils.cleanHtml(lastLevel.content),
+    LegacyUnit.equal(
+      HtmlUtils.cleanHtml(lastLevel.content),
       '<span data-mce-bogus="1">x</span>' +
-      '<span data-mce-bogus="1"></span>' +
-      '<br data-mce-bogus="1">' +
-      'test' +
-      '\u200B' +
-      '<img src="about:blank">' +
-      '<table><tbody><tr><td>x</td></tr></tbody></table>'
+        '<span data-mce-bogus="1"></span>' +
+        '<br data-mce-bogus="1">' +
+        'test' +
+        '\u200B' +
+        '<img src="about:blank">' +
+        '<table><tbody><tr><td>x</td></tr></tbody></table>'
     );
   });
 
@@ -359,7 +371,10 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     LegacyUnit.setSelection(editor, 'p', 4, 'p', 9);
     KeyUtils.type(editor, '\b');
 
-    LegacyUnit.equal(HtmlUtils.cleanHtml(lastLevel.content), '<p>some text</p>');
+    LegacyUnit.equal(
+      HtmlUtils.cleanHtml(lastLevel.content),
+      '<p>some text</p>'
+    );
     editor.fire('blur');
     LegacyUnit.equal(HtmlUtils.cleanHtml(lastLevel.content), '<p>some</p>');
 
@@ -389,7 +404,10 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     editor.setContent('<p>b</p>');
     editor.undoManager.add();
 
-    LegacyUnit.equal(HtmlUtils.cleanHtml(lastEvt.lastLevel.content), '<p>a</p>');
+    LegacyUnit.equal(
+      HtmlUtils.cleanHtml(lastEvt.lastLevel.content),
+      '<p>a</p>'
+    );
     LegacyUnit.equal(HtmlUtils.cleanHtml(lastEvt.level.content), '<p>b</p>');
 
     editor.on('BeforeAddUndo', blockEvent);
@@ -401,7 +419,10 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     editor.setContent('<p>c</p>');
     editor.undoManager.add(null, { data: 1 });
 
-    LegacyUnit.equal(HtmlUtils.cleanHtml(lastEvt.lastLevel.content), '<p>b</p>');
+    LegacyUnit.equal(
+      HtmlUtils.cleanHtml(lastEvt.lastLevel.content),
+      '<p>b</p>'
+    );
     LegacyUnit.equal(HtmlUtils.cleanHtml(lastEvt.level.content), '<p>c</p>');
     LegacyUnit.equal(lastEvt.originalEvent.data, 1);
     ok(!addUndoEvt, 'Event level produced when it should be blocked');
@@ -440,12 +461,19 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     LegacyUnit.setSelection(editor, 'p', 1);
 
     ok(!editor.isDirty(), 'Dirty state should be false');
-    KeyUtils.type(editor, { keyCode: 65, charCode: 66, ctrlKey: true, altKey: true });
+    KeyUtils.type(editor, {
+      keyCode: 65,
+      charCode: 66,
+      ctrlKey: true,
+      altKey: true
+    });
     LegacyUnit.equal(editor.getContent(), '<p>aB</p>');
     ok(editor.isDirty(), 'Dirty state should be true');
   });
 
-  suite.test('ExecCommand while typing should produce undo level', function (editor) {
+  suite.test('ExecCommand while typing should produce undo level', function (
+    editor
+  ) {
     editor.undoManager.clear();
     editor.setDirty(false);
     editor.setContent('<p>a</p>');
@@ -463,7 +491,9 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     LegacyUnit.equal(editor.undoManager.data[2].content, '<p>aBC</p>');
   });
 
-  suite.test('transact while typing should produce undo level', function (editor) {
+  suite.test('transact while typing should produce undo level', function (
+    editor
+  ) {
     editor.undoManager.clear();
     editor.setDirty(false);
     editor.setContent('<p>a</p>');
@@ -500,13 +530,18 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     LegacyUnit.equal(editor.getContent(), '<p><em><strong>a</strong></em></p>');
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
-    Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
-  }, {
-    add_unload_trigger: false,
-    disable_nodechange: true,
-    indent: false,
-    entities: 'raw',
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  TinyLoader.setupLight(
+    function (editor, onSuccess, onFailure) {
+      Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
+    },
+    {
+      add_unload_trigger: false,
+      disable_nodechange: true,
+      indent: false,
+      entities: 'raw',
+      base_url: '/project/tinymce/js/tinymce'
+    },
+    success,
+    failure
+  );
 });

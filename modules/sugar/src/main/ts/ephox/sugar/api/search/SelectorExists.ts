@@ -6,7 +6,11 @@ const any = function (selector: string) {
   return SelectorFind.first(selector).isSome();
 };
 
-const ancestor = function (scope: Element<DomNode>, selector: string, isRoot?: (e: Element<DomNode>) => boolean) {
+const ancestor = function (
+  scope: Element<DomNode>,
+  selector: string,
+  isRoot?: (e: Element<DomNode>) => boolean
+) {
   return SelectorFind.ancestor(scope, selector, isRoot).isSome();
 };
 
@@ -22,15 +26,12 @@ const descendant = function (scope: Element<DomNode>, selector: string) {
   return SelectorFind.descendant(scope, selector).isSome();
 };
 
-const closest = function (scope: Element<DomNode>, selector: string, isRoot?: (e: Element<DomNode>) => boolean) {
+const closest = function (
+  scope: Element<DomNode>,
+  selector: string,
+  isRoot?: (e: Element<DomNode>) => boolean
+) {
   return SelectorFind.closest(scope, selector, isRoot).isSome();
 };
 
-export {
-  any,
-  ancestor,
-  sibling,
-  child,
-  descendant,
-  closest,
-};
+export { any, ancestor, sibling, child, descendant, closest };

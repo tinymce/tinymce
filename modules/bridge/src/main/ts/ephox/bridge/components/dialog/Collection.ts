@@ -1,7 +1,11 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
-import { FormComponentWithLabel, FormComponentWithLabelApi, formComponentWithLabelFields } from './FormComponent';
+import {
+  FormComponentWithLabel,
+  FormComponentWithLabelApi,
+  formComponentWithLabelFields
+} from './FormComponent';
 
 export interface CollectionApi extends FormComponentWithLabelApi {
   type: 'collection';
@@ -14,9 +18,9 @@ export interface Collection extends FormComponentWithLabel {
   columns: number | 'auto';
 }
 
-const collectionFields: FieldProcessorAdt[] = formComponentWithLabelFields.concat([
-  FieldSchema.defaulted('columns', 'auto')
-]);
+const collectionFields: FieldProcessorAdt[] = formComponentWithLabelFields.concat(
+  [FieldSchema.defaulted('columns', 'auto')]
+);
 
 export const collectionSchema = ValueSchema.objOf(collectionFields);
 
@@ -27,4 +31,7 @@ export const collectionDataProcessor = ValueSchema.arrOfObj([
   FieldSchema.strictString('icon')
 ]);
 
-export const createCollection = (spec: CollectionApi): Result<Collection, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<Collection>('collection', collectionSchema, spec);
+export const createCollection = (
+  spec: CollectionApi
+): Result<Collection, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<Collection>('collection', collectionSchema, spec);

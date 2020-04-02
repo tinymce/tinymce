@@ -16,7 +16,10 @@ import Editor from '../api/Editor';
  */
 
 const findBlockCaretContainer = function (editor: Editor) {
-  return SelectorFind.descendant(Element.fromDom(editor.getBody()), '*[data-mce-caret]').fold(Fun.constant(null), function (elm) {
+  return SelectorFind.descendant(
+    Element.fromDom(editor.getBody()),
+    '*[data-mce-caret]'
+  ).fold(Fun.constant(null), function (elm) {
     return elm.dom();
   });
 };
@@ -25,7 +28,10 @@ const removeIeControlRect = function (editor: Editor) {
   editor.selection.setRng(editor.selection.getRng());
 };
 
-const showBlockCaretContainer = function (editor: Editor, blockCaretContainer: HTMLElement) {
+const showBlockCaretContainer = function (
+  editor: Editor,
+  blockCaretContainer: HTMLElement
+) {
   if (blockCaretContainer.hasAttribute('data-mce-caret')) {
     CaretContainer.showCaretContainerBlock(blockCaretContainer);
     removeIeControlRect(editor);
@@ -57,6 +63,4 @@ const setup = function (editor: Editor) {
   editor.on('keyup compositionstart', Fun.curry(handleBlockContainer, editor));
 };
 
-export {
-  setup
-};
+export { setup };

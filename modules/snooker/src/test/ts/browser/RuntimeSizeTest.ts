@@ -1,7 +1,16 @@
 import { assert, UnitTest, TestLabel } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Attr, Body, Css, Element, Html, Insert, Remove, SelectorFilter } from '@ephox/sugar';
+import {
+  Attr,
+  Body,
+  Css,
+  Element,
+  Html,
+  Insert,
+  Remove,
+  SelectorFilter
+} from '@ephox/sugar';
 import * as RuntimeSize from 'ephox/snooker/resize/RuntimeSize';
 
 UnitTest.test('Runtime Size Test', function () {
@@ -19,11 +28,17 @@ UnitTest.test('Runtime Size Test', function () {
     return Math.round(elm.dom().getBoundingClientRect().height);
   };
 
-  const measureCells = function (getSize: (e: Element) => number, table: Element) {
+  const measureCells = function (
+    getSize: (e: Element) => number,
+    table: Element
+  ) {
     return Arr.map(SelectorFilter.descendants(table, 'td'), getSize);
   };
 
-  const measureTable = function (table: Element, getSize: (e: Element) => number) {
+  const measureTable = function (
+    table: Element,
+    getSize: (e: Element) => number
+  ) {
     return {
       total: getSize(table),
       cells: measureCells(getSize, table)
@@ -38,10 +53,15 @@ UnitTest.test('Runtime Size Test', function () {
     Css.set(table, 'height', value);
   };
 
-  const resizeTableBy = function (table: Element, setSize: (e: Element, v: string) => void, tableInfo: { total: number; cells: number[] }, delta: number) {
+  const resizeTableBy = function (
+    table: Element,
+    setSize: (e: Element, v: string) => void,
+    tableInfo: { total: number; cells: number[] },
+    delta: number
+  ) {
     setSize(table, '');
     Arr.map(SelectorFilter.descendants(table, 'td'), function (cell, i) {
-      setSize(cell, (tableInfo.cells[i] + delta) + 'px');
+      setSize(cell, tableInfo.cells[i] + delta + 'px');
     });
   };
 
@@ -50,19 +70,49 @@ UnitTest.test('Runtime Size Test', function () {
     assert.eq(true, Math.abs(a - b) <= 1, msg);
   };
 
-  const assertSize = function (s1: { total: number; cells: number[] }, table: Element, getOuterSize: (e: Element) => number, message: string) {
+  const assertSize = function (
+    s1: { total: number; cells: number[] },
+    table: Element,
+    getOuterSize: (e: Element) => number,
+    message: string
+  ) {
     const s2 = measureTable(table, getOuterSize);
-    const cellAssertEq = platform.browser.isIE() || platform.browser.isEdge() ? fuzzyAssertEq : assert.eq;
+    const cellAssertEq =
+      platform.browser.isIE() || platform.browser.isEdge()
+        ? fuzzyAssertEq
+        : assert.eq;
 
-    assert.eq(s1.total, s2.total, () => message + ', expected table size: ' + s1.total + ', actual: ' + s2.total + ', table: ' + Html.getOuter(table));
+    assert.eq(
+      s1.total,
+      s2.total,
+      () =>
+        message +
+        ', expected table size: ' +
+        s1.total +
+        ', actual: ' +
+        s2.total +
+        ', table: ' +
+        Html.getOuter(table)
+    );
 
     Arr.each(s1.cells, function (cz1, i) {
       const cz2 = s2.cells[i];
-      cellAssertEq(cz1, cz2, () => message + ', expected cell size: ' + cz1 + ', actual: ' + cz2 + ', table: ' + Html.getOuter(table));
+      cellAssertEq(
+        cz1,
+        cz2,
+        () =>
+          message +
+          ', expected cell size: ' +
+          cz1 +
+          ', actual: ' +
+          cz2 +
+          ', table: ' +
+          Html.getOuter(table)
+      );
     });
   };
 
-  const randomValue = function <T> (values: T[]) {
+  const randomValue = function <T>(values: T[]) {
     const idx = random(0, values.length - 1);
     return values[idx];
   };
@@ -87,7 +137,7 @@ UnitTest.test('Runtime Size Test', function () {
     Attr.set(table, 'cellspacing', random(0, 10).toString());
 
     Css.setAll(table, {
-      'border-collapse': randomValue([ 'collapse', 'separate' ]),
+      'border-collapse': randomValue(['collapse', 'separate']),
       'border-left': randomBorder(0, 5, 'red'),
       'border-right': randomBorder(0, 5, 'red'),
       'width': randomSize(100, 1000)
@@ -138,7 +188,7 @@ UnitTest.test('Runtime Size Test', function () {
     Attr.set(table, 'cellspacing', random(0, 10).toString());
 
     Css.setAll(table, {
-      'border-collapse': randomValue([ 'collapse', 'separate' ]),
+      'border-collapse': randomValue(['collapse', 'separate']),
       'border-top': randomBorder(0, 5, 'red'),
       'border-bottom': randomBorder(0, 5, 'red'),
       'height': randomSize(100, 1000)
@@ -151,7 +201,7 @@ UnitTest.test('Runtime Size Test', function () {
       Css.setAll(cell, {
         'width': '10px',
         'height': randomSize(1, 100),
-        'box-sizing': randomValue([ 'content-box', 'border-box' ]),
+        'box-sizing': randomValue(['content-box', 'border-box']),
         'padding-top': randomSize(0, 5),
         'padding-bottom': randomSize(0, 5),
         'border-top': randomBorder(0, 5, 'green'),
@@ -182,7 +232,10 @@ UnitTest.test('Runtime Size Test', function () {
     return table;
   };
 
-  const resizeModel = function (size: { total: number; cells: number[] }, delta: number) {
+  const resizeModel = function (
+    size: { total: number; cells: number[] },
+    delta: number
+  ) {
     const deltaTotal = delta * size.cells.length;
     const cells = Arr.map(size.cells, function (cz) {
       return cz + delta;
@@ -194,16 +247,31 @@ UnitTest.test('Runtime Size Test', function () {
     };
   };
 
-  const testTableSize = function (createTable: () => Element, getOuterSize: (e: Element) => number, getSize: (e: Element) => number, setSize: (e: Element, v: string) => void) {
+  const testTableSize = function (
+    createTable: () => Element,
+    getOuterSize: (e: Element) => number,
+    getSize: (e: Element) => number,
+    setSize: (e: Element, v: string) => void
+  ) {
     return function (_n: any) {
       const table = createTable();
       const beforeSize = measureTable(table, getOuterSize);
 
       resizeTableBy(table, setSize, measureTable(table, getSize), 0);
-      assertSize(beforeSize, table, getOuterSize, 'Should be unchanged in size');
+      assertSize(
+        beforeSize,
+        table,
+        getOuterSize,
+        'Should be unchanged in size'
+      );
 
       resizeTableBy(table, setSize, measureTable(table, getSize), 10);
-      assertSize(resizeModel(beforeSize, 10), table, getOuterSize, 'Should be changed by 10 size');
+      assertSize(
+        resizeModel(beforeSize, 10),
+        table,
+        getOuterSize,
+        'Should be changed by 10 size'
+      );
 
       Remove.remove(table);
     };
@@ -213,6 +281,17 @@ UnitTest.test('Runtime Size Test', function () {
     Arr.each(Arr.range(n, Fun.identity), generator);
   };
 
-  generateTest(testTableSize(createTableH, getOuterWidth, RuntimeSize.getWidth, setWidth), 50);
-  generateTest(testTableSize(createTableV, getOuterHeight, RuntimeSize.getHeight, setHeight), 50);
+  generateTest(
+    testTableSize(createTableH, getOuterWidth, RuntimeSize.getWidth, setWidth),
+    50
+  );
+  generateTest(
+    testTableSize(
+      createTableV,
+      getOuterHeight,
+      RuntimeSize.getHeight,
+      setHeight
+    ),
+    50
+  );
 });

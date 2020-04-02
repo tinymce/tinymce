@@ -1,4 +1,13 @@
-import { Adt, Arr, Fun, Merger, Obj, Option, Thunk, Type } from '@ephox/katamari';
+import {
+  Adt,
+  Arr,
+  Fun,
+  Merger,
+  Obj,
+  Option,
+  Thunk,
+  Type
+} from '@ephox/katamari';
 import { SimpleResult, SimpleResultType } from '../alien/SimpleResult';
 
 import * as FieldPresence from '../api/FieldPresence';
@@ -8,22 +17,39 @@ import * as ObjWriter from './ObjWriter';
 import * as SchemaError from './SchemaError';
 
 // TODO: Handle the fact that strength shouldn't be pushed outside this project.
-export type ValueValidator = (a, strength?: () => any) => SimpleResult<string, any>;
-export type PropExtractor = (path: string[], strength, val: any) => SimpleResult<any, any>;
-export type ValueExtractor = (label: string, prop: Processor, strength: () => any, obj: any) => SimpleResult<any, string>;
+export type ValueValidator = (
+  a,
+  strength?: () => any
+) => SimpleResult<string, any>;
+export type PropExtractor = (
+  path: string[],
+  strength,
+  val: any
+) => SimpleResult<any, any>;
+export type ValueExtractor = (
+  label: string,
+  prop: Processor,
+  strength: () => any,
+  obj: any
+) => SimpleResult<any, string>;
 export interface Processor {
   extract: PropExtractor;
   toString: () => string;
 }
 
-export type FieldValueProcessor<T> = (key: string, okey: string, presence: FieldPresence.FieldPresenceAdt, prop: Processor) => T;
-export type StateValueProcessor<T> = (okey: string, instantiator: (obj: any) => any) => T;
+export type FieldValueProcessor<T> = (
+  key: string,
+  okey: string,
+  presence: FieldPresence.FieldPresenceAdt,
+  prop: Processor
+) => T;
+export type StateValueProcessor<T> = (
+  okey: string,
+  instantiator: (obj: any) => any
+) => T;
 
 export interface ValueProcessorAdt {
-  fold: <T>(
-    field: FieldValueProcessor<T>,
-    state: StateValueProcessor<T>
-  ) => T;
+  fold: <T>(field: FieldValueProcessor<T>, state: StateValueProcessor<T>) => T;
   match: <T>(branches: {
     field: FieldValueProcessor<T>;
     state: StateValueProcessor<T>;
@@ -39,8 +65,8 @@ export interface ValueProcessor {
 
 // data ValueAdt = Field fields | state
 const adt: ValueProcessor = Adt.generate([
-  { field: [ 'key', 'okey', 'presence', 'prop' ] },
-  { state: [ 'okey', 'instantiator' ] }
+  { field: ['key', 'okey', 'presence', 'prop'] },
+  { state: ['okey', 'instantiator'] }
 ]);
 
 const output = function (okey, value): ValueProcessorAdt {
@@ -80,52 +106,61 @@ const cExtractOne = function (path, obj, field, strength) {
   return field.fold(
     function (key, okey, presence, prop) {
       const bundle = function (av) {
-        const result = prop.extract(path.concat([ key ]), strength, av);
-        return SimpleResult.map(result, (res) => ObjWriter.wrap(okey, strength(res)));
+        const result = prop.extract(path.concat([key]), strength, av);
+        return SimpleResult.map(result, (res) =>
+          ObjWriter.wrap(okey, strength(res))
+        );
       };
 
       const bundleAsOption = function (optValue) {
-        return optValue.fold(function () {
-          const outcome = ObjWriter.wrap(okey, strength(Option.none()));
-          return SimpleResult.svalue(outcome);
-        }, function (ov) {
-          const result: SimpleResult<any, any> = prop.extract(path.concat([ key ]), strength, ov);
-          return SimpleResult.map(result, function (res) {
-            return ObjWriter.wrap(okey, strength(Option.some(res)));
-          });
-        });
+        return optValue.fold(
+          function () {
+            const outcome = ObjWriter.wrap(okey, strength(Option.none()));
+            return SimpleResult.svalue(outcome);
+          },
+          function (ov) {
+            const result: SimpleResult<any, any> = prop.extract(
+              path.concat([key]),
+              strength,
+              ov
+            );
+            return SimpleResult.map(result, function (res) {
+              return ObjWriter.wrap(okey, strength(Option.some(res)));
+            });
+          }
+        );
       };
 
       return (function () {
-        return presence.fold(function () {
-          return SimpleResult.bind(
-            strictAccess(path, obj, key),
-            bundle
-          );
-        }, function (fallbackThunk) {
-          return SimpleResult.bind(
-            fallbackAccess(obj, key, fallbackThunk),
-            bundle
-          );
-        }, function () {
-          return SimpleResult.bind(
-            optionAccess(obj, key),
-            bundleAsOption
-          );
-        }, function (fallbackThunk) {
-          // Defaulted option access
-          return SimpleResult.bind(
-            optionDefaultedAccess(obj, key, fallbackThunk),
-            bundleAsOption
-          );
-        }, function (baseThunk) {
-          const base = baseThunk(obj);
-          const result = SimpleResult.map(
-            fallbackAccess(obj, key, Fun.constant({})),
-            (v) => Merger.deepMerge(base, v)
-          );
-          return SimpleResult.bind(result, bundle);
-        });
+        return presence.fold(
+          function () {
+            return SimpleResult.bind(strictAccess(path, obj, key), bundle);
+          },
+          function (fallbackThunk) {
+            return SimpleResult.bind(
+              fallbackAccess(obj, key, fallbackThunk),
+              bundle
+            );
+          },
+          function () {
+            return SimpleResult.bind(optionAccess(obj, key), bundleAsOption);
+          },
+          function (fallbackThunk) {
+            // Defaulted option access
+            return SimpleResult.bind(
+              optionDefaultedAccess(obj, key, fallbackThunk),
+              bundleAsOption
+            );
+          },
+          function (baseThunk) {
+            const base = baseThunk(obj);
+            const result = SimpleResult.map(
+              fallbackAccess(obj, key, Fun.constant({})),
+              (v) => Merger.deepMerge(base, v)
+            );
+            return SimpleResult.bind(result, bundle);
+          }
+        );
       })();
     },
     function (okey, instantiator) {
@@ -190,20 +225,25 @@ const getSetKeys = function (obj) {
 const objOfOnly = function (fields: ValueProcessorAdt[]): Processor {
   const delegate = objOf(fields);
 
-  const fieldNames = Arr.foldr<ValueProcessorAdt, Record<string, string>>(fields, function (acc, f: ValueProcessorAdt) {
-    return f.fold(function (key) {
-      return Merger.deepMerge(acc, Objects.wrap(key, true));
-    }, Fun.constant(acc));
-  }, { });
+  const fieldNames = Arr.foldr<ValueProcessorAdt, Record<string, string>>(
+    fields,
+    function (acc, f: ValueProcessorAdt) {
+      return f.fold(function (key) {
+        return Merger.deepMerge(acc, Objects.wrap(key, true));
+      }, Fun.constant(acc));
+    },
+    {}
+  );
 
   const extract = function (path, strength, o) {
-    const keys = Type.isBoolean(o) ? [ ] : getSetKeys(o);
+    const keys = Type.isBoolean(o) ? [] : getSetKeys(o);
     const extra = Arr.filter(keys, function (k) {
       return !Obj.hasNonNullableKey(fieldNames, k);
     });
 
-    return extra.length === 0  ? delegate.extract(path, strength, o) :
-      SchemaError.unsupportedFields(path, extra);
+    return extra.length === 0
+      ? delegate.extract(path, strength, o)
+      : SchemaError.unsupportedFields(path, extra);
   };
 
   return {
@@ -219,11 +259,14 @@ const objOf = function (fields: ValueProcessorAdt[]): Processor {
 
   const toString = function () {
     const fieldStrings = Arr.map(fields, function (field) {
-      return field.fold(function (key, okey, presence, prop) {
-        return key + ' -> ' + prop.toString();
-      }, function (okey, _instantiator) {
-        return 'state(' + okey + ')';
-      });
+      return field.fold(
+        function (key, okey, presence, prop) {
+          return key + ' -> ' + prop.toString();
+        },
+        function (okey, _instantiator) {
+          return 'state(' + okey + ')';
+        }
+      );
     });
     return 'obj{\n' + fieldStrings.join('\n') + '}';
   };
@@ -237,7 +280,7 @@ const objOf = function (fields: ValueProcessorAdt[]): Processor {
 const arrOf = function (prop: Processor): Processor {
   const extract = function (path, strength, array) {
     const results = Arr.map(array, function (a, i) {
-      return prop.extract(path.concat([ '[' + i + ']' ]), strength, a);
+      return prop.extract(path.concat(['[' + i + ']']), strength, a);
     });
     return ResultCombine.consolidateArr(results);
   };
@@ -253,7 +296,11 @@ const arrOf = function (prop: Processor): Processor {
 };
 
 const oneOf = function (props: Processor[]): Processor {
-  const extract = function (path: string[], strength, val: any): SimpleResult<any, any> {
+  const extract = function (
+    path: string[],
+    strength,
+    val: any
+  ): SimpleResult<any, any> {
     const errors: Array<SimpleResult<string[], any>> = [];
 
     // Return on first match
@@ -270,7 +317,9 @@ const oneOf = function (props: Processor[]): Processor {
   };
 
   const toString = function () {
-    return 'oneOf(' + Arr.map(props, (prop) => prop.toString()).join(', ') + ')';
+    return (
+      'oneOf(' + Arr.map(props, (prop) => prop.toString()).join(', ') + ')'
+    );
   };
 
   return {
@@ -307,14 +356,20 @@ const setOf = function (validator: ValueValidator, prop: Processor): Processor {
 };
 
 // retriever is passed in. See funcOrDie in ValueSchema
-const func = function (args: string[], schema: Processor, retriever): Processor {
+const func = function (
+  args: string[],
+  schema: Processor,
+  retriever
+): Processor {
   const delegate = value(function (f, strength) {
-    return Type.isFunction(f) ? SimpleResult.svalue<any, () => any>(function () {
-      const gArgs = Array.prototype.slice.call(arguments, 0);
-      const allowedArgs = gArgs.slice(0, args.length);
-      const o = f.apply(null, allowedArgs);
-      return retriever(o, strength);
-    }) : SimpleResult.serror('Not a function');
+    return Type.isFunction(f)
+      ? SimpleResult.svalue<any, () => any>(function () {
+          const gArgs = Array.prototype.slice.call(arguments, 0);
+          const allowedArgs = gArgs.slice(0, args.length);
+          const o = f.apply(null, allowedArgs);
+          return retriever(o, strength);
+        })
+      : SimpleResult.serror('Not a function');
   });
 
   return {
@@ -354,14 +409,12 @@ export {
   anyValue,
   value,
   valueThunk,
-
   objOf,
   objOfOnly,
   arrOf,
   oneOf,
   setOf,
   arrOfObj,
-
   state,
   field,
   output,

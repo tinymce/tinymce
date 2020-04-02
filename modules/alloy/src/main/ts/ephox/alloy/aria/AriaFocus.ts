@@ -6,21 +6,23 @@ const preserve = <T>(f: (e: Element) => T, container: Element): T => {
 
   const refocus = Focus.active(ownerDoc).bind((focused: Element) => {
     const hasFocus = (elem: Element) => Compare.eq(focused, elem);
-    return hasFocus(container) ? Option.some(container) : PredicateFind.descendant(container, hasFocus);
+    return hasFocus(container)
+      ? Option.some(container)
+      : PredicateFind.descendant(container, hasFocus);
   });
 
   const result = f(container);
 
   // If there is a focussed element, the F function may cause focus to be lost (such as by hiding elements). Restore it afterwards.
   refocus.each((oldFocus: Element) => {
-    Focus.active(ownerDoc).filter((newFocus) => Compare.eq(newFocus, oldFocus)).fold(() => {
-      // Only refocus if the focus has changed, otherwise we break IE
-      Focus.focus(oldFocus);
-    }, Fun.noop);
+    Focus.active(ownerDoc)
+      .filter((newFocus) => Compare.eq(newFocus, oldFocus))
+      .fold(() => {
+        // Only refocus if the focus has changed, otherwise we break IE
+        Focus.focus(oldFocus);
+      }, Fun.noop);
   });
   return result;
 };
 
-export {
-  preserve
-};
+export { preserve };

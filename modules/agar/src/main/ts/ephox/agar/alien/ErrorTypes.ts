@@ -18,6 +18,4 @@ const enrichWith = (label: TestLabel, err: any): any => {
   }
 };
 
-export {
-  enrichWith
-};
+export { enrichWith };

@@ -6,15 +6,26 @@
  */
 
 const getDateFormat = function (editor) {
-  return editor.getParam('insertdatetime_dateformat', editor.translate('%Y-%m-%d'));
+  return editor.getParam(
+    'insertdatetime_dateformat',
+    editor.translate('%Y-%m-%d')
+  );
 };
 
 const getTimeFormat = function (editor) {
-  return editor.getParam('insertdatetime_timeformat', editor.translate('%H:%M:%S'));
+  return editor.getParam(
+    'insertdatetime_timeformat',
+    editor.translate('%H:%M:%S')
+  );
 };
 
 const getFormats = function (editor) {
-  return editor.getParam('insertdatetime_formats', [ '%H:%M:%S', '%Y-%m-%d', '%I:%M:%S %p', '%D' ]);
+  return editor.getParam('insertdatetime_formats', [
+    '%H:%M:%S',
+    '%Y-%m-%d',
+    '%I:%M:%S %p',
+    '%D'
+  ]);
 };
 
 const getDefaultDateTime = function (editor) {

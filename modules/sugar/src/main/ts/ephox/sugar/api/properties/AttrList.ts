@@ -9,14 +9,22 @@ const read = function (element: Element<DomElement>, attr: string): string[] {
   return value === undefined || value === '' ? [] : value.split(' ');
 };
 
-const add = function (element: Element<DomElement>, attr: string, id: string): boolean {
+const add = function (
+  element: Element<DomElement>,
+  attr: string,
+  id: string
+): boolean {
   const old = read(element, attr);
-  const nu = old.concat([ id ]);
+  const nu = old.concat([id]);
   Attr.set(element, attr, nu.join(' '));
   return true;
 };
 
-const remove = function (element: Element<DomElement>, attr: string, id: string): boolean {
+const remove = function (
+  element: Element<DomElement>,
+  attr: string,
+  id: string
+): boolean {
   const nu = Arr.filter(read(element, attr), function (v) {
     return v !== id;
   });
@@ -28,8 +36,4 @@ const remove = function (element: Element<DomElement>, attr: string, id: string)
   return false;
 };
 
-export {
-  read,
-  add,
-  remove,
-};
+export { read, add, remove };

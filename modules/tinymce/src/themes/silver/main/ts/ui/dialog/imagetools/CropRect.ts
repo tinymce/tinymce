@@ -25,7 +25,13 @@ export interface CropRect extends Observable<any> {
   destroy: () => void;
 }
 
-const create = (currentRect, viewPortRect, clampRect, containerElm, action): CropRect => {
+const create = (
+  currentRect,
+  viewPortRect,
+  clampRect,
+  containerElm,
+  action
+): CropRect => {
   let instance;
   let dragHelpers;
   let blockers;
@@ -33,14 +39,59 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
   const id = prefix + 'crid-' + count++;
 
   const handles = [
-    { name: 'move', xMul: 0, yMul: 0, deltaX: 1, deltaY: 1, deltaW: 0, deltaH: 0, label: 'Crop Mask' },
-    { name: 'nw', xMul: 0, yMul: 0, deltaX: 1, deltaY: 1, deltaW: -1, deltaH: -1, label: 'Top Left Crop Handle' },
-    { name: 'ne', xMul: 1, yMul: 0, deltaX: 0, deltaY: 1, deltaW: 1, deltaH: -1, label: 'Top Right Crop Handle' },
-    { name: 'sw', xMul: 0, yMul: 1, deltaX: 1, deltaY: 0, deltaW: -1, deltaH: 1, label: 'Bottom Left Crop Handle' },
-    { name: 'se', xMul: 1, yMul: 1, deltaX: 0, deltaY: 0, deltaW: 1, deltaH: 1, label: 'Bottom Right Crop Handle' }
+    {
+      name: 'move',
+      xMul: 0,
+      yMul: 0,
+      deltaX: 1,
+      deltaY: 1,
+      deltaW: 0,
+      deltaH: 0,
+      label: 'Crop Mask'
+    },
+    {
+      name: 'nw',
+      xMul: 0,
+      yMul: 0,
+      deltaX: 1,
+      deltaY: 1,
+      deltaW: -1,
+      deltaH: -1,
+      label: 'Top Left Crop Handle'
+    },
+    {
+      name: 'ne',
+      xMul: 1,
+      yMul: 0,
+      deltaX: 0,
+      deltaY: 1,
+      deltaW: 1,
+      deltaH: -1,
+      label: 'Top Right Crop Handle'
+    },
+    {
+      name: 'sw',
+      xMul: 0,
+      yMul: 1,
+      deltaX: 1,
+      deltaY: 0,
+      deltaW: -1,
+      deltaH: 1,
+      label: 'Bottom Left Crop Handle'
+    },
+    {
+      name: 'se',
+      xMul: 1,
+      yMul: 1,
+      deltaX: 0,
+      deltaY: 0,
+      deltaW: 1,
+      deltaH: 1,
+      label: 'Bottom Right Crop Handle'
+    }
   ];
 
-  blockers = [ 'top', 'right', 'bottom', 'left' ];
+  blockers = ['top', 'right', 'bottom', 'left'];
 
   const getAbsoluteRect = (outerRect, relativeRect) => ({
     x: relativeRect.x + outerRect.x,
@@ -49,7 +100,10 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
     h: relativeRect.h
   });
 
-  const getRelativeRect = (outerRect: GeomRect, innerRect: GeomRect): GeomRect => ({
+  const getRelativeRect = (
+    outerRect: GeomRect,
+    innerRect: GeomRect
+  ): GeomRect => ({
     x: innerRect.x - outerRect.x,
     y: innerRect.y - outerRect.y,
     w: innerRect.w,
@@ -79,7 +133,11 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
       h = 20;
     }
 
-    rect = currentRect = Rect.clamp({ x, y, w, h }, clampRect, handle.name === 'move');
+    rect = currentRect = Rect.clamp(
+      { x, y, w, h },
+      clampRect,
+      handle.name === 'move'
+    );
     rect = getRelativeRect(clampRect, rect);
 
     instance.fire('updateRect', { rect });
@@ -104,22 +162,45 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
     }
 
     DomQuery(
-      '<div id="' + id + '" class="' + prefix + 'croprect-container"' +
-      ' role="grid" aria-dropeffect="execute">'
+      '<div id="' +
+        id +
+        '" class="' +
+        prefix +
+        'croprect-container"' +
+        ' role="grid" aria-dropeffect="execute">'
     ).appendTo(containerElm);
 
     Tools.each(blockers, function (blocker) {
       DomQuery('#' + id, containerElm).append(
-        '<div id="' + id + '-' + blocker + '"class="' + prefix + 'croprect-block" style="display: none" data-mce-bogus="all">'
+        '<div id="' +
+          id +
+          '-' +
+          blocker +
+          '"class="' +
+          prefix +
+          'croprect-block" style="display: none" data-mce-bogus="all">'
       );
     });
 
     Tools.each(handles, function (handle) {
       DomQuery('#' + id, containerElm).append(
-        '<div id="' + id + '-' + handle.name + '" class="' + prefix +
-        'croprect-handle ' + prefix + 'croprect-handle-' + handle.name + '"' +
-        'style="display: none" data-mce-bogus="all" role="gridcell" tabindex="-1"' +
-        ' aria-label="' + handle.label + '" aria-grabbed="false" title="' + handle.label + '">' // TODO: tooltips AP-213
+        '<div id="' +
+          id +
+          '-' +
+          handle.name +
+          '" class="' +
+          prefix +
+          'croprect-handle ' +
+          prefix +
+          'croprect-handle-' +
+          handle.name +
+          '"' +
+          'style="display: none" data-mce-bogus="all" role="gridcell" tabindex="-1"' +
+          ' aria-label="' +
+          handle.label +
+          '" aria-grabbed="false" title="' +
+          handle.label +
+          '">' // TODO: tooltips AP-213
       );
     });
 
@@ -128,7 +209,10 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
     repaint(currentRect);
 
     DomQuery(containerElm).on('focusin focusout', function (e) {
-      DomQuery(e.target).attr('aria-grabbed', e.type === 'focus' ? 'true' : 'false');
+      DomQuery(e.target).attr(
+        'aria-grabbed',
+        e.type === 'focus' ? 'true' : 'false'
+      );
     });
 
     DomQuery(containerElm).on('keydown', function (e) {
@@ -179,9 +263,13 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
 
     selectors = Tools.map(handles, function (handle) {
       return '#' + id + '-' + handle.name;
-    }).concat(Tools.map(blockers, function (blocker) {
-      return '#' + id + '-' + blocker;
-    })).join(',');
+    })
+      .concat(
+        Tools.map(blockers, function (blocker) {
+          return '#' + id + '-' + blocker;
+        })
+      )
+      .join(',');
 
     if (state) {
       DomQuery(selectors, containerElm).show();
@@ -215,15 +303,30 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
       });
     });
 
-    updateElementRect('top', { x: viewPortRect.x, y: viewPortRect.y, w: viewPortRect.w, h: rect.y - viewPortRect.y });
-    updateElementRect('right', { x: rect.x + rect.w, y: rect.y, w: viewPortRect.w - rect.x - rect.w + viewPortRect.x, h: rect.h });
+    updateElementRect('top', {
+      x: viewPortRect.x,
+      y: viewPortRect.y,
+      w: viewPortRect.w,
+      h: rect.y - viewPortRect.y
+    });
+    updateElementRect('right', {
+      x: rect.x + rect.w,
+      y: rect.y,
+      w: viewPortRect.w - rect.x - rect.w + viewPortRect.x,
+      h: rect.h
+    });
     updateElementRect('bottom', {
       x: viewPortRect.x,
       y: rect.y + rect.h,
       w: viewPortRect.w,
       h: viewPortRect.h - rect.y - rect.h + viewPortRect.y
     });
-    updateElementRect('left', { x: viewPortRect.x, y: rect.y, w: rect.x - viewPortRect.x, h: rect.h });
+    updateElementRect('left', {
+      x: viewPortRect.x,
+      y: rect.y,
+      w: rect.x - viewPortRect.x,
+      h: rect.h
+    });
     updateElementRect('move', rect);
   }
 
@@ -256,15 +359,18 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
 
   render();
 
-  instance = Tools.extend({
-    toggleVisibility,
-    setClampRect,
-    setRect,
-    getInnerRect,
-    setInnerRect,
-    setViewPortRect,
-    destroy
-  }, Observable);
+  instance = Tools.extend(
+    {
+      toggleVisibility,
+      setClampRect,
+      setRect,
+      getInnerRect,
+      setInnerRect,
+      setViewPortRect,
+      destroy
+    },
+    Observable
+  );
 
   return instance;
 };

@@ -16,20 +16,37 @@ import { SilverDialogEvents } from './SilverDialogEvents';
 import { renderModalFooter } from './SilverDialogFooter';
 import { getDialogApi } from './SilverDialogInstanceApi';
 
-const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra, backstage: UiFactoryBackstage) => {
-  const header = SilverDialogCommon.getHeader(dialogInit.internalDialog.title, backstage);
+const renderDialog = <T>(
+  dialogInit: DialogManager.DialogInit<T>,
+  extra: SilverDialogCommon.WindowExtra,
+  backstage: UiFactoryBackstage
+) => {
+  const header = SilverDialogCommon.getHeader(
+    dialogInit.internalDialog.title,
+    backstage
+  );
 
-  const body = renderModalBody({
-    body: dialogInit.internalDialog.body
-  }, backstage);
+  const body = renderModalBody(
+    {
+      body: dialogInit.internalDialog.body
+    },
+    backstage
+  );
 
-  const storagedMenuButtons = SilverDialogCommon.mapMenuButtons(dialogInit.internalDialog.buttons);
+  const storagedMenuButtons = SilverDialogCommon.mapMenuButtons(
+    dialogInit.internalDialog.buttons
+  );
 
-  const objOfCells = SilverDialogCommon.extractCellsToObject(storagedMenuButtons);
+  const objOfCells = SilverDialogCommon.extractCellsToObject(
+    storagedMenuButtons
+  );
 
-  const footer = renderModalFooter({
-    buttons: storagedMenuButtons
-  }, backstage);
+  const footer = renderModalFooter(
+    {
+      buttons: storagedMenuButtons
+    },
+    backstage
+  );
 
   const dialogEvents = SilverDialogEvents.initDialog(
     () => instanceApi,
@@ -37,11 +54,12 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverD
     backstage.shared.getSink
   );
 
-  const dialogSize = dialogInit.internalDialog.size !== 'normal'
-    ? dialogInit.internalDialog.size === 'large'
-      ? [ 'tox-dialog--width-lg' ]
-      : [ 'tox-dialog--width-md' ]
-    : [];
+  const dialogSize =
+    dialogInit.internalDialog.size !== 'normal'
+      ? dialogInit.internalDialog.size === 'large'
+        ? ['tox-dialog--width-lg']
+        : ['tox-dialog--width-md']
+      : [];
 
   const spec = {
     header,
@@ -52,7 +70,12 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverD
     extraStyles: {}
   };
 
-  const dialog = SilverDialogCommon.renderModalDialog(spec, dialogInit, dialogEvents, backstage);
+  const dialog = SilverDialogCommon.renderModalDialog(
+    spec,
+    dialogInit,
+    dialogEvents,
+    backstage
+  );
 
   const modalAccess = (() => {
     const getForm = (): AlloyComponent => {
@@ -77,6 +100,4 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverD
   };
 };
 
-export {
-  renderDialog
-};
+export { renderDialog };

@@ -9,14 +9,14 @@ import { SplitFloatingToolbarDetail } from '../types/SplitFloatingToolbarTypes';
 import { ToolbarSpec } from '../types/ToolbarTypes';
 import * as ToolbarSchema from './ToolbarSchema';
 
-const schema: () => FieldProcessorAdt[] = Fun.constant([
-  Fields.markers([ 'overflowToggledClass' ]),
-  FieldSchema.optionFunction('getOverflowBounds'),
-  FieldSchema.strict('lazySink'),
-  FieldSchema.state('overflowGroups', () => Cell([ ]))
-].concat(
-  SplitToolbarBase.schema(),
-));
+const schema: () => FieldProcessorAdt[] = Fun.constant(
+  [
+    Fields.markers(['overflowToggledClass']),
+    FieldSchema.optionFunction('getOverflowBounds'),
+    FieldSchema.strict('lazySink'),
+    FieldSchema.state('overflowGroups', () => Cell([]))
+  ].concat(SplitToolbarBase.schema())
+);
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.required<SplitFloatingToolbarDetail, ToolbarSpec>({

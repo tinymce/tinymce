@@ -13,7 +13,8 @@ import { getText } from './GetText';
 
 export type Counter = (node: Node, schema: Schema) => number;
 
-const strLen = (str: string): number => str.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, '_').length;
+const strLen = (str: string): number =>
+  str.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, '_').length;
 
 const countWords: Counter = (node: Node, schema: Schema) => {
   const text = getText(node, schema).join('\n');
@@ -30,8 +31,4 @@ const countCharactersWithoutSpaces: Counter = (node: Node, schema: Schema) => {
   return strLen(text);
 };
 
-export {
-  countWords,
-  countCharacters,
-  countCharactersWithoutSpaces
-};
+export { countWords, countCharacters, countCharactersWithoutSpaces };

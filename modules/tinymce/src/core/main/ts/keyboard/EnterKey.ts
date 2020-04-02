@@ -12,7 +12,10 @@ import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import { endTypingLevelIgnoreLocks } from '../undo/TypingState';
 
-const handleEnterKeyEvent = function (editor: Editor, event: EditorEvent<KeyboardEvent>) {
+const handleEnterKeyEvent = function (
+  editor: Editor,
+  event: EditorEvent<KeyboardEvent>
+) {
   if (event.isDefaultPrevented()) {
     return;
   }
@@ -37,6 +40,4 @@ const setup = function (editor: Editor) {
   });
 };
 
-export {
-  setup
-};
+export { setup };

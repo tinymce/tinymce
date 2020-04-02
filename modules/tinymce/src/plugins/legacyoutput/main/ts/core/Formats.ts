@@ -17,21 +17,21 @@ const overrideFormats = (editor: Editor) => {
   // Override some internal formats to produce legacy elements and attributes
   editor.formatter.register({
     // Change alignment formats to use the deprecated align attribute
-    alignleft: { selector: alignElements, attributes: { align: 'left' }},
-    aligncenter: { selector: alignElements, attributes: { align: 'center' }},
-    alignright: { selector: alignElements, attributes: { align: 'right' }},
-    alignjustify: { selector: alignElements, attributes: { align: 'justify' }},
+    alignleft: { selector: alignElements, attributes: { align: 'left' } },
+    aligncenter: { selector: alignElements, attributes: { align: 'center' } },
+    alignright: { selector: alignElements, attributes: { align: 'right' } },
+    alignjustify: { selector: alignElements, attributes: { align: 'justify' } },
 
     // Change the basic formatting elements to use deprecated element types
     bold: [
       { inline: 'b', remove: 'all' },
       { inline: 'strong', remove: 'all' },
-      { inline: 'span', styles: { fontWeight: 'bold' }}
+      { inline: 'span', styles: { fontWeight: 'bold' } }
     ],
     italic: [
       { inline: 'i', remove: 'all' },
       { inline: 'em', remove: 'all' },
-      { inline: 'span', styles: { fontStyle: 'italic' }}
+      { inline: 'span', styles: { fontStyle: 'italic' } }
     ],
     underline: [
       { inline: 'u', remove: 'all' },
@@ -39,11 +39,15 @@ const overrideFormats = (editor: Editor) => {
     ],
     strikethrough: [
       { inline: 'strike', remove: 'all' },
-      { inline: 'span', styles: { textDecoration: 'line-through' }, exact: true }
+      {
+        inline: 'span',
+        styles: { textDecoration: 'line-through' },
+        exact: true
+      }
     ],
 
     // Change font size and font family to use the deprecated font element
-    fontname: { inline: 'font', toggle: false, attributes: { face: '%value' }},
+    fontname: { inline: 'font', toggle: false, attributes: { face: '%value' } },
     fontsize: {
       inline: 'font',
       toggle: false,
@@ -55,8 +59,20 @@ const overrideFormats = (editor: Editor) => {
     },
 
     // Setup font elements for colors as well
-    forecolor: { inline: 'font', attributes: { color: '%value' }, links: true, remove_similar: true, clear_child_styles: true },
-    hilitecolor: { inline: 'font', styles: { backgroundColor: '%value' }, links: true, remove_similar: true, clear_child_styles: true }
+    forecolor: {
+      inline: 'font',
+      attributes: { color: '%value' },
+      links: true,
+      remove_similar: true,
+      clear_child_styles: true
+    },
+    hilitecolor: {
+      inline: 'font',
+      styles: { backgroundColor: '%value' },
+      links: true,
+      remove_similar: true,
+      clear_child_styles: true
+    }
   });
 
   // Check that deprecated elements are allowed if not add them
@@ -83,7 +99,8 @@ const overrideFormats = (editor: Editor) => {
 };
 
 const overrideSettings = (editor: Editor) => {
-  const defaultFontsizeFormats = '8pt=1 10pt=2 12pt=3 14pt=4 18pt=5 24pt=6 36pt=7';
+  const defaultFontsizeFormats =
+    '8pt=1 10pt=2 12pt=3 14pt=4 18pt=5 24pt=6 36pt=7';
   const defaultFontsFormats =
     'Andale Mono=andale mono,monospace;' +
     'Arial=arial,helvetica,sans-serif;' +
@@ -122,6 +139,4 @@ const setup = (editor: Editor) => {
   editor.on('PreInit', () => overrideFormats(editor));
 };
 
-export {
-  setup
-};
+export { setup };

@@ -13,14 +13,15 @@ const single = (img: Blob) => {
   return singleWithUrl(img, objurl);
 };
 
-const singleWithUrl = (img: Blob, objurl: string) => Future.nu((callback: (data: ImageAssetAdt) => void) => {
-  BlobConversions.blobToDataUri(img).then((datauri) => {
-    const ir = ResultConversions.fromBlobAndUrlSync(img, datauri);
-    const id = Id.generate('image');
-    const asset = ImageAsset.blob(id, ir, objurl);
-    callback(asset);
+const singleWithUrl = (img: Blob, objurl: string) =>
+  Future.nu((callback: (data: ImageAssetAdt) => void) => {
+    BlobConversions.blobToDataUri(img).then((datauri) => {
+      const ir = ResultConversions.fromBlobAndUrlSync(img, datauri);
+      const id = Id.generate('image');
+      const asset = ImageAsset.blob(id, ir, objurl);
+      callback(asset);
+    });
   });
-});
 
 /**
  * Converts a list of files into a list of ImageAssets. This is

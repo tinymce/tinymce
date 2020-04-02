@@ -15,7 +15,11 @@ import * as TouchBlockerEvents from './TouchBlockerEvents';
 import * as TouchData from './TouchData';
 import { TouchDraggingConfig } from './TouchDraggingTypes';
 
-const events = <E>(dragConfig: TouchDraggingConfig<E>, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void) => {
+const events = <E>(
+  dragConfig: TouchDraggingConfig<E>,
+  dragState: DraggingState,
+  updateStartState: (comp: AlloyComponent) => void
+) => {
   const blockerCell = Cell<Option<AlloyComponent>>(Option.none());
 
   // Android fires events on the component at all times, while iOS initially fires on the component
@@ -33,14 +37,18 @@ const events = <E>(dragConfig: TouchDraggingConfig<E>, dragState: DraggingState,
       const dragApi: BlockerDragApi = {
         drop: stop,
         // delayDrop is not used by touch
-        delayDrop() { },
+        delayDrop() {},
         forceDrop: stop,
         move(event) {
           DragUtils.move(component, dragConfig, dragState, TouchData, event);
         }
       };
 
-      const blocker = BlockerUtils.createComponent(component, dragConfig.blockerClass, TouchBlockerEvents.init(dragApi));
+      const blocker = BlockerUtils.createComponent(
+        component,
+        dragConfig.blockerClass,
+        TouchBlockerEvents.init(dragApi)
+      );
       blockerCell.set(Option.some(blocker));
 
       const start = () => {
@@ -50,10 +58,19 @@ const events = <E>(dragConfig: TouchDraggingConfig<E>, dragState: DraggingState,
 
       start();
     }),
-    AlloyEvents.run<EventArgs>(NativeEvents.touchmove(), (component, simulatedEvent) => {
-      simulatedEvent.stop();
-      DragUtils.move(component, dragConfig, dragState, TouchData, simulatedEvent.event());
-    }),
+    AlloyEvents.run<EventArgs>(
+      NativeEvents.touchmove(),
+      (component, simulatedEvent) => {
+        simulatedEvent.stop();
+        DragUtils.move(
+          component,
+          dragConfig,
+          dragState,
+          TouchData,
+          simulatedEvent.event()
+        );
+      }
+    ),
     AlloyEvents.run(NativeEvents.touchend(), (component, simulatedEvent) => {
       simulatedEvent.stop();
       DragUtils.stop(component, blockerCell.get(), dragConfig, dragState);
@@ -73,7 +90,4 @@ const schema: FieldProcessorAdt[] = [
   })
 ];
 
-export {
-  events,
-  schema
-};
+export { events, schema };

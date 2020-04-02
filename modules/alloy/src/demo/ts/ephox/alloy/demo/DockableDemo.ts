@@ -65,7 +65,12 @@ export default (): void => {
                 transitionClass: 'demo-alloy-dock-transition',
                 fadeOutClass: 'demo-alloy-dock-fade-out',
                 fadeInClass: 'demo-alloy-dock-fade-in',
-                lazyContext: (component) => component.getSystem().getByUid('panel-container').toOption().map((comp) => Boxes.box(comp.element()))
+                lazyContext: (component) =>
+                  component
+                    .getSystem()
+                    .getByUid('panel-container')
+                    .toOption()
+                    .map((comp) => Boxes.box(comp.element()))
               }
             })
           ])
@@ -73,5 +78,4 @@ export default (): void => {
       ]
     })
   );
-
 };

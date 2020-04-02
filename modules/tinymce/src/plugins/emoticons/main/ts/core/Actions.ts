@@ -11,6 +11,4 @@ const insertEmoticon = function (editor: Editor, ch: string): void {
   editor.insertContent(ch);
 };
 
-export {
-  insertEmoticon
-};
+export { insertEmoticon };

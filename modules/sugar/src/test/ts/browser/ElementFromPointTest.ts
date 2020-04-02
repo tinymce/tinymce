@@ -31,16 +31,22 @@ UnitTest.test('ElementFromPointTest', function () {
   };
 
   const checkMatch = function (p, placeX, placeY, expectedElm, testX, testY) {
-    const actualElm = getAt(p, placeX, placeY, testX, testY).getOrDie('Should be some element.');
+    const actualElm = getAt(p, placeX, placeY, testX, testY).getOrDie(
+      'Should be some element.'
+    );
     // debugger
-    Assert.eq('Should be expected element', true, Compare.eq(expectedElm, actualElm));
+    Assert.eq(
+      'Should be expected element',
+      true,
+      Compare.eq(expectedElm, actualElm)
+    );
   };
 
   const checkNone = function (p, placeX, placeY, testX, testY) {
     KAssert.eqNone('Should be none', getAt(p, placeX, placeY, testX, testY));
   };
 
-  Arr.each([ bg, a ], function (elm) {
+  Arr.each([bg, a], function (elm) {
     Insert.append(Body.body(), elm);
   });
 
@@ -55,5 +61,5 @@ UnitTest.test('ElementFromPointTest', function () {
   checkMatch(a, 20, 20, bg, 10, 10);
   checkNone(a, 0, 0, -1000, -1000);
 
-  Arr.each([ bg, a ], Remove.remove);
+  Arr.each([bg, a], Remove.remove);
 });

@@ -18,21 +18,27 @@ UnitTest.test('ExtractTextTest', function () {
             Gene('1.2.2.2', 'br', [])
           ]),
           TextGene('1.2.3', 'More text'),
-          Gene('1.2.4', 'em', [
-            TextGene('1.2.4.1', 'Inside em')
-          ]),
+          Gene('1.2.4', 'em', [TextGene('1.2.4.1', 'Inside em')]),
           TextGene('1.2.5', 'Last piece of text')
         ])
       ])
     ])
   );
 
-  const check = function (expected: string, extract: <E, D>(universe: Universe<E, D>, item: E) => string, initial: string) {
+  const check = function (
+    expected: string,
+    extract: <E, D>(universe: Universe<E, D>, item: E) => string,
+    initial: string
+  ) {
     const start = Finder.get(doc, initial);
     const actual = extract(doc, start);
     assert.eq(expected, actual.trim());
   };
 
   check('Inside em', Extract.toText, '1.2.4');
-  check('post-image text\n\nThis is textinside a span\nMore textInside emLast piece of text', Extract.toText, '1');
+  check(
+    'post-image text\n\nThis is textinside a span\nMore textInside emLast piece of text',
+    Extract.toText,
+    '1'
+  );
 });

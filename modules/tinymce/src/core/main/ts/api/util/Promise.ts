@@ -25,11 +25,19 @@ const promise = function () {
     };
   }
 
-  const isArray = Array.isArray || function (value) { return Object.prototype.toString.call(value) === '[object Array]'; };
+  const isArray =
+    Array.isArray ||
+    function (value) {
+      return Object.prototype.toString.call(value) === '[object Array]';
+    };
 
   const Promise: any = function (fn) {
-    if (typeof this !== 'object') { throw new TypeError('Promises must be constructed via new'); }
-    if (typeof fn !== 'function') { throw new TypeError('not a function'); }
+    if (typeof this !== 'object') {
+      throw new TypeError('Promises must be constructed via new');
+    }
+    if (typeof fn !== 'function') {
+      throw new TypeError('not a function');
+    }
     this._state = null;
     this._value = null;
     this._deferreds = [];
@@ -38,8 +46,12 @@ const promise = function () {
   };
 
   // Use polyfill for setImmediate for performance gains
-  const asap = Promise.immediateFn || (typeof setImmediate === 'function' && setImmediate) ||
-  function (fn) { setTimeout(fn, 1); };
+  const asap =
+    Promise.immediateFn ||
+    (typeof setImmediate === 'function' && setImmediate) ||
+    function (fn) {
+      setTimeout(fn, 1);
+    };
 
   function handle(deferred) {
     const me = this;
@@ -65,19 +77,31 @@ const promise = function () {
   }
 
   function resolve(newValue) {
-    try { // Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
-      if (newValue === this) { throw new TypeError('A promise cannot be resolved with itself.'); }
-      if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
+    try {
+      // Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
+      if (newValue === this) {
+        throw new TypeError('A promise cannot be resolved with itself.');
+      }
+      if (
+        newValue &&
+        (typeof newValue === 'object' || typeof newValue === 'function')
+      ) {
         const then = newValue.then;
         if (typeof then === 'function') {
-          doResolve(bind(then, newValue), bind(resolve, this), bind(reject, this));
+          doResolve(
+            bind(then, newValue),
+            bind(resolve, this),
+            bind(reject, this)
+          );
           return;
         }
       }
       this._state = true;
       this._value = newValue;
       finale.call(this);
-    } catch (e) { reject.call(this, e); }
+    } catch (e) {
+      reject.call(this, e);
+    }
   }
 
   function reject(newValue) {
@@ -109,17 +133,26 @@ const promise = function () {
   function doResolve(fn, onFulfilled, onRejected) {
     let done = false;
     try {
-      fn(function (value) {
-        if (done) { return; }
-        done = true;
-        onFulfilled(value);
-      }, function (reason) {
-        if (done) { return; }
-        done = true;
-        onRejected(reason);
-      });
+      fn(
+        function (value) {
+          if (done) {
+            return;
+          }
+          done = true;
+          onFulfilled(value);
+        },
+        function (reason) {
+          if (done) {
+            return;
+          }
+          done = true;
+          onRejected(reason);
+        }
+      );
     } catch (ex) {
-      if (done) { return; }
+      if (done) {
+        return;
+      }
       done = true;
       onRejected(ex);
     }
@@ -137,17 +170,27 @@ const promise = function () {
   };
 
   Promise.all = function () {
-    const args = Array.prototype.slice.call(arguments.length === 1 && isArray(arguments[0]) ? arguments[0] : arguments);
+    const args = Array.prototype.slice.call(
+      arguments.length === 1 && isArray(arguments[0]) ? arguments[0] : arguments
+    );
 
     return new Promise(function (resolve, reject) {
-      if (args.length === 0) { return resolve([]); }
+      if (args.length === 0) {
+        return resolve([]);
+      }
       let remaining = args.length;
       function res(i, val) {
         try {
           if (val && (typeof val === 'object' || typeof val === 'function')) {
             const then = val.then;
             if (typeof then === 'function') {
-              then.call(val, function (val) { res(i, val); }, reject);
+              then.call(
+                val,
+                function (val) {
+                  res(i, val);
+                },
+                reject
+              );
               return;
             }
           }

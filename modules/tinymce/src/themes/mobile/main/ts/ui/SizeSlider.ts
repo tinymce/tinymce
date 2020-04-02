@@ -39,7 +39,8 @@ const sketch = function (rawSpec): SketchSpec {
       classes: [
         Styles.resolve('slider-' + spec.category + '-size-container'),
         Styles.resolve('slider'),
-        Styles.resolve('slider-size-container') ]
+        Styles.resolve('slider-size-container')
+      ]
     },
     onChange,
     onDragStart(slider, thumb) {
@@ -59,13 +60,13 @@ const sketch = function (rawSpec): SketchSpec {
     stepSize: 1,
     snapToGrid: true,
 
-    sliderBehaviours: Behaviour.derive([
-      Receivers.orientation(Slider.refresh)
-    ]),
+    sliderBehaviours: Behaviour.derive([Receivers.orientation(Slider.refresh)]),
 
     components: [
       Slider.parts().spectrum({
-        dom: UiDomFactory.dom('<div class="${prefix}-slider-size-container"></div>'),
+        dom: UiDomFactory.dom(
+          '<div class="${prefix}-slider-size-container"></div>'
+        ),
         components: [
           UiDomFactory.spec('<div class="${prefix}-slider-size-line"></div>')
         ]
@@ -83,6 +84,4 @@ const sketch = function (rawSpec): SketchSpec {
   });
 };
 
-export {
-  sketch
-};
+export { sketch };

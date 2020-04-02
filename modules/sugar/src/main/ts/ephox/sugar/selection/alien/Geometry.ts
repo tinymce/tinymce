@@ -1,6 +1,12 @@
 import { ClientRect, DOMRect } from '@ephox/dom-globals';
 
-const searchForPoint = function (rectForOffset: (number: number) => (ClientRect | DOMRect), x: number, y: number, maxX: number, length: number) {
+const searchForPoint = function (
+  rectForOffset: (number: number) => ClientRect | DOMRect,
+  x: number,
+  y: number,
+  maxX: number,
+  length: number
+) {
   // easy cases
   if (length === 0) {
     return 0;
@@ -35,7 +41,4 @@ const inRect = function (rect: ClientRect | DOMRect, x: number, y: number) {
   return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
 };
 
-export {
-  inRect,
-  searchForPoint,
-};
+export { inRect, searchForPoint };

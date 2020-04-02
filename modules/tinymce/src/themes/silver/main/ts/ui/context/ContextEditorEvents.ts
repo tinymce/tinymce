@@ -11,7 +11,4 @@
 const showContextToolbarEvent = 'contexttoolbar-show';
 const hideContextToolbarEvent = 'contexttoolbar-hide';
 
-export {
-  showContextToolbarEvent,
-  hideContextToolbarEvent
-};
+export { showContextToolbarEvent, hideContextToolbarEvent };

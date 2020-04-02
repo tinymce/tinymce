@@ -8,23 +8,28 @@ const hexColour = (value: string): Hex => ({
 const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
 const longformRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
 
-const isHexString = (hex: string): boolean => shorthandRegex.test(hex) || longformRegex.test(hex);
+const isHexString = (hex: string): boolean =>
+  shorthandRegex.test(hex) || longformRegex.test(hex);
 
-const fromString = (hex: string): Option<Hex> => isHexString(hex) ? Option.some({ value: hex }) : Option.none();
+const fromString = (hex: string): Option<Hex> =>
+  isHexString(hex) ? Option.some({ value: hex }) : Option.none();
 
 // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
 const getLongForm = (hex: Hex): Hex => {
-  const hexString = hex.value.replace(shorthandRegex, (m, r, g, b) =>
-    r + r + g + g + b + b
+  const hexString = hex.value.replace(
+    shorthandRegex,
+    (m, r, g, b) => r + r + g + g + b + b
   );
 
   return { value: hexString };
 };
 
-const extractValues = (hex: Hex): RegExpExecArray | [string, string, string, string] => {
+const extractValues = (
+  hex: Hex
+): RegExpExecArray | [string, string, string, string] => {
   const longForm = getLongForm(hex);
   const splitForm = longformRegex.exec(longForm.value);
-  return splitForm === null ? [ 'FFFFFF', 'FF', 'FF', 'FF' ] : splitForm;
+  return splitForm === null ? ['FFFFFF', 'FF', 'FF', 'FF'] : splitForm;
 };
 
 const toHex = (component: number): string => {
@@ -33,14 +38,9 @@ const toHex = (component: number): string => {
 };
 
 const fromRgba = (rgbaColour: Rgba): Hex => {
-  const value = toHex(rgbaColour.red) + toHex(rgbaColour.green) + toHex(rgbaColour.blue);
+  const value =
+    toHex(rgbaColour.red) + toHex(rgbaColour.green) + toHex(rgbaColour.blue);
   return hexColour(value);
 };
 
-export {
-  hexColour,
-  isHexString,
-  fromString,
-  fromRgba,
-  extractValues
-};
+export { hexColour, isHexString, fromString, fromRgba, extractValues };

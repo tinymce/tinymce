@@ -7,9 +7,14 @@ import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 const platform = PlatformDetection.detect();
 
 // IE 11 only supports 'Text' or 'URL' types see: https://msdn.microsoft.com/en-us/ie/ms536744(v=vs.94)
-const getPlatformType = (type: string) => platform.browser.isIE() ? 'text' : type;
+const getPlatformType = (type: string) =>
+  platform.browser.isIE() ? 'text' : type;
 
-const setDataTransferFallback = (transfer: DataTransfer, types: string[], data: string) => {
+const setDataTransferFallback = (
+  transfer: DataTransfer,
+  types: string[],
+  data: string
+) => {
   Arr.each(types, (type) => {
     const platformType = getPlatformType(type);
 
@@ -21,7 +26,11 @@ const setDataTransferFallback = (transfer: DataTransfer, types: string[], data: 
   });
 };
 
-const setDataItems = (transfer: DataTransfer, types: string[], data: string) => {
+const setDataItems = (
+  transfer: DataTransfer,
+  types: string[],
+  data: string
+) => {
   transfer.items.clear();
   Arr.each(types, (type) => {
     transfer.items.add(data, type);
@@ -32,7 +41,8 @@ const setData = (transfer: DataTransfer, types: string[], data: string) => {
   // IE only supports the transfer.setData api with 'text'
   // Edge throws exceptions when setting custom mime types
   // Firefox (ESR 60) and older will corrupt all drag/drop handling if you use the items api
-  const oldFirefox = platform.browser.isFirefox() && platform.browser.version.major < 66;
+  const oldFirefox =
+    platform.browser.isFirefox() && platform.browser.version.major < 66;
   if (platform.browser.isIE() || platform.browser.isEdge() || oldFirefox) {
     setDataTransferFallback(transfer, types, data);
   } else {
@@ -47,9 +57,15 @@ const getData = (transfer: DataTransfer, type: string) => {
   return Type.isNull(data) ? '' : data;
 };
 
-const hasDragImageSupport = (transfer: DataTransfer) => !Type.isUndefined(transfer.setDragImage);
+const hasDragImageSupport = (transfer: DataTransfer) =>
+  !Type.isUndefined(transfer.setDragImage);
 
-const setDragImage = (transfer: DataTransfer, image: Element, x: number, y: number) => {
+const setDragImage = (
+  transfer: DataTransfer,
+  image: Element,
+  x: number,
+  y: number
+) => {
   // IE 11 and Edge doesn't have support for setting drag image we can't really
   // fake it either since it shows the element being dragged instead
   if (hasDragImageSupport(transfer)) {
@@ -72,15 +88,24 @@ const isValidDrop = (transfer: DataTransfer) => {
   const effectAllowed = transfer.effectAllowed.toLowerCase();
   const dropEffect = transfer.dropEffect.toLowerCase();
 
-  return effectAllowed === 'all' || effectAllowed === 'uninitialized' || Strings.contains(effectAllowed, dropEffect);
+  return (
+    effectAllowed === 'all' ||
+    effectAllowed === 'uninitialized' ||
+    Strings.contains(effectAllowed, dropEffect)
+  );
 };
 
-const getDataTransferFromEvent = (simulatedEvent: NativeSimulatedEvent): DataTransfer => {
+const getDataTransferFromEvent = (
+  simulatedEvent: NativeSimulatedEvent
+): DataTransfer => {
   const rawEvent: any = simulatedEvent.event().raw();
   return rawEvent.dataTransfer;
 };
 
-const setDropEffectOnEvent = (simulatedEvent: NativeSimulatedEvent, dropEffect: string) => {
+const setDropEffectOnEvent = (
+  simulatedEvent: NativeSimulatedEvent,
+  dropEffect: string
+) => {
   setDropEffect(getDataTransferFromEvent(simulatedEvent), dropEffect);
 };
 

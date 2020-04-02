@@ -18,15 +18,13 @@ export default (): void => {
   Attachment.attachSystem(body, gui);
 
   const redBehaviour = Behaviour.create({
-    fields: [ ],
+    fields: [],
     name: 'red.behaviour',
     active: {
       exhibit() {
         return DomModification.nu({
-          classes: [ 'cat' ],
-          attributes: {
-
-          },
+          classes: ['cat'],
+          attributes: {},
           styles: {
             color: 'red'
           }
@@ -36,12 +34,12 @@ export default (): void => {
   });
 
   const catBehaviour = Behaviour.create({
-    fields: [ ],
+    fields: [],
     name: 'cat.behaviour',
     active: {
       exhibit() {
         return DomModification.nu({
-          classes: [ 'cat' ],
+          classes: ['cat'],
           attributes: {
             'data-cat': 'cat'
           },
@@ -61,7 +59,8 @@ export default (): void => {
         tag: 'button',
         styles: {
           'background-color': 'black',
-          'background-image': 'url(http://yamaha/textbox/icons/Transforms13.png)',
+          'background-image':
+            'url(http://yamaha/textbox/icons/Transforms13.png)',
           'width': '20px',
           'height': '20px'
         }
@@ -78,7 +77,7 @@ export default (): void => {
     Button.sketch({
       dom: {
         tag: 'button',
-        classes: [ 'demo-alloy-bold' ],
+        classes: ['demo-alloy-bold'],
         styles: {
           border: '1px solid #ccc',
           display: 'inline-block'
@@ -103,7 +102,7 @@ export default (): void => {
   HtmlDisplay.section(
     gui,
     'This text button has two custom behaviours. One adds (among other things) "data-cat" and ' +
-    'background blue, and the other adds color red',
+      'background blue, and the other adds color red',
     Button.sketch({
       dom: {
         tag: 'span',
@@ -114,8 +113,8 @@ export default (): void => {
       },
 
       buttonBehaviours: Behaviour.derive([
-        catBehaviour.config({ }),
-        redBehaviour.config({ })
+        catBehaviour.config({}),
+        redBehaviour.config({})
       ])
     })
   );

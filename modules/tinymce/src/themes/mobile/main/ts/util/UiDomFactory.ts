@@ -20,7 +20,4 @@ const spec = (rawHtml) => ({
   dom: dom(rawHtml)
 });
 
-export {
-  dom,
-  spec
-};
+export { dom, spec };

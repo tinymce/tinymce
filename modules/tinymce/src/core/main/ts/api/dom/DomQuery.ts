@@ -5,7 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, HTMLElementEventMap, Node, Window } from '@ephox/dom-globals';
+import {
+  document,
+  HTMLElementEventMap,
+  Node,
+  Window
+} from '@ephox/dom-globals';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
 import Sizzle from './Sizzle';
 import Tools from '../util/Tools';
@@ -62,21 +67,27 @@ export interface DomQueryConstructor {
   isArray: Tools['isArray'];
 
   // tslint:disable-next-line:no-misused-new
-  new <T extends Node = Node>(selector?: DomQueryInitSelector<T>, context?: Node): DomQuery;
-  <T extends Node = Node>(selector?: DomQueryInitSelector<T>, context?: Node): DomQuery;
+  new <T extends Node = Node>(
+    selector?: DomQueryInitSelector<T>,
+    context?: Node
+  ): DomQuery;
+  <T extends Node = Node>(
+    selector?: DomQueryInitSelector<T>,
+    context?: Node
+  ): DomQuery;
 
-  overrideDefaults (callback: Function): DomQueryConstructor;
+  overrideDefaults(callback: Function): DomQueryConstructor;
 
-  makeArray <T>(object: T): T[];
-  inArray <T>(item: {}, array: T[]): number;
-  each <T>(obj: T[], callback: (i: number, value: T) => void): void;
-  each <T>(obj: T, callback: (key: string, obj: T[keyof T]) => void): void;
-  trim (str: string): string;
-  grep <T>(array: T[], callback: (item, i: number) => boolean): T[];
-  unique <T>(results: T[]): T[];
-  text (elem: Node): string;
-  contains (context, elem: Node): number;
-  filter (expr: string, elems: Node[], not?: boolean);
+  makeArray<T>(object: T): T[];
+  inArray<T>(item: {}, array: T[]): number;
+  each<T>(obj: T[], callback: (i: number, value: T) => void): void;
+  each<T>(obj: T, callback: (key: string, obj: T[keyof T]) => void): void;
+  trim(str: string): string;
+  grep<T>(array: T[], callback: (item, i: number) => boolean): T[];
+  unique<T>(results: T[]): T[];
+  text(elem: Node): string;
+  contains(context, elem: Node): number;
+  filter(expr: string, elems: Node[], not?: boolean);
 }
 
 interface DomQuery<T = Node> extends Iterable<T> {
@@ -86,72 +97,80 @@ interface DomQuery<T = Node> extends Iterable<T> {
   length: number;
   selector: string;
 
-  add (items: Array<string | T> | DomQuery<T>, sort?: boolean): this;
-  addClass (className: string): this;
-  after (content: DomQuerySelector<T>): this;
-  append (content: DomQuerySelector<T>): this;
-  appendTo (val: DomQuerySelector<T>): this;
-  attr (name: string, value: string): this;
-  attr (attrs: Record<string, string | number>): this;
-  attr (name: string): string;
-  before (content: DomQuerySelector<T>): this;
-  children (selector?: string): this;
-  clone (): this;
-  closest (selector: DomQuerySelector<T>): this;
-  contents (selector?: string): this;
-  css (name: string, value: string | number): this;
-  css (styles: Record<string, string | number>): this;
-  css (name: string): string;
-  each (callback: (i: number, value: T) => void): this;
-  empty (): this;
-  eq (index: number): this;
-  filter (selector: string | ((i: number, item) => boolean)): this;
-  find (selector: string): this;
-  first (): this;
-  hasClass (className: string): boolean;
-  hide (): this;
-  html (value: string): this;
-  html (): string;
-  is (selector: string | ((i: number, item) => boolean)): boolean;
-  last (): this;
-  next (selector?: string): this;
-  nextUntil (selector: DomQuerySelector<T>, until?: string): this;
-  off <K extends keyof HTMLElementEventMap>(name: K, callback?: EventUtilsCallback<HTMLElementEventMap[K]>): this;
-  off <U>(name?: string, callback?: EventUtilsCallback<U>): this;
-  offset (offset?: {}): {} | this;
-  on <K extends keyof HTMLElementEventMap>(name: K, callback: EventUtilsCallback<HTMLElementEventMap[K]>): this;
-  on <U>(name: string, callback: EventUtilsCallback<U>): this;
-  parent (selector?: string): this;
-  parents (selector?: string): this;
-  parentsUntil (selector: DomQuerySelector<T>, filter?: string): this;
-  prepend (content: DomQuerySelector<T>): this;
-  prependTo (val: DomQuerySelector<T>): this;
-  prev (selector?: string): this;
-  prevUntil (selector: DomQuerySelector<T>, filter?: string): this;
-  prop (name: string, value: string): this;
-  prop (props: Record<string, string | number>): this;
-  prop (name: string): string;
-  push (...items: T[]): number;
-  remove (): this;
-  removeAttr (name: string): DomQuery | string;
-  removeClass (className: string): this;
-  replaceWith (content: DomQuerySelector<T>): this;
-  show (): this;
-  slice (start: number, end?: number): this;
-  splice (start: number, deleteCount?: number): T[];
-  sort (compareFn?: (a: T, b: T) => number): T[];
-  text (value: string): DomQuery;
-  text (): string;
-  toArray (): T[];
-  toggleClass (className: string, state?: boolean): this;
-  trigger (name: string | { type: string }): this;
-  unwrap (): this;
-  wrap (content: DomQuerySelector<T>): this;
-  wrapAll (content: DomQuerySelector<T>): this;
-  wrapInner (content: string): this;
+  add(items: Array<string | T> | DomQuery<T>, sort?: boolean): this;
+  addClass(className: string): this;
+  after(content: DomQuerySelector<T>): this;
+  append(content: DomQuerySelector<T>): this;
+  appendTo(val: DomQuerySelector<T>): this;
+  attr(name: string, value: string): this;
+  attr(attrs: Record<string, string | number>): this;
+  attr(name: string): string;
+  before(content: DomQuerySelector<T>): this;
+  children(selector?: string): this;
+  clone(): this;
+  closest(selector: DomQuerySelector<T>): this;
+  contents(selector?: string): this;
+  css(name: string, value: string | number): this;
+  css(styles: Record<string, string | number>): this;
+  css(name: string): string;
+  each(callback: (i: number, value: T) => void): this;
+  empty(): this;
+  eq(index: number): this;
+  filter(selector: string | ((i: number, item) => boolean)): this;
+  find(selector: string): this;
+  first(): this;
+  hasClass(className: string): boolean;
+  hide(): this;
+  html(value: string): this;
+  html(): string;
+  is(selector: string | ((i: number, item) => boolean)): boolean;
+  last(): this;
+  next(selector?: string): this;
+  nextUntil(selector: DomQuerySelector<T>, until?: string): this;
+  off<K extends keyof HTMLElementEventMap>(
+    name: K,
+    callback?: EventUtilsCallback<HTMLElementEventMap[K]>
+  ): this;
+  off<U>(name?: string, callback?: EventUtilsCallback<U>): this;
+  offset(offset?: {}): {} | this;
+  on<K extends keyof HTMLElementEventMap>(
+    name: K,
+    callback: EventUtilsCallback<HTMLElementEventMap[K]>
+  ): this;
+  on<U>(name: string, callback: EventUtilsCallback<U>): this;
+  parent(selector?: string): this;
+  parents(selector?: string): this;
+  parentsUntil(selector: DomQuerySelector<T>, filter?: string): this;
+  prepend(content: DomQuerySelector<T>): this;
+  prependTo(val: DomQuerySelector<T>): this;
+  prev(selector?: string): this;
+  prevUntil(selector: DomQuerySelector<T>, filter?: string): this;
+  prop(name: string, value: string): this;
+  prop(props: Record<string, string | number>): this;
+  prop(name: string): string;
+  push(...items: T[]): number;
+  remove(): this;
+  removeAttr(name: string): DomQuery | string;
+  removeClass(className: string): this;
+  replaceWith(content: DomQuerySelector<T>): this;
+  show(): this;
+  slice(start: number, end?: number): this;
+  splice(start: number, deleteCount?: number): T[];
+  sort(compareFn?: (a: T, b: T) => number): T[];
+  text(value: string): DomQuery;
+  text(): string;
+  toArray(): T[];
+  toggleClass(className: string, state?: boolean): this;
+  trigger(name: string | { type: string }): this;
+  unwrap(): this;
+  wrap(content: DomQuerySelector<T>): this;
+  wrapAll(content: DomQuerySelector<T>): this;
+  wrapInner(content: string): this;
 }
 
-const doc = document, push = Array.prototype.push, slice = Array.prototype.slice;
+const doc = document,
+  push = Array.prototype.push,
+  slice = Array.prototype.slice;
 const rquickExpr = /^(?:[^#<]*(<[\w\W]+>)[^>]*$|#([\w\-]*)$)/;
 const Event = EventUtils.Event;
 const skipUniques = Tools.makeMap('children,contents,next,prev');
@@ -215,7 +234,11 @@ const domManipulate = function (targetNodes, sourceItem, callback, reverse?) {
 };
 
 const hasClass = function (node, className) {
-  return node && className && (' ' + node.className + ' ').indexOf(' ' + className + ' ') !== -1;
+  return (
+    node &&
+    className &&
+    (' ' + node.className + ' ').indexOf(' ' + className + ' ') !== -1
+  );
 };
 
 const wrap = function (elements, wrapper, all?) {
@@ -239,8 +262,14 @@ const wrap = function (elements, wrapper, all?) {
   return elements;
 };
 
-const numericCssMap = Tools.makeMap('fillOpacity fontWeight lineHeight opacity orphans widows zIndex zoom', ' ');
-const booleanMap = Tools.makeMap('checked compact declare defer disabled ismap multiple nohref noshade nowrap readonly selected', ' ');
+const numericCssMap = Tools.makeMap(
+  'fillOpacity fontWeight lineHeight opacity orphans widows zIndex zoom',
+  ' '
+);
+const booleanMap = Tools.makeMap(
+  'checked compact declare defer disabled ismap multiple nohref noshade nowrap readonly selected',
+  ' '
+);
 const propFix = {
   for: 'htmlFor',
   class: 'className',
@@ -250,9 +279,13 @@ const cssFix = {
   float: 'cssFloat'
 };
 
-const attrHooks = {}, cssHooks = {};
+const attrHooks = {},
+  cssHooks = {};
 
-const DomQueryConstructor: any = function <T extends Node = Node> (selector: DomQueryInitSelector<T>, context?): DomQuery {
+const DomQueryConstructor: any = function <T extends Node = Node>(
+  selector: DomQueryInitSelector<T>,
+  context?
+): DomQuery {
   /* eslint new-cap:0 */
   return new DomQuery.fn.init(selector, context);
 };
@@ -277,7 +310,9 @@ const inArray = function (item, array) {
 const whiteSpaceRegExp = /^\s*|\s*$/g;
 
 const trim = function (str) {
-  return (str === null || str === undefined) ? '' : ('' + str).replace(whiteSpaceRegExp, '');
+  return str === null || str === undefined
+    ? ''
+    : ('' + str).replace(whiteSpaceRegExp, '');
 };
 
 const each = function (obj, callback) {
@@ -397,15 +432,20 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
     if (isString(selector)) {
       self.selector = selector;
 
-      if (selector.charAt(0) === '<' && selector.charAt(selector.length - 1) === '>' && selector.length >= 3) {
-        match = [ null, selector, null ];
+      if (
+        selector.charAt(0) === '<' &&
+        selector.charAt(selector.length - 1) === '>' &&
+        selector.length >= 3
+      ) {
+        match = [null, selector, null];
       } else {
         match = rquickExpr.exec(selector);
       }
 
       if (match) {
         if (match[1]) {
-          node = createFragment(selector, getElementDocument(context)).firstChild;
+          node = createFragment(selector, getElementDocument(context))
+            .firstChild;
 
           while (node) {
             push.call(self, node);
@@ -647,7 +687,9 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
 
         if (elm.ownerDocument.defaultView) {
           try {
-            return elm.ownerDocument.defaultView.getComputedStyle(elm, null).getPropertyValue(dashed(name));
+            return elm.ownerDocument.defaultView
+              .getComputedStyle(elm, null)
+              .getPropertyValue(dashed(name));
           } catch (ex) {
             return undefined;
           }
@@ -670,7 +712,8 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    */
   remove() {
     const self = this;
-    let node, i = this.length;
+    let node,
+      i = this.length;
 
     while (i--) {
       node = self[i];
@@ -692,7 +735,8 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    */
   empty() {
     const self = this;
-    let node, i = this.length;
+    let node,
+      i = this.length;
 
     while (i--) {
       node = self[i];
@@ -757,7 +801,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
       return self;
     }
 
-    return self[0] ? (self[0].innerText || self[0].textContent) : '';
+    return self[0] ? self[0].innerText || self[0].textContent : '';
   },
 
   /**
@@ -784,12 +828,17 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    * @return {tinymce.dom.DomQuery} Current set.
    */
   prepend() {
-    return domManipulate(this, arguments, function (node) {
-      // Either element or Shadow Root
-      if (this.nodeType === 1 || (this.host && this.host.nodeType === 1)) {
-        this.insertBefore(node, this.firstChild);
-      }
-    }, true);
+    return domManipulate(
+      this,
+      arguments,
+      function (node) {
+        // Either element or Shadow Root
+        if (this.nodeType === 1 || (this.host && this.host.nodeType === 1)) {
+          this.insertBefore(node, this.firstChild);
+        }
+      },
+      true
+    );
   },
 
   /**
@@ -822,9 +871,14 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
     const self = this;
 
     if (self[0] && self[0].parentNode) {
-      return domManipulate(self, arguments, function (node) {
-        this.parentNode.insertBefore(node, this.nextSibling);
-      }, true);
+      return domManipulate(
+        self,
+        arguments,
+        function (node) {
+          this.parentNode.insertBefore(node, this.nextSibling);
+        },
+        true
+      );
     }
 
     return self;
@@ -984,7 +1038,12 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
           existingClassName = node.className;
 
           if (classState) {
-            node.className = trim((' ' + existingClassName + ' ').replace(' ' + className + ' ', ' '));
+            node.className = trim(
+              (' ' + existingClassName + ' ').replace(
+                ' ' + className + ' ',
+                ' '
+              )
+            );
           } else {
             node.className += existingClassName ? ' ' + className : className;
           }
@@ -1156,9 +1215,11 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    */
   filter(selector) {
     if (typeof selector === 'function') {
-      return DomQuery(grep(this.toArray(), function (item, i) {
-        return selector(i, item);
-      }));
+      return DomQuery(
+        grep(this.toArray(), function (item, i) {
+          return selector(i, item);
+        })
+      );
     }
 
     return DomQuery(DomQuery.filter(selector, this.toArray()));
@@ -1204,7 +1265,9 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    */
   offset(offset?) {
     let elm, doc, docElm;
-    let x = 0, y = 0, pos;
+    let x = 0,
+      y = 0,
+      pos;
 
     if (!offset) {
       elm = this[0];
@@ -1215,8 +1278,14 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
 
         if (elm.getBoundingClientRect) {
           pos = elm.getBoundingClientRect();
-          x = pos.left + (docElm.scrollLeft || doc.body.scrollLeft) - docElm.clientLeft;
-          y = pos.top + (docElm.scrollTop || doc.body.scrollTop) - docElm.clientTop;
+          x =
+            pos.left +
+            (docElm.scrollLeft || doc.body.scrollLeft) -
+            docElm.clientLeft;
+          y =
+            pos.top +
+            (docElm.scrollTop || doc.body.scrollTop) -
+            docElm.clientTop;
         }
       }
 
@@ -1257,7 +1326,7 @@ Tools.extend(DomQueryConstructor, {
    */
   makeArray(object) {
     if (isWindow(object) || object.nodeType) {
-      return [ object ];
+      return [object];
     }
 
     return Tools.toArray(object);
@@ -1340,7 +1409,7 @@ Tools.extend(DomQueryConstructor, {
     }
 
     if (elems.length === 1) {
-      elems = DomQuery.find.matchesSelector(elems[0], expr) ? [ elems[0] ] : [];
+      elems = DomQuery.find.matchesSelector(elems[0], expr) ? [elems[0]] : [];
     } else {
       elems = DomQuery.find.matches(expr, elems);
     }
@@ -1416,184 +1485,195 @@ const firstSibling = function (node, siblingName, nodeType) {
   return null;
 };
 
-each({
-  /**
-   * Returns a new collection with the parent of each item in current collection matching the optional selector.
-   *
-   * @method parent
-   * @param {Element/tinymce.dom.DomQuery} node Node to match parents against.
-   * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
-   */
-  parent(node) {
-    const parent = node.parentNode;
+each(
+  {
+    /**
+     * Returns a new collection with the parent of each item in current collection matching the optional selector.
+     *
+     * @method parent
+     * @param {Element/tinymce.dom.DomQuery} node Node to match parents against.
+     * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
+     */
+    parent(node) {
+      const parent = node.parentNode;
 
-    return parent && parent.nodeType !== 11 ? parent : null;
+      return parent && parent.nodeType !== 11 ? parent : null;
+    },
+
+    /**
+     * Returns a new collection with the all the parents of each item in current collection matching the optional selector.
+     *
+     * @method parents
+     * @param {Element/tinymce.dom.DomQuery} node Node to match parents against.
+     * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
+     */
+    parents(node) {
+      return dir(node, 'parentNode');
+    },
+
+    /**
+     * Returns a new collection with next sibling of each item in current collection matching the optional selector.
+     *
+     * @method next
+     * @param {Element/tinymce.dom.DomQuery} node Node to match the next element against.
+     * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
+     */
+    next(node) {
+      return firstSibling(node, 'nextSibling', 1);
+    },
+
+    /**
+     * Returns a new collection with previous sibling of each item in current collection matching the optional selector.
+     *
+     * @method prev
+     * @param {Element/tinymce.dom.DomQuery} node Node to match the previous element against.
+     * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
+     */
+    prev(node) {
+      return firstSibling(node, 'previousSibling', 1);
+    },
+
+    /**
+     * Returns all child elements matching the optional selector.
+     *
+     * @method children
+     * @param {Element/tinymce.dom.DomQuery} node Node to match the elements against.
+     * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
+     */
+    children(node) {
+      return sibling(node.firstChild, 'nextSibling', 1);
+    },
+
+    /**
+     * Returns all child nodes matching the optional selector.
+     *
+     * @method contents
+     * @param {Element/tinymce.dom.DomQuery} node Node to get the contents of.
+     * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
+     */
+    contents(node) {
+      return Tools.toArray(
+        (node.nodeName === 'iframe'
+          ? node.contentDocument || node.contentWindow.document
+          : node
+        ).childNodes
+      );
+    }
   },
+  function (name, fn) {
+    DomQueryConstructor.fn[name] = function (selector?) {
+      const self = this;
+      let result = [];
 
-  /**
-   * Returns a new collection with the all the parents of each item in current collection matching the optional selector.
-   *
-   * @method parents
-   * @param {Element/tinymce.dom.DomQuery} node Node to match parents against.
-   * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
-   */
-  parents(node) {
-    return dir(node, 'parentNode');
-  },
+      self.each(function () {
+        const nodes = fn.call(result, this, selector, result);
 
-  /**
-   * Returns a new collection with next sibling of each item in current collection matching the optional selector.
-   *
-   * @method next
-   * @param {Element/tinymce.dom.DomQuery} node Node to match the next element against.
-   * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
-   */
-  next(node) {
-    return firstSibling(node, 'nextSibling', 1);
-  },
+        if (nodes) {
+          if (DomQuery.isArray(nodes)) {
+            result.push.apply(result, nodes);
+          } else {
+            result.push(nodes);
+          }
+        }
+      });
 
-  /**
-   * Returns a new collection with previous sibling of each item in current collection matching the optional selector.
-   *
-   * @method prev
-   * @param {Element/tinymce.dom.DomQuery} node Node to match the previous element against.
-   * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
-   */
-  prev(node) {
-    return firstSibling(node, 'previousSibling', 1);
-  },
+      // If traversing on multiple elements we might get the same elements twice
+      if (this.length > 1) {
+        if (!skipUniques[name]) {
+          result = DomQuery.unique(result);
+        }
 
-  /**
-   * Returns all child elements matching the optional selector.
-   *
-   * @method children
-   * @param {Element/tinymce.dom.DomQuery} node Node to match the elements against.
-   * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
-   */
-  children(node) {
-    return sibling(node.firstChild, 'nextSibling', 1);
-  },
-
-  /**
-   * Returns all child nodes matching the optional selector.
-   *
-   * @method contents
-   * @param {Element/tinymce.dom.DomQuery} node Node to get the contents of.
-   * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
-   */
-  contents(node) {
-    return Tools.toArray((node.nodeName === 'iframe' ? node.contentDocument || node.contentWindow.document : node).childNodes);
-  }
-}, function (name, fn) {
-  DomQueryConstructor.fn[name] = function (selector?) {
-    const self = this;
-    let result = [];
-
-    self.each(function () {
-      const nodes = fn.call(result, this, selector, result);
-
-      if (nodes) {
-        if (DomQuery.isArray(nodes)) {
-          result.push.apply(result, nodes);
-        } else {
-          result.push(nodes);
+        if (name.indexOf('parents') === 0) {
+          result = result.reverse();
         }
       }
-    });
 
-    // If traversing on multiple elements we might get the same elements twice
-    if (this.length > 1) {
-      if (!skipUniques[name]) {
+      const wrappedResult = DomQuery(result);
+
+      if (selector) {
+        return wrappedResult.filter(selector);
+      }
+
+      return wrappedResult;
+    };
+  }
+);
+
+each(
+  {
+    /**
+     * Returns a new collection with the all the parents until the matching selector/element
+     * of each item in current collection matching the optional selector.
+     *
+     * @method parentsUntil
+     * @param {Element/tinymce.dom.DomQuery} node Node to find parent of.
+     * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.
+     * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
+     */
+    parentsUntil(node, until) {
+      return dir(node, 'parentNode', until);
+    },
+
+    /**
+     * Returns a new collection with all next siblings of each item in current collection matching the optional selector.
+     *
+     * @method nextUntil
+     * @param {Element/tinymce.dom.DomQuery} node Node to find next siblings on.
+     * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.
+     * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
+     */
+    nextUntil(node, until) {
+      return sibling(node, 'nextSibling', 1, until).slice(1);
+    },
+
+    /**
+     * Returns a new collection with all previous siblings of each item in current collection matching the optional selector.
+     *
+     * @method prevUntil
+     * @param {Element/tinymce.dom.DomQuery} node Node to find previous siblings on.
+     * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.
+     * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
+     */
+    prevUntil(node, until) {
+      return sibling(node, 'previousSibling', 1, until).slice(1);
+    }
+  },
+  function (name, fn) {
+    DomQueryConstructor.fn[name] = function (selector, filter?) {
+      const self = this;
+      let result = [];
+
+      self.each(function () {
+        const nodes = fn.call(result, this, selector, result);
+
+        if (nodes) {
+          if (DomQuery.isArray(nodes)) {
+            result.push.apply(result, nodes);
+          } else {
+            result.push(nodes);
+          }
+        }
+      });
+
+      // If traversing on multiple elements we might get the same elements twice
+      if (this.length > 1) {
         result = DomQuery.unique(result);
-      }
 
-      if (name.indexOf('parents') === 0) {
-        result = result.reverse();
-      }
-    }
-
-    const wrappedResult = DomQuery(result);
-
-    if (selector) {
-      return wrappedResult.filter(selector);
-    }
-
-    return wrappedResult;
-  };
-});
-
-each({
-  /**
-   * Returns a new collection with the all the parents until the matching selector/element
-   * of each item in current collection matching the optional selector.
-   *
-   * @method parentsUntil
-   * @param {Element/tinymce.dom.DomQuery} node Node to find parent of.
-   * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.
-   * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
-   */
-  parentsUntil(node, until) {
-    return dir(node, 'parentNode', until);
-  },
-
-  /**
-   * Returns a new collection with all next siblings of each item in current collection matching the optional selector.
-   *
-   * @method nextUntil
-   * @param {Element/tinymce.dom.DomQuery} node Node to find next siblings on.
-   * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.
-   * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
-   */
-  nextUntil(node, until) {
-    return sibling(node, 'nextSibling', 1, until).slice(1);
-  },
-
-  /**
-   * Returns a new collection with all previous siblings of each item in current collection matching the optional selector.
-   *
-   * @method prevUntil
-   * @param {Element/tinymce.dom.DomQuery} node Node to find previous siblings on.
-   * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.
-   * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
-   */
-  prevUntil(node, until) {
-    return sibling(node, 'previousSibling', 1, until).slice(1);
-  }
-}, function (name, fn) {
-  DomQueryConstructor.fn[name] = function (selector, filter?) {
-    const self = this;
-    let result = [];
-
-    self.each(function () {
-      const nodes = fn.call(result, this, selector, result);
-
-      if (nodes) {
-        if (DomQuery.isArray(nodes)) {
-          result.push.apply(result, nodes);
-        } else {
-          result.push(nodes);
+        if (name.indexOf('parents') === 0 || name === 'prevUntil') {
+          result = result.reverse();
         }
       }
-    });
 
-    // If traversing on multiple elements we might get the same elements twice
-    if (this.length > 1) {
-      result = DomQuery.unique(result);
+      const wrappedResult = DomQuery(result);
 
-      if (name.indexOf('parents') === 0 || name === 'prevUntil') {
-        result = result.reverse();
+      if (filter) {
+        return wrappedResult.filter(filter);
       }
-    }
 
-    const wrappedResult = DomQuery(result);
-
-    if (filter) {
-      return wrappedResult.filter(filter);
-    }
-
-    return wrappedResult;
-  };
-});
+      return wrappedResult;
+    };
+  }
+);
 
 /**
  * Returns true/false if the current set items matches the selector.

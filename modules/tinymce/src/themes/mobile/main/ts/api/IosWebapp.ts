@@ -21,7 +21,7 @@ export interface MobileWebApp {
   destroy(): void;
 }
 
-const produce = function (raw: {any}): MobileWebApp {
+const produce = function (raw: { any }): MobileWebApp {
   const mobile = ValueSchema.asRawOrDie(
     'Getting IosWebapp schema',
     MobileSchema,
@@ -37,9 +37,7 @@ const produce = function (raw: {any}): MobileWebApp {
     mode.enter();
   };
 
-  const mask = GuiFactory.build(
-    TapToEditMask.sketch(onView, mobile.translate)
-  );
+  const mask = GuiFactory.build(TapToEditMask.sketch(onView, mobile.translate));
 
   mobile.alloy.add(mask);
   const maskApi = {
@@ -58,10 +56,8 @@ const produce = function (raw: {any}): MobileWebApp {
     refreshStructure: mode.refreshStructure,
     enter: mode.enter,
     exit: mode.exit,
-    destroy: Fun.noop  // TODO: lifecycle hookup
+    destroy: Fun.noop // TODO: lifecycle hookup
   };
 };
 
-export {
-  produce
-};
+export { produce };

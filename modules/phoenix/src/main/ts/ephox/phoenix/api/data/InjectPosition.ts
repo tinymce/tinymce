@@ -4,14 +4,14 @@ type InjectPositionHandler<E, U> = (item: E) => U;
 type InvalidHandler<E, U> = (item: E, offset: number) => U;
 
 export interface InjectPosition<E> {
-  fold: <U> (
+  fold: <U>(
     onBefore: InjectPositionHandler<E, U>,
     onAfter: InjectPositionHandler<E, U>,
     onRest: InjectPositionHandler<E, U>,
     onLast: InjectPositionHandler<E, U>,
     onInvalid: InvalidHandler<E, U>
   ) => U;
-  match: <U> (branches: {
+  match: <U>(branches: {
     before: InjectPositionHandler<E, U>;
     after: InjectPositionHandler<E, U>;
     rest: InjectPositionHandler<E, U>;
@@ -22,17 +22,17 @@ export interface InjectPosition<E> {
 }
 
 const adt: {
-  before: <E> (element: E) => InjectPosition<E>;
-  after: <E> (element: E) => InjectPosition<E>;
-  rest: <E> (element: E) => InjectPosition<E>;
-  last: <E> (element: E) => InjectPosition<E>;
-  invalid: <E> (element: E, offset: number) => InjectPosition<E>;
+  before: <E>(element: E) => InjectPosition<E>;
+  after: <E>(element: E) => InjectPosition<E>;
+  rest: <E>(element: E) => InjectPosition<E>;
+  last: <E>(element: E) => InjectPosition<E>;
+  invalid: <E>(element: E, offset: number) => InjectPosition<E>;
 } = Adt.generate([
-  { before: [ 'element' ] },
-  { after: [ 'element' ] },
-  { rest: [ 'element' ] },
-  { last: [ 'element' ] },
-  { invalid: [ 'element', 'offset' ] }
+  { before: ['element'] },
+  { after: ['element'] },
+  { rest: ['element'] },
+  { last: ['element'] },
+  { invalid: ['element', 'offset'] }
 ]);
 
 export const InjectPosition = {

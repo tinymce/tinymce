@@ -15,19 +15,36 @@ import * as NodeType from './NodeType';
 const hasWhitespacePreserveParent = function (rootNode: Node, node: Node) {
   const rootElement = Element.fromDom(rootNode);
   const startNode = Element.fromDom(node);
-  return SelectorExists.ancestor(startNode, 'pre,code', Fun.curry(Compare.eq, rootElement));
+  return SelectorExists.ancestor(
+    startNode,
+    'pre,code',
+    Fun.curry(Compare.eq, rootElement)
+  );
 };
 
 const isWhitespace = function (rootNode: Node, node: Node) {
-  return NodeType.isText(node) && /^[ \t\r\n]*$/.test(node.data) && hasWhitespacePreserveParent(rootNode, node) === false;
+  return (
+    NodeType.isText(node) &&
+    /^[ \t\r\n]*$/.test(node.data) &&
+    hasWhitespacePreserveParent(rootNode, node) === false
+  );
 };
 
 const isNamedAnchor = function (node: Node) {
-  return NodeType.isElement(node) && node.nodeName === 'A' && node.hasAttribute('name');
+  return (
+    NodeType.isElement(node) &&
+    node.nodeName === 'A' &&
+    node.hasAttribute('name')
+  );
 };
 
 const isContent = function (rootNode: Node, node: Node) {
-  return (CaretCandidate.isCaretCandidate(node) && isWhitespace(rootNode, node) === false) || isNamedAnchor(node) || isBookmark(node);
+  return (
+    (CaretCandidate.isCaretCandidate(node) &&
+      isWhitespace(rootNode, node) === false) ||
+    isNamedAnchor(node) ||
+    isBookmark(node)
+  );
 };
 
 const isBookmark = NodeType.hasAttribute('data-mce-bookmark');
@@ -35,7 +52,8 @@ const isBogus = NodeType.hasAttribute('data-mce-bogus');
 const isBogusAll = NodeType.hasAttributeValue('data-mce-bogus', 'all');
 
 const isEmptyNode = function (targetNode: Node, skipBogus: boolean) {
-  let node, brCount = 0;
+  let node,
+    brCount = 0;
 
   if (isContent(targetNode, targetNode)) {
     return false;
@@ -76,8 +94,7 @@ const isEmptyNode = function (targetNode: Node, skipBogus: boolean) {
   }
 };
 
-const isEmpty = (elm: Element<Node>, skipBogus: boolean = true) => isEmptyNode(elm.dom(), skipBogus);
+const isEmpty = (elm: Element<Node>, skipBogus: boolean = true) =>
+  isEmptyNode(elm.dom(), skipBogus);
 
-export {
-  isEmpty
-};
+export { isEmpty };

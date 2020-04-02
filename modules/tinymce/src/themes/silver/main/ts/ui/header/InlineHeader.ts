@@ -11,7 +11,14 @@ import { Body, Css, Element, Height, Location, Width } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import { getMaxWidthSetting, getToolbarMode, isStickyToolbar, isToolbarLocationTop, ToolbarMode, useFixedContainer } from '../../api/Settings';
+import {
+  getMaxWidthSetting,
+  getToolbarMode,
+  isStickyToolbar,
+  isToolbarLocationTop,
+  ToolbarMode,
+  useFixedContainer
+} from '../../api/Settings';
 import { RenderUiComponents } from '../../Render';
 import OuterContainer from '../general/OuterContainer';
 import * as EditorSize from '../sizing/EditorSize';
@@ -25,15 +32,23 @@ export interface InlineHeader {
   repositionPopups: () => void;
 }
 
-export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: RenderUiComponents, floatContainer: Cell<AlloyComponent>): InlineHeader => {
+export const InlineHeader = (
+  editor: Editor,
+  targetElm: Element,
+  uiComponents: RenderUiComponents,
+  floatContainer: Cell<AlloyComponent>
+): InlineHeader => {
   const { uiMothership, outerContainer } = uiComponents;
   const DOM = DOMUtils.DOM;
   const useFixedToolbarContainer = useFixedContainer(editor);
   const isSticky = isStickyToolbar(editor);
-  const editorMaxWidthOpt = getMaxWidthSetting(editor).or(EditorSize.getWidth(editor));
+  const editorMaxWidthOpt = getMaxWidthSetting(editor).or(
+    EditorSize.getWidth(editor)
+  );
 
   const toolbarMode = getToolbarMode(editor);
-  const isSplitToolbar = toolbarMode === ToolbarMode.sliding || toolbarMode === ToolbarMode.floating;
+  const isSplitToolbar =
+    toolbarMode === ToolbarMode.sliding || toolbarMode === ToolbarMode.floating;
   const isToolbarTop = isToolbarLocationTop(editor);
 
   const visible = Cell(false);
@@ -42,25 +57,37 @@ export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: R
     // Update the max width of the inline toolbar
     const maxWidth = editorMaxWidthOpt.getOrThunk(() => {
       // No max width, so use the body width, minus the left pos as the maximum
-      const bodyMargin = Utils.parseToInt(Css.get(Body.body(), 'margin-left')).getOr(0);
-      return Width.get(Body.body()) - Location.absolute(targetElm).left() + bodyMargin;
+      const bodyMargin = Utils.parseToInt(
+        Css.get(Body.body(), 'margin-left')
+      ).getOr(0);
+      return (
+        Width.get(Body.body()) -
+        Location.absolute(targetElm).left() +
+        bodyMargin
+      );
     });
     Css.set(floatContainer.get().element(), 'max-width', maxWidth + 'px');
   };
 
   const updateChromePosition = (toolbar: Option<AlloyComponent>) => {
     // Calculate the toolbar offset when using a split toolbar drawer
-    const offset = isSplitToolbar ? toolbar.fold(() => 0, (tbar) =>
-      // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
-      tbar.components().length > 1 ? Height.get(tbar.components()[1].element()) : 0
-    ) : 0;
+    const offset = isSplitToolbar
+      ? toolbar.fold(
+          () => 0,
+          (tbar) =>
+            // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
+            tbar.components().length > 1
+              ? Height.get(tbar.components()[1].element())
+              : 0
+        )
+      : 0;
 
     // The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
     // so we need to round this to account for that.
     const targetBounds = Boxes.box(targetElm);
-    const top = isToolbarTop ?
-      targetBounds.y - Height.get(floatContainer.get().element()) + offset :
-      targetBounds.bottom;
+    const top = isToolbarTop
+      ? targetBounds.y - Height.get(floatContainer.get().element()) + offset
+      : targetBounds.bottom;
 
     Css.setAll(outerContainer.element(), {
       position: 'absolute',
@@ -70,7 +97,7 @@ export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: R
   };
 
   const repositionPopups = () => {
-    uiMothership.broadcastOn([ Channels.repositionPopups() ], { });
+    uiMothership.broadcastOn([Channels.repositionPopups()], {});
   };
 
   const updateChromeUi = (resetDocking: boolean = false) => {
@@ -97,7 +124,9 @@ export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: R
     // Docking
     if (isSticky) {
       const floatContainerComp = floatContainer.get();
-      resetDocking ? Docking.reset(floatContainerComp) : Docking.refresh(floatContainerComp);
+      resetDocking
+        ? Docking.reset(floatContainerComp)
+        : Docking.refresh(floatContainerComp);
     }
 
     // Floating toolbar

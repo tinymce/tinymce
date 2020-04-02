@@ -41,7 +41,10 @@ const getEventTarget = function (editor: Editor, eventName: string): Node {
 
   // Need to bind mousedown/mouseup etc to document not body in iframe mode
   // Since the user might click on the HTML element not the BODY
-  if (!editor.inline && /^mouse|touch|click|contextmenu|drop|dragover|dragend/.test(eventName)) {
+  if (
+    !editor.inline &&
+    /^mouse|touch|click|contextmenu|drop|dragover|dragend/.test(eventName)
+  ) {
     return editor.getDoc().documentElement;
   }
 
@@ -135,9 +138,9 @@ const bindEventDelegate = function (editor: Editor, eventName: string) {
 };
 
 interface EditorObservable extends Observable<EditorEventMap> {
-  bindPendingEventDelegates (): void;
-  toggleNativeEvent (name: string, state: boolean);
-  unbindAllNativeEvents (): void;
+  bindPendingEventDelegates(): void;
+  toggleNativeEvent(name: string, state: boolean);
+  unbindAllNativeEvents(): void;
 }
 
 const EditorObservable: EditorObservable = {
@@ -175,7 +178,7 @@ const EditorObservable: EditorObservable = {
         bindEventDelegate(self, name);
       } else {
         if (!self._pendingNativeEvents) {
-          self._pendingNativeEvents = [ name ];
+          self._pendingNativeEvents = [name];
         } else {
           self._pendingNativeEvents.push(name);
         }

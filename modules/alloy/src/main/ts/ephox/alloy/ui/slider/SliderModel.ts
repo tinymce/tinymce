@@ -31,7 +31,12 @@ export interface OffsetOfArgs {
   centerMaxEdge: number;
 }
 
-const reduceBy = (value: number, min: number, max: number, step: number): number => {
+const reduceBy = (
+  value: number,
+  min: number,
+  max: number,
+  step: number
+): number => {
   if (value < min) {
     return value;
   } else if (value > max) {
@@ -43,7 +48,12 @@ const reduceBy = (value: number, min: number, max: number, step: number): number
   }
 };
 
-const increaseBy = (value: number, min: number, max: number, step: number): number => {
+const increaseBy = (
+  value: number,
+  min: number,
+  max: number,
+  step: number
+): number => {
   if (value > max) {
     return value;
   } else if (value < min) {
@@ -55,37 +65,59 @@ const increaseBy = (value: number, min: number, max: number, step: number): numb
   }
 };
 
-const capValue = (value: number, min: number, max: number): number => Math.max(
-  min,
-  Math.min(max, value)
-);
+const capValue = (value: number, min: number, max: number): number =>
+  Math.max(min, Math.min(max, value));
 
-const snapValueOf = (value: number, min: number, max: number, step: number, snapStart: Option<number>): number =>
+const snapValueOf = (
+  value: number,
+  min: number,
+  max: number,
+  step: number,
+  snapStart: Option<number>
+): number =>
   // We are snapping by the step size. Therefore, find the nearest multiple of
   // the step
-  snapStart.fold(() => {
-    // There is no initial snapping start, so just go from the minimum
-    const initValue = value - min;
-    const extraValue = Math.round(initValue / step) * step;
-    return capValue(min + extraValue, min - 1, max + 1);
-  }, (start) => {
-    // There is an initial snapping start, so using that as the starting point,
-    // calculate the nearest snap position based on the value
-    const remainder = (value - start) % step;
-    const adjustment = Math.round(remainder / step);
+  snapStart.fold(
+    () => {
+      // There is no initial snapping start, so just go from the minimum
+      const initValue = value - min;
+      const extraValue = Math.round(initValue / step) * step;
+      return capValue(min + extraValue, min - 1, max + 1);
+    },
+    (start) => {
+      // There is an initial snapping start, so using that as the starting point,
+      // calculate the nearest snap position based on the value
+      const remainder = (value - start) % step;
+      const adjustment = Math.round(remainder / step);
 
-    const rawSteps = Math.floor((value - start) / step);
-    const maxSteps = Math.floor((max - start) / step);
+      const rawSteps = Math.floor((value - start) / step);
+      const maxSteps = Math.floor((max - start) / step);
 
-    const numSteps = Math.min(maxSteps, rawSteps + adjustment);
-    const r = start + (numSteps * step);
-    return Math.max(start, r);
-  });
+      const numSteps = Math.min(maxSteps, rawSteps + adjustment);
+      const r = start + numSteps * step;
+      return Math.max(start, r);
+    }
+  );
 
-const findOffsetOf = (value: number, min: number, max: number): number => Math.min(max, Math.max(value, min)) - min;
+const findOffsetOf = (value: number, min: number, max: number): number =>
+  Math.min(max, Math.max(value, min)) - min;
 
 const findValueOf = (args: ValueOfArgs): number => {
-  const { min, max, range, value, step, snap, snapStart, rounded, hasMinEdge, hasMaxEdge, minBound, maxBound, screenRange } = args;
+  const {
+    min,
+    max,
+    range,
+    value,
+    step,
+    snap,
+    snapStart,
+    rounded,
+    hasMinEdge,
+    hasMaxEdge,
+    minBound,
+    maxBound,
+    screenRange
+  } = args;
 
   const capMin = hasMinEdge ? min - 1 : min;
   const capMax = hasMaxEdge ? max + 1 : max;
@@ -96,7 +128,11 @@ const findValueOf = (args: ValueOfArgs): number => {
     return capMax;
   } else {
     const offset = findOffsetOf(value, minBound, maxBound);
-    const newValue = capValue(((offset / screenRange) * range) + min, capMin, capMax);
+    const newValue = capValue(
+      (offset / screenRange) * range + min,
+      capMin,
+      capMax
+    );
     if (snap && newValue >= min && newValue <= max) {
       return snapValueOf(newValue, min, max, step, snapStart);
     } else if (rounded) {
@@ -108,7 +144,18 @@ const findValueOf = (args: ValueOfArgs): number => {
 };
 
 const findOffsetOfValue = (args: OffsetOfArgs): number => {
-  const { min, max, range, value, hasMinEdge, hasMaxEdge, maxBound, maxOffset, centerMinEdge, centerMaxEdge } = args;
+  const {
+    min,
+    max,
+    range,
+    value,
+    hasMinEdge,
+    hasMaxEdge,
+    maxBound,
+    maxOffset,
+    centerMinEdge,
+    centerMaxEdge
+  } = args;
 
   if (value < min) {
     return hasMinEdge ? 0 : centerMinEdge;
@@ -116,13 +163,8 @@ const findOffsetOfValue = (args: OffsetOfArgs): number => {
     return hasMaxEdge ? maxBound : centerMaxEdge;
   } else {
     // position along the slider
-    return (value - min) / range * maxOffset;
+    return ((value - min) / range) * maxOffset;
   }
 };
 
-export {
-  reduceBy,
-  increaseBy,
-  findValueOf,
-  findOffsetOfValue
-};
+export { reduceBy, increaseBy, findValueOf, findOffsetOfValue };

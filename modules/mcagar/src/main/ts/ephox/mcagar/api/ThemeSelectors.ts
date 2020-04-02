@@ -26,16 +26,19 @@ const ModernThemeSelectors: ThemeSelectors = {
 };
 
 const SilverThemeSelectors: ThemeSelectors = {
-  toolBarSelector: (editor: Editor) => Arr.exists([ editor.settings.toolbar_mode, editor.settings.toolbar_drawer ], (s) => s === 'floating' || s === 'sliding') ? '.tox-toolbar-overlord' : '.tox-toolbar',
+  toolBarSelector: (editor: Editor) =>
+    Arr.exists(
+      [editor.settings.toolbar_mode, editor.settings.toolbar_drawer],
+      (s) => s === 'floating' || s === 'sliding'
+    )
+      ? '.tox-toolbar-overlord'
+      : '.tox-toolbar',
   menuBarSelector: '.tox-menubar',
   dialogCloseSelector: '.tox-button:contains("Cancel")',
   dialogSubmitSelector: '.tox-button:contains("Save")'
 };
 
-const getThemeSelectors = (): ThemeSelectors => isModern() ? ModernThemeSelectors : SilverThemeSelectors;
+const getThemeSelectors = (): ThemeSelectors =>
+  isModern() ? ModernThemeSelectors : SilverThemeSelectors;
 
-export {
-  getThemeSelectors,
-  isModern,
-  isSilver
-};
+export { getThemeSelectors, isModern, isSilver };

@@ -64,7 +64,4 @@ const cancel = function (editor) {
   editor.resetContent(h);
 };
 
-export {
-  save,
-  cancel
-};
+export { save, cancel };

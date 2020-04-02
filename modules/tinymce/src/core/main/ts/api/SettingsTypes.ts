@@ -5,14 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLElement, HTMLImageElement, Node, ReferrerPolicy as DomReferrerPolicy } from '@ephox/dom-globals';
+import {
+  Element,
+  HTMLElement,
+  HTMLImageElement,
+  Node,
+  ReferrerPolicy as DomReferrerPolicy
+} from '@ephox/dom-globals';
 import { UploadHandler } from '../file/Uploader';
 import Editor from './Editor';
 import { Formats } from './fmt/Format';
 import { AllowedFormat } from './fmt/StyleFormat';
 import { SchemaType } from './html/Schema';
 
-export type ThemeInitFunc = (editor: Editor, elm: HTMLElement) => {
+export type ThemeInitFunc = (
+  editor: Editor,
+  elm: HTMLElement
+) => {
   editorContainer: HTMLElement;
   iframeContainer: HTMLElement;
   height?: number;
@@ -21,15 +30,43 @@ export type ThemeInitFunc = (editor: Editor, elm: HTMLElement) => {
 
 export type SetupCallback = (editor: Editor) => void;
 
-export type FilePickerCallback = (callback: Function, value: any, meta: Record<string, any>) => void;
-export type FilePickerValidationStatus = 'valid' | 'unknown' | 'invalid' | 'none';
-export type FilePickerValidationCallback = (info: { type: string; url: string }, callback: (validation: { status: FilePickerValidationStatus; message: string}) => void) => void;
+export type FilePickerCallback = (
+  callback: Function,
+  value: any,
+  meta: Record<string, any>
+) => void;
+export type FilePickerValidationStatus =
+  | 'valid'
+  | 'unknown'
+  | 'invalid'
+  | 'none';
+export type FilePickerValidationCallback = (
+  info: { type: string; url: string },
+  callback: (validation: {
+    status: FilePickerValidationStatus;
+    message: string;
+  }) => void
+) => void;
 
 // dom-globals is outdated and missing a number of valid values
-export type ReferrerPolicy = DomReferrerPolicy | 'origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin';
+export type ReferrerPolicy =
+  | DomReferrerPolicy
+  | 'origin'
+  | 'same-origin'
+  | 'strict-origin'
+  | 'strict-origin-when-cross-origin';
 
-export type URLConverter = (url: string, name: string, elm?: HTMLElement) => string;
-export type URLConverterCallback = (url: string, node: Node, on_save: boolean, name: string) => void;
+export type URLConverter = (
+  url: string,
+  name: string,
+  elm?: HTMLElement
+) => string;
+export type URLConverterCallback = (
+  url: string,
+  node: Node,
+  on_save: boolean,
+  name: string
+) => void;
 
 interface ToolbarGroup {
   name?: string;

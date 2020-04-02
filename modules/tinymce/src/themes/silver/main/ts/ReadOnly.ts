@@ -21,20 +21,28 @@ const ReadOnlyDataSchema = ValueSchema.objOf([
   FieldSchema.strictBoolean('readonly')
 ]);
 
-const broadcastReadonly = (uiComponents: RenderUiComponents, readonly: boolean) => {
+const broadcastReadonly = (
+  uiComponents: RenderUiComponents,
+  readonly: boolean
+) => {
   const outerContainer = uiComponents.outerContainer;
   const target = outerContainer.element();
 
   if (readonly) {
-    uiComponents.mothership.broadcastOn([ Channels.dismissPopups() ], { target });
-    uiComponents.uiMothership.broadcastOn([ Channels.dismissPopups() ], { target });
+    uiComponents.mothership.broadcastOn([Channels.dismissPopups()], { target });
+    uiComponents.uiMothership.broadcastOn([Channels.dismissPopups()], {
+      target
+    });
   }
 
-  uiComponents.mothership.broadcastOn([ ReadOnlyChannel ], { readonly });
-  uiComponents.uiMothership.broadcastOn([ ReadOnlyChannel ], { readonly });
+  uiComponents.mothership.broadcastOn([ReadOnlyChannel], { readonly });
+  uiComponents.uiMothership.broadcastOn([ReadOnlyChannel], { readonly });
 };
 
-const setupReadonlyModeSwitch = (editor: Editor, uiComponents: RenderUiComponents) => {
+const setupReadonlyModeSwitch = (
+  editor: Editor,
+  uiComponents: RenderUiComponents
+) => {
   editor.on('init', () => {
     // Force an update of the ui components disabled states if in readonly mode
     if (editor.mode.isReadOnly()) {
@@ -42,26 +50,25 @@ const setupReadonlyModeSwitch = (editor: Editor, uiComponents: RenderUiComponent
     }
   });
 
-  editor.on('SwitchMode', () => broadcastReadonly(uiComponents, editor.mode.isReadOnly()));
+  editor.on('SwitchMode', () =>
+    broadcastReadonly(uiComponents, editor.mode.isReadOnly())
+  );
 
   if (Settings.isReadOnly(editor)) {
     editor.setMode('readonly');
   }
 };
 
-const receivingConfig = (): Behaviour.NamedConfiguredBehaviour<any, any> => Receiving.config({
-  channels: {
-    [ReadOnlyChannel]: {
-      schema: ReadOnlyDataSchema,
-      onReceive(comp, data: ReadOnlyData) {
-        Disabling.set(comp, data.readonly);
+const receivingConfig = (): Behaviour.NamedConfiguredBehaviour<any, any> =>
+  Receiving.config({
+    channels: {
+      [ReadOnlyChannel]: {
+        schema: ReadOnlyDataSchema,
+        onReceive(comp, data: ReadOnlyData) {
+          Disabling.set(comp, data.readonly);
+        }
       }
     }
-  }
-});
+  });
 
-export {
-  ReadOnlyDataSchema,
-  setupReadonlyModeSwitch,
-  receivingConfig
-};
+export { ReadOnlyDataSchema, setupReadonlyModeSwitch, receivingConfig };

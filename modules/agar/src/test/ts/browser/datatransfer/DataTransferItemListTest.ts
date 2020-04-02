@@ -5,7 +5,10 @@ import { Type } from '@ephox/katamari';
 import { createDataTransferItemList } from 'ephox/agar/datatransfer/DataTransferItemList';
 import { getData } from 'ephox/agar/datatransfer/DataTransferItem';
 import { createDataTransfer } from 'ephox/agar/datatransfer/DataTransfer';
-import { setProtectedMode, setReadOnlyMode } from 'ephox/agar/datatransfer/Mode';
+import {
+  setProtectedMode,
+  setReadOnlyMode
+} from 'ephox/agar/datatransfer/Mode';
 
 UnitTest.test('DataTransferItemListTest', () => {
   const testAdding = () => {
@@ -13,7 +16,9 @@ UnitTest.test('DataTransferItemListTest', () => {
 
     Assert.eq('Should not be an array', false, Type.isArray(items));
 
-    items.add(createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/html' })));
+    items.add(
+      createFile('a.txt', 1234, new Blob(['123'], { type: 'text/html' }))
+    );
     Assert.eq('Should be expected kind', 'file', items[0].kind);
     Assert.eq('Should be expected length', 1, items.length);
 
@@ -30,7 +35,9 @@ UnitTest.test('DataTransferItemListTest', () => {
   const testRemoving = () => {
     const items = createDataTransferItemList(createDataTransfer());
 
-    items.add(createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/html' })));
+    items.add(
+      createFile('a.txt', 1234, new Blob(['123'], { type: 'text/html' }))
+    );
     items.add('123', 'text/plain');
     items.add('1234', 'text/something');
 
@@ -44,7 +51,9 @@ UnitTest.test('DataTransferItemListTest', () => {
   const testClearing = () => {
     const items = createDataTransferItemList(createDataTransfer());
 
-    items.add(createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/html' })));
+    items.add(
+      createFile('a.txt', 1234, new Blob(['123'], { type: 'text/html' }))
+    );
     items.add('123', 'text/plain');
     items.add('1234', 'text/something');
 

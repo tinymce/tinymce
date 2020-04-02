@@ -29,25 +29,35 @@ const getAbsolutePosition = function (elm) {
 };
 
 const getBodyPosition = function (editor: Editor) {
-  return editor.inline ? getAbsolutePosition(editor.getBody()) : { left: 0, top: 0 };
+  return editor.inline
+    ? getAbsolutePosition(editor.getBody())
+    : { left: 0, top: 0 };
 };
 
 const getScrollPosition = function (editor: Editor) {
   const body = editor.getBody();
-  return editor.inline ? { left: body.scrollLeft, top: body.scrollTop } : { left: 0, top: 0 };
+  return editor.inline
+    ? { left: body.scrollLeft, top: body.scrollTop }
+    : { left: 0, top: 0 };
 };
 
 const getBodyScroll = function (editor: Editor) {
-  const body = editor.getBody(), docElm = editor.getDoc().documentElement;
+  const body = editor.getBody(),
+    docElm = editor.getDoc().documentElement;
   const inlineScroll = { left: body.scrollLeft, top: body.scrollTop };
-  const iframeScroll = { left: body.scrollLeft || docElm.scrollLeft, top: body.scrollTop || docElm.scrollTop };
+  const iframeScroll = {
+    left: body.scrollLeft || docElm.scrollLeft,
+    top: body.scrollTop || docElm.scrollTop
+  };
 
   return editor.inline ? inlineScroll : iframeScroll;
 };
 
 const getMousePosition = function (editor: Editor, event) {
   if (event.target.ownerDocument !== editor.getDoc()) {
-    const iframePosition = getAbsolutePosition(editor.getContentAreaContainer());
+    const iframePosition = getAbsolutePosition(
+      editor.getContentAreaContainer()
+    );
     const scrollPosition = getBodyScroll(editor);
 
     return {
@@ -62,17 +72,23 @@ const getMousePosition = function (editor: Editor, event) {
   };
 };
 
-const calculatePosition = function (bodyPosition, scrollPosition, mousePosition) {
+const calculatePosition = function (
+  bodyPosition,
+  scrollPosition,
+  mousePosition
+) {
   return {
-    pageX: (mousePosition.left - bodyPosition.left) + scrollPosition.left,
-    pageY: (mousePosition.top - bodyPosition.top) + scrollPosition.top
+    pageX: mousePosition.left - bodyPosition.left + scrollPosition.left,
+    pageY: mousePosition.top - bodyPosition.top + scrollPosition.top
   };
 };
 
 const calc = function (editor: Editor, event) {
-  return calculatePosition(getBodyPosition(editor), getScrollPosition(editor), getMousePosition(editor, event));
+  return calculatePosition(
+    getBodyPosition(editor),
+    getScrollPosition(editor),
+    getMousePosition(editor, event)
+  );
 };
 
-export {
-  calc
-};
+export { calc };

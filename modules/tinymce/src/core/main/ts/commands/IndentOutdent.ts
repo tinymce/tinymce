@@ -13,7 +13,13 @@ import { isListItem, isList, isTable } from '../dom/ElementType';
 import * as Settings from '../api/Settings';
 import * as NodeType from '../dom/NodeType';
 
-const isEditable = (target: Element) => PredicateFind.closest(target, (elm) => NodeType.isContentEditableTrue(elm.dom()) || NodeType.isContentEditableFalse(elm.dom())).exists((elm) => NodeType.isContentEditableTrue(elm.dom()));
+const isEditable = (target: Element) =>
+  PredicateFind.closest(
+    target,
+    (elm) =>
+      NodeType.isContentEditableTrue(elm.dom()) ||
+      NodeType.isContentEditableFalse(elm.dom())
+  ).exists((elm) => NodeType.isContentEditableTrue(elm.dom()));
 
 const parseIndentValue = (value: string) => {
   const number = parseInt(value, 10);
@@ -26,37 +32,63 @@ const getIndentStyleName = (useMargin: boolean, element: Element) => {
   return indentStyleName + suffix;
 };
 
-const indentElement = (dom, command: string, useMargin: boolean, value: number, unit: string, element: HTMLElement) => {
-  const indentStyleName = getIndentStyleName(useMargin, Element.fromDom(element));
+const indentElement = (
+  dom,
+  command: string,
+  useMargin: boolean,
+  value: number,
+  unit: string,
+  element: HTMLElement
+) => {
+  const indentStyleName = getIndentStyleName(
+    useMargin,
+    Element.fromDom(element)
+  );
 
   if (command === 'outdent') {
-    const styleValue = Math.max(0, parseIndentValue(element.style[indentStyleName]) - value);
+    const styleValue = Math.max(
+      0,
+      parseIndentValue(element.style[indentStyleName]) - value
+    );
     dom.setStyle(element, indentStyleName, styleValue ? styleValue + unit : '');
   } else {
-    const styleValue = parseIndentValue(element.style[indentStyleName]) + value + unit;
+    const styleValue =
+      parseIndentValue(element.style[indentStyleName]) + value + unit;
     dom.setStyle(element, indentStyleName, styleValue);
   }
 };
 
-const validateBlocks = (editor: Editor, blocks: Element[]) => Arr.forall(blocks, (block) => {
-  const indentStyleName = getIndentStyleName(Settings.shouldIndentUseMargin(editor), block);
-  const intentValue = Css.getRaw(block, indentStyleName).map(parseIndentValue).getOr(0);
-  const contentEditable = editor.dom.getContentEditable(block.dom());
-  return contentEditable !== 'false' && intentValue > 0;
-});
+const validateBlocks = (editor: Editor, blocks: Element[]) =>
+  Arr.forall(blocks, (block) => {
+    const indentStyleName = getIndentStyleName(
+      Settings.shouldIndentUseMargin(editor),
+      block
+    );
+    const intentValue = Css.getRaw(block, indentStyleName)
+      .map(parseIndentValue)
+      .getOr(0);
+    const contentEditable = editor.dom.getContentEditable(block.dom());
+    return contentEditable !== 'false' && intentValue > 0;
+  });
 
 const canOutdent = (editor: Editor) => {
   const blocks = getBlocksToIndent(editor);
-  return !editor.mode.isReadOnly() && (blocks.length > 1 || validateBlocks(editor, blocks));
+  return (
+    !editor.mode.isReadOnly() &&
+    (blocks.length > 1 || validateBlocks(editor, blocks))
+  );
 };
 
 const isListComponent = (el: Element) => isList(el) || isListItem(el);
 
-const parentIsListComponent = (el: Element) => Traverse.parent(el).map(isListComponent).getOr(false);
+const parentIsListComponent = (el: Element) =>
+  Traverse.parent(el).map(isListComponent).getOr(false);
 
-const getBlocksToIndent = (editor: Editor) => Arr.filter(Arr.map(editor.selection.getSelectedBlocks(), Element.fromDom), (el) =>
-  !isListComponent(el) && !parentIsListComponent(el) && isEditable(el)
-) as Element<HTMLElement>[];
+const getBlocksToIndent = (editor: Editor) =>
+  Arr.filter(
+    Arr.map(editor.selection.getSelectedBlocks(), Element.fromDom),
+    (el) => !isListComponent(el) && !parentIsListComponent(el) && isEditable(el)
+  ) as Element<HTMLElement>[];
 
 const handle = (editor: Editor, command: string) => {
   const { dom, selection, formatter } = editor;
@@ -67,18 +99,28 @@ const handle = (editor: Editor, command: string) => {
   const forcedRootBlock = Settings.getForcedRootBlock(editor);
 
   // If forced_root_blocks is set to false we don't have a block to indent so lets create a div
-  if (!editor.queryCommandState('InsertUnorderedList') && !editor.queryCommandState('InsertOrderedList')) {
-    if (forcedRootBlock === '' && !dom.getParent(selection.getNode(), dom.isBlock)) {
+  if (
+    !editor.queryCommandState('InsertUnorderedList') &&
+    !editor.queryCommandState('InsertOrderedList')
+  ) {
+    if (
+      forcedRootBlock === '' &&
+      !dom.getParent(selection.getNode(), dom.isBlock)
+    ) {
       formatter.apply('div');
     }
   }
 
   Arr.each(getBlocksToIndent(editor), (block) => {
-    indentElement(dom, command, useMargin, indentValue, indentUnit, block.dom());
+    indentElement(
+      dom,
+      command,
+      useMargin,
+      indentValue,
+      indentUnit,
+      block.dom()
+    );
   });
 };
 
-export {
-  canOutdent,
-  handle
-};
+export { canOutdent, handle };

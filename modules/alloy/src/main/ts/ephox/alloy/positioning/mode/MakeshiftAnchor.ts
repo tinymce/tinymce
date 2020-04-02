@@ -10,9 +10,18 @@ import * as Origins from '../layout/Origins';
 import { MakeshiftAnchor, nu as NuAnchoring } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 
-const placement = (component: AlloyComponent, anchorInfo: MakeshiftAnchor, origin: Origins.OriginAdt) => {
+const placement = (
+  component: AlloyComponent,
+  anchorInfo: MakeshiftAnchor,
+  origin: Origins.OriginAdt
+) => {
   const pos = Origins.translate(origin, anchorInfo.x, anchorInfo.y);
-  const anchorBox = bounds(pos.left(), pos.top(), anchorInfo.width, anchorInfo.height);
+  const anchorBox = bounds(
+    pos.left(),
+    pos.top(),
+    anchorInfo.width,
+    anchorInfo.height
+  );
 
   const layouts = AnchorLayouts.get(
     component.element(),
@@ -42,7 +51,7 @@ export default [
   FieldSchema.defaulted('height', 0),
   FieldSchema.defaulted('width', 0),
   FieldSchema.defaulted('bubble', Bubble.fallback()),
-  FieldSchema.defaulted('overrides', { }),
+  FieldSchema.defaulted('overrides', {}),
   AnchorLayouts.schema(),
   Fields.output('placement', placement)
 ];

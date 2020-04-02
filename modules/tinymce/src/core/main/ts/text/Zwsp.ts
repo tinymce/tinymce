@@ -23,8 +23,4 @@ const ZWSP = Unicode.zeroWidth;
 const isZwsp = (chr: string) => chr === ZWSP;
 const trim = (text: string) => text.replace(new RegExp(ZWSP, 'g'), '');
 
-export {
-  isZwsp,
-  ZWSP,
-  trim
-};
+export { isZwsp, ZWSP, trim };

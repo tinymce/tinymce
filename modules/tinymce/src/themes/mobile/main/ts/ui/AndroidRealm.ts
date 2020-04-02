@@ -19,7 +19,7 @@ import { MobileWebApp } from 'tinymce/themes/mobile/api/IosWebapp';
 
 export default (scrollIntoView: () => void): MobileRealm => {
   const alloy = OuterContainer({
-    classes: [ Styles.resolve('android-container') ]
+    classes: [Styles.resolve('android-container')]
   });
 
   const toolbar = ScrollingToolbar();
@@ -56,9 +56,7 @@ export default (scrollIntoView: () => void): MobileRealm => {
   };
 
   const init = (spec) => {
-    webapp.set(
-      AndroidWebapp.produce(spec)
-    );
+    webapp.set(AndroidWebapp.produce(spec));
   };
 
   const exit = () => {

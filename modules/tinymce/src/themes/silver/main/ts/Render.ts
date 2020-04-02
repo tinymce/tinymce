@@ -5,21 +5,46 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, VerticalDir } from '@ephox/alloy';
+import {
+  AlloyComponent,
+  AlloySpec,
+  Behaviour,
+  Gui,
+  GuiFactory,
+  Keying,
+  Memento,
+  Positioning,
+  SimpleSpec,
+  VerticalDir
+} from '@ephox/alloy';
 import { HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import { getMultipleToolbarsSetting, getToolbarGroups, getToolbarMode, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, isToolbarLocationTop, ToolbarMode, useFixedContainer } from './api/Settings';
+import {
+  getMultipleToolbarsSetting,
+  getToolbarGroups,
+  getToolbarMode,
+  isDistractionFree,
+  isMenubarEnabled,
+  isMultipleToolbars,
+  isStickyToolbar,
+  isToolbarEnabled,
+  isToolbarLocationTop,
+  ToolbarMode,
+  useFixedContainer
+} from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import * as ContextToolbar from './ContextToolbar';
 import * as Events from './Events';
 import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
 import * as FormatControls from './ui/core/FormatControls';
-import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterContainer';
+import OuterContainer, {
+  OuterContainerSketchSpec
+} from './ui/general/OuterContainer';
 import * as StaticHeader from './ui/header/StaticHeader';
 import * as StickyHeader from './ui/header/StickyHeader';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
@@ -35,7 +60,7 @@ export interface RenderInfo {
   uiMothership: Gui.GuiSystem;
   backstage: Backstage.UiFactoryBackstage;
   renderUI: () => ModeRenderInfo;
-  getUi: () => ({ channels: UiChannels });
+  getUi: () => { channels: UiChannels };
 }
 
 export interface ModeRenderInfo {
@@ -55,7 +80,10 @@ export interface RenderUiComponents {
   outerContainer: AlloyComponent;
 }
 
-export type ToolbarConfig = Array<string | ToolbarGroupSetting> | string | boolean;
+export type ToolbarConfig =
+  | Array<string | ToolbarGroupSetting>
+  | string
+  | boolean;
 
 export interface RenderToolbarConfig {
   toolbar: ToolbarConfig;
@@ -88,23 +116,25 @@ const setup = (editor: Editor): RenderInfo => {
 
   const platform = PlatformDetection.detect();
   const isIE = platform.browser.isIE();
-  const platformClasses = isIE ? [ 'tox-platform-ie' ] : [];
+  const platformClasses = isIE ? ['tox-platform-ie'] : [];
   const isTouch = platform.deviceType.isTouch();
   const touchPlatformClass = 'tox-platform-touch';
-  const deviceClasses = isTouch ? [ touchPlatformClass ] : [];
+  const deviceClasses = isTouch ? [touchPlatformClass] : [];
   const isToolbarTop = isToolbarLocationTop(editor);
 
-  const dirAttributes = I18n.isRtl() ? {
-    attributes: {
-      dir: 'rtl'
-    }
-  } : {};
+  const dirAttributes = I18n.isRtl()
+    ? {
+        attributes: {
+          dir: 'rtl'
+        }
+      }
+    : {};
 
   const verticalDirAttributes = {
     attributes: {
-      [VerticalDir.Attribute]: isToolbarTop ?
-        VerticalDir.AttributeValue.TopToBottom :
-        VerticalDir.AttributeValue.BottomToTop
+      [VerticalDir.Attribute]: isToolbarTop
+        ? VerticalDir.AttributeValue.TopToBottom
+        : VerticalDir.AttributeValue.BottomToTop
     }
   };
 
@@ -115,7 +145,9 @@ const setup = (editor: Editor): RenderInfo => {
   const sink = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: [ 'tox', 'tox-silver-sink', 'tox-tinymce-aux' ].concat(platformClasses).concat(deviceClasses),
+      classes: ['tox', 'tox-silver-sink', 'tox-tinymce-aux']
+        .concat(platformClasses)
+        .concat(deviceClasses),
       ...dirAttributes
     },
     behaviours: Behaviour.derive([
@@ -130,22 +162,35 @@ const setup = (editor: Editor): RenderInfo => {
   const memAnchorBar = Memento.record({
     dom: {
       tag: 'div',
-      classes: [ 'tox-anchorbar' ]
+      classes: ['tox-anchorbar']
     }
   });
 
-  const lazyAnchorBar = () => lazyOuterContainer.bind((container) => memAnchorBar.getOpt(container)).getOrDie('Could not find a anchor bar element');
+  const lazyAnchorBar = () =>
+    lazyOuterContainer
+      .bind((container) => memAnchorBar.getOpt(container))
+      .getOrDie('Could not find a anchor bar element');
 
-  const lazyToolbar = () => lazyOuterContainer.bind((container) => OuterContainer.getToolbar(container)).getOrDie('Could not find more toolbar element');
+  const lazyToolbar = () =>
+    lazyOuterContainer
+      .bind((container) => OuterContainer.getToolbar(container))
+      .getOrDie('Could not find more toolbar element');
 
-  const lazyThrobber = () => lazyOuterContainer.bind((container) => OuterContainer.getThrobber(container)).getOrDie('Could not find throbber element');
+  const lazyThrobber = () =>
+    lazyOuterContainer
+      .bind((container) => OuterContainer.getThrobber(container))
+      .getOrDie('Could not find throbber element');
 
-  const backstage: Backstage.UiFactoryBackstage = Backstage.init(sink, editor, lazyAnchorBar);
+  const backstage: Backstage.UiFactoryBackstage = Backstage.init(
+    sink,
+    editor,
+    lazyAnchorBar
+  );
 
   const partMenubar: AlloySpec = OuterContainer.parts().menubar({
     dom: {
       tag: 'div',
-      classes: [ 'tox-menubar' ]
+      classes: ['tox-menubar']
     },
     backstage,
     onEscape() {
@@ -158,7 +203,7 @@ const setup = (editor: Editor): RenderInfo => {
   const partToolbar: AlloySpec = OuterContainer.parts().toolbar({
     dom: {
       tag: 'div',
-      classes: [ 'tox-toolbar' ]
+      classes: ['tox-toolbar']
     },
     getSink: lazySink,
     providers: backstage.shared.providers,
@@ -171,34 +216,36 @@ const setup = (editor: Editor): RenderInfo => {
     ...verticalDirAttributes
   });
 
-  const partMultipleToolbar: AlloySpec = OuterContainer.parts()['multiple-toolbar']({
+  const partMultipleToolbar: AlloySpec = OuterContainer.parts()[
+    'multiple-toolbar'
+  ]({
     dom: {
       tag: 'div',
-      classes: [ 'tox-toolbar-overlord' ]
+      classes: ['tox-toolbar-overlord']
     },
     providers: backstage.shared.providers,
-    onEscape: () => { },
+    onEscape: () => {},
     type: toolbarMode
   });
 
   const partSocket: AlloySpec = OuterContainer.parts().socket({
     dom: {
       tag: 'div',
-      classes: [ 'tox-edit-area' ]
+      classes: ['tox-edit-area']
     }
   });
 
   const partSidebar: AlloySpec = OuterContainer.parts().sidebar({
     dom: {
       tag: 'div',
-      classes: [ 'tox-sidebar' ]
+      classes: ['tox-sidebar']
     }
   });
 
   const partThrobber: AlloySpec = OuterContainer.parts().throbber({
     dom: {
       tag: 'div',
-      classes: [ 'tox-throbber' ]
+      classes: ['tox-throbber']
     },
     backstage
   });
@@ -206,17 +253,16 @@ const setup = (editor: Editor): RenderInfo => {
   const sb = editor.getParam('statusbar', true, 'boolean');
 
   const statusbar: Option<AlloySpec> =
-    sb && !isInline ? Option.some(renderStatusbar(editor, backstage.shared.providers)) : Option.none<AlloySpec>();
+    sb && !isInline
+      ? Option.some(renderStatusbar(editor, backstage.shared.providers))
+      : Option.none<AlloySpec>();
 
   const socketSidebarContainer: SimpleSpec = {
     dom: {
       tag: 'div',
-      classes: [ 'tox-sidebar-wrap' ]
+      classes: ['tox-sidebar-wrap']
     },
-    components: [
-      partSocket,
-      partSidebar
-    ]
+    components: [partSocket, partSidebar]
   };
 
   // False should stop the menubar and toolbar rendering altogether
@@ -226,52 +272,52 @@ const setup = (editor: Editor): RenderInfo => {
 
   const getPartToolbar = () => {
     if (hasMultipleToolbar) {
-      return [ partMultipleToolbar ];
+      return [partMultipleToolbar];
     } else if (hasToolbar) {
-      return [ partToolbar ];
+      return [partToolbar];
     } else {
-      return [ ];
+      return [];
     }
   };
 
   const partHeader = OuterContainer.parts().header({
     dom: {
       tag: 'div',
-      classes: [ 'tox-editor-header' ],
-      ...verticalDirAttributes,
+      classes: ['tox-editor-header'],
+      ...verticalDirAttributes
     },
     components: Arr.flatten<AlloySpec>([
-      hasMenubar ? [ partMenubar ] : [ ],
+      hasMenubar ? [partMenubar] : [],
       getPartToolbar(),
       // fixed_toolbar_container anchors to the editable area, else add an anchor bar
-      useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ],
+      useFixedContainer(editor) ? [] : [memAnchorBar.asSpec()]
     ]),
     sticky: isStickyToolbar(editor),
     editor,
-    getSink: lazySink,
+    getSink: lazySink
   });
 
   // We need the statusbar to be separate to everything else so resizing works properly
   const editorComponents = Arr.flatten<AlloySpec>([
-    isToolbarTop ? [ partHeader ] : [ ],
+    isToolbarTop ? [partHeader] : [],
     // Inline mode does not have a socket/sidebar
-    isInline ? [ ] : [ socketSidebarContainer ],
-    isToolbarTop ? [ ] : [ partHeader ]
+    isInline ? [] : [socketSidebarContainer],
+    isToolbarTop ? [] : [partHeader]
   ]);
 
   const editorContainer = {
     dom: {
       tag: 'div',
-      classes: [ 'tox-editor-container' ]
+      classes: ['tox-editor-container']
     },
-    components: editorComponents,
+    components: editorComponents
   };
 
   const containerComponents = Arr.flatten<AlloySpec>([
-    [ editorContainer ],
+    [editorContainer],
     // Inline mode does not have a status bar
-    isInline ? [ ] : statusbar.toArray(),
-    [ partThrobber ]
+    isInline ? [] : statusbar.toArray(),
+    [partThrobber]
   ]);
 
   // Hide the outer container if using inline mode and there's no menubar or toolbar
@@ -279,24 +325,24 @@ const setup = (editor: Editor): RenderInfo => {
 
   const attributes = {
     role: 'application',
-    ...I18n.isRtl() ? { dir: 'rtl' } : {},
-    ...isHidden ? { 'aria-hidden': 'true' } : {}
+    ...(I18n.isRtl() ? { dir: 'rtl' } : {}),
+    ...(isHidden ? { 'aria-hidden': 'true' } : {})
   };
 
   const outerContainer = GuiFactory.build(
     OuterContainer.sketch({
       dom: {
         tag: 'div',
-        classes: [ 'tox', 'tox-tinymce' ]
-          .concat(isInline ? [ 'tox-tinymce-inline' ] : [])
-          .concat(isToolbarTop ? [] : [ 'tox-tinymce--toolbar-bottom' ])
+        classes: ['tox', 'tox-tinymce']
+          .concat(isInline ? ['tox-tinymce-inline'] : [])
+          .concat(isToolbarTop ? [] : ['tox-tinymce--toolbar-bottom'])
           .concat(deviceClasses)
           .concat(platformClasses),
         styles: {
           // This is overridden by the skin, it helps avoid FOUC
           visibility: 'hidden',
           // Hide the container if needed, but don't use "display: none" so that it still has a position
-          ...isHidden ? { opacity: '0', border: '0' } : {},
+          ...(isHidden ? { opacity: '0', border: '0' } : {})
         },
         attributes
       },
@@ -304,7 +350,8 @@ const setup = (editor: Editor): RenderInfo => {
       behaviours: Behaviour.derive([
         Keying.config({
           mode: 'cyclic',
-          selector: '.tox-menubar, .tox-toolbar, .tox-toolbar__primary, .tox-toolbar__overflow--open, .tox-sidebar__overflow--open, .tox-statusbar__path, .tox-statusbar__wordcount, .tox-statusbar__branding a'
+          selector:
+            '.tox-menubar, .tox-toolbar, .tox-toolbar__primary, .tox-toolbar__overflow--open, .tox-sidebar__overflow--open, .tox-statusbar__path, .tox-statusbar__wordcount, .tox-statusbar__branding a'
         })
       ])
     } as OuterContainerSketchSpec)
@@ -319,9 +366,7 @@ const setup = (editor: Editor): RenderInfo => {
     OuterContainer.focusToolbar(outerContainer);
   });
 
-  const mothership = Gui.takeover(
-    outerContainer
-  );
+  const mothership = Gui.takeover(outerContainer);
 
   const uiMothership = Gui.takeover(sink);
 
@@ -339,7 +384,9 @@ const setup = (editor: Editor): RenderInfo => {
 
   const setEditorSize = () => {
     // Set height and width if they were given, though height only applies to iframe mode
-    const parsedHeight = Utils.numToPx(EditorSize.getHeightWithFallback(editor));
+    const parsedHeight = Utils.numToPx(
+      EditorSize.getHeightWithFallback(editor)
+    );
     const parsedWidth = Utils.numToPx(EditorSize.getWidthWithFallback(editor));
 
     if (!editor.inline) {
@@ -371,12 +418,24 @@ const setup = (editor: Editor): RenderInfo => {
     });
 
     // Apply Bridge types
-    const { buttons, menuItems, contextToolbars, sidebars } = editor.ui.registry.getAll();
-    const toolbarOpt: Option<ToolbarConfig> = getMultipleToolbarsSetting(editor);
+    const {
+      buttons,
+      menuItems,
+      contextToolbars,
+      sidebars
+    } = editor.ui.registry.getAll();
+    const toolbarOpt: Option<ToolbarConfig> = getMultipleToolbarsSetting(
+      editor
+    );
     const rawUiConfig: RenderUiConfig = {
       menuItems,
 
-      menus: !editor.settings.menu ? {} : Obj.map(editor.settings.menu, (menu) => ({ ...menu, items: menu.items })),
+      menus: !editor.settings.menu
+        ? {}
+        : Obj.map(editor.settings.menu, (menu) => ({
+            ...menu,
+            items: menu.items
+          })),
       menubar: editor.settings.menubar,
       toolbar: toolbarOpt.getOrThunk(() => editor.getParam('toolbar', true)),
       allowToolbarGroups: toolbarMode === ToolbarMode.floating,
@@ -393,7 +452,11 @@ const setup = (editor: Editor): RenderInfo => {
     const elm = editor.getElement();
     const height = setEditorSize();
 
-    const uiComponents: RenderUiComponents = { mothership, uiMothership, outerContainer };
+    const uiComponents: RenderUiComponents = {
+      mothership,
+      uiMothership,
+      outerContainer
+    };
     const args: RenderArgs = { targetNode: elm, height };
     return mode.render(editor, uiComponents, rawUiConfig, backstage, args);
   };
@@ -401,6 +464,4 @@ const setup = (editor: Editor): RenderInfo => {
   return { mothership, uiMothership, backstage, renderUI, getUi };
 };
 
-export {
-  setup
-};
+export { setup };

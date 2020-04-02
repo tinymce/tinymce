@@ -11,6 +11,4 @@ const Pinching: PinchingBehaviour = Behaviour.create({
   state: DragState
 });
 
-export {
-  Pinching
-};
+export { Pinching };

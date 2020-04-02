@@ -4,7 +4,11 @@ import { Height, Location, Width, Element, VisualViewport } from '@ephox/sugar';
 import { CssPositionAdt } from './CssPosition';
 import * as OuterPosition from '../frame/OuterPosition';
 
-const pointed = (point: CssPositionAdt, width: number, height: number): BoxByPoint => ({
+const pointed = (
+  point: CssPositionAdt,
+  width: number,
+  height: number
+): BoxByPoint => ({
   point,
   width,
   height
@@ -39,7 +43,12 @@ export interface BoxByPoint {
   readonly height: number;
 }
 
-const bounds = (x: number, y: number, width: number, height: number): Bounds => ({
+const bounds = (
+  x: number,
+  y: number,
+  width: number,
+  height: number
+): Bounds => ({
   x,
   y,
   width,
@@ -66,11 +75,4 @@ const absolute = (element: Element): Bounds => {
 
 const win = (): Bounds => VisualViewport.getBounds(window);
 
-export {
-  pointed,
-  rect,
-  bounds,
-  box,
-  absolute,
-  win
-};
+export { pointed, rect, bounds, box, absolute, win };

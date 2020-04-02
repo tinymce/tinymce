@@ -14,7 +14,9 @@ interface FilterMatch {
   nodes: Node[];
 }
 
-interface FilterMatchMap { [key: string]: FilterMatch }
+interface FilterMatchMap {
+  [key: string]: FilterMatch;
+}
 
 const traverse = (node: Node, fn: (node: Node) => void): void => {
   fn(node);
@@ -28,7 +30,11 @@ const traverse = (node: Node, fn: (node: Node) => void): void => {
   }
 };
 
-const findMatchingNodes = (nodeFilters: ParserFilter[], attributeFilters: ParserFilter[], node: Node): FilterMatch[] => {
+const findMatchingNodes = (
+  nodeFilters: ParserFilter[],
+  attributeFilters: ParserFilter[],
+  node: Node
+): FilterMatch[] => {
   const nodeMatches: FilterMatchMap = {};
   const attrMatches: FilterMatchMap = {};
   const matches: FilterMatch[] = [];
@@ -40,7 +46,7 @@ const findMatchingNodes = (nodeFilters: ParserFilter[], attributeFilters: Parser
           if (nodeMatches[filter.name]) {
             nodeMatches[filter.name].nodes.push(node);
           } else {
-            nodeMatches[filter.name] = { filter, nodes: [ node ] };
+            nodeMatches[filter.name] = { filter, nodes: [node] };
           }
         }
       });
@@ -50,7 +56,7 @@ const findMatchingNodes = (nodeFilters: ParserFilter[], attributeFilters: Parser
           if (attrMatches[filter.name]) {
             attrMatches[filter.name].nodes.push(node);
           } else {
-            attrMatches[filter.name] = { filter, nodes: [ node ] };
+            attrMatches[filter.name] = { filter, nodes: [node] };
           }
         }
       });
@@ -72,7 +78,11 @@ const findMatchingNodes = (nodeFilters: ParserFilter[], attributeFilters: Parser
   return matches;
 };
 
-const filter = (nodeFilters: ParserFilter[], attributeFilters: ParserFilter[], node: Node): void => {
+const filter = (
+  nodeFilters: ParserFilter[],
+  attributeFilters: ParserFilter[],
+  node: Node
+): void => {
   const matches = findMatchingNodes(nodeFilters, attributeFilters, node);
 
   Arr.each(matches, (match: FilterMatch) => {
@@ -82,6 +92,4 @@ const filter = (nodeFilters: ParserFilter[], attributeFilters: ParserFilter[], n
   });
 };
 
-export {
-  filter
-};
+export { filter };

@@ -12,12 +12,24 @@ import { DomTextMatcher } from '../core/DomTextMatcher';
 
 type LastSuggestion = Actions.LastSuggestion;
 
-const register = function (editor: Editor, pluginUrl: string, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, lastSuggestionsState: Cell<LastSuggestion>, currentLanguageState: Cell<string>) {
+const register = function (
+  editor: Editor,
+  pluginUrl: string,
+  startedState: Cell<boolean>,
+  textMatcherState: Cell<DomTextMatcher>,
+  lastSuggestionsState: Cell<LastSuggestion>,
+  currentLanguageState: Cell<string>
+) {
   editor.addCommand('mceSpellCheck', function () {
-    Actions.spellcheck(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
+    Actions.spellcheck(
+      editor,
+      pluginUrl,
+      startedState,
+      textMatcherState,
+      lastSuggestionsState,
+      currentLanguageState
+    );
   });
 };
 
-export {
-  register
-};
+export { register };

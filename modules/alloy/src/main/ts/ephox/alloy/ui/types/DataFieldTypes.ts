@@ -1,7 +1,11 @@
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { RawDomSchema } from '../../api/component/SpecTypes';
-import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
+import {
+  SingleSketch,
+  SingleSketchDetail,
+  SingleSketchSpec
+} from '../../api/ui/Sketcher';
 
 export interface DataFieldDetail extends SingleSketchDetail {
   uid: string;
@@ -17,4 +21,4 @@ export interface DataFieldSpec extends SingleSketchSpec {
   dataBehaviours?: AlloyBehaviourRecord;
 }
 
-export interface DataFieldSketcher extends SingleSketch<DataFieldSpec> { }
+export interface DataFieldSketcher extends SingleSketch<DataFieldSpec> {}

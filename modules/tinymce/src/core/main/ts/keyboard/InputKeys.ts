@@ -45,6 +45,4 @@ const setup = (editor: Editor) => {
   });
 };
 
-export {
-  setup
-};
+export { setup };

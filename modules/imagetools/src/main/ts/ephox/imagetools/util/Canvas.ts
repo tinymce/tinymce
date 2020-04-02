@@ -1,4 +1,9 @@
-import { document, HTMLCanvasElement, WebGLRenderingContext, CanvasRenderingContext2D } from '@ephox/dom-globals';
+import {
+  document,
+  HTMLCanvasElement,
+  WebGLRenderingContext,
+  CanvasRenderingContext2D
+} from '@ephox/dom-globals';
 
 function create(width: number, height: number) {
   return resize(document.createElement('canvas'), width, height);
@@ -23,7 +28,8 @@ function get3dContext(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
     return null;
   }
 
-  if (!gl) { // it seems that sometimes it doesn't throw exception, but still fails to get context
+  if (!gl) {
+    // it seems that sometimes it doesn't throw exception, but still fails to get context
     gl = null;
   }
   return gl;
@@ -36,10 +42,4 @@ function resize(canvas: HTMLCanvasElement, width: number, height: number) {
   return canvas;
 }
 
-export {
-  create,
-  clone,
-  resize,
-  get2dContext,
-  get3dContext
-};
+export { create, clone, resize, get2dContext, get3dContext };

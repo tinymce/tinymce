@@ -10,7 +10,10 @@ import * as HtmlUtils from '../module/test/HtmlUtils';
 import URI from 'tinymce/core/api/util/URI';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.EditorTest', function (
+  success,
+  failure
+) {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
@@ -60,25 +63,48 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
     editor.documentBaseURI = new URI('http://www.site.com/dirA/dirB/dirC/');
 
     editor.setContent('<a href="test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="test.html">test</a></p>');
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p><a href="test.html">test</a></p>'
+    );
 
     editor.setContent('<a href="../test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="../test.html">test</a></p>');
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p><a href="../test.html">test</a></p>'
+    );
 
     editor.setContent('<a href="test/test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="test/test.html">test</a></p>');
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p><a href="test/test.html">test</a></p>'
+    );
 
     editor.setContent('<a href="/test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="../../../test.html">test</a></p>');
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p><a href="../../../test.html">test</a></p>'
+    );
 
-    editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
+    editor.setContent(
+      '<a href="http://www.somesite.com/test/file.htm">test</a>'
+    );
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>'
+    );
 
     editor.setContent('<a href="//www.site.com/test/file.htm">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="../../../test/file.htm">test</a></p>');
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p><a href="../../../test/file.htm">test</a></p>'
+    );
 
     editor.setContent('<a href="//www.somesite.com/test/file.htm">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="//www.somesite.com/test/file.htm">test</a></p>');
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p><a href="//www.somesite.com/test/file.htm">test</a></p>'
+    );
   });
 
   suite.test('urls - absoluteURLs', function (editor) {
@@ -87,47 +113,88 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
     editor.documentBaseURI = new URI('http://www.site.com/dirA/dirB/dirC/');
 
     editor.setContent('<a href="test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="/dirA/dirB/dirC/test.html">test</a></p>');
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p><a href="/dirA/dirB/dirC/test.html">test</a></p>'
+    );
 
     editor.setContent('<a href="../test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="/dirA/dirB/test.html">test</a></p>');
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p><a href="/dirA/dirB/test.html">test</a></p>'
+    );
 
     editor.setContent('<a href="test/test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="/dirA/dirB/dirC/test/test.html">test</a></p>');
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p><a href="/dirA/dirB/dirC/test/test.html">test</a></p>'
+    );
 
-    editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
+    editor.setContent(
+      '<a href="http://www.somesite.com/test/file.htm">test</a>'
+    );
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>'
+    );
 
     editor.settings.relative_urls = false;
     editor.settings.remove_script_host = false;
 
     editor.setContent('<a href="test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/dirC/test.html">test</a></p>');
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p><a href="http://www.site.com/dirA/dirB/dirC/test.html">test</a></p>'
+    );
 
     editor.setContent('<a href="../test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/test.html">test</a></p>');
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p><a href="http://www.site.com/dirA/dirB/test.html">test</a></p>'
+    );
 
     editor.setContent('<a href="test/test.html">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/dirC/test/test.html">test</a></p>');
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p><a href="http://www.site.com/dirA/dirB/dirC/test/test.html">test</a></p>'
+    );
 
-    editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
+    editor.setContent(
+      '<a href="http://www.somesite.com/test/file.htm">test</a>'
+    );
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>'
+    );
 
     editor.setContent('<a href="//www.site.com/test/file.htm">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="//www.site.com/test/file.htm">test</a></p>');
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p><a href="//www.site.com/test/file.htm">test</a></p>'
+    );
 
     editor.setContent('<a href="//www.somesite.com/test/file.htm">test</a>');
-    LegacyUnit.equal(editor.getContent(), '<p><a href="//www.somesite.com/test/file.htm">test</a></p>');
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p><a href="//www.somesite.com/test/file.htm">test</a></p>'
+    );
   });
 
   suite.test('WebKit Serialization range bug', function (editor) {
     if (Env.webkit) {
       // Note that if we create the P with this invalid content directly, Chrome cleans it up differently to other browsers so we don't
       // wind up testing the serialization functionality we were aiming for and the test fails.
-      const p = editor.dom.create('p', {}, '123<table><tbody><tr><td>X</td></tr></tbody></table>456');
+      const p = editor.dom.create(
+        'p',
+        {},
+        '123<table><tbody><tr><td>X</td></tr></tbody></table>456'
+      );
       editor.dom.replace(p, editor.getBody().firstChild);
 
-      LegacyUnit.equal(editor.getContent(), '<p>123</p><table><tbody><tr><td>X</td></tr></tbody></table><p>456</p>');
+      LegacyUnit.equal(
+        editor.getContent(),
+        '<p>123</p><table><tbody><tr><td>X</td></tr></tbody></table><p>456</p>'
+      );
     }
   });
 
@@ -181,13 +248,22 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
 
   suite.test('custom elements', function (editor) {
     editor.setContent('<custom1>c1</custom1><custom2>c1</custom2>');
-    LegacyUnit.equal(editor.getContent(), '<custom1>c1</custom1><p><custom2>c1</custom2></p>');
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<custom1>c1</custom1><p><custom2>c1</custom2></p>'
+    );
   });
 
   suite.test('Store/restore tabindex', function (editor) {
     editor.setContent('<span tabindex="42">abc</span>');
-    LegacyUnit.equal(editor.getContent({ format: 'raw' }).toLowerCase(), '<p><span data-mce-tabindex="42">abc</span></p>');
-    LegacyUnit.equal(editor.getContent(), '<p><span tabindex="42">abc</span></p>');
+    LegacyUnit.equal(
+      editor.getContent({ format: 'raw' }).toLowerCase(),
+      '<p><span data-mce-tabindex="42">abc</span></p>'
+    );
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p><span tabindex="42">abc</span></p>'
+    );
   });
 
   suite.test('show/hide/isHidden and events', function (editor) {
@@ -216,7 +292,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
     LegacyUnit.equal(lastEvent, null);
   });
 
-  suite.test('hide save content and hidden state while saving', function (editor) {
+  suite.test('hide save content and hidden state while saving', function (
+    editor
+  ) {
     let lastEvent, hiddenStateWhileSaving;
 
     editor.on('SaveContent', function (e) {
@@ -228,7 +306,11 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
     editor.hide();
 
     const elm: any = document.getElementById(editor.id);
-    LegacyUnit.equal(hiddenStateWhileSaving, false, 'False isHidden state while saving');
+    LegacyUnit.equal(
+      hiddenStateWhileSaving,
+      false,
+      'False isHidden state while saving'
+    );
     LegacyUnit.equal(lastEvent.content, '<p>xyz</p>');
     LegacyUnit.equal(elm.value, '<p>xyz</p>');
 
@@ -246,7 +328,10 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
     editor.setContent('<p><strong>a</strong></p>');
     LegacyUnit.setSelection(editor, 'p', 1);
     editor.insertContent('<em><strong>b</strong></em>', { merge: true });
-    LegacyUnit.equal(editor.getContent(), '<p><strong>a<em>b</em></strong></p>');
+    LegacyUnit.equal(
+      editor.getContent(),
+      '<p><strong>a<em>b</em></strong></p>'
+    );
   });
 
   suite.test('addCommand', function (editor) {
@@ -296,20 +381,22 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
   });
 
   suite.test('Block script execution', function (editor) {
-    editor.setContent('<script></script><script type="x"></script><script type="mce-x"></script><p>x</p>');
+    editor.setContent(
+      '<script></script><script type="x"></script><script type="mce-x"></script><p>x</p>'
+    );
     LegacyUnit.equal(
       HtmlUtils.cleanHtml(editor.getBody().innerHTML),
       '<script type="mce-no/type"></script>' +
-      '<script type="mce-x"></script>' +
-      '<script type="mce-x"></script>' +
-      '<p>x</p>'
+        '<script type="mce-x"></script>' +
+        '<script type="mce-x"></script>' +
+        '<p>x</p>'
     );
     LegacyUnit.equal(
       editor.getContent(),
       '<script></script>' +
-      '<script type="x"></script>' +
-      '<script type="x"></script>' +
-      '<p>x</p>'
+        '<script type="x"></script>' +
+        '<script type="x"></script>' +
+        '<p>x</p>'
     );
   });
 
@@ -365,7 +452,10 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
 
     const isDisabled = (selector) => {
       const elm = UiFinder.findIn(Body.body(), selector);
-      return elm.forall((elm) => Attr.has(elm, 'disabled') || Class.has(elm, 'tox-tbtn--disabled'));
+      return elm.forall(
+        (elm) =>
+          Attr.has(elm, 'disabled') || Class.has(elm, 'tox-tbtn--disabled')
+      );
     };
 
     editor.on('click', function () {
@@ -393,7 +483,10 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
     });
 
     LegacyUnit.equal(editor.translate('input i18n'), 'output i18n');
-    LegacyUnit.equal(editor.translate([ 'value:{0}{1}', 'a', 'b' ]), 'value translation:ab');
+    LegacyUnit.equal(
+      editor.translate(['value:{0}{1}', 'a', 'b']),
+      'value translation:ab'
+    );
   });
 
   suite.test('Treat some paragraphs as empty contents', function (editor) {
@@ -430,18 +523,28 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
     input.parentNode.removeChild(input);
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    Pipeline.async({}, suite.toSteps(editor), function () {
-      onSuccess();
-    }, onFailure);
-  }, {
-    selector: 'textarea',
-    add_unload_trigger: false,
-    disable_nodechange: true,
-    custom_elements: 'custom1,~custom2',
-    extended_valid_elements: 'custom1,custom2,script[*]',
-    entities: 'raw',
-    indent: false,
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  TinyLoader.setup(
+    function (editor, onSuccess, onFailure) {
+      Pipeline.async(
+        {},
+        suite.toSteps(editor),
+        function () {
+          onSuccess();
+        },
+        onFailure
+      );
+    },
+    {
+      selector: 'textarea',
+      add_unload_trigger: false,
+      disable_nodechange: true,
+      custom_elements: 'custom1,~custom2',
+      extended_valid_elements: 'custom1,custom2,script[*]',
+      entities: 'raw',
+      indent: false,
+      base_url: '/project/tinymce/js/tinymce'
+    },
+    success,
+    failure
+  );
 });

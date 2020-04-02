@@ -22,6 +22,4 @@ const setup = function (editor, toggleState) {
   }
 };
 
-export {
-  setup
-};
+export { setup };

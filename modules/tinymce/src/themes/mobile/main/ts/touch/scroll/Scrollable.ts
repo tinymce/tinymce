@@ -11,11 +11,11 @@ import * as Styles from '../../style/Styles';
 const scrollableStyle = Styles.resolve('scrollable');
 
 const register = function (element) {
-/*
- *  The reason this function exists is to have a
- *  central place where to set if an element can be explicitly
- *  scrolled. This is for mobile devices atm.
- */
+  /*
+   *  The reason this function exists is to have a
+   *  central place where to set if an element can be explicitly
+   *  scrolled. This is for mobile devices atm.
+   */
   Class.add(element, scrollableStyle);
 };
 
@@ -25,8 +25,4 @@ const deregister = function (element) {
 
 const scrollable = scrollableStyle;
 
-export {
-  register,
-  deregister,
-  scrollable
-};
+export { register, deregister, scrollable };

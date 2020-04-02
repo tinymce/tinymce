@@ -15,7 +15,9 @@
 const isArray = Array.isArray;
 
 const toArray = function (obj) {
-  let array = obj, i, l;
+  let array = obj,
+    i,
+    l;
 
   if (!isArray(obj)) {
     array = [];

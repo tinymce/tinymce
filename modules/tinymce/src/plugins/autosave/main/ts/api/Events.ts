@@ -11,8 +11,4 @@ const fireStoreDraft = (editor) => editor.fire('StoreDraft');
 
 const fireRemoveDraft = (editor) => editor.fire('RemoveDraft');
 
-export {
-  fireRestoreDraft,
-  fireStoreDraft,
-  fireRemoveDraft
-};
+export { fireRestoreDraft, fireStoreDraft, fireRemoveDraft };

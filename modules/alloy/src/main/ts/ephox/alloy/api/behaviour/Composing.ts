@@ -9,6 +9,4 @@ const Composing: ComposingBehaviour = Behaviour.create({
   apis: ComposeApis
 });
 
-export {
-  Composing
-};
+export { Composing };

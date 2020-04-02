@@ -14,7 +14,7 @@ import * as ConvertShortcut from '../alien/ConvertShortcut';
 const renderIcon = (iconHtml: string): AlloySpec => ({
   dom: {
     tag: 'div',
-    classes: [ ItemClasses.iconClass ],
+    classes: [ItemClasses.iconClass],
     innerHtml: iconHtml
   }
 });
@@ -22,15 +22,15 @@ const renderIcon = (iconHtml: string): AlloySpec => ({
 const renderText = (text: string): AlloySpec => ({
   dom: {
     tag: 'div',
-    classes: [ ItemClasses.textClass ]
+    classes: [ItemClasses.textClass]
   },
-  components: [ GuiFactory.text(I18n.translate(text)) ]
+  components: [GuiFactory.text(I18n.translate(text))]
 });
 
 const renderHtml = (html: string): AlloySpec => ({
   dom: {
     tag: 'div',
-    classes: [ ItemClasses.textClass ],
+    classes: [ItemClasses.textClass],
     innerHtml: html
   }
 });
@@ -43,7 +43,7 @@ interface StyleProps {
 const renderStyledText = (style: StyleProps, text: string): AlloySpec => ({
   dom: {
     tag: 'div',
-    classes: [ ItemClasses.textClass ],
+    classes: [ItemClasses.textClass]
   },
   components: [
     {
@@ -51,7 +51,7 @@ const renderStyledText = (style: StyleProps, text: string): AlloySpec => ({
         tag: style.tag,
         styles: style.styles
       },
-      components: [ GuiFactory.text(I18n.translate(text)) ]
+      components: [GuiFactory.text(I18n.translate(text))]
     }
   ]
 });
@@ -59,7 +59,7 @@ const renderStyledText = (style: StyleProps, text: string): AlloySpec => ({
 const renderShortcut = (shortcut: string): AlloySpec => ({
   dom: {
     tag: 'div',
-    classes: [ ItemClasses.accessoryClass ],
+    classes: [ItemClasses.accessoryClass],
     innerHtml: ConvertShortcut.convertText(shortcut)
   }
 });
@@ -67,7 +67,7 @@ const renderShortcut = (shortcut: string): AlloySpec => ({
 const renderCheckmark = (icons: IconProvider): AlloySpec => ({
   dom: {
     tag: 'div',
-    classes: [ ItemClasses.iconClass, ItemClasses.checkmarkClass ],
+    classes: [ItemClasses.iconClass, ItemClasses.checkmarkClass],
     innerHtml: getIcon('checkmark', icons)
   }
 });
@@ -75,7 +75,7 @@ const renderCheckmark = (icons: IconProvider): AlloySpec => ({
 const renderSubmenuCaret = (icons: IconProvider): AlloySpec => ({
   dom: {
     tag: 'div',
-    classes: [ ItemClasses.caretClass ],
+    classes: [ItemClasses.caretClass],
     innerHtml: getIcon('chevron-right', icons)
   }
 });
@@ -83,7 +83,7 @@ const renderSubmenuCaret = (icons: IconProvider): AlloySpec => ({
 const renderDownwardsCaret = (icons: IconProvider): AlloySpec => ({
   dom: {
     tag: 'div',
-    classes: [ ItemClasses.caretClass ],
+    classes: [ItemClasses.caretClass],
     innerHtml: getIcon('chevron-down', icons)
   }
 });

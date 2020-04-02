@@ -1,7 +1,6 @@
 import { Result } from '@ephox/katamari';
 
 export class BinaryReader {
-
   public littleEndian: boolean = false;
 
   private dataView: DataView;
@@ -24,7 +23,7 @@ export class BinaryReader {
     let sum = 0;
     for (let i = 0; i < size; i++) {
       // eslint-disable-next-line no-bitwise
-      sum |= (this.readByteAt(idx + i) << Math.abs(mv + i * 8));
+      sum |= this.readByteAt(idx + i) << Math.abs(mv + i * 8);
     }
     return Result.value(sum);
   }

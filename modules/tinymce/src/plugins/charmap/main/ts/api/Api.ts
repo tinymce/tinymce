@@ -23,6 +23,4 @@ const get = function (editor) {
   };
 };
 
-export {
-  get
-};
+export { get };

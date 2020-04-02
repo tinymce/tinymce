@@ -12,7 +12,11 @@ import * as AnnotationChanges from '../annotate/AnnotationChanges';
 import * as AnnotationFilter from '../annotate/AnnotationFilter';
 import { create } from '../annotate/AnnotationsRegistry';
 import { findAll, identify } from '../annotate/Identification';
-import { annotateWithBookmark, Decorator, DecoratorData } from '../annotate/Wrapping';
+import {
+  annotateWithBookmark,
+  Decorator,
+  DecoratorData
+} from '../annotate/Wrapping';
 import Editor from './Editor';
 
 export type AnnotationListenerApi = AnnotationChanges.AnnotationListener;
@@ -61,7 +65,7 @@ const Annotator = function (editor: Editor): Annotator {
      * @param {Object} data information to pass through to this particular
      * annotation
      */
-    annotate: (name: string, data: { }) => {
+    annotate: (name: string, data: {}) => {
       registry.lookup(name).each((settings) => {
         annotateWithBookmark(editor, name, settings, data);
       });
@@ -101,7 +105,9 @@ const Annotator = function (editor: Editor): Annotator {
      */
     getAll: (name: string): Record<string, Element[]> => {
       const directory = findAll(editor, name);
-      return Obj.map(directory, (elems) => Arr.map(elems, (elem) => elem.dom()));
+      return Obj.map(directory, (elems) =>
+        Arr.map(elems, (elem) => elem.dom())
+      );
     }
   };
 };

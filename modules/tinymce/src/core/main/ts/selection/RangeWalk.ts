@@ -24,9 +24,14 @@ const clampToExistingChildren = (container: Node, index: number) => {
   return childNodes[index] || container;
 };
 
-const getEndChild = (container: Node, index: number) => clampToExistingChildren(container, index - 1);
+const getEndChild = (container: Node, index: number) =>
+  clampToExistingChildren(container, index - 1);
 
-const walk = function (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => void) {
+const walk = function (
+  dom: DOMUtils,
+  rng: RangeLikeObject,
+  callback: (nodes: Node[]) => void
+) {
   let startContainer = rng.startContainer;
   const startOffset = rng.startOffset;
   let endContainer = rng.endContainer;
@@ -37,7 +42,7 @@ const walk = function (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: No
   const nodes = dom.select('td[data-mce-selected],th[data-mce-selected]');
   if (nodes.length > 0) {
     each(nodes, function (node) {
-      callback([ node ]);
+      callback([node]);
     });
 
     return;
@@ -55,13 +60,22 @@ const walk = function (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: No
 
     // First node is excluded
     node = nodes[0];
-    if (node.nodeType === 3 && node === startContainer && startOffset >= node.nodeValue.length) {
+    if (
+      node.nodeType === 3 &&
+      node === startContainer &&
+      startOffset >= node.nodeValue.length
+    ) {
       nodes.splice(0, 1);
     }
 
     // Last node is excluded
     node = nodes[nodes.length - 1];
-    if (endOffset === 0 && nodes.length > 0 && node === endContainer && node.nodeType === 3) {
+    if (
+      endOffset === 0 &&
+      nodes.length > 0 &&
+      node === endContainer &&
+      node.nodeType === 3
+    ) {
       nodes.splice(nodes.length - 1, 1);
     }
 
@@ -88,12 +102,23 @@ const walk = function (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: No
     } while (node);
   };
 
-  const walkBoundary = function (startNode: Node, endNode: Node, next?: boolean) {
+  const walkBoundary = function (
+    startNode: Node,
+    endNode: Node,
+    next?: boolean
+  ) {
     const siblingName = next ? 'nextSibling' : 'previousSibling';
 
-    for (let node = startNode, parent = node.parentNode; node && node !== endNode; node = parent) {
+    for (
+      let node = startNode, parent = node.parentNode;
+      node && node !== endNode;
+      node = parent
+    ) {
       parent = node.parentNode;
-      const siblings = collectSiblings(node === startNode ? node : node[siblingName], siblingName);
+      const siblings = collectSiblings(
+        node === startNode ? node : node[siblingName],
+        siblingName
+      );
 
       if (siblings.length) {
         if (!next) {
@@ -117,7 +142,7 @@ const walk = function (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: No
 
   // Same container
   if (startContainer === endContainer) {
-    return callback(exclude([ startContainer ]));
+    return callback(exclude([startContainer]));
   }
 
   // Find common ancestor and end points
@@ -167,6 +192,4 @@ const walk = function (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: No
   walkBoundary(endContainer, endPoint);
 };
 
-export {
-  walk
-};
+export { walk };

@@ -42,12 +42,14 @@ const viewportUpdate = VisualViewport.get().fold(
 
     const refreshVisualViewport = () => {
       window.requestAnimationFrame(() => {
-        editorContainer.on((container) => Css.setAll(container, {
-          top: visualViewport.offsetTop + 'px',
-          left: visualViewport.offsetLeft + 'px',
-          height: visualViewport.height + 'px',
-          width: visualViewport.width + 'px'
-        }));
+        editorContainer.on((container) =>
+          Css.setAll(container, {
+            top: visualViewport.offsetTop + 'px',
+            left: visualViewport.offsetLeft + 'px',
+            height: visualViewport.height + 'px',
+            width: visualViewport.width + 'px'
+          })
+        );
       });
     };
 
@@ -147,6 +149,4 @@ const toggleFullscreen = function (editor, fullscreenState) {
   }
 };
 
-export {
-  toggleFullscreen
-};
+export { toggleFullscreen };

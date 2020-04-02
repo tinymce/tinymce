@@ -21,7 +21,8 @@ import Editor from './Editor';
  * editor.shortcuts.add('access+a', "description of the shortcut", function() {}); // "access" maps to ctrl+alt on Mac and shift+alt on PC
  */
 
-const each = Tools.each, explode = Tools.explode;
+const each = Tools.each,
+  explode = Tools.explode;
 
 const keyCodeLookup = {
   f1: 112,
@@ -67,7 +68,10 @@ class Shortcuts {
     const self = this;
 
     editor.on('keyup keypress keydown', function (e) {
-      if ((self.hasModifier(e) || self.isFunctionKey(e)) && !e.isDefaultPrevented()) {
+      if (
+        (self.hasModifier(e) || self.isFunctionKey(e)) &&
+        !e.isDefaultPrevented()
+      ) {
         each(self.shortcuts, function (shortcut) {
           if (self.matchShortcut(e, shortcut)) {
             self.pendingPatterns = shortcut.subpatterns.slice(0);
@@ -103,7 +107,12 @@ class Shortcuts {
    * @param {Object} scope Optional scope to execute the function in.
    * @return {Boolean} true/false state if the shortcut was added or not.
    */
-  public add(pattern: string, desc: string, cmdFunc: string | any[] | Function, scope?: {}): boolean {
+  public add(
+    pattern: string,
+    desc: string,
+    cmdFunc: string | any[] | Function,
+    scope?: {}
+  ): boolean {
     const self = this;
     let cmd;
 
@@ -159,13 +168,14 @@ class Shortcuts {
           shortcut.keyCode = parseInt(value, 10);
         } else {
           shortcut.charCode = value.charCodeAt(0);
-          shortcut.keyCode = keyCodeLookup[value] || value.toUpperCase().charCodeAt(0);
+          shortcut.keyCode =
+            keyCodeLookup[value] || value.toUpperCase().charCodeAt(0);
         }
       }
     });
 
     // Generate unique id for modifier combination and set default state for unused modifiers
-    id = [ shortcut.keyCode ];
+    id = [shortcut.keyCode];
     for (key in modifierNames) {
       if (shortcut[key]) {
         id.push(key);
@@ -203,10 +213,13 @@ class Shortcuts {
     let shortcuts;
 
     shortcuts = Tools.map(explode(pattern, '>'), this.parseShortcut);
-    shortcuts[shortcuts.length - 1] = Tools.extend(shortcuts[shortcuts.length - 1], {
-      func: cmdFunc,
-      scope: scope || this.editor
-    });
+    shortcuts[shortcuts.length - 1] = Tools.extend(
+      shortcuts[shortcuts.length - 1],
+      {
+        func: cmdFunc,
+        scope: scope || this.editor
+      }
+    );
 
     return Tools.extend(shortcuts[0], {
       desc: this.editor.translate(desc),
@@ -235,7 +248,10 @@ class Shortcuts {
       return false;
     }
 
-    if (e.keyCode === shortcut.keyCode || (e.charCode && e.charCode === shortcut.charCode)) {
+    if (
+      e.keyCode === shortcut.keyCode ||
+      (e.charCode && e.charCode === shortcut.charCode)
+    ) {
       e.preventDefault();
       return true;
     }

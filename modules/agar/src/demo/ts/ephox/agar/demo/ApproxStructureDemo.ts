@@ -5,22 +5,21 @@ import * as DemoContainer from 'ephox/agar/demo/DemoContainer';
 import { Class, Element, Html, InsertAll } from '@ephox/sugar';
 
 export const demo = (): void => {
-  DemoContainer.init(
-    'Approx Structure',
-    (success, failure) => {
+  DemoContainer.init('Approx Structure', (success, failure) => {
+    const div = Element.fromTag('div');
 
-      const div = Element.fromTag('div');
+    const p = Element.fromTag('p');
 
-      const p = Element.fromTag('p');
+    const span = Element.fromTag('span');
 
-      const span = Element.fromTag('span');
+    InsertAll.append(div, [p]);
+    InsertAll.append(p, [span]);
 
-      InsertAll.append(div, [ p ]);
-      InsertAll.append(p, [ span ]);
+    Class.add(span, 'dog');
 
-      Class.add(span, 'dog');
-
-      Pipeline.async({}, [
+    Pipeline.async(
+      {},
+      [
         Assertions.sAssertStructure(
           'Assert Structure example: ' + Html.getOuter(div),
           ApproxStructure.build((s, str, arr) =>
@@ -29,17 +28,20 @@ export const demo = (): void => {
                 s.element('p', {
                   children: [
                     s.element('span', {
-                      classes: [ arr.has('dog'), arr.not('cat') ]
+                      classes: [arr.has('dog'), arr.not('cat')]
                     })
                   ]
                 })
               ]
-            })),
+            })
+          ),
           div
         )
-      ], success, failure);
+      ],
+      success,
+      failure
+    );
 
-      return [ div ];
-    }
-  );
+    return [div];
+  });
 };

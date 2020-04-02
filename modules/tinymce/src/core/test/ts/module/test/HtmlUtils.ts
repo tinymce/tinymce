@@ -2,9 +2,17 @@ import Writer from 'tinymce/core/api/html/Writer';
 import SaxParser from 'tinymce/core/api/html/SaxParser';
 
 const cleanHtml = function (html) {
-  return html.toLowerCase().replace(/[\r\n]+/gi, '')
-    .replace(/ (sizcache[0-9]+|sizcache|nodeindex|sizset[0-9]+|sizset|data\-mce\-expando|data\-mce\-selected)="[^"]*"/gi, '')
-    .replace(/<span[^>]+data-mce-bogus[^>]+>[\u200B\uFEFF]+<\/span>|<div[^>]+data-mce-bogus[^>]+><\/div>/gi, '')
+  return html
+    .toLowerCase()
+    .replace(/[\r\n]+/gi, '')
+    .replace(
+      / (sizcache[0-9]+|sizcache|nodeindex|sizset[0-9]+|sizset|data\-mce\-expando|data\-mce\-selected)="[^"]*"/gi,
+      ''
+    )
+    .replace(
+      /<span[^>]+data-mce-bogus[^>]+>[\u200B\uFEFF]+<\/span>|<div[^>]+data-mce-bogus[^>]+><\/div>/gi,
+      ''
+    )
     .replace(/ style="([^"]+)"/gi, function (val1, val2) {
       val2 = val2.replace(/;$/, '');
       return ' style="' + val2.replace(/\:([^ ])/g, ': $1') + ';"';
@@ -39,7 +47,4 @@ const normalizeHtml = function (html) {
   return writer.getContent();
 };
 
-export {
-  cleanHtml,
-  normalizeHtml
-};
+export { cleanHtml, normalizeHtml };

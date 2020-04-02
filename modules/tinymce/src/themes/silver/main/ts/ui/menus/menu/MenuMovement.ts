@@ -11,10 +11,16 @@ import { markers as getMenuMarkers } from './MenuParts';
 import { selectableClass, colorClass } from '../item/ItemClasses';
 import { MenuTypes, KeyingConfigSpec } from '@ephox/alloy';
 
-export const deriveMenuMovement = (columns: number | 'auto', presets: Types.PresetTypes): MenuTypes.MenuMovementSpec => {
+export const deriveMenuMovement = (
+  columns: number | 'auto',
+  presets: Types.PresetTypes
+): MenuTypes.MenuMovementSpec => {
   const menuMarkers = getMenuMarkers(presets);
   if (columns === 1) {
-    return { mode: 'menu', moveOnTab: true } as MenuTypes.MenuNormalMovementSpec;
+    return {
+      mode: 'menu',
+      moveOnTab: true
+    } as MenuTypes.MenuNormalMovementSpec;
   } else if (columns === 'auto') {
     return {
       mode: 'grid',
@@ -25,7 +31,8 @@ export const deriveMenuMovement = (columns: number | 'auto', presets: Types.Pres
       }
     } as MenuTypes.MenuGridMovementSpec;
   } else {
-    const rowClass = presets === 'color' ? 'tox-swatches__row' : 'tox-collection__group';
+    const rowClass =
+      presets === 'color' ? 'tox-swatches__row' : 'tox-collection__group';
     return {
       mode: 'matrix',
       rowSelector: '.' + rowClass
@@ -33,7 +40,10 @@ export const deriveMenuMovement = (columns: number | 'auto', presets: Types.Pres
   }
 };
 
-export const deriveCollectionMovement = (columns: number | 'auto', presets: Types.PresetTypes): KeyingConfigSpec => {
+export const deriveCollectionMovement = (
+  columns: number | 'auto',
+  presets: Types.PresetTypes
+): KeyingConfigSpec => {
   if (columns === 1) {
     return {
       mode: 'menu',
@@ -53,10 +63,10 @@ export const deriveCollectionMovement = (columns: number | 'auto', presets: Type
     return {
       mode: 'matrix',
       selectors: {
-        row: presets === 'color' ? '.tox-swatches__row' : '.tox-collection__group',
+        row:
+          presets === 'color' ? '.tox-swatches__row' : '.tox-collection__group',
         cell: presets === 'color' ? `.${colorClass}` : `.${selectableClass}`
       }
-
     };
   }
 };

@@ -10,13 +10,11 @@ const parse = (timeString: string, defaultTime: string) => {
     s: 1000,
     m: 60000
   };
-  const toParse = (timeString || defaultTime);
+  const toParse = timeString || defaultTime;
 
   const parsedTime = /^(\d+)([ms]?)$/.exec('' + toParse);
 
   return (parsedTime[2] ? multiples[parsedTime[2]] : 1) * parseInt(toParse, 10);
 };
 
-export {
-  parse
-};
+export { parse };

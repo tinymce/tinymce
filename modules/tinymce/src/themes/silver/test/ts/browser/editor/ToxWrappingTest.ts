@@ -14,14 +14,27 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
     (editor: Editor, onSuccess, onFailure) => {
       const replacedElem = Element.fromDom(editor.getElement());
 
-      Pipeline.async({ }, [
-        Chain.asStep(Body.body(), [
-          UiFinder.cFindIn(`#${Attr.get(replacedElem, 'id')}`),
-          Chain.binder((elem) => Traverse.nextSibling(elem).fold(() => Result.error('Replaced element has no next sibling'), Result.value)),
-          Chain.mapper((elem) => Class.has(elem, 'tox-tinymce')),
-          Assertions.cAssertEq(`Replaced element's next sibling has "tox-tinymce" class`, true)
-        ])
-      ], onSuccess, onFailure);
+      Pipeline.async(
+        {},
+        [
+          Chain.asStep(Body.body(), [
+            UiFinder.cFindIn(`#${Attr.get(replacedElem, 'id')}`),
+            Chain.binder((elem) =>
+              Traverse.nextSibling(elem).fold(
+                () => Result.error('Replaced element has no next sibling'),
+                Result.value
+              )
+            ),
+            Chain.mapper((elem) => Class.has(elem, 'tox-tinymce')),
+            Assertions.cAssertEq(
+              `Replaced element's next sibling has "tox-tinymce" class`,
+              true
+            )
+          ])
+        ],
+        onSuccess,
+        onFailure
+      );
     },
     {
       theme: 'silver',

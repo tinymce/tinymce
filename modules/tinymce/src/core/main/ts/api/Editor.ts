@@ -6,7 +6,14 @@
  */
 
 import { Registry } from '@ephox/bridge';
-import { Document, Element, Event, HTMLElement, HTMLIFrameElement, Window } from '@ephox/dom-globals';
+import {
+  Document,
+  Element,
+  Event,
+  HTMLElement,
+  HTMLIFrameElement,
+  Window
+} from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import * as EditorContent from '../content/EditorContent';
 import * as NodeType from '../dom/NodeType';
@@ -75,12 +82,17 @@ export interface Ui {
 export interface EditorConstructor {
   readonly prototype: Editor;
 
-  new (id: string, settings: RawEditorSettings, editorManager: EditorManager): Editor;
+  new (
+    id: string,
+    settings: RawEditorSettings,
+    editorManager: EditorManager
+  ): Editor;
 }
 
 // Shorten these names
 const DOM = DOMUtils.DOM;
-const extend = Tools.extend, each = Tools.each;
+const extend = Tools.extend,
+  each = Tools.each;
 const resolve = Tools.resolve;
 const ie = Env.ie;
 
@@ -280,14 +292,24 @@ class Editor implements EditorObservable {
    * @param {Object} settings Settings for the editor.
    * @param {tinymce.EditorManager} editorManager EditorManager instance.
    */
-  public constructor(id: string, settings: RawEditorSettings, editorManager: EditorManager) {
+  public constructor(
+    id: string,
+    settings: RawEditorSettings,
+    editorManager: EditorManager
+  ) {
     this.editorManager = editorManager;
     this.documentBaseUrl = editorManager.documentBaseURL;
 
     // Patch in the EditorObservable functions
     extend(this, EditorObservable);
 
-    this.settings = getEditorSettings(this, id, this.documentBaseUrl, editorManager.defaultSettings, settings);
+    this.settings = getEditorSettings(
+      this,
+      id,
+      this.documentBaseUrl,
+      editorManager.defaultSettings,
+      settings
+    );
 
     if (this.settings.suffix) {
       editorManager.suffix = this.settings.suffix;
@@ -300,8 +322,12 @@ class Editor implements EditorObservable {
     this.baseUri = editorManager.baseURI;
 
     if (this.settings.referrer_policy) {
-      ScriptLoader.ScriptLoader._setReferrerPolicy(this.settings.referrer_policy);
-      DOMUtils.DOM.styleSheetLoader._setReferrerPolicy(this.settings.referrer_policy);
+      ScriptLoader.ScriptLoader._setReferrerPolicy(
+        this.settings.referrer_policy
+      );
+      DOMUtils.DOM.styleSheetLoader._setReferrerPolicy(
+        this.settings.referrer_policy
+      );
     }
 
     AddOnManager.languageLoad = this.settings.language_load;
@@ -383,7 +409,8 @@ class Editor implements EditorObservable {
    */
   public execCallback(name: string, ...x: any[]): any {
     const self = this;
-    let callback = self.settings[name], scope;
+    let callback = self.settings[name],
+      scope;
 
     if (!callback) {
       return;
@@ -433,10 +460,18 @@ class Editor implements EditorObservable {
    * // Returns a specific config value from a specific editor instance by id
    * var someval2 = tinymce.get('my_editor').getParam('myvalue');
    */
-  public getParam <K extends keyof ParamTypeMap>(name: string, defaultVal: ParamTypeMap[K], type: K): ParamTypeMap[K];
-  public getParam <K extends keyof EditorSettings>(name: K, defaultVal?: EditorSettings[K], type?: string): EditorSettings[K];
-  public getParam <T>(name: string, defaultVal: T, type: string): T;
-  public getParam(name: string, defaultVal?: any, type?: string): any  {
+  public getParam<K extends keyof ParamTypeMap>(
+    name: string,
+    defaultVal: ParamTypeMap[K],
+    type: K
+  ): ParamTypeMap[K];
+  public getParam<K extends keyof EditorSettings>(
+    name: K,
+    defaultVal?: EditorSettings[K],
+    type?: string
+  ): EditorSettings[K];
+  public getParam<T>(name: string, defaultVal: T, type: string): T;
+  public getParam(name: string, defaultVal?: any, type?: string): any {
     return getParam(this, name, defaultVal, type);
   }
 
@@ -472,7 +507,11 @@ class Editor implements EditorObservable {
    *    }
    * });
    */
-  public addCommand(name: string, callback: EditorCommandCallback, scope?: object) {
+  public addCommand(
+    name: string,
+    callback: EditorCommandCallback,
+    scope?: object
+  ) {
     /**
      * Callback function that gets called when a command is executed.
      *
@@ -532,7 +571,12 @@ class Editor implements EditorObservable {
    * @param {Object} scope Optional scope to execute the function in.
    * @return {Boolean} true/false state if the shortcut was added or not.
    */
-  public addShortcut(pattern: string, desc: string, cmdFunc: string | any[] | Function, scope?: {}) {
+  public addShortcut(
+    pattern: string,
+    desc: string,
+    cmdFunc: string | any[] | Function,
+    scope?: {}
+  ) {
     this.shortcuts.add(pattern, desc, cmdFunc, scope);
   }
 
@@ -548,7 +592,12 @@ class Editor implements EditorObservable {
    * @param {mixed} value Optional command value, this can be anything.
    * @param {Object} args Optional arguments object.
    */
-  public execCommand(cmd: string, ui?: boolean, value?: any, args?: any): boolean {
+  public execCommand(
+    cmd: string,
+    ui?: boolean,
+    value?: any,
+    args?: any
+  ): boolean {
     return this.editorCommands.execCommand(cmd, ui, value, args);
   }
 
@@ -614,7 +663,8 @@ class Editor implements EditorObservable {
    * @method hide
    */
   public hide() {
-    const self = this, doc = self.getDoc();
+    const self = this,
+      doc = self.getDoc();
 
     if (!self.hidden) {
       // Fixed bug where IE has a blinking cursor left from the editor
@@ -685,7 +735,8 @@ class Editor implements EditorObservable {
    */
   public load(args?: any): string {
     const self = this;
-    let elm = self.getElement(), html;
+    let elm = self.getElement(),
+      html;
 
     if (self.removed) {
       return '';
@@ -721,7 +772,9 @@ class Editor implements EditorObservable {
    */
   public save(args?: any): string {
     const self = this;
-    let elm = self.getElement(), html, form;
+    let elm = self.getElement(),
+      html,
+      form;
 
     if (!elm || !self.initialized || self.removed) {
       return;
@@ -789,9 +842,15 @@ class Editor implements EditorObservable {
    * // Sets the content of the activeEditor editor using the specified format
    * tinymce.activeEditor.setContent('<p>Some html</p>', {format: 'html'});
    */
-  public setContent (content: string, args?: EditorContent.SetContentArgs): string;
-  public setContent (content: Node, args?: EditorContent.SetContentArgs): Node;
-  public setContent(content: EditorContent.Content, args?: EditorContent.SetContentArgs): EditorContent.Content {
+  public setContent(
+    content: string,
+    args?: EditorContent.SetContentArgs
+  ): string;
+  public setContent(content: Node, args?: EditorContent.SetContentArgs): Node;
+  public setContent(
+    content: EditorContent.Content,
+    args?: EditorContent.SetContentArgs
+  ): EditorContent.Content {
     return EditorContent.setContent(this, content, args);
   }
 
@@ -812,9 +871,13 @@ class Editor implements EditorObservable {
    * // Get content of a specific editor:
    * tinymce.get('content id').getContent()
    */
-  public getContent (args: { format: 'tree' } & EditorContent.GetContentArgs): Node;
-  public getContent (args?: EditorContent.GetContentArgs): string;
-  public getContent(args?: EditorContent.GetContentArgs): EditorContent.Content {
+  public getContent(
+    args: { format: 'tree' } & EditorContent.GetContentArgs
+  ): Node;
+  public getContent(args?: EditorContent.GetContentArgs): string;
+  public getContent(
+    args?: EditorContent.GetContentArgs
+  ): EditorContent.Content {
     return EditorContent.getContent(this, args);
   }
 
@@ -1008,7 +1071,8 @@ class Editor implements EditorObservable {
    * @return {string} Converted URL string.
    */
   public convertURL(url: string, name: string, elm?): string {
-    const self = this, settings = self.settings;
+    const self = this,
+      settings = self.settings;
 
     // Use callback instead
     if (settings.urlconverter_callback) {
@@ -1016,7 +1080,12 @@ class Editor implements EditorObservable {
     }
 
     // Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
-    if (!settings.convert_urls || (elm && elm.nodeName === 'LINK') || url.indexOf('file:') === 0 || url.length === 0) {
+    if (
+      !settings.convert_urls ||
+      (elm && elm.nodeName === 'LINK') ||
+      url.indexOf('file:') === 0 ||
+      url.length === 0
+    ) {
       return url;
     }
 
@@ -1126,28 +1195,36 @@ class Editor implements EditorObservable {
    * No longer supported, use editor.ui.registry.addButton instead
    */
   public addButton() {
-    throw new Error('editor.addButton has been removed in tinymce 5x, use editor.ui.registry.addButton or editor.ui.registry.addToggleButton or editor.ui.registry.addSplitButton instead');
+    throw new Error(
+      'editor.addButton has been removed in tinymce 5x, use editor.ui.registry.addButton or editor.ui.registry.addToggleButton or editor.ui.registry.addSplitButton instead'
+    );
   }
 
   /**
    * No longer supported, use editor.ui.registry.addSidebar instead
    */
   public addSidebar() {
-    throw new Error('editor.addSidebar has been removed in tinymce 5x, use editor.ui.registry.addSidebar instead');
+    throw new Error(
+      'editor.addSidebar has been removed in tinymce 5x, use editor.ui.registry.addSidebar instead'
+    );
   }
 
   /**
    * No longer supported, use editor.ui.registry.addMenuItem instead
    */
   public addMenuItem() {
-    throw new Error('editor.addMenuItem has been removed in tinymce 5x, use editor.ui.registry.addMenuItem instead');
+    throw new Error(
+      'editor.addMenuItem has been removed in tinymce 5x, use editor.ui.registry.addMenuItem instead'
+    );
   }
 
   /**
    * No longer supported, use editor.ui.registry.addContextMenu instead
    */
   public addContextToolbar() {
-    throw new Error('editor.addContextToolbar has been removed in tinymce 5x, use editor.ui.registry.addContextToolbar instead');
+    throw new Error(
+      'editor.addContextToolbar has been removed in tinymce 5x, use editor.ui.registry.addContextToolbar instead'
+    );
   }
 }
 

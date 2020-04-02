@@ -8,11 +8,12 @@ export interface BehaviourStateInitialiser<C, S extends BehaviourState> {
 }
 
 const NoState: BehaviourStateInitialiser<any, BehaviourState> = {
-  init: () => nu({
-    readState() {
-      return 'No State required';
-    }
-  })
+  init: () =>
+    nu({
+      readState() {
+        return 'No State required';
+      }
+    })
 };
 
 export interface Stateless extends BehaviourState {
@@ -21,7 +22,4 @@ export interface Stateless extends BehaviourState {
 
 const nu = <T extends BehaviourState>(spec: T): T => spec;
 
-export {
-  nu as nuState,
-  NoState
-};
+export { nu as nuState, NoState };

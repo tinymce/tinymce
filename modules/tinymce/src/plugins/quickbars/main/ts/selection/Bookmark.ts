@@ -67,7 +67,8 @@ const resolve = function (dom, bookmark) {
     let container, offset, node;
 
     function nodeIndex(container) {
-      let node = container.parentNode.firstChild, idx = 0;
+      let node = container.parentNode.firstChild,
+        idx = 0;
 
       while (node) {
         if (node === container) {
@@ -75,7 +76,10 @@ const resolve = function (dom, bookmark) {
         }
 
         // Skip data-mce-type=bookmark nodes
-        if (node.nodeType !== 1 || node.getAttribute('data-mce-type') !== 'bookmark') {
+        if (
+          node.nodeType !== 1 ||
+          node.getAttribute('data-mce-type') !== 'bookmark'
+        ) {
           idx++;
         }
 
@@ -116,7 +120,4 @@ const resolve = function (dom, bookmark) {
   return rng;
 };
 
-export {
-  create,
-  resolve
-};
+export { create, resolve };

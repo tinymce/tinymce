@@ -12,35 +12,49 @@ import * as PluginAssert from '../module/PluginAssert';
 import { selectors } from '../module/Selectors';
 
 UnitTest.asynctest('Browser Test: .MetadataTest', (success, failure) => {
-
   HelpPlugin();
   FakePlugin();
   NoMetaFakePlugin();
   SilverTheme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
-    const ui = TinyUi(editor);
+  TinyLoader.setupLight(
+    function (editor, onSuccess, onFailure) {
+      const ui = TinyUi(editor);
 
-    Pipeline.async({},
-      Log.steps('TBA', 'Help: Assert Help Plugin list contains getMetadata functionality', [
-        ui.sClickOnToolbar('Click help button', selectors.toolbarHelpButton),
-        PluginAssert.sAssert(
-          'Failed to list fake plugins',
-          {
-            'li a:contains("Help")': 1,
-            'li a:contains("Fake")': 1,
-            'li:contains("nometafake")': 1,
-            'button:contains("Close")': 1
-          },
-          selectors.dialog,
-          selectors.pluginsTab
-        )
-      ])
-      , onSuccess, onFailure);
-  }, {
-    plugins: 'help fake nometafake',
-    toolbar: 'help',
-    theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
-  }, success, failure);
+      Pipeline.async(
+        {},
+        Log.steps(
+          'TBA',
+          'Help: Assert Help Plugin list contains getMetadata functionality',
+          [
+            ui.sClickOnToolbar(
+              'Click help button',
+              selectors.toolbarHelpButton
+            ),
+            PluginAssert.sAssert(
+              'Failed to list fake plugins',
+              {
+                'li a:contains("Help")': 1,
+                'li a:contains("Fake")': 1,
+                'li:contains("nometafake")': 1,
+                'button:contains("Close")': 1
+              },
+              selectors.dialog,
+              selectors.pluginsTab
+            )
+          ]
+        ),
+        onSuccess,
+        onFailure
+      );
+    },
+    {
+      plugins: 'help fake nometafake',
+      toolbar: 'help',
+      theme: 'silver',
+      base_url: '/project/tinymce/js/tinymce'
+    },
+    success,
+    failure
+  );
 });

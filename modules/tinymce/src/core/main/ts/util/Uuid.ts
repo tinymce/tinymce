@@ -16,7 +16,7 @@ let count = 0;
 
 const seed = function () {
   const rnd = function () {
-    return Math.round(Math.random() * 0xFFFFFFFF).toString(36);
+    return Math.round(Math.random() * 0xffffffff).toString(36);
   };
 
   const now = new Date().getTime();
@@ -24,9 +24,7 @@ const seed = function () {
 };
 
 const uuid = function (prefix) {
-  return prefix + (count++) + seed();
+  return prefix + count++ + seed();
 };
 
-export {
-  uuid
-};
+export { uuid };

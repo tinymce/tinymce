@@ -26,9 +26,8 @@ const around = function (text: string, position: number) {
   const endOfWord = after.bind((a) => Options.someIf(position === a, current));
 
   return endOfWord.getOrThunk(() =>
-    before.bind((b) => Options.someIf(position === b, current)).getOr(fallback));
+    before.bind((b) => Options.someIf(position === b, current)).getOr(fallback)
+  );
 };
 
-export {
-  around
-};
+export { around };

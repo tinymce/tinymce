@@ -19,8 +19,4 @@ const getTocDepth = function (editor) {
   return depth >= 1 && depth <= 9 ? depth : 3;
 };
 
-export {
-  getTocClass,
-  getTocHeader,
-  getTocDepth
-};
+export { getTocClass, getTocHeader, getTocDepth };

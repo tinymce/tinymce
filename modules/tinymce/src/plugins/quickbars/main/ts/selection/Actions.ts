@@ -40,7 +40,4 @@ const createLink = function (editor: Editor, url: string) {
   url.trim().length === 0 ? unlink(editor) : updateOrInsertLink(editor, url);
 };
 
-export {
-  createLink,
-  unlink
-};
+export { createLink, unlink };

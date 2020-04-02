@@ -30,7 +30,4 @@ const getNode = function (container: Node, offset: number): Node {
   return container;
 };
 
-export {
-  getSelectedNode,
-  getNode
-};
+export { getSelectedNode, getNode };

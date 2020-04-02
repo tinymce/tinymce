@@ -39,7 +39,10 @@ const tap = alloy.tap;
  * Tap event for touch device, otherwise click event
  * @deprecated
  */
-const tapOrClick = () => PlatformDetection.detect().deviceType.isTouch() ? alloy.tap() : NativeEvents.click();
+const tapOrClick = () =>
+  PlatformDetection.detect().deviceType.isTouch()
+    ? alloy.tap()
+    : NativeEvents.click();
 
 // This event represents a longpress on the same location
 const longpress = Fun.constant('alloy.longpress');
@@ -99,7 +102,6 @@ const highlight = Fun.constant('alloy.highlight');
 const dehighlight = Fun.constant('alloy.dehighlight');
 
 export {
-
   focus,
   postBlur,
   postPaste,
@@ -116,19 +118,14 @@ export {
   documentTouchend,
   windowScroll,
   windowResize,
-
   dismissRequested,
   repositionRequested,
   focusShifted,
-
   attachedToDom,
   detachedFromDom,
-
   changeTab,
   dismissTab,
-
   slotVisibility,
-
   highlight,
-  dehighlight,
+  dehighlight
 };

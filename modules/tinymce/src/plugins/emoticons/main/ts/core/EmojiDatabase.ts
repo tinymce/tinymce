@@ -45,7 +45,8 @@ export interface EmojiDatabase {
   listCategories: () => string[];
 }
 
-const translateCategory = (categories: Record<string, string>, name: string) => Obj.has(categories, name) ? categories[name] : name;
+const translateCategory = (categories: Record<string, string>, name: string) =>
+  Obj.has(categories, name) ? categories[name] : name;
 
 const getUserDefinedEmoticons = (editor: Editor) => {
   const userDefinedEmoticons = Settings.getAppendedEmoticons(editor);
@@ -56,7 +57,11 @@ const getUserDefinedEmoticons = (editor: Editor) => {
 };
 
 // TODO: Consider how to share this loading across different editors
-const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): EmojiDatabase => {
+const initDatabase = (
+  editor: Editor,
+  databaseUrl: string,
+  databaseId: string
+): EmojiDatabase => {
   const categories = Cell<Option<Record<string, EmojiEntry[]>>>(Option.none());
   const all = Cell<Option<EmojiEntry[]>>(Option.none());
 
@@ -72,8 +77,9 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
         char: lib.char,
         category: translateCategory(categoryNameMap, lib.category)
       };
-      const current = cats[entry.category] !== undefined ? cats[entry.category] : [];
-      cats[entry.category] = current.concat([ entry ]);
+      const current =
+        cats[entry.category] !== undefined ? cats[entry.category] : [];
+      cats[entry.category] = current.concat([entry]);
       everything.push(entry);
     });
 
@@ -82,27 +88,35 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
   };
 
   editor.on('init', () => {
-    Resource.load(databaseId, databaseUrl).then((emojis) => {
-      const userEmojis = getUserDefinedEmoticons(editor);
-      processEmojis(Merger.merge(emojis, userEmojis));
-    }, (err) => {
-      // tslint:disable-next-line:no-console
-      console.log(`Failed to load emoticons: ${err}`);
-      categories.set(Option.some({}));
-      all.set(Option.some([]));
-    });
+    Resource.load(databaseId, databaseUrl).then(
+      (emojis) => {
+        const userEmojis = getUserDefinedEmoticons(editor);
+        processEmojis(Merger.merge(emojis, userEmojis));
+      },
+      (err) => {
+        // tslint:disable-next-line:no-console
+        console.log(`Failed to load emoticons: ${err}`);
+        categories.set(Option.some({}));
+        all.set(Option.some([]));
+      }
+    );
   });
 
   const listCategory = (category: string): EmojiEntry[] => {
-    if (category === ALL_CATEGORY) { return listAll(); }
-    return categories.get().bind((cats) => Option.from(cats[category])).getOr([]);
+    if (category === ALL_CATEGORY) {
+      return listAll();
+    }
+    return categories
+      .get()
+      .bind((cats) => Option.from(cats[category]))
+      .getOr([]);
   };
 
   const listAll = (): EmojiEntry[] => all.get().getOr([]);
 
   const listCategories = (): string[] =>
     // TODO: Category key order should be adjusted to match the standard
-    [ ALL_CATEGORY ].concat(Obj.keys(categories.get().getOr({})));
+    [ALL_CATEGORY].concat(Obj.keys(categories.get().getOr({})));
 
   const waitForLoad = (): Promise<boolean> => {
     if (hasLoaded()) {
@@ -128,7 +142,8 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
     }
   };
 
-  const hasLoaded = (): boolean => categories.get().isSome() && all.get().isSome();
+  const hasLoaded = (): boolean =>
+    categories.get().isSome() && all.get().isSome();
 
   return {
     listCategories,

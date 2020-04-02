@@ -20,9 +20,16 @@ interface SelectionContentData {
 const hasWorkingClipboardApi = (clipboardData: DataTransfer) =>
   // iOS supports the clipboardData API but it doesn't do anything for cut operations
   // Edge 15 has a broken HTML Clipboard API see https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11780845/
-  Env.iOS === false && clipboardData !== undefined && typeof clipboardData.setData === 'function' && Utils.isMsEdge() !== true;
+  Env.iOS === false &&
+  clipboardData !== undefined &&
+  typeof clipboardData.setData === 'function' &&
+  Utils.isMsEdge() !== true;
 
-const setHtml5Clipboard = (clipboardData: DataTransfer, html: string, text: string) => {
+const setHtml5Clipboard = (
+  clipboardData: DataTransfer,
+  html: string,
+  text: string
+) => {
   if (hasWorkingClipboardApi(clipboardData)) {
     try {
       clipboardData.clearData();
@@ -41,7 +48,12 @@ const setHtml5Clipboard = (clipboardData: DataTransfer, html: string, text: stri
 type DoneFn = () => void;
 type FallbackFn = (html: string, done: DoneFn) => void;
 
-const setClipboardData = (evt: ClipboardEvent, data: SelectionContentData, fallback: FallbackFn, done: DoneFn) => {
+const setClipboardData = (
+  evt: ClipboardEvent,
+  data: SelectionContentData,
+  fallback: FallbackFn,
+  done: DoneFn
+) => {
   if (setHtml5Clipboard(evt.clipboardData, data.html, data.text)) {
     evt.preventDefault();
     done();
@@ -56,7 +68,11 @@ const fallback = (editor: Editor): FallbackFn => (html, done) => {
     'contenteditable': 'false',
     'data-mce-bogus': 'all'
   });
-  const inner = editor.dom.create('div', { contenteditable: 'true' }, markedHtml);
+  const inner = editor.dom.create(
+    'div',
+    { contenteditable: 'true' },
+    markedHtml
+  );
   editor.dom.setStyles(outer, {
     position: 'fixed',
     top: '0',
@@ -81,16 +97,20 @@ const fallback = (editor: Editor): FallbackFn => (html, done) => {
   }, 0);
 };
 
-const getData = (editor: Editor): SelectionContentData => (
-  {
-    html: editor.selection.getContent({ contextual: true }),
-    text: editor.selection.getContent({ format: 'text' })
-  }
-);
+const getData = (editor: Editor): SelectionContentData => ({
+  html: editor.selection.getContent({ contextual: true }),
+  text: editor.selection.getContent({ format: 'text' })
+});
 
-const isTableSelection = (editor: Editor): boolean => !!editor.dom.getParent(editor.selection.getStart(), 'td[data-mce-selected],th[data-mce-selected]', editor.getBody());
+const isTableSelection = (editor: Editor): boolean =>
+  !!editor.dom.getParent(
+    editor.selection.getStart(),
+    'td[data-mce-selected],th[data-mce-selected]',
+    editor.getBody()
+  );
 
-const hasSelectedContent = (editor: Editor): boolean => !editor.selection.isCollapsed() || isTableSelection(editor);
+const hasSelectedContent = (editor: Editor): boolean =>
+  !editor.selection.isCollapsed() || isTableSelection(editor);
 
 const cut = (editor: Editor) => (evt: ClipboardEvent) => {
   if (hasSelectedContent(editor)) {
@@ -99,12 +119,17 @@ const cut = (editor: Editor) => (evt: ClipboardEvent) => {
         const rng = editor.selection.getRng();
         // Chrome fails to execCommand from another execCommand with this message:
         // "We don't execute document.execCommand() this time, because it is called recursively.""
-        Delay.setEditorTimeout(editor, () => { // detach
-          // Restore the range before deleting, as Chrome on Android will
-          // collapse the selection after a cut event has fired.
-          editor.selection.setRng(rng);
-          editor.execCommand('Delete');
-        }, 0);
+        Delay.setEditorTimeout(
+          editor,
+          () => {
+            // detach
+            // Restore the range before deleting, as Chrome on Android will
+            // collapse the selection after a cut event has fired.
+            editor.selection.setRng(rng);
+            editor.execCommand('Delete');
+          },
+          0
+        );
       } else {
         editor.execCommand('Delete');
       }
@@ -123,6 +148,4 @@ const register = (editor: Editor) => {
   editor.on('copy', copy(editor));
 };
 
-export {
-  register
-};
+export { register };

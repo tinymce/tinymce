@@ -14,7 +14,8 @@ import Tools from '../api/util/Tools';
 import Editor from '../api/Editor';
 
 const getStartNode = function (rng) {
-  const sc = rng.startContainer, so = rng.startOffset;
+  const sc = rng.startContainer,
+    so = rng.startOffset;
   if (NodeType.isText(sc)) {
     return so === 0 ? Option.some(Element.fromDom(sc)) : Option.none();
   } else {
@@ -23,48 +24,54 @@ const getStartNode = function (rng) {
 };
 
 const getEndNode = function (rng) {
-  const ec = rng.endContainer, eo = rng.endOffset;
+  const ec = rng.endContainer,
+    eo = rng.endOffset;
   if (NodeType.isText(ec)) {
-    return eo === ec.data.length ? Option.some(Element.fromDom(ec)) : Option.none();
+    return eo === ec.data.length
+      ? Option.some(Element.fromDom(ec))
+      : Option.none();
   } else {
     return Option.from(ec.childNodes[eo - 1]).map(Element.fromDom);
   }
 };
 
 const getFirstChildren = function (node) {
-  return Traverse.firstChild(node).fold(
-    Fun.constant([ node ]),
-    function (child) {
-      return [ node ].concat(getFirstChildren(child));
-    }
-  );
+  return Traverse.firstChild(node).fold(Fun.constant([node]), function (child) {
+    return [node].concat(getFirstChildren(child));
+  });
 };
 
 const getLastChildren = function (node) {
-  return Traverse.lastChild(node).fold(
-    Fun.constant([ node ]),
-    function (child) {
-      if (Node.name(child) === 'br') {
-        return Traverse.prevSibling(child).map(function (sibling) {
-          return [ node ].concat(getLastChildren(sibling));
-        }).getOr([]);
-      } else {
-        return [ node ].concat(getLastChildren(child));
-      }
+  return Traverse.lastChild(node).fold(Fun.constant([node]), function (child) {
+    if (Node.name(child) === 'br') {
+      return Traverse.prevSibling(child)
+        .map(function (sibling) {
+          return [node].concat(getLastChildren(sibling));
+        })
+        .getOr([]);
+    } else {
+      return [node].concat(getLastChildren(child));
     }
-  );
+  });
 };
 
 const hasAllContentsSelected = function (elm, rng) {
-  return Options.lift2(getStartNode(rng), getEndNode(rng), function (startNode, endNode) {
-    const start = Arr.find(getFirstChildren(elm), Fun.curry(Compare.eq, startNode));
+  return Options.lift2(getStartNode(rng), getEndNode(rng), function (
+    startNode,
+    endNode
+  ) {
+    const start = Arr.find(
+      getFirstChildren(elm),
+      Fun.curry(Compare.eq, startNode)
+    );
     const end = Arr.find(getLastChildren(elm), Fun.curry(Compare.eq, endNode));
     return start.isSome() && end.isSome();
   }).getOr(false);
 };
 
 const moveEndPoint = (dom, rng: Range, node, start: boolean): void => {
-  const root = node, walker = new TreeWalker(node, root);
+  const root = node,
+    walker = new TreeWalker(node, root);
   const nonEmptyElementsMap = dom.schema.getNonEmptyElements();
 
   do {
@@ -80,7 +87,10 @@ const moveEndPoint = (dom, rng: Range, node, start: boolean): void => {
     }
 
     // BR/IMG/INPUT elements but not table cells
-    if (nonEmptyElementsMap[node.nodeName] && !/^(TD|TH)$/.test(node.nodeName)) {
+    if (
+      nonEmptyElementsMap[node.nodeName] &&
+      !/^(TD|TH)$/.test(node.nodeName)
+    ) {
       if (start) {
         rng.setStartBefore(node);
       } else {
@@ -93,7 +103,7 @@ const moveEndPoint = (dom, rng: Range, node, start: boolean): void => {
 
       return;
     }
-  } while ((node = (start ? walker.next() : walker.prev())));
+  } while ((node = start ? walker.next() : walker.prev()));
 
   // Failed to find any text node or other suitable location then move to the root of body
   if (root.nodeName === 'BODY') {
@@ -110,8 +120,4 @@ const hasAnyRanges = (editor: Editor) => {
   return sel && sel.rangeCount > 0;
 };
 
-export {
-  hasAllContentsSelected,
-  moveEndPoint,
-  hasAnyRanges
-};
+export { hasAllContentsSelected, moveEndPoint, hasAnyRanges };

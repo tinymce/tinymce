@@ -11,12 +11,41 @@ UnitTest.test('CssProperty', function () {
 
   const propertyIsNot = function (elm, propName, propValue) {
     assert.eq(false, init.is(elm));
-    assert.eq(false, Css.get(elm, propName) === propValue, 'Expected ' + elm.dom() + ' to not have property ' + propName + ' set to ' + propValue);
+    assert.eq(
+      false,
+      Css.get(elm, propName) === propValue,
+      'Expected ' +
+        elm.dom() +
+        ' to not have property ' +
+        propName +
+        ' set to ' +
+        propValue
+    );
   };
 
   const propertyIs = function (elm, propName, propValue) {
-    assert.eq(true, init.is(elm), 'This is failing because ' + elm.dom() + ' should have ' + propName + ':' + propValue + '. But found: ' + Css.get(elm, propName) );
-    assert.eq(true, Css.get(elm, propName) === propValue, 'Expected ' + elm.dom() + ' to have property ' + propName + ' set to ' + propValue);
+    assert.eq(
+      true,
+      init.is(elm),
+      'This is failing because ' +
+        elm.dom() +
+        ' should have ' +
+        propName +
+        ':' +
+        propValue +
+        '. But found: ' +
+        Css.get(elm, propName)
+    );
+    assert.eq(
+      true,
+      Css.get(elm, propName) === propValue,
+      'Expected ' +
+        elm.dom() +
+        ' to have property ' +
+        propName +
+        ' set to ' +
+        propValue
+    );
   };
 
   propertyIsNot(el, propertyName, propertyValue);

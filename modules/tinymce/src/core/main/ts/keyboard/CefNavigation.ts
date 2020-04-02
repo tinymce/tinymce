@@ -20,32 +20,65 @@ import * as RangeNodes from '../selection/RangeNodes';
 import * as ArrUtils from '../util/ArrUtils';
 import * as InlineUtils from '../keyboard/InlineUtils';
 import * as Settings from '../api/Settings';
-import { isBeforeContentEditableFalse, isAfterContentEditableFalse, isBeforeTable, isAfterTable } from '../caret/CaretPositionPredicates';
+import {
+  isBeforeContentEditableFalse,
+  isAfterContentEditableFalse,
+  isBeforeTable,
+  isAfterTable
+} from '../caret/CaretPositionPredicates';
 import Editor from '../api/Editor';
-import { getPositionsUntilNextLine, getPositionsUntilPreviousLine } from '../caret/LineReader';
+import {
+  getPositionsUntilNextLine,
+  getPositionsUntilPreviousLine
+} from '../caret/LineReader';
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const getSelectedNode = RangeNodes.getSelectedNode;
 
-const moveToCeFalseHorizontally = (direction: HDirection, editor: Editor, getNextPosFn: (pos: CaretPosition) => CaretPosition, range: Range): Range => {
+const moveToCeFalseHorizontally = (
+  direction: HDirection,
+  editor: Editor,
+  getNextPosFn: (pos: CaretPosition) => CaretPosition,
+  range: Range
+): Range => {
   const forwards = direction === HDirection.Forwards;
-  const isBeforeContentEditableFalseFn = forwards ? isBeforeContentEditableFalse : isAfterContentEditableFalse;
+  const isBeforeContentEditableFalseFn = forwards
+    ? isBeforeContentEditableFalse
+    : isAfterContentEditableFalse;
 
   if (!range.collapsed) {
     const node = getSelectedNode(range);
     if (isContentEditableFalse(node)) {
-      return CefUtils.showCaret(direction, editor, node, direction === HDirection.Backwards, true);
+      return CefUtils.showCaret(
+        direction,
+        editor,
+        node,
+        direction === HDirection.Backwards,
+        true
+      );
     }
   }
 
-  const rangeIsInContainerBlock = CaretContainer.isRangeInCaretContainerBlock(range);
-  const caretPosition = CaretUtils.getNormalizedRangeEndPoint(direction, editor.getBody(), range);
+  const rangeIsInContainerBlock = CaretContainer.isRangeInCaretContainerBlock(
+    range
+  );
+  const caretPosition = CaretUtils.getNormalizedRangeEndPoint(
+    direction,
+    editor.getBody(),
+    range
+  );
 
   if (isBeforeContentEditableFalseFn(caretPosition)) {
-    return CefUtils.selectNode(editor, caretPosition.getNode(!forwards) as Element);
+    return CefUtils.selectNode(
+      editor,
+      caretPosition.getNode(!forwards) as Element
+    );
   }
 
-  const nextCaretPosition = InlineUtils.normalizePosition(forwards, getNextPosFn(caretPosition));
+  const nextCaretPosition = InlineUtils.normalizePosition(
+    forwards,
+    getNextPosFn(caretPosition)
+  );
   if (!nextCaretPosition) {
     if (rangeIsInContainerBlock) {
       return range;
@@ -55,14 +88,28 @@ const moveToCeFalseHorizontally = (direction: HDirection, editor: Editor, getNex
   }
 
   if (isBeforeContentEditableFalseFn(nextCaretPosition)) {
-    return CefUtils.showCaret(direction, editor, nextCaretPosition.getNode(!forwards) as Element, forwards, true);
+    return CefUtils.showCaret(
+      direction,
+      editor,
+      nextCaretPosition.getNode(!forwards) as Element,
+      forwards,
+      true
+    );
   }
 
   // Peek ahead for handling of ab|c<span cE=false> -> abc|<span cE=false>
   const peekCaretPosition = getNextPosFn(nextCaretPosition);
   if (peekCaretPosition && isBeforeContentEditableFalseFn(peekCaretPosition)) {
-    if (CaretUtils.isMoveInsideSameBlock(nextCaretPosition, peekCaretPosition)) {
-      return CefUtils.showCaret(direction, editor, peekCaretPosition.getNode(!forwards) as Element, forwards, true);
+    if (
+      CaretUtils.isMoveInsideSameBlock(nextCaretPosition, peekCaretPosition)
+    ) {
+      return CefUtils.showCaret(
+        direction,
+        editor,
+        peekCaretPosition.getNode(!forwards) as Element,
+        forwards,
+        true
+      );
     }
   }
 
@@ -73,24 +120,47 @@ const moveToCeFalseHorizontally = (direction: HDirection, editor: Editor, getNex
   return null;
 };
 
-type WalkerFunction = (root: Element, pred: (clientRect: LineWalker.ClientRectLine) => boolean, pos: CaretPosition) => LineWalker.ClientRectLine[];
+type WalkerFunction = (
+  root: Element,
+  pred: (clientRect: LineWalker.ClientRectLine) => boolean,
+  pos: CaretPosition
+) => LineWalker.ClientRectLine[];
 
-const moveToCeFalseVertically = (direction: LineWalker.VDirection, editor: Editor, walkerFn: WalkerFunction, range: Range) => {
+const moveToCeFalseVertically = (
+  direction: LineWalker.VDirection,
+  editor: Editor,
+  walkerFn: WalkerFunction,
+  range: Range
+) => {
   let caretPosition, linePositions, nextLinePositions;
   let closestNextLineRect, caretClientRect, clientX;
   let dist1, dist2, contentEditableFalseNode;
 
   contentEditableFalseNode = getSelectedNode(range);
-  caretPosition = CaretUtils.getNormalizedRangeEndPoint(direction, editor.getBody(), range);
-  linePositions = walkerFn(editor.getBody(), LineWalker.isAboveLine(1), caretPosition);
+  caretPosition = CaretUtils.getNormalizedRangeEndPoint(
+    direction,
+    editor.getBody(),
+    range
+  );
+  linePositions = walkerFn(
+    editor.getBody(),
+    LineWalker.isAboveLine(1),
+    caretPosition
+  );
   nextLinePositions = Arr.filter(linePositions, LineWalker.isLine(1));
   caretClientRect = ArrUtils.last(caretPosition.getClientRects());
 
-  if (isBeforeContentEditableFalse(caretPosition) || isBeforeTable(caretPosition)) {
+  if (
+    isBeforeContentEditableFalse(caretPosition) ||
+    isBeforeTable(caretPosition)
+  ) {
     contentEditableFalseNode = caretPosition.getNode();
   }
 
-  if (isAfterContentEditableFalse(caretPosition) || isAfterTable(caretPosition)) {
+  if (
+    isAfterContentEditableFalse(caretPosition) ||
+    isAfterTable(caretPosition)
+  ) {
     contentEditableFalseNode = caretPosition.getNode(true);
   }
 
@@ -100,27 +170,54 @@ const moveToCeFalseVertically = (direction: LineWalker.VDirection, editor: Edito
 
   clientX = caretClientRect.left;
 
-  closestNextLineRect = LineUtils.findClosestClientRect(nextLinePositions, clientX);
+  closestNextLineRect = LineUtils.findClosestClientRect(
+    nextLinePositions,
+    clientX
+  );
   if (closestNextLineRect) {
     if (isContentEditableFalse(closestNextLineRect.node)) {
       dist1 = Math.abs(clientX - closestNextLineRect.left);
       dist2 = Math.abs(clientX - closestNextLineRect.right);
 
-      return CefUtils.showCaret(direction, editor, closestNextLineRect.node, dist1 < dist2, true);
+      return CefUtils.showCaret(
+        direction,
+        editor,
+        closestNextLineRect.node,
+        dist1 < dist2,
+        true
+      );
     }
   }
 
   if (contentEditableFalseNode) {
-    const caretPositions = LineWalker.positionsUntil(direction, editor.getBody(), LineWalker.isAboveLine(1), contentEditableFalseNode);
+    const caretPositions = LineWalker.positionsUntil(
+      direction,
+      editor.getBody(),
+      LineWalker.isAboveLine(1),
+      contentEditableFalseNode
+    );
 
-    closestNextLineRect = LineUtils.findClosestClientRect(Arr.filter(caretPositions, LineWalker.isLine(1)), clientX);
+    closestNextLineRect = LineUtils.findClosestClientRect(
+      Arr.filter(caretPositions, LineWalker.isLine(1)),
+      clientX
+    );
     if (closestNextLineRect) {
-      return CefUtils.renderRangeCaret(editor, closestNextLineRect.position.toRange(), true);
+      return CefUtils.renderRangeCaret(
+        editor,
+        closestNextLineRect.position.toRange(),
+        true
+      );
     }
 
-    closestNextLineRect = ArrUtils.last(Arr.filter(caretPositions, LineWalker.isLine(0)));
+    closestNextLineRect = ArrUtils.last(
+      Arr.filter(caretPositions, LineWalker.isLine(0))
+    );
     if (closestNextLineRect) {
-      return CefUtils.renderRangeCaret(editor, closestNextLineRect.position.toRange(), true);
+      return CefUtils.renderRangeCaret(
+        editor,
+        closestNextLineRect.position.toRange(),
+        true
+      );
     }
   }
 };
@@ -135,11 +232,21 @@ const createTextBlock = (editor: Editor): Element => {
   return textBlock;
 };
 
-const exitPreBlock = (editor: Editor, direction: HDirection, range: Range): void => {
+const exitPreBlock = (
+  editor: Editor,
+  direction: HDirection,
+  range: Range
+): void => {
   let pre, caretPos, newBlock;
   const caretWalker = CaretWalker(editor.getBody());
-  const getNextVisualCaretPosition = Fun.curry(CaretUtils.getVisualCaretPosition, caretWalker.next);
-  const getPrevVisualCaretPosition = Fun.curry(CaretUtils.getVisualCaretPosition, caretWalker.prev);
+  const getNextVisualCaretPosition = Fun.curry(
+    CaretUtils.getVisualCaretPosition,
+    caretWalker.next
+  );
+  const getPrevVisualCaretPosition = Fun.curry(
+    CaretUtils.getVisualCaretPosition,
+    caretWalker.prev
+  );
 
   if (range.collapsed && editor.settings.forced_root_block) {
     pre = editor.dom.getParent(range.startContainer, 'PRE');
@@ -148,9 +255,13 @@ const exitPreBlock = (editor: Editor, direction: HDirection, range: Range): void
     }
 
     if (direction === 1) {
-      caretPos = getNextVisualCaretPosition(CaretPosition.fromRangeStart(range));
+      caretPos = getNextVisualCaretPosition(
+        CaretPosition.fromRangeStart(range)
+      );
     } else {
-      caretPos = getPrevVisualCaretPosition(CaretPosition.fromRangeStart(range));
+      caretPos = getPrevVisualCaretPosition(
+        CaretPosition.fromRangeStart(range)
+      );
     }
 
     if (!caretPos) {
@@ -170,11 +281,19 @@ const exitPreBlock = (editor: Editor, direction: HDirection, range: Range): void
 
 const getHorizontalRange = (editor: Editor, forward: boolean): Range => {
   const caretWalker = CaretWalker(editor.getBody());
-  const getNextVisualCaretPosition = Fun.curry(CaretUtils.getVisualCaretPosition, caretWalker.next);
-  const getPrevVisualCaretPosition = Fun.curry(CaretUtils.getVisualCaretPosition, caretWalker.prev);
+  const getNextVisualCaretPosition = Fun.curry(
+    CaretUtils.getVisualCaretPosition,
+    caretWalker.next
+  );
+  const getPrevVisualCaretPosition = Fun.curry(
+    CaretUtils.getVisualCaretPosition,
+    caretWalker.prev
+  );
   let newRange;
   const direction = forward ? HDirection.Forwards : HDirection.Backwards;
-  const getNextPosFn = forward ? getNextVisualCaretPosition : getPrevVisualCaretPosition;
+  const getNextPosFn = forward
+    ? getNextVisualCaretPosition
+    : getPrevVisualCaretPosition;
   const range = editor.selection.getRng();
 
   newRange = moveToCeFalseHorizontally(direction, editor, getNextPosFn, range);
@@ -231,23 +350,23 @@ const moveV = (editor: Editor, down: boolean) => () => {
   }
 };
 
-const isCefPosition = (forward: boolean) => (pos: CaretPosition) => forward ? isAfterContentEditableFalse(pos) : isBeforeContentEditableFalse(pos);
+const isCefPosition = (forward: boolean) => (pos: CaretPosition) =>
+  forward
+    ? isAfterContentEditableFalse(pos)
+    : isBeforeContentEditableFalse(pos);
 
 const moveToLineEndPoint = (editor: Editor, forward: boolean) => () => {
-  const from = forward ? CaretPosition.fromRangeEnd(editor.selection.getRng()) : CaretPosition.fromRangeStart(editor.selection.getRng());
-  const result = forward ? getPositionsUntilNextLine(editor.getBody(), from) : getPositionsUntilPreviousLine(editor.getBody(), from);
+  const from = forward
+    ? CaretPosition.fromRangeEnd(editor.selection.getRng())
+    : CaretPosition.fromRangeStart(editor.selection.getRng());
+  const result = forward
+    ? getPositionsUntilNextLine(editor.getBody(), from)
+    : getPositionsUntilPreviousLine(editor.getBody(), from);
   const to = forward ? Arr.last(result.positions) : Arr.head(result.positions);
-  return to.filter(isCefPosition(forward)).fold(
-    Fun.constant(false),
-    (pos) => {
-      editor.selection.setRng(pos.toRange());
-      return true;
-    }
-  );
+  return to.filter(isCefPosition(forward)).fold(Fun.constant(false), (pos) => {
+    editor.selection.setRng(pos.toRange());
+    return true;
+  });
 };
 
-export {
-  moveH,
-  moveV,
-  moveToLineEndPoint
-};
+export { moveH, moveV, moveToLineEndPoint };

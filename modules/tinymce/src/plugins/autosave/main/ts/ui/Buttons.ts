@@ -12,7 +12,8 @@ const makeSetupHandler = (editor: Editor) => (api) => {
   api.setDisabled(!Storage.hasDraft(editor));
   const editorEventCallback = () => api.setDisabled(!Storage.hasDraft(editor));
   editor.on('StoreDraft RestoreDraft RemoveDraft', editorEventCallback);
-  return () => editor.off('StoreDraft RestoreDraft RemoveDraft', editorEventCallback);
+  return () =>
+    editor.off('StoreDraft RestoreDraft RemoveDraft', editorEventCallback);
 };
 
 const register = (editor: Editor) => {
@@ -35,10 +36,8 @@ const register = (editor: Editor) => {
     onAction: () => {
       Storage.restoreLastDraft(editor);
     },
-    onSetup: makeSetupHandler(editor),
+    onSetup: makeSetupHandler(editor)
   });
 };
 
-export {
-  register
-};
+export { register };

@@ -26,7 +26,15 @@ import {
   SystemEvents
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Arr, Future, FutureResult, Id, Option, Result, Fun } from '@ephox/katamari';
+import {
+  Arr,
+  Future,
+  FutureResult,
+  Id,
+  Option,
+  Result,
+  Fun
+} from '@ephox/katamari';
 import { Traverse, Attr } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
@@ -43,7 +51,7 @@ import {
   filterByQuery,
   headerTargets,
   historyTargets,
-  joinMenuLists,
+  joinMenuLists
 } from '../urlinput/Completions';
 import ItemResponse from '../menus/item/ItemResponse';
 import { Omit } from '../Omit';
@@ -52,23 +60,37 @@ import * as ReadOnly from '../../ReadOnly';
 
 type UrlInputSpec = Omit<Types.UrlInput.UrlInput, 'type'>;
 
-const getItems = (fileType: 'image' | 'media' | 'file', input: AlloyComponent, urlBackstage: UiFactoryBackstageForUrlInput) => {
+const getItems = (
+  fileType: 'image' | 'media' | 'file',
+  input: AlloyComponent,
+  urlBackstage: UiFactoryBackstageForUrlInput
+) => {
   const urlInputValue = Representing.getValue(input);
-  const term = urlInputValue.meta.text !== undefined ? urlInputValue.meta.text : urlInputValue.value;
+  const term =
+    urlInputValue.meta.text !== undefined
+      ? urlInputValue.meta.text
+      : urlInputValue.value;
   const info = urlBackstage.getLinkInformation();
   return info.fold(
     () => [],
     (linkInfo) => {
-      const history = filterByQuery(term, historyTargets(urlBackstage.getHistory(fileType)));
-      return fileType === 'file' ? joinMenuLists([
-        history,
-        filterByQuery(term, headerTargets(linkInfo)),
-        filterByQuery(term, Arr.flatten([
-          anchorTargetTop(linkInfo),
-          anchorTargets(linkInfo),
-          anchorTargetBottom(linkInfo)
-        ]))
-      ])
+      const history = filterByQuery(
+        term,
+        historyTargets(urlBackstage.getHistory(fileType))
+      );
+      return fileType === 'file'
+        ? joinMenuLists([
+            history,
+            filterByQuery(term, headerTargets(linkInfo)),
+            filterByQuery(
+              term,
+              Arr.flatten([
+                anchorTargetTop(linkInfo),
+                anchorTargets(linkInfo),
+                anchorTargetBottom(linkInfo)
+              ])
+            )
+          ])
         : history;
     }
   );
@@ -76,7 +98,11 @@ const getItems = (fileType: 'image' | 'media' | 'file', input: AlloyComponent, u
 
 const errorId = Id.generate('aria-invalid');
 
-export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage, urlBackstage: UiFactoryBackstageForUrlInput): SketchSpec => {
+export const renderUrlInput = (
+  spec: UrlInputSpec,
+  backstage: UiFactoryBackstage,
+  urlBackstage: UiFactoryBackstageForUrlInput
+): SketchSpec => {
   const providersBackstage = backstage.shared.providers;
 
   const updateHistory = (component: AlloyComponent): void => {
@@ -88,8 +114,8 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
   const pField = AlloyFormField.parts().field({
     factory: AlloyTypeahead,
     dismissOnBlur: true,
-    inputClasses: [ 'tox-textfield' ],
-    sandboxClasses: [ 'tox-dialog__popups' ],
+    inputClasses: ['tox-textfield'],
+    sandboxClasses: ['tox-dialog__popups'],
     inputAttributes: {
       'aria-errormessage': errorId,
       'type': 'url'
@@ -98,7 +124,12 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     responseTime: 0,
     fetch: (input: AlloyComponent) => {
       const items = getItems(spec.filetype, input, urlBackstage);
-      const tdata = NestedMenus.build(items, ItemResponse.BUBBLE_TO_SANDBOX, backstage, false);
+      const tdata = NestedMenus.build(
+        items,
+        ItemResponse.BUBBLE_TO_SANDBOX,
+        backstage,
+        false
+      );
       return Future.pure(tdata);
     },
 
@@ -109,63 +140,86 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
       }
     },
 
-    typeaheadBehaviours: Behaviour.derive(Arr.flatten([
-      urlBackstage.getValidationHandler().map(
-        (handler) => Invalidating.config({
-          getRoot: (comp) => Traverse.parent(comp.element()),
-          invalidClass: 'tox-control-wrap--status-invalid',
-          notify: {
-            onInvalid: (comp: AlloyComponent, err: string) => {
-              memInvalidIcon.getOpt(comp).each((invalidComp) => {
-                Attr.set(invalidComp.element(), 'title', providersBackstage.translate(err));
-              });
-            }
-          },
-          validator: {
-            validate: (input) => {
-              const urlEntry = Representing.getValue(input);
-              return FutureResult.nu((completer) => {
-                handler({ type: spec.filetype, url: urlEntry.value }, (validation) => {
-                  if (validation.status === 'invalid') {
-                    const err = Result.error(validation.message);
-                    completer(err);
-                  } else {
-                    const val = Result.value(validation.message);
-                    completer(val);
-                  }
-                });
-              });
-            },
-            validateOnLoad: false
-          }
-        })
-      ).toArray(),
-      [
-        Disabling.config({ disabled: spec.disabled }),
-        Tabstopping.config({}),
-        AddEventsBehaviour.config('urlinput-events', Arr.flatten([
-          // We want to get fast feedback for the link dialog, but not sure about others
-          spec.filetype === 'file' ? [
-            AlloyEvents.run(NativeEvents.input(), (comp) => {
-              AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
+    typeaheadBehaviours: Behaviour.derive(
+      Arr.flatten([
+        urlBackstage
+          .getValidationHandler()
+          .map((handler) =>
+            Invalidating.config({
+              getRoot: (comp) => Traverse.parent(comp.element()),
+              invalidClass: 'tox-control-wrap--status-invalid',
+              notify: {
+                onInvalid: (comp: AlloyComponent, err: string) => {
+                  memInvalidIcon.getOpt(comp).each((invalidComp) => {
+                    Attr.set(
+                      invalidComp.element(),
+                      'title',
+                      providersBackstage.translate(err)
+                    );
+                  });
+                }
+              },
+              validator: {
+                validate: (input) => {
+                  const urlEntry = Representing.getValue(input);
+                  return FutureResult.nu((completer) => {
+                    handler(
+                      { type: spec.filetype, url: urlEntry.value },
+                      (validation) => {
+                        if (validation.status === 'invalid') {
+                          const err = Result.error(validation.message);
+                          completer(err);
+                        } else {
+                          const val = Result.value(validation.message);
+                          completer(val);
+                        }
+                      }
+                    );
+                  });
+                },
+                validateOnLoad: false
+              }
             })
-          ] : [ ],
-          [
-            AlloyEvents.run(NativeEvents.change(), (comp) => {
-              AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
-              updateHistory(comp);
-            }),
-            AlloyEvents.run(SystemEvents.postPaste(), (comp) => {
-              AlloyTriggers.emitWith(comp, formChangeEvent, { name: spec.name });
-              updateHistory(comp);
-            })
-          ]
-        ]))
-      ]
-    ])),
+          )
+          .toArray(),
+        [
+          Disabling.config({ disabled: spec.disabled }),
+          Tabstopping.config({}),
+          AddEventsBehaviour.config(
+            'urlinput-events',
+            Arr.flatten([
+              // We want to get fast feedback for the link dialog, but not sure about others
+              spec.filetype === 'file'
+                ? [
+                    AlloyEvents.run(NativeEvents.input(), (comp) => {
+                      AlloyTriggers.emitWith(comp, formChangeEvent, {
+                        name: spec.name
+                      });
+                    })
+                  ]
+                : [],
+              [
+                AlloyEvents.run(NativeEvents.change(), (comp) => {
+                  AlloyTriggers.emitWith(comp, formChangeEvent, {
+                    name: spec.name
+                  });
+                  updateHistory(comp);
+                }),
+                AlloyEvents.run(SystemEvents.postPaste(), (comp) => {
+                  AlloyTriggers.emitWith(comp, formChangeEvent, {
+                    name: spec.name
+                  });
+                  updateHistory(comp);
+                })
+              ]
+            ])
+          )
+        ]
+      ])
+    ),
 
     eventOrder: {
-      [NativeEvents.input()]: [ 'streaming', 'urlinput-events', 'invalidating' ]
+      [NativeEvents.input()]: ['streaming', 'urlinput-events', 'invalidating']
     },
 
     model: {
@@ -192,18 +246,28 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     }
   });
 
-  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
+  const pLabel = spec.label.map((label) =>
+    renderLabel(label, providersBackstage)
+  );
 
   // TODO: Consider a way of merging with Checkbox.
-  const makeIcon = (name, errId: Option<string>, icon = name, label = name) => ({
+  const makeIcon = (
+    name,
+    errId: Option<string>,
+    icon = name,
+    label = name
+  ) => ({
     dom: {
       tag: 'div',
-      classes: [ 'tox-icon', 'tox-control-wrap__status-icon-' + name ],
+      classes: ['tox-icon', 'tox-control-wrap__status-icon-' + name],
       innerHtml: Icons.get(icon, providersBackstage.icons),
       attributes: {
         'title': providersBackstage.translate(label),
         'aria-live': 'polite',
-        ...errId.fold(() => ({ }), (id) => ({ id }))
+        ...errId.fold(
+          () => ({}),
+          (id) => ({ id })
+        )
       }
     }
   });
@@ -215,7 +279,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
   const memStatus = Memento.record({
     dom: {
       tag: 'div',
-      classes: [ 'tox-control-wrap__status-icon-wrap' ]
+      classes: ['tox-control-wrap__status-icon-wrap']
     },
     components: [
       // Include the 'valid' and 'unknown' icons here only if they are to be displayed
@@ -227,35 +291,41 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
 
   const browseUrlEvent = Id.generate('browser.url.event');
 
-  const memUrlBox = Memento.record(
-    {
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-control-wrap' ]
-      },
-      components: [ pField, memStatus.asSpec() ],
-      behaviours: Behaviour.derive([
-        Disabling.config({ disabled: spec.disabled })
-      ])
-    }
-  );
+  const memUrlBox = Memento.record({
+    dom: {
+      tag: 'div',
+      classes: ['tox-control-wrap']
+    },
+    components: [pField, memStatus.asSpec()],
+    behaviours: Behaviour.derive([
+      Disabling.config({ disabled: spec.disabled })
+    ])
+  });
 
-  const memUrlPickerButton = Memento.record(renderButton({
-    name: spec.name,
-    icon: Option.some('browse'),
-    text: spec.label.getOr(''),
-    disabled: spec.disabled,
-    primary: false,
-    borderless: true
-  },  (component) => AlloyTriggers.emit(component, browseUrlEvent), providersBackstage, [], [ 'tox-browse-url' ]));
+  const memUrlPickerButton = Memento.record(
+    renderButton(
+      {
+        name: spec.name,
+        icon: Option.some('browse'),
+        text: spec.label.getOr(''),
+        disabled: spec.disabled,
+        primary: false,
+        borderless: true
+      },
+      (component) => AlloyTriggers.emit(component, browseUrlEvent),
+      providersBackstage,
+      [],
+      ['tox-browse-url']
+    )
+  );
 
   const controlHWrapper = (): AlloySpec => ({
     dom: {
       tag: 'div',
-      classes: [ 'tox-form__controls-h-stack' ]
+      classes: ['tox-form__controls-h-stack']
     },
     components: Arr.flatten([
-      [ memUrlBox.asSpec() ],
+      [memUrlBox.asSpec()],
       optUrlPicker.map(() => memUrlPickerButton.asSpec()).toArray()
     ])
   });
@@ -265,7 +335,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
       const componentData = Representing.getValue(field);
       const urlData = {
         fieldname: spec.name,
-        ...componentData,
+        ...componentData
       };
       optUrlPicker.each((picker) => {
         picker(urlData).get((chosenData) => {
@@ -278,9 +348,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
 
   return AlloyFormField.sketch({
     dom: renderFormFieldDom(),
-    components: pLabel.toArray().concat([
-      controlHWrapper()
-    ]),
+    components: pLabel.toArray().concat([controlHWrapper()]),
     fieldBehaviours: Behaviour.derive([
       Disabling.config({
         disabled: spec.disabled || providersBackstage.isReadonly(),

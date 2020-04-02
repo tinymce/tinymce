@@ -1,9 +1,5 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
 
-const ComposeSchema: FieldProcessorAdt[] = [
-  FieldSchema.strict('find')
-];
+const ComposeSchema: FieldProcessorAdt[] = [FieldSchema.strict('find')];
 
-export {
-  ComposeSchema
-};
+export { ComposeSchema };

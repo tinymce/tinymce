@@ -40,18 +40,23 @@ const hasOnlyTwoOrLessPositionsLeft = function (elm) {
       const normalizedFirstPos = InlineUtils.normalizePosition(true, firstPos);
       const normalizedLastPos = InlineUtils.normalizePosition(false, lastPos);
 
-      return CaretFinder.nextPosition(elm, normalizedFirstPos).map(function (pos) {
-        return pos.isEqual(normalizedLastPos);
-      }).getOr(true);
-    }).getOr(true);
+      return CaretFinder.nextPosition(elm, normalizedFirstPos)
+        .map(function (pos) {
+          return pos.isEqual(normalizedLastPos);
+        })
+        .getOr(true);
+    }
+  ).getOr(true);
 };
 
 const setCaretLocation = function (editor: Editor, caret) {
   return function (location) {
-    return BoundaryCaret.renderCaret(caret, location).map(function (pos) {
-      BoundarySelection.setCaretPosition(editor, pos);
-      return true;
-    }).getOr(false);
+    return BoundaryCaret.renderCaret(caret, location)
+      .map(function (pos) {
+        BoundarySelection.setCaretPosition(editor, pos);
+        return true;
+      })
+      .getOr(false);
   };
 };
 
@@ -63,7 +68,11 @@ const deleteFromTo = function (editor: Editor, caret, from, to) {
     editor.selection.setRng(rangeFromPositions(from, to));
     editor.execCommand('Delete');
 
-    BoundaryLocation.readLocation(isInlineTarget, rootNode, CaretPosition.fromRangeStart(editor.selection.getRng()))
+    BoundaryLocation.readLocation(
+      isInlineTarget,
+      rootNode,
+      CaretPosition.fromRangeStart(editor.selection.getRng())
+    )
       .map(BoundaryLocation.inside)
       .map(setCaretLocation(editor, caret));
   });
@@ -76,28 +85,38 @@ const rescope = function (rootNode, node) {
   return parentBlock ? parentBlock : rootNode;
 };
 
-const backspaceDeleteCollapsed = function (editor: Editor, caret, forward: boolean, from) {
+const backspaceDeleteCollapsed = function (
+  editor: Editor,
+  caret,
+  forward: boolean,
+  from
+) {
   const rootNode = rescope(editor.getBody(), from.container());
   const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
-  const fromLocation = BoundaryLocation.readLocation(isInlineTarget, rootNode, from);
+  const fromLocation = BoundaryLocation.readLocation(
+    isInlineTarget,
+    rootNode,
+    from
+  );
 
-  return fromLocation.bind(function (location) {
-    if (forward) {
-      return location.fold(
-        Fun.constant(Option.some(BoundaryLocation.inside(location))), // Before
-        Option.none, // Start
-        Fun.constant(Option.some(BoundaryLocation.outside(location))), // End
-        Option.none  // After
-      );
-    } else {
-      return location.fold(
-        Option.none, // Before
-        Fun.constant(Option.some(BoundaryLocation.outside(location))), // Start
-        Option.none, // End
-        Fun.constant(Option.some(BoundaryLocation.inside(location)))  // After
-      );
-    }
-  })
+  return fromLocation
+    .bind(function (location) {
+      if (forward) {
+        return location.fold(
+          Fun.constant(Option.some(BoundaryLocation.inside(location))), // Before
+          Option.none, // Start
+          Fun.constant(Option.some(BoundaryLocation.outside(location))), // End
+          Option.none // After
+        );
+      } else {
+        return location.fold(
+          Option.none, // Before
+          Fun.constant(Option.some(BoundaryLocation.outside(location))), // Start
+          Option.none, // End
+          Fun.constant(Option.some(BoundaryLocation.inside(location))) // After
+        );
+      }
+    })
     .map(setCaretLocation(editor, caret))
     .getOrThunk(function () {
       const toPosition = CaretFinder.navigate(forward, rootNode, from);
@@ -106,26 +125,34 @@ const backspaceDeleteCollapsed = function (editor: Editor, caret, forward: boole
       });
 
       if (fromLocation.isSome() && toLocation.isSome()) {
-        return InlineUtils.findRootInline(isInlineTarget, rootNode, from).map(function (elm) {
-          if (hasOnlyTwoOrLessPositionsLeft(elm)) {
-            DeleteElement.deleteElement(editor, forward, Element.fromDom(elm));
-            return true;
-          } else {
-            return false;
-          }
-        }).getOr(false);
-      } else {
-        return toLocation.bind(function (_) {
-          return toPosition.map(function (to) {
-            if (forward) {
-              deleteFromTo(editor, caret, from, to);
+        return InlineUtils.findRootInline(isInlineTarget, rootNode, from)
+          .map(function (elm) {
+            if (hasOnlyTwoOrLessPositionsLeft(elm)) {
+              DeleteElement.deleteElement(
+                editor,
+                forward,
+                Element.fromDom(elm)
+              );
+              return true;
             } else {
-              deleteFromTo(editor, caret, to, from);
+              return false;
             }
+          })
+          .getOr(false);
+      } else {
+        return toLocation
+          .bind(function (_) {
+            return toPosition.map(function (to) {
+              if (forward) {
+                deleteFromTo(editor, caret, from, to);
+              } else {
+                deleteFromTo(editor, caret, to, from);
+              }
 
-            return true;
-          });
-        }).getOr(false);
+              return true;
+            });
+          })
+          .getOr(false);
       }
     });
 };
@@ -139,6 +166,4 @@ const backspaceDelete = function (editor: Editor, caret, forward?: boolean) {
   return false;
 };
 
-export {
-  backspaceDelete
-};
+export { backspaceDelete };

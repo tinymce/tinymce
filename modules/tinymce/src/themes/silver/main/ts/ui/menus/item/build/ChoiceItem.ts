@@ -15,7 +15,15 @@ import { renderCheckmark } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
-const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: (itemValue: string) => void, isSelected: boolean, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders) => {
+const renderChoiceItem = (
+  spec: Menu.ChoiceMenuItem,
+  useText: boolean,
+  presets: Types.PresetItemTypes,
+  onItemValueHandler: (itemValue: string) => void,
+  isSelected: boolean,
+  itemResponse: ItemResponse,
+  providersBackstage: UiFactoryBackstageProviders
+) => {
   const getApi = (component): Menu.ToggleMenuItemInstanceApi => ({
     setActive: (state) => {
       Toggling.set(component, state);
@@ -25,35 +33,46 @@ const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: 
     setDisabled: (state: boolean) => Disabling.set(component, state)
   });
 
-  const structure = renderItemStructure({
-    presets,
-    textContent:  useText ? spec.text : Option.none(),
-    htmlContent: Option.none(),
-    ariaLabel: spec.text,
-    iconContent: spec.icon,
-    shortcutContent: useText ? spec.shortcut : Option.none(),
+  const structure = renderItemStructure(
+    {
+      presets,
+      textContent: useText ? spec.text : Option.none(),
+      htmlContent: Option.none(),
+      ariaLabel: spec.text,
+      iconContent: spec.icon,
+      shortcutContent: useText ? spec.shortcut : Option.none(),
 
-    // useText essentially says that we have one column. In one column lists, we should show a tick
-    // The tick is controlled by the tickedClass (via css). It is always present
-    // but is hidden unless the tickedClass is present.
-    checkMark: useText ? Option.some(renderCheckmark(providersBackstage.icons)) : Option.none(),
-    caret: Option.none(),
-    value: spec.value
-  }, providersBackstage, true);
+      // useText essentially says that we have one column. In one column lists, we should show a tick
+      // The tick is controlled by the tickedClass (via css). It is always present
+      // but is hidden unless the tickedClass is present.
+      checkMark: useText
+        ? Option.some(renderCheckmark(providersBackstage.icons))
+        : Option.none(),
+      caret: Option.none(),
+      value: spec.value
+    },
+    providersBackstage,
+    true
+  );
 
   return Merger.deepMerge(
-    renderCommonItem({
-      data: buildData(spec),
-      disabled: spec.disabled,
-      getApi,
-      onAction: (_api) => onItemValueHandler(spec.value),
-      onSetup: (api) => {
-        api.setActive(isSelected);
-        return () => {};
+    renderCommonItem(
+      {
+        data: buildData(spec),
+        disabled: spec.disabled,
+        getApi,
+        onAction: (_api) => onItemValueHandler(spec.value),
+        onSetup: (api) => {
+          api.setActive(isSelected);
+          return () => {};
+        },
+        triggersSubmenu: false,
+        itemBehaviours: []
       },
-      triggersSubmenu: false,
-      itemBehaviours: [ ]
-    }, structure, itemResponse, providersBackstage),
+      structure,
+      itemResponse,
+      providersBackstage
+    ),
     {
       toggling: {
         toggleClass: ItemClasses.tickedClass,

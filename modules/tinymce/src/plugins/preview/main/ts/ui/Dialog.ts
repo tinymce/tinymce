@@ -9,7 +9,6 @@ import Editor from 'tinymce/core/api/Editor';
 import * as IframeContent from '../core/IframeContent';
 
 export const open = (editor: Editor) => {
-
   const content = IframeContent.getPreviewHtml(editor);
 
   const dataApi = editor.windowManager.open({
@@ -21,7 +20,7 @@ export const open = (editor: Editor) => {
         {
           name: 'preview',
           type: 'iframe',
-          sandboxed: true,
+          sandboxed: true
         }
       ]
     },

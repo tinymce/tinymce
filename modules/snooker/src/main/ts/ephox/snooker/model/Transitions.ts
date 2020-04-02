@@ -5,14 +5,22 @@ import { Warehouse } from './Warehouse';
 import { Generators } from '../api/Generators';
 import { Element } from '@ephox/sugar';
 
-const toDetails = function (grid: Structs.RowCells[], comparator: (a: Element, b: Element) => boolean) {
+const toDetails = function (
+  grid: Structs.RowCells[],
+  comparator: (a: Element, b: Element) => boolean
+) {
   const seen = Arr.map(grid, function (row) {
     return Arr.map(row.cells(), function () {
       return false;
     });
   });
 
-  const updateSeen = function (ri: number, ci: number, rowspan: number, colspan: number) {
+  const updateSeen = function (
+    ri: number,
+    ci: number,
+    rowspan: number,
+    colspan: number
+  ) {
     for (let r = ri; r < ri + rowspan; r++) {
       for (let c = ci; c < ci + colspan; c++) {
         seen[r][c] = true;
@@ -26,7 +34,14 @@ const toDetails = function (grid: Structs.RowCells[], comparator: (a: Element, b
       if (seen[ri][ci] === false) {
         const result = TableGrid.subgrid(grid, ri, ci, comparator);
         updateSeen(ri, ci, result.rowspan, result.colspan);
-        return [ Structs.detailnew(cell.element(), result.rowspan, result.colspan, cell.isNew()) ];
+        return [
+          Structs.detailnew(
+            cell.element(),
+            result.rowspan,
+            result.colspan,
+            cell.isNew()
+          )
+        ];
       } else {
         return [] as Structs.DetailNew[];
       }
@@ -35,17 +50,23 @@ const toDetails = function (grid: Structs.RowCells[], comparator: (a: Element, b
   });
 };
 
-const toGrid = function (warehouse: Warehouse, generators: Generators, isNew: boolean) {
+const toGrid = function (
+  warehouse: Warehouse,
+  generators: Generators,
+  isNew: boolean
+) {
   const grid: Structs.RowCells[] = [];
   for (let i = 0; i < warehouse.grid.rows(); i++) {
     const rowCells: Structs.ElementNew[] = [];
     for (let j = 0; j < warehouse.grid.columns(); j++) {
       // The element is going to be the element at that position, or a newly generated gap.
-      const element = Warehouse.getAt(warehouse, i, j).map(function (item) {
-        return Structs.elementnew(item.element(), isNew);
-      }).getOrThunk(function () {
-        return Structs.elementnew(generators.gap(), true);
-      });
+      const element = Warehouse.getAt(warehouse, i, j)
+        .map(function (item) {
+          return Structs.elementnew(item.element(), isNew);
+        })
+        .getOrThunk(function () {
+          return Structs.elementnew(generators.gap(), true);
+        });
       rowCells.push(element);
     }
     const row = Structs.rowcells(rowCells, warehouse.all[i].section());
@@ -54,7 +75,4 @@ const toGrid = function (warehouse: Warehouse, generators: Generators, isNew: bo
   return grid;
 };
 
-export {
-  toDetails,
-  toGrid
-};
+export { toDetails, toGrid };

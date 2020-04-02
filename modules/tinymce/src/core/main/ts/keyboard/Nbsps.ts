@@ -15,15 +15,24 @@ import * as Parents from '../dom/Parents';
 import * as ElementType from '../dom/ElementType';
 import { getElementFromPosition } from '../caret/CaretUtils';
 import * as CaretFinder from '../caret/CaretFinder';
-import { isAtStartOfBlock, isAtEndOfBlock, isAfterBlock, isBeforeBlock } from '../caret/BlockBoundary';
+import {
+  isAtStartOfBlock,
+  isAtEndOfBlock,
+  isAfterBlock,
+  isBeforeBlock
+} from '../caret/BlockBoundary';
 import { isNbsp, isContent } from '../text/CharType';
 import { isAfterBr, isBeforeBr } from '../caret/CaretBr';
 import { isAfterSpace, isBeforeSpace } from '../caret/CaretPositionPredicates';
 
-const isInMiddleOfText = (pos: CaretPosition) => CaretPosition.isTextPosition(pos) && !pos.isAtStart() && !pos.isAtEnd();
+const isInMiddleOfText = (pos: CaretPosition) =>
+  CaretPosition.isTextPosition(pos) && !pos.isAtStart() && !pos.isAtEnd();
 
 const getClosestBlock = (root: Element, pos: CaretPosition): Element => {
-  const parentBlocks = Arr.filter(Parents.parentsAndSelf(Element.fromDom(pos.container()), root), ElementType.isBlock);
+  const parentBlocks = Arr.filter(
+    Parents.parentsAndSelf(Element.fromDom(pos.container()), root),
+    ElementType.isBlock
+  );
   return Arr.head(parentBlocks).getOr(root);
 };
 
@@ -31,7 +40,12 @@ const hasSpaceBefore = (root: Element, pos: CaretPosition): boolean => {
   if (isInMiddleOfText(pos)) {
     return isAfterSpace(pos);
   } else {
-    return isAfterSpace(pos) || CaretFinder.prevPosition(getClosestBlock(root, pos).dom(), pos).exists(isAfterSpace);
+    return (
+      isAfterSpace(pos) ||
+      CaretFinder.prevPosition(getClosestBlock(root, pos).dom(), pos).exists(
+        isAfterSpace
+      )
+    );
   }
 };
 
@@ -39,33 +53,46 @@ const hasSpaceAfter = (root: Element, pos: CaretPosition): boolean => {
   if (isInMiddleOfText(pos)) {
     return isBeforeSpace(pos);
   } else {
-    return isBeforeSpace(pos) || CaretFinder.nextPosition(getClosestBlock(root, pos).dom(), pos).exists(isBeforeSpace);
+    return (
+      isBeforeSpace(pos) ||
+      CaretFinder.nextPosition(getClosestBlock(root, pos).dom(), pos).exists(
+        isBeforeSpace
+      )
+    );
   }
 };
 
-const isPreValue = (value: string) => Arr.contains([ 'pre', 'pre-wrap' ], value);
+const isPreValue = (value: string) => Arr.contains(['pre', 'pre-wrap'], value);
 
-const isInPre = (pos: CaretPosition) => getElementFromPosition(pos)
-  .bind((elm) => PredicateFind.closest(elm, Node.isElement))
-  .exists((elm: Element<DomElement>) => isPreValue(Css.get(elm, 'white-space')));
+const isInPre = (pos: CaretPosition) =>
+  getElementFromPosition(pos)
+    .bind((elm) => PredicateFind.closest(elm, Node.isElement))
+    .exists((elm: Element<DomElement>) =>
+      isPreValue(Css.get(elm, 'white-space'))
+    );
 
-const isAtBeginningOfBody = (root: Element, pos: CaretPosition) => CaretFinder.prevPosition(root.dom(), pos).isNone();
-const isAtEndOfBody = (root: Element, pos: CaretPosition) => CaretFinder.nextPosition(root.dom(), pos).isNone();
+const isAtBeginningOfBody = (root: Element, pos: CaretPosition) =>
+  CaretFinder.prevPosition(root.dom(), pos).isNone();
+const isAtEndOfBody = (root: Element, pos: CaretPosition) =>
+  CaretFinder.nextPosition(root.dom(), pos).isNone();
 
-const isAtLineBoundary = (root: Element, pos: CaretPosition) => (
+const isAtLineBoundary = (root: Element, pos: CaretPosition) =>
   isAtBeginningOfBody(root, pos) ||
-    isAtEndOfBody(root, pos) ||
-    isAtStartOfBlock(root, pos) ||
-    isAtEndOfBlock(root, pos) ||
-    isAfterBr(root, pos) ||
-    isBeforeBr(root, pos)
-);
+  isAtEndOfBody(root, pos) ||
+  isAtStartOfBlock(root, pos) ||
+  isAtEndOfBlock(root, pos) ||
+  isAfterBr(root, pos) ||
+  isBeforeBr(root, pos);
 
 const needsToHaveNbsp = (root: Element, pos: CaretPosition) => {
   if (isInPre(pos)) {
     return false;
   } else {
-    return isAtLineBoundary(root, pos) || hasSpaceBefore(root, pos) || hasSpaceAfter(root, pos);
+    return (
+      isAtLineBoundary(root, pos) ||
+      hasSpaceBefore(root, pos) ||
+      hasSpaceAfter(root, pos)
+    );
   }
 };
 
@@ -73,7 +100,12 @@ const needsToBeNbspLeft = (root: Element, pos: CaretPosition) => {
   if (isInPre(pos)) {
     return false;
   } else {
-    return isAtStartOfBlock(root, pos) || isBeforeBlock(root, pos) || isAfterBr(root, pos) || hasSpaceBefore(root, pos);
+    return (
+      isAtStartOfBlock(root, pos) ||
+      isBeforeBlock(root, pos) ||
+      isAfterBr(root, pos) ||
+      hasSpaceBefore(root, pos)
+    );
   }
 };
 
@@ -93,23 +125,37 @@ const needsToBeNbspRight = (root: Element, pos: CaretPosition) => {
   if (isInPre(afterPos)) {
     return false;
   } else {
-    return isAtEndOfBlock(root, afterPos) || isAfterBlock(root, afterPos) || isBeforeBr(root, afterPos) || hasSpaceAfter(root, afterPos);
+    return (
+      isAtEndOfBlock(root, afterPos) ||
+      isAfterBlock(root, afterPos) ||
+      isBeforeBr(root, afterPos) ||
+      hasSpaceAfter(root, afterPos)
+    );
   }
 };
 
-const needsToBeNbsp = (root: Element, pos: CaretPosition) => needsToBeNbspLeft(root, pos) || needsToBeNbspRight(root, pos);
+const needsToBeNbsp = (root: Element, pos: CaretPosition) =>
+  needsToBeNbspLeft(root, pos) || needsToBeNbspRight(root, pos);
 
 const isNbspAt = (text: string, offset: number) => isNbsp(text.charAt(offset));
 
 const hasNbsp = (pos: CaretPosition) => {
   const container = pos.container();
-  return NodeType.isText(container) && Strings.contains(container.data, Unicode.nbsp);
+  return (
+    NodeType.isText(container) && Strings.contains(container.data, Unicode.nbsp)
+  );
 };
 
 const normalizeNbspMiddle = (text: string): string => {
   const chars = text.split('');
   return Arr.map(chars, (chr, i) => {
-    if (isNbsp(chr) && i > 0 && i < chars.length - 1 && isContent(chars[i - 1]) && isContent(chars[i + 1])) {
+    if (
+      isNbsp(chr) &&
+      i > 0 &&
+      i < chars.length - 1 &&
+      isContent(chars[i - 1]) &&
+      isContent(chars[i + 1])
+    ) {
       return ' ';
     } else {
       return chr;
@@ -151,24 +197,32 @@ const normalizeNbspAtEnd = (root: Element, node: Text): boolean => {
   }
 };
 
-const normalizeNbsps = (root: Element, pos: CaretPosition): Option<CaretPosition> => Option.some(pos).filter(hasNbsp).bind((pos) => {
-  const container = pos.container() as Text;
-  const normalized = normalizeNbspAtStart(root, container) || normalizeNbspInMiddleOfTextNode(container) || normalizeNbspAtEnd(root, container);
-  return normalized ? Option.some(pos) : Option.none();
-});
+const normalizeNbsps = (
+  root: Element,
+  pos: CaretPosition
+): Option<CaretPosition> =>
+  Option.some(pos)
+    .filter(hasNbsp)
+    .bind((pos) => {
+      const container = pos.container() as Text;
+      const normalized =
+        normalizeNbspAtStart(root, container) ||
+        normalizeNbspInMiddleOfTextNode(container) ||
+        normalizeNbspAtEnd(root, container);
+      return normalized ? Option.some(pos) : Option.none();
+    });
 
 const normalizeNbspsInEditor = (editor: Editor) => {
   const root = Element.fromDom(editor.getBody());
 
   if (editor.selection.isCollapsed()) {
-    normalizeNbsps(root, CaretPosition.fromRangeStart(editor.selection.getRng())).each((pos) => {
+    normalizeNbsps(
+      root,
+      CaretPosition.fromRangeStart(editor.selection.getRng())
+    ).each((pos) => {
       editor.selection.setRng(pos.toRange());
     });
   }
 };
 
-export {
-  needsToHaveNbsp,
-  normalizeNbspMiddle,
-  normalizeNbspsInEditor
-};
+export { needsToHaveNbsp, normalizeNbspMiddle, normalizeNbspsInEditor };

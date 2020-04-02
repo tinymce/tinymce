@@ -9,12 +9,12 @@ import { FormFieldDetail } from '../types/FormFieldTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('prefix', 'form-field'),
-  SketchBehaviours.field('fieldBehaviours', [ Composing, Representing ])
+  SketchBehaviours.field('fieldBehaviours', [Composing, Representing])
 ]);
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.optional<FormFieldDetail>({
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [FieldSchema.strict('dom')],
     name: 'label'
   }),
 
@@ -26,7 +26,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
           dom: {
             tag: 'span',
             styles: {
-              display: 'none',
+              display: 'none'
             },
             attributes: {
               'aria-hidden': 'true'
@@ -36,23 +36,23 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         };
       }
     },
-    schema: [ FieldSchema.strict('text') ],
+    schema: [FieldSchema.strict('text')],
     name: 'aria-descriptor'
   }),
 
-  PartType.required<FormFieldDetail, { factory: { sketch: (spec: Record<string, any>) => Record<string, any> } }>({
+  PartType.required<
+    FormFieldDetail,
+    { factory: { sketch: (spec: Record<string, any>) => Record<string, any> } }
+  >({
     factory: {
       sketch(spec) {
-        const excludeFactory = Objects.exclude(spec, [ 'factory' ]);
+        const excludeFactory = Objects.exclude(spec, ['factory']);
         return spec.factory.sketch(excludeFactory);
       }
     },
-    schema: [ FieldSchema.strict('factory') ],
+    schema: [FieldSchema.strict('factory')],
     name: 'field'
   })
 ]);
 
-export {
-  schema,
-  parts
-};
+export { schema, parts };

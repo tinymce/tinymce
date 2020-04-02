@@ -3,18 +3,26 @@ import { Option } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import {
+  CompositeSketch,
+  CompositeSketchDetail,
+  CompositeSketchSpec
+} from '../../api/ui/Sketcher';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 
 export interface FormCoupledInputsDetail extends CompositeSketchDetail {
   uid: string;
   dom: RawDomSchema;
-  components: AlloySpec[ ];
+  components: AlloySpec[];
   coupledFieldBehaviours: SketchBehaviours;
   field1Name: string;
   field2Name: string;
   locked: boolean;
-  onLockedChange: (me: AlloyComponent, other: AlloyComponent, lock: AlloyComponent) => void;
+  onLockedChange: (
+    me: AlloyComponent,
+    other: AlloyComponent,
+    lock: AlloyComponent
+  ) => void;
   markers: {
     lockClass: string;
   };
@@ -28,7 +36,11 @@ export interface FormCoupledInputsSpec extends CompositeSketchSpec {
   field1Name?: string;
   field2Name?: string;
   locked?: boolean;
-  onLockedChange: (me: AlloyComponent, other: AlloyComponent, lock: AlloyComponent) => void;
+  onLockedChange: (
+    me: AlloyComponent,
+    other: AlloyComponent,
+    lock: AlloyComponent
+  ) => void;
   markers: {
     lockClass: string;
   };
@@ -40,4 +52,6 @@ export interface FormCoupledInputsApis {
   getLock: (comp: AlloyComponent) => Option<AlloyComponent>;
 }
 
-export interface FormCoupledInputsSketcher extends CompositeSketch<FormCoupledInputsSpec>, FormCoupledInputsApis { }
+export interface FormCoupledInputsSketcher
+  extends CompositeSketch<FormCoupledInputsSpec>,
+    FormCoupledInputsApis {}

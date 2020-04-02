@@ -38,10 +38,13 @@ const getNodeClientRects = (node: Node): NodeClientRect[] => {
   }
 };
 
-const getClientRects = (node: Node[]): NodeClientRect[] => Arr.foldl(node, function (result, node) {
-  return result.concat(getNodeClientRects(node));
-}, []);
+const getClientRects = (node: Node[]): NodeClientRect[] =>
+  Arr.foldl(
+    node,
+    function (result, node) {
+      return result.concat(getNodeClientRects(node));
+    },
+    []
+  );
 
-export {
-  getClientRects
-};
+export { getClientRects };

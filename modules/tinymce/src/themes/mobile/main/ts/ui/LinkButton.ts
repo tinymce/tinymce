@@ -29,11 +29,9 @@ const getGroups = Thunk.cached(function (realm, editor) {
           ],
 
           // Do not include link
-          maxFieldIndex: [ 'url', 'text', 'title', 'target' ].length - 1,
+          maxFieldIndex: ['url', 'text', 'title', 'target'].length - 1,
           getInitialValue(/* dialog */) {
-            return Option.some(
-              LinkBridge.getInfo(editor)
-            );
+            return Option.some(LinkBridge.getInfo(editor));
           },
 
           onExecute(dialog, _simulatedEvent) {
@@ -69,6 +67,4 @@ const sketch = function (realm, editor): SketchSpec {
   });
 };
 
-export {
-  sketch
-};
+export { sketch };

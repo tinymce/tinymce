@@ -9,13 +9,13 @@ UnitTest.test('MergeOperationsTest', function () {
       '<tr><td rowspan="2">a<br>d<br></td><td>b</td><td>c</td></tr>' +
       '<tr><td>e</td><td>f</td></tr>' +
       '<tr><td>g</td><td>h</td><td>i</td></tr>' +
-    '</tbody></table>',
+      '</tbody></table>',
 
     '<table border="1" style="border-collapse: collapse;"><tbody>' +
       '<tr><td>a</td><td>b</td><td>c</td></tr>' +
       '<tr><td>d</td><td>e</td><td>f</td></tr>' +
       '<tr><td>g</td><td>h</td><td>i</td></tr>' +
-    '</tbody></table>',
+      '</tbody></table>',
 
     [
       { section: 0, row: 0, column: 0 },
@@ -34,7 +34,7 @@ UnitTest.test('MergeOperationsTest', function () {
       '<tbody>' +
       '<tr><td>g</td><td>h</td><td>i</td></tr>' +
       '<tr><td>j</td><td>k</td><td>l</td></tr>' +
-    '</tbody></table>',
+      '</tbody></table>',
 
     '<table border="1" style="border-collapse: collapse;"><thead>' +
       '<tr><td>a</td><td>b</td><td>c</td></tr>' +
@@ -43,7 +43,7 @@ UnitTest.test('MergeOperationsTest', function () {
       '<tbody>' +
       '<tr><td>g</td><td>h</td><td>i</td></tr>' +
       '<tr><td>j</td><td>k</td><td>l</td></tr>' +
-    '</tbody></table>',
+      '</tbody></table>',
 
     [
       { section: 0, row: 0, column: 0 },
@@ -62,7 +62,7 @@ UnitTest.test('MergeOperationsTest', function () {
       '<tbody>' +
       '<tr><td rowspan="2">g<br>j<br></td><td>h</td><td>i</td></tr>' +
       '<tr><td>k</td><td>l</td></tr>' +
-    '</tbody></table>',
+      '</tbody></table>',
 
     '<table border="1" style="border-collapse: collapse;"><thead>' +
       '<tr><td>a</td><td>b</td><td>c</td></tr>' +
@@ -71,7 +71,7 @@ UnitTest.test('MergeOperationsTest', function () {
       '<tbody>' +
       '<tr><td>g</td><td>h</td><td>i</td></tr>' +
       '<tr><td>j</td><td>k</td><td>l</td></tr>' +
-    '</tbody></table>',
+      '</tbody></table>',
 
     [
       { section: 1, row: 0, column: 0 },

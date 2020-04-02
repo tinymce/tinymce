@@ -12,20 +12,24 @@ import Tools from '../api/util/Tools';
 import Editor from '../api/Editor';
 
 export interface FormatRegistry {
-  get (name?: string): Formats | Format[];
-  has (name: string): boolean;
-  register (name: string | Formats, format?: Format[] | Format): void;
-  unregister (name: string): Formats;
+  get(name?: string): Formats | Format[];
+  has(name: string): boolean;
+  register(name: string | Formats, format?: Format[] | Format): void;
+  unregister(name: string): Formats;
 }
 
 export function FormatRegistry(editor: Editor): FormatRegistry {
   const formats: Record<string, Format[]> = {};
 
-  const get = (name?: string): Formats | Format[] => name ? formats[name] : formats;
+  const get = (name?: string): Formats | Format[] =>
+    name ? formats[name] : formats;
 
   const has = (name: string): boolean => Obj.has(formats, name);
 
-  const register = function (name: string | Formats, format?: Format | Format[]) {
+  const register = function (
+    name: string | Formats,
+    format?: Format | Format[]
+  ) {
     if (name) {
       if (typeof name !== 'string') {
         Tools.each(name, function (format, name) {
@@ -34,7 +38,7 @@ export function FormatRegistry(editor: Editor): FormatRegistry {
       } else {
         // Force format into array and add it to internal collection
         if (!Type.isArray(format)) {
-          format = [ format ];
+          format = [format];
         }
 
         Tools.each(format, function (format: any) {
@@ -50,7 +54,11 @@ export function FormatRegistry(editor: Editor): FormatRegistry {
           }
 
           // Default to true
-          if (typeof format.remove === 'undefined' && format.selector && !format.inline) {
+          if (
+            typeof format.remove === 'undefined' &&
+            format.selector &&
+            !format.inline
+          ) {
             format.remove = 'none';
           }
 

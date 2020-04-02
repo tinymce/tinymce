@@ -12,34 +12,64 @@ import { createDataTransfer } from 'ephox/agar/datatransfer/DataTransfer';
 import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.asynctest('DataTransferItemTest', (success, failure) => {
-  Pipeline.async({}, [
-    Logger.t('Create transfer item from file', Step.sync(() => {
-      const fileItem = createDataTransferItemFromFile(createDataTransfer(), createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/plain' })));
+  Pipeline.async(
+    {},
+    [
+      Logger.t(
+        'Create transfer item from file',
+        Step.sync(() => {
+          const fileItem = createDataTransferItemFromFile(
+            createDataTransfer(),
+            createFile('a.txt', 1234, new Blob(['123'], { type: 'text/plain' }))
+          );
 
-      Assert.eq('Should be the expected kind', 'file', fileItem.kind);
-      Assert.eq('Should be a noop', Fun.noop, fileItem.getAsString);
-      Assert.eq('Should be expected file', 'a.txt', fileItem.getAsFile().name);
-      Assert.eq('Should be expected file', 'text/plain', fileItem.getAsFile().type);
-      KAssert.eqNone('Should not have any data', getData(fileItem));
-    })),
+          Assert.eq('Should be the expected kind', 'file', fileItem.kind);
+          Assert.eq('Should be a noop', Fun.noop, fileItem.getAsString);
+          Assert.eq(
+            'Should be expected file',
+            'a.txt',
+            fileItem.getAsFile().name
+          );
+          Assert.eq(
+            'Should be expected file',
+            'text/plain',
+            fileItem.getAsFile().type
+          );
+          KAssert.eqNone('Should not have any data', getData(fileItem));
+        })
+      ),
 
-    Logger.t('Create transfer item from string', Step.async((next, die) => {
-      const stringItem = createDataTransferItemFromString(createDataTransfer(), 'text/plain', '123');
+      Logger.t(
+        'Create transfer item from string',
+        Step.async((next, die) => {
+          const stringItem = createDataTransferItemFromString(
+            createDataTransfer(),
+            'text/plain',
+            '123'
+          );
 
-      Assert.eq('Should be the expected kind', 'string', stringItem.kind);
-      Assert.eq('Should be null for a string kind', null, stringItem.getAsFile());
-      KAssert.eqSome('Should have some data', '123', getData(stringItem));
+          Assert.eq('Should be the expected kind', 'string', stringItem.kind);
+          Assert.eq(
+            'Should be null for a string kind',
+            null,
+            stringItem.getAsFile()
+          );
+          KAssert.eqSome('Should have some data', '123', getData(stringItem));
 
-      stringItem.getAsString((text) => {
-        try {
-          Assert.eq('Should be expected contents', '123', text);
-          next();
-        } catch (e) {
-          die(e);
-        }
-      });
-    }))
-  ], () => {
-    success();
-  }, failure);
+          stringItem.getAsString((text) => {
+            try {
+              Assert.eq('Should be expected contents', '123', text);
+              next();
+            } catch (e) {
+              die(e);
+            }
+          });
+        })
+      )
+    ],
+    () => {
+      success();
+    },
+    failure
+  );
 });

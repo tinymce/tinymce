@@ -8,8 +8,18 @@ import * as Direction from './Direction';
 import { PositionCss, NuPositionCss } from '../view/PositionCss';
 
 type NoneOrigin<T> = () => T;
-type RelativeOrigin<T> = (x: number, y: number, width: number, height: number) => T;
-type FixedOrigin<T> = (x: number, y: number, width: number, height: number) => T;
+type RelativeOrigin<T> = (
+  x: number,
+  y: number,
+  width: number,
+  height: number
+) => T;
+type FixedOrigin<T> = (
+  x: number,
+  y: number,
+  width: number,
+  height: number
+) => T;
 
 export interface OriginAdt {
   fold: <T>(
@@ -30,12 +40,19 @@ const adt: {
   relative: RelativeOrigin<OriginAdt>;
   fixed: FixedOrigin<OriginAdt>;
 } = Adt.generate([
-  { none: [ ] },
-  { relative: [ 'x', 'y', 'width', 'height' ] },
-  { fixed: [ 'x', 'y', 'width', 'height' ] }
+  { none: [] },
+  { relative: ['x', 'y', 'width', 'height'] },
+  { fixed: ['x', 'y', 'width', 'height'] }
 ]);
 
-const positionWithDirection = (posName: string, decision: RepositionDecision, x: number, y: number, width: number, height: number) => {
+const positionWithDirection = (
+  posName: string,
+  decision: RepositionDecision,
+  x: number,
+  y: number,
+  width: number,
+  height: number
+) => {
   const decisionX = decision.x - x;
   const decisionY = decision.y - y;
   const decisionWidth = decision.width;
@@ -49,7 +66,8 @@ const positionWithDirection = (posName: string, decision: RepositionDecision, x:
   const bottom = Option.some(decisionBottom);
   const none = Option.none<number>();
 
-  return Direction.cata(decision.direction,
+  return Direction.cata(
+    decision.direction,
     () => NuPositionCss(posName, left, top, none, none), // southeast
     () => NuPositionCss(posName, none, top, right, none), // southwest
     () => NuPositionCss(posName, left, none, none, bottom), // northeast
@@ -61,13 +79,27 @@ const positionWithDirection = (posName: string, decision: RepositionDecision, x:
   );
 };
 
-const reposition = (origin: OriginAdt, decision: RepositionDecision): PositionCss => origin.fold(function () {
-  return NuPositionCss('absolute', Option.some(decision.x), Option.some(decision.y), Option.none(), Option.none());
-}, function (x, y, width, height) {
-  return positionWithDirection('absolute', decision, x, y, width, height);
-}, function (x, y, width, height) {
-  return positionWithDirection('fixed', decision, x, y, width, height);
-});
+const reposition = (
+  origin: OriginAdt,
+  decision: RepositionDecision
+): PositionCss =>
+  origin.fold(
+    function () {
+      return NuPositionCss(
+        'absolute',
+        Option.some(decision.x),
+        Option.some(decision.y),
+        Option.none(),
+        Option.none()
+      );
+    },
+    function (x, y, width, height) {
+      return positionWithDirection('absolute', decision, x, y, width, height);
+    },
+    function (x, y, width, height) {
+      return positionWithDirection('fixed', decision, x, y, width, height);
+    }
+  );
 
 const toBox = (origin: OriginAdt, element: Element): Boxes.Bounds => {
   const rel = Fun.curry(OuterPosition.find, element);
@@ -82,17 +114,22 @@ const toBox = (origin: OriginAdt, element: Element): Boxes.Bounds => {
   return Boxes.bounds(position.left(), position.top(), width, height);
 };
 
-const viewport = (origin: OriginAdt, getBounds: Option<() => Boxes.Bounds>): Boxes.Bounds => getBounds.fold(() =>
-/* There are no bounds supplied */
-  origin.fold(Boxes.win, Boxes.win, Boxes.bounds)
-, (b) =>
-/* Use any bounds supplied or remove the scroll position of the bounds for fixed. */
-  origin.fold(b, b, () => {
-    const bounds = b();
-    const pos = translate(origin, bounds.x, bounds.y);
-    return Boxes.bounds(pos.left(), pos.top(), bounds.width, bounds.height);
-  })
-);
+const viewport = (
+  origin: OriginAdt,
+  getBounds: Option<() => Boxes.Bounds>
+): Boxes.Bounds =>
+  getBounds.fold(
+    () =>
+      /* There are no bounds supplied */
+      origin.fold(Boxes.win, Boxes.win, Boxes.bounds),
+    (b) =>
+      /* Use any bounds supplied or remove the scroll position of the bounds for fixed. */
+      origin.fold(b, b, () => {
+        const bounds = b();
+        const pos = translate(origin, bounds.x, bounds.y);
+        return Boxes.bounds(pos.left(), pos.top(), bounds.width, bounds.height);
+      })
+  );
 
 const translate = (origin: OriginAdt, x: number, y: number): Position => {
   const pos = Position(x, y);
@@ -115,13 +152,4 @@ const none = adt.none;
 const relative = adt.relative;
 const fixed = adt.fixed;
 
-export {
-  none,
-  relative,
-  fixed,
-  reposition,
-  viewport,
-  toBox,
-  translate,
-  cata
-};
+export { none, relative, fixed, reposition, viewport, toBox, translate, cata };

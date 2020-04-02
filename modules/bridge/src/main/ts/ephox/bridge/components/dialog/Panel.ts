@@ -34,19 +34,24 @@ export interface Panel {
   items: BodyComponent[];
 }
 
-const createItemsField = (name: string) => FieldSchema.field(
-  'items',
-  'items',
-  FieldPresence.strict(),
-  ValueSchema.arrOf(ValueSchema.valueOf((v) => ValueSchema.asRaw(`Checking item of ${name}`, itemSchema, v).fold(
-    (sErr) => Result.error(ValueSchema.formatError(sErr)),
-    (passValue) => Result.value(passValue)
-  )))
-);
+const createItemsField = (name: string) =>
+  FieldSchema.field(
+    'items',
+    'items',
+    FieldPresence.strict(),
+    ValueSchema.arrOf(
+      ValueSchema.valueOf((v) =>
+        ValueSchema.asRaw(`Checking item of ${name}`, itemSchema, v).fold(
+          (sErr) => Result.error(ValueSchema.formatError(sErr)),
+          (passValue) => Result.value(passValue)
+        )
+      )
+    )
+  );
 
 // We're using a thunk here so we can refer to panel fields
-export const itemSchema = ValueSchema.valueThunkOf(
-  () => ValueSchema.chooseProcessor('type', {
+export const itemSchema = ValueSchema.valueThunkOf(() =>
+  ValueSchema.chooseProcessor('type', {
     alertbanner: alertBannerSchema,
     bar: ValueSchema.objOf(createBarFields(createItemsField('bar'))),
     button: buttonSchema,
@@ -79,4 +84,7 @@ const panelFields = [
 
 export const panelSchema = ValueSchema.objOf(panelFields);
 
-export const createPanel = (spec: PanelApi): Result<Panel, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<Panel>('panel', panelSchema, spec);
+export const createPanel = (
+  spec: PanelApi
+): Result<Panel, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<Panel>('panel', panelSchema, spec);

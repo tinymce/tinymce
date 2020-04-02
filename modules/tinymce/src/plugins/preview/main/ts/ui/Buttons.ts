@@ -17,10 +17,8 @@ const register = function (editor: Editor) {
   editor.ui.registry.addMenuItem('preview', {
     icon: 'preview',
     text: 'Preview',
-    onAction: () => editor.execCommand('mcePreview'),
+    onAction: () => editor.execCommand('mcePreview')
   });
 };
 
-export {
-  register
-};
+export { register };

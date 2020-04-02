@@ -42,12 +42,18 @@ const describe = (item: Element, description: string): Element => {
   return token;
 };
 
-const base = (getAttrs: (string: string) => { }, parent: Element, text: string): void => {
+const base = (
+  getAttrs: (string: string) => {},
+  parent: Element,
+  text: string
+): void => {
   const doc = Traverse.owner(parent);
 
   // firefox needs aria-describedby to speak a role=alert token, which causes IE11 to read twice
   const token = create(doc, text);
-  if (isFirefox) { linkToDescription(parent, token); }
+  if (isFirefox) {
+    linkToDescription(parent, token);
+  }
 
   // Make it speak as soon as it is in the DOM (politely)
   Attr.setAll(token, getAttrs(text));
@@ -77,13 +83,10 @@ const getShoutAttrs = (_text: string) => ({
   'role': 'alert'
 });
 
-const speak = (parent: Element, text: string): void => base(getSpeakAttrs, parent, text);
+const speak = (parent: Element, text: string): void =>
+  base(getSpeakAttrs, parent, text);
 
-const shout = (parent: Element, text: string): void => base(getShoutAttrs, parent, text);
+const shout = (parent: Element, text: string): void =>
+  base(getShoutAttrs, parent, text);
 
-export {
-  describe,
-  speak,
-  shout,
-  tokenSelector
-};
+export { describe, speak, shout, tokenSelector };

@@ -14,13 +14,17 @@ const words = function (allText: string) {
     const start = x.start();
     const finish = x.finish();
     const text = allText.substring(start, finish);
-    const prev = start > 0 ? Option.some(allText.charAt(start - 1)) : Option.none<string>();
-    const next = finish < len ? Option.some(allText.charAt(finish)) : Option.none<string>();
+    const prev =
+      start > 0
+        ? Option.some(allText.charAt(start - 1))
+        : Option.none<string>();
+    const next =
+      finish < len
+        ? Option.some(allText.charAt(finish))
+        : Option.none<string>();
     const r = WordScope(text, prev, next);
     return WordSanitiser.scope(r);
   });
 };
 
-export {
-  words
-};
+export { words };

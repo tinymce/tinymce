@@ -17,14 +17,10 @@ const getNonEditableRegExps = function (editor) {
   const nonEditableRegExps = editor.getParam('noneditable_regexp', []);
 
   if (nonEditableRegExps && nonEditableRegExps.constructor === RegExp) {
-    return [ nonEditableRegExps ];
+    return [nonEditableRegExps];
   } else {
     return nonEditableRegExps;
   }
 };
 
-export {
-  getNonEditableClass,
-  getEditableClass,
-  getNonEditableRegExps
-};
+export { getNonEditableClass, getEditableClass, getNonEditableRegExps };

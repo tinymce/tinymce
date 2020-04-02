@@ -10,7 +10,10 @@ import Editor from 'tinymce/core/api/Editor';
 
 // Note: node.firstChild check is for the 'allow_html_in_named_anchor' setting
 // Only want to add contenteditable attributes if there is no text within the anchor
-const isNamedAnchorNode = (node: Node) => !node.attr('href') && (node.attr('id') || node.attr('name')) && !node.firstChild;
+const isNamedAnchorNode = (node: Node) =>
+  !node.attr('href') &&
+  (node.attr('id') || node.attr('name')) &&
+  !node.firstChild;
 
 const setContentEditable = (state: string | null) => (nodes: Node[]) => {
   for (let i = 0; i < nodes.length; i++) {
@@ -27,6 +30,4 @@ const setup = (editor: Editor) => {
   });
 };
 
-export {
-  setup
-};
+export { setup };

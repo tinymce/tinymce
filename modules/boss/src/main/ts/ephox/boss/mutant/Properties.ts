@@ -27,7 +27,11 @@ const isComment = function (item: Gene) {
 };
 
 const isElement = function (item: Gene) {
-  return item.name !== undefined && item.name !== 'TEXT_GENE' && item.name !== 'COMMENT_GENE';
+  return (
+    item.name !== undefined &&
+    item.name !== 'TEXT_GENE' &&
+    item.name !== 'COMMENT_GENE'
+  );
 };
 
 const getText = function (item: Gene) {
@@ -39,7 +43,7 @@ const setText = function (item: Gene, value: string | undefined) {
 };
 
 const isEmptyTag = function (item: Gene) {
-  return Arr.contains([ 'br', 'img', 'hr' ], item.name);
+  return Arr.contains(['br', 'img', 'hr'], item.name);
 };
 
 const isBoundary = function (item: Gene) {

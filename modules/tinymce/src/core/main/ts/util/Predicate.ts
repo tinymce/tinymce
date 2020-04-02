@@ -6,7 +6,6 @@
  */
 
 const or = function (...args: any[]) {
-
   return function (x) {
     for (let i = 0; i < args.length; i++) {
       if (args[i](x)) {
@@ -30,7 +29,4 @@ const and = function (...args: any[]) {
   };
 };
 
-export {
-  and,
-  or
-};
+export { and, or };

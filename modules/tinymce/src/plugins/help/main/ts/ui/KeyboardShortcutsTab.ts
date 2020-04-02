@@ -16,26 +16,28 @@ export interface ShortcutActionPairType {
 }
 
 const tab = (): Types.Dialog.TabApi => {
-  const shortcutList = Arr.map(KeyboardShortcuts.shortcuts, (shortcut: ShortcutActionPairType) => {
-    const shortcutText = Arr.map(shortcut.shortcuts, ConvertShortcut.convertText).join(' or ');
-    return [ shortcut.action, shortcutText ];
-  });
+  const shortcutList = Arr.map(
+    KeyboardShortcuts.shortcuts,
+    (shortcut: ShortcutActionPairType) => {
+      const shortcutText = Arr.map(
+        shortcut.shortcuts,
+        ConvertShortcut.convertText
+      ).join(' or ');
+      return [shortcut.action, shortcutText];
+    }
+  );
 
   const tablePanel: Types.Dialog.BodyComponentApi = {
     type: 'table',
     // TODO: Fix table styles #TINY-2909
-    header: [ 'Action', 'Shortcut' ],
+    header: ['Action', 'Shortcut'],
     cells: shortcutList
   };
   return {
     name: 'shortcuts',
     title: 'Handy Shortcuts',
-    items: [
-      tablePanel
-    ]
+    items: [tablePanel]
   };
 };
 
-export {
-  tab
-};
+export { tab };

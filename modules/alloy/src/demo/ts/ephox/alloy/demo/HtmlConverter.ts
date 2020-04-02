@@ -21,7 +21,8 @@ export default (): void => {
       Container.sketch({
         dom: {
           tag: 'p',
-          innerHtml: 'Copy your HTML structure into this textarea and press <strong>Convert</strong>'
+          innerHtml:
+            'Copy your HTML structure into this textarea and press <strong>Convert</strong>'
         }
       }),
       Input.sketch({
@@ -31,7 +32,8 @@ export default (): void => {
           height: '300px',
           display: 'block'
         },
-        data: '<div class="cat dog elephant" data-ephox="this is"><div id="mike">chau</div></div>',
+        data:
+          '<div class="cat dog elephant" data-ephox="this is"><div id="mike">chau</div></div>',
         uid: 'textarea-input'
       }),
       Button.sketch({
@@ -40,13 +42,16 @@ export default (): void => {
           innerHtml: 'Convert'
         },
         action(button) {
-          const textarea = button.getSystem().getByUid('textarea-input').getOrDie();
+          const textarea = button
+            .getSystem()
+            .getByUid('textarea-input')
+            .getOrDie();
           const value = Representing.getValue(textarea);
           const output = GuiTemplate.readHtml(value).getOrDie();
           const display = button.getSystem().getByUid('pre-output').getOrDie();
           const prettyprint = JSON.stringify(output, undefined, 2);
 
-          Replacing.set(display, [ GuiFactory.text(prettyprint) ]);
+          Replacing.set(display, [GuiFactory.text(prettyprint)]);
         }
       }),
 
@@ -55,9 +60,7 @@ export default (): void => {
         dom: {
           tag: 'pre'
         },
-        containerBehaviours: Behaviour.derive([
-          Replacing.config({ })
-        ])
+        containerBehaviours: Behaviour.derive([Replacing.config({})])
       })
     ]
   });
@@ -66,5 +69,4 @@ export default (): void => {
   const gui = Gui.takeover(root);
 
   Attachment.attachSystem(ephoxUi, gui);
-
 };

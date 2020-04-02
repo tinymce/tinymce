@@ -34,7 +34,7 @@ export default {
           {
             text: 'Blank',
             value: '_blank'
-          },
+          }
         ]
       }
     ]
@@ -53,7 +53,7 @@ export default {
     }
   ],
   initialData: {
-    url: { value: 'my.html', text: 'my.html', meta: { }},
+    url: { value: 'my.html', text: 'my.html', meta: {} },
     text: 'Some text',
     title: 'Some title',
     target: '_blank'

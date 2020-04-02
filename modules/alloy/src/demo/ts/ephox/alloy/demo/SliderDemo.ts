@@ -12,7 +12,11 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { SliderValue, SliderValueX, SliderValueY } from 'ephox/alloy/ui/types/SliderTypes';
+import {
+  SliderValue,
+  SliderValueX,
+  SliderValueY
+} from 'ephox/alloy/ui/types/SliderTypes';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export default (): void => {
@@ -68,7 +72,7 @@ export default (): void => {
     gui,
     'This is a basic slider with two snapping regions [35] and [75]. The minimum value is 0',
     Slider.sketch({
-      dom: { tag: 'div', styles: { 'margin-bottom': '40px' }},
+      dom: { tag: 'div', styles: { 'margin-bottom': '40px' } },
       model: {
         mode: 'y',
         getInitialValue: Fun.constant({ y: Fun.constant(35) })
@@ -77,21 +81,21 @@ export default (): void => {
       stepSize: 40,
       snapStart: 35,
       snapToGrid: true,
-      onDragStart(_, thumb) { Toggling.on(thumb); },
-      onDragEnd(_, thumb) { Toggling.off(thumb); },
+      onDragStart(_, thumb) {
+        Toggling.on(thumb);
+      },
+      onDragEnd(_, thumb) {
+        Toggling.off(thumb);
+      },
 
       onChange(_slider, thumb, value: SliderValue) {
         if (isValueY(value)) {
-          Replacing.set(thumb, [
-            GuiFactory.text(value.y().toString())
-          ]);
+          Replacing.set(thumb, [GuiFactory.text(value.y().toString())]);
         }
       },
       onInit(_slider, thumb, _spectrum, value: SliderValue) {
         if (isValueY(value)) {
-          Replacing.set(thumb, [
-            GuiFactory.text(value.y().toString())
-          ]);
+          Replacing.set(thumb, [GuiFactory.text(value.y().toString())]);
         }
       },
 
@@ -100,7 +104,9 @@ export default (): void => {
           dom: {
             tag: 'div',
             styles: {
-              width: '20px', background: 'green', height: '300px'
+              width: '20px',
+              background: 'green',
+              height: '300px'
             }
           }
         }),
@@ -113,7 +119,9 @@ export default (): void => {
               'height': '25px',
               'border': '1px solid green',
               'background': 'transparent',
-              'display': 'flex', 'align-items': 'center', 'justify-content': 'center'
+              'display': 'flex',
+              'align-items': 'center',
+              'justify-content': 'center'
             }
           },
           behaviours: Behaviour.derive([
@@ -136,7 +144,8 @@ export default (): void => {
   }
 
   const setColor = (thumb: AlloyComponent, hue: number) => {
-    const color = (hue < 0) ? 'black' : (hue > 360) ? 'white' : 'hsl(' + hue + ', 100%, 50%)';
+    const color =
+      hue < 0 ? 'black' : hue > 360 ? 'white' : 'hsl(' + hue + ', 100%, 50%)';
     Css.set(thumb.element(), 'background', color);
   };
 
@@ -153,7 +162,10 @@ export default (): void => {
         maxX: 360,
         minY: 0,
         maxY: 360,
-        getInitialValue: Fun.constant({ x: Fun.constant(120), y: Fun.constant(120) })
+        getInitialValue: Fun.constant({
+          x: Fun.constant(120),
+          y: Fun.constant(120)
+        })
       },
       stepSize: 10,
 
@@ -195,7 +207,8 @@ export default (): void => {
                 tag: 'div',
                 styles: {
                   height: '500px',
-                  background: 'linear-gradient(to right, hsl(0, 100%, 50%) 0%, hsl(60, 100%, 50%) 17%, hsl(120, 100%, 50%) 33%, hsl(180, 100%, 50%) 50%, hsl(240, 100%, 50%) 67%, hsl(300, 100%, 50%) 83%, hsl(360, 100%, 50%) 100%)',
+                  background:
+                    'linear-gradient(to right, hsl(0, 100%, 50%) 0%, hsl(60, 100%, 50%) 17%, hsl(120, 100%, 50%) 33%, hsl(180, 100%, 50%) 50%, hsl(240, 100%, 50%) 67%, hsl(300, 100%, 50%) 83%, hsl(360, 100%, 50%) 100%)',
                   width: '500px'
                 }
               }
@@ -215,7 +228,7 @@ export default (): void => {
         Slider.parts().thumb({
           dom: {
             tag: 'div',
-            classes: [ 'demo-sliding-thumb' ],
+            classes: ['demo-sliding-thumb'],
             styles: {
               'height': '30px',
               'width': '10px',
@@ -235,6 +248,8 @@ export default (): void => {
   const isTouch = platform.deviceType.isTouch();
 
   DomEvent.bind(body, 'click', () => {
-    if (!isTouch) { Keying.focusIn(slider1); }
+    if (!isTouch) {
+      Keying.focusIn(slider1);
+    }
   });
 };

@@ -24,9 +24,7 @@ export default (): void => {
     dom: {
       tag: 'div'
     },
-    behaviours: Behaviour.derive([
-      Positioning.config({ })
-    ])
+    behaviours: Behaviour.derive([Positioning.config({})])
   });
 
   const lazySink = function () {
@@ -42,21 +40,21 @@ export default (): void => {
         tag: 'div'
       },
       containerBehaviours: Behaviour.derive([
-        Focusing.config({ }),
+        Focusing.config({}),
         Keying.config({
           mode: 'flow',
           selector: 'button'
         })
       ]),
 
-      components: Arr.map([ 'alpha', 'beta', 'gamma' ], function (n) {
-        return <AlloySpec> {
+      components: Arr.map(['alpha', 'beta', 'gamma'], function (n) {
+        return <AlloySpec>{
           dom: {
             tag: 'button',
             innerHtml: n
           },
           behaviours: Behaviour.derive([
-            Focusing.config({ }),
+            Focusing.config({}),
             Tooltipping.config({
               lazySink,
               // NOTE: At this stage, exclusive=false, probably doesn't do much, because
@@ -76,9 +74,7 @@ export default (): void => {
             })
           ])
         };
-      }).concat([
-        <AlloySpec> GuiFactory.premade(sink)
-      ])
+      }).concat([<AlloySpec>GuiFactory.premade(sink)])
     })
   );
 };

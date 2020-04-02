@@ -75,42 +75,27 @@ export interface Bounds {
   readonly finishCol: () => number;
 }
 
-const dimension = (
-  width: number,
-  height: number
-): Dimension => ({
+const dimension = (width: number, height: number): Dimension => ({
   width: Fun.constant(width),
   height: Fun.constant(height)
 });
 
-const dimensions = (
-  width: number[],
-  height: number[]
-): Dimensions => ({
+const dimensions = (width: number[], height: number[]): Dimensions => ({
   width: Fun.constant(width),
   height: Fun.constant(height)
 });
 
-const grid = (
-  rows: number,
-  columns: number
-): Grid => ({
+const grid = (rows: number, columns: number): Grid => ({
   rows: Fun.constant(rows),
   columns: Fun.constant(columns)
 });
 
-const address = (
-  row: number,
-  column: number
-): Address => ({
+const address = (row: number, column: number): Address => ({
   row: Fun.constant(row),
   column: Fun.constant(column)
 });
 
-const coords = (
-  x: number,
-  y: number
-): Coords => ({
+const coords = (x: number, y: number): Coords => ({
   x: Fun.constant(x),
   y: Fun.constant(y)
 });
@@ -151,7 +136,7 @@ const extended = (
   column: Fun.constant(column)
 });
 
-const rowdata = <T> (
+const rowdata = <T>(
   element: Element,
   cells: T[],
   section: Section
@@ -161,15 +146,12 @@ const rowdata = <T> (
   section: Fun.constant(section)
 });
 
-const elementnew = (
-  element: Element,
-  isNew: boolean
-): ElementNew => ({
+const elementnew = (element: Element, isNew: boolean): ElementNew => ({
   element: Fun.constant(element),
   isNew: Fun.constant(isNew)
 });
 
-const rowdatanew = <T> (
+const rowdatanew = <T>(
   element: Element,
   cells: T[],
   section: Section,
@@ -181,18 +163,12 @@ const rowdatanew = <T> (
   isNew: Fun.constant(isNew)
 });
 
-const rowcells = (
-  cells: ElementNew[],
-  section: Section
-): RowCells => ({
+const rowcells = (cells: ElementNew[], section: Section): RowCells => ({
   cells: Fun.constant(cells),
   section: Fun.constant(section)
 });
 
-const rowdetails = (
-  details: DetailNew[],
-  section: Section
-): RowDetails => ({
+const rowdetails = (details: DetailNew[], section: Section): RowDetails => ({
   details: Fun.constant(details),
   section: Fun.constant(section)
 });
@@ -203,7 +179,7 @@ const bounds = (
   finishRow: number,
   finishCol: number
 ): Bounds => ({
-  startRow:  Fun.constant(startRow),
+  startRow: Fun.constant(startRow),
   startCol: Fun.constant(startCol),
   finishRow: Fun.constant(finishRow),
   finishCol: Fun.constant(finishCol)

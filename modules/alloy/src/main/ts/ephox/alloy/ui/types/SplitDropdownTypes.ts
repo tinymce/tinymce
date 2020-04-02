@@ -5,7 +5,11 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { AnchorOverrides, AnchorSpec, HasLayoutAnchorSpec } from '../../positioning/mode/Anchoring';
+import {
+  AnchorOverrides,
+  AnchorSpec,
+  HasLayoutAnchorSpec
+} from '../../positioning/mode/Anchoring';
 import { CommonDropdownDetail } from './DropdownTypes';
 import { TieredMenuSpec, TieredData } from './TieredMenuTypes';
 
@@ -14,14 +18,20 @@ export interface SplitDropdownDetail extends CommonDropdownDetail<TieredData> {
   toggleClass: string;
 
   onExecute: (comp: AlloyComponent, button: AlloyComponent) => void;
-  onItemExecute: (comp: AlloyComponent, button: AlloyComponent, item: AlloyComponent) => void;
+  onItemExecute: (
+    comp: AlloyComponent,
+    button: AlloyComponent,
+    item: AlloyComponent
+  ) => void;
 }
 
 export interface SplitDropdownApis {
   repositionMenus: (comp: AlloyComponent) => void;
 }
 
-export interface SplitDropdownSpec extends CompositeSketchSpec, HasLayoutAnchorSpec {
+export interface SplitDropdownSpec
+  extends CompositeSketchSpec,
+    HasLayoutAnchorSpec {
   uid?: string;
   dom: RawDomSchema;
   role?: string;
@@ -34,9 +44,17 @@ export interface SplitDropdownSpec extends CompositeSketchSpec, HasLayoutAnchorS
   getAnchorOverrides?: () => AnchorOverrides;
 
   onExecute: (comp: AlloyComponent, button: AlloyComponent) => void;
-  onItemExecute: (comp: AlloyComponent, button: AlloyComponent, item: AlloyComponent) => void;
+  onItemExecute: (
+    comp: AlloyComponent,
+    button: AlloyComponent,
+    item: AlloyComponent
+  ) => void;
 
-  onOpen?: (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
+  onOpen?: (
+    anchor: AnchorSpec,
+    comp: AlloyComponent,
+    menu: AlloyComponent
+  ) => void;
 
   lazySink?: (comp: AlloyComponent) => Result<AlloyComponent, Error>;
   fetch: (comp: AlloyComponent) => Future<Option<TieredData>>;
@@ -49,4 +67,6 @@ export interface SplitDropdownSpec extends CompositeSketchSpec, HasLayoutAnchorS
   };
 }
 
-export interface SplitDropdownSketcher extends CompositeSketch<SplitDropdownSpec>, SplitDropdownApis { }
+export interface SplitDropdownSketcher
+  extends CompositeSketch<SplitDropdownSpec>,
+    SplitDropdownApis {}

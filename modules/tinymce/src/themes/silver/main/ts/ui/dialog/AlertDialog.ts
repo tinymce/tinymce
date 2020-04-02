@@ -5,7 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyEvents, Focusing, GuiFactory, Memento, ModalDialog } from '@ephox/alloy';
+import {
+  AlloyEvents,
+  Focusing,
+  GuiFactory,
+  Memento,
+  ModalDialog
+} from '@ephox/alloy';
 import { Option } from '@ephox/katamari';
 import { renderFooterButton } from '../general/Button';
 import { formCancelEvent, FormCancelEvent } from '../general/FormEvents';
@@ -15,21 +21,24 @@ export const setup = (extras) => {
   const sharedBackstage = extras.backstage.shared;
 
   const open = (message: string, callback: () => void) => {
-
     const closeDialog = () => {
       ModalDialog.hide(alertDialog);
       callback();
     };
 
     const memFooterClose = Memento.record(
-      renderFooterButton({
-        name: 'close-alert',
-        text: 'OK',
-        primary: true,
-        align: 'end',
-        disabled: false,
-        icon: Option.none()
-      }, 'cancel', extras.backstage)
+      renderFooterButton(
+        {
+          name: 'close-alert',
+          text: 'OK',
+          primary: true,
+          align: 'end',
+          disabled: false,
+          icon: Option.none()
+        },
+        'cancel',
+        extras.backstage
+      )
     );
 
     const titleSpec = Dialogs.pUntitled();
@@ -40,17 +49,17 @@ export const setup = (extras) => {
         lazySink: () => sharedBackstage.getSink(),
         header: Dialogs.hiddenHeader(titleSpec, closeSpec),
         body: Dialogs.pBodyMessage(message, sharedBackstage.providers),
-        footer: Option.some(Dialogs.pFooter(Dialogs.pFooterGroup([], [
-          memFooterClose.asSpec()
-        ]))),
+        footer: Option.some(
+          Dialogs.pFooter(Dialogs.pFooterGroup([], [memFooterClose.asSpec()]))
+        ),
         onEscape: closeDialog,
-        extraClasses: [ 'tox-alert-dialog' ],
-        extraBehaviours: [ ],
-        extraStyles: { },
+        extraClasses: ['tox-alert-dialog'],
+        extraBehaviours: [],
+        extraStyles: {},
         dialogEvents: [
           AlloyEvents.run<FormCancelEvent>(formCancelEvent, closeDialog)
         ],
-        eventOrder: { }
+        eventOrder: {}
       })
     );
 

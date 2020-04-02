@@ -39,6 +39,4 @@ const register = function (editor: Editor) {
   editor.addShortcut('Meta+S', '', 'mceSave');
 };
 
-export {
-  register
-};
+export { register };

@@ -13,8 +13,4 @@ export interface PaletteUpdateEvent extends EventFormat {
   value: SliderTypes.SliderValueXY;
 }
 
-export {
-  fieldsUpdate,
-  sliderUpdate,
-  paletteUpdate
-};
+export { fieldsUpdate, sliderUpdate, paletteUpdate };

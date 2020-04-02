@@ -8,7 +8,6 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { setTimeout } from '@ephox/dom-globals';
 
 UnitTest.asynctest('ResizeRaceTest', function (success, failure) {
-
   const div = Element.fromTag('div');
   Insert.append(Body.body(), div);
 

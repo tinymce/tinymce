@@ -26,19 +26,27 @@ const schema = [
   FieldSchema.option('focusIn')
 ];
 
-const getKeydownRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, specialInfo: SpecialConfig): Array<KeyRules.KeyRule<SpecialConfig, Stateless>> => [
+const getKeydownRules = (
+  component: AlloyComponent,
+  simulatedEvent: NativeSimulatedEvent,
+  specialInfo: SpecialConfig
+): Array<KeyRules.KeyRule<SpecialConfig, Stateless>> => [
   KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), specialInfo.onSpace),
   KeyRules.rule(
-    KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.ENTER()) ]), specialInfo.onEnter
+    KeyMatch.and([KeyMatch.isNotShift, KeyMatch.inSet(Keys.ENTER())]),
+    specialInfo.onEnter
   ),
   KeyRules.rule(
-    KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.ENTER()) ]), specialInfo.onShiftEnter
+    KeyMatch.and([KeyMatch.isShift, KeyMatch.inSet(Keys.ENTER())]),
+    specialInfo.onShiftEnter
   ),
   KeyRules.rule(
-    KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB()) ]), specialInfo.onShiftTab
+    KeyMatch.and([KeyMatch.isShift, KeyMatch.inSet(Keys.TAB())]),
+    specialInfo.onShiftTab
   ),
   KeyRules.rule(
-    KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.TAB()) ]), specialInfo.onTab
+    KeyMatch.and([KeyMatch.isNotShift, KeyMatch.inSet(Keys.TAB())]),
+    specialInfo.onTab
   ),
 
   KeyRules.rule(KeyMatch.inSet(Keys.UP()), specialInfo.onUp),
@@ -49,8 +57,19 @@ const getKeydownRules = (component: AlloyComponent, simulatedEvent: NativeSimula
   KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), specialInfo.onEscape)
 ];
 
-const getKeyupRules =  (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, specialInfo: SpecialConfig): Array<KeyRules.KeyRule<SpecialConfig, Stateless>> => specialInfo.stopSpaceKeyup ? [
-  KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), stopEventForFirefox)
-] : [ ];
+const getKeyupRules = (
+  component: AlloyComponent,
+  simulatedEvent: NativeSimulatedEvent,
+  specialInfo: SpecialConfig
+): Array<KeyRules.KeyRule<SpecialConfig, Stateless>> =>
+  specialInfo.stopSpaceKeyup
+    ? [KeyRules.rule(KeyMatch.inSet(Keys.SPACE()), stopEventForFirefox)]
+    : [];
 
-export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, (specialInfo: SpecialConfig) => specialInfo.focusIn);
+export default KeyingType.typical(
+  schema,
+  NoState.init,
+  getKeydownRules,
+  getKeyupRules,
+  (specialInfo: SpecialConfig) => specialInfo.focusIn
+);

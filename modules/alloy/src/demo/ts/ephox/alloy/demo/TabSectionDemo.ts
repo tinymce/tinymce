@@ -17,7 +17,11 @@ export default (): void => {
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  const makeTab = (tabSpec: { view: () => PremadeSpec[]; value: string; text: string }) => ({
+  const makeTab = (tabSpec: {
+    view: () => PremadeSpec[];
+    value: string;
+    text: string;
+  }) => ({
     view: tabSpec.view,
     value: tabSpec.value,
     dom: {
@@ -26,18 +30,14 @@ export default (): void => {
         'data-value': tabSpec.value
       }
     },
-    components: [
-      GuiFactory.text(tabSpec.text)
-    ]
+    components: [GuiFactory.text(tabSpec.text)]
   });
 
   const pTabbar = TabSection.parts().tabbar({
     dom: {
       tag: 'div'
     },
-    components: [
-      Tabbar.parts().tabs({ })
-    ],
+    components: [Tabbar.parts().tabs({})],
     markers: {
       tabClass: 'demo-tab',
       selectedClass: 'demo-selected-tab'
@@ -57,26 +57,25 @@ export default (): void => {
           }
         })
       ],
-      tabs: Arr.map([
-        {
-          value: 'alpha',
-          text: 'Alpha',
-          view() {
-            return [
-              GuiFactory.text('Alpha panel text')
-            ];
+      tabs: Arr.map(
+        [
+          {
+            value: 'alpha',
+            text: 'Alpha',
+            view() {
+              return [GuiFactory.text('Alpha panel text')];
+            }
+          },
+          {
+            value: 'beta',
+            text: 'Beta',
+            view() {
+              return [GuiFactory.text('Beta panel text')];
+            }
           }
-        },
-        {
-          value: 'beta',
-          text: 'Beta',
-          view() {
-            return [
-              GuiFactory.text('Beta panel text')
-            ];
-          }
-        }
-      ], makeTab)
+        ],
+        makeTab
+      )
     })
   );
 

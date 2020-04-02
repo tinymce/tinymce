@@ -4,15 +4,22 @@ import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
-import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
-import { DomModification, DomModificationSpec } from '../../dom/DomModification';
+import {
+  SingleSketch,
+  SingleSketchDetail,
+  SingleSketchSpec
+} from '../../api/ui/Sketcher';
+import {
+  DomModification,
+  DomModificationSpec
+} from '../../dom/DomModification';
 
 export type ButtonAction = (comp: AlloyComponent) => void;
 
 export interface TabButtonDetail extends SingleSketchDetail {
   uid: string;
   dom: RawDomSchema;
-  components: AlloySpec[ ];
+  components: AlloySpec[];
   action: Option<ButtonAction>;
   tabButtonBehaviours: SketchBehaviours;
   domModification: DomModification;
@@ -29,4 +36,4 @@ export interface TabButtonSpec extends SingleSketchSpec {
   domModification?: DomModificationSpec;
 }
 
-export interface TabButtonSketcher extends SingleSketch<TabButtonSpec> { }
+export interface TabButtonSketcher extends SingleSketch<TabButtonSpec> {}

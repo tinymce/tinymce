@@ -60,9 +60,12 @@ const wasSimple = function (link) {
 };
 
 const getTextToApply = function (link, url, info) {
-  return info.text.toOption().filter(isNotEmpty).fold(function () {
-    return wasSimple(link) ? Option.some(url) : Option.none();
-  }, Option.some);
+  return info.text
+    .toOption()
+    .filter(isNotEmpty)
+    .fold(function () {
+      return wasSimple(link) ? Option.some(url) : Option.none();
+    }, Option.some);
 };
 
 const unlinkIfRequired = function (editor, info) {
@@ -73,38 +76,55 @@ const unlinkIfRequired = function (editor, info) {
 };
 
 const getAttrs = function (url, info) {
-  const attrs: any = { };
+  const attrs: any = {};
   attrs.href = url;
 
-  info.title.toOption().filter(isNotEmpty).each(function (title) {
-    attrs.title = title;
-  });
-  info.target.toOption().filter(isNotEmpty).each(function (target) {
-    attrs.target = target;
-  });
+  info.title
+    .toOption()
+    .filter(isNotEmpty)
+    .each(function (title) {
+      attrs.title = title;
+    });
+  info.target
+    .toOption()
+    .filter(isNotEmpty)
+    .each(function (target) {
+      attrs.target = target;
+    });
   return attrs;
 };
 
 const applyInfo = function (editor, info) {
-  info.url.toOption().filter(isNotEmpty).fold(function () {
-    // Unlink if there is something to unlink
-    unlinkIfRequired(editor, info);
-  }, function (url) {
-    // We must have a non-empty URL to insert a link
-    const attrs = getAttrs(url, info);
+  info.url
+    .toOption()
+    .filter(isNotEmpty)
+    .fold(
+      function () {
+        // Unlink if there is something to unlink
+        unlinkIfRequired(editor, info);
+      },
+      function (url) {
+        // We must have a non-empty URL to insert a link
+        const attrs = getAttrs(url, info);
 
-    const activeLink = info.link.bind(Fun.identity);
-    activeLink.fold(function () {
-      const text = info.text.toOption().filter(isNotEmpty).getOr(url);
-      editor.insertContent(editor.dom.createHTML('a', attrs, editor.dom.encode(text)));
-    }, function (link) {
-      const text = getTextToApply(link, url, info);
-      Attr.setAll(link, attrs);
-      text.each(function (newText) {
-        TextContent.set(link, newText);
-      });
-    });
-  });
+        const activeLink = info.link.bind(Fun.identity);
+        activeLink.fold(
+          function () {
+            const text = info.text.toOption().filter(isNotEmpty).getOr(url);
+            editor.insertContent(
+              editor.dom.createHTML('a', attrs, editor.dom.encode(text))
+            );
+          },
+          function (link) {
+            const text = getTextToApply(link, url, info);
+            Attr.setAll(link, attrs);
+            text.each(function (newText) {
+              TextContent.set(link, newText);
+            });
+          }
+        );
+      }
+    );
 };
 
 const query = function (editor) {
@@ -112,8 +132,4 @@ const query = function (editor) {
   return SelectorFind.closest(start, 'a');
 };
 
-export {
-  getInfo,
-  applyInfo,
-  query
-};
+export { getInfo, applyInfo, query };

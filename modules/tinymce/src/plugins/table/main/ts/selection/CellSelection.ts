@@ -5,12 +5,36 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
-import { Event, HTMLElement, KeyboardEvent, MouseEvent, Node as HtmlNode, TouchEvent } from '@ephox/dom-globals';
+import {
+  InputHandlers,
+  SelectionAnnotation,
+  SelectionKeys
+} from '@ephox/darwin';
+import {
+  Event,
+  HTMLElement,
+  KeyboardEvent,
+  MouseEvent,
+  Node as HtmlNode,
+  TouchEvent
+} from '@ephox/dom-globals';
 import { Cell, Fun, Option } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
-import { OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker';
-import { Class, Compare, DomEvent, Element, Node, Selection, SelectionDirection } from '@ephox/sugar';
+import {
+  OtherCells,
+  TableFill,
+  TableLookup,
+  TableResize
+} from '@ephox/snooker';
+import {
+  Class,
+  Compare,
+  DomEvent,
+  Element,
+  Node,
+  Selection,
+  SelectionDirection
+} from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
@@ -21,7 +45,11 @@ import * as Direction from '../queries/Direction';
 import * as Ephemera from './Ephemera';
 import { SelectionTargets } from './SelectionTargets';
 
-const hasInternalTarget = (e: Event) => Class.has(Element.fromDom(e.target as HTMLElement), 'ephox-snooker-resizer-bar') === false;
+const hasInternalTarget = (e: Event) =>
+  Class.has(
+    Element.fromDom(e.target as HTMLElement),
+    'ephox-snooker-resizer-bar'
+  ) === false;
 
 interface HandlerStruct {
   readonly mousedown: (e: MouseEvent) => void;
@@ -31,7 +59,11 @@ interface HandlerStruct {
   readonly keydown: (e: KeyboardEvent) => void;
 }
 
-export default function (editor: Editor, lazyResize: () => Option<TableResize>, selectionTargets: SelectionTargets) {
+export default function (
+  editor: Editor,
+  lazyResize: () => Option<TableResize>,
+  selectionTargets: SelectionTargets
+) {
   let handlers: Option<HandlerStruct> = Option.none();
 
   const cloneFormats = getCloneElements(editor);
@@ -41,9 +73,19 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
       const tableOpt = TableLookup.table(start);
       tableOpt.each((table) => {
         const doc = Element.fromDom(editor.getDoc());
-        const generators = TableFill.cellOperations(Fun.noop, doc, cloneFormats);
+        const generators = TableFill.cellOperations(
+          Fun.noop,
+          doc,
+          cloneFormats
+        );
         const otherCells = OtherCells.getOtherCells(table, targets, generators);
-        Events.fireTableSelectionChange(editor, cells, start, finish, otherCells);
+        Events.fireTableSelectionChange(
+          editor,
+          cells,
+          start,
+          finish,
+          otherCells
+        );
       });
     });
   };
@@ -52,7 +94,11 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
     Events.fireTableSelectionClear(editor);
   };
 
-  const annotations = SelectionAnnotation.byAttr(Ephemera, onSelection, onClear);
+  const annotations = SelectionAnnotation.byAttr(
+    Ephemera,
+    onSelection,
+    onClear
+  );
 
   editor.on('init', function (_e) {
     const win = editor.getWin();
@@ -65,7 +111,7 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
       const sel = editor.selection;
       const start = Element.fromDom(sel.getStart());
       const end = Element.fromDom(sel.getEnd());
-      const shared = DomParent.sharedOne(TableLookup.table, [ start, end ]);
+      const shared = DomParent.sharedOne(TableLookup.table, [start, end]);
       shared.fold(function () {
         annotations.clear(body);
       }, Fun.noop);
@@ -99,13 +145,18 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
     const keyup = function (event) {
       const wrappedEvent = DomEvent.fromRawEvent(event);
       // Note, this is an optimisation.
-      if (wrappedEvent.raw().shiftKey && SelectionKeys.isNavigation(wrappedEvent.raw().which)) {
+      if (
+        wrappedEvent.raw().shiftKey &&
+        SelectionKeys.isNavigation(wrappedEvent.raw().which)
+      ) {
         const rng = editor.selection.getRng();
         const start = Element.fromDom(rng.startContainer);
         const end = Element.fromDom(rng.endContainer);
-        keyHandlers.keyup(wrappedEvent, start, rng.startOffset, end, rng.endOffset).each(function (response) {
-          handleResponse(wrappedEvent, response);
-        });
+        keyHandlers
+          .keyup(wrappedEvent, start, rng.startOffset, end, rng.endOffset)
+          .each(function (response) {
+            handleResponse(wrappedEvent, response);
+          });
       }
     };
 
@@ -119,10 +170,21 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
       const startContainer = Element.fromDom(editor.selection.getStart());
       const start = Element.fromDom(rng.startContainer);
       const end = Element.fromDom(rng.endContainer);
-      const direction = Direction.directionAt(startContainer).isRtl() ? SelectionKeys.rtl : SelectionKeys.ltr;
-      keyHandlers.keydown(wrappedEvent, start, rng.startOffset, end, rng.endOffset, direction).each(function (response) {
-        handleResponse(wrappedEvent, response);
-      });
+      const direction = Direction.directionAt(startContainer).isRtl()
+        ? SelectionKeys.rtl
+        : SelectionKeys.ltr;
+      keyHandlers
+        .keydown(
+          wrappedEvent,
+          start,
+          rng.startOffset,
+          end,
+          rng.endOffset,
+          direction
+        )
+        .each(function (response) {
+          handleResponse(wrappedEvent, response);
+        });
       lazyResize().each(function (resize) {
         resize.showBars();
       });
@@ -173,11 +235,11 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
       const lastTimeStamp = Cell<number>(0);
 
       const touchEnd = (t: TouchEvent) => {
-        const target = Element.fromDom(<HtmlNode> t.target);
+        const target = Element.fromDom(<HtmlNode>t.target);
         if (Node.name(target) === 'td' || Node.name(target) === 'th') {
           const lT = lastTarget.get();
           const lTS = lastTimeStamp.get();
-          if (Compare.eq(lT, target) && (t.timeStamp - lTS) < 300) {
+          if (Compare.eq(lT, target) && t.timeStamp - lTS < 300) {
             t.preventDefault();
             external(target, target);
           }

@@ -26,6 +26,4 @@ const setup = function (editor: Editor) {
   }
 };
 
-export {
-  setup
-};
+export { setup };

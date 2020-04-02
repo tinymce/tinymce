@@ -23,13 +23,18 @@ const attach = (parent: AlloyComponent, child: AlloyComponent) => {
 
 const detachChildren = (component: AlloyComponent): void => {
   // This will not detach the component, but will detach its children and sync at the end.
-  Arr.each(component.components(), (childComp) => Remove.remove(childComp.element()));
+  Arr.each(component.components(), (childComp) =>
+    Remove.remove(childComp.element())
+  );
   // Clear the component also.
   Remove.empty(component.element());
   component.syncComponents();
 };
 
-const replaceChildren = (component: AlloyComponent, newChildren: AlloyComponent[]) => {
+const replaceChildren = (
+  component: AlloyComponent,
+  newChildren: AlloyComponent[]
+) => {
   // Detach all existing children
   const subs = component.components();
   detachChildren(component);
@@ -47,7 +52,9 @@ const replaceChildren = (component: AlloyComponent, newChildren: AlloyComponent[
     if (!childComp.getSystem().isConnected()) {
       component.getSystem().addToWorld(childComp);
       attach(component, childComp);
-      if (Body.inBody(component.element())) { fireAttaching(childComp); }
+      if (Body.inBody(component.element())) {
+        fireAttaching(childComp);
+      }
     } else {
       attach(component, childComp);
     }
@@ -55,11 +62,4 @@ const replaceChildren = (component: AlloyComponent, newChildren: AlloyComponent[
   });
 };
 
-export {
-  fireAttaching,
-  fireDetaching,
-
-  detachChildren,
-
-  replaceChildren
-};
+export { fireAttaching, fireDetaching, detachChildren, replaceChildren };

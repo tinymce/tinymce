@@ -5,7 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, Menu as AlloyMenu, RawDomSchema, ItemTypes } from '@ephox/alloy';
+import {
+  AlloySpec,
+  Menu as AlloyMenu,
+  RawDomSchema,
+  ItemTypes
+} from '@ephox/alloy';
 import { Arr, Fun, Obj } from '@ephox/katamari';
 
 const chunk = <I>(rowDom: RawDomSchema, numColumns: number) => (items: I[]) => {
@@ -19,23 +24,26 @@ const chunk = <I>(rowDom: RawDomSchema, numColumns: number) => (items: I[]) => {
 const forSwatch = (columns: number | 'auto') => ({
   dom: {
     tag: 'div',
-    classes: [ 'tox-menu', 'tox-swatches-menu' ]
+    classes: ['tox-menu', 'tox-swatches-menu']
   },
   components: [
     {
       dom: {
         tag: 'div',
-        classes: [ 'tox-swatches' ]
+        classes: ['tox-swatches']
       },
       components: [
         AlloyMenu.parts().items({
-          preprocess: columns !== 'auto' ? chunk(
-            {
-              tag: 'div',
-              classes: [ 'tox-swatches__row' ]
-            },
-            columns
-          ) : Fun.identity
+          preprocess:
+            columns !== 'auto'
+              ? chunk(
+                  {
+                    tag: 'div',
+                    classes: ['tox-swatches__row']
+                  },
+                  columns
+                )
+              : Fun.identity
         })
       ]
     }
@@ -46,14 +54,19 @@ const forToolbar = (columns: number) => ({
   dom: {
     tag: 'div',
     // TODO: Configurable lg setting?
-    classes: [ 'tox-menu', 'tox-collection', 'tox-collection--toolbar', 'tox-collection--toolbar-lg' ]
+    classes: [
+      'tox-menu',
+      'tox-collection',
+      'tox-collection--toolbar',
+      'tox-collection--toolbar-lg'
+    ]
   },
   components: [
     AlloyMenu.parts().items({
       preprocess: chunk(
         {
           tag: 'div',
-          classes: [ 'tox-collection__group' ]
+          classes: ['tox-collection__group']
         },
         columns
       )
@@ -62,15 +75,18 @@ const forToolbar = (columns: number) => ({
 });
 
 // NOTE: That type signature isn't quite true.
-const preprocessCollection = (items: ItemTypes.ItemSpec[], isSeparator: (a: ItemTypes.ItemSpec, index: number) => boolean): AlloySpec[] => {
-  const allSplits = [ ];
-  let currentSplit = [ ];
+const preprocessCollection = (
+  items: ItemTypes.ItemSpec[],
+  isSeparator: (a: ItemTypes.ItemSpec, index: number) => boolean
+): AlloySpec[] => {
+  const allSplits = [];
+  let currentSplit = [];
   Arr.each(items, (item, i) => {
     if (isSeparator(item, i)) {
       if (currentSplit.length > 0) {
         allSplits.push(currentSplit);
       }
-      currentSplit = [ ];
+      currentSplit = [];
       if (Obj.has(item.dom, 'innerHtml')) {
         currentSplit.push(item);
       }
@@ -86,28 +102,40 @@ const preprocessCollection = (items: ItemTypes.ItemSpec[], isSeparator: (a: Item
   return Arr.map(allSplits, (s) => ({
     dom: {
       tag: 'div',
-      classes: [ 'tox-collection__group' ]
+      classes: ['tox-collection__group']
     },
     components: s
   }));
 };
 
-const forCollection = (columns: number | 'auto', initItems, _hasIcons: boolean = true) => ({
+const forCollection = (
+  columns: number | 'auto',
+  initItems,
+  _hasIcons: boolean = true
+) => ({
   dom: {
     tag: 'div',
-    classes: [ 'tox-menu', 'tox-collection' ].concat(columns === 1 ? [ 'tox-collection--list' ] : [ 'tox-collection--grid' ])
+    classes: ['tox-menu', 'tox-collection'].concat(
+      columns === 1 ? ['tox-collection--list'] : ['tox-collection--grid']
+    )
   },
   components: [
     // TODO: Clean up code and test atomically
     AlloyMenu.parts().items({
       preprocess: (items) => {
         if (columns !== 'auto' && columns > 1) {
-          return chunk<AlloySpec>({
-            tag: 'div',
-            classes: [ 'tox-collection__group' ]
-          }, columns)(items);
+          return chunk<AlloySpec>(
+            {
+              tag: 'div',
+              classes: ['tox-collection__group']
+            },
+            columns
+          )(items);
         } else {
-          return preprocessCollection(items, (_item, i) => initItems[i].type === 'separator');
+          return preprocessCollection(
+            items,
+            (_item, i) => initItems[i].type === 'separator'
+          );
         }
       }
     })
@@ -117,19 +145,17 @@ const forCollection = (columns: number | 'auto', initItems, _hasIcons: boolean =
 const forHorizontalCollection = (initItems, _hasIcons: boolean = true) => ({
   dom: {
     tag: 'div',
-    classes: [ 'tox-collection', 'tox-collection--horizontal' ]
+    classes: ['tox-collection', 'tox-collection--horizontal']
   },
   components: [
     AlloyMenu.parts().items({
-      preprocess: (items: ItemTypes.ItemSpec[]) => preprocessCollection(items, (_item, i) => initItems[i].type === 'separator')
+      preprocess: (items: ItemTypes.ItemSpec[]) =>
+        preprocessCollection(
+          items,
+          (_item, i) => initItems[i].type === 'separator'
+        )
     })
   ]
 });
 
-export {
-  chunk,
-  forSwatch,
-  forCollection,
-  forHorizontalCollection,
-  forToolbar
-};
+export { chunk, forSwatch, forCollection, forHorizontalCollection, forToolbar };

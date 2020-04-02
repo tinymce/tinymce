@@ -6,8 +6,14 @@ import { AlloySystemApi } from './SystemApi';
 
 const NoContextApi = (getComp?: () => AlloyComponent): AlloySystemApi => {
   const fail = (event: string) => () => {
-    throw new Error('The component must be in a context to send: ' + event +
-        (getComp ? '\n' + AlloyLogger.element(getComp().element()) + ' is not in context.' : '')
+    throw new Error(
+      'The component must be in a context to send: ' +
+        event +
+        (getComp
+          ? '\n' +
+            AlloyLogger.element(getComp().element()) +
+            ' is not in context.'
+          : '')
     );
   };
 
@@ -32,7 +38,4 @@ const NoContextApi = (getComp?: () => AlloyComponent): AlloySystemApi => {
 
 const singleton = NoContextApi();
 
-export {
-  singleton,
-  NoContextApi
-};
+export { singleton, NoContextApi };

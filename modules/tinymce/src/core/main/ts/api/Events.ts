@@ -8,21 +8,34 @@
 import { HTMLElement } from '@ephox/dom-globals';
 import Editor from './Editor';
 
-const firePreProcess = (editor: Editor, args) => editor.fire('PreProcess', args);
+const firePreProcess = (editor: Editor, args) =>
+  editor.fire('PreProcess', args);
 
-const firePostProcess = (editor: Editor, args) => editor.fire('PostProcess', args);
+const firePostProcess = (editor: Editor, args) =>
+  editor.fire('PostProcess', args);
 
 const fireRemove = (editor: Editor) => editor.fire('remove');
 
 const fireDetach = (editor: Editor) => editor.fire('detach');
 
-const fireSwitchMode = (editor: Editor, mode: string) => editor.fire('SwitchMode', { mode });
+const fireSwitchMode = (editor: Editor, mode: string) =>
+  editor.fire('SwitchMode', { mode });
 
-const fireObjectResizeStart = (editor: Editor, target: HTMLElement, width: number, height: number) => {
+const fireObjectResizeStart = (
+  editor: Editor,
+  target: HTMLElement,
+  width: number,
+  height: number
+) => {
   editor.fire('ObjectResizeStart', { target, width, height });
 };
 
-const fireObjectResized = (editor: Editor, target: HTMLElement, width: number, height: number) => {
+const fireObjectResized = (
+  editor: Editor,
+  target: HTMLElement,
+  width: number,
+  height: number
+) => {
   editor.fire('ObjectResized', { target, width, height });
 };
 
@@ -32,9 +45,14 @@ const firePostRender = (editor: Editor) => editor.fire('PostRender');
 
 const fireInit = (editor: Editor) => editor.fire('Init');
 
-const firePlaceholderToggle = (editor: Editor, state: boolean) => editor.fire('PlaceholderToggle', { state });
+const firePlaceholderToggle = (editor: Editor, state: boolean) =>
+  editor.fire('PlaceholderToggle', { state });
 
-const fireError = (editor: Editor, errorType: string, error: { message: string }) => editor.fire(errorType, error);
+const fireError = (
+  editor: Editor,
+  errorType: string,
+  error: { message: string }
+) => editor.fire(errorType, error);
 
 export {
   firePreProcess,

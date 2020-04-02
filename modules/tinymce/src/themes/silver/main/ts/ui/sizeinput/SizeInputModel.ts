@@ -7,7 +7,23 @@
 
 import { Option, Options, Result } from '@ephox/katamari';
 
-export type SizeUnit = '' | 'cm' | 'mm' | 'in' | 'px' | 'pt' | 'pc' | 'em' | 'ex' | 'ch' | 'rem' | 'vw' | 'vh' | 'vmin' | 'vmax' | '%';
+export type SizeUnit =
+  | ''
+  | 'cm'
+  | 'mm'
+  | 'in'
+  | 'px'
+  | 'pt'
+  | 'pc'
+  | 'em'
+  | 'ex'
+  | 'ch'
+  | 'rem'
+  | 'vw'
+  | 'vh'
+  | 'vmin'
+  | 'vmax'
+  | '%';
 
 export interface Size {
   value: number;
@@ -33,7 +49,7 @@ export const formatSize = function (size: Size): string {
     'in': 4,
     '%': 4
   };
-  const maxDecimal = (unit: SizeUnit) => unit in unitDec ? unitDec[unit] : 1;
+  const maxDecimal = (unit: SizeUnit) => (unit in unitDec ? unitDec[unit] : 1);
   let numText = size.value.toFixed(maxDecimal(size.unit));
   if (numText.indexOf('.') !== -1) {
     numText = numText.replace(/\.?0*$/, '');
@@ -72,7 +88,7 @@ export const convertUnit = (size: Size, unit: SizeUnit): Option<number> => {
     if (inInch[size.unit] === inInch[unit]) {
       return Option.some(size.value);
     } else {
-      return Option.some(size.value / inInch[size.unit] * inInch[unit]);
+      return Option.some((size.value / inInch[size.unit]) * inInch[unit]);
     }
   } else {
     return Option.none();
@@ -83,13 +99,22 @@ export type SizeConversion = (input: Size) => Option<Size>;
 
 export const noSizeConversion: SizeConversion = (_input: Size) => Option.none();
 
-export const ratioSizeConversion = (scale: number, unit: SizeUnit): SizeConversion =>
-  (size: Size) => convertUnit(size, unit).map((value) => ({ value: value * scale, unit }));
+export const ratioSizeConversion = (
+  scale: number,
+  unit: SizeUnit
+): SizeConversion => (size: Size) =>
+  convertUnit(size, unit).map((value) => ({ value: value * scale, unit }));
 
-export const makeRatioConverter = (currentFieldText: string, otherFieldText: string): SizeConversion => {
+export const makeRatioConverter = (
+  currentFieldText: string,
+  otherFieldText: string
+): SizeConversion => {
   const cValue = parseSize(currentFieldText).toOption();
   const oValue = parseSize(otherFieldText).toOption();
-  return Options.lift2(cValue, oValue, (cSize: Size, oSize: Size) => convertUnit(cSize, oSize.unit).map((val) => oSize.value / val).map(
-    (r) => ratioSizeConversion(r, oSize.unit)
-  ).getOr(noSizeConversion)).getOr(noSizeConversion);
+  return Options.lift2(cValue, oValue, (cSize: Size, oSize: Size) =>
+    convertUnit(cSize, oSize.unit)
+      .map((val) => oSize.value / val)
+      .map((r) => ratioSizeConversion(r, oSize.unit))
+      .getOr(noSizeConversion)
+  ).getOr(noSizeConversion);
 };

@@ -11,8 +11,4 @@ const enable = 'enable';
 
 // TODO: dedupe these from ImageToolsEvents.ts in silver
 
-export {
-  saveState,
-  disable,
-  enable
-};
+export { saveState, disable, enable };

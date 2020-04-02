@@ -12,23 +12,40 @@ import * as ComponentEvents from '../construct/ComponentEvents';
 import { UncurriedHandler } from '../events/EventRegistry';
 
 export default () => {
-  const getEvents = (elem: Element, spec: DispatchedAlloyConfig): { readonly elem: Element; readonly evts: Record<string, UncurriedHandler> } => {
+  const getEvents = (
+    elem: Element,
+    spec: DispatchedAlloyConfig
+  ): {
+    readonly elem: Element;
+    readonly evts: Record<string, UncurriedHandler>;
+  } => {
     const evts = DomState.getOrCreate(elem, () => {
       // If we haven't already setup this particular element, then generate any state and config
       // required by its behaviours and put it in the cache.
       const info = {
-        events: Obj.hasNonNullableKey(spec, 'events') ? spec.events : { },
-        eventOrder: Obj.hasNonNullableKey(spec, 'eventOrder') ? spec.eventOrder : { }
+        events: Obj.hasNonNullableKey(spec, 'events') ? spec.events : {},
+        eventOrder: Obj.hasNonNullableKey(spec, 'eventOrder')
+          ? spec.eventOrder
+          : {}
       };
 
       // NOTE: Note all behaviours are supported at the moment
-      const bInfo = CompBehaviours.generateFrom(spec, [ Toggling, Dragging, Pinching ]);
+      const bInfo = CompBehaviours.generateFrom(spec, [
+        Toggling,
+        Dragging,
+        Pinching
+      ]);
       const baseEvents = {
         'alloy.base.behaviour': info.events
       };
 
       const bData = BehaviourBlob.getData(bInfo);
-      return ComponentEvents.combine(bData, info.eventOrder, [ Toggling, Dragging, Pinching ], baseEvents).getOrDie();
+      return ComponentEvents.combine(
+        bData,
+        info.eventOrder,
+        [Toggling, Dragging, Pinching],
+        baseEvents
+      ).getOrDie();
     });
 
     return {

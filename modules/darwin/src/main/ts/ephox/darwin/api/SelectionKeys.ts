@@ -21,10 +21,4 @@ const rtl = {
   isForward: isKey(37)
 };
 
-export {
-  ltr,
-  rtl,
-  isUp,
-  isDown,
-  isNavigation
-};
+export { ltr, rtl, isUp, isDown, isNavigation };

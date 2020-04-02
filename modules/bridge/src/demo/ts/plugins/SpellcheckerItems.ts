@@ -1,7 +1,7 @@
 import { getDemoRegistry } from './../buttons/DemoRegistry';
 
 const editor = {
-  on: (_s, _f) => { },
+  on: (_s, _f) => {},
   isDirty: () => true
 };
 
@@ -14,11 +14,11 @@ export const registerSpellcheckerItems = () => {
       editor.on('SpellcheckStart SpellcheckEnd', (e) => {
         buttonApi.setActive(e);
       });
-      return () => { };
+      return () => {};
     },
     fetch: (callback) => {
       // read all the langauges
-      const languages = [ ];
+      const languages = [];
       callback(languages);
       // Set the active state of a particular language (if it matches selected language).. handled by `select`
     },

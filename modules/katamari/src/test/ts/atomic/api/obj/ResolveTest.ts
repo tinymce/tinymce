@@ -61,28 +61,36 @@ UnitTest.test('Resolve.resolve', () => {
   check(parseInt, 'parseInt', null);
 });
 
-UnitTest.test('Checking that creating a namespace (forge) from an obj will enable that value to be retrieved by resolving (path)', () => {
-  fc.assert(fc.property(
-    // NOTE: This value is being modified, so it cannot be shrunk.
-    fc.dictionary(fc.asciiString(),
-      // We want to make sure every path in the object is an object
-      // also, because that is a limitation of forge.
-      fc.dictionary(fc.asciiString(),
-        fc.dictionary(fc.asciiString(), fc.constant({}))
-      )
-    ),
-    fc.array(fc.asciiString(1, 30), 1, 40),
-    fc.asciiString(1, 30),
-    fc.asciiString(1, 30),
-    function (dict, parts, field, newValue) {
-      const created = Resolve.forge(parts, dict);
-      created[field] = newValue;
-      const resolved = Resolve.path(parts.concat([ field ]), dict);
-      Assert.eq(
-        'Checking that namespace works with resolve',
-        newValue,
-        resolved
-      );
-    }
-  ), { endOnFailure: true });
-});
+UnitTest.test(
+  'Checking that creating a namespace (forge) from an obj will enable that value to be retrieved by resolving (path)',
+  () => {
+    fc.assert(
+      fc.property(
+        // NOTE: This value is being modified, so it cannot be shrunk.
+        fc.dictionary(
+          fc.asciiString(),
+          // We want to make sure every path in the object is an object
+          // also, because that is a limitation of forge.
+          fc.dictionary(
+            fc.asciiString(),
+            fc.dictionary(fc.asciiString(), fc.constant({}))
+          )
+        ),
+        fc.array(fc.asciiString(1, 30), 1, 40),
+        fc.asciiString(1, 30),
+        fc.asciiString(1, 30),
+        function (dict, parts, field, newValue) {
+          const created = Resolve.forge(parts, dict);
+          created[field] = newValue;
+          const resolved = Resolve.path(parts.concat([field]), dict);
+          Assert.eq(
+            'Checking that namespace works with resolve',
+            newValue,
+            resolved
+          );
+        }
+      ),
+      { endOnFailure: true }
+    );
+  }
+);

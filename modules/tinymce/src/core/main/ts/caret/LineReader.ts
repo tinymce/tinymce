@@ -26,16 +26,36 @@ export interface LineInfo {
   breakAt: Option<CaretPosition>;
 }
 
-type CheckerPredicate = typeof CaretPosition.isAbove | typeof CaretPosition.isBelow;
+type CheckerPredicate =
+  | typeof CaretPosition.isAbove
+  | typeof CaretPosition.isBelow;
 type LineInfoFinder = (scope: HTMLElement, start: CaretPosition) => LineInfo;
-type CaretPositionsFinder = (scope: HTMLElement, start: CaretPosition) => CaretPosition[];
+type CaretPositionsFinder = (
+  scope: HTMLElement,
+  start: CaretPosition
+) => CaretPosition[];
 
-const flip = (direction: HDirection, positions: CaretPosition[]): CaretPosition[] =>
+const flip = (
+  direction: HDirection,
+  positions: CaretPosition[]
+): CaretPosition[] =>
   direction === HDirection.Backwards ? Arr.reverse(positions) : positions;
 
-const walk = (direction: HDirection, caretWalker: CaretWalker, pos: CaretPosition): CaretPosition => direction === HDirection.Forwards ? caretWalker.next(pos) : caretWalker.prev(pos);
+const walk = (
+  direction: HDirection,
+  caretWalker: CaretWalker,
+  pos: CaretPosition
+): CaretPosition =>
+  direction === HDirection.Forwards
+    ? caretWalker.next(pos)
+    : caretWalker.prev(pos);
 
-const getBreakType = (scope: HTMLElement, direction: HDirection, currentPos: CaretPosition, nextPos: CaretPosition): BreakType => {
+const getBreakType = (
+  scope: HTMLElement,
+  direction: HDirection,
+  currentPos: CaretPosition,
+  nextPos: CaretPosition
+): BreakType => {
   if (NodeType.isBr(nextPos.getNode(direction === HDirection.Forwards))) {
     return BreakType.Br;
   } else if (isInSameBlock(currentPos, nextPos) === false) {
@@ -45,9 +65,15 @@ const getBreakType = (scope: HTMLElement, direction: HDirection, currentPos: Car
   }
 };
 
-const getPositionsUntil = (predicate: CheckerPredicate, direction: HDirection, scope: HTMLElement, start: CaretPosition): LineInfo => {
+const getPositionsUntil = (
+  predicate: CheckerPredicate,
+  direction: HDirection,
+  scope: HTMLElement,
+  start: CaretPosition
+): LineInfo => {
   const caretWalker = CaretWalker(scope);
-  let currentPos = start, nextPos: CaretPosition;
+  let currentPos = start,
+    nextPos: CaretPosition;
   const positions: CaretPosition[] = [];
 
   while (currentPos) {
@@ -59,9 +85,17 @@ const getPositionsUntil = (predicate: CheckerPredicate, direction: HDirection, s
 
     if (NodeType.isBr(nextPos.getNode(false))) {
       if (direction === HDirection.Forwards) {
-        return { positions: flip(direction, positions).concat([ nextPos ]), breakType: BreakType.Br, breakAt: Option.some(nextPos) };
+        return {
+          positions: flip(direction, positions).concat([nextPos]),
+          breakType: BreakType.Br,
+          breakAt: Option.some(nextPos)
+        };
       } else {
-        return { positions: flip(direction, positions), breakType: BreakType.Br, breakAt: Option.some(nextPos) };
+        return {
+          positions: flip(direction, positions),
+          breakType: BreakType.Br,
+          breakAt: Option.some(nextPos)
+        };
       }
     }
 
@@ -72,46 +106,118 @@ const getPositionsUntil = (predicate: CheckerPredicate, direction: HDirection, s
 
     if (predicate(currentPos, nextPos)) {
       const breakType = getBreakType(scope, direction, currentPos, nextPos);
-      return { positions: flip(direction, positions), breakType, breakAt: Option.some(nextPos) };
+      return {
+        positions: flip(direction, positions),
+        breakType,
+        breakAt: Option.some(nextPos)
+      };
     }
 
     positions.push(nextPos);
     currentPos = nextPos;
   }
 
-  return { positions: flip(direction, positions), breakType: BreakType.Eol, breakAt: Option.none() };
+  return {
+    positions: flip(direction, positions),
+    breakType: BreakType.Eol,
+    breakAt: Option.none()
+  };
 };
 
-const getAdjacentLinePositions = (direction: HDirection, getPositionsUntilBreak: LineInfoFinder, scope: HTMLElement, start: CaretPosition): CaretPosition[] => getPositionsUntilBreak(scope, start).breakAt.map((pos) => {
-  const positions = getPositionsUntilBreak(scope, pos).positions;
-  return direction === HDirection.Backwards ? positions.concat(pos) : [ pos ].concat(positions);
-}).getOr([]);
+const getAdjacentLinePositions = (
+  direction: HDirection,
+  getPositionsUntilBreak: LineInfoFinder,
+  scope: HTMLElement,
+  start: CaretPosition
+): CaretPosition[] =>
+  getPositionsUntilBreak(scope, start)
+    .breakAt.map((pos) => {
+      const positions = getPositionsUntilBreak(scope, pos).positions;
+      return direction === HDirection.Backwards
+        ? positions.concat(pos)
+        : [pos].concat(positions);
+    })
+    .getOr([]);
 
-const findClosestHorizontalPositionFromPoint = (positions: CaretPosition[], x: number): Option<CaretPosition> => Arr.foldl(positions, (acc, newPos) => acc.fold(
-  () => Option.some(newPos),
-  (lastPos) => Options.lift2(Arr.head(lastPos.getClientRects()), Arr.head(newPos.getClientRects()), (lastRect, newRect) => {
-    const lastDist = Math.abs(x - lastRect.left);
-    const newDist = Math.abs(x - newRect.left);
-    return newDist <= lastDist ? newPos : lastPos;
-  }).or(acc)
-), Option.none());
+const findClosestHorizontalPositionFromPoint = (
+  positions: CaretPosition[],
+  x: number
+): Option<CaretPosition> =>
+  Arr.foldl(
+    positions,
+    (acc, newPos) =>
+      acc.fold(
+        () => Option.some(newPos),
+        (lastPos) =>
+          Options.lift2(
+            Arr.head(lastPos.getClientRects()),
+            Arr.head(newPos.getClientRects()),
+            (lastRect, newRect) => {
+              const lastDist = Math.abs(x - lastRect.left);
+              const newDist = Math.abs(x - newRect.left);
+              return newDist <= lastDist ? newPos : lastPos;
+            }
+          ).or(acc)
+      ),
+    Option.none()
+  );
 
-const findClosestHorizontalPosition = (positions: CaretPosition[], pos: CaretPosition): Option<CaretPosition> => Arr.head(pos.getClientRects()).bind((targetRect) => findClosestHorizontalPositionFromPoint(positions, targetRect.left));
+const findClosestHorizontalPosition = (
+  positions: CaretPosition[],
+  pos: CaretPosition
+): Option<CaretPosition> =>
+  Arr.head(pos.getClientRects()).bind((targetRect) =>
+    findClosestHorizontalPositionFromPoint(positions, targetRect.left)
+  );
 
-const getPositionsUntilPreviousLine = Fun.curry(getPositionsUntil, CaretPosition.isAbove, -1) as LineInfoFinder;
-const getPositionsUntilNextLine = Fun.curry(getPositionsUntil, CaretPosition.isBelow, 1) as LineInfoFinder;
-const isAtFirstLine = (scope: HTMLElement, pos: CaretPosition) => getPositionsUntilPreviousLine(scope, pos).breakAt.isNone();
-const isAtLastLine = (scope: HTMLElement, pos: CaretPosition) => getPositionsUntilNextLine(scope, pos).breakAt.isNone();
-const getPositionsAbove = Fun.curry(getAdjacentLinePositions, -1, getPositionsUntilPreviousLine) as CaretPositionsFinder;
-const getPositionsBelow = Fun.curry(getAdjacentLinePositions, 1, getPositionsUntilNextLine) as CaretPositionsFinder;
+const getPositionsUntilPreviousLine = Fun.curry(
+  getPositionsUntil,
+  CaretPosition.isAbove,
+  -1
+) as LineInfoFinder;
+const getPositionsUntilNextLine = Fun.curry(
+  getPositionsUntil,
+  CaretPosition.isBelow,
+  1
+) as LineInfoFinder;
+const isAtFirstLine = (scope: HTMLElement, pos: CaretPosition) =>
+  getPositionsUntilPreviousLine(scope, pos).breakAt.isNone();
+const isAtLastLine = (scope: HTMLElement, pos: CaretPosition) =>
+  getPositionsUntilNextLine(scope, pos).breakAt.isNone();
+const getPositionsAbove = Fun.curry(
+  getAdjacentLinePositions,
+  -1,
+  getPositionsUntilPreviousLine
+) as CaretPositionsFinder;
+const getPositionsBelow = Fun.curry(
+  getAdjacentLinePositions,
+  1,
+  getPositionsUntilNextLine
+) as CaretPositionsFinder;
 
-const getFirstLinePositions = (scope: HTMLElement) => CaretFinder.firstPositionIn(scope).map((pos) => [ pos ].concat(getPositionsUntilNextLine(scope, pos).positions)).getOr([]);
+const getFirstLinePositions = (scope: HTMLElement) =>
+  CaretFinder.firstPositionIn(scope)
+    .map((pos) => [pos].concat(getPositionsUntilNextLine(scope, pos).positions))
+    .getOr([]);
 
-const getLastLinePositions = (scope: HTMLElement) => CaretFinder.lastPositionIn(scope).map((pos) => getPositionsUntilPreviousLine(scope, pos).positions.concat(pos)).getOr([]);
+const getLastLinePositions = (scope: HTMLElement) =>
+  CaretFinder.lastPositionIn(scope)
+    .map((pos) =>
+      getPositionsUntilPreviousLine(scope, pos).positions.concat(pos)
+    )
+    .getOr([]);
 
-const getClosestPositionAbove = (scope: HTMLElement, pos: CaretPosition): Option<CaretPosition> => findClosestHorizontalPosition(getPositionsAbove(scope, pos), pos);
+const getClosestPositionAbove = (
+  scope: HTMLElement,
+  pos: CaretPosition
+): Option<CaretPosition> =>
+  findClosestHorizontalPosition(getPositionsAbove(scope, pos), pos);
 
-const getClosestPositionBelow = (scope: HTMLElement, pos: CaretPosition): Option<CaretPosition> => findClosestHorizontalPosition(getPositionsBelow(scope, pos), pos);
+const getClosestPositionBelow = (
+  scope: HTMLElement,
+  pos: CaretPosition
+): Option<CaretPosition> =>
+  findClosestHorizontalPosition(getPositionsBelow(scope, pos), pos);
 
 export {
   getPositionsUntilPreviousLine,

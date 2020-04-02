@@ -50,15 +50,19 @@ const getChildNodes = (node: Node): Node[] => {
     return [];
   }
 
-  return ArrUtils.reduce(node.childNodes, function (result, node) {
-    if (isBogus(node) && node.nodeName !== 'BR') {
-      result = result.concat(getChildNodes(node));
-    } else {
-      result.push(node);
-    }
+  return ArrUtils.reduce(
+    node.childNodes,
+    function (result, node) {
+      if (isBogus(node) && node.nodeName !== 'BR') {
+        result = result.concat(getChildNodes(node));
+      } else {
+        result.push(node);
+      }
 
-    return result;
-  }, []);
+      return result;
+    },
+    []
+  );
 };
 
 const normalizedTextOffset = (node: Node, offset: number): number => {
@@ -81,15 +85,19 @@ const normalizedNodeIndex = (node: Node): number => {
   nodes = getChildNodes(normalizedParent(node));
   index = ArrUtils.findIndex(nodes, equal(node), node);
   nodes = nodes.slice(0, index + 1);
-  numTextFragments = ArrUtils.reduce(nodes, function (result, node, i) {
-    if (isText(node) && isText(nodes[i - 1])) {
-      result++;
-    }
+  numTextFragments = ArrUtils.reduce(
+    nodes,
+    function (result, node, i) {
+      if (isText(node) && isText(nodes[i - 1])) {
+        result++;
+      }
 
-    return result;
-  }, 0);
+      return result;
+    },
+    0
+  );
 
-  nodes = ArrUtils.filter(nodes, NodeType.matchNodeNames([ node.nodeName ]));
+  nodes = ArrUtils.filter(nodes, NodeType.matchNodeNames([node.nodeName]));
   index = ArrUtils.findIndex(nodes, equal(node), node);
 
   return index - numTextFragments;
@@ -122,8 +130,12 @@ const parentsUntil = function (root: Node, node: Node, predicate?): Node[] {
 };
 
 const create = (root: Node, caretPosition: CaretPosition): string => {
-  let container, offset, path = [],
-    outputOffset, childNodes, parents;
+  let container,
+    offset,
+    path = [],
+    outputOffset,
+    childNodes,
+    parents;
 
   container = caretPosition.container();
   offset = caretPosition.offset();
@@ -145,9 +157,11 @@ const create = (root: Node, caretPosition: CaretPosition): string => {
   path.push(createPathItem(container));
   parents = parentsUntil(root, container);
   parents = ArrUtils.filter(parents, Fun.not(NodeType.isBogus));
-  path = path.concat(ArrUtils.map(parents, function (node) {
-    return createPathItem(node);
-  }));
+  path = path.concat(
+    ArrUtils.map(parents, function (node) {
+      return createPathItem(node);
+    })
+  );
 
   return path.reverse().join('/') + ',' + outputOffset;
 };
@@ -159,12 +173,14 @@ const resolvePathItem = (node: Node, name: string, index: number): Node => {
     return !isText(node) || !isText(nodes[index - 1]);
   });
 
-  nodes = ArrUtils.filter(nodes, NodeType.matchNodeNames([ name ]));
+  nodes = ArrUtils.filter(nodes, NodeType.matchNodeNames([name]));
   return nodes[index];
 };
 
 const findTextPosition = (container: Node, offset: number): CaretPosition => {
-  let node = container, targetOffset = 0, dataLen;
+  let node = container,
+    targetOffset = 0,
+    dataLen;
 
   while (isText(node)) {
     dataLen = node.data.length;
@@ -203,18 +219,22 @@ const resolve = (root: Node, path: string): CaretPosition => {
   path = parts[0].split('/');
   offset = parts.length > 1 ? parts[1] : 'before';
 
-  container = ArrUtils.reduce(path, function (result, value) {
-    value = /([\w\-\(\)]+)\[([0-9]+)\]/.exec(value);
-    if (!value) {
-      return null;
-    }
+  container = ArrUtils.reduce(
+    path,
+    function (result, value) {
+      value = /([\w\-\(\)]+)\[([0-9]+)\]/.exec(value);
+      if (!value) {
+        return null;
+      }
 
-    if (value[1] === 'text()') {
-      value[1] = '#text';
-    }
+      if (value[1] === 'text()') {
+        value[1] = '#text';
+      }
 
-    return resolvePathItem(result, value[1], parseInt(value[2], 10));
-  }, root);
+      return resolvePathItem(result, value[1], parseInt(value[2], 10));
+    },
+    root
+  );
 
   if (!container) {
     return null;
@@ -243,7 +263,6 @@ export {
    * @return {String} String xpath like location of caret position.
    */
   create,
-
   /**
    * Resolves a xpath like bookmark location to the a caret position.
    *

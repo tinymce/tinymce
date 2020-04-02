@@ -81,10 +81,8 @@ const tab = (): Types.Dialog.TabApi => {
   return {
     name: 'keyboardnav',
     title: 'Keyboard Navigation',
-    items: [ body ]
+    items: [body]
   };
 };
 
-export {
-  tab
-};
+export { tab };

@@ -6,12 +6,10 @@ import SelectionAnchor from './SelectionAnchor';
 import NodeAnchor from './NodeAnchor';
 import SubmenuAnchor from './SubmenuAnchor';
 
-export default ValueSchema.choose(
-  'anchor', {
-    selection: SelectionAnchor,
-    node: NodeAnchor,
-    hotspot: HotspotAnchor,
-    submenu: SubmenuAnchor,
-    makeshift: MakeshiftAnchor
-  }
-);
+export default ValueSchema.choose('anchor', {
+  selection: SelectionAnchor,
+  node: NodeAnchor,
+  hotspot: HotspotAnchor,
+  submenu: SubmenuAnchor,
+  makeshift: MakeshiftAnchor
+});

@@ -8,15 +8,21 @@
 import * as Settings from '../api/Settings';
 
 const daysShort = 'Sun Mon Tue Wed Thu Fri Sat Sun'.split(' ');
-const daysLong = 'Sunday Monday Tuesday Wednesday Thursday Friday Saturday Sunday'.split(' ');
-const monthsShort = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ');
-const monthsLong = 'January February March April May June July August September October November December'.split(' ');
+const daysLong = 'Sunday Monday Tuesday Wednesday Thursday Friday Saturday Sunday'.split(
+  ' '
+);
+const monthsShort = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(
+  ' '
+);
+const monthsLong = 'January February March April May June July August September October November December'.split(
+  ' '
+);
 
 const addZeros = function (value, len) {
   value = '' + value;
 
   if (value.length < len) {
-    for (let i = 0; i < (len - value.length); i++) {
+    for (let i = 0; i < len - value.length; i++) {
       value = '0' + value;
     }
   }
@@ -36,7 +42,7 @@ const getDateTime = function (editor, fmt, date?) {
   fmt = fmt.replace('%H', '' + addZeros(date.getHours(), 2));
   fmt = fmt.replace('%M', '' + addZeros(date.getMinutes(), 2));
   fmt = fmt.replace('%S', '' + addZeros(date.getSeconds(), 2));
-  fmt = fmt.replace('%I', '' + ((date.getHours() + 11) % 12 + 1));
+  fmt = fmt.replace('%I', '' + (((date.getHours() + 11) % 12) + 1));
   fmt = fmt.replace('%p', '' + (date.getHours() < 12 ? 'AM' : 'PM'));
   fmt = fmt.replace('%B', '' + editor.translate(monthsLong[date.getMonth()]));
   fmt = fmt.replace('%b', '' + editor.translate(monthsShort[date.getMonth()]));
@@ -48,7 +54,11 @@ const getDateTime = function (editor, fmt, date?) {
 };
 
 const updateElement = function (editor, timeElm, computerTime, userTime) {
-  const newTimeElm = editor.dom.create('time', { datetime: computerTime }, userTime);
+  const newTimeElm = editor.dom.create(
+    'time',
+    { datetime: computerTime },
+    userTime
+  );
   timeElm.parentNode.insertBefore(newTimeElm, timeElm);
   editor.dom.remove(timeElm);
   editor.selection.select(newTimeElm, true);
@@ -71,14 +81,13 @@ const insertDateTime = function (editor, format) {
     if (timeElm) {
       updateElement(editor, timeElm, computerTime, userTime);
     } else {
-      editor.insertContent('<time datetime="' + computerTime + '">' + userTime + '</time>');
+      editor.insertContent(
+        '<time datetime="' + computerTime + '">' + userTime + '</time>'
+      );
     }
   } else {
     editor.insertContent(getDateTime(editor, format));
   }
 };
 
-export {
-  insertDateTime,
-  getDateTime
-};
+export { insertDateTime, getDateTime };

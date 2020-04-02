@@ -24,7 +24,7 @@ const getRanges = function (selection) {
 const getSelectedNodes = function (ranges) {
   return Arr.bind(ranges, function (range) {
     const node = RangeNodes.getSelectedNode(range);
-    return node ? [ Element.fromDom(node) ] : [];
+    return node ? [Element.fromDom(node)] : [];
   });
 };
 
@@ -32,8 +32,4 @@ const hasMultipleRanges = function (selection) {
   return getRanges(selection).length > 1;
 };
 
-export {
-  getRanges,
-  getSelectedNodes,
-  hasMultipleRanges
-};
+export { getRanges, getSelectedNodes, hasMultipleRanges };

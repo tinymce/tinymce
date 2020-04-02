@@ -77,27 +77,30 @@ export default (): void => {
     Form.sketch((parts: FormParts) => ({
       dom: {
         tag: 'div',
-        classes: [ 'outside-form' ]
+        classes: ['outside-form']
       },
 
       components: [
-        parts.field('aria', FormField.sketch({
-          dom: {
-            tag: 'span'
-          },
-          components: [
-            FormField.parts().label({
-              dom: {
-                tag: 'label',
-                innerHtml: 'aria test'
-              }
-            }),
-            FormField.parts().field({ factory: Input }),
-            FormField.parts()['aria-descriptor']({
-              text: 'aria descriptor'
-            })
-          ]
-        })),
+        parts.field(
+          'aria',
+          FormField.sketch({
+            dom: {
+              tag: 'span'
+            },
+            components: [
+              FormField.parts().label({
+                dom: {
+                  tag: 'label',
+                  innerHtml: 'aria test'
+                }
+              }),
+              FormField.parts().field({ factory: Input }),
+              FormField.parts()['aria-descriptor']({
+                text: 'aria descriptor'
+              })
+            ]
+          })
+        ),
         parts.field('alpha', DemoFields.textMunger(alphaSpec)),
         parts.field('beta', DemoFields.textMunger(betaSpec)),
         Container.sketch({
@@ -106,9 +109,7 @@ export default (): void => {
               border: '1px solid green'
             }
           },
-          components: [
-            parts.field('gamma', DemoFields.textMunger(gammaSpec))
-          ]
+          components: [parts.field('gamma', DemoFields.textMunger(gammaSpec))]
         }),
 
         parts.field('delta', DemoFields.textMunger(deltaSpec)),
@@ -124,10 +125,10 @@ export default (): void => {
             innerHtml: 'OK'
           },
           action(_button) {
-            console.log('Form values', Obj.map(
-              Representing.getValue(form),
-              (v) => v.getOr('Not found')
-            ));
+            console.log(
+              'Form values',
+              Obj.map(Representing.getValue(form), (v) => v.getOr('Not found'))
+            );
           }
         })
       ],
@@ -152,7 +153,7 @@ export default (): void => {
     ExpandableForm.sketch({
       dom: {
         tag: 'div',
-        classes: [ 'expandable-form' ]
+        classes: ['expandable-form']
       },
 
       markers: {
@@ -169,13 +170,13 @@ export default (): void => {
           Form.sketch((parts: FormParts) => ({
             dom: {
               tag: 'div',
-              classes: [ 'demo-form-section', 'demo-form-minimal' ]
+              classes: ['demo-form-section', 'demo-form-minimal']
             },
 
             components: [
               parts.field('omega', DemoFields.coupledTextMunger(omegaSpec)),
               parts.field('alpha', DemoFields.textMunger(alphaSpec)),
-              parts.field('beta', DemoFields.textMunger(betaSpec)),
+              parts.field('beta', DemoFields.textMunger(betaSpec))
             ]
           }))
         ),
@@ -184,7 +185,7 @@ export default (): void => {
           Form.sketch((parts: FormParts) => ({
             dom: {
               tag: 'div',
-              classes: [ 'demo-form-section', 'demo-form-extra' ]
+              classes: ['demo-form-section', 'demo-form-extra']
             },
             components: [
               parts.field('beta', DemoFields.textMunger(betaSpec)),
@@ -209,33 +210,31 @@ export default (): void => {
             tag: 'button',
             innerHtml: 'v'
           },
-          buttonBehaviours: Behaviour.derive([
-            Tabstopping.config({ })
-          ])
+          buttonBehaviours: Behaviour.derive([Tabstopping.config({})])
         }),
         ExpandableForm.parts().controls({
           dom: {
             tag: 'div'
           },
           behaviours: Behaviour.derive([
-            Tabstopping.config({ }),
+            Tabstopping.config({}),
             Keying.config({
               mode: 'flow',
               selector: 'button'
             })
           ]),
           components: [
-            Button.sketch(
-              {
-                dom: { tag: 'button', innerHtml: 'OK' },
-                action(_button) {
-                  console.log('Exp Form values', Obj.map(
-                    Representing.getValue(expform),
-                    (v) => v.getOr('Not found')
-                  ));
-                }
+            Button.sketch({
+              dom: { tag: 'button', innerHtml: 'OK' },
+              action(_button) {
+                console.log(
+                  'Exp Form values',
+                  Obj.map(Representing.getValue(expform), (v) =>
+                    v.getOr('Not found')
+                  )
+                );
               }
-            )
+            })
           ]
         })
       ],
@@ -257,15 +256,20 @@ export default (): void => {
       alpha: 'hi'
     });
 
-    console.log('form', Obj.map(Representing.getValue(form), (v) => v.getOrDie()));
+    console.log(
+      'form',
+      Obj.map(Representing.getValue(form), (v) => v.getOrDie())
+    );
 
-    console.log('expform', Obj.map(Representing.getValue(expform), (v) => v.getOrDie()));
+    console.log(
+      'expform',
+      Obj.map(Representing.getValue(expform), (v) => v.getOrDie())
+    );
 
     Representing.setValue(expform, {
       omega: 'hi'
     });
 
     Representing.getValue(expform);
-
   }, 100);
 };

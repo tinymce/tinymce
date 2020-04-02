@@ -1,4 +1,12 @@
-import { AlloyComponent, Bubble, InlineView, Layout, LayoutInside, MaxHeight, MaxWidth } from '@ephox/alloy';
+import {
+  AlloyComponent,
+  Bubble,
+  InlineView,
+  Layout,
+  LayoutInside,
+  MaxHeight,
+  MaxWidth
+} from '@ephox/alloy';
 import { MouseEvent, TouchEvent } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
@@ -18,22 +26,46 @@ import { getNodeAnchor, getPointAnchor } from '../Coords';
 type MenuItems = string | Array<string | SingleMenuItemApi>;
 
 const layouts = {
-  onLtr: () => [ Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest ],
-  onRtl: () => [ Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast ]
+  onLtr: () => [
+    Layout.south,
+    Layout.southeast,
+    Layout.southwest,
+    Layout.northeast,
+    Layout.northwest,
+    Layout.north,
+    LayoutInside.north,
+    LayoutInside.south,
+    LayoutInside.northeast,
+    LayoutInside.southeast,
+    LayoutInside.northwest,
+    LayoutInside.southwest
+  ],
+  onRtl: () => [
+    Layout.south,
+    Layout.southwest,
+    Layout.southeast,
+    Layout.northwest,
+    Layout.northeast,
+    Layout.north,
+    LayoutInside.north,
+    LayoutInside.south,
+    LayoutInside.northwest,
+    LayoutInside.southwest,
+    LayoutInside.northeast,
+    LayoutInside.southeast
+  ]
 };
 
 const bubbleSize = 12;
 const bubbleAlignments = {
   valignCentre: [],
   alignCentre: [],
-  alignLeft: [ 'tox-pop--align-left' ],
-  alignRight: [ 'tox-pop--align-right' ],
-  right: [ 'tox-pop--right' ],
-  left: [ 'tox-pop--left' ],
-  bottom: [ 'tox-pop--bottom' ],
-  top: [ 'tox-pop--top' ]
+  alignLeft: ['tox-pop--align-left'],
+  alignRight: ['tox-pop--align-right'],
+  right: ['tox-pop--right'],
+  left: ['tox-pop--left'],
+  bottom: ['tox-pop--bottom'],
+  top: ['tox-pop--top']
 };
 
 const isTouchWithinSelection = (editor: Editor, e: EditorEvent<TouchEvent>) => {
@@ -43,17 +75,28 @@ const isTouchWithinSelection = (editor: Editor, e: EditorEvent<TouchEvent>) => {
   } else {
     const touch = e.touches[0];
     const rng = selection.getRng();
-    const rngRectOpt = WindowSelection.getFirstRect(editor.getWin(), Selection.domRange(rng));
-    return rngRectOpt.exists((rngRect) => rngRect.left() <= touch.clientX &&
-      rngRect.right() >= touch.clientX &&
-      rngRect.top() <= touch.clientY &&
-      rngRect.bottom() >= touch.clientY
+    const rngRectOpt = WindowSelection.getFirstRect(
+      editor.getWin(),
+      Selection.domRange(rng)
+    );
+    return rngRectOpt.exists(
+      (rngRect) =>
+        rngRect.left() <= touch.clientX &&
+        rngRect.right() >= touch.clientX &&
+        rngRect.top() <= touch.clientY &&
+        rngRect.bottom() >= touch.clientY
     );
   }
 };
 
-const getAnchorSpec = (editor: Editor, isTriggeredByKeyboardEvent: boolean, e: EditorEvent<TouchEvent>) => {
-  const anchorSpec = isTriggeredByKeyboardEvent ? getNodeAnchor(editor) : getPointAnchor(editor, e);
+const getAnchorSpec = (
+  editor: Editor,
+  isTriggeredByKeyboardEvent: boolean,
+  e: EditorEvent<TouchEvent>
+) => {
+  const anchorSpec = isTriggeredByKeyboardEvent
+    ? getNodeAnchor(editor)
+    : getPointAnchor(editor, e);
   return {
     bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
     layouts,
@@ -70,9 +113,13 @@ const setupiOSOverrides = (editor: Editor) => {
   // need to reset the selection back to the original selection after the touchend event has fired
   const originalSelection = editor.selection.getRng();
   const selectionReset = () => {
-    Delay.setEditorTimeout(editor, () => {
-      editor.selection.setRng(originalSelection);
-    }, 10);
+    Delay.setEditorTimeout(
+      editor,
+      () => {
+        editor.selection.setRng(originalSelection);
+      },
+      10
+    );
     unbindEventListeners();
   };
   editor.once('touchend', selectionReset);
@@ -96,39 +143,70 @@ const setupiOSOverrides = (editor: Editor) => {
   };
 };
 
-const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, isTriggeredByKeyboardEvent: boolean, highlightImmediately: boolean) => {
+const show = (
+  editor: Editor,
+  e: EditorEvent<TouchEvent>,
+  items: MenuItems,
+  backstage: UiFactoryBackstage,
+  contextmenu: AlloyComponent,
+  isTriggeredByKeyboardEvent: boolean,
+  highlightImmediately: boolean
+) => {
   const anchorSpec = getAnchorSpec(editor, isTriggeredByKeyboardEvent, e);
 
-  NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, true).map((menuData) => {
-    e.preventDefault();
+  NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, true).map(
+    (menuData) => {
+      e.preventDefault();
 
-    // Show the context menu, with items set to close on click
-    InlineView.showMenuWithinBounds(contextmenu, anchorSpec, {
-      menu: {
-        markers: MenuParts.markers('normal'),
-        highlightImmediately
-      },
-      data: menuData,
-      type: 'horizontal'
-    }, () => Option.some(getContextToolbarBounds(editor)));
+      // Show the context menu, with items set to close on click
+      InlineView.showMenuWithinBounds(
+        contextmenu,
+        anchorSpec,
+        {
+          menu: {
+            markers: MenuParts.markers('normal'),
+            highlightImmediately
+          },
+          data: menuData,
+          type: 'horizontal'
+        },
+        () => Option.some(getContextToolbarBounds(editor))
+      );
 
-    // Ensure the context toolbar is hidden
-    editor.fire(hideContextToolbarEvent);
-  });
+      // Ensure the context toolbar is hidden
+      editor.fire(hideContextToolbarEvent);
+    }
+  );
 };
 
-export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMenu: () => MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, isTriggeredByKeyboardEvent: boolean): void => {
+export const initAndShow = (
+  editor: Editor,
+  e: EditorEvent<TouchEvent>,
+  buildMenu: () => MenuItems,
+  backstage: UiFactoryBackstage,
+  contextmenu: AlloyComponent,
+  isTriggeredByKeyboardEvent: boolean
+): void => {
   const detection = PlatformDetection.detect();
   const isiOS = detection.os.isiOS();
   const isOSX = detection.os.isOSX();
   const isAndroid = detection.os.isAndroid();
   const isTouch = detection.deviceType.isTouch();
 
-  const shouldHighlightImmediately = () => !(isAndroid || isiOS || (isOSX && isTouch));
+  const shouldHighlightImmediately = () =>
+    !(isAndroid || isiOS || (isOSX && isTouch));
 
   const open = () => {
     const items = buildMenu();
-    show(editor, e, items, backstage, contextmenu, isTriggeredByKeyboardEvent, shouldHighlightImmediately());
+    show(
+      editor,
+      e,
+      items,
+      backstage,
+      contextmenu,
+      isTriggeredByKeyboardEvent,
+      shouldHighlightImmediately()
+    );
   };
 
   // On iOS/iPadOS if we've long pressed on a ranged selection then we've already selected the content

@@ -32,7 +32,9 @@ const buildMenuItems = function (listName: string, languageValues) {
 };
 
 const getItems = function (editor) {
-  return Tools.map(Settings.getLanguages(editor).split(','), function (langPair) {
+  return Tools.map(Settings.getLanguages(editor).split(','), function (
+    langPair
+  ) {
     langPair = langPair.split('=');
 
     return {
@@ -42,10 +44,24 @@ const getItems = function (editor) {
   });
 };
 
-const register = function (editor: Editor, pluginUrl: string, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, lastSuggestionsState: Cell<LastSuggestion>) {
+const register = function (
+  editor: Editor,
+  pluginUrl: string,
+  startedState: Cell<boolean>,
+  textMatcherState: Cell<DomTextMatcher>,
+  currentLanguageState: Cell<string>,
+  lastSuggestionsState: Cell<LastSuggestion>
+) {
   const languageMenuItems = buildMenuItems('Language', getItems(editor));
   const startSpellchecking = function () {
-    Actions.spellcheck(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
+    Actions.spellcheck(
+      editor,
+      pluginUrl,
+      startedState,
+      textMatcherState,
+      lastSuggestionsState,
+      currentLanguageState
+    );
   };
 
   const buttonArgs: Toolbar.ToolbarToggleButtonApi = {
@@ -65,14 +81,17 @@ const register = function (editor: Editor, pluginUrl: string, startedState: Cell
 
   const splitButtonArgs: Toolbar.ToolbarSplitButtonApi = {
     ...buttonArgs,
-    type : 'splitbutton',
-    select : (value) => value === currentLanguageState.get(),
-    fetch : (callback) => {
-      const items = Tools.map(languageMenuItems, (languageItem): Menu.ChoiceMenuItemApi => ({
-        type: 'choiceitem',
-        value: languageItem.data,
-        text: languageItem.text
-      }));
+    type: 'splitbutton',
+    select: (value) => value === currentLanguageState.get(),
+    fetch: (callback) => {
+      const items = Tools.map(
+        languageMenuItems,
+        (languageItem): Menu.ChoiceMenuItemApi => ({
+          type: 'choiceitem',
+          value: languageItem.data,
+          text: languageItem.text
+        })
+      );
       callback(items);
     },
     onItemAction: (splitButtonApi, value) => {
@@ -100,9 +119,6 @@ const register = function (editor: Editor, pluginUrl: string, startedState: Cell
     },
     onAction: startSpellchecking
   });
-
 };
 
-export {
-  register
-};
+export { register };

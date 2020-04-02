@@ -7,10 +7,10 @@ UnitTest.test('ContractsTest', () => {
   const b = Fun.constant('destroy');
   const c = Fun.constant('events');
 
-  const bagger = Contracts.exactly([ 'element', 'destroy', 'events' ]);
-  const baggerMin = Contracts.ensure([ 'element', 'destroy', 'events' ]);
+  const bagger = Contracts.exactly(['element', 'destroy', 'events']);
+  const baggerMin = Contracts.ensure(['element', 'destroy', 'events']);
 
-  const baggerMin10 = Contracts.ensureWith([ 'mustBe10', 'any' ], {
+  const baggerMin10 = Contracts.ensureWith(['mustBe10', 'any'], {
     label: '10 if mustBe10',
     validate(v, k) {
       return k === 'mustBe10' ? v === 10 : true;
@@ -42,7 +42,8 @@ UnitTest.test('ContractsTest', () => {
   })();
 
   (() => {
-    const expected = 'All values need to be of type: function. Keys (element, events) were not.';
+    const expected =
+      'All values need to be of type: function. Keys (element, events) were not.';
     try {
       bagger({
         element: 'element',
@@ -57,7 +58,8 @@ UnitTest.test('ContractsTest', () => {
   })();
 
   (() => {
-    const expected = 'All values need to be of type: function. Keys (element, events) were not.';
+    const expected =
+      'All values need to be of type: function. Keys (element, events) were not.';
     try {
       baggerMin({
         element: 'element',
@@ -102,7 +104,8 @@ UnitTest.test('ContractsTest', () => {
   })();
 
   (() => {
-    const expected = 'All values need to be of type: 10 if mustBe10. Keys (mustBe10) were not.';
+    const expected =
+      'All values need to be of type: 10 if mustBe10. Keys (mustBe10) were not.';
     try {
       baggerMin10({
         mustBe10: 'dog',

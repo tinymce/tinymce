@@ -67,7 +67,8 @@ const resolveBookmark = function (bookmark) {
     let container, offset, node;
 
     const nodeIndex = function (container) {
-      let node = container.parentNode.firstChild, idx = 0;
+      let node = container.parentNode.firstChild,
+        idx = 0;
 
       while (node) {
         if (node === container) {
@@ -75,7 +76,10 @@ const resolveBookmark = function (bookmark) {
         }
 
         // Skip data-mce-type=bookmark nodes
-        if (node.nodeType !== 1 || node.getAttribute('data-mce-type') !== 'bookmark') {
+        if (
+          node.nodeType !== 1 ||
+          node.getAttribute('data-mce-type') !== 'bookmark'
+        ) {
           idx++;
         }
 
@@ -120,7 +124,4 @@ const resolveBookmark = function (bookmark) {
   return Range.normalizeRange(rng);
 };
 
-export {
-  createBookmark,
-  resolveBookmark
-};
+export { createBookmark, resolveBookmark };

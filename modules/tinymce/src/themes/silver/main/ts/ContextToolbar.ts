@@ -5,7 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView, Keying, Layout, LayoutInside, MaxHeight, MaxWidth, Positioning } from '@ephox/alloy';
+import {
+  AddEventsBehaviour,
+  AlloyEvents,
+  AlloySpec,
+  AlloyTriggers,
+  AnchorSpec,
+  Behaviour,
+  Boxes,
+  Bubble,
+  GuiFactory,
+  InlineView,
+  Keying,
+  Layout,
+  LayoutInside,
+  MaxHeight,
+  MaxWidth,
+  Positioning
+} from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Element as DomElement } from '@ephox/dom-globals';
 import { Cell, Id, Merger, Obj, Option, Thunk } from '@ephox/katamari';
@@ -14,12 +31,18 @@ import { Css, Element, Focus, Scroll } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { getToolbarMode, ToolbarMode } from './api/Settings';
-import { hideContextToolbarEvent, showContextToolbarEvent } from './ui/context/ContextEditorEvents';
+import {
+  hideContextToolbarEvent,
+  showContextToolbarEvent
+} from './ui/context/ContextEditorEvents';
 import { ContextForm } from './ui/context/ContextForm';
 import { getContextToolbarBounds } from './ui/context/ContextToolbarBounds';
 import * as ToolbarLookup from './ui/context/ContextToolbarLookup';
 import * as ToolbarScopes from './ui/context/ContextToolbarScopes';
-import { forwardSlideEvent, renderContextToolbar } from './ui/context/ContextUi';
+import {
+  forwardSlideEvent,
+  renderContextToolbar
+} from './ui/context/ContextUi';
 import { renderToolbar } from './ui/toolbar/CommonToolbar';
 import { identifyButtons } from './ui/toolbar/Integration';
 
@@ -29,12 +52,12 @@ const bubbleSize = 12;
 const bubbleAlignments = {
   valignCentre: [],
   alignCentre: [],
-  alignLeft: [ 'tox-pop--align-left' ],
-  alignRight: [ 'tox-pop--align-right' ],
-  right: [ 'tox-pop--right' ],
-  left: [ 'tox-pop--left' ],
-  bottom: [ 'tox-pop--bottom' ],
-  top: [ 'tox-pop--top' ]
+  alignLeft: ['tox-pop--align-left'],
+  alignRight: ['tox-pop--align-right'],
+  right: ['tox-pop--right'],
+  left: ['tox-pop--left'],
+  bottom: ['tox-pop--bottom'],
+  top: ['tox-pop--top']
 };
 
 const anchorOverrides = {
@@ -44,26 +67,77 @@ const anchorOverrides = {
 
 // On desktop we prioritise north-then-south because it's cleaner, but on mobile we prioritise south to try to avoid overlapping with native context toolbars
 const desktopAnchorSpecLayouts = {
-  onLtr: () => [ Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest ],
-  onRtl: () => [ Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast ]
+  onLtr: () => [
+    Layout.north,
+    Layout.south,
+    Layout.northeast,
+    Layout.southeast,
+    Layout.northwest,
+    Layout.southwest,
+    LayoutInside.north,
+    LayoutInside.south,
+    LayoutInside.northeast,
+    LayoutInside.southeast,
+    LayoutInside.northwest,
+    LayoutInside.southwest
+  ],
+  onRtl: () => [
+    Layout.north,
+    Layout.south,
+    Layout.northwest,
+    Layout.southwest,
+    Layout.northeast,
+    Layout.southeast,
+    LayoutInside.north,
+    LayoutInside.south,
+    LayoutInside.northwest,
+    LayoutInside.southwest,
+    LayoutInside.northeast,
+    LayoutInside.southeast
+  ]
 };
 
 const mobileAnchorSpecLayouts = {
-  onLtr: () => [ Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest ],
-  onRtl: () => [ Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast ]
+  onLtr: () => [
+    Layout.south,
+    Layout.southeast,
+    Layout.southwest,
+    Layout.northeast,
+    Layout.northwest,
+    Layout.north,
+    LayoutInside.north,
+    LayoutInside.south,
+    LayoutInside.northeast,
+    LayoutInside.southeast,
+    LayoutInside.northwest,
+    LayoutInside.southwest
+  ],
+  onRtl: () => [
+    Layout.south,
+    Layout.southwest,
+    Layout.southeast,
+    Layout.northwest,
+    Layout.northeast,
+    Layout.north,
+    LayoutInside.north,
+    LayoutInside.south,
+    LayoutInside.northwest,
+    LayoutInside.southwest,
+    LayoutInside.northeast,
+    LayoutInside.southeast
+  ]
 };
 
-const getAnchorLayout = (position: Toolbar.ContextToolbarPosition, isTouch: boolean): Partial<AnchorSpec> => {
+const getAnchorLayout = (
+  position: Toolbar.ContextToolbarPosition,
+  isTouch: boolean
+): Partial<AnchorSpec> => {
   if (position === 'line') {
     return {
       bubble: Bubble.nu(bubbleSize, 0, bubbleAlignments),
       layouts: {
-        onLtr: () => [ Layout.east ],
-        onRtl: () => [ Layout.west ]
+        onLtr: () => [Layout.east],
+        onRtl: () => [Layout.west]
       },
       overrides: anchorOverrides
     };
@@ -91,13 +165,23 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
 
   const getBounds = () => getContextToolbarBounds(editor);
 
-  const isRangeOverlapping = (aTop: number, aBottom: number, bTop: number, bBottom: number) => Math.max(aTop, bTop) <= Math.min(aBottom, bBottom);
+  const isRangeOverlapping = (
+    aTop: number,
+    aBottom: number,
+    bTop: number,
+    bBottom: number
+  ) => Math.max(aTop, bTop) <= Math.min(aBottom, bBottom);
 
   const getLastElementVerticalBound = () => {
-    const nodeBounds = lastElement.get().map((ele) => ele.getBoundingClientRect()).getOrThunk(() => editor.selection.getRng().getBoundingClientRect());
+    const nodeBounds = lastElement
+      .get()
+      .map((ele) => ele.getBoundingClientRect())
+      .getOrThunk(() => editor.selection.getRng().getBoundingClientRect());
 
     // Translate to the top level document, as nodeBounds is relative to the iframe viewport
-    const diffTop = editor.inline ? Scroll.get().top() : Boxes.absolute(Element.fromDom(editor.getBody())).y;
+    const diffTop = editor.inline
+      ? Scroll.get().top()
+      : Boxes.absolute(Element.fromDom(editor.getBody())).y;
 
     return {
       y: nodeBounds.top + diffTop,
@@ -135,7 +219,12 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
       if (shouldContextToolbarHide()) {
         Css.set(contextBarEle, 'display', 'none');
       } else {
-        Positioning.positionWithinBounds(sink, anchor, contextbar, Option.some(getBounds()));
+        Positioning.positionWithinBounds(
+          sink,
+          anchor,
+          contextbar,
+          Option.some(getBounds())
+        );
       }
     });
   };
@@ -147,9 +236,9 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   const wrapInPopDialog = (toolbarSpec: AlloySpec) => ({
     dom: {
       tag: 'div',
-      classes: [ 'tox-pop__dialog' ],
+      classes: ['tox-pop__dialog']
     },
-    components: [ toolbarSpec ],
+    components: [toolbarSpec],
     behaviours: Behaviour.derive([
       Keying.config({
         mode: 'acyclic'
@@ -157,7 +246,9 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
 
       AddEventsBehaviour.config('pop-dialog-wrap-events', [
         AlloyEvents.runOnAttached((comp) => {
-          editor.shortcuts.add('ctrl+F9', 'focus statusbar', () => Keying.focusIn(comp));
+          editor.shortcuts.add('ctrl+F9', 'focus statusbar', () =>
+            Keying.focusIn(comp)
+          );
         }),
         AlloyEvents.runOnDetached((_comp) => {
           editor.shortcuts.remove('ctrl+F9');
@@ -166,54 +257,84 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     ])
   });
 
-  const getScopes: () => ScopedToolbars = Thunk.cached(() => ToolbarScopes.categorise(registryContextToolbars, (toolbarApi) => {
-    const alloySpec = buildToolbar(toolbarApi);
-    AlloyTriggers.emitWith(contextbar, forwardSlideEvent, {
-      forwardContents: wrapInPopDialog(alloySpec)
-    });
-  }));
+  const getScopes: () => ScopedToolbars = Thunk.cached(() =>
+    ToolbarScopes.categorise(registryContextToolbars, (toolbarApi) => {
+      const alloySpec = buildToolbar(toolbarApi);
+      AlloyTriggers.emitWith(contextbar, forwardSlideEvent, {
+        forwardContents: wrapInPopDialog(alloySpec)
+      });
+    })
+  );
 
   const buildToolbar = (ctx): AlloySpec => {
     const { buttons } = editor.ui.registry.getAll();
 
     // For context toolbars we don't want to use floating or sliding, so just restrict this
     // to scrolling or wrapping (default)
-    const toolbarType = getToolbarMode(editor) === ToolbarMode.scrolling ? ToolbarMode.scrolling : ToolbarMode.default;
+    const toolbarType =
+      getToolbarMode(editor) === ToolbarMode.scrolling
+        ? ToolbarMode.scrolling
+        : ToolbarMode.default;
 
     const scopes = getScopes();
-    return ctx.type === 'contexttoolbar' ? (() => {
-      const allButtons = { ...buttons, ...scopes.formNavigators };
-      const initGroups = identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items, allowToolbarGroups: false }, extras, Option.some([ 'form:' ]));
-      return renderToolbar({
-        type: toolbarType,
-        uid: Id.generate('context-toolbar'),
-        initGroups,
-        onEscape: Option.none,
-        cyclicKeying: true,
-        providers: extras.backstage.shared.providers
-      });
-    })() : (() => ContextForm.renderContextForm(toolbarType, ctx, extras.backstage.shared.providers))();
+    return ctx.type === 'contexttoolbar'
+      ? (() => {
+          const allButtons = { ...buttons, ...scopes.formNavigators };
+          const initGroups = identifyButtons(
+            editor,
+            {
+              buttons: allButtons,
+              toolbar: ctx.items,
+              allowToolbarGroups: false
+            },
+            extras,
+            Option.some(['form:'])
+          );
+          return renderToolbar({
+            type: toolbarType,
+            uid: Id.generate('context-toolbar'),
+            initGroups,
+            onEscape: Option.none,
+            cyclicKeying: true,
+            providers: extras.backstage.shared.providers
+          });
+        })()
+      : (() =>
+          ContextForm.renderContextForm(
+            toolbarType,
+            ctx,
+            extras.backstage.shared.providers
+          ))();
   };
 
   editor.on(showContextToolbarEvent, (e) => {
     const scopes = getScopes();
     // TODO: Have this stored in a better structure
     Obj.get(scopes.lookupTable, e.toolbarKey).each((ctx) => {
-      launchContext(ctx, e.target === editor ? Option.none() : Option.some(e as DomElement));
+      launchContext(
+        ctx,
+        e.target === editor ? Option.none() : Option.some(e as DomElement)
+      );
       // Forms launched via this way get immediate focus
       InlineView.getContent(contextbar).each(Keying.focusIn);
     });
   });
 
-  const getAnchor = (position: Toolbar.ContextToolbarPosition, element: Option<Element>): AnchorSpec => {
-    const anchorage = position === 'node' ? extras.backstage.shared.anchors.node(element) : extras.backstage.shared.anchors.cursor();
-    return Merger.deepMerge(
-      anchorage,
-      getAnchorLayout(position, isTouch())
-    );
+  const getAnchor = (
+    position: Toolbar.ContextToolbarPosition,
+    element: Option<Element>
+  ): AnchorSpec => {
+    const anchorage =
+      position === 'node'
+        ? extras.backstage.shared.anchors.node(element)
+        : extras.backstage.shared.anchors.cursor();
+    return Merger.deepMerge(anchorage, getAnchorLayout(position, isTouch()));
   };
 
-  const launchContext = (toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm, elem: Option<DomElement>) => {
+  const launchContext = (
+    toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm,
+    elem: Option<DomElement>
+  ) => {
     clearTimer();
 
     // If a mobile context menu is open, don't launch else they'll probably overlap. For android, specifically.
@@ -224,11 +345,16 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     const toolbarSpec = buildToolbar(toolbarApi);
     const sElem = elem.map(Element.fromDom);
     const anchor = getAnchor(toolbarApi.position, sElem);
-    lastAnchor.set(Option.some((anchor)));
+    lastAnchor.set(Option.some(anchor));
     lastElement.set(elem);
     const contextBarEle = contextbar.element();
     Css.remove(contextBarEle, 'display');
-    InlineView.showWithinBounds(contextbar, anchor, wrapInPopDialog(toolbarSpec), () => Option.some(getBounds()));
+    InlineView.showWithinBounds(
+      contextbar,
+      anchor,
+      wrapInPopDialog(toolbarSpec),
+      () => Option.some(getBounds())
+    );
 
     // It's possible we may have launched offscreen, if so then hide
     if (shouldContextToolbarHide()) {
@@ -270,23 +396,31 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
 
   editor.on('init', () => {
     editor.on(hideContextToolbarEvent, forceHide);
-    editor.on('ScrollContent ScrollWindow longpress', hideOrRepositionIfNecessary);
+    editor.on(
+      'ScrollContent ScrollWindow longpress',
+      hideOrRepositionIfNecessary
+    );
 
     // FIX: Make it go away when the action makes it go away. E.g. deleting a column deletes the table.
     editor.on('click keyup focus SetContent ObjectResized ResizeEditor', () => {
       // Fixing issue with chrome focus on img.
-      resetTimer(
-        Delay.setEditorTimeout(editor, launchContextToolbar, 0)
-      );
+      resetTimer(Delay.setEditorTimeout(editor, launchContextToolbar, 0));
     });
 
     editor.on('focusout', (_e) => {
-      Delay.setEditorTimeout(editor, () => {
-        if (Focus.search(sink.element()).isNone() && Focus.search(contextbar.element()).isNone()) {
-          lastAnchor.set(Option.none());
-          InlineView.hide(contextbar);
-        }
-      }, 0);
+      Delay.setEditorTimeout(
+        editor,
+        () => {
+          if (
+            Focus.search(sink.element()).isNone() &&
+            Focus.search(contextbar.element()).isNone()
+          ) {
+            lastAnchor.set(Option.none());
+            InlineView.hide(contextbar);
+          }
+        },
+        0
+      );
     });
 
     editor.on('SwitchMode', () => {
@@ -299,18 +433,12 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     editor.on('NodeChange', (_e) => {
       Focus.search(contextbar.element()).fold(
         () => {
-          resetTimer(
-            Delay.setEditorTimeout(editor, launchContextToolbar, 0)
-          );
+          resetTimer(Delay.setEditorTimeout(editor, launchContextToolbar, 0));
         },
-        (_) => {
-
-        }
+        (_) => {}
       );
     });
   });
 };
 
-export {
-  register
-};
+export { register };

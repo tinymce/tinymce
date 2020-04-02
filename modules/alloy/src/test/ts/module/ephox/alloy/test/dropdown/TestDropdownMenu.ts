@@ -11,48 +11,59 @@ import * as Tagger from 'ephox/alloy/registry/Tagger';
 import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 import { PartialMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
 
-const renderMenu = (spec: { value: string; text?: string; items: ItemSpec[] }): PartialMenuSpec => ({
+const renderMenu = (spec: {
+  value: string;
+  text?: string;
+  items: ItemSpec[];
+}): PartialMenuSpec => ({
   dom: {
     tag: 'ol',
-    classes: [ 'menu' ],
-    attributes: spec.text !== undefined ? {
-      'aria-label': spec.text
-    } : { }
+    classes: ['menu'],
+    attributes:
+      spec.text !== undefined
+        ? {
+            'aria-label': spec.text
+          }
+        : {}
   },
   items: spec.items,
-  components: [
-    Menu.parts().items({ })
-  ]
+  components: [Menu.parts().items({})]
 });
 
-const renderItem = (spec: { type: any; widget?: any; data: { value: string; meta: any }; hasSubmenu?: boolean}): ItemSpec => spec.type === 'widget' ? {
-  type: 'widget',
-  data: spec.data,
-  dom: {
-    tag: 'li',
-    attributes: {
-      'data-value': spec.data.value
-    },
-    classes: [ 'item-widget' ]
-  },
-  components: [
-    ItemWidget.parts().widget(spec.widget)
-  ]
-} : {
-  type: spec.type,
-  data: spec.data,
-  hasSubmenu: spec.hasSubmenu,
-  dom: {
-    tag: 'li',
-    attributes: {
-      'data-value': spec.data.value,
-      'data-test-id': 'item-' + spec.data.value
-    },
-    classes: [ ],
-    innerHtml: spec.data.meta.text
-  },
-  components: [ ]
-};
+const renderItem = (spec: {
+  type: any;
+  widget?: any;
+  data: { value: string; meta: any };
+  hasSubmenu?: boolean;
+}): ItemSpec =>
+  spec.type === 'widget'
+    ? {
+        type: 'widget',
+        data: spec.data,
+        dom: {
+          tag: 'li',
+          attributes: {
+            'data-value': spec.data.value
+          },
+          classes: ['item-widget']
+        },
+        components: [ItemWidget.parts().widget(spec.widget)]
+      }
+    : {
+        type: spec.type,
+        data: spec.data,
+        hasSubmenu: spec.hasSubmenu,
+        dom: {
+          tag: 'li',
+          attributes: {
+            'data-value': spec.data.value,
+            'data-test-id': 'item-' + spec.data.value
+          },
+          classes: [],
+          innerHtml: spec.data.meta.text
+        },
+        components: []
+      };
 
 const part = (store: TestStore) => ({
   dom: {
@@ -65,13 +76,14 @@ const part = (store: TestStore) => ({
   }
 });
 
-const mStoreMenuUid = (component: AlloyComponent) => Step.stateful((value: any, next, _die) => {
-  const menu = SelectorFind.descendant(component.element(), '.menu').getOrDie('Could not find menu');
-  const uid = Tagger.readOrDie(menu);
-  next(
-    Merger.deepMerge(value, { menuUid: uid })
-  );
-});
+const mStoreMenuUid = (component: AlloyComponent) =>
+  Step.stateful((value: any, next, _die) => {
+    const menu = SelectorFind.descendant(component.element(), '.menu').getOrDie(
+      'Could not find menu'
+    );
+    const uid = Tagger.readOrDie(menu);
+    next(Merger.deepMerge(value, { menuUid: uid }));
+  });
 
 const mWaitForNewMenu = (component: AlloyComponent) =>
   // TODO: Create an API to hide this detail
@@ -79,22 +91,30 @@ const mWaitForNewMenu = (component: AlloyComponent) =>
     Waiter.sTryUntil(
       'Waiting for a new menu (different uid)',
       Step.sync(() => {
-        SelectorFind.descendant(component.element(), '.menu').filter((menu) => {
-          const uid = Tagger.readOrDie(menu);
-          return value.menuUid !== uid;
-        }).getOrDie('New menu has not appeared');
+        SelectorFind.descendant(component.element(), '.menu')
+          .filter((menu) => {
+            const uid = Tagger.readOrDie(menu);
+            return value.menuUid !== uid;
+          })
+          .getOrDie('New menu has not appeared');
       }),
       100,
       3000
     ).runStep(value, next, die, logs);
   });
 
-const assertLazySinkArgs = (expectedTag: string, expectedClass: string, comp: AlloyComponent) => {
+const assertLazySinkArgs = (
+  expectedTag: string,
+  expectedClass: string,
+  comp: AlloyComponent
+) => {
   Assertions.assertStructure(
     'Lazy sink should get passed the split button',
-    ApproxStructure.build((s, _str, arr) => s.element(expectedTag, {
-      classes: [ arr.has(expectedClass) ]
-    })),
+    ApproxStructure.build((s, _str, arr) =>
+      s.element(expectedTag, {
+        classes: [arr.has(expectedClass)]
+      })
+    ),
     comp.element()
   );
 };

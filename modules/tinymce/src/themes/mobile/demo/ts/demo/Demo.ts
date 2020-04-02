@@ -4,7 +4,24 @@ export default function () {
   tinymce.init({
     selector: '.tiny-text',
     theme: 'mobile',
-    toolbar: [ 'styleselect', 'undo', 'redo', 'bold', 'bold', 'italic', 'underline', 'styleselect', 'removeformat', 'link', 'unlink', 'image', 'fontsizeselect', 'bullist', 'numlist', 'forecolor' ],
+    toolbar: [
+      'styleselect',
+      'undo',
+      'redo',
+      'bold',
+      'bold',
+      'italic',
+      'underline',
+      'styleselect',
+      'removeformat',
+      'link',
+      'unlink',
+      'image',
+      'fontsizeselect',
+      'bullist',
+      'numlist',
+      'forecolor'
+    ],
     plugins: [
       'lists', // Required for list functionality (commands),
       'autolink', // Required for turning pasted text into hyperlinks
@@ -16,7 +33,8 @@ export default function () {
       ed.on('skinLoaded', function () {
         // Notification fields for equality: type, text, progressBar, timeout
         ed.notificationManager.open({
-          text: 'You will not see this because the mobile theme has no notifications',
+          text:
+            'You will not see this because the mobile theme has no notifications',
           type: 'info'
         });
       });
@@ -24,7 +42,8 @@ export default function () {
 
     style_formats: [
       {
-        title: 'Headings', items: [
+        title: 'Headings',
+        items: [
           { title: 'Heading 1', format: 'h1' },
           { title: 'Heading 2', format: 'h2' },
           { title: 'Heading 3', format: 'h3' },
@@ -35,11 +54,16 @@ export default function () {
       },
 
       {
-        title: 'Inline', items: [
+        title: 'Inline',
+        items: [
           { title: 'Bold', icon: 'bold', format: 'bold' },
           { title: 'Italic', icon: 'italic', format: 'italic' },
           { title: 'Underline', icon: 'underline', format: 'underline' },
-          { title: 'Strikethrough', icon: 'strikethrough', format: 'strikethrough' },
+          {
+            title: 'Strikethrough',
+            icon: 'strikethrough',
+            format: 'strikethrough'
+          },
           { title: 'Superscript', icon: 'superscript', format: 'superscript' },
           { title: 'Subscript', icon: 'subscript', format: 'subscript' },
           { title: 'Code', icon: 'code', format: 'code' }
@@ -48,15 +72,20 @@ export default function () {
 
       {
         // Should not appear when not in a table.
-        title: 'Table', items: [
-          { title: 'Rows', items: [
-            { title: 'Cell', selector: 'tr', styles: { background: 'red' }}
-          ] }
+        title: 'Table',
+        items: [
+          {
+            title: 'Rows',
+            items: [
+              { title: 'Cell', selector: 'tr', styles: { background: 'red' } }
+            ]
+          }
         ]
       },
 
       {
-        title: 'Blocks', items: [
+        title: 'Blocks',
+        items: [
           { title: 'Paragraph', format: 'p', selector: 'address' },
           { title: 'Blockquote', format: 'blockquote', selector: 'address' },
           { title: 'Div', format: 'div', selector: 'address' },
@@ -65,7 +94,8 @@ export default function () {
       },
 
       {
-        title: 'Alignment', items: [
+        title: 'Alignment',
+        items: [
           { title: 'Left', icon: 'alignleft', format: 'alignleft' },
           { title: 'Center', icon: 'aligncenter', format: 'aligncenter' },
           { title: 'Right', icon: 'alignright', format: 'alignright' },

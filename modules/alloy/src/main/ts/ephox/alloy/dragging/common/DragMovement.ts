@@ -1,5 +1,12 @@
 import { Num, Option, Options } from '@ephox/katamari';
-import { Css, Element, Location, Position, Scroll, Traverse } from '@ephox/sugar';
+import {
+  Css,
+  Element,
+  Location,
+  Position,
+  Scroll,
+  Traverse
+} from '@ephox/sugar';
 
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -7,23 +14,40 @@ import * as DragCoord from '../../api/data/DragCoord';
 import * as Snappables from '../snap/Snappables';
 import { DraggingConfig, DragStartData, SnapsConfig } from './DraggingTypes';
 
-const getCurrentCoord = (target: Element): DragCoord.CoordAdt => Options.lift3(Css.getRaw(target, 'left'), Css.getRaw(target, 'top'), Css.getRaw(target, 'position'), (left, top, position) => {
-  const nu = position === 'fixed' ? DragCoord.fixed : DragCoord.offset;
-  return nu(
-    parseInt(left, 10),
-    parseInt(top, 10)
-  );
-}).getOrThunk(() => {
-  const location = Location.absolute(target);
-  return DragCoord.absolute(location.left(), location.top());
-});
+const getCurrentCoord = (target: Element): DragCoord.CoordAdt =>
+  Options.lift3(
+    Css.getRaw(target, 'left'),
+    Css.getRaw(target, 'top'),
+    Css.getRaw(target, 'position'),
+    (left, top, position) => {
+      const nu = position === 'fixed' ? DragCoord.fixed : DragCoord.offset;
+      return nu(parseInt(left, 10), parseInt(top, 10));
+    }
+  ).getOrThunk(() => {
+    const location = Location.absolute(target);
+    return DragCoord.absolute(location.left(), location.top());
+  });
 
-const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scroll: Position, origin: Position, startData: DragStartData): DragCoord.CoordAdt => {
+const clampCoords = (
+  component: AlloyComponent,
+  coords: DragCoord.CoordAdt,
+  scroll: Position,
+  origin: Position,
+  startData: DragStartData
+): DragCoord.CoordAdt => {
   const bounds = startData.bounds;
   const absoluteCoord = DragCoord.asAbsolute(coords, scroll, origin);
 
-  const newX = Num.clamp(absoluteCoord.left(), bounds.x, bounds.x + bounds.width - startData.width);
-  const newY = Num.clamp(absoluteCoord.top(), bounds.y, bounds.y + bounds.height - startData.height);
+  const newX = Num.clamp(
+    absoluteCoord.left(),
+    bounds.x,
+    bounds.x + bounds.width - startData.width
+  );
+  const newY = Num.clamp(
+    absoluteCoord.top(),
+    bounds.y,
+    bounds.y + bounds.height - startData.height
+  );
   const newCoords = DragCoord.absolute(newX, newY);
 
   // Translate the absolute coord back into the previous type
@@ -39,29 +63,56 @@ const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scro
     () => {
       const fixed = DragCoord.asFixed(newCoords, scroll, origin);
       return DragCoord.fixed(fixed.left(), fixed.top());
-    },
+    }
   );
 };
 
-const calcNewCoord = <E>(component: AlloyComponent, optSnaps: Option<SnapsConfig<E>>, currentCoord: DragCoord.CoordAdt, scroll: Position, origin: Position, delta: Position, startData: DragStartData): DragCoord.CoordAdt => {
-  const newCoord = optSnaps.fold(() => {
-    // When not docking, use fixed coordinates.
-    const translated = DragCoord.translate(currentCoord, delta.left(), delta.top());
-    const fixedCoord = DragCoord.asFixed(translated, scroll, origin);
-    return DragCoord.fixed(fixedCoord.left(), fixedCoord.top());
-  }, (snapInfo) => {
-    const snapping = Snappables.moveOrSnap(component, snapInfo, currentCoord, delta, scroll, origin);
-    snapping.extra.each((extra: any) => {
-      snapInfo.onSensor(component, extra);
-    });
-    return snapping.coord;
-  });
+const calcNewCoord = <E>(
+  component: AlloyComponent,
+  optSnaps: Option<SnapsConfig<E>>,
+  currentCoord: DragCoord.CoordAdt,
+  scroll: Position,
+  origin: Position,
+  delta: Position,
+  startData: DragStartData
+): DragCoord.CoordAdt => {
+  const newCoord = optSnaps.fold(
+    () => {
+      // When not docking, use fixed coordinates.
+      const translated = DragCoord.translate(
+        currentCoord,
+        delta.left(),
+        delta.top()
+      );
+      const fixedCoord = DragCoord.asFixed(translated, scroll, origin);
+      return DragCoord.fixed(fixedCoord.left(), fixedCoord.top());
+    },
+    (snapInfo) => {
+      const snapping = Snappables.moveOrSnap(
+        component,
+        snapInfo,
+        currentCoord,
+        delta,
+        scroll,
+        origin
+      );
+      snapping.extra.each((extra: any) => {
+        snapInfo.onSensor(component, extra);
+      });
+      return snapping.coord;
+    }
+  );
 
   // Clamp the coords so that they are within the bounds
   return clampCoords(component, newCoord, scroll, origin, startData);
 };
 
-const dragBy = <E>(component: AlloyComponent, dragConfig: DraggingConfig<E>, startData: DragStartData, delta: Position): void => {
+const dragBy = <E>(
+  component: AlloyComponent,
+  dragConfig: DraggingConfig<E>,
+  startData: DragStartData,
+  delta: Position
+): void => {
   const target = dragConfig.getTarget(component.element());
 
   if (dragConfig.repositionTarget) {
@@ -72,7 +123,15 @@ const dragBy = <E>(component: AlloyComponent, dragConfig: DraggingConfig<E>, sta
 
     const currentCoord = getCurrentCoord(target);
 
-    const newCoord = calcNewCoord(component, dragConfig.snaps, currentCoord, scroll, origin, delta, startData);
+    const newCoord = calcNewCoord(
+      component,
+      dragConfig.snaps,
+      currentCoord,
+      scroll,
+      origin,
+      delta,
+      startData
+    );
 
     const styles = DragCoord.toStyles(newCoord, scroll, origin);
     Css.setOptions(target, styles);
@@ -81,6 +140,4 @@ const dragBy = <E>(component: AlloyComponent, dragConfig: DraggingConfig<E>, sta
   dragConfig.onDrag(component, target, delta);
 };
 
-export {
-  dragBy
-};
+export { dragBy };

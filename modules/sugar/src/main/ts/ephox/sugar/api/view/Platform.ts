@@ -22,12 +22,18 @@ const isOfSize = function (width: number, height: number) {
   return window.screen.width >= width && window.screen.height >= height;
 };
 
-const choice = function <T> (options: ChoiceOption<T>[], fallback: T): T {
-  const target = Arr.foldl(options, function (b, option) {
-    return b.orThunk(function () {
-      return option.predicate() ? Option.some(option.value()) : Option.none<T>();
-    });
-  }, Option.none<T>());
+const choice = function <T>(options: ChoiceOption<T>[], fallback: T): T {
+  const target = Arr.foldl(
+    options,
+    function (b, option) {
+      return b.orThunk(function () {
+        return option.predicate()
+          ? Option.some(option.value())
+          : Option.none<T>();
+      });
+    },
+    Option.none<T>()
+  );
 
   return target.getOr(fallback);
 };
@@ -52,4 +58,12 @@ const isSmallAndroid = function () {
   return isSmallTouch() && isAndroid();
 };
 
-export { isTouch, choice, isLarge, isLargeTouch, isSmallTouch, isLargeDesktop, isSmallAndroid, };
+export {
+  isTouch,
+  choice,
+  isLarge,
+  isLargeTouch,
+  isSmallTouch,
+  isLargeDesktop,
+  isSmallAndroid
+};

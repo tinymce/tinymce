@@ -6,21 +6,33 @@ import { Result } from '@ephox/katamari';
 UnitTest.asynctest('LogTest', (success, failure) => {
   const logStepTest = StepAssertions.testStepFail(
     'TestCase-01: Step failure',
-    Log.step('01', 'Step failure', Assertions.sAssertEq('Assert failure', false, true))
+    Log.step(
+      '01',
+      'Step failure',
+      Assertions.sAssertEq('Assert failure', false, true)
+    )
   );
 
   const logStepTestWithMessage = StepAssertions.testStepFail(
     'checking error message',
     StepAssertions.testStepFail(
       'TestCase-01b: (wrong) Step failure',
-      Log.step('01b', 'Step failure', Assertions.sAssertEq('Assert failure', false, true))
+      Log.step(
+        '01b',
+        'Step failure',
+        Assertions.sAssertEq('Assert failure', false, true)
+      )
     )
   );
 
   const logStepInArrayTest = StepAssertions.testStepsFail(
     'TestCase-02: Step failure',
     [
-      Log.step('02', 'Step failure', Assertions.sAssertEq('Assert failure', true, false))
+      Log.step(
+        '02',
+        'Step failure',
+        Assertions.sAssertEq('Assert failure', true, false)
+      )
     ]
   );
 
@@ -63,14 +75,22 @@ UnitTest.asynctest('LogTest', (success, failure) => {
   const logChainTest = StepAssertions.testChainFail(
     'TestCase-07: Chain failure',
     true,
-    Log.chain('07', 'Chain failure', Assertions.cAssertEq('Assert failure', false))
+    Log.chain(
+      '07',
+      'Chain failure',
+      Assertions.cAssertEq('Assert failure', false)
+    )
   );
 
   const logChainInArrayTest = StepAssertions.testChainsFail(
     'TestCase-08: Chain failure',
     true,
     [
-      Log.chain('08', 'Chain failure', Assertions.cAssertEq('Assert failure', false))
+      Log.chain(
+        '08',
+        'Chain failure',
+        Assertions.cAssertEq('Assert failure', false)
+      )
     ]
   );
 
@@ -163,29 +183,32 @@ UnitTest.asynctest('LogTest', (success, failure) => {
     ]
   );
 
-  Pipeline.async({}, [
-    logStepTest,
-    logStepTestWithMessage,
+  Pipeline.async(
+    {},
+    [
+      logStepTest,
+      logStepTestWithMessage,
 
-    logStepInArrayTest,
-    logStepsEarlyFailTest,
-    logStepsLateFailTest,
-    logStepsAsStepTest,
-    logStepsAsStepInArrayTest,
+      logStepInArrayTest,
+      logStepsEarlyFailTest,
+      logStepsLateFailTest,
+      logStepsAsStepTest,
+      logStepsAsStepInArrayTest,
 
-    logChainTest,
-    logChainInArrayTest,
-    logChainsEarlyFailTest,
-    logChainsLateFailTest,
-    logChainsAsChainTest,
-    logChainsAsChainInArrayTest,
+      logChainTest,
+      logChainInArrayTest,
+      logChainsEarlyFailTest,
+      logChainsLateFailTest,
+      logChainsAsChainTest,
+      logChainsAsChainInArrayTest,
 
-    logStepsPassTest,
-    logStepPassTestWithMessage,
+      logStepsPassTest,
+      logStepPassTestWithMessage,
 
-    logChainsAsStepPassTest,
-    logChainsAsStepFailTest
-
-  ], success, failure);
-
+      logChainsAsStepPassTest,
+      logChainsAsStepFailTest
+    ],
+    success,
+    failure
+  );
 });

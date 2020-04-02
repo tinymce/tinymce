@@ -41,11 +41,15 @@ function innerText(html: string) {
   const domParser = DomParser({}, schema);
   let text = '';
   const shortEndedElements = schema.getShortEndedElements();
-  const ignoreElements = Tools.makeMap('script noscript style textarea video audio iframe object', ' ');
+  const ignoreElements = Tools.makeMap(
+    'script noscript style textarea video audio iframe object',
+    ' '
+  );
   const blockElements = schema.getBlockElements();
 
   function walk(node) {
-    const name = node.name, currentNode = node;
+    const name = node.name,
+      currentNode = node;
 
     if (name === 'br') {
       text += '\n';
@@ -118,9 +122,9 @@ function trimHtml(html: string) {
   }
 
   html = filter(html, [
-    /^[\s\S]*<body[^>]*>\s*|\s*<\/body[^>]*>[\s\S]*$/ig, // Remove anything but the contents within the BODY element
+    /^[\s\S]*<body[^>]*>\s*|\s*<\/body[^>]*>[\s\S]*$/gi, // Remove anything but the contents within the BODY element
     /<!--StartFragment-->|<!--EndFragment-->/g, // Inner fragments (tables from excel on mac)
-    [ /( ?)<span class="Apple-converted-space">\u00a0<\/span>( ?)/g, trimSpaces ],
+    [/( ?)<span class="Apple-converted-space">\u00a0<\/span>( ?)/g, trimSpaces],
     /<br class="Apple-interchange-newline">/g,
     /<br>$/i // Trailing BR elements
   ]);
@@ -133,7 +137,7 @@ function createIdGenerator(prefix: string) {
   let count = 0;
 
   return function () {
-    return prefix + (count++);
+    return prefix + count++;
   };
 }
 
@@ -141,10 +145,4 @@ const isMsEdge = function () {
   return navigator.userAgent.indexOf(' Edge/') !== -1;
 };
 
-export {
-  filter,
-  innerText,
-  trimHtml,
-  createIdGenerator,
-  isMsEdge
-};
+export { filter, innerText, trimHtml, createIdGenerator, isMsEdge };

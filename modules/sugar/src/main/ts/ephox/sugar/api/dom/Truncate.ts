@@ -5,6 +5,4 @@ const getHtml = (element: Element<any>): string => {
   return Html.getOuter(clone);
 };
 
-export {
-  getHtml
-};
+export { getHtml };

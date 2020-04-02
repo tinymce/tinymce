@@ -11,17 +11,17 @@ interface Decorator {
 
 const gOne = (wDecorations: Decorator[]) =>
   WeightedChoice.generator(wDecorations).flatMap((choice: Option<Decorator>) =>
-    choice.fold(() =>
-      Jsc.constant({}).generator,
-    (c) => c.value.map((v) => {
-      const r = {};
-      r[c.property] = v;
-      return r;
-    })));
+    choice.fold(
+      () => Jsc.constant({}).generator,
+      (c) =>
+        c.value.map((v) => {
+          const r = {};
+          r[c.property] = v;
+          return r;
+        })
+    )
+  );
 
 const gEnforce = (decorations) => Jsc.constant(decorations).generator;
 
-export {
-  gOne,
-  gEnforce
-};
+export { gOne, gEnforce };

@@ -1,4 +1,10 @@
-import { ApproxStructure, Assertions, GeneralSteps, Logger, Step } from '@ephox/agar';
+import {
+  ApproxStructure,
+  Assertions,
+  GeneralSteps,
+  Logger,
+  Step
+} from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Value } from '@ephox/sugar';
 
@@ -12,7 +18,6 @@ import * as TestForm from 'ephox/alloy/test/form/TestForm';
 import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 
 UnitTest.asynctest('Basic Form', (success, failure) => {
-
   const formAntSpec = {
     uid: 'input-ant',
     dom: {
@@ -25,7 +30,7 @@ UnitTest.asynctest('Basic Form', (success, failure) => {
       }),
       FormField.parts().label({
         dom: { tag: 'label', innerHtml: 'a' },
-        components: [ ]
+        components: []
       })
     ]
   };
@@ -43,117 +48,137 @@ UnitTest.asynctest('Basic Form', (success, failure) => {
           { value: 'select-b-other', text: 'Select-b-other' }
         ]
       }),
-      FormField.parts().label({ dom: { tag: 'label', innerHtml: 'a' }, components: [ ] })
+      FormField.parts().label({
+        dom: { tag: 'label', innerHtml: 'a' },
+        components: []
+      })
     ]
   };
 
-  GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(
-    Form.sketch((parts: FormParts) => ({
-      dom: {
-        tag: 'div'
-      },
-      components: [
-        parts.field('form.ant', FormField.sketch(formAntSpec)),
-        parts.field('form.bull', FormField.sketch(formBullSpec))
-      ]
-    }))
-  ), (_doc, _body, _gui, component, _store) => {
-    const helper = TestForm.helper(component);
-
-    const sAssertDisplay = (inputText: string, selectValue: string) => Step.sync(() => {
-      Assertions.assertStructure(
-        'Checking that HTML select and text input have right contents',
-        ApproxStructure.build((s, str, _arr) => s.element('div', {
-          children: [
-            s.element('div', {
-              children: [
-                s.element('input', { value: str.is(inputText) }),
-                s.element('label', {})
-              ]
-            }),
-            s.element('div', {
-              children: [
-                s.element('select', { value: str.is(selectValue) }),
-                s.element('label', { })
-              ]
-            })
+  GuiSetup.setup(
+    (_store, _doc, _body) =>
+      GuiFactory.build(
+        Form.sketch((parts: FormParts) => ({
+          dom: {
+            tag: 'div'
+          },
+          components: [
+            parts.field('form.ant', FormField.sketch(formAntSpec)),
+            parts.field('form.bull', FormField.sketch(formBullSpec))
           ]
-        })),
-        component.element()
-      );
-    });
-
-    return [
-      Logger.t(
-        'Initial values',
-        GeneralSteps.sequence([
-          helper.sAssertRep({
-            'form.ant': 'Init',
-            'form.bull': 'select-b-init'
-          }),
-          sAssertDisplay('Init', 'select-b-init')
-        ])
+        }))
       ),
+    (_doc, _body, _gui, component, _store) => {
+      const helper = TestForm.helper(component);
 
-      Logger.t(
-        'Setting "form.ant" to ant-value',
-        GeneralSteps.sequence([
-          helper.sSetRep({
-            'form.ant': 'ant-value'
-          }),
+      const sAssertDisplay = (inputText: string, selectValue: string) =>
+        Step.sync(() => {
+          Assertions.assertStructure(
+            'Checking that HTML select and text input have right contents',
+            ApproxStructure.build((s, str, _arr) =>
+              s.element('div', {
+                children: [
+                  s.element('div', {
+                    children: [
+                      s.element('input', { value: str.is(inputText) }),
+                      s.element('label', {})
+                    ]
+                  }),
+                  s.element('div', {
+                    children: [
+                      s.element('select', { value: str.is(selectValue) }),
+                      s.element('label', {})
+                    ]
+                  })
+                ]
+              })
+            ),
+            component.element()
+          );
+        });
 
-          helper.sAssertRep({
-            'form.ant': 'ant-value',
-            'form.bull': 'select-b-init'
-          }),
+      return [
+        Logger.t(
+          'Initial values',
+          GeneralSteps.sequence([
+            helper.sAssertRep({
+              'form.ant': 'Init',
+              'form.bull': 'select-b-init'
+            }),
+            sAssertDisplay('Init', 'select-b-init')
+          ])
+        ),
 
-          sAssertDisplay('ant-value', 'select-b-init')
-        ])
-      ),
+        Logger.t(
+          'Setting "form.ant" to ant-value',
+          GeneralSteps.sequence([
+            helper.sSetRep({
+              'form.ant': 'ant-value'
+            }),
 
-      Logger.t(
-        'Setting multiple values but the select value is invalid',
-        GeneralSteps.sequence([
-          helper.sSetRep({
-            'form.ant': 'ant-value',
-            'form.bull': 'select-b-not-there'
-          }),
+            helper.sAssertRep({
+              'form.ant': 'ant-value',
+              'form.bull': 'select-b-init'
+            }),
 
-          helper.sAssertRep({
-            'form.ant': 'ant-value',
-            'form.bull': 'select-b-init'
-          }),
+            sAssertDisplay('ant-value', 'select-b-init')
+          ])
+        ),
 
-          sAssertDisplay('ant-value', 'select-b-init')
-        ])
-      ),
+        Logger.t(
+          'Setting multiple values but the select value is invalid',
+          GeneralSteps.sequence([
+            helper.sSetRep({
+              'form.ant': 'ant-value',
+              'form.bull': 'select-b-not-there'
+            }),
 
-      Logger.t(
-        'Setting "form.ant" and "form.bull" to valid values',
-        GeneralSteps.sequence([
-          helper.sSetRep({
-            'form.ant': 'ant-value',
-            'form.bull': 'select-b-other'
-          }),
+            helper.sAssertRep({
+              'form.ant': 'ant-value',
+              'form.bull': 'select-b-init'
+            }),
 
-          helper.sAssertRep({
-            'form.ant': 'ant-value',
-            'form.bull': 'select-b-other'
-          }),
+            sAssertDisplay('ant-value', 'select-b-init')
+          ])
+        ),
 
-          sAssertDisplay('ant-value', 'select-b-other')
-        ])
-      ),
+        Logger.t(
+          'Setting "form.ant" and "form.bull" to valid values',
+          GeneralSteps.sequence([
+            helper.sSetRep({
+              'form.ant': 'ant-value',
+              'form.bull': 'select-b-other'
+            }),
 
-      Logger.t(
-        'Retrieve the bull field directly and check its value',
-        GeneralSteps.sequence([
-          Step.sync(() => {
-            const field = Form.getField(component, 'form.bull').getOrDie('Could not find field');
-            Assertions.assertEq('Checking value', 'select-b-other', Value.get(field.element()));
-          })
-        ])
-      )
-    ];
-  }, () => { success(); }, failure);
+            helper.sAssertRep({
+              'form.ant': 'ant-value',
+              'form.bull': 'select-b-other'
+            }),
+
+            sAssertDisplay('ant-value', 'select-b-other')
+          ])
+        ),
+
+        Logger.t(
+          'Retrieve the bull field directly and check its value',
+          GeneralSteps.sequence([
+            Step.sync(() => {
+              const field = Form.getField(component, 'form.bull').getOrDie(
+                'Could not find field'
+              );
+              Assertions.assertEq(
+                'Checking value',
+                'select-b-other',
+                Value.get(field.element())
+              );
+            })
+          ])
+        )
+      ];
+    },
+    () => {
+      success();
+    },
+    failure
+  );
 });

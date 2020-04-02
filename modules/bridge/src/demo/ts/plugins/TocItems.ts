@@ -1,7 +1,7 @@
 import { getDemoRegistry } from './../buttons/DemoRegistry';
 
 const editor = {
-  on: (_s, _f) => { },
+  on: (_s, _f) => {},
   isDirty: () => true
 };
 
@@ -13,7 +13,7 @@ export const registerTocItems = () => {
       editor.on('LoadContent SetContent change', (e) => {
         buttonApi.setDisabled(e);
       });
-      return () => { };
+      return () => {};
     },
     onAction: (_buttonApi) => {
       // insert Table of contents

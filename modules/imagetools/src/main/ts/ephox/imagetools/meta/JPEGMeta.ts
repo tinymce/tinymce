@@ -3,7 +3,7 @@ import { Options } from '@ephox/katamari';
 import * as Conversions from '../util/Conversions';
 import { Promise } from '../util/Promise';
 import { BinaryReader } from './BinaryReader';
-import { readMetaData, ExifTags, GPSTags , TiffTags } from './ExifReader';
+import { readMetaData, ExifTags, GPSTags, TiffTags } from './ExifReader';
 import { readShort } from './BinaryReaderUtils';
 
 export interface JPEGMeta {
@@ -26,7 +26,8 @@ const extractFrom = function (blob: Blob): Promise<JPEGMeta> {
   return Conversions.blobToArrayBuffer(blob).then<JPEGMeta>(function (ar) {
     try {
       const br = new BinaryReader(ar);
-      if (readShort(br, 0).is(0xFFD8)) { // is JPEG
+      if (readShort(br, 0).is(0xffd8)) {
+        // is JPEG
         const headers = extractHeaders(br);
         const app1 = headers.filter((header) => header.name === 'APP1'); // APP1 contains Exif, Gps, etc
         const meta: JPEGMeta = {
@@ -48,7 +49,9 @@ const extractFrom = function (blob: Blob): Promise<JPEGMeta> {
       }
       return Promise.reject('Image was not a jpeg');
     } catch (ex) {
-      return Promise.reject(`Unsupported format or not an image: ${blob.type} (Exception: ${ex.message})`);
+      return Promise.reject(
+        `Unsupported format or not an image: ${blob.type} (Exception: ${ex.message})`
+      );
     }
   });
 };
@@ -65,17 +68,19 @@ const extractHeaders = function (br: BinaryReader): Header[] {
     }
 
     // omit RST (restart) markers
-    if (marker >= 0xFFD0 && marker <= 0xFFD7) {
+    if (marker >= 0xffd0 && marker <= 0xffd7) {
       idx += 2;
       continue;
     }
 
     // no headers allowed after SOS marker
-    if (marker === 0xFFDA || marker === 0xFFD9) {
+    if (marker === 0xffda || marker === 0xffd9) {
       break;
     }
 
-    const lengthTemp = readShort(br, idx + 2).toOption().getOrNull();
+    const lengthTemp = readShort(br, idx + 2)
+      .toOption()
+      .getOrNull();
     if (lengthTemp === null) {
       throw new Error('Invalid Exif data.');
     }
@@ -83,10 +88,10 @@ const extractHeaders = function (br: BinaryReader): Header[] {
     const length = lengthTemp + 2;
 
     // APPn marker detected
-    if (marker >= 0xFFE1 && marker <= 0xFFEF) {
+    if (marker >= 0xffe1 && marker <= 0xffef) {
       headers.push({
         hex: marker,
-        name: 'APP' + (marker & 0x000F), // eslint-disable-line no-bitwise
+        name: 'APP' + (marker & 0x000f), // eslint-disable-line no-bitwise
         start: idx,
         length,
         segment: br.segment(idx, length)
@@ -98,6 +103,4 @@ const extractHeaders = function (br: BinaryReader): Header[] {
   return headers;
 };
 
-export {
-  extractFrom
-};
+export { extractFrom };

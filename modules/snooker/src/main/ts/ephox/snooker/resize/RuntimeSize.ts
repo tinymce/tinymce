@@ -26,7 +26,9 @@ const getCalculatedHeight = function (cell: Element) {
   const boxSizing = Css.get(cell, 'box-sizing');
   const borders = borderTop + borderBottom;
 
-  return boxSizing === 'border-box' ? height : height - paddingTop - paddingBottom - borders;
+  return boxSizing === 'border-box'
+    ? height
+    : height - paddingTop - paddingBottom - borders;
 };
 
 const getWidth = function (cell: Element) {
@@ -34,10 +36,9 @@ const getWidth = function (cell: Element) {
 };
 
 const getHeight = function (cell: Element) {
-  return needManualCalc() ? getCalculatedHeight(cell) : getProp(cell, 'height', Height.get(cell));
+  return needManualCalc()
+    ? getCalculatedHeight(cell)
+    : getProp(cell, 'height', Height.get(cell));
 };
 
-export {
-  getWidth,
-  getHeight
-};
+export { getWidth, getHeight };

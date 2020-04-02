@@ -4,7 +4,10 @@ import Rect from 'tinymce/core/api/geom/Rect';
 import Tools from 'tinymce/core/api/util/Tools';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function (
+  success,
+  failure
+) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('relativePosition', function () {
@@ -12,17 +15,17 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function (success, fail
       targetRect = Rect.create(10, 20, 40, 50),
       tests = [
         // Only test a few of them all would be 81
-        [ 'tl-tl', 10, 20, 20, 30 ],
-        [ 'tc-tc', 20, 20, 20, 30 ],
-        [ 'tr-tr', 30, 20, 20, 30 ],
-        [ 'cl-cl', 10, 30, 20, 30 ],
-        [ 'cc-cc', 20, 30, 20, 30 ],
-        [ 'cr-cr', 30, 30, 20, 30 ],
-        [ 'bl-bl', 10, 40, 20, 30 ],
-        [ 'bc-bc', 20, 40, 20, 30 ],
-        [ 'br-br', 30, 40, 20, 30 ],
-        [ 'tr-tl', 50, 20, 20, 30 ],
-        [ 'br-bl', 50, 40, 20, 30 ]
+        ['tl-tl', 10, 20, 20, 30],
+        ['tc-tc', 20, 20, 20, 30],
+        ['tr-tr', 30, 20, 20, 30],
+        ['cl-cl', 10, 30, 20, 30],
+        ['cc-cc', 20, 30, 20, 30],
+        ['cr-cr', 30, 30, 20, 30],
+        ['bl-bl', 10, 40, 20, 30],
+        ['bc-bc', 20, 40, 20, 30],
+        ['br-br', 30, 40, 20, 30],
+        ['tr-tl', 50, 20, 20, 30],
+        ['br-bl', 50, 40, 20, 30]
       ];
 
     Tools.each(tests, function (item: any[]) {
@@ -38,15 +41,20 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function (success, fail
     const sourceRect = Rect.create(0, 0, 20, 30),
       targetRect = Rect.create(10, 20, 40, 50),
       tests = [
-        [[ 'tl-tl' ], 5, 15, 100, 100, 'tl-tl' ],
-        [[ 'tl-tl' ], 20, 30, 100, 100, null ],
-        [[ 'tl-tl', 'tr-tl' ], 20, 20, 100, 100, 'tr-tl' ],
-        [[ 'tl-bl', 'tr-tl', 'bl-tl' ], 10, 20, 40, 100, 'bl-tl' ]
+        [['tl-tl'], 5, 15, 100, 100, 'tl-tl'],
+        [['tl-tl'], 20, 30, 100, 100, null],
+        [['tl-tl', 'tr-tl'], 20, 20, 100, 100, 'tr-tl'],
+        [['tl-bl', 'tr-tl', 'bl-tl'], 10, 20, 40, 100, 'bl-tl']
       ];
 
     Tools.each(tests, function (item: any[]) {
       LegacyUnit.equal(
-        Rect.findBestRelativePosition(sourceRect, targetRect, Rect.create(item[1], item[2], item[3], item[4]), item[0]),
+        Rect.findBestRelativePosition(
+          sourceRect,
+          targetRect,
+          Rect.create(item[1], item[2], item[3], item[4]),
+          item[0]
+        ),
         item[5],
         item[5]
       );
@@ -54,18 +62,70 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function (success, fail
   });
 
   suite.test('inflate', function () {
-    LegacyUnit.deepEqual(Rect.inflate(Rect.create(10, 20, 30, 40), 5, 10), Rect.create(5, 10, 40, 60));
+    LegacyUnit.deepEqual(
+      Rect.inflate(Rect.create(10, 20, 30, 40), 5, 10),
+      Rect.create(5, 10, 40, 60)
+    );
   });
 
   suite.test('intersect', function () {
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 20, 30, 40)), { x: 10, y: 20, w: 30, h: 40 });
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(15, 25, 30, 40)), { x: 15, y: 25, w: 25, h: 35 });
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(15, 25, 5, 5)), { x: 15, y: 25, w: 5, h: 5 });
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(0, 10, 5, 5)), null);
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(45, 20, 5, 5)), null);
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 65, 5, 5)), null);
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(40, 20, 30, 40)), { x: 40, y: 20, w: 0, h: 40 });
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 60, 30, 40)), { x: 10, y: 60, w: 30, h: 0 });
+    LegacyUnit.equal(
+      Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 20, 30, 40)),
+      {
+        x: 10,
+        y: 20,
+        w: 30,
+        h: 40
+      }
+    );
+    LegacyUnit.equal(
+      Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(15, 25, 30, 40)),
+      {
+        x: 15,
+        y: 25,
+        w: 25,
+        h: 35
+      }
+    );
+    LegacyUnit.equal(
+      Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(15, 25, 5, 5)),
+      {
+        x: 15,
+        y: 25,
+        w: 5,
+        h: 5
+      }
+    );
+    LegacyUnit.equal(
+      Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(0, 10, 5, 5)),
+      null
+    );
+    LegacyUnit.equal(
+      Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(45, 20, 5, 5)),
+      null
+    );
+    LegacyUnit.equal(
+      Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 65, 5, 5)),
+      null
+    );
+    LegacyUnit.equal(
+      Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(40, 20, 30, 40)),
+      {
+        x: 40,
+        y: 20,
+        w: 0,
+        h: 40
+      }
+    );
+    LegacyUnit.equal(
+      Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 60, 30, 40)),
+      {
+        x: 10,
+        y: 60,
+        w: 30,
+        h: 0
+      }
+    );
   });
 
   suite.test('clamp', function () {
@@ -86,14 +146,39 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function (success, fail
   });
 
   suite.test('create', function () {
-    LegacyUnit.deepEqual(Rect.create(10, 20, 30, 40), { x: 10, y: 20, w: 30, h: 40 });
+    LegacyUnit.deepEqual(Rect.create(10, 20, 30, 40), {
+      x: 10,
+      y: 20,
+      w: 30,
+      h: 40
+    });
   });
 
   suite.test('fromClientRect', function () {
-    LegacyUnit.deepEqual(Rect.fromClientRect({ left: 10, top: 20, width: 30, height: 40, bottom: 60, right: 40 }), { x: 10, y: 20, w: 30, h: 40 });
+    LegacyUnit.deepEqual(
+      Rect.fromClientRect({
+        left: 10,
+        top: 20,
+        width: 30,
+        height: 40,
+        bottom: 60,
+        right: 40
+      }),
+      {
+        x: 10,
+        y: 20,
+        w: 30,
+        h: 40
+      }
+    );
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
-    success();
-  }, failure);
+  Pipeline.async(
+    {},
+    suite.toSteps({}),
+    function () {
+      success();
+    },
+    failure
+  );
 });

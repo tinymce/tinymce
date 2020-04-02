@@ -13,7 +13,10 @@ import { Types } from '@ephox/bridge';
 
 export type PanelSpec = Omit<Types.Dialog.Panel, 'type'>;
 
-const renderPanel = (spec: PanelSpec, backstage: UiFactoryBackstage): SimpleSpec => ({
+const renderPanel = (
+  spec: PanelSpec,
+  backstage: UiFactoryBackstage
+): SimpleSpec => ({
   dom: {
     tag: 'div',
     classes: spec.classes
@@ -23,6 +26,4 @@ const renderPanel = (spec: PanelSpec, backstage: UiFactoryBackstage): SimpleSpec
   components: Arr.map(spec.items, backstage.shared.interpreter)
 });
 
-export {
-  renderPanel
-};
+export { renderPanel };

@@ -15,6 +15,4 @@ const register = (editor: Editor, oldSize: Cell<number>) => {
   });
 };
 
-export {
-  register
-};
+export { register };

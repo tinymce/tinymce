@@ -25,10 +25,10 @@ type GrowthFn = (x: number, y: number) => Growth;
 const grower = function (f: GrowthFn) {
   return function (element: Element) {
     const events = Events.create({
-      grow: Event([ 'x', 'y' ])
+      grow: Event(['x', 'y'])
     }) as GrowEvents;
 
-    const mutate =  function (x: number, y: number) {
+    const mutate = function (x: number, y: number) {
       const growth = f(x, y);
       const width = Width.get(element);
       const height = Height.get(element);
@@ -51,22 +51,18 @@ const both = grower(function (x, y): Growth {
   };
 });
 
-const horizontal = grower(function (x, _y): Growth  {
+const horizontal = grower(function (x, _y): Growth {
   return {
     x,
     y: 0
   };
 });
 
-const vertical = grower(function (x, y): Growth  {
+const vertical = grower(function (x, y): Growth {
   return {
     x: 0,
     y
   };
 });
 
-export {
-  both,
-  horizontal,
-  vertical
-};
+export { both, horizontal, vertical };

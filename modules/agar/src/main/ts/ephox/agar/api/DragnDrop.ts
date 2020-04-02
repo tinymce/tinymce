@@ -20,7 +20,7 @@ const isDraggable = (element: Element<any>): boolean => {
   const name = Node.name(element);
   return (
     name === 'img' ||
-    name === 'a' && Attr.has(element, 'href') ||
+    (name === 'a' && Attr.has(element, 'href')) ||
     Attr.get(element, 'draggable') === 'true'
   );
 };
@@ -42,12 +42,36 @@ const dragnDrop = (from: Element<any>, to: Element<any>): void => {
     throw new Error('Can not drag a non draggable element.');
   }
 
-  dispatchDndEvent(createDragstartEvent(fromWin, fromRect.left, fromRect.top, transfer), from);
-  dispatchDndEvent(createDragEvent(fromWin, fromRect.left, fromRect.top, transfer), from);
-  checkDefaultPrevented(dispatchDndEvent(createDragenterEvent(toWin, toRect.left, toRect.top, transfer), to));
-  checkDefaultPrevented(dispatchDndEvent(createDragoverEvent(toWin, toRect.left, toRect.top, transfer), to));
-  checkDefaultPrevented(dispatchDndEvent(createDropEvent(toWin, toRect.left, toRect.top, transfer), to));
-  dispatchDndEvent(createDragendEvent(fromWin, fromRect.left, fromRect.top, transfer), from);
+  dispatchDndEvent(
+    createDragstartEvent(fromWin, fromRect.left, fromRect.top, transfer),
+    from
+  );
+  dispatchDndEvent(
+    createDragEvent(fromWin, fromRect.left, fromRect.top, transfer),
+    from
+  );
+  checkDefaultPrevented(
+    dispatchDndEvent(
+      createDragenterEvent(toWin, toRect.left, toRect.top, transfer),
+      to
+    )
+  );
+  checkDefaultPrevented(
+    dispatchDndEvent(
+      createDragoverEvent(toWin, toRect.left, toRect.top, transfer),
+      to
+    )
+  );
+  checkDefaultPrevented(
+    dispatchDndEvent(
+      createDropEvent(toWin, toRect.left, toRect.top, transfer),
+      to
+    )
+  );
+  dispatchDndEvent(
+    createDragendEvent(fromWin, fromRect.left, fromRect.top, transfer),
+    from
+  );
 };
 
 const dropFiles = (files: File[], to: Element<any>): void => {
@@ -59,27 +83,48 @@ const dropFiles = (files: File[], to: Element<any>): void => {
     transfer.items.add(file);
   });
 
-  dispatchDndEvent(createDragenterEvent(toWin, toRect.left, toRect.top, transfer), to);
-  dispatchDndEvent(createDragoverEvent(toWin, toRect.left, toRect.top, transfer), to);
-  checkDefaultPrevented(dispatchDndEvent(createDropEvent(toWin, toRect.left, toRect.top, transfer), to));
+  dispatchDndEvent(
+    createDragenterEvent(toWin, toRect.left, toRect.top, transfer),
+    to
+  );
+  dispatchDndEvent(
+    createDragoverEvent(toWin, toRect.left, toRect.top, transfer),
+    to
+  );
+  checkDefaultPrevented(
+    dispatchDndEvent(
+      createDropEvent(toWin, toRect.left, toRect.top, transfer),
+      to
+    )
+  );
 };
 
-const cDragnDrop = <T> (fromSelector: string, toSelector: string): Chain<Element<T>, Element<T>> => NamedChain.asChain([
-  NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn(fromSelector), 'from'),
-  NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn(toSelector), 'to'),
-  Chain.op((obj) => dragnDrop(obj.from, obj.to)),
-  NamedChain.output(NamedChain.inputName())
-]);
+const cDragnDrop = <T>(
+  fromSelector: string,
+  toSelector: string
+): Chain<Element<T>, Element<T>> =>
+  NamedChain.asChain([
+    NamedChain.direct(
+      NamedChain.inputName(),
+      UiFinder.cFindIn(fromSelector),
+      'from'
+    ),
+    NamedChain.direct(
+      NamedChain.inputName(),
+      UiFinder.cFindIn(toSelector),
+      'to'
+    ),
+    Chain.op((obj) => dragnDrop(obj.from, obj.to)),
+    NamedChain.output(NamedChain.inputName())
+  ]);
 
 const sDragnDrop = <T>(fromSelector: string, toSelector: string): Step<T, T> =>
-  Chain.asStep(Body.body(), [ cDragnDrop(fromSelector, toSelector) ]);
+  Chain.asStep(Body.body(), [cDragnDrop(fromSelector, toSelector)]);
 
-const sDropFiles = <T>(files: File[], toSelector: string): Step<T, T> => Chain.asStep(Body.body(), [
-  UiFinder.cFindIn(toSelector),
-  cDropFiles(files)
-]);
+const sDropFiles = <T>(files: File[], toSelector: string): Step<T, T> =>
+  Chain.asStep(Body.body(), [UiFinder.cFindIn(toSelector), cDropFiles(files)]);
 
-const cDropFiles = <T> (files: File[]): Chain<Element<T>, Element<T>> =>
+const cDropFiles = <T>(files: File[]): Chain<Element<T>, Element<T>> =>
   Chain.op((elm) => {
     dropFiles(files, elm);
   });

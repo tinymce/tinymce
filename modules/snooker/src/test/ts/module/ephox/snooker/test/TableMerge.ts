@@ -12,7 +12,10 @@ const mapToStructGrid = function (grid: Structs.ElementNew[][]) {
   });
 };
 
-const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowCells[]) {
+const assertGrids = function (
+  expected: Structs.RowCells[],
+  actual: Structs.RowCells[]
+) {
   assert.eq(expected.length, actual.length);
   Arr.each(expected, function (row, i) {
     Arr.each(row.cells(), function (cell, j) {
@@ -23,38 +26,109 @@ const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowC
   });
 };
 
-const mergeTest = function (expected: Structs.ElementNew[][] | { error: string }, startAddress: Structs.Address, gridA: () => Structs.ElementNew[][], gridB: () => Structs.ElementNew[][], generator: () => SimpleGenerators, comparator: (a: Element, b: Element) => boolean) {
+const mergeTest = function (
+  expected: Structs.ElementNew[][] | { error: string },
+  startAddress: Structs.Address,
+  gridA: () => Structs.ElementNew[][],
+  gridB: () => Structs.ElementNew[][],
+  generator: () => SimpleGenerators,
+  comparator: (a: Element, b: Element) => boolean
+) {
   // The last step, merge cells from gridB into gridA
-  const nuGrid = TableMerge.merge(startAddress, mapToStructGrid(gridA()), mapToStructGrid(gridB()), generator(), comparator);
-  nuGrid.fold(function (err) {
-    if ('error' in expected) {
-      assert.eq(expected.error, err);
-    } else {
-      assert.fail('Failure was unexpected, got error "' + err + '"');
+  const nuGrid = TableMerge.merge(
+    startAddress,
+    mapToStructGrid(gridA()),
+    mapToStructGrid(gridB()),
+    generator(),
+    comparator
+  );
+  nuGrid.fold(
+    function (err) {
+      if ('error' in expected) {
+        assert.eq(expected.error, err);
+      } else {
+        assert.fail('Failure was unexpected, got error "' + err + '"');
+      }
+    },
+    function (grid) {
+      if (!('error' in expected)) {
+        assertGrids(mapToStructGrid(expected), grid);
+      } else {
+        assert.fail(
+          'Expected failure "' + expected.error + '" but instead got grid'
+        );
+      }
     }
-  }, function (grid) {
-    if (!('error' in expected)) {
-      assertGrids(mapToStructGrid(expected), grid);
-    } else {
-      assert.fail('Expected failure "' + expected.error + '" but instead got grid');
-    }
-  });
+  );
 };
 
-const mergeIVTest = function (asserter: (result: Result<Structs.RowCells[], string>, s: Structs.Address, specA: { rows: () => number; cols: () => number; grid: () => Structs.ElementNew[][] }, specB: { rows: () => number; cols: () => number; grid: () => Structs.ElementNew[][] }) => void, startAddress: Structs.Address, gridSpecA: { rows: () => number; cols: () => number; grid: () => Structs.ElementNew[][] }, gridSpecB: { rows: () => number; cols: () => number; grid: () => Structs.ElementNew[][] }, generator: () => SimpleGenerators, comparator: (a: Element, b: Element) => boolean) {
+const mergeIVTest = function (
+  asserter: (
+    result: Result<Structs.RowCells[], string>,
+    s: Structs.Address,
+    specA: {
+      rows: () => number;
+      cols: () => number;
+      grid: () => Structs.ElementNew[][];
+    },
+    specB: {
+      rows: () => number;
+      cols: () => number;
+      grid: () => Structs.ElementNew[][];
+    }
+  ) => void,
+  startAddress: Structs.Address,
+  gridSpecA: {
+    rows: () => number;
+    cols: () => number;
+    grid: () => Structs.ElementNew[][];
+  },
+  gridSpecB: {
+    rows: () => number;
+    cols: () => number;
+    grid: () => Structs.ElementNew[][];
+  },
+  generator: () => SimpleGenerators,
+  comparator: (a: Element, b: Element) => boolean
+) {
   // The last step, merge cells from gridB into gridA
-  const nuGrid = TableMerge.merge(startAddress, mapToStructGrid(gridSpecA.grid()), mapToStructGrid(gridSpecB.grid()), generator(), comparator);
+  const nuGrid = TableMerge.merge(
+    startAddress,
+    mapToStructGrid(gridSpecA.grid()),
+    mapToStructGrid(gridSpecB.grid()),
+    generator(),
+    comparator
+  );
   asserter(nuGrid, startAddress, gridSpecA, gridSpecB);
 };
 
-const suite = function (label: string, startAddress: Structs.Address, gridA: () => Structs.ElementNew[][], gridB: () => Structs.ElementNew[][], generator: () => SimpleGenerators, comparator: (a: Element, b: Element) => boolean, expectedMeasure: {rowDelta: number; colDelta: number }, expectedTailor: Structs.ElementNew[][], expectedMergeGrids: Structs.ElementNew[][]) {
+const suite = function (
+  label: string,
+  startAddress: Structs.Address,
+  gridA: () => Structs.ElementNew[][],
+  gridB: () => Structs.ElementNew[][],
+  generator: () => SimpleGenerators,
+  comparator: (a: Element, b: Element) => boolean,
+  expectedMeasure: { rowDelta: number; colDelta: number },
+  expectedTailor: Structs.ElementNew[][],
+  expectedMergeGrids: Structs.ElementNew[][]
+) {
   Fitment.measureTest(expectedMeasure, startAddress, gridA, gridB);
-  Fitment.tailorTest(expectedTailor, startAddress, gridA, expectedMeasure, generator);
-  mergeTest(expectedMergeGrids, startAddress, gridA, gridB, generator, comparator);
+  Fitment.tailorTest(
+    expectedTailor,
+    startAddress,
+    gridA,
+    expectedMeasure,
+    generator
+  );
+  mergeTest(
+    expectedMergeGrids,
+    startAddress,
+    gridA,
+    gridB,
+    generator,
+    comparator
+  );
 };
 
-export {
-  mergeTest,
-  mergeIVTest,
-  suite
-};
+export { mergeTest, mergeIVTest, suite };

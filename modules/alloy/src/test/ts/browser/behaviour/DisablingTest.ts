@@ -1,4 +1,12 @@
-import { ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Step } from '@ephox/agar';
+import {
+  ApproxStructure,
+  Assertions,
+  Chain,
+  GeneralSteps,
+  Logger,
+  Mouse,
+  Step
+} from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Focus } from '@ephox/sugar';
 
@@ -12,7 +20,6 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('DisablingTest', (success, failure) => {
-
   const subject = Memento.record(
     Button.sketch({
       dom: {
@@ -27,108 +34,123 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
     })
   );
 
-  GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
-    Container.sketch({
-      components: [
-        subject.asSpec()
-      ],
-      events: AlloyEvents.derive([
-        AlloyEvents.runOnExecute(store.adder('execute.reached'))
-      ])
-    }
-    )), (_doc, _body, _gui, component, store) => {
-
-    const sClickButton = Chain.asStep({ }, [
-      Chain.mapper(() => subject.get(component).element()),
-      Mouse.cClick
-    ]);
-
-    const button = subject.get(component);
-    return [
-      Assertions.sAssertStructure(
-        'Disabled should have a disabled attribute',
-        ApproxStructure.build((s, str, _arr) => s.element('button', {
-          attrs: {
-            disabled: str.is('disabled')
-          }
-        })),
-        button.element()
+  GuiSetup.setup(
+    (store, _doc, _body) =>
+      GuiFactory.build(
+        Container.sketch({
+          components: [subject.asSpec()],
+          events: AlloyEvents.derive([
+            AlloyEvents.runOnExecute(store.adder('execute.reached'))
+          ])
+        })
       ),
+    (_doc, _body, _gui, component, store) => {
+      const sClickButton = Chain.asStep({}, [
+        Chain.mapper(() => subject.get(component).element()),
+        Mouse.cClick
+      ]);
 
-      Logger.t(
-        'Clicking on disabled button field should not fire event',
-        GeneralSteps.sequence([
+      const button = subject.get(component);
+      return [
+        Assertions.sAssertStructure(
+          'Disabled should have a disabled attribute',
+          ApproxStructure.build((s, str, _arr) =>
+            s.element('button', {
+              attrs: {
+                disabled: str.is('disabled')
+              }
+            })
+          ),
+          button.element()
+        ),
+
+        Logger.t(
+          'Clicking on disabled button field should not fire event',
+          GeneralSteps.sequence([
+            Step.sync(() => {
+              // TODO: Maybe replace with an alloy focus call
+              Focus.focus(button.element());
+            }),
+            sClickButton,
+            store.sAssertEq('Execute did not get past disabled button', [])
+          ])
+        ),
+
+        Logger.t(
+          'Re-enable button',
           Step.sync(() => {
-            // TODO: Maybe replace with an alloy focus call
-            Focus.focus(button.element());
-          }),
-          sClickButton,
-          store.sAssertEq('Execute did not get past disabled button', [ ])
-        ])
-      ),
+            Disabling.enable(button);
+          })
+        ),
 
-      Logger.t(
-        'Re-enable button',
-        Step.sync(() => {
-          Disabling.enable(button);
-        })
-      ),
+        Assertions.sAssertStructure(
+          'After re-enabling, the disabled attribute should be removed',
+          ApproxStructure.build((s, str, _arr) =>
+            s.element('button', {
+              attrs: {
+                disabled: str.none()
+              }
+            })
+          ),
+          button.element()
+        ),
 
-      Assertions.sAssertStructure(
-        'After re-enabling, the disabled attribute should be removed',
-        ApproxStructure.build((s, str, _arr) => s.element('button', {
-          attrs: {
-            disabled: str.none()
-          }
-        })),
-        button.element()
-      ),
+        Logger.t(
+          'Clicking on enabled button field *should* fire event',
+          GeneralSteps.sequence([
+            Step.sync(() => {
+              // TODO: Maybe replace with an alloy focus call
+              Focus.focus(button.element());
+            }),
+            sClickButton,
+            store.sAssertEq('Execute did not get past disabled button', [
+              'execute.reached'
+            ])
+          ])
+        ),
 
-      Logger.t(
-        'Clicking on enabled button field *should* fire event',
-        GeneralSteps.sequence([
+        Logger.t(
+          'Set button to disabled state',
           Step.sync(() => {
-            // TODO: Maybe replace with an alloy focus call
-            Focus.focus(button.element());
-          }),
-          sClickButton,
-          store.sAssertEq('Execute did not get past disabled button', [ 'execute.reached' ])
-        ])
-      ),
+            Disabling.set(button, true);
+          })
+        ),
 
-      Logger.t(
-        'Set button to disabled state',
-        Step.sync(() => {
-          Disabling.set(button, true);
-        })
-      ),
+        Assertions.sAssertStructure(
+          'Disabled should have a disabled attribute',
+          ApproxStructure.build((s, str, _arr) =>
+            s.element('button', {
+              attrs: {
+                disabled: str.is('disabled')
+              }
+            })
+          ),
+          button.element()
+        ),
 
-      Assertions.sAssertStructure(
-        'Disabled should have a disabled attribute',
-        ApproxStructure.build((s, str, _arr) => s.element('button', {
-          attrs: {
-            disabled: str.is('disabled')
-          }
-        })),
-        button.element()
-      ),
+        Logger.t(
+          'Set button to enabled state',
+          Step.sync(() => {
+            Disabling.set(button, false);
+          })
+        ),
 
-      Logger.t(
-        'Set button to enabled state',
-        Step.sync(() => {
-          Disabling.set(button, false);
-        })
-      ),
-
-      Assertions.sAssertStructure(
-        'After re-enabling, the disabled attribute should be removed',
-        ApproxStructure.build((s, str, _arr) => s.element('button', {
-          attrs: {
-            disabled: str.none()
-          }
-        })),
-        button.element()
-      )
-    ];
-  }, () => { success(); }, failure);
+        Assertions.sAssertStructure(
+          'After re-enabling, the disabled attribute should be removed',
+          ApproxStructure.build((s, str, _arr) =>
+            s.element('button', {
+              attrs: {
+                disabled: str.none()
+              }
+            })
+          ),
+          button.element()
+        )
+      ];
+    },
+    () => {
+      success();
+    },
+    failure
+  );
 });

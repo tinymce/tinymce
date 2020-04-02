@@ -5,7 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Button, GuiFactory, Replacing, Representing, SimpleSpec, Tabstopping } from '@ephox/alloy';
+import {
+  AddEventsBehaviour,
+  AlloyEvents,
+  Behaviour,
+  Button,
+  GuiFactory,
+  Replacing,
+  Representing,
+  SimpleSpec,
+  Tabstopping
+} from '@ephox/alloy';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
@@ -16,22 +26,30 @@ const enum WordCountMode {
   Characters = 'characters'
 }
 
-export const renderWordCount = (editor: Editor, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
-  const replaceCountText = (comp, count, mode) => Replacing.set(comp, [ GuiFactory.text(providersBackstage.translate([ '{0} ' + mode, count[mode] ])) ]);
+export const renderWordCount = (
+  editor: Editor,
+  providersBackstage: UiFactoryBackstageProviders
+): SimpleSpec => {
+  const replaceCountText = (comp, count, mode) =>
+    Replacing.set(comp, [
+      GuiFactory.text(
+        providersBackstage.translate(['{0} ' + mode, count[mode]])
+      )
+    ]);
 
   return Button.sketch({
     dom: {
       // The tag for word count was changed to 'button' as Jaws does not read out spans.
       // Word count is just a toggle and changes modes between words and characters.
       tag: 'button',
-      classes: [ 'tox-statusbar__wordcount' ]
+      classes: ['tox-statusbar__wordcount']
     },
-    components: [ ],
+    components: [],
     buttonBehaviours: Behaviour.derive([
       DisablingConfigs.button(providersBackstage.isReadonly()),
       ReadOnly.receivingConfig(),
-      Tabstopping.config({ }),
-      Replacing.config({ }),
+      Tabstopping.config({}),
+      Replacing.config({}),
       Representing.config({
         store: {
           mode: 'memory',
@@ -44,8 +62,14 @@ export const renderWordCount = (editor: Editor, providersBackstage: UiFactoryBac
       AddEventsBehaviour.config('wordcount-events', [
         AlloyEvents.runOnExecute((comp) => {
           const currentVal = Representing.getValue(comp);
-          const newMode = currentVal.mode === WordCountMode.Words ? WordCountMode.Characters : WordCountMode.Words;
-          Representing.setValue(comp, { mode: newMode, count: currentVal.count });
+          const newMode =
+            currentVal.mode === WordCountMode.Words
+              ? WordCountMode.Characters
+              : WordCountMode.Words;
+          Representing.setValue(comp, {
+            mode: newMode,
+            count: currentVal.count
+          });
           replaceCountText(comp, currentVal.count, newMode);
         }),
         AlloyEvents.runOnAttached((comp) => {
@@ -58,7 +82,7 @@ export const renderWordCount = (editor: Editor, providersBackstage: UiFactoryBac
       ])
     ]),
     eventOrder: {
-      'alloy.execute': [ 'disabling', 'alloy.base.behaviour', 'wordcount-events' ]
+      'alloy.execute': ['disabling', 'alloy.base.behaviour', 'wordcount-events']
     }
   });
 };

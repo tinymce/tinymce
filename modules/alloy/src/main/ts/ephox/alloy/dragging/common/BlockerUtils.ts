@@ -11,31 +11,38 @@ const initialAttribute = 'data-initial-z-index';
 // discarding it, we need to reset those z-indices back to what they
 // were. ASSUMPTION: the blocker has been added as a direct child of the root
 const resetZIndex = (blocker: AlloyComponent): void => {
-  Traverse.parent(blocker.element()).filter(Node.isElement).each((root) => {
-    const initZIndex = Attr.get(root, initialAttribute);
-    if (Attr.has(root, initialAttribute)) {
-      Css.set(root, 'z-index', initZIndex);
-    } else {
-      Css.remove(root, 'z-index');
-    }
+  Traverse.parent(blocker.element())
+    .filter(Node.isElement)
+    .each((root) => {
+      const initZIndex = Attr.get(root, initialAttribute);
+      if (Attr.has(root, initialAttribute)) {
+        Css.set(root, 'z-index', initZIndex);
+      } else {
+        Css.remove(root, 'z-index');
+      }
 
-    Attr.remove(root, initialAttribute);
-  });
+      Attr.remove(root, initialAttribute);
+    });
 };
 
 const changeZIndex = (blocker: AlloyComponent): void => {
-  Traverse.parent(blocker.element()).filter(Node.isElement).each((root) => {
-    Css.getRaw(root, 'z-index').each((zindex) => {
-      Attr.set(root, initialAttribute, zindex);
-    });
+  Traverse.parent(blocker.element())
+    .filter(Node.isElement)
+    .each((root) => {
+      Css.getRaw(root, 'z-index').each((zindex) => {
+        Attr.set(root, initialAttribute, zindex);
+      });
 
-    // Used to be a really high number, but it probably just has
-    // to match the blocker
-    Css.set(root, 'z-index', Css.get(blocker.element(), 'z-index'));
-  });
+      // Used to be a really high number, but it probably just has
+      // to match the blocker
+      Css.set(root, 'z-index', Css.get(blocker.element(), 'z-index'));
+    });
 };
 
-const instigate = (anyComponent: AlloyComponent, blocker: AlloyComponent): void => {
+const instigate = (
+  anyComponent: AlloyComponent,
+  blocker: AlloyComponent
+): void => {
   anyComponent.getSystem().addToGui(blocker);
   changeZIndex(blocker);
 };
@@ -45,26 +52,27 @@ const discard = (blocker: AlloyComponent): void => {
   blocker.getSystem().removeFromGui(blocker);
 };
 
-const createComponent = (component: AlloyComponent, blockerClass: string, blockerEvents: AlloyEventRecord) => component.getSystem().build(
-  Container.sketch({
-    dom: {
-      // Probably consider doing with classes?
-      styles: {
-        'left': '0px',
-        'top': '0px',
-        'width': '100%',
-        'height': '100%',
-        'position': 'fixed',
-        'z-index': '1000000000000000'
+const createComponent = (
+  component: AlloyComponent,
+  blockerClass: string,
+  blockerEvents: AlloyEventRecord
+) =>
+  component.getSystem().build(
+    Container.sketch({
+      dom: {
+        // Probably consider doing with classes?
+        styles: {
+          'left': '0px',
+          'top': '0px',
+          'width': '100%',
+          'height': '100%',
+          'position': 'fixed',
+          'z-index': '1000000000000000'
+        },
+        classes: [blockerClass]
       },
-      classes: [ blockerClass ]
-    },
-    events: blockerEvents
-  })
-);
+      events: blockerEvents
+    })
+  );
 
-export {
-  createComponent,
-  instigate,
-  discard
-};
+export { createComponent, instigate, discard };

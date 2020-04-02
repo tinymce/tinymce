@@ -1,4 +1,9 @@
-import { document, window, HTMLTableElement, HTMLStyleElement } from '@ephox/dom-globals';
+import {
+  document,
+  window,
+  HTMLTableElement,
+  HTMLStyleElement
+} from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import {
   Attr,
@@ -14,7 +19,7 @@ import {
   SelectorFind,
   Traverse,
   WindowSelection,
-  EventArgs,
+  EventArgs
 } from '@ephox/sugar';
 import { Ephemera } from 'ephox/darwin/api/Ephemera';
 import * as InputHandlers from 'ephox/darwin/api/InputHandlers';
@@ -28,25 +33,25 @@ Attr.set(ephoxUi, 'contenteditable', 'true');
 
 const style = Element.fromHtml<HTMLStyleElement>(
   '<style>' +
-  'table { border-collapse: separate; border-spacing: 30px; }\n' +
-  'td { text-align: left; border: 1px solid #aaa; font-size: 20px; }\n' +
-  'td.ephox-darwin-selected { background: #cadbee; }\n' +
-  '#coords { position: fixed; right: 0px; bottom: 0px; background: #ddd }' +
-  '</style>'
+    'table { border-collapse: separate; border-spacing: 30px; }\n' +
+    'td { text-align: left; border: 1px solid #aaa; font-size: 20px; }\n' +
+    'td.ephox-darwin-selected { background: #cadbee; }\n' +
+    '#coords { position: fixed; right: 0px; bottom: 0px; background: #ddd }' +
+    '</style>'
 );
 
 const table = Element.fromHtml<HTMLTableElement>(
   '<table style="width: 400px;">' +
-  '<tbody>' +
-  '<tr style="height: 20px;"><td>A</td><td rowspan="2" colspan="2">B</td><td>C</td></tr>' +
-  '<tr style="height: 20px;"><td>D</td><td colspan="1" rowspan="2">E</td>' +
-  '<tr style="height: 20px;"><td colspan="3" rowspan="3">F</td></tr>' +
-  '<tr style="height: 20px;"><td>G</td></tr>' +
-  '<tr style="height: 20px;"><td>H</td></tr>' +
-  '<tr style="height: 20px;"><td rowspan="2" colspan="1">I</td><td>J</td><td colspan="2">K</td></tr>' +
-  '<tr style="height: 20px;"><td colspan="2">L</td><td>M</td></tr>' +
-  '</tbody>' +
-  '</table>'
+    '<tbody>' +
+    '<tr style="height: 20px;"><td>A</td><td rowspan="2" colspan="2">B</td><td>C</td></tr>' +
+    '<tr style="height: 20px;"><td>D</td><td colspan="1" rowspan="2">E</td>' +
+    '<tr style="height: 20px;"><td colspan="3" rowspan="3">F</td></tr>' +
+    '<tr style="height: 20px;"><td>G</td></tr>' +
+    '<tr style="height: 20px;"><td>H</td></tr>' +
+    '<tr style="height: 20px;"><td rowspan="2" colspan="1">I</td><td>J</td><td colspan="2">K</td></tr>' +
+    '<tr style="height: 20px;"><td colspan="2">L</td><td>M</td></tr>' +
+    '</tbody>' +
+    '</table>'
 );
 
 /* Uncomment for normal table with no colspans.
@@ -97,12 +102,24 @@ Insert.append(Body.body(), cloneDiv);
 
 Insert.append(Body.body(), Element.fromHtml('<span id="coords">(0, 0)</span>'));
 DomEvent.bind(Body.body(), 'mousemove', function (event) {
-  Option.from(document.querySelector('#coords')).getOrDie('Could not find ID "coords"').innerHTML = '(' + event.raw().clientX + ', ' + event.raw().clientY + ')';
+  Option.from(document.querySelector('#coords')).getOrDie(
+    'Could not find ID "coords"'
+  ).innerHTML = '(' + event.raw().clientX + ', ' + event.raw().clientY + ')';
 });
 
 const annotations = SelectionAnnotation.byClass(Ephemera);
-const mouseHandlers = InputHandlers.mouse(window, ephoxUi, Fun.curry(Compare.eq, table), annotations);
-const keyHandlers = InputHandlers.keyboard(window, ephoxUi, Fun.curry(Compare.eq, table), annotations);
+const mouseHandlers = InputHandlers.mouse(
+  window,
+  ephoxUi,
+  Fun.curry(Compare.eq, table),
+  annotations
+);
+const keyHandlers = InputHandlers.keyboard(
+  window,
+  ephoxUi,
+  Fun.curry(Compare.eq, table),
+  annotations
+);
 
 DomEvent.bind(ephoxUi, 'mousedown', mouseHandlers.mousedown);
 DomEvent.bind(ephoxUi, 'mouseover', mouseHandlers.mouseover);
@@ -116,18 +133,30 @@ const handleResponse = function (event: EventArgs, response: Response) {
     // ns is {start(): Situ, finish(): Situ}
     const relative = Selection.relative(ns.start(), ns.finish());
     const range = Util.convertToRange(window, relative);
-    WindowSelection.setExact(window, range.start(), range.soffset(), range.finish(), range.foffset());
+    WindowSelection.setExact(
+      window,
+      range.start(),
+      range.soffset(),
+      range.finish(),
+      range.foffset()
+    );
     // WindowSelection.setExact(window, ns.start(), ns.soffset(), ns.finish(), ns.foffset());
   });
 };
 
 DomEvent.bind(ephoxUi, 'keyup', function (event) {
   // Note, this is an optimisation.
-  if (event.raw().shiftKey && event.raw().which >= 37 && event.raw().which <= 40) {
+  if (
+    event.raw().shiftKey &&
+    event.raw().which >= 37 &&
+    event.raw().which <= 40
+  ) {
     WindowSelection.getExact(window).each(function (sel) {
-      keyHandlers.keyup(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset()).each(function (response) {
-        handleResponse(event, response);
-      });
+      keyHandlers
+        .keyup(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset())
+        .each(function (response) {
+          handleResponse(event, response);
+        });
     });
   }
 });
@@ -135,10 +164,22 @@ DomEvent.bind(ephoxUi, 'keyup', function (event) {
 DomEvent.bind(ephoxUi, 'keydown', function (event) {
   // This might get expensive.
   WindowSelection.getExact(window).each(function (sel) {
-    const target = (Node.isText(sel.start()) ? Traverse.parent(sel.start()) : Option.some(sel.start())).filter(Node.isElement);
+    const target = (Node.isText(sel.start())
+      ? Traverse.parent(sel.start())
+      : Option.some(sel.start())
+    ).filter(Node.isElement);
     const direction = target.map(Direction.getDirection).getOr('ltr');
-    keyHandlers.keydown(event, sel.start(), sel.soffset(), sel.finish(), sel.foffset(), direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl).each(function (response) {
-      handleResponse(event, response);
-    });
+    keyHandlers
+      .keydown(
+        event,
+        sel.start(),
+        sel.soffset(),
+        sel.finish(),
+        sel.foffset(),
+        direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl
+      )
+      .each(function (response) {
+        handleResponse(event, response);
+      });
   });
 });

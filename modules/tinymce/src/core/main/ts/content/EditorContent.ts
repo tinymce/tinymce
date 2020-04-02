@@ -11,10 +11,4 @@ import Node from '../api/html/Node';
 
 type Content = string | Node;
 
-export {
-  Content,
-  GetContentArgs,
-  SetContentArgs,
-  setContent,
-  getContent
-};
+export { Content, GetContentArgs, SetContentArgs, setContent, getContent };

@@ -13,7 +13,10 @@ import { Omit } from '../Omit';
 
 type TableSpec = Omit<Types.Table.Table, 'type'>;
 
-export const renderTable = (spec: TableSpec, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
+export const renderTable = (
+  spec: TableSpec,
+  providersBackstage: UiFactoryBackstageProviders
+): SimpleSpec => {
   const renderTh = (text: string) => ({
     dom: {
       tag: 'th',
@@ -33,21 +36,23 @@ export const renderTable = (spec: TableSpec, providersBackstage: UiFactoryBackst
       }
     ]
   });
-  const renderTd = (text: string) => ({ dom: { tag: 'td', innerHtml: providersBackstage.translate(text) }});
-  const renderTr = (row: string[]) => ({ dom: { tag: 'tr' }, components: Arr.map(row, renderTd) });
-  const renderRows = (rows: string[][]) => ({ dom: { tag: 'tbody' }, components: Arr.map(rows, renderTr) });
+  const renderTd = (text: string) => ({
+    dom: { tag: 'td', innerHtml: providersBackstage.translate(text) }
+  });
+  const renderTr = (row: string[]) => ({
+    dom: { tag: 'tr' },
+    components: Arr.map(row, renderTd)
+  });
+  const renderRows = (rows: string[][]) => ({
+    dom: { tag: 'tbody' },
+    components: Arr.map(rows, renderTr)
+  });
   return {
     dom: {
       tag: 'table',
-      classes: [ 'tox-dialog__table' ]
+      classes: ['tox-dialog__table']
     },
-    components: [
-      renderHeader(spec.header),
-      renderRows(spec.cells)
-    ],
-    behaviours: Behaviour.derive([
-      Tabstopping.config({ }),
-      Focusing.config({ })
-    ])
+    components: [renderHeader(spec.header), renderRows(spec.cells)],
+    behaviours: Behaviour.derive([Tabstopping.config({}), Focusing.config({})])
   };
 };

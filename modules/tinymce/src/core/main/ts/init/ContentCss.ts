@@ -31,6 +31,4 @@ const appendContentCssFromSettings = (editor: Editor) => {
   editor.contentCSS = editor.contentCSS.concat(getContentCssUrls(editor));
 };
 
-export {
-  appendContentCssFromSettings
-};
+export { appendContentCssFromSettings };

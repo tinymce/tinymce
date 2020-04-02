@@ -1,7 +1,6 @@
 declare let tinymce: any;
 
 export default function () {
-
   const settings = {
     selector: '.tinymce',
     inline: true,
@@ -20,15 +19,24 @@ export default function () {
       { title: 'Some class', value: 'class-name' }
     ],
     templates: [
-      { title: 'Some title 1', description: 'Some desc 1', content: 'My content' },
-      { title: 'Some title 2', description: 'Some desc 2', content: '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>' }
+      {
+        title: 'Some title 1',
+        description: 'Some desc 1',
+        content: 'My content'
+      },
+      {
+        title: 'Some title 2',
+        description: 'Some desc 2',
+        content:
+          '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>'
+      }
     ],
     plugins: [
       'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
       'searchreplace wordcount visualblocks visualchars code fullscreen fullpage insertdatetime media nonbreaking',
       'save table directionality emoticons template paste importcss textpattern',
       'codesample help noneditable print'
-    ],
+    ]
   };
 
   tinymce.init(settings);

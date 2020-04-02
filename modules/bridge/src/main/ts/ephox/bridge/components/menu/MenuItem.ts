@@ -1,6 +1,11 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Result, Option } from '@ephox/katamari';
-import { CommonMenuItem, CommonMenuItemApi, commonMenuItemFields, CommonMenuItemInstanceApi } from './CommonMenuItem';
+import {
+  CommonMenuItem,
+  CommonMenuItemApi,
+  commonMenuItemFields,
+  CommonMenuItemInstanceApi
+} from './CommonMenuItem';
 
 export interface MenuItemApi extends CommonMenuItemApi {
   type?: 'menuitem';
@@ -10,7 +15,7 @@ export interface MenuItemApi extends CommonMenuItemApi {
 }
 
 // tslint:disable-next-line:no-empty-interface
-export interface MenuItemInstanceApi extends CommonMenuItemInstanceApi { }
+export interface MenuItemInstanceApi extends CommonMenuItemInstanceApi {}
 
 export interface MenuItem extends CommonMenuItem {
   type: 'menuitem';
@@ -19,11 +24,16 @@ export interface MenuItem extends CommonMenuItem {
   onAction: (api: MenuItemInstanceApi) => void;
 }
 
-export const menuItemSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
-  FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
-  FieldSchema.defaultedFunction('onAction', Fun.noop),
-  FieldSchema.optionString('icon'),
-].concat(commonMenuItemFields));
+export const menuItemSchema = ValueSchema.objOf(
+  [
+    FieldSchema.strictString('type'),
+    FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
+    FieldSchema.defaultedFunction('onAction', Fun.noop),
+    FieldSchema.optionString('icon')
+  ].concat(commonMenuItemFields)
+);
 
-export const createMenuItem = (spec: MenuItemApi): Result<MenuItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('menuitem', menuItemSchema, spec);
+export const createMenuItem = (
+  spec: MenuItemApi
+): Result<MenuItem, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw('menuitem', menuItemSchema, spec);

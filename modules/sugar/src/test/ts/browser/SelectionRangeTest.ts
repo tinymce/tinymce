@@ -22,7 +22,10 @@ UnitTest.test('WindowSelectionTest', function () {
   const body = Body.body();
   Insert.append(body, container);
 
-  Html.set(container, '<p>This <strong>world</strong> is not <strong>w<em>ha</em>t</strong> I<br><br>wanted</p><p><br>And even more</p>');
+  Html.set(
+    container,
+    '<p>This <strong>world</strong> is not <strong>w<em>ha</em>t</strong> I<br><br>wanted</p><p><br>And even more</p>'
+  );
 
   const find = function (path) {
     return Hierarchy.follow(container, path).getOrDie('invalid path');
@@ -49,12 +52,22 @@ UnitTest.test('WindowSelectionTest', function () {
   const checkSelection = function (label, variants, start, finish) {
     const expected = detector(variants);
     WindowSelection.setRelative(window, start, finish);
-    const actual = WindowSelection.getExact(window).getOrDie('No selection after selection');
+    const actual = WindowSelection.getExact(window).getOrDie(
+      'No selection after selection'
+    );
     const expStart = find(expected.start);
     const expFinish = find(expected.finish);
 
-    assert.eq(true, Compare.eq(expStart, actual.start()), 'Start element different');
-    assert.eq(true, Compare.eq(expFinish, actual.finish()), 'Finish element different');
+    assert.eq(
+      true,
+      Compare.eq(expStart, actual.start()),
+      'Start element different'
+    );
+    assert.eq(
+      true,
+      Compare.eq(expFinish, actual.finish()),
+      'Finish element different'
+    );
     assert.eq(expected.soffset, actual.soffset());
     assert.eq(expected.foffset, actual.foffset());
   };
@@ -67,8 +80,15 @@ UnitTest.test('WindowSelectionTest', function () {
 
   const checkStringAt = function (label, expectedStr, start, finish) {
     // dont need to set a selection range, just extract the Situ.on() element/offset pair
-    const actual = WindowSelection.getAsString(window, Selection.relative(start, finish));
-    assert.eq(expectedStr, actual, 'Actual was not expected [' + expectedStr + '|' + actual + ']');
+    const actual = WindowSelection.getAsString(
+      window,
+      Selection.relative(start, finish)
+    );
+    assert.eq(
+      expectedStr,
+      actual,
+      'Actual was not expected [' + expectedStr + '|' + actual + ']'
+    );
   };
 
   checkSelection(
@@ -76,42 +96,42 @@ UnitTest.test('WindowSelectionTest', function () {
     {
       // '<p>This <strong>w[o]rld</strong> is not <strong>w<em>ha</em>t</strong> I<br><br>wanted</p><p><br>And even more</p>';
       fallback: {
-        start: [ 0, 1, 0 ],
+        start: [0, 1, 0],
         soffset: 'w'.length,
-        finish: [ 0, 1, 0 ],
+        finish: [0, 1, 0],
         foffset: 'wo'.length
       }
     },
-    Situ.on(find( [ 0, 1, 0 ]), 'w'.length),
-    Situ.on(find( [ 0, 1, 0 ]), 'wo'.length)
+    Situ.on(find([0, 1, 0]), 'w'.length),
+    Situ.on(find([0, 1, 0]), 'wo'.length)
   );
 
   checkSelection(
     'RTL selection: (o)',
     {
-    // '<p>This <strong>w]o[rld</strong> is not <strong>w<em>ha</em>t</strong> I<br><br>wanted</p><p><br>And even more</p>';
+      // '<p>This <strong>w]o[rld</strong> is not <strong>w<em>ha</em>t</strong> I<br><br>wanted</p><p><br>And even more</p>';
       fallback: {
-        start: [ 0, 1, 0 ],
+        start: [0, 1, 0],
         soffset: 'wo'.length,
-        finish: [ 0, 1, 0 ],
+        finish: [0, 1, 0],
         foffset: 'w'.length
       },
       // '<p>This <strong>w[o]rld</strong> is not <strong>w<em>ha</em>t</strong> I<br><br>wanted</p><p><br>And even more</p>';
       ie: {
-        start: [ 0, 1, 0 ],
+        start: [0, 1, 0],
         soffset: 'w'.length,
-        finish: [ 0, 1, 0 ],
+        finish: [0, 1, 0],
         foffset: 'wo'.length
       },
       spartan: {
-        start: [ 0, 1, 0 ],
+        start: [0, 1, 0],
         soffset: 'wo'.length,
-        finish: [ 0, 1, 0 ],
+        finish: [0, 1, 0],
         foffset: 'w'.length
       }
     },
-    Situ.on(find( [ 0, 1, 0 ]), 'wo'.length),
-    Situ.on(find( [ 0, 1, 0 ]), 'w'.length)
+    Situ.on(find([0, 1, 0]), 'wo'.length),
+    Situ.on(find([0, 1, 0]), 'w'.length)
   );
 
   checkSelection(
@@ -119,38 +139,38 @@ UnitTest.test('WindowSelectionTest', function () {
     {
       // '<p>This <strong>w]orld</strong>[ is not <strong>w<em>ha</em>t</strong> I<br><br>wanted</p><p><br>And even more</p>';
       firefox: {
-        start: [ 0 ],
+        start: [0],
         soffset: 2,
-        finish: [ 0, 1, 0 ],
+        finish: [0, 1, 0],
         foffset: 'w'.length
       },
       chrome: {
-        start: [ 0 ],
+        start: [0],
         soffset: 2,
-        finish: [ 0, 1, 0 ],
+        finish: [0, 1, 0],
         foffset: 'w'.length
       },
       ie: {
-        finish: [ 0 ],
+        finish: [0],
         foffset: 2,
-        start: [ 0, 1, 0 ],
+        start: [0, 1, 0],
         soffset: 'w'.length
       },
       spartan: {
-        start: [ 0 ],
+        start: [0],
         soffset: 2,
-        finish: [ 0, 1, 0 ],
+        finish: [0, 1, 0],
         foffset: 'w'.length
       },
       fallback: {
-        start: [ 0, 1, 0 ],
+        start: [0, 1, 0],
         soffset: 'world'.length,
-        finish: [ 0, 1, 0 ],
+        finish: [0, 1, 0],
         foffset: 'w'.length
       }
     },
-    Situ.before(find( [ 0, 2 ])),
-    Situ.on(find( [ 0, 1, 0 ]), 'w'.length)
+    Situ.before(find([0, 2])),
+    Situ.on(find([0, 1, 0]), 'w'.length)
   );
 
   checkSelection(
@@ -158,20 +178,20 @@ UnitTest.test('WindowSelectionTest', function () {
     {
       // '<p>[This <strong>world</strong> is not <strong>w<em>ha</em>t</strong> I<br><br>wanted]</p><p><br>And even more</p>';
       fallback: {
-        start: [ 0 ],
+        start: [0],
         soffset: 0,
-        finish: [ 0 ],
+        finish: [0],
         foffset: 7
       },
       safari: {
-        start: [ 0, 0 ],
+        start: [0, 0],
         soffset: ''.length,
-        finish: [ 0 ],
+        finish: [0],
         foffset: 7
       }
     },
-    Situ.on(find( [ 0 ]), 0),
-    Situ.on(find( [ 0 ]), 7)
+    Situ.on(find([0]), 0),
+    Situ.on(find([0]), 7)
   );
 
   checkSelection(
@@ -179,32 +199,32 @@ UnitTest.test('WindowSelectionTest', function () {
     {
       // '<p>]This <strong>world</strong> is not <strong>w<em>ha</em>t</strong> I<br><br>wanted[</p><p><br>And even more</p>';
       fallback: {
-        start: [ 0 ],
+        start: [0],
         soffset: 7,
-        finish: [ 0 ],
+        finish: [0],
         foffset: 0
       },
       ie: {
-        start: [ 0 ],
+        start: [0],
         soffset: 0,
-        finish: [ 0 ],
+        finish: [0],
         foffset: 7
       },
       chrome: {
-        start: [ 0 ],
+        start: [0],
         soffset: 7,
-        finish: [ 0 ],
+        finish: [0],
         foffset: 0
       },
       safari: {
-        start: [ 0 ],
+        start: [0],
         soffset: 7,
-        finish: [ 0, 0 ],
+        finish: [0, 0],
         foffset: ''.length
       }
     },
-    Situ.on(find( [ 0 ]), 7),
-    Situ.on(find( [ 0 ]), 0)
+    Situ.on(find([0]), 7),
+    Situ.on(find([0]), 0)
   );
 
   checkSelection(
@@ -212,20 +232,20 @@ UnitTest.test('WindowSelectionTest', function () {
     {
       // '<p>This <strong>world</strong> is not <strong>w<em>ha[</em>t</strong> I<br><br>]wanted</p><p><br>And even more</p>';
       safari: {
-        start: [ 0, 3, 2 ],
+        start: [0, 3, 2],
         soffset: ''.length,
-        finish: [ 0 ],
+        finish: [0],
         foffset: 6
       },
       fallback: {
-        start: [ 0, 3, 1 ],
+        start: [0, 3, 1],
         soffset: 1,
-        finish: [ 0 ],
+        finish: [0],
         foffset: 6
       }
     },
-    Situ.after(find( [ 0, 3, 1, 0 ]) ),
-    Situ.before(find( [ 0, 6 ]) )
+    Situ.after(find([0, 3, 1, 0])),
+    Situ.before(find([0, 6]))
   );
 
   checkSelection(
@@ -233,38 +253,38 @@ UnitTest.test('WindowSelectionTest', function () {
     {
       // '<p>This <strong>world</strong> is not <strong>w<em>ha]</em>t</strong> I<br><br>[wanted</p><p><br>And even more</p>';
       fallback: {
-        finish: [ 0, 3, 2 ],
+        finish: [0, 3, 2],
         foffset: ''.length,
-        start: [ 0 ],
+        start: [0],
         soffset: 6
       },
       firefox: {
-        finish: [ 0, 3, 1 ],
+        finish: [0, 3, 1],
         foffset: 1,
-        start: [ 0 ],
+        start: [0],
         soffset: 6
       },
       chrome: {
-        finish: [ 0, 3, 1 ],
+        finish: [0, 3, 1],
         foffset: 1,
-        start: [ 0 ],
+        start: [0],
         soffset: 6
       },
       ie: {
-        start: [ 0, 3, 1 ],
+        start: [0, 3, 1],
         soffset: 1,
-        finish: [ 0 ],
+        finish: [0],
         foffset: 6
       },
       spartan: {
-        finish: [ 0, 3, 1 ],
+        finish: [0, 3, 1],
         foffset: 1,
-        start: [ 0 ],
+        start: [0],
         soffset: 6
       }
     },
-    Situ.before(find( [ 0, 6 ]) ),
-    Situ.after(find( [ 0, 3, 1, 0 ]) )
+    Situ.before(find([0, 6])),
+    Situ.after(find([0, 3, 1, 0]))
   );
 
   checkStringAt(
@@ -273,15 +293,15 @@ UnitTest.test('WindowSelectionTest', function () {
     //   expects:    '<p>[This <strong>world</strong> is not <strong>w<em>ha</em>t</strong> I<br><br>wanted]</p><p><br>And even more</p>';
     //   but actual: '<p>[This <strong>world</strong> is not <strong>w<em>ha</em>t</strong> I<br>]<br>wanted</p><p><br>And even more</p>';
     'This world is not what I',
-    Situ.on(find( [ 0 ]), 0),
-    Situ.on(find( [ 0 ]), 7)
+    Situ.on(find([0]), 0),
+    Situ.on(find([0]), 7)
   );
 
   checkStringAt(
     'RTL Selection (This world is not what I)',
     'This world is not what I',
-    Situ.on(find( [ 0 ]), 7),
-    Situ.on(find( [ 0 ]), 0)
+    Situ.on(find([0]), 7),
+    Situ.on(find([0]), 0)
   );
 
   // Test that proves safari will always normalise a selection to the end leaf
@@ -291,40 +311,40 @@ UnitTest.test('WindowSelectionTest', function () {
     'TBIO-3883: Unicode position',
     {
       fallback: {
-        start: [ 0 ],
+        start: [0],
         soffset: 0,
-        finish: [ 0 ],
+        finish: [0],
         foffset: 0
       },
       safari: {
-        start: [ 0, 0 ],
+        start: [0, 0],
         soffset: 0,
-        finish: [ 0, 0 ],
+        finish: [0, 0],
         foffset: 0
       }
     },
-    Situ.on(find( [ 0 ]), 0 ),
-    Situ.on(find( [ 0 ]), 0 )
+    Situ.on(find([0]), 0),
+    Situ.on(find([0]), 0)
   );
 
   checkUniCodeSelection('<span>^<span>')(
     'TBIO-3883: Any Character',
     {
       fallback: {
-        start: [ 0 ],
+        start: [0],
         soffset: 0,
-        finish: [ 0 ],
+        finish: [0],
         foffset: 0
       },
       safari: {
-        start: [ 0, 0 ],
+        start: [0, 0],
         soffset: 0,
-        finish: [ 0, 0 ],
+        finish: [0, 0],
         foffset: 0
       }
     },
-    Situ.on(find( [ 0 ]), 0 ),
-    Situ.on(find( [ 0 ]), 0 )
+    Situ.on(find([0]), 0),
+    Situ.on(find([0]), 0)
   );
 
   Remove.remove(container);

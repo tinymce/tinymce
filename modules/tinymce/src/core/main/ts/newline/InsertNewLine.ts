@@ -25,6 +25,4 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
   );
 };
 
-export {
-  insert
-};
+export { insert };

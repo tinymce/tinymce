@@ -8,7 +8,7 @@
 import AddOnManager from './AddOnManager';
 
 export interface Plugin {
-  getMetadata? (): { name: string; url: string };
+  getMetadata?(): { name: string; url: string };
 
   // Allow custom apis
   [key: string]: any;

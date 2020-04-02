@@ -10,22 +10,22 @@ import { Menu } from '@ephox/bridge';
 import * as ItemClasses from '../ItemClasses';
 import { ItemTypes } from '@ephox/alloy';
 
-const renderSeparatorItem = (spec: Menu.SeparatorMenuItem): ItemTypes.ItemSpec => {
+const renderSeparatorItem = (
+  spec: Menu.SeparatorMenuItem
+): ItemTypes.ItemSpec => {
   const innerHtml = spec.text.fold(
-    () => ({ }),
+    () => ({}),
     (text) => ({ innerHtml: text })
   );
   return {
     type: 'separator',
     dom: {
       tag: 'div',
-      classes: [ ItemClasses.selectableClass, ItemClasses.groupHeadingClass ],
+      classes: [ItemClasses.selectableClass, ItemClasses.groupHeadingClass],
       ...innerHtml
     },
-    components: [ ]
+    components: []
   };
 };
 
-export {
-  renderSeparatorItem
-};
+export { renderSeparatorItem };

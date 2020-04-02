@@ -3,7 +3,6 @@ import { document, Window } from '@ephox/dom-globals';
 import { Type } from 'ephox/katamari/api/Main';
 
 UnitTest.asynctest('Type cross window test', (success, failure) => {
-
   const runTest = (frameEval: (script: string) => any) => {
     const check = (expected, method, input) => {
       const frameValue = frameEval(input);

@@ -23,19 +23,25 @@ const insertInlinePos = function (pos: CaretPosition, before: boolean) {
 };
 
 const isPosCaretContainer = function (pos: CaretPosition, caret: Cell<Text>) {
-  const caretNode = (<Cell<any>> caret).get();
-  return caretNode && pos.container() === caretNode && CaretContainer.isCaretContainerInline(caretNode);
+  const caretNode = (<Cell<any>>caret).get();
+  return (
+    caretNode &&
+    pos.container() === caretNode &&
+    CaretContainer.isCaretContainerInline(caretNode)
+  );
 };
 
 const renderCaret = function (caret: Cell<Text>, location) {
   return location.fold(
-    function (element) { // Before
+    function (element) {
+      // Before
       CaretContainerRemove.remove(caret.get());
       const text = CaretContainerInline.insertInlineBefore(element);
       caret.set(text);
       return Option.some(CaretPosition(text, text.length - 1));
     },
-    function (element) { // Start
+    function (element) {
+      // Start
       return CaretFinder.firstPositionIn(element).map(function (pos) {
         if (!isPosCaretContainer(pos, caret)) {
           CaretContainerRemove.remove(caret.get());
@@ -47,7 +53,8 @@ const renderCaret = function (caret: Cell<Text>, location) {
         }
       });
     },
-    function (element) { // End
+    function (element) {
+      // End
       return CaretFinder.lastPositionIn(element).map(function (pos) {
         if (!isPosCaretContainer(pos, caret)) {
           CaretContainerRemove.remove(caret.get());
@@ -59,7 +66,8 @@ const renderCaret = function (caret: Cell<Text>, location) {
         }
       });
     },
-    function (element) { // After
+    function (element) {
+      // After
       CaretContainerRemove.remove(caret.get());
       const text = CaretContainerInline.insertInlineAfter(element);
       caret.set(text);
@@ -68,6 +76,4 @@ const renderCaret = function (caret: Cell<Text>, location) {
   );
 };
 
-export {
-  renderCaret
-};
+export { renderCaret };

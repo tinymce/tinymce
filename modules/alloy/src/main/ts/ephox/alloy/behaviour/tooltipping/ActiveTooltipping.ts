@@ -12,10 +12,17 @@ import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Attachment from '../../api/system/Attachment';
 import { ReceivingInternalEvent } from '../../events/SimulatedEvent';
 import * as TooltippingApis from './TooltippingApis';
-import { ExclusivityChannel, HideTooltipEvent, ShowTooltipEvent } from './TooltippingCommunication';
+import {
+  ExclusivityChannel,
+  HideTooltipEvent,
+  ShowTooltipEvent
+} from './TooltippingCommunication';
 import { TooltippingConfig, TooltippingState } from './TooltippingTypes';
 
-const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): AlloyEvents.AlloyEventRecord => {
+const events = (
+  tooltipConfig: TooltippingConfig,
+  state: TooltippingState
+): AlloyEvents.AlloyEventRecord => {
   const hide = (comp: AlloyComponent) => {
     state.getTooltip().each((p) => {
       Attachment.detach(p);
@@ -35,19 +42,17 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
         events: AlloyEvents.derive(
           tooltipConfig.mode === 'normal'
             ? [
-              AlloyEvents.run(NativeEvents.mouseover(), (_) => {
-                AlloyTriggers.emit(comp, ShowTooltipEvent);
-              }),
-              AlloyEvents.run(NativeEvents.mouseout(), (_) => {
-                AlloyTriggers.emit(comp, HideTooltipEvent);
-              })
-            ]
+                AlloyEvents.run(NativeEvents.mouseover(), (_) => {
+                  AlloyTriggers.emit(comp, ShowTooltipEvent);
+                }),
+                AlloyEvents.run(NativeEvents.mouseout(), (_) => {
+                  AlloyTriggers.emit(comp, HideTooltipEvent);
+                })
+              ]
             : []
         ),
 
-        behaviours: Behaviour.derive([
-          Replacing.config({})
-        ])
+        behaviours: Behaviour.derive([Replacing.config({})])
       });
 
       state.setTooltip(popup);
@@ -57,55 +62,56 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
     }
   };
 
-  return AlloyEvents.derive(Arr.flatten([
-    [
-      AlloyEvents.run(ShowTooltipEvent, (comp) => {
-        state.resetTimer(() => {
-          show(comp);
-        }, tooltipConfig.delay);
-      }),
-      AlloyEvents.run(HideTooltipEvent, (comp) => {
-        state.resetTimer(() => {
+  return AlloyEvents.derive(
+    Arr.flatten([
+      [
+        AlloyEvents.run(ShowTooltipEvent, (comp) => {
+          state.resetTimer(() => {
+            show(comp);
+          }, tooltipConfig.delay);
+        }),
+        AlloyEvents.run(HideTooltipEvent, (comp) => {
+          state.resetTimer(() => {
+            hide(comp);
+          }, tooltipConfig.delay);
+        }),
+        AlloyEvents.run(SystemEvents.receive(), (comp, message) => {
+          // TODO: Think about the types for this, or find a better way for this
+          // to rely on receiving.
+          const receivingData = (message as unknown) as ReceivingInternalEvent;
+          if (Arr.contains(receivingData.channels(), ExclusivityChannel)) {
+            hide(comp);
+          }
+        }),
+        AlloyEvents.runOnDetached((comp) => {
           hide(comp);
-        }, tooltipConfig.delay);
-      }),
-      AlloyEvents.run(SystemEvents.receive(), (comp, message) => {
-        // TODO: Think about the types for this, or find a better way for this
-        // to rely on receiving.
-        const receivingData = message as unknown as ReceivingInternalEvent;
-        if (Arr.contains(receivingData.channels(), ExclusivityChannel)) { hide(comp); }
-      }),
-      AlloyEvents.runOnDetached((comp) => {
-        hide(comp);
-      })
-    ],
-    (
+        })
+      ],
       tooltipConfig.mode === 'normal'
         ? [
-          AlloyEvents.run(NativeEvents.focusin(), (comp) => {
-            AlloyTriggers.emit(comp, ShowTooltipEvent);
-          }),
-          AlloyEvents.run(SystemEvents.postBlur(), (comp) => {
-            AlloyTriggers.emit(comp, HideTooltipEvent);
-          }),
-          AlloyEvents.run(NativeEvents.mouseover(), (comp) => {
-            AlloyTriggers.emit(comp, ShowTooltipEvent);
-          }),
-          AlloyEvents.run(NativeEvents.mouseout(), (comp) => {
-            AlloyTriggers.emit(comp, HideTooltipEvent);
-          }),
-        ]
+            AlloyEvents.run(NativeEvents.focusin(), (comp) => {
+              AlloyTriggers.emit(comp, ShowTooltipEvent);
+            }),
+            AlloyEvents.run(SystemEvents.postBlur(), (comp) => {
+              AlloyTriggers.emit(comp, HideTooltipEvent);
+            }),
+            AlloyEvents.run(NativeEvents.mouseover(), (comp) => {
+              AlloyTriggers.emit(comp, ShowTooltipEvent);
+            }),
+            AlloyEvents.run(NativeEvents.mouseout(), (comp) => {
+              AlloyTriggers.emit(comp, HideTooltipEvent);
+            })
+          ]
         : [
-          AlloyEvents.run(SystemEvents.highlight(), (comp, _se) => {
-            AlloyTriggers.emit(comp, ShowTooltipEvent);
-          }),
-          AlloyEvents.run(SystemEvents.dehighlight(), (comp) => {
-            AlloyTriggers.emit(comp, HideTooltipEvent);
-          }),
-        ]
-    )
-  ]));
-
+            AlloyEvents.run(SystemEvents.highlight(), (comp, _se) => {
+              AlloyTriggers.emit(comp, ShowTooltipEvent);
+            }),
+            AlloyEvents.run(SystemEvents.dehighlight(), (comp) => {
+              AlloyTriggers.emit(comp, HideTooltipEvent);
+            })
+          ]
+    ])
+  );
 };
 
 export { events };

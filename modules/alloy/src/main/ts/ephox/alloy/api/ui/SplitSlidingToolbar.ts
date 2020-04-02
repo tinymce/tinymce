@@ -11,7 +11,12 @@ import { ToolbarGroup } from '../../api/ui/ToolbarGroup';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as SplitToolbarUtils from '../../toolbar/SplitToolbarUtils';
 import * as SplitSlidingToolbarSchema from '../../ui/schema/SplitSlidingToolbarSchema';
-import { SplitSlidingToolbarApis, SplitSlidingToolbarDetail, SplitSlidingToolbarSketcher, SplitSlidingToolbarSpec } from '../../ui/types/SplitSlidingToolbarTypes';
+import {
+  SplitSlidingToolbarApis,
+  SplitSlidingToolbarDetail,
+  SplitSlidingToolbarSketcher,
+  SplitSlidingToolbarSpec
+} from '../../ui/types/SplitSlidingToolbarTypes';
 import { Sliding } from '../behaviour/Sliding';
 import { Toggling } from '../behaviour/Toggling';
 import { AlloyComponent } from '../component/ComponentApi';
@@ -20,14 +25,20 @@ import * as Sketcher from './Sketcher';
 import { Toolbar } from './Toolbar';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const toggleToolbar = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) => {
+const toggleToolbar = (
+  toolbar: AlloyComponent,
+  detail: SplitSlidingToolbarDetail
+) => {
   AlloyParts.getPart(toolbar, detail, 'overflow').each((overf) => {
     refresh(toolbar, detail);
     Sliding.toggleGrow(overf);
   });
 };
 
-const refresh = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) => {
+const refresh = (
+  toolbar: AlloyComponent,
+  detail: SplitSlidingToolbarDetail
+) => {
   AlloyParts.getPart(toolbar, detail, 'overflow').each((overflow) => {
     SplitToolbarUtils.refresh(toolbar, detail, (groups) => {
       const builtGroups = Arr.map(groups, (g) => GuiFactory.premade(g));
@@ -44,7 +55,10 @@ const refresh = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) => 
   });
 };
 
-const factory: CompositeSketchFactory<SplitSlidingToolbarDetail, SplitSlidingToolbarSpec> = (detail, components, spec, externals) => {
+const factory: CompositeSketchFactory<
+  SplitSlidingToolbarDetail,
+  SplitSlidingToolbarSpec
+> = (detail, components, spec, externals) => {
   const toolbarToggleEvent = 'alloy.toolbar.toggle';
 
   const doSetGroups = (toolbar: AlloyComponent, groups: AlloySpec[]) => {
@@ -56,36 +70,33 @@ const factory: CompositeSketchFactory<SplitSlidingToolbarDetail, SplitSlidingToo
     uid: detail.uid,
     dom: detail.dom,
     components,
-    behaviours: SketchBehaviours.augment(
-      detail.splitToolbarBehaviours,
-      [
-        Coupling.config({
-          others: {
-            overflowGroup(toolbar) {
-              return ToolbarGroup.sketch({
-                ...externals['overflow-group'](),
-                items: [
-                  Button.sketch({
-                    ...externals['overflow-button'](),
-                    action(_button) {
-                      AlloyTriggers.emit(toolbar, toolbarToggleEvent);
-                    }
-                  })
-                ]
-              });
-            }
-          }
-        }),
-        AddEventsBehaviour.config('toolbar-toggle-events', [
-          AlloyEvents.run(toolbarToggleEvent, (toolbar) => {
-            AlloyParts.getPart(toolbar, detail, 'overflow').each((overf) => {
-              refresh(toolbar, detail);
-              Sliding.toggleGrow(overf);
+    behaviours: SketchBehaviours.augment(detail.splitToolbarBehaviours, [
+      Coupling.config({
+        others: {
+          overflowGroup(toolbar) {
+            return ToolbarGroup.sketch({
+              ...externals['overflow-group'](),
+              items: [
+                Button.sketch({
+                  ...externals['overflow-button'](),
+                  action(_button) {
+                    AlloyTriggers.emit(toolbar, toolbarToggleEvent);
+                  }
+                })
+              ]
             });
-          })
-        ])
-      ]
-    ),
+          }
+        }
+      }),
+      AddEventsBehaviour.config('toolbar-toggle-events', [
+        AlloyEvents.run(toolbarToggleEvent, (toolbar) => {
+          AlloyParts.getPart(toolbar, detail, 'overflow').each((overf) => {
+            refresh(toolbar, detail);
+            Sliding.toggleGrow(overf);
+          });
+        })
+      ])
+    ]),
     apis: {
       setGroups(toolbar: AlloyComponent, groups: AlloySpec[]) {
         doSetGroups(toolbar, groups);
@@ -100,7 +111,11 @@ const factory: CompositeSketchFactory<SplitSlidingToolbarDetail, SplitSlidingToo
   };
 };
 
-const SplitSlidingToolbar: SplitSlidingToolbarSketcher = Sketcher.composite<SplitSlidingToolbarSpec, SplitSlidingToolbarDetail, SplitSlidingToolbarApis>({
+const SplitSlidingToolbar: SplitSlidingToolbarSketcher = Sketcher.composite<
+  SplitSlidingToolbarSpec,
+  SplitSlidingToolbarDetail,
+  SplitSlidingToolbarApis
+>({
   name: 'SplitSlidingToolbar',
   configFields: SplitSlidingToolbarSchema.schema(),
   partFields: SplitSlidingToolbarSchema.parts(),

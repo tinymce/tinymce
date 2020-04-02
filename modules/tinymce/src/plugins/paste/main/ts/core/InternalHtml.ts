@@ -22,9 +22,4 @@ const isMarked = function (html: string) {
 
 const internalHtmlMime = () => internalMimeType;
 
-export {
-  mark,
-  unmark,
-  isMarked,
-  internalHtmlMime
-};
+export { mark, unmark, isMarked, internalHtmlMime };

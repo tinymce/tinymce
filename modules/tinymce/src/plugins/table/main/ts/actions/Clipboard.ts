@@ -19,37 +19,59 @@ import { TableActions } from './TableActions';
 
 const extractSelected = function (cells) {
   // Assume for now that we only have one table (also handles the case where we multi select outside a table)
-  return TableLookup.table(cells[0]).map(Replication.deep).map(function (replica) {
-    return [ CopySelected.extract(replica, Ephemera.attributeSelector) ];
-  });
+  return TableLookup.table(cells[0])
+    .map(Replication.deep)
+    .map(function (replica) {
+      return [CopySelected.extract(replica, Ephemera.attributeSelector)];
+    });
 };
 
-const serializeElements = (editor: Editor, elements: Element[]): string => Arr.map(elements, (elm) => editor.selection.serializer.serialize(elm.dom(), {})).join('');
+const serializeElements = (editor: Editor, elements: Element[]): string =>
+  Arr.map(elements, (elm) =>
+    editor.selection.serializer.serialize(elm.dom(), {})
+  ).join('');
 
-const getTextContent = (elements: Element[]): string => Arr.map(elements, (element) => element.dom().innerText).join('');
+const getTextContent = (elements: Element[]): string =>
+  Arr.map(elements, (element) => element.dom().innerText).join('');
 
-const registerEvents = function (editor: Editor, selections: Selections, actions: TableActions, cellSelection) {
+const registerEvents = function (
+  editor: Editor,
+  selections: Selections,
+  actions: TableActions,
+  cellSelection
+) {
   editor.on('BeforeGetContent', function (e) {
     const multiCellContext = function (cells) {
       e.preventDefault();
       extractSelected(cells).each(function (elements) {
-        e.content = e.format === 'text' ? getTextContent(elements) : serializeElements(editor, elements);
+        e.content =
+          e.format === 'text'
+            ? getTextContent(elements)
+            : serializeElements(editor, elements);
       });
     };
 
     if (e.selection === true) {
-      SelectionTypes.cata(selections.get(), Fun.noop, multiCellContext, Fun.noop);
+      SelectionTypes.cata(
+        selections.get(),
+        Fun.noop,
+        multiCellContext,
+        Fun.noop
+      );
     }
   });
 
   editor.on('BeforeSetContent', function (e) {
     if (e.selection === true && e.paste === true) {
-      const cellOpt = Option.from(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
+      const cellOpt = Option.from(
+        editor.dom.getParent(editor.selection.getStart(), 'th,td')
+      );
       cellOpt.each(function (domCell) {
         const cell = Element.fromDom(domCell);
         TableLookup.table(cell).each((table) => {
-
-          const elements = Arr.filter(Elements.fromHtml(e.content), function (content) {
+          const elements = Arr.filter(Elements.fromHtml(e.content), function (
+            content
+          ) {
             return Node.name(content) !== 'meta';
           });
 
@@ -71,6 +93,4 @@ const registerEvents = function (editor: Editor, selections: Selections, actions
   });
 };
 
-export {
-  registerEvents
-};
+export { registerEvents };

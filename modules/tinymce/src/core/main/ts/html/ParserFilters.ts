@@ -17,7 +17,10 @@ import Env from '../api/Env';
 
 const isInternalImageSource = (src: string) => src === Env.transparentSrc;
 
-const registerBase64ImageFilter = (parser: DomParser, settings: DomParserSettings) => {
+const registerBase64ImageFilter = (
+  parser: DomParser,
+  settings: DomParserSettings
+) => {
   const { blob_cache: blobCache } = settings;
   const processImage = (img: Node): void => {
     const inputSrc = img.attr('src');
@@ -26,13 +29,13 @@ const registerBase64ImageFilter = (parser: DomParser, settings: DomParserSetting
       return;
     }
 
-    parseDataUri(inputSrc).map(({ type, data }) => Conversions.buildBlob(type, data).each(
-      (blob) => {
+    parseDataUri(inputSrc).map(({ type, data }) =>
+      Conversions.buildBlob(type, data).each((blob) => {
         const blobInfo = blobCache.create(uniqueId(), blob, data);
         blobCache.add(blobInfo);
         img.attr('src', blobInfo.blobUri());
-      }
-    ));
+      })
+    );
   };
 
   if (blobCache) {
@@ -73,7 +76,10 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
             prevName = prev.name;
 
             // Ignore bookmarks
-            if (prevName !== 'span' || prev.attr('data-mce-type') !== 'bookmark') {
+            if (
+              prevName !== 'span' ||
+              prev.attr('data-mce-type') !== 'bookmark'
+            ) {
               // Found a non BR element
               if (prevName !== 'br') {
                 break;
@@ -110,7 +116,11 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
           // Replaces BR elements inside inline elements like <p><b><i><br></i></b></p>
           // so they become <p><b><i>&nbsp;</i></b></p>
           lastParent = node;
-          while (parent && parent.firstChild === lastParent && parent.lastChild === lastParent) {
+          while (
+            parent &&
+            parent.firstChild === lastParent &&
+            parent.lastChild === lastParent
+          ) {
             lastParent = parent;
 
             if (blockElements[parent.name]) {
@@ -135,7 +145,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
 
     const appendRel = (rel: string) => {
       const parts = rel.split(' ').filter((p) => p.length > 0);
-      return parts.concat([ 'noopener' ]).sort().join(' ');
+      return parts.concat(['noopener']).sort().join(' ');
     };
 
     const addNoOpener = (rel: string) => {
@@ -160,7 +170,11 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
   // Force anchor names closed, unless the setting "allow_html_in_named_anchor" is explicitly included.
   if (!settings.allow_html_in_named_anchor) {
     parser.addAttributeFilter('id,name', (nodes) => {
-      let i = nodes.length, sibling, prevSibling, parent, node;
+      let i = nodes.length,
+        sibling,
+        prevSibling,
+        parent,
+        node;
 
       while (i--) {
         node = nodes[i];
@@ -181,7 +195,9 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
 
   if (settings.fix_list_elements) {
     parser.addNodeFilter('ul,ol', (nodes) => {
-      let i = nodes.length, node, parentNode;
+      let i = nodes.length,
+        node,
+        parentNode;
 
       while (i--) {
         node = nodes[i];
@@ -202,7 +218,12 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
 
   if (settings.validate && schema.getValidClasses()) {
     parser.addAttributeFilter('class', (nodes) => {
-      let i = nodes.length, node, classList, ci, className, classValue;
+      let i = nodes.length,
+        node,
+        classList,
+        ci,
+        className,
+        classValue;
       const validClasses = schema.getValidClasses();
       let validClassesMap, valid;
 
@@ -246,6 +267,4 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
   registerBase64ImageFilter(parser, settings);
 };
 
-export {
-  register
-};
+export { register };

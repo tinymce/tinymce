@@ -35,7 +35,7 @@ const resume = function (cWin) {
   const iBody = Element.fromDom(cWin.document.body);
 
   const inInput = Focus.active().exists(function (elem) {
-    return Arr.contains([ 'input', 'textarea' ], Node.name(elem));
+    return Arr.contains(['input', 'textarea'], Node.name(elem));
   });
 
   const transaction = inInput ? autocompleteHack() : Fun.apply;
@@ -49,6 +49,4 @@ const resume = function (cWin) {
   });
 };
 
-export {
-  resume
-};
+export { resume };

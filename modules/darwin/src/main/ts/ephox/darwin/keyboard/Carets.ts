@@ -35,15 +35,19 @@ const moveBottomTo = function (caret: Carets, bottom: number): Carets {
 
 const moveTopTo = function (caret: Carets, top: number): Carets {
   const height = caret.bottom - caret.top;
-  return ({
+  return {
     left: caret.left,
     top,
     right: caret.right,
     bottom: top + height
-  });
+  };
 };
 
-const translate = function (caret: Carets, xDelta: number, yDelta: number): Carets {
+const translate = function (
+  caret: Carets,
+  xDelta: number,
+  yDelta: number
+): Carets {
   return {
     left: caret.left + xDelta,
     top: caret.top + yDelta,
@@ -61,7 +65,17 @@ const getBottom = function (caret: Carets): number {
 };
 
 const toString = function (caret: Carets) {
-  return '(' + caret.left + ', ' + caret.top + ') -> (' + caret.right + ', ' + caret.bottom + ')';
+  return (
+    '(' +
+    caret.left +
+    ', ' +
+    caret.top +
+    ') -> (' +
+    caret.right +
+    ', ' +
+    caret.bottom +
+    ')'
+  );
 };
 
 export {

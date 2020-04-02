@@ -7,22 +7,33 @@
 
 import { Element, Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Class, Element as SugarElement, Node as SugarNode } from '@ephox/sugar';
+import {
+  Class,
+  Element as SugarElement,
+  Node as SugarNode
+} from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Data from './Data';
 import * as Nodes from './Nodes';
 
-const isWrappedNbsp = (node) => node.nodeName.toLowerCase() === 'span' && node.classList.contains('mce-nbsp-wrap');
+const isWrappedNbsp = (node) =>
+  node.nodeName.toLowerCase() === 'span' &&
+  node.classList.contains('mce-nbsp-wrap');
 
 const show = (editor: Editor, rootElm: Node) => {
-  const nodeList = Nodes.filterDescendants(SugarElement.fromDom(rootElm), Nodes.isMatch);
+  const nodeList = Nodes.filterDescendants(
+    SugarElement.fromDom(rootElm),
+    Nodes.isMatch
+  );
 
   Arr.each(nodeList, (n) => {
     const parent = n.dom().parentNode;
     if (isWrappedNbsp(parent)) {
       Class.add(SugarElement.fromDom(parent), Data.nbspClass);
     } else {
-      const withSpans = Nodes.replaceWithSpans(editor.dom.encode(SugarNode.value(n)));
+      const withSpans = Nodes.replaceWithSpans(
+        editor.dom.encode(SugarNode.value(n))
+      );
 
       const div = editor.dom.create('div', null, withSpans);
       let node: any;
@@ -61,8 +72,4 @@ const toggle = (editor: Editor) => {
   editor.selection.moveToBookmark(bookmark);
 };
 
-export {
-  show,
-  hide,
-  toggle
-};
+export { show, hide, toggle };

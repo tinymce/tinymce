@@ -1,4 +1,9 @@
-import { clearInterval, setInterval, MutationObserver, HTMLElement } from '@ephox/dom-globals';
+import {
+  clearInterval,
+  setInterval,
+  MutationObserver,
+  HTMLElement
+} from '@ephox/dom-globals';
 import { Fun, Throttler } from '@ephox/katamari';
 import Element from '../node/Element';
 import * as Traverse from '../search/Traverse';
@@ -31,15 +36,26 @@ const mutate = function (element: Element<HTMLElement>, f: () => void) {
 
   // childList is super expensive, but required on Safari where the iframe has no width or height immediately.
   // If it becomes a performance issue, we can make childList === isSafari but thus far Sugar has no platform detection so that would be a sad day.
-  observer.observe(Traverse.owner(element).dom(), { attributes: true, subtree: true, childList: true, attributeFilter: [ 'style', 'class' ] });
+  observer.observe(Traverse.owner(element).dom(), {
+    attributes: true,
+    subtree: true,
+    childList: true,
+    attributeFilter: ['style', 'class']
+  });
 
   return unbindMutate;
 };
 
 // IE11 and above, not using numerosity so we can poll on IE10
-const wait = window.MutationObserver !== undefined && window.MutationObserver !== null ? mutate : poll;
+const wait =
+  window.MutationObserver !== undefined && window.MutationObserver !== null
+    ? mutate
+    : poll;
 
-const onShow = function (element: Element<HTMLElement>, f: () => void): () => void {
+const onShow = function (
+  element: Element<HTMLElement>,
+  f: () => void
+): () => void {
   if (Visibility.isVisible(element)) {
     window.requestAnimationFrame(f);
     return Fun.noop;

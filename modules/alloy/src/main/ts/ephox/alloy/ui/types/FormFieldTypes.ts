@@ -4,12 +4,16 @@ import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
-import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import {
+  CompositeSketch,
+  CompositeSketchDetail,
+  CompositeSketchSpec
+} from '../../api/ui/Sketcher';
 
 export interface FormFieldDetail extends CompositeSketchDetail {
   uid: string;
   dom: RawDomSchema;
-  components: AlloySpec[ ];
+  components: AlloySpec[];
   fieldBehaviours: SketchBehaviours;
   prefix: string;
 }
@@ -27,4 +31,6 @@ export interface FormFieldApis {
   getLabel: (container: AlloyComponent) => Option<AlloyComponent>;
 }
 
-export interface FormFieldSketcher extends CompositeSketch<FormFieldSpec>, FormFieldApis { }
+export interface FormFieldSketcher
+  extends CompositeSketch<FormFieldSpec>,
+    FormFieldApis {}

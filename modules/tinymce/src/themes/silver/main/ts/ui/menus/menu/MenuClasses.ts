@@ -24,6 +24,4 @@ const classes = (presets: Types.PresetTypes) => ({
   tieredMenu: 'tox-tiered-menu'
 });
 
-export {
-  classes
-};
+export { classes };

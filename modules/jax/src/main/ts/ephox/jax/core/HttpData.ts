@@ -7,7 +7,12 @@ export interface ResponseTypeMap {
   [DataType.Text]: string;
 }
 
-export type RequestBody = JsonData | BlobData | TextData | FormData | MultipartFormData;
+export type RequestBody =
+  | JsonData
+  | BlobData
+  | TextData
+  | FormData
+  | MultipartFormData;
 export type ResponseBody = Exclude<RequestBody, FormData>;
 export type ResponseBodyDataTypes = Exclude<DataType, DataType.FormData>;
 
@@ -36,8 +41,25 @@ export interface MultipartFormData {
   data: Record<string, string | Blob | File>;
 }
 
-export const jsonData = (data: any): JsonData => ({ type: DataType.JSON, data });
-export const blobData = (data: Blob): BlobData => ({ type: DataType.Blob, data });
-export const textData = (data: string): TextData => ({ type: DataType.Text, data });
-export const formData = (data: Record<string, string>): FormData => ({ type: DataType.FormData, data });
-export const multipartFormData = (data: Record<string, string | Blob | File>): MultipartFormData => ({ type: DataType.MultipartFormData, data });
+export const jsonData = (data: any): JsonData => ({
+  type: DataType.JSON,
+  data
+});
+export const blobData = (data: Blob): BlobData => ({
+  type: DataType.Blob,
+  data
+});
+export const textData = (data: string): TextData => ({
+  type: DataType.Text,
+  data
+});
+export const formData = (data: Record<string, string>): FormData => ({
+  type: DataType.FormData,
+  data
+});
+export const multipartFormData = (
+  data: Record<string, string | Blob | File>
+): MultipartFormData => ({
+  type: DataType.MultipartFormData,
+  data
+});

@@ -5,7 +5,22 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Dropdown, Focusing, Keying, NativeEvents, RawDomSchema, Replacing, Sketcher, SystemEvents, Tabstopping, UiSketcher, } from '@ephox/alloy';
+import {
+  AddEventsBehaviour,
+  AlloyComponent,
+  AlloyEvents,
+  Behaviour,
+  Dropdown,
+  Focusing,
+  Keying,
+  NativeEvents,
+  RawDomSchema,
+  Replacing,
+  Sketcher,
+  SystemEvents,
+  Tabstopping,
+  UiSketcher
+} from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Fun, Option } from '@ephox/katamari';
@@ -37,14 +52,19 @@ export interface SilverMenubarApis {
   setMenus: (comp: AlloyComponent, groups) => void;
 }
 
-export interface SilverMenubarSketch extends Sketcher.SingleSketch<SilverMenubarSpec>, SilverMenubarApis { }
+export interface SilverMenubarSketch
+  extends Sketcher.SingleSketch<SilverMenubarSpec>,
+    SilverMenubarApis {}
 
 export interface MenubarItemSpec {
   text: TranslatedString;
   getItems: () => SingleMenuItemApi[];
 }
 
-const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubarSpec> = function (detail, spec) {
+const factory: UiSketcher.SingleSketchFactory<
+  SilverMenubarDetail,
+  SilverMenubarSpec
+> = function (detail, spec) {
   const setMenus = (comp: AlloyComponent, menus: MenubarItemSpec[]) => {
     const newMenus = Arr.map(menus, (m) => {
       const buttonSpec = {
@@ -56,9 +76,12 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
       };
 
       // Convert to an internal bridge spec
-      const internal = Toolbar.createMenuButton(buttonSpec).mapError((errInfo) => ValueSchema.formatError(errInfo)).getOrDie();
+      const internal = Toolbar.createMenuButton(buttonSpec)
+        .mapError((errInfo) => ValueSchema.formatError(errInfo))
+        .getOrDie();
 
-      return renderMenuButton(internal,
+      return renderMenuButton(
+        internal,
         MenuButtonClasses.Button,
         spec.backstage,
         // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
@@ -77,10 +100,10 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
   return {
     uid: detail.uid,
     dom: detail.dom,
-    components: [ ],
+    components: [],
 
     behaviours: Behaviour.derive([
-      Replacing.config({ }),
+      Replacing.config({}),
       AddEventsBehaviour.config('menubar-events', [
         AlloyEvents.runOnAttached(function (component) {
           detail.onSetup(component);
@@ -88,32 +111,53 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
 
         AlloyEvents.run(NativeEvents.mouseover(), (comp, se) => {
           // TODO: Use constants
-          SelectorFind.descendant(comp.element(), '.' + MenuButtonClasses.Active).each((activeButton) => {
-            SelectorFind.closest(se.event().target(), '.' + MenuButtonClasses.Button).each((hoveredButton) => {
-              if (! Compare.eq(activeButton, hoveredButton)) {
+          SelectorFind.descendant(
+            comp.element(),
+            '.' + MenuButtonClasses.Active
+          ).each((activeButton) => {
+            SelectorFind.closest(
+              se.event().target(),
+              '.' + MenuButtonClasses.Button
+            ).each((hoveredButton) => {
+              if (!Compare.eq(activeButton, hoveredButton)) {
                 // Now, find the components, and expand the hovered one, and close the active one
-                comp.getSystem().getByDom(activeButton).each((activeComp) => {
-                  comp.getSystem().getByDom(hoveredButton).each((hoveredComp) => {
-                    Dropdown.expand(hoveredComp);
-                    Dropdown.close(activeComp);
-                    Focusing.focus(hoveredComp);
+                comp
+                  .getSystem()
+                  .getByDom(activeButton)
+                  .each((activeComp) => {
+                    comp
+                      .getSystem()
+                      .getByDom(hoveredButton)
+                      .each((hoveredComp) => {
+                        Dropdown.expand(hoveredComp);
+                        Dropdown.close(activeComp);
+                        Focusing.focus(hoveredComp);
+                      });
                   });
-                });
               }
             });
           });
         }),
 
-        AlloyEvents.run<SystemEvents.AlloyFocusShiftedEvent>(SystemEvents.focusShifted(), (comp, se) => {
-          se.event().prevFocus().bind((prev) => comp.getSystem().getByDom(prev).toOption()).each((prev) => {
-            se.event().newFocus().bind((nu) => comp.getSystem().getByDom(nu).toOption()).each((nu) => {
-              if (Dropdown.isOpen(prev)) {
-                Dropdown.expand(nu);
-                Dropdown.close(prev);
-              }
-            });
-          });
-        })
+        AlloyEvents.run<SystemEvents.AlloyFocusShiftedEvent>(
+          SystemEvents.focusShifted(),
+          (comp, se) => {
+            se.event()
+              .prevFocus()
+              .bind((prev) => comp.getSystem().getByDom(prev).toOption())
+              .each((prev) => {
+                se.event()
+                  .newFocus()
+                  .bind((nu) => comp.getSystem().getByDom(nu).toOption())
+                  .each((nu) => {
+                    if (Dropdown.isOpen(prev)) {
+                      Dropdown.expand(nu);
+                      Dropdown.close(prev);
+                    }
+                  });
+              });
+          }
+        )
       ]),
       Keying.config({
         mode: 'flow',
@@ -123,7 +167,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
           return Option.some(true);
         }
       }),
-      Tabstopping.config({ })
+      Tabstopping.config({})
     ]),
     apis,
     domModification: {
@@ -134,7 +178,11 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
   };
 };
 
-export default Sketcher.single<SilverMenubarSpec, SilverMenubarDetail, SilverMenubarApis>({
+export default Sketcher.single<
+  SilverMenubarSpec,
+  SilverMenubarDetail,
+  SilverMenubarApis
+>({
   factory,
   name: 'silver.Menubar',
   configFields: [

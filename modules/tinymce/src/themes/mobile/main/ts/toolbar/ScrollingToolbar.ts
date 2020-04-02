@@ -26,25 +26,35 @@ import * as UiDomFactory from '../util/UiDomFactory';
 
 export default function () {
   const makeGroup = function (gSpec) {
-    const scrollClass = gSpec.scrollable === true ? '${prefix}-toolbar-scrollable-group' : '';
+    const scrollClass =
+      gSpec.scrollable === true ? '${prefix}-toolbar-scrollable-group' : '';
     return {
-      dom: UiDomFactory.dom('<div aria-label="' + gSpec.label + '" class="${prefix}-toolbar-group ' + scrollClass + '"></div>'),
+      dom: UiDomFactory.dom(
+        '<div aria-label="' +
+          gSpec.label +
+          '" class="${prefix}-toolbar-group ' +
+          scrollClass +
+          '"></div>'
+      ),
 
       tgroupBehaviours: Behaviour.derive([
-        AddEventsBehaviour.config('adhoc-scrollable-toolbar', gSpec.scrollable === true ? [
-          AlloyEvents.runOnInit(function (component, _simulatedEvent) {
-            Css.set(component.element(), 'overflow-x', 'auto');
-            Scrollables.markAsHorizontal(component.element());
-            Scrollable.register(component.element());
-          })
-        ] : [ ])
+        AddEventsBehaviour.config(
+          'adhoc-scrollable-toolbar',
+          gSpec.scrollable === true
+            ? [
+                AlloyEvents.runOnInit(function (component, _simulatedEvent) {
+                  Css.set(component.element(), 'overflow-x', 'auto');
+                  Scrollables.markAsHorizontal(component.element());
+                  Scrollable.register(component.element());
+                })
+              ]
+            : []
+        )
       ]),
 
       components: [
         Container.sketch({
-          components: [
-            ToolbarGroup.parts().items({ })
-          ]
+          components: [ToolbarGroup.parts().items({})]
         })
       ],
       markers: {
@@ -61,37 +71,31 @@ export default function () {
   };
 
   const toolbar = GuiFactory.build(
-    Toolbar.sketch(
-      {
-        dom: UiDomFactory.dom('<div class="${prefix}-toolbar"></div>'),
-        components: [
-          Toolbar.parts().groups({ })
-        ],
-        toolbarBehaviours: Behaviour.derive([
-          Toggling.config({
-            toggleClass: Styles.resolve('context-toolbar'),
-            toggleOnExecute: false,
-            aria: {
-              mode: 'none'
-            }
-          }),
-          Keying.config({
-            mode: 'cyclic'
-          })
-        ]),
-        shell: true
-      }
-    )
+    Toolbar.sketch({
+      dom: UiDomFactory.dom('<div class="${prefix}-toolbar"></div>'),
+      components: [Toolbar.parts().groups({})],
+      toolbarBehaviours: Behaviour.derive([
+        Toggling.config({
+          toggleClass: Styles.resolve('context-toolbar'),
+          toggleOnExecute: false,
+          aria: {
+            mode: 'none'
+          }
+        }),
+        Keying.config({
+          mode: 'cyclic'
+        })
+      ]),
+      shell: true
+    })
   );
 
   const wrapper = GuiFactory.build(
     Container.sketch({
       dom: {
-        classes: [ Styles.resolve('toolstrip') ]
+        classes: [Styles.resolve('toolstrip')]
       },
-      components: [
-        GuiFactory.premade(toolbar)
-      ],
+      components: [GuiFactory.premade(toolbar)],
       containerBehaviours: Behaviour.derive([
         Toggling.config({
           toggleClass: Styles.resolve('android-selection-context-toolbar'),
@@ -106,7 +110,7 @@ export default function () {
     Toggling.off(toolbar);
   };
 
-  const initGroups = Cell([ ]);
+  const initGroups = Cell([]);
 
   const setGroups = function (gs) {
     initGroups.set(gs);

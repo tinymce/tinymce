@@ -11,12 +11,20 @@ const imgSrc = '../img/dogleft.jpg';
 
 $(
   '<textarea class="tinymce">' +
-  '<p><img src="' + imgSrc + '" width="160" height="100">' +
-  '<p><img src="' + imgSrc + '" style="width: 160px; height: 100px">' +
-  '<p><img src="' + imgSrc + '" style="width: 20%">' +
-  '<p><img src="' + imgSrc + '">' +
-  '<p><img src="http://moxiecode.cachefly.net/tinymce/v9/images/logo.png">' +
-  '</textarea>',
+    '<p><img src="' +
+    imgSrc +
+    '" width="160" height="100">' +
+    '<p><img src="' +
+    imgSrc +
+    '" style="width: 160px; height: 100px">' +
+    '<p><img src="' +
+    imgSrc +
+    '" style="width: 20%">' +
+    '<p><img src="' +
+    imgSrc +
+    '">' +
+    '<p><img src="http://moxiecode.cachefly.net/tinymce/v9/images/logo.png">' +
+    '</textarea>'
 ).appendTo('#ephox-ui');
 
 tinymce.init({
@@ -43,9 +51,16 @@ tinymce.init({
   // imagetools_cors_hosts: ['localhost', 'moxiecode.cachefly.net'],
   // imagetools_credentials_hosts: ['localhost'],
   // rtl_ui: true,
-  toolbar: 'editimage undo redo | styleselect | alignleft aligncenter alignright alignjustify | link image | media | emoticons',
+  toolbar:
+    'editimage undo redo | styleselect | alignleft aligncenter alignright alignjustify | link image | media | emoticons',
   images_upload_handler(data, success, failure, progress) {
-    console.log('blob upload [started]', 'id:', data.id(), 'filename:', data.filename());
+    console.log(
+      'blob upload [started]',
+      'id:',
+      data.id(),
+      'filename:',
+      data.filename()
+    );
     progress(0);
 
     Delay.setTimeout(function () {

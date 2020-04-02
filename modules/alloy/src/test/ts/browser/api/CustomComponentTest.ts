@@ -13,130 +13,150 @@ import * as DomModification from 'ephox/alloy/dom/DomModification';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 UnitTest.asynctest('CustomComponentTest', (success, failure) => {
-
   type BehaviourA = Behaviour.AlloyBehaviour<any, any> & { behaveA: any };
   const bA = Cell<BehaviourA | null>(null);
   const bB = Cell<Behaviour.AlloyBehaviour<any, any> | null>(null);
 
-  GuiSetup.setup((store, _doc, _body) => {
-    const behaviourA = Behaviour.create({
-      fields: [ ],
-      name: 'behaviourA',
-      active: {
-        exhibit(_base, _info) {
-          return DomModification.nu({
-            classes: [ 'behaviour-a-exhibit' ]
-          });
+  GuiSetup.setup(
+    (store, _doc, _body) => {
+      const behaviourA = Behaviour.create({
+        fields: [],
+        name: 'behaviourA',
+        active: {
+          exhibit(_base, _info) {
+            return DomModification.nu({
+              classes: ['behaviour-a-exhibit']
+            });
+          },
+          events: Fun.constant(
+            AlloyEvents.derive([
+              AlloyEvents.run(
+                'alloy.custom.test.event',
+                store.adder('behaviour.a.event')
+              )
+            ])
+          )
         },
-        events: Fun.constant(
-          AlloyEvents.derive([
-            AlloyEvents.run('alloy.custom.test.event', store.adder('behaviour.a.event'))
-          ])
-        )
-      },
-      apis: {
-        behaveA(_comp) {
-          store.adder('behaveA')();
+        apis: {
+          behaveA(_comp) {
+            store.adder('behaveA')();
+          }
         }
-      }
-    });
+      });
 
-    bA.set(behaviourA);
+      bA.set(behaviourA);
 
-    const behaviourB = Behaviour.create({
-      fields: [
-        FieldSchema.strict('attr')
-      ],
-      name: 'behaviourB',
-      active: {
-        exhibit(_base, info: { attr: string}) {
-          const extra = {
-            attributes: {
-              'behaviour-b-exhibit': info.attr
+      const behaviourB = Behaviour.create({
+        fields: [FieldSchema.strict('attr')],
+        name: 'behaviourB',
+        active: {
+          exhibit(_base, info: { attr: string }) {
+            const extra = {
+              attributes: {
+                'behaviour-b-exhibit': info.attr
+              }
+            };
+            return DomModification.nu(extra);
+          },
+
+          events: Fun.constant(
+            AlloyEvents.derive([
+              AlloyEvents.run(
+                'alloy.custom.test.event',
+                store.adder('behaviour.b.event')
+              )
+            ])
+          )
+        }
+      });
+
+      bB.set(behaviourB);
+
+      return GuiFactory.build(
+        Container.sketch({
+          dom: {
+            tag: 'div',
+            classes: ['custom-component-test']
+          },
+          uid: 'custom-uid',
+          containerBehaviours: Behaviour.derive([
+            behaviourA.config({}),
+            behaviourB.config({
+              attr: 'exhibition'
+            })
+          ]),
+
+          domModification: {
+            classes: ['base-dom-modification']
+          },
+
+          eventOrder: {
+            'alloy.custom.test.event': ['behaviourA', 'behaviourB']
+          },
+          components: [Container.sketch({ uid: 'custom-uid-2' })]
+        })
+      );
+    },
+    (_doc, _body, _gui, component, store) => [
+      Assertions.sAssertStructure(
+        'Checking initial DOM modification',
+        ApproxStructure.build((s, str, arr) =>
+          s.element('div', {
+            classes: [
+              arr.has('behaviour-a-exhibit'),
+              arr.has('base-dom-modification')
+            ],
+            attrs: {
+              'behaviour-b-exhibit': str.is('exhibition'),
+              // This should no longer appear
+              'data-alloy-id': str.none()
             }
-          };
-          return DomModification.nu(extra);
-        },
-
-        events: Fun.constant(
-          AlloyEvents.derive([
-            AlloyEvents.run('alloy.custom.test.event', store.adder('behaviour.b.event'))
-          ])
-        )
-      }
-    });
-
-    bB.set(behaviourB);
-
-    return GuiFactory.build(
-      Container.sketch({
-        dom: {
-          tag: 'div',
-          classes: [ 'custom-component-test' ]
-        },
-        uid: 'custom-uid',
-        containerBehaviours: Behaviour.derive([
-          behaviourA.config({ }),
-          behaviourB.config({
-            attr: 'exhibition'
           })
-        ]),
+        ),
+        component.element()
+      ),
+      Step.sync(() => {
+        Assertions.assertEq(
+          'Tagger should read custom-uid',
+          'custom-uid',
+          Tagger.readOrDie(component.element())
+        );
+      }),
 
-        domModification: {
-          classes: [ 'base-dom-modification' ]
-        },
+      store.sAssertEq('Nothing in store yet', []),
 
-        eventOrder: {
-          'alloy.custom.test.event': [ 'behaviourA', 'behaviourB' ]
-        },
-        components: [
-          Container.sketch({ uid: 'custom-uid-2' })
-        ]
-      })
-    );
+      store.sClear,
 
-  }, (_doc, _body, _gui, component, store) => [
-    Assertions.sAssertStructure(
-      'Checking initial DOM modification',
-      ApproxStructure.build((s, str, arr) => s.element('div', {
-        classes: [ arr.has('behaviour-a-exhibit'), arr.has('base-dom-modification') ],
-        attrs: {
-          'behaviour-b-exhibit': str.is('exhibition'),
-          // This should no longer appear
-          'data-alloy-id': str.none()
-        }
-      })),
-      component.element()
-    ),
-    Step.sync(() => {
-      Assertions.assertEq('Tagger should read custom-uid', 'custom-uid', Tagger.readOrDie(component.element()));
-    }),
+      Step.sync(() => {
+        AlloyTriggers.emitWith(component, 'alloy.custom.test.event', {
+          message: 'event.data'
+        });
+      }),
 
-    store.sAssertEq('Nothing in store yet', [ ]),
+      store.sAssertEq(
+        'Should now have a behaviour.a and behaviour.b event log with a before b',
+        ['behaviour.a.event', 'behaviour.b.event']
+      ),
 
-    store.sClear,
-
-    Step.sync(() => {
-      AlloyTriggers.emitWith(component, 'alloy.custom.test.event', { message: 'event.data' });
-    }),
-
-    store.sAssertEq('Should now have a behaviour.a and behaviour.b event log with a before b', [
-      'behaviour.a.event',
-      'behaviour.b.event'
-    ]),
-
-    Step.sync(() => {
+      Step.sync(() => {
         bA.get()?.behaveA(component);
-    }),
+      }),
 
-    store.sAssertEq('Should now have an Api log', [
-      'behaviour.a.event',
-      'behaviour.b.event',
-      'behaveA'
-    ]),
+      store.sAssertEq('Should now have an Api log', [
+        'behaviour.a.event',
+        'behaviour.b.event',
+        'behaveA'
+      ]),
 
-    Step.sync(() => {
-      Assertions.assertEq('There should be no internal APIs on component', false, Obj.hasNonNullableKey<any, string>(component, 'apis'));
-    })
-  ], success, failure);
+      Step.sync(() => {
+        Assertions.assertEq(
+          'There should be no internal APIs on component',
+          false,
+          Obj.hasNonNullableKey<any, string>(component, 'apis')
+        );
+      })
+    ],
+    success,
+    failure
+  );
 });

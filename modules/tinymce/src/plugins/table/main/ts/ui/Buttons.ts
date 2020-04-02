@@ -14,7 +14,10 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets) => {
   editor.ui.registry.addMenuButton('table', {
     tooltip: 'Table',
     icon: 'table',
-    fetch: (callback) => callback('inserttable | cell row column | advtablesort | tableprops deletetable')
+    fetch: (callback) =>
+      callback(
+        'inserttable | cell row column | advtablesort | tableprops deletetable'
+      )
   });
 
   const cmd = (command) => () => editor.execCommand(command);
@@ -137,11 +140,11 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets) => {
     onAction: cmd('mceInsertTable'),
     icon: 'table'
   });
-
 };
 
 const addToolbars = (editor: Editor) => {
-  const isTable = (table: Node) => editor.dom.is(table, 'table') && editor.getBody().contains(table);
+  const isTable = (table: Node) =>
+    editor.dom.is(table, 'table') && editor.getBody().contains(table);
 
   const toolbar = getToolbar(editor);
   if (toolbar.length > 0) {
@@ -154,7 +157,4 @@ const addToolbars = (editor: Editor) => {
   }
 };
 
-export {
-  addButtons,
-  addToolbars
-};
+export { addButtons, addToolbars };

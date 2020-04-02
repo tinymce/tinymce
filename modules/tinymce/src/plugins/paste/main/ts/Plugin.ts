@@ -22,7 +22,9 @@ export default function () {
   PluginManager.add('paste', function (editor) {
     if (DetectProPlugin.hasProPlugin(editor) === false) {
       const draggingInternallyState = Cell(false);
-      const pasteFormat = Cell(Settings.isPasteAsTextEnabled(editor) ? 'text' : 'html');
+      const pasteFormat = Cell(
+        Settings.isPasteAsTextEnabled(editor) ? 'text' : 'html'
+      );
       const clipboard = Clipboard(editor, pasteFormat);
       const quirks = Quirks.setup(editor);
 

@@ -11,12 +11,13 @@ const setup = function (editor: Editor) {
   editor.on('ResolveName', function (e) {
     let name;
 
-    if (e.target.nodeType === 1 && (name = e.target.getAttribute('data-mce-object'))) {
+    if (
+      e.target.nodeType === 1 &&
+      (name = e.target.getAttribute('data-mce-object'))
+    ) {
       e.name = name;
     }
   });
 };
 
-export {
-  setup
-};
+export { setup };

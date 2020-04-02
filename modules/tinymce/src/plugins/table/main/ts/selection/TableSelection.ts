@@ -9,13 +9,18 @@ import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
-const getSelectionStartFromSelector = (selector: string) => (editor: Editor) => Option.from(editor.dom.getParent(editor.selection.getStart(), selector)).map(Element.fromDom);
+const getSelectionStartFromSelector = (selector: string) => (editor: Editor) =>
+  Option.from(editor.dom.getParent(editor.selection.getStart(), selector)).map(
+    Element.fromDom
+  );
 
 const getSelectionStartCaption = getSelectionStartFromSelector('caption');
 
 const getSelectionStartCell = getSelectionStartFromSelector('th,td');
 
-const getSelectionStartCellOrCaption = getSelectionStartFromSelector('th,td,caption');
+const getSelectionStartCellOrCaption = getSelectionStartFromSelector(
+  'th,td,caption'
+);
 
 export {
   getSelectionStartCaption,

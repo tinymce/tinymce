@@ -10,9 +10,13 @@ const byId = function (item: Gene, id: string): Option<Gene> {
   if (item.id !== undefined && item.id === id) {
     return Option.some(item);
   } else {
-    return Arr.foldl(item.children || [], function (b, a) {
-      return byId(a, id).or(b);
-    }, Option.none<Gene>());
+    return Arr.foldl(
+      item.children || [],
+      function (b, a) {
+        return byId(a, id).or(b);
+      },
+      Option.none<Gene>()
+    );
   }
 };
 
@@ -25,9 +29,13 @@ const byItem = function (item: Gene, target: Gene): Option<Gene> {
   } else if (sameId && itemNu && targetNu && item.random === target.random) {
     return Option.some(item);
   } else {
-    return Arr.foldl(item.children || [], function (b, a) {
-      return byItem(a, target).or(b);
-    }, Option.none());
+    return Arr.foldl(
+      item.children || [],
+      function (b, a) {
+        return byItem(a, target).or(b);
+      },
+      Option.none()
+    );
   }
 };
 
@@ -37,8 +45,4 @@ const indexIn = function (parent: Gene, item: Gene) {
   });
 };
 
-export {
-  byId,
-  byItem,
-  indexIn
-};
+export { byId, byItem, indexIn };

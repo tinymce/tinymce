@@ -29,12 +29,18 @@ const isPaddingNode = function (node) {
 
 const isPaddedEmptyBlock = function (schema, node) {
   const blockElements = schema.getBlockElements();
-  return blockElements[node.name] && hasOnlyOneChild(node) && isPaddingNode(node.firstChild);
+  return (
+    blockElements[node.name] &&
+    hasOnlyOneChild(node) &&
+    isPaddingNode(node.firstChild)
+  );
 };
 
 const isEmptyFragmentElement = function (schema, node) {
   const nonEmptyElements = schema.getNonEmptyElements();
-  return node && (node.isEmpty(nonEmptyElements) || isPaddedEmptyBlock(schema, node));
+  return (
+    node && (node.isEmpty(nonEmptyElements) || isPaddedEmptyBlock(schema, node))
+  );
 };
 
 const isListFragment = function (schema, fragment) {
@@ -97,7 +103,12 @@ const isPadding = function (node) {
 };
 
 const isListItemPadded = function (node) {
-  return node && node.firstChild && node.firstChild === node.lastChild && isPadding(node.firstChild);
+  return (
+    node &&
+    node.firstChild &&
+    node.firstChild === node.lastChild &&
+    isPadding(node.firstChild)
+  );
 };
 
 const isEmptyOrPadded = function (elm) {
@@ -105,7 +116,9 @@ const isEmptyOrPadded = function (elm) {
 };
 
 const trimListItems = function (elms) {
-  return elms.length > 0 && isEmptyOrPadded(elms[elms.length - 1]) ? elms.slice(0, -1) : elms;
+  return elms.length > 0 && isEmptyOrPadded(elms[elms.length - 1])
+    ? elms.slice(0, -1)
+    : elms;
 };
 
 const getParentLi = function (dom, node) {
@@ -124,10 +137,7 @@ const getSplit = function (parentNode, rng) {
   beforeRng.setStartBefore(parentNode);
   afterRng.setEndAfter(parentNode);
 
-  return [
-    beforeRng.cloneContents(),
-    afterRng.cloneContents()
-  ];
+  return [beforeRng.cloneContents(), afterRng.cloneContents()];
 };
 
 const findFirstIn = function (node, rootNode) {
@@ -179,13 +189,17 @@ const insertAtCaret = function (serializer, dom, rng, fragment): Range {
   const domFragment = toDomFragment(dom, serializer, fragment);
   const liTarget = getParentLi(dom, rng.startContainer);
   const liElms = trimListItems(listItems(domFragment.firstChild));
-  const BEGINNING = 1, END = 2;
+  const BEGINNING = 1,
+    END = 2;
   const rootNode = dom.getRoot();
 
   const isAt = function (location) {
     const caretPos = CaretPosition.fromRangeStart(rng);
     const caretWalker = CaretWalker(dom.getRoot());
-    const newPos = location === BEGINNING ? caretWalker.prev(caretPos) : caretWalker.next(caretPos);
+    const newPos =
+      location === BEGINNING
+        ? caretWalker.prev(caretPos)
+        : caretWalker.next(caretPos);
 
     return newPos ? getParentLi(dom, newPos.getNode()) !== liTarget : true;
   };

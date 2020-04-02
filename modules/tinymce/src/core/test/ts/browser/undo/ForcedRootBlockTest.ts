@@ -6,7 +6,10 @@ import * as Levels from 'tinymce/core/undo/Levels';
 import { UndoLevelType } from 'tinymce/core/undo/UndoManagerTypes';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.undo.ForcedRootBlockTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.undo.ForcedRootBlockTest', function (
+  success,
+  failure
+) {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
@@ -24,7 +27,8 @@ UnitTest.asynctest('browser.tinymce.core.undo.ForcedRootBlockTest', function (su
   });
 
   suite.test('createFromEditor forced_root_block: false', function (editor) {
-    editor.getBody().innerHTML = '<iframe src="about:blank"></iframe> <strong>a</strong> <span>b</span>';
+    editor.getBody().innerHTML =
+      '<iframe src="about:blank"></iframe> <strong>a</strong> <span>b</span>';
 
     LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
       beforeBookmark: null,
@@ -41,14 +45,19 @@ UnitTest.asynctest('browser.tinymce.core.undo.ForcedRootBlockTest', function (su
     });
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
-    Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
-  }, {
-    selector: 'textarea',
-    add_unload_trigger: false,
-    disable_nodechange: true,
-    entities: 'raw',
-    indent: false,
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  TinyLoader.setupLight(
+    function (editor, onSuccess, onFailure) {
+      Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
+    },
+    {
+      selector: 'textarea',
+      add_unload_trigger: false,
+      disable_nodechange: true,
+      entities: 'raw',
+      indent: false,
+      base_url: '/project/tinymce/js/tinymce'
+    },
+    success,
+    failure
+  );
 });

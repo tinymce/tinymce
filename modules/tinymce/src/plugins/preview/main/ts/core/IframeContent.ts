@@ -21,9 +21,16 @@ const getPreviewHtml = function (editor: Editor) {
     headHtml += '<style type="text/css">' + contentStyle + '</style>';
   }
 
-  const cors = Settings.shouldUseContentCssCors(editor) ? ' crossorigin="anonymous"' : '';
+  const cors = Settings.shouldUseContentCssCors(editor)
+    ? ' crossorigin="anonymous"'
+    : '';
   Tools.each(editor.contentCSS, function (url) {
-    headHtml += '<link type="text/css" rel="stylesheet" href="' + encode(editor.documentBaseURI.toAbsolute(url)) + '"' + cors + '>';
+    headHtml +=
+      '<link type="text/css" rel="stylesheet" href="' +
+      encode(editor.documentBaseURI.toAbsolute(url)) +
+      '"' +
+      cors +
+      '>';
   });
 
   let bodyId = editor.settings.body_id || 'tinymce';
@@ -40,37 +47,41 @@ const getPreviewHtml = function (editor: Editor) {
 
   const isMetaKeyPressed = Env.mac ? 'e.metaKey' : 'e.ctrlKey && !e.altKey';
 
-  const preventClicksOnLinksScript = (
+  const preventClicksOnLinksScript =
     '<script>' +
     'document.addEventListener && document.addEventListener("click", function(e) {' +
     'for (var elm = e.target; elm; elm = elm.parentNode) {' +
-    'if (elm.nodeName === "A" && !(' + isMetaKeyPressed + ')) {' +
+    'if (elm.nodeName === "A" && !(' +
+    isMetaKeyPressed +
+    ')) {' +
     'e.preventDefault();' +
     '}' +
     '}' +
     '}, false);' +
-    '</script> '
-  );
+    '</script> ';
 
   const directionality = editor.getBody().dir;
   const dirAttr = directionality ? ' dir="' + encode(directionality) + '"' : '';
 
-  const previewHtml = (
+  const previewHtml =
     '<!DOCTYPE html>' +
     '<html>' +
     '<head>' +
     headHtml +
     '</head>' +
-    '<body id="' + encode(bodyId) + '" class="mce-content-body ' + encode(bodyClass) + '"' + dirAttr + '>' +
+    '<body id="' +
+    encode(bodyId) +
+    '" class="mce-content-body ' +
+    encode(bodyClass) +
+    '"' +
+    dirAttr +
+    '>' +
     editor.getContent() +
     preventClicksOnLinksScript +
     '</body>' +
-    '</html>'
-  );
+    '</html>';
 
   return previewHtml;
 };
 
-export {
-  getPreviewHtml,
-};
+export { getPreviewHtml };

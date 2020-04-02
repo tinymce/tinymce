@@ -54,6 +54,4 @@ const splitList = function (editor, ul, li) {
   }
 };
 
-export {
-  splitList
-};
+export { splitList };

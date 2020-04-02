@@ -28,10 +28,20 @@ import { Bookmark } from '../bookmark/BookmarkTypes';
 
 // Added for compression purposes
 const each = Tools.each;
-const map = Tools.map, inArray = Tools.inArray;
+const map = Tools.map,
+  inArray = Tools.inArray;
 
-export type EditorCommandCallback = (ui: boolean, value: any, args: any) => void;
-export type EditorCommandsCallback = (command: string, ui: boolean, value: any, args: any) => void;
+export type EditorCommandCallback = (
+  ui: boolean,
+  value: any,
+  args: any
+) => void;
+export type EditorCommandsCallback = (
+  command: string,
+  ui: boolean,
+  value: any,
+  args: any
+) => void;
 
 export interface EditorCommandsConstructor {
   readonly prototype: EditorCommands;
@@ -42,7 +52,7 @@ export interface EditorCommandsConstructor {
 class EditorCommands {
   private readonly editor: Editor;
   private selectionBookmark: Bookmark;
-  private commands = { state: {}, exec: {}, value: {}};
+  private commands = { state: {}, exec: {}, value: {} };
 
   public constructor(editor: Editor) {
     this.editor = editor;
@@ -60,15 +70,27 @@ class EditorCommands {
    * @param {Object} args Optional extra arguments to the execCommand.
    * @return {Boolean} true/false if the command was found or not.
    */
-  public execCommand(command: string, ui?: boolean, value?: any, args?: any): boolean {
-    let func, customCommand, state = false;
+  public execCommand(
+    command: string,
+    ui?: boolean,
+    value?: any,
+    args?: any
+  ): boolean {
+    let func,
+      customCommand,
+      state = false;
     const self = this;
 
     if (self.editor.removed) {
       return;
     }
 
-    if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint)$/.test(command) && (!args || !args.skip_focus)) {
+    if (
+      !/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint)$/.test(
+        command
+      ) &&
+      (!args || !args.skip_focus)
+    ) {
       self.editor.focus();
     } else {
       SelectionBookmark.restore(self.editor);
@@ -100,7 +122,11 @@ class EditorCommands {
     }
 
     // Theme commands
-    if (self.editor.theme && self.editor.theme.execCommand && self.editor.theme.execCommand(command, ui, value)) {
+    if (
+      self.editor.theme &&
+      self.editor.theme.execCommand &&
+      self.editor.theme.execCommand(command, ui, value)
+    ) {
       self.editor.fire('ExecCommand', { command, ui, value });
       return true;
     }
@@ -183,7 +209,10 @@ class EditorCommands {
    * @param {Object} commandList Name/value collection with commands to add, the names can also be comma separated.
    * @param {String} type Optional type to add, defaults to exec. Can be value or state as well.
    */
-  public addCommands(commandList: Record<string, EditorCommandsCallback>, type?: 'exec' | 'state' | 'value') {
+  public addCommands(
+    commandList: Record<string, EditorCommandsCallback>,
+    type?: 'exec' | 'state' | 'value'
+  ) {
     const self = this;
     type = type || 'exec';
 
@@ -194,9 +223,14 @@ class EditorCommands {
     });
   }
 
-  public addCommand(command: string, callback: EditorCommandCallback, scope?: {}) {
+  public addCommand(
+    command: string,
+    callback: EditorCommandCallback,
+    scope?: {}
+  ) {
     command = command.toLowerCase();
-    this.commands.exec[command] = (command, ui, value, args) => callback.call(scope || this.editor, ui, value, args);
+    this.commands.exec[command] = (command, ui, value, args) =>
+      callback.call(scope || this.editor, ui, value, args);
   }
 
   /**
@@ -223,12 +257,20 @@ class EditorCommands {
     return false;
   }
 
-  public addQueryStateHandler(command: string, callback: () => void, scope?: {}) {
+  public addQueryStateHandler(
+    command: string,
+    callback: () => void,
+    scope?: {}
+  ) {
     command = command.toLowerCase();
     this.commands.state[command] = () => callback.call(scope || this.editor);
   }
 
-  public addQueryValueHandler(command: string, callback: () => void, scope?: {}) {
+  public addQueryValueHandler(
+    command: string,
+    callback: () => void,
+    scope?: {}
+  ) {
     command = command.toLowerCase();
     this.commands.value[command] = () => callback.call(scope || this.editor);
   }
@@ -275,7 +317,7 @@ class EditorCommands {
     // Add execCommand overrides
     this.addCommands({
       // Ignore these, added for compatibility
-      'mceResetDesignMode,mceBeginUndoLevel'() { },
+      'mceResetDesignMode,mceBeginUndoLevel'() {},
 
       // Add undo manager logic
       'mceEndUndoLevel,mceAddUndoLevel'() {
@@ -303,7 +345,7 @@ class EditorCommands {
         if (failed || !doc.queryCommandSupported(command)) {
           let msg = editor.translate(
             `Your browser doesn't support direct access to the clipboard. ` +
-            'Please use the Ctrl+X/C/V keyboard shortcuts instead.'
+              'Please use the Ctrl+X/C/V keyboard shortcuts instead.'
           );
 
           if (Env.mac) {
@@ -329,7 +371,9 @@ class EditorCommands {
       },
 
       // Override justify commands to use the text formatter engine
-      'JustifyLeft,JustifyCenter,JustifyRight,JustifyFull,JustifyNone'(command) {
+      'JustifyLeft,JustifyCenter,JustifyRight,JustifyFull,JustifyNone'(
+        command
+      ) {
         let align = command.substring(7);
 
         if (align === 'full') {
@@ -421,12 +465,16 @@ class EditorCommands {
       'mceSelectNodeDepth'(command, ui, value) {
         let counter = 0;
 
-        editor.dom.getParent(editor.selection.getNode(), function (node) {
-          if (node.nodeType === 1 && counter++ === value) {
-            editor.selection.select(node);
-            return false;
-          }
-        }, editor.getBody());
+        editor.dom.getParent(
+          editor.selection.getNode(),
+          function (node) {
+            if (node.nodeType === 1 && counter++ === value) {
+              editor.selection.select(node);
+              return false;
+            }
+          },
+          editor.getBody()
+        );
       },
 
       'mceSelectNode'(command, ui, value) {
@@ -459,8 +507,7 @@ class EditorCommands {
         IndentOutdent.handle(editor, command);
       },
 
-      'mceRepaint'() {
-      },
+      'mceRepaint'() {},
 
       'InsertHorizontalRule'() {
         editor.execCommand('mceInsertContent', false, '<hr />');
@@ -472,7 +519,14 @@ class EditorCommands {
       },
 
       'mceReplaceContent'(command, ui, value) {
-        editor.execCommand('mceInsertContent', false, value.replace(/\{\$selection\}/g, editor.selection.getContent({ format: 'text' })));
+        editor.execCommand(
+          'mceInsertContent',
+          false,
+          value.replace(
+            /\{\$selection\}/g,
+            editor.selection.getContent({ format: 'text' })
+          )
+        );
       },
 
       'mceInsertLink'(command, ui, value) {
@@ -499,7 +553,10 @@ class EditorCommands {
       },
 
       'selectAll'() {
-        const editingHost = editor.dom.getParent(editor.selection.getStart(), NodeType.isContentEditableTrue);
+        const editingHost = editor.dom.getParent(
+          editor.selection.getStart(),
+          NodeType.isContentEditableTrue
+        );
         if (editingHost) {
           const rng = editor.dom.createRng();
           rng.selectNodeContents(editingHost);
@@ -526,7 +583,9 @@ class EditorCommands {
     });
 
     const alignStates = (name: string) => () => {
-      const nodes = editor.selection.isCollapsed() ? [ editor.dom.getParent(editor.selection.getNode(), editor.dom.isBlock) ] : editor.selection.getSelectedBlocks();
+      const nodes = editor.selection.isCollapsed()
+        ? [editor.dom.getParent(editor.selection.getNode(), editor.dom.isBlock)]
+        : editor.selection.getSelectedBlocks();
       const matches = map(nodes, function (node) {
         return !!editor.formatter.matchNode(node, name);
       });
@@ -534,29 +593,37 @@ class EditorCommands {
     };
 
     // Add queryCommandState overrides
-    self.addCommands({
-      // Override justify commands
-      'JustifyLeft': alignStates('alignleft'),
-      'JustifyCenter': alignStates('aligncenter'),
-      'JustifyRight': alignStates('alignright'),
-      'JustifyFull': alignStates('alignjustify'),
+    self.addCommands(
+      {
+        // Override justify commands
+        'JustifyLeft': alignStates('alignleft'),
+        'JustifyCenter': alignStates('aligncenter'),
+        'JustifyRight': alignStates('alignright'),
+        'JustifyFull': alignStates('alignjustify'),
 
-      'Bold,Italic,Underline,Strikethrough,Superscript,Subscript': (command) => self.isFormatMatch(command),
+        'Bold,Italic,Underline,Strikethrough,Superscript,Subscript': (
+          command
+        ) => self.isFormatMatch(command),
 
-      'mceBlockQuote': () => self.isFormatMatch('blockquote'),
+        'mceBlockQuote': () => self.isFormatMatch('blockquote'),
 
-      'Outdent': () => IndentOutdent.canOutdent(editor),
+        'Outdent': () => IndentOutdent.canOutdent(editor),
 
-      'InsertUnorderedList,InsertOrderedList': (command) => {
-        const list = editor.dom.getParent(editor.selection.getNode(), 'ul,ol') as HTMLElement;
+        'InsertUnorderedList,InsertOrderedList': (command) => {
+          const list = editor.dom.getParent(
+            editor.selection.getNode(),
+            'ul,ol'
+          ) as HTMLElement;
 
-        return list &&
-          (
-            command === 'insertunorderedlist' && list.tagName === 'UL' ||
-            command === 'insertorderedlist' && list.tagName === 'OL'
+          return (
+            list &&
+            ((command === 'insertunorderedlist' && list.tagName === 'UL') ||
+              (command === 'insertorderedlist' && list.tagName === 'OL'))
           );
-      }
-    }, 'state');
+        }
+      },
+      'state'
+    );
 
     // Add undo manager logic
     self.addCommands({
@@ -569,8 +636,16 @@ class EditorCommands {
       }
     });
 
-    self.addQueryValueHandler('FontName', () => FontCommands.fontNameQuery(editor), this);
-    self.addQueryValueHandler('FontSize', () => FontCommands.fontSizeQuery(editor), this);
+    self.addQueryValueHandler(
+      'FontName',
+      () => FontCommands.fontNameQuery(editor),
+      this
+    );
+    self.addQueryValueHandler(
+      'FontSize',
+      () => FontCommands.fontSizeQuery(editor),
+      this
+    );
   }
 }
 

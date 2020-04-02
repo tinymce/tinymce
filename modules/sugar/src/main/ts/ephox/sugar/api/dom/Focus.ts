@@ -1,4 +1,9 @@
-import { document, Document, HTMLElement, Node as DomNode } from '@ephox/dom-globals';
+import {
+  document,
+  Document,
+  HTMLElement,
+  Node as DomNode
+} from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import Element from '../node/Element';
 import * as PredicateExists from '../search/PredicateExists';
@@ -47,4 +52,4 @@ const search = function (element: Element<DomNode>) {
   });
 };
 
-export { hasFocus, focus, blur, active, search, focusInside, };
+export { hasFocus, focus, blur, active, search, focusInside };

@@ -1,6 +1,14 @@
 import { Assertions, Chain, UiFinder, Waiter } from '@ephox/agar';
 import { Id } from '@ephox/katamari';
-import { Attr, Class, Css, Element, Insert, Remove, SelectorFind } from '@ephox/sugar';
+import {
+  Attr,
+  Class,
+  Css,
+  Element,
+  Insert,
+  Remove,
+  SelectorFind
+} from '@ephox/sugar';
 import { document, navigator } from '@ephox/dom-globals';
 
 const styleClass = Id.generate('ui-test-styles');
@@ -30,15 +38,15 @@ const sWaitForToolstrip = function (realm) {
       UiFinder.cFindIn('.tinymce-mobile-toolstrip'),
       Chain.op(function (toolstrip) {
         if (navigator.userAgent.indexOf('PhantomJS') === -1) {
-          Assertions.assertEq('Checking toolstrip is flex', 'flex', Css.get(toolstrip, 'display'));
+          Assertions.assertEq(
+            'Checking toolstrip is flex',
+            'flex',
+            Css.get(toolstrip, 'display')
+          );
         }
       })
     ])
   );
 };
 
-export {
-  addStyles,
-  removeStyles,
-  sWaitForToolstrip
-};
+export { addStyles, removeStyles, sWaitForToolstrip };

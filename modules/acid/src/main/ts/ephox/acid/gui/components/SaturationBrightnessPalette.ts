@@ -1,4 +1,15 @@
-import { AlloyComponent, AlloyTriggers, Behaviour, Composing, Focusing, Sketcher, SketchSpec, Slider, SliderTypes, UiSketcher } from '@ephox/alloy';
+import {
+  AlloyComponent,
+  AlloyTriggers,
+  Behaviour,
+  Composing,
+  Focusing,
+  Sketcher,
+  SketchSpec,
+  Slider,
+  SliderTypes,
+  UiSketcher
+} from '@ephox/alloy';
 import { HTMLCanvasElement } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { Rgba } from '../../api/colour/ColourTypes';
@@ -6,25 +17,29 @@ import * as RgbaColour from '../../api/colour/RgbaColour';
 import * as ColourEvents from '../ColourEvents';
 
 // tslint:disable:no-empty-interface
-export interface SaturationBrightnessPaletteDetail extends Sketcher.SingleSketchDetail {
-}
+export interface SaturationBrightnessPaletteDetail
+  extends Sketcher.SingleSketchDetail {}
 
-export interface SaturationBrightnessPaletteSpec extends Sketcher.SingleSketchSpec {
-}
+export interface SaturationBrightnessPaletteSpec
+  extends Sketcher.SingleSketchSpec {}
 // tslint:enable:no-empty-interface
 
-export interface SaturationBrightnessPaletteSketcher extends Sketcher.SingleSketch<SaturationBrightnessPaletteSpec> {
+export interface SaturationBrightnessPaletteSketcher
+  extends Sketcher.SingleSketch<SaturationBrightnessPaletteSpec> {
   setRgba: (slider: AlloyComponent, colour: Rgba) => void;
 }
 
-const paletteFactory = (_translate: (key: string) => string, getClass: (key: string) => string): SaturationBrightnessPaletteSketcher => {
+const paletteFactory = (
+  _translate: (key: string) => string,
+  getClass: (key: string) => string
+): SaturationBrightnessPaletteSketcher => {
   const spectrumPart = Slider.parts().spectrum({
     dom: {
       tag: 'canvas',
       attributes: {
         role: 'presentation'
       },
-      classes: [ getClass('sv-palette-spectrum') ]
+      classes: [getClass('sv-palette-spectrum')]
     }
   });
 
@@ -34,8 +49,10 @@ const paletteFactory = (_translate: (key: string) => string, getClass: (key: str
       attributes: {
         role: 'presentation'
       },
-      classes: [ getClass('sv-palette-thumb') ],
-      innerHtml: `<div class=${getClass('sv-palette-inner-thumb')} role="presentation"></div>`
+      classes: [getClass('sv-palette-thumb')],
+      innerHtml: `<div class=${getClass(
+        'sv-palette-inner-thumb'
+      )} role="presentation"></div>`
     }
   });
 
@@ -68,19 +85,31 @@ const paletteFactory = (_translate: (key: string) => string, getClass: (key: str
     setColour(canvas, RgbaColour.toString(rgba));
   };
 
-  const factory: UiSketcher.SingleSketchFactory<SaturationBrightnessPaletteDetail, SaturationBrightnessPaletteSpec> = (_detail): SketchSpec => {
+  const factory: UiSketcher.SingleSketchFactory<
+    SaturationBrightnessPaletteDetail,
+    SaturationBrightnessPaletteSpec
+  > = (_detail): SketchSpec => {
     const getInitialValue = Fun.constant({
       x: Fun.constant(0),
       y: Fun.constant(0)
     });
 
-    const onChange = (slider: AlloyComponent, _thumb: AlloyComponent, value: number | SliderTypes.SliderValue) => {
+    const onChange = (
+      slider: AlloyComponent,
+      _thumb: AlloyComponent,
+      value: number | SliderTypes.SliderValue
+    ) => {
       AlloyTriggers.emitWith(slider, ColourEvents.paletteUpdate, {
         value
       });
     };
 
-    const onInit = (_slider: AlloyComponent, _thumb: AlloyComponent, spectrum: AlloyComponent, _value: number | SliderTypes.SliderValue) => {
+    const onInit = (
+      _slider: AlloyComponent,
+      _thumb: AlloyComponent,
+      spectrum: AlloyComponent,
+      _value: number | SliderTypes.SliderValue
+    ) => {
       // Maybe make this initial value configurable?
       setColour(spectrum.element().dom(), RgbaColour.toString(RgbaColour.red));
     };
@@ -98,17 +127,14 @@ const paletteFactory = (_translate: (key: string) => string, getClass: (key: str
         attributes: {
           role: 'presentation'
         },
-        classes: [ getClass('sv-palette') ]
+        classes: [getClass('sv-palette')]
       },
       model: {
         mode: 'xy',
         getInitialValue
       },
       rounded: false,
-      components: [
-        spectrumPart,
-        thumbPart
-      ],
+      components: [spectrumPart, thumbPart],
       onChange,
       onInit,
       sliderBehaviours
@@ -130,6 +156,4 @@ const paletteFactory = (_translate: (key: string) => string, getClass: (key: str
   return saturationBrightnessPaletteSketcher;
 };
 
-export {
-  paletteFactory
-};
+export { paletteFactory };

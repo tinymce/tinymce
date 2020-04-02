@@ -10,7 +10,7 @@ import {
   EventFormat,
   NativeSimulatedEvent,
   ReceivingEvent,
-  SimulatedEvent,
+  SimulatedEvent
 } from '../events/SimulatedEvent';
 import * as TapEvent from '../events/TapEvent';
 import * as AlloyLogger from '../log/AlloyLogger';
@@ -60,7 +60,7 @@ import {
   RawDomSchema,
   SimpleOrSketchSpec,
   SimpleSpec,
-  SketchSpec,
+  SketchSpec
 } from './component/SpecTypes';
 import * as Composite from './composite/Parts';
 import * as DragCoord from './data/DragCoord';
@@ -234,7 +234,6 @@ export {
   Typeahead,
   UiSketcher,
   Fields,
-
   AlloyParts,
   BehaviourState,
   PartType,
@@ -245,7 +244,6 @@ export {
   AlloyLogger,
   Debugging,
   FunctionAnnotator,
-
   AlloySpec,
   AlloyComponent,
   SimpleOrSketchSpec,
@@ -260,7 +258,6 @@ export {
   NativeSimulatedEvent,
   CustomSimulatedEvent,
   ReceivingEvent,
-
   // layout
   Layout,
   LayoutInside,
@@ -270,7 +267,6 @@ export {
   MaxWidth,
   LazySink,
   VerticalDir,
-
   // types
   TieredMenuTypes,
   MenuTypes,
@@ -286,8 +282,6 @@ export {
   SubmenuAnchorSpec,
   DraggingTypes,
   Layouts,
-
   FocusInsideModes,
-
   TestHelpers
 };

@@ -5,7 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Boxes, Focusing, Keying, SplitFloatingToolbar as AlloySplitFloatingToolbar, SplitSlidingToolbar as AlloySplitSlidingToolbar, Tabstopping, Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup } from '@ephox/alloy';
+import {
+  AddEventsBehaviour,
+  AlloyComponent,
+  AlloyEvents,
+  AlloySpec,
+  Behaviour,
+  Boxes,
+  Focusing,
+  Keying,
+  SplitFloatingToolbar as AlloySplitFloatingToolbar,
+  SplitSlidingToolbar as AlloySplitSlidingToolbar,
+  Tabstopping,
+  Toolbar as AlloyToolbar,
+  ToolbarGroup as AlloyToolbarGroup
+} from '@ephox/alloy';
 import { Arr, Option, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 import { ToolbarMode } from '../../api/Settings';
@@ -41,23 +55,24 @@ export interface ToolbarGroup {
 }
 
 const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
-  const attributes = toolbarGroup.title.fold(() => ({}),
-    (title) => ({ attributes: { title }}));
+  const attributes = toolbarGroup.title.fold(
+    () => ({}),
+    (title) => ({ attributes: { title } })
+  );
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-toolbar__group' ],
+      classes: ['tox-toolbar__group'],
       ...attributes
     },
 
-    components: [
-      AlloyToolbarGroup.parts().items({})
-    ],
+    components: [AlloyToolbarGroup.parts().items({})],
 
     items: toolbarGroup.items,
     markers: {
       // nav within a group breaks if disabled buttons are first in their group so skip them
-      itemSelector: '*:not(.tox-split-button) > .tox-tbtn:not([disabled]), .tox-split-button:not([disabled]), .tox-toolbar-nav-js:not([disabled])'
+      itemSelector:
+        '*:not(.tox-split-button) > .tox-tbtn:not([disabled]), .tox-split-button:not([disabled]), .tox-toolbar-nav-js:not([disabled])'
     },
     tgroupBehaviours: Behaviour.derive([
       Tabstopping.config({}),
@@ -66,7 +81,8 @@ const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
   };
 };
 
-const renderToolbarGroup = (toolbarGroup: ToolbarGroup) => AlloyToolbarGroup.sketch(renderToolbarGroupCommon(toolbarGroup));
+const renderToolbarGroup = (toolbarGroup: ToolbarGroup) =>
+  AlloyToolbarGroup.sketch(renderToolbarGroupCommon(toolbarGroup));
 
 const getToolbarbehaviours = (toolbarSpec: ToolbarSpec, modeName) => {
   const onAttached = AlloyEvents.runOnAttached(function (component) {
@@ -83,7 +99,7 @@ const getToolbarbehaviours = (toolbarSpec: ToolbarSpec, modeName) => {
       onEscape: toolbarSpec.onEscape,
       selector: '.tox-toolbar__group'
     }),
-    AddEventsBehaviour.config('toolbar-events', [ onAttached ])
+    AddEventsBehaviour.config('toolbar-events', [onAttached])
   ]);
 };
 
@@ -94,7 +110,7 @@ const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec) => {
     uid: toolbarSpec.uid,
     dom: {
       tag: 'div',
-      classes: [ 'tox-toolbar-overlord' ]
+      classes: ['tox-toolbar-overlord']
     },
     parts: {
       // This already knows it is a toolbar group
@@ -102,14 +118,18 @@ const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec) => {
         title: Option.none(),
         items: []
       }),
-      'overflow-button': renderIconButtonSpec({
-        name: 'more',
-        icon: Option.some('more-drawer'),
-        disabled: false,
-        tooltip: Option.some('More...'),
-        primary: false,
-        borderless: false
-      }, Option.none(), toolbarSpec.providers)
+      'overflow-button': renderIconButtonSpec(
+        {
+          name: 'more',
+          icon: Option.some('more-drawer'),
+          disabled: false,
+          tooltip: Option.some('More...'),
+          primary: false,
+          borderless: false
+        },
+        Option.none(),
+        toolbarSpec.providers
+      )
     },
     splitToolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName)
   };
@@ -122,7 +142,7 @@ const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
   const primary = AlloySplitFloatingToolbar.parts().primary({
     dom: {
       tag: 'div',
-      classes: [ 'tox-toolbar__primary' ]
+      classes: ['tox-toolbar__primary']
     }
   });
 
@@ -148,12 +168,12 @@ const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
       overflow: {
         dom: {
           tag: 'div',
-          classes: [ 'tox-toolbar__overflow' ],
+          classes: ['tox-toolbar__overflow'],
           attributes: toolbarSpec.attributes
         }
       }
     },
-    components: [ primary ],
+    components: [primary],
     markers: {
       overflowToggledClass: ToolbarButtonClasses.Ticked
     }
@@ -164,14 +184,14 @@ const renderSlidingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
   const primary = AlloySplitSlidingToolbar.parts().primary({
     dom: {
       tag: 'div',
-      classes: [ 'tox-toolbar__primary' ]
+      classes: ['tox-toolbar__primary']
     }
   });
 
   const overflow = AlloySplitSlidingToolbar.parts().overflow({
     dom: {
       tag: 'div',
-      classes: [ 'tox-toolbar__overflow' ]
+      classes: ['tox-toolbar__overflow']
     }
   });
 
@@ -179,7 +199,7 @@ const renderSlidingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
 
   return AlloySplitSlidingToolbar.sketch({
     ...baseSpec,
-    components: [ primary, overflow ],
+    components: [primary, overflow],
     markers: {
       openClass: 'tox-toolbar__overflow--open',
       closedClass: 'tox-toolbar__overflow--closed',
@@ -188,10 +208,14 @@ const renderSlidingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
       overflowToggledClass: ToolbarButtonClasses.Ticked
     },
     onOpened: (comp) => {
-      comp.getSystem().broadcastOn([ Channels.toolbarHeightChange() ], { type: 'opened' });
+      comp
+        .getSystem()
+        .broadcastOn([Channels.toolbarHeightChange()], { type: 'opened' });
     },
     onClosed: (comp) => {
-      comp.getSystem().broadcastOn([ Channels.toolbarHeightChange() ], { type: 'closed' });
+      comp
+        .getSystem()
+        .broadcastOn([Channels.toolbarHeightChange()], { type: 'closed' });
     }
   });
 };
@@ -203,14 +227,21 @@ const renderToolbar = (toolbarSpec: ToolbarSpec) => {
     uid: toolbarSpec.uid,
     dom: {
       tag: 'div',
-      classes: [ 'tox-toolbar' ].concat(toolbarSpec.type === ToolbarMode.scrolling ? [ 'tox-toolbar--scrolling' ] : [])
+      classes: ['tox-toolbar'].concat(
+        toolbarSpec.type === ToolbarMode.scrolling
+          ? ['tox-toolbar--scrolling']
+          : []
+      )
     },
-    components: [
-      AlloyToolbar.parts().groups({})
-    ],
+    components: [AlloyToolbar.parts().groups({})],
 
     toolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName)
   });
 };
 
-export { renderToolbarGroup, renderToolbar, renderFloatingMoreToolbar, renderSlidingMoreToolbar };
+export {
+  renderToolbarGroup,
+  renderToolbar,
+  renderFloatingMoreToolbar,
+  renderSlidingMoreToolbar
+};

@@ -8,11 +8,23 @@ const single = function (element: Element, envLang: string, onlyLang: string) {
   return TextZone.single(universe, element, envLang, onlyLang);
 };
 
-const range = function (start: Element, soffset: number, finish: Element, foffset: number, envLang: string, onlyLang: string) {
-  return TextZone.range(universe, start, soffset, finish, foffset, envLang, onlyLang);
+const range = function (
+  start: Element,
+  soffset: number,
+  finish: Element,
+  foffset: number,
+  envLang: string,
+  onlyLang: string
+) {
+  return TextZone.range(
+    universe,
+    start,
+    soffset,
+    finish,
+    foffset,
+    envLang,
+    onlyLang
+  );
 };
 
-export {
-  single,
-  range
-};
+export { single, range };

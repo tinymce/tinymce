@@ -4,7 +4,16 @@ import { Id } from '@ephox/katamari';
 import * as Fields from '../../data/Fields';
 import * as TieredMenuSpec from '../../ui/single/TieredMenuSpec';
 import { ItemDataTuple } from '../../ui/types/ItemTypes';
-import { PartialMenuSpec, TieredData, TieredMenuApis, TieredMenuDetail, TieredMenuExtras, TieredMenuRecord, TieredMenuSketcher, TieredMenuSpec as TieredMenuSpecType } from '../../ui/types/TieredMenuTypes';
+import {
+  PartialMenuSpec,
+  TieredData,
+  TieredMenuApis,
+  TieredMenuDetail,
+  TieredMenuExtras,
+  TieredMenuRecord,
+  TieredMenuSketcher,
+  TieredMenuSpec as TieredMenuSpecType
+} from '../../ui/types/TieredMenuTypes';
 import { Composing } from '../behaviour/Composing';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
@@ -12,7 +21,11 @@ import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { single } from './Sketcher';
 
-const tieredData = (primary: string, menus: TieredMenuRecord, expansions: Record<string, string>): TieredData => ({
+const tieredData = (
+  primary: string,
+  menus: TieredMenuRecord,
+  expansions: Record<string, string>
+): TieredData => ({
   primary,
   menus,
   expansions
@@ -21,7 +34,7 @@ const tieredData = (primary: string, menus: TieredMenuRecord, expansions: Record
 const singleData = (name: string, menu: PartialMenuSpec): TieredData => ({
   primary: name,
   menus: Objects.wrap(name, menu),
-  expansions: { }
+  expansions: {}
 });
 
 const collapseItem = (text: string): ItemDataTuple => ({
@@ -31,7 +44,12 @@ const collapseItem = (text: string): ItemDataTuple => ({
   }
 });
 
-const tieredMenu: TieredMenuSketcher = single<TieredMenuSpecType, TieredMenuDetail, TieredMenuApis, TieredMenuExtras>({
+const tieredMenu: TieredMenuSketcher = single<
+  TieredMenuSpecType,
+  TieredMenuDetail,
+  TieredMenuApis,
+  TieredMenuExtras
+>({
   name: 'TieredMenu',
   configFields: [
     Fields.onStrictKeyboardHandler('onExecute'),
@@ -60,8 +78,13 @@ const tieredMenu: TieredMenuSketcher = single<TieredMenuSpecType, TieredMenuDeta
     FieldSchema.defaulted('navigateOnHover', true),
     FieldSchema.defaulted('stayInDom', false),
 
-    SketchBehaviours.field('tmenuBehaviours', [ Keying, Highlighting, Composing, Replacing ]),
-    FieldSchema.defaulted('eventOrder', { })
+    SketchBehaviours.field('tmenuBehaviours', [
+      Keying,
+      Highlighting,
+      Composing,
+      Replacing
+    ]),
+    FieldSchema.defaulted('eventOrder', {})
   ],
 
   apis: {
@@ -85,7 +108,4 @@ const tieredMenu: TieredMenuSketcher = single<TieredMenuSpecType, TieredMenuDeta
   }
 });
 
-export {
-  tieredMenu,
-  TieredData
-};
+export { tieredMenu, TieredData };

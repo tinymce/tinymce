@@ -20,7 +20,11 @@ import { Input } from 'ephox/alloy/api/ui/Input';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { AnchorSpec, SelectionAnchorSpec, SubmenuAnchorSpec } from 'ephox/alloy/positioning/mode/Anchoring';
+import {
+  AnchorSpec,
+  SelectionAnchorSpec,
+  SubmenuAnchorSpec
+} from 'ephox/alloy/positioning/mode/Anchoring';
 
 import * as DemoRenders from './forms/DemoRenders';
 
@@ -68,9 +72,7 @@ export default (): void => {
             padding: '3em'
           }
         },
-        tooltipComponents: [
-          GuiFactory.text(t)
-        ],
+        tooltipComponents: [GuiFactory.text(t)],
         anchor: (comp) => ({
           anchor: 'submenu',
           item: comp
@@ -87,9 +89,7 @@ export default (): void => {
             ]);
           }, 2000);
         },
-        onHide: (_component, _tooltip) => {
-
-        }
+        onHide: (_component, _tooltip) => {}
       })
     ])
   });
@@ -115,11 +115,14 @@ export default (): void => {
 
     onOpenSubmenu(sandbox, item, submenu) {
       const sink = lazySink(sandbox).getOrDie();
-      Positioning.position(sink, {
-        anchor: 'submenu',
-        item
-      }, submenu);
-
+      Positioning.position(
+        sink,
+        {
+          anchor: 'submenu',
+          item
+        },
+        submenu
+      );
     },
 
     data: {
@@ -129,20 +132,26 @@ export default (): void => {
       menus: {
         'dog': DemoRenders.menu({
           value: 'dog',
-          items: Arr.map([
-            makeItem('alpha', 'Alpha', 'alpha'),
-            makeItem('beta', 'Beta', 'beta'),
-            makeItem('gamma', 'Gamma', 'gamma'),
-            makeItem('delta', 'Delta', 'delta')
-          ], DemoRenders.item),
+          items: Arr.map(
+            [
+              makeItem('alpha', 'Alpha', 'alpha'),
+              makeItem('beta', 'Beta', 'beta'),
+              makeItem('gamma', 'Gamma', 'gamma'),
+              makeItem('delta', 'Delta', 'delta')
+            ],
+            DemoRenders.item
+          ),
           textkey: 'Dog'
         }),
         'gamma-menu': DemoRenders.menu({
           value: 'gamma-menu',
-          items: Arr.map([
-            makeItem('gamma-1', 'Gamma-1', 'gamma-1'),
-            makeItem('gamma-2', 'Gamma-2', 'gamma-2')
-          ], DemoRenders.item),
+          items: Arr.map(
+            [
+              makeItem('gamma-1', 'Gamma-1', 'gamma-1'),
+              makeItem('gamma-2', 'Gamma-2', 'gamma-2')
+            ],
+            DemoRenders.item
+          ),
           textkey: 'gamma-menu'
         })
       },
@@ -165,14 +174,21 @@ export default (): void => {
         }
       },
       events: AlloyEvents.derive([
-        AlloyEvents.run<EventArgs>(NativeEvents.contextmenu(), (component, simulatedEvent) => {
-          simulatedEvent.event().kill();
-          InlineView.showAt(inlineComp, {
-            anchor: 'makeshift',
-            x: simulatedEvent.event().x(),
-            y: simulatedEvent.event().y()
-          }, inlineMenu);
-        })
+        AlloyEvents.run<EventArgs>(
+          NativeEvents.contextmenu(),
+          (component, simulatedEvent) => {
+            simulatedEvent.event().kill();
+            InlineView.showAt(
+              inlineComp,
+              {
+                anchor: 'makeshift',
+                x: simulatedEvent.event().x(),
+                y: simulatedEvent.event().y()
+              },
+              inlineMenu
+            );
+          }
+        )
       ])
     })
   );
@@ -180,8 +196,8 @@ export default (): void => {
   HtmlDisplay.section(
     gui,
     'This inline toolbar shows up when you click in the second input field. Note, ' +
-    'how when you focus an empty input, it will attach at the end of the field, and ' +
-    'when you focus a non-empty input, it will attach below',
+      'how when you focus an empty input, it will attach at the end of the field, and ' +
+      'when you focus a non-empty input, it will attach below',
     Container.sketch({
       containerBehaviours: Behaviour.derive([
         Keying.config({
@@ -209,39 +225,51 @@ export default (): void => {
                   root: gui.element()
                 };
 
-                const anchor: AnchorSpec = Value.get(input.element()).length > 0 ? nonEmptyAnchor : emptyAnchor;
-                InlineView.showAt(inlineComp, anchor, Container.sketch({
-                  containerBehaviours: Behaviour.derive([
-                    Keying.config({
-                      mode: 'flow',
-                      selector: 'button'
-                    })
-                  ]),
-                  components: [
-                    Button.sketch({
-                      dom: {
-                        tag: 'button',
-                        innerHtml: 'B'
-                      },
-                      action() { console.log('inline bold'); }
-                    }),
-                    Button.sketch({
-                      dom: {
-                        tag: 'button',
-                        innerHtml: 'I'
-                      },
-                      action() { console.log('inline italic'); }
-                    }),
-                    Button.sketch({
-                      dom: {
-                        tag: 'button',
-                        innerHtml: 'U'
-                      },
-                      action() { console.log('inline underline'); }
-                    })
-                  ]
-
-                }));
+                const anchor: AnchorSpec =
+                  Value.get(input.element()).length > 0
+                    ? nonEmptyAnchor
+                    : emptyAnchor;
+                InlineView.showAt(
+                  inlineComp,
+                  anchor,
+                  Container.sketch({
+                    containerBehaviours: Behaviour.derive([
+                      Keying.config({
+                        mode: 'flow',
+                        selector: 'button'
+                      })
+                    ]),
+                    components: [
+                      Button.sketch({
+                        dom: {
+                          tag: 'button',
+                          innerHtml: 'B'
+                        },
+                        action() {
+                          console.log('inline bold');
+                        }
+                      }),
+                      Button.sketch({
+                        dom: {
+                          tag: 'button',
+                          innerHtml: 'I'
+                        },
+                        action() {
+                          console.log('inline italic');
+                        }
+                      }),
+                      Button.sketch({
+                        dom: {
+                          tag: 'button',
+                          innerHtml: 'U'
+                        },
+                        action() {
+                          console.log('inline underline');
+                        }
+                      })
+                    ]
+                  })
+                );
               })
             ])
           ])

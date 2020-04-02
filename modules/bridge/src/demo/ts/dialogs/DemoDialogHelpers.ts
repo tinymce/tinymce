@@ -2,10 +2,18 @@ import { Processor, ValueSchema } from '@ephox/boulder';
 import { console } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import { DialogManager } from '../../../main/ts/ephox/bridge/api/DialogManager';
-import { Dialog, DialogApi, DialogInstanceApi } from '../../../main/ts/ephox/bridge/components/dialog/Dialog';
+import {
+  Dialog,
+  DialogApi,
+  DialogInstanceApi
+} from '../../../main/ts/ephox/bridge/components/dialog/Dialog';
 
 // This is the function that would be implemented in modern theme/silver theme for creating dialogs
-const createDemoApi = <T>(internalStructure: Dialog<T>, initalData: T, dataValidator: Processor): DialogInstanceApi<T> => {
+const createDemoApi = <T>(
+  internalStructure: Dialog<T>,
+  initalData: T,
+  dataValidator: Processor
+): DialogInstanceApi<T> => {
   const data = Cell(initalData);
 
   // tslint:disable-next-line:no-console
@@ -18,25 +26,19 @@ const createDemoApi = <T>(internalStructure: Dialog<T>, initalData: T, dataValid
     getData: () => data.get(),
     setData: (newData: Partial<T>) => {
       const mergedData = { ...data.get(), ...newData };
-      const newInternalData = ValueSchema.getOrDie(ValueSchema.asRaw('data', dataValidator, mergedData));
+      const newInternalData = ValueSchema.getOrDie(
+        ValueSchema.asRaw('data', dataValidator, mergedData)
+      );
       data.set(newInternalData);
     },
-    redial: () => {
-    },
-    focus: (_name: string) => {
-    },
-    showTab: (_title: string) => {
-    },
-    disable: (_name: string) => {
-    },
-    enable: (_name: string) => {
-    },
-    block: (_message: string) => {
-    },
-    unblock: () => {
-    },
-    close: () => {
-    }
+    redial: () => {},
+    focus: (_name: string) => {},
+    showTab: (_title: string) => {},
+    disable: (_name: string) => {},
+    enable: (_name: string) => {},
+    block: (_message: string) => {},
+    unblock: () => {},
+    close: () => {}
   };
 };
 

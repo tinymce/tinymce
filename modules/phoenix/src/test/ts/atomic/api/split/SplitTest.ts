@@ -7,9 +7,7 @@ import * as Finder from 'ephox/phoenix/test/Finder';
 UnitTest.test('api.Split.(split,splitByPair)', function () {
   const generate = function (text: string) {
     const universe = TestUniverse(
-      Gene('root', 'root', [
-        TextGene('generate_text', text)
-      ])
+      Gene('root', 'root', [TextGene('generate_text', text)])
     );
 
     const item = Finder.get(universe, 'generate_text');
@@ -17,29 +15,48 @@ UnitTest.test('api.Split.(split,splitByPair)', function () {
   };
 
   const isEq = function (opt1: Option<string>, opt2: Option<Gene>) {
-    return opt1.fold(function () {
-      return opt2.isNone();
-    }, function (a) {
-      return opt2.exists(function (x) {
-        return a === x.text;
-      });
-    });
+    return opt1.fold(
+      function () {
+        return opt2.isNone();
+      },
+      function (a) {
+        return opt2.exists(function (x) {
+          return a === x.text;
+        });
+      }
+    );
   };
 
-  const checkSplit = function (before: Option<string>, after: Option<string>, text: string, position: number) {
+  const checkSplit = function (
+    before: Option<string>,
+    after: Option<string>,
+    text: string,
+    position: number
+  ) {
     const input = generate(text);
     const actual = Split.split(input.universe, input.item, position);
     assert.eq(true, isEq(before, actual.before()));
     assert.eq(true, isEq(after, actual.after()));
   };
 
-  const checkPair = function (expected: string, middle: string, text: string, start: number, finish: number) {
+  const checkPair = function (
+    expected: string,
+    middle: string,
+    text: string,
+    start: number,
+    finish: number
+  ) {
     const input = generate(text);
     const actual = Split.splitByPair(input.universe, input.item, start, finish);
     assert.eq(middle, actual.text);
-    assert.eq(expected, input.universe.shortlog(function (item) {
-      return item.name === 'TEXT_GENE' ? 'text("' + item.text + '")' : item.id;
-    }));
+    assert.eq(
+      expected,
+      input.universe.shortlog(function (item) {
+        return item.name === 'TEXT_GENE'
+          ? 'text("' + item.text + '")'
+          : item.id;
+      })
+    );
   };
   // probably never happens, but just in case
   checkSplit(Option.none(), Option.some('apple'), 'apple', -1);

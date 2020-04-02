@@ -15,14 +15,25 @@ import { StyleMap } from 'tinymce/core/api/html/Styles';
 import * as InsertTable from '../actions/InsertTable';
 import * as Styles from '../actions/Styles';
 import * as Util from '../alien/Util';
-import { getDefaultAttributes, getDefaultStyles, getTableClassList, hasAdvancedTableTab, shouldStyleWithCss } from '../api/Settings';
+import {
+  getDefaultAttributes,
+  getDefaultStyles,
+  getTableClassList,
+  hasAdvancedTableTab,
+  shouldStyleWithCss
+} from '../api/Settings';
 import * as Helpers from './Helpers';
 import * as TableDialogGeneralTab from './TableDialogGeneralTab';
 
 type TableData = Helpers.TableData;
 
 // Explore the layers of the table till we find the first layer of tds or ths
-const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?: string | number) => {
+const styleTDTH = (
+  dom: DOMUtils,
+  elm: Element,
+  name: string | StyleMap,
+  value?: string | number
+) => {
   if (elm.tagName === 'TD' || elm.tagName === 'TH') {
     if (Type.isString(name)) {
       dom.setStyle(elm, name, value);
@@ -68,11 +79,11 @@ const applyDataToElement = (editor: Editor, tableElm, data: TableData) => {
     for (let i = 0; i < tableElm.children.length; i++) {
       styleTDTH(dom, tableElm.children[i], {
         'border-width': Util.addSizeSuffix(data.border),
-        'padding': Util.addSizeSuffix(data.cellpadding),
+        'padding': Util.addSizeSuffix(data.cellpadding)
       });
       if (hasAdvancedTableTab(editor)) {
         styleTDTH(dom, tableElm.children[i], {
-          'border-color': data.bordercolor,
+          'border-color': data.bordercolor
         });
       }
     }
@@ -88,7 +99,11 @@ const applyDataToElement = (editor: Editor, tableElm, data: TableData) => {
   dom.setAttribs(tableElm, { ...getDefaultAttributes(editor), ...attrs });
 };
 
-const onSubmitTableForm = (editor: Editor, tableElm: Element, api: Types.Dialog.DialogInstanceApi<TableData>) => {
+const onSubmitTableForm = (
+  editor: Editor,
+  tableElm: Element,
+  api: Types.Dialog.DialogInstanceApi<TableData>
+) => {
   const dom = editor.dom;
   let captionElm;
   const data = api.getData();
@@ -118,7 +133,9 @@ const onSubmitTableForm = (editor: Editor, tableElm: Element, api: Types.Dialog.
 
     if (!captionElm && data.caption) {
       captionElm = dom.create('caption');
-      captionElm.innerHTML = !Env.ie ? '<br data-mce-bogus="1"/>' : Unicode.nbsp;
+      captionElm.innerHTML = !Env.ie
+        ? '<br data-mce-bogus="1"/>'
+        : Unicode.nbsp;
       tableElm.insertBefore(captionElm, tableElm.firstChild);
     }
 
@@ -136,7 +153,10 @@ const onSubmitTableForm = (editor: Editor, tableElm: Element, api: Types.Dialog.
 const open = (editor: Editor, insertNewTable: boolean) => {
   const dom = editor.dom;
   let tableElm: Element;
-  let data = Helpers.extractDataFromSettings(editor, hasAdvancedTableTab(editor));
+  let data = Helpers.extractDataFromSettings(
+    editor,
+    hasAdvancedTableTab(editor)
+  );
 
   // Cases for creation/update of tables:
   // 1. isNew == true - called by mceInsertTable - we are inserting a new table so we don't care what the selection's parent is,
@@ -148,7 +168,11 @@ const open = (editor: Editor, insertNewTable: boolean) => {
     tableElm = dom.getParent(editor.selection.getStart(), 'table');
     if (tableElm) {
       // Case 2 - isNew == false && table parent
-      data = Helpers.extractDataFromTableElement(editor, tableElm, hasAdvancedTableTab(editor));
+      data = Helpers.extractDataFromTableElement(
+        editor,
+        tableElm,
+        hasAdvancedTableTab(editor)
+      );
     } else {
       // Case 3 - isNew == false && non-table parent. data is set to basic defaults so just add the adv properties if needed
       if (hasAdvancedTableTab(editor)) {
@@ -184,7 +208,7 @@ const open = (editor: Editor, insertNewTable: boolean) => {
 
   const nonAdvancedForm = (): Types.Dialog.PanelApi => ({
     type: 'panel',
-    items: [ generalPanel ]
+    items: [generalPanel]
   });
 
   const advancedForm = (): Types.Dialog.TabPanelApi => ({
@@ -193,13 +217,15 @@ const open = (editor: Editor, insertNewTable: boolean) => {
       {
         title: 'General',
         name: 'general',
-        items: [ generalPanel ]
+        items: [generalPanel]
       },
       Helpers.getAdvancedTab('table')
     ]
   });
 
-  const dialogBody = hasAdvancedTableTab(editor) ? advancedForm() : nonAdvancedForm();
+  const dialogBody = hasAdvancedTableTab(editor)
+    ? advancedForm()
+    : nonAdvancedForm();
 
   editor.windowManager.open({
     title: 'Table Properties',
@@ -210,7 +236,7 @@ const open = (editor: Editor, insertNewTable: boolean) => {
       {
         type: 'cancel',
         name: 'cancel',
-        text: 'Cancel',
+        text: 'Cancel'
       },
       {
         type: 'submit',
@@ -223,6 +249,4 @@ const open = (editor: Editor, insertNewTable: boolean) => {
   });
 };
 
-export {
-  open
-};
+export { open };

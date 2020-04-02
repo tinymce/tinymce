@@ -16,14 +16,17 @@ UnitTest.test('ResizeTest', function () {
 
   const direction = ResizeDirection.ltr;
 
-  const boundBox = '<div style="width: 800px; height: 600px; display: block;"></div>';
+  const boundBox =
+    '<div style="width: 800px; height: 600px; display: block;"></div>';
   const box = Element.fromHtml<HTMLDivElement>(boundBox);
   Insert.append(Body.body(), box);
 
   const percentTablePercentCellsTest = function () {
     const delta = 200;
 
-    const table = Element.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 100%;">
+    const table = Element.fromHtml<
+      HTMLTableElement
+    >(`<table style="border-collapse: collapse; width: 100%;">
     <tbody>
     <tr>
     <td style="width: 50%;">A</td>
@@ -55,12 +58,12 @@ UnitTest.test('ResizeTest', function () {
     const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
     // [50%, 50%] existing widths.
-    assert.eq([ 50, 50 ], widths);
+    assert.eq([50, 50], widths);
 
     const deltas = Deltas.determine(widths, 0, step, tableSize);
 
     // [25%, -25%] deltas.
-    assert.eq([ 25, -25 ], deltas);
+    assert.eq([25, -25], deltas);
 
     // Set new width
     tableSize.setTableWidth(table, [], step);
@@ -72,7 +75,9 @@ UnitTest.test('ResizeTest', function () {
   const percentTablePixelCellsTest = function () {
     const delta = 200;
 
-    const table = Element.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 100%;">
+    const table = Element.fromHtml<
+      HTMLTableElement
+    >(`<table style="border-collapse: collapse; width: 100%;">
     <tbody>
     <tr>
     <td style="width: 400px;">A</td>
@@ -103,7 +108,7 @@ UnitTest.test('ResizeTest', function () {
     const warehouse = getWarehouse(table);
     const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
-    const expectedWidths = [ 50, 50 ];
+    const expectedWidths = [50, 50];
 
     const widthDiffs = Arr.map(expectedWidths, (x, i) => widths[i] - x);
 
@@ -118,7 +123,7 @@ UnitTest.test('ResizeTest', function () {
     const deltas = Deltas.determine(widths, 0, step, tableSize);
 
     // [25%, -25%] deltas.
-    assert.eq([ 25, -25 ], deltas);
+    assert.eq([25, -25], deltas);
 
     // Set new width
     tableSize.setTableWidth(table, [], step);
@@ -130,7 +135,9 @@ UnitTest.test('ResizeTest', function () {
   const pixelTablePixelCellsTest = function () {
     const delta = 200;
 
-    const table = Element.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 800px;">
+    const table = Element.fromHtml<
+      HTMLTableElement
+    >(`<table style="border-collapse: collapse; width: 800px;">
     <tbody>
     <tr>
     <td style="width: 400px;">A</td>
@@ -162,12 +169,12 @@ UnitTest.test('ResizeTest', function () {
     const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
     // [50%, 50%] existing widths.
-    assert.eq([ 400, 400 ], widths);
+    assert.eq([400, 400], widths);
 
     const deltas = Deltas.determine(widths, 0, step, tableSize);
 
     // [25%, -25%] deltas.
-    assert.eq([ 200, -200 ], deltas);
+    assert.eq([200, -200], deltas);
 
     Remove.remove(table);
   };
@@ -175,7 +182,9 @@ UnitTest.test('ResizeTest', function () {
   const pixelTablePercentCellsTest = function () {
     const delta = 200;
 
-    const table = Element.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 800px;">
+    const table = Element.fromHtml<
+      HTMLTableElement
+    >(`<table style="border-collapse: collapse; width: 800px;">
     <tbody>
     <tr>
     <td style="width: 50%;">A</td>
@@ -207,12 +216,12 @@ UnitTest.test('ResizeTest', function () {
     const widths = tableSize.getWidths(warehouse, direction, tableSize);
 
     // [50%, 50%] existing widths.
-    assert.eq([ 400, 400 ], widths);
+    assert.eq([400, 400], widths);
 
     const deltas = Deltas.determine(widths, 0, step, tableSize);
 
     // [25%, -25%] deltas.
-    assert.eq([ 200, -200 ], deltas);
+    assert.eq([200, -200], deltas);
 
     Remove.remove(table);
   };

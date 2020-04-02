@@ -33,9 +33,12 @@ const buttonFields = [
     ValueSchema.string
   ),
   FieldSchema.optionString('icon'),
-  FieldSchema.defaultedBoolean('borderless', false),
+  FieldSchema.defaultedBoolean('borderless', false)
 ];
 
 export const buttonSchema = ValueSchema.objOf(buttonFields);
 
-export const createButton = (spec: ButtonApi): Result<Button, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<Button>('button', buttonSchema, spec);
+export const createButton = (
+  spec: ButtonApi
+): Result<Button, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<Button>('button', buttonSchema, spec);

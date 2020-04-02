@@ -13,30 +13,33 @@ import * as PartType from '../../parts/PartType';
 import * as AnchorLayouts from '../../positioning/mode/AnchorLayouts';
 import { DropdownDetail, DropdownSpec } from '../types/DropdownTypes';
 
-const schema: () => FieldProcessorAdt[] = Fun.constant([
-  FieldSchema.strict('dom'),
-  FieldSchema.strict('fetch'),
-  Fields.onHandler('onOpen'),
-  Fields.onKeyboardHandler('onExecute'),
-  FieldSchema.defaulted('getHotspot', Option.some),
-  FieldSchema.defaulted('getAnchorOverrides', Fun.constant({ })),
-  AnchorLayouts.schema(),
-  SketchBehaviours.field('dropdownBehaviours', [ Toggling, Coupling, Keying, Focusing ]),
-  FieldSchema.strict('toggleClass'),
-  FieldSchema.defaulted('eventOrder', { }),
-  FieldSchema.option('lazySink'),
-  FieldSchema.defaulted('matchWidth', false),
-  FieldSchema.defaulted('useMinWidth', false),
-  FieldSchema.option('role')
-].concat(
-  SketcherFields.sandboxFields()
-));
+const schema: () => FieldProcessorAdt[] = Fun.constant(
+  [
+    FieldSchema.strict('dom'),
+    FieldSchema.strict('fetch'),
+    Fields.onHandler('onOpen'),
+    Fields.onKeyboardHandler('onExecute'),
+    FieldSchema.defaulted('getHotspot', Option.some),
+    FieldSchema.defaulted('getAnchorOverrides', Fun.constant({})),
+    AnchorLayouts.schema(),
+    SketchBehaviours.field('dropdownBehaviours', [
+      Toggling,
+      Coupling,
+      Keying,
+      Focusing
+    ]),
+    FieldSchema.strict('toggleClass'),
+    FieldSchema.defaulted('eventOrder', {}),
+    FieldSchema.option('lazySink'),
+    FieldSchema.defaulted('matchWidth', false),
+    FieldSchema.defaulted('useMinWidth', false),
+    FieldSchema.option('role')
+  ].concat(SketcherFields.sandboxFields())
+);
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.external<DropdownDetail, DropdownSpec>({
-    schema: [
-      Fields.tieredMenuMarkers()
-    ],
+    schema: [Fields.tieredMenuMarkers()],
     name: 'menu',
     defaults(detail) {
       return {
@@ -49,8 +52,4 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 ]);
 
 const name = () => 'Dropdown';
-export {
-  name,
-  schema,
-  parts
-};
+export { name, schema, parts };

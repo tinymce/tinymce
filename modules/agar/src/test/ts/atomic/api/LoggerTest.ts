@@ -10,7 +10,8 @@ UnitTest.test('LoggerTest', () => {
     });
     assert.fail('Expected test1 to fail');
   } catch (err) {
-    assert.eq(0,
+    assert.eq(
+      0,
       err.message.indexOf('test 1. Foo is not a function\nTypeError:'),
       'Expected enchanced error message.'
     );

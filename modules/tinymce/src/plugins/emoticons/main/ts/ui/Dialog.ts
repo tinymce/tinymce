@@ -15,7 +15,6 @@ import { emojisFrom } from '../core/Lookup';
 const patternName = 'pattern';
 
 const open = function (editor: Editor, database: EmojiDatabase) {
-
   const initialState = {
     pattern: '',
     results: emojisFrom(database.listAll(), '', Option.some(300))
@@ -27,7 +26,11 @@ const open = function (editor: Editor, database: EmojiDatabase) {
     const dialogData = dialogApi.getData();
     const category = currentTab.get();
     const candidates = database.listCategory(category);
-    const results = emojisFrom(candidates, dialogData[patternName], category === ALL_CATEGORY ? Option.some(300) : Option.none());
+    const results = emojisFrom(
+      candidates,
+      dialogData[patternName],
+      category === ALL_CATEGORY ? Option.some(300) : Option.none()
+    );
     dialogApi.setData({
       results
     });
@@ -45,7 +48,7 @@ const open = function (editor: Editor, database: EmojiDatabase) {
 
   const resultsField: Types.Dialog.BodyComponentApi = {
     type: 'collection',
-    name: 'results',
+    name: 'results'
     // TODO TINY-3229 implement collection columns properly
     // columns: 'auto'
   };
@@ -57,7 +60,7 @@ const open = function (editor: Editor, database: EmojiDatabase) {
       tabs: Arr.map(database.listCategories(), (cat) => ({
         title: cat,
         name: cat,
-        items: [ searchField, resultsField ]
+        items: [searchField, resultsField]
       }))
     };
     return {
@@ -92,43 +95,44 @@ const open = function (editor: Editor, database: EmojiDatabase) {
 
   if (!database.hasLoaded()) {
     dialogApi.block('Loading emoticons...');
-    database.waitForLoad().then(() => {
-      dialogApi.redial(getInitialState());
-      updateFilter.throttle(dialogApi);
-      dialogApi.focus(patternName);
-      dialogApi.unblock();
-    }).catch((_err) => {
-      dialogApi.redial({
-        title: 'Emoticons',
-        body: {
-          type: 'panel',
-          items: [
+    database
+      .waitForLoad()
+      .then(() => {
+        dialogApi.redial(getInitialState());
+        updateFilter.throttle(dialogApi);
+        dialogApi.focus(patternName);
+        dialogApi.unblock();
+      })
+      .catch((_err) => {
+        dialogApi.redial({
+          title: 'Emoticons',
+          body: {
+            type: 'panel',
+            items: [
+              {
+                type: 'alertbanner',
+                level: 'error',
+                icon: 'warning',
+                text: '<p>Could not load emoticons</p>'
+              }
+            ]
+          },
+          buttons: [
             {
-              type: 'alertbanner',
-              level: 'error',
-              icon: 'warning',
-              text: '<p>Could not load emoticons</p>'
+              type: 'cancel',
+              text: 'Close',
+              primary: true
             }
-          ]
-        },
-        buttons: [
-          {
-            type: 'cancel',
-            text: 'Close',
-            primary: true
+          ],
+          initialData: {
+            pattern: '',
+            results: []
           }
-        ],
-        initialData: {
-          pattern: '',
-          results: []
-        }
+        });
+        dialogApi.focus(patternName);
+        dialogApi.unblock();
       });
-      dialogApi.focus(patternName);
-      dialogApi.unblock();
-    });
   }
 };
 
-export {
-  open
-};
+export { open };

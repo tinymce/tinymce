@@ -1,4 +1,10 @@
-import { Range, Window, DOMRect, ClientRect, Node as DomNode } from '@ephox/dom-globals';
+import {
+  Range,
+  Window,
+  DOMRect,
+  ClientRect,
+  Node as DomNode
+} from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import Element from '../../api/node/Element';
 import { Situ } from '../../api/selection/Situ';
@@ -10,14 +16,19 @@ const selectNodeContents = function (win: Window, element: Element<DomNode>) {
   return rng;
 };
 
-const selectNodeContentsUsing = function (rng: Range, element: Element<DomNode>) {
+const selectNodeContentsUsing = function (
+  rng: Range,
+  element: Element<DomNode>
+) {
   rng.selectNodeContents(element.dom());
 };
 
 const isWithin = function (outerRange: Range, innerRange: Range) {
   // Adapted from: http://stackoverflow.com/questions/5605401/insert-link-in-contenteditable-element
-  return innerRange.compareBoundaryPoints(outerRange.END_TO_START, outerRange) < 1 &&
-    innerRange.compareBoundaryPoints(outerRange.START_TO_END, outerRange) > -1;
+  return (
+    innerRange.compareBoundaryPoints(outerRange.END_TO_START, outerRange) < 1 &&
+    innerRange.compareBoundaryPoints(outerRange.START_TO_END, outerRange) > -1
+  );
 };
 
 const create = function (win: Window) {
@@ -26,23 +37,31 @@ const create = function (win: Window) {
 
 // NOTE: Mutates the range.
 const setStart = function (rng: Range, situ: Situ) {
-  situ.fold(function (e) {
-    rng.setStartBefore(e.dom());
-  }, function (e, o) {
-    rng.setStart(e.dom(), o);
-  }, function (e) {
-    rng.setStartAfter(e.dom());
-  });
+  situ.fold(
+    function (e) {
+      rng.setStartBefore(e.dom());
+    },
+    function (e, o) {
+      rng.setStart(e.dom(), o);
+    },
+    function (e) {
+      rng.setStartAfter(e.dom());
+    }
+  );
 };
 
 const setFinish = function (rng: Range, situ: Situ) {
-  situ.fold(function (e) {
-    rng.setEndBefore(e.dom());
-  }, function (e, o) {
-    rng.setEnd(e.dom(), o);
-  }, function (e) {
-    rng.setEndAfter(e.dom());
-  });
+  situ.fold(
+    function (e) {
+      rng.setEndBefore(e.dom());
+    },
+    function (e, o) {
+      rng.setEnd(e.dom(), o);
+    },
+    function (e) {
+      rng.setEndAfter(e.dom());
+    }
+  );
 };
 
 const replaceWith = function (rng: Range, fragment: Element<DomNode>) {
@@ -51,14 +70,24 @@ const replaceWith = function (rng: Range, fragment: Element<DomNode>) {
   rng.insertNode(fragment.dom());
 };
 
-const relativeToNative = function (win: Window, startSitu: Situ, finishSitu: Situ) {
+const relativeToNative = function (
+  win: Window,
+  startSitu: Situ,
+  finishSitu: Situ
+) {
   const range = win.document.createRange();
   setStart(range, startSitu);
   setFinish(range, finishSitu);
   return range;
 };
 
-const exactToNative = function (win: Window, start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
+const exactToNative = function (
+  win: Window,
+  start: Element<DomNode>,
+  soffset: number,
+  finish: Element<DomNode>,
+  foffset: number
+) {
   const rng = win.document.createRange();
   rng.setStart(start.dom(), soffset);
   rng.setEnd(finish.dom(), foffset);
@@ -89,16 +118,33 @@ const getFirstRect = function (rng: Range) {
   const rects = rng.getClientRects();
   // ASSUMPTION: The first rectangle is the start of the selection
   const rect = rects.length > 0 ? rects[0] : rng.getBoundingClientRect();
-  return rect.width > 0 || rect.height > 0  ? Option.some(rect).map(toRect) : Option.none<StructRect>();
+  return rect.width > 0 || rect.height > 0
+    ? Option.some(rect).map(toRect)
+    : Option.none<StructRect>();
 };
 
 const getBounds = function (rng: Range) {
   const rect = rng.getBoundingClientRect();
-  return rect.width > 0 || rect.height > 0  ? Option.some(rect).map(toRect) : Option.none<StructRect>();
+  return rect.width > 0 || rect.height > 0
+    ? Option.some(rect).map(toRect)
+    : Option.none<StructRect>();
 };
 
 const toString = function (rng: Range) {
   return rng.toString();
 };
 
-export { create, replaceWith, selectNodeContents, selectNodeContentsUsing, relativeToNative, exactToNative, deleteContents, cloneFragment, getFirstRect, getBounds, isWithin, toString, };
+export {
+  create,
+  replaceWith,
+  selectNodeContents,
+  selectNodeContentsUsing,
+  relativeToNative,
+  exactToNative,
+  deleteContents,
+  cloneFragment,
+  getFirstRect,
+  getBounds,
+  isWithin,
+  toString
+};

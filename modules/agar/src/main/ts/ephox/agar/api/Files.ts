@@ -1,6 +1,3 @@
 import { createFile, createFileFromString } from '../file/File';
 
-export {
-  createFile,
-  createFileFromString
-};
+export { createFile, createFileFromString };

@@ -8,8 +8,8 @@ export const first = function (str: string, count: number) {
 };
 
 /** Return the last 'count' letters from 'str'.
-*  e.g. last("abcde", 2) === "de"
-*/
+ *  e.g. last("abcde", 2) === "de"
+ */
 export const last = function (str: string, count: number) {
   return str.substr(str.length - count, str.length);
 };

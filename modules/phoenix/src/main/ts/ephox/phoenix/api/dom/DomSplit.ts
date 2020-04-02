@@ -13,7 +13,12 @@ const splitByPair = function (element: Element, start: number, finish: number) {
   return Split.splitByPair(universe, element, start, finish);
 };
 
-const range = function (start: Element, startOffset: number, finish: Element, finishOffset: number) {
+const range = function (
+  start: Element,
+  startOffset: number,
+  finish: Element,
+  finishOffset: number
+) {
   return Split.range(universe, start, startOffset, finish, finishOffset);
 };
 
@@ -25,10 +30,4 @@ const position = function (target: TextSplit<Element>) {
   return Split.position(universe, target);
 };
 
-export {
-  split,
-  splitByPair,
-  range,
-  subdivide,
-  position
-};
+export { split, splitByPair, range, subdivide, position };

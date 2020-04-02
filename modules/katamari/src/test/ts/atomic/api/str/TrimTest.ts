@@ -24,46 +24,41 @@ UnitTest.test('Strings.trim: unit tests', () => {
 });
 
 UnitTest.test('leftTrim(whitespace + s) === leftTrim(s)', () => {
-  fc.assert(fc.property(
-    fc.string(),
-    (s) => {
+  fc.assert(
+    fc.property(fc.string(), (s) => {
       Assert.eq('leftTrim', Strings.lTrim(' ' + s), Strings.lTrim(s), tString);
-    }
-  ));
+    })
+  );
 });
 
 UnitTest.test('rightTrim(s + whitespace) === rightTrim(s)', () => {
-  fc.assert(fc.property(
-    fc.string(),
-    (s) => {
+  fc.assert(
+    fc.property(fc.string(), (s) => {
       Assert.eq('rightTrim', Strings.rTrim(s + ' '), Strings.rTrim(s), tString);
-    }
-  ));
+    })
+  );
 });
 
 UnitTest.test('trim(whitespace + s) === trim(s)', () => {
-  fc.assert(fc.property(
-    fc.string(),
-    (s) => {
+  fc.assert(
+    fc.property(fc.string(), (s) => {
       Assert.eq('trim', Strings.trim(' ' + s), Strings.trim(s), tString);
-    }
-  ));
+    })
+  );
 });
 
 UnitTest.test('trim(s + whitespace) === trim(s)', () => {
-  fc.assert(fc.property(
-    fc.string(),
-    (s) => {
+  fc.assert(
+    fc.property(fc.string(), (s) => {
       Assert.eq('trim', Strings.trim(s + ' '), Strings.trim(s), tString);
-    }
-  ));
+    })
+  );
 });
 
 UnitTest.test('trim(whitespace + s + whitespace) === trim(s)', () => {
-  fc.assert(fc.property(
-    fc.string(),
-    (s) => {
+  fc.assert(
+    fc.property(fc.string(), (s) => {
       Assert.eq('trim', Strings.trim(' ' + s + ' '), Strings.trim(s), tString);
-    }
-  ));
+    })
+  );
 });

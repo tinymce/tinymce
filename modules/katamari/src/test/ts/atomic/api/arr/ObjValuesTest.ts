@@ -11,6 +11,6 @@ UnitTest.test('Obj.values', () => {
   };
 
   check([], {});
-  check([ 'A' ], { a: 'A' });
-  check([ 'A', 'B', 'C' ], { a: 'A', c: 'C', b: 'B' });
+  check(['A'], { a: 'A' });
+  check(['A', 'B', 'C'], { a: 'A', c: 'C', b: 'B' });
 });

@@ -28,42 +28,50 @@ UnitTest.test('Arr.indexOf: unit tests', () => {
   };
 
   checkNone([], 'x');
-  checkNone([ 'q' ], 'x');
-  checkNone([ 1 ], '1');
-  checkNone([ 1 ], undefined);
-  check(0, [ undefined ], undefined);
-  check(0, [ undefined, undefined ], undefined);
-  check(1, [ 1, undefined ], undefined);
-  check(2, [ 'dog', 3, 'cat' ], 'cat');
+  checkNone(['q'], 'x');
+  checkNone([1], '1');
+  checkNone([1], undefined);
+  check(0, [undefined], undefined);
+  check(0, [undefined, undefined], undefined);
+  check(1, [1, undefined], undefined);
+  check(2, ['dog', 3, 'cat'], 'cat');
 });
 
 UnitTest.test('Arr.indexOf: find in middle of array', () => {
-  fc.assert(fc.property(fc.array(fc.nat()), arbNegativeInteger(), fc.array(fc.nat()), (prefix, element, suffix) => {
-    const arr = prefix.concat([ element ]).concat(suffix);
-    Assert.eq(
-      'Element should be found immediately after the prefix array',
-      Option.some(prefix.length),
-      Arr.indexOf(arr, element),
-      tOption(tNumber)
-    );
-  }));
+  fc.assert(
+    fc.property(
+      fc.array(fc.nat()),
+      arbNegativeInteger(),
+      fc.array(fc.nat()),
+      (prefix, element, suffix) => {
+        const arr = prefix.concat([element]).concat(suffix);
+        Assert.eq(
+          'Element should be found immediately after the prefix array',
+          Option.some(prefix.length),
+          Arr.indexOf(arr, element),
+          tOption(tNumber)
+        );
+      }
+    )
+  );
 });
 
 UnitTest.test('Arr.indexOf: indexOf of an empty array is none', () => {
-  fc.property(
-    fc.integer(),
-    (x) => {
-      Assert.eq('indexOf', Option.none(), Arr.indexOf([], x), tOption());
-    }
-  );
+  fc.property(fc.integer(), (x) => {
+    Assert.eq('indexOf', Option.none(), Arr.indexOf([], x), tOption());
+  });
 });
 
-UnitTest.test('Arr.indexOf: indexOf of a [value].concat(array) is some(0)', () => {
-  fc.property(
-    fc.array(fc.integer()),
-    fc.integer(),
-    (arr, x) => {
-      Assert.eq('index', Option.some(0), Arr.indexOf([ x ].concat(arr), x), tOption());
-    }
-  );
-});
+UnitTest.test(
+  'Arr.indexOf: indexOf of a [value].concat(array) is some(0)',
+  () => {
+    fc.property(fc.array(fc.integer()), fc.integer(), (arr, x) => {
+      Assert.eq(
+        'index',
+        Option.some(0),
+        Arr.indexOf([x].concat(arr), x),
+        tOption()
+      );
+    });
+  }
+);

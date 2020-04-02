@@ -11,6 +11,4 @@ const fromElements = function (elements: Element<DomNode>[], scope?: Document) {
   return Element.fromDom(fragment);
 };
 
-export {
-  fromElements
-};
+export { fromElements };

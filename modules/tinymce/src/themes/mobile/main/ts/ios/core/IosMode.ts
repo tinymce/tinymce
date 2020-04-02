@@ -79,7 +79,13 @@ const create = function (platform, mask) {
       });
 
       iosEvents.set(
-        IosEvents.initEvents(editorApi, iosApi, platform.toolstrip, platform.socket, platform.dropup)
+        IosEvents.initEvents(
+          editorApi,
+          iosApi,
+          platform.toolstrip,
+          platform.socket,
+          platform.dropup
+        )
       );
     });
   };
@@ -111,8 +117,8 @@ const create = function (platform, mask) {
     Thor.restoreStyles();
     Scrollable.deregister(platform.toolbar);
 
-    Css.remove(platform.socket, 'overflow'/* , 'scroll'*/);
-    Css.remove(platform.socket, '-webkit-overflow-scrolling'/* , 'touch'*/);
+    Css.remove(platform.socket, 'overflow' /* , 'scroll'*/);
+    Css.remove(platform.socket, '-webkit-overflow-scrolling' /* , 'touch'*/);
 
     // Hide the keyboard and remove the selection so there isn't a blue cursor in the content
     // still even once exited.
@@ -137,6 +143,4 @@ const create = function (platform, mask) {
   };
 };
 
-export {
-  create
-};
+export { create };

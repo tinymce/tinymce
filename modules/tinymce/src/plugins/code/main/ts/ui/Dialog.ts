@@ -27,7 +27,7 @@ const open = function (editor: Editor) {
       {
         type: 'cancel',
         name: 'cancel',
-        text: 'Cancel',
+        text: 'Cancel'
       },
       {
         type: 'submit',
@@ -51,6 +51,4 @@ const open = function (editor: Editor) {
   // win.find('#code').value(Content.getContent(editor));
 };
 
-export {
-  open
-};
+export { open };

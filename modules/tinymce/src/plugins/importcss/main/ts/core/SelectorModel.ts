@@ -8,17 +8,17 @@
 import { Arr } from '@ephox/katamari';
 
 const generate = () => {
-  const ungroupedOrder = [ ];
-  const groupOrder = [ ];
+  const ungroupedOrder = [];
+  const groupOrder = [];
 
-  const groups = { };
+  const groups = {};
 
   const addItemToGroup = (groupTitle, itemInfo) => {
     if (groups[groupTitle]) {
       groups[groupTitle].push(itemInfo);
     } else {
       groupOrder.push(groupTitle);
-      groups[groupTitle] = [ itemInfo ];
+      groups[groupTitle] = [itemInfo];
     }
   };
 
@@ -29,10 +29,14 @@ const generate = () => {
   const toFormats = () => {
     const groupItems = Arr.bind(groupOrder, (g) => {
       const items = groups[g];
-      return items.length === 0 ? [ ] : [{
-        title: g,
-        items
-      }];
+      return items.length === 0
+        ? []
+        : [
+            {
+              title: g,
+              items
+            }
+          ];
     });
 
     return groupItems.concat(ungroupedOrder);
@@ -45,6 +49,4 @@ const generate = () => {
   };
 };
 
-export {
-  generate
-};
+export { generate };

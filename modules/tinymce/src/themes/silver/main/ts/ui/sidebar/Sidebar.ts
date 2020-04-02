@@ -19,7 +19,7 @@ import {
   Tabstopping,
   Focusing,
   SlotContainer,
-  SlotContainerTypes,
+  SlotContainerTypes
 } from '@ephox/alloy';
 import { Sidebar as BridgeSidebar } from '@ephox/bridge';
 import { HTMLElement } from '@ephox/dom-globals';
@@ -29,7 +29,10 @@ import Editor from 'tinymce/core/api/Editor';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
-import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
+import {
+  onControlAttached,
+  onControlDetached
+} from 'tinymce/themes/silver/ui/controls/Controls';
 import { ValueSchema } from '@ephox/boulder';
 
 export type SidebarConfig = Record<string, BridgeSidebar.SidebarApi>;
@@ -40,7 +43,8 @@ const setup = (editor: Editor) => {
   // Setup each registered sidebar
   Arr.each(Obj.keys(sidebars), (name) => {
     const spec = sidebars[name];
-    const isActive = () => Option.from(editor.queryCommandValue('ToggleSidebar')).is(name);
+    const isActive = () =>
+      Option.from(editor.queryCommandValue('ToggleSidebar')).is(name);
     editor.ui.registry.addToggleButton(name, {
       icon: spec.icon,
       tooltip: spec.tooltip,
@@ -63,7 +67,10 @@ const getApi = (comp: AlloyComponent): BridgeSidebar.SidebarInstanceApi => ({
   element: (): HTMLElement => comp.element().dom()
 });
 
-const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: SidebarConfig) => {
+const makePanels = (
+  parts: SlotContainerTypes.SlotContainerParts,
+  panelConfigs: SidebarConfig
+) => {
   const specs = Arr.map(Obj.keys(panelConfigs), (name) => {
     const spec = panelConfigs[name];
     const bridged = ValueSchema.getOrDie(BridgeSidebar.createSidebar(spec));
@@ -78,44 +85,54 @@ const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: 
 
   return Arr.map(specs, (spec) => {
     const editorOffCell = Cell(Fun.noop);
-    return parts.slot(
-      spec.name,
-      {
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-sidebar__pane' ]
-        },
-        behaviours: SimpleBehaviours.unnamedEvents([
-          onControlAttached(spec, editorOffCell),
-          onControlDetached(spec, editorOffCell),
-          AlloyEvents.run<SystemEvents.AlloySlotVisibilityEvent>(SystemEvents.slotVisibility(), (sidepanel, se) => {
+    return parts.slot(spec.name, {
+      dom: {
+        tag: 'div',
+        classes: ['tox-sidebar__pane']
+      },
+      behaviours: SimpleBehaviours.unnamedEvents([
+        onControlAttached(spec, editorOffCell),
+        onControlDetached(spec, editorOffCell),
+        AlloyEvents.run<SystemEvents.AlloySlotVisibilityEvent>(
+          SystemEvents.slotVisibility(),
+          (sidepanel, se) => {
             const data = se.event();
-            const optSidePanelSpec = Arr.find(specs, (config) => config.name === data.name());
+            const optSidePanelSpec = Arr.find(
+              specs,
+              (config) => config.name === data.name()
+            );
             optSidePanelSpec.each((sidePanelSpec) => {
-              const handler = data.visible() ? sidePanelSpec.onShow : sidePanelSpec.onHide;
+              const handler = data.visible()
+                ? sidePanelSpec.onShow
+                : sidePanelSpec.onHide;
               handler(sidePanelSpec.getApi(sidepanel));
             });
-          })
-        ])
-      }
-    );
+          }
+        )
+      ])
+    });
   });
 };
 
-const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts) => ({
-  dom: {
-    tag: 'div',
-    classes: [ 'tox-sidebar__pane-container' ],
-  },
-  components: makePanels(parts, panelConfigs),
-  slotBehaviours: SimpleBehaviours.unnamedEvents([
-    AlloyEvents.runOnAttached((slotContainer) => SlotContainer.hideAllSlots(slotContainer))
-  ])
-}));
+const makeSidebar = (panelConfigs: SidebarConfig) =>
+  SlotContainer.sketch((parts) => ({
+    dom: {
+      tag: 'div',
+      classes: ['tox-sidebar__pane-container']
+    },
+    components: makePanels(parts, panelConfigs),
+    slotBehaviours: SimpleBehaviours.unnamedEvents([
+      AlloyEvents.runOnAttached((slotContainer) =>
+        SlotContainer.hideAllSlots(slotContainer)
+      )
+    ])
+  }));
 
 const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig) => {
   const optSlider = Composing.getCurrent(sidebar);
-  optSlider.each((slider) => Replacing.set(slider, [ makeSidebar(panelConfigs) ]));
+  optSlider.each((slider) =>
+    Replacing.set(slider, [makeSidebar(panelConfigs)])
+  );
 };
 
 const toggleSidebar = (sidebar: AlloyComponent, name: string) => {
@@ -168,7 +185,7 @@ const renderSidebar = (spec) => ({
   uid: spec.uid,
   dom: {
     tag: 'div',
-    classes: [ 'tox-sidebar' ],
+    classes: ['tox-sidebar'],
     attributes: {
       role: 'complementary'
     }
@@ -177,14 +194,14 @@ const renderSidebar = (spec) => ({
     {
       dom: {
         tag: 'div',
-        classes: [ 'tox-sidebar__slider' ]
+        classes: ['tox-sidebar__slider']
       },
       components: [
         // this will be replaced on setSidebar
       ],
       behaviours: Behaviour.derive([
-        Tabstopping.config({ }),
-        Focusing.config({ }), // TODO use Keying and use focusIn, but need to handle if sidebar contains nothing
+        Tabstopping.config({}),
+        Focusing.config({}), // TODO use Keying and use focusIn, but need to handle if sidebar contains nothing
         Sliding.config({
           dimension: {
             property: 'width'
@@ -202,10 +219,14 @@ const renderSidebar = (spec) => ({
             AlloyTriggers.emit(slider, autoSize);
           },
           onStartGrow: (slider: AlloyComponent) => {
-            AlloyTriggers.emitWith(slider, fixSize, { width: Css.getRaw(slider.element(), 'width').getOr('') });
+            AlloyTriggers.emitWith(slider, fixSize, {
+              width: Css.getRaw(slider.element(), 'width').getOr('')
+            });
           },
           onStartShrink: (slider: AlloyComponent) => {
-            AlloyTriggers.emitWith(slider, fixSize, { width: Width.get(slider.element()) + 'px' });
+            AlloyTriggers.emitWith(slider, fixSize, {
+              width: Width.get(slider.element()) + 'px'
+            });
           }
         }),
         Replacing.config({}),
@@ -231,10 +252,4 @@ const renderSidebar = (spec) => ({
   ])
 });
 
-export {
-  setSidebar,
-  toggleSidebar,
-  whichSidebar,
-  renderSidebar,
-  setup
-};
+export { setSidebar, toggleSidebar, whichSidebar, renderSidebar, setup };

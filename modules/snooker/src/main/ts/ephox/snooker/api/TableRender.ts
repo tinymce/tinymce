@@ -1,6 +1,3 @@
 import { render, RenderOptions } from '../operate/Render';
 
-export {
-  render,
-  RenderOptions
-};
+export { render, RenderOptions };

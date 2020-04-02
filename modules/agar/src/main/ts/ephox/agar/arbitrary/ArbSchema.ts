@@ -22,14 +22,17 @@ const inline = {
   recursionDepth: 3,
   // Underline, strikethrough
   tags: {
-    'span-strikethrough': { weight: 1, styles: { 'text-decoration': 'line-through' }},
+    'span-strikethrough': {
+      weight: 1,
+      styles: { 'text-decoration': 'line-through' }
+    },
     'span': { weight: 1 },
     'font': { weight: 0 },
     'em': { weight: 1 },
     'strong': { weight: 1 },
     'b': { weight: 1 },
     'i': { weight: 1 },
-    'span-underline': { weight: 1, styles: { 'text-decoration': 'underline' }}
+    'span-underline': { weight: 1, styles: { 'text-decoration': 'underline' } }
   },
   components: {
     anytext: { weight: 0.5 },
@@ -152,7 +155,7 @@ const caption = {
 const image = {
   type: 'arbitrary',
   // INVESTIGATE: Represent these without this import (not sure if good idea)
-  component: ArbNodes.elementOfArb(Jsc.elements([ 'img' ]))
+  component: ArbNodes.elementOfArb(Jsc.elements(['img']))
 };
 
 const netext = {
@@ -168,7 +171,7 @@ const anytext = {
 // TODO: Br?
 const whitespace = {
   type: 'arbitrary',
-  component: ArbNodes.textOfArb(Jsc.elements([ ' ', '\n' ]))
+  component: ArbNodes.textOfArb(Jsc.elements([' ', '\n']))
 };
 
 const zerowidth = {
@@ -178,7 +181,7 @@ const zerowidth = {
 
 const zerowidths = {
   type: 'arbitrary',
-  component: ArbNodes.textOfArb(Jsc.elements([ '\u200B', Unicode.zeroWidth ]))
+  component: ArbNodes.textOfArb(Jsc.elements(['\u200B', Unicode.zeroWidth]))
 };
 
 const comment = {

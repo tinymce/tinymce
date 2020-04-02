@@ -1,7 +1,7 @@
 import { getDemoRegistry } from './../buttons/DemoRegistry';
 
 const editor = {
-  on: (_s, _f) => { }
+  on: (_s, _f) => {}
 };
 
 export const registerMediaItems = () => {
@@ -13,7 +13,7 @@ export const registerMediaItems = () => {
         buttonApi.setActive(e);
         // sets active state based on selection
       });
-      return () => { };
+      return () => {};
     },
     onAction: (_buttonApi) => {
       // opens media dialog

@@ -6,10 +6,22 @@
  */
 
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Compare, Insert, InsertAll, Replication, Element, Attr, SelectorFilter } from '@ephox/sugar';
+import {
+  Compare,
+  Insert,
+  InsertAll,
+  Replication,
+  Element,
+  Attr,
+  SelectorFilter
+} from '@ephox/sugar';
 import { HTMLTableCellElement } from '@ephox/dom-globals';
 
-const tableModel = (element: Element<unknown>, width: number, rows: Element<unknown>[]) => ({
+const tableModel = (
+  element: Element<unknown>,
+  width: number,
+  rows: Element<unknown>[]
+) => ({
   element: Fun.constant(element),
   width: Fun.constant(width),
   rows: Fun.constant(rows)
@@ -65,9 +77,13 @@ const skipCellsX = function (table, x, y) {
 };
 
 const getWidth = function (rows) {
-  return Arr.foldl(rows, function (acc, row) {
-    return row.cells().length > acc ? row.cells().length : acc;
-  }, 0);
+  return Arr.foldl(
+    rows,
+    function (acc, row) {
+      return row.cells().length > acc ? row.cells().length : acc;
+    },
+    0
+  );
 };
 
 const findElementPos = function (table, element) {
@@ -98,9 +114,14 @@ const extractRows = function (table, sx, sy, ex, ey) {
 };
 
 const subTable = function (table, startPos, endPos) {
-  const sx = startPos.x(), sy = startPos.y();
-  const ex = endPos.x(), ey = endPos.y();
-  const newRows = sy < ey ? extractRows(table, sx, sy, ex, ey) : extractRows(table, sx, ey, ex, sy);
+  const sx = startPos.x(),
+    sy = startPos.y();
+  const ex = endPos.x(),
+    ey = endPos.y();
+  const newRows =
+    sy < ey
+      ? extractRows(table, sx, sy, ex, ey)
+      : extractRows(table, sx, ey, ex, sy);
 
   return tableModel(table.element(), getWidth(newRows), newRows);
 };
@@ -117,7 +138,9 @@ const createDomTable = function (table, rows) {
 
 const modelRowsToDomRows = function (table) {
   return Arr.map(table.rows(), function (row) {
-    const cells = Arr.map(row.cells(), function (cell: Element<HTMLTableCellElement>) {
+    const cells = Arr.map(row.cells(), function (
+      cell: Element<HTMLTableCellElement>
+    ) {
       const td = Replication.deep(cell);
       Attr.remove(td, 'colspan');
       Attr.remove(td, 'rowspan');
@@ -154,8 +177,4 @@ const subsection = function (table, startElement, endElement) {
   });
 };
 
-export {
-  fromDom,
-  toDom,
-  subsection
-};
+export { fromDom, toDom, subsection };

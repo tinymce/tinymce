@@ -13,9 +13,7 @@ UnitTest.test('Contiguous Text Nodes Test', function () {
         TextGene('1.2', 'beta'),
         TextGene('1.3', 'gamma')
       ]),
-      Gene('2', 'span', [
-        TextGene('1.4', '')
-      ]),
+      Gene('2', 'span', [TextGene('1.4', '')]),
       Gene('3', 'span', [
         TextGene('1.5', ''),
         Gene('img', 'img'),
@@ -39,14 +37,18 @@ UnitTest.test('Contiguous Text Nodes Test', function () {
     });
   };
 
-  check([
-    { parent: '1', children: [ '1.1', '1.2', '1.3' ] }
-  ], [ '1.1', '1.2', '1.3' ]);
+  check(
+    [{ parent: '1', children: ['1.1', '1.2', '1.3'] }],
+    ['1.1', '1.2', '1.3']
+  );
 
-  check([
-    { parent: '1', children: [ '1.1', '1.2', '1.3' ] },
-    { parent: '2', children: [ '1.4' ] },
-    { parent: '3', children: [ '1.5' ] },
-    { parent: '3', children: [ '1.6' ] }
-  ], [ '1.1', '1.2', '1.3', '1.4', '1.5', '1.6' ]);
+  check(
+    [
+      { parent: '1', children: ['1.1', '1.2', '1.3'] },
+      { parent: '2', children: ['1.4'] },
+      { parent: '3', children: ['1.5'] },
+      { parent: '3', children: ['1.6'] }
+    ],
+    ['1.1', '1.2', '1.3', '1.4', '1.5', '1.6']
+  );
 });

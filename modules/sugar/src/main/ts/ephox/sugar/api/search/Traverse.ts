@@ -32,7 +32,10 @@ const findIndex = function (element: Element<DomNode>) {
   });
 };
 
-const parents = function (element: Element<DomNode>, isRoot?: (e: Element<DomNode>) => boolean) {
+const parents = function (
+  element: Element<DomNode>,
+  isRoot?: (e: Element<DomNode>) => boolean
+) {
   const stop = Type.isFunction(isRoot) ? isRoot : Fun.never;
 
   // This is used a *lot* so it needs to be performant, not recursive
@@ -55,7 +58,7 @@ const parents = function (element: Element<DomNode>, isRoot?: (e: Element<DomNod
 
 const siblings = function (element: Element<DomNode>) {
   // TODO: Refactor out children so we can just not add self instead of filtering afterwards
-  const filterSelf = function <E> (elements: Element<E>[]) {
+  const filterSelf = function <E>(elements: Element<E>[]) {
     return Arr.filter(elements, function (x) {
       return !Compare.eq(element, x);
     });
@@ -120,9 +123,34 @@ const spot = <E>(element: Element<E>, offset: number): ElementAndOffset<E> => ({
   offset: Fun.constant(offset)
 });
 
-const leaf = function (element: Element<DomNode>, offset: number): ElementAndOffset<DomNode> {
+const leaf = function (
+  element: Element<DomNode>,
+  offset: number
+): ElementAndOffset<DomNode> {
   const cs = children(element);
-  return cs.length > 0 && offset < cs.length ? spot(cs[offset], 0) : spot(element, offset);
+  return cs.length > 0 && offset < cs.length
+    ? spot(cs[offset], 0)
+    : spot(element, offset);
 };
 
-export { owner, defaultView, documentElement, parent, findIndex, parents, siblings, prevSibling, offsetParent, prevSiblings, nextSibling, nextSiblings, children, child, firstChild, lastChild, childNodesCount, hasChildNodes, leaf, };
+export {
+  owner,
+  defaultView,
+  documentElement,
+  parent,
+  findIndex,
+  parents,
+  siblings,
+  prevSibling,
+  offsetParent,
+  prevSiblings,
+  nextSibling,
+  nextSiblings,
+  children,
+  child,
+  firstChild,
+  lastChild,
+  childNodesCount,
+  hasChildNodes,
+  leaf
+};

@@ -15,7 +15,7 @@ export interface SerializerSettings extends WriterSettings {
 }
 
 interface Serializer {
-  serialize (node: Node): string;
+  serialize(node: Node): string;
 }
 
 /**
@@ -88,7 +88,15 @@ const Serializer = function (settings?: SerializerSettings, schema = Schema()) {
 
     const walk = function (node: Node) {
       const handler = handlers[node.type];
-      let  name, isEmpty, attrs, attrName, attrValue, sortedAttrs, i, l, elementRule;
+      let name,
+        isEmpty,
+        attrs,
+        attrName,
+        attrValue,
+        sortedAttrs,
+        i,
+        l,
+        elementRule;
 
       if (!handler) {
         name = node.name;

@@ -18,8 +18,4 @@ const freefallRtl = function (element: Element) {
   return Descent.freefallRtl(universe, element);
 };
 
-export {
-  toLeaf,
-  freefallLtr,
-  freefallRtl
-};
+export { toLeaf, freefallLtr, freefallRtl };

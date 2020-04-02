@@ -53,25 +53,28 @@ function removeExplorerBrElementsAfterBlocks(editor: Editor, html: string) {
   // Produce block regexp based on the block elements in schema
   const blockElements = [];
 
-  Tools.each(editor.schema.getBlockElements(), function (block: Element, blockName: string) {
+  Tools.each(editor.schema.getBlockElements(), function (
+    block: Element,
+    blockName: string
+  ) {
     blockElements.push(blockName);
   });
 
   const explorerBlocksRegExp = new RegExp(
-    '(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*(<\\/?(' + blockElements.join('|') + ')[^>]*>)(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*',
+    '(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*(<\\/?(' +
+      blockElements.join('|') +
+      ')[^>]*>)(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*',
     'g'
   );
 
   // Remove BR:s from: <BLOCK>X</BLOCK><BR>
-  html = Utils.filter(html, [
-    [ explorerBlocksRegExp, '$1' ]
-  ]);
+  html = Utils.filter(html, [[explorerBlocksRegExp, '$1']]);
 
   // IE9 also adds an extra BR element for each soft-linefeed and it also adds a BR for each word wrap break
   html = Utils.filter(html, [
-    [ /<br><br>/g, '<BR><BR>' ], // Replace multiple BR elements with uppercase BR to keep them intact
-    [ /<br>/g, ' ' ],            // Replace single br elements with space since they are word wrap BR:s
-    [ /<BR><BR>/g, '<br>' ]      // Replace back the double brs but into a single BR
+    [/<br><br>/g, '<BR><BR>'], // Replace multiple BR elements with uppercase BR to keep them intact
+    [/<br>/g, ' '], // Replace single br elements with space since they are word wrap BR:s
+    [/<BR><BR>/g, '<br>'] // Replace back the double brs but into a single BR
   ]);
 
   return html;
@@ -86,7 +89,12 @@ function removeExplorerBrElementsAfterBlocks(editor: Editor, html: string) {
  *  paste_webkit_styles: "all", // Keep all of them
  *  paste_webkit_styles: "font-weight color" // Keep specific ones
  */
-function removeWebKitStyles(editor: Editor, content: string, internal: boolean, isWordHtml: boolean) {
+function removeWebKitStyles(
+  editor: Editor,
+  content: string,
+  internal: boolean,
+  isWordHtml: boolean
+) {
   // WordFilter has already processed styles at this point and internal doesn't need any processing
   if (isWordHtml || internal) {
     return content;
@@ -96,7 +104,10 @@ function removeWebKitStyles(editor: Editor, content: string, internal: boolean, 
   const webKitStylesSetting = Settings.getWebkitStyles(editor);
   let webKitStyles: string[] | string;
 
-  if (Settings.shouldRemoveWebKitStyles(editor) === false || webKitStylesSetting === 'all') {
+  if (
+    Settings.shouldRemoveWebKitStyles(editor) === false ||
+    webKitStylesSetting === 'all'
+  ) {
     return content;
   }
 
@@ -106,9 +117,15 @@ function removeWebKitStyles(editor: Editor, content: string, internal: boolean, 
 
   // Keep specific styles that doesn't match the current node computed style
   if (webKitStyles) {
-    const dom = editor.dom, node = editor.selection.getNode();
+    const dom = editor.dom,
+      node = editor.selection.getNode();
 
-    content = content.replace(/(<[^>]+) style="([^"]*)"([^>]*>)/gi, function (all, before, value, after) {
+    content = content.replace(/(<[^>]+) style="([^"]*)"([^>]*>)/gi, function (
+      all,
+      before,
+      value,
+      after
+    ) {
       const inputStyles = dom.parseStyle(dom.decode(value));
       let outputStyles = {};
 
@@ -117,7 +134,8 @@ function removeWebKitStyles(editor: Editor, content: string, internal: boolean, 
       }
 
       for (let i = 0; i < webKitStyles.length; i++) {
-        let inputValue = inputStyles[webKitStyles[i]], currentValue = dom.getStyle(node, webKitStyles[i], true);
+        let inputValue = inputStyles[webKitStyles[i]],
+          currentValue = dom.getStyle(node, webKitStyles[i], true);
 
         if (/color/.test(webKitStyles[i])) {
           inputValue = dom.toHex(inputValue);
@@ -142,17 +160,23 @@ function removeWebKitStyles(editor: Editor, content: string, internal: boolean, 
   }
 
   // Keep internal styles
-  content = content.replace(/(<[^>]+) data-mce-style="([^"]+)"([^>]*>)/gi, function (all, before, value, after) {
-    return before + ' style="' + value + '"' + after;
-  });
+  content = content.replace(
+    /(<[^>]+) data-mce-style="([^"]+)"([^>]*>)/gi,
+    function (all, before, value, after) {
+      return before + ' style="' + value + '"' + after;
+    }
+  );
 
   return content;
 }
 
 function removeUnderlineAndFontInAnchor(editor: Editor, root: Element) {
-  editor.$('a', root).find('font,u').each(function (i, node) {
-    editor.dom.remove(node, true);
-  });
+  editor
+    .$('a', root)
+    .find('font,u')
+    .each(function (i, node) {
+      editor.dom.remove(node, true);
+    });
 }
 
 const setup = function (editor: Editor) {
@@ -166,6 +190,4 @@ const setup = function (editor: Editor) {
   }
 };
 
-export {
-  setup
-};
+export { setup };

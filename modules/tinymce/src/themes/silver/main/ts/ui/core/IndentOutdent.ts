@@ -8,7 +8,10 @@
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from '@ephox/bridge';
 
-const toggleOutdentState = (api: Toolbar.ToolbarButtonInstanceApi, editor: Editor) => {
+const toggleOutdentState = (
+  api: Toolbar.ToolbarButtonInstanceApi,
+  editor: Editor
+) => {
   api.setDisabled(!editor.queryCommandState('outdent'));
 
   const onNodeChange = () => {
@@ -38,6 +41,4 @@ const register = (editor: Editor) => {
   registerButtons(editor);
 };
 
-export {
-  register
-};
+export { register };

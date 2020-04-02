@@ -39,6 +39,4 @@ const setup = (editor: Editor) => {
   filterDetails(editor);
 };
 
-export {
-  setup
-};
+export { setup };

@@ -4,43 +4,48 @@ import * as Fractures from 'ephox/robin/clumps/Fractures';
 
 UnitTest.test('FracturesTest', function () {
   const regen = function () {
-    return TestUniverse(Gene('root', 'root', [
-      Gene('a', 'span', [
-        Gene('aa', 'span', [
-          TextGene('aaa', 'aaa'),
-          TextGene('aab', 'aab'),
-          TextGene('aac', 'aac')
-        ]),
-        TextGene('ab', 'ab'),
-        Gene('ac', 'span', [
-          TextGene('aca', 'aca'),
-          Gene('acb', 'span', [
-            TextGene('acba', 'acba'),
-            Gene('acbb', 'span', [
-              TextGene('acbba', 'acbba')
+    return TestUniverse(
+      Gene('root', 'root', [
+        Gene('a', 'span', [
+          Gene('aa', 'span', [
+            TextGene('aaa', 'aaa'),
+            TextGene('aab', 'aab'),
+            TextGene('aac', 'aac')
+          ]),
+          TextGene('ab', 'ab'),
+          Gene('ac', 'span', [
+            TextGene('aca', 'aca'),
+            Gene('acb', 'span', [
+              TextGene('acba', 'acba'),
+              Gene('acbb', 'span', [TextGene('acbba', 'acbba')])
             ])
           ])
-        ])
-      ]),
-      TextGene('b', 'b'),
-      Gene('c', 'span', [
-        TextGene('ca', 'ca'),
-        Gene('cb', 'span', [
-          Gene('c', 'span', [
-            TextGene('cbaa', 'cbaa'),
-            TextGene('cbab', 'cbab')
-          ]),
-          TextGene('cbb', 'cbb')
+        ]),
+        TextGene('b', 'b'),
+        Gene('c', 'span', [
+          TextGene('ca', 'ca'),
+          Gene('cb', 'span', [
+            Gene('c', 'span', [
+              TextGene('cbaa', 'cbaa'),
+              TextGene('cbab', 'cbab')
+            ]),
+            TextGene('cbb', 'cbb')
+          ])
         ])
       ])
-    ]));
+    );
   };
 
   const isRoot = function (item: Gene) {
     return item.name === 'root';
   };
 
-  const check = function (expected: string, startId: string, finishId: string, doc: TestUniverse = regen()) {
+  const check = function (
+    expected: string,
+    startId: string,
+    finishId: string,
+    doc: TestUniverse = regen()
+  ) {
     const start = doc.find(doc.get(), startId).getOrDie();
     const finish = doc.find(doc.get(), finishId).getOrDie();
     const actual = Fractures.fracture(doc, isRoot, start, finish);
@@ -51,53 +56,59 @@ UnitTest.test('FracturesTest', function () {
         doc.insert().appendAll(wrapper, act);
       }
     });
-    assert.eq(expected, doc.shortlog(function (item) {
-      return doc.property().isText(item) ? '"' + item.text + '"' : item.name;
-    }));
+    assert.eq(
+      expected,
+      doc.shortlog(function (item) {
+        return doc.property().isText(item) ? '"' + item.text + '"' : item.name;
+      })
+    );
   };
 
   check(
     'root(' +
-    'span(' +
-    'span,' +
-    'bold(' +
-    'span(' +
-    '"aaa",' +
-    '"aab",' +
-    '"aac"' +
-    '),' +
-    '"ab",' +
-    'span(' +
-    '"aca",' +
-    'span(' +
-    '"acba",' +
-    'span(' +
-    '"acbba"' +
-    ')' +
-    ')' +
-    ')' +
-    '),' +
-    'span(span(span))' +
-    ')' +
-    ')', 'aaa', 'acbba', TestUniverse(Gene('root', 'root', [
-      Gene('a', 'span', [
-        Gene('aa', 'span', [
-          TextGene('aaa', 'aaa'),
-          TextGene('aab', 'aab'),
-          TextGene('aac', 'aac')
-        ]),
-        TextGene('ab', 'ab'),
-        Gene('ac', 'span', [
-          TextGene('aca', 'aca'),
-          Gene('acb', 'span', [
-            TextGene('acba', 'acba'),
-            Gene('acbb', 'span', [
-              TextGene('acbba', 'acbba')
+      'span(' +
+      'span,' +
+      'bold(' +
+      'span(' +
+      '"aaa",' +
+      '"aab",' +
+      '"aac"' +
+      '),' +
+      '"ab",' +
+      'span(' +
+      '"aca",' +
+      'span(' +
+      '"acba",' +
+      'span(' +
+      '"acbba"' +
+      ')' +
+      ')' +
+      ')' +
+      '),' +
+      'span(span(span))' +
+      ')' +
+      ')',
+    'aaa',
+    'acbba',
+    TestUniverse(
+      Gene('root', 'root', [
+        Gene('a', 'span', [
+          Gene('aa', 'span', [
+            TextGene('aaa', 'aaa'),
+            TextGene('aab', 'aab'),
+            TextGene('aac', 'aac')
+          ]),
+          TextGene('ab', 'ab'),
+          Gene('ac', 'span', [
+            TextGene('aca', 'aca'),
+            Gene('acb', 'span', [
+              TextGene('acba', 'acba'),
+              Gene('acbb', 'span', [TextGene('acbba', 'acbba')])
             ])
           ])
         ])
       ])
-    ]))
+    )
   );
 
   // Needs ancestor scanning and breaker.left
@@ -187,38 +198,40 @@ UnitTest.test('FracturesTest', function () {
 
   check(
     'root(' +
-    'span(' +
-    'span,' +
-    'bold(' +
-    'span(' +
-    '"aaa",' +
-    '"aab",' +
-    '"aac"' +
-    '),' +
-    '"ab",' +
-    'span(' +
-    '"aca",' +
-    'span(' +
-    '"acba",' +
-    'span(' +
-    '"acbba"' +
-    ')' +
-    ')' +
-    ')' +
-    '),' +
-    'span(span(span))' +
-    '),' +
-    '"b",' +
-    'span(' +
-    '"ca",' +
-    'span(' +
-    'span(' +
-    '"cbaa",' +
-    '"cbab"' +
-    '),' +
-    '"cbb"' +
-    ')' +
-    ')' +
-    ')',
-    'aaa', 'acbba');
+      'span(' +
+      'span,' +
+      'bold(' +
+      'span(' +
+      '"aaa",' +
+      '"aab",' +
+      '"aac"' +
+      '),' +
+      '"ab",' +
+      'span(' +
+      '"aca",' +
+      'span(' +
+      '"acba",' +
+      'span(' +
+      '"acbba"' +
+      ')' +
+      ')' +
+      ')' +
+      '),' +
+      'span(span(span))' +
+      '),' +
+      '"b",' +
+      'span(' +
+      '"ca",' +
+      'span(' +
+      'span(' +
+      '"cbaa",' +
+      '"cbab"' +
+      '),' +
+      '"cbb"' +
+      ')' +
+      ')' +
+      ')',
+    'aaa',
+    'acbba'
+  );
 });

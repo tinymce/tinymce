@@ -11,6 +11,4 @@ const Streaming: StreamingBehaviour = Behaviour.create({
   state: StreamingState
 });
 
-export {
-  Streaming
-};
+export { Streaming };

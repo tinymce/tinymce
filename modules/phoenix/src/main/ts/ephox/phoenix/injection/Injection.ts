@@ -3,15 +3,28 @@ import { Fun } from '@ephox/katamari';
 import { InjectPosition } from '../api/data/InjectPosition';
 import * as Split from '../api/general/Split';
 
-const insertAtText = function <E, D> (universe: Universe<E, D>, element: E, offset: number) {
+const insertAtText = function <E, D>(
+  universe: Universe<E, D>,
+  element: E,
+  offset: number
+) {
   const split = Split.split(universe, element, offset);
   const position = Split.position(universe, split);
-  return position.fold(function () {
-    return InjectPosition.invalid(element, offset);
-  }, InjectPosition.before, (before, _after) => InjectPosition.after(before), InjectPosition.after);
+  return position.fold(
+    function () {
+      return InjectPosition.invalid(element, offset);
+    },
+    InjectPosition.before,
+    (before, _after) => InjectPosition.after(before),
+    InjectPosition.after
+  );
 };
 
-const insertAtElement = function <E, D> (universe: Universe<E, D>, parent: E, offset: number) {
+const insertAtElement = function <E, D>(
+  universe: Universe<E, D>,
+  parent: E,
+  offset: number
+) {
   const children = universe.property().children(parent);
   const isEmptyTag = universe.property().isEmptyTag(parent);
 
@@ -39,8 +52,15 @@ const insertAtElement = function <E, D> (universe: Universe<E, D>, parent: E, of
  *   - if a valid child, insert before the child.
  *   - if invalid .... invalid case.
  */
-const atStartOf = function <E, D> (universe: Universe<E, D>, element: E, offset: number, injection: E) {
-  const insertion = universe.property().isText(element) ? insertAtText : insertAtElement;
+const atStartOf = function <E, D>(
+  universe: Universe<E, D>,
+  element: E,
+  offset: number,
+  injection: E
+) {
+  const insertion = universe.property().isText(element)
+    ? insertAtText
+    : insertAtElement;
   const position = insertion(universe, element, offset);
 
   const onLast = function (p: E) {
@@ -61,6 +81,4 @@ const atStartOf = function <E, D> (universe: Universe<E, D>, element: E, offset:
   position.fold(onBefore, onAfter, onRest, onLast, onInvalid);
 };
 
-export {
-  atStartOf
-};
+export { atStartOf };

@@ -15,26 +15,44 @@ export interface ScopedToolbars {
   inNodeScope: Array<Toolbar.ContextForm | Toolbar.ContextToolbar>;
   inEditorScope: Array<Toolbar.ContextForm | Toolbar.ContextToolbar>;
   lookupTable: Record<string, Toolbar.ContextForm | Toolbar.ContextToolbar>;
-  formNavigators: Record<string, Toolbar.ToolbarButtonApi | Toolbar.ToolbarToggleButtonApi>; // this stays API due to toolbar applying bridge
+  formNavigators: Record<
+    string,
+    Toolbar.ToolbarButtonApi | Toolbar.ToolbarToggleButtonApi
+  >; // this stays API due to toolbar applying bridge
 }
 
-const categorise = (contextToolbars: Record<string, Toolbar.ContextFormApi | Toolbar.ContextToolbarApi>, navigate: (destForm: Toolbar.ContextForm) => void): ScopedToolbars => {
-
+const categorise = (
+  contextToolbars: Record<
+    string,
+    Toolbar.ContextFormApi | Toolbar.ContextToolbarApi
+  >,
+  navigate: (destForm: Toolbar.ContextForm) => void
+): ScopedToolbars => {
   // TODO: Use foldl/foldr and avoid as much mutation.
-  const forms: Record<string, Toolbar.ContextForm> = { };
-  const inNodeScope: Array<Toolbar.ContextForm | Toolbar.ContextToolbar> = [ ];
-  const inEditorScope: Array<Toolbar.ContextForm | Toolbar.ContextToolbar> = [ ];
-  const formNavigators: Record<string, Toolbar.ToolbarButtonApi | Toolbar.ToolbarToggleButtonApi> = { };
-  const lookupTable: Record<string, Toolbar.ContextToolbar | Toolbar.ContextForm> = { };
+  const forms: Record<string, Toolbar.ContextForm> = {};
+  const inNodeScope: Array<Toolbar.ContextForm | Toolbar.ContextToolbar> = [];
+  const inEditorScope: Array<Toolbar.ContextForm | Toolbar.ContextToolbar> = [];
+  const formNavigators: Record<
+    string,
+    Toolbar.ToolbarButtonApi | Toolbar.ToolbarToggleButtonApi
+  > = {};
+  const lookupTable: Record<
+    string,
+    Toolbar.ContextToolbar | Toolbar.ContextForm
+  > = {};
 
   const registerForm = (key: string, toolbarApi: Toolbar.ContextFormApi) => {
-    const contextForm = ValueSchema.getOrDie(Toolbar.createContextForm(toolbarApi));
+    const contextForm = ValueSchema.getOrDie(
+      Toolbar.createContextForm(toolbarApi)
+    );
     forms[key] = contextForm;
     contextForm.launch.map((launch) => {
       // Use the original here (pre-boulder), because using as a the spec for toolbar buttons
       formNavigators['form:' + key + ''] = {
         ...toolbarApi.launch,
-        type: (launch.type === 'contextformtogglebutton' ? 'togglebutton' : 'button') as any,
+        type: (launch.type === 'contextformtogglebutton'
+          ? 'togglebutton'
+          : 'button') as any,
         onAction: () => {
           navigate(contextForm);
         }
@@ -50,7 +68,10 @@ const categorise = (contextToolbars: Record<string, Toolbar.ContextFormApi | Too
     lookupTable[key] = contextForm;
   };
 
-  const registerToolbar = (key: string, toolbarApi: Toolbar.ContextToolbarApi) => {
+  const registerToolbar = (
+    key: string,
+    toolbarApi: Toolbar.ContextToolbarApi
+  ) => {
     Toolbar.createContextToolbar(toolbarApi).each((contextToolbar) => {
       if (toolbarApi.scope === 'editor') {
         inEditorScope.push(contextToolbar);
@@ -81,6 +102,4 @@ const categorise = (contextToolbars: Record<string, Toolbar.ContextFormApi | Too
   };
 };
 
-export {
-  categorise
-};
+export { categorise };

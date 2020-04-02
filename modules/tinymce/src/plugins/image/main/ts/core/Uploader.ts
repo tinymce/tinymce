@@ -21,7 +21,12 @@ import Tools from 'tinymce/core/api/util/Tools';
 export type SuccessCallback = (path: string) => void;
 export type FailureCallback = (error: string) => void;
 export type ProgressCallback = (percent: number) => void;
-export type UploadHandler = (blobInfo: BlobInfo, success: SuccessCallback, failure: FailureCallback, progress: ProgressCallback) => void;
+export type UploadHandler = (
+  blobInfo: BlobInfo,
+  success: SuccessCallback,
+  failure: FailureCallback,
+  progress: ProgressCallback
+) => void;
 
 export interface UploaderSettings {
   url?: string;
@@ -39,7 +44,12 @@ const pathJoin = (path1: string | undefined, path2: string) => {
 };
 
 export default (settings: UploaderSettings) => {
-  const defaultHandler = (blobInfo: BlobInfo, success: SuccessCallback, failure: FailureCallback, progress: ProgressCallback) => {
+  const defaultHandler = (
+    blobInfo: BlobInfo,
+    success: SuccessCallback,
+    failure: FailureCallback,
+    progress: ProgressCallback
+  ) => {
     let xhr, formData;
 
     xhr = new XMLHttpRequest();
@@ -47,11 +57,13 @@ export default (settings: UploaderSettings) => {
     xhr.withCredentials = settings.credentials;
 
     xhr.upload.onprogress = (e) => {
-      progress(e.loaded / e.total * 100);
+      progress((e.loaded / e.total) * 100);
     };
 
     xhr.onerror = () => {
-      failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
+      failure(
+        'Image upload failed due to a XHR Transport error. Code: ' + xhr.status
+      );
     };
 
     xhr.onload = () => {
@@ -78,22 +90,29 @@ export default (settings: UploaderSettings) => {
     xhr.send(formData);
   };
 
-  const uploadBlob = (blobInfo: BlobInfo, handler: UploadHandler) => new Promise<string>((resolve, reject) => {
-    try {
-      handler(blobInfo, resolve, reject, Fun.noop);
-    } catch (ex) {
-      reject(ex.message);
-    }
-  });
+  const uploadBlob = (blobInfo: BlobInfo, handler: UploadHandler) =>
+    new Promise<string>((resolve, reject) => {
+      try {
+        handler(blobInfo, resolve, reject, Fun.noop);
+      } catch (ex) {
+        reject(ex.message);
+      }
+    });
 
   const isDefaultHandler = (handler: Function) => handler === defaultHandler;
 
-  const upload = (blobInfo: BlobInfo): Promise<string> => (!settings.url && isDefaultHandler(settings.handler)) ? Promise.reject('Upload url missing from the settings.') : uploadBlob(blobInfo, settings.handler);
+  const upload = (blobInfo: BlobInfo): Promise<string> =>
+    !settings.url && isDefaultHandler(settings.handler)
+      ? Promise.reject('Upload url missing from the settings.')
+      : uploadBlob(blobInfo, settings.handler);
 
-  settings = Tools.extend({
-    credentials: false,
-    handler: defaultHandler
-  }, settings);
+  settings = Tools.extend(
+    {
+      credentials: false,
+      handler: defaultHandler
+    },
+    settings
+  );
 
   return {
     upload

@@ -1,5 +1,15 @@
 import { Arr, Fun } from '@ephox/katamari';
-import { Css, Element, Height, InsertAll, Location, Remove, SelectorFind, Visibility, Width } from '@ephox/sugar';
+import {
+  Css,
+  Element,
+  Height,
+  InsertAll,
+  Location,
+  Remove,
+  SelectorFind,
+  Visibility,
+  Width
+} from '@ephox/sugar';
 
 export default function () {
   const box = function () {
@@ -11,8 +21,8 @@ export default function () {
     Css.set(r, 'z-index', '1000');
 
     const set = function (x: number, y: number) {
-      Css.set(r, 'left', (x - 4) + 'px');
-      Css.set(r, 'top', (y - 4) + 'px');
+      Css.set(r, 'left', x - 4 + 'px');
+      Css.set(r, 'top', y - 4 + 'px');
     };
 
     const destroy = function () {
@@ -41,7 +51,7 @@ export default function () {
     const w = Width.get(target);
     const h = Height.get(target);
     const minx = loc.left();
-    const maxx = loc.left() + w ;
+    const maxx = loc.left() + w;
     const midx = loc.left() + w / 2;
 
     const y = loc.top();
@@ -54,18 +64,18 @@ export default function () {
 
     const body = SelectorFind.first('body');
     body.each(function (b) {
-      InsertAll.append(b, [ southeast.element() ]);
+      InsertAll.append(b, [southeast.element()]);
     });
   };
 
   const hide = function () {
-    Arr.each([ northwest, north, northeast, southeast ], function (x) {
+    Arr.each([northwest, north, northeast, southeast], function (x) {
       x.hide();
     });
   };
 
   const show = function () {
-    Arr.each([ northwest, north, northeast, southeast ], function (x) {
+    Arr.each([northwest, north, northeast, southeast], function (x) {
       x.show();
     });
   };

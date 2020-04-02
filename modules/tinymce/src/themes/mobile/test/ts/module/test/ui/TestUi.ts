@@ -1,5 +1,18 @@
-import { Assertions, Chain, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { AlloyLogger, AlloyTriggers, NativeEvents, Toggling } from '@ephox/alloy';
+import {
+  Assertions,
+  Chain,
+  Mouse,
+  Step,
+  UiControls,
+  UiFinder,
+  Waiter
+} from '@ephox/agar';
+import {
+  AlloyLogger,
+  AlloyTriggers,
+  NativeEvents,
+  Toggling
+} from '@ephox/alloy';
 import { Result } from '@ephox/katamari';
 import { Attr, Focus, Traverse, Element } from '@ephox/sugar';
 
@@ -11,15 +24,14 @@ const cGetFocused = Chain.binder(function () {
 
 const cGetParent = Chain.binder(function (elem: Element) {
   return Traverse.parent(elem).fold(function () {
-    return Result.error('Could not find parent of ' + AlloyLogger.element(elem));
+    return Result.error(
+      'Could not find parent of ' + AlloyLogger.element(elem)
+    );
   }, Result.value);
 });
 
 const sSetFieldValue = function (value) {
-  return Chain.asStep({ }, [
-    cGetFocused,
-    UiControls.cSetValue(value)
-  ]);
+  return Chain.asStep({}, [cGetFocused, UiControls.cSetValue(value)]);
 };
 
 const sSetFieldOptValue = function (optVal) {
@@ -30,14 +42,17 @@ const sSetFieldOptValue = function (optVal) {
 
 const sStartEditor = function (alloy) {
   return Step.sync(function () {
-    const button = UiFinder.findIn(alloy.element(), '[role="button"]').getOrDie();
+    const button = UiFinder.findIn(
+      alloy.element(),
+      '[role="button"]'
+    ).getOrDie();
     const x = alloy.getByDom(button).getOrDie();
     AlloyTriggers.emit(x, NativeEvents.click());
   });
 };
 
 const sClickComponent = function (realm, memento) {
-  return Chain.asStep({ }, [
+  return Chain.asStep({}, [
     Chain.injectThunked(function () {
       return memento.get(realm.socket()).element();
     }),
@@ -51,7 +66,9 @@ const sWaitForToggledState = function (label, state, realm, memento) {
     Step.sync(function () {
       const component = memento.get(realm.socket());
       Assertions.assertEq(
-        'Selected/Pressed state of component: (' + Attr.get(component.element(), 'class') + ')',
+        'Selected/Pressed state of component: (' +
+          Attr.get(component.element(), 'class') +
+          ')',
         state,
         Toggling.isOn(component)
       );
@@ -75,10 +92,8 @@ export {
   cGetParent,
   sSetFieldValue,
   sSetFieldOptValue,
-
   sWaitForToggledState,
   sClickComponent,
   sStartEditor,
-
   sBroadcastState
 };

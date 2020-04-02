@@ -36,14 +36,21 @@ const updateAdvancedProps = (modifiers, data: CellData) => {
 // When applying to a single cell, values can be falsy. That is
 // because there should be a consistent value across the cell
 // selection, so it should also be possible to toggle things off.
-const applyToSingle = (editor: Editor, cells: HTMLTableCellElement[], data: CellData) => {
+const applyToSingle = (
+  editor: Editor,
+  cells: HTMLTableCellElement[],
+  data: CellData
+) => {
   // NOTE: cells instead of cellElm passed through here just to keep signature
   // same as applyToMultiple. Probably change.
   // let cellElm = cells[0] as HTMLTableCellElement;
   const dom = editor.dom;
 
   // Switch cell type
-  const cellElm = data.celltype && cells[0].nodeName.toLowerCase() !== data.celltype ? (dom.rename(cells[0], data.celltype) as HTMLTableCellElement) : cells[0];
+  const cellElm =
+    data.celltype && cells[0].nodeName.toLowerCase() !== data.celltype
+      ? (dom.rename(cells[0], data.celltype) as HTMLTableCellElement)
+      : cells[0];
 
   const modifiers = DomModifier.normal(dom, cellElm);
 
@@ -103,7 +110,11 @@ const applyToMultiple = (editor, cells: Node[], data: CellData) => {
   });
 };
 
-const onSubmitCellForm = (editor: Editor, cells: HTMLTableCellElement[], api) => {
+const onSubmitCellForm = (
+  editor: Editor,
+  cells: HTMLTableCellElement[],
+  api
+) => {
   const data = api.getData();
   api.close();
 
@@ -116,7 +127,8 @@ const onSubmitCellForm = (editor: Editor, cells: HTMLTableCellElement[], api) =>
 
 const open = (editor: Editor) => {
   // these any types are cheating, but seem difficult to unwind
-  let cellElm, cells = [];
+  let cellElm,
+    cells = [];
 
   // Get selected cells or the current cell
   cells = editor.dom.select('td[data-mce-selected],th[data-mce-selected]');
@@ -133,8 +145,12 @@ const open = (editor: Editor) => {
   }
 
   // Get current data and find shared values between cells
-  const cellsData: CellData[] = Tools.map(cells,
-    (cellElm) => Helpers.extractDataFromCellElement(editor, cellElm, hasAdvancedCellTab(editor))
+  const cellsData: CellData[] = Tools.map(cells, (cellElm) =>
+    Helpers.extractDataFromCellElement(
+      editor,
+      cellElm,
+      hasAdvancedCellTab(editor)
+    )
   );
   const data: CellData = Helpers.getSharedValues(cellsData);
 
@@ -156,7 +172,7 @@ const open = (editor: Editor) => {
         type: 'grid',
         columns: 2,
         items: CellDialogGeneralTab.getItems(editor)
-      },
+      }
     ]
   };
   editor.windowManager.open({
@@ -181,6 +197,4 @@ const open = (editor: Editor) => {
   });
 };
 
-export {
-  open
-};
+export { open };

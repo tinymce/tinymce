@@ -5,7 +5,11 @@ import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
-import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import {
+  CompositeSketch,
+  CompositeSketchDetail,
+  CompositeSketchSpec
+} from '../../api/ui/Sketcher';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
 export interface SliderValueX {
@@ -43,11 +47,22 @@ export interface EdgeActions {
 }
 
 export interface Manager {
-  setValueFrom: (spectrum: AlloyComponent, detail: SliderDetail, value: number | Position) => void;
+  setValueFrom: (
+    spectrum: AlloyComponent,
+    detail: SliderDetail,
+    value: number | Position
+  ) => void;
   setToMin: (spectrum: AlloyComponent, detail: SliderDetail) => void;
   setToMax: (spectrum: AlloyComponent, detail: SliderDetail) => void;
-  getValueFromEvent: (simulatedEvent: NativeSimulatedEvent) => Option<number | Position>;
-  setPositionFromValue: (slider: AlloyComponent, thumb: AlloyComponent, detail: SliderDetail, parts: SliderModelDetailParts) => void;
+  getValueFromEvent: (
+    simulatedEvent: NativeSimulatedEvent
+  ) => Option<number | Position>;
+  setPositionFromValue: (
+    slider: AlloyComponent,
+    thumb: AlloyComponent,
+    detail: SliderDetail,
+    parts: SliderModelDetailParts
+  ) => void;
   onLeft: (spectrum: AlloyComponent, detail: SliderDetail) => Option<boolean>;
   onRight: (spectrum: AlloyComponent, detail: SliderDetail) => Option<boolean>;
   onUp: (spectrum: AlloyComponent, detail: SliderDetail) => Option<boolean>;
@@ -94,12 +109,25 @@ export interface SliderDetail extends CompositeSketchDetail {
   snapToGrid: boolean;
   snapStart: Option<number>;
 
-  onChange: (component: AlloyComponent, thumb: AlloyComponent, value: number | SliderValue) => void;
-  onChoose: (component: AlloyComponent, thumb: AlloyComponent, value: number | SliderValue) => void;
+  onChange: (
+    component: AlloyComponent,
+    thumb: AlloyComponent,
+    value: number | SliderValue
+  ) => void;
+  onChoose: (
+    component: AlloyComponent,
+    thumb: AlloyComponent,
+    value: number | SliderValue
+  ) => void;
   onDragStart: (component: AlloyComponent, thumb: AlloyComponent) => void;
   onDragEnd: (component: AlloyComponent, thumb: AlloyComponent) => void;
 
-  onInit: (component: AlloyComponent, thumb: AlloyComponent, spectrum: AlloyComponent, value: number | SliderValue) => void;
+  onInit: (
+    component: AlloyComponent,
+    thumb: AlloyComponent,
+    spectrum: AlloyComponent,
+    value: number | SliderValue
+  ) => void;
 
   mouseIsDown: Cell<boolean>;
 }
@@ -151,18 +179,33 @@ export interface SliderSpec extends CompositeSketchSpec {
   snapStart?: number;
   rounded?: boolean;
 
-  onChange?: (component: AlloyComponent, thumb: AlloyComponent, value: SliderValue) => void;
-  onChoose?: (component: AlloyComponent, thumb: AlloyComponent, value: SliderValue) => void;
+  onChange?: (
+    component: AlloyComponent,
+    thumb: AlloyComponent,
+    value: SliderValue
+  ) => void;
+  onChoose?: (
+    component: AlloyComponent,
+    thumb: AlloyComponent,
+    value: SliderValue
+  ) => void;
   onDragStart?: (component: AlloyComponent, thumb: AlloyComponent) => void;
   onDragEnd?: (component: AlloyComponent, thumb: AlloyComponent) => void;
 
-  onInit?: (component: AlloyComponent, thumb: AlloyComponent, spectrum: AlloyComponent, value: SliderValue) => void;
+  onInit?: (
+    component: AlloyComponent,
+    thumb: AlloyComponent,
+    spectrum: AlloyComponent,
+    value: SliderValue
+  ) => void;
 }
 
-export interface SliderApis  {
+export interface SliderApis {
   resetToMin: (slider: AlloyComponent) => void;
   resetToMax: (slider: AlloyComponent) => void;
   refresh: (slider: AlloyComponent) => void;
 }
 
-export interface SliderSketcher extends CompositeSketch<SliderSpec>, SliderApis { }
+export interface SliderSketcher
+  extends CompositeSketch<SliderSpec>,
+    SliderApis {}

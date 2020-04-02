@@ -24,7 +24,4 @@ const dump = function (parray: PArrayTestItem[]) {
   });
 };
 
-export {
-  make,
-  dump
-};
+export { make, dump };

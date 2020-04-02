@@ -16,7 +16,9 @@
  * console.log(white.toHex(), red.toHsv());
  */
 
-const min = Math.min, max = Math.max, round = Math.round;
+const min = Math.min,
+  max = Math.max,
+  round = Math.round;
 
 interface RGB {
   r: number;
@@ -31,10 +33,10 @@ interface HSV {
 }
 
 interface Color {
-  toRgb (): RGB;
-  toHsv (): HSV;
-  toHex (): string;
-  parse (value: string | RGB | HSV): Color;
+  toRgb(): RGB;
+  toHsv(): HSV;
+  toHex(): string;
+  parse(value: string | RGB | HSV): Color;
 }
 
 /**
@@ -46,7 +48,9 @@ interface Color {
  */
 const Color = function (value?): Color {
   const self: any = {};
-  let r = 0, g = 0, b = 0;
+  let r = 0,
+    g = 0,
+    b = 0;
 
   const rgb2hsv = function (r, g, b) {
     let h, s, v, d, minRGB, maxRGB;
@@ -72,8 +76,8 @@ const Color = function (value?): Color {
     }
 
     /* eslint no-nested-ternary:0 */
-    d = (r === minRGB) ? g - b : ((b === minRGB) ? r - g : b - r);
-    h = (r === minRGB) ? 3 : ((b === minRGB) ? 1 : 5);
+    d = r === minRGB ? g - b : b === minRGB ? r - g : b - r;
+    h = r === minRGB ? 3 : b === minRGB ? 1 : 5;
     h = 60 * (h - d / (maxRGB - minRGB));
     s = (maxRGB - minRGB) / maxRGB;
     v = maxRGB;
@@ -101,7 +105,7 @@ const Color = function (value?): Color {
 
     side = hue / 60;
     chroma = brightness * saturation;
-    x = chroma * (1 - Math.abs(side % 2 - 1));
+    x = chroma * (1 - Math.abs((side % 2) - 1));
     match = brightness - chroma;
 
     switch (Math.floor(side)) {
@@ -216,7 +220,11 @@ const Color = function (value?): Color {
         hsvToRgb(value.h, value.s, value.v);
       }
     } else {
-      if ((matches = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)[^\)]*\)/gi.exec(value))) {
+      if (
+        (matches = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)[^\)]*\)/gi.exec(
+          value
+        ))
+      ) {
         r = parseInt(matches[1], 10);
         g = parseInt(matches[2], 10);
         b = parseInt(matches[3], 10);
@@ -231,9 +239,9 @@ const Color = function (value?): Color {
       }
     }
 
-    r = r < 0 ? 0 : (r > 255 ? 255 : r);
-    g = g < 0 ? 0 : (g > 255 ? 255 : g);
-    b = b < 0 ? 0 : (b > 255 ? 255 : b);
+    r = r < 0 ? 0 : r > 255 ? 255 : r;
+    g = g < 0 ? 0 : g > 255 ? 255 : g;
+    b = b < 0 ? 0 : b > 255 ? 255 : b;
 
     return self;
   };

@@ -1,13 +1,18 @@
 import { Option } from '@ephox/katamari';
 
-import { AlloyBehaviour, BehaviourConfigDetail, BehaviourConfigSpec } from '../../api/behaviour/Behaviour';
+import {
+  AlloyBehaviour,
+  BehaviourConfigDetail,
+  BehaviourConfigSpec
+} from '../../api/behaviour/Behaviour';
 import { LazySink } from '../../api/component/CommonTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { BehaviourState } from '../../behaviour/common/BehaviourState';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
 
-export interface TooltippingBehaviour extends AlloyBehaviour<TooltippingConfigSpec, TooltippingConfig> {
+export interface TooltippingBehaviour
+  extends AlloyBehaviour<TooltippingConfigSpec, TooltippingConfig> {
   hideAllExclusive: (comp: AlloyComponent) => void;
   setComponents: (comp: AlloyComponent, specs: AlloySpec[]) => void;
 }

@@ -7,7 +7,12 @@ type CompElm = (e1: Element, e2: Element) => boolean;
 type Subst = () => Element;
 
 // substitution: () -> item
-const merge = function (grid: Structs.RowCells[], bounds: Structs.Bounds, comparator: CompElm, substitution: Subst) {
+const merge = function (
+  grid: Structs.RowCells[],
+  bounds: Structs.Bounds,
+  comparator: CompElm,
+  substitution: Subst
+) {
   // Mutating. Do we care about the efficiency gain?
   if (grid.length === 0) {
     return grid;
@@ -22,7 +27,12 @@ const merge = function (grid: Structs.RowCells[], bounds: Structs.Bounds, compar
 };
 
 // substitution: () -> item
-const unmerge = function (grid: Structs.RowCells[], target: Element, comparator: CompElm, substitution: Subst) {
+const unmerge = function (
+  grid: Structs.RowCells[],
+  target: Element,
+  comparator: CompElm,
+  substitution: Subst
+) {
   // Mutating. Do we care about the efficiency gain?
   let first = true;
   // tslint:disable-next-line:prefer-for-of
@@ -32,7 +42,11 @@ const unmerge = function (grid: Structs.RowCells[], target: Element, comparator:
       const isToReplace = comparator(current, target);
 
       if (isToReplace === true && first === false) {
-        GridRow.mutateCell(grid[i], j, Structs.elementnew(substitution(), true));
+        GridRow.mutateCell(
+          grid[i],
+          j,
+          Structs.elementnew(substitution(), true)
+        );
       } else if (isToReplace === true) {
         first = false;
       }
@@ -42,14 +56,25 @@ const unmerge = function (grid: Structs.RowCells[], target: Element, comparator:
 };
 
 const uniqueCells = function (row: Structs.ElementNew[], comparator: CompElm) {
-  return Arr.foldl(row, function (rest, cell) {
-    return Arr.exists(rest, function (currentCell) {
-      return comparator(currentCell.element(), cell.element());
-    }) ? rest : rest.concat([ cell ]);
-  }, [] as Structs.ElementNew[]);
+  return Arr.foldl(
+    row,
+    function (rest, cell) {
+      return Arr.exists(rest, function (currentCell) {
+        return comparator(currentCell.element(), cell.element());
+      })
+        ? rest
+        : rest.concat([cell]);
+    },
+    [] as Structs.ElementNew[]
+  );
 };
 
-const splitRows = function (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst) {
+const splitRows = function (
+  grid: Structs.RowCells[],
+  index: number,
+  comparator: CompElm,
+  substitution: Subst
+) {
   // We don't need to split rows if we're inserting at the first or last row of the old table
   if (index > 0 && index < grid.length) {
     const rowPrevCells = grid[index - 1].cells();
@@ -78,8 +103,4 @@ const splitRows = function (grid: Structs.RowCells[], index: number, comparator:
   return grid;
 };
 
-export {
-  merge,
-  unmerge,
-  splitRows
-};
+export { merge, unmerge, splitRows };

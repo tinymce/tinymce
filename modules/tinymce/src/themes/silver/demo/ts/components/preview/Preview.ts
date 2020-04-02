@@ -18,7 +18,7 @@ export default () => {
         items: [
           {
             name: 'preview',
-            type: 'iframe',
+            type: 'iframe'
           }
         ]
       },
@@ -40,5 +40,8 @@ export default () => {
         // tslint:disable-next-line:no-console
         console.log('Preview Demo Close');
       }
-    }, {}, Fun.noop);
+    },
+    {},
+    Fun.noop
+  );
 };

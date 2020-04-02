@@ -10,9 +10,7 @@ UnitTest.test('WalkerPathTest', function () {
   const universe = TestUniverse(
     Gene('root', 'root', [
       Gene('1', 'node', [
-        Gene('1.1', 'node', [
-          Gene('1.1.1', 'node', [])
-        ]),
+        Gene('1.1', 'node', [Gene('1.1.1', 'node', [])]),
         Gene('1.2', 'node', [
           Gene('1.2.1', 'node', [
             Gene('1.2.1.1', 'node', []),
@@ -35,17 +33,24 @@ UnitTest.test('WalkerPathTest', function () {
             Gene('3.2.1.1', 'node', []),
             Gene('3.2.1.2', 'node', [])
           ]),
-          Gene('3.2.2', 'node', []),
+          Gene('3.2.2', 'node', [])
         ]),
         Gene('3.3', 'node', [])
       ])
     ])
   );
 
-  const checkPath = function (expected: string[], id: string, direction: Direction) {
+  const checkPath = function (
+    expected: string[],
+    id: string,
+    direction: Direction
+  ) {
     const start = Finder.get(universe, id);
     let path: string[] = [];
-    let current: Option<Traverse<Gene>> = Option.some({ item: Fun.constant(start), mode: Fun.constant(Walker.advance) });
+    let current: Option<Traverse<Gene>> = Option.some({
+      item: Fun.constant(start),
+      mode: Fun.constant(Walker.advance)
+    });
     while (current.isSome()) {
       const c = current.getOrDie();
       path = path.concat(c.item().id);
@@ -55,13 +60,66 @@ UnitTest.test('WalkerPathTest', function () {
     assert.eq(expected, path);
   };
 
-  checkPath([
-    '3.1', '3', '2', '2.2', '2.2.2', '2.2.1', '2.2', '2.1', '2', '1', '1.3', '1.2', '1.2.1', '1.2.1.2', '1.2.1.1',
-    '1.2.1', '1.2', '1.1', '1.1.1', '1.1', '1', 'root'
-  ], '3.1', Walkers.left());
+  checkPath(
+    [
+      '3.1',
+      '3',
+      '2',
+      '2.2',
+      '2.2.2',
+      '2.2.1',
+      '2.2',
+      '2.1',
+      '2',
+      '1',
+      '1.3',
+      '1.2',
+      '1.2.1',
+      '1.2.1.2',
+      '1.2.1.1',
+      '1.2.1',
+      '1.2',
+      '1.1',
+      '1.1.1',
+      '1.1',
+      '1',
+      'root'
+    ],
+    '3.1',
+    Walkers.left()
+  );
 
-  checkPath([
-    '1.2', '1.2.1', '1.2.1.1', '1.2.1.2', '1.2.1', '1.2', '1.3', '1', '2', '2.1', '2.2', '2.2.1', '2.2.2', '2.2', '2', '3',
-    '3.1', '3.2', '3.2.1', '3.2.1.1', '3.2.1.2', '3.2.1', '3.2.2', '3.2', '3.3', '3', 'root'
-  ], '1.2', Walkers.right());
+  checkPath(
+    [
+      '1.2',
+      '1.2.1',
+      '1.2.1.1',
+      '1.2.1.2',
+      '1.2.1',
+      '1.2',
+      '1.3',
+      '1',
+      '2',
+      '2.1',
+      '2.2',
+      '2.2.1',
+      '2.2.2',
+      '2.2',
+      '2',
+      '3',
+      '3.1',
+      '3.2',
+      '3.2.1',
+      '3.2.1.1',
+      '3.2.1.2',
+      '3.2.1',
+      '3.2.2',
+      '3.2',
+      '3.3',
+      '3',
+      'root'
+    ],
+    '1.2',
+    Walkers.right()
+  );
 });

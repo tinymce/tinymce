@@ -8,15 +8,39 @@ import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
 UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
   const checkErr = function (label, expectedPart, v, processor) {
     // NOTE: v is not a function here.
-    ValueSchema.asRaw(label, processor, v).fold(function (err) {
-      const message = ValueSchema.formatError(err);
-      Assert.eq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
-    }, function (val) {
-      assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(val, null, 2) + ')');
-    });
+    ValueSchema.asRaw(label, processor, v).fold(
+      function (err) {
+        const message = ValueSchema.formatError(err);
+        Assert.eq(
+          label +
+            '. Was looking to see if contained: ' +
+            expectedPart +
+            '.\nWas: ' +
+            message,
+          true,
+          message.indexOf(expectedPart) > -1
+        );
+      },
+      function (val) {
+        assert.fail(
+          label +
+            '\nExpected error: ' +
+            expectedPart +
+            '\nWas success(' +
+            JSON.stringify(val, null, 2) +
+            ')'
+        );
+      }
+    );
   };
 
-  const checkRawErrIs = function (label, expectedPart, applicator, f, processor) {
+  const checkRawErrIs = function (
+    label,
+    expectedPart,
+    applicator,
+    f,
+    processor
+  ) {
     Logger.sync(label, function () {
       const newF = ValueSchema.asRaw<any>(label, processor, f).getOrDie();
       let passed = null;
@@ -26,14 +50,37 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
         passed = val;
       } catch (err) {
         const message = err.message;
-        Assert.eq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
+        Assert.eq(
+          label +
+            '. Was looking to see if contained: ' +
+            expectedPart +
+            '.\nWas: ' +
+            message,
+          true,
+          message.indexOf(expectedPart) > -1
+        );
       }
 
-      if (passed !== null) { assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(passed, null, 2) + ')'); }
+      if (passed !== null) {
+        assert.fail(
+          label +
+            '\nExpected error: ' +
+            expectedPart +
+            '\nWas success(' +
+            JSON.stringify(passed, null, 2) +
+            ')'
+        );
+      }
     });
   };
 
-  const checkRawResultIs = function (label, expected, applicator, f, processor) {
+  const checkRawResultIs = function (
+    label,
+    expected,
+    applicator,
+    f,
+    processor
+  ) {
     Logger.sync(label, function () {
       const actual = ValueSchema.asRawOrDie(label, processor, f);
       const result = applicator(actual);
@@ -50,7 +97,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
     'Not passing through a function',
     'Not a function',
     10,
-    ValueSchema.funcOrDie([ 'a', 'b' ], ValueSchema.anyValue())
+    ValueSchema.funcOrDie(['a', 'b'], ValueSchema.anyValue())
   );
 
   checkRawResultIs(
@@ -60,7 +107,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
       return f('a', 'b', 'c');
     },
     getter1,
-    ValueSchema.funcOrDie([ 'a', 'b' ], ValueSchema.anyValue())
+    ValueSchema.funcOrDie(['a', 'b'], ValueSchema.anyValue())
   );
 
   checkRawErrIs(
@@ -72,9 +119,12 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
     function (_v) {
       return 'y';
     },
-    ValueSchema.funcOrDie([ 'value' ], ValueSchema.valueOf(function (v) {
-      return v === 'x' ? Result.value(v) : Result.error('wrong value');
-    }))
+    ValueSchema.funcOrDie(
+      ['value'],
+      ValueSchema.valueOf(function (v) {
+        return v === 'x' ? Result.value(v) : Result.error('wrong value');
+      })
+    )
   );
 
   const getter2 = function (a) {
@@ -93,16 +143,18 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
       return f('A');
     },
     getter2,
-    ValueSchema.funcOrDie([ 'a' ], ValueSchema.objOf([
-      FieldSchema.strict('A')
-    ]))
+    ValueSchema.funcOrDie(['a'], ValueSchema.objOf([FieldSchema.strict('A')]))
   );
 
   const getter3 = function (one, two, three) {
     return [
       { firstname: one + '.1', middlename: one + '.2', surname: one + '.3' },
       { firstname: two + '.1', middlename: two + '.2', surname: two + '.3' },
-      { firstname: three + '.1', middlename: three + '.2', surname: three + '.3' }
+      {
+        firstname: three + '.1',
+        middlename: three + '.2',
+        surname: three + '.3'
+      }
     ];
   };
 
@@ -117,10 +169,12 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
       return f('cat', 'dog', 'elephant');
     },
     getter3,
-    ValueSchema.funcOrDie([ 'one', 'two' ], ValueSchema.arrOfObj([
-      FieldSchema.strict('firstname'),
-      FieldSchema.strict('surname')
-    ]))
+    ValueSchema.funcOrDie(
+      ['one', 'two'],
+      ValueSchema.arrOfObj([
+        FieldSchema.strict('firstname'),
+        FieldSchema.strict('surname')
+      ])
+    )
   );
-
 });

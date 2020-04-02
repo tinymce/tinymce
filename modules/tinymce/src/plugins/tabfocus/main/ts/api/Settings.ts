@@ -13,6 +13,4 @@ const getTabFocus = function (editor) {
   return editor.getParam('tab_focus', getTabFocusElements(editor));
 };
 
-export {
-  getTabFocus
-};
+export { getTabFocus };

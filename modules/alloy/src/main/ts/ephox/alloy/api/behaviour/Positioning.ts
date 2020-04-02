@@ -11,6 +11,4 @@ const Positioning: PositioningBehaviour = Behaviour.create({
   apis: PositionApis
 });
 
-export {
-  Positioning
-};
+export { Positioning };

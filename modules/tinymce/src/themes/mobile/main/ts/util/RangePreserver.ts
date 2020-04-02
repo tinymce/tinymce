@@ -27,6 +27,4 @@ const forAndroid = (editor: Editor, f: () => void): void => {
   wrapper(f, editor);
 };
 
-export {
-  forAndroid
-};
+export { forAndroid };

@@ -15,6 +15,4 @@ const point = <T>(container: T, offset: number): SpotPoint<T> => ({
   offset
 });
 
-export {
-  point
-};
+export { point };

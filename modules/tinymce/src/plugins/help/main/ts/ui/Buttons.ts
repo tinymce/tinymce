@@ -22,6 +22,4 @@ const register = (editor: Editor, dialogOpener: () => void) => {
   });
 };
 
-export {
-  register
-};
+export { register };

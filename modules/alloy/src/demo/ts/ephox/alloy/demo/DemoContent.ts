@@ -6,6 +6,4 @@ const generate = (num: number): string => {
   return s;
 };
 
-export {
-  generate
-};
+export { generate };

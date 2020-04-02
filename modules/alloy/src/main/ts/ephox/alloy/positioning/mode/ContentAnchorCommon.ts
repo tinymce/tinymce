@@ -9,8 +9,16 @@ import * as Origins from '../layout/Origins';
 import { nu as NuAnchor, SelectionAnchor, NodeAnchor } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 
-const capRect = (left: number, top: number, width: number, height: number): Option<Boxes.BoxByPoint> => {
-  let newLeft = left, newTop = top, newWidth = width, newHeight = height;
+const capRect = (
+  left: number,
+  top: number,
+  width: number,
+  height: number
+): Option<Boxes.BoxByPoint> => {
+  let newLeft = left,
+    newTop = top,
+    newWidth = width,
+    newHeight = height;
   // Try to prevent the context toolbar from getting above the editor toolbar
   if (left < 0) {
     newLeft = 0;
@@ -24,49 +32,54 @@ const capRect = (left: number, top: number, width: number, height: number): Opti
   return Option.some(Boxes.pointed(point, newWidth, newHeight));
 };
 
-const calcNewAnchor = (optBox: Option<Boxes.BoxByPoint>, rootPoint: CssPosition.CssPositionAdt, anchorInfo: SelectionAnchor | NodeAnchor, origin: Origins.OriginAdt, elem: Element) => optBox.map((box) => {
-  const points = [ rootPoint, box.point ];
-  const topLeft = Origins.cata(origin,
-    () => CssPosition.sumAsAbsolute(points),
-    () => CssPosition.sumAsAbsolute(points),
-    () => CssPosition.sumAsFixed(points)
-  );
+const calcNewAnchor = (
+  optBox: Option<Boxes.BoxByPoint>,
+  rootPoint: CssPosition.CssPositionAdt,
+  anchorInfo: SelectionAnchor | NodeAnchor,
+  origin: Origins.OriginAdt,
+  elem: Element
+) =>
+  optBox.map((box) => {
+    const points = [rootPoint, box.point];
+    const topLeft = Origins.cata(
+      origin,
+      () => CssPosition.sumAsAbsolute(points),
+      () => CssPosition.sumAsAbsolute(points),
+      () => CssPosition.sumAsFixed(points)
+    );
 
-  const anchorBox = Boxes.rect(
-    topLeft.left(),
-    topLeft.top(),
-    box.width,
-    box.height
-  );
+    const anchorBox = Boxes.rect(
+      topLeft.left(),
+      topLeft.top(),
+      box.width,
+      box.height
+    );
 
-  const layoutsLtr = anchorInfo.showAbove ?
-    Layout.aboveOrBelow() :
-    Layout.belowOrAbove();
+    const layoutsLtr = anchorInfo.showAbove
+      ? Layout.aboveOrBelow()
+      : Layout.belowOrAbove();
 
-  const layoutsRtl = anchorInfo.showAbove ?
-    Layout.belowOrAboveRtl() :
-    Layout.belowOrAboveRtl();
+    const layoutsRtl = anchorInfo.showAbove
+      ? Layout.belowOrAboveRtl()
+      : Layout.belowOrAboveRtl();
 
-  const layouts = AnchorLayouts.get(
-    elem,
-    anchorInfo,
-    layoutsLtr,
-    layoutsRtl,
-    layoutsLtr,
-    layoutsRtl,
-    Option.none()
-  );
+    const layouts = AnchorLayouts.get(
+      elem,
+      anchorInfo,
+      layoutsLtr,
+      layoutsRtl,
+      layoutsLtr,
+      layoutsRtl,
+      Option.none()
+    );
 
-  return NuAnchor({
-    anchorBox,
-    bubble: anchorInfo.bubble.getOr(Bubble.fallback()),
-    overrides: anchorInfo.overrides,
-    layouts,
-    placer: Option.none()
+    return NuAnchor({
+      anchorBox,
+      bubble: anchorInfo.bubble.getOr(Bubble.fallback()),
+      overrides: anchorInfo.overrides,
+      layouts,
+      placer: Option.none()
+    });
   });
-});
 
-export {
-  capRect,
-  calcNewAnchor
-};
+export { capRect, calcNewAnchor };

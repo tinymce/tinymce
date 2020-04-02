@@ -3,7 +3,10 @@ import { Pipeline } from '@ephox/agar';
 import Promise from 'tinymce/core/api/util/Promise';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.util.PromiseTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.util.PromiseTest', function (
+  success,
+  failure
+) {
   const suite = LegacyUnit.createSuite();
 
   suite.asyncTest('Promise resolve', function (_, done) {
@@ -18,11 +21,13 @@ UnitTest.asynctest('browser.tinymce.core.util.PromiseTest', function (success, f
   suite.asyncTest('Promise reject', function (_, done) {
     new Promise(function (resolve, reject) {
       reject('123');
-    }).then(function () {
-    }, function (result) {
-      LegacyUnit.equal('123', result);
-      done();
-    });
+    }).then(
+      function () {},
+      function (result) {
+        LegacyUnit.equal('123', result);
+        done();
+      }
+    );
   });
 
   suite.asyncTest('Promise reject', function (_, done) {
@@ -43,7 +48,12 @@ UnitTest.asynctest('browser.tinymce.core.util.PromiseTest', function (success, f
     });
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
-    success();
-  }, failure);
+  Pipeline.async(
+    {},
+    suite.toSteps({}),
+    function () {
+      success();
+    },
+    failure
+  );
 });

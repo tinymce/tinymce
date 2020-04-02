@@ -34,7 +34,7 @@ export interface MobileRealm {
 
 export default (scrollIntoView: () => void): MobileRealm => {
   const alloy = OuterContainer({
-    classes: [ Styles.resolve('ios-container') ]
+    classes: [Styles.resolve('ios-container')]
   });
 
   const toolbar = ScrollingToolbar();
@@ -74,9 +74,7 @@ export default (scrollIntoView: () => void): MobileRealm => {
   };
 
   const init = function (spec) {
-    webapp.set(
-      IosWebapp.produce(spec)
-    );
+    webapp.set(IosWebapp.produce(spec));
   };
 
   const exit = function () {

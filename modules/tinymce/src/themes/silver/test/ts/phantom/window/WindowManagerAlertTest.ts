@@ -8,7 +8,7 @@ import {
   Pipeline,
   Step,
   UiFinder,
-  Waiter,
+  Waiter
 } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
@@ -27,87 +27,90 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
     Waiter.sTryUntil(
       'Waiting for blocker to disappear after clicking close',
       UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap')
-    ),
+    )
   ]);
 
-  const sHasBasicStructure = (label: string) => GeneralSteps.sequence([
-    sCreateAlert(label, Fun.noop),
-    sWaitForDialog,
-    Step.sync(() => {
-      Assertions.assertStructure('A basic alert dialog should have these components',
-        ApproxStructure.build((s, str, arr) => s.element('div', {
-          classes: [ arr.has('mce-silver-sink') ],
-          children: [
+  const sHasBasicStructure = (label: string) =>
+    GeneralSteps.sequence([
+      sCreateAlert(label, Fun.noop),
+      sWaitForDialog,
+      Step.sync(() => {
+        Assertions.assertStructure(
+          'A basic alert dialog should have these components',
+          ApproxStructure.build((s, str, arr) =>
             s.element('div', {
-              classes: [ arr.has('tox-dialog-wrap') ],
+              classes: [arr.has('mce-silver-sink')],
               children: [
-                s.element('div', { classes: [ arr.has('tox-dialog-wrap__backdrop') ] }),
                 s.element('div', {
-                  classes: [ arr.has('tox-dialog') ],
+                  classes: [arr.has('tox-dialog-wrap')],
                   children: [
                     s.element('div', {
-                      classes: [ arr.has('tox-dialog__header') ],
-                      styles: {
-                        display: str.is('none')
-                      },
+                      classes: [arr.has('tox-dialog-wrap__backdrop')]
+                    }),
+                    s.element('div', {
+                      classes: [arr.has('tox-dialog')],
                       children: [
                         s.element('div', {
-                          classes: [ arr.has('tox-dialog__title') ],
+                          classes: [arr.has('tox-dialog__header')],
                           styles: {
                             display: str.is('none')
                           },
-                          html: str.is('')
-                        }),
-                        s.element('button', {
-                          classes: [
-                            arr.has('tox-button'),
-                            arr.has('tox-button--icon'),
-                            arr.has('tox-button--naked')
-                          ],
-                          attrs: {
-                            'aria-label': str.is('Close'),
-                            'data-alloy-tabstop': str.is('true'),
-                            'type': str.is('button')
-                          },
-                          html: str.is('')
-                        })
-                      ]
-                    }),
-                    s.element('div', {
-                      classes: [ arr.has('tox-dialog__body') ],
-                      children: [
-                        s.element('div', {
-                          classes: [ arr.has('tox-dialog__body-content') ],
                           children: [
-                            s.element('p', {})
-                          ]
-                        })
-                      ]
-                    }),
-                    s.element('div', {
-                      classes: [ arr.has('tox-dialog__footer') ],
-                      children: [
-                        s.element('div', {
-                          classes: [ arr.has('tox-dialog__footer-start') ],
-                          attrs: {
-                            role: str.is('presentation')
-                          }
-                        }),
-                        s.element('div', {
-                          classes: [ arr.has('tox-dialog__footer-end') ],
-                          attrs: {
-                            role: str.is('presentation')
-                          },
-                          children: [
+                            s.element('div', {
+                              classes: [arr.has('tox-dialog__title')],
+                              styles: {
+                                display: str.is('none')
+                              },
+                              html: str.is('')
+                            }),
                             s.element('button', {
-                              html: str.is('OK'),
                               classes: [
                                 arr.has('tox-button'),
+                                arr.has('tox-button--icon'),
+                                arr.has('tox-button--naked')
                               ],
                               attrs: {
-                                'type': str.is('button'),
-                                'data-alloy-tabstop': str.is('true')
+                                'aria-label': str.is('Close'),
+                                'data-alloy-tabstop': str.is('true'),
+                                'type': str.is('button')
                               },
+                              html: str.is('')
+                            })
+                          ]
+                        }),
+                        s.element('div', {
+                          classes: [arr.has('tox-dialog__body')],
+                          children: [
+                            s.element('div', {
+                              classes: [arr.has('tox-dialog__body-content')],
+                              children: [s.element('p', {})]
+                            })
+                          ]
+                        }),
+                        s.element('div', {
+                          classes: [arr.has('tox-dialog__footer')],
+                          children: [
+                            s.element('div', {
+                              classes: [arr.has('tox-dialog__footer-start')],
+                              attrs: {
+                                role: str.is('presentation')
+                              }
+                            }),
+                            s.element('div', {
+                              classes: [arr.has('tox-dialog__footer-end')],
+                              attrs: {
+                                role: str.is('presentation')
+                              },
+                              children: [
+                                s.element('button', {
+                                  html: str.is('OK'),
+                                  classes: [arr.has('tox-button')],
+                                  attrs: {
+                                    'type': str.is('button'),
+                                    'data-alloy-tabstop': str.is('true')
+                                  }
+                                })
+                              ]
                             })
                           ]
                         })
@@ -117,17 +120,17 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
                 })
               ]
             })
-          ]
-        })),
-        SugarElement.fromDom(sink)
-      );
-    }),
-    sTeardown
-  ]);
+          ),
+          SugarElement.fromDom(sink)
+        );
+      }),
+      sTeardown
+    ]);
 
-  const sCreateAlert = (message: string, callback: () => void) => Step.sync(() => {
-    windowManager.alert(message, callback);
-  });
+  const sCreateAlert = (message: string, callback: () => void) =>
+    Step.sync(() => {
+      windowManager.alert(message, callback);
+    });
 
   const sWaitForDialog = Waiter.sTryUntil(
     'alert dialog shows',
@@ -136,30 +139,33 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
     10000
   );
 
-  const sInsertTheCorrectMessage = (label: string) => GeneralSteps.sequence([
-    sCreateAlert(label, Fun.noop),
-    Step.sync(() => {
-      const body = document.querySelector('.tox-dialog__body');
-      Assertions.assertStructure('A basic alert dialog should have these components',
-        ApproxStructure.build((s, str, arr) => s.element('div', {
-          classes: [ arr.has('tox-dialog__body') ],
-          children: [
+  const sInsertTheCorrectMessage = (label: string) =>
+    GeneralSteps.sequence([
+      sCreateAlert(label, Fun.noop),
+      Step.sync(() => {
+        const body = document.querySelector('.tox-dialog__body');
+        Assertions.assertStructure(
+          'A basic alert dialog should have these components',
+          ApproxStructure.build((s, str, arr) =>
             s.element('div', {
-              classes: [ arr.has('tox-dialog__body-content') ],
+              classes: [arr.has('tox-dialog__body')],
               children: [
-                s.element('p', {
-                  html: str.is(label)
+                s.element('div', {
+                  classes: [arr.has('tox-dialog__body-content')],
+                  children: [
+                    s.element('p', {
+                      html: str.is(label)
+                    })
+                  ]
                 })
               ]
             })
-          ]
-        })),
-        SugarElement.fromDom(body)
-      );
-    }),
-    sTeardown
-
-  ]);
+          ),
+          SugarElement.fromDom(body)
+        );
+      }),
+      sTeardown
+    ]);
 
   const sCallbackOnClose = (label: string) => {
     let calls = 0;
@@ -170,7 +176,11 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
           calls++;
         };
         windowManager.alert(label, testCallback);
-        Assertions.assertEq('callback should not have been called yet', 0, calls);
+        Assertions.assertEq(
+          'callback should not have been called yet',
+          0,
+          calls
+        );
       }),
       Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),
       Waiter.sTryUntil(
@@ -178,23 +188,38 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
         UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap')
       ),
       Step.sync(() => {
-        Assertions.assertEq('Clicking on close should call the callback fn once', 1, calls);
+        Assertions.assertEq(
+          'Clicking on close should call the callback fn once',
+          1,
+          calls
+        );
       })
-
     ]);
   };
 
   const sShouldFocusOnOkButton = GeneralSteps.sequence([
     sCreateAlert('initial focus should be on ok button', Fun.noop),
-    FocusTools.sTryOnSelector('When the alert dialog loads, focus should be on the ok button', Element.fromDom(document), 'button:contains(OK)'),
+    FocusTools.sTryOnSelector(
+      'When the alert dialog loads, focus should be on the ok button',
+      Element.fromDom(document),
+      'button:contains(OK)'
+    ),
     sTeardown
   ]);
 
   const sClickShouldFocusOnFirstButton = GeneralSteps.sequence([
     sCreateAlert('Click should focus ok button', Fun.noop),
-    FocusTools.sTryOnSelector('When the alert dialog loads, focus should be on the ok button', Element.fromDom(document), 'button:contains(OK)'),
+    FocusTools.sTryOnSelector(
+      'When the alert dialog loads, focus should be on the ok button',
+      Element.fromDom(document),
+      'button:contains(OK)'
+    ),
     Mouse.sTrueClickOn(Element.fromDom(document), '.tox-dialog'),
-    FocusTools.sTryOnSelector('Focus should still be on the ok button', Element.fromDom(document), 'button:contains(OK)'),
+    FocusTools.sTryOnSelector(
+      'Focus should still be on the ok button',
+      Element.fromDom(document),
+      'button:contains(OK)'
+    ),
     sTeardown
   ]);
 
@@ -203,19 +228,24 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
     GeneralSteps.sequence([
       sCreateAlert('Showing an alert', Fun.noop),
       Mouse.sClickOn(Body.body(), '.tox-button:contains("OK")'),
-      UiFinder.sNotExists(Body.body(), '[role="dialog"]'),
+      UiFinder.sNotExists(Body.body(), '[role="dialog"]')
     ])
   );
 
-  Pipeline.async({}, [
-    sHasBasicStructure('The alert dialog loads with the basic structure'),
-    sInsertTheCorrectMessage('should display this <strong>message</strong>'),
-    sCallbackOnClose('The callback should fire when ok is invoked'),
-    sClickShouldFocusOnFirstButton,
-    sShouldFocusOnOkButton,
-    sCloseButtonShouldWork
-  ], function () {
-    helpers.destroy();
-    success();
-  }, failure);
+  Pipeline.async(
+    {},
+    [
+      sHasBasicStructure('The alert dialog loads with the basic structure'),
+      sInsertTheCorrectMessage('should display this <strong>message</strong>'),
+      sCallbackOnClose('The callback should fire when ok is invoked'),
+      sClickShouldFocusOnFirstButton,
+      sShouldFocusOnOkButton,
+      sCloseButtonShouldWork
+    ],
+    function () {
+      helpers.destroy();
+      success();
+    },
+    failure
+  );
 });

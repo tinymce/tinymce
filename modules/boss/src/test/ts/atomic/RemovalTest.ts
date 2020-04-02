@@ -10,12 +10,7 @@ UnitTest.test('RemovalTest', function () {
   const data = function (): Gene {
     return Gene('A', '.', [
       Gene('B', '.'),
-      Gene('C', '.', [
-        Gene('D', '.', [
-          Gene('E', '.')
-        ]),
-        Gene('F', '.')
-      ])
+      Gene('C', '.', [Gene('D', '.', [Gene('E', '.')]), Gene('F', '.')])
     ]);
   };
 

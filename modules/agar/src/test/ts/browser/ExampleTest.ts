@@ -1,6 +1,15 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { document, setTimeout } from '@ephox/dom-globals';
-import { Class, Css, DomEvent, Element, Html, Insert, InsertAll, Remove } from '@ephox/sugar';
+import {
+  Class,
+  Css,
+  DomEvent,
+  Element,
+  Html,
+  Insert,
+  InsertAll,
+  Remove
+} from '@ephox/sugar';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as ChainSequence from 'ephox/agar/api/ChainSequence';
 import * as Guard from 'ephox/agar/api/Guard';
@@ -9,7 +18,6 @@ import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as UiFinder from 'ephox/agar/api/UiFinder';
 
 UnitTest.asynctest('Example for Tutorial', (success, failure) => {
-
   const makeSource = () => {
     const editor = Element.fromTag('div');
     Class.add(editor, 'editor');
@@ -37,7 +45,7 @@ UnitTest.asynctest('Example for Tutorial', (success, failure) => {
     Html.set(cancelButton, 'Cancel');
     Class.add(cancelButton, 'cancel');
 
-    InsertAll.append(dialog, [ dialogContent, cancelButton ]);
+    InsertAll.append(dialog, [dialogContent, cancelButton]);
 
     Insert.append(editor, showButton);
 
@@ -66,23 +74,39 @@ UnitTest.asynctest('Example for Tutorial', (success, failure) => {
 
   const body = Element.fromDom(document.body);
 
-  Pipeline.runStep({},
+  Pipeline.runStep(
+    {},
     // Inject as the first input: body
-    Chain.isolate(body, ChainSequence.sequence([
-      // Input: > container, output: visible element
-      UiFinder.cWaitForVisible('Waiting for ".editor" to be visible', '.editor'),
-      Mouse.cClickOn('button.show'),
-      Chain.inject(body),
-      UiFinder.cWaitForVisible('Waiting for ".dialog" to be visible', '.dialog'),
-      Mouse.cClickOn('button.cancel'),
-      Chain.inject(body),
-      Chain.control(
-        UiFinder.cFindIn('.dialog'),
-        Guard.tryUntilNot('Keep going until .dialog is not in the DOM', 10, 2000)
-      )
-    ]))
-    , () => {
+    Chain.isolate(
+      body,
+      ChainSequence.sequence([
+        // Input: > container, output: visible element
+        UiFinder.cWaitForVisible(
+          'Waiting for ".editor" to be visible',
+          '.editor'
+        ),
+        Mouse.cClickOn('button.show'),
+        Chain.inject(body),
+        UiFinder.cWaitForVisible(
+          'Waiting for ".dialog" to be visible',
+          '.dialog'
+        ),
+        Mouse.cClickOn('button.cancel'),
+        Chain.inject(body),
+        Chain.control(
+          UiFinder.cFindIn('.dialog'),
+          Guard.tryUntilNot(
+            'Keep going until .dialog is not in the DOM',
+            10,
+            2000
+          )
+        )
+      ])
+    ),
+    () => {
       Remove.remove(source);
       success();
-    }, failure);
+    },
+    failure
+  );
 });

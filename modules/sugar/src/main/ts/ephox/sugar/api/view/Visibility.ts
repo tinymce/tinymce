@@ -5,7 +5,12 @@ import { HTMLElement, Element as DomElement } from '@ephox/dom-globals';
 import Element from '../node/Element';
 
 // This function is dangerous. Toggle behaviour is different depending on whether the element is in the DOM or not when it's created.
-const visibilityToggler = function (element: Element<DomElement>, property: string, hiddenValue: string, visibleValue: string) {
+const visibilityToggler = function (
+  element: Element<DomElement>,
+  property: string,
+  hiddenValue: string,
+  visibleValue: string
+) {
   let initial = Css.get(element, property);
   // old jquery-ism that this function depends on
   if (initial === undefined) {
@@ -36,8 +41,4 @@ const isVisible = function (element: Element<HTMLElement>): boolean {
   return !isHidden(dom);
 };
 
-export {
-  toggler,
-  displayToggler,
-  isVisible,
-};
+export { toggler, displayToggler, isVisible };

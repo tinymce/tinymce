@@ -9,16 +9,25 @@ import { EscapingConfig, KeyRuleHandler } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 
 // NB: Tsc requires AlloyEventHandler and AlloyComponent to be imported here.
-const schema = [
-  Fields.onStrictKeyboardHandler('onEscape')
-];
+const schema = [Fields.onStrictKeyboardHandler('onEscape')];
 
-const doEscape: KeyRuleHandler<EscapingConfig, Stateless> = (component, simulatedEvent, escapeConfig, _escapeState) => escapeConfig.onEscape(component, simulatedEvent);
+const doEscape: KeyRuleHandler<EscapingConfig, Stateless> = (
+  component,
+  simulatedEvent,
+  escapeConfig,
+  _escapeState
+) => escapeConfig.onEscape(component, simulatedEvent);
 
-const getKeydownRules: () => Array<KeyRules.KeyRule<EscapingConfig, Stateless>> = Fun.constant([
-  KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), doEscape)
-]);
+const getKeydownRules: () => Array<
+  KeyRules.KeyRule<EscapingConfig, Stateless>
+> = Fun.constant([KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE()), doEscape)]);
 
-const getKeyupRules = Fun.constant([ ]);
+const getKeyupRules = Fun.constant([]);
 
-export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Option.none());
+export default KeyingType.typical(
+  schema,
+  NoState.init,
+  getKeydownRules,
+  getKeyupRules,
+  () => Option.none()
+);

@@ -37,7 +37,13 @@ const tableCell = function () {
   return Element.fromTag('td');
 };
 
-const render = (rows: number, columns: number, rowHeaders: number, columnHeaders: number, renderOpts: RenderOptions = DefaultRenderOptions) => {
+const render = (
+  rows: number,
+  columns: number,
+  rowHeaders: number,
+  columnHeaders: number,
+  renderOpts: RenderOptions = DefaultRenderOptions
+) => {
   const table = makeTable();
 
   Css.setAll(table, renderOpts.styles);
@@ -51,15 +57,19 @@ const render = (rows: number, columns: number, rowHeaders: number, columnHeaders
   for (let i = 0; i < rows; i++) {
     const tr = tableRow();
     for (let j = 0; j < columns; j++) {
-
-      const td = i < rowHeaders || j < columnHeaders ? tableHeaderCell() : tableCell();
-      if (j < columnHeaders) { Attr.set(td, 'scope', 'row'); }
-      if (i < rowHeaders) { Attr.set(td, 'scope', 'col'); }
+      const td =
+        i < rowHeaders || j < columnHeaders ? tableHeaderCell() : tableCell();
+      if (j < columnHeaders) {
+        Attr.set(td, 'scope', 'row');
+      }
+      if (i < rowHeaders) {
+        Attr.set(td, 'scope', 'col');
+      }
 
       // Note, this is a placeholder so that the cells have height. The unicode character didn't work in IE10.
       Insert.append(td, Element.fromTag('br'));
       if (renderOpts.percentages) {
-        Css.set(td, 'width', (100 / columns) + '%');
+        Css.set(td, 'width', 100 / columns + '%');
       }
       Insert.append(tr, td);
     }

@@ -8,7 +8,12 @@ type WorkDone = (res: Result<EventArgs, string>) => void;
 type Worker = (callback: WorkDone) => void;
 type TaskConstructor<T> = (worker: Worker) => T;
 
-const w = function <T> (fType: TaskConstructor<T>, element: Element, eventType: string, timeout: number) {
+const w = function <T>(
+  fType: TaskConstructor<T>,
+  element: Element,
+  eventType: string,
+  timeout: number
+) {
   return fType(function (callback) {
     const listener = DomEvent.bind(element, eventType, function (event) {
       clearTimeout(time);
@@ -18,17 +23,29 @@ const w = function <T> (fType: TaskConstructor<T>, element: Element, eventType: 
 
     const time = setTimeout(function () {
       listener.unbind();
-      callback(Result.error('Event ' + eventType + ' did not fire within ' + timeout + 'ms'));
+      callback(
+        Result.error(
+          'Event ' + eventType + ' did not fire within ' + timeout + 'ms'
+        )
+      );
     }, timeout);
   });
 };
 
-const cWaitFor = function (element: Element, eventType: string, timeout: number) {
+const cWaitFor = function (
+  element: Element,
+  eventType: string,
+  timeout: number
+) {
   return w(LazyValue.nu, element, eventType, timeout);
 };
 
-const waitFor = function (element: Element, eventType: string, timeout: number) {
+const waitFor = function (
+  element: Element,
+  eventType: string,
+  timeout: number
+) {
   return w(Future.nu, element, eventType, timeout);
 };
 
-export { cWaitFor, waitFor, };
+export { cWaitFor, waitFor };

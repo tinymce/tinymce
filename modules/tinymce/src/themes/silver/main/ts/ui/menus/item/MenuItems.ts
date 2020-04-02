@@ -21,12 +21,4 @@ const nested = renderNestedItem;
 const toggle = renderToggleMenuItem;
 const fancy = renderFancyMenuItem;
 
-export {
-  choice,
-  autocomplete,
-  separator,
-  normal,
-  nested,
-  toggle,
-  fancy
-};
+export { choice, autocomplete, separator, normal, nested, toggle, fancy };

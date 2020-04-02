@@ -23,7 +23,4 @@ const documentPositionContainedBy = function (a: Node, b: Node) {
   return compareDocumentPosition(a, b, Node.DOCUMENT_POSITION_CONTAINED_BY);
 };
 
-export {
-  documentPositionPreceding,
-  documentPositionContainedBy
-};
+export { documentPositionPreceding, documentPositionContainedBy };

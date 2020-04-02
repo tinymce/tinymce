@@ -34,7 +34,11 @@ const insertFragment = (dom: DOMUtils, rng: Range, frag: DocumentFragment) => {
 
 // Wrapper to Range.insertNode which removes any empty text nodes created in the process.
 // Doesn't merge adjacent text nodes - this is according to the DOM spec.
-const rangeInsertNode = (dom: DOMUtils, rng: Range, node: Node | DocumentFragment): void => {
+const rangeInsertNode = (
+  dom: DOMUtils,
+  rng: Range,
+  node: Node | DocumentFragment
+): void => {
   if (NodeType.isDocumentFragment(node)) {
     insertFragment(dom, rng, node);
   } else {
@@ -42,6 +46,4 @@ const rangeInsertNode = (dom: DOMUtils, rng: Range, node: Node | DocumentFragmen
   }
 };
 
-export {
-  rangeInsertNode
-};
+export { rangeInsertNode };

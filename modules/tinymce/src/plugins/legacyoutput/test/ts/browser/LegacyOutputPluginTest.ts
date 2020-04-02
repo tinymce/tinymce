@@ -7,17 +7,26 @@ import Plugin from 'tinymce/plugins/legacyoutput/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest(
-  'browser.tinymce.plugins.legacyoutput.LegacyOutputPluginTest', (success, failure) => {
+  'browser.tinymce.plugins.legacyoutput.LegacyOutputPluginTest',
+  (success, failure) => {
     const suite = LegacyUnit.createSuite();
     const formatsCell = Cell<any>({});
 
     Plugin();
     Theme();
 
-    suite.test('TestCase-TBA: LegacyOutput: Setting overrides', function (editor) {
+    suite.test('TestCase-TBA: LegacyOutput: Setting overrides', function (
+      editor
+    ) {
       LegacyUnit.equal(editor.getParam('inline_styles'), false);
-      LegacyUnit.equal(editor.getParam('fontsize_formats'), '8pt=1 10pt=2 12pt=3 14pt=4 18pt=5 24pt=6 36pt=7');
-      LegacyUnit.equal(editor.getParam('font_formats'), 'Arial=arial,helvetica,sans-serif;');
+      LegacyUnit.equal(
+        editor.getParam('fontsize_formats'),
+        '8pt=1 10pt=2 12pt=3 14pt=4 18pt=5 24pt=6 36pt=7'
+      );
+      LegacyUnit.equal(
+        editor.getParam('font_formats'),
+        'Arial=arial,helvetica,sans-serif;'
+      );
     });
 
     suite.test('TestCase-TBA: LegacyOutput: Font color', function (editor) {
@@ -25,21 +34,30 @@ UnitTest.asynctest(
       editor.setContent('<p>text</p>');
       LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
       editor.execCommand('forecolor', false, '#FF0000');
-      LegacyUnit.equal(editor.getContent().toLowerCase(), '<p><font color="#ff0000">text</font></p>');
+      LegacyUnit.equal(
+        editor.getContent().toLowerCase(),
+        '<p><font color="#ff0000">text</font></p>'
+      );
     });
 
     suite.test('TestCase-TBA: LegacyOutput: Font size', function (editor) {
       editor.setContent('<p>text</p>');
       LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
       editor.execCommand('fontsize', false, 7);
-      LegacyUnit.equal(editor.getContent(), '<p><font size="7">text</font></p>');
+      LegacyUnit.equal(
+        editor.getContent(),
+        '<p><font size="7">text</font></p>'
+      );
     });
 
     suite.test('TestCase-TBA: LegacyOutput: Font face', function (editor) {
       editor.setContent('<p>text</p>');
       LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
       editor.execCommand('fontname', false, 'times');
-      LegacyUnit.equal(editor.getContent(), '<p><font face="times">text</font></p>');
+      LegacyUnit.equal(
+        editor.getContent(),
+        '<p><font face="times">text</font></p>'
+      );
     });
 
     suite.test('TestCase-TBA: LegacyOutput: Bold', function (editor) {
@@ -98,48 +116,99 @@ UnitTest.asynctest(
       LegacyUnit.equal(editor.getContent(), '<p align="justify">text</p>');
     });
 
-    suite.test('TestCase-TBA: LegacyOutput: Justifycenter image', function (editor) {
-      editor.setContent('<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAF0lEQVR42mP8/5/hPwMJgHFUw6gG7AAAXVgj6XowjMAAAAAASUVORK5CYII=" /></p>');
+    suite.test('TestCase-TBA: LegacyOutput: Justifycenter image', function (
+      editor
+    ) {
+      editor.setContent(
+        '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAF0lEQVR42mP8/5/hPwMJgHFUw6gG7AAAXVgj6XowjMAAAAAASUVORK5CYII=" /></p>'
+      );
       LegacyUnit.setSelection(editor, 'p', 0);
       editor.execCommand('justifycenter');
-      LegacyUnit.equal(editor.getContent(), '<p align="center"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAF0lEQVR42mP8/5/hPwMJgHFUw6gG7AAAXVgj6XowjMAAAAAASUVORK5CYII=" /></p>');
+      LegacyUnit.equal(
+        editor.getContent(),
+        '<p align="center"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAF0lEQVR42mP8/5/hPwMJgHFUw6gG7AAAXVgj6XowjMAAAAAASUVORK5CYII=" /></p>'
+      );
     });
 
-    suite.test('TestCase-TBA: LegacyOutput: Remove text color', function (editor) {
+    suite.test('TestCase-TBA: LegacyOutput: Remove text color', function (
+      editor
+    ) {
       editor.setContent('<p><font color="red">text</font></p>');
       LegacyUnit.setSelection(editor, 'font', 0, 'font', 4);
       editor.execCommand('mceRemoveTextcolor', 'forecolor');
       LegacyUnit.equal(editor.getContent(), '<p>text</p>');
     });
 
-    suite.test('TestCase-TBA: LegacyOutput: Remove background color', function (editor) {
-      editor.setContent('<p><font style="background-color: red">text</font></p>');
+    suite.test('TestCase-TBA: LegacyOutput: Remove background color', function (
+      editor
+    ) {
+      editor.setContent(
+        '<p><font style="background-color: red">text</font></p>'
+      );
       LegacyUnit.setSelection(editor, 'font', 0, 'font', 4);
       editor.execCommand('mceRemoveTextcolor', 'hilitecolor');
       LegacyUnit.equal(editor.getContent(), '<p>text</p>');
     });
 
-    suite.test('TestCase-TBA: LegacyOutput: Formats registered before loading initial content', () => {
-      const formats = formatsCell.get();
-      LegacyUnit.equal(formats.bold[0], { inline: 'b', remove: 'all', deep: true, split: true });
-      LegacyUnit.equal(formats.italic[0], { inline: 'i', remove: 'all', deep: true, split: true });
-      LegacyUnit.equal(formats.underline[0], { inline: 'u', remove: 'all', deep: true, split: true });
-      LegacyUnit.equal(formats.fontname[0], { inline: 'font', toggle: false, attributes: { face: '%value' }, deep: true, split: true });
-    });
-
-    TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
-      Pipeline.async({}, Log.steps('TBA', 'LegacyOutput: Test legacy formatting', suite.toSteps(editor)), onSuccess, onFailure);
-    }, {
-      plugins: 'legacyoutput',
-      indent: false,
-      base_url: '/project/tinymce/js/tinymce',
-      font_formats: 'Arial=arial,helvetica,sans-serif;',
-      setup: (editor) => {
-        // Store the formats on `PostRender`, which is fired before the initial editor content is loaded
-        editor.on('PostRender', () => {
-          formatsCell.set({ ...editor.formatter.get() });
+    suite.test(
+      'TestCase-TBA: LegacyOutput: Formats registered before loading initial content',
+      () => {
+        const formats = formatsCell.get();
+        LegacyUnit.equal(formats.bold[0], {
+          inline: 'b',
+          remove: 'all',
+          deep: true,
+          split: true
+        });
+        LegacyUnit.equal(formats.italic[0], {
+          inline: 'i',
+          remove: 'all',
+          deep: true,
+          split: true
+        });
+        LegacyUnit.equal(formats.underline[0], {
+          inline: 'u',
+          remove: 'all',
+          deep: true,
+          split: true
+        });
+        LegacyUnit.equal(formats.fontname[0], {
+          inline: 'font',
+          toggle: false,
+          attributes: { face: '%value' },
+          deep: true,
+          split: true
         });
       }
-    }, success, failure);
+    );
+
+    TinyLoader.setupLight(
+      function (editor, onSuccess, onFailure) {
+        Pipeline.async(
+          {},
+          Log.steps(
+            'TBA',
+            'LegacyOutput: Test legacy formatting',
+            suite.toSteps(editor)
+          ),
+          onSuccess,
+          onFailure
+        );
+      },
+      {
+        plugins: 'legacyoutput',
+        indent: false,
+        base_url: '/project/tinymce/js/tinymce',
+        font_formats: 'Arial=arial,helvetica,sans-serif;',
+        setup: (editor) => {
+          // Store the formats on `PostRender`, which is fired before the initial editor content is loaded
+          editor.on('PostRender', () => {
+            formatsCell.set({ ...editor.formatter.get() });
+          });
+        }
+      },
+      success,
+      failure
+    );
   }
 );

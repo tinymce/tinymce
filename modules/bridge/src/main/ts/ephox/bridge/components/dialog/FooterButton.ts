@@ -1,6 +1,10 @@
 import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Id, Option } from '@ephox/katamari';
-import { DialogToggleMenuItemApi, dialogToggleMenuItemSchema, DialogToggleMenuItem as DialogToggleMenuItemType } from './ToggleMenuItem';
+import {
+  DialogToggleMenuItemApi,
+  dialogToggleMenuItemSchema,
+  DialogToggleMenuItem as DialogToggleMenuItemType
+} from './ToggleMenuItem';
 
 export type DialogMenuButtonItemTypes = DialogToggleMenuItemApi;
 export type DialogToggleMenuItem = DialogToggleMenuItemType;
@@ -60,7 +64,7 @@ const baseButtonFields = [
     ValueSchema.string
   ),
   FieldSchema.optionString('icon'),
-  FieldSchema.defaultedStringEnum('align', 'end', [ 'start', 'end' ]),
+  FieldSchema.defaultedStringEnum('align', 'end', ['start', 'end']),
   FieldSchema.defaultedBoolean('primary', false),
   FieldSchema.defaultedBoolean('disabled', false)
 ];
@@ -71,12 +75,12 @@ export const dialogButtonFields = [
 ];
 
 const normalButtonFields = [
-  FieldSchema.strictStringEnum('type', [ 'submit', 'cancel', 'custom' ]),
+  FieldSchema.strictStringEnum('type', ['submit', 'cancel', 'custom']),
   ...dialogButtonFields
 ];
 
 const menuButtonFields = [
-  FieldSchema.strictStringEnum('type', [ 'menu' ]),
+  FieldSchema.strictStringEnum('type', ['menu']),
   FieldSchema.optionString('text'),
   FieldSchema.optionString('tooltip'),
   FieldSchema.optionString('icon'),
@@ -84,12 +88,9 @@ const menuButtonFields = [
   ...baseButtonFields
 ];
 
-export const dialogButtonSchema = ValueSchema.choose(
-  'type',
-  {
-    submit: normalButtonFields,
-    cancel: normalButtonFields,
-    custom: normalButtonFields,
-    menu: menuButtonFields
-  }
-);
+export const dialogButtonSchema = ValueSchema.choose('type', {
+  submit: normalButtonFields,
+  cancel: normalButtonFields,
+  custom: normalButtonFields,
+  menu: menuButtonFields
+});

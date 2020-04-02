@@ -9,7 +9,11 @@ import * as Events from '../api/Events';
 import Editor from 'tinymce/core/api/Editor';
 import { Cell } from '@ephox/katamari';
 
-const toggleVisualBlocks = function (editor: Editor, pluginUrl: string, enabledState: Cell<boolean>) {
+const toggleVisualBlocks = function (
+  editor: Editor,
+  pluginUrl: string,
+  enabledState: Cell<boolean>
+) {
   const dom = editor.dom;
 
   dom.toggleClass(editor.getBody(), 'mce-visualblocks');
@@ -18,6 +22,4 @@ const toggleVisualBlocks = function (editor: Editor, pluginUrl: string, enabledS
   Events.fireVisualBlocks(editor, enabledState.get());
 };
 
-export {
-  toggleVisualBlocks
-};
+export { toggleVisualBlocks };

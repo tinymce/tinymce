@@ -5,7 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, Node as DomNode, Element as DomElement, Range, Text } from '@ephox/dom-globals';
+import {
+  HTMLElement,
+  Node as DomNode,
+  Element as DomElement,
+  Range,
+  Text
+} from '@ephox/dom-globals';
 import { Option, Options } from '@ephox/katamari';
 import Env from '../api/Env';
 import * as CaretBookmark from './CaretBookmark';
@@ -17,11 +23,26 @@ import { getParentCaretContainer } from '../fmt/FormatContainer';
 import * as Zwsp from '../text/Zwsp';
 import DOMUtils from '../api/dom/DOMUtils';
 import * as CaretFinder from '../caret/CaretFinder';
-import { isPathBookmark, isStringPathBookmark, isIdBookmark, isIndexBookmark, isRangeBookmark, PathBookmark, IdBookmark, Bookmark, IndexBookmark } from './BookmarkTypes';
+import {
+  isPathBookmark,
+  isStringPathBookmark,
+  isIdBookmark,
+  isIndexBookmark,
+  isRangeBookmark,
+  PathBookmark,
+  IdBookmark,
+  Bookmark,
+  IndexBookmark
+} from './BookmarkTypes';
 
 const addBogus = (dom: DOMUtils, node: DomNode): DomNode => {
   // Adds a bogus BR element for empty block elements
-  if (NodeType.isElement(node) && dom.isBlock(node) && !node.innerHTML && !Env.ie) {
+  if (
+    NodeType.isElement(node) &&
+    dom.isBlock(node) &&
+    !node.innerHTML &&
+    !Env.ie
+  ) {
     node.innerHTML = '<br data-mce-bogus="1" />';
   }
 
@@ -62,7 +83,11 @@ const tryFindRangePosition = (node: DomElement, rng: Range): boolean =>
 
 // Since we trim zwsp from undo levels the caret format containers
 // may be empty if so pad them with a zwsp and move caret there
-const padEmptyCaretContainer = (root: HTMLElement, node: DomNode, rng: Range): boolean => {
+const padEmptyCaretContainer = (
+  root: HTMLElement,
+  node: DomNode,
+  rng: Range
+): boolean => {
   if (isEmpty(node) && getParentCaretContainer(root, node)) {
     insertZwsp(node, rng);
     return true;
@@ -71,7 +96,12 @@ const padEmptyCaretContainer = (root: HTMLElement, node: DomNode, rng: Range): b
   }
 };
 
-const setEndPoint = (dom: DOMUtils, start: boolean, bookmark: PathBookmark, rng: Range) => {
+const setEndPoint = (
+  dom: DOMUtils,
+  start: boolean,
+  bookmark: PathBookmark,
+  rng: Range
+) => {
   const point = bookmark[start ? 'start' : 'end'];
   let i, node, offset, children;
   const root = dom.getRoot();
@@ -119,10 +149,19 @@ const setEndPoint = (dom: DOMUtils, start: boolean, bookmark: PathBookmark, rng:
   return true;
 };
 
-const isValidTextNode = (node: DomNode): node is Text => NodeType.isText(node) && node.data.length > 0;
+const isValidTextNode = (node: DomNode): node is Text =>
+  NodeType.isText(node) && node.data.length > 0;
 
-const restoreEndPoint = (dom: DOMUtils, suffix: string, bookmark: IdBookmark): Option<CaretPosition> => {
-  let marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev;
+const restoreEndPoint = (
+  dom: DOMUtils,
+  suffix: string,
+  bookmark: IdBookmark
+): Option<CaretPosition> => {
+  let marker = dom.get(bookmark.id + '_' + suffix),
+    node,
+    idx,
+    next,
+    prev;
   const keep = bookmark.keep;
   let container, offset;
 
@@ -191,7 +230,13 @@ const restoreEndPoint = (dom: DOMUtils, suffix: string, bookmark: IdBookmark): O
       // If siblings are text nodes then merge them unless it's Opera since it some how removes the node
       // and we are sniffing since adding a lot of detection code for a browser with 3% of the market
       // isn't worth the effort. Sorry, Opera but it's just a fact
-      if (prev && next && prev.nodeType === next.nodeType && NodeType.isText(prev) && !Env.opera) {
+      if (
+        prev &&
+        next &&
+        prev.nodeType === next.nodeType &&
+        NodeType.isText(prev) &&
+        !Env.opera
+      ) {
         idx = prev.nodeValue.length;
         prev.appendData(next.nodeValue);
         dom.remove(next);
@@ -215,7 +260,10 @@ const restoreEndPoint = (dom: DOMUtils, suffix: string, bookmark: IdBookmark): O
 const resolvePaths = (dom: DOMUtils, bookmark: PathBookmark): Option<Range> => {
   const rng = dom.createRng();
 
-  if (setEndPoint(dom, true, bookmark, rng) && setEndPoint(dom, false, bookmark, rng)) {
+  if (
+    setEndPoint(dom, true, bookmark, rng) &&
+    setEndPoint(dom, false, bookmark, rng)
+  ) {
     return Option.some(rng);
   } else {
     return Option.none();
@@ -226,23 +274,20 @@ const resolveId = (dom: DOMUtils, bookmark: IdBookmark): Option<Range> => {
   const startPos = restoreEndPoint(dom, 'start', bookmark);
   const endPos = restoreEndPoint(dom, 'end', bookmark);
 
-  return Options.lift2(
-    startPos,
-    endPos.or(startPos),
-    (spos, epos) => {
-      const rng = dom.createRng();
-      rng.setStart(addBogus(dom, spos.container()), spos.offset());
-      rng.setEnd(addBogus(dom, epos.container()), epos.offset());
-      return rng;
-    }
-  );
+  return Options.lift2(startPos, endPos.or(startPos), (spos, epos) => {
+    const rng = dom.createRng();
+    rng.setStart(addBogus(dom, spos.container()), spos.offset());
+    rng.setEnd(addBogus(dom, epos.container()), epos.offset());
+    return rng;
+  });
 };
 
-const resolveIndex = (dom: DOMUtils, bookmark: IndexBookmark): Option<Range> => Option.from(dom.select(bookmark.name)[bookmark.index]).map((elm) => {
-  const rng = dom.createRng();
-  rng.selectNode(elm);
-  return rng;
-});
+const resolveIndex = (dom: DOMUtils, bookmark: IndexBookmark): Option<Range> =>
+  Option.from(dom.select(bookmark.name)[bookmark.index]).map((elm) => {
+    const rng = dom.createRng();
+    rng.selectNode(elm);
+    return rng;
+  });
 
 const resolve = (selection: Selection, bookmark: Bookmark): Option<Range> => {
   const dom = selection.dom;
@@ -264,6 +309,4 @@ const resolve = (selection: Selection, bookmark: Bookmark): Option<Range> => {
   return Option.none();
 };
 
-export {
-  resolve
-};
+export { resolve };

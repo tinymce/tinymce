@@ -5,10 +5,30 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Boxes, Channels, Docking, Focusing, Receiving } from '@ephox/alloy';
+import {
+  AlloyComponent,
+  Boxes,
+  Channels,
+  Docking,
+  Focusing,
+  Receiving
+} from '@ephox/alloy';
 import { HTMLElement } from '@ephox/dom-globals';
 import { Cell, Option, Result } from '@ephox/katamari';
-import { Class, Classes, Compare, Css, Element, Focus, Height, Location, Scroll, Traverse, Visibility, Width } from '@ephox/sugar';
+import {
+  Class,
+  Classes,
+  Compare,
+  Css,
+  Element,
+  Focus,
+  Height,
+  Location,
+  Scroll,
+  Traverse,
+  Visibility,
+  Width
+} from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ScrollIntoViewEvent } from 'tinymce/core/api/EventTypes';
@@ -24,7 +44,10 @@ const visibility = {
 const editorStickyOnClass = 'tox-tinymce--toolbar-sticky-on';
 const editorStickyOffClass = 'tox-tinymce--toolbar-sticky-off';
 
-const scrollFromBehindHeader = (e: ScrollIntoViewEvent, containerHeader: Element) => {
+const scrollFromBehindHeader = (
+  e: ScrollIntoViewEvent,
+  containerHeader: Element
+) => {
   const doc = Traverse.owner(containerHeader);
   const viewHeight = doc.dom().defaultView.innerHeight;
   const scrollPos = Scroll.get(doc);
@@ -41,8 +64,10 @@ const scrollFromBehindHeader = (e: ScrollIntoViewEvent, containerHeader: Element
   const editorHeaderBottom = editorHeaderTop + editorHeaderHeight;
 
   // Check to see if the header is docked to the top/bottom of the page (eg is floating)
-  const editorHeaderDockedAtTop = Math.abs(editorHeaderTop - scrollPos.top()) < 2;
-  const editorHeaderDockedAtBottom = Math.abs(editorHeaderBottom - (scrollPos.top() + viewHeight)) < 2;
+  const editorHeaderDockedAtTop =
+    Math.abs(editorHeaderTop - scrollPos.top()) < 2;
+  const editorHeaderDockedAtBottom =
+    Math.abs(editorHeaderBottom - (scrollPos.top() + viewHeight)) < 2;
 
   // If the element is behind the header at the top of the page, then
   // scroll the element down by the header height
@@ -51,15 +76,19 @@ const scrollFromBehindHeader = (e: ScrollIntoViewEvent, containerHeader: Element
     // If the element is behind the header at the bottom of the page, then
     // scroll the element up by the header height
   } else if (editorHeaderDockedAtBottom && markerBottom > editorHeaderTop) {
-    const y = (markerTop - viewHeight) + markerHeight + editorHeaderHeight;
+    const y = markerTop - viewHeight + markerHeight + editorHeaderHeight;
     Scroll.to(scrollPos.left(), y, doc);
   }
 };
 
-const updateIframeContentFlow = (header: AlloyComponent, isToolbarTop: boolean): void => {
-  const getOccupiedHeight = (elm: Element<HTMLElement>) => Height.getOuter(elm) +
-      (parseInt(Css.get(elm, 'margin-top'), 10) || 0) +
-      (parseInt(Css.get(elm, 'margin-bottom'), 10) || 0) ;
+const updateIframeContentFlow = (
+  header: AlloyComponent,
+  isToolbarTop: boolean
+): void => {
+  const getOccupiedHeight = (elm: Element<HTMLElement>) =>
+    Height.getOuter(elm) +
+    (parseInt(Css.get(elm, 'margin-top'), 10) || 0) +
+    (parseInt(Css.get(elm, 'margin-bottom'), 10) || 0);
 
   const elm = header.element();
   Traverse.parent(elm).each((parentElem: Element<HTMLElement>) => {
@@ -76,13 +105,19 @@ const updateIframeContentFlow = (header: AlloyComponent, isToolbarTop: boolean):
   });
 };
 
-const updateSinkVisibility = (sinkElem: Element<HTMLElement>, visible: boolean): void => {
+const updateSinkVisibility = (
+  sinkElem: Element<HTMLElement>,
+  visible: boolean
+): void => {
   if (visible) {
     Class.remove(sinkElem, visibility.fadeOutClass);
-    Classes.add(sinkElem, [ visibility.transitionClass, visibility.fadeInClass ]);
+    Classes.add(sinkElem, [visibility.transitionClass, visibility.fadeInClass]);
   } else {
     Class.remove(sinkElem, visibility.fadeInClass);
-    Classes.add(sinkElem, [ visibility.fadeOutClass, visibility.transitionClass ]);
+    Classes.add(sinkElem, [
+      visibility.fadeOutClass,
+      visibility.transitionClass
+    ]);
   }
 };
 
@@ -101,21 +136,37 @@ const restoreFocus = (headerElem: Element, focusedElem: Element) => {
   // When the header is hidden, then the element that was focused will be lost
   // so we need to restore it if nothing else has already been focused (eg anything other than the body)
   const ownerDoc = Traverse.owner(focusedElem);
-  Focus.active(ownerDoc).filter((activeElm) =>
-    // Don't try to refocus the same element
-    !Compare.eq(focusedElem, activeElm)
-  ).filter((activeElm) =>
-    // Only attempt to refocus if the current focus is the body or is in the header element
-    Compare.eq(activeElm, Element.fromDom(ownerDoc.dom().body)) || Compare.contains(headerElem, activeElm)
-  ).each(() => Focus.focus(focusedElem));
+  Focus.active(ownerDoc)
+    .filter(
+      (activeElm) =>
+        // Don't try to refocus the same element
+        !Compare.eq(focusedElem, activeElm)
+    )
+    .filter(
+      (activeElm) =>
+        // Only attempt to refocus if the current focus is the body or is in the header element
+        Compare.eq(activeElm, Element.fromDom(ownerDoc.dom().body)) ||
+        Compare.contains(headerElem, activeElm)
+    )
+    .each(() => Focus.focus(focusedElem));
 };
 
-const findFocusedElem = (rootElm: Element, lazySink: () => Result<AlloyComponent, Error>): Option<Element> =>
+const findFocusedElem = (
+  rootElm: Element,
+  lazySink: () => Result<AlloyComponent, Error>
+): Option<Element> =>
   // Check to see if an element is focused inside the header or inside the sink
   // and if so store the element so we can restore it later
-  Focus.search(rootElm).orThunk(() => lazySink().toOption().bind((sink) => Focus.search(sink.element())));
+  Focus.search(rootElm).orThunk(() =>
+    lazySink()
+      .toOption()
+      .bind((sink) => Focus.search(sink.element()))
+  );
 
-const setup = (editor: Editor, lazyHeader: () => Option<AlloyComponent>): void => {
+const setup = (
+  editor: Editor,
+  lazyHeader: () => Option<AlloyComponent>
+): void => {
   if (!editor.inline) {
     // If using bottom toolbar then when the editor resizes we need to reset docking
     // otherwise it won't know the original toolbar position has moved
@@ -127,7 +178,9 @@ const setup = (editor: Editor, lazyHeader: () => Option<AlloyComponent>): void =
 
     // No need to update the content flow in inline mode as the header always floats
     editor.on('ResizeWindow ResizeEditor', () => {
-      lazyHeader().each((header) => updateIframeContentFlow(header, isToolbarLocationTop(editor)));
+      lazyHeader().each((header) =>
+        updateIframeContentFlow(header, isToolbarLocationTop(editor))
+      );
     });
 
     // Need to reset the docking position on skin loaded as the original position will have
@@ -168,12 +221,13 @@ const setup = (editor: Editor, lazyHeader: () => Option<AlloyComponent>): void =
   });
 };
 
-const isDocked = (lazyHeader: () => Option<AlloyComponent>): boolean => lazyHeader().map(Docking.isDocked).getOr(false);
+const isDocked = (lazyHeader: () => Option<AlloyComponent>): boolean =>
+  lazyHeader().map(Docking.isDocked).getOr(false);
 
 const getIframeBehaviours = (isToolbarTop: boolean) => [
   Receiving.config({
     channels: {
-      [ EditorChannels.toolbarHeightChange() ]: {
+      [EditorChannels.toolbarHeightChange()]: {
         onReceive: (comp) => {
           updateIframeContentFlow(comp, isToolbarTop);
         }
@@ -182,7 +236,10 @@ const getIframeBehaviours = (isToolbarTop: boolean) => [
   })
 ];
 
-const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>) => {
+const getBehaviours = (
+  editor: Editor,
+  lazySink: () => Result<AlloyComponent, Error>
+) => {
   const focusedElm = Cell<Option<Element>>(Option.none());
   const isToolbarTop = isToolbarLocationTop(editor);
 
@@ -195,30 +252,43 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
       updateIframeContentFlow(comp, isToolbarTop);
     }
     updateEditorClasses(editor, Docking.isDocked(comp));
-    comp.getSystem().broadcastOn( [ Channels.repositionPopups() ], { });
-    lazySink().each((sink) => sink.getSystem().broadcastOn( [ Channels.repositionPopups() ], { }));
+    comp.getSystem().broadcastOn([Channels.repositionPopups()], {});
+    lazySink().each((sink) =>
+      sink.getSystem().broadcastOn([Channels.repositionPopups()], {})
+    );
   };
 
-  const additionalBehaviours = editor.inline ? [ ] : getIframeBehaviours(isToolbarTop);
+  const additionalBehaviours = editor.inline
+    ? []
+    : getIframeBehaviours(isToolbarTop);
 
   return [
-    Focusing.config({ }),
+    Focusing.config({}),
     Docking.config({
       contextual: {
         lazyContext(comp) {
           const headerHeight = Height.getOuter(comp.element());
-          const container = editor.inline ? editor.getContentAreaContainer() : editor.getContainer();
+          const container = editor.inline
+            ? editor.getContentAreaContainer()
+            : editor.getContainer();
           const box = Boxes.box(Element.fromDom(container));
           // Force the header to hide before it overflows outside the container
           const boxHeight = box.height - headerHeight;
           const topBound = box.y + (isToolbarTop ? 0 : headerHeight);
-          return Option.some(Boxes.bounds(box.x, topBound, box.width, boxHeight));
+          return Option.some(
+            Boxes.bounds(box.x, topBound, box.width, boxHeight)
+          );
         },
         onShow: () => {
           runOnSinkElement((elem) => updateSinkVisibility(elem, true));
         },
         onShown: (comp) => {
-          runOnSinkElement((elem) => Classes.remove(elem, [ visibility.transitionClass, visibility.fadeInClass ]));
+          runOnSinkElement((elem) =>
+            Classes.remove(elem, [
+              visibility.transitionClass,
+              visibility.fadeInClass
+            ])
+          );
           // Restore focus and reset the stored focused element
           focusedElm.get().each((elem) => {
             restoreFocus(comp.element(), elem);
@@ -230,11 +300,13 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
           runOnSinkElement((elem) => updateSinkVisibility(elem, false));
         },
         onHidden: () => {
-          runOnSinkElement((elem) => Classes.remove(elem, [ visibility.transitionClass ]));
+          runOnSinkElement((elem) =>
+            Classes.remove(elem, [visibility.transitionClass])
+          );
         },
         ...visibility
       },
-      modes: [ isToolbarTop ? 'top' : 'bottom' ],
+      modes: [isToolbarTop ? 'top' : 'bottom'],
       onDocked: onDockingSwitch,
       onUndocked: onDockingSwitch
     }),
@@ -243,8 +315,4 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
   ];
 };
 
-export {
-  setup,
-  isDocked,
-  getBehaviours
-};
+export { setup, isDocked, getBehaviours };

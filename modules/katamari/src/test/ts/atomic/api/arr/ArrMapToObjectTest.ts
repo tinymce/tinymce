@@ -14,18 +14,21 @@ UnitTest.test('Arr.mapToObject', () => {
   checkToObject({}, [], () => {
     throw new Error('boom');
   });
-  checkToObject({ a: '3a' }, [ 'a' ], (x) => 3 + x);
-  checkToObject({ a: '3a', b: '3b' }, [ 'a', 'b' ], (x) => 3 + x);
-  checkToObject({ 1: 4, 2: 5 }, [ 1, 2 ], (x) => 3 + x);
+  checkToObject({ a: '3a' }, ['a'], (x) => 3 + x);
+  checkToObject({ a: '3a', b: '3b' }, ['a', 'b'], (x) => 3 + x);
+  checkToObject({ 1: 4, 2: 5 }, [1, 2], (x) => 3 + x);
 
-  fc.assert(fc.property(fc.array(fc.asciiString()), (keys) => {
-    const f = (x) => x + '_cat';
-    const inputKeys = Arr.sort(Unique.stringArray(keys));
-    const output = Arr.mapToObject(inputKeys, f);
-    const outputKeys = Arr.sort(Obj.keys(output));
+  fc.assert(
+    fc.property(fc.array(fc.asciiString()), (keys) => {
+      const f = (x) => x + '_cat';
+      const inputKeys = Arr.sort(Unique.stringArray(keys));
+      const output = Arr.mapToObject(inputKeys, f);
+      const outputKeys = Arr.sort(Obj.keys(output));
 
-    return Eq.eqArray(Eq.eqString).eq(inputKeys, outputKeys) &&
-      Arr.forall(outputKeys, (ok) => f(ok) === output[ok]
+      return (
+        Eq.eqArray(Eq.eqString).eq(inputKeys, outputKeys) &&
+        Arr.forall(outputKeys, (ok) => f(ok) === output[ok])
       );
-  }));
+    })
+  );
 });

@@ -17,17 +17,20 @@ export default [
   Fields.onHandler('onGrown'),
   Fields.onHandler('onStartGrow'),
   FieldSchema.defaulted('expanded', false),
-  FieldSchema.strictOf('dimension', ValueSchema.choose(
-    'property', {
+  FieldSchema.strictOf(
+    'dimension',
+    ValueSchema.choose('property', {
       width: [
         Fields.output('property', 'width'),
         Fields.output('getDimension', (elem: Element) => Width.get(elem) + 'px')
       ],
       height: [
         Fields.output('property', 'height'),
-        Fields.output('getDimension', (elem: Element) => Height.get(elem) + 'px')
+        Fields.output(
+          'getDimension',
+          (elem: Element) => Height.get(elem) + 'px'
+        )
       ]
-    }
-  ))
-
+    })
+  )
 ];

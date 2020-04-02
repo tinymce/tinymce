@@ -7,7 +7,10 @@ import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as HtmlUtils from '../module/test/HtmlUtils';
 
-UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function (
+  success,
+  failure
+) {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
@@ -57,7 +60,9 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function (success, f
 
   if (Env.ceFalse) {
     suite.test('SelectAll', function (editor) {
-      editor.setContent('<p>a</p><div contenteditable="false"><div contenteditable="true">b</div><p>c</p>');
+      editor.setContent(
+        '<p>a</p><div contenteditable="false"><div contenteditable="true">b</div><p>c</p>'
+      );
       LegacyUnit.setSelection(editor, 'div div', 0);
       editor.execCommand('SelectAll');
       LegacyUnit.equal(editor.selection.getStart().nodeName, 'DIV');
@@ -80,21 +85,30 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function (success, f
     editor.setContent('<p>123</p>');
     LegacyUnit.setSelection(editor, 'p', 3);
     editor.execCommand('InsertLineBreak');
-    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>123<br><br></p>');
+    LegacyUnit.equal(
+      HtmlUtils.cleanHtml(editor.getBody().innerHTML),
+      '<p>123<br><br></p>'
+    );
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
-    Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
-  }, {
-    add_unload_trigger: false,
-    disable_nodechange: true,
-    indent: false,
-    entities: 'raw',
-    convert_urls: false,
-    valid_styles: {
-      '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,' +
-        'float,margin,margin-top,margin-right,margin-bottom,margin-left,padding-left,text-align,display'
+  TinyLoader.setupLight(
+    function (editor, onSuccess, onFailure) {
+      Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
     },
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+    {
+      add_unload_trigger: false,
+      disable_nodechange: true,
+      indent: false,
+      entities: 'raw',
+      convert_urls: false,
+      valid_styles: {
+        '*':
+          'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,' +
+          'float,margin,margin-top,margin-right,margin-bottom,margin-left,padding-left,text-align,display'
+      },
+      base_url: '/project/tinymce/js/tinymce'
+    },
+    success,
+    failure
+  );
 });

@@ -23,9 +23,7 @@ const fallbacks = [
 const getTargets = (editor: Editor): Option<ListItem[]> => {
   const list = Settings.getTargetList(editor);
   if (Type.isArray(list)) {
-    return ListOptions.sanitize(list).orThunk(
-      () => Option.some(fallbacks)
-    );
+    return ListOptions.sanitize(list).orThunk(() => Option.some(fallbacks));
   } else if (list === false) {
     return Option.none();
   }

@@ -8,7 +8,8 @@
 import * as Settings from '../api/Settings';
 
 const setup = function (editor) {
-  const $ = editor.$, tocClass = Settings.getTocClass(editor);
+  const $ = editor.$,
+    tocClass = Settings.getTocClass(editor);
 
   editor.on('PreProcess', function (e) {
     const $tocElm = $('.' + tocClass, e.node);
@@ -27,6 +28,4 @@ const setup = function (editor) {
   });
 };
 
-export {
-  setup
-};
+export { setup };

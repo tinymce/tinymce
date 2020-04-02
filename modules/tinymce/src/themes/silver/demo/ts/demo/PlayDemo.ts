@@ -11,9 +11,48 @@ export default function () {
     selector: 'div.tiny-text',
     inline: false,
     theme: 'silver',
-    toolbar: [ 'styleselect', 'MagicButton', 'code', 'undo', 'toc', 'redo', 'preview', '|', 'help', 'link', '|', 'align', 'alignleft', 'alignright', 'aligncenter',
-      'alignjustify', 'alignnone', '|', 'bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript', '|', 'blockquote',
-      'outdent', 'indent', '|', 'cut', 'copy', 'paste', '|', 'help', 'selectall', 'visualaid', 'newdocument', 'removeformat', 'remove', '|', 'menu-button-1'
+    toolbar: [
+      'styleselect',
+      'MagicButton',
+      'code',
+      'undo',
+      'toc',
+      'redo',
+      'preview',
+      '|',
+      'help',
+      'link',
+      '|',
+      'align',
+      'alignleft',
+      'alignright',
+      'aligncenter',
+      'alignjustify',
+      'alignnone',
+      '|',
+      'bold',
+      'italic',
+      'underline',
+      'strikethrough',
+      'subscript',
+      'superscript',
+      '|',
+      'blockquote',
+      'outdent',
+      'indent',
+      '|',
+      'cut',
+      'copy',
+      'paste',
+      '|',
+      'help',
+      'selectall',
+      'visualaid',
+      'newdocument',
+      'removeformat',
+      'remove',
+      '|',
+      'menu-button-1'
     ].join(' '),
     // content_css: ['//fonts.googleapis.com/css?family=Lato:300,300i,400,400i', 'https://staging.tiny.cloud/css/content-standard.min.css'],
     plugins: [
@@ -43,21 +82,25 @@ export default function () {
 
     menubar: 'file edit view insert format table tools Menu-1 help',
     menu: {
-      'Menu-1': { title: 'Menu-1', items: 'menu-item-1 | link unlink | visualaid' }
+      'Menu-1': {
+        title: 'Menu-1',
+        items: 'menu-item-1 | link unlink | visualaid'
+      }
     },
 
     // media_dimensions: false,
 
     style_formats: [
       { title: 'Bold text', inline: 'b' },
-      { title: 'Red text', inline: 'span', styles: { color: '#ff0000' }},
-      { title: 'Red header', block: 'h1', styles: { color: '#ff0000' }},
+      { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+      { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
       { title: 'Example 1', inline: 'span', classes: 'example1' },
       { title: 'Example 2', inline: 'span', classes: 'example2' },
       { title: 'Table styles' },
       { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' },
       {
-        title: 'Headings', items: [
+        title: 'Headings',
+        items: [
           { title: 'Heading 1', format: 'h1' },
           { title: 'Heading 2', format: 'h2' },
           { title: 'Heading 3', format: 'h3' },
@@ -68,8 +111,9 @@ export default function () {
       },
 
       {
-        title: 'Inline', items: [
-          { title: 'Bold', icon: 'bold', format: 'bold' },
+        title: 'Inline',
+        items: [
+          { title: 'Bold', icon: 'bold', format: 'bold' }
           // { title: 'Italic', icon: 'italic', format: 'italic' },
           // { title: 'Underline', icon: 'underline', format: 'underline' },
           // { title: 'Strikethrough', icon: 'strikethrough', format: 'strikethrough' },
@@ -80,13 +124,14 @@ export default function () {
       },
 
       {
-        title: 'Blocks', items: [
+        title: 'Blocks',
+        items: [
           // { title: 'Paragraph', format: 'p' },
           // { title: 'Blockquote', format: 'blockquote' },
           // { title: 'Div', format: 'div' },
           // { title: 'Pre', format: 'pre' }
         ]
-      },
+      }
 
       // {
       //   title: 'Alignment', items: [
@@ -104,7 +149,8 @@ export default function () {
       ed.on('skinLoaded', function () {
         // Notification fields for equality: type, text, progressBar, timeout
         ed.notificationManager.open({
-          text: 'You will not see this because the mobile theme has no notifications',
+          text:
+            'You will not see this because the mobile theme has no notifications',
           type: 'info'
         });
       });
@@ -144,7 +190,6 @@ export default function () {
         scope: 'node',
         position: 'selection'
       });
-
     }
   });
 }

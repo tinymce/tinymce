@@ -4,7 +4,10 @@ import Delay from 'tinymce/core/api/util/Delay';
 import { UnitTest } from '@ephox/bedrock-client';
 import Editor from 'tinymce/core/api/Editor';
 
-UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function (
+  success,
+  failure
+) {
   const suite = LegacyUnit.createSuite();
 
   const ok = function (value, label) {
@@ -26,7 +29,8 @@ UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function (success, fai
   });
 
   suite.asyncTest('setInterval', function (_, done) {
-    let count = 0, id;
+    let count = 0,
+      id;
 
     id = Delay.setInterval(function () {
       if (++count === 2) {
@@ -59,7 +63,8 @@ UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function (success, fai
   });
 
   suite.asyncTest('setEditorInterval', function (_, done) {
-    let count = 0, id;
+    let count = 0,
+      id;
     const fakeEditor = {} as Editor;
 
     id = Delay.setEditorInterval(fakeEditor, function () {
@@ -95,7 +100,7 @@ UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function (success, fai
     fn(2);
 
     Delay.setTimeout(function () {
-      LegacyUnit.deepEqual(args, [ 2 ]);
+      LegacyUnit.deepEqual(args, [2]);
       done();
     }, 10);
   });
@@ -139,7 +144,12 @@ UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function (success, fai
     ok(true, 'clearInterval works.');
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
-    success();
-  }, failure);
+  Pipeline.async(
+    {},
+    suite.toSteps({}),
+    function () {
+      success();
+    },
+    failure
+  );
 });

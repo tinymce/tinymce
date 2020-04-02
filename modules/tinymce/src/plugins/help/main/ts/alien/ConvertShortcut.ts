@@ -31,9 +31,7 @@ const convertText = (source: string) => {
     return Obj.has(replace, search) ? replace[search] : segment;
   });
 
-  return Env.mac ? (updated.join('')).replace(/\s/, '') : updated.join('+');
+  return Env.mac ? updated.join('').replace(/\s/, '') : updated.join('+');
 };
 
-export {
-  convertText
-};
+export { convertText };

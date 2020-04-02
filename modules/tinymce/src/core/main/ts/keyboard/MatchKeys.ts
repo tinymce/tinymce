@@ -17,15 +17,16 @@ export interface KeyPattern {
   action: () => boolean;
 }
 
-const defaultPatterns = (patterns: KeyPattern[]): KeyPattern[] => Arr.map(patterns, (pattern) => ({
-  shiftKey: false,
-  altKey: false,
-  ctrlKey: false,
-  metaKey: false,
-  keyCode: 0,
-  action: Fun.noop,
-  ...pattern
-}));
+const defaultPatterns = (patterns: KeyPattern[]): KeyPattern[] =>
+  Arr.map(patterns, (pattern) => ({
+    shiftKey: false,
+    altKey: false,
+    ctrlKey: false,
+    metaKey: false,
+    keyCode: 0,
+    action: Fun.noop,
+    ...pattern
+  }));
 
 const matchesEvent = function (pattern: KeyPattern, evt: KeyboardEvent) {
   return (
@@ -38,7 +39,9 @@ const matchesEvent = function (pattern: KeyPattern, evt: KeyboardEvent) {
 };
 
 const match = function (patterns: KeyPattern[], evt: KeyboardEvent) {
-  return Arr.bind(defaultPatterns(patterns), (pattern) => matchesEvent(pattern, evt) ? [ pattern ] : [ ]);
+  return Arr.bind(defaultPatterns(patterns), (pattern) =>
+    matchesEvent(pattern, evt) ? [pattern] : []
+  );
 };
 
 const action = function (f, ...x: any[]) {
@@ -47,12 +50,11 @@ const action = function (f, ...x: any[]) {
   };
 };
 
-const execute = function (patterns: KeyPattern[], evt: KeyboardEvent): Option<KeyPattern> {
+const execute = function (
+  patterns: KeyPattern[],
+  evt: KeyboardEvent
+): Option<KeyPattern> {
   return Arr.find(match(patterns, evt), (pattern) => pattern.action());
 };
 
-export {
-  match,
-  action,
-  execute
-};
+export { match, action, execute };

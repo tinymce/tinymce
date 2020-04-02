@@ -25,7 +25,9 @@ const deleteRangeMergeBlocks = function (rootNode, selection: Selection) {
       if (Compare.eq(block1, block2) === false) {
         rng.deleteContents();
 
-        MergeBlocks.mergeBlocks(rootNode, true, block1, block2).each(function (pos) {
+        MergeBlocks.mergeBlocks(rootNode, true, block1, block2).each(function (
+          pos
+        ) {
           selection.setRng(pos.toRange());
         });
 
@@ -33,7 +35,8 @@ const deleteRangeMergeBlocks = function (rootNode, selection: Selection) {
       } else {
         return false;
       }
-    }).getOr(false);
+    }
+  ).getOr(false);
 };
 
 const isRawNodeInTable = function (root, rawNode) {
@@ -43,12 +46,21 @@ const isRawNodeInTable = function (root, rawNode) {
 };
 
 const isSelectionInTable = function (root, rng) {
-  return isRawNodeInTable(root, rng.startContainer) || isRawNodeInTable(root, rng.endContainer);
+  return (
+    isRawNodeInTable(root, rng.startContainer) ||
+    isRawNodeInTable(root, rng.endContainer)
+  );
 };
 
 const isEverythingSelected = function (root, rng) {
-  const noPrevious = CaretFinder.prevPosition(root.dom(), CaretPosition.fromRangeStart(rng)).isNone();
-  const noNext = CaretFinder.nextPosition(root.dom(), CaretPosition.fromRangeEnd(rng)).isNone();
+  const noPrevious = CaretFinder.prevPosition(
+    root.dom(),
+    CaretPosition.fromRangeStart(rng)
+  ).isNone();
+  const noNext = CaretFinder.nextPosition(
+    root.dom(),
+    CaretPosition.fromRangeEnd(rng)
+  ).isNone();
   return !isSelectionInTable(root, rng) && noPrevious && noNext;
 };
 
@@ -61,13 +73,13 @@ const emptyEditor = function (editor: Editor) {
 const deleteRange = function (editor: Editor) {
   const rootNode = Element.fromDom(editor.getBody());
   const rng = editor.selection.getRng();
-  return isEverythingSelected(rootNode, rng) ? emptyEditor(editor) : deleteRangeMergeBlocks(rootNode, editor.selection);
+  return isEverythingSelected(rootNode, rng)
+    ? emptyEditor(editor)
+    : deleteRangeMergeBlocks(rootNode, editor.selection);
 };
 
 const backspaceDelete = function (editor: Editor, _forward: boolean) {
   return editor.selection.isCollapsed() ? false : deleteRange(editor);
 };
 
-export {
-  backspaceDelete
-};
+export { backspaceDelete };

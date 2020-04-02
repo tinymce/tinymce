@@ -14,14 +14,20 @@ UnitTest.test('DomGatherTest', function () {
   };
 
   interface CheckItem {
-    seek: (element: Element, predicate: (e: Element) => boolean, isRoot: (e: Element) => boolean) => Option<Element>;
+    seek: (
+      element: Element,
+      predicate: (e: Element) => boolean,
+      isRoot: (e: Element) => boolean
+    ) => Option<Element>;
     element: Element;
     predicate: (e: Element) => boolean;
     expected: Element;
   }
 
   const check = function (spec: CheckItem) {
-    const actual = spec.seek(spec.element, spec.predicate, is(page.container)).getOrDie('No actual element found.');
+    const actual = spec
+      .seek(spec.element, spec.predicate, is(page.container))
+      .getOrDie('No actual element found.');
     assert.eq(spec.expected.dom(), actual.dom());
   };
 

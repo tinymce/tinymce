@@ -22,11 +22,17 @@ import * as Events from '../api/Events';
 
 const each = Tools.each;
 
-const registerCommands = (editor: Editor, actions: TableActions, cellSelection, selections: Selections, clipboardRows: Cell<Option<Element[]>>) => {
+const registerCommands = (
+  editor: Editor,
+  actions: TableActions,
+  cellSelection,
+  selections: Selections,
+  clipboardRows: Cell<Option<Element[]>>
+) => {
   const isRoot = Util.getIsRoot(editor);
   const eraseTable = () => {
-    TableSelection.getSelectionStartCellOrCaption(editor)
-      .each((cellOrCaption) => {
+    TableSelection.getSelectionStartCellOrCaption(editor).each(
+      (cellOrCaption) => {
         const tableOpt = TableLookup.table(cellOrCaption, isRoot);
         tableOpt.filter(Fun.not(isRoot)).each((table) => {
           const cursor = Element.fromText('');
@@ -44,10 +50,12 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
             editor.nodeChanged();
           }
         });
-      });
+      }
+    );
   };
 
-  const getTableFromCell = (cell: Element): Option<Element> => TableLookup.table(cell, isRoot);
+  const getTableFromCell = (cell: Element): Option<Element> =>
+    TableLookup.table(cell, isRoot);
 
   const getSize = (table) => ({
     width: Util.getPixelWidth(table.dom()),
@@ -58,8 +66,18 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
     const newSize = getSize(table);
 
     if (oldSize.width !== newSize.width || oldSize.height !== newSize.height) {
-      Events.fireObjectResizeStart(editor, table.dom(), oldSize.width, oldSize.height);
-      Events.fireObjectResized(editor, table.dom(), newSize.width, newSize.height);
+      Events.fireObjectResizeStart(
+        editor,
+        table.dom(),
+        oldSize.width,
+        oldSize.height
+      );
+      Events.fireObjectResized(
+        editor,
+        table.dom(),
+        newSize.width,
+        newSize.height
+      );
     }
   };
 
@@ -79,12 +97,19 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
     });
   };
 
-  const copyRowSelection = (_execute?) => TableSelection.getSelectionStartCell(editor).map((cell) => getTableFromCell(cell).bind((table) => {
-    const doc = Element.fromDom(editor.getDoc());
-    const targets = TableTargets.forMenu(selections, table, cell);
-    const generators = TableFill.cellOperations(Fun.noop, doc, Option.none());
-    return CopyRows.copyRows(table, targets, generators);
-  }));
+  const copyRowSelection = (_execute?) =>
+    TableSelection.getSelectionStartCell(editor).map((cell) =>
+      getTableFromCell(cell).bind((table) => {
+        const doc = Element.fromDom(editor.getDoc());
+        const targets = TableTargets.forMenu(selections, table, cell);
+        const generators = TableFill.cellOperations(
+          Fun.noop,
+          doc,
+          Option.none()
+        );
+        return CopyRows.copyRows(table, targets, generators);
+      })
+    );
 
   const pasteOnSelection = (execute) => {
     // If we have clipboard rows to paste
@@ -94,7 +119,13 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
         getTableFromCell(cell).each((table) => {
           const doc = Element.fromDom(editor.getDoc());
           const generators = TableFill.paste(doc);
-          const targets = TableTargets.pasteRows(selections, table, cell, clonedRows, generators);
+          const targets = TableTargets.pasteRows(
+            selections,
+            table,
+            cell,
+            clonedRows,
+            generators
+          );
           execute(table, targets).each((rng) => {
             editor.selection.setRng(rng);
             editor.focus();
@@ -106,79 +137,83 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
   };
 
   // Register action commands
-  each({
-    mceTableSplitCells() {
-      actOnSelection(actions.unmergeCells);
-    },
+  each(
+    {
+      mceTableSplitCells() {
+        actOnSelection(actions.unmergeCells);
+      },
 
-    mceTableMergeCells() {
-      actOnSelection(actions.mergeCells);
-    },
+      mceTableMergeCells() {
+        actOnSelection(actions.mergeCells);
+      },
 
-    mceTableInsertRowBefore() {
-      actOnSelection(actions.insertRowsBefore);
-    },
+      mceTableInsertRowBefore() {
+        actOnSelection(actions.insertRowsBefore);
+      },
 
-    mceTableInsertRowAfter() {
-      actOnSelection(actions.insertRowsAfter);
-    },
+      mceTableInsertRowAfter() {
+        actOnSelection(actions.insertRowsAfter);
+      },
 
-    mceTableInsertColBefore() {
-      actOnSelection(actions.insertColumnsBefore);
-    },
+      mceTableInsertColBefore() {
+        actOnSelection(actions.insertColumnsBefore);
+      },
 
-    mceTableInsertColAfter() {
-      actOnSelection(actions.insertColumnsAfter);
-    },
+      mceTableInsertColAfter() {
+        actOnSelection(actions.insertColumnsAfter);
+      },
 
-    mceTableDeleteCol() {
-      actOnSelection(actions.deleteColumn);
-    },
+      mceTableDeleteCol() {
+        actOnSelection(actions.deleteColumn);
+      },
 
-    mceTableDeleteRow() {
-      actOnSelection(actions.deleteRow);
-    },
-
-    mceTableCutRow(_grid) {
-      copyRowSelection().each((selection) => {
-        clipboardRows.set(selection);
+      mceTableDeleteRow() {
         actOnSelection(actions.deleteRow);
-      });
-    },
+      },
 
-    mceTableCopyRow(_grid) {
-      copyRowSelection().each((selection) => {
-        clipboardRows.set(selection);
-      });
-    },
+      mceTableCutRow(_grid) {
+        copyRowSelection().each((selection) => {
+          clipboardRows.set(selection);
+          actOnSelection(actions.deleteRow);
+        });
+      },
 
-    mceTablePasteRowBefore(_grid) {
-      pasteOnSelection(actions.pasteRowsBefore);
-    },
+      mceTableCopyRow(_grid) {
+        copyRowSelection().each((selection) => {
+          clipboardRows.set(selection);
+        });
+      },
 
-    mceTablePasteRowAfter(_grid) {
-      pasteOnSelection(actions.pasteRowsAfter);
-    },
+      mceTablePasteRowBefore(_grid) {
+        pasteOnSelection(actions.pasteRowsBefore);
+      },
 
-    mceTableDelete: eraseTable
-  }, (func, name) => {
-    editor.addCommand(name, func);
-  });
+      mceTablePasteRowAfter(_grid) {
+        pasteOnSelection(actions.pasteRowsAfter);
+      },
+
+      mceTableDelete: eraseTable
+    },
+    (func, name) => {
+      editor.addCommand(name, func);
+    }
+  );
 
   // Register dialog commands
-  each({
-    // AP-101 TableDialog.open renders a slightly different dialog if isNew is true
-    mceInsertTable: Fun.curry(TableDialog.open, editor, true),
-    mceTableProps: Fun.curry(TableDialog.open, editor, false),
-    mceTableRowProps: Fun.curry(RowDialog.open, editor),
-    mceTableCellProps: Fun.curry(CellDialog.open, editor)
-  }, (func, name) => {
-    editor.addCommand(name, () => {
-      func();
-    });
-  });
+  each(
+    {
+      // AP-101 TableDialog.open renders a slightly different dialog if isNew is true
+      mceInsertTable: Fun.curry(TableDialog.open, editor, true),
+      mceTableProps: Fun.curry(TableDialog.open, editor, false),
+      mceTableRowProps: Fun.curry(RowDialog.open, editor),
+      mceTableCellProps: Fun.curry(CellDialog.open, editor)
+    },
+    (func, name) => {
+      editor.addCommand(name, () => {
+        func();
+      });
+    }
+  );
 };
 
-export {
-  registerCommands
-};
+export { registerCommands };

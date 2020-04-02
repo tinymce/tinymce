@@ -13,25 +13,29 @@ UnitTest.test('difference: unit tests', () => {
   };
 
   check([], [], []);
-  check([ 1 ], [ 1 ], []);
-  check([ 1, 2, 3 ], [ 1, 2, 3 ], []);
-  check([], [], [ 1, 2, 3 ]);
-  check([], [ 1, 2, 3 ], [ 1, 2, 3 ]);
-  check([ 1, 3 ], [ 1, 2, 3, 4 ], [ 2, 4 ]);
-  check([ 1 ], [ 1, 2, 3 ], [ 3, 2 ]);
-  check([ 2 ], [ 1, 2, 3, 4 ], [ 3, 4, 5, 1, 10, 10000, 56 ]);
+  check([1], [1], []);
+  check([1, 2, 3], [1, 2, 3], []);
+  check([], [], [1, 2, 3]);
+  check([], [1, 2, 3], [1, 2, 3]);
+  check([1, 3], [1, 2, 3, 4], [2, 4]);
+  check([1], [1, 2, 3], [3, 2]);
+  check([2], [1, 2, 3, 4], [3, 4, 5, 1, 10, 10000, 56]);
 });
 
 UnitTest.test('difference: ∀ xs ys. x ∈ xs -> x ∉ (ys - xs)', () => {
-  fc.assert(fc.property(fc.array(fc.integer()), fc.array(fc.integer()), (xs, ys) => {
-    const diff = Arr.difference(ys, xs);
-    return Arr.forall(xs, (x) => !Arr.contains(diff, x));
-  }));
+  fc.assert(
+    fc.property(fc.array(fc.integer()), fc.array(fc.integer()), (xs, ys) => {
+      const diff = Arr.difference(ys, xs);
+      return Arr.forall(xs, (x) => !Arr.contains(diff, x));
+    })
+  );
 });
 
 UnitTest.test('difference: ∀ xs ys. x ∈ (ys - xs) -> x ∉ ys', () => {
-  fc.assert(fc.property(fc.array(fc.integer()), fc.array(fc.integer()), (xs, ys) => {
-    const diff = Arr.difference(ys, xs);
-    return Arr.forall(diff, (d) => Arr.contains(ys, d));
-  }));
+  fc.assert(
+    fc.property(fc.array(fc.integer()), fc.array(fc.integer()), (xs, ys) => {
+      const diff = Arr.difference(ys, xs);
+      return Arr.forall(diff, (d) => Arr.contains(ys, d));
+    })
+  );
 });

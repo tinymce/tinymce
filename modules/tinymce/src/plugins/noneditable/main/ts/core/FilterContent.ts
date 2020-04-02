@@ -16,7 +16,8 @@ const hasClass = function (checkClassName) {
 
 const replaceMatchWithSpan = function (editor, content, cls) {
   return function (match) {
-    const args = arguments, index = args[args.length - 2];
+    const args = arguments,
+      index = args[args.length - 2];
     const prevChar = index > 0 ? content.charAt(index - 1) : '';
 
     // Is value inside an attribute then don't replace
@@ -36,14 +37,20 @@ const replaceMatchWithSpan = function (editor, content, cls) {
     }
 
     return (
-      '<span class="' + cls + '" data-mce-content="' + editor.dom.encode(args[0]) + '">' +
-      editor.dom.encode(typeof args[1] === 'string' ? args[1] : args[0]) + '</span>'
+      '<span class="' +
+      cls +
+      '" data-mce-content="' +
+      editor.dom.encode(args[0]) +
+      '">' +
+      editor.dom.encode(typeof args[1] === 'string' ? args[1] : args[0]) +
+      '</span>'
     );
   };
 };
 
 const convertRegExpsToNonEditable = function (editor, nonEditableRegExps, e) {
-  let i = nonEditableRegExps.length, content = e.content;
+  let i = nonEditableRegExps.length,
+    content = e.content;
 
   // Don't replace the variables when raw is used for example on undo/redo
   if (e.format === 'raw') {
@@ -51,7 +58,14 @@ const convertRegExpsToNonEditable = function (editor, nonEditableRegExps, e) {
   }
 
   while (i--) {
-    content = content.replace(nonEditableRegExps[i], replaceMatchWithSpan(editor, content, Settings.getNonEditableClass(editor)));
+    content = content.replace(
+      nonEditableRegExps[i],
+      replaceMatchWithSpan(
+        editor,
+        content,
+        Settings.getNonEditableClass(editor)
+      )
+    );
   }
 
   e.content = content;
@@ -76,7 +90,8 @@ const setup = function (editor) {
     }
 
     editor.parser.addAttributeFilter('class', function (nodes) {
-      let i = nodes.length, node;
+      let i = nodes.length,
+        node;
 
       while (i--) {
         node = nodes[i];
@@ -89,8 +104,11 @@ const setup = function (editor) {
       }
     });
 
-    editor.serializer.addAttributeFilter(contentEditableAttrName, function (nodes) {
-      let i = nodes.length, node;
+    editor.serializer.addAttributeFilter(contentEditableAttrName, function (
+      nodes
+    ) {
+      let i = nodes.length,
+        node;
 
       while (i--) {
         node = nodes[i];
@@ -111,6 +129,4 @@ const setup = function (editor) {
   });
 };
 
-export {
-  setup
-};
+export { setup };

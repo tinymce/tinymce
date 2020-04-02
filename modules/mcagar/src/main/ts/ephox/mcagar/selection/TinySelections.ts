@@ -9,7 +9,13 @@ const toDomRange = function (range: SimRange) {
   return rng;
 };
 
-const createDomSelection = function (container: Element, sPath: number[], soffset: number, fPath: number[], foffset: number) {
+const createDomSelection = function (
+  container: Element,
+  sPath: number[],
+  soffset: number,
+  fPath: number[],
+  foffset: number
+) {
   const path = Cursors.path({
     startPath: sPath,
     soffset,
@@ -19,26 +25,45 @@ const createDomSelection = function (container: Element, sPath: number[], soffse
   return toDomRange(Cursors.calculate(container, path));
 };
 
-const createDomCursor = function (container: Element, elementPath: number[], offset: number) {
+const createDomCursor = function (
+  container: Element,
+  elementPath: number[],
+  offset: number
+) {
   const elm = Cursors.calculateOne(container, elementPath);
-  return toDomRange(Cursors.range({
-    start: elm,
-    soffset: offset,
-    finish: elm,
-    foffset: offset
-  }));
+  return toDomRange(
+    Cursors.range({
+      start: elm,
+      soffset: offset,
+      finish: elm,
+      foffset: offset
+    })
+  );
 };
 
-const createDomSelectionOf = function (container: Element, start: Element, soffset: number, finish: Element, foffset: number) {
-  return toDomRange(Cursors.range({
-    start,
-    soffset,
-    finish,
-    foffset
-  }));
+const createDomSelectionOf = function (
+  container: Element,
+  start: Element,
+  soffset: number,
+  finish: Element,
+  foffset: number
+) {
+  return toDomRange(
+    Cursors.range({
+      start,
+      soffset,
+      finish,
+      foffset
+    })
+  );
 };
 
-const cCreateDomSelection = function (sPath: number[], soffset: number, fPath: number[], foffset: number) {
+const cCreateDomSelection = function (
+  sPath: number[],
+  soffset: number,
+  fPath: number[],
+  foffset: number
+) {
   return Chain.mapper(function (container: Element) {
     return createDomSelection(container, sPath, soffset, fPath, foffset);
   });
@@ -50,7 +75,12 @@ const cCreateDomCursor = function (elementPath: number[], offset: number) {
   });
 };
 
-const cCreateDomSelectionOf = function (start: Element, soffset: number, finish: Element, foffset: number) {
+const cCreateDomSelectionOf = function (
+  start: Element,
+  soffset: number,
+  finish: Element,
+  foffset: number
+) {
   return Chain.mapper(function (container: Element) {
     return createDomSelectionOf(container, start, soffset, finish, foffset);
   });
@@ -60,7 +90,6 @@ export {
   createDomSelection,
   createDomCursor,
   createDomSelectionOf,
-
   cCreateDomSelection,
   cCreateDomCursor,
   cCreateDomSelectionOf

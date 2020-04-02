@@ -14,7 +14,12 @@ import * as Events from '../api/Events';
 import { getUiContainer, isToolbarLocationTop } from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import * as ReadOnly from '../ReadOnly';
-import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
+import {
+  ModeRenderInfo,
+  RenderArgs,
+  RenderUiComponents,
+  RenderUiConfig
+} from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { InlineHeader } from '../ui/header/InlineHeader';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
@@ -37,7 +42,8 @@ const setupEvents = (editor: Editor, targetElm: Element, ui: InlineHeader) => {
     const { pos, bounds } = getTargetPosAndBounds(targetElm, isToolbarTop);
     const { pos: prevPos, bounds: prevBounds } = prevPosAndBounds.get();
 
-    const hasResized = bounds.height !== prevBounds.height || bounds.width !== prevBounds.width;
+    const hasResized =
+      bounds.height !== prevBounds.height || bounds.width !== prevBounds.width;
     prevPosAndBounds.set({ pos, bounds });
 
     if (hasResized) {
@@ -68,14 +74,22 @@ const setupEvents = (editor: Editor, targetElm: Element, ui: InlineHeader) => {
 
   // Bind to async load events and trigger a content resize event if the size has changed
   const elementLoad = Singleton.unbindable();
-  elementLoad.set(DomEvent.capture(Element.fromDom(editor.getBody()), 'load', resizeContent));
+  elementLoad.set(
+    DomEvent.capture(Element.fromDom(editor.getBody()), 'load', resizeContent)
+  );
 
   editor.on('remove', () => {
     elementLoad.clear();
   });
 };
 
-const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
+const render = (
+  editor: Editor,
+  uiComponents: RenderUiComponents,
+  rawUiConfig: RenderUiConfig,
+  backstage: UiFactoryBackstage,
+  args: RenderArgs
+): ModeRenderInfo => {
   const { mothership, uiMothership, outerContainer } = uiComponents;
   const floatContainer = Cell<AlloyComponent>(null);
   const targetElm = Element.fromDom(args.targetNode);
@@ -126,6 +140,4 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   };
 };
 
-export {
-  render
-};
+export { render };

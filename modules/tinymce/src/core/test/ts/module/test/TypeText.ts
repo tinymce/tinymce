@@ -4,7 +4,8 @@ import { document } from '@ephox/dom-globals';
 
 const insertCharAtRange = function (rng, chr) {
   const outRng = rng.cloneRange();
-  const sc = rng.startContainer, so = rng.startOffset;
+  const sc = rng.startContainer,
+    so = rng.startOffset;
 
   if (sc.nodeType === 3) {
     sc.insertData(so, chr);
@@ -55,9 +56,9 @@ const sTypeChar = function (doc, chr) {
 };
 
 const sTypeContentAtSelection = function (doc, text) {
-  return GeneralSteps.sequence(Arr.map(text.split(''), Fun.curry(sTypeChar, doc)));
+  return GeneralSteps.sequence(
+    Arr.map(text.split(''), Fun.curry(sTypeChar, doc))
+  );
 };
 
-export {
-  sTypeContentAtSelection
-};
+export { sTypeContentAtSelection };

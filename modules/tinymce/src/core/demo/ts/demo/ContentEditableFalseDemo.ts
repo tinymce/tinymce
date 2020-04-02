@@ -6,7 +6,6 @@ declare const window: any;
 declare let tinymce: any;
 
 export default function () {
-
   const paintClientRect = function (rect, color, id) {
     const editor: Editor = tinymce.activeEditor;
     const $ = editor.$;
@@ -27,8 +26,8 @@ export default function () {
 
     rectDiv.attr('id', id).css({
       position: 'absolute',
-      left: (rect.left + viewPort.x) + 'px',
-      top: (rect.top + viewPort.y) + 'px',
+      left: rect.left + viewPort.x + 'px',
+      top: rect.top + viewPort.y + 'px',
       width: (rect.width || 1) + 'px',
       height: rect.height + 'px',
       background: color,
@@ -65,9 +64,10 @@ export default function () {
     selector: 'textarea.tinymce',
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     add_unload_trigger: false,
-    toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify' +
-    ' | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample',
-    plugins: [ 'paste', 'list' ],
+    toolbar:
+      'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify' +
+      ' | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample',
+    plugins: ['paste', 'list'],
     content_css: '../css/content_editable.css',
     height: 400
   });
@@ -77,9 +77,10 @@ export default function () {
     inline: true,
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     add_unload_trigger: false,
-    toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify' +
-    ' | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample',
-    plugins: [ 'paste', 'list' ],
+    toolbar:
+      'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify' +
+      ' | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample',
+    plugins: ['paste', 'list'],
     content_css: '../css/content_editable.css'
   });
 

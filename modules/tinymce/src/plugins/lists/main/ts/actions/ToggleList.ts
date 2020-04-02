@@ -52,7 +52,9 @@ const getEndPointNode = function (editor, rng, start, root) {
 
   // Resolve node index
   if (container.nodeType === 1) {
-    container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
+    container =
+      container.childNodes[Math.min(offset, container.childNodes.length - 1)] ||
+      container;
   }
 
   if (!start && NodeType.isBr(container.nextSibling)) {
@@ -75,7 +77,8 @@ const getEndPointNode = function (editor, rng, start, root) {
 };
 
 const getSelectedTextBlocks = function (editor, rng, root) {
-  const textBlocks = [], dom = editor.dom;
+  const textBlocks = [],
+    dom = editor.dom;
 
   const startNode = getEndPointNode(editor, rng, true, root);
   const endNode = getEndPointNode(editor, rng, false, root);
@@ -108,7 +111,10 @@ const getSelectedTextBlocks = function (editor, rng, root) {
 
     const nextSibling = node.nextSibling;
     if (BookmarkManager.isBookmarkNode(node)) {
-      if (NodeType.isTextBlock(editor, nextSibling) || (!nextSibling && node.parentNode === root)) {
+      if (
+        NodeType.isTextBlock(editor, nextSibling) ||
+        (!nextSibling && node.parentNode === root)
+      ) {
         block = null;
         return;
       }
@@ -139,7 +145,10 @@ const applyList = function (editor, listName: string, detail = {}) {
   const rng = editor.selection.getRng(true);
   let bookmark;
   let listItemName = 'LI';
-  const root = Selection.getClosestListRootElm(editor, editor.selection.getStart(true));
+  const root = Selection.getClosestListRootElm(
+    editor,
+    editor.selection.getStart(true)
+  );
   const dom = editor.dom;
 
   if (dom.getContentEditable(editor.selection.getNode()) === 'false') {
@@ -158,7 +167,12 @@ const applyList = function (editor, listName: string, detail = {}) {
     let listBlock, sibling;
 
     sibling = block.previousSibling;
-    if (sibling && NodeType.isListNode(sibling) && sibling.nodeName === listName && hasCompatibleStyle(dom, sibling, detail)) {
+    if (
+      sibling &&
+      NodeType.isListNode(sibling) &&
+      sibling.nodeName === listName &&
+      hasCompatibleStyle(dom, sibling, detail)
+    ) {
       listBlock = sibling;
       block = dom.rename(block, listItemName);
       sibling.appendChild(block);
@@ -170,8 +184,16 @@ const applyList = function (editor, listName: string, detail = {}) {
     }
 
     removeStyles(dom, block, [
-      'margin', 'margin-right', 'margin-bottom', 'margin-left', 'margin-top',
-      'padding', 'padding-right', 'padding-bottom', 'padding-left', 'padding-top',
+      'margin',
+      'margin-right',
+      'margin-bottom',
+      'margin-left',
+      'margin-top',
+      'padding',
+      'padding-right',
+      'padding-bottom',
+      'padding-left',
+      'padding-top'
     ]);
 
     updateListWithDetails(dom, listBlock, detail);
@@ -182,7 +204,12 @@ const applyList = function (editor, listName: string, detail = {}) {
 };
 
 const isValidLists = function (list1, list2) {
-  return list1 && list2 && NodeType.isListNode(list1) && list1.nodeName === list2.nodeName;
+  return (
+    list1 &&
+    list2 &&
+    NodeType.isListNode(list1) &&
+    list1.nodeName === list2.nodeName
+  );
 };
 
 const hasSameListStyle = function (dom, list1, list2) {
@@ -196,7 +223,11 @@ const hasSameClasses = function (elm1, elm2) {
 };
 
 const shouldMerge = function (dom, list1, list2) {
-  return isValidLists(list1, list2) && hasSameListStyle(dom, list1, list2) && hasSameClasses(list1, list2);
+  return (
+    isValidLists(list1, list2) &&
+    hasSameListStyle(dom, list1, list2) &&
+    hasSameClasses(list1, list2)
+  );
 };
 
 const mergeWithAdjacentLists = function (dom, listBlock) {
@@ -232,13 +263,19 @@ const updateList = function (editor: Editor, list, listName, detail) {
   }
 };
 
-const toggleMultipleLists = function (editor, parentList, lists, listName, detail) {
+const toggleMultipleLists = function (
+  editor,
+  parentList,
+  lists,
+  listName,
+  detail
+) {
   if (parentList.nodeName === listName && !hasListStyleDetail(detail)) {
     flattenListSelection(editor);
   } else {
     const bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
 
-    Tools.each([ parentList ].concat(lists), function (elm) {
+    Tools.each([parentList].concat(lists), function (elm) {
       updateList(editor, elm, listName, detail);
     });
 
@@ -250,13 +287,17 @@ const hasListStyleDetail = function (detail) {
   return 'list-style-type' in detail;
 };
 
-const toggleSingleList =  function (editor, parentList, listName, detail) {
+const toggleSingleList = function (editor, parentList, listName, detail) {
   if (parentList === editor.getBody()) {
     return;
   }
 
   if (parentList) {
-    if (parentList.nodeName === listName && !hasListStyleDetail(detail) && !isCustomList(parentList)) {
+    if (
+      parentList.nodeName === listName &&
+      !hasListStyleDetail(detail) &&
+      !isCustomList(parentList)
+    ) {
       flattenListSelection(editor);
     } else {
       const bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
@@ -285,7 +326,4 @@ const toggleList = function (editor, listName, detail) {
   }
 };
 
-export {
-  toggleList,
-  mergeWithAdjacentLists
-};
+export { toggleList, mergeWithAdjacentLists };

@@ -17,6 +17,4 @@ const register = function (editor: Editor, charMap: CharMap[]) {
   });
 };
 
-export {
-  register
-};
+export { register };

@@ -8,12 +8,19 @@ import { Testable } from '@ephox/dispute';
 const { tNumber } = Testable;
 
 UnitTest.test('Arr.head: empty', () => {
-  Assert.eq('empty', Option.none<number>(), Arr.head<number>([]), tOption(tNumber));
+  Assert.eq(
+    'empty',
+    Option.none<number>(),
+    Arr.head<number>([]),
+    tOption(tNumber)
+  );
 });
 
 UnitTest.test('Arr.head: nonEmpty', () => {
-  fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), (t, h) => {
-    const arr = [ h ].concat(t);
-    Assert.eq('nonEmpty', Option.some(h), Arr.head(arr), tOption(tNumber));
-  }));
+  fc.assert(
+    fc.property(fc.array(fc.integer()), fc.integer(), (t, h) => {
+      const arr = [h].concat(t);
+      Assert.eq('nonEmpty', Option.some(h), Arr.head(arr), tOption(tNumber));
+    })
+  );
 });

@@ -16,7 +16,7 @@ import MobileSchema from './MobileSchema';
 import { MobileWebApp } from 'tinymce/themes/mobile/api/IosWebapp';
 
 // TODO: Remove dupe with IosWebapp
-const produce = function (raw: {any}): MobileWebApp {
+const produce = function (raw: { any }): MobileWebApp {
   const mobile = ValueSchema.asRawOrDie(
     'Getting AndroidWebapp schema',
     MobileSchema,
@@ -32,9 +32,7 @@ const produce = function (raw: {any}): MobileWebApp {
     mode.enter();
   };
 
-  const mask = GuiFactory.build(
-    TapToEditMask.sketch(onTap, mobile.translate)
-  );
+  const mask = GuiFactory.build(TapToEditMask.sketch(onTap, mobile.translate));
 
   mobile.alloy.add(mask);
   const maskApi = {
@@ -60,6 +58,4 @@ const produce = function (raw: {any}): MobileWebApp {
   };
 };
 
-export {
-  produce
-};
+export { produce };

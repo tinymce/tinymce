@@ -9,6 +9,4 @@ const Receiving: ReceivingBehaviour = Behaviour.create({
   active: ActiveReceiving
 });
 
-export {
-  Receiving
-};
+export { Receiving };

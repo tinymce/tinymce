@@ -7,12 +7,20 @@ import TestEditor from './TestEditor';
 
 export default function () {
   const frame = Element.fromTag('iframe');
-  Attr.set(frame, 'src', '/project/tinymce/src/themes/mobile/test/html/editor.html');
+  Attr.set(
+    frame,
+    'src',
+    '/project/tinymce/src/themes/mobile/test/html/editor.html'
+  );
 
   const sWaitForEditorLoaded = Waiter.sTryUntil(
     'Waiting for iframe to load',
     Step.sync(() => {
-      Assertions.assertEq('Check for a content editable body', 'true', frame.dom().contentWindow.document.body.contentEditable);
+      Assertions.assertEq(
+        'Check for a content editable body',
+        'true',
+        frame.dom().contentWindow.document.body.contentEditable
+      );
     }),
     100,
     8000
@@ -33,9 +41,11 @@ export default function () {
   const editor = {
     selection: {
       getStart() {
-        return WindowSelection.getExact(frame.dom().contentWindow).map(function (sel) {
-          return sel.start().dom();
-        }).getOr(null);
+        return WindowSelection.getExact(frame.dom().contentWindow)
+          .map(function (sel) {
+            return sel.start().dom();
+          })
+          .getOr(null);
       },
       getContent() {
         return frame.dom().contentWindow.document.body.innerHTML;
@@ -56,7 +66,7 @@ export default function () {
       const win = frame.dom().contentWindow;
       WindowSelection.getExact(win).orThunk(function () {
         const fbody = Element.fromDom(frame.dom().contentWindow.document.body);
-        const elem = Cursors.calculateOne(fbody, [ 0 ]);
+        const elem = Cursors.calculateOne(fbody, [0]);
         WindowSelection.setExact(win, elem, 0, elem, 0);
         return Option.none();
       });

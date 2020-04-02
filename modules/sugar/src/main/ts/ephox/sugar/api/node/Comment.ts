@@ -18,8 +18,4 @@ const set = function (element: Element<Comment>, value: string) {
   api.set(element, value);
 };
 
-export {
-  get,
-  getOption,
-  set,
-};
+export { get, getOption, set };

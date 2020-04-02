@@ -21,7 +21,7 @@ export default function () {
     ],
 
     menus: {
-      File: [ 'x1', 'x2', 'x3', '|', 't1', '|', 'd1' ]
+      File: ['x1', 'x2', 'x3', '|', 't1', '|', 'd1']
     },
 
     setup(ed: Editor) {
@@ -60,12 +60,14 @@ export default function () {
           const state = DemoState.get();
           console.log(state);
           comp.setActive(state);
-          return () => { };
+          return () => {};
         },
         onAction(comp) {
           DemoState.toggle();
           comp.setActive(DemoState.get());
-          console.log('button with Toggle click - current state is: ' + DemoState.get());
+          console.log(
+            'button with Toggle click - current state is: ' + DemoState.get()
+          );
         }
       });
 
@@ -106,12 +108,15 @@ export default function () {
               const state = DemoState2.get();
               console.log(state);
               comp.setActive(state);
-              return () => { };
+              return () => {};
             },
             onAction(comp) {
               DemoState2.toggle();
               comp.setActive(DemoState2.get());
-              console.log('button with Toggle click - current state is: ' + DemoState2.get());
+              console.log(
+                'button with Toggle click - current state is: ' +
+                  DemoState2.get()
+              );
             }
           },
           {

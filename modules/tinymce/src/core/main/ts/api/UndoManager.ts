@@ -54,7 +54,15 @@ const UndoManager = function (editor: Editor): UndoManager {
      * @return {Object} Undo level that got added or null it a level wasn't needed.
      */
     add(level?: UndoLevel, event?: Event): UndoLevel {
-      return Rtc.addUndoLevel(editor, undoManager, index, locks, beforeBookmark, level, event);
+      return Rtc.addUndoLevel(
+        editor,
+        undoManager,
+        index,
+        locks,
+        beforeBookmark,
+        level,
+        event
+      );
     },
 
     /**

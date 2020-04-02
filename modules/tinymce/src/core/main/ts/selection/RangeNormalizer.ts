@@ -31,16 +31,24 @@ const normalizeBlockSelectionRange = (rng: Range): Range => {
 
   return CaretFinder.fromPosition(false, rootNode, endPos)
     .map(function (newEndPos) {
-      if (!CaretUtils.isInSameBlock(startPos, endPos, rootNode) && CaretUtils.isInSameBlock(startPos, newEndPos, rootNode)) {
-        return createRange(startPos.container(), startPos.offset(), newEndPos.container(), newEndPos.offset());
+      if (
+        !CaretUtils.isInSameBlock(startPos, endPos, rootNode) &&
+        CaretUtils.isInSameBlock(startPos, newEndPos, rootNode)
+      ) {
+        return createRange(
+          startPos.container(),
+          startPos.offset(),
+          newEndPos.container(),
+          newEndPos.offset()
+        );
       } else {
         return rng;
       }
-    }).getOr(rng);
+    })
+    .getOr(rng);
 };
 
-const normalize = (rng: Range): Range => rng.collapsed ? rng : normalizeBlockSelectionRange(rng);
+const normalize = (rng: Range): Range =>
+  rng.collapsed ? rng : normalizeBlockSelectionRange(rng);
 
-export {
-  normalize
-};
+export { normalize };

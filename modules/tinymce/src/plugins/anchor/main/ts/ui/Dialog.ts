@@ -54,13 +54,12 @@ const open = (editor: Editor) => {
       id: currentId
     },
     onSubmit(api) {
-      if (insertAnchor(editor, api.getData().id)) { // TODO we need a better way to do validation
+      if (insertAnchor(editor, api.getData().id)) {
+        // TODO we need a better way to do validation
         api.close();
       }
     }
   });
 };
 
-export {
-  open
-};
+export { open };

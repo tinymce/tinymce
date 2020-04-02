@@ -28,12 +28,4 @@ const isOpera = function (platform: PlatformDetection) {
   return platform.browser.isOpera();
 };
 
-export {
-  isEdge,
-  isChrome,
-  isFirefox,
-  isOpera,
-  isIE11,
-  isIE,
-  isSafari
-};
+export { isEdge, isChrome, isFirefox, isOpera, isIE11, isIE, isSafari };

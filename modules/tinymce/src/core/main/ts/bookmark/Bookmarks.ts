@@ -12,7 +12,11 @@ import * as NodeType from '../dom/NodeType';
 import { Bookmark } from './BookmarkTypes';
 import { Node } from '@ephox/dom-globals';
 
-const getBookmark = function (selection: Selection, type: number, normalized: boolean): Bookmark {
+const getBookmark = function (
+  selection: Selection,
+  type: number,
+  normalized: boolean
+): Bookmark {
   return GetBookmark.getBookmark(selection, type, normalized);
 };
 
@@ -23,11 +27,11 @@ const moveToBookmark = function (selection: Selection, bookmark: Bookmark) {
 };
 
 const isBookmarkNode = function (node: Node) {
-  return NodeType.isElement(node) && node.tagName === 'SPAN' && node.getAttribute('data-mce-type') === 'bookmark';
+  return (
+    NodeType.isElement(node) &&
+    node.tagName === 'SPAN' &&
+    node.getAttribute('data-mce-type') === 'bookmark'
+  );
 };
 
-export {
-  getBookmark,
-  moveToBookmark,
-  isBookmarkNode
-};
+export { getBookmark, moveToBookmark, isBookmarkNode };

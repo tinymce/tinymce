@@ -10,7 +10,10 @@ import { DocumentFragment, Node } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../api/Settings';
 
-const createTextBlock = (editor: Editor, contentNode: Node): DocumentFragment => {
+const createTextBlock = (
+  editor: Editor,
+  contentNode: Node
+): DocumentFragment => {
   const dom = editor.dom;
   const blockElements = editor.schema.getBlockElements();
   const fragment = dom.createFragment();
@@ -33,7 +36,11 @@ const createTextBlock = (editor: Editor, contentNode: Node): DocumentFragment =>
     while ((node = contentNode.firstChild)) {
       const nodeName = node.nodeName;
 
-      if (!hasContentNode && (nodeName !== 'SPAN' || node.getAttribute('data-mce-type') !== 'bookmark')) {
+      if (
+        !hasContentNode &&
+        (nodeName !== 'SPAN' ||
+          node.getAttribute('data-mce-type') !== 'bookmark')
+      ) {
         hasContentNode = true;
       }
 
@@ -67,6 +74,4 @@ const createTextBlock = (editor: Editor, contentNode: Node): DocumentFragment =>
   return fragment;
 };
 
-export {
-  createTextBlock
-};
+export { createTextBlock };

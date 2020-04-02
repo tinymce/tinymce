@@ -11,8 +11,4 @@ const setup = Fun.noop;
 const isDocked = Fun.never;
 const getBehaviours = Fun.constant([]);
 
-export {
-  setup,
-  isDocked,
-  getBehaviours
-};
+export { setup, isDocked, getBehaviours };

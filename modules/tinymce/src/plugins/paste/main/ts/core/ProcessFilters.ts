@@ -13,34 +13,66 @@ import * as Events from '../api/Events';
 import * as WordFilter from './WordFilter';
 
 const preProcess = (editor: Editor, html: string) => {
-  const parser = DomParser({ }, editor.schema);
+  const parser = DomParser({}, editor.schema);
 
   // Strip meta elements
   parser.addNodeFilter('meta', (nodes) => {
     Tools.each(nodes, (node) => node.remove());
   });
 
-  const fragment = parser.parse(html, { forced_root_block: false, isRootContent: true });
-  return Serializer({ validate: editor.settings.validate }, editor.schema).serialize(fragment);
+  const fragment = parser.parse(html, {
+    forced_root_block: false,
+    isRootContent: true
+  });
+  return Serializer(
+    { validate: editor.settings.validate },
+    editor.schema
+  ).serialize(fragment);
 };
 
 const processResult = function (content: string, cancelled: boolean) {
   return { content, cancelled };
 };
 
-const postProcessFilter = function (editor: Editor, html: string, internal: boolean, isWordHtml: boolean) {
+const postProcessFilter = function (
+  editor: Editor,
+  html: string,
+  internal: boolean,
+  isWordHtml: boolean
+) {
   const tempBody = editor.dom.create('div', { style: 'display:none' }, html);
-  const postProcessArgs = Events.firePastePostProcess(editor, tempBody, internal, isWordHtml);
-  return processResult(postProcessArgs.node.innerHTML, postProcessArgs.isDefaultPrevented());
+  const postProcessArgs = Events.firePastePostProcess(
+    editor,
+    tempBody,
+    internal,
+    isWordHtml
+  );
+  return processResult(
+    postProcessArgs.node.innerHTML,
+    postProcessArgs.isDefaultPrevented()
+  );
 };
 
-const filterContent = function (editor: Editor, content: string, internal: boolean, isWordHtml: boolean) {
-  const preProcessArgs = Events.firePastePreProcess(editor, content, internal, isWordHtml);
+const filterContent = function (
+  editor: Editor,
+  content: string,
+  internal: boolean,
+  isWordHtml: boolean
+) {
+  const preProcessArgs = Events.firePastePreProcess(
+    editor,
+    content,
+    internal,
+    isWordHtml
+  );
 
   // Filter the content to remove potentially dangerous content (eg scripts)
   const filteredContent = preProcess(editor, preProcessArgs.content);
 
-  if (editor.hasEventListeners('PastePostProcess') && !preProcessArgs.isDefaultPrevented()) {
+  if (
+    editor.hasEventListeners('PastePostProcess') &&
+    !preProcessArgs.isDefaultPrevented()
+  ) {
     return postProcessFilter(editor, filteredContent, internal, isWordHtml);
   } else {
     return processResult(filteredContent, preProcessArgs.isDefaultPrevented());
@@ -54,6 +86,4 @@ const process = function (editor: Editor, html: string, internal: boolean) {
   return filterContent(editor, content, internal, isWordHtml);
 };
 
-export {
-  process
-};
+export { process };

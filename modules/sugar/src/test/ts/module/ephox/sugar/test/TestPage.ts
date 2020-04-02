@@ -49,22 +49,24 @@ const t3 = Element.fromText(' things. Like:');
 const t4 = Element.fromText('More data');
 const t5 = Element.fromText('And more data.');
 const t6 = Element.fromText('Nested inside div');
-const t7 = Element.fromText('Text in a node ancestor of another node with text (t6)');
+const t7 = Element.fromText(
+  'Text in a node ancestor of another node with text (t6)'
+);
 
 const ul = Element.fromTag('ul');
 const li = Element.fromTag('li');
 Insert.append(ul, li);
-InsertAll.append(li, [ t7, d1 ]);
+InsertAll.append(li, [t7, d1]);
 
-InsertAll.append(container, [ p1, ul, p2 ]);
-InsertAll.append(p1, [ t1, s1, t3 ]);
-InsertAll.append(s1, [ t2 ]);
-InsertAll.append(p2, [ s2 ]);
-InsertAll.append(s2, [ s3, s4 ]);
-InsertAll.append(s3, [ t4 ]);
-InsertAll.append(s4, [ t5 ]);
-InsertAll.append(d1, [ p3 ]);
-InsertAll.append(p3, [ t6 ]);
+InsertAll.append(container, [p1, ul, p2]);
+InsertAll.append(p1, [t1, s1, t3]);
+InsertAll.append(s1, [t2]);
+InsertAll.append(p2, [s2]);
+InsertAll.append(s2, [s3, s4]);
+InsertAll.append(s3, [t4]);
+InsertAll.append(s4, [t5]);
+InsertAll.append(d1, [p3]);
+InsertAll.append(p3, [t6]);
 
 const connect = function () {
   const body = Body.body();
@@ -90,6 +92,5 @@ export {
   t7,
   ul,
   li,
-
-  connect,
+  connect
 };

@@ -10,14 +10,12 @@ import { ToolbarDetail } from '../types/ToolbarTypes';
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('dom'),
   FieldSchema.defaulted('shell', true),
-  SketchBehaviours.field('toolbarBehaviours', [ Replacing ])
+  SketchBehaviours.field('toolbarBehaviours', [Replacing])
 ]);
 
 // TODO: Dupe with Toolbar
 const enhanceGroups = () => ({
-  behaviours: Behaviour.derive([
-    Replacing.config({ })
-  ])
+  behaviours: Behaviour.derive([Replacing.config({})])
 });
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
@@ -30,8 +28,4 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 
 const name = Fun.constant('Toolbar');
 
-export {
-  name,
-  schema,
-  parts
-};
+export { name, schema, parts };

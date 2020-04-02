@@ -39,7 +39,10 @@ const renderMobileTheme = (editor: Editor) => {
 
     if (Settings.isSkinDisabled(editor) === false) {
       editor.contentCSS.push(cssUrls.content);
-      DOMUtils.DOM.styleSheetLoader.load(cssUrls.ui, SkinLoaded.fireSkinLoaded(editor));
+      DOMUtils.DOM.styleSheetLoader.load(
+        cssUrls.ui,
+        SkinLoaded.fireSkinLoaded(editor)
+      );
     } else {
       SkinLoaded.fireSkinLoaded(editor)();
     }
@@ -48,18 +51,24 @@ const renderMobileTheme = (editor: Editor) => {
       editor.fire('ScrollIntoView');
     };
 
-    const realm = PlatformDetection.detect().os.isAndroid() ? AndroidRealm(doScrollIntoView) : IosRealm(doScrollIntoView);
+    const realm = PlatformDetection.detect().os.isAndroid()
+      ? AndroidRealm(doScrollIntoView)
+      : IosRealm(doScrollIntoView);
     const original = Element.fromDom(targetNode);
     Attachment.attachSystemAfter(original, realm.system());
 
-    const findFocusIn = (elem) => Focus.search(elem).bind((focused) =>
-      realm.system().getByDom(focused).toOption());
+    const findFocusIn = (elem) =>
+      Focus.search(elem).bind((focused) =>
+        realm.system().getByDom(focused).toOption()
+      );
 
     const outerWindow = targetNode.ownerDocument.defaultView;
     const orientation = Orientation.onChange(outerWindow, {
       onChange() {
         const alloy = realm.system();
-        alloy.broadcastOn([ TinyChannels.orientationChanged ], { width: Orientation.getActualWidth(outerWindow) });
+        alloy.broadcastOn([TinyChannels.orientationChanged], {
+          width: Orientation.getActualWidth(outerWindow)
+        });
       },
       onReady: Fun.noop
     });
@@ -68,7 +77,11 @@ const renderMobileTheme = (editor: Editor) => {
       if (ro === false) {
         editor.selection.collapse();
       }
-      const toolbars = configureToolbar(dynamicGroup, readOnlyGroups, mainGroups);
+      const toolbars = configureToolbar(
+        dynamicGroup,
+        readOnlyGroups,
+        mainGroups
+      );
       realm.setToolbarGroups(ro === true ? toolbars.readOnly : toolbars.main);
 
       editor.setMode(ro === true ? 'readonly' : 'design');
@@ -104,7 +117,9 @@ const renderMobileTheme = (editor: Editor) => {
       realm.init({
         editor: {
           getFrame() {
-            return Element.fromDom(editor.contentAreaContainer.querySelector('iframe'));
+            return Element.fromDom(
+              editor.contentAreaContainer.querySelector('iframe')
+            );
           },
 
           onDomChanged() {
@@ -141,7 +156,11 @@ const renderMobileTheme = (editor: Editor) => {
           },
 
           onTouchContent() {
-            const toolbar = Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar')));
+            const toolbar = Element.fromDom(
+              editor.editorContainer.querySelector(
+                '.' + Styles.resolve('toolbar')
+              )
+            );
             // If something in the toolbar had focus, fire an execute on it (execute on tap away)
             // Perhaps it will be clearer later what is a better way of doing this.
             findFocusIn(toolbar).each(AlloyTriggers.emitExecute);
@@ -157,7 +176,9 @@ const renderMobileTheme = (editor: Editor) => {
               // Prevent the default behaviour from firing so that the image stays selected
               evt.kill();
             } else if (Node.name(target) === 'a') {
-              const component = realm.system().getByDom(Element.fromDom(editor.editorContainer));
+              const component = realm
+                .system()
+                .getByDom(Element.fromDom(editor.editorContainer));
               component.each((container) => {
                 // view mode
                 if (Swapping.isAlpha(container)) {
@@ -169,8 +190,14 @@ const renderMobileTheme = (editor: Editor) => {
         },
         container: Element.fromDom(editor.editorContainer),
         socket: Element.fromDom(editor.contentAreaContainer),
-        toolstrip: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolstrip'))),
-        toolbar: Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar'))),
+        toolstrip: Element.fromDom(
+          editor.editorContainer.querySelector(
+            '.' + Styles.resolve('toolstrip')
+          )
+        ),
+        toolbar: Element.fromDom(
+          editor.editorContainer.querySelector('.' + Styles.resolve('toolbar'))
+        ),
         dropup: realm.dropup(),
         alloy: realm.system(),
         translate: Fun.noop,
@@ -186,7 +213,7 @@ const renderMobileTheme = (editor: Editor) => {
 
       const hideDropup = () => {
         realm.dropup().disappear(() => {
-          realm.system().broadcastOn([ TinyChannels.dropupDismissed ], { });
+          realm.system().broadcastOn([TinyChannels.dropupDismissed], {});
         });
       };
 
@@ -194,10 +221,15 @@ const renderMobileTheme = (editor: Editor) => {
         label: 'The first group',
         scrollable: false,
         items: [
-          Buttons.forToolbar('back', (/* btn */) => {
-            editor.selection.collapse();
-            realm.exit();
-          }, { }, editor)
+          Buttons.forToolbar(
+            'back',
+            (/* btn */) => {
+              editor.selection.collapse();
+              realm.exit();
+            },
+            {},
+            editor
+          )
         ]
       };
 
@@ -205,9 +237,14 @@ const renderMobileTheme = (editor: Editor) => {
         label: 'Back to read only',
         scrollable: false,
         items: [
-          Buttons.forToolbar('readonly-back', (/* btn */) => {
-            setReadOnly(dynamicGroup, readOnlyGroups, mainGroups, true);
-          }, {}, editor)
+          Buttons.forToolbar(
+            'readonly-back',
+            (/* btn */) => {
+              setReadOnly(dynamicGroup, readOnlyGroups, mainGroups, true);
+            },
+            {},
+            editor
+          )
         ]
       };
 
@@ -234,11 +271,11 @@ const renderMobileTheme = (editor: Editor) => {
         ]
       };
 
-      const mainGroups = Cell([ actionGroup, extraGroup ]);
-      const readOnlyGroups = Cell([ readOnlyGroup, extraGroup ]);
+      const mainGroups = Cell([actionGroup, extraGroup]);
+      const readOnlyGroups = Cell([readOnlyGroup, extraGroup]);
       const dynamicGroup = Cell({
-        backToMask: [ backToMaskGroup ],
-        backToReadOnly: [ backToReadOnlyGroup ]
+        backToMask: [backToMaskGroup],
+        backToReadOnly: [backToReadOnlyGroup]
       });
       // Investigate ways to keep in sync with the ui
       FormatChangers.init(realm, editor);

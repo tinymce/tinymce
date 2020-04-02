@@ -4,12 +4,16 @@ import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
-import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
+import {
+  SingleSketch,
+  SingleSketchDetail,
+  SingleSketchSpec
+} from '../../api/ui/Sketcher';
 
 export interface ButtonDetail extends SingleSketchDetail {
   uid: string;
   dom: RawDomSchema;
-  components: AlloySpec[ ];
+  components: AlloySpec[];
   buttonBehaviours: SketchBehaviours;
   action: Option<ButtonAction>;
   role: Option<string>;
@@ -28,4 +32,4 @@ export interface ButtonSpec extends SingleSketchSpec {
   eventOrder?: Record<string, string[]>;
 }
 
-export interface ButtonSketcher extends SingleSketch<ButtonSpec> { }
+export interface ButtonSketcher extends SingleSketch<ButtonSpec> {}

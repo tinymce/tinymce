@@ -5,9 +5,4 @@ import {
   SidebarInstanceApi
 } from '../components/sidebar/Sidebar';
 
-export {
-  createSidebar,
-  Sidebar,
-  SidebarApi,
-  SidebarInstanceApi
-};
+export { createSidebar, Sidebar, SidebarApi, SidebarInstanceApi };

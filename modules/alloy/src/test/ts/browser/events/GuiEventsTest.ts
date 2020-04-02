@@ -1,13 +1,35 @@
-import { Chain, Cleaner, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, Touch, UiFinder } from '@ephox/agar';
+import {
+  Chain,
+  Cleaner,
+  Cursors,
+  FocusTools,
+  GeneralSteps,
+  Keyboard,
+  Keys,
+  Logger,
+  Mouse,
+  Pipeline,
+  Step,
+  Touch,
+  UiFinder
+} from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
-import { Attr, DomEvent, Element, EventArgs, Insert, Node, Remove, Text } from '@ephox/sugar';
+import {
+  Attr,
+  DomEvent,
+  Element,
+  EventArgs,
+  Insert,
+  Node,
+  Remove,
+  Text
+} from '@ephox/sugar';
 import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 
 import * as GuiEvents from 'ephox/alloy/events/GuiEvents';
 
 UnitTest.asynctest('GuiEventsTest', (success, failure) => {
-
   const cleanup = Cleaner();
 
   const page = Element.fromHtml(
@@ -31,36 +53,39 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
 
   const onBodyKeydown = DomEvent.bind(body, 'keydown', (evt) => {
     if (evt.raw().which === Keys.backspace()) {
-      outerStore.adder('Backspace on ' + Node.name(evt.target()) + ': preventDefault = ' + evt.raw().defaultPrevented)();
+      outerStore.adder(
+        'Backspace on ' +
+          Node.name(evt.target()) +
+          ': preventDefault = ' +
+          evt.raw().defaultPrevented
+      )();
     }
   });
   cleanup.add(onBodyKeydown.unbind);
 
   const triggerEvent = (eventName: string, event: EventArgs) => {
     const target = event.target();
-    const targetValue = Node.isText(target) ? 'text(' + Text.get(target) + ')' : Attr.get(target, 'class');
+    const targetValue = Node.isText(target)
+      ? 'text(' + Text.get(target) + ')'
+      : Attr.get(target, 'class');
     store.adder({ eventName, target: targetValue })();
   };
 
   const sTestFocusInput = GeneralSteps.sequence([
-    FocusTools.sSetFocus(
-      'Focusing test input',
-      page,
-      '.test-input'
-    ),
+    FocusTools.sSetFocus('Focusing test input', page, '.test-input'),
 
-    store.sAssertEq(
-      'Checking event log after focusing test-input',
-      [
-        { eventName: 'focusin', target: 'test-input' }
-      ]
-    ),
+    store.sAssertEq('Checking event log after focusing test-input', [
+      { eventName: 'focusin', target: 'test-input' }
+    ]),
 
     Logger.t(
       'Check that backspace is NOT prevent defaulted on inputs',
       GeneralSteps.sequence([
-        Keyboard.sKeydown(doc, Keys.backspace(), { }),
-        outerStore.sAssertEq('Checking backspace gets prevent default on inputs', [ 'Backspace on input: preventDefault = false' ]),
+        Keyboard.sKeydown(doc, Keys.backspace(), {}),
+        outerStore.sAssertEq(
+          'Checking backspace gets prevent default on inputs',
+          ['Backspace on input: preventDefault = false']
+        ),
         outerStore.sClear
       ])
     ),
@@ -69,25 +94,21 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
   ]);
 
   const sTestFocusContentEditable = GeneralSteps.sequence([
-    FocusTools.sSetFocus(
-      'Focusing test input',
-      page,
-      '.test-contenteditable'
-    ),
+    FocusTools.sSetFocus('Focusing test input', page, '.test-contenteditable'),
 
-    store.sAssertEq(
-      'Checking event log after focusing test-contenteditable',
-      [
-        { eventName: 'focusout', target: 'test-input' },
-        { eventName: 'focusin', target: 'test-contenteditable' }
-      ]
-    ),
+    store.sAssertEq('Checking event log after focusing test-contenteditable', [
+      { eventName: 'focusout', target: 'test-input' },
+      { eventName: 'focusin', target: 'test-contenteditable' }
+    ]),
 
     Logger.t(
       'Check that backspace is NOT prevent defaulted on contenteditable',
       GeneralSteps.sequence([
-        Keyboard.sKeydown(doc, Keys.backspace(), { }),
-        outerStore.sAssertEq('Checking backspace gets prevent default on contenteditable', [ 'Backspace on div: preventDefault = false' ]),
+        Keyboard.sKeydown(doc, Keys.backspace(), {}),
+        outerStore.sAssertEq(
+          'Checking backspace gets prevent default on contenteditable',
+          ['Backspace on div: preventDefault = false']
+        ),
         outerStore.sClear
       ])
     ),
@@ -96,30 +117,26 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
   ]);
 
   const sTestFocusSpan = GeneralSteps.sequence([
-    FocusTools.sSetFocus(
-      'Focusing span',
-      page,
-      '.focusable-span'
-    ),
+    FocusTools.sSetFocus('Focusing span', page, '.focusable-span'),
 
     // Wait for the post.blur to fire.
     Step.wait(200),
 
-    store.sAssertEq(
-      'Checking event log after focusing span',
-      [
-        { eventName: 'focusout', target: 'test-contenteditable' },
-        { eventName: 'focusin', target: 'focusable-span' },
-        { eventName: 'alloy.blur.post', target: 'test-input' },
-        { eventName: 'alloy.blur.post', target: 'test-contenteditable' }
-      ]
-    ),
+    store.sAssertEq('Checking event log after focusing span', [
+      { eventName: 'focusout', target: 'test-contenteditable' },
+      { eventName: 'focusin', target: 'focusable-span' },
+      { eventName: 'alloy.blur.post', target: 'test-input' },
+      { eventName: 'alloy.blur.post', target: 'test-contenteditable' }
+    ]),
 
     Logger.t(
       'Check that backspace is prevent defaulted on spans',
       GeneralSteps.sequence([
-        Keyboard.sKeydown(doc, Keys.backspace(), { }),
-        outerStore.sAssertEq('Checking backspace gets prevent default on spans', [ 'Backspace on span: preventDefault = true' ]),
+        Keyboard.sKeydown(doc, Keys.backspace(), {}),
+        outerStore.sAssertEq(
+          'Checking backspace gets prevent default on spans',
+          ['Backspace on span: preventDefault = true']
+        ),
         outerStore.sClear
       ])
     ),
@@ -128,63 +145,48 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
   ]);
 
   const sTestKeydown = GeneralSteps.sequence([
-    Keyboard.sKeydown(doc, 'A'.charCodeAt(0), { }),
-    store.sAssertEq(
-      'Checking event log after keydown',
-      [
-        { eventName: 'keydown', target: 'focusable-span' }
-      ]
-    ),
+    Keyboard.sKeydown(doc, 'A'.charCodeAt(0), {}),
+    store.sAssertEq('Checking event log after keydown', [
+      { eventName: 'keydown', target: 'focusable-span' }
+    ]),
     store.sClear
   ]);
 
   const sTestClick = GeneralSteps.sequence([
     Mouse.sClickOn(page, '.test-button'),
-    store.sAssertEq(
-      'Checking event log after clicking on test-button',
-      [
-        { eventName: 'click', target: 'test-button' }
-      ]
-    ),
+    store.sAssertEq('Checking event log after clicking on test-button', [
+      { eventName: 'click', target: 'test-button' }
+    ]),
     store.sClear,
     Chain.asStep(page, [
       UiFinder.cFindIn('.test-button'),
-      Cursors.cFollow([ 0 ]),
+      Cursors.cFollow([0]),
       Mouse.cClick
     ]),
-    store.sAssertEq(
-      'Checking event log after clicking on test-button text',
-      [
-        { eventName: 'click', target: 'text(Button)' }
-      ]
-    ),
+    store.sAssertEq('Checking event log after clicking on test-button text', [
+      { eventName: 'click', target: 'text(Button)' }
+    ]),
     store.sClear
   ]);
 
   const sTestTap = GeneralSteps.sequence([
     Touch.sTapOn(page, '.test-button'),
-    store.sAssertEq(
-      'Checking event log after tapping on test-button',
-      [
-        { eventName: 'touchstart', target: 'test-button' },
-        { eventName: 'alloy.tap', target: 'test-button' },
-        { eventName: 'touchend', target: 'test-button' }
-      ]
-    ),
+    store.sAssertEq('Checking event log after tapping on test-button', [
+      { eventName: 'touchstart', target: 'test-button' },
+      { eventName: 'alloy.tap', target: 'test-button' },
+      { eventName: 'touchend', target: 'test-button' }
+    ]),
     store.sClear,
     Chain.asStep(page, [
       UiFinder.cFindIn('.test-button'),
-      Cursors.cFollow([ 0 ]),
+      Cursors.cFollow([0]),
       Touch.cTap
     ]),
-    store.sAssertEq(
-      'Checking event log after tapping on test-button text',
-      [
-        { eventName: 'touchstart', target: 'text(Button)' },
-        { eventName: 'alloy.tap', target: 'text(Button)' },
-        { eventName: 'touchend', target: 'text(Button)' }
-      ]
-    ),
+    store.sAssertEq('Checking event log after tapping on test-button text', [
+      { eventName: 'touchstart', target: 'text(Button)' },
+      { eventName: 'alloy.tap', target: 'text(Button)' },
+      { eventName: 'touchend', target: 'text(Button)' }
+    ]),
     store.sClear
   ]);
 
@@ -196,25 +198,20 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
 
   const sTestMouseover = GeneralSteps.sequence([
     Mouse.sHoverOn(page, '.focusable-span'),
-    store.sAssertEq(
-      'Checking event log after hovering on focusable span',
-      [
-        { eventName: 'mouseover', target: 'focusable-span' }
-      ]
-    ),
+    store.sAssertEq('Checking event log after hovering on focusable span', [
+      { eventName: 'mouseover', target: 'focusable-span' }
+    ]),
     store.sClear
   ]);
 
-  const sTestMouseOperation = (eventName: string, op: Chain<any, any>) => GeneralSteps.sequence([
-    Chain.asStep(page, [ op ]),
-    store.sAssertEq(
-      'Checking event log after ' + eventName + ' on root',
-      [
+  const sTestMouseOperation = (eventName: string, op: Chain<any, any>) =>
+    GeneralSteps.sequence([
+      Chain.asStep(page, [op]),
+      store.sAssertEq('Checking event log after ' + eventName + ' on root', [
         { eventName, target: 'gui-events-test-container' }
-      ]
-    ),
-    store.sClear
-  ]);
+      ]),
+      store.sClear
+    ]);
 
   const sTestUnbind = GeneralSteps.sequence([
     Step.sync(() => {
@@ -223,24 +220,16 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
 
     store.sClear,
 
-    FocusTools.sSetFocus(
-      'Focusing test input',
-      page,
-      '.test-input'
-    ),
+    FocusTools.sSetFocus('Focusing test input', page, '.test-input'),
 
-    FocusTools.sSetFocus(
-      'Focusing span',
-      page,
-      '.focusable-span'
-    ),
+    FocusTools.sSetFocus('Focusing span', page, '.focusable-span'),
 
-    Keyboard.sKeydown(doc, 'A'.charCodeAt(0), { }),
+    Keyboard.sKeydown(doc, 'A'.charCodeAt(0), {}),
     Mouse.sClickOn(page, '.test-button'),
 
     store.sAssertEq(
       'After unbinding events, nothing should be listened to any longer',
-      [ ]
+      []
     )
 
     // TODO: Any other event triggers here.
@@ -250,30 +239,35 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
   const sTestTransitionEnd = Step.pass;
 
   const gui = GuiEvents.setup(page, {
-    triggerEvent,
+    triggerEvent
   });
 
-  Pipeline.async({}, [
-    sTestFocusInput,
-    sTestFocusContentEditable,
-    sTestFocusSpan,
-    sTestKeydown,
-    sTestClick,
-    sTestTap,
-    sTestInput,
-    sTestMouseover,
-    sTestSelectStart,
+  Pipeline.async(
+    {},
+    [
+      sTestFocusInput,
+      sTestFocusContentEditable,
+      sTestFocusSpan,
+      sTestKeydown,
+      sTestClick,
+      sTestTap,
+      sTestInput,
+      sTestMouseover,
+      sTestSelectStart,
 
-    sTestMouseOperation('mousedown', Mouse.cMouseDown),
-    sTestMouseOperation('mouseup', Mouse.cMouseUp),
-    sTestMouseOperation('mousemove', Mouse.cMouseMoveTo(10, 10)),
-    sTestMouseOperation('mouseout', Mouse.cMouseOut),
-    sTestMouseOperation('contextmenu', Mouse.cContextMenu),
+      sTestMouseOperation('mousedown', Mouse.cMouseDown),
+      sTestMouseOperation('mouseup', Mouse.cMouseUp),
+      sTestMouseOperation('mousemove', Mouse.cMouseMoveTo(10, 10)),
+      sTestMouseOperation('mouseout', Mouse.cMouseOut),
+      sTestMouseOperation('contextmenu', Mouse.cContextMenu),
 
-    // TODO: Add API support to agar
-    sTestChange,
-    sTestTransitionEnd,
+      // TODO: Add API support to agar
+      sTestChange,
+      sTestTransitionEnd,
 
-    sTestUnbind
-  ], cleanup.wrap(success), cleanup.wrap(failure));
+      sTestUnbind
+    ],
+    cleanup.wrap(success),
+    cleanup.wrap(failure)
+  );
 });

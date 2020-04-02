@@ -35,7 +35,4 @@ const applyPositionCss = (element: Element, position: PositionCss) => {
   });
 };
 
-export {
-  NuPositionCss,
-  applyPositionCss
-};
+export { NuPositionCss, applyPositionCss };

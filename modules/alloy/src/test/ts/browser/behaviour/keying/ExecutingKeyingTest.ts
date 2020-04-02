@@ -10,88 +10,101 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('ExecutingKeyingTest', (success, failure) => {
-
   const sTestDefault = Logger.t(
     'Default execution',
     Step.async((next, die) => {
-
-      GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
-        Container.sketch({
-          dom: {
-            classes: [ 'executing-keying-test' ],
-            styles: {
-
-            }
-          },
-          containerBehaviours: Behaviour.derive([
-            Focusing.config({ }),
-            Keying.config({
-              mode: 'execution'
+      GuiSetup.setup(
+        (store, _doc, _body) =>
+          GuiFactory.build(
+            Container.sketch({
+              dom: {
+                classes: ['executing-keying-test'],
+                styles: {}
+              },
+              containerBehaviours: Behaviour.derive([
+                Focusing.config({}),
+                Keying.config({
+                  mode: 'execution'
+                })
+              ]),
+              events: AlloyEvents.derive([
+                AlloyEvents.runOnExecute(store.adder('event.execute'))
+              ])
             })
-          ]),
-          events: AlloyEvents.derive([
-            AlloyEvents.runOnExecute(store.adder('event.execute'))
-          ])
-        })
-      ), (doc, body, _gui, component, store) => [
-        GuiSetup.mSetupKeyLogger(body),
-        Step.sync(() => {
-          Focusing.focus(component);
-        }),
-        store.sAssertEq('Initially empty', [ ]),
-        Keyboard.sKeydown(doc, Keys.enter(), { }),
-        store.sAssertEq('Post enter', [ 'event.execute' ]),
-        GuiSetup.mTeardownKeyLogger(body, [ ])
-      ], next, die);
+          ),
+        (doc, body, _gui, component, store) => [
+          GuiSetup.mSetupKeyLogger(body),
+          Step.sync(() => {
+            Focusing.focus(component);
+          }),
+          store.sAssertEq('Initially empty', []),
+          Keyboard.sKeydown(doc, Keys.enter(), {}),
+          store.sAssertEq('Post enter', ['event.execute']),
+          GuiSetup.mTeardownKeyLogger(body, [])
+        ],
+        next,
+        die
+      );
     })
   );
 
   const sTestConfiguration = Logger.t(
     'Testing ctrl+enter and space execute',
     Step.async((next, die) => {
-      GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
-        Container.sketch({
-          dom: {
-            classes: [ 'executing-keying-test' ],
-            styles: {
-
-            }
-          },
-          containerBehaviours: Behaviour.derive([
-            Focusing.config({ }),
-            Keying.config({
-              mode: 'execution',
-              useControlEnter: true,
-              useEnter: false,
-              useSpace: true
+      GuiSetup.setup(
+        (store, _doc, _body) =>
+          GuiFactory.build(
+            Container.sketch({
+              dom: {
+                classes: ['executing-keying-test'],
+                styles: {}
+              },
+              containerBehaviours: Behaviour.derive([
+                Focusing.config({}),
+                Keying.config({
+                  mode: 'execution',
+                  useControlEnter: true,
+                  useEnter: false,
+                  useSpace: true
+                })
+              ]),
+              events: AlloyEvents.derive([
+                AlloyEvents.runOnExecute(store.adder('event.execute'))
+              ])
             })
+          ),
+        (doc, body, _gui, component, store) => [
+          GuiSetup.mSetupKeyLogger(body),
+          Step.sync(() => {
+            Focusing.focus(component);
+          }),
+          store.sAssertEq('Initially empty', []),
+          Keyboard.sKeydown(doc, Keys.enter(), {}),
+          store.sAssertEq('Post enter', []),
+          Keyboard.sKeydown(doc, Keys.space(), {}),
+          store.sAssertEq('Post space', ['event.execute']),
+          Keyboard.sKeydown(doc, Keys.enter(), { ctrl: true }),
+          store.sAssertEq('Post ctrl+enter', [
+            'event.execute',
+            'event.execute'
           ]),
-          events: AlloyEvents.derive([
-            AlloyEvents.runOnExecute(store.adder('event.execute'))
+          GuiSetup.mTeardownKeyLogger(body, [
+            // Enter was not handled
+            'keydown.to.body: 13'
           ])
-        })
-      ), (doc, body, _gui, component, store) => [
-        GuiSetup.mSetupKeyLogger(body),
-        Step.sync(() => {
-          Focusing.focus(component);
-        }),
-        store.sAssertEq('Initially empty', [ ]),
-        Keyboard.sKeydown(doc, Keys.enter(), { }),
-        store.sAssertEq('Post enter', [ ]),
-        Keyboard.sKeydown(doc, Keys.space(), { }),
-        store.sAssertEq('Post space', [ 'event.execute' ]),
-        Keyboard.sKeydown(doc, Keys.enter(), { ctrl: true }),
-        store.sAssertEq('Post ctrl+enter', [ 'event.execute', 'event.execute' ]),
-        GuiSetup.mTeardownKeyLogger(body, [
-          // Enter was not handled
-          'keydown.to.body: 13'
-        ])
-      ], next, die);
+        ],
+        next,
+        die
+      );
     })
   );
 
-  Pipeline.async({ }, [
-    sTestDefault,
-    sTestConfiguration
-  ], () => { success(); }, failure);
+  Pipeline.async(
+    {},
+    [sTestDefault, sTestConfiguration],
+    () => {
+      success();
+    },
+    failure
+  );
 });

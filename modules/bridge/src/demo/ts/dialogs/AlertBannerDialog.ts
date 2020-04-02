@@ -1,36 +1,34 @@
 import { openDemoDialog } from './DemoDialogHelpers';
 
 export const createAlertBannerDialog = () => {
-  openDemoDialog(
-    {
-      title: 'Alert Banner',
-      body: {
-        type: 'panel',
-        items: [
-          {
-            type: 'alertbanner',
-            level: 'warn',
-            text: 'The alert bannner message',
-            icon: 'iconsvg'
-          }
-        ]
-      },
-      buttons: [
+  openDemoDialog({
+    title: 'Alert Banner',
+    body: {
+      type: 'panel',
+      items: [
         {
-          type: 'submit',
-          name: 'ok',
-          text: 'Ok',
-          primary: true
-        },
-        {
-          type: 'cancel',
-          name: 'cancel',
-          text: 'Cancel'
+          type: 'alertbanner',
+          level: 'warn',
+          text: 'The alert bannner message',
+          icon: 'iconsvg'
         }
-      ],
-      onSubmit: (api) => {
-        api.close();
+      ]
+    },
+    buttons: [
+      {
+        type: 'submit',
+        name: 'ok',
+        text: 'Ok',
+        primary: true
+      },
+      {
+        type: 'cancel',
+        name: 'cancel',
+        text: 'Cancel'
       }
+    ],
+    onSubmit: (api) => {
+      api.close();
     }
-  );
+  });
 };

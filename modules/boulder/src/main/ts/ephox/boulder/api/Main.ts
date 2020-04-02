@@ -9,7 +9,6 @@ export {
   FieldSchema,
   Objects,
   ValueSchema,
-
   // Types
   Processor,
   FieldProcessorAdt

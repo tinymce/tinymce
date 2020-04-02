@@ -17,7 +17,6 @@ interface InDragEvents {
 }
 
 export default function () {
-
   let previous = Option.none<Position>();
 
   const reset = function () {
@@ -49,7 +48,7 @@ export default function () {
   };
 
   const events = Events.create({
-    move: Event([ 'info' ])
+    move: Event(['info'])
   }) as InDragEvents;
 
   return {

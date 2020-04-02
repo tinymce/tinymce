@@ -10,7 +10,4 @@ const set = function (element: Element<DomNode>, value: string) {
   element.dom().textContent = value;
 };
 
-export {
-  get,
-  set,
-};
+export { get, set };

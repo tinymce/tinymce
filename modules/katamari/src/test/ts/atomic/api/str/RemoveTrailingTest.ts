@@ -16,11 +16,13 @@ UnitTest.test('removeTrailing: unit tests', () => {
 });
 
 UnitTest.test('removeTrailing property', () => {
-  fc.assert(fc.property(
-    fc.asciiString(),
-    fc.asciiString(),
-    (prefix, suffix) => {
-      Assert.eq('removeTrailing', prefix, Strings.removeTrailing(prefix + suffix, suffix));
-    }
-  ));
+  fc.assert(
+    fc.property(fc.asciiString(), fc.asciiString(), (prefix, suffix) => {
+      Assert.eq(
+        'removeTrailing',
+        prefix,
+        Strings.removeTrailing(prefix + suffix, suffix)
+      );
+    })
+  );
 });

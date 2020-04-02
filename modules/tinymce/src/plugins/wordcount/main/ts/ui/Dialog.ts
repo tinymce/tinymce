@@ -16,7 +16,7 @@ const open = (editor: Editor, api: WordCountApi) => {
       items: [
         {
           type: 'table',
-          header: [ 'Count', 'Document', 'Selection' ],
+          header: ['Count', 'Document', 'Selection'],
           cells: [
             [
               'Words',
@@ -32,10 +32,10 @@ const open = (editor: Editor, api: WordCountApi) => {
               'Characters',
               String(api.body.getCharacterCount()),
               String(api.selection.getCharacterCount())
-            ],
+            ]
           ]
         }
-      ],
+      ]
     },
     buttons: [
       {
@@ -48,6 +48,4 @@ const open = (editor: Editor, api: WordCountApi) => {
   });
 };
 
-export {
-  open
-};
+export { open };

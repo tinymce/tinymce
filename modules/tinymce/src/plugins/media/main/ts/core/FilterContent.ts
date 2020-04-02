@@ -18,7 +18,7 @@ const setup = function (editor: Editor) {
     // Make sure that any messy HTML is retained inside these
     const specialElements = editor.schema.getSpecialElements();
     Tools.each('video audio iframe object'.split(' '), function (name) {
-      specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
+      specialElements[name] = new RegExp('</' + name + '[^>]*>', 'gi');
     });
 
     // Allow elements
@@ -28,16 +28,24 @@ const setup = function (editor: Editor) {
 
     // Set allowFullscreen attribs as boolean
     const boolAttrs = editor.schema.getBoolAttrs();
-    Tools.each('webkitallowfullscreen mozallowfullscreen allowfullscreen'.split(' '), function (name) {
-      boolAttrs[name] = {};
-    });
+    Tools.each(
+      'webkitallowfullscreen mozallowfullscreen allowfullscreen'.split(' '),
+      function (name) {
+        boolAttrs[name] = {};
+      }
+    );
 
     // Converts iframe, video etc into placeholder images
-    editor.parser.addNodeFilter('iframe,video,audio,object,embed,script',
-      Nodes.placeHolderConverter(editor));
+    editor.parser.addNodeFilter(
+      'iframe,video,audio,object,embed,script',
+      Nodes.placeHolderConverter(editor)
+    );
 
     // Replaces placeholder images with real elements for video, object, iframe etc
-    editor.serializer.addAttributeFilter('data-mce-object', function (nodes, name) {
+    editor.serializer.addAttributeFilter('data-mce-object', function (
+      nodes,
+      name
+    ) {
       let i = nodes.length;
       let node;
       let realElm;
@@ -119,6 +127,4 @@ const setup = function (editor: Editor) {
   });
 };
 
-export {
-  setup
-};
+export { setup };

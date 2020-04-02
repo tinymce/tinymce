@@ -11,6 +11,4 @@ const buildDemoDialog = (spec) => {
   winMgr.open(spec, {}, Fun.noop);
 };
 
-export {
-  buildDemoDialog
-};
+export { buildDemoDialog };

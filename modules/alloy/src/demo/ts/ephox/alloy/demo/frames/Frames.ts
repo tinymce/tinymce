@@ -4,11 +4,17 @@ import { HTMLFrameElement, HTMLDocument, console } from '@ephox/dom-globals';
 
 // tslint:disable:no-console
 
-const iframeDoc = (element: Element<HTMLFrameElement>): Option<Element<HTMLDocument>> => {
+const iframeDoc = (
+  element: Element<HTMLFrameElement>
+): Option<Element<HTMLDocument>> => {
   const dom = element.dom();
   try {
-    const idoc = dom.contentWindow ? dom.contentWindow.document : dom.contentDocument;
-    return idoc !== undefined && idoc !== null ? Option.some(Element.fromDom(idoc)) : Option.none();
+    const idoc = dom.contentWindow
+      ? dom.contentWindow.document
+      : dom.contentDocument;
+    return idoc !== undefined && idoc !== null
+      ? Option.some(Element.fromDom(idoc))
+      : Option.none();
   } catch (err) {
     // ASSUMPTION: Permission errors result in an unusable iframe.
     console.log('Error reading iframe: ', dom);
@@ -27,7 +33,11 @@ const readDoc = (element: Element) => {
 };
 
 const write = (element: Element, content: string): void => {
-  if (!Body.inBody(element)) { throw new Error('Internal error: attempted to write to an iframe that is not n the DOM'); }
+  if (!Body.inBody(element)) {
+    throw new Error(
+      'Internal error: attempted to write to an iframe that is not n the DOM'
+    );
+  }
 
   const doc = readDoc(element);
   const dom = doc.dom();
@@ -36,7 +46,4 @@ const write = (element: Element, content: string): void => {
   dom.close();
 };
 
-export {
-  write,
-  readDoc
-};
+export { write, readDoc };

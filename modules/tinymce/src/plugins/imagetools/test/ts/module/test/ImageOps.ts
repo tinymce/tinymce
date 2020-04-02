@@ -1,4 +1,12 @@
-import { Chain, Guard, Mouse, Pipeline, Step, UiFinder, Logger } from '@ephox/agar';
+import {
+  Chain,
+  Guard,
+  Mouse,
+  Pipeline,
+  Step,
+  UiFinder,
+  Logger
+} from '@ephox/agar';
 import { Fun, Result } from '@ephox/katamari';
 import { TinyDom, TinyUi } from '@ephox/mcagar';
 import { Attr } from '@ephox/sugar';
@@ -9,7 +17,9 @@ export default function (editor) {
   const cHasState = function (predicate) {
     return Chain.control(
       Chain.binder(function (element) {
-        return predicate(element) ? Result.value(element) : Result.error(`Predicate didn't match.`);
+        return predicate(element)
+          ? Result.value(element)
+          : Result.error(`Predicate didn't match.`);
       }),
       Guard.addLogging('Assert element has state')
     );
@@ -59,16 +69,19 @@ export default function (editor) {
     return Chain.control(
       Chain.fromChains([
         cClickToolbarButton('Edit image'),
-        Chain.fromParent(ui.cWaitForPopup('wait for Edit Image dialog', '[role="dialog"]'), [
-          ui.cWaitForUi('wait for canvas', '.tox-image-tools__image > img'),
-          Chain.wait(200),
-          cClickToolbarButton(label),
-          cInteractWithUi,
-          Chain.wait(200),
-          cClickButton('Apply'),
-          cClickButton('Save'),
-          cWaitForDialogClose()
-        ])
+        Chain.fromParent(
+          ui.cWaitForPopup('wait for Edit Image dialog', '[role="dialog"]'),
+          [
+            ui.cWaitForUi('wait for canvas', '.tox-image-tools__image > img'),
+            Chain.wait(200),
+            cClickToolbarButton(label),
+            cInteractWithUi,
+            Chain.wait(200),
+            cClickButton('Apply'),
+            cClickButton('Save'),
+            cWaitForDialogClose()
+          ]
+        )
       ]),
       Guard.addLogging(`Execute ${label} command from dialog`)
     );
@@ -81,15 +94,19 @@ export default function (editor) {
     );
   };
 
-  const cWaitForDialogClose = () => Chain.control(
-    UiFinder.cNotExists('[role="dialog"]'),
-    Guard.tryUntil('Waiting for dialog to go away', 10, 3000)
-  );
+  const cWaitForDialogClose = () =>
+    Chain.control(
+      UiFinder.cNotExists('[role="dialog"]'),
+      Guard.tryUntil('Waiting for dialog to go away', 10, 3000)
+    );
 
   const cClickButton = function (text) {
     return Chain.control(
       Chain.fromChains([
-        cWaitForUi('wait for ' + text + ' button', 'button:contains(' + text + ')'),
+        cWaitForUi(
+          'wait for ' + text + ' button',
+          'button:contains(' + text + ')'
+        ),
         cWaitForState(function (el) {
           return Attr.get(el, 'disabled') === undefined;
         }),
@@ -113,29 +130,45 @@ export default function (editor) {
   };
 
   const sWaitForUrlChange = function (imgEl, origUrl) {
-    return Logger.t('Wait for url change', Chain.asStep(imgEl, [
-      cWaitForState(function (el) {
-        return Attr.get(el, 'src') !== origUrl;
-      })
-    ]));
+    return Logger.t(
+      'Wait for url change',
+      Chain.asStep(imgEl, [
+        cWaitForState(function (el) {
+          return Attr.get(el, 'src') !== origUrl;
+        })
+      ])
+    );
   };
 
   const sExec = function (execFromToolbar, label) {
-    return Logger.t(`Execute ${label}`, Step.async(function (next, die) {
-      const imgEl = TinyDom.fromDom(editor.selection.getNode());
-      const origUrl = Attr.get(imgEl, 'src');
+    return Logger.t(
+      `Execute ${label}`,
+      Step.async(function (next, die) {
+        const imgEl = TinyDom.fromDom(editor.selection.getNode());
+        const origUrl = Attr.get(imgEl, 'src');
 
-      Pipeline.async({}, [
-        Chain.asStep(imgEl, [
-          Mouse.cClick,
-          ui.cWaitForPopup('wait for Imagetools toolbar', '.tox-pop__dialog div'),
-          execFromToolbar ? cClickToolbarButton(label) : cExecCommandFromDialog(label)
-        ]),
-        sWaitForUrlChange(imgEl, origUrl)
-      ], function () {
-        next();
-      }, die);
-    }));
+        Pipeline.async(
+          {},
+          [
+            Chain.asStep(imgEl, [
+              Mouse.cClick,
+              ui.cWaitForPopup(
+                'wait for Imagetools toolbar',
+                '.tox-pop__dialog div'
+              ),
+              execFromToolbar
+                ? cClickToolbarButton(label)
+                : cExecCommandFromDialog(label)
+            ]),
+            sWaitForUrlChange(imgEl, origUrl)
+          ],
+          function () {
+            next();
+          },
+          die
+        );
+      })
+    );
   };
 
   return {

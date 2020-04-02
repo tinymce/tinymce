@@ -5,7 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, Behaviour, ItemWidget, Keying, Memento, Menu, SimpleOrSketchSpec, MenuTypes } from '@ephox/alloy';
+import {
+  AlloySpec,
+  Behaviour,
+  ItemWidget,
+  Keying,
+  Memento,
+  Menu,
+  SimpleOrSketchSpec,
+  MenuTypes
+} from '@ephox/alloy';
 import { Id, Option } from '@ephox/katamari';
 
 import { dom as menuDom } from './MenuParts';
@@ -15,7 +24,9 @@ export interface WidgetMenuSpec {
   widget: AlloySpec;
 }
 
-export const renderWidgetMenu = (spec: WidgetMenuSpec): Partial<MenuTypes.MenuSpec> => {
+export const renderWidgetMenu = (
+  spec: WidgetMenuSpec
+): Partial<MenuTypes.MenuSpec> => {
   const memWidget = Memento.record(spec.widget as SimpleOrSketchSpec);
   return {
     value: spec.value,
@@ -33,30 +44,26 @@ export const renderWidgetMenu = (spec: WidgetMenuSpec): Partial<MenuTypes.MenuSp
           tag: 'div'
         },
         components: [
-          ItemWidget.parts().widget(
-            {
-              dom: {
-                tag: 'div',
-                classes: [ 'tox-menu-widget-js' ]
-              },
-              components: [ memWidget.asSpec() ],
-              behaviours: Behaviour.derive([
-                Keying.config({
-                  mode: 'special',
-                  focusIn: (comp) => {
-                    memWidget.getOpt(comp).each(Keying.focusIn);
-                    return Option.some(true);
-                  }
-                })
-              ])
-            }
-          )
-        ],
+          ItemWidget.parts().widget({
+            dom: {
+              tag: 'div',
+              classes: ['tox-menu-widget-js']
+            },
+            components: [memWidget.asSpec()],
+            behaviours: Behaviour.derive([
+              Keying.config({
+                mode: 'special',
+                focusIn: (comp) => {
+                  memWidget.getOpt(comp).each(Keying.focusIn);
+                  return Option.some(true);
+                }
+              })
+            ])
+          })
+        ]
       }
     ],
     dom: menuDom(false, 1, 'normal'),
-    components: [
-      Menu.parts().items({ })
-    ]
+    components: [Menu.parts().items({})]
   };
 };

@@ -12,7 +12,4 @@ const find = function (parent: Element<DomNode>) {
   return SelectorFind.descendant<HTMLInputElement>(parent, 'input:checked');
 };
 
-export {
-  set,
-  find,
-};
+export { set, find };

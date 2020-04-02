@@ -18,7 +18,8 @@ const getClassList = (editor: Editor) => {
     rowClassList,
     (item) => {
       if (item.value) {
-        item.textStyle = () => editor.formatter.getCssText({ block: 'tr', classes: [ item.value ] });
+        item.textStyle = () =>
+          editor.formatter.getCssText({ block: 'tr', classes: [item.value] });
       }
     }
   );
@@ -60,14 +61,13 @@ const formChildren: Types.Dialog.BodyComponentApi[] = [
     label: 'Height',
     name: 'height',
     type: 'input'
-  },
+  }
 ];
 
-const getItems = (editor: Editor) => getClassList(editor).fold(
-  () => formChildren,
-  (classes) => formChildren.concat(classes)
-);
+const getItems = (editor: Editor) =>
+  getClassList(editor).fold(
+    () => formChildren,
+    (classes) => formChildren.concat(classes)
+  );
 
-export {
-  getItems
-};
+export { getItems };

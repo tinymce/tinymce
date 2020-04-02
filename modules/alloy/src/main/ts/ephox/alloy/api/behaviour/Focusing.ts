@@ -12,6 +12,4 @@ const Focusing: FocusingBehaviour = Behaviour.create({
   // Consider adding isFocused an an extra
 });
 
-export {
-  Focusing
-};
+export { Focusing };

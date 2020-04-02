@@ -1,9 +1,13 @@
 import { Adt, Fun } from '@ephox/katamari';
 
 export type StrictField<T> = () => T;
-export type DefaultedThunkField<T> = (fallbackThunk: (...rest: any[]) => any) => T;
+export type DefaultedThunkField<T> = (
+  fallbackThunk: (...rest: any[]) => any
+) => T;
 export type AsOptionField<T> = () => T;
-export type AsDefaultedOptionThunkField<T> = (fallbackThunk: (...rest: any[]) => any) => T;
+export type AsDefaultedOptionThunkField<T> = (
+  fallbackThunk: (...rest: any[]) => any
+) => T;
 export type MergeWithThunkField<T> = (baseThunk: (...rest: any[]) => any) => T;
 export interface FieldPresenceAdt {
   fold: <T>(
@@ -30,29 +34,23 @@ const adt: {
   asDefaultedOptionThunk: MergeWithThunkField<FieldPresenceAdt>;
   mergeWithThunk: MergeWithThunkField<FieldPresenceAdt>;
 } = Adt.generate([
-  { strict: [ ] },
-  { defaultedThunk: [ 'fallbackThunk' ] },
-  { asOption: [ ] },
-  { asDefaultedOptionThunk: [ 'fallbackThunk' ] },
-  { mergeWithThunk: [ 'baseThunk' ] }
+  { strict: [] },
+  { defaultedThunk: ['fallbackThunk'] },
+  { asOption: [] },
+  { asDefaultedOptionThunk: ['fallbackThunk'] },
+  { mergeWithThunk: ['baseThunk'] }
 ]);
 
 const defaulted = function (fallback: any): FieldPresenceAdt {
-  return adt.defaultedThunk(
-    Fun.constant(fallback)
-  );
+  return adt.defaultedThunk(Fun.constant(fallback));
 };
 
-const asDefaultedOption = function <T> (fallback: T): FieldPresenceAdt {
-  return adt.asDefaultedOptionThunk(
-    Fun.constant(fallback)
-  );
+const asDefaultedOption = function <T>(fallback: T): FieldPresenceAdt {
+  return adt.asDefaultedOptionThunk(Fun.constant(fallback));
 };
 
 const mergeWith = function (base: {}): FieldPresenceAdt {
-  return adt.mergeWithThunk(
-    Fun.constant(base)
-  );
+  return adt.mergeWithThunk(Fun.constant(base));
 };
 
 const strict = adt.strict;
@@ -64,13 +62,10 @@ const mergeWithThunk = adt.mergeWithThunk;
 export {
   strict,
   asOption,
-
   defaulted,
   defaultedThunk,
-
   asDefaultedOption,
   asDefaultedOptionThunk,
-
   mergeWith,
   mergeWithThunk
 };

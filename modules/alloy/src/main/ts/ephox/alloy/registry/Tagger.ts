@@ -25,7 +25,10 @@ const read = (elem: Element): Option<string> => {
   return Option.from(id);
 };
 
-const readOrDie = (elem: Element): string => read(elem).getOrDie('Could not find alloy uid in: ' + AlloyLogger.element(elem));
+const readOrDie = (elem: Element): string =>
+  read(elem).getOrDie(
+    'Could not find alloy uid in: ' + AlloyLogger.element(elem)
+  );
 
 const generate = (prefix: string): string => Id.generate(prefix);
 
@@ -37,12 +40,4 @@ const revoke = (elem: Element): void => {
 // TODO: Consider deprecating.
 const attribute: () => string = Fun.constant(idAttr);
 
-export {
-  revoke,
-  write,
-  writeOnly,
-  read,
-  readOrDie,
-  generate,
-  attribute
-};
+export { revoke, write, writeOnly, read, readOrDie, generate, attribute };

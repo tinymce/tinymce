@@ -7,4 +7,6 @@ export interface NamedPattern {
 }
 type NamedPatternConstructor = (word: string, pattern: PRegExp) => NamedPattern;
 
-export const NamedPattern = <NamedPatternConstructor> Struct.immutable('word', 'pattern');
+export const NamedPattern = <NamedPatternConstructor>(
+  Struct.immutable('word', 'pattern')
+);

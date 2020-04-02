@@ -13,7 +13,12 @@ import OuterContainer from '../ui/general/OuterContainer';
 import { identifyButtons } from '../ui/toolbar/Integration';
 
 // Set toolbar(s) depending on if multiple toolbars is configured or not
-const setToolbar = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage) => {
+const setToolbar = (
+  editor: Editor,
+  uiComponents: RenderUiComponents,
+  rawUiConfig: RenderUiConfig,
+  backstage: UiFactoryBackstage
+) => {
   const comp = uiComponents.outerContainer;
   const toolbarConfig = rawUiConfig.toolbar;
   const toolbarButtonsConfig = rawUiConfig.buttons;
@@ -21,7 +26,11 @@ const setToolbar = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfi
   // Check if toolbar type is a non-empty string array
   if (Type.isArrayOf(toolbarConfig, Type.isString)) {
     const toolbars = toolbarConfig.map((t) => {
-      const config = { toolbar: t, buttons: toolbarButtonsConfig, allowToolbarGroups: rawUiConfig.allowToolbarGroups };
+      const config = {
+        toolbar: t,
+        buttons: toolbarButtonsConfig,
+        allowToolbarGroups: rawUiConfig.allowToolbarGroups
+      };
       return identifyButtons(editor, config, { backstage }, Option.none());
     });
     OuterContainer.setToolbars(comp, toolbars);

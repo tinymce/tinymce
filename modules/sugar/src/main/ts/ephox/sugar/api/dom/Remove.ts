@@ -32,8 +32,4 @@ const unwrap = function (wrapper: Element<DomNode>) {
   remove(wrapper);
 };
 
-export {
-  empty,
-  remove,
-  unwrap,
-};
+export { empty, remove, unwrap };

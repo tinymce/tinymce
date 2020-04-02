@@ -1,4 +1,9 @@
-import { Event, EventListenerOrEventListenerObject, Window, window } from '@ephox/dom-globals';
+import {
+  Event,
+  EventListenerOrEventListenerObject,
+  Window,
+  window
+} from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { fromRawEvent } from '../../impl/FilteredEvent';
 import { EventHandler } from '../events/Types';
@@ -23,8 +28,14 @@ interface VisualViewport {
   readonly width: number;
   readonly height: number;
   readonly scale: number;
-  readonly addEventListener: (event: string, handler: EventListenerOrEventListenerObject) => void;
-  readonly removeEventListener: (event: string, handler: EventListenerOrEventListenerObject) => void;
+  readonly addEventListener: (
+    event: string,
+    handler: EventListenerOrEventListenerObject
+  ) => void;
+  readonly removeEventListener: (
+    event: string,
+    handler: EventListenerOrEventListenerObject
+  ) => void;
 }
 
 const get = (_win?: Window): Option<VisualViewport> => {
@@ -33,7 +44,12 @@ const get = (_win?: Window): Option<VisualViewport> => {
   return Option.from(win['visualViewport']);
 };
 
-const bounds = (x: number, y: number, width: number, height: number): Bounds => ({
+const bounds = (
+  x: number,
+  y: number,
+  width: number,
+  height: number
+): Bounds => ({
   x,
   y,
   width,
@@ -58,25 +74,27 @@ const getBounds = (_win?: Window): Bounds => {
     (visualViewport) =>
       // iOS doesn't update the pageTop/pageLeft when element.scrollIntoView() is called, so we need to fallback to the
       // scroll position which will always be less than the page top/left values when page top/left are accurate/correct.
-      bounds(Math.max(visualViewport.pageLeft, scroll.left()), Math.max(visualViewport.pageTop, scroll.top()), visualViewport.width, visualViewport.height)
-
+      bounds(
+        Math.max(visualViewport.pageLeft, scroll.left()),
+        Math.max(visualViewport.pageTop, scroll.top()),
+        visualViewport.width,
+        visualViewport.height
+      )
   );
 };
 
-const bind = (name: string, callback: EventHandler, _win?: Window) => get(_win).map((visualViewport) => {
-  const handler = (e: Event) => fromRawEvent(e);
-  visualViewport.addEventListener(name, handler);
+const bind = (name: string, callback: EventHandler, _win?: Window) =>
+  get(_win)
+    .map((visualViewport) => {
+      const handler = (e: Event) => fromRawEvent(e);
+      visualViewport.addEventListener(name, handler);
 
-  return {
-    unbind: () => visualViewport.removeEventListener(name, handler)
-  };
-}).getOrThunk(() => ({
-  unbind: Fun.noop
-}));
+      return {
+        unbind: () => visualViewport.removeEventListener(name, handler)
+      };
+    })
+    .getOrThunk(() => ({
+      unbind: Fun.noop
+    }));
 
-export {
-  bind,
-  get,
-  getBounds,
-  VisualViewport
-};
+export { bind, get, getBounds, VisualViewport };

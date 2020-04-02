@@ -1,4 +1,12 @@
-import { AlloyComponent, Attachment, Behaviour, Gui, GuiFactory, Memento, Replacing } from '@ephox/alloy';
+import {
+  AlloyComponent,
+  Attachment,
+  Behaviour,
+  Gui,
+  GuiFactory,
+  Memento,
+  Replacing
+} from '@ephox/alloy';
 import { Arr, Fun } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
@@ -10,7 +18,6 @@ import { MobileRealm } from 'tinymce/themes/mobile/ui/IosRealm';
 const strName = 'test';
 
 const setup = function (info, onSuccess, onFailure) {
-
   /* This test is going to create a toolbar with both list items on it */
   const alloy = Gui.create();
 
@@ -19,17 +26,15 @@ const setup = function (info, onSuccess, onFailure) {
   const toolbar = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: [ 'test-toolbar' ]
+      classes: ['test-toolbar']
     },
-    behaviours: Behaviour.derive([
-      Replacing.config({ })
-    ])
+    behaviours: Behaviour.derive([Replacing.config({})])
   });
 
   const socket = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: [ 'test-socket' ]
+      classes: ['test-socket']
     }
   });
 
@@ -63,37 +68,49 @@ const setup = function (info, onSuccess, onFailure) {
   });
 
   return {
-    use(f: (realm: MobileRealm, apis: TinyApis, toolbar: AlloyComponent, socket: AlloyComponent, buttons, onSuccess: () => void, onFailure: (err?: any) => void) => void) {
-      TinyLoader.setup(function (editor, onS, onF) {
-        const features = Features.setup(realm, editor);
+    use(
+      f: (
+        realm: MobileRealm,
+        apis: TinyApis,
+        toolbar: AlloyComponent,
+        socket: AlloyComponent,
+        buttons,
+        onSuccess: () => void,
+        onFailure: (err?: any) => void
+      ) => void
+    ) {
+      TinyLoader.setup(
+        function (editor, onS, onF) {
+          const features = Features.setup(realm, editor);
 
-        FormatChangers.init(realm, editor);
+          FormatChangers.init(realm, editor);
 
-        const apis = TinyApis(editor);
+          const apis = TinyApis(editor);
 
-        const buttons = { };
-        Arr.each(info.items, function (item) {
-          // For each item in the toolbar, make a lookup
-          buttons[item] = Memento.record(features[item].sketch());
-        });
+          const buttons = {};
+          Arr.each(info.items, function (item) {
+            // For each item in the toolbar, make a lookup
+            buttons[item] = Memento.record(features[item].sketch());
+          });
 
-        const toolbarItems = Arr.map(info.items, function (item) {
-          return buttons[item].asSpec();
-        });
+          const toolbarItems = Arr.map(info.items, function (item) {
+            return buttons[item].asSpec();
+          });
 
-        Replacing.set(toolbar, toolbarItems);
-        f(realm, apis, toolbar, socket, buttons, onS, onF);
-      }, {
-        theme: strName,
-        base_url: '/project/tinymce/js/tinymce'
-      }, onSuccess, onFailure);
+          Replacing.set(toolbar, toolbarItems);
+          f(realm, apis, toolbar, socket, buttons, onS, onF);
+        },
+        {
+          theme: strName,
+          base_url: '/project/tinymce/js/tinymce'
+        },
+        onSuccess,
+        onFailure
+      );
     }
   };
 };
 
 const name = Fun.constant(strName);
 
-export {
-  setup,
-  name
-};
+export { setup, name };

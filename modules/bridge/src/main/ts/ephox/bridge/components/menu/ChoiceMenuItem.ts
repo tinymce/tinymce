@@ -1,4 +1,9 @@
-import { CommonMenuItemApi, CommonMenuItem, CommonMenuItemInstanceApi, commonMenuItemFields } from './CommonMenuItem';
+import {
+  CommonMenuItemApi,
+  CommonMenuItem,
+  CommonMenuItemInstanceApi,
+  commonMenuItemFields
+} from './CommonMenuItem';
 import { ValueSchema, FieldSchema } from '@ephox/boulder';
 import { Result, Option } from '@ephox/katamari';
 
@@ -18,10 +23,15 @@ export interface ChoiceMenuItem extends CommonMenuItem {
   icon: Option<string>;
 }
 
-export const choiceMenuItemSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
-  FieldSchema.defaultedBoolean('active', false),
-  FieldSchema.optionString('icon'),
-].concat(commonMenuItemFields));
+export const choiceMenuItemSchema = ValueSchema.objOf(
+  [
+    FieldSchema.strictString('type'),
+    FieldSchema.defaultedBoolean('active', false),
+    FieldSchema.optionString('icon')
+  ].concat(commonMenuItemFields)
+);
 
-export const createChoiceMenuItem = (spec: ChoiceMenuItemApi): Result<ChoiceMenuItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('choicemenuitem', choiceMenuItemSchema, spec);
+export const createChoiceMenuItem = (
+  spec: ChoiceMenuItemApi
+): Result<ChoiceMenuItem, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw('choicemenuitem', choiceMenuItemSchema, spec);

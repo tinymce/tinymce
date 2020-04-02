@@ -4,8 +4,11 @@ import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { BehaviourCellState } from '../common/BehaviourCellState';
 
-export interface TogglingBehaviour extends Behaviour.AlloyBehaviour<TogglingConfigSpec, TogglingConfig> {
-  config: (config: TogglingConfigSpec) => Behaviour.NamedConfiguredBehaviour<TogglingConfigSpec, TogglingConfig>;
+export interface TogglingBehaviour
+  extends Behaviour.AlloyBehaviour<TogglingConfigSpec, TogglingConfig> {
+  config: (
+    config: TogglingConfigSpec
+  ) => Behaviour.NamedConfiguredBehaviour<TogglingConfigSpec, TogglingConfig>;
   onLoad: (component: AlloyComponent) => void;
   toggle: (component: AlloyComponent) => void;
   isOn: (component: AlloyComponent) => boolean;
@@ -15,7 +18,11 @@ export interface TogglingBehaviour extends Behaviour.AlloyBehaviour<TogglingConf
 }
 
 export interface AriaTogglingConfig {
-  update: (comp: AlloyComponent, ariaConfig: AriaTogglingConfig, state: boolean) => void;
+  update: (
+    comp: AlloyComponent,
+    ariaConfig: AriaTogglingConfig,
+    state: boolean
+  ) => void;
   syncWithExpanded: boolean;
 }
 
@@ -38,4 +45,10 @@ export interface TogglingConfigSpec extends Behaviour.BehaviourConfigSpec {
   selected?: boolean;
 }
 
-export type TogglingMode = 'expanded' | 'pressed' | 'checked' | 'toggled' | 'selected' | 'none';
+export type TogglingMode =
+  | 'expanded'
+  | 'pressed'
+  | 'checked'
+  | 'toggled'
+  | 'selected'
+  | 'none';

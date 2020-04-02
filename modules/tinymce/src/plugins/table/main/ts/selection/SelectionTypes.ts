@@ -9,8 +9,8 @@ import { Adt } from '@ephox/katamari';
 
 const type = Adt.generate([
   { none: [] },
-  { multiple: [ 'elements' ] },
-  { single: [ 'selection' ] }
+  { multiple: ['elements'] },
+  { single: ['selection'] }
 ]);
 
 export const cata = function (subject, onNone, onMultiple, onSingle) {

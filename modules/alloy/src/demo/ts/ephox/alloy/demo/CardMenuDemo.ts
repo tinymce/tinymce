@@ -28,7 +28,7 @@ export default (): void => {
       tag: 'div',
       innerHtml: text
     },
-    components: [ ]
+    components: []
   });
 
   const makeItem = (value: string, text: string): ItemSpec => ({
@@ -40,14 +40,14 @@ export default (): void => {
       tag: 'div',
       innerHtml: text
     },
-    components: [ ]
+    components: []
   });
 
   const makeSeparator = (text: string) => ({
     type: 'separator',
     dom: {
       tag: 'div',
-      classes: [ 'separator' ]
+      classes: ['separator']
     },
     components: [
       {
@@ -65,15 +65,13 @@ export default (): void => {
       tag: 'div'
     },
     components: [
-      Objects.exclude(makeSeparator(value), [ 'type' ]),
+      Objects.exclude(makeSeparator(value), ['type']),
       {
         dom: {
           tag: 'div',
-          classes: [ 'menu-items-container' ]
+          classes: ['menu-items-container']
         },
-        components: [
-          Menu.parts().items({ })
-        ]
+        components: [Menu.parts().items({})]
       }
     ],
     items,
@@ -94,11 +92,9 @@ export default (): void => {
   const tieredMenu = TieredMenu.sketch({
     dom: {
       tag: 'div',
-      classes: [ 'demo-tiered-menu' ]
+      classes: ['demo-tiered-menu']
     },
-    components: [
-
-    ],
+    components: [],
 
     // Focus causes issues when the things being focused are offscreen.
     fakeFocus: true,
@@ -122,7 +118,10 @@ export default (): void => {
     },
     onOpenSubmenu(container, item, submenu) {
       const w = Width.get(container.element());
-      const menu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
+      const menu = SelectorFind.ancestor(
+        item.element(),
+        '[role="menu"]'
+      ).getOrDie('hacky');
       const menuComp = container.getSystem().getByDom(menu).getOrDie();
       Width.set(submenu.element(), w);
 
@@ -134,7 +133,10 @@ export default (): void => {
     },
 
     onCollapseMenu(container, item, menu) {
-      const submenu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
+      const submenu = SelectorFind.ancestor(
+        item.element(),
+        '[role="menu"]'
+      ).getOrDie('hacky');
       const submenuComp = container.getSystem().getByDom(submenu).getOrDie();
       if (Transitioning.progressTo) {
         Transitioning.progressTo(submenuComp, 'after');
@@ -197,9 +199,5 @@ export default (): void => {
     }
   });
 
-  HtmlDisplay.section(
-    gui,
-    'This menu is a card menu',
-    tieredMenu
-  );
+  HtmlDisplay.section(gui, 'This menu is a card menu', tieredMenu);
 };

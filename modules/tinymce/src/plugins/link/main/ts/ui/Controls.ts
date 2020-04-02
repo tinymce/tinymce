@@ -64,7 +64,10 @@ const setupContextMenu = function (editor: Editor) {
   const inLink = 'link unlink openlink';
   const noLink = 'link';
   editor.ui.registry.addContextMenu('link', {
-    update: (element) => Utils.hasLinks(editor.dom.getParents(element, 'a') as HTMLAnchorElement[]) ? inLink : noLink
+    update: (element) =>
+      Utils.hasLinks(editor.dom.getParents(element, 'a') as HTMLAnchorElement[])
+        ? inLink
+        : noLink
   });
 };
 
@@ -76,7 +79,7 @@ const setupContextToolbars = function (editor: Editor) {
   const onSetupLink = (buttonApi: Toolbar.ContextButtonInstanceApi) => {
     const node = editor.selection.getNode();
     buttonApi.setDisabled(!Utils.getAnchorElement(editor, node));
-    return () => { };
+    return () => {};
   };
 
   editor.ui.registry.addContextForm('quicklink', {
@@ -87,7 +90,9 @@ const setupContextToolbars = function (editor: Editor) {
       onSetup: Actions.toggleActiveState(editor)
     },
     label: 'Link',
-    predicate: (node) => !!Utils.getAnchorElement(editor, node) && Settings.hasContextToolbar(editor),
+    predicate: (node) =>
+      !!Utils.getAnchorElement(editor, node) &&
+      Settings.hasContextToolbar(editor),
     initValue: () => {
       const elm = Utils.getAnchorElement(editor);
       return !!elm ? Utils.getHref(elm) : '';
@@ -108,9 +113,15 @@ const setupContextToolbars = function (editor: Editor) {
           const anchor = Utils.getAnchorElement(editor);
           const value = formApi.getValue();
           if (!anchor) {
-            const attachState = { href: value, attach: () => { } };
-            const onlyText = Utils.isOnlyTextSelected(editor.selection.getContent());
-            const text: Option<string> = onlyText ? Option.some(Utils.getAnchorText(editor.selection, anchor)).filter((t) => t.length > 0).or(Option.from(value)) : Option.none();
+            const attachState = { href: value, attach: () => {} };
+            const onlyText = Utils.isOnlyTextSelected(
+              editor.selection.getContent()
+            );
+            const text: Option<string> = onlyText
+              ? Option.some(Utils.getAnchorText(editor.selection, anchor))
+                  .filter((t) => t.length > 0)
+                  .or(Option.from(value))
+              : Option.none();
             Utils.link(editor, attachState, {
               href: value,
               text,
@@ -152,9 +163,4 @@ const setupContextToolbars = function (editor: Editor) {
   });
 };
 
-export {
-  setupButtons,
-  setupMenuItems,
-  setupContextMenu,
-  setupContextToolbars
-};
+export { setupButtons, setupMenuItems, setupContextMenu, setupContextToolbars };

@@ -10,9 +10,7 @@ const boxPosition = function (dom: DomElement) {
 
 // Avoids falsy false fallthrough
 const firstDefinedOrZero = function (a: number, b: number) {
-  return a !== undefined ? a :
-    b !== undefined ? b :
-      0;
+  return a !== undefined ? a : b !== undefined ? b : 0;
 };
 
 const absolute = function (element: Element<DomElement>) {
@@ -33,7 +31,8 @@ const absolute = function (element: Element<DomElement>) {
 
   return viewport(element).translate(
     scrollLeft - clientLeft,
-    scrollTop - clientTop);
+    scrollTop - clientTop
+  );
 };
 
 // This is the old $.position(), but JQuery does nonsense calculations.
@@ -63,8 +62,4 @@ const viewport = function (element: Element<DomElement>) {
   return boxPosition(dom);
 };
 
-export {
-  absolute,
-  relative,
-  viewport,
-};
+export { absolute, relative, viewport };

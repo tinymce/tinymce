@@ -5,8 +5,11 @@ import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { BehaviourState } from '../common/BehaviourState';
 
-export interface SlidingBehaviour extends Behaviour.AlloyBehaviour<SlidingConfigSpec, SlidingConfig> {
-  config: (config: SlidingConfigSpec) => Behaviour.NamedConfiguredBehaviour<SlidingConfigSpec, SlidingConfig>;
+export interface SlidingBehaviour
+  extends Behaviour.AlloyBehaviour<SlidingConfigSpec, SlidingConfig> {
+  config: (
+    config: SlidingConfigSpec
+  ) => Behaviour.NamedConfiguredBehaviour<SlidingConfigSpec, SlidingConfig>;
   refresh: (component: AlloyComponent) => void;
   grow: (component: AlloyComponent) => void;
   shrink: (component: AlloyComponent) => void;
@@ -35,7 +38,6 @@ export interface SlidingConfig extends Behaviour.BehaviourConfigDetail {
   onStartGrow: (comp: AlloyComponent) => void;
   onStartShrink: (comp: AlloyComponent) => void;
   getAnimationRoot: Option<(comp: AlloyComponent) => Element>;
-
 }
 
 export interface SlidingState extends BehaviourState {

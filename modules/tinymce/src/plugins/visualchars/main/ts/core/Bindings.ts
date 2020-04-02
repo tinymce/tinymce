@@ -18,6 +18,4 @@ const setup = (editor: Editor, toggleState) => {
   });
 };
 
-export {
-  setup
-};
+export { setup };

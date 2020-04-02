@@ -18,8 +18,18 @@ tinymce.init({
     { title: 'p', block: 'p' },
     { title: 'div', block: 'div' },
     { title: 'pre', block: 'pre' },
-    { title: 'section', block: 'section', wrapper: true, merge_siblings: false },
-    { title: 'article', block: 'article', wrapper: true, merge_siblings: false },
+    {
+      title: 'section',
+      block: 'section',
+      wrapper: true,
+      merge_siblings: false
+    },
+    {
+      title: 'article',
+      block: 'article',
+      wrapper: true,
+      merge_siblings: false
+    },
     { title: 'blockquote', block: 'blockquote', wrapper: true },
     { title: 'hgroup', block: 'hgroup', wrapper: true },
     { title: 'aside', block: 'aside', wrapper: true },

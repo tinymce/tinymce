@@ -14,30 +14,46 @@ import * as PartType from '../../parts/PartType';
 import { EdgeActions, SliderDetail } from '../../ui/types/SliderTypes';
 
 const labelPart = PartType.optional({
-  schema: [ FieldSchema.strict('dom') ],
+  schema: [FieldSchema.strict('dom')],
   name: 'label'
 });
 
-const edgePart = (name: keyof EdgeActions): PartType.PartTypeAdt => PartType.optional({
-  name: '' + name + '-edge',
-  overrides(detail: SliderDetail) {
-    const action = detail.model.manager.edgeActions[name];
-    // Not all edges have actions for all sliders.
-    // A horizontal slider will only have left and right, for instance,
-    // ignoring top, bottom and diagonal edges as they don't make sense in context of those sliders.
-    return action.fold(() => ({}),
-      (a) => ({
-        events: AlloyEvents.derive([
-          AlloyEvents.runActionExtra(NativeEvents.touchstart(), (comp, se, d) => a(comp, d), [ detail ]),
-          AlloyEvents.runActionExtra(NativeEvents.mousedown(), (comp, se, d) => a(comp, d), [ detail ]),
-          AlloyEvents.runActionExtra(NativeEvents.mousemove(), (comp, se, det: SliderDetail) => {
-            if (det.mouseIsDown.get()) { a(comp, det); }
-          }, [ detail ])
-        ])
-      })
-    );
-  }
-});
+const edgePart = (name: keyof EdgeActions): PartType.PartTypeAdt =>
+  PartType.optional({
+    name: '' + name + '-edge',
+    overrides(detail: SliderDetail) {
+      const action = detail.model.manager.edgeActions[name];
+      // Not all edges have actions for all sliders.
+      // A horizontal slider will only have left and right, for instance,
+      // ignoring top, bottom and diagonal edges as they don't make sense in context of those sliders.
+      return action.fold(
+        () => ({}),
+        (a) => ({
+          events: AlloyEvents.derive([
+            AlloyEvents.runActionExtra(
+              NativeEvents.touchstart(),
+              (comp, se, d) => a(comp, d),
+              [detail]
+            ),
+            AlloyEvents.runActionExtra(
+              NativeEvents.mousedown(),
+              (comp, se, d) => a(comp, d),
+              [detail]
+            ),
+            AlloyEvents.runActionExtra(
+              NativeEvents.mousemove(),
+              (comp, se, det: SliderDetail) => {
+                if (det.mouseIsDown.get()) {
+                  a(comp, det);
+                }
+              },
+              [detail]
+            )
+          ])
+        })
+      );
+    }
+  });
 
 // When the user touches the top left edge, it should move the thumb
 const tlEdgePart = edgePart('top-left');
@@ -64,7 +80,10 @@ const blEdgePart = edgePart('bottom-left');
 const ledgePart = edgePart('left');
 
 // The thumb part needs to have position absolute to be positioned correctly
-const thumbPart = PartType.required<SliderDetail, { dom: OptionalDomSchema; events: AlloyEvents.AlloyEventRecord }>({
+const thumbPart = PartType.required<
+  SliderDetail,
+  { dom: OptionalDomSchema; events: AlloyEvents.AlloyEventRecord }
+>({
   name: 'thumb',
   defaults: Fun.constant({
     dom: {
@@ -76,12 +95,28 @@ const thumbPart = PartType.required<SliderDetail, { dom: OptionalDomSchema; even
       events: AlloyEvents.derive([
         // If the user touches the thumb itself, pretend they touched the spectrum instead. This
         // allows sliding even when they touchstart the current value
-        AlloyEvents.redirectToPart(NativeEvents.touchstart(), detail, 'spectrum'),
-        AlloyEvents.redirectToPart(NativeEvents.touchmove(), detail, 'spectrum'),
+        AlloyEvents.redirectToPart(
+          NativeEvents.touchstart(),
+          detail,
+          'spectrum'
+        ),
+        AlloyEvents.redirectToPart(
+          NativeEvents.touchmove(),
+          detail,
+          'spectrum'
+        ),
         AlloyEvents.redirectToPart(NativeEvents.touchend(), detail, 'spectrum'),
 
-        AlloyEvents.redirectToPart(NativeEvents.mousedown(), detail, 'spectrum'),
-        AlloyEvents.redirectToPart(NativeEvents.mousemove(), detail, 'spectrum'),
+        AlloyEvents.redirectToPart(
+          NativeEvents.mousedown(),
+          detail,
+          'spectrum'
+        ),
+        AlloyEvents.redirectToPart(
+          NativeEvents.mousemove(),
+          detail,
+          'spectrum'
+        ),
         AlloyEvents.redirectToPart(NativeEvents.mouseup(), detail, 'spectrum')
       ])
     };
@@ -89,28 +124,32 @@ const thumbPart = PartType.required<SliderDetail, { dom: OptionalDomSchema; even
 });
 
 const spectrumPart = PartType.required({
-  schema: [
-    FieldSchema.state('mouseIsDown', () => Cell(false))
-  ],
+  schema: [FieldSchema.state('mouseIsDown', () => Cell(false))],
   name: 'spectrum',
   overrides(detail: SliderDetail) {
     const modelDetail = detail.model;
     const model = modelDetail.manager;
 
-    const setValueFrom = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => model.getValueFromEvent(simulatedEvent).map((value: number | Position) => model.setValueFrom(component, detail, value));
+    const setValueFrom = (
+      component: AlloyComponent,
+      simulatedEvent: NativeSimulatedEvent
+    ) =>
+      model
+        .getValueFromEvent(simulatedEvent)
+        .map((value: number | Position) =>
+          model.setValueFrom(component, detail, value)
+        );
 
     return {
       behaviours: Behaviour.derive([
         // Move left and right along the spectrum
-        Keying.config(
-          {
-            mode: 'special',
-            onLeft: (spectrum) => model.onLeft(spectrum, detail),
-            onRight: (spectrum) => model.onRight(spectrum, detail),
-            onUp: (spectrum) => model.onUp(spectrum, detail),
-            onDown: (spectrum) => model.onDown(spectrum, detail)
-          }
-        ),
+        Keying.config({
+          mode: 'special',
+          onLeft: (spectrum) => model.onLeft(spectrum, detail),
+          onRight: (spectrum) => model.onRight(spectrum, detail),
+          onUp: (spectrum) => model.onUp(spectrum, detail),
+          onDown: (spectrum) => model.onDown(spectrum, detail)
+        }),
         Focusing.config({})
       ]),
 
@@ -119,7 +158,9 @@ const spectrumPart = PartType.required({
         AlloyEvents.run(NativeEvents.touchmove(), setValueFrom),
         AlloyEvents.run(NativeEvents.mousedown(), setValueFrom),
         AlloyEvents.run<EventArgs>(NativeEvents.mousemove(), (spectrum, se) => {
-          if (detail.mouseIsDown.get()) { setValueFrom(spectrum, se); }
+          if (detail.mouseIsDown.get()) {
+            setValueFrom(spectrum, se);
+          }
         })
       ])
     };

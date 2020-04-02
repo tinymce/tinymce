@@ -31,7 +31,7 @@ export default (): void => {
                 delay: 2000
               },
               onStream: (comp) => {
-                comp.getSystem().broadcastOn([ 'reflecting-channel' ], {
+                comp.getSystem().broadcastOn(['reflecting-channel'], {
                   items: Value.get(comp.element()).split(',')
                 });
               }
@@ -47,17 +47,18 @@ export default (): void => {
           dom: {
             tag: 'ol'
           },
-          components: [ ],
+          components: [],
 
           containerBehaviours: Behaviour.derive([
             Reflecting.config({
               channel: 'reflecting-channel',
-              renderComponents: (data: { items: string [] }) => Arr.map(data.items, (d) => ({
-                dom: { tag: 'li', innerHtml: d }
-              })),
+              renderComponents: (data: { items: string[] }) =>
+                Arr.map(data.items, (d) => ({
+                  dom: { tag: 'li', innerHtml: d }
+                })),
               updateState: (comp, data) => Option.some<any>(data),
               initialData: {
-                items: [ 'dog', 'cat', 'elephant' ]
+                items: ['dog', 'cat', 'elephant']
               }
             })
           ])

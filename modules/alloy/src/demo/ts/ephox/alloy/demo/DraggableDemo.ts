@@ -86,19 +86,20 @@ export default (): void => {
 
           buttonBehaviours: Behaviour.derive([
             Dragging.config({
-              mode: PlatformDetection.detect().deviceType.isTouch() ? 'touch' : 'mouse',
+              mode: PlatformDetection.detect().deviceType.isTouch()
+                ? 'touch'
+                : 'mouse',
               blockerClass: 'blocker',
               snaps: snapData
             }),
-            Unselecting.config({ })
+            Unselecting.config({})
           ]),
           eventOrder: {
             // Because this is a button, allow dragging. It will stop clicking.
-            mousedown: [ 'dragging', 'alloy.base.behaviour' ]
+            mousedown: ['dragging', 'alloy.base.behaviour']
           }
         })
       ]
     })
   );
-
 };

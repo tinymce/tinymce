@@ -15,6 +15,4 @@ const get = function (toggleState) {
   };
 };
 
-export {
-  get
-};
+export { get };

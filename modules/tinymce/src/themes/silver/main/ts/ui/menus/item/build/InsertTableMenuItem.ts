@@ -5,7 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, Focusing, GuiFactory, ItemTypes, ItemWidget, Keying, Memento, NativeEvents, NativeSimulatedEvent, Replacing, SystemEvents, Toggling } from '@ephox/alloy';
+import {
+  AddEventsBehaviour,
+  AlloyComponent,
+  AlloyEvents,
+  AlloySpec,
+  AlloyTriggers,
+  Behaviour,
+  CustomEvent,
+  Focusing,
+  GuiFactory,
+  ItemTypes,
+  ItemWidget,
+  Keying,
+  Memento,
+  NativeEvents,
+  NativeSimulatedEvent,
+  Replacing,
+  SystemEvents,
+  Toggling
+} from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Arr, Id } from '@ephox/katamari';
 
@@ -18,8 +37,10 @@ interface CellEvent extends CustomEvent {
 }
 
 const makeCell = (row, col, labelId) => {
-  const emitCellOver = (c: AlloyComponent) => AlloyTriggers.emitWith(c, cellOverEvent, { row, col } );
-  const emitExecute = (c: AlloyComponent) => AlloyTriggers.emitWith(c, cellExecuteEvent, { row, col } );
+  const emitCellOver = (c: AlloyComponent) =>
+    AlloyTriggers.emitWith(c, cellOverEvent, { row, col });
+  const emitExecute = (c: AlloyComponent) =>
+    AlloyTriggers.emitWith(c, cellExecuteEvent, { row, col });
 
   const onClick = (c: AlloyComponent, se: NativeSimulatedEvent) => {
     se.stop();
@@ -50,7 +71,7 @@ const makeCell = (row, col, labelId) => {
   });
 };
 
-const makeCells =  (labelId, numRows, numCols) => {
+const makeCells = (labelId, numRows, numCols) => {
   const cells = [];
   for (let i = 0; i < numRows; i++) {
     const row = [];
@@ -62,7 +83,13 @@ const makeCells =  (labelId, numRows, numCols) => {
   return cells;
 };
 
-const selectCells = (cells, selectedRow, selectedColumn, numRows, numColumns) => {
+const selectCells = (
+  cells,
+  selectedRow,
+  selectedColumn,
+  numRows,
+  numColumns
+) => {
   for (let i = 0; i < numRows; i++) {
     for (let j = 0; j < numColumns; j++) {
       Toggling.set(cells[i][j], i <= selectedRow && j <= selectedColumn);
@@ -70,12 +97,16 @@ const selectCells = (cells, selectedRow, selectedColumn, numRows, numColumns) =>
   }
 };
 
-const makeComponents = (cells: Array<Array<AlloyComponent>>): Array<AlloySpec> =>
+const makeComponents = (
+  cells: Array<Array<AlloyComponent>>
+): Array<AlloySpec> =>
   Arr.bind(cells, (cellRow) => Arr.map(cellRow, GuiFactory.premade));
 
 const makeLabelText = (row, col) => GuiFactory.text(`${col + 1}x${row + 1}`);
 
-export function renderInsertTableMenuItem(spec: Menu.FancyMenuItem): ItemTypes.WidgetItemSpec {
+export function renderInsertTableMenuItem(
+  spec: Menu.FancyMenuItem
+): ItemTypes.WidgetItemSpec {
   const numRows = 10;
   const numColumns = 10;
   const sizeLabelId = Id.generate('size-label');
@@ -84,15 +115,13 @@ export function renderInsertTableMenuItem(spec: Menu.FancyMenuItem): ItemTypes.W
   const memLabel = Memento.record({
     dom: {
       tag: 'span',
-      classes: [ 'tox-insert-table-picker__label' ],
+      classes: ['tox-insert-table-picker__label'],
       attributes: {
         id: sizeLabelId
       }
     },
-    components: [ GuiFactory.text('0x0') ],
-    behaviours: Behaviour.derive([
-      Replacing.config({})
-    ])
+    components: [GuiFactory.text('0x0')],
+    behaviours: Behaviour.derive([Replacing.config({})])
   });
 
   return {
@@ -100,37 +129,45 @@ export function renderInsertTableMenuItem(spec: Menu.FancyMenuItem): ItemTypes.W
     data: { value: Id.generate('widget-id') },
     dom: {
       tag: 'div',
-      classes: [ 'tox-fancymenuitem' ],
+      classes: ['tox-fancymenuitem']
     },
     autofocus: true,
-    components: [ ItemWidget.parts().widget({
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-insert-table-picker' ]
-      },
-      components: makeComponents(cells).concat(memLabel.asSpec()),
-      behaviours: Behaviour.derive([
-        AddEventsBehaviour.config('insert-table-picker', [
-          AlloyEvents.runWithTarget<CellEvent>(cellOverEvent, (c, t, e) => {
-            const row = e.event().row();
-            const col = e.event().col();
-            selectCells(cells, row, col, numRows, numColumns);
-            Replacing.set(memLabel.get(c), [ makeLabelText(row, col) ]);
-          }),
-          AlloyEvents.runWithTarget<CellEvent>(cellExecuteEvent, (c, _, e) => {
-            spec.onAction({ numRows: e.event().row() + 1, numColumns: e.event().col() + 1 });
-            AlloyTriggers.emit(c, SystemEvents.sandboxClose());
+    components: [
+      ItemWidget.parts().widget({
+        dom: {
+          tag: 'div',
+          classes: ['tox-insert-table-picker']
+        },
+        components: makeComponents(cells).concat(memLabel.asSpec()),
+        behaviours: Behaviour.derive([
+          AddEventsBehaviour.config('insert-table-picker', [
+            AlloyEvents.runWithTarget<CellEvent>(cellOverEvent, (c, t, e) => {
+              const row = e.event().row();
+              const col = e.event().col();
+              selectCells(cells, row, col, numRows, numColumns);
+              Replacing.set(memLabel.get(c), [makeLabelText(row, col)]);
+            }),
+            AlloyEvents.runWithTarget<CellEvent>(
+              cellExecuteEvent,
+              (c, _, e) => {
+                spec.onAction({
+                  numRows: e.event().row() + 1,
+                  numColumns: e.event().col() + 1
+                });
+                AlloyTriggers.emit(c, SystemEvents.sandboxClose());
+              }
+            )
+          ]),
+          Keying.config({
+            initSize: {
+              numRows,
+              numColumns
+            },
+            mode: 'flatgrid',
+            selector: '[role="button"]'
           })
-        ]),
-        Keying.config({
-          initSize: {
-            numRows,
-            numColumns
-          },
-          mode: 'flatgrid',
-          selector: '[role="button"]'
-        })
-      ])
-    }) ]
+        ])
+      })
+    ]
   };
 }

@@ -1,50 +1,59 @@
 import { Arr } from '@ephox/katamari';
 
-export enum TestLogEntryState { Original, Started, Finished }
+export enum TestLogEntryState {
+  Original,
+  Started,
+  Finished
+}
 
 export interface TestLogEntry {
   message: string;
-  entries: TestLogEntry[ ];
+  entries: TestLogEntry[];
   state: TestLogEntryState;
   trace: any;
 }
 
 export interface TestLogs {
-  history: TestLogEntry[ ];
+  history: TestLogEntry[];
 }
 
 const DISABLE_LOGGING = false;
 
 // Pop level needs to change the parent. This would be so much easier with zippers.
-const modifyStartedEntryTo = (entries: TestLogEntry[], f): TestLogEntry[] => Arr.last(entries).fold(
-  () => entries,
-  (lastEntry) => {
-    // If the last entry has started, and has entries,
-    if (lastEntry.state === TestLogEntryState.Started) {
-      return Arr.last(lastEntry.entries).fold(
-        // We have no entries, so just modify us
-        () => entries.slice(0, entries.length - 1).concat([ f(lastEntry) ]),
-        // Great name!
-        (lastEntryLastEntry) => {
-          if (lastEntryLastEntry.state === TestLogEntryState.Started) {
-            // Need to keep going.
-            return entries.slice(0, entries.length - 1).concat([{
-              message: lastEntry.message,
-              state: lastEntry.state,
-              trace: lastEntry.trace,
-              entries: modifyStartedEntryTo(lastEntry.entries, f)
-            }]);
-          } else {
-            // We have no further nesting, so just modify us
-            return entries.slice(0, entries.length - 1).concat([ f(lastEntry) ]);
+const modifyStartedEntryTo = (entries: TestLogEntry[], f): TestLogEntry[] =>
+  Arr.last(entries).fold(
+    () => entries,
+    (lastEntry) => {
+      // If the last entry has started, and has entries,
+      if (lastEntry.state === TestLogEntryState.Started) {
+        return Arr.last(lastEntry.entries).fold(
+          // We have no entries, so just modify us
+          () => entries.slice(0, entries.length - 1).concat([f(lastEntry)]),
+          // Great name!
+          (lastEntryLastEntry) => {
+            if (lastEntryLastEntry.state === TestLogEntryState.Started) {
+              // Need to keep going.
+              return entries.slice(0, entries.length - 1).concat([
+                {
+                  message: lastEntry.message,
+                  state: lastEntry.state,
+                  trace: lastEntry.trace,
+                  entries: modifyStartedEntryTo(lastEntry.entries, f)
+                }
+              ]);
+            } else {
+              // We have no further nesting, so just modify us
+              return entries
+                .slice(0, entries.length - 1)
+                .concat([f(lastEntry)]);
+            }
           }
-        }
-      );
-    } else {
-      return entries.slice(0, entries.length - 1).concat([ f(lastEntry) ]);
+        );
+      } else {
+        return entries.slice(0, entries.length - 1).concat([f(lastEntry)]);
+      }
     }
-  }
-);
+  );
 
 const modifyStartedEntry = (logs: TestLogs, f): TestLogs => ({
   history: modifyStartedEntryTo(logs.history, f)
@@ -57,20 +66,22 @@ const modifyLastEntryTo = (entries: TestLogEntry[], f): TestLogEntry[] =>
       f({
         message: 'Unknown',
         state: TestLogEntryState.Original,
-        entries: [ ],
+        entries: [],
         trace: null
       })
     ],
     (lastEntry) => {
       if (lastEntry.state === TestLogEntryState.Started) {
-        return entries.slice(0, entries.length - 1).concat([{
-          message: lastEntry.message,
-          state: lastEntry.state,
-          entries: modifyLastEntryTo(lastEntry.entries, f),
-          trace: lastEntry.trace
-        }]);
+        return entries.slice(0, entries.length - 1).concat([
+          {
+            message: lastEntry.message,
+            state: lastEntry.state,
+            entries: modifyLastEntryTo(lastEntry.entries, f),
+            trace: lastEntry.trace
+          }
+        ]);
       } else {
-        return entries.slice(0, entries.length - 1).concat([ f(lastEntry) ]);
+        return entries.slice(0, entries.length - 1).concat([f(lastEntry)]);
       }
     }
   );
@@ -80,22 +91,27 @@ const modifyLastEntry = (logs: TestLogs, f): TestLogs => ({
 });
 
 // Determine if we are inside a subentry
-const addLogEntryTo = (entries: TestLogEntry[], newEntry: TestLogEntry): TestLogEntry[] => {
+const addLogEntryTo = (
+  entries: TestLogEntry[],
+  newEntry: TestLogEntry
+): TestLogEntry[] => {
   if (entries.length === 0) {
-    return [ newEntry ];
+    return [newEntry];
   } else {
     const lastEntry = entries[entries.length - 1];
     if (lastEntry.state === TestLogEntryState.Started) {
       const before = entries.slice(0, entries.length - 1);
       const newLastEntries = addLogEntryTo(lastEntry.entries, newEntry);
-      return before.concat([{
-        message: lastEntry.message,
-        entries: newLastEntries,
-        state: lastEntry.state,
-        trace: lastEntry.trace
-      }]);
+      return before.concat([
+        {
+          message: lastEntry.message,
+          entries: newLastEntries,
+          state: lastEntry.state,
+          trace: lastEntry.trace
+        }
+      ]);
     } else {
-      return entries.concat([ newEntry ]);
+      return entries.concat([newEntry]);
     }
   }
 };
@@ -109,7 +125,7 @@ export const addLogEntry = (logs: TestLogs, message: string): TestLogs => {
     message,
     trace: null,
     state: TestLogEntryState.Original,
-    entries: [ ]
+    entries: []
   };
 
   return {
@@ -141,7 +157,10 @@ export const popLogLevel = (logs: TestLogs): TestLogs => {
   }));
 };
 
-export const addStackTrace = (logs: TestLogs, err: { stack: any }): TestLogs => {
+export const addStackTrace = (
+  logs: TestLogs,
+  err: { stack: any }
+): TestLogs => {
   if (DISABLE_LOGGING) {
     return logs;
   }
@@ -158,6 +177,7 @@ const initLogsWith = (history: TestLogEntry[]) => ({
 });
 
 export const TestLogs = {
-  getOrInit: (logs: TestLogs): TestLogs => logs !== undefined ? logs : initLogsWith([ ]),
-  init: (): TestLogs => initLogsWith([ ])
+  getOrInit: (logs: TestLogs): TestLogs =>
+    logs !== undefined ? logs : initLogsWith([]),
+  init: (): TestLogs => initLogsWith([])
 };

@@ -8,6 +8,4 @@ type SimplifyFn = <E, D>(universe: Universe<E, D>, elements: E[]) => E[];
  */
 const simplify: SimplifyFn = Simplify.simplify;
 
-export {
-  simplify
-};
+export { simplify };

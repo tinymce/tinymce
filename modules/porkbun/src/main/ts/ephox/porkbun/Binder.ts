@@ -5,7 +5,10 @@ const create = function () {
   const registrations: Bindable<any>[] = [];
   const handlers: EventHandler<any>[] = [];
 
-  const bind = function (registration: Bindable<any>, handler: EventHandler<any>) {
+  const bind = function (
+    registration: Bindable<any>,
+    handler: EventHandler<any>
+  ) {
     if (Arr.contains(registrations, registration)) {
       throw new Error('Invalid key, key already exists.');
     } else {
@@ -17,13 +20,16 @@ const create = function () {
 
   const unbind = function (registration: Bindable<any>) {
     const index = Arr.indexOf(registrations, registration);
-    index.fold(function () {
-      throw new Error('Invalid key, does not exist.');
-    }, function (ind) {
-      registrations.splice(ind, 1);
-      const handler = handlers.splice(ind, 1)[0];
-      registration.unbind(handler);
-    });
+    index.fold(
+      function () {
+        throw new Error('Invalid key, does not exist.');
+      },
+      function (ind) {
+        registrations.splice(ind, 1);
+        const handler = handlers.splice(ind, 1)[0];
+        registration.unbind(handler);
+      }
+    );
   };
 
   const unbindAll = function () {
@@ -43,6 +49,4 @@ const create = function () {
   };
 };
 
-export {
-  create
-};
+export { create };

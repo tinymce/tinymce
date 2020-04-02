@@ -15,18 +15,22 @@ UnitTest.test('Obj.size: unit tests', function () {
 
 // Phantomjs gives incorrect results for this test
 if (navigator.userAgent.indexOf('PhantomJS') <= -1) {
-// NOTE: This breaks for empty keys
+  // NOTE: This breaks for empty keys
   UnitTest.test('Obj.size: inductive case', () => {
-    fc.assert(fc.property(
-      fc.dictionary(fc.asciiString(1, 30), fc.integer()),
-      fc.asciiString(1, 30),
-      fc.integer(),
-      (obj, k, v) => {
-        const objWithoutK = Obj.filter(obj, (x, i) => i !== k);
-        Assert.eq('Adding key adds 1 to size',
-          Obj.size(objWithoutK) + 1,
-          Obj.size({ k: v, ...objWithoutK })
-        );
-      }));
+    fc.assert(
+      fc.property(
+        fc.dictionary(fc.asciiString(1, 30), fc.integer()),
+        fc.asciiString(1, 30),
+        fc.integer(),
+        (obj, k, v) => {
+          const objWithoutK = Obj.filter(obj, (x, i) => i !== k);
+          Assert.eq(
+            'Adding key adds 1 to size',
+            Obj.size(objWithoutK) + 1,
+            Obj.size({ k: v, ...objWithoutK })
+          );
+        }
+      )
+    );
   });
 }

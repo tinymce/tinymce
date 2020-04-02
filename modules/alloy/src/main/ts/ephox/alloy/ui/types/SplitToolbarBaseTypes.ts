@@ -3,14 +3,23 @@ import { Cell } from '@ephox/katamari';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema, SimpleOrSketchSpec, SketchSpec } from '../../api/component/SpecTypes';
-import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import {
+  AlloySpec,
+  RawDomSchema,
+  SimpleOrSketchSpec,
+  SketchSpec
+} from '../../api/component/SpecTypes';
+import {
+  CompositeSketch,
+  CompositeSketchDetail,
+  CompositeSketchSpec
+} from '../../api/ui/Sketcher';
 import { ToolbarGroupSpec } from './ToolbarGroupTypes';
 
 export interface SplitToolbarBaseDetail extends CompositeSketchDetail {
   uid: string;
   dom: RawDomSchema;
-  components: AlloySpec[ ];
+  components: AlloySpec[];
   splitToolbarBehaviours: SketchBehaviours;
   builtGroups: Cell<AlloyComponent[]>;
 }
@@ -34,4 +43,5 @@ export interface SplitToolbarBaseSpec extends CompositeSketchSpec {
 }
 
 export interface SplitToolbarBaseSketcher<T extends SplitToolbarBaseSpec>
-  extends CompositeSketch<T>, SplitToolbarBaseApis { }
+  extends CompositeSketch<T>,
+    SplitToolbarBaseApis {}

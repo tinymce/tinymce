@@ -5,21 +5,43 @@ import DomParser from 'tinymce/core/api/html/DomParser';
 import Schema from 'tinymce/core/api/html/Schema';
 import Serializer from 'tinymce/core/api/html/Serializer';
 
-UnitTest.asynctest('browser.tinymce.core.html.SerializerTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.html.SerializerTest', function (
+  success,
+  failure
+) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('Basic serialization', function () {
     const serializer = Serializer();
 
-    LegacyUnit.equal(serializer.serialize(DomParser().parse('text<text&')), 'text&lt;text&amp;');
+    LegacyUnit.equal(
+      serializer.serialize(DomParser().parse('text<text&')),
+      'text&lt;text&amp;'
+    );
     LegacyUnit.equal(
       serializer.serialize(DomParser().parse('<B>text</B><IMG src="1.gif">')),
       '<strong>text</strong><img src="1.gif" />'
     );
-    LegacyUnit.equal(serializer.serialize(DomParser().parse('<!-- comment -->')), '<!-- comment -->');
-    LegacyUnit.equal(serializer.serialize(DomParser().parse('<![CDATA[cdata]]>', { format: 'xml' })), '<![CDATA[cdata]]>');
-    LegacyUnit.equal(serializer.serialize(DomParser().parse('<?xml attr="value" ?>', { format: 'xml' })), '<?xml attr="value" ?>');
-    LegacyUnit.equal(serializer.serialize(DomParser().parse('<!DOCTYPE html>')), '<!DOCTYPE html>');
+    LegacyUnit.equal(
+      serializer.serialize(DomParser().parse('<!-- comment -->')),
+      '<!-- comment -->'
+    );
+    LegacyUnit.equal(
+      serializer.serialize(
+        DomParser().parse('<![CDATA[cdata]]>', { format: 'xml' })
+      ),
+      '<![CDATA[cdata]]>'
+    );
+    LegacyUnit.equal(
+      serializer.serialize(
+        DomParser().parse('<?xml attr="value" ?>', { format: 'xml' })
+      ),
+      '<?xml attr="value" ?>'
+    );
+    LegacyUnit.equal(
+      serializer.serialize(DomParser().parse('<!DOCTYPE html>')),
+      '<!DOCTYPE html>'
+    );
   });
 
   suite.test('Sorting of attributes', function () {
@@ -31,17 +53,29 @@ UnitTest.asynctest('browser.tinymce.core.html.SerializerTest', function (success
     );
   });
 
-  suite.test('Serialize with validate: true, when parsing with validate:false bug', function () {
-    const schema = Schema({ valid_elements: 'b' });
-    const serializer = Serializer({}, schema);
+  suite.test(
+    'Serialize with validate: true, when parsing with validate:false bug',
+    function () {
+      const schema = Schema({ valid_elements: 'b' });
+      const serializer = Serializer({}, schema);
 
-    LegacyUnit.equal(
-      serializer.serialize(DomParser({ validate: false }, schema).parse('<b a="1" b="2">a</b><i a="1" b="2">b</i>')),
-      '<b a="1" b="2">a</b><i a="1" b="2">b</i>'
-    );
-  });
+      LegacyUnit.equal(
+        serializer.serialize(
+          DomParser({ validate: false }, schema).parse(
+            '<b a="1" b="2">a</b><i a="1" b="2">b</i>'
+          )
+        ),
+        '<b a="1" b="2">a</b><i a="1" b="2">b</i>'
+      );
+    }
+  );
 
-  Pipeline.async({}, suite.toSteps({}), function () {
-    success();
-  }, failure);
+  Pipeline.async(
+    {},
+    suite.toSteps({}),
+    function () {
+      success();
+    },
+    failure
+  );
 });

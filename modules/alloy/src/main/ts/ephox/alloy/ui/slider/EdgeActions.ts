@@ -20,12 +20,18 @@ const xyValue = (x: number, y: number) => ({
   y: Fun.constant(y)
 });
 
-const fireSliderChange = (component: AlloyComponent, value: SliderValue): void => {
+const fireSliderChange = (
+  component: AlloyComponent,
+  value: SliderValue
+): void => {
   AlloyTriggers.emitWith(component, ModelCommon.sliderChangeEvent(), { value });
 };
 
 // North West XY
-const setToTLEdgeXY = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
+const setToTLEdgeXY = (
+  edge: AlloyComponent,
+  detail: TwoDSliderDetail
+): void => {
   fireSliderChange(edge, xyValue(min1X(detail), min1Y(detail)));
 };
 
@@ -40,7 +46,10 @@ const setToTEdgeXY = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
 };
 
 // North East XY
-const setToTREdgeXY = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
+const setToTREdgeXY = (
+  edge: AlloyComponent,
+  detail: TwoDSliderDetail
+): void => {
   fireSliderChange(edge, xyValue(max1X(detail), min1Y(detail)));
 };
 
@@ -55,7 +64,10 @@ const setToREdgeXY = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
 };
 
 // South East XY
-const setToBREdgeXY = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
+const setToBREdgeXY = (
+  edge: AlloyComponent,
+  detail: TwoDSliderDetail
+): void => {
   fireSliderChange(edge, xyValue(max1X(detail), max1Y(detail)));
 };
 
@@ -70,7 +82,10 @@ const setToBEdgeXY = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
 };
 
 // South West XY
-const setToBLEdgeXY = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
+const setToBLEdgeXY = (
+  edge: AlloyComponent,
+  detail: TwoDSliderDetail
+): void => {
   fireSliderChange(edge, xyValue(min1X(detail), max1Y(detail)));
 };
 
@@ -96,5 +111,5 @@ export {
   setToBEdgeXY,
   setToBLEdgeXY,
   setToLEdge,
-  setToLEdgeXY,
+  setToLEdgeXY
 };

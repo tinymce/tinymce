@@ -5,17 +5,22 @@ import * as Touches from '../touch/Touches';
 import { Chain } from './Chain';
 import * as UiFinder from './UiFinder';
 
-const cTrigger = (selector: string, action: (ele: Element<any>) => void) => Chain.async<Element, Element>((container, next, die) => {
-  UiFinder.findIn(container, selector).fold(
-    () => die('Could not find element: ' + selector),
-    (ele) => {
-      action(ele);
-      next(container);
-    }
-  );
-});
+const cTrigger = (selector: string, action: (ele: Element<any>) => void) =>
+  Chain.async<Element, Element>((container, next, die) => {
+    UiFinder.findIn(container, selector).fold(
+      () => die('Could not find element: ' + selector),
+      (ele) => {
+        action(ele);
+        next(container);
+      }
+    );
+  });
 
-const sTriggerWith = <T>(container: Element<any>, selector: string, action: (ele: Element<any>) => void) => Chain.asStep<T, Element>(container, [ cTrigger(selector, action) ]);
+const sTriggerWith = <T>(
+  container: Element<any>,
+  selector: string,
+  action: (ele: Element<any>) => void
+) => Chain.asStep<T, Element>(container, [cTrigger(selector, action)]);
 
 const trueTap = (elem: Element<any>) => {
   // The closest event queue to a true tap event
@@ -31,17 +36,23 @@ const tap = (elem: Element<any>) => {
 
 const sTap = <T>(element: Element<any>) => Step.sync<T>(() => tap(element));
 
-const sTrueTapOn = <T>(container: Element<any>, selector: string) => sTriggerWith<T>(container, selector, trueTap);
+const sTrueTapOn = <T>(container: Element<any>, selector: string) =>
+  sTriggerWith<T>(container, selector, trueTap);
 
-const sTapOn = <T>(container: Element<any>, selector: string) => sTriggerWith<T>(container, selector, tap);
+const sTapOn = <T>(container: Element<any>, selector: string) =>
+  sTriggerWith<T>(container, selector, tap);
 
-const cTapOn = (selector: string): Chain<Element, Element> => cTrigger(selector, tap);
+const cTapOn = (selector: string): Chain<Element, Element> =>
+  cTrigger(selector, tap);
 
-const cTouchStartAt = (dx: number, dy: number) => Chain.op(Touches.touchstartAt(dx, dy));
+const cTouchStartAt = (dx: number, dy: number) =>
+  Chain.op(Touches.touchstartAt(dx, dy));
 
-const cTouchEndAt = (dx: number, dy: number) => Chain.op(Touches.touchendAt(dx, dy));
+const cTouchEndAt = (dx: number, dy: number) =>
+  Chain.op(Touches.touchendAt(dx, dy));
 
-const cTouchMoveTo = (dx: number, dy: number) => Chain.op(Touches.touchmoveTo(dx, dy));
+const cTouchMoveTo = (dx: number, dy: number) =>
+  Chain.op(Touches.touchmoveTo(dx, dy));
 
 const point = Touches.point;
 
@@ -53,11 +64,9 @@ const cTouchEnd = Chain.op(Touches.touchend);
 
 export {
   point,
-
   sTap,
   sTapOn,
   sTrueTapOn,
-
   cTap,
   cTapOn,
   cTrueTap,

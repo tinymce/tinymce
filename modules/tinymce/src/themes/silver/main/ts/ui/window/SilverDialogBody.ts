@@ -5,7 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, Behaviour, Focusing, Keying, ModalDialog, Reflecting, Tabstopping } from '@ephox/alloy';
+import {
+  AlloySpec,
+  Behaviour,
+  Focusing,
+  Keying,
+  ModalDialog,
+  Reflecting,
+  Tabstopping
+} from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Fun, Option } from '@ephox/katamari';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
@@ -22,26 +30,28 @@ type WindowBodySpec = {
 
 // ariaAttrs is being passed through to silver inline dialog
 // from the WindowManager as a property of 'params'
-const renderBody = (spec: WindowBodySpec, id: Option<string>, backstage: UiFactoryBackstage, ariaAttrs: boolean): AlloySpec => {
+const renderBody = (
+  spec: WindowBodySpec,
+  id: Option<string>,
+  backstage: UiFactoryBackstage,
+  ariaAttrs: boolean
+): AlloySpec => {
   const renderComponents = (incoming: WindowBodySpec) => {
     switch (incoming.body.type) {
       case 'tabpanel': {
-        return [
-          renderTabPanel(incoming.body, backstage)
-        ];
+        return [renderTabPanel(incoming.body, backstage)];
       }
 
       default: {
-        return [
-          renderBodyPanel(incoming.body, backstage)
-        ];
+        return [renderBodyPanel(incoming.body, backstage)];
       }
     }
   };
 
-  const updateState = (_comp, incoming: WindowBodySpec) => Option.some({
-    isTabPanel: () => incoming.body.type === 'tabpanel'
-  });
+  const updateState = (_comp, incoming: WindowBodySpec) =>
+    Option.some({
+      isTabPanel: () => incoming.body.type === 'tabpanel'
+    });
 
   const ariaAttributes = {
     'aria-live': 'polite'
@@ -50,13 +60,13 @@ const renderBody = (spec: WindowBodySpec, id: Option<string>, backstage: UiFacto
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-dialog__content-js' ],
+      classes: ['tox-dialog__content-js'],
       attributes: {
-        ...id.map((x): {id?: string} => ({ id: x })).getOr({}),
-        ...ariaAttrs ? ariaAttributes : {}
+        ...id.map((x): { id?: string } => ({ id: x })).getOr({}),
+        ...(ariaAttrs ? ariaAttributes : {})
       }
     },
-    components: [ ],
+    components: [],
     behaviours: Behaviour.derive([
       ComposingConfigs.childAt(0),
       Reflecting.config({
@@ -69,26 +79,32 @@ const renderBody = (spec: WindowBodySpec, id: Option<string>, backstage: UiFacto
   };
 };
 
-const renderInlineBody = (spec: WindowBodySpec, contentId: string, backstage: UiFactoryBackstage, ariaAttrs: boolean) => renderBody(spec, Option.some(contentId), backstage, ariaAttrs);
+const renderInlineBody = (
+  spec: WindowBodySpec,
+  contentId: string,
+  backstage: UiFactoryBackstage,
+  ariaAttrs: boolean
+) => renderBody(spec, Option.some(contentId), backstage, ariaAttrs);
 
-const renderModalBody = (spec: WindowBodySpec, backstage: UiFactoryBackstage) => {
+const renderModalBody = (
+  spec: WindowBodySpec,
+  backstage: UiFactoryBackstage
+) => {
   const bodySpec = renderBody(spec, Option.none(), backstage, false);
-  return ModalDialog.parts().body(
-    bodySpec
-  );
+  return ModalDialog.parts().body(bodySpec);
 };
 
 const renderIframeBody = (spec: Types.UrlDialog.UrlDialog) => {
   const bodySpec = {
     dom: {
       tag: 'div',
-      classes: [ 'tox-dialog__content-js' ]
+      classes: ['tox-dialog__content-js']
     },
     components: [
       {
         dom: {
           tag: 'div',
-          classes: [ 'tox-dialog__body-iframe' ]
+          classes: ['tox-dialog__body-iframe']
         },
         components: [
           NavigableObject.craft({
@@ -99,8 +115,8 @@ const renderIframeBody = (spec: Types.UrlDialog.UrlDialog) => {
               }
             },
             behaviours: Behaviour.derive([
-              Tabstopping.config({ }),
-              Focusing.config({ })
+              Tabstopping.config({}),
+              Focusing.config({})
             ])
           })
         ]
@@ -114,13 +130,7 @@ const renderIframeBody = (spec: Types.UrlDialog.UrlDialog) => {
     ])
   };
 
-  return ModalDialog.parts().body(
-    bodySpec
-  );
+  return ModalDialog.parts().body(bodySpec);
 };
 
-export {
-  renderInlineBody,
-  renderModalBody,
-  renderIframeBody
-};
+export { renderInlineBody, renderModalBody, renderIframeBody };

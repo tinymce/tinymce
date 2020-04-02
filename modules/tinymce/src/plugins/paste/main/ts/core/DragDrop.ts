@@ -15,7 +15,11 @@ import { Clipboard } from '../api/Clipboard';
 import { MouseEvent, DataTransfer, Range } from '@ephox/dom-globals';
 
 const getCaretRangeFromEvent = function (editor: Editor, e: MouseEvent) {
-  return RangeUtils.getCaretRangeFromPoint(e.clientX, e.clientY, editor.getDoc());
+  return RangeUtils.getCaretRangeFromPoint(
+    e.clientX,
+    e.clientY,
+    editor.getDoc()
+  );
 };
 
 const isPlainTextFileUrl = function (content: DataTransfer) {
@@ -28,7 +32,11 @@ const setFocusedRange = function (editor: Editor, rng: Range) {
   editor.selection.setRng(rng);
 };
 
-const setup = function (editor: Editor, clipboard: Clipboard, draggingInternallyState) {
+const setup = function (
+  editor: Editor,
+  clipboard: Clipboard,
+  draggingInternallyState
+) {
   // Block all drag/drop events
   if (Settings.shouldBlockDrop(editor)) {
     editor.on('dragend dragover draggesture dragdrop drop drag', function (e) {
@@ -58,14 +66,24 @@ const setup = function (editor: Editor, clipboard: Clipboard, draggingInternally
     }
 
     dropContent = clipboard.getDataTransferItems(e.dataTransfer);
-    const internal = clipboard.hasContentType(dropContent, InternalHtml.internalHtmlMime());
+    const internal = clipboard.hasContentType(
+      dropContent,
+      InternalHtml.internalHtmlMime()
+    );
 
-    if ((!clipboard.hasHtmlOrText(dropContent) || isPlainTextFileUrl(dropContent)) && clipboard.pasteImageData(e, rng)) {
+    if (
+      (!clipboard.hasHtmlOrText(dropContent) ||
+        isPlainTextFileUrl(dropContent)) &&
+      clipboard.pasteImageData(e, rng)
+    ) {
       return;
     }
 
     if (rng && Settings.shouldFilterDrop(editor)) {
-      let content = dropContent['mce-internal'] || dropContent['text/html'] || dropContent['text/plain'];
+      let content =
+        dropContent['mce-internal'] ||
+        dropContent['text/html'] ||
+        dropContent['text/plain'];
 
       if (content) {
         e.preventDefault();
@@ -97,7 +115,10 @@ const setup = function (editor: Editor, clipboard: Clipboard, draggingInternally
   });
 
   editor.on('dragover dragend', function (e) {
-    if (Settings.shouldPasteDataImages(editor) && draggingInternallyState.get() === false) {
+    if (
+      Settings.shouldPasteDataImages(editor) &&
+      draggingInternallyState.get() === false
+    ) {
       e.preventDefault();
       setFocusedRange(editor, getCaretRangeFromEvent(editor, e));
     }
@@ -108,6 +129,4 @@ const setup = function (editor: Editor, clipboard: Clipboard, draggingInternally
   });
 };
 
-export {
-  setup
-};
+export { setup };

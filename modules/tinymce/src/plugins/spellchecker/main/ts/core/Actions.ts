@@ -29,8 +29,17 @@ const getTextMatcher = function (editor, textMatcherState) {
   return textMatcherState.get();
 };
 
-const defaultSpellcheckCallback = function (editor: Editor, pluginUrl: string, currentLanguageState: Cell<string>) {
-  return function (method: string, text: string, doneCallback: Function, errorCallback: Function) {
+const defaultSpellcheckCallback = function (
+  editor: Editor,
+  pluginUrl: string,
+  currentLanguageState: Cell<string>
+) {
+  return function (
+    method: string,
+    text: string,
+    doneCallback: Function,
+    errorCallback: Function
+  ) {
     const data = { method, lang: currentLanguageState.get() };
     let postData = '';
 
@@ -52,7 +61,9 @@ const defaultSpellcheckCallback = function (editor: Editor, pluginUrl: string, c
         const parseResult = JSON.parse(result);
 
         if (!parseResult) {
-          const message = editor.translate(`Server response wasn't proper JSON.`);
+          const message = editor.translate(
+            `Server response wasn't proper JSON.`
+          );
           errorCallback(message);
         } else if (parseResult.error) {
           errorCallback(parseResult.error);
@@ -61,7 +72,8 @@ const defaultSpellcheckCallback = function (editor: Editor, pluginUrl: string, c
         }
       },
       error() {
-        const message = editor.translate('The spelling service was not found: (') +
+        const message =
+          editor.translate('The spelling service was not found: (') +
           Settings.getRpcUrl(editor) +
           editor.translate(')');
         errorCallback(message);
@@ -70,13 +82,36 @@ const defaultSpellcheckCallback = function (editor: Editor, pluginUrl: string, c
   };
 };
 
-const sendRpcCall = function (editor: Editor, pluginUrl: string, currentLanguageState: Cell<string>, name: string, data: string, successCallback: Function, errorCallback?: Function) {
+const sendRpcCall = function (
+  editor: Editor,
+  pluginUrl: string,
+  currentLanguageState: Cell<string>,
+  name: string,
+  data: string,
+  successCallback: Function,
+  errorCallback?: Function
+) {
   const userSpellcheckCallback = Settings.getSpellcheckerCallback(editor);
-  const spellCheckCallback = userSpellcheckCallback ? userSpellcheckCallback : defaultSpellcheckCallback(editor, pluginUrl, currentLanguageState);
-  spellCheckCallback.call(editor.plugins.spellchecker, name, data, successCallback, errorCallback);
+  const spellCheckCallback = userSpellcheckCallback
+    ? userSpellcheckCallback
+    : defaultSpellcheckCallback(editor, pluginUrl, currentLanguageState);
+  spellCheckCallback.call(
+    editor.plugins.spellchecker,
+    name,
+    data,
+    successCallback,
+    errorCallback
+  );
 };
 
-const spellcheck = function (editor: Editor, pluginUrl: string, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, lastSuggestionsState: Cell<LastSuggestion>, currentLanguageState: Cell<string>) {
+const spellcheck = function (
+  editor: Editor,
+  pluginUrl: string,
+  startedState: Cell<boolean>,
+  textMatcherState: Cell<DomTextMatcher>,
+  lastSuggestionsState: Cell<LastSuggestion>,
+  currentLanguageState: Cell<string>
+) {
   if (finish(editor, startedState, textMatcherState)) {
     return;
   }
@@ -88,38 +123,81 @@ const spellcheck = function (editor: Editor, pluginUrl: string, startedState: Ce
   };
 
   const successCallback = function (data: Data) {
-    markErrors(editor, startedState, textMatcherState, lastSuggestionsState, data);
+    markErrors(
+      editor,
+      startedState,
+      textMatcherState,
+      lastSuggestionsState,
+      data
+    );
   };
 
   editor.setProgressState(true);
-  sendRpcCall(editor, pluginUrl, currentLanguageState, 'spellcheck', getTextMatcher(editor, textMatcherState).text, successCallback, errorCallback);
+  sendRpcCall(
+    editor,
+    pluginUrl,
+    currentLanguageState,
+    'spellcheck',
+    getTextMatcher(editor, textMatcherState).text,
+    successCallback,
+    errorCallback
+  );
   editor.focus();
 };
 
-const checkIfFinished = function (editor: Editor, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>) {
+const checkIfFinished = function (
+  editor: Editor,
+  startedState: Cell<boolean>,
+  textMatcherState: Cell<DomTextMatcher>
+) {
   if (!editor.dom.select('span.mce-spellchecker-word').length) {
     finish(editor, startedState, textMatcherState);
   }
 };
 
-const addToDictionary = function (editor: Editor, pluginUrl: string, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, word: string, spans: Element[]) {
+const addToDictionary = function (
+  editor: Editor,
+  pluginUrl: string,
+  startedState: Cell<boolean>,
+  textMatcherState: Cell<DomTextMatcher>,
+  currentLanguageState: Cell<string>,
+  word: string,
+  spans: Element[]
+) {
   editor.setProgressState(true);
 
-  sendRpcCall(editor, pluginUrl, currentLanguageState, 'addToDictionary', word, () => {
-    editor.setProgressState(false);
-    editor.dom.remove(spans, true);
-    checkIfFinished(editor, startedState, textMatcherState);
-  }, (message) => {
-    editor.notificationManager.open({ text: message, type: 'error' });
-    editor.setProgressState(false);
-  });
+  sendRpcCall(
+    editor,
+    pluginUrl,
+    currentLanguageState,
+    'addToDictionary',
+    word,
+    () => {
+      editor.setProgressState(false);
+      editor.dom.remove(spans, true);
+      checkIfFinished(editor, startedState, textMatcherState);
+    },
+    (message) => {
+      editor.notificationManager.open({ text: message, type: 'error' });
+      editor.setProgressState(false);
+    }
+  );
 };
 
-const ignoreWord = function (editor: Editor, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, word: string, spans: Element[], all?: boolean) {
+const ignoreWord = function (
+  editor: Editor,
+  startedState: Cell<boolean>,
+  textMatcherState: Cell<DomTextMatcher>,
+  word: string,
+  spans: Element[],
+  all?: boolean
+) {
   editor.selection.collapse();
 
   if (all) {
-    Tools.each(editor.dom.select('span.mce-spellchecker-word'), function (span) {
+    Tools.each(editor.dom.select('span.mce-spellchecker-word'), function (
+      span
+    ) {
       if (span.getAttribute('data-mce-word') === word) {
         editor.dom.remove(span, true);
       }
@@ -131,7 +209,11 @@ const ignoreWord = function (editor: Editor, startedState: Cell<boolean>, textMa
   checkIfFinished(editor, startedState, textMatcherState);
 };
 
-const finish = function (editor: Editor, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>) {
+const finish = function (
+  editor: Editor,
+  startedState: Cell<boolean>,
+  textMatcherState: Cell<DomTextMatcher>
+) {
   const bookmark = editor.selection.getBookmark();
   getTextMatcher(editor, textMatcherState).reset();
   editor.selection.moveToBookmark(bookmark);
@@ -182,7 +264,13 @@ export interface LastSuggestion {
   hasDictionarySupport: boolean;
 }
 
-const markErrors = function (editor: Editor, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, lastSuggestionsState: Cell<LastSuggestion>, data: Data) {
+const markErrors = function (
+  editor: Editor,
+  startedState: Cell<boolean>,
+  textMatcherState: Cell<DomTextMatcher>,
+  lastSuggestionsState: Cell<LastSuggestion>,
+  data: Data
+) {
   const hasDictionarySupport = !!data.dictionary;
   const suggestions = data.words;
 
@@ -202,16 +290,19 @@ const markErrors = function (editor: Editor, startedState: Cell<boolean>, textMa
 
   const bookmark = editor.selection.getBookmark();
 
-  getTextMatcher(editor, textMatcherState).find(Settings.getSpellcheckerWordcharPattern(editor)).filter(function (match) {
-    return !!suggestions[match.text];
-  }).wrap(function (match) {
-    return editor.dom.create('span', {
-      'class': 'mce-spellchecker-word',
-      'aria-invalid': 'spelling',
-      'data-mce-bogus': 1,
-      'data-mce-word': match.text
+  getTextMatcher(editor, textMatcherState)
+    .find(Settings.getSpellcheckerWordcharPattern(editor))
+    .filter(function (match) {
+      return !!suggestions[match.text];
+    })
+    .wrap(function (match) {
+      return editor.dom.create('span', {
+        'class': 'mce-spellchecker-word',
+        'aria-invalid': 'spelling',
+        'data-mce-bogus': 1,
+        'data-mce-word': match.text
+      });
     });
-  });
 
   editor.selection.moveToBookmark(bookmark);
 

@@ -13,6 +13,4 @@ const Tooltipping: TooltippingBehaviour = Behaviour.create({
   apis: TooltippingApis
 });
 
-export {
-  Tooltipping
-};
+export { Tooltipping };

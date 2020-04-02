@@ -8,13 +8,24 @@ import Editor from 'tinymce/core/api/Editor';
 declare let tinymce: any;
 
 export default function () {
-  const makeSidebar = (ed: Editor, name: string, background: string, width: number) => {
+  const makeSidebar = (
+    ed: Editor,
+    name: string,
+    background: string,
+    width: number
+  ) => {
     ed.ui.registry.addSidebar(name, {
       icon: 'comment',
       tooltip: 'Tooltip for ' + name,
       onSetup: (api) => {
         console.log('onSetup ' + name);
-        const box = Element.fromHtml('<div style="width: ' + width + 'px; background: ' + background + ';"></div>');
+        const box = Element.fromHtml(
+          '<div style="width: ' +
+            width +
+            'px; background: ' +
+            background +
+            ';"></div>'
+        );
         api.element().appendChild(box.dom());
         return () => {
           api.element().removeChild(box.dom());
@@ -25,7 +36,7 @@ export default function () {
       },
       onHide: (_api) => {
         console.log('onHide ' + name);
-      },
+      }
     });
   };
 
@@ -36,7 +47,7 @@ export default function () {
     plugins: [
       'lists', // Required for list functionality (commands),
       'autolink', // Required for turning pasted text into hyperlinks
-      'autosave', // Required to prevent users losing content when they press back
+      'autosave' // Required to prevent users losing content when they press back
     ],
     // statusbar: false,
     resize: 'both',

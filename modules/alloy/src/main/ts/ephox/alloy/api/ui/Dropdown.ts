@@ -8,7 +8,12 @@ import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import { SimulatedEvent } from '../../events/SimulatedEvent';
 import * as ButtonBase from '../../ui/common/ButtonBase';
 import * as DropdownSchema from '../../ui/schema/DropdownSchema';
-import { DropdownApis, DropdownDetail, DropdownSketcher, DropdownSpec } from '../../ui/types/DropdownTypes';
+import {
+  DropdownApis,
+  DropdownDetail,
+  DropdownSketcher,
+  DropdownSpec
+} from '../../ui/types/DropdownTypes';
 import { Coupling } from '../behaviour/Coupling';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
@@ -20,8 +25,14 @@ import * as Sketcher from './Sketcher';
 import * as TieredMenu from './TieredMenu';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, components: AlloySpec[], _spec: DropdownSpec, externals): SketchSpec => {
-  const lookupAttr = (attr: string) => Obj.get(detail.dom, 'attributes').bind((attrs) => Obj.get(attrs, attr));
+const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (
+  detail,
+  components: AlloySpec[],
+  _spec: DropdownSpec,
+  externals
+): SketchSpec => {
+  const lookupAttr = (attr: string) =>
+    Obj.get(detail.dom, 'attributes').bind((attrs) => Obj.get(attrs, attr));
 
   const switchToMenu = (sandbox: AlloyComponent) => {
     Sandboxing.getState(sandbox).each((tmenu) => {
@@ -31,24 +42,52 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
 
   const action = (component: AlloyComponent): void => {
     const onOpenSync = switchToMenu;
-    DropdownUtils.togglePopup(detail, (x) => x, component, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
+    DropdownUtils.togglePopup(
+      detail,
+      (x) => x,
+      component,
+      externals,
+      onOpenSync,
+      DropdownUtils.HighlightOnOpen.HighlightFirst
+    ).get(Fun.noop);
   };
 
   const apis: DropdownApis = {
     expand: (comp) => {
-      if (! Toggling.isOn(comp)) {
-        DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightNone).get(Fun.noop);
+      if (!Toggling.isOn(comp)) {
+        DropdownUtils.togglePopup(
+          detail,
+          (x) => x,
+          comp,
+          externals,
+          Fun.noop,
+          DropdownUtils.HighlightOnOpen.HighlightNone
+        ).get(Fun.noop);
       }
     },
     open: (comp) => {
-      if (! Toggling.isOn(comp)) {
-        DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
+      if (!Toggling.isOn(comp)) {
+        DropdownUtils.togglePopup(
+          detail,
+          (x) => x,
+          comp,
+          externals,
+          Fun.noop,
+          DropdownUtils.HighlightOnOpen.HighlightFirst
+        ).get(Fun.noop);
       }
     },
     isOpen: Toggling.isOn,
     close: (comp) => {
       if (Toggling.isOn(comp)) {
-        DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
+        DropdownUtils.togglePopup(
+          detail,
+          (x) => x,
+          comp,
+          externals,
+          Fun.noop,
+          DropdownUtils.HighlightOnOpen.HighlightFirst
+        ).get(Fun.noop);
       }
     },
     // If we are open, refresh the menus in the tiered menu system
@@ -59,7 +98,10 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     }
   };
 
-  const triggerExecute = (comp: AlloyComponent, _se: SimulatedEvent<EventArgs>): Option<boolean> => {
+  const triggerExecute = (
+    comp: AlloyComponent,
+    _se: SimulatedEvent<EventArgs>
+  ): Option<boolean> => {
     AlloyTriggers.emitExecute(comp);
     return Option.some<boolean>(true);
   };
@@ -68,60 +110,63 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     uid: detail.uid,
     dom: detail.dom,
     components,
-    behaviours: SketchBehaviours.augment(
-      detail.dropdownBehaviours,
-      [
-        Toggling.config({
-          toggleClass: detail.toggleClass,
-          aria: {
-            mode: 'expanded'
+    behaviours: SketchBehaviours.augment(detail.dropdownBehaviours, [
+      Toggling.config({
+        toggleClass: detail.toggleClass,
+        aria: {
+          mode: 'expanded'
+        }
+      }),
+      Coupling.config({
+        others: {
+          sandbox(hotspot) {
+            return DropdownUtils.makeSandbox(detail, hotspot, {
+              onOpen() {
+                Toggling.on(hotspot);
+              },
+              onClose() {
+                Toggling.off(hotspot);
+              }
+            });
           }
-        }),
-        Coupling.config({
-          others: {
-            sandbox(hotspot) {
-              return DropdownUtils.makeSandbox(detail, hotspot, {
-                onOpen() { Toggling.on(hotspot); },
-                onClose() { Toggling.off(hotspot); }
-              });
-            }
+        }
+      }),
+      Keying.config({
+        mode: 'special',
+        onSpace: triggerExecute,
+        onEnter: triggerExecute,
+        onDown: (comp, _se): Option<boolean> => {
+          if (Dropdown.isOpen(comp)) {
+            const sandbox = Coupling.getCoupled(comp, 'sandbox');
+            switchToMenu(sandbox);
+          } else {
+            Dropdown.open(comp);
           }
-        }),
-        Keying.config({
-          mode: 'special',
-          onSpace: triggerExecute,
-          onEnter: triggerExecute,
-          onDown: (comp, _se): Option<boolean> => {
-            if (Dropdown.isOpen(comp)) {
-              const sandbox = Coupling.getCoupled(comp, 'sandbox');
-              switchToMenu(sandbox);
-            } else {
-              Dropdown.open(comp);
-            }
 
+          return Option.some<boolean>(true);
+        },
+        onEscape: (comp, _se): Option<boolean> => {
+          if (Dropdown.isOpen(comp)) {
+            Dropdown.close(comp);
             return Option.some<boolean>(true);
-          },
-          onEscape: (comp, _se): Option<boolean> => {
-            if (Dropdown.isOpen(comp)) {
-              Dropdown.close(comp);
-              return Option.some<boolean>(true);
-            } else {
-              return Option.none();
-            }
+          } else {
+            return Option.none();
           }
-        }),
-        Focusing.config({ })
-      ]
-    ),
+        }
+      }),
+      Focusing.config({})
+    ]),
 
-    events: ButtonBase.events(
-      Option.some(action)
-    ),
+    events: ButtonBase.events(Option.some(action)),
 
     eventOrder: {
       ...detail.eventOrder,
       // Order, the button state is toggled first, so assumed !selected means close.
-      [SystemEvents.execute()]: [ 'disabling', 'toggling', 'alloy.base.behaviour' ]
+      [SystemEvents.execute()]: [
+        'disabling',
+        'toggling',
+        'alloy.base.behaviour'
+      ]
     },
 
     apis,
@@ -129,14 +174,23 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     domModification: {
       attributes: {
         'aria-haspopup': 'true',
-        ...detail.role.fold(() => ({}), (role) => ({ role })),
-        ...detail.dom.tag === 'button' ? { type: lookupAttr('type').getOr('button') } : {}
+        ...detail.role.fold(
+          () => ({}),
+          (role) => ({ role })
+        ),
+        ...(detail.dom.tag === 'button'
+          ? { type: lookupAttr('type').getOr('button') }
+          : {})
       }
     }
   };
 };
 
-const Dropdown: DropdownSketcher = Sketcher.composite<DropdownSpec, DropdownDetail, DropdownApis>({
+const Dropdown: DropdownSketcher = Sketcher.composite<
+  DropdownSpec,
+  DropdownDetail,
+  DropdownApis
+>({
   name: 'Dropdown',
   configFields: DropdownSchema.schema(),
   partFields: DropdownSchema.parts(),
@@ -150,6 +204,4 @@ const Dropdown: DropdownSketcher = Sketcher.composite<DropdownSpec, DropdownDeta
   }
 });
 
-export {
-  Dropdown
-};
+export { Dropdown };

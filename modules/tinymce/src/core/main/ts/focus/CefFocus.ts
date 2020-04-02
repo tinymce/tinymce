@@ -19,8 +19,13 @@ const setup = function (editor: Editor) {
     // so focus goes to the dialog's buttons correctly.
     if (!editor.removed && editor.getBody().contains(document.activeElement)) {
       const rng = editor.selection.getRng();
-      if (rng.collapsed) { // see TINY-1479
-        const caretRange = CefUtils.renderRangeCaret(editor, editor.selection.getRng(), false);
+      if (rng.collapsed) {
+        // see TINY-1479
+        const caretRange = CefUtils.renderRangeCaret(
+          editor,
+          editor.selection.getRng(),
+          false
+        );
         editor.selection.setRng(caretRange);
       }
     }
@@ -35,6 +40,4 @@ const setup = function (editor: Editor) {
   });
 };
 
-export {
-  setup
-};
+export { setup };

@@ -9,6 +9,4 @@ const fireVisualChars = function (editor, state) {
   return editor.fire('VisualChars', { state });
 };
 
-export {
-  fireVisualChars
-};
+export { fireVisualChars };

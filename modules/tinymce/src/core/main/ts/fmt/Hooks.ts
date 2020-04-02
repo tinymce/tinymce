@@ -17,7 +17,9 @@ import Editor from '../api/Editor';
  * @class tinymce.fmt.Hooks
  */
 
-const postProcessHooks = {}, filter = ArrUtils.filter, each = ArrUtils.each;
+const postProcessHooks = {},
+  filter = ArrUtils.filter,
+  each = ArrUtils.each;
 
 const addPostProcessHook = function (name, hook) {
   const hooks = postProcessHooks[name];
@@ -40,7 +42,10 @@ addPostProcessHook('pre', function (editor: Editor) {
   let isPre, blocks;
 
   const hasPreSibling = function (pre) {
-    return isPre(pre.previousSibling) && ArrUtils.indexOf(blocks, pre.previousSibling) !== -1;
+    return (
+      isPre(pre.previousSibling) &&
+      ArrUtils.indexOf(blocks, pre.previousSibling) !== -1
+    );
   };
 
   const joinPre = function (pre1, pre2) {
@@ -48,7 +53,7 @@ addPostProcessHook('pre', function (editor: Editor) {
     DomQuery(pre1).append('<br><br>').append(pre2.childNodes);
   };
 
-  isPre = NodeType.matchNodeNames([ 'pre' ]);
+  isPre = NodeType.matchNodeNames(['pre']);
 
   if (!rng.collapsed) {
     blocks = editor.selection.getSelectedBlocks();
@@ -59,6 +64,4 @@ addPostProcessHook('pre', function (editor: Editor) {
   }
 });
 
-export {
-  postProcess
-};
+export { postProcess };

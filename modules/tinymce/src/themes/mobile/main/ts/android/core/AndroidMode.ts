@@ -15,7 +15,6 @@ import * as Styles from '../../style/Styles';
 import * as MetaViewport from '../../touch/view/MetaViewport';
 
 const create = function (platform, mask) {
-
   const meta = MetaViewport.tag();
   const androidApi = Singleton.api();
 
@@ -32,7 +31,10 @@ const create = function (platform, mask) {
     Class.add(platform.body, Styles.resolve('android-scroll-reload'));
 
     androidApi.set(
-      AndroidSetup.setup(platform.win, PlatformEditor.getWin(platform.editor).getOrDie('no'))
+      AndroidSetup.setup(
+        platform.win,
+        PlatformEditor.getWin(platform.editor).getOrDie('no')
+      )
     );
 
     PlatformEditor.getActiveApi(platform.editor).each(function (editorApi) {
@@ -64,6 +66,4 @@ const create = function (platform, mask) {
   };
 };
 
-export {
-  create
-};
+export { create };

@@ -68,8 +68,4 @@ function getNaturalImageSize(img) {
   };
 }
 
-export {
-  getImageSize,
-  setImageSize,
-  getNaturalImageSize
-};
+export { getImageSize, setImageSize, getNaturalImageSize };

@@ -17,9 +17,9 @@ import * as SplitRange from '../../selection/SplitRange';
 import DOMUtils from './DOMUtils';
 
 interface RangeUtils {
-  walk (rng: Range, callback: (nodes: Node[]) => void): void;
-  split (rng: Range): RangeLikeObject;
-  normalize (rng: Range): boolean;
+  walk(rng: Range, callback: (nodes: Node[]) => void): void;
+  split(rng: Range): RangeLikeObject;
+  normalize(rng: Range): boolean;
 }
 
 /**
@@ -96,9 +96,15 @@ namespace RangeUtils {
    * @param {Document} doc Document that x/y are relative to
    * @returns {Range} caret range
    */
-  export const getCaretRangeFromPoint = CaretRangeFromPoint.fromPoint as (clientX: number, clientY: number, doc: Document) => Range;
+  export const getCaretRangeFromPoint = CaretRangeFromPoint.fromPoint as (
+    clientX: number,
+    clientY: number,
+    doc: Document
+  ) => Range;
 
-  export const getSelectedNode = RangeNodes.getSelectedNode as (range: Range) => Node;
+  export const getSelectedNode = RangeNodes.getSelectedNode as (
+    range: Range
+  ) => Node;
   export const getNode = RangeNodes.getNode;
 }
 

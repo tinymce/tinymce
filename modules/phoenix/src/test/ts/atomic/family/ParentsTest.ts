@@ -10,10 +10,7 @@ UnitTest.test('ParentsTest', function () {
         Gene('aa', '', [
           Gene('aaa', '', []),
           Gene('aab', '', [
-            Gene('aaba', '', [
-              Gene('aabaa', '', []),
-              Gene('aabab', '', [])
-            ])
+            Gene('aaba', '', [Gene('aabaa', '', []), Gene('aabab', '', [])])
           ])
         ]),
         Gene('ab', '', [
@@ -22,14 +19,10 @@ UnitTest.test('ParentsTest', function () {
           Gene('abc', '', [
             Gene('abca', '', []),
             Gene('abcb', '', []),
-            Gene('abcc', '', [
-              Gene('abcca', '', [])
-            ])
+            Gene('abcc', '', [Gene('abcca', '', [])])
           ])
         ]),
-        Gene('ac', '', [
-          Gene('aca', '', [])
-        ])
+        Gene('ac', '', [Gene('aca', '', [])])
       ]),
       Gene('b', '', [])
     ])

@@ -31,18 +31,32 @@ const getHeightValue = function (cell: Element) {
   });
 };
 
-const convert = function (cell: Element, number: number, getter: (e: Element) => number, setter: (e: Element, value: number) => void) {
-  const newSize = TableLookup.table(cell).map(function (table) {
-    const total = getter(table);
-    return Math.floor((number / 100.0) * total);
-  }).getOr(number);
+const convert = function (
+  cell: Element,
+  number: number,
+  getter: (e: Element) => number,
+  setter: (e: Element, value: number) => void
+) {
+  const newSize = TableLookup.table(cell)
+    .map(function (table) {
+      const total = getter(table);
+      return Math.floor((number / 100.0) * total);
+    })
+    .getOr(number);
   setter(cell, newSize);
   return newSize;
 };
 
-const normalizePixelSize = function (value: string, cell: Element, getter: (e: Element) => number, setter: (e: Element, value: number) => void) {
+const normalizePixelSize = function (
+  value: string,
+  cell: Element,
+  getter: (e: Element) => number,
+  setter: (e: Element, value: number) => void
+) {
   const number = parseInt(value, 10);
-  return Strings.endsWith(value, '%') && Node.name(cell) !== 'table' ? convert(cell, number, getter, setter) : number;
+  return Strings.endsWith(value, '%') && Node.name(cell) !== 'table'
+    ? convert(cell, number, getter, setter)
+    : number;
 };
 
 const getTotalHeight = function (cell: Element) {
@@ -66,18 +80,28 @@ const getSpan = function (cell: Element, type: string) {
 export const getRawWidth = function (element: Element) {
   // Try to use the style width first, otherwise attempt to get attribute width
   const cssWidth = Css.getRaw(element, 'width');
-  return cssWidth.fold(function () {
-    return Option.from(Attr.get(element, 'width'));
-  }, function (width) {
-    return Option.some(width);
-  });
+  return cssWidth.fold(
+    function () {
+      return Option.from(Attr.get(element, 'width'));
+    },
+    function (width) {
+      return Option.some(width);
+    }
+  );
 };
 
-const normalizePercentageWidth = function (cellWidth: number, tableSize: TableSize) {
-  return cellWidth / tableSize.pixelWidth() * 100;
+const normalizePercentageWidth = function (
+  cellWidth: number,
+  tableSize: TableSize
+) {
+  return (cellWidth / tableSize.pixelWidth()) * 100;
 };
 
-const choosePercentageSize = function (element: Element, width: string, tableSize: TableSize) {
+const choosePercentageSize = function (
+  element: Element,
+  width: string,
+  tableSize: TableSize
+) {
   const percentMatch = rPercentageBasedSizeRegex.exec(width);
   if (percentMatch !== null) {
     return parseFloat(percentMatch[1]);
@@ -88,21 +112,31 @@ const choosePercentageSize = function (element: Element, width: string, tableSiz
 };
 
 // Get a percentage size for a percentage parent table
-export const getPercentageWidth = function (cell: Element, tableSize: TableSize) {
+export const getPercentageWidth = function (
+  cell: Element,
+  tableSize: TableSize
+) {
   const width = getRawWidth(cell);
-  return width.fold(function () {
-    const intWidth = Width.get(cell);
-    return normalizePercentageWidth(intWidth, tableSize);
-  }, function (w) {
-    return choosePercentageSize(cell, w, tableSize);
-  });
+  return width.fold(
+    function () {
+      const intWidth = Width.get(cell);
+      return normalizePercentageWidth(intWidth, tableSize);
+    },
+    function (w) {
+      return choosePercentageSize(cell, w, tableSize);
+    }
+  );
 };
 
 const normalizePixelWidth = function (cellWidth: number, tableSize: TableSize) {
-  return cellWidth / 100 * tableSize.pixelWidth();
+  return (cellWidth / 100) * tableSize.pixelWidth();
 };
 
-const choosePixelSize = function (element: Element, width: string, tableSize: TableSize) {
+const choosePixelSize = function (
+  element: Element,
+  width: string,
+  tableSize: TableSize
+) {
   const pixelMatch = rPixelBasedSizeRegex.exec(width);
   if (pixelMatch !== null) {
     return parseInt(pixelMatch[1], 10);
@@ -117,11 +151,14 @@ const choosePixelSize = function (element: Element, width: string, tableSize: Ta
 
 export const getPixelWidth = function (cell: Element, tableSize: TableSize) {
   const width = getRawWidth(cell);
-  return width.fold(function () {
-    return Width.get(cell);
-  }, function (w) {
-    return choosePixelSize(cell, w, tableSize);
-  });
+  return width.fold(
+    function () {
+      return Width.get(cell);
+    },
+    function (w) {
+      return choosePixelSize(cell, w, tableSize);
+    }
+  );
 };
 
 export const getHeight = function (cell: Element) {
@@ -143,7 +180,11 @@ export const getGenericWidth = function (cell: Element): Option<GenericWidth> {
   });
 };
 
-export const setGenericWidth = function (cell: Element, amount: number, unit: string) {
+export const setGenericWidth = function (
+  cell: Element,
+  amount: number,
+  unit: string
+) {
   Css.set(cell, 'width', amount + unit);
 };
 

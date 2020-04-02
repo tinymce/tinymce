@@ -1,12 +1,12 @@
 import { Adt, Strings } from '@ephox/katamari';
 
 export interface Size {
-  fold: <T> (
+  fold: <T>(
     invalid: (raw: string) => T,
     pixels: (value: number) => T,
     percent: (value: number) => T
   ) => T;
-  match: <T> (branches: {
+  match: <T>(branches: {
     invalid: (raw: string) => T;
     pixels: (value: number) => T;
     percent: (value: number) => T;
@@ -19,12 +19,16 @@ const adt: {
   pixels: (value: number) => Size;
   percent: (value: number) => Size;
 } = Adt.generate([
-  { invalid: [ 'raw' ] },
-  { pixels: [ 'value' ] },
-  { percent: [ 'value' ] }
+  { invalid: ['raw'] },
+  { pixels: ['value'] },
+  { percent: ['value'] }
 ]);
 
-const validateFor = function (suffix: string, type: (value: number) => Size, value: string) {
+const validateFor = function (
+  suffix: string,
+  type: (value: number) => Size,
+  value: string
+) {
   const rawAmount = value.substring(0, value.length - suffix.length);
   const amount = parseFloat(rawAmount);
   return rawAmount === amount.toString() ? type(amount) : adt.invalid(value);
@@ -42,5 +46,5 @@ const from = function (value: string) {
 
 export const Size = {
   ...adt,
-  from,
+  from
 };

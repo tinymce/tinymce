@@ -46,6 +46,4 @@ const create = function () {
   };
 };
 
-export {
-  create
-};
+export { create };

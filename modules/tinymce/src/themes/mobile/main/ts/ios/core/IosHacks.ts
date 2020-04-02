@@ -21,9 +21,16 @@ const setSelectionAtTouch = function (editorApi, touchEvent) {
   // cursor into view, in this case it wants to scroll down so the text is centered on the screen,
   // we have to live with this until we control selection
   const touch = touchEvent.raw().changedTouches[0];
-  WindowSelection.getAtPoint(editorApi.win(), touch.pageX, touch.pageY).each(function (raw) {
-    editorApi.setSelection(raw.start(), raw.soffset(), raw.finish(), raw.foffset());
-  });
+  WindowSelection.getAtPoint(editorApi.win(), touch.pageX, touch.pageY).each(
+    function (raw) {
+      editorApi.setSelection(
+        raw.start(),
+        raw.soffset(),
+        raw.finish(),
+        raw.foffset()
+      );
+    }
+  );
 };
 
 // NOTE: NOT USED YET
@@ -41,7 +48,4 @@ const onOrientationReady = function (outerWindow, refreshView) {
   }, 100);
 };
 
-export {
-  setSelectionAtTouch,
-  onOrientationReady
-};
+export { setSelectionAtTouch, onOrientationReady };

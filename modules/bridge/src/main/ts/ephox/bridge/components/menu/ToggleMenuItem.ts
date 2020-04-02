@@ -1,7 +1,12 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Result } from '@ephox/katamari';
 
-import { CommonMenuItem, CommonMenuItemApi, commonMenuItemFields, CommonMenuItemInstanceApi } from './CommonMenuItem';
+import {
+  CommonMenuItem,
+  CommonMenuItemApi,
+  commonMenuItemFields,
+  CommonMenuItemInstanceApi
+} from './CommonMenuItem';
 
 export interface ToggleMenuItemApi extends CommonMenuItemApi {
   type?: 'togglemenuitem';
@@ -18,15 +23,22 @@ export interface ToggleMenuItemInstanceApi extends CommonMenuItemInstanceApi {
 export interface ToggleMenuItem extends CommonMenuItem {
   type: 'togglemenuitem';
   active: boolean;
-  onSetup: (api: ToggleMenuItemInstanceApi) => (api: ToggleMenuItemInstanceApi) => void;
+  onSetup: (
+    api: ToggleMenuItemInstanceApi
+  ) => (api: ToggleMenuItemInstanceApi) => void;
   onAction: (api: ToggleMenuItemInstanceApi) => void;
 }
 
-export const toggleMenuItemSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
-  FieldSchema.defaultedBoolean('active', false),
-  FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
-  FieldSchema.strictFunction('onAction')
-].concat(commonMenuItemFields));
+export const toggleMenuItemSchema = ValueSchema.objOf(
+  [
+    FieldSchema.strictString('type'),
+    FieldSchema.defaultedBoolean('active', false),
+    FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
+    FieldSchema.strictFunction('onAction')
+  ].concat(commonMenuItemFields)
+);
 
-export const createToggleMenuItem = (spec: ToggleMenuItemApi): Result<ToggleMenuItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('togglemenuitem', toggleMenuItemSchema, spec);
+export const createToggleMenuItem = (
+  spec: ToggleMenuItemApi
+): Result<ToggleMenuItem, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw('togglemenuitem', toggleMenuItemSchema, spec);

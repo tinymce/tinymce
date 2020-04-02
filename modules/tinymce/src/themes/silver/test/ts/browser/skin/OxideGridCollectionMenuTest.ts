@@ -10,7 +10,7 @@ import {
   Pipeline,
   UiFinder,
   Step,
-  GeneralSteps,
+  GeneralSteps
 } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document, navigator } from '@ephox/dom-globals';
@@ -32,55 +32,83 @@ UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
     (editor, onSuccess, onFailure) => {
       const doc = Element.fromDom(document);
 
-      Pipeline.async({ }, Logger.ts(
-        'Check structure of grid collection menu',
-        [
+      Pipeline.async(
+        {},
+        Logger.ts('Check structure of grid collection menu', [
           TestHelpers.GuiSetup.mAddStyles(doc, [
             ':focus { background-color: rgb(222, 224, 226); }'
           ]),
           Mouse.sClickOn(Body.body(), '.tox-split-button__chevron'),
-          UiFinder.sWaitForVisible('Waiting for menu', Body.body(), '[role="menu"]'),
+          UiFinder.sWaitForVisible(
+            'Waiting for menu',
+            Body.body(),
+            '[role="menu"]'
+          ),
           Chain.asStep(Body.body(), [
             UiFinder.cFindIn('[role="menu"]'),
             Assertions.cAssertStructure(
               'Checking structure',
-              ApproxStructure.build((s, str, arr) => s.element('div', {
-                classes: [ arr.has('tox-menu'), arr.has('tox-collection'), arr.has('tox-collection--grid') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-collection__group') ],
-                    children: Arr.map([ '1', '2', '3', '4', '5', '6', '7', '8' ], (num) => s.element('div', {
-                      classes: [ arr.has('tox-collection__item') ],
-                      attrs: {
-                        title: str.is(num)
-                      },
-                      children: [
-                        // NOTE: The oxide demo page has div, but I think that's just a mistake
-                        s.element('div', {
-                          classes: [ arr.has('tox-collection__item-icon') ],
-                          children: [
-                            s.element('svg', {})
-                          ]
-                        })
-                      ]
-                    }))
-                  })
-                ]
-              }))
+              ApproxStructure.build((s, str, arr) =>
+                s.element('div', {
+                  classes: [
+                    arr.has('tox-menu'),
+                    arr.has('tox-collection'),
+                    arr.has('tox-collection--grid')
+                  ],
+                  children: [
+                    s.element('div', {
+                      classes: [arr.has('tox-collection__group')],
+                      children: Arr.map(
+                        ['1', '2', '3', '4', '5', '6', '7', '8'],
+                        (num) =>
+                          s.element('div', {
+                            classes: [arr.has('tox-collection__item')],
+                            attrs: {
+                              title: str.is(num)
+                            },
+                            children: [
+                              // NOTE: The oxide demo page has div, but I think that's just a mistake
+                              s.element('div', {
+                                classes: [arr.has('tox-collection__item-icon')],
+                                children: [s.element('svg', {})]
+                              })
+                            ]
+                          })
+                      )
+                    })
+                  ]
+                })
+              )
             )
           ]),
 
           // Without layout, the flatgrid cannot be calculated on phantom
-          navigator.userAgent.indexOf('PhantomJS') > -1 ? Step.pass : GeneralSteps.sequence([
-            FocusTools.sTryOnSelector('Focus should be on 1', doc, '.tox-collection__item[title="1"]'),
-            Keyboard.sKeydown(doc, Keys.right(), { }),
-            FocusTools.sTryOnSelector('Focus should be on 2', doc, '.tox-collection__item[title="2"]'),
-            Keyboard.sKeydown(doc, Keys.right(), { }),
-            FocusTools.sTryOnSelector('Focus should be on 3', doc, '.tox-collection__item[title="3"]')
-          ]),
+          navigator.userAgent.indexOf('PhantomJS') > -1
+            ? Step.pass
+            : GeneralSteps.sequence([
+                FocusTools.sTryOnSelector(
+                  'Focus should be on 1',
+                  doc,
+                  '.tox-collection__item[title="1"]'
+                ),
+                Keyboard.sKeydown(doc, Keys.right(), {}),
+                FocusTools.sTryOnSelector(
+                  'Focus should be on 2',
+                  doc,
+                  '.tox-collection__item[title="2"]'
+                ),
+                Keyboard.sKeydown(doc, Keys.right(), {}),
+                FocusTools.sTryOnSelector(
+                  'Focus should be on 3',
+                  doc,
+                  '.tox-collection__item[title="3"]'
+                )
+              ]),
           TestHelpers.GuiSetup.mRemoveStyles
-        ]
-      ), onSuccess, onFailure);
+        ]),
+        onSuccess,
+        onFailure
+      );
     },
     {
       theme: 'silver',
@@ -93,12 +121,16 @@ UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
           columns: 'auto',
           fetch: (callback) => {
             callback(
-              Arr.map([ '1', '2', '3', '4', '5', '6', '7', '8' ], (num) => ({
-                type: 'choiceitem',
-                value: num,
-                text: num,
-                icon: 'fake-icon-name'
-              } as Menu.ChoiceMenuItemApi))
+              Arr.map(
+                ['1', '2', '3', '4', '5', '6', '7', '8'],
+                (num) =>
+                  ({
+                    type: 'choiceitem',
+                    value: num,
+                    text: num,
+                    icon: 'fake-icon-name'
+                  } as Menu.ChoiceMenuItemApi)
+              )
             );
           },
           onAction: store.adder('onAction'),

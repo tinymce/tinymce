@@ -16,6 +16,4 @@ const get = function (editor: Editor) {
   };
 };
 
-export {
-  get
-};
+export { get };

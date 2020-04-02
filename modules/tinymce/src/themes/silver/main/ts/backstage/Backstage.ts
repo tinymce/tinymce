@@ -5,7 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, FormTypes, HotspotAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
+import {
+  AlloyComponent,
+  AlloySpec,
+  FormTypes,
+  HotspotAnchorSpec,
+  NodeAnchorSpec,
+  SelectionAnchorSpec
+} from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Cell, Option, Result } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
@@ -15,17 +22,29 @@ import * as UiFactory from 'tinymce/themes/silver/ui/general/UiFactory';
 import { SelectData } from '../ui/core/complex/BespokeSelect';
 import { IconProvider } from '../ui/icons/Icons';
 import * as Anchors from './Anchors';
-import { ColorInputBackstage, UiFactoryBackstageForColorInput } from './ColorInputBackstage';
-import { DialogBackstage, UiFactoryBackstageForDialog } from './DialogBackstage';
+import {
+  ColorInputBackstage,
+  UiFactoryBackstageForColorInput
+} from './ColorInputBackstage';
+import {
+  DialogBackstage,
+  UiFactoryBackstageForDialog
+} from './DialogBackstage';
 import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';
-import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
+import {
+  UiFactoryBackstageForUrlInput,
+  UrlInputBackstage
+} from './UrlInputBackstage';
 
 // INVESTIGATE: Make this a body component API ?
 export type BridgedType = any;
 
 export interface UiFactoryBackstageProviders {
   icons: IconProvider;
-  menuItems: () => Record<string, Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.ToggleMenuItemApi>;
+  menuItems: () => Record<
+    string,
+    Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.ToggleMenuItemApi
+  >;
   translate: (any) => TranslatedString;
   isReadonly: () => boolean;
 }
@@ -41,7 +60,11 @@ export interface UiFactoryBackstageShared {
     cursor: () => SelectionAnchorSpec;
     node: (elem: Option<Element>) => NodeAnchorSpec;
   };
-  formInterpreter?: (parts: FormTypes.FormParts, spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
+  formInterpreter?: (
+    parts: FormTypes.FormParts,
+    spec: BridgedType,
+    backstage: UiFactoryBackstage
+  ) => AlloySpec;
   getSink?: () => Result<AlloyComponent, any>;
 }
 
@@ -55,7 +78,11 @@ export interface UiFactoryBackstage {
   setContextMenuState?: (state: boolean) => void;
 }
 
-const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent): UiFactoryBackstage => {
+const init = (
+  sink: AlloyComponent,
+  editor: Editor,
+  lazyAnchorbar: () => AlloyComponent
+): UiFactoryBackstage => {
   const contextMenuState = Cell(false);
   const backstage: UiFactoryBackstage = {
     shared: {

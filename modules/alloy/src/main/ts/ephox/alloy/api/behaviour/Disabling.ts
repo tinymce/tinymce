@@ -11,6 +11,4 @@ const Disabling: DisableBehaviour = Behaviour.create({
   apis: DisableApis
 });
 
-export {
-  Disabling
-};
+export { Disabling };

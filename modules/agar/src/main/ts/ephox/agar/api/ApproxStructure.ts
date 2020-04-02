@@ -14,7 +14,11 @@ type CombinedAssert = ApproxComparisons.CombinedAssert;
 export type ArrayApi = typeof arrApi;
 export type StringApi = typeof strApi;
 export type StructApi = typeof structApi;
-export type Builder<T> = (struct: StructApi, str: StringApi, arr: ArrayApi) => T;
+export type Builder<T> = (
+  struct: StructApi,
+  str: StringApi,
+  arr: ArrayApi
+) => T;
 
 const structApi = {
   element: ApproxStructures.element,
@@ -25,7 +29,7 @@ const structApi = {
   zeroOrOne: ApproxStructures.zeroOrOne,
   zeroOrMore: ApproxStructures.zeroOrMore,
   oneOrMore: ApproxStructures.oneOrMore,
-  theRest: ApproxStructures.theRest,
+  theRest: ApproxStructures.theRest
 };
 
 const strApi = {
@@ -41,14 +45,17 @@ const arrApi = {
   hasPrefix: ApproxComparisons.hasPrefix
 };
 
-const build = <T>(f: Builder<T>): T =>
-  f(structApi, strApi, arrApi);
+const build = <T>(f: Builder<T>): T => f(structApi, strApi, arrApi);
 
-const getAttrsExcept = (node: Element<any>, exclude: string[]): Record<string, string> =>
+const getAttrsExcept = (
+  node: Element<any>,
+  exclude: string[]
+): Record<string, string> =>
   Obj.bifilter(Attr.clone(node), (value, key) => !Arr.contains(exclude, key)).t;
 
-const toAssertableObj = (obj: Record<string, string>): Record<string, CombinedAssert> =>
-  Obj.map(obj, ApproxComparisons.is);
+const toAssertableObj = (
+  obj: Record<string, string>
+): Record<string, CombinedAssert> => Obj.map(obj, ApproxComparisons.is);
 
 const toAssertableArr = (arr: string[]): (StringAssert & ArrayAssert)[] =>
   Arr.map(arr, ApproxComparisons.has);
@@ -57,7 +64,7 @@ const fromElement = (node: Element<any>): StructAssert => {
   if (Node.isElement(node)) {
     return ApproxStructures.element(Node.name(node), {
       children: Arr.map(Traverse.children(node), fromElement),
-      attrs: toAssertableObj(getAttrsExcept(node, [ 'style', 'class' ])),
+      attrs: toAssertableObj(getAttrsExcept(node, ['style', 'class'])),
       styles: toAssertableObj(Css.getAllRaw(node)),
       classes: toAssertableArr(Classes.get(node))
     });
@@ -69,8 +76,4 @@ const fromElement = (node: Element<any>): StructAssert => {
 const fromHtml = (html: string): StructAssertBasic | StructAssertAdv =>
   fromElement(Element.fromHtml(html));
 
-export {
-  build,
-  fromHtml,
-  fromElement
-};
+export { build, fromHtml, fromElement };

@@ -50,7 +50,8 @@ const readHeaders = function (editor) {
 };
 
 const getMinLevel = function (headers) {
-  let i, minLevel = 9;
+  let i,
+    minLevel = 9;
 
   for (i = 0; i < headers.length; i++) {
     if (headers[i].level < minLevel) {
@@ -73,7 +74,13 @@ const generateTitle = function (tag, title) {
 
 const generateTocHtml = function (editor) {
   const html = generateTocContentHtml(editor);
-  return '<div class="' + editor.dom.encode(Settings.getTocClass(editor)) + '" contenteditable="false">' + html + '</div>';
+  return (
+    '<div class="' +
+    editor.dom.encode(Settings.getTocClass(editor)) +
+    '" contenteditable="false">' +
+    html +
+    '</div>'
+  );
 };
 
 const generateTocContentHtml = function (editor) {
@@ -86,7 +93,10 @@ const generateTocContentHtml = function (editor) {
     return '';
   }
 
-  html += generateTitle(Settings.getTocHeader(editor), I18n.translate('Table of Contents'));
+  html += generateTitle(
+    Settings.getTocHeader(editor),
+    I18n.translate('Table of Contents')
+  );
 
   for (i = 0; i < headers.length; i++) {
     h = headers[i];
@@ -122,7 +132,10 @@ const generateTocContentHtml = function (editor) {
 };
 
 const isEmptyOrOffscren = function (editor, nodes) {
-  return !nodes.length || editor.dom.getParents(nodes[0], '.mce-offscreen-selection').length > 0;
+  return (
+    !nodes.length ||
+    editor.dom.getParents(nodes[0], '.mce-offscreen-selection').length > 0
+  );
 };
 
 const insertToc = function (editor) {
@@ -147,8 +160,4 @@ const updateToc = function (editor) {
   }
 };
 
-export {
-  hasHeaders,
-  insertToc,
-  updateToc
-};
+export { hasHeaders, insertToc, updateToc };

@@ -27,6 +27,4 @@ const toggleVisualChars = function (editor, toggleState) {
   selection.moveToBookmark(bookmark);
 };
 
-export {
-  toggleVisualChars
-};
+export { toggleVisualChars };

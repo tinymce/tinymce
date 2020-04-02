@@ -10,7 +10,11 @@ import { Stateless } from '../../behaviour/common/BehaviourState';
 import * as Anchor from '../../positioning/layout/Anchor';
 import * as Origins from '../../positioning/layout/Origins';
 import * as SimpleLayout from '../../positioning/layout/SimpleLayout';
-import { AnchorDetail, Anchoring, AnchorSpec } from '../../positioning/mode/Anchoring';
+import {
+  AnchorDetail,
+  Anchoring,
+  AnchorSpec
+} from '../../positioning/mode/Anchoring';
 import AnchorSchema from '../../positioning/mode/AnchorSchema';
 import { PositioningConfig } from './PositioningTypes';
 
@@ -27,25 +31,74 @@ const getRelativeOrigin = (component: AlloyComponent): Origins.OriginAdt => {
 
   // We think that this just needs to be kept consistent with Boxes.win. If we remove the scroll values from Boxes.win, we
   // should change this to just bounds.left and bounds.top from getBoundingClientRect
-  return Origins.relative(position.left(), position.top(), bounds.width, bounds.height);
+  return Origins.relative(
+    position.left(),
+    position.top(),
+    bounds.width,
+    bounds.height
+  );
 };
 
-const place = (component: AlloyComponent, origin: Origins.OriginAdt, anchoring: Anchoring, getBounds: Option<() => Bounds>, placee: AlloyComponent): void => {
+const place = (
+  component: AlloyComponent,
+  origin: Origins.OriginAdt,
+  anchoring: Anchoring,
+  getBounds: Option<() => Bounds>,
+  placee: AlloyComponent
+): void => {
   const anchor = Anchor.box(anchoring.anchorBox, origin);
-  SimpleLayout.simple(anchor, placee.element(), anchoring.bubble, anchoring.layouts, getBounds, anchoring.overrides);
+  SimpleLayout.simple(
+    anchor,
+    placee.element(),
+    anchoring.bubble,
+    anchoring.layouts,
+    getBounds,
+    anchoring.overrides
+  );
 };
 
-const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent): void => {
+const position = (
+  component: AlloyComponent,
+  posConfig: PositioningConfig,
+  posState: Stateless,
+  anchor: AnchorSpec,
+  placee: AlloyComponent
+): void => {
   positionWithin(component, posConfig, posState, anchor, placee, Option.none());
 };
 
-const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, boxElement: Option<Element>): void => {
+const positionWithin = (
+  component: AlloyComponent,
+  posConfig: PositioningConfig,
+  posState: Stateless,
+  anchor: AnchorSpec,
+  placee: AlloyComponent,
+  boxElement: Option<Element>
+): void => {
   const boundsBox = boxElement.map(box);
-  return positionWithinBounds(component, posConfig, posState, anchor, placee, boundsBox);
+  return positionWithinBounds(
+    component,
+    posConfig,
+    posState,
+    anchor,
+    placee,
+    boundsBox
+  );
 };
 
-const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, bounds: Option<Bounds>): void => {
-  const anchorage: AnchorDetail<any> = ValueSchema.asRawOrDie('positioning anchor.info', AnchorSchema, anchor);
+const positionWithinBounds = (
+  component: AlloyComponent,
+  posConfig: PositioningConfig,
+  posState: Stateless,
+  anchor: AnchorSpec,
+  placee: AlloyComponent,
+  bounds: Option<Bounds>
+): void => {
+  const anchorage: AnchorDetail<any> = ValueSchema.asRawOrDie(
+    'positioning anchor.info',
+    AnchorSchema,
+    anchor
+  );
 
   // Preserve the focus as IE 11 loses it when setting visibility to hidden
   AriaFocus.preserve(() => {
@@ -59,7 +112,9 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
     // We need to calculate the origin (esp. the bounding client rect) *after* we have done
     // all the preprocessing of the component and placee. Otherwise, the relative positions
     // (bottom and right) will be using the wrong dimensions
-    const origin = posConfig.useFixed() ? getFixedOrigin() : getRelativeOrigin(component);
+    const origin = posConfig.useFixed()
+      ? getFixedOrigin()
+      : getRelativeOrigin(component);
 
     const placer = anchorage.placement;
 
@@ -70,11 +125,14 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
       doPlace(component, origin, anchoring, getBounds, placee);
     });
 
-    oldVisibility.fold(() => {
-      Css.remove(placee.element(), 'visibility');
-    }, (vis) => {
-      Css.set(placee.element(), 'visibility', vis);
-    });
+    oldVisibility.fold(
+      () => {
+        Css.remove(placee.element(), 'visibility');
+      },
+      (vis) => {
+        Css.set(placee.element(), 'visibility', vis);
+      }
+    );
 
     // We need to remove position: fixed put on by above code if it is not needed.
     if (
@@ -83,15 +141,16 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
       Css.getRaw(placee.element(), 'right').isNone() &&
       Css.getRaw(placee.element(), 'bottom').isNone() &&
       Css.getRaw(placee.element(), 'position').is('fixed')
-    ) { Css.remove(placee.element(), 'position'); }
+    ) {
+      Css.remove(placee.element(), 'position');
+    }
   }, placee.element());
 };
 
-const getMode = (component: AlloyComponent, pConfig: PositioningConfig, _pState: Stateless): string => pConfig.useFixed() ? 'fixed' : 'absolute';
+const getMode = (
+  component: AlloyComponent,
+  pConfig: PositioningConfig,
+  _pState: Stateless
+): string => (pConfig.useFixed() ? 'fixed' : 'absolute');
 
-export {
-  position,
-  positionWithin,
-  positionWithinBounds,
-  getMode
-};
+export { position, positionWithin, positionWithinBounds, getMode };

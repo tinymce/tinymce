@@ -23,50 +23,77 @@ const toMenuItem = (target: LinkTarget): BridgeMenu.MenuItemApi => ({
   meta: {
     attach: target.attach
   },
-  onAction: () => { }
+  onAction: () => {}
 });
 
-const staticMenuItem = (title: string, url: string): BridgeMenu.MenuItemApi => ({
+const staticMenuItem = (
+  title: string,
+  url: string
+): BridgeMenu.MenuItemApi => ({
   type: 'menuitem',
   value: url,
   text: title,
   meta: {
     attach: undefined
   },
-  onAction: () => { }
+  onAction: () => {}
 });
 
 const toMenuItems = (targets: LinkTarget[]): BridgeMenu.MenuItemApi[] =>
   Arr.map(targets, toMenuItem);
 
-const filterLinkTargets = (type: LinkTargetType, targets: LinkTarget[]): LinkTarget[] =>
-  Arr.filter(targets, (target) => target.type === type);
+const filterLinkTargets = (
+  type: LinkTargetType,
+  targets: LinkTarget[]
+): LinkTarget[] => Arr.filter(targets, (target) => target.type === type);
 
 const filteredTargets = (type: LinkTargetType, targets: LinkTarget[]) =>
   toMenuItems(filterLinkTargets(type, targets));
 
-const headerTargets = (linkInfo: LinkInformation) => filteredTargets('header', linkInfo.targets);
+const headerTargets = (linkInfo: LinkInformation) =>
+  filteredTargets('header', linkInfo.targets);
 
-const anchorTargets = (linkInfo: LinkInformation) => filteredTargets('anchor', linkInfo.targets);
+const anchorTargets = (linkInfo: LinkInformation) =>
+  filteredTargets('anchor', linkInfo.targets);
 
-const anchorTargetTop = (linkInfo: LinkInformation) => Option.from(linkInfo.anchorTop).map((url) => staticMenuItem('<top>', url)).toArray();
+const anchorTargetTop = (linkInfo: LinkInformation) =>
+  Option.from(linkInfo.anchorTop)
+    .map((url) => staticMenuItem('<top>', url))
+    .toArray();
 
-const anchorTargetBottom = (linkInfo: LinkInformation) => Option.from(linkInfo.anchorBottom).map((url) => staticMenuItem('<bottom>', url)).toArray();
+const anchorTargetBottom = (linkInfo: LinkInformation) =>
+  Option.from(linkInfo.anchorBottom)
+    .map((url) => staticMenuItem('<bottom>', url))
+    .toArray();
 
-const historyTargets = (history: string[]) => Arr.map(history, (url) => staticMenuItem(url, url));
+const historyTargets = (history: string[]) =>
+  Arr.map(history, (url) => staticMenuItem(url, url));
 
 const joinMenuLists = function (items: BridgeMenu.MenuItemApi[][]) {
-  return Arr.foldl(items, function (a, b) {
-    const bothEmpty = a.length === 0 || b.length === 0;
-    return bothEmpty ? a.concat(b) : a.concat(separator, b);
-  }, <SingleMenuItemApi[]> []);
+  return Arr.foldl(
+    items,
+    function (a, b) {
+      const bothEmpty = a.length === 0 || b.length === 0;
+      return bothEmpty ? a.concat(b) : a.concat(separator, b);
+    },
+    <SingleMenuItemApi[]>[]
+  );
 };
 
-const filterByQuery = function (term: string, menuItems: BridgeMenu.MenuItemApi[]) {
+const filterByQuery = function (
+  term: string,
+  menuItems: BridgeMenu.MenuItemApi[]
+) {
   const lowerCaseTerm = term.toLowerCase();
   return Arr.filter(menuItems, function (item) {
-    const text = item.meta !== undefined && item.meta.text !== undefined ? item.meta.text : item.text;
-    return Strings.contains(text.toLowerCase(), lowerCaseTerm) || Strings.contains(item.value.toLowerCase(), lowerCaseTerm);
+    const text =
+      item.meta !== undefined && item.meta.text !== undefined
+        ? item.meta.text
+        : item.text;
+    return (
+      Strings.contains(text.toLowerCase(), lowerCaseTerm) ||
+      Strings.contains(item.value.toLowerCase(), lowerCaseTerm)
+    );
   });
 };
 

@@ -13,7 +13,6 @@ import * as TestUi from '../../module/test/ui/TestUi';
 import { Fun } from '@ephox/katamari';
 
 UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
-
   /*
    * PURPOSE
    *
@@ -50,9 +49,14 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
   );
 
   const memGamma = Memento.record(
-    Buttons.forToolbarStateAction(tEditor.editor(), 'gamma-class', 'gamma-query', function () {
-      tEditor.adder('gamma-action')();
-    })
+    Buttons.forToolbarStateAction(
+      tEditor.editor(),
+      'gamma-class',
+      'gamma-query',
+      function () {
+        tEditor.adder('gamma-action')();
+      }
+    )
   );
 
   const sClickAlpha = TestUi.sClickComponent(realm, memAlpha);
@@ -68,11 +72,7 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
   realm.setToolbarGroups([
     {
       label: 'group1',
-      items: [
-        memAlpha.asSpec(),
-        memBeta.asSpec(),
-        memGamma.asSpec()
-      ]
+      items: [memAlpha.asSpec(), memBeta.asSpec(), memGamma.asSpec()]
     }
   ]);
 
@@ -81,7 +81,7 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
    * editor fires execCommand with alpha
    */
   const sTestAlpha = GeneralSteps.sequence([
-    tEditor.sAssertEq('Initially empty', [ ]),
+    tEditor.sAssertEq('Initially empty', []),
     sClickAlpha,
     tEditor.sAssertEq('After clicking on alpha', [
       {
@@ -100,7 +100,7 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
    *  - when the format change is broadcast, the toggled state changes
    */
   const sTestBeta = GeneralSteps.sequence([
-    tEditor.sAssertEq('before beta, store is empty', [ ]),
+    tEditor.sAssertEq('before beta, store is empty', []),
     sClickBeta,
     tEditor.sAssertEq('After clicking on beta', [
       {
@@ -113,7 +113,7 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
     tEditor.sClear,
     sCheckComponent('Initially, beta should be unselected', false)(memBeta),
     // Fire a format change
-    TestUi.sBroadcastState(realm, [ TinyChannels.formatChanged ], 'beta', true),
+    TestUi.sBroadcastState(realm, [TinyChannels.formatChanged], 'beta', true),
     sCheckComponent('After broadcast, beta should be selected', true)(memBeta),
     tEditor.sClear
   ]);
@@ -124,27 +124,38 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
    *  - when the format change is broadcast, the toggled state changes
    */
   const sTestGamma = GeneralSteps.sequence([
-    tEditor.sAssertEq('before gamma, store is empty', [ ]),
+    tEditor.sAssertEq('before gamma, store is empty', []),
     sClickGamma,
-    tEditor.sAssertEq('After clicking on gamma', [ 'gamma-action' ]),
+    tEditor.sAssertEq('After clicking on gamma', ['gamma-action']),
     tEditor.sClear,
     sCheckComponent('Initially, gamma should be unselected', false)(memGamma),
     // Fire a format change
-    TestUi.sBroadcastState(realm, [ TinyChannels.formatChanged ], 'gamma-query', true),
+    TestUi.sBroadcastState(
+      realm,
+      [TinyChannels.formatChanged],
+      'gamma-query',
+      true
+    ),
     sCheckComponent('After broadcast, gamma should be selected', true)(memGamma)
   ]);
 
-  Pipeline.async({}, [
-    TestHelpers.GuiSetup.mAddStyles(doc, [
-      '.tinymce-mobile-icon-alpha:before { content: "ALPHA"; }',
-      '.tinymce-mobile-icon-beta:before { content: "BETA"; }',
-      '.tinymce-mobile-icon-gamma-class:before { content: "GAMMA"; }'
-    ]),
-    TestStyles.sWaitForToolstrip(realm),
-    sTestAlpha,
-    sTestBeta,
-    sTestGamma
-  ], function () {
-    unload(); success();
-  }, failure);
+  Pipeline.async(
+    {},
+    [
+      TestHelpers.GuiSetup.mAddStyles(doc, [
+        '.tinymce-mobile-icon-alpha:before { content: "ALPHA"; }',
+        '.tinymce-mobile-icon-beta:before { content: "BETA"; }',
+        '.tinymce-mobile-icon-gamma-class:before { content: "GAMMA"; }'
+      ]),
+      TestStyles.sWaitForToolstrip(realm),
+      sTestAlpha,
+      sTestBeta,
+      sTestGamma
+    ],
+    function () {
+      unload();
+      success();
+    },
+    failure
+  );
 });

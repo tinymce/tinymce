@@ -12,6 +12,4 @@ const insertChar = function (editor, chr) {
   editor.execCommand('mceInsertContent', false, evtChr);
 };
 
-export {
-  insertChar
-};
+export { insertChar };

@@ -3,24 +3,25 @@ import { Element } from '@ephox/sugar';
 declare let tinymce: any;
 
 export default function () {
-
   const makeSidebar = (ed, name: string, background: string, width: number) => {
     ed.ui.registry.addSidebar(name, {
       icon: 'comment',
       tooltip: 'Tooltip for ' + name,
       onSetup: (api) => {
-        const box = Element.fromHtml('<div style="width: ' + width + 'px; background: ' + background + ';"></div>');
+        const box = Element.fromHtml(
+          '<div style="width: ' +
+            width +
+            'px; background: ' +
+            background +
+            ';"></div>'
+        );
         api.element().appendChild(box.dom());
         return () => {
           api.element().removeChild(box.dom());
         };
       },
-      onShow: (_api) => {
-
-      },
-      onHide: (_api) => {
-
-      },
+      onShow: (_api) => {},
+      onHide: (_api) => {}
     });
   };
 
@@ -47,17 +48,24 @@ export default function () {
     file_picker_callback(callback, _value, meta) {
       // Provide file and text for the link dialog
       if (meta.filetype === 'file') {
-        callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
+        callback('https://www.google.com/logos/google.jpg', {
+          text: 'My text'
+        });
       }
 
       // Provide image and alt text for the image dialog
       if (meta.filetype === 'image') {
-        callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
+        callback('https://www.google.com/logos/google.jpg', {
+          alt: 'My alt text'
+        });
       }
 
       // Provide alternative source and posted for the media dialog
       if (meta.filetype === 'media') {
-        callback('movie.mp4', { source2: 'alt.ogg', poster: 'https://www.google.com/logos/google.jpg' });
+        callback('movie.mp4', {
+          source2: 'alt.ogg',
+          poster: 'https://www.google.com/logos/google.jpg'
+        });
       }
     },
     spellchecker_callback(method, text, success, _failure) {
@@ -67,7 +75,7 @@ export default function () {
         const suggestions = {};
 
         for (let i = 0; i < words.length; i++) {
-          suggestions[words[i]] = [ 'First', 'Second' ];
+          suggestions[words[i]] = ['First', 'Second'];
         }
 
         success(suggestions);
@@ -78,17 +86,24 @@ export default function () {
       }
     },
     templates: [
-      { title: 'Some title 1', description: 'Some desc 1', content: 'My content' },
-      { title: 'Some title 2', description: 'Some desc 2', content: '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>' }
+      {
+        title: 'Some title 1',
+        description: 'Some desc 1',
+        content: 'My content'
+      },
+      {
+        title: 'Some title 2',
+        description: 'Some desc 2',
+        content:
+          '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>'
+      }
     ],
     template_cdate_format: '[CDATE: %m/%d/%Y : %H:%M:%S]',
     template_mdate_format: '[MDATE: %m/%d/%Y : %H:%M:%S]',
     image_caption: true,
     theme: 'silver',
     mobile: {
-      plugins: [
-        'autosave lists'
-      ]
+      plugins: ['autosave lists']
     },
     setup(ed) {
       makeSidebar(ed, 'sidebar1', 'green', 200);
@@ -102,7 +117,8 @@ export default function () {
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'undo redo sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+    toolbar:
+      'undo redo sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
       'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
     toolbar_mode: 'floating',
     toolbar_sticky: true

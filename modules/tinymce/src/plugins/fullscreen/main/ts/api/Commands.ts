@@ -13,6 +13,4 @@ const register = function (editor, fullscreenState) {
   });
 };
 
-export {
-  register
-};
+export { register };

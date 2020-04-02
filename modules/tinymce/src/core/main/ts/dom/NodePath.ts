@@ -17,7 +17,11 @@ import DOMUtils from '../api/dom/DOMUtils';
 const create = function (rootNode, targetNode, normalized?) {
   const path = [];
 
-  for (; targetNode && targetNode !== rootNode; targetNode = targetNode.parentNode) {
+  for (
+    ;
+    targetNode && targetNode !== rootNode;
+    targetNode = targetNode.parentNode
+  ) {
     path.push(DOMUtils.nodeIndex(targetNode, normalized));
   }
 
@@ -40,7 +44,4 @@ const resolve = function (rootNode, path) {
   return node;
 };
 
-export {
-  create,
-  resolve
-};
+export { create, resolve };

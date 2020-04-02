@@ -18,44 +18,84 @@ import { WordWalking } from './WordWalking';
  * These rules are encoded in WordDecision.decide
  * Returns: [WordDecision.make Struct] of all the words recursively from item in direction.
  */
-const doWords = function <E, D> (universe: Universe<E, D>, item: E, mode: Transition, direction: WordWalking, isCustomBoundary: (universe: Universe<E, D>, item: E) => boolean): WordDecisionItem<E>[] {
+const doWords = function <E, D>(
+  universe: Universe<E, D>,
+  item: E,
+  mode: Transition,
+  direction: WordWalking,
+  isCustomBoundary: (universe: Universe<E, D>, item: E) => boolean
+): WordDecisionItem<E>[] {
   const destination = Gather.walk(universe, item, mode, direction);
-  const result = destination.map(function (dest) {
-    const decision = WordDecision.decide(universe, dest.item(), direction.slicer, isCustomBoundary);
-    const recursive: WordDecisionItem<E>[] = decision.abort ? [] : doWords(universe, dest.item(), dest.mode(), direction, isCustomBoundary);
-    return decision.items.concat(recursive);
-  }).getOr([]);
+  const result = destination
+    .map(function (dest) {
+      const decision = WordDecision.decide(
+        universe,
+        dest.item(),
+        direction.slicer,
+        isCustomBoundary
+      );
+      const recursive: WordDecisionItem<E>[] = decision.abort
+        ? []
+        : doWords(
+            universe,
+            dest.item(),
+            dest.mode(),
+            direction,
+            isCustomBoundary
+          );
+      return decision.items.concat(recursive);
+    })
+    .getOr([]);
 
   return Arr.filter(result, function (res) {
     return res.text.trim().length > 0;
   });
 };
 
-const creepLeft = function <E, D> (universe: Universe<E, D>, item: E, isCustomBoundary: (universe: Universe<E, D>, item: E) => boolean): WordDecisionItem<E>[] {
-  return doWords(universe, item, Gather.sidestep, WordWalking.left, isCustomBoundary);
-};
-
-const creepRight = function <E, D> (universe: Universe<E, D>, item: E, isCustomBoundary: (universe: Universe<E, D>, item: E) => boolean): WordDecisionItem<E>[] {
-  return doWords(universe, item, Gather.sidestep, WordWalking.right, isCustomBoundary);
-};
-
-const isEmpty = function <E, D> (universe: Universe<E, D>, item: E): boolean {
-  // Empty if there are no text nodes in self or any descendants.
-  return universe.property().isText(item) ? false : universe.down().predicate(item, universe.property().isText).length === 0;
-};
-
-const flatten = function <E, D> (universe: Universe<E, D>, item: E) {
-  return universe.property().isText(item) ? [ WordDecision.detail(universe, item) ] : Arr.map(
-    universe.down().predicate(item, universe.property().isText),
-    function (e) {
-      return WordDecision.detail(universe, e);
-    }
+const creepLeft = function <E, D>(
+  universe: Universe<E, D>,
+  item: E,
+  isCustomBoundary: (universe: Universe<E, D>, item: E) => boolean
+): WordDecisionItem<E>[] {
+  return doWords(
+    universe,
+    item,
+    Gather.sidestep,
+    WordWalking.left,
+    isCustomBoundary
   );
 };
 
-export {
-  creepLeft,
-  creepRight,
-  flatten,
-  isEmpty
+const creepRight = function <E, D>(
+  universe: Universe<E, D>,
+  item: E,
+  isCustomBoundary: (universe: Universe<E, D>, item: E) => boolean
+): WordDecisionItem<E>[] {
+  return doWords(
+    universe,
+    item,
+    Gather.sidestep,
+    WordWalking.right,
+    isCustomBoundary
+  );
 };
+
+const isEmpty = function <E, D>(universe: Universe<E, D>, item: E): boolean {
+  // Empty if there are no text nodes in self or any descendants.
+  return universe.property().isText(item)
+    ? false
+    : universe.down().predicate(item, universe.property().isText).length === 0;
+};
+
+const flatten = function <E, D>(universe: Universe<E, D>, item: E) {
+  return universe.property().isText(item)
+    ? [WordDecision.detail(universe, item)]
+    : Arr.map(
+        universe.down().predicate(item, universe.property().isText),
+        function (e) {
+          return WordDecision.detail(universe, e);
+        }
+      );
+};
+
+export { creepLeft, creepRight, flatten, isEmpty };

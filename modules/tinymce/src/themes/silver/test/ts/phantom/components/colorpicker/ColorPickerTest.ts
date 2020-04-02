@@ -1,4 +1,11 @@
-import { Assertions, Chain, Logger, UiControls, UiFinder, Waiter } from '@ephox/agar';
+import {
+  Assertions,
+  Chain,
+  Logger,
+  UiControls,
+  UiFinder,
+  Waiter
+} from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Option } from '@ephox/katamari';
@@ -8,15 +15,19 @@ import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 
 UnitTest.asynctest('ColorPicker component Test', (success, failure) => {
   TestHelpers.GuiSetup.setup(
-    (_store, _doc, _body) => GuiFactory.build(
-      renderColorPicker({
-        label: Option.some('ColorPicker label'),
-        name: 'col1'
-      })
-    ),
+    (_store, _doc, _body) =>
+      GuiFactory.build(
+        renderColorPicker({
+          label: Option.some('ColorPicker label'),
+          name: 'col1'
+        })
+      ),
     (_doc, _body, _gui, component, _store) => {
-
-      const sAssertColour = (label: string, expected: string, labelText: string) =>
+      const sAssertColour = (
+        label: string,
+        expected: string,
+        labelText: string
+      ) =>
         Logger.t(
           label,
           Waiter.sTryUntil(

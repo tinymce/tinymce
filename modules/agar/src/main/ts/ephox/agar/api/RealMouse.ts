@@ -18,8 +18,7 @@ const sMoveToOn = <T>(selector: string): Step<T, T> =>
 const sDownOn = <T>(selector: string): Step<T, T> =>
   sActionOn<T>(selector, 'down');
 
-const sUpOn = <T>(selector: string): Step<T, T> =>
-  sActionOn<T>(selector, 'up');
+const sUpOn = <T>(selector: string): Step<T, T> => sActionOn<T>(selector, 'up');
 
 const sClickOn = <T>(selector: string): Step<T, T> =>
   sActionOn<T>(selector, 'click');
@@ -48,11 +47,4 @@ const cClick = () =>
     })
   ]);
 
-export {
-  sMoveToOn,
-  sDownOn,
-  sUpOn,
-  sClickOn,
-  cClick,
-  BedrockIdAttribute
-};
+export { sMoveToOn, sDownOn, sUpOn, sClickOn, cClick, BedrockIdAttribute };

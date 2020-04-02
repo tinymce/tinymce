@@ -6,8 +6,4 @@ const mouse = MouseDragging.schema;
 const touch = TouchDragging.schema;
 const mouseOrTouch = MouseOrTouchDragging.schema;
 
-export {
-  mouse,
-  touch,
-  mouseOrTouch
-};
+export { mouse, touch, mouseOrTouch };

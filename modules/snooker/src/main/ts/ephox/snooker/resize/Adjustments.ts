@@ -11,14 +11,18 @@ import { RowData, Detail } from '../api/Structs';
 import { Element } from '@ephox/sugar';
 import { BarPositions, ColInfo, RowInfo } from './BarPositions';
 
-const getWarehouse = function <T extends Detail> (list: RowData<T>[]) {
+const getWarehouse = function <T extends Detail>(list: RowData<T>[]) {
   return Warehouse.generate(list);
 };
 
 const sumUp = function (newSize: number[]) {
-  return Arr.foldr(newSize, function (b, a) {
-    return b + a;
-  }, 0);
+  return Arr.foldr(
+    newSize,
+    function (b, a) {
+      return b + a;
+    },
+    0
+  );
 };
 
 const getTableWarehouse = function (table: Element) {
@@ -26,7 +30,12 @@ const getTableWarehouse = function (table: Element) {
   return getWarehouse(list);
 };
 
-const adjustWidth = function (table: Element, delta: number, index: number, direction: BarPositions<ColInfo>) {
+const adjustWidth = function (
+  table: Element,
+  delta: number,
+  index: number,
+  direction: BarPositions<ColInfo>
+) {
   const tableSize = TableSize.getTableSize(table);
   const step = tableSize.getCellDelta(delta);
   const warehouse = getTableWarehouse(table);
@@ -50,7 +59,12 @@ const adjustWidth = function (table: Element, delta: number, index: number, dire
   }
 };
 
-const adjustHeight = function (table: Element, delta: number, index: number, direction: BarPositions<RowInfo>) {
+const adjustHeight = function (
+  table: Element,
+  delta: number,
+  index: number,
+  direction: BarPositions<RowInfo>
+) {
   const warehouse = getTableWarehouse(table);
   const heights = ColumnSizes.getPixelHeights(warehouse, direction);
 
@@ -74,7 +88,11 @@ const adjustHeight = function (table: Element, delta: number, index: number, dir
 };
 
 // Ensure that the width of table cells match the passed in table information.
-const adjustWidthTo = function <T extends Detail> (table: Element, list: RowData<T>[], direction: BarPositions<ColInfo>) {
+const adjustWidthTo = function <T extends Detail>(
+  table: Element,
+  list: RowData<T>[],
+  direction: BarPositions<ColInfo>
+) {
   const tableSize = TableSize.getTableSize(table);
   const warehouse = getWarehouse(list);
   const widths = tableSize.getWidths(warehouse, direction, tableSize);
@@ -93,8 +111,4 @@ const adjustWidthTo = function <T extends Detail> (table: Element, list: RowData
   }
 };
 
-export {
-  adjustWidth,
-  adjustHeight,
-  adjustWidthTo
-};
+export { adjustWidth, adjustHeight, adjustWidthTo };

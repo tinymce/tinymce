@@ -12,7 +12,7 @@ const trimPx = function (value: string) {
 };
 
 const addPx = function (value: string) {
-  return /^[0-9.]+$/.test(value) ? (value + 'px') : value;
+  return /^[0-9.]+$/.test(value) ? value + 'px' : value;
 };
 
 const getSize = function (name: string) {
@@ -34,9 +34,4 @@ const getMaxHeight = getSize('maxHeight');
 const setMaxWidth = setSize('maxWidth');
 const setMaxHeight = setSize('maxHeight');
 
-export {
-  getMaxWidth,
-  getMaxHeight,
-  setMaxWidth,
-  setMaxHeight
-};
+export { getMaxWidth, getMaxHeight, setMaxWidth, setMaxHeight };

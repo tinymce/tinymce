@@ -1,19 +1,22 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import { StreamingConfig, StreamingState } from './StreamingTypes';
 
-const events = (streamConfig: StreamingConfig, streamState: StreamingState): AlloyEvents.AlloyEventRecord => {
+const events = (
+  streamConfig: StreamingConfig,
+  streamState: StreamingState
+): AlloyEvents.AlloyEventRecord => {
   const streams = streamConfig.stream.streams;
   const processor = streams.setup(streamConfig, streamState);
-  return AlloyEvents.derive([
-    AlloyEvents.run(streamConfig.event, processor),
-    AlloyEvents.runOnDetached(() => streamState.cancel())
-  ].concat(
-    streamConfig.cancelEvent.map((e) => [
-      AlloyEvents.run(e, () => streamState.cancel())
-    ]).getOr([ ])
-  ));
+  return AlloyEvents.derive(
+    [
+      AlloyEvents.run(streamConfig.event, processor),
+      AlloyEvents.runOnDetached(() => streamState.cancel())
+    ].concat(
+      streamConfig.cancelEvent
+        .map((e) => [AlloyEvents.run(e, () => streamState.cancel())])
+        .getOr([])
+    )
+  );
 };
 
-export {
-  events
-};
+export { events };

@@ -13,7 +13,8 @@ const attr = 'data-ephox-mobile-fullscreen-style';
 const siblingStyles = 'display:none!important;';
 const ancestorPosition = 'position:absolute!important;';
 // TINY-3407 ancestors need 'height:100%!important;overflow:visible!important;' to prevent collapsed ancestors hiding the editor
-const ancestorStyles = 'top:0!important;left:0!important;margin:0!important;padding:0!important;width:100%!important;height:100%!important;overflow:visible!important;';
+const ancestorStyles =
+  'top:0!important;left:0!important;margin:0!important;padding:0!important;width:100%!important;height:100%!important;overflow:visible!important;';
 const bgFallback = 'background-color:rgb(255,255,255)!important;';
 
 const isAndroid = PlatformDetection.detect().os.isAndroid();
@@ -22,7 +23,9 @@ const matchColor = (editorBody): string => {
   // in iOS you can overscroll, sometimes when you overscroll you can reveal the bgcolor of an element beneath,
   // by matching the bg color and clobbering ensures any reveals are 'camouflaged' the same color
   const color = Css.get(editorBody, 'background-color');
-  return (color !== undefined && color !== '') ? 'background-color:' + color + '!important' : bgFallback;
+  return color !== undefined && color !== ''
+    ? 'background-color:' + color + '!important'
+    : bgFallback;
 };
 
 // We clobber all tags, direct ancestors to the editorBody get ancestorStyles, everything else gets siblingStyles
@@ -66,7 +69,4 @@ const restoreStyles = (): void => {
   });
 };
 
-export {
-  clobberStyles,
-  restoreStyles
-};
+export { clobberStyles, restoreStyles };

@@ -1,4 +1,10 @@
-import { document, Window, HTMLDivElement, Document, Element as DomElement } from '@ephox/dom-globals';
+import {
+  document,
+  Window,
+  HTMLDivElement,
+  Document,
+  Element as DomElement
+} from '@ephox/dom-globals';
 import { Option, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import * as Insert from '../dom/Insert';
@@ -68,7 +74,7 @@ const capture = function (doc: Element<Document>) {
 
   save();
   return {
-    save,      /* Saves the current page scroll position */
+    save /* Saves the current page scroll position */,
     restore /* Restores the page scroll to its former position when invoked */
   };
 };
@@ -76,7 +82,10 @@ const capture = function (doc: Element<Document>) {
 // TBIO-4472 Safari 10 - Scrolling typeahead with keyboard scrolls page
 const intoView = function (element: Element<DomElement>, alignToTop: boolean) {
   // this method isn't in TypeScript
-  if (isSafari && Type.isFunction((element.dom() as any).scrollIntoViewIfNeeded)) {
+  if (
+    isSafari &&
+    Type.isFunction((element.dom() as any).scrollIntoViewIfNeeded)
+  ) {
     (element.dom() as any).scrollIntoViewIfNeeded(false); // false=align to nearest edge
   } else {
     element.dom().scrollIntoView(alignToTop); // true=to top, false=to bottom
@@ -84,7 +93,10 @@ const intoView = function (element: Element<DomElement>, alignToTop: boolean) {
 };
 
 // If the element is above the container, or below the container, then scroll to the top or bottom
-const intoViewIfNeeded = function (element: Element<DomElement>, container: Element<DomElement>) {
+const intoViewIfNeeded = function (
+  element: Element<DomElement>,
+  container: Element<DomElement>
+) {
   const containerBox = container.dom().getBoundingClientRect();
   const elementBox = element.dom().getBoundingClientRect();
   if (elementBox.top < containerBox.top) {
@@ -99,11 +111,23 @@ const intoViewIfNeeded = function (element: Element<DomElement>, container: Elem
 // Return the scroll bar width (calculated by temporarily inserting an element into the dom)
 const scrollBarWidth = function () {
   // From https://davidwalsh.name/detect-scrollbar-width
-  const scrollDiv = Element.fromHtml<HTMLDivElement>('<div style="width: 100px; height: 100px; overflow: scroll; position: absolute; top: -9999px;"></div>');
+  const scrollDiv = Element.fromHtml<HTMLDivElement>(
+    '<div style="width: 100px; height: 100px; overflow: scroll; position: absolute; top: -9999px;"></div>'
+  );
   Insert.after(Body.body(), scrollDiv);
   const w = scrollDiv.dom().offsetWidth - scrollDiv.dom().clientWidth;
   Remove.remove(scrollDiv);
   return w;
 };
 
-export { get, to, by, preserve, capture, intoView, intoViewIfNeeded, setToElement, scrollBarWidth, };
+export {
+  get,
+  to,
+  by,
+  preserve,
+  capture,
+  intoView,
+  intoViewIfNeeded,
+  setToElement,
+  scrollBarWidth
+};

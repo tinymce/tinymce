@@ -10,5 +10,5 @@ const anything: ZoneViewports<any> = {
 };
 
 export const ZoneViewports = {
-  anything: Fun.constant(anything) as <E> () => ZoneViewports<E>
+  anything: Fun.constant(anything) as <E>() => ZoneViewports<E>
 };

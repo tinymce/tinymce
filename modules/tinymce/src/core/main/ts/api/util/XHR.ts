@@ -16,22 +16,26 @@ export interface XHRSettings {
   content_type?: string;
   crossDomain?: boolean;
   data?: string;
-  requestheaders?: Record<string, { key: string; value: string}>;
+  requestheaders?: Record<string, { key: string; value: string }>;
   scope?: {};
   type?: string;
   url: string;
   error_scope?: {};
   success_scope?: {};
-  error? (message: 'TIMED_OUT' | 'GENERAL', xhr: XMLHttpRequest, settings: XHRSettings): void;
-  success? (text: string, xhr: XMLHttpRequest, settings: XHRSettings): void;
+  error?(
+    message: 'TIMED_OUT' | 'GENERAL',
+    xhr: XMLHttpRequest,
+    settings: XHRSettings
+  ): void;
+  success?(text: string, xhr: XMLHttpRequest, settings: XHRSettings): void;
 }
 
 export interface XHREventMap extends NativeEventMap {
-  'beforeInitialize': { settings: XHRSettings };
+  beforeInitialize: { settings: XHRSettings };
 }
 
 interface XHR extends Observable<XHREventMap> {
-  send (settings: XHRSettings): void;
+  send(settings: XHRSettings): void;
 }
 
 /**
@@ -65,14 +69,25 @@ const XHR: XHR = {
    * @param {Object} settings Object will target URL, callbacks and other info needed to make the request.
    */
   send(settings: XHRSettings) {
-    let xhr, count = 0;
+    let xhr,
+      count = 0;
 
     const ready = function () {
       if (!settings.async || xhr.readyState === 4 || count++ > 10000) {
         if (settings.success && count < 10000 && xhr.status === 200) {
-          settings.success.call(settings.success_scope, '' + xhr.responseText, xhr, settings);
+          settings.success.call(
+            settings.success_scope,
+            '' + xhr.responseText,
+            xhr,
+            settings
+          );
         } else if (settings.error) {
-          settings.error.call(settings.error_scope, count > 10000 ? 'TIMED_OUT' : 'GENERAL', xhr, settings);
+          settings.error.call(
+            settings.error_scope,
+            count > 10000 ? 'TIMED_OUT' : 'GENERAL',
+            xhr,
+            settings
+          );
         }
 
         xhr = null;
@@ -97,7 +112,11 @@ const XHR: XHR = {
         xhr.overrideMimeType(settings.content_type);
       }
 
-      xhr.open(settings.type || (settings.data ? 'POST' : 'GET'), settings.url, settings.async);
+      xhr.open(
+        settings.type || (settings.data ? 'POST' : 'GET'),
+        settings.url,
+        settings.async
+      );
 
       if (settings.crossDomain) {
         xhr.withCredentials = true;

@@ -14,12 +14,15 @@ import { WindowManagerImpl } from './WindowManager';
 
 export type Theme = {
   ui?: any;
-  execCommand? (command: string, ui?: boolean, value?: any): boolean;
-  destroy? (): void;
-  init? (editor: Editor, url: string, $: DomQueryConstructor);
-  renderUI? (): { iframeContainer?: HTMLIFrameElement; editorContainer: HTMLElement };
-  getNotificationManagerImpl? (): NotificationManagerImpl;
-  getWindowManagerImpl? (): WindowManagerImpl;
+  execCommand?(command: string, ui?: boolean, value?: any): boolean;
+  destroy?(): void;
+  init?(editor: Editor, url: string, $: DomQueryConstructor);
+  renderUI?(): {
+    iframeContainer?: HTMLIFrameElement;
+    editorContainer: HTMLElement;
+  };
+  getNotificationManagerImpl?(): NotificationManagerImpl;
+  getWindowManagerImpl?(): WindowManagerImpl;
 };
 
 export default AddOnManager.ThemeManager as AddOnManager<Theme>;

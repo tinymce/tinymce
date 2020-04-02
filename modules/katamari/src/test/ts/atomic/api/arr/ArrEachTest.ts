@@ -22,8 +22,15 @@ UnitTest.test('Arr.each: unit test', () => {
   };
 
   checkL([], []);
-  checkL([{ index: 0, value: 1 }], [ 1 ]);
-  checkL([{ index: 0, value: 2 }, { index: 1, value: 3 }, { index: 2, value: 5 }], [ 2, 3, 5 ]);
+  checkL([{ index: 0, value: 1 }], [1]);
+  checkL(
+    [
+      { index: 0, value: 2 },
+      { index: 1, value: 3 },
+      { index: 2, value: 5 }
+    ],
+    [2, 3, 5]
+  );
 });
 
 UnitTest.test('Arr.eachr: unit test', () => {
@@ -40,33 +47,42 @@ UnitTest.test('Arr.eachr: unit test', () => {
     checkRHelper(expected, Object.freeze(input.slice()));
   };
 
-  checkR([{ index: 2, value: 2 }, { index: 1, value: 3 }, { index: 0, value: 5 }], [ 5, 3, 2 ]);
+  checkR(
+    [
+      { index: 2, value: 2 },
+      { index: 1, value: 3 },
+      { index: 0, value: 5 }
+    ],
+    [5, 3, 2]
+  );
 });
 
 UnitTest.test('Arr.each: property test', () => {
-  fc.assert(fc.property(
-    fc.array(fc.integer()),
-    (arr) => {
+  fc.assert(
+    fc.property(fc.array(fc.integer()), (arr) => {
       const values: number[] = [];
       const output = Arr.each(arr, (x, _i) => {
         values.push(x);
       });
       Assert.eq('Return undefined', undefined, output);
       Assert.eq('Captures all input in right order', arr, values);
-    }
-  ));
+    })
+  );
 });
 
 UnitTest.test('Arr.eachr: property test', () => {
-  fc.assert(fc.property(
-    fc.array(fc.integer()),
-    (arr) => {
+  fc.assert(
+    fc.property(fc.array(fc.integer()), (arr) => {
       const values: number[] = [];
       const output = Arr.eachr(arr, (x, _i) => {
         values.push(x);
       });
       Assert.eq('Return undefined', undefined, output);
-      Assert.eq('Captures all input in reverse order', Arr.reverse(arr), values);
-    }
-  ));
+      Assert.eq(
+        'Captures all input in reverse order',
+        Arr.reverse(arr),
+        values
+      );
+    })
+  );
 });

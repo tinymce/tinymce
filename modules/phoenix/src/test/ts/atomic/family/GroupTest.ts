@@ -15,13 +15,9 @@ UnitTest.test('GroupTest', function () {
         ]),
         Gene('1.2', 'p', [
           TextGene('1.2.1', 'This is text'),
-          Gene('1.2.2', 'span', [
-            TextGene('1.2.2.1', 'inside a span')
-          ]),
+          Gene('1.2.2', 'span', [TextGene('1.2.2.1', 'inside a span')]),
           TextGene('1.2.3', 'More text'),
-          Gene('1.2.4', 'em', [
-            TextGene('1.2.4.1', 'Inside em')
-          ]),
+          Gene('1.2.4', 'em', [TextGene('1.2.4.1', 'Inside em')]),
           TextGene('1.2.5', 'Last piece of text')
         ])
       ])
@@ -33,19 +29,28 @@ UnitTest.test('GroupTest', function () {
       return Finder.get(doc, id);
     });
     const actual = Group.group(doc, items);
-    assert.eq(expected, Arr.map(actual, function (xs) {
-      return Arr.map(xs, TestRenders.typeditem);
-    }));
+    assert.eq(
+      expected,
+      Arr.map(actual, function (xs) {
+        return Arr.map(xs, TestRenders.typeditem);
+      })
+    );
   };
 
-  check([
-    [ 'empty(1.1.1)' ],
-    [ 'text("post-image text")' ],
-    [ 'text("This is text")', 'text("inside a span")', 'text("More text")', 'text("Inside em")', 'text("Last piece of text")' ]
-  ], [ '1' ]);
+  check(
+    [
+      ['empty(1.1.1)'],
+      ['text("post-image text")'],
+      [
+        'text("This is text")',
+        'text("inside a span")',
+        'text("More text")',
+        'text("Inside em")',
+        'text("Last piece of text")'
+      ]
+    ],
+    ['1']
+  );
 
-  check([
-    [ 'empty(1.1.1)' ],
-    [ 'text("post-image text")' ]
-  ], [ '1.1' ]);
+  check([['empty(1.1.1)'], ['text("post-image text")']], ['1.1']);
 });

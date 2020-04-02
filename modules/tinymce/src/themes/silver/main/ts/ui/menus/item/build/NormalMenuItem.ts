@@ -14,32 +14,46 @@ import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 // Note, this does not create a valid SketchSpec.
-const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true): ItemTypes.ItemSpec => {
+const renderNormalItem = (
+  spec: Menu.MenuItem,
+  itemResponse: ItemResponse,
+  providersBackstage: UiFactoryBackstageProviders,
+  renderIcons: boolean = true
+): ItemTypes.ItemSpec => {
   const getApi = (component: AlloyComponent): Menu.MenuItemInstanceApi => ({
     isDisabled: () => Disabling.isDisabled(component),
     setDisabled: (state: boolean) => Disabling.set(component, state)
   });
 
-  const structure = renderItemStructure({
-    presets: 'normal',
-    iconContent: spec.icon,
-    textContent: spec.text,
-    htmlContent: Option.none(),
-    ariaLabel: spec.text,
-    caret: Option.none(),
-    checkMark: Option.none(),
-    shortcutContent: spec.shortcut
-  }, providersBackstage, renderIcons);
+  const structure = renderItemStructure(
+    {
+      presets: 'normal',
+      iconContent: spec.icon,
+      textContent: spec.text,
+      htmlContent: Option.none(),
+      ariaLabel: spec.text,
+      caret: Option.none(),
+      checkMark: Option.none(),
+      shortcutContent: spec.shortcut
+    },
+    providersBackstage,
+    renderIcons
+  );
 
-  return renderCommonItem({
-    data: buildData(spec),
-    getApi,
-    disabled: spec.disabled,
-    onAction: spec.onAction,
-    onSetup: spec.onSetup,
-    triggersSubmenu: false,
-    itemBehaviours: [ ]
-  }, structure, itemResponse, providersBackstage);
+  return renderCommonItem(
+    {
+      data: buildData(spec),
+      getApi,
+      disabled: spec.disabled,
+      onAction: spec.onAction,
+      onSetup: spec.onSetup,
+      triggersSubmenu: false,
+      itemBehaviours: []
+    },
+    structure,
+    itemResponse,
+    providersBackstage
+  );
 };
 
 export { renderNormalItem };

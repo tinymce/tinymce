@@ -19,7 +19,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
               getValue(_component) {
                 return detail.data;
               },
-              setValue() { }
+              setValue() {}
             }
           })
         ])
@@ -28,7 +28,4 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   })
 ]);
 
-export {
-  owner,
-  parts
-};
+export { owner, parts };

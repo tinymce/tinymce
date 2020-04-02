@@ -29,12 +29,9 @@ const init = (): TooltippingState => {
     clearTimer();
     timer.set(
       Option.some(
-        setTimeout(
-          () => {
-            f();
-          },
-          delay
-        )
+        setTimeout(() => {
+          f();
+        }, delay)
       )
     );
   };
@@ -52,9 +49,6 @@ const init = (): TooltippingState => {
     resetTimer,
     readState
   });
-
 };
 
-export {
-  init
-};
+export { init };

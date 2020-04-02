@@ -1,4 +1,11 @@
-import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Step } from '@ephox/agar';
+import {
+  ApproxStructure,
+  Assertions,
+  FocusTools,
+  Keyboard,
+  Keys,
+  Step
+} from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
@@ -24,75 +31,103 @@ UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
     dom: {
       tag: 'button',
       innerHtml: itemSpec.data.text,
-      classes: [ 'toolbar-item' ]
+      classes: ['toolbar-item']
     },
 
-    behaviours: Behaviour.derive([
-      Focusing.config({ })
-    ])
+    behaviours: Behaviour.derive([Focusing.config({})])
   });
 
-  GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(
-    {
-      dom: {
-        tag: 'div'
-      },
-      components: [
-        ToolbarGroup.sketch({
-          dom: {
-            tag: 'div',
-            classes: [ 'test-group1' ]
-          },
-          components: [
-            ToolbarGroup.parts().items({
-              dom: {
-                tag: 'div',
-                classes: [ 'group-items' ]
-              }
-            })
-          ],
+  GuiSetup.setup(
+    (_store, _doc, _body) =>
+      GuiFactory.build({
+        dom: {
+          tag: 'div'
+        },
+        components: [
+          ToolbarGroup.sketch({
+            dom: {
+              tag: 'div',
+              classes: ['test-group1']
+            },
+            components: [
+              ToolbarGroup.parts().items({
+                dom: {
+                  tag: 'div',
+                  classes: ['group-items']
+                }
+              })
+            ],
 
-          tgroupBehaviours: Behaviour.derive([
-            Tabstopping.config({ })
-          ]),
+            tgroupBehaviours: Behaviour.derive([Tabstopping.config({})]),
 
-          items: Arr.map([{ data: { value: 'a', text: 'A' }}, { data: { value: 'b', text: 'B' }}], mungeItem),
-          markers: {
-            itemSelector: '.toolbar-item'
-          }
-        })
-      ]
-    }
-  ), (doc, _body, _gui, component: AlloyComponent, _store) => {
-
-    const group1 = component.getSystem().getByDom(
-      SelectorFind.descendant(component.element(), '.test-group1').getOrDie('Could not find test-group1')
-    ).getOrDie();
-
-    return [
-      Assertions.sAssertStructure(
-        'Checking initial toolbar groups (group1)',
-        ApproxStructure.build((s, str, arr) => s.element('div', {
-          classes: [ arr.not('group-items') ],
-          attrs: {
-            'role': str.is('toolbar'),
-            'data-alloy-tabstop': str.is('true')
-          },
-          children: [
-            s.element('button', { html: str.is('A'), classes: [ arr.has('toolbar-item') ] }),
-            s.element('button', { html: str.is('B'), classes: [ arr.has('toolbar-item') ] })
-          ]
-        })),
-        group1.element()
-      ),
-
-      Step.sync(() => {
-        Keying.focusIn(group1);
+            items: Arr.map(
+              [
+                { data: { value: 'a', text: 'A' } },
+                { data: { value: 'b', text: 'B' } }
+              ],
+              mungeItem
+            ),
+            markers: {
+              itemSelector: '.toolbar-item'
+            }
+          })
+        ]
       }),
+    (doc, _body, _gui, component: AlloyComponent, _store) => {
+      const group1 = component
+        .getSystem()
+        .getByDom(
+          SelectorFind.descendant(component.element(), '.test-group1').getOrDie(
+            'Could not find test-group1'
+          )
+        )
+        .getOrDie();
 
-      FocusTools.sTryOnSelector('Focus should start on A', doc, 'button:contains("A")'),
-      Keyboard.sKeydown(doc, Keys.right(), { }),
-      FocusTools.sTryOnSelector('Focus should move to B', doc, 'button:contains("B")')
-    ];
-  }, () => { success(); }, failure);
+      return [
+        Assertions.sAssertStructure(
+          'Checking initial toolbar groups (group1)',
+          ApproxStructure.build((s, str, arr) =>
+            s.element('div', {
+              classes: [arr.not('group-items')],
+              attrs: {
+                'role': str.is('toolbar'),
+                'data-alloy-tabstop': str.is('true')
+              },
+              children: [
+                s.element('button', {
+                  html: str.is('A'),
+                  classes: [arr.has('toolbar-item')]
+                }),
+                s.element('button', {
+                  html: str.is('B'),
+                  classes: [arr.has('toolbar-item')]
+                })
+              ]
+            })
+          ),
+          group1.element()
+        ),
+
+        Step.sync(() => {
+          Keying.focusIn(group1);
+        }),
+
+        FocusTools.sTryOnSelector(
+          'Focus should start on A',
+          doc,
+          'button:contains("A")'
+        ),
+        Keyboard.sKeydown(doc, Keys.right(), {}),
+        FocusTools.sTryOnSelector(
+          'Focus should move to B',
+          doc,
+          'button:contains("B")'
+        )
+      ];
+    },
+    () => {
+      success();
+    },
+    failure
+  );
 });

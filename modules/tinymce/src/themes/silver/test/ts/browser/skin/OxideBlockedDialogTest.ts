@@ -1,4 +1,14 @@
-import { ApproxStructure, Assertions, Chain, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import {
+  ApproxStructure,
+  Assertions,
+  Chain,
+  Logger,
+  Mouse,
+  Pipeline,
+  Step,
+  UiFinder,
+  Waiter
+} from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
@@ -8,7 +18,6 @@ import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
-
   Theme();
   const testDialogApi = Cell({} as any);
 
@@ -16,11 +25,15 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
     (editor, onSuccess, onFailure) => {
       const tinyUi = TinyUi(editor);
 
-      Pipeline.async({ }, Logger.ts(
-        'Check structure of font format',
-        [
+      Pipeline.async(
+        {},
+        Logger.ts('Check structure of font format', [
           tinyUi.sClickOnToolbar('Click on toolbar button', 'button'),
-          UiFinder.sWaitForVisible('Waiting for dialog', Body.body(), '[role="dialog"]'),
+          UiFinder.sWaitForVisible(
+            'Waiting for dialog',
+            Body.body(),
+            '[role="dialog"]'
+          ),
           Mouse.sClickOn(Body.body(), 'button:contains("Make Busy")'),
           Waiter.sTryUntil(
             'Waiting for busy structure to match expected',
@@ -28,34 +41,36 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
               UiFinder.cFindIn('[role="dialog"]'),
               Assertions.cAssertStructure(
                 'Checking dialog structure to see where "busy" is',
-                ApproxStructure.build((s, str, arr) => s.element('div', {
-                  classes: [ arr.has('tox-dialog') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-dialog__header') ]
-                    }),
-                    s.element('div', {
-                      classes: [ arr.has('tox-dialog__content-js') ]
-                    }),
-                    s.element('div', {
-                      classes: [ arr.has('tox-dialog__footer') ]
-                    }),
-                    s.element('div', {
-                      classes: [ arr.has('tox-dialog__busy-spinner') ],
-                      children: [
-                        s.element('div', {
-                          classes: [ arr.has('tox-spinner') ],
-                          children: [
-                            // The three loading dots
-                            s.element('div', { }),
-                            s.element('div', { }),
-                            s.element('div', { })
-                          ]
-                        })
-                      ]
-                    })
-                  ]
-                }))
+                ApproxStructure.build((s, str, arr) =>
+                  s.element('div', {
+                    classes: [arr.has('tox-dialog')],
+                    children: [
+                      s.element('div', {
+                        classes: [arr.has('tox-dialog__header')]
+                      }),
+                      s.element('div', {
+                        classes: [arr.has('tox-dialog__content-js')]
+                      }),
+                      s.element('div', {
+                        classes: [arr.has('tox-dialog__footer')]
+                      }),
+                      s.element('div', {
+                        classes: [arr.has('tox-dialog__busy-spinner')],
+                        children: [
+                          s.element('div', {
+                            classes: [arr.has('tox-spinner')],
+                            children: [
+                              // The three loading dots
+                              s.element('div', {}),
+                              s.element('div', {}),
+                              s.element('div', {})
+                            ]
+                          })
+                        ]
+                      })
+                    ]
+                  })
+                )
               )
             ])
           ),
@@ -68,25 +83,29 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
               UiFinder.cFindIn('[role="dialog"]'),
               Assertions.cAssertStructure(
                 'Checking dialog structure to see where "busy" is',
-                ApproxStructure.build((s, str, arr) => s.element('div', {
-                  classes: [ arr.has('tox-dialog') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-dialog__header') ]
-                    }),
-                    s.element('div', {
-                      classes: [ arr.has('tox-dialog__content-js') ]
-                    }),
-                    s.element('div', {
-                      classes: [ arr.has('tox-dialog__footer') ]
-                    })
-                  ]
-                }))
+                ApproxStructure.build((s, str, arr) =>
+                  s.element('div', {
+                    classes: [arr.has('tox-dialog')],
+                    children: [
+                      s.element('div', {
+                        classes: [arr.has('tox-dialog__header')]
+                      }),
+                      s.element('div', {
+                        classes: [arr.has('tox-dialog__content-js')]
+                      }),
+                      s.element('div', {
+                        classes: [arr.has('tox-dialog__footer')]
+                      })
+                    ]
+                  })
+                )
               )
             ])
           )
-        ]
-      ), onSuccess, onFailure);
+        ]),
+        onSuccess,
+        onFailure
+      );
     },
     {
       theme: 'silver',
@@ -98,25 +117,27 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
           type: 'button',
           text: 'Launch Dialog',
           onAction: () => {
-            testDialogApi.set(ed.windowManager.open({
-              title: 'Testing Blocking',
-              body: {
-                type: 'panel',
-                items: [
-                  {
-                    type: 'button',
-                    name: 'busy-button',
-                    text: 'Make Busy'
+            testDialogApi.set(
+              ed.windowManager.open({
+                title: 'Testing Blocking',
+                body: {
+                  type: 'panel',
+                  items: [
+                    {
+                      type: 'button',
+                      name: 'busy-button',
+                      text: 'Make Busy'
+                    }
+                  ]
+                },
+                buttons: [],
+                onAction: (dialogApi, actionData) => {
+                  if (actionData.name === 'busy-button') {
+                    dialogApi.block('Dialog is blocked.');
                   }
-                ]
-              },
-              buttons: [ ],
-              onAction: (dialogApi, actionData) => {
-                if (actionData.name === 'busy-button') {
-                  dialogApi.block('Dialog is blocked.');
                 }
-              }
-            }));
+              })
+            );
           }
         });
       }

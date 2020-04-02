@@ -5,27 +5,33 @@ import { getDemoRegistry } from '../buttons/DemoRegistry';
 
 export const registerDemoContextMenus = () => {
   getDemoRegistry().addContextMenu('regular', {
-    update: () => [ 'bold', 'italic', '|', 'table' ]
+    update: () => ['bold', 'italic', '|', 'table']
   });
 
   getDemoRegistry().addContextMenu('custom', {
-    update: () => [{
-      icon: 'code',
-      text: 'Code',
-      onAction: (_api) => {
-        console.log('open source code dialog');
+    update: () => [
+      {
+        icon: 'code',
+        text: 'Code',
+        onAction: (_api) => {
+          console.log('open source code dialog');
+        }
       }
-    }]
+    ]
   });
 
   getDemoRegistry().addContextMenu('mixed', {
-    update: () => [ 'bold', 'italic', {
-      icon: 'code',
-      text: 'Code',
-      onAction: (_api) => {
-        console.log('open source code dialog');
+    update: () => [
+      'bold',
+      'italic',
+      {
+        icon: 'code',
+        text: 'Code',
+        onAction: (_api) => {
+          console.log('open source code dialog');
+        }
       }
-    }]
+    ]
   });
 
   getDemoRegistry().addContextMenu('spelling', {
@@ -52,10 +58,9 @@ export const registerDemoContextMenus = () => {
           {
             text: 'word4',
             onAction: () => console.log('word4')
-          },
+          }
         ]
       }
     ]
   });
-
 };

@@ -10,10 +10,15 @@ import { Arr, Option } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
-import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
+import {
+  createMenuItems,
+  createSelectButton,
+  SelectSpec
+} from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 
-const defaultFontsFormats = 'Andale Mono=andale mono,monospace;' +
+const defaultFontsFormats =
+  'Andale Mono=andale mono,monospace;' +
   'Arial=arial,helvetica,sans-serif;' +
   'Arial Black=arial black,sans-serif;' +
   'Book Antiqua=book antiqua,palatino,serif;' +
@@ -33,7 +38,13 @@ const defaultFontsFormats = 'Andale Mono=andale mono,monospace;' +
 
 // A list of fonts that must be in a font family for the font to be recognised as the system stack
 // Note: Don't include 'BlinkMacSystemFont', as Chrome on Mac converts it to different names
-const systemStackFonts = [ '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'sans-serif' ];
+const systemStackFonts = [
+  '-apple-system',
+  'Segoe UI',
+  'Roboto',
+  'Helvetica Neue',
+  'sans-serif'
+];
 
 // Split the fonts into an array and strip away any start/end quotes
 const splitFonts = (fontFamily: string): string[] => {
@@ -48,7 +59,10 @@ const isSystemFontStack = (fontFamily: string): boolean => {
   // Wordpress: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   const matchesSystemStack = (): boolean => {
     const fonts = splitFonts(fontFamily.toLowerCase());
-    return Arr.forall(systemStackFonts, (font) => fonts.indexOf(font.toLowerCase()) > -1);
+    return Arr.forall(
+      systemStackFonts,
+      (font) => fonts.indexOf(font.toLowerCase()) > -1
+    );
   };
 
   return fontFamily.indexOf('-apple-system') === 0 && matchesSystemStack();
@@ -56,7 +70,8 @@ const isSystemFontStack = (fontFamily: string): boolean => {
 
 const getSpec = (editor: Editor): SelectSpec => {
   const getMatchingValue = () => {
-    const getFirstFont = (fontFamily) => fontFamily ? splitFonts(fontFamily)[0] : '';
+    const getFirstFont = (fontFamily) =>
+      fontFamily ? splitFonts(fontFamily)[0] : '';
 
     const fontFamily = editor.queryCommandValue('FontName');
     const items = dataset.data;
@@ -64,7 +79,10 @@ const getSpec = (editor: Editor): SelectSpec => {
 
     const matchOpt = Arr.find(items, (item) => {
       const format = item.format;
-      return (format.toLowerCase() === font) || (getFirstFont(format).toLowerCase() === getFirstFont(font).toLowerCase());
+      return (
+        format.toLowerCase() === font ||
+        getFirstFont(format).toLowerCase() === getFirstFont(font).toLowerCase()
+      );
     }).orThunk(() => {
       if (isSystemFontStack(font)) {
         return Option.from({
@@ -79,17 +97,20 @@ const getSpec = (editor: Editor): SelectSpec => {
     return { matchOpt, font: fontFamily };
   };
 
-  const isSelectedFor = (item) => (valueOpt: Option<{ format: string; title: string }>) => valueOpt.exists((value) => value.format === item);
+  const isSelectedFor = (item) => (
+    valueOpt: Option<{ format: string; title: string }>
+  ) => valueOpt.exists((value) => value.format === item);
 
   const getCurrentValue = () => {
     const { matchOpt } = getMatchingValue();
     return matchOpt;
   };
 
-  const getPreviewFor = (item) => () => Option.some({
-    tag: 'div',
-    styles: item.indexOf('dings') === -1 ? { 'font-family': item } :  { }
-  });
+  const getPreviewFor = (item) => () =>
+    Option.some({
+      tag: 'div',
+      styles: item.indexOf('dings') === -1 ? { 'font-family': item } : {}
+    });
 
   const onAction = (rawItem) => () => {
     editor.undoManager.transact(() => {
@@ -100,17 +121,27 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   const updateSelectMenuText = (comp: AlloyComponent) => {
     const { matchOpt, font } = getMatchingValue();
-    const text = matchOpt.fold(() => font, (item) => item.title);
+    const text = matchOpt.fold(
+      () => font,
+      (item) => item.title
+    );
     AlloyTriggers.emitWith(comp, updateMenuText, {
       text
     });
   };
 
-  const nodeChangeHandler = Option.some((comp) => () => updateSelectMenuText(comp));
+  const nodeChangeHandler = Option.some((comp) => () =>
+    updateSelectMenuText(comp)
+  );
 
   const setInitialValue = Option.some((comp) => updateSelectMenuText(comp));
 
-  const dataset = buildBasicSettingsDataset(editor, 'font_formats', defaultFontsFormats, Delimiter.SemiColon);
+  const dataset = buildBasicSettingsDataset(
+    editor,
+    'font_formats',
+    defaultFontsFormats,
+    Delimiter.SemiColon
+  );
 
   return {
     tooltip: 'Fonts',
@@ -127,14 +158,16 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
-const createFontSelect = (editor: Editor, backstage: UiFactoryBackstage) => createSelectButton(editor, backstage, getSpec(editor));
+const createFontSelect = (editor: Editor, backstage: UiFactoryBackstage) =>
+  createSelectButton(editor, backstage, getSpec(editor));
 
 // TODO: Test this!
 const fontSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('fontformats', {
     text: backstage.shared.providers.translate('Fonts'),
-    getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
+    getSubmenuItems: () =>
+      menuItems.items.validateItems(menuItems.getStyleItems())
   });
 };
 

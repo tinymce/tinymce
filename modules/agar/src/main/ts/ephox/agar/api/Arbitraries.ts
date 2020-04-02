@@ -11,7 +11,8 @@ const scenario = (component, overrides, exclusions) => {
     Generators.selection(root, exclusions).map((selection) => ({
       root: Fun.constant(root),
       selection: Fun.constant(selection)
-    })));
+    }))
+  );
 
   return Jsc.bless({
     generator
@@ -21,7 +22,4 @@ const scenario = (component, overrides, exclusions) => {
 const content = (component, overrides?) =>
   ArbContent.arbOf(component, overrides);
 
-export {
-  scenario,
-  content
-};
+export { scenario, content };

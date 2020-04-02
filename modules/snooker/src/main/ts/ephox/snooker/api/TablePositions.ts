@@ -18,13 +18,23 @@ const intercepts = function (table: Element, first: Element, last: Element) {
   return CellFinder.intercepts(warehouse, first, last);
 };
 
-const nestedIntercepts = function (table: Element, first: Element, firstTable: Element, last: Element, lastTable: Element) {
+const nestedIntercepts = function (
+  table: Element,
+  first: Element,
+  firstTable: Element,
+  last: Element,
+  lastTable: Element
+) {
   const warehouse = getWarehouse(table);
-  const optStartCell = Compare.eq(table, firstTable) ? Option.some(first) : CellFinder.parentCell(warehouse, first);
-  const optLastCell = Compare.eq(table, lastTable) ? Option.some(last) : CellFinder.parentCell(warehouse, last);
-  return optStartCell.bind(
-    (startCell) => optLastCell.bind(
-      (lastCell) => CellFinder.intercepts(warehouse, startCell, lastCell)
+  const optStartCell = Compare.eq(table, firstTable)
+    ? Option.some(first)
+    : CellFinder.parentCell(warehouse, first);
+  const optLastCell = Compare.eq(table, lastTable)
+    ? Option.some(last)
+    : CellFinder.parentCell(warehouse, last);
+  return optStartCell.bind((startCell) =>
+    optLastCell.bind((lastCell) =>
+      CellFinder.intercepts(warehouse, startCell, lastCell)
     )
   );
 };
@@ -40,9 +50,4 @@ const getWarehouse = function (table: Element) {
   return Warehouse.generate(list);
 };
 
-export {
-  moveBy,
-  intercepts,
-  nestedIntercepts,
-  getBox
-};
+export { moveBy, intercepts, nestedIntercepts, getBox };

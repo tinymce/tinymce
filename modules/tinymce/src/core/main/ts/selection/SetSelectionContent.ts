@@ -30,22 +30,36 @@ const rngSetContent = (rng: Range, fragment: DocumentFragment): void => {
   rng.deleteContents();
   rng.insertNode(fragment);
 
-  const prevText = firstChild.bind(Traverse.prevSibling).filter(Node.isText).bind(removeEmpty);
-  const nextText = lastChild.bind(Traverse.nextSibling).filter(Node.isText).bind(removeEmpty);
+  const prevText = firstChild
+    .bind(Traverse.prevSibling)
+    .filter(Node.isText)
+    .bind(removeEmpty);
+  const nextText = lastChild
+    .bind(Traverse.nextSibling)
+    .filter(Node.isText)
+    .bind(removeEmpty);
 
   // Join start
-  Options.lift2(prevText, firstChild.filter(Node.isText), (prev: Element, start: Element) => {
-    prependData(start.dom(), prev.dom().data);
-    Remove.remove(prev);
-  });
+  Options.lift2(
+    prevText,
+    firstChild.filter(Node.isText),
+    (prev: Element, start: Element) => {
+      prependData(start.dom(), prev.dom().data);
+      Remove.remove(prev);
+    }
+  );
 
   // Join end
-  Options.lift2(nextText, lastChild.filter(Node.isText), (next: Element, end: Element) => {
-    const oldLength = end.dom().length;
-    end.dom().appendData(next.dom().data);
-    rng.setEnd(end.dom(), oldLength);
-    Remove.remove(next);
-  });
+  Options.lift2(
+    nextText,
+    lastChild.filter(Node.isText),
+    (next: Element, end: Element) => {
+      const oldLength = end.dom().length;
+      end.dom().appendData(next.dom().data);
+      rng.setEnd(end.dom(), oldLength);
+      Remove.remove(next);
+    }
+  );
 
   rng.collapse(false);
 };
@@ -80,6 +94,4 @@ const setContent = (editor: Editor, content: string, args) => {
   }
 };
 
-export {
-  setContent
-};
+export { setContent };

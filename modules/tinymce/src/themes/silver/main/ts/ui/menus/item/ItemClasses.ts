@@ -28,13 +28,13 @@ const checkmarkClass = 'tox-collection__item-checkmark';
 const activeClass = 'tox-collection__item--active';
 const iconClassRtl = 'tox-collection__item-icon-rtl';
 
-const classForPreset = (presets: Types.PresetTypes): string => Obj.get(presetClasses, presets).getOr(navClass);
+const classForPreset = (presets: Types.PresetTypes): string =>
+  Obj.get(presetClasses, presets).getOr(navClass);
 
 export {
   classForPreset,
   navClass,
   colorClass,
-
   activeClass,
   selectableClass,
   textClass,

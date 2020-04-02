@@ -5,7 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, Behaviour, Button, GuiFactory, Memento, Replacing, Sketcher, UiSketcher } from '@ephox/alloy';
+import {
+  AlloyComponent,
+  AlloySpec,
+  Behaviour,
+  Button,
+  GuiFactory,
+  Memento,
+  Replacing,
+  Sketcher,
+  UiSketcher
+} from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Option } from '@ephox/katamari';
 import { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
@@ -40,9 +50,9 @@ export interface NotificationSketchDetail extends Sketcher.SingleSketchDetail {
   translationProvider: (text: Untranslated) => TranslatedString;
 }
 
-export interface NotificationSketcher extends Sketcher.SingleSketch<NotificationSketchSpec>, NotificationSketchApis {
-
-}
+export interface NotificationSketcher
+  extends Sketcher.SingleSketch<NotificationSketchSpec>,
+    NotificationSketchApis {}
 
 const notificationIconMap = {
   success: 'checkmark',
@@ -53,22 +63,23 @@ const notificationIconMap = {
   info: 'info'
 };
 
-const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, NotificationSketchSpec> = (detail) => {
+const factory: UiSketcher.SingleSketchFactory<
+  NotificationSketchDetail,
+  NotificationSketchSpec
+> = (detail) => {
   // For using the alert banner as a standalone banner
   const memBannerText = Memento.record({
     dom: {
       tag: 'p',
       innerHtml: detail.translationProvider(detail.text)
     },
-    behaviours: Behaviour.derive([
-      Replacing.config({ })
-    ])
+    behaviours: Behaviour.derive([Replacing.config({})])
   });
 
   const renderPercentBar = (percent: number) => ({
     dom: {
       tag: 'div',
-      classes: [ 'tox-bar' ],
+      classes: ['tox-bar'],
       attributes: {
         style: `width: ${percent}%`
       }
@@ -78,7 +89,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
   const renderPercentText = (percent: number) => ({
     dom: {
       tag: 'div',
-      classes: [ 'tox-text' ],
+      classes: ['tox-text'],
       innerHtml: `${percent}%`
     }
   });
@@ -86,37 +97,36 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
   const memBannerProgress = Memento.record({
     dom: {
       tag: 'div',
-      classes: detail.progress ? [ 'tox-progress-bar', 'tox-progress-indicator' ] : [ 'tox-progress-bar' ]
+      classes: detail.progress
+        ? ['tox-progress-bar', 'tox-progress-indicator']
+        : ['tox-progress-bar']
     },
     components: [
       {
         dom: {
           tag: 'div',
-          classes: [ 'tox-bar-container' ]
+          classes: ['tox-bar-container']
         },
-        components: [
-          renderPercentBar(0)
-        ]
+        components: [renderPercentBar(0)]
       },
       renderPercentText(0)
     ],
-    behaviours: Behaviour.derive([
-      Replacing.config({ })
-    ])
+    behaviours: Behaviour.derive([Replacing.config({})])
   });
 
-  const updateProgress: NotificationSketchApis['updateProgress'] = (comp, percent) => {
+  const updateProgress: NotificationSketchApis['updateProgress'] = (
+    comp,
+    percent
+  ) => {
     if (comp.getSystem().isConnected()) {
       memBannerProgress.getOpt(comp).each((progress) => {
         Replacing.set(progress, [
           {
             dom: {
               tag: 'div',
-              classes: [ 'tox-bar-container' ]
+              classes: ['tox-bar-container']
             },
-            components: [
-              renderPercentBar(percent)
-            ]
+            components: [renderPercentBar(percent)]
           },
           renderPercentText(percent)
         ]);
@@ -127,9 +137,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
   const updateText: NotificationSketchApis['updateText'] = (comp, text) => {
     if (comp.getSystem().isConnected()) {
       const banner = memBannerText.get(comp);
-      Replacing.set(banner, [
-        GuiFactory.text(text)
-      ]);
+      Replacing.set(banner, [GuiFactory.text(text)]);
     }
   };
 
@@ -141,7 +149,9 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
   const iconChoices = Arr.flatten([
     detail.icon.toArray(),
     detail.level.toArray(),
-    detail.level.bind((level) => Option.from(notificationIconMap[level])).toArray()
+    detail.level
+      .bind((level) => Option.from(notificationIconMap[level]))
+      .toArray()
   ]);
 
   return {
@@ -151,50 +161,63 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
       attributes: {
         role: 'alert'
       },
-      classes: detail.level.map((level) => [ 'tox-notification', 'tox-notification--in', `tox-notification--${level}` ]).getOr(
-        [ 'tox-notification', 'tox-notification--in' ]
-      )
+      classes: detail.level
+        .map((level) => [
+          'tox-notification',
+          'tox-notification--in',
+          `tox-notification--${level}`
+        ])
+        .getOr(['tox-notification', 'tox-notification--in'])
     },
-    components: [ {
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-notification__icon' ],
-        innerHtml: getFirst(iconChoices, detail.iconProvider)
-      }
-    } as AlloySpec,
-    {
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-notification__body' ],
-      },
-      components: [
-        memBannerText.asSpec()
-      ],
-      behaviours: Behaviour.derive([
-        Replacing.config({ })
-      ])
-    } as AlloySpec
-    ]
-      .concat(detail.progress ? [ memBannerProgress.asSpec() ] : [])
-      .concat(!detail.closeButton ? [] : [ Button.sketch({
+    components: [
+      {
         dom: {
-          tag: 'button',
-          classes: [ 'tox-notification__dismiss', 'tox-button', 'tox-button--naked', 'tox-button--icon' ]
-        },
-        components: [{
-          dom: {
-            tag: 'div',
-            classes: [ 'tox-icon' ],
-            innerHtml: getIcon('close', detail.iconProvider),
-            attributes: {
-              'aria-label': detail.translationProvider('Close')
-            }
-          }
-        }],
-        action: (comp) => {
-          detail.onAction(comp);
+          tag: 'div',
+          classes: ['tox-notification__icon'],
+          innerHtml: getFirst(iconChoices, detail.iconProvider)
         }
-      }) ]
+      } as AlloySpec,
+      {
+        dom: {
+          tag: 'div',
+          classes: ['tox-notification__body']
+        },
+        components: [memBannerText.asSpec()],
+        behaviours: Behaviour.derive([Replacing.config({})])
+      } as AlloySpec
+    ]
+      .concat(detail.progress ? [memBannerProgress.asSpec()] : [])
+      .concat(
+        !detail.closeButton
+          ? []
+          : [
+              Button.sketch({
+                dom: {
+                  tag: 'button',
+                  classes: [
+                    'tox-notification__dismiss',
+                    'tox-button',
+                    'tox-button--naked',
+                    'tox-button--icon'
+                  ]
+                },
+                components: [
+                  {
+                    dom: {
+                      tag: 'div',
+                      classes: ['tox-icon'],
+                      innerHtml: getIcon('close', detail.iconProvider),
+                      attributes: {
+                        'aria-label': detail.translationProvider('Close')
+                      }
+                    }
+                  }
+                ],
+                action: (comp) => {
+                  detail.onAction(comp);
+                }
+              })
+            ]
       ),
     apis
   };
@@ -214,10 +237,18 @@ export const Notification: NotificationSketcher = Sketcher.single({
     FieldSchema.defaultedBoolean('closeButton', true)
   ],
   apis: {
-    updateProgress: (apis: NotificationSketchApis, comp: AlloyComponent, percent: number) => {
+    updateProgress: (
+      apis: NotificationSketchApis,
+      comp: AlloyComponent,
+      percent: number
+    ) => {
       apis.updateProgress(comp, percent);
     },
-    updateText: (apis: NotificationSketchApis, comp: AlloyComponent, text: string) => {
+    updateText: (
+      apis: NotificationSketchApis,
+      comp: AlloyComponent,
+      text: string
+    ) => {
       apis.updateText(comp, text);
     }
   }

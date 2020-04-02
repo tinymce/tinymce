@@ -35,7 +35,10 @@ import * as ReadOnly from '../../ReadOnly';
 
 type CheckboxSpec = Omit<Types.Checkbox.Checkbox, 'type'>;
 
-export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryBackstageProviders): SimpleSpec => {
+export const renderCheckbox = (
+  spec: CheckboxSpec,
+  providerBackstage: UiFactoryBackstageProviders
+): SimpleSpec => {
   const repBehaviour = Representing.config({
     store: {
       mode: 'manual',
@@ -59,7 +62,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
     factory: { sketch: Fun.identity },
     dom: {
       tag: 'input',
-      classes: [ 'tox-checkbox__input' ],
+      classes: ['tox-checkbox__input'],
       attributes: {
         type: 'checkbox'
       }
@@ -69,7 +72,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
       ComposingConfigs.self(),
       Disabling.config({ disabled: spec.disabled }),
       Tabstopping.config({}),
-      Focusing.config({ }),
+      Focusing.config({}),
       repBehaviour,
       Keying.config({
         mode: 'special',
@@ -79,21 +82,21 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
       }),
       AddEventsBehaviour.config('checkbox-events', [
         AlloyEvents.run(NativeEvents.change(), (component, _) => {
-          AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name } );
+          AlloyTriggers.emitWith(component, formChangeEvent, {
+            name: spec.name
+          });
         })
       ])
-    ]),
+    ])
   });
 
   const pLabel = AlloyFormField.parts().label({
     dom: {
       tag: 'span',
-      classes: [ 'tox-checkbox__label' ],
+      classes: ['tox-checkbox__label'],
       innerHtml: providerBackstage.translate(spec.label)
     },
-    behaviours: Behaviour.derive([
-      Unselecting.config({})
-    ])
+    behaviours: Behaviour.derive([Unselecting.config({})])
   });
 
   const makeIcon = (className: string) => {
@@ -101,35 +104,26 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
     return {
       dom: {
         tag: 'span',
-        classes: [ 'tox-icon', 'tox-checkbox-icon__' + className ],
+        classes: ['tox-icon', 'tox-checkbox-icon__' + className],
         innerHtml: Icons.get(iconName, providerBackstage.icons)
       }
     };
   };
 
-  const memIcons = Memento.record(
-    {
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-checkbox__icons' ]
-      },
-      components: [
-        makeIcon('checked'),
-        makeIcon('unchecked')
-      ]
-    }
-  );
+  const memIcons = Memento.record({
+    dom: {
+      tag: 'div',
+      classes: ['tox-checkbox__icons']
+    },
+    components: [makeIcon('checked'), makeIcon('unchecked')]
+  });
 
   return AlloyFormField.sketch({
     dom: {
       tag: 'label',
-      classes: [ 'tox-checkbox' ],
+      classes: ['tox-checkbox']
     },
-    components: [
-      pField,
-      memIcons.asSpec(),
-      pLabel
-    ],
+    components: [pField, memIcons.asSpec(), pLabel],
     fieldBehaviours: Behaviour.derive([
       Disabling.config({
         disabled: spec.disabled || providerBackstage.isReadonly(),

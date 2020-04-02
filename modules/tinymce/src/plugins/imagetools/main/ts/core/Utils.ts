@@ -23,8 +23,12 @@ const traverse = function (json, path) {
   return isValue(value) ? value : null;
 };
 
-const requestUrlAsBlob = function (url: string, headers: Record<string, string>, withCredentials: boolean) {
-  return new Promise<{status: number; blob: Blob}>(function (resolve) {
+const requestUrlAsBlob = function (
+  url: string,
+  headers: Record<string, string>,
+  withCredentials: boolean
+) {
+  return new Promise<{ status: number; blob: Blob }>(function (resolve) {
     let xhr;
 
     xhr = new XMLHttpRequest();
@@ -76,9 +80,4 @@ const parseJson = function (text) {
   return json;
 };
 
-export {
-  traverse,
-  readBlob,
-  requestUrlAsBlob,
-  parseJson
-};
+export { traverse, readBlob, requestUrlAsBlob, parseJson };

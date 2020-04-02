@@ -3,7 +3,10 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Cell } from '@ephox/katamari';
 import * as MatchKeys from 'tinymce/core/keyboard/MatchKeys';
 
-UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (success, failure) {
+UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (
+  success,
+  failure
+) {
   const state = Cell([]);
 
   const event = function (evt) {
@@ -19,7 +22,7 @@ UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (succe
 
   const handleAction = function (value) {
     return function () {
-      state.set(state.get().concat([ value ]));
+      state.set(state.get().concat([value]));
       return true;
     };
   };
@@ -35,7 +38,11 @@ UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (succe
         return pattern.action();
       });
 
-      Assertions.assertEq('Should have the expected state', expectedData, state.get());
+      Assertions.assertEq(
+        'Should have the expected state',
+        expectedData,
+        state.get()
+      );
     });
   };
 
@@ -54,48 +61,113 @@ UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (succe
       state.set([]);
 
       const result = MatchKeys.execute(patterns, event);
-      Assertions.assertEq('Should be expected match', expectedMatch, result.getOrDie());
-      Assertions.assertEq('Should have the expected state', expectedData, state.get());
+      Assertions.assertEq(
+        'Should be expected match',
+        expectedMatch,
+        result.getOrDie()
+      );
+      Assertions.assertEq(
+        'Should have the expected state',
+        expectedData,
+        state.get()
+      );
     });
   };
 
   const actionA = handleAction('a');
   const actionB = handleAction('b');
 
-  Pipeline.async({}, [
-    sTestMatchNone([], {}),
-    sTestMatchNone([], event({ keyCode: 65 })),
-    sTestMatchNone([{ keyCode: 65, action: actionA }], event({ keyCode: 13 })),
-    sTestMatch([{ keyCode: 65, action: actionA }], event({ keyCode: 65 }), [ 'a' ]),
-    sTestMatch([{ keyCode: 65, shiftKey: true, action: actionA }], event({ keyCode: 65, shiftKey: true }), [ 'a' ]),
-    sTestMatch([{ keyCode: 65, altKey: true, action: actionA }], event({ keyCode: 65, altKey: true }), [ 'a' ]),
-    sTestMatch([{ keyCode: 65, ctrlKey: true, action: actionA }], event({ keyCode: 65, ctrlKey: true }), [ 'a' ]),
-    sTestMatch([{ keyCode: 65, metaKey: true, action: actionA }], event({ keyCode: 65, metaKey: true }), [ 'a' ]),
-    sTestMatch(
-      [
-        { keyCode: 65, ctrlKey: true, metaKey: true, altKey: true, action: actionA },
-        { keyCode: 65, ctrlKey: true, metaKey: true, action: actionB }
-      ],
-      event({ keyCode: 65, metaKey: true, ctrlKey: true }),
-      [ 'b' ]
-    ),
-    sTestExecute(
-      [
-        { keyCode: 65, ctrlKey: true, metaKey: true, altKey: true, action: actionA },
-        { keyCode: 65, ctrlKey: true, metaKey: true, action: actionB }
-      ],
-      event({ keyCode: 65, metaKey: true, ctrlKey: true }),
-      [ 'b' ],
-      { shiftKey: false, altKey: false, ctrlKey: true, metaKey: true, keyCode: 65, action: actionB }
-    ),
-    Logger.t('Action wrapper helper', Step.sync(function () {
-      const action = MatchKeys.action(function () {
-        return Array.prototype.slice.call(arguments, 0);
-      }, 1, 2, 3);
+  Pipeline.async(
+    {},
+    [
+      sTestMatchNone([], {}),
+      sTestMatchNone([], event({ keyCode: 65 })),
+      sTestMatchNone(
+        [{ keyCode: 65, action: actionA }],
+        event({ keyCode: 13 })
+      ),
+      sTestMatch([{ keyCode: 65, action: actionA }], event({ keyCode: 65 }), [
+        'a'
+      ]),
+      sTestMatch(
+        [{ keyCode: 65, shiftKey: true, action: actionA }],
+        event({ keyCode: 65, shiftKey: true }),
+        ['a']
+      ),
+      sTestMatch(
+        [{ keyCode: 65, altKey: true, action: actionA }],
+        event({ keyCode: 65, altKey: true }),
+        ['a']
+      ),
+      sTestMatch(
+        [{ keyCode: 65, ctrlKey: true, action: actionA }],
+        event({ keyCode: 65, ctrlKey: true }),
+        ['a']
+      ),
+      sTestMatch(
+        [{ keyCode: 65, metaKey: true, action: actionA }],
+        event({ keyCode: 65, metaKey: true }),
+        ['a']
+      ),
+      sTestMatch(
+        [
+          {
+            keyCode: 65,
+            ctrlKey: true,
+            metaKey: true,
+            altKey: true,
+            action: actionA
+          },
+          { keyCode: 65, ctrlKey: true, metaKey: true, action: actionB }
+        ],
+        event({ keyCode: 65, metaKey: true, ctrlKey: true }),
+        ['b']
+      ),
+      sTestExecute(
+        [
+          {
+            keyCode: 65,
+            ctrlKey: true,
+            metaKey: true,
+            altKey: true,
+            action: actionA
+          },
+          { keyCode: 65, ctrlKey: true, metaKey: true, action: actionB }
+        ],
+        event({ keyCode: 65, metaKey: true, ctrlKey: true }),
+        ['b'],
+        {
+          shiftKey: false,
+          altKey: false,
+          ctrlKey: true,
+          metaKey: true,
+          keyCode: 65,
+          action: actionB
+        }
+      ),
+      Logger.t(
+        'Action wrapper helper',
+        Step.sync(function () {
+          const action = MatchKeys.action(
+            function () {
+              return Array.prototype.slice.call(arguments, 0);
+            },
+            1,
+            2,
+            3
+          );
 
-      Assertions.assertEq('Should return the parameters passed in', [ 1, 2, 3 ], action());
-    }))
-  ], function () {
-    success();
-  }, failure);
+          Assertions.assertEq(
+            'Should return the parameters passed in',
+            [1, 2, 3],
+            action()
+          );
+        })
+      )
+    ],
+    function () {
+      success();
+    },
+    failure
+  );
 });

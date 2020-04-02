@@ -5,7 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling, FormField as AlloyFormField, Memento, NativeEvents, Representing, SimpleSpec, SimulatedEvent, SystemEvents, Tabstopping, Toggling } from '@ephox/alloy';
+import {
+  AddEventsBehaviour,
+  AlloyComponent,
+  AlloyEvents,
+  AlloyTriggers,
+  Behaviour,
+  Button,
+  Disabling,
+  FormField as AlloyFormField,
+  Memento,
+  NativeEvents,
+  Representing,
+  SimpleSpec,
+  SimulatedEvent,
+  SystemEvents,
+  Tabstopping,
+  Toggling
+} from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { DragEvent, FileList } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
@@ -23,28 +40,38 @@ import * as ReadOnly from '../../ReadOnly';
 const extensionsAccepted = '.jpg,.jpeg,.png,.gif';
 
 const filterByExtension = function (files: FileList) {
-  const re = new RegExp('(' + extensionsAccepted.split(/\s*,\s*/).join('|') + ')$', 'i');
+  const re = new RegExp(
+    '(' + extensionsAccepted.split(/\s*,\s*/).join('|') + ')$',
+    'i'
+  );
   return Arr.filter(Arr.from(files), (file) => re.test(file.name));
 };
 
 type DropZoneSpec = Omit<Types.DropZone.DropZone, 'type'>;
 
-export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
-
+export const renderDropZone = (
+  spec: DropZoneSpec,
+  providersBackstage: UiFactoryBackstageProviders
+): SimpleSpec => {
   // TODO: Consider moving to alloy
-  const stopper: AlloyEvents.EventRunHandler<EventArgs> = (_: AlloyComponent, se: SimulatedEvent<EventArgs>): void => {
+  const stopper: AlloyEvents.EventRunHandler<EventArgs> = (
+    _: AlloyComponent,
+    se: SimulatedEvent<EventArgs>
+  ): void => {
     se.stop();
   };
 
   // TODO: Consider moving to alloy
-  const sequence = (actions: Array<AlloyEvents.EventRunHandler<EventArgs>>): AlloyEvents.EventRunHandler<EventArgs> => (comp, se) => {
+  const sequence = (
+    actions: Array<AlloyEvents.EventRunHandler<EventArgs>>
+  ): AlloyEvents.EventRunHandler<EventArgs> => (comp, se) => {
     Arr.each(actions, (a) => {
       a(comp, se);
     });
   };
 
   const onDrop: AlloyEvents.EventRunHandler<EventArgs> = (comp, se) => {
-    if (! Disabling.isDisabled(comp)) {
+    if (!Disabling.isDisabled(comp)) {
       const transferEvent = se.event().raw() as DragEvent;
       handleFiles(comp, transferEvent.dataTransfer.files);
     }
@@ -60,35 +87,33 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
     AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
   };
 
-  const memInput = Memento.record(
-    {
-      dom: {
-        tag: 'input',
-        attributes: {
-          type: 'file',
-          accept: 'image/*'
-        },
-        styles: {
-          display: 'none'
-        }
+  const memInput = Memento.record({
+    dom: {
+      tag: 'input',
+      attributes: {
+        type: 'file',
+        accept: 'image/*'
       },
-      behaviours: Behaviour.derive([
-        AddEventsBehaviour.config('input-file-events', [
-          AlloyEvents.cutter(NativeEvents.click()),
-          AlloyEvents.cutter(SystemEvents.tap())
-        ])
+      styles: {
+        display: 'none'
+      }
+    },
+    behaviours: Behaviour.derive([
+      AddEventsBehaviour.config('input-file-events', [
+        AlloyEvents.cutter(NativeEvents.click()),
+        AlloyEvents.cutter(SystemEvents.tap())
       ])
-    }
-  );
+    ])
+  });
 
   const renderField = (s) => ({
     uid: s.uid,
     dom: {
       tag: 'div',
-      classes: [ 'tox-dropzone-container' ]
+      classes: ['tox-dropzone-container']
     },
     behaviours: Behaviour.derive([
-      RepresentingConfigs.memory([ ]),
+      RepresentingConfigs.memory([]),
       ComposingConfigs.self(),
       Disabling.config({}),
       Toggling.config({
@@ -96,18 +121,18 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
         toggleOnExecute: false
       }),
       AddEventsBehaviour.config('dropzone-events', [
-        AlloyEvents.run('dragenter', sequence([ stopper, Toggling.toggle ])),
-        AlloyEvents.run('dragleave', sequence([ stopper, Toggling.toggle ])),
+        AlloyEvents.run('dragenter', sequence([stopper, Toggling.toggle])),
+        AlloyEvents.run('dragleave', sequence([stopper, Toggling.toggle])),
         AlloyEvents.run('dragover', stopper),
-        AlloyEvents.run('drop', sequence([ stopper, onDrop ])),
+        AlloyEvents.run('drop', sequence([stopper, onDrop])),
         AlloyEvents.run(NativeEvents.change(), onSelect)
-      ]),
+      ])
     ]),
     components: [
       {
         dom: {
           tag: 'div',
-          classes: [ 'tox-dropzone' ],
+          classes: ['tox-dropzone'],
           styles: {}
         },
         components: [
@@ -124,17 +149,15 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
               styles: {
                 position: 'relative'
               },
-              classes: [ 'tox-button', 'tox-button--secondary' ]
+              classes: ['tox-button', 'tox-button--secondary']
             },
-            components: [
-              memInput.asSpec()
-            ],
+            components: [memInput.asSpec()],
             action: (comp) => {
               const inputComp = memInput.get(comp);
               inputComp.element().dom().click();
             },
             buttonBehaviours: Behaviour.derive([
-              Tabstopping.config({ }),
+              Tabstopping.config({}),
               DisablingConfigs.button(providersBackstage.isReadonly()),
               ReadOnly.receivingConfig()
             ])
@@ -144,10 +167,17 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
     ]
   });
 
-  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
+  const pLabel = spec.label.map((label) =>
+    renderLabel(label, providersBackstage)
+  );
   const pField = AlloyFormField.parts().field({
     factory: { sketch: renderField }
   });
 
-  return renderFormFieldWith(pLabel, pField, [ 'tox-form__group--stretched' ], [ ]);
+  return renderFormFieldWith(
+    pLabel,
+    pField,
+    ['tox-form__group--stretched'],
+    []
+  );
 };

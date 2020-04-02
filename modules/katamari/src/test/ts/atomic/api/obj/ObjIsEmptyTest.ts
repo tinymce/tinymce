@@ -8,12 +8,10 @@ UnitTest.test('Obj.isEmpty: unit tests', () => {
 });
 
 UnitTest.test('Obj.isEmpty: single key/value', () => {
-  fc.assert(fc.property(
-    fc.string(),
-    fc.json(),
-    (k: string, v: any) => {
+  fc.assert(
+    fc.property(fc.string(), fc.json(), (k: string, v: any) => {
       const o = { [k]: v };
       Assert.eq('eq', false, Obj.isEmpty(o));
-    }
-  ));
+    })
+  );
 });

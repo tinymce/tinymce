@@ -29,24 +29,51 @@ import { renderButton, renderIconButton } from '../../general/Button';
 import { renderSizeInput } from '../SizeInput';
 import * as ImageToolsEvents from './ImageToolsEvents';
 
-const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProviders) => {
-  const createButton = (text: string, action: (button: AlloyComponent) => void, disabled: boolean, primary: boolean): Memento.MementoRecord => Memento.record(renderButton({
-    name: text,
-    text,
-    disabled,
-    primary,
-    icon: Option.none(),
-    borderless: false
-  }, action, providersBackstage));
+const renderEditPanel = (
+  imagePanel,
+  providersBackstage: UiFactoryBackstageProviders
+) => {
+  const createButton = (
+    text: string,
+    action: (button: AlloyComponent) => void,
+    disabled: boolean,
+    primary: boolean
+  ): Memento.MementoRecord =>
+    Memento.record(
+      renderButton(
+        {
+          name: text,
+          text,
+          disabled,
+          primary,
+          icon: Option.none(),
+          borderless: false
+        },
+        action,
+        providersBackstage
+      )
+    );
 
-  const createIconButton = (icon: string, tooltip: string, action: (button: AlloyComponent) => void, disabled: boolean): Memento.MementoRecord => Memento.record(renderIconButton({
-    name: icon,
-    icon: Option.some(icon),
-    tooltip: Option.some(tooltip),
-    disabled,
-    primary: false,
-    borderless: false
-  }, action, providersBackstage));
+  const createIconButton = (
+    icon: string,
+    tooltip: string,
+    action: (button: AlloyComponent) => void,
+    disabled: boolean
+  ): Memento.MementoRecord =>
+    Memento.record(
+      renderIconButton(
+        {
+          name: icon,
+          icon: Option.some(icon),
+          tooltip: Option.some(tooltip),
+          disabled,
+          primary: false,
+          borderless: false
+        },
+        action,
+        providersBackstage
+      )
+    );
 
   const disableAllComponents = (comps, eventcomp) => {
     comps.map((mem) => {
@@ -68,7 +95,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
 
   const panelDom = {
     tag: 'div',
-    classes: [ 'tox-image-tools__toolbar', 'tox-image-tools-edit-panel' ]
+    classes: ['tox-image-tools__toolbar', 'tox-image-tools-edit-panel']
   };
 
   const noop = Fun.noop;
@@ -77,10 +104,15 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     AlloyTriggers.emitWith(comp, event, data);
   };
 
-  const emitDisable = (component) => AlloyTriggers.emit(component, ImageToolsEvents.external.disable());
-  const emitEnable = (component) => AlloyTriggers.emit(component, ImageToolsEvents.external.enable());
+  const emitDisable = (component) =>
+    AlloyTriggers.emit(component, ImageToolsEvents.external.disable());
+  const emitEnable = (component) =>
+    AlloyTriggers.emit(component, ImageToolsEvents.external.enable());
 
-  const emitTransform = (comp: AlloyComponent, transform: (ir: ImageResult) => ImageResult | PromiseLike<ImageResult>): void => {
+  const emitTransform = (
+    comp: AlloyComponent,
+    transform: (ir: ImageResult) => ImageResult | PromiseLike<ImageResult>
+  ): void => {
     emitDisable(comp);
     emit(comp, ImageToolsEvents.internal.transform(), {
       transform
@@ -88,7 +120,10 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     emitEnable(comp);
   };
 
-  const emitTempTransform = (comp: AlloyComponent, transform: (ir: ImageResult) => ImageResult | PromiseLike<ImageResult>): void => {
+  const emitTempTransform = (
+    comp: AlloyComponent,
+    transform: (ir: ImageResult) => ImageResult | PromiseLike<ImageResult>
+  ): void => {
     emitDisable(comp);
     emit(comp, ImageToolsEvents.internal.tempTransform(), {
       transform
@@ -96,13 +131,18 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     emitEnable(comp);
   };
 
-  const getBackSwap = (anyInSystem: AlloyComponent): (() => void) => (): void => {
+  const getBackSwap = (
+    anyInSystem: AlloyComponent
+  ): (() => void) => (): void => {
     memContainer.getOpt(anyInSystem).each((container) => {
-      Replacing.set(container, [ ButtonPanel ]);
+      Replacing.set(container, [ButtonPanel]);
     });
   };
 
-  const emitTransformApply = (comp: AlloyComponent, transform: (ir: ImageResult) => ImageResult | PromiseLike<ImageResult>): void => {
+  const emitTransformApply = (
+    comp: AlloyComponent,
+    transform: (ir: ImageResult) => ImageResult | PromiseLike<ImageResult>
+  ): void => {
     emitDisable(comp);
     emit(comp, ImageToolsEvents.internal.transformApply(), {
       transform,
@@ -111,23 +151,40 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     emitEnable(comp);
   };
 
-  const createBackButton = (): Memento.MementoRecord => createButton('Back', (button) => emit(button, ImageToolsEvents.internal.back(), {
-    swap: getBackSwap(button)
-  }), false, false);
+  const createBackButton = (): Memento.MementoRecord =>
+    createButton(
+      'Back',
+      (button) =>
+        emit(button, ImageToolsEvents.internal.back(), {
+          swap: getBackSwap(button)
+        }),
+      false,
+      false
+    );
 
-  const createSpacer = (): Memento.MementoRecord => Memento.record({
-    dom: {
-      tag: 'div',
-      classes: [ 'tox-spacer' ]
-    },
-    behaviours: Behaviour.derive([ Disabling.config({ }) ])
-  });
+  const createSpacer = (): Memento.MementoRecord =>
+    Memento.record({
+      dom: {
+        tag: 'div',
+        classes: ['tox-spacer']
+      },
+      behaviours: Behaviour.derive([Disabling.config({})])
+    });
 
-  const createApplyButton = (): Memento.MementoRecord => createButton('Apply', (button) => emit(button, ImageToolsEvents.internal.apply(), {
-    swap: getBackSwap(button)
-  }), true, true);
+  const createApplyButton = (): Memento.MementoRecord =>
+    createButton(
+      'Apply',
+      (button) =>
+        emit(button, ImageToolsEvents.internal.apply(), {
+          swap: getBackSwap(button)
+        }),
+      true,
+      true
+    );
 
-  const makeCropTransform = (): ((ir: ImageResult) => Promise<ImageResult>) => (ir: ImageResult): Promise<ImageResult> => {
+  const makeCropTransform = (): ((ir: ImageResult) => Promise<ImageResult>) => (
+    ir: ImageResult
+  ): Promise<ImageResult> => {
     const rect = imagePanel.getRect();
     return ImageTransformations.crop(ir, rect.x, rect.y, rect.w, rect.h);
   };
@@ -135,11 +192,16 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   const cropPanelComponents = [
     createBackButton(),
     createSpacer(),
-    createButton('Apply', (button) => {
-      const transform = makeCropTransform();
-      emitTransformApply(button, transform);
-      imagePanel.hideCrop();
-    }, false, true)
+    createButton(
+      'Apply',
+      (button) => {
+        const transform = makeCropTransform();
+        emitTransformApply(button, transform);
+        imagePanel.hideCrop();
+      },
+      false,
+      true
+    )
   ];
 
   const CropPanel = Container.sketch({
@@ -158,30 +220,43 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   });
 
   const memSize = Memento.record(
-    renderSizeInput({
-      name: 'size',
-      label: Option.none(),
-      constrain: true,
-      disabled: false
-    }, providersBackstage)
+    renderSizeInput(
+      {
+        name: 'size',
+        label: Option.none(),
+        constrain: true,
+        disabled: false
+      },
+      providersBackstage
+    )
   );
 
-  const makeResizeTransform = (width: number, height: number): ((ir: ImageResult) => Promise<ImageResult>) => (ir: ImageResult): Promise<ImageResult> => ImageTransformations.resize(ir, width, height);
+  const makeResizeTransform = (
+    width: number,
+    height: number
+  ): ((ir: ImageResult) => Promise<ImageResult>) => (
+    ir: ImageResult
+  ): Promise<ImageResult> => ImageTransformations.resize(ir, width, height);
 
   const resizePanelComponents = [
     createBackButton(),
     createSpacer(),
     memSize,
     createSpacer(),
-    createButton('Apply', (button) => {
-      memSize.getOpt(button).each((sizeInput) => {
-        const value = Representing.getValue(sizeInput);
-        const width = parseInt(value.width, 10);
-        const height = parseInt(value.height, 10);
-        const transform = makeResizeTransform(width, height);
-        emitTransformApply(button, transform);
-      });
-    }, false, true)
+    createButton(
+      'Apply',
+      (button) => {
+        memSize.getOpt(button).each((sizeInput) => {
+          const value = Representing.getValue(sizeInput);
+          const width = parseInt(value.width, 10);
+          const height = parseInt(value.height, 10);
+          const transform = makeResizeTransform(width, height);
+          emitTransformApply(button, transform);
+        });
+      },
+      false,
+      true
+    )
   ];
 
   const ResizePanel = Container.sketch({
@@ -199,11 +274,17 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     ])
   });
 
-  const makeValueTransform = (transform: (ir: ImageResult, value: any) => Promise<ImageResult>, value: any) => (ir: ImageResult): Promise<ImageResult> => transform(ir, value);
+  const makeValueTransform = (
+    transform: (ir: ImageResult, value: any) => Promise<ImageResult>,
+    value: any
+  ) => (ir: ImageResult): Promise<ImageResult> => transform(ir, value);
 
   const horizontalFlip = makeValueTransform(ImageTransformations.flip, 'h');
   const verticalFlip = makeValueTransform(ImageTransformations.flip, 'v');
-  const counterclockwiseRotate = makeValueTransform(ImageTransformations.rotate, -90);
+  const counterclockwiseRotate = makeValueTransform(
+    ImageTransformations.rotate,
+    -90
+  );
   const clockwiseRotate = makeValueTransform(ImageTransformations.rotate, 90);
 
   const flipRotateOnAction = (comp, operation) => {
@@ -213,18 +294,38 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   const flipRotateComponents = [
     createBackButton(),
     createSpacer(),
-    createIconButton('flip-horizontally', 'Flip horizontally', (button) => {
-      flipRotateOnAction(button, horizontalFlip);
-    }, false),
-    createIconButton('flip-vertically', 'Flip vertically', (button) => {
-      flipRotateOnAction(button, verticalFlip);
-    }, false),
-    createIconButton('rotate-left', 'Rotate counterclockwise', (button) => {
-      flipRotateOnAction(button, counterclockwiseRotate);
-    }, false),
-    createIconButton('rotate-right', 'Rotate clockwise', (button) => {
-      flipRotateOnAction(button, clockwiseRotate);
-    }, false),
+    createIconButton(
+      'flip-horizontally',
+      'Flip horizontally',
+      (button) => {
+        flipRotateOnAction(button, horizontalFlip);
+      },
+      false
+    ),
+    createIconButton(
+      'flip-vertically',
+      'Flip vertically',
+      (button) => {
+        flipRotateOnAction(button, verticalFlip);
+      },
+      false
+    ),
+    createIconButton(
+      'rotate-left',
+      'Rotate counterclockwise',
+      (button) => {
+        flipRotateOnAction(button, counterclockwiseRotate);
+      },
+      false
+    ),
+    createIconButton(
+      'rotate-right',
+      'Rotate clockwise',
+      (button) => {
+        flipRotateOnAction(button, clockwiseRotate);
+      },
+      false
+    ),
     createSpacer(),
     createApplyButton()
   ];
@@ -244,11 +345,21 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     ])
   });
 
-  const makeSlider = (label: string, onChoose: (slider: AlloyComponent, thumb: AlloyComponent, value: SliderTypes.SliderValueX) => void, min: number, value: number, max: number): Memento.MementoRecord => {
+  const makeSlider = (
+    label: string,
+    onChoose: (
+      slider: AlloyComponent,
+      thumb: AlloyComponent,
+      value: SliderTypes.SliderValueX
+    ) => void,
+    min: number,
+    value: number,
+    max: number
+  ): Memento.MementoRecord => {
     const labelPart = Slider.parts().label({
       dom: {
         tag: 'label',
-        classes: [ 'tox-label' ],
+        classes: ['tox-label'],
         innerHtml: providersBackstage.translate(label)
       }
     });
@@ -256,7 +367,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     const spectrum = Slider.parts().spectrum({
       dom: {
         tag: 'div',
-        classes: [ 'tox-slider__rail' ],
+        classes: ['tox-slider__rail'],
         attributes: {
           role: 'presentation'
         }
@@ -266,41 +377,47 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     const thumb = Slider.parts().thumb({
       dom: {
         tag: 'div',
-        classes: [ 'tox-slider__handle' ],
+        classes: ['tox-slider__handle'],
         attributes: {
           role: 'presentation'
         }
       }
     });
 
-    return Memento.record(Slider.sketch({
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-slider' ],
-        attributes: {
-          role: 'presentation'
-        }
-      },
-      model: {
-        mode: 'x',
-        minX: min,
-        maxX: max,
-        getInitialValue: Fun.constant({ x: Fun.constant(value) })
-      },
-      components: [
-        labelPart,
-        spectrum,
-        thumb
-      ],
-      sliderBehaviours: Behaviour.derive([
-        Focusing.config({})
-      ]),
-      onChoose
-    }));
+    return Memento.record(
+      Slider.sketch({
+        dom: {
+          tag: 'div',
+          classes: ['tox-slider'],
+          attributes: {
+            role: 'presentation'
+          }
+        },
+        model: {
+          mode: 'x',
+          minX: min,
+          maxX: max,
+          getInitialValue: Fun.constant({ x: Fun.constant(value) })
+        },
+        components: [labelPart, spectrum, thumb],
+        sliderBehaviours: Behaviour.derive([Focusing.config({})]),
+        onChoose
+      })
+    );
   };
 
-  const makeVariableSlider = (label: string, transform: (ir: ImageResult, adjust: number) => Promise<ImageResult>, min: number, value: number, max: number): Memento.MementoRecord => {
-    const onChoose = (slider: AlloyComponent, _thumb: AlloyComponent, value: SliderTypes.SliderValueX): void => {
+  const makeVariableSlider = (
+    label: string,
+    transform: (ir: ImageResult, adjust: number) => Promise<ImageResult>,
+    min: number,
+    value: number,
+    max: number
+  ): Memento.MementoRecord => {
+    const onChoose = (
+      slider: AlloyComponent,
+      _thumb: AlloyComponent,
+      value: SliderTypes.SliderValueX
+    ): void => {
       const valTransform = makeValueTransform(transform, value.x() / 100);
       // TODO: Fire the disable event on mousedown and enable on mouseup for silder
       emitTransform(slider, valTransform);
@@ -314,8 +431,20 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     createApplyButton()
   ];
 
-  const createVariableFilterPanel = (label: string, transform: (ir: ImageResult, adjust: number) => Promise<ImageResult>, min: number, value: number, max: number) => {
-    const filterPanelComponents = variableFilterPanelComponents(label, transform, min, value, max);
+  const createVariableFilterPanel = (
+    label: string,
+    transform: (ir: ImageResult, adjust: number) => Promise<ImageResult>,
+    min: number,
+    value: number,
+    max: number
+  ) => {
+    const filterPanelComponents = variableFilterPanelComponents(
+      label,
+      transform,
+      min,
+      value,
+      max
+    );
     return Container.sketch({
       dom: panelDom,
       components: filterPanelComponents.map((mem) => mem.asSpec()),
@@ -344,14 +473,43 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     components: filterPanelComponents.map((mem) => mem.asSpec())
   });
 
-  const BrightnessPanel = createVariableFilterPanel('Brightness', ImageTransformations.brightness, -100, 0, 100);
-  const ContrastPanel = createVariableFilterPanel('Contrast', ImageTransformations.contrast, -100, 0, 100);
-  const GammaPanel = createVariableFilterPanel('Gamma', ImageTransformations.gamma, -100, 0, 100);
+  const BrightnessPanel = createVariableFilterPanel(
+    'Brightness',
+    ImageTransformations.brightness,
+    -100,
+    0,
+    100
+  );
+  const ContrastPanel = createVariableFilterPanel(
+    'Contrast',
+    ImageTransformations.contrast,
+    -100,
+    0,
+    100
+  );
+  const GammaPanel = createVariableFilterPanel(
+    'Gamma',
+    ImageTransformations.gamma,
+    -100,
+    0,
+    100
+  );
 
-  const makeColorTransform = (red: number, green: number, blue: number): ((ir: ImageResult) => Promise<ImageResult>) => (ir: ImageResult): Promise<ImageResult> => ImageTransformations.colorize(ir, red, green, blue);
+  const makeColorTransform = (
+    red: number,
+    green: number,
+    blue: number
+  ): ((ir: ImageResult) => Promise<ImageResult>) => (
+    ir: ImageResult
+  ): Promise<ImageResult> =>
+    ImageTransformations.colorize(ir, red, green, blue);
 
   const makeColorSlider = (label: string) => {
-    const onChoose = (slider: AlloyComponent, _thumb: AlloyComponent, _value: SliderTypes.SliderValueX): void => {
+    const onChoose = (
+      slider: AlloyComponent,
+      _thumb: AlloyComponent,
+      _value: SliderTypes.SliderValueX
+    ): void => {
       const redOpt = memRed.getOpt(slider);
       const blueOpt = memBlue.getOpt(slider);
       const greenOpt = memGreen.getOpt(slider);
@@ -391,10 +549,14 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     components: colorizePanelComponents.map((mem) => mem.asSpec())
   });
 
-  const getTransformPanelEvent = (panel: AlloySpec, transform: Option<(ir: ImageResult) => Promise<ImageResult>>, update: (container: AlloyComponent) => void): ((button: AlloyComponent) => void) => (button: AlloyComponent): void => {
+  const getTransformPanelEvent = (
+    panel: AlloySpec,
+    transform: Option<(ir: ImageResult) => Promise<ImageResult>>,
+    update: (container: AlloyComponent) => void
+  ): ((button: AlloyComponent) => void) => (button: AlloyComponent): void => {
     const swap = () => {
       memContainer.getOpt(button).each((container) => {
-        Replacing.set(container, [ panel ]);
+        Replacing.set(container, [panel]);
         update(container);
       });
     };
@@ -424,15 +586,60 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   const invertTransform = Option.some(ImageTransformations.invert);
 
   const buttonPanelComponents = [
-    createIconButton('crop', 'Crop', getTransformPanelEvent(CropPanel, Option.none(), cropPanelUpdate), false),
-    createIconButton('resize', 'Resize', getTransformPanelEvent(ResizePanel, Option.none(), resizePanelUpdate), false),
-    createIconButton('orientation', 'Orientation', getTransformPanelEvent(FlipRotatePanel, Option.none(), noop), false),
-    createIconButton('brightness', 'Brightness', getTransformPanelEvent(BrightnessPanel, Option.none(), noop), false),
-    createIconButton('sharpen', 'Sharpen', getTransformPanelEvent(FilterPanel, sharpenTransform, noop), false),
-    createIconButton('contrast', 'Contrast', getTransformPanelEvent(ContrastPanel, Option.none(), noop), false),
-    createIconButton('color-levels', 'Color levels', getTransformPanelEvent(ColorizePanel, Option.none(), noop), false),
-    createIconButton('gamma', 'Gamma', getTransformPanelEvent(GammaPanel, Option.none(), noop), false),
-    createIconButton('invert', 'Invert', getTransformPanelEvent(FilterPanel, invertTransform, noop), false),
+    createIconButton(
+      'crop',
+      'Crop',
+      getTransformPanelEvent(CropPanel, Option.none(), cropPanelUpdate),
+      false
+    ),
+    createIconButton(
+      'resize',
+      'Resize',
+      getTransformPanelEvent(ResizePanel, Option.none(), resizePanelUpdate),
+      false
+    ),
+    createIconButton(
+      'orientation',
+      'Orientation',
+      getTransformPanelEvent(FlipRotatePanel, Option.none(), noop),
+      false
+    ),
+    createIconButton(
+      'brightness',
+      'Brightness',
+      getTransformPanelEvent(BrightnessPanel, Option.none(), noop),
+      false
+    ),
+    createIconButton(
+      'sharpen',
+      'Sharpen',
+      getTransformPanelEvent(FilterPanel, sharpenTransform, noop),
+      false
+    ),
+    createIconButton(
+      'contrast',
+      'Contrast',
+      getTransformPanelEvent(ContrastPanel, Option.none(), noop),
+      false
+    ),
+    createIconButton(
+      'color-levels',
+      'Color levels',
+      getTransformPanelEvent(ColorizePanel, Option.none(), noop),
+      false
+    ),
+    createIconButton(
+      'gamma',
+      'Gamma',
+      getTransformPanelEvent(GammaPanel, Option.none(), noop),
+      false
+    ),
+    createIconButton(
+      'invert',
+      'Invert',
+      getTransformPanelEvent(FilterPanel, invertTransform, noop),
+      false
+    )
   ];
 
   const ButtonPanel = Container.sketch({
@@ -444,20 +651,19 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     dom: {
       tag: 'div'
     },
-    components: [
-      ButtonPanel
-    ],
-    containerBehaviours: Behaviour.derive([
-      Replacing.config({})
-    ])
+    components: [ButtonPanel],
+    containerBehaviours: Behaviour.derive([Replacing.config({})])
   });
 
   const memContainer = Memento.record(container);
 
-  const getApplyButton = (anyInSystem: AlloyComponent): Option<AlloyComponent> => memContainer.getOpt(anyInSystem).map((container) => {
-    const panel = container.components()[0];
-    return panel.components()[panel.components().length - 1];
-  });
+  const getApplyButton = (
+    anyInSystem: AlloyComponent
+  ): Option<AlloyComponent> =>
+    memContainer.getOpt(anyInSystem).map((container) => {
+      const panel = container.components()[0];
+      return panel.components()[panel.components().length - 1];
+    });
 
   return {
     memContainer,
@@ -465,6 +671,4 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   };
 };
 
-export {
-  renderEditPanel
-};
+export { renderEditPanel };

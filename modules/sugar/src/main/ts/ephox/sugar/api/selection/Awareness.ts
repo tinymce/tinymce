@@ -6,11 +6,16 @@ import Element from '../node/Element';
 import { Node as DomNode } from '@ephox/dom-globals';
 
 const getEnd = function (element: Element<DomNode>) {
-  return Node.name(element) === 'img' ? 1 : Text.getOption(element).fold(function () {
-    return Traverse.children(element).length;
-  }, function (v) {
-    return v.length;
-  });
+  return Node.name(element) === 'img'
+    ? 1
+    : Text.getOption(element).fold(
+        function () {
+          return Traverse.children(element).length;
+        },
+        function (v) {
+          return v.length;
+        }
+      );
 };
 
 const isEnd = function (element: Element<DomNode>, offset: number) {
@@ -22,22 +27,22 @@ const isStart = function (element: Element<DomNode>, offset: number) {
 };
 
 const isTextNodeWithCursorPosition = function (el: Element<DomNode>) {
-  return Text.getOption(el).filter(function (text) {
-    // For the purposes of finding cursor positions only allow text nodes with content,
-    // but trim removes &nbsp; and that's allowed
-    return text.trim().length !== 0 || text.indexOf(Unicode.nbsp) > -1;
-  }).isSome();
+  return Text.getOption(el)
+    .filter(function (text) {
+      // For the purposes of finding cursor positions only allow text nodes with content,
+      // but trim removes &nbsp; and that's allowed
+      return text.trim().length !== 0 || text.indexOf(Unicode.nbsp) > -1;
+    })
+    .isSome();
 };
 
-const elementsWithCursorPosition = [ 'img', 'br' ];
+const elementsWithCursorPosition = ['img', 'br'];
 const isCursorPosition = function (elem: Element<DomNode>) {
   const hasCursorPosition = isTextNodeWithCursorPosition(elem);
-  return hasCursorPosition || Arr.contains(elementsWithCursorPosition, Node.name(elem));
+  return (
+    hasCursorPosition ||
+    Arr.contains(elementsWithCursorPosition, Node.name(elem))
+  );
 };
 
-export {
-  getEnd,
-  isEnd,
-  isStart,
-  isCursorPosition,
-};
+export { getEnd, isEnd, isStart, isCursorPosition };

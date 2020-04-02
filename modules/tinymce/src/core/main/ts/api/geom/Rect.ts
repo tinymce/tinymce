@@ -21,16 +21,23 @@ export interface GeomRect {
 }
 
 interface Rect {
-  inflate (rect: GeomRect, w: number, h: number): GeomRect;
-  relativePosition (rect: GeomRect, targetRect: GeomRect, rel: string): GeomRect;
-  findBestRelativePosition (rect, targetRect, constrainRect, rels): GeomRect | null;
-  intersect (rect: GeomRect, cropRect: GeomRect): GeomRect | null;
-  clamp (rect: GeomRect, clampRect: GeomRect, fixedSize?: boolean): GeomRect;
-  create (x: number, y: number, w: number, h: number): GeomRect;
-  fromClientRect (clientRect: ClientRect): GeomRect;
+  inflate(rect: GeomRect, w: number, h: number): GeomRect;
+  relativePosition(rect: GeomRect, targetRect: GeomRect, rel: string): GeomRect;
+  findBestRelativePosition(
+    rect,
+    targetRect,
+    constrainRect,
+    rels
+  ): GeomRect | null;
+  intersect(rect: GeomRect, cropRect: GeomRect): GeomRect | null;
+  clamp(rect: GeomRect, clampRect: GeomRect, fixedSize?: boolean): GeomRect;
+  create(x: number, y: number, w: number, h: number): GeomRect;
+  fromClientRect(clientRect: ClientRect): GeomRect;
 }
 
-const min = Math.min, max = Math.max, round = Math.round;
+const min = Math.min,
+  max = Math.max,
+  round = Math.round;
 
 /**
  * Returns the rect positioned based on the relative position name
@@ -97,14 +104,23 @@ const relativePosition = function (rect, targetRect, rel) {
  * @param {Rect} constrainRect Rect to constrain within.
  * @param {Array} rels Array of relative positions to test against.
  */
-const findBestRelativePosition = function (rect, targetRect, constrainRect, rels) {
+const findBestRelativePosition = function (
+  rect,
+  targetRect,
+  constrainRect,
+  rels
+) {
   let pos, i;
 
   for (i = 0; i < rels.length; i++) {
     pos = relativePosition(rect, targetRect, rels[i]);
 
-    if (pos.x >= constrainRect.x && pos.x + pos.w <= constrainRect.w + constrainRect.x &&
-      pos.y >= constrainRect.y && pos.y + pos.h <= constrainRect.h + constrainRect.y) {
+    if (
+      pos.x >= constrainRect.x &&
+      pos.x + pos.w <= constrainRect.w + constrainRect.x &&
+      pos.y >= constrainRect.y &&
+      pos.y + pos.h <= constrainRect.h + constrainRect.y
+    ) {
       return rels[i];
     }
   }
@@ -159,8 +175,16 @@ const intersect = function (rect, cropRect) {
  * @return {Rect} Clamped rect.
  */
 const clamp = function (rect, clampRect, fixedSize?) {
-  let underflowX1, underflowY1, overflowX2, overflowY2,
-    x1, y1, x2, y2, cx2, cy2;
+  let underflowX1,
+    underflowY1,
+    overflowX2,
+    overflowY2,
+    x1,
+    y1,
+    x2,
+    y2,
+    cx2,
+    cy2;
 
   x1 = rect.x;
   y1 = rect.y;
@@ -212,7 +236,12 @@ const create = function (x, y, w, h) {
  * @return {Rect} New rectangle object.
  */
 const fromClientRect = function (clientRect) {
-  return create(clientRect.left, clientRect.top, clientRect.width, clientRect.height);
+  return create(
+    clientRect.left,
+    clientRect.top,
+    clientRect.width,
+    clientRect.height
+  );
 };
 
 const Rect: Rect = {

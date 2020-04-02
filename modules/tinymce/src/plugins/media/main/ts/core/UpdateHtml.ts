@@ -16,9 +16,14 @@ import { Obj } from '@ephox/katamari';
 
 const DOM = DOMUtils.DOM;
 
-type AttrList = Array<{ name: string; value: string }> & { map: Record<string, string> };
+type AttrList = Array<{ name: string; value: string }> & {
+  map: Record<string, string>;
+};
 
-const setAttributes = function (attrs: AttrList, updatedAttrs: Record<string, any>) {
+const setAttributes = function (
+  attrs: AttrList,
+  updatedAttrs: Record<string, any>
+) {
   let i;
   let attr;
 
@@ -58,128 +63,135 @@ const normalizeHtml = function (html: string): string {
   return writer.getContent();
 };
 
-const sources = [ 'source', 'altsource' ];
+const sources = ['source', 'altsource'];
 
-const updateHtmlSax = function (html: string, data: Partial<MediaData>, updateAll?: boolean): string {
+const updateHtmlSax = function (
+  html: string,
+  data: Partial<MediaData>,
+  updateAll?: boolean
+): string {
   const writer = Writer();
   let sourceCount = 0;
   let hasImage;
 
-  SaxParser({
-    validate: false,
-    allow_conditional_comments: true,
+  SaxParser(
+    {
+      validate: false,
+      allow_conditional_comments: true,
 
-    comment(text) {
-      writer.comment(text);
-    },
+      comment(text) {
+        writer.comment(text);
+      },
 
-    cdata(text) {
-      writer.cdata(text);
-    },
+      cdata(text) {
+        writer.cdata(text);
+      },
 
-    text(text, raw) {
-      writer.text(text, raw);
-    },
+      text(text, raw) {
+        writer.text(text, raw);
+      },
 
-    start(name, attrs, empty) {
-      switch (name) {
-        case 'video':
-        case 'object':
-        case 'embed':
-        case 'img':
-        case 'iframe':
-          if (data.height !== undefined && data.width !== undefined) {
-            setAttributes(attrs, {
-              width: data.width,
-              height: data.height
-            });
-          }
-          break;
-      }
-
-      if (updateAll) {
+      start(name, attrs, empty) {
         switch (name) {
           case 'video':
-            setAttributes(attrs, {
-              poster: data.poster,
-              src: ''
-            });
-
-            if (data.altsource) {
-              setAttributes(attrs, {
-                src: ''
-              });
-            }
-            break;
-
-          case 'iframe':
-            setAttributes(attrs, {
-              src: data.source
-            });
-            break;
-
-          case 'source':
-            if (sourceCount < 2) {
-              setAttributes(attrs, {
-                src: data[sources[sourceCount]],
-                type: data[sources[sourceCount] + 'mime']
-              });
-
-              if (!data[sources[sourceCount]]) {
-                return;
-              }
-            }
-            sourceCount++;
-            break;
-
+          case 'object':
+          case 'embed':
           case 'img':
-            if (!data.poster) {
-              return;
+          case 'iframe':
+            if (data.height !== undefined && data.width !== undefined) {
+              setAttributes(attrs, {
+                width: data.width,
+                height: data.height
+              });
             }
-
-            hasImage = true;
             break;
         }
-      }
 
-      writer.start(name, attrs, empty);
-    },
-
-    end(name) {
-      if (name === 'video' && updateAll) {
-        for (let index = 0; index < 2; index++) {
-          if (data[sources[index]]) {
-            const attrs: any = [];
-            attrs.map = {};
-
-            if (sourceCount < index) {
+        if (updateAll) {
+          switch (name) {
+            case 'video':
               setAttributes(attrs, {
-                src: data[sources[index]],
-                type: data[sources[index] + 'mime']
+                poster: data.poster,
+                src: ''
               });
 
-              writer.start('source', attrs, true);
+              if (data.altsource) {
+                setAttributes(attrs, {
+                  src: ''
+                });
+              }
+              break;
+
+            case 'iframe':
+              setAttributes(attrs, {
+                src: data.source
+              });
+              break;
+
+            case 'source':
+              if (sourceCount < 2) {
+                setAttributes(attrs, {
+                  src: data[sources[sourceCount]],
+                  type: data[sources[sourceCount] + 'mime']
+                });
+
+                if (!data[sources[sourceCount]]) {
+                  return;
+                }
+              }
+              sourceCount++;
+              break;
+
+            case 'img':
+              if (!data.poster) {
+                return;
+              }
+
+              hasImage = true;
+              break;
+          }
+        }
+
+        writer.start(name, attrs, empty);
+      },
+
+      end(name) {
+        if (name === 'video' && updateAll) {
+          for (let index = 0; index < 2; index++) {
+            if (data[sources[index]]) {
+              const attrs: any = [];
+              attrs.map = {};
+
+              if (sourceCount < index) {
+                setAttributes(attrs, {
+                  src: data[sources[index]],
+                  type: data[sources[index] + 'mime']
+                });
+
+                writer.start('source', attrs, true);
+              }
             }
           }
         }
+
+        if (data.poster && name === 'object' && updateAll && !hasImage) {
+          const imgAttrs: any = [];
+          imgAttrs.map = {};
+
+          setAttributes(imgAttrs, {
+            src: data.poster,
+            width: data.width,
+            height: data.height
+          });
+
+          writer.start('img', imgAttrs, true);
+        }
+
+        writer.end(name);
       }
-
-      if (data.poster && name === 'object' && updateAll && !hasImage) {
-        const imgAttrs: any = [];
-        imgAttrs.map = {};
-
-        setAttributes(imgAttrs, {
-          src: data.poster,
-          width: data.width,
-          height: data.height
-        });
-
-        writer.start('img', imgAttrs, true);
-      }
-
-      writer.end(name);
-    }
-  }, Schema({})).parse(html);
+    },
+    Schema({})
+  ).parse(html);
 
   return writer.getContent();
 };
@@ -189,7 +201,10 @@ const isEphoxEmbed = function (html: string): boolean {
   return DOM.getAttrib(fragment.firstChild, 'data-ephox-embed-iri') !== '';
 };
 
-const updateEphoxEmbed = function (html: string, data: Partial<MediaData>): string {
+const updateEphoxEmbed = function (
+  html: string,
+  data: Partial<MediaData>
+): string {
   const fragment = DOM.createFragment(html);
   const div = fragment.firstChild as HTMLElement;
 
@@ -199,10 +214,14 @@ const updateEphoxEmbed = function (html: string, data: Partial<MediaData>): stri
   return normalizeHtml(div.outerHTML);
 };
 
-const updateHtml = function (html: string, data: Partial<MediaData>, updateAll?: boolean) {
-  return isEphoxEmbed(html) ? updateEphoxEmbed(html, data) : updateHtmlSax(html, data, updateAll);
+const updateHtml = function (
+  html: string,
+  data: Partial<MediaData>,
+  updateAll?: boolean
+) {
+  return isEphoxEmbed(html)
+    ? updateEphoxEmbed(html, data)
+    : updateHtmlSax(html, data, updateAll);
 };
 
-export {
-  updateHtml
-};
+export { updateHtml };

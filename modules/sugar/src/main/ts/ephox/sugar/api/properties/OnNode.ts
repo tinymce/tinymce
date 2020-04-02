@@ -27,9 +27,4 @@ const hasClass = function (clazz: string) {
   };
 };
 
-export {
-  addClass,
-  removeClass,
-  removeClasses,
-  hasClass,
-};
+export { addClass, removeClass, removeClasses, hasClass };

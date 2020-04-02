@@ -20,7 +20,8 @@ import { Obj } from '@ephox/katamari';
  * * Defaults settings
  */
 
-const each = Tools.each, extend = Tools.extend;
+const each = Tools.each,
+  extend = Tools.extend;
 
 let extendClass, initializing;
 
@@ -35,20 +36,19 @@ interface Prop {
 interface Class {
   prototype: Class;
 
-  extend (prop: Prop): ExtendedClass;
+  extend(prop: Prop): ExtendedClass;
 }
 
 export interface ExtendedClass extends Class {
   constructor: ExtendedClass;
 
-  init? (...args: any[]): void;
+  init?(...args: any[]): void;
 
   // TODO See if we can type this to allow adding the props dynamically
   [key: string]: any;
 }
 
-const Class: Class = function () {
-};
+const Class: Class = function () {};
 
 // Provides classical inheritance, based on code made by John Resig
 Class.extend = extendClass = function (prop: Prop): ExtendedClass {

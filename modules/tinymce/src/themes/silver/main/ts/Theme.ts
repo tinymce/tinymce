@@ -15,19 +15,28 @@ import * as WindowManager from './ui/dialog/WindowManager';
 type RenderInfo = Render.RenderInfo;
 
 export default function () {
-  ThemeManager.add('silver', (editor): Theme => {
-    const { uiMothership, backstage, renderUI, getUi }: RenderInfo = Render.setup(editor);
+  ThemeManager.add(
+    'silver',
+    (editor): Theme => {
+      const {
+        uiMothership,
+        backstage,
+        renderUI,
+        getUi
+      }: RenderInfo = Render.setup(editor);
 
-    Autocompleter.register(editor, backstage.shared);
+      Autocompleter.register(editor, backstage.shared);
 
-    const windowMgr = WindowManager.setup({ editor, backstage });
+      const windowMgr = WindowManager.setup({ editor, backstage });
 
-    return {
-      renderUI,
-      getWindowManagerImpl: Fun.constant(windowMgr),
-      getNotificationManagerImpl: () => NotificationManagerImpl(editor, { backstage }, uiMothership),
-      // TODO: move to editor.ui namespace
-      ui: getUi()
-    };
-  });
+      return {
+        renderUI,
+        getWindowManagerImpl: Fun.constant(windowMgr),
+        getNotificationManagerImpl: () =>
+          NotificationManagerImpl(editor, { backstage }, uiMothership),
+        // TODO: move to editor.ui namespace
+        ui: getUi()
+      };
+    }
+  );
 }

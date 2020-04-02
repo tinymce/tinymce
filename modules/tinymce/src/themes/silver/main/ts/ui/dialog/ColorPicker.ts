@@ -6,7 +6,16 @@
  */
 
 import { ColourPicker } from '@ephox/acid';
-import { AlloyTriggers, Behaviour, Composing, Form, Memento, NativeEvents, Representing, SimpleSpec } from '@ephox/alloy';
+import {
+  AlloyTriggers,
+  Behaviour,
+  Composing,
+  Form,
+  Memento,
+  NativeEvents,
+  Representing,
+  SimpleSpec
+} from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
@@ -31,7 +40,8 @@ const english = {
   'colorcustom.sb.brightness': 'Brightness',
   'colorcustom.sb.picker': 'Saturation and Brightness Picker',
   'colorcustom.sb.palette': 'Saturation and Brightness Palette',
-  'colorcustom.sb.instructions': 'Use arrow keys to select saturation and brightness, on x and y axes',
+  'colorcustom.sb.instructions':
+    'Use arrow keys to select saturation and brightness, on x and y axes',
   'colorcustom.hue.hue': 'Hue',
   'colorcustom.hue.slider': 'Hue Slider',
   'colorcustom.hue.palette': 'Hue Palette',
@@ -57,18 +67,24 @@ export const renderColorPicker = (_spec: ColorPickerSpec): SimpleSpec => {
   const colourPickerFactory = ColourPicker.makeFactory(translate, getClass);
 
   const onValidHex = (form) => {
-    AlloyTriggers.emitWith(form, formActionEvent, { name: 'hex-valid', value: true },  );
+    AlloyTriggers.emitWith(form, formActionEvent, {
+      name: 'hex-valid',
+      value: true
+    });
   };
 
   const onInvalidHex = (form) => {
-    AlloyTriggers.emitWith(form, formActionEvent, { name: 'hex-valid', value: false } );
+    AlloyTriggers.emitWith(form, formActionEvent, {
+      name: 'hex-valid',
+      value: false
+    });
   };
 
   const memPicker = Memento.record(
     colourPickerFactory.sketch({
       dom: {
         tag: 'div',
-        classes: [ getClass('color-picker-container') ],
+        classes: [getClass('color-picker-container')],
         attributes: {
           role: 'presentation'
         }
@@ -82,9 +98,7 @@ export const renderColorPicker = (_spec: ColorPickerSpec): SimpleSpec => {
     dom: {
       tag: 'div'
     },
-    components: [
-      memPicker.asSpec()
-    ],
+    components: [memPicker.asSpec()],
     behaviours: Behaviour.derive([
       // We'll allow invalid values
       Representing.config({
@@ -96,7 +110,7 @@ export const renderColorPicker = (_spec: ColorPickerSpec): SimpleSpec => {
             const optHex = optRgbForm.bind((rgbForm) => {
               const formValues = Representing.getValue(rgbForm);
               return formValues.hex as Option<string>;
-            }) ;
+            });
             return optHex.map((hex) => '#' + hex).getOr('');
           },
           setValue: (comp, newValue) => {
@@ -104,19 +118,22 @@ export const renderColorPicker = (_spec: ColorPickerSpec): SimpleSpec => {
             const m = pattern.exec(newValue);
             const picker = memPicker.get(comp);
             const optRgbForm = Composing.getCurrent(picker);
-            optRgbForm.fold(() => {
-              // tslint:disable-next-line:no-console
-              console.log('Can not find form');
-            }, (rgbForm) => {
-              Representing.setValue(rgbForm, {
-                hex: Option.from(m[1]).getOr('')
-              });
+            optRgbForm.fold(
+              () => {
+                // tslint:disable-next-line:no-console
+                console.log('Can not find form');
+              },
+              (rgbForm) => {
+                Representing.setValue(rgbForm, {
+                  hex: Option.from(m[1]).getOr('')
+                });
 
-              // So not the way to do this.
-              Form.getField(rgbForm, 'hex').each((hexField) => {
-                AlloyTriggers.emit(hexField, NativeEvents.input());
-              });
-            });
+                // So not the way to do this.
+                Form.getField(rgbForm, 'hex').each((hexField) => {
+                  AlloyTriggers.emit(hexField, NativeEvents.input());
+                });
+              }
+            );
           }
         }
       }),

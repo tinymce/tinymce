@@ -3,11 +3,19 @@ import { Option } from '@ephox/katamari';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { OptionalDomSchema, RawDomSchema, SimpleOrSketchSpec, SketchSpec } from '../../api/component/SpecTypes';
-import { CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import {
+  OptionalDomSchema,
+  RawDomSchema,
+  SimpleOrSketchSpec,
+  SketchSpec
+} from '../../api/component/SpecTypes';
+import {
+  CompositeSketchDetail,
+  CompositeSketchSpec
+} from '../../api/ui/Sketcher';
 import { ConfiguredPart } from '../../parts/AlloyParts';
 
-export interface SlotContainerDetail extends CompositeSketchDetail  {
+export interface SlotContainerDetail extends CompositeSketchDetail {
   uid: string;
   dom: RawDomSchema;
   slotBehaviours: SketchBehaviours;
@@ -21,7 +29,9 @@ export interface SlotContainerSpec extends CompositeSketchSpec {
   eventOrder?: Record<string, string[]>;
 }
 
-export type SlotContainerSpecBuilder = (parts: SlotContainerParts) => SlotContainerSpec;
+export type SlotContainerSpecBuilder = (
+  parts: SlotContainerParts
+) => SlotContainerSpec;
 
 export interface SlotContainerParts {
   slot: (name: string, config: SimpleOrSketchSpec) => ConfiguredPart;

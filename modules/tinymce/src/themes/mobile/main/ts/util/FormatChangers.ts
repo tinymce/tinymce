@@ -11,10 +11,20 @@ import Editor from 'tinymce/core/api/Editor';
 import * as TinyChannels from '../channels/TinyChannels';
 import { MobileRealm } from '../ui/IosRealm';
 
-const fontSizesArray: readonly string[] = [ 'x-small', 'small', 'medium', 'large', 'x-large' ];
+const fontSizesArray: readonly string[] = [
+  'x-small',
+  'small',
+  'medium',
+  'large',
+  'x-large'
+];
 
-const fireChange = (realm: MobileRealm, command: string, state: boolean): void => {
-  realm.system().broadcastOn([ TinyChannels.formatChanged ], {
+const fireChange = (
+  realm: MobileRealm,
+  command: string,
+  state: boolean
+): void => {
+  realm.system().broadcastOn([TinyChannels.formatChanged], {
     command,
     state
   });
@@ -28,7 +38,7 @@ const init = (realm: MobileRealm, editor: Editor): void => {
     });
   });
 
-  Arr.each([ 'ul', 'ol' ], (command) => {
+  Arr.each(['ul', 'ol'], (command) => {
     editor.selection.selectorChanged(command, (state, _data) => {
       fireChange(realm, command, state);
     });
@@ -37,7 +47,4 @@ const init = (realm: MobileRealm, editor: Editor): void => {
 
 const fontSizes = Fun.constant(fontSizesArray);
 
-export {
-  init,
-  fontSizes
-};
+export { init, fontSizes };

@@ -4,7 +4,8 @@ import * as ApproxStructure from 'ephox/agar/api/ApproxStructure';
 import * as Assertions from 'ephox/agar/api/Assertions';
 
 UnitTest.test('Approx Structures Tutorial Test', () => {
-  const html = '<div data-key="test-1" selected="double" class="test1 root" style="display: block;">' +
+  const html =
+    '<div data-key="test-1" selected="double" class="test1 root" style="display: block;">' +
     '<div selected="true">' +
     '<span data-ephox-id="blah" class="disabled">span</span>' +
     '</div>' +
@@ -18,10 +19,7 @@ UnitTest.test('Approx Structures Tutorial Test', () => {
 
   const structure = ApproxStructure.build((s, str, arr) =>
     s.element('div', {
-      classes: [
-        arr.has('test1'),
-        arr.hasPrefix('tes')
-      ],
+      classes: [arr.has('test1'), arr.hasPrefix('tes')],
       attrs: {
         selected: str.is('double'),
         car: str.none('Car should not be there')
@@ -39,17 +37,15 @@ UnitTest.test('Approx Structures Tutorial Test', () => {
               attrs: {
                 'data-ephox-id': str.startsWith('bl')
               },
-              classes: [
-                arr.has('disabled'),
-                arr.not('enabled')
-              ],
+              classes: [arr.has('disabled'), arr.not('enabled')],
               html: str.is('span')
             })
           ]
         }),
         s.text(str.is('words'))
       ]
-    }));
+    })
+  );
 
   check(structure, html);
 });

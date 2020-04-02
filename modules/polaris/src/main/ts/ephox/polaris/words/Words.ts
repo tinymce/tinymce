@@ -21,18 +21,24 @@ const findWordEnd = (characters: string[], startIndex: number) => {
 
 const findUrlEnd = (characters: string[], startIndex: number): number => {
   const endIndex = findWordEnd(characters, startIndex + 1);
-  const peakedWord = characters.slice(startIndex + 1, endIndex).join(EMPTY_STRING);
+  const peakedWord = characters
+    .slice(startIndex + 1, endIndex)
+    .join(EMPTY_STRING);
   return peakedWord.substr(0, 3) === '://' ? endIndex : startIndex;
 };
 
-const findWords = <T>(chars: T[], sChars: string[], characterMap: CharacterMap, options: WordOptions): T[][] => {
+const findWords = <T>(
+  chars: T[],
+  sChars: string[],
+  characterMap: CharacterMap,
+  options: WordOptions
+): T[][] => {
   const words: T[][] = [];
   let word: T[] = [];
 
   // Loop through each character in the classification map and determine whether
   // it precedes a word boundary, building an array of distinct words as we go.
   for (let i = 0; i < characterMap.length; ++i) {
-
     // Append this character to the current word.
     word.push(chars[i]);
 
@@ -72,10 +78,14 @@ export interface WordOptions {
 
 const getDefaultOptions = (): WordOptions => ({
   includeWhitespace: false,
-  includePunctuation: false,
+  includePunctuation: false
 });
 
-const getWords = <T>(chars: T[], extract: (char: T) => string, options?: WordOptions): T[][] => {
+const getWords = <T>(
+  chars: T[],
+  extract: (char: T) => string,
+  options?: WordOptions
+): T[][] => {
   options = {
     ...getDefaultOptions(),
     ...options
@@ -97,6 +107,4 @@ const getWords = <T>(chars: T[], extract: (char: T) => string, options?: WordOpt
   return findWords(filteredChars, extractedChars, characterMap, options);
 };
 
-export {
-  getWords
-};
+export { getWords };

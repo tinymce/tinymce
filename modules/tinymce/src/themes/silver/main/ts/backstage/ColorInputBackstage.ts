@@ -20,18 +20,26 @@ export interface UiFactoryBackstageForColorInput {
   getColorCols: () => number;
 }
 
-const colorPicker = (editor: Editor) => (callback: ColorInputCallback, value: string) => {
+const colorPicker = (editor: Editor) => (
+  callback: ColorInputCallback,
+  value: string
+) => {
   const dialog = ColorSwatch.colorPickerDialog(editor);
   dialog(callback, value);
 };
 
-const hasCustomColors = (editor: Editor) => (): boolean => Settings.hasCustomColors(editor);
+const hasCustomColors = (editor: Editor) => (): boolean =>
+  Settings.hasCustomColors(editor);
 
-const getColors = (editor: Editor) => (): Menu.ChoiceMenuItemApi[] => Settings.getColors(editor);
+const getColors = (editor: Editor) => (): Menu.ChoiceMenuItemApi[] =>
+  Settings.getColors(editor);
 
-const getColorCols = (editor: Editor) => (): number => ColorSwatch.getColorCols(editor);
+const getColorCols = (editor: Editor) => (): number =>
+  ColorSwatch.getColorCols(editor);
 
-export const ColorInputBackstage = (editor: Editor): UiFactoryBackstageForColorInput => ({
+export const ColorInputBackstage = (
+  editor: Editor
+): UiFactoryBackstageForColorInput => ({
   colorPicker: colorPicker(editor),
   hasCustomColors: hasCustomColors(editor),
   getColors: getColors(editor),

@@ -21,6 +21,4 @@ const Representing: RepresentingBehaviour = Behaviour.create({
   state: RepresentState
 });
 
-export {
-  Representing
-};
+export { Representing };

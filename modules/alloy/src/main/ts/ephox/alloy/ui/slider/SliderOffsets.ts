@@ -10,8 +10,12 @@ const top = 'top',
   height = 'height';
 
 // Screen offsets from bounding client rect
-const getBounds = (component: AlloyComponent): ClientRect => component.element().dom().getBoundingClientRect();
-const getBoundsProperty = (bounds: ClientRect, property: keyof ClientRect): number => bounds[property];
+const getBounds = (component: AlloyComponent): ClientRect =>
+  component.element().dom().getBoundingClientRect();
+const getBoundsProperty = (
+  bounds: ClientRect,
+  property: keyof ClientRect
+): number => bounds[property];
 
 const getMinXBounds = (component: AlloyComponent): number => {
   const bounds = getBounds(component);
@@ -38,10 +42,16 @@ const getYScreenRange = (component: AlloyComponent): number => {
   return getBoundsProperty(bounds, height);
 };
 
-const getCenterOffsetOf = (componentMinEdge: number, componentMaxEdge: number, spectrumMinEdge: number): number =>
-  (componentMinEdge + componentMaxEdge) / 2 - spectrumMinEdge;
+const getCenterOffsetOf = (
+  componentMinEdge: number,
+  componentMaxEdge: number,
+  spectrumMinEdge: number
+): number => (componentMinEdge + componentMaxEdge) / 2 - spectrumMinEdge;
 
-const getXCenterOffSetOf = (component: AlloyComponent, spectrum: AlloyComponent): number => {
+const getXCenterOffSetOf = (
+  component: AlloyComponent,
+  spectrum: AlloyComponent
+): number => {
   const componentBounds = getBounds(component);
   const spectrumBounds = getBounds(spectrum);
   const componentMinEdge = getBoundsProperty(componentBounds, left);
@@ -49,7 +59,10 @@ const getXCenterOffSetOf = (component: AlloyComponent, spectrum: AlloyComponent)
   const spectrumMinEdge = getBoundsProperty(spectrumBounds, left);
   return getCenterOffsetOf(componentMinEdge, componentMaxEdge, spectrumMinEdge);
 };
-const getYCenterOffSetOf = (component: AlloyComponent, spectrum: AlloyComponent): number => {
+const getYCenterOffSetOf = (
+  component: AlloyComponent,
+  spectrum: AlloyComponent
+): number => {
   const componentBounds = getBounds(component);
   const spectrumBounds = getBounds(spectrum);
   const componentMinEdge = getBoundsProperty(componentBounds, top);

@@ -7,9 +7,11 @@
 
 const applyListFormat = function (editor, listName, styleValue) {
   const cmd = listName === 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList';
-  editor.execCommand(cmd, false, styleValue === false ? null : { 'list-style-type': styleValue });
+  editor.execCommand(
+    cmd,
+    false,
+    styleValue === false ? null : { 'list-style-type': styleValue }
+  );
 };
 
-export {
-  applyListFormat
-};
+export { applyListFormat };

@@ -9,7 +9,13 @@ import { punctuationStr } from '../words/UnicodeData';
 // \u00C0 - \u00FF are various language characters (Latin-1)
 // \u0100 - \u017F are various language characters (Latin Extended-A)
 // \u2018 and \u2019 are the smart quote characters
-const charsStr = '\\w' + `'` + '\\-' + '\\u0100-\\u017F\\u00C0-\\u00FF' + Unicode.zeroWidth + '\\u2018\\u2019';
+const charsStr =
+  '\\w' +
+  `'` +
+  '\\-' +
+  '\\u0100-\\u017F\\u00C0-\\u00FF' +
+  Unicode.zeroWidth +
+  '\\u2018\\u2019';
 const wordbreakStr = '[^' + charsStr + ']';
 const wordcharStr = '[' + charsStr + ']';
 
@@ -18,9 +24,4 @@ const wordbreak = Fun.constant(wordbreakStr);
 const wordchar = Fun.constant(wordcharStr);
 const punctuation = Fun.constant(punctuationStr);
 
-export {
-  chars,
-  punctuation,
-  wordbreak,
-  wordchar
-};
+export { chars, punctuation, wordbreak, wordchar };

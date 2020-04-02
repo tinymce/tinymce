@@ -32,8 +32,14 @@ export default ValueSchema.objOf([
     FieldSchema.defaulted('onTapContent', Fun.noop),
     FieldSchema.defaulted('onTouchToolstrip', Fun.noop),
 
-    FieldSchema.defaulted('onScrollToCursor', Fun.constant({ unbind: Fun.noop })),
-    FieldSchema.defaulted('onScrollToElement', Fun.constant({ unbind: Fun.noop })),
+    FieldSchema.defaulted(
+      'onScrollToCursor',
+      Fun.constant({ unbind: Fun.noop })
+    ),
+    FieldSchema.defaulted(
+      'onScrollToElement',
+      Fun.constant({ unbind: Fun.noop })
+    ),
     FieldSchema.defaulted('onToEditing', Fun.constant({ unbind: Fun.noop })),
     FieldSchema.defaulted('onToReading', Fun.constant({ unbind: Fun.noop })),
     FieldSchema.defaulted('onToolbarScrollStart', Fun.identity)
@@ -49,9 +55,7 @@ export default ValueSchema.objOf([
     return Traverse.owner(spec.socket).dom().defaultView;
   }),
   FieldSchema.state('body', function (spec) {
-    return Element.fromDom(
-      spec.socket.dom().ownerDocument.body
-    );
+    return Element.fromDom(spec.socket.dom().ownerDocument.body);
   }),
   FieldSchema.defaulted('translate', Fun.identity),
   FieldSchema.defaulted('setReadOnly', Fun.noop),

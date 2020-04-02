@@ -3,7 +3,10 @@ import { Pipeline } from '@ephox/agar';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('atomic.tinymce.core.text.ZwspTest', function (success, failure) {
+UnitTest.asynctest('atomic.tinymce.core.text.ZwspTest', function (
+  success,
+  failure
+) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('ZWSP', function () {
@@ -18,7 +21,12 @@ UnitTest.asynctest('atomic.tinymce.core.text.ZwspTest', function (success, failu
     LegacyUnit.strictEqual(Zwsp.trim('a' + Zwsp.ZWSP + 'b'), 'ab');
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
-    success();
-  }, failure);
+  Pipeline.async(
+    {},
+    suite.toSteps({}),
+    function () {
+      success();
+    },
+    failure
+  );
 });

@@ -14,7 +14,11 @@ const register = Thunk.cached((gui: GuiSystem) => {
   Debugging.registerInspector('htmldisplay', gui);
 });
 
-const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyComponent => {
+const section = (
+  gui: GuiSystem,
+  instructions: string,
+  spec: AlloySpec
+): AlloyComponent => {
   register(gui);
   const information = Container.sketch({
     dom: {
@@ -35,10 +39,7 @@ const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyCo
           'border': '1px dashed green'
         }
       },
-      components: [
-        GuiFactory.premade(component)
-
-      ]
+      components: [GuiFactory.premade(component)]
     })
   );
 
@@ -49,11 +50,9 @@ const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyCo
     uid: dumpUid,
     dom: {
       tag: 'p',
-      classes: [ 'html-display' ]
+      classes: ['html-display']
     },
-    components: [
-      GuiFactory.text(htmlDump)
-    ]
+    components: [GuiFactory.text(htmlDump)]
   });
 
   const updateHtml = () => {
@@ -67,16 +66,21 @@ const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyCo
     updateHtml();
   });
 
-  observer.observe(component.element().dom(), { attributes: true, childList: true, characterData: true, subtree: true });
+  observer.observe(component.element().dom(), {
+    attributes: true,
+    childList: true,
+    characterData: true,
+    subtree: true
+  });
 
   const all = GuiFactory.build(
     Container.sketch({
       components: [
-        Container.sketch({ dom: { tag: 'hr' }}),
+        Container.sketch({ dom: { tag: 'hr' } }),
         information,
         GuiFactory.premade(display),
         dump,
-        Container.sketch({ dom: { tag: 'hr' }})
+        Container.sketch({ dom: { tag: 'hr' } })
       ]
     })
   );
@@ -85,16 +89,13 @@ const section = (gui: GuiSystem, instructions: string, spec: AlloySpec): AlloyCo
 
   DomEvent.bind(Element.fromDom(document), 'mousedown', (evt) => {
     if (evt.raw().button === 0) {
-      gui.broadcastOn([ Channels.dismissPopups() ], {
+      gui.broadcastOn([Channels.dismissPopups()], {
         target: evt.target()
       });
     }
   });
 
   return component;
-
 };
 
-export {
-  section
-};
+export { section };

@@ -1,17 +1,32 @@
-import { Attachment, Behaviour, Channels, Debugging, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
+import {
+  Attachment,
+  Behaviour,
+  Channels,
+  Debugging,
+  DomFactory,
+  Gui,
+  GuiFactory,
+  Positioning
+} from '@ephox/alloy';
 import { console, document, window } from '@ephox/dom-globals';
 import { Fun, Future, Id, Option, Result } from '@ephox/katamari';
 import { Body, Class } from '@ephox/sugar';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
-import { LinkInformation, ApiUrlData, UrlValidationHandler } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
+import {
+  LinkInformation,
+  ApiUrlData,
+  UrlValidationHandler
+} from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 import I18n from 'tinymce/core/api/util/I18n';
 import Editor from 'tinymce/core/api/Editor';
 
 const setupDemo = () => {
-
   const oldSink = document.querySelectorAll('.mce-silver-sink');
   if (oldSink.length > 0) {
-    throw Error('old sinks found, a previous demo did not call helpers.destroy() leaving artifacts, found: ' + oldSink.length);
+    throw Error(
+      'old sinks found, a previous demo did not call helpers.destroy() leaving artifacts, found: ' +
+        oldSink.length
+    );
   }
 
   // begin of demo helpers
@@ -29,34 +44,57 @@ const setupDemo = () => {
 
   const fakeHistory = (fileType: string): string[] => {
     if (fileType === 'image') {
-      return [ 'https://i.stack.imgur.com/8JoS3.png' ];
+      return ['https://i.stack.imgur.com/8JoS3.png'];
     } else if (fileType === 'media') {
       return [];
     } else if (fileType === 'file') {
-      return [ 'https://www.tiny.cloud/' ];
+      return ['https://www.tiny.cloud/'];
     }
     return [];
   };
 
   const fakeLinkInfo: LinkInformation = {
     targets: [
-      { type: 'anchor', title: 'Google', url: 'http://www.google.com.au', level: 0, attach: Fun.noop },
-      { type: 'header', title: 'Header', url: '#header', level: 1, attach: () => {
-        // tslint:disable-next-line:no-console
-        console.log('This is where the ID would be attached to the header so it can be linked');
-      } }
+      {
+        type: 'anchor',
+        title: 'Google',
+        url: 'http://www.google.com.au',
+        level: 0,
+        attach: Fun.noop
+      },
+      {
+        type: 'header',
+        title: 'Header',
+        url: '#header',
+        level: 1,
+        attach: () => {
+          // tslint:disable-next-line:no-console
+          console.log(
+            'This is where the ID would be attached to the header so it can be linked'
+          );
+        }
+      }
     ],
     anchorTop: '#top',
     anchorBottom: '#bottom'
   };
 
   const fakeValidator: UrlValidationHandler = (info, callback) => {
-    if (info.url === 'test-valid' || /^https?:\/\/www\.google\.com\/google\.jpg$/.test(info.url)) {
+    if (
+      info.url === 'test-valid' ||
+      /^https?:\/\/www\.google\.com\/google\.jpg$/.test(info.url)
+    ) {
       callback({ message: `Yep, that's valid...`, status: 'valid' });
-    } else if (info.url === 'test-unknown' || /\.(?:jpg|png|gif)$/.test(info.url)) {
+    } else if (
+      info.url === 'test-unknown' ||
+      /\.(?:jpg|png|gif)$/.test(info.url)
+    ) {
       callback({ message: `Hmm, I don't know...`, status: 'unknown' });
     } else if (info.url === 'test-invalid') {
-      callback({ message: `No, no, definitly not, just don't, STOP...`, status: 'invalid' });
+      callback({
+        message: `No, no, definitly not, just don't, STOP...`,
+        status: 'invalid'
+      });
     } else {
       callback({ message: '', status: 'none' });
     }
@@ -102,8 +140,8 @@ const setupDemo = () => {
   const backstage: UiFactoryBackstage = {
     shared: {
       providers: {
-        icons: () => <Record<string, string>> {},
-        menuItems: () => <Record<string, any>> {},
+        icons: () => <Record<string, string>>{},
+        menuItems: () => <Record<string, any>>{},
         translate: I18n.translate,
         isReadonly: () => false
       },
@@ -143,11 +181,17 @@ const setupDemo = () => {
       addToHistory: (_url: string, _fileType: string) => {},
       getLinkInformation: () => Option.some(fakeLinkInfo),
       getValidationHandler: () => Option.some(fakeValidator),
-      getUrlPicker: (_filetype) => Option.some((entry: ApiUrlData) => {
-        const newUrl = Option.from(window.prompt('File browser would show instead of this...', entry.value));
-        return Future.pure({ ...entry, value: newUrl.getOr(entry.value) });
-      })
-    },
+      getUrlPicker: (_filetype) =>
+        Option.some((entry: ApiUrlData) => {
+          const newUrl = Option.from(
+            window.prompt(
+              'File browser would show instead of this...',
+              entry.value
+            )
+          );
+          return Future.pure({ ...entry, value: newUrl.getOr(entry.value) });
+        })
+    }
     // styleselect: StyleFormatsBackstage.init({
     //   on: (name, f) => {
     //     if (name === 'addStyleModifications') {
@@ -247,7 +291,7 @@ const setupDemo = () => {
 
   // Let the dialog components demo know that the mouse has been released.
   document.addEventListener('mouseup', () => {
-    uiMothership.broadcastOn([ Channels.mouseReleased() ], { });
+    uiMothership.broadcastOn([Channels.mouseReleased()], {});
   });
 
   // end of demo helpers

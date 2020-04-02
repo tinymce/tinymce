@@ -23,7 +23,4 @@ const getContent = function (editor) {
   return editor.getContent({ source_view: true });
 };
 
-export {
-  setContent,
-  getContent
-};
+export { setContent, getContent };

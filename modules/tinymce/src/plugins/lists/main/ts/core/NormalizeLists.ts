@@ -44,7 +44,4 @@ const normalizeLists = function (dom, element) {
   });
 };
 
-export {
-  normalizeList,
-  normalizeLists
-};
+export { normalizeList, normalizeLists };

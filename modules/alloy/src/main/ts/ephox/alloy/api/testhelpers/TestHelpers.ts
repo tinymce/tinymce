@@ -2,7 +2,4 @@
 import * as GuiSetup from './GuiSetup';
 import { TestStore } from './TestStore';
 
-export {
-  GuiSetup,
-  TestStore
-};
+export { GuiSetup, TestStore };

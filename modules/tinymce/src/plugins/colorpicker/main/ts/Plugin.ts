@@ -11,6 +11,8 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 export default function () {
   PluginManager.add('colorpicker', function () {
     // tslint:disable-next-line:no-console
-    console.warn('Color picker plugin is now built in to the core editor, please remove it from your editor configuration');
+    console.warn(
+      'Color picker plugin is now built in to the core editor, please remove it from your editor configuration'
+    );
   });
 }

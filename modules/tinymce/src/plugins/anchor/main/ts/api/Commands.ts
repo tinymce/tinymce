@@ -13,6 +13,4 @@ const register = (editor) => {
   });
 };
 
-export {
-  register
-};
+export { register };

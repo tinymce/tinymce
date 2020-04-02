@@ -74,6 +74,4 @@ const register = function (editor: Editor) {
   });
 };
 
-export {
-  register
-};
+export { register };

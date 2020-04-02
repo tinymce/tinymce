@@ -18,17 +18,28 @@ export interface TypeaheadModelDetail {
 
 // TODO: CommonDropdownDetail has getHotspot. So all things extending it
 // need to have a schema setting for getHotspot
-export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, InputDetail {
+export interface TypeaheadDetail
+  extends CommonDropdownDetail<TieredData>,
+    InputDetail {
   uid: string;
-  components: AlloySpec[ ];
+  components: AlloySpec[];
   minChars: number;
   responseTime: number;
 
   model: TypeaheadModelDetail;
 
   typeaheadBehaviours: SketchBehaviours;
-  onExecute: (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
-  onItemExecute: (typeahead: AlloyComponent, sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
+  onExecute: (
+    sandbox: AlloyComponent,
+    item: AlloyComponent,
+    value: any
+  ) => void;
+  onItemExecute: (
+    typeahead: AlloyComponent,
+    sandbox: AlloyComponent,
+    item: AlloyComponent,
+    value: any
+  ) => void;
   dismissOnBlur: boolean;
 
   initialData: Option<TypeaheadData>;
@@ -54,8 +65,8 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   sandboxBehaviours?: AlloyBehaviourRecord;
   getHotspot?: (comp: AlloyComponent) => Option<AlloyComponent>;
   inputClasses?: string[];
-  inputAttributes?: { };
-  inputStyles?: { };
+  inputAttributes?: {};
+  inputStyles?: {};
 
   minChars?: number;
   responseTime?: number;
@@ -76,10 +87,19 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   };
 
   dismissOnBlur?: boolean;
-  onExecute?: (sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
-  onItemExecute?: (typeahead: AlloyComponent, sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
+  onExecute?: (
+    sandbox: AlloyComponent,
+    item: AlloyComponent,
+    value: any
+  ) => void;
+  onItemExecute?: (
+    typeahead: AlloyComponent,
+    sandbox: AlloyComponent,
+    item: AlloyComponent,
+    value: any
+  ) => void;
 
   initialData?: TypeaheadData;
 }
 
-export interface TypeaheadSketcher extends CompositeSketch<TypeaheadSpec> { }
+export interface TypeaheadSketcher extends CompositeSketch<TypeaheadSpec> {}

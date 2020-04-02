@@ -8,11 +8,17 @@ import { Document } from '@ephox/dom-globals';
  * change. This acts as an intermediary between the scroll event, and the value for scroll
  * changing
  */
-const bind = function (doc: Element<Document>, handler: (pos: Position) => void) {
+const bind = function (
+  doc: Element<Document>,
+  handler: (pos: Position) => void
+) {
   let lastScroll = Scroll.get(doc);
   const scrollBinder = DomEvent.bind(doc, 'scroll', function (_event) {
     const scroll = Scroll.get(doc);
-    if ( (scroll.top() !== lastScroll.top()) || (scroll.left() !== lastScroll.left()) ) {
+    if (
+      scroll.top() !== lastScroll.top() ||
+      scroll.left() !== lastScroll.left()
+    ) {
       handler(scroll);
     }
     lastScroll = scroll;
@@ -23,6 +29,4 @@ const bind = function (doc: Element<Document>, handler: (pos: Position) => void)
   };
 };
 
-export {
-  bind
-};
+export { bind };

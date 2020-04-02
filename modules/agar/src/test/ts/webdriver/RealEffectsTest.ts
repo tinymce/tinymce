@@ -15,12 +15,16 @@ import * as UiFinder from 'ephox/agar/api/UiFinder';
 import * as Waiter from 'ephox/agar/api/Waiter';
 
 UnitTest.asynctest('Real Effects Test', (success, failure) => {
-
   const platform = PlatformDetection.detect();
 
   // IE never passes unless watched and Edge 18 fails to hover on mousemove
   // the meta key on mac using chromedriver/safaridriver doesn't work (see https://github.com/webdriverio/webdriverio/issues/622)
-  if (platform.browser.isIE() || platform.browser.isEdge() || platform.browser.isSafari() || (platform.os.isOSX() && platform.browser.isChrome())) {
+  if (
+    platform.browser.isIE() ||
+    platform.browser.isEdge() ||
+    platform.browser.isSafari() ||
+    (platform.os.isOSX() && platform.browser.isChrome())
+  ) {
     return success();
   }
 
@@ -34,7 +38,10 @@ UnitTest.asynctest('Real Effects Test', (success, failure) => {
     Insert.append(container, input);
 
     const css = Element.fromTag('style');
-    Html.set(css, 'button { border: 1px solid black; }\nbutton.test:hover { border: 1px solid white }');
+    Html.set(
+      css,
+      'button { border: 1px solid black; }\nbutton.test:hover { border: 1px solid white }'
+    );
     Insert.append(head, css);
 
     const button = Element.fromTag('button');
@@ -58,57 +65,73 @@ UnitTest.asynctest('Real Effects Test', (success, failure) => {
     Chain.asStep(body, [
       UiFinder.cFindIn('button.test'),
       Chain.mapper((button) => {
-        const prop = platform.browser.isFirefox() || platform.browser.isEdge() || platform.browser.isIE() ? 'border-right-color' : 'border-color';
+        const prop =
+          platform.browser.isFirefox() ||
+          platform.browser.isEdge() ||
+          platform.browser.isIE()
+            ? 'border-right-color'
+            : 'border-color';
         return Css.get(button, prop);
       }),
-      Assertions.cAssertEq(label + '\nChecking color of button border', expected)
+      Assertions.cAssertEq(
+        label + '\nChecking color of button border',
+        expected
+      )
     ]);
 
-  Pipeline.async({}, [
-    sCreateWorld,
-    Step.wait(200),
-    RealKeys.sSendKeysOn('input', [
-      RealKeys.text('I am typing thos')
-    ]),
-    sCheckInput('Initial typing', 'I am typing thos'),
-    Step.wait(50),
-    RealKeys.sSendKeysOn('input', [
-      RealKeys.backspace(),
-      RealKeys.backspace()
-    ]),
-    sCheckInput('After backspacing incorrect letters', 'I am typing th'),
-    Step.wait(50),
-    RealKeys.sSendKeysOn('input', [
-      RealKeys.text('is')
-    ]),
-    sCheckInput('After correcting "this"', 'I am typing this'),
-    Step.wait(50),
-    RealKeys.sSendKeysOn('input', [
-      RealKeys.combo(platform.os.isOSX() ? { metaKey: true } : { ctrlKey: true }, 'a')
-    ]),
-    Step.wait(50),
-    RealClipboard.sCopy('input'),
-    sCheckInput('After triggering copy', 'I am typing this'),
+  Pipeline.async(
+    {},
+    [
+      sCreateWorld,
+      Step.wait(200),
+      RealKeys.sSendKeysOn('input', [RealKeys.text('I am typing thos')]),
+      sCheckInput('Initial typing', 'I am typing thos'),
+      Step.wait(50),
+      RealKeys.sSendKeysOn('input', [
+        RealKeys.backspace(),
+        RealKeys.backspace()
+      ]),
+      sCheckInput('After backspacing incorrect letters', 'I am typing th'),
+      Step.wait(50),
+      RealKeys.sSendKeysOn('input', [RealKeys.text('is')]),
+      sCheckInput('After correcting "this"', 'I am typing this'),
+      Step.wait(50),
+      RealKeys.sSendKeysOn('input', [
+        RealKeys.combo(
+          platform.os.isOSX() ? { metaKey: true } : { ctrlKey: true },
+          'a'
+        )
+      ]),
+      Step.wait(50),
+      RealClipboard.sCopy('input'),
+      sCheckInput('After triggering copy', 'I am typing this'),
 
-    Step.wait(50),
-    RealKeys.sSendKeysOn('input', [
-      RealKeys.backspace()
-    ]),
-    sCheckInput('After pressing Backspace on Select All', ''),
-    Step.wait(50),
-    RealClipboard.sPaste('input'),
-    sCheckInput('Post paste', 'I am typing this'),
-    Step.wait(100),
-    RealMouse.sMoveToOn('input'),
-    sCheckButtonBorder('Checking initial state of button border', 'rgb(0, 0, 0)'),
+      Step.wait(50),
+      RealKeys.sSendKeysOn('input', [RealKeys.backspace()]),
+      sCheckInput('After pressing Backspace on Select All', ''),
+      Step.wait(50),
+      RealClipboard.sPaste('input'),
+      sCheckInput('Post paste', 'I am typing this'),
+      Step.wait(100),
+      RealMouse.sMoveToOn('input'),
+      sCheckButtonBorder(
+        'Checking initial state of button border',
+        'rgb(0, 0, 0)'
+      ),
 
-    RealMouse.sMoveToOn('button.test'),
-    Waiter.sTryUntil(
-      'Waiting for hovered state',
-      sCheckButtonBorder('Checking hovered state of button border', 'rgb(255, 255, 255)')
-    )
-  ], () => {
-    Remove.remove(container);
-    success();
-  }, failure);
+      RealMouse.sMoveToOn('button.test'),
+      Waiter.sTryUntil(
+        'Waiting for hovered state',
+        sCheckButtonBorder(
+          'Checking hovered state of button border',
+          'rgb(255, 255, 255)'
+        )
+      )
+    ],
+    () => {
+      Remove.remove(container);
+      success();
+    },
+    failure
+  );
 });

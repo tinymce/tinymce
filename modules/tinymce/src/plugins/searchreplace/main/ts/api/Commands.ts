@@ -10,12 +10,13 @@ import Editor from 'tinymce/core/api/Editor';
 import { SearchState } from '../core/Actions';
 import * as Dialog from '../ui/Dialog';
 
-const register = function (editor: Editor, currentSearchState: Cell<SearchState>) {
+const register = function (
+  editor: Editor,
+  currentSearchState: Cell<SearchState>
+) {
   editor.addCommand('SearchReplace', function () {
     Dialog.open(editor, currentSearchState);
   });
 };
 
-export {
-  register
-};
+export { register };

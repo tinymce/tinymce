@@ -13,6 +13,4 @@ const Sandboxing: SandboxingBehaviour = Behaviour.create({
   state: SandboxState
 });
 
-export {
-  Sandboxing
-};
+export { Sandboxing };

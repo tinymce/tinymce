@@ -5,7 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Receiving, AddEventsBehaviour, AlloyEvents, AlloyParts } from '@ephox/alloy';
+import {
+  Receiving,
+  AddEventsBehaviour,
+  AlloyEvents,
+  AlloyParts
+} from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { window, HTMLIFrameElement } from '@ephox/dom-globals';
 import { Cell, Obj, Option, Type } from '@ephox/katamari';
@@ -19,17 +24,39 @@ import { renderIframeBody } from './SilverDialogBody';
 import { SilverDialogEvents } from './SilverDialogEvents';
 import { renderModalFooter } from './SilverDialogFooter';
 import { getUrlDialogApi } from './SilverUrlDialogInstanceApi';
-import { DialogSpec, getEventExtras, getHeader, renderModalDialog, WindowExtra } from './SilverDialogCommon';
-import {  bodySendMessageChannel } from './DialogChannels';
+import {
+  DialogSpec,
+  getEventExtras,
+  getHeader,
+  renderModalDialog,
+  WindowExtra
+} from './SilverDialogCommon';
+import { bodySendMessageChannel } from './DialogChannels';
 
 // A list of supported message actions
-const SUPPORTED_MESSAGE_ACTIONS = [ 'insertContent', 'setContent', 'execCommand', 'close', 'block', 'unblock' ];
+const SUPPORTED_MESSAGE_ACTIONS = [
+  'insertContent',
+  'setContent',
+  'execCommand',
+  'close',
+  'block',
+  'unblock'
+];
 
-const isSupportedMessage = (data: any): boolean => Type.isObject(data) && SUPPORTED_MESSAGE_ACTIONS.indexOf(data.mceAction) !== -1;
+const isSupportedMessage = (data: any): boolean =>
+  Type.isObject(data) &&
+  SUPPORTED_MESSAGE_ACTIONS.indexOf(data.mceAction) !== -1;
 
-const isCustomMessage = (data: any): boolean => !isSupportedMessage(data) && Type.isObject(data) && Obj.has(data, 'mceAction');
+const isCustomMessage = (data: any): boolean =>
+  !isSupportedMessage(data) &&
+  Type.isObject(data) &&
+  Obj.has(data, 'mceAction');
 
-const handleMessage = (editor: Editor, api: Types.UrlDialog.UrlDialogInstanceApi, data: any) => {
+const handleMessage = (
+  editor: Editor,
+  api: Types.UrlDialog.UrlDialogInstanceApi,
+  data: any
+) => {
   switch (data.mceAction) {
     case 'insertContent':
       editor.insertContent(data.content);
@@ -53,7 +80,12 @@ const handleMessage = (editor: Editor, api: Types.UrlDialog.UrlDialogInstanceApi
   }
 };
 
-const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: WindowExtra, editor: Editor, backstage: UiFactoryBackstage) => {
+const renderUrlDialog = (
+  internalDialog: Types.UrlDialog.UrlDialog,
+  extra: WindowExtra,
+  editor: Editor,
+  backstage: UiFactoryBackstage
+) => {
   const header = getHeader(internalDialog.title, backstage);
   const body = renderIframeBody(internalDialog);
   const footer = internalDialog.buttons.bind((buttons) => {
@@ -65,20 +97,36 @@ const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: Windo
     }
   });
 
-  const dialogEvents = SilverDialogEvents.initUrlDialog(() => instanceApi, getEventExtras(() => dialog, extra));
+  const dialogEvents = SilverDialogEvents.initUrlDialog(
+    () => instanceApi,
+    getEventExtras(() => dialog, extra)
+  );
 
   // Add the styles for the modal width/height
   const styles = {
-    ...internalDialog.height.fold(() => ({}), (height) => ({ 'height': height + 'px', 'max-height': height + 'px' })),
-    ...internalDialog.width.fold(() => ({}), (width) => ({ 'width': width + 'px', 'max-width': width + 'px' })),
+    ...internalDialog.height.fold(
+      () => ({}),
+      (height) => ({ 'height': height + 'px', 'max-height': height + 'px' })
+    ),
+    ...internalDialog.width.fold(
+      () => ({}),
+      (width) => ({ 'width': width + 'px', 'max-width': width + 'px' })
+    )
   };
 
   // Default back to using a large sized dialog, if no dimensions are specified
-  const classes = internalDialog.width.isNone() && internalDialog.height.isNone() ? [ 'tox-dialog--width-lg' ] : [];
+  const classes =
+    internalDialog.width.isNone() && internalDialog.height.isNone()
+      ? ['tox-dialog--width-lg']
+      : [];
 
   // Determine the iframe urls domain, so we can target that specifically when sending messages
-  const iframeUri = new URI(internalDialog.url, { base_uri: new URI(window.location.href) });
-  const iframeDomain = `${iframeUri.protocol}://${iframeUri.host}${iframeUri.port ? ':' + iframeUri.port : ''}`;
+  const iframeUri = new URI(internalDialog.url, {
+    base_uri: new URI(window.location.href)
+  });
+  const iframeDomain = `${iframeUri.protocol}://${iframeUri.host}${
+    iframeUri.port ? ':' + iframeUri.port : ''
+  }`;
   const messageHandlerUnbinder = Cell(Option.none<EventUnbinder>());
 
   // Setup the behaviours for dealing with messages between the iframe and current window
@@ -86,19 +134,23 @@ const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: Windo
     AddEventsBehaviour.config('messages', [
       // When the dialog is opened, bind a window message listener for the spec url
       AlloyEvents.runOnAttached(() => {
-        const unbind = DomEvent.bind(Element.fromDom(window), 'message', (e) => {
-          // Validate that the request came from the correct domain
-          if (iframeUri.isSameOrigin(new URI(e.raw().origin))) {
-            const data = e.raw().data;
+        const unbind = DomEvent.bind(
+          Element.fromDom(window),
+          'message',
+          (e) => {
+            // Validate that the request came from the correct domain
+            if (iframeUri.isSameOrigin(new URI(e.raw().origin))) {
+              const data = e.raw().data;
 
-            // Handle the message if it has the 'mceAction' key, otherwise just ignore it
-            if (isSupportedMessage(data)) {
-              handleMessage(editor, instanceApi, data);
-            } else if (isCustomMessage(data)) {
-              internalDialog.onMessage(instanceApi, data);
+              // Handle the message if it has the 'mceAction' key, otherwise just ignore it
+              if (isSupportedMessage(data)) {
+                handleMessage(editor, instanceApi, data);
+              } else if (isCustomMessage(data)) {
+                internalDialog.onMessage(instanceApi, data);
+              }
             }
           }
-        });
+        );
         messageHandlerUnbinder.set(Option.some(unbind));
       }),
 
@@ -112,7 +164,10 @@ const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: Windo
         [bodySendMessageChannel]: {
           onReceive: (comp, data) => {
             // Send the message to the iframe via postMessage
-            SelectorFind.descendant<HTMLIFrameElement>(comp.element(), 'iframe').each((iframeEle) => {
+            SelectorFind.descendant<HTMLIFrameElement>(
+              comp.element(),
+              'iframe'
+            ).each((iframeEle) => {
               const iframeWin = iframeEle.dom().contentWindow;
               iframeWin.postMessage(data, iframeDomain);
             });
@@ -131,7 +186,12 @@ const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: Windo
     extraStyles: styles
   };
 
-  const dialog = renderModalDialog(spec, internalDialog, dialogEvents, backstage);
+  const dialog = renderModalDialog(
+    spec,
+    internalDialog,
+    dialogEvents,
+    backstage
+  );
 
   const instanceApi = getUrlDialogApi(dialog);
 
@@ -141,6 +201,4 @@ const renderUrlDialog = (internalDialog: Types.UrlDialog.UrlDialog, extra: Windo
   };
 };
 
-export {
-  renderUrlDialog
-};
+export { renderUrlDialog };

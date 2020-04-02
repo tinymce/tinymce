@@ -10,7 +10,7 @@ export default function () {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
   const form = SerialisedDialog.sketch({
-    onExecute() { },
+    onExecute() {},
     getInitialValue() {
       return Option.some({
         alpha: 'Alpha',
@@ -31,19 +31,23 @@ export default function () {
   Attachment.attachSystem(ephoxUi, gui);
 
   const container = GuiFactory.build({
-    dom: UiDomFactory.dom('<div class="${prefix}-outer-container ${prefix}-fullscreen-maximized"></div>'),
+    dom: UiDomFactory.dom(
+      '<div class="${prefix}-outer-container ${prefix}-fullscreen-maximized"></div>'
+    ),
     components: [
       {
         dom: UiDomFactory.dom('<div class="${prefix}-toolstrip"></div>'),
         components: [
           {
-            dom: UiDomFactory.dom('<div class="${prefix}-toolbar ${prefix}-context-toolbar"></div>'),
+            dom: UiDomFactory.dom(
+              '<div class="${prefix}-toolbar ${prefix}-context-toolbar"></div>'
+            ),
             components: [
               {
-                dom: UiDomFactory.dom('<div class="${prefix}-toolbar-group"></div>'),
-                components: [
-                  form
-                ]
+                dom: UiDomFactory.dom(
+                  '<div class="${prefix}-toolbar-group"></div>'
+                ),
+                components: [form]
               }
             ]
           }

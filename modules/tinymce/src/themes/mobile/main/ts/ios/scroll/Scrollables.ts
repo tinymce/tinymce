@@ -39,7 +39,9 @@ const markAsHorizontal = function (container) {
 };
 
 const hasScroll = function (container) {
-  return Attr.get(container, dataHorizontal) === 'true' ? hasHorizontalScroll(container) : hasVerticalScroll(container);
+  return Attr.get(container, dataHorizontal) === 'true'
+    ? hasHorizontalScroll(container)
+    : hasVerticalScroll(container);
 };
 
 /*
@@ -48,13 +50,12 @@ const hasScroll = function (container) {
  */
 const exclusive = function (scope, selector) {
   return DomEvent.bind(scope, 'touchmove', function (event) {
-    SelectorFind.closest(event.target(), selector).filter(hasScroll).fold(function () {
-      event.raw().preventDefault();
-    }, Fun.noop);
+    SelectorFind.closest(event.target(), selector)
+      .filter(hasScroll)
+      .fold(function () {
+        event.raw().preventDefault();
+      }, Fun.noop);
   });
 };
 
-export {
-  exclusive,
-  markAsHorizontal
-};
+export { exclusive, markAsHorizontal };

@@ -14,7 +14,9 @@ const LONGPRESS_DELAY = 400;
 
 const getTouch = (event: EventArgs<TouchEvent>): Option<Touch> => {
   const raw = event.raw();
-  if (raw.touches === undefined || raw.touches.length !== 1) { return Option.none(); }
+  if (raw.touches === undefined || raw.touches.length !== 1) {
+    return Option.none();
+  }
   return Option.some(raw.touches[0]);
 };
 
@@ -66,7 +68,9 @@ const monitor = (settings: GuiEventSettings) => {
     longpress.cancel();
     getTouch(event).each((touch) => {
       startData.get().each((data) => {
-        if (isFarEnough(touch, data)) { startData.set(Option.none()); }
+        if (isFarEnough(touch, data)) {
+          startData.set(Option.none());
+        }
       });
     });
     return Option.none();
@@ -75,31 +79,37 @@ const monitor = (settings: GuiEventSettings) => {
   const handleTouchend = (event: EventArgs): Option<boolean> => {
     longpress.cancel();
 
-    const isSame = (data: TouchHistoryData) => Compare.eq(data.target, event.target());
+    const isSame = (data: TouchHistoryData) =>
+      Compare.eq(data.target, event.target());
 
-    return startData.get().filter(isSame).map((_data) => {
-      if (longpressFired.get()) {
-        event.prevent();
-        return false;
-      } else {
-        return settings.triggerEvent(SystemEvents.tap(), event);
-      }
-    });
+    return startData
+      .get()
+      .filter(isSame)
+      .map((_data) => {
+        if (longpressFired.get()) {
+          event.prevent();
+          return false;
+        } else {
+          return settings.triggerEvent(SystemEvents.tap(), event);
+        }
+      });
   };
 
-  const handlers: Record<string, (event: EventArgs) => Option<boolean>> = Objects.wrapAll([
+  const handlers: Record<
+    string,
+    (event: EventArgs) => Option<boolean>
+  > = Objects.wrapAll([
     { key: NativeEvents.touchstart(), value: handleTouchstart },
     { key: NativeEvents.touchmove(), value: handleTouchmove },
     { key: NativeEvents.touchend(), value: handleTouchend }
   ]);
 
-  const fireIfReady = (event: EventArgs, type: string): Option<boolean> => Obj.get(handlers, type).bind((handler) => handler(event));
+  const fireIfReady = (event: EventArgs, type: string): Option<boolean> =>
+    Obj.get(handlers, type).bind((handler) => handler(event));
 
   return {
     fireIfReady
   };
 };
 
-export {
-  monitor
-};
+export { monitor };

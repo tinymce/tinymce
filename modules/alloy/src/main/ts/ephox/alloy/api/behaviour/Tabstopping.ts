@@ -9,6 +9,4 @@ const Tabstopping: TabstoppingBehaviour = Behaviour.create({
   active: ActiveTabstopping
 });
 
-export {
-  Tabstopping
-};
+export { Tabstopping };

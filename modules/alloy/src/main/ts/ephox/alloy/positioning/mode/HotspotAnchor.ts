@@ -9,7 +9,11 @@ import { nu as NuAnchor, HotspotAnchor, Anchoring } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
-const placement = (component: AlloyComponent, anchorInfo: HotspotAnchor, origin: Origins.OriginAdt): Option<Anchoring> => {
+const placement = (
+  component: AlloyComponent,
+  anchorInfo: HotspotAnchor,
+  origin: Origins.OriginAdt
+): Option<Anchoring> => {
   const hotspot = anchorInfo.hotspot;
   const anchorBox = Origins.toBox(origin, hotspot.element());
 
@@ -37,7 +41,7 @@ const placement = (component: AlloyComponent, anchorInfo: HotspotAnchor, origin:
 export default [
   FieldSchema.strict('hotspot'),
   FieldSchema.option('bubble'),
-  FieldSchema.defaulted('overrides', { }),
+  FieldSchema.defaulted('overrides', {}),
   AnchorLayouts.schema(),
   Fields.output('placement', placement)
 ];

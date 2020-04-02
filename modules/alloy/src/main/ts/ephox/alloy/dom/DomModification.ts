@@ -6,15 +6,13 @@ export interface DomModification {
   styles: Record<string, string>;
 }
 
-export interface DomModificationSpec extends Partial<DomModification> {
-
-}
+export interface DomModificationSpec extends Partial<DomModification> {}
 
 // Maybe we'll need to allow add/remove
 const nu = (s: DomModificationSpec): DomModification => ({
-  classes: s.classes !== undefined ? s.classes : [ ],
-  attributes: s.attributes !== undefined ? s.attributes : { },
-  styles: s.styles !== undefined ? s.styles : { }
+  classes: s.classes !== undefined ? s.classes : [],
+  attributes: s.attributes !== undefined ? s.attributes : {},
+  styles: s.styles !== undefined ? s.styles : {}
 });
 
 const modToStr = (mod: DomModification): string => {
@@ -24,7 +22,10 @@ const modToStr = (mod: DomModification): string => {
 
 const modToRaw = (mod: DomModification): any => mod;
 
-const merge = (defnA: DomDefinitionDetail, mod: DomModification): DomDefinitionDetail => ({
+const merge = (
+  defnA: DomDefinitionDetail,
+  mod: DomModification
+): DomDefinitionDetail => ({
   ...defnA,
   attributes: { ...defnA.attributes, ...mod.attributes },
   styles: { ...defnA.styles, ...mod.styles },

@@ -14,8 +14,11 @@ UnitTest.test('AttributionTest', function () {
   assert.eq('10', Attribution.get(item, 'border'));
 
   Attribution.copyTo(item, b);
-  assert.eq({
-    cat: 'dog',
-    border: '10'
-  }, b.attrs);
+  assert.eq(
+    {
+      cat: 'dog',
+      border: '10'
+    },
+    b.attrs
+  );
 });

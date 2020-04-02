@@ -6,7 +6,15 @@
  */
 
 import { Arr, Unicode } from '@ephox/katamari';
-import { Insert, Remove, Element, Node, Text, SelectorFilter, Traverse } from '@ephox/sugar';
+import {
+  Insert,
+  Remove,
+  Element,
+  Node,
+  Text,
+  SelectorFilter,
+  Traverse
+} from '@ephox/sugar';
 import * as ElementType from './ElementType';
 
 const getLastChildren = function (elm) {
@@ -35,7 +43,9 @@ const fillWithPaddingBr = function (elm) {
 };
 
 const isPaddingContents = function (elm) {
-  return Node.isText(elm) ? Text.get(elm) === Unicode.nbsp : ElementType.isBr(elm);
+  return Node.isText(elm)
+    ? Text.get(elm) === Unicode.nbsp
+    : ElementType.isBr(elm);
 };
 
 const isPaddedElement = function (elm) {
@@ -45,7 +55,11 @@ const isPaddedElement = function (elm) {
 const trimBlockTrailingBr = function (elm) {
   Traverse.lastChild(elm).each(function (lastChild) {
     Traverse.prevSibling(lastChild).each(function (lastChildPrevSibling) {
-      if (ElementType.isBlock(elm) && ElementType.isBr(lastChild) && ElementType.isBlock(lastChildPrevSibling)) {
+      if (
+        ElementType.isBlock(elm) &&
+        ElementType.isBr(lastChild) &&
+        ElementType.isBlock(lastChildPrevSibling)
+      ) {
         Remove.remove(lastChild);
       }
     });

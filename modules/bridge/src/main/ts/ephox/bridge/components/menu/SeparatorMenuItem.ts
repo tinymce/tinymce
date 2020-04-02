@@ -7,7 +7,7 @@ export interface SeparatorMenuItemApi {
 }
 
 // tslint:disable-next-line:no-empty-interface
-export interface SeparatorMenuItemInstanceApi { }
+export interface SeparatorMenuItemInstanceApi {}
 
 export interface SeparatorMenuItem {
   type: 'separator';
@@ -19,4 +19,7 @@ export const separatorMenuItemSchema = ValueSchema.objOf([
   FieldSchema.optionString('text')
 ]);
 
-export const createSeparatorMenuItem = (spec: SeparatorMenuItemApi): Result<SeparatorMenuItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('separatormenuitem', separatorMenuItemSchema, spec);
+export const createSeparatorMenuItem = (
+  spec: SeparatorMenuItemApi
+): Result<SeparatorMenuItem, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw('separatormenuitem', separatorMenuItemSchema, spec);

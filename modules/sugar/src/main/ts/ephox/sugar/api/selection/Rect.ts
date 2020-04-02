@@ -20,12 +20,12 @@ export interface RawRect {
 }
 
 const toRaw = (sr: StructRect): RawRect => ({
-  left : sr.left(),
+  left: sr.left(),
   top: sr.top(),
-  right : sr.right(),
-  bottom : sr.bottom(),
-  width : sr.width(),
-  height : sr.height()
+  right: sr.right(),
+  bottom: sr.bottom(),
+  width: sr.width(),
+  height: sr.height()
 });
 
 export const Rect = {

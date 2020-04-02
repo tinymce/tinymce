@@ -12,9 +12,7 @@ const createFileList = (inputFiles: File[]): FileList => {
     files[idx] = file;
   });
 
-  return Object.freeze(files) as unknown as FileList;
+  return (Object.freeze(files) as unknown) as FileList;
 };
 
-export {
-  createFileList
-};
+export { createFileList };

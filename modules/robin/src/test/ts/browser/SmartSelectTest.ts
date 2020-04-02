@@ -1,6 +1,14 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
-import { Body, Compare, Element, Hierarchy, Insert, InsertAll, Remove } from '@ephox/sugar';
+import {
+  Body,
+  Compare,
+  Element,
+  Hierarchy,
+  Insert,
+  InsertAll,
+  Remove
+} from '@ephox/sugar';
 import * as DomSmartSelect from 'ephox/robin/api/dom/DomSmartSelect';
 
 UnitTest.test('SmartSelectTest', function () {
@@ -38,11 +46,11 @@ UnitTest.test('SmartSelectTest', function () {
     const space = Element.fromText(' ');
     const yes = Element.fromText('"yes"');
 
-    InsertAll.append(p1, [ are, s1, oi, b1 ]);
-    InsertAll.append(p2, [ toSay, space, yes ]);
-    InsertAll.append(s1, [ g ]);
-    InsertAll.append(b1, [ ng ]);
-    InsertAll.append(editor, [ we, p1, p2 ]);
+    InsertAll.append(p1, [are, s1, oi, b1]);
+    InsertAll.append(p2, [toSay, space, yes]);
+    InsertAll.append(s1, [g]);
+    InsertAll.append(b1, [ng]);
+    InsertAll.append(editor, [we, p1, p2]);
     Insert.append(Body.body(), editor);
   };
 
@@ -62,67 +70,78 @@ UnitTest.test('SmartSelectTest', function () {
   }
 
   const check = function (expected: Expected, path: number[], offset: number) {
-    const start = Hierarchy.follow(editor, path).getOrDie('Looking for start of smart select');
+    const start = Hierarchy.follow(editor, path).getOrDie(
+      'Looking for start of smart select'
+    );
     const actual = DomSmartSelect.word(start, offset);
-    actual.fold(function () {
-      throw new Error('Expected to select word: ' + expected.word);
-    }, function (act) {
-      const expStart = Hierarchy.follow(editor, expected.start.element).getOrDie('Could not find expected start');
-      const expFinish = Hierarchy.follow(editor, expected.finish.element).getOrDie('Could not find expected finish');
-      assert.eq(true, Compare.eq(expStart, act.startContainer()));
-      assert.eq(expected.start.offset, act.startOffset());
-      assert.eq(true, Compare.eq(expFinish, act.endContainer()));
-      assert.eq(expected.finish.offset, act.endOffset());
+    actual.fold(
+      function () {
+        throw new Error('Expected to select word: ' + expected.word);
+      },
+      function (act) {
+        const expStart = Hierarchy.follow(
+          editor,
+          expected.start.element
+        ).getOrDie('Could not find expected start');
+        const expFinish = Hierarchy.follow(
+          editor,
+          expected.finish.element
+        ).getOrDie('Could not find expected finish');
+        assert.eq(true, Compare.eq(expStart, act.startContainer()));
+        assert.eq(expected.start.offset, act.startOffset());
+        assert.eq(true, Compare.eq(expFinish, act.endContainer()));
+        assert.eq(expected.finish.offset, act.endOffset());
 
-      const range = document.createRange();
-      range.setStart(act.startContainer().dom(), act.startOffset());
-      range.setEnd(act.endContainer().dom(), act.endOffset());
-      assert.eq(expected.word, range.toString());
-    });
+        const range = document.createRange();
+        range.setStart(act.startContainer().dom(), act.startOffset());
+        range.setEnd(act.endContainer().dom(), act.endOffset());
+        assert.eq(expected.word, range.toString());
+      }
+    );
   };
 
   const words = {
     we: {
-      start: { element: [ 0 ], offset: 0 },
-      finish: { element: [ 0 ], offset: 'We'.length },
+      start: { element: [0], offset: 0 },
+      finish: { element: [0], offset: 'We'.length },
       word: 'We'
     },
     are: {
-      start: { element: [ 1, 0 ], offset: 0 },
-      finish: { element: [ 1, 0 ], offset: 'are'.length },
+      start: { element: [1, 0], offset: 0 },
+      finish: { element: [1, 0], offset: 'are'.length },
       word: 'are'
     },
     going: {
-      start: { element: [ 1, 1, 0 ], offset: ''.length },
-      finish: { element: [ 1, 3, 0 ], offset: 'ng'.length },
+      start: { element: [1, 1, 0], offset: ''.length },
+      finish: { element: [1, 3, 0], offset: 'ng'.length },
       word: 'going'
     },
     to: {
-      start: { element: [ 2, 0 ], offset: ''.length },
-      finish: { element: [ 2, 0 ], offset: 'to'.length },
+      start: { element: [2, 0], offset: ''.length },
+      finish: { element: [2, 0], offset: 'to'.length },
       word: 'to'
     },
     say: {
-      start: { element: [ 2, 0 ], offset: 'to '.length },
-      finish: { element: [ 2, 0 ], offset: 'to say'.length },
+      start: { element: [2, 0], offset: 'to '.length },
+      finish: { element: [2, 0], offset: 'to say'.length },
       word: 'say'
     },
     yes: {
-      start: { element: [ 2, 2 ], offset: '"'.length },
-      finish: { element: [ 2, 2 ], offset: '"yes'.length },
+      start: { element: [2, 2], offset: '"'.length },
+      finish: { element: [2, 2], offset: '"yes'.length },
       word: 'yes'
     }
   };
 
   populate();
 
-  check(words.we, [ 0 ], 1);
-  check(words.are, [ 1, 0 ], 1);
-  check(words.are, [ 1, 0 ], 2);
-  check(words.going, [ 1, 1, 0 ], 1);
-  check(words.to, [ 2, 0 ], 1);
-  check(words.say, [ 2, 0 ], 'to s'.length);
-  check(words.yes, [ 2, 2 ], '"y'.length);
+  check(words.we, [0], 1);
+  check(words.are, [1, 0], 1);
+  check(words.are, [1, 0], 2);
+  check(words.going, [1, 1, 0], 1);
+  check(words.to, [2, 0], 1);
+  check(words.say, [2, 0], 'to s'.length);
+  check(words.yes, [2, 2], '"y'.length);
 
   cleanup();
 });

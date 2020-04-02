@@ -27,11 +27,14 @@ const updateScrollingFixed = function (element, winY, offsetY) {
 };
 
 const updateFixture = function (fixture, winY) {
-  return fixture.fold(function (element, property, offsetY) {
-    return updateFixed(element, property, winY, offsetY);
-  }, function (element, offsetY) {
-    return updateScrollingFixed(element, winY, offsetY);
-  });
+  return fixture.fold(
+    function (element, property, offsetY) {
+      return updateFixed(element, property, winY, offsetY);
+    },
+    function (element, offsetY) {
+      return updateScrollingFixed(element, winY, offsetY);
+    }
+  );
 };
 
 const updatePositions = function (container, winY) {
@@ -42,6 +45,4 @@ const updatePositions = function (container, winY) {
   return Futures.par(updates);
 };
 
-export {
-  updatePositions
-};
+export { updatePositions };

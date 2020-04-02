@@ -9,7 +9,10 @@ import * as Arr from '../api/Arr';
  *   get: function (callback) { callback(10); }
  * }
  */
-export const par = function <A, T, C> (asyncValues: ArrayLike<(A & {get: (callback: (value: T) => void) => void})>, nu: (worker: (callback: (values: T[]) => void) => void) => C) {
+export const par = function <A, T, C>(
+  asyncValues: ArrayLike<A & { get: (callback: (value: T) => void) => void }>,
+  nu: (worker: (callback: (values: T[]) => void) => void) => C
+) {
   return nu(function (callback) {
     const r: T[] = [];
     let count = 0;
@@ -27,7 +30,10 @@ export const par = function <A, T, C> (asyncValues: ArrayLike<(A & {get: (callba
     if (asyncValues.length === 0) {
       callback([]);
     } else {
-      Arr.each(asyncValues, function (asyncValue: A & {get: (callback: (value: T) => void) => void}, i) {
+      Arr.each(asyncValues, function (
+        asyncValue: A & { get: (callback: (value: T) => void) => void },
+        i
+      ) {
         asyncValue.get(cb(i));
       });
     }

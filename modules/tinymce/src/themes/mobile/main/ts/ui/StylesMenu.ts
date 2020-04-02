@@ -6,8 +6,17 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyEvents, Behaviour, Button, GuiFactory, Memento, Menu, Representing,
-  TieredMenu, Toggling, Transitioning
+  AddEventsBehaviour,
+  AlloyEvents,
+  Behaviour,
+  Button,
+  GuiFactory,
+  Memento,
+  Menu,
+  Representing,
+  TieredMenu,
+  Toggling,
+  Transitioning
 } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Arr, Merger, Obj, Option } from '@ephox/katamari';
@@ -22,12 +31,22 @@ const getValue = function (item): string {
 };
 
 const convert = function (formats, memMenuThunk) {
-  const mainMenu = makeMenu('Styles', [
-  ].concat(
-    Arr.map(formats.items, function (k) {
-      return makeItem(getValue(k), k.title, k.isSelected(), k.getPreview(), Obj.hasNonNullableKey(formats.expansions, getValue(k)));
-    })
-  ), memMenuThunk, false);
+  const mainMenu = makeMenu(
+    'Styles',
+    [].concat(
+      Arr.map(formats.items, function (k) {
+        return makeItem(
+          getValue(k),
+          k.title,
+          k.isSelected(),
+          k.getPreview(),
+          Obj.hasNonNullableKey(formats.expansions, getValue(k))
+        );
+      })
+    ),
+    memMenuThunk,
+    false
+  );
 
   const submenus = Obj.map(formats.menus, function (menuItems, menuName) {
     const items = Arr.map(menuItems, function (item) {
@@ -60,19 +79,23 @@ const makeItem = function (value, text, selected, preview, isMenu) {
     type: 'item',
     dom: {
       tag: 'div',
-      classes: isMenu ? [ Styles.resolve('styles-item-is-menu') ] : [ ]
+      classes: isMenu ? [Styles.resolve('styles-item-is-menu')] : []
     },
     toggling: {
       toggleOnExecute: false,
       toggleClass: Styles.resolve('format-matches'),
       selected
     },
-    itemBehaviours: Behaviour.derive(isMenu ? [ ] : [
-      Receivers.format(value, function (comp, status) {
-        const toggle = status ? Toggling.on : Toggling.off;
-        toggle(comp);
-      })
-    ]),
+    itemBehaviours: Behaviour.derive(
+      isMenu
+        ? []
+        : [
+            Receivers.format(value, function (comp, status) {
+              const toggle = status ? Toggling.on : Toggling.off;
+              toggle(comp);
+            })
+          ]
+    ),
     components: [
       {
         dom: {
@@ -97,17 +120,19 @@ const makeMenu = function (value, items, memMenuThunk, collapsable) {
       Button.sketch({
         dom: {
           tag: 'div',
-          classes: [ Styles.resolve('styles-collapser') ]
+          classes: [Styles.resolve('styles-collapser')]
         },
-        components: collapsable ? [
-          {
-            dom: {
-              tag: 'span',
-              classes: [ Styles.resolve('styles-collapse-icon') ]
-            }
-          },
-          GuiFactory.text(value)
-        ] : [ GuiFactory.text(value) ],
+        components: collapsable
+          ? [
+              {
+                dom: {
+                  tag: 'span',
+                  classes: [Styles.resolve('styles-collapse-icon')]
+                }
+              },
+              GuiFactory.text(value)
+            ]
+          : [GuiFactory.text(value)],
         action(item) {
           if (collapsable) {
             const comp = memMenuThunk().get(item);
@@ -118,17 +143,19 @@ const makeMenu = function (value, items, memMenuThunk, collapsable) {
       {
         dom: {
           tag: 'div',
-          classes: [ Styles.resolve('styles-menu-items-container') ]
+          classes: [Styles.resolve('styles-menu-items-container')]
         },
-        components: [
-          Menu.parts().items({ })
-        ],
+        components: [Menu.parts().items({})],
 
         behaviours: Behaviour.derive([
           AddEventsBehaviour.config('adhoc-scrollable-menu', [
             AlloyEvents.runOnAttached(function (component, _simulatedEvent) {
               Css.set(component.element(), 'overflow-y', 'auto');
-              Css.set(component.element(), '-webkit-overflow-scrolling', 'touch');
+              Css.set(
+                component.element(),
+                '-webkit-overflow-scrolling',
+                'touch'
+              );
               Scrollable.register(component.element());
             }),
 
@@ -162,67 +189,73 @@ const sketch = function (settings) {
   });
   // Turn settings into a tiered menu data.
 
-  const memMenu = Memento.record(TieredMenu.sketch({
-    dom: {
-      tag: 'div',
-      classes: [ Styles.resolve('styles-menu') ]
-    },
-    components: [ ],
+  const memMenu = Memento.record(
+    TieredMenu.sketch({
+      dom: {
+        tag: 'div',
+        classes: [Styles.resolve('styles-menu')]
+      },
+      components: [],
 
-    // Focus causes issues when the things being focused are offscreen.
-    fakeFocus: true,
-    // For animations, need things to stay around in the DOM (at least until animation is done)
-    stayInDom: true,
+      // Focus causes issues when the things being focused are offscreen.
+      fakeFocus: true,
+      // For animations, need things to stay around in the DOM (at least until animation is done)
+      stayInDom: true,
 
-    onExecute(_tmenu, item) {
-      const v = Representing.getValue(item);
-      settings.handle(item, v.value);
-      return Option.none();
-    },
-    onEscape() {
-      return Option.none();
-    },
-    onOpenMenu(container, menu) {
-      const w = Width.get(container.element());
-      Width.set(menu.element(), w);
-      Transitioning.jumpTo(menu, 'current');
-    },
-    onOpenSubmenu(container, item, submenu) {
-      const w = Width.get(container.element());
-      const menu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
-      const menuComp = container.getSystem().getByDom(menu).getOrDie();
+      onExecute(_tmenu, item) {
+        const v = Representing.getValue(item);
+        settings.handle(item, v.value);
+        return Option.none();
+      },
+      onEscape() {
+        return Option.none();
+      },
+      onOpenMenu(container, menu) {
+        const w = Width.get(container.element());
+        Width.set(menu.element(), w);
+        Transitioning.jumpTo(menu, 'current');
+      },
+      onOpenSubmenu(container, item, submenu) {
+        const w = Width.get(container.element());
+        const menu = SelectorFind.ancestor(
+          item.element(),
+          '[role="menu"]'
+        ).getOrDie('hacky');
+        const menuComp = container.getSystem().getByDom(menu).getOrDie();
 
-      Width.set(submenu.element(), w);
+        Width.set(submenu.element(), w);
 
-      Transitioning.progressTo(menuComp, 'before');
-      Transitioning.jumpTo(submenu, 'after');
-      Transitioning.progressTo(submenu, 'current');
-    },
+        Transitioning.progressTo(menuComp, 'before');
+        Transitioning.jumpTo(submenu, 'after');
+        Transitioning.progressTo(submenu, 'current');
+      },
 
-    onCollapseMenu(container, item, menu) {
-      const submenu = SelectorFind.ancestor(item.element(), '[role="menu"]').getOrDie('hacky');
-      const submenuComp = container.getSystem().getByDom(submenu).getOrDie();
-      Transitioning.progressTo(submenuComp, 'after');
-      Transitioning.progressTo(menu, 'current');
-    },
+      onCollapseMenu(container, item, menu) {
+        const submenu = SelectorFind.ancestor(
+          item.element(),
+          '[role="menu"]'
+        ).getOrDie('hacky');
+        const submenuComp = container.getSystem().getByDom(submenu).getOrDie();
+        Transitioning.progressTo(submenuComp, 'after');
+        Transitioning.progressTo(menu, 'current');
+      },
 
-    navigateOnHover: false,
+      navigateOnHover: false,
 
-    highlightImmediately: true,
-    data: dataset.tmenu,
+      highlightImmediately: true,
+      data: dataset.tmenu,
 
-    markers: {
-      backgroundMenu: Styles.resolve('styles-background-menu'),
-      menu: Styles.resolve('styles-menu'),
-      selectedMenu: Styles.resolve('styles-selected-menu'),
-      item: Styles.resolve('styles-item'),
-      selectedItem: Styles.resolve('styles-selected-item')
-    }
-  }));
+      markers: {
+        backgroundMenu: Styles.resolve('styles-background-menu'),
+        menu: Styles.resolve('styles-menu'),
+        selectedMenu: Styles.resolve('styles-selected-menu'),
+        item: Styles.resolve('styles-item'),
+        selectedItem: Styles.resolve('styles-selected-item')
+      }
+    })
+  );
 
   return memMenu.asSpec();
 };
 
-export {
-  sketch
-};
+export { sketch };

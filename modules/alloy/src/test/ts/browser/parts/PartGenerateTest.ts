@@ -37,7 +37,11 @@ UnitTest.test('Atomic Test: parts.GenerateTest', () => {
     schema
   });
 
-  const check = (label: string, expected: Record<string, any>, parts: PartType.PartTypeAdt[]) => {
+  const check = (
+    label: string,
+    expected: Record<string, any>,
+    parts: PartType.PartTypeAdt[]
+  ) => {
     Logger.sync(label, () => {
       const data = { 'test-data': label };
       const generated = AlloyParts.generate('owner', parts);
@@ -46,10 +50,14 @@ UnitTest.test('Atomic Test: parts.GenerateTest', () => {
       Obj.each(generated, (g) => {
         const output = g(data);
         Assert.eq('Checking config', data, output.config);
-        Assert.eq('Checking validated', {
-          'test-data': data['test-data'],
-          'state': 'state'
-        }, output.validated);
+        Assert.eq(
+          'Checking validated',
+          {
+            'test-data': data['test-data'],
+            'state': 'state'
+          },
+          output.validated
+        );
       });
 
       Assert.eq(
@@ -57,13 +65,17 @@ UnitTest.test('Atomic Test: parts.GenerateTest', () => {
         expected,
         Obj.map(generated, (g) => {
           const output = g(data);
-          return Objects.exclude(output, [ 'config', 'validated' ]);
+          return Objects.exclude(output, ['config', 'validated']);
         })
       );
     });
   };
 
-  const checkGroup = (label: string, expected: Record<string, any>, parts: PartType.PartTypeAdt[]) => {
+  const checkGroup = (
+    label: string,
+    expected: Record<string, any>,
+    parts: PartType.PartTypeAdt[]
+  ) => {
     Logger.sync(label, () => {
       const data = { preprocess: 'PREPROCESSOR' };
       const generated = AlloyParts.generate('owner', parts);
@@ -72,8 +84,16 @@ UnitTest.test('Atomic Test: parts.GenerateTest', () => {
       Obj.each(generated, (g) => {
         const output = g(data);
         Assert.eq('Checking config', data, output.config);
-        Assert.eq('Checking validated', 'PREPROCESSOR', output.validated.preprocess.getOr('none'));
-        Assert.eq('Should only be one key: preprocess', [ 'preprocess' ], Obj.keys(output.validated));
+        Assert.eq(
+          'Checking validated',
+          'PREPROCESSOR',
+          output.validated.preprocess.getOr('none')
+        );
+        Assert.eq(
+          'Should only be one key: preprocess',
+          ['preprocess'],
+          Obj.keys(output.validated)
+        );
       });
 
       Assert.eq(
@@ -81,7 +101,7 @@ UnitTest.test('Atomic Test: parts.GenerateTest', () => {
         expected,
         Obj.map(generated, (g) => {
           const output = g(data);
-          return Objects.exclude(output, [ 'config', 'validated' ]);
+          return Objects.exclude(output, ['config', 'validated']);
         })
       );
     });
@@ -96,14 +116,10 @@ UnitTest.test('Atomic Test: parts.GenerateTest', () => {
         name: 'name.part.1'
       }
     },
-    [ internal ]
+    [internal]
   );
 
-  check(
-    'External',
-    { },
-    [ external ]
-  );
+  check('External', {}, [external]);
 
   check(
     'Optional',
@@ -114,7 +130,7 @@ UnitTest.test('Atomic Test: parts.GenerateTest', () => {
         name: 'name.part.3'
       }
     },
-    [ optional ]
+    [optional]
   );
 
   checkGroup(
@@ -126,6 +142,6 @@ UnitTest.test('Atomic Test: parts.GenerateTest', () => {
         name: 'name.part.4'
       }
     },
-    [ group ]
+    [group]
   );
 });

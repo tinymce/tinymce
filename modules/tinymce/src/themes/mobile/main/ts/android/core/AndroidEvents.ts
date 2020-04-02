@@ -8,7 +8,14 @@
 import { Toggling } from '@ephox/alloy';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Compare, DomEvent, Element, Focus, Node, Traverse } from '@ephox/sugar';
+import {
+  Compare,
+  DomEvent,
+  Element,
+  Focus,
+  Node,
+  Traverse
+} from '@ephox/sugar';
 
 import * as TappingEvent from '../../util/TappingEvent';
 import { HTMLInputElement } from '@ephox/dom-globals';
@@ -27,25 +34,34 @@ const isAndroid6 = PlatformDetection.detect().os.version.major >= 6;
 
 */
 const initEvents = function (editorApi, toolstrip, alloy) {
-
   const tapping = TappingEvent.monitor(editorApi);
   const outerDoc = Traverse.owner(toolstrip);
 
   const isRanged = function (sel) {
-    return !Compare.eq(sel.start(), sel.finish()) || sel.soffset() !== sel.foffset();
+    return (
+      !Compare.eq(sel.start(), sel.finish()) || sel.soffset() !== sel.foffset()
+    );
   };
 
   const hasRangeInUi = function () {
-    return Focus.active(outerDoc).filter(function (input) {
-      return Node.name(input) === 'input';
-    }).exists(function (input: Element<HTMLInputElement>) {
-      return input.dom().selectionStart !== input.dom().selectionEnd;
-    });
+    return Focus.active(outerDoc)
+      .filter(function (input) {
+        return Node.name(input) === 'input';
+      })
+      .exists(function (input: Element<HTMLInputElement>) {
+        return input.dom().selectionStart !== input.dom().selectionEnd;
+      });
   };
 
   const updateMargin = function () {
-    const rangeInContent = editorApi.doc().dom().hasFocus() && editorApi.getSelection().exists(isRanged);
-    alloy.getByDom(toolstrip).each((rangeInContent || hasRangeInUi()) === true ? Toggling.on : Toggling.off);
+    const rangeInContent =
+      editorApi.doc().dom().hasFocus() &&
+      editorApi.getSelection().exists(isRanged);
+    alloy
+      .getByDom(toolstrip)
+      .each(
+        (rangeInContent || hasRangeInUi()) === true ? Toggling.on : Toggling.off
+      );
   };
 
   const listeners = [
@@ -71,21 +87,26 @@ const initEvents = function (editorApi, toolstrip, alloy) {
       editorApi.getCursorBox().each(function (bounds) {
         const cWin = editorApi.win();
         // The goal here is to shift as little as required.
-        const isOutside = bounds.top() > cWin.innerHeight || bounds.bottom() > cWin.innerHeight;
-        const cScrollBy = isOutside ? bounds.bottom() - cWin.innerHeight + 50 /* EXTRA_SPACING*/ : 0;
+        const isOutside =
+          bounds.top() > cWin.innerHeight || bounds.bottom() > cWin.innerHeight;
+        const cScrollBy = isOutside
+          ? bounds.bottom() - cWin.innerHeight + 50 /* EXTRA_SPACING*/
+          : 0;
         if (cScrollBy !== 0) {
           cWin.scrollTo(cWin.pageXOffset, cWin.pageYOffset + cScrollBy);
         }
       });
     })
   ].concat(
-    isAndroid6 === true ? [ ] : [
-      DomEvent.bind(Element.fromDom(editorApi.win()), 'blur', function () {
-        alloy.getByDom(toolstrip).each(Toggling.off);
-      }),
-      DomEvent.bind(outerDoc, 'select', updateMargin),
-      DomEvent.bind(editorApi.doc(), 'selectionchange', updateMargin)
-    ]
+    isAndroid6 === true
+      ? []
+      : [
+          DomEvent.bind(Element.fromDom(editorApi.win()), 'blur', function () {
+            alloy.getByDom(toolstrip).each(Toggling.off);
+          }),
+          DomEvent.bind(outerDoc, 'select', updateMargin),
+          DomEvent.bind(editorApi.doc(), 'selectionchange', updateMargin)
+        ]
   );
 
   const destroy = function () {
@@ -99,6 +120,4 @@ const initEvents = function (editorApi, toolstrip, alloy) {
   };
 };
 
-export {
-  initEvents
-};
+export { initEvents };

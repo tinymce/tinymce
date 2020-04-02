@@ -13,10 +13,10 @@ import * as LazyEvaluator from '../util/LazyEvaluator';
 import { getParentCaretContainer } from '../fmt/FormatContainer';
 
 const Location = Adt.generate([
-  { before: [ 'element' ] },
-  { start: [ 'element' ] },
-  { end: [ 'element' ] },
-  { after: [ 'element' ] }
+  { before: ['element'] },
+  { start: ['element'] },
+  { end: ['element'] },
+  { after: ['element'] }
 ]);
 
 const rescope = function (rootNode, node) {
@@ -44,20 +44,28 @@ const isNotInsideFormatCaretContainer = function (rootNode, elm) {
 };
 
 const findInsideRootInline = function (isInlineTarget, rootNode, pos) {
-  return InlineUtils.findRootInline(isInlineTarget, rootNode, pos).filter(Fun.curry(isNotInsideFormatCaretContainer, rootNode));
+  return InlineUtils.findRootInline(isInlineTarget, rootNode, pos).filter(
+    Fun.curry(isNotInsideFormatCaretContainer, rootNode)
+  );
 };
 
 const start = function (isInlineTarget, rootNode, pos) {
   const nPos = InlineUtils.normalizeBackwards(pos);
-  return findInsideRootInline(isInlineTarget, rootNode, nPos).bind(function (inline) {
+  return findInsideRootInline(isInlineTarget, rootNode, nPos).bind(function (
+    inline
+  ) {
     const prevPos = CaretFinder.prevPosition(inline, nPos);
-    return prevPos.isNone() ? Option.some(Location.start(inline)) : Option.none();
+    return prevPos.isNone()
+      ? Option.some(Location.start(inline))
+      : Option.none();
   });
 };
 
 const end = function (isInlineTarget, rootNode, pos) {
   const nPos = InlineUtils.normalizeForwards(pos);
-  return findInsideRootInline(isInlineTarget, rootNode, nPos).bind(function (inline) {
+  return findInsideRootInline(isInlineTarget, rootNode, nPos).bind(function (
+    inline
+  ) {
     const nextPos = CaretFinder.nextPosition(inline, nPos);
     return nextPos.isNone() ? Option.some(Location.end(inline)) : Option.none();
   });
@@ -83,12 +91,10 @@ const isValidLocation = function (location) {
 };
 
 const readLocation = function (isInlineTarget, rootNode, pos) {
-  const location = LazyEvaluator.evaluateUntil([
-    before,
-    start,
-    end,
-    after
-  ], [ isInlineTarget, rootNode, pos ]);
+  const location = LazyEvaluator.evaluateUntil(
+    [before, start, end, after],
+    [isInlineTarget, rootNode, pos]
+  );
 
   return location.filter(isValidLocation);
 };
@@ -98,16 +104,16 @@ const getElement = function (location) {
     Fun.identity, // Before
     Fun.identity, // Start
     Fun.identity, // End
-    Fun.identity  // After
+    Fun.identity // After
   );
 };
 
 const getName = function (location) {
   return location.fold(
     Fun.constant('before'), // Before
-    Fun.constant('start'),  // Start
-    Fun.constant('end'),    // End
-    Fun.constant('after')   // After
+    Fun.constant('start'), // Start
+    Fun.constant('end'), // End
+    Fun.constant('after') // After
   );
 };
 
@@ -115,8 +121,8 @@ const outside = function (location) {
   return location.fold(
     Location.before, // Before
     Location.before, // Start
-    Location.after,  // End
-    Location.after   // After
+    Location.after, // End
+    Location.after // After
   );
 };
 
@@ -124,41 +130,60 @@ const inside = function (location) {
   return location.fold(
     Location.start, // Before
     Location.start, // Start
-    Location.end,   // End
-    Location.end    // After
+    Location.end, // End
+    Location.end // After
   );
 };
 
 const isEq = function (location1, location2) {
-  return getName(location1) === getName(location2) && getElement(location1) === getElement(location2);
+  return (
+    getName(location1) === getName(location2) &&
+    getElement(location1) === getElement(location2)
+  );
 };
 
-const betweenInlines = function (forward, isInlineTarget, rootNode, from, to, location) {
+const betweenInlines = function (
+  forward,
+  isInlineTarget,
+  rootNode,
+  from,
+  to,
+  location
+) {
   return Options.lift2(
     InlineUtils.findRootInline(isInlineTarget, rootNode, from),
     InlineUtils.findRootInline(isInlineTarget, rootNode, to),
     function (fromInline, toInline) {
-      if (fromInline !== toInline && InlineUtils.hasSameParentBlock(rootNode, fromInline, toInline)) {
+      if (
+        fromInline !== toInline &&
+        InlineUtils.hasSameParentBlock(rootNode, fromInline, toInline)
+      ) {
         // Force after since some browsers normalize and lean left into the closest inline
         return Location.after(forward ? fromInline : toInline);
       } else {
         return location;
       }
-    }).getOr(location);
+    }
+  ).getOr(location);
 };
 
 const skipNoMovement = function (fromLocation, toLocation) {
-  return fromLocation.fold(
-    Fun.constant(true),
-    function (fromLocation) {
-      return !isEq(fromLocation, toLocation);
-    }
-  );
+  return fromLocation.fold(Fun.constant(true), function (fromLocation) {
+    return !isEq(fromLocation, toLocation);
+  });
 };
 
-const findLocationTraverse = function (forward, isInlineTarget, rootNode, fromLocation, pos) {
+const findLocationTraverse = function (
+  forward,
+  isInlineTarget,
+  rootNode,
+  fromLocation,
+  pos
+) {
   const from = InlineUtils.normalizePosition(forward, pos);
-  const to = CaretFinder.fromPosition(forward, rootNode, from).map(Fun.curry(InlineUtils.normalizePosition, forward));
+  const to = CaretFinder.fromPosition(forward, rootNode, from).map(
+    Fun.curry(InlineUtils.normalizePosition, forward)
+  );
 
   const location = to.fold(
     function () {
@@ -166,7 +191,9 @@ const findLocationTraverse = function (forward, isInlineTarget, rootNode, fromLo
     },
     function (to) {
       return readLocation(isInlineTarget, rootNode, to)
-        .map(Fun.curry(betweenInlines, forward, isInlineTarget, rootNode, from, to))
+        .map(
+          Fun.curry(betweenInlines, forward, isInlineTarget, rootNode, from, to)
+        )
         .filter(Fun.curry(skipNoMovement, fromLocation));
     }
   );
@@ -196,9 +223,17 @@ const findLocation = function (forward, isInlineTarget, rootNode, pos) {
   const from = InlineUtils.normalizePosition(forward, pos);
   const fromLocation = readLocation(isInlineTarget, rootNode, from);
 
-  return readLocation(isInlineTarget, rootNode, from).bind(Fun.curry(findLocationSimple, forward)).orThunk(function () {
-    return findLocationTraverse(forward, isInlineTarget, rootNode, fromLocation, pos);
-  });
+  return readLocation(isInlineTarget, rootNode, from)
+    .bind(Fun.curry(findLocationSimple, forward))
+    .orThunk(function () {
+      return findLocationTraverse(
+        forward,
+        isInlineTarget,
+        rootNode,
+        fromLocation,
+        pos
+      );
+    });
 };
 
 const prevLocation = Fun.curry(findLocation, false);

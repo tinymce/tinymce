@@ -28,6 +28,4 @@ function guessMimeType(uri: string): string {
   }
 }
 
-export {
-  guessMimeType
-};
+export { guessMimeType };

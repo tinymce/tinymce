@@ -6,7 +6,7 @@ tinymce.init({
   skin_url: '../../../../../js/tinymce/skins/ui/oxide',
   plugins: 'save code',
   toolbar: 'save code',
-  height: 600,
+  height: 600
   // save_onsavecallback: () => { console.log('saved'); }
 });
 

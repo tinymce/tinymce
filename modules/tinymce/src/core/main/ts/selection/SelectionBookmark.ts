@@ -8,14 +8,23 @@
 import { document, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Compare, Element, Node, Text, Traverse, Selection } from '@ephox/sugar';
+import {
+  Compare,
+  Element,
+  Node,
+  Text,
+  Traverse,
+  Selection
+} from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
 
 const browser = PlatformDetection.detect().browser;
 
 const clamp = function (offset, element) {
-  const max = Node.isText(element) ? Text.get(element).length : Traverse.children(element).length + 1;
+  const max = Node.isText(element)
+    ? Text.get(element).length
+    : Traverse.children(element).length + 1;
 
   if (offset > max) {
     return max;
@@ -36,7 +45,10 @@ const normalizeRng = function (rng) {
 };
 
 const isOrContains = function (root: Element, elm: Element) {
-  return !NodeType.isRestrictedNode(elm.dom()) && (Compare.contains(root, elm) || Compare.eq(root, elm));
+  return (
+    !NodeType.isRestrictedNode(elm.dom()) &&
+    (Compare.contains(root, elm) || Compare.eq(root, elm))
+  );
 };
 
 const isRngInRoot = function (root) {
@@ -50,26 +62,31 @@ const shouldStore = function (editor: Editor) {
 };
 
 const nativeRangeToSelectionRange = function (r) {
-  return Selection.range(Element.fromDom(r.startContainer), r.startOffset, Element.fromDom(r.endContainer), r.endOffset);
+  return Selection.range(
+    Element.fromDom(r.startContainer),
+    r.startOffset,
+    Element.fromDom(r.endContainer),
+    r.endOffset
+  );
 };
 
 const readRange = function (win) {
   const selection = win.getSelection();
-  const rng = !selection || selection.rangeCount === 0 ? Option.none() : Option.from(selection.getRangeAt(0));
+  const rng =
+    !selection || selection.rangeCount === 0
+      ? Option.none()
+      : Option.from(selection.getRangeAt(0));
   return rng.map(nativeRangeToSelectionRange);
 };
 
 const getBookmark = function (root) {
   const win = Traverse.defaultView(root);
 
-  return readRange(win.dom())
-    .filter(isRngInRoot(root));
+  return readRange(win.dom()).filter(isRngInRoot(root));
 };
 
 const validate = function (root, bookmark) {
-  return Option.from(bookmark)
-    .filter(isRngInRoot(root))
-    .map(normalizeRng);
+  return Option.from(bookmark).filter(isRngInRoot(root)).map(normalizeRng);
 };
 
 const bookmarkToNativeRng = function (bookmark): Option<Range> {
@@ -86,7 +103,9 @@ const bookmarkToNativeRng = function (bookmark): Option<Range> {
 };
 
 const store = function (editor: Editor) {
-  const newBookmark = shouldStore(editor) ? getBookmark(Element.fromDom(editor.getBody())) : Option.none();
+  const newBookmark = shouldStore(editor)
+    ? getBookmark(Element.fromDom(editor.getBody()))
+    : Option.none();
 
   editor.bookmark = newBookmark.isSome() ? newBookmark : editor.bookmark;
 };
@@ -95,7 +114,8 @@ const storeNative = function (editor: Editor, rng) {
   const root = Element.fromDom(editor.getBody());
   const range = shouldStore(editor) ? Option.from(rng) : Option.none();
 
-  const newBookmark = range.map(nativeRangeToSelectionRange)
+  const newBookmark = range
+    .map(nativeRangeToSelectionRange)
     .filter(isRngInRoot(root));
 
   editor.bookmark = newBookmark.isSome() ? newBookmark : editor.bookmark;

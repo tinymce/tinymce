@@ -11,7 +11,14 @@ export interface Gene {
   random?: number;
 }
 
-export const Gene = function (id: string, name: string, children: Gene[] = [], css: Record<string, string> = {}, attrs: Record<string, string> = {}, text?: string): Gene {
+export const Gene = function (
+  id: string,
+  name: string,
+  children: Gene[] = [],
+  css: Record<string, string> = {},
+  attrs: Record<string, string> = {},
+  text?: string
+): Gene {
   const parent = Option.none<Gene>();
   return {
     id,
@@ -20,6 +27,6 @@ export const Gene = function (id: string, name: string, children: Gene[] = [], c
     css,
     attrs,
     text,
-    parent,
+    parent
   };
 };

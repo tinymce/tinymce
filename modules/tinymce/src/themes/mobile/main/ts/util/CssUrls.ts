@@ -26,6 +26,4 @@ const derive = (editor: Editor): CssUrls => {
   };
 };
 
-export {
-  derive
-};
+export { derive };

@@ -6,7 +6,6 @@ import * as DomExtract from 'ephox/phoenix/api/dom/DomExtract';
 import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('DomExtractTest', function () {
-
   // IMPORTANT: Otherwise CSS display does not work.
   const page = Page();
 
@@ -14,20 +13,37 @@ UnitTest.test('DomExtractTest', function () {
 
   (function () {
     // Test extractTo
-    const check = function (eNode: Element, eOffset: number, cNode: Element, cOffset: number, predicate: (e: Element) => boolean) {
+    const check = function (
+      eNode: Element,
+      eOffset: number,
+      cNode: Element,
+      cOffset: number,
+      predicate: (e: Element) => boolean
+    ) {
       const actual = DomExtract.extractTo(cNode, cOffset, predicate, optimise);
       Assert.eq('eq', true, Compare.eq(eNode, actual.element()));
       Assert.eq('eq', eOffset, actual.offset());
     };
 
-    check(page.div1, 'First paragraphSecond here'.length + 1, page.t4, 1, function (element) {
-      return Compare.eq(element, page.div1);
-    });
+    check(
+      page.div1,
+      'First paragraphSecond here'.length + 1,
+      page.t4,
+      1,
+      function (element) {
+        return Compare.eq(element, page.div1);
+      }
+    );
   })();
 
   (function () {
     // Test find.
-    const check = function (eNode: Element, eOffset: number, pNode: Element, pOffset: number) {
+    const check = function (
+      eNode: Element,
+      eOffset: number,
+      pNode: Element,
+      pOffset: number
+    ) {
       const actual = DomExtract.find(pNode, pOffset, optimise).getOrDie();
       Assert.eq('eq', true, Compare.eq(eNode, actual.element()));
       Assert.eq('eq', eOffset, actual.offset());
@@ -47,7 +63,12 @@ UnitTest.test('DomExtractTest', function () {
 
   (function () {
     // Test extract
-    const check = function (eNode: Element, eOffset: number, cNode: Element, cOffset: number) {
+    const check = function (
+      eNode: Element,
+      eOffset: number,
+      cNode: Element,
+      cOffset: number
+    ) {
       const actual = DomExtract.extract(cNode, cOffset, optimise);
       Assert.eq('eq', true, Compare.eq(eNode, actual.element()));
       Assert.eq('eq', eOffset, actual.offset());
@@ -64,23 +85,34 @@ UnitTest.test('DomExtractTest', function () {
     const check = function (expected: string, input: Element) {
       const rawActual = DomExtract.from(input, optimise);
       const actual = Arr.map(rawActual, function (x) {
-        return x.fold(function () {
-          return '\\w';
-        }, function () {
-          return '-';
-        }, function (t) {
-          return Text.get(t);
-        }, function (t) {
-          return Text.get(t);
-        });
+        return x.fold(
+          function () {
+            return '\\w';
+          },
+          function () {
+            return '-';
+          },
+          function (t) {
+            return Text.get(t);
+          },
+          function (t) {
+            return Text.get(t);
+          }
+        );
       }).join('');
       Assert.eq('eq', expected, actual);
     };
 
     check('', Element.fromText(''));
     check('\\wFirst paragraph\\w', page.p1);
-    check('\\w\\wFirst paragraph\\w\\wSecond here is something\\w\\wMore data\\w\\w', page.div1);
-    check('\\w\\w\\wFirst paragraph\\w\\wSecond here is something\\w\\wMore data\\w\\w\\wNext \\wSection now\\w\\w\\w', page.container);
+    check(
+      '\\w\\wFirst paragraph\\w\\wSecond here is something\\w\\wMore data\\w\\w',
+      page.div1
+    );
+    check(
+      '\\w\\w\\wFirst paragraph\\w\\wSecond here is something\\w\\wMore data\\w\\w\\wNext \\wSection now\\w\\w\\w',
+      page.container
+    );
   })();
 
   page.disconnect();

@@ -16,7 +16,8 @@ const createDataTransferItem = function (mime, content) {
 };
 
 const create = function (inputData) {
-  let data = {}, result;
+  let data = {},
+    result;
 
   const clearData = function () {
     data = {};
@@ -56,6 +57,4 @@ const create = function (inputData) {
   return result;
 };
 
-export {
-  create
-};
+export { create };

@@ -33,20 +33,42 @@ const getRestriction = (anchor: AnchorBox, restriction: Restriction) => {
   }
 };
 
-export const boundsRestriction = (anchor: AnchorBox, restrictions: Partial<Record<BoundsRestrictionKeys, Restriction>>): BoundsRestriction => Arr.mapToObject([ 'left', 'right', 'top', 'bottom' ], (dir) => Obj.get(restrictions, dir).map((restriction) => getRestriction(anchor, restriction)));
+export const boundsRestriction = (
+  anchor: AnchorBox,
+  restrictions: Partial<Record<BoundsRestrictionKeys, Restriction>>
+): BoundsRestriction =>
+  Arr.mapToObject(['left', 'right', 'top', 'bottom'], (dir) =>
+    Obj.get(restrictions, dir).map((restriction) =>
+      getRestriction(anchor, restriction)
+    )
+  );
 
-export const adjustBounds = (bounds: Boxes.Bounds, boundsRestrictions: BoundsRestriction, bubbleOffsets: Position) => {
+export const adjustBounds = (
+  bounds: Boxes.Bounds,
+  boundsRestrictions: BoundsRestriction,
+  bubbleOffsets: Position
+) => {
   const applyRestriction = (dir: BoundsRestrictionKeys, current: number) => {
-    const bubbleOffset = dir === 'top' || dir === 'bottom' ? bubbleOffsets.top() : bubbleOffsets.left();
-    return Obj.get(boundsRestrictions, dir).bind(Fun.identity)
-      .bind((restriction): Option<number> => {
-        // Ensure the restriction is within the current bounds
-        if (dir === 'left' || dir === 'top') {
-          return restriction >= current ? Option.some(restriction) : Option.none();
-        } else {
-          return restriction <= current ? Option.some(restriction) : Option.none();
+    const bubbleOffset =
+      dir === 'top' || dir === 'bottom'
+        ? bubbleOffsets.top()
+        : bubbleOffsets.left();
+    return Obj.get(boundsRestrictions, dir)
+      .bind(Fun.identity)
+      .bind(
+        (restriction): Option<number> => {
+          // Ensure the restriction is within the current bounds
+          if (dir === 'left' || dir === 'top') {
+            return restriction >= current
+              ? Option.some(restriction)
+              : Option.none();
+          } else {
+            return restriction <= current
+              ? Option.some(restriction)
+              : Option.none();
+          }
         }
-      })
+      )
       .map((restriction) => restriction + bubbleOffset)
       .getOr(current);
   };
@@ -56,5 +78,10 @@ export const adjustBounds = (bounds: Boxes.Bounds, boundsRestrictions: BoundsRes
   const adjustedRight = applyRestriction('right', bounds.right);
   const adjustedBottom = applyRestriction('bottom', bounds.bottom);
 
-  return Boxes.bounds(adjustedLeft, adjustedTop, adjustedRight - adjustedLeft, adjustedBottom - adjustedTop);
+  return Boxes.bounds(
+    adjustedLeft,
+    adjustedTop,
+    adjustedRight - adjustedLeft,
+    adjustedBottom - adjustedTop
+  );
 };

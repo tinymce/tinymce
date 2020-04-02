@@ -14,7 +14,7 @@ export default (): void => {
     SlotContainer.sketch((parts) => ({
       dom: {
         tag: 'div',
-        classes: [ 'demo-slot-container' ],
+        classes: ['demo-slot-container'],
         styles: {
           border: '1px solid black',
           background: 'yellow',

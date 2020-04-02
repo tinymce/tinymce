@@ -14,36 +14,48 @@ UnitTest.test('DomSplitTest', function () {
 
   const check = function (expected: string[], element: Element<DomText>) {
     const parent = Traverse.parent(element);
-    parent.fold(function () {
-      throw new Error('Element must have parent for test to work');
-    }, function (v) {
-      const children = Traverse.children(v) as Element<DomText>[];
-      const text = Arr.map(children, Text.get);
-      assert.eq(expected, text);
-    });
+    parent.fold(
+      function () {
+        throw new Error('Element must have parent for test to work');
+      },
+      function (v) {
+        const children = Traverse.children(v) as Element<DomText>[];
+        const text = Arr.map(children, Text.get);
+        assert.eq(expected, text);
+      }
+    );
   };
 
-  const checkSplitByPair = function (expected: string[], element: Element<DomText>, start: number, end: number) {
+  const checkSplitByPair = function (
+    expected: string[],
+    element: Element<DomText>,
+    start: number,
+    end: number
+  ) {
     DomSplit.splitByPair(element, start, end);
     check(expected, element);
   };
 
-  const checkSplit = function (expected: string[], element: Element<DomText>, offset: number) {
+  const checkSplit = function (
+    expected: string[],
+    element: Element<DomText>,
+    offset: number
+  ) {
     DomSplit.split(element, offset);
     check(expected, element);
   };
 
-  checkSplit([ 'no', 'w' ], Page().t9, 2);
-  checkSplit([ 'no', 'w' ], Page().t9, 0);
-  checkSplit([ 'n', 'o', 'w' ], Page().t9, 1);
-  checkSplit([ 'no', 'w' ], Page().t10, 0);
-  checkSplit([ 'no', 'w' ], Page().t10, 1);
+  checkSplit(['no', 'w'], Page().t9, 2);
+  checkSplit(['no', 'w'], Page().t9, 0);
+  checkSplit(['n', 'o', 'w'], Page().t9, 1);
+  checkSplit(['no', 'w'], Page().t10, 0);
+  checkSplit(['no', 'w'], Page().t10, 1);
 
-  checkSplitByPair([ 'something' ], Page().t5, 0, 9);
-  checkSplitByPair([ 'something' ], Page().t5, 0, 0);
-  checkSplitByPair([ 'something' ], Page().t5, 9, 9);
-  checkSplitByPair([ 's', 'omething' ], Page().t5, 0, 1);
-  checkSplitByPair([ 'some', 'thing' ], Page().t5, 0, 4);
-  checkSplitByPair([ 'some', 'thing' ], Page().t5, 4, 9);
-  checkSplitByPair([ 's', 'omet', 'hing' ], Page().t5, 1, 5);
+  checkSplitByPair(['something'], Page().t5, 0, 9);
+  checkSplitByPair(['something'], Page().t5, 0, 0);
+  checkSplitByPair(['something'], Page().t5, 9, 9);
+  checkSplitByPair(['s', 'omething'], Page().t5, 0, 1);
+  checkSplitByPair(['some', 'thing'], Page().t5, 0, 4);
+  checkSplitByPair(['some', 'thing'], Page().t5, 4, 9);
+  checkSplitByPair(['s', 'omet', 'hing'], Page().t5, 1, 5);
 });

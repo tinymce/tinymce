@@ -6,31 +6,50 @@
  */
 
 import { Arr, Result, Type } from '@ephox/katamari';
-import { BlockPattern, InlineCmdPattern, InlinePattern, Pattern, PatternError, PatternSet, RawPattern } from '../core/PatternTypes';
+import {
+  BlockPattern,
+  InlineCmdPattern,
+  InlinePattern,
+  Pattern,
+  PatternError,
+  PatternSet,
+  RawPattern
+} from '../core/PatternTypes';
 
-const isInlinePattern = (pattern: Pattern): pattern is InlinePattern => pattern.type === 'inline-command' || pattern.type === 'inline-format';
+const isInlinePattern = (pattern: Pattern): pattern is InlinePattern =>
+  pattern.type === 'inline-command' || pattern.type === 'inline-format';
 
-const isBlockPattern = (pattern: Pattern): pattern is BlockPattern => pattern.type === 'block-command' || pattern.type === 'block-format';
+const isBlockPattern = (pattern: Pattern): pattern is BlockPattern =>
+  pattern.type === 'block-command' || pattern.type === 'block-format';
 
-const sortPatterns = <T extends Pattern>(patterns: T[]): T[] => Arr.sort(patterns, (a, b) => {
-  if (a.start.length === b.start.length) {
-    return 0;
-  }
-  return a.start.length > b.start.length ? -1 : 1;
-});
+const sortPatterns = <T extends Pattern>(patterns: T[]): T[] =>
+  Arr.sort(patterns, (a, b) => {
+    if (a.start.length === b.start.length) {
+      return 0;
+    }
+    return a.start.length > b.start.length ? -1 : 1;
+  });
 
-const normalizePattern = (pattern: RawPattern): Result<Pattern, PatternError> => {
+const normalizePattern = (
+  pattern: RawPattern
+): Result<Pattern, PatternError> => {
   const err = (message: string) => Result.error({ message, pattern });
-  const formatOrCmd = <T> (name: string, onFormat: (formats: string[]) => T, onCommand: (cmd: string, value: any) => T): Result<T, PatternError> => {
+  const formatOrCmd = <T>(
+    name: string,
+    onFormat: (formats: string[]) => T,
+    onCommand: (cmd: string, value: any) => T
+  ): Result<T, PatternError> => {
     if (pattern.format !== undefined) {
       let formats: string[];
       if (Type.isArray(pattern.format)) {
         if (!Arr.forall(pattern.format, Type.isString)) {
-          return err(name + ' pattern has non-string items in the `format` array');
+          return err(
+            name + ' pattern has non-string items in the `format` array'
+          );
         }
         formats = pattern.format as string[];
       } else if (Type.isString(pattern.format)) {
-        formats = [ pattern.format ];
+        formats = [pattern.format];
       } else {
         return err(name + ' pattern has non-string `format` parameter');
       }
@@ -41,7 +60,9 @@ const normalizePattern = (pattern: RawPattern): Result<Pattern, PatternError> =>
       }
       return Result.value(onCommand(pattern.cmd, pattern.value));
     } else {
-      return err(name + ' pattern is missing both `format` and `cmd` parameters');
+      return err(
+        name + ' pattern is missing both `format` and `cmd` parameters'
+      );
     }
   };
   if (!Type.isObject(pattern)) {
@@ -65,9 +86,11 @@ const normalizePattern = (pattern: RawPattern): Result<Pattern, PatternError> =>
       end = start;
       start = '';
     }
-    return formatOrCmd<InlinePattern>('Inline',
+    return formatOrCmd<InlinePattern>(
+      'Inline',
       (format) => ({ type: 'inline-format', start, end, format }),
-      (cmd, value) => ({ type: 'inline-command', start, end, cmd, value }));
+      (cmd, value) => ({ type: 'inline-command', start, end, cmd, value })
+    );
   } else if (pattern.replacement !== undefined) {
     // replacement pattern
     if (!Type.isString(pattern.replacement)) {
@@ -81,23 +104,27 @@ const normalizePattern = (pattern: RawPattern): Result<Pattern, PatternError> =>
       start: '',
       end: pattern.start,
       cmd: 'mceInsertContent',
-      value: pattern.replacement,
+      value: pattern.replacement
     });
   } else {
     // block pattern
     if (pattern.start.length === 0) {
       return err('Block pattern has empty `start` parameter');
     }
-    return formatOrCmd<BlockPattern>('Block', (formats) => ({
-      type: 'block-format',
-      start: pattern.start,
-      format: formats[0]
-    }), (command, commandValue) => ({
-      type: 'block-command',
-      start: pattern.start,
-      cmd: command,
-      value: commandValue,
-    }));
+    return formatOrCmd<BlockPattern>(
+      'Block',
+      (formats) => ({
+        type: 'block-format',
+        start: pattern.start,
+        format: formats[0]
+      }),
+      (command, commandValue) => ({
+        type: 'block-command',
+        start: pattern.start,
+        cmd: command,
+        value: commandValue
+      })
+    );
   }
 };
 
@@ -117,7 +144,7 @@ const denormalizePattern = (pattern: Pattern): RawPattern => {
     if (pattern.cmd === 'mceInsertContent' && pattern.start === '') {
       return {
         start: pattern.end,
-        replacement: pattern.value,
+        replacement: pattern.value
       };
     } else {
       return {
@@ -138,11 +165,7 @@ const denormalizePattern = (pattern: Pattern): RawPattern => {
 
 const createPatternSet = (patterns: Pattern[]): PatternSet => ({
   inlinePatterns: Arr.filter(patterns, isInlinePattern),
-  blockPatterns: sortPatterns(Arr.filter(patterns, isBlockPattern)),
+  blockPatterns: sortPatterns(Arr.filter(patterns, isBlockPattern))
 });
 
-export {
-  normalizePattern,
-  denormalizePattern,
-  createPatternSet
-};
+export { normalizePattern, denormalizePattern, createPatternSet };

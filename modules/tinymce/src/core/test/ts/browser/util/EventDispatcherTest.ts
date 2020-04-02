@@ -3,7 +3,10 @@ import { Pipeline } from '@ephox/agar';
 import EventDispatcher from 'tinymce/core/api/util/EventDispatcher';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (
+  success,
+  failure
+) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('fire (no event listeners)', function () {
@@ -43,7 +46,8 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (su
     let data = '';
 
     dispatcher.on('click', function (e) {
-      data += 'a'; e.stopImmediatePropagation();
+      data += 'a';
+      e.stopImmediatePropagation();
     });
     dispatcher.on('click', function () {
       data += 'b';
@@ -57,12 +61,18 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (su
     const dispatcher = new EventDispatcher();
     let data = '';
 
-    LegacyUnit.equal(dispatcher.on('click', function () {
-      data += 'a';
-    }), dispatcher);
-    LegacyUnit.equal(dispatcher.on('click keydown', function () {
-      data += 'b';
-    }), dispatcher);
+    LegacyUnit.equal(
+      dispatcher.on('click', function () {
+        data += 'a';
+      }),
+      dispatcher
+    );
+    LegacyUnit.equal(
+      dispatcher.on('click keydown', function () {
+        data += 'b';
+      }),
+      dispatcher
+    );
 
     dispatcher.fire('click');
     LegacyUnit.equal(data, 'ab');
@@ -75,12 +85,22 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (su
     const dispatcher = new EventDispatcher();
     let data = '';
 
-    LegacyUnit.equal(dispatcher.on('click', function () {
-      data += 'a';
-    }), dispatcher);
-    LegacyUnit.equal(dispatcher.on('click', function () {
-      data += 'b';
-    }, true), dispatcher);
+    LegacyUnit.equal(
+      dispatcher.on('click', function () {
+        data += 'a';
+      }),
+      dispatcher
+    );
+    LegacyUnit.equal(
+      dispatcher.on(
+        'click',
+        function () {
+          data += 'b';
+        },
+        true
+      ),
+      dispatcher
+    );
 
     dispatcher.fire('click');
     LegacyUnit.equal(data, 'ba');
@@ -90,15 +110,24 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (su
     const dispatcher = new EventDispatcher();
     let data = '';
 
-    LegacyUnit.equal(dispatcher.on('click', function () {
-      data += 'a';
-    }), dispatcher);
-    LegacyUnit.equal(dispatcher.once('click', function () {
-      data += 'b';
-    }), dispatcher);
-    LegacyUnit.equal(dispatcher.on('click', function () {
-      data += 'c';
-    }), dispatcher);
+    LegacyUnit.equal(
+      dispatcher.on('click', function () {
+        data += 'a';
+      }),
+      dispatcher
+    );
+    LegacyUnit.equal(
+      dispatcher.once('click', function () {
+        data += 'b';
+      }),
+      dispatcher
+    );
+    LegacyUnit.equal(
+      dispatcher.on('click', function () {
+        data += 'c';
+      }),
+      dispatcher
+    );
 
     dispatcher.fire('click');
     LegacyUnit.equal(data, 'abc');
@@ -111,15 +140,28 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (su
     const dispatcher = new EventDispatcher();
     let data = '';
 
-    LegacyUnit.equal(dispatcher.on('click', function () {
-      data += 'a';
-    }), dispatcher);
-    LegacyUnit.equal(dispatcher.once('click', function () {
-      data += 'b';
-    }, true), dispatcher);
-    LegacyUnit.equal(dispatcher.on('click', function () {
-      data += 'c';
-    }), dispatcher);
+    LegacyUnit.equal(
+      dispatcher.on('click', function () {
+        data += 'a';
+      }),
+      dispatcher
+    );
+    LegacyUnit.equal(
+      dispatcher.once(
+        'click',
+        function () {
+          data += 'b';
+        },
+        true
+      ),
+      dispatcher
+    );
+    LegacyUnit.equal(
+      dispatcher.on('click', function () {
+        data += 'c';
+      }),
+      dispatcher
+    );
 
     dispatcher.fire('click');
     LegacyUnit.equal(data, 'bac');
@@ -245,19 +287,23 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (su
     let lastScope, lastEvent, dispatcher;
 
     dispatcher = new EventDispatcher();
-    dispatcher.on('click', function () {
-      // eslint-disable-next-line consistent-this
-      lastScope = this;
-    }).fire('click');
+    dispatcher
+      .on('click', function () {
+        // eslint-disable-next-line consistent-this
+        lastScope = this;
+      })
+      .fire('click');
     LegacyUnit.equal(dispatcher, lastScope);
 
     const scope = { test: 1 };
     dispatcher = new EventDispatcher({ scope });
-    dispatcher.on('click', function (e) {
-      // eslint-disable-next-line consistent-this
-      lastScope = this;
-      lastEvent = e;
-    }).fire('click');
+    dispatcher
+      .on('click', function (e) {
+        // eslint-disable-next-line consistent-this
+        lastScope = this;
+        lastEvent = e;
+      })
+      .fire('click');
     LegacyUnit.equal(scope, lastScope);
     LegacyUnit.equal(lastEvent.target, lastScope);
   });
@@ -276,7 +322,10 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (su
   });
 
   suite.test('beforeFire setting (stopImmediatePropagation)', function () {
-    let lastArgs, dispatcher, args, data = '';
+    let lastArgs,
+      dispatcher,
+      args,
+      data = '';
 
     dispatcher = new EventDispatcher({
       beforeFire(args) {
@@ -305,10 +354,8 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (su
       }
     });
 
-    const listenerA = function () {
-    };
-    const listenerB = function () {
-    };
+    const listenerA = function () {};
+    const listenerB = function () {};
 
     dispatcher.on('click', listenerA);
     LegacyUnit.equal(lastName, 'click');
@@ -328,7 +375,12 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (su
     LegacyUnit.equal(lastState, false);
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
-    success();
-  }, failure);
+  Pipeline.async(
+    {},
+    suite.toSteps({}),
+    function () {
+      success();
+    },
+    failure
+  );
 });

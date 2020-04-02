@@ -12,10 +12,19 @@ import VK from '../api/util/VK';
 import Editor from '../api/Editor';
 
 const executeKeydownOverride = (editor: Editor, evt: KeyboardEvent) => {
-  MatchKeys.execute([
-    { keyCode: VK.END, action: CefNavigation.moveToLineEndPoint(editor, true) },
-    { keyCode: VK.HOME, action: CefNavigation.moveToLineEndPoint(editor, false) }
-  ], evt).each((_) => {
+  MatchKeys.execute(
+    [
+      {
+        keyCode: VK.END,
+        action: CefNavigation.moveToLineEndPoint(editor, true)
+      },
+      {
+        keyCode: VK.HOME,
+        action: CefNavigation.moveToLineEndPoint(editor, false)
+      }
+    ],
+    evt
+  ).each((_) => {
     evt.preventDefault();
   });
 };
@@ -28,6 +37,4 @@ const setup = (editor: Editor) => {
   });
 };
 
-export {
-  setup
-};
+export { setup };

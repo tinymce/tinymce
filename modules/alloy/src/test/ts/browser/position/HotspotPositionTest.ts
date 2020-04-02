@@ -10,61 +10,69 @@ import * as PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
-
-  GuiSetup.setup((_store, _doc, _body) => {
-    const hotspot = GuiFactory.build(
-      Button.sketch({
-        action() { },
-        dom: {
-          styles: {
-            position: 'absolute',
-            left: '100px',
-            top: '120px'
+  GuiSetup.setup(
+    (_store, _doc, _body) => {
+      const hotspot = GuiFactory.build(
+        Button.sketch({
+          action() {},
+          dom: {
+            styles: {
+              position: 'absolute',
+              left: '100px',
+              top: '120px'
+            },
+            innerHtml: 'Hotspot',
+            tag: 'button'
           },
-          innerHtml: 'Hotspot',
-          tag: 'button'
-        },
-        uid: 'hotspot'
-      })
-    );
+          uid: 'hotspot'
+        })
+      );
 
-    return GuiFactory.build(
-      Container.sketch({
-        components: [
-          GuiFactory.premade(Sinks.fixedSink()),
-          GuiFactory.premade(Sinks.relativeSink()),
-          GuiFactory.premade(Sinks.popup()),
-          GuiFactory.premade(hotspot)
-        ]
-      })
-    );
+      return GuiFactory.build(
+        Container.sketch({
+          components: [
+            GuiFactory.premade(Sinks.fixedSink()),
+            GuiFactory.premade(Sinks.relativeSink()),
+            GuiFactory.premade(Sinks.popup()),
+            GuiFactory.premade(hotspot)
+          ]
+        })
+      );
+    },
+    (_doc, _body, gui, _component, _store) => {
+      const cSetupAnchor = Chain.mapper((hotspot) => ({
+        anchor: 'hotspot',
+        hotspot
+      }));
 
-  }, (_doc, _body, gui, _component, _store) => {
-    const cSetupAnchor = Chain.mapper((hotspot) => ({
-      anchor: 'hotspot',
-      hotspot
-    }));
+      return [
+        Chain.asStep({}, [
+          NamedChain.asChain([
+            ChainUtils.cFindUids(gui, {
+              fixed: 'fixed-sink',
+              relative: 'relative-sink',
+              popup: 'popup',
+              hotspot: 'hotspot'
+            }),
 
-    return [
-      Chain.asStep({}, [
-        NamedChain.asChain([
-          ChainUtils.cFindUids(gui, {
-            fixed: 'fixed-sink',
-            relative: 'relative-sink',
-            popup: 'popup',
-            hotspot: 'hotspot'
-          }),
+            NamedChain.direct('hotspot', cSetupAnchor, 'anchor'),
 
-          NamedChain.direct('hotspot', cSetupAnchor, 'anchor'),
+            PositionTestUtils.cTestSink('Relative, not scrolled', 'relative'),
+            PositionTestUtils.cTestSink('Fixed, not scrolled', 'fixed'),
 
-          PositionTestUtils.cTestSink('Relative, not scrolled', 'relative'),
-          PositionTestUtils.cTestSink('Fixed, not scrolled', 'fixed'),
-
-          PositionTestUtils.cScrollDown('hotspot', '1000px'),
-          PositionTestUtils.cTestSink('Relative, scrolled 1000px', 'relative'),
-          PositionTestUtils.cTestSink('Fixed, scrolled 1000px', 'fixed')
+            PositionTestUtils.cScrollDown('hotspot', '1000px'),
+            PositionTestUtils.cTestSink(
+              'Relative, scrolled 1000px',
+              'relative'
+            ),
+            PositionTestUtils.cTestSink('Fixed, scrolled 1000px', 'fixed')
+          ])
         ])
-      ])
-    ];
-  }, () => { success(); }, failure);
+      ];
+    },
+    () => {
+      success();
+    },
+    failure
+  );
 });

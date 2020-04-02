@@ -11,7 +11,11 @@ export interface CellSpan {
 export interface Generators {
   readonly cell: (cellSpan: CellSpan) => Element;
   readonly row: () => Element;
-  readonly replace: <K extends keyof HTMLElementTagNameMap>(cell: Element, tag: K, attrs: Record<string, string | number | boolean | null>) => Element;
+  readonly replace: <K extends keyof HTMLElementTagNameMap>(
+    cell: Element,
+    tag: K,
+    attrs: Record<string, string | number | boolean | null>
+  ) => Element;
   readonly gap: () => Element;
 }
 
@@ -27,11 +31,17 @@ export interface GeneratorsWrapper {
 }
 
 export interface GeneratorsModification extends GeneratorsWrapper {
-  readonly getOrInit: (element: Element, comparator: (a: Element, b: Element) => boolean) => Element;
+  readonly getOrInit: (
+    element: Element,
+    comparator: (a: Element, b: Element) => boolean
+  ) => Element;
 }
 
 export interface GeneratorsTransform extends GeneratorsWrapper {
-  readonly replaceOrInit: (element: Element, comparator: (a: Element, b: Element) => boolean) => Element;
+  readonly replaceOrInit: (
+    element: Element,
+    comparator: (a: Element, b: Element) => boolean
+  ) => Element;
 }
 
 export interface GeneratorsMerging extends GeneratorsWrapper {
@@ -48,11 +58,20 @@ interface Item {
   readonly sub: Element;
 }
 
-const verifyGenerators: (gen: Generators) => Generators = Contracts.exactly([ 'cell', 'row', 'replace', 'gap' ]);
+const verifyGenerators: (gen: Generators) => Generators = Contracts.exactly([
+  'cell',
+  'row',
+  'replace',
+  'gap'
+]);
 
 const elementToData = function (element: Element): CellSpan {
-  const colspan = Attr.has(element, 'colspan') ? parseInt(Attr.get(element, 'colspan'), 10) : 1;
-  const rowspan = Attr.has(element, 'rowspan') ? parseInt(Attr.get(element, 'rowspan'), 10) : 1;
+  const colspan = Attr.has(element, 'colspan')
+    ? parseInt(Attr.get(element, 'colspan'), 10)
+    : 1;
+  const rowspan = Attr.has(element, 'rowspan')
+    ? parseInt(Attr.get(element, 'rowspan'), 10)
+    : 1;
   return {
     element: Fun.constant(element),
     colspan: Fun.constant(colspan),
@@ -61,7 +80,10 @@ const elementToData = function (element: Element): CellSpan {
 };
 
 // note that `toData` seems to be only for testing
-const modification = function (generators: Generators, toData = elementToData): GeneratorsModification {
+const modification = function (
+  generators: Generators,
+  toData = elementToData
+): GeneratorsModification {
   verifyGenerators(generators);
   const position = Cell(Option.none<Element>());
 
@@ -84,27 +106,39 @@ const modification = function (generators: Generators, toData = elementToData): 
   };
 
   let recent = Option.none<Recent>();
-  const getOrInit = function (element: Element, comparator: (a: Element, b: Element) => boolean) {
-    return recent.fold(function () {
-      return add(element);
-    }, function (p) {
-      return comparator(element, p.item) ? p.replacement : add(element);
-    });
+  const getOrInit = function (
+    element: Element,
+    comparator: (a: Element, b: Element) => boolean
+  ) {
+    return recent.fold(
+      function () {
+        return add(element);
+      },
+      function (p) {
+        return comparator(element, p.item) ? p.replacement : add(element);
+      }
+    );
   };
 
   return {
     getOrInit,
     cursor: position.get
-  } ;
+  };
 };
 
-const transform = function <K extends keyof HTMLElementTagNameMap> (scope: string | null, tag: K) {
+const transform = function <K extends keyof HTMLElementTagNameMap>(
+  scope: string | null,
+  tag: K
+) {
   return function (generators: Generators): GeneratorsTransform {
     const position = Cell(Option.none<Element>());
     verifyGenerators(generators);
     const list: Item[] = [];
 
-    const find = function (element: Element, comparator: (a: Element, b: Element) => boolean) {
+    const find = function (
+      element: Element,
+      comparator: (a: Element, b: Element) => boolean
+    ) {
       return Arr.find(list, function (x) {
         return comparator(x.item, element);
       });
@@ -125,12 +159,18 @@ const transform = function <K extends keyof HTMLElementTagNameMap> (scope: strin
       return cell;
     };
 
-    const replaceOrInit = function (element: Element, comparator: (a: Element, b: Element) => boolean) {
-      return find(element, comparator).fold(function () {
-        return makeNew(element);
-      }, function (p) {
-        return comparator(element, p.item) ? p.sub : makeNew(element);
-      });
+    const replaceOrInit = function (
+      element: Element,
+      comparator: (a: Element, b: Element) => boolean
+    ) {
+      return find(element, comparator).fold(
+        function () {
+          return makeNew(element);
+        },
+        function (p) {
+          return comparator(element, p.item) ? p.sub : makeNew(element);
+        }
+      );
     };
 
     return {

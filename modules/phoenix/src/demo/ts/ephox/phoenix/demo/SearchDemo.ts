@@ -1,6 +1,15 @@
 import { document } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
-import { Attr, Class, Css, DomEvent, Element, Insert, InsertAll, Value } from '@ephox/sugar';
+import {
+  Attr,
+  Class,
+  Css,
+  DomEvent,
+  Element,
+  Insert,
+  InsertAll,
+  Value
+} from '@ephox/sugar';
 import * as DomSearch from 'ephox/phoenix/api/dom/DomSearch';
 import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
 import { SearchResult } from 'ephox/phoenix/api/data/Types';
@@ -47,7 +56,7 @@ const wrapper = function () {
 DomEvent.bind(button, 'click', function (_event) {
   const token = Value.get(input);
   if (token.length > 0) {
-    const matches = DomSearch.safeToken([ content ], token);
+    const matches = DomSearch.safeToken([content], token);
     highlight(matches);
   }
 });
@@ -55,7 +64,7 @@ DomEvent.bind(button, 'click', function (_event) {
 DomEvent.bind(buttonWord, 'click', function (_event) {
   const word = Value.get(input);
   if (word.length > 0) {
-    const matches = DomSearch.safeWords([ content ], [ word ]);
+    const matches = DomSearch.safeWords([content], [word]);
     highlight(matches);
   }
 });
@@ -66,7 +75,11 @@ const highlight = function (matches: SearchResult<Element>[]) {
   });
 };
 
-InsertAll.append(container, [ input, button, buttonWord, content ]);
+InsertAll.append(container, [input, button, buttonWord, content]);
 
-const ephoxUi = Element.fromDom(Option.from(document.getElementById('ephox-ui')).getOrDie('No element with id "ephox-id"'));
+const ephoxUi = Element.fromDom(
+  Option.from(document.getElementById('ephox-ui')).getOrDie(
+    'No element with id "ephox-id"'
+  )
+);
 Insert.append(ephoxUi, container);

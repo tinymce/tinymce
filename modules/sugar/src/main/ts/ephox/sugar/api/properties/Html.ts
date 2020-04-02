@@ -30,8 +30,4 @@ const getOuter = function (element: Element<DomNode>) {
   return get(container);
 };
 
-export {
-  get,
-  set,
-  getOuter,
-};
+export { get, set, getOuter };

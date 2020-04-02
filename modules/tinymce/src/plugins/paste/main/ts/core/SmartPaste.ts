@@ -35,45 +35,69 @@ const isImageUrl = function (url: string) {
   return isAbsoluteUrl(url) && /.(gif|jpe?g|png)$/.test(url);
 };
 
-const createImage = function (editor: Editor, url: string, pasteHtmlFn: typeof pasteHtml) {
-  editor.undoManager.extra(function () {
-    pasteHtmlFn(editor, url);
-  }, function () {
-    editor.insertContent('<img src="' + url + '">');
-  });
+const createImage = function (
+  editor: Editor,
+  url: string,
+  pasteHtmlFn: typeof pasteHtml
+) {
+  editor.undoManager.extra(
+    function () {
+      pasteHtmlFn(editor, url);
+    },
+    function () {
+      editor.insertContent('<img src="' + url + '">');
+    }
+  );
 
   return true;
 };
 
-const createLink = function (editor: Editor, url: string, pasteHtmlFn: typeof pasteHtml) {
-  editor.undoManager.extra(function () {
-    pasteHtmlFn(editor, url);
-  }, function () {
-    editor.execCommand('mceInsertLink', false, url);
-  });
+const createLink = function (
+  editor: Editor,
+  url: string,
+  pasteHtmlFn: typeof pasteHtml
+) {
+  editor.undoManager.extra(
+    function () {
+      pasteHtmlFn(editor, url);
+    },
+    function () {
+      editor.execCommand('mceInsertLink', false, url);
+    }
+  );
 
   return true;
 };
 
-const linkSelection = function (editor: Editor, html: string, pasteHtmlFn: typeof pasteHtml) {
-  return editor.selection.isCollapsed() === false && isAbsoluteUrl(html) ? createLink(editor, html, pasteHtmlFn) : false;
+const linkSelection = function (
+  editor: Editor,
+  html: string,
+  pasteHtmlFn: typeof pasteHtml
+) {
+  return editor.selection.isCollapsed() === false && isAbsoluteUrl(html)
+    ? createLink(editor, html, pasteHtmlFn)
+    : false;
 };
 
-const insertImage = function (editor: Editor, html: string, pasteHtmlFn: typeof pasteHtml) {
+const insertImage = function (
+  editor: Editor,
+  html: string,
+  pasteHtmlFn: typeof pasteHtml
+) {
   return isImageUrl(html) ? createImage(editor, html, pasteHtmlFn) : false;
 };
 
 const smartInsertContent = function (editor: Editor, html: string) {
-  Tools.each([
-    linkSelection,
-    insertImage,
-    pasteHtml
-  ], function (action) {
+  Tools.each([linkSelection, insertImage, pasteHtml], function (action) {
     return action(editor, html, pasteHtml) !== true;
   });
 };
 
-const insertContent = function (editor: Editor, html: string, pasteAsText: boolean) {
+const insertContent = function (
+  editor: Editor,
+  html: string,
+  pasteAsText: boolean
+) {
   if (pasteAsText || Settings.isSmartPasteEnabled(editor) === false) {
     pasteHtml(editor, html);
   } else {
@@ -81,8 +105,4 @@ const insertContent = function (editor: Editor, html: string, pasteAsText: boole
   }
 };
 
-export {
-  isImageUrl,
-  isAbsoluteUrl,
-  insertContent
-};
+export { isImageUrl, isAbsoluteUrl, insertContent };

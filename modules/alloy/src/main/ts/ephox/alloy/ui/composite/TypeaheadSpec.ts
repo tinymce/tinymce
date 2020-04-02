@@ -21,10 +21,17 @@ import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { DatasetRepresentingState } from '../../behaviour/representing/RepresentingTypes';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import { CustomEvent, SimulatedEvent } from '../../events/SimulatedEvent';
-import { setCursorAtEnd, setValueFromItem } from '../../ui/typeahead/TypeaheadModel';
+import {
+  setCursorAtEnd,
+  setValueFromItem
+} from '../../ui/typeahead/TypeaheadModel';
 import { NormalItemSpec } from '../../ui/types/ItemTypes';
 import { TieredData } from '../../ui/types/TieredMenuTypes';
-import { TypeaheadData, TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
+import {
+  TypeaheadData,
+  TypeaheadDetail,
+  TypeaheadSpec
+} from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
 import * as TypeaheadEvents from './TypeaheadEvents';
 
@@ -33,7 +40,12 @@ interface ItemExecuteEvent extends CustomEvent {
 }
 
 // TODO: Fix this.
-const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, components, spec, externals) => {
+const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (
+  detail,
+  components,
+  spec,
+  externals
+) => {
   const navigateList = (
     comp: AlloyComponent,
     simulatedEvent: SimulatedEvent<EventArgs>,
@@ -55,17 +67,33 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
     const sandbox = Coupling.getCoupled(comp, 'sandbox');
     if (Sandboxing.isOpen(sandbox)) {
       Composing.getCurrent(sandbox).each((menu) => {
-        Highlighting.getHighlighted(menu).fold(() => {
-          highlighter(menu);
-        }, () => {
-          AlloyTriggers.dispatchEvent(sandbox, menu.element(), 'keydown', simulatedEvent);
-        });
+        Highlighting.getHighlighted(menu).fold(
+          () => {
+            highlighter(menu);
+          },
+          () => {
+            AlloyTriggers.dispatchEvent(
+              sandbox,
+              menu.element(),
+              'keydown',
+              simulatedEvent
+            );
+          }
+        );
       });
     } else {
       const onOpenSync = (sandbox: AlloyComponent) => {
         Composing.getCurrent(sandbox).each(highlighter);
       };
-      DropdownUtils.open(detail, mapFetch(comp), comp, sandbox, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
+      DropdownUtils.open(
+        detail,
+        mapFetch(comp),
+        comp,
+        sandbox,
+        externals,
+        onOpenSync,
+        DropdownUtils.HighlightOnOpen.HighlightFirst
+      ).get(Fun.noop);
     }
   };
 
@@ -73,19 +101,25 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
   // (easily) the same representing logic as input fields.
   const focusBehaviours = InputBase.focusBehaviours(detail);
 
-  const mapFetch = (comp: AlloyComponent) => (tdata: Option<TieredData>): Option<TieredData> => tdata.map((data) => {
-    const menus = Obj.values(data.menus);
-    const items = Arr.bind(menus, (menu) => Arr.filter(menu.items, (item): item is NormalItemSpec => item.type === 'item'));
+  const mapFetch = (comp: AlloyComponent) => (
+    tdata: Option<TieredData>
+  ): Option<TieredData> =>
+    tdata.map((data) => {
+      const menus = Obj.values(data.menus);
+      const items = Arr.bind(menus, (menu) =>
+        Arr.filter(
+          menu.items,
+          (item): item is NormalItemSpec => item.type === 'item'
+        )
+      );
 
-    const repState = Representing.getState(comp) as DatasetRepresentingState;
-    repState.update(
-      Arr.map(items, (item) => item.data)
-    );
-    return data;
-  });
+      const repState = Representing.getState(comp) as DatasetRepresentingState;
+      repState.update(Arr.map(items, (item) => item.data));
+      return data;
+    });
 
   const behaviours = [
-    Focusing.config({ }),
+    Focusing.config({}),
     Representing.config({
       onSetValue: detail.onSetValue,
       store: {
@@ -94,12 +128,14 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         // This really needs to be configurable
         getFallbackEntry: (itemString) => ({
           value: itemString,
-          meta: { }
+          meta: {}
         }),
         setValue: (comp, data) => {
           Value.set(comp.element(), detail.model.getDisplayText(data));
         },
-        ...detail.initialData.map((d) => Objects.wrap('initialValue', d)).getOr({ })
+        ...detail.initialData
+          .map((d) => Objects.wrap('initialValue', d))
+          .getOr({})
       }
     }),
     Streaming.config({
@@ -109,37 +145,55 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         stopEvent: false
       },
       onStream(component, _simulatedEvent) {
-
         const sandbox = Coupling.getCoupled(component, 'sandbox');
         const focusInInput = Focusing.isFocused(component);
         // You don't want it to change when something else has triggered the change.
         if (focusInInput) {
           if (Value.get(component.element()).length >= detail.minChars) {
-
-            const previousValue = Composing.getCurrent(sandbox).bind((menu) => Highlighting.getHighlighted(menu).map(Representing.getValue) as Option<TypeaheadData>);
+            const previousValue = Composing.getCurrent(sandbox).bind(
+              (menu) =>
+                Highlighting.getHighlighted(menu).map(
+                  Representing.getValue
+                ) as Option<TypeaheadData>
+            );
 
             detail.previewing.set(true);
 
             const onOpenSync = (_sandbox: AlloyComponent) => {
               Composing.getCurrent(sandbox).each((menu) => {
-                previousValue.fold(() => {
-                  if (detail.model.selectsOver) { Highlighting.highlightFirst(menu); }
-                }, (pv) => {
-                  Highlighting.highlightBy(menu, (item) => {
-                    const itemData = Representing.getValue(item) as TypeaheadData;
-                    return itemData.value === pv.value;
-                  });
+                previousValue.fold(
+                  () => {
+                    if (detail.model.selectsOver) {
+                      Highlighting.highlightFirst(menu);
+                    }
+                  },
+                  (pv) => {
+                    Highlighting.highlightBy(menu, (item) => {
+                      const itemData = Representing.getValue(
+                        item
+                      ) as TypeaheadData;
+                      return itemData.value === pv.value;
+                    });
 
-                  // Highlight first if could not find it?
-                  Highlighting.getHighlighted(menu).orThunk(() => {
-                    Highlighting.highlightFirst(menu);
-                    return Option.none();
-                  });
-                });
+                    // Highlight first if could not find it?
+                    Highlighting.getHighlighted(menu).orThunk(() => {
+                      Highlighting.highlightFirst(menu);
+                      return Option.none();
+                    });
+                  }
+                );
               });
             };
 
-            DropdownUtils.open(detail, mapFetch(component), component, sandbox, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
+            DropdownUtils.open(
+              detail,
+              mapFetch(component),
+              component,
+              sandbox,
+              externals,
+              onOpenSync,
+              DropdownUtils.HighlightOnOpen.HighlightFirst
+            ).get(Fun.noop);
           }
         }
       },
@@ -172,10 +226,14 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         if (sandboxIsOpen && !detail.previewing.get()) {
           // If we have a current selection in the menu, and we aren't
           // previewing, copy the item data into the input
-          return Composing.getCurrent(sandbox).bind((menu) => Highlighting.getHighlighted(menu)).map((item): boolean => {
-            AlloyTriggers.emitWith(comp, TypeaheadEvents.itemExecute(), { item });
-            return true;
-          });
+          return Composing.getCurrent(sandbox)
+            .bind((menu) => Highlighting.getHighlighted(menu))
+            .map((item): boolean => {
+              AlloyTriggers.emitWith(comp, TypeaheadEvents.itemExecute(), {
+                item
+              });
+              return true;
+            });
         } else {
           const currentValue = Representing.getValue(comp) as TypeaheadData;
           AlloyTriggers.emit(comp, SystemEvents.typeaheadCancel());
@@ -207,53 +265,72 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         }
       }
     }),
-    AddEventsBehaviour.config('typeaheadevents', [
-      AlloyEvents.runOnExecute((comp) => {
-        const onOpenSync = Fun.noop;
-        DropdownUtils.togglePopup(detail, mapFetch(comp), comp, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
-      }),
-      AlloyEvents.run<ItemExecuteEvent>(TypeaheadEvents.itemExecute(), (comp, se) => {
-        const sandbox = Coupling.getCoupled(comp, 'sandbox');
+    AddEventsBehaviour.config(
+      'typeaheadevents',
+      [
+        AlloyEvents.runOnExecute((comp) => {
+          const onOpenSync = Fun.noop;
+          DropdownUtils.togglePopup(
+            detail,
+            mapFetch(comp),
+            comp,
+            externals,
+            onOpenSync,
+            DropdownUtils.HighlightOnOpen.HighlightFirst
+          ).get(Fun.noop);
+        }),
+        AlloyEvents.run<ItemExecuteEvent>(
+          TypeaheadEvents.itemExecute(),
+          (comp, se) => {
+            const sandbox = Coupling.getCoupled(comp, 'sandbox');
 
-        setValueFromItem(detail.model, comp, se.event().item());
-        AlloyTriggers.emit(comp, SystemEvents.typeaheadCancel());
-        detail.onItemExecute(comp, sandbox, se.event().item(), Representing.getValue(comp));
+            setValueFromItem(detail.model, comp, se.event().item());
+            AlloyTriggers.emit(comp, SystemEvents.typeaheadCancel());
+            detail.onItemExecute(
+              comp,
+              sandbox,
+              se.event().item(),
+              Representing.getValue(comp)
+            );
 
-        Sandboxing.close(sandbox);
-        setCursorAtEnd(comp);
-      })
-    ].concat(detail.dismissOnBlur ? [
-      AlloyEvents.run(SystemEvents.postBlur(), (typeahead) => {
-        const sandbox = Coupling.getCoupled(typeahead, 'sandbox');
-        // Only close the sandbox if the focus isn't inside it!
-        if (Focus.search(sandbox.element()).isNone()) {
-          Sandboxing.close(sandbox);
-        }
-      })
-    ] : [ ]))
+            Sandboxing.close(sandbox);
+            setCursorAtEnd(comp);
+          }
+        )
+      ].concat(
+        detail.dismissOnBlur
+          ? [
+              AlloyEvents.run(SystemEvents.postBlur(), (typeahead) => {
+                const sandbox = Coupling.getCoupled(typeahead, 'sandbox');
+                // Only close the sandbox if the focus isn't inside it!
+                if (Focus.search(sandbox.element()).isNone()) {
+                  Sandboxing.close(sandbox);
+                }
+              })
+            ]
+          : []
+      )
+    )
   ];
 
   return {
     uid: detail.uid,
-    dom: InputBase.dom(Merger.deepMerge(detail, {
-      // TODO: Add aria-activedescendant attribute
-      inputAttributes: {
-        'role': 'combobox',
-        'aria-autocomplete': 'list',
-        'aria-haspopup': 'true'
-      }
-    })),
+    dom: InputBase.dom(
+      Merger.deepMerge(detail, {
+        // TODO: Add aria-activedescendant attribute
+        inputAttributes: {
+          'role': 'combobox',
+          'aria-autocomplete': 'list',
+          'aria-haspopup': 'true'
+        }
+      })
+    ),
     behaviours: {
       ...focusBehaviours,
-      ...SketchBehaviours.augment(
-        detail.typeaheadBehaviours,
-        behaviours
-      )
+      ...SketchBehaviours.augment(detail.typeaheadBehaviours, behaviours)
     },
     eventOrder: detail.eventOrder
   };
 };
 
-export {
-  make
-};
+export { make };

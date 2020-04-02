@@ -15,18 +15,23 @@ const find = (element: Element): Position => {
   return path.fold(Fun.curry(Location.absolute, element), (frames) => {
     const offset = Location.viewport(element);
 
-    const r = Arr.foldr(frames, (b, a) => {
-      const loc = Location.viewport(a);
-      return {
-        left: b.left + loc.left(),
-        top: b.top + loc.top()
-      };
-    }, { left: 0, top: 0 });
+    const r = Arr.foldr(
+      frames,
+      (b, a) => {
+        const loc = Location.viewport(a);
+        return {
+          left: b.left + loc.left(),
+          top: b.top + loc.top()
+        };
+      },
+      { left: 0, top: 0 }
+    );
 
-    return Position(r.left + offset.left() + scroll.left(), r.top + offset.top() + scroll.top());
+    return Position(
+      r.left + offset.left() + scroll.left(),
+      r.top + offset.top() + scroll.top()
+    );
   });
 };
 
-export {
-  find
-};
+export { find };

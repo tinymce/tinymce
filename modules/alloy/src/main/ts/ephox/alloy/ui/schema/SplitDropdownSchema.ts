@@ -19,29 +19,33 @@ import { ButtonSpec } from '../types/ButtonTypes';
 import { SplitDropdownDetail } from '../types/SplitDropdownTypes';
 import { TieredMenuSpec } from '../types/TieredMenuTypes';
 
-const schema: () => FieldProcessorAdt[] = Fun.constant([
-  FieldSchema.strict('toggleClass'),
-  FieldSchema.strict('fetch'),
-  Fields.onStrictHandler('onExecute'),
-  FieldSchema.defaulted('getHotspot', Option.some),
-  FieldSchema.defaulted('getAnchorOverrides', Fun.constant({ })),
-  AnchorLayouts.schema(),
-  Fields.onStrictHandler('onItemExecute'),
-  FieldSchema.option('lazySink'),
-  FieldSchema.strict('dom'),
-  Fields.onHandler('onOpen'),
-  SketchBehaviours.field('splitDropdownBehaviours', [ Coupling, Keying, Focusing ]),
-  FieldSchema.defaulted('matchWidth', false),
-  FieldSchema.defaulted('useMinWidth', false),
-  FieldSchema.defaulted('eventOrder', {}),
-  FieldSchema.option('role')
-].concat(
-  SketcherFields.sandboxFields()
-));
+const schema: () => FieldProcessorAdt[] = Fun.constant(
+  [
+    FieldSchema.strict('toggleClass'),
+    FieldSchema.strict('fetch'),
+    Fields.onStrictHandler('onExecute'),
+    FieldSchema.defaulted('getHotspot', Option.some),
+    FieldSchema.defaulted('getAnchorOverrides', Fun.constant({})),
+    AnchorLayouts.schema(),
+    Fields.onStrictHandler('onItemExecute'),
+    FieldSchema.option('lazySink'),
+    FieldSchema.strict('dom'),
+    Fields.onHandler('onOpen'),
+    SketchBehaviours.field('splitDropdownBehaviours', [
+      Coupling,
+      Keying,
+      Focusing
+    ]),
+    FieldSchema.defaulted('matchWidth', false),
+    FieldSchema.defaulted('useMinWidth', false),
+    FieldSchema.defaulted('eventOrder', {}),
+    FieldSchema.option('role')
+  ].concat(SketcherFields.sandboxFields())
+);
 
 const arrowPart = PartType.required<SplitDropdownDetail, ButtonSpec>({
   factory: Button,
-  schema: [ FieldSchema.strict('dom') ],
+  schema: [FieldSchema.strict('dom')],
   name: 'arrow',
   defaults() {
     return {
@@ -74,7 +78,7 @@ const arrowPart = PartType.required<SplitDropdownDetail, ButtonSpec>({
 
 const buttonPart = PartType.required<SplitDropdownDetail, ButtonSpec>({
   factory: Button,
-  schema: [ FieldSchema.strict('dom') ],
+  schema: [FieldSchema.strict('dom')],
   name: 'button',
   defaults() {
     return {
@@ -93,9 +97,12 @@ const buttonPart = PartType.required<SplitDropdownDetail, ButtonSpec>({
         }
       },
       action(btn: AlloyComponent) {
-        btn.getSystem().getByUid(detail.uid).each((splitDropdown) => {
-          detail.onExecute(splitDropdown, btn);
-        });
+        btn
+          .getSystem()
+          .getByUid(detail.uid)
+          .each((splitDropdown) => {
+            detail.onExecute(splitDropdown, btn);
+          });
       }
     };
   }
@@ -113,7 +120,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
           dom: {
             tag: 'span',
             styles: {
-              display: 'none',
+              display: 'none'
             },
             attributes: {
               'aria-hidden': 'true'
@@ -123,21 +130,22 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         };
       }
     },
-    schema: [ FieldSchema.strict('text') ],
+    schema: [FieldSchema.strict('text')],
     name: 'aria-descriptor'
   }),
 
   PartType.external<SplitDropdownDetail, TieredMenuSpec>({
-    schema: [
-      Fields.tieredMenuMarkers()
-    ],
+    schema: [Fields.tieredMenuMarkers()],
     name: 'menu',
     defaults(detail) {
       return {
         onExecute(tmenu: AlloyComponent, item: AlloyComponent) {
-          tmenu.getSystem().getByUid(detail.uid).each((splitDropdown) => {
-            detail.onItemExecute(splitDropdown, tmenu, item);
-          });
+          tmenu
+            .getSystem()
+            .getByUid(detail.uid)
+            .each((splitDropdown) => {
+              detail.onItemExecute(splitDropdown, tmenu, item);
+            });
         }
       };
     }
@@ -147,8 +155,4 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 ]);
 
 const name = Fun.constant('SplitDropdown');
-export {
-  name,
-  schema,
-  parts
-};
+export { name, schema, parts };

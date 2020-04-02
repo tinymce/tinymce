@@ -10,7 +10,12 @@ import { Blob, URL } from '@ephox/dom-globals';
 import { Type, Fun, Arr } from '@ephox/katamari';
 
 export interface BlobCache {
-  create: (o: string | BlobInfoData, blob?: Blob, base64?: string, filename?: string) => BlobInfo;
+  create: (
+    o: string | BlobInfoData,
+    blob?: Blob,
+    base64?: string,
+    filename?: string
+  ) => BlobInfo;
   add: (blobInfo: BlobInfo) => void;
   get: (id: string) => BlobInfo;
   getByUri: (blobUri: string) => BlobInfo;
@@ -52,7 +57,12 @@ export const BlobCache = function (): BlobCache {
     return mimes[mime.toLowerCase()] || 'dat';
   };
 
-  const create = function (o: BlobInfoData | string, blob?: Blob, base64?: string, filename?: string): BlobInfo {
+  const create = function (
+    o: BlobInfoData | string,
+    blob?: Blob,
+    base64?: string,
+    filename?: string
+  ): BlobInfo {
     if (Type.isString(o)) {
       const id = o;
 
@@ -73,7 +83,9 @@ export const BlobCache = function (): BlobCache {
     let id, name;
 
     if (!o.blob || !o.base64) {
-      throw new Error('blob and base64 representations of the image are required for BlobInfo to be created');
+      throw new Error(
+        'blob and base64 representations of the image are required for BlobInfo to be created'
+      );
     }
 
     id = o.id || Uuid.uuid('blobid');

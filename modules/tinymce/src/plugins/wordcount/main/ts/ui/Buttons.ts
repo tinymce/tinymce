@@ -23,6 +23,4 @@ const register = (editor: Editor, api: WordCountApi) => {
   });
 };
 
-export {
-  register
-};
+export { register };

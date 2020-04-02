@@ -56,8 +56,14 @@ const getBottomEdge = function (index: number, cell: Element) {
   return rowInfo(index, getTop(cell) + Height.getOuter(cell));
 };
 
-const findPositions = function <T> (getInnerEdge: (idx: number, ele: Element) => T, getOuterEdge: (idx: number, ele: Element) => T, array: Option<Element>[]) {
-  if (array.length === 0 ) { return []; }
+const findPositions = function <T>(
+  getInnerEdge: (idx: number, ele: Element) => T,
+  getOuterEdge: (idx: number, ele: Element) => T,
+  array: Option<Element>[]
+) {
+  if (array.length === 0) {
+    return [];
+  }
   const lines = Arr.map(array.slice(1), function (cellOption, index) {
     return cellOption.map(function (cell) {
       return getInnerEdge(index, cell);
@@ -68,7 +74,7 @@ const findPositions = function <T> (getInnerEdge: (idx: number, ele: Element) =>
     return getOuterEdge(array.length - 1, cell);
   });
 
-  return lines.concat([ lastLine ]);
+  return lines.concat([lastLine]);
 };
 
 const negate = function (step: number) {
@@ -77,24 +83,23 @@ const negate = function (step: number) {
 
 const height: BarPositions<RowInfo> = {
   delta: Fun.identity,
-  positions: (optElements: Option<Element>[]) => findPositions(getTopEdge, getBottomEdge, optElements),
+  positions: (optElements: Option<Element>[]) =>
+    findPositions(getTopEdge, getBottomEdge, optElements),
   edge: getTop
 };
 
 const ltr: BarPositions<ColInfo> = {
   delta: Fun.identity,
   edge: ltrEdge,
-  positions: (optElements: Option<Element>[]) => findPositions(getLeftEdge, getRightEdge, optElements),
+  positions: (optElements: Option<Element>[]) =>
+    findPositions(getLeftEdge, getRightEdge, optElements)
 };
 
 const rtl: BarPositions<ColInfo> = {
   delta: negate,
   edge: rtlEdge,
-  positions: (optElements: Option<Element>[]) => findPositions(getRightEdge, getLeftEdge, optElements),
+  positions: (optElements: Option<Element>[]) =>
+    findPositions(getRightEdge, getLeftEdge, optElements)
 };
 
-export {
-  height,
-  rtl,
-  ltr
-};
+export { height, rtl, ltr };

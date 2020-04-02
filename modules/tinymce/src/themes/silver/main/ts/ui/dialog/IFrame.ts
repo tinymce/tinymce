@@ -5,7 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Focusing, Tabstopping, FormField, AlloyComponent } from '@ephox/alloy';
+import {
+  Behaviour,
+  Focusing,
+  Tabstopping,
+  FormField,
+  AlloyComponent
+} from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Cell, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
@@ -17,7 +23,10 @@ import { renderLabel, renderFormFieldWith } from '../alien/FieldLabeller';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { Omit } from '../Omit';
 
-const platformNeedsSandboxing = !(PlatformDetection.detect().browser.isIE() || PlatformDetection.detect().browser.isEdge());
+const platformNeedsSandboxing = !(
+  PlatformDetection.detect().browser.isIE() ||
+  PlatformDetection.detect().browser.isEdge()
+);
 
 interface IFrameSourcing {
   getValue: (frame: AlloyComponent) => string;
@@ -33,7 +42,6 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
       // Ideally we should fetch data from the iframe...innerHtml, this triggers Corrs errors
       cachedValue.get(),
     setValue: (frameComponent: AlloyComponent, html: string) => {
-
       if (!isSandbox) {
         Attr.set(frameComponent.element(), 'src', `javascript:''`);
         // IE 6-11 doesn't support data uris on iframeComponents
@@ -45,7 +53,6 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
         doc.open();
         doc.write(html);
         doc.close();
-
       } else {
         // TINY-3769: We need to use srcdoc here, instead of src with a data URI, otherwise browsers won't retain the Origin.
         // See https://bugs.chromium.org/p/chromium/issues/detail?id=58999#c11
@@ -56,20 +63,27 @@ const getDynamicSource = (isSandbox): IFrameSourcing => {
   };
 };
 
-const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstageProviders) => {
+const renderIFrame = (
+  spec: IframeSpec,
+  providersBackstage: UiFactoryBackstageProviders
+) => {
   const isSandbox = platformNeedsSandboxing && spec.sandboxed;
 
   const attributes = {
-    ...spec.label.map<{ title?: string }>((title) => ({ title })).getOr({}),
-    ...isSandbox ? { sandbox : 'allow-scripts allow-same-origin' } : { }
+    ...spec.label
+      .map<{ title?: string }>((title) => ({ title }))
+      .getOr({}),
+    ...(isSandbox ? { sandbox: 'allow-scripts allow-same-origin' } : {})
   };
 
   const sourcing = getDynamicSource(isSandbox);
 
-  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
+  const pLabel = spec.label.map((label) =>
+    renderLabel(label, providersBackstage)
+  );
 
-  const factory = (newSpec: { uid: string }) => NavigableObject.craft(
-    {
+  const factory = (newSpec: { uid: string }) =>
+    NavigableObject.craft({
       // We need to use the part uid or the label and field won't be linked with ARIA
       uid: newSpec.uid,
       dom: {
@@ -77,21 +91,27 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
         attributes
       },
       behaviours: Behaviour.derive([
-        Tabstopping.config({ }),
-        Focusing.config({ }),
-        RepresentingConfigs.withComp(Option.none(), sourcing.getValue, sourcing.setValue)
+        Tabstopping.config({}),
+        Focusing.config({}),
+        RepresentingConfigs.withComp(
+          Option.none(),
+          sourcing.getValue,
+          sourcing.setValue
+        )
       ])
-    }
-  );
+    });
 
   // Note, it's not going to handle escape at this point.
   const pField = FormField.parts().field({
     factory: { sketch: factory }
   });
 
-  return renderFormFieldWith(pLabel, pField, [ 'tox-form__group--stretched' ], [ ]);
+  return renderFormFieldWith(
+    pLabel,
+    pField,
+    ['tox-form__group--stretched'],
+    []
+  );
 };
 
-export {
-  renderIFrame
-};
+export { renderIFrame };

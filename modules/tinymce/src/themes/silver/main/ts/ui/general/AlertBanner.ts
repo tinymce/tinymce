@@ -18,7 +18,10 @@ export interface AlertBannerWrapper extends AlertBannerSpec {
   iconTooltip: string;
 }
 
-export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: UiFactoryBackstageProviders): SketchSpec =>
+export const renderAlertBanner = (
+  spec: AlertBannerWrapper,
+  providersBackstage: UiFactoryBackstageProviders
+): SketchSpec =>
   // For using the alert banner inside a dialog
   Container.sketch({
     dom: {
@@ -26,19 +29,23 @@ export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: 
       attributes: {
         role: 'alert'
       },
-      classes: [ 'tox-notification', 'tox-notification--in', `tox-notification--${spec.level}` ]
+      classes: [
+        'tox-notification',
+        'tox-notification--in',
+        `tox-notification--${spec.level}`
+      ]
     },
     components: [
       {
         dom: {
           tag: 'div',
-          classes: [ 'tox-notification__icon' ]
+          classes: ['tox-notification__icon']
         },
         components: [
           Button.sketch({
             dom: {
               tag: 'button',
-              classes: [ 'tox-button', 'tox-button--naked', 'tox-button--icon' ],
+              classes: ['tox-button', 'tox-button--naked', 'tox-button--icon'],
               innerHtml: Icons.get(spec.icon, providersBackstage.icons),
               attributes: {
                 title: providersBackstage.translate(spec.iconTooltip)
@@ -46,7 +53,10 @@ export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: 
             },
             // TODO: aria label this button!
             action: (comp) => {
-              AlloyTriggers.emitWith(comp, formActionEvent, { name: 'alert-banner', value: spec.url });
+              AlloyTriggers.emitWith(comp, formActionEvent, {
+                name: 'alert-banner',
+                value: spec.url
+              });
             }
           })
         ]
@@ -54,7 +64,7 @@ export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: 
       {
         dom: {
           tag: 'div',
-          classes: [ 'tox-notification__body' ],
+          classes: ['tox-notification__body'],
           // TODO: AP-247: Escape this text so that it can't contain script tags
           innerHtml: providersBackstage.translate(spec.text)
         }

@@ -8,9 +8,7 @@ import { SeparatorItemDetail } from '../../ui/types/ItemTypes';
 const builder = (detail: SeparatorItemDetail) => ({
   dom: detail.dom,
   components: detail.components,
-  events: AlloyEvents.derive([
-    AlloyEvents.stopper(SystemEvents.focusItem())
-  ])
+  events: AlloyEvents.derive([AlloyEvents.stopper(SystemEvents.focusItem())])
 });
 
 const schema = [

@@ -18,6 +18,6 @@ export default function (attribute: string, value: string) {
   return {
     is,
     remove,
-    set,
+    set
   };
 }

@@ -7,7 +7,7 @@ import * as Fun from './Fun';
  */
 export interface Option<T> {
   /** If none, run whenNone; if some(a) run whenSome(a) */
-  readonly fold: <T2> (whenNone: () => T2, whenSome: (v: T) => T2) => T2;
+  readonly fold: <T2>(whenNone: () => T2, whenSome: (v: T) => T2) => T2;
 
   /** is this value some(t)?  */
   readonly is: (t: T) => boolean;
@@ -38,7 +38,7 @@ export interface Option<T> {
   /** Run a function over the 'some' value.
    *  "map" operation on the Option functor.
    */
-  readonly map: <T2> (mapper: (x: T) => T2) => Option<T2>;
+  readonly map: <T2>(mapper: (x: T) => T2) => Option<T2>;
 
   /** Run a side effect over the 'some' value */
   readonly each: (worker: (x: T) => void) => void;
@@ -46,7 +46,7 @@ export interface Option<T> {
   /** "bind"/"flatMap" operation on the Option Bind/Monad.
    *  Equivalent to >>= in Haskell/PureScript; flatMap in Scala.
    */
-  readonly bind: <T2> (f: (x: T) => Option<T2>) => Option<T2>;
+  readonly bind: <T2>(f: (x: T) => Option<T2>) => Option<T2>;
 
   /** Does this Option contain a value that predicate? */
   readonly exists: (f: (x: T) => boolean) => boolean;
@@ -66,7 +66,10 @@ export interface Option<T> {
   readonly equals: (opt: Option<T>) => boolean;
 
   /** Compare two Options using a specified comparator. */
-  readonly equals_: <T2> (opt: Option<T2>, equality: (a: T, b: T2) => boolean) => boolean;
+  readonly equals_: <T2>(
+    opt: Option<T2>,
+    equality: (a: T, b: T2) => boolean
+  ) => boolean;
 
   /** Returns all the values in this Option as an array */
   readonly toArray: () => T[];
@@ -74,7 +77,7 @@ export interface Option<T> {
   readonly toString: () => string;
 }
 
-const none = <T>() => <Option<T>> NONE;
+const none = <T>() => <Option<T>>NONE;
 
 const NONE: Option<any> = (() => {
   const eq = function (o) {
@@ -106,7 +109,9 @@ const NONE: Option<any> = (() => {
     filter: none,
     equals: eq,
     equals_: eq,
-    toArray() { return []; },
+    toArray() {
+      return [];
+    },
     toString: Fun.constant('none()')
   };
   return me;
@@ -119,12 +124,12 @@ const some = <T>(a: T): Option<T> => {
     // can't Fun.constant this one
     me;
 
-  const bind = function <T2> (f: (value: T) => T2) {
+  const bind = function <T2>(f: (value: T) => T2) {
     return f(a);
   };
 
   const me: Option<T> = {
-    fold: <T2> (n: () => T2, s: (v: T) => T2): T2 => s(a),
+    fold: <T2>(n: () => T2, s: (v: T) => T2): T2 => s(a),
     is: (v: T): boolean => a === v,
     isSome: Fun.always,
     isNone: Fun.never,
@@ -135,7 +140,7 @@ const some = <T>(a: T): Option<T> => {
     getOrUndefined: constant_a,
     or: self,
     orThunk: self,
-    map: <T2> (f: (value: T) => T2) => some(f(a)),
+    map: <T2>(f: (value: T) => T2) => some(f(a)),
     each: (f: (value: T) => void): void => {
       f(a);
     },
@@ -143,23 +148,23 @@ const some = <T>(a: T): Option<T> => {
     exists: bind,
     forall: bind,
     filter: <Q extends T>(f: (value: T) => value is Q): Option<Q> =>
-      f(a) ? me as Option<Q> : NONE,
-    toArray: () => [ a ],
+      f(a) ? (me as Option<Q>) : NONE,
+    toArray: () => [a],
     toString: () => 'some(' + a + ')',
     equals(o: Option<T>) {
       return o.is(a);
     },
     equals_<T2>(o: Option<T2>, elementEq: (a: T, b: T2) => boolean) {
-      return o.fold(
-        Fun.never,
-        function (b) { return elementEq(a, b); }
-      );
-    },
+      return o.fold(Fun.never, function (b) {
+        return elementEq(a, b);
+      });
+    }
   };
   return me;
 };
 
-const from = <T>(value: T | undefined | null): Option<T> => value === null || value === undefined ? NONE : some(value);
+const from = <T>(value: T | undefined | null): Option<T> =>
+  value === null || value === undefined ? NONE : some(value);
 
 export const Option = {
   some,

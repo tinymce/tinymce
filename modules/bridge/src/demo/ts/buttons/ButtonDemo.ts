@@ -16,10 +16,25 @@ export const registerDemoButtons = () => {
     tooltip: 'My menu button',
     fetch: (resolve) => {
       resolve([
-        { type: 'menuitem', text: 'some item 1', value: '1', onAction: () => console.log('1') },
+        {
+          type: 'menuitem',
+          text: 'some item 1',
+          value: '1',
+          onAction: () => console.log('1')
+        },
         { type: 'separator' },
-        { type: 'menuitem', text: 'some item 2', value: '2', onAction: () => console.log('2') },
-        { type: 'menuitem', text: 'some item 3', value: '3', onAction: () => console.log('3') }
+        {
+          type: 'menuitem',
+          text: 'some item 2',
+          value: '2',
+          onAction: () => console.log('2')
+        },
+        {
+          type: 'menuitem',
+          text: 'some item 3',
+          value: '3',
+          onAction: () => console.log('3')
+        }
       ]);
     }
   });
@@ -48,7 +63,7 @@ export const registerDemoButtons = () => {
     tooltip: 'Bold',
     onSetup: (api) => {
       api.setActive(false);
-      return () => { };
+      return () => {};
     },
     onAction: (_api) => {
       console.log('bold clicked');

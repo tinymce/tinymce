@@ -1,7 +1,12 @@
 import { Thunk } from '@ephox/katamari';
 import Element from './Element';
 import * as Node from './Node';
-import { document, Document, Node as DomNode, HTMLElement } from '@ephox/dom-globals';
+import {
+  document,
+  Document,
+  Node as DomNode,
+  HTMLElement
+} from '@ephox/dom-globals';
 
 // Node.contains() is very, very, very good performance
 // http://jsperf.com/closest-vs-contains/5
@@ -12,7 +17,9 @@ const inBody = function (element: Element<DomNode>) {
 
   // use ownerDocument.body to ensure this works inside iframes.
   // Normally contains is bad because an element "contains" itself, but here we want that.
-  return dom !== undefined && dom !== null && dom.ownerDocument.body.contains(dom);
+  return (
+    dom !== undefined && dom !== null && dom.ownerDocument.body.contains(dom)
+  );
 };
 
 const body: () => Element<HTMLElement> = Thunk.cached(function () {
@@ -27,8 +34,4 @@ const getBody = function (doc: Element<Document>) {
   return Element.fromDom(b);
 };
 
-export {
-  body,
-  getBody,
-  inBody,
-};
+export { body, getBody, inBody };

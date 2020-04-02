@@ -27,14 +27,13 @@ export default (): void => {
         {
           dom: {
             tag: 'li',
-            innerHtml: 'The square is an in-memory component not connected to the system'
+            innerHtml:
+              'The square is an in-memory component not connected to the system'
           }
         }
       ],
 
-      containerBehaviours: Behaviour.derive([
-        Replacing.config({ })
-      ])
+      containerBehaviours: Behaviour.derive([Replacing.config({})])
     })
   );
 
@@ -55,7 +54,9 @@ export default (): void => {
         Replacing.append(list, {
           dom: {
             tag: 'li',
-            innerHtml: 'The square has been attached to the DOM: ' + new Date().getSeconds()
+            innerHtml:
+              'The square has been attached to the DOM: ' +
+              new Date().getSeconds()
           }
         });
       }),
@@ -65,7 +66,9 @@ export default (): void => {
         Replacing.append(list, {
           dom: {
             tag: 'li',
-            innerHtml: 'The square has been added to the system: ' + new Date().getSeconds()
+            innerHtml:
+              'The square has been added to the system: ' +
+              new Date().getSeconds()
           }
         });
       })
@@ -78,5 +81,4 @@ export default (): void => {
       gui.add(square);
     }, 2000);
   }, 2000);
-
 };

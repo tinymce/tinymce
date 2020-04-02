@@ -5,7 +5,4 @@ import * as PartType from '../../parts/PartType';
 const parts = AlloyParts;
 const partType = PartType;
 
-export {
-  parts,
-  partType
-};
+export { parts, partType };

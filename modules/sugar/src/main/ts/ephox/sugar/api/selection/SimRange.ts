@@ -9,7 +9,12 @@ export interface SimRange {
   foffset: () => number;
 }
 
-const create = (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number): SimRange => ({
+const create = (
+  start: Element<DomNode>,
+  soffset: number,
+  finish: Element<DomNode>,
+  foffset: number
+): SimRange => ({
   start: Fun.constant(start),
   soffset: Fun.constant(soffset),
   finish: Fun.constant(finish),

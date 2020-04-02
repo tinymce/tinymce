@@ -30,6 +30,4 @@ const init = (): SandboxingState => {
   });
 };
 
-export {
-  init
-};
+export { init };

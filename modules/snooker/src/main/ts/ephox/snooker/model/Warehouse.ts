@@ -14,19 +14,32 @@ const key = function (row: number, column: number) {
 
 const getAt = function (warehouse: Warehouse, row: number, column: number) {
   const raw = warehouse.access[key(row, column)];
-  return raw !== undefined ? Option.some(raw) : Option.none<Structs.DetailExt>();
+  return raw !== undefined
+    ? Option.some(raw)
+    : Option.none<Structs.DetailExt>();
 };
 
-const findItem = function <T> (warehouse: Warehouse, item: T, comparator: (a: T, b: Element) => boolean) {
+const findItem = function <T>(
+  warehouse: Warehouse,
+  item: T,
+  comparator: (a: T, b: Element) => boolean
+) {
   const filtered = filterItems(warehouse, function (detail) {
     return comparator(item, detail.element());
   });
 
-  return filtered.length > 0 ? Option.some(filtered[0]) : Option.none<Structs.DetailExt>();
+  return filtered.length > 0
+    ? Option.some(filtered[0])
+    : Option.none<Structs.DetailExt>();
 };
 
-const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: number) => boolean) {
-  const all = Arr.bind(warehouse.all, function (r) { return r.cells(); });
+const filterItems = function (
+  warehouse: Warehouse,
+  predicate: (x: Structs.DetailExt, i: number) => boolean
+) {
+  const all = Arr.bind(warehouse.all, function (r) {
+    return r.cells();
+  });
   return Arr.filter(all, predicate);
 };
 
@@ -36,7 +49,9 @@ const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.Detai
  *  2. a data structure which can efficiently identify which cell is in which row,column position
  *  3. a list of all cells in order left-to-right, top-to-bottom
  */
-const generate = function <T extends Structs.Detail> (list: Structs.RowData<T>[]): Warehouse {
+const generate = function <T extends Structs.Detail>(
+  list: Structs.RowData<T>[]
+): Warehouse {
   // list is an array of objects, made by cells and elements
   // elements: is the TR
   // cells: is an array of objects representing the cells in the row.
@@ -60,7 +75,13 @@ const generate = function <T extends Structs.Detail> (list: Structs.RowData<T>[]
         start++;
       }
 
-      const current = Structs.extended(detail.element(), detail.rowspan(), detail.colspan(), r, start);
+      const current = Structs.extended(
+        detail.element(),
+        detail.rowspan(),
+        detail.colspan(),
+        r,
+        start
+      );
 
       // Occupy all the (row, column) positions that this cell spans for.
       for (let i = 0; i < detail.colspan(); i++) {
@@ -76,7 +97,9 @@ const generate = function <T extends Structs.Detail> (list: Structs.RowData<T>[]
       currentRow.push(current);
     });
 
-    cells.push(Structs.rowdata(details.element(), currentRow, details.section()));
+    cells.push(
+      Structs.rowdata(details.element(), currentRow, details.section())
+    );
   });
 
   const grid = Structs.grid(maxRows, maxColumns);

@@ -37,43 +37,62 @@ UnitTest.test('Obj.map: unit test', () => {
   };
 
   checkMapToArray([], {}, stringify);
-  checkMapToArray([ 'a :: a' ], { a: 'a' }, stringify);
-  checkMapToArray([ 'a :: a', 'b :: b', 'c :: c' ], { a: 'a', b: 'b', c: 'c' }, stringify);
+  checkMapToArray(['a :: a'], { a: 'a' }, stringify);
+  checkMapToArray(
+    ['a :: a', 'b :: b', 'c :: c'],
+    { a: 'a', b: 'b', c: 'c' },
+    stringify
+  );
 });
 
 UnitTest.test('Obj.map: map id obj = obj', () => {
-  fc.assert(fc.property(fc.dictionary(fc.asciiString(), fc.integer()), (obj) => {
-    const actual = Obj.map(obj, Fun.identity);
-    Assert.eq('map id', obj, actual);
-  }));
+  fc.assert(
+    fc.property(fc.dictionary(fc.asciiString(), fc.integer()), (obj) => {
+      const actual = Obj.map(obj, Fun.identity);
+      Assert.eq('map id', obj, actual);
+    })
+  );
 });
 
-UnitTest.test('map constant obj means that values(obj) are all the constant', () => {
-  fc.assert(fc.property(fc.dictionary(fc.asciiString(), fc.integer()), fc.integer(), (obj, x) => {
-    const output = Obj.map(obj, Fun.constant(x));
-    const values = Obj.values(output);
-    return Arr.forall(values, (v) => v === x);
-  }));
-});
+UnitTest.test(
+  'map constant obj means that values(obj) are all the constant',
+  () => {
+    fc.assert(
+      fc.property(
+        fc.dictionary(fc.asciiString(), fc.integer()),
+        fc.integer(),
+        (obj, x) => {
+          const output = Obj.map(obj, Fun.constant(x));
+          const values = Obj.values(output);
+          return Arr.forall(values, (v) => v === x);
+        }
+      )
+    );
+  }
+);
 
 UnitTest.test('tupleMap obj (x, i) -> { k: i, v: x }', () => {
-  fc.assert(fc.property(fc.dictionary(fc.asciiString(), fc.integer()), (obj) => {
-    const output = Obj.tupleMap(obj, (x, i) => ({ k: i, v: x }));
-    Assert.eq('tupleMap', obj, output);
-  }));
+  fc.assert(
+    fc.property(fc.dictionary(fc.asciiString(), fc.integer()), (obj) => {
+      const output = Obj.tupleMap(obj, (x, i) => ({ k: i, v: x }));
+      Assert.eq('tupleMap', obj, output);
+    })
+  );
 });
 
 UnitTest.test('mapToArray is symmetric with tupleMap', () => {
-  fc.assert(fc.property(fc.dictionary(fc.asciiString(), fc.integer()), (obj) => {
-    const array = Obj.mapToArray(obj, (x, i) => ({ k: i, v: x }));
+  fc.assert(
+    fc.property(fc.dictionary(fc.asciiString(), fc.integer()), (obj) => {
+      const array = Obj.mapToArray(obj, (x, i) => ({ k: i, v: x }));
 
-    const aKeys = Arr.map(array, (x) => x.k);
-    const aValues = Arr.map(array, (x) => x.v);
+      const aKeys = Arr.map(array, (x) => x.k);
+      const aValues = Arr.map(array, (x) => x.v);
 
-    const keys = Obj.keys(obj);
-    const values = Obj.values(obj);
+      const keys = Obj.keys(obj);
+      const values = Obj.values(obj);
 
-    Assert.eq('same keys', Arr.sort(keys), Arr.sort(aKeys));
-    Assert.eq('same values', Arr.sort(values), Arr.sort(aValues));
-  }));
+      Assert.eq('same keys', Arr.sort(keys), Arr.sort(aKeys));
+      Assert.eq('same values', Arr.sort(values), Arr.sort(aValues));
+    })
+  );
 });

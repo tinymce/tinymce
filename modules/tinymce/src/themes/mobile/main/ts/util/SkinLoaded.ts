@@ -20,6 +20,4 @@ const fireSkinLoaded = (editor: Editor) => (): void => {
   }
 };
 
-export {
-  fireSkinLoaded
-};
+export { fireSkinLoaded };

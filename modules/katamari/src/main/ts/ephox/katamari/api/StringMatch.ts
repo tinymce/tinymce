@@ -30,13 +30,13 @@ const adt = Adt.generate<{
   all: () => StringMatch;
   not: (stringMatch: StringMatch) => StringMatch;
 }>([
-      { starts: [ 'value', 'f' ] },
-      { pattern: [ 'regex', 'f' ] },
-      { contains: [ 'value', 'f' ] },
-      { exact: [ 'value', 'f' ] },
-      { all: [ ] },
-      { not: [ 'stringMatch' ] }
-    ]);
+  { starts: ['value', 'f'] },
+  { pattern: ['regex', 'f'] },
+  { contains: ['value', 'f'] },
+  { exact: ['value', 'f'] },
+  { all: [] },
+  { not: ['stringMatch'] }
+]);
 
 const caseInsensitive = function (val: string) {
   return val.toLowerCase();
@@ -48,22 +48,29 @@ const caseSensitive = function (val: string) {
 
 /** matches :: (StringMatch, String) -> Boolean */
 const matches = function (subject: StringMatch, str: string): boolean {
-  return subject.fold(function (value, f) {
-    return f(str).indexOf(f(value)) === 0;
-  }, function (regex, f) {
-    return regex.test(f(str));
-  }, function (value, f) {
-    return f(str).indexOf(f(value)) >= 0;
-  }, function (value, f) {
-    return f(str) === f(value);
-  }, function () {
-    return true;
-  }, function (other) {
-    return !matches(other, str);
-  });
+  return subject.fold(
+    function (value, f) {
+      return f(str).indexOf(f(value)) === 0;
+    },
+    function (regex, f) {
+      return regex.test(f(str));
+    },
+    function (value, f) {
+      return f(str).indexOf(f(value)) >= 0;
+    },
+    function (value, f) {
+      return f(str) === f(value);
+    },
+    function () {
+      return true;
+    },
+    function (other) {
+      return !matches(other, str);
+    }
+  );
 };
 
-const cata = function <T> (
+const cata = function <T>(
   subject: StringMatch,
   s: (value: string, f: StringMapper) => T,
   p: (regex: RegExp, f: StringMapper) => T,

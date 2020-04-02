@@ -15,7 +15,11 @@ import { renderCheckmark } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
-const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemTypes.ItemSpec => {
+const renderToggleMenuItem = (
+  spec: Menu.ToggleMenuItem,
+  itemResponse: ItemResponse,
+  providersBackstage: UiFactoryBackstageProviders
+): ItemTypes.ItemSpec => {
   const getApi = (component): Menu.ToggleMenuItemInstanceApi => ({
     setActive: (state) => {
       Toggling.set(component, state);
@@ -27,28 +31,37 @@ const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemRespo
 
   // BespokeSelects use meta to pass through styling information. Bespokes should only
   // be togglemenuitems hence meta is only passed through in this MenuItem.
-  const structure = renderItemStructure({
-    iconContent: Option.none(),
-    textContent: spec.text,
-    htmlContent: Option.none(),
-    ariaLabel: spec.text,
-    checkMark: Option.some(renderCheckmark(providersBackstage.icons)),
-    caret: Option.none(),
-    shortcutContent: spec.shortcut,
-    presets: 'normal',
-    meta: spec.meta
-  }, providersBackstage, true);
+  const structure = renderItemStructure(
+    {
+      iconContent: Option.none(),
+      textContent: spec.text,
+      htmlContent: Option.none(),
+      ariaLabel: spec.text,
+      checkMark: Option.some(renderCheckmark(providersBackstage.icons)),
+      caret: Option.none(),
+      shortcutContent: spec.shortcut,
+      presets: 'normal',
+      meta: spec.meta
+    },
+    providersBackstage,
+    true
+  );
 
   return Merger.deepMerge(
-    renderCommonItem({
-      data: buildData(spec),
-      disabled: spec.disabled,
-      getApi,
-      onAction: spec.onAction,
-      onSetup: spec.onSetup,
-      triggersSubmenu: false,
-      itemBehaviours: [ ]
-    }, structure, itemResponse, providersBackstage),
+    renderCommonItem(
+      {
+        data: buildData(spec),
+        disabled: spec.disabled,
+        getApi,
+        onAction: spec.onAction,
+        onSetup: spec.onSetup,
+        triggersSubmenu: false,
+        itemBehaviours: []
+      },
+      structure,
+      itemResponse,
+      providersBackstage
+    ),
     {
       toggling: {
         toggleClass: ItemClasses.tickedClass,

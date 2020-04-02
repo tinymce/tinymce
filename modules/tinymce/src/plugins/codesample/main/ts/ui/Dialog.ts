@@ -14,8 +14,14 @@ type LanguageSpec = Languages.LanguageSpec;
 
 const open = (editor: Editor) => {
   const languages: LanguageSpec[] = Languages.getLanguages(editor);
-  const defaultLanguage: string = Arr.head(languages).fold(() => '', (l) => l.value);
-  const currentLanguage: string = Languages.getCurrentLanguage(editor, defaultLanguage);
+  const defaultLanguage: string = Arr.head(languages).fold(
+    () => '',
+    (l) => l.value
+  );
+  const currentLanguage: string = Languages.getCurrentLanguage(
+    editor,
+    defaultLanguage
+  );
   const currentCode: string = CodeSample.getCurrentCode(editor);
 
   editor.windowManager.open({
@@ -33,7 +39,7 @@ const open = (editor: Editor) => {
         {
           type: 'textarea',
           name: 'code',
-          label: 'Code view',
+          label: 'Code view'
         }
       ]
     },
@@ -41,7 +47,7 @@ const open = (editor: Editor) => {
       {
         type: 'cancel',
         name: 'cancel',
-        text: 'Cancel',
+        text: 'Cancel'
       },
       {
         type: 'submit',
@@ -62,6 +68,4 @@ const open = (editor: Editor) => {
   });
 };
 
-export {
-  open
-};
+export { open };

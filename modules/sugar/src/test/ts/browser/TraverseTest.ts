@@ -26,11 +26,15 @@ UnitTest.test('TraverseTest', function () {
   const middle = node('middle');
   const oldest = node('oldest');
 
-  InsertAll.append(grandparent, [ uncle, mother ]);
-  InsertAll.append(mother, [ youngest, middle, oldest ]);
+  InsertAll.append(grandparent, [uncle, mother]);
+  InsertAll.append(mother, [youngest, middle, oldest]);
 
   const checkNone = function (subject) {
-    KAssert.eqNone(() => 'Expected "' + Attr.get(subject, 'name') + '" not to have a parent.', Traverse.findIndex(subject));
+    KAssert.eqNone(
+      () =>
+        'Expected "' + Attr.get(subject, 'name') + '" not to have a parent.',
+      Traverse.findIndex(subject)
+    );
   };
 
   const checkIndex = function (expected: number, subject: Element<DomElement>) {
@@ -38,7 +42,7 @@ UnitTest.test('TraverseTest', function () {
     KAssert.eqSome('eq', expected, actual);
   };
 
-  Arr.each([ grandparent ], checkNone);
+  Arr.each([grandparent], checkNone);
   checkIndex(0, uncle);
   checkIndex(1, mother);
   checkIndex(0, youngest);
@@ -48,12 +52,11 @@ UnitTest.test('TraverseTest', function () {
   const checkSiblings = function (expected, subject, direction) {
     const actual = direction(subject);
 
-    const getName = function (e) { return Attr.get(e, 'name'); };
+    const getName = function (e) {
+      return Attr.get(e, 'name');
+    };
 
-    Assert.eq('eq',
-      Arr.map(expected, getName),
-      Arr.map(actual, getName)
-    );
+    Assert.eq('eq', Arr.map(expected, getName), Arr.map(actual, getName));
   };
 
   const aunt = node('aunt');
@@ -63,13 +66,13 @@ UnitTest.test('TraverseTest', function () {
   const c4 = node('c4');
   const c5 = node('c5');
   const c6 = node('c6');
-  InsertAll.append(aunt, [ c1, c2, c3, c4, c5, c6 ]);
+  InsertAll.append(aunt, [c1, c2, c3, c4, c5, c6]);
 
-  checkSiblings([ c1, c2 ],     c3, Traverse.prevSiblings);
-  checkSiblings([ c4, c5, c6 ], c3, Traverse.nextSiblings);
+  checkSiblings([c1, c2], c3, Traverse.prevSiblings);
+  checkSiblings([c4, c5, c6], c3, Traverse.nextSiblings);
 
-  checkSiblings([ c1 ],         c2, Traverse.prevSiblings);
-  checkSiblings([ c6 ],         c5, Traverse.nextSiblings);
+  checkSiblings([c1], c2, Traverse.prevSiblings);
+  checkSiblings([c6], c5, Traverse.nextSiblings);
 
   const el = Element.fromTag('div');
   Assert.eq('eq', true, Traverse.owner(el).dom() === document);
@@ -81,7 +84,7 @@ UnitTest.test('TraverseTest', function () {
   const t1 = textNode('t1');
   const t2 = textNode('t2');
   const t3 = textNode('t3');
-  InsertAll.append(n, [ c1, t1, c2, t2, t3 ]);
+  InsertAll.append(n, [c1, t1, c2, t2, t3]);
   Assert.eq('eq', 0, Traverse.childNodesCount(c1));
   Assert.eq('eq', 0, Traverse.childNodesCount(t1));
   Assert.eq('eq', 5, Traverse.childNodesCount(n));

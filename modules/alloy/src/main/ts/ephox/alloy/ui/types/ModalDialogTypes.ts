@@ -7,18 +7,28 @@ import { LazySink } from '../../api/component/CommonTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
-import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import {
+  CompositeSketch,
+  CompositeSketchDetail,
+  CompositeSketchSpec
+} from '../../api/ui/Sketcher';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
 export interface ModalDialogDetail extends CompositeSketchDetail {
   uid: string;
   dom: RawDomSchema;
-  components: AlloySpec[ ];
+  components: AlloySpec[];
   modalBehaviours: SketchBehaviours;
   eventOrder: Record<string, string[]>;
 
-  onExecute: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
-  onEscape: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
+  onExecute: (
+    comp: AlloyComponent,
+    simulatedEvent: NativeSimulatedEvent
+  ) => Option<boolean>;
+  onEscape: (
+    comp: AlloyComponent,
+    simulatedEvent: NativeSimulatedEvent
+  ) => Option<boolean>;
   useTabstopAt: (elem: Element) => boolean;
 
   lazySink: LazySink;
@@ -35,8 +45,14 @@ export interface ModalDialogSpec extends CompositeSketchSpec {
 
   lazySink?: LazySink;
   useTabstopAt?: (comp: Element) => boolean;
-  onExecute?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
-  onEscape?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
+  onExecute?: (
+    comp: AlloyComponent,
+    simulatedEvent: NativeSimulatedEvent
+  ) => Option<boolean>;
+  onEscape?: (
+    comp: AlloyComponent,
+    simulatedEvent: NativeSimulatedEvent
+  ) => Option<boolean>;
   dragBlockClass?: string;
   getDragBounds?: () => Bounds;
 
@@ -62,4 +78,6 @@ export interface ModalDialogApis {
   setIdle: (dialog: AlloyComponent) => void;
 }
 
-export interface ModalDialogSketcher extends CompositeSketch<ModalDialogSpec>, ModalDialogApis { }
+export interface ModalDialogSketcher
+  extends CompositeSketch<ModalDialogSpec>,
+    ModalDialogApis {}

@@ -9,6 +9,4 @@ const Highlighting: HighlightingBehaviour = Behaviour.create({
   apis: HighlightApis
 });
 
-export {
-  Highlighting
-};
+export { Highlighting };

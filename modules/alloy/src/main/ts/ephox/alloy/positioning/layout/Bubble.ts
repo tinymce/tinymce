@@ -59,10 +59,19 @@ const allAlignments: Array<keyof BubbleAlignments> = [
   'right'
 ];
 
-const nu = (width: number, yoffset: number, classes: BubbleAlignments): Bubble => {
-  const getClasses = (prop: keyof BubbleAlignments): string[] => Obj.get(classes, prop).getOr([ ]);
+const nu = (
+  width: number,
+  yoffset: number,
+  classes: BubbleAlignments
+): Bubble => {
+  const getClasses = (prop: keyof BubbleAlignments): string[] =>
+    Obj.get(classes, prop).getOr([]);
 
-  const make = (xDelta: number, yDelta: number, alignmentsOn: Array<(keyof BubbleAlignments)>) => {
+  const make = (
+    xDelta: number,
+    yDelta: number,
+    alignmentsOn: Array<keyof BubbleAlignments>
+  ) => {
     const alignmentsOff = Arr.difference(allAlignments, alignmentsOn);
     return {
       offset: () => Position(xDelta, yDelta),
@@ -72,28 +81,25 @@ const nu = (width: number, yoffset: number, classes: BubbleAlignments): Bubble =
   };
 
   return {
-    southeast: () => make(-width, yoffset, [ 'top', 'alignLeft' ]),
-    southwest: () => make(width, yoffset, [ 'top', 'alignRight' ]),
-    south: () => make(-width / 2, yoffset, [ 'top', 'alignCentre' ]),
-    northeast: () => make(-width, -yoffset, [ 'bottom', 'alignLeft' ]),
-    northwest: () => make(width, -yoffset, [ 'bottom', 'alignRight' ]),
-    north: () => make(-width / 2, -yoffset, [ 'bottom', 'alignCentre' ]),
-    east: () => make(width, -yoffset / 2, [ 'valignCentre', 'left' ]),
-    west: () => make(-width, -yoffset / 2, [ 'valignCentre', 'right' ]),
-    innerNorthwest: () => make(-width, yoffset, [ 'top', 'alignRight' ]),
-    innerNortheast: () => make(width, yoffset, [ 'top', 'alignLeft' ]),
-    innerNorth: () => make(-width / 2, yoffset, [ 'top', 'alignCentre' ]),
-    innerSouthwest: () => make(-width, -yoffset, [ 'bottom', 'alignRight' ]),
-    innerSoutheast: () => make(width, -yoffset, [ 'bottom', 'alignLeft' ]),
-    innerSouth: () => make(-width / 2, -yoffset, [ 'bottom', 'alignCentre' ]),
-    innerWest: () => make(width, -yoffset / 2, [ 'valignCentre', 'right' ]),
-    innerEast: () => make(-width, -yoffset / 2, [ 'valignCentre', 'left' ])
+    southeast: () => make(-width, yoffset, ['top', 'alignLeft']),
+    southwest: () => make(width, yoffset, ['top', 'alignRight']),
+    south: () => make(-width / 2, yoffset, ['top', 'alignCentre']),
+    northeast: () => make(-width, -yoffset, ['bottom', 'alignLeft']),
+    northwest: () => make(width, -yoffset, ['bottom', 'alignRight']),
+    north: () => make(-width / 2, -yoffset, ['bottom', 'alignCentre']),
+    east: () => make(width, -yoffset / 2, ['valignCentre', 'left']),
+    west: () => make(-width, -yoffset / 2, ['valignCentre', 'right']),
+    innerNorthwest: () => make(-width, yoffset, ['top', 'alignRight']),
+    innerNortheast: () => make(width, yoffset, ['top', 'alignLeft']),
+    innerNorth: () => make(-width / 2, yoffset, ['top', 'alignCentre']),
+    innerSouthwest: () => make(-width, -yoffset, ['bottom', 'alignRight']),
+    innerSoutheast: () => make(width, -yoffset, ['bottom', 'alignLeft']),
+    innerSouth: () => make(-width / 2, -yoffset, ['bottom', 'alignCentre']),
+    innerWest: () => make(width, -yoffset / 2, ['valignCentre', 'right']),
+    innerEast: () => make(-width, -yoffset / 2, ['valignCentre', 'left'])
   };
 };
 
-const fallback = () => nu(0, 0, { });
+const fallback = () => nu(0, 0, {});
 
-export {
-  nu,
-  fallback
-};
+export { nu, fallback };

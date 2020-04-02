@@ -6,12 +6,7 @@ import { Gene } from 'ephox/boss/api/Gene';
 UnitTest.test('TracksTest', function () {
   const family = Gene('A', '.', [
     Gene('B', '.'),
-    Gene('C', '.', [
-      Gene('D', '.', [
-        Gene('E', '.')
-      ]),
-      Gene('F', '.')
-    ])
+    Gene('C', '.', [Gene('D', '.', [Gene('E', '.')]), Gene('F', '.')])
   ]);
 
   const result = Tracks.track(family, Option.some(Gene('parent', '.')));

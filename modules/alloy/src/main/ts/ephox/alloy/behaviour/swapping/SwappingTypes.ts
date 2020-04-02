@@ -1,8 +1,11 @@
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
-export interface SwappingBehaviour extends Behaviour.AlloyBehaviour<SwappingConfigSpec, SwappingConfig> {
-  config: (config: SwappingConfigSpec) => Behaviour.NamedConfiguredBehaviour<SwappingConfigSpec, SwappingConfig>;
+export interface SwappingBehaviour
+  extends Behaviour.AlloyBehaviour<SwappingConfigSpec, SwappingConfig> {
+  config: (
+    config: SwappingConfigSpec
+  ) => Behaviour.NamedConfiguredBehaviour<SwappingConfigSpec, SwappingConfig>;
   toAlpha: (component: AlloyComponent) => void;
   toOmega: (component: AlloyComponent) => void;
   isAlpha: (component: AlloyComponent) => boolean;

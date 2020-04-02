@@ -4,10 +4,14 @@ import { TinyDom } from './TinyDom';
 import { Editor } from '../alien/EditorTypes';
 
 type SyncTestCallback<T> = (initValue: T) => void;
-type AsyncTestCallback<T> = (initValue: T, done: () => void, die: (err?: any) => void) => void;
+type AsyncTestCallback<T> = (
+  initValue: T,
+  done: () => void,
+  die: (err?: any) => void
+) => void;
 type Offset = 'after' | 'afterNextCharacter' | number;
 
-const test = function <T> (message: string, fn: SyncTestCallback<T>) {
+const test = function <T>(message: string, fn: SyncTestCallback<T>) {
   return function (initValue: T) {
     return Logger.t(
       message,
@@ -18,7 +22,7 @@ const test = function <T> (message: string, fn: SyncTestCallback<T>) {
   };
 };
 
-const asyncTest = function <T> (message: string, fn: AsyncTestCallback<T>) {
+const asyncTest = function <T>(message: string, fn: AsyncTestCallback<T>) {
   return function (initValue: T) {
     return Logger.t(
       message,
@@ -29,7 +33,7 @@ const asyncTest = function <T> (message: string, fn: AsyncTestCallback<T>) {
   };
 };
 
-const createSuite = function <T = any> () {
+const createSuite = function <T = any>() {
   const tests: Array<(initValue: T) => Step<any, any>> = [];
 
   return {
@@ -49,13 +53,21 @@ const createSuite = function <T = any> () {
   };
 };
 
-const execCommand = function <T extends Editor = Editor> (editor: T, cmd: string, ui?: boolean, value?: any) {
+const execCommand = function <T extends Editor = Editor>(
+  editor: T,
+  cmd: string,
+  ui?: boolean,
+  value?: any
+) {
   if (editor.editorCommands.hasCustomCommand(cmd)) {
     editor.execCommand(cmd, ui, value);
   }
 };
 
-const findContainer = function <T extends Editor = Editor> (editor: T, selector: string | DomNode) {
+const findContainer = function <T extends Editor = Editor>(
+  editor: T,
+  selector: string | DomNode
+) {
   let container;
 
   if (typeof selector === 'string') {
@@ -71,12 +83,25 @@ const findContainer = function <T extends Editor = Editor> (editor: T, selector:
   return container;
 };
 
-const setSelection = function <T extends Editor = Editor> (editor: T, startSelector: string, startOffset: Offset, endSelector?: string, endOffset?: Offset) {
+const setSelection = function <T extends Editor = Editor>(
+  editor: T,
+  startSelector: string,
+  startOffset: Offset,
+  endSelector?: string,
+  endOffset?: Offset
+) {
   const startContainer = findContainer(editor, startSelector);
-  const endContainer = findContainer(editor, endSelector ? endSelector : startSelector);
+  const endContainer = findContainer(
+    editor,
+    endSelector ? endSelector : startSelector
+  );
   const rng = editor.dom.createRng();
 
-  const setRange = function (container: DomNode, offset: Offset | undefined, start: boolean) {
+  const setRange = function (
+    container: DomNode,
+    offset: Offset | undefined,
+    start: boolean
+  ) {
     offset = offset ? offset : 0;
 
     if (offset === 'after') {
@@ -108,12 +133,24 @@ const trimBrs = function (html: string) {
   return html.toLowerCase().replace(/<br[^>]*>|[\r\n]+/gi, '');
 };
 
-const equalDom = function <T extends DomNode> (actual: T, expected: T, message?: string) {
-  Assertions.assertDomEq(typeof message !== 'undefined' ? message : 'Nodes are not equal', TinyDom.fromDom(expected), TinyDom.fromDom(actual));
+const equalDom = function <T extends DomNode>(
+  actual: T,
+  expected: T,
+  message?: string
+) {
+  Assertions.assertDomEq(
+    typeof message !== 'undefined' ? message : 'Nodes are not equal',
+    TinyDom.fromDom(expected),
+    TinyDom.fromDom(actual)
+  );
 };
 
-const equal = function <T> (actual: T, expected: T, message?: string) {
-  Assertions.assertEq(typeof message !== 'undefined' ? message : 'No message specified', expected, actual);
+const equal = function <T>(actual: T, expected: T, message?: string) {
+  Assertions.assertEq(
+    typeof message !== 'undefined' ? message : 'No message specified',
+    expected,
+    actual
+  );
 };
 
 const strictEqual = equal;
@@ -123,12 +160,9 @@ export {
   test,
   asyncTest,
   createSuite,
-
   execCommand,
   setSelection,
-
   trimBrs,
-
   equal,
   equalDom,
   strictEqual,

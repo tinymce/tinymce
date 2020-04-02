@@ -25,7 +25,10 @@ const getNormalizedPoint = (container: Node, offset: number): Point => {
       container: node,
       offset: offset >= container.childNodes.length ? node.data.length : 0
     };
-  } else if (node.previousSibling && NodeType.isTextNode(node.previousSibling)) {
+  } else if (
+    node.previousSibling &&
+    NodeType.isTextNode(node.previousSibling)
+  ) {
     return {
       container: node.previousSibling,
       offset: node.previousSibling.data.length
@@ -52,7 +55,4 @@ const normalizeRange = (rng: Range): Range => {
   return outRng;
 };
 
-export {
-  getNormalizedPoint,
-  normalizeRange
-};
+export { getNormalizedPoint, normalizeRange };

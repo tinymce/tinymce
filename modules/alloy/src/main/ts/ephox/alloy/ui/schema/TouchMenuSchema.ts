@@ -23,49 +23,51 @@ const anchorAtCentre = (component: AlloyComponent) => {
     x: pos.left() + w / 2,
     y: pos.top() + h / 2,
     layouts: {
-      onLtr: () => [ Layout.south, Layout.north ],
-      onRtl: () => [ Layout.south, Layout.north ]
+      onLtr: () => [Layout.south, Layout.north],
+      onRtl: () => [Layout.south, Layout.north]
     }
   };
 };
 
 // Similar to dropdown.
-const schema: () => FieldProcessorAdt[] = Fun.constant([
-  FieldSchema.strict('dom'),
-  FieldSchema.strict('fetch'),
-  Fields.onHandler('onOpen'),
-  Fields.onKeyboardHandler('onExecute'),
-  Fields.onHandler('onTap'),
-  Fields.onHandler('onHoverOn'),
-  Fields.onHandler('onHoverOff'),
-  Fields.onHandler('onMiss'),
-  SketchBehaviours.field('touchmenuBehaviours', [ Toggling, Unselecting, Coupling ]),
-  FieldSchema.strict('toggleClass'),
-  FieldSchema.option('lazySink'),
-  FieldSchema.option('role'),
-  FieldSchema.defaulted('eventOrder', { }),
-  FieldSchema.defaulted('matchWidth', true),
-  FieldSchema.defaulted('useMinWidth', false),
+const schema: () => FieldProcessorAdt[] = Fun.constant(
+  [
+    FieldSchema.strict('dom'),
+    FieldSchema.strict('fetch'),
+    Fields.onHandler('onOpen'),
+    Fields.onKeyboardHandler('onExecute'),
+    Fields.onHandler('onTap'),
+    Fields.onHandler('onHoverOn'),
+    Fields.onHandler('onHoverOff'),
+    Fields.onHandler('onMiss'),
+    SketchBehaviours.field('touchmenuBehaviours', [
+      Toggling,
+      Unselecting,
+      Coupling
+    ]),
+    FieldSchema.strict('toggleClass'),
+    FieldSchema.option('lazySink'),
+    FieldSchema.option('role'),
+    FieldSchema.defaulted('eventOrder', {}),
+    FieldSchema.defaulted('matchWidth', true),
+    FieldSchema.defaulted('useMinWidth', false),
 
-  Fields.onHandler('onClosed'),
+    Fields.onHandler('onClosed'),
 
-  FieldSchema.option('menuTransition'),
+    FieldSchema.option('menuTransition'),
 
-  FieldSchema.defaulted('getAnchor', anchorAtCentre)
-].concat(
-  SketcherFields.sandboxFields()
-));
+    FieldSchema.defaulted('getAnchor', anchorAtCentre)
+  ].concat(SketcherFields.sandboxFields())
+);
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.external<TouchMenuDetail>({
-    schema: [
-      Fields.itemMarkers()
-    ],
+    schema: [Fields.itemMarkers()],
     name: 'menu'
   }),
 
   PartType.external<TouchMenuDetail>({
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [FieldSchema.strict('dom')],
     name: 'view'
   }),
 
@@ -74,8 +76,4 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 
 const name = Fun.constant('TouchMenu');
 
-export {
-  name,
-  schema,
-  parts
-};
+export { name, schema, parts };

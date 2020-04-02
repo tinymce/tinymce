@@ -21,35 +21,140 @@ import * as PageBreakDelete from '../delete/ImageBlockDelete';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import * as Outdent from '../delete/Outdent';
 
-const executeKeydownOverride = function (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) {
-  MatchKeys.execute([
-    { keyCode: VK.BACKSPACE, action: MatchKeys.action(Outdent.backspaceDelete, editor, false) },
-    { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.backspaceDelete, editor, false) },
-    { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.backspaceDelete, editor, true) },
-    { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefBoundaryDelete.backspaceDelete, editor, false) },
-    { keyCode: VK.DELETE, action: MatchKeys.action(CefBoundaryDelete.backspaceDelete, editor, true) },
-    { keyCode: VK.BACKSPACE, action: MatchKeys.action(InlineBoundaryDelete.backspaceDelete, editor, caret, false) },
-    { keyCode: VK.DELETE, action: MatchKeys.action(InlineBoundaryDelete.backspaceDelete, editor, caret, true) },
-    { keyCode: VK.BACKSPACE, action: MatchKeys.action(TableDelete.backspaceDelete, editor, false) },
-    { keyCode: VK.DELETE, action: MatchKeys.action(TableDelete.backspaceDelete, editor, true) },
-    { keyCode: VK.BACKSPACE, action: MatchKeys.action(PageBreakDelete.backspaceDelete, editor, false) },
-    { keyCode: VK.DELETE, action: MatchKeys.action(PageBreakDelete.backspaceDelete, editor, true) },
-    { keyCode: VK.BACKSPACE, action: MatchKeys.action(BlockRangeDelete.backspaceDelete, editor, false) },
-    { keyCode: VK.DELETE, action: MatchKeys.action(BlockRangeDelete.backspaceDelete, editor, true) },
-    { keyCode: VK.BACKSPACE, action: MatchKeys.action(BlockBoundaryDelete.backspaceDelete, editor, false) },
-    { keyCode: VK.DELETE, action: MatchKeys.action(BlockBoundaryDelete.backspaceDelete, editor, true) },
-    { keyCode: VK.BACKSPACE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, false) },
-    { keyCode: VK.DELETE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, true) }
-  ], evt).each(function (_) {
+const executeKeydownOverride = function (
+  editor: Editor,
+  caret: Cell<Text>,
+  evt: KeyboardEvent
+) {
+  MatchKeys.execute(
+    [
+      {
+        keyCode: VK.BACKSPACE,
+        action: MatchKeys.action(Outdent.backspaceDelete, editor, false)
+      },
+      {
+        keyCode: VK.BACKSPACE,
+        action: MatchKeys.action(CefDelete.backspaceDelete, editor, false)
+      },
+      {
+        keyCode: VK.DELETE,
+        action: MatchKeys.action(CefDelete.backspaceDelete, editor, true)
+      },
+      {
+        keyCode: VK.BACKSPACE,
+        action: MatchKeys.action(
+          CefBoundaryDelete.backspaceDelete,
+          editor,
+          false
+        )
+      },
+      {
+        keyCode: VK.DELETE,
+        action: MatchKeys.action(
+          CefBoundaryDelete.backspaceDelete,
+          editor,
+          true
+        )
+      },
+      {
+        keyCode: VK.BACKSPACE,
+        action: MatchKeys.action(
+          InlineBoundaryDelete.backspaceDelete,
+          editor,
+          caret,
+          false
+        )
+      },
+      {
+        keyCode: VK.DELETE,
+        action: MatchKeys.action(
+          InlineBoundaryDelete.backspaceDelete,
+          editor,
+          caret,
+          true
+        )
+      },
+      {
+        keyCode: VK.BACKSPACE,
+        action: MatchKeys.action(TableDelete.backspaceDelete, editor, false)
+      },
+      {
+        keyCode: VK.DELETE,
+        action: MatchKeys.action(TableDelete.backspaceDelete, editor, true)
+      },
+      {
+        keyCode: VK.BACKSPACE,
+        action: MatchKeys.action(PageBreakDelete.backspaceDelete, editor, false)
+      },
+      {
+        keyCode: VK.DELETE,
+        action: MatchKeys.action(PageBreakDelete.backspaceDelete, editor, true)
+      },
+      {
+        keyCode: VK.BACKSPACE,
+        action: MatchKeys.action(
+          BlockRangeDelete.backspaceDelete,
+          editor,
+          false
+        )
+      },
+      {
+        keyCode: VK.DELETE,
+        action: MatchKeys.action(BlockRangeDelete.backspaceDelete, editor, true)
+      },
+      {
+        keyCode: VK.BACKSPACE,
+        action: MatchKeys.action(
+          BlockBoundaryDelete.backspaceDelete,
+          editor,
+          false
+        )
+      },
+      {
+        keyCode: VK.DELETE,
+        action: MatchKeys.action(
+          BlockBoundaryDelete.backspaceDelete,
+          editor,
+          true
+        )
+      },
+      {
+        keyCode: VK.BACKSPACE,
+        action: MatchKeys.action(
+          InlineFormatDelete.backspaceDelete,
+          editor,
+          false
+        )
+      },
+      {
+        keyCode: VK.DELETE,
+        action: MatchKeys.action(
+          InlineFormatDelete.backspaceDelete,
+          editor,
+          true
+        )
+      }
+    ],
+    evt
+  ).each(function (_) {
     evt.preventDefault();
   });
 };
 
 const executeKeyupOverride = function (editor: Editor, evt: KeyboardEvent) {
-  MatchKeys.execute([
-    { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) },
-    { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.paddEmptyElement, editor) }
-  ], evt);
+  MatchKeys.execute(
+    [
+      {
+        keyCode: VK.BACKSPACE,
+        action: MatchKeys.action(CefDelete.paddEmptyElement, editor)
+      },
+      {
+        keyCode: VK.DELETE,
+        action: MatchKeys.action(CefDelete.paddEmptyElement, editor)
+      }
+    ],
+    evt
+  );
 };
 
 const setup = function (editor: Editor, caret: Cell<Text>) {
@@ -66,6 +171,4 @@ const setup = function (editor: Editor, caret: Cell<Text>) {
   });
 };
 
-export {
-  setup
-};
+export { setup };

@@ -24,7 +24,9 @@ import WindowManager from './WindowManager';
 import IconManager from './IconManager';
 import BookmarkManager from './dom/BookmarkManager';
 import RangeUtils from './dom/RangeUtils';
-import DomSerializer, { SerializerSettings as DomSerializerSettings } from './dom/Serializer';
+import DomSerializer, {
+  SerializerSettings as DomSerializerSettings
+} from './dom/Serializer';
 import ControlSelection from './dom/ControlSelection';
 import DOMUtils from './dom/DOMUtils';
 import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
@@ -41,13 +43,17 @@ import Entities from './html/Entities';
 import Node from './html/Node';
 import SaxParser, { SaxParserSettings } from './html/SaxParser';
 import Schema, { SchemaSettings } from './html/Schema';
-import HtmlSerializer, { SerializerSettings as HtmlSerializerSettings } from './html/Serializer';
+import HtmlSerializer, {
+  SerializerSettings as HtmlSerializerSettings
+} from './html/Serializer';
 import Styles from './html/Styles';
 import Writer, { WriterSettings } from './html/Writer';
 import Class from './util/Class';
 import Color from './util/Color';
 import Delay from './util/Delay';
-import EventDispatcher, { EventDispatcherConstructor } from './util/EventDispatcher';
+import EventDispatcher, {
+  EventDispatcherConstructor
+} from './util/EventDispatcher';
 import I18n from './util/I18n';
 import JSON from './util/JSON';
 import JSONP from './util/JSONP';
@@ -62,7 +68,6 @@ import XHR from './util/XHR';
 import { UndoManager as UndoManagerType } from '../undo/UndoManagerTypes';
 
 export interface TinyMCE extends EditorManager {
-
   geom: {
     Rect: Rect;
   };
@@ -90,14 +95,28 @@ export interface TinyMCE extends EditorManager {
     Sizzle: any;
     DomQuery: DomQueryConstructor;
     TreeWalker: TreeWalkerConstructor;
-    TextSeeker: (dom: DOMUtils, isBlockBoundary?: (node: Node) => boolean) => TextSeeker;
+    TextSeeker: (
+      dom: DOMUtils,
+      isBlockBoundary?: (node: Node) => boolean
+    ) => TextSeeker;
     DOMUtils: DOMUtils;
     ScriptLoader: ScriptLoaderConstructor;
     RangeUtils: (dom: DOMUtils) => RangeUtils;
-    Serializer: (settings: DomSerializerSettings, editor?: Editor) => DomSerializer;
-    ControlSelection: (selection: Selection, editor: Editor) => ControlSelection;
+    Serializer: (
+      settings: DomSerializerSettings,
+      editor?: Editor
+    ) => DomSerializer;
+    ControlSelection: (
+      selection: Selection,
+      editor: Editor
+    ) => ControlSelection;
     BookmarkManager: (selection: Selection) => BookmarkManager;
-    Selection: (dom: DOMUtils, win: Window, serializer, editor: Editor) => Selection;
+    Selection: (
+      dom: DOMUtils,
+      win: Window,
+      serializer,
+      editor: Editor
+    ) => Selection;
     Event: EventUtils;
   };
 
@@ -109,7 +128,10 @@ export interface TinyMCE extends EditorManager {
     SaxParser: (settings?: SaxParserSettings, schema?: Schema) => SaxParser;
     DomParser: (settings?: DomParserSettings, schema?: Schema) => DomParser;
     Writer: (settings?: WriterSettings) => Writer;
-    Serializer: (settings?: HtmlSerializerSettings, schema?: Schema) => HtmlSerializer;
+    Serializer: (
+      settings?: HtmlSerializerSettings,
+      schema?: Schema
+    ) => HtmlSerializer;
   };
 
   AddOnManager: <T>() => AddOnManager<T>;

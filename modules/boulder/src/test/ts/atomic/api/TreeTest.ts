@@ -10,7 +10,7 @@ UnitTest.test('Atomic Test: api.TreeTest', function () {
     FieldSchema.field(
       'branches',
       'branches',
-      FieldPresence.defaulted([ ]),
+      FieldPresence.defaulted([]),
       ValueSchema.thunkOf('recursive', function () {
         return ValueSchema.arrOf(schema);
       })
@@ -22,9 +22,10 @@ UnitTest.test('Atomic Test: api.TreeTest', function () {
     Assert.eq(label, expected, actual);
   };
 
-  check('Single leaf', { value: 'a', text: '?', branches: [ ] }, { value: 'a' });
+  check('Single leaf', { value: 'a', text: '?', branches: [] }, { value: 'a' });
 
-  check('One branch',
+  check(
+    'One branch',
     {
       value: 'a',
       text: '?',
@@ -32,7 +33,7 @@ UnitTest.test('Atomic Test: api.TreeTest', function () {
         {
           value: 'a0',
           text: 'a0-text',
-          branches: [ ]
+          branches: []
         }
       ]
     },
@@ -48,7 +49,8 @@ UnitTest.test('Atomic Test: api.TreeTest', function () {
     }
   );
 
-  check('Nested branches',
+  check(
+    'Nested branches',
     {
       value: 'a',
       text: '?',
@@ -64,14 +66,14 @@ UnitTest.test('Atomic Test: api.TreeTest', function () {
                 {
                   value: 'a0-0-0',
                   text: 'a0-0-0-text',
-                  branches: [ ]
+                  branches: []
                 }
               ]
             },
             {
               value: 'a0-1',
               text: '?',
-              branches: [ ]
+              branches: []
             }
           ]
         }
@@ -101,5 +103,4 @@ UnitTest.test('Atomic Test: api.TreeTest', function () {
       value: 'a'
     }
   );
-
 });

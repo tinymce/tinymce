@@ -32,7 +32,11 @@ const makeState = (initialState: BlobState) => {
     blobState.set(state);
   };
 
-  const getTempState = (): BlobState => tempState.get().fold(() => blobState.get(), (temp) => temp);
+  const getTempState = (): BlobState =>
+    tempState.get().fold(
+      () => blobState.get(),
+      (temp) => temp
+    );
 
   const updateTempState = (blob: Blob): string => {
     const newTempState = createState(blob);
@@ -74,12 +78,16 @@ const makeState = (initialState: BlobState) => {
     return newState.url;
   };
 
-  const applyTempState = (postApply: () => void): void => tempState.get().fold(() => {
-    // TODO: Inform the user of failures somehow
-  }, (temp) => {
-    addBlobState(temp.blob);
-    postApply();
-  });
+  const applyTempState = (postApply: () => void): void =>
+    tempState.get().fold(
+      () => {
+        // TODO: Inform the user of failures somehow
+      },
+      (temp) => {
+        addBlobState(temp.blob);
+        postApply();
+      }
+    );
 
   const undo = (): string => {
     const currentState = undoStack.undo();
@@ -117,6 +125,4 @@ const makeState = (initialState: BlobState) => {
   };
 };
 
-export {
-  makeState
-};
+export { makeState };

@@ -21,7 +21,9 @@ const add = function (element: Element<DomElement>, clazz: string) {
 };
 
 const cleanClass = function (element: Element<DomElement>) {
-  const classList = ClassList.supports(element) ? element.dom().classList : ClassList.get(element);
+  const classList = ClassList.supports(element)
+    ? element.dom().classList
+    : ClassList.get(element);
   // classList is a "live list", so this is up to date already
   if (classList.length === 0) {
     // No more classes left, remove the class attribute as well
@@ -41,8 +43,9 @@ const remove = function (element: Element<DomElement>, clazz: string) {
 };
 
 const toggle = function (element: Element<DomElement>, clazz: string) {
-  return ClassList.supports(element) ? element.dom().classList.toggle(clazz) :
-    ClassList.toggle(element, clazz);
+  return ClassList.supports(element)
+    ? element.dom().classList.toggle(clazz)
+    : ClassList.toggle(element, clazz);
 };
 
 const toggler = function (element: Element<DomElement>, clazz: string) {
@@ -70,10 +73,4 @@ const has = function (element: Element<Node>, clazz: string) {
   return ClassList.supports(element) && element.dom().classList.contains(clazz);
 };
 
-export {
-  add,
-  remove,
-  toggle,
-  toggler,
-  has,
-};
+export { add, remove, toggle, toggler, has };

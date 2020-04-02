@@ -19,7 +19,8 @@ export interface AutocompleteContext {
   triggerChar: string;
 }
 
-const stripTriggerChar = (text: string, triggerCh: string) => text.substring(triggerCh.length);
+const stripTriggerChar = (text: string, triggerCh: string) =>
+  text.substring(triggerCh.length);
 
 const findChar = (text: string, index: number, ch: string): Option<number> => {
   // Identify the `char` in, and start the text from that point forward. If there is ever any whitespace, fail
@@ -39,7 +40,12 @@ const findChar = (text: string, index: number, ch: string): Option<number> => {
   return Option.some(i);
 };
 
-const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Option<AutocompleteContext> => {
+const findStart = (
+  dom: DOMUtils,
+  initRange: Range,
+  ch: string,
+  minChars: number = 0
+): Option<AutocompleteContext> => {
   if (!isValidTextRange(initRange)) {
     return Option.none();
   }
@@ -49,8 +55,15 @@ const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number
     // and we'll handle the final checks below instead
     findChar(text, offset, ch).getOr(offset);
 
-  const root = dom.getParent(initRange.startContainer, dom.isBlock) || dom.getRoot();
-  return repeatLeft(dom, initRange.startContainer, initRange.startOffset, findTriggerChIndex, root).bind((spot) => {
+  const root =
+    dom.getParent(initRange.startContainer, dom.isBlock) || dom.getRoot();
+  return repeatLeft(
+    dom,
+    initRange.startContainer,
+    initRange.startOffset,
+    findTriggerChIndex,
+    root
+  ).bind((spot) => {
     const range = initRange.cloneRange();
     range.setStart(spot.container, spot.offset);
     range.setEnd(initRange.endContainer, initRange.endOffset);
@@ -64,23 +77,40 @@ const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number
     const triggerCharIndex = text.lastIndexOf(ch);
 
     // If the match doesn't start with the trigger char (eg whitespace found) or the match is less than the minimum number of chars then abort
-    if (triggerCharIndex !== 0 || stripTriggerChar(text, ch).length < minChars ) {
+    if (
+      triggerCharIndex !== 0 ||
+      stripTriggerChar(text, ch).length < minChars
+    ) {
       return Option.none();
     } else {
-      return Option.some({ text: stripTriggerChar(text, ch), range, triggerChar: ch });
+      return Option.some({
+        text: stripTriggerChar(text, ch),
+        range,
+        triggerChar: ch
+      });
     }
   });
 };
 
-const getContext = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Option<AutocompleteContext> => AutocompleteTag.detect(Element.fromDom(initRange.startContainer)).fold(
-  () => findStart(dom, initRange, ch, minChars),
-  (elm) => {
-    const range = dom.createRng();
-    range.selectNode(elm.dom());
-    const text = getText(range);
-    return Option.some({ range, text: stripTriggerChar(text, ch), triggerChar: ch });
-  }
-);
+const getContext = (
+  dom: DOMUtils,
+  initRange: Range,
+  ch: string,
+  minChars: number = 0
+): Option<AutocompleteContext> =>
+  AutocompleteTag.detect(Element.fromDom(initRange.startContainer)).fold(
+    () => findStart(dom, initRange, ch, minChars),
+    (elm) => {
+      const range = dom.createRng();
+      range.selectNode(elm.dom());
+      const text = getText(range);
+      return Option.some({
+        range,
+        text: stripTriggerChar(text, ch),
+        triggerChar: ch
+      });
+    }
+  );
 
 export {
   findChar, // Exposed for testing.

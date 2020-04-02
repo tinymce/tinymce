@@ -31,7 +31,9 @@ const composite = (rawDepth, detail, construct) => {
     )
   );
 
-  return depth === 0 ? Jsc.constant([]).generator : Jsc.generator.nearray(repeat).map(Arr.flatten);
+  return depth === 0
+    ? Jsc.constant([]).generator
+    : Jsc.generator.nearray(repeat).map(Arr.flatten);
 };
 
 const structure = (rawDepth, detail, construct) => {
@@ -41,17 +43,13 @@ const structure = (rawDepth, detail, construct) => {
     const children = Arr.foldl(
       components,
       (b, component) =>
-        random <= component.chance ?
-          b.concat([ construct(component.component, rawDepth) ]) :
-          b,
+        random <= component.chance
+          ? b.concat([construct(component.component, rawDepth)])
+          : b,
       []
     );
     return Jsc.tuple(children).generator;
   });
 };
 
-export {
-  none,
-  composite,
-  structure
-};
+export { none, composite, structure };

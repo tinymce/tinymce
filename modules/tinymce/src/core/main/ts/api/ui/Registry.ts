@@ -16,7 +16,6 @@ const registry = () => {
   const bridge = Registry.create();
 
   return {
-
     /**
      * Registers a new auto completer component. When a configured string pattern is matched in the content while typing, the autocompleter will be triggered. Emoticons and Charmap use an autocompleter.
      *
@@ -167,6 +166,4 @@ const registry = () => {
   };
 };
 
-export {
-  registry
-};
+export { registry };

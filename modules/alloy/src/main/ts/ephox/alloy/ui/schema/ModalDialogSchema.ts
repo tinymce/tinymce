@@ -17,7 +17,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaultedFunction('getBounds', Boxes.win),
   FieldSchema.defaulted('useTabstopAt', Fun.constant(true)),
   FieldSchema.defaulted('eventOrder', {}),
-  SketchBehaviours.field('modalBehaviours', [ Keying ]),
+  SketchBehaviours.field('modalBehaviours', [Keying]),
 
   Fields.onKeyboardHandler('onExecute'),
   Fields.onStrictKeyboardHandler('onEscape')
@@ -34,13 +34,15 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
           Dragging.config({
             mode: 'mouse',
             getTarget(handle) {
-              return SelectorFind.ancestor(handle, '[role="dialog"]').getOr(handle);
+              return SelectorFind.ancestor(handle, '[role="dialog"]').getOr(
+                handle
+              );
             },
             blockerClass: detail.dragBlockClass.getOrDie(
               // TODO: Support errors in Option getOrDie.
               new Error(
                 'The drag blocker class was not specified for a dialog with a drag handle: \n' +
-                JSON.stringify(spec, null, 2)
+                  JSON.stringify(spec, null, 2)
               ).message
             ),
             getBounds: detail.getDragBounds
@@ -51,25 +53,25 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   }),
 
   PartType.required<ModalDialogDetail>({
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [FieldSchema.strict('dom')],
     name: 'title'
   }),
 
   PartType.required<ModalDialogDetail>({
     factory: basic,
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [FieldSchema.strict('dom')],
     name: 'close'
   }),
 
   PartType.required<ModalDialogDetail>({
     factory: basic,
-    schema:  [ FieldSchema.strict('dom') ],
+    schema: [FieldSchema.strict('dom')],
     name: 'body'
   }),
 
   PartType.optional<ModalDialogDetail>({
     factory: basic,
-    schema:  [ FieldSchema.strict('dom') ],
+    schema: [FieldSchema.strict('dom')],
     name: 'footer'
   }),
 
@@ -82,7 +84,6 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
           dom: detail.dom,
           components: detail.components
         })
-
     },
     schema: [
       FieldSchema.defaulted('dom', {
@@ -95,7 +96,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
           bottom: '0px'
         }
       }),
-      FieldSchema.defaulted('components', [ ])
+      FieldSchema.defaulted('components', [])
     ],
     name: 'blocker'
   })
@@ -103,8 +104,4 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 
 const name = Fun.constant('ModalDialog');
 
-export {
-  name,
-  schema,
-  parts
-};
+export { name, schema, parts };

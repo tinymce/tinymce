@@ -14,7 +14,12 @@ import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import * as ReadOnly from '../ReadOnly';
-import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
+import {
+  ModeRenderInfo,
+  RenderArgs,
+  RenderUiComponents,
+  RenderUiConfig
+} from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { iframe as loadIframeSkin } from './../ui/skin/Loader';
@@ -29,14 +34,23 @@ const setupEvents = (editor: Editor) => {
   const contentWindow = editor.getWin();
   const initialDocEle = editor.getDoc().documentElement;
 
-  const lastWindowDimensions = Cell(Position(contentWindow.innerWidth, contentWindow.innerHeight));
-  const lastDocumentDimensions = Cell(Position(initialDocEle.offsetWidth, initialDocEle.offsetHeight));
+  const lastWindowDimensions = Cell(
+    Position(contentWindow.innerWidth, contentWindow.innerHeight)
+  );
+  const lastDocumentDimensions = Cell(
+    Position(initialDocEle.offsetWidth, initialDocEle.offsetHeight)
+  );
 
   const resizeWindow = (e) => {
     // Check if the window dimensions have changed and if so then trigger a content resize event
     const outer = lastWindowDimensions.get();
-    if (outer.left() !== contentWindow.innerWidth || outer.top() !== contentWindow.innerHeight) {
-      lastWindowDimensions.set(Position(contentWindow.innerWidth, contentWindow.innerHeight));
+    if (
+      outer.left() !== contentWindow.innerWidth ||
+      outer.top() !== contentWindow.innerHeight
+    ) {
+      lastWindowDimensions.set(
+        Position(contentWindow.innerWidth, contentWindow.innerHeight)
+      );
       Events.fireResizeContent(editor, e);
     }
   };
@@ -47,8 +61,13 @@ const setupEvents = (editor: Editor) => {
 
     // Check if the document dimensions have changed and if so then trigger a content resize event
     const inner = lastDocumentDimensions.get();
-    if (inner.left() !== docEle.offsetWidth || inner.top() !== docEle.offsetHeight) {
-      lastDocumentDimensions.set(Position(docEle.offsetWidth, docEle.offsetHeight));
+    if (
+      inner.left() !== docEle.offsetWidth ||
+      inner.top() !== docEle.offsetHeight
+    ) {
+      lastDocumentDimensions.set(
+        Position(docEle.offsetWidth, docEle.offsetHeight)
+      );
       Events.fireResizeContent(editor, e);
     }
   };
@@ -59,7 +78,11 @@ const setupEvents = (editor: Editor) => {
   DOM.bind(contentWindow, 'scroll', scroll);
 
   // Bind to async load events and trigger a content resize event if the size has changed
-  const elementLoad = DomEvent.capture(Element.fromDom(editor.getBody()), 'load', resizeDocument);
+  const elementLoad = DomEvent.capture(
+    Element.fromDom(editor.getBody()),
+    'load',
+    resizeDocument
+  );
 
   editor.on('NodeChange', resizeDocument);
   editor.on('remove', () => {
@@ -69,12 +92,21 @@ const setupEvents = (editor: Editor) => {
   });
 };
 
-const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: RenderUiConfig, backstage: UiFactoryBackstage, args: RenderArgs): ModeRenderInfo => {
+const render = (
+  editor: Editor,
+  uiComponents: RenderUiComponents,
+  rawUiConfig: RenderUiConfig,
+  backstage: UiFactoryBackstage,
+  args: RenderArgs
+): ModeRenderInfo => {
   const lastToolbarWidth = Cell(0);
 
   loadIframeSkin(editor);
 
-  Attachment.attachSystemAfter(Element.fromDom(args.targetNode), uiComponents.mothership);
+  Attachment.attachSystemAfter(
+    Element.fromDom(args.targetNode),
+    uiComponents.mothership
+  );
   Attachment.attachSystem(Body.body(), uiComponents.uiMothership);
 
   editor.on('PostRender', () => {
@@ -86,15 +118,14 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       identifyMenus(editor, rawUiConfig)
     );
 
-    OuterContainer.setSidebar(
-      uiComponents.outerContainer,
-      rawUiConfig.sidebar
-    );
+    OuterContainer.setSidebar(uiComponents.outerContainer, rawUiConfig.sidebar);
 
     setupEvents(editor);
   });
 
-  const socket = OuterContainer.getSocket(uiComponents.outerContainer).getOrDie('Could not find expected socket element');
+  const socket = OuterContainer.getSocket(uiComponents.outerContainer).getOrDie(
+    'Could not find expected socket element'
+  );
 
   if (isiOS12 === true) {
     Css.setAll(socket.element(), {
@@ -116,7 +147,9 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     editor.fire('ToggleSidebar');
   });
 
-  editor.addQueryValueHandler('ToggleSidebar', () => OuterContainer.whichSidebar(uiComponents.outerContainer));
+  editor.addQueryValueHandler('ToggleSidebar', () =>
+    OuterContainer.whichSidebar(uiComponents.outerContainer)
+  );
 
   const toolbarMode = Settings.getToolbarMode(editor);
 
@@ -124,7 +157,10 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     OuterContainer.refreshToolbar(uiComponents.outerContainer);
   };
 
-  if (toolbarMode === Settings.ToolbarMode.sliding || toolbarMode === Settings.ToolbarMode.floating) {
+  if (
+    toolbarMode === Settings.ToolbarMode.sliding ||
+    toolbarMode === Settings.ToolbarMode.floating
+  ) {
     editor.on('ResizeWindow ResizeEditor ResizeContent', () => {
       // Check if the width has changed, if so then refresh the toolbar drawer. We don't care if height changes.
       const width = editor.getWin().innerWidth;
@@ -137,10 +173,8 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   return {
     iframeContainer: socket.element().dom(),
-    editorContainer: uiComponents.outerContainer.element().dom(),
+    editorContainer: uiComponents.outerContainer.element().dom()
   };
 };
 
-export {
-  render
-};
+export { render };

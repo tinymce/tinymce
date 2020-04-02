@@ -19,8 +19,8 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('dom'),
 
   FieldSchema.defaulted('clickToDismiss', false),
-  SketchBehaviours.field('tabbarBehaviours', [ Highlighting, Keying ]),
-  Fields.markers([ 'tabClass', 'selectedClass' ])
+  SketchBehaviours.field('tabbarBehaviours', [Highlighting, Keying]),
+  Fields.markers(['tabClass', 'selectedClass'])
 ]);
 
 const tabsPart = PartType.group<TabbarDetail, TabButtonSpec>({
@@ -52,7 +52,7 @@ const tabsPart = PartType.group<TabbarDetail, TabButtonSpec>({
         const response = (() => {
           if (activeButton && barDetail.clickToDismiss) {
             return dismissTab;
-          } else if (! activeButton) {
+          } else if (!activeButton) {
             return changeTab;
           } else {
             return Fun.noop;
@@ -63,20 +63,14 @@ const tabsPart = PartType.group<TabbarDetail, TabButtonSpec>({
       },
 
       domModification: {
-        classes: [ barDetail.markers.tabClass ]
+        classes: [barDetail.markers.tabClass]
       }
     };
   }
 });
 
-const parts: () => PartType.PartTypeAdt[] = Fun.constant([
-  tabsPart
-]);
+const parts: () => PartType.PartTypeAdt[] = Fun.constant([tabsPart]);
 
 const name = Fun.constant('Tabbar');
 
-export {
-  name,
-  schema,
-  parts
-};
+export { name, schema, parts };

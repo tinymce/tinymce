@@ -5,7 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, AlloyTriggers, Behaviour, Input, Keying, Memento } from '@ephox/alloy';
+import {
+  AlloySpec,
+  AlloyTriggers,
+  Behaviour,
+  Input,
+  Keying,
+  Memento
+} from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Id, Option } from '@ephox/katamari';
 
@@ -14,26 +21,31 @@ import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderToolbar } from '../toolbar/CommonToolbar';
 import { generate } from './ContextFormButtons';
 
-const renderContextForm = (toolbarType: ToolbarMode, ctx: Toolbar.ContextForm, providers: UiFactoryBackstageProviders) => {
+const renderContextForm = (
+  toolbarType: ToolbarMode,
+  ctx: Toolbar.ContextForm,
+  providers: UiFactoryBackstageProviders
+) => {
   // Cannot use the FormField.sketch, because the DOM structure doesn't have a wrapping group
   const inputAttributes = ctx.label.fold(
-    () => ({ }),
+    () => ({}),
     (label) => ({ 'aria-label': label })
   );
 
   const memInput = Memento.record(
     Input.sketch({
-      inputClasses: [ 'tox-toolbar-textfield', 'tox-toolbar-nav-js' ],
+      inputClasses: ['tox-toolbar-textfield', 'tox-toolbar-nav-js'],
       data: ctx.initValue(),
       inputAttributes,
       selectOnFocus: true,
       inputBehaviours: Behaviour.derive([
         Keying.config({
           mode: 'special',
-          onEnter: (input) => commands.findPrimary(input).map((primary) => {
-            AlloyTriggers.emitExecute(primary);
-            return true;
-          }),
+          onEnter: (input) =>
+            commands.findPrimary(input).map((primary) => {
+              AlloyTriggers.emitExecute(primary);
+              return true;
+            }),
           // These two lines need to be tested. They are about left and right bypassing
           // any keyboard handling, and allowing left and right to be processed by the input
           // Maybe this should go in an alloy sketch for Input?
@@ -58,7 +70,7 @@ const renderContextForm = (toolbarType: ToolbarMode, ctx: Toolbar.ContextForm, p
     initGroups: [
       {
         title: Option.none(),
-        items: [ memInput.asSpec() ]
+        items: [memInput.asSpec()]
       },
       {
         title: Option.none(),

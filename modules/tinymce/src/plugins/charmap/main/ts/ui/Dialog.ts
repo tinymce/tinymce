@@ -23,25 +23,35 @@ const open = function (editor: Editor, charMap: CharMap[]) {
     },
     {
       type: 'collection',
-      name: 'results',
+      name: 'results'
       // TODO TINY-3229 implement collection columns properly
       // columns: 'auto'
     }
   ];
 
-  const makeTabs = () => Arr.map(charMap, (charGroup) => ({
-    title: charGroup.name,
-    name: charGroup.name,
+  const makeTabs = () =>
+    Arr.map(charMap, (charGroup) => ({
+      title: charGroup.name,
+      name: charGroup.name,
+      items: makeGroupItems()
+    }));
+
+  const makePanel = (): Types.Dialog.PanelApi => ({
+    type: 'panel',
     items: makeGroupItems()
-  }));
+  });
 
-  const makePanel = (): Types.Dialog.PanelApi => ({ type: 'panel', items: makeGroupItems() });
-
-  const makeTabPanel = (): Types.Dialog.TabPanelApi => ({ type: 'tabpanel', tabs: makeTabs() });
+  const makeTabPanel = (): Types.Dialog.TabPanelApi => ({
+    type: 'tabpanel',
+    tabs: makeTabs()
+  });
 
   const currentTab = charMap.length === 1 ? Cell(UserDefined) : Cell('All');
 
-  const scanAndSet = (dialogApi: Types.Dialog.DialogInstanceApi<typeof initialData>, pattern: string) => {
+  const scanAndSet = (
+    dialogApi: Types.Dialog.DialogInstanceApi<typeof initialData>,
+    pattern: string
+  ) => {
     Arr.find(charMap, (group) => group.name === currentTab.get()).each((f) => {
       const items = Scan.scan(f, pattern);
       dialogApi.setData({
@@ -52,10 +62,13 @@ const open = function (editor: Editor, charMap: CharMap[]) {
 
   const SEARCH_DELAY = 40;
 
-  const updateFilter = Throttler.last((dialogApi: Types.Dialog.DialogInstanceApi<typeof initialData>) => {
-    const pattern = dialogApi.getData().pattern;
-    scanAndSet(dialogApi, pattern);
-  }, SEARCH_DELAY);
+  const updateFilter = Throttler.last(
+    (dialogApi: Types.Dialog.DialogInstanceApi<typeof initialData>) => {
+      const pattern = dialogApi.getData().pattern;
+      scanAndSet(dialogApi, pattern);
+    },
+    SEARCH_DELAY
+  );
 
   const body = charMap.length === 1 ? makePanel() : makeTabPanel();
 
@@ -99,6 +112,4 @@ const open = function (editor: Editor, charMap: CharMap[]) {
   dialogApi.focus(patternName);
 };
 
-export {
-  open
-};
+export { open };

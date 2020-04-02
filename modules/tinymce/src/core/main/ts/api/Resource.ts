@@ -14,10 +14,16 @@ interface Resource {
   add(id: string, data: any): void;
 }
 
-const awaiter = (resolveCb: (data: any) => void, rejectCb: (err?: any) => void, timeout = 1000) => {
+const awaiter = (
+  resolveCb: (data: any) => void,
+  rejectCb: (err?: any) => void,
+  timeout = 1000
+) => {
   let done = false;
   let timer = null;
-  const complete = <T extends any[]>(completer: (...args: T) => void) => (...args: T) => {
+  const complete = <T extends any[]>(completer: (...args: T) => void) => (
+    ...args: T
+  ) => {
     if (!done) {
       done = true;
       if (timer !== null) {
@@ -54,7 +60,11 @@ const create = (): Resource => {
       const task = new Promise<any>((resolve, reject) => {
         const waiter = awaiter(resolve, reject);
         resultFns[id] = waiter.resolve;
-        ScriptLoader.ScriptLoader.loadScript(url, () => waiter.start(runErrMsg), () => waiter.reject(loadErrMsg));
+        ScriptLoader.ScriptLoader.loadScript(
+          url,
+          () => waiter.start(runErrMsg),
+          () => waiter.reject(loadErrMsg)
+        );
       });
       tasks[id] = task;
       return task;

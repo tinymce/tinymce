@@ -7,7 +7,4 @@ const splits: SplitsApi = Split.splits;
 type CssSanitiseApi = (str: string) => string;
 const cssSanitise: CssSanitiseApi = Sanitise.css;
 
-export {
-  cssSanitise,
-  splits
-};
+export { cssSanitise, splits };

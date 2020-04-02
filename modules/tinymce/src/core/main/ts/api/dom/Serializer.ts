@@ -9,12 +9,10 @@ import { DomSerializer, DomSerializerSettings } from '../../dom/DomSerializer';
 import Editor from '../Editor';
 
 // tslint:disable-next-line:no-empty-interface
-export interface SerializerSettings extends DomSerializerSettings {
-}
+export interface SerializerSettings extends DomSerializerSettings {}
 
 // tslint:disable-next-line:no-empty-interface
-interface Serializer extends DomSerializer {
-}
+interface Serializer extends DomSerializer {}
 
 /**
  * This class is used to serialize DOM trees into a string. Consult the TinyMCE API Documentation for
@@ -23,7 +21,10 @@ interface Serializer extends DomSerializer {
  * @class tinymce.dom.Serializer
  */
 
-const Serializer = function (settings: SerializerSettings, editor?: Editor): Serializer {
+const Serializer = function (
+  settings: SerializerSettings,
+  editor?: Editor
+): Serializer {
   const domSerializer = DomSerializer(settings, editor);
 
   // Return public methods

@@ -25,7 +25,9 @@ const deleteElement = function (editor: Editor, forward) {
 
 const moveToElement = function (editor: Editor, forward) {
   return function (element) {
-    const pos = forward ? CaretPosition.before(element) : CaretPosition.after(element);
+    const pos = forward
+      ? CaretPosition.before(element)
+      : CaretPosition.after(element);
     editor.selection.setRng(pos.toRange());
     return true;
   };
@@ -38,7 +40,8 @@ const moveToPosition = function (editor: Editor) {
   };
 };
 
-const getAncestorCe = (editor, node: Node) => Option.from(getContentEditableRoot(editor.getBody(), node));
+const getAncestorCe = (editor, node: Node) =>
+  Option.from(getContentEditableRoot(editor.getBody(), node));
 
 const backspaceDeleteCaret = function (editor: Editor, forward: boolean) {
   const selectedNode = editor.selection.getNode(); // is the parent node if cursor before/after cef
@@ -50,23 +53,32 @@ const backspaceDeleteCaret = function (editor: Editor, forward: boolean) {
   // 4. no CET/CEF ancestor -> try to delete, return true if possible else false
   // 5. CEF ancestor -> return true
 
-  return getAncestorCe(editor, selectedNode).filter(NodeType.isContentEditableFalse).fold(
-    () => {
-      const result = CefDeleteAction.read(editor.getBody(), forward, editor.selection.getRng()).map(function (deleteAction) {
-        return deleteAction.fold(
-          deleteElement(editor, forward),
-          moveToElement(editor, forward),
-          moveToPosition(editor)
-        );
-      });
-      return result.getOr(false);
-    },
-    () => true
-  );
+  return getAncestorCe(editor, selectedNode)
+    .filter(NodeType.isContentEditableFalse)
+    .fold(
+      () => {
+        const result = CefDeleteAction.read(
+          editor.getBody(),
+          forward,
+          editor.selection.getRng()
+        ).map(function (deleteAction) {
+          return deleteAction.fold(
+            deleteElement(editor, forward),
+            moveToElement(editor, forward),
+            moveToPosition(editor)
+          );
+        });
+        return result.getOr(false);
+      },
+      () => true
+    );
 };
 
 const deleteOffscreenSelection = function (rootElement) {
-  Arr.each(SelectorFilter.descendants(rootElement, '.mce-offscreen-selection'), Remove.remove);
+  Arr.each(
+    SelectorFilter.descendants(rootElement, '.mce-offscreen-selection'),
+    Remove.remove
+  );
 };
 
 const backspaceDeleteRange = function (editor: Editor, forward: boolean) {
@@ -78,11 +90,18 @@ const backspaceDeleteRange = function (editor: Editor, forward: boolean) {
   //    b. CEF ancestor -> return true
   // 2. non-CEF selectedNode -> return false
   if (NodeType.isContentEditableFalse(selectedNode)) {
-    const hasCefAncestor = getAncestorCe(editor, selectedNode.parentNode).filter(NodeType.isContentEditableFalse);
+    const hasCefAncestor = getAncestorCe(
+      editor,
+      selectedNode.parentNode
+    ).filter(NodeType.isContentEditableFalse);
     return hasCefAncestor.fold(
       () => {
         deleteOffscreenSelection(Element.fromDom(editor.getBody()));
-        DeleteElement.deleteElement(editor, forward, Element.fromDom(editor.selection.getNode()));
+        DeleteElement.deleteElement(
+          editor,
+          forward,
+          Element.fromDom(editor.selection.getNode())
+        );
         DeleteUtils.paddEmptyBody(editor);
         return true;
       },
@@ -94,7 +113,10 @@ const backspaceDeleteRange = function (editor: Editor, forward: boolean) {
 
 const getContentEditableRoot = function (root, node) {
   while (node && node !== root) {
-    if (NodeType.isContentEditableTrue(node) || NodeType.isContentEditableFalse(node)) {
+    if (
+      NodeType.isContentEditableTrue(node) ||
+      NodeType.isContentEditableFalse(node)
+    ) {
       return node;
     }
 
@@ -106,9 +128,16 @@ const getContentEditableRoot = function (root, node) {
 
 const paddEmptyElement = function (editor: Editor) {
   let br;
-  const ceRoot = getContentEditableRoot(editor.getBody(), editor.selection.getNode());
+  const ceRoot = getContentEditableRoot(
+    editor.getBody(),
+    editor.selection.getNode()
+  );
 
-  if (NodeType.isContentEditableTrue(ceRoot) && editor.dom.isBlock(ceRoot) && editor.dom.isEmpty(ceRoot)) {
+  if (
+    NodeType.isContentEditableTrue(ceRoot) &&
+    editor.dom.isBlock(ceRoot) &&
+    editor.dom.isEmpty(ceRoot)
+  ) {
     br = editor.dom.create('br', { 'data-mce-bogus': '1' });
     editor.dom.setHTML(ceRoot, '');
     ceRoot.appendChild(br);
@@ -126,7 +155,4 @@ const backspaceDelete = function (editor: Editor, forward) {
   }
 };
 
-export {
-  backspaceDelete,
-  paddEmptyElement
-};
+export { backspaceDelete, paddEmptyElement };

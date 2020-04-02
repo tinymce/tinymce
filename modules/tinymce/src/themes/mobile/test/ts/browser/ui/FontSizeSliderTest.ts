@@ -12,7 +12,10 @@ import * as TestSelectors from '../../module/test/ui/TestSelectors';
 import * as TestStyles from '../../module/test/ui/TestStyles';
 import { Fun } from '@ephox/katamari';
 
-UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function (success, failure) {
+UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function (
+  success,
+  failure
+) {
   const detection = PlatformDetection.detect();
 
   const realm = IosRealm(Fun.noop);
@@ -36,23 +39,32 @@ UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function (success, fai
   realm.setToolbarGroups([
     {
       label: 'group1',
-      items: [
-        FontSizeSlider.sketch(realm, tEditor.editor())
-      ]
+      items: [FontSizeSlider.sketch(realm, tEditor.editor())]
     }
   ]);
 
-  Pipeline.async({}, detection.browser.isChrome() ? [
-    TestStyles.sWaitForToolstrip(realm),
-    tEditor.sWaitForEditorLoaded,
-    Step.sync(function () {
-      tEditor.editor().focus();
-    }),
-    Mouse.sClickOn(realm.system().element(), TestSelectors.fontsize()),
-    tEditor.sAssertEq('on first showing, the font size slider should not have fired execCommand', [ ])
+  Pipeline.async(
+    {},
+    detection.browser.isChrome()
+      ? [
+          TestStyles.sWaitForToolstrip(realm),
+          tEditor.sWaitForEditorLoaded,
+          Step.sync(function () {
+            tEditor.editor().focus();
+          }),
+          Mouse.sClickOn(realm.system().element(), TestSelectors.fontsize()),
+          tEditor.sAssertEq(
+            'on first showing, the font size slider should not have fired execCommand',
+            []
+          )
 
-    // Think about how to do the slider events
-  ] : [], function () {
-    unload(); success();
-  }, failure);
+          // Think about how to do the slider events
+        ]
+      : [],
+    function () {
+      unload();
+      success();
+    },
+    failure
+  );
 });

@@ -4,12 +4,19 @@ import * as WordUtil from 'ephox/robin/util/WordUtil';
 import { KAssert } from '@ephox/katamari-assertions';
 
 UnitTest.test('Word Util', function () {
-  const checkNone = function (text: string, word: (w: string) => Option<string>) {
+  const checkNone = function (
+    text: string,
+    word: (w: string) => Option<string>
+  ) {
     const actual = word(text);
     KAssert.eqNone('eq', actual);
   };
 
-  const check = function (expected: string, text: string, word: (w: string) => Option<string>) {
+  const check = function (
+    expected: string,
+    text: string,
+    word: (w: string) => Option<string>
+  ) {
     const actual = word(text);
     KAssert.eqSome('eq', expected, actual);
   };
@@ -19,7 +26,11 @@ UnitTest.test('Word Util', function () {
     Assert.eq('eq', expected, actual);
   };
 
-  const checkBreakPosition = function (expected: Option<number>, text: string, direction: (w: string) => Option<number>) {
+  const checkBreakPosition = function (
+    expected: Option<number>,
+    text: string,
+    direction: (w: string) => Option<number>
+  ) {
     const actual = direction(text);
     KAssert.eqOption('eq', expected, actual);
   };
@@ -47,8 +58,24 @@ UnitTest.test('Word Util', function () {
   checkBreakPosition(Option.some(0), ' ', WordUtil.leftBreak);
   checkBreakPosition(Option.some(0), ' word', WordUtil.leftBreak);
   checkBreakPosition(Option.some(4), 'word ', WordUtil.leftBreak);
-  checkBreakPosition(Option.some(4), 'word ' + Unicode.zeroWidth + '', WordUtil.leftBreak);
-  checkBreakPosition(Option.some(0), ' ' + Unicode.zeroWidth + 'word', WordUtil.leftBreak);
-  checkBreakPosition(Option.some(0), ' ' + Unicode.zeroWidth + '' + Unicode.zeroWidth + 'word', WordUtil.leftBreak);
-  checkBreakPosition(Option.some(0), ' ' + Unicode.zeroWidth + 'wo' + Unicode.zeroWidth + 'rd', WordUtil.leftBreak);
+  checkBreakPosition(
+    Option.some(4),
+    'word ' + Unicode.zeroWidth + '',
+    WordUtil.leftBreak
+  );
+  checkBreakPosition(
+    Option.some(0),
+    ' ' + Unicode.zeroWidth + 'word',
+    WordUtil.leftBreak
+  );
+  checkBreakPosition(
+    Option.some(0),
+    ' ' + Unicode.zeroWidth + '' + Unicode.zeroWidth + 'word',
+    WordUtil.leftBreak
+  );
+  checkBreakPosition(
+    Option.some(0),
+    ' ' + Unicode.zeroWidth + 'wo' + Unicode.zeroWidth + 'rd',
+    WordUtil.leftBreak
+  );
 });

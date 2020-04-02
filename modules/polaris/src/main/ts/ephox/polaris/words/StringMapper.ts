@@ -18,7 +18,7 @@ const getType = (char: string): number => {
   return type;
 };
 
-const memoize = <R> (func: (char: string) => R) => {
+const memoize = <R>(func: (char: string) => R) => {
   const cache: Record<string, R> = {};
 
   return (char: string) => {
@@ -39,6 +39,4 @@ const classify = (characters: string[]): CharacterMap => {
   return Arr.map(characters, memoized);
 };
 
-export {
-  classify
-};
+export { classify };

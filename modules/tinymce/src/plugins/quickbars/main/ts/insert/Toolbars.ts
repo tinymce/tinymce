@@ -18,7 +18,14 @@ const addToEditor = (editor: Editor) => {
         const textBlockElementsMap = editor.schema.getTextBlockElements();
         const isRoot = (elem) => elem.dom() === editor.getBody();
         return SelectorFind.closest(sugarNode, 'table', isRoot).fold(
-          () => PredicateFind.closest(sugarNode, (elem) => Node.name(elem) in textBlockElementsMap && editor.dom.isEmpty(elem.dom()), isRoot).isSome(),
+          () =>
+            PredicateFind.closest(
+              sugarNode,
+              (elem) =>
+                Node.name(elem) in textBlockElementsMap &&
+                editor.dom.isEmpty(elem.dom()),
+              isRoot
+            ).isSome(),
           () => false
         );
       },
@@ -29,6 +36,4 @@ const addToEditor = (editor: Editor) => {
   }
 };
 
-export {
-  addToEditor
-};
+export { addToEditor };

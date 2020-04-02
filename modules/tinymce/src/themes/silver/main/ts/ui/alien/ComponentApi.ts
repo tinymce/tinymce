@@ -5,7 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Disabling, Replacing, Representing, Toggling } from '@ephox/alloy';
+import {
+  AlloyComponent,
+  Disabling,
+  Replacing,
+  Representing,
+  Toggling
+} from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
 
 // Purpose to wrap internal bits we don't want to expose, like alloy component.
@@ -17,9 +23,15 @@ const deriveToggling = (spec, component: AlloyComponent) => {
     return spec.toggle().bind((toggle) => {
       if (toggle === true) {
         return {
-          toggleOn: () => { Toggling.on(component); },
-          toggleOff: () => { Toggling.off(component); },
-          toggleIsOn: () => { Toggling.isOn(component); },
+          toggleOn: () => {
+            Toggling.on(component);
+          },
+          toggleOff: () => {
+            Toggling.off(component);
+          },
+          toggleIsOn: () => {
+            Toggling.isOn(component);
+          }
         };
       }
     });
@@ -31,7 +43,7 @@ const deriveRepresenting = (spec, component: AlloyComponent) => {
     const item = Representing.getValue(component);
     return {
       itemValue: () => item.value,
-      itemText: () => item.text,
+      itemText: () => item.text
     };
   }
 };
@@ -75,6 +87,4 @@ const component = (spec, component: AlloyComponent) => {
   };
 };
 
-export {
-  component
-};
+export { component };

@@ -18,7 +18,11 @@ import * as TextArea from '../components/dialog/Textarea';
 import * as UrlInput from '../components/dialog/UrlInput';
 import * as ImageTools from '../components/dialog/ImageTools';
 import * as Table from '../components/dialog/Table';
-import { ColumnTypes, PresetTypes, PresetItemTypes } from '../components/toolbar/ToolbarSplitButton';
+import {
+  ColumnTypes,
+  PresetTypes,
+  PresetItemTypes
+} from '../components/toolbar/ToolbarSplitButton';
 import * as Label from '../components/dialog/Label';
 import * as UrlDialog from '../components/dialog/UrlDialog';
 

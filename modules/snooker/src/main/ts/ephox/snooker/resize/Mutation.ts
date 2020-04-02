@@ -20,9 +20,9 @@ export interface Mutation {
 }
 
 export const Mutation = function (): Mutation {
-  const events = Events.create({
-    drag: Event([ 'xDelta', 'yDelta' ])
-  }) as unknown as DragDistanceEvents;
+  const events = (Events.create({
+    drag: Event(['xDelta', 'yDelta'])
+  }) as unknown) as DragDistanceEvents;
 
   const mutate = function (x: number, y: number) {
     events.trigger.drag(x, y);

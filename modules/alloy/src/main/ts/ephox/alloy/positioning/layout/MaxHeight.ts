@@ -25,7 +25,4 @@ const expandable = Fun.constant((element: Element, available: number): void => {
   setMaxHeight(element, available);
 });
 
-export {
-  anchored,
-  expandable
-};
+export { anchored, expandable };

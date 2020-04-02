@@ -23,11 +23,39 @@ export default function () {
       const textMatcherState = Cell(null);
       const lastSuggestionsState = Cell<LastSuggestion>(null);
 
-      Buttons.register(editor, pluginUrl, startedState, textMatcherState, currentLanguageState, lastSuggestionsState);
-      SuggestionsMenu.setup(editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState, currentLanguageState);
-      Commands.register(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
+      Buttons.register(
+        editor,
+        pluginUrl,
+        startedState,
+        textMatcherState,
+        currentLanguageState,
+        lastSuggestionsState
+      );
+      SuggestionsMenu.setup(
+        editor,
+        pluginUrl,
+        lastSuggestionsState,
+        startedState,
+        textMatcherState,
+        currentLanguageState
+      );
+      Commands.register(
+        editor,
+        pluginUrl,
+        startedState,
+        textMatcherState,
+        lastSuggestionsState,
+        currentLanguageState
+      );
 
-      return Api.get(editor, startedState, lastSuggestionsState, textMatcherState, currentLanguageState, pluginUrl);
+      return Api.get(
+        editor,
+        startedState,
+        lastSuggestionsState,
+        textMatcherState,
+        currentLanguageState,
+        pluginUrl
+      );
     }
   });
 }

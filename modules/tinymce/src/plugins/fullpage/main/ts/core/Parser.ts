@@ -18,7 +18,7 @@ const parseHeader = function (head: string) {
   return DomParser({
     validate: false,
     root_name: '#document'
-  // Parse as XHTML to allow for inclusion of the XML processing instruction
+    // Parse as XHTML to allow for inclusion of the XML processing instruction
   }).parse(head, { format: 'xhtml' });
 };
 
@@ -207,34 +207,37 @@ const dataToHtml = function (editor, data, head) {
   }
 
   // Add/update/remove meta
-  Tools.each('keywords,description,author,copyright,robots'.split(','), function (name) {
-    const nodes = headerFragment.getAll('meta');
-    let i, meta;
-    const value = data[name];
+  Tools.each(
+    'keywords,description,author,copyright,robots'.split(','),
+    function (name) {
+      const nodes = headerFragment.getAll('meta');
+      let i, meta;
+      const value = data[name];
 
-    for (i = 0; i < nodes.length; i++) {
-      meta = nodes[i];
+      for (i = 0; i < nodes.length; i++) {
+        meta = nodes[i];
 
-      if (meta.attr('name') === name) {
-        if (value) {
-          meta.attr('content', value);
-        } else {
-          meta.remove();
+        if (meta.attr('name') === name) {
+          if (value) {
+            meta.attr('content', value);
+          } else {
+            meta.remove();
+          }
+
+          return;
         }
+      }
 
-        return;
+      if (value) {
+        elm = new Node('meta', 1);
+        elm.attr('name', name);
+        elm.attr('content', value);
+        elm.shortEnded = true;
+
+        addHeadNode(elm);
       }
     }
-
-    if (value) {
-      elm = new Node('meta', 1);
-      elm.attr('name', name);
-      elm.attr('content', value);
-      elm.shortEnded = true;
-
-      addHeadNode(elm);
-    }
-  });
+  );
 
   const currentStyleSheetsMap: Record<string, HTMLLinkElement> = {};
   Tools.each(headerFragment.getAll('link'), function (stylesheet) {
@@ -306,8 +309,4 @@ const dataToHtml = function (editor, data, head) {
   return html.substring(0, html.indexOf('</body>'));
 };
 
-export {
-  parseHeader,
-  htmlToData,
-  dataToHtml
-};
+export { parseHeader, htmlToData, dataToHtml };

@@ -8,7 +8,6 @@ import { identifyButtons } from 'tinymce/themes/silver/ui/toolbar/Integration';
 import { setupDemo } from '../components/DemoHelpers';
 
 export default function () {
-
   const buttons = {
     'alpha': {
       type: 'button',
@@ -75,14 +74,14 @@ export default function () {
 
   const helpers = setupDemo();
   const mockEditor: Editor = {
-    on: () => { },
+    on: () => {},
     formatter: {
       canApply: () => true,
       match: () => true,
-      remove: () => { },
-      apply: () => { }
+      remove: () => {},
+      apply: () => {}
     },
-    focus: () => { },
+    focus: () => {},
     undoManager: {
       transact: (f) => f()
     }
@@ -91,58 +90,68 @@ export default function () {
   const toolbar = GuiFactory.build({
     dom: {
       tag: 'div',
-      classes: [ 'demo-toolbar' ],
+      classes: ['demo-toolbar'],
       styles: {
         'display': 'flex',
         'flex-direction': 'column'
       }
     },
-    components: Arr.map([
-      { label: 'Button', button: 'alpha' },
-      { label: 'ToggleButton', button: 'alpha.toggle' },
-      { label: 'SplitButton', button: 'beta' },
-      { label: 'StyleButton', button: 'styleselect' }
-    ], ({ label, button }) => {
-      const groups = identifyButtons(mockEditor, { buttons, toolbar: button, allowToolbarGroups: true }, helpers.extras, Option.none());
-      const buttonComponents = Arr.flatten(Arr.map(groups, (group) => group.items));
-      return {
-        dom: {
-          tag: 'div',
-          classes: [ ],
-          styles: {
-            display: 'flex',
-            border: '1px solid #ccc'
-          }
-        },
-        components: [
-          {
-            dom: {
-              tag: 'label',
-              styles: {
-                'margin-right': '3em',
-                'display': 'flex',
-                'align-items': 'center',
-                'padding': '1em'
-              },
-              innerHtml: label
+    components: Arr.map(
+      [
+        { label: 'Button', button: 'alpha' },
+        { label: 'ToggleButton', button: 'alpha.toggle' },
+        { label: 'SplitButton', button: 'beta' },
+        { label: 'StyleButton', button: 'styleselect' }
+      ],
+      ({ label, button }) => {
+        const groups = identifyButtons(
+          mockEditor,
+          { buttons, toolbar: button, allowToolbarGroups: true },
+          helpers.extras,
+          Option.none()
+        );
+        const buttonComponents = Arr.flatten(
+          Arr.map(groups, (group) => group.items)
+        );
+        return {
+          dom: {
+            tag: 'div',
+            classes: [],
+            styles: {
+              display: 'flex',
+              border: '1px solid #ccc'
             }
           },
-          {
-            dom: {
-              tag: 'div',
-              classes: [ 'toolbar-row' ],
-              styles: {
-                'display': 'flex',
-                'flex-direction': 'row-reverse',
-                'flex-grow': '1',
-                'align-items': 'center'
+          components: [
+            {
+              dom: {
+                tag: 'label',
+                styles: {
+                  'margin-right': '3em',
+                  'display': 'flex',
+                  'align-items': 'center',
+                  'padding': '1em'
+                },
+                innerHtml: label
               }
             },
-            components: buttonComponents
-          }
-        ]
-      };
-    })
+            {
+              dom: {
+                tag: 'div',
+                classes: ['toolbar-row'],
+                styles: {
+                  'display': 'flex',
+                  'flex-direction': 'row-reverse',
+                  'flex-grow': '1',
+                  'align-items': 'center'
+                }
+              },
+              components: buttonComponents
+            }
+          ]
+        };
+      }
+    )
   });
 
   helpers.uiMothership.add(toolbar);

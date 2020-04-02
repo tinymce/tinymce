@@ -27,20 +27,24 @@ const SliderSchema: FieldProcessorAdt[] = [
   FieldSchema.defaulted('snapToGrid', false),
   FieldSchema.defaulted('rounded', true),
   FieldSchema.option('snapStart'),
-  FieldSchema.strictOf('model', ValueSchema.choose(
-    'mode',
-    {
+  FieldSchema.strictOf(
+    'model',
+    ValueSchema.choose('mode', {
       x: [
         FieldSchema.defaulted('minX', 0),
         FieldSchema.defaulted('maxX', 100),
-        FieldSchema.state('value', (spec: SliderModelSpec) => Cell(spec.mode.minX)),
+        FieldSchema.state('value', (spec: SliderModelSpec) =>
+          Cell(spec.mode.minX)
+        ),
         FieldSchema.strict('getInitialValue'),
         Fields.output('manager', HorizontalModel)
       ],
       y: [
         FieldSchema.defaulted('minY', 0),
         FieldSchema.defaulted('maxY', 100),
-        FieldSchema.state('value', (spec: SliderModelSpec) => Cell(spec.mode.minY)),
+        FieldSchema.state('value', (spec: SliderModelSpec) =>
+          Cell(spec.mode.minY)
+        ),
         FieldSchema.strict('getInitialValue'),
         Fields.output('manager', VerticalModel)
       ],
@@ -49,20 +53,20 @@ const SliderSchema: FieldProcessorAdt[] = [
         FieldSchema.defaulted('maxX', 100),
         FieldSchema.defaulted('minY', 0),
         FieldSchema.defaulted('maxY', 100),
-        FieldSchema.state('value', (spec: SliderModelSpec) => Cell({
-          x: Fun.constant(spec.mode.minX),
-          y: Fun.constant(spec.mode.minY)
-        })),
+        FieldSchema.state('value', (spec: SliderModelSpec) =>
+          Cell({
+            x: Fun.constant(spec.mode.minX),
+            y: Fun.constant(spec.mode.minY)
+          })
+        ),
         FieldSchema.strict('getInitialValue'),
         Fields.output('manager', TwoDModel)
       ]
-    }
-  )),
+    })
+  ),
 
-  SketchBehaviours.field('sliderBehaviours', [ Keying, Representing ]),
+  SketchBehaviours.field('sliderBehaviours', [Keying, Representing]),
   FieldSchema.state('mouseIsDown', () => Cell(false))
 ];
 
-export {
-  SliderSchema
-};
+export { SliderSchema };

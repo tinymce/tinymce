@@ -10,13 +10,10 @@ UnitTest.test('UpTest', () => {
   const family = Tracks.track(
     Gene('A', '_A_', [
       Gene('B', '_B_'),
-      Gene('C', '_C_', [
-        Gene('D', '_D_', [
-          Gene('E', '_E_')
-        ]),
-        Gene('F', '_F_')
-      ])
-    ]), Option.none());
+      Gene('C', '_C_', [Gene('D', '_D_', [Gene('E', '_E_')]), Gene('F', '_F_')])
+    ]),
+    Option.none()
+  );
 
   const getId = (x: Gene) => x.id;
 
@@ -44,9 +41,16 @@ UnitTest.test('UpTest', () => {
   KAssert.eqNone('eq', selectorId(d, '_B_,_Z_'));
   KAssert.eqNone('eq', closestId(d, '_B_,_Z_'));
 
-  KAssert.eqSome('eq', 'A', Up.predicate(d, (item: Gene) => item.id === 'A').map(getId));
+  KAssert.eqSome(
+    'eq',
+    'A',
+    Up.predicate(d, (item: Gene) => item.id === 'A').map(getId)
+  );
 
-  KAssert.eqNone('eq', Up.predicate(d, (item: Gene) => item.id === 'root'));
+  KAssert.eqNone(
+    'eq',
+    Up.predicate(d, (item: Gene) => item.id === 'root')
+  );
 
   const checkAll = (expected: string, start: string) => {
     const actual = Locator.byId(family, start).map((item) => {

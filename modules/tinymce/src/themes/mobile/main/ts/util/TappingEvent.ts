@@ -17,13 +17,15 @@ const monitor = (editorApi) => {
   } as any);
 
   // convenience methods
-  const onTouchend = (): EventUnbinder => DomEvent.bind(editorApi.body(), 'touchend', (evt) => {
-    tapEvent.fireIfReady(evt, 'touchend');
-  });
+  const onTouchend = (): EventUnbinder =>
+    DomEvent.bind(editorApi.body(), 'touchend', (evt) => {
+      tapEvent.fireIfReady(evt, 'touchend');
+    });
 
-  const onTouchmove = (): EventUnbinder => DomEvent.bind(editorApi.body(), 'touchmove', (evt) => {
-    tapEvent.fireIfReady(evt, 'touchmove');
-  });
+  const onTouchmove = (): EventUnbinder =>
+    DomEvent.bind(editorApi.body(), 'touchmove', (evt) => {
+      tapEvent.fireIfReady(evt, 'touchmove');
+    });
 
   const fireTouchstart = (evt): void => {
     tapEvent.fireIfReady(evt, 'touchstart');
@@ -36,6 +38,4 @@ const monitor = (editorApi) => {
   };
 };
 
-export {
-  monitor
-};
+export { monitor };

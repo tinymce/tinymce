@@ -7,11 +7,9 @@ import { Option } from '@ephox/katamari';
  *
  * f: item -> boolean
  */
-const predicate = function <E> (f: (e: E) => boolean) {
-  return function <D> (universe: Universe<E, D>, item: E) {
-    return f(item) ?
-      Option.some(item) :
-      universe.up().predicate(item, f);
+const predicate = function <E>(f: (e: E) => boolean) {
+  return function <D>(universe: Universe<E, D>, item: E) {
+    return f(item) ? Option.some(item) : universe.up().predicate(item, f);
   };
 };
 
@@ -22,14 +20,11 @@ const predicate = function <E> (f: (e: E) => boolean) {
  * sel: selector
  */
 const selector = function (sel: string) {
-  return function <E, D> (universe: Universe<E, D>, item: E) {
-    return universe.is(item, sel) ?
-      Option.some(item) :
-      universe.up().selector(item, sel);
+  return function <E, D>(universe: Universe<E, D>, item: E) {
+    return universe.is(item, sel)
+      ? Option.some(item)
+      : universe.up().selector(item, sel);
   };
 };
 
-export {
-  predicate,
-  selector
-};
+export { predicate, selector };

@@ -12,17 +12,25 @@ import { ItemTypes } from '@ephox/alloy';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderColorSwatchItem } from './ColorSwatchItem';
 
-const fancyMenuItems: Record<keyof Menu.FancyActionArgsMap, (mi: Menu.FancyMenuItem, bs: UiFactoryBackstage) => ItemTypes.WidgetItemSpec> = {
+const fancyMenuItems: Record<
+  keyof Menu.FancyActionArgsMap,
+  (mi: Menu.FancyMenuItem, bs: UiFactoryBackstage) => ItemTypes.WidgetItemSpec
+> = {
   inserttable: renderInsertTableMenuItem,
   colorswatch: renderColorSwatchItem
 };
 
-const valueOpt = <T>(obj: Record<string, T>, key): Option<T> => Object.prototype.hasOwnProperty.call(obj, key)
-  ? Option.some(obj[key])
-  : Option.none();
+const valueOpt = <T>(obj: Record<string, T>, key): Option<T> =>
+  Object.prototype.hasOwnProperty.call(obj, key)
+    ? Option.some(obj[key])
+    : Option.none();
 
-const renderFancyMenuItem = (spec: Menu.FancyMenuItem, backstage: UiFactoryBackstage): Option<ItemTypes.WidgetItemSpec> => valueOpt(fancyMenuItems, spec.fancytype).map((render) => render(spec, backstage));
+const renderFancyMenuItem = (
+  spec: Menu.FancyMenuItem,
+  backstage: UiFactoryBackstage
+): Option<ItemTypes.WidgetItemSpec> =>
+  valueOpt(fancyMenuItems, spec.fancytype).map((render) =>
+    render(spec, backstage)
+  );
 
-export {
-  renderFancyMenuItem
-};
+export { renderFancyMenuItem };

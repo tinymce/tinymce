@@ -9,17 +9,21 @@ const percentageSize = function (width: string, element: Element): TableSize {
   const floatWidth = parseFloat(width);
   const pixelWidth = Width.get(element);
   const getCellDelta = function (delta: number) {
-    return delta / pixelWidth * 100;
+    return (delta / pixelWidth) * 100;
   };
   const singleColumnWidth = function (w: number, _delta: number) {
     // If we have one column in a percent based table, that column should be 100% of the width of the table.
-    return [ 100 - w ];
+    return [100 - w];
   };
   // Get the width of a 10 pixel wide cell over the width of the table as a percentage
   const minCellWidth = function () {
-    return CellUtils.minWidth() / pixelWidth * 100;
+    return (CellUtils.minWidth() / pixelWidth) * 100;
   };
-  const setTableWidth = function (table: Element, _newWidths: number[], delta: number) {
+  const setTableWidth = function (
+    table: Element,
+    _newWidths: number[],
+    delta: number
+  ) {
     const ratio = delta / 100;
     const change = ratio * floatWidth;
     Sizes.setPercentageWidth(table, floatWidth + change);
@@ -40,10 +44,20 @@ const pixelSize = function (width: number): TableSize {
   const getCellDelta = Fun.identity;
   const singleColumnWidth = function (w: number, delta: number) {
     const newNext = Math.max(CellUtils.minWidth(), w + delta);
-    return [ newNext - w ];
+    return [newNext - w];
   };
-  const setTableWidth = function (table: Element, newWidths: number[], _delta: number) {
-    const total = Arr.foldr(newWidths, function (b, a) { return b + a; }, 0);
+  const setTableWidth = function (
+    table: Element,
+    newWidths: number[],
+    _delta: number
+  ) {
+    const total = Arr.foldr(
+      newWidths,
+      function (b, a) {
+        return b + a;
+      },
+      0
+    );
     Sizes.setPixelWidth(table, total);
   };
   return {
@@ -75,14 +89,15 @@ const chooseSize = function (element: Element, width: string) {
 const getTableSize = function (element: Element) {
   const width = Sizes.getRawWidth(element);
   // If we have no width still, return a pixel width at least.
-  return width.fold(function () {
-    const fallbackWidth = Width.get(element);
-    return pixelSize(fallbackWidth);
-  }, function (w) {
-    return chooseSize(element, w);
-  });
+  return width.fold(
+    function () {
+      const fallbackWidth = Width.get(element);
+      return pixelSize(fallbackWidth);
+    },
+    function (w) {
+      return chooseSize(element, w);
+    }
+  );
 };
 
-export {
-  getTableSize
-};
+export { getTableSize };

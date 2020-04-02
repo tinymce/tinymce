@@ -4,11 +4,16 @@ import Observable from 'tinymce/core/api/util/Observable';
 import Tools from 'tinymce/core/api/util/Tools';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.util.ObservableTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.util.ObservableTest', function (
+  success,
+  failure
+) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('Event bubbling/removed state', function () {
-    let lastName, lastState, data = '';
+    let lastName,
+      lastState,
+      data = '';
 
     const Class: any = function (parentObj) {
       this.toggleNativeEvent = function (name, state) {
@@ -62,7 +67,12 @@ UnitTest.asynctest('browser.tinymce.core.util.ObservableTest', function (success
     LegacyUnit.strictEqual(data, 'cabcr');
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
-    success();
-  }, failure);
+  Pipeline.async(
+    {},
+    suite.toSteps({}),
+    function () {
+      success();
+    },
+    failure
+  );
 });

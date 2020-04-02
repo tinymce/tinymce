@@ -5,7 +5,12 @@ import { Ephemera } from './Ephemera';
 export interface SelectionAnnotation {
   clearBeforeUpdate: (container: Element) => void;
   clear: (container: Element) => void;
-  selectRange: (container: Element, cells: Element[], start: Element, finish: Element) => void;
+  selectRange: (
+    container: Element,
+    cells: Element[],
+    start: Element,
+    finish: Element
+  ) => void;
   selectedSelector: string;
   firstSelectedSelector: string;
   lastSelectedSelector: string;
@@ -13,14 +18,26 @@ export interface SelectionAnnotation {
 
 const byClass = function (ephemera: Ephemera): SelectionAnnotation {
   const addSelectionClass = OnNode.addClass(ephemera.selected);
-  const removeSelectionClasses = OnNode.removeClasses([ ephemera.selected, ephemera.lastSelected, ephemera.firstSelected ]);
+  const removeSelectionClasses = OnNode.removeClasses([
+    ephemera.selected,
+    ephemera.lastSelected,
+    ephemera.firstSelected
+  ]);
 
   const clear = function (container: Element) {
-    const sels = SelectorFilter.descendants(container, ephemera.selectedSelector);
+    const sels = SelectorFilter.descendants(
+      container,
+      ephemera.selectedSelector
+    );
     Arr.each(sels, removeSelectionClasses);
   };
 
-  const selectRange = function (container: Element, cells: Element[], start: Element, finish: Element) {
+  const selectRange = function (
+    container: Element,
+    cells: Element[],
+    start: Element,
+    finish: Element
+  ) {
     clear(container);
     Arr.each(cells, addSelectionClass);
     Class.add(start, ephemera.firstSelected);
@@ -37,7 +54,11 @@ const byClass = function (ephemera: Ephemera): SelectionAnnotation {
   };
 };
 
-const byAttr = function (ephemera: Ephemera, onSelection: (cells: Element[], start: Element, finish: Element) => void, onClear: () => void): SelectionAnnotation {
+const byAttr = function (
+  ephemera: Ephemera,
+  onSelection: (cells: Element[], start: Element, finish: Element) => void,
+  onClear: () => void
+): SelectionAnnotation {
   const removeSelectionAttributes = function (element: Element) {
     Attr.remove(element, ephemera.selected);
     Attr.remove(element, ephemera.firstSelected);
@@ -54,11 +75,19 @@ const byAttr = function (ephemera: Ephemera, onSelection: (cells: Element[], sta
   };
 
   const clearBeforeUpdate = (container: Element) => {
-    const sels = SelectorFilter.descendants(container, ephemera.selectedSelector);
+    const sels = SelectorFilter.descendants(
+      container,
+      ephemera.selectedSelector
+    );
     Arr.each(sels, removeSelectionAttributes);
   };
 
-  const selectRange = function (container: Element, cells: Element[], start: Element, finish: Element) {
+  const selectRange = function (
+    container: Element,
+    cells: Element[],
+    start: Element,
+    finish: Element
+  ) {
     clear(container);
     Arr.each(cells, addSelectionAttribute);
     Attr.set(start, ephemera.firstSelected, '1');

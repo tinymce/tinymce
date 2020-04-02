@@ -5,11 +5,20 @@ import { document } from '@ephox/dom-globals';
 import { Editor } from '../alien/EditorTypes';
 
 export interface ActionChains {
-  cContentKeypress: <T extends Editor> (code: number, modifiers?: Record<string, any>) => Chain<T, T>;
-  cContentKeydown: <T extends Editor> (code: number, modifiers?: Record<string, any>) => Chain<T, T>;
-  cContentKeystroke: <T extends Editor> (code: number, modifiers?: Record<string, any>) => Chain<T, T>;
+  cContentKeypress: <T extends Editor>(
+    code: number,
+    modifiers?: Record<string, any>
+  ) => Chain<T, T>;
+  cContentKeydown: <T extends Editor>(
+    code: number,
+    modifiers?: Record<string, any>
+  ) => Chain<T, T>;
+  cContentKeystroke: <T extends Editor>(
+    code: number,
+    modifiers?: Record<string, any>
+  ) => Chain<T, T>;
 
-  cUiKeydown: <T> (code: number, modifiers?: Record<string, any>) => Chain<T, T>;
+  cUiKeydown: <T>(code: number, modifiers?: Record<string, any>) => Chain<T, T>;
 }
 
 const cIDoc = Chain.mapper(function (editor: Editor) {
@@ -20,13 +29,22 @@ const cUiDoc = Chain.injectThunked(function () {
   return Element.fromDom(document);
 });
 
-const cTriggerKeyEvent = function <T> (cTarget: Chain<T, Element>, evtType: 'keydown' | 'keyup' | 'keypress' | 'keystroke', code: number, modifiers = {}) {
+const cTriggerKeyEvent = function <T>(
+  cTarget: Chain<T, Element>,
+  evtType: 'keydown' | 'keyup' | 'keypress' | 'keystroke',
+  code: number,
+  modifiers = {}
+) {
   return NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), cTarget, 'doc'),
     NamedChain.direct('doc', FocusTools.cGetFocused, 'activeElement'),
-    NamedChain.direct('activeElement', Chain.op(function (dispatcher) {
-      Keyboard[evtType](code, modifiers, dispatcher);
-    }), '_'),
+    NamedChain.direct(
+      'activeElement',
+      Chain.op(function (dispatcher) {
+        Keyboard[evtType](code, modifiers, dispatcher);
+      }),
+      '_'
+    ),
     NamedChain.output(NamedChain.inputName())
   ]);
 };

@@ -9,7 +9,12 @@ const round = Math.round;
 const rgbRegex = /^rgb\((\d+),\s*(\d+),\s*(\d+)\)/;
 const rgbaRegex = /^rgba\((\d+),\s*(\d+),\s*(\d+),\s*(\d?(?:\.\d+)?)\)/;
 
-const rgbaColour = (red: number, green: number, blue: number, alpha: number): Rgba => ({
+const rgbaColour = (
+  red: number,
+  green: number,
+  blue: number,
+  alpha: number
+): Rgba => ({
   red,
   green,
   blue,
@@ -22,7 +27,9 @@ const isRgbaComponent = (value: string): boolean => {
 };
 
 const fromHsv = (hsv: Hsv): Rgba => {
-  let r; let g; let b;
+  let r;
+  let g;
+  let b;
   const hue = (hsv.hue || 0) % 360;
   let saturation = hsv.saturation / 100;
   let brightness = hsv.value / 100;
@@ -36,7 +43,7 @@ const fromHsv = (hsv: Hsv): Rgba => {
 
   const side = hue / 60;
   const chroma = brightness * saturation;
-  const x = chroma * (1 - Math.abs(side % 2 - 1));
+  const x = chroma * (1 - Math.abs((side % 2) - 1));
   const match = brightness - chroma;
 
   switch (Math.floor(side)) {
@@ -96,7 +103,12 @@ const fromHex = (hexColour: Hex): Rgba => {
   return rgbaColour(red, green, blue, 1);
 };
 
-const fromStringValues = (red: string, green: string, blue: string, alpha: string): Rgba => {
+const fromStringValues = (
+  red: string,
+  green: string,
+  blue: string,
+  alpha: string
+): Rgba => {
   const r = parseInt(red, 10);
   const g = parseInt(green, 10);
   const b = parseInt(blue, 10);
@@ -110,16 +122,21 @@ const fromString = (rgbaString: string): Option<Rgba> => {
   }
   const rgbMatch = rgbRegex.exec(rgbaString);
   if (rgbMatch !== null) {
-    return Option.some(fromStringValues(rgbMatch[1], rgbMatch[2], rgbMatch[3], '1'));
+    return Option.some(
+      fromStringValues(rgbMatch[1], rgbMatch[2], rgbMatch[3], '1')
+    );
   }
   const rgbaMatch = rgbaRegex.exec(rgbaString);
   if (rgbaMatch !== null) {
-    return Option.some(fromStringValues(rgbaMatch[1], rgbaMatch[2], rgbaMatch[3], rgbaMatch[4]));
+    return Option.some(
+      fromStringValues(rgbaMatch[1], rgbaMatch[2], rgbaMatch[3], rgbaMatch[4])
+    );
   }
   return Option.none();
 };
 
-const toString = (rgba: Rgba): string => `rgba(${rgba.red},${rgba.green},${rgba.blue},${rgba.alpha})`;
+const toString = (rgba: Rgba): string =>
+  `rgba(${rgba.red},${rgba.green},${rgba.blue},${rgba.alpha})`;
 
 const red = rgbaColour(255, 0, 0, 1);
 

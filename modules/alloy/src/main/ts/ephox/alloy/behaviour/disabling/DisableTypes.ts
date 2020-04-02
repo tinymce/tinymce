@@ -3,8 +3,11 @@ import { Option } from '@ephox/katamari';
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
-export interface DisableBehaviour extends Behaviour.AlloyBehaviour<DisableConfigSpec, DisableConfig> {
-  config: (config: DisableConfigSpec) => Behaviour.NamedConfiguredBehaviour<DisableConfigSpec, DisableConfig>;
+export interface DisableBehaviour
+  extends Behaviour.AlloyBehaviour<DisableConfigSpec, DisableConfig> {
+  config: (
+    config: DisableConfigSpec
+  ) => Behaviour.NamedConfiguredBehaviour<DisableConfigSpec, DisableConfig>;
   enable: (component: AlloyComponent) => void;
   disable: (component: AlloyComponent) => void;
   isDisabled: (component: AlloyComponent) => boolean;

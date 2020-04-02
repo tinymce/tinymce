@@ -3,9 +3,17 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { FocusManager } from '../../api/focus/FocusManagers';
-import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import {
+  CompositeSketch,
+  CompositeSketchDetail,
+  CompositeSketchSpec
+} from '../../api/ui/Sketcher';
 import { CustomEvent } from '../../events/SimulatedEvent';
-import { FlatgridConfigSpec, MatrixConfigSpec, MenuConfigSpec } from '../../keying/KeyingModeTypes';
+import {
+  FlatgridConfigSpec,
+  MatrixConfigSpec,
+  MenuConfigSpec
+} from '../../keying/KeyingModeTypes';
 import { ItemSpec } from './ItemTypes';
 
 export interface MenuGridMovementSpec {
@@ -26,12 +34,18 @@ export interface MenuNormalMovementSpec {
   moveOnTab?: boolean;
 }
 
-export type MenuMovementSpec = MenuGridMovementSpec | MenuMatrixMovementSpec | MenuNormalMovementSpec;
+export type MenuMovementSpec =
+  | MenuGridMovementSpec
+  | MenuMatrixMovementSpec
+  | MenuNormalMovementSpec;
 
 // config: (detail: MenuDetail,  movementInfo: MenuMovement) => KeyingConfigSpec
 export interface MenuGridMovement {
   mode: 'grid';
-  config: (detail: MenuDetail,  movementInfo: MenuMovement) => FlatgridConfigSpec;
+  config: (
+    detail: MenuDetail,
+    movementInfo: MenuMovement
+  ) => FlatgridConfigSpec;
   initSize: {
     numColumns: number;
     numRows: number;
@@ -40,7 +54,7 @@ export interface MenuGridMovement {
 
 export interface MenuMatrixMovement {
   mode: 'matrix';
-  config: (detail: MenuDetail,  movementInfo: MenuMovement) => MatrixConfigSpec;
+  config: (detail: MenuDetail, movementInfo: MenuMovement) => MatrixConfigSpec;
   rowSelector: string;
 }
 
@@ -50,12 +64,15 @@ export interface MenuNormalMovement {
   moveOnTab: boolean;
 }
 
-export type MenuMovement = MenuGridMovement | MenuMatrixMovement | MenuNormalMovement;
+export type MenuMovement =
+  | MenuGridMovement
+  | MenuMatrixMovement
+  | MenuNormalMovement;
 
 export interface MenuDetail extends CompositeSketchDetail {
   uid: string;
   dom: RawDomSchema;
-  components: AlloySpec[ ];
+  components: AlloySpec[];
   menuBehaviours: SketchBehaviours;
 
   fakeFocus: boolean;
@@ -94,7 +111,7 @@ export interface MenuSpec extends CompositeSketchSpec {
   eventOrder?: Record<string, string[]>;
 }
 
-export interface MenuSketcher extends CompositeSketch<MenuSpec> { }
+export interface MenuSketcher extends CompositeSketch<MenuSpec> {}
 
 export interface MenuItemHoverEvent extends CustomEvent {
   item: () => AlloyComponent;

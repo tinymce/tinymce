@@ -13,6 +13,4 @@ const Sliding: SlidingBehaviour = Behaviour.create({
   state: SlidingState
 });
 
-export {
-  Sliding
-};
+export { Sliding };

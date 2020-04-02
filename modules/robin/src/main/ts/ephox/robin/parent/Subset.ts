@@ -1,17 +1,22 @@
 import { Universe } from '@ephox/boss';
 import { Arr, Fun, Option } from '@ephox/katamari';
 
-const eq = function <E, D> (universe: Universe<E, D>, item: E) {
+const eq = function <E, D>(universe: Universe<E, D>, item: E) {
   return Fun.curry(universe.eq, item);
 };
 
-const unsafeSubset = function <E, D> (universe: Universe<E, D>, common: E, ps1: E[], ps2: E[]) {
+const unsafeSubset = function <E, D>(
+  universe: Universe<E, D>,
+  common: E,
+  ps1: E[],
+  ps2: E[]
+) {
   const children = universe.property().children(common);
   if (universe.eq(common, ps1[0])) {
-    return Option.some([ ps1[0] ]);
+    return Option.some([ps1[0]]);
   }
   if (universe.eq(common, ps2[0])) {
-    return Option.some([ ps2[0] ]);
+    return Option.some([ps2[0]]);
   }
 
   const finder = function (ps: E[]) {
@@ -20,7 +25,8 @@ const unsafeSubset = function <E, D> (universe: Universe<E, D>, common: E, ps1: 
 
     // find the child of common in the ps array
     const index = Arr.findIndex(topDown, eq(universe, common)).getOr(-1);
-    const item = index < topDown.length - 1 ? topDown[index + 1] : topDown[index];
+    const item =
+      index < topDown.length - 1 ? topDown[index + 1] : topDown[index];
 
     // find the index of that child in the common children
     return Arr.findIndex(children, eq(universe, item));
@@ -42,20 +48,28 @@ const unsafeSubset = function <E, D> (universe: Universe<E, D>, common: E, ps1: 
 };
 
 // Note: this can be exported if it is required in the future.
-const ancestors = function <E, D> (universe: Universe<E, D>, start: E, end: E, isRoot: (x: E) => boolean = Fun.never) {
+const ancestors = function <E, D>(
+  universe: Universe<E, D>,
+  start: E,
+  end: E,
+  isRoot: (x: E) => boolean = Fun.never
+) {
   // Inefficient if no isRoot is supplied.
   // TODO: Andy knows there is a graph-based algorithm to find a common parent, but can't remember it
   //        This also includes something to get the subset after finding the common parent
-  const ps1 = [ start ].concat(universe.up().all(start));
-  const ps2 = [ end ].concat(universe.up().all(end));
+  const ps1 = [start].concat(universe.up().all(start));
+  const ps2 = [end].concat(universe.up().all(end));
 
   const prune = function (path: E[]) {
     const index = Arr.findIndex(path, isRoot);
-    return index.fold(function () {
-      return path;
-    }, function (ind) {
-      return path.slice(0, ind + 1);
-    });
+    return index.fold(
+      function () {
+        return path;
+      },
+      function (ind) {
+        return path.slice(0, ind + 1);
+      }
+    );
   };
 
   const pruned1 = prune(ps1);
@@ -77,14 +91,11 @@ const ancestors = function <E, D> (universe: Universe<E, D>, start: E, end: E, i
  *
  * Then return all children of the common element such that start and end are included.
  */
-const subset = function <E, D> (universe: Universe<E, D>, start: E, end: E) {
+const subset = function <E, D>(universe: Universe<E, D>, start: E, end: E) {
   const ancs = ancestors(universe, start, end);
   return ancs.shared().bind(function (shared) {
     return unsafeSubset(universe, shared, ancs.firstpath(), ancs.secondpath());
   });
 };
 
-export {
-  subset,
-  ancestors
-};
+export { subset, ancestors };

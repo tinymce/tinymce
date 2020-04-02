@@ -21,10 +21,18 @@ import { FormatVars } from '../api/fmt/Format';
 const each = Tools.each;
 
 const isElementNode = function (node: Node) {
-  return NodeType.isElement(node) && !Bookmarks.isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
+  return (
+    NodeType.isElement(node) &&
+    !Bookmarks.isBookmarkNode(node) &&
+    !isCaretNode(node) &&
+    !NodeType.isBogus(node)
+  );
 };
 
-const findElementSibling = function (node: Node, siblingName: 'nextSibling' | 'previousSibling') {
+const findElementSibling = function (
+  node: Node,
+  siblingName: 'nextSibling' | 'previousSibling'
+) {
   let sibling;
 
   for (sibling = node; sibling; sibling = sibling[siblingName]) {
@@ -53,7 +61,7 @@ const mergeSiblingsNodes = function (dom: DOMUtils, prev: Node, next: Node) {
     // Compare next and previous nodes
     if (elementUtils.compare(prev, next)) {
       // Append nodes between
-      for (sibling = prev.nextSibling; sibling && sibling !== next;) {
+      for (sibling = prev.nextSibling; sibling && sibling !== next; ) {
         tmpSibling = sibling;
         sibling = sibling.nextSibling;
         prev.appendChild(tmpSibling);
@@ -72,7 +80,11 @@ const mergeSiblingsNodes = function (dom: DOMUtils, prev: Node, next: Node) {
   return next;
 };
 
-const processChildElements = function (node: Node, filter: (node: Node) => boolean, process: (node: Node) => void) {
+const processChildElements = function (
+  node: Node,
+  filter: (node: Node) => boolean,
+  process: (node: Node) => void
+) {
   each(node.childNodes, function (node) {
     if (isElementNode(node)) {
       if (filter(node)) {
@@ -88,7 +100,9 @@ const processChildElements = function (node: Node, filter: (node: Node) => boole
 const hasStyle = (dom: DOMUtils, name: string) => (node: Node): boolean =>
   !!(node && FormatUtils.getStyle(dom, node, name));
 
-const applyStyle = (dom: DOMUtils, name: string, value: string) => (node: Element): void => {
+const applyStyle = (dom: DOMUtils, name: string, value: string) => (
+  node: Element
+): void => {
   dom.setStyle(node, name, value);
 
   if (node.getAttribute('style') === '') {
@@ -104,7 +118,12 @@ const unwrapEmptySpan = function (dom: DOMUtils, node: Node) {
   }
 };
 
-const mergeUnderlineAndColor = function (dom: DOMUtils, format, vars: FormatVars, node: Node) {
+const mergeUnderlineAndColor = function (
+  dom: DOMUtils,
+  format,
+  vars: FormatVars,
+  node: Node
+) {
   const processUnderlineAndColor = function (n: Node) {
     if (n.nodeType === 1 && n.parentNode && n.parentNode.nodeType === 1) {
       const textDecoration = FormatUtils.getTextDecoration(dom, n.parentNode);
@@ -123,20 +142,36 @@ const mergeUnderlineAndColor = function (dom: DOMUtils, format, vars: FormatVars
   }
 };
 
-const mergeBackgroundColorAndFontSize = function (dom: DOMUtils, format, vars: FormatVars, node: Node) {
+const mergeBackgroundColorAndFontSize = function (
+  dom: DOMUtils,
+  format,
+  vars: FormatVars,
+  node: Node
+) {
   // nodes with font-size should have their own background color as well to fit the line-height (see TINY-882)
   if (format.styles && format.styles.backgroundColor) {
-    processChildElements(node,
+    processChildElements(
+      node,
       hasStyle(dom, 'fontSize'),
-      applyStyle(dom, 'backgroundColor', FormatUtils.replaceVars(format.styles.backgroundColor, vars))
+      applyStyle(
+        dom,
+        'backgroundColor',
+        FormatUtils.replaceVars(format.styles.backgroundColor, vars)
+      )
     );
   }
 };
 
-const mergeSubSup = function (dom: DOMUtils, format, vars: FormatVars, node: Node) {
+const mergeSubSup = function (
+  dom: DOMUtils,
+  format,
+  vars: FormatVars,
+  node: Node
+) {
   // Remove font size on all chilren of a sub/sup and remove the inverse element
   if (format.inline === 'sub' || format.inline === 'sup') {
-    processChildElements(node,
+    processChildElements(
+      node,
       hasStyle(dom, 'fontSize'),
       applyStyle(dom, 'fontSize', '')
     );
@@ -145,11 +180,24 @@ const mergeSubSup = function (dom: DOMUtils, format, vars: FormatVars, node: Nod
   }
 };
 
-const mergeSiblings = function (dom: DOMUtils, format, vars: FormatVars, node: Node) {
+const mergeSiblings = function (
+  dom: DOMUtils,
+  format,
+  vars: FormatVars,
+  node: Node
+) {
   // Merge next and previous siblings if they are similar <b>text</b><b>text</b> becomes <b>texttext</b>
   if (node && format.merge_siblings !== false) {
-    node = mergeSiblingsNodes(dom, FormatUtils.getNonWhiteSpaceSibling(node), node);
-    node = mergeSiblingsNodes(dom, node, FormatUtils.getNonWhiteSpaceSibling(node, true));
+    node = mergeSiblingsNodes(
+      dom,
+      FormatUtils.getNonWhiteSpaceSibling(node),
+      node
+    );
+    node = mergeSiblingsNodes(
+      dom,
+      node,
+      FormatUtils.getNonWhiteSpaceSibling(node, true)
+    );
   }
 };
 
@@ -166,7 +214,12 @@ const clearChildStyles = function (dom: DOMUtils, format, node: Node) {
   }
 };
 
-const mergeWithChildren = function (editor: Editor, formatList, vars: FormatVars, node: Node) {
+const mergeWithChildren = function (
+  editor: Editor,
+  formatList,
+  vars: FormatVars,
+  node: Node
+) {
   // Remove/merge children
   each(formatList, function (format) {
     // Merge all children of similar type will move styles from child to parent
@@ -177,14 +230,26 @@ const mergeWithChildren = function (editor: Editor, formatList, vars: FormatVars
         return;
       }
 
-      RemoveFormat.removeFormat(editor, format, vars, child, format.exact ? child : null);
+      RemoveFormat.removeFormat(
+        editor,
+        format,
+        vars,
+        child,
+        format.exact ? child : null
+      );
     });
 
     clearChildStyles(editor.dom, format, node);
   });
 };
 
-const mergeWithParents = function (editor: Editor, format, name: string, vars: FormatVars, node: Node) {
+const mergeWithParents = function (
+  editor: Editor,
+  format,
+  name: string,
+  vars: FormatVars,
+  node: Node
+) {
   // Remove format if direct parent already has the same format
   if (MatchFormat.matchNode(editor, node.parentNode, name, vars)) {
     if (RemoveFormat.removeFormat(editor, format, vars, node)) {

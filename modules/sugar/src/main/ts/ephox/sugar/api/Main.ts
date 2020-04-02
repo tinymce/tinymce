@@ -8,7 +8,12 @@ import * as InsertAll from './dom/InsertAll';
 import * as Link from './dom/Link';
 import * as Remove from './dom/Remove';
 import * as Replication from './dom/Replication';
-import { EventArgs, EventFilter, EventHandler, EventUnbinder } from './events/Types';
+import {
+  EventArgs,
+  EventFilter,
+  EventHandler,
+  EventUnbinder
+} from './events/Types';
 import * as DomEvent from './events/DomEvent';
 import * as MouseEvent from './events/MouseEvent';
 import * as Ready from './events/Ready';

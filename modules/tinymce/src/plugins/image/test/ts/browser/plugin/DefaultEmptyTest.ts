@@ -11,37 +11,45 @@ import {
   cSubmitDialog,
   cWaitForDialog,
   generalTabSelectors,
-  silverSettings,
+  silverSettings
 } from '../../module/Helpers';
 import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('Default image dialog on empty data', (success, failure) => {
   SilverTheme();
   ImagePlugin();
-  Pipeline.async({}, [
-    Log.chainsAsStep('TBA', 'Image: default image dialog on empty data', [
-      Editor.cFromSettings(silverSettings),
-      cExecCommand('mceImage', true),
-      cWaitForDialog(),
-      Chain.fromParent(Chain.identity, [
-        cAssertInputValue(generalTabSelectors.src, ''),
-        cAssertInputValue(generalTabSelectors.alt, ''),
-        cAssertInputValue(generalTabSelectors.height, ''),
-        cAssertInputValue(generalTabSelectors.width, '')
-      ]),
-      cFillActiveDialog({
-        src: {
-          value: 'src'
-        },
-        alt: 'alt',
-        dimensions: {
-          width: '200',
-          height: '100'
-        }
-      }),
-      cSubmitDialog(),
-      cAssertCleanHtml('Checking output', '<p><img src="src" alt="alt" width="200" height="100" /></p>'),
-      Editor.cRemove
-    ])
-  ], () => success(), failure);
+  Pipeline.async(
+    {},
+    [
+      Log.chainsAsStep('TBA', 'Image: default image dialog on empty data', [
+        Editor.cFromSettings(silverSettings),
+        cExecCommand('mceImage', true),
+        cWaitForDialog(),
+        Chain.fromParent(Chain.identity, [
+          cAssertInputValue(generalTabSelectors.src, ''),
+          cAssertInputValue(generalTabSelectors.alt, ''),
+          cAssertInputValue(generalTabSelectors.height, ''),
+          cAssertInputValue(generalTabSelectors.width, '')
+        ]),
+        cFillActiveDialog({
+          src: {
+            value: 'src'
+          },
+          alt: 'alt',
+          dimensions: {
+            width: '200',
+            height: '100'
+          }
+        }),
+        cSubmitDialog(),
+        cAssertCleanHtml(
+          'Checking output',
+          '<p><img src="src" alt="alt" width="200" height="100" /></p>'
+        ),
+        Editor.cRemove
+      ])
+    ],
+    () => success(),
+    failure
+  );
 });

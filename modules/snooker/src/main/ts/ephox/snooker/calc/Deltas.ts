@@ -28,7 +28,12 @@ const neighbours = function (input: number[], index: number) {
  * Calculate the offsets to apply to each column width (not the absolute widths themselves)
  * based on a resize at column: column of step: step. The minimum column width allowed is min
  */
-const determine = function (input: number[], column: number, step: number, tableSize: TableSize): number[] {
+const determine = function (
+  input: number[],
+  column: number,
+  step: number,
+  tableSize: TableSize
+): number[] {
   const result = input.slice(0);
   const context = neighbours(input, column);
 
@@ -44,11 +49,15 @@ const determine = function (input: number[], column: number, step: number, table
   const onChange = function (index: number, next: number) {
     if (step >= 0) {
       const newNext = Math.max(tableSize.minCellWidth(), result[next] - step);
-      return zero(result.slice(0, index)).concat([ step, newNext - result[next] ]).concat(zero(result.slice(next + 1)));
+      return zero(result.slice(0, index))
+        .concat([step, newNext - result[next]])
+        .concat(zero(result.slice(next + 1)));
     } else {
       const newThis = Math.max(tableSize.minCellWidth(), result[index] + step);
       const diffx = result[index] - newThis;
-      return zero(result.slice(0, index)).concat([ newThis - result[index], diffx ]).concat(zero(result.slice(next + 1)));
+      return zero(result.slice(0, index))
+        .concat([newThis - result[index], diffx])
+        .concat(zero(result.slice(next + 1)));
     }
   };
 
@@ -60,16 +69,14 @@ const determine = function (input: number[], column: number, step: number, table
 
   const onRight = function (_prev: number, index: number) {
     if (step >= 0) {
-      return zero(result.slice(0, index)).concat([ step ]);
+      return zero(result.slice(0, index)).concat([step]);
     } else {
       const size = Math.max(tableSize.minCellWidth(), result[index] + step);
-      return zero(result.slice(0, index)).concat([ size - result[index] ]);
+      return zero(result.slice(0, index)).concat([size - result[index]]);
     }
   };
 
   return context.fold(onNone, onOnly, onLeft, onMiddle, onRight);
 };
 
-export {
-  determine
-};
+export { determine };

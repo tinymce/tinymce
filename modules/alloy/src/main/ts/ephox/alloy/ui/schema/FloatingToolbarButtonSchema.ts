@@ -17,7 +17,7 @@ import { ToolbarSpec } from '../types/ToolbarTypes';
 import * as ToolbarSchema from './ToolbarSchema';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
-  Fields.markers([ 'toggledClass' ]),
+  Fields.markers(['toggledClass']),
   FieldSchema.strict('lazySink'),
   FieldSchema.strictFunction('fetch'),
   FieldSchema.optionFunction('getBounds'),

@@ -8,6 +8,4 @@ const getGridSize = function (table: Element) {
   return warehouse.grid;
 };
 
-export {
-  getGridSize
-};
+export { getGridSize };

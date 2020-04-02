@@ -7,7 +7,7 @@ UnitTest.test('OnNodeTest', function () {
 
   const addAlpha = OnNode.addClass('alpha');
   const addBeta = OnNode.addClass('beta');
-  const removeAll = OnNode.removeClasses([ 'alpha', 'beta' ]);
+  const removeAll = OnNode.removeClasses(['alpha', 'beta']);
   const removeAlpha = OnNode.removeClass('alpha');
   const hasAlpha = OnNode.hasClass('alpha');
   const hasBeta = OnNode.hasClass('beta');

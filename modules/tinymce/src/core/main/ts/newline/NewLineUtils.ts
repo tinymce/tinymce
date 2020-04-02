@@ -15,7 +15,10 @@ import * as ScrollIntoView from '../dom/ScrollIntoView';
 
 const firstNonWhiteSpaceNodeSibling = function (node) {
   while (node) {
-    if (node.nodeType === 1 || (node.nodeType === 3 && node.data && /[\r\n\s]/.test(node.data))) {
+    if (
+      node.nodeType === 1 ||
+      (node.nodeType === 3 && node.data && /[\r\n\s]/.test(node.data))
+    ) {
       return node;
     }
 
@@ -24,7 +27,9 @@ const firstNonWhiteSpaceNodeSibling = function (node) {
 };
 
 const moveToCaretPosition = function (editor: Editor, root) {
-  let node, rng, lastNode = root;
+  let node,
+    rng,
+    lastNode = root;
   const dom = editor.dom;
   const moveCaretBeforeOnEnterElementsMap = editor.schema.getMoveCaretBeforeOnEnterElements();
 
@@ -104,22 +109,23 @@ const getEditableRoot = function (dom, node) {
 };
 
 const getParentBlock = function (editor: Editor) {
-  return Option.from(editor.dom.getParent(editor.selection.getStart(true), editor.dom.isBlock));
-};
-
-const getParentBlockName = function (editor: Editor) {
-  return getParentBlock(editor).fold(
-    Fun.constant(''),
-    function (parentBlock) {
-      return parentBlock.nodeName.toUpperCase();
-    }
+  return Option.from(
+    editor.dom.getParent(editor.selection.getStart(true), editor.dom.isBlock)
   );
 };
 
+const getParentBlockName = function (editor: Editor) {
+  return getParentBlock(editor).fold(Fun.constant(''), function (parentBlock) {
+    return parentBlock.nodeName.toUpperCase();
+  });
+};
+
 const isListItemParentBlock = function (editor: Editor) {
-  return getParentBlock(editor).filter(function (elm) {
-    return ElementType.isListItem(Element.fromDom(elm));
-  }).isSome();
+  return getParentBlock(editor)
+    .filter(function (elm) {
+      return ElementType.isListItem(Element.fromDom(elm));
+    })
+    .isSome();
 };
 
 export {

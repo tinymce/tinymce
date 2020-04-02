@@ -5,23 +5,35 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
 import { EventFormat, SimulatedEvent } from '../../events/SimulatedEvent';
 import * as StreamingState from './StreamingState';
-import { StreamingConfig, StreamingState as StreamingStateType, ThrottleStreamingConfig } from './StreamingTypes';
+import {
+  StreamingConfig,
+  StreamingState as StreamingStateType,
+  ThrottleStreamingConfig
+} from './StreamingTypes';
 
-const setup = (streamInfo: StreamingConfig, streamState: StreamingStateType) => {
+const setup = (
+  streamInfo: StreamingConfig,
+  streamState: StreamingStateType
+) => {
   const sInfo = streamInfo.stream as ThrottleStreamingConfig;
   const throttler = Throttler.last(streamInfo.onStream, sInfo.delay);
   streamState.setTimer(throttler);
 
-  return (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventFormat>) => {
+  return (
+    component: AlloyComponent,
+    simulatedEvent: SimulatedEvent<EventFormat>
+  ) => {
     throttler.throttle(component, simulatedEvent);
-    if (sInfo.stopEvent) { simulatedEvent.stop(); }
+    if (sInfo.stopEvent) {
+      simulatedEvent.stop();
+    }
   };
 };
 
 export default [
-  FieldSchema.strictOf('stream', ValueSchema.choose(
-    'mode',
-    {
+  FieldSchema.strictOf(
+    'stream',
+    ValueSchema.choose('mode', {
       throttle: [
         FieldSchema.strict('delay'),
         FieldSchema.defaulted('stopEvent', true),
@@ -30,8 +42,8 @@ export default [
           state: StreamingState.throttle
         })
       ]
-    }
-  )),
+    })
+  ),
   FieldSchema.defaulted('event', 'input'),
   FieldSchema.option('cancelEvent'),
   Fields.onStrictHandler('onStream')

@@ -18,7 +18,7 @@ export const registerDemoMenuItems = () => {
       // tslint:disable-next-line:no-console
       console.log('bold');
       api.setActive(true);
-      return () => { };
+      return () => {};
     },
     onAction: (_api) => {
       // tslint:disable-next-line:no-console

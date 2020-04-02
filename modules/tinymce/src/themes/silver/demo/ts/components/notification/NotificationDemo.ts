@@ -33,7 +33,7 @@ export default function () {
   };
 
   const notifyExtraLong = function (len) {
-    const longTextMessage = [ 'this is text ' ];
+    const longTextMessage = ['this is text '];
 
     for (let i = 0; i < len; i++) {
       longTextMessage.push('bla');
@@ -74,25 +74,28 @@ export default function () {
     console.log(notification);
   };
 
-  Arr.each([
-    { title: 'success', action: notifyShort, value: 'success' },
-    { title: 'error', action: notifyShort, value: 'error' },
-    { title: 'warn', action: notifyShort, value: 'warning' },
-    { title: 'info', action: notifyShort, value: 'info' },
-    { title: 'blank', action: notifyShort },
-    { title: 'notifyLong', action: notifyLong, value: 100 },
-    { title: 'notifyExtraLong', action: notifyExtraLong, value: 100 },
-    { title: 'notifyProgress', action: notifyProgress, value: 50 },
-    { title: 'notifyTimeout', action: notifyTimeout, value: 3000 },
-    { title: 'notifyIcon', action: notifyIcon }
-  ], function (notification) {
-    const btn = document.createElement('button');
-    btn.innerHTML = notification.title;
-    btn.onclick = function () {
-      notification.action(notification.value);
-    };
-    document.querySelector('#ephox-ui').appendChild(btn);
-  });
+  Arr.each(
+    [
+      { title: 'success', action: notifyShort, value: 'success' },
+      { title: 'error', action: notifyShort, value: 'error' },
+      { title: 'warn', action: notifyShort, value: 'warning' },
+      { title: 'info', action: notifyShort, value: 'info' },
+      { title: 'blank', action: notifyShort },
+      { title: 'notifyLong', action: notifyLong, value: 100 },
+      { title: 'notifyExtraLong', action: notifyExtraLong, value: 100 },
+      { title: 'notifyProgress', action: notifyProgress, value: 50 },
+      { title: 'notifyTimeout', action: notifyTimeout, value: 3000 },
+      { title: 'notifyIcon', action: notifyIcon }
+    ],
+    function (notification) {
+      const btn = document.createElement('button');
+      btn.innerHTML = notification.title;
+      btn.onclick = function () {
+        notification.action(notification.value);
+      };
+      document.querySelector('#ephox-ui').appendChild(btn);
+    }
+  );
 
   tinymce.init({
     selector: 'textarea.tinymce',

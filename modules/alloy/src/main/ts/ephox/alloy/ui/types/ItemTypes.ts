@@ -5,7 +5,10 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketchDetail } from '../../api/ui/Sketcher';
 import { TogglingConfigSpec } from '../../behaviour/toggling/TogglingTypes';
-import { DomModification, DomModificationSpec } from '../../dom/DomModification';
+import {
+  DomModification,
+  DomModificationSpec
+} from '../../dom/DomModification';
 
 export interface ItemDataTuple {
   value: string;
@@ -33,7 +36,7 @@ export interface WidgetItemDetail extends ItemDetail, CompositeSketchDetail {
   components: AlloySpec[];
   builder: <WidgetItemInfo>(buildInfo: WidgetItemInfo) => AlloySpec;
   autofocus: boolean;
-  domModification: { };
+  domModification: {};
   widgetBehaviours: SketchBehaviours;
   ignoreFocus: boolean;
   data: ItemDataTuple;

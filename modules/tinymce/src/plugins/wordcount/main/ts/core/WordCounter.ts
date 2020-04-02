@@ -19,13 +19,14 @@ const setup = (editor: Editor, api: WordCountApi, delay: number) => {
 
   editor.on('init', () => {
     updateCount(editor, api);
-    Delay.setEditorTimeout(editor, () => {
-      editor.on('SetContent BeforeAddUndo Undo Redo keyup', debouncedUpdate);
-    }, 0);
+    Delay.setEditorTimeout(
+      editor,
+      () => {
+        editor.on('SetContent BeforeAddUndo Undo Redo keyup', debouncedUpdate);
+      },
+      0
+    );
   });
 };
 
-export {
-  setup,
-  updateCount
-};
+export { setup, updateCount };

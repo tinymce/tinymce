@@ -10,8 +10,16 @@ import { Arr, Id, Option, Strings } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import * as TextSearch from '../text/TextSearch';
-import { createMarker, Marker, rangeFromMarker, removeMarker } from '../utils/Marker';
-import { generatePathRange, generatePathRangeFromRange } from '../utils/PathRange';
+import {
+  createMarker,
+  Marker,
+  rangeFromMarker,
+  removeMarker
+} from '../utils/Marker';
+import {
+  generatePathRange,
+  generatePathRangeFromRange
+} from '../utils/PathRange';
 import * as Spot from '../utils/Spot';
 import * as Utils from '../utils/Utils';
 import { InlinePattern, InlinePatternMatch } from './PatternTypes';
@@ -27,10 +35,15 @@ interface SearchResults {
   position: Spot.SpotPoint<Text>;
 }
 
-const matchesPattern = (dom: DOMUtils, block: Node, patternContent: string) => (element: Text, offset: number) => {
+const matchesPattern = (dom: DOMUtils, block: Node, patternContent: string) => (
+  element: Text,
+  offset: number
+) => {
   const text = element.data;
   const searchText = text.substring(0, offset);
-  const startEndIndex = searchText.lastIndexOf(patternContent.charAt(patternContent.length - 1));
+  const startEndIndex = searchText.lastIndexOf(
+    patternContent.charAt(patternContent.length - 1)
+  );
   const startIndex = searchText.lastIndexOf(patternContent);
   if (startIndex !== -1) {
     // Complete string found
@@ -44,9 +57,20 @@ const matchesPattern = (dom: DOMUtils, block: Node, patternContent: string) => (
   }
 };
 
-const findPatternStartFromSpot = (dom: DOMUtils, pattern: InlinePattern, block: Node, spot: Spot.SpotPoint<Text>): Option<Range> => {
+const findPatternStartFromSpot = (
+  dom: DOMUtils,
+  pattern: InlinePattern,
+  block: Node,
+  spot: Spot.SpotPoint<Text>
+): Option<Range> => {
   const startPattern = pattern.start;
-  const startSpot = TextSearch.repeatLeft(dom, spot.container, spot.offset, matchesPattern(dom, block, startPattern), block);
+  const startSpot = TextSearch.repeatLeft(
+    dom,
+    spot.container,
+    spot.offset,
+    matchesPattern(dom, block, startPattern),
+    block
+  );
   return startSpot.bind((spot) => {
     if (spot.offset >= startPattern.length) {
       // Complete match
@@ -57,24 +81,40 @@ const findPatternStartFromSpot = (dom: DOMUtils, pattern: InlinePattern, block: 
     } else {
       // Partial match so lean left to see if the string exists over fragmented text nodes
       const offset = spot.offset - startPattern.length;
-      return TextSearch.scanLeft(spot.container, offset, block).map((nextSpot) => {
-        // Build up the range between the last char and the first char
-        const rng = dom.createRng();
-        rng.setStart(nextSpot.container, nextSpot.offset);
-        rng.setEnd(spot.container, spot.offset);
-        return rng;
-      }).filter((rng) =>
-        // Ensure the range content matches the start
-        rng.toString() === startPattern
-      ).orThunk(() =>
-        // No match found, so continue searching
-        findPatternStartFromSpot(dom, pattern, block, Spot.point(spot.container, 0))
-      );
+      return TextSearch.scanLeft(spot.container, offset, block)
+        .map((nextSpot) => {
+          // Build up the range between the last char and the first char
+          const rng = dom.createRng();
+          rng.setStart(nextSpot.container, nextSpot.offset);
+          rng.setEnd(spot.container, spot.offset);
+          return rng;
+        })
+        .filter(
+          (rng) =>
+            // Ensure the range content matches the start
+            rng.toString() === startPattern
+        )
+        .orThunk(() =>
+          // No match found, so continue searching
+          findPatternStartFromSpot(
+            dom,
+            pattern,
+            block,
+            Spot.point(spot.container, 0)
+          )
+        );
     }
   });
 };
 
-const findPatternStart = (dom: DOMUtils, pattern: InlinePattern, node: Node, offset: number, block: Node, requireGap = false): Option<Range> => {
+const findPatternStart = (
+  dom: DOMUtils,
+  pattern: InlinePattern,
+  node: Node,
+  offset: number,
+  block: Node,
+  requireGap = false
+): Option<Range> => {
   if (pattern.start.length === 0 && !requireGap) {
     const rng = dom.createRng();
     rng.setStart(node, offset);
@@ -86,9 +126,15 @@ const findPatternStart = (dom: DOMUtils, pattern: InlinePattern, node: Node, off
     const start = findPatternStartFromSpot(dom, pattern, block, spot);
     return start.bind((startRange: Range) => {
       if (requireGap) {
-        if (startRange.endContainer === spot.container && startRange.endOffset === spot.offset) {
+        if (
+          startRange.endContainer === spot.container &&
+          startRange.endOffset === spot.offset
+        ) {
           return Option.none();
-        } else if (spot.offset === 0 && startRange.endContainer.textContent.length === startRange.endOffset) {
+        } else if (
+          spot.offset === 0 &&
+          startRange.endContainer.textContent.length === startRange.endOffset
+        ) {
           return Option.none();
         }
       }
@@ -98,7 +144,11 @@ const findPatternStart = (dom: DOMUtils, pattern: InlinePattern, node: Node, off
   });
 };
 
-const findPattern = (editor: Editor, block: Node, details: PatternDetails): Option<SearchResults> => {
+const findPattern = (
+  editor: Editor,
+  block: Node,
+  details: PatternDetails
+): Option<SearchResults> => {
   const dom = editor.dom;
   const root = dom.getRoot();
   const pattern = details.pattern;
@@ -106,36 +156,66 @@ const findPattern = (editor: Editor, block: Node, details: PatternDetails): Opti
   const endOffset = details.position.offset;
 
   // Lean left to find the start of the end pattern, as it could be across fragmented nodes
-  return TextSearch.scanLeft(endNode, endOffset - details.pattern.end.length, block).bind((spot) => {
-    const endPathRng = generatePathRange(root, spot.container, spot.offset, endNode, endOffset);
+  return TextSearch.scanLeft(
+    endNode,
+    endOffset - details.pattern.end.length,
+    block
+  ).bind((spot) => {
+    const endPathRng = generatePathRange(
+      root,
+      spot.container,
+      spot.offset,
+      endNode,
+      endOffset
+    );
 
     // If we have a replacement pattern, then it can't have nested patterns so just return immediately
     if (Utils.isReplacementPattern(pattern)) {
       return Option.some({
-        matches: [{
-          pattern,
-          startRng: endPathRng,
-          endRng: endPathRng
-        }],
+        matches: [
+          {
+            pattern,
+            startRng: endPathRng,
+            endRng: endPathRng
+          }
+        ],
         position: spot
       });
     } else {
       // Find any nested patterns, making sure not to process the current pattern again
-      const resultsOpt = findPatternsRec(editor, details.remainingPatterns, spot.container, spot.offset, block);
+      const resultsOpt = findPatternsRec(
+        editor,
+        details.remainingPatterns,
+        spot.container,
+        spot.offset,
+        block
+      );
       const results = resultsOpt.getOr({ matches: [], position: spot });
       const pos = results.position;
 
       // Find the start of the matched pattern
-      const start = findPatternStart(dom, pattern, pos.container, pos.offset, block, resultsOpt.isNone());
+      const start = findPatternStart(
+        dom,
+        pattern,
+        pos.container,
+        pos.offset,
+        block,
+        resultsOpt.isNone()
+      );
       return start.map((startRng) => {
         const startPathRng = generatePathRangeFromRange(root, startRng);
         return {
-          matches: results.matches.concat([{
-            pattern,
-            startRng: startPathRng,
-            endRng: endPathRng
-          }]),
-          position: Spot.point(startRng.startContainer as Text, startRng.startOffset)
+          matches: results.matches.concat([
+            {
+              pattern,
+              startRng: startPathRng,
+              endRng: endPathRng
+            }
+          ]),
+          position: Spot.point(
+            startRng.startContainer as Text,
+            startRng.startOffset
+          )
         };
       });
     }
@@ -149,7 +229,13 @@ const findPattern = (editor: Editor, block: Node, details: PatternDetails): Opti
 // 3. Patterns will not extend outside of the root element
 // 4. All pattern ends must be directly before the cursor (represented by node + offset)
 // 5. Only text nodes matter
-const findPatternsRec = (editor: Editor, patterns: InlinePattern[], node: Node, offset: number, block: Node): Option<SearchResults> => {
+const findPatternsRec = (
+  editor: Editor,
+  patterns: InlinePattern[],
+  node: Node,
+  offset: number,
+  block: Node
+): Option<SearchResults> => {
   const dom = editor.dom;
 
   return TextSearch.textBefore(node, offset, dom.getRoot()).bind((endSpot) => {
@@ -185,7 +271,11 @@ const findPatternsRec = (editor: Editor, patterns: InlinePattern[], node: Node, 
   });
 };
 
-const applyPattern = (editor: Editor, pattern: InlinePattern, patternRange: Range) => {
+const applyPattern = (
+  editor: Editor,
+  pattern: InlinePattern,
+  patternRange: Range
+) => {
   editor.selection.setRng(patternRange);
   if (pattern.type === 'inline-format') {
     Arr.each(pattern.format, (format) => {
@@ -196,7 +286,12 @@ const applyPattern = (editor: Editor, pattern: InlinePattern, patternRange: Rang
   }
 };
 
-const applyReplacementPattern = (editor: Editor, pattern: InlinePattern, marker: Marker, isRoot: (e: Node) => boolean) => {
+const applyReplacementPattern = (
+  editor: Editor,
+  pattern: InlinePattern,
+  marker: Marker,
+  isRoot: (e: Node) => boolean
+) => {
   // Remove the original text
   const markerRange = rangeFromMarker(editor.dom, marker);
   Utils.deleteRng(editor.dom, markerRange, isRoot);
@@ -205,7 +300,13 @@ const applyReplacementPattern = (editor: Editor, pattern: InlinePattern, marker:
   applyPattern(editor, pattern, markerRange);
 };
 
-const applyPatternWithContent = (editor: Editor, pattern: InlinePattern, startMarker: Marker, endMarker: Marker, isRoot: (e: Node) => boolean) => {
+const applyPatternWithContent = (
+  editor: Editor,
+  pattern: InlinePattern,
+  startMarker: Marker,
+  endMarker: Marker,
+  isRoot: (e: Node) => boolean
+) => {
   const dom = editor.dom;
 
   // Create the marker ranges for the patterns start/end content
@@ -217,44 +318,84 @@ const applyPatternWithContent = (editor: Editor, pattern: InlinePattern, startMa
   Utils.deleteRng(dom, markerEndRange, isRoot);
 
   // Apply the pattern
-  const patternMarker = { prefix: startMarker.prefix, start: startMarker.end, end: endMarker.start };
+  const patternMarker = {
+    prefix: startMarker.prefix,
+    start: startMarker.end,
+    end: endMarker.start
+  };
   const patternRange = rangeFromMarker(dom, patternMarker);
   applyPattern(editor, pattern, patternRange);
 };
 
-const addMarkers = (dom: DOMUtils, matches: InlinePatternMatch[]): (InlinePatternMatch & { endMarker: Marker; startMarker: Marker })[] => {
+const addMarkers = (
+  dom: DOMUtils,
+  matches: InlinePatternMatch[]
+): (InlinePatternMatch & { endMarker: Marker; startMarker: Marker })[] => {
   const markerPrefix = Id.generate('mce_textpattern');
 
   // Add end markers
-  const matchesWithEnds = Arr.foldr(matches, (acc, match) => {
-    const endMarker = createMarker(dom, markerPrefix + `_end${acc.length}`, match.endRng);
-    return acc.concat([{
-      ...match,
-      endMarker
-    }]);
-  }, []);
+  const matchesWithEnds = Arr.foldr(
+    matches,
+    (acc, match) => {
+      const endMarker = createMarker(
+        dom,
+        markerPrefix + `_end${acc.length}`,
+        match.endRng
+      );
+      return acc.concat([
+        {
+          ...match,
+          endMarker
+        }
+      ]);
+    },
+    []
+  );
 
   // Add start markers
-  return Arr.foldr(matchesWithEnds, (acc, match) => {
-    const idx = matchesWithEnds.length - acc.length - 1;
-    const startMarker = Utils.isReplacementPattern(match.pattern) ? match.endMarker : createMarker(dom, markerPrefix + `_start${idx}`, match.startRng);
-    return acc.concat([{
-      ...match,
-      startMarker
-    }]);
-  }, []);
+  return Arr.foldr(
+    matchesWithEnds,
+    (acc, match) => {
+      const idx = matchesWithEnds.length - acc.length - 1;
+      const startMarker = Utils.isReplacementPattern(match.pattern)
+        ? match.endMarker
+        : createMarker(dom, markerPrefix + `_start${idx}`, match.startRng);
+      return acc.concat([
+        {
+          ...match,
+          startMarker
+        }
+      ]);
+    },
+    []
+  );
 };
 
-const findPatterns = (editor: Editor, patterns: InlinePattern[], space: boolean): InlinePatternMatch[] => {
+const findPatterns = (
+  editor: Editor,
+  patterns: InlinePattern[],
+  space: boolean
+): InlinePatternMatch[] => {
   const rng = editor.selection.getRng();
   if (rng.collapsed === false) {
     return [];
   }
 
-  return Utils.getParentBlock(editor, rng).bind((block) => {
-    const offset =  rng.startOffset - (space ? 1 : 0);
-    return findPatternsRec(editor, patterns, rng.startContainer, offset, block);
-  }).fold(() => [], (result) => result.matches);
+  return Utils.getParentBlock(editor, rng)
+    .bind((block) => {
+      const offset = rng.startOffset - (space ? 1 : 0);
+      return findPatternsRec(
+        editor,
+        patterns,
+        rng.startContainer,
+        offset,
+        block
+      );
+    })
+    .fold(
+      () => [],
+      (result) => result.matches
+    );
 };
 
 const applyMatches = (editor: Editor, matches: InlinePatternMatch[]) => {
@@ -276,7 +417,13 @@ const applyMatches = (editor: Editor, matches: InlinePatternMatch[]) => {
     if (Utils.isReplacementPattern(match.pattern)) {
       applyReplacementPattern(editor, match.pattern, match.endMarker, isRoot);
     } else {
-      applyPatternWithContent(editor, match.pattern, match.startMarker, match.endMarker, isRoot);
+      applyPatternWithContent(
+        editor,
+        match.pattern,
+        match.startMarker,
+        match.endMarker,
+        isRoot
+      );
     }
 
     // Remove the markers

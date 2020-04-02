@@ -7,7 +7,10 @@ import $ from 'tinymce/core/api/dom/DomQuery';
 import ViewBlock from '../../module/test/ViewBlock';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function (
+  success,
+  failure
+) {
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 
@@ -20,7 +23,8 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function (success, fai
   };
 
   suite.test('positionsUntil', function () {
-    let result, predicateCallCount = 0;
+    let result,
+      predicateCallCount = 0;
 
     const predicate = function () {
       predicateCallCount++;
@@ -28,25 +32,49 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function (success, fai
     };
 
     $(getRoot()).html('<span contentEditable="false">a</span><span>b</span>');
-    result = LineWalker.positionsUntil(1, getRoot(), predicate, getRoot().firstChild);
+    result = LineWalker.positionsUntil(
+      1,
+      getRoot(),
+      predicate,
+      getRoot().firstChild
+    );
     LegacyUnit.equal(result.length, 3);
     LegacyUnit.equalDom(result[0].position.getNode(), getRoot().lastChild);
-    LegacyUnit.equalDom(result[1].position.getNode(), getRoot().lastChild.firstChild);
-    LegacyUnit.equalDom(result[2].position.getNode(), getRoot().lastChild.firstChild);
+    LegacyUnit.equalDom(
+      result[1].position.getNode(),
+      getRoot().lastChild.firstChild
+    );
+    LegacyUnit.equalDom(
+      result[2].position.getNode(),
+      getRoot().lastChild.firstChild
+    );
     LegacyUnit.equal(predicateCallCount, 3);
 
     predicateCallCount = 0;
     $(getRoot()).html('<span>a</span><span contentEditable="false">b</span>');
-    result = LineWalker.positionsUntil(-1, getRoot(), predicate, getRoot().lastChild);
+    result = LineWalker.positionsUntil(
+      -1,
+      getRoot(),
+      predicate,
+      getRoot().lastChild
+    );
     LegacyUnit.equal(result.length, 3);
     LegacyUnit.equalDom(result[0].position.getNode(), getRoot().lastChild);
-    LegacyUnit.equalDom(result[1].position.getNode(), getRoot().firstChild.firstChild);
-    LegacyUnit.equalDom(result[2].position.getNode(), getRoot().firstChild.firstChild);
+    LegacyUnit.equalDom(
+      result[1].position.getNode(),
+      getRoot().firstChild.firstChild
+    );
+    LegacyUnit.equalDom(
+      result[2].position.getNode(),
+      getRoot().firstChild.firstChild
+    );
     LegacyUnit.equal(predicateCallCount, 3);
   });
 
   suite.test('upUntil', function () {
-    let caretPosition, result, predicateCallCount = 0;
+    let caretPosition,
+      result,
+      predicateCallCount = 0;
 
     const predicate = function () {
       predicateCallCount++;
@@ -66,7 +94,9 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function (success, fai
   });
 
   suite.test('downUntil', function () {
-    let caretPosition, result, predicateCallCount = 0;
+    let caretPosition,
+      result,
+      predicateCallCount = 0;
 
     const predicate = function () {
       predicateCallCount++;
@@ -86,18 +116,35 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function (success, fai
   });
 
   suite.test('isAboveLine', function () {
-    LegacyUnit.equal(LineWalker.isAboveLine(5)({ line: 10 } as LineWalker.ClientRectLine), true);
-    LegacyUnit.equal(LineWalker.isAboveLine(5)({ line: 2 } as LineWalker.ClientRectLine), false);
+    LegacyUnit.equal(
+      LineWalker.isAboveLine(5)({ line: 10 } as LineWalker.ClientRectLine),
+      true
+    );
+    LegacyUnit.equal(
+      LineWalker.isAboveLine(5)({ line: 2 } as LineWalker.ClientRectLine),
+      false
+    );
   });
 
   suite.test('isLine', function () {
-    LegacyUnit.equal(LineWalker.isLine(3)({ line: 3 } as LineWalker.ClientRectLine), true);
-    LegacyUnit.equal(LineWalker.isLine(3)({ line: 4 } as LineWalker.ClientRectLine), false);
+    LegacyUnit.equal(
+      LineWalker.isLine(3)({ line: 3 } as LineWalker.ClientRectLine),
+      true
+    );
+    LegacyUnit.equal(
+      LineWalker.isLine(3)({ line: 4 } as LineWalker.ClientRectLine),
+      false
+    );
   });
 
   viewBlock.attach();
-  Pipeline.async({}, suite.toSteps({}), function () {
-    viewBlock.detach();
-    success();
-  }, failure);
+  Pipeline.async(
+    {},
+    suite.toSteps({}),
+    function () {
+      viewBlock.detach();
+      success();
+    },
+    failure
+  );
 });

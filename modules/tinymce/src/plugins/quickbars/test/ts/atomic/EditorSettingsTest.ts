@@ -8,10 +8,15 @@ UnitTest.test('DialogChanges', () => {
   Logger.sync(
     'Quick Toolbars plugin: Quick Toolbars Editor Settings and default values',
     () => {
-
-      const test = (label: string, method: (editor: Editor) => string, settings: any, expected: string) => {
+      const test = (
+        label: string,
+        method: (editor: Editor) => string,
+        settings: any,
+        expected: string
+      ) => {
         const mockEditor = {
-          getParam: (name, defaultValue) => Obj.get(settings, name).getOr(defaultValue),
+          getParam: (name, defaultValue) =>
+            Obj.get(settings, name).getOr(defaultValue),
           settings
         } as any;
 
@@ -21,7 +26,8 @@ UnitTest.test('DialogChanges', () => {
         });
       };
 
-      test('getTextSelectionToolbarItems: testing for empty string should return empty string',
+      test(
+        'getTextSelectionToolbarItems: testing for empty string should return empty string',
         Settings.getTextSelectionToolbarItems,
         {
           quickbars_selection_toolbar: ''
@@ -29,7 +35,8 @@ UnitTest.test('DialogChanges', () => {
         ''
       );
 
-      test('getTextSelectionToolbarItems: testing for boolean false should return empty string',
+      test(
+        'getTextSelectionToolbarItems: testing for boolean false should return empty string',
         Settings.getTextSelectionToolbarItems,
         {
           quickbars_selection_toolbar: false
@@ -37,7 +44,8 @@ UnitTest.test('DialogChanges', () => {
         ''
       );
 
-      test('getTextSelectionToolbarItems: testing for boolean true should fallback to defaults',
+      test(
+        'getTextSelectionToolbarItems: testing for boolean true should fallback to defaults',
         Settings.getTextSelectionToolbarItems,
         {
           quickbars_selection_toolbar: true
@@ -45,7 +53,8 @@ UnitTest.test('DialogChanges', () => {
         'bold italic | quicklink h2 h3 blockquote'
       );
 
-      test('getTextSelectionToolbarItems: testing for undefined should fallback to defaults',
+      test(
+        'getTextSelectionToolbarItems: testing for undefined should fallback to defaults',
         Settings.getTextSelectionToolbarItems,
         {
           // intentionally blank undefined
@@ -53,7 +62,8 @@ UnitTest.test('DialogChanges', () => {
         'bold italic | quicklink h2 h3 blockquote'
       );
 
-      test('getTextSelectionToolbarItems: testing for custom config string',
+      test(
+        'getTextSelectionToolbarItems: testing for custom config string',
         Settings.getTextSelectionToolbarItems,
         {
           quickbars_selection_toolbar: 'hello | friend'
@@ -61,7 +71,8 @@ UnitTest.test('DialogChanges', () => {
         'hello | friend'
       );
 
-      test('getInsertToolbarItems: testing for empty string should return empty string',
+      test(
+        'getInsertToolbarItems: testing for empty string should return empty string',
         Settings.getInsertToolbarItems,
         {
           quickbars_insert_toolbar: ''
@@ -69,7 +80,8 @@ UnitTest.test('DialogChanges', () => {
         ''
       );
 
-      test('getInsertToolbarItems: testing for boolean false should return empty string',
+      test(
+        'getInsertToolbarItems: testing for boolean false should return empty string',
         Settings.getInsertToolbarItems,
         {
           quickbars_insert_toolbar: false
@@ -77,7 +89,8 @@ UnitTest.test('DialogChanges', () => {
         ''
       );
 
-      test('getInsertToolbarItems: testing for boolean true should fallback to defaults',
+      test(
+        'getInsertToolbarItems: testing for boolean true should fallback to defaults',
         Settings.getInsertToolbarItems,
         {
           quickbars_insert_toolbar: true
@@ -85,7 +98,8 @@ UnitTest.test('DialogChanges', () => {
         'quickimage quicktable'
       );
 
-      test('getInsertToolbarItems: testing for undefined should fallback to defaults',
+      test(
+        'getInsertToolbarItems: testing for undefined should fallback to defaults',
         Settings.getInsertToolbarItems,
         {
           // intentionally blank undefined
@@ -93,14 +107,14 @@ UnitTest.test('DialogChanges', () => {
         'quickimage quicktable'
       );
 
-      test('getInsertToolbarItems: testing for custom config string',
+      test(
+        'getInsertToolbarItems: testing for custom config string',
         Settings.getInsertToolbarItems,
         {
           quickbars_insert_toolbar: 'bye | now'
         },
         'bye | now'
       );
-
     }
   );
 });

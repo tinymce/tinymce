@@ -12,13 +12,15 @@ const storageName = 'tinymce-custom-colors';
 
 export default (max: number = 10) => {
   const storageString = LocalStorage.getItem(storageName);
-  const localstorage = Type.isString(storageString) ? JSON.parse(storageString) : [];
+  const localstorage = Type.isString(storageString)
+    ? JSON.parse(storageString)
+    : [];
 
   const prune = (list: string[]): string[] => {
     // When the localStorage cache is too big,
     // remove the difference from the tail (head is fresh, tail is stale!)
     const diff = max - list.length;
-    return (diff < 0) ? list.slice(0, max) : list;
+    return diff < 0 ? list.slice(0, max) : list;
   };
 
   const cache = prune(localstorage);

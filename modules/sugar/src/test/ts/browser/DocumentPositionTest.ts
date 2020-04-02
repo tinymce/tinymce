@@ -28,27 +28,87 @@ UnitTest.test('DocumentPositionTest', function () {
    * </div>
    */
 
-  InsertAll.append(container, [ p1 ]);
-  InsertAll.append(p1, [ p1t1, p1t2, p1s1 ]);
-  InsertAll.append(p1s1, [ p1s1t1 ]);
+  InsertAll.append(container, [p1]);
+  InsertAll.append(p1, [p1t1, p1t2, p1s1]);
+  InsertAll.append(p1s1, [p1s1t1]);
 
   Insert.append(Body.body(), container);
 
   const check = function (expected, start, soffset, finish, foffset, msg) {
-    assert.eq(expected, DocumentPosition.after(start, soffset, finish, foffset), msg);
+    assert.eq(
+      expected,
+      DocumentPosition.after(start, soffset, finish, foffset),
+      msg
+    );
   };
 
-  check(true, container, 1, p1t1, ''.length, 'Selection from (div,end) -> (p1t1,0) should be RTL');
-  check(false, p1t1, 0, container, 1, 'Selection from (p1t1,0) -> (div,end) should be LTR');
+  check(
+    true,
+    container,
+    1,
+    p1t1,
+    ''.length,
+    'Selection from (div,end) -> (p1t1,0) should be RTL'
+  );
+  check(
+    false,
+    p1t1,
+    0,
+    container,
+    1,
+    'Selection from (p1t1,0) -> (div,end) should be LTR'
+  );
 
-  check(true, container, 1, p1t1, 'p1text'.length, 'Selection from (div,end) -> (p1t1,end) should be RTL');
-  check(false, p1t1, 'p1text'.length, container, 1, 'Selection from (p1t1,end) -> (div,end) should be LTR');
+  check(
+    true,
+    container,
+    1,
+    p1t1,
+    'p1text'.length,
+    'Selection from (div,end) -> (p1t1,end) should be RTL'
+  );
+  check(
+    false,
+    p1t1,
+    'p1text'.length,
+    container,
+    1,
+    'Selection from (p1t1,end) -> (div,end) should be LTR'
+  );
 
-  check(true, container, 1, p1s1t1, 'spantext'.length, 'Selection from (div,end) -> (p1s1t1,end) should be RTL');
-  check(false, p1s1t1, 'spantext'.length, container, 1, 'Selection from  (p1s1t1,end) -> (div,end) should be LTR');
+  check(
+    true,
+    container,
+    1,
+    p1s1t1,
+    'spantext'.length,
+    'Selection from (div,end) -> (p1s1t1,end) should be RTL'
+  );
+  check(
+    false,
+    p1s1t1,
+    'spantext'.length,
+    container,
+    1,
+    'Selection from  (p1s1t1,end) -> (div,end) should be LTR'
+  );
 
-  check(true, container, 1, p1, 3, 'Selection from (div,end) -> (p,end) should be RTL');
-  check(false, p1, 3, container, 1, 'Selection from (p,end) -> (div,end) should be LTR');
+  check(
+    true,
+    container,
+    1,
+    p1,
+    3,
+    'Selection from (div,end) -> (p,end) should be RTL'
+  );
+  check(
+    false,
+    p1,
+    3,
+    container,
+    1,
+    'Selection from (p,end) -> (div,end) should be LTR'
+  );
 
   Remove.remove(container);
 
@@ -64,9 +124,9 @@ UnitTest.test('DocumentPositionTest', function () {
     const p1span2 = Element.fromText(' dog ');
     const p2br = Element.fromTag('br');
 
-    InsertAll.append(div, [ p11, p2 ]);
-    InsertAll.append(p11, [ p1text, p1textb, p1span ]);
-    InsertAll.append(p1span, [ p1span1, p1span2 ]);
+    InsertAll.append(div, [p11, p2]);
+    InsertAll.append(p11, [p1text, p1textb, p1span]);
+    InsertAll.append(p1span, [p1span1, p1span2]);
     Insert.append(p2, p2br);
     /* div+-p1
           |  |-p1text
@@ -77,17 +137,66 @@ UnitTest.test('DocumentPositionTest', function () {
           +-p2
              +-p2br
     */
-    assert.eq(true, Compare.eq(div, DocumentPosition.commonAncestorContainer(div, 0, div, 0)),
-      'lca(div,0,div,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(div, 0, div, 0)) + `, expected: '<div>...'`);
-    assert.eq(true, Compare.eq(div, DocumentPosition.commonAncestorContainer(p11, 0, p2, 0)),
-      'lca(p1,0,p2,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p11, 0, p2, 0)) + `, expected: '<div>...'`);
-    assert.eq(true, Compare.eq(div, DocumentPosition.commonAncestorContainer(div, 1, div, 2)),
-      'lca(div,1,div,2)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(div, 1, div, 2)) + `, expected: '<div>...'`);
-    assert.eq(true, Compare.eq(div, DocumentPosition.commonAncestorContainer(p1span1, 0, p2br, 0)),
-      'lca(p1span1,0,p2br,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p1span1, 0, p2br, 0)) + `, expected: '<div>...'`);
-    assert.eq(true, Compare.eq(p11, DocumentPosition.commonAncestorContainer(p1text, 0, p1span2, 0)),
-      'lca(p1text,0,p1span2,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p1text, 0, p1span2, 0)) + `, expected: 'p1': <p>One, two...`);
-    assert.eq(true, Compare.eq(p1span, DocumentPosition.commonAncestorContainer(p1span1, 0, p1span2, 0)),
-      'lca(p1span1,0,p1span2,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p1span1, 0, p1span2, 0)) + `, expected: 'p1span': <span>cat dog </span>`);
+    assert.eq(
+      true,
+      Compare.eq(div, DocumentPosition.commonAncestorContainer(div, 0, div, 0)),
+      'lca(div,0,div,0)===' +
+        Html.getOuter(
+          DocumentPosition.commonAncestorContainer(div, 0, div, 0)
+        ) +
+        `, expected: '<div>...'`
+    );
+    assert.eq(
+      true,
+      Compare.eq(div, DocumentPosition.commonAncestorContainer(p11, 0, p2, 0)),
+      'lca(p1,0,p2,0)===' +
+        Html.getOuter(DocumentPosition.commonAncestorContainer(p11, 0, p2, 0)) +
+        `, expected: '<div>...'`
+    );
+    assert.eq(
+      true,
+      Compare.eq(div, DocumentPosition.commonAncestorContainer(div, 1, div, 2)),
+      'lca(div,1,div,2)===' +
+        Html.getOuter(
+          DocumentPosition.commonAncestorContainer(div, 1, div, 2)
+        ) +
+        `, expected: '<div>...'`
+    );
+    assert.eq(
+      true,
+      Compare.eq(
+        div,
+        DocumentPosition.commonAncestorContainer(p1span1, 0, p2br, 0)
+      ),
+      'lca(p1span1,0,p2br,0)===' +
+        Html.getOuter(
+          DocumentPosition.commonAncestorContainer(p1span1, 0, p2br, 0)
+        ) +
+        `, expected: '<div>...'`
+    );
+    assert.eq(
+      true,
+      Compare.eq(
+        p11,
+        DocumentPosition.commonAncestorContainer(p1text, 0, p1span2, 0)
+      ),
+      'lca(p1text,0,p1span2,0)===' +
+        Html.getOuter(
+          DocumentPosition.commonAncestorContainer(p1text, 0, p1span2, 0)
+        ) +
+        `, expected: 'p1': <p>One, two...`
+    );
+    assert.eq(
+      true,
+      Compare.eq(
+        p1span,
+        DocumentPosition.commonAncestorContainer(p1span1, 0, p1span2, 0)
+      ),
+      'lca(p1span1,0,p1span2,0)===' +
+        Html.getOuter(
+          DocumentPosition.commonAncestorContainer(p1span1, 0, p1span2, 0)
+        ) +
+        `, expected: 'p1span': <span>cat dog </span>`
+    );
   })();
 });

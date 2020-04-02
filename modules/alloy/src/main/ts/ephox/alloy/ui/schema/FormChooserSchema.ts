@@ -16,8 +16,13 @@ import { FormChooserDetail } from '../types/FormChooserTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('choices'),
-  SketchBehaviours.field('chooserBehaviours', [ Keying, Highlighting, Composing, Representing ]),
-  Fields.markers([ 'choiceClass', 'selectedClass' ])
+  SketchBehaviours.field('chooserBehaviours', [
+    Keying,
+    Highlighting,
+    Composing,
+    Representing
+  ]),
+  Fields.markers(['choiceClass', 'selectedClass'])
 ]);
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
@@ -35,7 +40,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.group<FormChooserDetail, SimpleOrSketchSpec & { value: string }>({
     factory: {
       sketch(spec) {
-        return Objects.exclude(spec, [ 'value' ]);
+        return Objects.exclude(spec, ['value']);
       }
     },
     name: 'choices',
@@ -55,11 +60,11 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
               initialValue: choiceSpec.value
             }
           }),
-          Focusing.config({ })
+          Focusing.config({})
         ]),
 
         domModification: {
-          classes: [ detail.markers.choiceClass ]
+          classes: [detail.markers.choiceClass]
         },
         events: ButtonBase.events(Option.none())
       };
@@ -69,8 +74,4 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 
 const name = Fun.constant('FormChooser');
 
-export {
-  name,
-  schema,
-  parts
-};
+export { name, schema, parts };

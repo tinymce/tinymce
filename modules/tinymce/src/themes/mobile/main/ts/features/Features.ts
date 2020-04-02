@@ -22,12 +22,20 @@ import * as LinkButton from '../ui/LinkButton';
 import * as StyleFormats from '../util/StyleFormats';
 import { MobileRealm } from '../ui/IosRealm';
 
-const defaults = [ 'undo', 'bold', 'italic', 'link', 'image', 'bullist', 'styleselect' ];
+const defaults = [
+  'undo',
+  'bold',
+  'italic',
+  'link',
+  'image',
+  'bullist',
+  'styleselect'
+];
 
 const extract = function (rawToolbar) {
   // Ignoring groups
   const toolbar = rawToolbar.replace(/\|/g, ' ').trim();
-  return toolbar.length > 0 ? toolbar.split(/\s+/) : [ ];
+  return toolbar.length > 0 ? toolbar.split(/\s+/) : [];
 };
 
 const identifyFromArray = function (toolbar) {
@@ -104,24 +112,29 @@ const setup = function (realm: MobileRealm, editor: Editor) {
   };
 
   const styleselect = function () {
-    return Buttons.forToolbar('style-formats', function (button) {
-      editor.fire('toReading');
-      realm.dropup().appear(styleFormatsMenu, Toggling.on, button);
-    }, Behaviour.derive([
-      Toggling.config({
-        toggleClass: Styles.resolve('toolbar-button-selected'),
-        toggleOnExecute: false,
-        aria: {
-          mode: 'pressed'
-        }
-      }),
-      Receiving.config({
-        channels: Objects.wrapAll([
-          Receivers.receive(TinyChannels.orientationChanged, Toggling.off),
-          Receivers.receive(TinyChannels.dropupDismissed, Toggling.off)
-        ])
-      })
-    ]), editor);
+    return Buttons.forToolbar(
+      'style-formats',
+      function (button) {
+        editor.fire('toReading');
+        realm.dropup().appear(styleFormatsMenu, Toggling.on, button);
+      },
+      Behaviour.derive([
+        Toggling.config({
+          toggleClass: Styles.resolve('toolbar-button-selected'),
+          toggleOnExecute: false,
+          aria: {
+            mode: 'pressed'
+          }
+        }),
+        Receiving.config({
+          channels: Objects.wrapAll([
+            Receivers.receive(TinyChannels.orientationChanged, Toggling.off),
+            Receivers.receive(TinyChannels.dropupDismissed, Toggling.off)
+          ])
+        })
+      ]),
+      editor
+    );
   };
 
   const feature = function (prereq, sketch) {
@@ -161,17 +174,18 @@ const detect = function (settings, features) {
   const itemNames = identify(settings);
 
   // Now, build the list only including supported features and no duplicates.
-  const present = { };
+  const present = {};
   return Arr.bind(itemNames, function (iName) {
-    const r = !Obj.hasNonNullableKey<any, string>(present, iName) && Obj.hasNonNullableKey(features, iName) && features[iName].isSupported() ? [ features[iName].sketch() ] : [];
+    const r =
+      !Obj.hasNonNullableKey<any, string>(present, iName) &&
+      Obj.hasNonNullableKey(features, iName) &&
+      features[iName].isSupported()
+        ? [features[iName].sketch()]
+        : [];
     // NOTE: Could use fold to avoid mutation, but it might be overkill and not performant
     present[iName] = true;
     return r;
   });
 };
 
-export {
-  identify,
-  setup,
-  detect
-};
+export { identify, setup, detect };

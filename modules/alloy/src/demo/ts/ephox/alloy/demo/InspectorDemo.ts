@@ -21,9 +21,10 @@ export default (): void => {
 
   Debugging.registerInspector('inspector-demo', gui);
 
-  HtmlDisplay.section(gui,
+  HtmlDisplay.section(
+    gui,
     '<p>Inspect away! "Alloy" will appear in the elements panel in Chrome Developer Tools</p>' +
-    '<p>Note, the inspector is not publically available yet.</p>',
+      '<p>Note, the inspector is not publically available yet.</p>',
     {
       dom: {
         tag: 'div'
@@ -43,9 +44,7 @@ export default (): void => {
           dom: {
             tag: 'div'
           },
-          components: [
-            parts.field('alpha', Input.sketch({ }))
-          ]
+          components: [parts.field('alpha', Input.sketch({}))]
         }))
       ]
     }

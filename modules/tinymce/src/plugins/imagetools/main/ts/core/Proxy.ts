@@ -29,22 +29,33 @@ const requestServiceBlob = function (url: string, apiKey: string) {
     'tiny-api-key': apiKey
   };
 
-  return Utils.requestUrlAsBlob(appendApiKey(url, apiKey), headers, false).then(function (result) {
-    return result.status < 200 || result.status >= 300 ? Errors.handleServiceErrorResponse(result.status, result.blob) : Promise.resolve(result.blob);
-  });
+  return Utils.requestUrlAsBlob(appendApiKey(url, apiKey), headers, false).then(
+    function (result) {
+      return result.status < 200 || result.status >= 300
+        ? Errors.handleServiceErrorResponse(result.status, result.blob)
+        : Promise.resolve(result.blob);
+    }
+  );
 };
 
 function requestBlob(url: string, withCredentials: boolean) {
-  return Utils.requestUrlAsBlob(url, {}, withCredentials)
-    .then(function (result) {
-      return result.status < 200 || result.status >= 300 ? Errors.handleHttpError(result.status) : Promise.resolve(result.blob);
-    });
+  return Utils.requestUrlAsBlob(url, {}, withCredentials).then(function (
+    result
+  ) {
+    return result.status < 200 || result.status >= 300
+      ? Errors.handleHttpError(result.status)
+      : Promise.resolve(result.blob);
+  });
 }
 
-const getUrl = function (url: string, apiKey: string, withCredentials: boolean): Promise<Blob> {
-  return apiKey ? requestServiceBlob(url, apiKey) : requestBlob(url, withCredentials);
+const getUrl = function (
+  url: string,
+  apiKey: string,
+  withCredentials: boolean
+): Promise<Blob> {
+  return apiKey
+    ? requestServiceBlob(url, apiKey)
+    : requestBlob(url, withCredentials);
 };
 
-export {
-  getUrl
-};
+export { getUrl };

@@ -15,7 +15,8 @@ import { Fun, Option } from '@ephox/katamari';
 import { Universe } from './Universe';
 import { Gene } from './Gene';
 
-export interface TestUniverseUp extends ReturnType<Universe<Gene, undefined>['up']> {
+export interface TestUniverseUp
+  extends ReturnType<Universe<Gene, undefined>['up']> {
   top: (element: Gene) => Gene;
 }
 

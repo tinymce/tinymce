@@ -27,6 +27,4 @@ const addStylesheet = function (url: string, scope?: Element<Document>) {
   return link;
 };
 
-export {
-  addStylesheet
-};
+export { addStylesheet };

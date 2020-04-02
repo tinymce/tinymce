@@ -16,9 +16,13 @@ export interface HtmlPanel {
 const htmlPanelFields = [
   FieldSchema.strictString('type'),
   FieldSchema.strictString('html'),
-  FieldSchema.defaultedStringEnum('presets', 'presentation', [ 'presentation', 'document' ])
+  FieldSchema.defaultedStringEnum('presets', 'presentation', [
+    'presentation',
+    'document'
+  ])
 ];
 
 export const htmlPanelSchema = ValueSchema.objOf(htmlPanelFields);
 
-export const createHtmlPanel = (spec: HtmlPanelApi) => ValueSchema.asRaw<HtmlPanel>('htmlpanel', htmlPanelSchema, spec);
+export const createHtmlPanel = (spec: HtmlPanelApi) =>
+  ValueSchema.asRaw<HtmlPanel>('htmlpanel', htmlPanelSchema, spec);

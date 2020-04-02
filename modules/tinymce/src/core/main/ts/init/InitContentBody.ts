@@ -52,9 +52,14 @@ const appendStyle = function (editor: Editor, text: string) {
   Insert.append(head, tag);
 };
 
-const getRootName = (editor: Editor): string => editor.inline ? editor.getElement().nodeName.toLowerCase() : undefined;
+const getRootName = (editor: Editor): string =>
+  editor.inline ? editor.getElement().nodeName.toLowerCase() : undefined;
 
-const removeUndefined = <T>(obj: T): T => Obj.filter(obj as Record<string, unknown>, (v) => Type.isUndefined(v) === false) as T;
+const removeUndefined = <T>(obj: T): T =>
+  Obj.filter(
+    obj as Record<string, unknown>,
+    (v) => Type.isUndefined(v) === false
+  ) as T;
 
 const mkParserSettings = (editor: Editor): DomParserSettings => {
   const settings = editor.settings;
@@ -105,7 +110,8 @@ const mkSerializerSettings = (editor: Editor): SerializerSettings => {
       extended_valid_elements: settings.extended_valid_elements,
       invalid_elements: settings.invalid_elements,
       invalid_styles: settings.invalid_styles,
-      move_caret_before_on_enter_elements: settings.move_caret_before_on_enter_elements,
+      move_caret_before_on_enter_elements:
+        settings.move_caret_before_on_enter_elements,
       non_empty_elements: settings.non_empty_elements,
       schema: settings.schema,
       self_closing_elements: settings.self_closing_elements,
@@ -118,7 +124,7 @@ const mkSerializerSettings = (editor: Editor): SerializerSettings => {
       valid_elements: settings.valid_elements,
       valid_styles: settings.valid_styles,
       verify_html: settings.verify_html,
-      whitespace_elements: settings.whitespace_elements,
+      whitespace_elements: settings.whitespace_elements
     })
   };
 };
@@ -128,7 +134,9 @@ const createParser = function (editor: Editor): DomParser {
 
   // Convert src and href into data-mce-src, data-mce-href and data-mce-style
   parser.addAttributeFilter('src,href,style,tabindex', function (nodes, name) {
-    let i = nodes.length, node: Node, value: string;
+    let i = nodes.length,
+      node: Node,
+      value: string;
     const dom = editor.dom;
     const internalName = 'data-mce-' + name;
 
@@ -164,7 +172,9 @@ const createParser = function (editor: Editor): DomParser {
 
   // Keep scripts from executing
   parser.addNodeFilter('script', function (nodes: Node[]) {
-    let i = nodes.length, node, type;
+    let i = nodes.length,
+      node,
+      type;
 
     while (i--) {
       node = nodes[i];
@@ -177,7 +187,8 @@ const createParser = function (editor: Editor): DomParser {
 
   if (editor.settings.preserve_cdata) {
     parser.addNodeFilter('#cdata', function (nodes: Node[]) {
-      let i = nodes.length, node;
+      let i = nodes.length,
+        node;
 
       while (i--) {
         node = nodes[i];
@@ -189,7 +200,8 @@ const createParser = function (editor: Editor): DomParser {
   }
 
   parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function (nodes: Node[]) {
-    let i = nodes.length, node;
+    let i = nodes.length,
+      node;
     const nonEmptyElements = editor.schema.getNonEmptyElements();
 
     while (i--) {
@@ -206,19 +218,23 @@ const createParser = function (editor: Editor): DomParser {
 
 const autoFocus = function (editor: Editor) {
   if (editor.settings.auto_focus) {
-    Delay.setEditorTimeout(editor, function () {
-      let focusEditor;
+    Delay.setEditorTimeout(
+      editor,
+      function () {
+        let focusEditor;
 
-      if (editor.settings.auto_focus === true) {
-        focusEditor = editor;
-      } else {
-        focusEditor = editor.editorManager.get(editor.settings.auto_focus);
-      }
+        if (editor.settings.auto_focus === true) {
+          focusEditor = editor;
+        } else {
+          focusEditor = editor.editorManager.get(editor.settings.auto_focus);
+        }
 
-      if (!focusEditor.destroyed) {
-        focusEditor.focus();
-      }
-    }, 100);
+        if (!focusEditor.destroyed) {
+          focusEditor.focus();
+        }
+      },
+      100
+    );
   }
 };
 
@@ -227,11 +243,16 @@ const moveSelectionToFirstCaretPosition = (editor: Editor) => {
   // We don't do this on inline because then it selects the editor container
   // This must run AFTER editor.focus!
   const root = editor.dom.getRoot();
-  if (!editor.inline && (!hasAnyRanges(editor) || editor.selection.getStart(true) === root)) {
+  if (
+    !editor.inline &&
+    (!hasAnyRanges(editor) || editor.selection.getStart(true) === root)
+  ) {
     CaretFinder.firstPositionIn(root).each((pos: CaretPosition) => {
       const node = pos.getNode();
       // If a table is the first caret pos, then walk down one more level
-      const caretPos = NodeType.isTable(node) ? CaretFinder.firstPositionIn(node).getOr(pos) : pos;
+      const caretPos = NodeType.isTable(node)
+        ? CaretFinder.firstPositionIn(node).getOr(pos)
+        : pos;
       // Don't set the selection on IE, as since it's a single selection model setting the selection will cause
       // it to grab focus, so instead store the selection in the bookmark
       if (Env.browser.isIE()) {
@@ -259,7 +280,9 @@ const getStyleSheetLoader = function (editor: Editor) {
 };
 
 const preInit = (editor: Editor, rtcMode: boolean) => {
-  const settings = editor.settings, doc = editor.getDoc(), body = editor.getBody();
+  const settings = editor.settings,
+    doc = editor.getDoc(),
+    body = editor.getBody();
 
   if (!settings.browser_spellcheck && !settings.gecko_spellcheck) {
     doc.body.spellcheck = false; // Gecko
@@ -330,7 +353,8 @@ const preInit = (editor: Editor, rtcMode: boolean) => {
 const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   const settings = editor.settings;
   const targetElm = editor.getElement();
-  let doc = editor.getDoc(), body;
+  let doc = editor.getDoc(),
+    body;
 
   // Restore visibility on target element
   if (!settings.inline) {
@@ -395,7 +419,12 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
 
   editor.parser = createParser(editor);
   editor.serializer = DomSerializer(mkSerializerSettings(editor), editor);
-  editor.selection = Selection(editor.dom, editor.getWin(), editor.serializer, editor);
+  editor.selection = Selection(
+    editor.dom,
+    editor.getWin(),
+    editor.serializer,
+    editor
+  );
   editor.annotator = Annotator(editor);
   editor.formatter = Formatter(editor);
   editor.undoManager = UndoManager(editor);
@@ -415,17 +444,18 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
 
   Events.firePreInit(editor);
 
-  Rtc.setup(editor).fold(() => {
-    preInit(editor, false);
-  }, (loadingRtc) => {
-    editor.setProgressState(true);
-    loadingRtc.then((rtcMode) => {
-      editor.setProgressState(false);
-      preInit(editor, rtcMode);
-    });
-  });
+  Rtc.setup(editor).fold(
+    () => {
+      preInit(editor, false);
+    },
+    (loadingRtc) => {
+      editor.setProgressState(true);
+      loadingRtc.then((rtcMode) => {
+        editor.setProgressState(false);
+        preInit(editor, rtcMode);
+      });
+    }
+  );
 };
 
-export {
-  initContentBody
-};
+export { initContentBody };

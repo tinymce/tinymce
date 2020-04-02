@@ -4,8 +4,7 @@ export interface ShootEvent {
   target: () => any;
 }
 
-export interface DieEvent {
-}
+export interface DieEvent {}
 
 export interface Outlaw {
   getElement: () => any;

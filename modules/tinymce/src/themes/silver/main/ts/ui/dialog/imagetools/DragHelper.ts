@@ -83,20 +83,25 @@ export default function (id, settings) {
 
     // Grab cursor from handle so we can place it on overlay
     if (window.getComputedStyle) {
-      cursor = window.getComputedStyle(handleElm, null).getPropertyValue('cursor');
+      cursor = window
+        .getComputedStyle(handleElm, null)
+        .getPropertyValue('cursor');
     } else {
       cursor = handleElm.runtimeStyle.cursor;
     }
 
-    $eventOverlay = DomQuery('<div></div>').css({
-      position: 'absolute',
-      top: 0, left: 0,
-      width: docSize.width,
-      height: docSize.height,
-      zIndex: 0x7FFFFFFF,
-      opacity: 0.0001,
-      cursor
-    }).appendTo(doc.body);
+    $eventOverlay = DomQuery('<div></div>')
+      .css({
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: docSize.width,
+        height: docSize.height,
+        zIndex: 0x7fffffff,
+        opacity: 0.0001,
+        cursor
+      })
+      .appendTo(doc.body);
 
     DomQuery(doc).on('mousemove touchmove', drag).on('mouseup touchend', stop);
 
@@ -120,7 +125,9 @@ export default function (id, settings) {
   stop = function (e) {
     updateWithTouchData(e);
 
-    DomQuery(doc).off('mousemove touchmove', drag).off('mouseup touchend', stop);
+    DomQuery(doc)
+      .off('mousemove touchmove', drag)
+      .off('mouseup touchend', stop);
 
     $eventOverlay.remove();
 

@@ -12,6 +12,4 @@ const track = function (current: Gene, parent: Option<Gene>) {
   return r;
 };
 
-export {
-  track
-};
+export { track };

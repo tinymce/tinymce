@@ -14,8 +14,8 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('selectFirst', true),
   Fields.onHandler('onChangeTab'),
   Fields.onHandler('onDismissTab'),
-  FieldSchema.defaulted('tabs', [ ]),
-  SketchBehaviours.field('tabSectionBehaviours', [ ])
+  FieldSchema.defaulted('tabs', []),
+  SketchBehaviours.field('tabSectionBehaviours', [])
 ]);
 
 const barPart = PartType.required<TabSectionDetail, TabbarSpec>({
@@ -40,14 +40,7 @@ const viewPart = PartType.required<TabSectionDetail, TabviewSpec>({
   name: 'tabview'
 });
 
-const parts: () => PartType.PartTypeAdt[] = Fun.constant([
-  barPart,
-  viewPart
-]);
+const parts: () => PartType.PartTypeAdt[] = Fun.constant([barPart, viewPart]);
 const name = Fun.constant('TabSection');
 
-export {
-  name,
-  schema,
-  parts
-};
+export { name, schema, parts };

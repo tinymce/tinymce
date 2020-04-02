@@ -7,7 +7,20 @@ import { SplitPosition } from './data/SplitPosition';
 import * as Spot from './data/Spot';
 import { TextSplit } from './data/TextSplit';
 import { TypedItem } from './data/TypedItem';
-import { Direction, SearchResult, SpanWrapRange, SpotDelta, SpotPoint, SpotPoints, SpotRange, SpotText, Successor, Transition, Traverse, Wrapter } from './data/Types';
+import {
+  Direction,
+  SearchResult,
+  SpanWrapRange,
+  SpotDelta,
+  SpotPoint,
+  SpotPoints,
+  SpotRange,
+  SpotText,
+  Successor,
+  Transition,
+  Traverse,
+  Wrapter
+} from './data/Types';
 import * as DomDescent from './dom/DomDescent';
 import * as DomExtract from './dom/DomExtract';
 import * as DomFamily from './dom/DomFamily';
