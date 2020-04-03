@@ -11,7 +11,7 @@ import { DatasetRepresentingState } from 'ephox/alloy/behaviour/representing/Rep
 import { TypeaheadData } from 'ephox/alloy/ui/types/TypeaheadTypes';
 
 UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -27,11 +27,11 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
                   text: 'Hund'
                 }
               },
-              getDataKey (component) {
+              getDataKey(component) {
                 return Value.get(component.element());
               },
-              getFallbackEntry (key) {
-                return { value: 'fallback.' + key.toLowerCase(), meta: { text: key } };
+              getFallbackEntry(key) {
+                return { value: 'fallback.' + key.toLowerCase(), meta: { text: key }};
               },
               setValue: (comp, data) => {
                 Value.set(comp.element(), data.meta.text);
@@ -41,7 +41,7 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
         ])
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, component, _store) => {
     const sAssertRepValue = (label: string, expected: { value: string; meta: { text: string } }) => {
       return Step.sync(() => {
         const v = Representing.getValue(component);
@@ -59,7 +59,7 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
     return [
       Assertions.sAssertStructure(
         'Initial value should be "Hund"',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('input', {
             value: str.is('Hund')
           });
@@ -67,7 +67,7 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
         component.element()
       ),
 
-      sAssertRepValue('Checking represented value on load', { value: 'dog', meta: { text: 'Hund' } }),
+      sAssertRepValue('Checking represented value on load', { value: 'dog', meta: { text: 'Hund' }}),
 
       FocusTools.sSetFocus('Setting of focus on input field', gui.element(), 'input'),
       FocusTools.sSetActiveValue(doc, 'Katze'),
@@ -89,7 +89,7 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
       }),
 
       sUpdateDataset([
-        { value: 'big.e', meta: { text: 'Elephant' } }
+        { value: 'big.e', meta: { text: 'Elephant' }}
       ]),
 
       sAssertRepValue('Checking represented value after set input but after update', {
@@ -100,7 +100,7 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
       }),
       Assertions.sAssertStructure(
         'Test will be Elephant."',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('input', {
             value: str.is('Elephant')
           });

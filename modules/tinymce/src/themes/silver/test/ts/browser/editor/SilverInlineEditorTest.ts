@@ -27,22 +27,22 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
               classes: [ arr.has('tox-editor-container') ],
               children: [
                 s.element('div', {
-                  classes: [arr.has('tox-editor-header')],
+                  classes: [ arr.has('tox-editor-header') ],
                   children: [
                     s.element('div', {
-                      classes: [arr.has('tox-menubar')],
+                      classes: [ arr.has('tox-menubar') ],
                       attrs: { role: str.is('menubar') },
                       children: [
                         // Dropdown via text
                         s.element('button', {
-                          classes: [arr.has('tox-mbtn'), arr.has('tox-mbtn--select')],
+                          classes: [ arr.has('tox-mbtn'), arr.has('tox-mbtn--select') ],
                           children: [
                             s.element('span', {
-                              classes: [arr.has('tox-mbtn__select-label')],
+                              classes: [ arr.has('tox-mbtn__select-label') ],
                               html: str.is('test')
                             }),
                             s.element('div', {
-                              classes: [arr.has('tox-mbtn__select-chevron')],
+                              classes: [ arr.has('tox-mbtn__select-chevron') ],
                               children: [
                                 s.element('svg', {})
                               ]
@@ -316,144 +316,144 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
   ]);
 
   TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
-      const uiContainer = Element.fromDom(editor.getContainer());
-      const contentAreaContainer = Element.fromDom(editor.getContentAreaContainer());
+    const uiContainer = Element.fromDom(editor.getContainer());
+    const contentAreaContainer = Element.fromDom(editor.getContentAreaContainer());
 
-      const tinyApis = TinyApis(editor);
-      const tinyUi = TinyUi(editor);
+    const tinyApis = TinyApis(editor);
+    const tinyUi = TinyUi(editor);
 
-      Pipeline.async({ }, Arr.flatten([
-        sUiContainerTest(editor, uiContainer, tinyApis, tinyUi),
-        sContentAreaContainerTest(contentAreaContainer)
-      ]), onSuccess, onFailure);
+    Pipeline.async({ }, Arr.flatten([
+      sUiContainerTest(editor, uiContainer, tinyApis, tinyUi),
+      sContentAreaContainerTest(contentAreaContainer)
+    ]), onSuccess, onFailure);
+  },
+  {
+    theme: 'silver',
+    inline: true,
+    toolbar: 'custom1 customtoggle1 dropdown1-with-text dropdown1-with-icon splitbutton1-with-text splitbutton2-with-icon',
+    menubar: 'menutest',
+    menu: {
+      menutest: { title: 'test', items: 'x1' }
     },
-    {
-      theme: 'silver',
-      inline: true,
-      toolbar: 'custom1 customtoggle1 dropdown1-with-text dropdown1-with-icon splitbutton1-with-text splitbutton2-with-icon',
-      menubar: 'menutest',
-      menu: {
-        menutest: { title: 'test', items: 'x1'}
-      },
-      base_url: '/project/tinymce/js/tinymce',
-      setup: (ed: Editor) => {
-        ed.ui.registry.addButton('custom1', {
-          type: 'button',
-          icon: 'cut',
-          onAction: () => {
-            store.set(store.get().concat([ 'button1' ]));
-          }
-        });
+    base_url: '/project/tinymce/js/tinymce',
+    setup: (ed: Editor) => {
+      ed.ui.registry.addButton('custom1', {
+        type: 'button',
+        icon: 'cut',
+        onAction: () => {
+          store.set(store.get().concat([ 'button1' ]));
+        }
+      });
 
-        ed.ui.registry.addToggleButton('customtoggle1', {
-          type: 'togglebutton',
-          text: 'ToggleMe',
-          onSetup: (toggleButtonApi) => {
-            const f = () => {
-              toggleButtonApi.setActive(!toggleButtonApi.isActive());
-            };
-            ed.on('customtoggle1-toggle', f);
-            return () => ed.off('customtoggle1-toggle', f);
-          },
-          onAction: () => {
-            store.set(store.get().concat([ 'button1' ]));
-          }
-        });
+      ed.ui.registry.addToggleButton('customtoggle1', {
+        type: 'togglebutton',
+        text: 'ToggleMe',
+        onSetup: (toggleButtonApi) => {
+          const f = () => {
+            toggleButtonApi.setActive(!toggleButtonApi.isActive());
+          };
+          ed.on('customtoggle1-toggle', f);
+          return () => ed.off('customtoggle1-toggle', f);
+        },
+        onAction: () => {
+          store.set(store.get().concat([ 'button1' ]));
+        }
+      });
 
-        ed.ui.registry.addMenuButton('dropdown1-with-text', {
-          text: 'dropdown1',
-          fetch: (callback) => {
-            return callback([
-              {
-                type: 'menuitem',
-                text: 'Fetch1',
-                onAction: () => {
-                  console.log('fetching item1');
-                }
+      ed.ui.registry.addMenuButton('dropdown1-with-text', {
+        text: 'dropdown1',
+        fetch: (callback) => {
+          return callback([
+            {
+              type: 'menuitem',
+              text: 'Fetch1',
+              onAction: () => {
+                console.log('fetching item1');
               }
-            ]);
-          }
-        });
+            }
+          ]);
+        }
+      });
 
-        ed.ui.registry.addMenuButton('dropdown1-with-icon', {
-          icon: 'bold',
-          fetch: (callback) => {
-            return callback([
-              {
-                type: 'menuitem',
-                text: 'Fetch1',
-                onAction: () => {
-                  console.log('fetching item1');
-                }
+      ed.ui.registry.addMenuButton('dropdown1-with-icon', {
+        icon: 'bold',
+        fetch: (callback) => {
+          return callback([
+            {
+              type: 'menuitem',
+              text: 'Fetch1',
+              onAction: () => {
+                console.log('fetching item1');
               }
-            ]);
-          }
-        });
+            }
+          ]);
+        }
+      });
 
-        ed.ui.registry.addSplitButton('splitbutton1-with-text', {
-          text: 'Delta',
-          onItemAction: () => { },
-          fetch: (callback) => {
-            callback([
-              {
-                type: 'choiceitem',
-                text: 'Split1',
-                value: 'split1'
-              },
-              {
-                type: 'choiceitem',
-                text: 'Split2',
-                value: 'split2'
-              },
-            ]);
-          },
-          onSetup: (splitButtonApi) => {
-            const f = () => {
-              splitButtonApi.setActive(!splitButtonApi.isActive());
-            };
-            ed.on('splitbutton1-toggle', f);
-            return () => ed.off('splitbutton1-toggle', f);
-          },
-          onAction: () => {
-            console.log('triggering action instead');
-          }
-        });
+      ed.ui.registry.addSplitButton('splitbutton1-with-text', {
+        text: 'Delta',
+        onItemAction: () => { },
+        fetch: (callback) => {
+          callback([
+            {
+              type: 'choiceitem',
+              text: 'Split1',
+              value: 'split1'
+            },
+            {
+              type: 'choiceitem',
+              text: 'Split2',
+              value: 'split2'
+            },
+          ]);
+        },
+        onSetup: (splitButtonApi) => {
+          const f = () => {
+            splitButtonApi.setActive(!splitButtonApi.isActive());
+          };
+          ed.on('splitbutton1-toggle', f);
+          return () => ed.off('splitbutton1-toggle', f);
+        },
+        onAction: () => {
+          console.log('triggering action instead');
+        }
+      });
 
-        ed.ui.registry.addSplitButton('splitbutton2-with-icon', {
-          icon: 'underline',
-          onItemAction: () => { },
-          fetch: (callback) => {
-            callback([
-              {
-                type: 'choiceitem',
-                text: '2-Split1',
-                value: '2-split1'
-              },
-              {
-                type: 'choiceitem',
-                text: '2-Split2',
-                value: '2-split2'
-              },
-            ]);
-          },
-          onAction: () => {
-            console.log('triggering action instead');
-          }
-        });
+      ed.ui.registry.addSplitButton('splitbutton2-with-icon', {
+        icon: 'underline',
+        onItemAction: () => { },
+        fetch: (callback) => {
+          callback([
+            {
+              type: 'choiceitem',
+              text: '2-Split1',
+              value: '2-split1'
+            },
+            {
+              type: 'choiceitem',
+              text: '2-Split2',
+              value: '2-split2'
+            },
+          ]);
+        },
+        onAction: () => {
+          console.log('triggering action instead');
+        }
+      });
 
-        ed.ui.registry.addMenuItem('x1', {
-          icon: 'italic',
-          text: 'Text with icon',
-          shortcut: 'Meta+M',
-          onAction () {
-            console.log('Just Text click');
-          }
-        });
-      }
-    },
-    () => {
-      success();
-    },
-    failure
+      ed.ui.registry.addMenuItem('x1', {
+        icon: 'italic',
+        text: 'Text with icon',
+        shortcut: 'Meta+M',
+        onAction() {
+          console.log('Just Text click');
+        }
+      });
+    }
+  },
+  () => {
+    success();
+  },
+  failure
   );
 });

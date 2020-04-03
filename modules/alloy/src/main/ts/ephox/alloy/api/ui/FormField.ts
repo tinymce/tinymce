@@ -13,12 +13,12 @@ import * as AlloyEvents from '../events/AlloyEvents';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail, components, spec, externals): SketchSpec => {
+const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail, components, _spec, _externals): SketchSpec => {
   const behaviours = SketchBehaviours.augment(
     detail.fieldBehaviours,
     [
       Composing.config({
-        find (container) {
+        find(container) {
           return AlloyParts.getPart(container, detail, 'field');
         }
       }),
@@ -26,10 +26,10 @@ const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail,
       Representing.config({
         store: {
           mode: 'manual',
-          getValue (field) {
+          getValue(field) {
             return Composing.getCurrent(field).bind(Representing.getValue);
           },
-          setValue (field, value) {
+          setValue(field, value) {
             Composing.getCurrent(field).each((current) => {
               Representing.setValue(current, value);
             });
@@ -41,7 +41,7 @@ const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail,
 
   const events = AlloyEvents.derive([
     // Used to be systemInit
-    AlloyEvents.runOnAttached((component, simulatedEvent) => {
+    AlloyEvents.runOnAttached((component, _simulatedEvent) => {
       const ps = AlloyParts.getParts(component, detail, [ 'label', 'field', 'aria-descriptor' ]);
       ps.field().each((field) => {
         const id = Id.generate(detail.prefix);

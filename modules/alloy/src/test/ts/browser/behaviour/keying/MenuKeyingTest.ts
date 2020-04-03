@@ -10,7 +10,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('MenuKeyingTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     const makeItem = (name: string) => {
       return Container.sketch({
         dom: {
@@ -27,7 +27,7 @@ UnitTest.asynctest('MenuKeyingTest', (success, failure) => {
       Container.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'menu-keying-test'],
+          classes: [ 'menu-keying-test' ],
           styles: {
 
           }
@@ -50,7 +50,7 @@ UnitTest.asynctest('MenuKeyingTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, body, _gui, component, store) => {
     const checkStore = (label: string, steps: Array<Step<any, any>>, expected: string[]) => {
       return GeneralSteps.sequence([
         store.sClear

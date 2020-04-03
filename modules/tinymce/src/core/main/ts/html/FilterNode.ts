@@ -14,7 +14,7 @@ interface FilterMatch {
   nodes: Node[];
 }
 
-interface FilterMatchMap { [key: string]: FilterMatch; }
+interface FilterMatchMap { [key: string]: FilterMatch }
 
 const traverse = (node: Node, fn: (node: Node) => void): void => {
   fn(node);
@@ -40,7 +40,7 @@ const findMatchingNodes = (nodeFilters: ParserFilter[], attributeFilters: Parser
           if (nodeMatches[filter.name]) {
             nodeMatches[filter.name].nodes.push(node);
           } else {
-            nodeMatches[filter.name] = { filter, nodes: [node] };
+            nodeMatches[filter.name] = { filter, nodes: [ node ] };
           }
         }
       });
@@ -50,7 +50,7 @@ const findMatchingNodes = (nodeFilters: ParserFilter[], attributeFilters: Parser
           if (attrMatches[filter.name]) {
             attrMatches[filter.name].nodes.push(node);
           } else {
-            attrMatches[filter.name] = { filter, nodes: [node] };
+            attrMatches[filter.name] = { filter, nodes: [ node ] };
           }
         }
       });

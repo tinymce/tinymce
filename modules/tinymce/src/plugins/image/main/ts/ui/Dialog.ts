@@ -13,7 +13,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
 import { getStyleValue, ImageData } from '../core/ImageData';
-import { insertOrUpdateImage, normalizeCss as doNormalizeCss } from '../core/ImageSelection';
+import { normalizeCss as doNormalizeCss } from '../core/ImageSelection';
 import { ListUtils } from '../core/ListUtils';
 import Uploader from '../core/Uploader';
 import * as Utils from '../core/Utils';
@@ -78,9 +78,9 @@ const fromImageData = (image: ImageData): ImageDialogData => ({
   isDecorative: image.isDecorative
 });
 
-const toImageData = (data: ImageDialogData): ImageData => ({
+const toImageData = (data: ImageDialogData, removeEmptyAlt: boolean): ImageData => ({
   src: data.src.value,
-  alt: data.alt,
+  alt: data.alt.length === 0 && removeEmptyAlt ? null : data.alt,
   title: data.title,
   width: data.dimensions.width,
   height: data.dimensions.height,
@@ -110,7 +110,7 @@ const addPrependUrl2 = (info: ImageDialogInfo, srcURL: string): Option<string> =
 const addPrependUrl = (info: ImageDialogInfo, api: API) => {
   const data = api.getData();
   addPrependUrl2(info, data.src.value).each((srcURL) => {
-    api.setData({ src: { value: srcURL, meta: data.src.meta } });
+    api.setData({ src: { value: srcURL, meta: data.src.meta }});
   });
 };
 
@@ -119,7 +119,7 @@ const formFillFromMeta2 = (info: ImageDialogInfo, data: ImageDialogData, meta: I
     data.alt = meta.alt;
   }
   if (info.hasAccessibilityOptions) {
-    data.isDecorative = meta.isDecorative || false;
+    data.isDecorative = meta.isDecorative || data.isDecorative || false;
   }
   if (info.hasImageTitle && Type.isString(meta.title)) {
     data.title = meta.title;
@@ -264,7 +264,7 @@ const changeStyle = (helpers: Helpers, api: API) => {
 
 const changeAStyle = (helpers: Helpers, info: ImageDialogInfo, api: API) => {
   const data: ImageDialogData = Merger.deepMerge(fromImageData(info.image), api.getData());
-  const style = getStyleValue(helpers.normalizeCss, toImageData(data));
+  const style = getStyleValue(helpers.normalizeCss, toImageData(data, false));
   api.setData({ style });
 };
 
@@ -290,7 +290,7 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
       };
 
       const updateSrcAndSwitchTab = (url: string) => {
-        api.setData({ src: { value: url, meta: {} } });
+        api.setData({ src: { value: url, meta: {}}});
         api.showTab('general');
         changeSrc(helpers, info, state, api);
       };
@@ -390,10 +390,7 @@ const makeDialog = (helpers: Helpers) => (info: ImageDialogInfo): Types.Dialog.D
 const submitHandler = (editor: Editor) => (info: ImageDialogInfo) => (api: API) => {
   const data: ImageDialogData = Merger.deepMerge(fromImageData(info.image), api.getData());
 
-  editor.undoManager.transact(() => {
-    insertOrUpdateImage(editor, toImageData(data), info);
-  });
-
+  editor.execCommand('mceUpdateImage', false, toImageData(data, info.hasAccessibilityOptions));
   editor.editorUpload.uploadImagesAuto();
 
   api.close();
@@ -450,10 +447,13 @@ export const Dialog = (editor: Editor) => {
     serializeStyle: serializeStyle(editor),
   };
   const open = () => collect(editor).then(makeDialog(helpers)).then((spec) => {
-    editor.windowManager.open(spec);
+    return editor.windowManager.open(spec);
   });
-
+  const openLater = () => {
+    open();
+  };
   return {
-    open
+    open,
+    openLater
   };
 };

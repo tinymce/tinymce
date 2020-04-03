@@ -12,7 +12,7 @@ UnitTest.test('browser.tinymce.core.file.BlobCacheTest', function () {
     for (i = 0; i < arr.length; i++) {
       arr[i] = str.charCodeAt(i);
     }
-    return new Blob([arr], { type });
+    return new Blob([ arr ], { type });
   };
 
   const id = 'blob0';

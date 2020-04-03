@@ -152,13 +152,13 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
         s.element('p', {}),
       ]),
       sInsertContentAndTrigger('aa'),
-      sSetCursor([0, 0, 0], 2),
+      sSetCursor([ 0, 0, 0 ], 2),
       sWaitForAutocompleteToClose,
       sAssertContent('Check autocompleter was not cancelled', (s, str) => [
         expectedAutocompletePara(':aaa')(s, str),
         s.element('p', { }),
       ]),
-      sSetCursor([1, 0], 0),
+      sSetCursor([ 1, 0 ], 0),
       sAssertContent('Check autocompleter was cancelled', (s, str) => [
         expectedSimplePara(':aaa')(s, str),
         s.element('p', { })
@@ -202,7 +202,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
         ch: ':',
         minChars: 1,
         columns: 'auto',
-        fetch: (pattern, maxResults) => {
+        fetch: (pattern, _maxResults) => {
           const filteredItems = Arr.filter([ 'a', 'b', 'c', 'd' ], (item) => item.indexOf(pattern) !== -1);
           return new Promise((resolve) => {
             resolve(
@@ -214,7 +214,7 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
             );
           });
         },
-        onAction: (autocompleteApi, rng, value) => {
+        onAction: (autocompleteApi, _rng, _value) => {
           autocompleteApi.hide();
         }
       });

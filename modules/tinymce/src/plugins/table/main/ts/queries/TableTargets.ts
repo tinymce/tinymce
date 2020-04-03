@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Option, Struct } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import * as CellOperations from './CellOperations';
 
 const noMenu = function (cell) {
@@ -13,7 +13,7 @@ const noMenu = function (cell) {
     element: Fun.constant(cell),
     mergable: Option.none,
     unmergable: Option.none,
-    selection: Fun.constant([cell])
+    selection: Fun.constant([ cell ])
   };
 };
 
@@ -30,7 +30,12 @@ const notCell = function (element) {
   return noMenu(element);
 };
 
-const paste = Struct.immutable('element', 'clipboard', 'generators');
+// TODO: types
+const paste = (element: any, clipboard: any, generators: any) => ({
+  element: Fun.constant(element),
+  clipboard: Fun.constant(clipboard),
+  generators: Fun.constant(generators)
+});
 
 const pasteRows = function (selections, table, cell, clipboard, generators) {
   return {

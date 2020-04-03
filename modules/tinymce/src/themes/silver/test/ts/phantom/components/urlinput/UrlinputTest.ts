@@ -15,7 +15,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
   const sink = Element.fromDom(document.querySelector('.mce-silver-sink'));
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (store, _doc, _body) => {
       return GuiFactory.build(
         renderUrlInput({
           label: Option.some('UrlInput label'),
@@ -23,8 +23,8 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
           filetype: 'file',
           disabled: false
         }, helpers.backstage, {
-          getHistory: (fileType) => [],
-          addToHistory: (url, filetype) => store.adder('addToHistory')(),
+          getHistory: (_fileType) => [],
+          addToHistory: (_url, _filetype) => store.adder('addToHistory')(),
           getLinkInformation: () => Option.some({
             targets: [
               {
@@ -46,14 +46,14 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
             anchorBottom: undefined
           }),
           getValidationHandler: () => Option.none(),
-          getUrlPicker: (filetype) => Option.some((entry: ApiUrlData) => {
+          getUrlPicker: (_filetype) => Option.some((entry: ApiUrlData) => {
             store.adder('urlpicker')();
             return Future.pure({ value: 'http://tiny.cloud', meta: { before: entry.value }, fieldname: 'test' });
           })
         })
       );
     },
-    (doc, body, gui, component, store) => {
+    (doc, _body, _gui, component, store) => {
 
       const input = component.getSystem().getByDom(
         SelectorFind.descendant(component.element(), 'input').getOrDie(
@@ -99,13 +99,13 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                     classes: [ arr.has('tox-collection__group') ],
                     children: [
                       s.element('div', {
-                        classes: [ arr.has('tox-collection__item')],
+                        classes: [ arr.has('tox-collection__item') ],
                         children: [
                           s.element('div', { html: str.is('Header1') })
                         ]
                       }),
                       s.element('div', {
-                        classes: [ arr.has('tox-collection__item')],
+                        classes: [ arr.has('tox-collection__item') ],
                         children: [
                           s.element('div', { html: str.is('Header2') })
                         ]
@@ -138,7 +138,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
             UiFinder.cFindAllIn('.tox-collection__item'),
             Chain.op((menuItems) => {
               if (menuItems.length > 2) {
-                throw Error('Menu hasn\'t been updated yet');
+                throw Error(`Menu hasn't been updated yet`);
               }
             })
           ])
@@ -155,13 +155,13 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
                     classes: [ arr.has('tox-collection__group') ],
                     children: [
                       s.element('div', {
-                        classes: [ arr.has('tox-collection__item')],
+                        classes: [ arr.has('tox-collection__item') ],
                         children: [
                           s.element('div', { html: str.is('Header1') })
                         ]
                       }),
                       s.element('div', {
-                        classes: [ arr.has('tox-collection__item')],
+                        classes: [ arr.has('tox-collection__item') ],
                         children: [
                           s.element('div', { html: str.is('Header2') })
                         ]
@@ -218,7 +218,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
           const repValue = Representing.getValue(input);
           Assertions.assertEq('Checking Rep.getValue', {
             value: 'http://tiny.cloud',
-            meta: { before: '#header'},
+            meta: { before: '#header' },
             fieldname: 'test'
           }, repValue);
         }),

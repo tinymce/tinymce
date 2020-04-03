@@ -29,12 +29,14 @@ import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formChangeEvent, formSubmitEvent } from '../general/FormEvents';
 import { Omit } from '../Omit';
+import * as ReadOnly from '../../ReadOnly';
 
 const renderTextField = function (spec: TextField, providersBackstage: UiFactoryBackstageProviders) {
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   const baseInputBehaviours = [
-    Disabling.config({ disabled: spec.disabled }),
+    Disabling.config({ disabled: spec.disabled || providersBackstage.isReadonly() }),
+    ReadOnly.receivingConfig(),
     Keying.config({
       mode: 'execution',
       useEnter: spec.multiline !== true,
@@ -83,7 +85,7 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
   const pField = AlloyFormField.parts().field({
     tag: spec.multiline === true ? 'textarea' : 'input',
     inputAttributes,
-    inputClasses: [spec.classname],
+    inputClasses: [ spec.classname ],
     inputBehaviours: Behaviour.derive(
       Arr.flatten<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>([
         baseInputBehaviours,
@@ -94,19 +96,20 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
     factory: AlloyInput
   });
 
-  const extraClasses = spec.flex ? ['tox-form__group--stretched'] : [];
-  const extraClasses2 = extraClasses.concat(spec.maximized ? ['tox-form-group--maximize'] : []);
+  const extraClasses = spec.flex ? [ 'tox-form__group--stretched' ] : [];
+  const extraClasses2 = extraClasses.concat(spec.maximized ? [ 'tox-form-group--maximize' ] : []);
 
   const extraBehaviours = [
     Disabling.config({
-      disabled: spec.disabled,
+      disabled: spec.disabled || providersBackstage.isReadonly(),
       onDisabled: (comp) => {
         AlloyFormField.getField(comp).each(Disabling.disable);
       },
       onEnabled: (comp) => {
         AlloyFormField.getField(comp).each(Disabling.enable);
       }
-    })
+    }),
+    ReadOnly.receivingConfig()
   ];
 
   return renderFormFieldWith(pLabel, pField, extraClasses2, extraBehaviours);
@@ -125,7 +128,7 @@ export interface TextField {
   disabled: boolean;
   validation: Option<{
     validator: Validator;
-    validateOnLoad?: boolean
+    validateOnLoad?: boolean;
   }>;
   maximized: boolean;
 }

@@ -25,7 +25,7 @@ const fromRgb = (rgbaColour: Rgba): Hsv => {
     );
   }
 
-  /*eslint no-nested-ternary:0 */
+  /* eslint no-nested-ternary:0 */
   const d = (r === minRGB) ? g - b : ((b === minRGB) ? r - g : b - r);
   h = (r === minRGB) ? 3 : ((b === minRGB) ? 1 : 5);
   h = 60 * (h - d / (maxRGB - minRGB));

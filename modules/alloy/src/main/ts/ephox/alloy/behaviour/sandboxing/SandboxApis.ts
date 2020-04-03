@@ -10,7 +10,7 @@ import { SandboxingConfig, SandboxingState } from './SandboxingTypes';
 // NOTE: A sandbox should not start as part of the world. It is expected to be
 // added to the sink on rebuild.
 const rebuild = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data: AlloySpec) => {
-  sState.get().each((data) => {
+  sState.get().each((_data) => {
     // If currently has data, so it hasn't been removed yet. It is
     // being "re-opened"
     Attachment.detachChildren(sandbox);
@@ -54,7 +54,7 @@ const close = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sandb
   });
 };
 
-const isOpen = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) => {
+const isOpen = (_sandbox: AlloyComponent, _sConfig: SandboxingConfig, sState: SandboxingState) => {
   return sState.isOpen();
 };
 
@@ -64,7 +64,7 @@ const isPartOf = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sa
   });
 };
 
-const getState = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) => {
+const getState = (_sandbox: AlloyComponent, _sConfig: SandboxingConfig, sState: SandboxingState) => {
   return sState.get();
 };
 
@@ -86,7 +86,7 @@ const restore = (sandbox: AlloyComponent, cssKey: string, attr: string) => {
   }
 };
 
-const cloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) => {
+const cloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, _sState: SandboxingState) => {
   const sink = sConfig.getAttachPoint(sandbox);
   // Use the positioning mode of the sink, so that it does not interfere with the sink's positioning
   // We add it here to stop it causing layout problems.
@@ -94,9 +94,9 @@ const cloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sandb
   store(sandbox, 'visibility', sConfig.cloakVisibilityAttr, 'hidden');
 };
 
-const hasPosition = (element: Element) => Arr.exists(['top', 'left', 'right', 'bottom'], (pos) => Css.getRaw(element, pos).isSome());
+const hasPosition = (element: Element) => Arr.exists([ 'top', 'left', 'right', 'bottom' ], (pos) => Css.getRaw(element, pos).isSome());
 
-const decloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState) => {
+const decloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, _sState: SandboxingState) => {
   if (!hasPosition(sandbox.element())) {
     // If a position value was not added to the sandbox during cloaking, remove it
     // otherwise certain position values (absolute, relative) will impact the child that _was_ positioned

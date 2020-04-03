@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
   Theme();
 
   const sAssertBodyClass = (editor: Editor, cls: string, state: boolean) => {
-    return Step.label('sAssertBodyClass: checking editor ' + (state ? 'has' : 'doesn\'t have') + ' class ' + cls, Step.sync(() => {
+    return Step.label('sAssertBodyClass: checking editor ' + (state ? 'has' : `doesn't have`) + ' class ' + cls, Step.sync(() => {
       Assertions.assertEq('Should be the expected class state', state, Class.has(Element.fromDom(editor.getBody()), cls));
     }));
   };
@@ -116,7 +116,7 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
       ])
     ]), onSuccess, onFailure);
   }, {
-      base_url: '/project/tinymce/js/tinymce',
-      readonly: true
-    }, success, failure);
+    base_url: '/project/tinymce/js/tinymce',
+    readonly: true
+  }, success, failure);
 });

@@ -9,7 +9,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('UnselectingTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         containerBehaviours: Behaviour.derive([
@@ -18,12 +18,12 @@ UnitTest.asynctest('UnselectingTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, component, _store) => {
     return [
       // TODO: Add behaviour testing. Probably webdriver tests.
       Assertions.sAssertStructure(
         'Check initial unselecting values',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('div', {
             styles: {
               /* Browser dependent

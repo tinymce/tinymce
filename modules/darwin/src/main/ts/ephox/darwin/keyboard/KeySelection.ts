@@ -23,9 +23,9 @@ const sync = function (container: Element, isRoot: (element: Element) => boolean
 const detect = function (container: Element, isRoot: (element: Element) => boolean, start: Element, finish: Element, selectRange: (container: Element, boxes: Element[], start: Element, finish: Element) => void) {
   if (!Compare.eq(start, finish)) {
     return CellSelection.identify(start, finish, isRoot).bind(function (cellSel) {
-      const boxes = cellSel.boxes().getOr([]);
+      const boxes = cellSel.boxes.getOr([]);
       if (boxes.length > 0) {
-        selectRange(container, boxes, cellSel.start(), cellSel.finish());
+        selectRange(container, boxes, cellSel.start, cellSel.finish);
         return Option.some(Response.create(
           Option.some(Util.makeSitus(start, 0, start, Awareness.getEnd(start))),
           true
@@ -42,8 +42,8 @@ const detect = function (container: Element, isRoot: (element: Element) => boole
 const update = function (rows: number, columns: number, container: Element, selected: Element[], annotations: SelectionAnnotation) {
   const updateSelection = function (newSels: IdentifiedExt) {
     annotations.clearBeforeUpdate(container);
-    annotations.selectRange(container, newSels.boxes(), newSels.start(), newSels.finish());
-    return newSels.boxes();
+    annotations.selectRange(container, newSels.boxes, newSels.start, newSels.finish);
+    return newSels.boxes;
   };
 
   return CellSelection.shiftSelection(selected, rows, columns, annotations.firstSelectedSelector, annotations.lastSelectedSelector).map(updateSelection);

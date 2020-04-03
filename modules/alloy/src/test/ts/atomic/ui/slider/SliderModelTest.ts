@@ -41,7 +41,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
     })
   });
 
-  const arbData = Jsc.tuple([arbRanged, arb1Up, Jsc.bool, Jsc.bool, Jsc.bool]).smap(
+  const arbData = Jsc.tuple([ arbRanged, arb1Up, Jsc.bool, Jsc.bool, Jsc.bool ]).smap(
     (arr: [ { min: number; max: number; value: number }, number, boolean, boolean, boolean ]) => {
       return {
         min: arr[0].min,

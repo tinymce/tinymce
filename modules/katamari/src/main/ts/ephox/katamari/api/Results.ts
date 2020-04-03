@@ -3,14 +3,14 @@ import * as Arr from './Arr';
 import { Result } from './Result';
 
 const comparison = Adt.generate([
-  { bothErrors: ['error1', 'error2'] },
-  { firstError: ['error1', 'value2'] },
-  { secondError: ['value1', 'error2'] },
-  { bothValues: ['value1', 'value2'] }
+  { bothErrors: [ 'error1', 'error2' ] },
+  { firstError: [ 'error1', 'value2' ] },
+  { secondError: [ 'value1', 'error2' ] },
+  { bothValues: [ 'value1', 'value2' ] }
 ]);
 
 /** partition :: [Result a] -> { errors: [String], values: [a] } */
-export const partition = function <T, E>(results: Result<T, E>[]): { values: T[], errors: E[] } {
+export const partition = function <T, E> (results: Result<T, E>[]): { values: T[]; errors: E[] } {
   const errors: E[] = [];
   const values: T[] = [];
 

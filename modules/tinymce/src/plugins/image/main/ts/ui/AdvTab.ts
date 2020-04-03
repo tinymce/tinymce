@@ -7,7 +7,7 @@
 
 import { ImageDialogInfo } from './DialogTypes';
 
-const makeTab = (info: ImageDialogInfo) => {
+const makeTab = (_info: ImageDialogInfo) => {
   return {
     title: 'Advanced',
     name: 'advanced',

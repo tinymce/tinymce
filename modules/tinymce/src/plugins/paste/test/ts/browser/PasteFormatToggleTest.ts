@@ -18,15 +18,15 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteFormatToggleTest', (succe
       Log.steps('TBA', 'Paste: paste plain text',
         [
           tinyApis.sExecCommand('mceTogglePlainTextPaste'),
-          Paste.sPaste(editor, { 'text/html': '<p><strong>test</strong></p>'}),
+          Paste.sPaste(editor, { 'text/html': '<p><strong>test</strong></p>' }),
           tinyApis.sAssertContent('<p>test</p>'),
           tinyApis.sSetContent(''),
           tinyApis.sExecCommand('mceTogglePlainTextPaste'),
-          Paste.sPaste(editor, { 'text/html': '<p><strong>test</strong></p>'}),
+          Paste.sPaste(editor, { 'text/html': '<p><strong>test</strong></p>' }),
           tinyApis.sAssertContent('<p><strong>test</strong></p>')
         ]
       )
-    : [];
+      : [];
 
     Pipeline.async({}, steps, onSuccess, onFailure);
   }, {

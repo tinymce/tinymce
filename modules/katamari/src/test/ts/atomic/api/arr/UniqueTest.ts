@@ -7,19 +7,19 @@ import { Testable } from '@ephox/dispute';
 const { tArray, tString } = Testable;
 
 UnitTest.test('Arr.unique: unit tests', () => {
-  const expected = ['three', 'two', 'one'];
+  const expected = [ 'three', 'two', 'one' ];
 
   const check = (input) => {
     Assert.eq('unique', expected, Unique.stringArray(input));
   };
 
-  check(['three', 'two', 'one']);
-  check(['three', 'three', 'two', 'one']);
-  check(['three', 'three', 'two', 'two', 'one']);
-  check(['three', 'three', 'two', 'two', 'one', 'one']);
-  check(['three', 'three', 'two', 'two', 'one', 'one', 'three']);
-  check(['three', 'three', 'two', 'two', 'one', 'one', 'three', 'two']);
-  check(['three', 'three', 'two', 'two', 'one', 'one', 'three', 'two', 'one']);
+  check([ 'three', 'two', 'one' ]);
+  check([ 'three', 'three', 'two', 'one' ]);
+  check([ 'three', 'three', 'two', 'two', 'one' ]);
+  check([ 'three', 'three', 'two', 'two', 'one', 'one' ]);
+  check([ 'three', 'three', 'two', 'two', 'one', 'one', 'three' ]);
+  check([ 'three', 'three', 'two', 'two', 'one', 'one', 'three', 'two' ]);
+  check([ 'three', 'three', 'two', 'two', 'one', 'one', 'three', 'two', 'one' ]);
 });
 
 UnitTest.test('Arr.unique: each element is not found in the rest of the array', () => {

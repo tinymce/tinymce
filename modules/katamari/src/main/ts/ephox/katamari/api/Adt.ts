@@ -5,7 +5,7 @@ import { console } from '@ephox/dom-globals';
 
 export interface Adt {
   fold: <T> (...caseHandlers: ((...data: any[]) => T)[]) => T;
-  match: <T> (branches: { [branch: string]: (...data: any[]) => T; }) => T;
+  match: <T> (branches: { [branch: string]: (...data: any[]) => T }) => T;
   log: (label: string) => void;
 }
 
@@ -86,7 +86,7 @@ const generate = function <T = Record<string, (...data: any[]) => Adt>> (cases: 
       // the fold function for key
       //
       return {
-        fold (/* arguments */) {
+        fold(/* arguments */) {
           // runtime validation
           if (arguments.length !== cases.length) {
             throw new Error('Wrong number of arguments to fold. Expected ' + cases.length + ', got ' + arguments.length);
@@ -97,7 +97,7 @@ const generate = function <T = Record<string, (...data: any[]) => Adt>> (cases: 
         match,
 
         // NOTE: Only for debugging.
-        log (label) {
+        log(label) {
           // tslint:disable-next-line:no-console
           console.log(label, {
             constructors,

@@ -13,10 +13,10 @@ import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
 
 UnitTest.asynctest('MakeshiftPositionTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     const button = GuiFactory.build(
       Button.sketch({
-        action () { },
+        action() { },
         dom: {
           styles: {
             position: 'absolute',
@@ -41,7 +41,7 @@ UnitTest.asynctest('MakeshiftPositionTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, gui, _component, _store) => {
     const cSetupAnchor = (x: number, y: number) => Chain.injectThunked(() => {
       return {
         anchor: 'makeshift',

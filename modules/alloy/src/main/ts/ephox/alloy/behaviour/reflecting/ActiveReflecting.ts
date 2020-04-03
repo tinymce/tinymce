@@ -34,7 +34,7 @@ const events = <I, S>(reflectingConfig: ReflectingConfig<I, S>, reflectingState:
       }
     }),
 
-    AlloyEvents.runOnAttached((comp, se) => {
+    AlloyEvents.runOnAttached((comp, _se) => {
       reflectingConfig.initialData.each((rawData) => {
         update(comp, rawData);
       });

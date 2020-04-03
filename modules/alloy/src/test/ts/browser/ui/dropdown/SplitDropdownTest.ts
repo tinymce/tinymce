@@ -28,7 +28,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
     })
   );
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const c = GuiFactory.build(
       SplitDropdown.sketch({
         dom: {
@@ -40,12 +40,12 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
         },
 
         toggleClass: 'test-selected-dropdown',
-        onExecute (dropdown, button) {
+        onExecute(dropdown, button) {
           const arg0Name = Attr.get(dropdown.element(), 'data-test-id');
           const arg1Name = Attr.get(button.element(), 'data-test-id');
           store.adderH('dropdown.execute(' + arg0Name + ', ' + arg1Name + ')')();
         },
-        onItemExecute (dropdown, tieredMenu, item) {
+        onItemExecute(dropdown, tieredMenu, item) {
           const arg0Name = Attr.get(dropdown.element(), 'data-test-id');
           const arg1Name = Attr.get(tieredMenu.element(), 'data-test-id');
           const arg2Name = Attr.get(item.element(), 'data-test-id');
@@ -101,10 +101,10 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
           }
         },
 
-        fetch () {
+        fetch() {
           const future = Future.pure([
-            { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' } } },
-            { type: 'item', data: { value: 'beta', meta: { text: 'Beta' } } }
+            { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' }}},
+            { type: 'item', data: { value: 'beta', meta: { text: 'Beta' }}}
           ]);
 
           return future.map((f) => {
@@ -120,7 +120,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
 
     return c;
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, component, store) => {
     gui.add(
       GuiFactory.build(sink.asSpec())
     );
@@ -128,7 +128,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
     return [
       Assertions.sAssertStructure(
         'Check basic initial structure',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('span', {
             attrs: {
               'role': str.is('button'),

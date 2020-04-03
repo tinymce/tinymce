@@ -58,8 +58,8 @@ UnitTest.test('IsRootTest', function () {
   assert.eq(true, SelectorExists.ancestor(TestPage.p3, 'div', isRoot));
   assert.eq(true, PredicateExists.ancestor(TestPage.p3, Checkers.isName('div'), isRoot));
 
-  Checkers.checkList([TestPage.d1], Traverse.parents(TestPage.p3, isRoot));
-  Checkers.checkList([TestPage.p3, TestPage.d1], Traverse.parents(TestPage.t6, isRoot));
+  Checkers.checkList([ TestPage.d1 ], Traverse.parents(TestPage.p3, isRoot));
+  Checkers.checkList([ TestPage.p3, TestPage.d1 ], Traverse.parents(TestPage.t6, isRoot));
 
   Remove.remove(TestPage.container);
 });

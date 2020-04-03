@@ -24,7 +24,7 @@ UnitTest.asynctest('MouseTest', function (success, failure) {
   let repository = [];
 
   // TODO: Free handlers.
-  const handlers = Arr.bind(['mousedown', 'mouseup', 'mouseover', 'click', 'focus', 'contextmenu'], (evt) =>
+  const handlers = Arr.bind([ 'mousedown', 'mouseup', 'mouseover', 'click', 'focus', 'contextmenu' ], (evt) =>
     [
       DomEvent.bind(container, evt, () => {
         repository.push('container.' + evt);
@@ -61,11 +61,11 @@ UnitTest.asynctest('MouseTest', function (success, failure) {
     runStep('Initial test', [], Step.pass),
     runStep(
       'sClickOn (container > input)',
-      ['input.click', 'container.click'],
+      [ 'input.click', 'container.click' ],
       Mouse.sClickOn(container, 'input')
     ),
 
-    runStep('point test', ['container.click'], Step.sync(() => Mouse.point('click', 0, container, 0, 0))),
+    runStep('point test', [ 'container.click' ], Step.sync(() => Mouse.point('click', 0, container, 0, 0))),
 
     runStep(
       'sTrueClickOn (container > input)',
@@ -101,19 +101,19 @@ UnitTest.asynctest('MouseTest', function (success, failure) {
 
     runStep(
       'sHoverOn (container > input)',
-      ['input.mouseover', 'container.mouseover'],
+      [ 'input.mouseover', 'container.mouseover' ],
       Mouse.sHoverOn(container, 'input')
     ),
 
     runStep(
       'sContextMenu (container > input)',
-      ['input.contextmenu', 'container.contextmenu'],
+      [ 'input.contextmenu', 'container.contextmenu' ],
       Mouse.sContextMenuOn(container, 'input')
     ),
 
     runStep(
       'cClick input',
-      ['input.click', 'container.click'],
+      [ 'input.click', 'container.click' ],
       Chain.asStep(container, [
         UiFinder.cFindIn('input'),
         Mouse.cClick
@@ -122,7 +122,7 @@ UnitTest.asynctest('MouseTest', function (success, failure) {
 
     runStep(
       'cClickOn (container > input)',
-      ['input.click', 'container.click'],
+      [ 'input.click', 'container.click' ],
       Chain.asStep(container, [
         Mouse.cClickOn('input')
       ])
@@ -130,7 +130,7 @@ UnitTest.asynctest('MouseTest', function (success, failure) {
 
     runStep(
       'cContextMenu input',
-      ['input.contextmenu', 'container.contextmenu'],
+      [ 'input.contextmenu', 'container.contextmenu' ],
       Chain.asStep(container, [
         UiFinder.cFindIn('input'),
         Mouse.cContextMenu

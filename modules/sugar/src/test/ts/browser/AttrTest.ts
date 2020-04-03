@@ -3,9 +3,7 @@ import Element from 'ephox/sugar/api/node/Element';
 import Div from 'ephox/sugar/test/Div';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import { Node, Comment, HTMLDivElement, HTMLSpanElement } from '@ephox/dom-globals';
-import { OptionInstances, Option } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
-import { Testable } from '@ephox/dispute';
 
 UnitTest.test('AttrTest', function () {
   const c = Div();
@@ -23,7 +21,7 @@ UnitTest.test('AttrTest', function () {
   const checkTypeErr = function (e) {
     checkErr(Attr.get, e, 'id');
     checkErr(Attr.set, e, 'id', '');
-    checkErr(Attr.setAll, e, {id: ''});
+    checkErr(Attr.setAll, e, { id: '' });
     checkErr(Attr.remove, e, 'id');
 
     // has just returns false now, no point in errors
@@ -75,8 +73,8 @@ UnitTest.test('AttrTest', function () {
    */
   Assert.eq('hasNone', false, Attr.hasNone(Element.fromHtml<HTMLDivElement>('<div style="display: block;"><span id="cat"></span></div>')));
 
-  Assert.eq('clone', {id: 'cat'}, Attr.clone(Element.fromHtml<HTMLSpanElement>('<span id="cat"></span>')));
-  Assert.eq('clone', {'name': 'foo', 'data-ephox-foo': 'bar'}, Attr.clone(Element.fromHtml<HTMLSpanElement>('<span name="foo" data-ephox-foo="bar"></span>')));
+  Assert.eq('clone', { id: 'cat' }, Attr.clone(Element.fromHtml<HTMLSpanElement>('<span id="cat"></span>')));
+  Assert.eq('clone', { 'name': 'foo', 'data-ephox-foo': 'bar' }, Attr.clone(Element.fromHtml<HTMLSpanElement>('<span name="foo" data-ephox-foo="bar"></span>')));
 
   Attr.set(c, 'tabindex', -1);
   Assert.eq('get', '-1', Attr.get(c, 'tabindex'));

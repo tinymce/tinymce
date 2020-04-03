@@ -15,7 +15,7 @@ import { NormalItemSpec, WidgetItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
 UnitTest.asynctest('MenuFocusTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const markers = {
       item: TestDropdownMenu.markers().item,
       selectedItem: TestDropdownMenu.markers().selectedItem
@@ -24,7 +24,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
     const items = (suffix: string) => [
       {
         type: 'widget',
-        data: { value: 'alpha', meta: { text: 'Alpha' } },
+        data: { value: 'alpha', meta: { text: 'Alpha' }},
         dom: {
           tag: 'span',
           classes: [ `alpha-widget-${suffix}` ]
@@ -47,7 +47,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
 
       {
         type: 'item',
-        data: { value: 'beta', meta: { text: 'Beta' } },
+        data: { value: 'beta', meta: { text: 'Beta' }},
         dom: {
           tag: 'span',
           classes: [ `beta-item-${suffix}` ],
@@ -109,7 +109,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
         ]
       }
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, _gui, component, store) => {
 
     const sAssertFocusShift = (label: string, expected: string, focusTarget: string) => {
       return Logger.t(

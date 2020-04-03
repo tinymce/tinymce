@@ -15,7 +15,7 @@ import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (detail, components: AlloySpec[], spec, externals): SketchSpec => {
+const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (detail, components: AlloySpec[], _spec, _externals): SketchSpec => {
   const findByValue = (chooser: AlloyComponent, value: any) => {
     const choices = SelectorFilter.descendants(chooser.element(), '.' + detail.markers.choiceClass);
     const choiceComps = Arr.map(choices, (c) => {
@@ -39,13 +39,13 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
           mode: 'flow',
           selector: '.' + detail.markers.choiceClass,
           executeOnMove: true,
-          getInitial (chooser) {
+          getInitial(chooser) {
             return Highlighting.getHighlighted(chooser).map((choice) => {
               return choice.element();
             });
           },
           // TODO CLEANUP: See if this execute handler can be removed, because execute is handled by bubbling to formchooser root
-          execute (chooser, simulatedEvent, focused) {
+          execute(chooser, simulatedEvent, focused) {
             return chooser.getSystem().getByDom(focused).map((choice) => {
               Highlighting.highlight(chooser, choice);
               return true;
@@ -56,10 +56,10 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
         Highlighting.config({
           itemClass: detail.markers.choiceClass,
           highlightClass: detail.markers.selectedClass,
-          onHighlight (chooser, choice) {
+          onHighlight(chooser, choice) {
             Attr.set(choice.element(), 'aria-checked', 'true');
           },
-          onDehighlight (chooser, choice) {
+          onDehighlight(chooser, choice) {
             Attr.set(choice.element(), 'aria-checked', 'false');
           }
         }),
@@ -71,12 +71,12 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
         Representing.config({
           store: {
             mode: 'manual',
-            setValue (chooser, value) {
+            setValue(chooser, value) {
               findByValue(chooser, value).each((choiceWithValue) => {
                 Highlighting.highlight(chooser, choiceWithValue);
               });
             },
-            getValue (chooser) {
+            getValue(chooser) {
               return Highlighting.getHighlighted(chooser).map(Representing.getValue);
             }
           }

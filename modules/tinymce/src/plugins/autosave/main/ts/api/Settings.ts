@@ -16,10 +16,10 @@ const getAutoSavePrefix = (editor) => {
   const location = document.location;
 
   return editor.getParam('autosave_prefix', 'tinymce-autosave-{path}{query}{hash}-{id}-')
-  .replace(/{path}/g, location.pathname)
-  .replace(/{query}/g, location.search)
-  .replace(/{hash}/g, location.hash)
-  .replace(/{id}/g, editor.id);
+    .replace(/{path}/g, location.pathname)
+    .replace(/{query}/g, location.search)
+    .replace(/{hash}/g, location.hash)
+    .replace(/{id}/g, editor.id);
 };
 
 const shouldRestoreWhenEmpty = (editor) => {

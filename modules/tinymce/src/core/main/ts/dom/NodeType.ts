@@ -59,7 +59,7 @@ const hasPropValue = function (propName: string, propValue: any) {
   };
 };
 
-const hasAttribute = function (attrName: string, attrValue?: string) {
+const hasAttribute = function (attrName: string) {
   return function (node: Node) {
     return isElement(node) && node.hasAttribute(attrName);
   };
@@ -91,13 +91,13 @@ const hasContentEditableState = function (value: string) {
   };
 };
 
-const isTextareaOrInput = matchNodeNames<HTMLTextAreaElement | HTMLInputElement>(['textarea', 'input']);
+const isTextareaOrInput = matchNodeNames<HTMLTextAreaElement | HTMLInputElement>([ 'textarea', 'input' ]);
 
 const isText = isNodeType(3) as (node: Node) => node is Text;
 const isComment = isNodeType(8) as (node: Node) => node is Comment;
 const isDocument = isNodeType(9) as (node: Node) => node is Document;
 const isDocumentFragment = isNodeType(11) as (node: Node) => node is DocumentFragment;
-const isBr = matchNodeNames<HTMLBRElement>(['br']);
+const isBr = matchNodeNames<HTMLBRElement>([ 'br' ]);
 const isContentEditableTrue = hasContentEditableState('true') as (node: Node) => node is HTMLElement;
 const isContentEditableFalse = hasContentEditableState('false') as (node: Node) => node is HTMLElement;
 

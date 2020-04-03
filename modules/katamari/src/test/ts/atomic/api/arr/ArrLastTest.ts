@@ -13,7 +13,7 @@ UnitTest.test('Arr.last: empty', () => {
 
 UnitTest.test('Arr.last: nonEmpty', () => {
   fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), (init, last) => {
-    const arr = init.concat([last]);
+    const arr = init.concat([ last ]);
     Assert.eq('nonEmpty', Option.some(last), Arr.last(arr), tOption(tNumber));
   }));
 });

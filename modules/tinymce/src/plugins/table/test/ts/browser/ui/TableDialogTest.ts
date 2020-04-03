@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
     const htmlEmptyTable = '<table><tr><td>X</td></tr></table>';
 
     const sSetTable = tinyApis.sSetContent(htmlEmptyTable);
-    const sSetCursor = tinyApis.sSetCursor([0, 0, 0], 0);
+    const sSetCursor = tinyApis.sSetCursor([ 0, 0, 0 ], 0);
 
     const emptyStandardData = {
       width: '',
@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
     };
 
     const standardFillOkTest = () => {
-      const htmlFilledEmptyTable = ApproxStructure.build(function (s, str/*, arr*/) {
+      const htmlFilledEmptyTable = ApproxStructure.build(function (s, str/* , arr*/) {
         return s.element('table', {
           attrs: {
             border: str.is('1'),
@@ -142,7 +142,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
     };
 
     const allOnOkTest = () => {
-      const htmlFilledAllOnTable = ApproxStructure.build(function (s, str/*, arr*/) {
+      const htmlFilledAllOnTable = ApproxStructure.build(function (s, str/* , arr*/) {
         return s.element('table', {
           styles: {
             'height': str.is('500px'),
@@ -202,9 +202,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
 
       return Log.stepsAsStep('TBA', 'Table: Table properties dialog all ui on fill ok', [
         tinyApis.sSetSetting('table_class_list', [
-          {title: 'None', value: ''},
-          {title: 'Dog', value: 'dog'},
-          {title: 'Cat', value: 'cat'}
+          { title: 'None', value: '' },
+          { title: 'Dog', value: 'dog' },
+          { title: 'Cat', value: 'cat' }
         ]),
         tinyApis.sSetSetting('table_advtab', true),
         tinyApis.sSetSetting('table_style_by_css', true),
@@ -286,9 +286,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
 
       return Log.stepsAsStep('TBA', 'Table: Test cancel changes nothing and save does', [
         tinyApis.sSetSetting('table_class_list', [
-          {title: 'None', value: ''},
-          {title: 'Dog', value: 'dog'},
-          {title: 'Cat', value: 'cat'}
+          { title: 'None', value: '' },
+          { title: 'Dog', value: 'dog' },
+          { title: 'Cat', value: 'cat' }
         ]),
         tinyApis.sSetSetting('table_advtab', true),
         tinyApis.sSetSetting('table_style_by_css', true),
@@ -318,15 +318,15 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
       execCommandTest()
     ], onSuccess, onFailure);
   }, {
-      plugins: 'table',
-      toolbar: 'tableprops',
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce',
-      indent: false,
-      valid_styles: {
-        '*': 'width,height,vertical-align,text-align,float,border-color,border-width,background-color,border,padding,border-spacing,border-collapse,border-style'
-      },
-      table_advtab: false,
-      statusbar: false
-    }, success, failure);
+    plugins: 'table',
+    toolbar: 'tableprops',
+    theme: 'silver',
+    base_url: '/project/tinymce/js/tinymce',
+    indent: false,
+    valid_styles: {
+      '*': 'width,height,vertical-align,text-align,float,border-color,border-width,background-color,border,padding,border-spacing,border-collapse,border-style'
+    },
+    table_advtab: false,
+    statusbar: false
+  }, success, failure);
 });

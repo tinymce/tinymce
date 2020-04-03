@@ -26,7 +26,7 @@ const predicate = function (item: Gene, f: (e: Gene) => boolean): Option<Gene> {
 
 const all = function (item: Gene): Gene[] {
   return item.parent.fold(Fun.constant([]), function (parent) {
-    return [parent].concat(all(parent));
+    return [ parent ].concat(all(parent));
   });
 };
 

@@ -5,24 +5,24 @@ import { getDemoRegistry } from '../buttons/DemoRegistry';
 
 export const registerDemoContextMenus = () => {
   getDemoRegistry().addContextMenu('regular', {
-    update: () => ['bold', 'italic', '|', 'table']
+    update: () => [ 'bold', 'italic', '|', 'table' ]
   });
 
   getDemoRegistry().addContextMenu('custom', {
     update: () => [{
       icon: 'code',
       text: 'Code',
-      onAction: (api) => {
+      onAction: (_api) => {
         console.log('open source code dialog');
       }
     }]
   });
 
   getDemoRegistry().addContextMenu('mixed', {
-    update: () => ['bold', 'italic', {
+    update: () => [ 'bold', 'italic', {
       icon: 'code',
       text: 'Code',
-      onAction: (api) => {
+      onAction: (_api) => {
         console.log('open source code dialog');
       }
     }]

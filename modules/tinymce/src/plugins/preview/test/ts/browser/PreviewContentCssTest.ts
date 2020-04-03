@@ -32,8 +32,8 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentCssTest', (suc
         sAssertIframeHtmlContains(editor, `<link type="text/css" rel="stylesheet" href="${contentCssUrl}" crossorigin="anonymous">`),
         tinyApis.sSetSetting('content_css_cors', false),
         sAssertIframeHtmlContains(editor, `<link type="text/css" rel="stylesheet" href="${contentCssUrl}">`)
-    ])
-    , onSuccess, onFailure);
+      ])
+      , onSuccess, onFailure);
   }, {
     theme: 'silver',
     plugins: 'preview',

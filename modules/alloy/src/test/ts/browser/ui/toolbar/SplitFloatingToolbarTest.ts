@@ -27,7 +27,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
     }
   }));
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     const pPrimary = SplitFloatingToolbar.parts().primary({
       dom: {
         tag: 'div',
@@ -46,7 +46,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
             outline: '2px solid blue'
           }
         },
-        lazySink (comp) {
+        lazySink(_comp) {
           return Result.value(sinkComp);
         },
         components: [
@@ -77,7 +77,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
         }
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, component, _store) => {
     gui.add(sinkComp);
     gui.add(GuiFactory.build(anchorButtonMem.asSpec()));
 
@@ -141,7 +141,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
       return GeneralSteps.sequence([
         Assertions.sAssertStructure(
           label,
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, _str, arr) => {
             return s.element('div', {
               children: [
                 s.element('div', {
@@ -189,9 +189,9 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
 
       Step.sync(() => {
         const groups = TestPartialToolbarGroup.createGroups([
-          { items: Arr.map([ { text: 'A' }, { text: 'B' } ], makeButton) },
-          { items: Arr.map([ { text: 'C' }, { text: 'D' } ], makeButton) },
-          { items: Arr.map([ { text: 'E' }, { text: 'F' }, { text: 'G' } ], makeButton) }
+          { items: Arr.map([{ text: 'A' }, { text: 'B' }], makeButton) },
+          { items: Arr.map([{ text: 'C' }, { text: 'D' }], makeButton) },
+          { items: Arr.map([{ text: 'E' }, { text: 'F' }, { text: 'G' }], makeButton) }
         ]);
         SplitFloatingToolbar.setGroups(component, groups);
         SplitFloatingToolbar.toggle(component);

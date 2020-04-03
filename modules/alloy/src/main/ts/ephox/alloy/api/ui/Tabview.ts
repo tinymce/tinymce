@@ -4,7 +4,7 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from './UiSketcher';
 
-const factory: SingleSketchFactory<TabviewDetail, TabviewSpec> = (detail, spec) => {
+const factory: SingleSketchFactory<TabviewDetail, TabviewSpec> = (detail, _spec) => {
   return {
     uid: detail.uid,
     dom: detail.dom,

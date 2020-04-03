@@ -932,7 +932,7 @@ UnitTest.asynctest('tinymce.lists.browser.BackspaceDeleteTest', (success, failur
     editor.plugins.lists.backspaceDelete();
 
     LegacyUnit.equal(editor.getContent(),
-    '<ul>' +
+      '<ul>' +
     '<li>item 1</li>' +
     '<li>item 2</li>' +
     '<li>item 2.1' +

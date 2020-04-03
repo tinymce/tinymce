@@ -10,12 +10,12 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('TogglingClassTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'custom-component-test'],
+          classes: [ 'custom-component-test' ],
           styles: {
             background: 'blue',
             width: '200px',
@@ -34,7 +34,7 @@ UnitTest.asynctest('TogglingClassTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, component, _store) => {
 
     const testIsSelected = (label: string) => {
       return Step.sync(() => {

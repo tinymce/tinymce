@@ -55,14 +55,13 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
         s.element('p', {
           children: [
             s.text(str.is('Hello')),
-              s.element('span', {
-                styles: {
-                  color: str.is('rgb(53, 152, 219)')
-                },
-                children: [
-                  s.text(str.is(Unicode.nbsp))
-                ]
-
+            s.element('span', {
+              styles: {
+                color: str.is('rgb(53, 152, 219)')
+              },
+              children: [
+                s.text(str.is(Unicode.nbsp))
+              ]
             }),
             s.text(str.is('world'))
           ]
@@ -70,28 +69,27 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
       ]
     });
 
-}
-);
+  }
+  );
   const backcolorStruct = ApproxStructure.build((s, str) => {
     return s.element('body', {
       children: [
         s.element('p', {
-         children: [
+          children: [
             s.text(str.is('Hello')),
-             s.element('span', {
-                styles: {
-                  'background-color': str.is('rgb(53, 152, 219)')
-                },
-               children: [
-                  s.text(str.is(Unicode.nbsp))
-                ]
-
+            s.element('span', {
+              styles: {
+                'background-color': str.is('rgb(53, 152, 219)')
+              },
+              children: [
+                s.text(str.is(Unicode.nbsp))
+              ]
             }),
             s.text(str.is('world'))
           ]
         })
       ]
-   });
+    });
   });
 
   TinyLoader.setup((editor, onSuccess, onFailure) => {
@@ -102,7 +100,7 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
       Log.stepsAsStep('TBA', 'TextColor: Forecolor on non breaking space', [
         tinyApis.sFocus(),
         tinyApis.sSetContent(`Hello${Unicode.nbsp}world`),
-        tinyApis.sSetSelection([0, 0], 5, [0, 0], 6),
+        tinyApis.sSetSelection([ 0, 0 ], 5, [ 0, 0 ], 6),
         tinyUi.sClickOnToolbar('click forecolor', '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron'),
         tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
         tinyUi.sClickOnUi('select blue color', 'div[data-mce-color="#3598DB"]'),
@@ -111,7 +109,7 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
       Log.stepsAsStep('TBA', 'TextColor: Backcolor on non breaking space', [
         tinyApis.sFocus(),
         tinyApis.sSetContent(`Hello${Unicode.nbsp}world`),
-        tinyApis.sSetSelection([0, 0], 5, [0, 0], 6),
+        tinyApis.sSetSelection([ 0, 0 ], 5, [ 0, 0 ], 6),
         tinyUi.sClickOnToolbar('click backcolor', '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron'),
         tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
         tinyUi.sClickOnUi('select blue color', 'div[data-mce-color="#3598DB"]'),
@@ -120,7 +118,7 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
       Log.stepsAsStep('TBA', 'TextColor: Forecolor for a special char', [
         tinyApis.sFocus(),
         tinyApis.sSetContent('圓'),
-        tinyApis.sSetSelection([0, 0], 0, [0, 0], 1),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 1),
         tinyUi.sClickOnToolbar('click forecolor', '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron'),
         tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
         tinyUi.sClickOnUi('click red color', 'div[title="Red"]'),
@@ -130,13 +128,12 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
       Log.stepsAsStep('TBA', 'TextColor: Backcolor for a special char that is 4-Byte UTF-8', [
         tinyApis.sFocus(),
         tinyApis.sSetContent('<p>&#142037;</p>'),
-        tinyApis.sSetSelection([0, 0], 0, [0, 0], 2),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 2),
         tinyUi.sClickOnToolbar('click backcolor', '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron'),
         tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
         tinyUi.sClickOnUi('click red color', 'div[title="Red"]'),
         tinyApis.sAssertContentStructure(backcolorTitleStruct),
       ]),
-
     ], onSuccess, onFailure );
 
   }, {

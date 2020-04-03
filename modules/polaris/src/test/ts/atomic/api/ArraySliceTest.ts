@@ -15,9 +15,9 @@ UnitTest.test('sliceby: unit tests', function () {
   };
 
   check([], [], is(0));
-  check([], [1], is(1));
-  check([1], [1, 2], is(2));
-  check([1, 2, 3], [1, 2, 3, 4], is(4));
+  check([], [ 1 ], is(1));
+  check([ 1 ], [ 1, 2 ], is(2));
+  check([ 1, 2, 3 ], [ 1, 2, 3, 4 ], is(4));
 });
 
 UnitTest.test('sliceby: property tests', function () {
@@ -26,7 +26,7 @@ UnitTest.test('sliceby: property tests', function () {
     fc.array(fc.nat()),
     fc.array(fc.nat()),
     (a1, a2) => {
-      const input = a1.concat([-1]).concat(a2);
+      const input = a1.concat([ -1 ]).concat(a2);
       Assert.eq('sliceby',
         a1,
         Arrays.sliceby(input, is(-1)),

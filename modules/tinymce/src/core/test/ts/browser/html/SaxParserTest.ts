@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     return {
       counts,
 
-      comment (text) {
+      comment(text) {
         if ('comment' in counts) {
           counts.comment++;
         } else {
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
         writer.comment(text);
       },
 
-      cdata (text) {
+      cdata(text) {
         if ('cdata' in counts) {
           counts.cdata++;
         } else {
@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
         writer.cdata(text);
       },
 
-      text (text, raw) {
+      text(text, raw) {
         if ('text' in counts) {
           counts.text++;
         } else {
@@ -47,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
         writer.text(text, raw);
       },
 
-      start (name, attrs, empty) {
+      start(name, attrs, empty) {
         if ('start' in counts) {
           counts.start++;
         } else {
@@ -57,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
         writer.start(name, attrs, empty);
       },
 
-      end (name) {
+      end(name) {
         if ('end' in counts) {
           counts.end++;
         } else {
@@ -67,7 +67,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
         writer.end(name);
       },
 
-      pi (name, text) {
+      pi(name, text) {
         if ('pi' in counts) {
           counts.pi++;
         } else {
@@ -77,7 +77,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
         writer.pi(name, text);
       },
 
-      doctype (text) {
+      doctype(text) {
         if ('doctype:' in counts) {
           counts.doctype++;
         } else {
@@ -96,8 +96,8 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse(
-      '<span id=id1 title="title value" class=\'class1 class2\' data-value="value1" ' +
-      'MYATTR="val1" myns:myattr="val2" disabled empty=""></span>'
+      `<span id=id1 title="title value" class='class1 class2' data-value="value1" ` +
+      `MYATTR="val1" myns:myattr="val2" disabled empty=""></span>`
     );
     LegacyUnit.equal(
       writer.getContent(),
@@ -110,7 +110,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
-    parser.parse('<b href=\'"&amp;<>\'></b>');
+    parser.parse(`<b href='"&amp;<>'></b>`);
     LegacyUnit.equal(writer.getContent(), '<b href="&quot;&amp;&lt;&gt;"></b>', 'Parse attributes with <> in them.');
     LegacyUnit.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse attributes with <> in them (count).');
 
@@ -240,10 +240,10 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
-    parser.parse('text\n<SC' + 'RIPT type=mce-text/javascript>// <![CDATA[\nalert(\'HELLO WORLD!\');\n// ]]></SC' + 'RIPT>');
+    parser.parse('text\n<SC' + `RIPT type=mce-text/javascript>// <![CDATA[\nalert('HELLO WORLD!');\n// ]]></SC` + 'RIPT>');
     LegacyUnit.equal(
       writer.getContent(),
-      'text\n<sc' + 'ript type="mce-text/javascript">// <![CDATA[\nalert(\'HELLO WORLD!\');\n// ]]></sc' + 'ript>',
+      'text\n<sc' + `ript type="mce-text/javascript">// <![CDATA[\nalert('HELLO WORLD!');\n// ]]></sc` + 'ript>',
       'Parse cdata script.'
     );
     LegacyUnit.deepEqual(counter.counts, { text: 2, start: 1, end: 1 }, 'Parse cdata script counts.');
@@ -991,6 +991,15 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function (success,
       writer.getContent(),
       'a a&lt;b c'
     );
+  });
+
+  suite.test('Retain base64 images', function () {
+    const counter = createCounter(writer);
+    const parser = SaxParser(counter, schema);
+
+    writer.reset();
+    parser.parse('a<img src="data:image/gif;base64,R0/yw==" /><img src="data:image/jpeg;base64,R1/yw==" /><!-- <img src="data:image/jpeg;base64,R1/yw==" /> -->b');
+    LegacyUnit.equal(writer.getContent(), 'a<img src="data:image/gif;base64,R0/yw==" /><img src="data:image/jpeg;base64,R1/yw==" /><!-- <img src="data:image/jpeg;base64,R1/yw==" /> -->b');
   });
 
   Pipeline.async({}, suite.toSteps({}), function () {

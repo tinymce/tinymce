@@ -14,7 +14,7 @@ import Delay from 'tinymce/core/api/util/Delay';
 import { formResizeEvent } from '../general/FormEvents';
 
 const measureHeights = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>, tabview, tabviewComp): number[] => {
-  return Arr.map(allTabs, (tab, i) => {
+  return Arr.map(allTabs, (_tab, i) => {
     Replacing.set(tabviewComp, allTabs[i].view());
     const rect = tabview.dom().getBoundingClientRect();
     Replacing.set(tabviewComp, [ ]);
@@ -36,7 +36,7 @@ const getMaxHeight = (heights: number[]) => {
 
 const getMaxTabviewHeight = (dialog: Element, tabview: Element, tablist: Element) => {
   const documentElement = Traverse.documentElement(dialog).dom();
-  const rootElm = SelectorFind.ancestor(dialog, '.tox-dialog-wrap').getOr(dialog) as Element<DomElement>;
+  const rootElm = SelectorFind.ancestor(dialog, '.tox-dialog-wrap').getOr(dialog);
   const isFixed = Css.get(rootElm, 'position') === 'fixed';
 
   // Get the document or window/viewport height
@@ -133,7 +133,7 @@ const setMode = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>) => 
           updateTabviewHeight(dialog, tabview, maxTabHeight);
         });
       }),
-      AlloyEvents.run(formResizeEvent, (comp, se) => {
+      AlloyEvents.run(formResizeEvent, (comp, _se) => {
         const dialog = comp.element();
         getTabview(dialog).each((tabview) => {
           const oldFocus = Focus.active();

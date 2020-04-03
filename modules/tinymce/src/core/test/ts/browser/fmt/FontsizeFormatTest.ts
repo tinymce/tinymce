@@ -8,7 +8,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontsizeFormatTest', function (succ
 
   Theme();
 
-  const sAssertMenuItemCount = function (expected, editor) {
+  const sAssertMenuItemCount = function (expected, _editor) {
     return Step.sync(function () {
       const actual = document.querySelectorAll('.tox-collection__item').length;
       Assert.eq('Should be correct count', expected, actual);

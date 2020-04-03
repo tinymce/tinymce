@@ -24,7 +24,7 @@ const getTransition = (comp: AlloyComponent, transConfig: TransitioningConfig, t
   });
 };
 
-const getTransitionOf = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Option<{ transition: { property: string; transitionClass: string }, route: TransitionProperties }> => {
+const getTransitionOf = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Option<{ transition: { property: string; transitionClass: string }; route: TransitionProperties }> => {
   return findRoute(comp, transConfig, transState, route).bind((r: TransitionProperties) => {
     return r.transition.map((t) => {
       return {
@@ -51,7 +51,7 @@ const getNewRoute = (comp: AlloyComponent, transConfig: TransitioningConfig, tra
   };
 };
 
-const getCurrentRoute = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless): Option<TransitionRoute> => {
+const getCurrentRoute = (comp: AlloyComponent, transConfig: TransitioningConfig, _transState: Stateless): Option<TransitionRoute> => {
   const el = comp.element();
   return Attr.has(el, transConfig.destinationAttr) ? Option.some({
     start: Attr.get(comp.element(), transConfig.stateAttr),
@@ -67,7 +67,7 @@ const jumpTo = (comp: AlloyComponent, transConfig: TransitioningConfig, transSta
   Attr.set(comp.element(), transConfig.stateAttr, destination);
 };
 
-const fasttrack = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, destination: string) => {
+const fasttrack = (comp: AlloyComponent, transConfig: TransitioningConfig, _transState: Stateless, _destination: string) => {
   if (Attr.has(comp.element(), transConfig.destinationAttr)) {
     Attr.set(comp.element(), transConfig.stateAttr, Attr.get(comp.element(), transConfig.destinationAttr));
     Attr.remove(comp.element(), transConfig.destinationAttr);
@@ -87,7 +87,7 @@ const progressTo = (comp: AlloyComponent, transConfig: TransitioningConfig, tran
   });
 };
 
-const getState = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless): Option<string> => {
+const getState = (comp: AlloyComponent, transConfig: TransitioningConfig, _transState: Stateless): Option<string> => {
   const e = comp.element();
   return Attr.has(e, transConfig.stateAttr) ? Option.some(
     Attr.get(e, transConfig.stateAttr)

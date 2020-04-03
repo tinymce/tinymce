@@ -66,7 +66,8 @@ const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemApi[] {
     }
     // all valid colors after this point
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#FFFFFF'; // invalid colors will be shown as white
+    // invalid colors will be shown as white - the first assignment will pass and the second may be ignored
+    ctx.fillStyle = '#FFFFFF'; // lgtm[js/useless-assignment-to-property]
     ctx.fillStyle = color;
     ctx.fillRect(0, 0, 1, 1);
     const rgba = ctx.getImageData(0, 0, 1, 1).data;

@@ -17,15 +17,15 @@ import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 
 UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       Menu.sketch({
         value: 'test-menu-1',
         items: Arr.map([
-          { type: 'item', data: { value: 'alpha', meta: { } }, hasSubmenu: false },
-          { type: 'item', data: { value: 'beta', meta: { } }, hasSubmenu: false },
-          { type: 'item', data: { value: 'gamma', meta: { } }, hasSubmenu: false },
-          { type: 'item', data: { value: 'delta', meta: { } }, hasSubmenu: false }
+          { type: 'item', data: { value: 'alpha', meta: { }}, hasSubmenu: false },
+          { type: 'item', data: { value: 'beta', meta: { }}, hasSubmenu: false },
+          { type: 'item', data: { value: 'gamma', meta: { }}, hasSubmenu: false },
+          { type: 'item', data: { value: 'delta', meta: { }}, hasSubmenu: false }
         ], TestDropdownMenu.renderItem),
         dom: {
           tag: 'ol',
@@ -65,7 +65,7 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
         ])
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, component, store) => {
     // TODO: Flesh out test.
     const cAssertStructure = (label: string, expected: StructAssert) => {
       return Chain.op((element: Element) => {
@@ -78,7 +78,7 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
     });
 
     const cAssertSelectedStates = (label: string, expected: boolean[]) => {
-      return NamedChain.direct('menu', cAssertStructure(label, ApproxStructure.build((s, str, arr) => {
+      return NamedChain.direct('menu', cAssertStructure(label, ApproxStructure.build((s, _str, arr) => {
         return s.element('ol', {
           classes: [
             arr.has('test-menu')

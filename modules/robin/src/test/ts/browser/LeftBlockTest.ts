@@ -38,16 +38,16 @@ UnitTest.test('LeftBlockTest', function () {
 
   Arr.each([
     // I'm only targeting text nodes here ... this is probably a limitation in the current implementation.
-    { expected: 'alpha', path: [0, 0], method: LeftBlock.top },
-    { expected: 'alpha', path: [0, 0], method: LeftBlock.all },
-    { expected: 'alpha<span>cat</span>hello', path: [0, 2, 0], method: LeftBlock.top },
-    { expected: 'alphacathello', path: [0, 2, 0], method: LeftBlock.all },
-    { expected: 'alpha<span>cat</span>helloword', path: [0, 2, 1, 0], method: LeftBlock.top },
-    { expected: 'alphacathelloword', path: [0, 2, 1, 0], method: LeftBlock.all },
-    { expected: 'alpha<span>cat</span>hello<i>word</i>hi', path: [0, 2, 2], method: LeftBlock.top },
-    { expected: 'alphacathellowordhi', path: [0, 2, 2], method: LeftBlock.all },
-    { expected: 'alpha<span>cat</span><b>hello<i>word</i>hi</b>there', path: [0, 3], method: LeftBlock.top },
-    { expected: 'alphacathellowordhithere', path: [0, 3], method: LeftBlock.all }
+    { expected: 'alpha', path: [ 0, 0 ], method: LeftBlock.top },
+    { expected: 'alpha', path: [ 0, 0 ], method: LeftBlock.all },
+    { expected: 'alpha<span>cat</span>hello', path: [ 0, 2, 0 ], method: LeftBlock.top },
+    { expected: 'alphacathello', path: [ 0, 2, 0 ], method: LeftBlock.all },
+    { expected: 'alpha<span>cat</span>helloword', path: [ 0, 2, 1, 0 ], method: LeftBlock.top },
+    { expected: 'alphacathelloword', path: [ 0, 2, 1, 0 ], method: LeftBlock.all },
+    { expected: 'alpha<span>cat</span>hello<i>word</i>hi', path: [ 0, 2, 2 ], method: LeftBlock.top },
+    { expected: 'alphacathellowordhi', path: [ 0, 2, 2 ], method: LeftBlock.all },
+    { expected: 'alpha<span>cat</span><b>hello<i>word</i>hi</b>there', path: [ 0, 3 ], method: LeftBlock.top },
+    { expected: 'alphacathellowordhithere', path: [ 0, 3 ], method: LeftBlock.all }
   ], function (item) {
     check(item.expected, item.path, item.method);
   });

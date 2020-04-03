@@ -1,4 +1,4 @@
-import { FieldSchema, Processor, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Option, Result } from '@ephox/katamari';
 
 import { ChoiceMenuItemApi, SeparatorMenuItemApi } from '../../api/Menu';
@@ -58,11 +58,11 @@ export const splitButtonSchema = ValueSchema.objOf([
   FieldSchema.strictFunction('fetch'),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
   // TODO: Validate the allowed presets
-  FieldSchema.defaultedStringEnum('presets', 'normal', ['normal', 'color', 'listpreview']),
+  FieldSchema.defaultedStringEnum('presets', 'normal', [ 'normal', 'color', 'listpreview' ]),
   FieldSchema.defaulted('columns', 1),
   FieldSchema.strictFunction('onAction'),
   FieldSchema.strictFunction('onItemAction')
-]) as Processor;
+]);
 
 export const isSplitButtonButton = (spec: any): spec is ToolbarSplitButton => spec.type === 'splitbutton';
 

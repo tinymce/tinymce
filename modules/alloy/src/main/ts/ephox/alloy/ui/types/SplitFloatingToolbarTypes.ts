@@ -33,9 +33,9 @@ export interface SplitFloatingToolbarSpec extends SplitToolbarBaseSpec {
   };
 
   parts: {
-    'overflow-group': Partial<ToolbarGroupSpec>,
-    'overflow-button': Partial<SimpleOrSketchSpec>,
-    'overflow': Partial<ToolbarSpec>
+    'overflow-group': Partial<ToolbarGroupSpec>;
+    'overflow-button': Partial<SimpleOrSketchSpec>;
+    'overflow': Partial<ToolbarSpec>;
   };
 }
 

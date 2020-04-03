@@ -27,7 +27,7 @@ export interface ChangeSlideEvent extends CustomEvent {
 
 const resizingClass = 'tox-pop--resizing';
 
-const renderContextToolbar = (spec: { onEscape: () => Option<boolean>, sink: AlloyComponent }) => {
+const renderContextToolbar = (spec: { onEscape: () => Option<boolean>; sink: AlloyComponent }) => {
   const stack = Cell([ ]);
 
   return InlineView.sketch({
@@ -50,10 +50,7 @@ const renderContextToolbar = (spec: { onEscape: () => Option<boolean>, sink: All
 
     inlineBehaviours: Behaviour.derive([
       AddEventsBehaviour.config('context-toolbar-events', [
-        AlloyEvents.runOnSource<EventArgs>(NativeEvents.transitionend(), (comp, se) => {
-          InlineView.getContent(comp).each((c) => {
-            // Css.remove(c.element(), 'opacity');
-          });
+        AlloyEvents.runOnSource<EventArgs>(NativeEvents.transitionend(), (comp, _se) => {
           Class.remove(comp.element(), resizingClass);
           Css.remove(comp.element(), 'width');
         }),
@@ -97,7 +94,7 @@ const renderContextToolbar = (spec: { onEscape: () => Option<boolean>, sink: All
           });
         }),
 
-        AlloyEvents.run<BackwardSlideEvent>(backSlideEvent, (comp, se) => {
+        AlloyEvents.run<BackwardSlideEvent>(backSlideEvent, (comp, _se) => {
           Arr.last(stack.get()).each((last) => {
             stack.set(stack.get().slice(0, stack.get().length - 1));
             AlloyTriggers.emitWith(comp, changeSlideEvent, {

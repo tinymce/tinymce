@@ -60,7 +60,7 @@ const getEventExtras = (lazyDialog, extra: WindowExtra) => {
           behaviours: bs,
           components: [
             {
-              dom: DomFactory.fromHtml(`<div class="tox-spinner"><div></div><div></div><div></div></div>`)
+              dom: DomFactory.fromHtml('<div class="tox-spinner"><div></div><div></div><div></div></div>')
             }
           ]
         };

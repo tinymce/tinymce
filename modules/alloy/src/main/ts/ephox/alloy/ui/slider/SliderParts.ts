@@ -29,17 +29,17 @@ const edgePart = (name: keyof EdgeActions): PartType.PartTypeAdt => {
       return action.fold(() => {
         return {};
       },
-        (a) => {
-          return {
-            events: AlloyEvents.derive([
-              AlloyEvents.runActionExtra(NativeEvents.touchstart(), (comp, se, d) => a(comp, d), [detail]),
-              AlloyEvents.runActionExtra(NativeEvents.mousedown(), (comp, se, d) => a(comp, d), [detail]),
-              AlloyEvents.runActionExtra(NativeEvents.mousemove(), (comp, se, det: SliderDetail) => {
-                if (det.mouseIsDown.get()) { a(comp, det); }
-              }, [detail])
-            ])
-          };
-        }
+      (a) => {
+        return {
+          events: AlloyEvents.derive([
+            AlloyEvents.runActionExtra(NativeEvents.touchstart(), (comp, se, d) => a(comp, d), [ detail ]),
+            AlloyEvents.runActionExtra(NativeEvents.mousedown(), (comp, se, d) => a(comp, d), [ detail ]),
+            AlloyEvents.runActionExtra(NativeEvents.mousemove(), (comp, se, det: SliderDetail) => {
+              if (det.mouseIsDown.get()) { a(comp, det); }
+            }, [ detail ])
+          ])
+        };
+      }
       );
     }
   });

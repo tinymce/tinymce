@@ -23,7 +23,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
   // Seems to have stopped working on phantomjs
   if (PhantomSkipper.skip()) { return success(); }
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
 
     const pMinimal = ExpandableForm.parts().minimal(
       Form.sketch((parts: FormParts) => {
@@ -62,7 +62,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
             classes: [ 'extra-form', 'form-section' ]
           },
           components: [
-            Container.sketch({ dom: { styles: { height: '100px', width: '100px', background: 'green' } } }),
+            Container.sketch({ dom: { styles: { height: '100px', width: '100px', background: 'green' }}}),
             parts.field('form.bull', FormField.sketch({
               uid: 'select-bull',
               dom: {
@@ -115,7 +115,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
               tag: 'button',
               innerHtml: 'Shrink!'
             },
-            action (button) {
+            action(_button) {
               ExpandableForm.collapseFormImmediately(me);
             },
             buttonBehaviours: Behaviour.derive([
@@ -153,7 +153,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
 
     return me;
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, component, _store) => {
     const helper = TestForm.helper(component);
 
     return [

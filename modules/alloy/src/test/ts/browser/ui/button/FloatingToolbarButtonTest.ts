@@ -26,7 +26,7 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
     });
   };
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build(
       FloatingToolbarButton.sketch({
         layouts: {
@@ -37,8 +37,8 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
         fetch: () => {
           return Future.nu((resolve) => {
             const groups = TestPartialToolbarGroup.createGroups([
-              { items: Arr.map([ { text: 'A' }, { text: 'B' } ], makeButton) },
-              { items: Arr.map([ { text: 'C' }, { text: 'D' } ], makeButton) }
+              { items: Arr.map([{ text: 'A' }, { text: 'B' }], makeButton) },
+              { items: Arr.map([{ text: 'C' }, { text: 'D' }], makeButton) }
             ]);
             resolve(groups);
           });
@@ -63,7 +63,7 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
         },
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, component, _store) => {
     gui.add(sinkComp);
 
     const sAssertButtonStructure = (active: boolean) => {

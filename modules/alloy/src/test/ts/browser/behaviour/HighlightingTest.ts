@@ -13,7 +13,7 @@ import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
 
 UnitTest.asynctest('HighlightingTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     const makeItem = (name: string) => {
       return Container.sketch({
         dom: {
@@ -47,7 +47,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, component, _store) => {
     const cCheckNum = (label: string, expected: number) => {
       return Chain.fromChains([
         Chain.mapper((array) => array.length),
@@ -209,7 +209,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
           cDehighlightAll,
           NamedChain.direct('container', cGetHighlightedIsNone, '_'),
 
-          Chain.op((input) => {
+          Chain.op((_input) => {
             Highlighting.highlightBy(component, (comp) => {
               return Class.has(comp.element(), 'beta');
             });

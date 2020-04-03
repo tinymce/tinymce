@@ -13,12 +13,12 @@ UnitTest.test('Binder', function () {
 
   let called = false;
 
-  binder.bind(events.registry.myEvent, function (event) {
+  binder.bind(events.registry.myEvent, function (_event) {
     called = true;
   });
 
   assert.throws(function () {
-    binder.bind(events.registry.myEvent, function (event) {
+    binder.bind(events.registry.myEvent, function (_event) {
       called = true;
     });
   });
@@ -39,11 +39,11 @@ UnitTest.test('Binder', function () {
 
   let count = 0;
 
-  binder.bind(events.registry.myEvent, function (event) {
+  binder.bind(events.registry.myEvent, function (_event) {
     count++;
   });
 
-  binder.bind(events.registry.secondEvent, function (event) {
+  binder.bind(events.registry.secondEvent, function (_event) {
     count++;
   });
 

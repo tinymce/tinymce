@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (success,
   });
 
   suite.test('Selected style element with css styles', function (editor) {
-    editor.formatter.register('color', { inline: 'span', styles: { color: '#ff0000' } });
+    editor.formatter.register('color', { inline: 'span', styles: { color: '#ff0000' }});
     editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (success,
   });
 
   suite.test('Selected style element with css styles indexed', function (editor) {
-    editor.formatter.register('color', { inline: 'span', styles: ['color'] });
+    editor.formatter.register('color', { inline: 'span', styles: [ 'color' ] });
     editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (success,
   });
 
   suite.test('Selected style element with attributes', function (editor) {
-    editor.formatter.register('fontsize', { inline: 'font', attributes: { size: '7' } });
+    editor.formatter.register('fontsize', { inline: 'font', attributes: { size: '7' }});
     editor.getBody().innerHTML = '<p><font size="7">1234</font></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('font')[0].firstChild, 0);
@@ -64,7 +64,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (success,
   });
 
   suite.test('Selected complex style element', function (editor) {
-    editor.formatter.register('complex', { inline: 'span', styles: { fontWeight: 'bold' } });
+    editor.formatter.register('complex', { inline: 'span', styles: { fontWeight: 'bold' }});
     editor.getBody().innerHTML = '<p><span style="color:#ff0000; font-weight:bold">1234</span></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
@@ -114,7 +114,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (success,
   });
 
   suite.test('Selected element match with variable', function (editor) {
-    editor.formatter.register('complex', { inline: 'span', styles: { color: '%color' } });
+    editor.formatter.register('complex', { inline: 'span', styles: { color: '%color' }});
     editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
@@ -127,7 +127,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (success,
     editor.formatter.register('complex', {
       inline: 'span',
       styles: {
-        color (vars) {
+        color(vars) {
           return vars.color + '00';
         }
       }
@@ -144,7 +144,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (success,
   suite.test('matchAll', function (editor) {
     editor.getBody().innerHTML = '<p><b><i>a</i></b></p>';
     LegacyUnit.setSelection(editor, 'i', 0, 'i', 1);
-    LegacyUnit.equal(editor.formatter.matchAll(['bold', 'italic', 'underline']), ['italic', 'bold']);
+    LegacyUnit.equal(editor.formatter.matchAll([ 'bold', 'italic', 'underline' ]), [ 'italic', 'bold' ]);
   });
 
   suite.test('canApply', function (editor) {
@@ -156,7 +156,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (success,
   suite.test('Custom onmatch handler', function (editor) {
     editor.formatter.register('format', {
       inline: 'span',
-      onmatch (elm) {
+      onmatch(elm) {
         return elm.className === 'x';
       }
     });
@@ -171,7 +171,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', function (success,
   suite.test('formatChanged complex format', function (editor) {
     let newState, newArgs;
 
-    editor.formatter.register('complex', { inline: 'span', styles: { color: '%color' } });
+    editor.formatter.register('complex', { inline: 'span', styles: { color: '%color' }});
 
     const handler = editor.formatter.formatChanged('complex', function (state, args) {
       newState = state;

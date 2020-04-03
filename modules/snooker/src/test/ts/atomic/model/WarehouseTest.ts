@@ -7,11 +7,11 @@ import { Element } from '@ephox/sugar';
 UnitTest.test('WarehouseTest', function () {
   const check = function (expected: Record<string, string>, input: Structs.RowData<Structs.Detail>[]) {
     const actual = Warehouse.generate(input);
-    assert.eq(expected, Obj.map(actual.access(), function (x) { return x.element(); }));
+    assert.eq(expected, Obj.map(actual.access, function (x) { return x.element(); }));
   };
 
-  const s = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as any as Element, rowspan, colspan);
-  const f = (fakeEle: any, cells: Structs.Detail[], section: 'tbody' | 'thead' | 'tfoot') => Structs.rowdata(fakeEle as any as Element, cells, section);
+  const s = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as Element, rowspan, colspan);
+  const f = (fakeEle: any, cells: Structs.Detail[], section: 'tbody' | 'thead' | 'tfoot') => Structs.rowdata(fakeEle as Element, cells, section);
 
   const testTable = [
     f('r1', [ s('a', 1, 2), s('b', 1, 1), s('c', 1, 1), s('d', 1, 1), s('e', 1, 1), s('f', 1, 1) ], 'thead'),
@@ -64,8 +64,8 @@ UnitTest.test('WarehouseTest', function () {
     '0,1': 'a',
     '0,2': 'a'
   },
-    [
-      f('r0', [ s('a', 1, 3) ], 'tbody')
-    ]
+  [
+    f('r0', [ s('a', 1, 3) ], 'tbody')
+  ]
   );
 });

@@ -1,13 +1,13 @@
 import { Universe } from '@ephox/boss';
-import { Adt, Arr, Option, Struct } from '@ephox/katamari';
+import { Adt, Arr, Option } from '@ephox/katamari';
 import { Descent, Gather, Spot, Transition } from '@ephox/phoenix';
 import * as Structure from '../api/general/Structure';
 
 export interface Clump<E> {
-  start: () => E;
-  soffset: () => number;
-  finish: () => E;
-  foffset: () => number;
+  start: E;
+  soffset: number;
+  finish: E;
+  foffset: number;
 }
 
 interface ClumpsScan<E> {
@@ -18,24 +18,24 @@ interface ClumpsScan<E> {
     finished: (element: E, mode: Transition) => T
   ) => T;
   match: <T> (branches: {
-    none: (last: E, mode: Transition) => T,
-    running: (next: E, mode: Transition) => T,
-    split: (boundary: E, last: E, mode: Transition) => T,
-    finished: (element: E, mode: Transition) => T
+    none: (last: E, mode: Transition) => T;
+    running: (next: E, mode: Transition) => T;
+    split: (boundary: E, last: E, mode: Transition) => T;
+    finished: (element: E, mode: Transition) => T;
   }) => T;
   log: (label: string) => void;
 }
 
 const adt: {
-  none: <E> (last: E, mode: Transition) => ClumpsScan<E>,
-  running: <E> (next: E, mode: Transition) => ClumpsScan<E>,
-  split: <E> (boundary: E, last: E, mode: Transition) => ClumpsScan<E>,
-  finished: <E> (element: E, mode: Transition) => ClumpsScan<E>
+  none: <E> (last: E, mode: Transition) => ClumpsScan<E>;
+  running: <E> (next: E, mode: Transition) => ClumpsScan<E>;
+  split: <E> (boundary: E, last: E, mode: Transition) => ClumpsScan<E>;
+  finished: <E> (element: E, mode: Transition) => ClumpsScan<E>;
 } = Adt.generate([
-  { none: ['last', 'mode'] },
-  { running: ['next', 'mode'] },
-  { split: ['boundary', 'last', 'mode'] },
-  { finished: ['element', 'mode'] }
+  { none: [ 'last', 'mode' ] },
+  { running: [ 'next', 'mode' ] },
+  { split: [ 'boundary', 'last', 'mode' ] },
+  { finished: [ 'element', 'mode' ] }
 ]);
 
 interface ClumpRange<E> {
@@ -43,7 +43,12 @@ interface ClumpRange<E> {
   finish: E;
 }
 
-const clump: <E> (start: E, soffset: number, finish: E, foffset: number) => Clump<E> = Struct.immutable('start', 'soffset', 'finish', 'foffset');
+const clump = <E> (start: E, soffset: number, finish: E, foffset: number): Clump<E> => ({
+  start,
+  soffset,
+  finish,
+  foffset
+});
 
 const descendBlock = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, block: E) {
   const leaf = Descent.toLeaf(universe, block, 0);
@@ -57,7 +62,7 @@ const descendBlock = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) =
 };
 
 const isBlock = function <E, D> (universe: Universe<E, D>, item: E) {
-  return Structure.isFrame(universe, item) || Structure.isBlock(universe, item) || Arr.contains(['li'], universe.property().name(item));
+  return Structure.isFrame(universe, item) || Structure.isBlock(universe, item) || Arr.contains([ 'li' ], universe.property().name(item));
 };
 
 const skipToRight = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, item: E) {
@@ -73,7 +78,7 @@ const skip = function <E, D> (universe: Universe<E, D>, item: E) {
   return universe.property().parent(item).exists(function (p) {
     // Text nodes of these children should be ignored when adding tags.
     // Dupe from phoenix OrphanText. We'll need a better solution for this.
-    return Arr.contains(['table', 'tbody', 'thead', 'tfoot', 'tr', 'ul', 'ol'], universe.property().name(p));
+    return Arr.contains([ 'table', 'tbody', 'thead', 'tfoot', 'tr', 'ul', 'ol' ], universe.property().name(p));
   });
 };
 
@@ -141,14 +146,14 @@ const scan = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolea
     // We have hit a boundary, so stop the current clump, and start a new from the next starting point.
     return resumption.fold(function () {
       // There was no new starting point, so just return the newly created clump
-      return [current];
+      return [ current ];
 
     }, function (n) {
       if (universe.eq(n, target)) {
-        return [current].concat({ start: target, finish: target });
+        return [ current ].concat({ start: target, finish: target });
       }
       // There was a new starting point, so scan for more clumps and accumulate the result.
-      return [current].concat(scan(universe, isRoot, Gather.advance, n, n, target));
+      return [ current ].concat(scan(universe, isRoot, Gather.advance, n, n, target));
     });
   }, function (elem, _mode) {
     // We hit the final destination, so finish our current clump
@@ -190,7 +195,7 @@ const doCollect = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => b
 
   // If the dropped start should be skipped, find the thing to the right of it.
   const raw = scan(universe, isRoot, Gather.sidestep, droppedStart, droppedStart, droppedFinish);
-  return Arr.map(raw, function (r, i) {
+  return Arr.map(raw, function (r) {
     // Incorporate any offsets that were required.
     const soff = universe.eq(r.start, start) ? soffset : 0;
     const foff = universe.eq(r.finish, finish) ? foffset : getEnd(universe, r.finish);
@@ -201,7 +206,7 @@ const doCollect = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => b
 const single = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, item: E, soffset: number, foffset: number): Clump<E>[] {
   // If we aren't on blocks, just span a clump from start to finish.
   if (!isBlock(universe, item)) {
-    return [clump(item, soffset, item, foffset)];
+    return [ clump(item, soffset, item, foffset) ];
   }
 
   // Jump to the leaves and try again if we have changed.
@@ -209,7 +214,7 @@ const single = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => bool
   const finish = Descent.toLeaf(universe, item, foffset);
   const changed = !universe.eq(start.element(), item) || !universe.eq(finish.element(), item);
   return changed ? collect(universe, isRoot, start.element(), start.offset(), finish.element(), finish.offset())
-    : [clump(start.element(), start.offset(), finish.element(), finish.offset())];
+    : [ clump(start.element(), start.offset(), finish.element(), finish.offset()) ];
 };
 
 const collect = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, start: E, soffset: number, finish: E, foffset: number) {

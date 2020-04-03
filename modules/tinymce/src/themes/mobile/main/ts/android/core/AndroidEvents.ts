@@ -56,7 +56,7 @@ const initEvents = function (editorApi, toolstrip, alloy) {
     tapping.onTouchmove(),
     tapping.onTouchend(),
 
-    DomEvent.bind(toolstrip, 'touchstart', function (evt) {
+    DomEvent.bind(toolstrip, 'touchstart', function (_evt) {
       editorApi.onTouchToolstrip();
     }),
 
@@ -72,7 +72,7 @@ const initEvents = function (editorApi, toolstrip, alloy) {
         const cWin = editorApi.win();
         // The goal here is to shift as little as required.
         const isOutside = bounds.top() > cWin.innerHeight || bounds.bottom() > cWin.innerHeight;
-        const cScrollBy = isOutside ? bounds.bottom() - cWin.innerHeight + 50 /*EXTRA_SPACING*/ : 0;
+        const cScrollBy = isOutside ? bounds.bottom() - cWin.innerHeight + 50 /* EXTRA_SPACING*/ : 0;
         if (cScrollBy !== 0) {
           cWin.scrollTo(cWin.pageXOffset, cWin.pageYOffset + cScrollBy);
         }

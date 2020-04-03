@@ -41,17 +41,17 @@ export default function () {
   const t900 = Element.fromText('no');
   const t1000 = Element.fromText('w');
 
-  InsertAll.append(container, [d100, d200]);
-  InsertAll.append(d100, [p100, p200, p300]);
-  InsertAll.append(p100, [t100]);
-  InsertAll.append(p200, [t200, t220, t250, t260, t270, t280, s100, s200]);
-  InsertAll.append(s100, [t300]);
-  InsertAll.append(s200, [t400, s300]);
-  InsertAll.append(s300, [t500]);
-  InsertAll.append(p300, [t600]);
-  InsertAll.append(d200, [t700, p400]);
-  InsertAll.append(p400, [t800, s400]);
-  InsertAll.append(s400, [t900, t1000]);
+  InsertAll.append(container, [ d100, d200 ]);
+  InsertAll.append(d100, [ p100, p200, p300 ]);
+  InsertAll.append(p100, [ t100 ]);
+  InsertAll.append(p200, [ t200, t220, t250, t260, t270, t280, s100, s200 ]);
+  InsertAll.append(s100, [ t300 ]);
+  InsertAll.append(s200, [ t400, s300 ]);
+  InsertAll.append(s300, [ t500 ]);
+  InsertAll.append(p300, [ t600 ]);
+  InsertAll.append(d200, [ t700, p400 ]);
+  InsertAll.append(p400, [ t800, s400 ]);
+  InsertAll.append(s400, [ t900, t1000 ]);
 
   const connect = function (element: Element) {
     Insert.append(element, container);

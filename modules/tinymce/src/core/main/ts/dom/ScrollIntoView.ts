@@ -14,11 +14,11 @@ import * as OuterPosition from '../frames/OuterPosition';
 import * as Zwsp from '../text/Zwsp';
 
 interface MarkerInfo {
-  element: SugarElement;
-  bottom: number;
-  height: number;
-  pos: Position;
-  cleanup: () => void;
+  readonly element: SugarElement;
+  readonly bottom: number;
+  readonly height: number;
+  readonly pos: Position;
+  readonly cleanup: () => void;
 }
 
 type ScrollFunc = (doc: SugarElement, scrollTop: number, marker: MarkerInfo, alignToTop?: boolean) => void;
@@ -34,7 +34,7 @@ const fireAfterScrollIntoViewEvent = (editor: Editor, data: ScrollIntoViewEvent)
   editor.fire('AfterScrollIntoView', data);
 };
 
-const descend = (element: SugarElement, offset: number): { element: SugarElement, offset: number } => {
+const descend = (element: SugarElement, offset: number): { element: SugarElement; offset: number } => {
   const children = Traverse.children(element);
   if (children.length === 0 || excludeFromDescend(element)) {
     return { element, offset };
@@ -169,9 +169,9 @@ const intoFrame = (doc: SugarElement, scrollTop: number, marker: MarkerInfo, ali
   // If the new position is outside the window viewport, scroll to it
   const op = OuterPosition.find(marker.element);
   const viewportBounds = VisualViewport.getBounds(window);
-  if (op.top() < viewportBounds.y()) {
+  if (op.top() < viewportBounds.y) {
     Scroll.intoView(marker.element, alignToTop !== false);
-  } else if (op.top() > viewportBounds.bottom()) {
+  } else if (op.top() > viewportBounds.bottom) {
     Scroll.intoView(marker.element, alignToTop === true);
   }
 };

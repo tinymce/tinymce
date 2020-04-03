@@ -32,8 +32,8 @@ import * as EventHandler from './EventHandler';
 type Info = Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>;
 
 type BehaviourTuple<T extends EventFormat> = {
-  name: () => string,
-  handler: () => AlloyEventHandler<T>
+  name: () => string;
+  handler: () => AlloyEventHandler<T>;
 };
 
 const behaviourTuple = <T extends EventFormat>(name: string, handler: AlloyEventHandler<T>): BehaviourTuple<T> => {

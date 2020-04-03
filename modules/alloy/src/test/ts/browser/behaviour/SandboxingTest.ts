@@ -15,9 +15,9 @@ import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('SandboxingTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return Sinks.fixedSink();
-  }, (doc, body, gui, sink, store) => {
+  }, (_doc, _body, gui, sink, store) => {
     const sandbox = sink.getSystem().build(
       Container.sketch({
         dom: {
@@ -26,7 +26,7 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
         uid: 'no-duplicates',
         containerBehaviours: Behaviour.derive([
           Sandboxing.config({
-            getAttachPoint (c) {
+            getAttachPoint(c) {
               Assertions.assertEq('Checking getAttachPoint gets given sandbox', sandbox.element(), c.element());
               return sink;
             },

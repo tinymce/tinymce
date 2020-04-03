@@ -82,7 +82,7 @@ const rgbFormFactory = (
     const helptext = translate(translatePrefix + 'range');
 
     const pLabel = FormField.parts().label({
-      dom: { tag: 'label', innerHtml: label, attributes: { 'aria-label': description } }
+      dom: { tag: 'label', innerHtml: label, attributes: { 'aria-label': description }}
     });
 
     const pField = FormField.parts().field({
@@ -92,7 +92,7 @@ const rgbFormFactory = (
         type: 'text',
         ...name === 'hex' ? { 'aria-live': 'polite' } : {}
       },
-      inputClasses: [getClass('textfield')],
+      inputClasses: [ getClass('textfield') ],
 
       // Have basic invalidating and tabstopping behaviour.
       inputBehaviours: Behaviour.derive([
@@ -109,10 +109,10 @@ const rgbFormFactory = (
       }
     });
 
-    const comps = [pLabel, pField];
-    const concats = name !== 'hex' ? [FormField.parts()['aria-descriptor']({
+    const comps = [ pLabel, pField ];
+    const concats = name !== 'hex' ? [ FormField.parts()['aria-descriptor']({
       text: helptext
-    })] : [];
+    }) ] : [];
     const components = comps.concat(concats);
 
     return {
@@ -150,7 +150,7 @@ const rgbFormFactory = (
     {
       dom: {
         tag: 'div',
-        classes: [getClass('rgba-preview')],
+        classes: [ getClass('rgba-preview') ],
         styles: {
           'background-color': 'white'
         },
@@ -169,10 +169,10 @@ const rgbFormFactory = (
 
   const factory: UiSketcher.SingleSketchFactory<RgbFormDetail, RgbFormSpec> = (): SketchSpec => {
     const state = {
-      red: Fun.constant(Cell(Option.some(255))),
-      green: Fun.constant(Cell(Option.some(255))),
-      blue: Fun.constant(Cell(Option.some(255))),
-      hex: Fun.constant(Cell(Option.some('ffffff')))
+      red: Cell(Option.some(255)),
+      green: Cell(Option.some(255)),
+      blue: Cell(Option.some(255)),
+      hex: Cell(Option.some('ffffff'))
     };
 
     const copyHexToRgb = (form: AlloyComponent, hex: Hex) => {
@@ -182,11 +182,11 @@ const rgbFormFactory = (
     };
 
     const get = (prop: keyof typeof state): Option<any> => {
-      return state[prop]().get();
+      return state[prop].get();
     };
 
     const set = (prop: keyof typeof state, value: Option<any>): void => {
-      state[prop]().set(value);
+      state[prop].set(value);
     };
 
     const getValueRgb = () => {
@@ -227,7 +227,7 @@ const rgbFormFactory = (
       copyRgbToForm(form, rgb);
       setValueRgb(rgb);
 
-      AlloyTriggers.emitWith(form, ColourEvents.fieldsUpdate(), {
+      AlloyTriggers.emitWith(form, ColourEvents.fieldsUpdate, {
         hex
       });
 
@@ -274,7 +274,7 @@ const rgbFormFactory = (
         return {
           dom: {
             tag: 'form',
-            classes: [getClass('rgb-form')],
+            classes: [ getClass('rgb-form') ],
             attributes: { 'aria-label': translate('aria.color.picker') }
           },
           components: [

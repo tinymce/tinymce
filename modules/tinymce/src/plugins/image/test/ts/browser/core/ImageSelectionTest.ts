@@ -7,7 +7,6 @@ import { ImageData } from 'tinymce/plugins/image/core/ImageData';
 import { insertOrUpdateImage } from 'tinymce/plugins/image/core/ImageSelection';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { ImageDialogInfo } from 'tinymce/plugins/image/ui/DialogTypes';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (success, failure) => {
   Plugin();
@@ -30,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (su
         borderStyle: '',
         isDecorative: false,
         ...data
-      }, { hasAccessibilityOptions: false } as ImageDialogInfo);
+      });
     });
   };
 
@@ -44,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (su
     Pipeline.async({}, [
       Logger.t('Insert image, size 100x100', GeneralSteps.sequence([
         tinyApis.sSetContent('<p></p>'),
-        tinyApis.sSetCursor([0], 0),
+        tinyApis.sSetCursor([ 0 ], 0),
         sUpdateImageOrFigure(editor, {
           src: 'image.png',
           height: '100',
@@ -67,17 +66,17 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (su
                   s.element('br', {})
                 ]
               }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlene') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlese') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') } })
+              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlene') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlese') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') }})
             ]
           });
         }))
       ])),
       Logger.t('Insert figure, size 100x100', GeneralSteps.sequence([
         tinyApis.sSetContent('<p></p>'),
-        tinyApis.sSetCursor([0], 0),
+        tinyApis.sSetCursor([ 0 ], 0),
         sUpdateImageOrFigure(editor, {
           src: 'image.png',
           caption: true,
@@ -114,10 +113,10 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (su
               }),
               s.element('p', {}),
               s.anything(),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlene') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlese') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') } })
+              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlene') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlese') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') }})
             ]
           });
         }))
@@ -164,10 +163,10 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (su
                 ]
               }),
               s.anything(),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlene') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlese') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') } })
+              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlene') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlese') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') }})
             ]
           });
         }))
@@ -199,10 +198,10 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (su
                   })
                 ]
               }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlene') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlese') } }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') } })
+              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlene') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlese') }}),
+              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') }})
             ]
           });
         }))

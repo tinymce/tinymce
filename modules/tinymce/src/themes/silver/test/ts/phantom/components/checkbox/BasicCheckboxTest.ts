@@ -14,11 +14,12 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
       unselected: '<svg></svg>'
     },
     menuItems: () => <Record<string, any>> {},
-    translate: I18n.translate
+    translate: I18n.translate,
+    isReadonly: () => false
   };
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       return GuiFactory.build(
         renderCheckbox({
           label: 'TestCheckbox',
@@ -27,7 +28,7 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
         }, providers)
       );
     },
-    (doc, body, gui, component, store) => {
+    (_doc, _body, _gui, component, _store) => {
 
       const sAssertCheckboxState = (label: string, expChecked: boolean) => {
         return Logger.t(

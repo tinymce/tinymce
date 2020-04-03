@@ -9,7 +9,7 @@ import * as Navigation from './Navigation';
 /**
  * Wrap all text nodes between two DOM positions, using the nu() wrapper
  */
-const wrapWith = function <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, nu: () => Wrapter<E>) {
+const wrapWith = function <E, D> (universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, nu: () => Wrapter<E>) {
   const nodes = Split.range(universe, base, baseOffset, end, endOffset);
   return wrapper(universe, nodes, nu);
 };
@@ -17,7 +17,7 @@ const wrapWith = function <E, D>(universe: Universe<E, D>, base: E, baseOffset: 
 /**
  * Wrap non-empty text nodes using the nu() wrapper
  */
-const wrapper = function <E, D>(universe: Universe<E, D>, wrapped: E[], nu: () => Wrapter<E>): E[] {
+const wrapper = function <E, D> (universe: Universe<E, D>, wrapped: E[], nu: () => Wrapter<E>): E[] {
   if (wrapped.length === 0) {
     return wrapped;
   }
@@ -37,7 +37,7 @@ const wrapper = function <E, D>(universe: Universe<E, D>, wrapped: E[], nu: () =
 /**
  * Return the cursor positions at the start and end of a collection of wrapper elements
  */
-const endPoints = function <E, D>(universe: Universe<E, D>, wrapped: E[]) {
+const endPoints = function <E, D> (universe: Universe<E, D>, wrapped: E[]) {
   return Option.from(wrapped[0]).map(function (first) {
     // INVESTIGATE: Should this one navigate to the next child when first isn't navigating down a level?
     const last = Navigation.toLower(universe, wrapped[wrapped.length - 1]);
@@ -51,7 +51,7 @@ const endPoints = function <E, D>(universe: Universe<E, D>, wrapped: E[]) {
 /**
  * Calls wrapWith() on text nodes in the range, and returns the end points
  */
-const leaves = function <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, nu: () => Wrapter<E>) {
+const leaves = function <E, D> (universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, nu: () => Wrapter<E>) {
   const start = Navigation.toLeaf(universe, base, baseOffset);
   const finish = Navigation.toLeaf(universe, end, endOffset);
   const wrapped = wrapWith(universe, start.element(), start.offset(), finish.element(), finish.offset(), nu);
@@ -66,7 +66,7 @@ interface Group<E> {
 /*
  * Returns a list of spans (reusing where possible) that wrap the text nodes within the range
  */
-const reuse = function <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, predicate: (e: E) => boolean, nu: () => Wrapter<E>) {
+const reuse = function <E, D> (universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, predicate: (e: E) => boolean, nu: () => Wrapter<E>) {
   const start = Navigation.toLeaf(universe, base, baseOffset);
   const finish = Navigation.toLeaf(universe, end, endOffset);
   const nodes = Split.range(universe, start.element(), start.offset(), finish.element(), finish.offset());

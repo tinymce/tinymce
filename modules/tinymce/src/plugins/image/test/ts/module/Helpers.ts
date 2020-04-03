@@ -7,25 +7,27 @@ import { TinyUi } from '@ephox/mcagar';
 
 export type ImageDialogData = {
   src: {
-    value: string
-  },
-  alt: string,
-  decorative: boolean
+    value: string;
+  };
+  alt: string;
+  title: string;
+  decorative: boolean;
   dimensions: {
-    width: string,
-    height: string
-  },
-  caption: boolean,
-  classIndex: number, // because the DOM api is setSelectedIndex
-  border: string,
-  hspace: string,
-  style: string,
-  vspace: string,
-  borderstyle: string,
+    width: string;
+    height: string;
+  };
+  caption: boolean;
+  classIndex: number; // because the DOM api is setSelectedIndex
+  border: string;
+  hspace: string;
+  style: string;
+  vspace: string;
+  borderstyle: string;
 };
 
 export const generalTabSelectors = {
   src: 'label.tox-label:contains("Source") + div.tox-form__controls-h-stack div.tox-control-wrap input.tox-textfield',
+  title: 'label.tox-label:contains("Image title") + input.tox-textfield',
   alt: 'label.tox-label:contains("Alternative description") + input.tox-textfield',
   width: 'div.tox-form__controls-h-stack div label:contains("Width") + input.tox-textfield',
   height: 'div.tox-form__controls-h-stack div label:contains("Height") + input.tox-textfield',
@@ -157,7 +159,7 @@ const cWaitForDialog = () => Chain.control(
     // Hmm. We might need an API to handle the case where you need to pass logs through a subchain.
     NamedChain.direct('tinyUi', Chain.on((tinyUi, next, die, logs) => {
       const subchain = tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]');
-      Chain.pipeline([subchain], (value, newLogs) => next(value, newLogs), die, logs);
+      Chain.pipeline([ subchain ], (value, newLogs) => next(value, newLogs), die, logs);
     }), '_'),
     NamedChain.outputInput
   ]),
@@ -193,10 +195,18 @@ const cAssertInputValue = (selector: string, value: string) => {
   ]);
 };
 
+const cAssertInputCheckbox = (selector: string, expectedState: boolean) => {
+  return Chain.fromChainsWith(Body.body(), [
+    UiFinder.cFindIn(selector),
+    Chain.mapper((elm: Element<HTMLInputElement>) => elm.dom().checked),
+    Assertions.cAssertEq(`input value should be ${expectedState}`, expectedState)
+  ]);
+};
+
 const cOpFromChains = (chains: Chain<any, any>[]) => Chain.control(
   // TODO: Another API case.
   Chain.on((value, next, die, logs) => {
-    Chain.pipeline([Chain.inject(value)].concat(chains), (_, newLogs) => next(value, newLogs), die, logs);
+    Chain.pipeline([ Chain.inject(value) ].concat(chains), (_, newLogs) => next(value, newLogs), die, logs);
   }),
   Guard.addLogging('Chain operations')
 );
@@ -219,5 +229,6 @@ export {
   cSubmitDialog,
   cAssertCleanHtml,
   cAssertInputValue,
+  cAssertInputCheckbox,
   cOpFromChains
 };

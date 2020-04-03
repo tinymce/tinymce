@@ -9,7 +9,7 @@ import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       Button.sketch({
         dom: {
@@ -21,7 +21,7 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
         uid: 'test-button-id'
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, component, store) => {
     // TODO: Use s prefix for all of these. Or find out why they aren't.
 
     const testStructure = Step.sync(() => {

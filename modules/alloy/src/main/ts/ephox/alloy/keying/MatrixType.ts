@@ -26,7 +26,7 @@ const schema: FieldProcessorAdt[] = [
   FieldSchema.defaulted('execute', KeyingTypes.defaultExecute)
 ];
 
-const focusIn = (component: AlloyComponent, matrixConfig: MatrixConfig, state: Stateless): void => {
+const focusIn = (component: AlloyComponent, matrixConfig: MatrixConfig, _state: Stateless): void => {
   const focused = matrixConfig.previousSelector(component).orThunk(() => {
     const selectors = matrixConfig.selectors;
     return SelectorFind.descendant(component.element(), selectors.cell);
@@ -60,9 +60,7 @@ const doMove = (ifCycle: MatrixNavigation.MatrixNavigationFunc<Element>, ifMove:
         return DomPinpoint.findIndex(allRows, inRow).bind((rowIndex) => {
           // Now, make the matrix.
           const matrix = toMatrix(allRows, matrixConfig);
-          return move(matrix, rowIndex, colIndex).map((next) => {
-            return next.cell();
-          });
+          return move(matrix, rowIndex, colIndex).map((next) => next.cell);
         });
       });
     });

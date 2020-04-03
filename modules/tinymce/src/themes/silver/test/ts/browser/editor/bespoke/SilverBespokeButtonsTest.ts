@@ -47,9 +47,9 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
       const sAssertFocusOnAlignToolbarButton = () => {
         return FocusTools.sTryOnSelector(
-          `Focus should be on Align`,
+          'Focus should be on Align',
           doc,
-          `.tox-toolbar__group button[aria-label="Align"]`
+          '.tox-toolbar__group button[aria-label="Align"]'
         );
       };
 
@@ -77,12 +77,12 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         label,
         GeneralSteps.sequence([
           tinyApis.sSetCursor(path, offset),
-            sOpen(menuText),
-            beforeStep,
-            sAssertItemTicks('Checking ticks at location', expectedTicks),
-            afterStep,
-            Keyboard.sKeydown(doc, Keys.escape(), { }),
-            UiFinder.sNotExists(Body.body(), '[role="menu"]'),
+          sOpen(menuText),
+          beforeStep,
+          sAssertItemTicks('Checking ticks at location', expectedTicks),
+          afterStep,
+          Keyboard.sKeydown(doc, Keys.escape(), { }),
+          UiFinder.sNotExists(Body.body(), '[role="menu"]'),
         ])
       );
 

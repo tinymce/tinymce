@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Boxes, Docking, GuiFactory, HotspotAnchorSpec, InlineView, Keying, MakeshiftAnchorSpec, ModalDialog, NodeAnchorSpec, SelectionAnchorSpec, SystemEvents, } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Boxes, Docking, GuiFactory, HotspotAnchorSpec, InlineView, Keying, MakeshiftAnchorSpec, ModalDialog, NodeAnchorSpec, SelectionAnchorSpec, SystemEvents } from '@ephox/alloy';
 import { Processor, ValueSchema } from '@ephox/boulder';
 import { DialogManager, Types } from '@ephox/bridge';
 import { Option, Singleton } from '@ephox/katamari';
-import { Body, Element } from '@ephox/sugar';
+import { Body, Element, SelectorExists } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../../api/Settings';
@@ -31,6 +31,10 @@ type InlineDialogAnchor = HotspotAnchorSpec | MakeshiftAnchorSpec | NodeAnchorSp
 
 const validateData = <T extends Types.Dialog.DialogData>(data: T, validator: Processor) => {
   return ValueSchema.getOrDie(ValueSchema.asRaw('data', validator, data));
+};
+
+const isAlertOrConfirmDialog = (target: Element): boolean => {
+  return SelectorExists.closest(target, '.tox-alert-dialog') || SelectorExists.closest(target, '.tox-confirm-dialog');
 };
 
 const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, isToolbarLocationTop: boolean): Behaviour.NamedConfiguredBehaviour<any, any>[] => {
@@ -129,7 +133,7 @@ const setup = (extras: WindowManagerSetup) => {
     return DialogManager.DialogManager.open<T>(factory, config);
   };
 
-  const openInlineDialog = <T extends Types.Dialog.DialogData>(config/*: Types.Dialog.DialogApi<T>*/, anchor: InlineDialogAnchor, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void, ariaAttrs): Types.Dialog.DialogInstanceApi<T> => {
+  const openInlineDialog = <T extends Types.Dialog.DialogData>(config/* : Types.Dialog.DialogApi<T>*/, anchor: InlineDialogAnchor, closeWindow: (dialogApi: Types.Dialog.DialogInstanceApi<T>) => void, ariaAttrs): Types.Dialog.DialogInstanceApi<T> => {
     const factory = (contents: Types.Dialog.Dialog<T>, internalInitialData: T, dataValidator: Processor): Types.Dialog.DialogInstanceApi<T> => {
       const initialData = validateData<T>(internalInitialData, dataValidator);
       const inlineDialog = Singleton.value<AlloyComponent>();
@@ -167,16 +171,17 @@ const setup = (extras: WindowManagerSetup) => {
         },
         // Fires the default dismiss event.
         fireDismissalEventInstead: { },
-        ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { } },
+        ...isToolbarLocationTop ? { } : { fireRepositionEventInstead: { }},
         inlineBehaviours: Behaviour.derive([
           AddEventsBehaviour.config('window-manager-inline-events', [
-            // Can't just fireDismissalEvent formCloseEvent, because it is on the parent component of the dialog
-            AlloyEvents.run(SystemEvents.dismissRequested(), (comp, se) => {
+            AlloyEvents.run(SystemEvents.dismissRequested(), (_comp, _se) => {
               AlloyTriggers.emit(dialogUi.dialog, formCancelEvent);
-            }),
+            })
           ]),
           ...inlineAdditionalBehaviours(editor, isStickyToolbar, isToolbarLocationTop)
-        ])
+        ]),
+        // Treat alert or confirm dialogs as part of the inline dialog
+        isExtraPart: (_comp, target) => isAlertOrConfirmDialog(target)
       }));
       inlineDialog.set(inlineDialogComp);
 

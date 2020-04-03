@@ -1,8 +1,8 @@
 import { getDemoRegistry } from './../buttons/DemoRegistry';
 
 const editor = {
-  on: (s, f) => { },
-  off: (s, f) => { },
+  on: (_s, _f) => { },
+  off: (_s, _f) => { },
   isDirty: () => true
 };
 
@@ -17,7 +17,7 @@ export const registerSaveItems = () => {
       editor.on('nodeChange dirty', editorOffCallback);
       return () => editor.off('nodeChange dirty', editorOffCallback);
     },
-    onAction: (buttonApi) => {
+    onAction: (_buttonApi) => {
       // trigger save (or cancel)
     }
   });

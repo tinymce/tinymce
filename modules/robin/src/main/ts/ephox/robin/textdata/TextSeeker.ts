@@ -10,9 +10,9 @@ export interface TextSeekerPhase<E> {
     finish: (info: SpotPoint<E>) => T
   ) => T;
   match: <T> (branches: {
-    abort: () => T,
-    kontinue: () => T,
-    finish: (info: SpotPoint<E>) => T
+    abort: () => T;
+    kontinue: () => T;
+    finish: (info: SpotPoint<E>) => T;
   }) => T;
   log: (label: string) => void;
 }
@@ -24,9 +24,9 @@ export interface TextSeekerOutcome<E> {
     success: (info: SpotPoint<E>) => T
   ) => T;
   match: <T> (branches: {
-    aborted: () => T,
-    edge: (element: E) => T,
-    success: (info: SpotPoint<E>) => T
+    aborted: () => T;
+    edge: (element: E) => T;
+    success: (info: SpotPoint<E>) => T;
   }) => T;
   log: (label: string) => void;
 }

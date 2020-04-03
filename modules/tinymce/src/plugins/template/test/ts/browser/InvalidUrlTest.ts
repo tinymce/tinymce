@@ -21,20 +21,20 @@ UnitTest.asynctest('browser.tinymce.plugins.template.InvalidUrlTest', (success, 
     const toolbarButtonSelector = 'button[aria-label="Insert template"]';
 
     Pipeline.async({}, [
-        Log.stepsAsStep('TBA', 'Template: Test loading in snippet from file that does not exist', [
-            tinyApis.sSetContent(''),
-            tinyApis.sSetSetting('templates', [{ title: 'invalid', description: 'b', url: '/custom/404' }, { title: 'a', description: 'a', content: '<strong>c</strong>' }]),
-            tinyUi.sClickOnToolbar('Click template button', toolbarButtonSelector),
-            tinyUi.sWaitForPopup('Waited for dialog to be visible', dialogSelector),
-            tinyUi.sWaitForPopup('Waited for alert dialog to be visible', alertDialogSelector),
-            tinyUi.sClickOnUi('Click on OK button', 'button.tox-button:contains(OK)'),
-            Waiter.sTryUntil('Alert dialog should close', UiFinder.sNotExists(docBody, alertDialogSelector)),
-            tinyUi.sClickOnUi('Click on Save button (should be disabled)', 'button.tox-button:contains(Save)'),
-            Waiter.sTryUntil('Dialog should not close', UiFinder.sExists(docBody, dialogSelector)),
-            tinyUi.sClickOnUi('Click on Cancel button', 'button.tox-button:contains(Cancel)'),
-            Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
-            tinyApis.sAssertContent(''),
-          ]),
+      Log.stepsAsStep('TBA', 'Template: Test loading in snippet from file that does not exist', [
+        tinyApis.sSetContent(''),
+        tinyApis.sSetSetting('templates', [{ title: 'invalid', description: 'b', url: '/custom/404' }, { title: 'a', description: 'a', content: '<strong>c</strong>' }]),
+        tinyUi.sClickOnToolbar('Click template button', toolbarButtonSelector),
+        tinyUi.sWaitForPopup('Waited for dialog to be visible', dialogSelector),
+        tinyUi.sWaitForPopup('Waited for alert dialog to be visible', alertDialogSelector),
+        tinyUi.sClickOnUi('Click on OK button', 'button.tox-button:contains(OK)'),
+        Waiter.sTryUntil('Alert dialog should close', UiFinder.sNotExists(docBody, alertDialogSelector)),
+        tinyUi.sClickOnUi('Click on Save button (should be disabled)', 'button.tox-button:contains(Save)'),
+        Waiter.sTryUntil('Dialog should not close', UiFinder.sExists(docBody, dialogSelector)),
+        tinyUi.sClickOnUi('Click on Cancel button', 'button.tox-button:contains(Cancel)'),
+        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
+        tinyApis.sAssertContent(''),
+      ]),
     ], onSuccess, onFailure);
   }, {
     theme: 'silver',

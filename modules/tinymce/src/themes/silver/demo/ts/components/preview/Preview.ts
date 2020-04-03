@@ -32,7 +32,7 @@ export default () => {
       initialData: {
         preview: 'Some content '
       },
-      onSubmit: (api) => {
+      onSubmit: (_api) => {
         // tslint:disable-next-line:no-console
         console.log('Preview Demo onSubmit');
       },

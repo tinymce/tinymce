@@ -12,7 +12,7 @@ export default function () {
     ],
     skin_url: '../../../../../js/tinymce/skins/ui/oxide',
 
-    setup (ed) {
+    setup(ed) {
       ed.on('skinLoaded', function () {
         // Notification fields for equality: type, text, progressBar, timeout
         ed.notificationManager.open({
@@ -50,7 +50,7 @@ export default function () {
         // Should not appear when not in a table.
         title: 'Table', items: [
           { title: 'Rows', items: [
-            { title: 'Cell', selector: 'tr', styles: { background: 'red' } }
+            { title: 'Cell', selector: 'tr', styles: { background: 'red' }}
           ] }
         ]
       },

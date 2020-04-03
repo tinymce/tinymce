@@ -8,9 +8,9 @@ UnitTest.test('Arr.flatten: unit tests', () => {
   };
 
   check([], []);
-  check([ 1 ], [ [ 1 ] ]);
-  check([ 1, 2 ], [ [ 1 ], [ 2 ] ]);
-  check([ 1, 2, 3, 4, 5 ], [ [ 1, 2 ], [], [ 3 ], [ 4, 5 ], [] ]);
+  check([ 1 ], [[ 1 ]]);
+  check([ 1, 2 ], [[ 1 ], [ 2 ]]);
+  check([ 1, 2, 3, 4, 5 ], [[ 1, 2 ], [], [ 3 ], [ 4, 5 ], []]);
 });
 
 UnitTest.test('Arr.flatten: consistent with chunking', () => {

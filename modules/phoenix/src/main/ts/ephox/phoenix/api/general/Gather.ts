@@ -25,8 +25,8 @@ const seekLeft: SeekLeftApi = Seeker.left;
 type SeekRightApi = <E, D>(universe: Universe<E, D>, item: E, predicate: (e: E) => boolean, isRoot: (e: E) => boolean) => Option<E>;
 const seekRight: SeekRightApi = Seeker.right;
 
-type WalkersApi = () => { left: () => Direction; right: () => Direction; };
-const walkers: WalkersApi = () => ({left: Walkers.left, right: Walkers.right });
+type WalkersApi = () => { left: () => Direction; right: () => Direction };
+const walkers: WalkersApi = () => ({ left: Walkers.left, right: Walkers.right });
 
 type WalkApi = <E, D>(universe: Universe<E, D>, item: E, mode: Transition, direction: Direction, rules?: Successor[]) => Option<Traverse<E>>;
 const walk: WalkApi = go;

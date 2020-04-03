@@ -9,21 +9,21 @@ export interface Situ {
     after: (element: Element<DomNode>) => U
   ) => U;
   match: <U> (branches: {
-    before: (element: Element<DomNode>) => U,
-    on: (element: Element<DomNode>, offset: number) => U,
-    after: (element: Element<DomNode>) => U,
+    before: (element: Element<DomNode>) => U;
+    on: (element: Element<DomNode>, offset: number) => U;
+    after: (element: Element<DomNode>) => U;
   }) => U;
   log: (label: string) => void;
 }
 
 const adt: {
-  before: (element: Element<DomNode>) => Situ,
-  on: (element: Element<DomNode>, offset: number) => Situ,
-  after: (element: Element<DomNode>) => Situ
+  before: (element: Element<DomNode>) => Situ;
+  on: (element: Element<DomNode>, offset: number) => Situ;
+  after: (element: Element<DomNode>) => Situ;
 } = Adt.generate([
-  { before: ['element'] },
-  { on: ['element', 'offset'] },
-  { after: ['element'] }
+  { before: [ 'element' ] },
+  { on: [ 'element', 'offset' ] },
+  { after: [ 'element' ] }
 ]);
 
 // Probably don't need this given that we now have "match"

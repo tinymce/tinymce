@@ -14,7 +14,7 @@ UnitTest.asynctest('Grid component Test', (success, failure) => {
   };
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       return GuiFactory.build(
         renderGrid({
           columns: 10,
@@ -22,32 +22,32 @@ UnitTest.asynctest('Grid component Test', (success, failure) => {
             {
               dom: {
                 tag: 'div',
-                classes: ['foo']
+                classes: [ 'foo' ]
               }
             } as any,
             {
               dom: {
                 tag: 'div',
-                classes: ['bar']
+                classes: [ 'bar' ]
               }
             } as any
           ]
-         }, sharedBackstage)
+        }, sharedBackstage)
       );
     },
-    (doc, body, gui, component, store) => {
+    (_doc, _body, _gui, component, _store) => {
       return [
         Assertions.sAssertStructure(
           'Checking initial structure',
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, _str, arr) => {
             return s.element('div', {
-              classes: [arr.has('tox-form__grid'), arr.has('tox-form__grid--10col')],
+              classes: [ arr.has('tox-form__grid'), arr.has('tox-form__grid--10col') ],
               children: [
                 s.element('div', {
-                  classes: [arr.has('foo')]
+                  classes: [ arr.has('foo') ]
                 }),
                 s.element('div', {
-                  classes: [arr.has('bar')]
+                  classes: [ arr.has('bar') ]
                 })
               ]
             });

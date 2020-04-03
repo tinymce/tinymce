@@ -35,7 +35,7 @@ const registerFocusOut = function (editor: Editor) {
 };
 
 const registerMouseUp = function (editor: Editor, throttledStore) {
-  editor.on('mouseup touchend', function (e) {
+  editor.on('mouseup touchend', function (_e) {
     throttledStore.throttle();
   });
 };

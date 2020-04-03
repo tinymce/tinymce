@@ -1,13 +1,13 @@
-import { Result, Struct } from '@ephox/katamari';
+import { Fun, Result } from '@ephox/katamari';
 import { Element, Hierarchy } from '@ephox/sugar';
 
 import { Chain } from './Chain';
 
 export interface CursorRange {
-  start: () => Element<any>;
-  soffset: () => number;
-  finish: () => Element<any>;
-  foffset: () => number;
+  readonly start: () => Element<any>;
+  readonly soffset: () => number;
+  readonly finish: () => Element<any>;
+  readonly foffset: () => number;
 }
 
 export interface CursorPath {
@@ -17,17 +17,23 @@ export interface CursorPath {
   foffset: () => number;
 }
 
-type RangeConstructor = (obj: { start: Element<any>; soffset: number; finish: Element<any>; foffset: number; }) => CursorRange;
+const range = (obj: { start: Element<any>; soffset: number; finish: Element<any>; foffset: number }): CursorRange => ({
+  start: Fun.constant(obj.start),
+  soffset: Fun.constant(obj.soffset),
+  finish: Fun.constant(obj.finish),
+  foffset: Fun.constant(obj.foffset)
+});
 
-const range: RangeConstructor = Struct.immutableBag(['start', 'soffset', 'finish', 'foffset'], []);
-
-type PathConstructor = (obj: { startPath: number[]; soffset: number; finishPath: number[]; foffset: number; }) => CursorPath;
-
-const path: PathConstructor = Struct.immutableBag(['startPath', 'soffset', 'finishPath', 'foffset'], []);
+const path = (obj: { startPath: number[]; soffset: number; finishPath: number[]; foffset: number }): CursorPath => ({
+  startPath: Fun.constant(obj.startPath),
+  soffset: Fun.constant(obj.soffset),
+  finishPath: Fun.constant(obj.finishPath),
+  foffset: Fun.constant(obj.foffset)
+});
 
 export interface CursorSpec {
-  element: number[];
-  offset: number;
+  readonly element: number[];
+  readonly offset: number;
 }
 
 const pathFromCollapsed = (spec: CursorSpec): CursorPath =>
@@ -39,8 +45,8 @@ const pathFromCollapsed = (spec: CursorSpec): CursorPath =>
   });
 
 export interface RangeSpec {
-  start: CursorSpec;
-  finish?: CursorSpec;
+  readonly start: CursorSpec;
+  readonly finish?: CursorSpec;
 }
 
 const pathFromRange = (spec: RangeSpec): CursorPath => {
@@ -61,8 +67,8 @@ const pathFrom = (spec: CursorSpec | RangeSpec): CursorPath =>
 
 const follow = (container: Element<any>, calcPath: number[]): Result<Element<any>, string> =>
   Hierarchy.follow(container, calcPath).fold(() =>
-      Result.error('Could not follow path: ' + calcPath.join(',')),
-    Result.value
+    Result.error('Could not follow path: ' + calcPath.join(',')),
+  Result.value
   );
 
 const followPath = (container: Element<any>, calcPath: CursorPath): Result<CursorRange, string> =>

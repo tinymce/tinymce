@@ -17,10 +17,10 @@ import { ModalDialog } from 'ephox/alloy/api/ui/ModalDialog';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('ModalDialogTest', (success, failure) => {
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return Sinks.relativeSink();
 
-  }, (doc, body, gui, sink, store) => {
+  }, (doc, _body, gui, sink, store) => {
     const focusAndTab = Behaviour.derive([
       Focusing.config({ }),
       Tabstopping.config({ })
@@ -108,12 +108,12 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         ],
 
         dragBlockClass: 'drag-blocker',
-        lazySink (comp) {
+        lazySink(comp) {
           Assertions.assertEq('Checking dialog passed through to lazySink', true, Compare.eq(comp.element(), dialog.element()));
           return Result.value(sink);
         },
 
-        useTabstopAt (elem) {
+        useTabstopAt(elem) {
           return !Class.has(elem, 'untabbable');
         },
 
@@ -127,7 +127,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         ]),
 
         eventOrder: {
-          [SystemEvents.attachedToDom()]: ['modal-events-1', 'modal-events-2']
+          [SystemEvents.attachedToDom()]: [ 'modal-events-1', 'modal-events-2' ]
         },
 
         onEscape: store.adderH('dialog.escape'),
@@ -258,7 +258,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
 
       Step.sync(() => {
         const body = ModalDialog.getBody(dialog);
-        Assertions.assertStructure('Checking body of dialog', ApproxStructure.build((s, str, arr) => {
+        Assertions.assertStructure('Checking body of dialog', ApproxStructure.build((s, _str, arr) => {
           return s.element('div', {
             classes: [ arr.has('test-dialog-body') ]
           });
@@ -267,7 +267,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
 
       Step.sync(() => {
         const footer = ModalDialog.getFooter(dialog);
-        Assertions.assertStructure('Checking footer of dialog', ApproxStructure.build((s, str, arr) => {
+        Assertions.assertStructure('Checking footer of dialog', ApproxStructure.build((s, _str, arr) => {
           return s.element('div', {
             classes: [ arr.has('test-dialog-footer') ]
           });
@@ -306,7 +306,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       Logger.t(
         'Set the Dialog to "Busy"',
         Step.sync(() => {
-          ModalDialog.setBusy(dialog, (d, bs) => {
+          ModalDialog.setBusy(dialog, (_d, bs) => {
             return {
               dom: {
                 tag: 'div',
@@ -350,7 +350,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       Logger.t(
         'Set the dialog to busy again without setting it to idle first',
         Step.sync(() => {
-          ModalDialog.setBusy(dialog, (d, bs) => {
+          ModalDialog.setBusy(dialog, (_d, _bs) => {
             return {
               dom: {
                 tag: 'div',

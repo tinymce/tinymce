@@ -12,7 +12,7 @@ UnitTest.asynctest('TransitioningTest', (success, failure) => {
 
   if (PhantomSkipper.skip()) { return success(); }
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build({
       dom: {
         tag: 'div',
@@ -28,17 +28,17 @@ UnitTest.asynctest('TransitioningTest', (success, failure) => {
               transitionClass: 'transitioning'
             }
           }),
-          onTransition (comp, route) {
+          onTransition(_comp, route) {
             store.adder(route.start + '->' + route.destination)();
           },
-          onFinish (comp, finishState) {
+          onFinish(_comp, finishState) {
             store.adder('finish: ' + finishState)();
           }
         })
       ])
     });
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, _gui, component, store) => {
     return [
       GuiSetup.mAddStyles(doc, [
         '.transitioning { transition: opacity 1s ease; }',
@@ -52,7 +52,7 @@ UnitTest.asynctest('TransitioningTest', (success, failure) => {
       }),
       Assertions.sAssertStructure(
         'Checking initial state',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('div', {
             attrs: {
               'data-transitioning-state': str.is('alpha'),
@@ -71,7 +71,7 @@ UnitTest.asynctest('TransitioningTest', (success, failure) => {
       ]),
       Assertions.sAssertStructure(
         'Checking transitioned state to gamma (jump)',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('div', {
             attrs: {
               'data-transitioning-state': str.is('gamma'),
@@ -88,7 +88,7 @@ UnitTest.asynctest('TransitioningTest', (success, failure) => {
       }),
       Assertions.sAssertStructure(
         'Checking transitioned state to beta (progress)',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('div', {
             attrs: {
               'data-transitioning-state': str.is('gamma'),

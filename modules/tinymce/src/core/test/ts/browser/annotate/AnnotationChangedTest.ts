@@ -11,15 +11,15 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
 
   Theme();
 
-  const changes: Cell<Array<{state: boolean, name: string, uid: string}>> = Cell([ ]);
+  const changes: Cell<Array<{state: boolean; name: string; uid: string}>> = Cell([ ]);
 
-  const sAssertChanges = <T> (message: string, expected: Array<{uid: string, state: boolean, name: string}>): Step<T, T> =>
+  const sAssertChanges = <T> (message: string, expected: Array<{uid: string; state: boolean; name: string}>): Step<T, T> =>
     Logger.t(
       message,
       // Use a chain so that changes.get() can be evaluated at run-time.
       Chain.asStep({ }, [
         Chain.injectThunked(changes.get),
-        Chain.op((cs: Array<{uid: string, name: string}>) => {
+        Chain.op((cs: Array<{uid: string; name: string}>) => {
           Assertions.assertEq('Checking changes', expected, cs);
         })
       ])
@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
   TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
-    const sTestAnnotationEvents = <T> (label: string, start: number[], soffset: number, expected: Array<{ uid: string, name: string, state: boolean}>): Step<T, T> => {
+    const sTestAnnotationEvents = <T> (label: string, start: number[], soffset: number, expected: Array<{ uid: string; name: string; state: boolean}>): Step<T, T> => {
       return StepSequence.sequenceSame<T>([
         tinyApis.sSetSelection(start, soffset, start, soffset),
         Waiter.sTryUntil(
@@ -72,17 +72,17 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
       sClearChanges(),
 
       sAssertHtmlContent(tinyApis, [
-        `<p>This <span data-mce-annotation="alpha" data-test-anything="comment-1" data-mce-annotation-uid="id-one" class="mce-annotation">is</span> the first paragraph</p>`,
+        '<p>This <span data-mce-annotation="alpha" data-test-anything="comment-1" data-mce-annotation-uid="id-one" class="mce-annotation">is</span> the first paragraph</p>',
 
-        `<p>T<span data-mce-annotation="alpha" data-test-anything="comment-two" data-mce-annotation-uid="id-two" class="mce-annotation">his is</span> the second.</p>`,
+        '<p>T<span data-mce-annotation="alpha" data-test-anything="comment-two" data-mce-annotation-uid="id-two" class="mce-annotation">his is</span> the second.</p>',
 
-        `<p>This is the th<span data-mce-annotation="beta" data-test-something="comment-three" data-mce-annotation-uid="id-three" class="mce-annotation">ir</span>d.</p>`,
+        '<p>This is the th<span data-mce-annotation="beta" data-test-something="comment-three" data-mce-annotation-uid="id-three" class="mce-annotation">ir</span>d.</p>',
 
-        `<p>Spanning <span data-mce-annotation="gamma" data-test-something="comment-four" data-mce-annotation-uid="id-four" class="mce-annotation">multiple</span></p>`,
+        '<p>Spanning <span data-mce-annotation="gamma" data-test-something="comment-four" data-mce-annotation-uid="id-four" class="mce-annotation">multiple</span></p>',
 
-        `<p><span data-mce-annotation="gamma" data-test-something="comment-four" data-mce-annotation-uid="id-four" class="mce-annotation">par` +
-          `<span data-mce-annotation="delta" data-test-something="comment-five" data-mce-annotation-uid="id-five" class="mce-annotation delta-test">ag</span>` +
-          `raphs</span> now</p>`
+        '<p><span data-mce-annotation="gamma" data-test-something="comment-four" data-mce-annotation-uid="id-four" class="mce-annotation">par' +
+          '<span data-mce-annotation="delta" data-test-something="comment-five" data-mce-annotation-uid="id-five" class="mce-annotation delta-test">ag</span>' +
+          'raphs</span> now</p>'
       ]),
 
       // Outside: p(0) > text(0) > "Th".length

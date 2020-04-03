@@ -7,8 +7,8 @@
 
 import * as Dialog from '../ui/Dialog';
 
-const register = function (editor) {
-  editor.addCommand('mceAnchor', function () {
+const register = (editor) => {
+  editor.addCommand('mceAnchor', () => {
     Dialog.open(editor);
   });
 };

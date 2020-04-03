@@ -7,7 +7,7 @@
 
 import { Arr } from '@ephox/katamari';
 import {
-    Class, Classes, Css, DomEvent, Element, Insert, InsertAll, Remove, Traverse
+  Class, Classes, Css, DomEvent, Element, Insert, InsertAll, Remove, Traverse
 } from '@ephox/sugar';
 
 import * as Styles from '../../style/Styles';

@@ -92,7 +92,7 @@ const setup = function (editor: Editor, clipboard: Clipboard, draggingInternally
     }
   });
 
-  editor.on('dragstart', function (e) {
+  editor.on('dragstart', function (_e) {
     draggingInternallyState.set(true);
   });
 

@@ -236,7 +236,7 @@ const getCssText = function (editor: Editor, format) {
     name = format.selector;
     previewFrag = parsedSelectorToHtml(items, editor);
   } else {
-    previewFrag = parsedSelectorToHtml([name], editor);
+    previewFrag = parsedSelectorToHtml([ name ], editor);
   }
 
   previewElm = dom.select(name, previewFrag)[0] || previewFrag.firstChild;

@@ -1,39 +1,17 @@
-import { Struct } from '@ephox/katamari';
-
-export interface RepositionDecisionSpec {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  maxHeight: number;
-  maxWidth: number;
-  direction: any;
-  classes: {
-    off: string[];
-    on: string[]
-  };
-  label: string;
-  candidateYforTest: number;
-}
+import { DirectionAdt } from '../layout/Direction';
 
 export interface RepositionDecision {
-  x: () => number;
-  y: () => number;
-  width: () => number;
-  height: () => number;
-  maxHeight: () => number;
-  maxWidth: () => number;
-  direction: () => any;
-  classes: () => {
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
+  readonly maxHeight: number;
+  readonly maxWidth: number;
+  readonly direction: DirectionAdt;
+  readonly classes: {
     off: string[];
-    on: string[]
+    on: string[];
   };
-  label: () => string;
-  candidateYforTest: () => number;
+  readonly label: string;
+  readonly candidateYforTest: number;
 }
-
-const decision: (obj: RepositionDecisionSpec) => RepositionDecision = Struct.immutableBag(['x', 'y', 'width', 'height', 'maxHeight', 'maxWidth', 'direction', 'classes', 'label', 'candidateYforTest'], []);
-
-export {
-  decision
-};

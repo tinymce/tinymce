@@ -145,7 +145,7 @@ const rtlTransform = [
 ];
 
 // TODO: Maybe need aria-label
-const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean, fallbackIcon: Option<string> = Option.none()): { dom: RawDomSchema, optComponents: Array<Option<AlloySpec>> } => {
+const renderItemStructure = <T>(info: ItemStructureSpec, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean, fallbackIcon: Option<string> = Option.none()): { dom: RawDomSchema; optComponents: Array<Option<AlloySpec>> } => {
   // If RTL and icon is in whitelist, add RTL icon class for icons that don't have a `-rtl` icon available.
   // Use `-rtl` icon suffix for icons that do.
   const getIconName = (iconName: Option<string>): Option<string> => {

@@ -9,12 +9,12 @@ import { Behaviour, Button, Container, GuiFactory, Replacing, Swapping, AlloyCom
 
 import * as UiDomFactory from '../util/UiDomFactory';
 
-const makeEditSwitch = function (webapp): AlloyComponent {
+const makeEditSwitch = (webapp): AlloyComponent => {
   return GuiFactory.build(
     Button.sketch({
       dom: UiDomFactory.dom('<div class="${prefix}-mask-edit-icon ${prefix}-icon"></div>'),
-      action () {
-        webapp.run(function (w) {
+      action() {
+        webapp.run((w) => {
           w.setReadOnly(false);
         });
       }
@@ -22,27 +22,27 @@ const makeEditSwitch = function (webapp): AlloyComponent {
   );
 };
 
-const makeSocket = function () {
+const makeSocket = (): AlloyComponent => {
   return GuiFactory.build(
     Container.sketch({
       dom: UiDomFactory.dom('<div class="${prefix}-editor-socket"></div>'),
-      components: [ ],
+      components: [],
       containerBehaviours: Behaviour.derive([
-        Replacing.config({ })
+        Replacing.config({})
       ])
     })
   );
 };
 
-const showEdit = function (socket, switchToEdit) {
+const showEdit = (socket: AlloyComponent, switchToEdit: AlloyComponent): void => {
   Replacing.append(socket, GuiFactory.premade(switchToEdit));
 };
 
-const hideEdit = function (socket, switchToEdit) {
+const hideEdit = (socket: AlloyComponent, switchToEdit: AlloyComponent): void => {
   Replacing.remove(socket, switchToEdit);
 };
 
-const updateMode = function (socket, switchToEdit, readOnly, root) {
+const updateMode = (socket: AlloyComponent, switchToEdit: AlloyComponent, readOnly: boolean, root: AlloyComponent): void => {
   const swap = (readOnly === true) ? Swapping.toAlpha : Swapping.toOmega;
   swap(root);
 

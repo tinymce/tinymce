@@ -6,30 +6,30 @@
  */
 
 import { TapEvent } from '@ephox/alloy';
-import { DomEvent } from '@ephox/sugar';
+import { DomEvent, EventUnbinder } from '@ephox/sugar';
 
 // TODO: TapEvent needs to be exposed in alloy's API somehow
-const monitor = function (editorApi) {
+const monitor = (editorApi) => {
   const tapEvent = TapEvent.monitor({
-    triggerEvent (type, evt) {
+    triggerEvent(type, evt) {
       editorApi.onTapContent(evt);
     }
   } as any);
 
   // convenience methods
-  const onTouchend = function () {
-    return DomEvent.bind(editorApi.body(), 'touchend', function (evt) {
+  const onTouchend = (): EventUnbinder => {
+    return DomEvent.bind(editorApi.body(), 'touchend', (evt) => {
       tapEvent.fireIfReady(evt, 'touchend');
     });
   };
 
-  const onTouchmove = function () {
-    return DomEvent.bind(editorApi.body(), 'touchmove', function (evt) {
+  const onTouchmove = (): EventUnbinder => {
+    return DomEvent.bind(editorApi.body(), 'touchmove', (evt) => {
       tapEvent.fireIfReady(evt, 'touchmove');
     });
   };
 
-  const fireTouchstart = function (evt) {
+  const fireTouchstart = (evt): void => {
     tapEvent.fireIfReady(evt, 'touchstart');
   };
 

@@ -49,7 +49,7 @@ const builder = (detail: NormalItemDetail): AlloySpec => {
           // focusable outer container ... often the body. If we prevent
           // mouseDown ... that doesn't happen. But only tested on Chrome/FF.
           stopMousedown: detail.ignoreFocus,
-          onFocus (component) {
+          onFocus(component) {
             ItemEvents.onFocus(component);
           }
         }),

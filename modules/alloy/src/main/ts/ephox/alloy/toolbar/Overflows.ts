@@ -1,8 +1,13 @@
-import { Arr, Fun, Option, Struct } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 
 import * as PositionArray from '../alien/PositionArray';
 
-const output = Struct.immutable('within', 'extra', 'withinWidth');
+// TODO: what types are these? I think it's AlloyComponent[], AlloyComponent, number
+const output = <T>(within: T[], extra: T, withinWidth: number) => ({
+  within: Fun.constant(within),
+  extra: Fun.constant(extra),
+  withinWidth: Fun.constant(withinWidth)
+});
 
 interface Pos {
   element: () => any;

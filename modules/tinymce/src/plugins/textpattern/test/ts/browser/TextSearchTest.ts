@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextSearchTest', (succes
       Log.stepsAsStep('TBA', 'TextSearch: text before from element', [
         tinyApis.sSetContent('<p>*<a href="#">a</a>bc</p>'),
         // Select the end of the paragraph
-        tinyApis.sSetCursor([0], 1),
+        tinyApis.sSetCursor([ 0 ], 1),
         Step.sync(() => {
           const rng = editor.selection.getRng();
           const content = TextSearch.textBefore(rng.startContainer, rng.startOffset, editorBody);
@@ -65,7 +65,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextSearchTest', (succes
       ]),
       Log.stepsAsStep('TBA', 'TextSearch: text before from text node', [
         tinyApis.sSetContent('<p>*<a href="#">a</a>bc</p>'),
-        tinyApis.sSetCursor([0, 2], 2),
+        tinyApis.sSetCursor([ 0, 2 ], 2),
         Step.sync(() => {
           const rng = editor.selection.getRng();
           const contentEnd = TextSearch.textBefore(rng.startContainer, 2, editorBody);
@@ -76,7 +76,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextSearchTest', (succes
       ]),
       Log.stepsAsStep('TBA', 'TextSearch: scan right over fragmented text', [
         tinyApis.sSetContent('<p>*<a href="#">a</a>bc</p>'),
-        tinyApis.sSetCursor([0, 0], 0),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
         Step.sync(() => {
           const startNode = editor.selection.getRng().startContainer as Text;
           const start = TextSearch.scanRight(startNode, 1, editorBody);
@@ -91,7 +91,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextSearchTest', (succes
       ]),
       Log.stepsAsStep('TBA', 'TextSearch: scan left over fragmented text', [
         tinyApis.sSetContent('<p>*<a href="#">a</a>bc</p>'),
-        tinyApis.sSetCursor([0, 2], 2),
+        tinyApis.sSetCursor([ 0, 2 ], 2),
         Step.sync(() => {
           const startNode = editor.selection.getRng().startContainer as Text;
           const start = TextSearch.scanLeft(startNode, 1, editorBody);
@@ -106,7 +106,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextSearchTest', (succes
       ]),
       Log.stepsAsStep('TBA', 'TextSearch: repeat left over fragmented text', [
         tinyApis.sSetContent('<p>def</p><p>*<a href="#">a</a>bc</p>'),
-        tinyApis.sSetCursor([1, 2], 2),
+        tinyApis.sSetCursor([ 1, 2 ], 2),
         Step.sync(() => {
           const asteriskNode = editorBody.childNodes[1].firstChild;
           const anchorNode = asteriskNode.nextSibling.firstChild;
@@ -120,7 +120,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextSearchTest', (succes
       ]),
       Log.stepsAsStep('TBA', 'TextSearch: repeat right over fragmented text', [
         tinyApis.sSetContent('<p>*<a href="#">a</a>bc</p><p>def</p>'),
-        tinyApis.sSetCursor([0, 0], 0),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
         Step.sync(() => {
           const contentNode = editorBody.childNodes[0].lastChild;
           const anchorNode = contentNode.previousSibling.firstChild;

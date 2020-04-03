@@ -44,7 +44,7 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
           html,
           rtl: iframeDoc.body.dir === 'rtl',
           dir: Attr.get(body, 'dir') || 'ltr',
-          byId (str) {
+          byId(str) {
             return Option.from(iframeDoc.getElementById(str))
               .map(Element.fromDom)
               .getOrDie('cannot find element with id ' + str);
@@ -67,14 +67,14 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
     html: Option.none(),
     body: Option.some({ contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
   },
-    function () {
-      testOne(ifr, { // rtl iframe
-        iframe: { id: 'rtl', style: 'height:200px; width:500px; border: 7px solid blueviolet;' },
-        html: Option.none(),
-        body: Option.some({ dir: 'rtl', contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
-      },
-        success);
-    });
+  function () {
+    testOne(ifr, { // rtl iframe
+      iframe: { id: 'rtl', style: 'height:200px; width:500px; border: 7px solid blueviolet;' },
+      html: Option.none(),
+      body: Option.some({ dir: 'rtl', contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
+    },
+    success);
+  });
 
   const within = function (a, b, eps) {
     return Math.abs(a - b) <= eps;

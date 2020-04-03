@@ -120,7 +120,7 @@ function trimHtml(html: string) {
   html = filter(html, [
     /^[\s\S]*<body[^>]*>\s*|\s*<\/body[^>]*>[\s\S]*$/ig, // Remove anything but the contents within the BODY element
     /<!--StartFragment-->|<!--EndFragment-->/g, // Inner fragments (tables from excel on mac)
-    [/( ?)<span class="Apple-converted-space">\u00a0<\/span>( ?)/g, trimSpaces],
+    [ /( ?)<span class="Apple-converted-space">\u00a0<\/span>( ?)/g, trimSpaces ],
     /<br class="Apple-interchange-newline">/g,
     /<br>$/i // Trailing BR elements
   ]);

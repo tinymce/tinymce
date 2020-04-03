@@ -17,6 +17,7 @@ import Delay from '../util/Delay';
 import Tools from '../util/Tools';
 import VK from '../util/VK';
 import Selection from './Selection';
+import { Obj } from '@ephox/katamari';
 
 interface ControlSelection {
   isResizable (elm: Element): boolean;
@@ -66,10 +67,10 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   // Details about each resize handle how to scale etc
   resizeHandles = {
     // Name: x multiplier, y multiplier, delta size x, delta size y
-    nw: [0, 0, -1, -1],
-    ne: [1, 0, 1, -1],
-    se: [1, 1, 1, 1],
-    sw: [0, 1, -1, 1]
+    nw: [ 0, 0, -1, -1 ],
+    ne: [ 1, 0, 1, -1 ],
+    se: [ 1, 1, 1, 1 ],
+    sw: [ 0, 1, -1, 1 ]
   };
 
   const isImage = function (elm) {
@@ -351,21 +352,19 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   };
 
   const hideResizeRect = function () {
-    let name, handleElm;
-
     unbindResizeHandleEvents();
 
     if (selectedElm) {
       selectedElm.removeAttribute('data-mce-selected');
     }
 
-    for (name in resizeHandles) {
-      handleElm = dom.get('mceResizeHandle' + name);
+    Obj.each(resizeHandles, (value, name) => {
+      const handleElm = dom.get('mceResizeHandle' + name);
       if (handleElm) {
         dom.unbind(handleElm);
         dom.remove(handleElm);
       }
-    }
+    });
   };
 
   const updateResizeRect = function (e) {
@@ -412,14 +411,12 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
   };
 
   const unbindResizeHandleEvents = function () {
-    for (const name in resizeHandles) {
-      const handle = resizeHandles[name];
-
+    Obj.each(resizeHandles, (handle) => {
       if (handle.elm) {
         dom.unbind(handle.elm);
         delete handle.elm;
       }
-    }
+    });
   };
 
   const disableGeckoResize = function () {
@@ -485,7 +482,7 @@ const ControlSelection = (selection: Selection, editor: Editor): ControlSelectio
       }
     });
 
-    editor.on('nodechange ResizeEditor ResizeWindow drop FullscreenStateChanged', throttledUpdateResizeRect);
+    editor.on('nodechange ResizeEditor ResizeWindow ResizeContent drop FullscreenStateChanged', throttledUpdateResizeRect);
 
     // Update resize rect while typing in a table
     editor.on('keyup compositionend', function (e) {

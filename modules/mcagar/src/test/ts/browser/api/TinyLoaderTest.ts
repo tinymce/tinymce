@@ -34,8 +34,8 @@ UnitTest.asynctest('TinyLoaderTest', (success, failure) => {
     ], loadSuccess, loadFailure);
 
   }, {
-      setup: silverSetup,
-      toolbar: 'test-button',
-      base_url: '/project/tinymce/js/tinymce',
-    }, success, failure);
+    setup: silverSetup,
+    toolbar: 'test-button',
+    base_url: '/project/tinymce/js/tinymce',
+  }, success, failure);
 });

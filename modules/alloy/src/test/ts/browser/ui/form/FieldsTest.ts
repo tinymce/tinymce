@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { Attr, SelectorFind } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -21,7 +21,7 @@ import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 
 UnitTest.asynctest('FieldsTest', (success, failure) => {
 
-  const renderChoice = (choiceSpec: { value: string; text: string; }): AlloySpec & { value: string } => {
+  const renderChoice = (choiceSpec: { value: string; text: string }): AlloySpec & { value: string } => {
     return {
       value: choiceSpec.value,
       dom: {
@@ -43,7 +43,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
     components: [ ]
   };
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     const inputA = FormField.sketch({
       uid: 'input-a',
       dom: {
@@ -127,7 +127,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         })
       ],
 
-      onLockedChange (current, other) {
+      onLockedChange(current, other) {
         Representing.setValueFrom(other, current);
       },
       markers: {
@@ -159,7 +159,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, _gui, component, _store) => {
 
     const inputA = component.getSystem().getByUid('input-a').getOrDie();
     const selectB = component.getSystem().getByUid('select-b').getOrDie();
@@ -173,12 +173,12 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
 
       RepresentPipes.sAssertValue('Checking input-a value', 'init', inputA),
 
-      Assertions.sAssertStructure('Check the input-a DOM', ApproxStructure.build((s, str, arr) => {
+      Assertions.sAssertStructure('Check the input-a DOM', ApproxStructure.build((s, str, _arr) => {
         const input = SelectorFind.descendant(inputA.element(), 'input').getOrDie('input element child was not found');
         const span = SelectorFind.descendant(inputA.element(), 'span').getOrDie('span element child was not found');
 
-        const inputID = Attr.get(input, 'id')!;
-        const spanID = Attr.get(span, 'id')!;
+        const inputID = Option.from(Attr.get(input, 'id')).getOrDie('Expected value for input.id');
+        const spanID = Option.from(Attr.get(span, 'id')).getOrDie('Expected value for span.id');
         return s.element('div', {
           children: [
             s.element('input', {
@@ -196,7 +196,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         });
       }), inputA.element()),
 
-      Assertions.sAssertStructure('Check the select-b dom', ApproxStructure.build((s, str, arr) => {
+      Assertions.sAssertStructure('Check the select-b dom', ApproxStructure.build((s, _str, _arr) => {
         return s.element('div', {
           children: [
             s.element('label', { }),
@@ -205,13 +205,13 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         });
       }), selectB.element()),
 
-      Assertions.sAssertStructure('Check the chooser-c dom', ApproxStructure.build((s, str, arr) => {
+      Assertions.sAssertStructure('Check the chooser-c dom', ApproxStructure.build((s, str, _arr) => {
         return s.element('div', {
           children: [
             s.element('legend', { }),
-            s.element('span', { attrs: { role: str.is('radio') } }),
-            s.element('span', { attrs: { role: str.is('radio') } }),
-            s.element('span', { attrs: { role: str.is('radio') } })
+            s.element('span', { attrs: { role: str.is('radio') }}),
+            s.element('span', { attrs: { role: str.is('radio') }}),
+            s.element('span', { attrs: { role: str.is('radio') }})
           ]
         });
       }), chooserC.element()),
@@ -227,7 +227,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         Assertions.assertEq('Checking chooser-c value after set', 'choice3', val2);
       }),
 
-      Assertions.sAssertStructure('Checking the data field (E)', ApproxStructure.build((s, str, arr) => {
+      Assertions.sAssertStructure('Checking the data field (E)', ApproxStructure.build((s, _str, _arr) => {
         return s.element('span', { children: [ ] });
       }), dataE.element()),
 

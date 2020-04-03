@@ -1,4 +1,4 @@
-import { console, HTMLElement, Element as DomElement, Node as DomNode } from '@ephox/dom-globals';
+import { console, Element as DomElement, Node as DomNode } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Type } from '@ephox/katamari';
 import Element from '../node/Element';
 import * as Node from '../node/Node';

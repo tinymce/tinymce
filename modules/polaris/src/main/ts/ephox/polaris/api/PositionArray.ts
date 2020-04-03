@@ -5,7 +5,7 @@ import * as Split from '../parray/Split';
 import * as Translate from '../parray/Translate';
 import { PRange } from '../pattern/Types';
 
-type GenerateApi = <T, R extends { finish: () => number; }>(xs: T[], f: (x: T, offset: number) => Option<R>, start?: number) => R[];
+type GenerateApi = <T, R extends { finish: () => number }>(xs: T[], f: (x: T, offset: number) => Option<R>, start?: number) => R[];
 const generate: GenerateApi = Generator.make;
 
 type GetApi = <T extends PRange>(parray: T[], offset: number) => Option<T>;

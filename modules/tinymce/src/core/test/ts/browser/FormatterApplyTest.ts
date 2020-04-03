@@ -587,7 +587,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     LegacyUnit.equal(getContent(editor), '<p><b data-x="1">12345678</b></p>', 'Inline element merged with left sibling');
   });
 
-  suite.test('Don\'t merge siblings with whitespace between 1', function (editor) {
+  suite.test(`Don't merge siblings with whitespace between 1`, function (editor) {
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -597,10 +597,10 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     rng.setEnd(editor.dom.select('p')[0].lastChild, 2);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>a</b> <b>b</b></p>', 'Don\'t merge siblings with whitespace between 1');
+    LegacyUnit.equal(getContent(editor), '<p><b>a</b> <b>b</b></p>', `Don't merge siblings with whitespace between 1`);
   });
 
-  suite.test('Don\'t merge siblings with whitespace between 1', function (editor) {
+  suite.test(`Don't merge siblings with whitespace between 1`, function (editor) {
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -610,7 +610,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>a</b> <b>b</b></p>', 'Don\'t merge siblings with whitespace between 2');
+    LegacyUnit.equal(getContent(editor), '<p><b>a</b> <b>b</b></p>', `Don't merge siblings with whitespace between 2`);
   });
 
   suite.test('Inline element not merged in exact mode', function (editor) {
@@ -746,12 +746,12 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     editor.formatter.register('format', {
       inline: 'b',
       styles: {
-        color (vars) {
+        color(vars) {
           return vars.color + '00ff';
         }
       },
       attributes: {
-        title (vars) {
+        title(vars) {
           return vars.title + '2';
         }
       }
@@ -1110,7 +1110,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     LegacyUnit.equal(
       editor.getContent(),
       '<p><span style="color: #ff0000;">123<a style="color: #ff0000;" href="#">abc</a>456</span></p>',
-      'Link should have it\'s own color.'
+      `Link should have it's own color.`
     );
   });
 
@@ -1133,7 +1133,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     LegacyUnit.equal(
       editor.getContent(),
       '<p><span style="color: #ff0000; font-size: 10px;">123<a style="color: #ff0000;" href="#">abc</a>456</span></p>',
-      'Link should have it\'s own color.'
+      `Link should have it's own color.`
     );
   });
 
@@ -1253,12 +1253,12 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
         color: '#ff0000'
       }
     });
-    editor.setContent('<p><span style="font-family: \'arial black\'; text-decoration: underline;">test</span></p>');
+    editor.setContent(`<p><span style="font-family: 'arial black'; text-decoration: underline;">test</span></p>`);
     editor.execCommand('SelectAll');
     editor.formatter.apply('format');
     LegacyUnit.equal(
       editor.getContent(),
-      '<p><span style="color: #ff0000; font-family: \'arial black\'; text-decoration: underline;">test</span></p>',
+      `<p><span style="color: #ff0000; font-family: 'arial black'; text-decoration: underline;">test</span></p>`,
       'Coloring an underlined text should result in a colored underline'
     );
   });
@@ -1271,13 +1271,13 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
         textDecoration: 'underline'
       }
     });
-    editor.setContent('<p><span style="font-family: \'arial black\'; color: rgb(255, 0, 0);">test</span></p>');
+    editor.setContent(`<p><span style="font-family: 'arial black'; color: rgb(255, 0, 0);">test</span></p>`);
     editor.execCommand('SelectAll');
     editor.formatter.apply('format');
     LegacyUnit.equal(
       editor.getContent(),
       '<p><span style="text-decoration: underline;"><span style="color: #ff0000; font-family: ' +
-      '\'arial black\'; text-decoration: underline;">test</span></span></p>',
+      `'arial black'; text-decoration: underline;">test</span></span></p>`,
       'Underlining colored text should result in a colored underline'
     );
   });
@@ -1291,14 +1291,14 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
       }
     });
     editor.setContent(
-      '<p><span style="font-family: \'arial black\'; text-decoration: underline;"><em><strong>This is some ' +
+      `<p><span style="font-family: 'arial black'; text-decoration: underline;"><em><strong>This is some ` +
       '<span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p>'
     );
     editor.execCommand('SelectAll');
     editor.formatter.apply('format');
     LegacyUnit.equal(
       editor.getContent(),
-      '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\';"><em>' +
+      `<p><span style="text-decoration: underline;"><span style="font-family: 'arial black';"><em>` +
       '<strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong>' +
       '</em> text</span></span></p>', 'Underlining colored and underlined text should result in a colored underline'
     );
@@ -1322,7 +1322,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     editor.formatter.apply('format');
     LegacyUnit.equal(getContent(editor), '<p style="font-size: 22pt;"><span style="text-decoration: underline;"><span style="color: yellow;' +
       ' text-decoration: underline;">yellow<span style="color: #ff0000; text-decoration: underline;">red</span>yellow</span></span></p>',
-      'Coloring an colored underdlined text should result in newly colored underline'
+    'Coloring an colored underdlined text should result in newly colored underline'
     );
   });
 
@@ -1335,11 +1335,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
       }
     });
     editor.setContent(
-      '<p><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: ' +
-      'rgb(255, 0, 0);">example</span></strong></em> text</span></p><p><span style="font-family: \'arial black\',' +
-      '\'avant garde\';"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong>' +
-      '</em> text</span></p><p><span style="font-family: \'arial black\', \'avant garde\';"><em><strong>This is' +
-      ' some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p>'
+      `<p><span style="font-family: 'arial black','avant garde';"><em><strong>This is some <span style="color: ` +
+      `rgb(255, 0, 0);">example</span></strong></em> text</span></p><p><span style="font-family: 'arial black',` +
+      `'avant garde';"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong>` +
+      `</em> text</span></p><p><span style="font-family: 'arial black', 'avant garde';"><em><strong>This is` +
+      ` some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p>`
     );
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('strong')[0].firstChild, 0);
@@ -1348,14 +1348,14 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     editor.formatter.apply('format');
     LegacyUnit.equal(
       editor.getContent(),
-      '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"' +
-      '><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong' +
-      '></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: ' +
-      '\'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration:' +
-      ' underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;' +
-      '"><span style="font-family: \'arial black\', \'avant garde\';"><em><strong>This is some <span style="color:' +
-      ' #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>',
-      'Colored elements should be underlined when selection is across multiple paragraphs'
+      `<p><span style="text-decoration: underline;"><span style="font-family: 'arial black','avant garde';"` +
+      `><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong` +
+      `></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: ` +
+      `'arial black','avant garde';"><em><strong>This is some <span style="color: #ff0000; text-decoration:` +
+      ` underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;` +
+      `"><span style="font-family: 'arial black', 'avant garde';"><em><strong>This is some <span style="color:` +
+      ` #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>`,
+      `Colored elements should be underlined when selection is across multiple paragraphs`
     );
   });
 
@@ -1838,7 +1838,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
   });
 
   suite.test('Format selection from with end at beginning of block', function (editor) {
-    editor.setContent('<div id=\'a\'>one</div><div id=\'b\'>two</div>');
+    editor.setContent(`<div id='a'>one</div><div id='b'>two</div>`);
     editor.focus();
     LegacyUnit.setSelection(editor, '#a', 0, '#b', 0);
     editor.execCommand('formatBlock', false, 'h1');
@@ -1852,7 +1852,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     LegacyUnit.equal(getContent(editor), '<p><strong>a</strong><span style="text-decoration: underline;">bc</span><em>d</em></p>');
   });
 
-  suite.test('Child wrapper having the same format as the immediate parent, shouldn\'t be removed if it also has other formats merged', function (editor) {
+  suite.test(`Child wrapper having the same format as the immediate parent, shouldn't be removed if it also has other formats merged`, function (editor) {
     editor.getBody().innerHTML = '<p><span style="font-family: verdana;">a <span style="color: #ff0000;">b</span>c</span></p>';
     LegacyUnit.setSelection(editor, 'span span', 0, 'span span', 1);
     editor.formatter.apply('fontname', { value: 'verdana' });
@@ -1937,7 +1937,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     LegacyUnit.equal(getContent(editor), '<p><sub>a</sub></p>');
   });
 
-  suite.test('TINY-782: Can\'t apply sub/sup to word on own line with large font', function (editor) {
+  suite.test(`TINY-782: Can't apply sub/sup to word on own line with large font`, function (editor) {
     editor.getBody().innerHTML = '<p><span style="font-size: 18px;">abc</span></p>';
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
     editor.formatter.apply('superscript');
@@ -1982,7 +1982,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     );
   });
 
-  suite.test('TINY-935: Text color, then size, then change color wraps span doesn\'t change color', function (editor) {
+  suite.test(`TINY-935: Text color, then size, then change color wraps span doesn't change color`, function (editor) {
     editor.getBody().innerHTML = '<p><span style="color: #00ff00; font-size: 14pt;">text</span></p>';
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 4);
     editor.formatter.apply('forecolor', { value: '#ff0000' });
@@ -1990,7 +1990,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
   });
 
   suite.test('GH-3519: Font family selection does not work after changing font size', function (editor) {
-    editor.getBody().innerHTML = '<p><span style="font-size: 14pt; font-family: \'comic sans ms\', sans-serif;">text</span></p>';
+    editor.getBody().innerHTML = `<p><span style="font-size: 14pt; font-family: 'comic sans ms', sans-serif;">text</span></p>`;
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 4);
     editor.formatter.apply('fontname', { value: 'verdana' });
     LegacyUnit.equal(getContent(editor), '<p><span style="font-size: 14pt; font-family: verdana;">text</span></p>');
@@ -2014,7 +2014,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     );
   });
 
-  suite.test('If links=true, formatter shouldn\'t remove similar styles from links even if clear_child_styles=true', function (editor) {
+  suite.test(`If links=true, formatter shouldn't remove similar styles from links even if clear_child_styles=true`, function (editor) {
     editor.getBody().innerHTML = '<p>a<a href="#">b</a>c</p>';
 
     editor.selection.select(editor.dom.select('p')[0]);
@@ -2028,7 +2028,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     );
   });
 
-  suite.test('Formatter should remove similar styles when clear_child_styles isn\'t defined', function (editor) {
+  suite.test(`Formatter should remove similar styles when clear_child_styles isn't defined`, function (editor) {
     editor.getBody().innerHTML = (
       '<p><span style="font-family: Arial; font-size: 13px">a</span>' +
       '<del style="font-family: Arial; font-size: 13px">b</del>' +
@@ -2037,7 +2037,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
 
     editor.selection.select(editor.dom.select('p')[0]);
 
-    editor.formatter.register('format', { inline: 'span', styles: { fontSize: '14px' } });
+    editor.formatter.register('format', { inline: 'span', styles: { fontSize: '14px' }});
     editor.formatter.apply('format');
 
     LegacyUnit.equal(
@@ -2059,7 +2059,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
 
   suite.test('Apply ceFalseOverride format', function (editor) {
     editor.setContent('<p contenteditable="false">a</p><div contenteditable="false">b</div>');
-    editor.formatter.register('format', { selector: 'div', classes: ['a'], ceFalseOverride: true });
+    editor.formatter.register('format', { selector: 'div', classes: [ 'a' ], ceFalseOverride: true });
 
     editor.selection.select(editor.dom.select('p')[0]);
     editor.formatter.apply('format');
@@ -2078,7 +2078,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
 
   suite.test('Apply defaultBlock format', function (editor) {
     editor.getBody().innerHTML = 'a<br>b';
-    editor.formatter.register('format', { selector: 'div', defaultBlock: 'div', classes: ['a'] });
+    editor.formatter.register('format', { selector: 'div', defaultBlock: 'div', classes: [ 'a' ] });
     editor.selection.setCursorLocation(editor.getBody().firstChild, 0);
     editor.formatter.apply('format');
     LegacyUnit.equal(getContent(editor), '<div class="a">a</div>b');
@@ -2112,7 +2112,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     editor.setContent('<p>a</p>');
     editor.formatter.register('format', {
       inline: 'span',
-      onformat (elm) {
+      onformat(elm) {
         elm.className = 'x';
       }
     });

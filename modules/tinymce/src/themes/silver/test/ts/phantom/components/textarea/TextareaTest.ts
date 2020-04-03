@@ -11,7 +11,7 @@ import { DisablingSteps } from '../../../module/DisablingSteps';
 UnitTest.asynctest('Textarea component Test', (success, failure) => {
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       return GuiFactory.build(
         renderTextarea({
           name: 'textarea',
@@ -22,7 +22,7 @@ UnitTest.asynctest('Textarea component Test', (success, failure) => {
         }, TestProviders)
       );
     },
-    (doc, body, gui, component, store) => {
+    (_doc, _body, _gui, component, _store) => {
       // TODO: Fix dupe with Input test. Test Ctrl+Enter.
       return [
         Assertions.sAssertStructure(

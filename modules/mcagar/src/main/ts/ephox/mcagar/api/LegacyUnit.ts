@@ -7,7 +7,7 @@ type SyncTestCallback<T> = (initValue: T) => void;
 type AsyncTestCallback<T> = (initValue: T, done: () => void, die: (err?: any) => void) => void;
 type Offset = 'after' | 'afterNextCharacter' | number;
 
-const test = function <T>(message: string, fn: SyncTestCallback<T>) {
+const test = function <T> (message: string, fn: SyncTestCallback<T>) {
   return function (initValue: T) {
     return Logger.t(
       message,
@@ -18,7 +18,7 @@ const test = function <T>(message: string, fn: SyncTestCallback<T>) {
   };
 };
 
-const asyncTest = function <T>(message: string, fn: AsyncTestCallback<T>) {
+const asyncTest = function <T> (message: string, fn: AsyncTestCallback<T>) {
   return function (initValue: T) {
     return Logger.t(
       message,
@@ -29,19 +29,19 @@ const asyncTest = function <T>(message: string, fn: AsyncTestCallback<T>) {
   };
 };
 
-const createSuite = function <T = any>() {
+const createSuite = function <T = any> () {
   const tests: Array<(initValue: T) => Step<any, any>> = [];
 
   return {
-    test (message: string, fn: SyncTestCallback<T>) {
+    test(message: string, fn: SyncTestCallback<T>) {
       tests.push(test(message, fn));
     },
 
-    asyncTest (message: string, fn: AsyncTestCallback<T>) {
+    asyncTest(message: string, fn: AsyncTestCallback<T>) {
       tests.push(asyncTest(message, fn));
     },
 
-    toSteps (initValue: T) {
+    toSteps(initValue: T) {
       return tests.map(function (test) {
         return test(initValue);
       });

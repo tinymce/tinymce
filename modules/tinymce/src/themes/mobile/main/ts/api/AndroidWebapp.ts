@@ -38,10 +38,10 @@ const produce = function (raw: {any}): MobileWebApp {
 
   mobile.alloy.add(mask);
   const maskApi = {
-    show () {
+    show() {
       mobile.alloy.add(mask);
     },
-    hide () {
+    hide() {
       mobile.alloy.remove(mask);
     }
   };

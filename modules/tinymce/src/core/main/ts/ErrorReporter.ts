@@ -28,7 +28,7 @@ const displayError = (editor: Editor, message: string) => {
 };
 
 const uploadError = (editor: Editor, message: string) => {
-  displayError(editor, I18n.translate(['Failed to upload image: {0}', message]));
+  displayError(editor, I18n.translate([ 'Failed to upload image: {0}', message ]));
 };
 
 const logError = (editor: Editor, errorType: string, msg: string) => {
@@ -56,7 +56,7 @@ const languageLoadError = (editor: Editor, url: string, name: string) => {
 };
 
 const pluginInitError = (editor: Editor, name: string, err) => {
-  const message = I18n.translate(['Failed to initialize plugin: {0}', name]);
+  const message = I18n.translate([ 'Failed to initialize plugin: {0}', name ]);
   initError(message, err);
   displayError(editor, message);
 };
@@ -64,10 +64,10 @@ const pluginInitError = (editor: Editor, name: string, err) => {
 const initError = function (message: string, ...x: any[]) {
   const console = window.console;
   if (console) { // Skip test env
-    if (console.error) { // tslint:disable-line:no-console
-      console.error.apply(console, arguments); // tslint:disable-line:no-console
+    if (console.error) {
+      console.error(message, ...x);
     } else {
-      console.log.apply(console, arguments); // tslint:disable-line:no-console
+      console.log(message, ...x);
     }
   }
 };

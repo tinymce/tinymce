@@ -20,26 +20,26 @@ const errorReporter = function (err: any) {
   }, 0);
 };
 
-const make = function <T = any>(run: () => Promise<T>): Future<T> {
+const make = function <T = any> (run: () => Promise<T>): Future<T> {
 
   const get = function (callback: (value: T) => void) {
     run().then(callback, errorReporter);
   };
 
   /** map :: this Future a -> (a -> b) -> Future b */
-  const map = function <U>(fab: (v: T) => U) {
+  const map = function <U> (fab: (v: T) => U) {
     return make(() => run().then(fab));
   };
 
   /** bind :: this Future a -> (a -> Future b) -> Future b */
-  const bind = function <U>(aFutureB: (v: T) => Future<U>) {
+  const bind = function <U> (aFutureB: (v: T) => Future<U>) {
     return make(() => run().then((v) => aFutureB(v).toPromise()));
   };
 
   /** anonBind :: this Future a -> Future b -> Future b
    *  Returns a future, which evaluates the first future, ignores the result, then evaluates the second.
    */
-  const anonBind = function <U>(futureB: Future<U>) {
+  const anonBind = function <U> (futureB: Future<U>) {
     return make(() => run().then(() => futureB.toPromise()));
   };
 
@@ -71,12 +71,12 @@ const make = function <T = any>(run: () => Promise<T>): Future<T> {
 
 };
 
-const nu = function <T = any>(baseFn: (completer: (value?: T) => void) => void): Future<T> {
+const nu = function <T = any> (baseFn: (completer: (value?: T) => void) => void): Future<T> {
   return make(() => new Promise(baseFn));
 };
 
 /** a -> Future a */
-const pure = function <T>(a: T) {
+const pure = function <T> (a: T) {
   return make(() => Promise.resolve(a));
 };
 

@@ -16,7 +16,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
   const createManager = (prefix: string) => {
     let active = '';
 
-    const set = (component: AlloyComponent, focusee: Element) => {
+    const set = (_component: AlloyComponent, focusee: Element) => {
       active = Attr.get(focusee, 'class');
     };
 
@@ -167,7 +167,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
   });
 
   GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       return GuiFactory.build({
         dom: {
           tag: 'div',
@@ -188,7 +188,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
       });
     },
 
-    (doc, body, gui, component, store) => {
+    (doc, _body, _gui, component, _store) => {
 
       const sFocusStillUnmoved = (label: string) => {
         return Logger.t(

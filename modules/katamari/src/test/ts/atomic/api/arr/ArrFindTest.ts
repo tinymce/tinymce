@@ -28,7 +28,7 @@ UnitTest.test('Arr.find: Unit tests', () => {
   };
 
   checkNone([], (x) => x > 0);
-  checkNone([], (x) => { throw new Error('should not be called'); });
+  checkNone([], (_x) => { throw new Error('should not be called'); });
   checkNone([ -1 ], (x) => x > 0);
   checkArr(1, [ 1 ], (x) => x > 0);
   checkArr(41, [ 4, 2, 10, 41, 3 ], (x) => x === 41);
@@ -40,7 +40,7 @@ UnitTest.test('Arr.find: Unit tests', () => {
 
 UnitTest.test('Arr.find: finds a value in the array', () => {
   fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), fc.array(fc.integer()), (prefix, i, suffix) => {
-    const arr = prefix.concat([i]).concat(suffix);
+    const arr = prefix.concat([ i ]).concat(suffix);
     const pred = (x) => x === i;
     const result = Arr.find(arr, pred);
     Assert.eq('Element found in array', Option.some(i), result, tOption(tNumber));

@@ -70,7 +70,7 @@ UnitTest.asynctest('browser.core.IframeNodeTest', function (success, failure) {
         Chain.asStep(Element.fromDom(editor.getBody()), [
           UiFinder.cFindIn('iframe'),
           Chain.op((input) =>
-            Assertions.assertStructure('should have all attributes', ApproxStructure.build((s, str, arr) => {
+            Assertions.assertStructure('should have all attributes', ApproxStructure.build((s, str, _arr) => {
               return s.element('iframe', {
                 attrs: {
                   width: str.is('300'),
@@ -87,10 +87,10 @@ UnitTest.asynctest('browser.core.IframeNodeTest', function (success, failure) {
       ]),
     ], onSuccess, onFailure);
   }, {
-    plugins: ['media'],
+    plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
-    media_url_resolver (data, resolve) {
+    media_url_resolver(data, resolve) {
       Delay.setTimeout(function () {
         resolve({
           html: '<span id="fake">' + data.url + '</span>'

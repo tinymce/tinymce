@@ -26,7 +26,7 @@ UnitTest.asynctest('Menu group heading test', (success, failure) => {
                     classes: [ arr.has('tox-menu'), arr.has('tox-collection'), arr.has('tox-collection--list'), arr.has('tox-selected-menu') ],
                     children: [
                       s.element('div', {
-                        classes: [ arr.has('tox-collection__group')],
+                        classes: [ arr.has('tox-collection__group') ],
                         children: [
                           s.element('div', {
                             classes: [ arr.has('tox-menu-nav__js'), arr.has('tox-collection__item') ]
@@ -34,7 +34,7 @@ UnitTest.asynctest('Menu group heading test', (success, failure) => {
                         ]
                       }),
                       s.element('div', {
-                        classes: [ arr.has('tox-collection__group')],
+                        classes: [ arr.has('tox-collection__group') ],
                         children: [
                           s.element('div', {
                             classes: [ arr.has('tox-collection__item'), arr.has('tox-collection__group-heading') ],
@@ -60,9 +60,9 @@ UnitTest.asynctest('Menu group heading test', (success, failure) => {
       toolbar: 'styleselect',
       menubar: false,
       style_formats: [
-        {title: 'Bold text', inline: 'b'},
-        {title: 'Table styles'},
-        {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
+        { title: 'Bold text', inline: 'b' },
+        { title: 'Table styles' },
+        { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
       ],
     },
     () => {

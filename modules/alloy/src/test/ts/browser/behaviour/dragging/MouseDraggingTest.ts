@@ -29,7 +29,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
           mode: 'mouse',
           blockerClass: 'test-blocker',
           snaps: {
-            getSnapPoints () {
+            getSnapPoints() {
               return [
                 Dragging.snap({
                   sensor: DragCoord.fixed(300, 10),
@@ -50,7 +50,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
     })
   );
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -64,7 +64,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
         ]
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, gui, component, _store) => {
 
     const cSubject = Chain.injectThunked(() => {
       return subject.get(component).element();

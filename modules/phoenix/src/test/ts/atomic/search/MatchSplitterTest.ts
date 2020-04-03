@@ -61,10 +61,10 @@ UnitTest.test('MatchSplitterTest', function () {
     correctly. The output format is transformed significantly so this isn't testing the output value
     as transparently as was desired.
   */
-  check(['AB', 'C', 'D', 'E', 'FG', 'H', 'I', 'JK', 'L', 'MNO', 'P'], [
-    { text: ['C', 'D'], exact: 'CD', word: 'w1' },
-    { text: ['FG'], exact: 'FG', word: 'w2' },
-    { text: ['I', 'JK'], exact: 'IJK', word: 'w3' },
-    { text: ['L', 'MNO'], exact: 'LMNO', word: 'w4' }
-  ], ['1', '2', '3', '4', '5'], [match(2, 4, 'w1'), match(5, 7, 'w2'), match(8, 11, 'w3'), match(11, 15, 'w4')], data());
+  check([ 'AB', 'C', 'D', 'E', 'FG', 'H', 'I', 'JK', 'L', 'MNO', 'P' ], [
+    { text: [ 'C', 'D' ], exact: 'CD', word: 'w1' },
+    { text: [ 'FG' ], exact: 'FG', word: 'w2' },
+    { text: [ 'I', 'JK' ], exact: 'IJK', word: 'w3' },
+    { text: [ 'L', 'MNO' ], exact: 'LMNO', word: 'w4' }
+  ], [ '1', '2', '3', '4', '5' ], [ match(2, 4, 'w1'), match(5, 7, 'w2'), match(8, 11, 'w3'), match(11, 15, 'w4') ], data());
 });

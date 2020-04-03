@@ -12,7 +12,7 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<CustomListDetail, CustomListSpec> = (detail, components, spec, external) => {
+const factory: CompositeSketchFactory<CustomListDetail, CustomListSpec> = (detail, components, _spec, _external) => {
 
   const setItems = (list: AlloyComponent, items: AlloySpec[]) => {
     getListContainer(list).fold(() => {
@@ -50,7 +50,7 @@ const factory: CompositeSketchFactory<CustomListDetail, CustomListSpec> = (detai
 
   // In shell mode, the group overrides need to be added to the main container, and there can be no children
   const extra: {
-    behaviours: Array<NamedConfiguredBehaviour<any, any>>,
+    behaviours: Array<NamedConfiguredBehaviour<any, any>>;
     components: AlloySpec[];
   } = detail.shell ? { behaviours: [ Replacing.config({ }) ], components: [ ] } : { behaviours: [ ], components };
 

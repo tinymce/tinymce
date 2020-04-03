@@ -8,7 +8,7 @@
 import { Element } from '@ephox/sugar';
 import Tools from '../util/Tools';
 
-export interface EntitiesMap { [name: string]: string; }
+export interface EntitiesMap { [name: string]: string }
 
 interface Entities {
   encodeRaw (text: string, attr?: boolean): string;
@@ -35,12 +35,12 @@ const textCharsRegExp = /[<>&\u007E-\uD7FF\uE000-\uFFEF]|[\uD800-\uDBFF][\uDC00-
 const rawCharsRegExp = /[<>&\"\']/g;
 const entityRegExp = /&#([a-z0-9]+);?|&([a-z0-9]+);/gi;
 const asciiMap = {
-    128: '\u20AC', 130: '\u201A', 131: '\u0192', 132: '\u201E', 133: '\u2026', 134: '\u2020',
-    135: '\u2021', 136: '\u02C6', 137: '\u2030', 138: '\u0160', 139: '\u2039', 140: '\u0152',
-    142: '\u017D', 145: '\u2018', 146: '\u2019', 147: '\u201C', 148: '\u201D', 149: '\u2022',
-    150: '\u2013', 151: '\u2014', 152: '\u02DC', 153: '\u2122', 154: '\u0161', 155: '\u203A',
-    156: '\u0153', 158: '\u017E', 159: '\u0178'
-  };
+  128: '\u20AC', 130: '\u201A', 131: '\u0192', 132: '\u201E', 133: '\u2026', 134: '\u2020',
+  135: '\u2021', 136: '\u02C6', 137: '\u2030', 138: '\u0160', 139: '\u2039', 140: '\u0152',
+  142: '\u017D', 145: '\u2018', 146: '\u2019', 147: '\u201C', 148: '\u201D', 149: '\u2022',
+  150: '\u2013', 151: '\u2014', 152: '\u02DC', 153: '\u2122', 154: '\u0161', 155: '\u203A',
+  156: '\u0153', 158: '\u017E', 159: '\u0178'
+};
 
 // Raw entities
 baseEntities = {
@@ -58,7 +58,7 @@ reverseEntities = {
   '&gt;': '>',
   '&amp;': '&',
   '&quot;': '"',
-  '&apos;': '\''
+  '&apos;': `'`
 };
 
 // Decodes text by using the browser
@@ -272,6 +272,7 @@ const decode = (text: string): string => {
       if (numeric > 0xFFFF) {
         numeric -= 0x10000;
 
+        // eslint-disable-next-line no-bitwise
         return String.fromCharCode(0xD800 + (numeric >> 10), 0xDC00 + (numeric & 0x3FF));
       }
 

@@ -15,11 +15,11 @@ UnitTest.test('ObjFindTest', function () {
     Assert.eq('eq', expected, actual);
   };
 
-  checkNone({}, function (v, k) { return v > 0; });
-  checkObj(3, { test: 3 }, function (v, k) { return k === 'test'; });
-  checkNone({ test: 0 }, function (v, k) { return v > 0; });
-  checkObj(4, { blah: 4, test: 3 }, function (v, k) { return v > 0; });
-  checkNone({ blah: 4, test: 3 }, function (v, k) { return v === 12; });
+  checkNone({}, function (v, _k) { return v > 0; });
+  checkObj(3, { test: 3 }, function (_v, k) { return k === 'test'; });
+  checkNone({ test: 0 }, function (v, _k) { return v > 0; });
+  checkObj(4, { blah: 4, test: 3 }, function (v, _k) { return v > 0; });
+  checkNone({ blah: 4, test: 3 }, function (v, _k) { return v === 12; });
 
   const obj = { blah: 4, test: 3 };
   checkObj(4, obj, function (v, k, o) { return o === obj; });

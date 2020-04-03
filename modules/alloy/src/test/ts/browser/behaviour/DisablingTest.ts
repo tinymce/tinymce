@@ -27,7 +27,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
     })
   );
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         components: [
@@ -37,8 +37,8 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
           AlloyEvents.runOnExecute(store.adder('execute.reached'))
         ])
       }
-    ));
-  }, (doc, body, gui, component, store) => {
+      ));
+  }, (_doc, _body, _gui, component, store) => {
 
     const sClickButton = Chain.asStep({ }, [
       Chain.mapper(() => {
@@ -51,7 +51,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
     return [
       Assertions.sAssertStructure(
         'Disabled should have a disabled attribute',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('button', {
             attrs: {
               disabled: str.is('disabled')
@@ -82,7 +82,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'After re-enabling, the disabled attribute should be removed',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('button', {
             attrs: {
               disabled: str.none()
@@ -113,7 +113,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'Disabled should have a disabled attribute',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('button', {
             attrs: {
               disabled: str.is('disabled')
@@ -132,7 +132,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'After re-enabling, the disabled attribute should be removed',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('button', {
             attrs: {
               disabled: str.none()

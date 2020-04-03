@@ -15,7 +15,7 @@ export default function () {
       editor.ui.registry.addButton(`${name}-${i}`, {
         type: buttonType,
         icon: `*-${i}-*`,
-        onAction (comp) {
+        onAction(_comp) {
           console.log(`${name} ${i} button clicked`);
         }
       });
@@ -39,7 +39,7 @@ export default function () {
       'autosave' // Required to prevent users losing content when they press back
     ],
 
-    setup (ed: Editor) {
+    setup(ed: Editor) {
       ed.on('skinLoaded', function () {
         // Notification fields for equality: type, text, progressBar, timeout
         ed.notificationManager.open({
@@ -55,7 +55,7 @@ export default function () {
         icon: 'bold',
         // ariaLabel: 'aria says icon button',
         disabled: true,
-        onAction (comp) {
+        onAction(_comp) {
           console.log('basic-button-2 click, basic-icon');
         }
       });
@@ -64,7 +64,7 @@ export default function () {
         type: 'button',
         icon: 'checkmark',
         // ariaLabel: 'aria says icon button',
-        onAction (comp) {
+        onAction(_comp) {
           console.log('basic-button-2 click, basic-icon');
         }
       });
@@ -82,7 +82,7 @@ export default function () {
           comp.setActive(state);
           return () => { };
         },
-        onAction (comp) {
+        onAction(comp) {
           DemoState2.toggle();
           comp.setActive(DemoState2.get());
           console.log('button with Toggle click - current state is: ' + DemoState2.get());

@@ -7,7 +7,7 @@
 
 import { ClipboardEvent, DataTransfer, DragEvent, Event, FocusEvent, KeyboardEvent, MouseEvent, PointerEvent, TouchEvent, WheelEvent } from '@ephox/dom-globals';
 import Tools from './Tools';
-import { Fun } from '@ephox/katamari';
+import { Fun, Obj } from '@ephox/katamari';
 
 // InputEvent is experimental so we don't have an actual type
 // See https://developer.mozilla.org/en-US/docs/Web/API/InputEvent
@@ -115,7 +115,7 @@ class EventDispatcher<T extends NativeEventMap> {
    * @return {Boolean} true/false if the event is native or not.
    * @static
    */
-  public static isNative (name: string): boolean {
+  public static isNative(name: string): boolean {
     return !!nativeEvents[name.toLowerCase()];
   }
 
@@ -124,7 +124,7 @@ class EventDispatcher<T extends NativeEventMap> {
   private readonly toggleEvent: (name: string, toggle: boolean) => void;
   private bindings = {};
 
-  constructor (settings?: Record<string, any>) {
+  public constructor(settings?: Record<string, any>) {
     this.settings = settings || {};
     this.scope = this.settings.scope || this;
     this.toggleEvent = this.settings.toggleEvent || Fun.never;
@@ -142,7 +142,7 @@ class EventDispatcher<T extends NativeEventMap> {
    */
   public fire <K extends keyof T>(name: K, args?: T[K]): EditorEvent<T[K]>;
   public fire <U = any>(name: string, args?: U): EditorEvent<U>;
-  public fire (name: string, args?: any): EditorEvent<any> {
+  public fire(name: string, args?: any): EditorEvent<any> {
     let handlers, i, l, callback;
 
     name = name.toLowerCase();
@@ -224,7 +224,7 @@ class EventDispatcher<T extends NativeEventMap> {
   public on <K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void, prepend?: boolean, extra?: {}): this;
   public on <U = any>(name: string, callback: (event: EditorEvent<U>) => void, prepend?: boolean, extra?: {}): this;
   public on (name: string, callback: false, prepend?: boolean, extra?: {}): this;
-  public on (name: string, callback: false | ((event: EditorEvent<any>) => void), prepend?: boolean, extra?: {}): this {
+  public on(name: string, callback: false | ((event: EditorEvent<any>) => void), prepend?: boolean, extra?: {}): this {
     let handlers, names, i;
 
     if (callback === false) {
@@ -281,8 +281,8 @@ class EventDispatcher<T extends NativeEventMap> {
   public off <K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void): this;
   public off <U = any>(name: string, callback: (event: EditorEvent<U>) => void): this;
   public off (name?: string): this;
-  public off (name?: string, callback?: (event: EditorEvent<any>) => void): this {
-    let i, handlers, bindingName, names, hi;
+  public off(name?: string, callback?: (event: EditorEvent<any>) => void): this {
+    let i, handlers, names, hi;
 
     if (name) {
       names = name.toLowerCase().split(' ');
@@ -293,10 +293,10 @@ class EventDispatcher<T extends NativeEventMap> {
 
         // Unbind all handlers
         if (!name) {
-          for (bindingName in this.bindings) {
+          Obj.each(this.bindings, (_value, bindingName) => {
             this.toggleEvent(bindingName, false);
             delete this.bindings[bindingName];
-          }
+          });
 
           return this;
         }
@@ -323,9 +323,9 @@ class EventDispatcher<T extends NativeEventMap> {
         }
       }
     } else {
-      for (name in this.bindings) {
+      Obj.each(this.bindings, (_value, name) => {
         this.toggleEvent(name, false);
-      }
+      });
 
       this.bindings = {};
     }
@@ -349,7 +349,7 @@ class EventDispatcher<T extends NativeEventMap> {
    */
   public once <K extends keyof T>(name: K, callback: (event: EditorEvent<T[K]>) => void, prepend?: boolean): this;
   public once <U = any>(name: string, callback: (event: EditorEvent<U>) => void, prepend?: boolean): this;
-  public once (name: string, callback: (event: EditorEvent<any>) => void, prepend?: boolean): this {
+  public once(name: string, callback: (event: EditorEvent<any>) => void, prepend?: boolean): this {
     return this.on(name, callback, prepend, { once: true });
   }
 
@@ -360,7 +360,7 @@ class EventDispatcher<T extends NativeEventMap> {
    * @param {String} name Name of the event to check for.
    * @return {Boolean} true/false if the event exists or not.
    */
-  public has (name: string): boolean {
+  public has(name: string): boolean {
     name = name.toLowerCase();
     return !(!this.bindings[name] || this.bindings[name].length === 0);
   }

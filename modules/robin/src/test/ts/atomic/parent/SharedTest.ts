@@ -59,7 +59,7 @@ UnitTest.test('SharedTest', function () {
     });
   };
 
-  checkNone('li', ['1.3.1']);
-  checkNone('p', ['1.1.1', '1.3.1']);
-  check('1.2', 'ol', ['1.2.2.1', '1.2.1.2']);
+  checkNone('li', [ '1.3.1' ]);
+  checkNone('p', [ '1.1.1', '1.3.1' ]);
+  check('1.2', 'ol', [ '1.2.2.1', '1.2.1.2' ]);
 });

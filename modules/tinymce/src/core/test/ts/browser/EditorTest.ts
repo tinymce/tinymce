@@ -393,7 +393,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
     });
 
     LegacyUnit.equal(editor.translate('input i18n'), 'output i18n');
-    LegacyUnit.equal(editor.translate(['value:{0}{1}', 'a', 'b']), 'value translation:ab');
+    LegacyUnit.equal(editor.translate([ 'value:{0}{1}', 'a', 'b' ]), 'value translation:ab');
   });
 
   suite.test('Treat some paragraphs as empty contents', function (editor) {
@@ -407,22 +407,6 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', function (success, failure
   suite.test('kamer word boundaries', function (editor) {
     editor.setContent('<p>!\u200b!\u200b!</p>');
     LegacyUnit.equal(editor.getContent(), '<p>!\u200b!\u200b!</p>');
-  });
-
-  suite.test('Padd empty elements with br', function (editor) {
-    editor.settings.padd_empty_with_br = true;
-    editor.setContent('<p>a</p><p></p>');
-    LegacyUnit.equal(editor.getContent(), '<p>a</p><p><br /></p>');
-    delete editor.settings.padd_empty_with_br;
-  });
-
-  suite.test('Padd empty elements with br on insert at caret', function (editor) {
-    editor.settings.padd_empty_with_br = true;
-    editor.setContent('<p>a</p>');
-    LegacyUnit.setSelection(editor, 'p', 1);
-    editor.insertContent('<p>b</p><p></p>');
-    LegacyUnit.equal(editor.getContent(), '<p>a</p><p>b</p><p><br /></p>');
-    delete editor.settings.padd_empty_with_br;
   });
 
   suite.test('Preserve whitespace pre elements', function (editor) {

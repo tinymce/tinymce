@@ -12,7 +12,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('Cyclic Keying Test', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const makeButton = (v: string, t: string) => {
       return Button.sketch({
         dom: { tag: 'button', innerHtml: t },
@@ -27,7 +27,7 @@ UnitTest.asynctest('Cyclic Keying Test', (success, failure) => {
       Container.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'cyclic-keying-test'],
+          classes: [ 'cyclic-keying-test' ],
           styles: {
             background: 'blue',
             width: '200px',
@@ -64,7 +64,7 @@ UnitTest.asynctest('Cyclic Keying Test', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, body, _gui, component, _store) => {
     return [
       GuiSetup.mSetupKeyLogger(body),
       Step.sync(() => {

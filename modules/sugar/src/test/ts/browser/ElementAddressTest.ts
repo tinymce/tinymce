@@ -123,11 +123,11 @@ UnitTest.test('ElementAddressTest', function () {
       element: '<td>C1</td>',
       index: 2
     },
-    [ 1, 1, 1, 2], 'td'
+    [ 1, 1, 1, 2 ], 'td'
   );
 
   checkNoneInParentOfSelector(
-    [ 1, 1, 1, 2], 'th'
+    [ 1, 1, 1, 2 ], 'th'
   );
 
   checkInParentOfAny(
@@ -137,7 +137,7 @@ UnitTest.test('ElementAddressTest', function () {
       element: 'span#s2',
       index: 3
     },
-    [0, 3]
+    [ 0, 3 ]
   );
 
   const checkInAncestorOfSelector = function (expected, startPath, ancestorSelector, descendantSelector) {

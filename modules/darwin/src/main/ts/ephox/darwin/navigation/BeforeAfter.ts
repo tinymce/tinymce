@@ -16,10 +16,10 @@ export interface BeforeAfter {
     failedDown: FailedDownHandler<T>,
   ) => T;
   match: <T>(branches: {
-    none: NoneHandler<T>,
-    success: SuccessHandler<T>,
-    failedUp: FailedUpHandler<T>,
-    failedDown: FailedDownHandler<T>,
+    none: NoneHandler<T>;
+    success: SuccessHandler<T>;
+    failedUp: FailedUpHandler<T>;
+    failedDown: FailedDownHandler<T>;
   }) => T;
   log: (label: string) => void;
 }
@@ -32,10 +32,10 @@ const adt: {
   failedUp: BeforeAfterFailureConstructor;
   failedDown: BeforeAfterFailureConstructor;
 } = Adt.generate([
-  { none: ['message'] },
+  { none: [ 'message' ] },
   { success: [] },
-  { failedUp: ['cell'] },
-  { failedDown: ['cell'] }
+  { failedUp: [ 'cell' ] },
+  { failedDown: [ 'cell' ] }
 ]);
 
 // Let's get some bounding rects, and see if they overlap (x-wise)
@@ -55,7 +55,7 @@ const verify = function (bridge: WindowBridge, before: Element, beforeOffset: nu
     return SelectorFind.closest(before, 'td,th', isRoot).map(function (beforeCell) {
       // If they are not in the same cell
       if (!Compare.eq(afterCell, beforeCell)) {
-        return DomParent.sharedOne(isRow, [afterCell, beforeCell]).fold(function () {
+        return DomParent.sharedOne(isRow, [ afterCell, beforeCell ]).fold(function () {
           // No shared row, and they overlap x-wise -> success, otherwise: failed
           return isOverlapping(bridge, beforeCell, afterCell) ? adt.success() : failure(beforeCell);
         }, function (_sharedRow) {

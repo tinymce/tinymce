@@ -47,7 +47,7 @@ const forbid = function (key: string, message: string): FieldProcessorAdt {
     key,
     key,
     FieldPresence.asOption(),
-    value(function (v) {
+    value(function (_v) {
       return SimpleResult.serror('The field: ' + key + ' is forbidden. ' + message);
     })
   );
@@ -80,7 +80,7 @@ const option = function (key: string): FieldProcessorAdt {
 };
 
 const optionOf = function (key: string, schema: Processor): FieldProcessorAdt {
-   return field(key, key, FieldPresence.asOption(), schema);
+  return field(key, key, FieldPresence.asOption(), schema);
 };
 
 const optionNumber = function (key: string): FieldProcessorAdt {

@@ -14,7 +14,7 @@ import { document } from '@ephox/dom-globals';
 import * as ElementType from '../dom/ElementType';
 import { isAtLastLine, isAtFirstLine } from '../caret/LineReader';
 
-const isTarget = (node: Element) => Arr.contains(['figcaption'], Node.name(node));
+const isTarget = (node: Element) => Arr.contains([ 'figcaption' ], Node.name(node));
 
 const rangeBefore = (target: Element) => {
   const rng = document.createRange();

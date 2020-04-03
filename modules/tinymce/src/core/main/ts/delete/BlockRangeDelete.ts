@@ -21,19 +21,19 @@ const deleteRangeMergeBlocks = function (rootNode, selection: Selection) {
   return Options.lift2(
     DeleteUtils.getParentBlock(rootNode, Element.fromDom(rng.startContainer)),
     DeleteUtils.getParentBlock(rootNode, Element.fromDom(rng.endContainer)),
-   function (block1, block2) {
-    if (Compare.eq(block1, block2) === false) {
-      rng.deleteContents();
+    function (block1, block2) {
+      if (Compare.eq(block1, block2) === false) {
+        rng.deleteContents();
 
-      MergeBlocks.mergeBlocks(rootNode, true, block1, block2).each(function (pos) {
-        selection.setRng(pos.toRange());
-      });
+        MergeBlocks.mergeBlocks(rootNode, true, block1, block2).each(function (pos) {
+          selection.setRng(pos.toRange());
+        });
 
-      return true;
-    } else {
-      return false;
-    }
-  }).getOr(false);
+        return true;
+      } else {
+        return false;
+      }
+    }).getOr(false);
 };
 
 const isRawNodeInTable = function (root, rawNode) {
@@ -64,7 +64,7 @@ const deleteRange = function (editor: Editor) {
   return isEverythingSelected(rootNode, rng) ? emptyEditor(editor) : deleteRangeMergeBlocks(rootNode, editor.selection);
 };
 
-const backspaceDelete = function (editor: Editor, forward: boolean) {
+const backspaceDelete = function (editor: Editor, _forward: boolean) {
   return editor.selection.isCollapsed() ? false : deleteRange(editor);
 };
 

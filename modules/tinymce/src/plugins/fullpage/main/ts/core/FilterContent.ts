@@ -110,7 +110,7 @@ const handleSetContent = function (editor: Editor, headState, footState, evt) {
       dom.add(headElm, 'link', {
         'rel': 'stylesheet',
         'text': 'text/css',
-        'href': href,
+        href,
         'data-mce-fullpage': '1'
       });
     }

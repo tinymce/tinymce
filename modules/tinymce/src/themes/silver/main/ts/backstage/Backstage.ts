@@ -27,6 +27,7 @@ export interface UiFactoryBackstageProviders {
   icons: IconProvider;
   menuItems: () => Record<string, Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.ToggleMenuItemApi>;
   translate: (any) => TranslatedString;
+  isReadonly: () => boolean;
 }
 
 type UiFactoryBackstageForStyleButton = SelectData;
@@ -35,10 +36,10 @@ export interface UiFactoryBackstageShared {
   providers?: UiFactoryBackstageProviders;
   interpreter?: (spec: BridgedType) => AlloySpec;
   anchors?: {
-    inlineDialog: () => HotspotAnchorSpec | NodeAnchorSpec,
-    banner: () => HotspotAnchorSpec | NodeAnchorSpec,
-    cursor: () => SelectionAnchorSpec,
-    node: (elem: Option<Element>) => NodeAnchorSpec
+    inlineDialog: () => HotspotAnchorSpec | NodeAnchorSpec;
+    banner: () => HotspotAnchorSpec | NodeAnchorSpec;
+    cursor: () => SelectionAnchorSpec;
+    node: (elem: Option<Element>) => NodeAnchorSpec;
   };
   formInterpreter?: (parts: FormTypes.FormParts, spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
   getSink?: () => Result<AlloyComponent, any>;
@@ -61,7 +62,8 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
       providers: {
         icons: () => editor.ui.registry.getAll().icons,
         menuItems: () => editor.ui.registry.getAll().menuItems,
-        translate: I18n.translate
+        translate: I18n.translate,
+        isReadonly: () => editor.mode.isReadOnly()
       },
       interpreter: (s) => {
         return UiFactory.interpretWithoutForm(s, backstage);

@@ -15,7 +15,7 @@ import * as TouchBlockerEvents from './TouchBlockerEvents';
 import * as TouchData from './TouchData';
 import { TouchDraggingConfig } from './TouchDraggingTypes';
 
-const events = (dragConfig: TouchDraggingConfig, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void) => {
+const events = <E>(dragConfig: TouchDraggingConfig<E>, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void) => {
   const blockerCell = Cell<Option<AlloyComponent>>(Option.none());
 
   // Android fires events on the component at all times, while iOS initially fires on the component
@@ -33,9 +33,9 @@ const events = (dragConfig: TouchDraggingConfig, dragState: DraggingState, updat
       const dragApi: BlockerDragApi = {
         drop: stop,
         // delayDrop is not used by touch
-        delayDrop () { },
+        delayDrop() { },
         forceDrop: stop,
-        move (event) {
+        move(event) {
           DragUtils.move(component, dragConfig, dragState, TouchData, event);
         }
       };

@@ -96,7 +96,7 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
           }),
         ]
         : [
-          AlloyEvents.run(SystemEvents.highlight(), (comp, se) => {
+          AlloyEvents.run(SystemEvents.highlight(), (comp, _se) => {
             AlloyTriggers.emit(comp, ShowTooltipEvent);
           }),
           AlloyEvents.run(SystemEvents.dehighlight(), (comp) => {

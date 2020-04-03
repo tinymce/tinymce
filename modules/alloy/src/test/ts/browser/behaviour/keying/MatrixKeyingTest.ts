@@ -21,7 +21,7 @@ UnitTest.asynctest('Matrix Keying Test', (success, failure) => {
     'c19', 'c20', 'c21'
   ];
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const rows = Arr.chunk(cells, 6);
 
     const item = (classes: string[]) => {
@@ -51,7 +51,7 @@ UnitTest.asynctest('Matrix Keying Test', (success, failure) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
-          classes: [ 'matrix-keying-test'],
+          classes: [ 'matrix-keying-test' ],
           styles: {
             background: 'white',
             width: '150px',
@@ -83,7 +83,7 @@ UnitTest.asynctest('Matrix Keying Test', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, body, gui, _component, store) => {
 
     const targets: any = Objects.wrapAll(
       Arr.map(cells, (sq) => {

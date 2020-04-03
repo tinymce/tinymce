@@ -13,10 +13,10 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
   const fullStatusbarSpec = (s, str, arr) => {
     return [
       s.element('div', {
-        classes: [ arr.has('tox-statusbar__text-container')],
+        classes: [ arr.has('tox-statusbar__text-container') ],
         children: [
           s.element('div', {
-            classes: [ arr.has('tox-statusbar__path')],
+            classes: [ arr.has('tox-statusbar__path') ],
             children: [
               s.element('div', { children: [ s.text(str.is('p')) ] }),
               s.element('div', { children: [ s.text(str.is(' » ')) ] }),
@@ -24,11 +24,11 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
             ]
           }),
           s.element('button', {
-            classes: [ arr.has('tox-statusbar__wordcount')],
+            classes: [ arr.has('tox-statusbar__wordcount') ],
             children: [ s.text(str.is('2 words')) ]
           }),
           s.element('span', {
-            classes: [ arr.has('tox-statusbar__branding')],
+            classes: [ arr.has('tox-statusbar__branding') ],
             children: [
               s.element('a', { children: [ s.text(str.is('Powered by Tiny')) ] })
             ]
@@ -39,7 +39,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
         attrs: {
           'aria-hidden': str.is('true')
         },
-        classes: [ arr.has('tox-statusbar__resize-handle')],
+        classes: [ arr.has('tox-statusbar__resize-handle') ],
       })
     ];
   };
@@ -47,10 +47,10 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
   const statusbarWithoutWordcountSpec = (s, str, arr) => {
     return [
       s.element('div', {
-        classes: [ arr.has('tox-statusbar__text-container')],
+        classes: [ arr.has('tox-statusbar__text-container') ],
         children: [
           s.element('div', {
-            classes: [ arr.has('tox-statusbar__path')],
+            classes: [ arr.has('tox-statusbar__path') ],
             children: [
               s.element('div', { children: [ s.text(str.is('p')) ] }),
               s.element('div', { children: [ s.text(str.is(' » ')) ] }),
@@ -58,7 +58,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
             ]
           }),
           s.element('span', {
-            classes: [ arr.has('tox-statusbar__branding')],
+            classes: [ arr.has('tox-statusbar__branding') ],
             children: [
               s.element('a', { children: [ s.text(str.is('Powered by Tiny')) ] })
             ]
@@ -69,7 +69,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
         attrs: {
           'aria-hidden': str.is('true')
         },
-        classes: [ arr.has('tox-statusbar__resize-handle')],
+        classes: [ arr.has('tox-statusbar__resize-handle') ],
       })
     ];
   };
@@ -77,10 +77,10 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
   const statusbarWithoutResizeSpec = (s, str, arr) => {
     return [
       s.element('div', {
-        classes: [ arr.has('tox-statusbar__text-container')],
+        classes: [ arr.has('tox-statusbar__text-container') ],
         children: [
           s.element('div', {
-            classes: [ arr.has('tox-statusbar__path')],
+            classes: [ arr.has('tox-statusbar__path') ],
             children: [
               s.element('div', { children: [ s.text(str.is('p')) ] }),
               s.element('div', { children: [ s.text(str.is(' » ')) ] }),
@@ -88,7 +88,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
             ]
           }),
           s.element('span', {
-            classes: [ arr.has('tox-statusbar__branding')],
+            classes: [ arr.has('tox-statusbar__branding') ],
             children: [
               s.element('a', { children: [ s.text(str.is('Powered by Tiny')) ] })
             ]
@@ -135,7 +135,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
           children: [
             s.anything(),
             s.element('div', {
-              classes: [ arr.has('tox-statusbar')],
+              classes: [ arr.has('tox-statusbar') ],
               children: fullStatusbarSpec(s, str, arr)
             }),
             s.theRest()
@@ -156,7 +156,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
           children: [
             s.anything(),
             s.element('div', {
-              classes: [ arr.has('tox-statusbar')],
+              classes: [ arr.has('tox-statusbar') ],
               children: statusbarWithoutWordcountSpec(s, str, arr)
             }),
             s.theRest()
@@ -178,7 +178,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
           children: [
             s.anything(),
             s.element('div', {
-              classes: [ arr.has('tox-statusbar')],
+              classes: [ arr.has('tox-statusbar') ],
               children: statusbarWithoutResizeSpec(s, str, arr)
             }),
             s.theRest()
@@ -227,13 +227,13 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
               children: [
                 s.anything(),
                 s.element('div', {
-                  classes: [ arr.has('tox-statusbar')],
+                  classes: [ arr.has('tox-statusbar') ],
                   children: [
                     s.element('div', {
-                      classes: [ arr.has('tox-statusbar__text-container')],
+                      classes: [ arr.has('tox-statusbar__text-container') ],
                       children: [
                         s.element('div', {
-                          classes: [ arr.has('tox-statusbar__path')],
+                          classes: [ arr.has('tox-statusbar__path') ],
                           children: [
                             s.element('div', { children: [ s.text(str.is('p')) ] }),
                             s.element('div', { children: [ s.text(str.is(' » ')) ] }),
@@ -259,13 +259,13 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
               children: [
                 s.anything(),
                 s.element('div', {
-                  classes: [ arr.has('tox-statusbar')],
+                  classes: [ arr.has('tox-statusbar') ],
                   children: [
                     s.element('div', {
-                      classes: [ arr.has('tox-statusbar__text-container')],
+                      classes: [ arr.has('tox-statusbar__text-container') ],
                       children: [
                         s.element('div', {
-                          classes: [ arr.has('tox-statusbar__path')],
+                          classes: [ arr.has('tox-statusbar__path') ],
                           children: [
                             s.element('div', { children: [ s.text(str.is('p')) ] }),
                           ]

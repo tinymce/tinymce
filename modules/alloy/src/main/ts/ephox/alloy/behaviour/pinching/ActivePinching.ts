@@ -1,4 +1,4 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 import { TouchEvent } from '@ephox/dom-globals';
 import { EventArgs } from '@ephox/sugar';
 
@@ -8,7 +8,7 @@ import { PinchingConfig, PinchingState, PinchDragData } from '../../behaviour/pi
 import { DragModeDeltas } from '../../dragging/common/DraggingTypes';
 
 const mode: DragModeDeltas<PinchDragData> = {
-  getData (e: EventArgs<TouchEvent>)  {
+  getData(e: EventArgs<TouchEvent>)  {
     const raw = e.raw();
     const touches = raw.touches;
     if (touches.length < 2) { return Option.none(); }
@@ -16,24 +16,24 @@ const mode: DragModeDeltas<PinchDragData> = {
     const deltaX = Math.abs(touches[0].clientX - touches[1].clientX);
     const deltaY = Math.abs(touches[0].clientY - touches[1].clientY);
 
-    const distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+    const deltaDistance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
 
     return Option.some({
-      deltaX: Fun.constant(deltaX),
-      deltaY: Fun.constant(deltaY),
-      deltaDistance: Fun.constant(distance)
+      deltaX,
+      deltaY,
+      deltaDistance
     });
   },
 
-  getDelta (old, nu) {
-    const changeX = nu.deltaX() - old.deltaX();
-    const changeY = nu.deltaY() - old.deltaY();
-    const changeDistance = nu.deltaDistance() - old.deltaDistance();
+  getDelta(old, nu) {
+    const changeX = nu.deltaX - old.deltaX;
+    const changeY = nu.deltaY - old.deltaY;
+    const changeDistance = nu.deltaDistance - old.deltaDistance;
 
     return {
-      deltaX: Fun.constant(changeX),
-      deltaY: Fun.constant(changeY),
-      deltaDistance: Fun.constant(changeDistance)
+      deltaX: changeX,
+      deltaY: changeY,
+      deltaDistance: changeDistance
     };
   }
 };
@@ -49,9 +49,9 @@ const events = (pinchConfig: PinchingConfig, pinchState: PinchingState): AlloyEv
 
       const delta = pinchState.update(mode, simulatedEvent.event());
       delta.each((dlt) => {
-        const multiplier = dlt.deltaDistance() > 0 ? 1 : -1;
-        const changeX = multiplier * Math.abs(dlt.deltaX());
-        const changeY = multiplier * Math.abs(dlt.deltaY());
+        const multiplier = dlt.deltaDistance > 0 ? 1 : -1;
+        const changeX = multiplier * Math.abs(dlt.deltaX);
+        const changeY = multiplier * Math.abs(dlt.deltaY);
 
         const f = multiplier === 1 ? pinchConfig.onPunch : pinchConfig.onPinch;
         f(component.element(), changeX, changeY);

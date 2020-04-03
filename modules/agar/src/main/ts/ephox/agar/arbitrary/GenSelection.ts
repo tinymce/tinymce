@@ -18,13 +18,13 @@ const getEnd = (target: Element<any>): number => {
 
 const gChooseIn = (target: Element<any>): any => {
   const offsets = getEnd(target);
-  return Jsc.integer(0, offsets).generator.map((offset: number) => ({element: target, offset}));
+  return Jsc.integer(0, offsets).generator.map((offset: number) => ({ element: target, offset }));
 };
 
 const gChooseFrom = (root: Element<any>, exclusions: SelectionExclusions) => {
-  const self = exclusions.containers(root) ? [] : [root];
+  const self = exclusions.containers(root) ? [] : [ root ];
   const everything = PredicateFilter.descendants(root, Fun.not(exclusions.containers)).concat(self);
-  return Jsc.elements(everything.length > 0 ? everything : [root]).generator.flatMap(gChooseIn);
+  return Jsc.elements(everything.length > 0 ? everything : [ root ]).generator.flatMap(gChooseIn);
 };
 
 const selection = (root: Element<any>, rawExclusions: SelectionExclusions) => {

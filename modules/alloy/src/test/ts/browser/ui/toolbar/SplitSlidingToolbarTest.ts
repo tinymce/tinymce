@@ -15,7 +15,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
   // viewed as an invalid value.
   if (PhantomSkipper.skip()) { return success(); }
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const pPrimary = SplitSlidingToolbar.parts().primary({
       dom: {
         tag: 'div',
@@ -71,7 +71,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
         }
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, _gui, component, store) => {
 
     const makeButton = (itemSpec: { text: string }) => {
       return Button.sketch({
@@ -132,7 +132,7 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
     const sAssertGroups = (label: string, pGroups: StructAssert[], oGroups: StructAssert[]) => {
       return Assertions.sAssertStructure(
         label,
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, _str, arr) => {
           return s.element('div', {
             children: [
               s.element('div', {
@@ -168,9 +168,9 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
 
       Step.sync(() => {
         const groups = TestPartialToolbarGroup.createGroups([
-          { items: Arr.map([ { text: 'A' }, { text: 'B' } ], makeButton) },
-          { items: Arr.map([ { text: 'C' }, { text: 'D' } ], makeButton) },
-          { items: Arr.map([ { text: 'E' }, { text: 'F' }, { text: 'G' } ], makeButton) }
+          { items: Arr.map([{ text: 'A' }, { text: 'B' }], makeButton) },
+          { items: Arr.map([{ text: 'C' }, { text: 'D' }], makeButton) },
+          { items: Arr.map([{ text: 'E' }, { text: 'F' }, { text: 'G' }], makeButton) }
         ]);
         SplitSlidingToolbar.setGroups(component, groups);
         SplitSlidingToolbar.toggle(component);

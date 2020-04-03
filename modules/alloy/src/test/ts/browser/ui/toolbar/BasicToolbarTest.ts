@@ -10,7 +10,7 @@ import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
 import * as TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
 
 UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         components: [
@@ -48,7 +48,7 @@ UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, _gui, component, _store) => {
     const makeButton = (itemSpec: { text: string }) => {
       return Button.sketch({
         dom: {
@@ -69,7 +69,7 @@ UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'Checking initial structure of toolbar',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('div', {
             children: [
               s.element('div', {
@@ -96,14 +96,14 @@ UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
       Step.sync(() => {
         TestPartialToolbarGroup.setGroups(t1, [
           {
-            items: Arr.map([ { text: 'a1' }, { text: 'a2' } ], makeButton)
+            items: Arr.map([{ text: 'a1' }, { text: 'a2' }], makeButton)
           }
         ]);
       }),
 
       Assertions.sAssertStructure(
         'Checking structure of toolbar after adding groups to shell-toolbar',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('div', {
             children: [
               s.element('div', {
@@ -141,14 +141,14 @@ UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
       Step.sync(() => {
         TestPartialToolbarGroup.setGroups(t2, [
           {
-            items: Arr.map([ { text: 'b1' }, { text: 'b2' } ], makeButton)
+            items: Arr.map([{ text: 'b1' }, { text: 'b2' }], makeButton)
           }
         ]);
       }),
 
       Assertions.sAssertStructure(
         'Checking structure of toolbar after adding groups to not-shell-toolbar',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('div', {
             children: [
               s.element('div', {

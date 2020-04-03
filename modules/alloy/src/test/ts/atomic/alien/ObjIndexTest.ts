@@ -10,7 +10,7 @@ UnitTest.test('ObjIndexTest', () => {
   };
 
   const sortObjValue = (obj: Record<string, any[]>) => {
-    return Obj.map(obj, (array, k) => {
+    return Obj.map(obj, (array, _k) => {
       return array.slice(0).sort((a, b) => {
         if (a.country < b.country) { return -1; } else if (a.country > b.country) { return +1; } else { return 0; }
       });
@@ -38,7 +38,7 @@ UnitTest.test('ObjIndexTest', () => {
         }
       }, tuple);
       assertSortedEq('Checking grouping', {
-        population: [ { country: 'aus', value: 100 }]
+        population: [{ country: 'aus', value: 100 }]
       }, actual);
     }
   );

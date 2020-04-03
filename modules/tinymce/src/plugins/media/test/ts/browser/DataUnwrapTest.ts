@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
         value: 'www.altsource.com',
         meta: {}
       },
-      poster: { value: '', meta: {} },
+      poster: { value: '', meta: {}},
       embed: '',
     };
 
@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.core.DataToHtmlTest', function (success, failure) {
       Assertions.sAssertEq('Test unwrap with dimensions', outputDataWithDimensions, Dialog.unwrap(inputDataWithDimensions, 'source')),
     ]), onSuccess, onFailure);
   }, {
-    plugins: ['media'],
+    plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',

@@ -5,7 +5,7 @@ export const registerDemoMenuItems = () => {
   getDemoRegistry().addMenuItem('code', {
     icon: 'code',
     text: 'Code',
-    onAction: (api) => {
+    onAction: (_api) => {
       // tslint:disable-next-line:no-console
       console.log('open source code dialog');
     }
@@ -20,7 +20,7 @@ export const registerDemoMenuItems = () => {
       api.setActive(true);
       return () => { };
     },
-    onAction: (api) => {
+    onAction: (_api) => {
       // tslint:disable-next-line:no-console
       console.log('bold');
     }

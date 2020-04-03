@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
 
     DOM.add(document.body, 'div', { id : 'test' });
 
-    dom = DOMUtils(document, { hex_colors : true, keep_values : true, url_converter (u) {
+    dom = DOMUtils(document, { hex_colors : true, keep_values : true, url_converter(u) {
       return 'X' + u + 'Y';
     } });
 
@@ -54,26 +54,26 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
 
     LegacyUnit.equal(
       dom.serializeStyle(dom.parseStyle('background: transparent url(test.gif);')),
-      'background: transparent url(\'Xtest.gifY\');'
+      `background: transparent url('Xtest.gifY');`
     );
 
     LegacyUnit.equal(
       dom.serializeStyle(dom.parseStyle('background: transparent url(http://www.site.com/test.gif?a=1&b=2);')),
-      'background: transparent url(\'Xhttp://www.site.com/test.gif?a=1&b=2Y\');'
+      `background: transparent url('Xhttp://www.site.com/test.gif?a=1&b=2Y');`
     );
 
     dom.setHTML('test', '<span id="test2" style="   margin-left: 1px;    margin-top: 1px;   margin-right: 1px;   margin-bottom: 1px   "></span>');
     LegacyUnit.equal(dom.getAttrib('test2', 'style'), 'margin: 1px;');
 
     dom.setHTML('test', '<span id="test2" style="background-image: url(test.gif);"></span>');
-    LegacyUnit.equal(dom.getAttrib('test2', 'style'), 'background-image: url(\'Xtest.gifY\');');
+    LegacyUnit.equal(dom.getAttrib('test2', 'style'), `background-image: url('Xtest.gifY');`);
 
     // dom.get('test').innerHTML = '<span id="test2" style="border: 1px solid #00ff00"></span>';
     // LegacyUnit.equal(dom.getAttrib('test2', 'style'), Env.ue && !window.getSelection ?
     // 'border: #00ff00 1px solid;' : 'border: 1px solid #00ff00;'); // IE has a separate output
 
     dom.get('test').innerHTML = '<span id="test2" style="background-image: url(http://www.site.com/test.gif);"></span>';
-    LegacyUnit.equal(dom.getAttrib('test2', 'style'), 'background-image: url(\'Xhttp://www.site.com/test.gifY\');');
+    LegacyUnit.equal(dom.getAttrib('test2', 'style'), `background-image: url('Xhttp://www.site.com/test.gifY');`);
 
     DOM.remove('test');
   });
@@ -163,7 +163,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     DOM.remove(e);
 
     DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
-    DOM.add(['test2', 'test3', 'test4'], 'span', { class : 'abc 123' });
+    DOM.add([ 'test2', 'test3', 'test4' ], 'span', { class : 'abc 123' });
     LegacyUnit.equal(DOM.select('span', 'test').length, 6);
 
     DOM.remove('test');
@@ -243,7 +243,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
   });
 
   suite.test('encode', function () {
-    LegacyUnit.equal(DOM.encode('abc<>"&\'\u00e5\u00e4\u00f6'), 'abc&lt;&gt;&quot;&amp;&#39;\u00e5\u00e4\u00f6');
+    LegacyUnit.equal(DOM.encode(`abc<>"&'\u00e5\u00e4\u00f6`), 'abc&lt;&gt;&quot;&amp;&#39;\u00e5\u00e4\u00f6');
   });
 
   suite.test('setGetAttrib', function () {
@@ -267,7 +267,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     LegacyUnit.equal(DOM.getAttrib('test', 'class'), '123');
     LegacyUnit.equal(DOM.getAttrib('test', 'title'), 'abc');
 
-    dom = DOMUtils(document, { keep_values : true, url_converter (u, n) {
+    dom = DOMUtils(document, { keep_values : true, url_converter(u, n) {
       return '&<>"' + u + '&<>"' + n;
     } });
 
@@ -500,7 +500,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     }
 
     // Create an iframe to load in, so that we are using a different document. Otherwise DOMUtils will fallback to using the default.
-    const iframe = DOM.create('iframe', { src: 'javascript=\'\'' }) as HTMLIFrameElement;
+    const iframe = DOM.create('iframe', { src: `javascript=''` }) as HTMLIFrameElement;
     DOM.add(document.body, iframe);
 
     const iframeDoc = iframe.contentWindow.document;
@@ -768,13 +768,13 @@ UnitTest.asynctest('browser.tinymce.core.dom.DomUtilsTest', function (success, f
     LegacyUnit.equal(count, 1);
 
     count = 0;
-    DOM.bind([document, window], 'click', function (e) {
+    DOM.bind([ document, window ], 'click', function (e) {
       e.stopPropagation();
       count++;
     });
     DOM.fire(document, 'click');
     DOM.fire(window, 'click');
-    DOM.unbind([document, window], 'click');
+    DOM.unbind([ document, window ], 'click');
     LegacyUnit.equal(count, 2);
 
     count = 0;

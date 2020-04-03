@@ -13,7 +13,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('Focus Modes Test', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     const makeContainer = (name: string, mode: FocusInsideModes): AlloySpec => {
       return {
         dom: {
@@ -49,7 +49,7 @@ UnitTest.asynctest('Focus Modes Test', (success, failure) => {
       {
         dom: {
           tag: 'div',
-          classes: [ 'cyclic-keying-test'],
+          classes: [ 'cyclic-keying-test' ],
           styles: {
             background: 'blue',
             width: '200px',
@@ -64,7 +64,7 @@ UnitTest.asynctest('Focus Modes Test', (success, failure) => {
       }
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, _gui, component, _store) => {
     const onApiComp = SelectorFind.descendant(component.element(), '.onApi').bind((elem) => {
       return component.getSystem().getByDom(elem).toOption();
     }).getOrDie('Could not find "onApi" div');

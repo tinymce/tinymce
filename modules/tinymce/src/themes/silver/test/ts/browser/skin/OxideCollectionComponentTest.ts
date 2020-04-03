@@ -103,36 +103,36 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
           navigator.userAgent.indexOf('PhantomJS') > -1 ?
             FocusTools.sSetFocus('Force focus to F on phantom', Body.body(), '.tox-collection__item:contains("F")')
             : Logger.t(
-            'Checking the second collection: columns = auto',
-            GeneralSteps.sequence([
-              Chain.asStep(Body.body(), [
-                cFindNthIn('[role="dialog"] .tox-form__group .tox-collection', 1),
-                Assertions.cAssertStructure(
-                  'Checking structure',
-                  ApproxStructure.build((s, str, arr) => {
-                    return s.element('div', {
-                      classes: [ arr.has('tox-collection'), arr.has('tox-collection--grid'), arr.not('tox-menu') ],
-                      children: [
-                        s.element('div', {
-                          classes: [ arr.has('tox-collection__group') ],
-                          children: Arr.map([ 'D', 'E', 'F' ], (letter) =>
-                            structureItem(Option.none(), Option.some('icon-' + letter))(s, str, arr)
-                          )
-                        })
-                      ]
-                    });
-                  })
-                )
-              ]),
-              FocusTools.sTryOnSelector('Focus should be on C', doc, '.tox-collection__item:contains(C)'),
-              Keyboard.sKeydown(doc, Keys.tab(), { }),
-              FocusTools.sTryOnSelector('Focus should be on D', doc, '.tox-collection__item:contains(D)'),
-              Keyboard.sKeydown(doc, Keys.right(), { }),
-              FocusTools.sTryOnSelector('Focus should be on E', doc, '.tox-collection__item:contains(E)'),
-              Keyboard.sKeydown(doc, Keys.right(), { }),
-              FocusTools.sTryOnSelector('Focus should be on F', doc, '.tox-collection__item:contains(F)'),
-            ])
-          ),
+              'Checking the second collection: columns = auto',
+              GeneralSteps.sequence([
+                Chain.asStep(Body.body(), [
+                  cFindNthIn('[role="dialog"] .tox-form__group .tox-collection', 1),
+                  Assertions.cAssertStructure(
+                    'Checking structure',
+                    ApproxStructure.build((s, str, arr) => {
+                      return s.element('div', {
+                        classes: [ arr.has('tox-collection'), arr.has('tox-collection--grid'), arr.not('tox-menu') ],
+                        children: [
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__group') ],
+                            children: Arr.map([ 'D', 'E', 'F' ], (letter) =>
+                              structureItem(Option.none(), Option.some('icon-' + letter))(s, str, arr)
+                            )
+                          })
+                        ]
+                      });
+                    })
+                  )
+                ]),
+                FocusTools.sTryOnSelector('Focus should be on C', doc, '.tox-collection__item:contains(C)'),
+                Keyboard.sKeydown(doc, Keys.tab(), { }),
+                FocusTools.sTryOnSelector('Focus should be on D', doc, '.tox-collection__item:contains(D)'),
+                Keyboard.sKeydown(doc, Keys.right(), { }),
+                FocusTools.sTryOnSelector('Focus should be on E', doc, '.tox-collection__item:contains(E)'),
+                Keyboard.sKeydown(doc, Keys.right(), { }),
+                FocusTools.sTryOnSelector('Focus should be on F', doc, '.tox-collection__item:contains(F)'),
+              ])
+            ),
 
           Logger.t(
             'Checking the third collection: columns = 2',

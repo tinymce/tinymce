@@ -63,7 +63,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
             Keying.focusIn(dialog);
           }),
 
-          AlloyEvents.run(dialogIdleEvent, (blocker, se) => {
+          AlloyEvents.run(dialogIdleEvent, (_blocker, _se) => {
             if (Attr.has(dialog.element(), 'aria-busy')) {
               Attr.remove(dialog.element(), 'aria-busy');
               busyComp.get().each((bc) => Replacing.remove(dialog, bc));
@@ -122,7 +122,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
   const modalEventsId = Id.generate('modal-events');
   const eventOrder = {
     ...detail.eventOrder,
-    'alloy.system.attached': [modalEventsId].concat(detail.eventOrder['alloy.system.attached'] || [])
+    'alloy.system.attached': [ modalEventsId ].concat(detail.eventOrder['alloy.system.attached'] || [])
   };
 
   return {

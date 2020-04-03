@@ -1,8 +1,9 @@
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { Attr, Element, Insert, InsertAll, Remove, Replication, SelectorFind, Traverse } from '@ephox/sugar';
-import { RowDataNew, DetailNew, Detail } from '../api/Structs';
+import { Detail, DetailNew, RowDataNew } from '../api/Structs';
+import { Node as DomNode } from '@ephox/dom-globals';
 
-const setIfNot = function (element: Element, property: string, value: number, ignore: number) {
+const setIfNot = function (element: Element, property: string, value: number, ignore: number): void {
   if (value === ignore) {
     Attr.remove(element, property);
   } else {
@@ -10,7 +11,12 @@ const setIfNot = function (element: Element, property: string, value: number, ig
   }
 };
 
-const render = function <T extends DetailNew>(table: Element, grid: RowDataNew<T>[]) {
+interface NewRowsAndCells {
+  readonly newRows: Element[];
+  readonly newCells: Element[];
+}
+
+const render = function <T extends DetailNew> (table: Element, grid: RowDataNew<T>[]): NewRowsAndCells {
   const newRows: Element[] = [];
   const newCells: Element[] = [];
 
@@ -78,13 +84,13 @@ const render = function <T extends DetailNew>(table: Element, grid: RowDataNew<T
   renderOrRemoveSection(footSection, 'tfoot');
 
   return {
-    newRows: Fun.constant(newRows),
-    newCells: Fun.constant(newCells)
+    newRows,
+    newCells
   };
 };
 
-const copy = function <T extends Detail> (grid: RowDataNew<T>[]) {
-  const rows = Arr.map(grid, function (row) {
+const copy = function <T extends Detail> (grid: RowDataNew<T>[]): Element<DomNode>[] {
+  return Arr.map(grid, function (row) {
     // Shallow copy the row element
     const tr = Replication.shallow(row.element());
     Arr.each(row.cells(), function (cell) {
@@ -95,7 +101,6 @@ const copy = function <T extends Detail> (grid: RowDataNew<T>[]) {
     });
     return tr;
   });
-  return rows;
 };
 
 export {

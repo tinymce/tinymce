@@ -10,7 +10,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('SpecialKeyingFocusInTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       {
         dom: {
@@ -50,7 +50,7 @@ UnitTest.asynctest('SpecialKeyingFocusInTest', (success, failure) => {
       }
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, body, _gui, component, store) => {
     const oneComp = SelectorFind.descendant(component.element(), '.one').bind((elem) => {
       return component.getSystem().getByDom(elem).toOption();
     }).getOrDie('Could not find "one" div');

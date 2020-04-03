@@ -52,7 +52,7 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
       '</div>';
   };
 
-  const makeLink = (p: {name: string, url: string}): string =>
+  const makeLink = (p: {name: string; url: string}): string =>
     `<a href="${p.url}" target="_blank" rel="noopener">${p.name}</a>`;
 
   const maybeUrlize = (editor, key: string) => {
@@ -81,7 +81,7 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
     const count = pluginLis.length;
     const pluginsString = pluginLis.join('');
 
-    const html = '<p><b>' + I18n.translate(['Plugins installed ({0}):', count]) + '</b></p>' +
+    const html = '<p><b>' + I18n.translate([ 'Plugins installed ({0}):', count ]) + '</b></p>' +
       '<ul>' + pluginsString + '</ul>';
 
     return html;

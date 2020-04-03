@@ -45,7 +45,7 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
   }));
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       return GuiFactory.build(
         renderCustomEditor({
           type: 'customeditor',
@@ -54,19 +54,19 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
           scriptId: 'BasicCustomEditorTest',
           scriptUrl: '/custom/404', // using the cache
           settings: undefined
-         })
+        })
       );
     },
-    (doc, body, gui, component, store) => {
+    (_doc, _body, _gui, component, _store) => {
 
       return [
         Assertions.sAssertStructure(
           'Checking initial structure',
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, _str, arr) => {
             return s.element('div', {
               children: [
                 s.element('textarea', {
-                  classes: [arr.not('my-custom-editor')]
+                  classes: [ arr.not('my-custom-editor') ]
                 })
               ]
             });
@@ -91,11 +91,11 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
           'Waiting for CustomEditor init',
           Assertions.sAssertStructure(
             'Checking structure after init',
-            ApproxStructure.build((s, str, arr) => {
+            ApproxStructure.build((s, _str, arr) => {
               return s.element('div', {
                 children: [
                   s.element('textarea', {
-                    classes: [arr.has('my-custom-editor')]
+                    classes: [ arr.has('my-custom-editor') ]
                   })
                 ]
               });

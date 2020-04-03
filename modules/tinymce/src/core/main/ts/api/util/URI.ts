@@ -38,7 +38,7 @@ export interface URIConstructor {
 
 class URI {
 
-  public static parseDataUri (uri: string): { type: string; data: string} {
+  public static parseDataUri(uri: string): { type: string; data: string} {
     let type;
 
     const uriComponents = decodeURIComponent(uri).split(',');
@@ -54,7 +54,7 @@ class URI {
     };
   }
 
-  public static getDocumentBaseUrl (loc: { protocol: string; host?: string; href?: string; pathname?: string }): string {
+  public static getDocumentBaseUrl(loc: { protocol: string; host?: string; href?: string; pathname?: string }): string {
     let baseUrl;
 
     // Pass applewebdata:// and other non web protocols though
@@ -99,7 +99,7 @@ class URI {
    * @param {String} url URI string to parse.
    * @param {Object} settings Optional settings object.
    */
-  constructor(url: string, settings?: URISettings) {
+  public constructor(url: string, settings?: URISettings) {
     url = trim(url);
     this.settings = settings || {};
     const baseUri: URI = this.settings.base_uri;
@@ -122,7 +122,7 @@ class URI {
     // Relative path http:// or protocol relative //path
     if (!/^[\w\-]*:?\/\//.test(url)) {
       const baseUrl = this.settings.base_uri ? this.settings.base_uri.path : new URI(document.location.href).directory;
-      // tslint:disable-next-line:triple-equals
+      // eslint-disable-next-line eqeqeq
       if (this.settings.base_uri && this.settings.base_uri.protocol == '') {
         url = '//mce_host' + self.toAbsPath(baseUrl, url);
       } else {
@@ -178,7 +178,7 @@ class URI {
    * @method setPath
    * @param {string} path Path string to set.
    */
-  public setPath (path: string) {
+  public setPath(path: string) {
     const pathMatch = /^(.*?)\/?(\w+)?$/.exec(path);
 
     // Update path parts
@@ -201,7 +201,7 @@ class URI {
    * // Converts an absolute URL to an relative URL url will be somedir/somefile.htm
    * var url = new tinymce.util.URI('http://www.site.com/dir/').toRelative('http://www.site.com/dir/somedir/somefile.htm');
    */
-  public toRelative (uri: string): string {
+  public toRelative(uri: string): string {
     let output;
 
     if (uri === './') {
@@ -249,7 +249,7 @@ class URI {
    * // Converts an relative URL to an absolute URL url will be http://www.site.com/dir/somedir/somefile.htm
    * var url = new tinymce.util.URI('http://www.site.com/dir/').toAbsolute('somedir/somefile.htm');
    */
-  public toAbsolute (uri: string, noHost?: boolean): string {
+  public toAbsolute(uri: string, noHost?: boolean): string {
     const absoluteUri = new URI(uri, { base_uri: this });
 
     return absoluteUri.getURI(noHost && this.isSameOrigin(absoluteUri));
@@ -264,16 +264,16 @@ class URI {
    * @param {tinymce.util.URI} uri Uri instance to compare.
    * @returns {Boolean} True if the origins are the same.
    */
-  public isSameOrigin (uri: URI): boolean {
-    // tslint:disable-next-line:triple-equals
+  public isSameOrigin(uri: URI): boolean {
+    // eslint-disable-next-line eqeqeq
     if (this.host == uri.host && this.protocol == uri.protocol) {
-      // tslint:disable-next-line:triple-equals
+      // eslint-disable-next-line eqeqeq
       if (this.port == uri.port) {
         return true;
       }
 
       const defaultPort = DEFAULT_PORTS[this.protocol];
-      // tslint:disable-next-line:triple-equals
+      // eslint-disable-next-line eqeqeq
       if (defaultPort && ((this.port || defaultPort) == (uri.port || defaultPort))) {
         return true;
       }
@@ -289,7 +289,7 @@ class URI {
    * @param {String} base Base point to convert the path from.
    * @param {String} path Absolute path to convert into a relative path.
    */
-  public toRelPath (base: string, path: string): string {
+  public toRelPath(base: string, path: string): string {
     let items, breakPoint = 0, out = '', i, l;
 
     // Split the paths
@@ -340,7 +340,7 @@ class URI {
    * @param {String} base Base point to convert the path from.
    * @param {String} path Relative path to convert into an absolute path.
    */
-  public toAbsPath (base: string, path: string): string {
+  public toAbsPath(base: string, path: string): string {
     let i, nb = 0, o = [], tr, outPath;
 
     // Split paths
@@ -407,7 +407,7 @@ class URI {
    * @method getURI
    * @param {Boolean} noProtoHost Optional no host and protocol part. Defaults to false.
    */
-  public getURI (noProtoHost: boolean = false): string {
+  public getURI(noProtoHost: boolean = false): string {
     let s;
 
     // Rebuild source

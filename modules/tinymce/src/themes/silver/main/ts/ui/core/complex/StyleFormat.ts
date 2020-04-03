@@ -73,7 +73,7 @@ const isSelectorFormat = (format: AllowedFormat): format is SelectorStyleFormat 
 type FormatTypes = Separator | FormatReference | NestedFormatting;
 
 interface CustomFormatMapping {
-  customFormats: { name: string, format: StyleFormat }[];
+  customFormats: { name: string; format: StyleFormat }[];
   formats: FormatTypes[];
 }
 
@@ -102,7 +102,7 @@ const mapFormats = (userFormats: AllowedFormat[]): CustomFormatMapping => {
 const registerCustomFormats = (editor: Editor, userFormats: AllowedFormat[]): FormatTypes[] => {
   const result = mapFormats(userFormats);
 
-  const registerFormats = (customFormats: {name: string, format: StyleFormat}[]) => {
+  const registerFormats = (customFormats: {name: string; format: StyleFormat}[]) => {
     Arr.each(customFormats, (fmt) => {
       // Only register the custom format with the editor, if it's not already registered
       if (!editor.formatter.has(fmt.name)) {

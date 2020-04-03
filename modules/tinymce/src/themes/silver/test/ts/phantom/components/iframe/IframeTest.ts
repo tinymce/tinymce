@@ -56,17 +56,17 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
     // Can't check content inside the iframe due to permission issues.
     // So instead, check that there is a source tag now.
     return Assertions.sAssertStructure(
-        'Checking to see that the src tag is now set on the iframe',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('iframe', {
-            classes: [ ],
-            attrs: {
-              srcdoc: str.contains(content)
-            }
-          });
-        }),
-        frame.element()
-      );
+      'Checking to see that the src tag is now set on the iframe',
+      ApproxStructure.build((s, str, _arr) => {
+        return s.element('iframe', {
+          classes: [ ],
+          attrs: {
+            srcdoc: str.contains(content)
+          }
+        });
+      }),
+      frame.element()
+    );
   };
 
   const sAssertStandardIframeContent = (frame: AlloyComponent) => {
@@ -74,11 +74,11 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
     //       as attempting to use sAssertStructure is throwing permission errors from tests
     return Assertions.sAssertStructure(
       'Checking to see that the src tag is now set on the iframe',
-      ApproxStructure.build((s, str, arr) => {
+      ApproxStructure.build((s, str, _arr) => {
         return s.element('iframe', {
           classes: [],
           attrs: {
-            src: str.is('javascript:\'\'')
+            src: str.is(`javascript:''`)
           }
         });
       }),
@@ -87,7 +87,7 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
   };
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       return GuiFactory.build(
         renderIFrame({
           name: 'frame-a',
@@ -96,7 +96,7 @@ UnitTest.asynctest('IFrame component Test', (success, failure) => {
         }, TestProviders)
       );
     },
-    (doc, body, gui, component, store) => {
+    (_doc, _body, _gui, component, _store) => {
 
       const frame = Composing.getCurrent(component).getOrDie(
         'Could not find internal frame field'

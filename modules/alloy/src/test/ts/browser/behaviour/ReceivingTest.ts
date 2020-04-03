@@ -11,11 +11,11 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('ReceivingTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
-          classes: [ 'receiving-test']
+          classes: [ 'receiving-test' ]
         },
         uid: 'custom-uid',
         containerBehaviours: Behaviour.derive([
@@ -28,7 +28,7 @@ UnitTest.asynctest('ReceivingTest', (success, failure) => {
                 schema: ValueSchema.objOfOnly([
                   FieldSchema.strict('dummy')
                 ]),
-                onReceive (component, data) {
+                onReceive(_component, data) {
                   store.adder('received: ' + data.dummy)();
                 }
               }
@@ -41,7 +41,7 @@ UnitTest.asynctest('ReceivingTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, gui, _component, store) => {
     return [
       store.sAssertEq('No messages yet', [ ]),
       Step.sync(() => {

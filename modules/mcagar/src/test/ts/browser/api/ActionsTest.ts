@@ -35,7 +35,7 @@ UnitTest.asynctest('ActionTest', (success, failure) =>  {
   };
 
   const sTestStep = Chain.asStep({}, [
-    Editor.cFromSettings({base_url: '/project/tinymce/js/tinymce'}),
+    Editor.cFromSettings({ base_url: '/project/tinymce/js/tinymce' }),
     cAssertContentKeyboardEvent(ActionChains.cContentKeypress, {
       type: 'keypress',
       code: 88,
@@ -56,7 +56,7 @@ UnitTest.asynctest('ActionTest', (success, failure) =>  {
         meta: true
       }
     }),
-    Waiter.cTryUntilPredicate('Wait for 2 assertions', (x) => count === 2),
+    Waiter.cTryUntilPredicate('Wait for 2 assertions', (_x) => count === 2),
     Editor.cRemove
   ]);
 

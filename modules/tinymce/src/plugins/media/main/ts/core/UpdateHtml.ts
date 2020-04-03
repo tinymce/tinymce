@@ -12,19 +12,18 @@ import Schema from 'tinymce/core/api/html/Schema';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import * as Size from './Size';
 import { MediaData } from './Types';
+import { Obj } from '@ephox/katamari';
 
 const DOM = DOMUtils.DOM;
 
-type AttrList = Array<{ name: string, value: string }> & { map: Record<string, string> };
+type AttrList = Array<{ name: string; value: string }> & { map: Record<string, string> };
 
 const setAttributes = function (attrs: AttrList, updatedAttrs: Record<string, any>) {
-  let name;
   let i;
-  let value;
   let attr;
 
-  for (name in updatedAttrs) {
-    value = '' + updatedAttrs[name];
+  Obj.each(updatedAttrs, (value, name) => {
+    value = '' + value;
 
     if (attrs.map[name]) {
       i = attrs.length;
@@ -49,7 +48,7 @@ const setAttributes = function (attrs: AttrList, updatedAttrs: Record<string, an
 
       attrs.map[name] = value;
     }
-  }
+  });
 };
 
 const normalizeHtml = function (html: string): string {
@@ -59,7 +58,7 @@ const normalizeHtml = function (html: string): string {
   return writer.getContent();
 };
 
-const sources = ['source', 'altsource'];
+const sources = [ 'source', 'altsource' ];
 
 const updateHtmlSax = function (html: string, data: Partial<MediaData>, updateAll?: boolean): string {
   const writer = Writer();
@@ -70,19 +69,19 @@ const updateHtmlSax = function (html: string, data: Partial<MediaData>, updateAl
     validate: false,
     allow_conditional_comments: true,
 
-    comment (text) {
+    comment(text) {
       writer.comment(text);
     },
 
-    cdata (text) {
+    cdata(text) {
       writer.cdata(text);
     },
 
-    text (text, raw) {
+    text(text, raw) {
       writer.text(text, raw);
     },
 
-    start (name, attrs, empty) {
+    start(name, attrs, empty) {
       switch (name) {
         case 'video':
         case 'object':
@@ -146,7 +145,7 @@ const updateHtmlSax = function (html: string, data: Partial<MediaData>, updateAl
       writer.start(name, attrs, empty);
     },
 
-    end (name) {
+    end(name) {
       if (name === 'video' && updateAll) {
         for (let index = 0; index < 2; index++) {
           if (data[sources[index]]) {

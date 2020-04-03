@@ -12,7 +12,7 @@ import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviou
 
 UnitTest.asynctest('ReflectingTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const makeChild = (label: string) => {
       return {
         dom: {
@@ -105,7 +105,7 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
             behaviours: Behaviour.derive([
               Reflecting.config({
                 channel: 'channel-3',
-                renderComponents: (input, state) => Arr.map(state.map((s) => s.state).getOr([ ]), makeChild),
+                renderComponents: (_input, state) => Arr.map(state.map((s) => s.state).getOr([ ]), makeChild),
                 updateState: (_c, input) => Option.some({ state: input })
               })
             ])
@@ -113,7 +113,7 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
         ]
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, gui, component, store) => {
     const sAssertReflectState = (label: string, expected: any, selector: string) => {
       return Chain.asStep(component.element(), [
         UiFinder.cFindIn(selector),
@@ -140,7 +140,7 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
       store.sClear,
       Assertions.sAssertStructure(
         'Checking initial structure',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('div', {
             children: [
               s.element('div', {
@@ -173,10 +173,10 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
       ),
 
       Step.sync(() => {
-        gui.broadcastOn([ 'channel-1' ], {blah: true});
+        gui.broadcastOn([ 'channel-1' ], { blah: true });
       }),
 
-      sAssertReflectState('reflector 1', {blah: true}, '.reflector-1'),
+      sAssertReflectState('reflector 1', { blah: true }, '.reflector-1'),
       store.sAssertEq('No attached/detached should have occurred', [ ]),
 
       Step.sync(() => {
@@ -198,7 +198,7 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'Checking structure after broadcast on channel-2',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('div', {
             children: [
               s.element('div', {
@@ -239,7 +239,7 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'Checking structure after broadcast on channel-3',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('div', {
             children: [
               s.element('div', {

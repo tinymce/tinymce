@@ -42,7 +42,7 @@ export default function (sink?: AlloyComponent): UiFactoryBackstage {
       addToHistory: () => {},
       getLinkInformation: () => Option.none(),
       getValidationHandler: () => Option.none(),
-      getUrlPicker: (filetype) => Option.some((entry: ApiUrlData) => {
+      getUrlPicker: (_filetype) => Option.some((entry: ApiUrlData) => {
         return Future.pure(entry);
       })
     },

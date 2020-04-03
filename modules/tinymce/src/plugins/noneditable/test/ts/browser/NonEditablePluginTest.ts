@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.noneditable.NonEditablePluginTest', 
   }, {
     add_unload_trigger: false,
     indent: false,
-    noneditable_regexp: [/\{[^\}]+\}/g],
+    noneditable_regexp: [ /\{[^\}]+\}/g ],
     plugins: 'noneditable',
     entities: 'raw',
     base_url: '/project/tinymce/js/tinymce'

@@ -24,10 +24,10 @@
  * @version 3.4
  */
 
-import { Unicode } from '@ephox/katamari';
+import { Unicode, Obj } from '@ephox/katamari';
 import Schema from './Schema';
 
-export interface StyleMap { [s: string]: string | number; }
+export interface StyleMap { [s: string]: string | number }
 interface Styles {
   toHex(color: string): string;
   parse(css: string): Record<string, string>;
@@ -45,8 +45,8 @@ const toHex = (match: string, r: string, g: string, b: string) => {
 };
 
 const Styles = function (settings?, schema?: Schema): Styles {
-  /*jshint maxlen:255 */
-  /*eslint max-len:0 */
+  /* jshint maxlen:255 */
+  /* eslint max-len:0 */
   const rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi;
   const urlOrStrRegExp = /(?:url(?:(?:\(\s*\"([^\"]+)\"\s*\))|(?:\(\s*\'([^\']+)\'\s*\))|(?:\(\s*([^)\s]+)\s*\))))|(?:\'([^\']+)\')|(?:\"([^\"]+)\")/gi;
   const styleRegExp = /\s*([^:]+):\s*([^;]+);?/g;
@@ -65,7 +65,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
     invalidStyles = schema.getInvalidStyles();
   }
 
-  encodingItems = ('\\" \\\' \\; \\: ; : ' + invisibleChar).split(' ');
+  encodingItems = (`\\" \\' \\; \\: ; : ` + invisibleChar).split(' ');
   for (i = 0; i < encodingItems.length; i++) {
     encodingLookup[encodingItems[i]] = invisibleChar + i;
     encodingLookup[invisibleChar + i] = encodingItems[i];
@@ -79,7 +79,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
      * @param {String} color RGB string value like rgb(1,2,3)
      * @return {String} Hex version of that RGB value like #FF00FF.
      */
-    toHex (color: string): string {
+    toHex(color: string): string {
       return color.replace(rgbRegExp, toHex);
     },
 
@@ -92,7 +92,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
      * @param {String} css Style value to parse for example: border:1px solid red;.
      * @return {Object} Object representation of that style like {border: '1px solid red'}
      */
-    parse (css: string): Record<string, string> {
+    parse(css: string): Record<string, string> {
       const styles: any = {};
       let matches, name, value, isEncoded;
       const urlConverter = settings.url_converter;
@@ -121,7 +121,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
           return;
         }
 
-        const box = [top, right, bottom, left];
+        const box = [ top, right, bottom, left ];
         i = box.length - 1;
         while (i--) {
           if (box[i] !== box[i + 1]) {
@@ -194,7 +194,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
       };
 
       // Decodes the specified string by replacing all _<num> with it's original value \" \' etc
-      // It will also decode the \" \' if keepSlashes is set to fale or omitted
+      // It will also decode the \" \' if keepSlashes is set to false or omitted
       const decode = function (str: string, keepSlashes?: boolean) {
         if (isEncoded) {
           str = str.replace(/\uFEFF[0-9]/g, function (str) {
@@ -224,7 +224,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
           str = decode(str);
 
           // Force strings into single quote format
-          return '\'' + str.replace(/\'/g, '\\\'') + '\'';
+          return `'` + str.replace(/\'/g, `\\'`) + `'`;
         }
 
         url = decode(url || url2 || url3);
@@ -247,7 +247,7 @@ const Styles = function (settings?, schema?: Schema): Styles {
         }
 
         // Output new URL format
-        return 'url(\'' + url.replace(/\'/g, '\\\'') + '\')';
+        return `url('` + url.replace(/\'/g, `\\'`) + `')`;
       };
 
       if (css) {
@@ -328,8 +328,8 @@ const Styles = function (settings?, schema?: Schema): Styles {
      * @param {String} elementName Optional element name, if specified only the styles that matches the schema will be serialized.
      * @return {String} String representation of the style object for example: border: 1px solid red.
      */
-    serialize (styles: StyleMap, elementName?: string): string {
-      let css = '', name, value;
+    serialize(styles: StyleMap, elementName?: string): string {
+      let css = '';
 
       const serializeStyles = (name: string) => {
         let styleList, i, l, value;
@@ -364,13 +364,11 @@ const Styles = function (settings?, schema?: Schema): Styles {
         serializeStyles(elementName);
       } else {
         // Output the styles in the order they are inside the object
-        for (name in styles) {
-          value = styles[name];
-
+        Obj.each(styles, (value, name) => {
           if (value && (!invalidStyles || isValid(name, elementName))) {
             css += (css.length > 0 ? ' ' : '') + name + ': ' + value + ';';
           }
-        }
+        });
       }
 
       return css;

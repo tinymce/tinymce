@@ -18,6 +18,7 @@ import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Con
 import * as Icons from '../icons/Icons';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import * as MenuParts from '../menus/menu/MenuParts';
+import * as ReadOnly from '../../ReadOnly';
 
 export const updateMenuText = Id.generate('update-menu-text');
 export const updateMenuIcon = Id.generate('update-menu-icon');
@@ -115,7 +116,8 @@ const renderCommonDropdown = <T>(spec: CommonDropdownSpec<T>, prefix: string, sh
       // TODO: Not quite working. Can still get the button focused.
       dropdownBehaviours: Behaviour.derive([
         ...spec.dropdownBehaviours,
-        DisablingConfigs.button(spec.disabled),
+        DisablingConfigs.button(spec.disabled || sharedBackstage.providers.isReadonly()),
+        ReadOnly.receivingConfig(),
         Unselecting.config({ }),
         Replacing.config({ }),
         AddEventsBehaviour.config('dropdown-events', [

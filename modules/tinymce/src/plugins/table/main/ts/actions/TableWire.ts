@@ -28,7 +28,7 @@ const createContainer = function () {
   return container;
 };
 
-const get = function (editor: Editor, container?) {
+const get = function (editor: Editor, _container?) {
   return editor.inline ? ResizeWire.body(Util.getBody(editor), createContainer()) : ResizeWire.only(Element.fromDom(editor.getDoc()));
 };
 

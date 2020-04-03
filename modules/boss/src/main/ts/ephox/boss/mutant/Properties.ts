@@ -14,7 +14,7 @@ const parent = function (item: Gene): Option<Gene> {
   return item.parent;
 };
 
-const document = function (item: Gene) {
+const document = function (_item: Gene) {
   return undefined; // currently the test universe does not have documents
 };
 

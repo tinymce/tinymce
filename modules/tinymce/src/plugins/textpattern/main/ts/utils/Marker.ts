@@ -16,7 +16,7 @@ export interface Marker {
   end: Node;
 }
 
-const newMarker = (dom: DOMUtils, id: string) => dom.create('span', { 'data-mce-type': 'bookmark', 'id': id });
+const newMarker = (dom: DOMUtils, id: string) => dom.create('span', { 'data-mce-type': 'bookmark', id });
 
 const rangeFromMarker = (dom: DOMUtils, marker: Marker): Range => {
   const rng = dom.createRng();

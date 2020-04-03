@@ -74,15 +74,15 @@ UnitTest.asynctest('browser.tinymce.themes.silver.editor.header.StickyHeaderScro
         Logger.t('Scroll up/down', GeneralSteps.sequence([
           sScrollReset(editor),
           sSetContent(editor, tinyApis, '<p style="height: 2000px">a</p><p style="height: 50px">b</p><p style="height: 2000px">c</p>'),
-          Step.label('Scroll to second paragraph', sScrollRangeIntoView(editor, [1, 0], 0)),
+          Step.label('Scroll to second paragraph', sScrollRangeIntoView(editor, [ 1, 0 ], 0)),
           sAssertApproxScrollPosition(editor, 0, expectedSecondParaScrollBottomPos + 17), // expected pos + para line height
-          Step.label('Scroll back to first paragraph', sScrollRangeIntoView(editor, [0, 0], 0)),
+          Step.label('Scroll back to first paragraph', sScrollRangeIntoView(editor, [ 0, 0 ], 0)),
           sAssertApproxScrollPosition(editor, 0, initialContainerPos.top() - headerHeight),
-          Step.label('Scroll to last paragraph', sScrollRangeIntoView(editor, [2, 0], 0)),
+          Step.label('Scroll to last paragraph', sScrollRangeIntoView(editor, [ 2, 0 ], 0)),
           sAssertApproxScrollPosition(editor, 0, expectedSecondParaScrollBottomPos + 50 + 17), // expected pos + second para height + para line height,
-          Step.label('Scroll back to first paragraph', sScrollRangeIntoView(editor, [0, 0], 0)),
+          Step.label('Scroll back to first paragraph', sScrollRangeIntoView(editor, [ 0, 0 ], 0)),
           sAssertApproxScrollPosition(editor, 0, initialContainerPos.top() - headerHeight),
-          Step.label('Scroll to second paragraph to the top', sScrollRangeIntoView(editor, [1, 0], 0, true)),
+          Step.label('Scroll to second paragraph to the top', sScrollRangeIntoView(editor, [ 1, 0 ], 0, true)),
           sAssertApproxScrollPosition(editor, 0, expectedSecondParaScrollTopPos)
         ]))
       ]))

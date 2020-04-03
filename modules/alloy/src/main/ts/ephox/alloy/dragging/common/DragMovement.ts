@@ -24,8 +24,8 @@ const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scro
   const bounds = startData.bounds;
   const absoluteCoord = DragCoord.asAbsolute(coords, scroll, origin);
 
-  const newX = Num.clamp(absoluteCoord.left(), bounds.x(), bounds.x() + bounds.width() - startData.width);
-  const newY = Num.clamp(absoluteCoord.top(), bounds.y(), bounds.y() + bounds.height() - startData.height);
+  const newX = Num.clamp(absoluteCoord.left(), bounds.x, bounds.x + bounds.width - startData.width);
+  const newY = Num.clamp(absoluteCoord.top(), bounds.y, bounds.y + bounds.height - startData.height);
   const newCoords = DragCoord.absolute(newX, newY);
 
   // Translate the absolute coord back into the previous type
@@ -45,7 +45,7 @@ const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scro
   );
 };
 
-const calcNewCoord = (component: AlloyComponent, optSnaps: Option<SnapsConfig>, currentCoord: DragCoord.CoordAdt, scroll: Position, origin: Position, delta: Position, startData: DragStartData): DragCoord.CoordAdt => {
+const calcNewCoord = <E>(component: AlloyComponent, optSnaps: Option<SnapsConfig<E>>, currentCoord: DragCoord.CoordAdt, scroll: Position, origin: Position, delta: Position, startData: DragStartData): DragCoord.CoordAdt => {
   const newCoord = optSnaps.fold(() => {
     // When not docking, use fixed coordinates.
     const translated = DragCoord.translate(currentCoord, delta.left(), delta.top());
@@ -63,7 +63,7 @@ const calcNewCoord = (component: AlloyComponent, optSnaps: Option<SnapsConfig>, 
   return clampCoords(component, newCoord, scroll, origin, startData);
 };
 
-const dragBy = (component: AlloyComponent, dragConfig: DraggingConfig, startData: DragStartData, delta: Position): void => {
+const dragBy = <E>(component: AlloyComponent, dragConfig: DraggingConfig<E>, startData: DragStartData, delta: Position): void => {
   const target = dragConfig.getTarget(component.element());
 
   if (dragConfig.repositionTarget) {

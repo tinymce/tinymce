@@ -33,7 +33,7 @@ export default function () {
   };
 
   const notifyExtraLong = function (len) {
-    const longTextMessage = ['this is text '];
+    const longTextMessage = [ 'this is text ' ];
 
     for (let i = 0; i < len; i++) {
       longTextMessage.push('bla');

@@ -39,7 +39,7 @@ import Serializer from './Serializer';
  */
 
 const isNativeIeSelection = (rng: any): boolean => {
-  return !!(<any> rng).select;
+  return !!(rng).select;
 };
 
 const isAttachedToDom = function (node: Node): boolean {
@@ -57,12 +57,12 @@ const isValidRange = function (rng: Range) {
 };
 
 interface Selection {
-  bookmarkManager: any;
+  bookmarkManager: BookmarkManager;
   controlSelection: ControlSelection;
-  dom: any;
+  dom: DOMUtils;
   win: Window;
-  serializer: any;
-  editor: any;
+  serializer: Serializer;
+  editor: Editor;
   collapse: (toStart?: boolean) => void;
   setCursorLocation: (node?: Node, offset?: number) => void;
   getContent: (args?: any) => any;
@@ -82,10 +82,10 @@ interface Selection {
   getSelectedBlocks: (startElm?: Element, endElm?: Element) => Element[];
   normalize: () => Range;
   selectorChanged: (selector: string, callback: (active: boolean, args: {
-      node: Node;
-      selector: String;
-      parents: Element[];
-  }) => void) => any;
+    node: Node;
+    selector: String;
+    parents: Element[];
+  }) => void) => Selection;
   selectorChangedWithUnbind: (selector: string, callback: (active: boolean, args: {
     node: Node;
     selector: String;
@@ -319,7 +319,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
       const bookmark = SelectionBookmark.getRng(editor);
 
       if (bookmark.isSome()) {
-        return bookmark.map((r) => EventProcessRanges.processRanges(editor, [r])[0]).getOr(doc.createRange());
+        return bookmark.map((r) => EventProcessRanges.processRanges(editor, [ r ])[0]).getOr(doc.createRange());
       }
     }
 
@@ -335,7 +335,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
       // IE throws unspecified error here if TinyMCE is placed in a frame/iframe
     }
 
-    rng = EventProcessRanges.processRanges(editor, [rng])[0];
+    rng = EventProcessRanges.processRanges(editor, [ rng ])[0];
 
     // No range found then create an empty one
     // This can occur when the editor is placed in a hidden container element on Gecko
@@ -513,7 +513,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
     return rng;
   };
 
-    /**
+  /**
    * Executes callback when the current selection starts/stops matching the specified selector. The current
    * state will be passed to the callback as it's first argument.
    *
@@ -521,7 +521,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer: Serializer, 
    * @param {String} selector CSS selector to check for.
    * @param {function} callback Callback with state and args when the selector is matches or not.
    */
-  const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node, selector: String, parents: Element[] }) => void) => {
+  const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node; selector: String; parents: Element[] }) => void) => {
     selectorChangedWithUnbind(selector, callback);
     return exports;
   };

@@ -51,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (success
   });
 
   suite.test('Inline element style where element is format root', function (editor) {
-    editor.formatter.register('format', { inline: 'span', styles: { fontWeight: 'bold' } });
+    editor.formatter.register('format', { inline: 'span', styles: { fontWeight: 'bold' }});
     editor.getBody().innerHTML = '<p><span style="font-weight:bold; color:#FF0000"><em>1234</em></span></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('em')[0].firstChild, 1);
@@ -93,7 +93,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (success
   });
 
   suite.test('Partially selected inline element text with complex children', function (editor) {
-    editor.formatter.register('format', { inline: 'span', styles: { fontWeight: 'bold' } });
+    editor.formatter.register('format', { inline: 'span', styles: { fontWeight: 'bold' }});
     editor.getBody().innerHTML = '<p><span style="font-weight:bold"><em><span style="color:#ff0000;font-weight:bold">1234</span></em></span></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[1].firstChild, 2);
@@ -142,7 +142,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (success
     editor.formatter.register('format', {
       inline: 'span',
       styles: {
-        color (vars) {
+        color(vars) {
           return vars.color + '00';
         }
       },
@@ -242,7 +242,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (success
   });
 
   suite.test('Remove span format within block with style', function (editor) {
-    editor.formatter.register('format', { selector: 'span', attributes: ['style', 'class'], remove: 'empty', split: true, expand: false, deep: true });
+    editor.formatter.register('format', { selector: 'span', attributes: [ 'style', 'class' ], remove: 'empty', split: true, expand: false, deep: true });
     const rng = editor.dom.createRng();
     editor.getBody().innerHTML = '<p style="color:#ff0000"><span style="color:#00ff00">text</span></p>';
     rng.setStart(editor.dom.select('span')[0].firstChild, 1);
@@ -326,7 +326,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (success
     LegacyUnit.equal(editor.getContent(), '<p><em><b>abc</b></em><b>d</b>e</p>');
   });
 
-  suite.test('Toggle styles at the end of the content don\' removes the format where it is not needed.', function (editor) {
+  suite.test(`Toggle styles at the end of the content don' removes the format where it is not needed.`, function (editor) {
     editor.setContent('<p><em><b>abce</b></em></p>');
     editor.formatter.register('b', { inline: 'b' });
     editor.formatter.register('em', { inline: 'em' });
@@ -446,7 +446,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (success
   });
 
   suite.test('Remove format with classes', function (editor) {
-    editor.formatter.register('format', { inline: 'span', classes: ['a', 'b'] });
+    editor.formatter.register('format', { inline: 'span', classes: [ 'a', 'b' ] });
     editor.getBody().innerHTML = '<p><span class="a b c">a</span></p>';
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 1);
     editor.formatter.remove('format');
@@ -463,8 +463,8 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (success
   suite.test('Remove ceFalseOverride format', function (editor) {
     editor.setContent('<p class="a" contenteditable="false">a</p><div class="a" contenteditable="false">b</div>');
     editor.formatter.register('format', [
-      { selector: 'div', classes: ['a'], ceFalseOverride: true },
-      { selector: 'p', classes: ['a'], ceFalseOverride: true }
+      { selector: 'div', classes: [ 'a' ], ceFalseOverride: true },
+      { selector: 'p', classes: [ 'a' ], ceFalseOverride: true }
     ]);
     editor.selection.select(editor.dom.select('div')[0]);
     editor.formatter.remove('format');
@@ -480,23 +480,12 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (success
     );
   });
 
-  suite.test('Remove block format from first block with forced_root_block: false', function (editor) {
-    editor.settings.forced_root_block = false;
-    editor.formatter.register('format', { block: 'h1' });
-    editor.getBody().innerHTML = '<h1>a</h1>b';
-    LegacyUnit.setSelection(editor, 'h1', 0, 'h1', 1);
-    editor.formatter.remove('format');
-    LegacyUnit.equal(getContent(editor), 'a<br />b', 'Lines should be separated with br');
-    editor.settings.forced_root_block = 'p';
-  });
-
   suite.test('Remove format from first position in table cell', function (editor) {
     editor.formatter.register('format', { inline: 'b' });
     editor.getBody().innerHTML = '<table><tbody><tr><td><b>ab</b> cd</td></tr></tbody></table>';
     LegacyUnit.setSelection(editor, 'b', 0, 'b', 2);
     editor.formatter.remove('format');
     LegacyUnit.equal(getContent(editor), '<table><tbody><tr><td>ab cd</td></tr></tbody></table>', 'Should have removed format.');
-    editor.settings.forced_root_block = 'p';
   });
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {

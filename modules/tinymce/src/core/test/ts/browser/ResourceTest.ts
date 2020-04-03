@@ -20,11 +20,11 @@ const testScript = (id: string, data: string) => {
   return `data:text/javascript,tinymce.Resource.add('${id}', '${data}')`;
 };
 
-const cScriptAdd = (id: string, data: string) => Chain.op<any>((value) => {
+const cScriptAdd = (id: string, data: string) => Chain.op<any>((_value) => {
   tinymce.Resource.add(id, data);
 });
 
-const cScriptLoad = (id: string, url: string) => Chain.async<any, Result<string, string>>((input, next, die) => {
+const cScriptLoad = (id: string, url: string) => Chain.async<any, Result<string, string>>((_input, next, _die) => {
   tinymce.Resource.load(id, url).then((value) => {
     next(Result.value(value));
   }, (err) => {
@@ -71,7 +71,7 @@ UnitTest.asynctest('Scripts test', (success, failure) => {
     ])),
     Step.label('invalid id fails', Chain.asStep({}, [
       cScriptLoad('script.4', testScript('invalid-id', 'value.4')), // this takes 1 second to timeout
-      cAssertLoadFailure('Script at URL "data:text/javascript,tinymce.Resource.add(\'invalid-id\', \'value.4\')" did not call `tinymce.Resource.add(\'script.4\', data)` within 1 second'),
+      cAssertLoadFailure(`Script at URL "data:text/javascript,tinymce.Resource.add('invalid-id', 'value.4')" did not call \`tinymce.Resource.add('script.4', data)\` within 1 second`),
     ])),
   ], cleanup.wrap(success), cleanup.wrap(failure));
 });

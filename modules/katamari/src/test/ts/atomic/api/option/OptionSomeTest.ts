@@ -25,8 +25,8 @@ UnitTest.test('OptionSomeTest', () => {
   Assert.eq('from', Option.some(5), Option.from(5), tOption(tNumber));
 
   Assert.eq('toArray 1', [ 1 ], Option.some(1).toArray());
-  Assert.eq('toArray 2', [ { cat: 'dog' } ], Option.some({ cat: 'dog' }).toArray());
-  Assert.eq('toArray 3', [ [ 1 ] ], Option.some([ 1 ]).toArray());
+  Assert.eq('toArray 2', [{ cat: 'dog' }], Option.some({ cat: 'dog' }).toArray());
+  Assert.eq('toArray 3', [[ 1 ]], Option.some([ 1 ]).toArray());
 
   Assert.eq('or some', true, Option.some(6).or(Option.some(7)).equals(Option.some(6)));
   Assert.eq('or none', true, Option.some(3).or(Option.none()).equals(Option.some(3)));

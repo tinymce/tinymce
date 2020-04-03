@@ -20,10 +20,10 @@ import Editor from '../api/Editor';
 const postProcessHooks = {}, filter = ArrUtils.filter, each = ArrUtils.each;
 
 const addPostProcessHook = function (name, hook) {
-  let hooks = postProcessHooks[name];
+  const hooks = postProcessHooks[name];
 
   if (!hooks) {
-    postProcessHooks[name] = hooks = [];
+    postProcessHooks[name] = [];
   }
 
   postProcessHooks[name].push(hook);
@@ -48,7 +48,7 @@ addPostProcessHook('pre', function (editor: Editor) {
     DomQuery(pre1).append('<br><br>').append(pre2.childNodes);
   };
 
-  isPre = NodeType.matchNodeNames(['pre']);
+  isPre = NodeType.matchNodeNames([ 'pre' ]);
 
   if (!rng.collapsed) {
     blocks = editor.selection.getSelectedBlocks();

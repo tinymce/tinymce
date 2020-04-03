@@ -155,28 +155,28 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
         [ 'tox-notification', 'tox-notification--in' ]
       )
     },
-    components: [{
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-notification__icon' ],
-          innerHtml: getFirst(iconChoices, detail.iconProvider)
-        }
-      } as AlloySpec,
-      {
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-notification__body'],
-        },
-        components: [
-          memBannerText.asSpec()
-        ],
-        behaviours: Behaviour.derive([
-          Replacing.config({ })
-        ])
-      } as AlloySpec
+    components: [ {
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-notification__icon' ],
+        innerHtml: getFirst(iconChoices, detail.iconProvider)
+      }
+    } as AlloySpec,
+    {
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-notification__body' ],
+      },
+      components: [
+        memBannerText.asSpec()
+      ],
+      behaviours: Behaviour.derive([
+        Replacing.config({ })
+      ])
+    } as AlloySpec
     ]
-    .concat(detail.progress ? [memBannerProgress.asSpec()] : [])
-    .concat(!detail.closeButton ? [] : [Button.sketch({
+      .concat(detail.progress ? [ memBannerProgress.asSpec() ] : [])
+      .concat(!detail.closeButton ? [] : [ Button.sketch({
         dom: {
           tag: 'button',
           classes: [ 'tox-notification__dismiss', 'tox-button', 'tox-button--naked', 'tox-button--icon' ]
@@ -184,7 +184,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
         components: [{
           dom: {
             tag: 'div',
-            classes: ['tox-icon'],
+            classes: [ 'tox-icon' ],
             innerHtml: getIcon('close', detail.iconProvider),
             attributes: {
               'aria-label': detail.translationProvider('Close')
@@ -194,8 +194,8 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
         action: (comp) => {
           detail.onAction(comp);
         }
-      })]
-    ),
+      }) ]
+      ),
     apis
   };
 };

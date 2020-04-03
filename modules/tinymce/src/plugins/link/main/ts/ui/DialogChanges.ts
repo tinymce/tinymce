@@ -18,7 +18,7 @@ const findTextByValue = (value: string, catalog: ListItem[]): Option<ListValue> 
   return Arr.findMap(catalog, (item) => {
     // TODO TINY-2236 re-enable this (support will need to be added to bridge)
     // return 'items' in item ? findTextByValue(value, item.items) :
-     return Option.some(item).filter((i) => i.value === value);
+    return Option.some(item).filter((i) => i.value === value);
   });
 };
 const getDelta = (persistentText: string, fieldName: string, catalog: ListItem[], data: Partial<LinkDialogData>): Option<DialogDelta> => {

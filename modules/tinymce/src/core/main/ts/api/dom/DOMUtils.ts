@@ -61,7 +61,7 @@ interface AttrHooks {
 const setupAttrHooks = function (styles: Styles, settings: Partial<DOMUtilsSettings>, getContext): AttrHooks {
   const keepValues: boolean = settings.keep_values;
   const keepUrlHook = {
-    set ($elm, value: string, name: string) {
+    set($elm, value: string, name: string) {
       if (settings.url_converter) {
         value = settings.url_converter.call(settings.url_converter_scope || getContext(), value, name, $elm[0]);
       }
@@ -69,14 +69,14 @@ const setupAttrHooks = function (styles: Styles, settings: Partial<DOMUtilsSetti
       $elm.attr('data-mce-' + name, value).attr(name, value);
     },
 
-    get ($elm, name: string) {
+    get($elm, name: string) {
       return $elm.attr('data-mce-' + name) || $elm.attr(name);
     }
   };
 
   const attrHooks: AttrHooks = {
     style: {
-      set ($elm, value: string | {}) {
+      set($elm, value: string | {}) {
         if (value !== null && typeof value === 'object') {
           $elm.css(value);
           return;
@@ -96,7 +96,7 @@ const setupAttrHooks = function (styles: Styles, settings: Partial<DOMUtilsSetti
         }
       },
 
-      get ($elm) {
+      get($elm) {
         let value = $elm.attr('data-mce-style') || $elm.attr('style');
 
         value = styles.serialize(styles.parse(value), $elm[0].nodeName);
@@ -187,8 +187,8 @@ interface DOMUtils {
   getViewPort (argWin?: Window): GeomRect;
   getRect (elm: string | HTMLElement): GeomRect;
   getSize (elm: string | HTMLElement): {
-      w: number;
-      h: number;
+    w: number;
+    h: number;
   };
   getParent (node: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node): Element;
   getParents (elm: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node, collect?: boolean): Element[];
@@ -212,8 +212,8 @@ interface DOMUtils {
   setAttribs (elm: string | Node, attrs: Record<string, string>): void;
   getAttrib (elm: string | Node, name: string, defaultVal?: string): string;
   getPos (elm: string | Node, rootElm?: Node): {
-      x: number;
-      y: number;
+    x: number;
+    y: number;
   };
   parseStyle (cssText: string): Record<string, string>;
   serializeStyle (stylesArg: StyleMap, name?: string): string;
@@ -405,10 +405,8 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     // TODO: Add feature detection here in the future
     if (!isIE || node.nodeType !== 1 || deep) {
       return node.cloneNode(deep);
-    }
-
-    // Make a HTML5 safe shallow copy
-    if (!deep) {
+    } else {
+      // Make a HTML5 safe shallow copy
       const clone = doc.createElement(node.nodeName);
 
       // Copy attribs
@@ -418,8 +416,6 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
       return clone;
     }
-
-    return null;
   };
 
   const getRoot = (): HTMLElement => {
@@ -431,10 +427,10 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
     // Returns viewport size excluding scrollbars
     return {
-      x: vp.x(),
-      y: vp.y(),
-      w: vp.width(),
-      h: vp.height()
+      x: vp.x,
+      y: vp.y,
+      w: vp.width,
+      h: vp.height
     };
   };
 
@@ -477,7 +473,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return $elm[0] && $elm[0].style ? $elm[0].style[name] : undefined;
   };
 
-  const getSize = (elm: HTMLElement | string): {w: number, h: number} => {
+  const getSize = (elm: HTMLElement | string): {w: number; h: number} => {
     let w, h;
 
     elm = get(elm);
@@ -547,9 +543,9 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       }
     }
 
-    const elms = !Array.isArray(elm) ? [elm] : elm;
+    const elms = !Array.isArray(elm) ? [ elm ] : elm;
 
-    /*eslint new-cap:0 */
+    /* eslint new-cap:0 */
     return Sizzle(selector, elms[0].ownerDocument || elms[0], null, elms).length > 0;
   };
 
@@ -587,7 +583,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
         if (collect) {
           result.push(node);
         } else {
-          return [node];
+          return [ node ];
         }
       }
 
@@ -1017,8 +1013,24 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return styles.toHex(Tools.trim(rgbVal));
   };
 
+  // Check if element has a data-bookmark attribute, name attribute or is a named anchor
+  const isNonEmptyElement = (node: Node) => {
+    if (NodeType.isElement(node)) {
+      const isNamedAnchor = node.nodeName.toLowerCase() === 'a' && !getAttrib(node, 'href') && getAttrib(node, 'id');
+      if (getAttrib(node, 'name') || getAttrib(node, 'data-mce-bookmark') || isNamedAnchor) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const isEmpty = (node: Node, elements?: Record<string, any>) => {
-    let i, attributes, type, name, brCount = 0;
+    let type: number, name: string, brCount = 0;
+
+    // Keep elements with data-bookmark attributes, name attributes or are named anchors
+    if (isNonEmptyElement(node)) {
+      return false;
+    }
 
     node = node.firstChild;
     if (node) {
@@ -1050,14 +1062,9 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
             return false;
           }
 
-          // Keep elements with data-bookmark attributes or name attribute like <a name="1"></a>
-          attributes = getAttribs(node);
-          i = attributes.length;
-          while (i--) {
-            name = attributes[i].nodeName;
-            if (name === 'name' || name === 'data-mce-bookmark') {
-              return false;
-            }
+          // Keep elements with data-bookmark attributes, name attributes or are named anchors
+          if (isNonEmptyElement(node)) {
+            return false;
           }
         }
 
@@ -1136,7 +1143,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
     // Collect all window/document events bound by editor instance
     if (settings.collect && (target === doc || target === win)) {
-      boundEvents.push([target, name, func, scope]);
+      boundEvents.push([ target, name, func, scope ]);
     }
 
     return events.bind(target, name, func, scope || self);
@@ -1157,7 +1164,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
 
     // Remove any bound events matching the input
-    if (boundEvents && (target === doc || target === win)) {
+    if (boundEvents.length > 0 && (target === doc || target === win)) {
       i = boundEvents.length;
 
       while (i--) {
@@ -1208,7 +1215,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
   const destroy = () => {
     // Unbind all events bound to window/document by editor instance
-    if (boundEvents) {
+    if (boundEvents.length > 0) {
       let i = boundEvents.length;
 
       while (i--) {

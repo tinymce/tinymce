@@ -1,6 +1,6 @@
 type LinkApi = () => RegExp;
 const link: LinkApi = function () {
- /*
+  /*
     The RegEx parses the following components (https://www.rfc-editor.org/rfc/rfc3986.txt):
 
       scheme:[//[user:password@]host[:port]][/]path[?query][#fragment]

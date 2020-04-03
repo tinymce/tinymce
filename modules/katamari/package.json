@@ -1,6 +1,6 @@
 {
   "name": "@ephox/katamari",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "Basic data type library",
   "repository": {
     "type": "git",
@@ -9,7 +9,8 @@
   "scripts": {
     "prepublishOnly": "tsc -b",
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
-    "test-manual": "bedrock -d src/test/ts"
+    "test-manual": "bedrock -d src/test/ts",
+    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",

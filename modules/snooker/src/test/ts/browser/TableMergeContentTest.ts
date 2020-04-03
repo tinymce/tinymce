@@ -4,7 +4,7 @@ import { Body, Element, Html, Insert, Remove } from '@ephox/sugar';
 import * as TableContent from 'ephox/snooker/api/TableContent';
 
 UnitTest.test('TableMergeContentTest', function () {
-  const mergeContentTest = function (specs: { label: string; html: string; expected: string; }[]) {
+  const mergeContentTest = function (specs: { label: string; html: string; expected: string }[]) {
     const table = Element.fromTag('table');
     const row = Element.fromTag('tr');
     Insert.append(table, row);
@@ -94,7 +94,7 @@ UnitTest.test('TableMergeContentTest', function () {
       expected: ''
     },
     {
-      label: 'lists should not have BR\'s after',
+      label: `lists should not have BR's after`,
       html: '<ul style="list-style-type: disc;"><li>Abotts&nbsp;list</li><li>empty</li></ul>',
       expected: ''
     },

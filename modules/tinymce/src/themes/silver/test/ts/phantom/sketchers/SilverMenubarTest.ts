@@ -29,7 +29,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
   const sink = Element.fromDom(document.querySelector('.mce-silver-sink'));
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (store, _doc, _body) => {
       return GuiFactory.build({
         dom: {
           tag: 'div',
@@ -48,7 +48,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
         ]
       });
     },
-    (doc, body, gui, testContainer, store) => {
+    (doc, _body, _gui, testContainer, store) => {
       const menubarEl = SelectorFind.descendant(testContainer.element(), '.test-menubar').getOrDie('Could not find menubar to test');
 
       const menubar = testContainer.getSystem().getByDom(menubarEl).getOrDie();
@@ -63,7 +63,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
       const sAssertActiveToggleItemHasOneCheckmark = (itemText: string) =>
         Chain.asStep(sink, [
           UiFinder.cFindIn('.tox-selected-menu [role=menuitemcheckbox]:contains("' + itemText + '")'),
-          Chain.op((menu) => {
+          Chain.op((_menu) => {
             const checkMarks = Selectors.all('.tox-collection__item-icon');
             Assertions.assertEq('only one check mark is displayed for active toggled menu items', 1, checkMarks.length);
           })
@@ -138,7 +138,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
           'Checking initial structure for menubar',
           ApproxStructure.build((s, str, arr) => {
             return s.element('div', {
-              classes: [arr.has('test-menubar')],
+              classes: [ arr.has('test-menubar') ],
               attrs: {
                 role: str.is('menubar')
               },

@@ -48,11 +48,11 @@ const defaultSpellcheckCallback = function (editor: Editor, pluginUrl: string, c
       type: 'post',
       content_type: 'application/x-www-form-urlencoded',
       data: postData,
-      success (result) {
+      success(result) {
         const parseResult = JSON.parse(result);
 
         if (!parseResult) {
-          const message = editor.translate('Server response wasn\'t proper JSON.');
+          const message = editor.translate(`Server response wasn't proper JSON.`);
           errorCallback(message);
         } else if (parseResult.error) {
           errorCallback(parseResult.error);
@@ -60,7 +60,7 @@ const defaultSpellcheckCallback = function (editor: Editor, pluginUrl: string, c
           doneCallback(parseResult);
         }
       },
-      error () {
+      error() {
         const message = editor.translate('The spelling service was not found: (') +
           Settings.getRpcUrl(editor) +
           editor.translate(')');

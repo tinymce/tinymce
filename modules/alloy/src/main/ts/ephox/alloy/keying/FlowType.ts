@@ -38,7 +38,7 @@ const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent
   });
 };
 
-const focusIn = (component: AlloyComponent, flowConfig: FlowConfig, state: Stateless): void => {
+const focusIn = (component: AlloyComponent, flowConfig: FlowConfig, _state: Stateless): void => {
   flowConfig.getInitial(component).orThunk(
     () => SelectorFind.descendant(component.element(), flowConfig.selector)
   ).each((first) => {

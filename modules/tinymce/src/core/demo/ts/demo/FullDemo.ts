@@ -19,10 +19,10 @@ export default function () {
           api.element().removeChild(box.dom());
         };
       },
-      onShow: (api) => {
+      onShow: (_api) => {
         console.log('onShow ' + name);
       },
-      onHide: (api) => {
+      onHide: (_api) => {
         console.log('onHide ' + name);
       },
     });
@@ -49,7 +49,7 @@ export default function () {
     importcss_append: true,
     height: 400,
     image_advtab: true,
-    file_picker_callback (callback, value, meta) {
+    file_picker_callback(callback, _value, meta) {
       if (meta.fieldname === 'poster') {
         callback('test.mp4', { altsource: 'blah.ogg', width: '400px', poster: 'testing.jpg', embed: '<p>test</p>' });
         return;
@@ -70,14 +70,14 @@ export default function () {
         callback('movie.mp4', { embed: '<p>test</p>' });
       }
     },
-    spellchecker_callback (method, text, success, failure) {
+    spellchecker_callback(method, text, success, _failure) {
       const words = text.match(this.getWordCharPattern());
 
       if (method === 'spellcheck') {
         const suggestions = {};
 
         for (let i = 0; i < words.length; i++) {
-          suggestions[words[i]] = ['First', 'Second'];
+          suggestions[words[i]] = [ 'First', 'Second' ];
         }
 
         success(suggestions);
@@ -100,7 +100,7 @@ export default function () {
         'autosave lists'
       ]
     },
-    setup (ed) {
+    setup(ed) {
       makeSidebar(ed, 'sidebar1', 'green', 200);
     },
     plugins: [
@@ -112,7 +112,7 @@ export default function () {
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'undo redo sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+    toolbar: 'undo redo sidebar1 | bold italic | alignleft aligncenter alignright alignjustify | align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | ' +
     'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
 
     // Multiple toolbar array

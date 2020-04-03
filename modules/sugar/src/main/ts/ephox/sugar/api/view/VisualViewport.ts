@@ -6,41 +6,41 @@ import Element from '../node/Element';
 import * as Scroll from './Scroll';
 
 export interface Bounds {
-  x: () => number;
-  y: () => number;
-  width: () => number;
-  height: () => number;
-  right: () => number;
-  bottom: () => number;
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
+  readonly right: number;
+  readonly bottom: number;
 }
 
 // Experimental support for visual viewport
-type VisualViewport = {
-  offsetLeft: number,
-  offsetTop: number,
-  pageLeft: number,
-  pageTop: number,
-  width: number,
-  height: number,
-  scale: number,
-  addEventListener: (event: string, handler: EventListenerOrEventListenerObject) => void,
-  removeEventListener: (event: string, handler: EventListenerOrEventListenerObject) => void
-};
+interface VisualViewport {
+  readonly offsetLeft: number;
+  readonly offsetTop: number;
+  readonly pageLeft: number;
+  readonly pageTop: number;
+  readonly width: number;
+  readonly height: number;
+  readonly scale: number;
+  readonly addEventListener: (event: string, handler: EventListenerOrEventListenerObject) => void;
+  readonly removeEventListener: (event: string, handler: EventListenerOrEventListenerObject) => void;
+}
 
 const get = (_win?: Window): Option<VisualViewport> => {
   const win = _win === undefined ? window : _win;
-  /* tslint:disable-next-line:no-string-literal */
+  // eslint-disable-next-line dot-notation
   return Option.from(win['visualViewport']);
 };
 
 const bounds = (x: number, y: number, width: number, height: number): Bounds => {
   return {
-    x: Fun.constant(x),
-    y: Fun.constant(y),
-    width: Fun.constant(width),
-    height: Fun.constant(height),
-    right: Fun.constant(x + width),
-    bottom: Fun.constant(y + height)
+    x,
+    y,
+    width,
+    height,
+    right: x + width,
+    bottom: y + height
   };
 };
 

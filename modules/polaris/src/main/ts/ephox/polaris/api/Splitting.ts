@@ -9,9 +9,9 @@ export interface Splitting<T> {
     onExcludeWithout: SplittingHandler<T, U>
   ) => U;
   match: <U> (branches: {
-    include: SplittingHandler<T, U>,
-    excludeWith: SplittingHandler<T, U>,
-    excludeWithout: SplittingHandler<T, U>,
+    include: SplittingHandler<T, U>;
+    excludeWith: SplittingHandler<T, U>;
+    excludeWithout: SplittingHandler<T, U>;
   }) => U;
   log: (label: string) => void;
 }

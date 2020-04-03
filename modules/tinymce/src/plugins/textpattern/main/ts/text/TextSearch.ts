@@ -20,7 +20,7 @@ const alwaysNext = (startNode: Node) => (node: Node) => startNode === node ? -1 
 
 // This largely is derived from robins isBoundary check, however it also treats contenteditable=false elements as a boundary
 // See robins `Structure.isEmptyTag` for the list of quasi block elements
-const isBoundary = (dom: DOMUtils) => (node: Node) => dom.isBlock(node) || Arr.contains(['BR', 'IMG', 'HR', 'INPUT'], node.nodeName) || dom.getContentEditable(node) === 'false';
+const isBoundary = (dom: DOMUtils) => (node: Node) => dom.isBlock(node) || Arr.contains([ 'BR', 'IMG', 'HR', 'INPUT' ], node.nodeName) || dom.getContentEditable(node) === 'false';
 
 // Finds the text node before the specified node, or just returns the node if it's already on a text node
 const textBefore = (node: Node, offset: number, rootNode: Node): Option<Spot.SpotPoint<Text>> => {

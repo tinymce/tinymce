@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTreeTest', (suc
       ])),
       Logger.t('Get selection as tree', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>ab<em>c</em></p>'),
-        tinyApis.sSetSelection([0, 0], 1, [0, 1, 0], 1),
+        tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 1, 0 ], 1),
         Step.sync(function () {
           const html = toHtml(editor.selection.getContent({ format: 'tree' }));
           Assertions.assertHtml('Should be expected selection html', 'b<em>c</em>', html);
@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTreeTest', (suc
       ])),
       Logger.t('Get selection as tree with whitespace', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a b c</p>'),
-        tinyApis.sSetSelection([0, 0], 1, [0, 0], 4),
+        tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 4),
         Step.sync(function () {
           const html = toHtml(editor.selection.getContent({ format: 'tree' }));
           Assertions.assertHtml('Should be expected selection html', ' b ', html);

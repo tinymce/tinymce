@@ -21,7 +21,7 @@ const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowC
   });
 };
 
-const measureTest = function (expected: { error: string } | {rowDelta: number, colDelta: number }, startAddress: Structs.Address, gridA: () => Structs.ElementNew[][], gridB: () => Structs.ElementNew[][]) {
+const measureTest = function (expected: { error: string } | {rowDelta: number; colDelta: number }, startAddress: Structs.Address, gridA: () => Structs.ElementNew[][], gridB: () => Structs.ElementNew[][]) {
   // Try put gridB into gridA at the startAddress
   // returns a delta,
   // colDelta = -3 means gridA is 3 columns too short
@@ -35,10 +35,10 @@ const measureTest = function (expected: { error: string } | {rowDelta: number, c
     }
   }, function (delta) {
     if ('rowDelta' in expected) {
-      assert.eq(expected.rowDelta, delta.rowDelta(), 'rowDelta expected: ' + expected.rowDelta + ' actual: ' + delta.rowDelta());
-      assert.eq(expected.colDelta, delta.colDelta(), 'colDelta expected: ' + expected.colDelta + ' actual: ' + delta.colDelta());
+      assert.eq(expected.rowDelta, delta.rowDelta, 'rowDelta expected: ' + expected.rowDelta + ' actual: ' + delta.rowDelta);
+      assert.eq(expected.colDelta, delta.colDelta, 'colDelta expected: ' + expected.colDelta + ' actual: ' + delta.colDelta);
     } else {
-      assert.fail('Expected error "' + expected.error + '" but instead got rowDelta=' + delta.rowDelta() + ' colDelta=' + delta.colDelta());
+      assert.fail('Expected error "' + expected.error + '" but instead got rowDelta=' + delta.rowDelta + ' colDelta=' + delta.colDelta);
     }
   });
 };
@@ -51,7 +51,7 @@ const tailorTest = function (expected: Structs.ElementNew[][], startAddress: Str
   assertGrids(mapToStructGrid(expected), tailoredGrid);
 };
 
-const tailorIVTest = function (expected: { rows: number, cols: number }, startAddress: Structs.Address, gridA: () => Structs.ElementNew[][], delta: Fitment.Delta, generator: () => SimpleGenerators) {
+const tailorIVTest = function (expected: { rows: number; cols: number }, startAddress: Structs.Address, gridA: () => Structs.ElementNew[][], delta: Fitment.Delta, generator: () => SimpleGenerators) {
   const tailoredGrid = Fitment.tailor(mapToStructGrid(gridA()), delta, generator());
   const rows = tailoredGrid.length;
   const cols = tailoredGrid[0].cells().length;

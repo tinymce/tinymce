@@ -23,7 +23,7 @@ const pickFile = (editor: Editor) => {
     document.body.appendChild(fileInput);
 
     const changeHandler = (e) => {
-      resolve(Array.prototype.slice.call((e.target as any).files));
+      resolve(Array.prototype.slice.call((e.target).files));
     };
 
     fileInput.addEventListener('change', changeHandler);

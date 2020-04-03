@@ -10,17 +10,17 @@ const compose = function <T extends any[], U, V> (fa: (v: U) => V, fb: (...x: T)
   };
 };
 
-const constant = function <T>(value: T): () => T {
+const constant = function <T> (value: T): () => T {
   return function () {
     return value;
   };
 };
 
-const identity = function <T = any>(x: T): T {
+const identity = function <T = any> (x: T): T {
   return x;
 };
 
-const tripleEquals = function <T>(a: T, b: T): boolean {
+const tripleEquals = function <T> (a: T, b: T): boolean {
   return a === b;
 };
 
@@ -51,7 +51,7 @@ const die = function (msg: string) {
   };
 };
 
-const apply = function <T>(f: () => T): T  {
+const apply = function <T> (f: () => T): T  {
   return f();
 };
 

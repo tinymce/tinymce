@@ -1,16 +1,16 @@
-import { Bubble } from './Bubble';
 import { SpotInfo } from '../view/SpotInfo';
+import { Bubble } from './Bubble';
 
 export interface AnchorBox {
-  x: () => number;
-  y: () => number;
-  width: () => number;
-  height: () => number;
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
 }
 
 export interface AnchorElement {
-  width: () => number;
-  height: () => number;
+  readonly width: number;
+  readonly height: number;
 }
 
 export type AnchorLayout = (

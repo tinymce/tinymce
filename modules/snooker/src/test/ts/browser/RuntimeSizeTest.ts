@@ -38,7 +38,7 @@ UnitTest.test('Runtime Size Test', function () {
     Css.set(table, 'height', value);
   };
 
-  const resizeTableBy = function (table: Element, setSize: (e: Element, v: string) => void, tableInfo: { total: number, cells: number[] }, delta: number) {
+  const resizeTableBy = function (table: Element, setSize: (e: Element, v: string) => void, tableInfo: { total: number; cells: number[] }, delta: number) {
     setSize(table, '');
     Arr.map(SelectorFilter.descendants(table, 'td'), function (cell, i) {
       setSize(cell, (tableInfo.cells[i] + delta) + 'px');
@@ -50,7 +50,7 @@ UnitTest.test('Runtime Size Test', function () {
     assert.eq(true, Math.abs(a - b) <= 1, msg);
   };
 
-  const assertSize = function (s1: { total: number, cells: number[] }, table: Element, getOuterSize: (e: Element) => number, message: string) {
+  const assertSize = function (s1: { total: number; cells: number[] }, table: Element, getOuterSize: (e: Element) => number, message: string) {
     const s2 = measureTable(table, getOuterSize);
     const cellAssertEq = platform.browser.isIE() || platform.browser.isEdge() ? fuzzyAssertEq : assert.eq;
 
@@ -87,7 +87,7 @@ UnitTest.test('Runtime Size Test', function () {
     Attr.set(table, 'cellspacing', random(0, 10).toString());
 
     Css.setAll(table, {
-      'border-collapse': randomValue(['collapse', 'separate']),
+      'border-collapse': randomValue([ 'collapse', 'separate' ]),
       'border-left': randomBorder(0, 5, 'red'),
       'border-right': randomBorder(0, 5, 'red'),
       'width': randomSize(100, 1000)
@@ -138,7 +138,7 @@ UnitTest.test('Runtime Size Test', function () {
     Attr.set(table, 'cellspacing', random(0, 10).toString());
 
     Css.setAll(table, {
-      'border-collapse': randomValue(['collapse', 'separate']),
+      'border-collapse': randomValue([ 'collapse', 'separate' ]),
       'border-top': randomBorder(0, 5, 'red'),
       'border-bottom': randomBorder(0, 5, 'red'),
       'height': randomSize(100, 1000)
@@ -151,7 +151,7 @@ UnitTest.test('Runtime Size Test', function () {
       Css.setAll(cell, {
         'width': '10px',
         'height': randomSize(1, 100),
-        'box-sizing': randomValue(['content-box', 'border-box']),
+        'box-sizing': randomValue([ 'content-box', 'border-box' ]),
         'padding-top': randomSize(0, 5),
         'padding-bottom': randomSize(0, 5),
         'border-top': randomBorder(0, 5, 'green'),
@@ -182,7 +182,7 @@ UnitTest.test('Runtime Size Test', function () {
     return table;
   };
 
-  const resizeModel = function (size: { total: number, cells: number[] }, delta: number) {
+  const resizeModel = function (size: { total: number; cells: number[] }, delta: number) {
     const deltaTotal = delta * size.cells.length;
     const cells = Arr.map(size.cells, function (cz) {
       return cz + delta;
@@ -195,7 +195,7 @@ UnitTest.test('Runtime Size Test', function () {
   };
 
   const testTableSize = function (createTable: () => Element, getOuterSize: (e: Element) => number, getSize: (e: Element) => number, setSize: (e: Element, v: string) => void) {
-    return function (n: any) {
+    return function (_n: any) {
       const table = createTable();
       const beforeSize = measureTable(table, getOuterSize);
 

@@ -31,12 +31,12 @@ const modifyStartedEntryTo = (entries: TestLogEntry[], f): TestLogEntry[] => {
           (lastEntryLastEntry) => {
             if (lastEntryLastEntry.state === TestLogEntryState.Started) {
               // Need to keep going.
-              return entries.slice(0, entries.length - 1).concat([ {
+              return entries.slice(0, entries.length - 1).concat([{
                 message: lastEntry.message,
                 state: lastEntry.state,
                 trace: lastEntry.trace,
                 entries: modifyStartedEntryTo(lastEntry.entries, f)
-              } ]);
+              }]);
             } else {
               // We have no further nesting, so just modify us
               return entries.slice(0, entries.length - 1).concat([ f(lastEntry) ]);

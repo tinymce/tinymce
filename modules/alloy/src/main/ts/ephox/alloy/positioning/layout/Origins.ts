@@ -36,10 +36,10 @@ const adt: {
 ]);
 
 const positionWithDirection = (posName: string, decision: RepositionDecision, x: number, y: number, width: number, height: number) => {
-  const decisionX = decision.x() - x;
-  const decisionY = decision.y() - y;
-  const decisionWidth = decision.width();
-  const decisionHeight = decision.height();
+  const decisionX = decision.x - x;
+  const decisionY = decision.y - y;
+  const decisionWidth = decision.width;
+  const decisionHeight = decision.height;
   const decisionRight = width - (decisionX + decisionWidth);
   const decisionBottom = height - (decisionY + decisionHeight);
 
@@ -49,7 +49,7 @@ const positionWithDirection = (posName: string, decision: RepositionDecision, x:
   const bottom = Option.some(decisionBottom);
   const none = Option.none<number>();
 
-  return Direction.cata(decision.direction(),
+  return Direction.cata(decision.direction,
     () => {
       // southeast
       return NuPositionCss(posName, left, top, none, none);
@@ -87,7 +87,7 @@ const positionWithDirection = (posName: string, decision: RepositionDecision, x:
 
 const reposition = (origin: OriginAdt, decision: RepositionDecision): PositionCss => {
   return origin.fold(function () {
-    return NuPositionCss('absolute', Option.some(decision.x()), Option.some(decision.y()), Option.none(), Option.none());
+    return NuPositionCss('absolute', Option.some(decision.x), Option.some(decision.y), Option.none(), Option.none());
   }, function (x, y, width, height) {
     return positionWithDirection('absolute', decision, x, y, width, height);
   }, function (x, y, width, height) {
@@ -116,8 +116,8 @@ const viewport = (origin: OriginAdt, getBounds: Option<() => Boxes.Bounds>): Box
     /* Use any bounds supplied or remove the scroll position of the bounds for fixed. */
     return origin.fold(b, b, () => {
       const bounds = b();
-      const pos = translate(origin, bounds.x(), bounds.y());
-      return Boxes.bounds(pos.left(), pos.top(), bounds.width(), bounds.height());
+      const pos = translate(origin, bounds.x, bounds.y);
+      return Boxes.bounds(pos.left(), pos.top(), bounds.width, bounds.height);
     });
   });
 };

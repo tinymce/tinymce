@@ -4,9 +4,9 @@ import { Gather, Transition, Traverse } from '@ephox/phoenix';
 
 export interface Walks {
   rules?: {
-      current: Transition;
-      next: Transition;
-      fallback: Option<Transition>;
+    current: Transition;
+    next: Transition;
+    fallback: Option<Transition>;
   }[];
   inclusion: <E, D> (universe: Universe<E, D>, next: Traverse<E>, item: E) => boolean;
 }
@@ -33,7 +33,7 @@ const top: Walks = {
 const all: Walks = {
   // rules === undefined, so use default.
   rules: undefined,
-  inclusion: <E, D> (universe: Universe<E, D>, next: Traverse<E>, item: E) => {
+  inclusion: <E, D> (universe: Universe<E, D>, next: Traverse<E>, _item: E) => {
     return universe.property().isText(next.item());
   }
 };

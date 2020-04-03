@@ -17,7 +17,7 @@ export const renderGrid = (spec: GridSpec, backstage: UiFactoryBackstageShared):
   return {
     dom: {
       tag: 'div',
-      classes: ['tox-form__grid', `tox-form__grid--${spec.columns}col`]
+      classes: [ 'tox-form__grid', `tox-form__grid--${spec.columns}col` ]
     },
     components: Arr.map(spec.items, backstage.interpreter)
   };

@@ -33,19 +33,19 @@ const setOf = (validator: (a) => Result<any, any>, prop: Processor): Processor =
 };
 
 const extract = function (label: string, prop: Processor, strength, obj: any): SimpleResult<any, any> {
-  const res = prop.extract([label], strength, obj);
+  const res = prop.extract([ label ], strength, obj);
   return SimpleResult.mapError(res, (errs) => {
     return { input: obj, errors: errs };
   });
 };
 
-const asStruct = function <T, U = any>(label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> {
+const asStruct = function <T, U = any> (label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> {
   return SimpleResult.toResult(
     extract(label, prop, Fun.constant, obj)
   );
 };
 
-const asRaw = function <T, U = any>(label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> {
+const asRaw = function <T, U = any> (label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> {
   return SimpleResult.toResult(
     extract(label, prop, Fun.identity, obj)
   );

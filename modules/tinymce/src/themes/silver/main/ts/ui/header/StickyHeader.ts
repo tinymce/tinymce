@@ -32,7 +32,7 @@ const scrollFromBehindHeader = (e: ScrollIntoViewEvent, containerHeader: Element
   const markerElement = Element.fromDom(e.elm);
   const markerPos = Boxes.absolute(markerElement);
   const markerHeight = Height.get(markerElement);
-  const markerTop = markerPos.y();
+  const markerTop = markerPos.y;
   const markerBottom = markerTop + markerHeight;
 
   const editorHeaderPos = Location.absolute(containerHeader);
@@ -214,14 +214,14 @@ const getBehaviours = (editor: Editor, lazySink: () => Result<AlloyComponent, Er
     Focusing.config({ }),
     Docking.config({
       contextual: {
-        lazyContext (comp) {
+        lazyContext(comp) {
           const headerHeight = Height.getOuter(comp.element());
           const container = editor.inline ? editor.getContentAreaContainer() : editor.getContainer();
           const box = Boxes.box(Element.fromDom(container));
           // Force the header to hide before it overflows outside the container
-          const boxHeight = box.height() - headerHeight;
-          const topBound = box.y() + (isToolbarTop ? 0 : headerHeight);
-          return Option.some(Boxes.bounds(box.x(), topBound, box.width(), boxHeight));
+          const boxHeight = box.height - headerHeight;
+          const topBound = box.y + (isToolbarTop ? 0 : headerHeight);
+          return Option.some(Boxes.bounds(box.x, topBound, box.width, boxHeight));
         },
         onShow: () => {
           runOnSinkElement((elem) => updateSinkVisibility(elem, true));

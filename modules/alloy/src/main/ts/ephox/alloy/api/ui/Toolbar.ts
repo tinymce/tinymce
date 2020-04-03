@@ -12,7 +12,7 @@ import { AlloySpec } from '../component/SpecTypes';
 import { composite } from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<ToolbarDetail, ToolbarSpec> = (detail, components, spec, _externals) => {
+const factory: CompositeSketchFactory<ToolbarDetail, ToolbarSpec> = (detail, components, _spec, _externals) => {
   const setGroups = (toolbar: AlloyComponent, groups: AlloySpec[]) => {
     getGroupContainer(toolbar).fold(() => {
       // check that the group container existed. It may not have if the components

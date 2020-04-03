@@ -13,7 +13,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
   Theme();
 
   const sAssertStaticPos = (container: Element) => Waiter.sTryUntil('Wait for toolbar to be absolute', Step.sync(() => {
-    Assertions.assertEq(`Container should be statically positioned`, 'static', Css.get(container, 'position'));
+    Assertions.assertEq('Container should be statically positioned', 'static', Css.get(container, 'position'));
   }));
 
   const sAssertAbsolutePos = (container: Element, contentArea: Element, position: 'above' | 'below') => Waiter.sTryUntil('Wait for toolbar to be absolute', Step.sync(() => {
@@ -22,10 +22,10 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
 
     const containerAreaBounds = Boxes.box(contentArea);
     const assertTop = position === 'above' ?
-      containerAreaBounds.y() - container.dom().clientHeight :
-      containerAreaBounds.bottom();
+      containerAreaBounds.y - container.dom().clientHeight :
+      containerAreaBounds.bottom;
 
-    Assertions.assertEq(`Container should be absolutely positioned`, 'absolute', Css.get(container, 'position'));
+    Assertions.assertEq('Container should be absolutely positioned', 'absolute', Css.get(container, 'position'));
     Assertions.assertEq(`Container left position (${left}) should be 0px`, '0px', left);
     Assertions.assertEq(`Container should be positioned ${position} contentarea, ${top}px should be ~${assertTop}px`, true, Math.abs(top - assertTop) < 3);
   }));
@@ -36,7 +36,7 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
 
     const assertTop = 0;
 
-    Assertions.assertEq(`Header container should be docked (fixed position)`, 'fixed', Css.get(header, 'position'));
+    Assertions.assertEq('Header container should be docked (fixed position)', 'fixed', Css.get(header, 'position'));
     Assertions.assertEq(`Header container left position (${left}) should be 0px`, '0px', left);
     Assertions.assertEq(`Header container should be docked to ${position}, ${top}px should be ~${assertTop}px`, true, Math.abs(top - assertTop) < 3);
   }));

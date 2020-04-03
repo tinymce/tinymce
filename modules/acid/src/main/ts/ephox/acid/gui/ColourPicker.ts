@@ -12,15 +12,15 @@ import * as RgbForm from './components/RgbForm';
 import * as SaturationBrightnessPalette from './components/SaturationBrightnessPalette';
 
 export interface ColourPickerDetail extends Sketcher.SingleSketchDetail {
-  dom: RawDomSchema;
-  onValidHex: (component: AlloyComponent) => void;
-  onInvalidHex: (component: AlloyComponent) => void;
+  readonly dom: RawDomSchema;
+  readonly onValidHex: (component: AlloyComponent) => void;
+  readonly onInvalidHex: (component: AlloyComponent) => void;
 }
 
 export interface ColourPickerSpec extends Sketcher.SingleSketchSpec {
-  dom: RawDomSchema;
-  onValidHex?: (component: AlloyComponent) => void;
-  onInvalidHex?: (component: AlloyComponent) => void;
+  readonly dom: RawDomSchema;
+  readonly onValidHex?: (component: AlloyComponent) => void;
+  readonly onInvalidHex?: (component: AlloyComponent) => void;
 }
 
 export interface ColourPickerSketcher extends Sketcher.SingleSketch<ColourPickerSpec> {
@@ -35,7 +35,7 @@ const makeFactory = (
     const sbPalette = SaturationBrightnessPalette.paletteFactory(translate, getClass);
 
     const state = {
-      paletteRgba: Fun.constant(Cell(RgbaColour.red))
+      paletteRgba: Cell(RgbaColour.red)
     };
 
     const memPalette = Memento.record(
@@ -48,7 +48,7 @@ const makeFactory = (
     const updatePalette = (anyInSystem: AlloyComponent, hex: Hex) => {
       memPalette.getOpt(anyInSystem).each((palette) => {
         const rgba = RgbaColour.fromHex(hex);
-        state.paletteRgba().set(rgba);
+        state.paletteRgba.set(rgba);
         sbPalette.setRgba(palette, rgba);
       });
     };
@@ -66,10 +66,10 @@ const makeFactory = (
     };
 
     const paletteUpdates = () => {
-      const updates = [updateFields];
+      const updates = [ updateFields ];
       return (form: AlloyComponent, simulatedEvent: SimulatedEvent<ColourEvents.PaletteUpdateEvent>) => {
-        const value = simulatedEvent.event().value();
-        const oldRgb = state.paletteRgba().get();
+        const value = simulatedEvent.event().value;
+        const oldRgb = state.paletteRgba.get();
         const hsvColour = HsvColour.fromRgb(oldRgb);
         const newHsvColour = HsvColour.hsvColour(hsvColour.hue, value.x(), (100 - value.y()));
         const rgb = RgbaColour.fromHsv(newHsvColour);
@@ -79,9 +79,9 @@ const makeFactory = (
     };
 
     const sliderUpdates = () => {
-      const updates = [updatePalette, updateFields];
+      const updates = [ updatePalette, updateFields ];
       return (form: AlloyComponent, simulatedEvent: SimulatedEvent<ColourEvents.SliderUpdateEvent>) => {
-        const value = simulatedEvent.event().value();
+        const value = simulatedEvent.event().value;
         const hex = calcHex(value.y());
         runUpdates(form, hex, updates);
       };
@@ -99,8 +99,8 @@ const makeFactory = (
       behaviours: Behaviour.derive([
         AddEventsBehaviour.config('colour-picker-events', [
           // AlloyEvents.run(ColourEvents.fieldsUpdate(), fieldsUpdates()),
-          AlloyEvents.run(ColourEvents.paletteUpdate(), paletteUpdates()),
-          AlloyEvents.run(ColourEvents.sliderUpdate(), sliderUpdates())
+          AlloyEvents.run(ColourEvents.paletteUpdate, paletteUpdates()),
+          AlloyEvents.run(ColourEvents.sliderUpdate, sliderUpdates())
         ]),
         Composing.config({
           find: (comp) => {

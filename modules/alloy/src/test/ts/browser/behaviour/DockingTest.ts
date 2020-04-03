@@ -13,7 +13,7 @@ import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 UnitTest.asynctest('DockingTest', (success, failure) => {
   const cleanup = Cleaner();
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -60,7 +60,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, gui, component, store) => {
     const staticBox = component.components()[0];
     const absoluteBox = component.components()[1];
     cleanup.add(
@@ -69,7 +69,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
       }).unbind
     );
     const boxWithNoPosition = () => {
-      return ApproxStructure.build((s, str, arr) => {
+      return ApproxStructure.build((s, str, _arr) => {
         return s.element('div', {
           styles: {
             position: str.none(),
@@ -83,7 +83,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
     };
 
     const boxWithPosition = (position: string) => {
-      return ApproxStructure.build((s, str, arr) => {
+      return ApproxStructure.build((s, str, _arr) => {
         return s.element('div', {
           styles: {
             position: str.is(position)
@@ -100,7 +100,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
       ),
       Assertions.sAssertStructure(
         'Assert initial structure of absoluteBox',
-        ApproxStructure.build((s, str, arr) => {
+        ApproxStructure.build((s, str, _arr) => {
           return s.element('div', {
             styles: {
               position: str.is('absolute'),
@@ -147,7 +147,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
         'When fixed, absoluteBox should be positioned with "top" and "left"',
         Assertions.sAssertStructure(
           'Assert structure of absoluteBox',
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('div', {
               styles: {
                 position: str.is('fixed'),

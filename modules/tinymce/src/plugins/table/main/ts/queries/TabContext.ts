@@ -9,7 +9,7 @@ import { KeyboardEvent } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { CellNavigation, TableLookup } from '@ephox/snooker';
 import {
-    Compare, CursorPosition, Element, Node, Selection, SelectorFilter, SelectorFind, WindowSelection
+  Compare, CursorPosition, Element, Node, Selection, SelectorFilter, SelectorFind, WindowSelection
 } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -41,7 +41,7 @@ const getNewRowCursorPosition = function (editor: Editor, table) {
   });
 };
 
-const go: any = function (editor: Editor, isRoot, cell, actions, lazyWire) { // TODO: forwars/backward is calling without actions
+const go: any = function (editor: Editor, isRoot, cell, actions, _lazyWire) { // TODO: forwars/backward is calling without actions
   return cell.fold(Option.none, Option.none, function (current, next) {
     return CursorPosition.first(next).map(function (cell) {
       return getCellFirstCursorPosition(editor, cell);
@@ -57,7 +57,7 @@ const go: any = function (editor: Editor, isRoot, cell, actions, lazyWire) { // 
   });
 };
 
-const rootElements = ['table', 'li', 'dl'];
+const rootElements = [ 'table', 'li', 'dl' ];
 
 const handle = function (event: KeyboardEvent, editor: Editor, actions: TableActions, lazyWire) {
   if (event.keyCode === VK.TAB) {

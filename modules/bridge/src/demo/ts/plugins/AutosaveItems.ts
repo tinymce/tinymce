@@ -1,8 +1,8 @@
 import { getDemoRegistry } from './../buttons/DemoRegistry';
 
 const editor = {
-  on: (s, f) => { },
-  off: (s, f) => { }
+  on: (_s, _f) => { },
+  off: (_s, _f) => { }
 };
 
 export const registerAutosaveItems = () => {
@@ -18,7 +18,7 @@ export const registerAutosaveItems = () => {
       editor.on('StoreDraft RestoreDraft RemoveDraft', editorOffCallback);
       return () => editor.off('StoreDraft RestoreDraft RemoveDraft', editorOffCallback);
     },
-    onAction: (buttonApi) => {
+    onAction: (_buttonApi) => {
       // apply restore draft command
     }
   });

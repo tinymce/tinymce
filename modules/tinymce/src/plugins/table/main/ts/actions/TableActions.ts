@@ -7,7 +7,7 @@
 
 import { Arr, Fun, Option } from '@ephox/katamari';
 import {
-    CellMutations, TableDirection, TableFill, TableGridSize, TableOperations
+  CellMutations, TableDirection, TableFill, TableGridSize, TableOperations
 } from '@ephox/snooker';
 import { Element, Node } from '@ephox/sugar';
 
@@ -16,6 +16,7 @@ import * as Direction from '../queries/Direction';
 import { getCloneElements } from '../api/Settings';
 import { fireNewCell, fireNewRow } from '../api/Events';
 import Editor from 'tinymce/core/api/Editor';
+import { DomDescent } from '@ephox/phoenix';
 
 export interface TableActions {
   deleteRow: (table: any, target: any) => any;
@@ -63,10 +64,11 @@ export const TableActions = function (editor: Editor, lazyWire) {
         Arr.each(result.newCells(), function (cell) {
           fireNewCell(editor, cell.dom());
         });
-        return result.cursor().map(function (cell) {
+        return result.cursor().map((cell) => {
+          const des = DomDescent.freefallRtl(cell);
           const rng = editor.dom.createRng();
-          rng.setStart(cell.dom(), 0);
-          rng.setEnd(cell.dom(), 0);
+          rng.setStart(des.element().dom(), des.offset());
+          rng.setEnd(des.element().dom(), des.offset());
           return rng;
         });
       }) : Option.none();

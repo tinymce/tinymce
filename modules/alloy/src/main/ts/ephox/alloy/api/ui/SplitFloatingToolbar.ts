@@ -65,7 +65,7 @@ const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingT
       [
         Coupling.config({
           others: {
-            overflowGroup () {
+            overflowGroup() {
               return ToolbarGroup.sketch({
                 ...externals['overflow-group'](),
                 items: [

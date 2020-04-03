@@ -39,7 +39,7 @@ export default (): void => {
   const pClose = ModalDialog.parts().close({
     dom: DomFactory.fromHtml('<button type="button" aria-hidden="true" class="mce-close"></button>'),
     components: [
-      Container.sketch({ dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] } })
+      Container.sketch({ dom: { tag: 'i', classes: [ 'mce-ico', 'mce-i-remove' ] }})
     ]
   });
 
@@ -54,7 +54,7 @@ export default (): void => {
           tag: 'button',
           innerHtml: 'Wait for 5 seconds'
         },
-        action: (comp) => {
+        action: (_comp) => {
           ModalDialog.setBusy(dialog, (dlg, busyBehaviours) => ({
             dom: {
               tag: 'div',
@@ -134,7 +134,7 @@ export default (): void => {
       ],
 
       lazySink,
-      onEscape () {
+      onEscape() {
         console.log('escaping');
         return Option.some<boolean>(true);
       },

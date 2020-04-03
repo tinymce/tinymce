@@ -5,30 +5,31 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Obj } from '@ephox/katamari';
+
 export const charMap = {
   '\u00a0': 'nbsp',
   '\u00ad': 'shy'
 };
 
 export const charMapToRegExp = function (charMap, global?) {
-  let key, regExp = '';
+  let regExp = '';
 
-  for (key in charMap) {
+  Obj.each(charMap, (_value, key) => {
     regExp += key;
-  }
+  });
 
   return new RegExp('[' + regExp + ']', global ? 'g' : '');
 };
 
 export const charMapToSelector = function (charMap) {
-  let key, selector = '';
-
-  for (key in charMap) {
+  let selector = '';
+  Obj.each(charMap, (value) => {
     if (selector) {
       selector += ',';
     }
-    selector += 'span.mce-' + charMap[key];
-  }
+    selector += 'span.mce-' + value;
+  });
 
   return selector;
 };

@@ -32,7 +32,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
     })
   );
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const makeFlow = (v: string) => {
       return Container.sketch({
         dom: {
@@ -67,39 +67,39 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           value: 'tools-menu-value',
           text: 'Tools Menu',
           items: Arr.map([
-            { type: 'item', data: { value: 'packages', meta: { text: 'Packages' } }, hasSubmenu: true },
-            { type: 'item', data: { value: 'about', meta: { text: 'About' } } },
-            { type: 'widget', widget, data: { value: 'widget', meta: { } } }
+            { type: 'item', data: { value: 'packages', meta: { text: 'Packages' }}, hasSubmenu: true },
+            { type: 'item', data: { value: 'about', meta: { text: 'About' }}},
+            { type: 'widget', widget, data: { value: 'widget', meta: { }}}
           ], TestDropdownMenu.renderItem)
         },
         'packages': { // menu name should be triggering parent item so TieredMenuSpec path works
           value: 'packages-menu-value',
           text: 'Packages Menu',
           items: Arr.map([
-            { type: 'item', data: { value: 'sortby', meta: { text: 'SortBy' } }, hasSubmenu: true }
+            { type: 'item', data: { value: 'sortby', meta: { text: 'SortBy' }}, hasSubmenu: true }
           ], TestDropdownMenu.renderItem)
         },
         'sortby': {
           value: 'sortby-menu-value',
           text: 'Sortby Menu',
           items: Arr.map([
-            { type: 'item', data: { value: 'strings', meta: { text: 'Strings' } }, hasSubmenu: true },
-            { type: 'item', data: { value: 'numbers', meta: { text: 'Numbers' } }, hasSubmenu: true }
+            { type: 'item', data: { value: 'strings', meta: { text: 'Strings' }}, hasSubmenu: true },
+            { type: 'item', data: { value: 'numbers', meta: { text: 'Numbers' }}, hasSubmenu: true }
           ], TestDropdownMenu.renderItem)
         },
         'strings': {
           value: 'strings-menu-value',
           text: 'Strings Menu',
           items: Arr.map([
-            { type: 'item', data: { value: 'versions', meta: { text: 'Versions', html: '<b>V</b>ersions' } } },
-            { type: 'item', data: { value: 'alphabetic', meta: { text: 'Alphabetic' } } }
+            { type: 'item', data: { value: 'versions', meta: { text: 'Versions', html: '<b>V</b>ersions' }}},
+            { type: 'item', data: { value: 'alphabetic', meta: { text: 'Alphabetic' }}}
           ], TestDropdownMenu.renderItem)
         },
         'numbers': {
           value: 'numbers-menu-value',
           text: 'Numbers Menu',
           items: Arr.map([
-            { type: 'item', data: { value: 'doubled', meta: { text: 'Doubled digits' } }, hasSubmenu: false }
+            { type: 'item', data: { value: 'doubled', meta: { text: 'Doubled digits' }}, hasSubmenu: false }
           ], TestDropdownMenu.renderItem)
         }
       }, TestDropdownMenu.renderMenu),
@@ -124,7 +124,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
 
         components: [ ],
 
-        lazySink (c) {
+        lazySink(c) {
           TestDropdownMenu.assertLazySinkArgs('div', 'dropdown-button', c);
           return Result.value(sink.get(c));
         },
@@ -133,7 +133,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           menu: TestDropdownMenu.part(store)
         },
 
-        fetch () {
+        fetch() {
           return Future.pure(testData).map((d) => {
             return Option.from(TieredMenu.tieredData(d.primary, d.menus, d.expansions));
           });
@@ -143,7 +143,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
 
     return c;
 
-  }, (doc, body, gui, dropdown, store) => {
+  }, (doc, _body, gui, dropdown, store) => {
     gui.add(
       GuiFactory.build(sink.asSpec())
     );

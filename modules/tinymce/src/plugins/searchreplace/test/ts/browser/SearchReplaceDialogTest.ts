@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTes
       ]),
       Log.stepsAsStep('TBA', 'SearchReplace: Test some content selected', [
         tinyApis.sSetContent('<p>fish fish fish</p>'),
-        tinyApis.sSetSelection([0, 0], 5, [0, 0], 9),
+        tinyApis.sSetSelection([ 0, 0 ], 5, [ 0, 0 ], 9),
         Utils.sOpenDialog(tinyUi),
         Utils.sAssertFieldValue(tinyUi, 'input.tox-textfield[placeholder="Find"]', 'fish'),
         sFindAndAssertFound(3),
@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTes
       ]),
       Log.stepsAsStep('TBA', 'SearchReplace: Test some content selected with matchcase enabled', [
         tinyApis.sSetContent('<p>fish Fish fish</p>'),
-        tinyApis.sSetSelection([0, 0], 5, [0, 0], 9),
+        tinyApis.sSetSelection([ 0, 0 ], 5, [ 0, 0 ], 9),
         Utils.sOpenDialog(tinyUi),
         Utils.sAssertFieldValue(tinyUi, 'input.tox-textfield[placeholder="Find"]', 'Fish'),
         Utils.sSelectPreference(tinyUi, 'Match case'),
@@ -51,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTes
       ]),
       Log.stepsAsStep('TBA', 'SearchReplace: Test some content selected with wholewords enabled', [
         tinyApis.sSetContent('<p>ttt TTT ttt ttttt</p>'),
-        tinyApis.sSetSelection([0, 0], 0, [0, 0], 3),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 3),
         Utils.sOpenDialog(tinyUi),
         Utils.sAssertFieldValue(tinyUi, 'input.tox-textfield[placeholder="Find"]', 'ttt'),
         Utils.sSelectPreference(tinyUi, 'Find whole words only'),
@@ -61,7 +61,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTes
       ]),
       Log.stepsAsStep('TBA', 'SearchReplace: Test some content selected while changing preferences', [
         tinyApis.sSetContent('<p>fish fish Fish fishy</p>'),
-        tinyApis.sSetSelection([0, 0], 5, [0, 0], 9),
+        tinyApis.sSetSelection([ 0, 0 ], 5, [ 0, 0 ], 9),
         Utils.sOpenDialog(tinyUi),
         Utils.sAssertFieldValue(tinyUi, 'input.tox-textfield[placeholder="Find"]', 'fish'),
         sFindAndAssertFound(4),

@@ -39,7 +39,7 @@ const fracture = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => bo
 const fractures = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, start: E, soffset: number, finish: E, foffset: number, ceiling?: (e: E) => E) {
   const clumps = Clumps.collect(universe, isRoot, start, soffset, finish, foffset);
   return Arr.bind(clumps, function (clump) {
-    return fracture(universe, isRoot, clump.start(), clump.soffset(), clump.finish(), clump.foffset(), ceiling).toArray();
+    return fracture(universe, isRoot, clump.start, clump.soffset, clump.finish, clump.foffset, ceiling).toArray();
   });
 };
 

@@ -16,11 +16,11 @@ interface ZoneWalkerState<E> {
     concluded: (item: E, mode: Transition) => T
   ) => T;
   match: <T> (branches: {
-    inline: (item: E, mode: Transition, lang: Option<string>) => T,
-    text: (item: E, mode: Transition) => T,
-    empty: (item: E, mode: Transition) => T,
-    boundary: (item: E, mode: Transition, lang: Option<string>) => T,
-    concluded: (item: E, mode: Transition) => T
+    inline: (item: E, mode: Transition, lang: Option<string>) => T;
+    text: (item: E, mode: Transition) => T;
+    empty: (item: E, mode: Transition) => T;
+    boundary: (item: E, mode: Transition, lang: Option<string>) => T;
+    concluded: (item: E, mode: Transition) => T;
   }) => T;
   log: (label: string) => void;
 }
@@ -33,14 +33,14 @@ const adt: {
   concluded: <E> (item: E, mode: Transition) => ZoneWalkerState<E>;
 } = Adt.generate([
   // an inline element, so use the lang to identify if a new zone is needed
-  { inline: ['item', 'mode', 'lang'] },
-  { text: ['item', 'mode'] },
+  { inline: [ 'item', 'mode', 'lang' ] },
+  { text: [ 'item', 'mode' ] },
   // things like <img>, <br>
-  { empty: ['item', 'mode'] },
+  { empty: [ 'item', 'mode' ] },
   // things like boundary tags
-  { boundary: ['item', 'mode', 'lang'] },
+  { boundary: [ 'item', 'mode', 'lang' ] },
   // hit the starting tag
-  { concluded: ['item', 'mode'] }
+  { concluded: [ 'item', 'mode' ] }
 ]);
 
 const analyse = function <E, D> (universe: Universe<E, D>, item: E, mode: Transition, stopOn: (item: E, mode: Transition) => boolean) {
@@ -91,7 +91,7 @@ const process = function <E, D> (universe: Universe<E, D>, outcome: ZoneWalkerSt
         // Use boundary positions to assess whether we have moved out of the viewport.
         const position = viewport.assess(aItem);
         return ZonePosition.cata(position,
-          function (aboveBlock) {
+          function (_aboveBlock) {
             // We are before the viewport, so skip
             // Only sidestep if we hadn't already tried it. Otherwise, we'll loop forever.
             if (aMode !== Gather.backtrack) {
@@ -99,17 +99,17 @@ const process = function <E, D> (universe: Universe<E, D>, outcome: ZoneWalkerSt
             } else {
               return Trampoline.stop();
             }
-          }, function (inBlock) {
+          }, function (_inBlock) {
             // We are in the viewport, so process normally
             const opening = aMode === Gather.advance;
             (opening ? stack.openBoundary : stack.closeBoundary)(aLang, aItem);
             return doWalk(universe, aItem, aMode, stopOn, stack, transform, viewport);
-          }, function (belowBlock) {
+          }, function (_belowBlock) {
             // We've gone past the end of the viewport, so stop completely
             return Trampoline.stop();
           }
         );
-      }, function (aItem, aMode) {
+      }, function (_aItem, _aMode) {
         // concluded(aItem, aMode) DO NOTHING
         return Trampoline.stop();
       }

@@ -60,22 +60,22 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (s
     Logger.t('None block boundaries', GeneralSteps.sequence([
       Logger.t('Should be none since it is a single block', Chain.asStep(viewBlock, [
         cSetHtml('<p>a</p>'),
-        cReadBlockBoundary(true, [0, 0], 0),
+        cReadBlockBoundary(true, [ 0, 0 ], 0),
         cAssertBlockBoundaryNone
       ])),
       Logger.t('Should be none since it is a single block', Chain.asStep(viewBlock, [
         cSetHtml('<p>a</p>'),
-        cReadBlockBoundary(false, [0, 0], 1),
+        cReadBlockBoundary(false, [ 0, 0 ], 1),
         cAssertBlockBoundaryNone
       ])),
       Logger.t('Should be none since it is in the middle of a block', Chain.asStep(viewBlock, [
         cSetHtml('<p>ab</p><p>c</p>'),
-        cReadBlockBoundary(true, [0, 0], 1),
+        cReadBlockBoundary(true, [ 0, 0 ], 1),
         cAssertBlockBoundaryNone
       ])),
       Logger.t('Should be none since it is in the middle of a block', Chain.asStep(viewBlock, [
         cSetHtml('<p>c</p><p>ab</p>'),
-        cReadBlockBoundary(true, [1, 0], 1),
+        cReadBlockBoundary(true, [ 1, 0 ], 1),
         cAssertBlockBoundaryNone
       ]))
     ])),
@@ -83,33 +83,33 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (s
     Logger.t('Some block boundaries', GeneralSteps.sequence([
       Logger.t('Should some between simple blocks (forwards: true)', Chain.asStep(viewBlock, [
         cSetHtml('<p>a</p><p>b</p>'),
-        cReadBlockBoundary(true, [0, 0], 1),
-        cAssertBlockBoundaryPositions([0, 0], 1, [1, 0], 0),
-        cAssertBlockBoundaryBlocks([0], [1])
+        cReadBlockBoundary(true, [ 0, 0 ], 1),
+        cAssertBlockBoundaryPositions([ 0, 0 ], 1, [ 1, 0 ], 0),
+        cAssertBlockBoundaryBlocks([ 0 ], [ 1 ])
       ])),
       Logger.t('Should some between simple blocks (forwards: false)', Chain.asStep(viewBlock, [
         cSetHtml('<p>a</p><p>b</p>'),
-        cReadBlockBoundary(false, [1, 0], 0),
-        cAssertBlockBoundaryPositions([1, 0], 0, [0, 0], 1),
-        cAssertBlockBoundaryBlocks([1], [0])
+        cReadBlockBoundary(false, [ 1, 0 ], 0),
+        cAssertBlockBoundaryPositions([ 1, 0 ], 0, [ 0, 0 ], 1),
+        cAssertBlockBoundaryBlocks([ 1 ], [ 0 ])
       ])),
       Logger.t('Should some between complex blocks (forwards: true)', Chain.asStep(viewBlock, [
         cSetHtml('<p><em>a</em></p><p><em>b</em></p>'),
-        cReadBlockBoundary(true, [0, 0, 0], 1),
-        cAssertBlockBoundaryPositions([0, 0, 0], 1, [1, 0, 0], 0),
-        cAssertBlockBoundaryBlocks([0], [1])
+        cReadBlockBoundary(true, [ 0, 0, 0 ], 1),
+        cAssertBlockBoundaryPositions([ 0, 0, 0 ], 1, [ 1, 0, 0 ], 0),
+        cAssertBlockBoundaryBlocks([ 0 ], [ 1 ])
       ])),
       Logger.t('Should some between complex blocks (forwards: false)', Chain.asStep(viewBlock, [
         cSetHtml('<p><em>a</em></p><p><em>b</em></p>'),
-        cReadBlockBoundary(false, [1, 0, 0], 0),
-        cAssertBlockBoundaryPositions([1, 0, 0], 0, [0, 0, 0], 1),
-        cAssertBlockBoundaryBlocks([1], [0])
+        cReadBlockBoundary(false, [ 1, 0, 0 ], 0),
+        cAssertBlockBoundaryPositions([ 1, 0, 0 ], 0, [ 0, 0, 0 ], 1),
+        cAssertBlockBoundaryBlocks([ 1 ], [ 0 ])
       ])),
       Logger.t('Should some between blocks with br (forwards: true)', Chain.asStep(viewBlock, [
         cSetHtml('<p>a<br></p><p>b</p>'),
-        cReadBlockBoundary(true, [0, 0], 1),
-        cAssertBlockBoundaryPositions([0, 0], 1, [1, 0], 0),
-        cAssertBlockBoundaryBlocks([0], [1])
+        cReadBlockBoundary(true, [ 0, 0 ], 1),
+        cAssertBlockBoundaryPositions([ 0, 0 ], 1, [ 1, 0 ], 0),
+        cAssertBlockBoundaryBlocks([ 0 ], [ 1 ])
       ]))
     ]))
   ], function () {

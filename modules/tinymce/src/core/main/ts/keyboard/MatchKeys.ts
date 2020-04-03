@@ -43,14 +43,13 @@ const matchesEvent = function (pattern: KeyPattern, evt: KeyboardEvent) {
 
 const match = function (patterns: KeyPattern[], evt: KeyboardEvent) {
   return Arr.bind(defaultPatterns(patterns), (pattern) => {
-    return matchesEvent(pattern, evt) ? [pattern] : [ ];
+    return matchesEvent(pattern, evt) ? [ pattern ] : [ ];
   });
 };
 
 const action = function (f, ...x: any[]) {
-  const args = Array.prototype.slice.call(arguments, 1);
   return function () {
-    return f.apply(null, args);
+    return f.apply(null, x);
   };
 };
 

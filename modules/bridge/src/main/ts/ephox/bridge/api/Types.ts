@@ -21,8 +21,8 @@ import * as Table from '../components/dialog/Table';
 import { ColumnTypes, PresetTypes, PresetItemTypes } from '../components/toolbar/ToolbarSplitButton';
 import * as Label from '../components/dialog/Label';
 import * as UrlDialog from '../components/dialog/UrlDialog';
-// tslint:disable-next-line:no-duplicate-imports
-import { DialogButton } from '../components/dialog/Dialog';
+
+type DialogButton = Dialog.DialogButton;
 
 // These are the types that are to be used internally in implementations
 

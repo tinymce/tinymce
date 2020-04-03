@@ -21,13 +21,13 @@ import * as Zwsp from '../text/Zwsp';
 import * as DomSerializerFilters from './DomSerializerFilters';
 import * as DomSerializerPreProcess from './DomSerializerPreProcess';
 import { isWsPreserveElement } from './ElementType';
+import { WriterSettings } from '../api/html/Writer';
 
 export interface SerializerArgs extends ParserArgs {
   format?: string;
 }
 
-interface DomSerializerSettings extends DomParserSettings, SchemaSettings, SerializerSettings {
-  entity_encoding?: string;
+interface DomSerializerSettings extends DomParserSettings, WriterSettings, SchemaSettings, SerializerSettings {
   url_converter?: URLConverter;
   url_converter_scope?: {};
 }
@@ -92,7 +92,7 @@ const toHtml = function (editor: Editor, settings: SerializerSettings, schema: S
 };
 
 const DomSerializer = function (settings: DomSerializerSettings, editor: Editor): DomSerializer {
-  const tempAttrs = ['data-mce-selected'];
+  const tempAttrs = [ 'data-mce-selected' ];
 
   const dom = editor && editor.dom ? editor.dom : DOMUtils.DOM;
   const schema = editor && editor.schema ? editor.schema : Schema(settings);
@@ -115,14 +115,14 @@ const DomSerializer = function (settings: DomSerializerSettings, editor: Editor)
     addNodeFilter: htmlParser.addNodeFilter,
     addAttributeFilter: htmlParser.addAttributeFilter,
     serialize,
-    addRules (rules) {
+    addRules(rules) {
       schema.addValidElements(rules);
     },
-    setRules (rules) {
+    setRules(rules) {
       schema.setValidElements(rules);
     },
     addTempAttr: Fun.curry(addTempAttr, htmlParser, tempAttrs),
-    getTempAttrs () {
+    getTempAttrs() {
       return tempAttrs;
     },
     getNodeFilters: htmlParser.getNodeFilters,

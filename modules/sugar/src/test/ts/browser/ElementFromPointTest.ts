@@ -40,7 +40,7 @@ UnitTest.test('ElementFromPointTest', function () {
     KAssert.eqNone('Should be none', getAt(p, placeX, placeY, testX, testY));
   };
 
-  Arr.each([bg, a], function (elm) {
+  Arr.each([ bg, a ], function (elm) {
     Insert.append(Body.body(), elm);
   });
 
@@ -55,5 +55,5 @@ UnitTest.test('ElementFromPointTest', function () {
   checkMatch(a, 20, 20, bg, 10, 10);
   checkNone(a, 0, 0, -1000, -1000);
 
-  Arr.each([bg, a], Remove.remove);
+  Arr.each([ bg, a ], Remove.remove);
 });

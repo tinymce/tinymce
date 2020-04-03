@@ -28,12 +28,11 @@ UnitTest.test('DirectionTest', function () {
     Remove.remove(element);
   };
 
-  const direction = Direction.getDirection(el);
   assertDirection(el, 'ltr');
   assertOnDirection(el, 'isLeft', 'isRight', 'isLeft');
 
   const arabicElement = EphoxElement('div');
-  Attr.setAll(arabicElement, {lang: 'ar', dir: 'rtl'});
+  Attr.setAll(arabicElement, { lang: 'ar', dir: 'rtl' });
   assertDirection(arabicElement, 'rtl');
   assertOnDirection(arabicElement, 'isLeft', 'isRight', 'isRight');
 });

@@ -23,7 +23,7 @@ UnitTest.test('Intersperse', () => {
   check([ 1 ], [ 1 ], 2);
   check([ 1, 2, 1, 2, 1 ], [ 1, 1, 1 ], 2);
   check([ 'a', 3, 'a', 3, 'a' ], [ 'a', 'a', 'a' ], 3);
-  check([ [ 1 ], [ 4 ], [ 1 ] ], [ [ 1 ], [ 1 ] ], [ 4 ]);
+  check([[ 1 ], [ 4 ], [ 1 ]], [[ 1 ], [ 1 ]], [ 4 ]);
   checkErr('Cannot intersperse undefined', undefined, 2);
 });
 

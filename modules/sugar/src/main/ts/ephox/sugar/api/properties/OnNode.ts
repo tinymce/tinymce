@@ -4,9 +4,9 @@ import Element from '../node/Element';
 import { Element as DomElement, Node as DomNode } from '@ephox/dom-globals';
 
 const addClass = function (clazz: string) {
- return function (element: Element<DomElement>) {
-   Class.add(element, clazz);
- };
+  return function (element: Element<DomElement>) {
+    Class.add(element, clazz);
+  };
 };
 
 const removeClass = function (clazz: string) {

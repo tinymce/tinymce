@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function (success,
 
   const setup = function () {
     const all = function (node) {
-      let list = [node];
+      let list = [ node ];
 
       if (node.hasChildNodes()) {
         for (let i = 0; i < node.childNodes.length; i++) {
@@ -64,7 +64,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function (success,
     const walker = new TreeWalker(nodes[0], viewBlock.get());
     let actualNodes;
 
-    actualNodes = [walker.current()];
+    actualNodes = [ walker.current() ];
     while ((walker.next())) {
       actualNodes.push(walker.current());
     }
@@ -76,7 +76,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function (success,
     const walker = new TreeWalker(nodes[nodes.length - 1], viewBlock.get());
     let actualNodes;
 
-    actualNodes = [walker.current()];
+    actualNodes = [ walker.current() ];
     while ((walker.prev2())) {
       actualNodes.push(walker.current());
     }
@@ -89,7 +89,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', function (success,
     const walker = new TreeWalker(nodes[nodes.length - 1], viewBlock.get());
     let actualNodes;
 
-    actualNodes = [walker.current()];
+    actualNodes = [ walker.current() ];
     while ((walker.prev2(true))) {
       actualNodes.push(walker.current());
     }

@@ -88,7 +88,7 @@ const generateContextMenu = (contextMenus: Record<string, Menu.ContextMenuApi>, 
         return acc;
       }
     } else {
-      return acc.concat([name]);
+      return acc.concat([ name ]);
     }
   }, []);
 
@@ -130,7 +130,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       fireDismissalEventInstead: { },
       inlineBehaviours: Behaviour.derive([
         AddEventsBehaviour.config('dismissContextMenu', [
-          AlloyEvents.run(SystemEvents.dismissRequested(), (comp, se) => {
+          AlloyEvents.run(SystemEvents.dismissRequested(), (comp, _se) => {
             Sandboxing.close(comp);
             editor.focus();
           })

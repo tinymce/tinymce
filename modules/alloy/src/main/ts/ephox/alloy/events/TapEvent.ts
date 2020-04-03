@@ -1,5 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Cell, Fun, Obj, Option } from '@ephox/katamari';
+import { Cell, Obj, Option } from '@ephox/katamari';
 import { Compare, Element, EventArgs } from '@ephox/sugar';
 import { Touch, TouchEvent } from '@ephox/dom-globals';
 
@@ -20,15 +20,15 @@ const getTouch = (event: EventArgs<TouchEvent>): Option<Touch> => {
 
 // Check to see if the touch has changed a *significant* amount
 const isFarEnough = (touch: Touch, data: TouchHistoryData): boolean => {
-  const distX = Math.abs(touch.clientX - data.x());
-  const distY = Math.abs(touch.clientY - data.y());
+  const distX = Math.abs(touch.clientX - data.x);
+  const distY = Math.abs(touch.clientY - data.y);
   return distX > SIGNIFICANT_MOVE || distY > SIGNIFICANT_MOVE;
 };
 
 export interface TouchHistoryData {
-  x: () => number;
-  y: () => number;
-  target: () => Element;
+  x: number;
+  y: number;
+  target: Element;
 }
 
 const monitor = (settings: GuiEventSettings) => {
@@ -50,9 +50,9 @@ const monitor = (settings: GuiEventSettings) => {
       longpress.cancel();
 
       const data = {
-        x: Fun.constant(touch.clientX),
-        y: Fun.constant(touch.clientY),
-        target: event.target
+        x: touch.clientX,
+        y: touch.clientY,
+        target: event.target()
       };
 
       longpress.schedule(event);
@@ -76,10 +76,10 @@ const monitor = (settings: GuiEventSettings) => {
     longpress.cancel();
 
     const isSame = (data: TouchHistoryData) => {
-      return Compare.eq(data.target(), event.target());
+      return Compare.eq(data.target, event.target());
     };
 
-    return startData.get().filter(isSame).map((data) => {
+    return startData.get().filter(isSame).map((_data) => {
       if (longpressFired.get()) {
         event.prevent();
         return false;

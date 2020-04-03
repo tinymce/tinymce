@@ -1,7 +1,7 @@
 import { getDemoRegistry } from './../buttons/DemoRegistry';
 
 const editor = {
-  on: (s, f) => { }
+  on: (_s, _f) => { }
 };
 
 export const registerPasteItems = () => {
@@ -14,7 +14,7 @@ export const registerPasteItems = () => {
       });
       return () => { };
     },
-    onAction: (buttonApi) => {
+    onAction: (_buttonApi) => {
       // toggles setting
     }
   });

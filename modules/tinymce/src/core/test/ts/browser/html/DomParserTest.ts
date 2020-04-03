@@ -5,6 +5,8 @@ import { LegacyUnit } from '@ephox/mcagar';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import Schema from 'tinymce/core/api/html/Schema';
 import Serializer from 'tinymce/core/api/html/Serializer';
+import { BlobCache } from 'tinymce/core/api/file/BlobCache';
+import Env from 'tinymce/core/api/Env';
 
 UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
@@ -45,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     LegacyUnit.equal(root.firstChild.name, 'b', 'Element name');
     LegacyUnit.deepEqual(
       root.firstChild.attributes, [{ name: 'title', value: 'title' },
-      { name: 'class', value: 'class' }],
+        { name: 'class', value: 'class' }],
       'Element attributes'
     );
     LegacyUnit.deepEqual(countNodes(root), { 'body': 1, 'b': 1, '#text': 1 }, 'Element attributes (count)');
@@ -456,7 +458,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     LegacyUnit.equal(serializer.serialize(root), '<strong>\u00a0</strong>');
   });
 
-  suite.test('Don\'t replace br inside root element when there is multiple brs', function () {
+  suite.test(`Don't replace br inside root element when there is multiple brs`, function () {
     let parser, root;
     const schema = Schema();
 
@@ -465,7 +467,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     LegacyUnit.equal(serializer.serialize(root), '<strong><br /><br /></strong>');
   });
 
-  suite.test('Don\'t replace br inside root element when there is siblings', function () {
+  suite.test(`Don't replace br inside root element when there is siblings`, function () {
     let parser, root;
     const schema = Schema();
 
@@ -509,7 +511,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     let parser, root;
     const schema = Schema();
 
-    parser = DomParser({ forced_root_block: 'p', forced_root_block_attrs: { class: 'class1' } }, schema);
+    parser = DomParser({ forced_root_block: 'p', forced_root_block_attrs: { class: 'class1' }}, schema);
     root = parser.parse(
       '<!-- a -->' +
       'b' +
@@ -525,7 +527,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
       '<p>d</p>' +
       '<p>e</p>' +
       '<p class="class1">f<strong>g</strong>h</p>',
-      'Mixed text nodes, inline elements and blocks.');
+    'Mixed text nodes, inline elements and blocks.');
   });
 
   suite.test('Parse html4 lists into html5 lists', function () {
@@ -629,7 +631,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
 
   suite.test('Valid classes multiple elements', function () {
     let parser, root;
-    const schema = Schema({ valid_classes: { '*': 'classA classB', 'strong': 'classC' } });
+    const schema = Schema({ valid_classes: { '*': 'classA classB', 'strong': 'classC' }});
 
     parser = DomParser({}, schema);
     root = parser.parse('<p class="classA classB classC"><strong class="classA classB classC classD">a</strong></p>');
@@ -706,8 +708,8 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
 
   suite.test('getAttributeFilters/getNodeFilters', function () {
     const parser = DomParser();
-    const cb1 = (nodes, name, args) => {};
-    const cb2 = (nodes, name, args) => {};
+    const cb1 = (_nodes, _name, _args) => {};
+    const cb2 = (_nodes, _name, _args) => {};
 
     parser.addAttributeFilter('attr', cb1);
     parser.addNodeFilter('node', cb2);
@@ -715,8 +717,53 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
     const attrFilters = parser.getAttributeFilters();
     const nodeFilters = parser.getNodeFilters();
 
-    Assertions.assertEq('Should be expected filter', {name: 'attr', callbacks: [cb1] }, attrFilters[attrFilters.length - 1]);
-    Assertions.assertEq('Should be extected filter', {name: 'node', callbacks: [cb2] }, nodeFilters[nodeFilters.length - 1]);
+    Assertions.assertEq('Should be expected filter', { name: 'attr', callbacks: [ cb1 ] }, attrFilters[attrFilters.length - 1]);
+    Assertions.assertEq('Should be extected filter', { name: 'node', callbacks: [ cb2 ] }, nodeFilters[nodeFilters.length - 1]);
+  });
+
+  suite.test('extract base64 uris to blobcache if blob cache is provided', () => {
+    const blobCache = BlobCache();
+    const parser = DomParser({ blob_cache: blobCache });
+    const base64 = 'R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw==';
+    const base64Uri = `data:image/gif;base64,${base64}`;
+    const serializedHtml = serializer.serialize(parser.parse(`<p><img src="${base64Uri}" /></p>`));
+    const blobInfo = blobCache.findFirst((bi) => bi.base64() === base64);
+    const blobUri = blobInfo.blobUri();
+
+    Assertions.assertEq(
+      'Should be html with blob uri',
+      `<p><img src="${blobUri}" /></p>`,
+      serializedHtml
+    );
+
+    blobCache.destroy();
+  });
+
+  suite.test('do not extract base64 uris for transparent images used by for example the page break plugin', () => {
+    const blobCache = BlobCache();
+    const parser = DomParser({ blob_cache: blobCache });
+    const html = `<p><img src="${Env.transparentSrc}" /></p>`;
+    const root = parser.parse(html);
+
+    Assertions.assertEq(
+      'Should be the unchanged transparent image source',
+      Env.transparentSrc,
+      root.getAll('img')[0].attr('src')
+    );
+
+    blobCache.destroy();
+  });
+
+  suite.test('do not extract base64 uris if blob cache is not provided', () => {
+    const parser = DomParser();
+    const html = '<p><img src="data:image/gif;base64,R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw==" /></p>';
+    const serializedHtml = serializer.serialize(parser.parse(html));
+
+    Assertions.assertEq(
+      'Should be html with base64 uri retained',
+      html,
+      serializedHtml
+    );
   });
 
   Pipeline.async({}, suite.toSteps({}), function () {

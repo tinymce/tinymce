@@ -29,14 +29,14 @@ type IframeSpec = Omit<Types.Iframe.Iframe, 'type'>;
 const getDynamicSource = (isSandbox): IFrameSourcing => {
   const cachedValue = Cell('');
   return {
-    getValue: (frameComponent: AlloyComponent): string => {
+    getValue: (_frameComponent: AlloyComponent): string => {
       // Ideally we should fetch data from the iframe...innerHtml, this triggers Corrs errors
       return cachedValue.get();
     },
     setValue: (frameComponent: AlloyComponent, html: string) => {
 
       if (!isSandbox) {
-        Attr.set(frameComponent.element(), 'src', 'javascript:\'\'');
+        Attr.set(frameComponent.element(), 'src', `javascript:''`);
         // IE 6-11 doesn't support data uris on iframeComponents
         // and Edge only supports upto ~4000 chars in data uris
         // so I guess they will have to be less secure since we can't sandbox on those
@@ -61,7 +61,7 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
   const isSandbox = platformNeedsSandboxing && spec.sandboxed;
 
   const attributes = {
-    ...spec.label.map<{ title?: string }>((title) => ({title})).getOr({}),
+    ...spec.label.map<{ title?: string }>((title) => ({ title })).getOr({}),
     ...isSandbox ? { sandbox : 'allow-scripts allow-same-origin' } : { }
   };
 
@@ -92,7 +92,7 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
     factory: { sketch: factory }
   });
 
-  return renderFormFieldWith(pLabel, pField, ['tox-form__group--stretched'], [ ]);
+  return renderFormFieldWith(pLabel, pField, [ 'tox-form__group--stretched' ], [ ]);
 };
 
 export {

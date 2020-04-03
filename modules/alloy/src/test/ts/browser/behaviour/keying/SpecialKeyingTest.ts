@@ -10,7 +10,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('SpecialKeyingTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -33,7 +33,7 @@ UnitTest.asynctest('SpecialKeyingTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, body, gui, _component, store) => {
     const press = (expected: string, key: number, modifiers: { }) => {
       return GeneralSteps.sequence([
         store.sClear,

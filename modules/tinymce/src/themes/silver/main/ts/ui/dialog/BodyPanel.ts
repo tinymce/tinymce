@@ -46,7 +46,7 @@ const renderBodyPanel = (spec: BodyPanelSpec, backstage: UiFactoryBackstage): Si
       {
         dom: {
           tag: 'div',
-          classes: ['tox-dialog__body-content']
+          classes: [ 'tox-dialog__body-content' ]
         },
         components: [
           memForm.asSpec()

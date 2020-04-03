@@ -134,7 +134,7 @@ UnitTest.test('CssTest', function () {
     KAssert.eqSome('getRaw font-family', 'Arial', Css.getRaw(play, 'font-family'));
 
     // final cleanup
-    Arr.each([c, d, play], Remove.remove);
+    Arr.each([ c, d, play ], Remove.remove);
 
   };
 

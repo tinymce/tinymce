@@ -266,7 +266,7 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (su
     let lastArgs, dispatcher, args;
 
     dispatcher = new EventDispatcher({
-      beforeFire (args) {
+      beforeFire(args) {
         lastArgs = args;
       }
     });
@@ -279,7 +279,7 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (su
     let lastArgs, dispatcher, args, data = '';
 
     dispatcher = new EventDispatcher({
-      beforeFire (args) {
+      beforeFire(args) {
         lastArgs = args;
         args.stopImmediatePropagation();
       }
@@ -299,7 +299,7 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (su
     let lastName, lastState, dispatcher;
 
     dispatcher = new EventDispatcher({
-      toggleEvent (name, state) {
+      toggleEvent(name, state) {
         lastName = name;
         lastState = state;
       }

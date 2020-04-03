@@ -63,7 +63,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     }
   };
 
-  const triggerExecute = (comp: AlloyComponent, se: SimulatedEvent<EventArgs>): Option<boolean> => {
+  const triggerExecute = (comp: AlloyComponent, _se: SimulatedEvent<EventArgs>): Option<boolean> => {
     AlloyTriggers.emitExecute(comp);
     return Option.some<boolean>(true);
   };
@@ -83,10 +83,10 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
         }),
         Coupling.config({
           others: {
-            sandbox (hotspot) {
+            sandbox(hotspot) {
               return DropdownUtils.makeSandbox(detail, hotspot, {
-                onOpen () { Toggling.on(hotspot); },
-                onClose () { Toggling.off(hotspot); }
+                onOpen() { Toggling.on(hotspot); },
+                onClose() { Toggling.off(hotspot); }
               });
             }
           }
@@ -95,7 +95,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
           mode: 'special',
           onSpace: triggerExecute,
           onEnter: triggerExecute,
-          onDown: (comp, se): Option<boolean> => {
+          onDown: (comp, _se): Option<boolean> => {
             if (Dropdown.isOpen(comp)) {
               const sandbox = Coupling.getCoupled(comp, 'sandbox');
               switchToMenu(sandbox);
@@ -105,7 +105,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
 
             return Option.some<boolean>(true);
           },
-          onEscape: (comp, se): Option<boolean> => {
+          onEscape: (comp, _se): Option<boolean> => {
             if (Dropdown.isOpen(comp)) {
               Dropdown.close(comp);
               return Option.some<boolean>(true);

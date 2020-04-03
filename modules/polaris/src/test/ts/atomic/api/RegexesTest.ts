@@ -18,8 +18,8 @@ UnitTest.test('RegexesTest', function () {
     'http://link/',
     'https://www.google.com.au/search?espv=2&q=hello+world&oq=hello+world&gs_l=serp.3..0l10.12435.15279.0.15482.13.9.0.3.3.0.241.1121.0j1j4.5.0.msedr...0...1c.1.64.serp..5.8.1125.GLORIzEXy3Y',
     'https://icmobile4.rtp.raleigh.ibm.com/files/app#/file/d0f8ed3e-f6d2-4577-8989-fa21ac332a20',
-    'https://www.google.com.aa/test.htm?$-_.+!*\'()test,test;test:test@=&',
-    'http://-.~_!$&\'()*+,;=:%40:80%2f::::::@example.com?-.~_!$&\'()*+,;=:%40:80%2f::::::@e#-.~_!$&\'()*+,;=:%40:80%2f::::::@e',
+    `https://www.google.com.aa/test.htm?$-_.+!*'()test,test;test:test@=&`,
+    `http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.com?-.~_!$&'()*+,;=:%40:80%2f::::::@e#-.~_!$&'()*+,;=:%40:80%2f::::::@e`,
     'http://xn--domain.com',
     'www.google.ca/index.htm?id=/bla/bla',
     'https://www.amazon.com.au/gp/product/B0798R2WXG/ref=s9_acsd_top_hd_bw_b5QhTfX_c_x_w?pf_rd_m=ANEGB3WVEVKZB&pf_rd_s=merchandised-search-4&pf_rd_r=KF6SD7C0M69MKF2FR9CC&pf_rd_t=101&pf_rd_p=8ad3bdba-b846-5350-9c00-72c2cb7191dd&pf_rd_i=4975211051'
@@ -50,7 +50,7 @@ UnitTest.test('RegexesTest', function () {
     'http://j.mp',
     'ftp://foo.bar/baz',
     'http://foo.bar/?q=Test%20URL-encoded%20stuff',
-    'http://-.~_!$&\'()*+,;=:%40:80%2f::::::@example.com',
+    `http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.com`,
     'http://1337.net',
     'http://a.b-c.de',
     'http://223.255.255.254'
@@ -148,7 +148,7 @@ UnitTest.test('RegexesTest', function () {
     assert.eq(false, match !== null && cs === match[0], 'expected false but was true: ' + cs);
   });
 
-  const autolinks = {// Ignore trailing: \-_.~*+=!&;:\'%@?#^${}(),
+  const autolinks = { // Ignore trailing: \-_.~*+=!&;:\'%@?#^${}(),
     'http://google.com\\': 'http://google.com',
     // 'http://google.com-': 'http://google.com', // TODO: change Regexes so domain cant end in '-'
     'http://google.com_': 'http://google.com',

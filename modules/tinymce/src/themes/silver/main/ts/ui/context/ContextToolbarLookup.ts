@@ -7,13 +7,13 @@
 
 import { Toolbar } from '@ephox/bridge';
 import { Node as DomNode } from '@ephox/dom-globals';
-import { Option, Arr } from '@ephox/katamari';
+import { Arr, Option } from '@ephox/katamari';
 import { Compare, Element, TransformFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import { ScopedToolbars } from './ContextToolbarScopes';
 
-export type LookupResult = { toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm, elem: Element };
+export type LookupResult = { toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm; elem: Element };
 
 const matchTargetWith = (elem: Element, toolbars: Array<Toolbar.ContextToolbar | Toolbar.ContextForm>): Option<LookupResult> => {
   return Arr.findMap(toolbars, (toolbarApi) =>
@@ -23,20 +23,23 @@ const matchTargetWith = (elem: Element, toolbars: Array<Toolbar.ContextToolbar |
 const lookup = (scopes: ScopedToolbars, editor: Editor): Option<LookupResult> => {
   const rootElem = Element.fromDom(editor.getBody());
   const isRoot = (elem: Element<DomNode>) => Compare.eq(elem, rootElem);
+  const isOutsideRoot = (startNode: Element<DomNode>) => !isRoot(startNode) && !Compare.contains(rootElem, startNode);
 
   const startNode = Element.fromDom(editor.selection.getNode());
 
-  // Ensure the lookup doesn't start on a parent element of the root node
-  if (Compare.contains(startNode, rootElem)) {
+  // Ensure the lookup doesn't start on a parent or sibling element of the root node
+  if (isOutsideRoot(startNode)) {
     return Option.none();
   }
 
   return matchTargetWith(startNode, scopes.inNodeScope).orThunk(() => {
     return matchTargetWith(startNode, scopes.inEditorScope).orThunk(() => {
-      return TransformFind.ancestor(startNode, (elem) => {
-        // TransformFind will try to transform before doing the isRoot check, so we need to check here as well
-        return isRoot(elem) ? Option.none() : matchTargetWith(elem, scopes.inNodeScope);
-      }, isRoot);
+      // Don't continue to traverse if the start node is the root node
+      if (isRoot(startNode)) {
+        return Option.none();
+      } else {
+        return TransformFind.ancestor(startNode, (elem) => matchTargetWith(elem, scopes.inNodeScope), isRoot);
+      }
     });
   });
 };

@@ -195,11 +195,11 @@ const sAssertEmbedData = function (ui: TinyUi, content: string) {
   return GeneralSteps.sequence([
     ui.sClickOnUi('Switch to Embed tab', '.tox-tab:contains("Embed")'),
     Waiter.sTryUntil('Textarea should have a proper value',
-    Chain.asStep(Body.body(), [
-      cFindInDialog(selectors.embed)(ui),
-      UiControls.cGetValue,
-      Assertions.cAssertEq('embed content', content)
-    ]), 1, 3000),
+      Chain.asStep(Body.body(), [
+        cFindInDialog(selectors.embed)(ui),
+        UiControls.cGetValue,
+        Assertions.cAssertEq('embed content', content)
+      ]), 1, 3000),
     ui.sClickOnUi('Switch to General tab', '.tox-tab:contains("General")')
   ]);
 };

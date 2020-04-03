@@ -55,9 +55,9 @@ const markAsSketchApi = <T extends Function>(f: T, apiFunction: Function): Funct
 };
 
 const getAnnotation = <T extends Function>(f: FunctionWithAnnotation<T>) => {
-  return f.hasOwnProperty('toFunctionAnnotation') ? Option.some(
-    f.toFunctionAnnotation!()
-  ) : Option.none();
+  return Option.from(
+    f.toFunctionAnnotation?.()
+  );
 };
 
 export {

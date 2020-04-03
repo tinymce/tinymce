@@ -9,7 +9,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 UnitTest.asynctest('HtmlSelectTest', (success, failure) => {
 
   const sNoInitialValue = Step.async((next, die) => {
-    GuiSetup.setup((store, doc, body) => {
+    GuiSetup.setup((_store, _doc, _body) => {
       return GuiFactory.build(
         HtmlSelect.sketch({
           dom: { }, // is always a select
@@ -21,7 +21,7 @@ UnitTest.asynctest('HtmlSelectTest', (success, failure) => {
           ]
         })
       );
-    }, (doc, body, gui, component, store) => {
+    }, (_doc, _body, _gui, component, _store) => {
       return [
         RepresentPipes.sAssertValue('Checking initial value', 'alpha', component),
         RepresentPipes.sSetValue(component, 'beta'),
@@ -35,7 +35,7 @@ UnitTest.asynctest('HtmlSelectTest', (success, failure) => {
   });
 
   const sHasInitialValue = Step.async((next, die) => {
-    GuiSetup.setup((store, doc, body) => {
+    GuiSetup.setup((_store, _doc, _body) => {
       return GuiFactory.build(
         HtmlSelect.sketch({
           dom: { }, // is always a select
@@ -51,7 +51,7 @@ UnitTest.asynctest('HtmlSelectTest', (success, failure) => {
           ]
         })
       );
-    }, (doc, body, gui, component, store) => {
+    }, (_doc, _body, _gui, component, _store) => {
       return [
         Assertions.sAssertStructure(
           'Checking initial structure',

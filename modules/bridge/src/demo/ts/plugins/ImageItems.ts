@@ -1,8 +1,8 @@
 import { getDemoRegistry } from './../buttons/DemoRegistry';
 
 const editor = {
-  on: (s, f) => { },
-  off: (s, f) => { }
+  on: (_s, _f) => { },
+  off: (_s, _f) => { }
 };
 
 export const registerImageItems = () => {
@@ -13,7 +13,7 @@ export const registerImageItems = () => {
       editor.on('nodeChange', f);
       return () => editor.off('nodeChange', f);
     },
-    onAction: (buttonApi) => {
+    onAction: (_buttonApi) => {
       // show image dialog
     }
   });

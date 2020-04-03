@@ -56,7 +56,7 @@ const JSONUtils: JSONUtils = {
    * @param {string} text JSON String to parse into a JavaScript object.
    * @return {Object} Object from input JSON string or undefined if it failed.
    */
-  parse (text: string): any {
+  parse(text: string): any {
     try {
       return JSON.parse(text);
     } catch (ex) {

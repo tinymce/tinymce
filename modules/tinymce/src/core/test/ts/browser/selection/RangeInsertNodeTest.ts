@@ -28,10 +28,10 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeInsertNode', (success, f
       Logger.t('Insert node at start of text', GeneralSteps.sequence([
         tinyApis.sFocus(),
         tinyApis.sSetRawContent('<p>a</p>'),
-        tinyApis.sSetCursor([0, 0], 0),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
         sRangeInsertNode(editor, doc.createTextNode('X')),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -48,10 +48,10 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeInsertNode', (success, f
       Logger.t('Insert node at end of text', GeneralSteps.sequence([
         tinyApis.sFocus(),
         tinyApis.sSetRawContent('<p>a</p>'),
-        tinyApis.sSetCursor([0, 0], 1),
+        tinyApis.sSetCursor([ 0, 0 ], 1),
         sRangeInsertNode(editor, doc.createTextNode('X')),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -68,10 +68,10 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeInsertNode', (success, f
       Logger.t('Insert document fragment at start of text', GeneralSteps.sequence([
         tinyApis.sFocus(),
         tinyApis.sSetRawContent('<p>a</p>'),
-        tinyApis.sSetCursor([0, 0], 0),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
         sRangeInsertNode(editor, fragmentFromHtml('X', doc)),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('p', {

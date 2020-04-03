@@ -57,7 +57,7 @@ const open = function (editor: Editor, database: EmojiDatabase) {
       tabs: Arr.map(database.listCategories(), (cat) => ({
         title: cat,
         name: cat,
-        items: [searchField, resultsField]
+        items: [ searchField, resultsField ]
       }))
     };
     return {
@@ -97,7 +97,7 @@ const open = function (editor: Editor, database: EmojiDatabase) {
       updateFilter.throttle(dialogApi);
       dialogApi.focus(patternName);
       dialogApi.unblock();
-    }).catch((err) => {
+    }).catch((_err) => {
       dialogApi.redial({
         title: 'Emoticons',
         body: {

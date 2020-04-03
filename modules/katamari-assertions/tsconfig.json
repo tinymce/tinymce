@@ -1,7 +1,6 @@
 {
   "extends": "../../tsconfig.shared.json",
   "compilerOptions": {
-    "noUnusedLocals": false,
     "strict": false,
     "noImplicitThis": true,
     "strictBindCallApply": true,

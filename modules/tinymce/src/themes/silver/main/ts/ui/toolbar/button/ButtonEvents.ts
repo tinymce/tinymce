@@ -21,7 +21,7 @@ export interface InternalToolbarButtonExecuteEvent<T> extends CustomEvent {
 
 // Perform `action` when an item is clicked on, close menus, and stop event
 const onToolbarButtonExecute = <T>(info: OnMenuItemExecuteType<T>) => {
-  return AlloyEvents.runOnExecute(function (comp, simulatedEvent) {
+  return AlloyEvents.runOnExecute(function (comp, _simulatedEvent) {
     // If there is an action, run the action
     runWithApi(info, comp)((itemApi: T) => {
       AlloyTriggers.emitWith(comp, internalToolbarButtonExecute, {

@@ -14,29 +14,29 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
   const root = Cell(Option.none<Element<any>>());
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build({
-        dom: {
-          tag: 'input'
-        },
-        behaviours: Behaviour.derive([
-          Invalidating.config({
-            invalidClass: 'test-invalid',
-            getRoot: root.get,
-            notify: {},
-            validator: {
-              validate (input) {
-                const value = Value.get(input.element());
-                const res = value === 'good-value' ? Result.value('good-value') : Result.error('bad value: ' + value);
-                return Future.pure(res);
-              },
-              onEvent: 'custom.test.validate'
-            }
-          })
-        ])
-      }
+      dom: {
+        tag: 'input'
+      },
+      behaviours: Behaviour.derive([
+        Invalidating.config({
+          invalidClass: 'test-invalid',
+          getRoot: root.get,
+          notify: {},
+          validator: {
+            validate(input) {
+              const value = Value.get(input.element());
+              const res = value === 'good-value' ? Result.value('good-value') : Result.error('bad value: ' + value);
+              return Future.pure(res);
+            },
+            onEvent: 'custom.test.validate'
+          }
+        })
+      ])
+    }
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, component, _store) => {
 
     // This will be used for the other root.
     const other = GuiFactory.build({
@@ -53,7 +53,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
           Assertions.sAssertStructure(
             'Checking structure after marking valid',
-            ApproxStructure.build((s, str, arr) => {
+            ApproxStructure.build((s, _str, arr) => {
               return s.element('input', {
                 classes: [
                   arr.not('test-invalid')
@@ -73,7 +73,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
         Step.control(
           Assertions.sAssertStructure(
             'Checking structure after marking invalid',
-            ApproxStructure.build((s, str, arr) => {
+            ApproxStructure.build((s, _str, arr) => {
               return s.element('input', {
                 classes: [
                   arr.has('test-invalid')
@@ -125,7 +125,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
         Step.control(
           Assertions.sAssertStructure(
             'Checking structure after marking invalid',
-            ApproxStructure.build((s, str, arr) => {
+            ApproxStructure.build((s, str, _arr) => {
               return s.element('input', {
                 attrs: {
                   'aria-invalid': str.is('true')
@@ -145,7 +145,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
         Step.control(
           Assertions.sAssertStructure(
             'Checking structure after marking valid',
-            ApproxStructure.build((s, str, arr) => {
+            ApproxStructure.build((s, str, _arr) => {
               return s.element('input', {
                 attrs: {
                   'aria-invalid': str.is('false')
@@ -177,13 +177,13 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
       Step.wait(100)
     ]);
 
-    const cQueryApi = Chain.async((value, next, die) => {
+    const cQueryApi = Chain.async((_value, next, _die) => {
       Invalidating.query(component).get((res) => {
         next(res);
       });
     });
 
-    const cRunApi = Chain.async((value, next, die) => {
+    const cRunApi = Chain.async((_value, next, _die) => {
       Invalidating.run(component).get((res) => {
         next(res);
       });

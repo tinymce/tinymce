@@ -180,7 +180,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     editor.dom.fire(editor.getBody(), 'keyup', evt);
 
     LegacyUnit.strictEqual(added, false);
-    LegacyUnit.deepEqual(commands, ['Undo']);
+    LegacyUnit.deepEqual(commands, [ 'Undo' ]);
   });
 
   suite.test('Transact', function (editor) {
@@ -283,13 +283,13 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     data = editor.undoManager.data;
     LegacyUnit.equal(data.length, 3);
     LegacyUnit.equal(data[0].content, '<p>abc</p>');
-    LegacyUnit.deepEqual(data[0].bookmark, { start: [0, 0, 0] });
-    LegacyUnit.deepEqual(data[0].beforeBookmark, { start: [0, 0, 0] });
+    LegacyUnit.deepEqual(data[0].bookmark, { start: [ 0, 0, 0 ] });
+    LegacyUnit.deepEqual(data[0].beforeBookmark, { start: [ 0, 0, 0 ] });
     LegacyUnit.equal(data[1].content, '<p>a1c</p>');
-    LegacyUnit.deepEqual(data[1].bookmark, { start: [2, 0, 0] });
-    LegacyUnit.deepEqual(data[1].beforeBookmark, { start: [2, 0, 0] });
+    LegacyUnit.deepEqual(data[1].bookmark, { start: [ 2, 0, 0 ] });
+    LegacyUnit.deepEqual(data[1].beforeBookmark, { start: [ 2, 0, 0 ] });
     LegacyUnit.equal(data[2].content, '<p>a2c</p>');
-    LegacyUnit.deepEqual(data[2].bookmark, { start: [2, 0, 0] });
+    LegacyUnit.deepEqual(data[2].bookmark, { start: [ 2, 0, 0 ] });
     LegacyUnit.deepEqual(data[1].beforeBookmark, data[2].bookmark);
   });
 

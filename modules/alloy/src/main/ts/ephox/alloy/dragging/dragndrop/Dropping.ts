@@ -12,7 +12,7 @@ import { createDropEventDetails } from './DropEvent';
 
 const schema: FieldProcessorAdt[] = [
   FieldSchema.defaultedString('type', 'text/plain'),
-  FieldSchema.defaultedStringEnum('dropEffect', 'move', ['copy', 'move', 'link', 'none']),
+  FieldSchema.defaultedStringEnum('dropEffect', 'move', [ 'copy', 'move', 'link', 'none' ]),
   Fields.onHandler('onDrop'),
   Fields.onHandler('onDrag'),
   Fields.onHandler('onDragover'),

@@ -25,6 +25,8 @@ import { createTieredDataFrom } from '../menus/menu/SingleMenu';
 import { createPartialChoiceMenu } from '../menus/menu/MenuChoice';
 import { deriveMenuMovement } from '../menus/menu/MenuMovement';
 import ItemResponse from '../menus/item/ItemResponse';
+import { DisablingConfigs } from '../alien/DisablingConfigs';
+import * as ReadOnly from '../../ReadOnly';
 
 export interface SwatchPanelButtonSpec {
   dom: RawDomSchema;
@@ -45,11 +47,13 @@ export const renderPanelButton = (spec: SwatchPanelButtonSpec, sharedBackstage: 
     toggleClass: 'mce-active',
 
     dropdownBehaviours: Behaviour.derive([
+      DisablingConfigs.button(sharedBackstage.providers.isReadonly()),
+      ReadOnly.receivingConfig(),
       Unselecting.config({}),
       Tabstopping.config({})
     ]),
     layouts: spec.layouts,
-    sandboxClasses: ['tox-dialog__popups'],
+    sandboxClasses: [ 'tox-dialog__popups' ],
 
     lazySink: sharedBackstage.getSink,
     fetch: (comp) => {

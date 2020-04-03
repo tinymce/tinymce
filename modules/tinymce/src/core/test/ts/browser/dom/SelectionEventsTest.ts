@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (suc
   Theme();
 
   const mBindEventMutator = function (editor, eventName, mutator) {
-    return Step.stateful(function (value, next, die) {
+    return Step.stateful(function (_value, next, _die) {
       const eventArgs = Cell(null);
 
       const handler = function (e) {
@@ -29,14 +29,14 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (suc
   };
 
   const mUnbindEvent = function (editor, eventName) {
-    return Step.stateful(function (value: any, next, die) {
+    return Step.stateful(function (value: any, next, _die) {
       editor.off(eventName, value.handler);
       next({});
     });
   };
 
   const mAssertSetSelectionEventArgs = function (editor, expectedForward) {
-    return Step.stateful(function (value: any, next, die) {
+    return Step.stateful(function (value: any, next, _die) {
       Assertions.assertEq('Should be expected forward flag', expectedForward, value.eventArgs.get().forward);
       assertSelectAllRange(editor, value.eventArgs.get().range);
       next(value);
@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (suc
     });
   };
 
-  const sGetRng = function (editor, forward?) {
+  const sGetRng = function (editor, _forward?) {
     return Step.sync(function () {
       editor.selection.getRng();
     });
@@ -99,7 +99,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (suc
         mBindEvent(editor, 'AfterSetSelectionRange'),
         tinyApis.sSetContent('<p>a</p>'),
         sSetRng(editor, undefined),
-        Step.stateful(function (value, next, die) {
+        Step.stateful(function (value, next, _die) {
           Assertions.assertEq('', 'undefined', typeof value.eventArgs.get().forward);
           next(value);
         }),
@@ -112,9 +112,9 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (suc
       Logger.t('GetSelectionRange event', GeneralSteps.sequence([
         mBindEventMutator(editor, 'GetSelectionRange', selectAll),
         tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetCursor([0, 0], 0),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
         sGetRng(editor),
-        Step.stateful(function (value, next, die) {
+        Step.stateful(function (value, next, _die) {
           assertSelectAllRange(editor, editor.selection.getRng());
           assertSelectAllRange(editor, value.eventArgs.get().range);
           next(value);

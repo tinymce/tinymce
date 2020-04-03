@@ -32,12 +32,12 @@ const allWords = (function () {
   return Obj.keys(set);
 })();
 
-DomEvent.bind(button, 'click', function (event) {
+DomEvent.bind(button, 'click', function (_event) {
   highlight(allWords, underline);
 });
 
 const highlight = function (words: string[], nu: () => Wrapter<Element>) {
-  const matches = DomSearch.safeWords([p], words);
+  const matches = DomSearch.safeWords([ p ], words);
   Arr.each(matches, function (x) {
     DomWrapping.wrapper(x.elements(), nu);
   });

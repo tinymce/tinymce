@@ -18,12 +18,12 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
   const bA = Cell<BehaviourA | null>(null);
   const bB = Cell<Behaviour.AlloyBehaviour<any, any> | null>(null);
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const behaviourA = Behaviour.create({
       fields: [ ],
       name: 'behaviourA',
       active: {
-        exhibit (base, info) {
+        exhibit(_base, _info) {
           return DomModification.nu({
             classes: [ 'behaviour-a-exhibit' ]
           });
@@ -35,7 +35,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
         )
       },
       apis: {
-        behaveA (comp) {
+        behaveA(_comp) {
           store.adder('behaveA')();
         }
       }
@@ -49,7 +49,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       ],
       name: 'behaviourB',
       active: {
-        exhibit (base, info: { attr: string}) {
+        exhibit(_base, info: { attr: string}) {
           const extra = {
             attributes: {
               'behaviour-b-exhibit': info.attr
@@ -72,7 +72,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       Container.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'custom-component-test']
+          classes: [ 'custom-component-test' ]
         },
         uid: 'custom-uid',
         containerBehaviours: Behaviour.derive([
@@ -95,7 +95,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, component, store) => {
     return [
       Assertions.sAssertStructure(
         'Checking initial DOM modification',
@@ -129,7 +129,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       ]),
 
       Step.sync(() => {
-        bA.get()!.behaveA(component);
+        bA.get()?.behaveA(component);
       }),
 
       store.sAssertEq('Should now have an Api log', [

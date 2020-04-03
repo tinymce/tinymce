@@ -8,9 +8,9 @@
 import { Form, Invalidating, Representing } from '@ephox/alloy';
 import { Arr, Future, Futures, Merger, Obj, Option, Result, Results } from '@ephox/katamari';
 
-export interface FormValidator { 'value': string | number; 'text': string; }
+export interface FormValidator { 'value': string | number; 'text': string }
 
-const toValidValues = function <T>(values: { [key: string]: Option<T[keyof T]> }) {
+const toValidValues = function <T> (values: { [key: string]: Option<T[keyof T]> }) {
   const errors: string[] = [];
   const result: { [key: string]: T[keyof T] } = {};
 
@@ -50,12 +50,12 @@ const extract = <T>(form) => {
   const values = toValidValues(rawValues);
 
   // TODO: Consider how to work "required" into this
-  return values.fold(function (errs) {
+  return values.fold(function (_errs) {
     // TODO: Something went very wrong (could not find fields)
     return Future.pure(Result.error([]));
   }, function (vs) {
     const keys: string[] = Obj.keys(vs);
-    const validations: Array<Future<Result<any, { field: any, message: string }>>> = Arr.map(keys, function (key: string) {
+    const validations: Array<Future<Result<any, { field: any; message: string }>>> = Arr.map(keys, function (key: string) {
       // TODO: This should be fine because we just got the value.
       const field = Form.getField(form, key).getOrDie('Could not find field: ' + key);
       // TODO: check this refactored line if it breaks.

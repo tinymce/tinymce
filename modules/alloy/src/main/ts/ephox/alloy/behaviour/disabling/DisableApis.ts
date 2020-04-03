@@ -45,7 +45,7 @@ const ariaEnable = (component: AlloyComponent): void => {
   Attr.set(component.element(), 'aria-disabled', 'false');
 };
 
-const disable = (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless): void => {
+const disable = (component: AlloyComponent, disableConfig: DisableConfig, _disableState: Stateless): void => {
   disableConfig.disableClass.each((disableClass) => {
     Class.add(component.element(), disableClass);
   });
@@ -54,7 +54,7 @@ const disable = (component: AlloyComponent, disableConfig: DisableConfig, disabl
   disableConfig.onDisabled(component);
 };
 
-const enable = (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless): void => {
+const enable = (component: AlloyComponent, disableConfig: DisableConfig, _disableState: Stateless): void => {
   disableConfig.disableClass.each((disableClass) => {
     Class.remove(component.element(), disableClass);
   });

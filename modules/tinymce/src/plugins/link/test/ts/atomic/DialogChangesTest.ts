@@ -25,7 +25,7 @@ UnitTest.test('DialogChanges', () => {
         Logger.sync('assertNone(' + label + ')', () => {
           const actual = DialogChanges.getDelta(previousText, 'anchor', catalog, data);
           actual.each(
-            (a) => { throw new Error('Should not have found replacement text'); }
+            (_a) => { throw new Error('Should not have found replacement text'); }
           );
         });
       };

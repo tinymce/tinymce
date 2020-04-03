@@ -45,10 +45,10 @@ UnitTest.test('MatrixNavigationTest', () => {
       const postUp = MatrixNavigation.cycleUp(arb.matrix, arb.row, arb.col).getOrDie(
         'Should be able to cycleUp!'
       );
-      const postDown = MatrixNavigation.cycleDown(arb.matrix, postUp.rowIndex(), postUp.columnIndex()).getOrDie(
+      const postDown = MatrixNavigation.cycleDown(arb.matrix, postUp.rowIndex, postUp.columnIndex).getOrDie(
         'Should be able to cycleDown!'
       );
-      return Jsc.eq(postDown.rowIndex(), arb.row) && Jsc.eq(postDown.columnIndex(), arb.col);
+      return Jsc.eq(postDown.rowIndex, arb.row) && Jsc.eq(postDown.columnIndex, arb.col);
     }
   );
 
@@ -59,10 +59,10 @@ UnitTest.test('MatrixNavigationTest', () => {
       const postLeft = MatrixNavigation.cycleLeft(arb.matrix, arb.row, arb.col).getOrDie(
         'Should be able to cycleLeft'
       );
-      const postRight = MatrixNavigation.cycleRight(arb.matrix, postLeft.rowIndex(), postLeft.columnIndex()).getOrDie(
+      const postRight = MatrixNavigation.cycleRight(arb.matrix, postLeft.rowIndex, postLeft.columnIndex).getOrDie(
         'Should be able to cycleRight'
       );
-      return Jsc.eq(postRight.rowIndex(), arb.row) && Jsc.eq(postRight.columnIndex(), arb.col);
+      return Jsc.eq(postRight.rowIndex, arb.row) && Jsc.eq(postRight.columnIndex, arb.col);
     }
   );
 

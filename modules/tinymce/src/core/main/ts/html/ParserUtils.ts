@@ -7,8 +7,10 @@
 
 import Node from '../api/html/Node';
 import { Unicode } from '@ephox/katamari';
+import { DomParserSettings, ParserArgs } from '../api/html/DomParser';
+import Schema, { SchemaMap } from '../api/html/Schema';
 
-const paddEmptyNode = function (settings, args, blockElements, node) {
+const paddEmptyNode = (settings: DomParserSettings, args: ParserArgs, blockElements: SchemaMap, node: Node) => {
   const brPreferred = settings.padd_empty_with_br || args.insert;
 
   if (brPreferred && blockElements[node.name]) {
@@ -18,26 +20,26 @@ const paddEmptyNode = function (settings, args, blockElements, node) {
   }
 };
 
-const isPaddedWithNbsp = function (node) {
+const isPaddedWithNbsp = (node: Node) => {
   return hasOnlyChild(node, '#text') && node.firstChild.value === Unicode.nbsp;
 };
 
-const hasOnlyChild = function (node, name) {
+const hasOnlyChild = (node: Node, name: string) => {
   return node && node.firstChild && node.firstChild === node.lastChild && node.firstChild.name === name;
 };
 
-const isPadded = function (schema, node) {
+const isPadded = (schema: Schema, node: Node) => {
   const rule = schema.getElementRule(node.name);
   return rule && rule.paddEmpty;
 };
 
-const isEmpty = function (schema, nonEmptyElements, whitespaceElements, node) {
-  return node.isEmpty(nonEmptyElements, whitespaceElements, function (node) {
+const isEmpty = (schema: Schema, nonEmptyElements: SchemaMap, whitespaceElements: SchemaMap, node: Node) => {
+  return node.isEmpty(nonEmptyElements, whitespaceElements, (node) => {
     return isPadded(schema, node);
   });
 };
 
-const isLineBreakNode = (node, blockElements) => node && (blockElements[node.name] || node.name === 'br');
+const isLineBreakNode = (node: Node, blockElements: SchemaMap) => node && (blockElements[node.name] || node.name === 'br');
 
 export {
   paddEmptyNode,

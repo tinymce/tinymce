@@ -7,7 +7,7 @@ import { Body, Element, Insert, Remove } from '@ephox/sugar';
 import { Cell, Option } from '@ephox/katamari';
 
 UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
-  const files = [ createFile('a.txt', 0, new Blob(['x'])) ];
+  const files = [ createFile('a.txt', 0, new Blob([ 'x' ])) ];
   const filesState = Cell(Option.none<FileList>());
 
   const pickFiles = (body: Element<any>, next: (files: FileList) => void) => {
@@ -20,8 +20,8 @@ UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
     elm.dom().click();
   };
 
-  const cPickFiles = Chain.async<Element, FileList>((input, next, die) => pickFiles(input, next));
-  const sPickFiles = Step.async((next, die) => pickFiles(Body.body(), (files) => {
+  const cPickFiles = Chain.async<Element, FileList>((input, next, _die) => pickFiles(input, next));
+  const sPickFiles = Step.async((next, _die) => pickFiles(Body.body(), (files) => {
     filesState.set(Option.some(files));
     next();
   }));

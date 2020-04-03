@@ -7,7 +7,7 @@
 
 import { InputHandlers, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
 import { Event, HTMLElement, KeyboardEvent, MouseEvent, Node as HtmlNode, TouchEvent } from '@ephox/dom-globals';
-import { Cell, Fun, Option, Struct } from '@ephox/katamari';
+import { Cell, Fun, Option } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker';
 import { Class, Compare, DomEvent, Element, Node, Selection, SelectionDirection } from '@ephox/sugar';
@@ -25,9 +25,16 @@ const hasInternalTarget = (e: Event) => {
   return Class.has(Element.fromDom(e.target as HTMLElement), 'ephox-snooker-resizer-bar') === false;
 };
 
+interface HandlerStruct {
+  readonly mousedown: (e: MouseEvent) => void;
+  readonly mouseover: (e: MouseEvent) => void;
+  readonly mouseup: (e: MouseEvent) => void;
+  readonly keyup: (e: KeyboardEvent) => void;
+  readonly keydown: (e: KeyboardEvent) => void;
+}
+
 export default function (editor: Editor, lazyResize: () => Option<TableResize>, selectionTargets: SelectionTargets) {
-  const handlerStruct = Struct.immutableBag(['mousedown', 'mouseover', 'mouseup', 'keyup', 'keydown'], []);
-  let handlers = Option.none();
+  let handlers: Option<HandlerStruct> = Option.none();
 
   const cloneFormats = getCloneElements(editor);
 
@@ -49,7 +56,7 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
 
   const annotations = SelectionAnnotation.byAttr(Ephemera, onSelection, onClear);
 
-  editor.on('init', function (e) {
+  editor.on('init', function (_e) {
     const win = editor.getWin();
     const body = Util.getBody(editor);
     const isRoot = Util.getIsRoot(editor);
@@ -60,7 +67,7 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
       const sel = editor.selection;
       const start = Element.fromDom(sel.getStart());
       const end = Element.fromDom(sel.getEnd());
-      const shared = DomParent.sharedOne(TableLookup.table, [start, end]);
+      const shared = DomParent.sharedOne(TableLookup.table, [ start, end ]);
       shared.fold(function () {
         annotations.clear(body);
       }, Fun.noop);
@@ -143,6 +150,7 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
       }
 
       // use bitwise & for optimal comparison
+      // eslint-disable-next-line no-bitwise
       return (raw.buttons & 1) !== 0;
     };
 
@@ -194,17 +202,17 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
     editor.on('keydown', keydown);
     editor.on('NodeChange', syncSelection);
 
-    handlers = Option.some(handlerStruct({
+    handlers = Option.some({
       mousedown: mouseDown,
       mouseover: mouseOver,
       mouseup: mouseUp,
       keyup,
       keydown
-    }));
+    });
   });
 
   const destroy = function () {
-    handlers.each(function (handlers) {
+    handlers.each(function (_handlers) {
       // editor.off('mousedown', handlers.mousedown());
       // editor.off('mouseover', handlers.mouseover());
       // editor.off('mouseup', handlers.mouseup());

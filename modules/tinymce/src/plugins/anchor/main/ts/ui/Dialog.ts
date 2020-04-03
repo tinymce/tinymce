@@ -8,19 +8,19 @@
 import Editor from 'tinymce/core/api/Editor';
 import * as Anchor from '../core/Anchor';
 
-const insertAnchor = function (editor: Editor, newId: string) {
+const insertAnchor = (editor: Editor, newId: string) => {
   if (!Anchor.isValidId(newId)) {
     editor.windowManager.alert(
       'Id should start with a letter, followed only by letters, numbers, dashes, dots, colons or underscores.'
     );
-    return true;
+    return false;
   } else {
     Anchor.insert(editor, newId);
-    return false;
+    return true;
   }
 };
 
-const open = function (editor: Editor) {
+const open = (editor: Editor) => {
   const currentId = Anchor.getId(editor);
 
   editor.windowManager.open({
@@ -53,8 +53,8 @@ const open = function (editor: Editor) {
     initialData: {
       id: currentId
     },
-    onSubmit (api) {
-      if (!insertAnchor(editor, api.getData().id)) { // TODO we need a better way to do validation
+    onSubmit(api) {
+      if (insertAnchor(editor, api.getData().id)) { // TODO we need a better way to do validation
         api.close();
       }
     }

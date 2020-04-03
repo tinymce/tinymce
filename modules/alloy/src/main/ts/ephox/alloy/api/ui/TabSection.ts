@@ -15,7 +15,7 @@ import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detail, components, spec, externals) => {
+const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detail, components, _spec, _externals) => {
   const changeTab = (button: AlloyComponent) => {
     const tabValue = Representing.getValue(button);
     AlloyParts.getPart(button, detail, 'tabview').each((tabview) => {
@@ -52,7 +52,7 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detai
       Arr.flatten([
 
         detail.selectFirst ? [
-          AlloyEvents.runOnAttached((section, simulatedEvent) => {
+          AlloyEvents.runOnAttached((section, _simulatedEvent) => {
             changeTabBy(section, Highlighting.getFirst);
           })
         ] : [ ],
@@ -71,14 +71,14 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detai
     ),
 
     apis: {
-      getViewItems (section: AlloyComponent) {
+      getViewItems(section: AlloyComponent) {
         return AlloyParts.getPart(section, detail, 'tabview').map((tabview) => {
           return Replacing.contents(tabview);
         }).getOr([ ]);
       },
 
       // How should "clickToDismiss" interact with this? At the moment, it will never dismiss
-      showTab (section: AlloyComponent, tabKey: string) {
+      showTab(section: AlloyComponent, tabKey: string) {
         // We only change the tab if it isn't currently active because that takes
         // the whole "dismiss" issue out of the equation.
         const getTabIfNotActive = (tabbar: AlloyComponent) => {

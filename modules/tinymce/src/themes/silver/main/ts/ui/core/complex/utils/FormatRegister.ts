@@ -14,7 +14,7 @@ import { FormatItem, FormatterFormatItem, PreviewSpec, SubMenuFormatItem } from 
 export type IsSelectedForType = (format: string) => (currentValue: Option<any>) => boolean;
 export type GetPreviewForType = (format: string) => () => Option<PreviewSpec>;
 
-const processBasic = (item: { format: string, title: string }, isSelectedFor, getPreviewFor): FormatterFormatItem => {
+const processBasic = (item: { format: string; title: string }, isSelectedFor, getPreviewFor): FormatterFormatItem => {
   const formatterSpec: Omit<FormatterFormatItem, 'format'> = {
     type: 'formatter',
     isSelected: isSelectedFor(item.format),
@@ -25,12 +25,12 @@ const processBasic = (item: { format: string, title: string }, isSelectedFor, ge
 
 // TODO: This is adapted from StyleFormats in the mobile theme. Consolidate.
 const register = (editor: Editor, formats, isSelectedFor: IsSelectedForType, getPreviewFor: GetPreviewForType) => {
-  const enrichSupported = (item: { format: string, title: string }): FormatterFormatItem => {
+  const enrichSupported = (item: { format: string; title: string }): FormatterFormatItem => {
     return processBasic(item, isSelectedFor, getPreviewFor);
   };
 
   // Item that triggers a submenu
-  const enrichMenu = (item: { title: TranslateIfNeeded; getStyleItems: () => FormatItem[]; }): SubMenuFormatItem => {
+  const enrichMenu = (item: { title: TranslateIfNeeded; getStyleItems: () => FormatItem[] }): SubMenuFormatItem => {
     const submenuSpec = {
       type: 'submenu' as 'submenu'
     };

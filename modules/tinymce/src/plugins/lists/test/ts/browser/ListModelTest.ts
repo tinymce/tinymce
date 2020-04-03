@@ -12,7 +12,7 @@ import { ListType } from 'tinymce/plugins/lists/listModel/Util';
 
 UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
   const arbitratyContent = Jsc.bless({
-    generator: Arbitraries.content('inline').generator.map((el) => [el])
+    generator: Arbitraries.content('inline').generator.map((el) => [ el ])
   });
 
   const arbitraryEntry = Jsc.record({
@@ -20,8 +20,8 @@ UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
     depth: Jsc.integer(1, 10),
     content: Jsc.small(arbitratyContent),
     listType: Jsc.oneof(Jsc.constant(ListType.OL), Jsc.constant(ListType.UL)),
-    listAttributes: Jsc.oneof(Jsc.constant({}), Jsc.constant({style: 'list-style-type: lower-alpha;'})),
-    itemAttributes: Jsc.oneof(Jsc.constant({}), Jsc.constant({style: 'color: red;'})),
+    listAttributes: Jsc.oneof(Jsc.constant({}), Jsc.constant({ style: 'list-style-type: lower-alpha;' })),
+    itemAttributes: Jsc.oneof(Jsc.constant({}), Jsc.constant({ style: 'color: red;' })),
   });
 
   const arbitraryEntries = Jsc.array(arbitraryEntry);
@@ -34,7 +34,7 @@ UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
 
   const composeParse = (entries: Entry[]): Entry[] => {
     return composeList(document, entries)
-      .map((list) => parseLists([list], Option.none()))
+      .map((list) => parseLists([ list ], Option.none()))
       .bind(Arr.head)
       .map((entrySet) => entrySet.entries)
       .getOr([]);
@@ -45,7 +45,7 @@ UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
   };
 
   const errorMessage = (inputEntries: Entry[], outputEntries: Entry[]): string => {
-    return `\nPretty print counterexample:\n` +
+    return '\nPretty print counterexample:\n' +
     `input: [${stringifyEntries(inputEntries)}\n]\n` +
     `output: [${stringifyEntries(outputEntries)}\n]`;
   };

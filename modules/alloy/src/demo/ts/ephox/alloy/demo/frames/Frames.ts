@@ -1,5 +1,5 @@
 import { Option } from '@ephox/katamari';
-import { Body, Element, Traverse} from '@ephox/sugar';
+import { Body, Element, Traverse } from '@ephox/sugar';
 import { HTMLFrameElement, HTMLDocument, console } from '@ephox/dom-globals';
 
 // tslint:disable:no-console
@@ -30,7 +30,7 @@ const write = (element: Element, content: string): void => {
   if (!Body.inBody(element)) { throw new Error('Internal error: attempted to write to an iframe that is not n the DOM'); }
 
   const doc = readDoc(element);
-  const dom = doc.dom() as HTMLDocument;
+  const dom = doc.dom();
   dom.open();
   dom.writeln(content);
   dom.close();

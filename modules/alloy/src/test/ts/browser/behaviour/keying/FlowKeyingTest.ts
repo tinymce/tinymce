@@ -12,7 +12,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
 UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const item = (classes: string[], name: string) => {
       return Container.sketch({
         dom: {
@@ -40,7 +40,7 @@ UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
-          classes: [ 'flow-keying-test'],
+          classes: [ 'flow-keying-test' ],
           styles: {
             background: 'white',
             width: '200px',
@@ -64,7 +64,7 @@ UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
         ]
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, body, gui, _component, store) => {
 
     const targets = {
       one: { label: 'one', selector: '.one' },

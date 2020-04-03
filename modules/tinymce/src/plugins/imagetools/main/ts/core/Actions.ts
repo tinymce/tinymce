@@ -232,27 +232,25 @@ const flip = function (editor: Editor, imageUploadTimerState, axis) {
 };
 
 const handleDialogBlob = function (editor: Editor, imageUploadTimerState, img, originalSize, blob: Blob) {
-  return new Promise(function (resolve) {
-    BlobConversions.blobToImage(blob).
-      then(function (newImage) {
-        const newSize = ImageSize.getNaturalImageSize(newImage);
+  return BlobConversions.blobToImage(blob).
+    then(function (newImage) {
+      const newSize = ImageSize.getNaturalImageSize(newImage);
 
-        if (originalSize.w !== newSize.w || originalSize.h !== newSize.h) {
-          if (ImageSize.getImageSize(img)) {
-            ImageSize.setImageSize(img, newSize);
-          }
+      if (originalSize.w !== newSize.w || originalSize.h !== newSize.h) {
+        if (ImageSize.getImageSize(img)) {
+          ImageSize.setImageSize(img, newSize);
         }
+      }
 
-        URL.revokeObjectURL(newImage.src);
-        return blob;
-      }).
-      then(ResultConversions.blobToImageResult).
-      then(function (imageResult) {
-        return updateSelectedImage(editor, imageResult, true, imageUploadTimerState, img);
-      }, function () {
-        // Close dialog
-      });
-  });
+      URL.revokeObjectURL(newImage.src);
+      return blob;
+    }).
+    then(ResultConversions.blobToImageResult).
+    then(function (imageResult) {
+      return updateSelectedImage(editor, imageResult, true, imageUploadTimerState, img);
+    }, function () {
+      // Close dialog
+    });
 };
 
 export {

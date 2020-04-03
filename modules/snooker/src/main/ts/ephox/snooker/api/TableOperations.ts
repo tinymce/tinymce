@@ -1,4 +1,4 @@
-import { Arr, Fun, Option, Struct } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { Remove, Element } from '@ephox/sugar';
 import * as DetailsList from '../model/DetailsList';
 import { run, onCell, onCells, onMergable, onUnmergable, onPaste, onPasteRows, ExtractPasteRows, ExtractPaste, ExtractMergable } from '../model/RunOperation';
@@ -15,8 +15,8 @@ import * as TableContent from './TableContent';
 import * as TableLookup from './TableLookup';
 
 export interface TableOperationResult {
-  grid: () => Structs.RowCells[];
-  cursor: () => Option<Element>;
+  readonly grid: () => Structs.RowCells[];
+  readonly cursor: () => Option<Element>;
 }
 
 type CompElm = (e1: Element, e2: Element) => boolean;
@@ -28,7 +28,10 @@ const prune = function (table: Element) {
   }
 };
 
-const outcome: (grid: Structs.RowCells[], cursor: Option<Element>) => TableOperationResult = Struct.immutable('grid', 'cursor');
+const outcome = (grid: Structs.RowCells[], cursor: Option<Element>): TableOperationResult => ({
+  grid: Fun.constant(grid),
+  cursor: Fun.constant(cursor)
+});
 
 const elementFromGrid = function (grid: Structs.RowCells[], row: number, column: number) {
   return findIn(grid, row, column).orThunk(function () {
@@ -51,9 +54,9 @@ const bundle = function (grid: Structs.RowCells[], row: number, column: number) 
 const uniqueRows = function (details: Structs.DetailExt[]) {
   return Arr.foldl(details, function (rest, detail) {
     return Arr.exists(rest, function (currentDetail) {
-        return currentDetail.row() === detail.row();
-      }) ? rest : rest.concat([detail]);
-    }, [] as Structs.DetailExt[]).sort(function (detailA, detailB) {
+      return currentDetail.row() === detail.row();
+    }) ? rest : rest.concat([ detail ]);
+  }, [] as Structs.DetailExt[]).sort(function (detailA, detailB) {
     return detailA.row() - detailB.row();
   });
 };
@@ -61,9 +64,9 @@ const uniqueRows = function (details: Structs.DetailExt[]) {
 const uniqueColumns = function (details: Structs.DetailExt[]) {
   return Arr.foldl(details, function (rest, detail) {
     return Arr.exists(rest, function (currentDetail) {
-        return currentDetail.column() === detail.column();
-      }) ? rest : rest.concat([detail]);
-    }, [] as Structs.DetailExt[]).sort(function (detailA, detailB) {
+      return currentDetail.column() === detail.column();
+    }) ? rest : rest.concat([ detail ]);
+  }, [] as Structs.DetailExt[]).sort(function (detailA, detailB) {
     return detailA.column() - detailB.column();
   });
 };

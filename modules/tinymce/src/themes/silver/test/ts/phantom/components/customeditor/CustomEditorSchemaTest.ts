@@ -35,9 +35,9 @@ UnitTest.test('Custom Editor Schema Test', () => {
 
   Assert.eq('Expect init be valid', true, ValueSchema.asRaw('.', schema, {
     ...base,
-    init(el) {
+    init(_el) {
       return {
-        setValue: (value: string) => {},
+        setValue: (_value: string) => {},
         getValue: () => '',
         destroy: () =>  {}
       };
@@ -48,9 +48,9 @@ UnitTest.test('Custom Editor Schema Test', () => {
     ...base,
     scriptId: 'scriptId',
     scriptUrl: 'scriptUrl',
-    init(el) {
+    init(_el) {
       return {
-        setValue: (value: string) => {},
+        setValue: (_value: string) => {},
         getValue: () => '',
         destroy: () =>  {}
       };
@@ -68,15 +68,15 @@ UnitTest.test('Custom Editor Schema Test', () => {
       d: false,
       e: null,
       f: undefined,
-      // tslint:disable-next-line:no-construct
+      // eslint-disable-next-line no-new-wrappers
       g: new Boolean(false),
       h: new Date(),
       i: /^(?:fizz|buzz)/,
-      j: new Blob(['<a id="a"><b id="b">hey!</b></a>'], {type : 'text/html'}),
-      k: ['text', Infinity, true, false],
+      j: new Blob([ '<a id="a"><b id="b">hey!</b></a>' ], { type : 'text/html' }),
+      k: [ 'text', Infinity, true, false ],
       l: { prop: 'value' },
-      m: new Map([['key1', 'value1'], ['key2', 'value2']]),
-      n: new Set([1, 2, 3, 4, 5])
+      m: new Map([[ 'key1', 'value1' ], [ 'key2', 'value2' ]]),
+      n: new Set([ 1, 2, 3, 4, 5 ])
     }
   }).isValue());
 

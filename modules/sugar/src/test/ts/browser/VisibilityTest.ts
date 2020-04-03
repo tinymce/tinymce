@@ -33,5 +33,5 @@ UnitTest.test('VisibilityTest', function () {
   assert.eq(true, Visibility.isVisible(d));
   assert.eq(true, Visibility.isVisible(c));
 
-  Arr.each([c, d, s], Remove.remove);
+  Arr.each([ c, d, s ], Remove.remove);
 });

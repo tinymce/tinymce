@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableClassListTest', (success,
       Log.stepsAsStep('TBA', 'Table: no class input without setting', [
         tinyApis.sFocus(),
         tinyApis.sSetContent(tableHtml),
-        tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 1),
+        tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1),
         tinyApis.sExecCommand('mceTableProps'),
         TableTestUtils.sAssertDialogPresence(
           'Checking that class label is not present',
@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableClassListTest', (success,
         tinyApis.sFocus(),
         tinyApis.sSetSetting('table_class_list', [{ title: 'test', value: 'test' }]),
         tinyApis.sSetContent(tableHtml),
-        tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 1),
+        tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1),
         // FIX: Dupe with TableCellClassListTest.
         tinyApis.sExecCommand('mceTableProps'),
         TableTestUtils.sAssertSelectValue('Select class', 'Class', 'test'),

@@ -7,7 +7,7 @@
 
 import { document, HTMLElementEventMap, window } from '@ephox/dom-globals';
 import Env from '../Env';
-import Delay from '../util/Delay';
+import { Obj } from '@ephox/katamari';
 
 export type EventUtilsCallback<T> = (event: EventUtilsEvent<T>) => void;
 
@@ -91,7 +91,7 @@ const getTargetFromShadowDom = function (event, defaultTarget) {
 /**
  * Normalizes a native event object or just adds the event specific methods on a custom event.
  */
-const fix = function <T extends any>(originalEvent: T, data?): EventUtilsEvent<T> {
+const fix = function <T extends any> (originalEvent: T, data?): EventUtilsEvent<T> {
   let name;
   const event = data || {};
 
@@ -204,26 +204,6 @@ const bindOnReady = function (win, callback, eventUtils) {
     }
   };
 
-  const waitForDomLoaded = function () {
-    if (isDocReady()) {
-      removeEvent(doc, 'readystatechange', waitForDomLoaded);
-      readyHandler();
-    }
-  };
-
-  const tryScroll = function () {
-    try {
-      // If IE is used, use the trick by Diego Perini licensed under MIT by request to the author.
-      // http://javascript.nwbox.com/IEContentLoaded/
-      doc.documentElement.doScroll('left');
-    } catch (ex) {
-      Delay.setTimeout(tryScroll);
-      return;
-    }
-
-    readyHandler();
-  };
-
   if (isDocReady()) {
     readyHandler();
   } else {
@@ -255,10 +235,10 @@ class EventUtils {
   private readonly expando;
   private hasFocusIn: boolean;
   private hasMouseEnterLeave: boolean;
-  private mouseEnterLeave: { mouseenter: 'mouseover', mouseleave: 'mouseout' };
+  private mouseEnterLeave: { mouseenter: 'mouseover'; mouseleave: 'mouseout' };
   private count: number = 1;
 
-  constructor () {
+  public constructor() {
     this.expando = eventExpandoPrefix + (+new Date()).toString(32);
     this.hasMouseEnterLeave = 'onmouseenter' in document.documentElement;
     this.hasFocusIn = 'onfocusin' in document.documentElement;
@@ -277,7 +257,7 @@ class EventUtils {
    */
   public bind <K extends keyof HTMLElementEventMap>(target: any, name: K, callback: EventUtilsCallback<HTMLElementEventMap[K]>, scope?: {}): EventUtilsCallback<HTMLElementEventMap[K]>;
   public bind <T = any>(target: any, names: string, callback: EventUtilsCallback<T>, scope?: {}): EventUtilsCallback<T>;
-  public bind (target: any, names: string, callback: EventUtilsCallback<any>, scope?: {}): EventUtilsCallback<any> {
+  public bind(target: any, names: string, callback: EventUtilsCallback<any>, scope?: {}): EventUtilsCallback<any> {
     const self = this;
     let id, callbackList, i, name, fakeName, nativeHandler, capture;
     const win = window;
@@ -412,7 +392,7 @@ class EventUtils {
   public unbind <K extends keyof HTMLElementEventMap>(target: any, name: K, callback?: EventUtilsCallback<HTMLElementEventMap[K]>): this;
   public unbind <T = any>(target: any, names: string, callback?: EventUtilsCallback<T>): this;
   public unbind (target: any): this;
-  public unbind (target: any, names?: string, callback?: EventUtilsCallback<any>): this {
+  public unbind(target: any, names?: string, callback?: EventUtilsCallback<any>): this {
     let id, callbackList, i, ci, name, eventMap;
 
     // Don't bind to text nodes or comments
@@ -463,17 +443,18 @@ class EventUtils {
         }
       } else {
         // All events for a specific element
-        for (name in eventMap) {
-          callbackList = eventMap[name];
+        Obj.each(eventMap, (callbackList, name) => {
           removeEvent(target, callbackList.fakeName || name, callbackList.nativeHandler, callbackList.capture);
-        }
+        });
 
         eventMap = {};
       }
 
       // Check if object is empty, if it isn't then we won't remove the expando map
       for (name in eventMap) {
-        return this;
+        if (Obj.has(eventMap, name)) {
+          return this;
+        }
       }
 
       // Delete event object
@@ -501,7 +482,7 @@ class EventUtils {
    * @param {Object} args Optional arguments to send to the observers.
    * @return {EventUtils} Event utils instance.
    */
-  public fire (target: any, name: string, args?: {}): this {
+  public fire(target: any, name: string, args?: {}): this {
     let id;
 
     // Don't bind to text nodes or comments
@@ -536,7 +517,7 @@ class EventUtils {
    * @param {Object} target Target node/window object.
    * @return {EventUtils} Event utils instance.
    */
-  public clean (target: any): this {
+  public clean(target: any): this {
     let i, children;
 
     // Don't bind to text nodes or comments
@@ -575,7 +556,7 @@ class EventUtils {
   /**
    * Destroys the event object. Call this on IE to remove memory leaks.
    */
-  public destroy () {
+  public destroy() {
     this.events = {};
   }
 
@@ -596,7 +577,7 @@ class EventUtils {
    * @param {Event} evt Event object.
    * @param {String} id Expando id value to look for.
    */
-  private executeHandlers (evt, id) {
+  private executeHandlers(evt, id) {
     let callbackList, i, l, callback;
     const container = this.events[id];
 

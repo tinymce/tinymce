@@ -7,7 +7,7 @@ import { UnitTest, Assert } from '@ephox/bedrock-client';
 import fc from 'fast-check';
 
 UnitTest.test('Zip: unit tests', () => {
-  const check1 = (expectedZipToObject: Option<Record<string, string>>, expectedZipToTuples: Option<Array<{ k: string, v: string }>>, keys: string[], values: string[]) => {
+  const check1 = (expectedZipToObject: Option<Record<string, string>>, expectedZipToTuples: Option<Array<{ k: string; v: string }>>, keys: string[], values: string[]) => {
     const sort = <T>(a: T[], ord: (a: T, b: T) => -1 | 0 | 1) => {
       const c = a.slice();
       c.sort(ord);
@@ -18,12 +18,12 @@ UnitTest.test('Zip: unit tests', () => {
     const lt = -1;
     const gt = 1;
 
-    const sortTuples = (a: Array<{ k: string, v: string }>) => sort(a, (a: { k: string, v: string }, b: { k: string, v: string }) => (
+    const sortTuples = (a: Array<{ k: string; v: string }>) => sort(a, (a: { k: string; v: string }, b: { k: string; v: string }) => (
       a.k === b.k ? a.v === b.v ? eq
         : a.v > b.v ? gt
           : lt
         : a.k > b.k ? gt
-        : lt
+          : lt
     ));
 
     expectedZipToObject.fold(() => {
@@ -40,7 +40,7 @@ UnitTest.test('Zip: unit tests', () => {
 
   check1(
     Option.some({ q: 'a', r: 'x' }),
-    Option.some([ { k: 'q', v: 'a' }, { k: 'r', v: 'x' } ]),
+    Option.some([{ k: 'q', v: 'a' }, { k: 'r', v: 'x' }]),
     [ 'q', 'r' ],
     [ 'a', 'x' ]
   );

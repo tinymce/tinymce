@@ -13,7 +13,6 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import { SliderValue, SliderValueX, SliderValueY } from 'ephox/alloy/ui/types/SliderTypes';
-import { ConfiguredPart } from 'ephox/alloy/parts/AlloyParts';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 export default (): void => {
@@ -33,7 +32,7 @@ export default (): void => {
         mode: 'x',
         minX: 20,
         maxX: 100,
-        getInitialValue: Fun.constant({x: Fun.constant(80)})
+        getInitialValue: Fun.constant({ x: Fun.constant(80) })
       },
       stepSize: 10,
       snapToGrid: true,
@@ -48,7 +47,7 @@ export default (): void => {
               outline: '4px solid green'
             }
           }
-        }) as ConfiguredPart,
+        }),
         Slider.parts().thumb({
           dom: {
             tag: 'div',
@@ -69,10 +68,10 @@ export default (): void => {
     gui,
     'This is a basic slider with two snapping regions [35] and [75]. The minimum value is 0',
     Slider.sketch({
-      dom: { tag: 'div', styles: { 'margin-bottom': '40px' } },
+      dom: { tag: 'div', styles: { 'margin-bottom': '40px' }},
       model: {
         mode: 'y',
-        getInitialValue: Fun.constant({y: Fun.constant(35)})
+        getInitialValue: Fun.constant({ y: Fun.constant(35) })
       },
 
       stepSize: 40,
@@ -154,7 +153,7 @@ export default (): void => {
         maxX: 360,
         minY: 0,
         maxY: 360,
-        getInitialValue: Fun.constant({x: Fun.constant(120), y: Fun.constant(120)})
+        getInitialValue: Fun.constant({ x: Fun.constant(120), y: Fun.constant(120) })
       },
       stepSize: 10,
 
@@ -216,7 +215,7 @@ export default (): void => {
         Slider.parts().thumb({
           dom: {
             tag: 'div',
-            classes: ['demo-sliding-thumb'],
+            classes: [ 'demo-sliding-thumb' ],
             styles: {
               'height': '30px',
               'width': '10px',

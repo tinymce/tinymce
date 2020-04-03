@@ -49,7 +49,7 @@ UnitTest.asynctest('Editor Autocompleter delay response test', (success, failure
         const additionalContent = scenario.additionalContent;
         return GeneralSteps.sequence([
           store.sClear,
-          tinyApis.sSetContent(`<p></p>`),
+          tinyApis.sSetContent('<p></p>'),
           RealKeys.sSendKeysOn(
             'iframe => body => p',
             [
@@ -108,7 +108,7 @@ UnitTest.asynctest('Editor Autocompleter delay response test', (success, failure
           ch: '$',
           minChars: 0,
           columns: 'auto',
-          fetch: (pattern, maxResults) => {
+          fetch: (_pattern, _maxResults) => {
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve(

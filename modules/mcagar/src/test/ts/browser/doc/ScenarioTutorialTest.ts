@@ -35,15 +35,15 @@ UnitTest.asynctest('Tutorial: Property Testing with TinyMCE', (success, failure)
           }
         }
       }).generator, sAssertion(editor, body), {
-          scenario: {
-            exclusions: {
-              containers: Fun.never
-            }
-          },
-          property: {
-            tests: 100
+        scenario: {
+          exclusions: {
+            containers: Fun.never
           }
-        })
+        },
+        property: {
+          tests: 100
+        }
+      })
     ], loadSuccess, loadFailure);
 
   }, {}, success, failure);

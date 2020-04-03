@@ -11,12 +11,12 @@ import { HttpError } from 'ephox/jax/core/HttpError';
 const expectError = (label: string, response: FutureResult<any, HttpError>, expectedCalls: string[], actualCalls: string[]) => {
   return FutureResult.nu((callback) => {
     response.get((res) => {
-      res.fold((err) => {
+      res.fold((_err) => {
         console.log(label, 'successfully failed');
         assert.eq(expectedCalls, actualCalls);
         actualCalls = [];
         callback(Result.value({ }));
-      }, (val) => {
+      }, (_val) => {
         callback(Result.error('Unexpected value in test: ' + label));
       });
     });
@@ -63,14 +63,14 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
         responseType: DataType.JSON,
       },
       fakeFactory(invalidCalls)
-    ), [ 'cached', 'fresh'], invalidCalls),
+    ), [ 'cached', 'fresh' ], invalidCalls),
     expectValue('GET on valid url', {}, HttpJwt.get(
       {
         url: '/custom/jax/sample/token/valid',
         responseType: DataType.JSON,
       },
       fakeFactory(validCalls)
-    ), [ 'cached'], validCalls)
+    ), [ 'cached' ], validCalls)
   ];
 
   Arr.foldr(responses, function (res, rest) {

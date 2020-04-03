@@ -36,52 +36,52 @@ UnitTest.test('TransformOperationsTest', function () {
     };
 
     check([
-      [en('h(a)_0', true)]
+      [ en('h(a)_0', true) ]
     ], [
-        [en('a', false)]
-      ], 0);
+      [ en('a', false) ]
+    ], 0);
 
     check([
-      [en('a', false), en('a', false), en('a', false)],
-      [en('b', false), en('h(c)_0', true), en('d', false)],
-      [en('e', false), en('h(f)_1', true), en('h(f)_1', true)]
+      [ en('a', false), en('a', false), en('a', false) ],
+      [ en('b', false), en('h(c)_0', true), en('d', false) ],
+      [ en('e', false), en('h(f)_1', true), en('h(f)_1', true) ]
     ], [
-        [en('a', false), en('a', false), en('a', false)],
-        [en('b', false), en('c', false), en('d', false)],
-        [en('e', false), en('f', false), en('f', false)]
-      ], 1);
+      [ en('a', false), en('a', false), en('a', false) ],
+      [ en('b', false), en('c', false), en('d', false) ],
+      [ en('e', false), en('f', false), en('f', false) ]
+    ], 1);
 
     check([
-      [en('a', false), en('a', false), en('a', false)],
-      [en('b', false), en('h(c)_0', true), en('d', false)],
-      [en('f', false), en('f', false), en('f', false)]
+      [ en('a', false), en('a', false), en('a', false) ],
+      [ en('b', false), en('h(c)_0', true), en('d', false) ],
+      [ en('f', false), en('f', false), en('f', false) ]
     ], [
-        [en('a', false), en('a', false), en('a', false)],
-        [en('b', false), en('c', false), en('d', false)],
-        [en('f', false), en('f', false), en('f', false)]
-      ], 1);
+      [ en('a', false), en('a', false), en('a', false) ],
+      [ en('b', false), en('c', false), en('d', false) ],
+      [ en('f', false), en('f', false), en('f', false) ]
+    ], 1);
 
     check([
-      [en('h(a)_0', true), en('h(a)_0', true), en('h(a)_0', true)],
-      [en('h(b)_1', true), en('c', false), en('d', false)],
-      [en('h(f)_2', true), en('h(f)_2', true), en('h(f)_2', true)]
+      [ en('h(a)_0', true), en('h(a)_0', true), en('h(a)_0', true) ],
+      [ en('h(b)_1', true), en('c', false), en('d', false) ],
+      [ en('h(f)_2', true), en('h(f)_2', true), en('h(f)_2', true) ]
     ], [
-        [en('a', false), en('a', false), en('a', false)],
-        [en('b', false), en('c', false), en('d', false)],
-        [en('f', false), en('f', false), en('f', false)]
-      ], 0);
+      [ en('a', false), en('a', false), en('a', false) ],
+      [ en('b', false), en('c', false), en('d', false) ],
+      [ en('f', false), en('f', false), en('f', false) ]
+    ], 0);
 
     check([
-      [en('h(a)_0', true), en('h(a)_0', true), en('h(a)_0', true)],
-      [en('h(a)_0', true), en('h(a)_0', true), en('h(a)_0', true)],
-      [en('h(b)_1', true), en('c', false), en('d', false)],
-      [en('h(f)_2', true), en('h(f)_2', true), en('h(f)_2', true)]
+      [ en('h(a)_0', true), en('h(a)_0', true), en('h(a)_0', true) ],
+      [ en('h(a)_0', true), en('h(a)_0', true), en('h(a)_0', true) ],
+      [ en('h(b)_1', true), en('c', false), en('d', false) ],
+      [ en('h(f)_2', true), en('h(f)_2', true), en('h(f)_2', true) ]
     ], [
-        [en('a', false), en('a', false), en('a', false)],
-        [en('a', false), en('a', false), en('a', false)],
-        [en('b', false), en('c', false), en('d', false)],
-        [en('f', false), en('f', false), en('f', false)]
-      ], 0);
+      [ en('a', false), en('a', false), en('a', false) ],
+      [ en('a', false), en('a', false), en('a', false) ],
+      [ en('b', false), en('c', false), en('d', false) ],
+      [ en('f', false), en('f', false), en('f', false) ]
+    ], 0);
   })();
 
   // Test basic changing to header (row)
@@ -95,49 +95,49 @@ UnitTest.test('TransformOperationsTest', function () {
 
     check([[]], [[]], 0);
     check([
-      [en('h(a)_0', true)]
+      [ en('h(a)_0', true) ]
     ], [
-        [en('a', false)]
-      ], 0);
+      [ en('a', false) ]
+    ], 0);
 
     check([
-      [en('a', false), en('b', false), en('e', false)],
-      [en('a', false), en('h(c)_0', true), en('h(f)_1', true)],
-      [en('a', false), en('d', false), en('h(f)_1', true)]
+      [ en('a', false), en('b', false), en('e', false) ],
+      [ en('a', false), en('h(c)_0', true), en('h(f)_1', true) ],
+      [ en('a', false), en('d', false), en('h(f)_1', true) ]
     ], [
-        [en('a', false), en('b', false), en('e', false)],
-        [en('a', false), en('c', false), en('f', false)],
-        [en('a', false), en('d', false), en('f', false)]
-      ], 1);
+      [ en('a', false), en('b', false), en('e', false) ],
+      [ en('a', false), en('c', false), en('f', false) ],
+      [ en('a', false), en('d', false), en('f', false) ]
+    ], 1);
 
     check([
-      [en('a', false), en('b', false), en('f', false)],
-      [en('a', false), en('h(c)_0', true), en('f', false)],
-      [en('a', false), en('d', false), en('f', false)]
+      [ en('a', false), en('b', false), en('f', false) ],
+      [ en('a', false), en('h(c)_0', true), en('f', false) ],
+      [ en('a', false), en('d', false), en('f', false) ]
     ], [
-        [en('a', false), en('b', false), en('f', false)],
-        [en('a', false), en('c', false), en('f', false)],
-        [en('a', false), en('d', false), en('f', false)]
-      ], 1);
+      [ en('a', false), en('b', false), en('f', false) ],
+      [ en('a', false), en('c', false), en('f', false) ],
+      [ en('a', false), en('d', false), en('f', false) ]
+    ], 1);
 
     check([
-      [en('h(a)_0', true), en('h(b)_1', true), en('h(f)_2', true)],
-      [en('h(a)_0', true), en('c', false), en('h(f)_2', true)],
-      [en('h(a)_0', true), en('d', false), en('h(f)_2', true)]
+      [ en('h(a)_0', true), en('h(b)_1', true), en('h(f)_2', true) ],
+      [ en('h(a)_0', true), en('c', false), en('h(f)_2', true) ],
+      [ en('h(a)_0', true), en('d', false), en('h(f)_2', true) ]
     ], [
-        [en('a', false), en('b', false), en('f', false)],
-        [en('a', false), en('c', false), en('f', false)],
-        [en('a', false), en('d', false), en('f', false)]
-      ], 0);
+      [ en('a', false), en('b', false), en('f', false) ],
+      [ en('a', false), en('c', false), en('f', false) ],
+      [ en('a', false), en('d', false), en('f', false) ]
+    ], 0);
 
     check([
-      [en('h(a)_0', true), en('h(a)_0', true), en('h(b)_1', true), en('h(f)_2', true)],
-      [en('h(a)_0', true), en('h(a)_0', true), en('c', false), en('h(f)_2', true)],
-      [en('h(a)_0', true), en('h(a)_0', true), en('d', false), en('h(f)_2', true)]
+      [ en('h(a)_0', true), en('h(a)_0', true), en('h(b)_1', true), en('h(f)_2', true) ],
+      [ en('h(a)_0', true), en('h(a)_0', true), en('c', false), en('h(f)_2', true) ],
+      [ en('h(a)_0', true), en('h(a)_0', true), en('d', false), en('h(f)_2', true) ]
     ], [
-        [en('a', false), en('a', false), en('b', false), en('f', false)],
-        [en('a', false), en('a', false), en('c', false), en('f', false)],
-        [en('a', false), en('a', false), en('d', false), en('f', false)]
-      ], 0);
+      [ en('a', false), en('a', false), en('b', false), en('f', false) ],
+      [ en('a', false), en('a', false), en('c', false), en('f', false) ],
+      [ en('a', false), en('a', false), en('d', false), en('f', false) ]
+    ], 0);
   })();
 });

@@ -95,7 +95,7 @@ UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function (success, fai
     fn(2);
 
     Delay.setTimeout(function () {
-      LegacyUnit.deepEqual(args, [2]);
+      LegacyUnit.deepEqual(args, [ 2 ]);
       done();
     }, 10);
   });
@@ -121,7 +121,7 @@ UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function (success, fai
     let id;
 
     id = Delay.setTimeout(function () {
-      throw new Error('clearTimeout didn\'t work.');
+      throw new Error(`clearTimeout didn't work.`);
     });
 
     Delay.clearTimeout(id);
@@ -132,7 +132,7 @@ UnitTest.asynctest('browser.tinymce.core.util.DelayTest', function (success, fai
     let id;
 
     id = Delay.setInterval(function () {
-      throw new Error('clearInterval didn\'t work.');
+      throw new Error(`clearInterval didn't work.`);
     });
 
     Delay.clearInterval(id);

@@ -35,7 +35,7 @@ export interface InvalidatingConfigSpec extends Behaviour.BehaviourConfigSpec {
 export interface InvalidatingConfig extends Behaviour.BehaviourConfigDetail {
   invalidClass: string;
   notify: Option<{
-    aria: string,
+    aria: string;
     getContainer: (input: AlloyComponent) => Option<Element>;
     onValid: (comp: AlloyComponent) => void;
     validHtml: string;
@@ -46,6 +46,6 @@ export interface InvalidatingConfig extends Behaviour.BehaviourConfigDetail {
   validator: Option<{
     validate: (input: AlloyComponent) => Future<Result<any, string>>;
     onEvent: string;
-    validateOnLoad?: boolean
+    validateOnLoad?: boolean;
   }>;
 }

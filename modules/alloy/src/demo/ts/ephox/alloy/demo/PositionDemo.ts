@@ -57,7 +57,7 @@ export default (): void => {
       eventOrder: {
         'alloy.execute': [ 'toggling', 'alloy.base.behaviour' ]
       },
-      action (comp) {
+      action(comp) {
         if (Toggling.isOn(comp)) {
           Attachment.attach(sink, popup);
           Positioning.position(sink, {
@@ -143,7 +143,7 @@ export default (): void => {
             tag: 'button',
             innerHtml: 'Show popup at cursor'
           },
-          action (button) {
+          action(button) {
             Attachment.attach(sink, popup);
             Positioning.position(sink, {
               anchor: 'selection',
@@ -178,7 +178,7 @@ export default (): void => {
             tag: 'button',
             innerHtml: 'Show popup at cursor'
           },
-          action (button) {
+          action(_button) {
             Attachment.attach(sink, popup);
             Positioning.position(sink, {
               anchor: 'selection',

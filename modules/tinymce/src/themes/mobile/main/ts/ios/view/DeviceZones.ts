@@ -5,10 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Css, Height, Traverse } from '@ephox/sugar';
+import { Css, Element, Height, Traverse } from '@ephox/sugar';
+import { HTMLElement, Node as DomNode, Window } from '@ephox/dom-globals';
 
 import * as Orientation from '../../touch/view/Orientation';
 import * as Devices from './Devices';
+
+type Keyboard = Devices.Keyboard;
 
 // Green zone is the area below the toolbar and above the keyboard, its considered the viewable
 // region that is not obstructed by the keyboard. If the keyboard is down, then the Green Zone is larger.
@@ -27,11 +30,10 @@ import * as Devices from './Devices';
 
 */
 
-const softKeyboardLimits = function (outerWindow) {
-  return Devices.findDevice(outerWindow.screen.width, outerWindow.screen.height);
-};
+const softKeyboardLimits = (outerWindow): Keyboard =>
+  Devices.findDevice(outerWindow.screen.width, outerWindow.screen.height);
 
-const accountableKeyboardHeight = function (outerWindow) {
+const accountableKeyboardHeight = (outerWindow: Window): number => {
   const portrait = Orientation.get(outerWindow).isPortrait();
   const limits = softKeyboardLimits(outerWindow);
 
@@ -45,7 +47,7 @@ const accountableKeyboardHeight = function (outerWindow) {
   return (visualScreenHeight - outerWindow.innerHeight) > keyboard ? 0 : keyboard;
 };
 
-const getGreenzone = function (socket, dropup) {
+const getGreenzone = (socket: Element<HTMLElement>, dropup: Element<HTMLElement>): number => {
   const outerWindow = Traverse.owner(socket).dom().defaultView;
   // Include the dropup for this calculation because it represents the total viewable height.
   const viewportHeight = Height.get(socket) + Height.get(dropup);
@@ -53,7 +55,7 @@ const getGreenzone = function (socket, dropup) {
   return viewportHeight - acc;
 };
 
-const updatePadding = function (contentBody, socket, dropup) {
+const updatePadding = (contentBody: Element<DomNode>, socket: Element<HTMLElement>, dropup: Element<HTMLElement>): void => {
   const greenzoneHeight = getGreenzone(socket, dropup);
   const deltaHeight = (Height.get(socket) + Height.get(dropup)) - greenzoneHeight;
   // TBIO-3878 Changed the element that was receiving the padding from the iframe to the body of the

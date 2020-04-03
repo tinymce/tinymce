@@ -181,7 +181,7 @@ const renderImagePanel = (initialUrl: string) => {
   const container = Container.sketch({
     dom: {
       tag: 'div',
-      classes: [ 'tox-image-tools__image']
+      classes: [ 'tox-image-tools__image' ]
     },
     components: [
       memBg.asSpec(),

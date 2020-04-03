@@ -6,6 +6,7 @@
  */
 
 import Tools from './Tools';
+import { Obj } from '@ephox/katamari';
 
 /**
  * This utility class is used for easier inheritance.
@@ -53,7 +54,7 @@ const Class: Class = function () {
 Class.extend = extendClass = function (prop: Prop): ExtendedClass {
   const self = this;
   const _super = self.prototype;
-  let prototype, name, member;
+  let prototype;
 
   // The dummy class constructor
   const Class = function () {
@@ -106,7 +107,7 @@ Class.extend = extendClass = function (prop: Prop): ExtendedClass {
   // don't run the init constructor)
   initializing = true;
 
-  /*eslint new-cap:0 */
+  /* eslint new-cap:0 */
   prototype = new self();
   initializing = false;
 
@@ -166,15 +167,13 @@ Class.extend = extendClass = function (prop: Prop): ExtendedClass {
   }
 
   // Copy the properties over onto the new prototype
-  for (name in prop) {
-    member = prop[name];
-
+  Obj.each(prop, (member, name) => {
     if (typeof member === 'function' && _super[name]) {
       prototype[name] = createMethod(name, member);
     } else {
       prototype[name] = member;
     }
-  }
+  });
 
   // Populate our constructed prototype object
   Class.prototype = prototype;

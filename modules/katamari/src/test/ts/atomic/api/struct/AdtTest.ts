@@ -25,7 +25,7 @@ UnitTest.test('ADT Test', () => {
   };
 
   const checkInvalidGenerate = (cases, message) => {
-    checkInvalid('generate() did not throw an error. Input: "' + message + '\'', () => {
+    checkInvalid('generate() did not throw an error. Input: "' + message + '"', () => {
       Adt.generate(cases);
     });
   };
@@ -33,10 +33,10 @@ UnitTest.test('ADT Test', () => {
   checkInvalidGenerate({}, 'object instead of array');
   checkInvalidGenerate([], 'empty cases array');
   checkInvalidGenerate([ 'f' ], 'array contains strings');
-  checkInvalidGenerate([ {} ], 'empty case');
-  checkInvalidGenerate([ { t: {} } ], 'object case arguments');
-  checkInvalidGenerate([ { cata: [] } ], 'case named cata');
-  checkInvalidGenerate([ { a: [] }, { a: [] } ], 'duplicate names');
+  checkInvalidGenerate([{}], 'empty case');
+  checkInvalidGenerate([{ t: {}}], 'object case arguments');
+  checkInvalidGenerate([{ cata: [] }], 'case named cata');
+  checkInvalidGenerate([{ a: [] }, { a: [] }], 'duplicate names');
   checkInvalidGenerate([
     {
       one: [],

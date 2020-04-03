@@ -46,14 +46,14 @@ const builder = (detail: WidgetItemDetail) => {
     domModification: detail.domModification,
     events: AlloyEvents.derive([
       AlloyEvents.runOnExecute((component, simulatedEvent) => {
-        focusWidget(component).each((widget) => {
+        focusWidget(component).each((_widget) => {
           simulatedEvent.stop();
         });
       }),
 
       AlloyEvents.run(NativeEvents.mouseover(), ItemEvents.onHover),
 
-      AlloyEvents.run(SystemEvents.focusItem(), (component, simulatedEvent) => {
+      AlloyEvents.run(SystemEvents.focusItem(), (component, _simulatedEvent) => {
         if (detail.autofocus) { focusWidget(component); } else { Focusing.focus(component); }
       })
     ]),
@@ -69,7 +69,7 @@ const builder = (detail: WidgetItemDetail) => {
         Focusing.config({
           ignore: detail.ignoreFocus,
           // What about stopMousedown from ItemType?
-          onFocus (component) {
+          onFocus(component) {
             ItemEvents.onFocus(component);
           }
         }),
@@ -81,7 +81,7 @@ const builder = (detail: WidgetItemDetail) => {
           } : Behaviour.revoke(),
           onLeft: onHorizontalArrow,
           onRight: onHorizontalArrow,
-          onEscape (component, simulatedEvent) {
+          onEscape(component, simulatedEvent) {
             // If the outer list item didn't have focus,
             // then focus it (i.e. escape the inner widget). Only do if not autofocusing
             // Autofocusing should treat the widget like it is the only item, so it should

@@ -6,14 +6,15 @@
  */
 
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Boxes, Focusing, Keying, SplitFloatingToolbar as AlloySplitFloatingToolbar, SplitSlidingToolbar as AlloySplitSlidingToolbar, Tabstopping, Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup } from '@ephox/alloy';
-import { Arr, Fun, Option, Result } from '@ephox/katamari';
+import { Arr, Option, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 import { ToolbarMode } from '../../api/Settings';
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Channels from '../../Channels';
-import { createReadonlyReceivingForOverflow } from '../../ReadOnly';
 import { renderIconButtonSpec } from '../general/Button';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
+import { DisablingConfigs } from '../alien/DisablingConfigs';
+import * as ReadOnly from '../../ReadOnly';
 
 export interface MoreDrawerData {
   lazyMoreButton: () => AlloyComponent;
@@ -27,10 +28,10 @@ export interface ToolbarSpec {
   onEscape: (comp: AlloyComponent) => Option<boolean>;
   initGroups: ToolbarGroup[];
   attributes?: Record<string, string>;
+  providers: UiFactoryBackstageProviders;
 }
 export interface MoreDrawerToolbarSpec extends ToolbarSpec {
   getSink: () => Result<AlloyComponent, string>;
-  backstage: UiFactoryBackstage;
   moreDrawerData?: MoreDrawerData;
 }
 
@@ -43,13 +44,13 @@ const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
   const attributes = toolbarGroup.title.fold(() => {
     return {};
   },
-    (title) => {
-      return { attributes: { title } };
-    });
+  (title) => {
+    return { attributes: { title }};
+  });
   return {
     dom: {
       tag: 'div',
-      classes: ['tox-toolbar__group'],
+      classes: [ 'tox-toolbar__group' ],
       ...attributes
     },
 
@@ -73,32 +74,33 @@ const renderToolbarGroup = (toolbarGroup: ToolbarGroup) => {
   return AlloyToolbarGroup.sketch(renderToolbarGroupCommon(toolbarGroup));
 };
 
-const getToolbarbehaviours = (toolbarSpec: ToolbarSpec, modeName, getOverflow: (comp: AlloyComponent) => Option<AlloyComponent>) => {
+const getToolbarbehaviours = (toolbarSpec: ToolbarSpec, modeName) => {
   const onAttached = AlloyEvents.runOnAttached(function (component) {
     const groups = Arr.map(toolbarSpec.initGroups, renderToolbarGroup);
     AlloyToolbar.setGroups(component, groups);
   });
 
   return Behaviour.derive([
+    DisablingConfigs.toolbarButton(toolbarSpec.providers.isReadonly()),
+    ReadOnly.receivingConfig(),
     Keying.config({
       // Tabs between groups
       mode: modeName,
       onEscape: toolbarSpec.onEscape,
       selector: '.tox-toolbar__group'
     }),
-    AddEventsBehaviour.config('toolbar-events', [ onAttached ]),
-    createReadonlyReceivingForOverflow(getOverflow)
+    AddEventsBehaviour.config('toolbar-events', [ onAttached ])
   ]);
 };
 
-const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec, getOverflow: (comp: AlloyComponent) => Option<AlloyComponent>) => {
+const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec) => {
   const modeName = toolbarSpec.cyclicKeying ? 'cyclic' : 'acyclic';
 
   return {
     uid: toolbarSpec.uid,
     dom: {
       tag: 'div',
-      classes: ['tox-toolbar-overlord']
+      classes: [ 'tox-toolbar-overlord' ]
     },
     parts: {
       // This already knows it is a toolbar group
@@ -113,20 +115,20 @@ const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec, getOverflow
         tooltip: Option.some('More...'),
         primary: false,
         borderless: false
-      }, Option.none(), toolbarSpec.backstage.shared.providers)
+      }, Option.none(), toolbarSpec.providers)
     },
-    splitToolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName, getOverflow)
+    splitToolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName)
   };
 };
 
 const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
-  const baseSpec = renderMoreToolbarCommon(toolbarSpec, AlloySplitFloatingToolbar.getOverflow);
+  const baseSpec = renderMoreToolbarCommon(toolbarSpec);
   const overflowXOffset = 4;
 
   const primary = AlloySplitFloatingToolbar.parts().primary({
     dom: {
       tag: 'div',
-      classes: ['tox-toolbar__primary']
+      classes: [ 'tox-toolbar__primary' ]
     }
   });
 
@@ -139,11 +141,12 @@ const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
       const headerBounds = Boxes.absolute(headerElem);
       const docElem = Traverse.documentElement(headerElem);
       const docBounds = Boxes.absolute(docElem);
+      const minTop = Math.min(docBounds.y, headerBounds.x);
       return Boxes.bounds(
-        headerBounds.x() + overflowXOffset,
-        docBounds.y(),
-        headerBounds.width() - overflowXOffset * 2,
-        docBounds.height()
+        headerBounds.x + overflowXOffset,
+        minTop,
+        headerBounds.width - overflowXOffset * 2,
+        Math.max(docBounds.height, headerBounds.bottom - minTop)
       );
     },
     parts: {
@@ -151,7 +154,7 @@ const renderFloatingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
       overflow: {
         dom: {
           tag: 'div',
-          classes: ['tox-toolbar__overflow'],
+          classes: [ 'tox-toolbar__overflow' ],
           attributes: toolbarSpec.attributes
         }
       }
@@ -167,18 +170,18 @@ const renderSlidingMoreToolbar = (toolbarSpec: MoreDrawerToolbarSpec) => {
   const primary = AlloySplitSlidingToolbar.parts().primary({
     dom: {
       tag: 'div',
-      classes: ['tox-toolbar__primary']
+      classes: [ 'tox-toolbar__primary' ]
     }
   });
 
   const overflow = AlloySplitSlidingToolbar.parts().overflow({
     dom: {
       tag: 'div',
-      classes: ['tox-toolbar__overflow']
+      classes: [ 'tox-toolbar__overflow' ]
     }
   });
 
-  const baseSpec = renderMoreToolbarCommon(toolbarSpec, Option.none);
+  const baseSpec = renderMoreToolbarCommon(toolbarSpec);
 
   return AlloySplitSlidingToolbar.sketch({
     ...baseSpec,
@@ -206,13 +209,13 @@ const renderToolbar = (toolbarSpec: ToolbarSpec) => {
     uid: toolbarSpec.uid,
     dom: {
       tag: 'div',
-      classes: ['tox-toolbar'].concat(toolbarSpec.type === ToolbarMode.scrolling ? [ 'tox-toolbar--scrolling' ] : [])
+      classes: [ 'tox-toolbar' ].concat(toolbarSpec.type === ToolbarMode.scrolling ? [ 'tox-toolbar--scrolling' ] : [])
     },
     components: [
       AlloyToolbar.parts().groups({})
     ],
 
-    toolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName, Fun.constant(Option.none()))
+    toolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName)
   });
 };
 

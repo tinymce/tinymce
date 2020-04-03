@@ -3,11 +3,11 @@ import { ClientRect } from '@ephox/dom-globals';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
 const top = 'top',
-      right = 'right',
-      bottom = 'bottom',
-      left = 'left',
-      width = 'width',
-      height = 'height';
+  right = 'right',
+  bottom = 'bottom',
+  left = 'left',
+  width = 'width',
+  height = 'height';
 
 // Screen offsets from bounding client rect
 const getBounds = (component: AlloyComponent): ClientRect => component.element().dom().getBoundingClientRect();

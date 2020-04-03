@@ -67,26 +67,26 @@ const eventConfig = Cell<Record<string, EventConfiguration>>({ });
 export type EventProcessor = (logger: DebuggerLogger) => boolean;
 
 const makeEventLogger = (eventName: string, initialTarget: Element): DebuggerLogger => {
-  const sequence: Array<{ outcome: string, target: Element, purpose?: string }> = [ ];
+  const sequence: Array<{ outcome: string; target: Element; purpose?: string }> = [ ];
   const startTime = new Date().getTime();
 
   return {
-    logEventCut (name: string, target: Element, purpose: string) {
+    logEventCut(_name: string, target: Element, purpose: string) {
       sequence.push({ outcome: 'cut', target, purpose });
     },
-    logEventStopped (name: string, target: Element, purpose: string) {
+    logEventStopped(_name: string, target: Element, purpose: string) {
       sequence.push({ outcome: 'stopped', target, purpose });
     },
-    logNoParent (name: string, target: Element, purpose: string) {
+    logNoParent(_name: string, target: Element, purpose: string) {
       sequence.push({ outcome: 'no-parent', target, purpose });
     },
-    logEventNoHandlers (name: string, target: Element) {
+    logEventNoHandlers(_name: string, target: Element) {
       sequence.push({ outcome: 'no-handlers-left', target });
     },
-    logEventResponse (name: string, target: Element, purpose: string) {
+    logEventResponse(_name: string, target: Element, purpose: string) {
       sequence.push({ outcome: 'response', purpose, target });
     },
-    write () {
+    write() {
       const finishTime = new Date().getTime();
       if (Arr.contains([ 'mousemove', 'mouseover', 'mouseout', SystemEvents.systemInit() ], eventName)) { return; }
       // tslint:disable-next-line:no-console
@@ -146,7 +146,7 @@ const getTrace = () => {
   }
 };
 
-const logHandler = (label: string, handlerName: string, trace: any) => {
+const logHandler = (_label: string, _handlerName: string, _trace: any) => {
   // if (debugging) console.log(label + ' [' + handlerName + ']', trace);
 };
 
@@ -173,7 +173,7 @@ const inspectorInfo = (comp: AlloyComponent) => {
       '(element)': AlloyLogger.element(c.element()),
       '(initComponents)': Arr.map(cSpec.components !== undefined ? cSpec.components : [ ], go),
       '(components)': Arr.map(c.components(), go),
-      '(bound.events)': Obj.mapToArray(c.events(), (v, k) => {
+      '(bound.events)': Obj.mapToArray(c.events(), (_v, k) => {
         return [ k ];
       }).join(', '),
       '(behaviours)': cSpec.behaviours !== undefined ? Obj.map(cSpec.behaviours, (v, k) => {
@@ -205,7 +205,7 @@ const getOrInitConnection = () => {
 
     win[CHROME_INSPECTOR_GLOBAL] = {
       systems: { },
-      lookup (uid: string) {
+      lookup(uid: string) {
         const systems = win[CHROME_INSPECTOR_GLOBAL].systems;
         const connections: string[] = Obj.keys(systems);
         return Arr.findMap(connections, (conn) => {

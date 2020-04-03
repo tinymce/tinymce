@@ -63,5 +63,5 @@ UnitTest.test('InsertionTest', function () {
     assert.eq(expected, Logger.basic(family));
   };
 
-  checkAfterAll('A(B,C(D,E,F))', data(), 'D', ['E', 'F']);
+  checkAfterAll('A(B,C(D,E,F))', data(), 'D', [ 'E', 'F' ]);
 });

@@ -11,10 +11,10 @@ import { readBlobAsText } from 'ephox/jax/core/BlobReader';
 const expectError = (label: string, response: FutureResult<any, HttpError>) => {
   return FutureResult.nu((callback) => {
     response.get((res) => {
-      res.fold((err) => {
+      res.fold((_err) => {
         console.log(label, 'successfully failed');
         callback(Result.value({ }));
-      }, (val) => {
+      }, (_val) => {
         callback(Result.error('Unexpected value in test: ' + label));
       });
     });
@@ -121,14 +121,14 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
       results: {
         bad: 'custom-header'
       }
-     }, Http.get(
-       {
-         url: '/custom/jax/sample/get/1?word=beta',
-         responseType: DataType.JSON,
-         headers: {
-            'X-custom-header': 'X-custom-header-value'
-          }
-       }
+    }, Http.get(
+      {
+        url: '/custom/jax/sample/get/1?word=beta',
+        responseType: DataType.JSON,
+        headers: {
+          'X-custom-header': 'X-custom-header-value'
+        }
+      }
     )),
 
     expectError('POST with wrong data: ', Http.post(
@@ -217,7 +217,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
       results: {
         'del-bad': 'custom-header'
       }
-     }, Http.del(
+    }, Http.del(
       {
         url: '/custom/jax/sample/del/1?word=beta',
         responseType: DataType.JSON,
@@ -227,7 +227,7 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
       }
     )),
 
-    expectBlobJson('Download with correct blob data', { results: { data: '123' } }, Http.download(
+    expectBlobJson('Download with correct blob data', { results: { data: '123' }}, Http.download(
       {
         url: '/custom/jax/blob',
         headers: {

@@ -8,7 +8,7 @@ import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('RepresentingTest (mode: manual)', (success, failure) => {
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build({
       dom: {
         tag: 'span',
@@ -18,11 +18,11 @@ UnitTest.asynctest('RepresentingTest (mode: manual)', (success, failure) => {
         Representing.config({
           store: {
             mode: 'manual',
-            getValue (comp) {
+            getValue(comp) {
               store.adder('getValue')();
               return Html.get(comp.element());
             },
-            setValue (comp, v) {
+            setValue(comp, v) {
               Html.set(comp.element(), v);
               store.adder('setValue(' + v + ')')();
             },
@@ -32,7 +32,7 @@ UnitTest.asynctest('RepresentingTest (mode: manual)', (success, failure) => {
       ])
     });
 
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, component, store) => {
     return [
       store.sAssertEq('Should have called setValue on init', [ 'setValue(init-value)' ]),
       RepresentPipes.sAssertValue('Checking initial value', 'init-value', component),

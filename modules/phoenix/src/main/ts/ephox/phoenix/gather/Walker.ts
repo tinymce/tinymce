@@ -1,9 +1,11 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Option, Struct } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { Direction, Successor, Transition, Traverse } from '../api/data/Types';
 
-type TraverseConstructor = <E>(item: E, mode: Transition) => Traverse<E>;
-const traverse: TraverseConstructor = Struct.immutable('item', 'mode');
+const traverse = <E>(item: E, mode: Transition): Traverse<E> => ({
+  item: Fun.constant(item),
+  mode: Fun.constant(mode)
+});
 
 const backtrack: Transition = function (universe, item, _direction, transition = sidestep) {
   return universe.property().parent(item).map(function (p) {
@@ -38,7 +40,7 @@ const successors: Successor[] = [
   { current: advance, next: advance, fallback: Option.some(sidestep) }
 ];
 
-const go = function <E, D>(universe: Universe<E, D>, item: E, mode: Transition, direction: Direction, rules: Successor[] = successors): Option<Traverse<E>> {
+const go = function <E, D> (universe: Universe<E, D>, item: E, mode: Transition, direction: Direction, rules: Successor[] = successors): Option<Traverse<E>> {
   // INVESTIGATE: Find a way which doesn't require an array search first to identify the current mode.
   const ruleOpt = Arr.find(rules, function (succ) {
     return succ.current === mode;

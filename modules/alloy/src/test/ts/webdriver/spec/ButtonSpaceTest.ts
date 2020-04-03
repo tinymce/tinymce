@@ -6,7 +6,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Button } from 'ephox/alloy/api/ui/Button';
 
 UnitTest.asynctest('ButtonSpaceTest (webdriver)', (success, failure) => {
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       {
         dom: {
@@ -34,7 +34,7 @@ UnitTest.asynctest('ButtonSpaceTest (webdriver)', (success, failure) => {
       }
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, _gui, component, store) => {
 
     return [
       FocusTools.sSetFocus('Focusing <button>', component.element(), '.test-button-for-space'),

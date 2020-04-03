@@ -72,7 +72,7 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>) => {
     tinymce.init({
       ...settings,
       selector: '#' + randomId,
-      setup (editor: Editor) {
+      setup(editor: Editor) {
         // Execute the setup called by the test.
         settingsSetup(editor);
 

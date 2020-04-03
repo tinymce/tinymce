@@ -16,7 +16,7 @@ import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 
 UnitTest.asynctest('TieredMenuTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       TieredMenu.sketch({
         uid: 'uid-test-menu-1',
@@ -36,15 +36,15 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
             'menu-a': {
               value: 'menu-a',
               items: Arr.map([
-                { type: 'item', data: { value: 'a-alpha', meta: { text: 'a-Alpha' } }, hasSubmenu: false},
-                { type: 'item', data: { value: 'a-beta', meta: { text: 'a-Beta' } }, hasSubmenu: true},
-                { type: 'item', data: { value: 'a-gamma', meta: { text: 'a-Gamma' } }, hasSubmenu: false}
+                { type: 'item', data: { value: 'a-alpha', meta: { text: 'a-Alpha' }}, hasSubmenu: false },
+                { type: 'item', data: { value: 'a-beta', meta: { text: 'a-Beta' }}, hasSubmenu: true },
+                { type: 'item', data: { value: 'a-gamma', meta: { text: 'a-Gamma' }}, hasSubmenu: false }
               ], TestDropdownMenu.renderItem)
             },
             'a-beta': { // menu name should be triggering parent item so TieredMenuSpec path works
               value: 'menu-b',
               items: Arr.map([
-                { type: 'item', data: { value: 'b-alpha', meta: { text: 'b-Alpha' } }, hasSubmenu: false}
+                { type: 'item', data: { value: 'b-alpha', meta: { text: 'b-Alpha' }}, hasSubmenu: false }
               ], TestDropdownMenu.renderItem)
             }
           }, TestDropdownMenu.renderMenu),
@@ -73,7 +73,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
         onRepositionMenu: store.adderH('onRepositionMenu')
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, _gui, component, store) => {
     // TODO: Flesh out test.
     // const cAssertStructure = (label, expected) => {
     //   return Chain.op((element: Element) => {
@@ -103,7 +103,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
           attrs: {
             'aria-haspopup': str.is(hasPopups[i].toString()),
             ...hasPopups[i]
-              ? {'aria-expanded': str.is(isExpandeds[i].toString())}
+              ? { 'aria-expanded': str.is(isExpandeds[i].toString()) }
               : { 'aria-expanded': str.none('aria-expanded should not exist') }
           }
         }))
@@ -130,7 +130,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
           return s.element('div', {
             classes: [ arr.has('test-menu') ],
             children: [
-              structureMenu(true, [ true, false, false ], [false, true, false], [false, false, false])(s, str, arr)
+              structureMenu(true, [ true, false, false ], [ false, true, false ], [ false, false, false ])(s, str, arr)
             ]
           });
         }),
@@ -150,8 +150,8 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
       sAssertMenu(
         'Post expansion of submenu with <right> structure test',
         [
-          structureMenu(false, [ false, true, false ], [false, true, false], [false, true, false]),
-          structureMenu(true, [ true ], [false], [false])
+          structureMenu(false, [ false, true, false ], [ false, true, false ], [ false, true, false ]),
+          structureMenu(true, [ true ], [ false ], [ false ])
         ]
       ),
 
@@ -159,15 +159,15 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
       sAssertMenu(
         'Post collapse of submenu with <left> structure test',
         [
-          structureMenu(true, [ false, true, false ], [false, true, false], [false, false, false])
+          structureMenu(true, [ false, true, false ], [ false, true, false ], [ false, false, false ])
         ]
       ),
       Keyboard.sKeydown(doc, Keys.enter(), { }),
       sAssertMenu(
         'Post exansion of submenu with <enter> structure test',
         [
-          structureMenu(false, [ false, true, false ], [false, true, false], [false, true, false]),
-          structureMenu(true, [ true ], [false], [false])
+          structureMenu(false, [ false, true, false ], [ false, true, false ], [ false, true, false ]),
+          structureMenu(true, [ true ], [ false ], [ false ])
         ]
       ),
 
@@ -175,7 +175,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
       sAssertMenu(
         'Post collapse of submenu with <escape> structure test',
         [
-          structureMenu(true, [ false, true, false ], [false, true, false], [false, false, false])
+          structureMenu(true, [ false, true, false ], [ false, true, false ], [ false, false, false ])
         ]
       ),
 
@@ -183,8 +183,8 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
       sAssertMenu(
         'Post hover on item with submenu structure test',
         [
-          structureMenu(true, [ false, true, false ], [false, true, false], [false, true, false]),
-          structureMenu(false, [ false ], [false], [false])
+          structureMenu(true, [ false, true, false ], [ false, true, false ], [ false, true, false ]),
+          structureMenu(false, [ false ], [ false ], [ false ])
         ]
       ),
 
@@ -192,8 +192,8 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
       sAssertMenu(
         'Post right on item with expanded submenu structure test',
         [
-          structureMenu(false, [ false, true, false ], [false, true, false], [false, true, false]),
-          structureMenu(true, [ true ], [false], [false])
+          structureMenu(false, [ false, true, false ], [ false, true, false ], [ false, true, false ]),
+          structureMenu(true, [ true ], [ false ], [ false ])
         ]
       )
       // TODO: Beef up tests

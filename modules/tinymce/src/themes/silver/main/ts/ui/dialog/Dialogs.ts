@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
-import {AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Button, Container, DomFactory, Focusing, Keying, ModalDialog, NativeEvents, SystemEvents, Tabstopping } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Button, Container, DomFactory, Focusing, Keying, ModalDialog, NativeEvents, SystemEvents, Tabstopping } from '@ephox/alloy';
 import { Option, Result } from '@ephox/katamari';
 import { Body, Class } from '@ephox/sugar';
 import Env from 'tinymce/core/api/Env';
@@ -79,7 +79,7 @@ const pBodyMessage = (message: string, providersBackstage: UiFactoryBackstagePro
     {
       dom: {
         tag: 'div',
-        classes: ['tox-dialog__body-content']
+        classes: [ 'tox-dialog__body-content' ]
       },
       components: [
         {
@@ -103,14 +103,14 @@ const pFooterGroup = (startButtons: AlloySpec[], endButtons: AlloySpec[]) => {
     Container.sketch({
       dom: {
         tag: 'div',
-        classes: [ `tox-dialog__footer-start` ]
+        classes: [ 'tox-dialog__footer-start' ]
       },
       components: startButtons
     }),
     Container.sketch({
       dom: {
         tag: 'div',
-        classes: [ `tox-dialog__footer-end` ]
+        classes: [ 'tox-dialog__footer-end' ]
       },
       components: endButtons
     })
@@ -178,7 +178,7 @@ const renderDialog = (spec: DialogSpec) => {
         AddEventsBehaviour.config('dialog-events', spec.dialogEvents.concat([
           // Note: `runOnSource` here will only listen to the event at the outer component level.
           // Using just `run` instead will cause an infinite loop as `focusIn` would fire a `focusin` which would then get responded to and so forth.
-          AlloyEvents.runOnSource(NativeEvents.focusin(), (comp, se) => {
+          AlloyEvents.runOnSource(NativeEvents.focusin(), (comp, _se) => {
             Keying.focusIn(comp);
           })
         ])),

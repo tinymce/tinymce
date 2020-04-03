@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.ContentEditableTest', (suc
       tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'Text selection toolbar is not shown with contenteditable=false', [
         tinyApis.sSetContent('<p>abc</p><p contenteditable="false">cab</p>'),
-        tinyApis.sSetSelection([0, 0], 0, [0, 0], 1),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 1),
         sAssertToolbarVisible,
         tinyApis.sSelect('p[contenteditable=false]', []),
         sAssertToolbarNotVisible
@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.ContentEditableTest', (suc
       ]),
       Log.stepsAsStep('TBA', 'Text selection toolbar is not shown with contenteditable=false span, select span', [
         tinyApis.sSetContent('<p>abc</p><p>abc <span contenteditable="false">click on me</span> 123</p>'),
-        tinyApis.sSetSelection([0, 0], 0, [0, 0], 1),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 1),
         sAssertToolbarVisible,
         tinyApis.sSelect('p span', []),
         sAssertToolbarNotVisible,

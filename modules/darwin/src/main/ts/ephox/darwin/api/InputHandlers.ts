@@ -16,7 +16,7 @@ interface RC {
   readonly cols: number;
 }
 
-const rc = (rows: number, cols: number): RC => ({rows, cols});
+const rc = (rows: number, cols: number): RC => ({ rows, cols });
 
 const mouse = function (win: Window, container: Element, isRoot: (e: Element) => boolean, annotations: SelectionAnnotation) {
   const bridge = WindowBridge(win);
@@ -81,13 +81,13 @@ const keyboard = function (win: Window, container: Element, isRoot: (e: Element)
       };
 
       if (SelectionKeys.isDown(keycode) && shiftKey) {
-        return update([rc(+1, 0)]);
+        return update([ rc(+1, 0) ]);
       } else if (SelectionKeys.isUp(keycode) && shiftKey) {
-        return update([rc(-1, 0)]);
+        return update([ rc(-1, 0) ]);
       } else if (direction.isBackward(keycode) && shiftKey) { // Left and right should try up/down respectively if they fail.
-        return update([rc(0, -1), rc(-1, 0)]);
+        return update([ rc(0, -1), rc(-1, 0) ]);
       } else if (direction.isForward(keycode) && shiftKey) {
-        return update([rc(0, +1), rc(+1, 0)]);
+        return update([ rc(0, +1), rc(+1, 0) ]);
       } else if (SelectionKeys.isNavigation(keycode) && shiftKey === false) { // Clear the selection on normal arrow keys.
         return clearToNavigate;
       } else {
@@ -126,8 +126,8 @@ const external = (win: Window, container: Element, isRoot: (e: Element) => boole
   return (start: Element, finish: Element) => {
     annotations.clearBeforeUpdate(container);
     CellSelection.identify(start, finish, isRoot).each(function (cellSel) {
-      const boxes = cellSel.boxes().getOr([]);
-      annotations.selectRange(container, boxes, cellSel.start(), cellSel.finish());
+      const boxes = cellSel.boxes.getOr([]);
+      annotations.selectRange(container, boxes, cellSel.start, cellSel.finish);
 
       // stop the browser from creating a big text selection, place the selection at the end of the cell where the cursor is
       bridge.selectContents(finish);

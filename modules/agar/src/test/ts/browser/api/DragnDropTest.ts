@@ -66,7 +66,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
     }
   });
 
-  const dragEndUnbinder = DomEvent.bind(draggable, 'dragend', (evt) => {
+  const dragEndUnbinder = DomEvent.bind(draggable, 'dragend', (_evt) => {
     store.push('dragend');
   });
 
@@ -77,7 +77,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
     Logger.t('Drag/drop element with data using selectors', GeneralSteps.sequence([
       sClearStore,
       sDragnDrop('.draggable', '.dropzone'),
-      sAssertStoreItems(['dragstart', 'dragenter', 'dragover', 'drop text: hello', 'dragend'])
+      sAssertStoreItems([ 'dragstart', 'dragenter', 'dragover', 'drop text: hello', 'dragend' ])
     ])),
 
     Logger.t('Drag/drop element with data using elements', GeneralSteps.sequence([
@@ -88,16 +88,16 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
 
         dragnDrop(from, to);
       }),
-      sAssertStoreItems(['dragstart', 'dragenter', 'dragover', 'drop text: hello', 'dragend'])
+      sAssertStoreItems([ 'dragstart', 'dragenter', 'dragover', 'drop text: hello', 'dragend' ])
     ])),
 
     Logger.t('Drop files using selector', GeneralSteps.sequence([
       sClearStore,
       sDropFiles([
-        createFile('a.txt', 123, new Blob([''], { type: 'text/plain' })),
-        createFile('b.html', 123, new Blob([''], { type: 'text/html' }))
+        createFile('a.txt', 123, new Blob([ '' ], { type: 'text/plain' })),
+        createFile('b.html', 123, new Blob([ '' ], { type: 'text/html' }))
       ], '.dropzone'),
-      sAssertStoreItems(['dragenter', 'dragover', 'drop files: 2'])
+      sAssertStoreItems([ 'dragenter', 'dragover', 'drop files: 2' ])
     ])),
 
     Logger.t('Drop files using element', GeneralSteps.sequence([
@@ -106,11 +106,11 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
         const to = SelectorFind.descendant(Body.body(), '.dropzone').getOrDie('Could not find to element.');
 
         dropFiles([
-          createFile('a.txt', 123, new Blob([''], { type: 'text/plain' })),
-          createFile('b.html', 123, new Blob([''], { type: 'text/html' }))
+          createFile('a.txt', 123, new Blob([ '' ], { type: 'text/plain' })),
+          createFile('b.html', 123, new Blob([ '' ], { type: 'text/html' }))
         ], to);
       }),
-      sAssertStoreItems(['dragenter', 'dragover', 'drop files: 2'])
+      sAssertStoreItems([ 'dragenter', 'dragover', 'drop files: 2' ])
     ]))
   ], () => {
     Remove.remove(dropzone);

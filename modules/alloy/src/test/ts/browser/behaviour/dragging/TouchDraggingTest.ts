@@ -38,7 +38,7 @@ UnitTest.asynctest('TouchDraggingTest', (success, failure) => {
           mode: 'touch',
           blockerClass: 'test-blocker',
           snaps: {
-            getSnapPoints () {
+            getSnapPoints() {
               return [
                 Dragging.snap({
                   sensor: DragCoord.fixed(300, 10),
@@ -59,7 +59,7 @@ UnitTest.asynctest('TouchDraggingTest', (success, failure) => {
     })
   );
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -73,7 +73,7 @@ UnitTest.asynctest('TouchDraggingTest', (success, failure) => {
         ]
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (_doc, _body, gui, component, _store) => {
 
     const cSubject = Chain.mapper(() => {
       return subject.get(component).element();

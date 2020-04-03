@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.ApiTest', (success, failur
     const createAssertionStep = (getCount: CountGetter) => (label: string, content: string, assertedLength: number, sel?: Sel) => {
       return GeneralSteps.sequence([
         tinyApis.sSetContent(content),
-        ...(sel ? [tinyApis.sSetSelection(sel.startPath, sel.soffset, sel.finishPath, sel.foffset)] : []),
+        ...(sel ? [ tinyApis.sSetSelection(sel.startPath, sel.soffset, sel.finishPath, sel.foffset) ] : []),
         Step.sync(() => Assertions.assertEq(label, getCount(), assertedLength))
       ]);
     };
@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.ApiTest', (success, failur
         bodyWordCount('Does not count dashes', '<p>Something -- ok</p>', 2),
         bodyWordCount('Does not count asterisks, non-word characters', '<p>* something\n\u00b7 something else</p>', 3),
         bodyWordCount('Does count numbers', '<p>Something 123 ok</p>', 3),
-        bodyWordCount('Does not count htmlentities', '<p>It&rsquo;s my life &ndash; &#8211; &#x2013; don\'t you forget.</p>', 6),
+        bodyWordCount('Does not count htmlentities', `<p>It&rsquo;s my life &ndash; &#8211; &#x2013; don't you forget.</p>`, 6),
         bodyWordCount('Counts hyphenated words as one word', '<p>Hello some-word here.</p>', 3),
         bodyWordCount('Counts words between blocks as two words', '<p>Hello</p><p>world</p>', 2)
       ])),
@@ -63,27 +63,27 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.ApiTest', (success, failur
 
       Logger.t('Selection word count', GeneralSteps.sequence([
         selectionWordCount('Simple word count', '<p>My sentence is this.</p>', 2, {
-          startPath: [0, 0],
+          startPath: [ 0, 0 ],
           soffset: 2,
-          finishPath: [0, 0],
+          finishPath: [ 0, 0 ],
           foffset: 15
         }),
       ])),
 
       Logger.t('Selection character count', GeneralSteps.sequence([
         selectionCharacterCount('Simple word count', '<p>My sentence is this.</p>', 13, {
-          startPath: [0, 0],
+          startPath: [ 0, 0 ],
           soffset: 2,
-          finishPath: [0, 0],
+          finishPath: [ 0, 0 ],
           foffset: 15
         }),
       ])),
 
       Logger.t('Selection character count without spaces', GeneralSteps.sequence([
         selectionCharacterCountWithoutSpaces('Simple word count', '<p>My sentence is this.</p>', 10, {
-          startPath: [0, 0],
+          startPath: [ 0, 0 ],
           soffset: 2,
-          finishPath: [0, 0],
+          finishPath: [ 0, 0 ],
           foffset: 15
         }),
       ]))

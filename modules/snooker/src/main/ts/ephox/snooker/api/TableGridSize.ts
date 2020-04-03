@@ -5,7 +5,7 @@ import { Element } from '@ephox/sugar';
 const getGridSize = function (table: Element) {
   const input = DetailsList.fromTable(table);
   const warehouse = Warehouse.generate(input);
-  return warehouse.grid();
+  return warehouse.grid;
 };
 
 export {

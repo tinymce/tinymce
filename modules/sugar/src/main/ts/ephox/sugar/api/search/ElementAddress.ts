@@ -1,4 +1,4 @@
-import { Arr, Fun, Struct } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import * as Compare from '../dom/Compare';
 import Element from '../node/Element';
 import * as PredicateFind from './PredicateFind';
@@ -21,8 +21,19 @@ export interface AddressInParent<P, C, E> {
   index: () => number;
 }
 
-const inAncestor: <A, D, E> (ancestor: Element<A>, descendants: Element<D>[], element: Element<E>, index: number) => AddressInAncestor<A, D, E> = Struct.immutable('ancestor', 'descendants', 'element', 'index');
-const inParent: <P, C, E>(parent: Element<P>, children: Element<C>[], element: Element<E>, index: number) => AddressInParent<P, C, E> = Struct.immutable('parent', 'children', 'element', 'index');
+const inAncestor = <A, D, E> (ancestor: Element<A>, descendants: Element<D>[], element: Element<E>, index: number): AddressInAncestor<A, D, E> => ({
+  ancestor: Fun.constant(ancestor),
+  descendants: Fun.constant(descendants),
+  element: Fun.constant(element),
+  index: Fun.constant(index)
+});
+
+const inParent = <P, C, E>(parent: Element<P>, children: Element<C>[], element: Element<E>, index: number): AddressInParent<P, C, E> => ({
+  parent: Fun.constant(parent),
+  children: Fun.constant(children),
+  element: Fun.constant(element),
+  index: Fun.constant(index)
+});
 
 const childOf = function (element: Element<DomNode>, ancestor: Element<DomNode>) {
   return PredicateFind.closest(element, function (elem) {
@@ -45,7 +56,7 @@ const indexOf = function (elements: Element<DomNode>[], element: Element<DomNode
   return Arr.findIndex(elements, Fun.curry(Compare.eq, element));
 };
 
-const selectorsInParent = function <E extends DomNode, S extends DomElement = DomElement>(element: Element<E>, selector: string) {
+const selectorsInParent = function <E extends DomNode, S extends DomElement = DomElement> (element: Element<E>, selector: string) {
   return Traverse.parent(element).bind(function (parent) {
     const children = SelectorFilter.children<S>(parent, selector);
     return indexOf(children, element).map(function (index) {
@@ -54,7 +65,7 @@ const selectorsInParent = function <E extends DomNode, S extends DomElement = Do
   });
 };
 
-const descendantsInAncestor = function <E extends DomNode, A extends DomElement = DomElement, D extends DomElement = DomElement>(element: Element<E>, ancestorSelector: string, descendantSelector: string) {
+const descendantsInAncestor = function <E extends DomNode, A extends DomElement = DomElement, D extends DomElement = DomElement> (element: Element<E>, ancestorSelector: string, descendantSelector: string) {
   return SelectorFind.closest<A>(element, ancestorSelector).bind(function (ancestor) {
     const descendants = SelectorFilter.descendants<D>(ancestor, descendantSelector);
     return indexOf(descendants, element).map(function (index) {

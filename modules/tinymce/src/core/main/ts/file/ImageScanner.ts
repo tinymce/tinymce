@@ -30,7 +30,7 @@ export interface ImageScanner {
 
 let count = 0;
 
-const uniqueId = function (prefix?: string): string {
+export const uniqueId = function (prefix?: string): string {
   return (prefix || 'blobid') + (count++);
 };
 
@@ -135,7 +135,7 @@ export function ImageScanner(uploadStatus, blobCache: BlobCache): ImageScanner {
     });
 
     const promises = Arr.map(images, function (img): Promise<BlobInfoImagePair> {
-      if (cachedPromises[img.src]) {
+      if (cachedPromises[img.src] !== undefined) {
         // Since the cached promise will return the cached image
         // We need to wrap it and resolve with the actual image
         return new Promise(function (resolve) {

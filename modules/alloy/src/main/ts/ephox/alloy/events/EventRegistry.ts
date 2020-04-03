@@ -1,30 +1,32 @@
-import { Fun, Obj, Option, Struct } from '@ephox/katamari';
+import { Fun, Obj, Option } from '@ephox/katamari';
 import { Element, TransformFind } from '@ephox/sugar';
 
 import * as Tagger from '../registry/Tagger';
 import * as DescribedHandler from './DescribedHandler';
 
 export interface ElementAndHandler {
-  element: () => Element;
-  descHandler: () => CurriedHandler;
+  readonly element: Element;
+  readonly descHandler: CurriedHandler;
 }
 
-const eventHandler: (element: Element, descHandler: CurriedHandler) => ElementAndHandler =
-  Struct.immutable('element', 'descHandler');
+const eventHandler = (element: Element, descHandler: CurriedHandler): ElementAndHandler => ({
+  element,
+  descHandler
+});
 
 export interface CurriedHandler {
-  purpose: () => string;
-  cHandler: Function;
+  readonly purpose: () => string;
+  readonly cHandler: Function;
 }
 
 export interface UncurriedHandler {
-  purpose: () => string;
-  handler: Function;
+  readonly purpose: () => string;
+  readonly handler: Function;
 }
 
 export interface UidAndHandler {
-  id: () => string;
-  descHandler: () => CurriedHandler;
+  readonly id: () => string;
+  readonly descHandler: () => CurriedHandler;
 }
 
 const broadcastHandler = (id: string, handler: CurriedHandler): UidAndHandler => {
@@ -69,7 +71,7 @@ export default () => {
 
   // Given event type, and element, find the handler.
   const find = (isAboveRoot: (elem: Element) => boolean, type: string, target: Element): Option<ElementAndHandler> => {
-    const handlers = Obj.get(registry, type) as Option<Record<string, CurriedHandler>>;
+    const handlers = Obj.get(registry, type);
     return TransformFind.closest(target, (elem: Element) => {
       return findHandler(handlers, elem);
     }, isAboveRoot);
@@ -77,7 +79,7 @@ export default () => {
 
   const unregisterId = (id: string): void => {
     // INVESTIGATE: Find a better way than mutation if we can.
-    Obj.each(registry, (handlersById: Record<string, CurriedHandler>, eventName) => {
+    Obj.each(registry, (handlersById: Record<string, CurriedHandler>, _eventName) => {
       if (handlersById.hasOwnProperty(id)) { delete handlersById[id]; }
     });
   };

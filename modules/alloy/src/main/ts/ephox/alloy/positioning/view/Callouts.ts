@@ -1,4 +1,3 @@
-import { Fun } from '@ephox/katamari';
 import { Classes, Css, Element, Height, Width } from '@ephox/sugar';
 
 import { Bubble } from '../layout/Bubble';
@@ -16,22 +15,22 @@ import { applyPositionCss } from './PositionCss';
 
 const elementSize = (p: Element): AnchorElement => {
   return {
-    width: Fun.constant(Width.getOuter(p)),
-    height: Fun.constant(Height.getOuter(p))
+    width: Width.getOuter(p),
+    height: Height.getOuter(p)
   };
 };
 
-const layout = (anchorBox: AnchorBox, element: Element, bubbles: Bubble, options: ReparteeOptions) => {
+const layout = (anchorBox: AnchorBox, element: Element, bubbles: Bubble, options: ReparteeOptions): RepositionDecision => {
   // clear the potentially limiting factors before measuring
   Css.remove(element, 'max-height');
   Css.remove(element, 'max-width');
 
   const elementBox = elementSize(element);
-  return Bounder.attempts(options.preference(), anchorBox, elementBox, bubbles, options.bounds());
+  return Bounder.attempts(options.preference, anchorBox, elementBox, bubbles, options.bounds);
 };
 
 const setClasses = (element: Element, decision: RepositionDecision) => {
-  const classInfo = decision.classes();
+  const classInfo = decision.classes;
   Classes.remove(element, classInfo.off);
   Classes.add(element, classInfo.on);
 };
@@ -44,20 +43,20 @@ const setClasses = (element: Element, decision: RepositionDecision) => {
  */
 const setHeight = (element: Element, decision: RepositionDecision, options: ReparteeOptions) => {
   // The old API enforced MaxHeight.anchored() for fixed position. That no longer seems necessary.
-  const maxHeightFunction = options.maxHeightFunction();
+  const maxHeightFunction = options.maxHeightFunction;
 
-  maxHeightFunction(element, decision.maxHeight());
+  maxHeightFunction(element, decision.maxHeight);
 };
 
 const setWidth = (element: Element, decision: RepositionDecision, options: ReparteeOptions) => {
-  const maxWidthFunction = options.maxWidthFunction();
-  maxWidthFunction(element, decision.maxWidth());
+  const maxWidthFunction = options.maxWidthFunction;
+  maxWidthFunction(element, decision.maxWidth);
 };
 
 const position = (element: Element, decision: RepositionDecision, options: ReparteeOptions) => {
   // This is a point of difference between Alloy and Repartee. Repartee appears to use Measure to calculate the available space for fixed origin
   // That is not ported yet.
-  applyPositionCss(element, Origins.reposition(options.origin(), decision));
+  applyPositionCss(element, Origins.reposition(options.origin, decision));
 };
 
 export {

@@ -6,8 +6,9 @@
  */
 
 import { SchemaMap } from './Schema';
+import { Obj } from '@ephox/katamari';
 
-export type Attributes = Array<{ name: string; value: string; }> & { map: Record<string, string> };
+export type Attributes = Array<{ name: string; value: string }> & { map: Record<string, string> };
 
 const whiteSpaceRegExp = /^[ \t\r\n]*$/;
 const typeLookup = {
@@ -63,6 +64,12 @@ const isEmptyTextNode = (node: Node) => {
   return true;
 };
 
+// Check if node contains data-bookmark attribute, name attribute, id attribute or is a named anchor
+const isNonEmptyElement = (node: Node) => {
+  const isNamedAnchor = node.name === 'a' && !node.attr('href') && node.attr('id');
+  return (node.attr('name') || (node.attr('id') && !node.firstChild) || node.attr('data-mce-bookmark') || isNamedAnchor);
+};
+
 /**
  * This class is a minimalistic implementation of a DOM like node used by the DomParser class.
  *
@@ -89,9 +96,9 @@ class Node {
 
     // Add attributes if needed
     if (attrs) {
-      for (const attrName in attrs) {
-        node.attr(attrName, attrs[attrName]);
-      }
+      Obj.each(attrs, (value, attrName) => {
+        node.attr(attrName, value);
+      });
     }
 
     return node;
@@ -116,7 +123,7 @@ class Node {
    * @param {String} name Name of the node type.
    * @param {Number} type Numeric type representing the node.
    */
-  constructor(name: string, type: number) {
+  public constructor(name: string, type: number) {
     this.name = name;
     this.type = type;
 
@@ -170,8 +177,10 @@ class Node {
     let attrs: Attributes;
 
     if (typeof name !== 'string') {
-      for (const key in name) {
-        self.attr(key, name[key]);
+      if (name !== undefined && name !== null) {
+        Obj.each(name, (value, key) => {
+          self.attr(key, value);
+        });
       }
 
       return self;
@@ -478,6 +487,10 @@ class Node {
     const self = this;
     let node = self.firstChild;
 
+    if (isNonEmptyElement(self)) {
+      return false;
+    }
+
     if (node) {
       do {
         if (node.type === 1) {
@@ -491,13 +504,8 @@ class Node {
             return false;
           }
 
-          // Keep bookmark nodes and name attribute like <a name="1"></a>
-          let i = node.attributes.length;
-          while (i--) {
-            const name = node.attributes[i].name;
-            if (name === 'name' || name.indexOf('data-mce-bookmark') === 0) {
-              return false;
-            }
+          if (isNonEmptyElement(node)) {
+            return false;
           }
         }
 

@@ -10,16 +10,16 @@ const owner = () => 'item-widget';
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.required({
     name: 'widget',
-    overrides (detail: WidgetItemDetail) {
+    overrides(detail: WidgetItemDetail) {
       return {
         behaviours: Behaviour.derive([
           Representing.config({
             store: {
               mode: 'manual',
-              getValue (component) {
+              getValue(_component) {
                 return detail.data;
               },
-              setValue () { }
+              setValue() { }
             }
           })
         ])

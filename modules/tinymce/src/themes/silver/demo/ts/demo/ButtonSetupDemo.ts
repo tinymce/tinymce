@@ -6,7 +6,7 @@ export default {
   setup: (ed: Editor) => {
     ed.ui.registry.addButton('basic-button-1', {
       text: 'basic-button-1',
-      onAction () {
+      onAction() {
         console.log('basic-button-1 click');
       }
     });
@@ -14,7 +14,7 @@ export default {
     ed.ui.registry.addButton('basic-button-2', {
       icon: 'basic-icon',
       text: 'aria-label-icon-button',
-      onAction () {
+      onAction() {
         console.log('basic-button-2 click, basic-icon');
       }
     });
@@ -41,7 +41,7 @@ export default {
     ed.ui.registry.addButton('dialog-button', {
       type: 'button',
       text: 'Launch Dialog',
-      onAction () {
+      onAction() {
         ed.windowManager.open({
           title: 'Dialog title',
           body: {
@@ -69,7 +69,7 @@ export default {
           initialData: {
             preview: 'some html url'
           },
-          onSubmit: (api) => { console.log('Preview Demo Submit'); },
+          onSubmit: (_api) => { console.log('Preview Demo Submit'); },
           onClose: () => { console.log('Preview Demo Close'); }
         });
       }
@@ -82,31 +82,31 @@ export default {
 
     ed.ui.registry.addMenuItem('menu-button-item-1', {
       text: 'menu-button-item-1',
-      onAction () {
+      onAction() {
         console.log('menu-button-item-1 click');
       }
     });
 
     ed.ui.registry.addNestedMenuItem('menu-button-item-2', {
       text: 'menu-button-item-2',
-      getSubmenuItems () {
+      getSubmenuItems() {
         return [
           {
             type: 'menuitem',
             text: 'submenu-1',
-            onAction () {
+            onAction() {
               console.log('submenu1');
             }
           },
           {
             type: 'menuitem',
             text: 'submenu-2',
-            getSubmenuItems () {
+            getSubmenuItems() {
               return [
                 {
                   type: 'menuitem',
                   text: 'submenu-2-a',
-                  onAction () {
+                  onAction() {
                     console.log('submenu2a');
                   }
                 }

@@ -13,8 +13,8 @@ import { Types } from '@ephox/bridge';
 import { Blob, URL } from '@ephox/dom-globals';
 
 type ImageToolsState = {
-  blob: Blob,
-  url: string
+  blob: Blob;
+  url: string;
 };
 
 const createState = (blob: Blob): ImageToolsState => {

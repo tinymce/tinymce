@@ -87,7 +87,7 @@ const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: 
       {
         dom: {
           tag: 'div',
-          classes: ['tox-sidebar__pane']
+          classes: [ 'tox-sidebar__pane' ]
         },
         behaviours: SimpleBehaviours.unnamedEvents([
           onControlAttached(spec, editorOffCell),
@@ -110,7 +110,7 @@ const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts
   return {
     dom: {
       tag: 'div',
-      classes: ['tox-sidebar__pane-container'],
+      classes: [ 'tox-sidebar__pane-container' ],
     },
     components: makePanels(parts, panelConfigs),
     slotBehaviours: SimpleBehaviours.unnamedEvents([
@@ -121,7 +121,7 @@ const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts
 
 const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig) => {
   const optSlider = Composing.getCurrent(sidebar);
-  optSlider.each((slider) => Replacing.set(slider, [makeSidebar(panelConfigs)]));
+  optSlider.each((slider) => Replacing.set(slider, [ makeSidebar(panelConfigs) ]));
 };
 
 const toggleSidebar = (sidebar: AlloyComponent, name: string) => {
@@ -175,7 +175,7 @@ const renderSidebar = (spec) => {
     uid: spec.uid,
     dom: {
       tag: 'div',
-      classes: ['tox-sidebar'],
+      classes: [ 'tox-sidebar' ],
       attributes: {
         role: 'complementary'
       }
@@ -184,7 +184,7 @@ const renderSidebar = (spec) => {
       {
         dom: {
           tag: 'div',
-          classes: ['tox-sidebar__slider']
+          classes: [ 'tox-sidebar__slider' ]
         },
         components: [
           // this will be replaced on setSidebar
@@ -231,7 +231,7 @@ const renderSidebar = (spec) => {
         AlloyEvents.run<FixSizeEvent>(fixSize, (comp, se) => {
           Css.set(comp.element(), 'width', se.event().width());
         }),
-        AlloyEvents.run(autoSize, (comp, se) => {
+        AlloyEvents.run(autoSize, (comp, _se) => {
           Css.remove(comp.element(), 'width');
         })
       ])

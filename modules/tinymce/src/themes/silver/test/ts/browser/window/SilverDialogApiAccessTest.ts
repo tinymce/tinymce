@@ -17,7 +17,7 @@ UnitTest.asynctest('WindowManager:simple-dialog access Test', (success, failure)
     const currentApi = Cell<Types.Dialog.DialogInstanceApi<any>>({ } as any);
     const store = TestHelpers.TestStore();
 
-    const dialogSpec: Types.Dialog.DialogApi<{ fieldA: string; }> = {
+    const dialogSpec: Types.Dialog.DialogApi<{ fieldA: string }> = {
       title: 'Silver Test Access Dialog',
       body: {
         type: 'panel',
@@ -57,7 +57,7 @@ UnitTest.asynctest('WindowManager:simple-dialog access Test', (success, failure)
           api.unblock();
           api.showTab('new tab');
           // Currently, it is only going to validate it if the dialog is still open
-          const redialSpec: Types.Dialog.DialogApi<{ fieldA: string; }> = {
+          const redialSpec: Types.Dialog.DialogApi<{ fieldA: string }> = {
             title: 'temporary redial to check the API',
             body: {
               type: 'panel',

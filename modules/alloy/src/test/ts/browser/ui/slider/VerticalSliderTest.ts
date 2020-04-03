@@ -15,7 +15,7 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
   // Tests requiring 'flex' do not currently work on phantom. Use the remote  to see how it is
   // viewed as an invalid value.
   if (PhantomSkipper.skip()) { return success(); }
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     return GuiFactory.build(
       Slider.sketch({
         dom: {
@@ -31,7 +31,7 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
         model: {
           mode: 'y',
           minY: 50,
-          getInitialValue: Fun.constant({y: Fun.constant(200)}),
+          getInitialValue: Fun.constant({ y: Fun.constant(200) }),
           maxY: 200
         },
         stepSize: 10,
@@ -42,25 +42,25 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
             height: '40px',
             width: '20px',
             background: 'black'
-          } } }),
+          }}}),
           Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'vertical-slider-test-spectrum' ], styles: {
             height: '150px',
             background: 'green'
-          } } }),
+          }}}),
           Slider.parts()['bottom-edge']({ dom: { tag: 'div', classes: [ 'vertical-slider-test-bottom-edge' ], styles: {
             height: '40px',
             width: '20px',
             background: 'white'
-          } } }),
+          }}}),
           Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'vertical-slider-test-thumb' ], styles: {
             height: '20px',
             width: '20px',
             background: 'gray'
-          } } })
+          }}})
         ]
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, _gui, component, _store) => {
 
     const cGetBounds = Chain.mapper((elem: Element) => {
       return elem.dom().getBoundingClientRect();

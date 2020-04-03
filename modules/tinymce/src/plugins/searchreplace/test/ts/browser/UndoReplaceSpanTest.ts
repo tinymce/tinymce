@@ -1,5 +1,5 @@
 import {
-    Chain, Log, Mouse, Pipeline, Step, UiControls, UiFinder, Logger
+  Chain, Log, Mouse, Pipeline, Step, UiControls, UiFinder, Logger
 } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
@@ -65,7 +65,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.UndoReplaceSpanTest', 
         tinyApis.sAssertContentPresence({ 'span.mce-match-marker': 0 }),
         tinyApis.sAssertContent('<p>dogs cats cats</p>')
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'searchreplace',
     toolbar: 'searchreplace',

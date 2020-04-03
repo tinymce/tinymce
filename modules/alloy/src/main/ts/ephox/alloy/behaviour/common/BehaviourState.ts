@@ -10,7 +10,7 @@ export interface BehaviourStateInitialiser<C, S extends BehaviourState> {
 const NoState: BehaviourStateInitialiser<any, BehaviourState> = {
   init: () => {
     return nu({
-      readState () {
+      readState() {
         return 'No State required';
       }
     });

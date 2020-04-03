@@ -5,13 +5,25 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option, Struct } from '@ephox/katamari';
+import { Arr, Fun, Option } from '@ephox/katamari';
 import { Compare, Insert, InsertAll, Replication, Element, Attr, SelectorFilter } from '@ephox/sugar';
 import { HTMLTableCellElement } from '@ephox/dom-globals';
 
-const tableModel = Struct.immutable('element', 'width', 'rows');
-const tableRow = Struct.immutable('element', 'cells');
-const cellPosition = Struct.immutable('x', 'y');
+const tableModel = (element: Element<unknown>, width: number, rows: Element<unknown>[]) => ({
+  element: Fun.constant(element),
+  width: Fun.constant(width),
+  rows: Fun.constant(rows)
+});
+
+const tableRow = (element: Element<unknown>, cells: Element<unknown>[]) => ({
+  element: Fun.constant(element),
+  cells: Fun.constant(cells)
+});
+
+const cellPosition = (x: number, y: number) => ({
+  x: Fun.constant(x),
+  y: Fun.constant(y)
+});
 
 const getSpan = function (td, key) {
   const value = parseInt(Attr.get(td, key), 10);

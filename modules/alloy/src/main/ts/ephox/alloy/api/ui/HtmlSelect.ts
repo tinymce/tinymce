@@ -10,7 +10,7 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from './UiSketcher';
 
-const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, spec): SketchSpec => {
+const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, _spec): SketchSpec => {
   const options = Arr.map(detail.options, (option) => {
     return {
       dom: {
@@ -40,10 +40,10 @@ const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, 
         Representing.config({
           store: {
             mode: 'manual',
-            getValue (select) {
+            getValue(select) {
               return Value.get(select.element());
             },
-            setValue (select, newValue) {
+            setValue(select, newValue) {
               // This is probably generically useful ... may become a part of Representing.
               const found = Arr.find(detail.options, (opt) => {
                 return opt.value === newValue;

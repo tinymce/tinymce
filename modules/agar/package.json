@@ -1,6 +1,6 @@
 {
   "name": "@ephox/agar",
-  "version": "4.15.2",
+  "version": "4.15.3",
   "description": "Testing infrastructure",
   "repository": {
     "type": "git",
@@ -9,7 +9,8 @@
   "scripts": {
     "prepublishOnly": "tsc -b",
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
-    "test-manual": "bedrock --testdirs src/test/ts/browser src/test/ts/atomic"
+    "test-manual": "bedrock --testdirs src/test/ts/browser src/test/ts/atomic",
+    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
   },
   "keywords": [
     "testing",
@@ -24,14 +25,14 @@
   "dependencies": {
     "@ephox/bedrock-client": "^9.3.2",
     "@ephox/dom-globals": "^1.1.2",
-    "@ephox/jax": "^4.1.30",
-    "@ephox/sand": "^3.1.5",
-    "@ephox/sugar": "^5.1.2",
+    "@ephox/jax": "^4.1.31",
+    "@ephox/sand": "^3.1.6",
+    "@ephox/sugar": "^5.1.3",
     "@ephox/wrap-jsverify": "^2.0.1",
     "@ephox/wrap-sizzle": "^4.0.0"
   },
   "devDependencies": {
-    "@ephox/katamari-assertions": "^1.0.3"
+    "@ephox/katamari-assertions": "^1.0.4"
   },
   "files": [
     "lib/main",

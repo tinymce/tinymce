@@ -14,7 +14,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.AcyclicKeyingTest', (success,
 
   // This test will wrap an acyclic section inside a cyclic section, both with enter handlers
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     return GuiFactory.build(
       Container.sketch({
         dom: {
@@ -92,7 +92,7 @@ UnitTest.asynctest('Browser Test: behaviour.keying.AcyclicKeyingTest', (success,
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, body, _gui, component, store) => {
     return [
       GuiSetup.mSetupKeyLogger(body),
       Step.sync(() => {

@@ -29,12 +29,12 @@ const bubbleSize = 12;
 const bubbleAlignments = {
   valignCentre: [],
   alignCentre: [],
-  alignLeft: ['tox-pop--align-left'],
-  alignRight: ['tox-pop--align-right'],
-  right: ['tox-pop--right'],
-  left: ['tox-pop--left'],
-  bottom: ['tox-pop--bottom'],
-  top: ['tox-pop--top']
+  alignLeft: [ 'tox-pop--align-left' ],
+  alignRight: [ 'tox-pop--align-right' ],
+  right: [ 'tox-pop--right' ],
+  left: [ 'tox-pop--left' ],
+  bottom: [ 'tox-pop--bottom' ],
+  top: [ 'tox-pop--top' ]
 };
 
 const anchorOverrides = {
@@ -44,17 +44,17 @@ const anchorOverrides = {
 
 // On desktop we prioritise north-then-south because it's cleaner, but on mobile we prioritise south to try to avoid overlapping with native context toolbars
 const desktopAnchorSpecLayouts = {
-  onLtr: () => [Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest],
-  onRtl: () => [Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast]
+  onLtr: () => [ Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest,
+    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest ],
+  onRtl: () => [ Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast,
+    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast ]
 };
 
 const mobileAnchorSpecLayouts = {
-  onLtr: () => [Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest],
-  onRtl: () => [Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast]
+  onLtr: () => [ Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north,
+    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest ],
+  onRtl: () => [ Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north,
+    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast ]
 };
 
 const getAnchorLayout = (position: Toolbar.ContextToolbarPosition, isTouch: boolean): Partial<AnchorSpec> => {
@@ -101,7 +101,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     });
 
     // Translate to the top level document, as nodeBounds is relative to the iframe viewport
-    const diffTop = editor.inline ? Scroll.get().top() : Boxes.absolute(Element.fromDom(editor.getBody())).y();
+    const diffTop = editor.inline ? Scroll.get().top() : Boxes.absolute(Element.fromDom(editor.getBody())).y;
 
     return {
       y: nodeBounds.top + diffTop,
@@ -122,8 +122,8 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     return !isRangeOverlapping(
       lastElementBounds.y,
       lastElementBounds.bottom,
-      contextToolbarBounds.y(),
-      contextToolbarBounds.bottom()
+      contextToolbarBounds.y,
+      contextToolbarBounds.bottom
     );
   };
 
@@ -152,9 +152,9 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     return {
       dom: {
         tag: 'div',
-        classes: ['tox-pop__dialog'],
+        classes: [ 'tox-pop__dialog' ],
       },
-      components: [toolbarSpec],
+      components: [ toolbarSpec ],
       behaviours: Behaviour.derive([
         Keying.config({
           mode: 'acyclic'
@@ -164,7 +164,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
           AlloyEvents.runOnAttached((comp) => {
             editor.shortcuts.add('ctrl+F9', 'focus statusbar', () => Keying.focusIn(comp));
           }),
-          AlloyEvents.runOnDetached((comp) => {
+          AlloyEvents.runOnDetached((_comp) => {
             editor.shortcuts.remove('ctrl+F9');
           })
         ])
@@ -197,10 +197,11 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
         uid: Id.generate('context-toolbar'),
         initGroups,
         onEscape: Option.none,
-        cyclicKeying: true
+        cyclicKeying: true,
+        providers: extras.backstage.shared.providers
       });
     })() : (() => {
-      return ContextForm.renderContextForm(toolbarType, ctx, extras.backstage);
+      return ContextForm.renderContextForm(toolbarType, ctx, extras.backstage.shared.providers);
     })();
   };
 
@@ -246,6 +247,11 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   };
 
   const launchContextToolbar = () => {
+    // Don't launch if the editor doesn't have focus
+    if (!editor.hasFocus()) {
+      return;
+    }
+
     const scopes = getScopes();
     ToolbarLookup.lookup(scopes, editor).fold(
       () => {
@@ -277,14 +283,14 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     editor.on('ScrollContent ScrollWindow longpress', hideOrRepositionIfNecessary);
 
     // FIX: Make it go away when the action makes it go away. E.g. deleting a column deletes the table.
-    editor.on('click keyup SetContent ObjectResized ResizeEditor', (e) => {
+    editor.on('click keyup focus SetContent ObjectResized ResizeEditor', () => {
       // Fixing issue with chrome focus on img.
       resetTimer(
         Delay.setEditorTimeout(editor, launchContextToolbar, 0)
       );
     });
 
-    editor.on('focusout', (e) => {
+    editor.on('focusout', (_e) => {
       Delay.setEditorTimeout(editor, () => {
         if (Focus.search(sink.element()).isNone() && Focus.search(contextbar.element()).isNone()) {
           lastAnchor.set(Option.none());
@@ -300,7 +306,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
       }
     });
 
-    editor.on('NodeChange', (e) => {
+    editor.on('NodeChange', (_e) => {
       Focus.search(contextbar.element()).fold(
         () => {
           resetTimer(

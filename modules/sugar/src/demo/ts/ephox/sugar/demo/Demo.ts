@@ -18,7 +18,7 @@ const button = Element.fromTag('button');
 Html.set(button, 'Click on me');
 const input = Element.fromTag('input');
 
-InsertAll.append(container, [button, input]);
+InsertAll.append(container, [ button, input ]);
 
 const doc = Element.fromDom(document);
 DomEvent.bind(doc, 'click', function (event) {

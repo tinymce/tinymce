@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowClassListTest', (succe
       Log.stepsAsStep('TBA', 'Table: no class input without setting', [
         tinyApis.sFocus(),
         tinyApis.sSetContent(tableHtml),
-        tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 1),
+        tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1),
         tinyApis.sExecCommand('mceTableRowProps'),
         TableTestUtils.sAssertDialogPresence(
           'Checking that class label is not present',
@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowClassListTest', (succe
         tinyApis.sFocus(),
         tinyApis.sSetSetting('table_row_class_list', [{ title: 'test', value: 'test' }]),
         tinyApis.sSetContent(tableHtml),
-        tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 1),
+        tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1),
         tinyApis.sExecCommand('mceTableRowProps'),
         TableTestUtils.sAssertSelectValue('Select class', 'Class', 'test'),
         TableTestUtils.sClickDialogButton('Trigger test class', true),

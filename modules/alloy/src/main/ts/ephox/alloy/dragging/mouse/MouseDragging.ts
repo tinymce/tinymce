@@ -17,7 +17,7 @@ import * as MouseBlockerEvents from './MouseBlockerEvents';
 import * as MouseData from './MouseData';
 import { MouseDraggingConfig } from './MouseDraggingTypes';
 
-const events = (dragConfig: MouseDraggingConfig, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void) => {
+const events = <E>(dragConfig: MouseDraggingConfig<E>, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void) => {
   return [
     AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mousedown(), (component, simulatedEvent) => {
       const raw = simulatedEvent.event().raw();
@@ -34,7 +34,7 @@ const events = (dragConfig: MouseDraggingConfig, dragState: DraggingState, updat
         drop: stop,
         delayDrop: delayDrop.schedule,
         forceDrop: stop,
-        move (event) {
+        move(event) {
           // Stop any pending drops caused by mouseout
           delayDrop.cancel();
           DragUtils.move(component, dragConfig, dragState, MouseData, event);

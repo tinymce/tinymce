@@ -6,7 +6,7 @@ import { Step } from 'ephox/agar/api/Step';
 UnitTest.asynctest('PipelineSuite Test', (success, failure) => {
 
   const mutator = (property, value) =>
-    Step.stateful((state, next, die) => {
+    Step.stateful((state, next, _die) => {
       state[property] = value;
       setTimeout(() => {
         next(state);

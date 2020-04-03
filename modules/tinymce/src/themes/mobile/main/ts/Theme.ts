@@ -6,7 +6,7 @@
  */
 
 import { AlloyTriggers, Attachment, Swapping } from '@ephox/alloy';
-import { HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
+import { HTMLIFrameElement } from '@ephox/dom-globals';
 import { Cell, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Element, Focus, Node } from '@ephox/sugar';
@@ -28,12 +28,12 @@ import * as FormatChangers from './util/FormatChangers';
 import * as SkinLoaded from './util/SkinLoaded';
 import { NotificationSpec } from 'tinymce/core/api/NotificationManager';
 
-/// not to be confused with editor mode
-const READING = 'toReading'; /// 'hide the keyboard'
-const EDITING = 'toEditing'; /// 'show the keyboard'
+// not to be confused with editor mode
+const READING = 'toReading'; // 'hide the keyboard'
+const EDITING = 'toEditing'; // 'show the keyboard'
 
-const renderMobileTheme = function (editor: Editor) {
-  const renderUI = function () {
+const renderMobileTheme = (editor: Editor) => {
+  const renderUI = () => {
     const targetNode = editor.getElement();
     const cssUrls = CssUrls.derive(editor);
 
@@ -44,7 +44,7 @@ const renderMobileTheme = function (editor: Editor) {
       SkinLoaded.fireSkinLoaded(editor)();
     }
 
-    const doScrollIntoView = function () {
+    const doScrollIntoView = () => {
       editor.fire('ScrollIntoView');
     };
 
@@ -52,21 +52,21 @@ const renderMobileTheme = function (editor: Editor) {
     const original = Element.fromDom(targetNode);
     Attachment.attachSystemAfter(original, realm.system());
 
-    const findFocusIn = function (elem) {
-      return Focus.search(elem).bind(function (focused) {
-        return realm.system().getByDom(focused).toOption();
-      });
+    const findFocusIn = (elem) => {
+      return Focus.search(elem).bind((focused) =>
+        realm.system().getByDom(focused).toOption());
     };
+
     const outerWindow = targetNode.ownerDocument.defaultView;
     const orientation = Orientation.onChange(outerWindow, {
-      onChange () {
+      onChange() {
         const alloy = realm.system();
         alloy.broadcastOn([ TinyChannels.orientationChanged ], { width: Orientation.getActualWidth(outerWindow) });
       },
       onReady: Fun.noop
     });
 
-    const setReadOnly = function (dynamicGroup, readOnlyGroups, mainGroups, ro) {
+    const setReadOnly = (dynamicGroup, readOnlyGroups, mainGroups, ro) => {
       if (ro === false) {
         editor.selection.collapse();
       }
@@ -78,7 +78,7 @@ const renderMobileTheme = function (editor: Editor) {
       realm.updateMode(ro);
     };
 
-    const configureToolbar = function (dynamicGroup, readOnlyGroups, mainGroups) {
+    const configureToolbar = (dynamicGroup, readOnlyGroups, mainGroups) => {
       const dynamic = dynamicGroup.get();
       const toolbars = {
         readOnly: dynamic.backToMask.concat(readOnlyGroups.get()),
@@ -93,42 +93,42 @@ const renderMobileTheme = function (editor: Editor) {
       return toolbars;
     };
 
-    const bindHandler = function (label: string, handler) {
+    const bindHandler = (label: string, handler) => {
       editor.on(label, handler);
       return {
-        unbind () {
+        unbind() {
           editor.off(label);
         }
       };
     };
 
-    editor.on('init', function () {
+    editor.on('init', () => {
       realm.init({
         editor: {
-          getFrame () {
+          getFrame() {
             return Element.fromDom(editor.contentAreaContainer.querySelector('iframe'));
           },
 
-          onDomChanged () {
+          onDomChanged() {
             return {
               unbind: Fun.noop
             };
           },
 
-          onToReading (handler) {
+          onToReading(handler) {
             return bindHandler(READING, handler);
           },
 
-          onToEditing (handler) {
+          onToEditing(handler) {
             return bindHandler(EDITING, handler);
           },
 
-          onScrollToCursor (handler) {
-            editor.on('ScrollIntoView', function (tinyEvent) {
+          onScrollToCursor(handler) {
+            editor.on('ScrollIntoView', (tinyEvent) => {
               handler(tinyEvent);
             });
 
-            const unbind = function () {
+            const unbind = () => {
               editor.off('ScrollIntoView');
               orientation.destroy();
             };
@@ -138,11 +138,11 @@ const renderMobileTheme = function (editor: Editor) {
             };
           },
 
-          onTouchToolstrip () {
+          onTouchToolstrip() {
             hideDropup();
           },
 
-          onTouchContent () {
+          onTouchContent() {
             const toolbar = Element.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar')));
             // If something in the toolbar had focus, fire an execute on it (execute on tap away)
             // Perhaps it will be clearer later what is a better way of doing this.
@@ -151,7 +151,7 @@ const renderMobileTheme = function (editor: Editor) {
             hideDropup();
           },
 
-          onTapContent (evt) {
+          onTapContent(evt) {
             const target = evt.target();
             // If the user has tapped (touchstart, touchend without movement) on an image, select it.
             if (Node.name(target) === 'img') {
@@ -160,8 +160,8 @@ const renderMobileTheme = function (editor: Editor) {
               evt.kill();
             } else if (Node.name(target) === 'a') {
               const component = realm.system().getByDom(Element.fromDom(editor.editorContainer));
-              component.each(function (container) {
-                /// view mode
+              component.each((container) => {
+                // view mode
                 if (Swapping.isAlpha(container)) {
                   TinyCodeDupe.openLink(target.dom());
                 }
@@ -177,17 +177,17 @@ const renderMobileTheme = function (editor: Editor) {
         alloy: realm.system(),
         translate: Fun.noop,
 
-        setReadOnly (ro) {
+        setReadOnly(ro) {
           setReadOnly(dynamicGroup, readOnlyGroups, mainGroups, ro);
         },
 
-        readOnlyOnInit () {
+        readOnlyOnInit() {
           return Settings.readOnlyOnInit(editor);
         }
       });
 
-      const hideDropup = function () {
-        realm.dropup().disappear(function () {
+      const hideDropup = () => {
+        realm.dropup().disappear(() => {
           realm.system().broadcastOn([ TinyChannels.dropupDismissed ], { });
         });
       };
@@ -196,7 +196,7 @@ const renderMobileTheme = function (editor: Editor) {
         label: 'The first group',
         scrollable: false,
         items: [
-          Buttons.forToolbar('back', function (/* btn */) {
+          Buttons.forToolbar('back', (/* btn */) => {
             editor.selection.collapse();
             realm.exit();
           }, { }, editor)
@@ -207,7 +207,7 @@ const renderMobileTheme = function (editor: Editor) {
         label: 'Back to read only',
         scrollable: false,
         items: [
-          Buttons.forToolbar('readonly-back', function (/* btn */) {
+          Buttons.forToolbar('readonly-back', (/* btn */) => {
             setReadOnly(dynamicGroup, readOnlyGroups, mainGroups, true);
           }, {}, editor)
         ]
@@ -257,12 +257,12 @@ const renderMobileTheme = function (editor: Editor) {
 
     return {
       iframeContainer: realm.socket().element().dom() as HTMLIFrameElement,
-      editorContainer: realm.element().dom() as HTMLElement
+      editorContainer: realm.element().dom()
     };
   };
 
   return {
-    getNotificationManagerImpl () {
+    getNotificationManagerImpl() {
       return {
         open: Fun.constant({
           progressBar: { value: Fun.noop },
@@ -282,6 +282,6 @@ const renderMobileTheme = function (editor: Editor) {
   };
 };
 
-export default function () {
+export default () => {
   ThemeManager.add('mobile', renderMobileTheme);
-}
+};

@@ -23,7 +23,7 @@ import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
 
 UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const sink = Sinks.relativeSink();
 
     return GuiFactory.build(
@@ -48,17 +48,17 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
               }
             },
 
-            fetch (input) {
+            fetch(input) {
               const text = Value.get(input.element()).toLowerCase();
               const future = Future.pure([
-                { type: 'item', data: { value: text + '1', meta: { text: Strings.capitalize(text) + '1' } } },
-                { type: 'item', data: { value: text + '2', meta: { text: Strings.capitalize(text) + '2' } } }
+                { type: 'item', data: { value: text + '1', meta: { text: Strings.capitalize(text) + '1' }}},
+                { type: 'item', data: { value: text + '2', meta: { text: Strings.capitalize(text) + '2' }}}
               ]);
 
               return future.map((f) => {
                 // TODO: Test this.
                 const items = text === 'no-data' ? [
-                  { type: 'separator', text: 'No data', data: { value: '', meta: { text: 'No data'} } }
+                  { type: 'separator', text: 'No data', data: { value: '', meta: { text: 'No data' }}}
                 ] : f;
 
                 const menu = TestDropdownMenu.renderMenu({
@@ -69,7 +69,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
               });
             },
 
-            lazySink (c) {
+            lazySink(c) {
               TestDropdownMenu.assertLazySinkArgs('input', 'test-typeahead', c);
               return Result.value(sink);
             },
@@ -86,7 +86,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, component, _store) => {
 
     const item = (key: string) => {
       return {
@@ -130,10 +130,10 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
         // Check that the representing state has keys of peo1, peo2 etc.
         const repState = Representing.getState(typeahead) as DatasetRepresentingState;
         const peo1Data = repState.lookup('peo1').getOrDie('Should have dataset data for peo1 now');
-        Assertions.assertEq('Checking peo1Data', { value: 'peo1', meta: { text: 'Peo1' } }, peo1Data);
+        Assertions.assertEq('Checking peo1Data', { value: 'peo1', meta: { text: 'Peo1' }}, peo1Data);
 
         const peo2Data = repState.lookup('peo2').getOrDie('Should have dataset data for peo2 now');
-        Assertions.assertEq('Checking peo2Data', { value: 'peo2', meta: { text: 'Peo2' } }, peo2Data);
+        Assertions.assertEq('Checking peo2Data', { value: 'peo2', meta: { text: 'Peo2' }}, peo2Data);
       }),
 
       Keyboard.sKeydown(doc, Keys.enter(), { }),

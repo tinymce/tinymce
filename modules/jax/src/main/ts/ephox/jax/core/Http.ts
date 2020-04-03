@@ -166,7 +166,7 @@ const fetchDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, 
       }));
     };
 
-    const failOnError = (e: Error) => {
+    const failOnError = (_e: Error) => {
       fail(`Could not load url ${init.url}`, HttpErrorCode.InternalServerError);
     };
 

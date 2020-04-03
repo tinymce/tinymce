@@ -79,22 +79,22 @@ Ready.execute(function () {
   //   '</tbody></table>'
   // );
 
-// subject = Element.fromHtml('<table contenteditable="true" style="border-collapse: collapse;"><tbody><tr><td>A</td><td>A2</td></tr><tr><td rowspan=2>B</td><td>C</td></tr><tr><td>d</td></tr></tbody></table>');
-// subject = Element.fromHtml('<table contenteditable="true" style="border-collapse: collapse;"><tbody><tr><td>A</td></tr><tr><td rowspan=2>B</td></tr></tbody></table>');
+  // subject = Element.fromHtml('<table contenteditable="true" style="border-collapse: collapse;"><tbody><tr><td>A</td><td>A2</td></tr><tr><td rowspan=2>B</td><td>C</td></tr><tr><td>d</td></tr></tbody></table>');
+  // subject = Element.fromHtml('<table contenteditable="true" style="border-collapse: collapse;"><tbody><tr><td>A</td></tr><tr><td rowspan=2>B</td></tr></tbody></table>');
 
   const subject2 = Element.fromHtml(
     '<table contenteditable="true" style="border-collapse: collapse;"><tbody>' +
       '<tr>' +
         '<td style="width: 110px;">1</td>' +
-        // '<td colspan="1">.</td>' +
+    // '<td colspan="1">.</td>' +
       '</tr>' +
-      // '<tr>' +
-      //   '<td>x</td>' +
-      //   '<td style="width: 120px;">2</td>' +
-      //   '<td>.</td>' +
-      //   '<td style="width: 150px;">5</td>' +
-      //   '<td>x</td>' +
-      // '</tr>' +
+    // '<tr>' +
+    //   '<td>x</td>' +
+    //   '<td style="width: 120px;">2</td>' +
+    //   '<td>.</td>' +
+    //   '<td style="width: 150px;">5</td>' +
+    //   '<td>x</td>' +
+    // '</tr>' +
     '</tbody></table>'
   );
 
@@ -207,13 +207,13 @@ Ready.execute(function () {
   };
 
   const runOperation = function (operation: (wire: ResizeWire, table: Element, target: TargetElement & TargetSelection, generators: Generators, direction: BarPositions<ColInfo>) => Option<RunOperationOutput>) {
-    return function (event: EventArgs) {
+    return function (_event: EventArgs) {
       detection().each(function (start) {
         const dir = Direction.getDirection(start);
         const direction = dir === 'rtl' ? ResizeDirection.rtl : ResizeDirection.ltr;
         const target = {
           element: Fun.constant(start),
-          selection: Fun.constant([start])
+          selection: Fun.constant([ start ])
         };
 
         // wire, table, target, generators, direction

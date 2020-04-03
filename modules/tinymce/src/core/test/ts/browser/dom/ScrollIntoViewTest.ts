@@ -69,7 +69,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
   };
 
   const mBindScrollIntoViewEvent = function (editor: Editor) {
-    return Step.stateful(function (value, next, die) {
+    return Step.stateful(function (_value, next, _die) {
       const state = Cell({});
 
       const handler = function (e) {
@@ -90,7 +90,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
   };
 
   const mAssertScrollIntoViewEventInfo = function (editor: Editor, expectedElementSelector: string, expectedAlignToTop: boolean) {
-    return Step.stateful(function (value: any, next, die) {
+    return Step.stateful(function (value: any, next, _die) {
       const expectedTarget = Element.fromDom(editor.dom.select(expectedElementSelector)[0]);
       const actualTarget = Element.fromDom(value.state.get().elm);
       Assertions.assertDomEq('Target should be expected element', expectedTarget, actualTarget);
@@ -116,7 +116,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
           sScrollIntoView(editor, 'div:nth-child(2)', true),
           sAssertScrollPosition(editor, 0, 1000)
         ])),
-        Logger.t('Scroll to element already in view shouldn\'t do anything', GeneralSteps.sequence([
+        Logger.t(`Scroll to element already in view shouldn't do anything`, GeneralSteps.sequence([
           sScrollReset(editor),
           sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 600px">a</div>'),
           Step.sync(() => {
@@ -150,11 +150,11 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
         Logger.t('Scroll up/down', GeneralSteps.sequence([
           sScrollReset(editor),
           sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>'),
-          sScrollRangeIntoView(editor, [1, 0], 0),
+          sScrollRangeIntoView(editor, [ 1, 0 ], 0),
           sAssertApproxScrollPosition(editor, 0, 618), // Height of the text content/cursor
-          sScrollRangeIntoView(editor, [0, 0], 0),
+          sScrollRangeIntoView(editor, [ 0, 0 ], 0),
           sAssertApproxScrollPosition(editor, 0, 0),
-          sScrollRangeIntoView(editor, [2, 0], 0),
+          sScrollRangeIntoView(editor, [ 2, 0 ], 0),
           sAssertApproxScrollPosition(editor, 0, 668)
         ]))
       ])),

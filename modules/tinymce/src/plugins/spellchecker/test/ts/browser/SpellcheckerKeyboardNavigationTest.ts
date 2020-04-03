@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
         altKey: false,
         shiftKey: false,
         metaKey: false
-      }, {altKey: true, keyCode: 120});
+      }, { altKey: true, keyCode: 120 });
       editor.fire('keydown', args);
     });
 
@@ -68,11 +68,11 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
     toolbar: 'spellchecker',
     base_url: '/project/tinymce/js/tinymce',
     statusbar: false,
-    spellchecker_callback (method, text, success, failure) {
+    spellchecker_callback(method, _text, success, _failure) {
       if (method === 'spellcheck') {
-        success({words: {
-          helo: ['hello'],
-          worl: ['world']
+        success({ words: {
+          helo: [ 'hello' ],
+          worl: [ 'world' ]
         }});
       }
     },

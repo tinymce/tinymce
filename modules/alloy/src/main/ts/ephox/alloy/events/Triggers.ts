@@ -43,24 +43,24 @@ const doTriggerHandler = (lookup: LookupEvent, eventType: string, rawEvent: Even
     logger.logEventNoHandlers(eventType, target);
     return adt.complete();
   }, (handlerInfo) => {
-    const descHandler = handlerInfo.descHandler();
+    const descHandler = handlerInfo.descHandler;
     const eventHandler = DescribedHandler.getCurried(descHandler);
     eventHandler(simulatedEvent);
 
     // Now, check if the event was stopped.
     if (simulatedEvent.isStopped()) {
-      logger.logEventStopped(eventType, handlerInfo.element(), descHandler.purpose());
+      logger.logEventStopped(eventType, handlerInfo.element, descHandler.purpose());
       return adt.stopped();
     } else if (simulatedEvent.isCut()) {
-      logger.logEventCut(eventType, handlerInfo.element(), descHandler.purpose());
+      logger.logEventCut(eventType, handlerInfo.element, descHandler.purpose());
       return adt.complete();
     } else {
-      return Traverse.parent(handlerInfo.element()).fold(() => {
-        logger.logNoParent(eventType, handlerInfo.element(), descHandler.purpose());
+      return Traverse.parent(handlerInfo.element).fold(() => {
+        logger.logNoParent(eventType, handlerInfo.element, descHandler.purpose());
         // No parent, so complete.
         return adt.complete();
       }, (parent) => {
-        logger.logEventResponse(eventType, handlerInfo.element(), descHandler.purpose());
+        logger.logEventResponse(eventType, handlerInfo.element, descHandler.purpose());
         // Resume at parent
         return adt.resume(parent);
       });
@@ -86,7 +86,7 @@ const triggerHandler = <T extends EventFormat>(lookup: LookupEvent, eventType: s
   return doTriggerHandler(lookup, eventType, rawEvent, target, source, logger);
 };
 
-const broadcast = (listeners: UidAndHandler[], rawEvent: EventFormat, logger?: DebuggerLogger): boolean => {
+const broadcast = (listeners: UidAndHandler[], rawEvent: EventFormat, _logger?: DebuggerLogger): boolean => {
   const simulatedEvent = fromExternal(rawEvent);
 
   Arr.each(listeners, (listener) => {

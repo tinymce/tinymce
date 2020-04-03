@@ -1,12 +1,12 @@
-import { FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Pipeline, Step, UiControls, UiFinder, Chain } from '@ephox/agar';
+import { Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Pipeline, Step, UiControls, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
-import { TinyLoader, TinyUi, TinyApis } from '@ephox/mcagar';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 
+import Tools from 'tinymce/core/api/util/Tools';
 import SearchReplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import Tools from 'tinymce/core/api/util/Tools';
 
 UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardNavigationTest', function (success, failure) {
   SilverTheme();
@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardN
         altKey: false,
         shiftKey: false,
         metaKey: false
-      }, {altKey: true, keyCode: 120});
+      }, { altKey: true, keyCode: 120 });
       editor.fire('keydown', args);
     });
 
@@ -96,6 +96,20 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardN
         sPressEnter,
         sAssertFocused('Find input', '.tox-textfield[placeholder="Find"]'),
         sPressEsc,
+      ]),
+      Log.stepsAsStep('TINY-4014', 'Find and replace: Dialog keyboard focus is returned to find input after displaying an alert', [
+        tinyApis.sSetContent('<p>fish fish fish</p>'),
+        sOpenDialog(tinyUi),
+        sAssertFocused('Find input', '.tox-textfield[placeholder="Find"]'),
+        Chain.asStep(body, [
+          UiFinder.cFindIn('input.tox-textfield[placeholder="Find"]'),
+          UiControls.cSetValue('notfound')
+        ]),
+        sPressEnter,
+        sAssertFocused('Alert dialog OK button', '.tox-alert-dialog .tox-button[title="OK"]'),
+        sPressEnter,
+        sAssertFocused('Find input', '.tox-textfield[placeholder="Find"]'),
+        sPressEsc
       ])
     ], onSuccess, onFailure);
   }, {

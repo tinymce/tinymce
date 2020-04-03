@@ -18,36 +18,36 @@ const identify = function (start: Element, finish: Element, isRoot?: (element: E
 
   // Optimisation: If the cells are equal, it's a single cell array
   if (Compare.eq(start, finish)) {
-    return Option.some(Identified.create({
-      boxes: Option.some([start]),
+    return Option.some({
+      boxes: Option.some([ start ]),
       start,
       finish
-    }));
+    });
   } else {
     return lookupTable(start).bind(function (startTable) {
       return lookupTable(finish).bind(function (finishTable) {
         if (Compare.eq(startTable, finishTable)) { // Selecting from within the same table.
-          return Option.some(Identified.create({
+          return Option.some({
             boxes: TablePositions.intercepts(startTable, start, finish),
             start,
             finish
-          }));
+          });
         } else if (Compare.contains(startTable, finishTable)) { // Selecting from the parent table to the nested table.
           const ancestorCells = SelectorFilter.ancestors(finish, 'td,th', getIsRoot(startTable));
           const finishCell = ancestorCells.length > 0 ? ancestorCells[ancestorCells.length - 1] : finish;
-          return Option.some(Identified.create({
+          return Option.some({
             boxes: TablePositions.nestedIntercepts(startTable, start, startTable, finish, finishTable),
             start,
             finish: finishCell
-          }));
+          });
         } else if (Compare.contains(finishTable, startTable)) { // Selecting from the nested table to the parent table.
           const ancestorCells = SelectorFilter.ancestors(start, 'td,th', getIsRoot(finishTable));
           const startCell = ancestorCells.length > 0 ? ancestorCells[ancestorCells.length - 1] : start;
-          return Option.some(Identified.create({
+          return Option.some({
             boxes: TablePositions.nestedIntercepts(finishTable, start, startTable, finish, finishTable),
             start,
             finish: startCell
-          }));
+          });
         } else { // Selecting from a nested table to a different nested table.
           return DomParent.ancestors(start, finish).shared().bind(function (lca) {
             return SelectorFind.closest(lca, 'table', isRoot).bind(function (lcaTable) {
@@ -55,11 +55,11 @@ const identify = function (start: Element, finish: Element, isRoot?: (element: E
               const finishCell = finishAncestorCells.length > 0 ? finishAncestorCells[finishAncestorCells.length - 1] : finish;
               const startAncestorCells = SelectorFilter.ancestors(start, 'td,th', getIsRoot(lcaTable));
               const startCell = startAncestorCells.length > 0 ? startAncestorCells[startAncestorCells.length - 1] : start;
-              return Option.some(Identified.create({
+              return Option.some({
                 boxes: TablePositions.nestedIntercepts(lcaTable, start, startTable, finish, finishTable),
                 start: startCell,
                 finish: finishCell
-              }));
+              });
             });
           });
         }
@@ -82,7 +82,7 @@ const getLast = function (boxes: Element[], lastSelectedSelector: string) {
 const getEdges = function (container: Element, firstSelectedSelector: string, lastSelectedSelector: string) {
   return SelectorFind.descendant(container, firstSelectedSelector).bind(function (first) {
     return SelectorFind.descendant(container, lastSelectedSelector).bind(function (last) {
-      return DomParent.sharedOne(lookupTable, [first, last]).map(function (tbl) {
+      return DomParent.sharedOne(lookupTable, [ first, last ]).map(function (tbl) {
         return {
           first: Fun.constant(first),
           last: Fun.constant(last),
@@ -93,15 +93,15 @@ const getEdges = function (container: Element, firstSelectedSelector: string, la
   });
 };
 
-const expandTo = function (finish: Element, firstSelectedSelector: string) {
+const expandTo = function (finish: Element, firstSelectedSelector: string): Option<IdentifiedExt> {
   return SelectorFind.ancestor(finish, 'table').bind(function (table) {
     return SelectorFind.descendant(table, firstSelectedSelector).bind(function (start) {
       return identify(start, finish).bind(function (identified) {
-        return identified.boxes().map<IdentifiedExt>(function (boxes) {
+        return identified.boxes.map<IdentifiedExt>(function (boxes) {
           return {
-            boxes: Fun.constant(boxes),
-            start: Fun.constant(identified.start()),
-            finish: Fun.constant(identified.finish())
+            boxes,
+            start: identified.start,
+            finish: identified.finish
           };
         });
       });

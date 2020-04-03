@@ -52,47 +52,47 @@ UnitTest.asynctest('Browser Test: behaviour.ReplacingAndTogglingTest', (success,
     ])
   });
 
-  GuiSetup.setup((store, doc, body) => {
-      return GuiFactory.build({
-        dom: {
-          tag: 'div',
-          classes: [ 'parent' ],
-          styles: {
-            background: 'blue',
-            padding: '10px',
-            width: '400px'
-          }
-        },
-        components: [
-          memChild1.asSpec(),
-          memChild2.asSpec()
-        ],
-        behaviours: Behaviour.derive([
-          Replacing.config({ })
-        ])
-      });
-    },
-    (doc, body, gui, component, store) => {
-      const childComp1 = memChild1.get(component);
-      const childComp2 = memChild2.get(component);
-      return [
-        Step.sync(() => {
-          Assertions.assertEq('Assert child1 initial toggling state', false, Toggling.isOn(childComp1));
-          Assertions.assertEq('Assert child1 initial toggling state', true, Toggling.isOn(childComp2));
+  GuiSetup.setup((_store, _doc, _body) => {
+    return GuiFactory.build({
+      dom: {
+        tag: 'div',
+        classes: [ 'parent' ],
+        styles: {
+          background: 'blue',
+          padding: '10px',
+          width: '400px'
+        }
+      },
+      components: [
+        memChild1.asSpec(),
+        memChild2.asSpec()
+      ],
+      behaviours: Behaviour.derive([
+        Replacing.config({ })
+      ])
+    });
+  },
+  (_doc, _body, _gui, component, _store) => {
+    const childComp1 = memChild1.get(component);
+    const childComp2 = memChild2.get(component);
+    return [
+      Step.sync(() => {
+        Assertions.assertEq('Assert child1 initial toggling state', false, Toggling.isOn(childComp1));
+        Assertions.assertEq('Assert child1 initial toggling state', true, Toggling.isOn(childComp2));
 
-          // Toggle the component
-          Toggling.on(childComp1);
-          Assertions.assertEq('Assert child1 toggling state is now on', true, Toggling.isOn(childComp1));
+        // Toggle the component
+        Toggling.on(childComp1);
+        Assertions.assertEq('Assert child1 toggling state is now on', true, Toggling.isOn(childComp1));
 
-          // Replace the contents
-          Replacing.set(component, [ GuiFactory.premade(childComp1), GuiFactory.premade(childComp2) ]);
+        // Replace the contents
+        Replacing.set(component, [ GuiFactory.premade(childComp1), GuiFactory.premade(childComp2) ]);
 
-          // Assert the state hasn't been reset
-          Assertions.assertEq('Assert child1 toggling state is still on', true, Toggling.isOn(childComp1));
-          Assertions.assertEq('Assert child2 toggling state is still on', true, Toggling.isOn(childComp1));
-        }),
-      ];
-    },
-    success, failure
+        // Assert the state hasn't been reset
+        Assertions.assertEq('Assert child1 toggling state is still on', true, Toggling.isOn(childComp1));
+        Assertions.assertEq('Assert child2 toggling state is still on', true, Toggling.isOn(childComp1));
+      }),
+    ];
+  },
+  success, failure
   );
 });

@@ -41,7 +41,7 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
   const layouts = menuSpec.type === 'horizontal' ? { layouts: {
     onLtr: () => Layout.belowOrAbove(),
     onRtl: () => Layout.belowOrAboveRtl()
-  } } : { };
+  }} : { };
 
   const isFirstTierSubmenu = (triggeringPaths: string[]) => triggeringPaths.length === 2; // primary and first tier menu === 2 items
   const getSubmenuLayouts = (triggeringPaths: string[]) => isFirstTierSubmenu(triggeringPaths) ? layouts : { };
@@ -81,7 +81,7 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
       }, submenu);
     },
 
-    onRepositionMenu (tmenu, primaryMenu, submenuTriggers) {
+    onRepositionMenu(tmenu, primaryMenu, submenuTriggers) {
       const sink = lazySink().getOrDie();
       Positioning.positionWithinBounds(sink, anchor, primaryMenu, getBounds());
       Arr.each(submenuTriggers, (st) => {
@@ -178,16 +178,16 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
       detail.inlineBehaviours,
       [
         Sandboxing.config({
-          isPartOf (sandbox, data, queryElem) {
+          isPartOf(sandbox, data, queryElem) {
             return ComponentStructure.isPartOf(data, queryElem) || isPartOfRelated(sandbox, queryElem);
           },
-          getAttachPoint (sandbox) {
+          getAttachPoint(sandbox) {
             return detail.lazySink(sandbox).getOrDie();
           },
-          onOpen (sandbox) {
+          onOpen(sandbox) {
             detail.onShow(sandbox);
           },
-          onClose (sandbox) {
+          onClose(sandbox) {
             detail.onHide(sandbox);
           }
         }),
@@ -200,11 +200,10 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
         Receiving.config({
           channels: {
             ...Dismissal.receivingChannel({
-              isExtraPart: Fun.constant(false),
+              isExtraPart: spec.isExtraPart,
               ...detail.fireDismissalEventInstead.map((fe) => ({ fireEventInstead: { event: fe.event }} as any)).getOr({ })
             }),
             ...Reposition.receivingChannel({
-              isExtraPart: Fun.constant(false),
               ...detail.fireRepositionEventInstead.map((fe) => ({ fireEventInstead: { event: fe.event }} as any)).getOr({ }),
               doReposition: reposition
             })
@@ -233,6 +232,7 @@ const InlineView: InlineViewSketcher = Sketcher.single<InlineViewSpec, InlineVie
       FieldSchema.defaulted('event', SystemEvents.repositionRequested())
     ]),
     FieldSchema.defaulted('getRelated', Option.none),
+    FieldSchema.defaulted('isExtraPart', Fun.never),
     FieldSchema.defaulted('eventOrder', Option.none)
   ],
   factory,

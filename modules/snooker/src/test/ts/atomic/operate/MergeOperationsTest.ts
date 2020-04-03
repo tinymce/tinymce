@@ -7,7 +7,7 @@ import { Element } from '@ephox/sugar';
 UnitTest.test('MergeOperationsTest', function () {
   const b = Structs.bounds;
   const r = Structs.rowcells;
-  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as any as Element, isNew);
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as Element, isNew);
 
   // Test basic merge.
   (function () {
@@ -24,8 +24,8 @@ UnitTest.test('MergeOperationsTest', function () {
     };
 
     check([], [], b(0, 0, 1, 1),  'a');
-    check([r([ en('a', false), en('a', false) ], 'thead')], [r([  en('a', false),  en('b', false) ], 'thead')], b(0, 0, 0, 1), 'a');
-    check([r([ en('a', false), en('a', false) ], 'tbody')], [r([  en('a', false),  en('b', false) ], 'tbody')], b(0, 0, 0, 1), 'a');
+    check([ r([ en('a', false), en('a', false) ], 'thead') ], [ r([  en('a', false),  en('b', false) ], 'thead') ], b(0, 0, 0, 1), 'a');
+    check([ r([ en('a', false), en('a', false) ], 'tbody') ], [ r([  en('a', false),  en('b', false) ], 'tbody') ], b(0, 0, 0, 1), 'a');
     check(
       [
         r([ en('a', false), en('a', false) ], 'thead'),
@@ -95,8 +95,8 @@ UnitTest.test('MergeOperationsTest', function () {
     };
 
     check([], [], 'a');
-    check([r([ en('a', false), en('?', true) ], 'thead')], [r([ en('a', false), en('a', false) ], 'thead')], 'a');
-    check([r([ en('a', false), en('?', true) ], 'tbody')], [r([ en('a', false), en('a', false) ], 'tbody')], 'a');
+    check([ r([ en('a', false), en('?', true) ], 'thead') ], [ r([ en('a', false), en('a', false) ], 'thead') ], 'a');
+    check([ r([ en('a', false), en('?', true) ], 'tbody') ], [ r([ en('a', false), en('a', false) ], 'tbody') ], 'a');
     check(
       [
         r([ en('a', false), en('?', true) ], 'tbody'),

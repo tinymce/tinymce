@@ -2,62 +2,62 @@ import { Universe } from '@ephox/boss';
 import { Option } from '@ephox/katamari';
 
 export interface SpotPoint<E> {
-  element(): E;
-  offset(): number;
+  readonly element: () => E;
+  readonly offset: () => number;
 }
 
 export interface SpotDelta<E> {
-  element(): E;
-  deltaOffset(): number;
+  readonly element: () => E;
+  readonly deltaOffset: () => number;
 }
 
 export interface SpotRange<E> {
-  element(): E;
-  start(): number;
-  finish(): number;
+  readonly element: () => E;
+  readonly start: () => number;
+  readonly finish: () => number;
 }
 
 export interface SpotPoints<E> {
-  begin(): SpotPoint<E>;
-  end(): SpotPoint<E>;
+  readonly begin: () => SpotPoint<E>;
+  readonly end: () => SpotPoint<E>;
 }
 
 export interface SpotText<E> {
-  element(): E;
-  text(): any; // TODO narrow type
+  readonly element: () => E;
+  readonly text: () => any; // TODO narrow type
 }
 
 export interface SearchResult<E> {
-  elements: () => E[];
-  word: () => string;
-  exact: () => string;
+  readonly elements: () => E[];
+  readonly word: () => string;
+  readonly exact: () => string;
 }
 
 export interface Direction {
-  sibling: <E, D>(universe: Universe<E, D>, item: E) => Option<E>;
-  first: <E>(children: E[]) => Option<E>;
+  readonly sibling: <E, D>(universe: Universe<E, D>, item: E) => Option<E>;
+  readonly first: <E>(children: E[]) => Option<E>;
 }
 
 export type Transition = <E, D> (universe: Universe<E, D>, item: E, direction: Direction, _transition?: Transition) => Option<Traverse<E>>;
 
 export interface Traverse<E> {
-  item(): E;
-  mode(): Transition;
+  readonly item: () => E;
+  readonly mode: () => Transition;
 }
 
 export type Successor = {
-  current: Transition,
-  next: Transition,
-  fallback: Option<Transition>
+  readonly current: Transition;
+  readonly next: Transition;
+  readonly fallback: Option<Transition>;
 };
 
 export interface Wrapter<E> {
-  element: () => E;
-  wrap: (contents: E) => void;
+  readonly element: () => E;
+  readonly wrap: (contents: E) => void;
 }
 
 export interface SpanWrapRange<E> {
-  range(): SpotPoints<E>;
-  temporary(): boolean;
-  wrappers(): E[];
+  readonly range: () => SpotPoints<E>;
+  readonly temporary: () => boolean;
+  readonly wrappers: () => E[];
 }

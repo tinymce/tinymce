@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
       '<p>This is some text.</p>' +
       '<h3 id="h4">H3</h3>' +
       '<p>This is some text.</p>'
-      ;
+    ;
 
     LegacyUnit.setSelection(editor, 'h1', 0);
     editor.execCommand('mceInsertToc');
@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
 
     LegacyUnit.equal($toc.find('ul ul ul').length, 0, 'no levels beyond 2 are included');
 
-    stripAttribs($toc, ['data-mce-href', 'data-mce-selected']);
+    stripAttribs($toc, [ 'data-mce-href', 'data-mce-selected' ]);
 
     LegacyUnit.equal(trimBr(HtmlUtils.normalizeHtml($toc[0].outerHTML)),
       '<div class="tst-toc" contenteditable="false">' +
@@ -84,14 +84,14 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
       '<p>This is some text.</p>' +
       '<h2 id="h4">H2</h2>' +
       '<p>This is some text.</p>'
-      ;
+    ;
 
     LegacyUnit.setSelection(editor, 'h1', 0);
     editor.execCommand('mceInsertToc');
 
     const $toc = editor.$('.tst-toc');
 
-    stripAttribs($toc, ['data-mce-href', 'data-mce-selected']);
+    stripAttribs($toc, [ 'data-mce-href', 'data-mce-selected' ]);
 
     LegacyUnit.equal(trimBr(HtmlUtils.normalizeHtml($toc[0].innerHTML)),
       '<h3 contenteditable="true">Table of Contents</h3>' +
@@ -123,7 +123,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
       '<p>This is some text.</p>' +
       '<h3 id="h4">H3</h3>' +
       '<p>This is some text.</p>'
-      ;
+    ;
 
     LegacyUnit.setSelection(editor, 'h1', 0);
     editor.execCommand('mceInsertToc');
@@ -148,7 +148,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
       '<p>This is some text.</p>' +
       '<h3 id="h4">H3</h3>' +
       '<p>This is some text.</p>'
-      ;
+    ;
 
     LegacyUnit.setSelection(editor, 'h2', 0);
     editor.execCommand('mceInsertToc');
@@ -163,7 +163,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
     LegacyUnit.deepEqual($toc.find(':first-child').attr('contentEditable'), 'true',
       'cE added back to title after setContent()');
 
-    stripAttribs($toc, ['data-mce-href', 'data-mce-selected']);
+    stripAttribs($toc, [ 'data-mce-href', 'data-mce-selected' ]);
 
     LegacyUnit.equal(trimBr(HtmlUtils.normalizeHtml($toc[0].innerHTML)),
       '<h3 contenteditable="true">Table of Contents</h3>' +

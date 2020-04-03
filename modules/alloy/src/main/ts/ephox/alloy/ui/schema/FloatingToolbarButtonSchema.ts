@@ -54,7 +54,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     factory: Toolbar,
     schema: ToolbarSchema.schema(),
     name: 'toolbar',
-    overrides (detail) {
+    overrides(detail) {
       return {
         toolbarBehaviours: Behaviour.derive([
           Keying.config({

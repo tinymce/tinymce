@@ -53,7 +53,7 @@ const isCaretAtStartOrEndOfTable = (forward: boolean, rng: Range, table: Element
   return CaretFinder.positionIn(!forward, table).map((pos) => pos.isEqual(caretPos)).getOr(false);
 };
 
-const navigateHorizontally = (editor, forward: boolean, table: HTMLElement, td: HTMLElement): boolean => {
+const navigateHorizontally = (editor, forward: boolean, table: HTMLElement, _td: HTMLElement): boolean => {
   const rng = editor.selection.getRng();
   const direction = forward ? 1 : -1;
 
@@ -88,7 +88,7 @@ const getClosestBelowPosition = (root: HTMLElement, table: HTMLElement, start: C
 
 const getTable = (previous: boolean, pos: CaretPosition): Option<HTMLElement> => {
   const node = pos.getNode(previous);
-  return NodeType.isElement(node) && node.nodeName === 'TABLE' ? Option.some(node as HTMLElement) : Option.none();
+  return NodeType.isElement(node) && node.nodeName === 'TABLE' ? Option.some(node) : Option.none();
 };
 
 const renderBlock = (down: boolean, editor: Editor, table: HTMLElement, pos: CaretPosition) => {

@@ -142,7 +142,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
             },
             {
               title: 'Other',
-              selector_converter: (selector, group) => {
+              selector_converter: (selector, _group) => {
                 return {
                   title: selector + '.OtherGroup',
                   selector: 'p',

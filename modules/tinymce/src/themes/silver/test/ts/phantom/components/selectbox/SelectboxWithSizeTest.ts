@@ -11,7 +11,7 @@ import TestProviders from '../../../module/TestProviders';
 UnitTest.asynctest('Selectbox with size component Test', (success, failure) => {
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       return GuiFactory.build(
         renderSelectBox({
           name: 'selector',
@@ -22,13 +22,13 @@ UnitTest.asynctest('Selectbox with size component Test', (success, failure) => {
             { value: 'one', text: 'One' },
             { value: 'two', text: 'Two' },
             { value: 'three', text: 'Three' },
-            { value: 'four', text: 'Four'},
-            { value: 'five', text: 'Five'}
+            { value: 'four', text: 'Four' },
+            { value: 'five', text: 'Five' }
           ]
         }, TestProviders)
       );
     },
-    (doc, body, gui, component, store) => {
+    (_doc, _body, _gui, component, _store) => {
 
       return [
         Assertions.sAssertStructure(
@@ -41,7 +41,7 @@ UnitTest.asynctest('Selectbox with size component Test', (success, failure) => {
                   classes: [ arr.has('tox-label') ]
                 }),
                 s.element('div', {
-                  classes: [arr.has('tox-selectfield')],
+                  classes: [ arr.has('tox-selectfield') ],
                   children: [
                     s.element('select', {
                       attrs: {
@@ -50,7 +50,7 @@ UnitTest.asynctest('Selectbox with size component Test', (success, failure) => {
                       children: [
                         s.element('option', { value: str.is('one'), html: str.is('One') }),
                         s.element('option', { value: str.is('two'), html: str.is('Two') }),
-                        s.element('option', { value: str.is('three'), html: str.is('Three')}),
+                        s.element('option', { value: str.is('three'), html: str.is('Three') }),
                         s.element('option', { value: str.is('four'), html: str.is('Four') }),
                         s.element('option', { value: str.is('five'), html: str.is('Five') })
                       ]

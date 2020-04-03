@@ -19,7 +19,7 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
   };
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       return GuiFactory.build(
         renderSelectBox({
           name: 'selector',
@@ -34,7 +34,7 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
         }, providers)
       );
     },
-    (doc, body, gui, component, store) => {
+    (_doc, _body, _gui, component, _store) => {
 
       return [
         Assertions.sAssertStructure(
@@ -47,7 +47,7 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
                   classes: [ arr.has('tox-label') ]
                 }),
                 s.element('div', {
-                  classes: [arr.has('tox-selectfield')],
+                  classes: [ arr.has('tox-selectfield') ],
                   children: [
                     s.element('select', {
                       value: str.is('one'),
@@ -61,7 +61,7 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
                       ]
                     }),
                     s.element('div', {
-                      classes: [arr.has('tox-selectfield__icon-js')],
+                      classes: [ arr.has('tox-selectfield__icon-js') ],
                       children: [
                         s.element('svg', {})
                       ]

@@ -25,7 +25,7 @@ const schema = [
   Fields.initSize()
 ];
 
-const focusIn = (component: AlloyComponent, gridConfig: FlatgridConfig, gridState: FlatgridState): void => {
+const focusIn = (component: AlloyComponent, gridConfig: FlatgridConfig, _gridState: FlatgridState): void => {
   SelectorFind.descendant(component.element(), gridConfig.selector).each((first: Element) => {
     gridConfig.focusManager.set(component, first);
   });
@@ -37,7 +37,7 @@ const findCurrent = (component: AlloyComponent, gridConfig: FlatgridConfig): Opt
   });
 };
 
-const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, gridConfig: FlatgridConfig, gridState: FlatgridState): Option<boolean> => {
+const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, gridConfig: FlatgridConfig, _gridState: FlatgridState): Option<boolean> => {
   return findCurrent(component, gridConfig).bind((focused) => {
     return gridConfig.execute(component, simulatedEvent, focused);
   });
@@ -56,7 +56,7 @@ const doMove = (cycle: WrapArrNavigation.ArrNavigationFunc<Element<HTMLElement>>
   };
 };
 
-const handleTab: KeyRuleHandler<FlatgridConfig, FlatgridState> = (component, simulatedEvent, gridConfig) => {
+const handleTab: KeyRuleHandler<FlatgridConfig, FlatgridState> = (_component, _simulatedEvent, gridConfig) => {
   return gridConfig.captureTab ? Option.some<boolean>(true) : Option.none();
 };
 

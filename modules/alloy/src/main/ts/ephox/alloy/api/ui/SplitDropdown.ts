@@ -46,7 +46,7 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
 
   const buttonEvents = {
     ...AlloyEvents.derive([
-      AlloyEvents.runOnAttached((component, simulatedEvent) => {
+      AlloyEvents.runOnAttached((component, _simulatedEvent) => {
         const ariaDescriptor = AlloyParts.getPart(component, detail, 'aria-descriptor');
         ariaDescriptor.each((descriptor) => {
           const descriptorId = Id.generate('aria');
@@ -84,14 +84,14 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
       [
         Coupling.config({
           others: {
-            sandbox (hotspot) {
+            sandbox(hotspot) {
               const arrow = AlloyParts.getPartOrDie(hotspot, detail, 'arrow');
               const extras = {
-                onOpen () {
+                onOpen() {
                   Toggling.on(arrow);
                   Toggling.on(hotspot);
                 },
-                onClose () {
+                onClose() {
                   Toggling.off(arrow);
                   Toggling.off(hotspot);
                 }

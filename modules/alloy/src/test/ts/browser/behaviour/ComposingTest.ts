@@ -14,7 +14,7 @@ UnitTest.asynctest('Browser Test: behaviour.ComposingTest', (success, failure) =
   });
 
   GuiSetup.setup(
-    (store, doc, body) => {
+    (_store, _doc, _body) => {
       return GuiFactory.build({
         dom: {
           tag: 'div'
@@ -24,18 +24,18 @@ UnitTest.asynctest('Browser Test: behaviour.ComposingTest', (success, failure) =
         ],
         behaviours: Behaviour.derive([
           Composing.config({
-            find (comp) {
+            find(comp) {
               return inner.getOpt(comp);
             }
           })
         ])
       });
     },
-    (doc, body, gui, component, store) => {
+    (_doc, _body, _gui, component, _store) => {
       return [
         Assertions.sAssertStructure(
           'Checking initial structure',
-          ApproxStructure.build((s, str, arr) => {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('div', {
               children: [
                 s.element('span', {
@@ -50,7 +50,7 @@ UnitTest.asynctest('Browser Test: behaviour.ComposingTest', (success, failure) =
           const delegate = Composing.getCurrent(component).getOrDie('Could not find delegate');
           Assertions.assertStructure(
             'Checking delegate structure',
-            ApproxStructure.build((s, str, arr) => {
+            ApproxStructure.build((s, str, _arr) => {
               return s.element('span', { html: str.is('inner') });
             }),
             delegate.element()
