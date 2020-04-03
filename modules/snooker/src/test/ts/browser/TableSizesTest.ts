@@ -6,25 +6,50 @@ import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import * as Sizes from 'ephox/snooker/api/Sizes';
 
 UnitTest.test('Table Sizes Test (fusebox)', function () {
-  const percentTable = '<table style="width: 100%;">' +
-                      '<tbody>' +
-                      '<tr><td style="width: 10%;">A0</td><td style="width: 30%;">B0</td><td style="width: 20%;">C0</td><td style="width: 25%;">D0</td><td style="width: 15%;">E0</td></tr>' +
-                      '<tr><td style="width: 60%;" colspan="3">A1</td><td style="width: 25%;">D1</td><td style="width: 15%;">E1</td></tr>' +
-                      '<tr><td style="width: 40%;" colspan="2">A2</td><td style="width: 60%;" colspan="3">C2</td></tr>' +
-                      '<tr><td style="width: 100%;" colspan="5">A0</td></tr>' +
-                      '</tbody>' +
-                      '</table>';
+  const percentTable =
+  '<table style="width: 100%;">' +
+  '<tbody>' +
+  '<tr><td style="width: 10%;">A0</td><td style="width: 30%;">B0</td>' +
+  '<td style="width: 20%;">C0</td><td style="width: 25%;">D0</td>' +
+  '<td style="width: 15%;">E0</td></tr>' +
+  '<tr><td style="width: 60%;" colspan="3">A1</td>' +
+  '<td style="width: 25%;">D1</td><td style="width: 15%;">E1</td></tr>' +
+  '<tr><td style="width: 40%;" colspan="2">A2</td>' +
+  '<td style="width: 60%;" colspan="3">C2</td></tr>' +
+  '<tr><td style="width: 100%;" colspan="5">A0</td></tr>' +
+  '</tbody>' +
+  '</table>';
 
-  const pixelTable = '<table style="width: 500px;">' +
-                    '<tbody>' +
-                    '<tr><td style="width: 50px;">A0</td><td style="width: 150px;">B0</td><td style="width: 100px;">C0</td><td style="width: 125px;">D0</td><td style="width: 75px;">E0</td></tr>' +
-                    '<tr><td style="width: 300px;" colspan="3">A1</td><td style="width: 125px;">D1</td><td style="width: 75px;">E1</td></tr>' +
-                    '<tr><td style="width: 200px;" colspan="2">A2</td><td style="width: 300px;" colspan="3">C2</td></tr>' +
-                    '<tr><td style="width: 500px;" colspan="5">A0</td></tr>' +
-                    '</tbody>' +
-                    '</table>';
+  const pixelTable =
+  '<table style="width: 500px;">' +
+  '<tbody>' +
+  '<tr><td style="width: 50px;">A0</td><td style="width: 150px;">B0</td>' +
+  '<td style="width: 100px;">C0</td><td style="width: 125px;">D0</td>' +
+  '<td style="width: 75px;">E0</td></tr>' +
+  '<tr><td style="width: 300px;" colspan="3">A1</td>' +
+  '<td style="width: 125px;">D1</td><td style="width: 75px;">E1</td></tr>' +
+  '<tr><td style="width: 200px;" colspan="2">A2</td>' +
+  '<td style="width: 300px;" colspan="3">C2</td></tr>' +
+  '<tr><td style="width: 500px;" colspan="5">A0</td></tr>' +
+  '</tbody>' +
+  '</table>';
 
-  const pixelTableHeight = '<table border="1" style="border-collapse: collapse; width: 100%;"> <tbody> <tr> <td style="width: 20%; height: 40px;" rowspan="2"></td> <td style="width: 20%; height: 40px;">  </td> <td style="width: 20%; height: 40px;" colspan="2"></td> <td style="width: 20%; height: 140px;" rowspan="2"></td> </tr> <tr> <td style="width: 20%; height: 250px;" rowspan="2"></td> <td style="width: 20%; height: 100px;">  </td> <td style="width: 20%; height: 100px;">  </td> </tr> <tr> <td style="width: 20%; height: 150px;">  </td> <td style="width: 20%; height: 150px;">  </td> <td style="width: 20%; height: 150px;">  </td> <td style="width: 20%; height: 150px;">  </td> </tr> </tbody> </table';
+  const pixelTableHeight =
+  '<table border="1" style="border-collapse: collapse; width: 100%;"> ' +
+  '<tbody> ' +
+  '<tr> <td style="width: 20%; height: 40px;" rowspan="2"></td> ' +
+  '<td style="width: 20%; height: 40px;">  </td> ' +
+  '<td style="width: 20%; height: 40px;" colspan="2"></td> ' +
+  '<td style="width: 20%; height: 140px;" rowspan="2"></td> </tr> ' +
+  '<tr> <td style="width: 20%; height: 250px;" rowspan="2"></td> ' +
+  '<td style="width: 20%; height: 100px;">  </td> ' +
+  '<td style="width: 20%; height: 100px;">  </td> </tr> ' +
+  '<tr> <td style="width: 20%; height: 150px;">  </td> ' +
+  '<td style="width: 20%; height: 150px;">  </td> ' +
+  '<td style="width: 20%; height: 150px;">  </td> ' +
+  '<td style="width: 20%; height: 150px;">  </td> </tr> ' +
+  '</tbody> ' +
+  '</table';
 
   const style = Element.fromHtml('<style>table { border-collapse: collapse; } td { border: 1px solid #333; }</style>');
   Insert.append(Element.fromDom(document.head), style);

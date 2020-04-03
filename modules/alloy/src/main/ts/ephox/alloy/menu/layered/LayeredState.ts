@@ -66,11 +66,12 @@ const init = (): LayeredState => {
 
   const getTriggeringItem = (menuValue: string): Option<string> => Obj.find(expansions.get(), (v, _k) => v === menuValue);
 
-  const getTriggerData = (menuValue: string, getItemByValue: (v: string) => Option<AlloyComponent>, path: string[]): Option<LayeredItemTrigger> => getPreparedMenu(menuValue).bind((menu) => getTriggeringItem(menuValue).bind((triggeringItemValue) => getItemByValue(triggeringItemValue).map((triggeredItem) => ({
-    triggeredMenu: menu,
-    triggeringItem: triggeredItem,
-    triggeringPath: path
-  }))));
+  const getTriggerData = (menuValue: string, getItemByValue: (v: string) => Option<AlloyComponent>, path: string[]): Option<LayeredItemTrigger> =>
+    getPreparedMenu(menuValue).bind((menu) => getTriggeringItem(menuValue).bind((triggeringItemValue) => getItemByValue(triggeringItemValue).map((triggeredItem) => ({
+      triggeredMenu: menu,
+      triggeringItem: triggeredItem,
+      triggeringPath: path
+    }))));
 
   const getTriggeringPath = (itemValue: string, getItemByValue: (v: string) => Option<AlloyComponent>): Option<LayeredItemTrigger[]> => {
     // Get the path up to the last item

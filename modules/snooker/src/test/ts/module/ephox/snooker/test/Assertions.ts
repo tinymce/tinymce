@@ -79,7 +79,15 @@ const checkStructure = function (expCell: { section: number; row: number; column
   Bars.destroy(wire);
 };
 
-const checkDelete = function (optExpCell: Option<{ section: number; row: number; column: number }>, optExpectedHtml: Option<{ ie: string; normal: string }>, input: string, operation: Op<TargetSelection>, cells: { section: number; row: number; column: number }[], platform: ReturnType<typeof PlatformDetection.detect>, direction: BarPositions<ColInfo> = ResizeDirection.ltr) {
+const checkDelete = function (
+  optExpCell: Option<{ section: number; row: number; column: number }>,
+  optExpectedHtml: Option<{ ie: string; normal: string }>,
+  input: string,
+  operation: Op<TargetSelection>,
+  cells: { section: number; row: number; column: number }[],
+  platform: ReturnType<typeof PlatformDetection.detect>,
+  direction: BarPositions<ColInfo> = ResizeDirection.ltr
+) {
   const table = Element.fromHtml<HTMLTableElement>(input);
   Insert.append(Body.body(), table);
   const wire = ResizeWire.only(Body.body());

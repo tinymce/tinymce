@@ -11,7 +11,12 @@ import { HTMLElement } from '@ephox/dom-globals';
 import { Result } from '@ephox/katamari';
 import { Attr, Compare, Element, Focus } from '@ephox/sugar';
 
-import { formActionEvent, FormActionEvent, formBlockEvent, FormBlockEvent, formCancelEvent, FormCancelEvent, FormChangeEvent, formChangeEvent, FormCloseEvent, formCloseEvent, FormSubmitEvent, formSubmitEvent, formTabChangeEvent, FormTabChangeEvent, formUnblockEvent, FormUnblockEvent } from '../general/FormEvents';
+import {
+  formActionEvent, FormActionEvent, formBlockEvent, FormBlockEvent,
+  formCancelEvent, FormCancelEvent, FormChangeEvent, formChangeEvent,
+  FormCloseEvent, formCloseEvent, FormSubmitEvent, formSubmitEvent,
+  formTabChangeEvent, FormTabChangeEvent, formUnblockEvent, FormUnblockEvent
+} from '../general/FormEvents';
 import * as NavigableObject from '../general/NavigableObject';
 
 export interface ExtraListeners {

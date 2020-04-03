@@ -98,7 +98,29 @@ Ready.execute(function () {
     '</tbody></table>'
   );
 
-  const subject3 = Element.fromHtml('<table contenteditable="true" width="100%" cellpadding="0" border="1" cellspacing="0"> <tbody><tr> <td rowspan="2" width="34%">&nbsp;a</td> <td width="33%">&nbsp;b</td> <td width="33%">&nbsp;c</td> </tr> <tr> <td width="33%">&nbsp;d</td> <td rowspan="2" width="33%">&nbsp;e</td> </tr> <tr> <td width="34%">&nbsp;f</td> <td width="33%">&nbsp;g</td> </tr> <tr> <td width="34%">&nbsp;h</td> <td width="33%">&nbsp;i</td> <td width="33%">j&nbsp;</td> </tr> </tbody></table>');
+  const subject3 = Element.fromHtml(
+    '<table contenteditable="true" width="100%" cellpadding="0" border="1" cellspacing="0"> ' +
+    '<tbody>' +
+    '<tr> ' +
+    '<td rowspan="2" width="34%">&nbsp;a</td> ' +
+    '<td width="33%">&nbsp;b</td> ' +
+    '<td width="33%">&nbsp;c</td> ' +
+    '</tr> ' +
+    '<tr> ' +
+    '<td width="33%">&nbsp;d</td> ' +
+    '<td rowspan="2" width="33%">&nbsp;e</td> ' +
+    '</tr> ' +
+    '<tr> ' +
+    '<td width="34%">&nbsp;f</td> ' +
+    '<td width="33%">&nbsp;g</td> ' +
+    '</tr> ' +
+    '<tr> ' +
+    '<td width="34%">&nbsp;h</td> ' +
+    '<td width="33%">&nbsp;i</td> ' +
+    '<td width="33%">j&nbsp;</td> ' +
+    '</tr> ' +
+    '</tbody>' +
+    '</table>');
 
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
   const ltrs = Element.fromHtml('<div class="ltrs"></div>');

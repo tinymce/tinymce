@@ -216,19 +216,25 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
     });
   };
 
-  const onRight = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => EditableFields.inside(item.element()) ? Option.none() : expandRight(container, item, ExpandHighlightDecision.HighlightSubmenu);
+  const onRight = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> =>
+    EditableFields.inside(item.element()) ? Option.none() : expandRight(container, item, ExpandHighlightDecision.HighlightSubmenu);
 
   const onLeft = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> =>
     // Exclude inputs, textareas etc.
     EditableFields.inside(item.element()) ? Option.none() : collapseLeft(container, item);
 
-  const onEscape = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> => collapseLeft(container, item).orThunk(() =>
-  // This should only fire when the user presses ESC ... not any other close.
-    detail.onEscape(container, item).map(() => container)
-  );
+  const onEscape = (container: AlloyComponent, item: AlloyComponent): Option<AlloyComponent> =>
+    collapseLeft(container, item).orThunk(() =>
+      detail.onEscape(container, item).map(() => container) // This should only fire when the user presses ESC ... not any other close.
+    );
 
   type KeyHandler = (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
-  const keyOnItem = (f: (container: AlloyComponent, item: AlloyComponent) => Option<AlloyComponent>): KeyHandler => (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent): Option<boolean> => SelectorFind.closest(simulatedEvent.getSource(), '.' + detail.markers.item).bind((target) => container.getSystem().getByDom(target).toOption().bind((item: AlloyComponent) => f(container, item).map((): boolean => true)));
+  const keyOnItem = (f: (container: AlloyComponent, item: AlloyComponent) => Option<AlloyComponent>): KeyHandler =>
+    (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent): Option<boolean> =>
+      SelectorFind.closest(simulatedEvent.getSource(), '.' + detail.markers.item).
+        bind((target) => container.getSystem().getByDom(target).toOption().bind(
+          (item: AlloyComponent) => f(container, item).map((): boolean => true)
+        ));
 
   const events = AlloyEvents.derive([
     // Set "active-menu" for the menu with focus

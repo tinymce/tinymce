@@ -157,7 +157,11 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     InlineView.getContent(autocompleter).each(Highlighting.highlightFirst);
   };
 
-  const doLookup = (fetchOptions?: Record<string, any>): Option<AutocompleteLookupInfo> => activeAutocompleter.get().map((ac) => getContext(editor.dom, editor.selection.getRng(), ac.triggerChar).bind((newContext) => lookupWithContext(editor, getAutocompleters, newContext, fetchOptions))).getOrThunk(() => lookup(editor, getAutocompleters));
+  const doLookup = (fetchOptions?: Record<string, any>): Option<AutocompleteLookupInfo> =>
+    activeAutocompleter.get().map(
+      (ac) => getContext(editor.dom, editor.selection.getRng(), ac.triggerChar).
+        bind((newContext) => lookupWithContext(editor, getAutocompleters, newContext, fetchOptions))
+    ).getOrThunk(() => lookup(editor, getAutocompleters));
 
   const load = (fetchOptions?: Record<string, any>) => {
     doLookup(fetchOptions).fold(

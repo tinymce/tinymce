@@ -5,7 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button as AlloyButton, Disabling, FloatingToolbarButton, Focusing, Keying, NativeEvents, Reflecting, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling, Unselecting } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour,
+  Button as AlloyButton, Disabling, FloatingToolbarButton, Focusing, Keying,
+  NativeEvents, Reflecting, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown,
+  SystemEvents, TieredData, TieredMenuTypes, Toggling, Unselecting
+} from '@ephox/alloy';
 import { Toolbar, Types } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
 import { Attr, SelectorFind } from '@ephox/sugar';
@@ -82,7 +87,15 @@ const rtlTransform = [
   'unordered-list'
 ];
 
-const renderCommonStructure = (icon: Option<string>, text: Option<string>, tooltip: Option<string>, receiver: Option<string>, behaviours: Option<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[]>, providersBackstage: UiFactoryBackstageProviders) => {
+type Behaviours = Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[];
+const renderCommonStructure = (
+  icon: Option<string>,
+  text: Option<string>,
+  tooltip: Option<string>,
+  receiver: Option<string>,
+  behaviours: Option<Behaviours>,
+  providersBackstage: UiFactoryBackstageProviders
+) => {
 
   // If RTL and icon is in whitelist, add RTL icon class for icons that don't have a `-rtl` icon available.
   // Use `-rtl` icon suffix for icons that do.

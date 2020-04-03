@@ -191,23 +191,24 @@ const createToolbar = (toolbarConfig: RenderToolbarConfig): ToolbarGroupSetting[
   }
 };
 
-const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, allowToolbarGroups: boolean, extras: Extras, prefixes: Option<string[]>): Option<AlloySpec> => Obj.get(buttons, toolbarItem.toLowerCase()).orThunk(() => prefixes.bind((ps) => Arr.findMap(ps, (prefix) => Obj.get(buttons, prefix + toolbarItem.toLowerCase())))).fold(
-  () => Obj.get(bespokeButtons, toolbarItem.toLowerCase()).map((r) => r(editor, extras)).orThunk(() =>
-  // TODO: Add back after TINY-3232 is implemented
-  // console.error('No representation for toolbarItem: ' + toolbarItem);
-    Option.none()
-  ),
-  (spec) => {
-    if (spec.type === 'grouptoolbarbutton' && !allowToolbarGroups) {
-      // TODO change this message when sliding is available
-      // tslint:disable-next-line:no-console
-      console.warn(`Ignoring the '${toolbarItem}' toolbar button. Group toolbar buttons are only supported when using floating toolbar mode and cannot be nested.`);
-      return Option.none();
-    } else {
-      return extractFrom(spec, extras, editor);
+const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, allowToolbarGroups: boolean, extras: Extras, prefixes: Option<string[]>): Option<AlloySpec> =>
+  Obj.get(buttons, toolbarItem.toLowerCase()).orThunk(() => prefixes.bind((ps) => Arr.findMap(ps, (prefix) => Obj.get(buttons, prefix + toolbarItem.toLowerCase())))).fold(
+    () => Obj.get(bespokeButtons, toolbarItem.toLowerCase()).map((r) => r(editor, extras)).orThunk(() =>
+    // TODO: Add back after TINY-3232 is implemented
+    // console.error('No representation for toolbarItem: ' + toolbarItem);
+      Option.none()
+    ),
+    (spec) => {
+      if (spec.type === 'grouptoolbarbutton' && !allowToolbarGroups) {
+        // TODO change this message when sliding is available
+        // tslint:disable-next-line:no-console
+        console.warn(`Ignoring the '${toolbarItem}' toolbar button. Group toolbar buttons are only supported when using floating toolbar mode and cannot be nested.`);
+        return Option.none();
+      } else {
+        return extractFrom(spec, extras, editor);
+      }
     }
-  }
-);
+  );
 
 const identifyButtons = (editor: Editor, toolbarConfig: RenderToolbarConfig, extras: Extras, prefixes: Option<string[]>): ToolbarGroup[] => {
   const toolbarGroups = createToolbar(toolbarConfig);

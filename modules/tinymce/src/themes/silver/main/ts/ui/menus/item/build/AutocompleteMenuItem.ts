@@ -63,7 +63,16 @@ const replaceText = (text: string, matchText: string): string => {
   }
 };
 
-const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, matchText: string, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: ItemValueHandler, itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared, renderIcons: boolean = true): ItemTypes.ItemSpec => {
+const renderAutocompleteItem = (
+  spec: InlineContent.AutocompleterItem,
+  matchText: string,
+  useText: boolean,
+  presets: Types.PresetItemTypes,
+  onItemValueHandler: ItemValueHandler,
+  itemResponse: ItemResponse,
+  sharedBackstage: UiFactoryBackstageShared,
+  renderIcons: boolean = true
+): ItemTypes.ItemSpec => {
   const structure = renderItemStructure({
     presets,
     textContent: Option.none(),

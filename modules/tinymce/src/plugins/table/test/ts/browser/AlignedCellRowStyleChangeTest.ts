@@ -18,7 +18,20 @@ UnitTest.asynctest('browser.tinymce.plugins.table.AlignedCellRowStyleChangeTest'
     Pipeline.async({}, Log.steps('TBA', 'Table: Set background color on selected table row with text-align: center', [
       UiFinder.sWaitForVisible('waiting for editor', Element.fromDom(document.body), 'div.tox-tinymce'),
       tinyApis.sFocus(),
-      tinyApis.sSetContent('<table style="border-collapse: collapse; width: 100%;" border="1"><tbody><tr style="height: 18px;"><td style="width: 50%; height: 18px; text-align: center;" data-mce-selected="1">a</td><td style="width: 50%; height: 18px; text-align: center;" data-mce-selected="1">b</td></tr><tr style="height: 18px;"><td style="width: 50%; height: 18px;">c</td><td style="width: 50%; height: 18px;">d</td></tr></tbody></table>'),
+      tinyApis.sSetContent(
+        '<table style="border-collapse: collapse; width: 100%;" border="1">' +
+        '<tbody>' +
+        '<tr style="height: 18px;">' +
+        '<td style="width: 50%; height: 18px; text-align: center;" data-mce-selected="1">a</td>' +
+        '<td style="width: 50%; height: 18px; text-align: center;" data-mce-selected="1">b</td>' +
+        '</tr>' +
+        '<tr style="height: 18px;">' +
+        '<td style="width: 50%; height: 18px;">c</td>' +
+        '<td style="width: 50%; height: 18px;">d</td>' +
+        '</tr>' +
+        '</tbody>' +
+        '</table>'
+      ),
       tinyApis.sSetSelection([ 0, 0, 0, 1, 0 ], 1, [ 0, 0, 0, 1, 0 ], 1),
       tinyApis.sExecCommand('mceTableRowProps'),
       UiFinder.sWaitForVisible('wait for dialog', TinyDom.fromDom(document.body), '.tox-dialog[role="dialog"]'),

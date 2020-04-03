@@ -20,10 +20,12 @@ const getTransition = (comp: AlloyComponent, transConfig: TransitioningConfig, t
   return route.bind((r) => getTransitionOf(comp, transConfig, transState, r));
 };
 
-const getTransitionOf = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Option<{ transition: { property: string; transitionClass: string }; route: TransitionProperties }> => findRoute(comp, transConfig, transState, route).bind((r: TransitionProperties) => r.transition.map((t) => ({
-  transition: t,
-  route: r
-})));
+type TransitionInfo = { transition: { property: string; transitionClass: string }; route: TransitionProperties };
+const getTransitionOf = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Option<TransitionInfo> =>
+  findRoute(comp, transConfig, transState, route).bind((r: TransitionProperties) => r.transition.map((t) => ({
+    transition: t,
+    route: r
+  })));
 
 const disableTransition = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless) => {
   // Disable the current transition

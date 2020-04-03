@@ -159,7 +159,14 @@ UnitTest.test('Arbitraries Test', () => {
     }
   }));
 
-  checkProperty('Formatting elements should only contain (display === inline)', Arbitraries.content('formatting'), (section) => assertProperty('nothing should have display block inside a formatting element', section, (elem) => !Compare.eq(section, elem) && Node.isElement(elem) && Css.get(elem, 'display') !== 'inline'));
+  checkProperty('Formatting elements should only contain (display === inline)',
+    Arbitraries.content('formatting'),
+    (section) => assertProperty(
+      'nothing should have display block inside a formatting element',
+      section,
+      (elem) => !Compare.eq(section, elem) && Node.isElement(elem) && Css.get(elem, 'display') !== 'inline'
+    )
+  );
 
   checkProperty('Table cell elements', Arbitraries.content('tablecell'), (element) => {
     Assertions.assertEq('Cells should be th|td', true, [ 'td', 'th' ].indexOf(Node.name(element)) > -1);

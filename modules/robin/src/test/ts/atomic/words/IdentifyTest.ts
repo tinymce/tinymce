@@ -51,5 +51,10 @@ UnitTest.test('words :: Identify', function () {
   ], ` 'this the night before`);
 
   // Note, the smart quotes.
-  checkWords([ 'Tale', 'is', 'about', 'an', 'adorable', 'mouse', 'with', 'a', 'lute', 'fighting', 'giant', 'crabs', 'Really', 'I’d', 'hope', 'that', 'was', 'enough', 'for', 'you', 'but', 'I\u2019ll', 'throw' ], 'Tale is about an adorable mouse with a lute fighting giant crabs. Really I’d hope that was enough for you, but I\u2019ll throw');
+  checkWords(
+    [ 'Tale', 'is', 'about', 'an', 'adorable', 'mouse', 'with', 'a', 'lute',
+      'fighting', 'giant', 'crabs', 'Really', 'I’d', 'hope', 'that', 'was',
+      'enough', 'for', 'you', 'but', 'I\u2019ll', 'throw' ],
+    'Tale is about an adorable mouse with a lute fighting giant crabs. ' +
+    'Really I’d hope that was enough for you, but I\u2019ll throw');
 });

@@ -39,7 +39,11 @@ UnitTest.test('TableMergeContentTest', function () {
     {
       label: 'just a P block tag, there should NOT be a br proceeding it',
       html: '<p>There should not be a br after.</p>',
-      expected: '<p>There should not be a br after.</p><p>Standard paragraph</p> I am a textnode and should have a br after the period.<br><img src="/project/@ephox/snooker/src/assets/img/ephox_nav.png"><br><span><div>Nested div<p> deep para</p></div> <span>nested span</span>there SHOULD be a br proceeding the span</span><br>'
+      expected: '<p>There should not be a br after.</p><p>Standard paragraph</p>' +
+                ' I am a textnode and should have a br after the period.<br>' +
+                '<img src="/project/@ephox/snooker/src/assets/img/ephox_nav.png"><br>' +
+                '<span><div>Nested div<p> deep para</p></div> ' +
+                '<span>nested span</span>there SHOULD be a br proceeding the span</span><br>'
     },
     {
       label: 'P tag, with a textnode after, there SHOULD be a br proceeding it',

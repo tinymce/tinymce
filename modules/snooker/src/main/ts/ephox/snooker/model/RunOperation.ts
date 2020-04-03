@@ -104,31 +104,33 @@ type Adjustment = <T extends Structs.DetailNew>(table: Element, grid: Structs.Ro
 type PostAction = (e: Element) => void;
 type GenWrap<GW extends GeneratorsWrapper> = (g: Generators) => GW;
 
-const run = <RAW, INFO, GW extends GeneratorsWrapper>(operation: Operation<INFO, GW>, extract: Extract<RAW, INFO>, adjustment: Adjustment, postAction: PostAction, genWrappers: GenWrap<GW>) => (wire: ResizeWire, table: Element, target: RAW, generators: Generators, direction: BarPositions<ColInfo>): Option<RunOperationOutput> => {
-  const input = DetailsList.fromTable(table);
-  const warehouse = Warehouse.generate(input);
-  const output = extract(warehouse, target).map((info) => {
-    const model = fromWarehouse(warehouse, generators);
-    const result = operation(model, info, Compare.eq, genWrappers(generators));
-    const grid = toDetailList(result.grid(), generators);
-    return {
-      grid: Fun.constant(grid),
-      cursor: result.cursor
-    };
-  });
-
-  return output.fold(() => Option.none<RunOperationOutput>(), (out) => {
-    const newElements = Redraw.render(table, out.grid());
-    adjustment(table, out.grid(), direction);
-    postAction(table);
-    Bars.refresh(wire, table, BarPositions.height, direction);
-    return Option.some({
-      cursor: out.cursor,
-      newRows: Fun.constant(newElements.newRows),
-      newCells: Fun.constant(newElements.newCells)
+const run = <RAW, INFO, GW extends GeneratorsWrapper>
+(operation: Operation<INFO, GW>, extract: Extract<RAW, INFO>, adjustment: Adjustment, postAction: PostAction, genWrappers: GenWrap<GW>) =>
+  (wire: ResizeWire, table: Element, target: RAW, generators: Generators, direction: BarPositions<ColInfo>): Option<RunOperationOutput> => {
+    const input = DetailsList.fromTable(table);
+    const warehouse = Warehouse.generate(input);
+    const output = extract(warehouse, target).map((info) => {
+      const model = fromWarehouse(warehouse, generators);
+      const result = operation(model, info, Compare.eq, genWrappers(generators));
+      const grid = toDetailList(result.grid(), generators);
+      return {
+        grid: Fun.constant(grid),
+        cursor: result.cursor
+      };
     });
-  });
-};
+
+    return output.fold(() => Option.none<RunOperationOutput>(), (out) => {
+      const newElements = Redraw.render(table, out.grid());
+      adjustment(table, out.grid(), direction);
+      postAction(table);
+      Bars.refresh(wire, table, BarPositions.height, direction);
+      return Option.some({
+        cursor: out.cursor,
+        newRows: Fun.constant(newElements.newRows),
+        newCells: Fun.constant(newElements.newCells)
+      });
+    });
+  };
 
 const onCell = (warehouse: Warehouse, target: TargetElement): Option<DetailExt> => TableLookup.cell(target.element()).bind((cell) => findInWarehouse(warehouse, cell));
 
