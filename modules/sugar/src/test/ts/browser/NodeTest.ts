@@ -1,14 +1,14 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { document, Node as DomNode } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import Element from 'ephox/sugar/api/node/Element';
 import * as Node from 'ephox/sugar/api/node/Node';
 import * as NodeTypes from 'ephox/sugar/api/node/NodeTypes';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import EphoxElement from 'ephox/sugar/test/EphoxElement';
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 
-UnitTest.test('NodeTest', function () {
-  const check = function (node, nodeType, nodeName, nodeValue, isElement, isText, isDocument) {
+UnitTest.test('NodeTest', () => {
+  const check = (node: Element<DomNode>, nodeType: number, nodeName: string, nodeValue: string | null, isElement: boolean, isText: boolean, isDocument: boolean) => {
     assert.eq(nodeType, Node.type(node));
     assert.eq(nodeName, Node.name(node));
     assert.eq(nodeValue, Node.value(node));
@@ -47,8 +47,8 @@ UnitTest.test('NodeTest', function () {
     true
   );
 
-  const checkIs = function (expected, predicate, inputs) {
-    const actual = Arr.map(inputs, function (raw) {
+  const checkIs = (expected: boolean[], predicate: (element: Element<DomNode>) => boolean, inputs: string[]) => {
+    const actual = Arr.map(inputs, (raw) => {
       const element = Element.fromHtml(raw);
       const input = Traverse.firstChild(element).getOrDie();
       return predicate(input);

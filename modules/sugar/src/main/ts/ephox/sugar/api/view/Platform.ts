@@ -18,13 +18,13 @@ const MINIMUM_LARGE_HEIGHT = 700;
 // window.screen.width and window.screen.height do not change with the orientation,
 // however window.screen.availableWidth and window.screen.availableHeight,
 // do change according to the orientation.
-const isOfSize = function (width: number, height: number) {
+const isOfSize = (width: number, height: number) => {
   return window.screen.width >= width && window.screen.height >= height;
 };
 
-const choice = function <T> (options: ChoiceOption<T>[], fallback: T): T {
-  const target = Arr.foldl(options, function (b, option) {
-    return b.orThunk(function () {
+const choice = <T> (options: ChoiceOption<T>[], fallback: T): T => {
+  const target = Arr.foldl(options, (b, option) => {
+    return b.orThunk(() => {
       return option.predicate() ? Option.some(option.value()) : Option.none<T>();
     });
   }, Option.none<T>());
@@ -32,24 +32,14 @@ const choice = function <T> (options: ChoiceOption<T>[], fallback: T): T {
   return target.getOr(fallback);
 };
 
-const isLargeTouch = function () {
-  return isOfSize(MINIMUM_LARGE_WIDTH, MINIMUM_LARGE_HEIGHT) && isTouch();
-};
+const isLargeTouch = () => isOfSize(MINIMUM_LARGE_WIDTH, MINIMUM_LARGE_HEIGHT) && isTouch();
 
-const isLargeDesktop = function () {
-  return isOfSize(MINIMUM_LARGE_WIDTH, MINIMUM_LARGE_HEIGHT) && !isTouch();
-};
+const isLargeDesktop = () => isOfSize(MINIMUM_LARGE_WIDTH, MINIMUM_LARGE_HEIGHT) && !isTouch();
 
-const isSmallTouch = function () {
-  return !isOfSize(MINIMUM_LARGE_WIDTH, MINIMUM_LARGE_HEIGHT) && isTouch();
-};
+const isSmallTouch = () => !isOfSize(MINIMUM_LARGE_WIDTH, MINIMUM_LARGE_HEIGHT) && isTouch();
 
-const isLarge = function () {
-  return isOfSize(MINIMUM_LARGE_WIDTH, MINIMUM_LARGE_HEIGHT);
-};
+const isLarge = () => isOfSize(MINIMUM_LARGE_WIDTH, MINIMUM_LARGE_HEIGHT);
 
-const isSmallAndroid = function () {
-  return isSmallTouch() && isAndroid();
-};
+const isSmallAndroid = () => isSmallTouch() && isAndroid();
 
-export { isTouch, choice, isLarge, isLargeTouch, isSmallTouch, isLargeDesktop, isSmallAndroid, };
+export { isTouch, choice, isLarge, isLargeTouch, isSmallTouch, isLargeDesktop, isSmallAndroid };

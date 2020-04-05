@@ -1,8 +1,8 @@
-import { Range, Window, Node as DomNode } from '@ephox/dom-globals';
+import { Node as DomNode, Range, Window } from '@ephox/dom-globals';
 import { Adt, Fun, Option, Thunk } from '@ephox/katamari';
 import Element from '../../api/node/Element';
-import * as NativeRange from './NativeRange';
 import { Selection } from '../../api/selection/Selection';
+import * as NativeRange from './NativeRange';
 
 type SelectionDirectionHandler<U> =  (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => U;
 
@@ -28,7 +28,7 @@ const adt: {
   { rtl: [ 'start', 'soffset', 'finish', 'foffset' ] }
 ]);
 
-const fromRange = function (win: Window, type: SelectionDirectionConstructor, range: Range) {
+const fromRange = (win: Window, type: SelectionDirectionConstructor, range: Range) => {
   return type(Element.fromDom(range.startContainer), range.startOffset, Element.fromDom(range.endContainer), range.endOffset);
 };
 
@@ -37,7 +37,7 @@ interface LtrRtlRanges {
   rtl: () => Option<Range>;
 }
 
-const getRanges = function (win: Window, selection: Selection): LtrRtlRanges {
+const getRanges = (win: Window, selection: Selection): LtrRtlRanges => {
   return selection.match<LtrRtlRanges>({
     domRange(rng) {
       return {
@@ -47,47 +47,33 @@ const getRanges = function (win: Window, selection: Selection): LtrRtlRanges {
     },
     relative(startSitu, finishSitu) {
       return {
-        ltr: Thunk.cached(function () {
-          return NativeRange.relativeToNative(win, startSitu, finishSitu);
-        }),
-        rtl: Thunk.cached(function () {
-          return Option.some(
-            NativeRange.relativeToNative(win, finishSitu, startSitu)
-          );
-        })
+        ltr: Thunk.cached(() => NativeRange.relativeToNative(win, startSitu, finishSitu)),
+        rtl: Thunk.cached(() => Option.some(NativeRange.relativeToNative(win, finishSitu, startSitu)))
       };
     },
     exact(start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
       return {
-        ltr: Thunk.cached(function () {
-          return NativeRange.exactToNative(win, start, soffset, finish, foffset);
-        }),
-        rtl: Thunk.cached(function () {
-          return Option.some(
-            NativeRange.exactToNative(win, finish, foffset, start, soffset)
-          );
-        })
+        ltr: Thunk.cached(() => NativeRange.exactToNative(win, start, soffset, finish, foffset)),
+        rtl: Thunk.cached(() => Option.some(NativeRange.exactToNative(win, finish, foffset, start, soffset)))
       };
     }
   });
 };
 
-const doDiagnose = function (win: Window, ranges: LtrRtlRanges) {
+const doDiagnose = (win: Window, ranges: LtrRtlRanges) => {
   // If we cannot create a ranged selection from start > finish, it could be RTL
   const rng = ranges.ltr();
   if (rng.collapsed) {
     // Let's check if it's RTL ... if it is, then reversing the direction will not be collapsed
-    const reversed = ranges.rtl().filter(function (rev) {
-      return rev.collapsed === false;
-    });
+    const reversed = ranges.rtl().filter((rev) => rev.collapsed === false);
 
-    return reversed.map(function (rev) {
+    return reversed.map((rev) => {
       // We need to use "reversed" here, because the original only has one point (collapsed)
       return adt.rtl(
         Element.fromDom(rev.endContainer), rev.endOffset,
         Element.fromDom(rev.startContainer), rev.startOffset
       );
-    }).getOrThunk(function () {
+    }).getOrThunk(() => {
       return fromRange(win, adt.ltr, rng);
     });
   } else {
@@ -95,12 +81,12 @@ const doDiagnose = function (win: Window, ranges: LtrRtlRanges) {
   }
 };
 
-const diagnose = function (win: Window, selection: Selection) {
+const diagnose = (win: Window, selection: Selection) => {
   const ranges = getRanges(win, selection);
   return doDiagnose(win, ranges);
 };
 
-const asLtrRange = function (win: Window, selection: Selection) {
+const asLtrRange = (win: Window, selection: Selection) => {
   const diagnosis = diagnose(win, selection);
   return diagnosis.match({
     ltr: (start, soffset, finish, foffset): Range => {

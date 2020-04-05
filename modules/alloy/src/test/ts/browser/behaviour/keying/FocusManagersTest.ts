@@ -14,7 +14,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success, failure) => {
   const createManager = (prefix: string) => {
-    let active = '';
+    let active: string | undefined = '';
 
     const set = (_component: AlloyComponent, focusee: Element) => {
       active = Attr.get(focusee, 'class');

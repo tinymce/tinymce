@@ -1,3 +1,4 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
@@ -7,9 +8,8 @@ import Element from 'ephox/sugar/api/node/Element';
 import * as Css from 'ephox/sugar/api/properties/Css';
 import * as Visibility from 'ephox/sugar/api/view/Visibility';
 import Div from 'ephox/sugar/test/Div';
-import { UnitTest, assert } from '@ephox/bedrock-client';
 
-UnitTest.test('VisibilityTest', function () {
+UnitTest.test('VisibilityTest', () => {
   const c = Div();
   assert.eq(false, Visibility.isVisible(c));
   Insert.append(Body.body(), c);

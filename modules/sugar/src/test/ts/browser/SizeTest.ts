@@ -1,17 +1,25 @@
-import * as Body from 'ephox/sugar/api/node/Body';
-import * as Css from 'ephox/sugar/api/properties/Css';
-import * as Height from 'ephox/sugar/api/view/Height';
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { HTMLElement } from '@ephox/dom-globals';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as Body from 'ephox/sugar/api/node/Body';
+import Element from 'ephox/sugar/api/node/Element';
+import * as Css from 'ephox/sugar/api/properties/Css';
+import * as Height from 'ephox/sugar/api/view/Height';
 import * as Width from 'ephox/sugar/api/view/Width';
 import Div from 'ephox/sugar/test/Div';
-import { UnitTest, assert } from '@ephox/bedrock-client';
 
-UnitTest.test('SizeTest', function () {
+interface SizeApi {
+  get: (element: Element<HTMLElement>) => number;
+  set: (element: Element<HTMLElement>, value: number | string) => void;
+}
+
+
+UnitTest.test('SizeTest', () => {
   const c = Div();
 
-  const checker = function (cssProp, api) {
-    const checkExc = function (expected, f) {
+  const checker = (cssProp: string, api: SizeApi) => {
+    const checkExc = (expected: string, f: () => void) => {
       try {
         f();
         assert.fail('Expected exception not thrown.');
@@ -20,16 +28,16 @@ UnitTest.test('SizeTest', function () {
       }
     };
 
-    const exact = function () {
+    const exact = () => {
       return Css.getRaw(c, cssProp).getOrDie('value was not set');
     };
 
     api.set(c, 100);
     assert.eq(100, api.get(c));
-    checkExc(cssProp + '.set accepts only positive integer values. Value was 100%', function () {
+    checkExc(cssProp + '.set accepts only positive integer values. Value was 100%', () => {
       api.set(c, '100%');
     });
-    checkExc(cssProp + '.set accepts only positive integer values. Value was 100px', function () {
+    checkExc(cssProp + '.set accepts only positive integer values. Value was 100px', () => {
       api.set(c, '100px');
     });
     assert.eq('100px', exact());

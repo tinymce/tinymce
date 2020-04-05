@@ -64,16 +64,16 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
   const logger = Debugging.noLogger();
 
   const lookup = (eventType: string, target: Element) => {
-    const targetId = Attr.get(target, 'data-event-id');
-
-    return Obj.get(domEvents as any, eventType).bind((x) => Obj.get(x, targetId)).map((h: Function) => {
-      return {
-        descHandler: {
-          cHandler: h,
-          purpose: Fun.constant('purpose')
-        },
-        element: target
-      };
+    return Attr.getOpt(target, 'data-event-id').bind((targetId) => {
+      return Obj.get(domEvents as any, eventType).bind((x) => Obj.get(x, targetId)).map((h: Function) => {
+        return {
+          descHandler: {
+            cHandler: h,
+            purpose: Fun.constant('purpose')
+          },
+          element: target
+        };
+      });
     });
   };
 

@@ -1,20 +1,20 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { document, Node as DomNode } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
+import { KAssert } from '@ephox/katamari-assertions';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as Body from 'ephox/sugar/api/node/Body';
-import * as Css from 'ephox/sugar/api/properties/Css';
 import Element from 'ephox/sugar/api/node/Element';
+import * as Css from 'ephox/sugar/api/properties/Css';
 import Div from 'ephox/sugar/test/Div';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
-import { KAssert } from '@ephox/katamari-assertions';
 
-UnitTest.test('ElementFromPointTest', function () {
+UnitTest.test('ElementFromPointTest', () => {
   const a = Div();
   const bg = Div();
 
-  const placeElm = function (elm, x, y, w, h) {
+  const placeElm = (elm: Element<DomNode>, x: number, y: number, w: number, h: number) => {
     Css.setAll(elm, {
       position: 'fixed',
       left: x + 'px',
@@ -25,22 +25,22 @@ UnitTest.test('ElementFromPointTest', function () {
     });
   };
 
-  const getAt = function (elm, placeX, placeY, testX, testY) {
+  const getAt = (elm: Element, placeX: number, placeY: number, testX: number, testY: number) => {
     placeElm(elm, placeX, placeY, 100, 50);
     return Element.fromPoint(Element.fromDom(document), testX, testY);
   };
 
-  const checkMatch = function (p, placeX, placeY, expectedElm, testX, testY) {
+  const checkMatch = (p: Element<DomNode>, placeX: number, placeY: number, expectedElm: Element<DomNode>, testX: number, testY: number) => {
     const actualElm = getAt(p, placeX, placeY, testX, testY).getOrDie('Should be some element.');
     // debugger
     Assert.eq('Should be expected element', true, Compare.eq(expectedElm, actualElm));
   };
 
-  const checkNone = function (p, placeX, placeY, testX, testY) {
+  const checkNone = (p: Element<DomNode>, placeX: number, placeY: number, testX: number, testY: number) => {
     KAssert.eqNone('Should be none', getAt(p, placeX, placeY, testX, testY));
   };
 
-  Arr.each([ bg, a ], function (elm) {
+  Arr.each([ bg, a ], (elm) => {
     Insert.append(Body.body(), elm);
   });
 

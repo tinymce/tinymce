@@ -1,3 +1,5 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { HTMLIFrameElement, setTimeout } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
@@ -9,11 +11,10 @@ import * as Node from 'ephox/sugar/api/node/Node';
 import * as Selectors from 'ephox/sugar/api/search/Selectors';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import { Selection } from 'ephox/sugar/api/selection/Selection';
+import { SimRange } from 'ephox/sugar/api/selection/SimRange';
 import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import { setTimeout, HTMLIFrameElement } from '@ephox/dom-globals';
 
-UnitTest.asynctest('Browser Test: Selection.getAtPoint', function (success, failure) {
+UnitTest.asynctest('Browser Test: Selection.getAtPoint', (success, failure) => {
 
   const browser = PlatformDetection.detect().browser;
   if (!browser.isIE()) {
@@ -24,10 +25,10 @@ UnitTest.asynctest('Browser Test: Selection.getAtPoint', function (success, fail
 
   const iframe = Element.fromHtml<HTMLIFrameElement>('<iframe style="position: fixed; top: 0; left: 0; height:700px; width:700px;" src="/project/@ephox/sugar/src/test/data/points.html"></iframe>');
   Insert.append(Body.body(), iframe);
-  const run = DomEvent.bind(iframe, 'load', function () {
+  const run = DomEvent.bind(iframe, 'load', () => {
     run.unbind();
     // IE doesn't render it immediately
-    setTimeout(function () {
+    setTimeout(() => {
       try {
         checks();
         success();
@@ -39,15 +40,16 @@ UnitTest.asynctest('Browser Test: Selection.getAtPoint', function (success, fail
     }, 50);
   });
 
-  const checks = function () {
-    const iframeWin = iframe.dom().contentWindow;
+  const checks = () => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const iframeWin = iframe.dom().contentWindow!;
     const iframeDoc = Element.fromDom(iframeWin.document);
 
-    const get = function (selector) {
+    const get = (selector: string) => {
       return Selectors.one(selector, iframeDoc).getOrDie('element with selector "' + selector + '" not found');
     };
 
-    const check = function (x, y, expected) {
+    const check = (x: number, y: number, expected: SimRange) => {
       const found = WindowSelection.getAtPoint(iframeWin, x, y);
       const raw = found.getOrDie('point ' + x + ',' + y + ' not found');
       WindowSelection.setExact(iframeWin, raw.start(), raw.soffset(), raw.finish(), raw.foffset());

@@ -1,22 +1,16 @@
-import * as Node from './Node';
+import { Node as DomNode, Text } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
 import NodeValue from '../../impl/NodeValue';
 import Element from './Element';
-import { Option } from '@ephox/katamari';
-import { Text, Node as DomNode } from '@ephox/dom-globals';
+import * as Node from './Node';
 
 const api = NodeValue(Node.isText, 'text');
 
-const get = function (element: Element<Text>) {
-  return api.get(element);
-};
+const get = (element: Element<Text>) => api.get(element);
 
-const getOption = function (element: Element<DomNode>): Option<string> {
-  return api.getOption(element);
-};
+const getOption = (element: Element<DomNode>): Option<string> => api.getOption(element);
 
-const set = function (element: Element<Text>, value: string) {
-  api.set(element, value);
-};
+const set = (element: Element<Text>, value: string) => api.set(element, value);
 
 export {
   get,

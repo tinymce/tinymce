@@ -30,7 +30,7 @@ const events = <E>(dragConfig: MouseDraggingConfig<E>, dragState: DraggingState,
       // 200 ms, then drop
       const delayDrop = DelayedFunction(stop, 200);
 
-      const dragApi: BlockerDragApi = {
+      const dragApi: BlockerDragApi<MouseEvent> = {
         drop: stop,
         delayDrop: delayDrop.schedule,
         forceDrop: stop,

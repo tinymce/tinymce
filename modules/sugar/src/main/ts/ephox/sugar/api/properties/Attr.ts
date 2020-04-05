@@ -3,7 +3,7 @@ import { Arr, Obj, Option, Type } from '@ephox/katamari';
 import Element from '../node/Element';
 import * as Node from '../node/Node';
 
-const rawSet = function (dom: DomElement, key: string, value: string | boolean | number) {
+const rawSet = (dom: DomElement, key: string, value: string | boolean | number) => {
   /*
    * JQuery coerced everything to a string, and silently did nothing on text node/null/undefined.
    *
@@ -18,18 +18,18 @@ const rawSet = function (dom: DomElement, key: string, value: string | boolean |
   }
 };
 
-const set = function (element: Element<DomElement>, key: string, value: string | boolean | number) {
+const set = (element: Element<DomElement>, key: string, value: string | boolean | number) => {
   rawSet(element.dom(), key, value);
 };
 
-const setAll = function (element: Element<DomElement>, attrs: Record<string, string | boolean | number>) {
+const setAll = (element: Element<DomElement>, attrs: Record<string, string | boolean | number>) => {
   const dom = element.dom();
-  Obj.each(attrs, function (v, k) {
+  Obj.each(attrs, (v, k) => {
     rawSet(dom, k, v);
   });
 };
 
-const get = function (element: Element<DomElement>, key: string) {
+const get = (element: Element<DomElement>, key: string) => {
   const v = element.dom().getAttribute(key);
 
   // undefined is the more appropriate value for JS, and this matches JQuery
@@ -39,41 +39,43 @@ const get = function (element: Element<DomElement>, key: string) {
 const getOpt = (element: Element<DomElement>, key: string): Option<string> =>
   Option.from(get(element, key));
 
-const has = function (element: Element<DomNode>, key: string) {
+const has = (element: Element<DomNode>, key: string) => {
   const dom = element.dom();
 
   // return false for non-element nodes, no point in throwing an error
   return dom && (dom as DomElement).hasAttribute ? (dom as DomElement).hasAttribute(key) : false;
 };
 
-const remove = function (element: Element<DomElement>, key: string) {
+const remove = (element: Element<DomElement>, key: string) => {
   element.dom().removeAttribute(key);
 };
 
-const hasNone = function (element: Element<DomNode>) {
+const hasNone = (element: Element<DomNode>) => {
   const attrs = (element.dom() as DomElement).attributes;
   return attrs === undefined || attrs === null || attrs.length === 0;
 };
 
-const clone = function (element: Element<DomElement>) {
+const clone = (element: Element<DomElement>) => {
   // TypeScript really doesn't like NamedNodeMap as array
-  return Arr.foldl(element.dom().attributes, function (acc, attr) {
+  return Arr.foldl(element.dom().attributes, (acc, attr) => {
     acc[attr.name] = attr.value;
     return acc;
   }, {} as Record<string, string>);
 };
 
-const transferOne = function (source: Element<DomElement>, destination: Element<DomElement>, attr: string) {
+const transferOne = (source: Element<DomElement>, destination: Element<DomElement>, attr: string) => {
   // NOTE: We don't want to clobber any existing attributes
-  if (has(source, attr) && !has(destination, attr)) { set(destination, attr, get(source, attr)); }
+  if (!has(destination, attr)) {
+    getOpt(source, attr).each((srcValue) => set(destination, attr, srcValue));
+  }
 };
 
 // Transfer attributes(attrs) from source to destination, unless they are already present
-const transfer = function (source: Element<DomElement>, destination: Element<DomElement>, attrs: string[]) {
+const transfer = (source: Element<DomElement>, destination: Element<DomElement>, attrs: string[]) => {
   if (!Node.isElement(source) || !Node.isElement(destination)) { return; }
-  Arr.each(attrs, function (attr) {
+  Arr.each(attrs, (attr) => {
     transferOne(source, destination, attr);
   });
 };
 
-export { clone, set, setAll, get, getOpt, has, remove, hasNone, transfer, };
+export { clone, set, setAll, get, getOpt, has, remove, hasNone, transfer };

@@ -92,7 +92,7 @@ const add = (code: string, items: Record<string, string>) => {
  * @return {String} String that got translated.
  */
 const translate = (text: Untranslated): TranslatedString => {
-  const langData = getLanguageData().getOr({});
+  const langData: Record<string, string> = getLanguageData().getOr({});
   /**
    * number - string
    * null, undefined and empty string - empty string

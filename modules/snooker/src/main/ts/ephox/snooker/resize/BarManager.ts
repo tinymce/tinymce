@@ -1,14 +1,14 @@
 import { Dragger } from '@ephox/dragster';
 import { Fun, Option } from '@ephox/katamari';
-import { Event, Events, Bindable } from '@ephox/porkbun';
+import { Bindable, Event, Events } from '@ephox/porkbun';
 import { Attr, Body, Class, Compare, Css, DomEvent, Element, SelectorFind } from '@ephox/sugar';
+import { findClosestContentEditable, isContentEditableTrue } from '../alien/ContentEditable';
+import { ResizeWire } from '../api/ResizeWire';
 import * as Styles from '../style/Styles';
 import * as CellUtils from '../util/CellUtils';
 import { BarMutation } from './BarMutation';
+import { BarPositions, ColInfo, RowInfo } from './BarPositions';
 import * as Bars from './Bars';
-import { isContentEditableTrue, findClosestContentEditable } from '../alien/ContentEditable';
-import { ResizeWire } from '../api/ResizeWire';
-import { BarPositions, RowInfo, ColInfo } from './BarPositions';
 
 export interface DragAdjustHeightEvent {
   table: () => Element;
@@ -50,19 +50,19 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
   /* Reposition the bar as the user drags */
   mutation.events.drag.bind(function (event) {
     getResizer(event.target(), 'data-row').each(function (_dataRow) {
-      const currentRow = CellUtils.getInt(event.target(), 'top');
+      const currentRow = CellUtils.getCssValue(event.target(), 'top');
       Css.set(event.target(), 'top', currentRow + event.yDelta() + 'px');
     });
 
     getResizer(event.target(), 'data-column').each(function (_dataCol) {
-      const currentCol = CellUtils.getInt(event.target(), 'left');
+      const currentCol = CellUtils.getCssValue(event.target(), 'left');
       Css.set(event.target(), 'left', currentCol + event.xDelta() + 'px');
     });
   });
 
   const getDelta = function (target: Element, dir: string) {
-    const newX = CellUtils.getInt(target, dir);
-    const oldX = parseInt(Attr.get(target, 'data-initial-' + dir), 10);
+    const newX = CellUtils.getCssValue(target, dir);
+    const oldX = CellUtils.getAttrValue(target,'data-initial-' + dir, 0);
     return newX - oldX;
   };
 
@@ -91,7 +91,7 @@ export const BarManager = function (wire: ResizeWire, direction: BarPositions<Co
   const handler = function (target: Element, dir: string) {
     events.trigger.startAdjust();
     mutation.assign(target);
-    Attr.set(target, 'data-initial-' + dir, parseInt(Css.get(target, dir), 10));
+    Attr.set(target, 'data-initial-' + dir, CellUtils.getCssValue(target, dir));
     Class.add(target, resizeBarDragging);
     Css.set(target, 'opacity', '0.2');
     resizing.go(wire.parent());

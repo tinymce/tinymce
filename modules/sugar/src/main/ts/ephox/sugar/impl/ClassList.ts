@@ -1,26 +1,20 @@
-import { Arr } from '@ephox/katamari';
-import * as AttrList from '../api/properties/AttrList';
-import Element from '../api/node/Element';
 import { Element as DomElement, Node as DomNode } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
+import Element from '../api/node/Element';
+import * as AttrList from '../api/properties/AttrList';
 
-const supports = function (element: Element<DomNode>): element is Element<DomElement> {
+const supports = (element: Element<DomNode>): element is Element<DomElement> => {
   // IE11 Can return undefined for a classList on elements such as math, so we make sure it's not undefined before attempting to use it.
   return (element.dom() as DomElement).classList !== undefined;
 };
 
-const get = function (element: Element<DomElement>) {
-  return AttrList.read(element, 'class');
-};
+const get = (element: Element<DomElement>) => AttrList.read(element, 'class');
 
-const add = function (element: Element<DomElement>, clazz: string) {
-  return AttrList.add(element, 'class', clazz);
-};
+const add = (element: Element<DomElement>, clazz: string) => AttrList.add(element, 'class', clazz);
 
-const remove = function (element: Element<DomElement>, clazz: string) {
-  return AttrList.remove(element, 'class', clazz);
-};
+const remove = (element: Element<DomElement>, clazz: string) => AttrList.remove(element, 'class', clazz);
 
-const toggle = function (element: Element<DomElement>, clazz: string) {
+const toggle = (element: Element<DomElement>, clazz: string) => {
   if (Arr.contains(get(element), clazz)) {
     return remove(element, clazz);
   } else {

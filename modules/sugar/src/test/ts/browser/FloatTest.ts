@@ -1,13 +1,13 @@
-import * as Body from 'ephox/sugar/api/node/Body';
-import * as Css from 'ephox/sugar/api/properties/Css';
-import Element from 'ephox/sugar/api/node/Element';
-import * as Float from 'ephox/sugar/api/properties/Float';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as Body from 'ephox/sugar/api/node/Body';
+import Element from 'ephox/sugar/api/node/Element';
+import * as Css from 'ephox/sugar/api/properties/Css';
+import * as Float from 'ephox/sugar/api/properties/Float';
 import MathElement from 'ephox/sugar/test/MathElement';
-import { UnitTest, assert } from '@ephox/bedrock-client';
 
-UnitTest.test('FloatTest', function () {
+UnitTest.test('FloatTest', () => {
   const image = Element.fromTag('table');
   const m = MathElement();
   assert.eq(null, Float.getRaw(image));

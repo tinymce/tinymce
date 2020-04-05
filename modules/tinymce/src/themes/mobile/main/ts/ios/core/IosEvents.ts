@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { TransitionEvent } from '@ephox/dom-globals';
 import { Arr, Throttler } from '@ephox/katamari';
 import { Compare, DomEvent, Height } from '@ephox/sugar';
 
@@ -131,7 +132,7 @@ const initEvents = (editorApi, iosApi, toolstrip, socket, _dropup): { destroy: (
     }),
 
     // Listen to the toolstrip growing animation so that we can update the position of the socket once it is done.
-    DomEvent.bind(toolstrip, 'transitionend', (transitionEvent) => {
+    DomEvent.bind<TransitionEvent>(toolstrip, 'transitionend', (transitionEvent) => {
       if (transitionEvent.raw().propertyName === 'height') {
         reposition();
       }

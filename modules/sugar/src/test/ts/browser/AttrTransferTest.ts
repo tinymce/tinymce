@@ -1,10 +1,12 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Element as DomElement } from '@ephox/dom-globals';
 import { Arr, Obj } from '@ephox/katamari';
+import Element from 'ephox/sugar/api/node/Element';
 import * as Attr from 'ephox/sugar/api/properties/Attr';
 import Div from 'ephox/sugar/test/Div';
 
-UnitTest.test('AttrTransfer', function () {
-  const alpha = function () {
+UnitTest.test('AttrTransfer', () => {
+  const alpha = () => {
     const r = Div();
     Attr.setAll(r, {
       title: 'monkey',
@@ -13,7 +15,7 @@ UnitTest.test('AttrTransfer', function () {
     return r;
   };
 
-  const beta = function () {
+  const beta = () => {
     const r = Div();
     Attr.setAll(r, {
       title: 'chimp',
@@ -22,7 +24,7 @@ UnitTest.test('AttrTransfer', function () {
     return r;
   };
 
-  const gamma = function () {
+  const gamma = () => {
     const r = Div();
     Attr.setAll(r, {
       placeholder: 'lookup'
@@ -30,14 +32,18 @@ UnitTest.test('AttrTransfer', function () {
     return r;
   };
 
-  const check = function (expectedPresent, expectedAbsent, source, destination, attributes) {
+  const check = (expectedPresent: Record<string, any>, expectedAbsent: string[], source: Element<DomElement>, destination: Element<DomElement>, attributes: string[]) => {
     Attr.transfer(source, destination, attributes);
-    Arr.each(expectedAbsent, function (k) {
-      if (Attr.has(destination, k)) { assert.fail('Result should not have attribute: ' + k); }
+    Arr.each(expectedAbsent, (k) => {
+      if (Attr.has(destination, k)) {
+        assert.fail('Result should not have attribute: ' + k);
+      }
     });
 
-    Obj.each(expectedPresent, function (v, k) {
-      if (!Attr.has(destination, k)) { assert.fail('Result should have attribute: ' + k); } else { assert.eq(v, Attr.get(destination, k)); }
+    Obj.each(expectedPresent, (v, k) => {
+      if (!Attr.has(destination, k)) {
+        assert.fail('Result should have attribute: ' + k); } else { assert.eq(v, Attr.get(destination, k));
+      }
     });
   };
 

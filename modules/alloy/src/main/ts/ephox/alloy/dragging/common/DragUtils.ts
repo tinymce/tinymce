@@ -1,3 +1,4 @@
+import { Event } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { EventArgs, Height, Position, Width } from '@ephox/sugar';
 
@@ -20,7 +21,7 @@ const calcStartData = <E>(dragConfig: DraggingConfig<E>, comp: AlloyComponent): 
   };
 };
 
-const move = <E>(component: AlloyComponent, dragConfig: DraggingConfig<E>, dragState: DraggingState, dragMode: DragModeDeltas<Position>, event: EventArgs) => {
+const move = <E, ET extends Event>(component: AlloyComponent, dragConfig: DraggingConfig<E>, dragState: DraggingState, dragMode: DragModeDeltas<ET, Position>, event: EventArgs<ET>) => {
   const delta = dragState.update(dragMode, event);
   const dragStartData = dragState.getStartData().getOrThunk(() => calcStartData(dragConfig, component));
   delta.each((dlt) => {

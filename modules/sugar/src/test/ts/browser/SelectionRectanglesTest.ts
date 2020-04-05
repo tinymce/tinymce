@@ -1,13 +1,13 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { window } from '@ephox/dom-globals';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as Body from 'ephox/sugar/api/node/Body';
 import Element from 'ephox/sugar/api/node/Element';
 import { Selection } from 'ephox/sugar/api/selection/Selection';
 import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import { window } from '@ephox/dom-globals';
 
-UnitTest.test('Browser Test: SelectionRectanglesTest', function () {
+UnitTest.test('Browser Test: SelectionRectanglesTest', () => {
   const p1 = Element.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');
   const p2 = Element.fromHtml('<p>This is the <em>second</em> paragraph</p>');
 

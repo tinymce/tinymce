@@ -1,8 +1,8 @@
-import Toggler from './Toggler';
-import * as Attr from './Attr';
+import { Element as DomElement, Node } from '@ephox/dom-globals';
 import * as ClassList from '../../impl/ClassList';
 import Element from '../node/Element';
-import { Element as DomElement, Node } from '@ephox/dom-globals';
+import * as Attr from './Attr';
+import Toggler from './Toggler';
 
 /*
  * ClassList is IE10 minimum:
@@ -12,7 +12,7 @@ import { Element as DomElement, Node } from '@ephox/dom-globals';
  * If it did, the toggler could be better.
  */
 
-const add = function (element: Element<DomElement>, clazz: string) {
+const add = (element: Element<DomElement>, clazz: string) => {
   if (ClassList.supports(element)) {
     element.dom().classList.add(clazz);
   } else {
@@ -20,7 +20,7 @@ const add = function (element: Element<DomElement>, clazz: string) {
   }
 };
 
-const cleanClass = function (element: Element<DomElement>) {
+const cleanClass = (element: Element<DomElement>) => {
   const classList = ClassList.supports(element) ? element.dom().classList : ClassList.get(element);
   // classList is a "live list", so this is up to date already
   if (classList.length === 0) {
@@ -29,7 +29,7 @@ const cleanClass = function (element: Element<DomElement>) {
   }
 };
 
-const remove = function (element: Element<DomElement>, clazz: string) {
+const remove = (element: Element<DomElement>, clazz: string) => {
   if (ClassList.supports(element)) {
     const classList = element.dom().classList;
     classList.remove(clazz);
@@ -40,22 +40,21 @@ const remove = function (element: Element<DomElement>, clazz: string) {
   cleanClass(element);
 };
 
-const toggle = function (element: Element<DomElement>, clazz: string) {
-  return ClassList.supports(element) ? element.dom().classList.toggle(clazz) :
-    ClassList.toggle(element, clazz);
+const toggle = (element: Element<DomElement>, clazz: string) => {
+  return ClassList.supports(element) ? element.dom().classList.toggle(clazz) : ClassList.toggle(element, clazz);
 };
 
-const toggler = function (element: Element<DomElement>, clazz: string) {
+const toggler = (element: Element<DomElement>, clazz: string) => {
   const hasClasslist = ClassList.supports(element);
   const classList = element.dom().classList;
-  const off = function () {
+  const off = () => {
     if (hasClasslist) {
       classList.remove(clazz);
     } else {
       ClassList.remove(element, clazz);
     }
   };
-  const on = function () {
+  const on = () => {
     if (hasClasslist) {
       classList.add(clazz);
     } else {
@@ -65,7 +64,7 @@ const toggler = function (element: Element<DomElement>, clazz: string) {
   return Toggler(off, on, has(element, clazz));
 };
 
-const has = function (element: Element<Node>, clazz: string) {
+const has = (element: Element<Node>, clazz: string) => {
   // Cereal has a nasty habit of calling this with a text node >.<
   return ClassList.supports(element) && element.dom().classList.contains(clazz);
 };
@@ -75,5 +74,5 @@ export {
   remove,
   toggle,
   toggler,
-  has,
+  has
 };

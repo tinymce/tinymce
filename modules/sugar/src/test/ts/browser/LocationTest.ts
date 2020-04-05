@@ -1,5 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { console, HTMLIFrameElement } from '@ephox/dom-globals';
+import { console, Document, HTMLElement, HTMLIFrameElement, Window } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
@@ -13,36 +13,61 @@ import * as Css from 'ephox/sugar/api/properties/Css';
 import * as Location from 'ephox/sugar/api/view/Location';
 import * as Scroll from 'ephox/sugar/api/view/Scroll';
 
+interface TestDocSpec {
+  iframe: Element<HTMLIFrameElement>;
+  rawWin: Window;
+  rawDoc: Element<Document>;
+  body: Element<HTMLElement>;
+  rtl: boolean;
+  dir: string;
+  byId: (str: string) => Element<HTMLElement>;
+}
+
+type AttrMap = Record<string, string | boolean | number>;
+interface TestAttrMap {
+  iframe: AttrMap;
+  html: Option<AttrMap>;
+  body: Option<AttrMap>;
+}
+
+interface CheckSpec {
+  id: string;
+  absolute: { top: number; left: Record<string, number> };
+  relative: { top: number; left: Record<string, number> };
+  viewport: { top: number; left: Record<string, number> };
+}
+
 UnitTest.asynctest('LocationTest', (success, failure) => {
   const platform = PlatformDetection.detect();
   const scrollBarWidth = Scroll.scrollBarWidth();
 
-  const leftScrollBarWidth = (doc) => {
+  const leftScrollBarWidth = (doc: TestDocSpec) => {
     // Tries to detect the width of the left scrollbar by checking the offsetLeft of the documentElement
     // Chrome adds the scrollbar to the left in rtl mode as of Chrome 70+
     return Location.relative(Traverse.documentElement(doc.body)).left();
   };
 
-  const asserteq = function (expected, actual, message) {
+  const asserteq = <T>(expected: T, actual: T, message: string) => {
     // I wish assert.eq printed expected and actual on failure
     const m = message === undefined ? undefined : 'expected ' + expected + ', was ' + actual + ': ' + message;
     assert.eq(expected, actual, m);
   };
 
-  const testOne = function (i, attrMap, next) {
+  const testOne = (i: string, attrMap: TestAttrMap, next: () => void) => {
     const iframe = Element.fromHtml<HTMLIFrameElement>(i);
     Attr.setAll(iframe, attrMap.iframe);
 
-    const run = DomEvent.bind(iframe, 'load', function () {
+    const run = DomEvent.bind(iframe, 'load', () => {
       run.unbind();
       try {
-        const iframeWin = iframe.dom().contentWindow;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const iframeWin = iframe.dom().contentWindow!;
         const iframeDoc = iframeWin.document;
         const html = Element.fromDom(iframeDoc.documentElement);
         const body = Element.fromDom(iframeDoc.body);
         attrMap.html.each(Fun.curry(Attr.setAll, html));
         attrMap.body.each(Fun.curry(Attr.setAll, body));
-        const doc = {
+        const doc: TestDocSpec = {
           iframe,
           rawWin: iframeWin,
           rawDoc: Element.fromDom(iframeDoc),
@@ -73,18 +98,18 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
   testOne(ifr, { // vanilla iframe
     iframe: { id: 'vanilla', style: 'height:200px; width:500px; border: 1px dashed chartreuse;' },
     html: Option.none(),
-    body: Option.some({ contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
+    body: Option.some<AttrMap>({ contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
   },
-  function () {
+  () => {
     testOne(ifr, { // rtl iframe
       iframe: { id: 'ifrRtl', style: 'height:200px; width:500px; border: 1px dashed turquoise;' },
       html: Option.none(),
-      body: Option.some({ dir: 'rtl', contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
+      body: Option.some<AttrMap>({ dir: 'rtl', contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
     },
     success);
   });
 
-  const checks = function (doc) {
+  const checks = (doc: TestDocSpec) => {
 
     Arr.each([
       baseChecks,
@@ -95,12 +120,12 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
       tableChecks,
       fixedChecks, // recommend making these last, as they adjust the iframe scroll
       bodyChecks
-    ], function (f) {
+    ], (f) => {
       f(doc);
     });
   };
 
-  const baseChecks = function () {
+  const baseChecks = () => {
     // these checks actually depend on the tunic stylesheet. They might not actually be useful.
     const body = Body.body();
     let pos = Location.absolute(body);
@@ -115,7 +140,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50 || (platform.os.isOSX() && scrollBarWidth === 0), 'scroll bar width, got=' + scrollBarWidth);
   };
 
-  const disconnectedChecks = function () {
+  const disconnectedChecks = () => {
     const div = Element.fromTag('div');
     let pos = Location.absolute(div);
     assert.eq(0, pos.top());
@@ -128,7 +153,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     assert.eq(0, pos.left());
   };
 
-  const absoluteChecks = function (doc) {
+  const absoluteChecks = (doc: TestDocSpec) => {
     const leftScrollW = leftScrollBarWidth(doc);
 
     // This one has position absolute, but no values set initially
@@ -171,7 +196,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     runChecks(doc, tests);
   };
 
-  const relativeChecks = function (doc) {
+  const relativeChecks = (doc: TestDocSpec) => {
     const leftScrollW = leftScrollBarWidth(doc);
 
     // GUESS: 1px differences from JQuery is due to the 1px margin on the body
@@ -220,7 +245,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     runChecks(doc, tests);
   };
 
-  const staticChecks = function (doc) {
+  const staticChecks = (doc: TestDocSpec) => {
     const leftScrollW = leftScrollBarWidth(doc);
 
     const extraHeight = 230; // because all tests are in one page
@@ -255,7 +280,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     runChecks(doc, tests);
   };
 
-  const tableChecks = function (doc) {
+  const tableChecks = (doc: TestDocSpec) => {
     const extraHeight = 460; // because all tests are in one page
     const leftScrollW = leftScrollBarWidth(doc);
 
@@ -303,7 +328,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     // Firefox 71 has also started behaving the same as chrome
     if (platform.browser.isChrome() || platform.browser.isFirefox() && platform.browser.version.major >= 71) {
       const chromeDifference = -2;
-      Arr.each(tests, function (t) {
+      Arr.each(tests, (t) => {
         if (t.id !== 'table-1') {
           // tslint:disable-next-line:no-console
           console.log('> Note - fix for Chrome bug - subtracting from relative top and left: ', chromeDifference);
@@ -317,7 +342,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     runChecks(doc, tests);
   };
 
-  const fixedChecks = function (doc) {
+  const fixedChecks = (doc: TestDocSpec) => {
     const leftScrollW = leftScrollBarWidth(doc);
 
     // GUESS: 1px differences from JQuery is due to the 1px margin on the body
@@ -389,7 +414,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     runChecks(doc, afterSetPosition);
   };
 
-  const bodyChecks = function (doc) {
+  const bodyChecks = (doc: TestDocSpec) => {
     Scroll.to(1000, 1000, doc.rawDoc);
     let pos = Location.absolute(doc.body);
     assert.eq(0, pos.top());
@@ -403,8 +428,8 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
   };
 
   /* Simple verification logic */
-  const runChecks = function (doc, tests) {
-    Arr.each(tests, function (t) {
+  const runChecks = (doc: TestDocSpec, tests: CheckSpec[]) => {
+    Arr.each(tests, (t) => {
       const div = doc.byId(t.id);
 
       let pos = Location.absolute(div);

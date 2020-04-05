@@ -1,9 +1,9 @@
-import { document, Node as DomNode, TreeWalker, NodeFilter, Comment } from '@ephox/dom-globals';
+import { Comment, document, Node as DomNode, NodeFilter, TreeWalker } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import Element from './Element';
 
-const regularGetNodes = function <T extends DomNode> (texas: TreeWalker) {
+const regularGetNodes = <T extends DomNode> (texas: TreeWalker) => {
   const ret: Element<T>[] = [];
   while (texas.nextNode() !== null) {
     ret.push(Element.fromDom(texas.currentNode as T));
@@ -11,7 +11,7 @@ const regularGetNodes = function <T extends DomNode> (texas: TreeWalker) {
   return ret;
 };
 
-const ieGetNodes = function <T extends DomNode> (texas: TreeWalker) {
+const ieGetNodes = <T extends DomNode> (texas: TreeWalker) => {
   // IE throws an error on nextNode() when there are zero nodes available, and any attempts I made to detect this
   // just resulted in throwing away valid cases
   try {
@@ -28,10 +28,10 @@ const getNodes = browser.isIE() || browser.isEdge() ? ieGetNodes : regularGetNod
 // Weird, but oh well
 const noFilter = Fun.constant(Fun.constant(true));
 
-const find = function (node: Element<DomNode>, filterOpt: Option<(n: string) => boolean>) {
+const find = (node: Element<DomNode>, filterOpt: Option<(n: string | null) => boolean>) => {
 
-  const vmlFilter: any = filterOpt.fold(noFilter, function (filter) {
-    return function (comment: DomNode) {
+  const vmlFilter: any = filterOpt.fold(noFilter, (filter) => {
+    return (comment: DomNode) => {
       return filter(comment.nodeValue);
     };
   });

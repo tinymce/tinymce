@@ -12,13 +12,13 @@ export interface Universe<E, D> {
     predicate: (scope: E, predicate: (e: E) => boolean) => E[];
   };
   styles: () => {
-    get: (element: E, property: string) => string;
+    get: (element: E, property: string) => string | undefined;
     getRaw: (element: E, property: string) => Option<string>;
     set: (element: E, property: string, value: string) => void;
     remove: (element: E, property: string) => void;
   };
   attrs: () => {
-    get: (element: E, key: string) => string;
+    get: (element: E, key: string) => string | undefined;
     set: (element: E, key: string, value: string | number | boolean) => void;
     remove: (element: E, key: string) => void;
     copyTo: (source: E, destination: E) => void;

@@ -2,7 +2,7 @@ import { KeyboardEvent } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
-export type KeyMatcher = (evt: EventArgs) => boolean;
+export type KeyMatcher = (evt: EventArgs<KeyboardEvent>) => boolean;
 
 const inSet = (keys: number[]): KeyMatcher => {
   return (event: EventArgs<KeyboardEvent>) => {
@@ -12,7 +12,7 @@ const inSet = (keys: number[]): KeyMatcher => {
 };
 
 const and = (preds: KeyMatcher[]): KeyMatcher => {
-  return (event: EventArgs) => {
+  return (event: EventArgs<KeyboardEvent>) => {
     return Arr.forall(preds, (pred) => {
       return pred(event);
     });

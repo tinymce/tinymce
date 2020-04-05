@@ -1,17 +1,17 @@
+import { Element as DomElement, HTMLElement, Node as DomNode } from '@ephox/dom-globals';
 import { Arr, Type } from '@ephox/katamari';
 import Element from '../api/node/Element';
 import * as Css from '../api/properties/Css';
 import * as Style from './Style';
-import { HTMLElement, Node as DomNode, Element as DomElement } from '@ephox/dom-globals';
 
-export default function (name: string, getOffset: (e: Element<HTMLElement>) => number) {
-  const set = function (element: Element<DomNode>, h: number | string) {
+export default (name: string, getOffset: (e: Element<HTMLElement>) => number) => {
+  const set = (element: Element<DomNode>, h: number | string) => {
     if (!Type.isNumber(h) && !h.match(/^[0-9]+$/)) {
       throw new Error(name + '.set accepts only positive integer values. Value was ' + h);
     }
     const dom = element.dom();
     if (Style.isSupported(dom)) {
-      dom.style[name] = h + 'px';
+      dom.style[name as any] = h + 'px';
     }
   };
 
@@ -21,7 +21,7 @@ export default function (name: string, getOffset: (e: Element<HTMLElement>) => n
    * TBIO doesn't do this, so the code is removed to save space, but left here just in case.
    */
   /*
-  var getDocumentWidth = function (element) {
+  var getDocumentWidth = (element) => {
     var dom = element.dom();
     if (Node.isDocument(element)) {
       var body = dom.body;
@@ -36,7 +36,7 @@ export default function (name: string, getOffset: (e: Element<HTMLElement>) => n
     }
   };
 
-  var getWindowWidth = function (element) {
+  var getWindowWidth = (element) => {
     var dom = element.dom();
     if (dom.window === dom) {
       // There is no offsetHeight on a window, so use the clientHeight of the document
@@ -45,7 +45,7 @@ export default function (name: string, getOffset: (e: Element<HTMLElement>) => n
   };
 */
 
-  const get = function (element: Element<HTMLElement>) {
+  const get = (element: Element<HTMLElement>) => {
     const r = getOffset(element);
 
     // zero or null means non-standard or disconnected, fall back to CSS
@@ -61,15 +61,15 @@ export default function (name: string, getOffset: (e: Element<HTMLElement>) => n
   // although these calculations only seem relevant for quirks mode, and edge cases TBIO doesn't rely on
   const getOuter = get;
 
-  const aggregate = function (element: Element<DomElement>, properties: string[]) {
-    return Arr.foldl(properties, function (acc, property) {
+  const aggregate = (element: Element<DomElement>, properties: string[]) => {
+    return Arr.foldl(properties, (acc, property) => {
       const val = Css.get(element, property);
       const value = val === undefined ? 0 : parseInt(val, 10);
       return isNaN(value) ? acc : acc + value;
     }, 0);
   };
 
-  const max = function (element: Element<DomElement>, value: number, properties: string[]) {
+  const max = (element: Element<DomElement>, value: number, properties: string[]) => {
     const cumulativeInclusions = aggregate(element, properties);
     // if max-height is 100px and your cumulativeInclusions is 150px, there is no way max-height can be 100px, so we return 0.
     const absoluteMax = value > cumulativeInclusions ? value - cumulativeInclusions : 0;
@@ -81,6 +81,6 @@ export default function (name: string, getOffset: (e: Element<HTMLElement>) => n
     get,
     getOuter,
     aggregate,
-    max,
+    max
   };
-}
+};

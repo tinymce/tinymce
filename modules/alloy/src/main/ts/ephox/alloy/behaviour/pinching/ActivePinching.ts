@@ -1,13 +1,13 @@
-import { Option } from '@ephox/katamari';
 import { TouchEvent } from '@ephox/dom-globals';
+import { Option } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
-import { PinchingConfig, PinchingState, PinchDragData } from '../../behaviour/pinching/PinchingTypes';
+import { PinchDragData, PinchingConfig, PinchingState } from '../../behaviour/pinching/PinchingTypes';
 import { DragModeDeltas } from '../../dragging/common/DraggingTypes';
 
-const mode: DragModeDeltas<PinchDragData> = {
+const mode: DragModeDeltas<TouchEvent, PinchDragData> = {
   getData(e: EventArgs<TouchEvent>)  {
     const raw = e.raw();
     const touches = raw.touches;
@@ -44,7 +44,7 @@ const events = (pinchConfig: PinchingConfig, pinchState: PinchingState): AlloyEv
     // Note: in testing, it didn't seem to cause problems on Android. Check.
     AlloyEvents.preventDefault(NativeEvents.gesturestart()),
 
-    AlloyEvents.run<EventArgs>(NativeEvents.touchmove(), (component, simulatedEvent) => {
+    AlloyEvents.run<EventArgs<TouchEvent>>(NativeEvents.touchmove(), (component, simulatedEvent) => {
       simulatedEvent.stop();
 
       const delta = pinchState.update(mode, simulatedEvent.event());

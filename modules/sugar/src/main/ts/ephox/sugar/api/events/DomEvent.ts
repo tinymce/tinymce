@@ -1,16 +1,23 @@
+import { Event, HTMLElementEventMap } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import * as FilteredEvent from '../../impl/FilteredEvent';
 import Element from '../node/Element';
-import { EventArgs, EventUnbinder } from './Types';
+import { EventHandler, EventUnbinder } from './Types';
 
 const filter = Fun.constant(true); // no filter on plain DomEvents
 
-const bind = (element: Element, event: string, handler: (evt: EventArgs) => void): EventUnbinder => {
-  return FilteredEvent.bind(element, event, filter, handler);
+const bind: {
+  <K extends keyof HTMLElementEventMap> (element: Element, event: K, handler: EventHandler<HTMLElementEventMap[K]>): EventUnbinder;
+  <T extends Event>(element: Element, event: string, handler: EventHandler<T>): EventUnbinder;
+} = <T extends Event>(element: Element, event: string, handler: EventHandler<T>): EventUnbinder => {
+  return FilteredEvent.bind<T>(element, event, filter, handler);
 };
 
-const capture = (element: Element, event: string, handler: (evt: EventArgs) => void): EventUnbinder => {
-  return FilteredEvent.capture(element, event, filter, handler);
+const capture: {
+  <K extends keyof HTMLElementEventMap> (element: Element, event: K, handler: EventHandler<HTMLElementEventMap[K]>): EventUnbinder;
+  <T extends Event>(element: Element, event: string, handler: EventHandler<T>): EventUnbinder;
+} = <T extends Event>(element: Element, event: string, handler: EventHandler<T>): EventUnbinder => {
+  return FilteredEvent.capture<T>(element, event, filter, handler);
 };
 
 const fromRawEvent = FilteredEvent.fromRawEvent;

@@ -1,6 +1,6 @@
+import { Node as DomNode } from '@ephox/dom-globals';
 import { Adt, Fun } from '@ephox/katamari';
 import Element from '../node/Element';
-import { Node as DomNode } from '@ephox/dom-globals';
 
 export interface Situ {
   fold: <U> (
@@ -27,13 +27,11 @@ const adt: {
 ]);
 
 // Probably don't need this given that we now have "match"
-const cata = function <U> (subject: Situ, onBefore: (element: Element<DomNode>) => U, onOn: (element: Element<DomNode>, offset: number) => U, onAfter: (element: Element<DomNode>) => U) {
+const cata = <U> (subject: Situ, onBefore: (element: Element<DomNode>) => U, onOn: (element: Element<DomNode>, offset: number) => U, onAfter: (element: Element<DomNode>) => U) => {
   return subject.fold(onBefore, onOn, onAfter);
 };
 
-const getStart = function (situ: Situ) {
-  return situ.fold(Fun.identity, Fun.identity, Fun.identity);
-};
+const getStart = (situ: Situ) => situ.fold(Fun.identity, Fun.identity, Fun.identity);
 
 const before = adt.before;
 const on = adt.on;
@@ -45,5 +43,5 @@ export const Situ = {
   on,
   after,
   cata,
-  getStart,
+  getStart
 };

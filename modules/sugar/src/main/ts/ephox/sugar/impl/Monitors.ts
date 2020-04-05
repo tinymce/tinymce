@@ -1,7 +1,7 @@
+import { Node as DomNode } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import * as Compare from '../api/dom/Compare';
 import Element from '../api/node/Element';
-import { Node as DomNode } from '@ephox/dom-globals';
 
 export interface Polling {
   element: Element<DomNode>;
@@ -16,20 +16,20 @@ export interface Polling {
  */
 const polls: Polling[] = [];
 
-const poll = function (element: Element<DomNode>, unbind: () => void): Polling {
+const poll = (element: Element<DomNode>, unbind: () => void): Polling => {
   return {
     element,
     unbind
   };
 };
 
-const findPoller = function (element: Element<DomNode>) {
-  return Arr.findIndex(polls, function (p) {
+const findPoller = (element: Element<DomNode>) => {
+  return Arr.findIndex(polls, (p) => {
     return Compare.eq(p.element, element);
   }).getOr(-1);
 };
 
-const begin = function (element: Element<DomNode>, f: () => (() => void)) {
+const begin = (element: Element<DomNode>, f: () => (() => void)) => {
   const index = findPoller(element);
   if (index === -1) {
     const unbind = f();
@@ -37,13 +37,13 @@ const begin = function (element: Element<DomNode>, f: () => (() => void)) {
   }
 };
 
-const query = function (element: Element<DomNode>) {
+const query = (element: Element<DomNode>) => {
   // Used in tests to determine whether an element is still being monitored
   const index = findPoller(element);
   return index === -1 ? Option.none<Polling>() : Option.some(polls[index]);
 };
 
-const end = function (element: Element<DomNode>) {
+const end = (element: Element<DomNode>) => {
   const index = findPoller(element);
 
   // This function is called speculatively, so just do nothing if there is no monitor for the element

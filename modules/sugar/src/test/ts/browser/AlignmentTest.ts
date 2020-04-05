@@ -1,16 +1,17 @@
-import * as Alignment from 'ephox/sugar/api/properties/Alignment';
-import * as Attr from 'ephox/sugar/api/properties/Attr';
-import * as Body from 'ephox/sugar/api/node/Body';
-import Element from 'ephox/sugar/api/node/Element';
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Element as DomElement, Text } from '@ephox/dom-globals';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as Body from 'ephox/sugar/api/node/Body';
+import Element from 'ephox/sugar/api/node/Element';
+import * as Alignment from 'ephox/sugar/api/properties/Alignment';
+import * as Attr from 'ephox/sugar/api/properties/Attr';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import EphoxElement from 'ephox/sugar/test/EphoxElement';
-import { UnitTest, assert } from '@ephox/bedrock-client';
 
-UnitTest.test('AlignmentTest', function () {
+UnitTest.test('AlignmentTest', () => {
   const body = Body.body();
-  const createDirectionalP = function (direction) {
+  const createDirectionalP = (direction: 'ltr' | 'rtl') => {
     const divEl = EphoxElement('div');
     const par = EphoxElement('p');
     Attr.setAll(divEl, { dir: direction });
@@ -19,7 +20,7 @@ UnitTest.test('AlignmentTest', function () {
     return par;
   };
 
-  const check = function (element, property, value, expected) {
+  const check = (element: Element<DomElement> | Element<Text>, property: string, value: string, expected: boolean) => {
     const res = Alignment.hasAlignment(element, property, value);
     assert.eq(expected, res);
     Traverse.parent(element).each(Remove.remove);

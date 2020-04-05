@@ -1,6 +1,9 @@
 import { FieldProcessorAdt } from '@ephox/boulder';
+import { UIEvent } from '@ephox/dom-globals';
+import { EventArgs } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { AlloyEventKeyAndHandler } from '../../api/events/AlloyEvents';
 import * as Fields from '../../data/Fields';
 import * as DraggingSchema from '../common/DraggingSchema';
 import { DraggingState } from '../common/DraggingTypes';
@@ -13,7 +16,7 @@ const events = <E>(dragConfig: MouseOrTouchDraggingConfig<E>, dragState: Draggin
   return [
     ...MouseDragging.events(dragConfig, dragState, updateStartState),
     ...TouchDragging.events(dragConfig, dragState, updateStartState),
-  ];
+  ] as AlloyEventKeyAndHandler<EventArgs<UIEvent>>[];
 };
 
 const schema: FieldProcessorAdt[] = [

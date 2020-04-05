@@ -1,9 +1,9 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { HTMLTextAreaElement } from '@ephox/dom-globals';
 import Element from 'ephox/sugar/api/node/Element';
 import * as Value from 'ephox/sugar/api/properties/Value';
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import { HTMLTextAreaElement } from '@ephox/dom-globals';
 
-UnitTest.test('ValueTest', function () {
+UnitTest.test('ValueTest', () => {
   const ta = Element.fromHtml<HTMLTextAreaElement>('<textarea>sometexthere</textarea>');
   assert.eq('sometexthere', Value.get(ta));
   Value.set(ta, 'one');
@@ -12,11 +12,13 @@ UnitTest.test('ValueTest', function () {
 
   let success = false;
   try {
-    Value.set(ta, undefined);
+    Value.set(ta, undefined as any);
     success = true;
   } catch (e) {
     // expected
   }
 
-  if (success) { assert.fail('setting undefined did not fail'); }
+  if (success) {
+    assert.fail('setting undefined did not fail');
+  }
 });

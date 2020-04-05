@@ -1,11 +1,11 @@
+import { HTMLButtonElement, HTMLInputElement, HTMLOptionElement, HTMLSelectElement, HTMLTextAreaElement } from '@ephox/dom-globals';
 import Element from '../node/Element';
-import { HTMLInputElement, HTMLTextAreaElement, HTMLSelectElement, HTMLButtonElement, HTMLOptionElement } from '@ephox/dom-globals';
 
-const get = function (element: Element<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLOptionElement | HTMLButtonElement>) {
-  return element.dom().value;
-};
+type TogglableElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLOptionElement | HTMLButtonElement;
 
-const set = function (element: Element<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLOptionElement | HTMLButtonElement>, value: string) {
+const get = (element: Element<TogglableElement>) => element.dom().value;
+
+const set = (element: Element<TogglableElement>, value: string) => {
   if (value === undefined) {
     throw new Error('Value.set was undefined');
   }
@@ -14,5 +14,5 @@ const set = function (element: Element<HTMLInputElement | HTMLTextAreaElement | 
 
 export {
   set,
-  get,
+  get
 };

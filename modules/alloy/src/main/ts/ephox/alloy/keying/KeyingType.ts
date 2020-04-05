@@ -1,4 +1,5 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FocusEvent, KeyboardEvent } from '@ephox/dom-globals';
 import { Arr, Option, Result } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
@@ -49,13 +50,13 @@ const typical = <C extends GeneralKeyingConfig, S extends BehaviourState>(
     const onFocusHandler = keyingConfig.focusInside !== FocusInsideModes.OnFocusMode
       ? Option.none<AlloyEvents.AlloyEventKeyAndHandler<EventFormat>>()
       : optFocusIn(keyingConfig).map((focusIn) =>
-        AlloyEvents.run<EventArgs>(SystemEvents.focus(), (component, simulatedEvent) => {
+        AlloyEvents.run<EventArgs<FocusEvent>>(SystemEvents.focus(), (component, simulatedEvent) => {
           focusIn(component, keyingConfig, keyingState);
           simulatedEvent.stop();
         }));
 
     // On enter or space on root element, if using EnterOrSpace focus mode, fire a focusIn on the component
-    const tryGoInsideComponent = (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventArgs>) => {
+    const tryGoInsideComponent = (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventArgs<KeyboardEvent>>) => {
       const isEnterOrSpace = inSet(Keys.SPACE().concat(Keys.ENTER()))(simulatedEvent.event());
 
       if (keyingConfig.focusInside === FocusInsideModes.OnEnterOrSpaceMode && isEnterOrSpace && EventRoot.isSource(component, simulatedEvent)) {
@@ -66,25 +67,27 @@ const typical = <C extends GeneralKeyingConfig, S extends BehaviourState>(
       }
     };
 
-    return AlloyEvents.derive(
-      onFocusHandler.toArray().concat([
-        AlloyEvents.run<EventArgs>(NativeEvents.keydown(), (component, simulatedEvent) => {
-          processKey(component, simulatedEvent, getKeydownRules, keyingConfig, keyingState).fold(
-            () => {
-              // Key wasn't handled ... so see if we should enter into the component (focusIn)
-              tryGoInsideComponent(component, simulatedEvent);
-            },
-            (_) => {
-              simulatedEvent.stop();
-            }
-          );
-        }),
-        AlloyEvents.run<EventArgs>(NativeEvents.keyup(), (component, simulatedEvent) => {
-          processKey(component, simulatedEvent, getKeyupRules, keyingConfig, keyingState).each((_) => {
+    const keyboardEvents = [
+      AlloyEvents.run<EventArgs<KeyboardEvent>>(NativeEvents.keydown(), (component, simulatedEvent) => {
+        processKey(component, simulatedEvent, getKeydownRules, keyingConfig, keyingState).fold(
+          () => {
+            // Key wasn't handled ... so see if we should enter into the component (focusIn)
+            tryGoInsideComponent(component, simulatedEvent);
+          },
+          (_) => {
             simulatedEvent.stop();
-          });
-        })
-      ])
+          }
+        );
+      }),
+      AlloyEvents.run<EventArgs<KeyboardEvent>>(NativeEvents.keyup(), (component, simulatedEvent) => {
+        processKey(component, simulatedEvent, getKeyupRules, keyingConfig, keyingState).each((_) => {
+          simulatedEvent.stop();
+        });
+      })
+    ];
+
+    return AlloyEvents.derive(
+      onFocusHandler.toArray().concat(keyboardEvents as Array<AlloyEvents.AlloyEventKeyAndHandler<EventArgs>>)
     );
   };
 

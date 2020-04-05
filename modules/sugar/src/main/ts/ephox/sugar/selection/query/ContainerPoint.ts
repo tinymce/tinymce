@@ -1,5 +1,5 @@
-import { Document, Range, Node as DomNode } from '@ephox/dom-globals';
-import { Option, Arr } from '@ephox/katamari';
+import { Document, Node as DomNode, Range } from '@ephox/dom-globals';
+import { Arr, Option } from '@ephox/katamari';
 import Element from '../../api/node/Element';
 import * as Node from '../../api/node/Node';
 import * as Traverse from '../../api/search/Traverse';
@@ -17,10 +17,10 @@ import * as TextPoint from './TextPoint';
  * (repartee does something similar).
  */
 
-const searchInChildren = function (doc: Element<Document>, node: Element<DomNode>, x: number, y: number): Option<Range> {
+const searchInChildren = (doc: Element<Document>, node: Element<DomNode>, x: number, y: number): Option<Range> => {
   const r = doc.dom().createRange();
   const nodes = Traverse.children(node);
-  return Arr.findMap(nodes, function (n) {
+  return Arr.findMap(nodes, (n) => {
     // slight mutation because we assume creating ranges is expensive
     r.selectNode(n.dom());
     return Geometry.inRect(r.getBoundingClientRect(), x, y) ?
@@ -29,11 +29,11 @@ const searchInChildren = function (doc: Element<Document>, node: Element<DomNode
   });
 };
 
-const locateNode = function (doc: Element<Document>, node: Element<DomNode>, x: number, y: number) {
+const locateNode = (doc: Element<Document>, node: Element<DomNode>, x: number, y: number) => {
   return Node.isText(node) ? TextPoint.locate(doc, node, x, y) : searchInChildren(doc, node, x, y);
 };
 
-const locate = function (doc: Element<Document>, node: Element<DomNode>, x: number, y: number) {
+const locate = (doc: Element<Document>, node: Element<DomNode>, x: number, y: number) => {
   const r = doc.dom().createRange();
   r.selectNode(node.dom());
   const rect = r.getBoundingClientRect();

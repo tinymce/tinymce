@@ -1,3 +1,5 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { HTMLParagraphElement, Node as DomNode, window } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
@@ -11,10 +13,8 @@ import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import { Selection } from 'ephox/sugar/api/selection/Selection';
 import { Situ } from 'ephox/sugar/api/selection/Situ';
 import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import { window, HTMLParagraphElement } from '@ephox/dom-globals';
 
-UnitTest.test('Browser Test: SelectionTest', function () {
+UnitTest.test('Browser Test: SelectionTest', () => {
   const p1 = Element.fromHtml<HTMLParagraphElement>('<p>This is the <strong>first</strong> paragraph</p>');
   const p2 = Element.fromHtml<HTMLParagraphElement>('<p>This is the <em>second</em> paragraph</p>');
 
@@ -23,20 +23,20 @@ UnitTest.test('Browser Test: SelectionTest', function () {
 
   InsertAll.append(Body.body(), [ p1, p2 ]);
 
-  const setSelection = function (start, soffset, finish, foffset) {
+  const setSelection = (start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) => {
     WindowSelection.setExact(window, start, soffset, finish, foffset);
   };
 
-  const assertNoSelection = function (label) {
-    WindowSelection.getExact(window).each(function (_sel) {
+  const assertNoSelection = (label: string) => {
+    WindowSelection.getExact(window).each((_sel) => {
       assert.fail('There should not be a selection yet: ' + label);
     });
   };
 
-  const assertSelection = function (label, expStart, expSoffset, expFinish, expFoffset) {
-    WindowSelection.getExact(window).fold(function () {
+  const assertSelection = (label: string, expStart: Element<DomNode>, expSoffset: number, expFinish: Element<DomNode>, expFoffset: number) => {
+    WindowSelection.getExact(window).fold(() => {
       assert.fail('After setting selection ' + label + ', could not find a selection');
-    }, function (sel) {
+    }, (sel) => {
       assert.eq(true, Compare.eq(sel.start(), expStart), () => 'Start container should be: ' + Html.getOuter(expStart) + '\n' + label);
       assert.eq(expSoffset, sel.soffset());
       assert.eq(true, Compare.eq(sel.finish(), expFinish), () => 'Finish container should be ' + Html.getOuter(expFinish) + '\n' + label);
@@ -53,7 +53,7 @@ UnitTest.test('Browser Test: SelectionTest', function () {
   setSelection(p2text, 2, p1text, 3);
   if (! PlatformDetection.detect().browser.isIE()) { assertSelection('(p2text, 2) -> (p1text, 3)', p2text, 2, p1text, 3); } else { assertSelection('reversed (p1text, 3) -> (p2text, 2)', p1text, 3, p2text, 2); }
 
-  const assertFragmentHtml = function (expected, fragment) {
+  const assertFragmentHtml = (expected: string, fragment: Element<DomNode>) => {
     const div = Element.fromTag('div');
     InsertAll.append(div, Traverse.children(fragment));
     assert.eq(expected, Html.get(div));
@@ -80,7 +80,7 @@ UnitTest.test('Browser Test: SelectionTest', function () {
   Remove.remove(p1);
   Remove.remove(p2);
 
-  const assertRng = function (selection, expStart, expSoffset, expFinish, expFoffset) {
+  const assertRng = (selection: Selection, expStart: Element<DomNode>, expSoffset: number, expFinish: Element<DomNode>, expFoffset: number) => {
     const r = WindowSelection.toNative(selection);
 
     assert.eq(expStart.dom(), r.startContainer, () => 'Start Container should be: ' + Html.getOuter(expStart));

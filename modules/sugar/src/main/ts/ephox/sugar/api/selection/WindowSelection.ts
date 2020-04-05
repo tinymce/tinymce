@@ -1,4 +1,4 @@
-import { Range, Selection as DomSelection, Window, Node as DomNode, Element as DomElement } from '@ephox/dom-globals';
+import { Element as DomElement, Node as DomNode, Range, Selection as DomSelection, Window } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import * as NativeRange from '../../selection/core/NativeRange';
 import * as SelectionDirection from '../../selection/core/SelectionDirection';
@@ -43,7 +43,7 @@ const setRangeFromRelative = (win: Window, relative: Selection): void =>
       // If this selection is backwards, then we need to use extend.
       if (selection.setBaseAndExtent) {
         selection.setBaseAndExtent(start.dom(), soffset, finish.dom(), foffset);
-      } else if (selection.extend) {
+      } else if ((selection as any).extend) {
         // This try catch is for older browsers (Firefox 52) as they're sometimes unable to handle setting backwards selections using selection.extend and error out.
         try {
           setLegacyRtlRange(win, selection, start, soffset, finish, foffset);

@@ -1,7 +1,7 @@
-import Element from 'ephox/sugar/api/node/Element';
+import { Eq, Pnode, Pprint, Testable } from '@ephox/dispute';
 import { Node as DomNode } from '@ephox/dom-globals';
 import { Html } from '@ephox/sugar';
-import { Eq, Pprint, Pnode, Testable } from '@ephox/dispute';
+import Element from 'ephox/sugar/api/node/Element';
 
 type Eq<A> = Eq.Eq<A>;
 type Pprint<A> = Pprint.Pprint<A>;

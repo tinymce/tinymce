@@ -1,3 +1,5 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { HTMLDivElement, HTMLElement, HTMLTableElement } from '@ephox/dom-globals';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as Body from 'ephox/sugar/api/node/Body';
@@ -9,12 +11,16 @@ import * as Width from 'ephox/sugar/api/view/Width';
 import Dimension from 'ephox/sugar/impl/Dimension';
 import Div from 'ephox/sugar/test/Div';
 import MathElement from 'ephox/sugar/test/MathElement';
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import { HTMLTableElement, HTMLDivElement } from '@ephox/dom-globals';
 
-UnitTest.test('DimensionTest', function () {
+interface DimensionApi {
+  get: (element: Element<HTMLElement>) => number;
+  getOuter: (element: Element<HTMLElement>) => number;
+  set: (element: Element<HTMLElement>, value: number | string) => void;
+}
+
+UnitTest.test('DimensionTest', () => {
   /* Remember, these checks are run 4 times */
-  const runChecks = function (dimension, borderBox) {
+  const runChecks = (dimension: DimensionApi, borderBox: boolean) => {
     // dupe with BorderBox - please apply any changes to both.
     // can't refactor, so many of the values are different.
 

@@ -1,13 +1,14 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Node as DomNode } from '@ephox/dom-globals';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
-import Element from 'ephox/sugar/api/node/Element';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
+import Element from 'ephox/sugar/api/node/Element';
 import * as TestPage from 'ephox/sugar/test/TestPage';
-import { UnitTest, assert } from '@ephox/bedrock-client';
 
-UnitTest.test('CompareTest', function () {
+UnitTest.test('CompareTest', () => {
   TestPage.connect(); // description of structure is in TestPage
 
-  const check = function (expected, e1, e2) {
+  const check = (expected: boolean, e1: Element<unknown>, e2: Element<unknown>) => {
     assert.eq(expected, Compare.eq(e1, e2));
   };
 
@@ -21,7 +22,7 @@ UnitTest.test('CompareTest', function () {
   assert.eq(true, Compare.member(TestPage.p1, [ TestPage.t2, TestPage.p1 ]));
   assert.eq(false, Compare.member(TestPage.p1, [ TestPage.t2 ]));
 
-  const checkIsEqualNode = function (expected, e1, e2) {
+  const checkIsEqualNode = (expected: boolean, e1: Element<DomNode>, e2: Element<DomNode>) => {
     assert.eq(expected, Compare.isEqualNode(e1, e2));
   };
 

@@ -1,11 +1,13 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { document, Node as DomNode, Window } from '@ephox/dom-globals';
 import Element from 'ephox/sugar/api/node/Element';
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 
-UnitTest.test('ElementTest', function () {
-  const checkErr = function (f, val) {
+type ElementConstructor<T extends DomNode | Window> = typeof Element.fromDom;
+
+UnitTest.test('ElementTest', () => {
+  const checkErr = <T extends DomNode | Window>(f: ElementConstructor<T>, node: T | undefined | null) => {
     try {
-      f(val);
+      f(node as T);
     } catch (e) {
       // expected
       return;
@@ -13,7 +15,7 @@ UnitTest.test('ElementTest', function () {
     assert.fail('function did not throw an error');
   };
 
-  const checkEl = function (f, el, expt) {
+  const checkEl = <T extends DomNode | Window>(f: ElementConstructor<T>, el: T, expt: T) => {
     const element = f(el);
     assert.eq(true, expt === element.dom());
   };

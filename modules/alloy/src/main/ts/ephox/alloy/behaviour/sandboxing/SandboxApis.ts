@@ -1,5 +1,5 @@
-import { Attr, Css, Element } from '@ephox/sugar';
 import { Arr } from '@ephox/katamari';
+import { Attr, Css, Element } from '@ephox/sugar';
 
 import { Positioning } from '../../api/behaviour/Positioning';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -78,12 +78,10 @@ const store = (sandbox: AlloyComponent, cssKey: string, attr: string, newValue: 
 };
 
 const restore = (sandbox: AlloyComponent, cssKey: string, attr: string) => {
-  if (Attr.has(sandbox.element(), attr)) {
-    const oldValue = Attr.get(sandbox.element(), attr);
-    Css.set(sandbox.element(), cssKey, oldValue);
-  } else {
-    Css.remove(sandbox.element(), cssKey);
-  }
+  Attr.getOpt(sandbox.element(), attr).fold(
+    () => Css.remove(sandbox.element(), cssKey),
+    (oldValue) => Css.set(sandbox.element(), cssKey, oldValue)
+  );
 };
 
 const cloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, _sState: SandboxingState) => {

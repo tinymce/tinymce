@@ -12,12 +12,10 @@ const initialAttribute = 'data-initial-z-index';
 // were. ASSUMPTION: the blocker has been added as a direct child of the root
 const resetZIndex = (blocker: AlloyComponent): void => {
   Traverse.parent(blocker.element()).filter(Node.isElement).each((root) => {
-    const initZIndex = Attr.get(root, initialAttribute);
-    if (Attr.has(root, initialAttribute)) {
-      Css.set(root, 'z-index', initZIndex);
-    } else {
-      Css.remove(root, 'z-index');
-    }
+    Attr.getOpt(root, initialAttribute).fold(
+      () => Css.remove(root, 'z-index'),
+      (zIndex) => Css.set(root, 'z-index', zIndex)
+    );
 
     Attr.remove(root, initialAttribute);
   });

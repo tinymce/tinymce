@@ -10,8 +10,8 @@ import * as Css from 'ephox/sugar/api/properties/Css';
 import Div from 'ephox/sugar/test/Div';
 import MathElement from 'ephox/sugar/test/MathElement';
 
-UnitTest.test('CssTest', function () {
-  const runChecks = function (connected) {
+UnitTest.test('CssTest', () => {
+  const runChecks = (connected: boolean) => {
     const c = Div();
     const m = MathElement();
     if (connected) {
@@ -20,7 +20,7 @@ UnitTest.test('CssTest', function () {
 
     Insert.append(Body.body(), m);
 
-    const check = function (k, v1, v2) {
+    const check = (k: string, v1: string, v2: string) => {
       Css.set(c, k, v1);
       Css.set(m, k, v1); // Just checking that the element
       Assert.eq('get', v1, Css.get(c, k));
@@ -40,7 +40,9 @@ UnitTest.test('CssTest', function () {
 
     // NOTE: Safari and Firefox 71+ seems to support styles for math ml tags, so the Css.copy(m, c2) clobbers the previous style
     const browser = PlatformDetection.detect().browser;
-    if (browser.isSafari() || browser.isFirefox() && browser.version.major >= 71) { Css.copy(c, c2); }
+    if (browser.isSafari() || browser.isFirefox() && browser.version.major >= 71) {
+      Css.copy(c, c2);
+    }
 
     Css.get(m, 'display');
     Css.getRaw(m, 'bogus');
@@ -98,7 +100,7 @@ UnitTest.test('CssTest', function () {
     }
 
     // ensure preserve works correctly when there are no styles
-    Css.preserve(play, function (e) {
+    Css.preserve(play, (e) => {
       Css.set(e, 'left', '0px');
     });
     if (!(Attr.get(play, 'style') === '' || Attr.get(play, 'style') === undefined)) {
@@ -111,7 +113,7 @@ UnitTest.test('CssTest', function () {
       'font-size': '12px'
     });
     Assert.eq('getRaw', true, Css.getRaw(play, 'font-size').isSome());
-    Css.preserve(play, function (el) {
+    Css.preserve(play, (el) => {
       Css.remove(el, 'font-size');
       Assert.eq('getRaw', false, Css.getRaw(play, 'font-size').isSome());
     });

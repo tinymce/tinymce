@@ -1,4 +1,4 @@
-import { setTimeout, window, HTMLElement, Node as DomNode } from '@ephox/dom-globals';
+import { HTMLElement, Node as DomNode, setTimeout, window } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import * as Monitors from '../../impl/Monitors';
 import * as Compare from '../dom/Compare';
@@ -7,8 +7,8 @@ import * as Height from '../view/Height';
 import * as Visibility from '../view/Visibility';
 import * as Width from '../view/Width';
 import * as DomEvent from './DomEvent';
-import * as Viewable from './Viewable';
 import { EventUnbinder } from './Types';
+import * as Viewable from './Viewable';
 
 interface Monitored {
   element: Element<HTMLElement>;
@@ -17,7 +17,7 @@ interface Monitored {
   lastHeight: number;
 }
 
-const elem = function (element: Element<HTMLElement>): Monitored {
+const elem = (element: Element<HTMLElement>): Monitored => {
   return {
     element,
     handlers: [],
@@ -27,20 +27,20 @@ const elem = function (element: Element<HTMLElement>): Monitored {
 };
 const elems: Monitored[] = [];
 
-const findElem = function (element: Element<DomNode>) {
-  return Arr.findIndex(elems, function (el) {
+const findElem = (element: Element<DomNode>) => {
+  return Arr.findIndex(elems, (el) => {
     return Compare.eq(el.element, element);
   }).getOr(-1);
 };
 
-const bind = function (element: Element<HTMLElement>, handler: () => void) {
-  let el = Arr.find(elems, function (elm) {
+const bind = (element: Element<HTMLElement>, handler: () => void) => {
+  const el = Arr.find(elems, (elm) => {
     return Compare.eq(elm.element, element);
-  }).getOrUndefined();
-  if (el === undefined) {
-    el = elem(element);
-    elems.push(el);
-  }
+  }).getOrThunk(() => {
+    const newEl = elem(element);
+    elems.push(newEl);
+    return newEl;
+  });
   el.handlers.push(handler);
   if (interval.isNone()) {
     start();
@@ -49,7 +49,7 @@ const bind = function (element: Element<HTMLElement>, handler: () => void) {
   // Fire an update event for this element on every bind call.
   // This is really handy if the element is currently hidden, the resize event
   // will fire as soon as it becomes visible.
-  setTimeout(function () {
+  setTimeout(() => {
     // Ensure we don't attempt to update something that is unbound in the 100ms since the bind call
     if (findElem(el.element) !== -1) {
       update(el);
@@ -57,7 +57,7 @@ const bind = function (element: Element<HTMLElement>, handler: () => void) {
   }, 100);
 };
 
-const unbind = function (element: Element<DomNode>, handler: () => void) {
+const unbind = (element: Element<DomNode>, handler: () => void) => {
   // remove any monitors on this element
   Monitors.end(element);
   const index = findElem(element);
@@ -79,7 +79,7 @@ const unbind = function (element: Element<DomNode>, handler: () => void) {
   }
 };
 
-const visibleUpdate = function (el: Monitored) {
+const visibleUpdate = (el: Monitored) => {
   const w = Width.get(el.element);
   const h = Height.get(el.element);
   if (w !== el.lastWidth || h !== el.lastHeight) {
@@ -89,15 +89,15 @@ const visibleUpdate = function (el: Monitored) {
   }
 };
 
-const update = function (el: Monitored) {
+const update = (el: Monitored) => {
   const element = el.element;
   // if already visible, run the update
   if (Visibility.isVisible(element)) {
     visibleUpdate(el);
   } else {
-    Monitors.begin(element, function () {
+    Monitors.begin(element, () => {
       // the monitor is "wait for viewable"
-      return Viewable.onShow(element, function () {
+      return Viewable.onShow(element, () => {
         Monitors.end(element);
         visibleUpdate(el);
       });
@@ -108,13 +108,13 @@ const update = function (el: Monitored) {
 // Don't use peanut Throttler, requestAnimationFrame is much much better than setTimeout for resize/scroll events:
 // http://www.html5rocks.com/en/tutorials/speed/animations/
 let throttle = false;
-const runHandler = function () {
+const runHandler = () => {
   throttle = false;
   // cancelAnimationFrame isn't stable yet, so we can't pass events to the callback (they would be out of date)
   Arr.each(elems, update);
 };
 
-const listener = function () {
+const listener = () => {
   // cancelAnimationFrame isn't stable yet, so we just ignore all subsequent events until the next animation frame
   if (!throttle) {
     throttle = true;
@@ -123,15 +123,15 @@ const listener = function () {
 };
 
 let interval = Option.none<EventUnbinder>();
-const start = function () {
+const start = () => {
   interval = Option.some(DomEvent.bind(Element.fromDom(window), 'resize', listener));
 };
 
-const stop = function () {
-  interval.each(function (f) {
+const stop = () => {
+  interval.each((f) => {
     f.unbind();
     interval = Option.none();
   });
 };
 
-export { bind, unbind, };
+export { bind, unbind };

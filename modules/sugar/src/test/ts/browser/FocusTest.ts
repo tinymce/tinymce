@@ -1,13 +1,13 @@
-import * as Attr from 'ephox/sugar/api/properties/Attr';
-import * as Body from 'ephox/sugar/api/node/Body';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
-import Element from 'ephox/sugar/api/node/Element';
 import * as Focus from 'ephox/sugar/api/dom/Focus';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import { UnitTest, assert } from '@ephox/bedrock-client';
+import * as Body from 'ephox/sugar/api/node/Body';
+import Element from 'ephox/sugar/api/node/Element';
+import * as Attr from 'ephox/sugar/api/properties/Attr';
 
-UnitTest.test('FocusTest', function () {
+UnitTest.test('FocusTest', () => {
   const div = Element.fromTag('div');
   Attr.set(div, 'tabindex', '-1');
 
