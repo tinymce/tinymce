@@ -1152,10 +1152,10 @@
   dependencies:
     "@types/node" ">= 8"
 
-"@tinymce/eslint-plugin@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@tinymce/eslint-plugin/-/eslint-plugin-1.1.0.tgz#8dce2777c586348910df3a51c2041803df7b1882"
-  integrity sha512-sodcEbsYraIMJ4HMQnV3rNv36vd33MG9enymvMvHUuXhP4N60MQUatqg8C9iuWIg/8T5H6HVTvQ+9eB/Z8eVig==
+"@tinymce/eslint-plugin@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@tinymce/eslint-plugin/-/eslint-plugin-1.2.0.tgz#d1c28a2a9b6eba5bc0f9e67a5e8d6e5a5547884d"
+  integrity sha512-kX4F0Lr5SZ4QyD6QFiM7022NHUUtGv2N6iINI6dWrJFsEWffUcaOW4p6CZiKmJne6goxx9KFaqtuUHLjBH0Oeg==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^2.22.0"
     "@typescript-eslint/parser" "^2.22.0"
