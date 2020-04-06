@@ -11,7 +11,11 @@ const premade = (comp: AlloyComponent): PremadeSpec => Objects.wrap(premadeTag, 
 
 const getPremade = (spec: AlloySpec): Option<AlloyComponent> => Obj.get<any, string>(spec, premadeTag);
 
-const makeApi = <A, R>(f: (api: A, comp: AlloyComponent, ...rest: any[]) => R) => FunctionAnnotator.markAsSketchApi((component: AlloyComponent, ...rest: any[]/* , ... */) => f.apply(undefined, ([ component.getApis<any>() ] as any).concat([ component ].concat(rest))), f);
+const makeApi = <A, R>(f: (api: A, comp: AlloyComponent, ...rest: any[]) => R) =>
+  FunctionAnnotator.markAsSketchApi(
+    (component: AlloyComponent, ...rest: any[]) => f(component.getApis(), component, ...rest),
+    f
+  );
 
 export {
   makeApi,
