@@ -7,6 +7,6 @@
     "number-leading-zero": "never",
     "order/properties-alphabetical-order": true,
     "at-rule-empty-line-before": ["always", { ignoreAtRules: "import"}],
-    "function-calc-no-invalid": false
+    "function-calc-no-invalid": null
   }
 }
