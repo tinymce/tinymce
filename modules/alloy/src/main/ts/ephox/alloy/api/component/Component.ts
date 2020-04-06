@@ -83,10 +83,11 @@ const build = (spec: ComponentDetail): AlloyComponent => {
   const syncComponents = (): void => {
     // Update the component list with the current children
     const children = Traverse.children(item);
-    const subs = Arr.bind(children, (child) => systemApi.get().getByDom(child).fold(() =>
     // INVESTIGATE: Not sure about how to handle text nodes here.
-      [ ]
-    , (c) => [ c ]));
+    const subs = Arr.bind(children, (child) => systemApi.get().getByDom(child).fold(
+      () => [ ],
+      (c) => [ c ]
+    ));
     subcomponents.set(subs);
   };
 
