@@ -89,7 +89,10 @@ const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingT
           FloatingToolbarButton.reposition(floatingToolbarButton);
         });
       },
-      getOverflow: (toolbar: AlloyComponent) => memFloatingToolbarButton.getOpt(toolbar).bind((floatingToolbarButton) => FloatingToolbarButton.getToolbar(floatingToolbarButton))
+      getOverflow: (toolbar: AlloyComponent) =>
+        memFloatingToolbarButton.getOpt(toolbar).bind(
+          (floatingToolbarButton) => FloatingToolbarButton.getToolbar(floatingToolbarButton)
+        )
     },
 
     domModification: {
