@@ -48,10 +48,18 @@ export default () => {
     });
   };
 
-  const findHandler = (handlers: Option<Record<Uid, CurriedHandler>>, elem: Element): Option<ElementAndHandler> => Tagger.read(elem).fold(() => Option.none(), (id) => handlers.bind((h) => Obj.get(h, id)).map((descHandler: CurriedHandler) => eventHandler(elem, descHandler)));
+  const findHandler = (handlers: Option<Record<Uid, CurriedHandler>>, elem: Element): Option<ElementAndHandler> =>
+    Tagger.read(elem).fold(
+      () => Option.none(),
+      (id) => handlers.bind((h) => Obj.get(h, id)).
+        map((descHandler: CurriedHandler) => eventHandler(elem, descHandler))
+    );
 
   // Given just the event type, find all handlers regardless of element
-  const filterByType = (type: string): UidAndHandler[] => Obj.get(registry, type).map((handlers) => Obj.mapToArray(handlers, (f, id) => broadcastHandler(id, f))).getOr([ ]);
+  const filterByType = (type: string): UidAndHandler[] =>
+    Obj.get(registry, type).
+      map((handlers) => Obj.mapToArray(handlers, (f, id) => broadcastHandler(id, f))).
+      getOr([ ]);
 
   // Given event type, and element, find the handler.
   const find = (isAboveRoot: (elem: Element) => boolean, type: string, target: Element): Option<ElementAndHandler> => {

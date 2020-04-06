@@ -22,33 +22,38 @@ type TooltipWorker = (success: (elem: HTMLElement) => void) => void;
 
 // Use meta to pass through special information about the tooltip
 // (yes this is horrible but it is not yet public API)
-const tooltipBehaviour = (meta: Record<string, any>, sharedBackstage: UiFactoryBackstageShared): Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[] => Obj.get(meta, 'tooltipWorker').map((tooltipWorker: TooltipWorker) => [
-  Tooltipping.config({
-    lazySink: sharedBackstage.getSink,
-    tooltipDom: {
-      tag: 'div',
-      classes: [ 'tox-tooltip-worker-container' ]
-    },
-    tooltipComponents: [
-    ],
-    anchor: (comp) => ({
-      anchor: 'submenu',
-      item: comp,
-      overrides: {
-        // NOTE: this avoids it setting overflow and max-height.
-        maxHeightFunction: MaxHeight.expandable
-      }
-    }),
-    mode: 'follow-highlight',
-    onShow: (component, _tooltip) => {
-      tooltipWorker((elm) => {
-        Tooltipping.setComponents(component, [
-          GuiFactory.external({ element: Element.fromDom(elm) })
-        ]);
-      });
-    }
-  })
-]).getOr([]);
+const tooltipBehaviour = (
+  meta: Record<string, any>, sharedBackstage: UiFactoryBackstageShared
+): Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[] =>
+  Obj.get(meta, 'tooltipWorker').
+    map((tooltipWorker: TooltipWorker) => [
+      Tooltipping.config({
+        lazySink: sharedBackstage.getSink,
+        tooltipDom: {
+          tag: 'div',
+          classes: [ 'tox-tooltip-worker-container' ]
+        },
+        tooltipComponents: [
+        ],
+        anchor: (comp) => ({
+          anchor: 'submenu',
+          item: comp,
+          overrides: {
+            // NOTE: this avoids it setting overflow and max-height.
+            maxHeightFunction: MaxHeight.expandable
+          }
+        }),
+        mode: 'follow-highlight',
+        onShow: (component, _tooltip) => {
+          tooltipWorker((elm) => {
+            Tooltipping.setComponents(component, [
+              GuiFactory.external({ element: Element.fromDom(elm) })
+            ]);
+          });
+        }
+      })
+    ]).
+    getOr([]);
 
 const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const encodeText = (text: string) => DOMUtils.DOM.encode(text);
