@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, EventFormat, Focusing, Form, FormField, FormTypes, Input, Invalidating, Memento, Representing, SimulatedEvent, Sketcher, SketchSpec, Tabstopping, UiSketcher } from '@ephox/alloy';
 import { Cell, Fun, Future, Id, Merger, Option, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
@@ -5,6 +6,7 @@ import { Hex, Rgba } from '../../api/colour/ColourTypes';
 import * as HexColour from '../../api/colour/HexColour';
 import * as RgbaColour from '../../api/colour/RgbaColour';
 import * as ColourEvents from '../ColourEvents';
+/* eslint-enable max-len */
 
 const validInput = Id.generate('valid-input');
 const invalidInput = Id.generate('invalid-input');
@@ -76,7 +78,13 @@ const rgbFormFactory = (
     }
   });
 
-  const renderTextField = (isValid: (value: string) => boolean, name: string, label: string, description: string, data: string | number) => {
+  const renderTextField = (
+    isValid: (value: string) => boolean,
+    name: string,
+    label: string,
+    description: string,
+    data: string | number
+  ) => {
     const helptext = translate(translatePrefix + 'range');
 
     const pLabel = FormField.parts().label({
@@ -265,10 +273,18 @@ const rgbFormFactory = (
           attributes: { 'aria-label': translate('aria.color.picker') }
         },
         components: [
-          parts.field('red', FormField.sketch(renderTextField(RgbaColour.isRgbaComponent, 'red', redStrings.label, redStrings.description, 255))),
-          parts.field('green', FormField.sketch(renderTextField(RgbaColour.isRgbaComponent, 'green', greenStrings.label, greenStrings.description, 255))),
-          parts.field('blue', FormField.sketch(renderTextField(RgbaColour.isRgbaComponent, 'blue', blueStrings.label, blueStrings.description, 255))),
-          parts.field('hex', FormField.sketch(renderTextField(HexColour.isHexString, 'hex', hexStrings.label, hexStrings.description, 'ffffff'))),
+          parts.field('red', FormField.sketch(
+            renderTextField(RgbaColour.isRgbaComponent, 'red', redStrings.label, redStrings.description, 255)
+          )),
+          parts.field('green', FormField.sketch(
+            renderTextField(RgbaColour.isRgbaComponent, 'green', greenStrings.label, greenStrings.description, 255)
+          )),
+          parts.field('blue', FormField.sketch(
+            renderTextField(RgbaColour.isRgbaComponent, 'blue', blueStrings.label, blueStrings.description, 255)
+          )),
+          parts.field('hex', FormField.sketch(
+            renderTextField(HexColour.isHexString, 'hex', hexStrings.label, hexStrings.description, 'ffffff')
+          )),
           memPreview.asSpec()
         ],
 

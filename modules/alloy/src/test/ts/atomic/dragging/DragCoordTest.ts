@@ -26,7 +26,13 @@ UnitTest.test('DragCoordTest', () => {
     { asPoint: DragCoord.asOffset, nu: DragCoord.offset, mode: 'offset' }
   ]);
 
-  const arbPosition = (name: string) => Jsc.tuple([ Jsc.integer, Jsc.integer ]).smap((arr: [ number, number ]) => Position(arr[0], arr[1]), (pos: Position) => [ pos.left(), pos.top() ], (pos: Position) => name + ': { left: ' + pos.left() + ', top: ' + pos.top() + '}');
+  const arbPosition = (name: string) =>
+    Jsc.tuple([ Jsc.integer, Jsc.integer ]).
+      smap(
+        (arr: [ number, number ]) => Position(arr[0], arr[1]),
+        (pos: Position) => [ pos.left(), pos.top() ],
+        (pos: Position) => name + ': { left: ' + pos.left() + ', top: ' + pos.top() + '}'
+      );
 
   Jsc.property(
     'round-tripping coordinates',
@@ -35,7 +41,13 @@ UnitTest.test('DragCoordTest', () => {
     arbPosition('point'),
     arbPosition('scroll'),
     arbPosition('origin'),
-    (original: TestConversion, transformations: TestConversion[], coord: Position, scroll: Position, origin: Position) => {
+    (
+      original: TestConversion,
+      transformations: TestConversion[],
+      coord: Position,
+      scroll: Position,
+      origin: Position
+    ) => {
       const o = original.nu(coord.left(), coord.top());
 
       const label = [ original.mode ].concat(Arr.map(transformations, (t) => t.mode));

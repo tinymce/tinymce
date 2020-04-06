@@ -27,6 +27,6 @@
     "prefer-const": "off",
     "prefer-rest-params": "off",
     "prefer-spread": "off",
-    "max-len": ["warn", 270]
+    "max-len": ["warn", 260]
   }
 }
