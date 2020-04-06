@@ -69,15 +69,16 @@ const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: Bo
   }
 });
 
-const getPrior = (elem: Element<HTMLElement>, state: DockingState): Option<Boxes.Bounds> => state.getInitialPosition().map((pos) =>
-// Only supports position absolute.
-  Boxes.bounds(
-    pos.bounds.x,
-    pos.bounds.y,
-    Width.get(elem),
-    Height.get(elem)
-  )
-);
+const getPrior = (elem: Element<HTMLElement>, state: DockingState): Option<Boxes.Bounds> =>
+  state.getInitialPosition().map(
+    // Only supports position absolute.
+    (pos) => Boxes.bounds(
+      pos.bounds.x,
+      pos.bounds.y,
+      Width.get(elem),
+      Height.get(elem)
+    )
+  );
 
 const storePrior = (elem: Element<HTMLElement>, box: Boxes.Bounds, state: DockingState): void => {
   state.setInitialPosition(Option.some<InitialDockingPosition>({
