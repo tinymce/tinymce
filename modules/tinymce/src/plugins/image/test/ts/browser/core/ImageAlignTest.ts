@@ -1,9 +1,9 @@
 import { Log, Pipeline, Step, ApproxStructure } from '@ephox/agar';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import ImagePlugin from 'tinymce/plugins/image/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
+import ImagePlugin from 'tinymce/plugins/image/Plugin';
+import SilverTheme from 'tinymce/themes/silver/Theme';
 
 type Alignment = 'left' | 'center' | 'right' | 'justify';
 
@@ -70,7 +70,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageAlignTest', (success, fai
   SilverTheme();
   ImagePlugin();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
@@ -87,8 +87,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageAlignTest', (success, fai
       const ariaPressed = isFigure && alignment === 'justify' ? 'false' : 'true';
 
       return Log.stepsAsStep('TINY-4057', 'Verify only one align toolbar button is highlighted', [
-        tinyUi.sWaitForUi(`Check ${ariaLabel} align toolbar button is highlighted`, `button[aria-label="${ariaLabel}"][aria-pressed="${ariaPressed}"]`),
-        ...Arr.map(otherLabels, (label) => tinyUi.sWaitForUi(`Check ${label} align toolbar button is not highlighted`, `button[aria-label="${label}"][aria-pressed="false"]`))
+        tinyUi.sWaitForUi(`Check ${alignment} align toolbar button is highlighted`, `button[aria-label="${ariaLabel}"][aria-pressed="${ariaPressed}"]`),
+        ...Arr.map(otherLabels, (label) => tinyUi.sWaitForUi(`Check ${alignment} align toolbar button is not highlighted`, `button[aria-label="${label}"][aria-pressed="false"]`))
       ]);
     };
 
@@ -100,10 +100,11 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageAlignTest', (success, fai
         justify: 'Justify'
       };
       const ariaLabel = ariaLabels[alignment];
+
       return Log.stepsAsStep('TINY-4057', `Click ${ariaLabel} align menu button`, [
         tinyUi.sClickOnToolbar(`Open align menu`, `button[aria-label="Align"]`),
         tinyUi.sWaitForUi('Wait for align menu', `div[title="${ariaLabel}"]`),
-        tinyUi.sClickOnUi(`Click ${ariaLabel} align menu button`, `div[title="${ariaLabel}"]`)
+        tinyUi.sClickOnUi(`Click ${alignment} align menu button`, `div[title="${ariaLabel}"]`)
       ]);
     };
 
@@ -115,12 +116,12 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageAlignTest', (success, fai
         justify: 'Justify'
       };
       const ariaLabel = ariaLabels[alignment];
-      return tinyUi.sClickOnToolbar(`Click ${ariaLabel} align toolbar button`, `button[aria-label="${ariaLabel}"]`);
+      return tinyUi.sClickOnToolbar(`Click ${alignment} align toolbar button`, `button[aria-label="${ariaLabel}"]`);
     };
 
     const sTestConsecutiveAlignments = (label: string, sAlignImage: (alignment: Alignment) => Step<unknown, unknown>, alignments: Alignment[]) => {
       const alignmentSteps = (isFigure: boolean) => Arr.map(alignments, (alignment) => {
-        return Log.stepsAsStep('TINY-4057', `Apply alignment ${alignment} to ${isFigure ? 'figure' : ''} image`, [
+        return Log.stepsAsStep('TINY-4057', `Apply ${alignment} alignment to ${isFigure ? 'figure' : ''} image`, [
           sAlignImage(alignment),
           sCheckToolbarHighlighting(alignment, isFigure),
           tinyApis.sAssertContentStructure(isFigure ? figureImageApproxStructure(alignment) : imageApproxStructure(alignment))
@@ -147,7 +148,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageAlignTest', (success, fai
         sTestConsecutiveAlignments('Align: right -> center -> right', sAlignImage, ['right', 'center', 'right']),
         sTestConsecutiveAlignments('Align: right -> justify -> right', sAlignImage, ['right', 'justify', 'right']),
         sTestConsecutiveAlignments('Align: center -> justify -> center', sAlignImage, ['center', 'justify', 'center']),
-        sTestConsecutiveAlignments('Align: left -> center -> right -> justify -> right', sAlignImage, ['left', 'center', 'right', 'justify'])
+        sTestConsecutiveAlignments('Align: left -> center -> right -> justify', sAlignImage, ['left', 'center', 'right', 'justify'])
       ]);
 
     Pipeline.async({}, [
