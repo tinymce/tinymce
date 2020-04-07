@@ -59,6 +59,8 @@ const isTypingKeyboardEvent = (e: EditorEvent<unknown>) =>
   // Android will generally always send a 229 keycode since it uses an IME to input text
   isKeyboardEvent(e) && !(isDeleteEvent(e) || e.type === 'keyup' && e.keyCode === 229);
 
+const isPasteEvent = (e: EditorEvent<unknown>) => e.type === 'paste';
+
 const isVisuallyEmpty = (dom: DOMUtils, rootElm: DomElement, forcedRootBlock: string) => {
   // Note: Don't use DOMUtils.isEmpty() here as it treats empty format caret nodes as non empty nodes
   if (Empty.isEmpty(Element.fromDom(rootElm), false)) {
@@ -90,7 +92,7 @@ const setup = (editor: Editor) => {
 
     // Check to see if we should show the placeholder
     const body = editor.getBody();
-    const showPlaceholder = isTypingKeyboardEvent(e) ? false : isVisuallyEmpty(dom, body, rootBlock);
+    const showPlaceholder = isTypingKeyboardEvent(e) || isPasteEvent(e) ? false : isVisuallyEmpty(dom, body, rootBlock);
 
     // Update the attribute as required
     const isPlaceholderShown = dom.getAttrib(body, placeholderAttr) !== '';
