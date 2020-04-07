@@ -33,16 +33,14 @@ const get = (_win?: Window): Option<VisualViewport> => {
   return Option.from(win['visualViewport']);
 };
 
-const bounds = (x: number, y: number, width: number, height: number): Bounds => {
-  return {
-    x,
-    y,
-    width,
-    height,
-    right: x + width,
-    bottom: y + height
-  };
-};
+const bounds = (x: number, y: number, width: number, height: number): Bounds => ({
+  x,
+  y,
+  width,
+  height,
+  right: x + width,
+  bottom: y + height
+});
 
 const getBounds = (_win?: Window): Bounds => {
   const win = _win === undefined ? window : _win;
@@ -57,28 +55,24 @@ const getBounds = (_win?: Window): Bounds => {
       const height = html.clientHeight;
       return bounds(scroll.left(), scroll.top(), width, height);
     },
-    (visualViewport) => {
+    (visualViewport) =>
       // iOS doesn't update the pageTop/pageLeft when element.scrollIntoView() is called, so we need to fallback to the
       // scroll position which will always be less than the page top/left values when page top/left are accurate/correct.
-      return bounds(Math.max(visualViewport.pageLeft, scroll.left()), Math.max(visualViewport.pageTop, scroll.top()), visualViewport.width, visualViewport.height);
-    }
+      bounds(Math.max(visualViewport.pageLeft, scroll.left()), Math.max(visualViewport.pageTop, scroll.top()), visualViewport.width, visualViewport.height)
+
   );
 };
 
-const bind = (name: string, callback: EventHandler, _win?: Window) => {
-  return get(_win).map((visualViewport) => {
-    const handler = (e: Event) => fromRawEvent(e);
-    visualViewport.addEventListener(name, handler);
+const bind = (name: string, callback: EventHandler, _win?: Window) => get(_win).map((visualViewport) => {
+  const handler = (e: Event) => fromRawEvent(e);
+  visualViewport.addEventListener(name, handler);
 
-    return {
-      unbind: () => visualViewport.removeEventListener(name, handler)
-    };
-  }).getOrThunk(() => {
-    return {
-      unbind: Fun.noop
-    };
-  });
-};
+  return {
+    unbind: () => visualViewport.removeEventListener(name, handler)
+  };
+}).getOrThunk(() => ({
+  unbind: Fun.noop
+}));
 
 export {
   bind,

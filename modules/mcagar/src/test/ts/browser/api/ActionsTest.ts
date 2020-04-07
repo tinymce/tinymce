@@ -14,25 +14,23 @@ UnitTest.asynctest('ActionTest', (success, failure) =>  {
     Assertions.assertEq(label, expected, actual);
   };
 
-  const cAssertContentKeyboardEvent = (cAction: (code: number, modifiers?: Record<string, any>) => Chain<EditorType, EditorType>, evt: Record<string, any>) => {
-    return Chain.fromChains([
-      Chain.op((editor: EditorType) => {
-        editor.once(evt.type, (e) => {
-          assertEq('asserting keyboard event', evt, {
-            type: e.type,
-            code: e.keyCode,
-            modifiers: {
-              ctrl: e.ctrlKey,
-              shift: e.shiftKey,
-              alt: e.altKey,
-              meta: e.metaKey
-            }
-          });
+  const cAssertContentKeyboardEvent = (cAction: (code: number, modifiers?: Record<string, any>) => Chain<EditorType, EditorType>, evt: Record<string, any>) => Chain.fromChains([
+    Chain.op((editor: EditorType) => {
+      editor.once(evt.type, (e) => {
+        assertEq('asserting keyboard event', evt, {
+          type: e.type,
+          code: e.keyCode,
+          modifiers: {
+            ctrl: e.ctrlKey,
+            shift: e.shiftKey,
+            alt: e.altKey,
+            meta: e.metaKey
+          }
         });
-      }),
-      cAction(evt.code, evt.modifiers),
-    ]);
-  };
+      });
+    }),
+    cAction(evt.code, evt.modifiers),
+  ]);
 
   const sTestStep = Chain.asStep({}, [
     Editor.cFromSettings({ base_url: '/project/tinymce/js/tinymce' }),

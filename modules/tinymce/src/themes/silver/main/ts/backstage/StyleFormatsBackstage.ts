@@ -12,11 +12,7 @@ import { FormatItem } from '../ui/core/complex/BespokeSelect';
 import * as FormatRegister from '../ui/core/complex/utils/FormatRegister';
 
 export const init = (editor: Editor) => {
-  const isSelectedFor = (format) => {
-    return () => {
-      return editor.formatter.match(format);
-    };
-  };
+  const isSelectedFor = (format) => () => editor.formatter.match(format);
 
   const getPreviewFor: FormatRegister.GetPreviewForType = (format) => () => {
     const fmt = editor.formatter.get(format);

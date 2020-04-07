@@ -19,9 +19,7 @@ export type BehaviourModeSpec<D extends BehaviourConfigDetail, S extends Behavio
 
 const derive = (
   capabilities: Array<NamedConfiguredBehaviour<any, any, any>>
-): AlloyBehaviourRecord => {
-  return Objects.wrapAll(capabilities);
-};
+): AlloyBehaviourRecord => Objects.wrapAll(capabilities);
 
 const simpleSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.strict('fields'),

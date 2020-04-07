@@ -12,30 +12,24 @@ import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { single } from './Sketcher';
 
-const tieredData = (primary: string, menus: TieredMenuRecord, expansions: Record<string, string>): TieredData => {
-  return {
-    primary,
-    menus,
-    expansions
-  };
-};
+const tieredData = (primary: string, menus: TieredMenuRecord, expansions: Record<string, string>): TieredData => ({
+  primary,
+  menus,
+  expansions
+});
 
-const singleData = (name: string, menu: PartialMenuSpec): TieredData => {
-  return {
-    primary: name,
-    menus: Objects.wrap(name, menu),
-    expansions: { }
-  };
-};
+const singleData = (name: string, menu: PartialMenuSpec): TieredData => ({
+  primary: name,
+  menus: Objects.wrap(name, menu),
+  expansions: { }
+});
 
-const collapseItem = (text: string): ItemDataTuple => {
-  return {
-    value: Id.generate(TieredMenuSpec.collapseItem()),
-    meta: {
-      text
-    }
-  };
-};
+const collapseItem = (text: string): ItemDataTuple => ({
+  value: Id.generate(TieredMenuSpec.collapseItem()),
+  meta: {
+    text
+  }
+});
 
 const tieredMenu: TieredMenuSketcher = single<TieredMenuSpecType, TieredMenuDetail, TieredMenuApis, TieredMenuExtras>({
   name: 'TieredMenu',

@@ -17,13 +17,11 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ContextMenuTest', (success, fa
 
     const rootDoc = Element.fromDom(document);
 
-    const sOpenContextMenu = (target) => {
-      return Chain.asStep(editor, [
-        tinyUi.cTriggerContextMenu('trigger image context menu', target, '.tox-silver-sink [role="menuitem"]'),
-        // Not sure why this is needed, but without the browser deselects the contextmenu target
-        Chain.wait(0)
-      ]);
-    };
+    const sOpenContextMenu = (target) => Chain.asStep(editor, [
+      tinyUi.cTriggerContextMenu('trigger image context menu', target, '.tox-silver-sink [role="menuitem"]'),
+      // Not sure why this is needed, but without the browser deselects the contextmenu target
+      Chain.wait(0)
+    ]);
 
     const sWaitForAndSubmitDialog = Chain.asStep(editor, [
       tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'),

@@ -9,14 +9,12 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
-const getItemSpec  = (): AlloySpec => {
-  return {
-    dom: {
-      tag: 'div',
-      classes: [ 'item' ]
-    }
-  };
-};
+const getItemSpec  = (): AlloySpec => ({
+  dom: {
+    tag: 'div',
+    classes: [ 'item' ]
+  }
+});
 
 export default () => {
   const gui = Gui.create();

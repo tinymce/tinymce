@@ -81,12 +81,10 @@ export default function (editor) {
     );
   };
 
-  const cWaitForDialogClose = () => {
-    return Chain.control(
-      UiFinder.cNotExists('[role="dialog"]'),
-      Guard.tryUntil('Waiting for dialog to go away', 10, 3000)
-    );
-  };
+  const cWaitForDialogClose = () => Chain.control(
+    UiFinder.cNotExists('[role="dialog"]'),
+    Guard.tryUntil('Waiting for dialog to go away', 10, 3000)
+  );
 
   const cClickButton = function (text) {
     return Chain.control(

@@ -52,26 +52,24 @@ UnitTest.asynctest('Browser Test: behaviour.ReplacingAndTogglingTest', (success,
     ])
   });
 
-  GuiSetup.setup((_store, _doc, _body) => {
-    return GuiFactory.build({
-      dom: {
-        tag: 'div',
-        classes: [ 'parent' ],
-        styles: {
-          background: 'blue',
-          padding: '10px',
-          width: '400px'
-        }
-      },
-      components: [
-        memChild1.asSpec(),
-        memChild2.asSpec()
-      ],
-      behaviours: Behaviour.derive([
-        Replacing.config({ })
-      ])
-    });
-  },
+  GuiSetup.setup((_store, _doc, _body) => GuiFactory.build({
+    dom: {
+      tag: 'div',
+      classes: [ 'parent' ],
+      styles: {
+        background: 'blue',
+        padding: '10px',
+        width: '400px'
+      }
+    },
+    components: [
+      memChild1.asSpec(),
+      memChild2.asSpec()
+    ],
+    behaviours: Behaviour.derive([
+      Replacing.config({ })
+    ])
+  }),
   (_doc, _body, _gui, component, _store) => {
     const childComp1 = memChild1.get(component);
     const childComp2 = memChild2.get(component);

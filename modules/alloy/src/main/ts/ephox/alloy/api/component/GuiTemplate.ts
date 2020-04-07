@@ -22,9 +22,7 @@ const readChildren = (elem: Element<DomNode>): SimpleOrSketchSpec[] => {
     const classes = getClasses(elem);
     const children = Traverse.children(elem);
 
-    const components = Arr.bind(children, (child) => {
-      return Node.isText(child) ? readText(child) : readChildren(child);
-    });
+    const components = Arr.bind(children, (child) => Node.isText(child) ? readText(child) : readChildren(child));
 
     return [{
       dom: {
@@ -43,9 +41,7 @@ const read = (elem: Element<DomNode>): SimpleOrSketchSpec => {
 
   const children = Traverse.children(elem);
 
-  const components = Arr.bind(children, (child) => {
-    return readChildren(child);
-  });
+  const components = Arr.bind(children, (child) => readChildren(child));
 
   return {
     dom: {

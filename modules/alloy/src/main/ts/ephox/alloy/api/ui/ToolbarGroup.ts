@@ -5,29 +5,27 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<ToolbarGroupDetail, ToolbarGroupSpec> = (detail, components, _spec, _externals) => {
-  return {
-    uid: detail.uid,
-    dom: detail.dom,
-    components,
+const factory: CompositeSketchFactory<ToolbarGroupDetail, ToolbarGroupSpec> = (detail, components, _spec, _externals) => ({
+  uid: detail.uid,
+  dom: detail.dom,
+  components,
 
-    behaviours: SketchBehaviours.augment(
-      detail.tgroupBehaviours,
-      [
-        Keying.config({
-          mode: 'flow',
-          selector: detail.markers.itemSelector
-        })
-      ]
-    ),
+  behaviours: SketchBehaviours.augment(
+    detail.tgroupBehaviours,
+    [
+      Keying.config({
+        mode: 'flow',
+        selector: detail.markers.itemSelector
+      })
+    ]
+  ),
 
-    domModification: {
-      attributes: {
-        role: 'toolbar'
-      }
+  domModification: {
+    attributes: {
+      role: 'toolbar'
     }
-  };
-};
+  }
+});
 
 const ToolbarGroup: ToolbarGroupSketcher = Sketcher.composite({
   name: 'ToolbarGroup',

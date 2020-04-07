@@ -23,9 +23,7 @@ const doDetach = (component: AlloyComponent) => {
 };
 
 const detach = (component: AlloyComponent): void => {
-  const parent = Traverse.parent(component.element()).bind((p) => {
-    return component.getSystem().getByDom(p).toOption();
-  });
+  const parent = Traverse.parent(component.element()).bind((p) => component.getSystem().getByDom(p).toOption());
 
   doDetach(component);
   parent.each((p) => {

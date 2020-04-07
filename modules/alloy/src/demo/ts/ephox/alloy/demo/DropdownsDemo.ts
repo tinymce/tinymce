@@ -22,18 +22,16 @@ import * as DemoRenders from './forms/DemoRenders';
 
 // tslint:disable:no-console
 
-const makeItem = (v: string, t: string, c?: string): DemoRenders.DemoItem => {
-  return {
-    type: 'item',
-    data: {
-      value: v,
-      meta: {
-        text: t,
-        ...c ? { 'item-class': c } : { }
-      }
+const makeItem = (v: string, t: string, c?: string): DemoRenders.DemoItem => ({
+  type: 'item',
+  data: {
+    value: v,
+    meta: {
+      text: t,
+      ...c ? { 'item-class': c } : { }
     }
-  };
-};
+  }
+});
 
 export default (): void => {
   const gui = Gui.create();
@@ -47,9 +45,7 @@ export default (): void => {
 
   gui.add(sink);
 
-  const lazySink = () => {
-    return Result.value(sink);
-  };
+  const lazySink = () => Result.value(sink);
 
   const menuMarkers = DemoRenders.tieredMarkers();
 
@@ -157,9 +153,7 @@ export default (): void => {
           items: [ wDoubleInput ]
         });
 
-        return Future.pure(menu).map(() => {
-          return Option.some(TieredMenu.singleData('demo.2.menu', menu));
-        });
+        return Future.pure(menu).map(() => Option.some(TieredMenu.singleData('demo.2.menu', menu)));
       }
     })
   );
@@ -210,9 +204,7 @@ export default (): void => {
               items: [ wDoubleInput ]
             });
 
-            return Future.pure(menu).map(() => {
-              return Option.some(TieredMenu.singleData('demo.2.menu', menu));
-            });
+            return Future.pure(menu).map(() => Option.some(TieredMenu.singleData('demo.2.menu', menu)));
           }
         })
       ]
@@ -450,9 +442,7 @@ export default (): void => {
           }
         });
 
-        return future.map((f) => {
-          return Option.from(TieredMenu.tieredData(f.primary, f.menus, f.expansions));
-        });
+        return future.map((f) => Option.from(TieredMenu.tieredData(f.primary, f.menus, f.expansions)));
       }
     })
   );

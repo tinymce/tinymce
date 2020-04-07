@@ -33,9 +33,8 @@ const open = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sandbo
   return newState;
 };
 
-const setContent = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data: AlloySpec) => {
-  return sState.get().map(() => rebuild(sandbox, sConfig, sState, data));
-};
+const setContent = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data: AlloySpec) =>
+  sState.get().map(() => rebuild(sandbox, sConfig, sState, data));
 
 // TODO AP-191 write a test for openWhileCloaked
 const openWhileCloaked = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, data: AlloySpec, transaction: () => void) => {
@@ -54,19 +53,15 @@ const close = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sandb
   });
 };
 
-const isOpen = (_sandbox: AlloyComponent, _sConfig: SandboxingConfig, sState: SandboxingState) => {
-  return sState.isOpen();
-};
+const isOpen = (_sandbox: AlloyComponent, _sConfig: SandboxingConfig, sState: SandboxingState) => sState.isOpen();
 
-const isPartOf = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, queryElem: Element) => {
-  return isOpen(sandbox, sConfig, sState) && sState.get().exists((data) => {
-    return sConfig.isPartOf(sandbox, data, queryElem);
-  });
-};
+const isPartOf = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, queryElem: Element) =>
+  isOpen(sandbox, sConfig, sState) && sState.get().exists(
+    (data) => sConfig.isPartOf(sandbox, data, queryElem)
+  );
 
-const getState = (_sandbox: AlloyComponent, _sConfig: SandboxingConfig, sState: SandboxingState) => {
-  return sState.get();
-};
+const getState = (_sandbox: AlloyComponent, _sConfig: SandboxingConfig, sState: SandboxingState) =>
+  sState.get();
 
 const store = (sandbox: AlloyComponent, cssKey: string, attr: string, newValue: string) => {
   Css.getRaw(sandbox.element(), cssKey).fold(() => {
@@ -94,7 +89,10 @@ const cloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, _sState: Sand
   store(sandbox, 'visibility', sConfig.cloakVisibilityAttr, 'hidden');
 };
 
-const hasPosition = (element: Element) => Arr.exists([ 'top', 'left', 'right', 'bottom' ], (pos) => Css.getRaw(element, pos).isSome());
+const hasPosition = (element: Element) => Arr.exists(
+  [ 'top', 'left', 'right', 'bottom' ],
+  (pos) => Css.getRaw(element, pos).isSome()
+);
 
 const decloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, _sState: SandboxingState) => {
   if (!hasPosition(sandbox.element())) {

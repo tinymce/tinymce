@@ -52,16 +52,10 @@ export default (): void => {
           containerBehaviours: Behaviour.derive([
             Reflecting.config({
               channel: 'reflecting-channel',
-              renderComponents: (data: { items: string [] }) => {
-                return Arr.map(data.items, (d) => {
-                  return {
-                    dom: { tag: 'li', innerHtml: d }
-                  };
-                });
-              },
-              updateState: (comp, data) => {
-                return Option.some<any>(data);
-              },
+              renderComponents: (data: { items: string [] }) => Arr.map(data.items, (d) => ({
+                dom: { tag: 'li', innerHtml: d }
+              })),
+              updateState: (comp, data) => Option.some<any>(data),
               initialData: {
                 items: [ 'dog', 'cat', 'elephant' ]
               }

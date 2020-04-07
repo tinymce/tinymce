@@ -15,12 +15,41 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.PasteBin', (success, failure) 
   const cases = [
     {
       label: 'TINY-1162: testing nested paste bins',
-      content: '<div id="mcepastebin" contenteditable="true" data-mce-bogus="all" data-mce-style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0" style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0"><div id="mcepastebin" data-mce-bogus="all" data-mce-style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0" style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0">a</div><div id="mcepastebin" data-mce-bogus="all" data-mce-style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0" style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0">b</div></div>',
+      content:
+      '<div id="mcepastebin" contenteditable="true" data-mce-bogus="all" ' +
+      'data-mce-style="position: absolute; top: 0.40000057220458984px;' +
+      'width: 10px; height: 10px; overflow: hidden; opacity: 0" ' +
+      'style="position: absolute; top: 0.40000057220458984px;' +
+      'width: 10px; height: 10px; overflow: hidden; opacity: 0">' +
+      '<div id="mcepastebin" data-mce-bogus="all" ' +
+      'data-mce-style="position: absolute; top: 0.40000057220458984px;' +
+      'width: 10px; height: 10px; overflow: hidden; opacity: 0" ' +
+      'style="position: absolute; top: 0.40000057220458984px;' +
+      'width: 10px; height: 10px; overflow: hidden; opacity: 0">a</div>' +
+      '<div id="mcepastebin" data-mce-bogus="all" ' +
+      'data-mce-style="position: absolute; top: 0.40000057220458984px;' +
+      'width: 10px; height: 10px; overflow: hidden; opacity: 0" ' +
+      'style="position: absolute; top: 0.40000057220458984px;' +
+      'width: 10px; height: 10px; overflow: hidden; opacity: 0">b</div>' +
+      '</div>',
       result: '<div>a</div><div>b</div>'
     },
     {
       label: 'TINY-1162: testing adjacent paste bins',
-      content: '<div id="mcepastebin" contenteditable="true" data-mce-bogus="all" data-mce-style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0" style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0"><p>a</p><p>b</p></div><div id="mcepastebin" contenteditable="true" data-mce-bogus="all" data-mce-style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0" style="position: absolute; top: 0.40000057220458984px;width: 10px; height: 10px; overflow: hidden; opacity: 0"><p>c</p></div>',
+      content:
+      '<div id="mcepastebin" contenteditable="true" data-mce-bogus="all" ' +
+      'data-mce-style="position: absolute; top: 0.40000057220458984px;' +
+      'width: 10px; height: 10px; overflow: hidden; opacity: 0" ' +
+      'style="position: absolute; top: 0.40000057220458984px;' +
+      'width: 10px; height: 10px; overflow: hidden; opacity: 0">' +
+      '<p>a</p><p>b</p></div>' +
+      '<div id="mcepastebin" contenteditable="true" data-mce-bogus="all" ' +
+      'data-mce-style="position: absolute; top: 0.40000057220458984px;' +
+      'width: 10px; height: 10px; overflow: hidden; opacity: 0" ' +
+      'style="position: absolute; top: 0.40000057220458984px;' +
+      'width: 10px; height: 10px; overflow: hidden; opacity: 0">' +
+      '<p>c</p>' +
+      '</div>',
       result: '<p>a</p><p>b</p><p>c</p>'
     }
   ];

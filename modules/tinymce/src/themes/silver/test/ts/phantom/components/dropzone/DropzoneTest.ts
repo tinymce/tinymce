@@ -9,66 +9,60 @@ import TestProviders from '../../../module/TestProviders';
 UnitTest.asynctest('Dropzone component Test', (success, failure) => {
 
   TestHelpers.GuiSetup.setup(
-    (_store, _doc, _body) => {
-      return GuiFactory.build(
-        renderDropZone({
-          name: 'drop1',
-          label: Option.some('Dropzone Label'),
-        }, TestProviders)
-      );
-    },
-    (_doc, _body, _gui, component, _store) => {
-      return [
-        Assertions.sAssertStructure(
-          'Checking initial structure',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              children: [
-                s.element('label', {
-                  classes: [ arr.has('tox-label') ],
-                  html: str.is('Dropzone Label')
-                }),
-                s.element('div', { })
-              ]
-            });
-          }),
-          component.element()
-        ),
+    (_store, _doc, _body) => GuiFactory.build(
+      renderDropZone({
+        name: 'drop1',
+        label: Option.some('Dropzone Label'),
+      }, TestProviders)
+    ),
+    (_doc, _body, _gui, component, _store) => [
+      Assertions.sAssertStructure(
+        'Checking initial structure',
+        ApproxStructure.build((s, str, arr) => s.element('div', {
+          children: [
+            s.element('label', {
+              classes: [ arr.has('tox-label') ],
+              html: str.is('Dropzone Label')
+            }),
+            s.element('div', { })
+          ]
+        })),
+        component.element()
+      ),
 
-        Logger.t(
-          'Trigger drop on zone',
-          Chain.asStep(component.element(), [
-            UiFinder.cFindIn('.tox-dropzone'),
-            Chain.binder(component.getSystem().getByDom),
-            Chain.op((zone) => {
-              // TODO: Add 'drop' to NativeEvents
-              AlloyTriggers.emitWith(zone, 'drop', {
-                raw: {
-                  dataTransfer: {
-                    files: [
-                      { name: 'image1.png' },
-                      { name: 'image2.bmp' },
-                      { name: 'image3.jpg' }
-                    ]
-                  }
+      Logger.t(
+        'Trigger drop on zone',
+        Chain.asStep(component.element(), [
+          UiFinder.cFindIn('.tox-dropzone'),
+          Chain.binder(component.getSystem().getByDom),
+          Chain.op((zone) => {
+            // TODO: Add 'drop' to NativeEvents
+            AlloyTriggers.emitWith(zone, 'drop', {
+              raw: {
+                dataTransfer: {
+                  files: [
+                    { name: 'image1.png' },
+                    { name: 'image2.bmp' },
+                    { name: 'image3.jpg' }
+                  ]
                 }
-              });
-            })
-          ])
-        ),
+              }
+            });
+          })
+        ])
+      ),
 
-        Step.sync(() => {
-          const zone = Composing.getCurrent(component).getOrDie(
-            'Failed trying to get the zone from the container'
-          );
-          const filesValue = Representing.getValue(zone);
-          Assertions.assertEq('Checking value of dropzone', [
-            { name: 'image1.png' },
-            { name: 'image3.jpg' }
-          ], filesValue);
-        })
-      ];
-    },
+      Step.sync(() => {
+        const zone = Composing.getCurrent(component).getOrDie(
+          'Failed trying to get the zone from the container'
+        );
+        const filesValue = Representing.getValue(zone);
+        Assertions.assertEq('Checking value of dropzone', [
+          { name: 'image1.png' },
+          { name: 'image3.jpg' }
+        ], filesValue);
+      })
+    ],
     success,
     failure
   );

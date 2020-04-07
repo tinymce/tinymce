@@ -12,9 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysTableTest', (success,
 
   const table = (html: string) => ApproxStructure.fromHtml('<table><tbody><tr><td>' + html + '</td></tr></tbody></table>');
   const block = ApproxStructure.fromHtml('<p><br></p>');
-  const caret = (type: string) => {
-    return ApproxStructure.fromHtml(`<p data-mce-caret="${type}" data-mce-bogus="all"><br data-mce-bogus="1"></p>`);
-  };
+  const caret = (type: string) => ApproxStructure.fromHtml(`<p data-mce-caret="${type}" data-mce-bogus="all"><br data-mce-bogus="1"></p>`);
   const visualCaret = (before: boolean) => {
     const caretClass = before ? 'mce-visual-caret-before' : 'mce-visual-caret';
     return ApproxStructure.fromHtml(`<div class="mce-visual-caret ${caretClass}" data-mce-bogus="all"></div>`);

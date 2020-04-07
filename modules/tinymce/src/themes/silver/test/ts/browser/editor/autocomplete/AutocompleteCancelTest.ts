@@ -23,25 +23,21 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
     assertion: (s, str, arr) => StructAssert[];
   }
 
-  const expectedSimplePara = (content: string) => (s, str): StructAssert => {
-    return s.element('p', {
-      children: [ s.text(str.is(content), true) ]
-    });
-  };
+  const expectedSimplePara = (content: string) => (s, str): StructAssert => s.element('p', {
+    children: [ s.text(str.is(content), true) ]
+  });
 
-  const expectedAutocompletePara = (content: string) => (s, str): StructAssert => {
-    return s.element('p', {
-      children: [
-        s.element('span', {
-          attrs: {
-            'data-mce-autocompleter': str.is('1'),
-            'data-mce-bogus': str.is('1')
-          },
-          children: [ s.text(str.is(content), true) ]
-        })
-      ]
-    });
-  };
+  const expectedAutocompletePara = (content: string) => (s, str): StructAssert => s.element('p', {
+    children: [
+      s.element('span', {
+        attrs: {
+          'data-mce-autocompleter': str.is('1'),
+          'data-mce-bogus': str.is('1')
+        },
+        children: [ s.text(str.is(content), true) ]
+      })
+    ]
+  });
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyActions = TinyActions(editor);
@@ -59,35 +55,25 @@ UnitTest.asynctest('Editor Autocompleter Cancel test', (success, failure) => {
       ]);
     };
 
-    const sInsertContentAndTrigger = (content: string) => {
-      return GeneralSteps.sequence([
-        tinyApis.sExecCommand('mceInsertContent', content),
-        tinyActions.sContentKeypress(content.charCodeAt(content.length - 1), { })
-      ]);
-    };
+    const sInsertContentAndTrigger = (content: string) => GeneralSteps.sequence([
+      tinyApis.sExecCommand('mceInsertContent', content),
+      tinyActions.sContentKeypress(content.charCodeAt(content.length - 1), { })
+    ]);
 
     const sSetCursor = (elementPath: number[], offset: number) => GeneralSteps.sequence([
       tinyApis.sSetCursor(elementPath, offset),
       tinyApis.sNodeChanged()
     ]);
 
-    const sAssertContent = (label: string, expected: (s, str, arr) => StructAssert[]) => {
-      return Waiter.sTryUntil(label, tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
-        return s.element('body', {
-          children: expected(s, str, arr)
-        });
-      })));
-    };
+    const sAssertContent = (label: string, expected: (s, str, arr) => StructAssert[]) => Waiter.sTryUntil(label, tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => s.element('body', {
+      children: expected(s, str, arr)
+    }))));
 
-    const sTriggerAndAssertInitialContent = (template?: string, elementPath?: number[], expected?: (s, str, arr) => StructAssert[]) => {
-      return GeneralSteps.sequence([
-        sSetContentAndTrigger(':a', ':'.charCodeAt(0), template, elementPath),
-        sWaitForMenuToOpen,
-        sAssertContent('Check initial content with autocompleter active', (s, str, arr) => {
-          return expected ? expected(s, str, arr) : [ expectedAutocompletePara(':a')(s, str) ];
-        })
-      ]);
-    };
+    const sTriggerAndAssertInitialContent = (template?: string, elementPath?: number[], expected?: (s, str, arr) => StructAssert[]) => GeneralSteps.sequence([
+      sSetContentAndTrigger(':a', ':'.charCodeAt(0), template, elementPath),
+      sWaitForMenuToOpen,
+      sAssertContent('Check initial content with autocompleter active', (s, str, arr) => expected ? expected(s, str, arr) : [ expectedAutocompletePara(':a')(s, str) ])
+    ]);
 
     const sTestAutocompleter = (scenario: Scenario) => GeneralSteps.sequence([
       scenario.setup ? scenario.setup : sTriggerAndAssertInitialContent(),

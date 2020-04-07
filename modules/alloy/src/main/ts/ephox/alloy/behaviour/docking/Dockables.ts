@@ -54,20 +54,17 @@ const disappear = (component: AlloyComponent, contextualInfo: DockingContext): v
   contextualInfo.onHide(component);
 };
 
-const isPartiallyVisible = (box: Boxes.Bounds, viewport: Boxes.Bounds): boolean => {
-  return box.y < viewport.bottom && box.bottom > viewport.y;
-};
+const isPartiallyVisible = (box: Boxes.Bounds, viewport: Boxes.Bounds): boolean =>
+  box.y < viewport.bottom && box.bottom > viewport.y;
 
-const isTopCompletelyVisible = (box: Boxes.Bounds, viewport: Boxes.Bounds): boolean => {
-  return box.y >= viewport.y;
-};
+const isTopCompletelyVisible = (box: Boxes.Bounds, viewport: Boxes.Bounds): boolean =>
+  box.y >= viewport.y;
 
-const isBottomCompletelyVisible = (box: Boxes.Bounds, viewport: Boxes.Bounds): boolean => {
-  return box.bottom <= viewport.bottom;
-};
+const isBottomCompletelyVisible = (box: Boxes.Bounds, viewport: Boxes.Bounds): boolean =>
+  box.bottom <= viewport.bottom;
 
-const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: Boxes.Bounds): boolean => {
-  return Arr.forall(modes, (mode) => {
+const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: Boxes.Bounds): boolean =>
+  Arr.forall(modes, (mode) => {
     switch (mode) {
       case 'bottom':
         return isBottomCompletelyVisible(box, viewport);
@@ -75,19 +72,17 @@ const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: Bo
         return isTopCompletelyVisible(box, viewport);
     }
   });
-};
 
-const getPrior = (elem: Element<HTMLElement>, state: DockingState): Option<Boxes.Bounds> => {
-  return state.getInitialPosition().map((pos) => {
+const getPrior = (elem: Element<HTMLElement>, state: DockingState): Option<Boxes.Bounds> =>
+  state.getInitialPosition().map(
     // Only supports position absolute.
-    return Boxes.bounds(
+    (pos) => Boxes.bounds(
       pos.bounds.x,
       pos.bounds.y,
       Width.get(elem),
       Height.get(elem)
-    );
-  });
-};
+    )
+  );
 
 const storePrior = (elem: Element<HTMLElement>, box: Boxes.Bounds, state: DockingState): void => {
   state.setInitialPosition(Option.some<InitialDockingPosition>({
@@ -97,8 +92,8 @@ const storePrior = (elem: Element<HTMLElement>, box: Boxes.Bounds, state: Dockin
   }));
 };
 
-const revertToOriginal = (elem: Element<HTMLElement>, box: Boxes.Bounds, state: DockingState): Option<MorphAdt> => {
-  return state.getInitialPosition().bind((position) => {
+const revertToOriginal = (elem: Element<HTMLElement>, box: Boxes.Bounds, state: DockingState): Option<MorphAdt> =>
+  state.getInitialPosition().bind((position) => {
     state.setInitialPosition(Option.none());
 
     switch (position.position) {
@@ -106,26 +101,25 @@ const revertToOriginal = (elem: Element<HTMLElement>, box: Boxes.Bounds, state: 
         return Option.some(morphAdt.static());
 
       case 'absolute':
-        const offsetBox = OffsetOrigin.getOffsetParent(elem).map(Boxes.box).getOrThunk(() => Boxes.box(Body.body()));
+        const offsetBox = OffsetOrigin.getOffsetParent(elem).map(Boxes.box).
+          getOrThunk(() => Boxes.box(Body.body()));
         return Option.some(morphAdt.absolute(NuPositionCss(
           'absolute',
-          Obj.get(position.style, 'left').map((_) => box.x - offsetBox.x),
-          Obj.get(position.style, 'top').map((_) => box.y - offsetBox.y),
-          Obj.get(position.style, 'right').map((_) => offsetBox.right - box.right),
-          Obj.get(position.style, 'bottom').map((_) => offsetBox.bottom - box.bottom),
+          Obj.get(position.style, 'left').map((_left) => box.x - offsetBox.x),
+          Obj.get(position.style, 'top').map((_top) => box.y - offsetBox.y),
+          Obj.get(position.style, 'right').map((_right) => offsetBox.right - box.right),
+          Obj.get(position.style, 'bottom').map((_bottom) => offsetBox.bottom - box.bottom),
         )));
 
       default:
         return Option.none<MorphAdt>();
     }
   });
-};
 
-const morphToOriginal = (elem: Element<HTMLElement>, dockInfo: DockingConfig, viewport: Boxes.Bounds, state: DockingState): Option<MorphAdt> => {
-  return getPrior(elem, state)
+const morphToOriginal = (elem: Element<HTMLElement>, dockInfo: DockingConfig, viewport: Boxes.Bounds, state: DockingState): Option<MorphAdt> =>
+  getPrior(elem, state)
     .filter((box) => isVisibleForModes(dockInfo.modes, box, viewport))
     .bind((box) => revertToOriginal(elem, box, state));
-};
 
 const morphToFixed = (elem: Element<HTMLElement>, dockInfo: DockingConfig, viewport: Boxes.Bounds, state: DockingState): Option<MorphAdt> => {
   const box = Boxes.box(elem);

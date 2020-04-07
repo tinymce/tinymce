@@ -75,9 +75,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
   // before `init` or other keydown / keypress listeners will fire first. Therefore,
   // this is a thunk so that its value is calculated just once when it is used for the
   // first time, and after that it's value is stored.
-  const getAutocompleters: () => Autocompleters.AutocompleterDatabase = Thunk.cached(() => {
-    return Autocompleters.register(editor);
-  });
+  const getAutocompleters: () => Autocompleters.AutocompleterDatabase = Thunk.cached(() => Autocompleters.register(editor));
 
   const getCombinedItems = (triggerChar: string, matches: AutocompleteLookupData[]): ItemTypes.ItemSpec[] => {
     const columns = Arr.findMap(matches, (m) => Option.from(m.columns)).getOr(1);
@@ -159,11 +157,11 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     InlineView.getContent(autocompleter).each(Highlighting.highlightFirst);
   };
 
-  const doLookup = (fetchOptions?: Record<string, any>): Option<AutocompleteLookupInfo> => {
-    return activeAutocompleter.get().map((ac) => {
-      return getContext(editor.dom, editor.selection.getRng(), ac.triggerChar).bind((newContext) => lookupWithContext(editor, getAutocompleters, newContext, fetchOptions));
-    }).getOrThunk(() => lookup(editor, getAutocompleters));
-  };
+  const doLookup = (fetchOptions?: Record<string, any>): Option<AutocompleteLookupInfo> =>
+    activeAutocompleter.get().map(
+      (ac) => getContext(editor.dom, editor.selection.getRng(), ac.triggerChar).
+        bind((newContext) => lookupWithContext(editor, getAutocompleters, newContext, fetchOptions))
+    ).getOrThunk(() => lookup(editor, getAutocompleters));
 
   const load = (fetchOptions?: Record<string, any>) => {
     doLookup(fetchOptions).fold(

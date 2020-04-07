@@ -134,9 +134,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
     let i = nodes.length;
 
     const appendRel = (rel: string) => {
-      const parts = rel.split(' ').filter((p) => {
-        return p.length > 0;
-      });
+      const parts = rel.split(' ').filter((p) => p.length > 0);
       return parts.concat([ 'noopener' ]).sort().join(' ');
     };
 

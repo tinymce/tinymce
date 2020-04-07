@@ -41,9 +41,7 @@ export default (max: number = 10) => {
     cache.splice(idx, 1);
   };
 
-  const state = (): string[] => {
-    return cache.slice(0);
-  };
+  const state = (): string[] => cache.slice(0);
 
   return {
     add,

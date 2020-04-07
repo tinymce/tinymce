@@ -10,31 +10,29 @@ import * as AlloyEvents from '../events/AlloyEvents';
 import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from './UiSketcher';
 
-const factory: SingleSketchFactory<DataFieldDetail, DataFieldSpec> = (detail): SketchSpec => {
-  return {
-    uid: detail.uid,
-    dom: detail.dom,
-    behaviours: SketchBehaviours.augment(
-      detail.dataBehaviours,
-      [
-        Representing.config({
-          store: {
-            mode: 'memory',
-            initialValue: detail.getInitialValue()
-          }
-        }),
-        Composing.config({
-          find: Option.some
-        })
-      ]
-    ),
-    events: AlloyEvents.derive([
-      AlloyEvents.runOnAttached((component, _simulatedEvent) => {
-        Representing.setValue(component, detail.getInitialValue());
+const factory: SingleSketchFactory<DataFieldDetail, DataFieldSpec> = (detail): SketchSpec => ({
+  uid: detail.uid,
+  dom: detail.dom,
+  behaviours: SketchBehaviours.augment(
+    detail.dataBehaviours,
+    [
+      Representing.config({
+        store: {
+          mode: 'memory',
+          initialValue: detail.getInitialValue()
+        }
+      }),
+      Composing.config({
+        find: Option.some
       })
-    ])
-  };
-};
+    ]
+  ),
+  events: AlloyEvents.derive([
+    AlloyEvents.runOnAttached((component, _simulatedEvent) => {
+      Representing.setValue(component, detail.getInitialValue());
+    })
+  ])
+});
 
 const DataField: DataFieldSketcher = Sketcher.single({
   name: 'DataField',

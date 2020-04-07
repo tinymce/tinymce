@@ -73,82 +73,66 @@ UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
     );
   }, (doc, _body, _gui, component, store) => {
 
-    const makeButton = (itemSpec: { text: string }) => {
-      return Button.sketch({
-        dom: {
-          tag: 'button',
-          innerHtml: itemSpec.text
-        }
-      });
-    };
-
-    const sResetWidth = (px: string) => {
-      return Step.sync(() => {
-        Css.set(component.element(), 'width', px);
-        SplitSlidingToolbar.refresh(component);
-      });
-    };
-
-    const group1 = ApproxStructure.build((s, str, arr) => {
-      return s.element('div', {
-        classes: [ arr.has('test-toolbar-group') ],
-        children: [
-          s.element('button', { html: str.is('A') }),
-          s.element('button', { html: str.is('B') })
-        ]
-      });
+    const makeButton = (itemSpec: { text: string }) => Button.sketch({
+      dom: {
+        tag: 'button',
+        innerHtml: itemSpec.text
+      }
     });
 
-    const group2 = ApproxStructure.build((s, str, arr) => {
-      return s.element('div', {
-        classes: [ arr.has('test-toolbar-group') ],
-        children: [
-          s.element('button', { html: str.is('C') }),
-          s.element('button', { html: str.is('D') })
-        ]
-      });
+    const sResetWidth = (px: string) => Step.sync(() => {
+      Css.set(component.element(), 'width', px);
+      SplitSlidingToolbar.refresh(component);
     });
 
-    const group3 = ApproxStructure.build((s, str, arr) => {
-      return s.element('div', {
-        classes: [ arr.has('test-toolbar-group') ],
-        children: [
-          s.element('button', { html: str.is('E') }),
-          s.element('button', { html: str.is('F') }),
-          s.element('button', { html: str.is('G') })
-        ]
-      });
-    });
+    const group1 = ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('test-toolbar-group') ],
+      children: [
+        s.element('button', { html: str.is('A') }),
+        s.element('button', { html: str.is('B') })
+      ]
+    }));
 
-    const oGroup = ApproxStructure.build((s, str, arr) => {
-      return s.element('div', {
-        classes: [ arr.has('test-toolbar-group') ],
-        children: [
-          s.element('button', { html: str.is('+') })
-        ]
-      });
-    });
+    const group2 = ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('test-toolbar-group') ],
+      children: [
+        s.element('button', { html: str.is('C') }),
+        s.element('button', { html: str.is('D') })
+      ]
+    }));
 
-    const sAssertGroups = (label: string, pGroups: StructAssert[], oGroups: StructAssert[]) => {
-      return Assertions.sAssertStructure(
-        label,
-        ApproxStructure.build((s, _str, arr) => {
-          return s.element('div', {
-            children: [
-              s.element('div', {
-                classes: [ arr.has('test-toolbar-primary') ],
-                children: pGroups
-              }),
-              s.element('div', {
-                classes: [ arr.has('test-toolbar-overflow') ],
-                children: oGroups
-              })
-            ]
-          });
-        }),
-        component.element()
-      );
-    };
+    const group3 = ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('test-toolbar-group') ],
+      children: [
+        s.element('button', { html: str.is('E') }),
+        s.element('button', { html: str.is('F') }),
+        s.element('button', { html: str.is('G') })
+      ]
+    }));
+
+    const oGroup = ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('test-toolbar-group') ],
+      children: [
+        s.element('button', { html: str.is('+') })
+      ]
+    }));
+
+    const sAssertGroups = (label: string, pGroups: StructAssert[], oGroups: StructAssert[]) => Assertions.sAssertStructure(
+      label,
+      ApproxStructure.build((s, _str, arr) => s.element('div', {
+        children: [
+          s.element('div', {
+            classes: [ arr.has('test-toolbar-primary') ],
+            children: pGroups
+          }),
+          s.element('div', {
+            classes: [ arr.has('test-toolbar-overflow') ],
+            children: oGroups
+          })
+        ]
+      })),
+      component.element()
+    );
 
     return [
       GuiSetup.mAddStyles(doc, [

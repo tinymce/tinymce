@@ -56,36 +56,32 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
       border: ''
     };
 
-    const baseGetTest = () => {
-      return Log.stepsAsStep('TBA', 'Table: Table cell properties dialog (get data from basic cell)', [
-        tinyApis.sSetSetting('table_cell_advtab', false),
-        tinyApis.sSetContent(baseHtml),
-        tinyApis.sSelect('td', [ 0 ]),
-        TableTestUtils.sOpenTableDialog(tinyUi),
-        TableTestUtils.sAssertDialogValues(baseData, false, generalSelectors),
-        TableTestUtils.sClickDialogButton('close dialog', false)
-      ]);
-    };
+    const baseGetTest = () => Log.stepsAsStep('TBA', 'Table: Table cell properties dialog (get data from basic cell)', [
+      tinyApis.sSetSetting('table_cell_advtab', false),
+      tinyApis.sSetContent(baseHtml),
+      tinyApis.sSelect('td', [ 0 ]),
+      TableTestUtils.sOpenTableDialog(tinyUi),
+      TableTestUtils.sAssertDialogValues(baseData, false, generalSelectors),
+      TableTestUtils.sClickDialogButton('close dialog', false)
+    ]);
 
-    const baseGetSetTest = () => {
-      return Log.stepsAsStep('TBA', 'Table: Table cell properties dialog (get/set data from/to basic cell)', [
-        tinyApis.sSetSetting('table_cell_advtab', false),
-        tinyApis.sSetContent(baseHtml),
-        tinyApis.sSelect('td', [ 0 ]),
-        TableTestUtils.sOpenTableDialog(tinyUi),
-        TableTestUtils.sAssertDialogValues(baseData, false, generalSelectors),
-        TableTestUtils.sSetDialogValues({
-          width: '100',
-          height: '101',
-          celltype: 'td',
-          scope: '',
-          halign: '',
-          valign: '',
-        }, false, generalSelectors),
-        TableTestUtils.sClickDialogButton('close dialog', true),
-        tinyApis.sAssertContent('<table><tbody><tr><td style="width: 100px; height: 101px;">a</td><td>b</td></tr></tbody></table>'),
-      ]);
-    };
+    const baseGetSetTest = () => Log.stepsAsStep('TBA', 'Table: Table cell properties dialog (get/set data from/to basic cell)', [
+      tinyApis.sSetSetting('table_cell_advtab', false),
+      tinyApis.sSetContent(baseHtml),
+      tinyApis.sSelect('td', [ 0 ]),
+      TableTestUtils.sOpenTableDialog(tinyUi),
+      TableTestUtils.sAssertDialogValues(baseData, false, generalSelectors),
+      TableTestUtils.sSetDialogValues({
+        width: '100',
+        height: '101',
+        celltype: 'td',
+        scope: '',
+        halign: '',
+        valign: '',
+      }, false, generalSelectors),
+      TableTestUtils.sClickDialogButton('close dialog', true),
+      tinyApis.sAssertContent('<table><tbody><tr><td style="width: 100px; height: 101px;">a</td><td>b</td></tr></tbody></table>'),
+    ]);
 
     const advGetTest = () => {
       const complexHtml = '<table><tr><th style="text-align: right; vertical-align: top; width: 10px; height: 11px; ' +

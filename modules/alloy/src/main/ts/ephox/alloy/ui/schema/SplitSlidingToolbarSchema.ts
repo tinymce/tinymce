@@ -75,19 +75,17 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 
   PartType.external<SplitSlidingToolbarDetail, ButtonSpec>({
     name: 'overflow-button',
-    overrides: (detail) => {
-      return {
-        buttonBehaviours: Behaviour.derive([
-          Toggling.config({
-            toggleClass: detail.markers.overflowToggledClass,
-            aria: {
-              mode: 'pressed'
-            },
-            toggleOnExecute: false
-          }),
-        ])
-      };
-    }
+    overrides: (detail) => ({
+      buttonBehaviours: Behaviour.derive([
+        Toggling.config({
+          toggleClass: detail.markers.overflowToggledClass,
+          aria: {
+            mode: 'pressed'
+          },
+          toggleOnExecute: false
+        }),
+      ])
+    })
   }),
 
   PartType.external<SplitSlidingToolbarDetail>({

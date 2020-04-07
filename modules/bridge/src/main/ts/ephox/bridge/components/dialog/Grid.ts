@@ -13,10 +13,8 @@ export interface Grid {
   items: BodyComponent[];
 }
 
-export const createGridFields = (itemsField: FieldProcessorAdt) => {
-  return [
-    FieldSchema.strictString('type'),
-    FieldSchema.strictNumber('columns'),
-    itemsField
-  ];
-};
+export const createGridFields = (itemsField: FieldProcessorAdt) => [
+  FieldSchema.strictString('type'),
+  FieldSchema.strictNumber('columns'),
+  itemsField
+];

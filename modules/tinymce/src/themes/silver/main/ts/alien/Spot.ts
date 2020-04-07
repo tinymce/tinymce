@@ -10,12 +10,10 @@ export interface SpotPoint<T> {
   offset: number;
 }
 
-const point = <T>(container: T, offset: number): SpotPoint<T> => {
-  return {
-    container,
-    offset
-  };
-};
+const point = <T>(container: T, offset: number): SpotPoint<T> => ({
+  container,
+  offset
+});
 
 export {
   point

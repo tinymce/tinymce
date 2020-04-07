@@ -13,27 +13,23 @@ import * as Styles from '../style/Styles';
 import * as UiDomFactory from '../util/UiDomFactory';
 import Editor from 'tinymce/core/api/Editor';
 
-const forToolbarCommand = (editor, command): SketchSpec => {
-  return forToolbar(command, () => {
-    editor.execCommand(command);
-  }, {}, editor);
-};
+const forToolbarCommand = (editor, command): SketchSpec => forToolbar(command, () => {
+  editor.execCommand(command);
+}, {}, editor);
 
-const getToggleBehaviours = (command: string) => {
-  return Behaviour.derive([
-    Toggling.config({
-      toggleClass: Styles.resolve('toolbar-button-selected'),
-      toggleOnExecute: false,
-      aria: {
-        mode: 'pressed'
-      }
-    }),
-    Receivers.format(command, (button, status) => {
-      const toggle = status ? Toggling.on : Toggling.off;
-      toggle(button);
-    })
-  ]);
-};
+const getToggleBehaviours = (command: string) => Behaviour.derive([
+  Toggling.config({
+    toggleClass: Styles.resolve('toolbar-button-selected'),
+    toggleOnExecute: false,
+    aria: {
+      mode: 'pressed'
+    }
+  }),
+  Receivers.format(command, (button, status) => {
+    const toggle = status ? Toggling.on : Toggling.off;
+    toggle(button);
+  })
+]);
 
 const forToolbarStateCommand = (editor, command: string): SketchSpec => {
   const extraBehaviours = getToggleBehaviours(command);

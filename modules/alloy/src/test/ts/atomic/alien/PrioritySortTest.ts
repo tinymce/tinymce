@@ -9,9 +9,7 @@ UnitTest.test('PrioritySortTest', () => {
     const actual = PrioritySort.sortKeys('test.sort', 'letter', input, order);
     // TODO: Use ResultAssertions test?
     actual.fold((err) => {
-      const errMessage = Arr.map(err, (e) => {
-        return e.message !== undefined ? e.message : e;
-      }).join('');
+      const errMessage = Arr.map(err, (e) => e.message !== undefined ? e.message : e).join('');
       Assert.eq('Checking the error of priority sort', errMessage.indexOf(expected) > -1, true);
     }, (val) => {
       Assert.fail('Priority sort should have thrown error: ' + expected + '\nWas: ' + JSON.stringify(val, null, 2));
@@ -28,27 +26,21 @@ UnitTest.test('PrioritySortTest', () => {
   };
 
   const letter = Struct.immutable('letter');
-  const letters = (ls: string[]) => {
-    return Arr.map(ls, (l) => letter(l));
-  };
+  const letters = (ls: string[]) => Arr.map(ls, (l) => letter(l));
 
   Logger.sync(
     'Checking [ a, d, f ] ordering',
-    () => {
-      return checkErr(
-        'The ordering for test.sort does not have an entry for a',
-        letters([ 'a', 'd', 'f' ]), [ 'e', 'f', 'b', 'c', 'd' ]
-      );
-    }
+    () => checkErr(
+      'The ordering for test.sort does not have an entry for a',
+      letters([ 'a', 'd', 'f' ]), [ 'e', 'f', 'b', 'c', 'd' ]
+    )
   );
 
   Logger.sync(
     'Checking [ a, d, f ] ordering when all specified',
-    () => {
-      return checkVal(
-        [ 'a', 'd', 'f' ],
-        letters([ 'a', 'd', 'f' ]), [ 'a', 'b', 'c', 'd', 'e', 'f' ]
-      );
-    }
+    () => checkVal(
+      [ 'a', 'd', 'f' ],
+      letters([ 'a', 'd', 'f' ]), [ 'a', 'b', 'c', 'd', 'e', 'f' ]
+    )
   );
 });

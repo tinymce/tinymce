@@ -53,9 +53,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
     Focusing, Representing, Streaming, Keying, Toggling, Coupling
   ]),
 
-  FieldSchema.state('previewing', () => {
-    return Cell(true);
-  })
+  FieldSchema.state('previewing', () => Cell(true))
 ].concat(
   InputBase.schema()
 ).concat(

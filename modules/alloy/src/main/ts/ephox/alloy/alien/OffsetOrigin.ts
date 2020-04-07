@@ -25,11 +25,7 @@ const getOffsetParent = (element: Element): Option<Element<DomElement>> => {
  * This allows the absolute coordinates to be obtained by adding the
  * origin to the offset coordinates and not needing to know scroll.
  */
-const getOrigin = (element: Element): Position => {
-  return getOffsetParent(element).map(Location.absolute).getOrThunk(() => {
-    return Position(0, 0);
-  });
-};
+const getOrigin = (element: Element): Position => getOffsetParent(element).map(Location.absolute).getOrThunk(() => Position(0, 0));
 
 export {
   getOrigin,

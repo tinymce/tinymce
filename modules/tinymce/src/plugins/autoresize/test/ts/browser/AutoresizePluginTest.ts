@@ -14,42 +14,32 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
   FullscreenPlugin();
   SilverTheme();
 
-  const sAssertEditorHeightAbove = (editor: Editor, minHeight: number) => {
-    return Logger.t(`Assert editor height is above ${minHeight}`, Step.sync(() => {
-      const editorHeight = editor.getContainer().offsetHeight;
-      Assert.eq(`should be above: ${editorHeight}>=${minHeight}`, true, editorHeight >= minHeight);
-    }));
-  };
+  const sAssertEditorHeightAbove = (editor: Editor, minHeight: number) => Logger.t(`Assert editor height is above ${minHeight}`, Step.sync(() => {
+    const editorHeight = editor.getContainer().offsetHeight;
+    Assert.eq(`should be above: ${editorHeight}>=${minHeight}`, true, editorHeight >= minHeight);
+  }));
 
-  const sAssertEditorHeightBelow = (editor: Editor, minHeight: number) => {
-    return Logger.t(`Assert editor height is below ${minHeight}`, Step.sync(() => {
-      const editorHeight = editor.getContainer().offsetHeight;
-      Assert.eq(`should be below: ${editorHeight}<=${minHeight}`, true, editorHeight <= minHeight);
-    }));
-  };
+  const sAssertEditorHeightBelow = (editor: Editor, minHeight: number) => Logger.t(`Assert editor height is below ${minHeight}`, Step.sync(() => {
+    const editorHeight = editor.getContainer().offsetHeight;
+    Assert.eq(`should be below: ${editorHeight}<=${minHeight}`, true, editorHeight <= minHeight);
+  }));
 
-  const sAssertEditorContentApproxHeight = (editor: Editor, height: number, diff: number = 5) => {
-    return Logger.t(`Assert editor content height is approx ${height}`, Step.sync(() => {
-      // Get the editor height, but exclude the 10px margin from the calculations
-      const editorContentHeight = editor.getContentAreaContainer().offsetHeight - 10;
-      const actualDiff = Math.abs(editorContentHeight - height);
-      Assert.eq(`should be approx (within ${diff}px): ${editorContentHeight} ~= ${height}`, true,  actualDiff <= diff);
-    }));
-  };
+  const sAssertEditorContentApproxHeight = (editor: Editor, height: number, diff: number = 5) => Logger.t(`Assert editor content height is approx ${height}`, Step.sync(() => {
+    // Get the editor height, but exclude the 10px margin from the calculations
+    const editorContentHeight = editor.getContentAreaContainer().offsetHeight - 10;
+    const actualDiff = Math.abs(editorContentHeight - height);
+    Assert.eq(`should be approx (within ${diff}px): ${editorContentHeight} ~= ${height}`, true,  actualDiff <= diff);
+  }));
 
-  const sAssertScrollPositionGreaterThan = (window: Window, position: number) => {
-    return Logger.t(`Assert scroll position is ~${position}px`, Step.sync(() => {
-      const scroll = window.pageYOffset;
-      Assertions.assertEq(`should be greater than: ${scroll}px >= ${position}px`, true, scroll >= position);
-    }));
-  };
+  const sAssertScrollPositionGreaterThan = (window: Window, position: number) => Logger.t(`Assert scroll position is ~${position}px`, Step.sync(() => {
+    const scroll = window.pageYOffset;
+    Assertions.assertEq(`should be greater than: ${scroll}px >= ${position}px`, true, scroll >= position);
+  }));
 
-  const sAssertScroll = (editor: Editor, state: boolean) => {
-    return Logger.t(`Assert scroll ${state}`, Step.sync(function () {
-      const body = editor.getBody();
-      Assertions.assertEq('', !state, body.style.overflowY === 'hidden');
-    }));
-  };
+  const sAssertScroll = (editor: Editor, state: boolean) => Logger.t(`Assert scroll ${state}`, Step.sync(function () {
+    const body = editor.getBody();
+    Assertions.assertEq('', !state, body.style.overflowY === 'hidden');
+  }));
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);

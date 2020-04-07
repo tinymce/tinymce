@@ -45,25 +45,23 @@ const discard = (blocker: AlloyComponent): void => {
   blocker.getSystem().removeFromGui(blocker);
 };
 
-const createComponent = (component: AlloyComponent, blockerClass: string, blockerEvents: AlloyEventRecord) => {
-  return component.getSystem().build(
-    Container.sketch({
-      dom: {
-        // Probably consider doing with classes?
-        styles: {
-          'left': '0px',
-          'top': '0px',
-          'width': '100%',
-          'height': '100%',
-          'position': 'fixed',
-          'z-index': '1000000000000000'
-        },
-        classes: [ blockerClass ]
+const createComponent = (component: AlloyComponent, blockerClass: string, blockerEvents: AlloyEventRecord) => component.getSystem().build(
+  Container.sketch({
+    dom: {
+      // Probably consider doing with classes?
+      styles: {
+        'left': '0px',
+        'top': '0px',
+        'width': '100%',
+        'height': '100%',
+        'position': 'fixed',
+        'z-index': '1000000000000000'
       },
-      events: blockerEvents
-    })
-  );
-};
+      classes: [ blockerClass ]
+    },
+    events: blockerEvents
+  })
+);
 
 export {
   createComponent,

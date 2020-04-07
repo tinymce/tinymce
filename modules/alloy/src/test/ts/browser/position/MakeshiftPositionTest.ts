@@ -42,13 +42,11 @@ UnitTest.asynctest('MakeshiftPositionTest', (success, failure) => {
     );
 
   }, (_doc, _body, gui, _component, _store) => {
-    const cSetupAnchor = (x: number, y: number) => Chain.injectThunked(() => {
-      return {
-        anchor: 'makeshift',
-        x,
-        y
-      };
-    });
+    const cSetupAnchor = (x: number, y: number) => Chain.injectThunked(() => ({
+      anchor: 'makeshift',
+      x,
+      y
+    }));
 
     const cAssertPopupNotInNoFitPosition = Chain.op((popup: AlloyComponent) => {
       const box = popup.element().dom().getBoundingClientRect();

@@ -52,11 +52,9 @@ const sketch = function (rawSpec): SketchSpec {
       mode: 'x',
       minX: 0,
       maxX: spec.sizes.length - 1,
-      getInitialValue: () => {
-        return {
-          x: () => spec.getInitialValue()
-        };
-      }
+      getInitialValue: () => ({
+        x: () => spec.getInitialValue()
+      })
     },
     stepSize: 1,
     snapToGrid: true,

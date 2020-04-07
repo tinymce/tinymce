@@ -128,28 +128,26 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
     return [
       Assertions.sAssertStructure(
         'Check basic initial structure',
-        ApproxStructure.build((s, str, _arr) => {
-          return s.element('span', {
-            attrs: {
-              'role': str.is('button'),
-              'aria-expanded': str.is('false'),
-              'aria-haspopup': str.is('true')
-            },
+        ApproxStructure.build((s, str, _arr) => s.element('span', {
+          attrs: {
+            'role': str.is('button'),
+            'aria-expanded': str.is('false'),
+            'aria-haspopup': str.is('true')
+          },
 
-            children: [
-              s.element('span', {
-                attrs: {
-                  role: str.is('presentation')
-                }
-              }),
-              s.element('span', {
-                attrs: {
-                  role: str.is('presentation')
-                }
-              })
-            ]
-          });
-        }),
+          children: [
+            s.element('span', {
+              attrs: {
+                role: str.is('presentation')
+              }
+            }),
+            s.element('span', {
+              attrs: {
+                role: str.is('presentation')
+              }
+            })
+          ]
+        })),
         component.element()
       ),
 
@@ -169,29 +167,27 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
       FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains("Alpha")'),
       Assertions.sAssertStructure(
         'Check menu opened structure',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('span', {
-            attrs: {
-              'role': str.is('button'),
-              'aria-expanded': str.is('true'),
-              'aria-haspopup': str.is('true')
-            },
+        ApproxStructure.build((s, str, arr) => s.element('span', {
+          attrs: {
+            'role': str.is('button'),
+            'aria-expanded': str.is('true'),
+            'aria-haspopup': str.is('true')
+          },
 
-            children: [
-              s.element('span', {
-                attrs: {
-                  role: str.is('presentation')
-                }
-              }),
-              s.element('span', {
-                attrs: {
-                  role: str.is('presentation')
-                },
-                classes: [ arr.has('test-selected-dropdown') ]
-              })
-            ]
-          });
-        }),
+          children: [
+            s.element('span', {
+              attrs: {
+                role: str.is('presentation')
+              }
+            }),
+            s.element('span', {
+              attrs: {
+                role: str.is('presentation')
+              },
+              classes: [ arr.has('test-selected-dropdown') ]
+            })
+          ]
+        })),
         component.element()
       ),
       Keyboard.sKeydown(doc, Keys.escape(), { }),

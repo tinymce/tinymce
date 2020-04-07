@@ -10,54 +10,47 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('SpecialKeyingFocusInTest', (success, failure) => {
 
-  GuiSetup.setup((store, _doc, _body) => {
-    return GuiFactory.build(
-      {
-        dom: {
-          tag: 'div',
-          classes: [ 'test-container' ]
-        },
-        components: [
-          {
-            dom: {
-              tag: 'div',
-              classes: [ 'one' ],
-              innerHtml: 'one'
-            },
-            behaviours: Behaviour.derive([
-              Focusing.config({ }),
-              Keying.config({
-                mode: 'special',
-                focusIn: store.adder('focusIn')
-              })
-            ])
+  GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
+    {
+      dom: {
+        tag: 'div',
+        classes: [ 'test-container' ]
+      },
+      components: [
+        {
+          dom: {
+            tag: 'div',
+            classes: [ 'one' ],
+            innerHtml: 'one'
           },
+          behaviours: Behaviour.derive([
+            Focusing.config({ }),
+            Keying.config({
+              mode: 'special',
+              focusIn: store.adder('focusIn')
+            })
+          ])
+        },
 
-          {
-            dom: {
-              tag: 'div',
-              classes: [ 'two' ],
-              innerHtml: 'two'
-            },
-            behaviours: Behaviour.derive([
-              Focusing.config({ }),
-              Keying.config({
-                mode: 'special'
-              })
-            ])
-          }
-        ]
-      }
-    );
+        {
+          dom: {
+            tag: 'div',
+            classes: [ 'two' ],
+            innerHtml: 'two'
+          },
+          behaviours: Behaviour.derive([
+            Focusing.config({ }),
+            Keying.config({
+              mode: 'special'
+            })
+          ])
+        }
+      ]
+    }
+  ), (doc, body, _gui, component, store) => {
+    const oneComp = SelectorFind.descendant(component.element(), '.one').bind((elem) => component.getSystem().getByDom(elem).toOption()).getOrDie('Could not find "one" div');
 
-  }, (doc, body, _gui, component, store) => {
-    const oneComp = SelectorFind.descendant(component.element(), '.one').bind((elem) => {
-      return component.getSystem().getByDom(elem).toOption();
-    }).getOrDie('Could not find "one" div');
-
-    const twoComp = SelectorFind.descendant(component.element(), '.two').bind((elem) => {
-      return component.getSystem().getByDom(elem).toOption();
-    }).getOrDie('Could not find "two" div');
+    const twoComp = SelectorFind.descendant(component.element(), '.two').bind((elem) => component.getSystem().getByDom(elem).toOption()).getOrDie('Could not find "two" div');
 
     return [
       GuiSetup.mSetupKeyLogger(body),

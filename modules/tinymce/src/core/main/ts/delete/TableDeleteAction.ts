@@ -39,13 +39,9 @@ const deleteAction = Adt.generate([
 const isRootFromElement = (root: Element<any>): (cur: Element<any>) => boolean =>
   (cur: Element<any>): boolean => Compare.eq(root, cur);
 
-const getClosestCell = (container: DomNode, isRoot: (e: Element<any>) => boolean) => {
-  return SelectorFind.closest(Element.fromDom(container), 'td,th', isRoot);
-};
+const getClosestCell = (container: DomNode, isRoot: (e: Element<any>) => boolean) => SelectorFind.closest(Element.fromDom(container), 'td,th', isRoot);
 
-const getClosestTable = (cell, isRoot) => {
-  return SelectorFind.ancestor(cell, 'table', isRoot);
-};
+const getClosestTable = (cell, isRoot) => SelectorFind.ancestor(cell, 'table', isRoot);
 
 const isExpandedCellRng = (cellRng: TableCellRng): boolean =>
   !Compare.eq(cellRng.start, cellRng.end);
@@ -59,9 +55,7 @@ const getTableFromCellRng = (cellRng: TableCellRng, isRoot: (e: Element<any>) =>
 const getTableCells = (table) => SelectorFilter.descendants(table, 'td,th');
 
 const getCellRangeFromStartTable = (cellRng: TableCellRng, isRoot): Option<TableCellRng> =>
-  getClosestTable(cellRng.start, isRoot).bind((table) => {
-    return Arr.last(getTableCells(table)).map((endCell) => tableCellRng(cellRng.start, endCell));
-  });
+  getClosestTable(cellRng.start, isRoot).bind((table) => Arr.last(getTableCells(table)).map((endCell) => tableCellRng(cellRng.start, endCell)));
 
 const partialSelection = (isRoot: (e: Element<any>) => boolean, rng: Range): Option<TableCellRng> => {
   const startCell = getClosestCell(rng.startContainer, isRoot);
@@ -69,12 +63,8 @@ const partialSelection = (isRoot: (e: Element<any>) => boolean, rng: Range): Opt
 
   return rng.collapsed ? Option.none() : Options.lift2(startCell, endCell, tableCellRng).fold(
     () => startCell.fold(
-      () => endCell.bind((endCell) => getClosestTable(endCell, isRoot).bind((table) => {
-        return Arr.head(getTableCells(table)).map((startCell) => tableCellRng(startCell, endCell));
-      })),
-      (startCell) => getClosestTable(startCell, isRoot).bind((table) => {
-        return Arr.last(getTableCells(table)).map((endCell) => tableCellRng(startCell, endCell));
-      })
+      () => endCell.bind((endCell) => getClosestTable(endCell, isRoot).bind((table) => Arr.head(getTableCells(table)).map((startCell) => tableCellRng(startCell, endCell)))),
+      (startCell) => getClosestTable(startCell, isRoot).bind((table) => Arr.last(getTableCells(table)).map((endCell) => tableCellRng(startCell, endCell)))
     ),
     (cellRng: any) => isWithinSameTable(isRoot, cellRng) ? Option.none() : getCellRangeFromStartTable(cellRng, isRoot)
   );
@@ -93,25 +83,19 @@ const getCellRng = (rng: Range, isRoot: (e: Element<any>) => boolean) => {
     .orThunk(() => partialSelection(isRoot, rng));
 };
 
-const getTableSelectionFromCellRng = (cellRng: TableCellRng, isRoot: (e: Element<any>) => boolean) => {
-  return getTableFromCellRng(cellRng, isRoot).map((table) => tableSelection(cellRng, table, getTableCells(table)));
-};
+const getTableSelectionFromCellRng = (cellRng: TableCellRng, isRoot: (e: Element<any>) => boolean) => getTableFromCellRng(cellRng, isRoot).map((table) => tableSelection(cellRng, table, getTableCells(table)));
 
 const getTableSelectionFromRng = (root, rng: Range) => {
   const isRoot = isRootFromElement(root);
   return getCellRng(rng, isRoot).bind((cellRng) => getTableSelectionFromCellRng(cellRng, isRoot));
 };
 
-const getCellIndex = <T> (cells: Element<T>[], cell: Element<T>): Option<number> => {
-  return Arr.findIndex(cells, (x) => Compare.eq(x, cell));
-};
+const getCellIndex = <T> (cells: Element<T>[], cell: Element<T>): Option<number> => Arr.findIndex(cells, (x) => Compare.eq(x, cell));
 
-const getSelectedCells = (tableSelection: TableSelection) => {
-  return Options.lift2(
-    getCellIndex(tableSelection.cells, tableSelection.rng.start),
-    getCellIndex(tableSelection.cells, tableSelection.rng.end),
-    (startIndex, endIndex) => tableSelection.cells.slice(startIndex, endIndex + 1));
-};
+const getSelectedCells = (tableSelection: TableSelection) => Options.lift2(
+  getCellIndex(tableSelection.cells, tableSelection.rng.start),
+  getCellIndex(tableSelection.cells, tableSelection.rng.end),
+  (startIndex, endIndex) => tableSelection.cells.slice(startIndex, endIndex + 1));
 
 const getAction = (tableSelection: TableSelection) =>
   getSelectedCells(tableSelection)

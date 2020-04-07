@@ -31,9 +31,7 @@ export type EventAbortHandler<T extends EventFormat> = (comp: AlloyComponent, se
 
 export type EventCanHandler<T extends EventFormat> = (comp: AlloyComponent, se: SimulatedEvent<T>) => boolean;
 
-const derive = <A extends EventFormat>(configs: Array<AlloyEventKeyAndHandler<A>>): AlloyEventRecord => {
-  return Objects.wrapAll(configs) as AlloyEventRecord;
-};
+const derive = <A extends EventFormat>(configs: Array<AlloyEventKeyAndHandler<A>>): AlloyEventRecord => Objects.wrapAll(configs) as AlloyEventRecord;
 
 // const combine = (configs...);
 
@@ -89,22 +87,18 @@ const runActionExtra = function <T extends EventFormat> (name: string, action: (
 };
 
 const runOnName = function <T extends EventFormat> (name: string): RunOnName<T> {
-  return (handler) => {
-    return run(name, handler);
-  };
+  return (handler) => run(name, handler);
 };
 
 const runOnSourceName = function <T extends EventFormat> (name: string): RunOnSourceName<T> {
-  return (handler: (component: AlloyComponent, simulatedEvent: SimulatedEvent<T>) => void): AlloyEventKeyAndHandler<T> => {
-    return {
-      key: name,
-      value: EventHandler.nu({
-        run(component: AlloyComponent, simulatedEvent: SimulatedEvent<T>) {
-          if (EventRoot.isSource(component, simulatedEvent)) { handler(component, simulatedEvent); }
-        }
-      })
-    };
-  };
+  return (handler: (component: AlloyComponent, simulatedEvent: SimulatedEvent<T>) => void): AlloyEventKeyAndHandler<T> => ({
+    key: name,
+    value: EventHandler.nu({
+      run(component: AlloyComponent, simulatedEvent: SimulatedEvent<T>) {
+        if (EventRoot.isSource(component, simulatedEvent)) { handler(component, simulatedEvent); }
+      }
+    })
+  });
 };
 
 const redirectToUid = function <T extends EventFormat> (name: string, uid: string): AlloyEventKeyAndHandler<T> {
@@ -129,9 +123,7 @@ const runWithTarget = function <T extends EventFormat> (name: string, f: (compon
       // until we find an alloy component? Performance concern?
       // TODO: Write tests for this.
       () => {
-        const closest = TransformFind.closest(ev.target(), (el) => {
-          return component.getSystem().getByDom(el).toOption();
-        }, Fun.constant(false));
+        const closest = TransformFind.closest(ev.target(), (el) => component.getSystem().getByDom(el).toOption(), Fun.constant(false));
 
         // If we still found nothing ... fire on component itself;
         return closest.getOr(component);

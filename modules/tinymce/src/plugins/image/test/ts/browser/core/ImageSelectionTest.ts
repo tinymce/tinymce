@@ -12,30 +12,26 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest',  (su
   Plugin();
   Theme();
 
-  const sUpdateImageOrFigure = (editor: Editor, data: Partial<ImageData>) => {
-    return Step.sync(() => {
-      insertOrUpdateImage(editor, {
-        src: 'image.png',
-        alt: '',
-        title: '',
-        width: '200',
-        height: '',
-        class: '',
-        style: '',
-        caption: false,
-        hspace: '',
-        vspace: '',
-        border: '',
-        borderStyle: '',
-        isDecorative: false,
-        ...data
-      });
+  const sUpdateImageOrFigure = (editor: Editor, data: Partial<ImageData>) => Step.sync(() => {
+    insertOrUpdateImage(editor, {
+      src: 'image.png',
+      alt: '',
+      title: '',
+      width: '200',
+      height: '',
+      class: '',
+      style: '',
+      caption: false,
+      hspace: '',
+      vspace: '',
+      border: '',
+      borderStyle: '',
+      isDecorative: false,
+      ...data
     });
-  };
+  });
 
-  const sWaitForDragHandles = (editor: any): Step<any, any> => {
-    return Waiter.sTryUntil('wait for draghandles', UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlenw'), 10, 5000);
-  };
+  const sWaitForDragHandles = (editor: any): Step<any, any> => Waiter.sTryUntil('wait for draghandles', UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlenw'), 10, 5000);
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);

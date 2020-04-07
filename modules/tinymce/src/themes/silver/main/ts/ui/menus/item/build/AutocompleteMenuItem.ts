@@ -22,9 +22,11 @@ type TooltipWorker = (success: (elem: HTMLElement) => void) => void;
 
 // Use meta to pass through special information about the tooltip
 // (yes this is horrible but it is not yet public API)
-const tooltipBehaviour = (meta: Record<string, any>, sharedBackstage: UiFactoryBackstageShared): Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[] => {
-  return Obj.get(meta, 'tooltipWorker').map((tooltipWorker: TooltipWorker) => {
-    return [
+const tooltipBehaviour = (
+  meta: Record<string, any>, sharedBackstage: UiFactoryBackstageShared
+): Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[] =>
+  Obj.get(meta, 'tooltipWorker').
+    map((tooltipWorker: TooltipWorker) => [
       Tooltipping.config({
         lazySink: sharedBackstage.getSink,
         tooltipDom: {
@@ -50,9 +52,8 @@ const tooltipBehaviour = (meta: Record<string, any>, sharedBackstage: UiFactoryB
           });
         }
       })
-    ];
-  }).getOr([]);
-};
+    ]).
+    getOr([]);
 
 const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const encodeText = (text: string) => DOMUtils.DOM.encode(text);
@@ -67,7 +68,16 @@ const replaceText = (text: string, matchText: string): string => {
   }
 };
 
-const renderAutocompleteItem = (spec: InlineContent.AutocompleterItem, matchText: string, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: ItemValueHandler, itemResponse: ItemResponse, sharedBackstage: UiFactoryBackstageShared, renderIcons: boolean = true): ItemTypes.ItemSpec => {
+const renderAutocompleteItem = (
+  spec: InlineContent.AutocompleterItem,
+  matchText: string,
+  useText: boolean,
+  presets: Types.PresetItemTypes,
+  onItemValueHandler: ItemValueHandler,
+  itemResponse: ItemResponse,
+  sharedBackstage: UiFactoryBackstageShared,
+  renderIcons: boolean = true
+): ItemTypes.ItemSpec => {
   const structure = renderItemStructure({
     presets,
     textContent: Option.none(),

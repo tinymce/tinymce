@@ -53,17 +53,15 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
         tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 2),
         sSetContent(editor, 'X', {}),
         Assertions.sAssertStructure('Checking initial structure',
-          ApproxStructure.build((s, str, _arr) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  children: [
-                    s.text(str.is('aXc'))
-                  ]
-                })
-              ]
-            });
-          }),
+          ApproxStructure.build((s, str, _arr) => s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text(str.is('aXc'))
+                ]
+              })
+            ]
+          })),
           root
         ),
         tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
@@ -74,17 +72,15 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
         tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
         sSetContent(editor, 'X', {}),
         Assertions.sAssertStructure('Checking initial structure',
-          ApproxStructure.build((s, str, _arr) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  children: [
-                    s.text(str.is('aXb'))
-                  ]
-                })
-              ]
-            });
-          }),
+          ApproxStructure.build((s, str, _arr) => s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text(str.is('aXb'))
+                ]
+              })
+            ]
+          })),
           root
         ),
         tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
@@ -95,17 +91,15 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
         tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
         sSetContent(editor, 'X', {}),
         Assertions.sAssertStructure('Checking initial structure',
-          ApproxStructure.build((s, str, _arr) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  children: [
-                    s.text(str.is('Xa'))
-                  ]
-                })
-              ]
-            });
-          }),
+          ApproxStructure.build((s, str, _arr) => s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text(str.is('Xa'))
+                ]
+              })
+            ]
+          })),
           root
         ),
         tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
@@ -116,17 +110,15 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
         tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
         sSetContent(editor, 'X', {}),
         Assertions.sAssertStructure('Checking initial structure',
-          ApproxStructure.build((s, str, _arr) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  children: [
-                    s.text(str.is('aX'))
-                  ]
-                })
-              ]
-            });
-          }),
+          ApproxStructure.build((s, str, _arr) => s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text(str.is('aX'))
+                ]
+              })
+            ]
+          })),
           root
         ),
       ])),
@@ -136,22 +128,20 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
         tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
         sSetContent(editor, 'b<em>c</em>', {}),
         Assertions.sAssertStructure('Checking initial structure',
-          ApproxStructure.build((s, str, _arr) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  children: [
-                    s.text(str.is('ab')),
-                    s.element('em', {
-                      children: [
-                        s.text(str.is('c'))
-                      ]
-                    })
-                  ]
-                })
-              ]
-            });
-          }),
+          ApproxStructure.build((s, str, _arr) => s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text(str.is('ab')),
+                  s.element('em', {
+                    children: [
+                      s.text(str.is('c'))
+                    ]
+                  })
+                ]
+              })
+            ]
+          })),
           root
         ),
       ])),
@@ -161,23 +151,21 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
         tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
         sSetContent(editor, '<em>b</em>c', {}),
         Assertions.sAssertStructure('Checking initial structure',
-          ApproxStructure.build((s, str, _arr) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  children: [
-                    s.text(str.is('a')),
-                    s.element('em', {
-                      children: [
-                        s.text(str.is('b'))
-                      ]
-                    }),
-                    s.text(str.is('c'))
-                  ]
-                })
-              ]
-            });
-          }),
+          ApproxStructure.build((s, str, _arr) => s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text(str.is('a')),
+                  s.element('em', {
+                    children: [
+                      s.text(str.is('b'))
+                    ]
+                  }),
+                  s.text(str.is('c'))
+                ]
+              })
+            ]
+          })),
           root
         ),
       ])),

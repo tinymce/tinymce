@@ -13,61 +13,51 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
   SilverTheme();
   TablePlugin();
 
-  const sDragDrop = (container: Element, selector: string, dx: number, dy: number) => {
-    return Logger.t('Drag from a point and drop at specified point', Chain.asStep(container, [
-      UiFinder.cFindIn(selector),
-      Mouse.cMouseDown,
-      Mouse.cMouseMoveTo(dx, dy),
-      Mouse.cMouseUpTo(dx, dy)
-    ]));
-  };
+  const sDragDrop = (container: Element, selector: string, dx: number, dy: number) => Logger.t('Drag from a point and drop at specified point', Chain.asStep(container, [
+    UiFinder.cFindIn(selector),
+    Mouse.cMouseDown,
+    Mouse.cMouseMoveTo(dx, dy),
+    Mouse.cMouseUpTo(dx, dy)
+  ]));
 
-  const sDragDropBlocker = (container: Element, selector: string, dx: number, dy: number) => {
-    return Logger.t('Block dragging and dropping of any other element in the container', Chain.asStep({}, [
-      Chain.fromParent(Chain.inject(container), [
-        Chain.fromChains([
-          UiFinder.cFindIn(selector),
-          Mouse.cMouseDown
-        ]),
-        Chain.fromChains([
-          UiFinder.cFindIn('div.ephox-dragster-blocker'),
-          Mouse.cMouseMove,
-          Mouse.cMouseMoveTo(dx, dy),
-          Mouse.cMouseUpTo(dx, dy)
-        ])
+  const sDragDropBlocker = (container: Element, selector: string, dx: number, dy: number) => Logger.t('Block dragging and dropping of any other element in the container', Chain.asStep({}, [
+    Chain.fromParent(Chain.inject(container), [
+      Chain.fromChains([
+        UiFinder.cFindIn(selector),
+        Mouse.cMouseDown
+      ]),
+      Chain.fromChains([
+        UiFinder.cFindIn('div.ephox-dragster-blocker'),
+        Mouse.cMouseMove,
+        Mouse.cMouseMoveTo(dx, dy),
+        Mouse.cMouseUpTo(dx, dy)
       ])
-    ]));
-  };
+    ])
+  ]));
 
-  const sMouseover = (container, selector) => {
-    return Logger.t('Place mouse point over element', Chain.asStep(container, [
-      UiFinder.cFindIn(selector),
-      Mouse.cMouseOver
-    ]));
-  };
+  const sMouseover = (container, selector) => Logger.t('Place mouse point over element', Chain.asStep(container, [
+    UiFinder.cFindIn(selector),
+    Mouse.cMouseOver
+  ]));
 
   const state = Cell(null);
 
-  const sSetStateFrom = (editor, path) => {
-    return Logger.t('Set height and width', Step.sync(() => {
-      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element') as Element<HTMLElement>;
-      const height = Height.get(element);
-      const width = Width.get(element);
+  const sSetStateFrom = (editor, path) => Logger.t('Set height and width', Step.sync(() => {
+    const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element') as Element<HTMLElement>;
+    const height = Height.get(element);
+    const width = Width.get(element);
 
-      state.set({
-        h: height,
-        w: width
-      });
-    }));
-  };
+    state.set({
+      h: height,
+      w: width
+    });
+  }));
 
   const sResetState = Logger.t('Reset height and width', Step.sync(() => {
     state.set(null);
   }));
 
-  const looseEqual = (exp, act, loose) => {
-    return Math.abs(exp - act) <= loose;
-  };
+  const looseEqual = (exp, act, loose) => Math.abs(exp - act) <= loose;
 
   const sAssertNoDataStyle = (editor, path) => Logger.t('Assert no data style is applied', Step.sync(() => {
     const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element');
@@ -76,19 +66,17 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
     Assert.eq('should not have data style', false, hasDataStyle);
   }));
 
-  const sAssertSizeChange = (editor, path, change) => {
-    return Logger.t('Asset change in height and width', Step.sync(() => {
-      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element') as Element<HTMLElement>;
-      const height = Height.get(element);
-      const width = Width.get(element);
+  const sAssertSizeChange = (editor, path, change) => Logger.t('Asset change in height and width', Step.sync(() => {
+    const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element') as Element<HTMLElement>;
+    const height = Height.get(element);
+    const width = Width.get(element);
 
-      const changedHeight = state.get().h + change.dh;
-      const changedWidth = state.get().w + change.dw;
+    const changedHeight = state.get().h + change.dh;
+    const changedWidth = state.get().w + change.dw;
 
-      Assertions.assertEq('height is ' + height + ' but expected ' + changedHeight, true, looseEqual(changedHeight, height, 4));
-      Assertions.assertEq('width is ' + width + ' but expected ' + changedWidth, true, looseEqual(changedWidth, width, 4));
-    }));
-  };
+    Assertions.assertEq('height is ' + height + ' but expected ' + changedHeight, true, looseEqual(changedHeight, height, 4));
+    Assertions.assertEq('width is ' + width + ' but expected ' + changedWidth, true, looseEqual(changedWidth, width, 4));
+  }));
 
   const tableHtml = '<table style="border-collapse: collapse; width: 367px; height: 190px;" border="1">' +
                     '<tbody>' +
@@ -103,15 +91,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
                     '</tbody>' +
                   '</table>';
 
-  const sWaitForSelection = (editor: Editor, tinyApis: TinyApis) => {
-    return Logger.t('Wait for resize handles to be visible', GeneralSteps.sequence([
-      tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0),
-      Waiter.sTryUntil(
-        'wait for resize handles',
-        UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlese')
-      )
-    ]));
-  };
+  const sWaitForSelection = (editor: Editor, tinyApis: TinyApis) => Logger.t('Wait for resize handles to be visible', GeneralSteps.sequence([
+    tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0),
+    Waiter.sTryUntil(
+      'wait for resize handles',
+      UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlese')
+    )
+  ]));
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);

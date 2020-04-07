@@ -20,9 +20,7 @@ const isMarked = function (html: string) {
   return html.indexOf(internalMark) !== -1;
 };
 
-const internalHtmlMime = () => {
-  return internalMimeType;
-};
+const internalHtmlMime = () => internalMimeType;
 
 export {
   mark,

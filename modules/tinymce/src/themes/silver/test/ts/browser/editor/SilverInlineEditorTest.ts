@@ -19,178 +19,176 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
     tinyApis.sFocus(),
     Assertions.sAssertStructure(
       'Container structure',
-      ApproxStructure.build((s, str, arr) => {
-        return s.element('div', {
-          classes: [ arr.has('tox-tinymce'), arr.has('tox-tinymce-inline') ],
-          children: [
-            s.element('div', {
-              classes: [ arr.has('tox-editor-container') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-editor-header') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-menubar') ],
-                      attrs: { role: str.is('menubar') },
-                      children: [
-                        // Dropdown via text
-                        s.element('button', {
-                          classes: [ arr.has('tox-mbtn'), arr.has('tox-mbtn--select') ],
-                          children: [
-                            s.element('span', {
-                              classes: [ arr.has('tox-mbtn__select-label') ],
-                              html: str.is('test')
-                            }),
-                            s.element('div', {
-                              classes: [ arr.has('tox-mbtn__select-chevron') ],
-                              children: [
-                                s.element('svg', {})
-                              ]
-                            }),
-                          ]
-                        }),
-                      ]
-                    }),
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-tinymce'), arr.has('tox-tinymce-inline') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-editor-container') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-editor-header') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-menubar') ],
+                    attrs: { role: str.is('menubar') },
+                    children: [
+                      // Dropdown via text
+                      s.element('button', {
+                        classes: [ arr.has('tox-mbtn'), arr.has('tox-mbtn--select') ],
+                        children: [
+                          s.element('span', {
+                            classes: [ arr.has('tox-mbtn__select-label') ],
+                            html: str.is('test')
+                          }),
+                          s.element('div', {
+                            classes: [ arr.has('tox-mbtn__select-chevron') ],
+                            children: [
+                              s.element('svg', {})
+                            ]
+                          }),
+                        ]
+                      }),
+                    ]
+                  }),
 
-                    s.element('div', {
-                      classes: [ arr.has('tox-toolbar-overlord') ],
-                      attrs: { role: str.is('group') },
-                      children: [
-                        s.element('div', {
-                          classes: [ arr.has('tox-toolbar__primary') ],
-                          attrs: { role: str.is('group') },
-                          children: [
-                            s.element('div', {
-                              classes: [ arr.has('tox-toolbar__group') ],
-                              children: [
-                                // Basic button
-                                s.element('button', {
-                                  classes: [ arr.has('tox-tbtn') ]
-                                }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-toolbar-overlord') ],
+                    attrs: { role: str.is('group') },
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-toolbar__primary') ],
+                        attrs: { role: str.is('group') },
+                        children: [
+                          s.element('div', {
+                            classes: [ arr.has('tox-toolbar__group') ],
+                            children: [
+                              // Basic button
+                              s.element('button', {
+                                classes: [ arr.has('tox-tbtn') ]
+                              }),
 
-                                // Toggle button
-                                s.element('button', {
-                                  classes: [ arr.has('tox-tbtn'), arr.not('tox-btn--enabled') ]
-                                }),
+                              // Toggle button
+                              s.element('button', {
+                                classes: [ arr.has('tox-tbtn'), arr.not('tox-btn--enabled') ]
+                              }),
 
-                                // Dropdown via text
-                                s.element('button', {
-                                  classes: [ arr.has('tox-tbtn'), arr.has('tox-tbtn--select') ],
-                                  children: [
-                                    s.element('span', {
-                                      classes: [ arr.has('tox-tbtn__select-label') ],
-                                      html: str.is('dropdown1')
-                                    }),
-                                    s.element('div', {
-                                      classes: [ arr.has('tox-tbtn__select-chevron') ],
-                                      children: [
-                                        s.element('svg', { })
-                                      ]
-                                    }),
-                                  ]
-                                }),
+                              // Dropdown via text
+                              s.element('button', {
+                                classes: [ arr.has('tox-tbtn'), arr.has('tox-tbtn--select') ],
+                                children: [
+                                  s.element('span', {
+                                    classes: [ arr.has('tox-tbtn__select-label') ],
+                                    html: str.is('dropdown1')
+                                  }),
+                                  s.element('div', {
+                                    classes: [ arr.has('tox-tbtn__select-chevron') ],
+                                    children: [
+                                      s.element('svg', { })
+                                    ]
+                                  }),
+                                ]
+                              }),
 
-                                // Dropdown via icon
-                                s.element('button', {
-                                  classes: [ arr.has('tox-tbtn'), arr.has('tox-tbtn--select') ],
-                                  children: [
-                                    s.element('span', {
-                                      // NOTE: Not sure what this should be?
-                                      classes: [  ],
-                                      children: [
-                                        s.element('svg', { })
-                                      ]
-                                    }),
-                                    s.element('div', {
-                                      classes: [ arr.has('tox-tbtn__select-chevron') ],
-                                      children: [
-                                        s.element('svg', { })
-                                      ]
-                                    }),
-                                  ]
-                                }),
+                              // Dropdown via icon
+                              s.element('button', {
+                                classes: [ arr.has('tox-tbtn'), arr.has('tox-tbtn--select') ],
+                                children: [
+                                  s.element('span', {
+                                    // NOTE: Not sure what this should be?
+                                    classes: [  ],
+                                    children: [
+                                      s.element('svg', { })
+                                    ]
+                                  }),
+                                  s.element('div', {
+                                    classes: [ arr.has('tox-tbtn__select-chevron') ],
+                                    children: [
+                                      s.element('svg', { })
+                                    ]
+                                  }),
+                                ]
+                              }),
 
-                                // Splitbutton with text
-                                s.element('div', {
-                                  classes: [ arr.has('tox-split-button') ],
-                                  children: [
-                                    s.element('span', {
-                                      classes: [ arr.has('tox-tbtn') ],
-                                      children: [
-                                        s.element('span', {
-                                          classes: [ arr.has('tox-tbtn__select-label') ],
-                                          html: str.is('Delta')
-                                        })
-                                      ]
-                                    }),
-                                    s.element('span', {
-                                      classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
-                                      children: [
-                                        s.element('svg', { })
-                                      ]
-                                    }),
-                                    s.element('span', {
-                                      attrs: {
-                                        'aria-hidden': str.is('true'),
-                                        'style': str.is('display: none;')
-                                      },
-                                      children: [
-                                        s.text(str.is('To open the popup, press Shift+Enter'))
-                                      ]
-                                    })
-                                  ]
-                                }),
+                              // Splitbutton with text
+                              s.element('div', {
+                                classes: [ arr.has('tox-split-button') ],
+                                children: [
+                                  s.element('span', {
+                                    classes: [ arr.has('tox-tbtn') ],
+                                    children: [
+                                      s.element('span', {
+                                        classes: [ arr.has('tox-tbtn__select-label') ],
+                                        html: str.is('Delta')
+                                      })
+                                    ]
+                                  }),
+                                  s.element('span', {
+                                    classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
+                                    children: [
+                                      s.element('svg', { })
+                                    ]
+                                  }),
+                                  s.element('span', {
+                                    attrs: {
+                                      'aria-hidden': str.is('true'),
+                                      'style': str.is('display: none;')
+                                    },
+                                    children: [
+                                      s.text(str.is('To open the popup, press Shift+Enter'))
+                                    ]
+                                  })
+                                ]
+                              }),
 
-                                // Splitbutton with icon
-                                s.element('div', {
-                                  classes: [ arr.has('tox-split-button') ],
-                                  children: [
-                                    s.element('span', {
-                                      classes: [ arr.has('tox-tbtn') ],
-                                      children: [
-                                        s.element('span', {
-                                          children: [
-                                            s.element('svg', { })
-                                          ]
-                                        })
-                                      ]
-                                    }),
-                                    s.element('span', {
-                                      classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
-                                      children: [
-                                        s.element('svg', { })
-                                      ]
-                                    }),
-                                    s.element('span', {
-                                      attrs: {
-                                        'aria-hidden': str.is('true'),
-                                        'style': str.is('display: none;')
-                                      },
-                                      children: [
-                                        s.text(str.is('To open the popup, press Shift+Enter'))
-                                      ]
-                                    })
-                                  ]
-                                })
-                              ]
-                            })
-                          ]
-                        })
-                      ]
-                    }),
-                    s.element('div', {
-                      classes: [ arr.has('tox-anchorbar') ]
-                    })
-                  ]
-                })
-              ]
-            }),
-            s.element('div', {
-              classes: [ arr.has('tox-throbber') ]
-            })
-          ]
-        });
-      }),
+                              // Splitbutton with icon
+                              s.element('div', {
+                                classes: [ arr.has('tox-split-button') ],
+                                children: [
+                                  s.element('span', {
+                                    classes: [ arr.has('tox-tbtn') ],
+                                    children: [
+                                      s.element('span', {
+                                        children: [
+                                          s.element('svg', { })
+                                        ]
+                                      })
+                                    ]
+                                  }),
+                                  s.element('span', {
+                                    classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
+                                    children: [
+                                      s.element('svg', { })
+                                    ]
+                                  }),
+                                  s.element('span', {
+                                    attrs: {
+                                      'aria-hidden': str.is('true'),
+                                      'style': str.is('display: none;')
+                                    },
+                                    children: [
+                                      s.text(str.is('To open the popup, press Shift+Enter'))
+                                    ]
+                                  })
+                                ]
+                              })
+                            ]
+                          })
+                        ]
+                      })
+                    ]
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-anchorbar') ]
+                  })
+                ]
+              })
+            ]
+          }),
+          s.element('div', {
+            classes: [ arr.has('tox-throbber') ]
+          })
+        ]
+      })),
       container
     ),
     Step.sync(() => {
@@ -212,27 +210,25 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
         UiFinder.cFindIn('[role="menu"] .tox-collection__item--active'),
         Assertions.cAssertStructure(
           'Checking item has svg icon and text',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-collection__item') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-collection__item-icon') ],
-                  children: [
-                    s.element('svg', { })
-                  ]
-                }),
-                s.element('div', {
-                  classes: [ arr.has('tox-collection__item-label') ],
-                  html: str.is('Text with icon')
-                }),
-                s.element('div', {
-                  classes: [ arr.has('tox-collection__item-accessory') ],
-                  html: str.is(Env.mac ? '\u2318' + 'M' : 'Ctrl' + '+M')
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('tox-collection__item') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-collection__item-icon') ],
+                children: [
+                  s.element('svg', { })
+                ]
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-collection__item-label') ],
+                html: str.is('Text with icon')
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-collection__item-accessory') ],
+                html: str.is(Env.mac ? '\u2318' + 'M' : 'Ctrl' + '+M')
+              })
+            ]
+          }))
         )
       ]),
       Keyboard.sKeydown(Element.fromDom(document), Keys.escape(), { }),
@@ -243,14 +239,12 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
       tinyUi.sClickOnToolbar('Click on ToggleMe toolbar button', '.tox-tbtn:contains("ToggleMe")'),
       Chain.asStep(container, [
         UiFinder.cFindIn('.tox-tbtn:contains("ToggleMe")'),
-        Assertions.cAssertStructure('Should not be pressed', ApproxStructure.build((s, str, arr) => {
-          return s.element('button', {
-            attrs: {
-              'aria-pressed': str.is('false')
-            },
-            classes: [ arr.not('tox-tbtn--enabled') ]
-          });
-        }))
+        Assertions.cAssertStructure('Should not be pressed', ApproxStructure.build((s, str, arr) => s.element('button', {
+          attrs: {
+            'aria-pressed': str.is('false')
+          },
+          classes: [ arr.not('tox-tbtn--enabled') ]
+        })))
       ])
     ]),
 
@@ -260,14 +254,12 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
       }),
       Chain.asStep(container, [
         UiFinder.cFindIn('.tox-tbtn:contains("ToggleMe")'),
-        Assertions.cAssertStructure('Should be pressed', ApproxStructure.build((s, str, arr) => {
-          return s.element('button', {
-            attrs: {
-              'aria-pressed': str.is('true')
-            },
-            classes: [ arr.has('tox-tbtn--enabled') ]
-          });
-        }))
+        Assertions.cAssertStructure('Should be pressed', ApproxStructure.build((s, str, arr) => s.element('button', {
+          attrs: {
+            'aria-pressed': str.is('true')
+          },
+          classes: [ arr.has('tox-tbtn--enabled') ]
+        })))
       ])
     ]),
 
@@ -275,11 +267,9 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
       tinyUi.sClickOnToolbar('Click on Delta toolbar button', '.tox-split-button:contains("Delta")'),
       Chain.asStep(container, [
         UiFinder.cFindIn('.tox-split-button > .tox-tbtn:contains("Delta")'),
-        Assertions.cAssertStructure('Should not be pressed', ApproxStructure.build((s, str, arr) => {
-          return s.element('span', {
-            classes: [ arr.not('tox-tbtn--enabled') ]
-          });
-        }))
+        Assertions.cAssertStructure('Should not be pressed', ApproxStructure.build((s, str, arr) => s.element('span', {
+          classes: [ arr.not('tox-tbtn--enabled') ]
+        })))
       ])
     ]),
 
@@ -289,11 +279,9 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
       }),
       Chain.asStep(container, [
         UiFinder.cFindIn('.tox-split-button > .tox-tbtn:contains("Delta")'),
-        Assertions.cAssertStructure('Should be pressed', ApproxStructure.build((s, str, arr) => {
-          return s.element('span', {
-            classes: [ arr.has('tox-tbtn--enabled') ]
-          });
-        }))
+        Assertions.cAssertStructure('Should be pressed', ApproxStructure.build((s, str, arr) => s.element('span', {
+          classes: [ arr.has('tox-tbtn--enabled') ]
+        })))
       ])
     ])
   ]);
@@ -301,16 +289,14 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
   const sContentAreaContainerTest = (contentAreaContainer) => Logger.ts('Check basic content area container structure', [
     Assertions.sAssertStructure(
       'Content area container structure',
-      ApproxStructure.build((s, str, arr) => {
-        return s.element('div', {
-          classes: [ arr.has('mce-content-body') ],
-          children: [
-            s.element('p', {
-              children: [ s.anything() ]
-            })
-          ]
-        });
-      }),
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('mce-content-body') ],
+        children: [
+          s.element('p', {
+            children: [ s.anything() ]
+          })
+        ]
+      })),
       contentAreaContainer
     )
   ]);
@@ -362,32 +348,28 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
 
       ed.ui.registry.addMenuButton('dropdown1-with-text', {
         text: 'dropdown1',
-        fetch: (callback) => {
-          return callback([
-            {
-              type: 'menuitem',
-              text: 'Fetch1',
-              onAction: () => {
-                console.log('fetching item1');
-              }
+        fetch: (callback) => callback([
+          {
+            type: 'menuitem',
+            text: 'Fetch1',
+            onAction: () => {
+              console.log('fetching item1');
             }
-          ]);
-        }
+          }
+        ])
       });
 
       ed.ui.registry.addMenuButton('dropdown1-with-icon', {
         icon: 'bold',
-        fetch: (callback) => {
-          return callback([
-            {
-              type: 'menuitem',
-              text: 'Fetch1',
-              onAction: () => {
-                console.log('fetching item1');
-              }
+        fetch: (callback) => callback([
+          {
+            type: 'menuitem',
+            text: 'Fetch1',
+            onAction: () => {
+              console.log('fetching item1');
             }
-          ]);
-        }
+          }
+        ])
       });
 
       ed.ui.registry.addSplitButton('splitbutton1-with-text', {

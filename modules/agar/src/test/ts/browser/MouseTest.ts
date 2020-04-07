@@ -50,10 +50,9 @@ UnitTest.asynctest('MouseTest', function (success, failure) {
       assertRepository(label, expected)
     ]);
 
-  const isUnfocusedFirefox = () => {
+  const isUnfocusedFirefox = () =>
     // Focus events are not fired until the window has focus: https://bugzilla.mozilla.org/show_bug.cgi?id=566671
-    return platform.browser.isFirefox() && !document.hasFocus();
-  };
+    platform.browser.isFirefox() && !document.hasFocus();
 
   Insert.append(container, input);
 

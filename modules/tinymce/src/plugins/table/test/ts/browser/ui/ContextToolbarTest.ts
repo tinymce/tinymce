@@ -37,24 +37,18 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success,
     const sPressTabKey = Keyboard.sKeydown(doc, Keys.tab(), { });
 
     // Assert focus is on the expected toolbar button
-    const sAssertFocusOnItem = (label: string, selector: string) => {
-      return FocusTools.sTryOnSelector(`Focus should be on: ${label}`, doc, selector);
-    };
+    const sAssertFocusOnItem = (label: string, selector: string) => FocusTools.sTryOnSelector(`Focus should be on: ${label}`, doc, selector);
 
-    const sAssertButtonDisabled = (label: string, selector: string) => {
-      return tinyUi.sWaitForUi(label, `.tox-pop__dialog ${selector}.tox-tbtn--disabled`);
-    };
+    const sAssertButtonDisabled = (label: string, selector: string) => tinyUi.sWaitForUi(label, `.tox-pop__dialog ${selector}.tox-tbtn--disabled`);
 
-    const sClickOnToolbarButton = (selector: string) => {
-      return Chain.asStep({}, [
-        Chain.fromParent(tinyUi.cWaitForPopup('wait for context toolbar', '.tox-pop__dialog div'), [
-          Chain.fromChains([
-            UiFinder.cFindIn(selector),
-            Mouse.cClick
-          ])
+    const sClickOnToolbarButton = (selector: string) => Chain.asStep({}, [
+      Chain.fromParent(tinyUi.cWaitForPopup('wait for context toolbar', '.tox-pop__dialog div'), [
+        Chain.fromChains([
+          UiFinder.cFindIn(selector),
+          Mouse.cClick
         ])
-      ]);
-    };
+      ])
+    ]);
 
     const sAssertHtmlStructure = (label, expectedHtml) => Chain.asStep({ editor }, [ NamedChain.read('editor', Chain.op((editor) => {
       const elm = Replication.deep(Element.fromDom(editor.getBody()));

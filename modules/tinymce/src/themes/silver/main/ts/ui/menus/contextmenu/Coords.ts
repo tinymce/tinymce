@@ -74,10 +74,8 @@ export const getSelectionAnchor = function (editor: Editor): SelectionAnchorSpec
   };
 };
 
-export const getNodeAnchor = (editor: Editor): NodeAnchorSpec => {
-  return {
-    anchor: 'node',
-    node: Option.some(Element.fromDom(editor.selection.getNode())),
-    root: Element.fromDom(editor.getBody())
-  };
-};
+export const getNodeAnchor = (editor: Editor): NodeAnchorSpec => ({
+  anchor: 'node',
+  node: Option.some(Element.fromDom(editor.selection.getNode())),
+  root: Element.fromDom(editor.getBody())
+});

@@ -8,22 +8,16 @@
 import { Arr, Result, Type } from '@ephox/katamari';
 import { BlockPattern, InlineCmdPattern, InlinePattern, Pattern, PatternError, PatternSet, RawPattern } from '../core/PatternTypes';
 
-const isInlinePattern = (pattern: Pattern): pattern is InlinePattern => {
-  return pattern.type === 'inline-command' || pattern.type === 'inline-format';
-};
+const isInlinePattern = (pattern: Pattern): pattern is InlinePattern => pattern.type === 'inline-command' || pattern.type === 'inline-format';
 
-const isBlockPattern = (pattern: Pattern): pattern is BlockPattern => {
-  return pattern.type === 'block-command' || pattern.type === 'block-format';
-};
+const isBlockPattern = (pattern: Pattern): pattern is BlockPattern => pattern.type === 'block-command' || pattern.type === 'block-format';
 
-const sortPatterns = <T extends Pattern>(patterns: T[]): T[] => {
-  return Arr.sort(patterns, (a, b) => {
-    if (a.start.length === b.start.length) {
-      return 0;
-    }
-    return a.start.length > b.start.length ? -1 : 1;
-  });
-};
+const sortPatterns = <T extends Pattern>(patterns: T[]): T[] => Arr.sort(patterns, (a, b) => {
+  if (a.start.length === b.start.length) {
+    return 0;
+  }
+  return a.start.length > b.start.length ? -1 : 1;
+});
 
 const normalizePattern = (pattern: RawPattern): Result<Pattern, PatternError> => {
   const err = (message: string) => Result.error({ message, pattern });
@@ -142,12 +136,10 @@ const denormalizePattern = (pattern: Pattern): RawPattern => {
   }
 };
 
-const createPatternSet = (patterns: Pattern[]): PatternSet => {
-  return {
-    inlinePatterns: Arr.filter(patterns, isInlinePattern),
-    blockPatterns: sortPatterns(Arr.filter(patterns, isBlockPattern)),
-  };
-};
+const createPatternSet = (patterns: Pattern[]): PatternSet => ({
+  inlinePatterns: Arr.filter(patterns, isInlinePattern),
+  blockPatterns: sortPatterns(Arr.filter(patterns, isBlockPattern)),
+});
 
 export {
   normalizePattern,

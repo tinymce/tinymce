@@ -47,17 +47,15 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
     );
 
   }, (_doc, _body, gui, _component, _store) => {
-    const cSetupAnchor = Chain.mapper((data: any) => {
-      return {
-        anchor: 'selection',
-        root: data.inline.element(),
-        getSelection() {
-          return Option.some(
-            Cursors.calculate(data.inline.element(), data.path)
-          );
-        }
-      };
-    });
+    const cSetupAnchor = Chain.mapper((data: any) => ({
+      anchor: 'selection',
+      root: data.inline.element(),
+      getSelection() {
+        return Option.some(
+          Cursors.calculate(data.inline.element(), data.path)
+        );
+      }
+    }));
 
     return [
       Chain.asStep({}, [

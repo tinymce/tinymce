@@ -13,14 +13,12 @@ export default function () {
     editor.on(message, handleError);
   };
 
-  const sAssertErrorLogged = (label: string, message: string) => {
-    return Waiter.sTryUntil(label,
-      Step.sync(() => {
-        Assertions.assertEq(label, true, errors.indexOf(message) !== -1);
-      }),
-      100, 1000
-    );
-  };
+  const sAssertErrorLogged = (label: string, message: string) => Waiter.sTryUntil(label,
+    Step.sync(() => {
+      Assertions.assertEq(label, true, errors.indexOf(message) !== -1);
+    }),
+    100, 1000
+  );
 
   return {
     sAssertErrorLogged,

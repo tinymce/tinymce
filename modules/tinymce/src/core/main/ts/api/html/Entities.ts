@@ -132,11 +132,9 @@ namedEntities = buildEntitiesLookup(
  * @param {Boolean} attr Optional flag to specify if the text is attribute contents.
  * @return {String} Entity encoded text.
  */
-const encodeRaw = (text: string, attr?: boolean): string => {
-  return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
-    return baseEntities[chr] || chr;
-  });
-};
+const encodeRaw = (text: string, attr?: boolean): string => text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
+  return baseEntities[chr] || chr;
+});
 
 /**
  * Encoded the specified text with both the attributes and text entities. This function will produce larger text contents
@@ -147,11 +145,9 @@ const encodeRaw = (text: string, attr?: boolean): string => {
  * @param {String} text Text to encode.
  * @return {String} Entity encoded text.
  */
-const encodeAllRaw = (text: string): string => {
-  return ('' + text).replace(rawCharsRegExp, function (chr) {
-    return baseEntities[chr] || chr;
-  });
-};
+const encodeAllRaw = (text: string): string => ('' + text).replace(rawCharsRegExp, function (chr) {
+  return baseEntities[chr] || chr;
+});
 
 /**
  * Encodes the specified string using numeric entities. The core entities will be
@@ -162,16 +158,14 @@ const encodeAllRaw = (text: string): string => {
  * @param {Boolean} attr Optional flag to specify if the text is attribute contents.
  * @return {String} Entity encoded text.
  */
-const encodeNumeric = (text: string, attr?: boolean): string => {
-  return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
-    // Multi byte sequence convert it to a single entity
-    if (chr.length > 1) {
-      return '&#' + (((chr.charCodeAt(0) - 0xD800) * 0x400) + (chr.charCodeAt(1) - 0xDC00) + 0x10000) + ';';
-    }
+const encodeNumeric = (text: string, attr?: boolean): string => text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
+  // Multi byte sequence convert it to a single entity
+  if (chr.length > 1) {
+    return '&#' + (((chr.charCodeAt(0) - 0xD800) * 0x400) + (chr.charCodeAt(1) - 0xDC00) + 0x10000) + ';';
+  }
 
-    return baseEntities[chr] || '&#' + chr.charCodeAt(0) + ';';
-  });
-};
+  return baseEntities[chr] || '&#' + chr.charCodeAt(0) + ';';
+});
 
 /**
  * Encodes the specified string using named entities. The core entities will be encoded
@@ -202,24 +196,22 @@ const encodeNamed = (text: string, attr?: boolean, entities?: EntitiesMap): stri
 const getEncodeFunc = (name: string, entities?: EntitiesMap | string) => {
   const entitiesMap = buildEntitiesLookup(entities) || namedEntities;
 
-  const encodeNamedAndNumeric = (text: string, attr?: boolean): string => {
-    return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
-      if (baseEntities[chr] !== undefined) {
-        return baseEntities[chr];
-      }
+  const encodeNamedAndNumeric = (text: string, attr?: boolean): string => text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
+    if (baseEntities[chr] !== undefined) {
+      return baseEntities[chr];
+    }
 
-      if (entitiesMap[chr] !== undefined) {
-        return entitiesMap[chr];
-      }
+    if (entitiesMap[chr] !== undefined) {
+      return entitiesMap[chr];
+    }
 
-      // Convert multi-byte sequences to a single entity.
-      if (chr.length > 1) {
-        return '&#' + (((chr.charCodeAt(0) - 0xD800) * 0x400) + (chr.charCodeAt(1) - 0xDC00) + 0x10000) + ';';
-      }
+    // Convert multi-byte sequences to a single entity.
+    if (chr.length > 1) {
+      return '&#' + (((chr.charCodeAt(0) - 0xD800) * 0x400) + (chr.charCodeAt(1) - 0xDC00) + 0x10000) + ';';
+    }
 
-      return '&#' + chr.charCodeAt(0) + ';';
-    });
-  };
+    return '&#' + chr.charCodeAt(0) + ';';
+  });
 
   const encodeCustomNamed = function (text: string, attr) {
     return encodeNamed(text, attr, entitiesMap);
@@ -259,29 +251,27 @@ const getEncodeFunc = (name: string, entities?: EntitiesMap | string) => {
  * @param {String} text Text to entity decode.
  * @return {String} Entity decoded string.
  */
-const decode = (text: string): string => {
-  return text.replace(entityRegExp, function (all, numeric) {
-    if (numeric) {
-      if (numeric.charAt(0).toLowerCase() === 'x') {
-        numeric = parseInt(numeric.substr(1), 16);
-      } else {
-        numeric = parseInt(numeric, 10);
-      }
-
-      // Support upper UTF
-      if (numeric > 0xFFFF) {
-        numeric -= 0x10000;
-
-        // eslint-disable-next-line no-bitwise
-        return String.fromCharCode(0xD800 + (numeric >> 10), 0xDC00 + (numeric & 0x3FF));
-      }
-
-      return asciiMap[numeric] || String.fromCharCode(numeric);
+const decode = (text: string): string => text.replace(entityRegExp, function (all, numeric) {
+  if (numeric) {
+    if (numeric.charAt(0).toLowerCase() === 'x') {
+      numeric = parseInt(numeric.substr(1), 16);
+    } else {
+      numeric = parseInt(numeric, 10);
     }
 
-    return reverseEntities[all] || namedEntities[all] || nativeDecode(all);
-  });
-};
+    // Support upper UTF
+    if (numeric > 0xFFFF) {
+      numeric -= 0x10000;
+
+      // eslint-disable-next-line no-bitwise
+      return String.fromCharCode(0xD800 + (numeric >> 10), 0xDC00 + (numeric & 0x3FF));
+    }
+
+    return asciiMap[numeric] || String.fromCharCode(numeric);
+  }
+
+  return reverseEntities[all] || namedEntities[all] || nativeDecode(all);
+});
 
 const Entities: Entities = {
   encodeRaw,

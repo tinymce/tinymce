@@ -16,18 +16,16 @@ const sSetContentAndFireKeystroke = function (key: number) {
   };
 };
 
-const sSetContentAndPressSpace = (tinyApis: TinyApis, tinyActions: TinyActions, content: string, offset = content.length, elementPath = [ 0, 0 ]) => {
-  return Step.label('Set content and press space', GeneralSteps.sequence([
-    tinyApis.sSetContent('<p>' + content + '</p>'),
-    tinyApis.sFocus(),
-    tinyApis.sSetCursor(
-      elementPath,
-      offset
-    ),
-    tinyApis.sExecCommand('mceInsertContent', ' '),
-    tinyActions.sContentKeystroke(32, {}),
-  ]));
-};
+const sSetContentAndPressSpace = (tinyApis: TinyApis, tinyActions: TinyActions, content: string, offset = content.length, elementPath = [ 0, 0 ]) => Step.label('Set content and press space', GeneralSteps.sequence([
+  tinyApis.sSetContent('<p>' + content + '</p>'),
+  tinyApis.sFocus(),
+  tinyApis.sSetCursor(
+    elementPath,
+    offset
+  ),
+  tinyApis.sExecCommand('mceInsertContent', ' '),
+  tinyActions.sContentKeystroke(32, {}),
+]));
 
 const withTeardown = function (steps: Step<any, any>[], teardownStep: Step<any, any>) {
   return Arr.bind(steps, function (step) {

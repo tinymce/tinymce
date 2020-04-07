@@ -84,53 +84,51 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
 
     const typeahead = gui.getByUid('test-type').getOrDie();
 
-    const testWithChooser = (label: string, sChooser: Step<any, any>): Step<any, any> => {
-      return Logger.t(
-        label,
-        GeneralSteps.sequence([
-          Logger.t(
-            'Set some content in the typeahead',
-            UiControls.sSetValue(typeahead.element(), 'Neo'),
-          ),
+    const testWithChooser = (label: string, sChooser: Step<any, any>): Step<any, any> => Logger.t(
+      label,
+      GeneralSteps.sequence([
+        Logger.t(
+          'Set some content in the typeahead',
+          UiControls.sSetValue(typeahead.element(), 'Neo'),
+        ),
 
-          Logger.t(
-            'Trigger an "input" event and wait for the menu',
-            GeneralSteps.sequence([
-              Step.sync(() => {
-                AlloyTriggers.emit(typeahead, NativeEvents.input());
-              }),
-              UiFinder.sWaitFor('Waiting for menu to appear', component.element(), '[role="menu"]')
-            ])
-          ),
+        Logger.t(
+          'Trigger an "input" event and wait for the menu',
+          GeneralSteps.sequence([
+            Step.sync(() => {
+              AlloyTriggers.emit(typeahead, NativeEvents.input());
+            }),
+            UiFinder.sWaitFor('Waiting for menu to appear', component.element(), '[role="menu"]')
+          ])
+        ),
 
-          Logger.t(
-            'Trigger another input and wait for a little bit (less than 1000s - delay)',
-            GeneralSteps.sequence([
-              Step.sync(() => {
-                AlloyTriggers.emit(typeahead, NativeEvents.input());
-              }),
-              Step.wait(100)
-            ])
-          ),
+        Logger.t(
+          'Trigger another input and wait for a little bit (less than 1000s - delay)',
+          GeneralSteps.sequence([
+            Step.sync(() => {
+              AlloyTriggers.emit(typeahead, NativeEvents.input());
+            }),
+            Step.wait(100)
+          ])
+        ),
 
-          Logger.t(
-            'While the other menu is loading, try and select an option and ensure menu goes away',
-            GeneralSteps.sequence([
-              sChooser,
-              UiFinder.sNotExists(component.element(), '[role="menu"]')
-            ])
-          ),
+        Logger.t(
+          'While the other menu is loading, try and select an option and ensure menu goes away',
+          GeneralSteps.sequence([
+            sChooser,
+            UiFinder.sNotExists(component.element(), '[role="menu"]')
+          ])
+        ),
 
-          Logger.t(
-            'Wait and ensure menu does not reappear when second input triggers',
-            GeneralSteps.sequence([
-              Step.wait(500),
-              UiFinder.sNotExists(component.element(), '[role="menu"]')
-            ])
-          ),
-        ])
-      );
-    };
+        Logger.t(
+          'Wait and ensure menu does not reappear when second input triggers',
+          GeneralSteps.sequence([
+            Step.wait(500),
+            UiFinder.sNotExists(component.element(), '[role="menu"]')
+          ])
+        ),
+      ])
+    );
 
     return [
       FocusTools.sSetFocus('Focusing typeahead', gui.element(), 'input'),

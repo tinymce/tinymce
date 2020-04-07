@@ -9,9 +9,7 @@ import { Arr, Fun, Strings, Option } from '@ephox/katamari';
 
 import { EmojiEntry } from './EmojiDatabase';
 
-const emojiMatches = (emoji: EmojiEntry, lowerCasePattern: string): boolean => {
-  return Strings.contains(emoji.title.toLowerCase(), lowerCasePattern) || Arr.exists(emoji.keywords, (k) => Strings.contains(k.toLowerCase(), lowerCasePattern));
-};
+const emojiMatches = (emoji: EmojiEntry, lowerCasePattern: string): boolean => Strings.contains(emoji.title.toLowerCase(), lowerCasePattern) || Arr.exists(emoji.keywords, (k) => Strings.contains(k.toLowerCase(), lowerCasePattern));
 
 const emojisFrom = (list: EmojiEntry[], pattern: string, maxResults: Option<number>): Array<{value: string; icon: string; text: string }> => {
   const matches = [];

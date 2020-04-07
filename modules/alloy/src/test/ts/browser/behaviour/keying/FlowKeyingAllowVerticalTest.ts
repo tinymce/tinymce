@@ -13,29 +13,27 @@ import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 UnitTest.asynctest('Flow Keying Allow Vertical Test', (success, failure) => {
 
   GuiSetup.setup((store, _doc, _body) => {
-    const item = (classes: string[], name: string) => {
-      return Container.sketch({
-        dom: {
-          tag: 'span',
-          styles: {
-            display: 'inline-block',
-            width: '20px',
-            height: '20px',
-            margin: '2px',
-            border: '1px solid blue'
-          },
-          classes
+    const item = (classes: string[], name: string) => Container.sketch({
+      dom: {
+        tag: 'span',
+        styles: {
+          display: 'inline-block',
+          width: '20px',
+          height: '20px',
+          margin: '2px',
+          border: '1px solid blue'
         },
-        events: AlloyEvents.derive([
-          AlloyEvents.runOnExecute(
-            store.adder('item.execute: ' + name)
-          )
-        ]),
-        containerBehaviours: Behaviour.derive([
-          Focusing.config({ })
-        ])
-      });
-    };
+        classes
+      },
+      events: AlloyEvents.derive([
+        AlloyEvents.runOnExecute(
+          store.adder('item.execute: ' + name)
+        )
+      ]),
+      containerBehaviours: Behaviour.derive([
+        Focusing.config({ })
+      ])
+    });
 
     return GuiFactory.build(
       Container.sketch({

@@ -22,19 +22,43 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertTableTest', (success, fa
       Log.stepsAsStep('TBA', 'Table: Insert table 2x2', [
         tinyApis.sSetContent(''),
         sInsertTable(editor, 2, 2),
-        tinyApis.sAssertContent('<table style="width: 100%; border-collapse: collapse;" border="1"><tbody><tr><td style="width: 50%;">&nbsp;</td><td style="width: 50%;">&nbsp;</td></tr><tr><td style="width: 50%;">&nbsp;</td><td style="width: 50%;">&nbsp;</td></tr></tbody></table>'),
+        tinyApis.sAssertContent(
+          '<table style="width: 100%; border-collapse: collapse;" border="1">' +
+          '<tbody><tr>' +
+          '<td style="width: 50%;">&nbsp;</td>' +
+          '<td style="width: 50%;">&nbsp;</td>' +
+          '</tr><tr>' +
+          '<td style="width: 50%;">&nbsp;</td>' +
+          '<td style="width: 50%;">&nbsp;</td>' +
+          '</tr></tbody>' +
+          '</table>'
+        ),
         tinyApis.sAssertSelection([ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 0)
       ]),
       Log.stepsAsStep('TBA', 'Table: Insert table 1x2', [
         tinyApis.sSetContent(''),
         sInsertTable(editor, 1, 2),
-        tinyApis.sAssertContent('<table style="width: 100%; border-collapse: collapse;" border="1"><tbody><tr><td style="width: 100%;">&nbsp;</td></tr><tr><td style="width: 100%;">&nbsp;</td></tr></tbody></table>'),
+        tinyApis.sAssertContent(
+          '<table style="width: 100%; border-collapse: collapse;" border="1">' +
+          '<tbody><tr>' +
+          '<td style="width: 100%;">&nbsp;</td>' +
+          '</tr><tr>' +
+          '<td style="width: 100%;">&nbsp;</td>' +
+          '</tr></tbody>' +
+          '</table>'
+        ),
         tinyApis.sAssertSelection([ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 0)
       ]),
       Log.stepsAsStep('TBA', 'Table: Insert table 2x1', [
         tinyApis.sSetContent(''),
         sInsertTable(editor, 2, 1),
-        tinyApis.sAssertContent('<table style="width: 100%; border-collapse: collapse;" border="1"><tbody><tr><td style="width: 50%;">&nbsp;</td><td style="width: 50%;">&nbsp;</td></tr></tbody></table>'),
+        tinyApis.sAssertContent(
+          '<table style="width: 100%; border-collapse: collapse;" border="1">' +
+          '<tbody><tr>' +
+          '<td style="width: 50%;">&nbsp;</td>' +
+          '<td style="width: 50%;">&nbsp;</td>' +
+          '</tr></tbody></table>'
+        ),
         tinyApis.sAssertSelection([ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 0)
       ])
     ], onSuccess, onFailure);
@@ -42,7 +66,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertTableTest', (success, fa
     plugins: 'table',
     indent: false,
     valid_styles: {
-      '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
+      '*': 'width,height,vertical-align,text-align,float,border-color,' +
+           'background-color,border,padding,border-spacing,border-collapse'
     },
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',

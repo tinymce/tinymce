@@ -38,7 +38,12 @@ const registry = () => {
     addButton: bridge.addButton,
 
     /**
-     * Registers a new contextual form item. Similar to a context menu item, a contextual form is an item with an input form element appearing when a content predicate is matched. An example us of a contextual form is the link plugin when the configuration { link_context_toolbar: true } is used. When the cursor is on a link, a contextual input form appears allowing for quick changes to the url field.
+     * Registers a new contextual form item.
+     * Similar to a context menu item, a contextual form is an item with an input
+     * form element appearing when a content predicate is matched. An example
+     * us of a contextual form is the link plugin when the configuration
+     * { link_context_toolbar: true } is used. When the cursor is on a link, a
+     * contextual input form appears allowing for quick changes to the url field.
      *
      * @method addContextForm
      * @param {String} name Unique name identifying the new contextual form item.
@@ -108,7 +113,13 @@ const registry = () => {
     addNestedMenuItem: bridge.addNestedMenuItem,
 
     /**
-     * Registers a new sidebar container. This sidebar container is attached to the right side of the editor and can be toggled open or closed. When registered, a new toolbar toggle button with the same sidebar name is created. Additionally there is a ToggleSidebar command and a 'ToggleSidebar' event that can used to manage the sidebar open/closed state. The tinycomments plugin uses a sidebar for its Ui components.
+     * Registers a new sidebar container.
+     * This sidebar container is attached to the right side of the editor and
+     * can be toggled open or closed. When registered, a new toolbar toggle
+     * button with the same sidebar name is created. Additionally there is a
+     * ToggleSidebar command and a 'ToggleSidebar' event that can used to
+     * manage the sidebar open/closed state. The tinycomments plugin uses a
+     * sidebar for its Ui components.
      *
      * @method addSidebar
      * @param {String} name Unique name identifying the new sidebar.

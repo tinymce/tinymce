@@ -15,59 +15,53 @@ import { Attr } from '@ephox/sugar';
 
 UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success, failure) => {
   GuiSetup.setup(
-    (store, _doc, _body) => {
-      return GuiFactory.build({
+    (store, _doc, _body) => GuiFactory.build({
+      dom: {
+        tag: 'div',
+        classes: [ 'container' ]
+      },
+      components: Arr.map([ 1, 2, 3 ], (num) => ({
         dom: {
           tag: 'div',
-          classes: [ 'container' ]
+          classes: [ 'candidate' ],
+          attributes: {
+            'data-index': num
+          },
+          innerHtml: 'Candidate-' + num
         },
-        components: Arr.map([ 1, 2, 3 ], (num) => {
-          return {
-            dom: {
-              tag: 'div',
-              classes: [ 'candidate' ],
-              attributes: {
-                'data-index': num
-              },
-              innerHtml: 'Candidate-' + num
-            },
-            behaviours: Behaviour.derive([
-              Focusing.config({ })
-            ])
-          };
+        behaviours: Behaviour.derive([
+          Focusing.config({ })
+        ])
+      })),
+
+      behaviours: Behaviour.derive([
+        Highlighting.config({
+          itemClass: 'candidate',
+          highlightClass: 'selected-candidate'
         }),
 
-        behaviours: Behaviour.derive([
-          Highlighting.config({
-            itemClass: 'candidate',
-            highlightClass: 'selected-candidate'
-          }),
-
-          AddEventsBehaviour.config('focus-manager-events', [
-            AlloyEvents.run<SystemEvents.AlloyFocusShiftedEvent>(SystemEvents.focusShifted(), (_comp, se) => {
-              const prevFocus = se.event().prevFocus();
-              const newFocus = se.event().newFocus();
-              const prevIndex = prevFocus.map((p) => Attr.get(p, 'data-index')).getOr('{none}');
-              const newIndex = newFocus.map((p) => Attr.get(p, 'data-index')).getOr('{none}');
-              store.adder(prevIndex + '->' + newIndex)();
-            })
-          ])
+        AddEventsBehaviour.config('focus-manager-events', [
+          AlloyEvents.run<SystemEvents.AlloyFocusShiftedEvent>(SystemEvents.focusShifted(), (_comp, se) => {
+            const prevFocus = se.event().prevFocus();
+            const newFocus = se.event().newFocus();
+            const prevIndex = prevFocus.map((p) => Attr.get(p, 'data-index')).getOr('{none}');
+            const newIndex = newFocus.map((p) => Attr.get(p, 'data-index')).getOr('{none}');
+            store.adder(prevIndex + '->' + newIndex)();
+          })
         ])
-      });
-    },
+      ])
+    }),
 
     (doc, _body, _gui, component, store) => {
       const highlightManager = FocusManagers.highlights();
       const domManager = FocusManagers.dom();
 
-      const sFireFocusOn = (focusManager: FocusManagers.FocusManager, selector: string) => {
-        return Chain.asStep(component.element(), [
-          UiFinder.cFindIn(selector),
-          Chain.op((elem) => {
-            focusManager.set(component, elem);
-          })
-        ]);
-      };
+      const sFireFocusOn = (focusManager: FocusManagers.FocusManager, selector: string) => Chain.asStep(component.element(), [
+        UiFinder.cFindIn(selector),
+        Chain.op((elem) => {
+          focusManager.set(component, elem);
+        })
+      ]);
 
       return [
         store.sClear,

@@ -42,123 +42,111 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       borderstyle: '',
     };
 
-    const baseGetTest = () => {
-      return Log.stepsAsStep('TBA', 'Table: Table row properties dialog (get data from plain cell)', [
-        tinyApis.sSetSetting('table_row_advtab', false),
-        UiFinder.sWaitForVisible('waiting for editor', Element.fromDom(document.body), 'div.tox-tinymce'),
-        tinyApis.sSetContent(baseHtml),
-        tinyApis.sSelect('td', [ 0 ]),
-        TableTestUtils.sOpenTableDialog(tinyUi),
-        TableTestUtils.sAssertDialogValues(baseData, false, generalSelectors),
-        TableTestUtils.sClickDialogButton('cancel dialog', false)
-      ]);
-    };
+    const baseGetTest = () => Log.stepsAsStep('TBA', 'Table: Table row properties dialog (get data from plain cell)', [
+      tinyApis.sSetSetting('table_row_advtab', false),
+      UiFinder.sWaitForVisible('waiting for editor', Element.fromDom(document.body), 'div.tox-tinymce'),
+      tinyApis.sSetContent(baseHtml),
+      tinyApis.sSelect('td', [ 0 ]),
+      TableTestUtils.sOpenTableDialog(tinyUi),
+      TableTestUtils.sAssertDialogValues(baseData, false, generalSelectors),
+      TableTestUtils.sClickDialogButton('cancel dialog', false)
+    ]);
 
-    const baseGetSetTest = () => {
-      return Log.stepsAsStep('TBA', 'Table: Table row properties dialog (update all)', [
-        UiFinder.sWaitForVisible('waiting for editor', Element.fromDom(document.body), 'div.tox-tinymce'),
-        tinyApis.sSetContent(baseHtml),
-        tinyApis.sSelect('td', [ 0 ]),
-        TableTestUtils.sOpenTableDialog(tinyUi),
-        TableTestUtils.sSetDialogValues({
-          height: '10',
-          align: 'right',
-          type: 'thead'
-        }, false, generalSelectors),
-        TableTestUtils.sClickDialogButton('clicking save', true),
-        tinyApis.sAssertContent('<table style="border: 1px solid black; border-collapse: collapse;" border="1"><thead><tr style="height: 10px; text-align: right;"><td>X</td></tr></thead></table>')
-      ]);
-    };
+    const baseGetSetTest = () => Log.stepsAsStep('TBA', 'Table: Table row properties dialog (update all)', [
+      UiFinder.sWaitForVisible('waiting for editor', Element.fromDom(document.body), 'div.tox-tinymce'),
+      tinyApis.sSetContent(baseHtml),
+      tinyApis.sSelect('td', [ 0 ]),
+      TableTestUtils.sOpenTableDialog(tinyUi),
+      TableTestUtils.sSetDialogValues({
+        height: '10',
+        align: 'right',
+        type: 'thead'
+      }, false, generalSelectors),
+      TableTestUtils.sClickDialogButton('clicking save', true),
+      tinyApis.sAssertContent('<table style="border: 1px solid black; border-collapse: collapse;" border="1"><thead><tr style="height: 10px; text-align: right;"><td>X</td></tr></thead></table>')
+    ]);
 
-    const captionTest = () => {
-      return Log.stepsAsStep('TBA', 'Table: Caption should always stay the firstChild of the table (see TINY-1167)', [
-        tinyApis.sSetContent('<table><caption>CAPTION</caption><tbody><tr><td>X</td></tr><tr><td>Y</td></tr></tbody></table>'),
-        tinyApis.sSelect('td', [ 0 ]),
-        TableTestUtils.sOpenTableDialog(tinyUi),
+    const captionTest = () => Log.stepsAsStep('TBA', 'Table: Caption should always stay the firstChild of the table (see TINY-1167)', [
+      tinyApis.sSetContent('<table><caption>CAPTION</caption><tbody><tr><td>X</td></tr><tr><td>Y</td></tr></tbody></table>'),
+      tinyApis.sSelect('td', [ 0 ]),
+      TableTestUtils.sOpenTableDialog(tinyUi),
 
-        TableTestUtils.sSetDialogValues({
-          height: '',
-          align: '',
-          type: 'thead'
-        }, false, generalSelectors),
-        TableTestUtils.sClickDialogButton('clicking save', true),
-        tinyApis.sAssertContent('<table><caption>CAPTION</caption><thead><tr><td>X</td></tr></thead><tbody><tr><td>Y</td></tr></tbody></table>')
-      ]);
-    };
+      TableTestUtils.sSetDialogValues({
+        height: '',
+        align: '',
+        type: 'thead'
+      }, false, generalSelectors),
+      TableTestUtils.sClickDialogButton('clicking save', true),
+      tinyApis.sAssertContent('<table><caption>CAPTION</caption><thead><tr><td>X</td></tr></thead><tbody><tr><td>Y</td></tr></tbody></table>')
+    ]);
 
-    const advGetTest = () => {
-      return Log.stepsAsStep('TBA', 'Table: Table row properties dialog (get data from complex row)', [
-        tinyApis.sSetSetting('table_row_advtab', true),
-        tinyApis.sSetContent(advHtml),
-        tinyApis.sSelect('td', [ 0 ]),
-        TableTestUtils.sOpenTableDialog(tinyUi),
-        TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
-        TableTestUtils.sClickDialogButton('clicking cancel', false)
-      ]);
-    };
+    const advGetTest = () => Log.stepsAsStep('TBA', 'Table: Table row properties dialog (get data from complex row)', [
+      tinyApis.sSetSetting('table_row_advtab', true),
+      tinyApis.sSetContent(advHtml),
+      tinyApis.sSelect('td', [ 0 ]),
+      TableTestUtils.sOpenTableDialog(tinyUi),
+      TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
+      TableTestUtils.sClickDialogButton('clicking cancel', false)
+    ]);
 
-    const advGetSetTest = () => {
-      return Log.stepsAsStep('TBA', 'Table: Update advanced styles from row properties dialog', [
-        UiFinder.sWaitForVisible('waiting for editor', Element.fromDom(document.body), 'div.tox-tinymce'),
-        tinyApis.sSetContent(
-          '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
+    const advGetSetTest = () => Log.stepsAsStep('TBA', 'Table: Update advanced styles from row properties dialog', [
+      UiFinder.sWaitForVisible('waiting for editor', Element.fromDom(document.body), 'div.tox-tinymce'),
+      tinyApis.sSetContent(
+        '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
           '<tbody>' +
           '<tr>' +
           '<td>a</td>' +
           '</tr>' +
           '</tbody>' +
           '</table>'
-        ),
-        tinyApis.sSelect('td', [ 0 ]),
-        TableTestUtils.sOpenTableDialog(tinyUi),
-        TableTestUtils.sSetDialogValues({
-          align: '',
-          height: '',
-          type: 'tbody',
-          bordercolor: 'blue',
-          borderstyle: 'dotted',
-          backgroundcolor: '#ff0000'
-        }, true, generalSelectors),
-        TableTestUtils.sClickDialogButton('clicking save', true),
-        tinyApis.sAssertContent(
-          '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
+      ),
+      tinyApis.sSelect('td', [ 0 ]),
+      TableTestUtils.sOpenTableDialog(tinyUi),
+      TableTestUtils.sSetDialogValues({
+        align: '',
+        height: '',
+        type: 'tbody',
+        bordercolor: 'blue',
+        borderstyle: 'dotted',
+        backgroundcolor: '#ff0000'
+      }, true, generalSelectors),
+      TableTestUtils.sClickDialogButton('clicking save', true),
+      tinyApis.sAssertContent(
+        '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
           '<tbody>' +
           '<tr style="border-color: blue; border-style: dotted; background-color: #ff0000;">' +
           '<td>a</td>' +
           '</tr>' +
           '</tbody>' +
           '</table>'
-        )
-      ]);
-    };
+      )
+    ]);
 
-    const advRemoveTest = () => {
-      return Log.stepsAsStep('TBA', 'Table: Remove all advanced styles through the style field', [
-        tinyApis.sSetContent(advHtml),
+    const advRemoveTest = () => Log.stepsAsStep('TBA', 'Table: Remove all advanced styles through the style field', [
+      tinyApis.sSetContent(advHtml),
 
-        tinyApis.sSelect('tr:nth-child(1) td:nth-child(1)', [ 0 ]),
-        TableTestUtils.sOpenTableDialog(tinyUi),
-        TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
-        TableTestUtils.sSetDialogValues({
-          align: '',
-          height: '',
-          type: 'tbody',
-          backgroundcolor: '',
-          bordercolor: '',
-          borderstyle: '',
-        }, true, generalSelectors),
-        TableTestUtils.sClickDialogButton('clicking save', true),
-        tinyApis.sAssertContent(
-          '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
+      tinyApis.sSelect('tr:nth-child(1) td:nth-child(1)', [ 0 ]),
+      TableTestUtils.sOpenTableDialog(tinyUi),
+      TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
+      TableTestUtils.sSetDialogValues({
+        align: '',
+        height: '',
+        type: 'tbody',
+        backgroundcolor: '',
+        bordercolor: '',
+        borderstyle: '',
+      }, true, generalSelectors),
+      TableTestUtils.sClickDialogButton('clicking save', true),
+      tinyApis.sAssertContent(
+        '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
           '<tbody>' +
           '<tr>' +
           '<td>X</td>' +
           '</tr>' +
           '</tbody>' +
           '</table>'
-        )
-      ]);
-    };
+      )
+    ]);
 
     const multiUpdateTest = () => {
       const initialHtml =

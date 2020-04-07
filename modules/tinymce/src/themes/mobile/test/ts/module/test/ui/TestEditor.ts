@@ -40,11 +40,9 @@ export default function () {
     focus: Fun.noop,
     ui: {
       registry: {
-        getAll: () => {
-          return {
-            icons: {}
-          };
-        }
+        getAll: () => ({
+          icons: {}
+        })
       }
     }
   };

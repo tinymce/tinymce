@@ -19,40 +19,37 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
     '.test-sliding-width-shrinking { transition: width 5.0s ease; background: green !important; }'
   ];
 
-  GuiSetup.setup((store, _doc, _body) => {
-    return GuiFactory.build(
-      Container.sketch({
-        dom: {
-          styles: {
-            'overflow-x': 'hidden',
-            'background': 'blue',
-            'max-width': '300px',
-            'height': '20px'
-          }
-        },
-        components: [ ],
-        containerBehaviours: Behaviour.derive([
-          Sliding.config({
-            closedClass: 'test-sliding-closed',
-            openClass: 'test-sliding-open',
-            shrinkingClass: 'test-sliding-width-shrinking',
-            growingClass: 'test-sliding-width-growing',
+  GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
+    Container.sketch({
+      dom: {
+        styles: {
+          'overflow-x': 'hidden',
+          'background': 'blue',
+          'max-width': '300px',
+          'height': '20px'
+        }
+      },
+      components: [ ],
+      containerBehaviours: Behaviour.derive([
+        Sliding.config({
+          closedClass: 'test-sliding-closed',
+          openClass: 'test-sliding-open',
+          shrinkingClass: 'test-sliding-width-shrinking',
+          growingClass: 'test-sliding-width-growing',
 
-            dimension: {
-              property: 'width'
-            },
+          dimension: {
+            property: 'width'
+          },
 
-            onShrunk: store.adder('onShrunk'),
-            onStartShrink: store.adder('onStartShrink'),
-            onGrown: store.adder('onGrown'),
-            onStartGrow: store.adder('onStartGrow')
-          })
+          onShrunk: store.adder('onShrunk'),
+          onStartShrink: store.adder('onStartShrink'),
+          onGrown: store.adder('onGrown'),
+          onStartGrow: store.adder('onStartGrow')
+        })
 
-        ])
-      })
-    );
-
-  }, (doc, _body, _gui, component, _store) => {
+      ])
+    })
+  ), (doc, _body, _gui, component, _store) => {
 
     const sIsGrowing = Step.sync(() => {
       Assertions.assertEq('Ensuring still growing', true, Class.has(component.element(), 'test-sliding-width-growing'));

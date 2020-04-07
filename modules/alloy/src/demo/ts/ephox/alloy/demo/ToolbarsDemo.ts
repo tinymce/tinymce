@@ -28,75 +28,71 @@ export default (): void => {
   const sink = DemoSink.make();
   gui.add(sink);
 
-  const lazySink: LazySink = (_) => {
-    return Result.value(sink);
-  };
+  const lazySink: LazySink = (_) => Result.value(sink);
 
-  const groups = () => {
-    return Arr.map([
-      {
-        label: 'group-1',
-        items: Arr.map([
-          { text: '1a', action() { } },
-          { text: '1b', action() { } },
-          { text: '1c', action() { } }
+  const groups = () => Arr.map([
+    {
+      label: 'group-1',
+      items: Arr.map([
+        { text: '1a', action() { } },
+        { text: '1b', action() { } },
+        { text: '1c', action() { } }
 
-        ], DemoRenders.toolbarItem)
-      },
-      {
-        label: 'group-2',
-        items: Arr.map([
-          { text: '2a', action() { } },
-          { text: '2b', action() { } },
-          { text: '2c', action() { } }
+      ], DemoRenders.toolbarItem)
+    },
+    {
+      label: 'group-2',
+      items: Arr.map([
+        { text: '2a', action() { } },
+        { text: '2b', action() { } },
+        { text: '2c', action() { } }
 
-        ], DemoRenders.toolbarItem)
-      },
-      {
-        label: 'group-3',
-        items: Arr.map([
-          { text: '3a', action() { } },
-          { text: '3b', action() { } },
-          { text: '3c', action() { } }
+      ], DemoRenders.toolbarItem)
+    },
+    {
+      label: 'group-3',
+      items: Arr.map([
+        { text: '3a', action() { } },
+        { text: '3b', action() { } },
+        { text: '3c', action() { } }
 
-        ], DemoRenders.toolbarItem)
-      },
-      {
-        label: 'group-4',
-        items: Arr.map([
-          { text: '4a', action() { } },
-          { text: '4b', action() { } },
-          { text: '4c', action() { } }
+      ], DemoRenders.toolbarItem)
+    },
+    {
+      label: 'group-4',
+      items: Arr.map([
+        { text: '4a', action() { } },
+        { text: '4b', action() { } },
+        { text: '4c', action() { } }
 
-        ], DemoRenders.toolbarItem)
-      },
-      {
-        label: 'group-5',
-        items: Arr.map([
-          { text: '5a', action() { } },
-          { text: '5b', action() { } },
-          { text: '5c', action() { } }
+      ], DemoRenders.toolbarItem)
+    },
+    {
+      label: 'group-5',
+      items: Arr.map([
+        { text: '5a', action() { } },
+        { text: '5b', action() { } },
+        { text: '5c', action() { } }
 
-        ], DemoRenders.toolbarItem)
-      },
-      {
-        label: 'group-6',
-        items: Arr.map([
-          { text: '6a', action() { } },
-          { text: '6b', action() { } }
+      ], DemoRenders.toolbarItem)
+    },
+    {
+      label: 'group-6',
+      items: Arr.map([
+        { text: '6a', action() { } },
+        { text: '6b', action() { } }
 
-        ], DemoRenders.toolbarItem)
-      },
-      {
-        label: 'group-7',
-        items: Arr.map([
-          { text: '7a', action() { } },
-          { text: '7b', action() { } }
+      ], DemoRenders.toolbarItem)
+    },
+    {
+      label: 'group-7',
+      items: Arr.map([
+        { text: '7a', action() { } },
+        { text: '7b', action() { } }
 
-        ], DemoRenders.toolbarItem)
-      }
-    ], DemoRenders.toolbarGroup);
-  };
+      ], DemoRenders.toolbarItem)
+    }
+  ], DemoRenders.toolbarGroup);
 
   const subject = HtmlDisplay.section(
     gui,
@@ -252,20 +248,18 @@ export default (): void => {
         // })
       ],
       shell: true,
-      makeItem: () => {
-        return Toolbar.sketch(
-          {
-            dom: {
-              tag: 'div',
-              classes: [ 'single-toolbar' ],
-              styles: {
-                display: 'flex'
-              }
-            },
-            components: [ ]
-          }
-        );
-      },
+      makeItem: () => Toolbar.sketch(
+        {
+          dom: {
+            tag: 'div',
+            classes: [ 'single-toolbar' ],
+            styles: {
+              display: 'flex'
+            }
+          },
+          components: [ ]
+        }
+      ),
       setupItem: (mToolbar: AlloyComponent, tc: AlloyComponent, data: any, _index: number) => {
         Toolbar.setGroups(tc, data);
       }

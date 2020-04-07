@@ -19,9 +19,7 @@ export const indexOf = <T = any>(xs: ArrayLike<T>, x: T): Option<number> => {
   return r === -1 ? Option.none() : Option.some(r);
 };
 
-export const contains = <T>(xs: ArrayLike<T>, x: T): boolean => {
-  return rawIndexOf(xs, x) > -1;
-};
+export const contains = <T>(xs: ArrayLike<T>, x: T): boolean => rawIndexOf(xs, x) > -1;
 
 export const exists = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): boolean => {
   for (let i = 0, len = xs.length; i < len; i++) {
@@ -221,9 +219,7 @@ export const reverse = <T>(xs: ArrayLike<T>): T[] => {
   return r;
 };
 
-export const difference = <T>(a1: ArrayLike<T>, a2: ArrayLike<T>): T[] => {
-  return filter(a1, (x) => !contains(a2, x));
-};
+export const difference = <T>(a1: ArrayLike<T>, a2: ArrayLike<T>): T[] => filter(a1, (x) => !contains(a2, x));
 
 export const mapToObject = <T extends keyof any, U>(xs: ArrayLike<T>, f: (x: T, i: number) => U): Record<T, U> => {
   const r = {} as Record<T, U>;

@@ -66,17 +66,13 @@ const register = function (editor: Editor, pluginUrl: string, startedState: Cell
   const splitButtonArgs: Toolbar.ToolbarSplitButtonApi = {
     ...buttonArgs,
     type : 'splitbutton',
-    select : (value) => {
-      return value === currentLanguageState.get();
-    },
+    select : (value) => value === currentLanguageState.get(),
     fetch : (callback) => {
-      const items = Tools.map(languageMenuItems, (languageItem): Menu.ChoiceMenuItemApi => {
-        return {
-          type: 'choiceitem',
-          value: languageItem.data,
-          text: languageItem.text
-        };
-      });
+      const items = Tools.map(languageMenuItems, (languageItem): Menu.ChoiceMenuItemApi => ({
+        type: 'choiceitem',
+        value: languageItem.data,
+        text: languageItem.text
+      }));
       callback(items);
     },
     onItemAction: (splitButtonApi, value) => {

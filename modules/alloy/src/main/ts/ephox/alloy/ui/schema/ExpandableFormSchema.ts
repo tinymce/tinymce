@@ -32,10 +32,8 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   SketchBehaviours.field('expandableBehaviours', [ Representing ])
 ]);
 
-const runOnExtra = (detail: ExpandableFormDetail, operation: (comp: AlloyComponent) => void): (comp: AlloyComponent) => void => {
-  return (anyComp) => {
-    AlloyParts.getPart(anyComp, detail, 'extra').each(operation);
-  };
+const runOnExtra = (detail: ExpandableFormDetail, operation: (comp: AlloyComponent) => void): (comp: AlloyComponent) => void => (anyComp) => {
+  AlloyParts.getPart(anyComp, detail, 'extra').each(operation);
 };
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([

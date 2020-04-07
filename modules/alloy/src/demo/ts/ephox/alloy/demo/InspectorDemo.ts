@@ -39,16 +39,14 @@ export default (): void => {
             console.log('clicked on a button');
           }
         }),
-        Form.sketch((parts: FormParts) => {
-          return {
-            dom: {
-              tag: 'div'
-            },
-            components: [
-              parts.field('alpha', Input.sketch({ }))
-            ]
-          };
-        })
+        Form.sketch((parts: FormParts) => ({
+          dom: {
+            tag: 'div'
+          },
+          components: [
+            parts.field('alpha', Input.sketch({ }))
+          ]
+        }))
       ]
     }
   );

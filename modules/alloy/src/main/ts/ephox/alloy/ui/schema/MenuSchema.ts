@@ -26,37 +26,31 @@ const itemSchema = ValueSchema.choose(
   }
 );
 
-const configureGrid = (detail: MenuDetail, movementInfo: MenuGridMovement): FlatgridConfigSpec => {
-  return {
-    mode: 'flatgrid',
-    selector: '.' + detail.markers.item,
-    initSize: {
-      numColumns: movementInfo.initSize.numColumns,
-      numRows: movementInfo.initSize.numRows
-    },
-    focusManager: detail.focusManager
-  };
-};
+const configureGrid = (detail: MenuDetail, movementInfo: MenuGridMovement): FlatgridConfigSpec => ({
+  mode: 'flatgrid',
+  selector: '.' + detail.markers.item,
+  initSize: {
+    numColumns: movementInfo.initSize.numColumns,
+    numRows: movementInfo.initSize.numRows
+  },
+  focusManager: detail.focusManager
+});
 
-const configureMatrix = (detail: MenuDetail, movementInfo: MenuMatrixMovement): MatrixConfigSpec => {
-  return {
-    mode: 'matrix',
-    selectors: {
-      row: movementInfo.rowSelector,
-      cell: '.' + detail.markers.item,
-    },
-    focusManager: detail.focusManager
-  };
-};
+const configureMatrix = (detail: MenuDetail, movementInfo: MenuMatrixMovement): MatrixConfigSpec => ({
+  mode: 'matrix',
+  selectors: {
+    row: movementInfo.rowSelector,
+    cell: '.' + detail.markers.item,
+  },
+  focusManager: detail.focusManager
+});
 
-const configureMenu = (detail: MenuDetail, movementInfo: MenuNormalMovement): MenuConfigSpec => {
-  return {
-    mode: 'menu',
-    selector: '.' + detail.markers.item,
-    moveOnTab: movementInfo.moveOnTab,
-    focusManager: detail.focusManager
-  };
-};
+const configureMenu = (detail: MenuDetail, movementInfo: MenuNormalMovement): MenuConfigSpec => ({
+  mode: 'menu',
+  selector: '.' + detail.markers.item,
+  moveOnTab: movementInfo.moveOnTab,
+  focusManager: detail.focusManager
+});
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.group<MenuDetail, ItemSpec>({

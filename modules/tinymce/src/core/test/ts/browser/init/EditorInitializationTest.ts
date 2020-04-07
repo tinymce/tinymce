@@ -186,41 +186,39 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     Assertions.assertHtml('Editor contents should be the second div content', '<p>b</p>', editors[1].getContent());
     // tslint:disable-next-line:no-console
     console.log('Editor container 0:', editors[0].editorContainer);
-    const containerApproxStructure = ApproxStructure.build((s, str, arr) => {
-      return s.element('div', {
-        classes: [ arr.has('tox'), arr.has('tox-tinymce'), arr.has('tox-tinymce-inline') ],
-        children: [
-          s.element('div', {
-            classes: [ arr.has('tox-editor-container') ],
-            children: [
-              s.element('div', {
-                classes: [ arr.has('tox-editor-header') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-menubar') ],
-                    attrs: {
-                      role: str.is('menubar'),
-                    },
-                  }),
-                  s.element('div', {
-                    classes: [ arr.has('tox-toolbar') ],
-                    attrs: {
-                      role: str.is('group'),
-                    },
-                  }),
-                  s.element('div', {
-                    classes: [ arr.has('tox-anchorbar') ]
-                  })
-                ]
-              })
-            ]
-          }),
-          s.element('div', {
-            classes: [ arr.has('tox-throbber') ]
-          })
-        ]
-      });
-    });
+    const containerApproxStructure = ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('tox'), arr.has('tox-tinymce'), arr.has('tox-tinymce-inline') ],
+      children: [
+        s.element('div', {
+          classes: [ arr.has('tox-editor-container') ],
+          children: [
+            s.element('div', {
+              classes: [ arr.has('tox-editor-header') ],
+              children: [
+                s.element('div', {
+                  classes: [ arr.has('tox-menubar') ],
+                  attrs: {
+                    role: str.is('menubar'),
+                  },
+                }),
+                s.element('div', {
+                  classes: [ arr.has('tox-toolbar') ],
+                  attrs: {
+                    role: str.is('group'),
+                  },
+                }),
+                s.element('div', {
+                  classes: [ arr.has('tox-anchorbar') ]
+                })
+              ]
+            })
+          ]
+        }),
+        s.element('div', {
+          classes: [ arr.has('tox-throbber') ]
+        })
+      ]
+    }));
     Assertions.assertStructure('Editor container should match expected structure', containerApproxStructure, Element.fromDom(editors[0].editorContainer));
     Assertions.assertStructure('Editor container should match expected structure', containerApproxStructure, Element.fromDom(editors[1].editorContainer));
 
@@ -253,21 +251,19 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     next({});
   }));
 
-  const sInitAndAssertContent = (html: string, selector: string, expectedEditorContent: string) => {
-    return Step.async((done) => {
-      viewBlock.update(html);
+  const sInitAndAssertContent = (html: string, selector: string, expectedEditorContent: string) => Step.async((done) => {
+    viewBlock.update(html);
 
-      EditorManager.init({
-        selector,
-        skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-        content_css: '/project/tinymce/js/tinymce/skins/content/default',
-        init_instance_callback(ed) {
-          Assertions.assertEq('Expect editor to have content', expectedEditorContent, ed.getContent({ format: 'text' }));
-          teardown(done);
-        }
-      });
+    EditorManager.init({
+      selector,
+      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
+      content_css: '/project/tinymce/js/tinymce/skins/content/default',
+      init_instance_callback(ed) {
+        Assertions.assertEq('Expect editor to have content', expectedEditorContent, ed.getContent({ format: 'text' }));
+        teardown(done);
+      }
     });
-  };
+  });
 
   setup();
   Pipeline.async({}, [

@@ -279,19 +279,17 @@ export default () => {
     url: ''
   }, sharedBackstage.providers);
 
-  const display = (label: string, spec: SimpleSpec) => {
-    return {
-      dom: {
-        tag: 'div',
-        styles: { border: '1px solid #aaa', margin: '1em', padding: '1em' }
-      },
-      components: [
-        { dom: DomFactory.fromHtml('<h3>' + label + '</h3>') },
-        { dom: { tag: 'hr' }},
-        spec
-      ]
-    };
-  };
+  const display = (label: string, spec: SimpleSpec) => ({
+    dom: {
+      tag: 'div',
+      styles: { border: '1px solid #aaa', margin: '1em', padding: '1em' }
+    },
+    components: [
+      { dom: DomFactory.fromHtml('<h3>' + label + '</h3>') },
+      { dom: { tag: 'hr' }},
+      spec
+    ]
+  });
 
   const memCollection = Memento.record(
     renderCollection({

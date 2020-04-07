@@ -27,6 +27,4 @@ export const urlInputDataProcessor = ValueSchema.objOf([
   FieldSchema.defaulted('meta', { })
 ]);
 
-export const createUrlInput = (spec: any): Result<UrlInput, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<UrlInput>('urlinput', urlInputSchema, spec);
-};
+export const createUrlInput = (spec: any): Result<UrlInput, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<UrlInput>('urlinput', urlInputSchema, spec);

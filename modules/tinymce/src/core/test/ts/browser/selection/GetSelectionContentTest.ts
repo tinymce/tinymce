@@ -29,18 +29,12 @@ UnitTest.asynctest('browser.tinymce.selection.GetSelectionContentTest', (success
     document.body.appendChild(div);
   });
 
-  const cGetContent = (args: any) => {
-    return Chain.mapper((editor: Editor) => {
-      return GetSelectionContent.getContent(editor, args);
-    });
-  };
+  const cGetContent = (args: any) => Chain.mapper((editor: Editor) => GetSelectionContent.getContent(editor, args));
 
-  const sAssertGetContent = (label: string, editor: Editor, expectedContents: string, args: any = {}) => {
-    return Chain.asStep(editor, [
-      cGetContent(args),
-      Assertions.cAssertEq('Should be expected contents', expectedContents)
-    ]);
-  };
+  const sAssertGetContent = (label: string, editor: Editor, expectedContents: string, args: any = {}) => Chain.asStep(editor, [
+    cGetContent(args),
+    Assertions.cAssertEq('Should be expected contents', expectedContents)
+  ]);
 
   const sAssertGetContentOverrideBeforeGetContent = (label: string, editor: Editor, expectedContents: string, args: any = {}) => {
     const handler = (e) => {

@@ -54,11 +54,10 @@ const isNonTypingKeyboardEvent = (e: EditorEvent<unknown>) => {
   }
 };
 
-const isTypingKeyboardEvent = (e: EditorEvent<unknown>) => {
+const isTypingKeyboardEvent = (e: EditorEvent<unknown>) =>
   // 229 === Unidentified, so since we don't know what it is treat it as a non typing event on keyup but as a typing event on keydown
   // Android will generally always send a 229 keycode since it uses an IME to input text
-  return isKeyboardEvent(e) && !(isDeleteEvent(e) || e.type === 'keyup' && e.keyCode === 229);
-};
+  isKeyboardEvent(e) && !(isDeleteEvent(e) || e.type === 'keyup' && e.keyCode === 229);
 
 const isVisuallyEmpty = (dom: DOMUtils, rootElm: DomElement, forcedRootBlock: string) => {
   // Note: Don't use DOMUtils.isEmpty() here as it treats empty format caret nodes as non empty nodes

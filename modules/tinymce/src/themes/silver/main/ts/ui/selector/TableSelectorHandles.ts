@@ -29,33 +29,29 @@ const snapOffset = snapWidth / 2;
 //   Insert.append(Body.body(), debugArea);
 // };
 
-const calcSnap = (selectorOpt: Option<AlloyComponent>, td: Element<HTMLTableDataCellElement>, x: number, y: number, width: number, height: number) => {
-  return selectorOpt.fold(() => {
-    return Dragging.snap({
-      sensor: DragCoord.absolute(x - snapOffset, y - snapOffset),
-      range: Position(width, height),
-      output: DragCoord.absolute(Option.some(x), Option.some(y)),
-      extra: {
-        td
-      }
-    });
-  }, (selectorHandle) => {
-    const sensorLeft = x - snapOffset;
-    const sensorTop = y - snapOffset;
-    const sensorWidth = snapWidth; // box.width();
-    const sensorHeight = snapWidth; // box.height();
-    const rect = selectorHandle.element().dom().getBoundingClientRect();
-    // insertDebugDiv(sensorLeft, sensorTop, sensorWidth, sensorHeight, 'green', 'top-left-snap-debug');
-    return Dragging.snap({
-      sensor: DragCoord.absolute(sensorLeft, sensorTop),
-      range: Position(sensorWidth, sensorHeight),
-      output: DragCoord.absolute(Option.some(x - (rect.width / 2)), Option.some(y - (rect.height / 2))),
-      extra: {
-        td
-      }
-    });
+const calcSnap = (selectorOpt: Option<AlloyComponent>, td: Element<HTMLTableDataCellElement>, x: number, y: number, width: number, height: number) => selectorOpt.fold(() => Dragging.snap({
+  sensor: DragCoord.absolute(x - snapOffset, y - snapOffset),
+  range: Position(width, height),
+  output: DragCoord.absolute(Option.some(x), Option.some(y)),
+  extra: {
+    td
+  }
+}), (selectorHandle) => {
+  const sensorLeft = x - snapOffset;
+  const sensorTop = y - snapOffset;
+  const sensorWidth = snapWidth; // box.width();
+  const sensorHeight = snapWidth; // box.height();
+  const rect = selectorHandle.element().dom().getBoundingClientRect();
+  // insertDebugDiv(sensorLeft, sensorTop, sensorWidth, sensorHeight, 'green', 'top-left-snap-debug');
+  return Dragging.snap({
+    sensor: DragCoord.absolute(sensorLeft, sensorTop),
+    range: Position(sensorWidth, sensorHeight),
+    output: DragCoord.absolute(Option.some(x - (rect.width / 2)), Option.some(y - (rect.height / 2))),
+    extra: {
+      td
+    }
   });
-};
+});
 
 const getSnapsConfig = (getSnapPoints: () => DraggingTypes.SnapConfig<SnapExtra>[], cell: Cell<Option<Element<HTMLTableDataCellElement>>>, onChange: (td: Element<HTMLTableDataCellElement>) => void): DraggingTypes.SnapsConfigSpec<SnapExtra> => {
   // Can't use Option.is() here since we need to do a dom compare, not an equality compare
@@ -111,32 +107,26 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
     return calcSnap(memTopLeft.getOpt(sink), td, box.x, box.y, box.width, box.height);
   };
 
-  const getTopLeftSnaps = () => {
+  const getTopLeftSnaps = () =>
     // const body = Body.body();
     // const debugs = SelectorFilter.descendants(body, '.top-left-snap-debug');
     // Arr.each(debugs, (debugArea) => {
     //   Remove.remove(debugArea);
     // });
-    return Arr.map(tlTds.get(), (td) => {
-      return getTopLeftSnap(td);
-    });
-  };
+    Arr.map(tlTds.get(), (td) => getTopLeftSnap(td));
 
   const getBottomRightSnap = (td: Element<HTMLTableDataCellElement>) => {
     const box = Boxes.absolute(td);
     return calcSnap(memBottomRight.getOpt(sink), td, box.right, box.bottom, box.width, box.height);
   };
 
-  const getBottomRightSnaps = () => {
+  const getBottomRightSnaps = () =>
     // const body = Body.body();
     // const debugs = SelectorFilter.descendants(body, '.bottom-right-snap-debug');
     // Arr.each(debugs, (debugArea) => {
     //   Remove.remove(debugArea);
     // });
-    return Arr.map(brTds.get(), (td) => {
-      return getBottomRightSnap(td);
-    });
-  };
+    Arr.map(brTds.get(), (td) => getBottomRightSnap(td));
 
   const topLeftSnaps = getSnapsConfig(getTopLeftSnaps, startCell, (start) => {
     finishCell.get().each((finish) => {
@@ -170,12 +160,8 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
   const snapTo = (selector: AlloyComponent, cell: Element<HTMLTableDataCellElement>, getSnapConfig: (cell: Element<HTMLTableDataCellElement>) => DraggingTypes.SnapConfig<SnapExtra>, pos: 'top' | 'bottom') => {
     const snap = getSnapConfig(cell);
     Dragging.snapTo(selector, snap);
-    const isAbove = (rect: ClientRect) => {
-      return rect[pos] < 0;
-    };
-    const isBelow = (rect: ClientRect, viewportHeight: number) => {
-      return rect[pos] > viewportHeight;
-    };
+    const isAbove = (rect: ClientRect) => rect[pos] < 0;
+    const isBelow = (rect: ClientRect, viewportHeight: number) => rect[pos] > viewportHeight;
     showOrHideHandle(selector, cell, isAbove, isBelow);
   };
 

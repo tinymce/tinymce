@@ -17,21 +17,19 @@ export default (): void => {
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  const makeTab = (tabSpec: { view: () => PremadeSpec[]; value: string; text: string }) => {
-    return {
-      view: tabSpec.view,
-      value: tabSpec.value,
-      dom: {
-        tag: 'button',
-        attributes: {
-          'data-value': tabSpec.value
-        }
-      },
-      components: [
-        GuiFactory.text(tabSpec.text)
-      ]
-    };
-  };
+  const makeTab = (tabSpec: { view: () => PremadeSpec[]; value: string; text: string }) => ({
+    view: tabSpec.view,
+    value: tabSpec.value,
+    dom: {
+      tag: 'button',
+      attributes: {
+        'data-value': tabSpec.value
+      }
+    },
+    components: [
+      GuiFactory.text(tabSpec.text)
+    ]
+  });
 
   const pTabbar = TabSection.parts().tabbar({
     dom: {

@@ -8,40 +8,36 @@ import { HttpError } from 'ephox/jax/core/HttpError';
 
 /* tslint:disable:no-console */
 
-const expectError = (label: string, response: FutureResult<any, HttpError>, expectedCalls: string[], actualCalls: string[]) => {
-  return FutureResult.nu((callback) => {
-    response.get((res) => {
-      res.fold((_err) => {
-        console.log(label, 'successfully failed');
+const expectError = (label: string, response: FutureResult<any, HttpError>, expectedCalls: string[], actualCalls: string[]) => FutureResult.nu((callback) => {
+  response.get((res) => {
+    res.fold((_err) => {
+      console.log(label, 'successfully failed');
+      assert.eq(expectedCalls, actualCalls);
+      actualCalls = [];
+      callback(Result.value({ }));
+    }, (_val) => {
+      callback(Result.error('Unexpected value in test: ' + label));
+    });
+  });
+});
+
+const expectValue = (label: string, value: any, response: FutureResult<any, HttpError>, expectedCalls: string[], actualCalls: string[]) => FutureResult.nu((callback) => {
+  response.get((res) => {
+    res.fold((err) => {
+      callback(Result.error(new Error(err.message)));
+    }, (val) => {
+      try {
+        assert.eq(value, val);
+        console.log(label, 'passed with ', val);
         assert.eq(expectedCalls, actualCalls);
         actualCalls = [];
-        callback(Result.value({ }));
-      }, (_val) => {
-        callback(Result.error('Unexpected value in test: ' + label));
-      });
+        callback(Result.value({}));
+      } catch (err) {
+        callback(Result.error(err));
+      }
     });
   });
-};
-
-const expectValue = (label: string, value: any, response: FutureResult<any, HttpError>, expectedCalls: string[], actualCalls: string[]) => {
-  return FutureResult.nu((callback) => {
-    response.get((res) => {
-      res.fold((err) => {
-        callback(Result.error(new Error(err.message)));
-      }, (val) => {
-        try {
-          assert.eq(value, val);
-          console.log(label, 'passed with ', val);
-          assert.eq(expectedCalls, actualCalls);
-          actualCalls = [];
-          callback(Result.value({}));
-        } catch (err) {
-          callback(Result.error(err));
-        }
-      });
-    });
-  });
-};
+});
 
 UnitTest.asynctest('HttpTest', (success, failure) => {
   const invalidCalls: string[] = [];

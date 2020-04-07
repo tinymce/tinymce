@@ -105,11 +105,9 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
                     routes: Transitioning.createBistate(
                       'open',
                       'closed',
-                      detail.menuTransition.map((t) => {
-                        return {
-                          transition: t
-                        } as TransitionPropertiesSpec;
-                      }).getOr({ })
+                      detail.menuTransition.map((t) => ({
+                        transition: t
+                      } as TransitionPropertiesSpec)).getOr({ })
                     ),
 
                     onFinish(view, destination) {

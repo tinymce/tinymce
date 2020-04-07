@@ -30,6 +30,4 @@ export const sidebarSchema = ValueSchema.objOf([
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
 ]);
 
-export const createSidebar = <T>(spec: SidebarApi): Result<Sidebar, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw('sidebar', sidebarSchema, spec);
-};
+export const createSidebar = <T>(spec: SidebarApi): Result<Sidebar, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('sidebar', sidebarSchema, spec);

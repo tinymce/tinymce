@@ -9,17 +9,15 @@ import { Cell } from '@ephox/katamari';
 UnitTest.asynctest('ControlOnSetup Test', (success, failure) => {
 
   TestHelpers.GuiSetup.setup(
-    (_store, _doc, _body) => {
-      return GuiFactory.build({
-        dom: {
-          tag: 'div',
-          classes: [ 'test-container' ]
-        },
-        behaviours: Behaviour.derive([
-          Replacing.config({ })
-        ])
-      });
-    },
+    (_store, _doc, _body) => GuiFactory.build({
+      dom: {
+        tag: 'div',
+        classes: [ 'test-container' ]
+      },
+      behaviours: Behaviour.derive([
+        Replacing.config({ })
+      ])
+    }),
     (_doc, _body, _gui, component, store) => {
       const cellWithDestroy = Cell(store.adder('fallbackWithDestroy'));
 

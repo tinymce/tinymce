@@ -25,54 +25,44 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
   const arb1Up = Jsc.nat.smap((num: number) => num + 1, (num: number) => num - 1);
 
   const arbRanged = Jsc.bless({
-    generator: Jsc.nat.generator.flatMap((min: number) => {
-      return arb1Up.generator.flatMap((width: number) => {
-        const max = min + width;
-        return Jsc.number(min - 1, max + 1).generator.map((value: number) => {
-          const v = Math.round(value);
+    generator: Jsc.nat.generator.flatMap((min: number) => arb1Up.generator.flatMap((width: number) => {
+      const max = min + width;
+      return Jsc.number(min - 1, max + 1).generator.map((value: number) => {
+        const v = Math.round(value);
 
-          return {
-            min,
-            max,
-            value: v
-          };
-        });
+        return {
+          min,
+          max,
+          value: v
+        };
       });
-    })
+    }))
   });
 
   const arbData = Jsc.tuple([ arbRanged, arb1Up, Jsc.bool, Jsc.bool, Jsc.bool ]).smap(
-    (arr: [ { min: number; max: number; value: number }, number, boolean, boolean, boolean ]) => {
-      return {
-        min: arr[0].min,
-        max: arr[0].max,
-        value: arr[0].value,
-        stepSize: arr[1],
-        snapToGrid: arr[2],
-        rounded: true, // Difficult to test with this off
-        hasLedge: arr[3],
-        hasRedge: arr[4]
-      };
-    },
-    (r: TestData) => {
-      return [
-        { min: r.min, max: r.max, value: r.value },
-        r.stepSize,
-        r.snapToGrid
-      ];
-    }
+    (arr: [ { min: number; max: number; value: number }, number, boolean, boolean, boolean ]) => ({
+      min: arr[0].min,
+      max: arr[0].max,
+      value: arr[0].value,
+      stepSize: arr[1],
+      snapToGrid: arr[2],
+      rounded: true, // Difficult to test with this off
+      hasLedge: arr[3],
+      hasRedge: arr[4]
+    }),
+    (r: TestData) => [
+      { min: r.min, max: r.max, value: r.value },
+      r.stepSize,
+      r.snapToGrid
+    ]
   );
 
   const arbBounds = Jsc.bless({
-    generator: Jsc.nat.generator.flatMap((min: number) => {
-      return arb1Up.generator.map((width: number) => {
-        return {
-          left: min,
-          width,
-          right: min + width
-        };
-      });
-    })
+    generator: Jsc.nat.generator.flatMap((min: number) => arb1Up.generator.map((width: number) => ({
+      left: min,
+      width,
+      right: min + width
+    })))
   });
 
   Jsc.syncProperty(

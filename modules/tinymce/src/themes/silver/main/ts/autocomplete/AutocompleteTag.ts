@@ -12,10 +12,10 @@ import Editor from 'tinymce/core/api/Editor';
 
 const autocompleteSelector = '[data-mce-autocompleter]';
 
-const create = (editor: Editor, range: Range): Element => {
+const create = (editor: Editor, range: Range): Element =>
   // Check if an existing wrapper exists (eg from undoing), otherwise
   // wrap the content in a span, so we know where to search between
-  return detect(Element.fromDom(editor.selection.getNode())).getOrThunk(() => {
+  detect(Element.fromDom(editor.selection.getNode())).getOrThunk(() => {
     // Create a wrapper
     const wrapper = Element.fromHtml('<span data-mce-autocompleter="1" data-mce-bogus="1"></span>', editor.getDoc());
 
@@ -31,11 +31,8 @@ const create = (editor: Editor, range: Range): Element => {
 
     return wrapper;
   });
-};
 
-const detect = (elm: Element): Option<Element> => {
-  return SelectorFind.closest(elm, autocompleteSelector);
-};
+const detect = (elm: Element): Option<Element> => SelectorFind.closest(elm, autocompleteSelector);
 
 export {
   create,

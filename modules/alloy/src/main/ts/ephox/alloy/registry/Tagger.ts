@@ -25,13 +25,9 @@ const read = (elem: Element): Option<string> => {
   return Option.from(id);
 };
 
-const readOrDie = (elem: Element): string => {
-  return read(elem).getOrDie('Could not find alloy uid in: ' + AlloyLogger.element(elem));
-};
+const readOrDie = (elem: Element): string => read(elem).getOrDie('Could not find alloy uid in: ' + AlloyLogger.element(elem));
 
-const generate = (prefix: string): string => {
-  return Id.generate(prefix);
-};
+const generate = (prefix: string): string => Id.generate(prefix);
 
 const revoke = (elem: Element): void => {
   // This looks like it is only used by ForeignGui, which is experimental.

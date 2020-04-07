@@ -28,9 +28,7 @@ const textBefore = (node: Node, offset: number, rootNode: Node): Option<Spot.Spo
     return Option.some(Spot.point(node, offset));
   } else {
     const textSeeker = TextSeeker(DOM);
-    return Option.from(textSeeker.backwards(node, offset, alwaysNext(node), rootNode)).map((prev) => {
-      return Spot.point(prev.container, prev.container.data.length);
-    });
+    return Option.from(textSeeker.backwards(node, offset, alwaysNext(node), rootNode)).map((prev) => Spot.point(prev.container, prev.container.data.length));
   }
 };
 
@@ -39,9 +37,7 @@ const textAfter = (node: Node, offset: number, rootNode: Node): Option<Spot.Spot
     return Option.some(Spot.point(node, offset));
   } else {
     const textSeeker = TextSeeker(DOM);
-    return Option.from(textSeeker.forwards(node, offset, alwaysNext(node), rootNode)).map((prev) => {
-      return Spot.point(prev.container, 0);
-    });
+    return Option.from(textSeeker.forwards(node, offset, alwaysNext(node), rootNode)).map((prev) => Spot.point(prev.container, 0));
   }
 };
 
@@ -70,9 +66,7 @@ const scanRight = (node: Text, offset: number, rootNode: Node): Option<Spot.Spot
     return Option.some(Spot.point(node, offset));
   } else {
     const textSeeker = TextSeeker(DOM);
-    return Option.from(textSeeker.forwards(node, offset, alwaysNext(node), rootNode)).bind((next) => {
-      return scanRight(next.container, offset - text.length, rootNode);
-    });
+    return Option.from(textSeeker.forwards(node, offset, alwaysNext(node), rootNode)).bind((next) => scanRight(next.container, offset - text.length, rootNode));
   }
 };
 

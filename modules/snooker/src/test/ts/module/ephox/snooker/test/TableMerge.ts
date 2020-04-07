@@ -23,9 +23,22 @@ const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowC
   });
 };
 
-const mergeTest = function (expected: Structs.ElementNew[][] | { error: string }, startAddress: Structs.Address, gridA: () => Structs.ElementNew[][], gridB: () => Structs.ElementNew[][], generator: () => SimpleGenerators, comparator: (a: Element, b: Element) => boolean) {
+const mergeTest = function (
+  expected: Structs.ElementNew[][] | { error: string },
+  startAddress: Structs.Address,
+  gridA: () => Structs.ElementNew[][],
+  gridB: () => Structs.ElementNew[][],
+  generator: () => SimpleGenerators,
+  comparator: (a: Element, b: Element) => boolean
+) {
   // The last step, merge cells from gridB into gridA
-  const nuGrid = TableMerge.merge(startAddress, mapToStructGrid(gridA()), mapToStructGrid(gridB()), generator(), comparator);
+  const nuGrid = TableMerge.merge(
+    startAddress,
+    mapToStructGrid(gridA()),
+    mapToStructGrid(gridB()),
+    generator(),
+    comparator
+  );
   nuGrid.fold(function (err) {
     if ('error' in expected) {
       assert.eq(expected.error, err);
@@ -40,14 +53,38 @@ const mergeTest = function (expected: Structs.ElementNew[][] | { error: string }
     }
   });
 };
-
-const mergeIVTest = function (asserter: (result: Result<Structs.RowCells[], string>, s: Structs.Address, specA: { rows: () => number; cols: () => number; grid: () => Structs.ElementNew[][] }, specB: { rows: () => number; cols: () => number; grid: () => Structs.ElementNew[][] }) => void, startAddress: Structs.Address, gridSpecA: { rows: () => number; cols: () => number; grid: () => Structs.ElementNew[][] }, gridSpecB: { rows: () => number; cols: () => number; grid: () => Structs.ElementNew[][] }, generator: () => SimpleGenerators, comparator: (a: Element, b: Element) => boolean) {
+type Spec = { rows: () => number; cols: () => number; grid: () => Structs.ElementNew[][] };
+type Asserter = (result: Result<Structs.RowCells[], string>, s: Structs.Address, specA: Spec, specB: Spec) => void;
+const mergeIVTest = function (
+  asserter: Asserter,
+  startAddress: Structs.Address,
+  gridSpecA: Spec,
+  gridSpecB: Spec,
+  generator: () => SimpleGenerators,
+  comparator: (a: Element, b: Element) => boolean
+) {
   // The last step, merge cells from gridB into gridA
-  const nuGrid = TableMerge.merge(startAddress, mapToStructGrid(gridSpecA.grid()), mapToStructGrid(gridSpecB.grid()), generator(), comparator);
+  const nuGrid = TableMerge.merge(
+    startAddress,
+    mapToStructGrid(gridSpecA.grid()),
+    mapToStructGrid(gridSpecB.grid()),
+    generator(),
+    comparator
+  );
   asserter(nuGrid, startAddress, gridSpecA, gridSpecB);
 };
 
-const suite = function (label: string, startAddress: Structs.Address, gridA: () => Structs.ElementNew[][], gridB: () => Structs.ElementNew[][], generator: () => SimpleGenerators, comparator: (a: Element, b: Element) => boolean, expectedMeasure: {rowDelta: number; colDelta: number }, expectedTailor: Structs.ElementNew[][], expectedMergeGrids: Structs.ElementNew[][]) {
+const suite = function (
+  label: string,
+  startAddress: Structs.Address,
+  gridA: () => Structs.ElementNew[][],
+  gridB: () => Structs.ElementNew[][],
+  generator: () => SimpleGenerators,
+  comparator: (a: Element, b: Element) => boolean,
+  expectedMeasure: {rowDelta: number; colDelta: number },
+  expectedTailor: Structs.ElementNew[][],
+  expectedMergeGrids: Structs.ElementNew[][]
+) {
   Fitment.measureTest(expectedMeasure, startAddress, gridA, gridB);
   Fitment.tailorTest(expectedTailor, startAddress, gridA, expectedMeasure, generator);
   mergeTest(expectedMergeGrids, startAddress, gridA, gridB, generator, comparator);

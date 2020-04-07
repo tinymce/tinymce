@@ -9,36 +9,32 @@ import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
 
-  GuiSetup.setup((store, _doc, _body) => {
-    return GuiFactory.build(
-      Button.sketch({
-        dom: {
-          tag: 'button',
-          innerHtml: 'ButtonSpecTest.button',
-          classes: [ 'test-button' ]
-        },
-        action: store.adder('button.action'),
-        uid: 'test-button-id'
-      })
-    );
-  }, (doc, _body, gui, component, store) => {
+  GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
+    Button.sketch({
+      dom: {
+        tag: 'button',
+        innerHtml: 'ButtonSpecTest.button',
+        classes: [ 'test-button' ]
+      },
+      action: store.adder('button.action'),
+      uid: 'test-button-id'
+    })
+  ), (doc, _body, gui, component, store) => {
     // TODO: Use s prefix for all of these. Or find out why they aren't.
 
     const testStructure = Step.sync(() => {
       Assertions.assertStructure(
         'Checking initial structure of button',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('button', {
-            classes: [
-              arr.has('test-button')
-            ],
-            attrs: {
-              'type': str.is('button'),
-              'data-alloy-id': str.none()
-            },
-            html: str.is('ButtonSpecTest.button')
-          });
-        }),
+        ApproxStructure.build((s, str, arr) => s.element('button', {
+          classes: [
+            arr.has('test-button')
+          ],
+          attrs: {
+            'type': str.is('button'),
+            'data-alloy-id': str.none()
+          },
+          html: str.is('ButtonSpecTest.button')
+        })),
         component.element()
       );
     });

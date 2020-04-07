@@ -30,99 +30,95 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
     )
   ]);
 
-  const sHasBasicStructure = (label: string) => {
-    return GeneralSteps.sequence([
-      sCreateConfirm(label, Fun.noop),
-      sWaitForDialog,
-      Step.sync(() => {
-        Assertions.assertStructure('A basic confirm dialog should have these components',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('mce-silver-sink') ],
+  const sHasBasicStructure = (label: string) => GeneralSteps.sequence([
+    sCreateConfirm(label, Fun.noop),
+    sWaitForDialog,
+    Step.sync(() => {
+      Assertions.assertStructure('A basic confirm dialog should have these components',
+        ApproxStructure.build((s, str, arr) => s.element('div', {
+          classes: [ arr.has('mce-silver-sink') ],
+          children: [
+            s.element('div', {
+              classes: [ arr.has('tox-dialog-wrap') ],
               children: [
+                s.element('div', { classes: [ arr.has('tox-dialog-wrap__backdrop') ] }),
                 s.element('div', {
-                  classes: [ arr.has('tox-dialog-wrap') ],
+                  classes: [ arr.has('tox-dialog') ],
                   children: [
-                    s.element('div', { classes: [ arr.has('tox-dialog-wrap__backdrop') ] }),
                     s.element('div', {
-                      classes: [ arr.has('tox-dialog') ],
+                      classes: [ arr.has('tox-dialog__header') ],
+                      styles: {
+                        display: str.is('none')
+                      },
                       children: [
                         s.element('div', {
-                          classes: [ arr.has('tox-dialog__header') ],
+                          classes: [ arr.has('tox-dialog__title') ],
                           styles: {
                             display: str.is('none')
                           },
+                          html: str.is('')
+                        }),
+                        s.element('button', {
+                          classes: [
+                            arr.has('tox-button'),
+                            arr.has('tox-button--icon'),
+                            arr.has('tox-button--naked')
+                          ],
+                          attrs: {
+                            'aria-label': str.is('Close'),
+                            'data-alloy-tabstop': str.is('true'),
+                            'type': str.is('button')
+                          },
+                          html: str.is('')
+                        })
+                      ]
+                    }),
+                    s.element('div', {
+                      classes: [ arr.has('tox-dialog__body') ],
+                      children: [
+                        s.element('div', {
+                          classes: [ arr.has('tox-dialog__body-content') ],
                           children: [
-                            s.element('div', {
-                              classes: [ arr.has('tox-dialog__title') ],
-                              styles: {
-                                display: str.is('none')
-                              },
-                              html: str.is('')
-                            }),
+                            s.element('p', {})
+                          ]
+                        })
+                      ]
+                    }),
+                    s.element('div', {
+                      classes: [ arr.has('tox-dialog__footer') ],
+                      children: [
+                        s.element('div', {
+                          classes: [ arr.has('tox-dialog__footer-start') ],
+                          attrs: {
+                            role: str.is('presentation')
+                          }
+                        }),
+                        s.element('div', {
+                          classes: [ arr.has('tox-dialog__footer-end') ],
+                          attrs: {
+                            role: str.is('presentation')
+                          },
+                          children: [
                             s.element('button', {
+                              html: str.is('No'),
                               classes: [
                                 arr.has('tox-button'),
-                                arr.has('tox-button--icon'),
-                                arr.has('tox-button--naked')
+                                arr.has('tox-button--secondary')
                               ],
                               attrs: {
-                                'aria-label': str.is('Close'),
-                                'data-alloy-tabstop': str.is('true'),
-                                'type': str.is('button')
+                                'type': str.is('button'),
+                                'data-alloy-tabstop': str.is('true')
                               },
-                              html: str.is('')
-                            })
-                          ]
-                        }),
-                        s.element('div', {
-                          classes: [ arr.has('tox-dialog__body') ],
-                          children: [
-                            s.element('div', {
-                              classes: [ arr.has('tox-dialog__body-content') ],
-                              children: [
-                                s.element('p', {})
-                              ]
-                            })
-                          ]
-                        }),
-                        s.element('div', {
-                          classes: [ arr.has('tox-dialog__footer') ],
-                          children: [
-                            s.element('div', {
-                              classes: [ arr.has('tox-dialog__footer-start') ],
-                              attrs: {
-                                role: str.is('presentation')
-                              }
                             }),
-                            s.element('div', {
-                              classes: [ arr.has('tox-dialog__footer-end') ],
+                            s.element('button', {
+                              html: str.is('Yes'),
+                              classes: [
+                                arr.has('tox-button'),
+                              ],
                               attrs: {
-                                role: str.is('presentation')
+                                'type': str.is('button'),
+                                'data-alloy-tabstop': str.is('true')
                               },
-                              children: [
-                                s.element('button', {
-                                  html: str.is('No'),
-                                  classes: [
-                                    arr.has('tox-button'),
-                                    arr.has('tox-button--secondary')
-                                  ],
-                                  attrs: {
-                                    'type': str.is('button'),
-                                    'data-alloy-tabstop': str.is('true')
-                                  },
-                                }),
-                                s.element('button', {
-                                  html: str.is('Yes'),
-                                  classes: [
-                                    arr.has('tox-button'),
-                                  ],
-                                  attrs: {
-                                    'type': str.is('button'),
-                                    'data-alloy-tabstop': str.is('true')
-                                  },
-                                })
-                              ]
                             })
                           ]
                         })
@@ -131,54 +127,48 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
                   ]
                 })
               ]
-            });
-          }),
-          SugarElement.fromDom(sink)
-        );
-      }),
-      sTeardown
-    ]);
-  };
+            })
+          ]
+        })),
+        SugarElement.fromDom(sink)
+      );
+    }),
+    sTeardown
+  ]);
 
-  const sCreateConfirm = <T> (message: string, callback: (state: boolean) => void) => {
-    return Step.sync<T>(() => {
-      windowManager.confirm(message, callback);
-    });
-  };
+  const sCreateConfirm = <T> (message: string, callback: (state: boolean) => void) => Step.sync<T>(() => {
+    windowManager.confirm(message, callback);
+  });
 
   const sWaitForDialog = Waiter.sTryUntil(
     'confirm dialog shows',
     UiFinder.sExists(Body.body(), '.tox-dialog__body')
   );
 
-  const sInsertTheCorrectMessage = (label: string) => {
-    return GeneralSteps.sequence([
-      sCreateConfirm(label, Fun.noop),
-      Step.sync(() => {
-        const body = document.querySelector('.tox-dialog__body');
-        Assertions.assertStructure('A basic confirm dialog should have these components',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-dialog__body') ],
+  const sInsertTheCorrectMessage = (label: string) => GeneralSteps.sequence([
+    sCreateConfirm(label, Fun.noop),
+    Step.sync(() => {
+      const body = document.querySelector('.tox-dialog__body');
+      Assertions.assertStructure('A basic confirm dialog should have these components',
+        ApproxStructure.build((s, str, arr) => s.element('div', {
+          classes: [ arr.has('tox-dialog__body') ],
+          children: [
+            s.element('div', {
+              classes: [ arr.has('tox-dialog__body-content') ],
               children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-dialog__body-content') ],
-                  children: [
-                    s.element('p', {
-                      html: str.is(label)
-                    })
-                  ]
+                s.element('p', {
+                  html: str.is(label)
                 })
               ]
-            });
-          }),
-          SugarElement.fromDom(body)
-        );
-      }),
-      sTeardown
+            })
+          ]
+        })),
+        SugarElement.fromDom(body)
+      );
+    }),
+    sTeardown
 
-    ]);
-  };
+  ]);
 
   const sCallbackOnClose = (label: string) => {
     let calls = 0;

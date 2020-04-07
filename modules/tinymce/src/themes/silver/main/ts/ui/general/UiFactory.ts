@@ -37,21 +37,17 @@ export type FormPartRenderer = (parts: FormTypes.FormParts, spec: BridgedType, b
 export type NoFormRenderer = (spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
 
 const make = function (render: NoFormRenderer): FormPartRenderer {
-  return (parts, spec, backstage) => {
-    return Obj.get(spec, 'name').fold(
-      () => render(spec, backstage),
-      (fieldName) => parts.field(fieldName, render(spec, backstage) as SimpleOrSketchSpec)
-    );
-  };
+  return (parts, spec, backstage) => Obj.get(spec, 'name').fold(
+    () => render(spec, backstage),
+    (fieldName) => parts.field(fieldName, render(spec, backstage) as SimpleOrSketchSpec)
+  );
 };
 
-const makeIframe = (render: NoFormRenderer): FormPartRenderer => {
-  return (parts, spec, backstage) => {
-    const iframeSpec = Merger.deepMerge(spec, {
-      source: 'dynamic'
-    });
-    return make(render)(parts, iframeSpec, backstage);
-  };
+const makeIframe = (render: NoFormRenderer): FormPartRenderer => (parts, spec, backstage) => {
+  const iframeSpec = Merger.deepMerge(spec, {
+    source: 'dynamic'
+  });
+  return make(render)(parts, iframeSpec, backstage);
 };
 
 const factories: Record<string, FormPartRenderer> = {
@@ -89,9 +85,7 @@ const interpretInForm = (parts, spec, oldBackstage) => {
     {
       // Add the interpreter based on the form parts.
       shared: {
-        interpreter: (childSpec) => {
-          return interpretParts(parts, childSpec, newBackstage);
-        }
+        interpreter: (childSpec) => interpretParts(parts, childSpec, newBackstage)
       }
     }
   );
@@ -99,17 +93,13 @@ const interpretInForm = (parts, spec, oldBackstage) => {
   return interpretParts(parts, spec, newBackstage);
 };
 
-const interpretParts: FormPartRenderer = (parts, spec, backstage) => {
-  return Obj.get(factories, spec.type).fold(
-    () => {
-      console.error(`Unknown factory type "${spec.type}", defaulting to container: `, spec);
-      return spec as AlloySpec;
-    },
-    (factory: FormPartRenderer) => {
-      return factory(parts, spec, backstage);
-    }
-  );
-};
+const interpretParts: FormPartRenderer = (parts, spec, backstage) => Obj.get(factories, spec.type).fold(
+  () => {
+    console.error(`Unknown factory type "${spec.type}", defaulting to container: `, spec);
+    return spec as AlloySpec;
+  },
+  (factory: FormPartRenderer) => factory(parts, spec, backstage)
+);
 
 const interpretWithoutForm: NoFormRenderer = (spec, backstage: UiFactoryBackstage) => {
   const parts = noFormParts;

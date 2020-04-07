@@ -13,36 +13,26 @@ const browser = PlatformDetection.detect().browser;
 UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysTest', (success, failure) => {
   Theme();
 
-  const sFireInsert = (editor: Editor) => {
-    return Step.sync(() => {
-      editor.fire('input', { isComposing: false });
-    });
-  };
+  const sFireInsert = (editor: Editor) => Step.sync(() => {
+    editor.fire('input', { isComposing: false });
+  });
 
-  const sFireKeyPress = (editor: Editor) => {
-    return Step.sync(() => {
-      editor.fire('keypress');
-    });
-  };
+  const sFireKeyPress = (editor: Editor) => Step.sync(() => {
+    editor.fire('keypress');
+  });
 
-  const sInsertEmptyTextNodesAt = (editor: Editor, count: number, path: number[], insert: (marker: Element, element: Element) => void) => {
-    return Chain.asStep(Element.fromDom(editor.getBody()), [
-      Cursors.cFollow(path),
-      Chain.op((elm) => {
-        Arr.each(Arr.range(count, Fun.identity), () => {
-          insert(elm, Element.fromDom(document.createTextNode('')));
-        });
-      })
-    ]);
-  };
+  const sInsertEmptyTextNodesAt = (editor: Editor, count: number, path: number[], insert: (marker: Element, element: Element) => void) => Chain.asStep(Element.fromDom(editor.getBody()), [
+    Cursors.cFollow(path),
+    Chain.op((elm) => {
+      Arr.each(Arr.range(count, Fun.identity), () => {
+        insert(elm, Element.fromDom(document.createTextNode('')));
+      });
+    })
+  ]);
 
-  const sPrependEmptyTextNodesAt = (editor: Editor, count: number, path: number[]) => {
-    return sInsertEmptyTextNodesAt(editor, count, path, Insert.before);
-  };
+  const sPrependEmptyTextNodesAt = (editor: Editor, count: number, path: number[]) => sInsertEmptyTextNodesAt(editor, count, path, Insert.before);
 
-  const sAppendEmptyTextNodesAt = (editor: Editor, count: number, path: number[]) => {
-    return sInsertEmptyTextNodesAt(editor, count, path, Insert.after);
-  };
+  const sAppendEmptyTextNodesAt = (editor: Editor, count: number, path: number[]) => sInsertEmptyTextNodesAt(editor, count, path, Insert.after);
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);

@@ -71,9 +71,7 @@ const getTextSetting = (settings: Record<string, any>, name: string, defaultValu
   return Type.isString(value) ? Option.some(value) : Option.none();
 };
 
-const getPicker = (settings: Record<string, any>): Option<Picker> => {
-  return Option.some(settings.file_picker_callback).filter(Type.isFunction) as Option<Picker>;
-};
+const getPicker = (settings: Record<string, any>): Option<Picker> => Option.some(settings.file_picker_callback).filter(Type.isFunction) as Option<Picker>;
 
 const getPickerTypes = (settings: Record<string, any>): boolean | Record<string, boolean> => {
   const optFileTypes = Option.some(settings.file_picker_types).filter(isTruthy);
@@ -96,31 +94,25 @@ const getPickerSetting = (settings: Record<string, any>, filetype: string): Opti
   }
 };
 
-const getUrlPicker = (editor: Editor, filetype: string): Option<UrlPicker> => {
-  return getPickerSetting(editor.settings, filetype).map((picker) => {
-    return (entry: InternalUrlData): Future<ApiUrlData> => {
-      return Future.nu((completer) => {
-        const handler = (value: string, meta?: Record<string, any>) => {
-          if (!Type.isString(value)) {
-            throw new Error('Expected value to be string');
-          }
-          if (meta !== undefined && !Type.isObject(meta)) {
-            throw new Error('Expected meta to be a object');
-          }
-          const r: ApiUrlData = { value, meta };
-          completer(r);
-        };
-        const meta = {
-          filetype,
-          fieldname: entry.fieldname,
-          ...Option.from(entry.meta).getOr({})
-        };
-        // file_picker_callback(callback, currentValue, metaData)
-        picker.call(editor, handler, entry.value, meta);
-      });
-    };
-  });
-};
+const getUrlPicker = (editor: Editor, filetype: string): Option<UrlPicker> => getPickerSetting(editor.settings, filetype).map((picker) => (entry: InternalUrlData): Future<ApiUrlData> => Future.nu((completer) => {
+  const handler = (value: string, meta?: Record<string, any>) => {
+    if (!Type.isString(value)) {
+      throw new Error('Expected value to be string');
+    }
+    if (meta !== undefined && !Type.isObject(meta)) {
+      throw new Error('Expected meta to be a object');
+    }
+    const r: ApiUrlData = { value, meta };
+    completer(r);
+  };
+  const meta = {
+    filetype,
+    fieldname: entry.fieldname,
+    ...Option.from(entry.meta).getOr({})
+  };
+  // file_picker_callback(callback, currentValue, metaData)
+  picker.call(editor, handler, entry.value, meta);
+}));
 
 export const getLinkInformation = (editor: Editor): Option<LinkInformation> => {
   if (editor.settings.typeahead_urls === false) {
@@ -139,9 +131,7 @@ export const getValidationHandler = (editor: Editor): Option<UrlValidationHandle
   return optValidator.orThunk(() => Option.from(editor.settings.filepicker_validator_handler).filter(Type.isFunction));
 };
 
-export const getUrlPickerTypes = (editor: Editor): boolean | Record<string, boolean> => {
-  return getPickerTypes(editor.settings);
-};
+export const getUrlPickerTypes = (editor: Editor): boolean | Record<string, boolean> => getPickerTypes(editor.settings);
 
 export const UrlInputBackstage = (editor: Editor): UiFactoryBackstageForUrlInput => ({
   getHistory,

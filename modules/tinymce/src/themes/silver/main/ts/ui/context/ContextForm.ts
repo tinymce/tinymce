@@ -30,12 +30,10 @@ const renderContextForm = (toolbarType: ToolbarMode, ctx: Toolbar.ContextForm, p
       inputBehaviours: Behaviour.derive([
         Keying.config({
           mode: 'special',
-          onEnter: (input) => {
-            return commands.findPrimary(input).map((primary) => {
-              AlloyTriggers.emitExecute(primary);
-              return true;
-            });
-          },
+          onEnter: (input) => commands.findPrimary(input).map((primary) => {
+            AlloyTriggers.emitExecute(primary);
+            return true;
+          }),
           // These two lines need to be tested. They are about left and right bypassing
           // any keyboard handling, and allowing left and right to be processed by the input
           // Maybe this should go in an alloy sketch for Input?

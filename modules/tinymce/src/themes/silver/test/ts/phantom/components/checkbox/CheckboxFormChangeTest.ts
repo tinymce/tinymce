@@ -10,36 +10,32 @@ import TestProviders from '../../../module/TestProviders';
 UnitTest.asynctest('Checkbox component Test', (success, failure) => {
 
   TestHelpers.GuiSetup.setup(
-    (store, _doc, _body) => {
-      return GuiFactory.build(
-        {
-          dom: {
-            tag: 'div'
-          },
-          components: [
-            renderCheckbox({
-              label: 'TestCheckbox',
-              name: 'test-check-box',
-              disabled: false
-            }, TestProviders)
-          ],
-          behaviours: Behaviour.derive([
-            AddEventsBehaviour.config('test-checkbox', [
-              AlloyEvents.run(formChangeEvent, (_component, event) => {
-                store.adder((event.event()).name())();
-              })
-            ])
+    (store, _doc, _body) => GuiFactory.build(
+      {
+        dom: {
+          tag: 'div'
+        },
+        components: [
+          renderCheckbox({
+            label: 'TestCheckbox',
+            name: 'test-check-box',
+            disabled: false
+          }, TestProviders)
+        ],
+        behaviours: Behaviour.derive([
+          AddEventsBehaviour.config('test-checkbox', [
+            AlloyEvents.run(formChangeEvent, (_component, event) => {
+              store.adder((event.event()).name())();
+            })
           ])
-        }
-      );
-    },
-    (doc, body, _gui, _component, store) => {
-      return [
-        FocusTools.sSetFocus('Focus checkbox', body, '.tox-checkbox__input'),
-        Keyboard.sKeydown(doc, Keys.enter(), {}),
-        store.sAssertEq('Form change should have fired', [ 'test-check-box' ])
-      ];
-    },
+        ])
+      }
+    ),
+    (doc, body, _gui, _component, store) => [
+      FocusTools.sSetFocus('Focus checkbox', body, '.tox-checkbox__input'),
+      Keyboard.sKeydown(doc, Keys.enter(), {}),
+      store.sAssertEq('Form change should have fired', [ 'test-check-box' ])
+    ],
     success,
     failure
   );

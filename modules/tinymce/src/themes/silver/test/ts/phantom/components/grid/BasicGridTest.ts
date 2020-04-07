@@ -14,48 +14,42 @@ UnitTest.asynctest('Grid component Test', (success, failure) => {
   };
 
   TestHelpers.GuiSetup.setup(
-    (_store, _doc, _body) => {
-      return GuiFactory.build(
-        renderGrid({
-          columns: 10,
-          items: [
-            {
-              dom: {
-                tag: 'div',
-                classes: [ 'foo' ]
-              }
-            } as any,
-            {
-              dom: {
-                tag: 'div',
-                classes: [ 'bar' ]
-              }
-            } as any
+    (_store, _doc, _body) => GuiFactory.build(
+      renderGrid({
+        columns: 10,
+        items: [
+          {
+            dom: {
+              tag: 'div',
+              classes: [ 'foo' ]
+            }
+          } as any,
+          {
+            dom: {
+              tag: 'div',
+              classes: [ 'bar' ]
+            }
+          } as any
+        ]
+      }, sharedBackstage)
+    ),
+    (_doc, _body, _gui, component, _store) => [
+      Assertions.sAssertStructure(
+        'Checking initial structure',
+        ApproxStructure.build((s, _str, arr) => s.element('div', {
+          classes: [ arr.has('tox-form__grid'), arr.has('tox-form__grid--10col') ],
+          children: [
+            s.element('div', {
+              classes: [ arr.has('foo') ]
+            }),
+            s.element('div', {
+              classes: [ arr.has('bar') ]
+            })
           ]
-        }, sharedBackstage)
-      );
-    },
-    (_doc, _body, _gui, component, _store) => {
-      return [
-        Assertions.sAssertStructure(
-          'Checking initial structure',
-          ApproxStructure.build((s, _str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-form__grid'), arr.has('tox-form__grid--10col') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('foo') ]
-                }),
-                s.element('div', {
-                  classes: [ arr.has('bar') ]
-                })
-              ]
-            });
-          }),
-          component.element()
-        )
-      ];
-    },
+        })),
+        component.element()
+      )
+    ],
     success,
     failure
   );

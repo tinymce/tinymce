@@ -32,12 +32,10 @@ const items = (value: boolean | string, defaultValue: string): string => {
   return value;
 };
 
-const getToolbarItemsOr_ = (predicate: (value: any) => boolean) => {
-  return (editor: Editor, name: string, defaultValue: string): string => {
-    validDefaultOrDie(defaultValue, predicate);
-    const value = editor.getParam(name, defaultValue);
-    return items(value, defaultValue);
-  };
+const getToolbarItemsOr_ = (predicate: (value: any) => boolean) => (editor: Editor, name: string, defaultValue: string): string => {
+  validDefaultOrDie(defaultValue, predicate);
+  const value = editor.getParam(name, defaultValue);
+  return items(value, defaultValue);
 };
 
 export const getToolbarItemsOr = getToolbarItemsOr_(Type.isString);

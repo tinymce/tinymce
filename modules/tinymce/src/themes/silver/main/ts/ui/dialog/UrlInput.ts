@@ -169,9 +169,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     },
 
     model: {
-      getDisplayText: (itemData) => {
-        return itemData.value;
-      },
+      getDisplayText: (itemData) => itemData.value,
       selectsOver: false,
       populateFromBrowse: false
     },
@@ -197,20 +195,18 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   // TODO: Consider a way of merging with Checkbox.
-  const makeIcon = (name, errId: Option<string>, icon = name, label = name) => {
-    return ({
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-icon', 'tox-control-wrap__status-icon-' + name ],
-        innerHtml: Icons.get(icon, providersBackstage.icons),
-        attributes: {
-          'title': providersBackstage.translate(label),
-          'aria-live': 'polite',
-          ...errId.fold(() => ({ }), (id) => ({ id }))
-        }
+  const makeIcon = (name, errId: Option<string>, icon = name, label = name) => ({
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-icon', 'tox-control-wrap__status-icon-' + name ],
+      innerHtml: Icons.get(icon, providersBackstage.icons),
+      attributes: {
+        'title': providersBackstage.translate(label),
+        'aria-live': 'polite',
+        ...errId.fold(() => ({ }), (id) => ({ id }))
       }
-    });
-  };
+    }
+  });
 
   const memInvalidIcon = Memento.record(
     makeIcon('invalid', Option.some(errorId), 'warning')
@@ -253,18 +249,16 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     borderless: true
   },  (component) => AlloyTriggers.emit(component, browseUrlEvent), providersBackstage, [], [ 'tox-browse-url' ]));
 
-  const controlHWrapper = (): AlloySpec => {
-    return {
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-form__controls-h-stack' ]
-      },
-      components: Arr.flatten([
-        [ memUrlBox.asSpec() ],
-        optUrlPicker.map(() => memUrlPickerButton.asSpec()).toArray()
-      ])
-    };
-  };
+  const controlHWrapper = (): AlloySpec => ({
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-form__controls-h-stack' ]
+    },
+    components: Arr.flatten([
+      [ memUrlBox.asSpec() ],
+      optUrlPicker.map(() => memUrlPickerButton.asSpec()).toArray()
+    ])
+  });
 
   const openUrlPicker = (comp: AlloyComponent) => {
     Composing.getCurrent(comp).each((field) => {

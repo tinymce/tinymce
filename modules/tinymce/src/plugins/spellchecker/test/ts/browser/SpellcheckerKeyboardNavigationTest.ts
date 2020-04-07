@@ -38,9 +38,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
       editor.fire('keydown', args);
     });
 
-    const sAssertFocused = (name, selector) => {
-      return FocusTools.sTryOnSelector(name, doc, selector);
-    };
+    const sAssertFocused = (name, selector) => FocusTools.sTryOnSelector(name, doc, selector);
 
     Pipeline.async({}, Log.steps('TBA', 'Spellchecker: Reaching the spellchecker via the keyboard', [
       sTestDefaultLanguage(editor),

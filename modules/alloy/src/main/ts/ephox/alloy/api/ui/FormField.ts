@@ -61,13 +61,11 @@ const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail,
   ]);
 
   const apis = {
-    getField: (container: AlloyComponent) => {
-      return AlloyParts.getPart(container, detail, 'field');
-    },
-    getLabel: (container: AlloyComponent) => {
+    getField: (container: AlloyComponent) => AlloyParts.getPart(container, detail, 'field'),
+    getLabel: (container: AlloyComponent) =>
       // TODO: Use constants for part names
-      return AlloyParts.getPart(container, detail, 'label');
-    }
+      AlloyParts.getPart(container, detail, 'label')
+
   };
 
   return {

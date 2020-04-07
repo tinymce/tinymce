@@ -22,22 +22,18 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
 
   const alpha = Element.fromText('alpha');
 
-  const touches = (x: number, y: number, target: Element) => {
-    return {
-      raw: Fun.constant({
-        touches: [
-          { clientX: x, clientY: y }
-        ]
-      }),
-      target: Fun.constant(target)
-    } as EventArgs;
-  };
+  const touches = (x: number, y: number, target: Element) => ({
+    raw: Fun.constant({
+      touches: [
+        { clientX: x, clientY: y }
+      ]
+    }),
+    target: Fun.constant(target)
+  } as EventArgs);
 
-  const sFireIfReady = (event: EventArgs, type: string) => {
-    return Step.sync(() => {
-      monitor.fireIfReady(event, type);
-    });
-  };
+  const sFireIfReady = (event: EventArgs, type: string) => Step.sync(() => {
+    monitor.fireIfReady(event, type);
+  });
 
   Pipeline.async({ }, [
     Logger.t(

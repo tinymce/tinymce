@@ -15,18 +15,16 @@ import Editor from '../api/Editor';
 import { Content } from '../content/GetContent';
 import { ContentFormat } from '../content/GetContentImpl';
 
-const getTextContent = (editor: Editor): string => {
-  return Option.from(editor.selection.getRng()).map((rng) => {
-    const bin = editor.dom.add(editor.getBody(), 'div', {
-      'data-mce-bogus': 'all',
-      'style': 'overflow: hidden; opacity: 0;'
-    }, rng.cloneContents());
+const getTextContent = (editor: Editor): string => Option.from(editor.selection.getRng()).map((rng) => {
+  const bin = editor.dom.add(editor.getBody(), 'div', {
+    'data-mce-bogus': 'all',
+    'style': 'overflow: hidden; opacity: 0;'
+  }, rng.cloneContents());
 
-    const text = Zwsp.trim(bin.innerText);
-    editor.dom.remove(bin);
-    return text;
-  }).getOr('');
-};
+  const text = Zwsp.trim(bin.innerText);
+  editor.dom.remove(bin);
+  return text;
+}).getOr('');
 
 const getSerializedContent = (editor: Editor, args: any): Content => {
   const rng = editor.selection.getRng(), tmpElm = editor.dom.create('body');

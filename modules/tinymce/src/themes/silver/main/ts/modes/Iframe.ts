@@ -116,9 +116,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     editor.fire('ToggleSidebar');
   });
 
-  editor.addQueryValueHandler('ToggleSidebar', () => {
-    return OuterContainer.whichSidebar(uiComponents.outerContainer);
-  });
+  editor.addQueryValueHandler('ToggleSidebar', () => OuterContainer.whichSidebar(uiComponents.outerContainer));
 
   const toolbarMode = Settings.getToolbarMode(editor);
 

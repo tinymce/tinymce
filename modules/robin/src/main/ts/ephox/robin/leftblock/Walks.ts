@@ -33,9 +33,7 @@ const top: Walks = {
 const all: Walks = {
   // rules === undefined, so use default.
   rules: undefined,
-  inclusion: <E, D> (universe: Universe<E, D>, next: Traverse<E>, _item: E) => {
-    return universe.property().isText(next.item());
-  }
+  inclusion: <E, D> (universe: Universe<E, D>, next: Traverse<E>, _item: E) => universe.property().isText(next.item())
 };
 
 export const Walks = {

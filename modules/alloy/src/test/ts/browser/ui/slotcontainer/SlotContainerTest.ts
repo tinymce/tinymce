@@ -10,49 +10,45 @@ import { SlotContainer } from 'ephox/alloy/api/ui/SlotContainer';
 
 UnitTest.asynctest('SlotContainerTest', (success, failure) => {
 
-  GuiSetup.setup((store, _doc, _body) => {
-    return GuiFactory.build(
-      SlotContainer.sketch((parts) => ({
-        dom: {
-          tag: 'div',
-          classes: [ 'test-slot-container' ]
-        },
-        components: [
-          parts.slot('inputA', Input.sketch({ inputClasses: [ 'slot-input' ] })),
-          {
-            dom: {
-              tag: 'p',
-              classes: [ 'something-else' ],
-              innerHtml: 'Hello'
-            }
-          },
-          {
-            dom: {
-              tag: 'div',
-              classes: [ 'slot-wrapper' ]
-            },
-            components: [
-              parts.slot('buttonB', Button.sketch({
-                dom: {
-                  tag: 'button',
-                  classes: [ 'slot-button' ],
-                  innerHtml: 'Patchy button'
-                },
-                action: store.adder('slot-button')
-              }))
-            ]
+  GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
+    SlotContainer.sketch((parts) => ({
+      dom: {
+        tag: 'div',
+        classes: [ 'test-slot-container' ]
+      },
+      components: [
+        parts.slot('inputA', Input.sketch({ inputClasses: [ 'slot-input' ] })),
+        {
+          dom: {
+            tag: 'p',
+            classes: [ 'something-else' ],
+            innerHtml: 'Hello'
           }
-        ]
-      }))
-    );
-  }, (_doc, _body, _gui, component, _store) => {
+        },
+        {
+          dom: {
+            tag: 'div',
+            classes: [ 'slot-wrapper' ]
+          },
+          components: [
+            parts.slot('buttonB', Button.sketch({
+              dom: {
+                tag: 'button',
+                classes: [ 'slot-button' ],
+                innerHtml: 'Patchy button'
+              },
+              action: store.adder('slot-button')
+            }))
+          ]
+        }
+      ]
+    }))
+  ), (_doc, _body, _gui, component, _store) => {
 
-    const cGetSlot = (slot: string) => Chain.binder(() => {
-      return SlotContainer.getSlot(component, slot).fold(
-        () => Result.error('Could not find slot: ' + slot),
-        Result.value
-      );
-    });
+    const cGetSlot = (slot: string) => Chain.binder(() => SlotContainer.getSlot(component, slot).fold(
+      () => Result.error('Could not find slot: ' + slot),
+      Result.value
+    ));
 
     const sAssertSlotStructure = (label: string, slot: string, expectedStructure: ApproxStructure.Builder<StructAssert>) => Chain.asStep({ }, [
       cGetSlot(slot),
@@ -65,53 +61,43 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
       })
     ]);
 
-    const sAssertButtonShowing = (label: string) => sAssertSlotStructure(label, 'buttonB', (s, str, _arr) => {
-      return s.element('button', {
-        attrs: {
-          'aria-hidden': str.none()
-        },
-        styles: {
-          display: str.none()
-        }
-      });
-    });
+    const sAssertButtonShowing = (label: string) => sAssertSlotStructure(label, 'buttonB', (s, str, _arr) => s.element('button', {
+      attrs: {
+        'aria-hidden': str.none()
+      },
+      styles: {
+        display: str.none()
+      }
+    }));
 
-    const sAssertButtonHidden = (label: string) => sAssertSlotStructure(label, 'buttonB', (s, str, _arr) => {
-      return s.element('button', {
-        attrs: {
-          'aria-hidden': str.is('true')
-        },
-        styles: {
-          display: str.is('none')
-        }
-      });
-    });
+    const sAssertButtonHidden = (label: string) => sAssertSlotStructure(label, 'buttonB', (s, str, _arr) => s.element('button', {
+      attrs: {
+        'aria-hidden': str.is('true')
+      },
+      styles: {
+        display: str.is('none')
+      }
+    }));
 
-    const sAssertInputShowing = (label: string) => sAssertSlotStructure(label, 'inputA', (s, str, _arr) => {
-      return s.element('input', {
-        attrs: {
-          'aria-hidden': str.none()
-        },
-        styles: {
-          display: str.none()
-        }
-      });
-    });
+    const sAssertInputShowing = (label: string) => sAssertSlotStructure(label, 'inputA', (s, str, _arr) => s.element('input', {
+      attrs: {
+        'aria-hidden': str.none()
+      },
+      styles: {
+        display: str.none()
+      }
+    }));
 
-    const sAssertInputHidden = (label: string) => sAssertSlotStructure(label, 'inputA', (s, str, _arr) => {
-      return s.element('input', {
-        attrs: {
-          'aria-hidden': str.is('true')
-        },
-        styles: {
-          display: str.is('none')
-        }
-      });
-    });
+    const sAssertInputHidden = (label: string) => sAssertSlotStructure(label, 'inputA', (s, str, _arr) => s.element('input', {
+      attrs: {
+        'aria-hidden': str.is('true')
+      },
+      styles: {
+        display: str.is('none')
+      }
+    }));
 
-    const cSlotShowing = (slot: string) => Chain.mapper(() => {
-      return SlotContainer.isShowing(component, slot);
-    });
+    const cSlotShowing = (slot: string) => Chain.mapper(() => SlotContainer.isShowing(component, slot));
 
     const sAssertSlotShowing = (slot: string, expectedShowing: boolean) => (label: string) => Chain.asStep({}, [
       cSlotShowing(slot),
@@ -123,9 +109,7 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
     const sAssertInputSlotShowing = sAssertSlotShowing('inputA', true);
     const sAssertInputSlotHidden = sAssertSlotShowing('inputA', false);
 
-    const cGetSlotNames = () => Chain.mapper(() => {
-      return SlotContainer.getSlotNames(component);
-    });
+    const cGetSlotNames = () => Chain.mapper(() => SlotContainer.getSlotNames(component));
 
     const sAssertGetSlotNames = (label: string, expectedSlots: string[]) => Chain.asStep({}, [
       cGetSlotNames(),
@@ -147,23 +131,21 @@ UnitTest.asynctest('SlotContainerTest', (success, failure) => {
     return [
       Assertions.sAssertStructure(
         'Checking initial structure',
-        ApproxStructure.build((s, _str, arr) => {
-          return s.element('div', {
-            classes: [ arr.has('test-slot-container') ],
-            children: [
-              s.element('input', { classes: [ arr.has('slot-input') ] }),
-              s.element('p', { classes: [ arr.has('something-else') ] }),
-              s.element('div', {
-                classes: [ arr.has('slot-wrapper') ],
-                children: [
-                  s.element('button', {
-                    classes: [ arr.has('slot-button') ]
-                  })
-                ]
-              })
-            ]
-          });
-        }),
+        ApproxStructure.build((s, _str, arr) => s.element('div', {
+          classes: [ arr.has('test-slot-container') ],
+          children: [
+            s.element('input', { classes: [ arr.has('slot-input') ] }),
+            s.element('p', { classes: [ arr.has('something-else') ] }),
+            s.element('div', {
+              classes: [ arr.has('slot-wrapper') ],
+              children: [
+                s.element('button', {
+                  classes: [ arr.has('slot-button') ]
+                })
+              ]
+            })
+          ]
+        })),
         component.element()
       ),
 

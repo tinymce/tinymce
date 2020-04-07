@@ -33,7 +33,49 @@ UnitTest.test('TableLookupTest', function () {
     });
   };
 
-  const htmlA = '<table style="border-collapse: collapse; width: 1088px; float: none; height: 60px;" summary="Skin burns" border="1"><caption>Outer table<br></caption><tbody><tr style="height: 20px;"><td style="width: 242px; height: 20px;"><br></td><td style="width: 10px; height: 20px;"><br></td><td style="height: 60px; width: 815px;"><table style="border-collapse: collapse; width: 400px; float: none; height: 200px;" border="1"><caption>Inner table</caption><tbody><tr style="height: 0px;"><td style="width: 399px; height: 0px;" colspan="3" rowspan="3"><span class="ephox-cram-annotation-wrap ephox-cram_4309642597121480569760068" aria-invalid="spelling" data-ephox-cram-highlight-id="ephox-cram_4309642597121480569760068" data-ephox-cram-annotation="eee" data-ephox-cram-lingo="en_us">eee</span></td></tr><tr style="height: 0px;"></tr><tr></tr></tbody></table><br></td><td style="width: 11px;"><br></td><td style="width: 10px; height: 20px;"><br></td></tr><tr style="height: 20px;"><td style="width: 242px; height: 20px;"><br></td><td style="width: 10px; height: 20px;"><br></td><td style="width: 815px;"><br></td><td style="width: 11px;"><br></td><td style="width: 10px; height: 20px;"><br></td></tr><tr style="height: 20px;"><td style="width: 242px; height: 20px;"><br></td><td style="width: 10px; height: 20px;"><br></td><td style="width: 815px;"><br></td><td style="width: 11px;"><br></td><td style="width: 10px; height: 20px;"><br></td></tr></tbody></table>';
+  const htmlA =
+  '<table style="border-collapse: collapse; width: 1088px; float: none; height: 60px;" summary="Skin burns" border="1">' +
+  '<caption>Outer table<br></caption>' +
+  '<tbody>' +
+  '<tr style="height: 20px;">' +
+  '<td style="width: 242px; height: 20px;"><br></td>' +
+  '<td style="width: 10px; height: 20px;"><br></td>' +
+  '<td style="height: 60px; width: 815px;">' +
+  '<table style="border-collapse: collapse; width: 400px; float: none; height: 200px;" border="1">' +
+  '<caption>Inner table</caption>' +
+  '<tbody>' +
+  '<tr style="height: 0px;">' +
+  '<td style="width: 399px; height: 0px;" colspan="3" rowspan="3">' +
+  '<span class="ephox-cram-annotation-wrap ephox-cram_4309642597121480569760068" ' +
+  'aria-invalid="spelling" data-ephox-cram-highlight-id="ephox-cram_4309642597121480569760068" ' +
+  'data-ephox-cram-annotation="eee" data-ephox-cram-lingo="en_us">eee</span>' +
+  '</td>' +
+  '</tr>' +
+  '<tr style="height: 0px;"></tr>' +
+  '<tr></tr>' +
+  '</tbody>' +
+  '</table>' +
+  '<br>' +
+  '</td>' +
+  '<td style="width: 11px;"><br></td>' +
+  '<td style="width: 10px; height: 20px;"><br></td>' +
+  '</tr>' +
+  '<tr style="height: 20px;">' +
+  '<td style="width: 242px; height: 20px;"><br></td>' +
+  '<td style="width: 10px; height: 20px;"><br></td>' +
+  '<td style="width: 815px;"><br></td>' +
+  '<td style="width: 11px;"><br></td>' +
+  '<td style="width: 10px; height: 20px;"><br></td>' +
+  '</tr>' +
+  '<tr style="height: 20px;">' +
+  '<td style="width: 242px; height: 20px;"><br></td>' +
+  '<td style="width: 10px; height: 20px;"><br></td>' +
+  '<td style="width: 815px;"><br></td>' +
+  '<td style="width: 11px;"><br></td>' +
+  '<td style="width: 10px; height: 20px;"><br></td>' +
+  '</tr>' +
+  '</tbody>' +
+  '</table>';
   const testTableRoWClick = function () {
     const triggerSelector = 'table > tbody > tr:nth-child(1) > td:nth-child(3) > table > tbody > tr:nth-child(1)';
     testerShouldNotFind(htmlA, triggerSelector, 'testTableRoWClick');
@@ -55,7 +97,49 @@ UnitTest.test('TableLookupTest', function () {
     testerShouldNotFind(htmlA, triggerSelector, 'testOuterTableCaptionClick');
   };
 
-  const htmlB = '<table style="border-collapse: collapse; width: 1088px; float: none; height: 60px;" summary="Skin burns" border="1"><caption>Outer table<br></caption><tbody><tr style="height: 20px;"><td style="width: 242px; height: 20px;"><br></td><td style="width: 10px; height: 20px;"><br></td><td style="height: 60px; width: 815px;"><table style="border-collapse: collapse; width: 400px; float: none; height: 200px;" border="1"><caption>Inner table</caption><tbody><tr style="height: 0px;"><td style="width: 399px; height: 0px;" colspan="3" rowspan="3"><span class="ephox-cram-annotation-wrap ephox-cram_4309642597121480569760068" aria-invalid="spelling" data-ephox-cram-highlight-id="ephox-cram_4309642597121480569760068" data-ephox-cram-annotation="eee" data-ephox-cram-lingo="en_us">eee</span></td></tr><tr style="height: 0px;"></tr><tr></tr></tbody></table><br></td><td style="width: 11px;"><br></td><td style="width: 10px; height: 20px;"><br></td></tr><tr style="height: 20px;"><td style="width: 242px; height: 20px;"><br></td><td style="width: 10px; height: 20px;"><br></td><td style="width: 815px;"><br></td><td style="width: 11px;"><br></td><td style="width: 10px; height: 20px;"><br></td></tr><tr style="height: 20px;"><td style="width: 242px; height: 20px;"><br></td><td style="width: 10px; height: 20px;"><br></td><td style="width: 815px;"><br></td><td style="width: 11px;"><br></td><td style="width: 10px; height: 20px;"><br></td></tr></tbody></table>';
+  const htmlB =
+  '<table style="border-collapse: collapse; width: 1088px; float: none; height: 60px;" summary="Skin burns" border="1">' +
+  '<caption>Outer table<br></caption>' +
+  '<tbody>' +
+  '<tr style="height: 20px;">' +
+  '<td style="width: 242px; height: 20px;"><br></td>' +
+  '<td style="width: 10px; height: 20px;"><br></td>' +
+  '<td style="height: 60px; width: 815px;">' +
+  '<table style="border-collapse: collapse; width: 400px; float: none; height: 200px;" border="1">' +
+  '<caption>Inner table</caption>' +
+  '<tbody>' +
+  '<tr style="height: 0px;">' +
+  '<td style="width: 399px; height: 0px;" colspan="3" rowspan="3">' +
+  '<span class="ephox-cram-annotation-wrap ephox-cram_4309642597121480569760068" ' +
+  'aria-invalid="spelling" data-ephox-cram-highlight-id="ephox-cram_4309642597121480569760068" ' +
+  'data-ephox-cram-annotation="eee" data-ephox-cram-lingo="en_us">eee</span>' +
+  '</td>' +
+  '</tr>' +
+  '<tr style="height: 0px;"></tr>' +
+  '<tr></tr>' +
+  '</tbody>' +
+  '</table>' +
+  '<br>' +
+  '</td>' +
+  '<td style="width: 11px;"><br></td>' +
+  '<td style="width: 10px; height: 20px;"><br></td>' +
+  '</tr>' +
+  '<tr style="height: 20px;">' +
+  '<td style="width: 242px; height: 20px;"><br></td>' +
+  '<td style="width: 10px; height: 20px;"><br></td>' +
+  '<td style="width: 815px;"><br></td>' +
+  '<td style="width: 11px;"><br></td>' +
+  '<td style="width: 10px; height: 20px;"><br></td>' +
+  '</tr>' +
+  '<tr style="height: 20px;">' +
+  '<td style="width: 242px; height: 20px;"><br></td>' +
+  '<td style="width: 10px; height: 20px;"><br></td>' +
+  '<td style="width: 815px;"><br></td>' +
+  '<td style="width: 11px;"><br></td>' +
+  '<td style="width: 10px; height: 20px;"><br></td>' +
+  '</tr>' +
+  '</tbody>' +
+  '</table>';
   const testOuterTableMergedRowClick = function () {
     const triggerSelector = 'body > table > tbody > tr:nth-child(3)';
     testerShouldNotFind(htmlB, triggerSelector, 'testOuterTableMergedRowClick');

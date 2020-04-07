@@ -24,6 +24,4 @@ export const choiceMenuItemSchema = ValueSchema.objOf([
   FieldSchema.optionString('icon'),
 ].concat(commonMenuItemFields));
 
-export const createChoiceMenuItem = (spec: ChoiceMenuItemApi): Result<ChoiceMenuItem, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw('choicemenuitem', choiceMenuItemSchema, spec);
-};
+export const createChoiceMenuItem = (spec: ChoiceMenuItemApi): Result<ChoiceMenuItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('choicemenuitem', choiceMenuItemSchema, spec);

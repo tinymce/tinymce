@@ -22,13 +22,11 @@ const getResponseText = (responseType: ResponseBodyDataTypes, request: XMLHttpRe
   }
 };
 
-export const handle = (url: string, responseType: ResponseBodyDataTypes, request: XMLHttpRequest): Future<HttpError> => {
-  return getResponseText(responseType, request).map((responseText) => {
-    const message = request.status === 0 ? 'Unknown HTTP error (possible cross-domain request)' :  `Could not load url ${url}: ${request.statusText}`;
-    return {
-      message,
-      status: request.status,
-      responseText
-    };
-  });
-};
+export const handle = (url: string, responseType: ResponseBodyDataTypes, request: XMLHttpRequest): Future<HttpError> => getResponseText(responseType, request).map((responseText) => {
+  const message = request.status === 0 ? 'Unknown HTTP error (possible cross-domain request)' :  `Could not load url ${url}: ${request.statusText}`;
+  return {
+    message,
+    status: request.status,
+    responseText
+  };
+});

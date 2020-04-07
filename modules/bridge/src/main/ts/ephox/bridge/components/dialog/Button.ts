@@ -29,9 +29,7 @@ const buttonFields = [
   FieldSchema.field(
     'name',
     'name',
-    FieldPresence.defaultedThunk(() => {
-      return Id.generate('button-name');
-    }),
+    FieldPresence.defaultedThunk(() => Id.generate('button-name')),
     ValueSchema.string
   ),
   FieldSchema.optionString('icon'),
@@ -40,6 +38,4 @@ const buttonFields = [
 
 export const buttonSchema = ValueSchema.objOf(buttonFields);
 
-export const createButton = (spec: ButtonApi): Result<Button, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<Button>('button', buttonSchema, spec);
-};
+export const createButton = (spec: ButtonApi): Result<Button, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<Button>('button', buttonSchema, spec);
