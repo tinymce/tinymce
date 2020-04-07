@@ -15,22 +15,15 @@ import { buildBasicStaticDataset } from './SelectDatasets';
 import { IsSelectedForType } from './utils/FormatRegister';
 
 const alignMenuItems = [
-  { title: 'Left', icon: 'align-left', format: 'alignleft'},
-  { title: 'Center', icon: 'align-center', format: 'aligncenter' },
-  { title: 'Right', icon: 'align-right', format: 'alignright' },
-  { title: 'Justify', icon: 'align-justify', format: 'alignjustify' }
+  { title: 'Left', icon: 'align-left', format: 'alignleft', command: 'JustifyLeft' },
+  { title: 'Center', icon: 'align-center', format: 'aligncenter', command: 'JustifyCenter' },
+  { title: 'Right', icon: 'align-right', format: 'alignright', command: 'JustifyRight' },
+  { title: 'Justify', icon: 'align-justify', format: 'alignjustify', command: 'JustifyFull' }
 ];
-
-const alignCommands = {
-  alignleft: 'JustifyLeft',
-  aligncenter: 'JustifyCenter',
-  alignright: 'JustifyRight',
-  alignjustify: 'JustifyFull'
-};
 
 const getSpec = (editor: Editor): SelectSpec => {
   const getMatchingValue = (): Option<Partial<FormatItem>> => {
-    return  Arr.find(alignMenuItems, (item) => editor.formatter.match(item.format));
+    return Arr.find(alignMenuItems, (item) => editor.formatter.match(item.format));
   };
 
   const isSelectedFor: IsSelectedForType = (format: string) => () => editor.formatter.match(format);
@@ -53,13 +46,17 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   const dataset = buildBasicStaticDataset(alignMenuItems);
 
+  const onAction = (rawItem: FormatterFormatItem) => () =>
+    Arr.find(alignMenuItems, (item) => item.format === rawItem.format)
+      .each((item) => editor.execCommand(item.command));
+
   return {
     tooltip: 'Align',
     icon: Option.some('align-left'),
     isSelectedFor,
     getCurrentValue: Fun.constant(Option.none()),
     getPreviewFor,
-    onAction: (rawItem: FormatterFormatItem) => () => editor.execCommand(alignCommands[rawItem.format]),
+    onAction,
     setInitialValue,
     nodeChangeHandler,
     dataset,
