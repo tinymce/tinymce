@@ -10,8 +10,7 @@ import { Arr, Option, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { updateMenuIcon } from '../../dropdown/CommonDropdown';
-import { onActionToggleFormat } from './utils/Utils';
-import { createMenuItems, createSelectButton, FormatItem, PreviewSpec, SelectSpec } from './BespokeSelect';
+import { createMenuItems, createSelectButton, FormatItem, PreviewSpec, SelectSpec, FormatterFormatItem } from './BespokeSelect';
 import { buildBasicStaticDataset } from './SelectDatasets';
 import { IsSelectedForType } from './utils/FormatRegister';
 
@@ -21,6 +20,13 @@ const alignMenuItems = [
   { title: 'Right', icon: 'align-right', format: 'alignright' },
   { title: 'Justify', icon: 'align-justify', format: 'alignjustify' }
 ];
+
+const alignCommands = {
+  alignleft: 'JustifyLeft',
+  aligncenter: 'JustifyCenter',
+  alignright: 'JustifyRight',
+  alignjustify: 'JustifyFull'
+};
 
 const getSpec = (editor: Editor): SelectSpec => {
   const getMatchingValue = (): Option<Partial<FormatItem>> => {
@@ -53,7 +59,7 @@ const getSpec = (editor: Editor): SelectSpec => {
     isSelectedFor,
     getCurrentValue: Fun.constant(Option.none()),
     getPreviewFor,
-    onAction: onActionToggleFormat(editor),
+    onAction: (rawItem: FormatterFormatItem) => () => editor.execCommand(alignCommands[rawItem.format]),
     setInitialValue,
     nodeChangeHandler,
     dataset,

@@ -1,5 +1,6 @@
 Version 5.2.2 (TBD)
     Fixed an issue where anchors could not be inserted on empty lines #TINY-2788
+    Fixed format menu align buttons inconsistently applying to images #TINY-4057
 Version 5.2.1 (2020-03-25)
     Fixed the "is decorative" checkbox in the image dialog clearing after certain dialog events #FOAM-11
     Fixed possible uncaught exception when a `style` attribute is removed using a content filter on `setContent` #TINY-4742
