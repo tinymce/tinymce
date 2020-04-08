@@ -7,26 +7,32 @@ import Theme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('browser.tinymce.core.delete.OutdentForcedRootBlockFalseTest', (success, failure) => {
   Theme();
 
-  const sTestDeleteOrBackspaceKey = (editor: Editor, tinyApis: TinyApis, tinyActions: TinyActions, key: number) => {
-    return (setupHtml: string, setupPath: number[], setupOffset: number, expectedHtml: string, expectedPath: number[], expectedOffset: number) => {
-      return GeneralSteps.sequence([
-        tinyApis.sSetContent(setupHtml),
-        tinyApis.sSetCursor(setupPath, setupOffset),
-        tinyApis.sExecCommand('indent'),
-        tinyApis.sNodeChanged(),
-        tinyActions.sContentKeystroke(key, { }),
-        sNormalizeBody(editor),
-        tinyApis.sAssertContent(expectedHtml),
-        tinyApis.sAssertSelection(expectedPath, expectedOffset, expectedPath, expectedOffset),
-      ]);
-    };
-  };
+  const sTestDeleteOrBackspaceKey = (
+    editor: Editor,
+    tinyApis: TinyApis,
+    tinyActions: TinyActions,
+    key: number
+  ) => (
+    setupHtml: string,
+    setupPath: number[],
+    setupOffset: number,
+    expectedHtml: string,
+    expectedPath: number[],
+    expectedOffset: number
+  ) => GeneralSteps.sequence([
+    tinyApis.sSetContent(setupHtml),
+    tinyApis.sSetCursor(setupPath, setupOffset),
+    tinyApis.sExecCommand('indent'),
+    tinyApis.sNodeChanged(),
+    tinyActions.sContentKeystroke(key, { }),
+    sNormalizeBody(editor),
+    tinyApis.sAssertContent(expectedHtml),
+    tinyApis.sAssertSelection(expectedPath, expectedOffset, expectedPath, expectedOffset),
+  ]);
 
-  const sNormalizeBody = (editor: Editor) => {
-    return Step.sync(() => {
-      editor.getBody().normalize();
-    });
-  };
+  const sNormalizeBody = (editor: Editor) => Step.sync(() => {
+    editor.getBody().normalize();
+  });
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
@@ -39,7 +45,14 @@ UnitTest.asynctest('browser.tinymce.core.delete.OutdentForcedRootBlockFalseTest'
         sTestBackspace('a', [ 0 ], 0, '<div>a</div>', [ 0, 0 ], 0), // outdent
         sTestBackspace('aa', [ 0 ], 1, '<div style="padding-left: 40px;">aa</div>', [ 0, 0 ], 1), // no outdent
         sTestBackspace('a <br>b', [ 2 ], 0, 'a\n<div>b</div>', [ 1, 0 ], 0), // outdent
-        sTestBackspace('aa<br>bb', [ 2 ], 1, 'aa\n<div style="padding-left: 40px;">bb</div>', [ 1, 0 ], 1), // no outdent
+        sTestBackspace(
+          'aa<br>bb',
+          [ 2 ],
+          1,
+          'aa\n<div style="padding-left: 40px;">bb</div>',
+          [ 1, 0 ],
+          1
+        ), // no outdent
       ]))
     ], onSuccess, onFailure);
   }, {

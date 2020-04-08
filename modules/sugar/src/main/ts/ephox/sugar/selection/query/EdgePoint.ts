@@ -16,9 +16,8 @@ import * as CursorPosition from '../../api/selection/CursorPosition';
 const COLLAPSE_TO_LEFT = true;
 const COLLAPSE_TO_RIGHT = false;
 
-const getCollapseDirection = (rect: ClientRect | DOMRect, x: number) => {
-  return x - rect.left < rect.right - x ? COLLAPSE_TO_LEFT : COLLAPSE_TO_RIGHT;
-};
+const getCollapseDirection = (rect: ClientRect | DOMRect, x: number) =>
+  x - rect.left < rect.right - x ? COLLAPSE_TO_LEFT : COLLAPSE_TO_RIGHT;
 
 const createCollapsedNode = (doc: Element<Document>, target: Element<DomNode>, collapseDirection: boolean) => {
   const r = doc.dom().createRange();
@@ -34,9 +33,7 @@ const locateInElement = (doc: Element<Document>, node: Element<DomElement>, x: n
   const collapseDirection = getCollapseDirection(rect, x);
 
   const f = collapseDirection === COLLAPSE_TO_LEFT ? CursorPosition.first : CursorPosition.last;
-  return f(node).map((target) => {
-    return createCollapsedNode(doc, target, collapseDirection);
-  });
+  return f(node).map((target) => createCollapsedNode(doc, target, collapseDirection));
 };
 
 const locateInEmpty = (doc: Element<Document>, node: Element<DomElement>, x: number) => {

@@ -30,17 +30,13 @@ const adt: {
   { exact: [ 'start', 'soffset', 'finish', 'foffset' ] }
 ]);
 
-const exactFromRange = (simRange: SimRange) => {
-  return adt.exact(simRange.start(), simRange.soffset(), simRange.finish(), simRange.foffset());
-};
+const exactFromRange = (simRange: SimRange) => adt.exact(simRange.start(), simRange.soffset(), simRange.finish(), simRange.foffset());
 
-const getStart = (selection: Selection) => {
-  return selection.match({
-    domRange: (rng) => Element.fromDom(rng.startContainer),
-    relative: (startSitu, _finishSitu) => Situ.getStart(startSitu),
-    exact: (start, _soffset, _finish, _foffset) => start
-  });
-};
+const getStart = (selection: Selection) => selection.match({
+  domRange: (rng) => Element.fromDom(rng.startContainer),
+  relative: (startSitu, _finishSitu) => Situ.getStart(startSitu),
+  exact: (start, _soffset, _finish, _foffset) => start
+});
 
 const domRange = adt.domRange;
 const relative = adt.relative;
@@ -48,7 +44,6 @@ const exact = adt.exact;
 
 const getWin = (selection: Selection) => {
   const start = getStart(selection);
-
   return Traverse.defaultView(start);
 };
 

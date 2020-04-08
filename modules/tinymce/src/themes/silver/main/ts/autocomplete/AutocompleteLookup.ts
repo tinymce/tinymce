@@ -31,26 +31,19 @@ export interface AutocompleteLookupInfo {
   lookupData: Promise<AutocompleteLookupData[]>;
 }
 
-const isPreviousCharContent = (dom: DOMUtils, leaf: Spot.SpotPoint<Node>) => {
+const isPreviousCharContent = (dom: DOMUtils, leaf: Spot.SpotPoint<Node>) =>
   // If at the start of the range, then we need to look backwards one more place. Otherwise we just need to look at the current text
-  return repeatLeft(dom, leaf.container, leaf.offset, (element, offset) => offset === 0 ? -1 : offset, dom.getRoot()).filter((spot) => {
+  repeatLeft(dom, leaf.container, leaf.offset, (element, offset) => offset === 0 ? -1 : offset, dom.getRoot()).filter((spot) => {
     const char = spot.container.data.charAt(spot.offset - 1);
     return !isWhitespace(char);
   }).isSome();
+
+const isStartOfWord = (dom: DOMUtils) => (rng: Range) => {
+  const leaf = toLeaf(rng.startContainer, rng.startOffset);
+  return !isPreviousCharContent(dom, leaf);
 };
 
-const isStartOfWord = (dom: DOMUtils) => {
-  return (rng: Range) => {
-    const leaf = toLeaf(rng.startContainer, rng.startOffset);
-    return !isPreviousCharContent(dom, leaf);
-  };
-};
-
-const getTriggerContext = (dom: DOMUtils, initRange: Range, database: AutocompleterDatabase): Option<AutocompleteContext> => {
-  return Arr.findMap(database.triggerChars, (ch) => {
-    return getContext(dom, initRange, ch);
-  });
-};
+const getTriggerContext = (dom: DOMUtils, initRange: Range, database: AutocompleterDatabase): Option<AutocompleteContext> => Arr.findMap(database.triggerChars, (ch) => getContext(dom, initRange, ch));
 
 const lookup = (editor: Editor, getDatabase: () => AutocompleterDatabase): Option<AutocompleteLookupInfo> => {
   const database = getDatabase();
@@ -64,9 +57,7 @@ const lookupWithContext = (editor: Editor, getDatabase: () => AutocompleterDatab
   const rng = editor.selection.getRng();
   const startText = rng.startContainer.nodeValue;
 
-  const autocompleters = Arr.filter(database.lookupByChar(context.triggerChar), (autocompleter) => {
-    return context.text.length >= autocompleter.minChars && autocompleter.matches.getOrThunk(() => isStartOfWord(editor.dom))(context.range, startText, context.text);
-  });
+  const autocompleters = Arr.filter(database.lookupByChar(context.triggerChar), (autocompleter) => context.text.length >= autocompleter.minChars && autocompleter.matches.getOrThunk(() => isStartOfWord(editor.dom))(context.range, startText, context.text));
 
   if (autocompleters.length === 0) {
     return Option.none();

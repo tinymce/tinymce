@@ -18,32 +18,26 @@ const labelPart = PartType.optional({
   name: 'label'
 });
 
-const edgePart = (name: keyof EdgeActions): PartType.PartTypeAdt => {
-  return PartType.optional({
-    name: '' + name + '-edge',
-    overrides(detail: SliderDetail) {
-      const action = detail.model.manager.edgeActions[name];
-      // Not all edges have actions for all sliders.
-      // A horizontal slider will only have left and right, for instance,
-      // ignoring top, bottom and diagonal edges as they don't make sense in context of those sliders.
-      return action.fold(() => {
-        return {};
-      },
-      (a) => {
-        return {
-          events: AlloyEvents.derive([
-            AlloyEvents.runActionExtra(NativeEvents.touchstart(), (comp, se, d) => a(comp, d), [ detail ]),
-            AlloyEvents.runActionExtra(NativeEvents.mousedown(), (comp, se, d) => a(comp, d), [ detail ]),
-            AlloyEvents.runActionExtra(NativeEvents.mousemove(), (comp, se, det: SliderDetail) => {
-              if (det.mouseIsDown.get()) { a(comp, det); }
-            }, [ detail ])
-          ])
-        };
-      }
-      );
-    }
-  });
-};
+const edgePart = (name: keyof EdgeActions): PartType.PartTypeAdt => PartType.optional({
+  name: '' + name + '-edge',
+  overrides(detail: SliderDetail) {
+    const action = detail.model.manager.edgeActions[name];
+    // Not all edges have actions for all sliders.
+    // A horizontal slider will only have left and right, for instance,
+    // ignoring top, bottom and diagonal edges as they don't make sense in context of those sliders.
+    return action.fold(() => ({}),
+      (a) => ({
+        events: AlloyEvents.derive([
+          AlloyEvents.runActionExtra(NativeEvents.touchstart(), (comp, se, d) => a(comp, d), [ detail ]),
+          AlloyEvents.runActionExtra(NativeEvents.mousedown(), (comp, se, d) => a(comp, d), [ detail ]),
+          AlloyEvents.runActionExtra(NativeEvents.mousemove(), (comp, se, det: SliderDetail) => {
+            if (det.mouseIsDown.get()) { a(comp, det); }
+          }, [ detail ])
+        ])
+      })
+    );
+  }
+});
 
 // When the user touches the top left edge, it should move the thumb
 const tlEdgePart = edgePart('top-left');
@@ -103,11 +97,7 @@ const spectrumPart = PartType.required({
     const modelDetail = detail.model;
     const model = modelDetail.manager;
 
-    const setValueFrom = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {
-      return model.getValueFromEvent(simulatedEvent).map((value: number | Position) => {
-        return model.setValueFrom(component, detail, value);
-      });
-    };
+    const setValueFrom = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => model.getValueFromEvent(simulatedEvent).map((value: number | Position) => model.setValueFrom(component, detail, value));
 
     return {
       behaviours: Behaviour.derive([
@@ -115,18 +105,10 @@ const spectrumPart = PartType.required({
         Keying.config(
           {
             mode: 'special',
-            onLeft: (spectrum) => {
-              return model.onLeft(spectrum, detail);
-            },
-            onRight: (spectrum) => {
-              return model.onRight(spectrum, detail);
-            },
-            onUp: (spectrum) => {
-              return model.onUp(spectrum, detail);
-            },
-            onDown: (spectrum) => {
-              return model.onDown(spectrum, detail);
-            }
+            onLeft: (spectrum) => model.onLeft(spectrum, detail),
+            onRight: (spectrum) => model.onRight(spectrum, detail),
+            onUp: (spectrum) => model.onUp(spectrum, detail),
+            onDown: (spectrum) => model.onDown(spectrum, detail)
           }
         ),
         Focusing.config({})

@@ -17,35 +17,25 @@ const flatgrid = (): FlatgridState => {
     );
   };
 
-  const getNumRows = () => {
-    return dimensions.get().map((d) => d.numRows);
-  };
+  const getNumRows = () => dimensions.get().map((d) => d.numRows);
 
-  const getNumColumns = () => {
-    return dimensions.get().map((d) => d.numColumns);
-  };
+  const getNumColumns = () => dimensions.get().map((d) => d.numColumns);
 
   return nuState({
-    readState: () => {
-      return dimensions.get().map((d) => {
-        return {
-          numRows: String(d.numRows),
-          numColumns: String(d.numColumns)
-        };
-      }).getOr({
-        numRows: '?',
-        numColumns: '?'
-      });
-    },
+    readState: () => dimensions.get().map((d) => ({
+      numRows: String(d.numRows),
+      numColumns: String(d.numColumns)
+    })).getOr({
+      numRows: '?',
+      numColumns: '?'
+    }),
     setGridSize,
     getNumRows,
     getNumColumns
   });
 };
 
-const init = (spec: GeneralKeyingConfig) => {
-  return spec.state(spec);
-};
+const init = (spec: GeneralKeyingConfig) => spec.state(spec);
 
 export {
   flatgrid,

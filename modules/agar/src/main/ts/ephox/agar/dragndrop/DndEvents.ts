@@ -41,9 +41,7 @@ const createDragenterEvent = createDndEvent('dragenter');
 const createDropEvent = createDndEvent('drop');
 const createDragEvent = createDndEvent('drag');
 
-const isDefaultPrevented = (evt: DragEvent): boolean => {
-  return evt.defaultPrevented || evt.hasOwnProperty('ieDefaultPrevented');
-};
+const isDefaultPrevented = (evt: DragEvent): boolean => evt.defaultPrevented || evt.hasOwnProperty('ieDefaultPrevented');
 
 const dispatchDndEvent = (event: DragEvent, target: Element<any>): DragEvent => {
   if (event.type === 'dragstart') {
@@ -59,9 +57,7 @@ const dispatchDndEvent = (event: DragEvent, target: Element<any>): DragEvent => 
   return event;
 };
 
-const getWindowFromElement = (element: Element<any>): Window => {
-  return element.dom().ownerDocument.defaultView;
-};
+const getWindowFromElement = (element: Element<any>): Window => element.dom().ownerDocument.defaultView;
 
 export {
   createDndEvent,

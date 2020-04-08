@@ -50,10 +50,10 @@ export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: R
 
   const updateChromePosition = (toolbar: Option<AlloyComponent>) => {
     // Calculate the toolbar offset when using a split toolbar drawer
-    const offset = isSplitToolbar ? toolbar.fold(() => 0, (tbar) => {
+    const offset = isSplitToolbar ? toolbar.fold(() => 0, (tbar) =>
       // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
-      return tbar.components().length > 1 ? Height.get(tbar.components()[1].element()) : 0;
-    }) : 0;
+      tbar.components().length > 1 ? Height.get(tbar.components()[1].element()) : 0
+    ) : 0;
 
     // The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
     // so we need to round this to account for that.

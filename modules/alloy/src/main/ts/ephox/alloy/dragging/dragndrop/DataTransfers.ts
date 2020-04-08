@@ -65,9 +65,7 @@ const setEffectAllowed = (transfer: DataTransfer, effect: string) => {
   transfer.effectAllowed = effect;
 };
 
-const getFiles = (transfer: DataTransfer) => {
-  return Arr.from(transfer.files);
-};
+const getFiles = (transfer: DataTransfer) => Arr.from(transfer.files);
 
 // IE 11 and Edge doesn't seem to support effectAllow properly the drop event fires even if it shouldn't, so we need to manually check as well
 const isValidDrop = (transfer: DataTransfer) => {

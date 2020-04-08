@@ -64,24 +64,21 @@ export interface CommonCollectionItemSpec {
 // from other renders because it is used for rendering a component
 // inside a dialog, not inside a menu. That's basically the reason
 // for the differences here.
-const renderCommonChoice = <T>(spec: CommonCollectionItemSpec, structure: ItemStructure, itemResponse: ItemResponse, providersbackstage: UiFactoryBackstageProviders): AlloySpec => {
-
-  return Button.sketch({
-    dom: structure.dom,
-    components: componentRenderPipeline(structure.optComponents),
-    eventOrder: menuItemEventOrder,
-    buttonBehaviours: Behaviour.derive(
-      [
-        AddEventsBehaviour.config('item-events', [
-          AlloyEvents.run(NativeEvents.mouseover(), Focusing.focus)
-        ]),
-        DisablingConfigs.item(spec.disabled || providersbackstage.isReadonly()),
-        ReadOnly.receivingConfig()
-      ]
-    ),
-    action: spec.onAction
-  });
-};
+const renderCommonChoice = <T>(spec: CommonCollectionItemSpec, structure: ItemStructure, itemResponse: ItemResponse, providersbackstage: UiFactoryBackstageProviders): AlloySpec => Button.sketch({
+  dom: structure.dom,
+  components: componentRenderPipeline(structure.optComponents),
+  eventOrder: menuItemEventOrder,
+  buttonBehaviours: Behaviour.derive(
+    [
+      AddEventsBehaviour.config('item-events', [
+        AlloyEvents.run(NativeEvents.mouseover(), Focusing.focus)
+      ]),
+      DisablingConfigs.item(spec.disabled || providersbackstage.isReadonly()),
+      ReadOnly.receivingConfig()
+    ]
+  ),
+  action: spec.onAction
+});
 
 export interface ItemDataInput {
   value: string;
@@ -91,15 +88,13 @@ export interface ItemDataInput {
 
 export type ItemDataOutput = ItemTypes.NormalItemSpec['data'];
 
-const buildData = (source: ItemDataInput): ItemDataOutput => {
-  return {
-    value: source.value,
-    meta: {
-      text: source.text.getOr(''),
-      ...source.meta
-    }
-  };
-};
+const buildData = (source: ItemDataInput): ItemDataOutput => ({
+  value: source.value,
+  meta: {
+    text: source.text.getOr(''),
+    ...source.meta
+  }
+});
 
 export {
   buildData,

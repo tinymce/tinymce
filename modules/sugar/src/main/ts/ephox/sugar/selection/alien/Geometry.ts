@@ -31,9 +31,8 @@ const searchForPoint = (rectForOffset: (number: number) => (ClientRect | DOMRect
   return 0; // always return something, even if it's not the exact offset it'll be better than nothing
 };
 
-const inRect = (rect: ClientRect | DOMRect, x: number, y: number) => {
-  return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
-};
+const inRect = (rect: ClientRect | DOMRect, x: number, y: number) =>
+  x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
 
 export {
   inRect,

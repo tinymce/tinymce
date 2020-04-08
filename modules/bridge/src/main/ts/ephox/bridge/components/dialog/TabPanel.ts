@@ -29,9 +29,7 @@ export const tabFields = [
   FieldSchema.field(
     'name',
     'name',
-    FieldPresence.defaultedThunk(() => {
-      return Id.generate('tab-name');
-    }),
+    FieldPresence.defaultedThunk(() => Id.generate('tab-name')),
     ValueSchema.string
   ),
   FieldSchema.strictString('title'),
@@ -45,6 +43,4 @@ export const tabPanelFields = [
 
 export const tabPanelSchema = ValueSchema.objOf(tabPanelFields);
 
-export const createTabPanel = (spec: TabPanelApi): Result<TabPanel, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<TabPanel>('tabpanel', tabPanelSchema, spec);
-};
+export const createTabPanel = (spec: TabPanelApi): Result<TabPanel, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<TabPanel>('tabpanel', tabPanelSchema, spec);

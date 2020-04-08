@@ -18,22 +18,20 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
   const cAssertIsDefaultMenubar = Assertions.cAssertStructure(
     'Checking structure of tox-menubar is "default"',
-    ApproxStructure.build((s, str, arr) => {
-      return s.element('div', {
-        classes: [ arr.has('tox-menubar') ],
-        children: Arr.map([ 'File', 'Edit', 'View', 'Format' ], (x) =>
-          s.element('button', {
-            children: [
-              s.element('span', {
-                html: str.is(x)
-              }),
-              // chevron
-              s.element('div', { })
-            ]
-          })
-        )
-      });
-    })
+    ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('tox-menubar') ],
+      children: Arr.map([ 'File', 'Edit', 'View', 'Format' ], (x) =>
+        s.element('button', {
+          children: [
+            s.element('span', {
+              html: str.is(x)
+            }),
+            // chevron
+            s.element('div', { })
+          ]
+        })
+      )
+    }))
   );
 
   Pipeline.async({}, [
@@ -81,15 +79,13 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         NamedChain.direct('body', cExtractOnlyOne('.tox-menubar'), 'menubar'),
         NamedChain.direct('menubar', Assertions.cAssertStructure(
           'Checking menubar should have just file and edit',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-menubar') ],
-              children: [
-                s.element('button', { }),
-                s.element('button', { })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('tox-menubar') ],
+            children: [
+              s.element('button', { }),
+              s.element('button', { })
+            ]
+          }))
         ), Id.generate('')),
         NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)

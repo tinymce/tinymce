@@ -17,14 +17,12 @@ const regularContains = (e1: Element<DomNode>, e2: Element<DomNode>) => {
   return d1 === d2 ? false : d1.contains(d2);
 };
 
-const ieContains = (e1: Element<DomNode>, e2: Element<DomNode>) => {
-  // IE only implements the contains() method for Element nodes.
-  // It fails for Text nodes, so implement it using compareDocumentPosition()
-  // https://connect.microsoft.com/IE/feedback/details/780874/node-contains-is-incorrect
-  // Note that compareDocumentPosition returns CONTAINED_BY if 'e2 *is_contained_by* e1':
-  // Also, compareDocumentPosition defines a node containing itself as false.
-  return Node.documentPositionContainedBy(e1.dom(), e2.dom());
-};
+// IE only implements the contains() method for Element nodes.
+// It fails for Text nodes, so implement it using compareDocumentPosition()
+// https://connect.microsoft.com/IE/feedback/details/780874/node-contains-is-incorrect
+// Note that compareDocumentPosition returns CONTAINED_BY if 'e2 *is_contained_by* e1':
+// Also, compareDocumentPosition defines a node containing itself as false.
+const ieContains = (e1: Element<DomNode>, e2: Element<DomNode>) => Node.documentPositionContainedBy(e1.dom(), e2.dom());
 
 const browser = PlatformDetection.detect().browser;
 

@@ -44,16 +44,14 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
     );
 
   }, (_doc, _body, gui, _component, _store) => {
-    const cSetupAnchor = Chain.mapper((hotspot) => {
-      return {
-        anchor: 'hotspot',
-        hotspot,
-        layouts: {
-          onLtr: () => [ Layout.northeast, Layout.southeast ],
-          onRtl: () => [ Layout.northwest, Layout.southwest ]
-        }
-      };
-    });
+    const cSetupAnchor = Chain.mapper((hotspot) => ({
+      anchor: 'hotspot',
+      hotspot,
+      layouts: {
+        onLtr: () => [ Layout.northeast, Layout.southeast ],
+        onRtl: () => [ Layout.northwest, Layout.southwest ]
+      }
+    }));
 
     const cAssertLayoutDirection = (direction: 'top' | 'bottom'): Chain<any, any> => Chain.op((data: { popup: AlloyComponent }) => {
       const popup = data.popup.element();

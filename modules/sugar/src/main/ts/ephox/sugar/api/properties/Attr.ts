@@ -55,13 +55,10 @@ const hasNone = (element: Element<DomNode>) => {
   return attrs === undefined || attrs === null || attrs.length === 0;
 };
 
-const clone = (element: Element<DomElement>) => {
-  // TypeScript really doesn't like NamedNodeMap as array
-  return Arr.foldl(element.dom().attributes, (acc, attr) => {
-    acc[attr.name] = attr.value;
-    return acc;
-  }, {} as Record<string, string>);
-};
+const clone = (element: Element<DomElement>) => Arr.foldl(element.dom().attributes, (acc, attr) => {
+  acc[attr.name] = attr.value;
+  return acc;
+}, {} as Record<string, string>);
 
 const transferOne = (source: Element<DomElement>, destination: Element<DomElement>, attr: string) => {
   // NOTE: We don't want to clobber any existing attributes

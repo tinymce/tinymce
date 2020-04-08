@@ -38,33 +38,31 @@ UnitTest.asynctest('Inline editor ContextToolbar Position test', (success, failu
         });
       }), 10, 1000);
 
-      const sTestPositionWhileScrolling = (scenario: Scenario) => {
-        return Log.stepsAsStep('TBA', scenario.label, [
-          tinyApis.sSetContent(`<p style="height: 100px"></p><p style="height: 25px;${scenario.contentStyles || ''}">${scenario.content}</p><p style="height: 100px"></p>`),
-          sScrollTo(0, -250),
-          tinyApis.sSetCursor(scenario.cursor.elementPath, scenario.cursor.offset),
-          UiFinder.sWaitForVisible('Waiting for toolbar to appear above content', Body.body(), '.tox-pop.tox-pop--bottom' + scenario.classes),
-          sAssertPosition('absolute', 'bottom', 1637),
+      const sTestPositionWhileScrolling = (scenario: Scenario) => Log.stepsAsStep('TBA', scenario.label, [
+        tinyApis.sSetContent(`<p style="height: 100px"></p><p style="height: 25px;${scenario.contentStyles || ''}">${scenario.content}</p><p style="height: 100px"></p>`),
+        sScrollTo(0, -250),
+        tinyApis.sSetCursor(scenario.cursor.elementPath, scenario.cursor.offset),
+        UiFinder.sWaitForVisible('Waiting for toolbar to appear above content', Body.body(), '.tox-pop.tox-pop--bottom' + scenario.classes),
+        sAssertPosition('absolute', 'bottom', 1637),
 
-          // Position the link at the top of the viewport, just below the toolbar
-          sScrollTo(0, -80),
-          UiFinder.sWaitForVisible('Waiting for toolbar to appear below content', Body.body(), '.tox-pop.tox-pop--top' + scenario.classes),
-          sAssertPosition('fixed', 'top', 109),
+        // Position the link at the top of the viewport, just below the toolbar
+        sScrollTo(0, -80),
+        UiFinder.sWaitForVisible('Waiting for toolbar to appear below content', Body.body(), '.tox-pop.tox-pop--top' + scenario.classes),
+        sAssertPosition('fixed', 'top', 109),
 
-          // Position the element offscreen and check the toolbar is hidden
-          sScrollTo(0, 100),
-          UiFinder.sWaitForHidden('Waiting for toolbar to be hidden', Body.body(), '.tox-pop'),
+        // Position the element offscreen and check the toolbar is hidden
+        sScrollTo(0, 100),
+        UiFinder.sWaitForHidden('Waiting for toolbar to be hidden', Body.body(), '.tox-pop'),
 
-          // Position the element back into view
-          sScrollTo(0, -250),
-          UiFinder.sWaitForVisible('Waiting for toolbar to appear above content', Body.body(), '.tox-pop.tox-pop--bottom' + scenario.classes),
-          sAssertPosition('absolute', 'bottom', 1637),
+        // Position the element back into view
+        sScrollTo(0, -250),
+        UiFinder.sWaitForVisible('Waiting for toolbar to appear above content', Body.body(), '.tox-pop.tox-pop--bottom' + scenario.classes),
+        sAssertPosition('absolute', 'bottom', 1637),
 
-          // Position the element behind the docked toolbar and check the toolbar is hidden
-          sScrollTo(0, -10),
-          UiFinder.sWaitForHidden('Waiting for toolbar to be hidden', Body.body(), '.tox-pop'),
-        ]);
-      };
+        // Position the element behind the docked toolbar and check the toolbar is hidden
+        sScrollTo(0, -10),
+        UiFinder.sWaitForHidden('Waiting for toolbar to be hidden', Body.body(), '.tox-pop'),
+      ]);
 
       Pipeline.async({ }, [
         Step.sync(() => {

@@ -16,16 +16,14 @@ import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemTypes.ItemSpec => {
-  const getApi = (component): Menu.ToggleMenuItemInstanceApi => {
-    return {
-      setActive: (state) => {
-        Toggling.set(component, state);
-      },
-      isActive: () => Toggling.isOn(component),
-      isDisabled: () => Disabling.isDisabled(component),
-      setDisabled: (state: boolean) => Disabling.set(component, state)
-    };
-  };
+  const getApi = (component): Menu.ToggleMenuItemInstanceApi => ({
+    setActive: (state) => {
+      Toggling.set(component, state);
+    },
+    isActive: () => Toggling.isOn(component),
+    isDisabled: () => Disabling.isDisabled(component),
+    setDisabled: (state: boolean) => Disabling.set(component, state)
+  });
 
   // BespokeSelects use meta to pass through styling information. Bespokes should only
   // be togglemenuitems hence meta is only passed through in this MenuItem.

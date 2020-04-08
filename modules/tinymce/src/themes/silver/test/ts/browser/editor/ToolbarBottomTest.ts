@@ -30,12 +30,10 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
       NamedChain.asChain([
         NamedChain.write('editor', McEditor.cFromSettings(nuSettings)),
         NamedChain.writeValue('body', Body.body()),
-        ...Arr.flatten(Arr.map(scenario.initial, (p) => {
-          return [
-            NamedChain.read('body', Mouse.cClickOn(p.clickOn)),
-            NamedChain.read('body', UiFinder.cWaitForVisible(`Wait for "${p.waitFor}" to be visible`, p.waitFor)),
-          ];
-        })),
+        ...Arr.flatten(Arr.map(scenario.initial, (p) => [
+          NamedChain.read('body', Mouse.cClickOn(p.clickOn)),
+          NamedChain.read('body', UiFinder.cWaitForVisible(`Wait for "${p.waitFor}" to be visible`, p.waitFor)),
+        ])),
         NamedChain.direct('body', Chain.fromChains([ UiFinder.cFindIn(scenario.assertAbove), Chain.mapper(Boxes.box) ]), 'upperBoxBounds'),
         NamedChain.direct('body', Chain.fromChains([ UiFinder.cFindIn(scenario.assertBelow), Chain.mapper(Boxes.box) ]), 'lowerBoxBounds'),
         Chain.op((input) => {

@@ -39,11 +39,9 @@ const renderBody = (spec: WindowBodySpec, id: Option<string>, backstage: UiFacto
     }
   };
 
-  const updateState = (_comp, incoming: WindowBodySpec) => {
-    return Option.some({
-      isTabPanel: () => incoming.body.type === 'tabpanel'
-    });
-  };
+  const updateState = (_comp, incoming: WindowBodySpec) => Option.some({
+    isTabPanel: () => incoming.body.type === 'tabpanel'
+  });
 
   const ariaAttributes = {
     'aria-live': 'polite'
@@ -71,9 +69,7 @@ const renderBody = (spec: WindowBodySpec, id: Option<string>, backstage: UiFacto
   };
 };
 
-const renderInlineBody = (spec: WindowBodySpec, contentId: string, backstage: UiFactoryBackstage, ariaAttrs: boolean) => {
-  return renderBody(spec, Option.some(contentId), backstage, ariaAttrs);
-};
+const renderInlineBody = (spec: WindowBodySpec, contentId: string, backstage: UiFactoryBackstage, ariaAttrs: boolean) => renderBody(spec, Option.some(contentId), backstage, ariaAttrs);
 
 const renderModalBody = (spec: WindowBodySpec, backstage: UiFactoryBackstage) => {
   const bodySpec = renderBody(spec, Option.none(), backstage, false);

@@ -24,9 +24,7 @@ const getCompByName = (access: DialogAccess, name: string): Option<AlloyComponen
       const footer = access.getFooter();
       const footerState = Reflecting.getState(footer);
       return footerState.get().bind((f) => f.lookupByName(form, name));
-    }, (comp) => {
-      return Option.some(comp);
-    });
+    }, (comp) => Option.some(comp));
   } else {
     return Option.none();
   }
@@ -34,11 +32,9 @@ const getCompByName = (access: DialogAccess, name: string): Option<AlloyComponen
 
 const validateData = <T>(access: DialogAccess, data) => {
   const root = access.getRoot();
-  return Reflecting.getState(root).get().map((dialogState: DialogManager.DialogInit<T>) => {
-    return ValueSchema.getOrDie(
-      ValueSchema.asRaw('data', dialogState.dataValidator, data)
-    );
-  }).getOr(data);
+  return Reflecting.getState(root).get().map((dialogState: DialogManager.DialogInit<T>) => ValueSchema.getOrDie(
+    ValueSchema.asRaw('data', dialogState.dataValidator, data)
+  )).getOr(data);
 };
 
 export interface DialogAccess {
@@ -64,9 +60,7 @@ const getDialogApi = <T extends Types.Dialog.DialogData>(
     const root = access.getRoot();
     const valueComp = root.getSystem().isConnected() ? access.getFormWrapper() : root;
     const representedValues = Representing.getValue(valueComp);
-    const menuItemCurrentState = Obj.map(menuItemStates, (cell: any) => {
-      return cell.get();
-    });
+    const menuItemCurrentState = Obj.map(menuItemStates, (cell: any) => cell.get());
     return {
       ...representedValues,
       ...menuItemCurrentState

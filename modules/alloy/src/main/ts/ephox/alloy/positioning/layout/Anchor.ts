@@ -25,9 +25,7 @@ const element = (anchorElement: Element, origin: Origins.OriginAdt): Anchor => {
   return anchor(anchorBox, origin);
 };
 
-const box = (anchorBox: AnchorBox, origin: Origins.OriginAdt): Anchor => {
-  return anchor(anchorBox, origin);
-};
+const box = (anchorBox: AnchorBox, origin: Origins.OriginAdt): Anchor => anchor(anchorBox, origin);
 
 export {
   box,

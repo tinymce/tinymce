@@ -71,36 +71,32 @@ const parseCustomTabs = (editor: Editor, customTabs: CustomTabSpecs) => {
   );
 };
 
-const init = (editor: Editor, customTabs: CustomTabSpecs): () => void => {
-  return () => {
-    // const tabSpecs: Record<string, Types.Dialog.TabApi> = customTabs.get();
-    const { tabs, names } = parseCustomTabs(editor, customTabs);
-    const foundTabs: Option<Types.Dialog.TabApi>[] = Arr.map(names, (name) => {
-      return Obj.get(tabs, name);
-    });
-    const dialogTabs: Types.Dialog.TabApi[] = Options.cat(foundTabs);
+const init = (editor: Editor, customTabs: CustomTabSpecs): () => void => () => {
+  // const tabSpecs: Record<string, Types.Dialog.TabApi> = customTabs.get();
+  const { tabs, names } = parseCustomTabs(editor, customTabs);
+  const foundTabs: Option<Types.Dialog.TabApi>[] = Arr.map(names, (name) => Obj.get(tabs, name));
+  const dialogTabs: Types.Dialog.TabApi[] = Options.cat(foundTabs);
 
-    const body: Types.Dialog.TabPanelApi = {
-      type: 'tabpanel',
-      tabs: dialogTabs
-    };
-    editor.windowManager.open(
-      {
-        title: 'Help',
-        size: 'medium',
-        body,
-        buttons: [
-          {
-            type: 'cancel',
-            name: 'close',
-            text: 'Close',
-            primary: true
-          }
-        ],
-        initialData: {}
-      }
-    );
+  const body: Types.Dialog.TabPanelApi = {
+    type: 'tabpanel',
+    tabs: dialogTabs
   };
+  editor.windowManager.open(
+    {
+      title: 'Help',
+      size: 'medium',
+      body,
+      buttons: [
+        {
+          type: 'cancel',
+          name: 'close',
+          text: 'Close',
+          primary: true
+        }
+      ],
+      initialData: {}
+    }
+  );
 };
 
 export { init };

@@ -6,14 +6,12 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { create, defaultData, getStyleValue, ImageData, isFigure, isImage, read, write } from 'tinymce/plugins/image/core/ImageData';
 
 UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success, failure) => {
-  const cSetHtml = (html: string) => {
-    return Chain.control(
-      Chain.op(function (elm: Element) {
-        Html.set(elm, html);
-      }),
-      Guard.addLogging('Set html')
-    );
-  };
+  const cSetHtml = (html: string) => Chain.control(
+    Chain.op(function (elm: Element) {
+      Html.set(elm, html);
+    }),
+    Guard.addLogging('Set html')
+  );
 
   const normalizeCss = (cssText: string) => {
     const css = DOMUtils.DOM.styles.parse(cssText);
@@ -26,12 +24,10 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
     return DOMUtils.DOM.styles.serialize(newCss);
   };
 
-  const cCreate = (data: ImageData) => {
-    return Chain.control(
-      Chain.inject(Element.fromDom(create(normalizeCss, data))),
-      Guard.addLogging(`Create ${data}`)
-    );
-  };
+  const cCreate = (data: ImageData) => Chain.control(
+    Chain.inject(Element.fromDom(create(normalizeCss, data))),
+    Guard.addLogging(`Create ${data}`)
+  );
   const cReadFromImage = Chain.control(
     Chain.mapper(function (elm: Element) {
       const img = Node.name(elm) === 'img' ? elm : SelectorFind.descendant(elm, 'img').getOrDie('failed to find image');
@@ -47,32 +43,26 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
     Guard.addLogging('Write to image')
   );
 
-  const cUpdateModel = (props) => {
-    return Chain.control(
-      Chain.mapper(function (data: any) {
-        return { model: { ...data.model, ...props }, image: data.image, parent: data.parent };
-      }),
-      Guard.addLogging('Update data model')
-    );
-  };
+  const cUpdateModel = (props) => Chain.control(
+    Chain.mapper(function (data: any) {
+      return { model: { ...data.model, ...props }, image: data.image, parent: data.parent };
+    }),
+    Guard.addLogging('Update data model')
+  );
 
-  const cAssertModel = (model) => {
-    return Chain.control(
-      Chain.op(function (data: any) {
-        Assert.eq('', model, data.model);
-      }),
-      Guard.addLogging('Assert model')
-    );
-  };
+  const cAssertModel = (model) => Chain.control(
+    Chain.op(function (data: any) {
+      Assert.eq('', model, data.model);
+    }),
+    Guard.addLogging('Assert model')
+  );
 
-  const cAssertStructure = (structure) => {
-    return Chain.control(
-      Chain.op(function (data: any) {
-        Assertions.assertStructure('', structure, data.parent);
-      }),
-      Guard.addLogging('Assert structure')
-    );
-  };
+  const cAssertStructure = (structure) => Chain.control(
+    Chain.op(function (data: any) {
+      Assertions.assertStructure('', structure, data.parent);
+    }),
+    Guard.addLogging('Assert structure')
+  );
 
   const cAssertImage = Chain.control(
     Chain.op(function (data: any) {

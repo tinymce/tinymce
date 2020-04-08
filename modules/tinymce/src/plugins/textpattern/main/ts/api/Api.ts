@@ -19,12 +19,10 @@ const get = (patternsState: Cell<PatternSet>) => {
     patternsState.set(createPatternSet(normalized.values));
   };
 
-  const getPatterns = () => {
-    return [
-      ...Arr.map(patternsState.get().inlinePatterns, denormalizePattern),
-      ...Arr.map(patternsState.get().blockPatterns, denormalizePattern),
-    ];
-  };
+  const getPatterns = () => [
+    ...Arr.map(patternsState.get().inlinePatterns, denormalizePattern),
+    ...Arr.map(patternsState.get().blockPatterns, denormalizePattern),
+  ];
 
   return {
     setPatterns,

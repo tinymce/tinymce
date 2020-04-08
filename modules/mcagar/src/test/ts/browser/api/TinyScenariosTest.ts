@@ -56,9 +56,7 @@ UnitTest.asynctest('TinyScenariosTest', (success, failure) => {
         },
         scenario: {
           exclusions: {
-            containers: (elem) => {
-              return !Node.isText(elem);
-            }
+            containers: (elem) => !Node.isText(elem)
           }
         }
       }),

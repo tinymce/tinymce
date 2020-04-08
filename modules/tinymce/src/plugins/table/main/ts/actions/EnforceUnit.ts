@@ -10,9 +10,7 @@ import { Css, Element, SelectorFilter, Traverse } from '@ephox/sugar';
 import { getPixelWidth } from '../alien/Util';
 import { HTMLTableElement } from '@ephox/dom-globals';
 
-const calculatePercentageWidth = (element: Element, parent: Element): string => {
-  return getPixelWidth(element.dom()) / getPixelWidth(parent.dom()) * 100 + '%';
-};
+const calculatePercentageWidth = (element: Element, parent: Element): string => getPixelWidth(element.dom()) / getPixelWidth(parent.dom()) * 100 + '%';
 
 const enforcePercentage = (rawTable: HTMLTableElement) => {
   const table = Element.fromDom(rawTable);

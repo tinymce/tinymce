@@ -31,9 +31,7 @@ UnitTest.test('Browser Test: SelectionTest', () => {
           num, actual.length, 'Incorrect number of ' + tag + ' tags.\n' +
           'Expected: ' + num + ', but was: ' + actual.length
         );
-        assert.eq(true, Arr.forall(actual, (a) => {
-          return Node.name(a) === tag;
-        }), 'All tags must be: ' + tag);
+        assert.eq(true, Arr.forall(actual, (a) => Node.name(a) === tag), 'All tags must be: ' + tag);
       });
     });
   };

@@ -15,44 +15,42 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
   const sink = Element.fromDom(document.querySelector('.mce-silver-sink'));
 
   TestHelpers.GuiSetup.setup(
-    (store, _doc, _body) => {
-      return GuiFactory.build(
-        renderUrlInput({
-          label: Option.some('UrlInput label'),
-          name: 'col1',
-          filetype: 'file',
-          disabled: false
-        }, helpers.backstage, {
-          getHistory: (_fileType) => [],
-          addToHistory: (_url, _filetype) => store.adder('addToHistory')(),
-          getLinkInformation: () => Option.some({
-            targets: [
-              {
-                type: 'header' as LinkTargetType,
-                title: 'Header1',
-                url: '#header',
-                level: 0,
-                attach: store.adder('header1.attach')
-              },
-              {
-                type: 'header' as LinkTargetType,
-                title: 'Header2',
-                url: '#h_2abefd32',
-                level: 0,
-                attach: store.adder('header2.attach')
-              }
-            ],
-            anchorTop: '#anchor-top',
-            anchorBottom: undefined
-          }),
-          getValidationHandler: () => Option.none(),
-          getUrlPicker: (_filetype) => Option.some((entry: ApiUrlData) => {
-            store.adder('urlpicker')();
-            return Future.pure({ value: 'http://tiny.cloud', meta: { before: entry.value }, fieldname: 'test' });
-          })
+    (store, _doc, _body) => GuiFactory.build(
+      renderUrlInput({
+        label: Option.some('UrlInput label'),
+        name: 'col1',
+        filetype: 'file',
+        disabled: false
+      }, helpers.backstage, {
+        getHistory: (_fileType) => [],
+        addToHistory: (_url, _filetype) => store.adder('addToHistory')(),
+        getLinkInformation: () => Option.some({
+          targets: [
+            {
+              type: 'header' as LinkTargetType,
+              title: 'Header1',
+              url: '#header',
+              level: 0,
+              attach: store.adder('header1.attach')
+            },
+            {
+              type: 'header' as LinkTargetType,
+              title: 'Header2',
+              url: '#h_2abefd32',
+              level: 0,
+              attach: store.adder('header2.attach')
+            }
+          ],
+          anchorTop: '#anchor-top',
+          anchorBottom: undefined
+        }),
+        getValidationHandler: () => Option.none(),
+        getUrlPicker: (_filetype) => Option.some((entry: ApiUrlData) => {
+          store.adder('urlpicker')();
+          return Future.pure({ value: 'http://tiny.cloud', meta: { before: entry.value }, fieldname: 'test' });
         })
-      );
-    },
+      })
+    ),
     (doc, _body, _gui, component, store) => {
 
       const input = component.getSystem().getByDom(
@@ -91,40 +89,38 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
           UiFinder.cFindIn('[role="menu"]'),
           Assertions.cAssertStructure(
             'Checking structure of menu (especially text)',
-            ApproxStructure.build((s, str, arr) => {
-              return s.element('div', {
-                classes: [ arr.has('tox-menu'), arr.has('tox-collection--list'), arr.has('tox-collection') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-collection__group') ],
-                    children: [
-                      s.element('div', {
-                        classes: [ arr.has('tox-collection__item') ],
-                        children: [
-                          s.element('div', { html: str.is('Header1') })
-                        ]
-                      }),
-                      s.element('div', {
-                        classes: [ arr.has('tox-collection__item') ],
-                        children: [
-                          s.element('div', { html: str.is('Header2') })
-                        ]
-                      })
-                    ]
-                  }),
-                  s.element('div', {
-                    classes: [ arr.has('tox-collection__group') ],
-                    children: [
-                      s.element('div', {
-                        children: [
-                          s.element('div', { html: str.is('&lt;top&gt;') })
-                        ]
-                      })
-                    ]
-                  })
-                ]
-              });
-            })
+            ApproxStructure.build((s, str, arr) => s.element('div', {
+              classes: [ arr.has('tox-menu'), arr.has('tox-collection--list'), arr.has('tox-collection') ],
+              children: [
+                s.element('div', {
+                  classes: [ arr.has('tox-collection__group') ],
+                  children: [
+                    s.element('div', {
+                      classes: [ arr.has('tox-collection__item') ],
+                      children: [
+                        s.element('div', { html: str.is('Header1') })
+                      ]
+                    }),
+                    s.element('div', {
+                      classes: [ arr.has('tox-collection__item') ],
+                      children: [
+                        s.element('div', { html: str.is('Header2') })
+                      ]
+                    })
+                  ]
+                }),
+                s.element('div', {
+                  classes: [ arr.has('tox-collection__group') ],
+                  children: [
+                    s.element('div', {
+                      children: [
+                        s.element('div', { html: str.is('&lt;top&gt;') })
+                      ]
+                    })
+                  ]
+                })
+              ]
+            }))
           )
         ]),
 
@@ -147,30 +143,28 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
           UiFinder.cFindIn('[role="menu"]'),
           Assertions.cAssertStructure(
             'Checking the menu shows items that match the input string',
-            ApproxStructure.build((s, str, arr) => {
-              return s.element('div', {
-                classes: [ arr.has('tox-menu'), arr.has('tox-collection--list'), arr.has('tox-collection') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-collection__group') ],
-                    children: [
-                      s.element('div', {
-                        classes: [ arr.has('tox-collection__item') ],
-                        children: [
-                          s.element('div', { html: str.is('Header1') })
-                        ]
-                      }),
-                      s.element('div', {
-                        classes: [ arr.has('tox-collection__item') ],
-                        children: [
-                          s.element('div', { html: str.is('Header2') })
-                        ]
-                      })
-                    ]
-                  })
-                ]
-              });
-            })
+            ApproxStructure.build((s, str, arr) => s.element('div', {
+              classes: [ arr.has('tox-menu'), arr.has('tox-collection--list'), arr.has('tox-collection') ],
+              children: [
+                s.element('div', {
+                  classes: [ arr.has('tox-collection__group') ],
+                  children: [
+                    s.element('div', {
+                      classes: [ arr.has('tox-collection__item') ],
+                      children: [
+                        s.element('div', { html: str.is('Header1') })
+                      ]
+                    }),
+                    s.element('div', {
+                      classes: [ arr.has('tox-collection__item') ],
+                      children: [
+                        s.element('div', { html: str.is('Header2') })
+                      ]
+                    })
+                  ]
+                })
+              ]
+            }))
           )
         ]),
 
@@ -210,9 +204,7 @@ UnitTest.asynctest('UrlInput component Test', (success, failure) => {
           [ 'addToHistory' , 'header1.attach', 'urlpicker' ]
         ),
 
-        Waiter.sTryUntilPredicate('Checking Value.get', () => {
-          return 'http://tiny.cloud' === Value.get(input.element());
-        }),
+        Waiter.sTryUntilPredicate('Checking Value.get', () => 'http://tiny.cloud' === Value.get(input.element())),
 
         Step.sync(() => {
           const repValue = Representing.getValue(input);

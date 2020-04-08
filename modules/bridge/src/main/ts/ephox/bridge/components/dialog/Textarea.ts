@@ -26,6 +26,4 @@ export const textAreaSchema = ValueSchema.objOf(textAreaFields);
 
 export const textAreaDataProcessor = ValueSchema.string;
 
-export const createTextArea = (spec: TextAreaApi): Result<TextArea, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<TextArea>('textarea', textAreaSchema, spec);
-};
+export const createTextArea = (spec: TextAreaApi): Result<TextArea, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<TextArea>('textarea', textAreaSchema, spec);

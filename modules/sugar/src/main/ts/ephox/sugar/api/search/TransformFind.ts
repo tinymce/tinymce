@@ -25,9 +25,7 @@ const ancestor = <A> (scope: Element<DomNode>, transform: (e: Element<DomNode>) 
 const closest = <A> (scope: Element<DomNode>, transform: (e: Element<DomNode>) => Option<A>, isRoot?: (e: Element<DomNode>) => boolean): Option<A> => {
   const current = transform(scope);
   const stop = ensureIsRoot(isRoot);
-  return current.orThunk(() => {
-    return stop(scope) ? Option.none<A>() : ancestor(scope, transform, stop);
-  });
+  return current.orThunk(() => stop(scope) ? Option.none<A>() : ancestor(scope, transform, stop));
 };
 
 export { ancestor, closest };

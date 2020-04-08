@@ -11,8 +11,8 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
   }
   SilverTheme();
 
-  const backcolorTitleStruct = ApproxStructure.build((s, str) => {
-    return s.element('body' , {
+  const backcolorTitleStruct = ApproxStructure.build((s, str) =>
+    s.element('body' , {
       children: [
         s.element('p', {
           children: [
@@ -27,11 +27,10 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
           ]
         })
       ]
-    });
-  });
+    }));
 
-  const forecolorTitleStruct = ApproxStructure.build((s, str) => {
-    return s.element('body' , {
+  const forecolorTitleStruct = ApproxStructure.build((s, str) =>
+    s.element('body' , {
       children: [
         s.element('p', {
           children: [
@@ -46,11 +45,10 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
           ]
         })
       ]
-    });
-  });
+    }));
 
-  const forecolorStruct = ApproxStructure.build((s, str) => {
-    return s.element('body', {
+  const forecolorStruct = ApproxStructure.build((s, str) =>
+    s.element('body', {
       children: [
         s.element('p', {
           children: [
@@ -67,12 +65,10 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
           ]
         })
       ]
-    });
+    }));
 
-  }
-  );
-  const backcolorStruct = ApproxStructure.build((s, str) => {
-    return s.element('body', {
+  const backcolorStruct = ApproxStructure.build((s, str) =>
+    s.element('body', {
       children: [
         s.element('p', {
           children: [
@@ -89,8 +85,7 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
           ]
         })
       ]
-    });
-  });
+    }));
 
   TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);

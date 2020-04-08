@@ -91,14 +91,10 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
 
   const getBounds = () => getContextToolbarBounds(editor);
 
-  const isRangeOverlapping = (aTop: number, aBottom: number, bTop: number, bBottom: number) => {
-    return Math.max(aTop, bTop) <= Math.min(aBottom, bBottom);
-  };
+  const isRangeOverlapping = (aTop: number, aBottom: number, bTop: number, bBottom: number) => Math.max(aTop, bTop) <= Math.min(aBottom, bBottom);
 
   const getLastElementVerticalBound = () => {
-    const nodeBounds = lastElement.get().map((ele) => ele.getBoundingClientRect()).getOrThunk(() => {
-      return editor.selection.getRng().getBoundingClientRect();
-    });
+    const nodeBounds = lastElement.get().map((ele) => ele.getBoundingClientRect()).getOrThunk(() => editor.selection.getRng().getBoundingClientRect());
 
     // Translate to the top level document, as nodeBounds is relative to the iframe viewport
     const diffTop = editor.inline ? Scroll.get().top() : Boxes.absolute(Element.fromDom(editor.getBody())).y;
@@ -148,38 +144,34 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   const lastElement = Cell<Option<DomElement>>(Option.none<DomElement>());
   const timer = Cell(null);
 
-  const wrapInPopDialog = (toolbarSpec: AlloySpec) => {
-    return {
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-pop__dialog' ],
-      },
-      components: [ toolbarSpec ],
-      behaviours: Behaviour.derive([
-        Keying.config({
-          mode: 'acyclic'
+  const wrapInPopDialog = (toolbarSpec: AlloySpec) => ({
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-pop__dialog' ],
+    },
+    components: [ toolbarSpec ],
+    behaviours: Behaviour.derive([
+      Keying.config({
+        mode: 'acyclic'
+      }),
+
+      AddEventsBehaviour.config('pop-dialog-wrap-events', [
+        AlloyEvents.runOnAttached((comp) => {
+          editor.shortcuts.add('ctrl+F9', 'focus statusbar', () => Keying.focusIn(comp));
         }),
-
-        AddEventsBehaviour.config('pop-dialog-wrap-events', [
-          AlloyEvents.runOnAttached((comp) => {
-            editor.shortcuts.add('ctrl+F9', 'focus statusbar', () => Keying.focusIn(comp));
-          }),
-          AlloyEvents.runOnDetached((_comp) => {
-            editor.shortcuts.remove('ctrl+F9');
-          })
-        ])
+        AlloyEvents.runOnDetached((_comp) => {
+          editor.shortcuts.remove('ctrl+F9');
+        })
       ])
-    };
-  };
-
-  const getScopes: () => ScopedToolbars = Thunk.cached(() => {
-    return ToolbarScopes.categorise(registryContextToolbars, (toolbarApi) => {
-      const alloySpec = buildToolbar(toolbarApi);
-      AlloyTriggers.emitWith(contextbar, forwardSlideEvent, {
-        forwardContents: wrapInPopDialog(alloySpec)
-      });
-    });
+    ])
   });
+
+  const getScopes: () => ScopedToolbars = Thunk.cached(() => ToolbarScopes.categorise(registryContextToolbars, (toolbarApi) => {
+    const alloySpec = buildToolbar(toolbarApi);
+    AlloyTriggers.emitWith(contextbar, forwardSlideEvent, {
+      forwardContents: wrapInPopDialog(alloySpec)
+    });
+  }));
 
   const buildToolbar = (ctx): AlloySpec => {
     const { buttons } = editor.ui.registry.getAll();
@@ -200,9 +192,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
         cyclicKeying: true,
         providers: extras.backstage.shared.providers
       });
-    })() : (() => {
-      return ContextForm.renderContextForm(toolbarType, ctx, extras.backstage.shared.providers);
-    })();
+    })() : (() => ContextForm.renderContextForm(toolbarType, ctx, extras.backstage.shared.providers))();
   };
 
   editor.on(showContextToolbarEvent, (e) => {

@@ -33,11 +33,15 @@ const getRestriction = (anchor: AnchorBox, restriction: Restriction) => {
   }
 };
 
-export const boundsRestriction = (anchor: AnchorBox, restrictions: Partial<Record<BoundsRestrictionKeys, Restriction>>): BoundsRestriction => {
-  return Arr.mapToObject([ 'left', 'right', 'top', 'bottom' ], (dir) => {
-    return Obj.get(restrictions, dir).map((restriction) => getRestriction(anchor, restriction));
-  });
-};
+export const boundsRestriction = (
+  anchor: AnchorBox,
+  restrictions: Partial<Record<BoundsRestrictionKeys, Restriction>>
+): BoundsRestriction => Arr.mapToObject(
+  [ 'left', 'right', 'top', 'bottom' ],
+  (dir) => Obj.get(restrictions, dir).map(
+    (restriction) => getRestriction(anchor, restriction)
+  )
+);
 
 export const adjustBounds = (bounds: Boxes.Bounds, boundsRestrictions: BoundsRestriction, bubbleOffsets: Position) => {
   const applyRestriction = (dir: BoundsRestrictionKeys, current: number) => {

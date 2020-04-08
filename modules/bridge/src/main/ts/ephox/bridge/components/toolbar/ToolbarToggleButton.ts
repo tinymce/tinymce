@@ -43,6 +43,4 @@ export const toggleButtonSchema = ValueSchema.objOf(
 
 export const isToggleButton = (spec: any): spec is ToolbarToggleButton => spec.type === 'togglebutton';
 
-export const createToggleButton = (spec: any): Result<ToolbarToggleButton, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<ToolbarToggleButton>('ToggleButton', toggleButtonSchema, spec);
-};
+export const createToggleButton = (spec: any): Result<ToolbarToggleButton, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<ToolbarToggleButton>('ToggleButton', toggleButtonSchema, spec);

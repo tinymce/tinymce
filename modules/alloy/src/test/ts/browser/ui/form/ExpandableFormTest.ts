@@ -26,67 +26,63 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
   GuiSetup.setup((_store, _doc, _body) => {
 
     const pMinimal = ExpandableForm.parts().minimal(
-      Form.sketch((parts: FormParts) => {
-        return {
-          dom: {
-            tag: 'div',
-            classes: [ 'minimal-form', 'form-section' ]
-          },
-          components: [
-            parts.field('form.ant', FormField.sketch({
-              uid: 'input-ant',
-              dom: {
-                tag: 'div'
-              },
-              components: [
-                FormField.parts().field({
-                  factory: Input,
-                  data: 'init',
-                  inputBehaviours: Behaviour.derive([
-                    Tabstopping.config({ })
-                  ])
-                }),
-                FormField.parts().label({ dom: { tag: 'label', innerHtml: 'a' }, components: [ ] })
-              ]
-            }))
-          ]
-        };
-      })
+      Form.sketch((parts: FormParts) => ({
+        dom: {
+          tag: 'div',
+          classes: [ 'minimal-form', 'form-section' ]
+        },
+        components: [
+          parts.field('form.ant', FormField.sketch({
+            uid: 'input-ant',
+            dom: {
+              tag: 'div'
+            },
+            components: [
+              FormField.parts().field({
+                factory: Input,
+                data: 'init',
+                inputBehaviours: Behaviour.derive([
+                  Tabstopping.config({ })
+                ])
+              }),
+              FormField.parts().label({ dom: { tag: 'label', innerHtml: 'a' }, components: [ ] })
+            ]
+          }))
+        ]
+      }))
     );
 
     const pExtra = ExpandableForm.parts().extra(
-      Form.sketch((parts: FormParts) => {
-        return {
-          dom: {
-            tag: 'div',
-            classes: [ 'extra-form', 'form-section' ]
-          },
-          components: [
-            Container.sketch({ dom: { styles: { height: '100px', width: '100px', background: 'green' }}}),
-            parts.field('form.bull', FormField.sketch({
-              uid: 'select-bull',
-              dom: {
-                tag: 'div'
-              },
-              components: [
-                FormField.parts().field({
-                  factory: HtmlSelect,
-                  selectBehaviours: Behaviour.derive([
-                    Tabstopping.config({ })
-                  ]),
-                  options: [
-                    { value: 'select-b-init', text: 'Select-b-init' },
-                    { value: 'select-b-set', text: 'Select-b-set' },
-                    { value: 'select-b-other', text: 'Select-b-other' }
-                  ]
-                }),
+      Form.sketch((parts: FormParts) => ({
+        dom: {
+          tag: 'div',
+          classes: [ 'extra-form', 'form-section' ]
+        },
+        components: [
+          Container.sketch({ dom: { styles: { height: '100px', width: '100px', background: 'green' }}}),
+          parts.field('form.bull', FormField.sketch({
+            uid: 'select-bull',
+            dom: {
+              tag: 'div'
+            },
+            components: [
+              FormField.parts().field({
+                factory: HtmlSelect,
+                selectBehaviours: Behaviour.derive([
+                  Tabstopping.config({ })
+                ]),
+                options: [
+                  { value: 'select-b-init', text: 'Select-b-init' },
+                  { value: 'select-b-set', text: 'Select-b-set' },
+                  { value: 'select-b-other', text: 'Select-b-other' }
+                ]
+              }),
 
-                FormField.parts().label({ dom: { tag: 'label', innerHtml: 'a' }, components: [ ] })
-              ]
-            }))
-          ]
-        };
-      })
+              FormField.parts().label({ dom: { tag: 'label', innerHtml: 'a' }, components: [ ] })
+            ]
+          }))
+        ]
+      }))
     );
 
     const me = GuiFactory.build(

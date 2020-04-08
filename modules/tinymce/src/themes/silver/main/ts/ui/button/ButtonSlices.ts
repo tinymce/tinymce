@@ -22,17 +22,13 @@ const renderIcon = (iconHtml, behaviours): SimpleOrSketchSpec =>
     ...behaviours
   });
 
-const renderIconFromPack = (iconName: string, iconsProvider: IconProvider): SimpleOrSketchSpec => {
-  return renderIcon(getIcon(iconName, iconsProvider), { });
-};
+const renderIconFromPack = (iconName: string, iconsProvider: IconProvider): SimpleOrSketchSpec => renderIcon(getIcon(iconName, iconsProvider), { });
 
-const renderReplacableIconFromPack = (iconName: string, iconsProvider: IconProvider): SimpleOrSketchSpec => {
-  return renderIcon(getIcon(iconName, iconsProvider), {
-    behaviours: Behaviour.derive([
-      Replacing.config({ })
-    ])
-  });
-};
+const renderReplacableIconFromPack = (iconName: string, iconsProvider: IconProvider): SimpleOrSketchSpec => renderIcon(getIcon(iconName, iconsProvider), {
+  behaviours: Behaviour.derive([
+    Replacing.config({ })
+  ])
+});
 
 const renderLabel = (text: TranslateIfNeeded, prefix: string, providersBackstage: UiFactoryBackstageProviders) => ({
   dom: {

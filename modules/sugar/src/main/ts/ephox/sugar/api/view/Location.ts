@@ -10,9 +10,11 @@ const boxPosition = (dom: DomElement) => {
 
 // Avoids falsy false fallthrough
 const firstDefinedOrZero = (a: number, b: number) => {
-  return a !== undefined ? a :
-    b !== undefined ? b :
-      0;
+  if (a !== undefined) {
+    return a;
+  } else {
+    return b !== undefined ? b : 0;
+  }
 };
 
 const absolute = (element: Element<DomElement>) => {

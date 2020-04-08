@@ -104,8 +104,6 @@ const reset = (component: AlloyComponent, config: DockingConfig, state: DockingS
   }
 };
 
-const isDocked = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {
-  return state.isDocked();
-};
+const isDocked = (component: AlloyComponent, config: DockingConfig, state: DockingState) => state.isDocked();
 
 export { refresh, reset, isDocked };

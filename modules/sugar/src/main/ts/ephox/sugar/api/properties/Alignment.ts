@@ -24,9 +24,8 @@ const getAlignment = (element: Element<DomElement>, property: string): string =>
     .getOr(raw);
 };
 
-const hasAlignment = (element: Element<DomElement> | Element<Text>, property: string, value: string) => {
-  return Node.isText(element) ? false : getAlignment(element, property) === value;
-};
+const hasAlignment = (element: Element<DomElement> | Element<Text>, property: string, value: string) =>
+  Node.isText(element) ? false : getAlignment(element, property) === value;
 
 export {
   hasAlignment

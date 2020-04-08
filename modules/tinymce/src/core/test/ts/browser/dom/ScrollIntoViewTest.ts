@@ -39,16 +39,14 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
     });
   };
 
-  const sScrollRangeIntoView = (editor: Editor, path: number[], offset: number) => {
-    return Step.sync(function () {
-      const x = Cursors.calculateOne(Element.fromDom(editor.getBody()), path);
-      const rng = editor.dom.createRng();
-      rng.setStart(x.dom(), offset);
-      rng.setEnd(x.dom(), offset);
+  const sScrollRangeIntoView = (editor: Editor, path: number[], offset: number) => Step.sync(function () {
+    const x = Cursors.calculateOne(Element.fromDom(editor.getBody()), path);
+    const rng = editor.dom.createRng();
+    rng.setStart(x.dom(), offset);
+    rng.setEnd(x.dom(), offset);
 
-      ScrollIntoView.scrollRangeIntoView(editor, rng);
-    });
-  };
+    ScrollIntoView.scrollRangeIntoView(editor, rng);
+  });
 
   const sAssertScrollPosition = function (editor: Editor, x: number, y: number) {
     return Step.sync(function () {

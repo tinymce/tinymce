@@ -35,11 +35,9 @@ const inListBlock = function (requiredState) {
   };
 };
 
-const inBlock = (blockName: string, requiredState: boolean) => {
-  return function (editor: Editor, _shiftKey) {
-    const state = NewLineUtils.getParentBlockName(editor) === blockName.toUpperCase();
-    return state === requiredState;
-  };
+const inBlock = (blockName: string, requiredState: boolean) => function (editor: Editor, _shiftKey) {
+  const state = NewLineUtils.getParentBlockName(editor) === blockName.toUpperCase();
+  return state === requiredState;
 };
 
 const inPreBlock = (requiredState: boolean) => inBlock('pre', requiredState);

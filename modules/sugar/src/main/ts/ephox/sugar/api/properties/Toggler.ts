@@ -16,9 +16,7 @@ export default (turnOff: () => void, turnOn: () => void, initial: boolean) => {
     f();
   };
 
-  const isOn = () => {
-    return active;
-  };
+  const isOn = () => active;
 
   return {
     on,

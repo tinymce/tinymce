@@ -7,31 +7,20 @@ import * as Selectors from './Selectors';
 
 // TODO: An internal SelectorFilter module that doesn't Element.fromDom() everything
 
-const first = <T extends DomElement = DomElement> (selector: string) => {
-  return Selectors.one<T>(selector);
-};
+const first = <T extends DomElement = DomElement> (selector: string) =>
+  Selectors.one<T>(selector);
 
-const ancestor = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string, isRoot?: (e: Element<DomNode>) => boolean) => {
-  return PredicateFind.ancestor(scope, (e): e is Element<T> => {
-    return Selectors.is<T>(e, selector);
-  }, isRoot);
-};
+const ancestor = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string, isRoot?: (e: Element<DomNode>) => boolean) =>
+  PredicateFind.ancestor(scope, (e): e is Element<T> => Selectors.is<T>(e, selector), isRoot);
 
-const sibling = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string) => {
-  return PredicateFind.sibling(scope, (e): e is Element<T> => {
-    return Selectors.is<T>(e, selector);
-  });
-};
+const sibling = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string) =>
+  PredicateFind.sibling(scope, (e): e is Element<T> => Selectors.is<T>(e, selector));
 
-const child = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string) => {
-  return PredicateFind.child(scope, (e): e is Element<T> => {
-    return Selectors.is<T>(e, selector);
-  });
-};
+const child = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string) =>
+  PredicateFind.child(scope, (e): e is Element<T> => Selectors.is<T>(e, selector));
 
-const descendant = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string) => {
-  return Selectors.one<T>(selector, scope);
-};
+const descendant = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string) =>
+  Selectors.one<T>(selector, scope);
 
 // Returns Some(closest ancestor element (sugared)) matching 'selector' up to isRoot, or None() otherwise
 const closest = <T extends DomElement = DomElement> (scope: Element<DomNode>, selector: string, isRoot?: (e: Element<DomNode>) => boolean): Option<Element<T>> => {

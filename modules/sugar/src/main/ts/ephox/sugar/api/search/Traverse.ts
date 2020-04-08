@@ -5,32 +5,20 @@ import * as Compare from '../dom/Compare';
 import Element from '../node/Element';
 
 // The document associated with the current element
-const owner = (element: Element<DomNode>) => {
-  return Element.fromDom(element.dom().ownerDocument);
-};
+const owner = (element: Element<DomNode>) => Element.fromDom(element.dom().ownerDocument);
 
-const documentElement = (element: Element<DomNode>) => {
-  return Element.fromDom(element.dom().ownerDocument.documentElement);
-};
+const documentElement = (element: Element<DomNode>) => Element.fromDom(element.dom().ownerDocument.documentElement);
 
 // The window element associated with the element
-const defaultView = (element: Element<DomNode>) => {
-  return Element.fromDom(element.dom().ownerDocument.defaultView);
-};
+const defaultView = (element: Element<DomNode>) => Element.fromDom(element.dom().ownerDocument.defaultView);
 
-const parent = (element: Element<DomNode>) => {
-  return Option.from(element.dom().parentNode).map(Element.fromDom);
-};
+const parent = (element: Element<DomNode>) => Option.from(element.dom().parentNode).map(Element.fromDom);
 
-const findIndex = (element: Element<DomNode>) => {
-  return parent(element).bind((p) => {
-    // TODO: Refactor out children so we can avoid the constant unwrapping
-    const kin = children(p);
-    return Arr.findIndex(kin, (elem) => {
-      return Compare.eq(element, elem);
-    });
-  });
-};
+const findIndex = (element: Element<DomNode>) => parent(element).bind((p) => {
+  // TODO: Refactor out children so we can avoid the constant unwrapping
+  const kin = children(p);
+  return Arr.findIndex(kin, (elem) => Compare.eq(element, elem));
+});
 
 const parents = (element: Element<DomNode>, isRoot?: (e: Element<DomNode>) => boolean) => {
   const stop = Type.isFunction(isRoot) ? isRoot : Fun.never;
@@ -55,60 +43,36 @@ const parents = (element: Element<DomNode>, isRoot?: (e: Element<DomNode>) => bo
 
 const siblings = (element: Element<DomNode>) => {
   // TODO: Refactor out children so we can just not add self instead of filtering afterwards
-  const filterSelf = <E> (elements: Element<E>[]) => {
-    return Arr.filter(elements, (x) => {
-      return !Compare.eq(element, x);
-    });
-  };
+  const filterSelf = <E> (elements: Element<E>[]) => Arr.filter(elements, (x) => !Compare.eq(element, x));
 
   return parent(element).map(children).map(filterSelf).getOr([]);
 };
 
-const offsetParent = (element: Element<HTMLElement>) => {
-  return Option.from(element.dom().offsetParent).map(Element.fromDom);
-};
+const offsetParent = (element: Element<HTMLElement>) => Option.from(element.dom().offsetParent).map(Element.fromDom);
 
-const prevSibling = (element: Element<DomNode>) => {
-  return Option.from(element.dom().previousSibling).map(Element.fromDom);
-};
+const prevSibling = (element: Element<DomNode>) => Option.from(element.dom().previousSibling).map(Element.fromDom);
 
-const nextSibling = (element: Element<DomNode>) => {
-  return Option.from(element.dom().nextSibling).map(Element.fromDom);
-};
+const nextSibling = (element: Element<DomNode>) => Option.from(element.dom().nextSibling).map(Element.fromDom);
 
-const prevSiblings = (element: Element<DomNode>) => {
-  // This one needs to be reversed, so they're still in DOM order
-  return Arr.reverse(Recurse.toArray(element, prevSibling));
-};
+// This one needs to be reversed, so they're still in DOM order
+const prevSiblings = (element: Element<DomNode>) => Arr.reverse(Recurse.toArray(element, prevSibling));
 
-const nextSiblings = (element: Element<DomNode>) => {
-  return Recurse.toArray(element, nextSibling);
-};
+const nextSiblings = (element: Element<DomNode>) => Recurse.toArray(element, nextSibling);
 
-const children = (element: Element<DomNode>) => {
-  return Arr.map(element.dom().childNodes, Element.fromDom);
-};
+const children = (element: Element<DomNode>) => Arr.map(element.dom().childNodes, Element.fromDom);
 
 const child = (element: Element<DomNode>, index: number) => {
   const cs = element.dom().childNodes;
   return Option.from(cs[index] as DomNode).map(Element.fromDom);
 };
 
-const firstChild = (element: Element<DomNode>) => {
-  return child(element, 0);
-};
+const firstChild = (element: Element<DomNode>) => child(element, 0);
 
-const lastChild = (element: Element<DomNode>) => {
-  return child(element, element.dom().childNodes.length - 1);
-};
+const lastChild = (element: Element<DomNode>) => child(element, element.dom().childNodes.length - 1);
 
-const childNodesCount = (element: Element<DomNode>) => {
-  return element.dom().childNodes.length;
-};
+const childNodesCount = (element: Element<DomNode>) => element.dom().childNodes.length;
 
-const hasChildNodes = (element: Element<DomNode>) => {
-  return element.dom().hasChildNodes();
-};
+const hasChildNodes = (element: Element<DomNode>) => element.dom().hasChildNodes();
 
 export interface ElementAndOffset<E> {
   readonly element: () => Element<E>;

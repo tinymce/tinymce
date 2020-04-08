@@ -16,48 +16,42 @@ interface GeneratedIrregularGrid extends GeneratedGrid {
 }
 
 UnitTest.test('WrapArrNavigationTest', () => {
-  const genRegularGrid = Jsc.integer(2, 20).generator.flatMap((numRows: number) => {
-    return Jsc.integer(2, 20).generator.flatMap((numCols: number) => {
-      const maxIndex = numRows * numCols;
-      return Jsc.integer(0, maxIndex - 1).generator.map((index: number) => {
-        const values = [ ];
-        for (let i = 0; i < maxIndex; i++) {
-          values[i] = i;
-        }
+  const genRegularGrid = Jsc.integer(2, 20).generator.flatMap((numRows: number) => Jsc.integer(2, 20).generator.flatMap((numCols: number) => {
+    const maxIndex = numRows * numCols;
+    return Jsc.integer(0, maxIndex - 1).generator.map((index: number) => {
+      const values = [ ];
+      for (let i = 0; i < maxIndex; i++) {
+        values[i] = i;
+      }
 
-        return {
-          values,
-          numRows,
-          numCols,
-          index
-        };
-      });
+      return {
+        values,
+        numRows,
+        numCols,
+        index
+      };
     });
-  });
+  }));
 
-  const genIrregularGrid = Jsc.integer(2, 3).generator.flatMap((numRows: number) => {
-    return Jsc.integer(2, 3).generator.flatMap((numCols: number) => {
-      return Jsc.integer(1, numCols - 2).generator.flatMap((remainder: number) => {
-        const maxIndex = numRows * numCols + remainder;
-        return Jsc.integer(0, maxIndex - 1).generator.map((index: number) => {
+  const genIrregularGrid = Jsc.integer(2, 3).generator.flatMap((numRows: number) => Jsc.integer(2, 3).generator.flatMap((numCols: number) => Jsc.integer(1, numCols - 2).generator.flatMap((remainder: number) => {
+    const maxIndex = numRows * numCols + remainder;
+    return Jsc.integer(0, maxIndex - 1).generator.map((index: number) => {
 
-          const values = [ ];
-          for (let i = 0; i < maxIndex; i++) {
-            values[i] = i;
-          }
+      const values = [ ];
+      for (let i = 0; i < maxIndex; i++) {
+        values[i] = i;
+      }
 
-          return {
-            values,
-            numRows: numRows + 1, // due to remainder
-            numCols,
-            lastRowIndex: numRows * numCols,
-            remainder,
-            index
-          };
-        });
-      });
+      return {
+        values,
+        numRows: numRows + 1, // due to remainder
+        numCols,
+        lastRowIndex: numRows * numCols,
+        remainder,
+        index
+      };
     });
-  });
+  })));
 
   const arbRegularGrid = Jsc.bless({
     generator: genRegularGrid

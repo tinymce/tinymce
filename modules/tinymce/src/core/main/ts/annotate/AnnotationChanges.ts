@@ -102,12 +102,10 @@ const setup = (editor: Editor, _registry: AnnotationsRegistry): AnnotationChange
   });
 
   const addListener = (name: string, f: AnnotationListener): void => {
-    updateCallbacks(name, (data) => {
-      return {
-        previous: data.previous,
-        listeners: data.listeners.concat([ f ])
-      };
-    });
+    updateCallbacks(name, (data) => ({
+      previous: data.previous,
+      listeners: data.listeners.concat([ f ])
+    }));
   };
 
   return {

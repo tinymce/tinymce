@@ -38,9 +38,7 @@ import Serializer from './Serializer';
  * alert(tinymce.activeEditor.selection.getNode().nodeName);
  */
 
-const isNativeIeSelection = (rng: any): boolean => {
-  return !!(rng).select;
-};
+const isNativeIeSelection = (rng: any): boolean => !!(rng).select;
 
 const isAttachedToDom = function (node: Node): boolean {
   return !!(node && node.ownerDocument) && Compare.contains(SugarElement.fromDom(node.ownerDocument), SugarElement.fromDom(node));

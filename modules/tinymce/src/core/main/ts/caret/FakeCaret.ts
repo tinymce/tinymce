@@ -188,9 +188,8 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
 
   const destroy = () => Delay.clearInterval(cursorInterval);
 
-  const getCss = () => {
-    return (
-      '.mce-visual-caret {' +
+  const getCss = () => (
+    '.mce-visual-caret {' +
       'position: absolute;' +
       'background-color: black;' +
       'background-color: currentcolor;' +
@@ -207,8 +206,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
       'margin: 0;' +
       'padding: 0;' +
       '}'
-    );
-  };
+  );
 
   return {
     show,

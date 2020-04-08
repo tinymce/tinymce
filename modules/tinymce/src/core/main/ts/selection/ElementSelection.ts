@@ -13,24 +13,31 @@ import { moveEndPoint } from './SelectionUtils';
 import * as NodeType from '../dom/NodeType';
 import DOMUtils from '../api/dom/DOMUtils';
 
-const getEndpointElement = (root: Element, rng: Range, start: boolean, real: boolean, resolve: (elm, offset: number) => number) => {
+const getEndpointElement = (
+  root: Element,
+  rng: Range,
+  start: boolean,
+  real: boolean,
+  resolve: (elm: SugarElement<Node>, offset: number) => number
+) => {
   const container = start ? rng.startContainer : rng.endContainer;
   const offset = start ? rng.startOffset : rng.endOffset;
 
-  return Option.from(container).map(SugarElement.fromDom).map((elm) => {
-    return !real || !rng.collapsed ? Traverse.child(elm, resolve(elm, offset)).getOr(elm) : elm;
-  }).bind((elm) => SugarNode.isElement(elm) ? Option.some(elm) : Traverse.parent(elm)).map((elm: any) => elm.dom()).getOr(root);
+  return Option.from(container).
+    map(SugarElement.fromDom).
+    map((elm) => !real || !rng.collapsed ? Traverse.child(elm, resolve(elm, offset)).getOr(elm) : elm).
+    bind((elm) => SugarNode.isElement(elm) ? Option.some(elm) : Traverse.parent(elm).filter(SugarNode.isElement)).
+    map((elm) => elm.dom()).
+    getOr(root);
 };
 
-const getStart = (root: Element, rng: Range, real?: boolean): Element => {
-  return getEndpointElement(root, rng, true, real, (elm, offset) => Math.min(Traverse.childNodesCount(elm), offset));
-};
+const getStart = (root: Element, rng: Range, real?: boolean): Element =>
+  getEndpointElement(root, rng, true, real, (elm, offset) => Math.min(Traverse.childNodesCount(elm), offset));
 
-const getEnd = (root: Element, rng: Range, real?: boolean): Element => {
-  return getEndpointElement(root, rng, false, real, (elm, offset) => offset > 0 ? offset - 1 : offset);
-};
+const getEnd = (root: Element, rng: Range, real?: boolean): Element =>
+  getEndpointElement(root, rng, false, real, (elm, offset) => offset > 0 ? offset - 1 : offset);
 
-const skipEmptyTextNodes = function (node: Node, forwards: boolean) {
+const skipEmptyTextNodes = (node: Node, forwards: boolean) => {
   const orig = node;
 
   while (node && NodeType.isText(node) && node.length === 0) {
@@ -126,23 +133,21 @@ const getSelectedBlocks = (dom: DOMUtils, rng: Range, startElm?: Element, endElm
   return selectedBlocks;
 };
 
-const select = (dom, node: Node, content?: boolean) => {
-  return Option.from(node).map((node) => {
-    const idx = dom.nodeIndex(node);
-    const rng = dom.createRng();
+const select = (dom, node: Node, content?: boolean) => Option.from(node).map((node) => {
+  const idx = dom.nodeIndex(node);
+  const rng = dom.createRng();
 
-    rng.setStart(node.parentNode, idx);
-    rng.setEnd(node.parentNode, idx + 1);
+  rng.setStart(node.parentNode, idx);
+  rng.setEnd(node.parentNode, idx + 1);
 
-    // Find first/last text node or BR element
-    if (content) {
-      moveEndPoint(dom, rng, node, true);
-      moveEndPoint(dom, rng, node, false);
-    }
+  // Find first/last text node or BR element
+  if (content) {
+    moveEndPoint(dom, rng, node, true);
+    moveEndPoint(dom, rng, node, false);
+  }
 
-    return rng;
-  });
-};
+  return rng;
+});
 
 export {
   getStart,

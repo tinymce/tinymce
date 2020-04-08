@@ -38,29 +38,27 @@ const mode: DragModeDeltas<TouchEvent, PinchDragData> = {
   }
 };
 
-const events = (pinchConfig: PinchingConfig, pinchState: PinchingState): AlloyEvents.AlloyEventRecord => {
-  return AlloyEvents.derive([
-    // TODO: Only run on iOS. It prevents default behaviour like zooming and showing all the tabs.
-    // Note: in testing, it didn't seem to cause problems on Android. Check.
-    AlloyEvents.preventDefault(NativeEvents.gesturestart()),
+const events = (pinchConfig: PinchingConfig, pinchState: PinchingState): AlloyEvents.AlloyEventRecord => AlloyEvents.derive([
+  // TODO: Only run on iOS. It prevents default behaviour like zooming and showing all the tabs.
+  // Note: in testing, it didn't seem to cause problems on Android. Check.
+  AlloyEvents.preventDefault(NativeEvents.gesturestart()),
 
-    AlloyEvents.run<EventArgs<TouchEvent>>(NativeEvents.touchmove(), (component, simulatedEvent) => {
-      simulatedEvent.stop();
+  AlloyEvents.run<EventArgs<TouchEvent>>(NativeEvents.touchmove(), (component, simulatedEvent) => {
+    simulatedEvent.stop();
 
-      const delta = pinchState.update(mode, simulatedEvent.event());
-      delta.each((dlt) => {
-        const multiplier = dlt.deltaDistance > 0 ? 1 : -1;
-        const changeX = multiplier * Math.abs(dlt.deltaX);
-        const changeY = multiplier * Math.abs(dlt.deltaY);
+    const delta = pinchState.update(mode, simulatedEvent.event());
+    delta.each((dlt) => {
+      const multiplier = dlt.deltaDistance > 0 ? 1 : -1;
+      const changeX = multiplier * Math.abs(dlt.deltaX);
+      const changeY = multiplier * Math.abs(dlt.deltaY);
 
-        const f = multiplier === 1 ? pinchConfig.onPunch : pinchConfig.onPinch;
-        f(component.element(), changeX, changeY);
-      });
-    }),
+      const f = multiplier === 1 ? pinchConfig.onPunch : pinchConfig.onPinch;
+      f(component.element(), changeX, changeY);
+    });
+  }),
 
-    AlloyEvents.run(NativeEvents.touchend(), pinchState.reset)
-  ]);
-};
+  AlloyEvents.run(NativeEvents.touchend(), pinchState.reset)
+]);
 
 export {
   events

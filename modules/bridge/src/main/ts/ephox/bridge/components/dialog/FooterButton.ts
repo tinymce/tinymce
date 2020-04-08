@@ -56,9 +56,7 @@ const baseButtonFields = [
   FieldSchema.field(
     'name',
     'name',
-    FieldPresence.defaultedThunk(() => {
-      return Id.generate('button-name');
-    }),
+    FieldPresence.defaultedThunk(() => Id.generate('button-name')),
     ValueSchema.string
   ),
   FieldSchema.optionString('icon'),

@@ -17,38 +17,34 @@ const createRoutes = (routes: Record<string, TransitionPropertiesSpec>): Transit
   return r;
 };
 
-const createBistate = (first: string, second: string, transitions: TransitionPropertiesSpec): TransitioningConfigSpec['routes'] => {
-  return Objects.wrapAll([
-    { key: first, value: Objects.wrap(second, transitions) },
-    { key: second, value: Objects.wrap(first, transitions) }
-  ]);
-};
+const createBistate = (first: string, second: string, transitions: TransitionPropertiesSpec): TransitioningConfigSpec['routes'] => Objects.wrapAll([
+  { key: first, value: Objects.wrap(second, transitions) },
+  { key: second, value: Objects.wrap(first, transitions) }
+]);
 
-const createTristate = (first: string, second: string, third: string, transitions: TransitionPropertiesSpec): TransitioningConfigSpec['routes'] => {
-  return Objects.wrapAll([
-    {
-      key: first,
-      value: Objects.wrapAll([
-        { key: second, value: transitions },
-        { key: third, value: transitions }
-      ])
-    },
-    {
-      key: second,
-      value: Objects.wrapAll([
-        { key: first, value: transitions },
-        { key: third, value: transitions }
-      ])
-    },
-    {
-      key: third,
-      value: Objects.wrapAll([
-        { key: first, value: transitions },
-        { key: second, value: transitions }
-      ])
-    }
-  ]);
-};
+const createTristate = (first: string, second: string, third: string, transitions: TransitionPropertiesSpec): TransitioningConfigSpec['routes'] => Objects.wrapAll([
+  {
+    key: first,
+    value: Objects.wrapAll([
+      { key: second, value: transitions },
+      { key: third, value: transitions }
+    ])
+  },
+  {
+    key: second,
+    value: Objects.wrapAll([
+      { key: first, value: transitions },
+      { key: third, value: transitions }
+    ])
+  },
+  {
+    key: third,
+    value: Objects.wrapAll([
+      { key: first, value: transitions },
+      { key: second, value: transitions }
+    ])
+  }
+]);
 
 const Transitioning: TransitioningBehaviour = Behaviour.create({
   fields: TransitionSchema,

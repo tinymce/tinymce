@@ -151,10 +151,6 @@ const contextToolbarSchema = ValueSchema.objOf([
   FieldSchema.strictString('items')
 ].concat(contextBarFields));
 
-export const createContextToolbar = (spec: ContextToolbarApi): Result<ContextToolbar, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<ContextToolbar>('ContextToolbar', contextToolbarSchema, spec);
-};
+export const createContextToolbar = (spec: ContextToolbarApi): Result<ContextToolbar, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<ContextToolbar>('ContextToolbar', contextToolbarSchema, spec);
 
-export const createContextForm = (spec: ContextFormApi): Result<ContextForm, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<ContextForm>('ContextForm', contextFormSchema, spec);
-};
+export const createContextForm = (spec: ContextFormApi): Result<ContextForm, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<ContextForm>('ContextForm', contextFormSchema, spec);

@@ -22,13 +22,11 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
 
   const cAssertIsDefaultToolbar = Assertions.cAssertStructure(
     'Checking structure of tox-toolbar is "default"',
-    ApproxStructure.build((s, str, arr) => {
-      return s.element('div', {
-        classes: [ arr.has('tox-toolbar') ],
-        children: Arr.map([ 1, 2, 3, 4, 5 ], (_) => // Technically meant to be 6 groups by default but the link and image plugins aren't loaded here so whatever
-          s.element('div', { classes: [ arr.has('tox-toolbar__group') ] }))
-      });
-    })
+    ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('tox-toolbar') ],
+      children: Arr.map([ 1, 2, 3, 4, 5 ], (_) => // Technically meant to be 6 groups by default but the link and image plugins aren't loaded here so whatever
+        s.element('div', { classes: [ arr.has('tox-toolbar__group') ] }))
+    }))
   );
 
   Pipeline.async({}, [
@@ -76,20 +74,18 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
         NamedChain.direct('toolbar', Assertions.cAssertStructure(
           'Checking toolbar should have just bold and italic',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-toolbar') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-toolbar__group') ],
-                  children: [
-                    s.element('button', { }),
-                    s.element('button', { })
-                  ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('tox-toolbar') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar__group') ],
+                children: [
+                  s.element('button', { }),
+                  s.element('button', { })
+                ]
+              })
+            ]
+          }))
         ), Id.generate('')),
         NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
@@ -104,27 +100,25 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
         NamedChain.direct('toolbar', Assertions.cAssertStructure(
           'Checking toolbar should have bold, italic, strikethrough and underline',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-toolbar') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-toolbar__group') ],
-                  children: [
-                    s.element('button', { }),
-                    s.element('button', { })
-                  ]
-                }),
-                s.element('div', {
-                  classes: [ arr.has('tox-toolbar__group') ],
-                  children: [
-                    s.element('button', { }),
-                    s.element('button', { })
-                  ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('tox-toolbar') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar__group') ],
+                children: [
+                  s.element('button', { }),
+                  s.element('button', { })
+                ]
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar__group') ],
+                children: [
+                  s.element('button', { }),
+                  s.element('button', { })
+                ]
+              })
+            ]
+          }))
         ), Id.generate('')),
         NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
@@ -141,42 +135,40 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         NamedChain.direct('toolbars', Assertions.cAssertEq('Should be two toolbars', 2), 'toolbars'),
         NamedChain.direct('multiple-toolbars', Assertions.cAssertStructure(
           'Checking toolbar1 should have bold italic and and toolbar 2 should have underline',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-toolbar-overlord') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-toolbar') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-toolbar__group') ],
-                      children: [
-                        s.element('button', { }),
-                        s.element('button', { })
-                      ]
-                    }),
-                  ]
-                }),
-                s.element('div', {
-                  classes: [ arr.has('tox-toolbar') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-toolbar__group') ],
-                      children: [
-                        s.element('button', { })
-                      ]
-                    }),
-                    s.element('div', {
-                      classes: [ arr.has('tox-toolbar__group') ],
-                      children: [
-                        s.element('button', { })
-                      ]
-                    })
-                  ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('tox-toolbar-overlord') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-toolbar__group') ],
+                    children: [
+                      s.element('button', { }),
+                      s.element('button', { })
+                    ]
+                  }),
+                ]
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-toolbar__group') ],
+                    children: [
+                      s.element('button', { })
+                    ]
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-toolbar__group') ],
+                    children: [
+                      s.element('button', { })
+                    ]
+                  })
+                ]
+              })
+            ]
+          }))
         ), Id.generate('')),
         NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
@@ -192,24 +184,22 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
         NamedChain.direct('multiple-toolbars', Assertions.cAssertStructure(
           'Checking toolbar should have just bold',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-toolbar-overlord') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-toolbar') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-toolbar__group') ],
-                      children: [
-                        s.element('button', { }),
-                      ]
-                    })
-                  ]
-                }),
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('tox-toolbar-overlord') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-toolbar__group') ],
+                    children: [
+                      s.element('button', { }),
+                    ]
+                  })
+                ]
+              }),
+            ]
+          }))
         ), Id.generate('')),
         NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
@@ -238,37 +228,35 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         NamedChain.direct('toolbars', Assertions.cAssertEq('Should be two toolbars', 2), 'toolbars'),
         NamedChain.direct('multiple-toolbars', Assertions.cAssertStructure(
           'Checking toolbar should have just bold and italic',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-toolbar-overlord') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-toolbar') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-toolbar__group') ],
-                      children: [
-                        s.element('button', { }),
-                        s.element('button', { }),
-                        s.element('button', { })
-                      ]
-                    }),
-                  ]
-                }),
-                s.element('div', {
-                  classes: [ arr.has('tox-toolbar') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-toolbar__group') ],
-                      children: [
-                        s.element('button', { })
-                      ]
-                    })
-                  ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('tox-toolbar-overlord') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-toolbar__group') ],
+                    children: [
+                      s.element('button', { }),
+                      s.element('button', { }),
+                      s.element('button', { })
+                    ]
+                  }),
+                ]
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-toolbar__group') ],
+                    children: [
+                      s.element('button', { })
+                    ]
+                  })
+                ]
+              })
+            ]
+          }))
         ), Id.generate('')),
         NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
@@ -284,26 +272,24 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbars'),
         NamedChain.direct('multiple-toolbars', Assertions.cAssertStructure(
           'Checking toolbar should have just bold, italic and underline',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-toolbar-overlord') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-toolbar') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-toolbar__group') ],
-                      children: [
-                        s.element('button', { }),
-                        s.element('button', { }),
-                        s.element('button', { }),
-                      ]
-                    }),
-                  ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('tox-toolbar-overlord') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-toolbar__group') ],
+                    children: [
+                      s.element('button', { }),
+                      s.element('button', { }),
+                      s.element('button', { }),
+                    ]
+                  }),
+                ]
+              })
+            ]
+          }))
         ), Id.generate('')),
         NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
@@ -319,25 +305,23 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbars'),
         NamedChain.direct('multiple-toolbars', Assertions.cAssertStructure(
           'Checking toolbar should have just bold and italic',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-toolbar-overlord') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-toolbar') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-toolbar__group') ],
-                      children: [
-                        s.element('button', { }),
-                        s.element('button', { }),
-                      ]
-                    }),
-                  ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('tox-toolbar-overlord') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-toolbar__group') ],
+                    children: [
+                      s.element('button', { }),
+                      s.element('button', { }),
+                    ]
+                  }),
+                ]
+              })
+            ]
+          }))
         ), Id.generate('')),
         NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
@@ -354,36 +338,34 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         NamedChain.direct('toolbars', Assertions.cAssertEq('Should be two toolbars', 2), 'toolbars'),
         NamedChain.direct('multiple-toolbars', Assertions.cAssertStructure(
           'Checking toolbar 1 should have bold and italic and toolbar 2 should have strikethrough',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-toolbar-overlord') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-toolbar') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-toolbar__group') ],
-                      children: [
-                        s.element('button', { }),
-                        s.element('button', { }),
-                      ]
-                    }),
-                  ]
-                }),
-                s.element('div', {
-                  classes: [ arr.has('tox-toolbar') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-toolbar__group') ],
-                      children: [
-                        s.element('button', { })
-                      ]
-                    })
-                  ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('tox-toolbar-overlord') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-toolbar__group') ],
+                    children: [
+                      s.element('button', { }),
+                      s.element('button', { }),
+                    ]
+                  }),
+                ]
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-toolbar__group') ],
+                    children: [
+                      s.element('button', { })
+                    ]
+                  })
+                ]
+              })
+            ]
+          }))
         ), Id.generate('')),
         NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
@@ -399,26 +381,24 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbars'),
         NamedChain.direct('multiple-toolbars', Assertions.cAssertStructure(
           'Checking toolbar should have just bold, italic and underline',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-toolbar-overlord') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-toolbar') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-toolbar__group') ],
-                      children: [
-                        s.element('button', { }),
-                        s.element('button', { }),
-                        s.element('button', { })
-                      ]
-                    }),
-                  ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('tox-toolbar-overlord') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-toolbar__group') ],
+                    children: [
+                      s.element('button', { }),
+                      s.element('button', { }),
+                      s.element('button', { })
+                    ]
+                  }),
+                ]
+              })
+            ]
+          }))
         ), Id.generate('')),
         NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
@@ -435,42 +415,40 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         NamedChain.direct('toolbars', Assertions.cAssertEq('Should be two toolbars', 2), 'toolbars'),
         NamedChain.direct('multiple-toolbars', Assertions.cAssertStructure(
           'Checking toolbar 1 should have bold, italic and underline and toolbar 2 should have strikethrough',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-toolbar-overlord') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-toolbar') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-toolbar__group') ],
-                      children: [
-                        s.element('button', { }),
-                        s.element('button', { }),
-                      ]
-                    }),
-                    s.element('div', {
-                      classes: [ arr.has('tox-toolbar__group') ],
-                      children: [
-                        s.element('button', { }),
-                      ]
-                    })
-                  ]
-                }),
-                s.element('div', {
-                  classes: [ arr.has('tox-toolbar') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-toolbar__group') ],
-                      children: [
-                        s.element('button', { })
-                      ]
-                    })
-                  ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('tox-toolbar-overlord') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-toolbar__group') ],
+                    children: [
+                      s.element('button', { }),
+                      s.element('button', { }),
+                    ]
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-toolbar__group') ],
+                    children: [
+                      s.element('button', { }),
+                    ]
+                  })
+                ]
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-toolbar__group') ],
+                    children: [
+                      s.element('button', { })
+                    ]
+                  })
+                ]
+              })
+            ]
+          }))
         ), Id.generate('')),
         NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
@@ -521,33 +499,31 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
         NamedChain.direct('toolbar', Assertions.cAssertStructure(
           'Checking toolbar should have undo, redo, bold and italic',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-toolbar') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-toolbar__group') ],
-                  attrs: {
-                    title: str.is('history')
-                  },
-                  children: [
-                    s.element('button', { }),
-                    s.element('button', { })
-                  ]
-                }),
-                s.element('div', {
-                  classes: [ arr.has('tox-toolbar__group') ],
-                  attrs: {
-                    title: str.is('formatting')
-                  },
-                  children: [
-                    s.element('button', { }),
-                    s.element('button', { })
-                  ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('tox-toolbar') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar__group') ],
+                attrs: {
+                  title: str.is('history')
+                },
+                children: [
+                  s.element('button', { }),
+                  s.element('button', { })
+                ]
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar__group') ],
+                attrs: {
+                  title: str.is('formatting')
+                },
+                children: [
+                  s.element('button', { }),
+                  s.element('button', { })
+                ]
+              })
+            ]
+          }))
         ), Id.generate('')),
         NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)

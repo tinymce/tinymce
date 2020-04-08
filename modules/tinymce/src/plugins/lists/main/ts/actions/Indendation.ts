@@ -34,17 +34,11 @@ const selectionIndentation = (editor: Editor, indentation: Indentation): boolean
   return isHandled;
 };
 
-const indentListSelection = (editor: Editor): boolean => {
-  return selectionIndentation(editor, Indentation.Indent);
-};
+const indentListSelection = (editor: Editor): boolean => selectionIndentation(editor, Indentation.Indent);
 
-const outdentListSelection = (editor: Editor): boolean => {
-  return selectionIndentation(editor, Indentation.Outdent);
-};
+const outdentListSelection = (editor: Editor): boolean => selectionIndentation(editor, Indentation.Outdent);
 
-const flattenListSelection = (editor: Editor): boolean => {
-  return selectionIndentation(editor, Indentation.Flatten);
-};
+const flattenListSelection = (editor: Editor): boolean => selectionIndentation(editor, Indentation.Flatten);
 
 export {
   indentListSelection,

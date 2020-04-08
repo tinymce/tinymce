@@ -35,43 +35,27 @@ const inParent = <P, C, E>(parent: Element<P>, children: Element<C>[], element: 
   index: Fun.constant(index)
 });
 
-const childOf = (element: Element<DomNode>, ancestor: Element<DomNode>) => {
-  return PredicateFind.closest(element, (elem) => {
-    return Traverse.parent(elem).exists((parent) => {
-      return Compare.eq(parent, ancestor);
-    });
-  });
-};
+const childOf = (element: Element<DomNode>, ancestor: Element<DomNode>) =>
+  PredicateFind.closest(element, (elem) =>
+    Traverse.parent(elem).exists((parent) => Compare.eq(parent, ancestor)));
 
-const indexInParent = <E extends DomNode> (element: Element<E>) => {
-  return Traverse.parent(element).bind((parent) => {
-    const children = Traverse.children(parent);
-    return indexOf(children, element).map((index) => {
-      return inParent(parent, children, element as Element<E & DomNode & ChildNode>, index);
-    });
-  });
-};
+const indexInParent = <E extends DomNode> (element: Element<E>) => Traverse.parent(element).bind((parent) => {
+  const children = Traverse.children(parent);
+  return indexOf(children, element).map((index) => inParent(parent, children, element as Element<E & DomNode & ChildNode>, index));
+});
 
-const indexOf = (elements: Element<DomNode>[], element: Element<DomNode>) => {
-  return Arr.findIndex(elements, Fun.curry(Compare.eq, element));
-};
+const indexOf = (elements: Element<DomNode>[], element: Element<DomNode>) => Arr.findIndex(elements, Fun.curry(Compare.eq, element));
 
-const selectorsInParent = <E extends DomNode, S extends DomElement = DomElement> (element: Element<E>, selector: string) => {
-  return Traverse.parent(element).bind((parent) => {
+const selectorsInParent = <E extends DomNode, S extends DomElement = DomElement> (element: Element<E>, selector: string) =>
+  Traverse.parent(element).bind((parent) => {
     const children = SelectorFilter.children<S>(parent, selector);
-    return indexOf(children, element).map((index) => {
-      return inParent(parent, children, element as Element<E & S>, index);
-    });
+    return indexOf(children, element).map((index) => inParent(parent, children, element as Element<E & S>, index));
   });
-};
 
-const descendantsInAncestor = <E extends DomNode, A extends DomElement = DomElement, D extends DomElement = DomElement> (element: Element<E>, ancestorSelector: string, descendantSelector: string) => {
-  return SelectorFind.closest<A>(element, ancestorSelector).bind((ancestor) => {
+const descendantsInAncestor = <E extends DomNode, A extends DomElement = DomElement, D extends DomElement = DomElement> (element: Element<E>, ancestorSelector: string, descendantSelector: string) =>
+  SelectorFind.closest<A>(element, ancestorSelector).bind((ancestor) => {
     const descendants = SelectorFilter.descendants<D>(ancestor, descendantSelector);
-    return indexOf(descendants, element).map((index) => {
-      return inAncestor(ancestor, descendants, element as Element<E & D>, index);
-    });
+    return indexOf(descendants, element).map((index) => inAncestor(ancestor, descendants, element as Element<E & D>, index));
   });
-};
 
 export { childOf, indexOf, indexInParent, selectorsInParent, descendantsInAncestor };

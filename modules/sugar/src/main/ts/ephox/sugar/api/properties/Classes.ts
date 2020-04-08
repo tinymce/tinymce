@@ -26,17 +26,9 @@ const toggle = (element: Element<DomElement>, classes: string[]) => {
   });
 };
 
-const hasAll = (element: Element<DomNode>, classes: string[]) => {
-  return Arr.forall(classes, (clazz) => {
-    return Class.has(element, clazz);
-  });
-};
+const hasAll = (element: Element<DomNode>, classes: string[]) => Arr.forall(classes, (clazz) => Class.has(element, clazz));
 
-const hasAny = (element: Element<DomNode>, classes: string[]) => {
-  return Arr.exists(classes, (clazz) => {
-    return Class.has(element, clazz);
-  });
-};
+const hasAny = (element: Element<DomNode>, classes: string[]) => Arr.exists(classes, (clazz) => Class.has(element, clazz));
 
 const getNative = (element: Element<DomElement>) => {
   const classList = element.dom().classList;
@@ -50,9 +42,7 @@ const getNative = (element: Element<DomElement>) => {
   return r;
 };
 
-const get = (element: Element<DomElement>) => {
-  return ClassList.supports(element) ? getNative(element) : ClassList.get(element);
-};
+const get = (element: Element<DomElement>) => ClassList.supports(element) ? getNative(element) : ClassList.get(element);
 
 export {
   add,

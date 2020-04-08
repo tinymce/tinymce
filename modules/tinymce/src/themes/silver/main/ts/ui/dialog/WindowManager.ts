@@ -29,13 +29,9 @@ export interface WindowManagerSetup {
 
 type InlineDialogAnchor = HotspotAnchorSpec | MakeshiftAnchorSpec | NodeAnchorSpec | SelectionAnchorSpec;
 
-const validateData = <T extends Types.Dialog.DialogData>(data: T, validator: Processor) => {
-  return ValueSchema.getOrDie(ValueSchema.asRaw('data', validator, data));
-};
+const validateData = <T extends Types.Dialog.DialogData>(data: T, validator: Processor) => ValueSchema.getOrDie(ValueSchema.asRaw('data', validator, data));
 
-const isAlertOrConfirmDialog = (target: Element): boolean => {
-  return SelectorExists.closest(target, '.tox-alert-dialog') || SelectorExists.closest(target, '.tox-confirm-dialog');
-};
+const isAlertOrConfirmDialog = (target: Element): boolean => SelectorExists.closest(target, '.tox-alert-dialog') || SelectorExists.closest(target, '.tox-confirm-dialog');
 
 const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, isToolbarLocationTop: boolean): Behaviour.NamedConfiguredBehaviour<any, any>[] => {
   // When using sticky toolbars it already handles the docking behaviours so applying docking would
@@ -77,9 +73,7 @@ const setup = (extras: WindowManagerSetup) => {
     }
   };
 
-  const openUrl = (config: Types.UrlDialog.UrlDialogApi, closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void) => {
-    return openModalUrlDialog(config, closeWindow);
-  };
+  const openUrl = (config: Types.UrlDialog.UrlDialogApi, closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void) => openModalUrlDialog(config, closeWindow);
 
   const openModalUrlDialog = (config: Types.UrlDialog.UrlDialogApi, closeWindow: (dialogApi: Types.UrlDialog.UrlDialogInstanceApi) => void) => {
     const factory = (contents: Types.UrlDialog.UrlDialog): Types.UrlDialog.UrlDialogInstanceApi => {

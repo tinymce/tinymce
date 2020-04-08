@@ -16,18 +16,9 @@ export interface Polling {
  */
 const polls: Polling[] = [];
 
-const poll = (element: Element<DomNode>, unbind: () => void): Polling => {
-  return {
-    element,
-    unbind
-  };
-};
+const poll = (element: Element<DomNode>, unbind: () => void): Polling => ({ element, unbind });
 
-const findPoller = (element: Element<DomNode>) => {
-  return Arr.findIndex(polls, (p) => {
-    return Compare.eq(p.element, element);
-  }).getOr(-1);
-};
+const findPoller = (element: Element<DomNode>) => Arr.findIndex(polls, (p) => Compare.eq(p.element, element)).getOr(-1);
 
 const begin = (element: Element<DomNode>, f: () => (() => void)) => {
   const index = findPoller(element);
@@ -56,4 +47,4 @@ const end = (element: Element<DomNode>) => {
   poller.unbind();
 };
 
-export { begin, query, end, };
+export { begin, query, end };

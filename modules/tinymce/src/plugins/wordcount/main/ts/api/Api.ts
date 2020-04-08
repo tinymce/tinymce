@@ -22,33 +22,25 @@ export interface WordCountApi {
   getCount: CountGetter; // TODO: Deprecate
 }
 
-const createBodyCounter = (editor: Editor, count: Counter): CountGetter => {
-  return () => count(editor.getBody(), editor.schema);
-};
+const createBodyCounter = (editor: Editor, count: Counter): CountGetter => () => count(editor.getBody(), editor.schema);
 
-const createSelectionCounter = (editor: Editor, count: Counter): CountGetter => {
-  return () => count(editor.selection.getRng().cloneContents(), editor.schema);
-};
+const createSelectionCounter = (editor: Editor, count: Counter): CountGetter => () => count(editor.selection.getRng().cloneContents(), editor.schema);
 
-const createBodyWordCounter = (editor: Editor): CountGetter => {
-  return createBodyCounter(editor, countWords);
-};
+const createBodyWordCounter = (editor: Editor): CountGetter => createBodyCounter(editor, countWords);
 
-const get = (editor: Editor): WordCountApi => {
-  return {
-    body: {
-      getWordCount: createBodyWordCounter(editor),
-      getCharacterCount: createBodyCounter(editor, countCharacters),
-      getCharacterCountWithoutSpaces: createBodyCounter(editor, countCharactersWithoutSpaces)
-    },
-    selection: {
-      getWordCount: createSelectionCounter(editor, countWords),
-      getCharacterCount: createSelectionCounter(editor, countCharacters),
-      getCharacterCountWithoutSpaces: createSelectionCounter(editor, countCharactersWithoutSpaces)
-    },
-    getCount: createBodyWordCounter(editor)
-  };
-};
+const get = (editor: Editor): WordCountApi => ({
+  body: {
+    getWordCount: createBodyWordCounter(editor),
+    getCharacterCount: createBodyCounter(editor, countCharacters),
+    getCharacterCountWithoutSpaces: createBodyCounter(editor, countCharactersWithoutSpaces)
+  },
+  selection: {
+    getWordCount: createSelectionCounter(editor, countWords),
+    getCharacterCount: createSelectionCounter(editor, countCharacters),
+    getCharacterCountWithoutSpaces: createSelectionCounter(editor, countCharactersWithoutSpaces)
+  },
+  getCount: createBodyWordCounter(editor)
+});
 
 export {
   get

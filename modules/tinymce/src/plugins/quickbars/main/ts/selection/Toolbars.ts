@@ -25,9 +25,7 @@ const addToEditor = (editor: Editor) => {
   const textToolbarItems = Settings.getTextSelectionToolbarItems(editor);
   if (textToolbarItems.trim().length > 0) {
     editor.ui.registry.addContextToolbar('textselection', {
-      predicate: (node) => {
-        return !isImage(node) && !editor.selection.isCollapsed() && isEditable(node);
-      },
+      predicate: (node) => !isImage(node) && !editor.selection.isCollapsed() && isEditable(node),
       items: textToolbarItems,
       position: 'selection',
       scope: 'editor'

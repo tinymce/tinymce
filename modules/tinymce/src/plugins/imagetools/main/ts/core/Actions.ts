@@ -22,13 +22,9 @@ import { SelectorFind, Element } from '@ephox/sugar';
 
 let count = 0;
 
-const getFigureImg = (elem) => {
-  return SelectorFind.child(Element.fromDom(elem), 'img');
-};
+const getFigureImg = (elem) => SelectorFind.child(Element.fromDom(elem), 'img');
 
-const isFigure = (editor: Editor, elem) => {
-  return editor.dom.is(elem, 'figure');
-};
+const isFigure = (editor: Editor, elem) => editor.dom.is(elem, 'figure');
 
 const getEditableImage = function (editor: Editor, elem) {
   const isImage = (imgNode) => editor.dom.is(imgNode, 'img:not([data-mce-object],[data-mce-placeholder])');
@@ -36,9 +32,7 @@ const getEditableImage = function (editor: Editor, elem) {
 
   if (isFigure(editor, elem)) {
     const imgOpt = getFigureImg(elem);
-    return imgOpt.map((img) => {
-      return isEditable(img.dom()) ? Option.some(img.dom()) : Option.none();
-    });
+    return imgOpt.map((img) => isEditable(img.dom()) ? Option.some(img.dom()) : Option.none());
   }
   return isEditable(elem) ? Option.some(elem) : Option.none();
 };
@@ -102,12 +96,10 @@ const defaultFetchImage = (editor: Editor, img: HTMLImageElement) => {
   return BlobConversions.imageToBlob(img);
 };
 
-const imageToBlob = (editor: Editor, img: HTMLImageElement): Promise<Blob> => {
-  return Settings.getFetchImage(editor).fold(
-    () => defaultFetchImage(editor, img),
-    (customFetchImage) => customFetchImage(img)
-  );
-};
+const imageToBlob = (editor: Editor, img: HTMLImageElement): Promise<Blob> => Settings.getFetchImage(editor).fold(
+  () => defaultFetchImage(editor, img),
+  (customFetchImage) => customFetchImage(img)
+);
 
 const findBlob = function (editor: Editor, img) {
   let blobInfo;
@@ -193,26 +185,22 @@ const selectedImageOperation = function (editor: Editor, imageUploadTimerState, 
     const imgOpt = getSelectedImage(editor);
     return imgOpt.fold(() => {
       displayError(editor, 'Could not find selected image');
-    }, (img) => {
-      return editor._scanForImages().
-        then(() => findBlob(editor, img.dom())).
-        then(ResultConversions.blobToImageResult).
-        then(fn).
-        then(function (imageResult) {
-          return updateSelectedImage(editor, imageResult, false, imageUploadTimerState, img.dom(), size);
-        }, function (error) {
-          displayError(editor, error);
-        });
-    });
+    }, (img) => editor._scanForImages().
+      then(() => findBlob(editor, img.dom())).
+      then(ResultConversions.blobToImageResult).
+      then(fn).
+      then(function (imageResult) {
+        return updateSelectedImage(editor, imageResult, false, imageUploadTimerState, img.dom(), size);
+      }, function (error) {
+        displayError(editor, error);
+      }));
   };
 };
 
 const rotate = function (editor: Editor, imageUploadTimerState, angle) {
   return function () {
     const imgOpt = getSelectedImage(editor);
-    const flippedSize = imgOpt.fold(() => {
-      return null;
-    }, (img) => {
+    const flippedSize = imgOpt.fold(() => null, (img) => {
       const size = ImageSize.getImageSize(img.dom());
       return size ? { w: size.h, h: size.w } : null;
     });

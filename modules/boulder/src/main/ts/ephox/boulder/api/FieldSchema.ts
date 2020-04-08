@@ -4,11 +4,9 @@ import * as FieldPresence from './FieldPresence';
 import * as ValueSchema from './ValueSchema';
 import { SimpleResult } from '../alien/SimpleResult';
 
-const validateEnum = (values) => ValueSchema.valueOf((value) => {
-  return Arr.contains(values, value) ?
-    Result.value(value) :
-    Result.error(`Unsupported value: "${value}", choose one of "${values.join(', ')}".`);
-});
+const validateEnum = (values) => ValueSchema.valueOf((value) => Arr.contains(values, value) ?
+  Result.value(value) :
+  Result.error(`Unsupported value: "${value}", choose one of "${values.join(', ')}".`));
 
 const strict = function (key: string): FieldProcessorAdt {
   return field(key, key, FieldPresence.strict(), anyValue());

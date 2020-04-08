@@ -43,14 +43,12 @@ export default function () {
       editor.on('init', () => {
         editor.annotator.register('alpha', {
           persistent: true,
-          decorate: (_uid, data) => {
-            return {
-              attributes: {
-                'data-mce-comment': data.comment ? data.comment : '',
-                'data-mce-author': data.author ? data.author : 'anonymous'
-              }
-            };
-          }
+          decorate: (_uid, data) => ({
+            attributes: {
+              'data-mce-comment': data.comment ? data.comment : '',
+              'data-mce-author': data.author ? data.author : 'anonymous'
+            }
+          })
         });
       });
     },

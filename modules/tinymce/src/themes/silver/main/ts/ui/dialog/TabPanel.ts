@@ -69,42 +69,40 @@ export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage
       view() {
         return [
           // Dupe with SilverDialog
-          AlloyForm.sketch((parts) => {
-            return {
-              dom: {
-                tag: 'div',
-                classes: [ 'tox-form' ]
-              },
-              components: Arr.map(tab.items, (item) => interpretInForm(parts, item, backstage)),
-              formBehaviours: Behaviour.derive([
-                Keying.config({
-                  mode: 'acyclic',
-                  useTabstopAt: Fun.not(NavigableObject.isPseudoStop)
-                }),
+          AlloyForm.sketch((parts) => ({
+            dom: {
+              tag: 'div',
+              classes: [ 'tox-form' ]
+            },
+            components: Arr.map(tab.items, (item) => interpretInForm(parts, item, backstage)),
+            formBehaviours: Behaviour.derive([
+              Keying.config({
+                mode: 'acyclic',
+                useTabstopAt: Fun.not(NavigableObject.isPseudoStop)
+              }),
 
-                AddEventsBehaviour.config('TabView.form.events', [
-                  AlloyEvents.runOnAttached(setDataOnForm),
-                  AlloyEvents.runOnDetached(updateDataWithForm)
-                ]),
-                Receiving.config({
-                  channels: Objects.wrapAll([
-                    {
-                      key: SendDataToSectionChannel,
-                      value:  {
-                        onReceive: updateDataWithForm
-                      }
-                    },
-                    {
-                      key: SendDataToViewChannel,
-                      value: {
-                        onReceive: setDataOnForm
-                      }
+              AddEventsBehaviour.config('TabView.form.events', [
+                AlloyEvents.runOnAttached(setDataOnForm),
+                AlloyEvents.runOnDetached(updateDataWithForm)
+              ]),
+              Receiving.config({
+                channels: Objects.wrapAll([
+                  {
+                    key: SendDataToSectionChannel,
+                    value:  {
+                      onReceive: updateDataWithForm
                     }
-                  ])
-                })
-              ])
-            };
-          })
+                  },
+                  {
+                    key: SendDataToViewChannel,
+                    value: {
+                      onReceive: setDataOnForm
+                    }
+                  }
+                ])
+              })
+            ])
+          }))
         ];
       }
     };

@@ -8,9 +8,7 @@
 import * as Time from '../core/Time';
 import { document } from '@ephox/dom-globals';
 
-const shouldAskBeforeUnload = (editor) => {
-  return editor.getParam('autosave_ask_before_unload', true);
-};
+const shouldAskBeforeUnload = (editor) => editor.getParam('autosave_ask_before_unload', true);
 
 const getAutoSavePrefix = (editor) => {
   const location = document.location;
@@ -22,17 +20,11 @@ const getAutoSavePrefix = (editor) => {
     .replace(/{id}/g, editor.id);
 };
 
-const shouldRestoreWhenEmpty = (editor) => {
-  return editor.getParam('autosave_restore_when_empty', false);
-};
+const shouldRestoreWhenEmpty = (editor) => editor.getParam('autosave_restore_when_empty', false);
 
-const getAutoSaveInterval = (editor) => {
-  return Time.parse(editor.settings.autosave_interval, '30s');
-};
+const getAutoSaveInterval = (editor) => Time.parse(editor.settings.autosave_interval, '30s');
 
-const getAutoSaveRetention = (editor) => {
-  return Time.parse(editor.settings.autosave_retention, '20m');
-};
+const getAutoSaveRetention = (editor) => Time.parse(editor.settings.autosave_retention, '20m');
 
 export {
   shouldAskBeforeUnload,

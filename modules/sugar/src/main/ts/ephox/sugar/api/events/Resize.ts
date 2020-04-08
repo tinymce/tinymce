@@ -17,26 +17,18 @@ interface Monitored {
   lastHeight: number;
 }
 
-const elem = (element: Element<HTMLElement>): Monitored => {
-  return {
-    element,
-    handlers: [],
-    lastWidth: Width.get(element),
-    lastHeight: Height.get(element)
-  };
-};
+const elem = (element: Element<HTMLElement>): Monitored => ({
+  element,
+  handlers: [],
+  lastWidth: Width.get(element),
+  lastHeight: Height.get(element)
+});
 const elems: Monitored[] = [];
 
-const findElem = (element: Element<DomNode>) => {
-  return Arr.findIndex(elems, (el) => {
-    return Compare.eq(el.element, element);
-  }).getOr(-1);
-};
+const findElem = (element: Element<DomNode>) => Arr.findIndex(elems, (el) => Compare.eq(el.element, element)).getOr(-1);
 
 const bind = (element: Element<HTMLElement>, handler: () => void) => {
-  const el = Arr.find(elems, (elm) => {
-    return Compare.eq(elm.element, element);
-  }).getOrThunk(() => {
+  const el = Arr.find(elems, (elm) => Compare.eq(elm.element, element)).getOrThunk(() => {
     const newEl = elem(element);
     elems.push(newEl);
     return newEl;
@@ -95,13 +87,13 @@ const update = (el: Monitored) => {
   if (Visibility.isVisible(element)) {
     visibleUpdate(el);
   } else {
-    Monitors.begin(element, () => {
+    Monitors.begin(element, () =>
       // the monitor is "wait for viewable"
-      return Viewable.onShow(element, () => {
+      Viewable.onShow(element, () => {
         Monitors.end(element);
         visibleUpdate(el);
-      });
-    });
+      })
+    );
   }
 };
 

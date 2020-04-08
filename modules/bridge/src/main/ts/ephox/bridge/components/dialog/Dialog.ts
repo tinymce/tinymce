@@ -126,6 +126,4 @@ export const dialogSchema = ValueSchema.objOf([
   FieldSchema.defaulted('onTabChange', Fun.noop),
 ]);
 
-export const createDialog = <T>(spec: DialogApi<T>): Result<Dialog<T>, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw('dialog', dialogSchema, spec);
-};
+export const createDialog = <T>(spec: DialogApi<T>): Result<Dialog<T>, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('dialog', dialogSchema, spec);

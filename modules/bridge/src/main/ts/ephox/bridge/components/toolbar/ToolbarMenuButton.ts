@@ -24,6 +24,4 @@ export const MenuButtonSchema = ValueSchema.objOf([
 
 export const isMenuButtonButton = (spec: any): spec is ToolbarMenuButton => spec.type === 'menubutton';
 
-export const createMenuButton = (spec: any): Result<ToolbarMenuButton, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<ToolbarMenuButton>('menubutton', MenuButtonSchema, spec);
-};
+export const createMenuButton = (spec: any): Result<ToolbarMenuButton, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<ToolbarMenuButton>('menubutton', MenuButtonSchema, spec);

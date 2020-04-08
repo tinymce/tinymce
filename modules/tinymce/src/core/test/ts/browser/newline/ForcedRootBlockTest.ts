@@ -23,14 +23,12 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
           tinyApis.sSetCursor([ 0, 0 ], 0),
           tinyApis.sExecCommand('mceInsertNewLine'),
           tinyApis.sAssertContentStructure(
-            ApproxStructure.build((s, _str, _arr) => {
-              return s.element('body', {
-                children: [
-                  ApproxStructure.fromHtml(expectedHTML('<br data-mce-bogus="1">')),
-                  s.element(rootBlock, {})
-                ]
-              });
-            })
+            ApproxStructure.build((s, _str, _arr) => s.element('body', {
+              children: [
+                ApproxStructure.fromHtml(expectedHTML('<br data-mce-bogus="1">')),
+                s.element(rootBlock, {})
+              ]
+            }))
           ),
           tinyApis.sAssertSelection([ 1, 0 ], 0, [ 1, 0 ], 0)
         ])),
@@ -39,14 +37,12 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
           tinyApis.sSetCursor([ 0, 0 ], 1),
           tinyApis.sExecCommand('mceInsertNewLine'),
           tinyApis.sAssertContentStructure(
-            ApproxStructure.build((s, _str, _arr) => {
-              return s.element('body', {
-                children: [
-                  s.element(rootBlock, {}),
-                  ApproxStructure.fromHtml(expectedHTML('b'))
-                ]
-              });
-            })
+            ApproxStructure.build((s, _str, _arr) => s.element('body', {
+              children: [
+                s.element(rootBlock, {}),
+                ApproxStructure.fromHtml(expectedHTML('b'))
+              ]
+            }))
           ),
           tinyApis.sAssertSelection([ 1, 0 ], 0, [ 1, 0 ], 0)
         ])),
@@ -55,14 +51,12 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
           tinyApis.sSetCursor([ 0, 0 ], 2),
           tinyApis.sExecCommand('mceInsertNewLine'),
           tinyApis.sAssertContentStructure(
-            ApproxStructure.build((s, _str, _arr) => {
-              return s.element('body', {
-                children: [
-                  s.element(rootBlock, {}),
-                  ApproxStructure.fromHtml(expectedHTML('<br data-mce-bogus="1">')),
-                ]
-              });
-            })
+            ApproxStructure.build((s, _str, _arr) => s.element('body', {
+              children: [
+                s.element(rootBlock, {}),
+                ApproxStructure.fromHtml(expectedHTML('<br data-mce-bogus="1">')),
+              ]
+            }))
           ),
           tinyApis.sAssertSelection([ 1 ], 0, [ 1 ], 0)
         ])),
@@ -71,32 +65,30 @@ UnitTest.asynctest('browser.tinymce.core.newline.ForcedRootBlockTest', (success,
           tinyApis.sSetCursor([ 0 ], 1),
           tinyApis.sExecCommand('mceInsertNewLine'),
           tinyApis.sAssertContentStructure(
-            ApproxStructure.build((s, str) => {
-              return s.element('body', {
-                children: [
-                  s.element(rootBlock, {
-                    children: [
-                      ApproxStructure.fromHtml(bookmarkSpan),
-                      s.element('br', {
-                        attrs: {
-                          'data-mce-bogus': str.is('1')
-                        }
-                      })
-                    ]
-                  }),
-                  s.element(rootBlock, {
-                    attrs: Obj.map(rootBlockAttrs, (val) => str.is(val)),
-                    children: [
-                      s.element('br', {
-                        attrs: {
-                          'data-mce-bogus': str.is('1')
-                        }
-                      })
-                    ]
-                  })
-                ]
-              });
-            })),
+            ApproxStructure.build((s, str) => s.element('body', {
+              children: [
+                s.element(rootBlock, {
+                  children: [
+                    ApproxStructure.fromHtml(bookmarkSpan),
+                    s.element('br', {
+                      attrs: {
+                        'data-mce-bogus': str.is('1')
+                      }
+                    })
+                  ]
+                }),
+                s.element(rootBlock, {
+                  attrs: Obj.map(rootBlockAttrs, (val) => str.is(val)),
+                  children: [
+                    s.element('br', {
+                      attrs: {
+                        'data-mce-bogus': str.is('1')
+                      }
+                    })
+                  ]
+                })
+              ]
+            }))),
           tinyApis.sAssertSelection([ 1 ], 0, [ 1 ], 0)
         ]))
       ]));

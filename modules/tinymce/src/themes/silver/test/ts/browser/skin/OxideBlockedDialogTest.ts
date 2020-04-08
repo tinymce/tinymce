@@ -28,36 +28,34 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
               UiFinder.cFindIn('[role="dialog"]'),
               Assertions.cAssertStructure(
                 'Checking dialog structure to see where "busy" is',
-                ApproxStructure.build((s, str, arr) => {
-                  return s.element('div', {
-                    classes: [ arr.has('tox-dialog') ],
-                    children: [
-                      s.element('div', {
-                        classes: [ arr.has('tox-dialog__header') ]
-                      }),
-                      s.element('div', {
-                        classes: [ arr.has('tox-dialog__content-js') ]
-                      }),
-                      s.element('div', {
-                        classes: [ arr.has('tox-dialog__footer') ]
-                      }),
-                      s.element('div', {
-                        classes: [ arr.has('tox-dialog__busy-spinner') ],
-                        children: [
-                          s.element('div', {
-                            classes: [ arr.has('tox-spinner') ],
-                            children: [
-                              // The three loading dots
-                              s.element('div', { }),
-                              s.element('div', { }),
-                              s.element('div', { })
-                            ]
-                          })
-                        ]
-                      })
-                    ]
-                  });
-                })
+                ApproxStructure.build((s, str, arr) => s.element('div', {
+                  classes: [ arr.has('tox-dialog') ],
+                  children: [
+                    s.element('div', {
+                      classes: [ arr.has('tox-dialog__header') ]
+                    }),
+                    s.element('div', {
+                      classes: [ arr.has('tox-dialog__content-js') ]
+                    }),
+                    s.element('div', {
+                      classes: [ arr.has('tox-dialog__footer') ]
+                    }),
+                    s.element('div', {
+                      classes: [ arr.has('tox-dialog__busy-spinner') ],
+                      children: [
+                        s.element('div', {
+                          classes: [ arr.has('tox-spinner') ],
+                          children: [
+                            // The three loading dots
+                            s.element('div', { }),
+                            s.element('div', { }),
+                            s.element('div', { })
+                          ]
+                        })
+                      ]
+                    })
+                  ]
+                }))
               )
             ])
           ),
@@ -70,22 +68,20 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
               UiFinder.cFindIn('[role="dialog"]'),
               Assertions.cAssertStructure(
                 'Checking dialog structure to see where "busy" is',
-                ApproxStructure.build((s, str, arr) => {
-                  return s.element('div', {
-                    classes: [ arr.has('tox-dialog') ],
-                    children: [
-                      s.element('div', {
-                        classes: [ arr.has('tox-dialog__header') ]
-                      }),
-                      s.element('div', {
-                        classes: [ arr.has('tox-dialog__content-js') ]
-                      }),
-                      s.element('div', {
-                        classes: [ arr.has('tox-dialog__footer') ]
-                      })
-                    ]
-                  });
-                })
+                ApproxStructure.build((s, str, arr) => s.element('div', {
+                  classes: [ arr.has('tox-dialog') ],
+                  children: [
+                    s.element('div', {
+                      classes: [ arr.has('tox-dialog__header') ]
+                    }),
+                    s.element('div', {
+                      classes: [ arr.has('tox-dialog__content-js') ]
+                    }),
+                    s.element('div', {
+                      classes: [ arr.has('tox-dialog__footer') ]
+                    })
+                  ]
+                }))
               )
             ])
           )

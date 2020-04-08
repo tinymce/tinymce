@@ -58,9 +58,7 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
     onEscape() {
       // Note for the future: this should possibly also call detail.onHide
       Sandboxing.close(menuSandbox);
-      detail.onEscape.map((handler) => {
-        return handler(menuSandbox);
-      });
+      detail.onEscape.map((handler) => handler(menuSandbox));
       return Option.some<boolean>(true);
     },
 
@@ -95,9 +93,7 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
 const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: InlineViewDetail, spec): SketchSpec => {
   const isPartOfRelated = (sandbox: AlloyComponent, queryElem: Element) => {
     const related = detail.getRelated(sandbox);
-    return related.exists((rel) => {
-      return ComponentStructure.isPartOf(rel, queryElem);
-    });
+    return related.exists((rel) => ComponentStructure.isPartOf(rel, queryElem));
   };
 
   const setContent = (sandbox: AlloyComponent, thing: AlloySpec) => {
@@ -137,9 +133,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
       Sandboxing.close(sandbox);
     }
   };
-  const getContent = (sandbox: AlloyComponent): Option<AlloyComponent> => {
-    return Sandboxing.getState(sandbox);
-  };
+  const getContent = (sandbox: AlloyComponent): Option<AlloyComponent> => Sandboxing.getState(sandbox);
   const reposition = (sandbox: AlloyComponent) => {
     if (Sandboxing.isOpen(sandbox)) {
       Representing.getValue(sandbox).each((state: InlineViewState) => {
@@ -255,12 +249,8 @@ const InlineView: InlineViewSketcher = Sketcher.single<InlineViewSpec, InlineVie
     hide: (apis, component) => {
       apis.hide(component);
     },
-    isOpen: (apis, component) => {
-      return apis.isOpen(component);
-    },
-    getContent: (apis, component) => {
-      return apis.getContent(component);
-    },
+    isOpen: (apis, component) => apis.isOpen(component),
+    getContent: (apis, component) => apis.getContent(component),
     setContent: (apis, component, thing) => {
       apis.setContent(component, thing);
     },

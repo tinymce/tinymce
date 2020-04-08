@@ -9,39 +9,32 @@ import TestProviders from '../../../module/TestProviders';
 UnitTest.asynctest('DialogButton component Test', (success, failure) => {
 
   TestHelpers.GuiSetup.setup(
-    (store, _doc, _body) => {
-      return GuiFactory.build(
-        renderButton({
-          name: 'test-button',
-          text: 'ButtonText',
-          disabled: false,
-          primary: true,
-          icon: Option.none(),
-          borderless: false
-        }, store.adder('button.action'), TestProviders)
-      );
-    },
-    (_doc, _body, gui, component, store) => {
+    (store, _doc, _body) => GuiFactory.build(
+      renderButton({
+        name: 'test-button',
+        text: 'ButtonText',
+        disabled: false,
+        primary: true,
+        icon: Option.none(),
+        borderless: false
+      }, store.adder('button.action'), TestProviders)
+    ),
+    (_doc, _body, gui, component, store) => [
+      Assertions.sAssertStructure(
+        'Checking initial structure',
+        ApproxStructure.build((s, str, arr) => s.element('button', {
+          classes: [ arr.has('tox-button'), arr.not('tox-button--secondary') ],
+          children: [
+            s.text( str.is('ButtonText') )
+          ]
+        })),
+        component.element()
+      ),
 
-      return [
-        Assertions.sAssertStructure(
-          'Checking initial structure',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('button', {
-              classes: [ arr.has('tox-button'), arr.not('tox-button--secondary') ],
-              children: [
-                s.text( str.is('ButtonText') )
-              ]
-            });
-          }),
-          component.element()
-        ),
-
-        store.sAssertEq('No button action should have fired yet', [ ]),
-        Mouse.sClickOn(gui.element(), '.tox-button'),
-        store.sAssertEq('Button action should have fired', [ 'button.action' ])
-      ];
-    },
+      store.sAssertEq('No button action should have fired yet', [ ]),
+      Mouse.sClickOn(gui.element(), '.tox-button'),
+      store.sAssertEq('Button action should have fired', [ 'button.action' ])
+    ],
     success,
     failure
   );

@@ -9,9 +9,7 @@ const init = (): TooltippingState => {
   const timer = Cell(Option.none<number>());
   const popup = Cell(Option.none<AlloyComponent>());
 
-  const getTooltip = () => {
-    return popup.get();
-  };
+  const getTooltip = () => popup.get();
 
   const setTooltip = (comp: AlloyComponent) => {
     popup.set(Option.some(comp));
@@ -41,9 +39,7 @@ const init = (): TooltippingState => {
     );
   };
 
-  const isShowing = () => {
-    return popup.get().isSome();
-  };
+  const isShowing = () => popup.get().isSome();
 
   const readState = Fun.constant('not-implemented');
 

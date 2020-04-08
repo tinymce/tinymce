@@ -28,37 +28,34 @@ const adt: {
   { rtl: [ 'start', 'soffset', 'finish', 'foffset' ] }
 ]);
 
-const fromRange = (win: Window, type: SelectionDirectionConstructor, range: Range) => {
-  return type(Element.fromDom(range.startContainer), range.startOffset, Element.fromDom(range.endContainer), range.endOffset);
-};
+const fromRange = (win: Window, type: SelectionDirectionConstructor, range: Range) =>
+  type(Element.fromDom(range.startContainer), range.startOffset, Element.fromDom(range.endContainer), range.endOffset);
 
 interface LtrRtlRanges {
   ltr: () => Range;
   rtl: () => Option<Range>;
 }
 
-const getRanges = (win: Window, selection: Selection): LtrRtlRanges => {
-  return selection.match<LtrRtlRanges>({
-    domRange(rng) {
-      return {
-        ltr: Fun.constant(rng),
-        rtl: Option.none
-      };
-    },
-    relative(startSitu, finishSitu) {
-      return {
-        ltr: Thunk.cached(() => NativeRange.relativeToNative(win, startSitu, finishSitu)),
-        rtl: Thunk.cached(() => Option.some(NativeRange.relativeToNative(win, finishSitu, startSitu)))
-      };
-    },
-    exact(start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
-      return {
-        ltr: Thunk.cached(() => NativeRange.exactToNative(win, start, soffset, finish, foffset)),
-        rtl: Thunk.cached(() => Option.some(NativeRange.exactToNative(win, finish, foffset, start, soffset)))
-      };
-    }
-  });
-};
+const getRanges = (win: Window, selection: Selection): LtrRtlRanges => selection.match<LtrRtlRanges>({
+  domRange(rng) {
+    return {
+      ltr: Fun.constant(rng),
+      rtl: Option.none
+    };
+  },
+  relative(startSitu, finishSitu) {
+    return {
+      ltr: Thunk.cached(() => NativeRange.relativeToNative(win, startSitu, finishSitu)),
+      rtl: Thunk.cached(() => Option.some(NativeRange.relativeToNative(win, finishSitu, startSitu)))
+    };
+  },
+  exact(start: Element<DomNode>, soffset: number, finish: Element<DomNode>, foffset: number) {
+    return {
+      ltr: Thunk.cached(() => NativeRange.exactToNative(win, start, soffset, finish, foffset)),
+      rtl: Thunk.cached(() => Option.some(NativeRange.exactToNative(win, finish, foffset, start, soffset)))
+    };
+  }
+});
 
 const doDiagnose = (win: Window, ranges: LtrRtlRanges) => {
   // If we cannot create a ranged selection from start > finish, it could be RTL
@@ -67,15 +64,13 @@ const doDiagnose = (win: Window, ranges: LtrRtlRanges) => {
     // Let's check if it's RTL ... if it is, then reversing the direction will not be collapsed
     const reversed = ranges.rtl().filter((rev) => rev.collapsed === false);
 
-    return reversed.map((rev) => {
+    return reversed.map((rev) =>
       // We need to use "reversed" here, because the original only has one point (collapsed)
-      return adt.rtl(
+      adt.rtl(
         Element.fromDom(rev.endContainer), rev.endOffset,
         Element.fromDom(rev.startContainer), rev.startOffset
-      );
-    }).getOrThunk(() => {
-      return fromRange(win, adt.ltr, rng);
-    });
+      )
+    ).getOrThunk(() => fromRange(win, adt.ltr, rng));
   } else {
     return fromRange(win, adt.ltr, rng);
   }
@@ -108,4 +103,4 @@ const asLtrRange = (win: Window, selection: Selection) => {
 const ltr = adt.ltr;
 const rtl = adt.rtl;
 
-export { ltr, rtl, diagnose, asLtrRange, };
+export { ltr, rtl, diagnose, asLtrRange };

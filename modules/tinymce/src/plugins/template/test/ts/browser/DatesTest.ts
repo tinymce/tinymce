@@ -18,11 +18,9 @@ UnitTest.asynctest('browser.tinymce.plugins.template.DatesTest', (success, failu
     const dialogSelector = 'div.tox-dialog';
     const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert template"]';
 
-    const sDeleteSetting = (key) => {
-      return Logger.t('Deleting Setting ' + key, Step.sync(() => {
-        delete editor.settings[key];
-      }));
-    };
+    const sDeleteSetting = (key) => Logger.t('Deleting Setting ' + key, Step.sync(() => {
+      delete editor.settings[key];
+    }));
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Template: Test cdate in snippet with default class', [

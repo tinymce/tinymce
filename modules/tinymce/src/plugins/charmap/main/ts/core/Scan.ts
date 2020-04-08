@@ -31,13 +31,11 @@ const scan = (group: CharMap, pattern: string): CharItem[] => {
     }
   });
 
-  return Arr.map(matches, (m) => {
-    return {
-      text: m[1],
-      value: Strings.fromCodePoint(m[0]),
-      icon: Strings.fromCodePoint(m[0])
-    };
-  });
+  return Arr.map(matches, (m) => ({
+    text: m[1],
+    value: Strings.fromCodePoint(m[0]),
+    icon: Strings.fromCodePoint(m[0])
+  }));
 };
 
 export {

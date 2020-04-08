@@ -14,23 +14,21 @@ const hasImageClass = (node: Node) => {
   return className && /\bimage\b/.test(className);
 };
 
-const toggleContentEditableState = (state: boolean) => {
-  return (nodes: Node[]) => {
-    let i = nodes.length;
+const toggleContentEditableState = (state: boolean) => (nodes: Node[]) => {
+  let i = nodes.length;
 
-    const toggleContentEditable = (node: Node) => {
-      node.attr('contenteditable', state ? 'true' : null);
-    };
-
-    while (i--) {
-      const node = nodes[i];
-
-      if (hasImageClass(node)) {
-        node.attr('contenteditable', state ? 'false' : null);
-        Tools.each(node.getAll('figcaption'), toggleContentEditable);
-      }
-    }
+  const toggleContentEditable = (node: Node) => {
+    node.attr('contenteditable', state ? 'true' : null);
   };
+
+  while (i--) {
+    const node = nodes[i];
+
+    if (hasImageClass(node)) {
+      node.attr('contenteditable', state ? 'false' : null);
+      Tools.each(node.getAll('figcaption'), toggleContentEditable);
+    }
+  }
 };
 
 const setup = (editor: Editor) => {

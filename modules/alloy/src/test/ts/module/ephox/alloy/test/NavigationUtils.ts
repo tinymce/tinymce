@@ -10,17 +10,15 @@ const range = <T, R>(num: number, f: (v: T, i: number) => R[]) => {
 };
 
 const sequence = (doc: Element<HTMLDocument>, key: number, modifiers: { }, identifiers: Array<{ label: string; selector: string }>) => {
-  const array = range(identifiers.length, (_, i) => {
-    return [
-      Keyboard.sKeydown(doc, key, modifiers),
-      FocusTools.sTryOnSelector(
-        'Focus should move from ' + (i > 0 ? identifiers[i - 1].label : '(start)') + ' to ' + identifiers[i].label,
-        doc,
-        identifiers[i].selector
-      ),
-      Step.wait(0)
-    ];
-  });
+  const array = range(identifiers.length, (_, i) => [
+    Keyboard.sKeydown(doc, key, modifiers),
+    FocusTools.sTryOnSelector(
+      'Focus should move from ' + (i > 0 ? identifiers[i - 1].label : '(start)') + ' to ' + identifiers[i].label,
+      doc,
+      identifiers[i].selector
+    ),
+    Step.wait(0)
+  ]);
 
   return GeneralSteps.sequence(array);
 };

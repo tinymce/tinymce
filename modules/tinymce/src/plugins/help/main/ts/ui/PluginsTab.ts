@@ -39,9 +39,7 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
       'Spell Checker Pro'
     ];
 
-    const premiumPluginList = Arr.map(premiumPlugins, (plugin) => {
-      return '<li>' + I18n.translate(plugin) + '</li>';
-    }).join('');
+    const premiumPluginList = Arr.map(premiumPlugins, (plugin) => '<li>' + I18n.translate(plugin) + '</li>').join('');
 
     return '<div data-mce-tabstop="1" tabindex="-1">' +
       '<p><b>' + I18n.translate('Premium plugins:') + '</b></p>' +
@@ -55,16 +53,14 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
   const makeLink = (p: {name: string; url: string}): string =>
     `<a href="${p.url}" target="_blank" rel="noopener">${p.name}</a>`;
 
-  const maybeUrlize = (editor, key: string) => {
-    return Arr.find(PluginUrls.urls, function (x: PluginUrlType) {
-      return x.key === key;
-    }).fold(function () {
-      const getMetadata = editor.plugins[key].getMetadata;
-      return typeof getMetadata === 'function' ? makeLink(getMetadata()) : key;
-    }, function (x) {
-      return makeLink({ name: x.name, url: 'https://www.tiny.cloud/docs/plugins/' + x.key });
-    });
-  };
+  const maybeUrlize = (editor, key: string) => Arr.find(PluginUrls.urls, function (x: PluginUrlType) {
+    return x.key === key;
+  }).fold(function () {
+    const getMetadata = editor.plugins[key].getMetadata;
+    return typeof getMetadata === 'function' ? makeLink(getMetadata()) : key;
+  }, function (x) {
+    return makeLink({ name: x.name, url: 'https://www.tiny.cloud/docs/plugins/' + x.key });
+  });
 
   const getPluginKeys = (editor) => {
     const keys = Obj.keys(editor.plugins);

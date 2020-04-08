@@ -35,10 +35,8 @@ const assertPprintError = (label: string, expectedExpectedValue: any, expectedAc
 };
 
 // We expect it to fail, and we somehow succeeded
-const failOnSuccess = (label: string, expectedError: any, unexpectedSuccess: any): string => {
-  return label + ': Should not have passed. Expected error: ' + expectedError + '. ' +
+const failOnSuccess = (label: string, expectedError: any, unexpectedSuccess: any): string => label + ': Should not have passed. Expected error: ' + expectedError + '. ' +
     'Received success: ' + unexpectedSuccess;
-};
 
 // We expect it to pass, so we are checking that the passing value is the right one
 const assertSuccess = (label: string, expected: any, actual: any): Result<any, any> => {
@@ -162,27 +160,25 @@ const testChainFail = (expected, initial, chain: Chain<any, any>) =>
     );
   });
 
-const testChainsFail = (expected, initial, chains: Array<Chain<any, any>>) => {
-  return Step.raw((initValue, next, die, initLogs) => {
-    Chain.pipeline(
-      Arr.flatten([
-        [ Chain.inject(initial) ],
-        chains
-      ]),
-      (v, newLogs) => {
-        const msg = failOnSuccess('testChainsFail', expected, v);
-        die(msg, newLogs);
-      },
-      (err, newLogs) => {
-        assertError('testChainsFail', expected, err).fold(
-          (err) => die(err, newLogs),
-          (_) => next(initValue, newLogs)
-        );
-      },
-      initLogs
-    );
-  });
-};
+const testChainsFail = (expected, initial, chains: Array<Chain<any, any>>) => Step.raw((initValue, next, die, initLogs) => {
+  Chain.pipeline(
+    Arr.flatten([
+      [ Chain.inject(initial) ],
+      chains
+    ]),
+    (v, newLogs) => {
+      const msg = failOnSuccess('testChainsFail', expected, v);
+      die(msg, newLogs);
+    },
+    (err, newLogs) => {
+      assertError('testChainsFail', expected, err).fold(
+        (err) => die(err, newLogs),
+        (_) => next(initValue, newLogs)
+      );
+    },
+    initLogs
+  );
+});
 
 const preserved = Fun.constant(sPreserved);
 

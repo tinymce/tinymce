@@ -27,9 +27,8 @@ const adt: {
 ]);
 
 // Probably don't need this given that we now have "match"
-const cata = <U> (subject: Situ, onBefore: (element: Element<DomNode>) => U, onOn: (element: Element<DomNode>, offset: number) => U, onAfter: (element: Element<DomNode>) => U) => {
-  return subject.fold(onBefore, onOn, onAfter);
-};
+const cata = <U> (subject: Situ, onBefore: (element: Element<DomNode>) => U, onOn: (element: Element<DomNode>, offset: number) => U, onAfter: (element: Element<DomNode>) => U) =>
+  subject.fold(onBefore, onOn, onAfter);
 
 const getStart = (situ: Situ) => situ.fold(Fun.identity, Fun.identity, Fun.identity);
 

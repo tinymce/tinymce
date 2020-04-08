@@ -40,19 +40,17 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
       align: ''
     };
 
-    const standardOkTest = () => {
-      return Log.stepsAsStep('TBA', 'Table: Table properties dialog standard ok', [
-        sSetTable,
-        sSetCursor,
-        TableTestUtils.sOpenTableDialog(tinyUi),
-        TableTestUtils.sAssertDialogValues(emptyStandardData, false, generalSelectors),
-        TableTestUtils.sClickDialogButton('empty dialog with empty details', true),
-        TableTestUtils.sAssertElementStructure(editor, 'table', htmlEmptyTable),
-        TableTestUtils.sOpenTableDialog(tinyUi),
-        TableTestUtils.sAssertDialogValues(emptyStandardData, false, generalSelectors),
-        TableTestUtils.sClickDialogButton('cancelling dialog', false)
-      ]);
-    };
+    const standardOkTest = () => Log.stepsAsStep('TBA', 'Table: Table properties dialog standard ok', [
+      sSetTable,
+      sSetCursor,
+      TableTestUtils.sOpenTableDialog(tinyUi),
+      TableTestUtils.sAssertDialogValues(emptyStandardData, false, generalSelectors),
+      TableTestUtils.sClickDialogButton('empty dialog with empty details', true),
+      TableTestUtils.sAssertElementStructure(editor, 'table', htmlEmptyTable),
+      TableTestUtils.sOpenTableDialog(tinyUi),
+      TableTestUtils.sAssertDialogValues(emptyStandardData, false, generalSelectors),
+      TableTestUtils.sClickDialogButton('cancelling dialog', false)
+    ]);
 
     const standardFillOkTest = () => {
       const htmlFilledEmptyTable = ApproxStructure.build(function (s, str/* , arr*/) {
@@ -225,7 +223,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
     };
 
     const execCommandTest = () => {
-      const baseHtml = '<table style="height: 500px; width: 500px; border-width: 1px; border-spacing: 5px; background-color: rgb(0, 0, 255); border-color: rgb(255, 0, 0); border-style: dotted; float: left;"><caption><br></caption><tbody><tr><td>X</td></tr></tbody></table>';
+      const baseHtml =
+      '<table style="height: 500px; width: 500px; border-width: 1px; ' +
+      'border-spacing: 5px; background-color: rgb(0, 0, 255); ' +
+      'border-color: rgb(255, 0, 0); border-style: dotted; float: left;">' +
+      '<caption><br></caption>' +
+      '<tbody><tr><td>X</td></tr></tbody>' +
+      '</table>';
 
       const baseData = {
         width: '500px',
@@ -268,7 +272,15 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
         backgroundcolor: ''
       };
 
-      const newHtml = '<table class="dog" style="width: 500px; height: 500px; float: left; background-color: #0000ff; border: 1px dotted #ff0000; border-spacing: 5px; border-collapse: collapse;" border="1"><caption>&nbsp;</caption><tbody><tr><td style="border-color: #ff0000; border-width: 1px; padding: 5px;">X</td></tr></tbody></table>';
+      const newHtml =
+      '<table class="dog" style="width: 500px; height: 500px; float: left; ' +
+      'background-color: #0000ff; border: 1px dotted #ff0000; ' +
+      'border-spacing: 5px; border-collapse: collapse;" border="1">' +
+      '<caption>&nbsp;</caption>' +
+      '<tbody>' +
+      '<tr><td style="border-color: #ff0000; border-width: 1px; padding: 5px;">X</td></tr>' +
+      '</tbody>' +
+      '</table>';
 
       const newData = {
         width: '500px',

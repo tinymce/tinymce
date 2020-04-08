@@ -82,17 +82,13 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
       ])),
 
       Logger.t('System font stack variants on a paragraph show "System Font" as the font name', GeneralSteps.sequence([
-        tinyApis.sSetContent(Arr.foldl(systemFontStackVariants, (acc, font) => {
-          return acc + '<p style="font-family: ' + font.replace(/"/g, `'`) + '"></p>';
-        }, '')),
+        tinyApis.sSetContent(Arr.foldl(systemFontStackVariants, (acc, font) => acc + '<p style="font-family: ' + font.replace(/"/g, `'`) + '"></p>', '')),
         tinyApis.sFocus(),
-        ...Arr.bind(systemFontStackVariants, (_, idx) => {
-          return [
-            tinyApis.sSetCursor([ idx, 0 ], 0),
-            tinyApis.sNodeChanged(),
-            sAssertSelectBoxDisplayValue(editor, 'Fonts', 'System Font')
-          ];
-        })
+        ...Arr.bind(systemFontStackVariants, (_, idx) => [
+          tinyApis.sSetCursor([ idx, 0 ], 0),
+          tinyApis.sNodeChanged(),
+          sAssertSelectBoxDisplayValue(editor, 'Fonts', 'System Font')
+        ])
       ]))
     ], onSuccess, onFailure);
   }, {

@@ -10,9 +10,8 @@ export default (is: (e: Element<Node>) => boolean, name: string) => {
     return getOption(element).getOr('');
   };
 
-  const getOption = (element: Element<Node>): Option<string> => {
-    return is(element) ? Option.from(element.dom().nodeValue) : Option.none<string>();
-  };
+  const getOption = (element: Element<Node>): Option<string> =>
+    is(element) ? Option.from(element.dom().nodeValue) : Option.none<string>();
 
   const set = (element: Element<Node>, value: string): void => {
     if (!is(element)) {
@@ -24,6 +23,6 @@ export default (is: (e: Element<Node>) => boolean, name: string) => {
   return {
     get,
     getOption,
-    set,
+    set
   };
 };

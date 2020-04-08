@@ -17,9 +17,7 @@ export interface ReparteeOptions {
   readonly maxWidthFunction: MaxWidthFunction;
 }
 
-const defaultOr = <K extends keyof AnchorOverrides>(options: AnchorOverrides, key: K, dephault: NonNullable<AnchorOverrides[K]>): NonNullable<AnchorOverrides[K]> => {
-  return options[key] === undefined ? dephault : options[key] as NonNullable<AnchorOverrides[K]>;
-};
+const defaultOr = <K extends keyof AnchorOverrides>(options: AnchorOverrides, key: K, dephault: NonNullable<AnchorOverrides[K]>): NonNullable<AnchorOverrides[K]> => options[key] === undefined ? dephault : options[key] as NonNullable<AnchorOverrides[K]>;
 
 // This takes care of everything when you are positioning UI that can go anywhere on the screen
 const simple = (anchor: Anchor, element: Element, bubble: Bubble, layouts: LayoutTypes.AnchorLayout[], getBounds: Option<() => Bounds>, overrideOptions: AnchorOverrides): void => {

@@ -12,11 +12,9 @@ const selectNodeContents = (win: Window, element: Element<DomNode>) => {
 
 const selectNodeContentsUsing = (rng: Range, element: Element<DomNode>) =>  rng.selectNodeContents(element.dom());
 
-const isWithin = (outerRange: Range, innerRange: Range) => {
+const isWithin = (outerRange: Range, innerRange: Range) =>
   // Adapted from: http://stackoverflow.com/questions/5605401/insert-link-in-contenteditable-element
-  return innerRange.compareBoundaryPoints(outerRange.END_TO_START, outerRange) < 1 &&
-    innerRange.compareBoundaryPoints(outerRange.START_TO_END, outerRange) > -1;
-};
+  innerRange.compareBoundaryPoints(outerRange.END_TO_START, outerRange) < 1 && innerRange.compareBoundaryPoints(outerRange.START_TO_END, outerRange) > -1;
 
 const create = (win: Window) => win.document.createRange();
 
@@ -70,16 +68,14 @@ const cloneFragment = (rng: Range) => {
   return Element.fromDom(fragment);
 };
 
-const toRect = (rect: ClientRect | DOMRect): StructRect => {
-  return {
-    left: Fun.constant(rect.left),
-    top: Fun.constant(rect.top),
-    right: Fun.constant(rect.right),
-    bottom: Fun.constant(rect.bottom),
-    width: Fun.constant(rect.width),
-    height: Fun.constant(rect.height)
-  };
-};
+const toRect = (rect: ClientRect | DOMRect): StructRect => ({
+  left: Fun.constant(rect.left),
+  top: Fun.constant(rect.top),
+  right: Fun.constant(rect.right),
+  bottom: Fun.constant(rect.bottom),
+  width: Fun.constant(rect.width),
+  height: Fun.constant(rect.height)
+});
 
 const getFirstRect = (rng: Range) => {
   const rects = rng.getClientRects();
@@ -93,8 +89,6 @@ const getBounds = (rng: Range) => {
   return rect.width > 0 || rect.height > 0  ? Option.some(rect).map(toRect) : Option.none<StructRect>();
 };
 
-const toString = (rng: Range) => {
-  return rng.toString();
-};
+const toString = (rng: Range) => rng.toString();
 
-export { create, replaceWith, selectNodeContents, selectNodeContentsUsing, relativeToNative, exactToNative, deleteContents, cloneFragment, getFirstRect, getBounds, isWithin, toString, };
+export { create, replaceWith, selectNodeContents, selectNodeContentsUsing, relativeToNative, exactToNative, deleteContents, cloneFragment, getFirstRect, getBounds, isWithin, toString };

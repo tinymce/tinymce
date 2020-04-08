@@ -89,11 +89,9 @@ const get = (element: Element<DomElement>, property: string): string => {
   return v === null ? '' : v;
 };
 
-const getUnsafeProperty = (dom: DomNode, property: string) => {
-  // removed: support for dom().style[property] where prop is camel case instead of normal property name
-  // empty string is what the browsers (IE11 and Chrome) return when the propertyValue doesn't exists.
-  return Style.isSupported(dom) ? dom.style.getPropertyValue(property) : '';
-};
+// removed: support for dom().style[property] where prop is camel case instead of normal property name
+// empty string is what the browsers (IE11 and Chrome) return when the propertyValue doesn't exists.
+const getUnsafeProperty = (dom: DomNode, property: string) => Style.isSupported(dom) ? dom.style.getPropertyValue(property) : '';
 
 /*
  * Gets the raw value from the style attribute. Useful for retrieving "used values" from the DOM:
@@ -105,7 +103,7 @@ const getRaw = (element: Element<DomNode>, property: string) => {
   const dom = element.dom();
   const raw = getUnsafeProperty(dom, property);
 
-  return Option.from(raw).filter((r) => { return r.length > 0; });
+  return Option.from(raw).filter((r) => r.length > 0);
 };
 
 const getAllRaw = (element: Element<DomNode>) => {
@@ -158,13 +156,11 @@ const copy = (source: Element<DomNode>, target: Element<HTMLElement>) => {
   }
 };
 
-const reflow = (e: Element<HTMLElement>) => {
-  /* NOTE:
-   * do not rely on this return value.
-   * It's here so the closure compiler doesn't optimise the property access away.
-   */
-  return e.dom().offsetWidth;
-};
+/* NOTE:
+ * do not rely on this return value.
+ * It's here so the closure compiler doesn't optimise the property access away.
+ */
+const reflow = (e: Element<HTMLElement>) => e.dom().offsetWidth;
 
 const transferOne = (source: Element<DomNode>, destination: Element<DomNode>, style: string) => {
   getRaw(source, style).each((value) => {

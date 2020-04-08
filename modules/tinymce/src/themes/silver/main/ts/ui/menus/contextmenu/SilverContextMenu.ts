@@ -100,19 +100,16 @@ const generateContextMenu = (contextMenus: Record<string, Menu.ContextMenuApi>, 
   return sections;
 };
 
-const isNativeOverrideKeyEvent = (editor: Editor, e: PointerEvent) => {
-  return e.ctrlKey && !Settings.shouldNeverUseNative(editor);
-};
+const isNativeOverrideKeyEvent = (editor: Editor, e: PointerEvent) => e.ctrlKey && !Settings.shouldNeverUseNative(editor);
 
-export const isTriggeredByKeyboard = (editor: Editor, e: PointerEvent) => {
+export const isTriggeredByKeyboard = (editor: Editor, e: PointerEvent) =>
   // Different browsers trigger the context menu from keyboards differently, so need to check various different things here.
   // If a longpress touch event, always treat it as a pointer event
   // Chrome: button = 0, pointerType = undefined & target = the selection range node
   // Firefox: button = 0, pointerType = undefined & target = body
   // IE/Edge: button = 2, pointerType = "" & target = body
   // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
-  return e.type !== 'longpress' && (e.button !== 2 || e.target === editor.getBody() && e.pointerType === '');
-};
+  e.type !== 'longpress' && (e.button !== 2 || e.target === editor.getBody() && e.pointerType === '');
 
 export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>, backstage: UiFactoryBackstage) => {
   const detection = PlatformDetection.detect();

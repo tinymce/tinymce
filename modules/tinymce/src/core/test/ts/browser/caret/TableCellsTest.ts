@@ -16,61 +16,49 @@ UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function (succes
     });
   };
 
-  const cAssertCell = (path) => {
-    return Chain.op(function (cellOption: Option<any>) {
-      const cell = cellOption.getOrDie('x');
-      const expectedContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
-      Assertions.assertDomEq('Should be the expected element', expectedContainer, Element.fromDom(cell));
-    });
-  };
+  const cAssertCell = (path) => Chain.op(function (cellOption: Option<any>) {
+    const cell = cellOption.getOrDie('x');
+    const expectedContainer = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+    Assertions.assertDomEq('Should be the expected element', expectedContainer, Element.fromDom(cell));
+  });
 
   const cAssertNone = Chain.op(function (pos: Option<any>) {
     Assertions.assertEq('Should be the none but got some', true, pos.isNone());
   });
 
-  const cGetClosestCellAbove = (x: number, y: number) => {
-    return Chain.mapper(function (viewBlock: any) {
-      const table = SelectorFind.descendant<HTMLTableElement>(Element.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
-      const rect = table.getBoundingClientRect();
-      return getClosestCellAbove(table, rect.left + x, rect.top + y);
-    });
-  };
+  const cGetClosestCellAbove = (x: number, y: number) => Chain.mapper(function (viewBlock: any) {
+    const table = SelectorFind.descendant<HTMLTableElement>(Element.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
+    const rect = table.getBoundingClientRect();
+    return getClosestCellAbove(table, rect.left + x, rect.top + y);
+  });
 
-  const cGetClosestCellBelow = (x: number, y: number) => {
-    return Chain.mapper(function (viewBlock: any) {
-      const table = SelectorFind.descendant<HTMLTableElement>(Element.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
-      const rect = table.getBoundingClientRect();
-      return getClosestCellBelow(table, rect.left + x, rect.top + y);
-    });
-  };
+  const cGetClosestCellBelow = (x: number, y: number) => Chain.mapper(function (viewBlock: any) {
+    const table = SelectorFind.descendant<HTMLTableElement>(Element.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
+    const rect = table.getBoundingClientRect();
+    return getClosestCellBelow(table, rect.left + x, rect.top + y);
+  });
 
-  const cFindClosestPositionInAboveCell = (path: number[], offset: number) => {
-    return Chain.mapper(function (viewBlock: any) {
-      const table = SelectorFind.descendant<HTMLTableElement>(Element.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
-      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
-      const pos = CaretPosition(container.dom(), offset);
-      return findClosestPositionInAboveCell(table, pos);
-    });
-  };
+  const cFindClosestPositionInAboveCell = (path: number[], offset: number) => Chain.mapper(function (viewBlock: any) {
+    const table = SelectorFind.descendant<HTMLTableElement>(Element.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
+    const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+    const pos = CaretPosition(container.dom(), offset);
+    return findClosestPositionInAboveCell(table, pos);
+  });
 
-  const cFindClosestPositionInBelowCell = (path: number[], offset: number) => {
-    return Chain.mapper(function (viewBlock: any) {
-      const table = SelectorFind.descendant<HTMLTableElement>(Element.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
-      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
-      const pos = CaretPosition(container.dom(), offset);
-      return findClosestPositionInBelowCell(table, pos);
-    });
-  };
+  const cFindClosestPositionInBelowCell = (path: number[], offset: number) => Chain.mapper(function (viewBlock: any) {
+    const table = SelectorFind.descendant<HTMLTableElement>(Element.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom();
+    const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+    const pos = CaretPosition(container.dom(), offset);
+    return findClosestPositionInBelowCell(table, pos);
+  });
 
-  const cAssertCaretPosition = (path: number[], offset: number) => {
-    return Chain.op(function (posOption: Option<any>) {
-      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
-      const pos = posOption.getOrDie('Needs to return a caret');
+  const cAssertCaretPosition = (path: number[], offset: number) => Chain.op(function (posOption: Option<any>) {
+    const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+    const pos = posOption.getOrDie('Needs to return a caret');
 
-      Assertions.assertDomEq('Should be the expected container', container, Element.fromDom(pos.container()));
-      Assertions.assertEq('Should be the expected offset', offset, pos.offset());
-    });
-  };
+    Assertions.assertDomEq('Should be the expected container', container, Element.fromDom(pos.container()));
+    Assertions.assertEq('Should be the expected offset', offset, pos.offset());
+  });
 
   viewBlock.attach();
   Pipeline.async({}, [

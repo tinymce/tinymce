@@ -66,15 +66,13 @@ const getMultipleToolbarsSetting = (editor: Editor): Option<string[]> => {
 
 // Check if multiple toolbars is enabled
 // Mulitple toolbars is enabled if toolbar value is a string array or if toolbar<n> is present
-const isMultipleToolbars = (editor: Editor): boolean => {
-  return getMultipleToolbarsSetting(editor).fold(
-    () => {
-      const toolbar = editor.getParam('toolbar', [], 'string[]');
-      return toolbar.length > 0;
-    },
-    () => true
-  );
-};
+const isMultipleToolbars = (editor: Editor): boolean => getMultipleToolbarsSetting(editor).fold(
+  () => {
+    const toolbar = editor.getParam('toolbar', [], 'string[]');
+    return toolbar.length > 0;
+  },
+  () => true
+);
 
 export enum ToolbarMode {
   default = 'wrap',
@@ -83,18 +81,14 @@ export enum ToolbarMode {
   scrolling = 'scrolling'
 }
 
-const getToolbarMode = (editor: Editor): ToolbarMode => {
-  return editor.getParam('toolbar_mode', '', 'string') as ToolbarMode;
-};
+const getToolbarMode = (editor: Editor): ToolbarMode => editor.getParam('toolbar_mode', '', 'string') as ToolbarMode;
 
 export enum ToolbarLocation {
   top = 'top',
   bottom = 'bottom'
 }
 
-const getToolbarGroups = (editor: Editor) => {
-  return editor.getParam('toolbar_groups', {}, 'object');
-};
+const getToolbarGroups = (editor: Editor) => editor.getParam('toolbar_groups', {}, 'object');
 
 // In case of a string not equal to 'top' nor 'bottom', default to position top
 const isToolbarLocationTop = (editor) => editor.getParam('toolbar_location', ToolbarLocation.top, 'string') !== ToolbarLocation.bottom;
@@ -114,9 +108,7 @@ const getUiContainer = (editor): Element => {
   return fixedContainer.getOr(Body.body());
 };
 
-const isDistractionFree = (editor: Editor) => {
-  return editor.inline && !isMenubarEnabled(editor) && !isToolbarEnabled(editor) && !isMultipleToolbars(editor);
-};
+const isDistractionFree = (editor: Editor) => editor.inline && !isMenubarEnabled(editor) && !isToolbarEnabled(editor) && !isMultipleToolbars(editor);
 
 const isStickyToolbar = (editor: Editor) => {
   const isStickyToolbar = editor.getParam('toolbar_sticky', false, 'boolean');

@@ -41,13 +41,11 @@ const cResizeToPos = (sx: number, sy: number, dx: number, dy: number, delta: num
   );
 };
 
-const cScrollRelativeEditor = (editor: Editor, relative: 'top' | 'bottom' = 'top', deltaY: number) => {
-  return Chain.op(() => {
-    const target = Element.fromDom(editor.inline ? editor.getBody() : editor.getContainer());
-    target.dom().scrollIntoView(relative === 'top');
-    Scroll.to(0, window.pageYOffset + deltaY);
-  });
-};
+const cScrollRelativeEditor = (editor: Editor, relative: 'top' | 'bottom' = 'top', deltaY: number) => Chain.op(() => {
+  const target = Element.fromDom(editor.inline ? editor.getBody() : editor.getContainer());
+  target.dom().scrollIntoView(relative === 'top');
+  Scroll.to(0, window.pageYOffset + deltaY);
+});
 
 export {
   cCountNumber,

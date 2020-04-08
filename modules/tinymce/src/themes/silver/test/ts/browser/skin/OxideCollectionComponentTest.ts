@@ -34,22 +34,20 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
       const tinyUi = TinyUi(editor);
       const doc = Element.fromDom(document);
 
-      const structureItem = (optText: Option<string>, optIcon: Option<string>) => (s, str, arr) => {
-        return s.element('div', {
-          classes: [ arr.has('tox-collection__item') ],
-          children: Options.cat([
-            optIcon.map((icon) => s.element('div', {
-              classes: [ arr.has('tox-collection__item-icon') ],
-              html: str.is(icon)
-            })),
+      const structureItem = (optText: Option<string>, optIcon: Option<string>) => (s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-collection__item') ],
+        children: Options.cat([
+          optIcon.map((icon) => s.element('div', {
+            classes: [ arr.has('tox-collection__item-icon') ],
+            html: str.is(icon)
+          })),
 
-            optText.map((text) => s.element('div', {
-              classes: [ arr.has('tox-collection__item-label') ],
-              html: str.is(text)
-            }))
-          ])
-        });
-      };
+          optText.map((text) => s.element('div', {
+            classes: [ arr.has('tox-collection__item-label') ],
+            html: str.is(text)
+          }))
+        ])
+      });
 
       const cFindNthIn = (selector, n) => Chain.binder((elem: Element) => {
         const matches = UiFinder.findAllIn(elem, selector);
@@ -76,19 +74,17 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
                 cFindNthIn('[role="dialog"] .tox-form__group .tox-collection', 0),
                 Assertions.cAssertStructure(
                   'Checking structure',
-                  ApproxStructure.build((s, str, arr) => {
-                    return s.element('div', {
-                      classes: [ arr.has('tox-collection'), arr.has('tox-collection--list'), arr.not('tox-menu') ],
-                      children: [
-                        s.element('div', {
-                          classes: [ arr.has('tox-collection__group') ],
-                          children: Arr.map([ 'A', 'B', 'C' ], (letter) =>
-                            structureItem(Option.some('text-' + letter), Option.some('icon-' + letter))(s, str, arr)
-                          )
-                        })
-                      ]
-                    });
-                  })
+                  ApproxStructure.build((s, str, arr) => s.element('div', {
+                    classes: [ arr.has('tox-collection'), arr.has('tox-collection--list'), arr.not('tox-menu') ],
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__group') ],
+                        children: Arr.map([ 'A', 'B', 'C' ], (letter) =>
+                          structureItem(Option.some('text-' + letter), Option.some('icon-' + letter))(s, str, arr)
+                        )
+                      })
+                    ]
+                  }))
                 )
               ]),
               FocusTools.sTryOnSelector('Focus should be on A', doc, '.tox-collection__item:contains(A).tox-collection__item--active'),
@@ -109,19 +105,17 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
                   cFindNthIn('[role="dialog"] .tox-form__group .tox-collection', 1),
                   Assertions.cAssertStructure(
                     'Checking structure',
-                    ApproxStructure.build((s, str, arr) => {
-                      return s.element('div', {
-                        classes: [ arr.has('tox-collection'), arr.has('tox-collection--grid'), arr.not('tox-menu') ],
-                        children: [
-                          s.element('div', {
-                            classes: [ arr.has('tox-collection__group') ],
-                            children: Arr.map([ 'D', 'E', 'F' ], (letter) =>
-                              structureItem(Option.none(), Option.some('icon-' + letter))(s, str, arr)
-                            )
-                          })
-                        ]
-                      });
-                    })
+                    ApproxStructure.build((s, str, arr) => s.element('div', {
+                      classes: [ arr.has('tox-collection'), arr.has('tox-collection--grid'), arr.not('tox-menu') ],
+                      children: [
+                        s.element('div', {
+                          classes: [ arr.has('tox-collection__group') ],
+                          children: Arr.map([ 'D', 'E', 'F' ], (letter) =>
+                            structureItem(Option.none(), Option.some('icon-' + letter))(s, str, arr)
+                          )
+                        })
+                      ]
+                    }))
                   )
                 ]),
                 FocusTools.sTryOnSelector('Focus should be on C', doc, '.tox-collection__item:contains(C)'),
@@ -141,25 +135,23 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
                 cFindNthIn('[role="dialog"] .tox-form__group .tox-collection', 2),
                 Assertions.cAssertStructure(
                   'Checking structure',
-                  ApproxStructure.build((s, str, arr) => {
-                    return s.element('div', {
-                      classes: [ arr.has('tox-collection'), arr.has('tox-collection--grid'), arr.not('tox-menu') ],
-                      children: [
-                        s.element('div', {
-                          classes: [ arr.has('tox-collection__group') ],
-                          children: Arr.map([ 'G', 'H' ], (letter) =>
-                            structureItem(Option.none(), Option.some('icon-' + letter))(s, str, arr)
-                          )
-                        }),
-                        s.element('div', {
-                          classes: [ arr.has('tox-collection__group') ],
-                          children: Arr.map([ 'I' ], (letter) =>
-                            structureItem(Option.none(), Option.some('icon-' + letter))(s, str, arr)
-                          )
-                        })
-                      ]
-                    });
-                  })
+                  ApproxStructure.build((s, str, arr) => s.element('div', {
+                    classes: [ arr.has('tox-collection'), arr.has('tox-collection--grid'), arr.not('tox-menu') ],
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__group') ],
+                        children: Arr.map([ 'G', 'H' ], (letter) =>
+                          structureItem(Option.none(), Option.some('icon-' + letter))(s, str, arr)
+                        )
+                      }),
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__group') ],
+                        children: Arr.map([ 'I' ], (letter) =>
+                          structureItem(Option.none(), Option.some('icon-' + letter))(s, str, arr)
+                        )
+                      })
+                    ]
+                  }))
                 )
               ]),
               FocusTools.sTryOnSelector('Focus should be on F', doc, '.tox-collection__item:contains(F)'),

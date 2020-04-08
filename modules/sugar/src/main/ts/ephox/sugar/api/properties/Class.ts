@@ -40,9 +40,8 @@ const remove = (element: Element<DomElement>, clazz: string) => {
   cleanClass(element);
 };
 
-const toggle = (element: Element<DomElement>, clazz: string) => {
-  return ClassList.supports(element) ? element.dom().classList.toggle(clazz) : ClassList.toggle(element, clazz);
-};
+const toggle = (element: Element<DomElement>, clazz: string) =>
+  ClassList.supports(element) ? element.dom().classList.toggle(clazz) : ClassList.toggle(element, clazz);
 
 const toggler = (element: Element<DomElement>, clazz: string) => {
   const hasClasslist = ClassList.supports(element);
@@ -64,10 +63,9 @@ const toggler = (element: Element<DomElement>, clazz: string) => {
   return Toggler(off, on, has(element, clazz));
 };
 
-const has = (element: Element<Node>, clazz: string) => {
-  // Cereal has a nasty habit of calling this with a text node >.<
-  return ClassList.supports(element) && element.dom().classList.contains(clazz);
-};
+// Cereal has a nasty habit of calling this with a text node >.<
+const has = (element: Element<Node>, clazz: string) =>
+  ClassList.supports(element) && element.dom().classList.contains(clazz);
 
 export {
   add,

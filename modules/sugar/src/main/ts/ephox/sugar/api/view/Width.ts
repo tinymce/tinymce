@@ -3,10 +3,10 @@ import Dimension from '../../impl/Dimension';
 import Element from '../node/Element';
 import * as Css from '../properties/Css';
 
-const api = Dimension('width', (element: Element<HTMLElement>) => {
+const api = Dimension('width', (element: Element<HTMLElement>) =>
   // IMO passing this function is better than using dom['offset' + 'width']
-  return element.dom().offsetWidth;
-});
+  element.dom().offsetWidth
+);
 
 const set = (element: Element<DomNode>, h: string | number) => api.set(element, h);
 

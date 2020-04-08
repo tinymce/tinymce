@@ -45,9 +45,7 @@ UnitTest.asynctest('Browser Test: Selection.getAtPoint', (success, failure) => {
     const iframeWin = iframe.dom().contentWindow!;
     const iframeDoc = Element.fromDom(iframeWin.document);
 
-    const get = (selector: string) => {
-      return Selectors.one(selector, iframeDoc).getOrDie('element with selector "' + selector + '" not found');
-    };
+    const get = (selector: string) => Selectors.one(selector, iframeDoc).getOrDie('element with selector "' + selector + '" not found');
 
     const check = (x: number, y: number, expected: SimRange) => {
       const found = WindowSelection.getAtPoint(iframeWin, x, y);

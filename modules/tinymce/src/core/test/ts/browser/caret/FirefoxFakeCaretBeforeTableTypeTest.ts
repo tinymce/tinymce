@@ -19,7 +19,16 @@ UnitTest.asynctest('browser.tinymce.core.FirefoxFakeCaretBeforeTableTypeTest', (
 
     Pipeline.async({}, Env.gecko ? [ // This test is only relevant on Firefox
       Logger.t('cursor before table type', GeneralSteps.sequence([
-        tinyApis.sSetContent('<table style="border-collapse: collapse; width: 100%;" border="1"><tbody><tr><td style="width: 50%;">&nbsp;</td><td style="width: 50%;">&nbsp;</td></tr><tr><td style="width: 50%;">&nbsp;</td><td style="width: 50%;">&nbsp;</td></tr></tbody></table>'),
+        tinyApis.sSetContent(
+          '<table style="border-collapse: collapse; width: 100%;" border="1">' +
+          '<tbody><tr>' +
+          '<td style="width: 50%;">&nbsp;</td>' +
+          '<td style="width: 50%;">&nbsp;</td>' +
+          '</tr><tr>' +
+          '<td style="width: 50%;">&nbsp;</td>' +
+          '<td style="width: 50%;">&nbsp;</td>' +
+          '</tr></tbody>' +
+          '</table>'),
         tinyApis.sSetCursor([], 0),
         sAssertUndoManagerDataLength(editor, 1),
         Step.sync(() => KeyUtils.type(editor, 'a')),

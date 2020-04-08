@@ -20,16 +20,12 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
       active = Attr.get(focusee, 'class');
     };
 
-    const get = (component: AlloyComponent) => {
-      return SelectorFind.descendant(component.element(), '.' + active);
-    };
+    const get = (component: AlloyComponent) => SelectorFind.descendant(component.element(), '.' + active);
 
     // Test only method
-    const sAssert = (label: string, expected: string) => {
-      return Step.sync(() => {
-        Assertions.assertEq(prefix + ' ' + label, expected, active);
-      });
-    };
+    const sAssert = (label: string, expected: string) => Step.sync(() => {
+      Assertions.assertEq(prefix + ' ' + label, expected, active);
+    });
 
     return {
       set,
@@ -38,23 +34,19 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
     };
   };
 
-  const makeItems = (tag: string, prefix: string, haveTabstop: boolean, firstNum: number) => {
-    return Arr.map([ firstNum, firstNum + 1, firstNum + 2 ], (num) => {
-      return {
-        dom: {
-          tag,
-          classes: [ prefix + '-' + num ],
-          innerHtml: prefix + '-' + num
-        },
-        behaviours: Behaviour.derive(
-          Arr.flatten<any>([
-            [ Focusing.config({ }) ],
-            haveTabstop ? [ Tabstopping.config({ }) ] : [ ]
-          ])
-        )
-      };
-    });
-  };
+  const makeItems = (tag: string, prefix: string, haveTabstop: boolean, firstNum: number) => Arr.map([ firstNum, firstNum + 1, firstNum + 2 ], (num) => ({
+    dom: {
+      tag,
+      classes: [ prefix + '-' + num ],
+      innerHtml: prefix + '-' + num
+    },
+    behaviours: Behaviour.derive(
+      Arr.flatten<any>([
+        [ Focusing.config({ }) ],
+        haveTabstop ? [ Tabstopping.config({ }) ] : [ ]
+      ])
+    )
+  }));
 
   const acyclicManager = createManager('acyclic');
   const memAcyclic = Memento.record({
@@ -167,50 +159,42 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
   });
 
   GuiSetup.setup(
-    (_store, _doc, _body) => {
-      return GuiFactory.build({
-        dom: {
-          tag: 'div',
-          classes: [ 'container' ]
-        },
-        components: [
-          memAcyclic.asSpec(),
-          memCyclic.asSpec(),
-          memFlatgrid.asSpec(),
-          memFlow.asSpec(),
-          memMatrix.asSpec(),
-          memMenu.asSpec()
-        ],
+    (_store, _doc, _body) => GuiFactory.build({
+      dom: {
+        tag: 'div',
+        classes: [ 'container' ]
+      },
+      components: [
+        memAcyclic.asSpec(),
+        memCyclic.asSpec(),
+        memFlatgrid.asSpec(),
+        memFlow.asSpec(),
+        memMatrix.asSpec(),
+        memMenu.asSpec()
+      ],
 
-        behaviours: Behaviour.derive([
-          Focusing.config({ })
-        ])
-      });
-    },
+      behaviours: Behaviour.derive([
+        Focusing.config({ })
+      ])
+    }),
 
     (doc, _body, _gui, component, _store) => {
 
-      const sFocusStillUnmoved = (label: string) => {
-        return Logger.t(
-          label,
-          FocusTools.sTryOnSelector('Focus always stays on outer container', doc, '.container')
-        );
-      };
+      const sFocusStillUnmoved = (label: string) => Logger.t(
+        label,
+        FocusTools.sTryOnSelector('Focus always stays on outer container', doc, '.container')
+      );
 
-      const sFocusIn = (component: AlloyComponent) => {
-        return Step.sync(() => {
-          Keying.focusIn(component);
-        });
-      };
+      const sFocusIn = (component: AlloyComponent) => Step.sync(() => {
+        Keying.focusIn(component);
+      });
 
-      const sKeyInside = (comp: AlloyComponent, selector: string, key: number, modifiers: { }) => {
-        return Chain.asStep(comp.element(), [
-          UiFinder.cFindIn(selector),
-          Chain.op((inside) => {
-            Keyboard.keydown(key, modifiers, inside);
-          })
-        ]);
-      };
+      const sKeyInside = (comp: AlloyComponent, selector: string, key: number, modifiers: { }) => Chain.asStep(comp.element(), [
+        UiFinder.cFindIn(selector),
+        Chain.op((inside) => {
+          Keyboard.keydown(key, modifiers, inside);
+        })
+      ]);
 
       const acyclic = memAcyclic.get(component);
       const cyclic = memCyclic.get(component);
@@ -219,21 +203,19 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
       const matrix = memMatrix.get(component);
       const menu = memMenu.get(component);
 
-      const sTestKeying = (label: string, comp: AlloyComponent, manager: ReturnType<typeof createManager>, keyName: keyof typeof Keys) => {
-        return Logger.t(
-          label + ' Keying',
-          GeneralSteps.sequence([
-            sFocusIn(comp),
-            manager.sAssert('Focus in ' + label + '-1', label + '-1'),
-            sFocusStillUnmoved(label + '.focusIn'),
+      const sTestKeying = (label: string, comp: AlloyComponent, manager: ReturnType<typeof createManager>, keyName: keyof typeof Keys) => Logger.t(
+        label + ' Keying',
+        GeneralSteps.sequence([
+          sFocusIn(comp),
+          manager.sAssert('Focus in ' + label + '-1', label + '-1'),
+          sFocusStillUnmoved(label + '.focusIn'),
 
-            // Pressing tab will work based on the get from focusManager, so it should move to acyclic-2
-            sKeyInside(comp, '.' + label + '-1', Keys[keyName](), { }),
-            manager.sAssert('Focus in ' + label + '-2', label + '-2'),
-            sFocusStillUnmoved(label + '.' + keyName)
-          ])
-        );
-      };
+          // Pressing tab will work based on the get from focusManager, so it should move to acyclic-2
+          sKeyInside(comp, '.' + label + '-1', Keys[keyName](), { }),
+          manager.sAssert('Focus in ' + label + '-2', label + '-2'),
+          sFocusStillUnmoved(label + '.' + keyName)
+        ])
+      );
 
       return [
         Logger.t(

@@ -30,5 +30,5 @@ export {
   getValue,
   add,
   addAll,
-  setSelected,
+  setSelected
 };

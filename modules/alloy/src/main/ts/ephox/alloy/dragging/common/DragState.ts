@@ -24,28 +24,21 @@ const init = <T>(): BaseDraggingState<T> => {
   // Return position delta between previous position and nu position,
   // or None if this is the first. Set the previous position to nu.
   const calculateDelta = <E extends Event>(mode: DragModeDeltas<E, T>, nu: T): Option<T> => {
-    const result = previous.map((old) => {
-      return mode.getDelta(old, nu);
-    });
+    const result = previous.map((old) => mode.getDelta(old, nu));
 
     previous = Option.some(nu);
     return result;
   };
 
   // NOTE: This dragEvent is the DOM touch event or mouse event
-  const update = <E extends Event>(mode: DragModeDeltas<E, T>, dragEvent: EventArgs<E>): Option<T> => {
-    return mode.getData(dragEvent).bind((nuData) => {
-      return calculateDelta(mode, nuData);
-    });
-  };
+  const update = <E extends Event>(mode: DragModeDeltas<E, T>, dragEvent: EventArgs<E>): Option<T> =>
+    mode.getData(dragEvent).bind((nuData) => calculateDelta(mode, nuData));
 
   const setStartData = (data: DragStartData) => {
     startData = Option.some(data);
   };
 
-  const getStartData = (): Option<DragStartData> => {
-    return startData;
-  };
+  const getStartData = (): Option<DragStartData> => startData;
 
   const readState = Fun.constant({ });
 

@@ -22,29 +22,27 @@ UnitTest.asynctest('Flat Grid Keying Test', (success, failure) => {
   ];
 
   GuiSetup.setup((store, _doc, _body) => {
-    const item = (classes: string[]) => {
-      return Container.sketch({
-        dom: {
-          tag: 'span',
-          styles: {
-            display: 'inline-block',
-            width: '20px',
-            height: '20px',
-            margin: '1px',
-            border: '1px solid black'
-          },
-          classes: [ 'square' ].concat(classes)
+    const item = (classes: string[]) => Container.sketch({
+      dom: {
+        tag: 'span',
+        styles: {
+          display: 'inline-block',
+          width: '20px',
+          height: '20px',
+          margin: '1px',
+          border: '1px solid black'
         },
-        events: AlloyEvents.derive([
-          AlloyEvents.runOnExecute(
-            store.adder('item.execute: ' + classes.join(','))
-          )
-        ]),
-        containerBehaviours: Behaviour.derive([
-          Focusing.config({ })
-        ])
-      });
-    };
+        classes: [ 'square' ].concat(classes)
+      },
+      events: AlloyEvents.derive([
+        AlloyEvents.runOnExecute(
+          store.adder('item.execute: ' + classes.join(','))
+        )
+      ]),
+      containerBehaviours: Behaviour.derive([
+        Focusing.config({ })
+      ])
+    });
 
     return GuiFactory.build(
       Container.sketch({
@@ -69,24 +67,20 @@ UnitTest.asynctest('Flat Grid Keying Test', (success, failure) => {
           })
         ]),
         // 4 x 6 grid size
-        components: Arr.map(squares, (num) => {
-          return item([ num ]);
-        })
+        components: Arr.map(squares, (num) => item([ num ]))
       })
     );
 
   }, (doc, body, gui, component, store) => {
 
     const targets: any = Objects.wrapAll(
-      Arr.map(squares, (sq) => {
-        return {
-          key: sq,
-          value: {
-            label: sq,
-            selector: '.' + sq
-          }
-        };
-      })
+      Arr.map(squares, (sq) => ({
+        key: sq,
+        value: {
+          label: sq,
+          selector: '.' + sq
+        }
+      }))
     );
 
     return [

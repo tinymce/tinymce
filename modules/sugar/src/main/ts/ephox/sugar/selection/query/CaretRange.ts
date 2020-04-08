@@ -8,8 +8,8 @@ import * as EdgePoint from './EdgePoint';
 
 declare const document: any;
 
-const caretPositionFromPoint = (doc: Element<Document>, x: number, y: number) => {
-  return Option.from((doc.dom() as any).caretPositionFromPoint(x, y)).bind((pos) => {
+const caretPositionFromPoint = (doc: Element<Document>, x: number, y: number) => Option.from((doc.dom() as any).caretPositionFromPoint(x, y))
+  .bind((pos) => {
     // It turns out that Firefox can return null for pos.offsetNode
     if (pos.offsetNode === null) {
       return Option.none<Range>();
@@ -19,7 +19,6 @@ const caretPositionFromPoint = (doc: Element<Document>, x: number, y: number) =>
     r.collapse();
     return Option.some(r);
   });
-};
 
 const caretRangeFromPoint = (doc: Element<Document>, x: number, y: number) => Option.from(doc.dom().caretRangeFromPoint(x, y));
 
@@ -34,10 +33,10 @@ const searchTextNodes = (doc: Element<Document>, node: Element<DomNode>, x: numb
   return ContainerPoint.locate(doc, node, boundedX, boundedY);
 };
 
-const searchFromPoint = (doc: Element<Document>, x: number, y: number): Option<Range> => {
+const searchFromPoint = (doc: Element<Document>, x: number, y: number): Option<Range> =>
   // elementFromPoint is defined to return null when there is no element at the point
   // This often happens when using IE10 event.y instead of event.clientY
-  return Element.fromPoint(doc, x, y).bind((elem) => {
+  Element.fromPoint(doc, x, y).bind((elem) => {
     // used when the x,y position points to an image, or outside the bounds
     const fallback = () => EdgePoint.search(doc, elem, x);
 
@@ -45,7 +44,6 @@ const searchFromPoint = (doc: Element<Document>, x: number, y: number): Option<R
     // if we have children, search for the right text node and then get the offset out of it
       searchTextNodes(doc, elem, x, y).orThunk(fallback);
   });
-};
 
 const availableSearch = document.caretPositionFromPoint ? caretPositionFromPoint :  // defined standard
   document.caretRangeFromPoint ? caretRangeFromPoint :        // webkit implementation
@@ -53,14 +51,12 @@ const availableSearch = document.caretPositionFromPoint ? caretPositionFromPoint
 
 const fromPoint = (win: Window, x: number, y: number) => {
   const doc = Element.fromDom(win.document);
-  return availableSearch(doc, x, y).map((rng) => {
-    return SimRange.create(
-      Element.fromDom(rng.startContainer),
-      rng.startOffset,
-      Element.fromDom(rng.endContainer),
-      rng.endOffset
-    );
-  });
+  return availableSearch(doc, x, y).map((rng) => SimRange.create(
+    Element.fromDom(rng.startContainer),
+    rng.startOffset,
+    Element.fromDom(rng.endContainer),
+    rng.endOffset
+  ));
 };
 
 export {

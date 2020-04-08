@@ -29,9 +29,8 @@ const searchInChildren = (doc: Element<Document>, node: Element<DomNode>, x: num
   });
 };
 
-const locateNode = (doc: Element<Document>, node: Element<DomNode>, x: number, y: number) => {
-  return Node.isText(node) ? TextPoint.locate(doc, node, x, y) : searchInChildren(doc, node, x, y);
-};
+const locateNode = (doc: Element<Document>, node: Element<DomNode>, x: number, y: number) =>
+  Node.isText(node) ? TextPoint.locate(doc, node, x, y) : searchInChildren(doc, node, x, y);
 
 const locate = (doc: Element<Document>, node: Element<DomNode>, x: number, y: number) => {
   const r = doc.dom().createRange();

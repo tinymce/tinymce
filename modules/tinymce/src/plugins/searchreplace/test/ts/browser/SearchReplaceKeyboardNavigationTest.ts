@@ -12,12 +12,10 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardN
   SilverTheme();
   SearchReplacePlugin();
 
-  const sOpenDialog = (ui: TinyUi) => {
-    return Logger.t('Open dialog', GeneralSteps.sequence([
-      ui.sClickOnToolbar('Click on find and replace button, there should be only 1 button in the toolbar', 'div.tox-toolbar__group > button'),
-      ui.sWaitForPopup('wait for dialog', 'div.tox-dialog')
-    ]));
-  };
+  const sOpenDialog = (ui: TinyUi) => Logger.t('Open dialog', GeneralSteps.sequence([
+    ui.sClickOnToolbar('Click on find and replace button, there should be only 1 button in the toolbar', 'div.tox-toolbar__group > button'),
+    ui.sWaitForPopup('wait for dialog', 'div.tox-dialog')
+  ]));
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
@@ -41,9 +39,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardN
       editor.fire('keydown', args);
     });
 
-    const sAssertFocused = (name, selector) => {
-      return FocusTools.sTryOnSelector(name, doc, selector);
-    };
+    const sAssertFocused = (name, selector) => FocusTools.sTryOnSelector(name, doc, selector);
 
     Pipeline.async({}, [
       Log.stepsAsStep('TINY-3914', 'Find and replace: Reaching find and replace via the keyboard', [

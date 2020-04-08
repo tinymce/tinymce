@@ -54,9 +54,7 @@ const appendStyle = function (editor: Editor, text: string) {
 
 const getRootName = (editor: Editor): string => editor.inline ? editor.getElement().nodeName.toLowerCase() : undefined;
 
-const removeUndefined = <T>(obj: T): T => {
-  return Obj.filter(obj as Record<string, unknown>, (v) => Type.isUndefined(v) === false) as T;
-};
+const removeUndefined = <T>(obj: T): T => Obj.filter(obj as Record<string, unknown>, (v) => Type.isUndefined(v) === false) as T;
 
 const mkParserSettings = (editor: Editor): DomParserSettings => {
   const settings = editor.settings;

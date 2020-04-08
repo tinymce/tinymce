@@ -28,9 +28,7 @@ UnitTest.test('SizeTest', () => {
       }
     };
 
-    const exact = () => {
-      return Css.getRaw(c, cssProp).getOrDie('value was not set');
-    };
+    const exact = () => Css.getRaw(c, cssProp).getOrDie('value was not set');
 
     api.set(c, 100);
     assert.eq(100, api.get(c));

@@ -16,9 +16,7 @@ const parseToInt = (val: string | number): Option<number> => {
   return Option.none();
 };
 
-const numToPx = (val: string | number): string => {
-  return Type.isNumber(val) ? val + 'px' : val;
-};
+const numToPx = (val: string | number): string => Type.isNumber(val) ? val + 'px' : val;
 
 const calcCappedSize = (size: number, minSize: Option<number>, maxSize: Option<number>): number => {
   const minOverride = minSize.filter((min) => size < min);

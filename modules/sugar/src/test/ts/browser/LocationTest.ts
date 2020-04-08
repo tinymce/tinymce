@@ -41,11 +41,10 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
   const platform = PlatformDetection.detect();
   const scrollBarWidth = Scroll.scrollBarWidth();
 
-  const leftScrollBarWidth = (doc: TestDocSpec) => {
+  const leftScrollBarWidth = (doc: TestDocSpec) =>
     // Tries to detect the width of the left scrollbar by checking the offsetLeft of the documentElement
     // Chrome adds the scrollbar to the left in rtl mode as of Chrome 70+
-    return Location.relative(Traverse.documentElement(doc.body)).left();
-  };
+    Location.relative(Traverse.documentElement(doc.body)).left();
 
   const asserteq = <T>(expected: T, actual: T, message: string) => {
     // I wish assert.eq printed expected and actual on failure

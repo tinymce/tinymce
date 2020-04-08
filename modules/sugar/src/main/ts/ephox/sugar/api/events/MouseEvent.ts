@@ -4,9 +4,7 @@ import Element from '../node/Element';
 import { EventFilter, EventHandler } from './Types';
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
-const isLeftClick = (raw: MouseEvent) => {
-  return raw.button === 0;
-};
+const isLeftClick = (raw: MouseEvent) => raw.button === 0;
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons
 const isLeftButtonPressed = (raw: MouseEvent) => {
@@ -22,24 +20,21 @@ const isLeftButtonPressed = (raw: MouseEvent) => {
 };
 
 // Not 100% sure whether this works, so use with caution
-const isRealClick = (raw: any) => {
+const isRealClick = (raw: any) =>
   // Firefox non-standard property
   // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent#mozInputSource
-  return (raw.mozInputSource === 6 || raw.mozInputSource === 0) ? false
+  (raw.mozInputSource === 6 || raw.mozInputSource === 0) ? false
     // standards, only gecko/webkit as of Sept 2015
     // https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted
     : raw.isTrusted !== undefined && raw.isTrusted !== true ? false
       // fallback to yes because there's no other way to really know
       : true;
-};
 
-const filtered = (event: string, filter: EventFilter<MouseEvent>) => {
-  return {
-    bind(element: Element, f: EventHandler<MouseEvent>) {
-      return FilteredEvent.bind(element, event, filter, f);
-    }
-  };
-};
+const filtered = (event: string, filter: EventFilter<MouseEvent>) => ({
+  bind(element: Element, f: EventHandler<MouseEvent>) {
+    return FilteredEvent.bind(element, event, filter, f);
+  }
+});
 
 const realClick = filtered('click', isRealClick);
 const leftDown = filtered('mousedown', isLeftClick);

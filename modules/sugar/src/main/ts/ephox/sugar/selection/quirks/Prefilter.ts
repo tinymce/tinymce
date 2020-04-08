@@ -32,21 +32,19 @@ const preprocessExact = (start: Element<DomNode>, soffset: number, finish: Eleme
   return Selection.relative(startSitu, finishSitu);
 };
 
-const preprocess = (selection: Selection) => {
-  return selection.match({
-    domRange(rng) {
-      const start = Element.fromDom(rng.startContainer);
-      const finish = Element.fromDom(rng.endContainer);
-      return preprocessExact(start, rng.startOffset, finish, rng.endOffset);
-    },
-    relative: preprocessRelative,
-    exact: preprocessExact
-  });
-};
+const preprocess = (selection: Selection) => selection.match({
+  domRange(rng) {
+    const start = Element.fromDom(rng.startContainer);
+    const finish = Element.fromDom(rng.endContainer);
+    return preprocessExact(start, rng.startOffset, finish, rng.endOffset);
+  },
+  relative: preprocessRelative,
+  exact: preprocessExact
+});
 
 export {
   beforeSpecial,
   preprocess,
   preprocessRelative,
-  preprocessExact,
+  preprocessExact
 };

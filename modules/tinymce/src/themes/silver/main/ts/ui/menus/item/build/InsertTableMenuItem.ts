@@ -5,9 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+/* eslint-disable max-len */
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, Focusing, GuiFactory, ItemTypes, ItemWidget, Keying, Memento, NativeEvents, NativeSimulatedEvent, Replacing, SystemEvents, Toggling } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Arr, Id } from '@ephox/katamari';
+/* eslint-enable max-len */
 
 const cellOverEvent = Id.generate('cell-over');
 const cellExecuteEvent = Id.generate('cell-execute');
@@ -75,7 +77,7 @@ const makeComponents = (cells: Array<Array<AlloyComponent>>): Array<AlloySpec> =
 
 const makeLabelText = (row, col) => GuiFactory.text(`${col + 1}x${row + 1}`);
 
-export function renderInsertTableMenuItem(spec: Menu.FancyMenuItem): ItemTypes.WidgetItemSpec {
+export const renderInsertTableMenuItem = (spec: Menu.FancyMenuItem): ItemTypes.WidgetItemSpec => {
   const numRows = 10;
   const numColumns = 10;
   const sizeLabelId = Id.generate('size-label');
@@ -133,4 +135,4 @@ export function renderInsertTableMenuItem(spec: Menu.FancyMenuItem): ItemTypes.W
       ])
     }) ]
   };
-}
+};

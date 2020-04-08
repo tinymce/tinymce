@@ -126,12 +126,11 @@ const forElement = (win: Window, element: Element<DomNode>) => {
   );
 };
 
-const getExact = (win: Window) => {
+const getExact = (win: Window) =>
   // We want to retrieve the selection as it is.
-  return Option.from(win.getSelection())
+  Option.from(win.getSelection())
     .filter((sel) => sel.rangeCount > 0)
     .bind(doGetExact);
-};
 
 // TODO: Test this.
 const get = (win: Window) =>

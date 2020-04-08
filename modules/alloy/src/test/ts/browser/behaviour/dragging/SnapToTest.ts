@@ -54,52 +54,38 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
     })
   );
 
-  GuiSetup.setup((_store, _doc, _body) => {
-    return GuiFactory.build(
-      Container.sketch({
-        dom: {
-          tag: 'div',
-          styles: {
-            'margin-bottom': '2000px'
-          }
-        },
-        components: [
-          subject.asSpec()
-        ]
-      })
-    );
-  }, (_doc, _body, _gui, component, _store) => {
+  GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(
+    Container.sketch({
+      dom: {
+        tag: 'div',
+        styles: {
+          'margin-bottom': '2000px'
+        }
+      },
+      components: [
+        subject.asSpec()
+      ]
+    })
+  ), (_doc, _body, _gui, component, _store) => {
 
-    const cSubject = Chain.injectThunked(() => {
-      return subject.get(component).element();
-    });
+    const cSubject = Chain.injectThunked(() => subject.get(component).element());
 
     const cRecordPosition = Chain.fromChains([
       Chain.control(
-        Chain.binder((box) => {
-          return Css.getRaw(box, 'left').bind((left) => {
-            return Css.getRaw(box, 'top').map((top) => {
-              return Result.value({
-                left,
-                top
-              });
-            });
-          }).getOrThunk(() => {
-            return Result.error('No left,top information yet');
-          });
-        }),
+        Chain.binder((box) => Css.getRaw(box, 'left').bind((left) => Css.getRaw(box, 'top').map((top) => Result.value({
+          left,
+          top
+        }))).getOrThunk(() => Result.error('No left,top information yet'))),
         Guard.tryUntil('Waiting for position data to record')
       )
     ]);
 
     const cEnsurePositionChanged = Chain.control(
-      Chain.binder((all: any) => {
-        return all.box_position1.left !== all.box_position2.left ? Result.value({}) :
-          Result.error('Positions did not change.\nPosition data: ' + JSON.stringify({
-            1: all.box_position1,
-            2: all.box_position2
-          }, null, 2));
-      }),
+      Chain.binder((all: any) => all.box_position1.left !== all.box_position2.left ? Result.value({}) :
+        Result.error('Positions did not change.\nPosition data: ' + JSON.stringify({
+          1: all.box_position1,
+          2: all.box_position2
+        }, null, 2))),
       Guard.addLogging('Ensuring that the position information read from the different stages was different')
     );
 
@@ -115,9 +101,7 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
           NamedChain.direct('box', cSnapTo, '_'),
           NamedChain.direct('box', cRecordPosition, 'box_position2'),
           NamedChain.write('_', cEnsurePositionChanged),
-          NamedChain.bundle((output) => {
-            return Result.value(output);
-          })
+          NamedChain.bundle((output) => Result.value(output))
         ])
       ])
     ];

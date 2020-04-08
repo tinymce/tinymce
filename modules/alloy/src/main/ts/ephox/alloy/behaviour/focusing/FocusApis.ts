@@ -16,9 +16,7 @@ const blur = (component: AlloyComponent, focusConfig: FocusingConfig): void => {
   }
 };
 
-const isFocused = (component: AlloyComponent): boolean => {
-  return Focus.hasFocus(component.element());
-};
+const isFocused = (component: AlloyComponent): boolean => Focus.hasFocus(component.element());
 
 export {
   focus,

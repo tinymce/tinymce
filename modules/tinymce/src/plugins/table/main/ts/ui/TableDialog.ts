@@ -182,26 +182,22 @@ const open = (editor: Editor, insertNewTable: boolean) => {
     items: TableDialogGeneralTab.getItems(editor, hasClasses, insertNewTable)
   };
 
-  const nonAdvancedForm = (): Types.Dialog.PanelApi => {
-    return {
-      type: 'panel',
-      items: [ generalPanel ]
-    };
-  };
+  const nonAdvancedForm = (): Types.Dialog.PanelApi => ({
+    type: 'panel',
+    items: [ generalPanel ]
+  });
 
-  const advancedForm = (): Types.Dialog.TabPanelApi => {
-    return {
-      type: 'tabpanel',
-      tabs: [
-        {
-          title: 'General',
-          name: 'general',
-          items: [ generalPanel ]
-        },
-        Helpers.getAdvancedTab('table')
-      ]
-    };
-  };
+  const advancedForm = (): Types.Dialog.TabPanelApi => ({
+    type: 'tabpanel',
+    tabs: [
+      {
+        title: 'General',
+        name: 'general',
+        items: [ generalPanel ]
+      },
+      Helpers.getAdvancedTab('table')
+    ]
+  });
 
   const dialogBody = hasAdvancedTableTab(editor) ? advancedForm() : nonAdvancedForm();
 

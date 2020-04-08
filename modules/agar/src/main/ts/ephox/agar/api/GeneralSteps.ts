@@ -42,38 +42,36 @@ const repeatUntil = <T, U>(label: string, repeatStep: Step<T, T>, successStep: S
   again(numAttempts);
 });
 
-const waitForPredicate = <T>(label: string, interval: number, amount: number, predicate: () => boolean) => {
-  return Step.async<T>((next, die) => {
-    if (predicate()) {
-      // Must use a setTimeout here otherwise FontSizeTest gets 'too much recursion' on Firefox
-      setTimeout(() => {
-        next();
-      });
-      return;
-    }
-    let counter = 0;
-    const timer = setInterval(() => {
-      counter += interval;
-      try {
-        if (predicate()) {
-          clearInterval(timer);
-          next();
-          return;
-        }
-      } catch (err) {
+const waitForPredicate = <T>(label: string, interval: number, amount: number, predicate: () => boolean) => Step.async<T>((next, die) => {
+  if (predicate()) {
+    // Must use a setTimeout here otherwise FontSizeTest gets 'too much recursion' on Firefox
+    setTimeout(() => {
+      next();
+    });
+    return;
+  }
+  let counter = 0;
+  const timer = setInterval(() => {
+    counter += interval;
+    try {
+      if (predicate()) {
         clearInterval(timer);
-        die(err);
+        next();
         return;
       }
+    } catch (err) {
+      clearInterval(timer);
+      die(err);
+      return;
+    }
 
-      if (counter > amount) {
-        clearInterval(timer);
-        die('Waited for ' + label + ' for ' + amount + '(' + counter + '/' + interval + ') ms. Predicate condition failed.');
-      }
+    if (counter > amount) {
+      clearInterval(timer);
+      die('Waited for ' + label + ' for ' + amount + '(' + counter + '/' + interval + ') ms. Predicate condition failed.');
+    }
 
-    }, interval);
-  });
-};
+  }, interval);
+});
 
 export {
   sequence,

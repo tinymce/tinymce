@@ -65,9 +65,7 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
         translate: I18n.translate,
         isReadonly: () => editor.mode.isReadOnly()
       },
-      interpreter: (s) => {
-        return UiFactory.interpretWithoutForm(s, backstage);
-      },
+      interpreter: (s) => UiFactory.interpretWithoutForm(s, backstage),
       anchors: Anchors.getAnchors(editor, lazyAnchorbar),
       getSink: () => Result.value(sink)
     },

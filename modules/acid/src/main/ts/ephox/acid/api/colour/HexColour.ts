@@ -8,13 +8,9 @@ const hexColour = (value: string): Hex => ({
 const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
 const longformRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
 
-const isHexString = (hex: string): boolean => {
-  return shorthandRegex.test(hex) || longformRegex.test(hex);
-};
+const isHexString = (hex: string): boolean => shorthandRegex.test(hex) || longformRegex.test(hex);
 
-const fromString = (hex: string): Option<Hex> => {
-  return isHexString(hex) ? Option.some({ value: hex }) : Option.none();
-};
+const fromString = (hex: string): Option<Hex> => isHexString(hex) ? Option.some({ value: hex }) : Option.none();
 
 // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
 const getLongForm = (hex: Hex): Hex => {

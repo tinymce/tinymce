@@ -29,23 +29,19 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
     }));
   };
 
-  const sSetHex = (hex) => {
-    return Logger.t('Changing textarea content to ' + hex, Step.sync(() => {
-      const inputs = SelectorFilter.descendants<HTMLInputElement>(docBody, 'div[role="dialog"] input');
-      const hexInput = inputs[inputs.length - 1];
-      hexInput.dom().value = hex;
-    }));
-  };
+  const sSetHex = (hex) => Logger.t('Changing textarea content to ' + hex, Step.sync(() => {
+    const inputs = SelectorFilter.descendants<HTMLInputElement>(docBody, 'div[role="dialog"] input');
+    const hexInput = inputs[inputs.length - 1];
+    hexInput.dom().value = hex;
+  }));
 
-  const sOpenDialog = (editor, docBody) => {
-    return GeneralSteps.sequence(Logger.ts('Open dialog and wait for it to be visible', [
-      Step.sync(function () {
-        const dialog = ColorSwatch.colorPickerDialog(editor);
-        dialog(setColor, '#ffffff');
-      }),
-      UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector)
-    ]));
-  };
+  const sOpenDialog = (editor, docBody) => GeneralSteps.sequence(Logger.ts('Open dialog and wait for it to be visible', [
+    Step.sync(function () {
+      const dialog = ColorSwatch.colorPickerDialog(editor);
+      dialog(setColor, '#ffffff');
+    }),
+    UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector)
+  ]));
 
   const sAssertColorWhite = sAssertColor('#ffffff');
 

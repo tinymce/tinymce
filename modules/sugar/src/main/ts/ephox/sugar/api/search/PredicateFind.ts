@@ -8,9 +8,8 @@ import Element from '../node/Element';
 const first: {
   <T extends DomNode = DomNode> (predicate: (e: Element<DomNode>) => e is Element<T>): Option<Element<T & ChildNode>>;
   (predicate: (e: Element<DomNode>) => boolean): Option<Element<DomNode & ChildNode>>;
-} = (predicate: (e: Element<DomNode>) => boolean) => {
-  return descendant(Body.body(), predicate);
-};
+} = (predicate: (e: Element<DomNode>) => boolean) =>
+  descendant(Body.body(), predicate);
 
 const ancestor: {
   <T extends DomNode = DomNode> (scope: Element<DomNode>, predicate: (e: Element<DomNode>) => e is Element<T>, isRoot?: (e: Element<DomNode>) => boolean): Option<Element<T>>;
@@ -50,9 +49,7 @@ const sibling: {
     return Option.none<Element<DomNode & ChildNode>>();
   }
 
-  return child(Element.fromDom(element.parentNode), (x) => {
-    return !Compare.eq(scope, x) && predicate(x);
-  });
+  return child(Element.fromDom(element.parentNode), (x) => !Compare.eq(scope, x) && predicate(x));
 };
 
 const child: {

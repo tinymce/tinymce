@@ -55,17 +55,15 @@ const increaseBy = (value: number, min: number, max: number, step: number): numb
   }
 };
 
-const capValue = (value: number, min: number, max: number): number => {
-  return Math.max(
-    min,
-    Math.min(max, value)
-  );
-};
+const capValue = (value: number, min: number, max: number): number => Math.max(
+  min,
+  Math.min(max, value)
+);
 
-const snapValueOf = (value: number, min: number, max: number, step: number, snapStart: Option<number>): number => {
+const snapValueOf = (value: number, min: number, max: number, step: number, snapStart: Option<number>): number =>
   // We are snapping by the step size. Therefore, find the nearest multiple of
   // the step
-  return snapStart.fold(() => {
+  snapStart.fold(() => {
     // There is no initial snapping start, so just go from the minimum
     const initValue = value - min;
     const extraValue = Math.round(initValue / step) * step;
@@ -83,11 +81,8 @@ const snapValueOf = (value: number, min: number, max: number, step: number, snap
     const r = start + (numSteps * step);
     return Math.max(start, r);
   });
-};
 
-const findOffsetOf = (value: number, min: number, max: number): number => {
-  return Math.min(max, Math.max(value, min)) - min;
-};
+const findOffsetOf = (value: number, min: number, max: number): number => Math.min(max, Math.max(value, min)) - min;
 
 const findValueOf = (args: ValueOfArgs): number => {
   const { min, max, range, value, step, snap, snapStart, rounded, hasMinEdge, hasMaxEdge, minBound, maxBound, screenRange } = args;

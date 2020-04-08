@@ -28,23 +28,21 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
             RealKeys.text('test')
           ]
         ),
-        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
-          return s.element('body', {
-            children: [
-              s.element('p', {
-                children: [
-                  s.element('span', {
-                    classes: [ arr.has('mce-nbsp-wrap') ],
-                    children: [
-                      s.text(str.is(Unicode.nbsp))
-                    ]
-                  }),
-                  s.text(str.is(Unicode.zeroWidth + 'test'))
-                ]
-              })
-            ]
-          });
-        }))
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => s.element('body', {
+          children: [
+            s.element('p', {
+              children: [
+                s.element('span', {
+                  classes: [ arr.has('mce-nbsp-wrap') ],
+                  children: [
+                    s.text(str.is(Unicode.nbsp))
+                  ]
+                }),
+                s.text(str.is(Unicode.zeroWidth + 'test'))
+              ]
+            })
+          ]
+        })))
       ]),
 
       tinyApis.sSetContent(''), // reset content
@@ -53,24 +51,22 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
         tinyApis.sSetContent('test'),
         tinyApis.sSetCursor([ 0, 0 ], 4),
         tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
-          return s.element('body', {
-            children: [
-              s.element('p', {
-                children: [
-                  s.text(str.is('test')),
-                  s.element('span', {
-                    classes: [ arr.has('mce-nbsp-wrap') ],
-                    children: [
-                      s.text(str.is(Unicode.nbsp))
-                    ]
-                  }),
-                  s.text(str.is(Unicode.zeroWidth))
-                ]
-              })
-            ]
-          });
-        }))
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => s.element('body', {
+          children: [
+            s.element('p', {
+              children: [
+                s.text(str.is('test')),
+                s.element('span', {
+                  classes: [ arr.has('mce-nbsp-wrap') ],
+                  children: [
+                    s.text(str.is(Unicode.nbsp))
+                  ]
+                }),
+                s.text(str.is(Unicode.zeroWidth))
+              ]
+            })
+          ]
+        })))
       ]),
 
       tinyApis.sSetContent(''), // reset content
@@ -85,24 +81,22 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
             RealKeys.text('test')
           ]
         ),
-        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
-          return s.element('body', {
-            children: [
-              s.element('p', {
-                children: [
-                  s.text(str.is('test')),
-                  s.element('span', {
-                    classes: [ arr.has('mce-nbsp-wrap') ],
-                    children: [
-                      s.text(str.is(Unicode.nbsp))
-                    ]
-                  }),
-                  s.text(str.is(Unicode.zeroWidth + 'test'))
-                ]
-              })
-            ]
-          });
-        }))
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => s.element('body', {
+          children: [
+            s.element('p', {
+              children: [
+                s.text(str.is('test')),
+                s.element('span', {
+                  classes: [ arr.has('mce-nbsp-wrap') ],
+                  children: [
+                    s.text(str.is(Unicode.nbsp))
+                  ]
+                }),
+                s.text(str.is(Unicode.zeroWidth + 'test'))
+              ]
+            })
+          ]
+        })))
       ]),
 
       tinyApis.sSetContent(''), // reset content
@@ -115,23 +109,21 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
             RealKeys.text(' ')
           ]
         ),
-        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
-          return s.element('body', {
-            children: [
-              s.element('p', {
-                children: [
-                  s.element('span', {
-                    classes: [ arr.has('mce-nbsp-wrap') ],
-                    children: [
-                      s.text(str.is(Unicode.nbsp))
-                    ]
-                  }),
-                  s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + ' ' : Unicode.zeroWidth + Unicode.nbsp))
-                ].concat(isGecko ? [ s.element('br', {}) ] : [])
-              })
-            ]
-          });
-        }))
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => s.element('body', {
+          children: [
+            s.element('p', {
+              children: [
+                s.element('span', {
+                  classes: [ arr.has('mce-nbsp-wrap') ],
+                  children: [
+                    s.text(str.is(Unicode.nbsp))
+                  ]
+                }),
+                s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + ' ' : Unicode.zeroWidth + Unicode.nbsp))
+              ].concat(isGecko ? [ s.element('br', {}) ] : [])
+            })
+          ]
+        })))
       ]),
 
       tinyApis.sSetContent(''), // reset content
@@ -140,48 +132,44 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
         tinyApis.sSetContent('test'),
         tinyApis.sSetCursor([ 0, 0 ], 4),
         tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
-          return s.element('body', {
-            children: [
-              s.element('p', {
-                children: [
-                  s.text(str.is('test')),
-                  s.element('span', {
-                    classes: [ arr.has('mce-nbsp-wrap') ],
-                    children: [
-                      s.text(str.is(Unicode.nbsp))
-                    ]
-                  }),
-                  s.text(str.is(Unicode.zeroWidth))
-                ]
-              })
-            ]
-          });
-        })),
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => s.element('body', {
+          children: [
+            s.element('p', {
+              children: [
+                s.text(str.is('test')),
+                s.element('span', {
+                  classes: [ arr.has('mce-nbsp-wrap') ],
+                  children: [
+                    s.text(str.is(Unicode.nbsp))
+                  ]
+                }),
+                s.text(str.is(Unicode.zeroWidth))
+              ]
+            })
+          ]
+        }))),
         RealKeys.sSendKeysOn(
           'iframe => body => p',
           [
             RealKeys.text('test ')
           ]
         ),
-        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
-          return s.element('body', {
-            children: [
-              s.element('p', {
-                children: [
-                  s.text(str.is('test')),
-                  s.element('span', {
-                    classes: [ arr.has('mce-nbsp-wrap') ],
-                    children: [
-                      s.text(str.is(Unicode.nbsp))
-                    ]
-                  }),
-                  s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + 'test ' : Unicode.zeroWidth + 'test\u00a0'))
-                ].concat(isGecko ? [ s.element('br', {}) ] : [])
-              })
-            ]
-          });
-        })),
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => s.element('body', {
+          children: [
+            s.element('p', {
+              children: [
+                s.text(str.is('test')),
+                s.element('span', {
+                  classes: [ arr.has('mce-nbsp-wrap') ],
+                  children: [
+                    s.text(str.is(Unicode.nbsp))
+                  ]
+                }),
+                s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + 'test ' : Unicode.zeroWidth + 'test\u00a0'))
+              ].concat(isGecko ? [ s.element('br', {}) ] : [])
+            })
+          ]
+        }))),
       ]),
 
       tinyApis.sSetContent(''), // reset content
@@ -190,72 +178,66 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingT
         tinyApis.sSetContent('test'),
         tinyApis.sSetCursor([ 0, 0 ], 4),
         tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
-          return s.element('body', {
-            children: [
-              s.element('p', {
-                children: [
-                  s.text(str.is('test')),
-                  s.element('span', {
-                    classes: [ arr.has('mce-nbsp-wrap') ],
-                    children: [
-                      s.text(str.is(Unicode.nbsp))
-                    ]
-                  }),
-                  s.text(str.is(Unicode.zeroWidth))
-                ]
-              })
-            ]
-          });
-        })),
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => s.element('body', {
+          children: [
+            s.element('p', {
+              children: [
+                s.text(str.is('test')),
+                s.element('span', {
+                  classes: [ arr.has('mce-nbsp-wrap') ],
+                  children: [
+                    s.text(str.is(Unicode.nbsp))
+                  ]
+                }),
+                s.text(str.is(Unicode.zeroWidth))
+              ]
+            })
+          ]
+        }))),
         RealKeys.sSendKeysOn(
           'iframe => body => p',
           [
             RealKeys.text('test ')
           ]
         ),
-        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
-          return s.element('body', {
-            children: [
-              s.element('p', {
-                children: [
-                  s.text(str.is('test')),
-                  s.element('span', {
-                    classes: [ arr.has('mce-nbsp-wrap') ],
-                    children: [
-                      s.text(str.is(Unicode.nbsp))
-                    ]
-                  }),
-                  s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + 'test ' : Unicode.zeroWidth + 'test\u00a0'))
-                ].concat(isGecko ? [ s.element('br', {}) ] : [])
-              })
-            ]
-          });
-        })),
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => s.element('body', {
+          children: [
+            s.element('p', {
+              children: [
+                s.text(str.is('test')),
+                s.element('span', {
+                  classes: [ arr.has('mce-nbsp-wrap') ],
+                  children: [
+                    s.text(str.is(Unicode.nbsp))
+                  ]
+                }),
+                s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + 'test ' : Unicode.zeroWidth + 'test\u00a0'))
+              ].concat(isGecko ? [ s.element('br', {}) ] : [])
+            })
+          ]
+        }))),
         RealKeys.sSendKeysOn(
           'iframe => body => p',
           [
             RealKeys.text('test ')
           ]
         ),
-        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
-          return s.element('body', {
-            children: [
-              s.element('p', {
-                children: [
-                  s.text(str.is('test')),
-                  s.element('span', {
-                    classes: [ arr.has('mce-nbsp-wrap') ],
-                    children: [
-                      s.text(str.is(Unicode.nbsp))
-                    ]
-                  }),
-                  s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + 'test test ' : Unicode.zeroWidth + 'test test\u00a0'))
-                ].concat(isGecko ? [ s.element('br', {}) ] : [])
-              })
-            ]
-          });
-        })),
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => s.element('body', {
+          children: [
+            s.element('p', {
+              children: [
+                s.text(str.is('test')),
+                s.element('span', {
+                  classes: [ arr.has('mce-nbsp-wrap') ],
+                  children: [
+                    s.text(str.is(Unicode.nbsp))
+                  ]
+                }),
+                s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + 'test test ' : Unicode.zeroWidth + 'test test\u00a0'))
+              ].concat(isGecko ? [ s.element('br', {}) ] : [])
+            })
+          ]
+        }))),
       ]),
 
     ], onSuccess, onFailure);

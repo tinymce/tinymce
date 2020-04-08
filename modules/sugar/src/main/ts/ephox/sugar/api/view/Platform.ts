@@ -18,16 +18,12 @@ const MINIMUM_LARGE_HEIGHT = 700;
 // window.screen.width and window.screen.height do not change with the orientation,
 // however window.screen.availableWidth and window.screen.availableHeight,
 // do change according to the orientation.
-const isOfSize = (width: number, height: number) => {
-  return window.screen.width >= width && window.screen.height >= height;
-};
+const isOfSize = (width: number, height: number) => window.screen.width >= width && window.screen.height >= height;
 
 const choice = <T> (options: ChoiceOption<T>[], fallback: T): T => {
-  const target = Arr.foldl(options, (b, option) => {
-    return b.orThunk(() => {
-      return option.predicate() ? Option.some(option.value()) : Option.none<T>();
-    });
-  }, Option.none<T>());
+  const target = Arr.foldl(options, (b, option) => b.orThunk(() =>
+    option.predicate() ? Option.some(option.value()) : Option.none<T>()
+  ), Option.none<T>());
 
   return target.getOr(fallback);
 };

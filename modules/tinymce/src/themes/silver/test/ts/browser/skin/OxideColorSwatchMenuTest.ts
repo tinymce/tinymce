@@ -31,24 +31,18 @@ UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
     (editor, onSuccess, onFailure) => {
       const doc = Element.fromDom(document);
 
-      const structColors = (values: string[]) => (s, str, arr) => {
-        return Arr.map(values, (v) => structColor(v)(s, str, arr));
-      };
+      const structColors = (values: string[]) => (s, str, arr) => Arr.map(values, (v) => structColor(v)(s, str, arr));
 
-      const structColor = (value: string) => (s, str, arr) => {
-        return s.element('div', {
-          classes: [ arr.has('tox-swatch') ],
-          styles: {
-            'background-color': str.is(value)
-          }
-        });
-      };
+      const structColor = (value: string) => (s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-swatch') ],
+        styles: {
+          'background-color': str.is(value)
+        }
+      });
 
       const sFocusOnColor = (expected: string) => Chain.asStep(doc, [
         FocusTools.cGetFocused,
-        Assertions.cAssertStructure('Checking focus is on ' + expected, ApproxStructure.build((s, str, arr) => {
-          return structColor(expected)(s, str, arr);
-        }))
+        Assertions.cAssertStructure('Checking focus is on ' + expected, ApproxStructure.build((s, str, arr) => structColor(expected)(s, str, arr)))
       ]);
 
       Pipeline.async({ }, Logger.ts(
@@ -67,48 +61,46 @@ UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
             ),
             Assertions.cAssertStructure(
               'Checking menu structure for color swatches',
-              ApproxStructure.build((s, str, arr) => {
-                return s.element('div', {
-                  classes: [ arr.has('tox-menu') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-swatches') ],
-                      children: [
-                        s.element('div', {
-                          classes: [ arr.has('tox-swatches__row') ],
-                          children: structColors([ 'green', 'red' ])(s, str, arr)
-                        }),
-                        s.element('div', {
-                          classes: [ arr.has('tox-swatches__row') ],
-                          children: structColors([ 'blue', 'black' ])(s, str, arr)
-                        }),
-                        s.element('div', {
-                          classes: [ arr.has('tox-swatches__row') ],
-                          children: (structColors([ 'white' ])(s, str, arr)).concat([
-                            s.element('div', {
-                              classes: [ arr.has('tox-swatch'), arr.has('tox-swatch--remove') ],
-                              children: [
-                                s.element('svg', {})
-                              ]
-                            })
-                          ])
-                        }),
-                        s.element('div', {
-                          classes: [ arr.has('tox-swatches__row') ],
-                          children: [
-                            s.element('button', {
-                              classes: [ arr.has('tox-swatch'), arr.has('tox-swatches__picker-btn') ],
-                              children: [
-                                s.element('svg', {})
-                              ]
-                            })
-                          ]
-                        })
-                      ]
-                    })
-                  ]
-                });
-              })
+              ApproxStructure.build((s, str, arr) => s.element('div', {
+                classes: [ arr.has('tox-menu') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-swatches') ],
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-swatches__row') ],
+                        children: structColors([ 'green', 'red' ])(s, str, arr)
+                      }),
+                      s.element('div', {
+                        classes: [ arr.has('tox-swatches__row') ],
+                        children: structColors([ 'blue', 'black' ])(s, str, arr)
+                      }),
+                      s.element('div', {
+                        classes: [ arr.has('tox-swatches__row') ],
+                        children: (structColors([ 'white' ])(s, str, arr)).concat([
+                          s.element('div', {
+                            classes: [ arr.has('tox-swatch'), arr.has('tox-swatch--remove') ],
+                            children: [
+                              s.element('svg', {})
+                            ]
+                          })
+                        ])
+                      }),
+                      s.element('div', {
+                        classes: [ arr.has('tox-swatches__row') ],
+                        children: [
+                          s.element('button', {
+                            classes: [ arr.has('tox-swatch'), arr.has('tox-swatches__picker-btn') ],
+                            children: [
+                              s.element('svg', {})
+                            ]
+                          })
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              }))
             )
           ]),
 

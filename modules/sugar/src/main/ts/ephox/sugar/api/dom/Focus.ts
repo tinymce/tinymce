@@ -23,9 +23,7 @@ const active = (_doc?: Element<Document>) => {
 const focusInside = (element: Element<HTMLElement>) => {
   // Only call focus if the focus is not already inside it.
   const doc = Traverse.owner(element);
-  const inside = active(doc).filter((a) => {
-    return PredicateExists.closest(a, Fun.curry(Compare.eq, element));
-  });
+  const inside = active(doc).filter((a) => PredicateExists.closest(a, Fun.curry(Compare.eq, element)));
 
   inside.fold(() => {
     focus(element);
@@ -37,10 +35,7 @@ const focusInside = (element: Element<HTMLElement>) => {
  * Use instead of SelectorFind.descendant(container, ':focus')
  *  because the :focus selector relies on keyboard focus.
  */
-const search = (element: Element<DomNode>) => {
-  return active(Traverse.owner(element)).filter((e) => {
-    return element.dom().contains(e.dom());
-  });
-};
+const search = (element: Element<DomNode>) => active(Traverse.owner(element))
+  .filter((e) => element.dom().contains(e.dom()));
 
 export { hasFocus, focus, blur, active, search, focusInside };

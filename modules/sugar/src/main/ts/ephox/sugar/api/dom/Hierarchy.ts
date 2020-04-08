@@ -13,13 +13,9 @@ const up = (descendant: Element<DomNode>, stopper: (e: Element<DomNode>) => bool
   if (stopper(descendant)) {
     return Option.some([] as number[]);
   } else {
-    return Traverse.parent(descendant).bind((parent) => {
-      return Traverse.findIndex(descendant).bind((index) => {
-        return up(parent, stopper).map((rest) => {
-          return rest.concat([ index ]);
-        });
-      });
-    });
+    return Traverse.parent(descendant).bind((parent) =>
+      Traverse.findIndex(descendant).bind((index) => up(parent, stopper)
+        .map((rest) => rest.concat([ index ]))));
   }
 };
 
@@ -32,9 +28,7 @@ const follow = (ancestor: Element<DomNode>, descendantPath: number[]): Option<El
   if (descendantPath.length === 0) {
     return Option.some(ancestor);
   } else {
-    return Traverse.child(ancestor, descendantPath[0]).bind((child) => {
-      return follow(child, descendantPath.slice(1));
-    });
+    return Traverse.child(ancestor, descendantPath[0]).bind((child) => follow(child, descendantPath.slice(1)));
   }
 };
 

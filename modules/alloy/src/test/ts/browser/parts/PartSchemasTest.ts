@@ -89,32 +89,26 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
     { }
   );
 
-  Jsc.syncProperty('Just internal', [ Jsc.string ], () => {
-    return checkSuccess(
-      'just internal',
-      { },
-      [ internal ],
-      { }
-    );
-  });
+  Jsc.syncProperty('Just internal', [ Jsc.string ], () => checkSuccess(
+    'just internal',
+    { },
+    [ internal ],
+    { }
+  ));
 
-  Jsc.syncProperty('Just external', [ Jsc.string ], (s: string) => {
-    return checkSuccess(
-      'just external',
-      {
-        external: { entirety: s }
-      },
-      [ external ],
-      { external: s }
-    );
-  });
+  Jsc.syncProperty('Just external', [ Jsc.string ], (s: string) => checkSuccess(
+    'just external',
+    {
+      external: { entirety: s }
+    },
+    [ external ],
+    { external: s }
+  ));
 
-  Jsc.syncProperty('Just group', [ Jsc.string ], () => {
-    return checkSuccess(
-      'just group',
-      { },
-      [ group ],
-      { }
-    );
-  });
+  Jsc.syncProperty('Just group', [ Jsc.string ], () => checkSuccess(
+    'just group',
+    { },
+    [ group ],
+    { }
+  ));
 });

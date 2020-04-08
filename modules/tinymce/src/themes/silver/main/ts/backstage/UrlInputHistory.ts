@@ -12,17 +12,11 @@ const STORAGE_KEY = 'tinymce-url-history';
 const HISTORY_LENGTH = 5;
 
 // validation functions
-const isHttpUrl = (url: any): boolean => {
-  return Type.isString(url) && /^https?/.test(url);
-};
+const isHttpUrl = (url: any): boolean => Type.isString(url) && /^https?/.test(url);
 
-const isArrayOfUrl = (a: any): boolean => {
-  return Type.isArray(a) && a.length <= HISTORY_LENGTH && Arr.forall(a, isHttpUrl);
-};
+const isArrayOfUrl = (a: any): boolean => Type.isArray(a) && a.length <= HISTORY_LENGTH && Arr.forall(a, isHttpUrl);
 
-const isRecordOfUrlArray = (r: any): boolean => {
-  return Type.isObject(r) && Obj.find(r, (value) => !isArrayOfUrl(value)).isNone();
-};
+const isRecordOfUrlArray = (r: any): boolean => Type.isObject(r) && Obj.find(r, (value) => !isArrayOfUrl(value)).isNone();
 
 const getAllHistory = function (): Record<string, string[]> {
   const unparsedHistory = localStorage.getItem(STORAGE_KEY);

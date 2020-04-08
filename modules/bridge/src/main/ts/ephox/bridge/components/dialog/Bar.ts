@@ -11,9 +11,7 @@ export interface Bar {
   items: BodyComponent[];
 }
 
-export const createBarFields = (itemsField: FieldProcessorAdt) => {
-  return [
-    FieldSchema.strictString('type'),
-    itemsField
-  ];
-};
+export const createBarFields = (itemsField: FieldProcessorAdt) => [
+  FieldSchema.strictString('type'),
+  itemsField
+];

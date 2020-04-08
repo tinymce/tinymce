@@ -17,9 +17,7 @@ const add = (element: Element<DomElement>, attr: string, id: string): boolean =>
 };
 
 const remove = (element: Element<DomElement>, attr: string, id: string): boolean => {
-  const nu = Arr.filter(read(element, attr), (v) => {
-    return v !== id;
-  });
+  const nu = Arr.filter(read(element, attr), (v) => v !== id);
   if (nu.length > 0) {
     Attr.set(element, attr, nu.join(' '));
   } else {

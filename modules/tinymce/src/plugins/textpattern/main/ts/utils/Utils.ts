@@ -50,9 +50,7 @@ const isBlockFormatName = (name: string, formatter: Formatter): boolean => {
   return Type.isArray(formatSet) && Arr.head(formatSet).exists((format) => Obj.has(format as any, 'block'));
 };
 
-const isReplacementPattern = (pattern: InlinePattern) => {
-  return pattern.start.length === 0;
-};
+const isReplacementPattern = (pattern: InlinePattern) => pattern.start.length === 0;
 
 const getParentBlock = (editor: Editor, rng: Range) => {
   const parentBlockOpt = Option.from(editor.dom.getParent(rng.startContainer, editor.dom.isBlock));

@@ -9,29 +9,27 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('MouseDragEventTest', (success, failure) => {
-  GuiSetup.setup((store, _doc, _body) => {
-    return GuiFactory.build(
-      Container.sketch({
-        dom: {
-          styles: {
-            width: '100px',
-            height: '100px',
-            border: '1px solid green'
+  GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
+    Container.sketch({
+      dom: {
+        styles: {
+          width: '100px',
+          height: '100px',
+          border: '1px solid green'
+        }
+      },
+      containerBehaviours: Behaviour.derive([
+        Dragging.config({
+          mode: 'mouse',
+          repositionTarget: false,
+          blockerClass: 'test-blocker',
+          onDrag: (_comp, _targetElem, delta) => {
+            store.adder({ left: delta.left(), top: delta.top() })();
           }
-        },
-        containerBehaviours: Behaviour.derive([
-          Dragging.config({
-            mode: 'mouse',
-            repositionTarget: false,
-            blockerClass: 'test-blocker',
-            onDrag: (_comp, _targetElem, delta) => {
-              store.adder({ left: delta.left(), top: delta.top() })();
-            }
-          })
-        ])
-      })
-    );
-  }, (_doc, _body, gui, component, store) => {
+        })
+      ])
+    })
+  ), (_doc, _body, gui, component, store) => {
     const cAssertNoPositionInfo = Chain.op((box: Element) => {
       Assertions.assertEq('Should be no "left"', true, Css.getRaw(box, 'left').isNone());
       Assertions.assertEq('Should be no "top"', true, Css.getRaw(box, 'top').isNone());
@@ -60,9 +58,7 @@ UnitTest.asynctest('MouseDragEventTest', (success, failure) => {
           store.cAssertEq('The state should have been reset, so one position should not give us a delta', [ ]),
           NamedChain.direct('blocker', Mouse.cMouseMoveTo(303, 100), '_'),
           store.cAssertEq('The state should have been reset, so two positions should give us a delta of (3, 0)', [{ left: 3, top: 0 }]),
-          NamedChain.bundle((output) => {
-            return Result.value(output);
-          })
+          NamedChain.bundle((output) => Result.value(output))
         ])
       ])
     ];

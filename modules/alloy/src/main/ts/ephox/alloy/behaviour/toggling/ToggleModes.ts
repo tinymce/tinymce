@@ -47,9 +47,7 @@ const detectFromRole = (component: AlloyComponent): Option<string[]> => {
 
 const updateAuto = (component: AlloyComponent, _ariaInfo: void, status: boolean): void => {
   // Role has priority
-  const attributes = detectFromRole(component).orThunk(() => {
-    return detectFromTag(component);
-  }).getOr([ ]);
+  const attributes = detectFromRole(component).orThunk(() => detectFromTag(component)).getOr([ ]);
   Arr.each(attributes, (attr) => {
     Attr.set(component.element(), attr, status);
   });

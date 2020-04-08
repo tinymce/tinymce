@@ -24,9 +24,7 @@ const divine = (element: Element<DomElement>) => {
   }
 };
 
-const getRaw = (element: Element<DomNode>) => {
-  return Css.getRaw(element, 'float').getOrNull();
-};
+const getRaw = (element: Element<DomNode>) => Css.getRaw(element, 'float').getOrNull();
 
 const setCentered = (element: Element<DomNode>) => {
   Css.setAll(element, {

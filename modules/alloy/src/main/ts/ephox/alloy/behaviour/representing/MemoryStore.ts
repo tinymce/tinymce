@@ -14,9 +14,7 @@ const setValue = (component: AlloyComponent, repConfig: MemoryRepresentingConfig
   repConfig.onSetValue(component, data);
 };
 
-const getValue = (component: AlloyComponent, repConfig: MemoryRepresentingConfig, repState: MemoryRepresentingState) => {
-  return repState.get();
-};
+const getValue = (component: AlloyComponent, repConfig: MemoryRepresentingConfig, repState: MemoryRepresentingState) => repState.get();
 
 const onLoad = (component: AlloyComponent, repConfig: MemoryRepresentingConfig, repState: MemoryRepresentingState) => {
   repConfig.store.initialValue.each((initVal) => {

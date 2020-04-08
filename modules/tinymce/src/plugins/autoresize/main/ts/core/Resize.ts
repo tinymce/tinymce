@@ -21,9 +21,7 @@ import * as Settings from '../api/Settings';
  * @private
  */
 
-const isFullscreen = (editor: Editor) => {
-  return editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
-};
+const isFullscreen = (editor: Editor) => editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
 
 /**
  * Calls the resize x times in 100ms intervals. We can't wait for load events since

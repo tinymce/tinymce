@@ -6,9 +6,7 @@ import Element from '../node/Element';
 import * as Elements from '../node/Elements';
 import * as Traverse from '../search/Traverse';
 
-const get = (element: Element<HTMLElement>) => {
-  return element.dom().innerHTML;
-};
+const get = (element: Element<HTMLElement>) => element.dom().innerHTML;
 
 const set = (element: Element<DomNode>, content: string) => {
   const owner = Traverse.owner(element);

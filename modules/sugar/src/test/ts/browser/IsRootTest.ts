@@ -17,9 +17,7 @@ import * as TestPage from 'ephox/sugar/test/TestPage';
 UnitTest.test('IsRootTest', () => {
   TestPage.connect(); // description of structure is in TestPage
 
-  const isRoot = (e: Element<unknown>) => {
-    return Compare.eq(TestPage.d1, e);
-  };
+  const isRoot = (e: Element<unknown>) => Compare.eq(TestPage.d1, e);
 
   const checkNone = <T extends DomNode>(optElement: Option<Element<T>>) => Checkers.checkOpt(Option.none<Element<T>>(), optElement);
 

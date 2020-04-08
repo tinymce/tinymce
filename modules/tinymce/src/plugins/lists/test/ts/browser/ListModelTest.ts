@@ -32,30 +32,21 @@ UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
     return isEqualEntries(inputEntries, outputEntries) || errorMessage(inputEntries, outputEntries);
   });
 
-  const composeParse = (entries: Entry[]): Entry[] => {
-    return composeList(document, entries)
-      .map((list) => parseLists([ list ], Option.none()))
-      .bind(Arr.head)
-      .map((entrySet) => entrySet.entries)
-      .getOr([]);
-  };
+  const composeParse = (entries: Entry[]): Entry[] => composeList(document, entries)
+    .map((list) => parseLists([ list ], Option.none()))
+    .bind(Arr.head)
+    .map((entrySet) => entrySet.entries)
+    .getOr([]);
 
-  const isEqualEntries = (a: Entry[], b: Entry[]): boolean => {
-    return stringifyEntries(a) === stringifyEntries(b);
-  };
+  const isEqualEntries = (a: Entry[], b: Entry[]): boolean => stringifyEntries(a) === stringifyEntries(b);
 
-  const errorMessage = (inputEntries: Entry[], outputEntries: Entry[]): string => {
-    return '\nPretty print counterexample:\n' +
+  const errorMessage = (inputEntries: Entry[], outputEntries: Entry[]): string => '\nPretty print counterexample:\n' +
     `input: [${stringifyEntries(inputEntries)}\n]\n` +
     `output: [${stringifyEntries(outputEntries)}\n]`;
-  };
 
-  const stringifyEntries = (entries: Entry[]): string => {
-    return Arr.map(entries, stringifyEntry).join(',');
-  };
+  const stringifyEntries = (entries: Entry[]): string => Arr.map(entries, stringifyEntry).join(',');
 
-  const stringifyEntry = (entry: Entry): string => {
-    return `\n  {
+  const stringifyEntry = (entry: Entry): string => `\n  {
       depth: ${entry.depth}
       content: ${entry.content.length > 0 ? serializeElements(entry.content) : '[Empty]'}
       listType: ${entry.listType}
@@ -63,11 +54,8 @@ UnitTest.test('tinymce.lists.browser.ListModelTest', () => {
       listAttributes: ${JSON.stringify(entry.listAttributes)}
       itemAttributes: ${JSON.stringify(entry.itemAttributes)}
     }`;
-  };
 
-  const serializeElements = (elms: Element[]): string => {
-    return Arr.map(elms, (el) => el.dom().outerHTML).join('');
-  };
+  const serializeElements = (elms: Element[]): string => Arr.map(elms, (el) => el.dom().outerHTML).join('');
 
   Jsc.assert(composeParseProperty, {
     size: 500,

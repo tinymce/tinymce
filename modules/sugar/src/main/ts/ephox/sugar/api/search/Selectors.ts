@@ -27,12 +27,11 @@ const is = <T extends DomElement = DomElement> (element: Element<DomNode>, selec
   }
 };
 
-const bypassSelector = (dom: DomNode) => {
+const bypassSelector = (dom: DomNode) =>
   // Only elements and documents support querySelector
-  return dom.nodeType !== ELEMENT && dom.nodeType !== DOCUMENT ||
-          // IE fix for complex queries on empty nodes: http://jsfiddle.net/spyder/fv9ptr5L/
-          (dom as DomElement | Document).childElementCount === 0;
-};
+  dom.nodeType !== ELEMENT && dom.nodeType !== DOCUMENT ||
+    // IE fix for complex queries on empty nodes: http://jsfiddle.net/spyder/fv9ptr5L/
+    (dom as DomElement | Document).childElementCount === 0;
 
 const all = <T extends DomElement = DomElement> (selector: string, scope?: Element<DomNode>): Element<T>[] => {
   const base = scope === undefined ? document : scope.dom();
@@ -47,5 +46,5 @@ const one = <T extends DomElement = DomElement> (selector: string, scope?: Eleme
 export {
   all,
   is,
-  one,
+  one
 };

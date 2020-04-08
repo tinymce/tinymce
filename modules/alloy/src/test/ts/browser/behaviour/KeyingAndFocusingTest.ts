@@ -58,18 +58,16 @@ UnitTest.asynctest('Browser Test: behaviour.KeyingAndFocusingTest', (success, fa
         ])
       });
     },
-    (doc, _body, _gui, component, _store) => {
-      return [
-        GuiSetup.mAddStyles(doc, [
-          ':focus { outline: 10px solid green; }'
-        ]),
-        Step.sync(() => {
-          AlloyTriggers.dispatchFocus(component, component.element());
-        }),
-        FocusTools.sTryOnSelector('Focus should be on child span', doc, 'span.child'),
-        GuiSetup.mRemoveStyles
-      ];
-    },
+    (doc, _body, _gui, component, _store) => [
+      GuiSetup.mAddStyles(doc, [
+        ':focus { outline: 10px solid green; }'
+      ]),
+      Step.sync(() => {
+        AlloyTriggers.dispatchFocus(component, component.element());
+      }),
+      FocusTools.sTryOnSelector('Focus should be on child span', doc, 'span.child'),
+      GuiSetup.mRemoveStyles
+    ],
     success, failure
   );
 });

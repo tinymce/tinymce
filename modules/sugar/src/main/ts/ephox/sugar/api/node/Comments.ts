@@ -30,11 +30,7 @@ const noFilter = Fun.constant(Fun.constant(true));
 
 const find = (node: Element<DomNode>, filterOpt: Option<(n: string | null) => boolean>) => {
 
-  const vmlFilter: any = filterOpt.fold(noFilter, (filter) => {
-    return (comment: DomNode) => {
-      return filter(comment.nodeValue);
-    };
-  });
+  const vmlFilter: any = filterOpt.fold(noFilter, (filter) => (comment: DomNode) => filter(comment.nodeValue));
 
   // the standard wants an object, IE wants a function. But everything is an object, so let's be sneaky
   // http://www.bennadel.com/blog/2607-finding-html-comment-nodes-in-the-dom-using-treewalker.htm

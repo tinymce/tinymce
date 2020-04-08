@@ -12,28 +12,20 @@ export interface TransitionRoute {
 
 // TYPIFY
 const findRoute = function (component: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Option<TransitionProperties> {
-  return Obj.get(transConfig.routes, route.start).bind((sConfig) => {
-    return Obj.get(sConfig, route.destination);
-  });
+  return Obj.get(transConfig.routes, route.start).bind((sConfig) => Obj.get(sConfig, route.destination));
 };
 
 const getTransition = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless) => {
   const route = getCurrentRoute(comp, transConfig, transState);
-  return route.bind((r) => {
-    return getTransitionOf(comp, transConfig, transState, r);
-  });
+  return route.bind((r) => getTransitionOf(comp, transConfig, transState, r));
 };
 
-const getTransitionOf = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Option<{ transition: { property: string; transitionClass: string }; route: TransitionProperties }> => {
-  return findRoute(comp, transConfig, transState, route).bind((r: TransitionProperties) => {
-    return r.transition.map((t) => {
-      return {
-        transition: t,
-        route: r
-      };
-    });
-  });
-};
+type TransitionInfo = { transition: { property: string; transitionClass: string }; route: TransitionProperties };
+const getTransitionOf = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Option<TransitionInfo> =>
+  findRoute(comp, transConfig, transState, route).bind((r: TransitionProperties) => r.transition.map((t) => ({
+    transition: t,
+    route: r
+  })));
 
 const disableTransition = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless) => {
   // Disable the current transition
@@ -44,23 +36,19 @@ const disableTransition = (comp: AlloyComponent, transConfig: TransitioningConfi
   });
 };
 
-const getNewRoute = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, destination: string): TransitionRoute => {
-  return {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    start: Attr.get(comp.element(), transConfig.stateAttr)!,
-    destination
-  };
-};
+const getNewRoute = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, destination: string): TransitionRoute => ({
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  start: Attr.get(comp.element(), transConfig.stateAttr)!,
+  destination
+});
 
 const getCurrentRoute = (comp: AlloyComponent, transConfig: TransitioningConfig, _transState: Stateless): Option<TransitionRoute> => {
   const el = comp.element();
-  return Attr.getOpt(el, transConfig.destinationAttr).map((destination) => {
-    return {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      start: Attr.get(comp.element(), transConfig.stateAttr)!,
-      destination
-    };
-  });
+  return Attr.getOpt(el, transConfig.destinationAttr).map((destination) => ({
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    start: Attr.get(comp.element(), transConfig.stateAttr)!,
+    destination
+  }));
 };
 
 const jumpTo = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, destination: string): void => {
@@ -93,9 +81,8 @@ const progressTo = (comp: AlloyComponent, transConfig: TransitioningConfig, tran
   });
 };
 
-const getState = (comp: AlloyComponent, transConfig: TransitioningConfig, _transState: Stateless): Option<string> => {
-  return Attr.getOpt(comp.element(), transConfig.stateAttr);
-};
+const getState = (comp: AlloyComponent, transConfig: TransitioningConfig, _transState: Stateless): Option<string> =>
+  Attr.getOpt(comp.element(), transConfig.stateAttr);
 
 export {
   findRoute,

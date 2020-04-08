@@ -6,11 +6,9 @@ const set = (element: Element<HTMLInputElement>, status: boolean) => {
   element.dom().checked = status;
 };
 
-const find = (parent: Element<DomNode>) => {
-  // :checked selector requires IE9
-  // http://www.quirksmode.org/css/selectors/#t60
-  return SelectorFind.descendant<HTMLInputElement>(parent, 'input:checked');
-};
+// :checked selector requires IE9
+// http://www.quirksmode.org/css/selectors/#t60
+const find = (parent: Element<DomNode>) => SelectorFind.descendant<HTMLInputElement>(parent, 'input:checked');
 
 export {
   set,

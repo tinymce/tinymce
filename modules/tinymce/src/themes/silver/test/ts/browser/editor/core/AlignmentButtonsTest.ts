@@ -23,33 +23,31 @@ UnitTest.asynctest('Editor alignment toolbar buttons test', (success, failure) =
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
         NamedChain.direct('toolbar', Assertions.cAssertStructure(
           'Checking toolbar should have just alignment buttons',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-toolbar') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-toolbar__group') ],
-                  children: [
-                    s.element('button', {
-                      attrs: { title: str.is('Align left') }
-                    }),
-                    s.element('button', {
-                      attrs: { title: str.is('Align center') }
-                    }),
-                    s.element('button', {
-                      attrs: { title: str.is('Align right') }
-                    }),
-                    s.element('button', {
-                      attrs: { title: str.is('Justify') }
-                    }),
-                    s.element('button', {
-                      attrs: { title: str.is('No alignment') }
-                    }),
-                  ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('tox-toolbar') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar__group') ],
+                children: [
+                  s.element('button', {
+                    attrs: { title: str.is('Align left') }
+                  }),
+                  s.element('button', {
+                    attrs: { title: str.is('Align center') }
+                  }),
+                  s.element('button', {
+                    attrs: { title: str.is('Align right') }
+                  }),
+                  s.element('button', {
+                    attrs: { title: str.is('Justify') }
+                  }),
+                  s.element('button', {
+                    attrs: { title: str.is('No alignment') }
+                  }),
+                ]
+              })
+            ]
+          }))
         ), Id.generate('')),
         NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)

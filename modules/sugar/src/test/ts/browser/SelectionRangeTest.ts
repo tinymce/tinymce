@@ -35,9 +35,7 @@ UnitTest.test('WindowSelectionTest', () => {
 
   Html.set(container, '<p>This <strong>world</strong> is not <strong>w<em>ha</em>t</strong> I<br><br>wanted</p><p><br>And even more</p>');
 
-  const find = (path: number[]) => {
-    return Hierarchy.follow(container, path).getOrDie('invalid path');
-  };
+  const find = (path: number[]) => Hierarchy.follow(container, path).getOrDie('invalid path');
 
   const detection = PlatformDetection.detect();
 

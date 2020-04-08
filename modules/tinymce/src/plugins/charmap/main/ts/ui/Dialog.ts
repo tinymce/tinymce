@@ -29,15 +29,11 @@ const open = function (editor: Editor, charMap: CharMap[]) {
     }
   ];
 
-  const makeTabs = () => {
-    return Arr.map(charMap, (charGroup) => {
-      return {
-        title: charGroup.name,
-        name: charGroup.name,
-        items: makeGroupItems()
-      };
-    });
-  };
+  const makeTabs = () => Arr.map(charMap, (charGroup) => ({
+    title: charGroup.name,
+    name: charGroup.name,
+    items: makeGroupItems()
+  }));
 
   const makePanel = (): Types.Dialog.PanelApi => ({ type: 'panel', items: makeGroupItems() });
 

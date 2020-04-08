@@ -17,13 +17,9 @@ import * as ResolveBookmark from 'tinymce/core/bookmark/ResolveBookmark';
 UnitTest.asynctest('browser.tinymce.core.bookmark.BookmarksTest', (success, failure) => {
   Theme();
 
-  const cGetBookmark = (type: number, normalized: boolean) => {
-    return NamedChain.direct('editor', Chain.mapper((editor) => GetBookmark.getBookmark(editor.selection, type, normalized)), 'bookmark');
-  };
+  const cGetBookmark = (type: number, normalized: boolean) => NamedChain.direct('editor', Chain.mapper((editor) => GetBookmark.getBookmark(editor.selection, type, normalized)), 'bookmark');
 
-  const cGetFilledPersistentBookmark = (_type: number, _normalized: boolean) => {
-    return NamedChain.direct('editor', Chain.mapper((editor) => GetBookmark.getPersistentBookmark(editor.selection, true)), 'bookmark');
-  };
+  const cGetFilledPersistentBookmark = (_type: number, _normalized: boolean) => NamedChain.direct('editor', Chain.mapper((editor) => GetBookmark.getPersistentBookmark(editor.selection, true)), 'bookmark');
 
   const assertRawRange = function (element, rng, startPath, startOffset, endPath, endOffset) {
     const startContainer = Hierarchy.follow(element, startPath).getOrDie();
@@ -35,23 +31,19 @@ UnitTest.asynctest('browser.tinymce.core.bookmark.BookmarksTest', (success, fail
     Assertions.assertEq('Should be expected end offset', endOffset, rng.endOffset);
   };
 
-  const cBundleOp = (f) => {
-    return NamedChain.bundle((input) => {
-      f(input);
-      return Result.value(input);
-    });
-  };
+  const cBundleOp = (f) => NamedChain.bundle((input) => {
+    f(input);
+    return Result.value(input);
+  });
 
   const cCreateNamedEditor = NamedChain.write('editor', Editor.cFromSettings({
     base_url: '/project/tinymce/js/tinymce'
   }));
 
-  const cSetupEditor = (content, startPath, startOffset, endPath, endOffset) => {
-    return NamedChain.read('editor', Chain.fromChains([
-      ApiChains.cSetContent(content),
-      ApiChains.cSetSelection(startPath, startOffset, endPath, endOffset)
-    ]));
-  };
+  const cSetupEditor = (content, startPath, startOffset, endPath, endOffset) => NamedChain.read('editor', Chain.fromChains([
+    ApiChains.cSetContent(content),
+    ApiChains.cSetSelection(startPath, startOffset, endPath, endOffset)
+  ]));
 
   const cRemoveEditor = NamedChain.read('editor', Editor.cRemove);
 
@@ -64,15 +56,13 @@ UnitTest.asynctest('browser.tinymce.core.bookmark.BookmarksTest', (success, fail
 
   const cAssertSelection = (spath, soffset, fpath, foffset) => NamedChain.read('editor', ApiChains.cAssertSelection(spath, soffset, fpath, foffset));
 
-  const sBookmarkTest = (namedChains) => {
-    return Chain.asStep({}, [
-      NamedChain.asChain(Arr.flatten([
-        [ cCreateNamedEditor ],
-        namedChains,
-        [ cRemoveEditor ]
-      ])
-      ) ]);
-  };
+  const sBookmarkTest = (namedChains) => Chain.asStep({}, [
+    NamedChain.asChain(Arr.flatten([
+      [ cCreateNamedEditor ],
+      namedChains,
+      [ cRemoveEditor ]
+    ])
+    ) ]);
 
   const cAssertRangeBookmark = (spath, soffset, fpath, foffset) => cBundleOp((input) => {
     Assert.eq('Should be a range bookmark', true, isRangeBookmark(input.bookmark));

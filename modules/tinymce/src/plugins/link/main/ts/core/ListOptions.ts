@@ -30,23 +30,17 @@ const sanitizeList = (list, extractValue: (item) => string): ListItem[] => {
   return out;
 };
 
-const sanitizeWith = (extracter: (item: any) => string = getValue) => (list: any[]): Option<ListItem[]> => {
-  return Option.from(list).map((list) => sanitizeList(list, extracter));
-};
+const sanitizeWith = (extracter: (item: any) => string = getValue) => (list: any[]): Option<ListItem[]> => Option.from(list).map((list) => sanitizeList(list, extracter));
 
-const sanitize = (list: any[]): Option<ListItem[]> => {
-  return sanitizeWith(getValue)(list);
-};
+const sanitize = (list: any[]): Option<ListItem[]> => sanitizeWith(getValue)(list);
 
 // NOTE: May need to care about flattening.
-const createUi = (name: string, label: string) => (items: ListItem[]): Types.Dialog.BodyComponentApi => {
-  return {
-    name,
-    type: 'selectbox',
-    label,
-    items
-  };
-};
+const createUi = (name: string, label: string) => (items: ListItem[]): Types.Dialog.BodyComponentApi => ({
+  name,
+  type: 'selectbox',
+  label,
+  items
+});
 
 export const ListOptions = {
   sanitize,

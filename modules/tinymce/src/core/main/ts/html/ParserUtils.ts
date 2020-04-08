@@ -20,24 +20,16 @@ const paddEmptyNode = (settings: DomParserSettings, args: ParserArgs, blockEleme
   }
 };
 
-const isPaddedWithNbsp = (node: Node) => {
-  return hasOnlyChild(node, '#text') && node.firstChild.value === Unicode.nbsp;
-};
+const isPaddedWithNbsp = (node: Node) => hasOnlyChild(node, '#text') && node.firstChild.value === Unicode.nbsp;
 
-const hasOnlyChild = (node: Node, name: string) => {
-  return node && node.firstChild && node.firstChild === node.lastChild && node.firstChild.name === name;
-};
+const hasOnlyChild = (node: Node, name: string) => node && node.firstChild && node.firstChild === node.lastChild && node.firstChild.name === name;
 
 const isPadded = (schema: Schema, node: Node) => {
   const rule = schema.getElementRule(node.name);
   return rule && rule.paddEmpty;
 };
 
-const isEmpty = (schema: Schema, nonEmptyElements: SchemaMap, whitespaceElements: SchemaMap, node: Node) => {
-  return node.isEmpty(nonEmptyElements, whitespaceElements, (node) => {
-    return isPadded(schema, node);
-  });
-};
+const isEmpty = (schema: Schema, nonEmptyElements: SchemaMap, whitespaceElements: SchemaMap, node: Node) => node.isEmpty(nonEmptyElements, whitespaceElements, (node) => isPadded(schema, node));
 
 const isLineBreakNode = (node: Node, blockElements: SchemaMap) => node && (blockElements[node.name] || node.name === 'br');
 

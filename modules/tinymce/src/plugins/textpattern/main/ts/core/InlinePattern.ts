@@ -63,13 +63,13 @@ const findPatternStartFromSpot = (dom: DOMUtils, pattern: InlinePattern, block: 
         rng.setStart(nextSpot.container, nextSpot.offset);
         rng.setEnd(spot.container, spot.offset);
         return rng;
-      }).filter((rng) => {
+      }).filter((rng) =>
         // Ensure the range content matches the start
-        return rng.toString() === startPattern;
-      }).orThunk(() => {
+        rng.toString() === startPattern
+      ).orThunk(() =>
         // No match found, so continue searching
-        return findPatternStartFromSpot(dom, pattern, block, Spot.point(spot.container, 0));
-      });
+        findPatternStartFromSpot(dom, pattern, block, Spot.point(spot.container, 0))
+      );
     }
   });
 };

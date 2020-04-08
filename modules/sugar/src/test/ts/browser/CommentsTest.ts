@@ -13,7 +13,7 @@ UnitTest.test('CommentsTest', () => {
   assert.eq('two', Comment.get(all[1]));
   assert.eq('three', Comment.get(all[2]));
 
-  const one = Comments.find(testPage, Option.some((value) => { return value === 'one'; }));
+  const one = Comments.find(testPage, Option.some((value) => value === 'one'));
   assert.eq(1, one.length);
   assert.eq('one', Comment.get(one[0]));
 });

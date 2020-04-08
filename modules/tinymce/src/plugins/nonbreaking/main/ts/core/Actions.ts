@@ -18,9 +18,7 @@ const stringRepeat = (string, repeats) => {
   return str;
 };
 
-const isVisualCharsEnabled = (editor: Editor) => {
-  return editor.plugins.visualchars ? editor.plugins.visualchars.isEnabled() : false;
-};
+const isVisualCharsEnabled = (editor: Editor) => editor.plugins.visualchars ? editor.plugins.visualchars.isEnabled() : false;
 
 const insertNbsp = (editor: Editor, times: number) => {
   const classes = () => isVisualCharsEnabled(editor) ? 'mce-nbsp-wrap mce-nbsp' : 'mce-nbsp-wrap';

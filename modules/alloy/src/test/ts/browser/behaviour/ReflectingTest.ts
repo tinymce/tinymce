@@ -13,26 +13,24 @@ import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviou
 UnitTest.asynctest('ReflectingTest', (success, failure) => {
 
   GuiSetup.setup((store, _doc, _body) => {
-    const makeChild = (label: string) => {
-      return {
-        dom: {
-          tag: 'span',
-          innerHtml: label,
-          styles: {
-            display: 'inline-block',
-            border: '1px solid #ccc',
-            margin: '0.5em',
-            padding: '1em'
-          }
-        },
-        behaviours: Behaviour.derive([
-          AddEventsBehaviour.config('child-events', [
-            AlloyEvents.runOnAttached(store.adder('child.' + label + '.attached')),
-            AlloyEvents.runOnDetached(store.adder('child.' + label + '.detached'))
-          ])
+    const makeChild = (label: string) => ({
+      dom: {
+        tag: 'span',
+        innerHtml: label,
+        styles: {
+          display: 'inline-block',
+          border: '1px solid #ccc',
+          margin: '0.5em',
+          padding: '1em'
+        }
+      },
+      behaviours: Behaviour.derive([
+        AddEventsBehaviour.config('child-events', [
+          AlloyEvents.runOnAttached(store.adder('child.' + label + '.attached')),
+          AlloyEvents.runOnDetached(store.adder('child.' + label + '.detached'))
         ])
-      };
-    };
+      ])
+    });
 
     return GuiFactory.build(
       Container.sketch({
@@ -114,16 +112,14 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
       })
     );
   }, (_doc, _body, gui, component, store) => {
-    const sAssertReflectState = (label: string, expected: any, selector: string) => {
-      return Chain.asStep(component.element(), [
-        UiFinder.cFindIn(selector),
-        Chain.binder(component.getSystem().getByDom),
-        Chain.op((r1) => {
-          const actual = Reflecting.getState(r1).get().getOrDie();
-          Assertions.assertEq('Checking state for: ' + label, expected, actual.state);
-        })
-      ]);
-    };
+    const sAssertReflectState = (label: string, expected: any, selector: string) => Chain.asStep(component.element(), [
+      UiFinder.cFindIn(selector),
+      Chain.binder(component.getSystem().getByDom),
+      Chain.op((r1) => {
+        const actual = Reflecting.getState(r1).get().getOrDie();
+        Assertions.assertEq('Checking state for: ' + label, expected, actual.state);
+      })
+    ]);
 
     return [
       store.sAssertEq('Checking the original sequence of attached and detached', [
@@ -140,35 +136,33 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
       store.sClear,
       Assertions.sAssertStructure(
         'Checking initial structure',
-        ApproxStructure.build((s, str, _arr) => {
-          return s.element('div', {
-            children: [
-              s.element('div', {
-                children: [
-                  s.element('span', { children: [  s.text(str.is('state-changes-only')) ] })
-                ]
-              }),
-              s.element('div', {
-                children: [
-                  s.element('span', { children: [  s.text(str.is('2a-cat')) ] }),
-                  s.element('span', { children: [  s.text(str.is('2a-dog')) ] })
-                ]
-              }),
-              s.element('div', {
-                children: [
-                  s.element('span', { children: [  s.text(str.is('2b-cat')) ] }),
-                  s.element('span', { children: [  s.text(str.is('2b-dog')) ] })
-                ]
-              }),
-              s.element('div', {
-                children: [ ]
-              }),
-              s.element('div', {
-                children: [ ]
-              })
-            ]
-          });
-        }),
+        ApproxStructure.build((s, str, _arr) => s.element('div', {
+          children: [
+            s.element('div', {
+              children: [
+                s.element('span', { children: [  s.text(str.is('state-changes-only')) ] })
+              ]
+            }),
+            s.element('div', {
+              children: [
+                s.element('span', { children: [  s.text(str.is('2a-cat')) ] }),
+                s.element('span', { children: [  s.text(str.is('2a-dog')) ] })
+              ]
+            }),
+            s.element('div', {
+              children: [
+                s.element('span', { children: [  s.text(str.is('2b-cat')) ] }),
+                s.element('span', { children: [  s.text(str.is('2b-dog')) ] })
+              ]
+            }),
+            s.element('div', {
+              children: [ ]
+            }),
+            s.element('div', {
+              children: [ ]
+            })
+          ]
+        })),
         component.element()
       ),
 
@@ -198,38 +192,36 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'Checking structure after broadcast on channel-2',
-        ApproxStructure.build((s, str, _arr) => {
-          return s.element('div', {
-            children: [
-              s.element('div', {
-                children: [
-                  s.element('span', { children: [  s.text(str.is('state-changes-only')) ] })
-                ]
-              }),
-              s.element('div', {
-                children: [
-                  s.element('span', { children: [  s.text(str.is('alpha')) ] }),
-                  s.element('span', { children: [  s.text(str.is('beta')) ] })
-                ]
-              }),
-              s.element('div', {
-                children: [
-                  s.element('span', { children: [  s.text(str.is('alpha')) ] }),
-                  s.element('span', { children: [  s.text(str.is('beta')) ] })
-                ]
-              }),
-              s.element('div', {
-                children: [
-                  s.element('span', { children: [  s.text(str.is('alpha')) ] }),
-                  s.element('span', { children: [  s.text(str.is('beta')) ] })
-                ]
-              }),
-              s.element('div', {
-                children: [ ]
-              })
-            ]
-          });
-        }),
+        ApproxStructure.build((s, str, _arr) => s.element('div', {
+          children: [
+            s.element('div', {
+              children: [
+                s.element('span', { children: [  s.text(str.is('state-changes-only')) ] })
+              ]
+            }),
+            s.element('div', {
+              children: [
+                s.element('span', { children: [  s.text(str.is('alpha')) ] }),
+                s.element('span', { children: [  s.text(str.is('beta')) ] })
+              ]
+            }),
+            s.element('div', {
+              children: [
+                s.element('span', { children: [  s.text(str.is('alpha')) ] }),
+                s.element('span', { children: [  s.text(str.is('beta')) ] })
+              ]
+            }),
+            s.element('div', {
+              children: [
+                s.element('span', { children: [  s.text(str.is('alpha')) ] }),
+                s.element('span', { children: [  s.text(str.is('beta')) ] })
+              ]
+            }),
+            s.element('div', {
+              children: [ ]
+            })
+          ]
+        })),
         component.element()
       ),
 
@@ -239,40 +231,38 @@ UnitTest.asynctest('ReflectingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'Checking structure after broadcast on channel-3',
-        ApproxStructure.build((s, str, _arr) => {
-          return s.element('div', {
-            children: [
-              s.element('div', {
-                children: [
-                  s.element('span', { children: [  s.text(str.is('state-changes-only')) ] })
-                ]
-              }),
-              s.element('div', {
-                children: [
-                  s.element('span', { children: [  s.text(str.is('alpha')) ] }),
-                  s.element('span', { children: [  s.text(str.is('beta')) ] })
-                ]
-              }),
-              s.element('div', {
-                children: [
-                  s.element('span', { children: [  s.text(str.is('alpha')) ] }),
-                  s.element('span', { children: [  s.text(str.is('beta')) ] })
-                ]
-              }),
-              s.element('div', {
-                children: [
-                  s.element('span', { children: [  s.text(str.is('alpha')) ] }),
-                  s.element('span', { children: [  s.text(str.is('beta')) ] })
-                ]
-              }),
-              s.element('div', {
-                children: [
-                  s.element('span', { children: [  s.text(str.is('gamma')) ] }),
-                ]
-              })
-            ]
-          });
-        }),
+        ApproxStructure.build((s, str, _arr) => s.element('div', {
+          children: [
+            s.element('div', {
+              children: [
+                s.element('span', { children: [  s.text(str.is('state-changes-only')) ] })
+              ]
+            }),
+            s.element('div', {
+              children: [
+                s.element('span', { children: [  s.text(str.is('alpha')) ] }),
+                s.element('span', { children: [  s.text(str.is('beta')) ] })
+              ]
+            }),
+            s.element('div', {
+              children: [
+                s.element('span', { children: [  s.text(str.is('alpha')) ] }),
+                s.element('span', { children: [  s.text(str.is('beta')) ] })
+              ]
+            }),
+            s.element('div', {
+              children: [
+                s.element('span', { children: [  s.text(str.is('alpha')) ] }),
+                s.element('span', { children: [  s.text(str.is('beta')) ] })
+              ]
+            }),
+            s.element('div', {
+              children: [
+                s.element('span', { children: [  s.text(str.is('gamma')) ] }),
+              ]
+            })
+          ]
+        })),
         component.element()
       ),
 

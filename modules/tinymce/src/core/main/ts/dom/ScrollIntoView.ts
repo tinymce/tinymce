@@ -76,9 +76,7 @@ const createMarker = (element: SugarElement, offset: number): MarkerInfo => {
   return markerInfo(span, () => Remove.remove(span));
 };
 
-const elementMarker = (element: HTMLElement): MarkerInfo => {
-  return markerInfo(SugarElement.fromDom(element), Fun.noop);
-};
+const elementMarker = (element: HTMLElement): MarkerInfo => markerInfo(SugarElement.fromDom(element), Fun.noop);
 
 const withMarker = (editor: Editor, f: ScrollFunc, rng: Range, alignToTop?: boolean) => {
   preserveWith(editor, (_s, _e) => applyWithMarker(editor, f, rng, alignToTop), rng);

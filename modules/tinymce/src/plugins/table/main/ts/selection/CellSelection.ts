@@ -21,9 +21,7 @@ import * as Direction from '../queries/Direction';
 import * as Ephemera from './Ephemera';
 import { SelectionTargets } from './SelectionTargets';
 
-const hasInternalTarget = (e: Event) => {
-  return Class.has(Element.fromDom(e.target as HTMLElement), 'ephox-snooker-resizer-bar') === false;
-};
+const hasInternalTarget = (e: Event) => Class.has(Element.fromDom(e.target as HTMLElement), 'ephox-snooker-resizer-bar') === false;
 
 interface HandlerStruct {
   readonly mousedown: (e: MouseEvent) => void;

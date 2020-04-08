@@ -22,35 +22,29 @@ UnitTest.asynctest('browser.tinymce.plugins.quickbars.SelectionToolbarTest', (su
     Center = 'center'
   }
 
-  const sAssertButtonToggledState = (name: string, state: boolean) => {
-    return Chain.asStep(Body.body(), [
-      Chain.control(
-        Chain.fromChains( [
-          UiFinder.cFindIn(`.tox-toolbar button[aria-label="${name}"]`),
-          Assertions.cAssertStructure(`Check ${name} button is ${state ? 'active' : 'inactive'}`,
-            ApproxStructure.build((s, str, arr) => {
-              return s.element('button', {
-                classes: [ state ? arr.has('tox-tbtn--enabled') : arr.not('tox-tbtn--enabled') ]
-              });
-            })
-          )
-        ]),
-        Guard.tryUntil('wait for toolbar button state')
-      )
-    ]);
-  };
+  const sAssertButtonToggledState = (name: string, state: boolean) => Chain.asStep(Body.body(), [
+    Chain.control(
+      Chain.fromChains( [
+        UiFinder.cFindIn(`.tox-toolbar button[aria-label="${name}"]`),
+        Assertions.cAssertStructure(`Check ${name} button is ${state ? 'active' : 'inactive'}`,
+          ApproxStructure.build((s, str, arr) => s.element('button', {
+            classes: [ state ? arr.has('tox-tbtn--enabled') : arr.not('tox-tbtn--enabled') ]
+          }))
+        )
+      ]),
+      Guard.tryUntil('wait for toolbar button state')
+    )
+  ]);
 
-  const sWaitForTextToolbarAndAssertState = (tinyUi: TinyUi, bold: boolean, italic: boolean, heading2: boolean, heading3: boolean, link: boolean, blockquote: boolean) => {
-    return GeneralSteps.sequence([
-      tinyUi.sWaitForUi('wait for text selection toolbar to show', '.tox-toolbar'),
-      sAssertButtonToggledState('Bold', bold),
-      sAssertButtonToggledState('Italic', italic),
-      sAssertButtonToggledState('Link', link),
-      sAssertButtonToggledState('Heading 2', heading2),
-      sAssertButtonToggledState('Heading 3', heading3),
-      sAssertButtonToggledState('Blockquote', blockquote)
-    ]);
-  };
+  const sWaitForTextToolbarAndAssertState = (tinyUi: TinyUi, bold: boolean, italic: boolean, heading2: boolean, heading3: boolean, link: boolean, blockquote: boolean) => GeneralSteps.sequence([
+    tinyUi.sWaitForUi('wait for text selection toolbar to show', '.tox-toolbar'),
+    sAssertButtonToggledState('Bold', bold),
+    sAssertButtonToggledState('Italic', italic),
+    sAssertButtonToggledState('Link', link),
+    sAssertButtonToggledState('Heading 2', heading2),
+    sAssertButtonToggledState('Heading 3', heading3),
+    sAssertButtonToggledState('Blockquote', blockquote)
+  ]);
 
   const sSetImageAndAssertToolbarState = (tinyApis: TinyApis, tinyUi: TinyUi, useFigure: boolean, alignment?: Alignment) => {
     let attrs, imageHtml;

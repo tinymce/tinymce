@@ -35,9 +35,7 @@ const currentCode = Cell('en');
 
 const getLanguageData = () => Obj.get(data, currentCode.get());
 
-const getData = (): Record<string, Record<string, string>> => {
-  return Obj.map(data, (value) => ({ ...value }));
-};
+const getData = (): Record<string, Record<string, string>> => Obj.map(data, (value) => ({ ...value }));
 
 /**
  * Sets the current language code.
@@ -110,9 +108,7 @@ const translate = (text: Untranslated): TranslatedString => {
     return !isEmpty(obj) ? '' + obj : '';
   };
 
-  const isEmpty = (text: Untranslated) => {
-    return text === '' || text === null || text === undefined;
-  };
+  const isEmpty = (text: Untranslated) => text === '' || text === null || text === undefined;
 
   const getLangData = (text: Untranslated) => {
     // make sure we work on a string and return a string
@@ -120,14 +116,11 @@ const translate = (text: Untranslated): TranslatedString => {
     return Obj.get(langData, textstr.toLowerCase()).map(toString).getOr(textstr);
   };
 
-  const removeContext = (str: string) => {
-    return str.replace(/{context:\w+}$/, '');
-  };
+  const removeContext = (str: string) => str.replace(/{context:\w+}$/, '');
 
-  const translated = (text: Untranslated): TranslatedString => {
+  const translated = (text: Untranslated): TranslatedString =>
     // TODO: When we figure out how to return a type Translated that fails if you give a String, we implement here
-    return text;
-  };
+    text;
 
   // empty strings
   if (isEmpty(text)) {
@@ -142,9 +135,7 @@ const translate = (text: Untranslated): TranslatedString => {
   // Tokenised {translations}
   if (isTokenised(text)) {
     const values = text.slice(1);
-    const substitued = getLangData(text[0]).replace(/\{([0-9]+)\}/g, ($1, $2) => {
-      return Obj.has(values, $2) ? toString(values[$2]) : $1;
-    });
+    const substitued = getLangData(text[0]).replace(/\{([0-9]+)\}/g, ($1, $2) => Obj.has(values, $2) ? toString(values[$2]) : $1);
     return translated(removeContext(substitued));
   }
 
@@ -158,11 +149,9 @@ const translate = (text: Untranslated): TranslatedString => {
  * @method isRtl
  * @return {Boolean} True if the current language pack is rtl.
  */
-const isRtl = () => {
-  return getLanguageData()
-    .bind((items) => Obj.get(items, '_dir'))
-    .exists((dir) => dir === 'rtl');
-};
+const isRtl = () => getLanguageData()
+  .bind((items) => Obj.get(items, '_dir'))
+  .exists((dir) => dir === 'rtl');
 
 /**
  * Returns true/false if specified language pack exists.

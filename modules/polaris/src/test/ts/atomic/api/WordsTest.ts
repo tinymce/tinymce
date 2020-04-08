@@ -7,18 +7,10 @@ UnitTest.test('api.Words.words', () => {
     char: string;
   }
 
-  const parseString = (str: string): Char[] => {
-    return Arr.map(str.split(''), (char) => {
-      return { char };
-    });
-  };
+  const parseString = (str: string): Char[] => Arr.map(str.split(''), (char) => ({ char }));
 
   // In order to simplify the assertions
-  const simplifySets = (charSets: Char[][]): string[] => {
-    return Arr.map(charSets, (set) => {
-      return Arr.map(set, (char) => char.char).join('');
-    });
-  };
+  const simplifySets = (charSets: Char[][]): string[] => Arr.map(charSets, (set) => Arr.map(set, (char) => char.char).join(''));
 
   const assertWords = (expected: string[], input: string, options?: WordOptions) => {
     const chars: Char[] = parseString(input);

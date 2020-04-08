@@ -12,21 +12,17 @@ const unbind = (bubblingState: AllowBubblingState) => {
 };
 
 const bind = (comp: AlloyComponent, bubblingConfig: AllowBubblingConfig, bubblingState: AllowBubblingState) => {
-  const unbinders = Arr.map(bubblingConfig.events, (eventConfig) => {
-    return DomEvent.bind(comp.element(), eventConfig.native, (event) => {
-      comp.getSystem().triggerEvent(eventConfig.simulated, comp.element(), event);
-    });
-  });
+  const unbinders = Arr.map(bubblingConfig.events, (eventConfig) => DomEvent.bind(comp.element(), eventConfig.native, (event) => {
+    comp.getSystem().triggerEvent(eventConfig.simulated, comp.element(), event);
+  }));
 
   bubblingState.set(unbinders);
 };
 
-const events = (bubblingConfig: AllowBubblingConfig, bubblingState: AllowBubblingState): AlloyEvents.AlloyEventRecord => {
-  return AlloyEvents.derive([
-    AlloyEvents.runOnAttached((comp) => bind(comp, bubblingConfig, bubblingState)),
-    AlloyEvents.runOnDetached(() => unbind(bubblingState))
-  ]);
-};
+const events = (bubblingConfig: AllowBubblingConfig, bubblingState: AllowBubblingState): AlloyEvents.AlloyEventRecord => AlloyEvents.derive([
+  AlloyEvents.runOnAttached((comp) => bind(comp, bubblingConfig, bubblingState)),
+  AlloyEvents.runOnDetached(() => unbind(bubblingState))
+]);
 
 export {
   events

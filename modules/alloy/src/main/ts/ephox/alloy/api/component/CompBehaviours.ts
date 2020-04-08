@@ -13,14 +13,10 @@ const getBehaviours = (spec: { behaviours?: AlloyBehaviourRecord }): Array<Alloy
     Obj.keys(behaviours),
     (k: BehaviourName) => behaviours[k] !== undefined
   );
-  return Arr.map(keys, (k) => {
-    return behaviours[k].me;
-  });
+  return Arr.map(keys, (k) => behaviours[k].me);
 };
 
-const generateFrom = (spec: { behaviours?: AlloyBehaviourRecord }, all: Array<AlloyBehaviour<any, any, any>>): BehaviourBlob.BehaviourData<any, any, any> => {
-  return BehaviourBlob.generateFrom(spec, all);
-};
+const generateFrom = (spec: { behaviours?: AlloyBehaviourRecord }, all: Array<AlloyBehaviour<any, any, any>>): BehaviourBlob.BehaviourData<any, any, any> => BehaviourBlob.generateFrom(spec, all);
 
 const generate = (spec: { behaviours?: AlloyBehaviourRecord }): BehaviourBlob.BehaviourData<any, any, any> => {
   const all = getBehaviours(spec);

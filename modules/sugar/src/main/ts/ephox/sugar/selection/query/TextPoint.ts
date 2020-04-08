@@ -26,13 +26,10 @@ const locate = (doc: Element<Document>, node: Element<DomText>, x: number, y: nu
   const r = doc.dom().createRange();
   r.selectNode(node.dom());
   const rects = r.getClientRects();
-  const foundRect = Arr.findMap<ClientRect | DOMRect, ClientRect | DOMRect>(rects, (rect) => {
-    return Geometry.inRect(rect, x, y) ? Option.some(rect) : Option.none();
-  });
+  const foundRect = Arr.findMap<ClientRect | DOMRect, ClientRect | DOMRect>(rects, (rect) =>
+    Geometry.inRect(rect, x, y) ? Option.some(rect) : Option.none());
 
-  return foundRect.map((rect) => {
-    return locateOffset(doc, node, x, y, rect);
-  });
+  return foundRect.map((rect) => locateOffset(doc, node, x, y, rect));
 };
 
 export { locate };

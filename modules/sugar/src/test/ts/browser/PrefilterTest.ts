@@ -15,13 +15,11 @@ UnitTest.test('Browser Test: PrefilterTest', () => {
     '</div>'
   );
 
-  const toString = (situ: Situ) => {
-    return situ.fold(
-      (b) => 'before(' + Html.getOuter(b) + ')',
-      (e, o) => 'on(' + Html.getOuter(e) + ', ' + o + ')',
-      (a) => 'after(' + Html.getOuter(a) + ')'
-    );
-  };
+  const toString = (situ: Situ) => situ.fold(
+    (b) => 'before(' + Html.getOuter(b) + ')',
+    (e, o) => 'on(' + Html.getOuter(e) + ', ' + o + ')',
+    (a) => 'after(' + Html.getOuter(a) + ')'
+  );
 
   const check = (label: string, expected: string, elementPath: number[], offset: number) => {
     const element = Hierarchy.follow(root, elementPath).getOrDie('Test: ' + label + '. Could not find the element path within root: ' + elementPath);

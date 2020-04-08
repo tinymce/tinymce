@@ -3,10 +3,8 @@ import { Arr } from '@ephox/katamari';
 import Element from '../api/node/Element';
 import * as AttrList from '../api/properties/AttrList';
 
-const supports = (element: Element<DomNode>): element is Element<DomElement> => {
-  // IE11 Can return undefined for a classList on elements such as math, so we make sure it's not undefined before attempting to use it.
-  return (element.dom() as DomElement).classList !== undefined;
-};
+// IE11 Can return undefined for a classList on elements such as math, so we make sure it's not undefined before attempting to use it.
+const supports = (element: Element<DomNode>): element is Element<DomElement> => (element.dom() as DomElement).classList !== undefined;
 
 const get = (element: Element<DomElement>) => AttrList.read(element, 'class');
 

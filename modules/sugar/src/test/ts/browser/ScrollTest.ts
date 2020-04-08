@@ -95,9 +95,7 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
     success);
   });
 
-  const within = (a: number, b: number, eps: number) => {
-    return Math.abs(a - b) <= eps;
-  };
+  const within = (a: number, b: number, eps: number) => Math.abs(a - b) <= eps;
 
   // check current scroll position is at (x,y) (or within +/- (epsX, epsY))
   const scrollCheck = (x: number, y: number, epsX: number, epsY: number, doc: TestDocSpec, msg: string) => {
