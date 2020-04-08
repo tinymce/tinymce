@@ -31,8 +31,6 @@ UnitTest.asynctest('browser.tinymce.core.fmt.TextDecorationColorTest', (success,
 
     const toggleInlineStyle = (style: string) => tinyUi.sClickOnToolbar(`click ${style}`, `[aria-label="${style}"]`);
 
-
-
     const sAssertEditorContent = (content: string) => {
       const contentStructure = ApproxStructure.build((s, str, arr) => {
         return s.element('body', {
