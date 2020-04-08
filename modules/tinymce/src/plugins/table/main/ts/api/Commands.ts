@@ -86,16 +86,12 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
     return CopyRows.copyRows(table, targets, generators);
   }));
 
-  const copyColSelection = (_execute?) => {
-    return TableSelection.getSelectionStartCell(editor).map((cell) => {
-      return getTableFromCell(cell).bind((table) => {
-        const doc = Element.fromDom(editor.getDoc());
-        const targets = TableTargets.forMenu(selections, table, cell);
-        const generators = TableFill.cellOperations(Fun.noop, doc, Option.none());
-        return CopyCols.copyCols(table, targets, generators);
-      });
-    });
-  };
+  const copyColSelection = (_execute?) => TableSelection.getSelectionStartCell(editor).map((cell) => getTableFromCell(cell).bind((table) => {
+    const doc = Element.fromDom(editor.getDoc());
+    const targets = TableTargets.forMenu(selections, table, cell);
+    const generators = TableFill.cellOperations(Fun.noop, doc, Option.none());
+    return CopyCols.copyCols(table, targets, generators);
+  }));
 
   const pasteOnSelection = (execute, cellGet) => {
     // If we have clipboard rows to paste
