@@ -17,7 +17,7 @@ const copyCols = function (table: Element, target: TargetSelection, generators: 
       const copiedCells = Arr.map(cellsToCopy, (cell) => Replication.deep(cell.element()));
       const fakeTR = Element.fromTag('tr');
       InsertAll.append(fakeTR, copiedCells);
-      return fakeTR
+      return fakeTR;
     });
     return slicedGrid;
   });
