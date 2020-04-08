@@ -104,6 +104,17 @@ UnitTest.asynctest('webdriver.tinymce.core.content.PlaceholderTest', (success, f
         tinyApi.sExecCommand('InsertOrderedList'),
         sAssertPlaceholderNotExists,
         sAssertCount(1)
+      ]),
+      Log.stepsAsStep('TINY-4828', 'Check placeholder hides when pasting content into the editor', [
+        sSetContent('<p></p>'),
+        sAssertPlaceholderExists,
+        // Note: This fakes a paste event
+        Step.sync(() => {
+          editor.fire('paste');
+          editor.getBody().innerHTML = '<p>Pasted content</p>';
+        }),
+        sAssertPlaceholderNotExists,
+        sAssertCount(1)
       ])
     ].concat(browserSpecificTests), onSuccess, onFailure);
   }, {
