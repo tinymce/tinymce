@@ -25,17 +25,11 @@ const point = <T> (element: Element, offset: number): ElementAndOffset<T> => ({
 
 // TODO: remove "any"
 // A range from (a, 1) to (body, end) was giving the wrong bounds.
-const descendOnce = (element: Element, offset: number): ElementAndOffset<any> => {
-  return Node.isText(element) ? point(element, offset) : Descend.descendOnce(element, offset);
-};
+const descendOnce = (element: Element, offset: number): ElementAndOffset<any> => Node.isText(element) ? point(element, offset) : Descend.descendOnce(element, offset);
 
 const getAnchorSelection = (win: Window, anchorInfo: SelectionAnchor): Option<SimRange> => {
   // FIX TEST Test both providing a getSelection and not providing a getSelection
-  const getSelection = anchorInfo.getSelection.getOrThunk(() => {
-    return () => {
-      return WindowSelection.getExact(win);
-    };
-  });
+  const getSelection = anchorInfo.getSelection.getOrThunk(() => () => WindowSelection.getExact(win));
 
   return getSelection().map((sel) => {
     const modStart = descendOnce(sel.start(), sel.soffset());
@@ -59,14 +53,10 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
         return rect;
       });
     });
-    return optRect.bind((rawRect) => {
-      return ContentAnchorCommon.capRect(rawRect.left(), rawRect.top(), rawRect.width(), rawRect.height());
-    });
+    return optRect.bind((rawRect) => ContentAnchorCommon.capRect(rawRect.left(), rawRect.top(), rawRect.width(), rawRect.height()));
   });
 
-  const targetElement: Option<Element> = getAnchorSelection(win, anchorInfo).bind((sel) => {
-    return Node.isElement(sel.start()) ? Option.some(sel.start()) : Traverse.parent(sel.start());
-  });
+  const targetElement: Option<Element> = getAnchorSelection(win, anchorInfo).bind((sel) => Node.isElement(sel.start()) ? Option.some(sel.start()) : Traverse.parent(sel.start()));
   const elem = targetElement.getOr(component.element());
 
   return ContentAnchorCommon.calcNewAnchor(selectionBox, rootPoint, anchorInfo, origin, elem);

@@ -24,30 +24,28 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
         tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 1),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('body', {
-              children: [
-                s.element('div', {
-                  children: [
-                    s.element('span', {
-                      children: [
-                        s.text(str.is('a'))
-                      ]
-                    }),
-                    s.text(str.is(' b'))
-                  ]
-                }),
-                s.element('p', {
-                  children: [
-                    s.text(str.is('c'))
-                  ]
-                }),
-                s.element('div', {
-                  classes: [ arr.has('mce-offscreen-selection') ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, arr) => s.element('body', {
+            children: [
+              s.element('div', {
+                children: [
+                  s.element('span', {
+                    children: [
+                      s.text(str.is('a'))
+                    ]
+                  }),
+                  s.text(str.is(' b'))
+                ]
+              }),
+              s.element('p', {
+                children: [
+                  s.text(str.is('c'))
+                ]
+              }),
+              s.element('div', {
+                classes: [ arr.has('mce-offscreen-selection') ]
+              })
+            ]
+          }))
         )
       ]),
 
@@ -57,30 +55,28 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
         tinyActions.sContentKeystroke(46, {}), // 46 = delete keycode
         tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 1),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('body', {
-              children: [
-                s.element('div', {
-                  children: [
-                    s.element('span', {
-                      children: [
-                        s.text(str.is('a'))
-                      ]
-                    }),
-                    s.text(str.is(' b'))
-                  ]
-                }),
-                s.element('p', {
-                  children: [
-                    s.text(str.is('c'))
-                  ]
-                }),
-                s.element('div', {
-                  classes: [ arr.has('mce-offscreen-selection') ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, arr) => s.element('body', {
+            children: [
+              s.element('div', {
+                children: [
+                  s.element('span', {
+                    children: [
+                      s.text(str.is('a'))
+                    ]
+                  }),
+                  s.text(str.is(' b'))
+                ]
+              }),
+              s.element('p', {
+                children: [
+                  s.text(str.is('c'))
+                ]
+              }),
+              s.element('div', {
+                classes: [ arr.has('mce-offscreen-selection') ]
+              })
+            ]
+          }))
         )
       ]),
 
@@ -91,27 +87,25 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
         tinyApis.sAssertSelection([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, _arr) => {
-            return s.element('body', {
-              children: [
-                s.element('div', {
-                  children: [
-                    s.element('span', {
-                      children: [
-                        s.text(str.is(Unicode.nbsp + 'b'))
-                      ]
-                    }),
-                    s.text(str.is(' c'))
-                  ]
-                }),
-                s.element('p', {
-                  children: [
-                    s.text(str.is('d'))
-                  ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, _arr) => s.element('body', {
+            children: [
+              s.element('div', {
+                children: [
+                  s.element('span', {
+                    children: [
+                      s.text(str.is(Unicode.nbsp + 'b'))
+                    ]
+                  }),
+                  s.text(str.is(' c'))
+                ]
+              }),
+              s.element('p', {
+                children: [
+                  s.text(str.is('d'))
+                ]
+              })
+            ]
+          }))
         )
       ])
     ];
@@ -125,28 +119,26 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
         tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 1 ], 1),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, _arr) => {
-            return s.element('body', {
-              children: [
-                s.element('div', {
-                  children: [
-                    s.element('span', {
-                      children: [
-                        s.text(str.is('a'))
-                      ]
-                    }),
-                    s.text(str.is(Unicode.zeroWidth)),
-                    s.text(str.is(' b'))
-                  ]
-                }),
-                s.element('p', {
-                  children: [
-                    s.text(str.is('c'))
-                  ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, _arr) => s.element('body', {
+            children: [
+              s.element('div', {
+                children: [
+                  s.element('span', {
+                    children: [
+                      s.text(str.is('a'))
+                    ]
+                  }),
+                  s.text(str.is(Unicode.zeroWidth)),
+                  s.text(str.is(' b'))
+                ]
+              }),
+              s.element('p', {
+                children: [
+                  s.text(str.is('c'))
+                ]
+              })
+            ]
+          }))
         )
       ]),
 
@@ -157,28 +149,26 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteNoneditableTest', (succ
         tinyActions.sContentKeystroke(46, {}), // 46 = delete keycode
         tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, _arr) => {
-            return s.element('body', {
-              children: [
-                s.element('div', {
-                  children: [
-                    s.text(str.is(Unicode.zeroWidth)),
-                    s.element('span', {
-                      children: [
-                        s.text(str.is('a'))
-                      ]
-                    }),
-                    s.text(str.is(' b'))
-                  ]
-                }),
-                s.element('p', {
-                  children: [
-                    s.text(str.is('c'))
-                  ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, _arr) => s.element('body', {
+            children: [
+              s.element('div', {
+                children: [
+                  s.text(str.is(Unicode.zeroWidth)),
+                  s.element('span', {
+                    children: [
+                      s.text(str.is('a'))
+                    ]
+                  }),
+                  s.text(str.is(' b'))
+                ]
+              }),
+              s.element('p', {
+                children: [
+                  s.text(str.is('c'))
+                ]
+              })
+            ]
+          }))
         )
       ])
     ];

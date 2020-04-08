@@ -19,9 +19,7 @@ UnitTest.asynctest('HttpDownloadTest', (success, failure) => {
         total += loaded;
       }
     }
-  ).bindFuture((blob) => {
-    return FutureResult.fromFuture<string, HttpError>(readBlobAsText(blob));
-  }).get((result) => {
+  ).bindFuture((blob) => FutureResult.fromFuture<string, HttpError>(readBlobAsText(blob))).get((result) => {
     result.fold(
       (err) => failure(err.message),
       (actualText) => {

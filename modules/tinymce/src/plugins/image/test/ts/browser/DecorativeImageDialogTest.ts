@@ -19,9 +19,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.DescriptiveImageDialogTest', (
     const sPressTab = Keyboard.sKeydown(doc, Keys.tab(), {});
     const sPressEsc = Keyboard.sKeydown(doc, Keys.escape(), {});
 
-    const sAssertFocused = (name, selector) => {
-      return FocusTools.sTryOnSelector(name, doc, selector);
-    };
+    const sAssertFocused = (name, selector) => FocusTools.sTryOnSelector(name, doc, selector);
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Insert Image Dialog basic keyboard navigation cycle ', [

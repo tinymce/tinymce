@@ -22,18 +22,23 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.DblClickCodesampleTest', 
 
     Pipeline.async({},
       [
-        Log.stepsAsStep('TBA', 'CodeSample: TBA-Open the dialog and check it has the right initial values. Set the codesample content, submit and check the editor content changes correctly. Double-click on the editor and check if the dialog opens with the correct language and content.', [
-          TestUtils.sOpenDialogAndAssertInitial(editor, docBody, 'markup', ''),
-          TestUtils.sSetTextareaContent(markupContent),
-          TestUtils.sSubmitDialog(docBody),
-          TestUtils.sAssertEditorContents(editorBody, 'markup', markupContent, 'pre.language-markup'),
-          Step.sync(function () {
-            const pre = editor.getBody().querySelector('pre');
-            editor.fire('dblclick', { target: pre });
-          }),
-          UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
-          TestUtils.sAssertCodeSampleDialog('markup', markupContent),
-        ]),
+        Log.stepsAsStep(
+          'TBA',
+          'CodeSample: TBA-Open the dialog and check it has the right initial values. ' +
+          'Set the codesample content, submit and check the editor content changes correctly. ' +
+          'Double-click on the editor and check if the dialog opens with the correct language and content.', [
+            TestUtils.sOpenDialogAndAssertInitial(editor, docBody, 'markup', ''),
+            TestUtils.sSetTextareaContent(markupContent),
+            TestUtils.sSubmitDialog(docBody),
+            TestUtils.sAssertEditorContents(editorBody, 'markup', markupContent, 'pre.language-markup'),
+            Step.sync(function () {
+              const pre = editor.getBody().querySelector('pre');
+              editor.fire('dblclick', { target: pre });
+            }),
+            UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
+            TestUtils.sAssertCodeSampleDialog('markup', markupContent),
+          ]
+        ),
 
         Log.stepsAsStep('TBA', 'CodeSample: Selecting code sample should update button state', [
           tinyApis.sSetContent('<p>abc</p><pre class="language-markup"><code></code></pre>'),

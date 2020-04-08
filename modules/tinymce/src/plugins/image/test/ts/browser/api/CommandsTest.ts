@@ -35,33 +35,31 @@ UnitTest.asynctest('browser.tinymce.plugins.image.api.CommandsTest', (success, f
         }),
         api.sSetCursor([ 0, 0 ], 1),
         api.sAssertContentStructure(
-          ApproxStructure.build((s, str, _arr) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  children: [
-                    s.text(str.is('a')),
-                    s.element('img', {
-                      attrs: {
-                        class: str.is('cls1'),
-                        title: str.is('title'),
-                        src: str.is('#2'),
-                        alt: str.is('alt'),
-                        width: str.is('100'),
-                        height: str.is('200')
-                      },
-                      styles: {
-                        'color': str.is('red'),
-                        'border-width': str.is('3px'),
-                        'border-style': str.is('solid'),
-                        'margin': str.is('2px 1px')
-                      }
-                    }),
-                  ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, _arr) => s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.text(str.is('a')),
+                  s.element('img', {
+                    attrs: {
+                      class: str.is('cls1'),
+                      title: str.is('title'),
+                      src: str.is('#2'),
+                      alt: str.is('alt'),
+                      width: str.is('100'),
+                      height: str.is('200')
+                    },
+                    styles: {
+                      'color': str.is('red'),
+                      'border-width': str.is('3px'),
+                      'border-style': str.is('solid'),
+                      'margin': str.is('2px 1px')
+                    }
+                  }),
+                ]
+              })
+            ]
+          }))
         )
       ]),
       Log.stepsAsStep('TBA', 'Update image with all data specified except caption and isDecorative', [
@@ -84,32 +82,30 @@ UnitTest.asynctest('browser.tinymce.plugins.image.api.CommandsTest', (success, f
         }),
         api.sSetCursor([ 0 ], 1),
         api.sAssertContentStructure(
-          ApproxStructure.build((s, str, _arr) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  children: [
-                    s.element('img', {
-                      attrs: {
-                        class: str.is('cls1'),
-                        title: str.is('title'),
-                        src: str.is('#2'),
-                        alt: str.is('alt'),
-                        width: str.is('100'),
-                        height: str.is('200')
-                      },
-                      styles: {
-                        'color': str.is('red'),
-                        'border-width': str.is('3px'),
-                        'border-style': str.is('solid'),
-                        'margin': str.is('2px 1px')
-                      }
-                    }),
-                  ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, str, _arr) => s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.element('img', {
+                    attrs: {
+                      class: str.is('cls1'),
+                      title: str.is('title'),
+                      src: str.is('#2'),
+                      alt: str.is('alt'),
+                      width: str.is('100'),
+                      height: str.is('200')
+                    },
+                    styles: {
+                      'color': str.is('red'),
+                      'border-width': str.is('3px'),
+                      'border-style': str.is('solid'),
+                      'margin': str.is('2px 1px')
+                    }
+                  }),
+                ]
+              })
+            ]
+          }))
         )
       ]),
       Log.stepsAsStep('TBA', 'Update image with null alt value', [

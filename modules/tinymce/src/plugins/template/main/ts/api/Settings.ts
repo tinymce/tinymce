@@ -31,13 +31,9 @@ const getTemplates = function (editorSettings) {
   return editorSettings.templates;
 };
 
-const getCdateFormat = (editor: Editor) => {
-  return editor.getParam('template_cdate_format', editor.translate('%Y-%m-%d'));
-};
+const getCdateFormat = (editor: Editor) => editor.getParam('template_cdate_format', editor.translate('%Y-%m-%d'));
 
-const getMdateFormat = (editor: Editor) => {
-  return editor.getParam('template_mdate_format', editor.translate('%Y-%m-%d'));
-};
+const getMdateFormat = (editor: Editor) => editor.getParam('template_mdate_format', editor.translate('%Y-%m-%d'));
 
 export {
   getCreationDateClasses,

@@ -1,19 +1,10 @@
-/* tslint:disable:no-shadowed-variable no-unimported-promise */
 import { setTimeout, Window } from '@ephox/dom-globals';
-
-/* eslint-disable */
-
-/* jshint ignore:start */
 
 /**
  * Modified to be a feature fill and wrapped as tinymce module.
  *
  * Promise polyfill under MIT license: https://github.com/taylorhakes/promise-polyfill
  */
-
-/* jshint ignore:end */
-
-/* eslint-enable */
 
 type Callback<T, TResult = T> = ((value: T) => TResult | PromiseLike<TResult>);
 type RejectFn = (reason?: any) => void;
@@ -32,7 +23,10 @@ interface PromisePolyfill<T> extends Promise<T> {
   _value: any;
   _deferreds: Deferred<T>[];
 
-  then<TResult1 = T, TResult2 = never>(onFulfilled?: Callback<T, TResult1> | undefined | null, onRejected?: Callback<any, TResult2> | undefined | null): PromisePolyfill<TResult1 | TResult2>;
+  then<TResult1 = T, TResult2 = never>(
+    onFulfilled?: Callback<T, TResult1> | undefined | null,
+    onRejected?: Callback<any, TResult2> | undefined | null
+  ): PromisePolyfill<TResult1 | TResult2>;
 
   catch<TResult = never>(onRejected?: Callback<any, TResult> | undefined | null): Promise<T | TResult>;
 }
@@ -71,7 +65,9 @@ const promise = <T>(): PromisePolyfillConstructor => {
     };
   }
 
-  const isArray = Array.isArray || function (value) { return Object.prototype.toString.call(value) === '[object Array]'; };
+  const isArray = Array.isArray || function (value) {
+    return Object.prototype.toString.call(value) === '[object Array]';
+  };
 
   function handle(this: PromisePolyfill<T>, deferred: Deferred<T>) {
     const me = this;
@@ -128,7 +124,13 @@ const promise = <T>(): PromisePolyfillConstructor => {
     this._deferreds = [];
   }
 
-  function Handler<TResult1 = T, TResult2 = never>(this: Deferred<T, TResult1, TResult2>, onFulfilled: Callback<T, TResult1> | null | undefined, onRejected: Callback<any, TResult2> | null | undefined, resolve: ResolveFn<TResult1 | TResult2>, reject: RejectFn) {
+  function Handler<TResult1 = T, TResult2 = never>(
+    this: Deferred<T, TResult1, TResult2>,
+    onFulfilled: Callback<T, TResult1> | null | undefined,
+    onRejected: Callback<any, TResult2> | null | undefined,
+    resolve: ResolveFn<TResult1 | TResult2>,
+    reject: RejectFn
+  ) {
     this.onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : null;
     this.onRejected = typeof onRejected === 'function' ? onRejected : null;
     this.resolve = resolve;
@@ -141,7 +143,11 @@ const promise = <T>(): PromisePolyfillConstructor => {
    *
    * Makes no guarantees about asynchrony.
    */
-  function doResolve<TResult1 = T, TResult2 = never>(fn: Executor<T>, onFulfilled: Callback<T, TResult1>, onRejected: Callback<any, TResult2>) {
+  function doResolve<TResult1 = T, TResult2 = never>(
+    fn: Executor<T>,
+    onFulfilled: Callback<T, TResult1>,
+    onRejected: Callback<any, TResult2>
+  ) {
     let done = false;
     try {
       fn(function (value) {
@@ -166,11 +172,16 @@ const promise = <T>(): PromisePolyfillConstructor => {
     }
   }
 
-  Promise.prototype.catch = function <TResult = never> (onRejected?: Callback<any, TResult> | null): PromisePolyfill<T | TResult> {
+  Promise.prototype.catch = function <TResult = never> (
+    onRejected?: Callback<any, TResult> | null
+  ): PromisePolyfill<T | TResult> {
     return this.then(null, onRejected);
   };
 
-  Promise.prototype.then = function <TResult1 = T, TResult2 = never> (onFulfilled?: Callback<T, TResult1> | null, onRejected?: Callback<any, TResult2> | null): PromisePolyfill<TResult1 | TResult2> {
+  Promise.prototype.then = function <TResult1 = T, TResult2 = never> (
+    onFulfilled?: Callback<T, TResult1> | null,
+    onRejected?: Callback<any, TResult2> | null
+  ): PromisePolyfill<TResult1 | TResult2> {
     const me = this;
     return new Promise(function (resolve, reject) {
       handle.call(me, new (Handler as any)(onFulfilled, onRejected, resolve, reject));

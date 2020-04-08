@@ -21,9 +21,7 @@ const view = (doc: Element): Option<Element> => {
   return element.map(Element.fromDom);
 };
 
-const owner = (element: Element): Element => {
-  return Traverse.owner(element);
-};
+const owner = (element: Element): Element => Traverse.owner(element);
 
 export {
   view,

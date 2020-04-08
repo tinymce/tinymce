@@ -113,13 +113,9 @@ const getClipboardContent = (editor: Editor, clipboardEvent: ClipboardEvent) => 
   return Utils.isMsEdge() ? Tools.extend(content, { 'text/html': '' }) : content;
 };
 
-const hasContentType = (clipboardContent: ClipboardContents, mimeType: string) => {
-  return mimeType in clipboardContent && clipboardContent[mimeType].length > 0;
-};
+const hasContentType = (clipboardContent: ClipboardContents, mimeType: string) => mimeType in clipboardContent && clipboardContent[mimeType].length > 0;
 
-const hasHtmlOrText = (content: ClipboardContents) => {
-  return hasContentType(content, 'text/html') || hasContentType(content, 'text/plain');
-};
+const hasHtmlOrText = (content: ClipboardContents) => hasContentType(content, 'text/html') || hasContentType(content, 'text/plain');
 
 const getBase64FromUri = (uri: string) => {
   let idx;
@@ -132,9 +128,7 @@ const getBase64FromUri = (uri: string) => {
   return null;
 };
 
-const isValidDataUriImage = (settings, imgElm: HTMLImageElement) => {
-  return settings.images_dataimg_filter ? settings.images_dataimg_filter(imgElm) : true;
-};
+const isValidDataUriImage = (settings, imgElm: HTMLImageElement) => settings.images_dataimg_filter ? settings.images_dataimg_filter(imgElm) : true;
 
 const extractFilename = (editor: Editor, str: string) => {
   const m = str.match(/([\s\S]+?)\.(?:jpeg|jpg|png|gif)$/i);
@@ -175,22 +169,18 @@ const pasteImage = (editor: Editor, imageItem) => {
 
 const isClipboardEvent = (event: Event): event is ClipboardEvent => event.type === 'paste';
 
-const readBlobsAsDataUris = (items: File[]) => {
-  return Promise.all(Arr.map(items, (item: any) => {
-    return new Promise((resolve) => {
-      const blob = item.getAsFile ? item.getAsFile() : item;
+const readBlobsAsDataUris = (items: File[]) => Promise.all(Arr.map(items, (item: any) => new Promise((resolve) => {
+  const blob = item.getAsFile ? item.getAsFile() : item;
 
-      const reader = new window.FileReader();
-      reader.onload = () => {
-        resolve({
-          blob,
-          uri: reader.result
-        });
-      };
-      reader.readAsDataURL(blob);
+  const reader = new window.FileReader();
+  reader.onload = () => {
+    resolve({
+      blob,
+      uri: reader.result
     });
-  }));
-};
+  };
+  reader.readAsDataURL(blob);
+})));
 
 const getImagesFromDataTransfer = (dataTransfer: DataTransfer) => {
   const items = dataTransfer.items ? Arr.map(Arr.from(dataTransfer.items), (item) => item.getAsFile()) : [];
@@ -245,9 +235,7 @@ const isBrokenAndroidClipboardEvent = (e: ClipboardEvent) => {
   return navigator.userAgent.indexOf('Android') !== -1 && clipboardData && clipboardData.items && clipboardData.items.length === 0;
 };
 
-const isKeyboardPasteEvent = (e: KeyboardEvent) => {
-  return (VK.metaKeyPressed(e) && e.keyCode === 86) || (e.shiftKey && e.keyCode === 45);
-};
+const isKeyboardPasteEvent = (e: KeyboardEvent) => (VK.metaKeyPressed(e) && e.keyCode === 86) || (e.shiftKey && e.keyCode === 45);
 
 const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: Cell<string>) => {
   const keyboardPasteEvent = Singleton.value();
@@ -444,9 +432,7 @@ const registerEventsAndFilters = (editor: Editor, pasteBin: PasteBin, pasteForma
   // Remove all data images from paste for example from Gecko
   // except internal images like video elements
   editor.parser.addNodeFilter('img', (nodes, name, args) => {
-    const isPasteInsert = (args) => {
-      return args.data && args.data.paste === true;
-    };
+    const isPasteInsert = (args) => args.data && args.data.paste === true;
 
     const remove = (node) => {
       if (!node.attr('data-mce-object') && src !== Env.transparentSrc) {
@@ -454,13 +440,9 @@ const registerEventsAndFilters = (editor: Editor, pasteBin: PasteBin, pasteForma
       }
     };
 
-    const isWebKitFakeUrl = (src) => {
-      return src.indexOf('webkit-fake-url') === 0;
-    };
+    const isWebKitFakeUrl = (src) => src.indexOf('webkit-fake-url') === 0;
 
-    const isDataUri = (src: string) => {
-      return src.indexOf('data:') === 0;
-    };
+    const isDataUri = (src: string) => src.indexOf('data:') === 0;
 
     if (!editor.settings.paste_data_images && isPasteInsert(args)) {
       let i = nodes.length;

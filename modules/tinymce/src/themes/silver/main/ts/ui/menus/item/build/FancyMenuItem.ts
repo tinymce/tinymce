@@ -17,15 +17,11 @@ const fancyMenuItems: Record<keyof Menu.FancyActionArgsMap, (mi: Menu.FancyMenuI
   colorswatch: renderColorSwatchItem
 };
 
-const valueOpt = <T>(obj: Record<string, T>, key): Option<T> => {
-  return Object.prototype.hasOwnProperty.call(obj, key)
-    ? Option.some(obj[key])
-    : Option.none();
-};
+const valueOpt = <T>(obj: Record<string, T>, key): Option<T> => Object.prototype.hasOwnProperty.call(obj, key)
+  ? Option.some(obj[key])
+  : Option.none();
 
-const renderFancyMenuItem = (spec: Menu.FancyMenuItem, backstage: UiFactoryBackstage): Option<ItemTypes.WidgetItemSpec> => {
-  return valueOpt(fancyMenuItems, spec.fancytype).map((render) => render(spec, backstage));
-};
+const renderFancyMenuItem = (spec: Menu.FancyMenuItem, backstage: UiFactoryBackstage): Option<ItemTypes.WidgetItemSpec> => valueOpt(fancyMenuItems, spec.fancytype).map((render) => render(spec, backstage));
 
 export {
   renderFancyMenuItem

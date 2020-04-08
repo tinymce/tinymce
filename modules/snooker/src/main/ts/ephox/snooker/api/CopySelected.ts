@@ -82,10 +82,10 @@ const fillInGaps = <T>(list: RowData<T>[], house: Warehouse, stats: StatsStruct,
 
 const clean = (table: Element, stats: StatsStruct): void => {
   // can't use :empty selector as that will not include TRs made up of whitespace
-  const emptyRows = Arr.filter(LayerSelector.firstLayer(table, 'tr'), (row) => {
+  const emptyRows = Arr.filter(LayerSelector.firstLayer(table, 'tr'), (row) =>
     // there is no sugar method for this, and Traverse.children() does too much processing
-    return (row.dom() as HTMLElement).childElementCount === 0;
-  });
+    (row.dom() as HTMLElement).childElementCount === 0
+  );
   Arr.each(emptyRows, Remove.remove);
 
   // If there is only one column, or only one row, delete all the colspan/rowspan

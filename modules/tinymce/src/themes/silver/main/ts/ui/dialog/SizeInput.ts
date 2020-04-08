@@ -73,15 +73,13 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     ])
   });
 
-  const formGroup = (components) => {
-    return {
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-form__group' ]
-      },
-      components
-    };
-  };
+  const formGroup = (components) => ({
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-form__group' ]
+    },
+    components
+  });
 
   const getFieldPart = (isField1) => AlloyFormField.parts().field({
     factory: AlloyInput,
@@ -102,15 +100,13 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     selectOnFocus: false
   });
 
-  const getLabel = (label: string) => {
-    return {
-      dom: {
-        tag: 'label',
-        classes: [ 'tox-label' ],
-        innerHtml: providersBackstage.translate(label)
-      }
-    };
-  };
+  const getLabel = (label: string) => ({
+    dom: {
+      tag: 'label',
+      classes: [ 'tox-label' ],
+      innerHtml: providersBackstage.translate(label)
+    }
+  });
 
   const widthField = AlloyFormCoupledInputs.parts().field1(
     formGroup([ AlloyFormField.parts().label(getLabel('Width')), getFieldPart(true) ])

@@ -22,11 +22,7 @@ const cCloseDialog = Chain.fromChains([
   Mouse.cClick
 ]);
 
-const cFindByLabelFor = (labelText: string) => Chain.binder((outer: Element) => {
-  return UiFinder.findIn(outer, 'label:contains("' + labelText + '")').bind((labelEle) => {
-    return UiFinder.findIn(outer, '#' + Attr.get(labelEle, 'for'));
-  });
-});
+const cFindByLabelFor = (labelText: string) => Chain.binder((outer: Element) => UiFinder.findIn(outer, 'label:contains("' + labelText + '")').bind((labelEle) => UiFinder.findIn(outer, '#' + Attr.get(labelEle, 'for'))));
 
 UnitTest.asynctest('browser.tinymce.plugins.link.UrlInputTest', (success, failure) => {
   Theme();

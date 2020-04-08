@@ -7,14 +7,11 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const isSkinDisabled = (editor: Editor): boolean => {
-  return editor.settings.skin === false;
-};
+const isSkinDisabled = (editor: Editor): boolean => editor.settings.skin === false;
 
-const readOnlyOnInit = (_editor: Editor) => {
+const readOnlyOnInit = (_editor: Editor) =>
   // Intentional short circuit, TODO: implement editor.settings.mobile
-  return false;
-};
+  false;
 
 export {
   isSkinDisabled,

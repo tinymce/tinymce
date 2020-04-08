@@ -75,14 +75,14 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 
   PartType.external<ModalDialogDetail>({
     factory: {
-      sketch: (spec, detail) => {
+      sketch: (spec, detail) =>
         // Merging should take care of the uid
-        return {
+        ({
           ...spec,
           dom: detail.dom,
           components: detail.components
-        };
-      }
+        })
+
     },
     schema: [
       FieldSchema.defaulted('dom', {

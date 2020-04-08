@@ -25,14 +25,14 @@ const generateFrom = (spec: { behaviours?: BehaviourRecord }, all: Array<AlloyBe
    * and ensures that all the behaviours were valid. Will need to document
    * this entire process. Let's see where this is used.
    */
-  const schema: FieldProcessorAdt[] = Arr.map(all, (a) => {
+  const schema: FieldProcessorAdt[] = Arr.map(all, (a) =>
     // Option here probably just due to ForeignGui listing everything it supports. Can most likely
     // change it to strict once I fix the other errors.
-    return FieldSchema.optionObjOf(a.name(), [
+    FieldSchema.optionObjOf(a.name(), [
       FieldSchema.strict('config'),
       FieldSchema.defaulted('state', NoState)
-    ]);
-  });
+    ])
+  );
 
   type B = Record<string, Option<BehaviourSpec<BehaviourConfigSpec, BehaviourConfigDetail, BehaviourState>>>;
   const validated = ValueSchema.asRaw<B>(
@@ -58,13 +58,9 @@ const generateFrom = (spec: { behaviours?: BehaviourRecord }, all: Array<AlloyBe
   };
 };
 
-const getBehaviours = <C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState>(bData: BehaviourData<C, D, S>): Array<AlloyBehaviour<C, D, S>> => {
-  return bData.list;
-};
+const getBehaviours = <C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState>(bData: BehaviourData<C, D, S>): Array<AlloyBehaviour<C, D, S>> => bData.list;
 
-const getData = <C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState>(bData: BehaviourData<C, D, S>): Record<string, () => Option<BehaviourConfigAndState<D, S>>> => {
-  return bData.data;
-};
+const getData = <C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState>(bData: BehaviourData<C, D, S>): Record<string, () => Option<BehaviourConfigAndState<D, S>>> => bData.data;
 
 export {
   generateFrom,

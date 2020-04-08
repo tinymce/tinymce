@@ -108,19 +108,17 @@ UnitTest.asynctest('Editor Autocompleter delay response test', (success, failure
           ch: '$',
           minChars: 0,
           columns: 'auto',
-          fetch: (_pattern, _maxResults) => {
-            return new Promise((resolve) => {
-              setTimeout(() => {
-                resolve(
-                  Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
-                    value: `dollar-${letter}`,
-                    text: `dollar-${letter}`,
-                    icon: '$'
-                  }))
-                );
-              }, 500);
-            });
-          },
+          fetch: (_pattern, _maxResults) => new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(
+                Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
+                  value: `dollar-${letter}`,
+                  text: `dollar-${letter}`,
+                  icon: '$'
+                }))
+              );
+            }, 500);
+          }),
           onAction: (autocompleteApi, rng, value) => {
             store.adder('dollars:' + value)();
             ed.selection.setRng(rng);

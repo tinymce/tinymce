@@ -90,64 +90,58 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
     ).getOrDie();
 
     const sAssertTabSelection = (label: string, expected: boolean, element: Element) =>
-      Assertions.sAssertStructure(label + ' (asserting structure)', ApproxStructure.build((s, str, arr) => {
-        return s.element('button', {
-          attrs: {
-            'aria-selected': expected ? str.is('true') : str.is('false')
-          },
-          classes: [ (expected ? arr.has : arr.not)('selected-test-tab-button') ]
-        });
-      }), element);
+      Assertions.sAssertStructure(label + ' (asserting structure)', ApproxStructure.build((s, str, arr) => s.element('button', {
+        attrs: {
+          'aria-selected': expected ? str.is('true') : str.is('false')
+        },
+        classes: [ (expected ? arr.has : arr.not)('selected-test-tab-button') ]
+      })), element);
 
     const sAssertTabView = (label: string, expected: ApproxStructure.Builder<StructAssert[]>) =>
-      Assertions.sAssertStructure(label + ' (asserting structure)', ApproxStructure.build((s, str, arr) => {
-        return s.element('div', {
-          children: expected(s, str, arr)
-        });
-      }), tview.element());
+      Assertions.sAssertStructure(label + ' (asserting structure)', ApproxStructure.build((s, str, arr) => s.element('div', {
+        children: expected(s, str, arr)
+      })), tview.element());
 
     return [
       GuiSetup.mAddStyles(doc, [
         '.selected-test-tab-button { background: #cadbee; }'
       ]),
-      Assertions.sAssertStructure('Checking initial tab section', ApproxStructure.build((s, str, arr) => {
-        return s.element('div', {
-          children: [
-            s.element('div', {
-              attrs: {
-                'data-alloy-tabstop': str.is('true'),
-                'role': str.is('tablist')
-              },
-              children: [
-                s.element('button', {
-                  html: str.is('A'),
-                  attrs: {
-                    'data-alloy-id': str.none(),
-                    'aria-selected': str.is('true')
-                  },
-                  classes: [
-                    arr.has('test-tab-button')
-                  ]
-                }),
+      Assertions.sAssertStructure('Checking initial tab section', ApproxStructure.build((s, str, arr) => s.element('div', {
+        children: [
+          s.element('div', {
+            attrs: {
+              'data-alloy-tabstop': str.is('true'),
+              'role': str.is('tablist')
+            },
+            children: [
+              s.element('button', {
+                html: str.is('A'),
+                attrs: {
+                  'data-alloy-id': str.none(),
+                  'aria-selected': str.is('true')
+                },
+                classes: [
+                  arr.has('test-tab-button')
+                ]
+              }),
 
-                s.element('button', {
-                  html: str.is('B'),
-                  attrs: {
-                    'data-alloy-id': str.none(),
-                    'aria-selected': str.is('false')
-                  },
-                  classes: [
-                    arr.has('test-tab-button')
-                  ]
-                })
-              ]
-            }),
-            s.element('div', {
-              classes: [ arr.has('test-tabview') ]
-            })
-          ]
-        });
-      }), component.element()),
+              s.element('button', {
+                html: str.is('B'),
+                attrs: {
+                  'data-alloy-id': str.none(),
+                  'aria-selected': str.is('false')
+                },
+                classes: [
+                  arr.has('test-tab-button')
+                ]
+              })
+            ]
+          }),
+          s.element('div', {
+            classes: [ arr.has('test-tabview') ]
+          })
+        ]
+      })), component.element()),
 
       Logger.t(
         'Execute alpha, check tabs and tabview',

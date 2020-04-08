@@ -35,6 +35,4 @@ export const groupToolbarButtonSchema = ValueSchema.objOf([
   ])),
 ].concat(baseToolbarButtonFields));
 
-export const createGroupToolbarButton = (spec: any): Result<GroupToolbarButton, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<GroupToolbarButton>('GroupToolbarButton', groupToolbarButtonSchema, spec);
-};
+export const createGroupToolbarButton = (spec: any): Result<GroupToolbarButton, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<GroupToolbarButton>('GroupToolbarButton', groupToolbarButtonSchema, spec);

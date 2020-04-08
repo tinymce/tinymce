@@ -70,9 +70,7 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
       Tabstopping.config({ }),
       Invalidating.config({
         invalidClass: 'tox-textbox-field-invalid',
-        getRoot: (comp) => {
-          return Traverse.parent(comp.element());
-        },
+        getRoot: (comp) => Traverse.parent(comp.element()),
         notify: {
           onValid: (comp) => {
             // onValid should pass through the value here

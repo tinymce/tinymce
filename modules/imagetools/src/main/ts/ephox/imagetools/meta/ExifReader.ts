@@ -222,21 +222,9 @@ const tagDescs: Record<string, Record<number, string>> = {
   }
 };
 
-const readRational = (reader: BinaryReader, idx: number) => {
-  return readLong(reader, idx).bind((numerator) => {
-    return readLong(reader, idx + 4).map((denominator) => {
-      return numerator / denominator;
-    });
-  });
-};
+const readRational = (reader: BinaryReader, idx: number) => readLong(reader, idx).bind((numerator) => readLong(reader, idx + 4).map((denominator) => numerator / denominator));
 
-const readSignedRational = (reader: BinaryReader, idx: number) => {
-  return readSignedLong(reader, idx).bind((numerator) => {
-    return readSignedLong(reader, idx + 4).map((denominator) => {
-      return numerator / denominator;
-    });
-  });
-};
+const readSignedRational = (reader: BinaryReader, idx: number) => readSignedLong(reader, idx).bind((numerator) => readSignedLong(reader, idx + 4).map((denominator) => numerator / denominator));
 
 const extractTags = (reader: BinaryReader, ifdOffset: number, tiffHeaderOffset: number, tags2extract: Record<number, string>): Result<Record<string, unknown>, string> => {
 
@@ -461,36 +449,28 @@ export const readMetaData = (ar: ArrayBuffer): MetaData => {
     return readLong(reader, TIFF_HEADER + 4).map((ifb0Offset) => TIFF_HEADER + ifb0Offset);
   })();
 
-  const tiff = ifd0.bind((ifb0Start) => {
-    return extractTags(reader, ifb0Start, TIFF_HEADER, tags.tiff).map(parseTiffTags);
-  });
+  const tiff = ifd0.bind((ifb0Start) => extractTags(reader, ifb0Start, TIFF_HEADER, tags.tiff).map(parseTiffTags));
 
-  const exif = tiff.bind((tiffTags) => {
-    return tiffTags.ExifIFDPointer.fold(
-      () => Result.value(Option.none<ExifTags>()),
-      (exifOffset) => extractTags(reader, TIFF_HEADER + exifOffset, TIFF_HEADER, tags.exif)
-        .map(parseExifTags).map(Option.some)
-    );
-  });
+  const exif = tiff.bind((tiffTags) => tiffTags.ExifIFDPointer.fold(
+    () => Result.value(Option.none<ExifTags>()),
+    (exifOffset) => extractTags(reader, TIFF_HEADER + exifOffset, TIFF_HEADER, tags.exif)
+      .map(parseExifTags).map(Option.some)
+  ));
 
-  const gps = tiff.bind((tiffTags) => {
-    return tiffTags.GPSInfoIFDPointer.fold(
-      () => Result.value(Option.none<GPSTags>()),
-      (gpsOffset) => extractTags(reader, TIFF_HEADER + gpsOffset, TIFF_HEADER, tags.gps)
-        .map(parseGpsTags).map(Option.some)
-    );
-  });
+  const gps = tiff.bind((tiffTags) => tiffTags.GPSInfoIFDPointer.fold(
+    () => Result.value(Option.none<GPSTags>()),
+    (gpsOffset) => extractTags(reader, TIFF_HEADER + gpsOffset, TIFF_HEADER, tags.gps)
+      .map(parseGpsTags).map(Option.some)
+  ));
 
   const exififd = ifd0.bind((ifb0Start) => readShort(reader, ifb0Start).map((ifb0Length) => ifb0Start + 2 + (ifb0Length * 12)));
 
   const ifd1 = exififd.bind((exififdStart) => readLong(reader, exififdStart).map((ifb1Offset) => ifb1Offset + TIFF_HEADER));
 
-  const thumb = ifd1.bind((ifd1Start) => {
-    return extractTags(reader, ifd1Start, TIFF_HEADER, tags.thumb)
-      .bind(parseThumbTags)
-      .map((tags) => reader.segment(TIFF_HEADER + tags.JPEGInterchangeFormat, tags.JPEGInterchangeFormatLength))
-      .map(Option.some);
-  });
+  const thumb = ifd1.bind((ifd1Start) => extractTags(reader, ifd1Start, TIFF_HEADER, tags.thumb)
+    .bind(parseThumbTags)
+    .map((tags) => reader.segment(TIFF_HEADER + tags.JPEGInterchangeFormat, tags.JPEGInterchangeFormatLength))
+    .map(Option.some));
 
   return {
     tiff,

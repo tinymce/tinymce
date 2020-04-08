@@ -15,36 +15,34 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
   const sStructureTest = (editor: Editor, container: Element, maxWidth: number) => Logger.t('Check basic container structure and actions', GeneralSteps.sequence([
     Assertions.sAssertStructure(
       'Container structure',
-      ApproxStructure.build((s, str, arr) => {
-        return s.element('div', {
-          classes: [ arr.has('tox-tinymce'), arr.has('tox-tinymce-inline') ],
-          children: [
-            s.element('div', {
-              classes: [ arr.has('tox-editor-container') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-editor-header') ],
-                  styles: {
-                    'max-width': str.is(`${maxWidth}px`),
-                  },
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-toolbar-overlord') ],
-                      attrs: { role: str.is('group') }
-                    }),
-                    s.element('div', {
-                      classes: [ arr.has('tox-anchorbar') ]
-                    })
-                  ]
-                })
-              ]
-            }),
-            s.element('div', {
-              classes: [ arr.has('tox-throbber') ]
-            })
-          ]
-        });
-      }),
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-tinymce'), arr.has('tox-tinymce-inline') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-editor-container') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-editor-header') ],
+                styles: {
+                  'max-width': str.is(`${maxWidth}px`),
+                },
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-toolbar-overlord') ],
+                    attrs: { role: str.is('group') }
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-anchorbar') ]
+                  })
+                ]
+              })
+            ]
+          }),
+          s.element('div', {
+            classes: [ arr.has('tox-throbber') ]
+          })
+        ]
+      })),
       container
     )
   ]));
@@ -59,35 +57,33 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
     })
   ]);
 
-  const sTestRender = (label: string, settings: Record<string, any>, expectedWidth: number, additionalSteps: (editor: Editor, apis) => Step<any, any>[] = Fun.constant([])) => {
-    return Step.label(label, Step.raw((_, done, die, logs) => {
-      TinyLoader.setup((editor, onSuccess, onFailure) => {
-        const uiContainer = Element.fromDom(editor.getContainer());
-        const tinyApis = TinyApis(editor);
+  const sTestRender = (label: string, settings: Record<string, any>, expectedWidth: number, additionalSteps: (editor: Editor, apis) => Step<any, any>[] = Fun.constant([])) => Step.label(label, Step.raw((_, done, die, logs) => {
+    TinyLoader.setup((editor, onSuccess, onFailure) => {
+      const uiContainer = Element.fromDom(editor.getContainer());
+      const tinyApis = TinyApis(editor);
 
-        Pipeline.async({}, [
-          Step.sync(() => Scroll.to(0, 0)),
-          tinyApis.sFocus(),
-          sStructureTest(editor, uiContainer, expectedWidth),
-          sAssetWidth(uiContainer, expectedWidth, expectedWidth - 100),
-          tinyApis.sSetContent(Arr.range(100, () => '<p></p>').join('')),
-          Step.sync(() => Scroll.to(0, 500)),
-          UiFinder.sWaitForVisible('Wait to be docked', Body.body(), '.tox-tinymce--toolbar-sticky-on .tox-editor-header'),
-          sAssetWidth(uiContainer, expectedWidth, expectedWidth - 100),
-          ...additionalSteps(editor, tinyApis)
-        ], onSuccess, onFailure, logs);
-      },
-      {
-        theme: 'silver',
-        menubar: false,
-        inline: true,
-        base_url: '/project/tinymce/js/tinymce',
-        toolbar_mode: 'floating',
-        ...settings
-      }, done, die
-      );
-    }));
-  };
+      Pipeline.async({}, [
+        Step.sync(() => Scroll.to(0, 0)),
+        tinyApis.sFocus(),
+        sStructureTest(editor, uiContainer, expectedWidth),
+        sAssetWidth(uiContainer, expectedWidth, expectedWidth - 100),
+        tinyApis.sSetContent(Arr.range(100, () => '<p></p>').join('')),
+        Step.sync(() => Scroll.to(0, 500)),
+        UiFinder.sWaitForVisible('Wait to be docked', Body.body(), '.tox-tinymce--toolbar-sticky-on .tox-editor-header'),
+        sAssetWidth(uiContainer, expectedWidth, expectedWidth - 100),
+        ...additionalSteps(editor, tinyApis)
+      ], onSuccess, onFailure, logs);
+    },
+    {
+      theme: 'silver',
+      menubar: false,
+      inline: true,
+      base_url: '/project/tinymce/js/tinymce',
+      toolbar_mode: 'floating',
+      ...settings
+    }, done, die
+    );
+  }));
 
   Pipeline.async({}, [
     sTestRender('Check max-width is 400px when set via init', { width: 400 }, 400),

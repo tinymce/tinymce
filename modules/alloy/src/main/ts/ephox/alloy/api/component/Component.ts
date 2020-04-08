@@ -55,9 +55,7 @@ const getEvents = (
 };
 
 const build = (spec: ComponentDetail): AlloyComponent => {
-  const getMe = () => {
-    return me;
-  };
+  const getMe = () => me;
 
   const systemApi = Cell(singleton);
 
@@ -85,15 +83,11 @@ const build = (spec: ComponentDetail): AlloyComponent => {
   const syncComponents = (): void => {
     // Update the component list with the current children
     const children = Traverse.children(item);
-    const subs = Arr.bind(children, (child) => {
-
-      return systemApi.get().getByDom(child).fold(() => {
-        // INVESTIGATE: Not sure about how to handle text nodes here.
-        return [ ];
-      }, (c) => {
-        return [ c ];
-      });
-    });
+    // INVESTIGATE: Not sure about how to handle text nodes here.
+    const subs = Arr.bind(children, (child) => systemApi.get().getByDom(child).fold(
+      () => [ ],
+      (c) => [ c ]
+    ));
     subcomponents.set(subs);
   };
 
@@ -106,19 +100,11 @@ const build = (spec: ComponentDetail): AlloyComponent => {
     return f();
   };
 
-  const hasConfigured = (behaviour: AlloyBehaviour<any, any>): boolean => {
-    return Type.isFunction(bData[behaviour.name()]);
-  };
+  const hasConfigured = (behaviour: AlloyBehaviour<any, any>): boolean => Type.isFunction(bData[behaviour.name()]);
 
-  const getApis = <A>(): A => {
-    return info.apis;
-  };
+  const getApis = <A>(): A => info.apis;
 
-  const readState = (behaviourName: string): any => {
-    return bData[behaviourName]().map((b) => {
-      return b.state.readState();
-    }).getOr('not enabled');
-  };
+  const readState = (behaviourName: string): any => bData[behaviourName]().map((b) => b.state.readState()).getOr('not enabled');
 
   const me: AlloyComponent = {
     getSystem: systemApi.get,

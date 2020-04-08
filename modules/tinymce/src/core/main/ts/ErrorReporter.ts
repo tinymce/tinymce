@@ -37,11 +37,9 @@ const logError = (editor: Editor, errorType: string, msg: string) => {
   console.error(msg);
 };
 
-const createLoadError = (type: string, url: string, name?: string) => {
-  return name ?
-    `Failed to load ${type}: ${name} from url ${url}` :
-    `Failed to load ${type} url: ${url}`;
-};
+const createLoadError = (type: string, url: string, name?: string) => name ?
+  `Failed to load ${type}: ${name} from url ${url}` :
+  `Failed to load ${type} url: ${url}`;
 
 const pluginLoadError = (editor: Editor, url: string, name?: string) => {
   logError(editor, 'PluginLoadError', createLoadError('plugin', url, name));

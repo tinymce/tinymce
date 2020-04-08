@@ -16,38 +16,32 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
 
       const tinyUi = TinyUi(editor);
 
-      const sAssertMenu = (label: string, expected, hasIcons) => {
-        return Chain.asStep(Body.body(), [
-          UiFinder.cWaitForVisible('Waiting for styles menu to appear', '[role="menu"]'),
-          Assertions.cAssertStructure('Checking structure', ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-menu') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-collection__group') ],
-                  children: Arr.map(expected, (exp) => {
-                    return s.element('div', {
-                      classes: [ arr.has('tox-collection__item') ],
-                      children: [
-                        ...hasIcons ? [ s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }) ] : [ ],
-                        s.element('div', exp.submenu ? {
-                          classes: [ arr.has('tox-collection__item-label') ],
-                          html: str.is(exp.html)
-                        } : {
-                          classes: [ arr.has('tox-collection__item-label') ],
-                          children: [
-                            s.element(exp.tag, { html: str.is(exp.html) })
-                          ]
-                        })
-                      ].concat(exp.submenu ? [ s.anything() ] : [ ])
-                    });
+      const sAssertMenu = (label: string, expected, hasIcons) => Chain.asStep(Body.body(), [
+        UiFinder.cWaitForVisible('Waiting for styles menu to appear', '[role="menu"]'),
+        Assertions.cAssertStructure('Checking structure', ApproxStructure.build((s, str, arr) => s.element('div', {
+          classes: [ arr.has('tox-menu') ],
+          children: [
+            s.element('div', {
+              classes: [ arr.has('tox-collection__group') ],
+              children: Arr.map(expected, (exp) => s.element('div', {
+                classes: [ arr.has('tox-collection__item') ],
+                children: [
+                  ...hasIcons ? [ s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }) ] : [ ],
+                  s.element('div', exp.submenu ? {
+                    classes: [ arr.has('tox-collection__item-label') ],
+                    html: str.is(exp.html)
+                  } : {
+                    classes: [ arr.has('tox-collection__item-label') ],
+                    children: [
+                      s.element(exp.tag, { html: str.is(exp.html) })
+                    ]
                   })
-                })
-              ]
-            });
-          }))
-        ]);
-      };
+                ].concat(exp.submenu ? [ s.anything() ] : [ ])
+              }))
+            })
+          ]
+        })))
+      ]);
 
       const sOpenStyleMenu = GeneralSteps.sequence([
         tinyUi.sClickOnToolbar('Clicking on the styleselect dropdown', 'button')
@@ -239,9 +233,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
         {
           content_css: [ '/project/tinymce/src/plugins/importcss/test/css/basic.css' ],
           importcss_append: false,
-          importcss_selector_filter: (sel) => {
-            return sel.indexOf('p') > -1 || sel.indexOf('inline') > -1;
-          }
+          importcss_selector_filter: (sel) => sel.indexOf('p') > -1 || sel.indexOf('inline') > -1
         }
       )
     ),
@@ -309,9 +301,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
             '/project/tinymce/src/plugins/importcss/test/css/other-adv.css'
           ],
           importcss_append: false,
-          importcss_file_filter: (href) => {
-            return href.indexOf('adv') > -1;
-          }
+          importcss_file_filter: (href) => href.indexOf('adv') > -1
         }
       )
     ),

@@ -9,50 +9,46 @@ UnitTest.asynctest('tinymce.themes.silver.test.browser.throbber.ThrobberTest', (
 
   const sAssertThrobberHiddenStructure = Chain.asStep(Body.body(), [
     UiFinder.cFindIn('.tox-throbber'),
-    Assertions.cAssertStructure('Checking disabled structure', ApproxStructure.build((s, str, arr) => {
-      return s.element('div', {
-        attrs: {
-          'aria-hidden': str.is('true')
-        },
-        classes: [ arr.has('tox-throbber') ],
-        styles: {
-          display: str.is('none')
-        }
-      });
-    }))
+    Assertions.cAssertStructure('Checking disabled structure', ApproxStructure.build((s, str, arr) => s.element('div', {
+      attrs: {
+        'aria-hidden': str.is('true')
+      },
+      classes: [ arr.has('tox-throbber') ],
+      styles: {
+        display: str.is('none')
+      }
+    })))
   ]);
 
   const sAssertThrobberShownStructure = Chain.asStep(Body.body(), [
     UiFinder.cFindIn('.tox-throbber'),
-    Assertions.cAssertStructure('Checking enabled structure', ApproxStructure.build((s, str, arr) => {
-      return s.element('div', {
-        attrs: {
-          'aria-hidden': str.none()
-        },
-        classes: [ arr.has('tox-throbber') ],
-        styles: {
-          display: str.none()
-        },
-        children: [
-          s.element('div', {
-            attrs: {
-              'aria-label': str.is('Loading...')
-            },
-            classes: [ arr.has('tox-throbber__busy-spinner') ],
-            children: [
-              s.element('div', {
-                classes: [ arr.has('tox-spinner') ],
-                children: [
-                  s.element('div', { }),
-                  s.element('div', { }),
-                  s.element('div', { })
-                ]
-              })
-            ]
-          })
-        ]
-      });
-    }))
+    Assertions.cAssertStructure('Checking enabled structure', ApproxStructure.build((s, str, arr) => s.element('div', {
+      attrs: {
+        'aria-hidden': str.none()
+      },
+      classes: [ arr.has('tox-throbber') ],
+      styles: {
+        display: str.none()
+      },
+      children: [
+        s.element('div', {
+          attrs: {
+            'aria-label': str.is('Loading...')
+          },
+          classes: [ arr.has('tox-throbber__busy-spinner') ],
+          children: [
+            s.element('div', {
+              classes: [ arr.has('tox-spinner') ],
+              children: [
+                s.element('div', { }),
+                s.element('div', { }),
+                s.element('div', { })
+              ]
+            })
+          ]
+        })
+      ]
+    })))
   ]);
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {

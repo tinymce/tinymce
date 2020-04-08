@@ -22,21 +22,17 @@ const arrOfVal = function (): Processor {
 const valueThunkOf = valueThunk;
 
 const valueOf = function (validator: (a: any) => Result<any, any>): Processor {
-  return value((v) => {
+  return value((v) =>
     // Intentionally not exposing "strength" at the API level
-    return validator(v).fold<any>(SimpleResult.serror, SimpleResult.svalue);
-  });
+    validator(v).fold<any>(SimpleResult.serror, SimpleResult.svalue)
+  );
 };
 
-const setOf = (validator: (a) => Result<any, any>, prop: Processor): Processor => {
-  return doSetOf((v) => SimpleResult.fromResult(validator(v)), prop);
-};
+const setOf = (validator: (a) => Result<any, any>, prop: Processor): Processor => doSetOf((v) => SimpleResult.fromResult(validator(v)), prop);
 
 const extract = function (label: string, prop: Processor, strength, obj: any): SimpleResult<any, any> {
   const res = prop.extract([ label ], strength, obj);
-  return SimpleResult.mapError(res, (errs) => {
-    return { input: obj, errors: errs };
-  });
+  return SimpleResult.mapError(res, (errs) => ({ input: obj, errors: errs }));
 };
 
 const asStruct = function <T, U = any> (label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> {
@@ -143,9 +139,7 @@ const isPostMessageable = (val: any): boolean => {
   }
 };
 
-const postMessageable = value((a) => {
-  return isPostMessageable(a) ? SimpleResult.svalue(a) : SimpleResult.serror('Expected value to be acceptable for sending via postMessage');
-});
+const postMessageable = value((a) => isPostMessageable(a) ? SimpleResult.svalue(a) : SimpleResult.serror('Expected value to be acceptable for sending via postMessage'));
 
 export {
   anyValue,

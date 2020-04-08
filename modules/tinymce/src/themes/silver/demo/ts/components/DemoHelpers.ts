@@ -110,35 +110,31 @@ const setupDemo = () => {
       interpreter: (x) => x,
       getSink: () => Result.value(sink),
       anchors: {
-        inlineDialog: () => {
+        inlineDialog: () =>
           // NOTE: Non-sensical
-          return {
+          ({
             anchor: 'hotspot',
             hotspot: sink
-          };
-        },
-        banner: () => {
+          }),
+        banner: () =>
           // NOTE: Non-sensical
-          return {
+          ({
             anchor: 'hotspot',
             hotspot: sink
-          };
-        },
-        cursor: () => {
+          }),
+        cursor: () =>
           // NOTE: Non-sensical
-          return {
+          ({
             anchor: 'selection',
             root: Body.body()
-          };
-        },
-        node: (elem) => {
+          }),
+        node: (elem) =>
           // NOTE: Non-sensical
-          return {
+          ({
             anchor: 'node',
             root: Body.body(),
             node: elem
-          };
-        }
+          })
       }
     },
     colorinput: fakecolorinputBackstage,

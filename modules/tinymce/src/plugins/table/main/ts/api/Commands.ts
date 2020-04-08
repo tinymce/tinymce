@@ -47,16 +47,12 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
       });
   };
 
-  const getTableFromCell = (cell: Element): Option<Element> => {
-    return TableLookup.table(cell, isRoot);
-  };
+  const getTableFromCell = (cell: Element): Option<Element> => TableLookup.table(cell, isRoot);
 
-  const getSize = (table) => {
-    return {
-      width: Util.getPixelWidth(table.dom()),
-      height: Util.getPixelWidth(table.dom())
-    };
-  };
+  const getSize = (table) => ({
+    width: Util.getPixelWidth(table.dom()),
+    height: Util.getPixelWidth(table.dom())
+  });
 
   const resizeChange = (editor: Editor, oldSize, table) => {
     const newSize = getSize(table);
@@ -83,16 +79,12 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
     });
   };
 
-  const copyRowSelection = (_execute?) => {
-    return TableSelection.getSelectionStartCell(editor).map((cell) => {
-      return getTableFromCell(cell).bind((table) => {
-        const doc = Element.fromDom(editor.getDoc());
-        const targets = TableTargets.forMenu(selections, table, cell);
-        const generators = TableFill.cellOperations(Fun.noop, doc, Option.none());
-        return CopyRows.copyRows(table, targets, generators);
-      });
-    });
-  };
+  const copyRowSelection = (_execute?) => TableSelection.getSelectionStartCell(editor).map((cell) => getTableFromCell(cell).bind((table) => {
+    const doc = Element.fromDom(editor.getDoc());
+    const targets = TableTargets.forMenu(selections, table, cell);
+    const generators = TableFill.cellOperations(Fun.noop, doc, Option.none());
+    return CopyRows.copyRows(table, targets, generators);
+  }));
 
   const copyColSelection = (_execute?) => {
     return TableSelection.getSelectionStartCell(editor).map((cell) => {

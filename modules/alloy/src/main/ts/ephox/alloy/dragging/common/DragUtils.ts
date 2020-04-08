@@ -12,13 +12,11 @@ import * as DragMovement from './DragMovement';
 
 type EventsFunc<C extends DraggingConfig<E>, A extends EventFormat, E> = (dragConfig: C, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void) => Array<AlloyEvents.AlloyEventKeyAndHandler<A>>;
 
-const calcStartData = <E>(dragConfig: DraggingConfig<E>, comp: AlloyComponent): DragStartData => {
-  return {
-    bounds: dragConfig.getBounds(),
-    height: Height.getOuter(comp.element()),
-    width: Width.getOuter(comp.element())
-  };
-};
+const calcStartData = <E>(dragConfig: DraggingConfig<E>, comp: AlloyComponent): DragStartData => ({
+  bounds: dragConfig.getBounds(),
+  height: Height.getOuter(comp.element()),
+  width: Width.getOuter(comp.element())
+});
 
 const move = <E>(component: AlloyComponent, dragConfig: DraggingConfig<E>, dragState: DraggingState, dragMode: DragModeDeltas<Position>, event: EventArgs) => {
   const delta = dragState.update(dragMode, event);
@@ -38,20 +36,18 @@ const stop = <E>(component: AlloyComponent, blocker: Option<AlloyComponent>, dra
   dragConfig.onDrop(component, target);
 };
 
-const handlers = <C extends DraggingConfig<E>, A extends EventFormat, E>(events: EventsFunc<C, A, E>) => {
-  return (dragConfig: C, dragState: DraggingState): AlloyEvents.AlloyEventRecord => {
-    const updateStartState = (comp: AlloyComponent) => {
-      dragState.setStartData(calcStartData(dragConfig, comp));
-    };
-
-    return AlloyEvents.derive([
-      AlloyEvents.run(SystemEvents.windowScroll(), (comp) => {
-        // Only update if we have some start data
-        dragState.getStartData().each(() => updateStartState(comp));
-      }),
-      ...events(dragConfig, dragState, updateStartState)
-    ]);
+const handlers = <C extends DraggingConfig<E>, A extends EventFormat, E>(events: EventsFunc<C, A, E>) => (dragConfig: C, dragState: DraggingState): AlloyEvents.AlloyEventRecord => {
+  const updateStartState = (comp: AlloyComponent) => {
+    dragState.setStartData(calcStartData(dragConfig, comp));
   };
+
+  return AlloyEvents.derive([
+    AlloyEvents.run(SystemEvents.windowScroll(), (comp) => {
+      // Only update if we have some start data
+      dragState.getStartData().each(() => updateStartState(comp));
+    }),
+    ...events(dragConfig, dragState, updateStartState)
+  ]);
 };
 
 export {

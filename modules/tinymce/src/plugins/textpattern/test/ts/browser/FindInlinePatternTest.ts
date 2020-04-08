@@ -75,19 +75,15 @@ UnitTest.asynctest('textpattern.browser.FindInlinePatternTest', (success, failur
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
-    const sSetContentAndCursor = (content: string, elementPath: number[], offset: number) => {
-      return GeneralSteps.sequence([
-        tinyApis.sSetRawContent(`<div>${content}</div>`),
-        tinyApis.sSetCursor([ 0 ].concat(elementPath), offset),
-      ]);
-    };
+    const sSetContentAndCursor = (content: string, elementPath: number[], offset: number) => GeneralSteps.sequence([
+      tinyApis.sSetRawContent(`<div>${content}</div>`),
+      tinyApis.sSetCursor([ 0 ].concat(elementPath), offset),
+    ]);
 
-    const sSetContentAndSelection = (content: string, startPath: number[], soffset: number, finishPath: number[], foffset: number) => {
-      return GeneralSteps.sequence([
-        tinyApis.sSetRawContent(`<div>${content}</div>`),
-        tinyApis.sSetSelection([ 0 ].concat(startPath), soffset, [ 0 ].concat(finishPath), foffset),
-      ]);
-    };
+    const sSetContentAndSelection = (content: string, startPath: number[], soffset: number, finishPath: number[], foffset: number) => GeneralSteps.sequence([
+      tinyApis.sSetRawContent(`<div>${content}</div>`),
+      tinyApis.sSetSelection([ 0 ].concat(startPath), soffset, [ 0 ].concat(finishPath), foffset),
+    ]);
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Run on text without pattern returns no matching patterns', [

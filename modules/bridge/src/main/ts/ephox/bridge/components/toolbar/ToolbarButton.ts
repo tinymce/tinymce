@@ -50,6 +50,4 @@ export const toolbarButtonSchema = ValueSchema.objOf([
   FieldSchema.strictFunction('onAction')
 ].concat(baseToolbarButtonFields));
 
-export const createToolbarButton = (spec: ToolbarButtonApi): Result<ToolbarButton, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw('toolbarbutton', toolbarButtonSchema, spec);
-};
+export const createToolbarButton = (spec: ToolbarButtonApi): Result<ToolbarButton, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('toolbarbutton', toolbarButtonSchema, spec);

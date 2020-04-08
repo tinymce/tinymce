@@ -19,19 +19,17 @@ UnitTest.asynctest('browser.tinymce.core.init.InitContentBodyDirectionalityTest'
     return editor.editorCommands.execCommand('mceSetContent', false, content);
   });
 
-  const makeStep = (config, label, expected) => {
-    return Chain.asStep({}, [
-      McEditor.cFromSettings(config),
-      NamedChain.asChain([
-        NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-        NamedChain.direct('editor', cSetContent('<p>Hello world!</p>'), ''),
-        NamedChain.direct('editor', cGetBodyDir, 'editorBodyDirectionality'),
-        NamedChain.direct('editorBodyDirectionality', Assertions.cAssertEq(label, expected), 'assertion'),
-        NamedChain.output('editor')
-      ]),
-      McEditor.cRemove
-    ]);
-  };
+  const makeStep = (config, label, expected) => Chain.asStep({}, [
+    McEditor.cFromSettings(config),
+    NamedChain.asChain([
+      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
+      NamedChain.direct('editor', cSetContent('<p>Hello world!</p>'), ''),
+      NamedChain.direct('editor', cGetBodyDir, 'editorBodyDirectionality'),
+      NamedChain.direct('editorBodyDirectionality', Assertions.cAssertEq(label, expected), 'assertion'),
+      NamedChain.output('editor')
+    ]),
+    McEditor.cRemove
+  ]);
 
   Pipeline.async({}, [
     Log.step('TBA', 'Test default directionality of the editor when set to use a rtl language', makeStep(

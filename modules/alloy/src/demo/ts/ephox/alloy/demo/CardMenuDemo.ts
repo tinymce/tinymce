@@ -21,82 +21,74 @@ export default (): void => {
   Class.add(gui.element(), 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
-  const makeBack = (text: string): ItemSpec => {
-    return {
-      data: TieredMenu.collapseItem(text),
-      type: 'item',
-      dom: {
-        tag: 'div',
-        innerHtml: text
-      },
-      components: [ ]
-    };
-  };
+  const makeBack = (text: string): ItemSpec => ({
+    data: TieredMenu.collapseItem(text),
+    type: 'item',
+    dom: {
+      tag: 'div',
+      innerHtml: text
+    },
+    components: [ ]
+  });
 
-  const makeItem = (value: string, text: string): ItemSpec => {
-    return {
-      data: {
-        value
-      },
-      type: 'item',
-      dom: {
-        tag: 'div',
-        innerHtml: text
-      },
-      components: [ ]
-    };
-  };
+  const makeItem = (value: string, text: string): ItemSpec => ({
+    data: {
+      value
+    },
+    type: 'item',
+    dom: {
+      tag: 'div',
+      innerHtml: text
+    },
+    components: [ ]
+  });
 
-  const makeSeparator = (text: string) => {
-    return {
-      type: 'separator',
-      dom: {
-        tag: 'div',
-        classes: [ 'separator' ]
-      },
-      components: [
-        {
-          dom: {
-            tag: 'strong',
-            innerHtml: text
+  const makeSeparator = (text: string) => ({
+    type: 'separator',
+    dom: {
+      tag: 'div',
+      classes: [ 'separator' ]
+    },
+    components: [
+      {
+        dom: {
+          tag: 'strong',
+          innerHtml: text
+        }
+      }
+    ]
+  });
+
+  const makeMenu = (value: string, items: ItemSpec[]) => ({
+    value,
+    dom: {
+      tag: 'div'
+    },
+    components: [
+      Objects.exclude(makeSeparator(value), [ 'type' ]),
+      {
+        dom: {
+          tag: 'div',
+          classes: [ 'menu-items-container' ]
+        },
+        components: [
+          Menu.parts().items({ })
+        ]
+      }
+    ],
+    items,
+    menuBehaviours: Behaviour.derive([
+      Transitioning.config({
+        initialState: 'after',
+        routes: Transitioning.createTristate('before', 'current', 'after', {
+          transition: {
+            property: 'transform',
+            transitionClass: 'transitioning'
           }
-        }
-      ]
-    };
-  };
-
-  const makeMenu = (value: string, items: ItemSpec[]) => {
-    return {
-      value,
-      dom: {
-        tag: 'div'
-      },
-      components: [
-        Objects.exclude(makeSeparator(value), [ 'type' ]),
-        {
-          dom: {
-            tag: 'div',
-            classes: [ 'menu-items-container' ]
-          },
-          components: [
-            Menu.parts().items({ })
-          ]
-        }
-      ],
-      items,
-      menuBehaviours: Behaviour.derive([
-        Transitioning.config({
-          initialState: 'after',
-          routes: Transitioning.createTristate('before', 'current', 'after', {
-            transition: {
-              property: 'transform',
-              transitionClass: 'transitioning'
-            }
-          })
         })
-      ])
-    };
-  };
+      })
+    ])
+  });
 
   // https://jsfiddle.net/xuto3by2/1/
   const tieredMenu = TieredMenu.sketch({

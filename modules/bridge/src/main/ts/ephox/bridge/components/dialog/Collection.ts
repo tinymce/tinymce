@@ -27,6 +27,4 @@ export const collectionDataProcessor = ValueSchema.arrOfObj([
   FieldSchema.strictString('icon')
 ]);
 
-export const createCollection = (spec: CollectionApi): Result<Collection, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<Collection>('collection', collectionSchema, spec);
-};
+export const createCollection = (spec: CollectionApi): Result<Collection, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<Collection>('collection', collectionSchema, spec);

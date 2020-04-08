@@ -49,18 +49,16 @@ const setupReadonlyModeSwitch = (editor: Editor, uiComponents: RenderUiComponent
   }
 };
 
-const receivingConfig = (): Behaviour.NamedConfiguredBehaviour<any, any> => {
-  return Receiving.config({
-    channels: {
-      [ReadOnlyChannel]: {
-        schema: ReadOnlyDataSchema,
-        onReceive(comp, data: ReadOnlyData) {
-          Disabling.set(comp, data.readonly);
-        }
+const receivingConfig = (): Behaviour.NamedConfiguredBehaviour<any, any> => Receiving.config({
+  channels: {
+    [ReadOnlyChannel]: {
+      schema: ReadOnlyDataSchema,
+      onReceive(comp, data: ReadOnlyData) {
+        Disabling.set(comp, data.readonly);
       }
     }
-  });
-};
+  }
+});
 
 export {
   ReadOnlyDataSchema,

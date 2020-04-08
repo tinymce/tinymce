@@ -27,20 +27,18 @@ interface TextMungerSpec {
   label: string;
 }
 
-const invalidation = (validate: (v: string) => Result<Record<string, string>, string>, invalidUid: string) => {
-  return Invalidating.config({
-    invalidClass: 'invalid-input',
-    notify: {
-      getContainer(input) {
-        return ComponentUtil.getByUid(input, invalidUid).map(ComponentUtil.toElem);
-      }
-    },
-    validator: {
-      validate: Invalidating.validation<Record<string, string>>(validate),
-      onEvent: NativeEvents.input()
+const invalidation = (validate: (v: string) => Result<Record<string, string>, string>, invalidUid: string) => Invalidating.config({
+  invalidClass: 'invalid-input',
+  notify: {
+    getContainer(input) {
+      return ComponentUtil.getByUid(input, invalidUid).map(ComponentUtil.toElem);
     }
-  });
-};
+  },
+  validator: {
+    validate: Invalidating.validation<Record<string, string>>(validate),
+    onEvent: NativeEvents.input()
+  }
+});
 
 const rawTextMunger = (spec: TextMungerSpec) => {
   const invalidUid = Tagger.generate('demo-invalid-uid');
@@ -52,9 +50,7 @@ const rawTextMunger = (spec: TextMungerSpec) => {
   const pField = FormField.parts().field({
     factory: Input,
     inputBehaviours: Behaviour.derive([
-      invalidation((v) => {
-        return v.indexOf('a') === 0 ? Result.error('Do not start with a!') : Result.value({ });
-      }, invalidUid),
+      invalidation((v) => v.indexOf('a') === 0 ? Result.error('Do not start with a!') : Result.value({ }), invalidUid),
       Tabstopping.config({ })
     ])
   });

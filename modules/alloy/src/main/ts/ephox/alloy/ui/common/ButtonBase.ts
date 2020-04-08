@@ -27,12 +27,10 @@ const pointerEvents = (): Array<AlloyEvents.AlloyEventKeyAndHandler<EventArgs>> 
 };
 
 const events = (optAction: Option<(comp: AlloyComponent) => void>): AlloyEvents.AlloyEventRecord => {
-  const executeHandler = (action: ButtonAction) => {
-    return AlloyEvents.runOnExecute((component, simulatedEvent) => {
-      action(component);
-      simulatedEvent.stop();
-    });
-  };
+  const executeHandler = (action: ButtonAction) => AlloyEvents.runOnExecute((component, simulatedEvent) => {
+    action(component);
+    simulatedEvent.stop();
+  });
 
   return AlloyEvents.derive(
     Arr.flatten([

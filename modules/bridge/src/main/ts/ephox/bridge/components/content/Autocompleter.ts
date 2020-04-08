@@ -76,14 +76,8 @@ const autocompleterSchema = ValueSchema.objOf([
   FieldSchema.strictFunction('onAction')
 ]);
 
-export const createSeparatorItem = (spec: SeparatorItemApi): Result<SeparatorItem, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw('Autocompleter.Separator', separatorMenuItemSchema, spec);
-};
+export const createSeparatorItem = (spec: SeparatorItemApi): Result<SeparatorItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('Autocompleter.Separator', separatorMenuItemSchema, spec);
 
-export const createAutocompleterItem = (spec: AutocompleterItemApi): Result<AutocompleterItem, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<AutocompleterItem>('Autocompleter.Item', autocompleterItemSchema, spec);
-};
+export const createAutocompleterItem = (spec: AutocompleterItemApi): Result<AutocompleterItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<AutocompleterItem>('Autocompleter.Item', autocompleterItemSchema, spec);
 
-export const createAutocompleter = (spec: AutocompleterApi): Result<Autocompleter, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<Autocompleter>('Autocompleter', autocompleterSchema, spec);
-};
+export const createAutocompleter = (spec: AutocompleterApi): Result<Autocompleter, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<Autocompleter>('Autocompleter', autocompleterSchema, spec);

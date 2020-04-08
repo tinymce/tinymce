@@ -29,31 +29,27 @@ const sOpenTableDialog = (ui: TinyUi) => Logger.t('Open table dialog', GeneralSt
   UiFinder.sWaitForVisible('wait for dialog', TinyDom.fromDom(document.body), '.tox-dialog[role="dialog"]'),
 ]));
 
-const sAssertElementStructure = (editor, selector, expected) => {
-  return Logger.t('Assert HTML structure of the element ' + expected, Step.sync(() => {
-    const body = editor.getBody();
-    body.normalize(); // consolidate text nodes
+const sAssertElementStructure = (editor, selector, expected) => Logger.t('Assert HTML structure of the element ' + expected, Step.sync(() => {
+  const body = editor.getBody();
+  body.normalize(); // consolidate text nodes
 
-    Assertions.assertStructure(
-      'Asserting HTML structure of the element: ' + selector,
-      ApproxStructure.fromHtml(expected),
-      SelectorFind.descendant(Element.fromDom(body), selector).getOrDie('Nothing in the Editor matches selector: ' + selector)
-    );
-  }));
-};
+  Assertions.assertStructure(
+    'Asserting HTML structure of the element: ' + selector,
+    ApproxStructure.fromHtml(expected),
+    SelectorFind.descendant(Element.fromDom(body), selector).getOrDie('Nothing in the Editor matches selector: ' + selector)
+  );
+}));
 
-const sAssertApproxElementStructure = (editor, selector, expected) => {
-  return Logger.t('Assert HTML structure of the element ' + expected, Step.sync(() => {
-    const body = editor.getBody();
-    body.normalize(); // consolidate text nodes
+const sAssertApproxElementStructure = (editor, selector, expected) => Logger.t('Assert HTML structure of the element ' + expected, Step.sync(() => {
+  const body = editor.getBody();
+  body.normalize(); // consolidate text nodes
 
-    Assertions.assertStructure(
-      'Asserting HTML structure of the element: ' + selector,
-      expected,
-      SelectorFind.descendant(Element.fromDom(body), selector).getOrDie('Nothing in the Editor matches selector: ' + selector)
-    );
-  }));
-};
+  Assertions.assertStructure(
+    'Asserting HTML structure of the element: ' + selector,
+    expected,
+    SelectorFind.descendant(Element.fromDom(body), selector).getOrDie('Nothing in the Editor matches selector: ' + selector)
+  );
+}));
 
 const sClickDialogButton = (label: string, isSave: boolean) => Logger.t('Close dialog and wait to confirm dialog goes away', GeneralSteps.sequence([
   Mouse.sClickOn(TinyDom.fromDom(document.body), '[role="dialog"].tox-dialog button:contains("' + (isSave ? 'Save' : 'Cancel') + '")'),
@@ -112,24 +108,18 @@ const cGetBody = Chain.control(
   Guard.addLogging('Get body')
 );
 
-const cInsertTable = (cols: number, rows: number) => {
-  return Chain.mapper((editor: Editor) => {
-    return TinyDom.fromDom(editor.plugins.table.insertTable(cols, rows));
-  });
-};
+const cInsertTable = (cols: number, rows: number) => Chain.mapper((editor: Editor) => TinyDom.fromDom(editor.plugins.table.insertTable(cols, rows)));
 
-const cInsertRaw = (html: string) => {
-  return Chain.mapper((editor: Editor) => {
-    const element = Element.fromHtml<HTMLElement>(html);
-    Attr.set(element, 'data-mce-id', '__mce');
-    editor.insertContent(Html.getOuter(element));
+const cInsertRaw = (html: string) => Chain.mapper((editor: Editor) => {
+  const element = Element.fromHtml<HTMLElement>(html);
+  Attr.set(element, 'data-mce-id', '__mce');
+  editor.insertContent(Html.getOuter(element));
 
-    return SelectorFind.descendant(Element.fromDom(editor.getBody()), '[data-mce-id="__mce"]').map((el) => {
-      Attr.remove(el, 'data-mce-id');
-      return el;
-    }).getOrDie();
-  });
-};
+  return SelectorFind.descendant(Element.fromDom(editor.getBody()), '[data-mce-id="__mce"]').map((el) => {
+    Attr.remove(el, 'data-mce-id');
+    return el;
+  }).getOrDie();
+});
 
 const cMergeCells = (keys) => Chain.control(
   Chain.mapper((editor: any) => {
@@ -211,35 +201,31 @@ const cGetInput = (selector: string) => Chain.control(
   Guard.addLogging('Get input')
 );
 
-const sAssertInputValue = (label, selector, expected) => {
-  return Logger.t(label,
-    Chain.asStep({}, [
-      cGetInput(selector),
-      Chain.op((element) => {
-        if (element.dom().type === 'checkbox') {
-          Assertions.assertEq(`The input value for ${label} should be: `, expected, element.dom().checked);
-          return;
-        }
-        Assertions.assertEq(`The input value for ${label} should be: `, expected, Value.get(element));
-      })
-    ]),
-  );
-};
+const sAssertInputValue = (label, selector, expected) => Logger.t(label,
+  Chain.asStep({}, [
+    cGetInput(selector),
+    Chain.op((element) => {
+      if (element.dom().type === 'checkbox') {
+        Assertions.assertEq(`The input value for ${label} should be: `, expected, element.dom().checked);
+        return;
+      }
+      Assertions.assertEq(`The input value for ${label} should be: `, expected, Value.get(element));
+    })
+  ]),
+);
 
-const sSetInputValue = (label, selector, value) => {
-  return Logger.t(label,
-    Chain.asStep({}, [
-      cGetInput(selector),
-      Chain.op((element) => {
-        if (element.dom().type === 'checkbox') {
-          element.dom().checked = value;
-          return;
-        }
-        Value.set(element, value);
-      })
-    ]),
-  );
-};
+const sSetInputValue = (label, selector, value) => Logger.t(label,
+  Chain.asStep({}, [
+    cGetInput(selector),
+    Chain.op((element) => {
+      if (element.dom().type === 'checkbox') {
+        element.dom().checked = value;
+        return;
+      }
+      Value.set(element, value);
+    })
+  ]),
+);
 
 const sGotoGeneralTab = Chain.asStep({}, [
   Chain.inject(Body.body()),

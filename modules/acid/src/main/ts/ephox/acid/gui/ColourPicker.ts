@@ -103,9 +103,7 @@ const makeFactory = (
           AlloyEvents.run(ColourEvents.sliderUpdate, sliderUpdates())
         ]),
         Composing.config({
-          find: (comp) => {
-            return memRgb.getOpt(comp);
-          }
+          find: (comp) => memRgb.getOpt(comp)
         }),
         Keying.config({
           mode: 'acyclic'

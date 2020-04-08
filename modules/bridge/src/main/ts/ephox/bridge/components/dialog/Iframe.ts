@@ -20,6 +20,4 @@ export const iframeSchema = ValueSchema.objOf(iframeFields);
 
 export const iframeDataProcessor = ValueSchema.string;
 
-export const createIframe = (spec: IframeApi): Result<Iframe, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<Iframe>('iframe', iframeSchema, spec);
-};
+export const createIframe = (spec: IframeApi): Result<Iframe, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<Iframe>('iframe', iframeSchema, spec);

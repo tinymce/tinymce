@@ -46,13 +46,11 @@ const markInvalid = (component: AlloyComponent, invalidConfig: InvalidatingConfi
   });
 };
 
-const query = (component: AlloyComponent, invalidConfig: InvalidatingConfig, _invalidState: Stateless): Future<Result<any, string>> => {
-  return invalidConfig.validator.fold(() => {
-    return Future.pure(Result.value(true));
-  }, (validatorInfo) => {
-    return validatorInfo.validate(component);
-  });
-};
+const query = (component: AlloyComponent, invalidConfig: InvalidatingConfig, _invalidState: Stateless): Future<Result<any, string>> =>
+  invalidConfig.validator.fold(
+    () => Future.pure(Result.value(true)),
+    (validatorInfo) => validatorInfo.validate(component)
+  );
 
 const run = (component: AlloyComponent, invalidConfig: InvalidatingConfig, invalidState: Stateless): Future<Result<any, string>> => {
   invalidConfig.notify.each((notifyInfo) => {

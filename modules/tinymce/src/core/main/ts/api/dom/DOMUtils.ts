@@ -418,9 +418,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
   };
 
-  const getRoot = (): HTMLElement => {
-    return settings.root_element || doc.body;
-  };
+  const getRoot = (): HTMLElement => settings.root_element || doc.body;
 
   const getViewPort = (argWin?: Window): GeomRect => {
     const vp = VisualViewport.getBounds(argWin);
@@ -434,9 +432,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     };
   };
 
-  const getPos = (elm: string | Node, rootElm?: Node) => {
-    return Position.getPos(doc.body, get(elm), rootElm);
-  };
+  const getPos = (elm: string | Node, rootElm?: Node) => Position.getPos(doc.body, get(elm), rootElm);
 
   const setStyle = (elm: string | Node, name: string | StyleMap, value?: string | number) => {
     const $elm = Type.isString(name) ? $$(elm).css(name, value) : $$(elm).css(name);
@@ -620,17 +616,11 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return null;
   };
 
-  const getNext = (node: Node, selector: string | Function) => {
-    return _findSib(node, selector, 'nextSibling');
-  };
+  const getNext = (node: Node, selector: string | Function) => _findSib(node, selector, 'nextSibling');
 
-  const getPrev = (node: Node, selector: string | Function) => {
-    return _findSib(node, selector, 'previousSibling');
-  };
+  const getPrev = (node: Node, selector: string | Function) => _findSib(node, selector, 'previousSibling');
 
-  const select = (selector: string, scope?: Node | string) => {
-    return Sizzle(selector, get(scope) || settings.root_element || doc, []);
-  };
+  const select = (selector: string, scope?: Node | string) => Sizzle(selector, get(scope) || settings.root_element || doc, []);
 
   const run = (elm: RunArguments, func: (node: Element) => any, scope?) => {
     let result;
@@ -700,26 +690,22 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
   };
 
-  const add = (parentElm: RunArguments, name: string | Node, attrs?: Record<string, any>, html?: string | Node, create?: boolean): HTMLElement => {
-    return run(parentElm, function (parentElm) {
-      const newElm = typeof name  === 'string' ? doc.createElement(name) : name;
-      setAttribs(newElm, attrs);
+  const add = (parentElm: RunArguments, name: string | Node, attrs?: Record<string, any>, html?: string | Node, create?: boolean): HTMLElement => run(parentElm, function (parentElm) {
+    const newElm = typeof name  === 'string' ? doc.createElement(name) : name;
+    setAttribs(newElm, attrs);
 
-      if (html) {
-        if (typeof html !== 'string' && html.nodeType) {
-          newElm.appendChild(html);
-        } else if (typeof html === 'string') {
-          setHTML(newElm, html);
-        }
+    if (html) {
+      if (typeof html !== 'string' && html.nodeType) {
+        newElm.appendChild(html);
+      } else if (typeof html === 'string') {
+        setHTML(newElm, html);
       }
+    }
 
-      return !create ? parentElm.appendChild(newElm) : newElm;
-    });
-  };
+    return !create ? parentElm.appendChild(newElm) : newElm;
+  });
 
-  const create = (name: string, attrs?: Record<string, string | number>, html?: string | Node): HTMLElement => {
-    return add(doc.createElement(name), name, attrs, html, true);
-  };
+  const create = (name: string, attrs?: Record<string, string | number>, html?: string | Node): HTMLElement => add(doc.createElement(name), name, attrs, html, true);
 
   const decode = Entities.decode;
   const encode = Entities.encodeAllRaw;
@@ -782,23 +768,17 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return $node.length > 1 ? $node.toArray() : $node[0];
   };
 
-  const removeAllAttribs = (e: RunArguments) => {
-    return run(e, function (e) {
-      let i;
-      const attrs = e.attributes;
-      for (i = attrs.length - 1; i >= 0; i--) {
-        e.removeAttributeNode(attrs.item(i));
-      }
-    });
-  };
+  const removeAllAttribs = (e: RunArguments) => run(e, function (e) {
+    let i;
+    const attrs = e.attributes;
+    for (i = attrs.length - 1; i >= 0; i--) {
+      e.removeAttributeNode(attrs.item(i));
+    }
+  });
 
-  const parseStyle = (cssText: string): Record<string, string> => {
-    return styles.parse(cssText);
-  };
+  const parseStyle = (cssText: string): Record<string, string> => styles.parse(cssText);
 
-  const serializeStyle = (stylesArg: StyleMap, name?: string) => {
-    return styles.serialize(stylesArg, name);
-  };
+  const serializeStyle = (stylesArg: StyleMap, name?: string) => styles.serialize(stylesArg, name);
 
   const addStyle = (cssText: string) => {
     let head, styleElm;
@@ -888,9 +868,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     toggleClass(elm, cls, false);
   };
 
-  const hasClass = (elm: string | Node, cls: string) => {
-    return $$(elm).hasClass(cls);
-  };
+  const hasClass = (elm: string | Node, cls: string) => $$(elm).hasClass(cls);
 
   const show = (elm: string | Node) => {
     $$(elm).show();
@@ -900,13 +878,9 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     $$(elm).hide();
   };
 
-  const isHidden = (elm: string | Node) => {
-    return $$(elm).css('display') === 'none';
-  };
+  const isHidden = (elm: string | Node) => $$(elm).css('display') === 'none';
 
-  const uniqueId = (prefix?: string) => {
-    return (!prefix ? 'mce_' : prefix) + (counter++);
-  };
+  const uniqueId = (prefix?: string) => (!prefix ? 'mce_' : prefix) + (counter++);
 
   const getOuterHTML = (elm: string | Node): string => {
     const node = typeof elm === 'string' ? get(elm) : elm;
@@ -950,21 +924,19 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     });
   };
 
-  const replace = (newElm: Node, oldElm: RunArguments, keepChildren?: boolean) => {
-    return run(oldElm, function (oldElm) {
-      if (Tools.is(oldElm, 'array')) {
-        newElm = newElm.cloneNode(true);
-      }
+  const replace = (newElm: Node, oldElm: RunArguments, keepChildren?: boolean) => run(oldElm, function (oldElm) {
+    if (Tools.is(oldElm, 'array')) {
+      newElm = newElm.cloneNode(true);
+    }
 
-      if (keepChildren) {
-        each(grep(oldElm.childNodes), function (node) {
-          newElm.appendChild(node);
-        });
-      }
+    if (keepChildren) {
+      each(grep(oldElm.childNodes), function (node) {
+        newElm.appendChild(node);
+      });
+    }
 
-      return oldElm.parentNode.replaceChild(newElm, oldElm);
-    });
-  };
+    return oldElm.parentNode.replaceChild(newElm, oldElm);
+  });
 
   const rename = (elm: Node, name: string): Node => {
     let newElm;
@@ -1009,9 +981,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return ps;
   };
 
-  const toHex = (rgbVal: string) => {
-    return styles.toHex(Tools.trim(rgbVal));
-  };
+  const toHex = (rgbVal: string) => styles.toHex(Tools.trim(rgbVal));
 
   // Check if element has a data-bookmark attribute, name attribute or is a named anchor
   const isNonEmptyElement = (node: Node) => {
@@ -1090,9 +1060,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return brCount <= 1;
   };
 
-  const createRng = () => {
-    return doc.createRange();
-  };
+  const createRng = () => doc.createRange();
 
   const split = (parentElm: Node, splitElm: Node, replacementElm?: Node) => {
     let r = createRng(), bef, aft, pa;
@@ -1179,9 +1147,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return events.unbind(target, name, func);
   };
 
-  const fire = (target: Target, name: string, evt?) => {
-    return events.fire(target, name, evt);
-  };
+  const fire = (target: Target, name: string, evt?) => events.fire(target, name, evt);
 
   const getContentEditable = (node: Node) => {
     if (node && NodeType.isElement(node)) {
@@ -1243,14 +1209,12 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return false;
   };
 
-  const dumpRng = (r: Range) => {
-    return (
-      'startContainer: ' + r.startContainer.nodeName +
+  const dumpRng = (r: Range) => (
+    'startContainer: ' + r.startContainer.nodeName +
       ', startOffset: ' + r.startOffset +
       ', endContainer: ' + r.endContainer.nodeName +
       ', endOffset: ' + r.endOffset
-    );
-  };
+  );
 
   const self: DOMUtils = {
     doc,

@@ -34,9 +34,7 @@ const isTableCell = function (node) {
   return /^(TH|TD)$/.test(node.nodeName);
 };
 
-const isChildOfInlineParent = (dom: DOMUtils, node: Node, parent: Node): boolean => {
-  return dom.isChildOf(node, parent) && node !== parent && !dom.isBlock(parent);
-};
+const isChildOfInlineParent = (dom: DOMUtils, node: Node, parent: Node): boolean => dom.isChildOf(node, parent) && node !== parent && !dom.isBlock(parent);
 
 const getContainer = function (ed: Editor, rng: RangeLikeObject, start?: boolean) {
   let container: Node, offset: number;

@@ -141,9 +141,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets) => {
 };
 
 const addToolbars = (editor: Editor) => {
-  const isTable = (table: Node) => {
-    return editor.dom.is(table, 'table') && editor.getBody().contains(table);
-  };
+  const isTable = (table: Node) => editor.dom.is(table, 'table') && editor.getBody().contains(table);
 
   const toolbar = getToolbar(editor);
   if (toolbar.length > 0) {

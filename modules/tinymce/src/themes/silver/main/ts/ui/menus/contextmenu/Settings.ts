@@ -16,14 +16,10 @@ const shouldNeverUseNative = function (editor: Editor): boolean {
 
 const getMenuItems = (editor: Editor, name: string, defaultItems: string) => {
   const contextMenus = editor.ui.registry.getAll().contextMenus;
-  return Obj.get(editor.settings, name).map(patchPipeConfig).getOrThunk(() => {
-    return Arr.filter(patchPipeConfig(defaultItems), (item) => Obj.has(contextMenus, item));
-  });
+  return Obj.get(editor.settings, name).map(patchPipeConfig).getOrThunk(() => Arr.filter(patchPipeConfig(defaultItems), (item) => Obj.has(contextMenus, item)));
 };
 
-const isContextMenuDisabled = (editor: Editor): boolean => {
-  return editor.getParam('contextmenu') === false;
-};
+const isContextMenuDisabled = (editor: Editor): boolean => editor.getParam('contextmenu') === false;
 
 const getContextMenu = function (editor: Editor): string[] {
   return getMenuItems(editor, 'contextmenu', 'link linkchecker image imagetools table spellchecker configurepermanentpen');

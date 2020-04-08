@@ -10,9 +10,7 @@ const offscreen = {
   left: '-9999px'
 };
 
-const tokenSelector = (): string => {
-  return 'span[id^="ephox-alloy-aria-voice"]';
-};
+const tokenSelector = (): string => 'span[id^="ephox-alloy-aria-voice"]';
 
 // INVESTIGATE: Aria is special for insertion. Think about it more.
 const create = (doc: Element<HTMLDocument>, text: string): Element => {
@@ -65,23 +63,19 @@ const base = (getAttrs: (string: string) => { }, parent: Element, text: string):
   }, 1000);
 };
 
-const getSpeakAttrs = (text: string) => {
-  return {
-    // Make it speak as soon as it is in the DOM (politely)
-    'aria-live': 'polite',
-    'aria-atomic': 'true',
-    'aria-label': text
-  };
-};
+const getSpeakAttrs = (text: string) => ({
+  // Make it speak as soon as it is in the DOM (politely)
+  'aria-live': 'polite',
+  'aria-atomic': 'true',
+  'aria-label': text
+});
 
-const getShoutAttrs = (_text: string) => {
-  return {
-    // Don't put aria-label in alerts. It will read it twice on JAWS+Firefox.
-    'aria-live': 'assertive',
-    'aria-atomic': 'true',
-    'role': 'alert'
-  };
-};
+const getShoutAttrs = (_text: string) => ({
+  // Don't put aria-label in alerts. It will read it twice on JAWS+Firefox.
+  'aria-live': 'assertive',
+  'aria-atomic': 'true',
+  'role': 'alert'
+});
 
 const speak = (parent: Element, text: string): void => base(getSpeakAttrs, parent, text);
 

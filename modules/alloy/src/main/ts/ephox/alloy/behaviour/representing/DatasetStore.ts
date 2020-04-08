@@ -19,11 +19,7 @@ const setValue = (component: AlloyComponent, repConfig: DatasetRepresentingConfi
 const getValue = (component: AlloyComponent, repConfig: DatasetRepresentingConfig, repState: DatasetRepresentingState) => {
   const store = repConfig.store;
   const key = store.getDataKey(component);
-  return repState.lookup(key).fold(() => {
-    return store.getFallbackEntry(key);
-  }, (data) => {
-    return data;
-  });
+  return repState.lookup(key).fold(() => store.getFallbackEntry(key), (data) => data);
 };
 
 const onLoad = (component: AlloyComponent, repConfig: DatasetRepresentingConfig, repState: DatasetRepresentingState) => {

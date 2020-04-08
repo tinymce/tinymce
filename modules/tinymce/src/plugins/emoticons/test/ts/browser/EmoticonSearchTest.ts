@@ -34,9 +34,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.SearchTest', (success, fai
           'Wait until rainbow is the first choice (search should filter)',
           Chain.asStep(Body.body(), [
             UiFinder.cFindIn('.tox-collection__item:first'),
-            Chain.mapper((item) => {
-              return Attr.get(item, 'data-collection-item-value');
-            }),
+            Chain.mapper((item) => Attr.get(item, 'data-collection-item-value')),
             Assertions.cAssertEq('Search should show rainbow', '🌈')
           ])
         ),

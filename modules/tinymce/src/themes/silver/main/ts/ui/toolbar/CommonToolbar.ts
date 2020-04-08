@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+// eslint-disable-next-line max-len
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Boxes, Focusing, Keying, SplitFloatingToolbar as AlloySplitFloatingToolbar, SplitSlidingToolbar as AlloySplitSlidingToolbar, Tabstopping, Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup } from '@ephox/alloy';
 import { Arr, Option, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
@@ -41,12 +42,8 @@ export interface ToolbarGroup {
 }
 
 const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
-  const attributes = toolbarGroup.title.fold(() => {
-    return {};
-  },
-  (title) => {
-    return { attributes: { title }};
-  });
+  const attributes = toolbarGroup.title.fold(() => ({}),
+    (title) => ({ attributes: { title }}));
   return {
     dom: {
       tag: 'div',
@@ -61,7 +58,9 @@ const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
     items: toolbarGroup.items,
     markers: {
       // nav within a group breaks if disabled buttons are first in their group so skip them
-      itemSelector: '*:not(.tox-split-button) > .tox-tbtn:not([disabled]), .tox-split-button:not([disabled]), .tox-toolbar-nav-js:not([disabled])'
+      itemSelector: '*:not(.tox-split-button) > .tox-tbtn:not([disabled]), ' +
+                    '.tox-split-button:not([disabled]), ' +
+                    '.tox-toolbar-nav-js:not([disabled])'
     },
     tgroupBehaviours: Behaviour.derive([
       Tabstopping.config({}),
@@ -70,9 +69,8 @@ const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
   };
 };
 
-const renderToolbarGroup = (toolbarGroup: ToolbarGroup) => {
-  return AlloyToolbarGroup.sketch(renderToolbarGroupCommon(toolbarGroup));
-};
+const renderToolbarGroup = (toolbarGroup: ToolbarGroup) =>
+  AlloyToolbarGroup.sketch(renderToolbarGroupCommon(toolbarGroup));
 
 const getToolbarbehaviours = (toolbarSpec: ToolbarSpec, modeName) => {
   const onAttached = AlloyEvents.runOnAttached(function (component) {
@@ -209,7 +207,9 @@ const renderToolbar = (toolbarSpec: ToolbarSpec) => {
     uid: toolbarSpec.uid,
     dom: {
       tag: 'div',
-      classes: [ 'tox-toolbar' ].concat(toolbarSpec.type === ToolbarMode.scrolling ? [ 'tox-toolbar--scrolling' ] : [])
+      classes: [ 'tox-toolbar' ].concat(
+        toolbarSpec.type === ToolbarMode.scrolling ? [ 'tox-toolbar--scrolling' ] : []
+      )
     },
     components: [
       AlloyToolbar.parts().groups({})

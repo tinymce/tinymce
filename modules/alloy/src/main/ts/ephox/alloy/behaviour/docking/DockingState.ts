@@ -8,9 +8,7 @@ const init = (): DockingState => {
   const visible = Cell(true);
   const initialBounds = Cell(Option.none<InitialDockingPosition>());
 
-  const readState = () => {
-    return `docked:  ${docked.get()}, visible: ${visible.get()}`;
-  };
+  const readState = () => `docked:  ${docked.get()}, visible: ${visible.get()}`;
 
   return nuState({
     isDocked: () => docked.get(),

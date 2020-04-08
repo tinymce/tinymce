@@ -82,12 +82,12 @@ const getSectionConfig = function (sectionResult: SectionResult, name: string) {
   return hasSection(sectionResult, name) ? sectionResult.sections()[name] : {};
 };
 
-const getToolbarMode = (settings: RawEditorSettings, defaultVal) => {
+const getToolbarMode = (settings: RawEditorSettings, defaultVal) =>
   // If toolbar_mode is unset by the user, fall back to:
-  return Obj.get(settings, 'toolbar_mode')
+  Obj.get(settings, 'toolbar_mode')
     .orThunk(() => Obj.get(settings, 'toolbar_drawer').map((val) => val === false ? 'wrap' : val))     // #1 toolbar_drawer
-    .getOr(defaultVal);                                 // #2 defaultVal
-};
+    .getOr(defaultVal);                                // #2 defaultVal
+
 
 const getDefaultSettings = function (settings: RawEditorSettings, id: string, documentBaseUrl: string, isTouch: boolean, editor: Editor): RawEditorSettings {
   const baseDefaults: RawEditorSettings = {
@@ -218,9 +218,7 @@ const getEditorSettings = function (editor: Editor, id: string, documentBaseUrl:
   return combineSettings(isPhone || isTablet, isPhone, defaultSettings, defaultOverrideSettings, settings);
 };
 
-const getFiltered = <K extends keyof EditorSettings> (predicate: (x: any) => boolean, editor: Editor, name: K): Option<EditorSettings[K]> => {
-  return Option.from(editor.settings[name]).filter(predicate);
-};
+const getFiltered = <K extends keyof EditorSettings> (predicate: (x: any) => boolean, editor: Editor, name: K): Option<EditorSettings[K]> => Option.from(editor.settings[name]).filter(predicate);
 
 const getParamObject = (value: string) => {
   let output = {};

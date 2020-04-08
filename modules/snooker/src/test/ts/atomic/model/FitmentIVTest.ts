@@ -7,8 +7,9 @@ import * as Structs from 'ephox/snooker/api/Structs';
 import * as Fitment from 'ephox/snooker/test/Fitment';
 import * as TableMerge from 'ephox/snooker/test/TableMerge';
 
-UnitTest.test('FitmentIVTest', function () {
-  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as Element, isNew);
+UnitTest.test('FitmentIVTest', () => {
+  const en = (fakeElement: any, isNew: boolean) =>
+    Structs.elementnew(fakeElement as Element, isNew);
 
   // Spend 5 seconds running as many iterations as we can (there are three cycles, so 15s total)
   const CYCLE_TIME = 5000;
@@ -19,18 +20,16 @@ UnitTest.test('FitmentIVTest', function () {
   const tailorIVTest = Fitment.tailorIVTest;
   const mergeIVTest = TableMerge.mergeIVTest;
 
-  const generator = function (): SimpleGenerators {
+  const generator = (): SimpleGenerators => {
     let counter = 0;
 
-    const cell = function () {
+    const cell = () => {
       const r = '?_' + counter;
       counter++;
       return r;
     };
 
-    const replace = function (name: string) {
-      return name;
-    };
+    const replace = (name: string) => name;
 
     return {
       cell,
@@ -40,19 +39,16 @@ UnitTest.test('FitmentIVTest', function () {
     } as any;
   };
 
-  const grid = function (isNew: boolean, rows: number, cols: number, prefix: string = '') {
-    return Arr.map(new Array(rows), function (_row, r) {
-      return Arr.map(new Array(cols), function (_cs, c) {
-        return en(prefix + '-' + r + '-' + c, isNew);
-      });
-    });
-  };
+  const grid = (isNew: boolean, rows: number, cols: number, prefix: string = '') =>
+    Arr.map(new Array(rows), (_row, r) => Arr.map(new Array(cols), (_cs, c) =>
+      en(prefix + '-' + r + '-' + c, isNew)
+    ));
 
-  const rand = function (min: number, max: number) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
+  const rand = (min: number, max: number) =>
+    Math.floor(Math.random() * (max - min + 1)) + min;
 
-  const inVariantRunner = function <T extends { test: () => void }>(label: string, mvTest: () => T, timelimit: number): number {
+  type InvTest = { test: () => void };
+  const inVariantRunner = <T extends InvTest> (label: string, mvTest: () => T, timelimit: number): number => {
     let times = 0;
     const startTime = Date.now();
     while (Date.now() - startTime < timelimit) {
@@ -64,7 +60,7 @@ UnitTest.test('FitmentIVTest', function () {
     return times;
   };
 
-  const gridGen = function (isNew: boolean, prefix?: string) {
+  const gridGen = (isNew: boolean, prefix?: string) => {
     const cols = rand(GRID_MIN, GRID_MAX);
     const rows = rand(GRID_MIN, GRID_MAX);
     return {
@@ -74,14 +70,14 @@ UnitTest.test('FitmentIVTest', function () {
     };
   };
 
-  const startGen = function (gridSpec: ReturnType<typeof gridGen>) {
+  const startGen = (gridSpec: ReturnType<typeof gridGen>) => {
     // because arrays start from 0 we -1
     const row = rand(0, gridSpec.rows() - 1);
     const col = rand(0, gridSpec.cols() - 1);
     return Structs.address(row, col);
   };
 
-  const deltaGen = function () {
+  const deltaGen = () => {
     const rowDelta = rand(-GRID_MAX, GRID_MAX);
     const colDelta = rand(-GRID_MAX, GRID_MAX);
     return {
@@ -90,7 +86,7 @@ UnitTest.test('FitmentIVTest', function () {
     };
   };
 
-  const measureIVTest = function () {
+  const measureIVTest = () => {
     const gridSpecA = gridGen(false);
     const gridSpecB = gridGen(true);
     const start = startGen(gridSpecA);
@@ -124,7 +120,7 @@ UnitTest.test('FitmentIVTest', function () {
     };
   };
 
-  const tailorTestIVTest = function () {
+  const tailorTestIVTest = () => {
     const gridSpecA = gridGen(false);
     const start = startGen(gridSpecA);
     const delta = deltaGen();
@@ -158,7 +154,7 @@ UnitTest.test('FitmentIVTest', function () {
     };
   };
 
-  const mergeGridsIVTest = function () {
+  const mergeGridsIVTest = () => {
     const gridSpecA = gridGen(false, 'a');
     const gridSpecB = gridGen(true, 'b');
     const start = startGen(gridSpecA);
@@ -177,7 +173,14 @@ UnitTest.test('FitmentIVTest', function () {
       }
     };
 
-    const queryliser2000 = function (result: Result<Structs.RowCells[], string>, s: Structs.Address, specA: { rows: () => number; cols: () => number; grid: () => Structs.ElementNew[][] }, specB: { rows: () => number; cols: () => number; grid: () => Structs.ElementNew[][] }) {
+    type Spec = { rows: () => number; cols: () => number; grid: () => Structs.ElementNew[][] };
+
+    const queryliser2000 = (
+      result: Result<Structs.RowCells[], string>,
+      s: Structs.Address,
+      specA: Spec,
+      specB: Spec
+    ) => {
       // expect to see some cell from specB at some address on specA
       const offsetRow = s.row();
       const offsetCol = s.column();
@@ -185,11 +188,12 @@ UnitTest.test('FitmentIVTest', function () {
       const gridA = specA.grid();
       const gridB = specB.grid();
 
-      Arr.each(result.getOrDie(), function (row, ri) {
-        Arr.each(row.cells(), function (cell, ci) {
-          const expected = (function () {
+      Arr.each(result.getOrDie(), (row, ri) => {
+        Arr.each(row.cells(), (cell, ci) => {
+          const expected = (() => {
             // Assumption: both gridA and gridB are rectangular.
-            if (ri >= offsetRow && ri <= offsetRow + gridB.length - 1 && ci >= offsetCol && ci <= offsetCol + gridB[0].length - 1) {
+            if (ri >= offsetRow && ri <= offsetRow + gridB.length - 1 &&
+                ci >= offsetCol && ci <= offsetCol + gridB[0].length - 1) {
               return gridB[ri - offsetRow][ci - offsetCol];
             } else if (ri >= 0 && ri < gridA.length && ci >= 0 && ci < gridA[0].length) {
               return gridA[ri][ci];

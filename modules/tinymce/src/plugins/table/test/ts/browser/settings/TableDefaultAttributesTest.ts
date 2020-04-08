@@ -65,20 +65,18 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultAttributesTest', (
         tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
         Waiter.sTryUntil('click table menu', tinyUi.sClickOnUi('click table menu', 'div.tox-menu div.tox-collection__item .tox-collection__item-label:contains("Table")')),
         Waiter.sTryUntil('click table grid', tinyUi.sClickOnUi('click table grid', 'div.tox-insert-table-picker div[role="button"]:nth(11)')), // button for 2x2 table
-        TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, arr) => {
-          return s.element('table', {
-            styles: {
-              'width': str.is('100%'),
-              'border-collapse': str.is('collapse')
-            },
-            attrs: {
-              border: str.is('1')
-            },
-            children: [
-              tableBody2By2(s, str, arr)
-            ]
-          });
-        })),
+        TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, arr) => s.element('table', {
+          styles: {
+            'width': str.is('100%'),
+            'border-collapse': str.is('collapse')
+          },
+          attrs: {
+            border: str.is('1')
+          },
+          children: [
+            tableBody2By2(s, str, arr)
+          ]
+        }))),
         tinyApis.sSetContent('')
       ])),
 
@@ -88,21 +86,19 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDefaultAttributesTest', (
         tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
         Waiter.sTryUntil('click table menu', tinyUi.sClickOnUi('click table menu', 'div.tox-menu div.tox-collection__item .tox-collection__item-label:contains("Table")'), 10, 1000),
         Waiter.sTryUntil('click table grid', tinyUi.sClickOnUi('click table grid', 'div.tox-insert-table-picker div[role="button"]:nth(11)'), 10, 1000), // button for 2x2 table
-        TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, arr) => {
-          return s.element('table', {
-            styles: {
-              'width': str.is('100%'),
-              'border-collapse': str.is('collapse')
-            },
-            attrs: {
-              border: str.none('Should not have the default border'),
-              title: str.is('x')
-            },
-            children: [
-              tableBody2By2(s, str, arr)
-            ]
-          });
-        })),
+        TableTestUtils.sAssertTableStructure(editor, ApproxStructure.build((s, str, arr) => s.element('table', {
+          styles: {
+            'width': str.is('100%'),
+            'border-collapse': str.is('collapse')
+          },
+          attrs: {
+            border: str.none('Should not have the default border'),
+            title: str.is('x')
+          },
+          children: [
+            tableBody2By2(s, str, arr)
+          ]
+        }))),
         tinyApis.sSetContent('')
       ]))
     ], onSuccess, onFailure);

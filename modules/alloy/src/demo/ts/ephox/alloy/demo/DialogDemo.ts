@@ -24,9 +24,7 @@ export default (): void => {
 
   gui.add(sink);
 
-  const lazySink = () => {
-    return Result.value(sink);
-  };
+  const lazySink = () => Result.value(sink);
 
   const pTitle = ModalDialog.parts().title({
     dom: DomFactory.fromHtml('<div class="mce-title">Insert Link</div>')

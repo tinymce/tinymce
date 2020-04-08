@@ -85,6 +85,4 @@ export const urlDialogSchema = ValueSchema.objOf([
   FieldSchema.defaultedFunction('onMessage', Fun.noop)
 ]);
 
-export const createUrlDialog = (spec: UrlDialogApi): Result<UrlDialog, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw('dialog', urlDialogSchema, spec);
-};
+export const createUrlDialog = (spec: UrlDialogApi): Result<UrlDialog, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('dialog', urlDialogSchema, spec);

@@ -45,13 +45,11 @@ const schema: FieldProcessorAdt[] = [
   FieldSchema.defaultedFunction('onDragover', Fun.identity),
   FieldSchema.defaultedFunction('onDragend', Fun.identity),
   FieldSchema.state('instance', () => {
-    const exhibit = () => {
-      return DomModification.nu({
-        attributes: {
-          draggable: 'true'
-        }
-      });
-    };
+    const exhibit = () => DomModification.nu({
+      attributes: {
+        draggable: 'true'
+      }
+    });
 
     const handlers = (config: DragStartingConfig): AlloyEvents.AlloyEventRecord => AlloyEvents.derive([
       AlloyEvents.run(NativeEvents.dragover(), config.onDragover),

@@ -39,16 +39,14 @@ export interface BoxByPoint {
   readonly height: number;
 }
 
-const bounds = (x: number, y: number, width: number, height: number): Bounds => {
-  return {
-    x,
-    y,
-    width,
-    height,
-    right: x + width,
-    bottom: y + height
-  };
-};
+const bounds = (x: number, y: number, width: number, height: number): Bounds => ({
+  x,
+  y,
+  width,
+  height,
+  right: x + width,
+  bottom: y + height
+});
 
 const box = (element: Element): Bounds => {
   const xy = Location.absolute(element);
@@ -66,9 +64,7 @@ const absolute = (element: Element): Bounds => {
   return bounds(position.left(), position.top(), width, height);
 };
 
-const win = (): Bounds => {
-  return VisualViewport.getBounds(window);
-};
+const win = (): Bounds => VisualViewport.getBounds(window);
 
 export {
   pointed,

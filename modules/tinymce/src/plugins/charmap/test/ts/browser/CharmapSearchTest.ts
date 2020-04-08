@@ -45,9 +45,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.SearchTest', (success, failu
           'Wait until Euro is the first choice (search should filter)',
           Chain.asStep(Body.body(), [
             UiFinder.cFindIn('.tox-collection__item:first'),
-            Chain.mapper((item) => {
-              return Attr.get(item, 'data-collection-item-value');
-            }),
+            Chain.mapper((item) => Attr.get(item, 'data-collection-item-value')),
             Assertions.cAssertEq('Search should show euro', '€')
           ])
         ),

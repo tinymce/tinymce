@@ -52,7 +52,14 @@ interface RtcRuntimeApi {
 interface RtcAdaptor {
   undoManager: {
     beforeChange: (locks: Locks, beforeBookmark: UndoBookmark) => void;
-    addUndoLevel: (undoManager: UndoManager, index: Index, locks: Locks, beforeBookmark: UndoBookmark, level?: UndoLevel, event?: Event) => UndoLevel;
+    addUndoLevel: (
+      undoManager: UndoManager,
+      index: Index,
+      locks: Locks,
+      beforeBookmark: UndoBookmark,
+      level?: UndoLevel,
+      event?: Event
+    ) => UndoLevel;
     undo: (undoManager: UndoManager, locks: Locks, index: Index) => UndoLevel;
     redo: (index: Index, data: UndoLevel[]) => UndoLevel;
     clear: (undoManager: UndoManager, index: Index) => void;
@@ -90,20 +97,19 @@ interface RtcEditor extends Editor {
   rtcInstance: RtcAdaptor;
 }
 
-const createDummyUndoLevel = (): UndoLevel => {
-  return {
-    type: UndoLevelType.Complete,
-    fragments: [],
-    content: '',
-    bookmark: null,
-    beforeBookmark: null
-  };
-};
+const createDummyUndoLevel = (): UndoLevel => ({
+  type: UndoLevelType.Complete,
+  fragments: [],
+  content: '',
+  bookmark: null,
+  beforeBookmark: null
+});
 
 const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
   undoManager: {
     beforeChange: (locks, beforeBookmark) => Operations.beforeChange(editor, locks, beforeBookmark),
-    addUndoLevel: (undoManager, index, locks, beforeBookmark, level, event) => Operations.addUndoLevel(editor, undoManager, index, locks, beforeBookmark, level, event),
+    addUndoLevel: (undoManager, index, locks, beforeBookmark, level, event) =>
+      Operations.addUndoLevel(editor, undoManager, index, locks, beforeBookmark, level, event),
     undo: (undoManager, locks, index) => Operations.undo(editor, undoManager, locks, index),
     redo: (index, data) => Operations.redo(editor, index, data),
     clear: (undoManager, index) => Operations.clear(editor, undoManager, index),
@@ -112,7 +118,8 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
     hasRedo: (undoManager, index) => Operations.hasRedo(undoManager, index),
     transact: (undoManager, locks, callback) => Operations.transact(undoManager, locks, callback),
     ignore: (locks, callback) => Operations.ignore(locks, callback),
-    extra: (undoManager, index, callback1, callback2) => Operations.extra(editor, undoManager, index, callback1, callback2)
+    extra: (undoManager, index, callback1, callback2) =>
+      Operations.extra(editor, undoManager, index, callback1, callback2)
   },
   formatter: {
     apply: (name, vars?, node?) => ApplyFormat.applyFormat(editor, name, vars, node),
@@ -178,7 +185,9 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
         }
       },
       setContent: (content, _args) => {
-        const fragment = isTreeNode(content) ? content : tinymceEditor.parser.parse(content, { isRootContent: true, insert: true });
+        const fragment = isTreeNode(content) ?
+          content :
+          tinymceEditor.parser.parse(content, { isRootContent: true, insert: true });
         rtcEditor.setContent(fragment);
         return content;
       },
@@ -225,10 +234,9 @@ export const setup = (editor: Editor): Option<Promise<boolean>> => {
   );
 };
 
-const getRtcInstanceWithFallback = (editor: Editor): RtcAdaptor => {
+const getRtcInstanceWithFallback = (editor: Editor): RtcAdaptor =>
   // Calls to editor.getContent/editor.setContent should still work even if the rtcInstance is not yet available
-  return (editor as RtcEditor).rtcInstance ? (editor as RtcEditor).rtcInstance : makePlainAdaptor(editor);
-};
+  (editor as RtcEditor).rtcInstance ? (editor as RtcEditor).rtcInstance : makePlainAdaptor(editor);
 
 const getRtcInstanceWithError = (editor: Editor): RtcAdaptor => {
   const rtcInstance = (editor as RtcEditor).rtcInstance;
@@ -244,17 +252,22 @@ export const beforeChange = (editor: Editor, locks: Locks, beforeBookmark: UndoB
   getRtcInstanceWithError(editor).undoManager.beforeChange(locks, beforeBookmark);
 };
 
-export const addUndoLevel = (editor: Editor, undoManager: UndoManager, index: Index, locks: Locks, beforeBookmark: UndoBookmark, level?: UndoLevel, event?: Event): UndoLevel => {
-  return getRtcInstanceWithError(editor).undoManager.addUndoLevel(undoManager, index, locks, beforeBookmark, level, event);
-};
+export const addUndoLevel = (
+  editor: Editor,
+  undoManager: UndoManager,
+  index: Index,
+  locks: Locks,
+  beforeBookmark: UndoBookmark,
+  level?: UndoLevel,
+  event?: Event
+): UndoLevel =>
+  getRtcInstanceWithError(editor).undoManager.addUndoLevel(undoManager, index, locks, beforeBookmark, level, event);
 
-export const undo = (editor: Editor, undoManager: UndoManager, locks: Locks, index: Index): UndoLevel => {
-  return getRtcInstanceWithError(editor).undoManager.undo(undoManager, locks, index);
-};
+export const undo = (editor: Editor, undoManager: UndoManager, locks: Locks, index: Index): UndoLevel =>
+  getRtcInstanceWithError(editor).undoManager.undo(undoManager, locks, index);
 
-export const redo = (editor: Editor, index: Index, data: UndoLevel[]): UndoLevel => {
-  return getRtcInstanceWithError(editor).undoManager.redo(index, data);
-};
+export const redo = (editor: Editor, index: Index, data: UndoLevel[]): UndoLevel =>
+  getRtcInstanceWithError(editor).undoManager.redo(index, data);
 
 export const clear = (editor: Editor, undoManager: UndoManager, index: Index): void => {
   getRtcInstanceWithError(editor).undoManager.clear(undoManager, index);
@@ -264,27 +277,35 @@ export const reset = (editor: Editor, undoManager: UndoManager): void => {
   getRtcInstanceWithError(editor).undoManager.reset(undoManager);
 };
 
-export const hasUndo = (editor: Editor, undoManager: UndoManager, index: Index): boolean => {
-  return getRtcInstanceWithError(editor).undoManager.hasUndo(undoManager, index);
-};
+export const hasUndo = (editor: Editor, undoManager: UndoManager, index: Index): boolean =>
+  getRtcInstanceWithError(editor).undoManager.hasUndo(undoManager, index);
 
-export const hasRedo = (editor: Editor, undoManager: UndoManager, index: Index): boolean => {
-  return getRtcInstanceWithError(editor).undoManager.hasRedo(undoManager, index);
-};
+export const hasRedo = (editor: Editor, undoManager: UndoManager, index: Index): boolean =>
+  getRtcInstanceWithError(editor).undoManager.hasRedo(undoManager, index);
 
-export const transact = (editor: Editor, undoManager: UndoManager, locks: Locks, callback: () => void): UndoLevel => {
-  return getRtcInstanceWithError(editor).undoManager.transact(undoManager, locks, callback);
-};
+export const transact = (editor: Editor, undoManager: UndoManager, locks: Locks, callback: () => void): UndoLevel =>
+  getRtcInstanceWithError(editor).undoManager.transact(undoManager, locks, callback);
 
 export const ignore = (editor: Editor, locks: Locks, callback: () => void): void => {
   getRtcInstanceWithError(editor).undoManager.ignore(locks, callback);
 };
 
-export const extra = (editor: Editor, undoManager: UndoManager, index: Index, callback1: () => void, callback2: () => void): void => {
+export const extra = (
+  editor: Editor,
+  undoManager: UndoManager,
+  index: Index,
+  callback1: () => void,
+  callback2: () => void
+): void => {
   getRtcInstanceWithError(editor).undoManager.extra(undoManager, index, callback1, callback2);
 };
 
-export const applyFormat = (editor: Editor, name: string, vars?: Record<string, string>, node?: DomNode | RangeLikeObject): void => {
+export const applyFormat = (
+  editor: Editor,
+  name: string,
+  vars?: Record<string, string>,
+  node?: DomNode | RangeLikeObject
+): void => {
   getRtcInstanceWithError(editor).formatter.apply(name, vars, node);
 };
 
@@ -296,18 +317,14 @@ export const toggleFormat = (editor: Editor, name: string, vars: Record<string, 
   getRtcInstanceWithError(editor).formatter.toggle(name, vars, node);
 };
 
-export const getContent = (editor: Editor, args: GetContentArgs, format: ContentFormat): Content => {
-  return getRtcInstanceWithFallback(editor).editor.getContent(args, format);
-};
+export const getContent = (editor: Editor, args: GetContentArgs, format: ContentFormat): Content =>
+  getRtcInstanceWithFallback(editor).editor.getContent(args, format);
 
-export const setContent = (editor: Editor, content: Content, args: SetContentArgs): Content => {
-  return getRtcInstanceWithFallback(editor).editor.setContent(content, args);
-};
+export const setContent = (editor: Editor, content: Content, args: SetContentArgs): Content =>
+  getRtcInstanceWithFallback(editor).editor.setContent(content, args);
 
-export const insertContent = (editor: Editor, value: string, details): void => {
-  return getRtcInstanceWithFallback(editor).editor.insertContent(value, details);
-};
+export const insertContent = (editor: Editor, value: string, details): void =>
+  getRtcInstanceWithFallback(editor).editor.insertContent(value, details);
 
-export const getSelectedContent = (editor: Editor, format: ContentFormat, args): Content => {
-  return getRtcInstanceWithError(editor).selection.getContent(format, args);
-};
+export const getSelectedContent = (editor: Editor, format: ContentFormat, args): Content =>
+  getRtcInstanceWithError(editor).selection.getContent(format, args);

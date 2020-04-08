@@ -195,8 +195,7 @@ const compileSchema = function (type: SchemaType) {
   phrasingContent =
     'a abbr b bdo br button cite code del dfn em embed i iframe img input ins kbd ' +
     'label map noscript object q s samp script select small span strong sub sup ' +
-    'textarea u var #text #comment'
-  ;
+    'textarea u var #text #comment';
 
   // Add HTML5 items to globalAttributes, blockContent, phrasingContent
   if (type !== 'html4') {

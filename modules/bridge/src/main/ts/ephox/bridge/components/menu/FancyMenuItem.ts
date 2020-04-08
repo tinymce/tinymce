@@ -26,6 +26,4 @@ export const fancyMenuItemSchema = ValueSchema.objOf([
   FieldSchema.defaultedFunction('onAction', Fun.noop)
 ]);
 
-export const createFancyMenuItem = (spec: FancyMenuItemApi): Result<FancyMenuItem, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw('fancymenuitem', fancyMenuItemSchema, spec);
-};
+export const createFancyMenuItem = (spec: FancyMenuItemApi): Result<FancyMenuItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('fancymenuitem', fancyMenuItemSchema, spec);

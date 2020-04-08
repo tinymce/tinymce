@@ -14,13 +14,11 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 ]);
 
 // TODO: Dupe with Toolbar
-const enhanceGroups = () => {
-  return {
-    behaviours: Behaviour.derive([
-      Replacing.config({ })
-    ])
-  };
-};
+const enhanceGroups = () => ({
+  behaviours: Behaviour.derive([
+    Replacing.config({ })
+  ])
+});
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   // Note, is the container for putting all the groups in, not a group itself.

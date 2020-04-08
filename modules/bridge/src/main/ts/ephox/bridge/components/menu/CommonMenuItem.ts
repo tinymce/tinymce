@@ -29,9 +29,7 @@ export const commonMenuItemFields: FieldProcessorAdt[] = [
   FieldSchema.field(
     'value',
     'value',
-    FieldPresence.defaultedThunk(() => {
-      return Id.generate('menuitem-value');
-    }),
+    FieldPresence.defaultedThunk(() => Id.generate('menuitem-value')),
     ValueSchema.anyValue()
   ),
   FieldSchema.defaulted('meta', { })

@@ -11,9 +11,7 @@ import { Types } from '@ephox/bridge';
 
 export type HelpTabsSetting = (string | Types.Dialog.TabApi)[];
 
-const getHelpTabs = (editor: Editor): Option<HelpTabsSetting> => {
-  return Option.from(editor.getParam('help_tabs'));
-};
+const getHelpTabs = (editor: Editor): Option<HelpTabsSetting> => Option.from(editor.getParam('help_tabs'));
 
 export {
   getHelpTabs

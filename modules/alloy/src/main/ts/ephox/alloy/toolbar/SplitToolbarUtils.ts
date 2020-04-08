@@ -17,11 +17,7 @@ const setGroups = (toolbar: AlloyComponent, storedGroups: AlloyComponent[]) => {
   Toolbar.setGroups(toolbar, bGroups);
 };
 
-const findFocusedComp = (comps: AlloyComponent[]): Option<AlloyComponent> => {
-  return Arr.findMap(comps, (comp) => {
-    return Focus.search(comp.element()).bind((focusedElm) => comp.getSystem().getByDom(focusedElm).toOption());
-  });
-};
+const findFocusedComp = (comps: AlloyComponent[]): Option<AlloyComponent> => Arr.findMap(comps, (comp) => Focus.search(comp.element()).bind((focusedElm) => comp.getSystem().getByDom(focusedElm).toOption()));
 
 const refresh = (toolbar: AlloyComponent, detail: SplitToolbarBaseDetail, setOverflow: (groups: AlloyComponent[]) => void) => {
   const primary = AlloyParts.getPartOrDie(toolbar, detail, 'primary');
@@ -43,9 +39,7 @@ const refresh = (toolbar: AlloyComponent, detail: SplitToolbarBaseDetail, setOve
 
   const availableWidth = Width.get(primary.element());
 
-  const overflows = Overflows.partition(availableWidth, detail.builtGroups.get(), (comp) => {
-    return Width.get(comp.element());
-  }, overflowGroup);
+  const overflows = Overflows.partition(availableWidth, detail.builtGroups.get(), (comp) => Width.get(comp.element()), overflowGroup);
 
   if (overflows.extra().length === 0) {
     // Not ideal. Breaking abstraction somewhat, though remove is better than insert

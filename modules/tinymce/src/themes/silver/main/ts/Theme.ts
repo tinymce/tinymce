@@ -25,9 +25,7 @@ export default function () {
     return {
       renderUI,
       getWindowManagerImpl: Fun.constant(windowMgr),
-      getNotificationManagerImpl: () => {
-        return NotificationManagerImpl(editor, { backstage }, uiMothership);
-      },
+      getNotificationManagerImpl: () => NotificationManagerImpl(editor, { backstage }, uiMothership),
       // TODO: move to editor.ui namespace
       ui: getUi()
     };

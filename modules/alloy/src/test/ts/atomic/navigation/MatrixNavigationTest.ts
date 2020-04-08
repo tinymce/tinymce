@@ -10,29 +10,25 @@ interface GeneratedMatrix {
 }
 
 UnitTest.test('MatrixNavigationTest', () => {
-  const genRegularMatrix = Jsc.integer(2, 3).generator.flatMap((numRows: number) => {
+  const genRegularMatrix = Jsc.integer(2, 3).generator.flatMap((numRows: number) =>
     // I want to generate for each row, something.
-    return Jsc.integer(2, 3).generator.flatMap((numCols: number) => {
-      return Jsc.integer(0, numRows - 1).generator.flatMap((rowIndex: number) => {
-        return Jsc.integer(0, numCols - 1).generator.map((colIndex: number) => {
-          const matrix = [ ];
-          for (let i = 0; i < numRows; i++) {
-            const row = [ ];
-            for (let j = 0; j < numCols; j++) {
-              row.push(i + 'x' + j);
-            }
-            matrix.push(row);
-          }
+    Jsc.integer(2, 3).generator.flatMap((numCols: number) => Jsc.integer(0, numRows - 1).generator.flatMap((rowIndex: number) => Jsc.integer(0, numCols - 1).generator.map((colIndex: number) => {
+      const matrix = [ ];
+      for (let i = 0; i < numRows; i++) {
+        const row = [ ];
+        for (let j = 0; j < numCols; j++) {
+          row.push(i + 'x' + j);
+        }
+        matrix.push(row);
+      }
 
-          return {
-            matrix,
-            row: rowIndex,
-            col: colIndex
-          };
-        });
-      });
-    });
-  });
+      return {
+        matrix,
+        row: rowIndex,
+        col: colIndex
+      };
+    })))
+  );
 
   const arbRegularMatrix = Jsc.bless({
     generator: genRegularMatrix

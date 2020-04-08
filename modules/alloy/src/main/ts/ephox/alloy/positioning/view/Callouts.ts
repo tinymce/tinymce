@@ -13,12 +13,10 @@ import { applyPositionCss } from './PositionCss';
  * in case we decide to bring back the flexibility of working with non-standard positioning.
  */
 
-const elementSize = (p: Element): AnchorElement => {
-  return {
-    width: Width.getOuter(p),
-    height: Height.getOuter(p)
-  };
-};
+const elementSize = (p: Element): AnchorElement => ({
+  width: Width.getOuter(p),
+  height: Height.getOuter(p)
+});
 
 const layout = (anchorBox: AnchorBox, element: Element, bubbles: Bubble, options: ReparteeOptions): RepositionDecision => {
   // clear the potentially limiting factors before measuring

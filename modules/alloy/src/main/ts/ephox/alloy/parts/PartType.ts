@@ -78,9 +78,7 @@ const fName = FieldSchema.strict('name');
 const fPname = FieldSchema.field(
   'pname',
   'pname',
-  FieldPresence.defaultedThunk((typeSpec: PartSpec<any, any>) => {
-    return '<alloy.' + Id.generate(typeSpec.name) + '>';
-  }),
+  FieldPresence.defaultedThunk((typeSpec: PartSpec<any, any>) => '<alloy.' + Id.generate(typeSpec.name) + '>'),
   ValueSchema.anyValue()
 );
 
@@ -115,9 +113,7 @@ const asNamedPart = function <T> (part: PartTypeAdt<T>): Option<T> {
 };
 
 const name = <T extends { name: string }>(part: PartTypeAdt<T>): string => {
-  const get = (data: T) => {
-    return data.name;
-  };
+  const get = (data: T) => data.name;
   return part.fold(get, get, get, get);
 };
 

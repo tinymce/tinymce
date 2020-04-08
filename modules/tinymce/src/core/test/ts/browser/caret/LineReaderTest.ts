@@ -18,11 +18,9 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
     offset: number;
   }
 
-  const cSetHtml = (html: string) => {
-    return Chain.op(function () {
-      viewBlock.update(html);
-    });
-  };
+  const cSetHtml = (html: string) => Chain.op(function () {
+    viewBlock.update(html);
+  });
 
   const logPositions = (msg, positions) => {
     Arr.each(positions, (pos) => {
@@ -31,122 +29,100 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
     });
   };
 
-  const cGetPositionsUntilPreviousLine = (path: number[], offset: number) => {
-    return Chain.mapper(function (scope: any) {
-      const container = Hierarchy.follow(Element.fromDom(scope.get()), path).getOrDie();
-      const pos = CaretPosition(container.dom(), offset);
-      return getPositionsUntilPreviousLine(scope.get(), pos);
-    });
-  };
+  const cGetPositionsUntilPreviousLine = (path: number[], offset: number) => Chain.mapper(function (scope: any) {
+    const container = Hierarchy.follow(Element.fromDom(scope.get()), path).getOrDie();
+    const pos = CaretPosition(container.dom(), offset);
+    return getPositionsUntilPreviousLine(scope.get(), pos);
+  });
 
-  const cGetPositionsUntilNextLine = (path: number[], offset: number) => {
-    return Chain.mapper(function (scope: any) {
-      const container = Hierarchy.follow(Element.fromDom(scope.get()), path).getOrDie();
-      const pos = CaretPosition(container.dom(), offset);
-      return getPositionsUntilNextLine(scope.get(), pos);
-    });
-  };
+  const cGetPositionsUntilNextLine = (path: number[], offset: number) => Chain.mapper(function (scope: any) {
+    const container = Hierarchy.follow(Element.fromDom(scope.get()), path).getOrDie();
+    const pos = CaretPosition(container.dom(), offset);
+    return getPositionsUntilNextLine(scope.get(), pos);
+  });
 
-  const cGetAbovePositions = (path: number[], offset: number) => {
-    return Chain.mapper(function (scope: any) {
-      const container = Hierarchy.follow(Element.fromDom(scope.get()), path).getOrDie();
-      const pos = CaretPosition(container.dom(), offset);
-      return getPositionsAbove(scope.get(), pos);
-    });
-  };
+  const cGetAbovePositions = (path: number[], offset: number) => Chain.mapper(function (scope: any) {
+    const container = Hierarchy.follow(Element.fromDom(scope.get()), path).getOrDie();
+    const pos = CaretPosition(container.dom(), offset);
+    return getPositionsAbove(scope.get(), pos);
+  });
 
-  const cGetBelowPositions = (path: number[], offset: number) => {
-    return Chain.mapper(function (scope: any) {
-      const container = Hierarchy.follow(Element.fromDom(scope.get()), path).getOrDie();
-      const pos = CaretPosition(container.dom(), offset);
-      return getPositionsBelow(scope.get(), pos);
-    });
-  };
+  const cGetBelowPositions = (path: number[], offset: number) => Chain.mapper(function (scope: any) {
+    const container = Hierarchy.follow(Element.fromDom(scope.get()), path).getOrDie();
+    const pos = CaretPosition(container.dom(), offset);
+    return getPositionsBelow(scope.get(), pos);
+  });
 
-  const cFindClosestHorizontalPosition = (path: number[], offset: number) => {
-    return Chain.mapper(function (positions: CaretPosition[]) {
-      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
-      const pos = CaretPosition(container.dom(), offset);
-      return findClosestHorizontalPosition(positions, pos);
-    });
-  };
+  const cFindClosestHorizontalPosition = (path: number[], offset: number) => Chain.mapper(function (positions: CaretPosition[]) {
+    const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+    const pos = CaretPosition(container.dom(), offset);
+    return findClosestHorizontalPosition(positions, pos);
+  });
 
-  const cAssertCaretPositions = (expectedPositions: Path[]) => {
-    return Chain.op(function (actualPositions: CaretPosition[]) {
-      if (expectedPositions.length !== actualPositions.length) {
-        logPositions('cAssertCaretPositions', actualPositions);
-      }
+  const cAssertCaretPositions = (expectedPositions: Path[]) => Chain.op(function (actualPositions: CaretPosition[]) {
+    if (expectedPositions.length !== actualPositions.length) {
+      logPositions('cAssertCaretPositions', actualPositions);
+    }
 
-      Assertions.assertEq('Should be the expected amount of positions', expectedPositions.length, actualPositions.length);
-      Arr.each(expectedPositions, (p: Path, i) => {
-        const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), p.path).getOrDie();
-        Assertions.assertDomEq('Should be the expected container', container, Element.fromDom(actualPositions[i].container()));
-        Assertions.assertEq('Should be the expected offset', p.offset, actualPositions[i].offset());
-      });
+    Assertions.assertEq('Should be the expected amount of positions', expectedPositions.length, actualPositions.length);
+    Arr.each(expectedPositions, (p: Path, i) => {
+      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), p.path).getOrDie();
+      Assertions.assertDomEq('Should be the expected container', container, Element.fromDom(actualPositions[i].container()));
+      Assertions.assertEq('Should be the expected offset', p.offset, actualPositions[i].offset());
     });
-  };
+  });
 
   const cAssertNone = Chain.op(function (a: Option<any>) {
     Assertions.assertEq('Option return value should be none', true, a.isNone());
   });
 
-  const cAssertLineInfoCaretPositions = (expectedPositions: Path[]) => {
-    return Chain.op(function (lineInfo: LineInfo) {
-      const actualPositions = lineInfo.positions;
+  const cAssertLineInfoCaretPositions = (expectedPositions: Path[]) => Chain.op(function (lineInfo: LineInfo) {
+    const actualPositions = lineInfo.positions;
 
+    if (expectedPositions.length !== actualPositions.length) {
       if (expectedPositions.length !== actualPositions.length) {
-        if (expectedPositions.length !== actualPositions.length) {
-          logPositions('cAssertLineInfoCaretPositions', actualPositions);
-        }
+        logPositions('cAssertLineInfoCaretPositions', actualPositions);
       }
+    }
 
-      Assertions.assertEq('Should be the expected amount of positions', expectedPositions.length, actualPositions.length);
-      Arr.each(expectedPositions, (p: Path, i) => {
-        const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), p.path).getOrDie();
-        Assertions.assertDomEq('Should be the expected container', container, Element.fromDom(actualPositions[i].container()));
-        Assertions.assertEq('Should be the expected offset', p.offset, actualPositions[i].offset());
-      });
+    Assertions.assertEq('Should be the expected amount of positions', expectedPositions.length, actualPositions.length);
+    Arr.each(expectedPositions, (p: Path, i) => {
+      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), p.path).getOrDie();
+      Assertions.assertDomEq('Should be the expected container', container, Element.fromDom(actualPositions[i].container()));
+      Assertions.assertEq('Should be the expected offset', p.offset, actualPositions[i].offset());
     });
-  };
+  });
 
   const cAssertBreakPositionNone = Chain.op(function (linebreak: LineInfo) {
     Assertions.assertEq('Should not be a line break position', true, linebreak.breakAt.isNone());
   });
 
-  const cAssertBreakPosition = (path: number[], offset: number) => {
-    return Chain.op(function (linebreak: LineInfo) {
-      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
-      const breakPos = linebreak.breakAt.getOrDie();
+  const cAssertBreakPosition = (path: number[], offset: number) => Chain.op(function (linebreak: LineInfo) {
+    const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+    const breakPos = linebreak.breakAt.getOrDie();
 
-      Assertions.assertDomEq('Should be the expected container', container, Element.fromDom(breakPos.container()));
-      Assertions.assertEq('Should be the expected offset', offset, breakPos.offset());
-    });
-  };
+    Assertions.assertDomEq('Should be the expected container', container, Element.fromDom(breakPos.container()));
+    Assertions.assertEq('Should be the expected offset', offset, breakPos.offset());
+  });
 
-  const cAssertBreakType = (expectedBreakType: BreakType) => {
-    return Chain.op(function (linebreak: LineInfo) {
-      const actualBreakType = linebreak.breakType;
-      Assertions.assertEq('Should be the expected break type',  expectedBreakType, actualBreakType);
-    });
-  };
+  const cAssertBreakType = (expectedBreakType: BreakType) => Chain.op(function (linebreak: LineInfo) {
+    const actualBreakType = linebreak.breakType;
+    Assertions.assertEq('Should be the expected break type',  expectedBreakType, actualBreakType);
+  });
 
-  const cAssertCaretPosition = (path: number[], offset: number) => {
-    return Chain.op(function (posOption: Option<any>) {
-      const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
-      const pos = posOption.getOrDie('Needs to return a caret');
+  const cAssertCaretPosition = (path: number[], offset: number) => Chain.op(function (posOption: Option<any>) {
+    const container = Hierarchy.follow(Element.fromDom(viewBlock.get()), path).getOrDie();
+    const pos = posOption.getOrDie('Needs to return a caret');
 
-      Assertions.assertDomEq('Should be the expected container', container, Element.fromDom(pos.container()));
-      Assertions.assertEq('Should be the expected offset', offset, pos.offset());
-    });
-  };
+    Assertions.assertDomEq('Should be the expected container', container, Element.fromDom(pos.container()));
+    Assertions.assertEq('Should be the expected offset', offset, pos.offset());
+  });
 
-  const cVisualCaretCheck = (predicate, path: number[], offset: number) => {
-    return Chain.mapper(function (scope: any) {
-      const container = Hierarchy.follow(Element.fromDom(scope.get()), path).getOrDie();
-      const pos = CaretPosition(container.dom(), offset);
-      return predicate(scope.get(), pos);
-    });
-  };
+  const cVisualCaretCheck = (predicate, path: number[], offset: number) => Chain.mapper(function (scope: any) {
+    const container = Hierarchy.follow(Element.fromDom(scope.get()), path).getOrDie();
+    const pos = CaretPosition(container.dom(), offset);
+    return predicate(scope.get(), pos);
+  });
 
   const cIsAtFirstLine = Fun.curry(cVisualCaretCheck, isAtFirstLine);
   const cIsAtLastLine = Fun.curry(cVisualCaretCheck, isAtLastLine);

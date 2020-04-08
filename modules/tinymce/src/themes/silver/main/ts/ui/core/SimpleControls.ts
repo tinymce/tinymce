@@ -9,10 +9,8 @@ import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import { onSetupFormatToggle } from './complex/utils/Utils';
 
-const toggleFormat = (editor: Editor, fmt: string) => {
-  return () => {
-    editor.execCommand('mceToggleFormat', false, fmt);
-  };
+const toggleFormat = (editor: Editor, fmt: string) => () => {
+  editor.execCommand('mceToggleFormat', false, fmt);
 };
 
 const registerFormatButtons = (editor: Editor) => {

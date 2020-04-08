@@ -20,16 +20,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextMenuTest', (success, fa
     const body = Body.body();
     const editorBody = Element.fromDom(editor.getBody());
 
-    const sOpenContextMenu = (target: string) => {
-      return Chain.asStep(editor, [
-        tinyUi.cTriggerContextMenu('trigger context menu', target, '.tox-silver-sink [role="menuitem"]'),
-        Chain.wait(0)
-      ]);
-    };
+    const sOpenContextMenu = (target: string) => Chain.asStep(editor, [
+      tinyUi.cTriggerContextMenu('trigger context menu', target, '.tox-silver-sink [role="menuitem"]'),
+      Chain.wait(0)
+    ]);
 
-    const sAssertFocusOnItem = (label: string, selector: string) => {
-      return FocusTools.sTryOnSelector(`Focus should be on: ${label}`, doc, selector);
-    };
+    const sAssertFocusOnItem = (label: string, selector: string) => FocusTools.sTryOnSelector(`Focus should be on: ${label}`, doc, selector);
 
     const sCloseDialogAndWait = GeneralSteps.sequence([
       tinyUi.sWaitForPopup('wait for dialog', 'div[role="dialog"]'),
@@ -45,21 +41,17 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextMenuTest', (success, fa
     const sPressDownArrowKey = Keyboard.sKeydown(doc, Keys.down(), { });
     const sPressEnterKey = Keyboard.sKeydown(doc, Keys.enter(), { });
 
-    const sRepeatDownArrowKey = (index) => {
-      return GeneralSteps.sequence(Arr.range(index, () => sPressDownArrowKey));
-    };
+    const sRepeatDownArrowKey = (index) => GeneralSteps.sequence(Arr.range(index, () => sPressDownArrowKey));
 
     // 'index' points to the context menuitems while 'subindex' points to the sub menuitems
-    const sSelectContextMenu = (label: string, selector: string, index: number, subindex: number) => {
-      return GeneralSteps.sequence([
-        sOpenContextMenu('td'),
-        sRepeatDownArrowKey(subindex),
-        Keyboard.sKeydown(doc, Keys.right(), {}),
-        sRepeatDownArrowKey(index),
-        sAssertFocusOnItem(label, selector),
-        sPressEnterKey
-      ]);
-    };
+    const sSelectContextMenu = (label: string, selector: string, index: number, subindex: number) => GeneralSteps.sequence([
+      sOpenContextMenu('td'),
+      sRepeatDownArrowKey(subindex),
+      Keyboard.sKeydown(doc, Keys.right(), {}),
+      sRepeatDownArrowKey(index),
+      sAssertFocusOnItem(label, selector),
+      sPressEnterKey
+    ]);
 
     const sSelectCellContextMenu = (label, selector, index) => sSelectContextMenu(label, selector, index, 0);
     const sSelectRowContextMenu = (label, selector, index) => sSelectContextMenu(label, selector, index, 1);
@@ -103,14 +95,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextMenuTest', (success, fa
       '</tbody>' +
     '</table>';
 
-    const sAssertHtmlStructure = (label: string, expectedHtml: string) => Assertions.sAssertStructure(label, ApproxStructure.build((s) => {
-      return s.element('body', {
-        children: [
-          ApproxStructure.fromHtml(expectedHtml),
-          s.theRest()
-        ]
-      });
-    }), editorBody);
+    const sAssertHtmlStructure = (label: string, expectedHtml: string) => Assertions.sAssertStructure(label, ApproxStructure.build((s) => s.element('body', {
+      children: [
+        ApproxStructure.fromHtml(expectedHtml),
+        s.theRest()
+      ]
+    })), editorBody);
 
     Pipeline.async({}, [
       tinyApis.sFocus(),

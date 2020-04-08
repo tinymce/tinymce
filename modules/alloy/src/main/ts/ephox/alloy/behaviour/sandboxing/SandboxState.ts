@@ -9,17 +9,13 @@ const init = (): SandboxingState => {
 
   const readState = Fun.constant('not-implemented');
 
-  const isOpen = () => {
-    return contents.get().isSome();
-  };
+  const isOpen = () => contents.get().isSome();
 
   const set = (comp: AlloyComponent) => {
     contents.set(Option.some(comp));
   };
 
-  const get = () => {
-    return contents.get();
-  };
+  const get = () => contents.get();
 
   const clear = () => {
     contents.set(Option.none());

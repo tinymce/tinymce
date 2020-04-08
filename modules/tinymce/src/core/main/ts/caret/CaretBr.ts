@@ -21,13 +21,9 @@ const findBr = (forward: boolean, root: Element, pos: CaretPosition) => {
   return CaretFinder.fromPosition(forward, scope.dom(), pos).filter(isBr);
 };
 
-const isBeforeBr = (root: Element, pos: CaretPosition) => {
-  return getElementFromPosition(pos).exists(ElementType.isBr) || findBr(true, root, pos).isSome();
-};
+const isBeforeBr = (root: Element, pos: CaretPosition) => getElementFromPosition(pos).exists(ElementType.isBr) || findBr(true, root, pos).isSome();
 
-const isAfterBr = (root: Element, pos: CaretPosition) => {
-  return getElementFromPrevPosition(pos).exists(ElementType.isBr) || findBr(false, root, pos).isSome();
-};
+const isAfterBr = (root: Element, pos: CaretPosition) => getElementFromPrevPosition(pos).exists(ElementType.isBr) || findBr(false, root, pos).isSome();
 
 const findPreviousBr = Fun.curry(findBr, false);
 const findNextBr = Fun.curry(findBr, true);

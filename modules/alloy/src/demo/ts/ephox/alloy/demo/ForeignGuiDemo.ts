@@ -20,16 +20,8 @@ const resize = (element: Element, changeX: number, changeY: number): void => {
     throw new Error('heading not found');
   } else {
     heading.innerHTML = 'resizing';
-    const width = Css.getRaw(element, 'width').map((w) => {
-      return parseInt(w, 10);
-    }).getOrThunk(() => {
-      return Width.get(element);
-    });
-    const height = Css.getRaw(element, 'height').map((h) => {
-      return parseInt(h, 10);
-    }).getOrThunk(() => {
-      return Height.get(element);
-    });
+    const width = Css.getRaw(element, 'width').map((w) => parseInt(w, 10)).getOrThunk(() => Width.get(element));
+    const height = Css.getRaw(element, 'height').map((h) => parseInt(h, 10)).getOrThunk(() => Height.get(element));
     Css.set(element, 'width', (width + changeX) + 'px');
     Css.set(element, 'height', (height + changeY) + 'px');
   }

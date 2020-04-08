@@ -51,12 +51,10 @@ UnitTest.asynctest('SubmenuPositionTest', (success, failure) => {
     );
 
   }, (_doc, _body, gui, _component, _store) => {
-    const cSetupAnchor = Chain.mapper((item) => {
-      return {
-        anchor: 'submenu',
-        item
-      };
-    });
+    const cSetupAnchor = Chain.mapper((item) => ({
+      anchor: 'submenu',
+      item
+    }));
 
     return [
       Chain.asStep({}, [

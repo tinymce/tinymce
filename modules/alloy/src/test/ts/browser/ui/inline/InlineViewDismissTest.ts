@@ -15,10 +15,7 @@ import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 
 UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
 
-  GuiSetup.setup((_store, _doc, _body) => {
-    return Sinks.relativeSink();
-
-  }, (_doc, _body, gui, component, store) => {
+  GuiSetup.setup((_store, _doc, _body) => Sinks.relativeSink(), (_doc, _body, gui, component, store) => {
     const inline = GuiFactory.build(
       InlineView.sketch({
         dom: {
@@ -60,35 +57,31 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
 
     gui.add(related);
 
-    const sCheckOpen = (label: string) => {
-      return Logger.t(
-        label,
-        GeneralSteps.sequence([
-          Waiter.sTryUntil(
-            'Test inline should not be DOM',
-            UiFinder.sExists(gui.element(), '.test-inline')
-          ),
-          Step.sync(() => {
-            Assertions.assertEq('Checking isOpen API', true, InlineView.isOpen(inline));
-          })
-        ])
-      );
-    };
+    const sCheckOpen = (label: string) => Logger.t(
+      label,
+      GeneralSteps.sequence([
+        Waiter.sTryUntil(
+          'Test inline should not be DOM',
+          UiFinder.sExists(gui.element(), '.test-inline')
+        ),
+        Step.sync(() => {
+          Assertions.assertEq('Checking isOpen API', true, InlineView.isOpen(inline));
+        })
+      ])
+    );
 
-    const sCheckClosed = (label: string) => {
-      return Logger.t(
-        label,
-        GeneralSteps.sequence([
-          Waiter.sTryUntil(
-            'Test inline should not be in DOM',
-            UiFinder.sNotExists(gui.element(), '.test-inline')
-          ),
-          Step.sync(() => {
-            Assertions.assertEq('Checking isOpen API', false, InlineView.isOpen(inline));
-          })
-        ])
-      );
-    };
+    const sCheckClosed = (label: string) => Logger.t(
+      label,
+      GeneralSteps.sequence([
+        Waiter.sTryUntil(
+          'Test inline should not be in DOM',
+          UiFinder.sNotExists(gui.element(), '.test-inline')
+        ),
+        Step.sync(() => {
+          Assertions.assertEq('Checking isOpen API', false, InlineView.isOpen(inline));
+        })
+      ])
+    );
 
     return [
       UiFinder.sNotExists(gui.element(), '.test-inline'),

@@ -53,91 +53,85 @@ export default (): void => {
     'x',
     'yak',
     'zebra'
-  ], (s) => {
-    return {
-      value: s,
-      text: Strings.capitalize(s)
-    };
-  });
+  ], (s) => ({
+    value: s,
+    text: Strings.capitalize(s)
+  }));
 
-  const lazySink = () => {
-    return Result.value(sink);
-  };
+  const lazySink = () => Result.value(sink);
 
   const sketchTypeahead = (model: {
     selectsOver: boolean;
     getDisplayText: (data: TypeaheadData) => string;
     populateFromBrowse: boolean;
-  }) => {
-    return Typeahead.sketch({
-      minChars: 1,
-      lazySink,
+  }) => Typeahead.sketch({
+    minChars: 1,
+    lazySink,
 
-      parts: {
-        menu: {
-          markers: DemoRenders.tieredMarkers(),
-          dom: {
-            tag: 'div'
-          }
+    parts: {
+      menu: {
+        markers: DemoRenders.tieredMarkers(),
+        dom: {
+          tag: 'div'
         }
-      },
+      }
+    },
 
-      markers: {
-        openClass: 'demo-typeahead-open'
-      },
+    markers: {
+      openClass: 'demo-typeahead-open'
+    },
 
-      initialData: { value: 'bison', meta: { text: 'Bison' }},
-      model,
+    initialData: { value: 'bison', meta: { text: 'Bison' }},
+    model,
 
-      fetch(input) {
-        const inputValue = Value.get(input.element());
-        console.log('text', inputValue);
-        const matching: DemoRenders.DemoItems[] = Arr.bind(dataset, (d) => {
-          const lText = d.text.toLowerCase();
-          const index = lText.indexOf(inputValue.toLowerCase());
-          if (index > -1) {
+    fetch(input) {
+      const inputValue = Value.get(input.element());
+      console.log('text', inputValue);
+      const matching: DemoRenders.DemoItems[] = Arr.bind(dataset, (d) => {
+        const lText = d.text.toLowerCase();
+        const index = lText.indexOf(inputValue.toLowerCase());
+        if (index > -1) {
 
-            const html = d.text.substring(0, index) + '<strong>' + d.text.substring(index, index + inputValue.length) + '</strong>' +
+          const html = d.text.substring(0, index) + '<strong>' + d.text.substring(index, index + inputValue.length) + '</strong>' +
               d.text.substring(index + inputValue.length);
-            return [
-              {
-                type: 'item',
-                data: {
-                  value: d.value,
-                  meta: {
-                    'text': d.text,
-                    html,
-                    'meta-demo-content': 'caterpillar',
-                    'item-class': 'class-' + d.value
-                  }
+          return [
+            {
+              type: 'item',
+              data: {
+                value: d.value,
+                meta: {
+                  'text': d.text,
+                  html,
+                  'meta-demo-content': 'caterpillar',
+                  'item-class': 'class-' + d.value
                 }
               }
-            ];
-          } else {
-            return [ ];
-          }
-        });
+            }
+          ];
+        } else {
+          return [ ];
+        }
+      });
 
-        const matches = matching.length > 0 ? matching : [
-          { type: 'separator', text: 'No items' } as DemoRenders.DemoSeparatorItem
-        ];
+      const matches = matching.length > 0 ? matching : [
+        { type: 'separator', text: 'No items' } as DemoRenders.DemoSeparatorItem
+      ];
 
-        const future = Future.pure(matches.slice(0, 5));
-        return future.map((items) => {
-          const menu = DemoRenders.menu({
-            value: 'blah.value',
-            items: Arr.map(items, DemoRenders.item)
-          });
-          return Option.some(TieredMenu.singleData('blah', menu));
+      const future = Future.pure(matches.slice(0, 5));
+      return future.map((items) => {
+        const menu = DemoRenders.menu({
+          value: 'blah.value',
+          items: Arr.map(items, DemoRenders.item)
         });
-      },
-      onExecute(sandbox, item, _itemValue) {
-        const value = Representing.getValue(item);
-        console.log('*** typeahead menu demo execute on: ', value, ' ***');
-        return Option.some(true);
-      }
-    });
-  };
+        return Option.some(TieredMenu.singleData('blah', menu));
+      });
+    },
+    onExecute(sandbox, item, _itemValue) {
+      const value = Representing.getValue(item);
+      console.log('*** typeahead menu demo execute on: ', value, ' ***');
+      return Option.some(true);
+    }
+  });
 
   HtmlDisplay.section(gui,
     'An example of a typeahead component',

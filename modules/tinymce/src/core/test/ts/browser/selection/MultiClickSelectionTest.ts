@@ -7,11 +7,9 @@ import Editor from 'tinymce/core/api/Editor';
 UnitTest.asynctest('browser.tinymce.core.selection.MultiClickSelectionTest', (success, failure) => {
   Theme();
 
-  const sFakeMultiClick = (editor: Editor, clickCount) => {
-    return Step.sync(() => {
-      editor.fire('click', { detail: clickCount });
-    });
-  };
+  const sFakeMultiClick = (editor: Editor, clickCount) => Step.sync(() => {
+    editor.fire('click', { detail: clickCount });
+  });
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);

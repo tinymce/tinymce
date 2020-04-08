@@ -27,16 +27,12 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
         });
       });
 
-      const sCheckLastButtonGroup = (label: string, children: (s, str, arr) => any) => {
-        return Chain.asStep(Body.body(), [
-          UiFinder.cFindIn('.tox-pop .tox-toolbar__group:last'),
-          Assertions.cAssertStructure(label, ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              children: children(s, str, arr)
-            });
-          }))
-        ]);
-      };
+      const sCheckLastButtonGroup = (label: string, children: (s, str, arr) => any) => Chain.asStep(Body.body(), [
+        UiFinder.cFindIn('.tox-pop .tox-toolbar__group:last'),
+        Assertions.cAssertStructure(label, ApproxStructure.build((s, str, arr) => s.element('div', {
+          children: children(s, str, arr)
+        })))
+      ]);
 
       const sFire = (event: string, object) => Step.sync(() => {
         editor.fire(event, object);
@@ -46,16 +42,14 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
         UiFinder.cFindIn('.tox-pop'),
         Assertions.cAssertStructure(
           `${label}: Checking pop has a dialog`,
-          ApproxStructure.build((s, _str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-pop') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-pop__dialog') ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, _str, arr) => s.element('div', {
+            classes: [ arr.has('tox-pop') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-pop__dialog') ]
+              })
+            ]
+          }))
         )
       ]);
 

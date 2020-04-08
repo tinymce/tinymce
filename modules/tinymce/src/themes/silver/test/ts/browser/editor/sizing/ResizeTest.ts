@@ -11,15 +11,13 @@ UnitTest.asynctest('Editor resize test', (success, failure) => {
   Theme();
 
   TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
-    const cAssertEditorSize = (expectedWidth: number, expectedHeight: number) => {
-      return Chain.control(
-        Chain.op((container: Element) => {
-          Assertions.assertEq(`Editor should be ${expectedHeight}px high`, expectedHeight, container.dom().offsetHeight);
-          Assertions.assertEq(`Editor should be ${expectedWidth}px wide`, expectedWidth, container.dom().offsetWidth);
-        }),
-        Guard.addLogging('Ensure that the editor has resized')
-      );
-    };
+    const cAssertEditorSize = (expectedWidth: number, expectedHeight: number) => Chain.control(
+      Chain.op((container: Element) => {
+        Assertions.assertEq(`Editor should be ${expectedHeight}px high`, expectedHeight, container.dom().offsetHeight);
+        Assertions.assertEq(`Editor should be ${expectedWidth}px wide`, expectedWidth, container.dom().offsetWidth);
+      }),
+      Guard.addLogging('Ensure that the editor has resized')
+    );
 
     Pipeline.async({ }, [
       Chain.asStep(Body.body(), [

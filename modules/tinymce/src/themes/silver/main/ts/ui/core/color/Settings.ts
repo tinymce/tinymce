@@ -86,32 +86,22 @@ const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemApi[] {
   return colors;
 };
 
-const getColorCols = (editor: Editor, defaultCols: number): number => {
-  return editor.getParam('color_cols', defaultCols, 'number');
-};
+const getColorCols = (editor: Editor, defaultCols: number): number => editor.getParam('color_cols', defaultCols, 'number');
 
-const hasCustomColors = (editor: Editor): boolean => {
-  return editor.getParam('custom_colors') !== false;
-};
+const hasCustomColors = (editor: Editor): boolean => editor.getParam('custom_colors') !== false;
 
-const getColorMap = (editor: Editor): string[] => {
-  return editor.getParam('color_map');
-};
+const getColorMap = (editor: Editor): string[] => editor.getParam('color_map');
 
 const getColors = (editor: Editor): Menu.ChoiceMenuItemApi[] => {
   const unmapped = getColorMap(editor);
   return unmapped !== undefined ? mapColors(unmapped) : defaultColors;
 };
 
-const getCurrentColors = (): Menu.ChoiceMenuItemApi[] => {
-  return Arr.map(colorCache.state(), (color) => {
-    return {
-      type: choiceItem,
-      text: color,
-      value: color
-    };
-  });
-};
+const getCurrentColors = (): Menu.ChoiceMenuItemApi[] => Arr.map(colorCache.state(), (color) => ({
+  type: choiceItem,
+  text: color,
+  value: color
+}));
 
 const addColor = (color: string) => {
   colorCache.add(color);

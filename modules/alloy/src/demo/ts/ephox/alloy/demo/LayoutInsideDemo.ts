@@ -43,45 +43,43 @@ export default (): void => {
     })
   );
 
-  const makeExample = (id: string, ltrDescription: string, rtlDescription: string, layouts: Layouts) => {
-    return HtmlDisplay.section(gui, 'Position anchoring to text selection', Container.sketch({
-      dom: {
-        tag: 'div'
-      },
-      components: [
-        Container.sketch({
-          dom: {
-            attributes: {
-              contenteditable: 'true'
-            },
-            styles: {
-              border: '1px solid black',
-              width: '300px',
-              height: '200px',
-              display: 'inline-block'
-            },
-            innerHtml: `Popup will appear in the ${ltrDescription} for LTR and ${rtlDescription} for RTL`
+  const makeExample = (id: string, ltrDescription: string, rtlDescription: string, layouts: Layouts) => HtmlDisplay.section(gui, 'Position anchoring to text selection', Container.sketch({
+    dom: {
+      tag: 'div'
+    },
+    components: [
+      Container.sketch({
+        dom: {
+          attributes: {
+            contenteditable: 'true'
           },
-          uid: `inner-${id}-editor`
-        }),
-        Button.sketch({
-          dom: {
-            tag: 'button',
-            innerHtml: 'Show popup inside editor'
+          styles: {
+            border: '1px solid black',
+            width: '300px',
+            height: '200px',
+            display: 'inline-block'
           },
-          action(button) {
-            Attachment.attach(sink, popup);
-            Positioning.position(sink, {
-              anchor: 'node',
-              root: button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element(),
-              node: Option.from(button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element()),
-              layouts
-            }, popup);
-          }
-        })
-      ]
-    }));
-  };
+          innerHtml: `Popup will appear in the ${ltrDescription} for LTR and ${rtlDescription} for RTL`
+        },
+        uid: `inner-${id}-editor`
+      }),
+      Button.sketch({
+        dom: {
+          tag: 'button',
+          innerHtml: 'Show popup inside editor'
+        },
+        action(button) {
+          Attachment.attach(sink, popup);
+          Positioning.position(sink, {
+            anchor: 'node',
+            root: button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element(),
+            node: Option.from(button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element()),
+            layouts
+          }, popup);
+        }
+      })
+    ]
+  }));
 
   // North
   makeExample('n', 'top', 'top', {

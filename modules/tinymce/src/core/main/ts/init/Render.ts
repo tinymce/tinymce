@@ -72,33 +72,23 @@ interface UrlMeta {
   name: Option<string>;
 }
 
-const getIconsUrlMetaFromUrl = (editor: Editor): Option<UrlMeta> => {
-  return Option.from(Settings.getIconsUrl(editor))
-    .filter((url) => url.length > 0)
-    .map((url) => {
-      return {
-        url,
-        name: Option.none()
-      };
-    });
-};
+const getIconsUrlMetaFromUrl = (editor: Editor): Option<UrlMeta> => Option.from(Settings.getIconsUrl(editor))
+  .filter((url) => url.length > 0)
+  .map((url) => ({
+    url,
+    name: Option.none()
+  }));
 
-const getIconsUrlMetaFromName = (editor: Editor, name: string | undefined, suffix: string): Option<UrlMeta> => {
-  return Option.from(name)
-    .filter((name) => name.length > 0 && !IconManager.has(name))
-    .map((name) => {
-      return {
-        url: `${editor.editorManager.baseURL}/icons/${name}/icons${suffix}.js`,
-        name: Option.some(name)
-      };
-    });
-};
+const getIconsUrlMetaFromName = (editor: Editor, name: string | undefined, suffix: string): Option<UrlMeta> => Option.from(name)
+  .filter((name) => name.length > 0 && !IconManager.has(name))
+  .map((name) => ({
+    url: `${editor.editorManager.baseURL}/icons/${name}/icons${suffix}.js`,
+    name: Option.some(name)
+  }));
 
 const loadIcons = (scriptLoader: ScriptLoader, editor: Editor, suffix: string) => {
   const defaultIconsUrl = getIconsUrlMetaFromName(editor, 'default', suffix);
-  const customIconsUrl = getIconsUrlMetaFromUrl(editor).orThunk(() => {
-    return getIconsUrlMetaFromName(editor, Settings.getIconPackName(editor), '');
-  });
+  const customIconsUrl = getIconsUrlMetaFromUrl(editor).orThunk(() => getIconsUrlMetaFromName(editor, Settings.getIconPackName(editor), ''));
 
   Arr.each(Options.cat([ defaultIconsUrl, customIconsUrl ]), (urlMeta) => {
     scriptLoader.add(urlMeta.url, Fun.noop, undefined, () => {

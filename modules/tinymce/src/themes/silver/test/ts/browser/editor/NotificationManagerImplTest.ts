@@ -12,9 +12,7 @@ import { cResizeToPos } from '../../module/UiChainUtils';
 UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
   Theme();
 
-  const cOpenNotification = (editor: Editor, type: 'info' | 'warning' | 'error' | 'success', text: string, progressBar = false) => Chain.injectThunked(() => {
-    return editor.notificationManager.open({ type, text, progressBar });
-  });
+  const cOpenNotification = (editor: Editor, type: 'info' | 'warning' | 'error' | 'success', text: string, progressBar = false) => Chain.injectThunked(() => editor.notificationManager.open({ type, text, progressBar }));
 
   const cCloseNotification = Chain.op((notification: NotificationApi) => {
     notification.close();
@@ -47,68 +45,66 @@ UnitTest.asynctest('NotificationManagerImpl test', (success, failure) => {
     }),
     Chain.async((editor: Editor, onSuccess, onFailure) => {
       const cAssertStructure = (label: string, type: string, message: string, progress?: number) => Chain.op((notification: NotificationApi) => {
-        Assertions.assertStructure(label, ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            attrs: {
-              role: str.is('alert')
-            },
-            classes: [
-              arr.has('tox-notification'),
-              arr.has(`tox-notification--${type}`)
-            ],
-            children: [
-              s.element('div', {
-                classes: [ arr.has('tox-notification__icon') ]
-              }),
-              s.element('div', {
-                classes: [ arr.has('tox-notification__body') ],
-                children: [
-                  s.element('p', {
-                    children: [ s.text(str.is(message)) ]
-                  })
-                ]
-              }),
-              ...progress !== undefined ? [
-                s.element('div', {
-                  classes: [ arr.has('tox-progress-bar'), arr.has('tox-progress-indicator') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-bar-container') ],
-                      children: [
-                        s.element('div', {
-                          classes: [ arr.has('tox-bar') ],
-                          styles: {
-                            width: str.is(`${progress}%`)
-                          }
-                        })
-                      ]
-                    }),
-                    s.element('div', {
-                      classes: [ arr.has('tox-text') ],
-                      children: [ s.text(str.is(`${progress}%`)) ]
-                    })
-                  ]
+        Assertions.assertStructure(label, ApproxStructure.build((s, str, arr) => s.element('div', {
+          attrs: {
+            role: str.is('alert')
+          },
+          classes: [
+            arr.has('tox-notification'),
+            arr.has(`tox-notification--${type}`)
+          ],
+          children: [
+            s.element('div', {
+              classes: [ arr.has('tox-notification__icon') ]
+            }),
+            s.element('div', {
+              classes: [ arr.has('tox-notification__body') ],
+              children: [
+                s.element('p', {
+                  children: [ s.text(str.is(message)) ]
                 })
-              ] : [],
-              s.element('button', {
-                classes: [
-                  arr.has('tox-notification__dismiss'),
-                  arr.has('tox-button'),
-                  arr.has('tox-button--naked'),
-                  arr.has('tox-button--icon')
-                ],
+              ]
+            }),
+            ...progress !== undefined ? [
+              s.element('div', {
+                classes: [ arr.has('tox-progress-bar'), arr.has('tox-progress-indicator') ],
                 children: [
                   s.element('div', {
-                    attrs: {
-                      'aria-label': str.is('Close')
-                    },
-                    classes: [ arr.has('tox-icon') ]
+                    classes: [ arr.has('tox-bar-container') ],
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-bar') ],
+                        styles: {
+                          width: str.is(`${progress}%`)
+                        }
+                      })
+                    ]
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-text') ],
+                    children: [ s.text(str.is(`${progress}%`)) ]
                   })
                 ]
               })
-            ]
-          });
-        }), Element.fromDom(notification.getEl()));
+            ] : [],
+            s.element('button', {
+              classes: [
+                arr.has('tox-notification__dismiss'),
+                arr.has('tox-button'),
+                arr.has('tox-button--naked'),
+                arr.has('tox-button--icon')
+              ],
+              children: [
+                s.element('div', {
+                  attrs: {
+                    'aria-label': str.is('Close')
+                  },
+                  classes: [ arr.has('tox-icon') ]
+                })
+              ]
+            })
+          ]
+        })), Element.fromDom(notification.getEl()));
       });
 
       Chain.pipeline([

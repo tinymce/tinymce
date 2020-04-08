@@ -7,11 +7,9 @@ import Editor from 'tinymce/core/api/Editor';
 UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysBrModeTest', (success, failure) => {
   Theme();
 
-  const sFireInsert = (editor: Editor) => {
-    return Step.sync(() => {
-      editor.fire('input', { isComposing: false });
-    });
-  };
+  const sFireInsert = (editor: Editor) => Step.sync(() => {
+    editor.fire('input', { isComposing: false });
+  });
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);

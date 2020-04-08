@@ -16,12 +16,10 @@ const init = (editor: Editor, database: EmojiDatabase): void => {
     ch: ':',
     columns: 'auto',
     minChars: 2,
-    fetch: (pattern, maxResults) => {
-      return database.waitForLoad().then(() => {
-        const candidates = database.listAll();
-        return emojisFrom(candidates, pattern, Option.some(maxResults));
-      });
-    },
+    fetch: (pattern, maxResults) => database.waitForLoad().then(() => {
+      const candidates = database.listAll();
+      return emojisFrom(candidates, pattern, Option.some(maxResults));
+    }),
     onAction: (autocompleteApi, rng, value) => {
       editor.selection.setRng(rng);
       editor.insertContent(value);

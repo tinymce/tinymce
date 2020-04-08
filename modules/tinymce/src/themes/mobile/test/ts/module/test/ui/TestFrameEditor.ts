@@ -63,11 +63,9 @@ export default function () {
     },
     ui: {
       registry: {
-        getAll: () => {
-          return {
-            icons: {}
-          };
-        }
+        getAll: () => ({
+          icons: {}
+        })
       }
     }
   };

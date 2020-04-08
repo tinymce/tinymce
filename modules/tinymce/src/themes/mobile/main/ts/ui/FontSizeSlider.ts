@@ -14,22 +14,18 @@ import { MobileRealm } from '../ui/IosRealm';
 
 const sizes = FontSizes.candidates();
 
-const makeSlider = (spec): SketchSpec => {
-  return SizeSlider.sketch({
-    onChange: spec.onChange,
-    sizes,
-    category: 'font',
-    getInitialValue: spec.getInitialValue
-  });
-};
+const makeSlider = (spec): SketchSpec => SizeSlider.sketch({
+  onChange: spec.onChange,
+  sizes,
+  category: 'font',
+  getInitialValue: spec.getInitialValue
+});
 
-const makeItems = (spec) => {
-  return [
-    UiDomFactory.spec('<span class="${prefix}-toolbar-button ${prefix}-icon-small-font ${prefix}-icon"></span>'),
-    makeSlider(spec),
-    UiDomFactory.spec('<span class="${prefix}-toolbar-button ${prefix}-icon-large-font ${prefix}-icon"></span>')
-  ];
-};
+const makeItems = (spec) => [
+  UiDomFactory.spec('<span class="${prefix}-toolbar-button ${prefix}-icon-small-font ${prefix}-icon"></span>'),
+  makeSlider(spec),
+  UiDomFactory.spec('<span class="${prefix}-toolbar-button ${prefix}-icon-large-font ${prefix}-icon"></span>')
+];
 
 const sketch = (realm: MobileRealm, editor): SketchSpec => {
   const spec = {

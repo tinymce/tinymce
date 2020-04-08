@@ -33,9 +33,7 @@ const setup = (api: AutocompleterUiApi, editor: Editor) => {
   };
 
   editor.on('keydown', (e) => {
-    const getItem = (): Option<AlloyComponent> => {
-      return api.getView().bind(Highlighting.getHighlighted);
-    };
+    const getItem = (): Option<AlloyComponent> => api.getView().bind(Highlighting.getHighlighted);
 
     // Pressing <backspace> updates the autocompleter
     if (e.which === 8) {

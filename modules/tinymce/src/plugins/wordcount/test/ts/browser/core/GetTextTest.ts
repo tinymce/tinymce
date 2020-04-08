@@ -13,13 +13,11 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.GetTextTest', (success, fa
   Theme();
 
   TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {
-    const sAssertGetText = (node: Node, expected) => {
-      return Step.sync(() => {
-        const actual = getText(node, editor.schema);
+    const sAssertGetText = (node: Node, expected) => Step.sync(() => {
+      const actual = getText(node, editor.schema);
 
-        Assert.eq('should be the same', expected, actual);
-      });
-    };
+      Assert.eq('should be the same', expected, actual);
+    });
 
     const c = (html) => editor.dom.create('div', {}, html);
 

@@ -75,9 +75,7 @@ const monitor = (settings: GuiEventSettings) => {
   const handleTouchend = (event: EventArgs): Option<boolean> => {
     longpress.cancel();
 
-    const isSame = (data: TouchHistoryData) => {
-      return Compare.eq(data.target, event.target());
-    };
+    const isSame = (data: TouchHistoryData) => Compare.eq(data.target, event.target());
 
     return startData.get().filter(isSame).map((_data) => {
       if (longpressFired.get()) {
@@ -95,9 +93,7 @@ const monitor = (settings: GuiEventSettings) => {
     { key: NativeEvents.touchend(), value: handleTouchend }
   ]);
 
-  const fireIfReady = (event: EventArgs, type: string): Option<boolean> => {
-    return Obj.get(handlers, type).bind((handler) => handler(event));
-  };
+  const fireIfReady = (event: EventArgs, type: string): Option<boolean> => Obj.get(handlers, type).bind((handler) => handler(event));
 
   return {
     fireIfReady

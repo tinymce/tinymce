@@ -42,9 +42,7 @@ const findParentElm = (elm: Node, rootElm: Node) => {
   }
 };
 
-const replaceWithSpans = (text: string) => {
-  return text.replace(Data.regExpGlobal, Html.wrapCharWithSpan);
-};
+const replaceWithSpans = (text: string) => text.replace(Data.regExpGlobal, Html.wrapCharWithSpan);
 
 export {
   isMatch,

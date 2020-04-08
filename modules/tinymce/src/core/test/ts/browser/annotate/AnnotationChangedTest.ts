@@ -33,15 +33,13 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
   TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
-    const sTestAnnotationEvents = <T> (label: string, start: number[], soffset: number, expected: Array<{ uid: string; name: string; state: boolean}>): Step<T, T> => {
-      return StepSequence.sequenceSame<T>([
-        tinyApis.sSetSelection(start, soffset, start, soffset),
-        Waiter.sTryUntil(
-          label,
-          sAssertChanges('sTestAnnotationEvents.sAssertChanges', expected)
-        ),
-      ]);
-    };
+    const sTestAnnotationEvents = <T> (label: string, start: number[], soffset: number, expected: Array<{ uid: string; name: string; state: boolean}>): Step<T, T> => StepSequence.sequenceSame<T>([
+      tinyApis.sSetSelection(start, soffset, start, soffset),
+      Waiter.sTryUntil(
+        label,
+        sAssertChanges('sTestAnnotationEvents.sAssertChanges', expected)
+      ),
+    ]);
 
     const sTestChanges = <T> () => StepSequence.sequenceSame<T>([
       tinyApis.sFocus(),
@@ -234,47 +232,39 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
     setup: (ed: Editor) => {
       ed.on('init', () => {
         ed.annotator.register('alpha', {
-          decorate: (uid, data) => {
-            return {
-              attributes: {
-                'data-test-anything': data.anything
-              },
-              classes: [ ]
-            };
-          }
+          decorate: (uid, data) => ({
+            attributes: {
+              'data-test-anything': data.anything
+            },
+            classes: [ ]
+          })
         });
 
         ed.annotator.register('beta', {
-          decorate: (uid, data) => {
-            return {
-              attributes: {
-                'data-test-something': data.something
-              },
-              classes: [ ]
-            };
-          }
+          decorate: (uid, data) => ({
+            attributes: {
+              'data-test-something': data.something
+            },
+            classes: [ ]
+          })
         });
 
         ed.annotator.register('gamma', {
-          decorate: (uid, data) => {
-            return {
-              attributes: {
-                'data-test-something': data.something
-              },
-              classes: [ ]
-            };
-          }
+          decorate: (uid, data) => ({
+            attributes: {
+              'data-test-something': data.something
+            },
+            classes: [ ]
+          })
         });
 
         ed.annotator.register('delta', {
-          decorate: (uid, data) => {
-            return {
-              attributes: {
-                'data-test-something': data.something
-              },
-              classes: [ 'delta-test' ]
-            };
-          }
+          decorate: (uid, data) => ({
+            attributes: {
+              'data-test-something': data.something
+            },
+            classes: [ 'delta-test' ]
+          })
         });
 
         // NOTE: Have to use old function syntax here when accessing "arguments"

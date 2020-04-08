@@ -14,17 +14,13 @@ import { AlloyBehaviour, BehaviourActiveSpec, BehaviourApiFunc, BehaviourApisRec
 type WrappedApiFunc<T extends (comp: AlloyComponent, config: any, state: any, ...args: any[]) => any> = T extends (comp: AlloyComponent, config: any, state: any, ...args: infer P) => infer R ? (comp: AlloyComponent, ...args: P) => R : never;
 type Executor<D extends BehaviourConfigDetail, S extends BehaviourState> = (component: AlloyComponent, bconfig: D, bState: S) => void;
 
-const executeEvent = <C extends BehaviourConfigSpec, S extends BehaviourState>(bConfig: C, bState: S, executor: Executor<C, S>): AlloyEvents.AlloyEventKeyAndHandler<CustomEvent> => {
-  return AlloyEvents.runOnExecute((component) => {
-    executor(component, bConfig, bState);
-  });
-};
+const executeEvent = <C extends BehaviourConfigSpec, S extends BehaviourState>(bConfig: C, bState: S, executor: Executor<C, S>): AlloyEvents.AlloyEventKeyAndHandler<CustomEvent> => AlloyEvents.runOnExecute((component) => {
+  executor(component, bConfig, bState);
+});
 
-const loadEvent = <C extends BehaviourConfigSpec, S extends BehaviourState>(bConfig: C, bState: S, f: Executor<C, S>): AlloyEvents.AlloyEventKeyAndHandler<CustomEvent> => {
-  return AlloyEvents.runOnInit((component, _simulatedEvent) => {
-    f(component, bConfig, bState);
-  });
-};
+const loadEvent = <C extends BehaviourConfigSpec, S extends BehaviourState>(bConfig: C, bState: S, f: Executor<C, S>): AlloyEvents.AlloyEventKeyAndHandler<CustomEvent> => AlloyEvents.runOnInit((component, _simulatedEvent) => {
+  f(component, bConfig, bState);
+});
 
 const create = <
   C extends BehaviourConfigSpec,
@@ -73,12 +69,10 @@ const wrapApi = <D extends BehaviourConfigDetail, S extends BehaviourState>(bNam
 };
 
 // I think the "revoke" idea is fragile at best.
-const revokeBehaviour = (name: string): NamedConfiguredBehaviour<any, any, any> => {
-  return {
-    key: name,
-    value: undefined as unknown as ConfiguredBehaviour<any, any, any>
-  };
-};
+const revokeBehaviour = (name: string): NamedConfiguredBehaviour<any, any, any> => ({
+  key: name,
+  value: undefined as unknown as ConfiguredBehaviour<any, any, any>
+});
 
 const doCreate = <
   C extends BehaviourConfigSpec,
@@ -87,17 +81,11 @@ const doCreate = <
   A extends BehaviourApisRecord<D, S>,
   E extends BehaviourExtraRecord<E>
 >(configSchema: Processor, schemaSchema: FieldProcessorAdt, name: string, active: BehaviourActiveSpec<D, S>, apis: A, extra: E, state: BehaviourStateInitialiser<D, S>) => {
-  const getConfig = (info: BehaviourInfo<D, S>) => {
-    return Obj.hasNonNullableKey(info, name) ? info[name]() : Option.none<BehaviourConfigAndState<D, S>>();
-  };
+  const getConfig = (info: BehaviourInfo<D, S>) => Obj.hasNonNullableKey(info, name) ? info[name]() : Option.none<BehaviourConfigAndState<D, S>>();
 
-  const wrappedApis = Obj.map(apis, (apiF, apiName) => {
-    return wrapApi(name, apiF, apiName);
-  }) as { [K in keyof A]: WrappedApiFunc<A[K]> };
+  const wrappedApis = Obj.map(apis, (apiF, apiName) => wrapApi(name, apiF, apiName)) as { [K in keyof A]: WrappedApiFunc<A[K]> };
 
-  const wrappedExtra = Obj.map(extra, (extraF, extraName) => {
-    return FunctionAnnotator.markAsExtraApi(extraF, extraName);
-  }) as E;
+  const wrappedExtra = Obj.map(extra, (extraF, extraName) => FunctionAnnotator.markAsExtraApi(extraF, extraName)) as E;
 
   const me: AlloyBehaviour<C, D, S> & typeof wrappedApis & typeof extra = {
     ...wrappedExtra,
@@ -111,9 +99,7 @@ const doCreate = <
         value: {
           config: prepared,
           me,
-          configAsRaw: Thunk.cached(() => {
-            return ValueSchema.asRawOrDie(name + '-config', configSchema, spec);
-          }),
+          configAsRaw: Thunk.cached(() => ValueSchema.asRawOrDie(name + '-config', configSchema, spec)),
           initialConfig: spec,
           state
         }
@@ -125,11 +111,7 @@ const doCreate = <
     },
 
     exhibit(info: BehaviourInfo<D, S>, base: DomDefinitionDetail) {
-      return getConfig(info).bind((behaviourInfo) => {
-        return Obj.get(active, 'exhibit').map((exhibitor) => {
-          return exhibitor(base, behaviourInfo.config, behaviourInfo.state);
-        });
-      }).getOr(DomModification.nu({ }));
+      return getConfig(info).bind((behaviourInfo) => Obj.get(active, 'exhibit').map((exhibitor) => exhibitor(base, behaviourInfo.config, behaviourInfo.state))).getOr(DomModification.nu({ }));
     },
 
     name() {

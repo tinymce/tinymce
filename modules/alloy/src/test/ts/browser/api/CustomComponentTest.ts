@@ -95,52 +95,48 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       })
     );
 
-  }, (_doc, _body, _gui, component, store) => {
-    return [
-      Assertions.sAssertStructure(
-        'Checking initial DOM modification',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            classes: [ arr.has('behaviour-a-exhibit'), arr.has('base-dom-modification') ],
-            attrs: {
-              'behaviour-b-exhibit': str.is('exhibition'),
-              // This should no longer appear
-              'data-alloy-id': str.none()
-            }
-          });
-        }),
-        component.element()
-      ),
-      Step.sync(() => {
-        Assertions.assertEq('Tagger should read custom-uid', 'custom-uid', Tagger.readOrDie(component.element()));
-      }),
+  }, (_doc, _body, _gui, component, store) => [
+    Assertions.sAssertStructure(
+      'Checking initial DOM modification',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('behaviour-a-exhibit'), arr.has('base-dom-modification') ],
+        attrs: {
+          'behaviour-b-exhibit': str.is('exhibition'),
+          // This should no longer appear
+          'data-alloy-id': str.none()
+        }
+      })),
+      component.element()
+    ),
+    Step.sync(() => {
+      Assertions.assertEq('Tagger should read custom-uid', 'custom-uid', Tagger.readOrDie(component.element()));
+    }),
 
-      store.sAssertEq('Nothing in store yet', [ ]),
+    store.sAssertEq('Nothing in store yet', [ ]),
 
-      store.sClear,
+    store.sClear,
 
-      Step.sync(() => {
-        AlloyTriggers.emitWith(component, 'alloy.custom.test.event', { message: 'event.data' });
-      }),
+    Step.sync(() => {
+      AlloyTriggers.emitWith(component, 'alloy.custom.test.event', { message: 'event.data' });
+    }),
 
-      store.sAssertEq('Should now have a behaviour.a and behaviour.b event log with a before b', [
-        'behaviour.a.event',
-        'behaviour.b.event'
-      ]),
+    store.sAssertEq('Should now have a behaviour.a and behaviour.b event log with a before b', [
+      'behaviour.a.event',
+      'behaviour.b.event'
+    ]),
 
-      Step.sync(() => {
+    Step.sync(() => {
         bA.get()?.behaveA(component);
-      }),
+    }),
 
-      store.sAssertEq('Should now have an Api log', [
-        'behaviour.a.event',
-        'behaviour.b.event',
-        'behaveA'
-      ]),
+    store.sAssertEq('Should now have an Api log', [
+      'behaviour.a.event',
+      'behaviour.b.event',
+      'behaveA'
+    ]),
 
-      Step.sync(() => {
-        Assertions.assertEq('There should be no internal APIs on component', false, Obj.hasNonNullableKey<any, string>(component, 'apis'));
-      })
-    ];
-  }, success, failure);
+    Step.sync(() => {
+      Assertions.assertEq('There should be no internal APIs on component', false, Obj.hasNonNullableKey<any, string>(component, 'apis'));
+    })
+  ], success, failure);
 });

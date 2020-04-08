@@ -541,17 +541,11 @@ class EditorCommands {
       'JustifyRight': alignStates('alignright'),
       'JustifyFull': alignStates('alignjustify'),
 
-      'Bold,Italic,Underline,Strikethrough,Superscript,Subscript': (command) => {
-        return self.isFormatMatch(command);
-      },
+      'Bold,Italic,Underline,Strikethrough,Superscript,Subscript': (command) => self.isFormatMatch(command),
 
-      'mceBlockQuote': () => {
-        return self.isFormatMatch('blockquote');
-      },
+      'mceBlockQuote': () => self.isFormatMatch('blockquote'),
 
-      'Outdent': () => {
-        return IndentOutdent.canOutdent(editor);
-      },
+      'Outdent': () => IndentOutdent.canOutdent(editor),
 
       'InsertUnorderedList,InsertOrderedList': (command) => {
         const list = editor.dom.getParent(editor.selection.getNode(), 'ul,ol') as HTMLElement;

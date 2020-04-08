@@ -1,13 +1,11 @@
 import { Keyboard, Step, Keys, FocusTools } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 
-const sAssertFocusOnItem = (doc, text) => {
-  return FocusTools.sTryOnSelector(
-    'Focus should be on: ' + text,
-    doc,
-    `.tox-collection__item:contains(${text})`
-  );
-};
+const sAssertFocusOnItem = (doc, text) => FocusTools.sTryOnSelector(
+  'Focus should be on: ' + text,
+  doc,
+  `.tox-collection__item:contains(${text})`
+);
 
 const sDelay = Step.wait(0);
 

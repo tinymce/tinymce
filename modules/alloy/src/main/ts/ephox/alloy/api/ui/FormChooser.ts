@@ -18,13 +18,9 @@ import { CompositeSketchFactory } from './UiSketcher';
 const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (detail, components: AlloySpec[], _spec, _externals): SketchSpec => {
   const findByValue = (chooser: AlloyComponent, value: any) => {
     const choices = SelectorFilter.descendants(chooser.element(), '.' + detail.markers.choiceClass);
-    const choiceComps = Arr.map(choices, (c) => {
-      return chooser.getSystem().getByDom(c).getOrDie();
-    });
+    const choiceComps = Arr.map(choices, (c) => chooser.getSystem().getByDom(c).getOrDie());
 
-    return Arr.find(choiceComps, (c) => {
-      return Representing.getValue(c) === value;
-    });
+    return Arr.find(choiceComps, (c) => Representing.getValue(c) === value);
   };
 
   return {
@@ -40,9 +36,7 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
           selector: '.' + detail.markers.choiceClass,
           executeOnMove: true,
           getInitial(chooser) {
-            return Highlighting.getHighlighted(chooser).map((choice) => {
-              return choice.element();
-            });
+            return Highlighting.getHighlighted(chooser).map((choice) => choice.element());
           },
           // TODO CLEANUP: See if this execute handler can be removed, because execute is handled by bubbling to formchooser root
           execute(chooser, simulatedEvent, focused) {

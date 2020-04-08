@@ -88,12 +88,10 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
 
   }, (doc, _body, gui, component, _store) => {
 
-    const item = (key: string) => {
-      return {
-        selector: '.selected-item[data-value="' + key + '"]',
-        label: key
-      };
-    };
+    const item = (key: string) => ({
+      selector: '.selected-item[data-value="' + key + '"]',
+      label: key
+    });
 
     const typeahead = gui.getByUid('test-type').getOrDie();
 

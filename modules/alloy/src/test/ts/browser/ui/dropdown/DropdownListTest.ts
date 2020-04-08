@@ -126,15 +126,13 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
       // Add more information to this.
       Assertions.sAssertStructure(
         'Initial structure of dropdown button',
-        ApproxStructure.build((s, str, _arr) => {
-          return s.element('button', {
-            attrs: {
-              'aria-expanded': str.is('false'),
-              'aria-haspopup': str.is('true'),
-              'type': str.is('button')
-            }
-          });
-        }),
+        ApproxStructure.build((s, str, _arr) => s.element('button', {
+          attrs: {
+            'aria-expanded': str.is('false'),
+            'aria-haspopup': str.is('true'),
+            'type': str.is('button')
+          }
+        })),
         component.element()
       ),
 

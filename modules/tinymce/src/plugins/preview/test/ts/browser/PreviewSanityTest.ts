@@ -20,12 +20,10 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewSanityTest', (success
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
-    const sOpenDialog = () => {
-      return GeneralSteps.sequence(Logger.ts('Open dialog and wait for it to be visible', [
-        tinyUi.sClickOnToolbar('click on preview toolbar', 'button'),
-        tinyUi.sWaitForPopup('wait for preview popup', '[role="dialog"] iframe')
-      ]));
-    };
+    const sOpenDialog = () => GeneralSteps.sequence(Logger.ts('Open dialog and wait for it to be visible', [
+      tinyUi.sClickOnToolbar('click on preview toolbar', 'button'),
+      tinyUi.sWaitForPopup('wait for preview popup', '[role="dialog"] iframe')
+    ]));
 
     Pipeline.async({},
       Log.steps('TBA', 'Preview: Set content, open dialog, click Close to close dialog. Open dialog, press escape and assert dialog closes', [

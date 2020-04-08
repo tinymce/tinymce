@@ -20,10 +20,10 @@ const iframeDoc = (element: Element<HTMLFrameElement>): Option<Element<HTMLDocum
 // NOTE: This looks like it is only used in the demo. Move out.
 const readDoc = (element: Element) => {
   const optDoc = iframeDoc(element);
-  return optDoc.getOrThunk(() => {
+  return optDoc.getOrThunk(() =>
     // INVESTIGATE: This is new, but there is nothing else than can be done here atm. Rethink.
-    return Traverse.owner(element);
-  });
+    Traverse.owner(element)
+  );
 };
 
 const write = (element: Element, content: string): void => {

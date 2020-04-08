@@ -111,21 +111,19 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
     );
   }, (doc, _body, _gui, component, store) => {
 
-    const sAssertFocusShift = (label: string, expected: string, focusTarget: string) => {
-      return Logger.t(
-        label,
-        GeneralSteps.sequence([
-          FocusTools.sSetFocus('Focus input field', component.element(), 'input'),
-          Chain.asStep(component.element(), [
-            UiFinder.cFindIn(focusTarget),
-            Chain.op((alphaWidget) => {
-              Focusing.focus(component.getSystem().getByDom(alphaWidget).toOption().getOrDie('Could not find selector: ' + focusTarget));
-            })
-          ]),
-          FocusTools.sTryOnSelector('Focus hould be on', doc, expected)
-        ])
-      );
-    };
+    const sAssertFocusShift = (label: string, expected: string, focusTarget: string) => Logger.t(
+      label,
+      GeneralSteps.sequence([
+        FocusTools.sSetFocus('Focus input field', component.element(), 'input'),
+        Chain.asStep(component.element(), [
+          UiFinder.cFindIn(focusTarget),
+          Chain.op((alphaWidget) => {
+            Focusing.focus(component.getSystem().getByDom(alphaWidget).toOption().getOrDie('Could not find selector: ' + focusTarget));
+          })
+        ]),
+        FocusTools.sTryOnSelector('Focus hould be on', doc, expected)
+      ])
+    );
 
     return [
       store.sAssertEq('Checking behaviours were added', [

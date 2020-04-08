@@ -21,13 +21,9 @@ export interface FormatRegistry {
 export function FormatRegistry(editor: Editor): FormatRegistry {
   const formats: Record<string, Format[]> = {};
 
-  const get = (name?: string): Formats | Format[] => {
-    return name ? formats[name] : formats;
-  };
+  const get = (name?: string): Formats | Format[] => name ? formats[name] : formats;
 
-  const has = (name: string): boolean => {
-    return Obj.has(formats, name);
-  };
+  const has = (name: string): boolean => Obj.has(formats, name);
 
   const register = function (name: string | Formats, format?: Format | Format[]) {
     if (name) {

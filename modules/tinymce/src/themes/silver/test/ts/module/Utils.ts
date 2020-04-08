@@ -2,9 +2,7 @@ import { HTMLElement } from '@ephox/dom-globals';
 import { Element, Insert, Remove } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
-const createScrollDiv = (height: number) => {
-  return Element.fromHtml<HTMLElement>(`<div style="height: ${height}px;"></div>`);
-};
+const createScrollDiv = (height: number) => Element.fromHtml<HTMLElement>(`<div style="height: ${height}px;"></div>`);
 
 const setupPageScroll = (editor: Editor, amount: number) => {
   const target = Element.fromDom(editor.inline ? editor.getBody() : editor.getContainer());

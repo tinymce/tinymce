@@ -43,119 +43,117 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
         Chain.op((dialog) => {
           Assertions.assertStructure(
             'Full page properties should have this structure',
-            ApproxStructure.build((s, str, arr) => {
-              return s.element('div', {
-                classes: [ arr.has('tox-dialog') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-dialog__header') ],
-                    children: [
-                      s.element('div', {
-                        html: str.is('Metadata and Document Properties')
-                      }),
-                      s.element('button', {
-                        classes: [ arr.has('tox-button--icon'), arr.has('tox-button--naked') ],
-                      })
-                    ]
-                  }),
-                  s.element('div', {
-                    classes: [ arr.has('tox-dialog__content-js') ],
-                    children: [
-                      s.element('div', {
-                        classes: [ arr.has('tox-dialog__body') ],
-                        children: [
-                          s.element('div', {
-                            classes: [ arr.has('tox-dialog__body-content') ],
-                            children: [
-                              s.element('div', {
-                                classes: [ arr.has('tox-form') ],
-                                children: [
-                                  s.element('div', {
-                                    classes: [ arr.has('tox-form__group') ],
-                                    children: [
-                                      s.element('label', {
-                                        classes: [ arr.has('tox-label') ],
-                                        html: str.is('Title')
-                                      }),
-                                      s.element('input', {
-                                        classes: [ arr.has('tox-textfield') ],
-                                      })
-                                    ]
-                                  }),
-                                  s.element('div', {
-                                    classes: [ arr.has('tox-form__group') ],
-                                    children: [
-                                      s.element('label', {
-                                        classes: [ arr.has('tox-label') ],
-                                        html: str.is('Keywords')
-                                      }),
-                                      s.element('input', {
-                                        classes: [ arr.has('tox-textfield') ],
-                                      })
-                                    ]
-                                  }),
-                                  s.element('div', {
-                                    classes: [ arr.has('tox-form__group') ],
-                                    children: [
-                                      s.element('label', {
-                                        classes: [ arr.has('tox-label') ],
-                                        html: str.is('Description')
-                                      }),
-                                      s.element('input', {
-                                        classes: [ arr.has('tox-textfield') ],
-                                      })
-                                    ]
-                                  }),
-                                  s.element('div', {
-                                    classes: [ arr.has('tox-form__group') ],
-                                    children: [
-                                      s.element('label', {
-                                        classes: [ arr.has('tox-label') ],
-                                        html: str.is('Robots')
-                                      }),
-                                      s.element('input', {
-                                        classes: [ arr.has('tox-textfield') ],
-                                      })
-                                    ]
-                                  }),
-                                  s.element('div', {
-                                    classes: [ arr.has('tox-form__group') ],
-                                    children: [
-                                      s.element('label', {
-                                        classes: [ arr.has('tox-label') ],
-                                        html: str.is('Author')
-                                      }),
-                                      s.element('input', {
-                                        classes: [ arr.has('tox-textfield') ],
-                                      })
-                                    ]
-                                  }),
-                                  s.element('div', {
-                                    classes: [ arr.has('tox-form__group') ],
-                                    children: [
-                                      s.element('label', {
-                                        classes: [ arr.has('tox-label') ],
-                                        html: str.is('Encoding')
-                                      }),
-                                      s.element('input', {
-                                        classes: [ arr.has('tox-textfield') ],
-                                      })
-                                    ]
-                                  })
-                                ]
-                              })
-                            ]
-                          })
-                        ]
-                      })
-                    ]
-                  }),
-                  s.element('div', {
-                    classes: [ arr.has('tox-dialog__footer') ]
-                  })
-                ]
-              });
-            }),
+            ApproxStructure.build((s, str, arr) => s.element('div', {
+              classes: [ arr.has('tox-dialog') ],
+              children: [
+                s.element('div', {
+                  classes: [ arr.has('tox-dialog__header') ],
+                  children: [
+                    s.element('div', {
+                      html: str.is('Metadata and Document Properties')
+                    }),
+                    s.element('button', {
+                      classes: [ arr.has('tox-button--icon'), arr.has('tox-button--naked') ],
+                    })
+                  ]
+                }),
+                s.element('div', {
+                  classes: [ arr.has('tox-dialog__content-js') ],
+                  children: [
+                    s.element('div', {
+                      classes: [ arr.has('tox-dialog__body') ],
+                      children: [
+                        s.element('div', {
+                          classes: [ arr.has('tox-dialog__body-content') ],
+                          children: [
+                            s.element('div', {
+                              classes: [ arr.has('tox-form') ],
+                              children: [
+                                s.element('div', {
+                                  classes: [ arr.has('tox-form__group') ],
+                                  children: [
+                                    s.element('label', {
+                                      classes: [ arr.has('tox-label') ],
+                                      html: str.is('Title')
+                                    }),
+                                    s.element('input', {
+                                      classes: [ arr.has('tox-textfield') ],
+                                    })
+                                  ]
+                                }),
+                                s.element('div', {
+                                  classes: [ arr.has('tox-form__group') ],
+                                  children: [
+                                    s.element('label', {
+                                      classes: [ arr.has('tox-label') ],
+                                      html: str.is('Keywords')
+                                    }),
+                                    s.element('input', {
+                                      classes: [ arr.has('tox-textfield') ],
+                                    })
+                                  ]
+                                }),
+                                s.element('div', {
+                                  classes: [ arr.has('tox-form__group') ],
+                                  children: [
+                                    s.element('label', {
+                                      classes: [ arr.has('tox-label') ],
+                                      html: str.is('Description')
+                                    }),
+                                    s.element('input', {
+                                      classes: [ arr.has('tox-textfield') ],
+                                    })
+                                  ]
+                                }),
+                                s.element('div', {
+                                  classes: [ arr.has('tox-form__group') ],
+                                  children: [
+                                    s.element('label', {
+                                      classes: [ arr.has('tox-label') ],
+                                      html: str.is('Robots')
+                                    }),
+                                    s.element('input', {
+                                      classes: [ arr.has('tox-textfield') ],
+                                    })
+                                  ]
+                                }),
+                                s.element('div', {
+                                  classes: [ arr.has('tox-form__group') ],
+                                  children: [
+                                    s.element('label', {
+                                      classes: [ arr.has('tox-label') ],
+                                      html: str.is('Author')
+                                    }),
+                                    s.element('input', {
+                                      classes: [ arr.has('tox-textfield') ],
+                                    })
+                                  ]
+                                }),
+                                s.element('div', {
+                                  classes: [ arr.has('tox-form__group') ],
+                                  children: [
+                                    s.element('label', {
+                                      classes: [ arr.has('tox-label') ],
+                                      html: str.is('Encoding')
+                                    }),
+                                    s.element('input', {
+                                      classes: [ arr.has('tox-textfield') ],
+                                    })
+                                  ]
+                                })
+                              ]
+                            })
+                          ]
+                        })
+                      ]
+                    })
+                  ]
+                }),
+                s.element('div', {
+                  classes: [ arr.has('tox-dialog__footer') ]
+                })
+              ]
+            })),
             dialog
           );
         })
@@ -163,11 +161,9 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
     ])
   );
 
-  const sOpenDialog = (editor) => {
-    return Logger.t('Open dialog', Step.sync(function () {
-      editor.execCommand('mceFullPageProperties');
-    }));
-  };
+  const sOpenDialog = (editor) => Logger.t('Open dialog', Step.sync(function () {
+    editor.execCommand('mceFullPageProperties');
+  }));
 
   const cGetInput = (selector: string) => Chain.control(
     Chain.fromChains([
@@ -177,16 +173,14 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
     Guard.addLogging('Get input')
   );
 
-  const sCheckInputValue = (Label, selector, expected) => {
-    return Logger.t(Label,
-      Chain.asStep({}, [
-        cGetInput(selector),
-        Chain.op((element) => {
-          Assertions.assertEq(`The input value for ${Label} should be: `, expected, Value.get(element));
-        })
-      ]),
-    );
-  };
+  const sCheckInputValue = (Label, selector, expected) => Logger.t(Label,
+    Chain.asStep({}, [
+      cGetInput(selector),
+      Chain.op((element) => {
+        Assertions.assertEq(`The input value for ${Label} should be: `, expected, Value.get(element));
+      })
+    ]),
+  );
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const doc = Element.fromDom(document);

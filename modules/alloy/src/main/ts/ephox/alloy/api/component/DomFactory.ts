@@ -16,9 +16,7 @@ const getAttrs = (elem: Element) => {
   }, {});
 };
 
-const getClasses = (elem: Element) => {
-  return Array.prototype.slice.call(elem.dom().classList, 0);
-};
+const getClasses = (elem: Element) => Array.prototype.slice.call(elem.dom().classList, 0);
 
 const fromHtml = (html: string): RawDomSchema => {
   const elem = Element.fromHtml(html);
@@ -36,31 +34,25 @@ const fromHtml = (html: string): RawDomSchema => {
   };
 };
 
-const sketch = <T>(sketcher: { sketch: (spec: { dom: RawDomSchema } & T) => SketchSpec}, html: string, config: T) => {
-  return sketcher.sketch({
-    dom: fromHtml(html),
-    ...config
-  });
-};
+const sketch = <T>(sketcher: { sketch: (spec: { dom: RawDomSchema } & T) => SketchSpec}, html: string, config: T) => sketcher.sketch({
+  dom: fromHtml(html),
+  ...config
+});
 
-const dom = (tag: string, classes: string[], attributes = { }, styles = { }) => {
-  return {
+const dom = (tag: string, classes: string[], attributes = { }, styles = { }) => ({
+  tag,
+  classes,
+  attributes,
+  styles
+});
+
+const simple = (tag: string, classes: string[], components: AlloySpec[]) => ({
+  dom: {
     tag,
-    classes,
-    attributes,
-    styles
-  };
-};
-
-const simple = (tag: string, classes: string[], components: AlloySpec[]) => {
-  return {
-    dom: {
-      tag,
-      classes
-    },
-    components
-  };
-};
+    classes
+  },
+  components
+});
 
 export {
   getAttrs,

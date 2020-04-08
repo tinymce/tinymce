@@ -67,9 +67,7 @@ const isUnicode = function <E, D> (universe: Universe<E, D>, element: E) {
   return universe.property().isText(element) && universe.property().getText(element) === Unicode.zeroWidth;
 };
 
-const isSpan = <E, D>(universe: Universe<E, D>, exclusions: (e: E) => boolean) => (elem: E) => {
-  return universe.property().name(elem) === 'span' && exclusions(elem) === false;
-};
+const isSpan = <E, D>(universe: Universe<E, D>, exclusions: (e: E) => boolean) => (elem: E) => universe.property().name(elem) === 'span' && exclusions(elem) === false;
 
 const wrap = function <E, D> (universe: Universe<E, D>, start: E, soffset: number, finish: E, foffset: number, exclusions: (e: E) => boolean): Option<SpanWrapRange<E>> {
   const doc = universe.property().document(start);

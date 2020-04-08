@@ -25,17 +25,13 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
     const doc = Element.fromDom(document);
     const editorBody = Element.fromDom(editor.getBody());
 
-    const sOpenContextMenu = (target) => {
-      return Chain.asStep(editor, [
-        tinyUi.cTriggerContextMenu('trigger context menu', target, '.tox-silver-sink .tox-collection [role="menuitem"]'),
-        Chain.wait(0)
-      ]);
-    };
+    const sOpenContextMenu = (target) => Chain.asStep(editor, [
+      tinyUi.cTriggerContextMenu('trigger context menu', target, '.tox-silver-sink .tox-collection [role="menuitem"]'),
+      Chain.wait(0)
+    ]);
 
     // Assert focus is on the expected menu item
-    const sAssertFocusOnItem = (label, selector) => {
-      return FocusTools.sTryOnSelector(`Focus should be on: ${label}`, doc, selector);
-    };
+    const sAssertFocusOnItem = (label, selector) => FocusTools.sTryOnSelector(`Focus should be on: ${label}`, doc, selector);
 
     // Wait for dialog to open and close dialog
     const sWaitForAndCloseDialog = GeneralSteps.sequence([
@@ -52,9 +48,7 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
     const sPressDownArrowKey = Keyboard.sKeydown(doc, Keys.down(), { });
     const sPressEnterKey = Keyboard.sKeydown(doc, Keys.enter(), { });
 
-    const sRepeatDownArrowKey = (index) => {
-      return GeneralSteps.sequence(Arr.range(index, () => sPressDownArrowKey));
-    };
+    const sRepeatDownArrowKey = (index) => GeneralSteps.sequence(Arr.range(index, () => sPressDownArrowKey));
 
     const tableHtml = '<table style="width: 100%;">' +
     '<tbody>' +
@@ -71,15 +65,13 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
 
     const imgSrc = '../img/dogleft.jpg';
 
-    const contentInTableHtml = (content: string) => {
-      return '<table style="width: 100%;">' +
+    const contentInTableHtml = (content: string) => '<table style="width: 100%;">' +
        '<tbody>' +
           '<tr>' +
             `<td>${content}</td>` +
           '</tr>' +
         '</tbody>' +
       '</table>';
-    };
 
     const imageInTableHtml = contentInTableHtml('<img src="' + imgSrc + '" width="160" height="100"/>');
     const placeholderImageInTableHtml = contentInTableHtml('<img src="' + imgSrc + '" width="160" height="100" data-mce-placeholder="1"/>');
@@ -87,18 +79,16 @@ UnitTest.asynctest('SilverContextMenuTest', (success, failure) => {
 
     // In Firefox we add a a bogus br element after the link that fixes a gecko link bug when,
     // a link is placed at the end of block elements there is no way to move the caret behind the link.
-    const sAssertRemoveLinkHtmlStructure = Assertions.sAssertStructure('Assert remove link', ApproxStructure.build((s, str) => {
-      return s.element('body', {
-        children: [
-          s.element('p', {
-            children: [
-              s.text(str.is('Tiny')),
-              s.zeroOrOne(s.element('br', {}))
-            ]
-          })
-        ]
-      });
-    }), editorBody);
+    const sAssertRemoveLinkHtmlStructure = Assertions.sAssertStructure('Assert remove link', ApproxStructure.build((s, str) => s.element('body', {
+      children: [
+        s.element('p', {
+          children: [
+            s.text(str.is('Tiny')),
+            s.zeroOrOne(s.element('br', {}))
+          ]
+        })
+      ]
+    })), editorBody);
 
     Pipeline.async({}, [
       tinyApis.sFocus(),

@@ -26,6 +26,4 @@ export const menuItemSchema = ValueSchema.objOf([
   FieldSchema.optionString('icon'),
 ].concat(commonMenuItemFields));
 
-export const createMenuItem = (spec: MenuItemApi): Result<MenuItem, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw('menuitem', menuItemSchema, spec);
-};
+export const createMenuItem = (spec: MenuItemApi): Result<MenuItem, ValueSchema.SchemaError<any>> => ValueSchema.asRaw('menuitem', menuItemSchema, spec);

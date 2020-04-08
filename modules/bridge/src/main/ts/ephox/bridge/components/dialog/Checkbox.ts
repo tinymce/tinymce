@@ -26,6 +26,4 @@ export const checkboxSchema = ValueSchema.objOf(checkboxFields);
 
 export const checkboxDataProcessor = ValueSchema.boolean;
 
-export const createCheckbox = (spec: CheckboxApi): Result<Checkbox, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<Checkbox>('checkbox', checkboxSchema, spec);
-};
+export const createCheckbox = (spec: CheckboxApi): Result<Checkbox, ValueSchema.SchemaError<any>> => ValueSchema.asRaw<Checkbox>('checkbox', checkboxSchema, spec);

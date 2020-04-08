@@ -99,9 +99,7 @@ const writeDeep = (scope: Document, cast: Segment[], entry: Entry): Segment[] =>
 };
 
 const composeList = (scope: Document, entries: Entry[]): Option<Element> => {
-  const cast: Segment[] = Arr.foldl(entries, (cast, entry) => {
-    return entry.depth > cast.length ? writeDeep(scope, cast, entry) : writeShallow(scope, cast, entry);
-  }, []);
+  const cast: Segment[] = Arr.foldl(entries, (cast, entry) => entry.depth > cast.length ? writeDeep(scope, cast, entry) : writeShallow(scope, cast, entry), []);
 
   return Arr.head(cast).map((segment) => segment.list);
 };
