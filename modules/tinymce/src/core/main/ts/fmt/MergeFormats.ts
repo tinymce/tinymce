@@ -111,9 +111,8 @@ const unwrapEmptySpan = function (dom: DOMUtils, node: Node) {
 };
 
 const processTextDecorationsAndColor = function (dom: DOMUtils, node: Node) {
-  let textDecoration;
   if (node.nodeType === 1 && node.parentNode && node.parentNode.nodeType === 1) {
-    textDecoration = FormatUtils.getTextDecoration(dom, node.parentNode);
+    const textDecoration = FormatUtils.getTextDecoration(dom, node.parentNode);
     if (dom.getStyle(node, 'color') && textDecoration) {
       dom.setStyle(node, 'text-decoration', textDecoration);
     } else if (dom.getStyle(node, 'text-decoration') === textDecoration) {
