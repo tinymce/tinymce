@@ -147,7 +147,7 @@ const onPaste = (warehouse: Warehouse, target: TargetPaste): Option<ExtractPaste
   }));
 };
 
-const onPasteRows = (warehouse: Warehouse, target: TargetPasteRows): Option<ExtractPasteRows> => {
+const onPasteByEditor = (warehouse: Warehouse, target: TargetPasteRows): Option<ExtractPasteRows> => {
   const details = Arr.map(target.selection(), (cell) => TableLookup.cell(cell).bind((lc) => {
     return findInWarehouse(warehouse, lc);
   }));
@@ -181,7 +181,7 @@ export {
   onCell,
   onCells,
   onPaste,
-  onPasteRows,
+  onPasteByEditor,
   onMergable,
   onUnmergable
 };

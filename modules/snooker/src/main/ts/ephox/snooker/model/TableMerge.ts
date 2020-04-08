@@ -1,4 +1,4 @@
-import { Fun } from '@ephox/katamari';
+import { Fun, Arr } from '@ephox/katamari';
 import * as Structs from '../api/Structs';
 import * as Fitment from './Fitment';
 import * as GridRow from './GridRow';
@@ -57,7 +57,22 @@ const merge = function (startAddress: Structs.Address, gridA: Structs.RowCells[]
   });
 };
 
-const insert = function (index: number, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: Element, b: Element) => boolean): Structs.RowCells[] {
+const insertCols = function (index: number, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: Element, b: Element) => boolean): Structs.RowCells[] {
+  MergingOperations.splitCols(gridA, index, comparator, generator.cell);
+
+  const delta = Fitment.measureHeight(gridB, gridA);
+  const fittedNewGrid = Fitment.tailor(gridB, delta, generator);
+
+  const secondDelta = Fitment.measureHeight(gridA, fittedNewGrid);
+  const fittedOldGrid = Fitment.tailor(gridA, secondDelta, generator);
+
+  return Arr.map(fittedOldGrid, (gridRow, i) => {
+    const newCells = gridRow.cells().slice(0, index).concat(fittedNewGrid[i].cells()).concat(gridRow.cells().slice(index, gridRow.cells().length));
+    return GridRow.setCells(gridRow, newCells);
+  });
+};
+
+const insertRows = function (index: number, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: Element, b: Element) => boolean): Structs.RowCells[] {
   MergingOperations.splitRows(gridA, index, comparator, generator.cell);
 
   const delta = Fitment.measureWidth(gridB, gridA);
@@ -71,5 +86,6 @@ const insert = function (index: number, gridA: Structs.RowCells[], gridB: Struct
 
 export {
   merge,
-  insert
+  insertCols,
+  insertRows
 };

@@ -49,6 +49,30 @@ const uniqueCells = function (row: Structs.ElementNew[], comparator: CompElm) {
   }, [] as Structs.ElementNew[]);
 };
 
+const splitCols = function (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst) {
+  // We don't need to split rows if we're inserting at the first or last row of the old table
+  if (index > 0 && index < grid[0].cells().length) {
+    Arr.each(grid, (row) => {
+      // only make a sub when we have to
+      let replacement = Option.none<Element>();
+      const prevCell = row.cells()[index - 1];
+      const current = row.cells()[index];
+      const isToReplace = comparator(current.element(), prevCell.element());
+
+      if (isToReplace) {
+        if (replacement.isNone()) {
+          replacement = Option.some(substitution());
+        }
+        replacement.each(function (sub) {
+          GridRow.mutateCell(row, index, Structs.elementnew(sub, true));
+        });
+      }
+    })
+  }
+
+  return grid;
+};
+
 const splitRows = function (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst) {
   // We don't need to split rows if we're inserting at the first or last row of the old table
   if (index > 0 && index < grid.length) {
@@ -81,5 +105,6 @@ const splitRows = function (grid: Structs.RowCells[], index: number, comparator:
 export {
   merge,
   unmerge,
+  splitCols,
   splitRows
 };
