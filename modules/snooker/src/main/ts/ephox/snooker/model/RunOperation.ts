@@ -144,9 +144,7 @@ const onPaste = (warehouse: Warehouse, target: TargetPaste): Option<ExtractPaste
 }));
 
 const onPasteByEditor = (warehouse: Warehouse, target: TargetPasteRows): Option<ExtractPasteRows> => {
-  const details = Arr.map(target.selection(), (cell) => TableLookup.cell(cell).bind((lc) => {
-    return findInWarehouse(warehouse, lc);
-  }));
+  const details = Arr.map(target.selection(), (cell) => TableLookup.cell(cell).bind((lc) => findInWarehouse(warehouse, lc)));
   const cells = Options.cat(details);
   return cells.length > 0 ? Option.some(
     {

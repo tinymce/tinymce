@@ -67,7 +67,7 @@ const splitCols = function (grid: Structs.RowCells[], index: number, comparator:
           GridRow.mutateCell(row, index, Structs.elementnew(sub, true));
         });
       }
-    })
+    });
   }
 
   return grid;
