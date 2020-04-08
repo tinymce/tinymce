@@ -49,6 +49,16 @@ const measureWidth = function (gridA: Structs.RowCells[], gridB: Structs.RowCell
   };
 };
 
+const measureHeight = function (gridA: Structs.RowCells[], gridB: Structs.RowCells[]): Delta {
+  const rowLengthA = gridA.length;
+  const rowLengthB = gridB.length;
+
+  return {
+    rowDelta: rowLengthA - rowLengthB,
+    colDelta: 0
+  };
+};
+
 const fill = function <T> (cells: T[], generator: SimpleGenerators) {
   return Arr.map(cells, function () {
     return Structs.elementnew(generator.cell(), true);
@@ -78,5 +88,6 @@ const tailor = function (gridA: Structs.RowCells[], delta: Delta, generator: Sim
 export {
   measure,
   measureWidth,
+  measureHeight,
   tailor
 };

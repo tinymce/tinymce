@@ -31,8 +31,9 @@ function Plugin(editor: Editor) {
   const cellSelection = CellSelection(editor, resizeHandler.lazyResize, selectionTargets);
   const actions = TableActions(editor, resizeHandler.lazyWire);
   const clipboardRows = Cell(Option.none<Element<any>[]>());
+  const clipboardCols = Cell(Option.none<Element<any>[]>());
 
-  Commands.registerCommands(editor, actions, cellSelection, selections, clipboardRows);
+  Commands.registerCommands(editor, actions, cellSelection, selections, clipboardRows, clipboardCols);
   Clipboard.registerEvents(editor, selections, actions, cellSelection);
 
   MenuItems.addMenuItems(editor, selectionTargets);
