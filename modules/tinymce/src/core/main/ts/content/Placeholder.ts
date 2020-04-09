@@ -13,6 +13,7 @@ import Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
+import Delay from '../api/util/Delay';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
 import * as Empty from '../dom/Empty';
@@ -113,6 +114,10 @@ const setup = (editor: Editor) => {
       // Setup the initial state
       updatePlaceholder(e, true);
       editor.on('change SetContent ExecCommand', updatePlaceholder);
+
+      // TINY-4828: Update the placeholder after pasting content. This needs to use a timeout as
+      // the browser doesn't update the dom until after the paste event has fired
+      editor.on('paste', (e) => Delay.setEditorTimeout(editor, () => updatePlaceholder(e)));
 
       // Remove the placeholder attributes on remove
       editor.on('remove', () => {
