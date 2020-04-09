@@ -7,7 +7,6 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('Browser Test: .AnchorInlineTest', (success, failure) => {
-
   AnchorPlugin();
   SilverTheme();
 

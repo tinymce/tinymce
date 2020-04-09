@@ -245,7 +245,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
 
   /**
    * Adds a node filter function to the parser, the parser will collect the specified nodes by name
-   * and then execute the callback ones it has finished parsing the document.
+   * and then execute the callback once it has finished parsing the document.
    *
    * @example
    * parser.addNodeFilter('p,h1', function(nodes, name) {
@@ -283,7 +283,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
 
   /**
    * Adds a attribute filter function to the parser, the parser will collect nodes that has the specified attributes
-   * and then execute the callback ones it has finished parsing the document.
+   * and then execute the callback once it has finished parsing the document.
    *
    * @example
    * parser.addAttributeFilter('src,href', function(nodes, name) {
@@ -655,19 +655,16 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
           }
 
           if (elementRule.removeEmpty && isEmpty(schema, nonEmptyElements, whiteSpaceElements, node)) {
-            // Leave nodes that have a name like <a name="name">
-            if (!node.attr('name') && !node.attr('id')) {
-              tempNode = node.parent;
+            tempNode = node.parent;
 
-              if (blockElements[node.name]) {
-                node.empty().remove();
-              } else {
-                node.unwrap();
-              }
-
-              node = tempNode;
-              return;
+            if (blockElements[node.name]) {
+              node.empty().remove();
+            } else {
+              node.unwrap();
             }
+
+            node = tempNode;
+            return;
           }
 
           if (elementRule.paddEmpty && (isPaddedWithNbsp(node) || isEmpty(schema, nonEmptyElements, whiteSpaceElements, node))) {
