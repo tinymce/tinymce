@@ -294,11 +294,9 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
         MergeFormats.mergeWithChildren(ed, formatList, vars, node);
         MergeFormats.mergeWithParents(ed, format, name, vars, node);
         MergeFormats.mergeBackgroundColorAndFontSize(dom, format, vars, node);
+        MergeFormats.mergeTextDecorationsAndColor(dom, format, vars, node);
         MergeFormats.mergeSubSup(dom, format, vars, node);
         MergeFormats.mergeSiblings(dom, format, vars, node);
-      }
-      if (format.styles) {
-        MergeFormats.mergeTextDecorationsAndColor(dom, format, vars, node);
       }
     });
   };
@@ -343,10 +341,6 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
         ed.selection.setRng(RangeNormalizer.normalize(ed.selection.getRng()));
         bookmark = GetBookmark.getPersistentBookmark(ed.selection, true);
         applyRngStyle(dom, ExpandRange.expandRng(ed, selection.getRng(), formatList), bookmark);
-
-        // if (format.styles) {
-        //   MergeFormats.mergeUnderlineAndColor(dom, format, vars, curSelNode);
-        // }
 
         selection.moveToBookmark(bookmark);
         FormatUtils.moveStart(dom, selection, selection.getRng());

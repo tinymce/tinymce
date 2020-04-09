@@ -115,7 +115,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.TextDecorationColorTest', (success,
     plugins: '',
     toolbar: 'forecolor backcolor | bold italic underline strikethrough',
     formats: {
-      custom_format: { inline: 'span', classes: 'abc', styles: { 'text-decoration': 'underline' } }
+      custom_format: { inline: 'span', classes: 'abc', styles: { textDecoration: 'underline' } }
     },
     base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
