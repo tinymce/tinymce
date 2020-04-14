@@ -713,7 +713,7 @@ class Editor implements EditorObservable {
   }
 
   /**
-   * Saves the contents from a editor out to the textarea or div element that got converted into an editor instance.
+   * Saves the contents from an editor out to the textarea or div element that got converted into an editor instance.
    * This method will move the HTML contents from the editor into that textarea or div by getContent
    * so all events etc that method has will get dispatched as well.
    *
