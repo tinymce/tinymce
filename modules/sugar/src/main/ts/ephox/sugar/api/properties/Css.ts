@@ -6,8 +6,6 @@ import Element from '../node/Element';
 import * as Node from '../node/Node';
 import * as Attr from './Attr';
 
-const styleKey = 'style';
-
 const internalSet = (dom: DomNode, property: string, value: string) => {
   // This is going to hurt. Apologies.
   // JQuery coerces numbers to pixels for certain property names, and other times lets numbers through.
@@ -131,19 +129,19 @@ const remove = (element: Element<DomNode>, property: string) => {
 
   internalRemove(dom, property);
 
-  if (Attr.getOpt(element as Element<DomElement>, styleKey).map(Strings.trim).is('')) {
+  if (Attr.getOpt(element as Element<DomElement>, 'style').map(Strings.trim).is('')) {
     // No more styles left, remove the style attribute as well
-    Attr.remove(element as Element<DomElement>, styleKey);
+    Attr.remove(element as Element<DomElement>, 'style');
   }
 };
 
 const preserve = <E extends DomElement, T> (element: Element<E>, f: (e: Element<E>) => T) => {
-  const oldStyles = Attr.get(element, styleKey);
+  const oldStyles = Attr.get(element, 'style');
   const result = f(element);
   if (oldStyles === undefined) {
-    Attr.remove(element, styleKey);
+    Attr.remove(element, 'style');
   } else {
-    Attr.set(element, styleKey, oldStyles);
+    Attr.set(element, 'style', oldStyles);
   }
   return result;
 };
