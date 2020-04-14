@@ -4,7 +4,7 @@ Welcome to the TinyMCE monorepo. For TinyMCE itself look to the [modules/tinymce
 
 ## Some background
 
-As TinyMCE transitioned to a modern codebase through 2017 and 2018 many external dependencies were added from previously closed-source projects. This became unweildy to develop, so in June 2019 the decision was made to bring those projects together in a monorepo.
+As TinyMCE transitioned to a modern codebase through 2017 and 2018 many external dependencies were added from previously closed-source projects. This became unwieldy to develop, so in June 2019 the decision was made to bring those projects together in a monorepo.
 
 This repo is built with Yarn workspaces and uses publish tooling support from Lerna. NPM is not supported and attempts to use it will fail.
 
