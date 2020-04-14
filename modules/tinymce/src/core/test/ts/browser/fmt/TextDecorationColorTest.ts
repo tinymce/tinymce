@@ -3,6 +3,7 @@ import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { UnitTest } from '@ephox/bedrock-client';
 import Theme from 'tinymce/themes/silver/Theme';
 import Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
 
 type Selection = { startPath: number[], sOffset: number, finishPath: number[], fOffset: number };
 type Text = { before: string, selected: string, after: string };
@@ -14,13 +15,15 @@ UnitTest.asynctest('browser.tinymce.core.fmt.TextDecorationColorTest', (success,
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
+    const textColorHex = '#bfedd2';
+
     const applyForecolor = () => Log.stepsAsStep('TBA', 'Apply forecolor to text', [
       tinyUi.sClickOnToolbar('click forecolor', '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron'),
       tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
-      tinyUi.sClickOnUi('click color', 'div[data-mce-color="#BFEDD2"]')
+      tinyUi.sClickOnUi('click color', `div[data-mce-color="${textColorHex.toUpperCase()}"]`)
     ]);
 
-    const removeForecolor = () => Log.stepsAsStep('TBA', 'Apply forecolor to text', [
+    const removeForecolor = () => Log.stepsAsStep('TBA', 'Remove forecolor from text', [
       tinyUi.sClickOnToolbar('click forecolor', '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron'),
       tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
       tinyUi.sClickOnUi('click remove color', '.tox-swatch--remove'),
@@ -32,80 +35,131 @@ UnitTest.asynctest('browser.tinymce.core.fmt.TextDecorationColorTest', (success,
     const toggleInlineStyle = (style: string) => tinyUi.sClickOnToolbar(`click ${style}`, `[aria-label="${style}"]`);
 
     const sAssertEditorContent = (content: string) => {
-      const contentStructure = ApproxStructure.build((s, str, arr) => {
+      const contentStructure = ApproxStructure.build((s) => {
         return s.element('body', {
           children: [
             ApproxStructure.fromHtml(content)
           ]
         });
       });
-      return tinyApis.sAssertContentStructure(contentStructure);
+      // IE11 and approx structure do not work properly with colors
+      // Cannot just use sAssertContent for other browsers as style properties can be in a different order
+      return Env.ie === 11 ? tinyApis.sAssertContent(content) : tinyApis.sAssertContentStructure(contentStructure);
     };
 
-    const sMergeForecolorAndTextDecoration = (toolbarLabel: string, textDecoration: string, text: Text, selection: Selection) =>
-      Log.stepsAsStep('TBA', `Merge forecolor and ${toolbarLabel} with text: ${text.before + text.selected + text.after}`, [
+    const sMergeForecolorAndTextDecoration = (toolbarLabel: string, textDecoration: string, text: Text, selection: Selection) => {
+      const startText = `<p>${text.before + text.selected + text.after}</p>`;
+      const sSelectText = () => tinyApis.sSetSelection(selection.startPath, selection.sOffset, selection.finishPath, selection.fOffset);
+
+      return Log.stepsAsStep('TBA', `Merge forecolor and ${toolbarLabel} with text: ${text.before + text.selected + text.after}`, [
         Log.stepsAsStep('TBA', 'Apply forecolor then text-decoration then unapply them', [
-          tinyApis.sSetContent(`<p>${text.before + text.selected + text.after}</p>`),
+          tinyApis.sSetContent(startText),
           tinyApis.sFocus(),
-          tinyApis.sSetSelection(selection.startPath, selection.sOffset, selection.finishPath, selection.fOffset),
+          sSelectText(),
           applyForecolor(),
-          sAssertEditorContent(`<p>${text.before}<span style="color: #bfedd2;">${text.selected}</span>${text.after}</p>`),
+          sAssertEditorContent(`<p>${text.before}<span style="color: ${textColorHex};">${text.selected}</span>${text.after}</p>`),
           toggleInlineStyle(toolbarLabel),
-          sAssertEditorContent(`<p>${text.before}<span style="text-decoration: ${textDecoration};"><span style="color: #bfedd2; text-decoration: ${textDecoration};">${text.selected}</span></span>${text.after}</p>`),
+          // TODO: This is different to test step below - need to investigate this in the future
+          sAssertEditorContent(`<p>${text.before}<span style="text-decoration: ${textDecoration};"><span style="color: ${textColorHex}; text-decoration: ${textDecoration};">${text.selected}</span></span>${text.after}</p>`),
           toggleInlineStyle(toolbarLabel),
-          sAssertEditorContent(`<p>${text.before}<span style="color: #bfedd2;">${text.selected}</span>${text.after}</p>`),
+          sAssertEditorContent(`<p>${text.before}<span style="color: ${textColorHex};">${text.selected}</span>${text.after}</p>`),
           removeForecolor(),
-          sAssertEditorContent(`<p>${text.before + text.selected + text.after}</p>`),
+          sAssertEditorContent(startText),
         ]),
         Log.stepsAsStep('TBA', 'Apply text-decoration then forecolor then unapply them', [
-          tinyApis.sSetContent(`<p>${text.before + text.selected + text.after}</p>`),
+          tinyApis.sSetContent(startText),
           tinyApis.sFocus(),
-          tinyApis.sSetSelection(selection.startPath, selection.sOffset, selection.finishPath, selection.fOffset),
+          sSelectText(),
           toggleInlineStyle(toolbarLabel),
           sAssertEditorContent(`<p>${text.before}<span style="text-decoration: ${textDecoration};">${text.selected}</span>${text.after}</p>`),
           applyForecolor(),
-          // This is different to above - need to investigate this
-          sAssertEditorContent(`<p>${text.before}<span style="text-decoration: ${textDecoration}; color: #bfedd2;">${text.selected}</span>${text.after}</p>`),
+          sAssertEditorContent(`<p>${text.before}<span style="color: ${textColorHex}; text-decoration: ${textDecoration};">${text.selected}</span>${text.after}</p>`),
           removeForecolor(),
           sAssertEditorContent(`<p>${text.before}<span style="text-decoration: ${textDecoration};">${text.selected}</span>${text.after}</p>`),
           toggleInlineStyle(toolbarLabel),
-          sAssertEditorContent(`<p>${text.before + text.selected + text.after}</p>`),
+          sAssertEditorContent(startText),
         ]),
-        Log.stepsAsStep('TBA', 'Apply forecolor and custom format then unapply them', [
-          tinyApis.sSetContent(`<p>${text.before + text.selected + text.after}</p>`),
+        Log.stepsAsStep('TBA', 'Apply bold, forecolor then text-decoration then unapply them', [
+          tinyApis.sSetContent(startText),
           tinyApis.sFocus(),
-          tinyApis.sSetSelection(selection.startPath, selection.sOffset, selection.finishPath, selection.fOffset),
+          sSelectText(),
+          toggleInlineStyle('Bold'),
+          sAssertEditorContent(`<p>${text.before}<strong>${text.selected}</strong>${text.after}</p>`),
           applyForecolor(),
-          sAssertEditorContent(`<p>${text.before}<span style="color: #bfedd2;">${text.selected}</span>${text.after}</p>`),
-          applyCustomFormat('custom_format'),
-          sAssertEditorContent(`<p>${text.before}<span class="abc" style="color: #bfedd2; text-decoration: underline;">${text.selected}</span>${text.after}</p>`),
-          removeCustomFormat('custom_format'),
-          sAssertEditorContent(`<p>${text.before}<span style="color: #bfedd2;">${text.selected}</span>${text.after}</p>`),
+          sAssertEditorContent(`<p>${text.before}<span style="color: ${textColorHex};"><strong>${text.selected}</strong></span>${text.after}</p>`),
+          toggleInlineStyle(toolbarLabel),
+          // TODO: This is different to test step below - need to investigate this in the future
+          sAssertEditorContent(`<p>${text.before}<span style="text-decoration: ${textDecoration};"><span style="color: ${textColorHex}; text-decoration: ${textDecoration};"><strong>${text.selected}</strong></span></span>${text.after}</p>`),
+          toggleInlineStyle(toolbarLabel),
+          sAssertEditorContent(`<p>${text.before}<span style="color: ${textColorHex};"><strong>${text.selected}</strong></span>${text.after}</p>`),
           removeForecolor(),
-          sAssertEditorContent(`<p>${text.before + text.selected + text.after}</p>`),
+          sAssertEditorContent(`<p>${text.before}<strong>${text.selected}</strong>${text.after}</p>`),
+          toggleInlineStyle('Bold'),
+          sAssertEditorContent(startText),
         ]),
-        Log.stepsAsStep('TBA', 'Apply custom format and forecolor then unapply them', [
-          tinyApis.sSetContent(`<p>${text.before + text.selected + text.after}</p>`),
+        Log.stepsAsStep('TBA', 'Apply bold, text-decoration then forecolor then unapply them', [
+          tinyApis.sSetContent(startText),
           tinyApis.sFocus(),
-          tinyApis.sSetSelection(selection.startPath, selection.sOffset, selection.finishPath, selection.fOffset),
-          applyCustomFormat('custom_format'),
-          sAssertEditorContent(`<p>${text.before}<span class="abc" style="text-decoration: underline;">${text.selected}</span>${text.after}</p>`),
+          sSelectText(),
+          toggleInlineStyle('Bold'),
+          sAssertEditorContent(`<p>${text.before}<strong>${text.selected}</strong>${text.after}</p>`),
+          toggleInlineStyle(toolbarLabel),
+          sAssertEditorContent(`<p>${text.before}<span style="text-decoration: ${textDecoration};"><strong>${text.selected}</strong></span>${text.after}</p>`),
           applyForecolor(),
-          sAssertEditorContent(`<p>${text.before}<span class="abc" style="text-decoration: underline; color: #bfedd2;">${text.selected}</span>${text.after}</p>`),
+          sAssertEditorContent(`<p>${text.before}<span style="color: ${textColorHex}; text-decoration: ${textDecoration};"><strong>${text.selected}</strong></span>${text.after}</p>`),
           removeForecolor(),
-          sAssertEditorContent(`<p>${text.before}<span class="abc" style="text-decoration: underline;">${text.selected}</span>${text.after}</p>`),
-          removeCustomFormat('custom_format'),
-          sAssertEditorContent(`<p>${text.before + text.selected + text.after}</p>`),
+          sAssertEditorContent(`<p>${text.before}<span style="text-decoration: ${textDecoration};"><strong>${text.selected}</strong></span>${text.after}</p>`),
+          toggleInlineStyle(toolbarLabel),
+          sAssertEditorContent(`<p>${text.before}<strong>${text.selected}</strong>${text.after}</p>`),
+          toggleInlineStyle('Bold'),
+          sAssertEditorContent(startText),
         ]),
       ]);
+    };
+
+    const sMergeForecolorAndTextDecorations = (text: Text, selection: Selection) => {
+      const startText = `<p>${text.before + text.selected + text.after}</p>`;
+      const sSelectText = () => tinyApis.sSetSelection(selection.startPath, selection.sOffset, selection.finishPath, selection.fOffset);
+
+      return Log.stepsAsStep('TBA', `Merge forecolor and text decorations with text: ${text.before + text.selected + text.after}`, [
+        Log.stepsAsStep('TBA', 'Apply forecolor and custom format then unapply them', [
+          tinyApis.sSetContent(startText),
+          tinyApis.sFocus(),
+          sSelectText(),
+          applyForecolor(),
+          sAssertEditorContent(`<p>${text.before}<span style="color: ${textColorHex};">${text.selected}</span>${text.after}</p>`),
+          applyCustomFormat('custom_format'),
+          sAssertEditorContent(`<p>${text.before}<span class="abc" style="color: ${textColorHex}; text-decoration: underline;">${text.selected}</span>${text.after}</p>`),
+          removeCustomFormat('custom_format'),
+          sAssertEditorContent(`<p>${text.before}<span style="color: ${textColorHex};">${text.selected}</span>${text.after}</p>`),
+          removeForecolor(),
+          sAssertEditorContent(startText),
+        ]),
+        Log.stepsAsStep('TBA', 'Apply custom format and forecolor then unapply them', [
+          tinyApis.sSetContent(startText),
+          tinyApis.sFocus(),
+          sSelectText(),
+          applyCustomFormat('custom_format'),
+          sAssertEditorContent(`<p>${text.before}<span class="abc" style="text-decoration: underline;">${text.selected}</span>${text.after}</p>`),
+          applyForecolor(),
+          sAssertEditorContent(`<p>${text.before}<span class="abc" style="color: ${textColorHex}; text-decoration: underline;">${text.selected}</span>${text.after}</p>`),
+          removeForecolor(),
+          sAssertEditorContent(`<p>${text.before}<span class="abc" style="text-decoration: underline;">${text.selected}</span>${text.after}</p>`),
+          removeCustomFormat('custom_format'),
+          sAssertEditorContent(startText),
+        ]),
+      ]);
+    };
 
     const sTestMergeForecolorAndTextDecoration = (label: string, text: Text, selection: Selection) =>
       Log.stepsAsStep('TBA', label, [
         sMergeForecolorAndTextDecoration('Underline', 'underline', text, selection),
         sMergeForecolorAndTextDecoration('Strikethrough', 'line-through', text, selection),
+        sMergeForecolorAndTextDecorations(text, selection)
       ]);
 
     Pipeline.async({}, [
+      tinyApis.sFocus(),
       sTestMergeForecolorAndTextDecoration('Collpased selection', { before: '', selected: 'abc', after: '' }, { startPath: [0, 0], sOffset: 1, finishPath: [0, 0], fOffset: 1 }),
       sTestMergeForecolorAndTextDecoration('Ranged selection: whole word', { before: '', selected: 'abc', after: ' def' }, { startPath: [0, 0], sOffset: 0, finishPath: [0, 0], fOffset: 'abc'.length }),
       sTestMergeForecolorAndTextDecoration('Ranged selection: part of word', { before: 'a', selected: 'b', after: 'c def' }, { startPath: [0, 0], sOffset: 1, finishPath: [0, 0], fOffset: 2 }),
