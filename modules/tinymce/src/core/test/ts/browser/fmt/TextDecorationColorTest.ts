@@ -17,13 +17,13 @@ UnitTest.asynctest('browser.tinymce.core.fmt.TextDecorationColorTest', (success,
 
     const textColorHex = '#bfedd2';
 
-    const applyForecolor = () => Log.stepsAsStep('TBA', 'Apply forecolor to text', [
+    const applyForecolor = () => Log.stepsAsStep('TINY-4757', 'Apply forecolor to text', [
       tinyUi.sClickOnToolbar('click forecolor', '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron'),
       tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
       tinyUi.sClickOnUi('click color', `div[data-mce-color="${textColorHex.toUpperCase()}"]`)
     ]);
 
-    const removeForecolor = () => Log.stepsAsStep('TBA', 'Remove forecolor from text', [
+    const removeForecolor = () => Log.stepsAsStep('TINY-4757', 'Remove forecolor from text', [
       tinyUi.sClickOnToolbar('click forecolor', '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron'),
       tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
       tinyUi.sClickOnUi('click remove color', '.tox-swatch--remove'),
@@ -51,8 +51,8 @@ UnitTest.asynctest('browser.tinymce.core.fmt.TextDecorationColorTest', (success,
       const startText = `<p>${text.before + text.selected + text.after}</p>`;
       const sSelectText = () => tinyApis.sSetSelection(selection.startPath, selection.sOffset, selection.finishPath, selection.fOffset);
 
-      return Log.stepsAsStep('TBA', `Merge forecolor and ${toolbarLabel} with text: ${text.before + text.selected + text.after}`, [
-        Log.stepsAsStep('TBA', 'Apply forecolor then text-decoration then unapply them', [
+      return Log.stepsAsStep('TINY-4757', `Merge forecolor and ${toolbarLabel} with text: ${text.before + text.selected + text.after}`, [
+        Log.stepsAsStep('TINY-4757', 'Apply forecolor then text-decoration then unapply them', [
           tinyApis.sSetContent(startText),
           tinyApis.sFocus(),
           sSelectText(),
@@ -66,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.TextDecorationColorTest', (success,
           removeForecolor(),
           sAssertEditorContent(startText),
         ]),
-        Log.stepsAsStep('TBA', 'Apply text-decoration then forecolor then unapply them', [
+        Log.stepsAsStep('TINY-4757', 'Apply text-decoration then forecolor then unapply them', [
           tinyApis.sSetContent(startText),
           tinyApis.sFocus(),
           sSelectText(),
@@ -79,7 +79,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.TextDecorationColorTest', (success,
           toggleInlineStyle(toolbarLabel),
           sAssertEditorContent(startText),
         ]),
-        Log.stepsAsStep('TBA', 'Apply bold, forecolor then text-decoration then unapply them', [
+        Log.stepsAsStep('TINY-4757', 'Apply bold, forecolor then text-decoration then unapply them', [
           tinyApis.sSetContent(startText),
           tinyApis.sFocus(),
           sSelectText(),
@@ -97,7 +97,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.TextDecorationColorTest', (success,
           toggleInlineStyle('Bold'),
           sAssertEditorContent(startText),
         ]),
-        Log.stepsAsStep('TBA', 'Apply bold, text-decoration then forecolor then unapply them', [
+        Log.stepsAsStep('TINY-4757', 'Apply bold, text-decoration then forecolor then unapply them', [
           tinyApis.sSetContent(startText),
           tinyApis.sFocus(),
           sSelectText(),
@@ -121,8 +121,8 @@ UnitTest.asynctest('browser.tinymce.core.fmt.TextDecorationColorTest', (success,
       const startText = `<p>${text.before + text.selected + text.after}</p>`;
       const sSelectText = () => tinyApis.sSetSelection(selection.startPath, selection.sOffset, selection.finishPath, selection.fOffset);
 
-      return Log.stepsAsStep('TBA', `Merge forecolor and text decorations with text: ${text.before + text.selected + text.after}`, [
-        Log.stepsAsStep('TBA', 'Apply forecolor and custom format then unapply them', [
+      return Log.stepsAsStep('TINY-4757', `Merge forecolor and text decorations with text: ${text.before + text.selected + text.after}`, [
+        Log.stepsAsStep('TINY-4757', 'Apply forecolor and custom format then unapply them', [
           tinyApis.sSetContent(startText),
           tinyApis.sFocus(),
           sSelectText(),
@@ -135,7 +135,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.TextDecorationColorTest', (success,
           removeForecolor(),
           sAssertEditorContent(startText),
         ]),
-        Log.stepsAsStep('TBA', 'Apply custom format and forecolor then unapply them', [
+        Log.stepsAsStep('TINY-4757', 'Apply custom format and forecolor then unapply them', [
           tinyApis.sSetContent(startText),
           tinyApis.sFocus(),
           sSelectText(),
@@ -152,7 +152,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.TextDecorationColorTest', (success,
     };
 
     const sTestMergeForecolorAndTextDecoration = (label: string, text: Text, selection: Selection) =>
-      Log.stepsAsStep('TBA', label, [
+      Log.stepsAsStep('TINY-4757', label, [
         sMergeForecolorAndTextDecoration('Underline', 'underline', text, selection),
         sMergeForecolorAndTextDecoration('Strikethrough', 'line-through', text, selection),
         sMergeForecolorAndTextDecorations(text, selection)
