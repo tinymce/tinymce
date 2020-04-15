@@ -1,9 +1,11 @@
 Version 5.3.0 (TBD)
     Added `uploadUri` and `blobInfo` to `editorUpload.uploadImages` return type #TINY-4579
+    Added `preserve_attributes` parameter to inline formats to assist with removing inline style element formats #TINY-4741
     Changed the `link`, `image` and `paste` plugins to use Promises to reduce the bundle size #TINY-4710
     Changed the default icons to be lazy loaded during initialization #TINY-4729
     Changed so base64 encoded urls are converted to blob urls when content is parsed #TINY-4727
     Changed context toolbars so they concatenate when more than one is suitable for the current selection #TINY-4495
+    Changed inline style element formats (strong, b, em, i, u, strike) to convert to a span on format removal if a `style` or `class` attribute is present #TINY-4741
     Fixed the `quickimage` button not restricting the file types to images #TINY-4715
     Fixed resize handlers displaying in the wrong location sometimes for remote images #TINY-4732
     Fixed table picker breaking in Firefox on low zoom levels #TINY-4728

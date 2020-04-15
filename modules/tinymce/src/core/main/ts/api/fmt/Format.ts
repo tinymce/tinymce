@@ -12,6 +12,9 @@ export type RemoveFormat = RemoveBlockFormat | RemoveInlineFormat | RemoveSelect
 export type Format = ApplyFormat | RemoveFormat;
 export type Formats = Record<string, Format | Format[]>;
 
+export type ApplyFormatPartial = Partial<BlockFormat> & Partial<InlineFormat> & Partial<SelectorFormat>;
+export type RemoveFormatPartial = Partial<RemoveBlockFormat> & Partial<RemoveInlineFormat> & Partial<RemoveSelectorFormat>;
+
 export type FormatAttrOrStyleValue = string | ((vars?: FormatVars) => string);
 export type FormatVars = Record<string, string>;
 
@@ -60,14 +63,17 @@ export interface CommonRemoveFormat<T> extends CommonFormat<T> {
   styles?: string[] | Record<string, FormatAttrOrStyleValue>;
   split?: boolean;
   deep?: boolean;
+  mixed?: boolean; // Legacy
 }
 
 export interface RemoveBlockFormat extends CommonRemoveFormat<RemoveBlockFormat> {
   block: string;
+  list_block?: string; // Legacy
 }
 
 export interface RemoveInlineFormat extends CommonRemoveFormat<RemoveInlineFormat> {
   inline: string;
+  preserve_attributes?: string[];
 }
 
 export interface RemoveSelectorFormat extends CommonRemoveFormat<RemoveSelectorFormat> {

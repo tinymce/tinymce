@@ -25,7 +25,8 @@ UnitTest.asynctest('browser.tinymce.core.fmt.RemoveFormatTest', (success, failur
     }];
     const boldFormat = [{
       inline: 'strong',
-      remove: 'all'
+      remove: 'all',
+      preserve_attributes: [ 'style', 'class' ]
     }];
 
     Pipeline.async({}, [

@@ -488,6 +488,30 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (success
     LegacyUnit.equal(getContent(editor), '<table><tbody><tr><td>ab cd</td></tr></tbody></table>', 'Should have removed format.');
   });
 
+  suite.test('Inline element on selected text with preserve_attributes flag (bold)', (editor) => {
+    editor.formatter.register('format', { inline: 'b', preserve_attributes: [ 'class', 'style' ], remove: 'all' });
+    editor.getBody().innerHTML = '<p><b class="abc" style="color: red;" data-test="1">1234</b></p>';
+    LegacyUnit.setSelection(editor, 'b', 2, 'b', 2);
+    editor.formatter.remove('format');
+    LegacyUnit.equal(
+      getContent(editor),
+      '<p><span style="color: red;" class="abc">1234</span></p>',
+      'Inline element on selected text with preserve_attributes flag (bold)'
+    );
+  });
+
+  suite.test('Inline element on selected text with preserve_attributes flag (italic)', (editor) => {
+    editor.formatter.register('format', { inline: 'em', preserve_attributes: [ 'class', 'style' ], remove: 'all' });
+    editor.getBody().innerHTML = '<p><em class="abc" style="color: red;" data-test="1">1234</em></p>';
+    LegacyUnit.setSelection(editor, 'em', 2, 'em', 2);
+    editor.formatter.remove('format');
+    LegacyUnit.equal(
+      getContent(editor),
+      '<p><span style="color: red;" class="abc">1234</span></p>',
+      'Inline element on text with preserve_attributes flag (italic)'
+    );
+  });
+
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
