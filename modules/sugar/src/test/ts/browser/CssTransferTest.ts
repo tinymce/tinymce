@@ -35,7 +35,9 @@ UnitTest.test('CssTransfer', () => {
   const check = (expectedPresent: Record<string, string>, expectedAbsent: string[], source: Element<DomElement>, destination: Element<DomElement>, styles: string[]) => {
     Css.transfer(source, destination, styles);
     Arr.each(expectedAbsent, (k) => {
-      if (Css.getRaw(destination, k).isSome()) { assert.fail('Result should not have style: ' + k); }
+      if (Css.getRaw(destination, k).isSome()) {
+        assert.fail('Result should not have style: ' + k);
+      }
     });
 
     Obj.each(expectedPresent, (v, k) => {

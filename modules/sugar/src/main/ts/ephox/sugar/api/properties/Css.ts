@@ -81,10 +81,7 @@ const get = (element: Element<DomElement>, property: string): string => {
 
   // jquery-ism: If r is an empty string, check that the element is not in a document. If it isn't, return the raw value.
   // Turns out we do this a lot.
-  const v = (r === '' && !Body.inBody(element)) ? getUnsafeProperty(dom, property) : r;
-
-  // Older browsers may return null instead of an empty string, so normalize back to an empty string
-  return v === null ? '' : v;
+  return (r === '' && !Body.inBody(element)) ? getUnsafeProperty(dom, property) : r;
 };
 
 // removed: support for dom().style[property] where prop is camel case instead of normal property name

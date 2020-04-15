@@ -63,7 +63,6 @@ const toggler = (element: Element<DomElement>, clazz: string) => {
   return Toggler(off, on, has(element, clazz));
 };
 
-// Cereal has a nasty habit of calling this with a text node >.<
 const has = (element: Element<Node>, clazz: string) =>
   ClassList.supports(element) && element.dom().classList.contains(clazz);
 
