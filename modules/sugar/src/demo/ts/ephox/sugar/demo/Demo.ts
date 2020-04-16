@@ -1,10 +1,10 @@
+import { console, document } from '@ephox/dom-globals';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
 import Element from 'ephox/sugar/api/node/Element';
 import * as Css from 'ephox/sugar/api/properties/Css';
 import * as Html from 'ephox/sugar/api/properties/Html';
-import { document, console } from '@ephox/dom-globals';
 
 /* tslint:disable:no-console */
 

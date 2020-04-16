@@ -1,10 +1,10 @@
-import { Arr } from '@ephox/katamari';
-import * as InsertAll from './InsertAll';
-import * as Traverse from '../search/Traverse';
-import Element from '../node/Element';
 import { Node as DomNode } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
+import Element from '../node/Element';
+import * as Traverse from '../search/Traverse';
+import * as InsertAll from './InsertAll';
 
-const empty = function (element: Element<DomNode>) {
+const empty = (element: Element<DomNode>) => {
   // shortcut "empty node" trick. Requires IE 9.
   element.dom().textContent = '';
 
@@ -12,19 +12,19 @@ const empty = function (element: Element<DomNode>) {
   // than removing every child node manually.
   // The following is (probably) safe for performance as 99.9% of the time the trick works and
   // Traverse.children will return an empty array.
-  Arr.each(Traverse.children(element), function (rogue) {
+  Arr.each(Traverse.children(element), (rogue) => {
     remove(rogue);
   });
 };
 
-const remove = function (element: Element<DomNode>) {
+const remove = (element: Element<DomNode>) => {
   const dom = element.dom();
   if (dom.parentNode !== null) {
     dom.parentNode.removeChild(dom);
   }
 };
 
-const unwrap = function (wrapper: Element<DomNode>) {
+const unwrap = (wrapper: Element<DomNode>) => {
   const children = Traverse.children(wrapper);
   if (children.length > 0) {
     InsertAll.before(wrapper, children);
@@ -35,5 +35,5 @@ const unwrap = function (wrapper: Element<DomNode>) {
 export {
   empty,
   remove,
-  unwrap,
+  unwrap
 };

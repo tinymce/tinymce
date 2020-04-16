@@ -1,11 +1,11 @@
-import * as Body from 'ephox/sugar/api/node/Body';
-import Element from 'ephox/sugar/api/node/Element';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as Body from 'ephox/sugar/api/node/Body';
+import Element from 'ephox/sugar/api/node/Element';
 import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
-import { UnitTest, assert } from '@ephox/bedrock-client';
 
-UnitTest.test('BodyTest', function () {
+UnitTest.test('BodyTest', () => {
   const body = SelectorFind.first('body').getOrDie();
 
   const div = Element.fromTag('div');

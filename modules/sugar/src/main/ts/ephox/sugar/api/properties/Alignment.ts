@@ -1,18 +1,15 @@
+import { Element as DomElement, Text } from '@ephox/dom-globals';
+import { Obj } from '@ephox/katamari';
+import Element from '../node/Element';
+import * as Node from '../node/Node';
 import * as Css from './Css';
 import * as Direction from './Direction';
-import * as Node from '../node/Node';
-import Element from '../node/Element';
-import { Element as DomElement } from '@ephox/dom-globals';
 
 type Alignment = 'left' | 'right' | 'justify' | 'center' | 'match-parent';
 
-const normal = function (value: Alignment) {
-  return function (_element: Element<DomElement>) {
-    return value;
-  };
-};
+const normal = (value: Alignment) => (_element: Element<DomElement>) => value;
 
-const lookups = {
+const lookups: Record<string, (element: Element<DomElement>) => string> = {
   'start': Direction.onDirection<Alignment>('left', 'right'),
   'end': Direction.onDirection<Alignment>('right', 'left'),
   'justify': normal('justify'),
@@ -20,14 +17,15 @@ const lookups = {
   'match-parent': normal('match-parent')
 };
 
-const getAlignment = function (element: Element<DomElement>, property: string): string {
+const getAlignment = (element: Element<DomElement>, property: string): string => {
   const raw = Css.get(element, property);
-  return lookups[raw] !== undefined ? lookups[raw](element) : raw;
+  return Obj.get(lookups, raw)
+    .map((f) => f(element))
+    .getOr(raw);
 };
 
-const hasAlignment = function (element: Element<DomElement>, property: string, value: string) {
-  return Node.isText(element) ? false : getAlignment(element, property) === value;
-};
+const hasAlignment = (element: Element<DomElement> | Element<Text>, property: string, value: string) =>
+  Node.isText(element) ? false : getAlignment(element, property) === value;
 
 export {
   hasAlignment

@@ -1,10 +1,10 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { document } from '@ephox/dom-globals';
 import Element from 'ephox/sugar/api/node/Element';
 import * as Text from 'ephox/sugar/api/node/Text';
 import * as TextContent from 'ephox/sugar/api/properties/TextContent';
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 
-UnitTest.test('TextContentTest', function () {
+UnitTest.test('TextContentTest', () => {
   const element = Element.fromHtml('<p>Hello <strong>World!</strong></p>');
   assert.eq('Hello World!', TextContent.get(element));
   TextContent.set(element, 'My text value');

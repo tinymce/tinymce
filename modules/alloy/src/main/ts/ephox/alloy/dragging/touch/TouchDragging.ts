@@ -1,4 +1,5 @@
 import { FieldProcessorAdt } from '@ephox/boulder';
+import { TouchEvent } from '@ephox/dom-globals';
 import { Cell, Option } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
@@ -30,7 +31,7 @@ const events = <E>(dragConfig: TouchDraggingConfig<E>, dragState: DraggingState,
         blockerCell.set(Option.none());
       };
 
-      const dragApi: BlockerDragApi = {
+      const dragApi: BlockerDragApi<TouchEvent> = {
         drop: stop,
         // delayDrop is not used by touch
         delayDrop() { },
@@ -50,7 +51,7 @@ const events = <E>(dragConfig: TouchDraggingConfig<E>, dragState: DraggingState,
 
       start();
     }),
-    AlloyEvents.run<EventArgs>(NativeEvents.touchmove(), (component, simulatedEvent) => {
+    AlloyEvents.run<EventArgs<TouchEvent>>(NativeEvents.touchmove(), (component, simulatedEvent) => {
       simulatedEvent.stop();
       DragUtils.move(component, dragConfig, dragState, TouchData, simulatedEvent.event());
     }),

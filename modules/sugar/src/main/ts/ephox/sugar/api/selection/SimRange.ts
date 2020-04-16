@@ -1,6 +1,6 @@
-import Element from '../node/Element';
-import { Fun } from '@ephox/katamari';
 import { Node as DomNode } from '@ephox/dom-globals';
+import { Fun } from '@ephox/katamari';
+import Element from '../node/Element';
 
 export interface SimRange {
   start: () => Element<DomNode>;

@@ -1,6 +1,7 @@
+import { Event } from '@ephox/dom-globals';
 import Element from '../node/Element';
 
-export interface EventArgs<T = any> { // Set to any since there might be a lot of code working directly with the sub types of Event
+export interface EventArgs<T = Event> {
   target: () => Element;
   x: () => number;
   y: () => number;
@@ -14,5 +15,5 @@ export interface EventUnbinder {
   unbind: () => void;
 }
 
-export type EventHandler = (evt: EventArgs) => void;
-export type EventFilter = (evt: any) => boolean;
+export type EventHandler<T = Event> = (evt: EventArgs<T>) => void;
+export type EventFilter<T = Event> = (evt: T) => boolean;

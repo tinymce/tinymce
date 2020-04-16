@@ -1,11 +1,11 @@
+import { Element as DomElement, HTMLElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import Toggler from '../properties/Toggler';
-import * as Css from '../properties/Css';
-import { HTMLElement, Element as DomElement } from '@ephox/dom-globals';
 import Element from '../node/Element';
+import * as Css from '../properties/Css';
+import Toggler from '../properties/Toggler';
 
 // This function is dangerous. Toggle behaviour is different depending on whether the element is in the DOM or not when it's created.
-const visibilityToggler = function (element: Element<DomElement>, property: string, hiddenValue: string, visibleValue: string) {
+const visibilityToggler = (element: Element<DomElement>, property: string, hiddenValue: string, visibleValue: string) => {
   let initial = Css.get(element, property);
   // old jquery-ism that this function depends on
   if (initial === undefined) {
@@ -19,25 +19,16 @@ const visibilityToggler = function (element: Element<DomElement>, property: stri
   return Toggler(off, on, false);
 };
 
-const toggler = function (element: Element<DomElement>) {
-  return visibilityToggler(element, 'visibility', 'hidden', 'visible');
-};
+const toggler = (element: Element<DomElement>) => visibilityToggler(element, 'visibility', 'hidden', 'visible');
 
-const displayToggler = function (element: Element<DomElement>, value: string) {
-  return visibilityToggler(element, 'display', 'none', value);
-};
+const displayToggler = (element: Element<DomElement>, value: string) => visibilityToggler(element, 'display', 'none', value);
 
-const isHidden = function (dom: HTMLElement): boolean {
-  return dom.offsetWidth <= 0 && dom.offsetHeight <= 0;
-};
+const isHidden = (dom: HTMLElement): boolean => dom.offsetWidth <= 0 && dom.offsetHeight <= 0;
 
-const isVisible = function (element: Element<HTMLElement>): boolean {
-  const dom = element.dom();
-  return !isHidden(dom);
-};
+const isVisible = (element: Element<HTMLElement>): boolean => !isHidden(element.dom());
 
 export {
   toggler,
   displayToggler,
-  isVisible,
+  isVisible
 };

@@ -1,5 +1,6 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Attr, Element, Node, SelectorFilter, SelectorFind, Selectors, Traverse } from '@ephox/sugar';
+import { Element, Node, SelectorFilter, SelectorFind, Selectors, Traverse } from '@ephox/sugar';
+import { getAttrValue } from '../util/CellUtils';
 import * as LayerSelector from '../util/LayerSelector';
 import * as Structs from './Structs';
 
@@ -63,7 +64,7 @@ const rows = function (ancestor: Element) {
 };
 
 const attr = function (element: Element, property: string) {
-  return parseInt(Attr.get(element, property), 10);
+  return getAttrValue(element, property);
 };
 
 const grid = function (element: Element, rowProp: string, colProp: string) {

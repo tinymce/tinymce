@@ -1,17 +1,17 @@
-import * as Body from 'ephox/sugar/api/node/Body';
-import * as Class from 'ephox/sugar/api/properties/Class';
-import * as Classes from 'ephox/sugar/api/properties/Classes';
-import Element from 'ephox/sugar/api/node/Element';
-import * as Html from 'ephox/sugar/api/properties/Html';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as Body from 'ephox/sugar/api/node/Body';
+import Element from 'ephox/sugar/api/node/Element';
+import * as Class from 'ephox/sugar/api/properties/Class';
+import * as Classes from 'ephox/sugar/api/properties/Classes';
+import * as Html from 'ephox/sugar/api/properties/Html';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import Div from 'ephox/sugar/test/Div';
 import EphoxElement from 'ephox/sugar/test/EphoxElement';
-import { UnitTest, assert } from '@ephox/bedrock-client';
 
-UnitTest.test('RemoveTest', function () {
-  const runChecks = function (connected) {
+UnitTest.test('RemoveTest', () => {
+  const runChecks = (connected: boolean) => {
     const container = Div();
     const span = EphoxElement('span');
     const li2 = EphoxElement('li');

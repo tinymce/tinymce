@@ -61,17 +61,15 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
 
   const logger = Debugging.noLogger();
 
-  const lookup = (eventType: string, target: Element) => {
-    const targetId = Attr.get(target, 'data-event-id');
-
-    return Obj.get(domEvents as any, eventType).bind((x) => Obj.get(x, targetId)).map((h: Function) => ({
-      descHandler: {
-        cHandler: h,
-        purpose: Fun.constant('purpose')
-      },
-      element: target
-    }));
-  };
+  const lookup = (eventType: string, target: Element) =>
+    Attr.getOpt(target, 'data-event-id').bind((targetId) =>
+      Obj.get(domEvents as any, eventType).bind((x) => Obj.get(x, targetId)).map((h: Function) => ({
+        descHandler: {
+          cHandler: h,
+          purpose: Fun.constant('purpose')
+        },
+        element: target
+      })));
 
   const container = Element.fromTag('div');
   const body = Element.fromDom(document.body);

@@ -16,10 +16,10 @@ export interface Option<T> {
   readonly isNone: () => boolean;
 
   /** If some(x) return x, otherwise return the specified default value */
-  readonly getOr: (value: T) => T;
+  readonly getOr: <T2>(value: T2) => T | T2;
 
   /** getOr with a thunked default value */
-  readonly getOrThunk: (makeValue: () => T) => T;
+  readonly getOrThunk: <T2>(makeValue: () => T2) => T | T2;
 
   /** get the 'some' value; throw if none */
   readonly getOrDie: (msg?: string) => T;

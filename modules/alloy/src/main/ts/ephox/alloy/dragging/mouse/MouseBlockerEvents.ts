@@ -5,7 +5,7 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import { BlockerDragApi } from '../common/BlockerTypes';
 
-const init = (dragApi: BlockerDragApi): AlloyEvents.AlloyEventRecord => AlloyEvents.derive([
+const init = (dragApi: BlockerDragApi<MouseEvent>): AlloyEvents.AlloyEventRecord => AlloyEvents.derive([
   // When the user clicks on the blocker, something has probably gone slightly
   // wrong, so we'll just drop for safety. The blocker should really only
   // be there when the mouse is already down and not released, so a 'click'

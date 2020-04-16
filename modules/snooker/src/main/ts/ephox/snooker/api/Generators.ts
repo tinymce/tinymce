@@ -1,6 +1,7 @@
-import { Arr, Cell, Contracts, Fun, Option } from '@ephox/katamari';
-import { Attr, Css, Element } from '@ephox/sugar';
 import { HTMLElementTagNameMap } from '@ephox/dom-globals';
+import { Arr, Cell, Contracts, Fun, Option } from '@ephox/katamari';
+import { Css, Element } from '@ephox/sugar';
+import { getAttrValue } from '../util/CellUtils';
 
 export interface CellSpan {
   readonly element: () => Element;
@@ -51,8 +52,8 @@ interface Item {
 const verifyGenerators: (gen: Generators) => Generators = Contracts.exactly([ 'cell', 'row', 'replace', 'gap' ]);
 
 const elementToData = function (element: Element): CellSpan {
-  const colspan = Attr.has(element, 'colspan') ? parseInt(Attr.get(element, 'colspan'), 10) : 1;
-  const rowspan = Attr.has(element, 'rowspan') ? parseInt(Attr.get(element, 'rowspan'), 10) : 1;
+  const colspan = getAttrValue(element, 'colspan', 1);
+  const rowspan = getAttrValue(element, 'rowspan', 1);
   return {
     element: Fun.constant(element),
     colspan: Fun.constant(colspan),

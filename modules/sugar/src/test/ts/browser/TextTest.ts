@@ -1,13 +1,14 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { HTMLSpanElement } from '@ephox/dom-globals';
 import Element from 'ephox/sugar/api/node/Element';
+import * as Node from 'ephox/sugar/api/node/Node';
 import * as Text from 'ephox/sugar/api/node/Text';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import { HTMLSpanElement, Text as DomText } from '@ephox/dom-globals';
 
-UnitTest.test('TextTest', function () {
-  const ensureClobberedTextNodeDoesNotThrow = function () {
+UnitTest.test('TextTest', () => {
+  const ensureClobberedTextNodeDoesNotThrow = () => {
     const span = Element.fromHtml<HTMLSpanElement>('<span>hi</span>');
-    Traverse.child(span, 0).each(function (text0: Element<DomText>) {
+    Traverse.child(span, 0).filter(Node.isText).each((text0) => {
       span.dom().innerHTML = 'smashed';
       const v = Text.get(text0); // Throws in IE10.
       assert.eq('string', typeof(v));

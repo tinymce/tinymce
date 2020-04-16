@@ -1,3 +1,5 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Node as DomNode } from '@ephox/dom-globals';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import Element from 'ephox/sugar/api/node/Element';
@@ -5,9 +7,8 @@ import * as Html from 'ephox/sugar/api/properties/Html';
 import * as Awareness from 'ephox/sugar/api/selection/Awareness';
 import * as CursorPosition from 'ephox/sugar/api/selection/CursorPosition';
 import * as Edge from 'ephox/sugar/api/selection/Edge';
-import { UnitTest, assert } from '@ephox/bedrock-client';
 
-UnitTest.test('Browser Test: CursorPositionTest', function () {
+UnitTest.test('Browser Test: CursorPositionTest', () => {
   const container = Element.fromTag('div');
   const child1 = Element.fromText('');
   const child2 = Element.fromText(' ');
@@ -25,12 +26,12 @@ UnitTest.test('Browser Test: CursorPositionTest', function () {
 
   InsertAll.append(container, [ child1, child2, child3, child4, child5 ]);
 
-  const checkFirst = function (label, expected, root) {
+  const checkFirst = (label: string, expected: Element<DomNode>, root: Element<DomNode>) => {
     const actual = CursorPosition.first(root).getOrDie('No cursor position found for: ' + label);
     assert.eq(true, Compare.eq(expected, actual), () => 'Incorrect element. \nExpected: ' + Html.getOuter(expected) + '\nWas: ' + Html.getOuter(actual));
   };
 
-  const checkLast = function (label, expected, root) {
+  const checkLast = (label: string, expected: Element<DomNode>, root: Element<DomNode>) => {
     const actual = CursorPosition.last(root).getOrDie('No cursor position found for: ' + label);
     assert.eq(true, Compare.eq(expected, actual), () => 'Incorrect element. \nExpected: ' + Html.getOuter(expected) + '\nWas: ' + Html.getOuter(actual));
   };

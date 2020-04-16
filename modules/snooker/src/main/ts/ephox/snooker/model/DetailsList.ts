@@ -1,7 +1,8 @@
 import { Arr } from '@ephox/katamari';
-import { Attr, Node, Traverse, Element } from '@ephox/sugar';
+import { Element, Node, Traverse } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
 import * as TableLookup from '../api/TableLookup';
+import { getAttrValue } from '../util/CellUtils';
 
 /*
  * Takes a DOM table and returns a list of list of:
@@ -20,8 +21,8 @@ const fromTable = function (table: Element) {
     }).getOr('tbody');
 
     const cells = Arr.map(TableLookup.cells(row), function (cell) {
-      const rowspan = Attr.has(cell, 'rowspan') ? parseInt(Attr.get(cell, 'rowspan'), 10) : 1;
-      const colspan = Attr.has(cell, 'colspan') ? parseInt(Attr.get(cell, 'colspan'), 10) : 1;
+      const rowspan = getAttrValue(cell, 'rowspan', 1);
+      const colspan = getAttrValue(cell, 'colspan', 1);
       return Structs.detail(cell, rowspan, colspan);
     });
 
@@ -32,8 +33,8 @@ const fromTable = function (table: Element) {
 const fromPastedRows = function (rows: Element[], example: Structs.RowCells) {
   return Arr.map(rows, function (row) {
     const cells = Arr.map(TableLookup.cells(row), function (cell) {
-      const rowspan = Attr.has(cell, 'rowspan') ? parseInt(Attr.get(cell, 'rowspan'), 10) : 1;
-      const colspan = Attr.has(cell, 'colspan') ? parseInt(Attr.get(cell, 'colspan'), 10) : 1;
+      const rowspan = getAttrValue(cell, 'rowspan', 1);
+      const colspan = getAttrValue(cell, 'colspan', 1);
       return Structs.detail(cell, rowspan, colspan);
     });
 

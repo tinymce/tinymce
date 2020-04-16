@@ -1,20 +1,19 @@
+import { Node } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import Element from '../api/node/Element';
-import { Node } from '@ephox/dom-globals';
 
-export default function (is: (e: Element<Node>) => boolean, name: string) {
-  const get = function (element: Element): string {
+export default (is: (e: Element<Node>) => boolean, name: string) => {
+  const get = (element: Element): string => {
     if (!is(element)) {
       throw new Error('Can only get ' + name + ' value of a ' + name + ' node');
     }
     return getOption(element).getOr('');
   };
 
-  const getOption = function (element: Element<Node>): Option<string> {
-    return is(element) ? Option.from(element.dom().nodeValue) : Option.none<string>();
-  };
+  const getOption = (element: Element<Node>): Option<string> =>
+    is(element) ? Option.from(element.dom().nodeValue) : Option.none<string>();
 
-  const set = function (element: Element<Node>, value: string): void {
+  const set = (element: Element<Node>, value: string): void => {
     if (!is(element)) {
       throw new Error('Can only set raw ' + name + ' value of a ' + name + ' node');
     }
@@ -24,6 +23,6 @@ export default function (is: (e: Element<Node>) => boolean, name: string) {
   return {
     get,
     getOption,
-    set,
+    set
   };
-}
+};

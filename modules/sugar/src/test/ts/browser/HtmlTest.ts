@@ -1,9 +1,9 @@
-import * as Html from 'ephox/sugar/api/properties/Html';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as Html from 'ephox/sugar/api/properties/Html';
 import Div from 'ephox/sugar/test/Div';
-import { UnitTest, assert } from '@ephox/bedrock-client';
 
-UnitTest.test('HtmlTest', function () {
+UnitTest.test('HtmlTest', () => {
   // checks that Html.getOuter does not fiddle with the dom
   const c = Div();
   const container = Div();

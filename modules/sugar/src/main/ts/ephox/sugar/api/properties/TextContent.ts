@@ -1,16 +1,12 @@
-import Element from '../node/Element';
 import { Node as DomNode } from '@ephox/dom-globals';
+import Element from '../node/Element';
 
 // REQUIRES IE9
-const get = function (element: Element<DomNode>) {
-  return element.dom().textContent;
-};
+const get = (element: Element<DomNode>) => element.dom().textContent;
 
-const set = function (element: Element<DomNode>, value: string) {
-  element.dom().textContent = value;
-};
+const set = (element: Element<DomNode>, value: string) => element.dom().textContent = value;
 
 export {
   get,
-  set,
+  set
 };

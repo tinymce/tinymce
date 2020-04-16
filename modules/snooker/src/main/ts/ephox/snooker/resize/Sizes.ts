@@ -1,6 +1,7 @@
 import { Fun, Option, Strings } from '@ephox/katamari';
-import { Attr, Css, Height, Node, Width, Element } from '@ephox/sugar';
+import { Attr, Css, Element, Height, Node, Width } from '@ephox/sugar';
 import * as TableLookup from '../api/TableLookup';
+import { getSpan } from '../util/CellUtils';
 import * as RuntimeSize from './RuntimeSize';
 import { TableSize } from './Types';
 
@@ -53,14 +54,10 @@ const getTotalHeight = function (cell: Element) {
   return normalizePixelSize(value, cell, Height.get, setHeight);
 };
 
-const get = function (cell: Element, type: string, f: (e: Element) => number) {
+const get = function (cell: Element, type: 'rowspan' | 'colspan', f: (e: Element) => number) {
   const v = f(cell);
   const span = getSpan(cell, type);
   return v / span;
-};
-
-const getSpan = function (cell: Element, type: string) {
-  return Attr.has(cell, type) ? parseInt(Attr.get(cell, type), 10) : 1;
 };
 
 export const getRawWidth = function (element: Element) {

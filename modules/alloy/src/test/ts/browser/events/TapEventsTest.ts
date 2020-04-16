@@ -1,5 +1,6 @@
 import { GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { TouchEvent } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Element, EventArgs } from '@ephox/sugar';
 
@@ -29,7 +30,7 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
       ]
     }),
     target: Fun.constant(target)
-  } as EventArgs);
+  } as unknown as EventArgs<TouchEvent>);
 
   const sFireIfReady = (event: EventArgs, type: string) => Step.sync(() => {
     monitor.fireIfReady(event, type);

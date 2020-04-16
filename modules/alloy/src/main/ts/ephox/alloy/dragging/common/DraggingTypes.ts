@@ -1,3 +1,4 @@
+import { Event } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Element, EventArgs, Position } from '@ephox/sugar';
 
@@ -95,8 +96,8 @@ export interface CommonDraggingConfigSpec<E> {
 
 export type DraggingConfigSpec<E> = MouseDraggingConfigSpec<E> | TouchDraggingConfigSpec<E> | MouseOrTouchDraggingConfigSpec<E>;
 
-export interface DragModeDeltas<T> {
-  readonly getData: (event: EventArgs) => Option<T>;
+export interface DragModeDeltas<E extends Event, T> {
+  readonly getData: (event: EventArgs<E>) => Option<T>;
   readonly getDelta: (old: T, nu: T) => T;
 }
 
@@ -107,7 +108,7 @@ export interface DragStartData {
 }
 
 export interface BaseDraggingState<T> extends BehaviourState {
-  readonly update: (mode: DragModeDeltas<T>, dragEvent: EventArgs) => Option<T>;
+  readonly update: <E extends Event>(mode: DragModeDeltas<E, T>, dragEvent: EventArgs<E>) => Option<T>;
   readonly setStartData: (data: DragStartData) => void;
   readonly getStartData: () => Option<DragStartData>;
   readonly reset: () => void;

@@ -1,4 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Document, HTMLElement, HTMLIFrameElement, Window } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
@@ -11,32 +12,50 @@ import * as Css from 'ephox/sugar/api/properties/Css';
 import * as Location from 'ephox/sugar/api/view/Location';
 import * as Scroll from 'ephox/sugar/api/view/Scroll';
 import * as Width from 'ephox/sugar/api/view/Width';
-import { HTMLIFrameElement } from '@ephox/dom-globals';
+
+interface TestDocSpec {
+  iframe: Element<HTMLIFrameElement>;
+  rawWin: Window;
+  rawDoc: Element<Document>;
+  html: Element<HTMLElement>;
+  body: Element<HTMLElement>;
+  rtl: boolean;
+  dir: string;
+  byId: (str: string) => Element<HTMLElement>;
+}
+
+type AttrMap = Record<string, string | boolean | number>;
+interface TestAttrMap {
+  iframe: AttrMap;
+  html: Option<AttrMap>;
+  body: Option<AttrMap>;
+}
 
 UnitTest.asynctest('ScrollTest', (success, failure) => {
   const platform = PlatformDetection.detect();
 
   if (!Math.sign) { // For IE: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/sign
-    Math.sign = function (x) {
+    Math.sign = (x) => {
       const a = x > 0 ? 1 : 0;
       const b = x < 0 ? 1 : 0;
       return (a - b) || +x;
     };
   }
 
-  const testOne = function (i, attrMap, next) {
+  const testOne = (i: string, attrMap: TestAttrMap, next: () => void) => {
     const iframe = Element.fromHtml<HTMLIFrameElement>(i);
     Attr.setAll(iframe, attrMap.iframe);
-    const run = DomEvent.bind(iframe, 'load', function () {
+    const run = DomEvent.bind(iframe, 'load', () => {
       run.unbind();
       try {
-        const iframeWin = iframe.dom().contentWindow;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const iframeWin = iframe.dom().contentWindow!;
         const iframeDoc = iframeWin.document;
         const html = Element.fromDom(iframeDoc.documentElement);
         const body = Element.fromDom(iframeDoc.body);
         attrMap.html.each(Fun.curry(Attr.setAll, html));
         attrMap.body.each(Fun.curry(Attr.setAll, body));
-        const doc = {
+        const doc: TestDocSpec = {
           iframe,
           rawWin: iframeWin,
           rawDoc: Element.fromDom(iframeDoc),
@@ -65,23 +84,21 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
   testOne(ifr, { // vanilla iframe
     iframe: { id: 'vanilla', style: 'height:200px; width:500px; border: 7px dotted chartreuse;' },
     html: Option.none(),
-    body: Option.some({ contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
+    body: Option.some<AttrMap>({ contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
   },
-  function () {
+  () => {
     testOne(ifr, { // rtl iframe
       iframe: { id: 'rtl', style: 'height:200px; width:500px; border: 7px solid blueviolet;' },
       html: Option.none(),
-      body: Option.some({ dir: 'rtl', contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
+      body: Option.some<AttrMap>({ dir: 'rtl', contenteditable: 'true', style: 'margin: 0; padding: 5px;' })
     },
     success);
   });
 
-  const within = function (a, b, eps) {
-    return Math.abs(a - b) <= eps;
-  };
+  const within = (a: number, b: number, eps: number) => Math.abs(a - b) <= eps;
 
   // check current scroll position is at (x,y) (or within +/- (epsX, epsY))
-  const scrollCheck = function (x, y, epsX, epsY, doc, msg) {
+  const scrollCheck = (x: number, y: number, epsX: number, epsY: number, doc: TestDocSpec, msg: string) => {
     Css.reflow(doc.body);
     const scr = Scroll.get(doc.rawDoc);
     assert.eq(true, within(x, scr.left(), epsX) , msg + ' (' + doc.dir + ') Expected scrollCheck x=' + x + ', got=' + scr.left() + ', eps=' + epsX);
@@ -89,28 +106,28 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
   };
 
   // scroll to (x,y) and check position
-  const scrollTo = function (x, y, doc) {
+  const scrollTo = (x: number, y: number, doc: TestDocSpec) => {
     Scroll.to(x, y, doc.rawDoc);
     scrollCheck(x, y, 0, 0, doc, 'scrollTo(' + x + ',' + y + ')');
   };
 
   // set the scroll to location of element 'el' and check position
-  const setToElement = function (doc, el, x, y, epsX, epsY, msg) {
+  const setToElement = (doc: TestDocSpec, el: Element<HTMLElement>, x: number, y: number, epsX: number, epsY: number, msg: string) => {
     Scroll.setToElement(doc.rawWin, el);
     scrollCheck(x, y, epsX, epsY, doc, msg);
   };
 
-  const scrollBy = function (x, y, doc, msg) {
+  const scrollBy = (x: number, y: number, doc: TestDocSpec, msg: string) => {
     const scr0 = Scroll.get(doc.rawDoc);
     Scroll.by(x, y, doc.rawDoc);
     scrollCheck(scr0.left() + x, scr0.top() + y, 0, 0, doc, 'scrollBy(' + x + ',' + y + '): ' + msg);
   };
 
-  const runTests = function (doc) {
+  const runTests = (doc: TestDocSpec) => {
     const mar0 = Css.get(doc.html, 'margin');
     const bod0 = Css.get(doc.body, 'border');
-    const bodyBorder = parseInt(bod0, 10) || 0;
-    const mar = parseInt(mar0, 10) || 0;
+    const bodyBorder = parseInt(bod0 || '', 10) || 0;
+    const mar = parseInt(mar0 || '', 10) || 0;
     const hgt = doc.body.dom().scrollHeight;
     const scrollBarWidth = Scroll.scrollBarWidth();
     const cEl = doc.byId('centre1');
@@ -149,7 +166,7 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
       setToElement(doc, doc.byId('bot1'), bot1Pos.left(), bot, 0, 20, 'set to bottom');
 
       scrollTo(x, cY, doc); // scroll back to centre
-      Scroll.preserve(doc.rawDoc, function () {
+      Scroll.preserve(doc.rawDoc, () => {
         scrollBy( 100, 100, doc, 'scroll 1'); // scroll some where else
       });
       scrollCheck(x, cY, 0, 0, doc, 'preserve'); // scroll back at centre

@@ -1,15 +1,14 @@
+import { Node as DomNode } from '@ephox/dom-globals';
 import { Option, Type } from '@ephox/katamari';
 import Element from '../api/node/Element';
-import { Node as DomNode } from '@ephox/dom-globals';
 
 type TestFn = (e: Element<DomNode>) => boolean;
-type ScopeTestFn<T> = (scope: Element<DomNode>, a: T) => boolean;
-type AncestorFn<T> = (scope: Element<DomNode>, predicate: T, isRoot?: TestFn) => Option<Element<DomNode>>;
+type ScopeTestFn<T, R extends DomNode> = (scope: Element<DomNode>, a: T) => scope is Element<R>;
+type AncestorFn<T, R extends DomNode> = (scope: Element<DomNode>, predicate: T, isRoot?: TestFn) => Option<Element<R>>;
 
-export default function <T> (is: ScopeTestFn<T>, ancestor: AncestorFn<T>, scope: Element<DomNode>, a: T, isRoot: TestFn): Option<Element<DomNode>> {
-  return is(scope, a) ?
+export default <T, R extends DomNode = DomNode> (is: ScopeTestFn<T, R>, ancestor: AncestorFn<T, R>, scope: Element<DomNode>, a: T, isRoot?: TestFn): Option<Element<R>> =>
+  is(scope, a) ?
     Option.some(scope) :
     Type.isFunction(isRoot) && isRoot(scope) ?
-      Option.none<Element<DomNode>>() :
+      Option.none<Element<R>>() :
       ancestor(scope, a, isRoot);
-}

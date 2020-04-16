@@ -3,7 +3,9 @@ import { Fun } from '@ephox/katamari';
 import { EventArgs, EventFilter, EventHandler, EventUnbinder } from '../api/events/Types';
 import Element from '../api/node/Element';
 
-const mkEvent = (target: Element, x: number, y: number, stop: () => void, prevent: () => void, kill: () => void, raw: Event): EventArgs =>
+type WrappedHandler<T> = (rawEvent: T) => void;
+
+const mkEvent = <T extends Event>(target: Element, x: number, y: number, stop: () => void, prevent: () => void, kill: () => void, raw: T): EventArgs<T> =>
   // switched from a struct to manual Fun.constant() because we are passing functions now, not just values
   ({
     target:  Fun.constant(target),
@@ -15,16 +17,12 @@ const mkEvent = (target: Element, x: number, y: number, stop: () => void, preven
     raw:     Fun.constant(raw)
   });
 
-const fromRawEvent = (rawEvent: Event) => {
+const fromRawEvent = <T extends Event>(rawEvent: T) => {
   const target = Element.fromDom(rawEvent.target as Node);
 
-  const stop = function () {
-    rawEvent.stopPropagation();
-  };
+  const stop = () => rawEvent.stopPropagation();
 
-  const prevent = function () {
-    rawEvent.preventDefault();
-  };
+  const prevent = () => rawEvent.preventDefault();
 
   const kill = Fun.compose(prevent, stop); // more of a sequence than a compose, but same effect
 
@@ -32,14 +30,13 @@ const fromRawEvent = (rawEvent: Event) => {
   return mkEvent(target, (rawEvent as any).clientX, (rawEvent as any).clientY, stop, prevent, kill, rawEvent);
 };
 
-const handle = function (filter: EventFilter, handler: EventHandler) {
-  return function (rawEvent) {
-    if (!filter(rawEvent)) { return; }
-    handler(fromRawEvent(rawEvent));
-  };
+const handle = <T extends Event>(filter: EventFilter<T>, handler: EventHandler<T>): WrappedHandler<T> => (rawEvent: T) => {
+  if (filter(rawEvent)) {
+    handler(fromRawEvent<T>(rawEvent));
+  }
 };
 
-const binder = function (element: Element, event: string, filter: EventFilter, handler: EventHandler, useCapture: boolean): EventUnbinder {
+const binder = <T extends Event>(element: Element, event: string, filter: EventFilter<T>, handler: EventHandler<T>, useCapture: boolean): EventUnbinder => {
   const wrapped = handle(filter, handler);
   // IE9 minimum
   element.dom().addEventListener(event, wrapped, useCapture);
@@ -49,15 +46,13 @@ const binder = function (element: Element, event: string, filter: EventFilter, h
   };
 };
 
-const bind = function (element: Element, event: string, filter: EventFilter, handler: EventHandler) {
-  return binder(element, event, filter, handler, false);
-};
+const bind = <T extends Event>(element: Element, event: string, filter: EventFilter<T>, handler: EventHandler<T>) =>
+  binder<T>(element, event, filter, handler, false);
 
-const capture = function (element: Element, event: string, filter: EventFilter, handler: EventHandler) {
-  return binder(element, event, filter, handler, true);
-};
+const capture = <T extends Event>(element: Element, event: string, filter: EventFilter<T>, handler: EventHandler<T>) =>
+  binder<T>(element, event, filter, handler, true);
 
-const unbind = function (element: Element, event: string, handler: EventHandler, useCapture: boolean) {
+const unbind = <T extends Event>(element: Element, event: string, handler: WrappedHandler<T>, useCapture: boolean) => {
   // IE9 minimum
   element.dom().removeEventListener(event, handler, useCapture);
 };

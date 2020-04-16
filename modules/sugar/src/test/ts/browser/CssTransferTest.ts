@@ -1,10 +1,12 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Element as DomElement } from '@ephox/dom-globals';
 import { Arr, Obj } from '@ephox/katamari';
+import Element from 'ephox/sugar/api/node/Element';
 import * as Css from 'ephox/sugar/api/properties/Css';
 import Div from 'ephox/sugar/test/Div';
 
-UnitTest.test('CssTransfer', function () {
-  const alpha = function () {
+UnitTest.test('CssTransfer', () => {
+  const alpha = () => {
     const r = Div();
     Css.setAll(r, {
       'display': 'inline',
@@ -13,7 +15,7 @@ UnitTest.test('CssTransfer', function () {
     return r;
   };
 
-  const beta = function () {
+  const beta = () => {
     const r = Div();
     Css.setAll(r, {
       display: 'block',
@@ -22,7 +24,7 @@ UnitTest.test('CssTransfer', function () {
     return r;
   };
 
-  const gamma = function () {
+  const gamma = () => {
     const r = Div();
     Css.setAll(r, {
       'background-color': 'red'
@@ -30,13 +32,15 @@ UnitTest.test('CssTransfer', function () {
     return r;
   };
 
-  const check = function (expectedPresent, expectedAbsent, source, destination, styles) {
+  const check = (expectedPresent: Record<string, string>, expectedAbsent: string[], source: Element<DomElement>, destination: Element<DomElement>, styles: string[]) => {
     Css.transfer(source, destination, styles);
-    Arr.each(expectedAbsent, function (k) {
-      if (Css.getRaw(destination, k).isSome()) { assert.fail('Result should not have style: ' + k); }
+    Arr.each(expectedAbsent, (k) => {
+      if (Css.getRaw(destination, k).isSome()) {
+        assert.fail('Result should not have style: ' + k);
+      }
     });
 
-    Obj.each(expectedPresent, function (v, k) {
+    Obj.each(expectedPresent, (v, k) => {
       const value = Css.getRaw(destination, k).getOrDie('Result should have style: ' + k);
       assert.eq(v, value);
     });

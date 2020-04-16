@@ -1,14 +1,21 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as Body from 'ephox/sugar/api/node/Body';
 import * as Class from 'ephox/sugar/api/properties/Class';
 import * as Css from 'ephox/sugar/api/properties/Css';
-import * as Insert from 'ephox/sugar/api/dom/Insert';
-import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as Visibility from 'ephox/sugar/api/view/Visibility';
 import Div from 'ephox/sugar/test/Div';
-import { UnitTest, assert } from '@ephox/bedrock-client';
 
-UnitTest.test('TogglerTest', function () {
-  const runCheck = function (toggler, check) {
+interface ToggleApi {
+  toggle: () => void;
+  on: () => void;
+  off: () => void;
+  isOn: () => boolean;
+}
+
+UnitTest.test('TogglerTest', () => {
+  const runCheck = (toggler: ToggleApi, check: (expected: boolean) => void) => {
     check(false);
     toggler.toggle();
     check(true);
@@ -37,7 +44,7 @@ UnitTest.test('TogglerTest', function () {
 
   // this is all due for a good refactoring
 
-  const checkClass = function (has) {
+  const checkClass = (has: boolean) => {
     assert.eq(has, Class.has(c, 'blob'));
   };
 
@@ -50,7 +57,7 @@ UnitTest.test('TogglerTest', function () {
 
   // CSS toggles are silly - we should delete this and do it in a way that does not require detection
 
-  const checkDisplayBlockRemoved = function (has) {
+  const checkDisplayBlockRemoved = (has: boolean) => {
     // oh IE, you bastard
     // var isie = PlatformDetection.detect().browser.isIE();
     // var off = isie ? 'block' : undefined;
@@ -65,7 +72,7 @@ UnitTest.test('TogglerTest', function () {
   runCheck(vis, checkDisplayBlockRemoved);
   Remove.remove(c);
 
-  const checkDisplayBlockNone = function (has) {
+  const checkDisplayBlockNone = (has: boolean) => {
     const v = has ? 'block' : 'none';
     assert.eq(v, Css.get(c, 'display'));
   };
@@ -78,7 +85,7 @@ UnitTest.test('TogglerTest', function () {
   runCheck(Visibility.displayToggler(c, 'block'), checkDisplayBlockNone);
   Remove.remove(c);
 
-  const checkVisibilityVisibleRemoved = function (has) {
+  const checkVisibilityVisibleRemoved = (has: boolean) => {
     const v = has ? 'hidden' : 'visible';
     assert.eq(v, Css.get(c, 'visibility'));
   };
@@ -90,7 +97,7 @@ UnitTest.test('TogglerTest', function () {
   runCheck(vis, checkVisibilityVisibleRemoved);
   Remove.remove(c);
 
-  const checkVisibilityVisibleHidden = function (has) {
+  const checkVisibilityVisibleHidden = (has: boolean) => {
     const v = has ? 'visible' : 'hidden';
     assert.eq(v, Css.get(c, 'visibility'));
   };

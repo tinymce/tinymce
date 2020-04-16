@@ -30,7 +30,7 @@ interface VisualViewport {
 const get = (_win?: Window): Option<VisualViewport> => {
   const win = _win === undefined ? window : _win;
   // eslint-disable-next-line dot-notation
-  return Option.from(win['visualViewport']);
+  return Option.from((win as any)['visualViewport']);
 };
 
 const bounds = (x: number, y: number, width: number, height: number): Bounds => ({

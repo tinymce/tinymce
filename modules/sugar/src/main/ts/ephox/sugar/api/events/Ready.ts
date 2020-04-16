@@ -1,8 +1,8 @@
-import * as DomEvent from './DomEvent';
-import Element from '../node/Element';
 import { document } from '@ephox/dom-globals';
+import Element from '../node/Element';
+import * as DomEvent from './DomEvent';
 
-const execute = function (f: () => void) {
+const execute = (f: () => void) => {
   /*
    * We only use this in one place, so creating one listener per ready request is more optimal than managing
    * a single event with a queue of functions.
@@ -22,7 +22,7 @@ const execute = function (f: () => void) {
   } else {
     // Note that this fires when DOM manipulation is allowed, but before all resources are
     // available. This is the best practice but might be a bit weird.
-    const listener = DomEvent.bind(Element.fromDom(document), 'DOMContentLoaded', function () { // IE9 minimum
+    const listener = DomEvent.bind(Element.fromDom(document), 'DOMContentLoaded', () => { // IE9 minimum
       f();
       listener.unbind();
     });

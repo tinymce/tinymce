@@ -1,7 +1,7 @@
-import * as Body from 'ephox/sugar/api/node/Body';
-import Element from 'ephox/sugar/api/node/Element';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
+import * as Body from 'ephox/sugar/api/node/Body';
+import Element from 'ephox/sugar/api/node/Element';
 
 /*
       <div>
@@ -91,5 +91,5 @@ export {
   ul,
   li,
 
-  connect,
+  connect
 };

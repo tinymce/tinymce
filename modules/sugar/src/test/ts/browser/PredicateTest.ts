@@ -1,6 +1,8 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+import { HTMLLIElement, HTMLSpanElement, Text } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
+import Element from 'ephox/sugar/api/node/Element';
 import * as Node from 'ephox/sugar/api/node/Node';
 import * as PredicateExists from 'ephox/sugar/api/search/PredicateExists';
 import * as PredicateFilter from 'ephox/sugar/api/search/PredicateFilter';
@@ -8,24 +10,24 @@ import * as PredicateFind from 'ephox/sugar/api/search/PredicateFind';
 import * as Checkers from 'ephox/sugar/test/Checkers';
 import * as TestPage from 'ephox/sugar/test/TestPage';
 
-UnitTest.test('PredicateTest', function () {
+UnitTest.test('PredicateTest', () => {
   TestPage.connect(); // description of structure is in TestPage
 
   Checkers.checkOpt(Option.some(TestPage.p1), PredicateFind.first(Checkers.isName('p')));
 
-  Checkers.checkOpt(Option.none(), PredicateFind.sibling(TestPage.t5, Node.isText));
+  Checkers.checkOpt(Option.none<Element<Text>>(), PredicateFind.sibling(TestPage.t5, Node.isText));
   Checkers.checkOpt(Option.some(TestPage.s3), PredicateFind.sibling(TestPage.s4, Checkers.isName('span')));
 
-  Checkers.checkOpt(Option.none(), PredicateFind.ancestor(TestPage.t4, Checkers.isName('li')));
+  Checkers.checkOpt(Option.none<Element<HTMLLIElement>>(), PredicateFind.ancestor(TestPage.t4, Checkers.isName('li')));
   Checkers.checkOpt(Option.some(TestPage.container), PredicateFind.ancestor(TestPage.s4, Checkers.isName('div')));
 
-  Checkers.checkOpt(Option.none(), PredicateFind.ancestor(TestPage.s2, Checkers.isName('span')));
+  Checkers.checkOpt(Option.none<Element<HTMLSpanElement>>(), PredicateFind.ancestor(TestPage.s2, Checkers.isName('span')));
   Checkers.checkOpt(Option.some(TestPage.s2), PredicateFind.closest(TestPage.s2, Checkers.isName('span')));
 
   Checkers.checkOpt(Option.some(TestPage.s2), PredicateFind.descendant(TestPage.p2, Checkers.isName('span')));
   Checkers.checkOpt(Option.some(TestPage.t4), PredicateFind.descendant(TestPage.p2, Node.isText));
 
-  Checkers.checkOpt(Option.none(), PredicateFind.child(TestPage.p2, Node.isText));
+  Checkers.checkOpt(Option.none<Element<Text>>(), PredicateFind.child(TestPage.p2, Node.isText));
   Checkers.checkOpt(Option.some(TestPage.t4), PredicateFind.child(TestPage.s3, Node.isText));
 
   Checkers.checkList([ TestPage.p1, TestPage.p3, TestPage.p2 ], PredicateFilter.all(Checkers.isName('p')));

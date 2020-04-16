@@ -122,8 +122,9 @@ const nu = function <E> (defaultLang: string): LanguageZones<E> {
 //    (regardless of 'classic'/iframe or 'inline'/div mode).
 // Note: there may be descendant elements with a different language
 const calculate = function <E, D> (universe: Universe<E, D>, item: E) {
-  return universe.up().closest(item, '[lang]', Fun.constant(false)).map(function (el) {
-    return universe.attrs().get(el, 'lang');
+  return universe.up().closest(item, '[lang]', Fun.constant(false)).bind(function (el) {
+    const lang = universe.attrs().get(el, 'lang');
+    return lang === undefined ? Option.none<string>() : Option.some(lang);
   });
 };
 

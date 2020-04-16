@@ -1,4 +1,7 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Node as DomNode } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
+import { KAssert } from '@ephox/katamari-assertions';
 import * as Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
@@ -8,10 +11,22 @@ import * as Node from 'ephox/sugar/api/node/Node';
 import * as Attr from 'ephox/sugar/api/properties/Attr';
 import * as Html from 'ephox/sugar/api/properties/Html';
 import * as ElementAddress from 'ephox/sugar/api/search/ElementAddress';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
-import { KAssert } from '@ephox/katamari-assertions';
 
-UnitTest.test('ElementAddressTest', function () {
+interface TestParentSpec {
+  parent: string;
+  children: string[];
+  element: string;
+  index: number;
+}
+
+interface TestAncestorSpec {
+  ancestor: string;
+  descendants: string[];
+  element: string;
+  index: number;
+}
+
+UnitTest.test('ElementAddressTest', () => {
   const page = Element.fromHtml(
     '<div>' +
       '<p id="p1">This is a paragraph <span id="s1">word</span> and another <span id="s2">word</span> and another <span id="s3">word</span> and more</p>' +
@@ -51,14 +66,20 @@ UnitTest.test('ElementAddressTest', function () {
 
   Insert.append(Body.body(), page);
 
-  const checkChild = function (expected, path) {
+  const checkChild = (expected: string, path: number[]) => {
     const element = Hierarchy.follow(page, path).getOrDie('Could not find path: ' + path.join(','));
     const actual = ElementAddress.childOf(element, page).getOrDie('Expected to find in line to ancestor');
     Assert.eq('eq', expected, toStr(actual));
   };
 
-  const toStr = function (element) {
-    if (Attr.has(element, 'id')) { return Node.name(element) + '#' + Attr.get(element, 'id'); } else if (Node.name(element) === 'td' || Node.name(element) === 'th') { return Html.getOuter(element); } else { return Node.name(element); }
+  const toStr = (element: Element<DomNode>) => {
+    if (Node.isElement(element) && Attr.has(element, 'id')) {
+      return Node.name(element) + '#' + Attr.get(element, 'id');
+    } else if (Node.name(element) === 'td' || Node.name(element) === 'th') {
+      return Html.getOuter(element);
+    } else {
+      return Node.name(element);
+    }
   };
 
   // page > table > thead > tr > th
@@ -72,7 +93,7 @@ UnitTest.test('ElementAddressTest', function () {
   // page > p > span > word
   checkChild('p#p1', [ 0, 1, 0 ]);
 
-  const checkInParentOfSelector = function (expected, startPath, selector) {
+  const checkInParentOfSelector = (expected: TestParentSpec, startPath: number[], selector: string) => {
     const element = Hierarchy.follow(page, startPath).getOrDie('Could not find: ' + startPath);
     const actual = ElementAddress.selectorsInParent(element, selector).getOrDie('None for inParent');
     Assert.eq('eq', expected.parent, toStr(actual.parent()));
@@ -81,7 +102,7 @@ UnitTest.test('ElementAddressTest', function () {
     Assert.eq('eq', expected.index, actual.index());
   };
 
-  const checkInParentOfAny = function (expected, startPath) {
+  const checkInParentOfAny = (expected: TestParentSpec, startPath: number[]) => {
     const element = Hierarchy.follow(page, startPath).getOrDie('Could not find: ' + startPath);
     const actual = ElementAddress.indexInParent(element).getOrDie('None for inParent');
     Assert.eq('eq', expected.parent, toStr(actual.parent()));
@@ -90,7 +111,7 @@ UnitTest.test('ElementAddressTest', function () {
     Assert.eq('eq', expected.index, actual.index());
   };
 
-  const checkNoneInParentOfSelector = function (startPath, ancestorSelector) {
+  const checkNoneInParentOfSelector = (startPath: number[], ancestorSelector: string) => {
     const element = Hierarchy.follow(page, startPath).getOrDie('Could not find: ' + startPath);
     const actual = ElementAddress.selectorsInParent(element, ancestorSelector);
     KAssert.eqNone('should be none', actual);
@@ -140,7 +161,7 @@ UnitTest.test('ElementAddressTest', function () {
     [ 0, 3 ]
   );
 
-  const checkInAncestorOfSelector = function (expected, startPath, ancestorSelector, descendantSelector) {
+  const checkInAncestorOfSelector = (expected: TestAncestorSpec, startPath: number[], ancestorSelector: string, descendantSelector: string) => {
     const element = Hierarchy.follow(page, startPath).getOrDie('Could not find: ' + startPath);
     const actual = ElementAddress.descendantsInAncestor(element, ancestorSelector, descendantSelector).getOrDie('None for inAncestor');
     Assert.eq('eq', expected.ancestor, toStr(actual.ancestor()));
@@ -149,7 +170,7 @@ UnitTest.test('ElementAddressTest', function () {
     Assert.eq('eq', expected.index, actual.index());
   };
 
-  const checkNoneInAncestorOfSelector = function (startPath, ancestorSelector, descendantSelector) {
+  const checkNoneInAncestorOfSelector = (startPath: number[], ancestorSelector: string, descendantSelector: string) => {
     const element = Hierarchy.follow(page, startPath).getOrDie('Could not find: ' + startPath);
     const actual = ElementAddress.descendantsInAncestor(element, ancestorSelector, descendantSelector);
     KAssert.eqNone('should be none', actual);
@@ -189,7 +210,7 @@ UnitTest.test('ElementAddressTest', function () {
     [ 1, 1, 0, 2 ], 'thead', 'th'
   );
 
-  (function () {
+  (() => {
     const alpha = Element.fromTag('div');
     const beta = Element.fromTag('div');
     const gamma = Element.fromTag('div');

@@ -196,7 +196,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog-title'), 'title'),
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog'), 'dialog'),
           NamedChain.bundle((f) => {
-            const titleId = Attr.get(f.title, 'id');
+            const titleId = Attr.get(f.title, 'id') || '';
             Assertions.assertEq('titleId should be set', true, Attr.has(f.title, 'id'));
             Assertions.assertEq('titleId should not be empty', true, titleId.length > 0);
             const dialogLabelledBy = Attr.get(f.dialog, 'aria-labelledby');
@@ -211,7 +211,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog-body'), 'body'),
           NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('.test-dialog'), 'dialog'),
           NamedChain.bundle((f) => {
-            const describeId = Attr.get(f.body, 'id');
+            const describeId = Attr.get(f.body, 'id') || '';
             Assertions.assertEq('describeId should be set', true, Attr.has(f.body, 'id'));
             Assertions.assertEq('describeId should not be empty', true, describeId.length > 0);
             const dialogDescribedBy = Attr.get(f.dialog, 'aria-describedby');

@@ -37,16 +37,18 @@ const disableTransition = (comp: AlloyComponent, transConfig: TransitioningConfi
 };
 
 const getNewRoute = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, destination: string): TransitionRoute => ({
-  start: Attr.get(comp.element(), transConfig.stateAttr),
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  start: Attr.get(comp.element(), transConfig.stateAttr)!,
   destination
 });
 
 const getCurrentRoute = (comp: AlloyComponent, transConfig: TransitioningConfig, _transState: Stateless): Option<TransitionRoute> => {
   const el = comp.element();
-  return Attr.has(el, transConfig.destinationAttr) ? Option.some({
-    start: Attr.get(comp.element(), transConfig.stateAttr),
-    destination: Attr.get(comp.element(), transConfig.destinationAttr)
-  }) : Option.none();
+  return Attr.getOpt(el, transConfig.destinationAttr).map((destination) => ({
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    start: Attr.get(comp.element(), transConfig.stateAttr)!,
+    destination
+  }));
 };
 
 const jumpTo = (comp: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, destination: string): void => {
@@ -59,7 +61,9 @@ const jumpTo = (comp: AlloyComponent, transConfig: TransitioningConfig, transSta
 
 const fasttrack = (comp: AlloyComponent, transConfig: TransitioningConfig, _transState: Stateless, _destination: string) => {
   if (Attr.has(comp.element(), transConfig.destinationAttr)) {
-    Attr.set(comp.element(), transConfig.stateAttr, Attr.get(comp.element(), transConfig.destinationAttr));
+    Attr.getOpt(comp.element(), transConfig.destinationAttr).each((destination) => {
+      Attr.set(comp.element(), transConfig.stateAttr, destination);
+    });
     Attr.remove(comp.element(), transConfig.destinationAttr);
   }
 };
@@ -77,12 +81,8 @@ const progressTo = (comp: AlloyComponent, transConfig: TransitioningConfig, tran
   });
 };
 
-const getState = (comp: AlloyComponent, transConfig: TransitioningConfig, _transState: Stateless): Option<string> => {
-  const e = comp.element();
-  return Attr.has(e, transConfig.stateAttr) ? Option.some(
-    Attr.get(e, transConfig.stateAttr)
-  ) : Option.none();
-};
+const getState = (comp: AlloyComponent, transConfig: TransitioningConfig, _transState: Stateless): Option<string> =>
+  Attr.getOpt(comp.element(), transConfig.stateAttr);
 
 export {
   findRoute,

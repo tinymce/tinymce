@@ -1,22 +1,21 @@
-import { Arr } from '@ephox/katamari';
-import * as Attr from 'ephox/sugar/api/properties/Attr';
-import Element from 'ephox/sugar/api/node/Element';
-import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
-import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { document, Element as DomElement, window } from '@ephox/dom-globals';
+import { document, Element as DomElement, Node as DomNode, window } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
+import Element from 'ephox/sugar/api/node/Element';
+import * as Node from 'ephox/sugar/api/node/Node';
+import * as Attr from 'ephox/sugar/api/properties/Attr';
+import * as Traverse from 'ephox/sugar/api/search/Traverse';
 
-UnitTest.test('TraverseTest', function () {
-  const node = function (name) {
+UnitTest.test('TraverseTest', () => {
+  const node = (name: string) => {
     const div = Element.fromTag('div');
     Attr.set(div, 'name', name);
     return div;
   };
 
-  const textNode = function (text) {
-    return Element.fromText(text);
-  };
+  const textNode = (text: string) => Element.fromText(text);
 
   const grandparent = node('grandparent');
   const uncle = node('uncle');
@@ -29,11 +28,11 @@ UnitTest.test('TraverseTest', function () {
   InsertAll.append(grandparent, [ uncle, mother ]);
   InsertAll.append(mother, [ youngest, middle, oldest ]);
 
-  const checkNone = function (subject) {
+  const checkNone = (subject: Element<DomElement>) => {
     KAssert.eqNone(() => 'Expected "' + Attr.get(subject, 'name') + '" not to have a parent.', Traverse.findIndex(subject));
   };
 
-  const checkIndex = function (expected: number, subject: Element<DomElement>) {
+  const checkIndex = (expected: number, subject: Element<DomElement>) => {
     const actual = Traverse.findIndex(subject);
     KAssert.eqSome('eq', expected, actual);
   };
@@ -45,10 +44,10 @@ UnitTest.test('TraverseTest', function () {
   checkIndex(1, middle);
   checkIndex(2, oldest);
 
-  const checkSiblings = function (expected, subject, direction) {
+  const checkSiblings = (expected: Element<DomElement>[], subject: Element<DomElement>, direction: (element: Element<DomElement>) => Element<DomNode>[]) => {
     const actual = direction(subject);
 
-    const getName = function (e) { return Attr.get(e, 'name'); };
+    const getName = (e: Element<DomNode>) => Node.isElement(e) ? Attr.get(e, 'name') : '';
 
     Assert.eq('eq',
       Arr.map(expected, getName),

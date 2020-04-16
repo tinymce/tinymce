@@ -1,16 +1,19 @@
-import * as Attr from 'ephox/sugar/api/properties/Attr';
-import Element from 'ephox/sugar/api/node/Element';
-import Div from 'ephox/sugar/test/Div';
-import { UnitTest, Assert } from '@ephox/bedrock-client';
-import { Node, Comment, HTMLDivElement, HTMLSpanElement } from '@ephox/dom-globals';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Comment, HTMLDivElement, HTMLSpanElement, Node as DomNode } from '@ephox/dom-globals';
 import { KAssert } from '@ephox/katamari-assertions';
+import Element from 'ephox/sugar/api/node/Element';
+import * as Attr from 'ephox/sugar/api/properties/Attr';
+import Div from 'ephox/sugar/test/Div';
 
-UnitTest.test('AttrTest', function () {
+type AttrFn<K, V> = (element: Element<any>, k: K, v: V) => void;
+type InvalidValue<V> = V | null | undefined | {};
+
+UnitTest.test('AttrTest', () => {
   const c = Div();
 
-  const checkErr = function (f, element, k, v?) {
+  const checkErr = <K, V>(f: AttrFn<K, V>, element: Element, k: K, v?: InvalidValue<V>) => {
     try {
-      f(element, k, v);
+      f(element, k, v as V);
     } catch (e) {
       // expected
       return;
@@ -18,7 +21,7 @@ UnitTest.test('AttrTest', function () {
     Assert.fail('function did not throw an error');
   };
 
-  const checkTypeErr = function (e) {
+  const checkTypeErr = (e: Element<DomNode>) => {
     checkErr(Attr.get, e, 'id');
     checkErr(Attr.set, e, 'id', '');
     checkErr(Attr.setAll, e, { id: '' });
@@ -28,7 +31,7 @@ UnitTest.test('AttrTest', function () {
     Assert.eq('does not have key', false, Attr.has(e, 'id'));
   };
 
-  const check = function (k, v1, v2) {
+  const check = (k: string, v1: string, v2: string) => {
     Assert.eq('has', false, Attr.has(c, k));
     Assert.eq('get', undefined, Attr.get(c, k));
     KAssert.eqNone('getOpt', Attr.getOpt(c, k));
@@ -57,7 +60,7 @@ UnitTest.test('AttrTest', function () {
   // passing things that don't have attributes
   checkTypeErr(Element.fromText(''));
   checkTypeErr(Element.fromHtml<Comment>('<!--a-->'));
-  checkTypeErr(Element.fromDom({} as Node));
+  checkTypeErr(Element.fromDom({} as DomNode));
 
   check('name', 'black', 'blue');
 

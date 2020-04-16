@@ -1,7 +1,7 @@
 import { Objects } from '@ephox/boulder';
+import { Touch, TouchEvent } from '@ephox/dom-globals';
 import { Cell, Obj, Option } from '@ephox/katamari';
 import { Compare, Element, EventArgs } from '@ephox/sugar';
-import { Touch, TouchEvent } from '@ephox/dom-globals';
 
 import DelayedFunction from '../alien/DelayedFunction';
 import * as NativeEvents from '../api/events/NativeEvents';
@@ -45,7 +45,7 @@ const monitor = (settings: GuiEventSettings) => {
     longpressFired.set(true);
   }, LONGPRESS_DELAY);
 
-  const handleTouchstart = (event: EventArgs): Option<boolean> => {
+  const handleTouchstart = (event: EventArgs<TouchEvent>): Option<boolean> => {
     getTouch(event).each((touch) => {
       longpress.cancel();
 
@@ -62,7 +62,7 @@ const monitor = (settings: GuiEventSettings) => {
     return Option.none();
   };
 
-  const handleTouchmove = (event: EventArgs): Option<boolean> => {
+  const handleTouchmove = (event: EventArgs<TouchEvent>): Option<boolean> => {
     longpress.cancel();
     getTouch(event).each((touch) => {
       startData.get().each((data) => {

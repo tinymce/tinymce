@@ -1,14 +1,19 @@
-import { Option } from '@ephox/katamari';
-import { Attr, Position } from '@ephox/sugar';
+import { Option, Type } from '@ephox/katamari';
+import { Attr, Element, Position } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SnapsConfig } from '../common/DraggingTypes';
 
+const parseAttrToInt = (element: Element, name: string): number => {
+  const value = Attr.get(element, name);
+  return Type.isUndefined(value) ? NaN : parseInt(value, 10);
+};
+
 // NOTE: Moved from ego with some parameterisation
 const get = <E>(component: AlloyComponent, snapsInfo: SnapsConfig<E>): Option<Position> => {
   const element = component.element();
-  const x = parseInt(Attr.get(element, snapsInfo.leftAttr), 10);
-  const y = parseInt(Attr.get(element, snapsInfo.topAttr), 10);
+  const x = parseAttrToInt(element, snapsInfo.leftAttr);
+  const y = parseAttrToInt(element, snapsInfo.topAttr);
   return isNaN(x) || isNaN(y) ? Option.none() : Option.some(
     Position(x, y)
   );

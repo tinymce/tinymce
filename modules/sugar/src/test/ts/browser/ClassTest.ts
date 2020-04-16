@@ -1,16 +1,16 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import Element from 'ephox/sugar/api/node/Element';
 import * as Attr from 'ephox/sugar/api/properties/Attr';
 import * as Class from 'ephox/sugar/api/properties/Class';
 import * as Classes from 'ephox/sugar/api/properties/Classes';
-import Element from 'ephox/sugar/api/node/Element';
 import Div from 'ephox/sugar/test/Div';
 import MathElement from 'ephox/sugar/test/MathElement';
-import { UnitTest, assert } from '@ephox/bedrock-client';
 
-UnitTest.test('ClassTest', function () {
+UnitTest.test('ClassTest', () => {
   const c = Div();
   const m = MathElement();
 
-  const check = function (blob, spot, mogel, t) {
+  const check = (blob: boolean, spot: boolean, mogel: boolean, t: boolean) => {
     assert.eq(blob, Class.has(c, 'blob'));
     assert.eq(spot, Class.has(c, 'spot'));
     assert.eq(mogel, Class.has(c, 'mogel'));

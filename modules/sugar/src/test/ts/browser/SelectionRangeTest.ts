@@ -1,3 +1,5 @@
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { window } from '@ephox/dom-globals';
 import { PlatformDetection } from '@ephox/sand';
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
@@ -11,10 +13,19 @@ import * as Html from 'ephox/sugar/api/properties/Html';
 import { Selection } from 'ephox/sugar/api/selection/Selection';
 import { Situ } from 'ephox/sugar/api/selection/Situ';
 import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
-import { UnitTest, assert } from '@ephox/bedrock-client';
-import { window } from '@ephox/dom-globals';
 
-UnitTest.test('WindowSelectionTest', function () {
+interface VariantRange {
+  start: number[];
+  soffset: number;
+  finish: number[];
+  foffset: number;
+}
+interface Variants {
+  fallback: VariantRange;
+  [key: string]: VariantRange;
+}
+
+UnitTest.test('WindowSelectionTest', () => {
   const container = Element.fromTag('div');
   Class.add(container, 'window-selection-test');
   Attr.set(container, 'contenteditable', 'true');
@@ -24,13 +35,11 @@ UnitTest.test('WindowSelectionTest', function () {
 
   Html.set(container, '<p>This <strong>world</strong> is not <strong>w<em>ha</em>t</strong> I<br><br>wanted</p><p><br>And even more</p>');
 
-  const find = function (path) {
-    return Hierarchy.follow(container, path).getOrDie('invalid path');
-  };
+  const find = (path: number[]) => Hierarchy.follow(container, path).getOrDie('invalid path');
 
   const detection = PlatformDetection.detect();
 
-  const detector = function (variants) {
+  const detector = (variants: Variants): VariantRange => {
     if (detection.browser.isFirefox() && variants.firefox !== undefined) {
       return variants.firefox;
     } else if (detection.browser.isSafari() && variants.safari !== undefined) {
@@ -42,11 +51,11 @@ UnitTest.test('WindowSelectionTest', function () {
     } else if (detection.browser.isEdge() && variants.spartan !== undefined) {
       return variants.spartan;
     } else {
-      return variants.fallback !== undefined ? variants.fallback : variants;
+      return variants.fallback;
     }
   };
 
-  const checkSelection = function (label, variants, start, finish) {
+  const checkSelection = (label: string, variants: Variants, start: Situ, finish: Situ) => {
     const expected = detector(variants);
     WindowSelection.setRelative(window, start, finish);
     const actual = WindowSelection.getExact(window).getOrDie('No selection after selection');
@@ -59,13 +68,13 @@ UnitTest.test('WindowSelectionTest', function () {
     assert.eq(expected.foffset, actual.foffset());
   };
 
-  const checkUniCodeSelection = function (content) {
+  const checkUniCodeSelection = (content: string) => {
     Remove.empty(container);
     Html.set(container, content);
     return checkSelection;
   };
 
-  const checkStringAt = function (label, expectedStr, start, finish) {
+  const checkStringAt = (label: string, expectedStr: string, start: Situ, finish: Situ) => {
     // dont need to set a selection range, just extract the Situ.on() element/offset pair
     const actual = WindowSelection.getAsString(window, Selection.relative(start, finish));
     assert.eq(expectedStr, actual, 'Actual was not expected [' + expectedStr + '|' + actual + ']');

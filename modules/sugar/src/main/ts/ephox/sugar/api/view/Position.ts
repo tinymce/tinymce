@@ -6,10 +6,8 @@ export interface Position {
   readonly translate: (x: number, y: number) => Position;
 }
 
-const r = function (left: number, top: number): Position {
-  const translate = function (x: number, y: number): Position {
-    return r(left + x, top + y);
-  };
+const r = (left: number, top: number): Position => {
+  const translate = (x: number, y: number): Position => r(left + x, top + y);
 
   return {
     left: Fun.constant(left),
