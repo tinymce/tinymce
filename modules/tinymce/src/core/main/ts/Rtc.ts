@@ -38,7 +38,7 @@ interface RtcRuntimeApi {
   hasRedo: () => boolean;
   transact: (fn: () => void) => void;
   applyFormat: (format: string, vars: Record<string, string>) => void;
-  removeFormat: (format: string, vars: Record<string, string>, similar?: boolean) => void;
+  removeFormat: (format: string, vars: Record<string, string>) => void;
   toggleFormat: (format: string, vars: Record<string, string>) => void;
   getContent: () => Node | null;
   setContent: (node: Node) => void;
@@ -168,7 +168,7 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
     },
     formatter: {
       apply: (name, vars, _node) => rtcEditor.applyFormat(name, defaultVars(vars)),
-      remove: (name, vars, _node, similar) => rtcEditor.removeFormat(name, defaultVars(vars), similar),
+      remove: (name, vars, _node, _similar?) => rtcEditor.removeFormat(name, defaultVars(vars)),
       toggle: (name, vars, _node) => rtcEditor.toggleFormat(name, defaultVars(vars)),
     },
     editor: {
