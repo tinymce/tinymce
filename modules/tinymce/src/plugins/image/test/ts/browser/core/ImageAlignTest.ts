@@ -15,27 +15,25 @@ const figureImageApproxStructure = (alignment: Alignment) => {
     justify: arr.not('align-justify')
   });
 
-  return ApproxStructure.build((s, str, arr) => {
-    return s.element('body', {
-      children: [
-        s.element('figure', {
-          classes: [
-            arr.has('image'),
-            alignClasses(arr)[alignment]
-          ],
-          children: [
-            s.element('img', {
-              attrs: {
-                src: str.is('image.png'),
-              }
-            }),
-            s.theRest()
-          ]
-        }),
-        s.theRest()
-      ]
-    });
-  });
+  return ApproxStructure.build((s, str, arr) => s.element('body', {
+    children: [
+      s.element('figure', {
+        classes: [
+          arr.has('image'),
+          alignClasses(arr)[alignment]
+        ],
+        children: [
+          s.element('img', {
+            attrs: {
+              src: str.is('image.png'),
+            }
+          }),
+          s.theRest()
+        ]
+      }),
+      s.theRest()
+    ]
+  }));
 };
 
 const imageApproxStructure = (alignment: Alignment) => {
@@ -46,24 +44,22 @@ const imageApproxStructure = (alignment: Alignment) => {
     justify: {}
   });
 
-  return ApproxStructure.build((s, str) => {
-    return s.element('body', {
-      children: [
-        s.element('p', {
-          styles: alignment === 'justify' ? { 'text-align': str.is('justify') } : {},
-          children: [
-            s.element('img', {
-              attrs: {
-                src: str.is('image.png'),
-              },
-              styles: alignStyles(str)[alignment]
-            }),
-          ]
-        }),
-        s.theRest()
-      ]
-    });
-  });
+  return ApproxStructure.build((s, str) => s.element('body', {
+    children: [
+      s.element('p', {
+        styles: alignment === 'justify' ? { 'text-align': str.is('justify') } : {},
+        children: [
+          s.element('img', {
+            attrs: {
+              src: str.is('image.png'),
+            },
+            styles: alignStyles(str)[alignment]
+          }),
+        ]
+      }),
+      s.theRest()
+    ]
+  }));
 };
 
 UnitTest.asynctest('browser.tinymce.plugins.image.ImageAlignTest', (success, failure) => {
@@ -120,18 +116,16 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageAlignTest', (success, fai
     };
 
     const sTestConsecutiveAlignments = (label: string, sAlignImage: (alignment: Alignment) => Step<unknown, unknown>, alignments: Alignment[]) => {
-      const alignmentSteps = (isFigure: boolean) => Arr.map(alignments, (alignment) => {
-        return Log.stepsAsStep('TINY-4057', `Apply ${alignment} alignment to ${isFigure ? 'figure' : ''} image`, [
-          sAlignImage(alignment),
-          sCheckToolbarHighlighting(alignment, isFigure),
-          tinyApis.sAssertContentStructure(isFigure ? figureImageApproxStructure(alignment) : imageApproxStructure(alignment))
-        ]);
-      });
+      const alignmentSteps = (isFigure: boolean) => Arr.map(alignments, (alignment) => Log.stepsAsStep('TINY-4057', `Apply ${alignment} alignment to ${isFigure ? 'figure' : ''} image`, [
+        sAlignImage(alignment),
+        sCheckToolbarHighlighting(alignment, isFigure),
+        tinyApis.sAssertContentStructure(isFigure ? figureImageApproxStructure(alignment) : imageApproxStructure(alignment))
+      ]));
 
       return Log.stepsAsStep('TINY-4057', label, [
         tinyApis.sFocus(),
         tinyApis.sSetContent('<p><img src="image.png" /></p>'),
-        tinyApis.sSetSelection([0], 0, [0], 1),
+        tinyApis.sSetSelection([ 0 ], 0, [ 0 ], 1),
         ...alignmentSteps(false),
         tinyApis.sFocus(),
         tinyApis.sSetContent('<figure class="image"><img src="image.png" /><figcaption>Caption</figcaption></figure>'),
@@ -142,13 +136,13 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageAlignTest', (success, fai
 
     const sTestImageAlignment = (alignmentType: 'toolbar' | 'menu', sAlignImage: (alignment: Alignment) => Step<unknown, unknown>) =>
       Log.stepsAsStep('TINY-4057', `Testing image alignment using the ${alignmentType}`, [
-        sTestConsecutiveAlignments('Align: left -> center -> left', sAlignImage, ['left', 'center', 'left']),
-        sTestConsecutiveAlignments('Align: left -> right -> left', sAlignImage, ['left', 'right', 'left']),
-        sTestConsecutiveAlignments('Align: left -> justify -> left', sAlignImage, ['left', 'justify', 'left']),
-        sTestConsecutiveAlignments('Align: right -> center -> right', sAlignImage, ['right', 'center', 'right']),
-        sTestConsecutiveAlignments('Align: right -> justify -> right', sAlignImage, ['right', 'justify', 'right']),
-        sTestConsecutiveAlignments('Align: center -> justify -> center', sAlignImage, ['center', 'justify', 'center']),
-        sTestConsecutiveAlignments('Align: left -> center -> right -> justify', sAlignImage, ['left', 'center', 'right', 'justify'])
+        sTestConsecutiveAlignments('Align: left -> center -> left', sAlignImage, [ 'left', 'center', 'left' ]),
+        sTestConsecutiveAlignments('Align: left -> right -> left', sAlignImage, [ 'left', 'right', 'left' ]),
+        sTestConsecutiveAlignments('Align: left -> justify -> left', sAlignImage, [ 'left', 'justify', 'left' ]),
+        sTestConsecutiveAlignments('Align: right -> center -> right', sAlignImage, [ 'right', 'center', 'right' ]),
+        sTestConsecutiveAlignments('Align: right -> justify -> right', sAlignImage, [ 'right', 'justify', 'right' ]),
+        sTestConsecutiveAlignments('Align: center -> justify -> center', sAlignImage, [ 'center', 'justify', 'center' ]),
+        sTestConsecutiveAlignments('Align: left -> center -> right -> justify', sAlignImage, [ 'left', 'center', 'right', 'justify' ])
       ]);
 
     Pipeline.async({}, [
