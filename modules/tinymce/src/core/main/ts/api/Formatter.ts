@@ -13,10 +13,10 @@ import { FormatRegistry } from '../fmt/FormatRegistry';
 import * as MatchFormat from '../fmt/MatchFormat';
 import * as Preview from '../fmt/Preview';
 import * as FormatShortcuts from '../keyboard/FormatShortcuts';
-import { Format, FormatVars } from './fmt/Format';
+import * as Rtc from '../Rtc';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import Editor from './Editor';
-import * as Rtc from '../Rtc';
+import { Format, FormatVars } from './fmt/Format';
 
 /**
  * Text formatter engine class. This class is used to apply formats like bold, italic, font size
@@ -109,8 +109,8 @@ const Formatter = function (editor: Editor): Formatter {
      * @param {Object} vars Optional list of variables to replace within format before removing it.
      * @param {Node/Range} node Optional node or DOM range to remove the format from defaults to current selection.
      */
-    remove: (name, vars?, node?) => {
-      Rtc.removeFormat(editor, name, vars, node);
+    remove: (name, vars?, node?, similar?) => {
+      Rtc.removeFormat(editor, name, vars, node, similar);
     },
 
     /**

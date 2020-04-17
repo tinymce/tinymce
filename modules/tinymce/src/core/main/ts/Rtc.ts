@@ -8,21 +8,21 @@
 import { Event, Node as DomNode, Range } from '@ephox/dom-globals';
 import { Fun, Obj, Option, Type } from '@ephox/katamari';
 import Editor from './api/Editor';
+import Formatter from './api/Formatter';
 import Node from './api/html/Node';
 import Serializer from './api/html/Serializer';
-import * as FilterNode from './html/FilterNode';
-import * as Operations from './undo/Operations';
-import { Index, Locks, UndoBookmark, UndoLevel, UndoLevelType, UndoManager } from './undo/UndoManagerTypes';
+import { Content } from './content/EditorContent';
+import { ContentFormat, GetContentArgs, getContentInternal } from './content/GetContentImpl';
+import { insertHtmlAtCaret } from './content/InsertContentImpl';
+import { SetContentArgs, setContentInternal } from './content/SetContentImpl';
 import * as ApplyFormat from './fmt/ApplyFormat';
 import * as RemoveFormat from './fmt/RemoveFormat';
 import * as ToggleFormat from './fmt/ToggleFormat';
-import { RangeLikeObject } from './selection/RangeTypes';
-import { Content } from './content/EditorContent';
-import { GetContentArgs, ContentFormat, getContentInternal } from './content/GetContentImpl';
-import { SetContentArgs, setContentInternal } from './content/SetContentImpl';
-import { insertHtmlAtCaret } from './content/InsertContentImpl';
+import * as FilterNode from './html/FilterNode';
 import { getSelectedContentInternal } from './selection/GetSelectionContentImpl';
-import Formatter from './api/Formatter';
+import { RangeLikeObject } from './selection/RangeTypes';
+import * as Operations from './undo/Operations';
+import { Index, Locks, UndoBookmark, UndoLevel, UndoLevelType, UndoManager } from './undo/UndoManagerTypes';
 
 const isTreeNode = (content: any): content is Node => content instanceof Node;
 
@@ -123,7 +123,7 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
   },
   formatter: {
     apply: (name, vars?, node?) => ApplyFormat.applyFormat(editor, name, vars, node),
-    remove: (name, vars, node) => RemoveFormat.remove(editor, name, vars, node),
+    remove: (name, vars, node, similar?) => RemoveFormat.remove(editor, name, vars, node, similar),
     toggle: (name, vars, node) => ToggleFormat.toggle(editor, name, vars, node),
   },
   editor: {
@@ -168,7 +168,7 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
     },
     formatter: {
       apply: (name, vars, _node) => rtcEditor.applyFormat(name, defaultVars(vars)),
-      remove: (name, vars, _node) => rtcEditor.removeFormat(name, defaultVars(vars)),
+      remove: (name, vars, _node, _similar?) => rtcEditor.removeFormat(name, defaultVars(vars)),
       toggle: (name, vars, _node) => rtcEditor.toggleFormat(name, defaultVars(vars)),
     },
     editor: {
@@ -309,8 +309,8 @@ export const applyFormat = (
   getRtcInstanceWithError(editor).formatter.apply(name, vars, node);
 };
 
-export const removeFormat = (editor: Editor, name: string, vars?: Record<string, string>, node?: DomNode | Range) => {
-  getRtcInstanceWithError(editor).formatter.remove(name, vars, node);
+export const removeFormat = (editor: Editor, name: string, vars?: Record<string, string>, node?: DomNode | Range, similar?: boolean) => {
+  getRtcInstanceWithError(editor).formatter.remove(name, vars, node, similar);
 };
 
 export const toggleFormat = (editor: Editor, name: string, vars: Record<string, string>, node: DomNode): void => {
