@@ -50,7 +50,7 @@ UnitTest.asynctest('Inline editor Context Toolbar Lookup test', (success, failur
           sResetNames(),
           tinyApis.sSetCursor([ 0, 0, 0 ], 1),
           UiFinder.sWaitForVisible('Waiting for node toolbar to appear', Body.body(), '.tox-tbtn:contains(Node)'),
-          sAssertNames([ 'a' ], [], [])
+          sAssertNames([ 'a' ], [ 'a' ], [ 'a' ])
         ]),
 
         Log.stepsAsStep('TINY-4571', 'Context toolbar parent node scope lookup', [

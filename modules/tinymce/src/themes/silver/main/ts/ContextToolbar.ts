@@ -5,15 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView, Keying, Layout, LayoutInside, MaxHeight, MaxWidth, Positioning } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView, Keying, Layout, LayoutInside, MaxHeight, MaxWidth, Positioning } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Element as DomElement } from '@ephox/dom-globals';
-import { Cell, Id, Merger, Obj, Option, Thunk } from '@ephox/katamari';
+import { Arr, Cell, Id, Merger, Obj, Option, Thunk } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, Element, Focus, Scroll } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { getToolbarMode, ToolbarMode } from './api/Settings';
+import { UiFactoryBackstage, UiFactoryBackstageProviders } from './backstage/Backstage';
 import { hideContextToolbarEvent, showContextToolbarEvent } from './ui/context/ContextEditorEvents';
 import { ContextForm } from './ui/context/ContextForm';
 import { getContextToolbarBounds } from './ui/context/ContextToolbarBounds';
@@ -24,6 +25,12 @@ import { renderToolbar } from './ui/toolbar/CommonToolbar';
 import { identifyButtons } from './ui/toolbar/Integration';
 
 type ScopedToolbars = ToolbarScopes.ScopedToolbars;
+
+export type ContextTypes = Toolbar.ContextToolbar | Toolbar.ContextForm;
+
+interface Extras {
+  backstage: UiFactoryBackstage;
+}
 
 const bubbleSize = 12;
 const bubbleAlignments = {
@@ -76,7 +83,7 @@ const getAnchorLayout = (position: Toolbar.ContextToolbarPosition, isTouch: bool
   }
 };
 
-const register = (editor: Editor, registryContextToolbars, sink, extras) => {
+const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent, extras: Extras) => {
   const isTouch = PlatformDetection.detect().deviceType.isTouch;
 
   const contextbar = GuiFactory.build(
@@ -167,39 +174,46 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   });
 
   const getScopes: () => ScopedToolbars = Thunk.cached(() => ToolbarScopes.categorise(registryContextToolbars, (toolbarApi) => {
-    const alloySpec = buildToolbar(toolbarApi);
+    // ASSUMPTION: This should only ever show one context toolbar since it's used for context forms hence [toolbarApi]
+    const alloySpec = buildToolbar([ toolbarApi ]);
     AlloyTriggers.emitWith(contextbar, forwardSlideEvent, {
       forwardContents: wrapInPopDialog(alloySpec)
     });
   }));
 
-  const buildToolbar = (ctx): AlloySpec => {
+  type ContextToolbarButtonTypes = Toolbar.ToolbarButtonApi | Toolbar.ToolbarMenuButtonApi | Toolbar.ToolbarSplitButtonApi | Toolbar.ToolbarToggleButtonApi | Toolbar.GroupToolbarButtonApi;
+
+  const buildContextToolbarGroups = (allButtons: Record<string, ContextToolbarButtonTypes>, ctx: Toolbar.ContextToolbar) => identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items, allowToolbarGroups: false }, extras, Option.some([ 'form:' ]));
+
+  const buildContextMenuGroups = (ctx: Toolbar.ContextForm, providers: UiFactoryBackstageProviders) => ContextForm.buildInitGroups(ctx, providers);
+
+  const buildToolbar = (toolbars: Array<ContextTypes>): AlloySpec => {
     const { buttons } = editor.ui.registry.getAll();
+    const scopes = getScopes();
+    const allButtons: Record<string, ContextToolbarButtonTypes> = { ...buttons, ...scopes.formNavigators };
 
     // For context toolbars we don't want to use floating or sliding, so just restrict this
     // to scrolling or wrapping (default)
     const toolbarType = getToolbarMode(editor) === ToolbarMode.scrolling ? ToolbarMode.scrolling : ToolbarMode.default;
 
-    const scopes = getScopes();
-    return ctx.type === 'contexttoolbar' ? (() => {
-      const allButtons = { ...buttons, ...scopes.formNavigators };
-      const initGroups = identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items, allowToolbarGroups: false }, extras, Option.some([ 'form:' ]));
-      return renderToolbar({
-        type: toolbarType,
-        uid: Id.generate('context-toolbar'),
-        initGroups,
-        onEscape: Option.none,
-        cyclicKeying: true,
-        providers: extras.backstage.shared.providers
-      });
-    })() : (() => ContextForm.renderContextForm(toolbarType, ctx, extras.backstage.shared.providers))();
+    const initGroups = Arr.flatten(Arr.map(toolbars, (ctx) => ctx.type === 'contexttoolbar' ? buildContextToolbarGroups(allButtons, ctx) : buildContextMenuGroups(ctx, extras.backstage.shared.providers)));
+
+    return renderToolbar({
+      type: toolbarType,
+      uid: Id.generate('context-toolbar'),
+      initGroups,
+      onEscape: Option.none,
+      cyclicKeying: true,
+      providers: extras.backstage.shared.providers
+    });
   };
 
   editor.on(showContextToolbarEvent, (e) => {
     const scopes = getScopes();
     // TODO: Have this stored in a better structure
     Obj.get(scopes.lookupTable, e.toolbarKey).each((ctx) => {
-      launchContext(ctx, e.target === editor ? Option.none() : Option.some(e as DomElement));
+      // ASSUMPTION: this is only used to open one specific toolbar at a time, hence [ctx]
+      launchContext([ ctx ], e.target === editor ? Option.none() : Option.some(e as DomElement));
       // Forms launched via this way get immediate focus
       InlineView.getContent(contextbar).each(Keying.focusIn);
     });
@@ -213,7 +227,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
     );
   };
 
-  const launchContext = (toolbarApi: Toolbar.ContextToolbar | Toolbar.ContextForm, elem: Option<DomElement>) => {
+  const launchContext = (toolbarApi: Array<ContextTypes>, elem: Option<DomElement>) => {
     clearTimer();
 
     // If a mobile context menu is open, don't launch else they'll probably overlap. For android, specifically.
@@ -223,7 +237,12 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
 
     const toolbarSpec = buildToolbar(toolbarApi);
     const sElem = elem.map(Element.fromDom);
-    const anchor = getAnchor(toolbarApi.position, sElem);
+
+    // TINY-4495 ASSUMPTION: Can only do toolbarApi[0].position because ContextToolbarLookup.filterToolbarsByPosition
+    // ensures all toolbars returned by ContextToolbarLookup have the same position.
+    // And everything else that gets toolbars from elsewhere only returns maximum 1 toolbar
+    const anchor = getAnchor(toolbarApi[0].position, sElem);
+
     lastAnchor.set(Option.some((anchor)));
     lastElement.set(elem);
     const contextBarEle = contextbar.element();
@@ -250,7 +269,7 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
       },
 
       (info) => {
-        launchContext(info.toolbarApi, Option.some(info.elem.dom()));
+        launchContext(info.toolbars, Option.some(info.elem.dom()));
       }
     );
   };
@@ -311,6 +330,5 @@ const register = (editor: Editor, registryContextToolbars, sink, extras) => {
   });
 };
 
-export {
-  register
-};
+export { register };
+
