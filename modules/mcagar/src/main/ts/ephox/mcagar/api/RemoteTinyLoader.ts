@@ -1,5 +1,5 @@
 import { TestLogs } from '@ephox/agar';
-import { Arr, FutureResult, Result } from '@ephox/katamari';
+import { Arr, FutureResult, Option, Result } from '@ephox/katamari';
 import { Attr, Body, DomEvent, Element, Insert } from '@ephox/sugar';
 import * as Loader from '../loader/Loader';
 import { setTinymceBaseUrl } from '../loader/Urls';
@@ -44,10 +44,22 @@ const setup = (callback: Loader.RunCallback, urls: string[], settings: Record<st
       run: callback,
       success,
       failure
-    }, settings);
+    }, settings, Option.none());
+  }, failure);
+};
+
+const setupFromElement = (callback: Loader.RunCallback, urls: string[], settings: Record<string, any>, element: Element, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
+  loadScripts(urls, () => {
+    Loader.setup({
+      preInit: setupBaseUrl,
+      run: callback,
+      success,
+      failure
+    }, settings, Option.some(element));
   }, failure);
 };
 
 export {
-  setup
+  setup,
+  setupFromElement
 };

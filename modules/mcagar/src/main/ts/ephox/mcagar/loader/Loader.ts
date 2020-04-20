@@ -1,7 +1,7 @@
 import { TestLogs } from '@ephox/agar';
 import { console, document, setTimeout } from '@ephox/dom-globals';
-import { Arr, Fun, Global, Id } from '@ephox/katamari';
-import { Attr, Element, Insert, Remove, SelectorFilter } from '@ephox/sugar';
+import { Arr, Fun, Global, Id, Option } from '@ephox/katamari';
+import { Attr, Body, Element, Insert, Remove, SelectorFilter } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 
 export type SuccessCallback = (v?: any, logs?: TestLogs) => void;
@@ -15,10 +15,7 @@ interface Callbacks {
   failure: FailureCallback;
 }
 
-const createTarget = function (inline: boolean) {
-  const target = Element.fromTag(inline ? 'div' : 'textarea');
-  return target;
-};
+const createTarget = (inline: boolean) => Element.fromTag(inline ? 'div' : 'textarea');
 
 const removeTinymceElements = () => {
   // NOTE: Don't remove the link/scripts added, as those are part of the global tinymce which we don't clean up
@@ -32,12 +29,14 @@ const removeTinymceElements = () => {
   Arr.each(elements, Remove.remove);
 };
 
-const setup = (callbacks: Callbacks, settings: Record<string, any>) => {
-  const target = createTarget(settings.inline);
+const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: Option<Element>) => {
+  const target = elementOpt.getOrThunk(() => createTarget(settings.inline));
   const randomId = Id.generate('tiny-loader');
   Attr.set(target, 'id', randomId);
 
-  Insert.append(Element.fromDom(document.body), target);
+  if (!Body.inBody(target)) {
+    Insert.append(Body.body(), target);
+  }
 
   const teardown = () => {
     tinymce.remove();

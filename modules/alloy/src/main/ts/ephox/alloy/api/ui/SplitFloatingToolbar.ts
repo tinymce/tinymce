@@ -34,10 +34,10 @@ const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingT
         resolve(buildGroups(detail.overflowGroups.get()));
       }),
       layouts: {
-        onLtr: () => [ Layout.southwest ],
-        onRtl: () => [ Layout.southeast ],
-        onBottomLtr: () => [ Layout.northwest ],
-        onBottomRtl: () => [ Layout.northeast ]
+        onLtr: () => [ Layout.southwest, Layout.southeast ],
+        onRtl: () => [ Layout.southeast, Layout.southwest ],
+        onBottomLtr: () => [ Layout.northwest, Layout.northeast ],
+        onBottomRtl: () => [ Layout.northeast, Layout.northwest ]
       },
       getBounds: spec.getOverflowBounds,
       lazySink: detail.lazySink,
