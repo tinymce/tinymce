@@ -1,10 +1,10 @@
-import { Global, Id, Strings, Type } from '@ephox/katamari';
-import { Attr, Element, Insert, Remove, Selectors } from '@ephox/sugar';
 import { Chain } from '@ephox/agar';
+import { setTimeout } from '@ephox/dom-globals';
+import { Global, Id, Strings, Type } from '@ephox/katamari';
+import { Attr, Body, Element, Insert, Remove, Selectors } from '@ephox/sugar';
 import 'tinymce';
-import { document, setTimeout } from '@ephox/dom-globals';
-import { setTinymceBaseUrl } from '../loader/Urls';
 import { Editor as EditorType } from '../alien/EditorTypes';
+import { setTinymceBaseUrl } from '../loader/Urls';
 
 const cFromElement = function <T extends EditorType = EditorType>(element: Element, settings: Record<string, any>): Chain<any, T> {
   return Chain.async<any, T>(function (_, next, die) {
@@ -16,7 +16,9 @@ const cFromElement = function <T extends EditorType = EditorType>(element: Eleme
     const randomId = Id.generate('tiny-loader');
 
     Attr.set(element, 'id', randomId);
-    Insert.append(Element.fromDom(document.body), element);
+    if (!Body.inBody(element)) {
+      Insert.append(Body.body(), element);
+    }
 
     const tinymce = Global.tinymce;
 

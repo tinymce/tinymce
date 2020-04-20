@@ -1,4 +1,5 @@
-import { Strings, Type } from '@ephox/katamari';
+import { Option, Strings, Type } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
 import 'tinymce';
 import * as Loader from '../loader/Loader';
 import { setTinymceBaseUrl } from '../loader/Urls';
@@ -24,7 +25,7 @@ const setupLight = (callback: Loader.RunCallback, settings: Record<string, any>,
     run: callback,
     success,
     failure
-  }, nuSettings);
+  }, nuSettings, Option.none());
 };
 
 const setup = (callback: Loader.RunCallback, settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
@@ -33,10 +34,20 @@ const setup = (callback: Loader.RunCallback, settings: Record<string, any>, succ
     run: callback,
     success,
     failure
-  }, settings);
+  }, settings, Option.none());
+};
+
+const setupFromElement = (callback: Loader.RunCallback, settings: Record<string, any>, element: Element, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
+  Loader.setup({
+    preInit: setupBaseUrl,
+    run: callback,
+    success,
+    failure
+  }, settings, Option.some(element));
 };
 
 export {
   setup,
-  setupLight
+  setupLight,
+  setupFromElement
 };
