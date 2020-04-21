@@ -1,4 +1,4 @@
-Version 5.2.2 (TBD)
+Version 5.2.2 (2020-04-22)
     Fixed an issue where anchors could not be inserted on empty lines #TINY-2788
     Fixed text decorations (underline, strikethrough) not consistently inheriting the text color #TINY-4757
     Fixed `format` menu alignment buttons inconsistently applying to images #TINY-4057
