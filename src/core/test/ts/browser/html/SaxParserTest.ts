@@ -848,14 +848,21 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', function () {
   });
 
   suite.test('Parse cdata with comments and trim those comments away', function () {
-    let counter, parser;
+    const testCDataSaxParse = (inputHtml: string, outputHtml: string, counters: Record<string, number>) => {
+      let counter, parser;
 
-    counter = createCounter(writer);
-    parser = SaxParser(counter, schema);
-    writer.reset();
-    parser.parse('<![CDATA[<!--x--><!--y--!>--><!--]]>');
-    LegacyUnit.equal(writer.getContent(), '<![CDATA[xy]]>');
-    LegacyUnit.deepEqual(counter.counts, { cdata: 1 });
+      counter = createCounter(writer);
+      counter.validate = true;
+      parser = SaxParser(counter, schema);
+      writer.reset();
+      parser.parse(inputHtml);
+      LegacyUnit.equal(writer.getContent(), outputHtml);
+      LegacyUnit.deepEqual(counter.counts, counters);
+    };
+
+    testCDataSaxParse('<![CDATA[<!--x--><!--y--!>--><!--]]>', '<![CDATA[xy]]>', { cdata: 1 });
+    testCDataSaxParse('<![CDATA[------>>>xy]]>', '<![CDATA[xy]]>', { cdata: 1 });
+    testCDataSaxParse('<![CDATA[------!>>!>xy]]>', '<![CDATA[xy]]>', { cdata: 1 });
   });
 
   suite.test('Parse special elements', function () {

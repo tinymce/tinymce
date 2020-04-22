@@ -56,8 +56,12 @@ const isValidPrefixAttrName = function (name) {
   return name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
 };
 
-const trimComments = function (text) {
-  return text.replace(/<!--|--!?>/g, '');
+const trimComments = function (text: string) {
+  let sanitizedText = text;
+  while (/<!--|--!?>/g.test(sanitizedText)) {
+    sanitizedText = sanitizedText.replace(/<!--|--!?>/g, '');
+  }
+  return sanitizedText;
 };
 
 const isInvalidUri = (settings, uri: string) => {
