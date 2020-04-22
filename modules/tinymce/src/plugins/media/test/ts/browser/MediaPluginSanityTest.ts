@@ -51,6 +51,12 @@ UnitTest.asynctest('browser.tinymce.plugins.media.MediaPluginSanityTest', functi
         Utils.sPasteSourceValue(ui, 'https://youtu.be/G60llMJepZI'),
         Utils.sAssertHeightAndWidth(ui, '314', '300'),
         Utils.sCloseDialog(ui)
+      ]),
+      Log.stepsAsStep('TINY-4857', 'Media: Test embed with XSS attack sanitized', [
+        Utils.sOpenDialog(ui),
+        Utils.sPasteTextareaValue(ui, '<video controls="controls" width="300" height="150"><source src="a" onerror="alert(1)" /></video>'),
+        ui.sClickOnUi('click save button', Utils.selectors.saveButton),
+        Utils.sAssertEditorContent(apis, editor, '<p><video controls="controls" width="300" height="150"><source src="a" /></video></p>')
       ])
     ], onSuccess, onFailure);
   }, {
