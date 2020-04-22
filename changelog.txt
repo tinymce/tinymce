@@ -1,5 +1,6 @@
 Version 4.9.10 (TBD)
     Fixed a security issue related to CDATA sanitization during parsing #TINY-4669
+    Fixed `media` embed content not processing safely in some cases #TINY-4857
 Version 4.9.9 (2020-03-25)
     Fixed the table selection not functioning correctly in Microsoft Edge 44 or higher #TINY-3862
     Fixed the table resize handles not functioning correctly in Microsoft Edge 44 or higher #TINY-4160

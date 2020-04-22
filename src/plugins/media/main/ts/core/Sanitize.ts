@@ -10,7 +10,7 @@ import Schema from 'tinymce/core/api/html/Schema';
 import Writer from 'tinymce/core/api/html/Writer';
 import Settings from '../api/Settings';
 
-const sanitize = function (editor, html) {
+const sanitize = function (editor, html: string) {
   if (Settings.shouldFilterHtml(editor) === false) {
     return html;
   }
@@ -38,16 +38,19 @@ const sanitize = function (editor, html) {
     start (name, attrs, empty) {
       blocked = true;
 
-      if (name === 'script' || name === 'noscript') {
+      if (name === 'script' || name === 'noscript' || name === 'svg') {
         return;
       }
 
-      for (let i = 0; i < attrs.length; i++) {
-        if (attrs[i].name.indexOf('on') === 0) {
-          return;
+      for (let i = attrs.length - 1; i >= 0; i--) {
+        const attrName = attrs[i].name;
+
+        if (attrName.indexOf('on') === 0) {
+          delete attrs.map[attrName];
+          attrs.splice(i, 1);
         }
 
-        if (attrs[i].name === 'style') {
+        if (attrName === 'style') {
           attrs[i].value = editor.dom.serializeStyle(editor.dom.parseStyle(attrs[i].value), name);
         }
       }

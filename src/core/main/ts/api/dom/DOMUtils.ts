@@ -723,6 +723,10 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     const container = doc.createElement('div');
     const frag = doc.createDocumentFragment();
 
+    // Append the container to the fragment so as to remove it from
+    // the current document context
+    frag.appendChild(container);
+
     if (html) {
       container.innerHTML = html;
     }
@@ -730,6 +734,9 @@ export function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}
     while ((node = container.firstChild)) {
       frag.appendChild(node);
     }
+
+    // Remove the container now that all the children have been transferred
+    frag.removeChild(container);
 
     return frag;
   };
