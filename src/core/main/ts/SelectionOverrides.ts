@@ -5,26 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
-import { Remove, Element as SugarElement, Attr, SelectorFilter, SelectorFind } from '@ephox/sugar';
-import DragDropOverrides from './DragDropOverrides';
-import EditorView from './EditorView';
+import { Element, HTMLElement, MouseEvent, Node, Range } from '@ephox/dom-globals';
+import { Arr, Obj } from '@ephox/katamari';
+import { Attr, Element as SugarElement, Remove, SelectorFilter, SelectorFind } from '@ephox/sugar';
+import { Editor } from 'tinymce/core/api/Editor';
+import EditorFocus from 'tinymce/core/focus/EditorFocus';
 import Env from './api/Env';
+import VK from './api/util/VK';
 import * as CaretContainer from './caret/CaretContainer';
 import CaretPosition from './caret/CaretPosition';
+import { isAfterContentEditableFalse, isBeforeContentEditableFalse } from './caret/CaretPositionPredicates';
 import * as CaretUtils from './caret/CaretUtils';
 import { CaretWalker } from './caret/CaretWalker';
+import { FakeCaret, isFakeCaretTarget } from './caret/FakeCaret';
 import * as LineUtils from './caret/LineUtils';
 import NodeType from './dom/NodeType';
 import RangePoint from './dom/RangePoint';
+import DragDropOverrides from './DragDropOverrides';
+import EditorView from './EditorView';
 import CefFocus from './focus/CefFocus';
 import * as CefUtils from './keyboard/CefUtils';
-import VK from './api/util/VK';
-import { FakeCaret, isFakeCaretTarget } from './caret/FakeCaret';
-import { Editor } from 'tinymce/core/api/Editor';
-import EditorFocus from 'tinymce/core/focus/EditorFocus';
-import { Range, Element, Node, HTMLElement, MouseEvent } from '@ephox/dom-globals';
-import { isBeforeContentEditableFalse, isAfterContentEditableFalse } from './caret/CaretPositionPredicates';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
@@ -288,9 +288,11 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
     });
 
     editor.on('setSelectionRange', function (e) {
-      let rng;
+      // If the range is set inside a short ended element, then move it
+      // to the side as IE for example will try to add content inside
+      e.range = normalizeShortEndedElementSelection(e.range);
 
-      rng = setContentEditableSelection(e.range, e.forward);
+      const rng = setContentEditableSelection(e.range, e.forward);
       if (rng) {
         e.range = rng;
       }
@@ -361,6 +363,37 @@ const SelectionOverrides = function (editor: Editor): SelectionOverrides {
 
   const isRangeInCaretContainer = function (rng: Range) {
     return isWithinCaretContainer(rng.startContainer) || isWithinCaretContainer(rng.endContainer);
+  };
+
+  const normalizeShortEndedElementSelection = (rng: Range) => {
+    const shortEndedElements = editor.schema.getShortEndedElements();
+    const newRng = editor.dom.createRng();
+    const startContainer = rng.startContainer;
+    const startOffset = rng.startOffset;
+    const endContainer = rng.endContainer;
+    const endOffset = rng.endOffset;
+
+    if (Obj.has(shortEndedElements, startContainer.nodeName.toLowerCase())) {
+      if (startOffset === 0) {
+        newRng.setStartBefore(startContainer);
+      } else {
+        newRng.setStartAfter(startContainer);
+      }
+    } else {
+      newRng.setStart(startContainer, startOffset);
+    }
+
+    if (Obj.has(shortEndedElements, endContainer.nodeName.toLowerCase())) {
+      if (endOffset === 0) {
+        newRng.setEndBefore(endContainer);
+      } else {
+        newRng.setEndAfter(endContainer);
+      }
+    } else {
+      newRng.setEnd(endContainer, endOffset);
+    }
+
+    return newRng;
   };
 
   const setContentEditableSelection = function (range: Range, forward?: boolean) {
