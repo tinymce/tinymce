@@ -1,4 +1,4 @@
-Version 4.9.10 (TBD)
+Version 4.9.10 (2020-04-23)
     Fixed an issue where the editor selection could end up inside a short ended element (eg br) #TINY-3999
     Fixed a security issue related to CDATA sanitization during parsing #TINY-4669
     Fixed `media` embed content not processing safely in some cases #TINY-4857
