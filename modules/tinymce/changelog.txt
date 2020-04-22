@@ -1,8 +1,8 @@
-Version 5.2.2 (2020-04-22)
+Version 5.2.2 (2020-04-23)
     Fixed an issue where anchors could not be inserted on empty lines #TINY-2788
     Fixed text decorations (underline, strikethrough) not consistently inheriting the text color #TINY-4757
     Fixed `format` menu alignment buttons inconsistently applying to images #TINY-4057
-    Fixed the floating toolbar drawer height collapsing when the editor is rendered in modal dialogs #TINY-4837
+    Fixed the floating toolbar drawer height collapsing when the editor is rendered in modal dialogs or floating containers #TINY-4837
     Fixed `media` embed content not processing safely in some cases #TINY-4857
 Version 5.2.1 (2020-03-25)
     Fixed the "is decorative" checkbox in the image dialog clearing after certain dialog events #FOAM-11
