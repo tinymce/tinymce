@@ -19,7 +19,7 @@ import * as ApplyFormat from './fmt/ApplyFormat';
 import * as RemoveFormat from './fmt/RemoveFormat';
 import * as ToggleFormat from './fmt/ToggleFormat';
 import * as FilterNode from './html/FilterNode';
-import { getSelectedContentInternal } from './selection/GetSelectionContentImpl';
+import { getSelectedContentInternal, GetSelectionContentArgs } from './selection/GetSelectionContentImpl';
 import { RangeLikeObject } from './selection/RangeTypes';
 import * as Operations from './undo/Operations';
 import { Index, Locks, UndoBookmark, UndoLevel, UndoLevelType, UndoManager } from './undo/UndoManagerTypes';
@@ -81,7 +81,7 @@ interface RtcAdaptor {
     insertContent: (value: string, details) => void;
   };
   selection: {
-    getContent: (format: ContentFormat, args) => Content;
+    getContent: (format: ContentFormat, args: GetSelectionContentArgs) => Content;
   };
   raw: {
     getModel: () => Option<any>;
@@ -326,5 +326,5 @@ export const setContent = (editor: Editor, content: Content, args: SetContentArg
 export const insertContent = (editor: Editor, value: string, details): void =>
   getRtcInstanceWithFallback(editor).editor.insertContent(value, details);
 
-export const getSelectedContent = (editor: Editor, format: ContentFormat, args): Content =>
+export const getSelectedContent = (editor: Editor, format: ContentFormat, args: GetSelectionContentArgs): Content =>
   getRtcInstanceWithError(editor).selection.getContent(format, args);

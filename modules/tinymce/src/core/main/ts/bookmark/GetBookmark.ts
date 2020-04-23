@@ -209,7 +209,7 @@ const getPersistentBookmark = function (selection: Selection, filled: boolean): 
   const startBookmarkNode = createBookmarkSpan(dom, id + '_start', filled);
   rangeInsertNode(dom, rng, startBookmarkNode);
 
-  selection.moveToBookmark({ id, keep: 1 });
+  selection.moveToBookmark({ id, keep: true });
 
   return { id };
 };
