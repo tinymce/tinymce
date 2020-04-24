@@ -18,6 +18,7 @@ export interface DialogData {
   replacetext: string;
   matchcase: boolean;
   wholewords: boolean;
+  matchselection: boolean;
 }
 
 const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchState>) {
@@ -40,7 +41,8 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     currentSearchState.set({
       ...current,
       matchCase: data.matchcase,
-      wholeWord: data.wholewords
+      wholeWord: data.wholewords,
+      matchSelection: data.matchselection
     });
   };
 
@@ -87,7 +89,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
       Actions.next(editor, currentSearchState);
     } else {
       // Find new matches
-      const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords);
+      const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords, data.matchselection);
       if (count <= 0) {
         notFoundAlert(api);
       }
@@ -103,7 +105,8 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     findtext: selectedText,
     replacetext: '',
     wholewords: initialState.wholeWord,
-    matchcase: initialState.matchCase
+    matchcase: initialState.matchCase,
+    matchselection: initialState.matchSelection
   };
 
   const spec: Types.Dialog.DialogApi<DialogData> = {
@@ -160,10 +163,16 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
             type: 'togglemenuitem',
             name: 'matchcase',
             text: 'Match case'
-          }, {
+          },
+          {
             type: 'togglemenuitem',
             name: 'wholewords',
             text: 'Find whole words only'
+          },
+          {
+            type: 'togglemenuitem',
+            name: 'matchselection',
+            text: 'Find words in selection only'
           }
         ]
       },
@@ -219,6 +228,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
           break;
         case 'matchcase':
         case 'wholewords':
+        case 'matchselection':
           updateSearchState(api);
           reset(api);
           break;

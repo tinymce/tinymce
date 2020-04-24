@@ -19,6 +19,7 @@ export interface SearchState {
   text: string;
   matchCase: boolean;
   wholeWord: boolean;
+  matchSelection: boolean;
 }
 
 const getElmIndex = function (elm: Element) {
@@ -32,18 +33,9 @@ const getElmIndex = function (elm: Element) {
 };
 
 const markAllMatches = function (editor: Editor, currentSearchState: Cell<SearchState>, regex: RegExp) {
-  let node, marker;
-
-  marker = editor.dom.create('span', {
-    'data-mce-bogus': 1
-  });
-
-  marker.className = 'mce-match-marker'; // IE 7 adds class="mce-match-marker" and class=mce-match-marker
-  node = editor.getBody();
-
+  const matchSelection = currentSearchState.get().matchSelection;
   done(editor, currentSearchState, false);
-
-  return FindReplaceText.findAndReplaceDOMText(regex, node, marker, 1, editor.schema);
+  return FindReplaceText.findAndReplaceDOMText(editor, regex, matchSelection);
 };
 
 const unwrap = function (node: Node) {
@@ -127,7 +119,7 @@ const escapeSearchText = (text: string, wholeWord: boolean) => {
   return wholeWord ? `(?:^|\\s|${Pattern.punctuation()})` + wordRegex + `(?=$|\\s|${Pattern.punctuation()})` : wordRegex;
 };
 
-const find = function (editor: Editor, currentSearchState: Cell<SearchState>, text: string, matchCase: boolean, wholeWord: boolean) {
+const find = function (editor: Editor, currentSearchState: Cell<SearchState>, text: string, matchCase: boolean, wholeWord: boolean, matchSelection: boolean) {
   const escapedText = escapeSearchText(text, wholeWord);
 
   const count = markAllMatches(editor, currentSearchState, new RegExp(escapedText, matchCase ? 'g' : 'gi'));
@@ -139,7 +131,8 @@ const find = function (editor: Editor, currentSearchState: Cell<SearchState>, te
       count,
       text,
       matchCase,
-      wholeWord
+      wholeWord,
+      matchSelection
     });
   }
 
