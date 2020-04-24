@@ -58,7 +58,6 @@ const setup = (extras: WindowManagerSetup) => {
   const backstage = extras.backstage;
   const editor = extras.editor;
   const isStickyToolbar = Settings.isStickyToolbar(editor);
-  const isToolbarLocationTop = Settings.isToolbarLocationTop(editor);
 
   const alertDialog = AlertDialog.setup(extras);
   const confirmDialog = ConfirmDialog.setup(extras);
@@ -131,6 +130,7 @@ const setup = (extras: WindowManagerSetup) => {
     const factory = (contents: Types.Dialog.Dialog<T>, internalInitialData: T, dataValidator: Processor): Types.Dialog.DialogInstanceApi<T> => {
       const initialData = validateData<T>(internalInitialData, dataValidator);
       const inlineDialog = Singleton.value<AlloyComponent>();
+      const isToolbarLocationTop = backstage.shared.header.isPositionedAtTop();
 
       const dialogInit = {
         dataValidator,

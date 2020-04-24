@@ -8,9 +8,11 @@ import { Body, Css, Element, Scroll, SelectorFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { getContextToolbarBounds } from 'tinymce/themes/silver/ui/context/ContextToolbarBounds';
+import TestBackstage from '../../../module/TestBackstage';
 
 UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
   SilverTheme();
+  const backstage = TestBackstage();
 
   interface TestBounds {
     header: Bounds;
@@ -76,6 +78,7 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
         base_url: '/project/tinymce/js/tinymce',
         ...scenario.settings
       })),
+      NamedChain.read('editor', Chain.op((editor) => backstage.shared.header.setDockingMode(editor.settings.toolbar_location))),
       NamedChain.write('tearDownScroll', Chain.mapper(() => setupPageScroll())),
       NamedChain.read('editor', Chain.op((editor: Editor) => editor.focus())),
       NamedChain.read('editor', cScrollRelativeEditorContainer(scenario.scroll.relativeTop, scenario.scroll.delta)),
@@ -92,7 +95,7 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
         };
 
         const asserted = scenario.assertBounds(getBounds(editor));
-        const actual = getContextToolbarBounds(editor);
+        const actual = getContextToolbarBounds(editor, backstage.shared);
 
         assertBounds('x');
         assertBounds('y');

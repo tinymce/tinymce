@@ -18,6 +18,8 @@ export interface DockingBehaviour extends Behaviour.AlloyBehaviour<DockingConfig
   refresh: (component: AlloyComponent) => void;
   reset: (component: AlloyComponent) => void;
   isDocked: (component: AlloyComponent) => boolean;
+  getModes: (component: AlloyComponent) => DockingMode[];
+  setModes: (component: AlloyComponent, modes: DockingMode[]) => void;
   getInitialPosition: (component: AlloyComponent) => Option<InitialDockingPosition>;
 }
 
@@ -47,6 +49,8 @@ export interface DockingState extends BehaviourState {
   setInitialPosition: (bounds: Option<InitialDockingPosition>) => void;
   isVisible: () => boolean;
   setVisible: (visible: boolean) => void;
+  getModes: () => DockingMode[];
+  setModes: (modes: DockingMode[]) => void;
 }
 
 export interface DockingConfigSpec extends Behaviour.BehaviourConfigSpec {

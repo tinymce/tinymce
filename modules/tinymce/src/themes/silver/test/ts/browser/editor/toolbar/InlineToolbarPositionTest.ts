@@ -118,61 +118,121 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
     base_url: '/project/tinymce/js/tinymce',
   };
 
+  const getTopPositionSteps = ({
+    editor,
+    tinyApis,
+    header,
+    container,
+    contentAreaContainer,
+  }) => [
+    Log.stepsAsStep('TINY-3621', 'Select item at the start of the content (absolute position)', [
+      sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
+      sAssertAbsolutePos(container, contentAreaContainer, 'above'),
+      sAssertStaticPos(header),
+      sDeactivateEditor(editor)
+    ]),
+    Log.stepsAsStep('TINY-3621', 'Select item in the middle of the content (docked position) and scroll back to top', [
+      sScrollToElementAndActivate(tinyApis, contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
+      sAssertDockedPos(header, 'top'),
+      sScrollToElement(contentAreaContainer, ':first-child'),
+      sAssertStaticPos(header),
+      sDeactivateEditor(editor)
+    ]),
+    Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content (docked position) and scroll back to top', [
+      sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child'),
+      sAssertDockedPos(header, 'top'),
+      sScrollToElement(contentAreaContainer, ':first-child'),
+      sAssertStaticPos(header),
+      sDeactivateEditor(editor)
+    ]),
+    Log.stepsAsStep('TINY-3621', 'Select item at the top of the content and scroll to middle and back', [
+      sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
+      sAssertStaticPos(header),
+      sScrollToElement(contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
+      sAssertDockedPos(header, 'top'),
+      sScrollToElement(contentAreaContainer, ':first-child'),
+      sAssertStaticPos(header),
+      sDeactivateEditor(editor)
+    ]),
+    Log.stepsAsStep('TINY-4530', 'Select item at the start of the content and change format (absolute position)', [
+      sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
+      sAssertAbsolutePos(container, contentAreaContainer, 'above'),
+      sAssertStaticPos(header),
+      tinyApis.sExecCommand('mceToggleFormat', 'div'),
+      sAssertAbsolutePos(container, contentAreaContainer, 'above'),
+      sDeactivateEditor(editor)
+    ])
+  ];
+
+  const getBottomPositionSteps = ({
+    editor,
+    tinyApis,
+    header,
+    container,
+    contentAreaContainer,
+  }) => [
+    Log.stepsAsStep('TINY-3621', 'Select item at the start of the content (docked position) and scroll to bottom', [
+      sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
+      sAssertDockedPos(header, 'bottom'),
+      sScrollToElement(contentAreaContainer, ':last-child', true),
+      sAssertStaticPos(header),
+      sDeactivateEditor(editor)
+    ]),
+    Log.stepsAsStep('TINY-3621', 'Select item in the middle of the content (docked position) and scroll to bottom', [
+      sScrollToElementAndActivate(tinyApis, contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
+      sAssertDockedPos(header, 'bottom'),
+      sScrollToElement(contentAreaContainer, ':last-child', true),
+      sAssertStaticPos(header),
+      sDeactivateEditor(editor)
+    ]),
+    Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content (absolute position)', [
+      sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child', true),
+      sAssertAbsolutePos(container, contentAreaContainer, 'below'),
+      sAssertStaticPos(header),
+      sDeactivateEditor(editor)
+    ]),
+    Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content and scroll to middle and back', [
+      sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child', true),
+      sAssertStaticPos(header),
+      sScrollToElement(contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
+      sAssertDockedPos(header, 'bottom'),
+      sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child', true),
+      sAssertStaticPos(header),
+      sDeactivateEditor(editor)
+    ]),
+    Log.stepsAsStep('TINY-4530', 'Select item at the bottom of the content and change format (absolute position)', [
+      sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child', true),
+      sAssertAbsolutePos(container, contentAreaContainer, 'below'),
+      sAssertStaticPos(header),
+      tinyApis.sExecCommand('mceToggleFormat', 'div'),
+      sAssertAbsolutePos(container, contentAreaContainer, 'below'),
+      sDeactivateEditor(editor)
+    ])
+  ];
+
   Pipeline.async({}, [
-    Log.chainsAsStep('', 'Test inline toolbar position with toolbar_location: "top"', [
-      McEditor.cFromSettings(settings),
-      cTest(({
-        editor,
-        tinyApis,
-        header,
-        container,
-        contentAreaContainer,
-      }) => [
-        Log.stepsAsStep('TINY-3621', 'Select item at the start of the content (absolute position)', [
-          sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
-          sAssertAbsolutePos(container, contentAreaContainer, 'above'),
-          sAssertStaticPos(header),
-          sDeactivateEditor(editor)
-        ]),
-        Log.stepsAsStep('TINY-3621', 'Select item in the middle of the content (docked position) and scroll back to top', [
-          sScrollToElementAndActivate(tinyApis, contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
-          sAssertDockedPos(header, 'top'),
-          sScrollToElement(contentAreaContainer, ':first-child'),
-          sAssertStaticPos(header),
-          sDeactivateEditor(editor)
-        ]),
-        Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content (docked position) and scroll back to top', [
-          sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child'),
-          sAssertDockedPos(header, 'top'),
-          sScrollToElement(contentAreaContainer, ':first-child'),
-          sAssertStaticPos(header),
-          sDeactivateEditor(editor)
-        ]),
-        Log.stepsAsStep('TINY-3621', 'Select item at the top of the content and scroll to middle and back', [
-          sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
-          sAssertStaticPos(header),
-          sScrollToElement(contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
-          sAssertDockedPos(header, 'top'),
-          sScrollToElement(contentAreaContainer, ':first-child'),
-          sAssertStaticPos(header),
-          sDeactivateEditor(editor)
-        ]),
-        Log.stepsAsStep('TINY-4530', 'Select item at the start of the content and change format (absolute position)', [
-          sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
-          sAssertAbsolutePos(container, contentAreaContainer, 'above'),
-          sAssertStaticPos(header),
-          tinyApis.sExecCommand('mceToggleFormat', 'div'),
-          sAssertAbsolutePos(container, contentAreaContainer, 'above'),
-          sDeactivateEditor(editor)
-        ])
-      ]),
+    Log.chainsAsStep('TINY-3621', 'Test inline toolbar position with toolbar_location: "top"', [
+      McEditor.cFromSettings({
+        ...settings,
+        toolbar_location: 'top'
+      }),
+      cTest((data) => getTopPositionSteps(data)),
       McEditor.cRemove
     ]),
 
-    Log.chainsAsStep('', 'Test inline toolbar position with toolbar_location: "bottom"', [
+    Log.chainsAsStep('TINY-3621', 'Test inline toolbar position with toolbar_location: "bottom"', [
       McEditor.cFromSettings({
         ...settings,
         toolbar_location: 'bottom'
+      }),
+      cTest((data) => getBottomPositionSteps(data)),
+      McEditor.cRemove
+    ]),
+
+    Log.chainsAsStep('TINY-3161', 'Test inline toolbar position with toolbar_location: "auto"', [
+      McEditor.cFromSettings({
+        ...settings,
+        toolbar_location: 'auto'
       }),
       cTest(({
         editor,
@@ -181,45 +241,27 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
         container,
         contentAreaContainer,
       }) => [
-        Log.stepsAsStep('TINY-3621', 'Select item at the start of the content (docked position) and scroll to bottom', [
+        // Should be the same as top in most cases, it should only switch to the bottom when there's no room
+        // in the document to show above the contentAreaContainer which we model here by using a fixed position container
+        ...getTopPositionSteps({ editor, tinyApis, header, container, contentAreaContainer }),
+        Log.stepsAsStep('TINY-3161', 'Select item at the top of content, when there\'s no room to render above (docked position)', [
+          Step.sync(() => {
+            const editorBody = Element.fromDom(editor.getBody());
+            Css.set(editorBody, 'position', 'fixed');
+            Css.set(editorBody, 'top', '0');
+          }),
           sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
-          sAssertDockedPos(header, 'bottom'),
-          sScrollToElement(contentAreaContainer, ':last-child', true),
-          sAssertStaticPos(header),
-          sDeactivateEditor(editor)
-        ]),
-        Log.stepsAsStep('TINY-3621', 'Select item in the middle of the content (docked position) and scroll to bottom', [
-          sScrollToElementAndActivate(tinyApis, contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
-          sAssertDockedPos(header, 'bottom'),
-          sScrollToElement(contentAreaContainer, ':last-child', true),
-          sAssertStaticPos(header),
-          sDeactivateEditor(editor)
-        ]),
-        Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content (absolute position)', [
-          sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child', true),
           sAssertAbsolutePos(container, contentAreaContainer, 'below'),
-          sAssertStaticPos(header),
-          sDeactivateEditor(editor)
-        ]),
-        Log.stepsAsStep('TINY-3621', 'Select item at the bottom of the content and scroll to middle and back', [
-          sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child', true),
-          sAssertStaticPos(header),
-          sScrollToElement(contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
           sAssertDockedPos(header, 'bottom'),
-          sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child', true),
-          sAssertStaticPos(header),
-          sDeactivateEditor(editor)
-        ]),
-        Log.stepsAsStep('TINY-4530', 'Select item at the bottom of the content and change format (absolute position)', [
-          sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':last-child', true),
-          sAssertAbsolutePos(container, contentAreaContainer, 'below'),
-          sAssertStaticPos(header),
-          tinyApis.sExecCommand('mceToggleFormat', 'div'),
-          sAssertAbsolutePos(container, contentAreaContainer, 'below'),
-          sDeactivateEditor(editor)
+          sDeactivateEditor(editor),
+          Step.sync(() => {
+            const editorBody = Element.fromDom(editor.getBody());
+            Css.remove(editorBody, 'position');
+            Css.remove(editorBody, 'top');
+          })
         ])
       ]),
       McEditor.cRemove
-    ]),
+    ])
   ], success, failure);
 });

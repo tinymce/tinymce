@@ -6,10 +6,11 @@
  */
 
 import { Bounds, Boxes } from '@ephox/alloy';
+import { window } from '@ephox/dom-globals';
 import { Element, SelectorFind, VisualViewport } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { window } from '@ephox/dom-globals';
 import * as Settings from '../../api/Settings';
+import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 const getHorizontalBounds = (contentAreaBox: Bounds, viewportBounds: Bounds): { x: number; width: number } => {
   const x = Math.max(viewportBounds.x, contentAreaBox.x);
@@ -19,12 +20,11 @@ const getHorizontalBounds = (contentAreaBox: Bounds, viewportBounds: Bounds): { 
   return { x, width };
 };
 
-const getVerticalBounds = (editor: Editor, contentAreaBox: Bounds, viewportBounds: Bounds): { y: number; bottom: number } => {
+const getVerticalBounds = (editor: Editor, contentAreaBox: Bounds, viewportBounds: Bounds, isToolbarLocationTop: boolean): { y: number; bottom: number } => {
   const container = Element.fromDom(editor.getContainer());
   const header = SelectorFind.descendant(container, '.tox-editor-header').getOr(container);
   const headerBox = Boxes.box(header);
   const isToolbarBelowContentArea = headerBox.y >= contentAreaBox.bottom;
-  const isToolbarLocationTop = Settings.isToolbarLocationTop(editor);
   const isToolbarAbove = isToolbarLocationTop && !isToolbarBelowContentArea;
 
   // Scenario toolbar top & inline: Bottom of the header -> Bottom of the viewport
@@ -60,7 +60,7 @@ const getVerticalBounds = (editor: Editor, contentAreaBox: Bounds, viewportBound
   };
 };
 
-const getContextToolbarBounds = (editor: Editor) => {
+const getContextToolbarBounds = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => {
   const viewportBounds = VisualViewport.getBounds(window);
   const contentAreaBox = Boxes.box(Element.fromDom(editor.getContentAreaContainer()));
   const toolbarOrMenubarEnabled = Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
@@ -71,7 +71,8 @@ const getContextToolbarBounds = (editor: Editor) => {
   if (editor.inline && !toolbarOrMenubarEnabled) {
     return Boxes.bounds(x, viewportBounds.y, width, viewportBounds.height);
   } else {
-    const { y, bottom } = getVerticalBounds(editor, contentAreaBox, viewportBounds);
+    const isToolbarTop = sharedBackstage.header.isPositionedAtTop();
+    const { y, bottom } = getVerticalBounds(editor, contentAreaBox, viewportBounds, isToolbarTop);
     return Boxes.bounds(x, y, width, bottom - y);
   }
 };

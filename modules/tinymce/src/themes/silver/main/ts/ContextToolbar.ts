@@ -96,7 +96,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
     })
   );
 
-  const getBounds = () => getContextToolbarBounds(editor);
+  const getBounds = () => getContextToolbarBounds(editor, extras.backstage.shared);
 
   const isRangeOverlapping = (aTop: number, aBottom: number, bTop: number, bBottom: number) => Math.max(aTop, bTop) <= Math.min(aBottom, bBottom);
 

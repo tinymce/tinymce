@@ -12,7 +12,7 @@ import { PlatformDetection } from '@ephox/sand';
 import { Css } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import { getMultipleToolbarsSetting, getToolbarGroups, getToolbarMode, isDistractionFree, isMenubarEnabled, isMultipleToolbars, isStickyToolbar, isToolbarEnabled, isToolbarLocationTop, ToolbarMode, useFixedContainer } from './api/Settings';
+import * as Settings from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import * as ContextToolbar from './ContextToolbar';
 import * as Events from './Events';
@@ -83,7 +83,7 @@ export interface RenderArgs {
 const setup = (editor: Editor): RenderInfo => {
   const isInline = editor.inline;
   const mode = isInline ? Inline : Iframe;
-  const header = isStickyToolbar(editor) ? StickyHeader : StaticHeader;
+  const header = Settings.isStickyToolbar(editor) ? StickyHeader : StaticHeader;
   let lazyOuterContainer: Option<AlloyComponent> = Option.none();
 
   const platform = PlatformDetection.detect();
@@ -92,7 +92,7 @@ const setup = (editor: Editor): RenderInfo => {
   const isTouch = platform.deviceType.isTouch();
   const touchPlatformClass = 'tox-platform-touch';
   const deviceClasses = isTouch ? [ touchPlatformClass ] : [];
-  const isToolbarTop = isToolbarLocationTop(editor);
+  const isToolbarBottom = Settings.isToolbarLocationBottom(editor);
 
   const dirAttributes = I18n.isRtl() ? {
     attributes: {
@@ -102,9 +102,9 @@ const setup = (editor: Editor): RenderInfo => {
 
   const verticalDirAttributes = {
     attributes: {
-      [VerticalDir.Attribute]: isToolbarTop ?
-        VerticalDir.AttributeValue.TopToBottom :
-        VerticalDir.AttributeValue.BottomToTop
+      [VerticalDir.Attribute]: isToolbarBottom ?
+        VerticalDir.AttributeValue.BottomToTop :
+        VerticalDir.AttributeValue.TopToBottom
     }
   };
 
@@ -153,7 +153,7 @@ const setup = (editor: Editor): RenderInfo => {
     }
   });
 
-  const toolbarMode = getToolbarMode(editor);
+  const toolbarMode = Settings.getToolbarMode(editor);
 
   const partToolbar: AlloySpec = OuterContainer.parts().toolbar({
     dom: {
@@ -220,9 +220,9 @@ const setup = (editor: Editor): RenderInfo => {
   };
 
   // False should stop the menubar and toolbar rendering altogether
-  const hasMultipleToolbar = isMultipleToolbars(editor);
-  const hasToolbar = isToolbarEnabled(editor);
-  const hasMenubar = isMenubarEnabled(editor);
+  const hasMultipleToolbar = Settings.isMultipleToolbars(editor);
+  const hasToolbar = Settings.isToolbarEnabled(editor);
+  const hasMenubar = Settings.isMenubarEnabled(editor);
 
   const getPartToolbar = () => {
     if (hasMultipleToolbar) {
@@ -244,19 +244,19 @@ const setup = (editor: Editor): RenderInfo => {
       hasMenubar ? [ partMenubar ] : [ ],
       getPartToolbar(),
       // fixed_toolbar_container anchors to the editable area, else add an anchor bar
-      useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ],
+      Settings.useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ],
     ]),
-    sticky: isStickyToolbar(editor),
+    sticky: Settings.isStickyToolbar(editor),
     editor,
-    getSink: lazySink,
+    sharedBackstage: backstage.shared
   });
 
   // We need the statusbar to be separate to everything else so resizing works properly
   const editorComponents = Arr.flatten<AlloySpec>([
-    isToolbarTop ? [ partHeader ] : [ ],
+    isToolbarBottom ? [ ] : [ partHeader ],
     // Inline mode does not have a socket/sidebar
     isInline ? [ ] : [ socketSidebarContainer ],
-    isToolbarTop ? [ ] : [ partHeader ]
+    isToolbarBottom ? [ partHeader ] : [ ]
   ]);
 
   const editorContainer = {
@@ -275,7 +275,7 @@ const setup = (editor: Editor): RenderInfo => {
   ]);
 
   // Hide the outer container if using inline mode and there's no menubar or toolbar
-  const isHidden = isDistractionFree(editor);
+  const isHidden = Settings.isDistractionFree(editor);
 
   const attributes = {
     role: 'application',
@@ -289,7 +289,7 @@ const setup = (editor: Editor): RenderInfo => {
         tag: 'div',
         classes: [ 'tox', 'tox-tinymce' ]
           .concat(isInline ? [ 'tox-tinymce-inline' ] : [])
-          .concat(isToolbarTop ? [] : [ 'tox-tinymce--toolbar-bottom' ])
+          .concat(isToolbarBottom ? [ 'tox-tinymce--toolbar-bottom' ] : [])
           .concat(deviceClasses)
           .concat(platformClasses),
         styles: {
@@ -360,26 +360,26 @@ const setup = (editor: Editor): RenderInfo => {
   };
 
   const renderUI = function (): ModeRenderInfo {
-    header.setup(editor, lazyHeader);
+    header.setup(editor, backstage.shared, lazyHeader);
     FormatControls.setup(editor, backstage);
     SilverContextMenu.setup(editor, lazySink, backstage);
     Sidebar.setup(editor);
     Throbber.setup(editor, lazyThrobber, backstage.shared);
 
-    Obj.map(getToolbarGroups(editor), (toolbarGroupButtonConfig, name) => {
+    Obj.map(Settings.getToolbarGroups(editor), (toolbarGroupButtonConfig, name) => {
       editor.ui.registry.addGroupToolbarButton(name, toolbarGroupButtonConfig);
     });
 
     // Apply Bridge types
     const { buttons, menuItems, contextToolbars, sidebars } = editor.ui.registry.getAll();
-    const toolbarOpt: Option<ToolbarConfig> = getMultipleToolbarsSetting(editor);
+    const toolbarOpt: Option<ToolbarConfig> = Settings.getMultipleToolbarsSetting(editor);
     const rawUiConfig: RenderUiConfig = {
       menuItems,
 
       menus: !editor.settings.menu ? {} : Obj.map(editor.settings.menu, (menu) => ({ ...menu, items: menu.items })),
       menubar: editor.settings.menubar,
       toolbar: toolbarOpt.getOrThunk(() => editor.getParam('toolbar', true)),
-      allowToolbarGroups: toolbarMode === ToolbarMode.floating,
+      allowToolbarGroups: toolbarMode === Settings.ToolbarMode.floating,
       buttons,
 
       // Apollo, not implemented yet

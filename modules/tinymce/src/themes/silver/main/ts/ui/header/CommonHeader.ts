@@ -5,17 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, Behaviour, SimpleSpec } from '@ephox/alloy';
-import { Result } from '@ephox/katamari';
+import { AlloySpec, Behaviour, SimpleSpec } from '@ephox/alloy';
 
 import Editor from 'tinymce/core/api/Editor';
+import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import * as StickyHeader from './StickyHeader';
 import * as StaticHeader from './StaticHeader';
 
 export interface HeaderSpec extends SimpleSpec {
   sticky: boolean;
   editor: Editor;
-  getSink: () => Result<AlloyComponent, Error>;
+  sharedBackstage: UiFactoryBackstageShared;
 }
 
 const renderHeader = (spec: HeaderSpec): AlloySpec => {
@@ -25,7 +25,7 @@ const renderHeader = (spec: HeaderSpec): AlloySpec => {
     uid: spec.uid,
     dom: spec.dom,
     components: spec.components,
-    behaviours: Behaviour.derive(getBehaviours(editor, spec.getSink))
+    behaviours: Behaviour.derive(getBehaviours(editor, spec.sharedBackstage))
   };
 };
 
