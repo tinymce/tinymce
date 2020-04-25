@@ -1,5 +1,6 @@
 /*eslint-env node */
 
+let path = require('path');
 let zipUtils = require('./tools/modules/zip-helper');
 let gruntUtils = require('./tools/modules/grunt-utils');
 let gruntWebPack = require('./tools/modules/grunt-webpack');
@@ -28,6 +29,14 @@ let oxideUiSkinMap = {
 const stripSourceMaps = function (data) {
   const sourcemap = data.lastIndexOf('/*# sourceMappingURL=');
   return sourcemap > -1 ? data.slice(0, sourcemap) : data;
+};
+
+const remapSandPlatformDetection = (importee) => {
+  if (importee.endsWith('ephox/sand/api/PlatformDetection.js')) {
+    return path.resolve('./lib/globals/sand/api/PlatformDetection.js');
+  } else {
+    return importee;
+  }
 };
 
 module.exports = function (grunt) {
@@ -99,7 +108,8 @@ module.exports = function (grunt) {
                 ]),
                 mappers: [
                   swag.mappers.replaceDir('./lib/core/main/ts/api', './lib/globals/tinymce/core/api'),
-                  swag.mappers.invalidDir('./lib/core/main/ts')
+                  swag.mappers.invalidDir('./lib/core/main/ts'),
+                  remapSandPlatformDetection
                 ]
               }),
               swag.remapImports()
@@ -125,7 +135,8 @@ module.exports = function (grunt) {
                 ]),
                 mappers: [
                   swag.mappers.replaceDir('./lib/core/main/ts/api', './lib/globals/tinymce/core/api'),
-                  swag.mappers.invalidDir('./lib/core/main/ts')
+                  swag.mappers.invalidDir('./lib/core/main/ts'),
+                  remapSandPlatformDetection
                 ]
               }),
               swag.remapImports()
@@ -281,6 +292,14 @@ module.exports = function (grunt) {
           {
             src: '../../README.md',
             dest: 'js/tinymce/readme.md'
+          }
+        ]
+      },
+      'platform-detection': {
+        files: [
+          {
+            src: 'src/core/main/js/PlatformDetection.js',
+            dest: 'lib/globals/sand/api/PlatformDetection.js',
           }
         ]
       },
@@ -843,6 +862,7 @@ module.exports = function (grunt) {
     'shell:tsc',
     'eslint',
     'globals',
+    'copy:platform-detection',
     'rollup',
     'unicode',
     'concat',
@@ -861,6 +881,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('dev', [
     'globals',
+    'copy:platform-detection',
     'unicode',
     // TODO: Make webpack use the oxide CSS directly
     // as well as making development easier, then we can update 'yarn dev' to run 'oxide-build' in parallel with 'tinymce-grunt dev'
