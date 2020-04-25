@@ -1,6 +1,7 @@
 import { GeneralSteps, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
 
 import SearchreplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -10,6 +11,7 @@ import * as Utils from '../module/test/Utils';
 UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTest', (success, failure) => {
   Theme();
   SearchreplacePlugin();
+  const browser = PlatformDetection.detect().browser;
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
@@ -57,6 +59,20 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTes
         Utils.sSelectPreference(tinyUi, 'Find whole words only'),
         sFindAndAssertFound(3),
         Utils.sSelectPreference(tinyUi, 'Find whole words only'),
+        Utils.sCloseDialog(tinyUi)
+      ]),
+      Log.stepsAsStep('TINY-4549', 'SearchReplace: Test some content selected with in selection enabled', [
+        tinyApis.sSetContent('<p>ttt TTT ttt ttttt</p>'),
+        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 7),
+        Utils.sOpenDialog(tinyUi),
+        Utils.sAssertFieldValue(tinyUi, 'input.tox-textfield[placeholder="Find"]', 'ttt TTT'),
+        Utils.sSetFieldValue(tinyUi, 'input.tox-textfield[placeholder="Find"]', 'ttt'),
+        Utils.sSelectPreference(tinyUi, 'Find in selection'),
+        sFindAndAssertFound(2),
+        browser.isIE() ? // TODO: Look into what to do with IE as it has a single selection model which causes some different behaviour
+          tinyApis.sAssertSelection([ 0, 0 ] , 0, [ 0, 0 ], 0) :
+          tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 4),
+        Utils.sSelectPreference(tinyUi, 'Find in selection'),
         Utils.sCloseDialog(tinyUi)
       ]),
       Log.stepsAsStep('TBA', 'SearchReplace: Test some content selected while changing preferences', [

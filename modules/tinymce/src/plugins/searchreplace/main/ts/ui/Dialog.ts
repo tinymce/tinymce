@@ -18,6 +18,7 @@ export interface DialogData {
   replacetext: string;
   matchcase: boolean;
   wholewords: boolean;
+  inselection: boolean;
 }
 
 const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchState>) {
@@ -40,7 +41,8 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     currentSearchState.set({
       ...current,
       matchCase: data.matchcase,
-      wholeWord: data.wholewords
+      wholeWord: data.wholewords,
+      inSelection: data.inselection
     });
   };
 
@@ -87,7 +89,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
       Actions.next(editor, currentSearchState);
     } else {
       // Find new matches
-      const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords);
+      const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords, data.inselection);
       if (count <= 0) {
         notFoundAlert(api);
       }
@@ -103,7 +105,8 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     findtext: selectedText,
     replacetext: '',
     wholewords: initialState.wholeWord,
-    matchcase: initialState.matchCase
+    matchcase: initialState.matchCase,
+    inselection: initialState.inSelection
   };
 
   const spec: Types.Dialog.DialogApi<DialogData> = {
@@ -145,7 +148,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
           name: 'replacetext',
           placeholder: 'Replace with',
           inputMode: 'search'
-        },
+        }
       ]
     },
     buttons: [
@@ -164,6 +167,11 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
             type: 'togglemenuitem',
             name: 'wholewords',
             text: 'Find whole words only'
+          },
+          {
+            type: 'togglemenuitem',
+            name: 'inselection',
+            text: 'Find in selection'
           }
         ]
       },
@@ -219,6 +227,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
           break;
         case 'matchcase':
         case 'wholewords':
+        case 'inselection':
           updateSearchState(api);
           reset(api);
           break;
