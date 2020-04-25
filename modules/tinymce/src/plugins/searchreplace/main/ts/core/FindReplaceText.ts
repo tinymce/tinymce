@@ -5,268 +5,70 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, Node } from '@ephox/dom-globals';
-import Schema from 'tinymce/core/api/html/Schema';
+import { HTMLElement, Node, Range } from '@ephox/dom-globals';
+import { Arr, Fun } from '@ephox/katamari';
+import { DomSearch, NamedPattern, SearchResult } from '@ephox/phoenix';
+import { PRegExp } from '@ephox/polaris';
+import { Attr, Element, Elements, Insert } from '@ephox/sugar';
+import Selection from 'tinymce/core/api/dom/Selection';
 
-function isContentEditableFalse(node: HTMLElement) {
-  return node && node.nodeType === 1 && node.contentEditable === 'false';
-}
+const isNodeWithin = (rng: Range, node: Node) => {
+  const document = node.ownerDocument;
+  const innerRange = document.createRange();
+  innerRange.selectNode(node);
+  return innerRange.compareBoundaryPoints(rng.END_TO_START, rng) < 1 && innerRange.compareBoundaryPoints(rng.START_TO_END, rng) > -1;
+};
 
-// Based on work developed by: James Padolsey http://james.padolsey.com
-// released under UNLICENSE that is compatible with LGPL
-// TODO: Handle contentEditable edgecase:
-// <p>text<span contentEditable="false">text<span contentEditable="true">text</span>text</span>text</p>
-function findAndReplaceDOMText(regex: RegExp, node: Node, replacementNode: Node, captureGroup: number | false, schema: Schema) {
-  let m;
-  const matches = [];
-  let text, count = 0, doc;
-  let blockElementsMap, hiddenTextElementsMap, shortEndedElementsMap;
+const findNodesInRange = (rng: Range) => {
+  const commonAncestor = rng.commonAncestorContainer;
+  return Arr.filter(commonAncestor.childNodes, Fun.curry(isNodeWithin, rng));
+};
 
-  doc = node.ownerDocument;
-  blockElementsMap = schema.getBlockElements(); // H1-H6, P, TD etc
-  hiddenTextElementsMap = schema.getWhiteSpaceElements(); // TEXTAREA, PRE, STYLE, SCRIPT
-  shortEndedElementsMap = schema.getShortEndedElements(); // BR, IMG, INPUT
+const find = (pattern: PRegExp, nodes: Node[]) => DomSearch.run(Elements.fromDom(nodes), [ NamedPattern('', pattern) ]);
 
-  function getMatchIndexes(m: RegExpMatchArray, captureGroup: number | false) {
-    captureGroup = captureGroup || 0;
+const mark = (matches: SearchResult<Element>[], replacementNode: HTMLElement) => {
+  Arr.each(matches, (match, idx) => {
+    Arr.each(match.elements(), (elm) => {
+      const wrapper = Element.fromDom(replacementNode.cloneNode(false) as HTMLElement);
+      Attr.set(wrapper, 'data-mce-index', idx);
+      Insert.wrap(elm, wrapper);
+    });
+  });
+};
 
-    if (!m[0]) {
-      throw new Error('findAndReplaceDOMText cannot handle zero-length matches');
-    }
+const findAndMark = (pattern: PRegExp, node: Node, replacementNode: HTMLElement) => {
+  const matches = find(pattern, [ node ]);
+  mark(matches, replacementNode);
+  return matches.length;
+};
 
-    let index = m.index;
+const findAndMarkInSelection = (pattern: PRegExp, selection: Selection, replacementNode: HTMLElement) => {
+  const bookmark = selection.getBookmark();
 
-    if (captureGroup > 0) {
-      const cg = m[captureGroup];
+  // Find matching text nodes
+  const nodes = findNodesInRange(selection.getRng());
+  const nodeMatches = find(pattern, nodes);
 
-      if (!cg) {
-        throw new Error('Invalid capture group');
-      }
+  // Restore the selection so we can compare if the matches are within the original range
+  // but ensure the bookmark markers aren't removed
+  selection.moveToBookmark({ ...bookmark, keep: true });
 
-      index += m[0].indexOf(cg);
-      m[0] = cg;
-    }
+  // Filter out any text matches outside the range, as the node may only be partly selected
+  const rng = selection.getRng();
+  const matches = Arr.foldl(nodeMatches, (acc, match) => {
+    const elements = Arr.filter(match.elements(), (e) => isNodeWithin(rng, e.dom()));
+    return elements.length > 0 ? acc.concat({ ...match, elements: Fun.constant(elements) }) : acc;
+  }, [] as SearchResult<Element>[]);
 
-    return [ index, index + m[0].length, [ m[0] ]];
-  }
+  // Mark matches
+  mark(matches, replacementNode);
 
-  function getText(node) {
-    let txt;
-
-    if (node.nodeType === 3) {
-      return node.data;
-    }
-
-    if (hiddenTextElementsMap[node.nodeName] && !blockElementsMap[node.nodeName]) {
-      return '';
-    }
-
-    txt = '';
-
-    if (isContentEditableFalse(node)) {
-      return '\n';
-    }
-
-    if (blockElementsMap[node.nodeName] || shortEndedElementsMap[node.nodeName]) {
-      txt += '\n';
-    }
-
-    if ((node = node.firstChild)) {
-      do {
-        txt += getText(node);
-      } while ((node = node.nextSibling));
-    }
-
-    return txt;
-  }
-
-  function stepThroughMatches(node, matches, replaceFn) {
-    let startNode, endNode, startNodeIndex,
-      endNodeIndex, innerNodes = [], atIndex = 0, curNode = node,
-      matchLocation = matches.shift(), matchIndex = 0;
-
-    out: while (true) {
-      if (blockElementsMap[curNode.nodeName] || shortEndedElementsMap[curNode.nodeName] || isContentEditableFalse(curNode)) {
-        atIndex++;
-      }
-
-      if (curNode.nodeType === 3) {
-        if (!endNode && curNode.length + atIndex >= matchLocation[1]) {
-          // We've found the ending
-          endNode = curNode;
-          endNodeIndex = matchLocation[1] - atIndex;
-        } else if (startNode) {
-          // Intersecting node
-          innerNodes.push(curNode);
-        }
-
-        if (!startNode && curNode.length + atIndex > matchLocation[0]) {
-          // We've found the match start
-          startNode = curNode;
-          startNodeIndex = matchLocation[0] - atIndex;
-        }
-
-        atIndex += curNode.length;
-      }
-
-      if (startNode && endNode) {
-        curNode = replaceFn({
-          startNode,
-          startNodeIndex,
-          endNode,
-          endNodeIndex,
-          innerNodes,
-          match: matchLocation[2],
-          matchIndex
-        });
-
-        // replaceFn has to return the node that replaced the endNode
-        // and then we step back so we can continue from the end of the
-        // match:
-        atIndex -= (endNode.length - endNodeIndex);
-        startNode = null;
-        endNode = null;
-        innerNodes = [];
-        matchLocation = matches.shift();
-        matchIndex++;
-
-        if (!matchLocation) {
-          break; // no more matches
-        }
-      } else if ((!hiddenTextElementsMap[curNode.nodeName] || blockElementsMap[curNode.nodeName]) && curNode.firstChild) {
-        if (!isContentEditableFalse(curNode)) {
-          // Move down
-          curNode = curNode.firstChild;
-          continue;
-        }
-      } else if (curNode.nextSibling) {
-        // Move forward:
-        curNode = curNode.nextSibling;
-        continue;
-      }
-
-      // Move forward or up:
-      while (true) {
-        if (curNode.nextSibling) {
-          curNode = curNode.nextSibling;
-          break;
-        } else if (curNode.parentNode !== node) {
-          curNode = curNode.parentNode;
-        } else {
-          break out;
-        }
-      }
-    }
-  }
-
-  /**
-  * Generates the actual replaceFn which splits up text nodes
-  * and inserts the replacement element.
-  */
-  function genReplacer(nodeName) {
-    let makeReplacementNode;
-
-    if (typeof nodeName !== 'function') {
-      const stencilNode = nodeName.nodeType ? nodeName : doc.createElement(nodeName);
-
-      makeReplacementNode = function (fill, matchIndex) {
-        const clone = stencilNode.cloneNode(false);
-
-        clone.setAttribute('data-mce-index', matchIndex);
-
-        if (fill) {
-          clone.appendChild(doc.createTextNode(fill));
-        }
-
-        return clone;
-      };
-    } else {
-      makeReplacementNode = nodeName;
-    }
-
-    return function (range) {
-      let before;
-      let after;
-      let parentNode;
-      const startNode = range.startNode;
-      const endNode = range.endNode;
-      const matchIndex = range.matchIndex;
-
-      if (startNode === endNode) {
-        const node = startNode;
-
-        parentNode = node.parentNode;
-        if (range.startNodeIndex > 0) {
-          // Add `before` text node (before the match)
-          before = doc.createTextNode(node.data.substring(0, range.startNodeIndex));
-          parentNode.insertBefore(before, node);
-        }
-
-        // Create the replacement node:
-        const el = makeReplacementNode(range.match[0], matchIndex);
-        parentNode.insertBefore(el, node);
-        if (range.endNodeIndex < node.length) {
-          // Add `after` text node (after the match)
-          after = doc.createTextNode(node.data.substring(range.endNodeIndex));
-          parentNode.insertBefore(after, node);
-        }
-
-        node.parentNode.removeChild(node);
-
-        return el;
-      }
-
-      // Replace startNode -> [innerNodes...] -> endNode (in that order)
-      before = doc.createTextNode(startNode.data.substring(0, range.startNodeIndex));
-      after = doc.createTextNode(endNode.data.substring(range.endNodeIndex));
-      const elA = makeReplacementNode(startNode.data.substring(range.startNodeIndex), matchIndex);
-      const innerEls = [];
-
-      for (let i = 0, l = range.innerNodes.length; i < l; ++i) {
-        const innerNode = range.innerNodes[i];
-        const innerEl = makeReplacementNode(innerNode.data, matchIndex);
-        innerNode.parentNode.replaceChild(innerEl, innerNode);
-        innerEls.push(innerEl);
-      }
-
-      const elB = makeReplacementNode(endNode.data.substring(0, range.endNodeIndex), matchIndex);
-
-      parentNode = startNode.parentNode;
-      parentNode.insertBefore(before, startNode);
-      parentNode.insertBefore(elA, startNode);
-      parentNode.removeChild(startNode);
-
-      parentNode = endNode.parentNode;
-      parentNode.insertBefore(elB, endNode);
-      parentNode.insertBefore(after, endNode);
-      parentNode.removeChild(endNode);
-
-      return elB;
-    };
-  }
-
-  text = getText(node);
-  if (!text) {
-    return;
-  }
-
-  if (regex.global) {
-    while ((m = regex.exec(text))) {
-      matches.push(getMatchIndexes(m, captureGroup));
-    }
-  } else {
-    m = text.match(regex);
-    matches.push(getMatchIndexes(m, captureGroup));
-  }
-
-  if (matches.length) {
-    count = matches.length;
-    stepThroughMatches(node, matches, genReplacer(replacementNode));
-  }
-
-  return count;
-}
+  // Restore the selection one last time
+  selection.moveToBookmark(bookmark);
+  return matches.length;
+};
 
 export {
-  findAndReplaceDOMText
+  findAndMark,
+  findAndMarkInSelection
 };

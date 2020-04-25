@@ -6,8 +6,8 @@
  */
 
 import { Element, Node } from '@ephox/dom-globals';
-import { Cell } from '@ephox/katamari';
-import { Pattern } from '@ephox/polaris';
+import { Cell, Fun, Option } from '@ephox/katamari';
+import { Pattern, PRegExp } from '@ephox/polaris';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -19,6 +19,7 @@ export interface SearchState {
   text: string;
   matchCase: boolean;
   wholeWord: boolean;
+  inSelection: boolean;
 }
 
 const getElmIndex = function (elm: Element) {
@@ -31,7 +32,7 @@ const getElmIndex = function (elm: Element) {
   return value;
 };
 
-const markAllMatches = function (editor: Editor, currentSearchState: Cell<SearchState>, regex: RegExp) {
+const markAllMatches = function (editor: Editor, currentSearchState: Cell<SearchState>, pattern: PRegExp, inSelection: boolean) {
   let node, marker;
 
   marker = editor.dom.create('span', {
@@ -43,7 +44,11 @@ const markAllMatches = function (editor: Editor, currentSearchState: Cell<Search
 
   done(editor, currentSearchState, false);
 
-  return FindReplaceText.findAndReplaceDOMText(regex, node, marker, 1, editor.schema);
+  if (inSelection) {
+    return FindReplaceText.findAndMarkInSelection(pattern, editor.selection, marker);
+  } else {
+    return FindReplaceText.findAndMark(pattern, node, marker);
+  }
 };
 
 const unwrap = function (node: Node) {
@@ -127,10 +132,16 @@ const escapeSearchText = (text: string, wholeWord: boolean) => {
   return wholeWord ? `(?:^|\\s|${Pattern.punctuation()})` + wordRegex + `(?=$|\\s|${Pattern.punctuation()})` : wordRegex;
 };
 
-const find = function (editor: Editor, currentSearchState: Cell<SearchState>, text: string, matchCase: boolean, wholeWord: boolean) {
+const find = function (editor: Editor, currentSearchState: Cell<SearchState>, text: string, matchCase: boolean, wholeWord: boolean, inSelection: boolean) {
   const escapedText = escapeSearchText(text, wholeWord);
 
-  const count = markAllMatches(editor, currentSearchState, new RegExp(escapedText, matchCase ? 'g' : 'gi'));
+  const pattern = Pattern.custom(
+    escapedText,
+    (match) => match[0].length - match[1].length,
+    Fun.constant(0),
+    Option.some(matchCase ? 'g' : 'gi')
+  );
+  const count = markAllMatches(editor, currentSearchState, pattern, inSelection);
 
   if (count) {
     const newIndex = moveSelection(editor, currentSearchState, true);
@@ -139,7 +150,8 @@ const find = function (editor: Editor, currentSearchState: Cell<SearchState>, te
       count,
       text,
       matchCase,
-      wholeWord
+      wholeWord,
+      inSelection
     });
   }
 
