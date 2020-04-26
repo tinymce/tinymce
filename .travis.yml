@@ -3,7 +3,7 @@ language: node_js
 os: linux
 
 node_js:
-  - node
+  - 13
 
 cache: yarn
 
@@ -14,7 +14,4 @@ before_script:
   - npm install -g chromedriver
 
 script:
-  - yarn eslint
-  - yarn build
-  - yarn phantomjs-test
-  - yarn browser-test
+  - timeout 10 npx chromedriver --port=4444
