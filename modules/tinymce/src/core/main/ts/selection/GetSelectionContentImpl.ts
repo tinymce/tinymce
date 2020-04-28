@@ -12,8 +12,13 @@ import * as FragmentReader from './FragmentReader';
 import * as MultiRange from './MultiRange';
 import * as Zwsp from '../text/Zwsp';
 import Editor from '../api/Editor';
-import { Content } from '../content/GetContent';
+import { Content, GetContentArgs } from '../content/GetContent';
 import { ContentFormat } from '../content/GetContentImpl';
+
+export interface GetSelectionContentArgs extends GetContentArgs {
+  selection?: boolean;
+  contextual?: boolean;
+}
 
 const getTextContent = (editor: Editor): string => Option.from(editor.selection.getRng()).map((rng) => {
   const bin = editor.dom.add(editor.getBody(), 'div', {
@@ -26,7 +31,7 @@ const getTextContent = (editor: Editor): string => Option.from(editor.selection.
   return text;
 }).getOr('');
 
-const getSerializedContent = (editor: Editor, args: any): Content => {
+const getSerializedContent = (editor: Editor, args: GetSelectionContentArgs): Content => {
   const rng = editor.selection.getRng(), tmpElm = editor.dom.create('body');
   const sel = editor.selection.getSel();
   const ranges = EventProcessRanges.processRanges(editor, MultiRange.getRanges(sel));
@@ -39,7 +44,7 @@ const getSerializedContent = (editor: Editor, args: any): Content => {
   return editor.selection.serializer.serialize(tmpElm, args);
 };
 
-export const getSelectedContentInternal = (editor: Editor, format: ContentFormat, args: any = {}): Content => {
+export const getSelectedContentInternal = (editor: Editor, format: ContentFormat, args: GetSelectionContentArgs = {}): Content => {
   args.get = true;
   args.format = format;
   args.selection = true;
@@ -59,7 +64,7 @@ export const getSelectedContentInternal = (editor: Editor, format: ContentFormat
     if (args.format === 'tree') {
       return content;
     } else {
-      args.content = editor.selection.isCollapsed() ? '' : content;
+      args.content = editor.selection.isCollapsed() ? '' : content as string;
       editor.fire('GetContent', args);
       return args.content;
     }
