@@ -11,7 +11,8 @@ import Selection from '../api/dom/Selection';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
-import { FormatAttrOrStyleValue, FormatVars } from '../api/fmt/Format';
+import { FormatAttrOrStyleValue, FormatVars, Format } from '../api/fmt/Format';
+import { Obj, Arr } from '@ephox/katamari';
 
 const isNode = (node: any): node is Node => !!(node).nodeType;
 
@@ -169,6 +170,59 @@ const getParents = function (dom: DOMUtils, node: Node, selector?: string) {
   return dom.getParents(node, selector, dom.getRoot());
 };
 
+const isVariableFormatName = (editor: Editor, formatName: string): boolean => {
+  const hasVariableValues = (format: Format) => {
+    const isVariableValue = (val: string): boolean => val.length > 1 && val.charAt(0) === '%';
+    const stylesFieldHas = Obj.get(format, 'styles').exists((stylesField) => Arr.exists(Obj.values(stylesField), isVariableValue));
+    const attributesFieldHas = Obj.get(format, 'attributes').exists((attributesField) => Arr.exists(Obj.values(attributesField), isVariableValue));
+    return stylesFieldHas || attributesFieldHas;
+  };
+  return Arr.exists(editor.formatter.get(formatName) as Format[], (format) => hasVariableValues(format));
+};
+
+/**
+ *  Get all of the format names present on the specifed node
+ */
+const getFormatNamesPresent = (editor: Editor, node: Node, blacklist: string[] = [ 'removeformat' ], deep: boolean = false): string[] => {
+  const validFormats = Arr.filter(Obj.keys(editor.formatter.get()), (name) => !Arr.exists(blacklist, (blacklistedName) => blacklistedName === name));
+  const formats = Arr.map(validFormats, (name) => ({
+    name,
+    matchSimilar: isVariableFormatName(editor, name),
+    checked: false
+  }));
+  const matchedFormatNames: string[] = [];
+
+  const checkNodeForFormats = (currentNode: Node) => {
+    Arr.each(formats, (format) => {
+      if (!format.checked && editor.formatter.matchNode(currentNode, format.name, {}, format.matchSimilar)) {
+        format.checked = true;
+        matchedFormatNames.push(format.name);
+      }
+    });
+    if (deep) {
+      Arr.each(currentNode.childNodes, (child) => checkNodeForFormats(child));
+    }
+  };
+
+  checkNodeForFormats(node);
+  return matchedFormatNames;
+};
+
+/**
+ * Checks if the two formats are similar based on the format type, attributes, styles and classes
+ */
+const areSimilarFormats = (editor: Editor, formatName: string, otherFormatName: string) => {
+  const validKeys = [ 'inline', 'block', 'selector', 'attributes', 'styles', 'classes' ];
+  const filterObj = (format) => Obj.filter(format, (_, key) => Arr.exists(validKeys, (validKey) => validKey === key));
+  return Arr.exists(editor.formatter.get(formatName) as Format[], (fmt1) => {
+    const filteredFmt1 = filterObj(fmt1);
+    return Arr.exists(editor.formatter.get(otherFormatName) as Format[], (fmt2) => {
+      const filteredFmt2 = filterObj(fmt2);
+      return Obj.equal(filteredFmt1, filteredFmt2);
+    });
+  });
+};
+
 export {
   isNode,
   isInlineBlock,
@@ -183,5 +237,7 @@ export {
   normalizeStyleValue,
   getStyle,
   getTextDecoration,
-  getParents
+  getParents,
+  getFormatNamesPresent,
+  areSimilarFormats
 };

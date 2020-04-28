@@ -29,6 +29,7 @@ Version 5.3.0 (TBD)
     Fixed an issue where the editor would fail to load if local storage was disabled #TINY-5935
     Fixed an issue where an uploaded image would reuse a cached image with a different mime type #TINY-5988
     Fixed bug where toolbars and dialogs would not show if the body element was replaced (e.g. with Turbolinks). Patch contributed by spohlenz #GH-5653
+    Fixed an issue where multiple formats would be removed when removing a single format at the end of lines or on empty lines #TINY-1170
     Fixed zero-width spaces incorrectly included in the `wordcount` plugin character count #TINY-5991
     Fixed a regression introduced in 5.2.0 whereby the desktop `toolbar_mode` setting would incorrectly override the mobile default setting #TINY-5998
 Version 5.2.2 (2020-04-23)

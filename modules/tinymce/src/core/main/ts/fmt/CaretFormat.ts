@@ -8,7 +8,6 @@
 import { Document, Node, Range } from '@ephox/dom-globals';
 import { Arr, Fun } from '@ephox/katamari';
 import { Attr, Element, Insert, Node as SugarNode, Remove } from '@ephox/sugar';
-import Selection from '../api/dom/Selection';
 import TreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import { FormatVars } from '../api/fmt/Format';
@@ -30,7 +29,7 @@ const importNode = function (ownerDocument: Document, node: Node) {
 };
 
 const getEmptyCaretContainers = function (node: Node) {
-  const nodes = [];
+  const nodes: Node[] = [];
 
   while (node) {
     if ((node.nodeType === 3 && node.nodeValue !== ZWSP) || node.childNodes.length > 1) {
@@ -173,13 +172,13 @@ const insertFormatNodesIntoCaretContainer = function (formatNodes: Node[], caret
 };
 
 const applyCaretFormat = function (editor: Editor, name: string, vars: FormatVars) {
-  let rng, caretContainer, textNode, offset, bookmark, container, text;
+  let caretContainer: Node, textNode: Node;
   const selection = editor.selection;
 
-  rng = selection.getRng();
-  offset = rng.startOffset;
-  container = rng.startContainer;
-  text = container.nodeValue;
+  const selectionRng = selection.getRng();
+  let offset = selectionRng.startOffset;
+  const container = selectionRng.startContainer;
+  const text = container.nodeValue;
 
   caretContainer = getParentCaretContainer(editor.getBody(), selection.getStart());
   if (caretContainer) {
@@ -191,13 +190,13 @@ const applyCaretFormat = function (editor: Editor, name: string, vars: FormatVar
   if (text && offset > 0 && offset < text.length &&
     wordcharRegex.test(text.charAt(offset)) && wordcharRegex.test(text.charAt(offset - 1))) {
     // Get bookmark of caret position
-    bookmark = selection.getBookmark();
+    const bookmark = selection.getBookmark();
 
     // Collapse bookmark range (WebKit)
-    rng.collapse(true);
+    selectionRng.collapse(true);
 
     // Expand the range to the closest word and split it at those points
-    rng = ExpandRange.expandRng(editor, rng, editor.formatter.get(name));
+    let rng = ExpandRange.expandRng(editor, selectionRng, editor.formatter.get(name));
     rng = SplitRange.split(rng);
 
     // Apply the format to the range
@@ -211,7 +210,7 @@ const applyCaretFormat = function (editor: Editor, name: string, vars: FormatVar
       caretContainer = importNode(editor.getDoc(), createCaretContainer(true).dom());
       textNode = caretContainer.firstChild;
 
-      rng.insertNode(caretContainer);
+      selectionRng.insertNode(caretContainer);
       offset = 1;
 
       editor.formatter.apply(name, vars, caretContainer);
@@ -225,14 +224,14 @@ const applyCaretFormat = function (editor: Editor, name: string, vars: FormatVar
 };
 
 const removeCaretFormat = function (editor: Editor, name: string, vars: FormatVars, similar: boolean) {
-  const dom = editor.dom, selection: Selection = editor.selection;
-  let container, offset, bookmark;
-  let hasContentAfter, node, formatNode;
-  const parents = [], rng = selection.getRng();
-  let caretContainer;
+  const dom = editor.dom;
+  const selection = editor.selection;
+  let hasContentAfter: boolean, node: Node, formatNode: Node;
+  const parents: Node[] = [];
+  const rng = selection.getRng();
 
-  container = rng.startContainer;
-  offset = rng.startOffset;
+  const container = rng.startContainer;
+  const offset = rng.startOffset;
   node = container;
 
   if (container.nodeType === 3) {
@@ -264,7 +263,7 @@ const removeCaretFormat = function (editor: Editor, name: string, vars: FormatVa
 
   // Is there contents after the caret then remove the format on the element
   if (hasContentAfter) {
-    bookmark = selection.getBookmark();
+    const bookmark = selection.getBookmark();
 
     // Collapse bookmark range (WebKit)
     rng.collapse(true);
@@ -275,12 +274,23 @@ const removeCaretFormat = function (editor: Editor, name: string, vars: FormatVa
 
     // TODO: Figure out how on earth this works, as it shouldn't since remove format
     //  definitely seems to require an actual Range
-    editor.formatter.remove(name, vars, expandedRng as Range);
+    editor.formatter.remove(name, vars, expandedRng as Range, similar);
     selection.moveToBookmark(bookmark);
   } else {
-    caretContainer = getParentCaretContainer(editor.getBody(), formatNode);
+    const caretContainer = getParentCaretContainer(editor.getBody(), formatNode);
     const newCaretContainer = createCaretContainer(false).dom();
-    const caretNode = insertFormatNodesIntoCaretContainer(parents, newCaretContainer);
+
+    // Find all formats present on the format node
+    const matchedFormats = FormatUtils.getFormatNamesPresent(editor, formatNode, [ 'removeformat', name ]);
+    // Filter out any matched formats that are 'visually' equivalent to the 'name' format since they are not unique formats on the node
+    const uniqueFormats = Arr.filter(matchedFormats, (fmtName) => !FormatUtils.areSimilarFormats(editor, fmtName, name));
+    // If more than one format is present, push formatNode on to parents array so that it can be appended to the caret container
+    // As a result formatter.remove() below can deal with removing the 'name' format safely
+    if (uniqueFormats.length > 0) {
+      parents.push(formatNode);
+    }
+
+    const caretTextNode = insertFormatNodesIntoCaretContainer(parents, newCaretContainer);
 
     if (caretContainer) {
       insertCaretContainerNode(editor, newCaretContainer, caretContainer);
@@ -289,7 +299,12 @@ const removeCaretFormat = function (editor: Editor, name: string, vars: FormatVa
     }
 
     removeCaretContainerNode(editor, caretContainer, false);
-    selection.setCursorLocation(caretNode, 1);
+
+    if (uniqueFormats.length > 0) {
+      editor.formatter.remove(name, vars, newCaretContainer, similar);
+    }
+
+    selection.setCursorLocation(caretTextNode, 1);
 
     if (dom.isEmpty(formatNode)) {
       dom.remove(formatNode);

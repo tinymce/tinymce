@@ -1,3 +1,4 @@
+import { Eq } from '@ephox/dispute';
 import { Option } from './Option';
 import * as Fun from './Fun';
 
@@ -107,3 +108,6 @@ export const isEmpty = (r: Record<any, any>): boolean => {
   }
   return true;
 };
+
+export const equal = <T>(a1: Record<string, T>, a2:  Record<string, T>, eq: Eq.Eq<T> = Eq.eqAny) =>
+  Eq.eqRecord(eq).eq(a1, a2);
