@@ -1,6 +1,5 @@
 Version 5.3.0 (TBD)
     Added `uploadUri` and `blobInfo` to `editorUpload.uploadImages` return type #TINY-4579
-    Added `preserve_attributes` parameter to inline formats to assist with removing inline style element formats #TINY-4741
     Changed the `link`, `image` and `paste` plugins to use Promises to reduce the bundle size #TINY-4710
     Changed the default icons to be lazy loaded during initialization #TINY-4729
     Changed so base64 encoded urls are converted to blob urls when content is parsed #TINY-4727

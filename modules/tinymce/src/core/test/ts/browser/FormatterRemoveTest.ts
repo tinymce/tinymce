@@ -512,6 +512,24 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (success
     );
   });
 
+  suite.test('Remove color format on text with multiple underline text decorations', (editor) => {
+    editor.formatter.register('format', {
+      inline: 'span',
+      exact: true,
+      styles: {
+        color: '#ff0000'
+      }
+    });
+    editor.setContent('<p><span style="text-decoration: underline;">abc <span style="color: #ff0000; text-decoration: underline;">def</span> ghi</span></p>');
+    editor.selection.select(editor.dom.select('span')[1]);
+    editor.formatter.remove('format');
+    LegacyUnit.equal(
+      getContent(editor),
+      '<p><span style="text-decoration: underline;">abc def ghi</span></p>',
+      'Remove color format on text with multiple underline text decorations'
+    );
+  });
+
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {

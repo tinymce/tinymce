@@ -159,7 +159,7 @@ const removeNode = (ed: Editor, node: Node, format: RemoveFormatPartial) => {
       // Wrap the block in a forcedRootBlock if we are at the root of document
       if (parentNode === dom.getRoot()) {
         if (!format.list_block || !isEq(node, format.list_block)) {
-          Arr.each(Tools.grep(node.childNodes), (node) => {
+          Arr.each(Arr.from(node.childNodes), (node) => {
             if (FormatUtils.isValid(ed, forcedRootBlock, node.nodeName.toLowerCase())) {
               if (!rootBlockElm) {
                 rootBlockElm = wrap(dom, node, forcedRootBlock);
@@ -208,7 +208,7 @@ const removeFormat = (ed: Editor, format: RemoveFormatPartial, vars?: FormatVars
   const elm = node as DomElement;
 
   // Applies to styling elements like strong, em, i, u, etc. so that if they have styling attributes, the attributes can be kept but the styling element is removed
-  if (format.inline && Type.isArray(format.preserve_attributes)) {
+  if (format.inline && format.remove === 'all' && Type.isArray(format.preserve_attributes)) {
     // Remove all attributes except for the attributes specified in preserve_attributes
     Arr.each(dom.getAttribs(elm), (attr) => {
       if (attr) {
@@ -218,9 +218,9 @@ const removeFormat = (ed: Editor, format: RemoveFormatPartial, vars?: FormatVars
         }
       }
     });
-    // Note: If there are no atrributes left, the element will be removed as normal at the end of the function
+    // Note: If there are no attributes left, the element will be removed as normal at the end of the function
     if (dom.getAttribs(elm).length > 0) {
-      // Conert inline element to span if necessary
+      // Convert inline element to span if necessary
       ed.dom.rename(node, 'span');
       return true;
     }
@@ -417,7 +417,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
     }
 
     // Grab the children first since the nodelist might be changed
-    children = Tools.grep(node.childNodes);
+    children = Arr.from(node.childNodes);
 
     // Process current node
     if (contentEditable && !hasContentEditableState) {
@@ -431,9 +431,9 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
     // Process the children
     if (format.deep) {
       if (children.length) {
-        Arr.each(children, (child) => {
-          process(child);
-        });
+        for (let i = 0; i < children.length; i++) {
+          process(children[i]);
+        }
 
         if (hasContentEditableState) {
           contentEditable = lastContentEditable; // Restore last contentEditable state from stack
@@ -548,7 +548,9 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
       Arr.each(nodes, (node) => {
         process(node);
 
-        // Remove parent span if it only contains text-decoration, yet a parent node also has the same text decoration.
+        // Note: Assists with cleaning up any stray text decorations that may been applied when text decorations
+        // and text colors were merged together from a applied format
+        // Remove child span if it only contains text-decoration and a parent node also has the same text decoration.
         const textDecorations = [ 'underline', 'line-through', 'overline' ];
         Arr.each(textDecorations, (decoration) => {
           if (NodeType.isElement(node) && ed.dom.getStyle(node, 'text-decoration') === decoration &&
