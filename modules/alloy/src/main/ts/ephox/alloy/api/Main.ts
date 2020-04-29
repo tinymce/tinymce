@@ -1,3 +1,4 @@
+import * as AriaVoice from '../aria/AriaVoice';
 import * as Boxes from '../alien/Boxes';
 import * as EventRoot from '../alien/EventRoot';
 import { BehaviourState } from '../behaviour/common/BehaviourState';
@@ -145,6 +146,7 @@ import * as TestHelpers from './testhelpers/TestHelpers';
 // TODO: naughty non API's being exported
 // Type Def Exports
 export {
+  AriaVoice,
   AddEventsBehaviour,
   Behaviour,
   AllowBubbling,

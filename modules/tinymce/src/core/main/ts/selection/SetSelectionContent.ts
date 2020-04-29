@@ -5,11 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Editor from '../api/Editor';
-import * as ScrollIntoView from '../dom/ScrollIntoView';
-import { Range, DocumentFragment, Text } from '@ephox/dom-globals';
+import { DocumentFragment, Range, Text } from '@ephox/dom-globals';
 import { Option, Options } from '@ephox/katamari';
-import { Element, Traverse, Node, Remove } from '@ephox/sugar';
+import { Element, Node, Remove, Traverse } from '@ephox/sugar';
+import Editor from '../api/Editor';
+import Serializer from '../api/html/Serializer';
+import { EditorEvent } from '../api/util/EventDispatcher';
+import { SetContentArgs } from '../content/SetContentImpl';
+import * as ScrollIntoView from '../dom/ScrollIntoView';
+
+export interface SelectionSetContentArgs extends SetContentArgs {
+  selection?: boolean;
+}
 
 const prependData = (target: Text, data: string): void => {
   target.insertData(0, data);
@@ -50,24 +57,37 @@ const rngSetContent = (rng: Range, fragment: DocumentFragment): void => {
   rng.collapse(false);
 };
 
-const setupArgs = (args, content: string) => {
-  args = args || { format: 'html' };
-  args.set = true;
-  args.selection = true;
-  args.content = content;
-  return args;
+const setupArgs = (args: Partial<SelectionSetContentArgs>, content: string): SelectionSetContentArgs => ({
+  format: 'html',
+  ...args,
+  set: true,
+  selection: true,
+  content
+});
+
+const cleanContent = (editor: Editor, args: SelectionSetContentArgs) => {
+  if (args.format !== 'raw') {
+    const node = editor.parser.parse(args.content, { isRootContent: true, forced_root_block: false, ...args });
+    return Serializer({ validate: editor.validate }, editor.schema).serialize(node);
+  } else {
+    return args.content;
+  }
 };
 
-const setContent = (editor: Editor, content: string, args) => {
-  args = setupArgs(args, content); // mutates
+const setContent = (editor: Editor, content: string, args: SelectionSetContentArgs = {}) => {
+  // Note: Need to cast as an EditorEvent due to reusing the variable for the editor.fire() return value
+  let contentArgs = setupArgs(args, content) as EditorEvent<SelectionSetContentArgs>;
 
-  if (!args.no_events) {
-    args = editor.fire('BeforeSetContent', args);
-    if (args.isDefaultPrevented()) {
-      editor.fire('SetContent', args);
+  if (!contentArgs.no_events) {
+    contentArgs = editor.fire('BeforeSetContent', contentArgs);
+    if (contentArgs.isDefaultPrevented()) {
+      editor.fire('SetContent', contentArgs);
       return;
     }
   }
+
+  // Sanitize the content
+  args.content = cleanContent(editor, contentArgs);
 
   const rng = editor.selection.getRng();
   rngSetContent(rng, rng.createContextualFragment(args.content));
@@ -75,8 +95,8 @@ const setContent = (editor: Editor, content: string, args) => {
 
   ScrollIntoView.scrollRangeIntoView(editor, rng);
 
-  if (!args.no_events) {
-    editor.fire('SetContent', args);
+  if (!contentArgs.no_events) {
+    editor.fire('SetContent', contentArgs);
   }
 };
 

@@ -1,13 +1,14 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import Node from 'tinymce/core/api/html/Node';
 import Serializer from 'tinymce/core/api/html/Serializer';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
 
 UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTreeTest', (success, failure) => {
   Theme();
 
-  const toHtml = function (node) {
+  const toHtml = function (node: Node) {
     const htmlSerializer = Serializer({});
     return htmlSerializer.serialize(node);
   };
