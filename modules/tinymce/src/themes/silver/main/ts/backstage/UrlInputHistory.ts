@@ -6,7 +6,8 @@
  */
 
 import { Arr, Type, Obj } from '@ephox/katamari';
-import { console, localStorage } from '@ephox/dom-globals';
+import { console } from '@ephox/dom-globals';
+import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 
 const STORAGE_KEY = 'tinymce-url-history';
 const HISTORY_LENGTH = 5;
@@ -19,7 +20,7 @@ const isArrayOfUrl = (a: any): boolean => Type.isArray(a) && a.length <= HISTORY
 const isRecordOfUrlArray = (r: any): boolean => Type.isObject(r) && Obj.find(r, (value) => !isArrayOfUrl(value)).isNone();
 
 const getAllHistory = function (): Record<string, string[]> {
-  const unparsedHistory = localStorage.getItem(STORAGE_KEY);
+  const unparsedHistory = LocalStorage.getItem(STORAGE_KEY);
   if (unparsedHistory === null) {
     return {};
   }
@@ -48,7 +49,7 @@ const setAllHistory = function (history: Record<string, string[]>) {
   if (!isRecordOfUrlArray(history)) {
     throw new Error('Bad format for history:\n' + JSON.stringify(history));
   }
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+  LocalStorage.setItem(STORAGE_KEY, JSON.stringify(history));
 };
 
 const getHistory = function (fileType: string): string[] {
@@ -68,7 +69,7 @@ const addToHistory = function (url: string, fileType: string) {
 };
 
 const clearHistory = function () {
-  localStorage.removeItem(STORAGE_KEY);
+  LocalStorage.removeItem(STORAGE_KEY);
 };
 
 export {
