@@ -19,11 +19,15 @@ import * as FakeStorage from './FakeStorage';
 
 let localStorage: Storage;
 
-// IE11 with certain strict security settings will explode when trying to access localStorage
-// so we need to do a try/catch and a simple stub here. #TINY-1782
+// Browsers with certain strict security settings will explode when trying to access localStorage
+// so we need to do a try/catch and a simple stub here. #TINY-1782 & #TINY-5935
 
 try {
+  const test = '__storage_test__';
   localStorage = window.localStorage;
+  // Make sure we can set a value, as storage may also be full
+  localStorage.setItem(test, test);
+  localStorage.removeItem(test);
 } catch (e) {
   localStorage = FakeStorage.create();
 }
