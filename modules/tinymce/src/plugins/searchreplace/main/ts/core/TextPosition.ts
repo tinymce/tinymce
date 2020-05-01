@@ -17,9 +17,9 @@ interface IndexedTextMatch extends TextMatch {
 const find = (text: string, pattern: Pattern, start = 0, finish = text.length): Position[] => {
   const regex = pattern.regex;
   regex.lastIndex = start;
-  let match = regex.exec(text);
   const results = [];
-  while (match) {
+  let match;
+  while ((match = regex.exec(text))) {
     const matchedText = match[pattern.matchIndex];
     const matchStart = match.index + match[0].indexOf(matchedText);
     const matchFinish = matchStart + matchedText.length;
@@ -34,7 +34,6 @@ const find = (text: string, pattern: Pattern, start = 0, finish = text.length): 
       finish: matchFinish
     });
     regex.lastIndex = matchFinish;
-    match = regex.exec(text);
   }
   return results;
 };
@@ -47,13 +46,13 @@ const extract = (elements: Element<DomText>[], matches: Position[]): TextMatch[]
     const finish = start + content.length;
 
     // Find positions for any matches in the current text node
-    const positions = Arr.bind(matches, (matches, matchIdx) => {
+    const positions = Arr.bind(matches, (match, matchIdx) => {
       // Check to see if the match overlaps with the text position
-      if (matches.start < finish && matches.finish > start) {
+      if (match.start < finish && match.finish > start) {
         return [{
           element,
-          start: Math.max(start, matches.start) - start,
-          finish: Math.min(finish, matches.finish) - start,
+          start: Math.max(start, match.start) - start,
+          finish: Math.min(finish, match.finish) - start,
           matchId: matchIdx
         }];
       } else {

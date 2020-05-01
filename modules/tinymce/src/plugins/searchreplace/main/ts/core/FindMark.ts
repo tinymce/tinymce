@@ -61,7 +61,7 @@ const findAndMarkInSelection = (dom: DOMUtils, pattern: Pattern, selection: Sele
   const matches = find(pattern, textSections);
   mark(matches, replacementNode);
 
-  // Restore the selection one last time
+  // Restore the selection
   selection.moveToBookmark(bookmark);
   return matches.length;
 };

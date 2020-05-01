@@ -112,14 +112,14 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceInSelecti
         content: '^^ ^^ ^^^^',
         find: '^^',
         matches: 3,
-        sel: { sPath: [ 0, 0 ], sOffset: 0, fPath: [ 0, 0 ], fOffset: 9 }
+        sel: { sPath: [ 0, 0 ], sOffset: 0, fPath: [ 0, 0 ], fOffset: 8 }
       }),
       sTestInSelection('Find special characters match, whole words: true', {
         content: '^^ ^^ ^^^^',
         find: '^^',
         matches: 2,
         wholeWords: true,
-        sel: { sPath: [ 0, 0 ], sOffset: 0, fPath: [ 0, 0 ], fOffset: 9 }
+        sel: { sPath: [ 0, 0 ], sOffset: 0, fPath: [ 0, 0 ], fOffset: 8 }
       }),
       sTestInSelection('Find and replace single match', {
         content: 'a a a',
