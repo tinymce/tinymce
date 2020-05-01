@@ -16,10 +16,23 @@ module.exports = function (grunt) {
       }
     }
 
-    function append(dirPath, fileName, value) {
+    function append(dirPath, fileName, value, extrasPath) {
       if (value) {
         value.split(/,/).forEach(function (src) {
           appendFile(path.join(dirPath, src, fileName));
+          if (extrasPath) {
+            var extrasDir = path.join(dirPath, src, extrasPath)
+            var useMinified = fileName.indexOf('.min.') !== -1;
+            if (fs.existsSync(extrasDir)) {
+              var files = fs.readdirSync(extrasDir);
+              files.filter((extraFileName) => {
+                var isMinified = extraFileName.indexOf('.min.') !== -1;
+                return isMinified === useMinified;
+              }).forEach((extraFileName) => {
+                appendFile(path.join(extrasDir, extraFileName));
+              });
+            }
+          }
         });
       }
     }
@@ -51,7 +64,7 @@ module.exports = function (grunt) {
     });
 
     append(options.themesDir, options.themeFileName, themes);
-    append(options.pluginsDir, options.pluginFileName, plugins);
+    append(options.pluginsDir, options.pluginFileName, plugins, 'js');
     append(options.iconsDir, options.iconsFileName, icons);
 
     if (contents.length > 0) {
