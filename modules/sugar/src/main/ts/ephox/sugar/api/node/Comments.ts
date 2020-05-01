@@ -3,7 +3,7 @@ import { Fun, Option } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import Element from './Element';
 
-const regularGetNodes = <T extends DomNode> (texas: TreeWalker) => {
+const regularGetNodes = <T extends DomNode> (texas: TreeWalker): Element<T>[] => {
   const ret: Element<T>[] = [];
   while (texas.nextNode() !== null) {
     ret.push(Element.fromDom(texas.currentNode as T));
@@ -11,7 +11,7 @@ const regularGetNodes = <T extends DomNode> (texas: TreeWalker) => {
   return ret;
 };
 
-const ieGetNodes = <T extends DomNode> (texas: TreeWalker) => {
+const ieGetNodes = <T extends DomNode> (texas: TreeWalker): Element<T>[] => {
   // IE throws an error on nextNode() when there are zero nodes available, and any attempts I made to detect this
   // just resulted in throwing away valid cases
   try {
@@ -22,8 +22,10 @@ const ieGetNodes = <T extends DomNode> (texas: TreeWalker) => {
 };
 
 // I hate needing platform detection in Sugar, but the alternative is to always try/catch which will swallow coding errors as well
-const browser = PlatformDetection.detect().browser;
-const getNodes = browser.isIE() || browser.isEdge() ? ieGetNodes : regularGetNodes;
+const getNodes = <T extends DomNode> (texas: TreeWalker): Element<T>[] => {
+  const browser = PlatformDetection.detect().browser;
+  return browser.isIE() || browser.isEdge() ? ieGetNodes(texas) : regularGetNodes(texas);
+};
 
 // Weird, but oh well
 const noFilter = Fun.constant(Fun.constant(true));

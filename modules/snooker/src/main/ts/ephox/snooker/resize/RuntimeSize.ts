@@ -1,10 +1,9 @@
-import { PlatformDetection } from '@ephox/sand';
-import { Css, Height, Width, Element } from '@ephox/sugar';
 import { HTMLElement } from '@ephox/dom-globals';
-
-const platform = PlatformDetection.detect();
+import { PlatformDetection } from '@ephox/sand';
+import { Css, Element, Height, Width } from '@ephox/sugar';
 
 const needManualCalc = function () {
+  const platform = PlatformDetection.detect();
   return platform.browser.isIE() || platform.browser.isEdge();
 };
 

@@ -1,13 +1,11 @@
 import { DataTransfer, Element } from '@ephox/dom-globals';
-import { Arr, Type, Strings } from '@ephox/katamari';
+import { Arr, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
-const platform = PlatformDetection.detect();
-
 // IE 11 only supports 'Text' or 'URL' types see: https://msdn.microsoft.com/en-us/ie/ms536744(v=vs.94)
-const getPlatformType = (type: string) => platform.browser.isIE() ? 'text' : type;
+const getPlatformType = (type: string) => PlatformDetection.detect().browser.isIE() ? 'text' : type;
 
 const setDataTransferFallback = (transfer: DataTransfer, types: string[], data: string) => {
   Arr.each(types, (type) => {
@@ -32,8 +30,9 @@ const setData = (transfer: DataTransfer, types: string[], data: string) => {
   // IE only supports the transfer.setData api with 'text'
   // Edge throws exceptions when setting custom mime types
   // Firefox (ESR 60) and older will corrupt all drag/drop handling if you use the items api
-  const oldFirefox = platform.browser.isFirefox() && platform.browser.version.major < 66;
-  if (platform.browser.isIE() || platform.browser.isEdge() || oldFirefox) {
+  const browser = PlatformDetection.detect().browser;
+  const oldFirefox = browser.isFirefox() && browser.version.major < 66;
+  if (browser.isIE() || browser.isEdge() || oldFirefox) {
     setDataTransferFallback(transfer, types, data);
   } else {
     setDataItems(transfer, types, data);
