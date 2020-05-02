@@ -1,10 +1,11 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Result } from '@ephox/katamari';
+import { Fun, Result, Option } from '@ephox/katamari';
 
 import { CommonMenuItem, CommonMenuItemApi, commonMenuItemFields, CommonMenuItemInstanceApi } from './CommonMenuItem';
 
 export interface ToggleMenuItemApi extends CommonMenuItemApi {
   type?: 'togglemenuitem';
+  icon?: string;
   active?: boolean;
   onSetup?: (api: ToggleMenuItemInstanceApi) => void;
   onAction: (api: ToggleMenuItemInstanceApi) => void;
@@ -17,6 +18,7 @@ export interface ToggleMenuItemInstanceApi extends CommonMenuItemInstanceApi {
 
 export interface ToggleMenuItem extends CommonMenuItem {
   type: 'togglemenuitem';
+  icon: Option<string>;
   active: boolean;
   onSetup: (api: ToggleMenuItemInstanceApi) => (api: ToggleMenuItemInstanceApi) => void;
   onAction: (api: ToggleMenuItemInstanceApi) => void;
@@ -24,6 +26,7 @@ export interface ToggleMenuItem extends CommonMenuItem {
 
 export const toggleMenuItemSchema = ValueSchema.objOf([
   FieldSchema.strictString('type'),
+  FieldSchema.optionString('icon'),
   FieldSchema.defaultedBoolean('active', false),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
   FieldSchema.strictFunction('onAction')

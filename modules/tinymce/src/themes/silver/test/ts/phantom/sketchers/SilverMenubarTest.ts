@@ -62,7 +62,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
         Chain.asStep(sink, [
           UiFinder.cFindIn('.tox-selected-menu [role=menuitemcheckbox]:contains("' + itemText + '")'),
           Chain.op((_menu) => {
-            const checkMarks = Selectors.all('.tox-collection__item-icon');
+            const checkMarks = Selectors.all('.tox-collection__item-checkmark');
             Assertions.assertEq('only one check mark is displayed for active toggled menu items', 1, checkMarks.length);
           })
         ]);
@@ -94,7 +94,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
           UiFinder.sNotExists(sink, '.tox-menu')
         );
 
-      const sAssertMenuItemGroups = (label: string, groups: string[][]) => Logger.t(
+      const sAssertMenuItemGroups = (label: string, groups: string[][], hasIcons: boolean, hasCheckmark: boolean) => Logger.t(
         label,
         Chain.asStep(sink, [
           UiFinder.cFindIn('.tox-selected-menu'),
@@ -109,14 +109,14 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
                   return s.element('div', {
                     classes: [ arr.has('tox-collection__item') ],
                     children: [
-                      s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }),
+                      ...hasIcons ? [ s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }) ] : [],
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item-label') ],
                         html: str.is(hasCaret ? itemText.substring(0, itemText.length - 1) : itemText)
                       })
                     ].concat(hasCaret ? [
                       s.element('div', { classes: [ arr.has('tox-collection__item-caret') ] })
-                    ] : [ ])
+                    ] : hasCheckmark ? [ s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] }) ] : [])
                   });
                 })
               }))
@@ -290,7 +290,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
           ),
           sAssertMenuItemGroups('After clicking on "Changes"', [
             [ 'Remember me' ]
-          ]),
+          ], false, true),
           Mouse.sHoverOn(menubar.element(), 'button[role="menuitem"]:contains("Basic Menu Button")'),
           UiFinder.sWaitForVisible(
             'Waiting for basic menu',
@@ -308,7 +308,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
           sAssertMenuItemGroups('After hovering on Basic (after another menu was open)', [
             [ 'Item1' ],
             [ 'Item2', 'Nested menu>' ]
-          ])
+          ], true, false)
         ])
       ];
     }, () => {

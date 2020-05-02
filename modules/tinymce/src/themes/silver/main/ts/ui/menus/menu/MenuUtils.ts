@@ -1,6 +1,6 @@
 import { ItemTypes, MenuTypes } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
-import { Types } from '@ephox/bridge';
+import { Types, InlineContent } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import { components as menuComponents, dom as menuDom } from './MenuParts';
@@ -8,8 +8,7 @@ import { components as menuComponents, dom as menuDom } from './MenuParts';
 import { forCollection, forHorizontalCollection, forSwatch, forToolbar } from './MenuStructures';
 import { SingleMenuItemApi } from './SingleMenuTypes';
 
-export const hasIcon = (item) => item.icon !== undefined || item.type === 'togglemenuitem' || item.type === 'choicemenuitem';
-export const menuHasIcons = (xs: SingleMenuItemApi[]) => Arr.exists(xs, hasIcon);
+export const menuHasIcons = (xs: Array<SingleMenuItemApi | InlineContent.AutocompleterItemApi>) => Arr.exists(xs, (item) => 'icon' in item && item.icon !== undefined);
 
 export interface PartialMenuSpec {
   value: string;

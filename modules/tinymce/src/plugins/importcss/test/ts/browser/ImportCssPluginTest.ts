@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
 
       const tinyUi = TinyUi(editor);
 
-      const sAssertMenu = (label: string, expected, hasIcons) => Chain.asStep(Body.body(), [
+      const sAssertMenu = (label: string, expected) => Chain.asStep(Body.body(), [
         UiFinder.cWaitForVisible('Waiting for styles menu to appear', '[role="menu"]'),
         Assertions.cAssertStructure('Checking structure', ApproxStructure.build((s, str, arr) => s.element('div', {
           classes: [ arr.has('tox-menu') ],
@@ -26,7 +26,6 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
               children: Arr.map(expected, (exp) => s.element('div', {
                 classes: [ arr.has('tox-collection__item') ],
                 children: [
-                  ...hasIcons ? [ s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }) ] : [ ],
                   s.element('div', exp.submenu ? {
                     classes: [ arr.has('tox-collection__item-label') ],
                     html: str.is(exp.html)
@@ -36,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
                       s.element(exp.tag, { html: str.is(exp.html) })
                     ]
                   })
-                ].concat(exp.submenu ? [ s.anything() ] : [ ])
+                ].concat(exp.submenu ? [ s.anything() ] : [ s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] }) ])
               }))
             })
           ]
@@ -49,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
 
       Pipeline.async({}, [
         sOpenStyleMenu,
-        sAssertMenu('Checking stuff', assertions.menuContents, assertions.menuHasIcons)
+        sAssertMenu('Checking stuff', assertions.menuContents)
       ].concat(assertions.choice.map((c) => [
         Assertions.sAssertPresence(
           `${c} should NOT be present before clicking`,
@@ -93,7 +92,6 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssTest', (success, 
             { tag: 'p', html: 'p.other', submenu: false },
             { tag: 'span', html: 'span.inline', submenu: false }
           ],
-          menuHasIcons: true,
           choice: Option.some('h1.red')
         },
         {

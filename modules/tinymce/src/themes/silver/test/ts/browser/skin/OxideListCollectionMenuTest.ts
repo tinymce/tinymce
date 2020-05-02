@@ -44,7 +44,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                         },
                         children: [
                           s.element('div', {
-                            classes: [ arr.has('tox-collection__item-icon'), arr.has('tox-collection__item-checkmark') ],
+                            classes: [ arr.has('tox-collection__item-icon') ],
                             children: [
                               s.element('svg', {})
                             ]
@@ -54,7 +54,13 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
                           }),
                           s.element('div', {
                             classes: [ arr.has('tox-collection__item-accessory') ]
-                          })
+                          }),
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-checkmark') ],
+                            children: [
+                              s.element('svg', {})
+                            ]
+                          }),
                         ]
                       }),
                       s.element('div', {

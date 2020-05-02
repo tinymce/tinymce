@@ -177,7 +177,8 @@
     cursor: not-allowed;
   }
 
-  .tox-collection__item-icon {
+  .tox-collection__item-icon,
+  .tox-collection__item-checkmark {
     align-items: center;
     display: flex;
     height: @collection-item-list-icon-height;
@@ -234,7 +235,12 @@
   }
 
   // Tickable items that are not ticked hide the check mark SVG (not the entire icon so there is still a gap)
-  .tox-collection__item[role="menuitemcheckbox"]:not(.tox-collection__item--enabled) .tox-collection__item-checkmark svg {
+  .tox-collection--list .tox-collection__item:not(.tox-collection__item--enabled) .tox-collection__item-checkmark svg {
+    display: none;
+  }
+
+  // Tickable items that are not ticked and have an adjacent shortcut hide the check mark completely (gap is removed)
+  .tox-collection--list .tox-collection__item:not(.tox-collection__item--enabled) .tox-collection__item-accessory + .tox-collection__item-checkmark {
     display: none;
   }
 

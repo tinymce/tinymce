@@ -15,7 +15,15 @@ import { renderCheckmark } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
-const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: Types.PresetItemTypes, onItemValueHandler: (itemValue: string) => void, isSelected: boolean, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders) => {
+const renderChoiceItem = (
+  spec: Menu.ChoiceMenuItem,
+  useText: boolean,
+  presets: Types.PresetItemTypes,
+  onItemValueHandler: (itemValue: string) => void,
+  isSelected: boolean, itemResponse: ItemResponse,
+  providersBackstage: UiFactoryBackstageProviders,
+  renderIcons: boolean = true
+) => {
   const getApi = (component): Menu.ToggleMenuItemInstanceApi => ({
     setActive: (state) => {
       Toggling.set(component, state);
@@ -39,7 +47,7 @@ const renderChoiceItem = (spec: Menu.ChoiceMenuItem, useText: boolean, presets: 
     checkMark: useText ? Option.some(renderCheckmark(providersBackstage.icons)) : Option.none(),
     caret: Option.none(),
     value: spec.value
-  }, providersBackstage, true);
+  }, providersBackstage, renderIcons);
 
   return Merger.deepMerge(
     renderCommonItem({

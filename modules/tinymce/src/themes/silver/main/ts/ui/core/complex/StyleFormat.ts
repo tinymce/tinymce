@@ -30,7 +30,7 @@ export const defaultStyleFormats: AllowedFormat[] = [
       { title: 'Strikethrough', icon: 'strike-through', format: 'strikethrough' },
       { title: 'Superscript', icon: 'superscript', format: 'superscript' },
       { title: 'Subscript', icon: 'subscript', format: 'subscript' },
-      { title: 'Code', icon: 'code', format: 'code' }
+      { title: 'Code', icon: 'sourcecode', format: 'code' }
     ]
   },
 
