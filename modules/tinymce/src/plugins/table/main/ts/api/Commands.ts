@@ -5,20 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Option, Cell } from '@ephox/katamari';
+import { Arr, Cell, Fun, Option } from '@ephox/katamari';
 import { CopyRows, TableFill, TableLookup } from '@ephox/snooker';
 import { Element, Insert, Remove, Replication } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+import { TableActions } from '../actions/TableActions';
 import * as Util from '../alien/Util';
 import * as TableTargets from '../queries/TableTargets';
+import { Selections } from '../selection/Selections';
+import * as TableSelection from '../selection/TableSelection';
 import * as CellDialog from '../ui/CellDialog';
 import * as RowDialog from '../ui/RowDialog';
 import * as TableDialog from '../ui/TableDialog';
-import { TableActions } from '../actions/TableActions';
-import { Selections } from '../selection/Selections';
-import * as TableSelection from '../selection/TableSelection';
-import * as Events from '../api/Events';
 
 const each = Tools.each;
 
@@ -49,27 +48,11 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
 
   const getTableFromCell = (cell: Element): Option<Element> => TableLookup.table(cell, isRoot);
 
-  const getSize = (table) => ({
-    width: Util.getPixelWidth(table.dom()),
-    height: Util.getPixelWidth(table.dom())
-  });
-
-  const resizeChange = (editor: Editor, oldSize, table) => {
-    const newSize = getSize(table);
-
-    if (oldSize.width !== newSize.width || oldSize.height !== newSize.height) {
-      Events.fireObjectResizeStart(editor, table.dom(), oldSize.width, oldSize.height);
-      Events.fireObjectResized(editor, table.dom(), newSize.width, newSize.height);
-    }
-  };
-
   const actOnSelection = (execute) => {
     TableSelection.getSelectionStartCell(editor).each((cell) => {
       getTableFromCell(cell).each((table) => {
         const targets = TableTargets.forMenu(selections, table, cell);
-        const beforeSize = getSize(table);
         execute(table, targets).each((rng) => {
-          resizeChange(editor, beforeSize, table);
           editor.selection.setRng(rng);
           editor.focus();
           cellSelection.clear(table);

@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Chain, Cursors, GeneralSteps, Guard, Logge
 import { document, HTMLElement } from '@ephox/dom-globals';
 import { Obj } from '@ephox/katamari';
 import { TinyDom, TinyUi } from '@ephox/mcagar';
-import { Body, Element, SelectorFind, Value, Attr, Html } from '@ephox/sugar';
+import { Attr, Body, Element, Html, SelectorFilter, SelectorFind, Value } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 const sAssertTableStructure = (editor, structure) => Logger.t('Assert table structure ' + structure, Step.sync(() => {
@@ -122,7 +122,7 @@ const cInsertRaw = (html: string) => Chain.mapper((editor: Editor) => {
 });
 
 const cMergeCells = (keys) => Chain.control(
-  Chain.mapper((editor: any) => {
+  Chain.mapper((editor: Editor) => {
     keys(editor);
     editor.execCommand('mceTableMergeCells');
   }),
@@ -130,31 +130,52 @@ const cMergeCells = (keys) => Chain.control(
 );
 
 const cSplitCells = Chain.control(
-  Chain.mapper((editor: any) => {
+  Chain.mapper((editor: Editor) => {
     editor.execCommand('mceTableSplitCells');
   }),
   Guard.addLogging('Split cells')
 );
 
 const cInsertColumnBefore = Chain.control(
-  Chain.mapper((editor: any) => {
+  Chain.mapper((editor: Editor) => {
     editor.execCommand('mceTableInsertColBefore');
   }),
   Guard.addLogging('Insert column before selected column')
 );
 
 const cInsertColumnAfter = Chain.control(
-  Chain.mapper((editor: any) => {
+  Chain.mapper((editor: Editor) => {
     editor.execCommand('mceTableInsertColAfter');
   }),
   Guard.addLogging('Insert column after selected column')
 );
 
 const cDeleteColumn = Chain.control(
-  Chain.mapper((editor: any) => {
+  Chain.mapper((editor: Editor) => {
     editor.execCommand('mceTableDeleteCol');
   }),
   Guard.addLogging('Delete column')
+);
+
+const cInsertRowBefore = Chain.control(
+  Chain.mapper((editor: Editor) => {
+    editor.execCommand('mceTableInsertRowBefore');
+  }),
+  Guard.addLogging('Insert row before selected row')
+);
+
+const cInsertRowAfter = Chain.control(
+  Chain.mapper((editor: Editor) => {
+    editor.execCommand('mceTableInsertRowAfter');
+  }),
+  Guard.addLogging('Insert row after selected row')
+);
+
+const cDeleteRow = Chain.control(
+  Chain.mapper((editor: Editor) => {
+    editor.execCommand('mceTableDeleteRow');
+  }),
+  Guard.addLogging('Delete row')
 );
 
 const cDragHandle = function (id, deltaH, deltaV) {
@@ -185,13 +206,31 @@ const cGetWidth = Chain.control(
     const rawWidth = editor.dom.getStyle(elm, 'width');
     const pxWidth = editor.dom.getStyle(elm, 'width', true);
     return {
-      raw: parseFloat(rawWidth),
+      raw: rawWidth === '' ? null : parseFloat(rawWidth),
       px: parseInt(pxWidth, 10),
       isPercent: /%$/.test(rawWidth)
     };
   }),
-  Guard.addLogging('Get width')
+  Guard.addLogging('Get table width')
 );
+
+const cGetCellWidth = (rowNumber: number, columnNumber: number) => Chain.control(
+  Chain.mapper((input: any) => {
+    const editor = input.editor;
+    const elm = input.element;
+    const row = SelectorFilter.descendants(elm, 'tr')[rowNumber];
+    const cell = SelectorFilter.descendants(row, 'th,td')[columnNumber];
+    const rawWidth = editor.dom.getStyle(cell.dom(), 'width');
+    const pxWidth = editor.dom.getStyle(cell.dom(), 'width', true);
+    return {
+      raw: rawWidth === '' ? null : parseFloat(rawWidth),
+      px: parseInt(pxWidth, 10),
+      isPercent: /%$/.test(rawWidth)
+    };
+  }),
+  Guard.addLogging('Get cell width')
+);
+
 
 const cGetInput = (selector: string) => Chain.control(
   Chain.fromChains([
@@ -314,7 +353,11 @@ export {
   cSplitCells,
   cDragHandle,
   cGetWidth,
+  cGetCellWidth,
   cInsertColumnBefore,
   cInsertColumnAfter,
-  cDeleteColumn
+  cDeleteColumn,
+  cInsertRowBefore,
+  cInsertRowAfter,
+  cDeleteRow
 };
