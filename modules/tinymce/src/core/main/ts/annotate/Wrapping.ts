@@ -9,10 +9,10 @@ import { Document, Range } from '@ephox/dom-globals';
 import { Arr, Cell, Id, Option, Unicode } from '@ephox/katamari';
 import { Attr, Class, Classes, Element, Html, Insert, Node, Replication, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
-import * as GetBookmark from '../bookmark/GetBookmark';
 import * as ExpandRange from '../fmt/ExpandRange';
-
 import * as RangeWalk from '../selection/RangeWalk';
+import * as SelectionUtils from '../selection/SelectionUtils';
+import * as TableCellSelection from '../selection/TableCellSelection';
 import { ChildContext, context } from './AnnotationContext';
 import { AnnotatorSettings } from './AnnotationsRegistry';
 import * as Markings from './Markings';
@@ -117,27 +117,31 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
 
 const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorSettings, data: { }): void => {
   editor.undoManager.transact(() => {
-    const initialRng = editor.selection.getRng();
-    if (initialRng.collapsed) {
+    const selection = editor.selection;
+    const initialRng = selection.getRng();
+    const hasFakeSelection = TableCellSelection.getCellsFromEditor(editor).length > 0;
+
+    if (initialRng.collapsed && !hasFakeSelection) {
       applyWordGrab(editor, initialRng);
     }
 
     // Even after applying word grab, we could not find a selection. Therefore,
     // just make a wrapper and insert it at the current cursor
-    if (editor.selection.getRng().collapsed)  {
+    if (selection.getRng().collapsed && !hasFakeSelection)  {
       const wrapper = makeAnnotation(editor.getDoc(), data, name, settings.decorate);
       // Put something visible in the marker
       Html.set(wrapper, Unicode.nbsp);
-      editor.selection.getRng().insertNode(wrapper.dom());
-      editor.selection.select(wrapper.dom());
+      selection.getRng().insertNode(wrapper.dom());
+      selection.select(wrapper.dom());
     } else {
       // The bookmark is responsible for splitting the nodes beforehand at the selection points
       // The "false" here means a zero width cursor is NOT put in the bookmark. It seems to be required
       // to stop an empty paragraph splitting into two paragraphs. Probably a better way exists.
-      const bookmark = GetBookmark.getPersistentBookmark(editor.selection, false);
-      const rng = editor.selection.getRng();
-      annotate(editor, rng, name, settings.decorate, data);
-      editor.selection.moveToBookmark(bookmark);
+      SelectionUtils.preserve(selection, false, () => {
+        SelectionUtils.runOnRanges(editor, (selectionRng) => {
+          annotate(editor, selectionRng, name, settings.decorate, data);
+        });
+      });
     }
   });
 };

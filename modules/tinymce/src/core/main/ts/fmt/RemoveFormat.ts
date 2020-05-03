@@ -15,11 +15,12 @@ import { FormatAttrOrStyleValue, FormatVars, RemoveFormatPartial } from '../api/
 import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
-import * as GetBookmark from '../bookmark/GetBookmark';
 import * as NodeType from '../dom/NodeType';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import * as RangeWalk from '../selection/RangeWalk';
+import * as SelectionUtils from '../selection/SelectionUtils';
 import * as SplitRange from '../selection/SplitRange';
+import * as TableCellSelection from '../selection/TableCellSelection';
 import * as CaretFormat from './CaretFormat';
 import * as ExpandRange from './ExpandRange';
 import * as FormatUtils from './FormatUtils';
@@ -596,10 +597,11 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
     return;
   }
 
-  if (!selection.isCollapsed() || !format.inline || dom.select('td[data-mce-selected],th[data-mce-selected]').length) {
-    const bookmark = GetBookmark.getPersistentBookmark(ed.selection, true);
-    removeRngStyle(selection.getRng());
-    selection.moveToBookmark(bookmark);
+  if (!selection.isCollapsed() || !format.inline || TableCellSelection.getCellsFromEditor(ed).length) {
+    // Remove formatting on the selection
+    SelectionUtils.preserve(selection, true, () => {
+      SelectionUtils.runOnRanges(ed, removeRngStyle);
+    });
 
     // Check if start element still has formatting then we are at: "<b>text|</b>text"
     // and need to move the start into the next text node

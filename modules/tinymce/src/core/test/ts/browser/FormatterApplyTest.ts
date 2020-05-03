@@ -2141,6 +2141,18 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', function (success,
     LegacyUnit.equal(getContent(editor), '<p><span style="background-color: #ff0000;">ab<span style="font-size: 32px;">c<span style="background-color: #00ff00;">d</span></span><strong><span style="background-color: #00ff00;">e</span>f</strong></span></p>');
   });
 
+  suite.test('Apply format to node outside fake table selection', function (editor) {
+    editor.setContent('<p>test</p><table><tbody><tr><td data-mce-selected="1">cell 1</td><td>cell 2</td></tr><tr><td data-mce-selected="1">cell 3</td><td>cell 4</td></tr></tbody></table>');
+    LegacyUnit.setSelection(editor, 'td', 0, 'td', 0);
+    const para = editor.dom.select('p')[0];
+    // Apply to custom node
+    editor.formatter.apply('bold', { }, para);
+    LegacyUnit.equal(getContent(editor), '<p><strong>test</strong></p><table><tbody><tr><td>cell 1</td><td>cell 2</td></tr><tr><td>cell 3</td><td>cell 4</td></tr></tbody></table>');
+    // Apply to current fake table selection
+    editor.formatter.apply('bold');
+    LegacyUnit.equal(getContent(editor), '<p><strong>test</strong></p><table><tbody><tr><td><strong>cell 1</strong></td><td>cell 2</td></tr><tr><td><strong>cell 3</strong></td><td>cell 4</td></tr></tbody></table>');
+  });
+
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {

@@ -14,9 +14,9 @@ const sAnnotate = <T> (editor: Editor, name: string, uid: string, data: { }): St
   });
 
 // This will result in an attribute order-insensitive HTML assertion
-const sAssertHtmlContent = <T> (tinyApis: TinyApis, children: string[]): Step<T, T> => tinyApis.sAssertContentStructure(
+const sAssertHtmlContent = <T> (tinyApis: TinyApis, children: string[], allowExtras?: boolean): Step<T, T> => tinyApis.sAssertContentStructure(
   ApproxStructure.build((s, _str, _arr) => s.element('body', {
-    children: Arr.map(children, ApproxStructure.fromHtml)
+    children: Arr.map(children, ApproxStructure.fromHtml).concat(allowExtras ? [ s.theRest() ] : [ ])
   }))
 );
 

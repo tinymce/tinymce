@@ -530,6 +530,18 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (success
     );
   });
 
+  suite.test('Remove format on node outside fake table selection', function (editor) {
+    editor.setContent('<p><strong>test</strong></p><table><tbody><tr><td data-mce-selected="1"><strong>cell 1</strong></td><td>cell 2</td></tr><tr><td data-mce-selected="1"><strong>cell 3</strong></td><td>cell 4</td></tr></tbody></table>');
+    LegacyUnit.setSelection(editor, 'td', 0, 'td', 0);
+    const para = editor.dom.select('p')[0];
+    // Remove bold on custom node
+    editor.formatter.remove('bold', { }, para);
+    LegacyUnit.equal(getContent(editor), '<p>test</p><table><tbody><tr><td><strong>cell 1</strong></td><td>cell 2</td></tr><tr><td><strong>cell 3</strong></td><td>cell 4</td></tr></tbody></table>');
+    // Remove bold current fake table selection
+    editor.formatter.remove('bold');
+    LegacyUnit.equal(getContent(editor), '<p>test</p><table><tbody><tr><td>cell 1</td><td>cell 2</td></tr><tr><td>cell 3</td><td>cell 4</td></tr></tbody></table>');
+  });
+
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {

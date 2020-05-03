@@ -6,25 +6,26 @@
  */
 
 import { Node } from '@ephox/dom-globals';
+import DOMUtils from '../api/dom/DOMUtils';
+import Selection from '../api/dom/Selection';
+import Editor from '../api/Editor';
+import { FormatVars } from '../api/fmt/Format';
+import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import { IdBookmark, IndexBookmark } from '../bookmark/BookmarkTypes';
 import * as NodeType from '../dom/NodeType';
+import * as RangeNormalizer from '../selection/RangeNormalizer';
+import { RangeLikeObject } from '../selection/RangeTypes';
+import * as RangeWalk from '../selection/RangeWalk';
+import * as SelectionUtils from '../selection/SelectionUtils';
+import * as TableCellSelection from '../selection/TableCellSelection';
 import * as CaretFormat from './CaretFormat';
 import * as ExpandRange from './ExpandRange';
+import { isCaretNode } from './FormatContainer';
 import * as FormatUtils from './FormatUtils';
 import * as Hooks from './Hooks';
 import * as MatchFormat from './MatchFormat';
 import * as MergeFormats from './MergeFormats';
-import * as RangeNormalizer from '../selection/RangeNormalizer';
-import { RangeLikeObject } from '../selection/RangeTypes';
-import * as RangeWalk from '../selection/RangeWalk';
-import Tools from '../api/util/Tools';
-import Selection from '../api/dom/Selection';
-import { isCaretNode } from './FormatContainer';
-import * as GetBookmark from '../bookmark/GetBookmark';
-import Editor from '../api/Editor';
-import { FormatVars } from '../api/fmt/Format';
-import DOMUtils from '../api/dom/DOMUtils';
 
 const each = Tools.each;
 
@@ -35,7 +36,7 @@ const isElementNode = function (node: Node) {
 const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject) {
   const formatList = ed.formatter.get(name);
   const format = formatList[0];
-  let bookmark, rng;
+  let rng;
   const isCollapsed = !node && ed.selection.isCollapsed();
   const dom = ed.dom, selection: Selection = ed.selection;
 
@@ -313,9 +314,9 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
         applyRngStyle(dom, node, null, true);
       }
     } else {
-      if (!isCollapsed || !format.inline || dom.select('td[data-mce-selected],th[data-mce-selected]').length) {
+      if (!isCollapsed || !format.inline || TableCellSelection.getCellsFromEditor(ed).length) {
         // Obtain selection node before selection is unselected by applyRngStyle
-        const curSelNode = ed.selection.getNode();
+        const curSelNode = selection.getNode();
 
         // If the formats have a default block and we can't find a parent block then
         // start wrapping it with a DIV this is for forced_root_blocks: false
@@ -325,11 +326,14 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
         }
 
         // Apply formatting to selection
-        ed.selection.setRng(RangeNormalizer.normalize(ed.selection.getRng()));
-        bookmark = GetBookmark.getPersistentBookmark(ed.selection, true);
-        applyRngStyle(dom, ExpandRange.expandRng(ed, selection.getRng(), formatList), bookmark);
+        selection.setRng(RangeNormalizer.normalize(selection.getRng()));
+        SelectionUtils.preserve(selection, true, (bookmark) => {
+          SelectionUtils.runOnRanges(ed, (selectionRng, fake) => {
+            const expandedRng = fake ? selectionRng : ExpandRange.expandRng(ed, selectionRng, formatList);
+            applyRngStyle(dom, expandedRng, bookmark);
+          });
+        });
 
-        selection.moveToBookmark(bookmark);
         FormatUtils.moveStart(dom, selection, selection.getRng());
         ed.nodeChanged();
       } else {
