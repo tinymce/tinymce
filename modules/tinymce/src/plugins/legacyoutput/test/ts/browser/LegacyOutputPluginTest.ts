@@ -119,11 +119,18 @@ UnitTest.asynctest(
       LegacyUnit.equal(editor.getContent(), '<p>text</p>');
     });
 
+    suite.test('TestCase-TINY-4741: LegacyOutput: Convert bold to span if styling attributes are present on format removal', function (editor) {
+      editor.setContent('<p><b class="abc" style="color: red; font-size: 20px;" data-test="2">text</b></p>');
+      LegacyUnit.setSelection(editor, 'b', 0, 'b', 4);
+      editor.execCommand('bold');
+      LegacyUnit.equal(editor.getContent(), '<p><span class="abc" style="color: red; font-size: 20px;">text</span></p>');
+    });
+
     suite.test('TestCase-TBA: LegacyOutput: Formats registered before loading initial content', () => {
       const formats = formatsCell.get();
-      LegacyUnit.equal(formats.bold[0], { inline: 'b', remove: 'all', deep: true, split: true });
-      LegacyUnit.equal(formats.italic[0], { inline: 'i', remove: 'all', deep: true, split: true });
-      LegacyUnit.equal(formats.underline[0], { inline: 'u', remove: 'all', deep: true, split: true });
+      LegacyUnit.equal(formats.bold[0], { inline: 'b', remove: 'all', deep: true, split: true, preserve_attributes: [ 'class', 'style' ] });
+      LegacyUnit.equal(formats.italic[0], { inline: 'i', remove: 'all', deep: true, split: true, preserve_attributes: [ 'class', 'style' ] });
+      LegacyUnit.equal(formats.underline[0], { inline: 'u', remove: 'all', deep: true, split: true, preserve_attributes: [ 'class', 'style' ] });
       LegacyUnit.equal(formats.fontname[0], { inline: 'font', toggle: false, attributes: { face: '%value' }, deep: true, split: true });
     });
 

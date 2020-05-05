@@ -24,21 +24,21 @@ const overrideFormats = (editor: Editor) => {
 
     // Change the basic formatting elements to use deprecated element types
     bold: [
-      { inline: 'b', remove: 'all' },
-      { inline: 'strong', remove: 'all' },
+      { inline: 'b', remove: 'all', preserve_attributes: [ 'class', 'style' ] },
+      { inline: 'strong', remove: 'all', preserve_attributes: [ 'class', 'style' ] },
       { inline: 'span', styles: { fontWeight: 'bold' }}
     ],
     italic: [
-      { inline: 'i', remove: 'all' },
-      { inline: 'em', remove: 'all' },
+      { inline: 'i', remove: 'all', preserve_attributes: [ 'class', 'style' ] },
+      { inline: 'em', remove: 'all', preserve_attributes: [ 'class', 'style' ] },
       { inline: 'span', styles: { fontStyle: 'italic' }}
     ],
     underline: [
-      { inline: 'u', remove: 'all' },
+      { inline: 'u', remove: 'all', preserve_attributes: [ 'class', 'style' ] },
       { inline: 'span', styles: { textDecoration: 'underline' }, exact: true }
     ],
     strikethrough: [
-      { inline: 'strike', remove: 'all' },
+      { inline: 'strike', remove: 'all', preserve_attributes: [ 'class', 'style' ] },
       { inline: 'span', styles: { textDecoration: 'line-through' }, exact: true }
     ],
 
