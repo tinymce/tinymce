@@ -119,7 +119,7 @@ UnitTest.asynctest(
       LegacyUnit.equal(editor.getContent(), '<p>text</p>');
     });
 
-    suite.test('TestCase-TINY-4741: LegacyOutput: Convert bold to span if styling attributes are present on format removal', function (editor) {
+    suite.test('TestCase-TINY-4741: LegacyOutput: Convert bold to span if styling attributes are present on format removal', (editor) => {
       editor.setContent('<p><b class="abc" style="color: red; font-size: 20px;" data-test="2">text</b></p>');
       LegacyUnit.setSelection(editor, 'b', 0, 'b', 4);
       editor.execCommand('bold');

@@ -210,16 +210,11 @@ const removeFormat = (ed: Editor, format: RemoveFormatPartial, vars?: FormatVars
   // Applies to styling elements like strong, em, i, u, etc. so that if they have styling attributes, the attributes can be kept but the styling element is removed
   if (format.inline && format.remove === 'all' && Type.isArray(format.preserve_attributes)) {
     // Remove all attributes except for the attributes specified in preserve_attributes
-    Arr.each(dom.getAttribs(elm), (attr) => {
-      if (attr) {
-        const attrName = attr.nodeName.toLowerCase();
-        if (!Arr.exists(format.preserve_attributes, (pAttr) => pAttr === attrName)) {
-          dom.setAttrib(elm, attrName, '');
-        }
-      }
-    });
+    const attrsToPreserve = Arr.filter(dom.getAttribs(elm), (attr) => Arr.contains(format.preserve_attributes, attr.name.toLowerCase()));
+    dom.removeAllAttribs(elm);
+    Arr.each(attrsToPreserve, (attr) => dom.setAttrib(elm, attr.name, attr.value));
     // Note: If there are no attributes left, the element will be removed as normal at the end of the function
-    if (dom.getAttribs(elm).length > 0) {
+    if (attrsToPreserve.length > 0) {
       // Convert inline element to span if necessary
       ed.dom.rename(node, 'span');
       return true;
