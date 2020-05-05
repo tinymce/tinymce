@@ -180,12 +180,7 @@ const value = function (validator: ValueValidator): Processor {
 };
 
 // This is because Obj.keys can return things where the key is set to undefined.
-const getSetKeys = function (obj) {
-  const keys = Obj.keys(obj);
-  return Arr.filter(keys, function (k) {
-    return Obj.hasNonNullableKey(obj, k);
-  });
-};
+const getSetKeys = (obj) => Obj.keys(Obj.filter(obj, (value) => value !== undefined && value !== null));
 
 const objOfOnly = function (fields: ValueProcessorAdt[]): Processor {
   const delegate = objOf(fields);
