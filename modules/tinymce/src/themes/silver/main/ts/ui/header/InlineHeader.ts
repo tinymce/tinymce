@@ -130,7 +130,9 @@ export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: R
     // 4. Inline + fixed_toolbar_container + more drawer: does SplitToolbar
 
     // Update the max width, as the body width may have changed
-    updateChromeWidth();
+    if (!useFixedToolbarContainer) {
+      updateChromeWidth();
+    }
 
     // Refresh split toolbar
     if (isSplitToolbar) {
