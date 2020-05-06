@@ -8,10 +8,15 @@
 import { Range } from '@ephox/dom-globals';
 import { Arr, Fun, Option, Options } from '@ephox/katamari';
 import { Compare, Element, Node, Traverse } from '@ephox/sugar';
-import * as NodeType from '../dom/NodeType';
+import DOMUtils from '../api/dom/DOMUtils';
+import Selection from '../api/dom/Selection';
 import TreeWalker from '../api/dom/TreeWalker';
-import Tools from '../api/util/Tools';
 import Editor from '../api/Editor';
+import Tools from '../api/util/Tools';
+import { IdBookmark, IndexBookmark } from '../bookmark/BookmarkTypes';
+import * as GetBookmark from '../bookmark/GetBookmark';
+import * as NodeType from '../dom/NodeType';
+import * as TableCellSelection from './TableCellSelection';
 
 const getStartNode = function (rng) {
   const sc = rng.startContainer, so = rng.startOffset;
@@ -63,7 +68,7 @@ const hasAllContentsSelected = function (elm, rng) {
   }).getOr(false);
 };
 
-const moveEndPoint = (dom, rng: Range, node, start: boolean): void => {
+const moveEndPoint = (dom: DOMUtils, rng: Range, node, start: boolean): void => {
   const root = node, walker = new TreeWalker(node, root);
   const nonEmptyElementsMap = dom.schema.getNonEmptyElements();
 
@@ -110,8 +115,34 @@ const hasAnyRanges = (editor: Editor) => {
   return sel && sel.rangeCount > 0;
 };
 
+const runOnRanges = (editor: Editor, executor: (rng: Range, fake: boolean) => void) => {
+  // Check to see if a fake selection is active. If so then we are simulating a multi range
+  // selection so we should return a range for each selected node.
+  // Note: Currently tables are the only thing supported for fake selections.
+  const fakeSelectionNodes = TableCellSelection.getCellsFromEditor(editor);
+  if (fakeSelectionNodes.length > 0) {
+    Arr.each(fakeSelectionNodes, (elem) => {
+      const node = elem.dom();
+      const fakeNodeRng = editor.dom.createRng();
+      fakeNodeRng.setStartBefore(node);
+      fakeNodeRng.setEndAfter(node);
+      executor(fakeNodeRng, true);
+    });
+  } else {
+    executor(editor.selection.getRng(), false);
+  }
+};
+
+const preserve = (selection: Selection, fillBookmark: boolean, executor: (bookmark: IdBookmark | IndexBookmark) => void) => {
+  const bookmark = GetBookmark.getPersistentBookmark(selection, fillBookmark);
+  executor(bookmark);
+  selection.moveToBookmark(bookmark);
+};
+
 export {
   hasAllContentsSelected,
   moveEndPoint,
-  hasAnyRanges
+  hasAnyRanges,
+  runOnRanges,
+  preserve
 };

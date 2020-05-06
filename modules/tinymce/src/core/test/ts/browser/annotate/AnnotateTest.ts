@@ -1,11 +1,11 @@
-import { Pipeline, Logger, Assertions, ApproxStructure, StepSequence, Step } from '@ephox/agar';
+import { ApproxStructure, Assertions, Logger, Pipeline, Step, StepSequence } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import { sAnnotate, sAssertHtmlContent } from '../../module/test/AnnotationAsserts';
-import { Element } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failure) => {
   Theme();
@@ -142,7 +142,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
     );
 
     const sTestInOneParagraph = <T> (): Step<T, T> => Logger.t(
-      'Testing in one pararaph',
+      'Testing in one paragraph',
       StepSequence.sequenceSame([
         // '<p>This |is| the first paragraph</p><p>This is the second.</p>'
         tinyApis.sSetContent('<p>This is the first paragraph</p><p>This is the second.</p>'),
@@ -188,6 +188,27 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
       ])
     );
 
+    const sTestInTable = <T> (): Step<T, T> => Logger.t(
+      'Testing in table',
+      StepSequence.sequenceSame([
+        // '<table><tbody><tr><td>|cell 1|</td><td>cell 2</td></tr><tr><td>|cell 3|</td><td>cell 4</td></tr></tbody></table><p>This is the second.</p>'
+        tinyApis.sSetContent('<table><tbody><tr><td data-mce-selected="1">cell 1</td><td>cell 2</td></tr><tr><td data-mce-selected="1">cell 3</td><td>cell 4</td></tr></tbody></table><p>This is the second.</p>'),
+        tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1),
+        sAnnotate(editor, 'test-annotation', 'test-uid', { anything: 'table' }),
+        sAssertHtmlContent(tinyApis, [
+          [
+            '<table><tbody>',
+            '<tr><td><span data-test-anything="table" data-mce-annotation="test-annotation" data-mce-annotation-uid="test-uid" class="mce-annotation">cell 1</span></td><td>cell 2</td></tr>',
+            '<tr><td><span data-test-anything="table" data-mce-annotation="test-annotation" data-mce-annotation-uid="test-uid" class="mce-annotation">cell 3</span></td><td>cell 4</td></tr>',
+            '</tbody></table>'
+          ].join(''),
+          '<p>This is the second.</p>'
+        ], true),
+
+        tinyApis.sAssertSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 1)
+      ])
+    );
+
     Pipeline.runStep({}, StepSequence.sequenceSame([
       tinyApis.sFocus(),
       sTestWordGrabIfCollapsed(),
@@ -198,7 +219,8 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failu
       sTestCanAnnotateAfterTwoNonBreakingSpaces(),
       sTestInOneParagraph(),
       sTestInTwoParagraphs(),
-      sTestInThreeParagraphs()
+      sTestInThreeParagraphs(),
+      sTestInTable()
     ]), onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',
