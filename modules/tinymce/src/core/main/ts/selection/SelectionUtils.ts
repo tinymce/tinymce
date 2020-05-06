@@ -116,9 +116,9 @@ const hasAnyRanges = (editor: Editor) => {
 };
 
 const runOnRanges = (editor: Editor, executor: (rng: Range, fake: boolean) => void) => {
-  const rng = editor.selection.getRng();
-
-  // If within a fake selection then remove the style for each node instead
+  // Check to see if a fake selection is active. If so then we are simulating a multi range
+  // selection so we should return a range for each selected node.
+  // Note: Currently tables are the only thing supported for fake selections.
   const fakeSelectionNodes = TableCellSelection.getCellsFromEditor(editor);
   if (fakeSelectionNodes.length > 0) {
     Arr.each(fakeSelectionNodes, (elem) => {
@@ -129,7 +129,7 @@ const runOnRanges = (editor: Editor, executor: (rng: Range, fake: boolean) => vo
       executor(fakeNodeRng, true);
     });
   } else {
-    executor(rng, false);
+    executor(editor.selection.getRng(), false);
   }
 };
 
