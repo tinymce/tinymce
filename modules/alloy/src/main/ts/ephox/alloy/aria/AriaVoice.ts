@@ -3,8 +3,6 @@ import { Id } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attr, Css, Element, Insert, Remove, Traverse } from '@ephox/sugar';
 
-const isFirefox: boolean = PlatformDetection.detect().browser.isFirefox();
-
 const offscreen = {
   position: 'absolute',
   left: '-9999px'
@@ -47,7 +45,9 @@ const base = (getAttrs: (string: string) => { }, parent: Element, text: string):
 
   // firefox needs aria-describedby to speak a role=alert token, which causes IE11 to read twice
   const token = create(doc, text);
-  if (isFirefox) { linkToDescription(parent, token); }
+  if (PlatformDetection.detect().browser.isFirefox()) {
+    linkToDescription(parent, token);
+  }
 
   // Make it speak as soon as it is in the DOM (politely)
   Attr.setAll(token, getAttrs(text));

@@ -1,5 +1,5 @@
 import { navigator, window } from '@ephox/dom-globals';
-import { Cell } from '@ephox/katamari';
+import { Fun, Thunk } from '@ephox/katamari';
 
 import { Browser as BrowserCore } from '../core/Browser';
 import { OperatingSystem as OperatingSystemCore } from '../core/OperatingSystem';
@@ -12,13 +12,15 @@ export type DeviceType = DeviceTypeCore;
 
 const mediaMatch = (query: string) => window.matchMedia(query).matches;
 
-const platform = Cell<PlatformDetection>(PlatformDetection.detect(navigator.userAgent, mediaMatch));
+// IMPORTANT: Must be in a thunk, otherwise rollup thinks calling this immediately
+// causes side effects and won't tree shake this away
+let platform = Thunk.cached(() => PlatformDetection.detect(navigator.userAgent, mediaMatch));
 
-export const detect = (): PlatformDetection => platform.get();
+export const detect = (): PlatformDetection => platform();
 
 export const override = (overrides: Partial<PlatformDetection>) => {
-  platform.set({
-    ...platform.get(),
+  platform = Fun.constant({
+    ...detect(),
     ...overrides
   });
 };

@@ -15,7 +15,7 @@ const isDangerous = (event: EventArgs<KeyboardEvent>): boolean => {
   return keyEv.which === Keys.BACKSPACE()[0] && !Arr.contains([ 'input', 'textarea' ], Node.name(event.target())) && !SelectorExists.closest(event.target(), '[contenteditable="true"]');
 };
 
-const isFirefox: boolean = PlatformDetection.detect().browser.isFirefox();
+const isFirefox = (): boolean => PlatformDetection.detect().browser.isFirefox();
 
 export interface GuiEventSettings {
   triggerEvent: (eventName: string, event: EventFormat) => boolean;
@@ -29,7 +29,7 @@ const settingsSchema: Processor = ValueSchema.objOfOnly([
 ]);
 
 const bindFocus = (container: Element, handler: (evt: EventArgs) => void): EventUnbinder => {
-  if (isFirefox) {
+  if (isFirefox()) {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=687787
     return DomEvent.capture(container, 'focus', handler);
   } else {
@@ -38,7 +38,7 @@ const bindFocus = (container: Element, handler: (evt: EventArgs) => void): Event
 };
 
 const bindBlur = (container: Element, handler: (evt: EventArgs) => void): EventUnbinder => {
-  if (isFirefox) {
+  if (isFirefox()) {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=687787
     return DomEvent.capture(container, 'blur', handler);
   } else {

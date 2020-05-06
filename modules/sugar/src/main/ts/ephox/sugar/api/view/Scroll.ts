@@ -8,8 +8,6 @@ import Element from '../node/Element';
 import * as Location from './Location';
 import { Position } from './Position';
 
-const isSafari = PlatformDetection.detect().browser.isSafari();
-
 // get scroll position (x,y) relative to document _doc (or global if not supplied)
 const get = (_DOC?: Element<Document>) => {
   const doc = _DOC !== undefined ? _DOC.dom() : document;
@@ -75,6 +73,7 @@ const capture = (doc: Element<Document>) => {
 
 // TBIO-4472 Safari 10 - Scrolling typeahead with keyboard scrolls page
 const intoView = (element: Element<DomElement>, alignToTop: boolean) => {
+  const isSafari = PlatformDetection.detect().browser.isSafari();
   // this method isn't in TypeScript
   if (isSafari && Type.isFunction((element.dom() as any).scrollIntoViewIfNeeded)) {
     (element.dom() as any).scrollIntoViewIfNeeded(false); // false=align to nearest edge

@@ -6,8 +6,6 @@ import { Compare, Css, Element, Position, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-const platform = PlatformDetection.detect();
-
 interface SnapExtra {
   td: Element<HTMLTableDataCellElement>;
 }
@@ -172,7 +170,7 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
   const snapLastBottomRight = () => finishCell.get().each(snapBottomRight);
 
   // TODO: Make this work for desktop maybe?
-  if (platform.deviceType.isTouch()) {
+  if (PlatformDetection.detect().deviceType.isTouch()) {
     editor.on('TableSelectionChange', (e) => {
       if (!isVisible.get()) {
         Attachment.attach(sink, topLeft);

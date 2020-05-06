@@ -24,11 +24,10 @@ const regularContains = (e1: Element<DomNode>, e2: Element<DomNode>) => {
 // Also, compareDocumentPosition defines a node containing itself as false.
 const ieContains = (e1: Element<DomNode>, e2: Element<DomNode>) => Node.documentPositionContainedBy(e1.dom(), e2.dom());
 
-const browser = PlatformDetection.detect().browser;
-
 // Returns: true if node e1 contains e2, otherwise false.
 // (returns false if e1===e2: A node does not contain itself).
-const contains = browser.isIE() ? ieContains : regularContains;
+const contains = (e1: Element<DomNode>, e2: Element<DomNode>) =>
+  PlatformDetection.detect().browser.isIE() ? ieContains(e1, e2) : regularContains(e1, e2);
 
 const is = Selectors.is;
 

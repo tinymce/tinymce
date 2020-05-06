@@ -1,15 +1,13 @@
 import { Fun, Option } from '@ephox/katamari';
 import { DomGather } from '@ephox/phoenix';
 import { PlatformDetection } from '@ephox/sand';
-import { Awareness, Compare, CursorPosition, PredicateExists, SelectorFilter, SelectorFind, Traverse, Element, SimRange } from '@ephox/sugar';
+import { Awareness, Compare, CursorPosition, Element, PredicateExists, SelectorFilter, SelectorFind, SimRange, Traverse } from '@ephox/sugar';
+import { WindowBridge } from '../api/WindowBridge';
+import { KeyDirection } from '../navigation/KeyDirection';
 import { Response } from '../selection/Response';
 import * as Util from '../selection/Util';
 import * as KeySelection from './KeySelection';
 import * as TableKeys from './TableKeys';
-import { WindowBridge } from '../api/WindowBridge';
-import { KeyDirection } from '../navigation/KeyDirection';
-
-const detection = PlatformDetection.detect();
 
 const inSameTable = function (elem: Element, table: Element) {
   return PredicateExists.ancestor(elem, function (e) {
@@ -48,7 +46,7 @@ const simulate = function (bridge: WindowBridge, isRoot: (e: Element) => boolean
 
 const navigate = function (bridge: WindowBridge, isRoot: (e: Element) => boolean, direction: KeyDirection, initial: Element, anchor: Element, precheck: (initial: Element, isRoot: (e: Element) => boolean) => Option<Response>) {
   // Do not override the up/down keys on IE.
-  if (detection.browser.isIE()) {
+  if (PlatformDetection.detect().browser.isIE()) {
     return Option.none<Response>();
   } else {
     return precheck(initial, isRoot).orThunk(function () {
