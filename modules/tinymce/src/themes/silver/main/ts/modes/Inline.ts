@@ -55,15 +55,13 @@ const setupEvents = (editor: Editor, targetElm: Element, ui: InlineHeader) => {
   editor.on('activate', ui.show);
   editor.on('deactivate', ui.hide);
 
-  editor.on('SkinLoaded ResizeWindow', () => {
-    if (ui.isVisible()) {
-      ui.update(true);
-    }
-  });
+  editor.on('SkinLoaded ResizeWindow', () => ui.update(true));
 
   editor.on('NodeChange keydown', (e) => {
     Delay.requestAnimationFrame(() => resizeContent(e));
   });
+
+  editor.on('ScrollWindow', () => ui.updateMode());
 
   // Bind to async load events and trigger a content resize event if the size has changed
   const elementLoad = Singleton.unbindable();

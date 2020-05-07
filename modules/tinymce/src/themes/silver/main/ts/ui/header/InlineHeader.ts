@@ -7,7 +7,7 @@
 
 import { AlloyComponent, Boxes, Channels, Docking, VerticalDir } from '@ephox/alloy';
 import { Cell, Option } from '@ephox/katamari';
-import { Attr, Body, Css, Element, Height, Location, Width } from '@ephox/sugar';
+import { Attr, Body, Css, Element, Height, Location, Traverse, Width } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -24,6 +24,7 @@ export interface InlineHeader {
   show: () => void;
   hide: () => void;
   update: (resetDocking?: boolean) => void;
+  updateMode: () => void;
   repositionPopups: () => void;
 }
 
@@ -41,6 +42,8 @@ export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: R
 
   const visible = Cell(false);
 
+  const isVisible = () => visible.get() && !editor.removed;
+
   // Calculate the toolbar offset when using a split toolbar drawer
   const calcToolbarOffset = (toolbar: Option<AlloyComponent>) => isSplitToolbar ?
     toolbar.fold(() => 0, (tbar) =>
@@ -49,20 +52,32 @@ export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: R
     ) : 0;
 
   const calcMode = (container: AlloyComponent): 'top' | 'bottom' => {
-    const toolbar = OuterContainer.getToolbar(outerContainer);
-    const offset = calcToolbarOffset(toolbar);
-    const targetBounds = Boxes.box(targetElm);
-
     switch (getToolbarLocation(editor)) {
       case ToolbarLocation.auto:
+        const toolbar = OuterContainer.getToolbar(outerContainer);
+        const offset = calcToolbarOffset(toolbar);
         const toolbarHeight = Height.get(container.element()) - offset;
+        const targetBounds = Boxes.box(targetElm);
 
-        // If there isn't ever room to add the toolbar above the target element, then place the toolbar at the bottom
-        // Make sure to exclude scroll position, as we want to still show at the top if the user can scroll up to undock
-        if (toolbarHeight > targetBounds.y) {
-          return 'bottom';
-        } else {
+        // Determine if the toolbar has room to render at the top/bottom of the document
+        const roomAtTop = targetBounds.y > toolbarHeight;
+        if (roomAtTop) {
           return 'top';
+        } else {
+          const docHeight = Height.get(Traverse.documentElement(targetElm));
+          const roomAtBottom = targetBounds.bottom < docHeight - toolbarHeight;
+
+          // If there isn't ever room to add the toolbar above the target element, then place the toolbar at the bottom.
+          // Likewise if there's no room at the bottom, then we should show at the top. If there's no room at the bottom
+          // or top, then prefer the bottom except when it'll prevent accessing the content at the bottom.
+          // Make sure to exclude scroll position, as we want to still show at the top if the user can scroll up to undock
+          if (roomAtBottom) {
+            return 'bottom';
+          } else {
+            const winBounds = Boxes.win();
+            const isRoomAtBottomViewport = winBounds.bottom < targetBounds.bottom - toolbarHeight;
+            return isRoomAtBottomViewport ? 'bottom' : 'top';
+          }
         }
       case ToolbarLocation.bottom:
         return 'bottom';
@@ -72,16 +87,9 @@ export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: R
     }
   };
 
-  const initMode = () => {
-    // Ignore setting up the mode if using a fixed container or sticky toolbars is disabled
-    if (useFixedToolbarContainer || !isSticky) {
-      return;
-    }
-
-    const container = floatContainer.get();
-    const mode = calcMode(container);
-
+  const setupMode = (mode: 'top' | 'bottom') => {
     // Update the docking mode
+    const container = floatContainer.get();
     Docking.setModes(container, [ mode ]);
     headerBackstage.setDockingMode(mode);
 
@@ -108,7 +116,7 @@ export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: R
     // so we need to round this to account for that.
     const targetBounds = Boxes.box(targetElm);
     const top = isPositionedAtTop() ?
-      targetBounds.y - Height.get(floatContainer.get().element()) + offset :
+      Math.max(targetBounds.y - Height.get(floatContainer.get().element()) + offset, 0) :
       targetBounds.bottom;
 
     Css.setAll(outerContainer.element(), {
@@ -123,6 +131,11 @@ export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: R
   };
 
   const updateChromeUi = (resetDocking: boolean = false) => {
+    // Skip updating the ui if it's hidden
+    if (!isVisible()) {
+      return;
+    }
+
     // Handles positioning, docking and SplitToolbar (more drawer) behaviour. Modes:
     // 1. Basic inline: does positioning and docking
     // 2. Inline + more drawer: does positioning, docking and SplitToolbar
@@ -154,12 +167,29 @@ export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: R
     repositionPopups();
   };
 
+  const updateMode = (updateUi: boolean = true) => {
+    // Skip updating the mode if the toolbar is hidden, is
+    // using a fixed container or has sticky toolbars disabled
+    if (useFixedToolbarContainer || !isSticky || !isVisible()) {
+      return;
+    }
+
+    const currentMode = headerBackstage.getDockingMode();
+    const newMode = calcMode(floatContainer.get());
+    if (newMode !== currentMode) {
+      setupMode(newMode);
+      if (updateUi) {
+        updateChromeUi(true);
+      }
+    }
+  };
+
   const show = () => {
     visible.set(true);
     Css.set(outerContainer.element(), 'display', 'flex');
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
     Css.remove(uiMothership.element(), 'display');
-    initMode();
+    updateMode(false);
     updateChromeUi();
   };
 
@@ -173,11 +203,12 @@ export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: R
   };
 
   return {
-    isVisible: () => visible.get() && !editor.removed,
+    isVisible,
     isPositionedAtTop,
     show,
     hide,
     update: updateChromeUi,
+    updateMode,
     repositionPopups
   };
 };
