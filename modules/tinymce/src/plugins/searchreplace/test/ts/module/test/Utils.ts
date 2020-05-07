@@ -1,5 +1,15 @@
 import { Assertions, Chain, GeneralSteps, Guard, UiControls, UiFinder, Waiter } from '@ephox/agar';
+import { document } from '@ephox/dom-globals';
 import { TinyUi } from '@ephox/mcagar';
+import { Element } from '@ephox/sugar';
+
+const cFakeEvent = (name: string) => Chain.label('Fake event',
+  Chain.op((elm: Element) => {
+    const evt = document.createEvent('HTMLEvents');
+    evt.initEvent(name, true, true);
+    elm.dom().dispatchEvent(evt);
+  })
+);
 
 const cFindInDialog = (ui: TinyUi, selector: string) => Chain.control(
   Chain.fromChains([
@@ -16,6 +26,12 @@ const sAssertFieldValue = (ui: TinyUi, selector: string, value: string) => Waite
     Assertions.cAssertEq(`Assert ${value} value`, value)
   ]), 20, 3000
 );
+
+const sSetFieldValue = (ui: TinyUi, selector: string, value: string) => Chain.asStep({}, [
+  cFindInDialog(ui, selector),
+  UiControls.cSetValue(value),
+  cFakeEvent('input')
+]);
 
 const sOpenDialog = (ui: TinyUi) => GeneralSteps.sequence([
   ui.sClickOnToolbar('click on searchreplace button', 'button[aria-label="Find and replace"]'),
@@ -39,6 +55,7 @@ const sSelectPreference = (ui, name: string) => GeneralSteps.sequence([
 export {
   cFindInDialog,
   sAssertFieldValue,
+  sSetFieldValue,
   sOpenDialog,
   sCloseDialog,
   sClickFind,
