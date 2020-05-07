@@ -5,17 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, HTMLElement, Text } from '@ephox/dom-globals';
+import { HTMLElement, Node, Text } from '@ephox/dom-globals';
 import { Arr, Cell, Fun } from '@ephox/katamari';
+import { Element, SelectorFilter } from '@ephox/sugar';
+import DOMUtils from '../api/dom/DOMUtils';
+import Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as CaretContainerRemove from '../caret/CaretContainerRemove';
 import CaretPosition from '../caret/CaretPosition';
+import * as WordSelection from '../selection/WordSelection';
 import * as BoundaryCaret from './BoundaryCaret';
 import * as BoundaryLocation from './BoundaryLocation';
 import * as InlineUtils from './InlineUtils';
-import * as WordSelection from '../selection/WordSelection';
-import Editor from '../api/Editor';
-import DOMUtils from '../api/dom/DOMUtils';
 
 const setCaretPosition = function (editor: Editor, pos: CaretPosition) {
   const rng = editor.dom.createRng();
@@ -56,7 +57,8 @@ const findLocation = function (editor: Editor, caret: Cell<Text>, forward: boole
 };
 
 const toggleInlines = function (isInlineTarget: NodePredicate, dom: DOMUtils, elms: Node[]) {
-  const selectedInlines = Arr.filter(dom.select('*[data-mce-selected="inline-boundary"]'), isInlineTarget);
+  const inlineBoundaries = Arr.map(SelectorFilter.descendants(Element.fromDom(dom.getRoot()), '*[data-mce-selected="inline-boundary"]'), (e) => e.dom());
+  const selectedInlines = Arr.filter(inlineBoundaries, isInlineTarget);
   const targetInlines = Arr.filter(elms, isInlineTarget);
   Arr.each(Arr.difference(selectedInlines, targetInlines), Fun.curry(setSelected, false));
   Arr.each(Arr.difference(targetInlines, selectedInlines), Fun.curry(setSelected, true));
