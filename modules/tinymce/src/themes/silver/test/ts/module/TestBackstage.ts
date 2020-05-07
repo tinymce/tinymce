@@ -1,5 +1,5 @@
 import { AlloyComponent, HotspotAnchorSpec } from '@ephox/alloy';
-import { Fun, Future, Option, Result } from '@ephox/katamari';
+import { Cell, Fun, Future, Option, Result } from '@ephox/katamari';
 import { Body } from '@ephox/sugar';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
@@ -11,6 +11,7 @@ export default function (sink?: AlloyComponent): UiFactoryBackstage {
     anchor: 'hotspot',
     hotspot: sink
   });
+  const headerLocation = Cell<'top' | 'bottom'>('top');
 
   return {
     shared: {
@@ -28,6 +29,11 @@ export default function (sink?: AlloyComponent): UiFactoryBackstage {
           root: Body.body(),
           node: elem
         })
+      },
+      header: {
+        isPositionedAtTop: () => headerLocation.get() !== 'bottom',
+        getDockingMode: headerLocation.get,
+        setDockingMode: headerLocation.set
       },
       getSink: () => Result.value(sink)
     },

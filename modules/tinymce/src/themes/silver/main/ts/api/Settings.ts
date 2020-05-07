@@ -84,14 +84,15 @@ export enum ToolbarMode {
 const getToolbarMode = (editor: Editor): ToolbarMode => editor.getParam('toolbar_mode', '', 'string') as ToolbarMode;
 
 export enum ToolbarLocation {
+  auto = 'auto',
   top = 'top',
   bottom = 'bottom'
 }
 
 const getToolbarGroups = (editor: Editor) => editor.getParam('toolbar_groups', {}, 'object');
 
-// In case of a string not equal to 'top' nor 'bottom', default to position top
-const isToolbarLocationTop = (editor) => editor.getParam('toolbar_location', ToolbarLocation.top, 'string') !== ToolbarLocation.bottom;
+const getToolbarLocation = (editor: Editor) => editor.getParam('toolbar_location', ToolbarLocation.auto, 'string') as ToolbarLocation;
+const isToolbarLocationBottom = (editor: Editor) => getToolbarLocation(editor) === ToolbarLocation.bottom;
 
 const fixedContainerSelector = (editor): string => editor.getParam('fixed_toolbar_container', '', 'string');
 
@@ -140,6 +141,7 @@ export {
   isDraggableModal,
   isDistractionFree,
   isStickyToolbar,
-  isToolbarLocationTop,
+  getToolbarLocation,
+  isToolbarLocationBottom,
   getToolbarGroups
 };

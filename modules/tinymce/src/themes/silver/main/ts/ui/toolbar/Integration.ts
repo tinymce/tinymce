@@ -11,7 +11,7 @@ import { Toolbar } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Arr, Obj, Option, Result, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { getToolbarMode, isToolbarLocationTop, ToolbarMode } from '../../api/Settings';
+import { getToolbarMode, ToolbarMode } from '../../api/Settings';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RenderToolbarConfig, ToolbarGroupSetting } from '../../Render';
@@ -108,7 +108,7 @@ const types = {
       const identify = (toolbar: string | ToolbarGroupSetting[]) =>
         identifyButtons(editor, { buttons, toolbar, allowToolbarGroups: false }, extras, Option.none());
       const attributes = {
-        [VerticalDir.Attribute]: isToolbarLocationTop(editor) ? VerticalDir.AttributeValue.TopToBottom : VerticalDir.AttributeValue.BottomToTop
+        [VerticalDir.Attribute]: extras.backstage.shared.header.isPositionedAtTop() ? VerticalDir.AttributeValue.TopToBottom : VerticalDir.AttributeValue.BottomToTop
       };
 
       switch (getToolbarMode(editor)) {

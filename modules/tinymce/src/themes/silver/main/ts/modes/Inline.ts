@@ -11,7 +11,7 @@ import { DomEvent, Element } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import * as Events from '../api/Events';
-import { getUiContainer, isToolbarLocationTop } from '../api/Settings';
+import { getUiContainer } from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import * as ReadOnly from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';
@@ -30,11 +30,10 @@ const getTargetPosAndBounds = (targetElm: Element, isToolbarTop: boolean) => {
 };
 
 const setupEvents = (editor: Editor, targetElm: Element, ui: InlineHeader) => {
-  const isToolbarTop = isToolbarLocationTop(editor);
-  const prevPosAndBounds = Cell(getTargetPosAndBounds(targetElm, isToolbarTop));
+  const prevPosAndBounds = Cell(getTargetPosAndBounds(targetElm, ui.isPositionedAtTop()));
 
   const resizeContent = (e) => {
-    const { pos, bounds } = getTargetPosAndBounds(targetElm, isToolbarTop);
+    const { pos, bounds } = getTargetPosAndBounds(targetElm, ui.isPositionedAtTop());
     const { pos: prevPos, bounds: prevBounds } = prevPosAndBounds.get();
 
     const hasResized = bounds.height !== prevBounds.height || bounds.width !== prevBounds.width;
@@ -79,7 +78,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   const { mothership, uiMothership, outerContainer } = uiComponents;
   const floatContainer = Cell<AlloyComponent>(null);
   const targetElm = Element.fromDom(args.targetNode);
-  const ui = InlineHeader(editor, targetElm, uiComponents, floatContainer);
+  const ui = InlineHeader(editor, targetElm, uiComponents, backstage, floatContainer);
 
   loadInlineSkin(editor);
 

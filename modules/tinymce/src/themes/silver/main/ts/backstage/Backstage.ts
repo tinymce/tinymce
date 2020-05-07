@@ -18,6 +18,7 @@ import * as Anchors from './Anchors';
 import { ColorInputBackstage, UiFactoryBackstageForColorInput } from './ColorInputBackstage';
 import { DialogBackstage, UiFactoryBackstageForDialog } from './DialogBackstage';
 import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';
+import { HeaderBackstage, UiFactoryBackstageForHeader } from './HeaderBackstage';
 import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
 
 // INVESTIGATE: Make this a body component API ?
@@ -41,6 +42,7 @@ export interface UiFactoryBackstageShared {
     cursor: () => SelectionAnchorSpec;
     node: (elem: Option<Element>) => NodeAnchorSpec;
   };
+  header?: UiFactoryBackstageForHeader;
   formInterpreter?: (parts: FormTypes.FormParts, spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
   getSink?: () => Result<AlloyComponent, any>;
 }
@@ -57,6 +59,7 @@ export interface UiFactoryBackstage {
 
 const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent): UiFactoryBackstage => {
   const contextMenuState = Cell(false);
+  const toolbar = HeaderBackstage(editor);
   const backstage: UiFactoryBackstage = {
     shared: {
       providers: {
@@ -66,7 +69,8 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
         isReadonly: () => editor.mode.isReadOnly()
       },
       interpreter: (s) => UiFactory.interpretWithoutForm(s, backstage),
-      anchors: Anchors.getAnchors(editor, lazyAnchorbar),
+      anchors: Anchors.getAnchors(editor, lazyAnchorbar, toolbar.isPositionedAtTop),
+      header: toolbar,
       getSink: () => Result.value(sink)
     },
     urlinput: UrlInputBackstage(editor),

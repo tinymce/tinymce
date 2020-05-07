@@ -5,6 +5,7 @@ Version 5.3.0 (TBD)
     Changed so base64 encoded urls are converted to blob urls when content is parsed #TINY-4727
     Changed context toolbars so they concatenate when more than one is suitable for the current selection #TINY-4495
     Changed inline style element formats (strong, b, em, i, u, strike) to convert to a span on format removal if a `style` or `class` attribute is present #TINY-4741
+    Changed inline toolbars to switch to positioning at the bottom if there's never space to position at the top #TINY-3161
     Fixed the `selection.setContent()` API not running parser filters #TINY-4002
     Fixed formats incorrectly applied or removed when table cells were selected #TINY-4709
     Fixed the `quickimage` button not restricting the file types to images #TINY-4715

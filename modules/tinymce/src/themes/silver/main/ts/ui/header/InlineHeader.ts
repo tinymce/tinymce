@@ -5,13 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Boxes, Channels, Docking } from '@ephox/alloy';
+import { AlloyComponent, Boxes, Channels, Docking, VerticalDir } from '@ephox/alloy';
 import { Cell, Option } from '@ephox/katamari';
-import { Body, Css, Element, Height, Location, Width } from '@ephox/sugar';
+import { Attr, Body, Css, Element, Height, Location, Width } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import { getMaxWidthSetting, getToolbarMode, isStickyToolbar, isToolbarLocationTop, ToolbarMode, useFixedContainer } from '../../api/Settings';
+import { getMaxWidthSetting, getToolbarLocation, getToolbarMode, isStickyToolbar, ToolbarLocation, ToolbarMode, useFixedContainer } from '../../api/Settings';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RenderUiComponents } from '../../Render';
 import OuterContainer from '../general/OuterContainer';
 import * as EditorSize from '../sizing/EditorSize';
@@ -19,24 +20,75 @@ import * as Utils from '../sizing/Utils';
 
 export interface InlineHeader {
   isVisible: () => boolean;
+  isPositionedAtTop: () => boolean;
   show: () => void;
   hide: () => void;
   update: (resetDocking?: boolean) => void;
   repositionPopups: () => void;
 }
 
-export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: RenderUiComponents, floatContainer: Cell<AlloyComponent>): InlineHeader => {
+export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: RenderUiComponents, backstage: UiFactoryBackstage, floatContainer: Cell<AlloyComponent>): InlineHeader => {
   const { uiMothership, outerContainer } = uiComponents;
   const DOM = DOMUtils.DOM;
   const useFixedToolbarContainer = useFixedContainer(editor);
   const isSticky = isStickyToolbar(editor);
   const editorMaxWidthOpt = getMaxWidthSetting(editor).or(EditorSize.getWidth(editor));
+  const headerBackstage = backstage.shared.header;
+  const isPositionedAtTop = headerBackstage.isPositionedAtTop;
 
   const toolbarMode = getToolbarMode(editor);
   const isSplitToolbar = toolbarMode === ToolbarMode.sliding || toolbarMode === ToolbarMode.floating;
-  const isToolbarTop = isToolbarLocationTop(editor);
 
   const visible = Cell(false);
+
+  // Calculate the toolbar offset when using a split toolbar drawer
+  const calcToolbarOffset = (toolbar: Option<AlloyComponent>) => isSplitToolbar ?
+    toolbar.fold(() => 0, (tbar) =>
+      // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
+      tbar.components().length > 1 ? Height.get(tbar.components()[1].element()) : 0
+    ) : 0;
+
+  const calcMode = (container: AlloyComponent): 'top' | 'bottom' => {
+    const toolbar = OuterContainer.getToolbar(outerContainer);
+    const offset = calcToolbarOffset(toolbar);
+    const targetBounds = Boxes.box(targetElm);
+
+    switch (getToolbarLocation(editor)) {
+      case ToolbarLocation.auto:
+        const toolbarHeight = Height.get(container.element()) - offset;
+
+        // If there isn't ever room to add the toolbar above the target element, then place the toolbar at the bottom
+        // Make sure to exclude scroll position, as we want to still show at the top if the user can scroll up to undock
+        if (toolbarHeight > targetBounds.y) {
+          return 'bottom';
+        } else {
+          return 'top';
+        }
+      case ToolbarLocation.bottom:
+        return 'bottom';
+      case ToolbarLocation.top:
+      default:
+        return 'top';
+    }
+  };
+
+  const initMode = () => {
+    // Ignore setting up the mode if using a fixed container or sticky toolbars is disabled
+    if (useFixedToolbarContainer || !isSticky) {
+      return;
+    }
+
+    const container = floatContainer.get();
+    const mode = calcMode(container);
+
+    // Update the docking mode
+    Docking.setModes(container, [ mode ]);
+    headerBackstage.setDockingMode(mode);
+
+    // Update the vertical menu direction
+    const verticalDir = isPositionedAtTop() ? VerticalDir.AttributeValue.TopToBottom : VerticalDir.AttributeValue.BottomToTop;
+    Attr.set(container.element(), VerticalDir.Attribute, verticalDir);
+  };
 
   const updateChromeWidth = () => {
     // Update the max width of the inline toolbar
@@ -48,17 +100,14 @@ export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: R
     Css.set(floatContainer.get().element(), 'max-width', maxWidth + 'px');
   };
 
-  const updateChromePosition = (toolbar: Option<AlloyComponent>) => {
-    // Calculate the toolbar offset when using a split toolbar drawer
-    const offset = isSplitToolbar ? toolbar.fold(() => 0, (tbar) =>
-      // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
-      tbar.components().length > 1 ? Height.get(tbar.components()[1].element()) : 0
-    ) : 0;
+  const updateChromePosition = () => {
+    const toolbar = OuterContainer.getToolbar(outerContainer);
+    const offset = calcToolbarOffset(toolbar);
 
     // The float container/editor may not have been rendered yet, which will cause it to have a non integer based positions
     // so we need to round this to account for that.
     const targetBounds = Boxes.box(targetElm);
-    const top = isToolbarTop ?
+    const top = isPositionedAtTop() ?
       targetBounds.y - Height.get(floatContainer.get().element()) + offset :
       targetBounds.bottom;
 
@@ -90,8 +139,7 @@ export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: R
 
     // Positioning
     if (!useFixedToolbarContainer) {
-      const toolbar = OuterContainer.getToolbar(outerContainer);
-      updateChromePosition(toolbar);
+      updateChromePosition();
     }
 
     // Docking
@@ -109,6 +157,7 @@ export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: R
     Css.set(outerContainer.element(), 'display', 'flex');
     DOM.addClass(editor.getBody(), 'mce-edit-focus');
     Css.remove(uiMothership.element(), 'display');
+    initMode();
     updateChromeUi();
   };
 
@@ -123,6 +172,7 @@ export const InlineHeader = (editor: Editor, targetElm: Element, uiComponents: R
 
   return {
     isVisible: () => visible.get() && !editor.removed,
+    isPositionedAtTop,
     show,
     hide,
     update: updateChromeUi,
