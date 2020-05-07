@@ -1,6 +1,7 @@
+import { Eq } from '@ephox/dispute';
+import * as Fun from './Fun';
 import { Option } from './Option';
 import * as Type from './Type';
-import { Eq } from '@ephox/dispute';
 
 type ArrayMorphism<T, U> = (x: T, i: number) => U;
 type ArrayPredicate<T> = ArrayMorphism<T, boolean>;
@@ -160,15 +161,19 @@ export const foldl = <T = any, U = any>(xs: ArrayLike<T>, f: (acc: U, x: T) => U
   return acc;
 };
 
-export const find = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Option<T> => {
+export const findUntil = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>, until: ArrayPredicate<T>): Option<T> => {
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
     if (pred(x, i)) {
       return Option.some(x);
+    } else if (until(x, i)) {
+      break;
     }
   }
   return Option.none();
 };
+
+export const find = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Option<T> => findUntil(xs, pred, Fun.never);
 
 export const findIndex = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Option<number> => {
   for (let i = 0, len = xs.length; i < len; i++) {

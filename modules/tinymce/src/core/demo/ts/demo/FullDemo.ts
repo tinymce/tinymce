@@ -114,6 +114,7 @@ export default function () {
     autosave_ask_before_unload: false,
     toolbar: 'undo redo sidebar1 | bold italic | alignleft aligncenter alignright alignjustify | align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | ' +
     'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
+    contextmenu: 'link linkchecker image imagetools table lists spellchecker configurepermanentpen',
 
     // Multiple toolbar array
     // toolbar: ['undo redo sidebar1 align fontsizeselect insertfile | fontselect formatselect styleselect insertfile | styleselect | bold italic',

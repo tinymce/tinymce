@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Traverse, Compare } from '@ephox/sugar';
+import { Compare, Element, Traverse } from '@ephox/sugar';
 
 export const enum ListType {
   OL = 'ol',

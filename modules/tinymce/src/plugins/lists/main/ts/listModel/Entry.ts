@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Traverse, Replication, Attr, Node } from '@ephox/sugar';
 import { Arr, Option } from '@ephox/katamari';
+import { Attr, Element, Node, Replication, Traverse } from '@ephox/sugar';
 import { hasLastChildList, ListType } from './Util';
 
 /*
@@ -26,6 +26,7 @@ General workflow: Parse lists to entries -> Manipulate entries -> Compose entrie
 
 export interface Entry {
   depth: number;
+  dirty: boolean;
   content: Element[];
   isSelected: boolean;
   listType: ListType;
@@ -45,6 +46,7 @@ const cloneItemContent = (li: Element): Element[] => {
 
 const createEntry = (li: Element, depth: number, isSelected: boolean): Option<Entry> => Traverse.parent(li).filter(Node.isElement).map((list) => ({
   depth,
+  dirty: false,
   isSelected,
   content: cloneItemContent(li),
   itemAttributes: Attr.clone(li),

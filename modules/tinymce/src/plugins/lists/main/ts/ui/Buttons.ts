@@ -5,36 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Tools from 'tinymce/core/api/util/Tools';
-import * as NodeType from '../core/NodeType';
 import Editor from 'tinymce/core/api/Editor';
-import { isCustomList } from '../core/Util';
-
-const findIndex = function (list, predicate) {
-  for (let index = 0; index < list.length; index++) {
-    const element = list[index];
-
-    if (predicate(element)) {
-      return index;
-    }
-  }
-  return -1;
-};
-
-const listState = function (editor: Editor, listName) {
-  return function (buttonApi) {
-    const nodeChangeHandler = (e) => {
-      const tableCellIndex = findIndex(e.parents, NodeType.isTableCellNode);
-      const parents = tableCellIndex !== -1 ? e.parents.slice(0, tableCellIndex) : e.parents;
-      const lists = Tools.grep(parents, NodeType.isListNode);
-      buttonApi.setActive(lists.length > 0 && lists[0].nodeName === listName && !isCustomList(lists[0]));
-    };
-
-    editor.on('NodeChange', nodeChangeHandler);
-
-    return () => editor.off('NodeChange', nodeChangeHandler);
-  };
-};
+import Tools from 'tinymce/core/api/util/Tools';
+import * as Util from '../core/Util';
 
 const register = function (editor: Editor) {
   const hasPlugin = function (editor, plugin) {
@@ -50,7 +23,7 @@ const register = function (editor: Editor) {
       active: false,
       tooltip: 'Numbered list',
       onAction: exec('InsertOrderedList'),
-      onSetup: listState(editor, 'OL')
+      onSetup: (api) => Util.listState(editor, 'OL', api.setActive)
     });
 
     editor.ui.registry.addToggleButton('bullist', {
@@ -58,7 +31,7 @@ const register = function (editor: Editor) {
       active: false,
       tooltip: 'Bullet list',
       onAction: exec('InsertUnorderedList'),
-      onSetup: listState(editor, 'UL')
+      onSetup: (api) => Util.listState(editor, 'UL', api.setActive)
     });
   }
 };
