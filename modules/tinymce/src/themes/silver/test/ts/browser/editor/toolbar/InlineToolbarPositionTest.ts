@@ -1,4 +1,4 @@
-import { Assertions, Chain, FocusTools, GeneralSteps, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Log, NamedChain, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document, HTMLElement } from '@ephox/dom-globals';
@@ -49,10 +49,14 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
   const sScrollToElementAndActivate = (tinyApis: TinyApis, element: Element, selector: string, alignWindowBottom = false) => Step.label('Activate editor', GeneralSteps.sequence([
     sScrollToElement(element, selector, alignWindowBottom),
     tinyApis.sSelect(selector, []),
+    sActiveEditor(tinyApis)
+  ]));
+
+  const sActiveEditor = (tinyApis: TinyApis) => GeneralSteps.sequence([
     tinyApis.sFocus(),
     tinyApis.sNodeChanged(),
     UiFinder.sWaitForVisible('Wait for editor to be visible', Body.body(), '.tox-editor-header')
-  ]));
+  ]);
 
   const sDeactivateEditor = (editor: Editor) => Step.label('Deactivate editor', GeneralSteps.sequence([
     FocusTools.sSetFocus('Focus outside editor', Element.fromDom(document.documentElement), 'div.scroll-div'),
@@ -262,6 +266,53 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
         ])
       ]),
       McEditor.cRemove
-    ])
+    ]),
+
+    Log.chainsAsStep('TINY-5955', 'Test fixed toolbar position', [
+      NamedChain.asChain([
+        NamedChain.write('toolbar', Chain.mapper(() => {
+          const toolbar = Element.fromHtml('<div id="toolbar"></div>');
+          Insert.append(Body.body(), toolbar);
+          return toolbar;
+        })),
+        NamedChain.write('editor', McEditor.cFromSettings({
+          ...settings,
+          fixed_toolbar_container: '#toolbar'
+        })),
+        NamedChain.read('editor', cTest((data) => {
+          // Add a margin to offset the regular max-width of the toolbar
+          Css.set(data.contentAreaContainer, 'margin-left', '100px');
+
+          return [
+            Log.stepsAsStep('TINY-5955', 'Activate and check toolbar styles', [
+              sActiveEditor(data.tinyApis),
+              sAssertStaticPos(data.header),
+              Assertions.sAssertStructure('Assert container isn\'t position absolute', ApproxStructure.build((s, str) =>
+                s.element('div', {
+                  styles: {
+                    position: str.none(),
+                    top: str.none(),
+                    left: str.none()
+                  }
+                })
+              ), data.container),
+              Assertions.sAssertStructure('Assert no header width or max-width set', ApproxStructure.build((s, str) =>
+                s.element('div', {
+                  styles: {
+                    'width': str.none(),
+                    'max-width': str.none()
+                  }
+                })
+              ), data.header),
+              sDeactivateEditor(data.editor)
+            ])
+          ];
+        })),
+        NamedChain.read('editor', McEditor.cRemove),
+        NamedChain.read('toolbar', Chain.op((toolbar) => {
+          Remove.remove(toolbar);
+        }))
+      ])
+    ]),
   ], success, failure);
 });
