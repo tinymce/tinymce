@@ -68,7 +68,7 @@ const makeFactory = (
     const paletteUpdates = () => {
       const updates = [ updateFields ];
       return (form: AlloyComponent, simulatedEvent: SimulatedEvent<ColourEvents.PaletteUpdateEvent>) => {
-        const value = simulatedEvent.event().value;
+        const value = simulatedEvent.event().value();
         const oldRgb = state.paletteRgba.get();
         const hsvColour = HsvColour.fromRgb(oldRgb);
         const newHsvColour = HsvColour.hsvColour(hsvColour.hue, value.x(), (100 - value.y()));
@@ -81,7 +81,7 @@ const makeFactory = (
     const sliderUpdates = () => {
       const updates = [ updatePalette, updateFields ];
       return (form: AlloyComponent, simulatedEvent: SimulatedEvent<ColourEvents.SliderUpdateEvent>) => {
-        const value = simulatedEvent.event().value;
+        const value = simulatedEvent.event().value();
         const hex = calcHex(value.y());
         runUpdates(form, hex, updates);
       };
