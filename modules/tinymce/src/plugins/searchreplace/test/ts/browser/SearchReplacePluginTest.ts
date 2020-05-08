@@ -156,11 +156,26 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplacePluginTes
     ));
   });
 
+  suite.test('TestCase-TINY-5967: SearchReplace: Find and replace all in nested contenteditable elements', (editor) => {
+    editor.setContent('<p>Editable '+
+      '<span contenteditable="false">NonEditable <span contenteditable="true">Editable ' +
+      '<span contenteditable="false">NonEditable <span contenteditable="true">Editable </span>NonEditable </span>' +
+      'Editable </span>NonEditable </span>' +
+      'Editable</p>');
+    LegacyUnit.equal(5, editor.plugins.searchreplace.find('Editable'));
+    LegacyUnit.equal(editor.plugins.searchreplace.replace('x', true, true), false);
+    LegacyUnit.equal(editor.getContent(), '<p>x '+
+      '<span contenteditable="false">NonEditable <span contenteditable="true">x ' +
+      '<span contenteditable="false">NonEditable <span contenteditable="true">x </span>NonEditable </span>' +
+      'x </span>NonEditable </span>' +
+      'x</p>');
+  });
+
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'SearchReplace: Find and replace matches', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'searchreplace',
-    valid_elements: 'b,i,br',
+    valid_elements: 'b,i,br,span[contenteditable]',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     theme: 'silver'

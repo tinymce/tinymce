@@ -7,10 +7,18 @@
 
 import { Node, Range, Text } from '@ephox/dom-globals';
 import { Arr, Fun, Obj } from '@ephox/katamari';
-import { Element, Traverse } from '@ephox/sugar';
+import { Element, SelectorFilter, Traverse } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import { TextSection } from './Types';
+
+type CollectContentEditableFn = (node: Node) => TextSection[];
+type CollectTextFn = (node: Text, section: TextSection) => void;
+interface WalkerCallbacks {
+  boundary: (node: Node) => boolean;
+  cef: (node: Node) => boolean;
+  text: (node: Text) => void;
+}
 
 const isBoundary = (dom: DOMUtils, node: Node) => dom.isBlock(node) || Obj.has(dom.schema.getShortEndedElements(), node.nodeName);
 const isContentEditableFalse = (dom: DOMUtils, node: Node) => dom.getContentEditable(node) === 'false';
@@ -23,23 +31,27 @@ const nuSection = (): TextSection => ({
   elements: []
 });
 
-const walk = (dom: DOMUtils, walkerFn: (shallow?: boolean) => Node, boundary: (node: Node) => boolean, text: (text: Text) => void, startNode: Node, endNode?: Node, skipStart: boolean = true) => {
+const toLeaf = (node: Node, offset: number) => Traverse.leaf(Element.fromDom(node), offset);
+
+const walk = (dom: DOMUtils, walkerFn: (shallow?: boolean) => Node, startNode: Node, callbacks: WalkerCallbacks, endNode?: Node, skipStart: boolean = true) => {
   let next = skipStart ? walkerFn(false) : startNode;
   while (next) {
     // Walk over content editable or hidden elements
-    if (isHidden(dom, next) || isContentEditableFalse(dom, next)) {
-      if (boundary(next)) {
+    const isCefNode = isContentEditableFalse(dom, next);
+    if (isCefNode || isHidden(dom, next)) {
+      const stopWalking = isCefNode ? callbacks.cef(next) : callbacks.boundary(next);
+      if (stopWalking) {
         break;
       } else {
         next = walkerFn(true);
         continue;
       }
     } else if (isBoundary(dom, next)) {
-      if (boundary(next)) {
+      if (callbacks.boundary(next)) {
         break;
       }
     } else if (isText(next)) {
-      text(next);
+      callbacks.text(next);
     }
 
     if (next === endNode) {
@@ -62,17 +74,21 @@ const collectTextToBoundary = (dom: DOMUtils, section: TextSection, node: Node, 
 
   // Walk over and add text nodes to the section and increase the offsets
   // so we know to ignore the additional text when matching
-  walk(dom, walkerFn, Fun.always, (next) => {
-    if (forwards) {
-      section.fOffset += next.length;
-    } else {
-      section.sOffset += next.length;
+  walk(dom, walkerFn, node, {
+    boundary: Fun.always,
+    cef: Fun.always,
+    text: (next) => {
+      if (forwards) {
+        section.fOffset += next.length;
+      } else {
+        section.sOffset += next.length;
+      }
+      section.elements.push(Element.fromDom(next));
     }
-    section.elements.push(Element.fromDom(next));
-  }, node);
+  });
 };
 
-const collectSections = (dom: DOMUtils, startNode: Node, startOffset: number, endNode: Node, endOffset: number, rootNode: Node): TextSection[] => {
+const collect = (dom: DOMUtils, rootNode: Node, startNode: Node, endNode?: Node, text?: CollectTextFn, cef?: CollectContentEditableFn, skipStart: boolean = true) => {
   const walker = new TreeWalker(startNode, rootNode);
   const sections: TextSection[] = [];
   let current: TextSection = nuSection();
@@ -90,32 +106,53 @@ const collectSections = (dom: DOMUtils, startNode: Node, startOffset: number, en
 
   // Collect all the text nodes in the specified range and create sections from the
   // boundaries within the range
-  walk(dom, walker.next, finishSection, (next) => {
-    if (next === endNode) {
-      current.fOffset += next.length - endOffset;
-    } else if (next === startNode) {
-      current.sOffset += startOffset;
+  walk(dom, walker.next, startNode, {
+    boundary: finishSection,
+    cef: (node) => {
+      finishSection();
+      // Collect additional nested contenteditable true content
+      if (cef) {
+        sections.push(...cef(node));
+      }
+      return false;
+    },
+    text: (next) => {
+      current.elements.push(Element.fromDom(next));
+      if (text) {
+        text(next, current);
+      }
     }
-    current.elements.push(Element.fromDom(next));
-  }, startNode, endNode, false);
+  }, endNode, skipStart);
 
   // Find any text between the end node and the closest boundary, then finalise the section
-  collectTextToBoundary(dom, current, endNode, rootNode, true);
+  if (endNode) {
+    collectTextToBoundary(dom, current, endNode, rootNode, true);
+  }
   finishSection();
 
   return sections;
 };
 
-const fromRng = (dom: DOMUtils, rng: Range): TextSection[] => {
-  if (rng.collapsed) {
-    return [];
-  } else {
-    const toLeaf = (node: Node, offset: number) => Traverse.leaf(Element.fromDom(node), offset);
-    const start = toLeaf(rng.startContainer, rng.startOffset);
-    const end = toLeaf(rng.endContainer, rng.endOffset);
-    return collectSections(dom, start.element().dom(), start.offset(), end.element().dom(), end.offset(), rng.commonAncestorContainer);
-  }
+const collectRangeSections = (dom: DOMUtils, rng: Range): TextSection[] => {
+  const start = toLeaf(rng.startContainer, rng.startOffset);
+  const startNode = start.element().dom();
+  const end = toLeaf(rng.endContainer, rng.endOffset);
+  const endNode = end.element().dom();
+
+  return collect(dom, rng.commonAncestorContainer, startNode, endNode, (node, section) => {
+    // Set the start/end offset of the section
+    if (node === endNode) {
+      section.fOffset += node.length - end.offset();
+    } else if (node === startNode) {
+      section.sOffset += start.offset();
+    }
+  }, (node) => Arr.bind(SelectorFilter.descendants(Element.fromDom(node), '*[contenteditable=true]'), (e) => {
+    const ceTrueNode = e.dom();
+    return collect(dom, ceTrueNode, ceTrueNode);
+  }), false);
 };
+
+const fromRng = (dom: DOMUtils, rng: Range): TextSection[] => rng.collapsed ? [] : collectRangeSections(dom, rng);
 
 const fromNode = (dom: DOMUtils, node: Node): TextSection[] => {
   const rng = dom.createRng();
