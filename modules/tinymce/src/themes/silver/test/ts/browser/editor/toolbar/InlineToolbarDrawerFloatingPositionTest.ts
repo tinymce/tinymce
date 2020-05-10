@@ -5,7 +5,7 @@ import { Editor as McEditor, TinyActions, TinyApis, TinyUi } from '@ephox/mcagar
 import { Body, Css, Element, Location } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { EditorSettings } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import Theme from 'tinymce/themes/silver/Theme';
 import { sAssertFloatingToolbarPosition, sOpenFloatingToolbarAndAssertPosition } from '../../../module/ToolbarUtils';
 
@@ -24,7 +24,7 @@ UnitTest.asynctest('Inline Editor Floating Toolbar Drawer Position test', (succe
     ...GeneralSteps.repeat(times, tinyActions.sContentKeydown(Keys.enter()))
   ]);
 
-  const sWithEditor = (settings: EditorSettings, getSteps: (editor: Editor, tinyApis: TinyApis) => Array<Step<any, any>>) => Chain.asStep({}, [
+  const sWithEditor = (settings: RawEditorSettings, getSteps: (editor: Editor, tinyApis: TinyApis) => Array<Step<any, any>>) => Chain.asStep({}, [
     McEditor.cFromSettings({
       theme: 'silver',
       inline: true,

@@ -5,7 +5,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import { EditorSettings as EditorSettingsType } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import * as EditorSettings from 'tinymce/core/EditorSettings';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -16,24 +16,24 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
 
   Theme();
 
-  const expectedDefaultSettings: EditorSettingsType = {
+  const expectedDefaultSettings: RawEditorSettings = {
     toolbar_mode: 'floating',
   };
 
-  const expectedTouchDefaultSettings: EditorSettingsType = {
+  const expectedTouchDefaultSettings: RawEditorSettings = {
     ...expectedDefaultSettings,
     table_grid: false,
     object_resizing: false,
     resize: false
   };
 
-  const expectedTabletDefaultSettings: EditorSettingsType = {
+  const expectedTabletDefaultSettings: RawEditorSettings = {
     ...expectedTouchDefaultSettings,
     toolbar_mode: 'scrolling',
     toolbar_sticky: false
   };
 
-  const expectedPhoneDefaultSettings: EditorSettingsType = {
+  const expectedPhoneDefaultSettings: RawEditorSettings = {
     ...expectedTabletDefaultSettings,
     menubar: false
   };
@@ -58,7 +58,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
       })),
 
       Logger.t('when unset, toolbar_mode should fall back to the value of toolbar_drawer', Step.sync(() => {
-        const toolbarSettings: EditorSettingsType = {
+        const toolbarSettings: RawEditorSettings = {
           toolbar_drawer: 'sliding'
         };
 

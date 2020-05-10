@@ -1,6 +1,5 @@
 import { Node, Text } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
-import { Spot } from '@ephox/phoenix';
 import * as NodeType from '../../dom/NodeType';
 import { TextWalker } from '../../dom/TextWalker';
 import DOMUtils from './DOMUtils';

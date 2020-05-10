@@ -7,8 +7,6 @@
 
 import Editor from '../api/Editor';
 import * as Rtc from '../Rtc';
-import { Content, SetContentArgs } from './SetContentImpl';
-
-export { Content, SetContentArgs } from './SetContentImpl';
+import { Content, SetContentArgs } from './ContentTypes';
 
 export const setContent = (editor: Editor, content: Content, args: SetContentArgs = {}): Content => Rtc.setContent(editor, content, args);
