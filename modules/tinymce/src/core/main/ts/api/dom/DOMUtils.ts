@@ -45,16 +45,20 @@ const whiteSpaceRegExp = /^[ \t\r\n]*$/;
 
 interface AttrHooks {
   style: {
-    set ($elm, value: string | {}): void;
-    get ($elm): string;
+    set ($elm: DomQuery, value: string | {} | null): void;
+    get ($elm: DomQuery): string;
   };
   href?: {
-    set ($elm, value: string, name: string): void;
-    get ($elm, name: string): string;
+    set ($elm: DomQuery, value: string | null, name: string): void;
+    get ($elm: DomQuery, name: string): string;
   };
   src?: {
-    set ($elm, value: string, name: string): void;
-    get ($elm, name: string): string;
+    set ($elm: DomQuery, value: string | null, name: string): void;
+    get ($elm: DomQuery, name: string): string;
+  };
+  [key: string]: {
+    set ($elm: DomQuery, value: string | {} | null, name: string): void;
+    get: ($elm: DomQuery, name: string) => string;
   };
 }
 
@@ -83,7 +87,7 @@ const setupAttrHooks = function (styles: Styles, settings: Partial<DOMUtilsSetti
         }
 
         if (keepValues) {
-          $elm.attr('data-mce-style', value);
+          $elm.attr('data-mce-style', value as string);
         }
 
         // If setting a style then delegate to the css api, otherwise
@@ -92,7 +96,7 @@ const setupAttrHooks = function (styles: Styles, settings: Partial<DOMUtilsSetti
           $elm.removeAttr('style');
           $elm.css(styles.parse(value));
         } else {
-          $elm.attr('style', value);
+          $elm.attr('style', value as null);
         }
       },
 
@@ -180,7 +184,8 @@ interface DOMUtils {
   root: Node;
   $: DomQueryConstructor;
 
-  $$ (elm: string | Node | Node[] | DomQuery): DomQuery;
+  $$ <T extends Node>(elm: T | T[] | DomQuery<T>): DomQuery<T>;
+  $$ (elm: string): DomQuery<Node>;
   isBlock (node: string | Node): boolean;
   clone (node: Node, deep: boolean): Node;
   getRoot (): HTMLElement;
@@ -193,23 +198,23 @@ interface DOMUtils {
   getParent (node: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node): Element;
   getParents (elm: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node, collect?: boolean): Element[];
   get (elm: string | Node): HTMLElement;
-  getNext (node: Node, selector: string | Function): Node;
-  getPrev (node: Node, selector: string | Function): Node;
+  getNext (node: Node, selector: string | ((node: Node) => boolean)): Node;
+  getPrev (node: Node, selector: string | ((node: Node) => boolean)): Node;
   select <K extends keyof HTMLElementTagNameMap>(selector: K, scope?: string | Node): Array<HTMLElementTagNameMap[K]>;
   select (selector: string, scope?: string | Node): HTMLElement[];
   is (elm: Node | Node[], selector: string): boolean;
-  add (parentElm: RunArguments, name: string | Node, attrs?: Record<string, any>, html?: string | Node, create?: boolean): HTMLElement;
-  create (name: string, attrs?: Record<string, string | number>, html?: string | Node): HTMLElement;
-  createHTML (name: string, attrs?: Record<string, any>, html?: string): string;
+  add (parentElm: RunArguments, name: string | Node, attrs?: Record<string, string | boolean | number>, html?: string | Node, create?: boolean): HTMLElement;
+  create (name: string, attrs?: Record<string, string | boolean | number>, html?: string | Node): HTMLElement;
+  createHTML (name: string, attrs?: Record<string, string>, html?: string): string;
   createFragment (html?: string): DocumentFragment;
   remove (node: string | Node | Node[], keepChildren?: boolean): any;
-  setStyle (elm: string | Node, name: string, value: string | number): void;
+  setStyle (elm: string | Node, name: string, value: string | number | null): void;
   setStyle (elm: string | Node, styles: StyleMap): void;
   getStyle (elm: string | Node, name: string, computed?: boolean): string;
   setStyles (elm: string | Node, stylesArg: StyleMap): void;
   removeAllAttribs (e: RunArguments): any;
-  setAttrib (elm: string | Node, name: string, value: string): void;
-  setAttribs (elm: string | Node, attrs: Record<string, string>): void;
+  setAttrib (elm: string | Node, name: string, value: string | boolean | number | null): void;
+  setAttribs (elm: string | Node, attrs: Record<string, string | boolean | number | null>): void;
   getAttrib (elm: string | Node, name: string, defaultVal?: string): string;
   getPos (elm: string | Node, rootElm?: Node): {
     x: number;
@@ -331,13 +336,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return elm as HTMLElement;
   };
 
-  const $$ = (elm: string | Node | Node[] | DomQuery): DomQuery => {
-    if (typeof elm === 'string') {
-      elm = get(elm);
-    }
-
-    return $(elm);
-  };
+  const $$ = <T extends Node>(elm: string | T | T[] | DomQuery<T>): DomQuery<T | Node> => $(typeof elm === 'string' ? get(elm) : elm);
 
   const getAttrib = (elm: string | Node, name: string, defaultVal?: string): string => {
     let hook, value;
@@ -371,7 +370,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return node.attributes;
   };
 
-  const setAttrib = (elm: string | Node, name: string, value: string) => {
+  const setAttrib = (elm: string | Node, name: string, value: string | boolean | number) => {
     let originalValue, hook;
 
     if (value === '') {
@@ -594,7 +593,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return parents && parents.length > 0 ? parents[0] : null;
   };
 
-  const _findSib = (node: Node, selector: string | Function, name: string) => {
+  const _findSib = (node: Node, selector: string | ((node: Node) => boolean), name: string) => {
     let func = selector;
 
     if (node) {
@@ -616,9 +615,9 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return null;
   };
 
-  const getNext = (node: Node, selector: string | Function) => _findSib(node, selector, 'nextSibling');
+  const getNext = (node: Node, selector: string | ((node: Node) => boolean)) => _findSib(node, selector, 'nextSibling');
 
-  const getPrev = (node: Node, selector: string | Function) => _findSib(node, selector, 'previousSibling');
+  const getPrev = (node: Node, selector: string | ((node: Node) => boolean)) => _findSib(node, selector, 'previousSibling');
 
   const select = (selector: string, scope?: Node | string) => Sizzle(selector, get(scope) || settings.root_element || doc, []);
 
@@ -651,7 +650,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return func.call(context, node);
   };
 
-  const setAttribs = (elm: string | Node, attrs: Record<string, string>) => {
+  const setAttribs = (elm: string | Node, attrs: Record<string, string | boolean | number>) => {
     $$(elm).each(function (i, node) {
       each(attrs, function (value, name) {
         setAttrib(node, name, value);
@@ -690,7 +689,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
   };
 
-  const add = (parentElm: RunArguments, name: string | Node, attrs?: Record<string, any>, html?: string | Node, create?: boolean): HTMLElement => run(parentElm, function (parentElm) {
+  const add = (parentElm: RunArguments, name: string | Node, attrs?: Record<string, string | boolean | number>, html?: string | Node, create?: boolean): HTMLElement => run(parentElm, function (parentElm) {
     const newElm = typeof name  === 'string' ? doc.createElement(name) : name;
     setAttribs(newElm, attrs);
 
@@ -705,12 +704,12 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return !create ? parentElm.appendChild(newElm) : newElm;
   });
 
-  const create = (name: string, attrs?: Record<string, string | number>, html?: string | Node): HTMLElement => add(doc.createElement(name), name, attrs, html, true);
+  const create = (name: string, attrs?: Record<string, string | boolean | number>, html?: string | Node): HTMLElement => add(doc.createElement(name), name, attrs, html, true);
 
   const decode = Entities.decode;
   const encode = Entities.encodeAllRaw;
 
-  const createHTML = (name: string, attrs?: Record<string, any>, html?: string): string => {
+  const createHTML = (name: string, attrs?: Record<string, string>, html?: string): string => {
     let outHtml = '', key;
 
     outHtml += '<' + name;
