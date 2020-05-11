@@ -251,12 +251,18 @@ UnitTest.asynctest('Inline Editor Toolbar Position test', (success, failure) => 
         Log.stepsAsStep('TINY-3161', 'Select item at the top of content, when there\'s no room to render above (docked position)', [
           Step.sync(() => {
             const editorBody = Element.fromDom(editor.getBody());
-            Css.set(editorBody, 'position', 'fixed');
+            Css.set(editorBody, 'position', 'absolute');
             Css.set(editorBody, 'top', '0');
+            Css.set(editorBody, 'left', '0');
           }),
           sScrollToElementAndActivate(tinyApis, contentAreaContainer, ':first-child'),
           sAssertAbsolutePos(container, contentAreaContainer, 'below'),
           sAssertDockedPos(header, 'bottom'),
+          sScrollToElement(contentAreaContainer, 'p:contains("STOP AND CLICK HERE")'),
+          sAssertDockedPos(header, 'bottom'),
+          sScrollToElement(contentAreaContainer, ':last-child', true),
+          sAssertAbsolutePos(container, contentAreaContainer, 'above'),
+          sAssertDockedPos(header, 'top'),
           sDeactivateEditor(editor),
           Step.sync(() => {
             const editorBody = Element.fromDom(editor.getBody());
