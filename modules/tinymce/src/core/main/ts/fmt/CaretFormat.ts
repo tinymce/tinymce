@@ -5,23 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun } from '@ephox/katamari';
-import { Insert, Remove, Element, Node as SugarNode, Attr } from '@ephox/sugar';
 import { Document, Node, Range } from '@ephox/dom-globals';
+import { Arr, Fun } from '@ephox/katamari';
+import { Attr, Element, Insert, Node as SugarNode, Remove } from '@ephox/sugar';
+import Selection from '../api/dom/Selection';
+import TreeWalker from '../api/dom/TreeWalker';
+import Editor from '../api/Editor';
+import { FormatVars } from '../api/fmt/Format';
 import CaretPosition from '../caret/CaretPosition';
+import * as DeleteElement from '../delete/DeleteElement';
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
-import TreeWalker from '../api/dom/TreeWalker';
-import * as ExpandRange from './ExpandRange';
-import * as FormatUtils from './FormatUtils';
-import * as MatchFormat from './MatchFormat';
 import * as SplitRange from '../selection/SplitRange';
 import * as Zwsp from '../text/Zwsp';
-import Selection from '../api/dom/Selection';
-import Editor from '../api/Editor';
-import { isCaretNode, getParentCaretContainer } from './FormatContainer';
-import * as DeleteElement from '../delete/DeleteElement';
-import { FormatVars } from '../api/fmt/Format';
+import * as ExpandRange from './ExpandRange';
+import { getParentCaretContainer, isCaretNode } from './FormatContainer';
+import * as FormatUtils from './FormatUtils';
+import * as MatchFormat from './MatchFormat';
 
 const ZWSP = Zwsp.ZWSP, CARET_ID = '_mce_caret';
 
@@ -100,17 +100,24 @@ const removeCaretContainerNode = (editor: Editor, node: Node, moveCaret: boolean
   } else {
     const rng = selection.getRng();
     const block = dom.getParent(node, dom.isBlock);
+
+    // Store the current selection offsets
+    const startContainer = rng.startContainer;
+    const startOffset = rng.startOffset;
+    const endContainer = rng.endContainer;
+    const endOffset = rng.endOffset;
+
     const textNode = trimZwspFromCaretContainer(node);
-
-    if (rng.startContainer === textNode && rng.startOffset > 0) {
-      rng.setStart(textNode, rng.startOffset - 1);
-    }
-
-    if (rng.endContainer === textNode && rng.endOffset > 0) {
-      rng.setEnd(textNode, rng.endOffset - 1);
-    }
-
     dom.remove(node, true);
+
+    // Restore the selection after unwrapping the node and removing the zwsp
+    if (startContainer === textNode && startOffset > 0) {
+      rng.setStart(textNode, startOffset - 1);
+    }
+
+    if (endContainer === textNode && endOffset > 0) {
+      rng.setEnd(textNode, endOffset - 1);
+    }
 
     if (block && dom.isEmpty(block)) {
       PaddingBr.fillWithPaddingBr(Element.fromDom(block));

@@ -1,13 +1,13 @@
-import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { ApproxStructure, Assertions, GeneralSteps, Logger, Mouse, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Text } from '@ephox/dom-globals';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Element } from '@ephox/sugar';
 import * as CaretFormat from 'tinymce/core/fmt/CaretFormat';
-import * as TypeText from '../../module/test/TypeText';
+import { getParentCaretContainer, isCaretNode } from 'tinymce/core/fmt/FormatContainer';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
-import { isCaretNode, getParentCaretContainer } from 'tinymce/core/fmt/FormatContainer';
+import * as TypeText from '../../module/test/TypeText';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success, failure) {
 
@@ -300,6 +300,53 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
             ]
           });
         }))
+      ])),
+      Logger.t('Apply bold to caret, type bold text, unbold and type text, then apply a ranged selection', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p></p>'),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
+        sApplyCaretFormat(editor, 'bold', {}),
+        TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'Hello'),
+        tinyApis.sAssertContent('<p><strong>Hello</strong></p>'),
+        tinyApis.sAssertSelection([ 0, 0, 0, 0 ], 6, [ 0, 0, 0, 0 ], 6),
+        sRemoveCaretFormat(editor, 'bold', {}),
+        TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'world'),
+        tinyApis.sAssertContent('<p><strong>Hello</strong>world</p>'),
+        tinyApis.sAssertSelection([ 0, 1, 0 ], 6, [ 0, 1, 0 ], 6),
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) =>
+          s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.element('strong', { children: [ s.text(str.is('Hello')) ] }),
+                  s.element('span', {
+                    attrs: {
+                      'id': str.is('_mce_caret'),
+                      'data-mce-bogus': str.is('1')
+                    },
+                    children: [ s.text(str.is(Zwsp.ZWSP + 'world')) ]
+                  }),
+                  s.element('br', {})
+                ]
+              })
+            ]
+          })
+        )),
+        tinyApis.sSetSelection([ 0, 0, 0 ], 2, [ 0, 1, 0 ], 3),
+        Mouse.sTrueClickOn(Element.fromDom(editor.getBody()), '#_mce_caret'),
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) =>
+          s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.element('strong', { children: [ s.text(str.is('Hello')) ] }),
+                  s.text(str.is('world')),
+                  s.element('br', {})
+                ]
+              })
+            ]
+          })
+        )),
+        tinyApis.sAssertSelection([ 0, 0, 0 ], 2, [ 0, 1 ], 2)
       ])),
       Logger.t('isCaretNode', Step.sync(function () {
         Assertions.assertEq('Should be false since it is not a caret node', false, isCaretNode(editor.dom.create('b')));
