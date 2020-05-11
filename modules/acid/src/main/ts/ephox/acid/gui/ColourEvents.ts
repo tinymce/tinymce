@@ -1,16 +1,16 @@
+import { CustomEvent, SliderTypes } from '@ephox/alloy';
 import { Id } from '@ephox/katamari';
-import { SliderTypes, EventFormat } from '@ephox/alloy';
 
 const fieldsUpdate = Id.generate('rgb-hex-update');
 const sliderUpdate = Id.generate('slider-update');
 const paletteUpdate = Id.generate('palette-update');
 
-export interface SliderUpdateEvent extends EventFormat {
-  value: SliderTypes.SliderValueY;
+export interface SliderUpdateEvent extends CustomEvent {
+  value: () => SliderTypes.SliderValueY;
 }
 
-export interface PaletteUpdateEvent extends EventFormat {
-  value: SliderTypes.SliderValueXY;
+export interface PaletteUpdateEvent extends CustomEvent {
+  value: () => SliderTypes.SliderValueXY;
 }
 
 export {
