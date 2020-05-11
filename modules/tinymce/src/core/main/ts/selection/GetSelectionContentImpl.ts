@@ -7,13 +7,12 @@
 
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+import Editor from '../api/Editor';
+import { Content, ContentFormat, GetContentArgs } from '../content/ContentTypes';
+import * as Zwsp from '../text/Zwsp';
 import * as EventProcessRanges from './EventProcessRanges';
 import * as FragmentReader from './FragmentReader';
 import * as MultiRange from './MultiRange';
-import * as Zwsp from '../text/Zwsp';
-import Editor from '../api/Editor';
-import { Content, GetContentArgs } from '../content/GetContent';
-import { ContentFormat } from '../content/GetContentImpl';
 
 export interface GetSelectionContentArgs extends GetContentArgs {
   selection?: boolean;

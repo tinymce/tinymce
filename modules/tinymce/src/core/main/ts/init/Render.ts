@@ -17,7 +17,7 @@ import IconManager from '../api/IconManager';
 import NotificationManager from '../api/NotificationManager';
 import PluginManager from '../api/PluginManager';
 import * as Settings from '../api/Settings';
-import { RawEditorSettings } from '../api/SettingsTypes';
+import { EditorSettings } from '../api/SettingsTypes';
 import ThemeManager from '../api/ThemeManager';
 import I18n from '../api/util/I18n';
 import Tools from '../api/util/Tools';
@@ -97,7 +97,7 @@ const loadIcons = (scriptLoader: ScriptLoader, editor: Editor, suffix: string) =
   });
 };
 
-const loadPlugins = (editor: Editor, settings: RawEditorSettings, suffix: string) => {
+const loadPlugins = (editor: Editor, settings: EditorSettings, suffix: string) => {
   if (Type.isArray(settings.plugins)) {
     settings.plugins = settings.plugins.join(' ');
   }

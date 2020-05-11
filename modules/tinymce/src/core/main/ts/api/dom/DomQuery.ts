@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, HTMLElementEventMap, Node, Window } from '@ephox/dom-globals';
+import { document, Element, HTMLElementEventMap, Node, Window } from '@ephox/dom-globals';
+import Tools from '../util/Tools';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
 import Sizzle from './Sizzle';
-import Tools from '../util/Tools';
 
 /**
  * This class mimics most of the jQuery API:
@@ -32,14 +32,18 @@ import Tools from '../util/Tools';
  * @class tinymce.dom.DomQuery
  */
 
-type DomQuerySelector<T> = string | T | T[] | DomQuery<T>;
-type DomQueryInitSelector<T> = DomQuerySelector<T> | Window;
+type DomQuerySelector<T extends Node> = string | T | T[] | DomQuery<T>;
+type DomQueryInitSelector<T extends Node> = DomQuerySelector<T> | Window;
+interface Hook {
+  get: <T extends Node>(elm: T) => string;
+  set: <T extends Node>($elm: DomQuery<T>, value: string | null) => void;
+}
 
 export interface DomQueryConstructor {
   prototype: DomQuery;
 
-  attrHooks: Record<string, {}>;
-  cssHooks: Record<string, {}>;
+  attrHooks: Record<string, Hook>;
+  cssHooks: Record<string, Hook>;
 
   fn: DomQuery;
 
@@ -62,10 +66,10 @@ export interface DomQueryConstructor {
   isArray: Tools['isArray'];
 
   // tslint:disable-next-line:no-misused-new
-  new <T extends Node = Node>(selector?: DomQueryInitSelector<T>, context?: Node): DomQuery;
-  <T extends Node = Node>(selector?: DomQueryInitSelector<T>, context?: Node): DomQuery;
+  new <T extends Node = Node>(selector?: DomQueryInitSelector<T>, context?: Node): DomQuery<T>;
+  <T extends Node = Node>(selector?: DomQueryInitSelector<T>, context?: Node): DomQuery<T>;
 
-  overrideDefaults (callback: Function): DomQueryConstructor;
+  overrideDefaults (callback: () => { context: Node; element: Element }): DomQueryConstructor;
 
   makeArray <T>(object: T): T[];
   inArray <T>(item: {}, array: T[]): number;
@@ -79,7 +83,7 @@ export interface DomQueryConstructor {
   filter (expr: string, elems: Node[], not?: boolean);
 }
 
-interface DomQuery<T = Node> extends Iterable<T> {
+interface DomQuery<T extends Node = Node> extends Iterable<T> {
   init: (selector?: DomQueryInitSelector<T>, context?: Node) => void;
 
   context: T;
@@ -91,16 +95,16 @@ interface DomQuery<T = Node> extends Iterable<T> {
   after (content: DomQuerySelector<T>): this;
   append (content: DomQuerySelector<T>): this;
   appendTo (val: DomQuerySelector<T>): this;
-  attr (name: string, value: string): this;
-  attr (attrs: Record<string, string | number>): this;
+  attr (name: string, value: string | boolean | number | null): this;
+  attr (attrs: Record<string, string | boolean | number | null>): this;
   attr (name: string): string;
   before (content: DomQuerySelector<T>): this;
   children (selector?: string): this;
   clone (): this;
   closest (selector: DomQuerySelector<T>): this;
   contents (selector?: string): this;
-  css (name: string, value: string | number): this;
-  css (styles: Record<string, string | number>): this;
+  css (name: string, value: string | number | null): this;
+  css (styles: Record<string, string | number | null>): this;
   css (name: string): string;
   each (callback: (i: number, value: T) => void): this;
   empty (): this;
@@ -250,9 +254,9 @@ const cssFix = {
   float: 'cssFloat'
 };
 
-const attrHooks = {}, cssHooks = {};
+const attrHooks: Record<string, Hook> = {}, cssHooks: Record<string, Hook> = {};
 
-const DomQueryConstructor: any = function <T extends Node = Node> (selector: DomQueryInitSelector<T>, context?): DomQuery {
+const DomQueryConstructor: any = function <T extends Node = Node> (selector: DomQueryInitSelector<T>, context?: T): DomQuery<T> {
   /* eslint new-cap:0 */
   return new DomQuery.fn.init(selector, context);
 };

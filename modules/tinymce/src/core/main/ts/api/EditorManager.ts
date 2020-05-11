@@ -5,22 +5,22 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Element, HTMLFormElement, Window, BeforeUnloadEvent } from '@ephox/dom-globals';
-import { Arr, Type, Obj } from '@ephox/katamari';
-import AddOnManager from './AddOnManager';
-import Editor from './Editor';
-import { RawEditorSettings } from './SettingsTypes';
-import Env from './Env';
+import { BeforeUnloadEvent, document, Element, HTMLFormElement, Window } from '@ephox/dom-globals';
+import { Arr, Obj, Type } from '@ephox/katamari';
 import * as ErrorReporter from '../ErrorReporter';
-import DOMUtils from './dom/DOMUtils';
-import DomQuery from './dom/DomQuery';
 import * as FocusController from '../focus/FocusController';
+import AddOnManager from './AddOnManager';
+import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
+import DOMUtils from './dom/DOMUtils';
+import Editor from './Editor';
+import Env from './Env';
+import { EditorManagerEventMap } from './EventTypes';
+import { RawEditorSettings } from './SettingsTypes';
 import I18n from './util/I18n';
 import Observable from './util/Observable';
 import Promise from './util/Promise';
 import Tools from './util/Tools';
 import URI from './util/URI';
-import { EditorManagerEventMap } from './EventTypes';
 
 declare const window: Window & { tinymce: any; tinyMCEPreInit: any };
 
@@ -116,8 +116,8 @@ const purgeDestroyedEditor = function (editor) {
 };
 
 interface EditorManager extends Observable<EditorManagerEventMap> {
-  $: any;
-  defaultSettings: Record<string, any>;
+  $: DomQueryConstructor;
+  defaultSettings: RawEditorSettings;
   majorVersion: string;
   minorVersion: string;
   releaseDate: string;

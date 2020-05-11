@@ -1,18 +1,18 @@
-import { Chain, Mouse, NamedChain, Pipeline, UiFinder, Assertions, Log } from '@ephox/agar';
+import { Assertions, Chain, Log, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
+import { Boxes } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Arr, Fun } from '@ephox/katamari';
 import { Editor as McEditor } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
-import { EditorSettings } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import Theme from 'tinymce/themes/silver/Theme';
-import { Boxes } from '@ephox/alloy';
-import { Arr, Fun } from '@ephox/katamari';
 
 UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when toolbar_location: "bottom"', (success, failure) => {
   Theme();
 
   interface Scenario {
     message: string;
-    settings: EditorSettings;
+    settings: RawEditorSettings;
     initial: Array<{ clickOn: string; waitFor: string }>;
     assertAbove: string;
     assertBelow: string;

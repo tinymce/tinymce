@@ -7,9 +7,7 @@
 
 import Editor from '../api/Editor';
 import * as Rtc from '../Rtc';
-import { Content, GetContentArgs } from './GetContentImpl';
-
-export { Content, GetContentArgs } from './GetContentImpl';
+import { Content, GetContentArgs } from './ContentTypes';
 
 const defaultFormat = 'html';
 export const getContent = (editor: Editor, args: GetContentArgs = {}): Content => {

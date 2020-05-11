@@ -6,27 +6,16 @@
  */
 
 import { HTMLElement } from '@ephox/dom-globals';
-import { Option, Fun } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import Node from '../api/html/Node';
+import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
+import { isWsPreserveElement } from '../dom/ElementType';
 import * as TrimHtml from '../dom/TrimHtml';
 import * as Zwsp from '../text/Zwsp';
-import * as Settings from '../api/Settings';
-import { isWsPreserveElement } from '../dom/ElementType';
-
-export type Content = string | Node;
-export type ContentFormat = 'raw' | 'text' | 'html' | 'tree';
-
-export interface GetContentArgs {
-  format?: ContentFormat;
-  get?: boolean;
-  content?: string;
-  getInner?: boolean;
-  no_events?: boolean;
-  [key: string]: any;
-}
+import { Content, ContentFormat, GetContentArgs } from './ContentTypes';
 
 const trimEmptyContents = (editor: Editor, html: string): string => {
   const blockName = Settings.getForcedRootBlock(editor);

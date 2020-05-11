@@ -11,7 +11,7 @@ import { Element, Node, Remove, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import Serializer from '../api/html/Serializer';
 import { EditorEvent } from '../api/util/EventDispatcher';
-import { SetContentArgs } from '../content/SetContentImpl';
+import { SetContentArgs } from '../content/ContentTypes';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
 
 export interface SelectionSetContentArgs extends SetContentArgs {

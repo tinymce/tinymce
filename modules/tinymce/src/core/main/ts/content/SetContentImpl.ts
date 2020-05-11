@@ -6,29 +6,21 @@
  */
 
 import { HTMLElement } from '@ephox/dom-globals';
-import { Option, Fun } from '@ephox/katamari';
+import { Fun, Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import Node from '../api/html/Node';
-import Tools from '../api/util/Tools';
 import Serializer from '../api/html/Serializer';
-import * as FilterNode from '../html/FilterNode';
 import * as Settings from '../api/Settings';
-import * as EditorFocus from '../focus/EditorFocus';
+import Tools from '../api/util/Tools';
 import * as CaretFinder from '../caret/CaretFinder';
-import * as NodeType from '../dom/NodeType';
 import { isWsPreserveElement } from '../dom/ElementType';
+import * as NodeType from '../dom/NodeType';
+import * as EditorFocus from '../focus/EditorFocus';
+import * as FilterNode from '../html/FilterNode';
+import { Content, SetContentArgs } from './ContentTypes';
 
 const defaultFormat = 'html';
-
-export type Content = string | Node;
-
-export interface SetContentArgs {
-  format?: string;
-  set?: boolean;
-  content?: string;
-  no_events?: boolean;
-}
 
 const isTreeNode = (content: any): content is Node => content instanceof Node;
 

@@ -7,8 +7,7 @@
 
 import { Types } from '@ephox/bridge';
 import { Element, Event, FocusEvent, HTMLElement, Node, Range, TouchEvent, UIEvent } from '@ephox/dom-globals';
-import { GetContentArgs } from '../content/GetContent';
-import { SetContentArgs } from '../content/SetContent';
+import { GetContentArgs, SetContentArgs } from '../content/ContentTypes';
 import { UndoLevel } from '../undo/UndoManagerTypes';
 import Editor from './Editor';
 import { NativeEventMap } from './util/EventDispatcher';
@@ -21,7 +20,7 @@ export type SetContentEvent = SetContentArgs & { paste: boolean; selection: bool
 
 export type NewBlockEvent = { newBlock: Element };
 
-export type NodeChangedEvent = { element: Element; parents: Node[]; selectionChange?: boolean; initial?: boolean };
+export type NodeChangeEvent = { element: Element; parents: Node[]; selectionChange?: boolean; initial?: boolean };
 
 export type ObjectResizedEvent = { target: HTMLElement; width: number; height: number };
 
@@ -70,7 +69,7 @@ export interface EditorEventMap extends NativeEventMap {
   'LanguageLoadError': LoadErrorEvent;
   'BeforeExecCommand': ExecCommandEvent;
   'ExecCommand': ExecCommandEvent;
-  'NodeChange': NodeChangedEvent;
+  'NodeChange': NodeChangeEvent;
   'ShowCaret': ShowCaretEvent;
   'SelectionChange': { };
   'ObjectSelected': ObjectSelectedEvent;

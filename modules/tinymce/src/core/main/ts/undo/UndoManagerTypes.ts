@@ -6,8 +6,8 @@
  */
 
 import { Cell, Option } from '@ephox/katamari';
+import { EditorEvent } from '../api/util/EventDispatcher';
 import { Bookmark } from '../bookmark/BookmarkTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 export const enum UndoLevelType {
   Fragmented = 'fragmented',

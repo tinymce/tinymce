@@ -6,8 +6,8 @@
  */
 
 import Editor from '../api/Editor';
+import { Content, ContentFormat } from '../content/ContentTypes';
 import * as Rtc from '../Rtc';
-import { Content, ContentFormat } from '../content/GetContentImpl';
 import { GetSelectionContentArgs } from './GetSelectionContentImpl';
 
 const getContent = (editor: Editor, args: GetSelectionContentArgs = {}): Content => {

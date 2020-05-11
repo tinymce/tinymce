@@ -3,13 +3,13 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Body } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { EditorSettings } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.fmt.BlockFormatsTest', (success, failure) => {
   Theme();
 
-  const sRunTinyWithSettings = (settings: EditorSettings, getSteps: (tinyApis: TinyApis, editor: Editor) => Step<any, any>[]) => Step.async((next, die) => {
+  const sRunTinyWithSettings = (settings: RawEditorSettings, getSteps: (tinyApis: TinyApis, editor: Editor) => Step<any, any>[]) => Step.async((next, die) => {
     TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);
       Pipeline.async({}, getSteps(tinyApis, editor), onSuccess, onFailure);
