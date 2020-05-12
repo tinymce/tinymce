@@ -117,15 +117,13 @@ const hasContentType = (clipboardContent: ClipboardContents, mimeType: string) =
 
 const hasHtmlOrText = (content: ClipboardContents) => hasContentType(content, 'text/html') || hasContentType(content, 'text/plain');
 
-const getBase64FromUri = (uri: string) => {
-  let idx;
-
-  idx = uri.indexOf(',');
-  if (idx !== -1) {
-    return uri.substr(idx + 1);
+const parseDataUri = (uri: string) => {
+  const matches = /data:([^;]+);base64,([a-z0-9\+\/=]+)/i.exec(uri);
+  if (matches) {
+    return { type: matches[1], data: decodeURIComponent(matches[2]) };
+  } else {
+    return { type: null, data: null };
   }
-
-  return null;
 };
 
 const isValidDataUriImage = (settings, imgElm: HTMLImageElement) => settings.images_dataimg_filter ? settings.images_dataimg_filter(imgElm) : true;
@@ -138,7 +136,7 @@ const extractFilename = (editor: Editor, str: string) => {
 const uniqueId = Utils.createIdGenerator('mceclip');
 
 const pasteImage = (editor: Editor, imageItem) => {
-  const base64 = getBase64FromUri(imageItem.uri);
+  const { data: base64, type } = parseDataUri(imageItem.uri);
   const id = uniqueId();
   const name = editor.settings.images_reuse_filename && imageItem.blob.name ? extractFilename(editor, imageItem.blob.name) : id;
   const img = new Image();
@@ -148,12 +146,9 @@ const pasteImage = (editor: Editor, imageItem) => {
   // TODO: Move the bulk of the cache logic to EditorUpload
   if (isValidDataUriImage(editor.settings, img)) {
     const blobCache = editor.editorUpload.blobCache;
-    let blobInfo, existingBlobInfo;
+    let blobInfo;
 
-    existingBlobInfo = blobCache.findFirst(function (cachedBlobInfo) {
-      return cachedBlobInfo.base64() === base64;
-    });
-
+    const existingBlobInfo = blobCache.getByData(base64, type);
     if (!existingBlobInfo) {
       blobInfo = blobCache.create(id, imageItem.blob, base64, name);
       blobCache.add(blobInfo);

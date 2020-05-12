@@ -1,5 +1,6 @@
 Version 5.3.0 (TBD)
     Added `uploadUri` and `blobInfo` to `editorUpload.uploadImages` return type #TINY-4579
+    Added new function to the `BlobCache` API to lookup a blob based on the base64 data and mime type #TINY-5988
     Added the ability to search and replace within a selection #TINY-4549
     Changed the `link`, `image` and `paste` plugins to use Promises to reduce the bundle size #TINY-4710
     Changed the default icons to be lazy loaded during initialization #TINY-4729
@@ -22,6 +23,7 @@ Version 5.3.0 (TBD)
     Fixed `ObjectResized` and `ObjectResizeStart` events incorrectly fired when adding or removing table rows and columns #TINY-4829
     Fixed the placeholder not hiding when pasting content into the editor #TINY-4828
     Fixed an issue where the editor would fail to load if local storage was disabled #TINY-5935
+    Fixed an issue where an uploaded image would reuse a cached image with a different mime type #TINY-5988
     Fixed bug where toolbars and dialogs would not show if the body element was replaced (e.g. with Turbolinks). Patch contributed by spohlenz #GH-5653
 Version 5.2.2 (2020-04-23)
     Fixed an issue where anchors could not be inserted on empty lines #TINY-2788

@@ -26,16 +26,15 @@ const registerBase64ImageFilter = (parser: DomParser, settings: DomParserSetting
       return;
     }
 
-    parseDataUri(inputSrc).bind(({ type, data }) => {
-      const cachedBlobInfo = blobCache.findFirst((blobInfo) => blobInfo.base64() === data);
-      return Option.from(cachedBlobInfo).orThunk(() =>
+    parseDataUri(inputSrc).bind(({ type, data }) =>
+      Option.from(blobCache.getByData(data, type)).orThunk(() =>
         Conversions.buildBlob(type, data).map((blob) => {
           const blobInfo = blobCache.create(uniqueId(), blob, data);
           blobCache.add(blobInfo);
           return blobInfo;
         })
-      );
-    }).each((blobInfo) => {
+      )
+    ).each((blobInfo) => {
       img.attr('src', blobInfo.blobUri());
     });
   };

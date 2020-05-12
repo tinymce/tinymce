@@ -1,7 +1,7 @@
 import { Assertions } from '@ephox/agar';
-import { BlobCache, BlobInfoData } from 'tinymce/core/api/file/BlobCache';
 import { UnitTest } from '@ephox/bedrock-client';
 import { atob, Blob } from '@ephox/dom-globals';
+import { BlobCache, BlobInfoData } from 'tinymce/core/api/file/BlobCache';
 
 UnitTest.test('browser.tinymce.core.file.BlobCacheTest', function () {
   const uriToBlob = function (base64, type) {
@@ -17,7 +17,8 @@ UnitTest.test('browser.tinymce.core.file.BlobCacheTest', function () {
 
   const id = 'blob0';
   const base64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='; // 1x1 transparent png
-  const blob = uriToBlob(base64, 'image/png');
+  const type = 'image/png';
+  const blob = uriToBlob(base64, type);
   const name = 'blank';
   const filename = 'blank.png';
   const uri = 'http://localhost/blank.png';
@@ -36,6 +37,7 @@ UnitTest.test('browser.tinymce.core.file.BlobCacheTest', function () {
   Assertions.assertEq('Testing get()', blobInfo, blobCache.get(id));
   Assertions.assertEq('BlobInfo instance has blobUri() accessor', true, blobInfo.blobUri().indexOf('blob:') === 0);
   Assertions.assertEq('Testing getByUri(), findFirst()', blobInfo, blobCache.getByUri(blobInfo.blobUri()));
+  Assertions.assertEq('Testing getByData()', blobInfo, blobCache.getByData(base64, type));
 
   blobCache.removeByUri(blobInfo.blobUri());
   Assertions.assertEq('Testing removeByUri()', undefined, blobCache.getByUri(blobInfo.blobUri()));

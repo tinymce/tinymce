@@ -6,11 +6,11 @@
  */
 
 import { HTMLElement, HTMLImageElement } from '@ephox/dom-globals';
-import { Fun, Arr } from '@ephox/katamari';
-import Promise from '../api/util/Promise';
-import * as Conversions from './Conversions';
+import { Arr, Fun } from '@ephox/katamari';
 import Env from '../api/Env';
 import { BlobCache, BlobInfo } from '../api/file/BlobCache';
+import Promise from '../api/util/Promise';
+import * as Conversions from './Conversions';
 
 export interface BlobInfoImagePair {
   image: HTMLImageElement;
@@ -65,10 +65,9 @@ const imageToBlobInfo = function (blobCache: BlobCache, img: HTMLImageElement, r
     return;
   }
 
-  base64 = Conversions.parseDataUri(img.src).data;
-  blobInfo = blobCache.findFirst(function (cachedBlobInfo) {
-    return cachedBlobInfo.base64() === base64;
-  });
+  const { data, type } = Conversions.parseDataUri(img.src);
+  base64 = data;
+  blobInfo = blobCache.getByData(base64, type);
 
   if (blobInfo) {
     resolve({
