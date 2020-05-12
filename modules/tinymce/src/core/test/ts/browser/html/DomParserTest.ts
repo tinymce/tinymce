@@ -2,11 +2,11 @@ import { Assertions, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
+import Env from 'tinymce/core/api/Env';
+import { BlobCache } from 'tinymce/core/api/file/BlobCache';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import Schema from 'tinymce/core/api/html/Schema';
 import Serializer from 'tinymce/core/api/html/Serializer';
-import { BlobCache } from 'tinymce/core/api/file/BlobCache';
-import Env from 'tinymce/core/api/Env';
 
 UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
@@ -736,6 +736,26 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', function (success,
       serializedHtml
     );
 
+    blobCache.destroy();
+  });
+
+  suite.test('duplicate base64 uris added only once to blobcache if blob cache is provided', () => {
+    const blobCache = BlobCache();
+    const parser = DomParser({ blob_cache: blobCache });
+    const base64 = 'R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw==';
+    const base64Uri = `data:image/gif;base64,${base64}`;
+    const image = `<img src="${base64Uri}" />`;
+    const serializedHtml = serializer.serialize(parser.parse(`<p>${image}</p><p>${image}</p>`));
+    let count = 0;
+    blobCache.findFirst((bi) => {
+      if (bi.base64() === base64) {
+        count++;
+      }
+      return false;
+    });
+
+    Assertions.assertEq('Only one image should be in the blob cache', 1, count);
+    Assertions.assertEq('HTML shouldn\'t include a base64 data URI', true, serializedHtml.indexOf(base64) === -1);
     blobCache.destroy();
   });
 
