@@ -47,6 +47,7 @@ const setupEvents = (editor: Editor, targetElm: Element, ui: InlineHeader) => {
       if (prevPos !== pos) {
         ui.update(true);
       } else if (hasResized) {
+        ui.updateMode();
         ui.repositionPopups();
       }
     }
