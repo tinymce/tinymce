@@ -7,9 +7,9 @@
 
 import { Element } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Delay from 'tinymce/core/api/util/Delay';
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
@@ -138,6 +138,11 @@ const setup = (editor: Editor, oldSize: Cell<number>) => {
   editor.on('init', () => {
     const overflowPadding = Settings.getAutoResizeOverflowPadding(editor);
     const dom = editor.dom;
+
+    // Disable height 100% on the root document element otherwise we'll end up resizing indefinitely
+    dom.setStyles(editor.getDoc().documentElement, {
+      height: 'auto'
+    });
 
     dom.setStyles(editor.getBody(), {
       'paddingLeft': overflowPadding,
