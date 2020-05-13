@@ -5,15 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Tools from '../api/util/Tools';
-import { isEmpty, paddEmptyNode } from './ParserUtils';
-import Node from '../api/html/Node';
-import { Unicode, Arr } from '@ephox/katamari';
-import DomParser, { DomParserSettings } from '../api/html/DomParser';
-import { uniqueId } from '../file/ImageScanner';
-import * as Conversions from '../file/Conversions';
-import { parseDataUri } from './Base64Uris';
+import { Arr, Option, Unicode } from '@ephox/katamari';
 import Env from '../api/Env';
+import DomParser, { DomParserSettings } from '../api/html/DomParser';
+import Node from '../api/html/Node';
+import Tools from '../api/util/Tools';
+import * as Conversions from '../file/Conversions';
+import { uniqueId } from '../file/ImageScanner';
+import { parseDataUri } from './Base64Uris';
+import { isEmpty, paddEmptyNode } from './ParserUtils';
 
 const isInternalImageSource = (src: string) => src === Env.transparentSrc;
 
@@ -26,13 +26,17 @@ const registerBase64ImageFilter = (parser: DomParser, settings: DomParserSetting
       return;
     }
 
-    parseDataUri(inputSrc).map(({ type, data }) => Conversions.buildBlob(type, data).each(
-      (blob) => {
-        const blobInfo = blobCache.create(uniqueId(), blob, data);
-        blobCache.add(blobInfo);
-        img.attr('src', blobInfo.blobUri());
-      }
-    ));
+    parseDataUri(inputSrc).bind(({ type, data }) =>
+      Option.from(blobCache.getByData(data, type)).orThunk(() =>
+        Conversions.buildBlob(type, data).map((blob) => {
+          const blobInfo = blobCache.create(uniqueId(), blob, data);
+          blobCache.add(blobInfo);
+          return blobInfo;
+        })
+      )
+    ).each((blobInfo) => {
+      img.attr('src', blobInfo.blobUri());
+    });
   };
 
   if (blobCache) {
