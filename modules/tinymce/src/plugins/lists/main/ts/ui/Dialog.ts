@@ -13,8 +13,8 @@ const open = (editor: Editor) => {
   const dom = editor.dom;
 
   // Find the current list and skip opening if the selection isn't in an ordered list
-  const parentList = getParentList(editor);
-  if (!isOlNode(parentList)) {
+  const currentList = getParentList(editor);
+  if (!isOlNode(currentList)) {
     return;
   }
 
@@ -32,7 +32,7 @@ const open = (editor: Editor) => {
       ]
     },
     initialData: {
-      start: dom.getAttrib(parentList, 'start') || '1'
+      start: dom.getAttrib(currentList, 'start') || '1'
     },
     buttons: [
       {
@@ -50,7 +50,7 @@ const open = (editor: Editor) => {
     onSubmit: (api) => {
       const data = api.getData();
       editor.undoManager.transact(() => {
-        dom.setAttrib(parentList, 'start', data.start === '1' ? '' : data.start);
+        dom.setAttrib(getParentList(editor), 'start', data.start === '1' ? '' : data.start);
       });
       api.close();
     }

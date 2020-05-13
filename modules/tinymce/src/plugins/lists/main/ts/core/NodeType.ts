@@ -5,28 +5,28 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Node, Text } from '@ephox/dom-globals';
+import { Element, HTMLBRElement, HTMLDListElement, HTMLElement, HTMLLIElement, HTMLOListElement, HTMLTableCellElement, HTMLTableHeaderCellElement, HTMLUListElement, Node, Text } from '@ephox/dom-globals';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 
-const matchNodeName = (name: string) => (node: Node) => node && node.nodeName.toLowerCase() === name;
-const matchNodeNames = (regex: RegExp) => (node: Node) => node && regex.test(node.nodeName);
+const matchNodeName = <T extends Node = Node>(name: string) => (node: Node): node is T => node && node.nodeName.toLowerCase() === name;
+const matchNodeNames = <T extends Node = Node>(regex: RegExp) => (node: Node): node is T => node && regex.test(node.nodeName);
 
 const isTextNode = (node: Node): node is Text => node && node.nodeType === 3;
 
-const isListNode = matchNodeNames(/^(OL|UL|DL)$/);
+const isListNode = matchNodeNames<HTMLOListElement | HTMLUListElement | HTMLDListElement>(/^(OL|UL|DL)$/);
 
-const isOlUlNode = matchNodeNames(/^(OL|UL)$/);
+const isOlUlNode = matchNodeNames<HTMLOListElement | HTMLUListElement>(/^(OL|UL)$/);
 
-const isOlNode = matchNodeName('ol');
+const isOlNode = matchNodeName<HTMLOListElement>('ol');
 
-const isListItemNode = matchNodeNames(/^(LI|DT|DD)$/);
+const isListItemNode = matchNodeNames<HTMLLIElement | HTMLElement>(/^(LI|DT|DD)$/);
 
-const isDlItemNode = matchNodeNames(/^(DT|DD)$/);
+const isDlItemNode = matchNodeNames<HTMLElement>(/^(DT|DD)$/);
 
-const isTableCellNode = matchNodeNames(/^(TH|TD)$/);
+const isTableCellNode = matchNodeNames<HTMLTableHeaderCellElement | HTMLTableCellElement>(/^(TH|TD)$/);
 
-const isBr = matchNodeName('br');
+const isBr = matchNodeName<HTMLBRElement>('br');
 
 const isFirstChild = (node: Node) => node.parentNode.firstChild === node;
 
@@ -36,7 +36,7 @@ const isTextBlock = (editor: Editor, node: Node) => node && !!editor.schema.getT
 
 const isBlock = (node: Node, blockElements: Record<string, any>) => node && node.nodeName in blockElements;
 
-const isBogusBr = (dom, node: Node) => {
+const isBogusBr = (dom: DOMUtils, node: Node) => {
   if (!isBr(node)) {
     return false;
   }
