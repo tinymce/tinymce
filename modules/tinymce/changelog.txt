@@ -1,6 +1,8 @@
 Version 5.3.0 (TBD)
     Added `uploadUri` and `blobInfo` to `editorUpload.uploadImages` return type #TINY-4579
     Added the ability to search and replace within a selection #TINY-4549
+    Added `icon` as an optional config option to the toggle menu item API #TINY-3345
+    Changed toggle menu items and choice menu items to have a dedicated icon with the checkmark displayed on the far right side of the menu item #TINY-3345
     Changed the `link`, `image` and `paste` plugins to use Promises to reduce the bundle size #TINY-4710
     Changed the default icons to be lazy loaded during initialization #TINY-4729
     Changed so base64 encoded urls are converted to blob urls when content is parsed #TINY-4727

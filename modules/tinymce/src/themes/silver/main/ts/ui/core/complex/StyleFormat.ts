@@ -24,13 +24,13 @@ export const defaultStyleFormats: AllowedFormat[] = [
 
   {
     title: 'Inline', items: [
-      { title: 'Bold', icon: 'bold', format: 'bold' },
-      { title: 'Italic', icon: 'italic', format: 'italic' },
-      { title: 'Underline', icon: 'underline', format: 'underline' },
-      { title: 'Strikethrough', icon: 'strike-through', format: 'strikethrough' },
-      { title: 'Superscript', icon: 'superscript', format: 'superscript' },
-      { title: 'Subscript', icon: 'subscript', format: 'subscript' },
-      { title: 'Code', icon: 'code', format: 'code' }
+      { title: 'Bold', format: 'bold' },
+      { title: 'Italic', format: 'italic' },
+      { title: 'Underline', format: 'underline' },
+      { title: 'Strikethrough', format: 'strikethrough' },
+      { title: 'Superscript', format: 'superscript' },
+      { title: 'Subscript', format: 'subscript' },
+      { title: 'Code', format: 'code' }
     ]
   },
 
@@ -45,10 +45,10 @@ export const defaultStyleFormats: AllowedFormat[] = [
 
   {
     title: 'Align', items: [
-      { title: 'Left', icon: 'align-left', format: 'alignleft' },
-      { title: 'Center', icon: 'align-center', format: 'aligncenter' },
-      { title: 'Right', icon: 'align-right', format: 'alignright' },
-      { title: 'Justify', icon: 'align-justify', format: 'alignjustify' }
+      { title: 'Left', format: 'alignleft' },
+      { title: 'Center', format: 'aligncenter' },
+      { title: 'Right', format: 'alignright' },
+      { title: 'Justify', format: 'alignjustify' }
     ]
   }
 ];

@@ -27,6 +27,7 @@ export interface FormatterFormatItem {
   type: 'formatter';
   title?: TranslateIfNeeded;
   format: string;
+  icon?: string;
   isSelected: (value: Option<any>) => boolean;
   getStylePreview: () => Option<PreviewSpec>;
 }
@@ -107,6 +108,7 @@ const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spe
         // If this type ever changes, we'll need to change that too
         type: 'togglemenuitem',
         text: translatedText,
+        icon: rawItem.icon,
         active: rawItem.isSelected(value),
         disabled,
         onAction: spec.onAction(rawItem),

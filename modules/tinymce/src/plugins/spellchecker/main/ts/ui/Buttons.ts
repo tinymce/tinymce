@@ -88,6 +88,7 @@ const register = function (editor: Editor, pluginUrl: string, startedState: Cell
 
   editor.ui.registry.addToggleMenuItem('spellchecker', {
     text: 'Spellcheck',
+    icon: 'spell-check',
     onSetup: (menuApi) => {
       menuApi.setActive(startedState.get());
       const setMenuItemCheck = () => {
