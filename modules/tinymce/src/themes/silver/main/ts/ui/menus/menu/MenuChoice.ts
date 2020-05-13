@@ -4,8 +4,10 @@ import { Arr, Option, Options } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderChoiceItem } from '../item/build/ChoiceItem';
 import ItemResponse from '../item/ItemResponse';
-import { createPartialMenuWithAlloyItems, handleError, menuHasIcons, PartialMenuSpec } from './MenuUtils';
+import * as MenuUtils from './MenuUtils';
 import { SingleMenuItemApi } from './SingleMenuTypes';
+
+type PartialMenuSpec = MenuUtils.PartialMenuSpec;
 
 export const createPartialChoiceMenu = (
   value: string,
@@ -17,10 +19,10 @@ export const createPartialChoiceMenu = (
   select: (value: string) => boolean,
   providersBackstage: UiFactoryBackstageProviders
 ): PartialMenuSpec => {
-  const hasIcons = menuHasIcons(items);
+  const hasIcons = MenuUtils.menuHasIcons(items);
   const presetItemTypes = presets !== 'color' ? 'normal' : 'color';
   const alloyItems = createChoiceItems(items, onItemValueHandler, columns, presetItemTypes, itemResponse, select, providersBackstage);
-  return createPartialMenuWithAlloyItems(value, hasIcons, alloyItems, columns, presets);
+  return MenuUtils.createPartialMenuWithAlloyItems(value, hasIcons, alloyItems, columns, presets);
 };
 
 export const createChoiceItems = (
@@ -35,8 +37,16 @@ export const createChoiceItems = (
   Arr.map(items, (item) => {
     if (item.type === 'choiceitem') {
       return BridgeMenu.createChoiceMenuItem(item).fold(
-        handleError,
-        (d: BridgeMenu.ChoiceMenuItem) => Option.some(renderChoiceItem(d, columns === 1, itemPresets, onItemValueHandler, select(item.value), itemResponse, providersBackstage))
+        MenuUtils.handleError,
+        (d: BridgeMenu.ChoiceMenuItem) => Option.some(renderChoiceItem(
+          d, columns === 1,
+          itemPresets,
+          onItemValueHandler,
+          select(item.value),
+          itemResponse,
+          providersBackstage,
+          MenuUtils.menuHasIcons(items)
+        ))
       );
     } else {
       return Option.none();

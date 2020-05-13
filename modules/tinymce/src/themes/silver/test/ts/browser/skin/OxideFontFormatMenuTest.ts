@@ -44,37 +44,37 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item') ],
                         children: [
-                          s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }),
                           s.element('div', {
                             classes: [ arr.has('tox-collection__item-label') ],
                             children: [
                               s.element('h1', { html: str.is('Title') })
                             ]
-                          })
+                          }),
+                          s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] })
                         ]
                       }),
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item') ],
                         children: [
-                          s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }),
                           s.element('div', {
                             classes: [ arr.has('tox-collection__item-label') ],
                             children: [
                               s.element('h2', { html: str.is('Main heading') })
                             ]
-                          })
+                          }),
+                          s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] })
                         ]
                       }),
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item') ],
                         children: [
-                          s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }),
                           s.element('div', {
                             classes: [ arr.has('tox-collection__item-label') ],
                             children: [
                               s.element('h3', { html: str.is('Sub heading') })
                             ]
-                          })
+                          }),
+                          s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] })
                         ]
                       })
                     ]
@@ -90,43 +90,42 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item') ],
                         children: [
-                          s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }),
                           s.element('div', {
                             classes: [ arr.has('tox-collection__item-label') ],
                             children: [
                               s.element('p', { html: str.is('Paragraph') })
                             ]
-                          })
+                          }),
+                          s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] })
                         ]
                       }),
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item') ],
                         children: [
-                          s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }),
                           s.element('div', {
                             classes: [ arr.has('tox-collection__item-label') ],
                             children: [
                               s.element('blockquote', { html: str.is('Blockquote') })
                             ]
-                          })
+                          }),
+                          s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] })
                         ]
                       }),
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item') ],
                         children: [
-                          s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }),
                           s.element('div', {
                             classes: [ arr.has('tox-collection__item-label') ],
                             children: [
                               s.element('pre', { html: str.is('Code') })
                             ]
-                          })
+                          }),
+                          s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] })
                         ]
                       }),
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item') ],
                         children: [
-                          s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }),
                           s.element('div', {
                             classes: [ arr.has('tox-collection__item-label') ],
                             html: str.is('Others')
@@ -139,7 +138,6 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item') ],
                         children: [
-                          s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }),
                           s.element('div', {
                             classes: [ arr.has('tox-collection__item-label') ],
                             children: [
@@ -150,13 +148,13 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                                 }
                               })
                             ]
-                          })
+                          }),
+                          s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] })
                         ]
                       }),
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item') ],
                         children: [
-                          s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }),
                           s.element('div', {
                             classes: [ arr.has('tox-collection__item-label') ],
                             children: [
@@ -167,19 +165,20 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
                                 }
                               })
                             ]
-                          })
+                          }),
+                          s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] })
                         ]
                       }),
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item') ],
                         children: [
-                          s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }),
                           s.element('div', {
                             classes: [ arr.has('tox-collection__item-label') ],
                             children: [
                               s.element('div', { html: str.is('Table row 1') })
                             ]
-                          })
+                          }),
+                          s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] })
                         ]
                       })
                     ]

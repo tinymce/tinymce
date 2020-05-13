@@ -24,6 +24,7 @@ const process = (rawFormats): Array<{ title: string; format: string}> => Arr.map
 export interface BasicSelectItem {
   title: string;
   format: string;
+  icon?: string;
 }
 
 export interface BasicSelectDataset {

@@ -15,7 +15,12 @@ import { renderCheckmark } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
-const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders): ItemTypes.ItemSpec => {
+const renderToggleMenuItem = (
+  spec: Menu.ToggleMenuItem,
+  itemResponse: ItemResponse,
+  providersBackstage: UiFactoryBackstageProviders,
+  renderIcons: boolean = true
+): ItemTypes.ItemSpec => {
   const getApi = (component): Menu.ToggleMenuItemInstanceApi => ({
     setActive: (state) => {
       Toggling.set(component, state);
@@ -28,7 +33,7 @@ const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemRespo
   // BespokeSelects use meta to pass through styling information. Bespokes should only
   // be togglemenuitems hence meta is only passed through in this MenuItem.
   const structure = renderItemStructure({
-    iconContent: Option.none(),
+    iconContent: spec.icon,
     textContent: spec.text,
     htmlContent: Option.none(),
     ariaLabel: spec.text,
@@ -37,7 +42,7 @@ const renderToggleMenuItem = (spec: Menu.ToggleMenuItem, itemResponse: ItemRespo
     shortcutContent: spec.shortcut,
     presets: 'normal',
     meta: spec.meta
-  }, providersBackstage, true);
+  }, providersBackstage, renderIcons);
 
   return Merger.deepMerge(
     renderCommonItem({
