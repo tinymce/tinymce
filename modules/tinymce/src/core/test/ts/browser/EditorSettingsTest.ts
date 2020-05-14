@@ -84,6 +84,22 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         });
       })),
 
+      Logger.t('desktop settings should not override mobile default settings', Step.sync(() => {
+        const settings: RawEditorSettings = {
+          toolbar_mode: 'sliding',
+          table_grid: true,
+          object_resizing: true,
+          toolbar_sticky: true,
+          resize: 'both',
+          menubar: true
+        };
+
+        const mobileSettings = EditorSettings.combineSettings(true, true, {}, {}, settings);
+        Obj.each(expectedPhoneDefaultSettings, (value, key) => {
+          Assertions.assertEq(`Should have default ${key} setting`, value, Obj.get(mobileSettings, key).getOrUndefined());
+        });
+      })),
+
       Logger.t('getEditorSettings tests', GeneralSteps.sequence([
         Logger.t('Override defaults plugins', Step.sync(function () {
           const settings = EditorSettings.getEditorSettings(
