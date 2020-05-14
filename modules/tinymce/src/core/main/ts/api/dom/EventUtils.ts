@@ -5,21 +5,34 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, HTMLElementEventMap, window } from '@ephox/dom-globals';
+import { document, HTMLElementEventMap, MouseEvent, window } from '@ephox/dom-globals';
 import { Obj } from '@ephox/katamari';
 import Env from '../Env';
 
 export type EventUtilsCallback<T> = (event: EventUtilsEvent<T>) => void;
 
+interface PartialEvent {
+  type: string;
+  target?: any;
+  isDefaultPrevented?: () => boolean;
+  preventDefault?: () => void;
+  isPropagationStopped?: () => boolean;
+  stopPropagation?: () => void;
+  isImmediatePropagationStopped?: () => boolean;
+  stopImmediatePropagation?: () => void;
+  returnValue?: boolean;
+  cancelBubble?: boolean;
+}
+
 export type EventUtilsEvent<T> = T & {
   type: string;
   target: any;
-  isDefaultPrevented (): boolean;
-  preventDefault (): void;
-  isPropagationStopped (): boolean;
-  stopPropagation (): void;
-  isImmediatePropagationStopped (): boolean;
-  stopImmediatePropagation (): void;
+  readonly isDefaultPrevented: () => boolean;
+  readonly preventDefault: () => void;
+  readonly isPropagationStopped: () => boolean;
+  readonly stopPropagation: () => void;
+  readonly isImmediatePropagationStopped: () => boolean;
+  readonly stopImmediatePropagation: () => void;
 };
 
 /**
@@ -88,12 +101,14 @@ const getTargetFromShadowDom = function (event, defaultTarget) {
   return defaultTarget;
 };
 
+const isMouseEvent = (event: any): event is MouseEvent => mouseEventRe.test(event.type);
+
 /**
  * Normalizes a native event object or just adds the event specific methods on a custom event.
  */
-const fix = function <T extends any> (originalEvent: T, data?): EventUtilsEvent<T> {
-  let name;
-  const event = data || {};
+const fix = function <T extends PartialEvent> (originalEvent: T, data?): EventUtilsEvent<T> {
+  let name: string;
+  const event = data || {} as EventUtilsEvent<T>;
 
   // Copy all properties from the original event
   for (name in originalEvent) {
@@ -114,7 +129,7 @@ const fix = function <T extends any> (originalEvent: T, data?): EventUtilsEvent<
   }
 
   // Calculate pageX/Y if missing and clientX/Y available
-  if (originalEvent && mouseEventRe.test(originalEvent.type) && originalEvent.pageX === undefined && originalEvent.clientX !== undefined) {
+  if (originalEvent && isMouseEvent(originalEvent) && originalEvent.pageX === undefined && originalEvent.clientX !== undefined) {
     const eventDoc = event.target.ownerDocument || document;
     const doc = eventDoc.documentElement;
     const body = eventDoc.body;
@@ -365,7 +380,7 @@ class EventUtils {
         }
       } else {
         if (name === 'ready' && self.domLoaded) {
-          callback(fix({ type: name }) as EventUtilsEvent<any>);
+          callback(fix({ type: name }));
         } else {
           // If it already has an native handler then just push the callback
           callbackList.push({ func: callback, scope });

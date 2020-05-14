@@ -1,5 +1,5 @@
-import { atob, Blob, HTMLCanvasElement, HTMLImageElement, Image, FileReader, URL, XMLHttpRequest } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
+import { atob, Blob, FileReader, HTMLCanvasElement, HTMLImageElement, Image, URL, XMLHttpRequest } from '@ephox/dom-globals';
+import { Option, Type } from '@ephox/katamari';
 import * as Canvas from './Canvas';
 import * as ImageSize from './ImageSize';
 import { Promise } from './Promise';
@@ -135,7 +135,7 @@ function uriToBlob(url: string): Promise<Blob> | null {
 function canvasToBlob(canvas: HTMLCanvasElement, type?: string, quality?: number): Promise<Blob> {
   type = type || 'image/png';
 
-  if (HTMLCanvasElement.prototype.toBlob) {
+  if (Type.isFunction(HTMLCanvasElement.prototype.toBlob)) {
     return new Promise<Blob>(function (resolve, reject) {
       canvas.toBlob(function (blob) {
         if (blob) {
