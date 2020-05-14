@@ -10,8 +10,6 @@ import { Unicode } from '@ephox/katamari';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Schema, { SchemaMap } from 'tinymce/core/api/html/Schema';
 
-const trimZwsp = (text: string) => text.replace(new RegExp(Unicode.zeroWidth, 'g'), '');
-
 const getText = (node: Node, schema: Schema): string[] => {
   const blockElements: SchemaMap = schema.getBlockElements();
   const shortEndedElements: SchemaMap = schema.getShortEndedElements();
@@ -24,7 +22,7 @@ const getText = (node: Node, schema: Schema): string[] => {
 
   while ((node = treeWalker.next())) {
     if (node.nodeType === 3) {
-      txt += trimZwsp((node as Text).data);
+      txt += Unicode.removeZwsp((node as Text).data);
     } else if (isNewline(node) && txt.length) {
       textBlocks.push(txt);
       txt = '';
