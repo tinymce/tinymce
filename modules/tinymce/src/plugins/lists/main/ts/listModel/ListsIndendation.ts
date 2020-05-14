@@ -19,14 +19,17 @@ import { normalizeEntries } from './NormalizeEntries';
 import { EntrySet, ItemSelection, parseLists } from './ParseLists';
 import { hasFirstChildList } from './Util';
 
-const outdentedComposer = (editor: Editor, entries: Entry[]): Element[] => Arr.map(entries, (entry) => {
-  const content = Fragment.fromElements(entry.content);
-  return Element.fromDom(createTextBlock(editor, content.dom()));
-});
+const outdentedComposer = (editor: Editor, entries: Entry[]): Element[] => {
+  const normalizedEntries = normalizeEntries(entries);
+  return Arr.map(normalizedEntries, (entry) => {
+    const content = Fragment.fromElements(entry.content);
+    return Element.fromDom(createTextBlock(editor, content.dom()));
+  });
+};
 
 const indentedComposer = (editor: Editor, entries: Entry[]): Element[] => {
-  normalizeEntries(entries);
-  return composeList(editor.contentDocument, entries).toArray();
+  const normalizedEntries = normalizeEntries(entries);
+  return composeList(editor.contentDocument, normalizedEntries).toArray();
 };
 
 const composeEntries = (editor, entries: Entry[]): Element[] => Arr.bind(Arr.groupBy(entries, isIndented), (entries) => {

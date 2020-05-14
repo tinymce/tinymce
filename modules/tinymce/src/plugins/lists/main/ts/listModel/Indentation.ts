@@ -26,4 +26,5 @@ export const indentEntry = (indentation: Indentation, entry: Entry): void => {
     case Indentation.Flatten:
       entry.depth = 0;
   }
+  entry.dirty = true;
 };

@@ -5,8 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { flattenListSelection, indentListSelection, outdentListSelection } from '../actions/Indendation';
 import * as ToggleList from '../actions/ToggleList';
-import { indentListSelection, outdentListSelection, flattenListSelection } from '../actions/Indendation';
+import * as Dialog from '../ui/Dialog';
 
 const queryListCommandState = function (editor, listName) {
   return function () {
@@ -40,6 +41,10 @@ const register = function (editor) {
 
   editor.addCommand('RemoveList', () => {
     flattenListSelection(editor);
+  });
+
+  editor.addCommand('mceListProps', () => {
+    Dialog.open(editor);
   });
 
   editor.addQueryStateHandler('InsertUnorderedList', queryListCommandState(editor, 'UL'));

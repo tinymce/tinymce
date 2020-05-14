@@ -13,8 +13,8 @@ import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as NodeType from './NodeType';
 
-const getParentList = function (editor) {
-  const selectionStart = editor.selection.getStart(true);
+const getParentList = (editor: Editor, node?: Node) => {
+  const selectionStart = node || editor.selection.getStart(true);
 
   return editor.dom.getParent(selectionStart, 'OL,UL,DL', getClosestListRootElm(editor, selectionStart));
 };

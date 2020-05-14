@@ -5,53 +5,38 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Text } from '@ephox/dom-globals';
+import { Element, HTMLBRElement, HTMLDListElement, HTMLElement, HTMLLIElement, HTMLOListElement, HTMLTableCellElement, HTMLTableHeaderCellElement, HTMLUListElement, Node, Text } from '@ephox/dom-globals';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Editor from 'tinymce/core/api/Editor';
 
-const isTextNode = function (node: Node): node is Text {
-  return node && node.nodeType === 3;
-};
+const matchNodeName = <T extends Node = Node>(name: string) => (node: Node): node is T => node && node.nodeName.toLowerCase() === name;
+const matchNodeNames = <T extends Node = Node>(regex: RegExp) => (node: Node): node is T => node && regex.test(node.nodeName);
 
-const isListNode = function (node: Node) {
-  return node && (/^(OL|UL|DL)$/).test(node.nodeName);
-};
+const isTextNode = (node: Node): node is Text => node && node.nodeType === 3;
 
-const isOlUlNode = function (node: Node) {
-  return node && (/^(OL|UL)$/).test(node.nodeName);
-};
+const isListNode = matchNodeNames<HTMLOListElement | HTMLUListElement | HTMLDListElement>(/^(OL|UL|DL)$/);
 
-const isListItemNode = function (node: Node) {
-  return node && /^(LI|DT|DD)$/.test(node.nodeName);
-};
+const isOlUlNode = matchNodeNames<HTMLOListElement | HTMLUListElement>(/^(OL|UL)$/);
 
-const isDlItemNode = function (node: Node) {
-  return node && /^(DT|DD)$/.test(node.nodeName);
-};
+const isOlNode = matchNodeName<HTMLOListElement>('ol');
 
-const isTableCellNode = function (node: Node) {
-  return node && /^(TH|TD)$/.test(node.nodeName);
-};
+const isListItemNode = matchNodeNames<HTMLLIElement | HTMLElement>(/^(LI|DT|DD)$/);
 
-const isBr = function (node: Node) {
-  return node && node.nodeName === 'BR';
-};
+const isDlItemNode = matchNodeNames<HTMLElement>(/^(DT|DD)$/);
 
-const isFirstChild = function (node: Node) {
-  return node.parentNode.firstChild === node;
-};
+const isTableCellNode = matchNodeNames<HTMLTableHeaderCellElement | HTMLTableCellElement>(/^(TH|TD)$/);
 
-const isLastChild = function (node: Node) {
-  return node.parentNode.lastChild === node;
-};
+const isBr = matchNodeName<HTMLBRElement>('br');
 
-const isTextBlock = function (editor, node: Node) {
-  return node && !!editor.schema.getTextBlockElements()[node.nodeName];
-};
+const isFirstChild = (node: Node) => node.parentNode.firstChild === node;
 
-const isBlock = function (node: Node, blockElements) {
-  return node && node.nodeName in blockElements;
-};
+const isLastChild = (node: Node) => node.parentNode.lastChild === node;
 
-const isBogusBr = function (dom, node: Node) {
+const isTextBlock = (editor: Editor, node: Node) => node && !!editor.schema.getTextBlockElements()[node.nodeName];
+
+const isBlock = (node: Node, blockElements: Record<string, any>) => node && node.nodeName in blockElements;
+
+const isBogusBr = (dom: DOMUtils, node: Node) => {
   if (!isBr(node)) {
     return false;
   }
@@ -63,7 +48,7 @@ const isBogusBr = function (dom, node: Node) {
   return false;
 };
 
-const isEmpty = function (dom, elm, keepBookmarks?) {
+const isEmpty = (dom: DOMUtils, elm: Node, keepBookmarks?: boolean) => {
   const empty = dom.isEmpty(elm);
 
   if (keepBookmarks && dom.select('span[data-mce-type=bookmark]', elm).length > 0) {
@@ -73,14 +58,13 @@ const isEmpty = function (dom, elm, keepBookmarks?) {
   return empty;
 };
 
-const isChildOfBody = function (dom, elm) {
-  return dom.isChildOf(elm, dom.getRoot());
-};
+const isChildOfBody = (dom: DOMUtils, elm: Element) => dom.isChildOf(elm, dom.getRoot());
 
 export {
   isTextNode,
   isListNode,
   isOlUlNode,
+  isOlNode,
   isDlItemNode,
   isListItemNode,
   isTableCellNode,

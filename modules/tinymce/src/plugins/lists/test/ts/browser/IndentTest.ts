@@ -1,4 +1,4 @@
-import { Pipeline, Log } from '@ephox/agar';
+import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
@@ -380,6 +380,60 @@ UnitTest.asynctest('tinymce.lists.browser.IndentTest', (success, failure) => {
     );
   });
 
+  suite.test('TestCase-TBA: Lists: Indent single LI in OL with start attribute', (editor) => {
+    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+      '<ol start="5">' +
+      '<li>a</li>' +
+      '</ol>'
+    );
+
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'li', 0);
+    LegacyUnit.execCommand(editor, 'Indent');
+
+    LegacyUnit.equal(editor.getContent(),
+      '<ol>' +
+      '<li style="list-style-type: none;">' +
+      '<ol>' +
+      '<li>a</li>' +
+      '</ol>' +
+      '</li>' +
+      '</ol>'
+    );
+
+    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+  });
+
+  suite.test('TestCase-TBA: Lists: Indent first LI and nested LI OL with start attributes', function (editor) {
+    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+      '<ol start="2">' +
+      '<li>a</li>' +
+      '<li>' +
+      '<ol start="5">' +
+      '<li>b</li>' +
+      '</ol>' +
+      '</li>' +
+      '</ol>'
+    );
+
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'li', 0);
+    LegacyUnit.execCommand(editor, 'Indent');
+
+    LegacyUnit.equal(editor.getContent(),
+      '<ol>' +
+      '<li style="list-style-type: none;">' +
+      '<ol start="5">' +
+      '<li>a</li>' +
+      '<li>b</li>' +
+      '</ol>' +
+      '</li>' +
+      '</ol>'
+    );
+
+    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+  });
+
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'Lists: List indent tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
@@ -389,7 +443,7 @@ UnitTest.asynctest('tinymce.lists.browser.IndentTest', (success, failure) => {
     indent: false,
     entities: 'raw',
     valid_elements:
-      'li[style|class|data-custom],ol[style|class|data-custom],' +
+      'li[style|class|data-custom],ol[style|class|data-custom|start],' +
       'ul[style|class|data-custom],dl,dt,dd,em,strong,span,#p,div,br,table,tr,td',
     valid_styles: {
       '*': 'color,font-size,font-family,background-color,font-weight,' +
