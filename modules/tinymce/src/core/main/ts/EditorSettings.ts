@@ -128,10 +128,10 @@ const getDefaultSettings = function (settings: RawEditorSettings, id: string, do
   };
 };
 
-const getDefaultMobileSettings = (settings: RawEditorSettings, isPhone: boolean): RawEditorSettings => {
+const getDefaultMobileSettings = (mobileSettings: RawEditorSettings, isPhone: boolean): RawEditorSettings => {
   const defaultMobileSettings: RawEditorSettings = {
     resize: false,               // Editor resize doesn't make sense on mobile
-    toolbar_mode: getToolbarMode(settings, 'scrolling'),   // Use the default side-scrolling toolbar for tablets/phones
+    toolbar_mode: getToolbarMode(mobileSettings, 'scrolling'),   // Use the default side-scrolling toolbar for tablets/phones
     toolbar_sticky: false        // Only enable sticky toolbar on desktop by default
   };
 
@@ -187,7 +187,7 @@ const isOnMobile = function (isMobileDevice: boolean, sectionResult: SectionResu
 
 const combineSettings = (isMobileDevice: boolean, isPhone: boolean,  defaultSettings: RawEditorSettings, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings => {
   // Use mobile mode by default on phones, so patch in the default mobile settings
-  const defaultDeviceSettings = isMobileDevice ? { mobile: getDefaultMobileSettings(settings, isPhone) } : { };
+  const defaultDeviceSettings = isMobileDevice ? { mobile: getDefaultMobileSettings(settings.mobile || {}, isPhone) } : { };
   const sectionResult = extractSections([ 'mobile' ], Merger.deepMerge(defaultDeviceSettings, settings));
 
   const extendedSettings = Tools.extend(
