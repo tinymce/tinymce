@@ -166,5 +166,6 @@ const backspaceDelete = (editor: Editor, forward?: boolean) => {
 };
 
 export {
-  backspaceDelete
+  backspaceDelete,
+  deleteCellContents
 };
