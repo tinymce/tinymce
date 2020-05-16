@@ -1,11 +1,11 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step, Keyboard, Keys } from '@ephox/agar';
+import { Assertions, GeneralSteps, Keyboard, Keys, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Remove, Replication, Element, Attr, Html, SelectorFilter } from '@ephox/sugar';
+import { Attr, Element, Html, Remove, Replication, SelectorFilter } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 import * as TableDelete from 'tinymce/core/delete/TableDelete';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock-client';
-import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', (success, failure) => {
   Theme();
@@ -60,11 +60,43 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', (success, fail
         ])),
 
         Logger.t('Range in only one cell should be noop', GeneralSteps.sequence([
-          tinyApis.sSetContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
+          tinyApis.sSetContent('<table><tbody><tr><td>ab</td><td>cd</td></tr></tbody></table>'),
           tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1),
           sDeleteNoop(editor),
-          tinyApis.sAssertContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'),
+          tinyApis.sAssertContent('<table><tbody><tr><td>ab</td><td>cd</td></tr></tbody></table>'),
           tinyApis.sAssertSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1)
+        ])),
+
+        Logger.t('All content selected in single cell deletes only content', GeneralSteps.sequence([
+          tinyApis.sSetContent('<table><tbody><tr><td>a</td></tr></tbody></table>'),
+          tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1),
+          sDelete(editor),
+          tinyApis.sAssertContent('<table><tbody><tr><td>&nbsp;</td></tr></tbody></table>'),
+          tinyApis.sAssertSelection([ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 0)
+        ])),
+
+        Logger.t('All content selected in single cell with paragraph deletes only content', GeneralSteps.sequence([
+          tinyApis.sSetContent('<table><tbody><tr><td><p>a</p></td></tr></tbody></table>'),
+          tinyApis.sSetSelection([ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 1),
+          sDelete(editor),
+          tinyApis.sAssertContent('<table><tbody><tr><td><p>&nbsp;</p></td></tr></tbody></table>'),
+          tinyApis.sAssertSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0)
+        ])),
+
+        Logger.t('All content selected in single cell with list deletes only content', GeneralSteps.sequence([
+          tinyApis.sSetContent('<table><tbody><tr><td><ul><li>a</li></ul></td></tr></tbody></table>'),
+          tinyApis.sSetSelection([ 0, 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1),
+          sDelete(editor),
+          tinyApis.sAssertContent('<table><tbody><tr><td><ul><li>&nbsp;</li></ul></td></tr></tbody></table>'),
+          tinyApis.sAssertSelection([ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 0)
+        ])),
+
+        Logger.t('All content selected in single cell with complex selection deletes only content', GeneralSteps.sequence([
+          tinyApis.sSetContent('<table><tbody><tr><td><p>a</p><ul><li style="list-style-type: none;"><ul><li>b</li></ul></li><li><strong>c</strong></li></ul></td></tr></tbody></table>'),
+          tinyApis.sSetSelection([ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 1, 1, 0, 0 ], 1),
+          sDelete(editor),
+          tinyApis.sAssertContent('<table><tbody><tr><td><ul><li>&nbsp;</li></ul></td></tr></tbody></table>'),
+          tinyApis.sAssertSelection([ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 0)
         ])),
 
         Logger.t('Select all content in all cells removes table', GeneralSteps.sequence([

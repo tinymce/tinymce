@@ -1,9 +1,9 @@
 import { Assertions, Chain, Logger, Pipeline } from '@ephox/agar';
-import { Arr, Fun, Result, Option } from '@ephox/katamari';
-import { Hierarchy,  Element,  Html } from '@ephox/sugar';
-import * as TableDeleteAction from 'tinymce/core/delete/TableDeleteAction';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
+import { Arr, Fun, Option, Result } from '@ephox/katamari';
+import { Element, Hierarchy, Html } from '@ephox/sugar';
+import * as TableDeleteAction from 'tinymce/core/delete/TableDeleteAction';
 
 UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function (success, failure) {
 
@@ -37,9 +37,22 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
               const cellString = Arr.map(xs, Html.getOuter).join('');
 
               return Result.value(cellString);
-            }
+            },
+            fail('unexpected action')
           );
         }
+      );
+  });
+
+  const cExtractDeleteSelectionCell = Chain.binder(function (actionOpt: Option<any>) {
+    return actionOpt
+      .fold(
+        fail('unexpected nothing'),
+        (action) => action.fold(
+          fail('unexpected action'),
+          fail('unexpected action'),
+          (rng, cell) => Result.value(Html.getOuter(cell))
+        )
       );
   });
 
@@ -52,6 +65,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
             function (table) {
               return Result.value(Html.getOuter(table));
             },
+            fail('unexpected action'),
             fail('unexpected action')
           );
         }
@@ -126,7 +140,14 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
       cExtractTableFromDeleteAction,
       Assertions.cAssertEq('should cells from partially selected table', '<table><tbody><tr><td>b</td></tr></tbody></table>')
     ])),
-  ], function () {
-    success();
-  }, failure);
+
+    Logger.t('single cell table with all content selected', Chain.asStep({}, [
+      cFromHtml(
+        '<table><tbody><tr><td>test</td></tr></tbody></table>',
+        [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 4,
+      ),
+      cExtractDeleteSelectionCell,
+      Assertions.cAssertEq('Should be cells', '<td>test</td>')
+    ])),
+  ], success, failure);
 });

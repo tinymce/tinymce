@@ -7,22 +7,45 @@
 
 import { Range } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Compare, Element, Node } from '@ephox/sugar';
+import { Compare, Element, Node, Remove, Traverse } from '@ephox/sugar';
+import Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
-import * as DeleteElement from './DeleteElement';
-import * as TableDeleteAction from './TableDeleteAction';
+import { isAfterTable, isBeforeTable } from '../caret/CaretPositionPredicates';
 import * as ElementType from '../dom/ElementType';
 import * as Empty from '../dom/Empty';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as Parents from '../dom/Parents';
 import * as TableCellSelection from '../selection/TableCellSelection';
-import Editor from '../api/Editor';
-import { isBeforeTable, isAfterTable } from '../caret/CaretPositionPredicates';
+import * as DeleteElement from './DeleteElement';
+import * as TableDeleteAction from './TableDeleteAction';
+
+const freefallRtl = (root: Element): Option<Element> => {
+  const child = Node.isComment(root) ? Traverse.prevSibling(root) : Traverse.lastChild(root);
+  return child.bind(freefallRtl).orThunk(() => Option.some(root));
+};
 
 const emptyCells = (editor: Editor, cells) => {
   Arr.each(cells, PaddingBr.fillWithPaddingBr);
   editor.selection.setCursorLocation(cells[0].dom(), 0);
+  return true;
+};
+
+const deleteCellContents = (editor: Editor, rng: Range, cell: Element) => {
+  rng.deleteContents();
+  // Pad the last block node
+  const lastNode = freefallRtl(cell).getOr(cell);
+  const lastBlock = Element.fromDom(editor.dom.getParent(lastNode.dom(), editor.dom.isBlock));
+  if (Empty.isEmpty(lastBlock)) {
+    PaddingBr.fillWithPaddingBr(lastBlock);
+    editor.selection.setCursorLocation(lastBlock.dom(), 0);
+  }
+  // Clean up any additional leftover nodes
+  Arr.each(Traverse.children(cell), (node) =>{
+    if (!Compare.eq(node, lastBlock) && !Compare.contains(node, lastBlock)) {
+      Remove.remove(node);
+    }
+  });
   return true;
 };
 
@@ -35,7 +58,8 @@ const deleteCellRange = (editor: Editor, rootElm, rng: Range) =>
   TableDeleteAction.getActionFromRange(rootElm, rng).
     map((action) => action.fold(
       Fun.curry(deleteTableElement, editor),
-      Fun.curry(emptyCells, editor)
+      Fun.curry(emptyCells, editor),
+      Fun.curry(deleteCellContents, editor)
     ));
 
 const deleteCaptionRange = (editor: Editor, caption) => emptyElement(editor, caption);
