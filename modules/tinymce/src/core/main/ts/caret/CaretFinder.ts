@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element, Node, Text } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
+import * as NodeType from '../dom/NodeType';
 import * as CaretCandidate from './CaretCandidate';
 import CaretPosition from './CaretPosition';
 import * as CaretUtils from './CaretUtils';
 import { CaretWalker } from './CaretWalker';
-import * as NodeType from '../dom/NodeType';
-import { Node, Element, Text } from '@ephox/dom-globals';
 
 const walkToPositionIn = (forward: boolean, root: Node, start: Node) => {
   const position = forward ? CaretPosition.before(start) : CaretPosition.after(start);
@@ -94,8 +94,8 @@ const positionIn = (forward: boolean, element: Node): Option<CaretPosition> => {
 const nextPosition = Fun.curry(fromPosition, true) as (root: Node, pos: CaretPosition) => Option<CaretPosition>;
 const prevPosition = Fun.curry(fromPosition, false) as (root: Node, pos: CaretPosition) => Option<CaretPosition>;
 
-const firstPositionIn = Fun.curry(positionIn, true) as (element: Element) => Option<CaretPosition>;
-const lastPositionIn = Fun.curry(positionIn, false) as (element: Element) => Option<CaretPosition>;
+const firstPositionIn = Fun.curry(positionIn, true) as (element: Node) => Option<CaretPosition>;
+const lastPositionIn = Fun.curry(positionIn, false) as (element: Node) => Option<CaretPosition>;
 
 export {
   fromPosition,

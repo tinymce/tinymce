@@ -125,6 +125,17 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentTest', (success, f
     assertSelection(editor, 'li', 1);
   });
 
+  suite.test('insertAtCaret - content into single table cell with all content selected', (editor) => {
+    editor.getBody().innerHTML = '<table class="mce-item-table"><tbody><tr><td>content</td></tr></tbody></table>';
+    editor.focus();
+    const rng = editor.dom.createRng();
+    rng.setStart(editor.dom.select('td')[0].firstChild, 0);
+    rng.setEnd(editor.dom.select('td')[0].firstChild, 7);
+    editor.selection.setRng(rng);
+    InsertContent.insertAtCaret(editor, { content: 'replace', paste: true });
+    LegacyUnit.equal(editor.getBody().innerHTML, '<table class="mce-item-table"><tbody><tr><td>replace</td></tr></tbody></table>');
+  });
+
   suite.test('insertAtCaret - empty paragraph pad the empty element with br on insert and nbsp on save', function (editor) {
     editor.setContent('<p>ab</p>');
     editor.focus();

@@ -5,26 +5,37 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Element as DomElement, Node, Range } from '@ephox/dom-globals';
 import { Option } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
-import { Element as DomElement, Node } from '@ephox/dom-globals';
-import Env from '../api/Env';
-import * as InsertList from './InsertList';
-import CaretPosition from '../caret/CaretPosition';
-import { CaretWalker } from '../caret/CaretWalker';
+import DOMUtils from '../api/dom/DOMUtils';
 import ElementUtils from '../api/dom/ElementUtils';
-import * as NodeType from '../dom/NodeType';
-import * as PaddingBr from '../dom/PaddingBr';
-import Serializer from '../api/html/Serializer';
-import * as RangeNormalizer from '../selection/RangeNormalizer';
 import Selection from '../api/dom/Selection';
 import Editor from '../api/Editor';
-import DOMUtils from '../api/dom/DOMUtils';
-import { trimOrPadLeftRight, trimNbspAfterDeleteAndPadValue, isAfterNbsp } from './NbspTrim';
+import Env from '../api/Env';
 import ParserNode from '../api/html/Node';
+import Serializer from '../api/html/Serializer';
 import Tools from '../api/util/Tools';
+import CaretPosition from '../caret/CaretPosition';
+import { CaretWalker } from '../caret/CaretWalker';
+import * as TableDelete from '../delete/TableDelete';
+import * as NodeType from '../dom/NodeType';
+import * as PaddingBr from '../dom/PaddingBr';
+import * as RangeNormalizer from '../selection/RangeNormalizer';
+import * as SelectionUtils from '../selection/SelectionUtils';
+import * as InsertList from './InsertList';
+import { isAfterNbsp, trimNbspAfterDeleteAndPadValue, trimOrPadLeftRight } from './NbspTrim';
 
 const isTableCell = NodeType.matchNodeNames([ 'td', 'th' ]);
+
+const isTableCellContentSelected = (dom: DOMUtils, rng: Range, cell: Node | null) => {
+  if (cell !== null) {
+    const endCell = dom.getParent(rng.endContainer, isTableCell);
+    return cell === endCell && SelectionUtils.hasAllContentsSelected(Element.fromDom(cell), rng);
+  } else {
+    return false;
+  }
+};
 
 const selectionSetContent = (editor: Editor, content: string) => {
   const rng = editor.selection.getRng();
@@ -188,6 +199,22 @@ const moveSelectionToMarker = function (editor: Editor, marker) {
   selection.setRng(rng);
 };
 
+const deleteSelectedContent = (editor: Editor) => {
+  const dom = editor.dom;
+  // Fix for #2595 seems that delete removes one extra character on
+  // WebKit for some odd reason if you double click select a word
+  const rng = RangeNormalizer.normalize(editor.selection.getRng());
+  editor.selection.setRng(rng);
+  // TINY-1044: Selecting all content in a single table cell will cause the entire table to be deleted
+  // when using the native delete command. As such we need to manually delete the cell content instead
+  const startCell = dom.getParent(rng.startContainer, isTableCell);
+  if (isTableCellContentSelected(dom, rng, startCell)) {
+    TableDelete.deleteCellContents(editor, rng, Element.fromDom(startCell));
+  } else {
+    editor.getDoc().execCommand('Delete', false, null);
+  }
+};
+
 export const insertHtmlAtCaret = function (editor: Editor, value: string, details) {
   let parser, serializer, parentNode, rootNode, fragment, args;
   let marker, rng, node, bookmarkHtml, merge;
@@ -240,10 +267,7 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
 
   // Insert node maker where we will insert the new HTML and get it's parent
   if (!selection.isCollapsed()) {
-    // Fix for #2595 seems that delete removes one extra character on
-    // WebKit for some odd reason if you double click select a word
-    editor.selection.setRng(RangeNormalizer.normalize(editor.selection.getRng()));
-    editor.getDoc().execCommand('Delete', false, null);
+    deleteSelectedContent(editor);
     value = trimNbspAfterDeleteAndPadValue(editor.selection.getRng(), value);
   }
 
