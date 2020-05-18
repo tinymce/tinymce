@@ -1,7 +1,7 @@
 Version 5.3.0 (TBD)
     Added html and body height styles to the default oxide content CSS #TINY-5978
     Added `uploadUri` and `blobInfo` to the data returned by `editor.uploadImages()` #TINY-4579
-    Added new function to the `BlobCache` API to lookup a blob based on the base64 data and mime type #TINY-5988
+    Added a new function to the `BlobCache` API to lookup a blob based on the base64 data and mime type #TINY-5988
     Added the ability to search and replace within a selection #TINY-4549
     Added the ability to set the list start position for ordered lists and added new `lists` context menu item #TINY-3915
     Added `icon` as an optional config option to the toggle menu item API #TINY-3345
