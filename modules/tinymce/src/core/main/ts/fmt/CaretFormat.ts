@@ -6,7 +6,7 @@
  */
 
 import { Document, Node, Range } from '@ephox/dom-globals';
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Obj, Option } from '@ephox/katamari';
 import { Attr, Element, Insert, Node as SugarNode, Remove } from '@ephox/sugar';
 import TreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -171,6 +171,29 @@ const insertFormatNodesIntoCaretContainer = function (formatNodes: Node[], caret
   return appendNode(innerMostFormatNode, innerMostFormatNode.ownerDocument.createTextNode(ZWSP));
 };
 
+const cleanFormatNode = (editor: Editor, caretContainer: Node, formatNode: Node, name: string, vars: FormatVars, similar: boolean): Option<Node> => {
+  const formatter = editor.formatter;
+  const dom = editor.dom;
+
+  // Find all formats present on the format node
+  const validFormats = Arr.filter(Obj.keys(formatter.get()), (formatName) => formatName !== 'removeformat' && formatName !== name);
+  const matchedFormats = MatchFormat.matchAllOnNode(editor, formatNode, validFormats);
+  // Filter out any matched formats that are 'visually' equivalent to the 'name' format since they are not unique formats on the node
+  const uniqueFormats = Arr.filter(matchedFormats, (fmtName) => !FormatUtils.areSimilarFormats(editor, fmtName, name));
+
+  // If more than one format is present, then there's additional formats that should be retained. So clone the node,
+  // remove the format and then return cleaned format node
+  if (uniqueFormats.length > 0) {
+    const clonedFormatNode = formatNode.cloneNode(false);
+    dom.add(caretContainer, clonedFormatNode);
+    formatter.remove(name, vars, clonedFormatNode, similar);
+    dom.remove(clonedFormatNode);
+    return Option.some(clonedFormatNode);
+  } else {
+    return Option.none();
+  }
+};
+
 const applyCaretFormat = function (editor: Editor, name: string, vars: FormatVars) {
   let caretContainer: Node, textNode: Node;
   const selection = editor.selection;
@@ -280,30 +303,12 @@ const removeCaretFormat = function (editor: Editor, name: string, vars: FormatVa
     const caretContainer = getParentCaretContainer(editor.getBody(), formatNode);
     const newCaretContainer = createCaretContainer(false).dom();
 
-    // Find all formats present on the format node
-    const matchedFormats = FormatUtils.getFormatNamesPresent(editor, formatNode, [ 'removeformat', name ]);
-    // Filter out any matched formats that are 'visually' equivalent to the 'name' format since they are not unique formats on the node
-    const uniqueFormats = Arr.filter(matchedFormats, (fmtName) => !FormatUtils.areSimilarFormats(editor, fmtName, name));
-    // If more than one format is present, push formatNode on to parents array so that it can be appended to the caret container
-    // As a result formatter.remove() below can deal with removing the 'name' format safely
-    if (uniqueFormats.length > 0) {
-      parents.push(formatNode);
-    }
+    insertCaretContainerNode(editor, newCaretContainer, caretContainer !== null ? caretContainer : formatNode);
 
-    const caretTextNode = insertFormatNodesIntoCaretContainer(parents, newCaretContainer);
-
-    if (caretContainer) {
-      insertCaretContainerNode(editor, newCaretContainer, caretContainer);
-    } else {
-      insertCaretContainerNode(editor, newCaretContainer, formatNode);
-    }
+    const cleanedFormatNode = cleanFormatNode(editor, newCaretContainer, formatNode, name, vars, similar);
+    const caretTextNode = insertFormatNodesIntoCaretContainer(parents.concat(cleanedFormatNode.toArray()), newCaretContainer);
 
     removeCaretContainerNode(editor, caretContainer, false);
-
-    if (uniqueFormats.length > 0) {
-      editor.formatter.remove(name, vars, newCaretContainer, similar);
-    }
-
     selection.setCursorLocation(caretTextNode, 1);
 
     if (dom.isEmpty(formatNode)) {

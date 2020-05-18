@@ -12,7 +12,7 @@ import Tools from '../api/util/Tools';
 import Editor from '../api/Editor';
 
 export interface FormatRegistry {
-  get (name?: string): Formats | Format[];
+  get (name?: string): Format[] | Record<string, Format[]>;
   has (name: string): boolean;
   register (name: string | Formats, format?: Format[] | Format): void;
   unregister (name: string): Formats;
@@ -21,7 +21,7 @@ export interface FormatRegistry {
 export function FormatRegistry(editor: Editor): FormatRegistry {
   const formats: Record<string, Format[]> = {};
 
-  const get = (name?: string): Formats | Format[] => name ? formats[name] : formats;
+  const get = (name?: string) => name ? formats[name] : formats;
 
   const has = (name: string): boolean => Obj.has(formats, name);
 
