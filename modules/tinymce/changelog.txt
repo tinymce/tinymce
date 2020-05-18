@@ -1,17 +1,17 @@
 Version 5.3.0 (TBD)
     Added html and body height styles to the default oxide content CSS #TINY-5978
-    Added `uploadUri` and `blobInfo` to `editorUpload.uploadImages` return type #TINY-4579
+    Added `uploadUri` and `blobInfo` to the data returned by `editor.uploadImages()` #TINY-4579
     Added new function to the `BlobCache` API to lookup a blob based on the base64 data and mime type #TINY-5988
     Added the ability to search and replace within a selection #TINY-4549
     Added the ability to set the list start position for ordered lists and added new `lists` context menu item #TINY-3915
     Added `icon` as an optional config option to the toggle menu item API #TINY-3345
     Changed toggle menu items and choice menu items to have a dedicated icon with the checkmark displayed on the far right side of the menu item #TINY-3345
-    Changed the `link`, `image` and `paste` plugins to use Promises to reduce the bundle size #TINY-4710
+    Changed the `link`, `image`, and `paste` plugins to use Promises to reduce the bundle size #TINY-4710
     Changed the default icons to be lazy loaded during initialization #TINY-4729
-    Changed so base64 encoded urls are converted to blob urls when content is parsed #TINY-4727
+    Changed base64 encoded urls are converted to blob urls when content is parsed #TINY-4727
     Changed context toolbars so they concatenate when more than one is suitable for the current selection #TINY-4495
     Changed inline style element formats (strong, b, em, i, u, strike) to convert to a span on format removal if a `style` or `class` attribute is present #TINY-4741
-    Changed inline toolbars to switch to positioning at the bottom if there's never space to position at the top #TINY-3161
+    Changed inline toolbar positioning to the bottom of the editor if there is never space to position at the top #TINY-3161
     Fixed the `selection.setContent()` API not running parser filters #TINY-4002
     Fixed formats incorrectly applied or removed when table cells were selected #TINY-4709
     Fixed the `quickimage` button not restricting the file types to images #TINY-4715
@@ -22,12 +22,12 @@ Version 5.3.0 (TBD)
     Fixed supplementary special characters being truncated when inserted into the editor. Patch contributed by mlitwin. #TINY-4791
     Fixed toolbar buttons not set to disabled when the editor is in readonly mode #TINY-4592
     Fixed the editor selection incorrectly changing when removing caret format containers #TINY-3438
-    Fixed bug where title, width, height would be set to empty string values when updating an image and removing those using the image dialog #TINY-4786
+    Fixed bug where title, width, or height would be set to empty string values when updating an image and removing those attributes using the image dialog #TINY-4786
     Fixed `ObjectResized` event firing when an object wasn't resized #TINY-4161
     Fixed `ObjectResized` and `ObjectResizeStart` events incorrectly fired when adding or removing table rows and columns #TINY-4829
     Fixed the placeholder not hiding when pasting content into the editor #TINY-4828
     Fixed an issue where the editor would fail to load if local storage was disabled #TINY-5935
-    Fixed an issue where an uploaded image would reuse a cached image with a different mime type #TINY-5988
+    Fixed an issue where an uploaded image would reuse a cached image with a the same filename but different mime type #TINY-5988
     Fixed bug where toolbars and dialogs would not show if the body element was replaced (e.g. with Turbolinks). Patch contributed by spohlenz #GH-5653
     Fixed zero-width spaces incorrectly included in the `wordcount` plugin character count #TINY-5991
     Fixed a regression introduced in 5.2.0 whereby the desktop `toolbar_mode` setting would incorrectly override the mobile default setting #TINY-5998
