@@ -7,22 +7,28 @@
 
 import { Node, Range, Text } from '@ephox/dom-globals';
 import { Arr, Fun, Obj } from '@ephox/katamari';
+import { Node as SandNode } from '@ephox/sand';
 import { Element, SelectorFilter, Traverse } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import { TextSection } from './Types';
 
-type CollectContentEditableFn = (node: Node) => TextSection[];
-type CollectTextFn = (node: Text, section: TextSection) => void;
 interface WalkerCallbacks {
   boundary: (node: Node) => boolean;
   cef: (node: Node) => boolean;
   text: (node: Text) => void;
 }
 
-const isBoundary = (dom: DOMUtils, node: Node) => dom.isBlock(node) || Obj.has(dom.schema.getShortEndedElements(), node.nodeName);
+interface CollectCallbacks {
+  cef: (node: Node) => TextSection[];
+  text: (node: Text, section: TextSection) => void;
+}
+
+const isSimpleBoundary = (dom: DOMUtils, node: Node) => dom.isBlock(node) || Obj.has(dom.schema.getShortEndedElements(), node.nodeName);
 const isContentEditableFalse = (dom: DOMUtils, node: Node) => dom.getContentEditable(node) === 'false';
+const isContentEditableTrueInCef = (dom: DOMUtils, node: Node) => dom.getContentEditable(node) === 'true' && dom.getContentEditableParent(node.parentNode) === 'false';
 const isHidden = (dom: DOMUtils, node: Node) => !dom.isBlock(node) && Obj.has(dom.schema.getWhiteSpaceElements(), node.nodeName);
+const isBoundary = (dom: DOMUtils, node: Node) => isSimpleBoundary(dom, node) || isContentEditableFalse(dom, node) || isHidden(dom, node) || isContentEditableTrueInCef(dom, node);
 const isText = (node: Node): node is Text => node.nodeType === 3;
 
 const nuSection = (): TextSection => ({
@@ -46,7 +52,7 @@ const walk = (dom: DOMUtils, walkerFn: (shallow?: boolean) => Node, startNode: N
         next = walkerFn(true);
         continue;
       }
-    } else if (isBoundary(dom, next)) {
+    } else if (isSimpleBoundary(dom, next)) {
       if (callbacks.boundary(next)) {
         break;
       }
@@ -88,7 +94,7 @@ const collectTextToBoundary = (dom: DOMUtils, section: TextSection, node: Node, 
   });
 };
 
-const collect = (dom: DOMUtils, rootNode: Node, startNode: Node, endNode?: Node, text?: CollectTextFn, cef?: CollectContentEditableFn, skipStart: boolean = true) => {
+const collect = (dom: DOMUtils, rootNode: Node, startNode: Node, endNode?: Node, callbacks?: CollectCallbacks, skipStart: boolean = true) => {
   const walker = new TreeWalker(startNode, rootNode);
   const sections: TextSection[] = [];
   let current: TextSection = nuSection();
@@ -111,15 +117,15 @@ const collect = (dom: DOMUtils, rootNode: Node, startNode: Node, endNode?: Node,
     cef: (node) => {
       finishSection();
       // Collect additional nested contenteditable true content
-      if (cef) {
-        sections.push(...cef(node));
+      if (callbacks) {
+        sections.push(...callbacks.cef(node));
       }
       return false;
     },
     text: (next) => {
       current.elements.push(Element.fromDom(next));
-      if (text) {
-        text(next, current);
+      if (callbacks) {
+        callbacks.text(next, current);
       }
     }
   }, endNode, skipStart);
@@ -139,17 +145,25 @@ const collectRangeSections = (dom: DOMUtils, rng: Range): TextSection[] => {
   const end = toLeaf(rng.endContainer, rng.endOffset);
   const endNode = end.element().dom();
 
-  return collect(dom, rng.commonAncestorContainer, startNode, endNode, (node, section) => {
-    // Set the start/end offset of the section
-    if (node === endNode) {
-      section.fOffset += node.length - end.offset();
-    } else if (node === startNode) {
-      section.sOffset += start.offset();
+  return collect(dom, rng.commonAncestorContainer, startNode, endNode, {
+    text: (node, section) => {
+      // Set the start/end offset of the section
+      if (node === endNode) {
+        section.fOffset += node.length - end.offset();
+      } else if (node === startNode) {
+        section.sOffset += start.offset();
+      }
+    },
+    cef: (node) => {
+      // Collect the sections and then order them appropriately, as nested sections maybe out of order
+      // TODO: See if we can improve this to avoid the sort overhead
+      const sections = Arr.bind(SelectorFilter.descendants(Element.fromDom(node), '*[contenteditable=true]'), (e) => {
+        const ceTrueNode = e.dom();
+        return collect(dom, ceTrueNode, ceTrueNode);
+      });
+      return Arr.sort(sections, (a, b) => (SandNode.documentPositionPreceding(a.elements[0].dom(), b.elements[0].dom())) ? 1 : -1);
     }
-  }, (node) => Arr.bind(SelectorFilter.descendants(Element.fromDom(node), '*[contenteditable=true]'), (e) => {
-    const ceTrueNode = e.dom();
-    return collect(dom, ceTrueNode, ceTrueNode);
-  }), false);
+  }, false);
 };
 
 const fromRng = (dom: DOMUtils, rng: Range): TextSection[] => rng.collapsed ? [] : collectRangeSections(dom, rng);
