@@ -19,10 +19,9 @@ interface WalkerCallbacks {
   text: (node: Text) => void;
 }
 
-interface CollectSettings {
-  cef?: (node: Node) => TextSection[];
-  text?: (node: Text, section: TextSection) => void;
-  skipStart: boolean;
+interface CollectCallbacks {
+  cef: (node: Node) => TextSection[];
+  text: (node: Text, section: TextSection) => void;
 }
 
 const isSimpleBoundary = (dom: DOMUtils, node: Node) => dom.isBlock(node) || Obj.has(dom.schema.getShortEndedElements(), node.nodeName);
@@ -95,7 +94,7 @@ const collectTextToBoundary = (dom: DOMUtils, section: TextSection, node: Node, 
   });
 };
 
-const collect = (dom: DOMUtils, rootNode: Node, startNode: Node, endNode: Node, settings: CollectSettings) => {
+const collect = (dom: DOMUtils, rootNode: Node, startNode: Node, endNode?: Node, callbacks?: CollectCallbacks, skipStart: boolean = true) => {
   const walker = new TreeWalker(startNode, rootNode);
   const sections: TextSection[] = [];
   let current: TextSection = nuSection();
@@ -118,18 +117,18 @@ const collect = (dom: DOMUtils, rootNode: Node, startNode: Node, endNode: Node, 
     cef: (node) => {
       finishSection();
       // Collect additional nested contenteditable true content
-      if (settings.cef) {
-        sections.push(...settings.cef(node));
+      if (callbacks) {
+        sections.push(...callbacks.cef(node));
       }
       return false;
     },
     text: (next) => {
       current.elements.push(Element.fromDom(next));
-      if (settings.text) {
-        settings.text(next, current);
+      if (callbacks) {
+        callbacks.text(next, current);
       }
     }
-  }, endNode, settings.skipStart);
+  }, endNode, skipStart);
 
   // Find any text between the end node and the closest boundary, then finalise the section
   if (endNode) {
@@ -160,12 +159,11 @@ const collectRangeSections = (dom: DOMUtils, rng: Range): TextSection[] => {
       // TODO: See if we can improve this to avoid the sort overhead
       const sections = Arr.bind(SelectorFilter.descendants(Element.fromDom(node), '*[contenteditable=true]'), (e) => {
         const ceTrueNode = e.dom();
-        return collect(dom, ceTrueNode, ceTrueNode, undefined, { skipStart: true });
+        return collect(dom, ceTrueNode, ceTrueNode);
       });
       return Arr.sort(sections, (a, b) => (SandNode.documentPositionPreceding(a.elements[0].dom(), b.elements[0].dom())) ? 1 : -1);
-    },
-    skipStart: false
-  });
+    }
+  }, false);
 };
 
 const fromRng = (dom: DOMUtils, rng: Range): TextSection[] => rng.collapsed ? [] : collectRangeSections(dom, rng);
