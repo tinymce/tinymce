@@ -2,10 +2,10 @@ import { Attachment, Behaviour, Channels, Debugging, DomFactory, Gui, GuiFactory
 import { console, document, window } from '@ephox/dom-globals';
 import { Fun, Future, Id, Option, Result } from '@ephox/katamari';
 import { Body, Class } from '@ephox/sugar';
-import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
-import { LinkInformation, ApiUrlData, UrlValidationHandler } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
-import I18n from 'tinymce/core/api/util/I18n';
 import Editor from 'tinymce/core/api/Editor';
+import I18n from 'tinymce/core/api/util/I18n';
+import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+import { ApiUrlData, LinkInformation, UrlValidationHandler } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 
 const setupDemo = () => {
 
@@ -105,7 +105,7 @@ const setupDemo = () => {
         icons: () => <Record<string, string>> {},
         menuItems: () => <Record<string, any>> {},
         translate: I18n.translate,
-        isReadonly: () => false
+        isReadOnly: () => false
       },
       interpreter: (x) => x,
       getSink: () => Result.value(sink),

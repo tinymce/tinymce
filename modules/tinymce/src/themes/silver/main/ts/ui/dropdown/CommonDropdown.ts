@@ -6,20 +6,23 @@
  */
 
 /* eslint-disable max-len */
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Dropdown as AlloyDropdown, Focusing, GuiFactory, Keying, Memento, Replacing, Representing, SimulatedEvent, SketchSpec, TieredData, Unselecting } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Dropdown as AlloyDropdown, Focusing, GuiFactory,
+  Keying, Memento, Replacing, Representing, SimulatedEvent, SketchSpec, TieredData, Unselecting
+} from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import * as ReadOnly from '../../ReadOnly';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderLabel, renderReplacableIconFromPack } from '../button/ButtonSlices';
 import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Controls';
 import * as Icons from '../icons/Icons';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import * as MenuParts from '../menus/menu/MenuParts';
-import * as ReadOnly from '../../ReadOnly';
 /* eslint-enable max-len */
 
 export const updateMenuText = Id.generate('update-menu-text');
@@ -127,7 +130,7 @@ const renderCommonDropdown = <T>(
       // TODO: Not quite working. Can still get the button focused.
       dropdownBehaviours: Behaviour.derive([
         ...spec.dropdownBehaviours,
-        DisablingConfigs.button(spec.disabled || sharedBackstage.providers.isReadonly()),
+        DisablingConfigs.button(() => spec.disabled || sharedBackstage.providers.isReadOnly()),
         ReadOnly.receivingConfig(),
         Unselecting.config({ }),
         Replacing.config({ }),

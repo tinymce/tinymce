@@ -5,11 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Button, GuiFactory, Replacing, Representing, SimpleSpec, Tabstopping } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyEvents, Behaviour, Button, GuiFactory, Replacing, Representing, SimpleSpec, Tabstopping
+} from '@ephox/alloy';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { DisablingConfigs } from '../alien/DisablingConfigs';
 import * as ReadOnly from '../../ReadOnly';
+import { DisablingConfigs } from '../alien/DisablingConfigs';
 
 const enum WordCountMode {
   Words = 'words',
@@ -28,7 +30,7 @@ export const renderWordCount = (editor: Editor, providersBackstage: UiFactoryBac
     },
     components: [ ],
     buttonBehaviours: Behaviour.derive([
-      DisablingConfigs.button(providersBackstage.isReadonly()),
+      DisablingConfigs.button(providersBackstage.isReadOnly),
       ReadOnly.receivingConfig(),
       Tabstopping.config({ }),
       Replacing.config({ }),

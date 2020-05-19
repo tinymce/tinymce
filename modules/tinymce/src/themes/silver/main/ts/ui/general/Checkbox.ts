@@ -6,32 +6,19 @@
  */
 
 import {
-  AddEventsBehaviour,
-  AlloyComponent,
-  AlloyEvents,
-  AlloyTriggers,
-  Behaviour,
-  Disabling,
-  Focusing,
-  FormField as AlloyFormField,
-  Keying,
-  Memento,
-  NativeEvents,
-  Representing,
-  SimpleSpec,
-  Tabstopping,
-  Unselecting
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Disabling, Focusing, FormField as AlloyFormField, Keying,
+  Memento, NativeEvents, Representing, SimpleSpec, Tabstopping, Unselecting
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { HTMLInputElement } from '@ephox/dom-globals';
 import { Fun, Option } from '@ephox/katamari';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import * as ReadOnly from '../../ReadOnly';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import * as Icons from '../icons/Icons';
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { formChangeEvent } from './FormEvents';
 import { Omit } from '../Omit';
-import * as ReadOnly from '../../ReadOnly';
+import { formChangeEvent } from './FormEvents';
 
 type CheckboxSpec = Omit<Types.Checkbox.Checkbox, 'type'>;
 
@@ -67,7 +54,9 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
 
     behaviours: Behaviour.derive([
       ComposingConfigs.self(),
-      Disabling.config({ disabled: spec.disabled }),
+      Disabling.config({
+        disabled: () => spec.disabled || providerBackstage.isReadOnly()
+      }),
       Tabstopping.config({}),
       Focusing.config({ }),
       repBehaviour,
@@ -132,7 +121,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
     ],
     fieldBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: spec.disabled || providerBackstage.isReadonly(),
+        disabled: () => spec.disabled || providerBackstage.isReadOnly(),
         disableClass: 'tox-checkbox--disabled',
         onDisabled: (comp) => {
           AlloyFormField.getField(comp).each(Disabling.disable);

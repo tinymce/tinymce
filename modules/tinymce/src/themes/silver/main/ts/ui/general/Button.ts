@@ -6,35 +6,25 @@
  */
 
 import {
-  AddEventsBehaviour,
-  AlloyComponent,
-  AlloyEvents,
-  AlloySpec,
-  AlloyTriggers,
-  Behaviour,
-  Button as AlloyButton,
-  FormField as AlloyFormField,
-  SketchSpec,
-  Tabstopping,
-  Memento,
-  SimpleOrSketchSpec
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField,
+  Memento, SimpleOrSketchSpec, SketchSpec, Tabstopping
 } from '@ephox/alloy';
+import { Types } from '@ephox/bridge';
 import { console } from '@ephox/dom-globals';
 import { Fun, Merger, Option } from '@ephox/katamari';
 import { formActionEvent, formCancelEvent, formSubmitEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
-import { UiFactoryBackstageProviders, UiFactoryBackstage } from '../../backstage/Backstage';
+import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import * as ReadOnly from '../../ReadOnly';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
+import { renderFormField } from '../alien/FieldLabeller';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { renderIconFromPack } from '../button/ButtonSlices';
-import { renderMenuButton, getFetch, StoragedMenuButton } from '../button/MenuButton';
+import { getFetch, renderMenuButton, StoragedMenuButton } from '../button/MenuButton';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
-import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
-import { Types } from '@ephox/bridge';
 import { Omit } from '../Omit';
-import { renderFormField } from '../alien/FieldLabeller';
-import * as ReadOnly from '../../ReadOnly';
+import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
 type ButtonSpec = Omit<Types.Button.Button, 'type'>;
 type FooterButtonSpec = Omit<Types.Dialog.DialogNormalButton, 'type'> | Omit<Types.Dialog.DialogMenuButton, 'type'>;
@@ -50,7 +40,7 @@ const renderCommonSpec = (spec, actionOpt: Option<(comp: AlloyComponent) => void
 
   const common = {
     buttonBehaviours: Behaviour.derive([
-      DisablingConfigs.button(spec.disabled || providersBackstage.isReadonly()),
+      DisablingConfigs.button(() => spec.disabled || providersBackstage.isReadOnly()),
       ReadOnly.receivingConfig(),
       Tabstopping.config({}),
       AddEventsBehaviour.config('button press', [

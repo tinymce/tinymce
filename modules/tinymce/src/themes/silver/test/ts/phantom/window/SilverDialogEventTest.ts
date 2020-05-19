@@ -1,9 +1,9 @@
-import { Logger, Mouse, Pipeline, Step, Waiter, UiFinder } from '@ephox/agar';
+import { Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Behaviour, GuiFactory, ModalDialog, Positioning, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { ValueSchema } from '@ephox/boulder';
 import { DialogManager } from '@ephox/bridge';
-import { Fun, Result, Option } from '@ephox/katamari';
+import { Fun, Option, Result } from '@ephox/katamari';
 import { Body } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
@@ -85,7 +85,7 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
                 icons: () => <Record<string, string>> {},
                 menuItems: () => <Record<string, any>> {},
                 translate: I18n.translate,
-                isReadonly: () => false
+                isReadOnly: () => false
               }
             },
             dialog: {

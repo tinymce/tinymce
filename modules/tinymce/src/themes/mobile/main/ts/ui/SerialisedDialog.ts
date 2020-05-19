@@ -6,10 +6,11 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Button, Container, Disabling, Form,
-  Highlighting, Keying, Memento, NativeEvents, Representing
+  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Button, Container, Disabling, Form, Highlighting, Keying, Memento,
+  NativeEvents, Representing
 } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { HTMLElement } from '@ephox/dom-globals';
 import { Arr, Cell, Option, Singleton } from '@ephox/katamari';
 import { Css, SelectorFilter, SelectorFind, Width } from '@ephox/sugar';
 
@@ -17,7 +18,6 @@ import * as Receivers from '../channels/Receivers';
 import * as SwipingModel from '../model/SwipingModel';
 import * as Styles from '../style/Styles';
 import * as UiDomFactory from '../util/UiDomFactory';
-import { HTMLElement } from '@ephox/dom-globals';
 
 const sketch = function (rawSpec) {
   const navigateEvent = 'navigateEvent';
@@ -50,7 +50,7 @@ const sketch = function (rawSpec) {
       buttonBehaviours: Behaviour.derive([
         Disabling.config({
           disableClass: Styles.resolve('toolbar-navigation-disabled'),
-          disabled: !enabled
+          disabled: () => !enabled
         })
       ])
     });

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Button, Keying, Replacing, Tabstopping, Disabling } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, Button, Disabling, Keying, Replacing, Tabstopping } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -52,7 +52,7 @@ const renderElementPath = (editor: Editor, settings, providersBackstage: UiFacto
         editor.nodeChanged();
       },
       buttonBehaviours: Behaviour.derive([
-        DisablingConfigs.button(providersBackstage.isReadonly()),
+        DisablingConfigs.button(providersBackstage.isReadOnly),
         ReadOnly.receivingConfig()
       ])
     }));
@@ -114,7 +114,9 @@ const renderElementPath = (editor: Editor, settings, providersBackstage: UiFacto
         mode: 'flow',
         selector: 'div[role=button]'
       }),
-      Disabling.config({ disabled: providersBackstage.isReadonly() }),
+      Disabling.config({
+        disabled: providersBackstage.isReadOnly
+      }),
       ReadOnly.receivingConfig(),
       Tabstopping.config({ }),
       Replacing.config({ }),

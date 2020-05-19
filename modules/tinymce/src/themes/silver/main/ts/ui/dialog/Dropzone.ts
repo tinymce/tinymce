@@ -5,20 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling, FormField as AlloyFormField, Memento, NativeEvents, Representing, SimpleSpec, SimulatedEvent, SystemEvents, Tabstopping, Toggling } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling, FormField as AlloyFormField, Memento,
+  NativeEvents, Representing, SimpleSpec, SimulatedEvent, SystemEvents, Tabstopping, Toggling
+} from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { DragEvent, FileList } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import * as ReadOnly from '../../ReadOnly';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
+import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { formChangeEvent } from '../general/FormEvents';
 import { Omit } from '../Omit';
-import { DisablingConfigs } from '../alien/DisablingConfigs';
-import * as ReadOnly from '../../ReadOnly';
 
 const extensionsAccepted = '.jpg,.jpeg,.png,.gif';
 
@@ -135,7 +138,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
             },
             buttonBehaviours: Behaviour.derive([
               Tabstopping.config({ }),
-              DisablingConfigs.button(providersBackstage.isReadonly()),
+              DisablingConfigs.button(providersBackstage.isReadOnly),
               ReadOnly.receivingConfig()
             ])
           })
