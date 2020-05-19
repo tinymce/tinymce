@@ -112,7 +112,7 @@ export default function () {
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'undo redo sidebar1 | bold italic | alignleft aligncenter alignright alignjustify | align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | ' +
+    toolbar: 'undo redo sidebar1 | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | ' +
     'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
     contextmenu: 'link linkchecker image imagetools table lists spellchecker configurepermanentpen',
 

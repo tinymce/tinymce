@@ -10,6 +10,7 @@ import Editor from '../api/Editor';
 import { Format, FormatVars, SelectorFormat } from '../api/fmt/Format';
 import { Node } from '@ephox/dom-globals';
 import DOMUtils from '../api/dom/DOMUtils';
+import { Arr } from '@ephox/katamari';
 
 const isEq = FormatUtils.isEq;
 
@@ -161,17 +162,14 @@ const match = function (editor: Editor, name: string, vars: FormatVars, node) {
 };
 
 const matchAll = function (editor: Editor, names: string[], vars: FormatVars) {
-  let startElement;
-  const matchedFormatNames = [];
-  const checkedMap = {};
+  const matchedFormatNames: string[] = [];
+  const checkedMap: Record<string, boolean> = {};
 
   // Check start of selection for formats
-  startElement = editor.selection.getStart();
+  const startElement = editor.selection.getStart();
   editor.dom.getParent(startElement, function (node) {
-    let i, name;
-
-    for (i = 0; i < names.length; i++) {
-      name = names[i];
+    for (let i = 0; i < names.length; i++) {
+      const name = names[i];
 
       if (!checkedMap[name] && matchNode(editor, node, name, vars)) {
         checkedMap[name] = true;
@@ -212,11 +210,25 @@ const canApply = function (editor: Editor, name: string) {
   return false;
 };
 
+/**
+ *  Get all of the format names present on the specified node
+ */
+const matchAllOnNode = (editor: Editor, node: Node, formatNames: string[]) =>
+  Arr.foldl(formatNames, (acc, name) => {
+    const matchSimilar = FormatUtils.isVariableFormatName(editor, name);
+    if (editor.formatter.matchNode(node, name, {}, matchSimilar)) {
+      return acc.concat([ name ]);
+    } else {
+      return acc;
+    }
+  }, [] as string[]);
+
 export {
   matchNode,
   matchName,
   match,
   matchAll,
+  matchAllOnNode,
   canApply,
   matchesUnInheritedFormatSelector
 };

@@ -445,7 +445,92 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
         Assertions.assertEq('Should not be format element', false, CaretFormat.isFormatElement(editor, Element.fromHtml('<a href="#"></a>')));
         Assertions.assertEq('Should not be format element', false, CaretFormat.isFormatElement(editor, Element.fromHtml('<span data-mce-bogus="1"></span>')));
         Assertions.assertEq('Should not be format element', false, CaretFormat.isFormatElement(editor, Element.fromHtml('<span id="_mce_caret"></span>')));
-      }))
+      })),
+      Logger.t('Remove single format on multiple format span (End of line) (TINY-1170)', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p><span style="text-decoration: underline; font-size: 18px;">a</span></p>'),
+        tinyApis.sSetCursor([ 0, 0, 0 ], 1),
+        sRemoveCaretFormat(editor, 'underline', {}),
+        TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'x'),
+        tinyApis.sAssertContent('<p><span style="text-decoration: underline; font-size: 18px;">a</span><span style="font-size: 18px;">x</span></p>'),
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => s.element('body', {
+          children: [
+            s.element('p', {
+              children: [
+                s.element('span', { children: [ s.text(str.is('a')) ] }),
+                s.element('span', {
+                  attrs: {
+                    'id': str.is('_mce_caret'),
+                    'data-mce-bogus': str.is('1')
+                  },
+                  children: [
+                    s.element('span', {
+                      styles: { 'font-size': str.is('18px') },
+                      children: [ s.text(str.is(Zwsp.ZWSP + 'x')) ]
+                    })
+                  ]
+                })
+              ]
+            })
+          ]
+        }))),
+        tinyApis.sAssertSelection([ 0, 1, 0, 0 ], 2, [ 0, 1, 0, 0 ], 2)
+      ])),
+      Logger.t('Remove single format on multiple format span (Empty line) (TINY-1170)', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p><span style="text-decoration: underline; font-size: 18px;"><br></span></p>'),
+        tinyApis.sSetCursor([ 0, 0, 0 ], 0),
+        sRemoveCaretFormat(editor, 'underline', {}),
+        TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'x'),
+        tinyApis.sAssertContent('<p><span style="font-size: 18px;">x</span></p>'),
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => s.element('body', {
+          children: [
+            s.element('p', {
+              children: [
+                s.element('span', {
+                  attrs: {
+                    'id': str.is('_mce_caret'),
+                    'data-mce-bogus': str.is('1')
+                  },
+                  children: [
+                    s.element('span', {
+                      styles: { 'font-size': str.is('18px') },
+                      children: [ s.text(str.is(Zwsp.ZWSP + 'x')) ]
+                    })
+                  ]
+                })
+              ]
+            })
+          ]
+        }))),
+        tinyApis.sAssertSelection([ 0, 0, 0, 0 ], 2, [ 0, 0, 0, 0 ], 2)
+      ])),
+      Logger.t('Remove text decoration format on text color, text decoration span (Empty line) (TINY-1170)', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p><span style="text-decoration: underline;"><span style="color: red; text-decoration: underline;"><br></span></span></p>'),
+        tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
+        sRemoveCaretFormat(editor, 'underline', {}),
+        TypeText.sTypeContentAtSelection(Element.fromDom(editor.getDoc()), 'x'),
+        tinyApis.sAssertContent('<p><span style="color: red;">x</span></p>'),
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => s.element('body', {
+          children: [
+            s.element('p', {
+              children: [
+                s.element('span', {
+                  attrs: {
+                    'id': str.is('_mce_caret'),
+                    'data-mce-bogus': str.is('1')
+                  },
+                  children: [
+                    s.element('span', {
+                      styles: { color: str.is('red') },
+                      children: [ s.text(str.is(Zwsp.ZWSP + 'x')) ]
+                    })
+                  ]
+                })
+              ]
+            })
+          ]
+        }))),
+        tinyApis.sAssertSelection([ 0, 0, 0, 0 ], 2, [ 0, 0, 0, 0 ], 2)
+      ])),
     ], onSuccess, onFailure);
   }, {
     plugins: '',
