@@ -154,10 +154,18 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteTest', (success, fail
         ])),
 
         Logger.t('All content selected in single cell with list deletes only content', GeneralSteps.sequence([
-          tinyApis.sSetContent('<table><tbody><tr><td><ul><li>a</li></ul></td></tr></tbody></table>'),
-          tinyApis.sSetSelection([ 0, 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1),
+          tinyApis.sSetContent('<table><tbody><tr><td><ul><li>a</li><li>b</li></ul></td></tr></tbody></table>'),
+          tinyApis.sSetSelection([ 0, 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 1, 0 ], 1),
           sDelete(editor),
           tinyApis.sAssertContent('<table><tbody><tr><td><ul><li>&nbsp;</li></ul></td></tr></tbody></table>'),
+          tinyApis.sAssertSelection([ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 0)
+        ])),
+
+        Logger.t('All content selected in single cell with list + start attribute deletes only content', GeneralSteps.sequence([
+          tinyApis.sSetContent('<table><tbody><tr><td><ol start="2"><li>a</li><li>b</li></ol></td></tr></tbody></table>'),
+          tinyApis.sSetSelection([ 0, 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 1, 0 ], 1),
+          sDelete(editor),
+          tinyApis.sAssertContent('<table><tbody><tr><td><ol start="2"><li>&nbsp;</li></ol></td></tr></tbody></table>'),
           tinyApis.sAssertSelection([ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 0)
         ])),
 
