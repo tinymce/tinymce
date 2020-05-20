@@ -1,7 +1,7 @@
 {
   "name": "@ephox/porkbun",
   "description": "Event framework for JavaScript",
-  "version": "4.0.33",
+  "version": "4.0.34",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce"
@@ -18,7 +18,7 @@
     "LICENSE.txt"
   ],
   "dependencies": {
-    "@ephox/katamari": "^5.0.2"
+    "@ephox/katamari": "^6.0.0"
   },
   "scripts": {
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
