@@ -17,15 +17,41 @@ type MatchResult = { contextToolbars: ContextTypes[]; contextForms: ContextTypes
 
 const matchTargetWith = (elem: Element, candidates: ContextTypes[]): MatchResult => {
   const ctxs = Arr.filter(candidates, (toolbarApi) => toolbarApi.predicate(elem.dom()));
+  // TODO: somehow type this properly (Arr.partition can't)
+  // e.g. here pass is Toolbar.ContextToolbar and fail is Toolbar.ContextForm
   const { pass, fail } = Arr.partition(ctxs, (t) => t.type === 'contexttoolbar');
   return { contextToolbars: pass, contextForms: fail };
 };
 
-const filterToolbarsByPosition = (toolbars: ContextTypes[]): ContextTypes[] => {
+const filterByPositionForStartNode = (toolbars: ContextTypes[]) => {
   if (toolbars.length <= 1) {
     return toolbars;
   } else {
-    const findPosition = (value) => Arr.find(toolbars, (t) => t.position === value);
+    const doesPositionExist = (value: string) => Arr.exists(toolbars, (t) => t.position === value);
+    const filterToolbarsByPosition = (value: string) => Arr.filter(toolbars, (t) => t.position === value);
+
+    const hasSelectionToolbars = doesPositionExist('selection');
+    const hasNodeToolbars = doesPositionExist('node');
+    if (hasSelectionToolbars || hasNodeToolbars) {
+      if (hasNodeToolbars && hasSelectionToolbars) {
+        // if there's a mix, change the 'selection' toolbars to 'node' so there's no positioning confusion
+        const nodeToolbars = filterToolbarsByPosition('node');
+        const selectionToolbars = Arr.map<ContextTypes>(filterToolbarsByPosition('selection'), (t) => ({ ...t, position: 'node' }));
+        return nodeToolbars.concat(selectionToolbars);
+      } else {
+        return hasSelectionToolbars ? filterToolbarsByPosition('selection') : filterToolbarsByPosition('node');
+      }
+    } else {
+      return filterToolbarsByPosition('line');
+    }
+  }
+};
+
+const filterByPositionForAncestorNode = (toolbars: ContextTypes[]) => {
+  if (toolbars.length <= 1) {
+    return toolbars;
+  } else {
+    const findPosition = (value: string) => Arr.find(toolbars, (t) => t.position === value);
 
     // prioritise position by 'selection' -> 'node' -> 'line'
     const basePosition = findPosition('selection')
@@ -56,7 +82,7 @@ const matchStartNode = (elem: Element, nodeCandidates: ContextTypes[], editorCan
     if (editorMatches.contextForms.length > 0) {
       return Option.some({ elem, toolbars: [ editorMatches.contextForms[ 0 ] ] });
     } else if (nodeMatches.contextToolbars.length > 0 || editorMatches.contextToolbars.length > 0) {
-      const toolbars = filterToolbarsByPosition(nodeMatches.contextToolbars.concat(editorMatches.contextToolbars));
+      const toolbars = filterByPositionForStartNode(nodeMatches.contextToolbars.concat(editorMatches.contextToolbars));
       return Option.some({ elem, toolbars });
     } else {
       return Option.none();
@@ -71,7 +97,7 @@ const matchAncestor = (isRoot, startNode, scopes): Option<LookupResult> => {
   } else {
     return TransformFind.ancestor(startNode, (ancestorElem) => {
       const { contextToolbars, contextForms } = matchTargetWith(ancestorElem, scopes.inNodeScope);
-      const toolbars = contextForms.length > 0 ? contextForms : contextToolbars;
+      const toolbars = contextForms.length > 0 ? contextForms : filterByPositionForAncestorNode(contextToolbars);
       return toolbars.length > 0 ? Option.some({ elem: ancestorElem, toolbars }) : Option.none();
     }, isRoot);
   }
@@ -93,6 +119,7 @@ const lookup = (scopes: ScopedToolbars, editor: Editor): Option<LookupResult> =>
 
 export {
   lookup,
-  filterToolbarsByPosition,
+  filterByPositionForStartNode,
+  filterByPositionForAncestorNode,
   matchStartNode
 };
