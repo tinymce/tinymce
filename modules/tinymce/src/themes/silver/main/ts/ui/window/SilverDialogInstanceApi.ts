@@ -83,6 +83,25 @@ const getDialogApi = <T extends Types.Dialog.DialogData>(
     });
   };
 
+  const setPartialData = (dataKey: string, dataValue: any) => {
+    withRoot((_) => {
+      // Unfortunately, because the validation requires the whole object, we have
+      // to recreate the whole data object. But then we just pass through the
+      // new thing we are setting. It's a bit hacky. And not efficient. FIX.
+      const prevData = instanceApi.getData();
+      const mergedData = {
+        ...prevData,
+        [dataKey]: dataValue
+      };
+      const newInternalData = validateData(access, mergedData);
+      console.log({ newInternalData });
+      const form = access.getFormWrapper();
+      Representing.setValue(form, {
+        [dataKey]: newInternalData[dataKey]
+      });
+    });
+  };
+
   const disable = (name: string) => {
     getCompByName(access, name).each(Disabling.disable);
   };
@@ -144,6 +163,7 @@ const getDialogApi = <T extends Types.Dialog.DialogData>(
   const instanceApi = {
     getData,
     setData,
+    setPartialData,
     disable,
     enable,
     focus,

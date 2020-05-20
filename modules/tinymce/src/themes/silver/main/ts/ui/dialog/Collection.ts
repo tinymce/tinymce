@@ -89,11 +89,13 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
     })),
     AlloyEvents.run<EventArgs>(NativeEvents.click(), onClick),
     AlloyEvents.run<EventArgs>(SystemEvents.tap(), onClick),
-    AlloyEvents.run(NativeEvents.focusin(), runOnItem((comp, se, tgt) => {
+    AlloyEvents.run(NativeEvents.focusin(), runOnItem((comp, se, tgt, itemValue) => {
       SelectorFind.descendant(comp.element(), '.' + ItemClasses.activeClass).each((currentActive) => {
         Class.remove(currentActive, ItemClasses.activeClass);
       });
+      // Be careful not to trigger infinite loops here!
       Class.add(tgt, ItemClasses.activeClass);
+      spec.onFocus(itemValue);
     })),
     AlloyEvents.run(NativeEvents.focusout(), runOnItem((comp) => {
       SelectorFind.descendant(comp.element(), '.' + ItemClasses.activeClass).each((currentActive) => {

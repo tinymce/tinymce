@@ -20,11 +20,12 @@ import {
   Focusing,
   SlotContainer,
   SlotContainerTypes,
+  Dragging,
 } from '@ephox/alloy';
 import { Sidebar as BridgeSidebar } from '@ephox/bridge';
 import { HTMLElement } from '@ephox/dom-globals';
-import { Arr, Id, Option, Obj, Cell, Fun } from '@ephox/katamari';
-import { Css, Width } from '@ephox/sugar';
+import { Arr, Id, Option, Obj, Cell, Fun, Strings } from '@ephox/katamari';
+import { Css, Element, Width, Traverse, SelectorFind } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -83,7 +84,11 @@ const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: 
       {
         dom: {
           tag: 'div',
-          classes: [ 'tox-sidebar__pane' ]
+          classes: [ 'tox-sidebar__pane' ],
+          // TODO: Fix inline style. This was different from the POC, but I think the DOM has subtly changed
+          styles: {
+            'flex': '1'
+          }
         },
         behaviours: SimpleBehaviours.unnamedEvents([
           onControlAttached(spec, editorOffCell),
@@ -106,6 +111,10 @@ const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts
   dom: {
     tag: 'div',
     classes: [ 'tox-sidebar__pane-container' ],
+    styles: {
+      // TODO: Fix inline style
+      'flex': '1'
+    }
   },
   components: makePanels(parts, panelConfigs),
   slotBehaviours: SimpleBehaviours.unnamedEvents([
@@ -177,6 +186,45 @@ const renderSidebar = (spec) => ({
     {
       dom: {
         tag: 'div',
+        classes: ['tox-resize-slider'],
+        styles: {
+          'background-color': 'transparent',
+          'width': '8px',
+          'cursor': 'col-resize',
+          'border-left': '1px solid lightgrey'
+        }
+      },
+      behaviours: Behaviour.derive([
+        Dragging.config({
+          mode: 'mouse',
+          repositionTarget: false,
+          onDrag: (comp, target, delta) => {
+            console.log('dragging', delta.left());
+            // Go up to the tox-sidebar, then go down to the slider.
+            // Expected dom structure
+            // tox-sidebar
+            //   > tox-resize-slider
+            //   > tox-sidebar__slider
+            Traverse.parent(comp.element()).each((parentElm) => {
+              // In the POC, we did descendant to .tox-sidebar__pane. Not sure if the DOM structure has
+              // changed since then.
+              SelectorFind.descendant(parentElm, '.tox-sidebar__slider').each((elm: Element<HTMLElement>) => {
+                const currentWidth = Css.getRaw(elm, 'width').bind((w) => {
+                  return Strings.endsWith(w, 'px') ? Option.some(parseInt(w, 10)) : Option.none<number>()
+                }).getOrThunk(() => {
+                  return Width.get(elm);
+                });
+                Css.set(elm, 'width', currentWidth - delta.left() + 'px');
+              });
+            });
+          },
+          blockerClass: 'tox-blocker'
+        })
+      ])
+    },
+    {
+      dom: {
+        tag: 'div',
         classes: [ 'tox-sidebar__slider' ]
       },
       components: [
@@ -219,7 +267,8 @@ const renderSidebar = (spec) => ({
     }
   ],
   behaviours: Behaviour.derive([
-    ComposingConfigs.childAt(0),
+    // Resizeable sidebar is at 0.
+    ComposingConfigs.childAt(1),
     AddEventsBehaviour.config('sidebar-sliding-events', [
       AlloyEvents.run<FixSizeEvent>(fixSize, (comp, se) => {
         Css.set(comp.element(), 'width', se.event().width());

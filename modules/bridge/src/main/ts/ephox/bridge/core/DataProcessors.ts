@@ -15,6 +15,7 @@ import { urlInputDataProcessor } from '../components/dialog/UrlInput';
 import { getAllObjects } from './ObjUtils';
 import { collectionDataProcessor } from '../components/dialog/Collection';
 import { dialogToggleMenuItemDataProcessor } from '../components/dialog/ToggleMenuItem';
+import { htmlPanelDataProcessor } from '../components/dialog/HtmlPanel';
 
 const isNamedItem = (obj) => Type.isString(obj.type) && Type.isString(obj.name);
 
@@ -32,6 +33,7 @@ const dataProcessors = {
   urlinput: urlInputDataProcessor,
   customeditor: customEditorDataProcessor,
   collection: collectionDataProcessor,
+  htmlpanel: htmlPanelDataProcessor,
   togglemenuitem: dialogToggleMenuItemDataProcessor
 };
 

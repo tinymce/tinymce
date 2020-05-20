@@ -11,7 +11,7 @@ export default function () {
     selector: 'div.tiny-text',
     inline: false,
     theme: 'silver',
-    toolbar: [ 'styleselect', 'MagicButton', 'code', 'undo', 'toc', 'redo', 'preview', '|', 'help', 'link', '|', 'align', 'alignleft', 'alignright', 'aligncenter',
+    toolbar: [ 'redpen', 'markdown', 'styleselect', 'MagicButton', 'code', 'undo', 'toc', 'redo', 'preview', '|', 'help', 'link', '|', 'align', 'alignleft', 'alignright', 'aligncenter',
       'alignjustify', 'alignnone', '|', 'bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript', '|', 'blockquote',
       'outdent', 'indent', '|', 'cut', 'copy', 'paste', '|', 'help', 'selectall', 'visualaid', 'newdocument', 'removeformat', 'remove', '|', 'menu-button-1'
     ].join(' '),
@@ -36,8 +36,12 @@ export default function () {
       'textcolor',
       'media'
     ],
+    external_plugins: {
+      redpen: 'http://localhost/me/work/tiny/redpen/scratch/compiled/plugin.js'
+    },
     // statusbar: false,
     resize: 'both',
+    height: '500px',
     link_context_toolbar: true,
     // fixed_toolbar_container: '#tiny-fixed-container', // DEPRECATED
 

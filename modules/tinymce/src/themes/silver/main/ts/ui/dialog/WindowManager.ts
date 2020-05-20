@@ -67,6 +67,8 @@ const setup = (extras: WindowManagerSetup) => {
       return openInlineDialog(config, backstage.shared.anchors.inlineDialog(), closeWindow, params.ariaAttrs);
     } else if (params !== undefined && params.inline === 'cursor') {
       return openInlineDialog(config, backstage.shared.anchors.cursor(), closeWindow, params.ariaAttrs);
+    } else if (params !== undefined && params.inline === 'custom') {
+      return openInlineDialog(config, params.anchor, closeWindow, params.arisAttrs);
     } else {
       return openModalDialog(config, closeWindow);
     }
