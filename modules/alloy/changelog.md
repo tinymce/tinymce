@@ -6,12 +6,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-### Added
+# [7.0.0] - 2020-05-21
 
+### Added
+- Added new `isExtraPart` property to `InlineView`. This allows the component to declare an external component as part of itself for dismissal events.
 - Added new `getModes` and `setModes` API to the docking behaviour.
+- Exposed the `AriaVoice` voice module in the API.
 
 ### Changed
-
+- The `AriaOwner` module, `Boxes` module, `Pinching` behaviour and `SnapConfig`/`SnapOutput` specs no longer use thunked functions and instead use the variable directly.
+- All uses of `Struct.immutableBag` and `Struct.immutable` have been replaced with readonly interfaces.
 - Changed the `Disabling` behaviour to use a lazy `disabled` configuration to determine if the component should be disabled on initial load.
 
 # [6.1.0] - 2020-03-16
