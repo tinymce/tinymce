@@ -6,16 +6,20 @@
  */
 
 // eslint-disable-next-line max-len
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Boxes, Focusing, Keying, SplitFloatingToolbar as AlloySplitFloatingToolbar, SplitSlidingToolbar as AlloySplitSlidingToolbar, Tabstopping, Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Boxes, Focusing, Keying,
+  SplitFloatingToolbar as AlloySplitFloatingToolbar, SplitSlidingToolbar as AlloySplitSlidingToolbar, Tabstopping, Toolbar as AlloyToolbar,
+  ToolbarGroup as AlloyToolbarGroup
+} from '@ephox/alloy';
 import { Arr, Option, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 import { ToolbarMode } from '../../api/Settings';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Channels from '../../Channels';
+import * as ReadOnly from '../../ReadOnly';
+import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderIconButtonSpec } from '../general/Button';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
-import { DisablingConfigs } from '../alien/DisablingConfigs';
-import * as ReadOnly from '../../ReadOnly';
 
 export interface MoreDrawerData {
   lazyMoreButton: () => AlloyComponent;
@@ -79,7 +83,7 @@ const getToolbarbehaviours = (toolbarSpec: ToolbarSpec, modeName) => {
   });
 
   return Behaviour.derive([
-    DisablingConfigs.toolbarButton(toolbarSpec.providers.isReadonly()),
+    DisablingConfigs.toolbarButton(toolbarSpec.providers.isReadOnly),
     ReadOnly.receivingConfig(),
     Keying.config({
       // Tabs between groups

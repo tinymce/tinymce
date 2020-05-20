@@ -6,10 +6,9 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour,
-  Button as AlloyButton, Disabling, FloatingToolbarButton, Focusing, Keying,
-  NativeEvents, Reflecting, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown,
-  SystemEvents, TieredData, TieredMenuTypes, Toggling, Unselecting
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button as AlloyButton, Disabling, FloatingToolbarButton,
+  Focusing, Keying, NativeEvents, Reflecting, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData,
+  TieredMenuTypes, Toggling, Unselecting
 } from '@ephox/alloy';
 import { Toolbar, Types } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Option } from '@ephox/katamari';
@@ -17,6 +16,7 @@ import { Attr, SelectorFind } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import * as ReadOnly from '../../../ReadOnly';
 import { ToolbarGroupSetting } from '../../../Render';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';
@@ -34,7 +34,6 @@ import { createTieredDataFrom } from '../../menus/menu/SingleMenu';
 import { ToolbarButtonClasses } from '../button/ButtonClasses';
 import { onToolbarButtonExecute, toolbarButtonEventOrder } from '../button/ButtonEvents';
 import { renderToolbarGroup, ToolbarGroup } from '../CommonToolbar';
-import * as ReadOnly from '../../../ReadOnly';
 
 interface Specialisation<T> {
   toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
@@ -124,7 +123,7 @@ const renderCommonStructure = (
 
     buttonBehaviours: Behaviour.derive(
       [
-        DisablingConfigs.toolbarButton(providersBackstage.isReadonly()),
+        DisablingConfigs.toolbarButton(providersBackstage.isReadOnly),
         ReadOnly.receivingConfig(),
         AddEventsBehaviour.config('common-button-display-events', [
           AlloyEvents.run(NativeEvents.mousedown(), (button, se) => {
@@ -188,7 +187,7 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
           onControlAttached(specialisation, editorOffCell),
           onControlDetached(specialisation, editorOffCell),
         ]),
-        DisablingConfigs.toolbarButton(spec.disabled || providersBackstage.isReadonly()),
+        DisablingConfigs.toolbarButton(() => spec.disabled || providersBackstage.isReadOnly()),
         ReadOnly.receivingConfig()
       ].concat(specialisation.toolbarButtonBehaviours)
     )
@@ -309,7 +308,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     onItemExecute: (_a, _b, _c) => { },
 
     splitDropdownBehaviours: Behaviour.derive([
-      DisablingConfigs.splitButton(sharedBackstage.providers.isReadonly()),
+      DisablingConfigs.splitButton(sharedBackstage.providers.isReadOnly),
       ReadOnly.receivingConfig(),
       AddEventsBehaviour.config('split-dropdown-events', [
         AlloyEvents.run(focusButtonEvent, Focusing.focus),
@@ -345,7 +344,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
           innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons)
         },
         buttonBehaviours: Behaviour.derive([
-          DisablingConfigs.splitButton(sharedBackstage.providers.isReadonly()),
+          DisablingConfigs.splitButton(sharedBackstage.providers.isReadOnly),
           ReadOnly.receivingConfig()
         ]),
       }),

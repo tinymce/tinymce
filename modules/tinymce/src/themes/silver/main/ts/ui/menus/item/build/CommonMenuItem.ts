@@ -5,16 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, ItemTypes, NativeEvents, Replacing } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, ItemTypes, NativeEvents, Replacing
+} from '@ephox/alloy';
 import { Arr, Cell, Fun, Option } from '@ephox/katamari';
+import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
+import * as ReadOnly from 'tinymce/themes/silver/ReadOnly';
 
 import { DisablingConfigs } from 'tinymce/themes/silver/ui/alien/DisablingConfigs';
 import { onControlAttached, onControlDetached, OnDestroy } from 'tinymce/themes/silver/ui/controls/Controls';
 import { menuItemEventOrder, onMenuItemExecute } from '../ItemEvents';
 import ItemResponse from '../ItemResponse';
 import { ItemStructure } from '../structure/ItemStructure';
-import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
-import * as ReadOnly from 'tinymce/themes/silver/ReadOnly';
 
 export const componentRenderPipeline = (xs: Array<Option<AlloySpec>>) =>
   Arr.bind(xs, (o) => o.toArray());
@@ -46,7 +48,7 @@ const renderCommonItem = <T>(spec: CommonMenuItemSpec<T>, structure: ItemStructu
           onControlAttached(spec, editorOffCell),
           onControlDetached(spec, editorOffCell)
         ]),
-        DisablingConfigs.item(spec.disabled || providersbackstage.isReadonly()),
+        DisablingConfigs.item(() => spec.disabled || providersbackstage.isReadOnly()),
         ReadOnly.receivingConfig(),
         Replacing.config({ })
       ].concat(spec.itemBehaviours)
@@ -73,7 +75,7 @@ const renderCommonChoice = <T>(spec: CommonCollectionItemSpec, structure: ItemSt
       AddEventsBehaviour.config('item-events', [
         AlloyEvents.run(NativeEvents.mouseover(), Focusing.focus)
       ]),
-      DisablingConfigs.item(spec.disabled || providersbackstage.isReadonly()),
+      DisablingConfigs.item(() => spec.disabled || providersbackstage.isReadOnly()),
       ReadOnly.receivingConfig()
     ]
   ),

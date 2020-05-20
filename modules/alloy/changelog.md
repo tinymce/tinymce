@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added new `getModes` and `setModes` API to the docking behaviour.
 
+### Changed
+
+- Changed the `Disabling` behaviour to use a lazy `disabled` configuration to determine if the component should be disabled on initial load.
+
 # [6.1.0] - 2020-03-16
 
 ### Added

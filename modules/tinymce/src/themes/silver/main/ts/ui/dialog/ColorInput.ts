@@ -6,24 +6,8 @@
  */
 
 import {
-  AddEventsBehaviour,
-  AlloyEvents,
-  AlloySpec,
-  AlloyTriggers,
-  Behaviour,
-  Composing,
-  CustomEvent,
-  Focusing,
-  FormField,
-  Input,
-  Invalidating,
-  Layout,
-  Memento,
-  Representing,
-  SimpleSpec,
-  Tabstopping,
-  AlloyComponent,
-  Disabling
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Composing, CustomEvent, Disabling, Focusing,
+  FormField, Input, Invalidating, Layout, Memento, Representing, SimpleSpec, Tabstopping
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Future, Id, Option, Result } from '@ephox/katamari';
@@ -31,13 +15,13 @@ import { Css, Element, Traverse } from '@ephox/sugar';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { UiFactoryBackstageForColorInput } from '../../backstage/ColorInputBackstage';
+import * as ReadOnly from '../../ReadOnly';
 import { renderLabel } from '../alien/FieldLabeller';
 import * as ColorSwatch from '../core/color/ColorSwatch';
 import * as Settings from '../core/color/Settings';
-import { renderPanelButton } from '../general/PanelButton';
 import { formChangeEvent } from '../general/FormEvents';
+import { renderPanelButton } from '../general/PanelButton';
 import { Omit } from '../Omit';
-import * as ReadOnly from '../../ReadOnly';
 
 const colorInputChangeEvent = Id.generate('color-input-change');
 const colorSwatchChangeEvent = Id.generate('color-swatch-change');
@@ -65,7 +49,9 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
     onSetValue: (c) => Invalidating.run(c).get(() => { }),
 
     inputBehaviours: Behaviour.derive([
-      Disabling.config({ disabled: sharedBackstage.providers.isReadonly() }),
+      Disabling.config({
+        disabled: sharedBackstage.providers.isReadOnly
+      }),
       ReadOnly.receivingConfig(),
       Tabstopping.config({ }),
       Invalidating.config({

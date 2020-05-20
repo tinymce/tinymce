@@ -1,9 +1,9 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
+import I18n from 'tinymce/core/api/util/I18n';
 
 import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
-import I18n from 'tinymce/core/api/util/I18n';
 
 UnitTest.asynctest('AlertBanner component Test', (success, failure) => {
   const providers = {
@@ -13,7 +13,7 @@ UnitTest.asynctest('AlertBanner component Test', (success, failure) => {
     },
     menuItems: () => <Record<string, any>> {},
     translate: I18n.translate,
-    isReadonly: () => false
+    isReadOnly: () => false
   };
 
   TestHelpers.GuiSetup.setup(

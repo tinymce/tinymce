@@ -6,30 +6,19 @@
  */
 
 import {
-  AddEventsBehaviour,
-  AlloyEvents,
-  AlloyTriggers,
-  Behaviour,
-  CustomEvent,
-  FormCoupledInputs as AlloyFormCoupledInputs,
-  FormField as AlloyFormField,
-  Input as AlloyInput,
-  NativeEvents,
-  Representing,
-  SketchSpec,
-  Tabstopping,
-  Disabling,
-  AlloyComponent
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Disabling,
+  FormCoupledInputs as AlloyFormCoupledInputs, FormField as AlloyFormField, Input as AlloyInput, NativeEvents, Representing, SketchSpec,
+  Tabstopping
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Id } from '@ephox/katamari';
 import { formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import * as Icons from '../icons/Icons';
-import { formatSize, makeRatioConverter, noSizeConversion, parseSize, SizeConversion } from '../sizeinput/SizeInputModel';
-import { Omit } from '../Omit';
 import * as ReadOnly from '../../ReadOnly';
+import * as Icons from '../icons/Icons';
+import { Omit } from '../Omit';
+import { formatSize, makeRatioConverter, noSizeConversion, parseSize, SizeConversion } from '../sizeinput/SizeInputModel';
 
 interface RatioEvent extends CustomEvent {
   isField1: () => boolean;
@@ -67,7 +56,9 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
       }
     ],
     buttonBehaviours: Behaviour.derive([
-      Disabling.config({ disabled: spec.disabled || providersBackstage.isReadonly() }),
+      Disabling.config({
+        disabled: () => spec.disabled || providersBackstage.isReadOnly()
+      }),
       ReadOnly.receivingConfig(),
       Tabstopping.config({})
     ])
@@ -85,7 +76,9 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     factory: AlloyInput,
     inputClasses: [ 'tox-textfield' ],
     inputBehaviours: Behaviour.derive([
-      Disabling.config({ disabled: spec.disabled || providersBackstage.isReadonly() }),
+      Disabling.config({
+        disabled: () => spec.disabled || providersBackstage.isReadOnly()
+      }),
       ReadOnly.receivingConfig(),
       Tabstopping.config({}),
       AddEventsBehaviour.config('size-input-events', [
@@ -154,7 +147,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     },
     coupledFieldBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: spec.disabled || providersBackstage.isReadonly(),
+        disabled: () => spec.disabled || providersBackstage.isReadOnly(),
         onDisabled: (comp) => {
           AlloyFormCoupledInputs.getField1(comp).bind(AlloyFormField.getField).each(Disabling.disable);
           AlloyFormCoupledInputs.getField2(comp).bind(AlloyFormField.getField).each(Disabling.disable);

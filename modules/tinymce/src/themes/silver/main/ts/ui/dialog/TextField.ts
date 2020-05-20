@@ -6,20 +6,8 @@
  */
 
 import {
-  AddEventsBehaviour,
-  AlloyEvents,
-  AlloyTriggers,
-  Behaviour,
-  Disabling,
-  FormField as AlloyFormField,
-  Input as AlloyInput,
-  Invalidating,
-  Keying,
-  NativeEvents,
-  Representing,
-  SketchSpec,
-  Tabstopping,
-  SystemEvents
+  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Disabling, FormField as AlloyFormField, Input as AlloyInput, Invalidating,
+  Keying, NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Arr, Fun, Future, Option, Result } from '@ephox/katamari';
@@ -27,15 +15,17 @@ import { Traverse } from '@ephox/sugar';
 import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import * as ReadOnly from '../../ReadOnly';
 import { formChangeEvent, formSubmitEvent } from '../general/FormEvents';
 import { Omit } from '../Omit';
-import * as ReadOnly from '../../ReadOnly';
 
 const renderTextField = function (spec: TextField, providersBackstage: UiFactoryBackstageProviders) {
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   const baseInputBehaviours = [
-    Disabling.config({ disabled: spec.disabled || providersBackstage.isReadonly() }),
+    Disabling.config({
+      disabled: () => spec.disabled || providersBackstage.isReadOnly()
+    }),
     ReadOnly.receivingConfig(),
     Keying.config({
       mode: 'execution',
@@ -99,7 +89,7 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
 
   const extraBehaviours = [
     Disabling.config({
-      disabled: spec.disabled || providersBackstage.isReadonly(),
+      disabled: () => spec.disabled || providersBackstage.isReadOnly(),
       onDisabled: (comp) => {
         AlloyFormField.getField(comp).each(Disabling.disable);
       },

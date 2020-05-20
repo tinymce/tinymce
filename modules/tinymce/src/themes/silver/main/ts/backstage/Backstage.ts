@@ -17,8 +17,8 @@ import { IconProvider } from '../ui/icons/Icons';
 import * as Anchors from './Anchors';
 import { ColorInputBackstage, UiFactoryBackstageForColorInput } from './ColorInputBackstage';
 import { DialogBackstage, UiFactoryBackstageForDialog } from './DialogBackstage';
-import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';
 import { HeaderBackstage, UiFactoryBackstageForHeader } from './HeaderBackstage';
+import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';
 import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
 
 // INVESTIGATE: Make this a body component API ?
@@ -28,7 +28,7 @@ export interface UiFactoryBackstageProviders {
   icons: IconProvider;
   menuItems: () => Record<string, Menu.MenuItemApi | Menu.NestedMenuItemApi | Menu.ToggleMenuItemApi>;
   translate: (any) => TranslatedString;
-  isReadonly: () => boolean;
+  isReadOnly: () => boolean;
 }
 
 type UiFactoryBackstageForStyleButton = SelectData;
@@ -66,7 +66,7 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
         icons: () => editor.ui.registry.getAll().icons,
         menuItems: () => editor.ui.registry.getAll().menuItems,
         translate: I18n.translate,
-        isReadonly: () => editor.mode.isReadOnly()
+        isReadOnly: () => editor.mode.isReadOnly()
       },
       interpreter: (s) => UiFactory.interpretWithoutForm(s, backstage),
       anchors: Anchors.getAnchors(editor, lazyAnchorbar, toolbar.isPositionedAtTop),

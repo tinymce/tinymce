@@ -11,7 +11,7 @@ addons:
   chrome: stable
 
 before_script:
-  - npm install -g chromedriver
+  - npm install -g chromedriver --detect_chromedriver_version
 
 script:
   - yarn eslint

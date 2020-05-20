@@ -6,49 +6,28 @@
  */
 
 import {
-  AddEventsBehaviour,
-  AlloyEvents,
-  AlloySpec,
-  AlloyTriggers,
-  Behaviour,
-  Composing,
-  CustomEvent,
-  Disabling,
-  FormField as AlloyFormField,
-  Invalidating,
-  Memento,
-  NativeEvents,
-  Representing,
-  SketchSpec,
-  Tabstopping,
-  Typeahead as AlloyTypeahead,
-  AlloyComponent,
-  SystemEvents
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Composing, CustomEvent, Disabling,
+  FormField as AlloyFormField, Invalidating, Memento, NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping,
+  Typeahead as AlloyTypeahead
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
-import { Arr, Future, FutureResult, Id, Option, Result, Fun } from '@ephox/katamari';
-import { Traverse, Attr } from '@ephox/sugar';
+import { Arr, Fun, Future, FutureResult, Id, Option, Result } from '@ephox/katamari';
+import { Attr, Traverse } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { UiFactoryBackstageForUrlInput } from '../../backstage/UrlInputBackstage';
+import * as ReadOnly from '../../ReadOnly';
 import { renderFormFieldDom, renderLabel } from '../alien/FieldLabeller';
+import { renderButton } from '../general/Button';
 import { formChangeEvent, formSubmitEvent } from '../general/FormEvents';
 import * as Icons from '../icons/Icons';
+import ItemResponse from '../menus/item/ItemResponse';
 import * as MenuParts from '../menus/menu/MenuParts';
 import * as NestedMenus from '../menus/menu/NestedMenus';
-import {
-  anchorTargetBottom,
-  anchorTargets,
-  anchorTargetTop,
-  filterByQuery,
-  headerTargets,
-  historyTargets,
-  joinMenuLists,
-} from '../urlinput/Completions';
-import ItemResponse from '../menus/item/ItemResponse';
 import { Omit } from '../Omit';
-import { renderButton } from '../general/Button';
-import * as ReadOnly from '../../ReadOnly';
+import {
+  anchorTargetBottom, anchorTargets, anchorTargetTop, filterByQuery, headerTargets, historyTargets, joinMenuLists,
+} from '../urlinput/Completions';
 
 type UrlInputSpec = Omit<Types.UrlInput.UrlInput, 'type'>;
 
@@ -141,7 +120,9 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
         })
       ).toArray(),
       [
-        Disabling.config({ disabled: spec.disabled }),
+        Disabling.config({
+          disabled: () => spec.disabled || providersBackstage.isReadOnly()
+        }),
         Tabstopping.config({}),
         AddEventsBehaviour.config('urlinput-events', Arr.flatten([
           // We want to get fast feedback for the link dialog, but not sure about others
@@ -235,7 +216,9 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
       },
       components: [ pField, memStatus.asSpec() ],
       behaviours: Behaviour.derive([
-        Disabling.config({ disabled: spec.disabled })
+        Disabling.config({
+          disabled: () => spec.disabled || providersBackstage.isReadOnly()
+        })
       ])
     }
   );
@@ -283,7 +266,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     ]),
     fieldBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: spec.disabled || providersBackstage.isReadonly(),
+        disabled: () => spec.disabled || providersBackstage.isReadOnly(),
         onDisabled: (comp) => {
           AlloyFormField.getField(comp).each(Disabling.disable);
           memUrlPickerButton.getOpt(comp).each(Disabling.disable);

@@ -6,28 +6,18 @@
  */
 
 import {
-  AddEventsBehaviour,
-  AlloyEvents,
-  AlloySpec,
-  AlloyTriggers,
-  Behaviour,
-  Disabling,
-  FormField as AlloyFormField,
-  HtmlSelect as AlloyHtmlSelect,
-  NativeEvents,
-  SimpleSpec,
-  SketchSpec,
-  Tabstopping
+  AddEventsBehaviour, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Disabling, FormField as AlloyFormField,
+  HtmlSelect as AlloyHtmlSelect, NativeEvents, SimpleSpec, SketchSpec, Tabstopping
 } from '@ephox/alloy';
 import { Types } from '@ephox/bridge';
 import { Arr, Option } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 import * as Icons from 'tinymce/themes/silver/ui/icons/Icons';
+import * as ReadOnly from '../../ReadOnly';
 
 import { formChangeEvent } from '../general/FormEvents';
 import { Omit } from '../Omit';
-import * as ReadOnly from '../../ReadOnly';
 
 type SelectBoxSpec = Omit<Types.SelectBox.SelectBox, 'type'>;
 
@@ -49,7 +39,9 @@ export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFacto
     options: translatedOptions,
     factory: AlloyHtmlSelect,
     selectBehaviours: Behaviour.derive([
-      Disabling.config({ disabled: spec.disabled }),
+      Disabling.config({
+        disabled: () => spec.disabled || providersBackstage.isReadOnly()
+      }),
       Tabstopping.config({ }),
       AddEventsBehaviour.config('selectbox-change', [
         AlloyEvents.run(NativeEvents.change(), (component, _) => {
@@ -84,7 +76,7 @@ export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFacto
     components: Arr.flatten<AlloySpec>([ pLabel.toArray(), [ selectWrap ]]),
     fieldBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: spec.disabled || providersBackstage.isReadonly(),
+        disabled: () => spec.disabled || providersBackstage.isReadOnly(),
         onDisabled: (comp) => {
           AlloyFormField.getField(comp).each(Disabling.disable);
         },

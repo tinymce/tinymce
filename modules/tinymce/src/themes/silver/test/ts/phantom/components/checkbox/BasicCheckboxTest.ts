@@ -2,9 +2,9 @@ import { ApproxStructure, Assertions, Chain, Keyboard, Keys, Logger, Step, UiFin
 import { GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { HTMLInputElement } from '@ephox/dom-globals';
+import I18n from 'tinymce/core/api/util/I18n';
 
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
-import I18n from 'tinymce/core/api/util/I18n';
 import { DisablingSteps } from '../../../module/DisablingSteps';
 
 UnitTest.asynctest('Checkbox component Test', (success, failure) => {
@@ -15,7 +15,7 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
     },
     menuItems: () => <Record<string, any>> {},
     translate: I18n.translate,
-    isReadonly: () => false
+    isReadOnly: () => false
   };
 
   TestHelpers.GuiSetup.setup(
