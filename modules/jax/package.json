@@ -1,6 +1,6 @@
 {
   "name": "@ephox/jax",
-  "version": "4.1.32",
+  "version": "4.1.33",
   "description": "AJAX library",
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^6.0.0",
+    "@ephox/katamari": "^6.0.1",
     "tslib": "^1.9.3"
   },
   "files": [

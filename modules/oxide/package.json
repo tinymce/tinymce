@@ -1,6 +1,6 @@
 {
   "name": "@tinymce/oxide",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "TinyMCE 5 Oxide skin",
   "scripts": {
     "test": "echo 'No tests'",
