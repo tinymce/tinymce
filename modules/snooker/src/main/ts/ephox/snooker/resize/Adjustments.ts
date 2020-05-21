@@ -35,7 +35,7 @@ const adjustWidth = function (table: Element, delta: number, index: number, dire
 
   // Set the overall width of the table.
   if (index === warehouse.grid.columns() - 1) {
-    tableSize.setTableWidth(table, newWidths, step);
+    tableSize.adjustTableWidth(step);
   }
 };
 
@@ -72,13 +72,6 @@ const adjustWidthTo = function <T extends Detail> (table: Element, list: RowData
   Arr.each(newSizes, function (cell) {
     tableSize.setElementWidth(cell.element, cell.width);
   });
-
-  // const total = Arr.foldr(widths, function (b, a) { return a + b; }, 0);
-  if (newSizes.length > 0) {
-    // tableSize.setTableWidth(table, total);
-    // WARNING, this may be incorrect, the commented out code above was the original
-    tableSize.setTableWidth(table, widths, tableSize.getCellDelta(0));
-  }
 };
 
 export {

@@ -1,10 +1,10 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { document } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
-import { TableSize } from '@ephox/snooker';
-import { Body, Css, Element, Html, Insert, InsertAll, Remove, SelectorFilter } from '@ephox/sugar';
+import { Body, Css, Element, Html, Insert, InsertAll, Remove } from '@ephox/sugar';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import * as Sizes from 'ephox/snooker/api/Sizes';
+import { TableSize } from 'ephox/snooker/api/TableSize';
+import { addStyles, readHeight, readWidth } from '../module/ephox/snooker/test/SizeUtils';
 
 UnitTest.test('Table Sizes Test (fusebox)', function () {
   const percentTable =
@@ -52,9 +52,6 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
   '</tbody> ' +
   '</table';
 
-  const style = Element.fromHtml('<style>table { border-collapse: collapse; } td { border: 1px solid #333; }</style>');
-  Insert.append(Element.fromDom(document.head), style);
-
   const generateW = function (info: string[][], totalWidth: string) {
     const table = Element.fromTag('table');
     Css.set(table, 'width', totalWidth);
@@ -95,26 +92,6 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
     return table;
   };
 
-  const readWidth = function (element: Element) {
-    const rows = SelectorFilter.descendants(element, 'tr');
-    return Arr.map(rows, function (row) {
-      const cells = SelectorFilter.descendants(row, 'td,th');
-      return Arr.map(cells, function (cell) {
-        return Css.getRaw(cell, 'width').getOrDie('Did not contain width information.');
-      });
-    });
-  };
-
-  const readHeight = function (element: Element) {
-    const rows = SelectorFilter.descendants(element, 'tr');
-    return Arr.map(rows, function (row) {
-      const cells = SelectorFilter.descendants(row, 'td,th');
-      return Arr.map(cells, function (cell) {
-        return Css.getRaw(cell, 'height').getOrDie('Did not contain height information.');
-      });
-    });
-  };
-
   assert.eq(
     '<table style="width: 25px;"><tbody>' +
       '<tr><td style="width: 20px;">A0</td><td style="width: 30%;">B0</td></tr>' +
@@ -152,6 +129,8 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
     checkHeight(expected, table, newHeight);
   };
 
+  const styles = addStyles();
+
   checkBasicHeight([[ '5px' ]], [[ '10px' ]], '100px', '50px');
   checkBasicHeight([[ '10%' ]], [[ '10px' ]], '100px', '100%');
   checkBasicHeight([[ '20px' ]], [[ '10px' ]], '25px', '50px');
@@ -178,15 +157,15 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
   ], Element.fromHtml(pixelTableHeight), '150px');
 
   checkHeight([
-    [ '46%', '13%', '13%', '46%' ],
-    [ '84%', '33%', '33%' ],
-    [ '51%', '51%', '51%', '51%' ]
+    [ '46.7%', '13.3%', '13.3%', '46.7%' ],
+    [ '83.3%', '33.3%', '33.3%' ],
+    [ '50%', '50%', '50%', '50%' ]
   ], Element.fromHtml(pixelTableHeight), '100%');
 
   checkHeight([
-    [ '46%', '13%', '13%', '46%' ],
-    [ '84%', '33%', '33%' ],
-    [ '51%', '51%', '51%', '51%' ]
+    [ '46.7%', '13.3%', '13.3%', '46.7%' ],
+    [ '83.3%', '33.3%', '33.3%' ],
+    [ '50%', '50%', '50%', '50%' ]
   ], Element.fromHtml(pixelTableHeight), '150%');
 
   checkWidth([
@@ -245,5 +224,5 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
     [ '300px' ]
   ], Element.fromHtml(percentTable), '300px');
 
-  Remove.remove(style);
+  styles.remove();
 });

@@ -3,7 +3,6 @@ import { Attr, Css, Element, Insert, InsertAll } from '@ephox/sugar';
 export interface RenderOptions {
   styles: Record<string, string>;
   attributes: Record<string, string>;
-  percentages: boolean;
 }
 
 const DefaultRenderOptions: RenderOptions = {
@@ -13,8 +12,7 @@ const DefaultRenderOptions: RenderOptions = {
   },
   attributes: {
     border: '1'
-  },
-  percentages: true
+  }
 };
 
 const makeTable = function () {
@@ -58,9 +56,6 @@ const render = (rows: number, columns: number, rowHeaders: number, columnHeaders
 
       // Note, this is a placeholder so that the cells have height. The unicode character didn't work in IE10.
       Insert.append(td, Element.fromTag('br'));
-      if (renderOpts.percentages) {
-        Css.set(td, 'width', (100 / columns) + '%');
-      }
       Insert.append(tr, td);
     }
     trs.push(tr);

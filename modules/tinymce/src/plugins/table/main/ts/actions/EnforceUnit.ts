@@ -5,42 +5,40 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLTableCellElement, HTMLTableElement, Node } from '@ephox/dom-globals';
+import { HTMLTableElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { TableLookup } from '@ephox/snooker';
-import { Css, Element, Traverse } from '@ephox/sugar';
-import { getPixelWidth } from '../core/Util';
+import { TableConversions, TableDirection, TableLookup } from '@ephox/snooker';
+import { Attr, Css, Element } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
+import * as Direction from '../queries/Direction';
+import * as TableSize from '../queries/TableSize';
 
-const calculatePercentageWidth = (element: Element, offsetParent: Element): string => getPixelWidth(element.dom()) / getPixelWidth(offsetParent.dom()) * 100 + '%';
-
-const eachCell = (table: Element<HTMLTableElement>, f: (cell: Element<HTMLTableCellElement>, parent: Element<Node>) => void) => {
-  Arr.each(TableLookup.cells(table), (td) => Traverse.parent(td).each((tr) => f(td, tr)));
+const enforcePercentage = (editor: Editor, table: Element<HTMLTableElement>) => {
+  const direction = TableDirection(Direction.directionAt);
+  const tableSizing = TableSize.get(editor, table);
+  TableConversions.convertToPercentSize(table, direction, tableSizing);
 };
 
-const enforcePercentage = (rawTable: HTMLTableElement) => {
-  const table = Element.fromDom(rawTable);
+const enforcePixels = (editor: Editor, table: Element<HTMLTableElement>) => {
+  const direction = TableDirection(Direction.directionAt);
+  const tableSizing = TableSize.get(editor, table);
+  TableConversions.convertToPixelSize(table, direction, tableSizing);
+};
 
-  Traverse.offsetParent(table).map((parent) => calculatePercentageWidth(table, parent)).each((tablePercentage) => {
-    Css.set(table, 'width', tablePercentage);
+const enforceNone = TableConversions.convertToNoneSize;
 
-    eachCell(table, (td, parent) => Css.set(td, 'width', calculatePercentageWidth(td, parent)));
+const syncPixels = (table: Element<HTMLTableElement>) => {
+  // Ensure the specified width matches the actual cell width
+  Arr.each(TableLookup.cells(table), (cell) => {
+    const computedWidth = Css.get(cell, 'width');
+    Css.set(cell, 'width', computedWidth);
+    Attr.remove(cell, 'width');
   });
-};
-
-const enforcePixels = (table: HTMLTableElement) => {
-  Css.set(Element.fromDom(table), 'width', getPixelWidth(table).toString() + 'px');
-};
-
-const enforceNone = (rawTable: HTMLTableElement) => {
-  const table = Element.fromDom(rawTable);
-  Css.remove(table, 'width');
-
-  eachCell(table, (td) => Css.remove(td, 'width'));
 };
 
 export {
   enforcePercentage,
   enforcePixels,
   enforceNone,
-  calculatePercentageWidth
+  syncPixels
 };
