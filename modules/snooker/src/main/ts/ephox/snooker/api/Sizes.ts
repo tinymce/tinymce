@@ -1,12 +1,13 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Css, Height, Width, Element } from '@ephox/sugar';
+import { Css, Element, Height, Width } from '@ephox/sugar';
 import * as DetailsList from '../model/DetailsList';
 import { Warehouse } from '../model/Warehouse';
 import * as BarPositions from '../resize/BarPositions';
 import * as ColumnSizes from '../resize/ColumnSizes';
 import * as Redistribution from '../resize/Redistribution';
-import * as CellUtils from '../util/CellUtils';
+import * as Sizes from '../resize/Sizes';
 import * as TableSize from '../resize/TableSize';
+import * as CellUtils from '../util/CellUtils';
 import { DetailExt, RowData } from './Structs';
 
 type ColInfo = BarPositions.ColInfo;
@@ -65,6 +66,25 @@ const redistribute = function (table: Element, optWidth: Option<string>, optHeig
 
 };
 
+const convertToPercentageSizing = (table: Element, direction: BarPositions<ColInfo>) => {
+  const newWidth = Sizes.getPercentTableWidth(table);
+  const newHeight = Sizes.getPercentTableHeight(table);
+  redistribute(table, Option.some(newWidth), Option.some(newHeight), direction);
+};
+
+const convertToPixelSizing = (table: Element, direction: BarPositions<ColInfo>) => {
+  const newWidth = Sizes.getPixelTableWidth(table);
+  const newHeight = Sizes.getPixelTableHeight(table);
+  redistribute(table, Option.some(newWidth), Option.some(newHeight), direction);
+};
+
+const isPercentSizing = Sizes.isPercentSizing;
+const isPixelSizing = Sizes.isPixelSizing;
+
 export {
+  convertToPercentageSizing,
+  convertToPixelSizing,
+  isPercentSizing,
+  isPixelSizing,
   redistribute
 };

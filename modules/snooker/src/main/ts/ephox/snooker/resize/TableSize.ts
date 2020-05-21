@@ -1,5 +1,5 @@
 import { Arr, Fun } from '@ephox/katamari';
-import { Width, Element } from '@ephox/sugar';
+import { Element, Width } from '@ephox/sugar';
 import * as CellUtils from '../util/CellUtils';
 import * as ColumnSizes from './ColumnSizes';
 import * as Sizes from './Sizes';
@@ -25,8 +25,8 @@ const percentageSize = function (width: string, element: Element): TableSize {
     Sizes.setPercentageWidth(table, floatWidth + change);
   };
   return {
-    width: Fun.constant(floatWidth),
-    pixelWidth: Fun.constant(pixelWidth),
+    width: floatWidth,
+    pixelWidth,
     getWidths: ColumnSizes.getPercentageWidths,
     getCellDelta,
     singleColumnWidth,
@@ -47,8 +47,8 @@ const pixelSize = function (width: number): TableSize {
     Sizes.setPixelWidth(table, total);
   };
   return {
-    width: Fun.constant(width),
-    pixelWidth: Fun.constant(width),
+    width,
+    pixelWidth: width,
     getWidths: ColumnSizes.getPixelWidths,
     getCellDelta,
     singleColumnWidth,

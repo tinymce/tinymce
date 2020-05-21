@@ -1,12 +1,12 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Css, Element } from '@ephox/sugar';
 import * as Blocks from '../lookup/Blocks';
+import { Warehouse } from '../model/Warehouse';
 import * as CellUtils from '../util/CellUtils';
 import * as Util from '../util/Util';
+import { BarPositions, ColInfo, RowInfo } from './BarPositions';
 import * as Sizes from './Sizes';
-import { Warehouse } from '../model/Warehouse';
 import { TableSize } from './Types';
-import { BarPositions, RowInfo, ColInfo } from './BarPositions';
 
 const getRaw = function (cell: Element, property: string, getter: (e: Element) => number) {
   return Css.getRaw(cell, property).fold(function () {
@@ -57,7 +57,7 @@ const getPercentageWidths = function (warehouse: Warehouse, direction: BarPositi
     return deduced.fold(function () {
       return tableSize.minCellWidth();
     }, function (cellWidth) {
-      return cellWidth / tableSize.pixelWidth() * 100;
+      return cellWidth / tableSize.pixelWidth * 100;
     });
   }, tableSize);
 };

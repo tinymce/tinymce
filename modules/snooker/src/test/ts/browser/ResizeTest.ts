@@ -1,12 +1,12 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+import { HTMLDivElement, HTMLTableElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Body, Element, Insert, Remove, Css } from '@ephox/sugar';
+import { Body, Css, Element, Insert, Remove } from '@ephox/sugar';
 import { ResizeDirection } from 'ephox/snooker/api/ResizeDirection';
 import * as Deltas from 'ephox/snooker/calc/Deltas';
 import * as DetailsList from 'ephox/snooker/model/DetailsList';
 import { Warehouse } from 'ephox/snooker/model/Warehouse';
 import * as TableSize from 'ephox/snooker/resize/TableSize';
-import { HTMLTableElement, HTMLDivElement } from '@ephox/dom-globals';
 
 UnitTest.test('ResizeTest', function () {
   const getWarehouse = function (table: Element) {
@@ -45,7 +45,7 @@ UnitTest.test('ResizeTest', function () {
     const tableSize = TableSize.getTableSize(table);
 
     // 100% width table
-    assert.eq(100, tableSize.width());
+    assert.eq(100, tableSize.width);
 
     // 25% width delta
     const step = tableSize.getCellDelta(delta);
@@ -94,7 +94,7 @@ UnitTest.test('ResizeTest', function () {
     const tableSize = TableSize.getTableSize(table);
 
     // 100% width table
-    assert.eq(100, tableSize.width());
+    assert.eq(100, tableSize.width);
 
     // 25% width delta
     const step = tableSize.getCellDelta(delta);
@@ -152,7 +152,7 @@ UnitTest.test('ResizeTest', function () {
     const tableSize = TableSize.getTableSize(table);
 
     // 100% width table
-    assert.eq(800, tableSize.width());
+    assert.eq(800, tableSize.width);
 
     // 25% width delta
     const step = tableSize.getCellDelta(delta);
@@ -197,7 +197,7 @@ UnitTest.test('ResizeTest', function () {
     const tableSize = TableSize.getTableSize(table);
 
     // 100% width table
-    assert.eq(800, tableSize.width());
+    assert.eq(800, tableSize.width);
 
     // 25% width delta
     const step = tableSize.getCellDelta(delta);

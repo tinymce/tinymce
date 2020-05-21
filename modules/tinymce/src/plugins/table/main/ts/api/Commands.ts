@@ -6,12 +6,13 @@
  */
 
 import { Arr, Cell, Fun, Obj, Option, Type } from '@ephox/katamari';
-import { CopyRows, TableFill, TableLookup } from '@ephox/snooker';
+import { CopyRows, Sizes, TableDirection, TableFill, TableLookup } from '@ephox/snooker';
 import { Element, Insert, Remove, Replication } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
 import { TableActions } from '../actions/TableActions';
 import * as Util from '../alien/Util';
+import * as Direction from '../queries/Direction';
 import * as TableTargets from '../queries/TableTargets';
 import { CellSelectionApi } from '../selection/CellSelection';
 import { Selections } from '../selection/Selections';
@@ -37,6 +38,19 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
         rng.setEnd(cursor.dom(), 0);
         editor.selection.setRng(rng);
         editor.nodeChanged();
+      }
+    });
+  });
+
+  const toggleSizing = () => TableSelection.getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
+    TableLookup.table(cellOrCaption, isRoot).each((table) => {
+      const direction = TableDirection(Direction.directionAt);
+      if (Sizes.isPercentSizing(table)) {
+        Sizes.convertToPixelSizing(table, direction);
+        Util.removeDataStyle(table);
+      } else if (Sizes.isPixelSizing(table)) {
+        Sizes.convertToPercentageSizing(table, direction);
+        Util.removeDataStyle(table);
       }
     });
   });
@@ -94,7 +108,8 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     mceTableCopyRow: (_grid) => copyRowSelection().each((selection) => clipboardRows.set(selection)),
     mceTablePasteRowBefore: (_grid) => pasteOnSelection(actions.pasteRowsBefore),
     mceTablePasteRowAfter: (_grid) => pasteOnSelection(actions.pasteRowsAfter),
-    mceTableDelete: eraseTable
+    mceTableDelete: eraseTable,
+    mceTableToggleSizing: toggleSizing
   }, (func, name) => editor.addCommand(name, func));
 
   // Register dialog commands

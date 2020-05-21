@@ -6,17 +6,15 @@
  */
 
 import { Arr, Fun, Option } from '@ephox/katamari';
-import {
-  CellMutations, TableDirection, TableFill, TableGridSize, TableOperations
-} from '@ephox/snooker';
+import { DomDescent } from '@ephox/phoenix';
+import { CellMutations, TableDirection, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
 import { Element, Node } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
 import * as Util from '../alien/Util';
-import * as Direction from '../queries/Direction';
-import { getCloneElements } from '../api/Settings';
 import { fireNewCell, fireNewRow } from '../api/Events';
-import Editor from 'tinymce/core/api/Editor';
-import { DomDescent } from '@ephox/phoenix';
+import { getCloneElements } from '../api/Settings';
+import * as Direction from '../queries/Direction';
 
 export interface TableActions {
   deleteRow: (table: any, target: any) => any;
