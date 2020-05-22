@@ -168,9 +168,9 @@ const open = (editor: Editor, insertNewTable: boolean) => {
     }
   }
 
-  const hasClasses = getTableClassList(editor).length > 0;
+  const classes = Helpers.buildListItems(getTableClassList(editor));
 
-  if (hasClasses) {
+  if (classes.length > 0) {
     if (data.class) {
       data.class = data.class.replace(/\s*mce\-item\-table\s*/g, '');
     }
@@ -179,7 +179,7 @@ const open = (editor: Editor, insertNewTable: boolean) => {
   const generalPanel: Types.Dialog.BodyComponentApi = {
     type: 'grid',
     columns: 2,
-    items: TableDialogGeneralTab.getItems(editor, hasClasses, insertNewTable)
+    items: TableDialogGeneralTab.getItems(editor, classes, insertNewTable)
   };
 
   const nonAdvancedForm = (): Types.Dialog.PanelApi => ({

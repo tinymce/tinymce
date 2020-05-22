@@ -31,44 +31,44 @@ interface HandlerStruct {
   readonly keydown: (e: KeyboardEvent) => void;
 }
 
-export default function (editor: Editor, lazyResize: () => Option<TableResize>, selectionTargets: SelectionTargets) {
+export interface CellSelectionApi {
+  clear: (container: Element) => void;
+  destroy: () => void;
+}
+
+export default function (editor: Editor, lazyResize: () => Option<TableResize>, selectionTargets: SelectionTargets): CellSelectionApi {
   let handlers: Option<HandlerStruct> = Option.none();
 
-  const cloneFormats = getCloneElements(editor);
 
   const onSelection = (cells: Element[], start: Element, finish: Element) => {
     selectionTargets.targets().each((targets) => {
       const tableOpt = TableLookup.table(start);
       tableOpt.each((table) => {
-        const doc = Element.fromDom(editor.getDoc());
-        const generators = TableFill.cellOperations(Fun.noop, doc, cloneFormats);
+        const cloneFormats = getCloneElements(editor);
+        const generators = TableFill.cellOperations(Fun.noop, Element.fromDom(editor.getDoc()), cloneFormats);
         const otherCells = OtherCells.getOtherCells(table, targets, generators);
         Events.fireTableSelectionChange(editor, cells, start, finish, otherCells);
       });
     });
   };
 
-  const onClear = () => {
-    Events.fireTableSelectionClear(editor);
-  };
+  const onClear = () => Events.fireTableSelectionClear(editor);
 
   const annotations = SelectionAnnotation.byAttr(Ephemera, onSelection, onClear);
 
-  editor.on('init', function (_e) {
+  editor.on('init', (_e) => {
     const win = editor.getWin();
     const body = Util.getBody(editor);
     const isRoot = Util.getIsRoot(editor);
 
     // When the selection changes through either the mouse or keyboard, and the selection is no longer within the table.
     // Remove the selection.
-    const syncSelection = function () {
+    const syncSelection = () => {
       const sel = editor.selection;
       const start = Element.fromDom(sel.getStart());
       const end = Element.fromDom(sel.getEnd());
       const shared = DomParent.sharedOne(TableLookup.table, [ start, end ]);
-      shared.fold(function () {
-        annotations.clear(body);
-      }, Fun.noop);
+      shared.fold(() => annotations.clear(body), Fun.noop);
     };
 
     const mouseHandlers = InputHandlers.mouse(win, body, isRoot, annotations);
@@ -76,11 +76,9 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
     const external = InputHandlers.external(win, body, isRoot, annotations);
     const hasShiftKey = (event) => event.raw().shiftKey === true;
 
-    editor.on('TableSelectorChange', (e) => {
-      external(e.start, e.finish);
-    });
+    editor.on('TableSelectorChange', (e) => external(e.start, e.finish));
 
-    const handleResponse = function (event, response) {
+    const handleResponse = (event, response) => {
       // Only handle shift key non shiftkey cell navigation is handled by core
       if (!hasShiftKey(event)) {
         return;
@@ -89,51 +87,45 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
       if (response.kill()) {
         event.kill();
       }
-      response.selection().each(function (ns) {
+      response.selection().each((ns) => {
         const relative = Selection.relative(ns.start(), ns.finish());
         const rng = SelectionDirection.asLtrRange(win, relative);
         editor.selection.setRng(rng);
       });
     };
 
-    const keyup = function (event) {
+    const keyup = (event) => {
       const wrappedEvent = DomEvent.fromRawEvent(event);
       // Note, this is an optimisation.
       if (wrappedEvent.raw().shiftKey && SelectionKeys.isNavigation(wrappedEvent.raw().which)) {
         const rng = editor.selection.getRng();
         const start = Element.fromDom(rng.startContainer);
         const end = Element.fromDom(rng.endContainer);
-        keyHandlers.keyup(wrappedEvent, start, rng.startOffset, end, rng.endOffset).each(function (response) {
+        keyHandlers.keyup(wrappedEvent, start, rng.startOffset, end, rng.endOffset).each((response) => {
           handleResponse(wrappedEvent, response);
         });
       }
     };
 
-    const keydown = function (event: KeyboardEvent) {
+    const keydown = (event: KeyboardEvent) => {
       const wrappedEvent = DomEvent.fromRawEvent(event);
-      lazyResize().each(function (resize) {
-        resize.hideBars();
-      });
+      lazyResize().each((resize) => resize.hideBars());
 
       const rng = editor.selection.getRng();
       const startContainer = Element.fromDom(editor.selection.getStart());
       const start = Element.fromDom(rng.startContainer);
       const end = Element.fromDom(rng.endContainer);
       const direction = Direction.directionAt(startContainer).isRtl() ? SelectionKeys.rtl : SelectionKeys.ltr;
-      keyHandlers.keydown(wrappedEvent, start, rng.startOffset, end, rng.endOffset, direction).each(function (response) {
+      keyHandlers.keydown(wrappedEvent, start, rng.startOffset, end, rng.endOffset, direction).each((response) => {
         handleResponse(wrappedEvent, response);
       });
-      lazyResize().each(function (resize) {
-        resize.showBars();
-      });
+      lazyResize().each((resize) => resize.showBars());
     };
 
-    const isLeftMouse = function (raw: MouseEvent) {
-      return raw.button === 0;
-    };
+    const isLeftMouse = (raw: MouseEvent) => raw.button === 0;
 
     // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons
-    const isLeftButtonPressed = function (raw: MouseEvent) {
+    const isLeftButtonPressed = (raw: MouseEvent) => {
       // Only added by Chrome/Firefox in June 2015.
       // This is only to fix a 1px bug (TBIO-2836) so return true if we're on an older browser
       if (raw.buttons === undefined) {
@@ -152,17 +144,17 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
       return (raw.buttons & 1) !== 0;
     };
 
-    const mouseDown = function (e: MouseEvent) {
+    const mouseDown = (e: MouseEvent) => {
       if (isLeftMouse(e) && hasInternalTarget(e)) {
         mouseHandlers.mousedown(DomEvent.fromRawEvent(e));
       }
     };
-    const mouseOver = function (e: MouseEvent) {
+    const mouseOver = (e: MouseEvent) => {
       if (isLeftButtonPressed(e) && hasInternalTarget(e)) {
         mouseHandlers.mouseover(DomEvent.fromRawEvent(e));
       }
     };
-    const mouseUp = function (e: MouseEvent) {
+    const mouseUp = (e: MouseEvent) => {
       if (isLeftMouse(e) && hasInternalTarget(e)) {
         mouseHandlers.mouseup(DomEvent.fromRawEvent(e));
       }
@@ -211,6 +203,7 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
 
   const destroy = function () {
     handlers.each(function (_handlers) {
+      // TODO: do we need these? can this be deleted? destroy() is only used in one place atm
       // editor.off('mousedown', handlers.mousedown());
       // editor.off('mouseover', handlers.mouseover());
       // editor.off('mouseup', handlers.mouseup());

@@ -13,13 +13,10 @@ import { HTMLElement } from '@ephox/dom-globals';
 import { ResizeHandler } from '../actions/ResizeHandler';
 import { SelectionTargets } from '../selection/SelectionTargets';
 
-const getClipboardRows = (clipboardRows): HTMLElement[] => clipboardRows.get().fold(function () {
-  return;
-}, function (rows) {
-  return Arr.map(rows, function (row) {
-    return row.dom();
-  });
-});
+const getClipboardRows = (clipboardRows): HTMLElement[] => clipboardRows.get().fold(
+  () => {},
+  (rows) => Arr.map(rows, (row) => row.dom())
+);
 
 const setClipboardRows = (rows: HTMLElement[], clipboardRows) => {
   const sugarRows = Arr.map(rows, Element.fromDom);
