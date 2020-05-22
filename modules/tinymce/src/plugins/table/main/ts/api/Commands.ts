@@ -19,6 +19,7 @@ import * as RowDialog from '../ui/RowDialog';
 import * as TableDialog from '../ui/TableDialog';
 import * as InsertTable from '../actions/InsertTable';
 import { CellSelectionApi } from '../selection/CellSelection';
+import { console } from '@ephox/dom-globals';
 
 const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboardRows: Cell<Option<Element[]>>) => {
   const isRoot = Util.getIsRoot(editor);
@@ -116,7 +117,6 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
         InsertTable.insert(editor, columns, rows, headerColumns, headerRows);
       } else {
         // eslint-disable-next-line no-console
-        // tslint:disable-next-line:no-console
         console.error('Invalid values for mceInsertTable - rows and columns values are required to insert a table.');
       }
     } else {
