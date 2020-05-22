@@ -27,7 +27,7 @@ const setClipboardRows = (rows: HTMLElement[], clipboardRows) => {
 };
 
 const getApi = (editor: Editor, clipboardRows: Cell<Option<any>>, resizeHandler: ResizeHandler, selectionTargets: SelectionTargets) => ({
-  insertTable: (columns: number, rows: number) => InsertTable.insert(editor, columns, rows),
+  insertTable: (columns: number, rows: number) => InsertTable.insert(editor, columns, rows, 0, 0),
   setClipboardRows: (rows: HTMLElement[]) => setClipboardRows(rows, clipboardRows),
   getClipboardRows: () => getClipboardRows(clipboardRows),
   resizeHandler,

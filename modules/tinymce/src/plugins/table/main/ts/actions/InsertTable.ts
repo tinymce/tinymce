@@ -35,7 +35,7 @@ const fireEvents = (editor: Editor, table) => {
 
 const isPercentage = (width: string) => Type.isString(width) && width.indexOf('%') !== -1;
 
-const insert = (editor: Editor, columns: number, rows: number): HTMLElement => {
+const insert = (editor: Editor, columns: number, rows: number, colHeaders: number, rowHeaders: number): HTMLElement => {
   const defaultStyles = getDefaultStyles(editor);
   const options: TableRender.RenderOptions = {
     styles: defaultStyles,
@@ -43,7 +43,7 @@ const insert = (editor: Editor, columns: number, rows: number): HTMLElement => {
     percentages: isPercentage(defaultStyles.width) && !isPixelsForced(editor)
   };
 
-  const table = TableRender.render(rows, columns, 0, 0, options);
+  const table = TableRender.render(rows, columns, rowHeaders, colHeaders, options);
   Attr.set(table, 'data-mce-id', '__mce');
 
   const html = Html.getOuter(table);

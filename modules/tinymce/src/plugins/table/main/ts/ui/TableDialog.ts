@@ -104,7 +104,7 @@ const onSubmitTableForm = (editor: Editor, tableElm: Element, api: Types.Dialog.
       const cols = parseInt(data.cols, 10) || 1;
       const rows = parseInt(data.rows, 10) || 1;
       // Cases 1 & 3 - inserting a table
-      tableElm = InsertTable.insert(editor, cols, rows);
+      tableElm = InsertTable.insert(editor, cols, rows, 0, 0);
     }
 
     applyDataToElement(editor, tableElm, data);
