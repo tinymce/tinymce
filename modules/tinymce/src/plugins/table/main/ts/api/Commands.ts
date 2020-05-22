@@ -5,12 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Arr, Cell, Fun, Obj, Option } from '@ephox/katamari';
+import { Arr, Cell, Fun, Obj, Option, Type } from '@ephox/katamari';
 import { CopyRows, TableFill, TableLookup } from '@ephox/snooker';
 import { Element, Insert, Remove, Replication } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import * as InsertTable from '../actions/InsertTable';
 import { TableActions } from '../actions/TableActions';
 import * as Util from '../alien/Util';
 import * as TableTargets from '../queries/TableTargets';
@@ -19,15 +17,7 @@ import * as TableSelection from '../selection/TableSelection';
 import * as CellDialog from '../ui/CellDialog';
 import * as RowDialog from '../ui/RowDialog';
 import * as TableDialog from '../ui/TableDialog';
-
-interface InsertTableData {
-  rows: number,
-  columns: number,
-  options: {
-    headerRows: number,
-    headerColumns: number
-  }
-}
+import * as InsertTable from '../actions/InsertTable';
 
 const registerCommands = (editor: Editor, actions: TableActions, cellSelection, selections: Selections, clipboardRows: Cell<Option<Element[]>>) => {
   const isRoot = Util.getIsRoot(editor);
@@ -114,21 +104,23 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection, 
     mceTableCellProps: Fun.curry(CellDialog.open, editor)
   }, (func, name) => editor.addCommand(name, () => func()));
 
-  const validateInsertTableSchema = ValueSchema.objOf([
-    FieldSchema.defaultedNumber('rows', 1),
-    FieldSchema.defaultedNumber('columns', 1),
-    FieldSchema.defaultedObjOf('options', { headerRows: 0, headerColumns: 0 }, [
-      FieldSchema.defaultedNumber('headerRows', 0),
-      FieldSchema.defaultedNumber('headerColumns', 0)
-    ])
-  ]);
-
   editor.addCommand('mceInsertTable', (_ui, args) => {
-    ValueSchema.asRaw<InsertTableData, any>('insertTableData', validateInsertTableSchema, args).fold(
-      // AP-101 TableDialog.open renders a slightly different dialog if isNew is true
-      () => TableDialog.open(editor, true),
-      (data) => InsertTable.insert(editor, data.columns, data.rows, data.options.headerColumns, data.options.headerRows)
-    );
+    if (Type.isObject(args)) {
+      const checkInput = (val: any) => Type.isNumber(val) && val > 0;
+      const rows = args.rows;
+      const columns = args.columns;
+      if (checkInput(rows) && checkInput(columns)) {
+        const headerRows = args?.options?.headerRows || 0;
+        const headerColumns = args?.options?.headerColumns || 0;
+        InsertTable.insert(editor, columns, rows, headerColumns, headerRows);
+      } else {
+        // eslint-disable-next-line no-console
+        // tslint:disable-next-line:no-console
+        console.error('Invalid values for mceInsertTable - rows and columns values are required to insert a table.');
+      }
+    } else {
+      TableDialog.open(editor, true);
+    }
   });
 };
 
