@@ -51,7 +51,7 @@ const toInfo = <A>(spec: ComponentDetail): Result<CustomDetail<A>, any> => Value
       'mousedown': [ 'focusing', 'alloy.base.behaviour', 'item-type-events' ],
       'touchstart': [ 'focusing', 'alloy.base.behaviour', 'item-type-events' ],
       'mouseover': [ 'item-type-events', 'tooltipping' ],
-      'alloy.receive': [ 'receiving', 'reflecting' ]
+      'alloy.receive': [ 'receiving', 'reflecting', 'tooltipping' ]
     }),
     ValueSchema.anyValue()
   ),

@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [7.0.2] - 2020-05-25
+
+### Fixed
+- Fixed `Tooltipping` behaviour failing to run due to not being listed in the default `alloy.receive` events.
+
 # [7.0.0] - 2020-05-21
 
 ### Added
