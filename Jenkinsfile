@@ -42,7 +42,7 @@ standardProperties()
 
 node("primary") {
   timestamps {
-    def primaryBranch = "master"
+    def primaryBranch = "develop"
 
     def gitMerge = {
       if (BRANCH_NAME != primaryBranch) {
