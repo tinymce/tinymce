@@ -37,7 +37,7 @@ interface Helpers {
   imageSize: (url: string) => Promise<Size>;
   addToBlobCache: (blobInfo: BlobInfo) => void;
   createBlobCache: (file: File, blobUri: string, dataUrl: string) => BlobInfo;
-  alertErr: (api: API, message: string) => void;
+  alertErr: (message: string) => void;
   normalizeCss: (cssText: string) => string;
   parseStyle: (cssText: string) => StyleMap;
   serializeStyle: (stylesArg: StyleMap, name?: string) => string;
@@ -297,7 +297,7 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
             finalize();
           }).catch((err) => {
             finalize();
-            helpers.alertErr(api, err);
+            helpers.alertErr(err);
           });
         } else {
           helpers.addToBlobCache(blobInfo);
@@ -406,9 +406,8 @@ const addToBlobCache = (editor: Editor) => (blobInfo: BlobInfo) => {
   editor.editorUpload.blobCache.add(blobInfo);
 };
 
-const alertErr = (editor: Editor) => (api: API, message: string) => {
-  // TODO: it looks like the intention to close the entire dialog on an error. Is that really a good idea?
-  editor.windowManager.alert(message, api.close);
+const alertErr = (editor: Editor) => (message: string) => {
+  editor.windowManager.alert(message);
 };
 
 const normalizeCss = (editor: Editor) => (cssText: string) => doNormalizeCss(editor, cssText);

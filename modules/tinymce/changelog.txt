@@ -1,5 +1,5 @@
 Version 5.3.1 (TBD)
-
+    Fixed the image upload error alert also incorrectly closing the image dialog #TINY-6020
 Version 5.3.0 (2020-05-21)
     Added html and body height styles to the default oxide content CSS #TINY-5978
     Added `uploadUri` and `blobInfo` to the data returned by `editor.uploadImages()` #TINY-4579

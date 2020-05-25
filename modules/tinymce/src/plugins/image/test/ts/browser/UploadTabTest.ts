@@ -140,6 +140,20 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
     ]);
 
+    const uploadWithError = Log.stepsAsStep('TNY-6020', 'Image: Image uploader test with upload error', [
+      api.sSetContent(''),
+      api.sSetSetting('images_upload_handler', (blobInfo, success, failure) => failure('Error occurred')),
+      ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
+      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
+      ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
+      sTriggerUpload,
+      ui.sWaitForUi('Wait for an alert dialog to appear', '.tox-alert-dialog'),
+      ui.sClickOnUi('Switch to Upload tab', '.tox-alert-dialog .tox-button:contains("OK")'),
+      UiFinder.sNotExists(Body.body(), '.tox-alert-dialog'),
+      UiFinder.sExists(Body.body(), '.tox-dialog__body-nav-item--active:contains("Upload")'),
+      ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
+    ]);
+
     const uploadWithAutomaticUploadsDisabled = Log.stepsAsStep('TBA', 'Image: Image uploader test with automatic uploads disabled', [
       api.sSetContent(''),
       api.sSetSetting('automatic_uploads', false),
@@ -161,6 +175,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       uploadWithCustomRoute,
       uploadWithCustomHandler,
       uploadCustomHandlerBase64String,
+      uploadWithError,
       uploadWithAutomaticUploadsDisabled
     ], onSuccess, onFailure);
   }, {
