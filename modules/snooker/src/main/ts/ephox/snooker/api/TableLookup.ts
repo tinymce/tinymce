@@ -1,3 +1,4 @@
+import { HTMLTableElement, HTMLTableRowElement, HTMLTableCellElement, Element as DomElement } from '@ephox/dom-globals';
 import { Arr, Fun, Option } from '@ephox/katamari';
 import { Element, Node, SelectorFilter, SelectorFind, Selectors, Traverse } from '@ephox/sugar';
 import { getAttrValue } from '../util/CellUtils';
@@ -5,7 +6,7 @@ import * as LayerSelector from '../util/LayerSelector';
 import * as Structs from './Structs';
 
 // lookup inside this table
-const lookup = function (tags: string[], element: Element, isRoot: (e: Element) => boolean = Fun.never): Option<Element> {
+const lookup = <T extends DomElement = DomElement> (tags: string[], element: Element, isRoot: (e: Element) => boolean = Fun.never): Option<Element<T>> => {
   // If the element we're inspecting is the root, we definitely don't want it.
   if (isRoot(element)) {
     return Option.none();
@@ -16,9 +17,7 @@ const lookup = function (tags: string[], element: Element, isRoot: (e: Element) 
     return Option.some(element);
   }
 
-  const isRootOrUpperTable = function (elm: Element) {
-    return Selectors.is(elm, 'table') || isRoot(elm);
-  };
+  const isRootOrUpperTable = (elm: Element) => Selectors.is(elm, 'table') || isRoot(elm);
 
   return SelectorFind.ancestor(element, tags.join(','), isRootOrUpperTable);
 };
@@ -26,48 +25,29 @@ const lookup = function (tags: string[], element: Element, isRoot: (e: Element) 
 /*
  * Identify the optional cell that element represents.
  */
-const cell = function (element: Element, isRoot?: (e: Element) => boolean) {
-  return lookup([ 'td', 'th' ], element, isRoot);
-};
+const cell = (element: Element, isRoot?: (e: Element) => boolean) => lookup<HTMLTableCellElement>([ 'td', 'th' ], element, isRoot);
 
-const cells = function (ancestor: Element) {
-  return LayerSelector.firstLayer(ancestor, 'th,td');
-};
+const cells = (ancestor: Element): Element<HTMLTableCellElement>[] => LayerSelector.firstLayer(ancestor, 'th,td');
 
-const notCell = function (element: Element, isRoot?: (e: Element) => boolean) {
-  return lookup([ 'caption', 'tr', 'tbody', 'tfoot', 'thead' ], element, isRoot);
-};
+const notCell = (element: Element, isRoot?: (e: Element) => boolean) => lookup<DomElement>([ 'caption', 'tr', 'tbody', 'tfoot', 'thead' ], element, isRoot);
 
-const neighbours = function (selector: string, element: Element) {
-  return Traverse.parent(element).map(function (parent) {
-    return SelectorFilter.children(parent, selector);
-  });
-};
+const neighbours = (selector: string, element: Element) =>
+  Traverse.parent(element).map((parent) => SelectorFilter.children(parent, selector));
 
 const neighbourCells = Fun.curry(neighbours, 'th,td');
 const neighbourRows  = Fun.curry(neighbours, 'tr');
 
-const firstCell = function (ancestor: Element) {
-  return SelectorFind.descendant(ancestor, 'th,td');
-};
+const firstCell = (ancestor: Element) => SelectorFind.descendant<HTMLTableCellElement>(ancestor, 'th,td');
 
-const table = function (element: Element, isRoot?: (e: Element) => boolean) {
-  return SelectorFind.closest(element, 'table', isRoot);
-};
+const table = (element: Element, isRoot?: (e: Element) => boolean) => SelectorFind.closest<HTMLTableElement>(element, 'table', isRoot);
 
-const row = function (element: Element, isRoot?: (e: Element) => boolean) {
-  return lookup([ 'tr' ], element, isRoot);
-};
+const row = (element: Element, isRoot?: (e: Element) => boolean) => lookup<HTMLTableRowElement>([ 'tr' ], element, isRoot);
 
-const rows = function (ancestor: Element) {
-  return LayerSelector.firstLayer(ancestor, 'tr');
-};
+const rows = (ancestor: Element): Element<HTMLTableRowElement>[] => LayerSelector.firstLayer(ancestor, 'tr');
 
-const attr = function (element: Element, property: string) {
-  return getAttrValue(element, property);
-};
+const attr = (element: Element, property: string) => getAttrValue(element, property);
 
-const grid = function (element: Element, rowProp: string, colProp: string) {
+const grid = (element: Element, rowProp: string, colProp: string) => {
   const rowsCount = attr(element, rowProp);
   const cols = attr(element, colProp);
   return Structs.grid(rowsCount, cols);
