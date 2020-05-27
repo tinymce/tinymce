@@ -7,6 +7,7 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
+import { Receiving } from 'ephox/alloy/api/behaviour/Receiving';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 import { Tooltipping } from 'ephox/alloy/api/behaviour/Tooltipping';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
@@ -51,7 +52,11 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
             GuiFactory.text(`${name}-tooltip`)
           ]
         }),
-        Focusing.config({ })
+        Focusing.config({ }),
+        // Add receiving to ensure the default event order is configured
+        Receiving.config({
+          channels: { }
+        })
       ])
     });
 
