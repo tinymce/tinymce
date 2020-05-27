@@ -112,8 +112,8 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       const rows = args.rows;
       const columns = args.columns;
       if (checkInput(rows) && checkInput(columns)) {
-        const headerRows = args?.options?.headerRows || 0;
-        const headerColumns = args?.options?.headerColumns || 0;
+        const headerRows = args.options?.headerRows || 0;
+        const headerColumns = args.options?.headerColumns || 0;
         InsertTable.insert(editor, columns, rows, headerColumns, headerRows);
       } else {
         // eslint-disable-next-line no-console

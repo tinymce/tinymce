@@ -33,7 +33,6 @@ interface HandlerStruct {
 
 export interface CellSelectionApi {
   clear: (container: Element) => void;
-  destroy: () => void;
 }
 
 export default function (editor: Editor, lazyResize: () => Option<TableResize>, selectionTargets: SelectionTargets): CellSelectionApi {
@@ -201,19 +200,7 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
     });
   });
 
-  const destroy = function () {
-    handlers.each(function (_handlers) {
-      // TODO: do we need these? can this be deleted? destroy() is only used in one place atm
-      // editor.off('mousedown', handlers.mousedown());
-      // editor.off('mouseover', handlers.mouseover());
-      // editor.off('mouseup', handlers.mouseup());
-      // editor.off('keyup', handlers.keyup());
-      // editor.off('keydown', handlers.keydown());
-    });
-  };
-
   return {
-    clear: annotations.clear,
-    destroy
+    clear: annotations.clear
   };
 }

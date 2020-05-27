@@ -152,7 +152,7 @@ const extractDataFromSettings = (editor: Editor, hasAdvTableTab: boolean): Table
   const style = getDefaultStyles(editor);
   const attrs = getDefaultAttributes(editor);
 
-  const extractAdvancedStyleData = (dom) => ({
+  const extractAdvancedStyleData = (dom: DOMUtils) => ({
     borderstyle: Obj.get(style, 'border-style').getOr(''),
     bordercolor: rgbToHex(dom)(Obj.get(style, 'border-color').getOr('')),
     backgroundcolor: rgbToHex(dom)(Obj.get(style, 'background-color').getOr(''))
