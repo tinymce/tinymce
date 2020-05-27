@@ -1,6 +1,7 @@
 Version 5.4.0 (TBD)
     Added all table menu items to the UI registry, so they can be used by name in other menus #TINY-4866
     Added additional font related variables for secondary buttons allowing more specific styling. #TINY-6061
+    Added new `mceTableApplyCellStyle` command to the `table` plugin #TINY-6004
     Changed `mceInsertTable` command and `insertTable` API method to take optional header rows and columns arguments #TINY-6012
     Fixed filters for screening commands from the undo stack to be properly case-insensitive #TINY-5946
     Fixed handling of mixed-case icon names by having the silver theme downcase them before icon retrieval #TINY-3854

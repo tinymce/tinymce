@@ -23,6 +23,7 @@ import * as MenuItems from './ui/MenuItems';
 import { hasTabNavigation } from './api/Settings';
 import { getApi } from './api/Api';
 import { Element } from '@ephox/sugar';
+import * as TableFormats from './api/TableFormats';
 
 function Plugin(editor: Editor) {
   const selections = Selections(editor);
@@ -42,6 +43,7 @@ function Plugin(editor: Editor) {
   editor.on('PreInit', function () {
     editor.serializer.addTempAttr(Ephemera.firstSelected);
     editor.serializer.addTempAttr(Ephemera.lastSelected);
+    TableFormats.registerFormats(editor);
   });
 
   if (hasTabNavigation(editor)) {

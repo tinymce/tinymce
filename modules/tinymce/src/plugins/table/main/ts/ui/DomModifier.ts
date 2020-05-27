@@ -6,6 +6,7 @@
  */
 
 import { Node } from '@ephox/dom-globals';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
 export interface DomModifier {
   setAttrib: (attr: string, value: string) => void;
@@ -14,30 +15,15 @@ export interface DomModifier {
 
 // The get node is required here because it can be transformed
 // when switching between tags (e.g. th and td)
-const normal = (dom, node: Node): DomModifier => {
+const modifiers = (testTruthy: boolean) => (dom: DOMUtils, node: Node): DomModifier => {
   const setAttrib = (attr: string, value: string) => {
-    dom.setAttrib(node, attr, value);
-  };
-
-  const setStyle = (prop: string, value: string) => {
-    dom.setStyle(node, prop, value);
-  };
-
-  return {
-    setAttrib,
-    setStyle
-  };
-};
-
-const ifTruthy = (dom, node: Node): DomModifier => {
-  const setAttrib = (attr: string, value: string) => {
-    if (value) {
+    if (!testTruthy || value) {
       dom.setAttrib(node, attr, value);
     }
   };
 
   const setStyle = (prop: string, value: string) => {
-    if (value) {
+    if (!testTruthy || value) {
       dom.setStyle(node, prop, value);
     }
   };
@@ -49,6 +35,6 @@ const ifTruthy = (dom, node: Node): DomModifier => {
 };
 
 export const DomModifier = {
-  normal,
-  ifTruthy
+  normal: modifiers(false),
+  ifTruthy: modifiers(true)
 };

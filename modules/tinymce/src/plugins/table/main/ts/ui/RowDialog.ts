@@ -6,18 +6,18 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { HTMLElement, Node } from '@ephox/dom-globals';
-import { Fun } from '@ephox/katamari';
+import { HTMLElement, HTMLTableRowElement } from '@ephox/dom-globals';
+import { TableLookup } from '@ephox/snooker';
+import { Arr, Fun, Options } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import Tools from 'tinymce/core/api/util/Tools';
-
 import * as Styles from '../actions/Styles';
 import * as Util from '../alien/Util';
 import { hasAdvancedRowTab } from '../api/Settings';
 import { DomModifier } from './DomModifier';
 import * as Helpers from './Helpers';
 import * as RowDialogGeneralTab from './RowDialogGeneralTab';
+import * as TableSelection from '../selection/TableSelection';
 
 type RowData = Helpers.RowData;
 
@@ -52,79 +52,74 @@ const switchRowType = (dom: DOMUtils, rowElm: HTMLElement, toType: string) => {
   }
 };
 
-const updateAdvancedProps = (modifier: DomModifier, data: RowData): void => {
+const updateSimpleProps = (modifier: DomModifier, data: RowData) => {
+  modifier.setAttrib('scope', data.scope);
+  modifier.setAttrib('class', data.class);
+  modifier.setStyle('height', Util.addSizeSuffix(data.height));
+};
+
+const updateAdvancedProps = (modifier: DomModifier, data: RowData) => {
   modifier.setStyle('background-color', data.backgroundcolor);
   modifier.setStyle('border-color', data.bordercolor);
   modifier.setStyle('border-style', data.borderstyle);
 };
 
-const onSubmitRowForm = (editor: Editor, rows: HTMLElement[], oldData: RowData, api) => {
+const applyRowData = (editor: Editor, rows: HTMLElement[], oldData: RowData, data: RowData) => {
   const dom = editor.dom;
+  const isSingleRow = rows.length === 1;
 
+  Arr.each(rows, (rowElm) => {
+    // Switch row type
+    if (data.type !== rowElm.parentNode.nodeName.toLowerCase()) {
+      switchRowType(editor.dom, rowElm, data.type);
+    }
+
+    const modifier = isSingleRow ? DomModifier.normal(dom, rowElm) : DomModifier.ifTruthy(dom, rowElm);
+
+    updateSimpleProps(modifier, data);
+
+    if (hasAdvancedRowTab(editor)) {
+      updateAdvancedProps(modifier, data);
+    }
+
+    if (data.align !== oldData.align) {
+      Styles.unApplyAlign(editor, rowElm);
+      Styles.applyAlign(editor, rowElm, data.align);
+    }
+  });
+};
+
+const onSubmitRowForm = (editor: Editor, rows: HTMLElement[], oldData: RowData, api) => {
   const data: RowData = api.getData();
   api.close();
 
-  // When selection length is 1, allow things to be turned off/cleared
-  const createModifier: (dom, node: Node) => DomModifier = rows.length === 1 ? DomModifier.normal : DomModifier.ifTruthy;
-
   editor.undoManager.transact(() => {
-    Tools.each(rows, (rowElm) => {
-
-      // Switch row type
-      if (data.type !== rowElm.parentNode.nodeName.toLowerCase()) {
-        switchRowType(editor.dom, rowElm, data.type);
-      }
-
-      const modifier = createModifier(dom, rowElm);
-
-      modifier.setAttrib('scope', data.scope);
-      modifier.setAttrib('class', data.class);
-      modifier.setStyle('height', Util.addSizeSuffix(data.height));
-
-      if (hasAdvancedRowTab(editor)) {
-        updateAdvancedProps(modifier, data);
-      }
-
-      if (data.align !== oldData.align) {
-        Styles.unApplyAlign(editor, rowElm);
-        Styles.applyAlign(editor, rowElm, data.align);
-      }
-    });
+    applyRowData(editor, rows, oldData, data);
     editor.focus();
   });
 };
 
+const getRowsFromSelection = (editor: Editor): HTMLTableRowElement[] => {
+  const cellOpt = TableSelection.getSelectionStartCell(editor);
+  const rowsOpt = cellOpt.bind((cell) => TableLookup.table(cell))
+    .map((table) => TableLookup.rows(table))
+    .map((rows) => Arr.map(rows, (row) => row.dom()));
+
+  return Options.lift2(cellOpt, rowsOpt, (cell, rows) =>
+    Arr.filter(rows, (row) => Arr.exists(row.cells, (rowCell) => editor.dom.getAttrib(rowCell, 'data-mce-selected') === '1' || rowCell === cell.dom()))
+  ).getOr([]);
+};
+
 const open = (editor: Editor) => {
-  const dom = editor.dom;
-  let tableElm, cellElm, rowElm;
-  const rows = [];
+  const rows = getRowsFromSelection(editor);
 
-  tableElm = dom.getParent(editor.selection.getStart(), 'table');
-
-  if (!tableElm) {
-    // If this element is null, return now to avoid crashing.
-    return;
-  }
-
-  cellElm = dom.getParent(editor.selection.getStart(), 'td,th');
-
-  Tools.each(tableElm.rows, (row) => {
-    Tools.each(row.cells, (cell) => {
-      if ((dom.getAttrib(cell, 'data-mce-selected') || cell === cellElm) && rows.indexOf(row) < 0) {
-        rows.push(row);
-        return false;
-      }
-    });
-  });
-
-  rowElm = rows[0];
-  if (!rowElm) {
-    // If this element is null, return now to avoid crashing.
+  // Check if there are any rows to operate on
+  if (rows.length === 0) {
     return;
   }
 
   // Get current data and find shared values between rows
-  const rowsData: RowData[] = Tools.map(rows, (rowElm) => Helpers.extractDataFromRowElement(editor, rowElm, hasAdvancedRowTab(editor)));
+  const rowsData: RowData[] = Arr.map(rows, (rowElm) => Helpers.extractDataFromRowElement(editor, rowElm, hasAdvancedRowTab(editor)));
   const data = Helpers.getSharedValues<RowData>(rowsData);
 
   const dialogTabPanel: Types.Dialog.TabPanelApi = {
