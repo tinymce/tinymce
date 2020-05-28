@@ -5,14 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Option } from '@ephox/katamari';
 import { KeyboardEvent } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import * as Clipboard from './actions/Clipboard';
-import { TableActions } from './actions/TableActions';
-import * as Commands from './api/Commands';
 import { getResizeHandler } from './actions/ResizeHandler';
+import { TableActions } from './actions/TableActions';
+import { getApi } from './api/Api';
+import * as Commands from './api/Commands';
+import { hasTabNavigation } from './api/Settings';
+import { Clipboard as FakeClipboard } from './core/Clipboard';
 import * as TabContext from './queries/TabContext';
 import CellSelection from './selection/CellSelection';
 import * as Ephemera from './selection/Ephemera';
@@ -20,9 +22,6 @@ import { Selections } from './selection/Selections';
 import { getSelectionTargets } from './selection/SelectionTargets';
 import * as Buttons from './ui/Buttons';
 import * as MenuItems from './ui/MenuItems';
-import { hasTabNavigation } from './api/Settings';
-import { getApi } from './api/Api';
-import { Element } from '@ephox/sugar';
 
 function Plugin(editor: Editor) {
   const selections = Selections(editor);
@@ -30,14 +29,13 @@ function Plugin(editor: Editor) {
   const resizeHandler = getResizeHandler(editor);
   const cellSelection = CellSelection(editor, resizeHandler.lazyResize, selectionTargets);
   const actions = TableActions(editor, resizeHandler.lazyWire);
-  const clipboardRows = Cell(Option.none<Element<any>[]>());
-  const clipboardCols = Cell(Option.none<Element<any>[]>());
+  const clipboard = FakeClipboard();
 
-  Commands.registerCommands(editor, actions, cellSelection, selections, clipboardRows, clipboardCols);
+  Commands.registerCommands(editor, actions, cellSelection, selections, clipboard);
   Clipboard.registerEvents(editor, selections, actions, cellSelection);
 
-  MenuItems.addMenuItems(editor, selectionTargets);
-  Buttons.addButtons(editor, selectionTargets);
+  MenuItems.addMenuItems(editor, selectionTargets, clipboard);
+  Buttons.addButtons(editor, selectionTargets, clipboard);
   Buttons.addToolbars(editor);
 
   editor.on('PreInit', function () {
@@ -55,7 +53,7 @@ function Plugin(editor: Editor) {
     resizeHandler.destroy();
   });
 
-  return getApi(editor, clipboardRows, resizeHandler, selectionTargets);
+  return getApi(editor, clipboard, resizeHandler, selectionTargets);
 }
 
 export default function () {

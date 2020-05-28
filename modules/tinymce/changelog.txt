@@ -1,6 +1,8 @@
 Version 5.4.0 (TBD)
     Added all table menu items to the UI registry, so they can be used by name in other menus #TINY-4866
+    Added new table cut, copy and paste column editor commands and menu items #TINY-6006
     Changed `mceInsertTable` command and `insertTable` API method to take optional header rows and columns arguments #TINY-6012
+    Fixed table `Paste row after` and `Paste row before` menu items not disabled when nothing was available to paste #TINY-6006
     Fixed filters for screening commands from the undo stack to be properly case-insensitive #TINY-5946
     Fixed handling of mixed-case icon names by having the silver theme downcase them before icon retrieval #TINY-3854
 Version 5.3.1 (2020-05-27)

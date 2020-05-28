@@ -1,7 +1,9 @@
 import { Arr, Fun, Option } from '@ephox/katamari';
-import { Remove, Element } from '@ephox/sugar';
+import { Element, Remove } from '@ephox/sugar';
 import * as DetailsList from '../model/DetailsList';
-import { run, onCell, onCells, onMergable, onUnmergable, onPaste, onPasteByEditor, ExtractPasteRows, ExtractPaste, ExtractMergable } from '../model/RunOperation';
+import {
+  ExtractMergable, ExtractPaste, ExtractPasteRows, onCell, onCells, onMergable, onPaste, onPasteByEditor, onUnmergable, run
+} from '../model/RunOperation';
 import * as TableMerge from '../model/TableMerge';
 import * as Transitions from '../model/Transitions';
 import { Warehouse } from '../model/Warehouse';
@@ -9,7 +11,7 @@ import * as MergingOperations from '../operate/MergingOperations';
 import * as ModificationOperations from '../operate/ModificationOperations';
 import * as TransformOperations from '../operate/TransformOperations';
 import * as Adjustments from '../resize/Adjustments';
-import { GeneratorsModification, GeneratorsTransform, GeneratorsMerging, Generators, SimpleGenerators } from './Generators';
+import { Generators, GeneratorsMerging, GeneratorsModification, GeneratorsTransform, SimpleGenerators } from './Generators';
 import * as Structs from './Structs';
 import * as TableContent from './TableContent';
 import * as TableLookup from './TableLookup';
@@ -222,8 +224,8 @@ const gridifyRows = function (rows: Element[], generators: Generators, example: 
   return Transitions.toGrid(wh, generators, true);
 };
 
-const opPasteColsBefore = function (grid: Structs.RowCells[], pasteDetails: ExtractPasteRows, comparator: CompElm, _genWrappers: GeneratorsModification) {
-  const example = grid[pasteDetails.cells[0].column()];
+const opPasteColsBefore = (grid: Structs.RowCells[], pasteDetails: ExtractPasteRows, comparator: CompElm, _genWrappers: GeneratorsModification) => {
+  const example = grid[pasteDetails.cells[0].row()];
   const index = pasteDetails.cells[0].column();
   const gridB = gridifyRows(pasteDetails.clipboard(), pasteDetails.generators(), example);
   const mergedGrid = TableMerge.insertCols(index, grid, gridB, pasteDetails.generators(), comparator);
@@ -231,8 +233,8 @@ const opPasteColsBefore = function (grid: Structs.RowCells[], pasteDetails: Extr
   return outcome(mergedGrid, cursor);
 };
 
-const opPasteColsAfter = function (grid: Structs.RowCells[], pasteDetails: ExtractPasteRows, comparator: CompElm, _genWrappers: GeneratorsModification) {
-  const example = grid[pasteDetails.cells[0].column()];
+const opPasteColsAfter = (grid: Structs.RowCells[], pasteDetails: ExtractPasteRows, comparator: CompElm, _genWrappers: GeneratorsModification) => {
+  const example = grid[pasteDetails.cells[0].row()];
   const index = pasteDetails.cells[pasteDetails.cells.length - 1].column() + pasteDetails.cells[pasteDetails.cells.length - 1].colspan();
   const gridB = gridifyRows(pasteDetails.clipboard(), pasteDetails.generators(), example);
   const mergedGrid = TableMerge.insertCols(index, grid, gridB, pasteDetails.generators(), comparator);

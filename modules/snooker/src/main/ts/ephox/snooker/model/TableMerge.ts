@@ -1,12 +1,12 @@
-import { Fun, Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
+import { Element } from '@ephox/sugar';
+import { SimpleGenerators } from '../api/Generators';
 import * as Structs from '../api/Structs';
+import * as MergingOperations from '../operate/MergingOperations';
 import * as Fitment from './Fitment';
 import * as GridRow from './GridRow';
-import * as MergingOperations from '../operate/MergingOperations';
-import { SimpleGenerators } from '../api/Generators';
-import { Element } from '@ephox/sugar';
 
-const isSpanning = function (grid: Structs.RowCells[], row: number, col: number, comparator: (a: Element, b: Element) => boolean) {
+const isSpanning = (grid: Structs.RowCells[], row: number, col: number, comparator: (a: Element, b: Element) => boolean) => {
   const candidate = GridRow.getCell(grid[row], col);
   const matching = Fun.curry(comparator, candidate.element());
   const currentRow = grid[row];
@@ -25,7 +25,7 @@ const isSpanning = function (grid: Structs.RowCells[], row: number, col: number,
     );
 };
 
-const mergeTables = function (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: Element, b: Element) => boolean) {
+const mergeTables = (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: Element, b: Element) => boolean) => {
   // Assumes
   //  - gridA is square and gridB is square
   const startRow = startAddress.row();
@@ -49,15 +49,15 @@ const mergeTables = function (startAddress: Structs.Address, gridA: Structs.RowC
   return gridA;
 };
 
-const merge = function (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: Element, b: Element) => boolean) {
+const merge = (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: Element, b: Element) => boolean) => {
   const result = Fitment.measure(startAddress, gridA, gridB);
-  return result.map(function (delta) {
+  return result.map((delta) => {
     const fittedGrid = Fitment.tailor(gridA, delta, generator);
     return mergeTables(startAddress, fittedGrid, gridB, generator, comparator);
   });
 };
 
-const insertCols = function (index: number, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: Element, b: Element) => boolean): Structs.RowCells[] {
+const insertCols = (index: number, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: Element, b: Element) => boolean): Structs.RowCells[] => {
   MergingOperations.splitCols(gridA, index, comparator, generator.cell);
 
   const delta = Fitment.measureHeight(gridB, gridA);
@@ -72,7 +72,7 @@ const insertCols = function (index: number, gridA: Structs.RowCells[], gridB: St
   });
 };
 
-const insertRows = function (index: number, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: Element, b: Element) => boolean): Structs.RowCells[] {
+const insertRows = (index: number, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: Element, b: Element) => boolean): Structs.RowCells[] => {
   MergingOperations.splitRows(gridA, index, comparator, generator.cell);
 
   const delta = Fitment.measureWidth(gridB, gridA);

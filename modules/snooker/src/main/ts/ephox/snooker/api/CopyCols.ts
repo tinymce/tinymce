@@ -1,25 +1,39 @@
+import { HTMLTableRowElement } from '@ephox/dom-globals';
+import { Arr, Option } from '@ephox/katamari';
+import { Attr, Element, InsertAll, Replication } from '@ephox/sugar';
 import * as DetailsList from '../model/DetailsList';
 import { onCells, TargetSelection } from '../model/RunOperation';
-import * as Transitions from '../model/Transitions';
 import { Warehouse } from '../model/Warehouse';
-import { Element, Replication, InsertAll } from '@ephox/sugar';
-import { Generators } from './Generators';
-import { Arr } from '@ephox/katamari';
+import * as CellUtils from '../util/CellUtils';
 
-const copyCols = function (table: Element, target: TargetSelection, generators: Generators) {
+const constrainSpan = (element: Element, property: 'colspan' | 'rowspan', value: number) => {
+  const currentColspan = CellUtils.getSpan(element, property);
+  if (value === 1 || currentColspan <= 1) {
+    Attr.remove(element, property);
+  } else {
+    Attr.set(element, property, Math.min(value, currentColspan));
+  }
+};
+
+const copyCols = (table: Element, target: TargetSelection): Option<Element<HTMLTableRowElement>[]> => {
   const list = DetailsList.fromTable(table);
   const house = Warehouse.generate(list);
   const details = onCells(house, target);
   return details.map((selectedCells) => {
-    const grid = Transitions.toGrid(house, generators, false);
-    const slicedGrid = Arr.map(grid, (row) => {
-      const cellsToCopy = row.cells().slice(selectedCells[0].column(), selectedCells[selectedCells.length - 1].column() + selectedCells[selectedCells.length -1 ].colspan());
-      const copiedCells = Arr.map(cellsToCopy, (cell) => Replication.deep(cell.element()));
+    const lastSelectedCell = selectedCells[selectedCells.length - 1];
+    const minColRange = selectedCells[0].column();
+    const maxColRange = lastSelectedCell.column() + lastSelectedCell.colspan();
+    return Arr.map(house.all, (row) => {
+      const cellsToCopy = Arr.filter(row.cells(), (cell) => cell.column() >= minColRange && cell.column() < maxColRange);
+      const copiedCells = Arr.map(cellsToCopy, (cell) => {
+        const clonedCell = Replication.deep(cell.element());
+        constrainSpan(clonedCell, 'colspan', maxColRange - minColRange);
+        return clonedCell;
+      });
       const fakeTR = Element.fromTag('tr');
       InsertAll.append(fakeTR, copiedCells);
       return fakeTR;
     });
-    return slicedGrid;
   });
 };
 

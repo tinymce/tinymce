@@ -1,7 +1,7 @@
+import { HTMLTableRowElement } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import { Attr, Element, Insert, InsertAll, Remove, Replication, SelectorFind, Traverse } from '@ephox/sugar';
 import { Detail, DetailNew, RowDataNew } from '../api/Structs';
-import { Node as DomNode } from '@ephox/dom-globals';
 
 const setIfNot = function (element: Element, property: string, value: number, ignore: number): void {
   if (value === ignore) {
@@ -89,19 +89,17 @@ const render = function <T extends DetailNew> (table: Element, grid: RowDataNew<
   };
 };
 
-const copy = function <T extends Detail> (grid: RowDataNew<T>[]): Element<DomNode>[] {
-  return Arr.map(grid, function (row) {
-    // Shallow copy the row element
-    const tr = Replication.shallow(row.element());
-    Arr.each(row.cells(), function (cell) {
-      const clonedCell = Replication.deep(cell.element());
-      setIfNot(clonedCell, 'colspan', cell.colspan(), 1);
-      setIfNot(clonedCell, 'rowspan', cell.rowspan(), 1);
-      Insert.append(tr, clonedCell);
-    });
-    return tr;
+const copy = <T extends Detail> (grid: RowDataNew<T>[]): Element<HTMLTableRowElement>[] => Arr.map(grid, (row) => {
+  // Shallow copy the row element
+  const tr = Replication.shallow(row.element());
+  Arr.each(row.cells(), (cell) => {
+    const clonedCell = Replication.deep(cell.element());
+    setIfNot(clonedCell, 'colspan', cell.colspan(), 1);
+    setIfNot(clonedCell, 'rowspan', cell.rowspan(), 1);
+    Insert.append(tr, clonedCell);
   });
-};
+  return tr;
+});
 
 export {
   render,

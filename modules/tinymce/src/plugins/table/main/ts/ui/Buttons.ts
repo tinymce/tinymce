@@ -8,9 +8,10 @@
 import { Node } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import { getToolbar } from '../api/Settings';
+import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets } from '../selection/SelectionTargets';
 
-const addButtons = (editor: Editor, selectionTargets: SelectionTargets) => {
+const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   editor.ui.registry.addMenuButton('table', {
     tooltip: 'Table',
     icon: 'table',
@@ -103,33 +104,61 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets) => {
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
-  // TODO: Need icons!!
+  // TODO: TINY-6062 Need icons!!
   editor.ui.registry.addButton('tablecutrow', {
     tooltip: 'Cut row',
+    icon: 'table-cut-row',
     onAction: cmd('mceTableCutRow'),
-    icon: 'temporary-placeholder',
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
   editor.ui.registry.addButton('tablecopyrow', {
     tooltip: 'Copy row',
+    icon: 'table-copy-row',
     onAction: cmd('mceTableCopyRow'),
-    icon: 'temporary-placeholder',
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupPasteable(clipboard.getRows)
   });
 
   editor.ui.registry.addButton('tablepasterowbefore', {
     tooltip: 'Paste row before',
+    icon: 'table-paste-row-before',
     onAction: cmd('mceTablePasteRowBefore'),
-    icon: 'temporary-placeholder',
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupPasteable(clipboard.getRows)
   });
 
   editor.ui.registry.addButton('tablepasterowafter', {
     tooltip: 'Paste row after',
+    icon: 'table-paste-row-after',
     onAction: cmd('mceTablePasteRowAfter'),
-    icon: 'temporary-placeholder',
     onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  editor.ui.registry.addButton('tablecutcol', {
+    tooltip: 'Cut column',
+    icon: 'table-cut-column',
+    onAction: cmd('mceTableCutCol'),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  editor.ui.registry.addButton('tablecopycol', {
+    tooltip: 'Copy column',
+    icon: 'table-copy-column',
+    onAction: cmd('mceTableCopyCol'),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  editor.ui.registry.addButton('tablepastecolbefore', {
+    tooltip: 'Paste column before',
+    icon: 'table-paste-column-before',
+    onAction: cmd('mceTablePasteColBefore'),
+    onSetup: selectionTargets.onSetupPasteable(clipboard.getColumns)
+  });
+
+  editor.ui.registry.addButton('tablepastecolafter', {
+    tooltip: 'Paste column after',
+    icon: 'table-paste-column-after',
+    onAction: cmd('mceTablePasteColAfter'),
+    onSetup: selectionTargets.onSetupPasteable(clipboard.getColumns)
   });
 
   editor.ui.registry.addButton('tableinsertdialog', {

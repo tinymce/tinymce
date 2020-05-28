@@ -5,13 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell, Fun, Obj, Option, Type } from '@ephox/katamari';
+import { HTMLTableRowElement } from '@ephox/dom-globals';
+import { Arr, Fun, Obj, Option, Type } from '@ephox/katamari';
 import { CopyCols, CopyRows, TableFill, TableLookup } from '@ephox/snooker';
 import { Element, Insert, Remove, Replication } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
 import { TableActions } from '../actions/TableActions';
 import * as Util from '../alien/Util';
+import { Clipboard } from '../core/Clipboard';
 import * as TableTargets from '../queries/TableTargets';
 import { CellSelectionApi } from '../selection/CellSelection';
 import { Selections } from '../selection/Selections';
@@ -20,7 +22,7 @@ import * as CellDialog from '../ui/CellDialog';
 import * as RowDialog from '../ui/RowDialog';
 import * as TableDialog from '../ui/TableDialog';
 
-const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboardRows: Cell<Option<Element[]>>, clipboardCols: Cell<Option<Element[]>>) => {
+const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboard: Clipboard) => {
   const isRoot = Util.getIsRoot(editor);
   const eraseTable = () => TableSelection.getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
     TableLookup.table(cellOrCaption, isRoot).filter(Fun.not(isRoot)).each((table) => {
@@ -55,21 +57,22 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     });
   });
 
-  const copyRowSelection = (_execute?) => TableSelection.getSelectionStartCell(editor).map((cell) => getTableFromCell(cell).bind((table) => {
-    const targets = TableTargets.forMenu(selections, table, cell);
-    const generators = TableFill.cellOperations(Fun.noop, Element.fromDom(editor.getDoc()), Option.none());
-    return CopyRows.copyRows(table, targets, generators);
-  }));
+  const copyRowSelection = () => TableSelection.getSelectionStartCell(editor).map((cell) =>
+    getTableFromCell(cell).bind((table) => {
+      const targets = TableTargets.forMenu(selections, table, cell);
+      const generators = TableFill.cellOperations(Fun.noop, Element.fromDom(editor.getDoc()), Option.none());
+      return CopyRows.copyRows(table, targets, generators);
+    }));
 
-  const copyColSelection = (_execute?) => TableSelection.getSelectionStartCell(editor).map((cell) => getTableFromCell(cell).bind((table) => {
-    const targets = TableTargets.forMenu(selections, table, cell);
-    const generators = TableFill.cellOperations(Fun.noop, Element.fromDom(editor.getDoc()), Option.none());
-    return CopyCols.copyCols(table, targets, generators);
-  }));
+  const copyColSelection = () => TableSelection.getSelectionStartCell(editor).map((cell) =>
+    getTableFromCell(cell).bind((table) => {
+      const targets = TableTargets.forMenu(selections, table, cell);
+      return CopyCols.copyCols(table, targets);
+    }));
 
-  const pasteOnSelection = (execute, cellGet) =>
+  const pasteOnSelection = (execute, getRows: () => Option<Element<HTMLTableRowElement>[]>) =>
     // If we have clipboard rows to paste
-    cellGet().each((rows) => {
+    getRows().each((rows) => {
       const clonedRows = Arr.map(rows, (row) => Replication.deep(row));
       TableSelection.getSelectionStartCell(editor).each((cell) => {
         getTableFromCell(cell).each((table) => {
@@ -95,19 +98,19 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     mceTableDeleteCol: () => actOnSelection(actions.deleteColumn),
     mceTableDeleteRow: () => actOnSelection(actions.deleteRow),
     mceTableCutCol: (_grid) => copyColSelection().each((selection) => {
-      clipboardCols.set(selection);
+      clipboard.setColumns(selection);
       actOnSelection(actions.deleteColumn);
     }),
     mceTableCutRow: (_grid) => copyRowSelection().each((selection) => {
-      clipboardRows.set(selection);
+      clipboard.setRows(selection);
       actOnSelection(actions.deleteRow);
     }),
-    mceTableCopyCol: (_grid) => copyColSelection().each((selection) => clipboardCols.set(selection)),
-    mceTableCopyRow: (_grid) => copyRowSelection().each((selection) => clipboardRows.set(selection)),
-    mceTablePasteColBefore: (_grid) => pasteOnSelection(actions.pasteColsBefore, clipboardCols.get),
-    mceTablePasteColAfter: (_grid) => pasteOnSelection(actions.pasteColsAfter, clipboardCols.get),
-    mceTablePasteRowBefore: (_grid) => pasteOnSelection(actions.pasteRowsBefore, clipboardRows.get),
-    mceTablePasteRowAfter: (_grid) => pasteOnSelection(actions.pasteRowsAfter, clipboardRows.get),
+    mceTableCopyCol: (_grid) => copyColSelection().each((selection) => clipboard.setColumns(selection)),
+    mceTableCopyRow: (_grid) => copyRowSelection().each((selection) => clipboard.setRows(selection)),
+    mceTablePasteColBefore: (_grid) => pasteOnSelection(actions.pasteColsBefore, clipboard.getColumns),
+    mceTablePasteColAfter: (_grid) => pasteOnSelection(actions.pasteColsAfter, clipboard.getColumns),
+    mceTablePasteRowBefore: (_grid) => pasteOnSelection(actions.pasteRowsBefore, clipboard.getRows),
+    mceTablePasteRowAfter: (_grid) => pasteOnSelection(actions.pasteRowsAfter, clipboard.getRows),
     mceTableDelete: eraseTable
   }, (func, name) => editor.addCommand(name, func));
 
