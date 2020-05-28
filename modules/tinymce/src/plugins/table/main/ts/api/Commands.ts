@@ -9,17 +9,16 @@ import { Arr, Cell, Fun, Obj, Option, Type } from '@ephox/katamari';
 import { CopyRows, TableFill, TableLookup } from '@ephox/snooker';
 import { Element, Insert, Remove, Replication } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import { insertTableWithDataValidation } from '../actions/InsertTable';
 import { TableActions } from '../actions/TableActions';
 import * as Util from '../alien/Util';
 import * as TableTargets from '../queries/TableTargets';
+import { CellSelectionApi } from '../selection/CellSelection';
 import { Selections } from '../selection/Selections';
 import * as TableSelection from '../selection/TableSelection';
 import * as CellDialog from '../ui/CellDialog';
 import * as RowDialog from '../ui/RowDialog';
 import * as TableDialog from '../ui/TableDialog';
-import * as InsertTable from '../actions/InsertTable';
-import { CellSelectionApi } from '../selection/CellSelection';
-import { console } from '@ephox/dom-globals';
 
 const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboardRows: Cell<Option<Element[]>>) => {
   const isRoot = Util.getIsRoot(editor);
@@ -107,18 +106,8 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
   }, (func, name) => editor.addCommand(name, () => func()));
 
   editor.addCommand('mceInsertTable', (_ui, args) => {
-    if (Type.isObject(args)) {
-      const checkInput = (val: any) => Type.isNumber(val) && val > 0;
-      const rows = args.rows;
-      const columns = args.columns;
-      if (checkInput(rows) && checkInput(columns)) {
-        const headerRows = args.options?.headerRows || 0;
-        const headerColumns = args.options?.headerColumns || 0;
-        InsertTable.insert(editor, columns, rows, headerColumns, headerRows);
-      } else {
-        // eslint-disable-next-line no-console
-        console.error('Invalid values for mceInsertTable - rows and columns values are required to insert a table.');
-      }
+    if (Type.isObject(args) && Obj.keys(args).length > 0) {
+      insertTableWithDataValidation(editor, args.rows, args.columns, args.options, 'Invalid values for mceInsertTable - rows and columns values are required to insert a table.');
     } else {
       TableDialog.open(editor, true);
     }

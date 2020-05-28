@@ -23,22 +23,11 @@ import { SelectionTargets } from './SelectionTargets';
 
 const hasInternalTarget = (e: Event) => Class.has(Element.fromDom(e.target as HTMLElement), 'ephox-snooker-resizer-bar') === false;
 
-interface HandlerStruct {
-  readonly mousedown: (e: MouseEvent) => void;
-  readonly mouseover: (e: MouseEvent) => void;
-  readonly mouseup: (e: MouseEvent) => void;
-  readonly keyup: (e: KeyboardEvent) => void;
-  readonly keydown: (e: KeyboardEvent) => void;
-}
-
 export interface CellSelectionApi {
   clear: (container: Element) => void;
 }
 
 export default function (editor: Editor, lazyResize: () => Option<TableResize>, selectionTargets: SelectionTargets): CellSelectionApi {
-  let handlers: Option<HandlerStruct> = Option.none();
-
-
   const onSelection = (cells: Element[], start: Element, finish: Element) => {
     selectionTargets.targets().each((targets) => {
       const tableOpt = TableLookup.table(start);
@@ -190,14 +179,6 @@ export default function (editor: Editor, lazyResize: () => Option<TableResize>, 
     editor.on('keyup', keyup);
     editor.on('keydown', keydown);
     editor.on('NodeChange', syncSelection);
-
-    handlers = Option.some({
-      mousedown: mouseDown,
-      mouseover: mouseOver,
-      mouseup: mouseUp,
-      keyup,
-      keydown
-    });
   });
 
   return {

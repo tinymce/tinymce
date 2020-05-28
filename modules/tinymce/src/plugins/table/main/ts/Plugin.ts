@@ -51,7 +51,7 @@ function Plugin(editor: Editor) {
   }
 
   editor.on('remove', function () {
-    resizeHandler.destroy(); 
+    resizeHandler.destroy();
   });
 
   return getApi(editor, clipboardRows, resizeHandler, selectionTargets);

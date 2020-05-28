@@ -60,6 +60,21 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
   }).getOr(null);
 };
 
+const insertTableWithDataValidation = (editor: Editor, rows: number, columns: number, options: Record<string, number> = {}, errorMsg: string) => {
+  const checkInput = (val: any) => Type.isNumber(val) && val > 0;
+
+  if (checkInput(rows) && checkInput(columns)) {
+    const headerRows = options.headerRows || 0;
+    const headerColumns = options.headerColumns || 0;
+    return insert(editor, columns, rows, headerColumns, headerRows);
+  } else {
+    // eslint-disable-next-line no-console
+    console.error(errorMsg);
+    return null;
+  }
+};
+
 export {
-  insert
+  insert,
+  insertTableWithDataValidation
 };
