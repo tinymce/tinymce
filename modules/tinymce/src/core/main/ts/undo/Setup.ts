@@ -26,9 +26,9 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
 
   // Get position before an execCommand is processed
   editor.on('BeforeExecCommand', (e) => {
-    const cmd = e.command;
+    const cmd = e.command.toLowerCase();
 
-    if (cmd !== 'Undo' && cmd !== 'Redo' && cmd !== 'mceRepaint') {
+    if (cmd !== 'undo' && cmd !== 'redo' && cmd !== 'mcerepaint') {
       endTyping(undoManager, locks);
       undoManager.beforeChange();
     }
@@ -36,9 +36,9 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
 
   // Add undo level after an execCommand call was made
   editor.on('ExecCommand', (e) => {
-    const cmd = e.command;
+    const cmd = e.command.toLowerCase();
 
-    if (cmd !== 'Undo' && cmd !== 'Redo' && cmd !== 'mceRepaint') {
+    if (cmd !== 'undo' && cmd !== 'redo' && cmd !== 'mcerepaint') {
       addNonTypingUndoLevel(e);
     }
   });
