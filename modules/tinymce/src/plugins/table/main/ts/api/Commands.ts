@@ -87,6 +87,8 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     mceTableInsertColAfter: () => actOnSelection(actions.insertColumnsAfter),
     mceTableDeleteCol: () => actOnSelection(actions.deleteColumn),
     mceTableDeleteRow: () => actOnSelection(actions.deleteRow),
+    mceTableToggleHeaderRows: () => actOnSelection(actions.makeRowHeaders), // only converts TO headers, not back so far
+    mceTableToggleHeaderCols: () => actOnSelection(actions.makeColHeaders), // only converts TO headers, not back so far
     mceTableCutRow: (_grid) => copyRowSelection().each((selection) => {
       clipboardRows.set(selection);
       actOnSelection(actions.deleteRow);
@@ -95,7 +97,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     mceTablePasteRowBefore: (_grid) => pasteOnSelection(actions.pasteRowsBefore),
     mceTablePasteRowAfter: (_grid) => pasteOnSelection(actions.pasteRowsAfter),
     mceTableDelete: eraseTable
-  }, (func, name) => editor.addCommand(name, func));
+  }, (func, name) => { console.log(name, func); editor.addCommand(name, func); });
 
   // Register dialog commands
   Obj.each({

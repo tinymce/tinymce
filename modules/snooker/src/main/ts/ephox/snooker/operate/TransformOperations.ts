@@ -41,19 +41,41 @@ const replaceColumn = function (grid: Structs.RowCells[], index: number, compara
   return replaceIn(grid, targets, comparator, substitution);
 };
 
-// substitution :: (item, comparator) -> item
-const replaceRow = function (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst) {
-  const targetRow = grid[index];
-  const targets = Arr.bind(targetRow.cells(), function (item, i) {
-    // Check that we haven't already added this one.
-    const alreadyAdded = notStartRow(grid, index, i, comparator) || notStartColumn(targetRow, i, comparator);
-    return alreadyAdded ? [] : [ item ];
+const replaceColumns = function (grid: Structs.RowCells[], indices: number[], comparator: CompElm, substitution: Subst) {
+  const allTargets = Arr.map((indices), (index) => {
+    // Make this efficient later.
+    return Arr.bind(grid, function (row, i) {
+      // check if already added.
+      const alreadyAdded = notStartRow(grid, i, index, comparator) || notStartColumn(row, index, comparator);
+      return alreadyAdded ? [] : [ GridRow.getCell(row, index) ];
+    });
   });
 
-  return replaceIn(grid, targets, comparator, substitution);
+  return replaceIn(grid, Arr.flatten(allTargets), comparator, substitution);
+};
+
+// substitution :: (item, comparator) -> item
+const replaceRow = function (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst) {
+  return replaceRows(grid, [ index ], comparator, substitution);
+};
+
+const replaceRows = (grid: Structs.RowCells[], indices: number[], comparator: CompElm, substitution: Subst) => {
+  const allTargets = Arr.map((indices), (index) => {
+    const targetRow = grid[index];
+    return Arr.bind(targetRow.cells(), function (item, i) {
+      // Check that we haven't already added this one.
+      const alreadyAdded = notStartRow(grid, index, i, comparator) || notStartColumn(targetRow, i, comparator);
+      return alreadyAdded ? [] : [ item ];
+    });
+  });
+  
+
+  return replaceIn(grid, Arr.flatten(allTargets), comparator, substitution);
 };
 
 export {
   replaceColumn,
-  replaceRow
+  replaceColumns,
+  replaceRow,
+  replaceRows
 };

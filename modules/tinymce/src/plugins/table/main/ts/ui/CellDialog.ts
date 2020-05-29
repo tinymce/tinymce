@@ -16,6 +16,7 @@ import * as CellDialogGeneralTab from './CellDialogGeneralTab';
 import * as Helpers from './Helpers';
 import { DomModifier } from './DomModifier';
 import { Types } from '@ephox/bridge';
+import { convertCellType } from '../actions/Convert';
 
 type CellData = Helpers.CellData;
 
@@ -43,7 +44,7 @@ const applyToSingle = (editor: Editor, cells: HTMLTableCellElement[], data: Cell
   const dom = editor.dom;
 
   // Switch cell type
-  const cellElm = data.celltype && cells[0].nodeName.toLowerCase() !== data.celltype ? (dom.rename(cells[0], data.celltype) as HTMLTableCellElement) : cells[0];
+  const cellElm = convertCellType(editor, cells, data.celltype)[0];
 
   const modifiers = DomModifier.normal(dom, cellElm);
 
@@ -77,10 +78,7 @@ const applyToMultiple = (editor, cells: Node[], data: CellData) => {
   const dom = editor.dom;
 
   Tools.each(cells, (cellElm: HTMLTableCellElement) => {
-    // Switch cell type
-    if (data.celltype && cellElm.nodeName.toLowerCase() !== data.celltype) {
-      cellElm = dom.rename(cellElm, data.celltype) as HTMLTableCellElement;
-    }
+    convertCellType(editor, [cellElm], data.celltype);
 
     // NOTE: This isn't tested at all.
     const modifiers = DomModifier.ifTruthy(dom, cellElm);

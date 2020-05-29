@@ -19,17 +19,19 @@ import Editor from 'tinymce/core/api/Editor';
 import { DomDescent } from '@ephox/phoenix';
 
 export interface TableActions {
-  deleteRow: (table: any, target: any) => any;
-  deleteColumn: (table: any, target: any) => any;
-  insertRowsBefore: (table: any, target: any) => any;
-  insertRowsAfter: (table: any, target: any) => any;
-  insertColumnsBefore: (table: any, target: any) => any;
-  insertColumnsAfter: (table: any, target: any) => any;
-  mergeCells: (table: any, target: any) => any;
-  unmergeCells: (table: any, target: any) => any;
-  pasteRowsBefore: (table: any, target: any) => any;
-  pasteRowsAfter: (table: any, target: any) => any;
-  pasteCells: (table: any, target: any) => any;
+  deleteRow: (table: Element<any>, target: any) => any;
+  deleteColumn: (table: Element<any>, target: any) => any;
+  insertRowsBefore: (table: Element<any>, target: any) => any;
+  insertRowsAfter: (table: Element<any>, target: any) => any;
+  insertColumnsBefore: (table: Element<any>, target: any) => any;
+  insertColumnsAfter: (table: Element<any>, target: any) => any;
+  mergeCells: (table: Element<any>, target: any) => any;
+  unmergeCells: (table: Element<any>, target: any) => any;
+  pasteRowsBefore: (table: Element<any>, target: any) => any;
+  pasteRowsAfter: (table: Element<any>, target: any) => any;
+  pasteCells: (table: Element<any>, target: any) => any;
+  makeRowHeaders: (table: Element<any>, target: any) => any;
+  makeColHeaders: (table: Element<any>, target: any) => any;
 }
 
 export const TableActions = function (editor: Editor, lazyWire) {
@@ -97,6 +99,10 @@ export const TableActions = function (editor: Editor, lazyWire) {
 
   const pasteCells = execute(TableOperations.pasteCells, Fun.always, Fun.noop, lazyWire);
 
+  const makeRowHeaders = execute(TableOperations.makeRowHeaders, Fun.always, Fun.noop, lazyWire);
+
+  const makeColHeaders = execute(TableOperations.makeColumnHeaders, Fun.always, Fun.noop, lazyWire);
+
   return {
     deleteRow,
     deleteColumn,
@@ -108,6 +114,8 @@ export const TableActions = function (editor: Editor, lazyWire) {
     unmergeCells,
     pasteRowsBefore,
     pasteRowsAfter,
-    pasteCells
+    pasteCells,
+    makeRowHeaders,
+    makeColHeaders
   };
 };
