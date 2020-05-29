@@ -23,7 +23,7 @@ const eq = <T> (t: T) => (a: any): a is T =>
 export const isString: (value: any) => value is string =
   isType('string');
 
-export const isObject: (value: any) => boolean =
+export const isObject: (value: any) => value is Object =
   isType('object');
 
 export const isArray: (value: any) => value is Array<unknown> =

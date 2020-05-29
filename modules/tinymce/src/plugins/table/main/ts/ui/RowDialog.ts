@@ -125,7 +125,7 @@ const open = (editor: Editor) => {
 
   // Get current data and find shared values between rows
   const rowsData: RowData[] = Tools.map(rows, (rowElm) => Helpers.extractDataFromRowElement(editor, rowElm, hasAdvancedRowTab(editor)));
-  const data: RowData = Helpers.getSharedValues(rowsData);
+  const data = Helpers.getSharedValues<RowData>(rowsData);
 
   const dialogTabPanel: Types.Dialog.TabPanelApi = {
     type: 'tabpanel',

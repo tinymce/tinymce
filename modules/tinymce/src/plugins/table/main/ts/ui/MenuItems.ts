@@ -17,7 +17,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
 
   const insertTableAction = ({ numRows, numColumns }) => {
     editor.undoManager.transact(function () {
-      InsertTable.insert(editor, numColumns, numRows);
+      InsertTable.insert(editor, numColumns, numRows, 0, 0);
     });
 
     editor.addVisual();

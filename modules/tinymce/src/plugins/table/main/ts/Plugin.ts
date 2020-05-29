@@ -52,7 +52,6 @@ function Plugin(editor: Editor) {
 
   editor.on('remove', function () {
     resizeHandler.destroy();
-    cellSelection.destroy();
   });
 
   return getApi(editor, clipboardRows, resizeHandler, selectionTargets);
