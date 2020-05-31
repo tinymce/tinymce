@@ -248,6 +248,9 @@ const render = function (editor: Editor) {
   if (settings.add_form_submit_trigger) {
     editor.on('submit', function () {
       if (editor.initialized) {
+        if (editor.isHidden()) {
+          editor.show();
+        }
         editor.save();
       }
     });
