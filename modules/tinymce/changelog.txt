@@ -1,4 +1,5 @@
 Version 5.4.0 (TBD)
+    Added all table menu items to the UI registry, so they can be used by name in other menus #TINY-4866
     Changed `mceInsertTable` command and `insertTable` API method to take optional header rows and columns arguments #TINY-6012
 Version 5.3.1 (2020-05-27)
     Fixed the image upload error alert also incorrectly closing the image dialog #TINY-6020
