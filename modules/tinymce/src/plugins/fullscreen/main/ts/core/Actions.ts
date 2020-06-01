@@ -91,9 +91,18 @@ const toggleFullscreen = function (editor, fullscreenState) {
 
   const isTouch = Env.deviceType.isTouch();
 
-  editorContainerStyle = editorContainer.style;
-  iframe = editor.getContentAreaContainer().firstChild;
-  iframeStyle = iframe.style;
+
+  const cleanup = () => {
+    if (isTouch) {
+      Thor.restoreStyles(editor.dom);
+    }
+
+    DOM.removeClass(body, 'tox-fullscreen');
+    DOM.removeClass(documentElement, 'tox-fullscreen');
+    DOM.removeClass(editorContainer, 'tox-fullscreen');
+
+    viewportUpdate.unbind();
+  };
 
   if (!fullscreenInfo) {
     const newFullScreenInfo = {
@@ -119,7 +128,7 @@ const toggleFullscreen = function (editor, fullscreenState) {
 
     viewportUpdate.bind(editorContainerS);
 
-    editor.on('remove', viewportUpdate.unbind);
+    editor.on('remove', cleanup);
 
     fullscreenState.set(newFullScreenInfo);
     Events.fireFullscreenStateChanged(editor, true);
@@ -132,18 +141,12 @@ const toggleFullscreen = function (editor, fullscreenState) {
     editorContainerStyle.top = fullscreenInfo.containerTop;
     editorContainerStyle.left = fullscreenInfo.containerLeft;
 
-    if (isTouch) {
-      Thor.restoreStyles(editor.dom);
-    }
-    DOM.removeClass(body, 'tox-fullscreen');
-    DOM.removeClass(documentElement, 'tox-fullscreen');
-    DOM.removeClass(editorContainer, 'tox-fullscreen');
     setScrollPos(fullscreenInfo.scrollPos);
 
     fullscreenState.set(null);
     Events.fireFullscreenStateChanged(editor, false);
-    viewportUpdate.unbind();
-    editor.off('remove', viewportUpdate.unbind);
+    cleanup();
+    editor.off('remove', cleanup);
   }
 };
 
