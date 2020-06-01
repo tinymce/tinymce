@@ -311,8 +311,8 @@
 
 "@ephox/wrap-promise-polyfill@^2.2.0":
   version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@ephox/wrap-promise-polyfill/-/wrap-promise-polyfill-2.2.0.tgz#866e58876a47e9689e4f69ad13dfc0b2b5d50e7c"
-  integrity sha512-l/Uus/bO5usluwZXIHutD7BwM+MKHKh4AnoqbeQ68bTZQoLbpKqqvOiPmaKeG8L1ky9fM7SHFbu/fi/wQ5sshQ==
+  resolved "https://registry.yarnpkg.com/@ephox/wrap-promise-polyfill/-/wrap-promise-polyfill-2.2.0.tgz#ea11e0a88320b5096dfed6249e169621c9853f7d"
+  integrity sha512-bTvZa0VEBPtCbcl05lYDjMre1WruTRXReCo8Yp2JrOnkf2PK8jgzBrOYPplbjgXvh6ToPqK2wiaeeBApYYgUSQ==
 
 "@ephox/wrap-sizzle@^4.0.0":
   version "4.0.1"
