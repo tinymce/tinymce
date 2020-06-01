@@ -5,17 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 import { document, window } from '@ephox/dom-globals';
-import { Fun, Singleton } from '@ephox/katamari';
+import { Fun, Singleton, Cell } from '@ephox/katamari';
 import { Css, Element, VisualViewport } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
 import * as Events from '../api/Events';
 import * as Thor from './Thor';
+import Editor from 'tinymce/core/api/Editor';
 
 const DOM = DOMUtils.DOM;
 
-const getScrollPos = function () {
+const getScrollPos = () => {
   const vp = VisualViewport.getBounds(window);
 
   return {
@@ -24,7 +25,7 @@ const getScrollPos = function () {
   };
 };
 
-const setScrollPos = function (pos) {
+const setScrollPos = (pos) => {
   window.scrollTo(pos.x, pos.y);
 };
 
@@ -78,12 +79,10 @@ const viewportUpdate = VisualViewport.get().fold(
   }
 );
 
-const toggleFullscreen = function (editor, fullscreenState) {
+const toggleFullscreen = (editor: Editor, fullscreenState: Cell<any>) => {
   const body = document.body;
   const documentElement = document.documentElement;
-  let editorContainerStyle;
-  let editorContainer, iframe, iframeStyle;
-  editorContainer = editor.getContainer();
+  const editorContainer = editor.getContainer();
   const editorContainerS = Element.fromDom(editorContainer);
 
   const fullscreenInfo = fullscreenState.get();
@@ -91,6 +90,9 @@ const toggleFullscreen = function (editor, fullscreenState) {
 
   const isTouch = Env.deviceType.isTouch();
 
+  const editorContainerStyle = editorContainer.style;
+  const iframe = editor.getContentAreaContainer().firstChild as any;
+  const iframeStyle = iframe.style;
 
   const cleanup = () => {
     if (isTouch) {
