@@ -49,7 +49,7 @@ export const create = (): Registry => {
   const contextMenus: Record<string, ContextMenuApi> = {};
   const contextToolbars: Record<string, ContextToolbarApi | ContextFormApi> = {};
   const sidebars: Record<string, SidebarApi> = {};
-  const add = (collection, type: string) => (name: string, spec: any): void => collection[name.toLowerCase()] = { ...spec, type };
+  const add = (collection, type: string) => (name: string, spec: any): void => collection[name.toLowerCase()] = { ...(() => {if (spec.icon !== undefined) {spec.icon = spec.icon.toLowerCase();};return spec;})(), type };
   const addIcon = (name: string, svgData: string) => icons[name.toLowerCase()] = svgData;
 
   return {
