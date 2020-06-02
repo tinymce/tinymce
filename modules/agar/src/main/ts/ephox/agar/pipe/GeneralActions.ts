@@ -1,6 +1,6 @@
 const debug = (): void => {
   // eslint-disable-next-line no-debugger
-  debugger;
+  // debugger;
 };
 
 const pass = (): void => {};

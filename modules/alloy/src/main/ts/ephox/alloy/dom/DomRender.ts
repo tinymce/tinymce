@@ -22,7 +22,7 @@ const renderToDom = (definition: DomDefinition.GeneralDefinitionDetail<Element>)
 
   if (!definition.uid) {
     // eslint-disable-next-line no-debugger
-    debugger;
+    // debugger;
   }
   Tagger.writeOnly(subject, definition.uid);
 
