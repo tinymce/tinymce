@@ -254,6 +254,18 @@ const opPasteRowsAfter = function (grid: Structs.RowCells[], pasteDetails: Extra
   return outcome(mergedGrid, cursor);
 };
 
+const opMakeThead = function (grid: Structs.RowCells[], details: Structs.DetailExt[], _comparator: CompElm, _genWrappers: GeneratorsModification) {
+  const newGrid = TransformOperations.changeSections(grid, Arr.map(details, (d) => d.row()), 'thead');
+  const cursor = elementFromGrid(newGrid, details[0].row(), details[0].column());
+  return outcome(newGrid, cursor);
+};
+
+const opMakeTfoot = function (grid: Structs.RowCells[], details: Structs.DetailExt[], _comparator: CompElm, _genWrappers: GeneratorsModification) {
+  const newGrid = TransformOperations.changeSections(grid, Arr.map(details, (d) => d.row()), 'tfoot');
+  const cursor = elementFromGrid(newGrid, details[0].row(), details[0].column());
+  return outcome(newGrid, cursor);
+};
+
 // Only column modifications force a resizing. Everything else just tries to preserve the table as is.
 const resize = Adjustments.adjustWidthTo;
 
@@ -280,3 +292,5 @@ export const unmergeCells = run(opUnmergeCells, onUnmergable, resize, Fun.noop, 
 export const pasteCells = run(opPasteCells, onPaste, resize, Fun.noop, Generators.modification);
 export const pasteRowsBefore = run(opPasteRowsBefore, onPasteRows, Fun.noop, Fun.noop, Generators.modification);
 export const pasteRowsAfter = run(opPasteRowsAfter, onPasteRows, Fun.noop, Fun.noop, Generators.modification);
+export const makeThead = run(opMakeThead, onCells, Fun.noop, Fun.noop, Generators.modification);
+export const makeTfoot = run(opMakeTfoot, onCells, Fun.noop, Fun.noop, Generators.modification);

@@ -36,6 +36,10 @@ const cellLength = function (gridRow: Structs.RowCells) {
   return gridRow.cells().length;
 };
 
+const setSection = function (gridRow: Structs.RowCells, newSection: Structs.Section) {
+  return Structs.rowcells(gridRow.cells(), newSection);
+};
+
 export {
   addCell,
   setCells,
@@ -43,5 +47,6 @@ export {
   getCell,
   getCellElement,
   mapCells,
-  cellLength
+  cellLength,
+  setSection
 };

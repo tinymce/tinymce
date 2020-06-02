@@ -73,9 +73,16 @@ const replaceRows = (grid: Structs.RowCells[], indices: number[], comparator: Co
   return replaceIn(grid, Arr.flatten(allTargets), comparator, substitution);
 };
 
+const changeSections = (grid: Structs.RowCells[], indices: number[], newSection: Structs.Section) => {
+  return Arr.map(grid, (rowCell, i) => {
+    return Arr.contains(indices, i) ? GridRow.setSection(rowCell, newSection) : rowCell;
+  });
+};
+
 export {
   replaceColumn,
   replaceColumns,
   replaceRow,
-  replaceRows
+  replaceRows,
+  changeSections
 };

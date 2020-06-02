@@ -89,6 +89,8 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     mceTableDeleteRow: () => actOnSelection(actions.deleteRow),
     mceTableToggleHeaderRows: () => actOnSelection(actions.makeRowHeaders), // only converts TO headers, not back so far
     mceTableToggleHeaderCols: () => actOnSelection(actions.makeColHeaders), // only converts TO headers, not back so far
+    mceTableToggleThead: () => actOnSelection(actions.makeThead),
+    mceTableToggleTfoot: () => actOnSelection(actions.makeTfoot),
     mceTableCutRow: (_grid) => copyRowSelection().each((selection) => {
       clipboardRows.set(selection);
       actOnSelection(actions.deleteRow);

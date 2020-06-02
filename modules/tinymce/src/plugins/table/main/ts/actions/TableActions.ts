@@ -32,6 +32,8 @@ export interface TableActions {
   pasteCells: (table: Element<any>, target: any) => any;
   makeRowHeaders: (table: Element<any>, target: any) => any;
   makeColHeaders: (table: Element<any>, target: any) => any;
+  makeThead: (table: Element<any>, target: any) => any;
+  makeTfoot: (table: Element<any>, target: any) => any;
 }
 
 export const TableActions = function (editor: Editor, lazyWire) {
@@ -103,6 +105,9 @@ export const TableActions = function (editor: Editor, lazyWire) {
 
   const makeColHeaders = execute(TableOperations.makeColumnHeaders, Fun.always, Fun.noop, lazyWire);
 
+  const makeThead = execute(TableOperations.makeThead, Fun.always, Fun.noop, lazyWire);
+  const makeTfoot = execute(TableOperations.makeTfoot, Fun.always, Fun.noop, lazyWire);
+
   return {
     deleteRow,
     deleteColumn,
@@ -116,6 +121,8 @@ export const TableActions = function (editor: Editor, lazyWire) {
     pasteRowsAfter,
     pasteCells,
     makeRowHeaders,
-    makeColHeaders
+    makeColHeaders,
+    makeThead,
+    makeTfoot
   };
 };
