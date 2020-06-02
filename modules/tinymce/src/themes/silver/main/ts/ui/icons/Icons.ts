@@ -11,11 +11,11 @@ export type IconProvider = () => Record<string, string>;
 
 const defaultIcon = (icons: IconProvider): string => Option.from(icons()['temporary-placeholder']).getOr('!not found!');
 
-const get = (name: string, icons: IconProvider): string => Option.from(icons()[name]).getOrThunk(() => defaultIcon(icons));
+const get = (name: string, icons: IconProvider): string => Option.from(icons()[name.toLowerCase()]).getOrThunk(() => defaultIcon(icons));
 
-const getOr = (name: string, icons: IconProvider, fallback: Option<string>): string => Option.from(icons()[name]).or(fallback).getOrThunk(() => defaultIcon(icons));
+const getOr = (name: string, icons: IconProvider, fallback: Option<string>): string => Option.from(icons()[name.toLowerCase()]).or(fallback).getOrThunk(() => defaultIcon(icons));
 
-const getFirst = (names: string[], icons: IconProvider): string => Arr.findMap(names, (name) => Option.from(icons()[name])).getOrThunk(() => defaultIcon(icons));
+const getFirst = (names: string[], icons: IconProvider): string => Arr.findMap(names, (name) => Option.from(icons()[name.toLowerCase()])).getOrThunk(() => defaultIcon(icons));
 
 export {
   getFirst,
