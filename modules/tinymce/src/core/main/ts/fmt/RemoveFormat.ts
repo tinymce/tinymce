@@ -30,7 +30,7 @@ const MCE_ATTR_RE = /^(src|href|style)$/;
 const each = Tools.each;
 const isEq = FormatUtils.isEq;
 
-const isTableCell = (node: Node) => /^(TH|TD)$/.test(node.nodeName);
+const isTableCellOrRow = (node: Node) => /^(TR|TH|TD)$/.test(node.nodeName);
 
 const isChildOfInlineParent = (dom: DOMUtils, node: Node, parent: Node): boolean => dom.isChildOf(node, parent) && node !== parent && !dom.isBlock(parent);
 
@@ -61,6 +61,20 @@ const getContainer = (ed: Editor, rng: RangeLikeObject, start?: boolean) => {
   }
 
   return container;
+};
+
+const normalizeTableSelection = (node: Node, start: boolean) => {
+  const prop = start ? 'firstChild' : 'lastChild';
+  if (isTableCellOrRow(node) && node[prop]) {
+    const childNode = node[prop];
+    if (node.nodeName === 'TR') {
+      return childNode[prop] || childNode;
+    } else {
+      return childNode;
+    }
+  }
+
+  return node;
 };
 
 const wrap = (dom: DOMUtils, node: Node, name: string, attrs?: Record<string, string>) => {
@@ -461,7 +475,6 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
 
   const removeRngStyle = (rng: Range) => {
     let startContainer: Node, endContainer: Node;
-    const commonAncestorContainer = rng.commonAncestorContainer;
 
     let expandedRng = ExpandRange.expandRng(ed, rng, formatList, true);
 
@@ -474,22 +487,10 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
 
       if (startContainer !== endContainer) {
         // WebKit will render the table incorrectly if we wrap a TH or TD in a SPAN
-        // so let's see if we can use the first child instead
+        // so let's see if we can use the first/last child instead
         // This will happen if you triple click a table cell and use remove formatting
-        if (/^(TR|TH|TD)$/.test(startContainer.nodeName) && startContainer.firstChild) {
-          if (startContainer.nodeName === 'TR') {
-            startContainer = startContainer.firstChild.firstChild || startContainer;
-          } else {
-            startContainer = startContainer.firstChild || startContainer;
-          }
-        }
-
-        // Try to adjust endContainer as well if cells on the same row were selected - bug #6410
-        if (commonAncestorContainer &&
-          /^T(HEAD|BODY|FOOT|R)$/.test(commonAncestorContainer.nodeName) &&
-          isTableCell(endContainer) && endContainer.firstChild) {
-          endContainer = endContainer.firstChild || endContainer;
-        }
+        startContainer = normalizeTableSelection(startContainer, true);
+        endContainer = normalizeTableSelection(endContainer, false);
 
         // Wrap and split if nested
         if (isChildOfInlineParent(dom, startContainer, endContainer)) {

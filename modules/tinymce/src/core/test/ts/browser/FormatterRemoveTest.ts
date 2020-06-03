@@ -488,6 +488,14 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (success
     LegacyUnit.equal(getContent(editor), '<table><tbody><tr><td>ab cd</td></tr></tbody></table>', 'Should have removed format.');
   });
 
+  suite.test('Remove format from last position in table cell', function (editor) {
+    editor.formatter.register('format', { inline: 'b' });
+    editor.getBody().innerHTML = '<table><tbody><tr><td>ab <b>cd</b></td></tr></tbody></table>';
+    LegacyUnit.setSelection(editor, 'b', 0, 'tr', 2);
+    editor.formatter.remove('format');
+    LegacyUnit.equal(getContent(editor), '<table><tbody><tr><td>ab cd</td></tr></tbody></table>', 'Should have removed format.');
+  });
+
   suite.test('Inline element on selected text with preserve_attributes flag (bold)', (editor) => {
     editor.formatter.register('format', { inline: 'b', preserve_attributes: [ 'class', 'style' ], remove: 'all' });
     editor.getBody().innerHTML = '<p><b class="abc" style="color: red;" data-test="1">1234</b></p>';
