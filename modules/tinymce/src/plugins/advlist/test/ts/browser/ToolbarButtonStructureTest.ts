@@ -1,20 +1,18 @@
-import { UnitTest } from "@ephox/bedrock-client";
-import { Pipeline, Log, Chain, NamedChain, Waiter, Assertions, ApproxStructure } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Pipeline, Log, NamedChain, Waiter, Assertions, ApproxStructure, UiFinder } from '@ephox/agar';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 import { Editor } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { Body } from '@ephox/sugar';
 
 UnitTest.asynctest('browser.tinymce.plugins.advlist.ToolbarButtonStructureTest', (success, failure) => {
   AdvListPlugin();
   ListsPlugin();
   Theme();
 
-  const cGetContainer = Chain.mapper((editor: any) => Element.fromDom(editor.editorContainer));
-
   Pipeline.async({}, [
-    Log.step('TBA', 'Test that one list type = toolbar button NOT splitbutton', Chain.asStep({}, [
+    Log.chainsAsStep('TBA', 'Test that one list type = toolbar button NOT splitbutton', [
       Editor.cFromSettings({
         theme: 'silver',
         plugins: 'lists advlist',
@@ -25,47 +23,55 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.ToolbarButtonStructureTest',
         base_url: '/project/tinymce/js/tinymce'
       }),
       NamedChain.asChain([
-        NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-        NamedChain.direct('editor', cGetContainer, 'editorContainer'),
-        NamedChain.direct('editorContainer', Waiter.cTryUntil('', Assertions.cAssertStructure(
-          'Check p>strong element path',
+        NamedChain.writeValue('body', Body.body()),
+        NamedChain.direct('body', UiFinder.cFindIn('.tox-editor-header .tox-toolbar .tox-toolbar__group'), 'toolbarGroup'),
+        NamedChain.read('toolbarGroup', Waiter.cTryUntil('', Assertions.cAssertStructure(
+          'Check lists toolbar button structure',
           ApproxStructure.build((s, str, arr) => s.element('div', {
-            classes: [ arr.has('tox-tinymce') ],
+            classes: [ arr.has('tox-toolbar__group') ],
             children: [
-              s.element('div', {
-                classes: [ arr.has('tox-editor-container') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-editor-header') ],
-                    children: [
-                      s.element('div', {
-                        classes: [ arr.has('tox-toolbar') ],
-                        children: [
-                          s.element('div', {
-                            classes: [ arr.has('tox-toolbar__group') ],
-                            children: [
-                              s.element('button', {
-                                classes: [ arr.has('tox-tbtn') ], 
-                                attrs: {
-                                  title: str.is("Numbered list")
-                                }
-                              })
-                            ]
-                          })
-                        ]
-                      }),
-                      s.anything()
-                    ]
-                  }),
-                  s.anything()
-                ]
-              }),
-              s.anything()
+              s.element('button', {
+                classes: [ arr.has('tox-tbtn'), arr.not('tox-split-button') ],
+                attrs: {
+                  title: str.is('Numbered list')
+                }
+              })
             ]
           }))
-        )), 'assertion1'),
-      ])
-
-    ]))
+        ))),
+        NamedChain.outputInput
+      ]),
+      Editor.cRemove
+    ]),
+    Log.chainsAsStep('TBA', 'Test that one list type = toolbar button IS splitbutton', [
+      Editor.cFromSettings({
+        theme: 'silver',
+        plugins: 'lists advlist',
+        toolbar: 'numlist',
+        menubar: false,
+        statusbar: false,
+        base_url: '/project/tinymce/js/tinymce'
+      }),
+      NamedChain.asChain([
+        NamedChain.writeValue('body', Body.body()),
+        NamedChain.direct('body', UiFinder.cFindIn('.tox-editor-header .tox-toolbar .tox-toolbar__group'), 'toolbarGroup'),
+        NamedChain.read('toolbarGroup', Waiter.cTryUntil('', Assertions.cAssertStructure(
+          'Check lists toolbar button structure',
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('tox-toolbar__group') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.not('tox-tbtn'), arr.has('tox-split-button') ],
+                attrs: {
+                  title: str.is('Numbered list')
+                }
+              })
+            ]
+          }))
+        ))),
+        NamedChain.outputInput
+      ]),
+      Editor.cRemove
+    ])
   ], success, failure);
 });
