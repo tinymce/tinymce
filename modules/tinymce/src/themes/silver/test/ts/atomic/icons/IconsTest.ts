@@ -11,15 +11,23 @@ UnitTest.asynctest('IconsTest', (success, failure) => {
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const iconIndent = getAllOxide().indent;
     const iconDefault = getAllOxide()['temporary-placeholder'];
+    const myCustomIcon = '<svg></svg>';
 
     const iconProvider = () => editor.ui.registry.getAll().icons;
     const emptyIconProvider: IconProvider = () => ({ });
+    const lowerCaseProvider: IconProvider = () => ({ mycustomicon: '<svg></svg>' });
 
     const getTest = Step.sync(() => {
       Assertions.assertEq(
         'When an icon exists as a default icon or provided, it should be returned',
         iconIndent,
         get('indent', iconProvider)
+      );
+
+      Assertions.assertEq(
+        'When a lowercase version of a mixed-case name exists, it should be returned',
+        myCustomIcon,
+        get('myCustomIcon', lowerCaseProvider)
       );
 
       Assertions.assertEq(

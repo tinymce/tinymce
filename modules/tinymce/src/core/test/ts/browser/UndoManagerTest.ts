@@ -500,6 +500,12 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     LegacyUnit.equal(editor.getContent(), '<p><em><strong>a</strong></em></p>');
   });
 
+  suite.test('undo filter for mceRepaint is case insensitive', function (editor) {
+    editor.undoManager.clear();
+    editor.execCommand('mceRepaint');
+    LegacyUnit.equal(editor.undoManager.hasUndo(), false);
+  });
+
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
