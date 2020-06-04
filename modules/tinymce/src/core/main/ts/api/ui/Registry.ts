@@ -44,6 +44,7 @@ const registry = () => {
      * of a contextual form is the link plugin when the configuration
      * { link_context_toolbar: true } is used. When the cursor is on a link, a
      * contextual input form appears allowing for quick changes to the url field.
+     * <br>
      * For information on creating context forms, see:
      * <a href="https://www.tiny.cloud/docs/ui-components/contextform/">
      * UI Components - Context forms</a>.
@@ -58,6 +59,7 @@ const registry = () => {
     /**
      * Registers a new context menu section that only appears when a content predicate is matched,
      * for example, the cursor is inside a table.
+     * <br>
      * For information on creating context menus, see:
      * <a href="https://www.tiny.cloud/docs/ui-components/contextmenu/">
      * UI Components - Context Menu</a>.
@@ -72,6 +74,7 @@ const registry = () => {
     /**
      * Registers a new context toolbar that only appears when a content predicate is matched for example
      * the cursor is on an image element.
+     * <br>
      * For information on creating context toolbars, see:
      * <a href="https://www.tiny.cloud/docs/ui-components/contexttoolbar/">
      * UI Components - Context Toolbar</a>.
