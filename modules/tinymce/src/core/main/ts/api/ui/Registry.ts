@@ -21,6 +21,7 @@ const registry = () => {
      * Registers a new auto completer component. When a configured string pattern
      * is matched in the content while typing, the autocompleter will be triggered.
      * Emoticons and Charmap use an autocompleter.
+     * <br>
      * For information on creating an autocompleter, see: 
      * <a href="https://www.tiny.cloud/docs/ui-components/autocompleter/">
      * UI Components - Autocompleter</a>.
@@ -35,6 +36,7 @@ const registry = () => {
     /**
      * Registers a new toolbar button that executes a command when clicked or activated
      * via keyboard navigation controls.
+     * <br>
      * For information on creating a basic toolbar button, see: 
      * <a href="https://www.tiny.cloud/docs/ui-components/typesoftoolbarbuttons/#basicbutton">
      * UI Components - Types of toolbar buttons: Basic button</a>.
@@ -83,8 +85,8 @@ const registry = () => {
 
     /**
      * Registers a new SVG icon, the icon name reference can be configured by any
-     * TinyMCE 5 Ui components that can display an icon.
-     * The icon is only available to the editor instance it was configured for.
+     * TinyMCE 5 Ui components that can display an icon. The icon is only available
+     * to the editor instance it was configured for.
      *
      * @method addIcon
      * @param {String} name Unique name identifying the new icon.
@@ -97,6 +99,7 @@ const registry = () => {
      * Registers a new menu button. Adds a toolbar button that opens a menu when
      * clicked. The menu can be populated by items created by addMenuItem,
      * addNestedMenuItem or addToggleMenuItem.
+     * <br>
      * For information on creating a toolbar menu button, see: 
      * <a href="https://www.tiny.cloud/docs/ui-components/typesoftoolbarbuttons/#menubutton">
      * UI Components - Types of toolbar buttons: Menu button</a>.
@@ -111,6 +114,7 @@ const registry = () => {
     /**
      * Registers a new menu item that executes a command when clicked or activated
      * via keyboard navigation controls.
+     * <br>
      * For information on creating a basic menu item, see:
      * <a href="https://www.tiny.cloud/docs/ui-components/menuitems/#basicmenuitems">
      * UI Components - Custom menu items: Basic menu items</a>.
@@ -126,6 +130,7 @@ const registry = () => {
      * Registers a new menu item that reveals a submenu when clicked or activated
      * by keyboard navigation controls.The submenu can be populated by items
      * created by addMenuItem, addNestedMenuItem or addToggleMenuItem.
+     * <br>
      * For information on creating a nested menu item, see:
      * <a href="https://www.tiny.cloud/docs/ui-components/menuitems/#nestedmenuitems">
      * UI Components - Custom menu items: Nested menu items</a>.
@@ -145,6 +150,7 @@ const registry = () => {
      * ToggleSidebar command and a 'ToggleSidebar' event that can used to
      * manage the sidebar open/closed state. The tinycomments plugin uses a
      * sidebar for its Ui components.
+     * <br>
      * For information on creating a custom sidebar, see:
      * <a href="https://www.tiny.cloud/docs/ui-components/customsidebar/">
      * UI Components - Custom sidebar</a>.
@@ -159,6 +165,7 @@ const registry = () => {
     /**
      * Registers a new split button for the toolbar. The advanced list plugin uses
      * a split button to simplify its functionality.
+     * <br>
      * For information on creating a split toolbar button, see:
      * <a href="https://www.tiny.cloud/docs/ui-components/typesoftoolbarbuttons/#splitbutton">
      * UI Components - Types of toolbar buttons: Split button</a>.
@@ -173,6 +180,7 @@ const registry = () => {
     /**
      * Registers a new toggle button for the toolbar. A toggle buttons state can
      * be set in the configuration.
+     * <br>
      * For information on creating a toggle toolbar button, see:
      * <a href="https://www.tiny.cloud/docs/ui-components/typesoftoolbarbuttons/#togglebutton">
      * UI Components - Types of toolbar buttons: Toggle button</a>.
@@ -191,6 +199,7 @@ const registry = () => {
      * <strong>Note:</strong> Group toolbar buttons can only be used when using the floating toolbar mode.
      * <br>
      * <em>Added in TinyMCE 5.2</em>
+     * <br>
      * For information on creating a group toolbar button, see:
      * <a href="https://www.tiny.cloud/docs/ui-components/typesoftoolbarbuttons/#grouptoolbarbutton">
      * UI Components - Types of toolbar buttons: Group toolbar button</a>.
@@ -205,6 +214,7 @@ const registry = () => {
     /**
      * Registers a new menu item that will act like a toggle button,
      * showing a tick in the menu item to represent state.
+     * <br>
      * For information on creating a toggle menu item, see: 
      * <a href="https://www.tiny.cloud/docs/ui-components/menuitems/#togglemenuitems">
      * UI Components - Custom menu items: Toggle menu items</a>.
