@@ -23,12 +23,22 @@ export const Clipboard = (): Clipboard => {
   const rows = Cell(Option.none<Element<HTMLTableRowElement>[]>());
   const cols = Cell(Option.none<Element<HTMLTableRowElement>[]>());
 
+  const clearClipboard = (clipboard: Cell<Option<Element<any>[]>>) => {
+    clipboard.set(Option.none());
+  };
+
   return {
     getRows: rows.get,
-    setRows: rows.set,
-    clearRows: () => rows.set(Option.none()),
+    setRows: (r: Option<Element<HTMLTableRowElement>[]>) => {
+      rows.set(r);
+      clearClipboard(cols);
+    },
+    clearRows: () => clearClipboard(rows),
     getColumns: cols.get,
-    setColumns: cols.set,
-    clearColumns: () => cols.set(Option.none())
+    setColumns: (c: Option<Element<HTMLTableRowElement>[]>) => {
+      cols.set(c);
+      clearClipboard(rows);
+    },
+    clearColumns: () => clearClipboard(cols)
   };
 };
