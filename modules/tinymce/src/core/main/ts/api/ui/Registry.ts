@@ -22,7 +22,7 @@ const registry = () => {
      * is matched in the content while typing, the autocompleter will be triggered.
      * Emoticons and Charmap use an autocompleter.
      * <br>
-     * For information on creating an autocompleter, see: 
+     * For information on creating an autocompleter, see:
      * <a href="https://www.tiny.cloud/docs/ui-components/autocompleter/">
      * UI Components - Autocompleter</a>.
      *
@@ -37,7 +37,7 @@ const registry = () => {
      * Registers a new toolbar button that executes a command when clicked or activated
      * via keyboard navigation controls.
      * <br>
-     * For information on creating a basic toolbar button, see: 
+     * For information on creating a basic toolbar button, see:
      * <a href="https://www.tiny.cloud/docs/ui-components/typesoftoolbarbuttons/#basicbutton">
      * UI Components - Types of toolbar buttons: Basic button</a>.
      *
@@ -100,7 +100,7 @@ const registry = () => {
      * clicked. The menu can be populated by items created by addMenuItem,
      * addNestedMenuItem or addToggleMenuItem.
      * <br>
-     * For information on creating a toolbar menu button, see: 
+     * For information on creating a toolbar menu button, see:
      * <a href="https://www.tiny.cloud/docs/ui-components/typesoftoolbarbuttons/#menubutton">
      * UI Components - Types of toolbar buttons: Menu button</a>.
      *
@@ -215,7 +215,7 @@ const registry = () => {
      * Registers a new menu item that will act like a toggle button,
      * showing a tick in the menu item to represent state.
      * <br>
-     * For information on creating a toggle menu item, see: 
+     * For information on creating a toggle menu item, see:
      * <a href="https://www.tiny.cloud/docs/ui-components/menuitems/#togglemenuitems">
      * UI Components - Custom menu items: Toggle menu items</a>.
      *
