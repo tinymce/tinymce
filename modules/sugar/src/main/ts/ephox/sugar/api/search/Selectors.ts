@@ -1,10 +1,7 @@
-import { document, Document, Element as DomElement, Node as DomNode } from '@ephox/dom-globals';
+import { document, Document, DocumentFragment, Element as DomElement, Node as DomNode } from '@ephox/dom-globals';
 import { Arr, Option } from '@ephox/katamari';
 import Element from '../node/Element';
-import * as NodeTypes from '../node/NodeTypes';
-
-const ELEMENT = NodeTypes.ELEMENT;
-const DOCUMENT = NodeTypes.DOCUMENT;
+import { ELEMENT, DOCUMENT, DOCUMENT_FRAGMENT } from '../node/NodeTypes';
 
 const is = <T extends DomElement = DomElement> (element: Element<DomNode>, selector: string): element is Element<T> => {
   const dom = element.dom();
@@ -28,10 +25,11 @@ const is = <T extends DomElement = DomElement> (element: Element<DomNode>, selec
 };
 
 const bypassSelector = (dom: DomNode) =>
-  // Only elements and documents support querySelector
-  dom.nodeType !== ELEMENT && dom.nodeType !== DOCUMENT ||
+  // Only elements, documents and shadow roots support querySelector
+  // shadow root element type is DOCUMENT_FRAGMENT
+  dom.nodeType !== ELEMENT && dom.nodeType !== DOCUMENT && dom.nodeType !== DOCUMENT_FRAGMENT ||
     // IE fix for complex queries on empty nodes: http://jsfiddle.net/spyder/fv9ptr5L/
-    (dom as DomElement | Document).childElementCount === 0;
+    (dom as DomElement | Document | DocumentFragment).childElementCount === 0;
 
 const all = <T extends DomElement = DomElement> (selector: string, scope?: Element<DomNode>): Element<T>[] => {
   const base = scope === undefined ? document : scope.dom();
