@@ -5,6 +5,12 @@ import * as Insert from 'ephox/sugar/api/dom/Insert';
 import { Element as DomElement, ShadowRoot } from '@ephox/dom-globals';
 import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
 
+const shadowDomTest = (name: string, fn: () => void) => {
+  if (DomElement.prototype.hasOwnProperty('attachShadow')) {
+    UnitTest.test(name, fn);
+  }
+};
+
 const mkShadow = (): Element<ShadowRoot> => {
   const body = Body.body();
   const e = Element.fromHtml<DomElement>('<div />');
@@ -14,7 +20,7 @@ const mkShadow = (): Element<ShadowRoot> => {
   return Element.fromDom(shadow);
 };
 
-UnitTest.test('ShadowDom - SelectorFind.descendant', () => {
+shadowDomTest('ShadowDom - SelectorFind.descendant', () => {
   const ss = mkShadow();
   const inner = Element.fromHtml('<div><p>hello<span id="frog">iamthefrog</span></p></div>');
   Insert.append(ss, inner);
