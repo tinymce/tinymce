@@ -1,14 +1,16 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { document } from '@ephox/dom-globals';
-import * as GetSelectionContent from 'tinymce/core/selection/GetSelectionContent';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 import Env from 'tinymce/core/api/Env';
+import * as GetSelectionContent from 'tinymce/core/selection/GetSelectionContent';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.selection.GetSelectionContentTest', (success, failure) => {
   Theme();
+  const browser = PlatformDetection.detect().browser;
   const testDivId = 'testDiv1';
 
   const sFocusDiv = Step.sync(() => {
@@ -89,6 +91,29 @@ UnitTest.asynctest('browser.tinymce.selection.GetSelectionContentTest', (success
         tinyApis.sSetContent('<p>ab<br/>cd</p>'),
         tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 2 ], 2),
         sAssertGetContent('Should be some content', editor, `ab${Env.ie === 11 ? '\r\n' : '\n'}cd`, { format: 'text' })
+      ])),
+      Logger.t('Should be text content with leading visible spaces', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p>content<em> Leading space</em></p>'),
+        tinyApis.sSetSelection([ 0 ], 1, [ 0 ], 2),
+        sAssertGetContent('Should be some content', editor, ' Leading space', { format: 'text' })
+      ])),
+      Logger.t('Should be text content with trailing visible spaces', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p><em>Trailing space </em>content</p>'),
+        tinyApis.sSetSelection([ 0 ], 0, [ 0 ], 1),
+        sAssertGetContent('Should be some content', editor, 'Trailing space ', { format: 'text' })
+      ])),
+      Logger.t('Should be text content without non-visible leading/trailing spaces', GeneralSteps.sequence([
+        tinyApis.sSetContent('<p><em> spaces </em></p>'),
+        tinyApis.sSetSelection([ 0 ], 0, [ 0 ], 1),
+        // Firefox, IE & Edge actually renders the trailing space within the editor in this case
+        // however Firefox reports via innerText that it doesn't render the trailing space. So
+        // as discussed we should use whatever it is returning for innerText
+        browser.isIE() || browser.isEdge() ?
+          sAssertGetContent('Should be some content', editor, 'spaces ', { format: 'text' }) :
+          sAssertGetContent('Should be some content', editor, 'spaces', { format: 'text' }),
+        tinyApis.sSetContent('<p> spaces </p>'),
+        tinyApis.sSetSelection([ ], 0, [ ], 1),
+        sAssertGetContent('Should be some content', editor, 'spaces', { format: 'text' })
       ]))
     ], onSuccess, onFailure);
   }, {
