@@ -41,9 +41,9 @@ const registry = () => {
      * Registers a new contextual form item.
      * Similar to a context menu item, a contextual form is an item with an input
      * form element appearing when a content predicate is matched. An example
-     * us of a contextual form is the link plugin when the configuration
+     * of a contextual form is the link plugin when the configuration
      * { link_context_toolbar: true } is used. When the cursor is on a link, a
-     * contextual input form appears allowing for quick changes to the url field.
+     * contextual input form appears allowing for quick changes to the url field. For information on creating context forms, see: <a href="https://www.tiny.cloud/docs/ui-components/contextform/">UI Components - Context forms</a>.
      *
      * @method addContextForm
      * @param {String} name Unique name identifying the new contextual form item.
@@ -53,7 +53,7 @@ const registry = () => {
     addContextForm: bridge.addContextForm,
 
     /**
-     * Registers a new context menu section that only appears when a content predicate is matched for example the cursor is inside a table.
+     * Registers a new context menu section that only appears when a content predicate is matched, for example, the cursor is inside a table. For information on creating context menus, see: <a href="https://www.tiny.cloud/docs/ui-components/contextmenu/">UI Components - Context Menu</a>.
      *
      * @method addContextMenu
      * @param {String} name Unique name identifying the new context menu.
@@ -63,7 +63,7 @@ const registry = () => {
     addContextMenu: bridge.addContextMenu,
 
     /**
-     * Registers a new context toolbar that only appears when a content predicate is matched for example the cursor is on an image element.
+     * Registers a new context toolbar that only appears when a content predicate is matched for example the cursor is on an image element. For information on creating context toolbars, see: <a href="https://www.tiny.cloud/docs/ui-components/contexttoolbar/">UI Components - Context Toolbar</a>.
      *
      * @method addContextToolbar
      * @param {String} name Unique name identifying the new context toolbar.
