@@ -71,6 +71,7 @@ import * as Width from './view/Width';
 import * as SelectionDirection from '../selection/core/SelectionDirection'; // Used directly by dawin
 import { StructRect, RawRect, Rect } from './selection/Rect';
 import * as Truncate from './dom/Truncate';
+import * as StyleContainer from './node/StyleContainer';
 
 export {
   Compare,
@@ -150,5 +151,6 @@ export {
   SelectionDirection,
   StructRect,
   RawRect,
-  Rect
+  Rect,
+  StyleContainer
 };

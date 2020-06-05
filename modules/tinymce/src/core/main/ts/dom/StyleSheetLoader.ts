@@ -7,10 +7,12 @@
 
 import { navigator } from '@ephox/dom-globals';
 import { Arr, Fun, Future, Futures, Result } from '@ephox/katamari';
-import { Attr, Element } from '@ephox/sugar';
+import { Attr, Element, StyleContainer } from '@ephox/sugar';
 import { ReferrerPolicy } from '../api/SettingsTypes';
 import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
+
+type StyleContainer = StyleContainer.StyleContainer;
 
 /**
  * This class handles loading of external stylesheets and fires events when these are loaded.
@@ -20,8 +22,8 @@ import Tools from '../api/util/Tools';
  */
 
 export interface StyleSheetLoader {
-  load: (url: string, loadedCallback: Function, errorCallback?: Function) => void;
-  loadAll: (urls: string[], success: Function, failure: Function) => void;
+  load: (styleContainer: StyleContainer, url: string, loadedCallback: Function, errorCallback?: Function) => void;
+  loadAll: (styleContainer: StyleContainer, urls: string[], success: Function, failure: Function) => void;
   _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
 }
 
@@ -42,19 +44,16 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
     settings.referrerPolicy = referrerPolicy;
   };
 
-  const appendToHead = function (node) {
-    document.getElementsByTagName('head')[0].appendChild(node);
-  };
-
   /**
    * Loads the specified css style sheet file and call the loadedCallback once it's finished loading.
    *
    * @method load
+   * @param {StyleContainer} styleContainer Element to place styles in
    * @param {String} url Url to be loaded.
    * @param {Function} loadedCallback Callback to be executed when loaded.
    * @param {Function} errorCallback Callback to be executed when failed loading.
    */
-  const load = function (url: string, loadedCallback: Function, errorCallback?: Function) {
+  const load = function (styleContainer: StyleContainer, url: string, loadedCallback: Function, errorCallback?: Function) {
     let link, style, startTime, state;
 
     const resolve = (status: number) => {
@@ -209,7 +208,7 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
         style = document.createElement('style');
         style.textContent = '@import "' + url + '"';
         waitForGeckoLinkLoaded();
-        appendToHead(style);
+        styleContainer.append(style);
         return;
       }
 
@@ -217,29 +216,27 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
       waitForWebKitLinkLoaded();
     }
 
-    appendToHead(link);
+    styleContainer.append(link);
     link.href = url;
   };
 
-  const loadF = function (url) {
-    return Future.nu(function (resolve) {
+  const loadF = (styleContainer: StyleContainer) => (url: string): Future<Result<string, string>> =>
+    Future.nu((resolve) => {
       load(
+        styleContainer,
         url,
         Fun.compose(resolve, Fun.constant(Result.value(url))),
         Fun.compose(resolve, Fun.constant(Result.error(url)))
       );
     });
-  };
 
   const unbox = function (result) {
     return result.fold(Fun.identity, Fun.identity);
   };
 
-  const loadAll = function (urls: string[], success: Function, failure: Function) {
-    Futures.par(Arr.map(urls, loadF)).get(function (result) {
-      const parts = Arr.partition(result, function (r) {
-        return r.isValue();
-      });
+  const loadAll = (styleContainer: StyleContainer, urls: string[], success: Function, failure: Function): void => {
+    Futures.par(Arr.map(urls, loadF(styleContainer))).get((result) => {
+      const parts = Arr.partition(result, (r) => r.isValue());
 
       if (parts.fail.length > 0) {
         failure(parts.fail.map(unbox));
