@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { navigator } from '@ephox/dom-globals';
+import { Document, navigator, ShadowRoot, Node as DomNode } from '@ephox/dom-globals';
 import { Arr, Fun, Future, Futures, Result } from '@ephox/katamari';
-import { Attr, Element } from '@ephox/sugar';
+import { Attr, Element, RootNode } from '@ephox/sugar';
 import { ReferrerPolicy } from '../api/SettingsTypes';
 import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
@@ -21,7 +21,9 @@ import Tools from '../api/util/Tools';
 
 export interface StyleSheetLoader {
   load: (url: string, loadedCallback: Function, errorCallback?: Function) => void;
+  loadInRoot: (root: Document | ShadowRoot, url: string, loadedCallback: Function, errorCallback?: Function) => void;
   loadAll: (urls: string[], success: Function, failure: Function) => void;
+  loadAllInRoot: (root: Document | ShadowRoot, urls: string[], success: Function, failure: Function) => void;
   _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
 }
 
@@ -31,7 +33,10 @@ export interface StyleSheetLoaderSettings {
   referrerPolicy: ReferrerPolicy;
 }
 
-export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
+const styleContainer = (dos: Document | ShadowRoot): DomNode =>
+  RootNode.isShadowRoot(dos) ? dos : dos.getElementsByTagName('head')[0];
+
+export function StyleSheetLoader(document: Document, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
   let idCount = 0;
   const loadedStates = {};
   let maxLoadTime;
@@ -40,10 +45,6 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
 
   const _setReferrerPolicy = (referrerPolicy: ReferrerPolicy) => {
     settings.referrerPolicy = referrerPolicy;
-  };
-
-  const appendToHead = function (node) {
-    document.getElementsByTagName('head')[0].appendChild(node);
   };
 
   /**
@@ -55,6 +56,21 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
    * @param {Function} errorCallback Callback to be executed when failed loading.
    */
   const load = function (url: string, loadedCallback: Function, errorCallback?: Function) {
+    loadInRoot(document, url, loadedCallback, errorCallback);
+  };
+
+  /**
+   * Loads the specified css style sheet file and call the loadedCallback once it's finished loading.
+   * Accepts a "root" element which can be a Document or a ShadowRoot. Useful for when the editor is loaded within
+   * a ShadowRoot, and styles need to be added to the ShadowRoot, rather than the document head.
+   *
+   * @method load
+   * @param {Document | ShadowRoot} root The Document or Shadow root that the stylesheet needs to be loaded into.
+   * @param {String} url Url to be loaded.
+   * @param {Function} loadedCallback Callback to be executed when loaded.
+   * @param {Function} errorCallback Callback to be executed when failed loading.
+   */
+  const loadInRoot = function (root: Document | ShadowRoot, url: string, loadedCallback: Function, errorCallback?: Function) {
     let link, style, startTime, state;
 
     const resolve = (status: number) => {
@@ -198,6 +214,10 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
       Attr.set(Element.fromDom(link), 'referrerpolicy', settings.referrerPolicy);
     }
 
+    const appendToHead = (node): void => {
+      styleContainer(root).appendChild(node);
+    };
+
     // Feature detect onload on link element and sniff older webkits since it has an broken onload event
     if ('onload' in link && !isOldWebKit()) {
       link.onload = waitForWebKitLinkLoaded;
@@ -221,22 +241,26 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
     link.href = url;
   };
 
-  const loadF = function (url) {
-    return Future.nu(function (resolve) {
-      load(
+  const loadF = (root: Document | ShadowRoot) => (url: string): Future<Result<string, string>> =>
+    Future.nu((resolve) => {
+      loadInRoot(
+        root,
         url,
         Fun.compose(resolve, Fun.constant(Result.value(url))),
         Fun.compose(resolve, Fun.constant(Result.error(url)))
       );
     });
-  };
 
   const unbox = function (result) {
     return result.fold(Fun.identity, Fun.identity);
   };
 
   const loadAll = function (urls: string[], success: Function, failure: Function) {
-    Futures.par(Arr.map(urls, loadF)).get(function (result) {
+    loadAllInRoot(document, urls, success, failure);
+  };
+
+  const loadAllInRoot = function (root: Document | ShadowRoot, urls: string[], success: Function, failure: Function) {
+    Futures.par(Arr.map(urls, loadF(root))).get(function (result) {
       const parts = Arr.partition(result, function (r) {
         return r.isValue();
       });
@@ -251,7 +275,9 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
 
   return {
     load,
+    loadInRoot,
     loadAll,
+    loadAllInRoot,
     _setReferrerPolicy
   };
 }

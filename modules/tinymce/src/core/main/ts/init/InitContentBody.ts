@@ -6,7 +6,7 @@
  */
 
 import { document, window } from '@ephox/dom-globals';
-import { Attr, Element, Insert } from '@ephox/sugar';
+import { Attr, Element, Insert, RootNode } from '@ephox/sugar';
 import Annotator from '../api/Annotator';
 import DOMUtils from '../api/dom/DOMUtils';
 import Selection from '../api/dom/Selection';
@@ -311,7 +311,9 @@ const preInit = (editor: Editor, rtcMode: boolean) => {
     editor.dom.addStyle(contentCssText);
   }
 
-  getStyleSheetLoader(editor).loadAll(
+  const rootNode = RootNode.getRootNode(editor.getElement());
+  getStyleSheetLoader(editor).loadAllInRoot(
+    rootNode,
     editor.contentCSS,
     function (_) {
       initEditor(editor);

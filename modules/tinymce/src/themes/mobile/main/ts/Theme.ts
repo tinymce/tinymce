@@ -9,7 +9,7 @@ import { AlloyTriggers, Attachment, Swapping } from '@ephox/alloy';
 import { HTMLIFrameElement } from '@ephox/dom-globals';
 import { Cell, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Element, Focus, Node } from '@ephox/sugar';
+import { Element, Focus, Node, RootNode } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import ThemeManager from 'tinymce/core/api/ThemeManager';
 import Editor from 'tinymce/core/api/Editor';
@@ -39,7 +39,8 @@ const renderMobileTheme = (editor: Editor) => {
 
     if (Settings.isSkinDisabled(editor) === false) {
       editor.contentCSS.push(cssUrls.content);
-      DOMUtils.DOM.styleSheetLoader.load(cssUrls.ui, SkinLoaded.fireSkinLoaded(editor));
+      const rootNode = RootNode.getRootNode(editor.getElement());
+      DOMUtils.DOM.styleSheetLoader.loadInRoot(rootNode, cssUrls.ui, SkinLoaded.fireSkinLoaded(editor));
     } else {
       SkinLoaded.fireSkinLoaded(editor)();
     }

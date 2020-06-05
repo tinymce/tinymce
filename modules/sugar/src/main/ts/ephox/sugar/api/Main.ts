@@ -23,6 +23,7 @@ import * as Elements from './node/Elements';
 import * as Fragment from './node/Fragment';
 import * as Node from './node/Node';
 import * as NodeTypes from './node/NodeTypes';
+import * as RootNode from './node/RootNode';
 import * as Text from './node/Text';
 import * as Alignment from './properties/Alignment';
 import * as Attr from './properties/Attr';
@@ -101,6 +102,7 @@ export {
   Fragment,
   Node,
   NodeTypes,
+  RootNode,
   Text,
   Alignment,
   Attr,
