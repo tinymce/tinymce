@@ -4,6 +4,7 @@ import * as Body from 'ephox/sugar/api/node/Body';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import { Element as DomElement, ShadowRoot } from '@ephox/dom-globals';
 import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
+import fc, { Arbitrary } from 'fast-check';
 
 const shadowDomTest = (name: string, fn: () => void) => {
   if (DomElement.prototype.hasOwnProperty('attachShadow')) {
@@ -20,11 +21,22 @@ const mkShadow = (): Element<ShadowRoot> => {
   return Element.fromDom(shadow);
 };
 
-shadowDomTest('ShadowDom - SelectorFind.descendant', () => {
-  const ss = mkShadow();
-  const inner = Element.fromHtml('<div><p>hello<span id="frog">iamthefrog</span></p></div>');
-  Insert.append(ss, inner);
+const htmlBlockTagName = (): Arbitrary<string> =>
+  // note: list is incomplete
+  fc.constantFrom('div', 'article', 'section', 'main', 'h1', 'h2', 'h3', 'aside', 'nav');
 
-  const frog: Element<DomElement> = SelectorFind.descendant(ss, '#frog').getOrDie('Element not found');
-  Assert.eq('textcontent', 'iamthefrog', frog.dom().textContent);
+const htmlInlineTagName = (): Arbitrary<string> =>
+  // note: list is incomplete
+  fc.constantFrom('span', 'b', 'i', 'u', 'strong', 'em');
+
+shadowDomTest('ShadowDom - SelectorFind.descendant', () => {
+  fc.assert(fc.property(htmlBlockTagName(), htmlInlineTagName(), fc.hexaString(), (block, inline, text) => {
+    const ss = mkShadow();
+    const id = 'theid';
+    const inner = Element.fromHtml(`<${block}><p>hello<${inline} id="${id}">${text}</${inline}></p></${block}>`);
+    Insert.append(ss, inner);
+
+    const frog: Element<DomElement> = SelectorFind.descendant(ss, `#${id}`).getOrDie('Element not found');
+    Assert.eq('textcontent', text, frog.dom().textContent);
+  }));
 });
