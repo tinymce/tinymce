@@ -6,9 +6,8 @@
  */
 
 import { Types } from '@ephox/bridge';
-import { HTMLElement, HTMLTableRowElement } from '@ephox/dom-globals';
-import { TableLookup } from '@ephox/snooker';
-import { Arr, Fun, Options } from '@ephox/katamari';
+import { HTMLElement } from '@ephox/dom-globals';
+import { Arr, Fun } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import * as Styles from '../actions/Styles';
@@ -65,7 +64,6 @@ const updateAdvancedProps = (modifier: DomModifier, data: RowData) => {
 };
 
 const applyRowData = (editor: Editor, rows: HTMLElement[], oldData: RowData, data: RowData) => {
-  const dom = editor.dom;
   const isSingleRow = rows.length === 1;
 
   Arr.each(rows, (rowElm) => {
@@ -74,7 +72,7 @@ const applyRowData = (editor: Editor, rows: HTMLElement[], oldData: RowData, dat
       switchRowType(editor.dom, rowElm, data.type);
     }
 
-    const modifier = isSingleRow ? DomModifier.normal(dom, rowElm) : DomModifier.ifTruthy(dom, rowElm);
+    const modifier = isSingleRow ? DomModifier.normal(editor, rowElm) : DomModifier.ifTruthy(editor, rowElm);
 
     updateSimpleProps(modifier, data);
 
@@ -99,19 +97,8 @@ const onSubmitRowForm = (editor: Editor, rows: HTMLElement[], oldData: RowData, 
   });
 };
 
-const getRowsFromSelection = (editor: Editor): HTMLTableRowElement[] => {
-  const cellOpt = TableSelection.getSelectionStartCell(editor);
-  const rowsOpt = cellOpt.bind((cell) => TableLookup.table(cell))
-    .map((table) => TableLookup.rows(table))
-    .map((rows) => Arr.map(rows, (row) => row.dom()));
-
-  return Options.lift2(cellOpt, rowsOpt, (cell, rows) =>
-    Arr.filter(rows, (row) => Arr.exists(row.cells, (rowCell) => editor.dom.getAttrib(rowCell, 'data-mce-selected') === '1' || rowCell === cell.dom()))
-  ).getOr([]);
-};
-
 const open = (editor: Editor) => {
-  const rows = getRowsFromSelection(editor);
+  const rows = TableSelection.getRowsFromSelection(editor);
 
   // Check if there are any rows to operate on
   if (rows.length === 0) {

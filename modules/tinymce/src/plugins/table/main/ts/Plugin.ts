@@ -23,7 +23,7 @@ import * as MenuItems from './ui/MenuItems';
 import { hasTabNavigation } from './api/Settings';
 import { getApi } from './api/Api';
 import { Element } from '@ephox/sugar';
-import * as TableFormats from './api/TableFormats';
+import * as TableFormats from './core/TableFormats';
 
 function Plugin(editor: Editor) {
   const selections = Selections(editor);

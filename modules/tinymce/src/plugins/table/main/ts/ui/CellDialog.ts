@@ -15,9 +15,7 @@ import * as CellDialogGeneralTab from './CellDialogGeneralTab';
 import * as Helpers from './Helpers';
 import { DomModifier } from './DomModifier';
 import { Types } from '@ephox/bridge';
-import { Selections } from '../selection/Selections';
 import * as TableSelection from '../selection/TableSelection';
-import * as CellOperations from '../queries/CellOperations';
 
 type CellData = Helpers.CellData;
 
@@ -29,10 +27,10 @@ const updateSimpleProps = (modifier: DomModifier, data: CellData) => {
 };
 
 const updateAdvancedProps = (modifier: DomModifier, data: CellData) => {
-  modifier.setStyle('background-color', data.backgroundcolor);
-  modifier.setStyle('border-color', data.bordercolor);
-  modifier.setStyle('border-style', data.borderstyle);
-  modifier.setStyle('border-width', Util.addSizeSuffix(data.borderwidth));
+  modifier.setFormat('tablecellbackgroundcolor', data.backgroundcolor);
+  modifier.setFormat('tablecellbordercolor', data.bordercolor);
+  modifier.setFormat('tablecellborderstyle', data.borderstyle);
+  modifier.setFormat('tablecellborderwidth', Util.addSizeSuffix(data.borderwidth));
 };
 
 // NOTES:
@@ -49,13 +47,12 @@ const updateAdvancedProps = (modifier: DomModifier, data: CellData) => {
 
 const applyCellData = (editor: Editor, cells: HTMLTableCellElement[], data: CellData) => {
   const dom = editor.dom;
-
   const isSingleCell = cells.length === 1;
 
   Arr.each(cells, (cell) => {
     // Switch cell type if applicable
     const cellElm = data.celltype && cell.nodeName.toLowerCase() !== data.celltype ? (dom.rename(cell, data.celltype) as HTMLTableCellElement) : cell;
-    const modifier = isSingleCell ? DomModifier.normal(dom, cellElm) : DomModifier.ifTruthy(dom, cellElm);
+    const modifier = isSingleCell ? DomModifier.normal(editor, cellElm) : DomModifier.ifTruthy(editor, cellElm);
 
     updateSimpleProps(modifier, data);
 
@@ -91,14 +88,8 @@ const onSubmitCellForm = (editor: Editor, cells: HTMLTableCellElement[], api) =>
   });
 };
 
-const getCellsFromSelection = (editor: Editor): HTMLTableCellElement[] =>
-  TableSelection.getSelectionStartCell(editor)
-    .map((cell) => CellOperations.selection(cell, Selections(editor)))
-    .map((cells) => Arr.map(cells, (cell) => cell.dom()))
-    .getOr([]);
-
 const open = (editor: Editor) => {
-  const cells = getCellsFromSelection(editor);
+  const cells = TableSelection.getCellsFromSelection(editor);
 
   // Check if there are any cells to operate on
   if (cells.length === 0) {

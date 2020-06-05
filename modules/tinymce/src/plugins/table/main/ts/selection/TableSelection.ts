@@ -5,8 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { HTMLTableCellElement, HTMLTableRowElement } from '@ephox/dom-globals';
+import { Arr, Option, Options } from '@ephox/katamari';
 import { Element } from '@ephox/sugar';
+import { TableLookup } from '@ephox/snooker';
+import { Selections } from '../selection/Selections';
+import * as CellOperations from '../queries/CellOperations';
 import Editor from 'tinymce/core/api/Editor';
 
 const getSelectionStartFromSelector = (selector: string) => (editor: Editor) => Option.from(editor.dom.getParent(editor.selection.getStart(), selector)).map(Element.fromDom);
@@ -17,8 +21,28 @@ const getSelectionStartCell = getSelectionStartFromSelector('th,td');
 
 const getSelectionStartCellOrCaption = getSelectionStartFromSelector('th,td,caption');
 
+
+const getCellsFromSelection = (editor: Editor): HTMLTableCellElement[] =>
+  getSelectionStartCell(editor)
+    .map((cell) => CellOperations.selection(cell, Selections(editor)))
+    .map((cells) => Arr.map(cells, (cell) => cell.dom()))
+    .getOr([]);
+
+const getRowsFromSelection = (editor: Editor): HTMLTableRowElement[] => {
+  const cellOpt = getSelectionStartCell(editor);
+  const rowsOpt = cellOpt.bind((cell) => TableLookup.table(cell))
+    .map((table) => TableLookup.rows(table))
+    .map((rows) => Arr.map(rows, (row) => row.dom()));
+
+  return Options.lift2(cellOpt, rowsOpt, (cell, rows) =>
+    Arr.filter(rows, (row) => Arr.exists(row.cells, (rowCell) => editor.dom.getAttrib(rowCell, 'data-mce-selected') === '1' || rowCell === cell.dom()))
+  ).getOr([]);
+};
+
 export {
   getSelectionStartCaption,
   getSelectionStartCell,
-  getSelectionStartCellOrCaption
+  getSelectionStartCellOrCaption,
+  getCellsFromSelection,
+  getRowsFromSelection
 };

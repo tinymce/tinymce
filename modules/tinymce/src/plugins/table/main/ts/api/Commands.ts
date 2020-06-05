@@ -19,6 +19,7 @@ import * as TableSelection from '../selection/TableSelection';
 import * as CellDialog from '../ui/CellDialog';
 import * as RowDialog from '../ui/RowDialog';
 import * as TableDialog from '../ui/TableDialog';
+import { DomModifier } from '../ui/DomModifier';
 
 const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboardRows: Cell<Option<Element[]>>) => {
   const isRoot = Util.getIsRoot(editor);
@@ -121,15 +122,18 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     if (!Type.isObject(args)) {
       return;
     }
+
+    const cells = TableSelection.getCellsFromSelection(editor);
+    if (cells.length === 0) {
+      return;
+    }
+
     Obj.each(args, (value, style) => {
       const formatName = 'tablecell' + style.toLowerCase().replace('-', '');
       if (editor.formatter.has(formatName) && Type.isString(value)) {
-        // Remove the style if given an empty string
-        if (value === '') {
-          editor.formatter.remove(formatName, {}, null, true);
-        } else {
-          editor.formatter.apply(formatName, { value });
-        }
+        Arr.each(cells, (cell) => {
+          DomModifier.normal(editor, cell).setFormat(formatName, value);
+        });
       }
     });
   });
