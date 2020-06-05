@@ -1,5 +1,5 @@
 Version 5.3.1 (TBD)
-    Changed so that split buttons now only shows a list if there's more than one options #TINY-3194
+    Changed `advlist` toolbar buttons to only show a dropdown list if there's more than one option #TINY-3194
     Fixed the image upload error alert also incorrectly closing the image dialog #TINY-6020
     Fixed editor content scrolling incorrectly on focus in Firefox by reverting default content CSS html and body heights added in 5.3.0 #TINY-6019
 Version 5.3.0 (2020-05-21)
