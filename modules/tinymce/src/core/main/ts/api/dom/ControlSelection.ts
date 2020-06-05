@@ -32,6 +32,7 @@ interface ControlSelection {
  * that can be resized and needs to be selected as a whole. It adds custom resize handles
  * to all browser engines that support properly disabling the built in resize logic.
  *
+ * @private
  * @class tinymce.dom.ControlSelection
  */
 
