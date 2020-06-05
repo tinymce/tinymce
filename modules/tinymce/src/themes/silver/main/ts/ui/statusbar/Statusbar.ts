@@ -52,7 +52,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
 
   const getResizeType = (editor): ResizeTypes => {
     // If autoresize is enabled, disable resize
-    const fallback = !Strings.contains(editor.settings.plugins, 'autoresize');
+    const fallback = !Strings.contains(editor.getParam('plugins', '', 'string'), 'autoresize');
     const resize = editor.getParam('resize', fallback);
     if (resize === false) {
       return ResizeTypes.None;
@@ -70,7 +70,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
       components.push(ElementPath.renderElementPath(editor, { }, providersBackstage));
     }
 
-    if (Strings.contains(editor.settings.plugins, 'wordcount')) {
+    if (Strings.contains(editor.getParam('plugins', '', 'string'), 'wordcount')) {
       components.push(renderWordCount(editor, providersBackstage));
     }
 

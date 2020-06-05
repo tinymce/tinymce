@@ -16,11 +16,8 @@ import * as BoundaryCaret from '../keyboard/BoundaryCaret';
 import * as BoundaryLocation from '../keyboard/BoundaryLocation';
 import * as BoundarySelection from '../keyboard/BoundarySelection';
 import * as InlineUtils from '../keyboard/InlineUtils';
+import * as Settings from '../api/Settings';
 import Editor from '../api/Editor';
-
-const isFeatureEnabled = function (editor: Editor) {
-  return editor.settings.inline_boundaries !== false;
-};
 
 const rangeFromPositions = function (from, to) {
   const range = document.createRange();
@@ -131,7 +128,7 @@ const backspaceDeleteCollapsed = function (editor: Editor, caret, forward: boole
 };
 
 const backspaceDelete = function (editor: Editor, caret, forward?: boolean) {
-  if (editor.selection.isCollapsed() && isFeatureEnabled(editor)) {
+  if (editor.selection.isCollapsed() && Settings.isInlineBoundariesEnabled(editor)) {
     const from = CaretPosition.fromRangeStart(editor.selection.getRng());
     return backspaceDeleteCollapsed(editor, caret, forward, from);
   }

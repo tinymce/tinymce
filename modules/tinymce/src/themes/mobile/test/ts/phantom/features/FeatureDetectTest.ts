@@ -3,17 +3,15 @@ import { Fun } from '@ephox/katamari';
 import * as Features from 'tinymce/themes/mobile/features/Features';
 import { UnitTest } from '@ephox/bedrock-client';
 
-UnitTest.test('features.FeatureDetectTest', function () {
+UnitTest.test('features.FeatureDetectTest', () => {
   /*
    * Check that if the feature is not known, it skips over it
    *
    */
-  const testFeature = function (name, supported) {
-    return {
-      isSupported: Fun.constant(supported),
-      sketch: Fun.constant(name)
-    };
-  };
+  const testFeature = (name: string, supported: boolean) => ({
+    isSupported: Fun.constant(supported),
+    sketch: Fun.constant(name)
+  });
 
   const features = {
     alpha: testFeature('alpha', true),
@@ -22,8 +20,11 @@ UnitTest.test('features.FeatureDetectTest', function () {
     delta: testFeature('delta', true)
   };
 
-  const check = function (label, expected, toolbar) {
-    const actual = Features.detect({ toolbar }, features);
+  const check = (label: string, expected: string[], toolbar: string | string[]) => {
+    const dummyEditor = {
+      getParam: () => toolbar
+    };
+    const actual = Features.detect(dummyEditor as any, features);
     Assertions.assertEq(label, expected, actual);
   };
 

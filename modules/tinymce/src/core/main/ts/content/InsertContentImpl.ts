@@ -24,6 +24,7 @@ import * as PaddingBr from '../dom/PaddingBr';
 import * as RangeNormalizer from '../selection/RangeNormalizer';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as InsertList from './InsertList';
+import * as Settings from '../api/Settings';
 import { isAfterNbsp, trimNbspAfterDeleteAndPadValue, trimOrPadLeftRight } from './NbspTrim';
 
 const isTableCell = NodeType.matchNodeNames([ 'td', 'th' ]);
@@ -230,7 +231,7 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
   const merge = details.merge;
 
   const serializer = Serializer({
-    validate: editor.settings.validate
+    validate: Settings.shouldValidate(editor)
   }, editor.schema);
   const bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;&#x200B;</span>';
 

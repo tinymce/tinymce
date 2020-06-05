@@ -60,7 +60,7 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
     // Check if forcedRootBlock is configured and that the block is a valid child of the body
     if (forcedRootBlockName && editor.schema.isValidChild(body.nodeName.toLowerCase(), forcedRootBlockName.toLowerCase())) {
       content = padd;
-      content = editor.dom.createHTML(forcedRootBlockName, editor.settings.forced_root_block_attrs, content);
+      content = editor.dom.createHTML(forcedRootBlockName, Settings.getForcedRootBlockAttrs(editor), content);
     } else if (!content) {
       // We need to add a BR when forced_root_block is disabled on non IE browsers to place the caret
       content = '<br data-mce-bogus="1">';

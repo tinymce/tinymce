@@ -10,6 +10,7 @@ import Editor from './api/Editor';
 import Env from './api/Env';
 import Delay from './api/util/Delay';
 import * as RangeCompare from './selection/RangeCompare';
+import * as Settings from './api/Settings';
 import { hasAnyRanges } from './selection/SelectionUtils';
 
 /**
@@ -101,7 +102,7 @@ class NodeChange {
     let node, parents, root;
 
     // Fix for bug #1896577 it seems that this can not be fired while the editor is loading
-    if (this.editor.initialized && selection && !this.editor.settings.disable_nodechange && !this.editor.mode.isReadOnly()) {
+    if (this.editor.initialized && selection && !Settings.shouldDisableNodeChange(this.editor) && !this.editor.mode.isReadOnly()) {
       // Get start node
       root = this.editor.getBody();
       node = selection.getStart(true) || root;

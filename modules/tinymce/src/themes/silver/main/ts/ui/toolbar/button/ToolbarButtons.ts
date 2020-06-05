@@ -17,7 +17,6 @@ import { Attr, SelectorFind } from '@ephox/sugar';
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import * as ReadOnly from '../../../ReadOnly';
-import { ToolbarGroupSetting } from '../../../Render';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
@@ -34,6 +33,7 @@ import { createTieredDataFrom } from '../../menus/menu/SingleMenu';
 import { ToolbarButtonClasses } from '../button/ButtonClasses';
 import { onToolbarButtonExecute, toolbarButtonEventOrder } from '../button/ButtonEvents';
 import { renderToolbarGroup, ToolbarGroup } from '../CommonToolbar';
+import { ToolbarGroupSetting } from 'tinymce/themes/silver/api/Settings';
 
 interface Specialisation<T> {
   toolbarButtonBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
