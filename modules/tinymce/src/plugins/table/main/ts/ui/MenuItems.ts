@@ -17,7 +17,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
 
   const insertTableAction = ({ numRows, numColumns }) => {
     editor.undoManager.transact(function () {
-      InsertTable.insert(editor, numColumns, numRows);
+      InsertTable.insert(editor, numColumns, numRows, 0, 0);
     });
 
     editor.addVisual();
@@ -36,46 +36,106 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
     onAction: cmd('mceTableDelete')
   };
 
-  const rowItems = [
-    { type: 'menuitem', text: 'Insert row before', icon: 'table-insert-row-above', onAction: cmd('mceTableInsertRowBefore'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'menuitem', text: 'Insert row after', icon: 'table-insert-row-after', onAction: cmd('mceTableInsertRowAfter'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'menuitem', text: 'Delete row', icon: 'table-delete-row', onAction: cmd('mceTableDeleteRow'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'menuitem', text: 'Row properties', icon: 'table-row-properties', onAction: cmd('mceTableRowProps'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'separator' },
-    { type: 'menuitem', text: 'Cut row', onAction: cmd('mceTableCutRow'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'menuitem', text: 'Copy row', onAction: cmd('mceTableCopyRow'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'menuitem', text: 'Paste row before', onAction: cmd('mceTablePasteRowBefore'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'menuitem', text: 'Paste row after', onAction: cmd('mceTablePasteRowAfter'), onSetup:  selectionTargets.onSetupCellOrRow }
-  ] as Array<Menu.NestedMenuItemContents>;
+  editor.ui.registry.addMenuItem('tableinsertrowbefore', {
+    text: 'Insert row before',
+    icon: 'table-insert-row-above',
+    onAction: cmd('mceTableInsertRowBefore'),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+  editor.ui.registry.addMenuItem('tableinsertrowafter', {
+    text: 'Insert row after',
+    icon: 'table-insert-row-after',
+    onAction: cmd('mceTableInsertRowAfter'),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+  editor.ui.registry.addMenuItem('tabledeleterow', {
+    text: 'Delete row',
+    icon: 'table-delete-row',
+    onAction: cmd('mceTableDeleteRow'),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+  editor.ui.registry.addMenuItem('tablerowprops', {
+    text: 'Row properties',
+    icon: 'table-row-properties',
+    onAction: cmd('mceTableRowProps'),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  editor.ui.registry.addMenuItem('tablecutrow', {
+    text: 'Cut row',
+    onAction: cmd('mceTableCutRow'),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+  editor.ui.registry.addMenuItem('tablecopyrow', {
+    text: 'Copy row',
+    onAction: cmd('mceTableCopyRow'),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+  editor.ui.registry.addMenuItem('tablepasterowbefore', {
+    text: 'Paste row before',
+    onAction: cmd('mceTablePasteRowBefore'),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+  editor.ui.registry.addMenuItem('tablepasterowafter', {
+    text: 'Paste row after',
+    onAction: cmd('mceTablePasteRowAfter'),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
 
   const row: Menu.NestedMenuItemApi = {
     type: 'nestedmenuitem',
     text: 'Row',
-    getSubmenuItems: () => rowItems
+    getSubmenuItems: () => 'tableinsertrowbefore tableinsertrowafter tabledeleterow tablerowprops | tablecutrow tablecopyrow tablepasterowbefore tablepasterowafter'
   };
 
-  const columnItems = [
-    { type: 'menuitem', text: 'Insert column before', icon: 'table-insert-column-before', onAction: cmd('mceTableInsertColBefore'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'menuitem', text: 'Insert column after', icon: 'table-insert-column-after', onAction: cmd('mceTableInsertColAfter'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'menuitem', text: 'Delete column', icon: 'table-delete-column', onAction: cmd('mceTableDeleteCol'), onSetup:  selectionTargets.onSetupCellOrRow }
-  ] as Array<Menu.NestedMenuItemContents>;
+  editor.ui.registry.addMenuItem('tableinsertcolumnbefore', {
+    text: 'Insert column before',
+    icon: 'table-insert-column-before',
+    onAction: cmd('mceTableInsertColBefore'),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+  editor.ui.registry.addMenuItem('tableinsertcolumnafter', {
+    text: 'Insert column after',
+    icon: 'table-insert-column-after',
+    onAction: cmd('mceTableInsertColAfter'),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+  editor.ui.registry.addMenuItem('tabledeletecolumn', {
+    text: 'Delete column',
+    icon: 'table-delete-column',
+    onAction: cmd('mceTableDeleteCol'),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
 
   const column: Menu.NestedMenuItemApi = {
     type: 'nestedmenuitem',
     text: 'Column',
-    getSubmenuItems: () => columnItems
+    getSubmenuItems: () => 'tableinsertcolumnbefore tableinsertcolumnafter tabledeletecolumn'
   };
 
-  const cellItems = [
-    { type: 'menuitem', text: 'Cell properties', icon: 'table-cell-properties', onAction: cmd('mceTableCellProps'), onSetup:  selectionTargets.onSetupCellOrRow },
-    { type: 'menuitem', text: 'Merge cells', icon: 'table-merge-cells', onAction: cmd('mceTableMergeCells'), onSetup: selectionTargets.onSetupMergeable },
-    { type: 'menuitem', text: 'Split cell', icon: 'table-split-cells', onAction: cmd('mceTableSplitCells'), onSetup: selectionTargets.onSetupUnmergeable }
-  ] as Array<Menu.NestedMenuItemContents>;
+  editor.ui.registry.addMenuItem('tablecellprops', {
+    text: 'Cell properties',
+    icon: 'table-cell-properties',
+    onAction: cmd('mceTableCellProps'),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+  editor.ui.registry.addMenuItem('tablemergecells', {
+    text: 'Merge cells',
+    icon: 'table-merge-cells',
+    onAction: cmd('mceTableMergeCells'),
+    onSetup: selectionTargets.onSetupMergeable
+  });
+  editor.ui.registry.addMenuItem('tablesplitcells', {
+    text: 'Split cell',
+    icon: 'table-split-cells',
+    onAction: cmd('mceTableSplitCells'),
+    onSetup: selectionTargets.onSetupUnmergeable
+  });
 
   const cell: Menu.NestedMenuItemApi = {
     type: 'nestedmenuitem',
     text: 'Cell',
-    getSubmenuItems: () => cellItems
+    getSubmenuItems: () => 'tablecellprops tablemergecells tablesplitcells'
   };
 
   if (hasTableGrid(editor) === false) {

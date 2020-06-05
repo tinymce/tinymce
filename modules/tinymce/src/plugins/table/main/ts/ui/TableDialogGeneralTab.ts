@@ -1,9 +1,8 @@
 import { Types } from '@ephox/bridge';
-import * as Helpers from './Helpers';
-import { getTableClassList, hasAppearanceOptions } from '../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
+import { hasAppearanceOptions } from '../api/Settings';
 
-const getItems = (editor: Editor, hasClasses: boolean, insertNewTable: boolean) => {
+const getItems = (editor: Editor, classes: Types.SelectBox.ExternalSelectBoxItem[], insertNewTable: boolean) => {
   const rowColCountItems: Types.Dialog.BodyComponentApi[] = !insertNewTable ? [] : [
     {
       type: 'input',
@@ -77,25 +76,16 @@ const getItems = (editor: Editor, hasClasses: boolean, insertNewTable: boolean) 
     }
   ];
 
-  const classListItem: Types.Dialog.BodyComponentApi[] = hasClasses ? [
+  const classListItem: Types.Dialog.BodyComponentApi[] = classes.length > 0 ? [
     {
       type: 'selectbox',
       name: 'class',
       label: 'Class',
-      items: Helpers.buildListItems(
-        getTableClassList(editor),
-        (item) => {
-          if (item.value) {
-            item.textStyle = () => editor.formatter.getCssText({ block: 'table', classes: [ item.value ] });
-          }
-        }
-      )
+      items: classes
     }
   ] : [];
 
   return rowColCountItems.concat(alwaysItems).concat(appearanceItems).concat(alignmentItem).concat(classListItem);
 };
 
-export {
-  getItems
-};
+export { getItems };

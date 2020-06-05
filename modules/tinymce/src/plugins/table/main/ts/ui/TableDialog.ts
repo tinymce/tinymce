@@ -104,7 +104,7 @@ const onSubmitTableForm = (editor: Editor, tableElm: Element, api: Types.Dialog.
       const cols = parseInt(data.cols, 10) || 1;
       const rows = parseInt(data.rows, 10) || 1;
       // Cases 1 & 3 - inserting a table
-      tableElm = InsertTable.insert(editor, cols, rows);
+      tableElm = InsertTable.insert(editor, cols, rows, 0, 0);
     }
 
     applyDataToElement(editor, tableElm, data);
@@ -168,9 +168,9 @@ const open = (editor: Editor, insertNewTable: boolean) => {
     }
   }
 
-  const hasClasses = getTableClassList(editor).length > 0;
+  const classes = Helpers.buildListItems(getTableClassList(editor));
 
-  if (hasClasses) {
+  if (classes.length > 0) {
     if (data.class) {
       data.class = data.class.replace(/\s*mce\-item\-table\s*/g, '');
     }
@@ -179,7 +179,7 @@ const open = (editor: Editor, insertNewTable: boolean) => {
   const generalPanel: Types.Dialog.BodyComponentApi = {
     type: 'grid',
     columns: 2,
-    items: TableDialogGeneralTab.getItems(editor, hasClasses, insertNewTable)
+    items: TableDialogGeneralTab.getItems(editor, classes, insertNewTable)
   };
 
   const nonAdvancedForm = (): Types.Dialog.PanelApi => ({

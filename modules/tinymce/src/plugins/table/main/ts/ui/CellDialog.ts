@@ -136,7 +136,7 @@ const open = (editor: Editor) => {
   const cellsData: CellData[] = Tools.map(cells,
     (cellElm) => Helpers.extractDataFromCellElement(editor, cellElm, hasAdvancedCellTab(editor))
   );
-  const data: CellData = Helpers.getSharedValues(cellsData);
+  const data = Helpers.getSharedValues<CellData>(cellsData);
 
   const dialogTabPanel: Types.Dialog.TabPanelApi = {
     type: 'tabpanel',
