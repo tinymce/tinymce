@@ -91,7 +91,8 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<any>) => {
   const isTouch = Env.deviceType.isTouch();
 
   const editorContainerStyle = editorContainer.style;
-  const iframe = editor.getContentAreaContainer().firstChild as any;
+
+  const iframe = editor.iframeElement;
   const iframeStyle = iframe.style;
 
   const cleanup = () => {
