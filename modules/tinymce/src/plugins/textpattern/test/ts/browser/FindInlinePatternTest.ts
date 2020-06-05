@@ -13,14 +13,19 @@ import Theme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('textpattern.browser.FindInlinePatternTest', (success, failure) => {
   Theme();
 
-  const inlinePatterns = Settings.getPatternSet({ textpattern_patterns: [
-    { start: '*', end: '*', format: 'italic' },
-    { start: '**', end: '**', format: 'bold' },
-    { start: '***', end: '***', format: [ 'bold', 'italic' ] }, // due to priority this will never be used
-    { start: '', end: 'brb', cmd: 'mceInsertContent', value: 'be right back' },
-    { start: 'irl', end: '', cmd: 'mceInsertContent', value: 'in real life' },
-    { start: 'asap', replacement: 'as soon as possible' }
-  ] }).inlinePatterns;
+  const mockEditor = {
+    getParam: () =>
+      [
+        { start: '*', end: '*', format: 'italic' },
+        { start: '**', end: '**', format: 'bold' },
+        { start: '***', end: '***', format: [ 'bold', 'italic' ] }, // due to priority this will never be used
+        { start: '', end: 'brb', cmd: 'mceInsertContent', value: 'be right back' },
+        { start: 'irl', end: '', cmd: 'mceInsertContent', value: 'in real life' },
+        { start: 'asap', replacement: 'as soon as possible' }
+      ]
+  };
+
+  const inlinePatterns = Settings.getPatternSet(mockEditor as any).inlinePatterns;
 
   const cGetInlinePattern = function (patterns: InlinePattern[], space: boolean = false) {
     const asStr = (p: InlinePattern) => {

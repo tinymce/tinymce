@@ -45,6 +45,20 @@ const shouldConvertWordFakeLists = (editor: Editor): boolean => editor.getParam(
 
 const shouldUseDefaultFilters = (editor: Editor): boolean => editor.getParam('paste_enable_default_filters', true);
 
+const getValidate = (editor: Editor) => editor.getParam('validate');
+
+const getAllowHtmlDataUrls = (editor: Editor): boolean => editor.getParam('allow_html_data_urls', false, 'boolean');
+
+const getPasteDataImages = (editor: Editor): boolean => editor.getParam('paste_data_images', false, 'boolean');
+
+const getImagesDataImgFilter = (editor: Editor) => editor.getParam('images_dataimg_filter');
+
+const getImagesReuseFilename = (editor: Editor) => editor.getParam('images_reuse_filename');
+
+const getForcedRootBlock = (editor: Editor) => editor.getParam('forced_root_block');
+
+const getForcedRootBlockAttrs = (editor: Editor) => editor.getParam('forced_root_block_attrs');
+
 export {
   shouldBlockDrop,
   shouldPasteDataImages,
@@ -59,5 +73,12 @@ export {
   getRetainStyleProps,
   getWordValidElements,
   shouldConvertWordFakeLists,
-  shouldUseDefaultFilters
+  shouldUseDefaultFilters,
+  getValidate,
+  getAllowHtmlDataUrls,
+  getPasteDataImages,
+  getImagesDataImgFilter,
+  getImagesReuseFilename,
+  getForcedRootBlock,
+  getForcedRootBlockAttrs
 };

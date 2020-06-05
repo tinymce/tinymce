@@ -10,6 +10,7 @@ import { Arr, Obj } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import * as PluginUrls from '../data/PluginUrls';
+import * as Settings from '../api/Settings';
 
 export interface PluginUrlType {
   key: string;
@@ -53,7 +54,7 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
   const makeLink = (p: {name: string; url: string}): string =>
     `<a href="${p.url}" target="_blank" rel="noopener">${p.name}</a>`;
 
-  const maybeUrlize = (editor, key: string) => Arr.find(PluginUrls.urls, function (x: PluginUrlType) {
+  const maybeUrlize = (editor: Editor, key: string) => Arr.find(PluginUrls.urls, function (x: PluginUrlType) {
     return x.key === key;
   }).fold(function () {
     const getMetadata = editor.plugins[key].getMetadata;
@@ -62,11 +63,13 @@ const tab = (editor: Editor): Types.Dialog.TabApi => {
     return makeLink({ name: x.name, url: 'https://www.tiny.cloud/docs/plugins/' + x.key });
   });
 
-  const getPluginKeys = (editor) => {
+  const getPluginKeys = (editor: Editor) => {
     const keys = Obj.keys(editor.plugins);
-    return editor.settings.forced_plugins === undefined ?
+    const forced_plugins = Settings.getForcedPlugins(editor);
+
+    return forced_plugins === undefined ?
       keys :
-      Arr.filter(keys, (k) => !Arr.contains(editor.settings.forced_plugins, k));
+      Arr.filter(keys, (k) => !Arr.contains(forced_plugins, k));
   };
 
   const pluginLister = (editor) => {
