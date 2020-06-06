@@ -1,7 +1,8 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { document, Element as DomElement, HTMLIFrameElement, ShadowRoot, Window } from '@ephox/dom-globals';
+import { document, Element as DomElement, HTMLIFrameElement, navigator, ShadowRoot, Window } from '@ephox/dom-globals';
 import { browserSupportsGetRootNode, getRootNode, isDocument, isShadowRoot, RootNode } from 'ephox/sugar/api/node/RootNode';
 import { Testable } from '@ephox/dispute';
+import { PlatformDetection } from '@ephox/sand';
 
 const withNormalElement = (f: (d: DomElement) => void): void => {
   const div = document.createElement('div');
@@ -105,4 +106,21 @@ UnitTest.test('isDocument in iframe', () => {
   withIframe((div: DomElement, iframe: HTMLIFrameElement, cw: Window) => {
     shouldBeDocument(cw.document);
   });
+});
+
+// TODO: this should be in sand
+const isPhantomJs = (): boolean =>
+  navigator.userAgent.indexOf('PhantomJS') > -1;
+
+UnitTest.test('browserSupportsGetRootNode platform test', () => {
+  const browser = PlatformDetection.detect().browser;
+  if (browser.isIE()) {
+    Assert.eq('IE does not support root node', false, browserSupportsGetRootNode());
+  } else if (browser.isEdge()) {
+    // could be yes or no
+  } else if (isPhantomJs()) {
+    Assert.eq('PhantomJS does not support root node', false, browserSupportsGetRootNode());
+  } else {
+    Assert.eq('This browser should support root node', true, browserSupportsGetRootNode());
+  }
 });
