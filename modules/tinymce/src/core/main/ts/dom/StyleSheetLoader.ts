@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Document, navigator, ShadowRoot, Node as DomNode } from '@ephox/dom-globals';
+import { Document, navigator, ShadowRoot } from '@ephox/dom-globals';
 import { Arr, Fun, Future, Futures, Result } from '@ephox/katamari';
 import { Attr, Element, RootNode } from '@ephox/sugar';
 import { ReferrerPolicy } from '../api/SettingsTypes';
@@ -21,9 +21,7 @@ import Tools from '../api/util/Tools';
 
 export interface StyleSheetLoader {
   load: (url: string, loadedCallback: Function, errorCallback?: Function) => void;
-  loadInRoot: (root: Document | ShadowRoot, url: string, loadedCallback: Function, errorCallback?: Function) => void;
   loadAll: (urls: string[], success: Function, failure: Function) => void;
-  loadAllInRoot: (root: Document | ShadowRoot, urls: string[], success: Function, failure: Function) => void;
   _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
 }
 
@@ -33,10 +31,7 @@ export interface StyleSheetLoaderSettings {
   referrerPolicy: ReferrerPolicy;
 }
 
-const styleContainer = (dos: Document | ShadowRoot): DomNode =>
-  RootNode.isShadowRoot(dos) ? dos : dos.getElementsByTagName('head')[0];
-
-export function StyleSheetLoader(document: Document, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
+export function StyleSheetLoader(doc: Document | ShadowRoot, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
   let idCount = 0;
   const loadedStates = {};
   const maxLoadTime = settings.maxLoadTime || 5000;
@@ -54,21 +49,6 @@ export function StyleSheetLoader(document: Document, settings: Partial<StyleShee
    * @param {Function} errorCallback Callback to be executed when failed loading.
    */
   const load = function (url: string, loadedCallback: Function, errorCallback?: Function) {
-    loadInRoot(document, url, loadedCallback, errorCallback);
-  };
-
-  /**
-   * Loads the specified css style sheet file and call the loadedCallback once it's finished loading.
-   * Accepts a "root" element which can be a Document or a ShadowRoot. Useful for when the editor is loaded within
-   * a ShadowRoot, and styles need to be added to the ShadowRoot, rather than the document head.
-   *
-   * @method load
-   * @param {Document | ShadowRoot} root The Document or Shadow root that the stylesheet needs to be loaded into.
-   * @param {String} url Url to be loaded.
-   * @param {Function} loadedCallback Callback to be executed when loaded.
-   * @param {Function} errorCallback Callback to be executed when failed loading.
-   */
-  const loadInRoot = function (root: Document | ShadowRoot, url: string, loadedCallback: Function, errorCallback?: Function) {
     let link, style, startTime, state;
 
     const resolve = (status: number) => {
@@ -127,7 +107,7 @@ export function StyleSheetLoader(document: Document, settings: Partial<StyleShee
     // Or WebKit that fires the onload event before the StyleSheet is added to the document
     const waitForWebKitLinkLoaded = function () {
       wait(function () {
-        const styleSheets = document.styleSheets;
+        const styleSheets = doc.styleSheets;
         let styleSheet, i = styleSheets.length, owner;
 
         while (i--) {
@@ -195,7 +175,7 @@ export function StyleSheetLoader(document: Document, settings: Partial<StyleShee
 
     // Start loading
     state.status = 1;
-    link = document.createElement('link');
+    link = RootNode.createElement(doc, 'link');
     link.rel = 'stylesheet';
     link.type = 'text/css';
     link.id = 'u' + (idCount++);
@@ -213,7 +193,7 @@ export function StyleSheetLoader(document: Document, settings: Partial<StyleShee
     }
 
     const appendToHead = (node): void => {
-      styleContainer(root).appendChild(node);
+      RootNode.styleContainer(doc).appendChild(node);
     };
 
     // Feature detect onload on link element and sniff older webkits since it has an broken onload event
@@ -224,7 +204,7 @@ export function StyleSheetLoader(document: Document, settings: Partial<StyleShee
       // Sniff for old Firefox that doesn't support the onload event on link elements
       // TODO: Remove this in the future when everyone uses modern browsers
       if (navigator.userAgent.indexOf('Firefox') > 0) {
-        style = document.createElement('style');
+        style = RootNode.createElement(doc, 'style');
         style.textContent = '@import "' + url + '"';
         waitForGeckoLinkLoaded();
         appendToHead(style);
@@ -239,10 +219,9 @@ export function StyleSheetLoader(document: Document, settings: Partial<StyleShee
     link.href = url;
   };
 
-  const loadF = (root: Document | ShadowRoot) => (url: string): Future<Result<string, string>> =>
+  const loadF = (url: string): Future<Result<string, string>> =>
     Future.nu((resolve) => {
-      loadInRoot(
-        root,
+      load(
         url,
         Fun.compose(resolve, Fun.constant(Result.value(url))),
         Fun.compose(resolve, Fun.constant(Result.error(url)))
@@ -254,11 +233,11 @@ export function StyleSheetLoader(document: Document, settings: Partial<StyleShee
   };
 
   const loadAll = function (urls: string[], success: Function, failure: Function) {
-    loadAllInRoot(document, urls, success, failure);
+    loadAllInRoot(doc, urls, success, failure);
   };
 
   const loadAllInRoot = function (root: Document | ShadowRoot, urls: string[], success: Function, failure: Function) {
-    Futures.par(Arr.map(urls, loadF(root))).get(function (result) {
+    Futures.par(Arr.map(urls, loadF)).get(function (result) {
       const parts = Arr.partition(result, function (r) {
         return r.isValue();
       });
@@ -273,9 +252,7 @@ export function StyleSheetLoader(document: Document, settings: Partial<StyleShee
 
   return {
     load,
-    loadInRoot,
     loadAll,
-    loadAllInRoot,
     _setReferrerPolicy
   };
 }

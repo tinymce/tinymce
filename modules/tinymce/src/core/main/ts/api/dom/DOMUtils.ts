@@ -5,9 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Attr, Document, document, DocumentFragment, Element, HTMLElement, HTMLElementEventMap, HTMLElementTagNameMap, NamedNodeMap, Node, Range, Window, window } from '@ephox/dom-globals';
+import {
+  Attr,
+  Document,
+  document,
+  DocumentFragment,
+  Element,
+  HTMLElement,
+  HTMLElementEventMap,
+  HTMLElementTagNameMap,
+  NamedNodeMap,
+  Node,
+  Range,
+  ShadowRoot,
+  Window,
+  window
+} from '@ephox/dom-globals';
 import { Type } from '@ephox/katamari';
-import { VisualViewport } from '@ephox/sugar';
+import { RootNode, VisualViewport } from '@ephox/sugar';
 import * as NodeType from '../../dom/NodeType';
 import * as Position from '../../dom/Position';
 import { StyleSheetLoader } from '../../dom/StyleSheetLoader';
@@ -188,7 +203,9 @@ interface DOMUtils {
   $$ (elm: string): DomQuery<Node>;
   isBlock (node: string | Node): boolean;
   clone (node: Node, deep: boolean): Node;
+  /** @deprecated use #getRootNode instead */
   getRoot (): HTMLElement;
+  getRootNode (): Node;
   getViewPort (argWin?: Window): GeomRect;
   getRect (elm: string | HTMLElement): GeomRect;
   getSize (elm: string | HTMLElement): {
@@ -265,10 +282,11 @@ interface DOMUtils {
  *
  * @constructor
  * @method DOMUtils
- * @param {Document} doc Document reference to bind the utility class to.
+ * @param {Document} dos Document reference to bind the utility class to.
  * @param {settings} settings Optional settings collection.
  */
-function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMUtils {
+function DOMUtils(dos: Document | ShadowRoot, settings: Partial<DOMUtilsSettings> = {}): DOMUtils {
+  const doc = RootNode.actualDocument(dos);
   let attrHooks;
   const addedStyles = {};
 
@@ -277,7 +295,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   let counter = 0;
   const stdMode = true;
   const boxModel = true;
-  const styleSheetLoader = StyleSheetLoader(doc, {
+  const styleSheetLoader = StyleSheetLoader(dos, {
     contentCssCors: settings.contentCssCors,
     referrerPolicy: settings.referrerPolicy
   });
@@ -322,12 +340,16 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   };
 
   const get = (elm: string | Node): HTMLElement => {
-    if (elm && doc && typeof elm === 'string') {
-      const node = doc.getElementById(elm);
+    if (elm && dos && typeof elm === 'string') {
+      const node = dos.getElementById(elm);
 
       // IE and Opera returns meta elements when they match the specified input ID, but getElementsByName seems to do the trick
       if (node && node.id !== elm) {
-        return doc.getElementsByName(elm)[1];
+        if (RootNode.isDocument(dos)) {
+          return dos.getElementsByName(elm)[1];
+        } else {
+          return dos.querySelector('[name="' + elm + '"]');
+        }
       } else {
         return node;
       }
@@ -417,7 +439,11 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
   };
 
+  // TODO: In the case of a shadow dom, we want the root to be the shadow root. However, shadow roots are Nodes, but not Elements.
+  // TODO: Should we use getRootNode below, and deprecate getRoot?
   const getRoot = (): HTMLElement => settings.root_element || doc.body;
+
+  const getRootNode = (): Node => settings.root_element || RootNode.bodyOrShadowRoot(doc);
 
   const getViewPort = (argWin?: Window): GeomRect => {
     const vp = VisualViewport.getBounds(argWin);
@@ -431,6 +457,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     };
   };
 
+  // TODO: is the actual document body ok here?
   const getPos = (elm: string | Node, rootElm?: Node) => Position.getPos(doc.body, get(elm), rootElm);
 
   const setStyle = (elm: string | Node, name: string | StyleMap, value?: string | number) => {
@@ -619,7 +646,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
   const getPrev = (node: Node, selector: string | ((node: Node) => boolean)) => _findSib(node, selector, 'previousSibling');
 
-  const select = (selector: string, scope?: Node | string) => Sizzle(selector, get(scope) || settings.root_element || doc, []);
+  const select = (selector: string, scope?: Node | string) => Sizzle(selector, get(scope) || settings.root_element || dos, []);
 
   const run = (elm: RunArguments, func: (node: Element) => any, scope?) => {
     let result;
@@ -704,7 +731,8 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return !create ? parentElm.appendChild(newElm) : newElm;
   });
 
-  const create = (name: string, attrs?: Record<string, string | boolean | number>, html?: string | Node): HTMLElement => add(doc.createElement(name), name, attrs, html, true);
+  const create = (name: string, attrs?: Record<string, string | boolean | number>, html?: string | Node): HTMLElement =>
+    add(doc.createElement(name), name, attrs, html, true);
 
   const decode = Entities.decode;
   const encode = Entities.encodeAllRaw;
@@ -787,10 +815,10 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   const serializeStyle = (stylesArg: StyleMap, name?: string) => styles.serialize(stylesArg, name);
 
   const addStyle = (cssText: string) => {
-    let head, styleElm;
+    let styleElm;
 
     // Prevent inline from loading the same styles twice
-    if (self !== DOMUtils.DOM && doc === document) {
+    if (self !== DOMUtils.DOM && dos === document) {
       if (addedStyles[cssText]) {
         return;
       }
@@ -799,17 +827,17 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
 
     // Create style element if needed
-    styleElm = doc.getElementById('mceDefaultStyles');
+    styleElm = dos.getElementById('mceDefaultStyles');
     if (!styleElm) {
       styleElm = doc.createElement('style');
       styleElm.id = 'mceDefaultStyles';
       styleElm.type = 'text/css';
 
-      head = doc.getElementsByTagName('head')[0];
-      if (head.firstChild) {
-        head.insertBefore(styleElm, head.firstChild);
+      const sc = RootNode.styleContainer(dos);
+      if (sc.firstChild) {
+        sc.insertBefore(styleElm, sc.firstChild);
       } else {
-        head.appendChild(styleElm);
+        sc.appendChild(styleElm);
       }
     }
 
@@ -822,10 +850,9 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   };
 
   const loadCSS = (url: string) => {
-    let head;
 
     // Prevent inline from loading the same CSS file twice
-    if (self !== DOMUtils.DOM && doc === document) {
+    if (self !== DOMUtils.DOM && dos === document) {
       DOMUtils.DOM.loadCSS(url);
       return;
     }
@@ -833,8 +860,6 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     if (!url) {
       url = '';
     }
-
-    head = doc.getElementsByTagName('head')[0];
 
     each(url.split(','), function (url) {
       let link;
@@ -854,7 +879,8 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
         ...settings.referrerPolicy ? { referrerPolicy: settings.referrerPolicy } : { }
       });
 
-      head.appendChild(link);
+      const sc = RootNode.styleContainer(dos);
+      sc.appendChild(link);
     });
   };
 
@@ -1116,7 +1142,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
 
     // Collect all window/document events bound by editor instance
-    if (settings.collect && (target === doc || target === win)) {
+    if (settings.collect && (target === dos || target === win)) {
       boundEvents.push([ target, name, func, scope ]);
     }
 
@@ -1138,7 +1164,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
 
     // Remove any bound events matching the input
-    if (boundEvents.length > 0 && (target === doc || target === win)) {
+    if (boundEvents.length > 0 && (target === dos || target === win)) {
       i = boundEvents.length;
 
       while (i--) {
@@ -1246,10 +1272,20 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * Returns the root node of the document. This is normally the body but might be a DIV. Parents like getParent will not
      * go above the point of this root node.
      *
+     * @deprecated use #getRootNode instead
      * @method getRoot
      * @return {Element} Root element for the utility class.
      */
     getRoot,
+
+    /**
+     * Returns the root node of the document. This is normally the body but might be a DIV or a shadow root.
+     * Parents like getParent will not go above the point of this root node.
+     *
+     * @method getRoot
+     * @return {Element} Root element for the utility class.
+     */
+    getRootNode,
 
     /**
      * Returns the viewport of the window.

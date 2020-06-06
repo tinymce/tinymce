@@ -6,7 +6,7 @@
  */
 
 import { document, window } from '@ephox/dom-globals';
-import { Attr, Element, Insert, RootNode } from '@ephox/sugar';
+import { Attr, Element, Insert } from '@ephox/sugar';
 import Annotator from '../api/Annotator';
 import DOMUtils from '../api/dom/DOMUtils';
 import Selection from '../api/dom/Selection';
@@ -41,8 +41,6 @@ import { Obj, Type } from '@ephox/katamari';
 import * as Rtc from '../Rtc';
 
 declare const escape: any;
-
-const DOM = DOMUtils.DOM;
 
 const appendStyle = function (editor: Editor, text: string) {
   const head = Element.fromDom(editor.getDoc().head);
@@ -255,7 +253,7 @@ const initEditor = function (editor: Editor) {
 };
 
 const getStyleSheetLoader = function (editor: Editor) {
-  return editor.inline ? DOM.styleSheetLoader : editor.dom.styleSheetLoader;
+  return editor.inline ? editor.uidom.styleSheetLoader : editor.dom.styleSheetLoader;
 };
 
 const preInit = (editor: Editor, rtcMode: boolean) => {
@@ -263,7 +261,7 @@ const preInit = (editor: Editor, rtcMode: boolean) => {
 
   if (!settings.browser_spellcheck && !settings.gecko_spellcheck) {
     doc.body.spellcheck = false; // Gecko
-    DOM.setAttrib(body, 'spellcheck', 'false');
+    editor.uidom.setAttrib(body, 'spellcheck', 'false');
   }
 
   editor.quirks = Quirks(editor);
@@ -348,12 +346,12 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
     editor.on('remove', function () {
       const bodyEl = this.getBody();
 
-      DOM.removeClass(bodyEl, 'mce-content-body');
-      DOM.removeClass(bodyEl, 'mce-edit-focus');
-      DOM.setAttrib(bodyEl, 'contentEditable', null);
+      editor.uidom.removeClass(bodyEl, 'mce-content-body');
+      editor.uidom.removeClass(bodyEl, 'mce-edit-focus');
+      editor.uidom.setAttrib(bodyEl, 'contentEditable', null);
     });
 
-    DOM.addClass(targetElm, 'mce-content-body');
+    editor.uidom.addClass(targetElm, 'mce-content-body');
     editor.contentDocument = doc = document;
     editor.contentWindow = window;
     editor.bodyElement = targetElm;
@@ -366,7 +364,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   editor.readonly = !!settings.readonly;
 
   if (!editor.readonly) {
-    if (editor.inline && DOM.getStyle(body, 'position', true) === 'static') {
+    if (editor.inline && editor.uidom.getStyle(body, 'position', true) === 'static') {
       body.style.position = 'relative';
     }
 

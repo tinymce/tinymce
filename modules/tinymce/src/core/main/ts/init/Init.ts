@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLElement } from '@ephox/dom-globals';
+import { Document, Element, HTMLElement, ShadowRoot } from '@ephox/dom-globals';
 import { Obj, Type } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
@@ -19,6 +19,7 @@ import * as ErrorReporter from '../ErrorReporter';
 import { appendContentCssFromSettings } from './ContentCss';
 import * as InitContentBody from './InitContentBody';
 import * as InitIframe from './InitIframe';
+import { RootNode } from '@ephox/sugar';
 
 const DOM = DOMUtils.DOM;
 
@@ -158,6 +159,9 @@ const renderThemeUi = function (editor: Editor) {
 
 const init = function (editor: Editor) {
   editor.fire('ScriptsLoaded');
+
+  const rootNode: Document | ShadowRoot = RootNode.getRootNode(editor.getElement());
+  editor.uidom = DOMUtils(rootNode);
 
   initIcons(editor);
   initTheme(editor);

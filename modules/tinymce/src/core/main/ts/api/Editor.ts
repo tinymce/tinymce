@@ -227,6 +227,7 @@ class Editor implements EditorObservable {
   public delegates: Record<string, (event: any) => void>;
   public destroyed: boolean;
   public dom: DOMUtils;
+  public uidom: DOMUtils;
   public editorContainer: HTMLElement;
   public eventRoot?: Element;
   public formatter: Formatter;
