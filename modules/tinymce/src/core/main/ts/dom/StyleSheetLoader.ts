@@ -39,9 +39,7 @@ const styleContainer = (dos: Document | ShadowRoot): DomNode =>
 export function StyleSheetLoader(document: Document, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
   let idCount = 0;
   const loadedStates = {};
-  let maxLoadTime;
-
-  maxLoadTime = settings.maxLoadTime || 5000;
+  const maxLoadTime = settings.maxLoadTime || 5000;
 
   const _setReferrerPolicy = (referrerPolicy: ReferrerPolicy) => {
     settings.referrerPolicy = referrerPolicy;
