@@ -1,6 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { document, Element as DomElement, ShadowRoot } from '@ephox/dom-globals';
-import { getRootNode, isDocument, isShadowRoot, browserSupportsGetRootNode } from 'ephox/sugar/api/node/RootNode';
+import { document, Element as DomElement, HTMLIFrameElement, ShadowRoot, Window } from '@ephox/dom-globals';
+import { browserSupportsGetRootNode, getRootNode, isDocument, isShadowRoot, RootNode } from 'ephox/sugar/api/node/RootNode';
 import { Testable } from '@ephox/dispute';
 
 const withNormalElement = (f: (d: DomElement) => void): void => {
@@ -33,6 +33,37 @@ const withShadowElement = (f: (sr: ShadowRoot, innerDiv: DomElement) => void): v
   withShadowElementInMode('closed', f);
 };
 
+
+const withIframe = (f: (div: DomElement, iframe: HTMLIFrameElement, cw: Window) => void): void => {
+  var iframe = document.createElement('iframe');
+  document.body.appendChild(iframe);
+
+  const cw = iframe.contentWindow;
+  if (cw === null) {
+    throw new Error("contentWindow was null")
+  }
+
+  cw.document.open();
+  cw.document.write("<html><head></head><body></body><html></html>");
+  const div = cw.document.createElement('div');
+  cw.document.body.appendChild(div);
+  try {
+    f(div, iframe, cw);
+  } finally {
+    iframe.remove();
+  }
+};
+
+const shouldBeShadowRoot = (n: RootNode) => {
+  Assert.eq('should be shadow root', true, isShadowRoot(n));
+  Assert.eq('should not be document', false, isDocument(n));
+};
+
+const shouldBeDocument = (n: RootNode) => {
+  Assert.eq('should not be shadow root', false, isShadowRoot(n));
+  Assert.eq('should be document', true, isDocument(n));
+};
+
 UnitTest.test('getRootNode === document on normal element in dom', () => {
   withNormalElement((div) => {
     Assert.eq('should be document', document, getRootNode(div), Testable.tStrict);
@@ -41,22 +72,12 @@ UnitTest.test('getRootNode === document on normal element in dom', () => {
 
 UnitTest.test('isDocument(getRootNode) === true on normal element in dom', () => {
   withNormalElement((div) => {
-    Assert.eq('should be document', true, isDocument(getRootNode(div)));
+    shouldBeDocument(getRootNode(div));
   });
 });
 
-UnitTest.test('isShadowRoot(getRootNode) === false on normal element in dom', () => {
-  withNormalElement((div) => {
-    Assert.eq('should not be shadowroot', false, isShadowRoot(getRootNode(div)));
-  });
-});
-
-UnitTest.test('isShadowRoot(document) === false', () => {
-  Assert.eq('should not be shadow root', false, isShadowRoot(document));
-});
-
-UnitTest.test('isDocument(document) === true', () => {
-  Assert.eq('should be document', true, isDocument(document));
+UnitTest.test('document is document', () => {
+  shouldBeDocument(document);
 });
 
 if (browserSupportsGetRootNode()) {
@@ -66,27 +87,22 @@ if (browserSupportsGetRootNode()) {
     })
   });
 
-  UnitTest.test('isDocument(getRootNode) === false on element in shadow root', () => {
+  UnitTest.test('shadow root is shadow root', () => {
     withShadowElement((sr, innerDiv) => {
-      Assert.eq('should not be document', false, isDocument(getRootNode(innerDiv)));
-    })
-  });
-
-  UnitTest.test('isShadowRoot(getRootNode) === true on element in shadow root', () => {
-    withShadowElement((sr, innerDiv) => {
-      Assert.eq('should be shadow root', true, isShadowRoot(getRootNode(innerDiv)));
-    })
-  });
-
-  UnitTest.test('isShadowRoot(shadowRoot) === true', () => {
-    withShadowElement((sr) => {
-      Assert.eq('should be shadow root', true, isShadowRoot(sr));
-    });
-  });
-
-  UnitTest.test('isDocument(shadowRoot) === false', () => {
-    withShadowElement((sr) => {
-      Assert.eq('should not be document', false, isDocument(sr));
+      shouldBeShadowRoot(getRootNode(innerDiv));
+      shouldBeShadowRoot(sr);
     });
   });
 }
+
+UnitTest.test('getRootNode in iframe', () => {
+  withIframe((div: DomElement, iframe: HTMLIFrameElement, cw: Window) => {
+    Assert.eq('should be inner doc', cw.document, getRootNode(div), Testable.tStrict);
+  });
+});
+
+UnitTest.test('isDocument in iframe', () => {
+  withIframe((div: DomElement, iframe: HTMLIFrameElement, cw: Window) => {
+    shouldBeDocument(cw.document);
+  });
+});
