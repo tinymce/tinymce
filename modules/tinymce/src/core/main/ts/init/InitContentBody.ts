@@ -311,9 +311,7 @@ const preInit = (editor: Editor, rtcMode: boolean) => {
     editor.dom.addStyle(contentCssText);
   }
 
-  const rootNode = RootNode.getRootNode(editor.getElement());
-  getStyleSheetLoader(editor).loadAllInRoot(
-    rootNode,
+  getStyleSheetLoader(editor).loadAll(
     editor.contentCSS,
     function (_) {
       initEditor(editor);
