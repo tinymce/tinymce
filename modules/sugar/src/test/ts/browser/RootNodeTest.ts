@@ -11,7 +11,7 @@ const withNormalElement = (f: (d: DomElement) => void): void => {
   try {
     f(div);
   } finally {
-    div.remove();
+    document.body.removeChild(div);
   }
 };
 
@@ -25,7 +25,7 @@ const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: ShadowRoot, in
   try {
     f(sr, innerDiv);
   } finally {
-    div.remove();
+    document.body.removeChild(div);
   }
 };
 
@@ -51,7 +51,7 @@ const withIframe = (f: (div: DomElement, iframe: HTMLIFrameElement, cw: Window) 
   try {
     f(div, iframe, cw);
   } finally {
-    iframe.remove();
+    document.body.removeChild(iframe);
   }
 };
 
