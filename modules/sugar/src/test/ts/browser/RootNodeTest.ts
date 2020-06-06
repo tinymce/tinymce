@@ -9,7 +9,7 @@ const withNormalElement = (f: (d: DomElement) => void): void => {
   document.body.appendChild(div);
 
   try {
-    f(div)
+    f(div);
   } finally {
     div.remove();
   }
@@ -23,7 +23,7 @@ const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: ShadowRoot, in
   sr.appendChild(innerDiv);
 
   try {
-    f(sr, innerDiv)
+    f(sr, innerDiv);
   } finally {
     div.remove();
   }
@@ -36,16 +36,16 @@ const withShadowElement = (f: (sr: ShadowRoot, innerDiv: DomElement) => void): v
 
 
 const withIframe = (f: (div: DomElement, iframe: HTMLIFrameElement, cw: Window) => void): void => {
-  var iframe = document.createElement('iframe');
+  const iframe = document.createElement('iframe');
   document.body.appendChild(iframe);
 
   const cw = iframe.contentWindow;
   if (cw === null) {
-    throw new Error("contentWindow was null")
+    throw new Error('contentWindow was null');
   }
 
   cw.document.open();
-  cw.document.write("<html><head></head><body></body><html></html>");
+  cw.document.write('<html><head></head><body></body><html></html>');
   const div = cw.document.createElement('div');
   cw.document.body.appendChild(div);
   try {
@@ -85,7 +85,7 @@ if (browserSupportsGetRootNode()) {
   UnitTest.test('getRootNode === shadowroot on element in shadow root', () => {
     withShadowElement((sr, innerDiv) => {
       Assert.eq('should be shadowroot', sr, getRootNode(innerDiv), Testable.tStrict);
-    })
+    });
   });
 
   UnitTest.test('shadow root is shadow root', () => {
