@@ -13,7 +13,7 @@ import * as Buttons from './ui/Buttons';
 
 export default function () {
   PluginManager.add('fullscreen', (editor) => {
-    const fullscreenState = Cell(null);
+    const fullscreenState: Cell<any> = Cell(null);
 
     if (editor.settings.inline) {
       return Api.get(fullscreenState);
