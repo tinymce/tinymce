@@ -4,11 +4,16 @@ const noop: (...args: any[]) => void
 const noarg: <T>(f: () => T) => (...args: any[]) => void
 = (f) => () => f();
 
+/** Compose a unary function with an n-ary function */
 const compose = function <T extends any[], U, V> (fa: (v: U) => V, fb: (...x: T) => U): (...x: T) => V {
   return function (...args: T) {
     return fa(fb.apply(null, args));
   };
 };
+
+/** Compose two unary functions. Similar to compose, but avoids using Function.prototype.apply. */
+const compose1 = <A, B, C> (fbc: (b: B) => C, fab: (a: A) => B) => (a: A): C =>
+  fbc(fab(a));
 
 const constant = function <T> (value: T): () => T {
   return function () {
@@ -66,6 +71,7 @@ export {
   noop,
   noarg,
   compose,
+  compose1,
   constant,
   identity,
   tripleEquals,
