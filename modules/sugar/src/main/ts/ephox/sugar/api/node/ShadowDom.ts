@@ -61,3 +61,6 @@ export const getShadowRoot = (e: Element<DomNode>): Option<Element<ShadowRoot>> 
   const r = getRootNode(e);
   return isShadowRoot(r) ? Option.some(r) : Option.none();
 };
+
+export const getShadowHost = (e: Element<ShadowRoot>): Element<DomElement> =>
+  Element.fromDom(e.dom().host);

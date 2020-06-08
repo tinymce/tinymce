@@ -16,22 +16,22 @@ export const withNormalElement = (f: (d: Element<DomElement>) => void): void => 
 };
 
 
-const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: Element<ShadowRoot>, innerDiv: Element<DomElement>) => void) => {
-  const div = Element.fromTag('div', document);
-  Insert.append(Body.body(), div);
-  const sr = Element.fromDom(div.dom().attachShadow({ mode }));
+const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: Element<ShadowRoot>, innerDiv: Element<DomElement>, shadowHost: Element<DomElement>) => void) => {
+  const shadowHost = Element.fromTag('div', document);
+  Insert.append(Body.body(), shadowHost);
+  const sr = Element.fromDom(shadowHost.dom().attachShadow({ mode }));
   const innerDiv = Element.fromTag('div', document);
 
   Insert.append(sr, innerDiv);
 
   try {
-    f(sr, innerDiv);
+    f(sr, innerDiv, shadowHost);
   } finally {
-    Remove.remove(div);
+    Remove.remove(shadowHost);
   }
 };
 
-export const withShadowElement = (f: (sr: Element<ShadowRoot>, innerDiv: Element<DomElement>) => void): void => {
+export const withShadowElement = (f: (shadowRoot: Element<ShadowRoot>, innerDiv: Element<DomElement>, shadowHost: Element<DomElement>) => void): void => {
   withShadowElementInMode('open', f);
   withShadowElementInMode('closed', f);
 };

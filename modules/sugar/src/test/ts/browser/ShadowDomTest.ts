@@ -140,3 +140,11 @@ if (ShadowDom.isSupported()) {
 UnitTest.test('stylecontainer is body for document', () => {
   Assert.eq('Should be head', Body.getBody(Document.getDocument()), ShadowDom.getContentContainer(Document.getDocument()), tElement);
 });
+
+if (ShadowDom.isSupported()) {
+  UnitTest.test('getShadowHost', () => {
+    withShadowElement((sr, inner, sh) => {
+      Assert.eq('Should be shadow host', sh, ShadowDom.getShadowHost(sr), tElement);
+    });
+  });
+}
