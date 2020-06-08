@@ -55,11 +55,11 @@ if (ShadowDom.isSupported()) {
     const div1 = document.createElement('div');
     document.body.appendChild(div1);
 
-    const sr1 = div1.attachShadow({mode: 'open'});
+    const sr1 = div1.attachShadow({ mode: 'open' });
     const div2 = document.createElement('div');
     sr1.appendChild(div2);
 
-    const sr2 = div2.attachShadow({mode: 'open'});
+    const sr2 = div2.attachShadow({ mode: 'open' });
     const div3 = document.createElement('div');
     sr2.appendChild(div3);
 
