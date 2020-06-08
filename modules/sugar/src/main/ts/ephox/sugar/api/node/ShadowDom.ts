@@ -37,9 +37,14 @@ export const getRootNode = (e: Element<DomNode>): RootNode => {
   }
 };
 
+/**
+ * If this is a Document, return it.
+ * If this is a ShadowRoot, return its parent document.
+ */
 export const actualDocument = (dos: RootNode): Element<Document> =>
   isDocument(dos) ? dos : Element.fromDom(dos.dom().ownerDocument);
 
+/** Create an element, using the actual document. */
 export const createElement: {
   <K extends keyof HTMLElementTagNameMap>(dos: RootNode, tag: K): Element<HTMLElementTagNameMap[K]>;
   (dos: RootNode, tag: string): Element<HTMLElement>;
@@ -54,13 +59,20 @@ export const getStyleContainer = (dos: RootNode): Element<DomNode> =>
 export const getContentContainer = (dos: RootNode): Element<DomNode> =>
   isShadowRoot(dos) ? dos : Body.getBody(actualDocument(dos));
 
+/** Is this element either a ShadowRoot or a descendent of a ShadowRoot. */
 export const isInShadowRoot = (e: Element<DomNode>): boolean =>
   isShadowRoot(getRootNode(e));
 
+/** If this element is in a ShadowRoot, return it. */
 export const getShadowRoot = (e: Element<DomNode>): Option<Element<ShadowRoot>> => {
   const r = getRootNode(e);
   return isShadowRoot(r) ? Option.some(r) : Option.none();
 };
 
+/** Return the host of a ShadowRoot.
+ *
+ * This function will throw if Shadow DOM is unsupported in the browser, or if the host is null.
+ * If you actually have a ShadowRoot, this shouldn't happen.
+ */
 export const getShadowHost = (e: Element<ShadowRoot>): Element<DomElement> =>
   Element.fromDom(e.dom().host);
