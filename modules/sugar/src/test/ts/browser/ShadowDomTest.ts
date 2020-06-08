@@ -2,13 +2,20 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import Element from 'ephox/sugar/api/node/Element';
 import * as Body from 'ephox/sugar/api/node/Body';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
-import { document, Element as DomElement, HTMLIFrameElement, navigator, ShadowRoot, Window } from '@ephox/dom-globals';
+import {
+  document,
+  Element as DomElement,
+  navigator,
+  ShadowRoot
+} from '@ephox/dom-globals';
 import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
-import fc, { Arbitrary } from 'fast-check';
+import fc from 'fast-check';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import { PlatformDetection } from '@ephox/sand';
 import * as ShadowDom from 'ephox/sugar/api/node/ShadowDom';
 import { Testable } from '@ephox/dispute';
+import { htmlBlockTagName, htmlInlineTagName } from 'ephox/sugar/test/Arbitrary';
+import { withIframe, withNormalElement, withShadowElement } from 'ephox/sugar/test/WithHelpers';
 
 type RootNode = ShadowDom.RootNode;
 
@@ -20,7 +27,7 @@ const shadowDomTest = (name: string, fn: () => void) => {
 
 const withShadow = (f: (shadow: Element<ShadowRoot>) => void): void => {
   const body = Body.body();
-  const e = Element.fromHtml<DomElement>('<div />');
+  const e = Element.fromTag('div');
   Insert.append(body, e);
 
   const shadow: ShadowRoot = e.dom().attachShadow({ mode: 'open' });
@@ -32,14 +39,6 @@ const withShadow = (f: (shadow: Element<ShadowRoot>) => void): void => {
     Remove.remove(e);
   }
 };
-
-const htmlBlockTagName = (): Arbitrary<string> =>
-  // note: list is incomplete
-  fc.constantFrom('div', 'article', 'section', 'main', 'h1', 'h2', 'h3', 'aside', 'nav');
-
-const htmlInlineTagName = (): Arbitrary<string> =>
-  // note: list is incomplete
-  fc.constantFrom('span', 'b', 'i', 'u', 'strong', 'em');
 
 shadowDomTest('ShadowDom - SelectorFind.descendant', () => {
   fc.assert(fc.property(htmlBlockTagName(), htmlInlineTagName(), fc.hexaString(), (block, inline, text) => {
@@ -54,58 +53,6 @@ shadowDomTest('ShadowDom - SelectorFind.descendant', () => {
   }));
 });
 
-
-const withNormalElement = (f: (d: DomElement) => void): void => {
-  const div = document.createElement('div');
-  document.body.appendChild(div);
-
-  try {
-    f(div);
-  } finally {
-    document.body.removeChild(div);
-  }
-};
-
-const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: ShadowRoot, innerDiv: DomElement) => void) => {
-  const div = document.createElement('div');
-  document.body.appendChild(div);
-  const sr = div.attachShadow({ mode });
-  const innerDiv = document.createElement('div');
-  sr.appendChild(innerDiv);
-
-  try {
-    f(sr, innerDiv);
-  } finally {
-    document.body.removeChild(div);
-  }
-};
-
-const withShadowElement = (f: (sr: ShadowRoot, innerDiv: DomElement) => void): void => {
-  withShadowElementInMode('open', f);
-  withShadowElementInMode('closed', f);
-};
-
-
-const withIframe = (f: (div: DomElement, iframe: HTMLIFrameElement, cw: Window) => void): void => {
-  const iframe = document.createElement('iframe');
-  document.body.appendChild(iframe);
-
-  const cw = iframe.contentWindow;
-  if (cw === null) {
-    throw new Error('contentWindow was null');
-  }
-
-  cw.document.open();
-  cw.document.write('<html><head></head><body></body><html></html>');
-  const div = cw.document.createElement('div');
-  cw.document.body.appendChild(div);
-  try {
-    f(div, iframe, cw);
-  } finally {
-    document.body.removeChild(iframe);
-  }
-};
-
 const shouldBeShadowRoot = (n: RootNode) => {
   Assert.eq('should be shadow root', true, ShadowDom.isShadowRoot(n));
   Assert.eq('should not be document', false, ShadowDom.isDocument(n));
@@ -118,7 +65,7 @@ const shouldBeDocument = (n: RootNode) => {
 
 UnitTest.test('getRootNode === document on normal element in dom', () => {
   withNormalElement((div) => {
-    Assert.eq('should be document', document, ShadowDom.getRootNode(div), Testable.tStrict);
+    Assert.eq('should be document', document, ShadowDom.getRootNode(div).dom(), Testable.tStrict);
   });
 });
 
@@ -129,13 +76,13 @@ UnitTest.test('isDocument(getRootNode) === true on normal element in dom', () =>
 });
 
 UnitTest.test('document is document', () => {
-  shouldBeDocument(document);
+  shouldBeDocument(Element.fromDom(document));
 });
 
 if (ShadowDom.isSupported()) {
   UnitTest.test('getRootNode === shadowroot on element in shadow root', () => {
     withShadowElement((sr, innerDiv) => {
-      Assert.eq('should be shadowroot', sr, ShadowDom.getRootNode(innerDiv), Testable.tStrict);
+      Assert.eq('should be shadowroot', sr.dom(), ShadowDom.getRootNode(innerDiv).dom(), Testable.tStrict);
     });
   });
 
@@ -148,14 +95,14 @@ if (ShadowDom.isSupported()) {
 }
 
 UnitTest.test('getRootNode in iframe', () => {
-  withIframe((div: DomElement, iframe: HTMLIFrameElement, cw: Window) => {
-    Assert.eq('should be inner doc', cw.document, ShadowDom.getRootNode(div), Testable.tStrict);
+  withIframe((div, iframe, cw) => {
+    Assert.eq('should be inner doc', cw.document, ShadowDom.getRootNode(div).dom(), Testable.tStrict);
   });
 });
 
 UnitTest.test('isDocument in iframe', () => {
-  withIframe((div: DomElement, iframe: HTMLIFrameElement, cw: Window) => {
-    shouldBeDocument(cw.document);
+  withIframe((div, iframe, cw) => {
+    shouldBeDocument(Element.fromDom(cw.document));
   });
 });
 
