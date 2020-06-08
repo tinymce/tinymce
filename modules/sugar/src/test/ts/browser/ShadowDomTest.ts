@@ -1,11 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import Element from 'ephox/sugar/api/node/Element';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
-import {
-  document,
-  Element as DomElement,
-  navigator,
-} from '@ephox/dom-globals';
+import { Element as DomElement, navigator } from '@ephox/dom-globals';
 import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
 import fc from 'fast-check';
 import { PlatformDetection } from '@ephox/sand';
@@ -51,7 +47,13 @@ const shouldBeDocument = (n: RootNode) => {
 
 UnitTest.test('getRootNode === document on normal element in dom', () => {
   withNormalElement((div) => {
-    Assert.eq('should be document', document, ShadowDom.getRootNode(div).dom(), Testable.tStrict);
+    Assert.eq('should be document', Document.getDocument(), ShadowDom.getRootNode(div), tElement);
+  });
+});
+
+UnitTest.test('getRootNode(document) === document on normal element in dom', () => {
+  withNormalElement(() => {
+    Assert.eq('should be document', Document.getDocument(), ShadowDom.getRootNode(Document.getDocument()), tElement);
   });
 });
 
@@ -62,13 +64,19 @@ UnitTest.test('isDocument(getRootNode) === true on normal element in dom', () =>
 });
 
 UnitTest.test('document is document', () => {
-  shouldBeDocument(Element.fromDom(document));
+  shouldBeDocument(Document.getDocument());
 });
 
 if (ShadowDom.isSupported()) {
   UnitTest.test('getRootNode === shadowroot on element in shadow root', () => {
     withShadowElement((sr, innerDiv) => {
-      Assert.eq('should be shadowroot', sr.dom(), ShadowDom.getRootNode(innerDiv).dom(), Testable.tStrict);
+      Assert.eq('should be shadowroot', sr, ShadowDom.getRootNode(innerDiv), tElement);
+    });
+  });
+
+  UnitTest.test('getRootNode(shadowroot) === shadowroot', () => {
+    withShadowElement((sr, innerDiv) => {
+      Assert.eq('should be shadowroot', sr, sr, tElement);
     });
   });
 
@@ -112,23 +120,23 @@ UnitTest.test('isSupported platform test', () => {
 if (ShadowDom.isSupported()) {
   UnitTest.test('stylecontainer is shadow root for shadow root', () => {
     withShadowElement((sr) => {
-      Assert.eq('Should be shadow root', sr, ShadowDom.getStyleContainer(sr), tElement)
+      Assert.eq('Should be shadow root', sr, ShadowDom.getStyleContainer(sr), tElement);
     });
   });
 }
 
 UnitTest.test('stylecontainer is head for document', () => {
-  Assert.eq('Should be head', Head.getHead(Document.getDocument()), ShadowDom.getStyleContainer(Document.getDocument()), tElement)
+  Assert.eq('Should be head', Head.getHead(Document.getDocument()), ShadowDom.getStyleContainer(Document.getDocument()), tElement);
 });
 
 if (ShadowDom.isSupported()) {
   UnitTest.test('contentcontainer is shadow root for shadow root', () => {
     withShadowElement((sr) => {
-      Assert.eq('Should be shadow root', sr, ShadowDom.getContentContainer(sr), tElement)
+      Assert.eq('Should be shadow root', sr, ShadowDom.getContentContainer(sr), tElement);
     });
   });
 }
 
 UnitTest.test('stylecontainer is body for document', () => {
-  Assert.eq('Should be head', Body.getBody(Document.getDocument()), ShadowDom.getContentContainer(Document.getDocument()), tElement)
+  Assert.eq('Should be head', Body.getBody(Document.getDocument()), ShadowDom.getContentContainer(Document.getDocument()), tElement);
 });
