@@ -1,21 +1,22 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import Element from 'ephox/sugar/api/node/Element';
-import * as Body from 'ephox/sugar/api/node/Body';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import {
   document,
   Element as DomElement,
   navigator,
-  ShadowRoot
 } from '@ephox/dom-globals';
 import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
 import fc from 'fast-check';
-import * as Remove from 'ephox/sugar/api/dom/Remove';
 import { PlatformDetection } from '@ephox/sand';
 import * as ShadowDom from 'ephox/sugar/api/node/ShadowDom';
 import { Testable } from '@ephox/dispute';
 import { htmlBlockTagName, htmlInlineTagName } from 'ephox/sugar/test/Arbitrary';
 import { withIframe, withNormalElement, withShadowElement } from 'ephox/sugar/test/WithHelpers';
+import { tElement } from 'ephox/sugar/test/ElementInstances';
+import * as Document from 'ephox/sugar/api/node/Document';
+import * as Head from 'ephox/sugar/api/node/Head';
+import * as Body from 'ephox/sugar/api/node/Body';
 
 type RootNode = ShadowDom.RootNode;
 
@@ -25,24 +26,9 @@ const shadowDomTest = (name: string, fn: () => void) => {
   }
 };
 
-const withShadow = (f: (shadow: Element<ShadowRoot>) => void): void => {
-  const body = Body.body();
-  const e = Element.fromTag('div');
-  Insert.append(body, e);
-
-  const shadow: ShadowRoot = e.dom().attachShadow({ mode: 'open' });
-  const shadowE: Element<ShadowRoot> = Element.fromDom(shadow);
-
-  try {
-    f(shadowE);
-  } finally {
-    Remove.remove(e);
-  }
-};
-
 shadowDomTest('ShadowDom - SelectorFind.descendant', () => {
   fc.assert(fc.property(htmlBlockTagName(), htmlInlineTagName(), fc.hexaString(), (block, inline, text) => {
-    withShadow((ss) => {
+    withShadowElement((ss) => {
       const id = 'theid';
       const inner = Element.fromHtml(`<${block}><p>hello<${inline} id="${id}">${text}</${inline}></p></${block}>`);
       Insert.append(ss, inner);
@@ -121,4 +107,28 @@ UnitTest.test('isSupported platform test', () => {
   } else {
     Assert.eq('This browser should support root node', true, ShadowDom.isSupported());
   }
+});
+
+if (ShadowDom.isSupported()) {
+  UnitTest.test('stylecontainer is shadow root for shadow root', () => {
+    withShadowElement((sr) => {
+      Assert.eq('Should be shadow root', sr, ShadowDom.getStyleContainer(sr), tElement)
+    });
+  });
+}
+
+UnitTest.test('stylecontainer is head for document', () => {
+  Assert.eq('Should be head', Head.getHead(Document.getDocument()), ShadowDom.getStyleContainer(Document.getDocument()), tElement)
+});
+
+if (ShadowDom.isSupported()) {
+  UnitTest.test('contentcontainer is shadow root for shadow root', () => {
+    withShadowElement((sr) => {
+      Assert.eq('Should be shadow root', sr, ShadowDom.getContentContainer(sr), tElement)
+    });
+  });
+}
+
+UnitTest.test('stylecontainer is body for document', () => {
+  Assert.eq('Should be head', Body.getBody(Document.getDocument()), ShadowDom.getContentContainer(Document.getDocument()), tElement)
 });
