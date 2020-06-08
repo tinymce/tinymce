@@ -19,6 +19,8 @@ import * as Body from './node/Body';
 import * as Comment from './node/Comment';
 import * as Comments from './node/Comments';
 import Element from './node/Element';
+import * as Document from './node/Document';
+import * as Head from './node/Head';
 import * as Elements from './node/Elements';
 import * as Fragment from './node/Fragment';
 import * as Node from './node/Node';
@@ -97,9 +99,11 @@ export {
   Body,
   Comment,
   Comments,
+  Document,
   Element,
   Elements,
   Fragment,
+  Head,
   Node,
   NodeTypes,
   ShadowDom,

@@ -3,7 +3,6 @@ import { document, Element as DomElement, HTMLIFrameElement, ShadowRoot, Window 
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Body from 'ephox/sugar/api/node/Body';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import { getDoc } from './Doc';
 
 export const withNormalElement = (f: (d: Element<DomElement>) => void): void => {
   const div = document.createElement('div');
@@ -19,7 +18,7 @@ export const withNormalElement = (f: (d: Element<DomElement>) => void): void => 
 
 const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: Element<ShadowRoot>, innerDiv: Element<DomElement>) => void) => {
   const div = Element.fromTag('div', document);
-  Insert.append(Body.getBody(getDoc()), div);
+  Insert.append(Body.body(), div);
   const sr = Element.fromDom(div.dom().attachShadow({ mode }));
   const innerDiv = Element.fromTag('div', document);
 
