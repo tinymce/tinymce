@@ -6,10 +6,9 @@ import Element from 'ephox/sugar/api/node/Element';
 import * as SelectorFind from 'ephox/sugar/api/search/SelectorFind';
 import * as ShadowDom from 'ephox/sugar/api/node/ShadowDom';
 import { withShadowElement } from 'ephox/sugar/test/WithHelpers';
+import { document } from '@ephox/dom-globals';
 
-UnitTest.test('BodyTest', () => {
-  const body = SelectorFind.first('body').getOrDie();
-
+UnitTest.test('Body.inBody - detached elements and their descendents', () => {
   const div = Element.fromTag('div');
   const child = Element.fromTag('span');
   const text = Element.fromText('hi');
@@ -18,14 +17,25 @@ UnitTest.test('BodyTest', () => {
   assert.eq(false, Body.inBody(div));
   assert.eq(false, Body.inBody(child));
   assert.eq(false, Body.inBody(text));
+});
 
+UnitTest.test('Body.inBody - elements in body', () => {
+  const body = SelectorFind.first('body').getOrDie();
+
+  const div = Element.fromTag('div');
+  const child = Element.fromTag('span');
+  const text = Element.fromText('hi');
+  Insert.append(child, text);
+  Insert.append(div, child);
   Insert.append(body, div);
-  assert.eq(true, Body.inBody(div));
-  assert.eq(true, Body.inBody(child));
-  assert.eq(true, Body.inBody(text));
-  assert.eq(true, Body.inBody(body));
-
-  Remove.remove(div);
+  try {
+    assert.eq(true, Body.inBody(div));
+    assert.eq(true, Body.inBody(child));
+    assert.eq(true, Body.inBody(text));
+    assert.eq(true, Body.inBody(body));
+  } finally{
+    Remove.remove(div);
+  }
 });
 
 if (ShadowDom.isSupported()) {
@@ -39,5 +49,33 @@ if (ShadowDom.isSupported()) {
     withShadowElement((sr) => {
       Assert.eq('should be inBody', true, Body.inBody(sr));
     });
+  });
+
+  UnitTest.test('Body.inBody - element in nested shadow root', () => {
+    const div1 = document.createElement('div');
+    document.body.appendChild(div1);
+
+    const sr1 = div1.attachShadow({mode: 'open'});
+    const div2 = document.createElement('div');
+    sr1.appendChild(div2);
+
+    const sr2 = div2.attachShadow({mode: 'open'});
+    const div3 = document.createElement('div');
+    sr2.appendChild(div3);
+
+    const div4 = document.createElement('div');
+    div3.appendChild(div4);
+
+    try {
+      Assert.eq('div1 should be inBody', true, Body.inBody(Element.fromDom(div1)));
+      Assert.eq('div2 should be inBody', true, Body.inBody(Element.fromDom(div2)));
+      Assert.eq('div3 should be inBody', true, Body.inBody(Element.fromDom(div3)));
+      Assert.eq('div4 should be inBody', true, Body.inBody(Element.fromDom(div4)));
+
+      Assert.eq('sr1 should be inBody', true, Body.inBody(Element.fromDom(sr1)));
+      Assert.eq('sr2 should be inBody', true, Body.inBody(Element.fromDom(sr2)));
+    } finally {
+      document.body.removeChild(div1);
+    }
   });
 }
