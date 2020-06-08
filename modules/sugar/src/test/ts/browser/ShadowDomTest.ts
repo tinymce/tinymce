@@ -75,7 +75,7 @@ if (ShadowDom.isSupported()) {
   });
 
   UnitTest.test('getRootNode(shadowroot) === shadowroot', () => {
-    withShadowElement((sr, innerDiv) => {
+    withShadowElement((sr) => {
       Assert.eq('should be shadowroot', sr, sr, tElement);
     });
   });
