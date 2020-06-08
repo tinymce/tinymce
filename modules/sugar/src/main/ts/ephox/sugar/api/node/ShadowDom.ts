@@ -21,7 +21,7 @@ export const isDocument = (dos: RootNode): dos is Element<Document> =>
 /**
  * Does the browser support shadow DOM?
  *
- * NOTE: Node.getRootNode() and Element.attachShadow doesn't exist on IE11 and pre-Chromium Edge.
+ * NOTE: Node.getRootNode() and Element.attachShadow don't exist on IE11 and pre-Chromium Edge.
  */
 export const isSupported = (): boolean =>
   Type.isFunction((DomElement.prototype as any).attachShadow) &&
