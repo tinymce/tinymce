@@ -62,7 +62,7 @@ export const getContentContainer = (dos: RootNode): Element<DomNode> =>
 
 /** Is this element either a ShadowRoot or a descendent of a ShadowRoot. */
 export const isInShadowRoot = (e: Element<DomNode>): boolean =>
-  isShadowRoot(getRootNode(e));
+  getShadowRoot(e).isSome();
 
 /** If this element is in a ShadowRoot, return it. */
 export const getShadowRoot = (e: Element<DomNode>): Option<Element<ShadowRoot>> => {
