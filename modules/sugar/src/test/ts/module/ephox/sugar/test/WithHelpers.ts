@@ -5,16 +5,15 @@ import * as Body from 'ephox/sugar/api/node/Body';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 
 export const withNormalElement = (f: (d: Element<DomElement>) => void): void => {
-  const div = document.createElement('div');
-  document.body.appendChild(div);
+  const div = Element.fromTag('div');
+  Insert.append(Body.body(), div);
 
   try {
-    f(Element.fromDom(div));
+    f(div);
   } finally {
-    document.body.removeChild(div);
+    Remove.remove(div);
   }
 };
-
 
 const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: Element<ShadowRoot>, innerDiv: Element<DomElement>, shadowHost: Element<DomElement>) => void) => {
   const shadowHost = Element.fromTag('div', document);
