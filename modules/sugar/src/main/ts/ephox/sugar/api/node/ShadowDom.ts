@@ -13,6 +13,12 @@ import * as Traverse from '../search/Traverse';
 
 export type RootNode = Element<Document | ShadowRoot>;
 
+/**
+ * Is the element a ShadowRoot?
+ *
+ * Note: this is insufficient to test if any element is a shadow root, but it is sufficient to differentiate between
+ * a Document and a ShadowRoot.
+ */
 export const isShadowRoot = (dos: RootNode): dos is Element<ShadowRoot> =>
   Node.isDocumentFragment(dos);
 
@@ -29,9 +35,7 @@ export const getRootNode = (e: Element<DomNode>): RootNode => {
   if (isSupported()) {
     return Element.fromDom((e.dom() as any).getRootNode());
   } else {
-    // ownerDocument returns null for a document, and Element.fromDom requires non-null,
-    // so we have to check if the element is a document.
-    return Node.isDocument(e) ? e : Traverse.owner(e);
+    return Traverse.documentOrOwner(e);
   }
 };
 
@@ -39,23 +43,22 @@ export const getRootNode = (e: Element<DomNode>): RootNode => {
  * If this is a Document, return it.
  * If this is a ShadowRoot, return its parent document.
  */
-export const getDocument = (dos: RootNode): Element<Document> =>
-  Node.isDocument(dos) ? dos : Traverse.owner(dos);
+
 
 /** Create an element, using the actual document. */
 export const createElement: {
   <K extends keyof HTMLElementTagNameMap>(dos: RootNode, tag: K): Element<HTMLElementTagNameMap[K]>;
   (dos: RootNode, tag: string): Element<HTMLElement>;
 } = (dos: RootNode, tag: string) =>
-  Element.fromTag(tag, getDocument(dos).dom());
+  Element.fromTag(tag, Traverse.documentOrOwner(dos).dom());
 
 /** Where style tags need to go. ShadowRoot or document head */
 export const getStyleContainer = (dos: RootNode): Element<DomNode> =>
-  isShadowRoot(dos) ? dos : Head.getHead(getDocument(dos));
+  isShadowRoot(dos) ? dos : Head.getHead(Traverse.documentOrOwner(dos));
 
 /** Where content needs to go. ShadowRoot or document body */
 export const getContentContainer = (dos: RootNode): Element<DomNode> =>
-  isShadowRoot(dos) ? dos : Body.getBody(getDocument(dos));
+  isShadowRoot(dos) ? dos : Body.getBody(Traverse.documentOrOwner(dos));
 
 /** Is this element either a ShadowRoot or a descendent of a ShadowRoot. */
 export const isInShadowRoot = (e: Element<DomNode>): boolean =>
