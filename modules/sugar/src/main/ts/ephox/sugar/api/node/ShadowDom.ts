@@ -39,12 +39,6 @@ export const getRootNode = (e: Element<DomNode>): RootNode => {
   }
 };
 
-/**
- * If this is a Document, return it.
- * If this is a ShadowRoot, return its parent document.
- */
-
-
 /** Create an element, using the actual document. */
 export const createElement: {
   <K extends keyof HTMLElementTagNameMap>(dos: RootNode, tag: K): Element<HTMLElementTagNameMap[K]>;
