@@ -16,9 +16,6 @@ export type RootNode = Element<Document | ShadowRoot>;
 export const isShadowRoot = (dos: RootNode): dos is Element<ShadowRoot> =>
   Node.isDocumentFragment(dos);
 
-export const isDocument = (dos: RootNode): dos is Element<Document> =>
-  Node.isDocument(dos);
-
 /**
  * Does the browser support shadow DOM?
  *
@@ -43,7 +40,7 @@ export const getRootNode = (e: Element<DomNode>): RootNode => {
  * If this is a ShadowRoot, return its parent document.
  */
 export const actualDocument = (dos: RootNode): Element<Document> =>
-  isDocument(dos) ? dos : Traverse.owner(dos);
+  Node.isDocument(dos) ? dos : Traverse.owner(dos);
 
 /** Create an element, using the actual document. */
 export const createElement: {

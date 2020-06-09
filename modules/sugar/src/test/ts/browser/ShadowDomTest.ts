@@ -13,6 +13,7 @@ import { tElement } from 'ephox/sugar/test/ElementInstances';
 import * as Document from 'ephox/sugar/api/node/Document';
 import * as Head from 'ephox/sugar/api/node/Head';
 import * as Body from 'ephox/sugar/api/node/Body';
+import * as Node from 'ephox/sugar/api/node/Node';
 
 type RootNode = ShadowDom.RootNode;
 
@@ -37,12 +38,12 @@ shadowDomTest('ShadowDom - SelectorFind.descendant', () => {
 
 const shouldBeShadowRoot = (n: RootNode) => {
   Assert.eq('should be shadow root', true, ShadowDom.isShadowRoot(n));
-  Assert.eq('should not be document', false, ShadowDom.isDocument(n));
+  Assert.eq('should not be document', false, Node.isDocument(n));
 };
 
 const shouldBeDocument = (n: RootNode) => {
   Assert.eq('should not be shadow root', false, ShadowDom.isShadowRoot(n));
-  Assert.eq('should be document', true, ShadowDom.isDocument(n));
+  Assert.eq('should be document', true, Node.isDocument(n));
 };
 
 UnitTest.test('getRootNode === document on normal element in dom', () => {
