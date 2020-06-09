@@ -6,9 +6,11 @@
  */
 
 import * as Actions from '../core/Actions';
+import { Cell } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 
-const register = function (editor, fullscreenState) {
-  editor.addCommand('mceFullScreen', function () {
+const register = (editor: Editor, fullscreenState: Cell<any>) => {
+  editor.addCommand('mceFullScreen', () => {
     Actions.toggleFullscreen(editor, fullscreenState);
   });
 };

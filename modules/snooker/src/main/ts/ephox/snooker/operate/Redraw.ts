@@ -1,6 +1,6 @@
 import { HTMLTableRowElement } from '@ephox/dom-globals';
-import { Arr } from '@ephox/katamari';
-import { Attr, Element, Insert, InsertAll, Remove, Replication, SelectorFind, Traverse } from '@ephox/sugar';
+import { Arr, Fun } from '@ephox/katamari';
+import { Attr, Element, Insert, InsertAll, Remove, Replication, SelectorFilter, SelectorFind, Traverse } from '@ephox/sugar';
 import { Detail, DetailNew, RowDataNew } from '../api/Structs';
 
 const setIfNot = function (element: Element, property: string, value: number, ignore: number): void {
@@ -20,10 +20,15 @@ const render = function <T extends DetailNew> (table: Element, grid: RowDataNew<
   const newRows: Element[] = [];
   const newCells: Element[] = [];
 
+  const insertThead = Arr.last(SelectorFilter.children(table, 'caption,colgroup')).fold(
+    () => Fun.curry(Insert.prepend, table),
+    (c) => Fun.curry(Insert.after, c)
+  );
+
   const renderSection = function (gridSection: RowDataNew<T>[], sectionName: 'thead' | 'tbody' | 'tfoot') {
     const section = SelectorFind.child(table, sectionName).getOrThunk(function () {
       const tb = Element.fromTag(sectionName, Traverse.owner(table).dom());
-      Insert.append(table, tb);
+      sectionName === 'thead' ? insertThead(tb) : Insert.append(table, tb); // mutation
       return tb;
     });
 
