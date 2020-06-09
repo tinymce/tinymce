@@ -22,15 +22,15 @@ export type RootNode = Element<Document | ShadowRoot>;
 export const isShadowRoot = (dos: RootNode): dos is Element<ShadowRoot> =>
   Node.isDocumentFragment(dos);
 
+const supported: boolean =
+  Type.isFunction((DomElement.prototype as any).attachShadow) &&
+  Type.isFunction((DomNode.prototype as any).getRootNode);
+
 /**
  * Does the browser support shadow DOM?
  *
  * NOTE: Node.getRootNode() and Element.attachShadow don't exist on IE11 and pre-Chromium Edge.
  */
-const supported: boolean =
-  Type.isFunction((DomElement.prototype as any).attachShadow) &&
-  Type.isFunction((DomNode.prototype as any).getRootNode);
-
 export const isSupported = Fun.constant(supported);
 
 export const getRootNode: (e: Element<DomNode>) => RootNode =
