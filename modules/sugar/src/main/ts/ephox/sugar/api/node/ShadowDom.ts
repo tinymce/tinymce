@@ -37,7 +37,6 @@ export const getRootNode: (e: Element<DomNode>) => RootNode =
     ? (e) => Element.fromDom((e.dom() as any).getRootNode())
     : Traverse.documentOrOwner;
 
-
 /** Create an element, using the actual document. */
 export const createElement: {
   <K extends keyof HTMLElementTagNameMap>(dos: RootNode, tag: K): Element<HTMLElementTagNameMap[K]>;
