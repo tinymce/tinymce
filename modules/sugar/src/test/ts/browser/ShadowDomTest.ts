@@ -101,7 +101,7 @@ UnitTest.test('isDocument in iframe', () => {
   });
 });
 
-// TODO: this should be in sand
+// TODO: this should be somewhere else (maybe Agar?)
 const isPhantomJs = (): boolean =>
   navigator.userAgent.indexOf('PhantomJS') > -1;
 
