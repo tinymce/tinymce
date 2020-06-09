@@ -31,7 +31,7 @@ export const getRootNode = (e: Element<DomNode>): RootNode => {
   } else {
     // ownerDocument returns null for a document, and Element.fromDom requires non-null,
     // so we have to check if the element is a document.
-    return Node.isDocument(e) ? e : Element.fromDom(e.dom().ownerDocument);
+    return Node.isDocument(e) ? e : Traverse.owner(e);
   }
 };
 
@@ -39,7 +39,7 @@ export const getRootNode = (e: Element<DomNode>): RootNode => {
  * If this is a Document, return it.
  * If this is a ShadowRoot, return its parent document.
  */
-export const actualDocument = (dos: RootNode): Element<Document> =>
+export const getDocument = (dos: RootNode): Element<Document> =>
   Node.isDocument(dos) ? dos : Traverse.owner(dos);
 
 /** Create an element, using the actual document. */
@@ -47,15 +47,15 @@ export const createElement: {
   <K extends keyof HTMLElementTagNameMap>(dos: RootNode, tag: K): Element<HTMLElementTagNameMap[K]>;
   (dos: RootNode, tag: string): Element<HTMLElement>;
 } = (dos: RootNode, tag: string) =>
-  Element.fromTag(tag, actualDocument(dos).dom());
+  Element.fromTag(tag, getDocument(dos).dom());
 
 /** Where style tags need to go. ShadowRoot or document head */
 export const getStyleContainer = (dos: RootNode): Element<DomNode> =>
-  isShadowRoot(dos) ? dos : Head.getHead(actualDocument(dos));
+  isShadowRoot(dos) ? dos : Head.getHead(getDocument(dos));
 
 /** Where content needs to go. ShadowRoot or document body */
 export const getContentContainer = (dos: RootNode): Element<DomNode> =>
-  isShadowRoot(dos) ? dos : Body.getBody(actualDocument(dos));
+  isShadowRoot(dos) ? dos : Body.getBody(getDocument(dos));
 
 /** Is this element either a ShadowRoot or a descendent of a ShadowRoot. */
 export const isInShadowRoot = (e: Element<DomNode>): boolean =>
