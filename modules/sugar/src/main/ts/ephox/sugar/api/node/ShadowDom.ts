@@ -51,6 +51,7 @@ export const getStyleContainer = (dos: RootNode): Element<DomNode> =>
 
 /** Where content needs to go. ShadowRoot or document body */
 export const getContentContainer = (dos: RootNode): Element<DomNode> =>
+  // Can't use Body.body without causing a circular module reference (since Body.inBody uses ShadowDom)
   isShadowRoot(dos) ? dos : Element.fromDom(Traverse.documentOrOwner(dos).dom().body);
 
 /** Is this element either a ShadowRoot or a descendent of a ShadowRoot. */
