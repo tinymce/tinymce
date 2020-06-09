@@ -10,9 +10,10 @@ import { Node } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as InsertTable from '../actions/InsertTable';
 import { hasTableGrid } from '../api/Settings';
+import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets } from '../selection/SelectionTargets';
 
-const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
+const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   const cmd = (command) => () => editor.execCommand(command);
 
   const insertTableAction = ({ numRows, numColumns }) => {
@@ -61,25 +62,30 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
+  // TODO: TINY-6062 Need icons!!
   editor.ui.registry.addMenuItem('tablecutrow', {
     text: 'Cut row',
+    // icon: 'table-cut-row',
     onAction: cmd('mceTableCutRow'),
     onSetup: selectionTargets.onSetupCellOrRow
   });
   editor.ui.registry.addMenuItem('tablecopyrow', {
     text: 'Copy row',
+    // icon: 'table-copy-row',
     onAction: cmd('mceTableCopyRow'),
     onSetup: selectionTargets.onSetupCellOrRow
   });
   editor.ui.registry.addMenuItem('tablepasterowbefore', {
     text: 'Paste row before',
+    // icon: 'table-paste-row-before',
     onAction: cmd('mceTablePasteRowBefore'),
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupPasteable(clipboard.getRows)
   });
   editor.ui.registry.addMenuItem('tablepasterowafter', {
     text: 'Paste row after',
+    // icon: 'table-paste-row-after',
     onAction: cmd('mceTablePasteRowAfter'),
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupPasteable(clipboard.getRows)
   });
 
   const row: Menu.NestedMenuItemApi = {
@@ -107,10 +113,33 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets) => {
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
+  // TODO: TINY-6062 Need icons!!
+  editor.ui.registry.addMenuItem('tablecutcolumn', {
+    text: 'Cut column',
+    onAction: cmd('mceTableCutCol'),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+  editor.ui.registry.addMenuItem('tablecopycolumn', {
+    text: 'Copy column',
+    onAction: cmd('mceTableCopyCol'),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+  editor.ui.registry.addMenuItem('tablepastecolumnbefore', {
+    text: 'Paste column before',
+    onAction: cmd('mceTablePasteColBefore'),
+    onSetup: selectionTargets.onSetupPasteable(clipboard.getColumns)
+  });
+  editor.ui.registry.addMenuItem('tablepastecolumnafter', {
+    text: 'Paste column after',
+    onAction: cmd('mceTablePasteColAfter'),
+    onSetup: selectionTargets.onSetupPasteable(clipboard.getColumns)
+  });
+
   const column: Menu.NestedMenuItemApi = {
     type: 'nestedmenuitem',
     text: 'Column',
-    getSubmenuItems: () => 'tableinsertcolumnbefore tableinsertcolumnafter tabledeletecolumn'
+    // TODO: Add the column cut/copy/paste menu items in TinyMCE 5.5 or whenever we are able to get them translated
+    getSubmenuItems: () => 'tableinsertcolumnbefore tableinsertcolumnafter tabledeletecolumn' // | tablecutcolumn tablecopycolumn tablepastecolumnbefore tablepastecolumnafter'
   };
 
   editor.ui.registry.addMenuItem('tablecellprops', {

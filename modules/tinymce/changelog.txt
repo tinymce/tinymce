@@ -1,10 +1,14 @@
 Version 5.4.0 (TBD)
-    Added all table menu items to the UI registry, so they can be used by name in other menus #TINY-4866
-    Added additional font related variables for secondary buttons allowing more specific styling. #TINY-6061
+    Added Oxide variables for styling the select element and headings in dialog content #TINY-6070
+    Added all `table` menu items to the UI registry, so they can be used by name in other menus #TINY-4866
+    Added new `table` cut, copy and paste column editor commands and menu items #TINY-6006
+    Added additional font related Oxide variables for secondary buttons allowing more specific styling. #TINY-6061
     Changed `mceInsertTable` command and `insertTable` API method to take optional header rows and columns arguments #TINY-6012
+    Fixed table `Paste row after` and `Paste row before` menu items not disabled when nothing was available to paste #TINY-6006
     Fixed filters for screening commands from the undo stack to be properly case-insensitive #TINY-5946
     Fixed `fullscreen` plugin now removes all classes when the editor is closed #TINY-4048
     Fixed handling of mixed-case icon names by having the silver theme downcase them before icon retrieval #TINY-3854
+    Fixed leading and trailing spaces lost when using `editor.selection.getContent({ format: 'text' })` #TINY-5986
     Fixed an issue where removing formatting in a table cell would cause Internet Explorer 11 to scroll to the end of the table #TINY-6049
 Version 5.3.1 (2020-05-27)
     Fixed the image upload error alert also incorrectly closing the image dialog #TINY-6020

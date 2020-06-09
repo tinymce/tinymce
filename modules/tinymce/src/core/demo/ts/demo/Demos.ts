@@ -7,7 +7,6 @@ import FullDemo from './FullDemo';
 import InlineDemo from './InlineDemo';
 import SourceDumpDemo from './SourceDumpDemo';
 import TinyMceDemo from './TinyMceDemo';
-import UiContainerDemo from './UiContainerDemo';
 import IframeDemo from './IframeDemo';
 import ResponsiveDemo from './ResponsiveDemo';
 import StickyToolbarDemo from './StickyToolbarDemo';
@@ -23,7 +22,6 @@ window.demos = {
   FixedToolbarContainerDemo,
   FullDemo,
   TinyMceDemo,
-  UiContainerDemo,
   AnnotationsDemo,
   SourceDumpDemo,
   ResponsiveDemo,
