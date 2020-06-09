@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     return editor.getContent();
   };
 
-  suite.test('TestCase-TBA: AutoLink: Urls ended with space', function (editor) {
+  suite.test('TestCase-TBA: AutoLink: Correct urls ended with space', (editor) => {
     editor.focus();
     LegacyUnit.equal(typeUrl(editor, 'http://www.domain.com'), '<p><a href="http://www.domain.com">http://www.domain.com</a>&nbsp;</p>');
     LegacyUnit.equal(typeUrl(editor, 'https://www.domain.com'), '<p><a href="https://www.domain.com">https://www.domain.com</a>&nbsp;</p>');
@@ -46,6 +46,17 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     LegacyUnit.equal(typeUrl(editor, 'user@domain.com'), '<p><a href="mailto:user@domain.com">user@domain.com</a>&nbsp;</p>');
     LegacyUnit.equal(typeUrl(editor, 'mailto:user@domain.com'), '<p><a href="mailto:user@domain.com">mailto:user@domain.com</a>&nbsp;</p>');
     LegacyUnit.equal(typeUrl(editor, 'first-last@domain.com'), '<p><a href="mailto:first-last@domain.com">first-last@domain.com</a>&nbsp;</p>');
+  });
+  suite.test('TestCase-TBA: AutoLink: Unexpected urls ended with space', (editor) => {
+    editor.focus();
+    LegacyUnit.equal(typeUrl(editor, 'first-last@domain'), '<p><a href="mailto:first-last@domain">first-last@domain</a>&nbsp;</p>'); // No .com or similar needed.
+    LegacyUnit.equal(typeUrl(editor, 'first-last@()'), '<p><a href="mailto:first-last@()">first-last@()</a>&nbsp;</p>'); // Anything goes after the @.
+    LegacyUnit.equal(typeUrl(editor, 'first-last@¶¶KJ'), '<p><a href="mailto:first-last@&para;&para;KJ">first-last@&para;&para;KJ</a>&nbsp;</p>'); // Anything goes after the @
+  });
+  suite.test('TestCase-TBA: AutoLink: text which should not work', (editor) => {
+    editor.focus();
+    LegacyUnit.equal(typeUrl(editor, 'first-last@@domain@.@com'), '<p>first-last@@domain@.@com&nbsp;</p>'); // We only accept one @
+    LegacyUnit.equal(typeUrl(editor, 'first-last@'), '<p>first-last@&nbsp;</p>'); // We only accept one @
   });
 
   suite.test('TestCase-TBA: AutoLink: Urls ended with )', function (editor) {
