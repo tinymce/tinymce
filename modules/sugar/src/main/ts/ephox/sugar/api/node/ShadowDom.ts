@@ -7,7 +7,7 @@ import {
 import * as Node from './Node';
 import * as Head from './Head';
 import * as Body from './Body';
-import { Option, Type } from '@ephox/katamari';
+import { Fun, Option, Type } from '@ephox/katamari';
 import Element from './Element';
 import * as Traverse from '../search/Traverse';
 
@@ -27,17 +27,17 @@ export const isShadowRoot = (dos: RootNode): dos is Element<ShadowRoot> =>
  *
  * NOTE: Node.getRootNode() and Element.attachShadow don't exist on IE11 and pre-Chromium Edge.
  */
-export const isSupported = (): boolean =>
+const supported: boolean =
   Type.isFunction((DomElement.prototype as any).attachShadow) &&
   Type.isFunction((DomNode.prototype as any).getRootNode);
 
-export const getRootNode = (e: Element<DomNode>): RootNode => {
-  if (isSupported()) {
-    return Element.fromDom((e.dom() as any).getRootNode());
-  } else {
-    return Traverse.documentOrOwner(e);
-  }
-};
+export const isSupported = Fun.constant(supported);
+
+export const getRootNode: (e: Element<DomNode>) => RootNode =
+  supported
+    ? (e) => Element.fromDom((e.dom() as any).getRootNode())
+    : Traverse.documentOrOwner;
+
 
 /** Create an element, using the actual document. */
 export const createElement: {
