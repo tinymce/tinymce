@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.selection.GetSelectionContentTest', (success
 
   const sAssertGetContent = (label: string, editor: Editor, expectedContents: string, args: any = {}) => Chain.asStep(editor, [
     cGetContent(args),
-    Assertions.cAssertEq('Should be expected contents', expectedContents)
+    Assertions.cAssertEq(label + ': Should be expected contents', expectedContents)
   ]);
 
   const sAssertGetContentOverrideBeforeGetContent = (label: string, editor: Editor, expectedContents: string, args: any = {}) => {
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.selection.GetSelectionContentTest', (success
       }),
       Chain.asStep(editor, [
         cGetContent(args),
-        Assertions.cAssertEq('Should be expected contents', expectedContents)
+        Assertions.cAssertEq(label + ': Should be expected contents', expectedContents)
       ]),
       Step.sync(function () {
         editor.off('BeforeGetContent', handler);
