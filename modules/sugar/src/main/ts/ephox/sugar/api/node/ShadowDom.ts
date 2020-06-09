@@ -9,6 +9,7 @@ import * as Head from './Head';
 import * as Body from './Body';
 import { Option, Type } from '@ephox/katamari';
 import Element from './Element';
+import * as Traverse from '../search/Traverse';
 
 export type RootNode = Element<Document | ShadowRoot>;
 
@@ -42,7 +43,7 @@ export const getRootNode = (e: Element<DomNode>): RootNode => {
  * If this is a ShadowRoot, return its parent document.
  */
 export const actualDocument = (dos: RootNode): Element<Document> =>
-  isDocument(dos) ? dos : Element.fromDom(dos.dom().ownerDocument);
+  isDocument(dos) ? dos : Traverse.owner(dos);
 
 /** Create an element, using the actual document. */
 export const createElement: {
