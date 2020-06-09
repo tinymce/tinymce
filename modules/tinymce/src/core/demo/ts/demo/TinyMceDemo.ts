@@ -20,7 +20,6 @@ export default function () {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     setup(ed) {
       ed.ui.registry.addButton('demoButton', {
-        type: 'button',
         text: 'Demo',
         onAction() {
           ed.insertContent('Hello world!');
