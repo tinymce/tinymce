@@ -1,6 +1,6 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { ColumnContext } from './ColumnContext';
-import { TableSize } from '../resize/Types';
+import { TableSize } from '../resize/TableSize';
 
 /*
  * Based on the column index, identify the context

@@ -12,8 +12,8 @@ import { Element } from '@ephox/sugar';
  */
 const columns = function (warehouse: Warehouse): Option<Element>[] {
   const grid = warehouse.grid;
-  const cols = Util.range(0, grid.columns());
-  const rowsArr = Util.range(0, grid.rows());
+  const cols = Util.range(grid.columns());
+  const rowsArr = Util.range(grid.rows());
 
   return Arr.map(cols, function (col) {
     const getBlock = function () {
@@ -49,8 +49,8 @@ const decide = function (getBlock: () => DetailExt[], isSingle: (detail: DetailE
 
 const rows = function (warehouse: Warehouse): Option<Element>[] {
   const grid = warehouse.grid;
-  const rowsArr = Util.range(0, grid.rows());
-  const cols = Util.range(0, grid.columns());
+  const rowsArr = Util.range(grid.rows());
+  const cols = Util.range(grid.columns());
 
   return Arr.map(rowsArr, function (row) {
 

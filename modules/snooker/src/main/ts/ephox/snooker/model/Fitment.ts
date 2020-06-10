@@ -63,7 +63,7 @@ const rowFill = function (grid: Structs.RowCells[], amount: number, generator: S
 
 const colFill = function (grid: Structs.RowCells[], amount: number, generator: SimpleGenerators): Structs.RowCells[] {
   return Arr.map(grid, function (row) {
-    return GridRow.setCells(row, row.cells().concat(fill(Util.range(0, amount), generator)));
+    return GridRow.setCells(row, row.cells().concat(fill(Util.range(amount), generator)));
   });
 };
 

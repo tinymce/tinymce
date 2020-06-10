@@ -1,7 +1,6 @@
 import { CellLocation } from './CellLocation';
 import * as CellMutations from './CellMutations';
 import * as CellNavigation from './CellNavigation';
-import * as CellProperties from './CellProperties';
 import * as CopyRows from './CopyRows';
 import * as CopySelected from './CopySelected';
 import { Generators } from './Generators';
@@ -26,7 +25,6 @@ export {
   CellLocation,
   CellMutations,
   CellNavigation,
-  CellProperties,
   CopyRows,
   CopySelected,
   Generators,
