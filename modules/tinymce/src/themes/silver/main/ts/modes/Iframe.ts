@@ -7,7 +7,7 @@
 
 import { Attachment } from '@ephox/alloy';
 import { Cell, Throttler } from '@ephox/katamari';
-import { Body, DomEvent, Element, Position, Css } from '@ephox/sugar';
+import { DomEvent, Element, Position, Css, ShadowDom } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
@@ -75,7 +75,8 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   loadIframeSkin(editor);
 
   Attachment.attachSystemAfter(Element.fromDom(args.targetNode), uiComponents.mothership);
-  Attachment.attachSystem(Body.body(), uiComponents.uiMothership);
+  const uiRoot = ShadowDom.getContentContainer(ShadowDom.getRootNode(Element.fromDom(editor.getElement())));
+  Attachment.attachSystem(uiRoot, uiComponents.uiMothership);
 
   editor.on('PostRender', () => {
     setToolbar(editor, uiComponents, rawUiConfig, backstage);
