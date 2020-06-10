@@ -5,7 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option, Unicode } from '@ephox/katamari';
+import { Image } from '@ephox/dom-globals';
+import { Arr, Obj, Option, Unicode } from '@ephox/katamari';
 import Env from '../api/Env';
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
 import Node from '../api/html/Node';
@@ -15,18 +16,35 @@ import { uniqueId } from '../file/ImageScanner';
 import { parseDataUri } from './Base64Uris';
 import { isEmpty, paddEmptyNode } from './ParserUtils';
 
-const isInternalImageSource = (src: string) => src === Env.transparentSrc;
+const isBogusImage = (img: Node) => img.attr('data-mce-bogus');
+const isInternalImageSource = (img: Node) => img.attr('src') === Env.transparentSrc || img.attr('data-mce-placeholder');
+
+const isValidDataImg = (img: Node, settings: DomParserSettings) => {
+  if (settings.images_dataimg_filter) {
+    // Construct an image element
+    const imgElem = new Image();
+    imgElem.src = img.attr('src');
+    Obj.each(img.attributes.map, (value, key) => {
+      imgElem.setAttribute(key, value);
+    });
+
+    // Check if it should be excluded from being converted to a blob
+    return settings.images_dataimg_filter(imgElem);
+  } else {
+    return true;
+  }
+};
 
 const registerBase64ImageFilter = (parser: DomParser, settings: DomParserSettings) => {
   const { blob_cache: blobCache } = settings;
   const processImage = (img: Node): void => {
     const inputSrc = img.attr('src');
 
-    if (isInternalImageSource(inputSrc)) {
+    if (isInternalImageSource(img) || isBogusImage(img)) {
       return;
     }
 
-    parseDataUri(inputSrc).bind(({ type, data }) =>
+    parseDataUri(inputSrc).filter(() => isValidDataImg(img, settings)).bind(({ type, data }) =>
       Option.from(blobCache.getByData(data, type)).orThunk(() =>
         Conversions.buildBlob(type, data).map((blob) => {
           const blobInfo = blobCache.create(uniqueId(), blob, data);
