@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { navigator } from '@ephox/dom-globals';
+import { navigator, Document, ShadowRoot, Node as DomNode } from '@ephox/dom-globals';
 import { Arr, Fun, Future, Futures, Result } from '@ephox/katamari';
-import { Attr, Element } from '@ephox/sugar';
+import { Attr, Element, Insert, ShadowDom, Traverse } from '@ephox/sugar';
 import { ReferrerPolicy } from '../api/SettingsTypes';
 import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
@@ -31,19 +31,22 @@ export interface StyleSheetLoaderSettings {
   referrerPolicy: ReferrerPolicy;
 }
 
-export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
+export function StyleSheetLoader(rootNode: Document | ShadowRoot, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
   let idCount = 0;
   const loadedStates = {};
   let maxLoadTime;
 
   maxLoadTime = settings.maxLoadTime || 5000;
 
+  const root: Element<Document | ShadowRoot> = Element.fromDom(rootNode);
+  const doc: Element<Document> = Traverse.documentOrOwner(root);
+
   const _setReferrerPolicy = (referrerPolicy: ReferrerPolicy) => {
     settings.referrerPolicy = referrerPolicy;
   };
 
-  const appendToHead = function (node) {
-    document.getElementsByTagName('head')[0].appendChild(node);
+  const appendStyleNode = (node: Element<DomNode>) => {
+    Insert.append(ShadowDom.getStyleContainer(root), node);
   };
 
   /**
@@ -181,7 +184,7 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
 
     // Start loading
     state.status = 1;
-    link = document.createElement('link');
+    link = doc.dom().createElement('link');
     link.rel = 'stylesheet';
     link.type = 'text/css';
     link.id = 'u' + (idCount++);
@@ -206,10 +209,10 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
       // Sniff for old Firefox that doesn't support the onload event on link elements
       // TODO: Remove this in the future when everyone uses modern browsers
       if (navigator.userAgent.indexOf('Firefox') > 0) {
-        style = document.createElement('style');
+        style = doc.dom().createElement('style');
         style.textContent = '@import "' + url + '"';
         waitForGeckoLinkLoaded();
-        appendToHead(style);
+        appendStyleNode(Element.fromDom(style));
         return;
       }
 
@@ -217,11 +220,11 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
       waitForWebKitLinkLoaded();
     }
 
-    appendToHead(link);
+    appendStyleNode(Element.fromDom(link));
     link.href = url;
   };
 
-  const loadF = function (url) {
+  const loadF = function (url: string) {
     return Future.nu(function (resolve) {
       load(
         url,
@@ -231,9 +234,8 @@ export function StyleSheetLoader(document, settings: Partial<StyleSheetLoaderSet
     });
   };
 
-  const unbox = function (result) {
-    return result.fold(Fun.identity, Fun.identity);
-  };
+  const unbox = <T>(result: Result<T, T>) =>
+    result.fold(Fun.identity, Fun.identity);
 
   const loadAll = function (urls: string[], success: Function, failure: Function) {
     Futures.par(Arr.map(urls, loadF)).get(function (result) {
