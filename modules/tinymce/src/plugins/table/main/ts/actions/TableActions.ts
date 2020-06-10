@@ -27,6 +27,8 @@ export interface TableActions {
   insertColumnsAfter: (table: any, target: any) => any;
   mergeCells: (table: any, target: any) => any;
   unmergeCells: (table: any, target: any) => any;
+  pasteColsBefore: (table: any, target: any) => any;
+  pasteColsAfter: (table: any, target: any) => any;
   pasteRowsBefore: (table: any, target: any) => any;
   pasteRowsAfter: (table: any, target: any) => any;
   pasteCells: (table: any, target: any) => any;
@@ -91,6 +93,10 @@ export const TableActions = function (editor: Editor, lazyWire) {
 
   const unmergeCells = execute(TableOperations.unmergeCells, Fun.always, Fun.noop, lazyWire);
 
+  const pasteColsBefore = execute(TableOperations.pasteColsBefore, Fun.always, Fun.noop, lazyWire);
+
+  const pasteColsAfter = execute(TableOperations.pasteColsAfter, Fun.always, Fun.noop, lazyWire);
+
   const pasteRowsBefore = execute(TableOperations.pasteRowsBefore, Fun.always, Fun.noop, lazyWire);
 
   const pasteRowsAfter = execute(TableOperations.pasteRowsAfter, Fun.always, Fun.noop, lazyWire);
@@ -106,6 +112,8 @@ export const TableActions = function (editor: Editor, lazyWire) {
     insertColumnsAfter,
     mergeCells,
     unmergeCells,
+    pasteColsBefore,
+    pasteColsAfter,
     pasteRowsBefore,
     pasteRowsAfter,
     pasteCells

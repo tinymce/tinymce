@@ -6,28 +6,31 @@
  */
 
 import { HTMLElement } from '@ephox/dom-globals';
-import { Arr, Cell, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Arr, Option } from '@ephox/katamari';
+import { Element, Elements } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
 import { ResizeHandler } from '../actions/ResizeHandler';
+import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets } from '../selection/SelectionTargets';
 
-const getClipboardRows = (clipboardRows: Cell<Option<Element[]>>): HTMLElement[] => clipboardRows.get().fold(
+const getClipboardElements = (getClipboard: () => Option<Element[]>) => (): HTMLElement[] => getClipboard().fold(
   () => [],
-  (rows) => Arr.map(rows, (row) => row.dom())
+  (elems) => Arr.map(elems, (e) => e.dom())
 );
 
-const setClipboardRows = (rows: HTMLElement[], clipboardRows) => {
-  const sugarRows = Arr.map(rows, Element.fromDom);
-  clipboardRows.set(Option.from(sugarRows));
+const setClipboardElements = (setClipboard: (elems: Option<Element[]>) => void) => (elems: HTMLElement[]): void => {
+  const elmsOpt = elems.length > 0 ? Option.some(Elements.fromDom(elems)) : Option.none<Element[]>();
+  setClipboard(elmsOpt);
 };
 
-const getApi = (editor: Editor, clipboardRows: Cell<Option<Element[]>>, resizeHandler: ResizeHandler, selectionTargets: SelectionTargets) => ({
+const getApi = (editor: Editor, clipboard: Clipboard, resizeHandler: ResizeHandler, selectionTargets: SelectionTargets) => ({
   insertTable: (columns: number, rows: number, options: Record<string, number> = {}) =>
     insertTableWithDataValidation(editor, rows, columns, options, 'Invalid values for insertTable - rows and columns values are required to insert a table.'),
-  setClipboardRows: (rows: HTMLElement[]) => setClipboardRows(rows, clipboardRows),
-  getClipboardRows: () => getClipboardRows(clipboardRows),
+  setClipboardRows: setClipboardElements(clipboard.setRows),
+  getClipboardRows: getClipboardElements(clipboard.getRows),
+  setClipboardCols: setClipboardElements(clipboard.setColumns),
+  getClipboardCols: getClipboardElements(clipboard.getColumns),
   resizeHandler,
   selectionTargets
 });
