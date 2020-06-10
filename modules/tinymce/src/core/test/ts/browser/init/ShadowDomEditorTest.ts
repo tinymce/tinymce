@@ -3,7 +3,7 @@ import { document, StyleSheet } from '@ephox/dom-globals';
 import { TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
-import { ShadowDom, Element, Insert, Body  } from '@ephox/sugar';
+import { ShadowDom, Element, Insert, Body, Remove } from '@ephox/sugar';
 import { UnitTest, Assert } from '@ephox/bedrock-client';
 import { Arr, Strings } from '@ephox/katamari';
 
@@ -33,7 +33,10 @@ UnitTest.asynctest('Skin stylesheets should be loaded in ShadowRoot when editor 
             Arr.exists(sr.dom().styleSheets, isSkin)
           );
         })
-      ], onSuccess, onFailure);
+      ], () => {
+        Remove.remove(shadowHost);
+        success();
+      }, onFailure);
     }, {
       toolbar_sticky: false,
       base_url: '/project/tinymce/js/tinymce'
