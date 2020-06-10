@@ -1,11 +1,12 @@
-import { Pipeline, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Log, Pipeline } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/autolink/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as KeyUtils from '../module/test/KeyUtils';
+import fc from 'fast-check';
 
 UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
@@ -13,14 +14,14 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
   Theme();
   Plugin();
 
-  const typeUrl = function (editor: Editor, url: string) {
+  const typeUrl = (editor: Editor, url: string): string => {
     editor.setContent('<p>' + url + '</p>');
     LegacyUnit.setSelection(editor, 'p', url.length);
     KeyUtils.type(editor, ' ');
     return editor.getContent();
   };
 
-  const typeAnEclipsedURL = function (editor, url) {
+  const typeAnEclipsedURL = function (editor: Editor, url: string) {
     url = '(' + url;
     editor.setContent('<p>' + url + '</p>');
     LegacyUnit.setSelection(editor, 'p', url.length);
@@ -28,15 +29,25 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     return editor.getContent();
   };
 
-  const typeNewlineURL = function (editor, url) {
+  const typeNewlineURL = (editor: Editor, url: string): string => {
     editor.setContent('<p>' + url + '</p>');
     LegacyUnit.setSelection(editor, 'p', url.length);
     KeyUtils.type(editor, '\n');
     return editor.getContent();
   };
 
-  suite.test('TestCase-TBA: AutoLink: Correct urls ended with space', (editor) => {
-    editor.focus();
+  const assertNoLink = (editor: Editor, s: string): void => {
+    Assert.eq('Should not convert to link', `<p>${s}&nbsp;</p>`, typeUrl(editor, s));
+  };
+
+  const test = (label: string, runTest: (editor: Editor) => void): void => {
+    suite.test('TestCase-TBA: AutoLink: Correct urls ended with space', (editor) => {
+      editor.focus();
+      runTest(editor);
+    });
+  };
+
+  test('TestCase-TBA: AutoLink: Correct urls ended with space', (editor) => {
     LegacyUnit.equal(typeUrl(editor, 'http://www.domain.com'), '<p><a href="http://www.domain.com">http://www.domain.com</a>&nbsp;</p>');
     LegacyUnit.equal(typeUrl(editor, 'https://www.domain.com'), '<p><a href="https://www.domain.com">https://www.domain.com</a>&nbsp;</p>');
     LegacyUnit.equal(typeUrl(editor, 'ssh://www.domain.com'), '<p><a href="ssh://www.domain.com">ssh://www.domain.com</a>&nbsp;</p>');
@@ -47,19 +58,31 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     LegacyUnit.equal(typeUrl(editor, 'mailto:user@domain.com'), '<p><a href="mailto:user@domain.com">mailto:user@domain.com</a>&nbsp;</p>');
     LegacyUnit.equal(typeUrl(editor, 'first-last@domain.com'), '<p><a href="mailto:first-last@domain.com">first-last@domain.com</a>&nbsp;</p>');
   });
-  suite.test('TestCase-TBA: AutoLink: Unexpected urls ended with space', (editor) => {
-    editor.focus();
+
+  test('TestCase-TBA: AutoLink: Unexpected urls ended with space', (editor) => {
     LegacyUnit.equal(typeUrl(editor, 'first-last@domain'), '<p><a href="mailto:first-last@domain">first-last@domain</a>&nbsp;</p>'); // No .com or similar needed.
     LegacyUnit.equal(typeUrl(editor, 'first-last@()'), '<p><a href="mailto:first-last@()">first-last@()</a>&nbsp;</p>'); // Anything goes after the @.
     LegacyUnit.equal(typeUrl(editor, 'first-last@¶¶KJ'), '<p><a href="mailto:first-last@&para;&para;KJ">first-last@&para;&para;KJ</a>&nbsp;</p>'); // Anything goes after the @
   });
-  suite.test('TestCase-TBA: AutoLink: text which should not work', (editor) => {
-    editor.focus();
-    LegacyUnit.equal(typeUrl(editor, 'first-last@@domain@.@com'), '<p>first-last@@domain@.@com&nbsp;</p>'); // We only accept one @
-    LegacyUnit.equal(typeUrl(editor, 'first-last@'), '<p>first-last@&nbsp;</p>'); // We only accept one @
+
+  test('TestCase-TBA: AutoLink: text which should not work', (editor) => {
+    assertNoLink(editor, 'first-last@@domain@.@com'); // We only accept one @
+    assertNoLink(editor, 'first-last@'); // We only accept one @
   });
 
-  suite.test('TestCase-TBA: AutoLink: Urls ended with )', function (editor) {
+  test('TestCase-TBA: AutoLink: multiple @ characters', (editor) => {
+    fc.assert(fc.property(fc.hexaString(0, 30), fc.hexaString(0, 30), fc.hexaString(0, 30), (s1, s2, s3) => {
+      assertNoLink(editor, `${s1}@@${s2}@.@${s3}`);
+    }));
+  });
+
+  test('TestCase-TBA: AutoLink: ending in @ character', (editor) => {
+    fc.assert(fc.property(fc.hexaString(0, 100), (s1) => {
+      assertNoLink(editor, `${s1}@`);
+    }));
+  });
+
+  test('TestCase-TBA: AutoLink: Urls ended with )', function (editor) {
     LegacyUnit.equal(
       typeAnEclipsedURL(editor, 'http://www.domain.com'),
       '<p>(<a href="http://www.domain.com">http://www.domain.com</a>)</p>'
@@ -80,7 +103,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     LegacyUnit.equal(typeAnEclipsedURL(editor, 'www.domain.com.'), '<p>(<a href="http://www.domain.com">www.domain.com</a>.)</p>');
   });
 
-  suite.test('TestCase-TBA: AutoLink: Urls ended with new line', function (editor) {
+  test('TestCase-TBA: AutoLink: Urls ended with new line', function (editor) {
     LegacyUnit.equal(
       typeNewlineURL(editor, 'http://www.domain.com'),
       '<p><a href="http://www.domain.com">http://www.domain.com</a></p><p>&nbsp;</p>'
@@ -107,7 +130,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     );
   });
 
-  suite.test('TestCase-TBA: AutoLink: Url inside blank formatting wrapper', function (editor) {
+  test('TestCase-TBA: AutoLink: Url inside blank formatting wrapper', function (editor) {
     editor.focus();
     editor.setContent('<p><br></p>');
     editor.selection.setCursorLocation(editor.getBody().firstChild, 0);
@@ -129,9 +152,8 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     delete editor.settings.default_link_target;
   });
 
-  suite.test('TestCase-TBA: AutoLink: link_default_protocol=https', function (editor) {
+  test('TestCase-TBA: AutoLink: link_default_protocol=https', function (editor) {
     editor.settings.link_default_protocol = 'https';
-    editor.focus();
     LegacyUnit.equal(typeUrl(editor, 'http://www.domain.com'), '<p><a href="http://www.domain.com">http://www.domain.com</a>&nbsp;</p>');
     LegacyUnit.equal(typeUrl(editor, 'https://www.domain.com'), '<p><a href="https://www.domain.com">https://www.domain.com</a>&nbsp;</p>');
     LegacyUnit.equal(typeUrl(editor, 'ssh://www.domain.com'), '<p><a href="ssh://www.domain.com">ssh://www.domain.com</a>&nbsp;</p>');
@@ -144,9 +166,8 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     delete editor.settings.link_default_protocol;
   });
 
-  suite.test('TestCase-TBA: AutoLink: link_default_protocol=http', function (editor) {
+  test('TestCase-TBA: AutoLink: link_default_protocol=http', function (editor) {
     editor.settings.link_default_protocol = 'http';
-    editor.focus();
     LegacyUnit.equal(typeUrl(editor, 'www.domain.com'), '<p><a href="http://www.domain.com">www.domain.com</a>&nbsp;</p>');
     LegacyUnit.equal(typeUrl(editor, 'www.domain.com.'), '<p><a href="http://www.domain.com">www.domain.com</a>.&nbsp;</p>');
     delete editor.settings.link_default_protocol;
