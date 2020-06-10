@@ -1,13 +1,9 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Fun, Option } from '@ephox/katamari';
+import { Option } from '@ephox/katamari';
 import * as Util from 'ephox/snooker/util/Util';
 
 UnitTest.test('UtilTest', function () {
   const eq = (a: number, b: number) => a === b;
-
-  assert.eq([], Util.repeat(0, Fun.constant('a')));
-  assert.eq([ 0 ] , Util.repeat(1, Fun.identity));
-  assert.eq([ 0, 1, 2, 3 ] , Util.repeat(4, Fun.identity));
 
   assert.eq([], Util.unique([], eq));
   assert.eq([ 1 ], Util.unique([ 1 ], eq));

@@ -1,5 +1,4 @@
 import { Arr, Fun } from '@ephox/katamari';
-import * as Util from '../util/Util';
 import { Size } from './Size';
 
 // Convert all column widths to percent.
@@ -45,7 +44,7 @@ const redistributeEmpty = function (newWidthType: Size, columns: number) {
       return Fun.constant(num + 'px');
     }
   );
-  return Util.repeat(columns, f);
+  return Arr.range(columns, f);
 };
 
 const redistributeValues = function (newWidthType: Size, widths: string[], totalWidth: number) {
@@ -115,9 +114,5 @@ const toIntegers = function (values: string[]) {
 
 const validate = Size.from;
 
-export {
-  validate,
-  redistribute,
-  sum,
-  toIntegers
-};
+export { validate, redistribute, sum, toIntegers };
+

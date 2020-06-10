@@ -1,7 +1,6 @@
 import { Arr, Fun, Result } from '@ephox/katamari';
 import { SimpleGenerators } from '../api/Generators';
 import * as Structs from '../api/Structs';
-import * as Util from '../util/Util';
 import * as GridRow from './GridRow';
 
 export interface Delta {
@@ -62,10 +61,10 @@ const measureHeight = (gridA: Structs.RowCells[], gridB: Structs.RowCells[]): De
 const fill = <T> (cells: T[], generator: SimpleGenerators) => Arr.map(cells, () => Structs.elementnew(generator.cell(), true));
 
 const rowFill = (grid: Structs.RowCells[], amount: number, generator: SimpleGenerators): Structs.RowCells[] =>
-  grid.concat(Util.repeat(amount, () => GridRow.setCells(grid[grid.length - 1], fill(grid[grid.length - 1].cells(), generator))));
+  grid.concat(Arr.range(amount, () => GridRow.setCells(grid[grid.length - 1], fill(grid[grid.length - 1].cells(), generator))));
 
 const colFill = (grid: Structs.RowCells[], amount: number, generator: SimpleGenerators): Structs.RowCells[] =>
-  Arr.map(grid, (row) => GridRow.setCells(row, row.cells().concat(fill(Util.range(0, amount), generator))));
+  Arr.map(grid, (row) => GridRow.setCells(row, row.cells().concat(fill(Arr.range(amount, Fun.identity), generator))));
 
 const tailor = (gridA: Structs.RowCells[], delta: Delta, generator: SimpleGenerators): Structs.RowCells[] => {
   const fillCols = delta.colDelta < 0 ? colFill : Fun.identity;
@@ -75,9 +74,4 @@ const tailor = (gridA: Structs.RowCells[], delta: Delta, generator: SimpleGenera
   return fillRows(modifiedCols, Math.abs(delta.rowDelta), generator);
 };
 
-export {
-  measure,
-  measureWidth,
-  measureHeight,
-  tailor
-};
+export { measure, measureWidth, measureHeight, tailor };

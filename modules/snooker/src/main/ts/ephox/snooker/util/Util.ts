@@ -1,15 +1,4 @@
-import { Arr, Option, Fun } from '@ephox/katamari';
-
-// Rename this module, and repeat should be in Arr.
-const repeat = <T> (repititions: number, f: (idx: number) => T) => {
-  const r: T[] = [];
-  for (let i = 0; i < repititions; i++) {
-    r.push(f(i));
-  }
-  return r;
-};
-
-const range = (max: number) => Arr.range(max, Fun.identity);
+import { Arr, Option } from '@ephox/katamari';
 
 const unique = <T> (xs: T[], eq: (a: T, b: T) => boolean) => {
   const result: T[] = [];
@@ -44,9 +33,4 @@ const deduce = (xs: Option<number>[], index: number) => {
   }));
 };
 
-export {
-  repeat,
-  range,
-  unique,
-  deduce
-};
+export { unique, deduce };
