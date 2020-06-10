@@ -10,6 +10,7 @@ import TinyMceDemo from './TinyMceDemo';
 import IframeDemo from './IframeDemo';
 import ResponsiveDemo from './ResponsiveDemo';
 import StickyToolbarDemo from './StickyToolbarDemo';
+import ShadowDomDemo from './ShadowDomDemo';
 
 declare const window: any;
 
@@ -25,5 +26,6 @@ window.demos = {
   AnnotationsDemo,
   SourceDumpDemo,
   ResponsiveDemo,
-  StickyToolbarDemo
+  StickyToolbarDemo,
+  ShadowDomDemo
 };
