@@ -850,3 +850,9 @@ UnitTest.test('DOMUtils.get - finds element by id in body, not element by name i
     document.body.removeChild(div);
   }
 });
+
+UnitTest.test('DOMUtils.get - returns element', () => {
+  const DOM = DOMUtils(document, { keep_values : true, schema : Schema() });
+  const e = document.createElement('div');
+  Assert.eq('get', e, DOM.get(e), Testable.tStrict);
+});
