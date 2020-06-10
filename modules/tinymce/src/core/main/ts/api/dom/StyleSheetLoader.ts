@@ -115,7 +115,7 @@ export function StyleSheetLoader(rootNode: Document | ShadowRoot, settings: Part
     // Or WebKit that fires the onload event before the StyleSheet is added to the document
     const waitForWebKitLinkLoaded = function () {
       wait(function () {
-        const styleSheets = document.styleSheets;
+        const styleSheets = doc.dom().styleSheets;
         let styleSheet, i = styleSheets.length, owner;
 
         while (i--) {
