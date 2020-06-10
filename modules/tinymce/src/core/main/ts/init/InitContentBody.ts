@@ -6,6 +6,7 @@
  */
 
 import { document, window } from '@ephox/dom-globals';
+import { Obj, Type } from '@ephox/katamari';
 import { Attr, Element, Insert } from '@ephox/sugar';
 import Annotator from '../api/Annotator';
 import DOMUtils from '../api/dom/DOMUtils';
@@ -31,14 +32,13 @@ import * as TouchEvents from '../events/TouchEvents';
 import * as ForceBlocks from '../ForceBlocks';
 import * as KeyboardOverrides from '../keyboard/KeyboardOverrides';
 import { NodeChange } from '../NodeChange';
+import * as Rtc from '../Rtc';
 import * as DetailsElement from '../selection/DetailsElement';
 import * as MultiClickSelection from '../selection/MultiClickSelection';
 import * as SelectionBookmark from '../selection/SelectionBookmark';
 import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
 import Quirks from '../util/Quirks';
-import { Obj, Type } from '@ephox/katamari';
-import * as Rtc from '../Rtc';
 
 declare const escape: any;
 
@@ -76,7 +76,10 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
     inline_styles: settings.inline_styles,
     root_name: getRootName(editor),
     validate: true,
-    blob_cache: blobCache
+    blob_cache: blobCache,
+
+    // Deprecated
+    images_dataimg_filter: settings.images_dataimg_filter
   });
 };
 

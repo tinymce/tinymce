@@ -1,3 +1,5 @@
+Version 5.3.2 (2020-06-10)
+    Fixed a regression introduced in 5.3.0, where `images_dataimg_filter` was no-longer called #TINY-6086
 Version 5.3.1 (2020-05-27)
     Fixed the image upload error alert also incorrectly closing the image dialog #TINY-6020
     Fixed editor content scrolling incorrectly on focus in Firefox by reverting default content CSS html and body heights added in 5.3.0 #TINY-6019
